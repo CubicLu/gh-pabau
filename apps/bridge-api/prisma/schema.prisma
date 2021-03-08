@@ -8,151 +8,147 @@ datasource db {
 }
 
 model TwoFactorHistory {
-  id           Int      @id @default(autoincrement())
-  company_id   Int
-  passcode     String
-  user_id      Int
-  request_date DateTime
-  is_confirmed Int
-  company      Company  @relation(fields: [company_id], references: [id])
+  id          Int      @id @default(autoincrement())
+  companyId   Int      @map("company_id")
+  passcode    String
+  userId      Int      @map("user_id")
+  requestDate DateTime @map("request_date")
+  isConfirmed Int      @map("is_confirmed")
+  company     Company  @relation(fields: [companyId], references: [id])
 
   @@map("2fa_history")
 }
 
 model ThirdPartyAccess {
-  id           Int     @id @default(autoincrement())
-  company_id   Int     @map("occupier")
-  company_name String
-  email        String
-  passcode     Int
-  first_name   String
-  last_name    String
-  logo         String
-  access_id    Int
-  company      Company @relation(fields: [company_id], references: [id])
+  id          Int     @id @default(autoincrement())
+  companyId   Int     @map("occupier")
+  companyName String  @map("company_name")
+  email       String
+  passcode    Int
+  firstName   String  @map("first_name")
+  lastName    String  @map("last_name")
+  logo        String
+  accessId    Int     @map("access_id")
+  company     Company @relation(fields: [companyId], references: [id])
 
   @@map("3rd_party_access")
 }
 
 model AcceptEmailToken {
-  id         Int     @id @default(autoincrement())
-  company_id Int
-  email      String
-  token      Int
-  company    Company @relation(fields: [company_id], references: [id])
+  id        Int     @id @default(autoincrement())
+  companyId Int     @map("company_id")
+  email     String
+  token     Int
+  company   Company @relation(fields: [companyId], references: [id])
 
   @@map("accept_email_token")
 }
 
 model AccountBalance {
-  id                   Int     @id @default(autoincrement())
-  contact_id           Int?    @unique
-  company_id           Int
-  insurance_company_id Int
-  balance              Float
-  imported             Int
-  company              Company @relation(fields: [company_id], references: [id])
+  id                 Int     @id @default(autoincrement())
+  contactId          Int?    @unique @map("contact_id")
+  companyId          Int     @map("company_id")
+  insuranceCompanyId Int     @map("insurance_companyId")
+  balance            Float
+  imported           Int
+  company            Company @relation(fields: [companyId], references: [id])
 
-  @@index([company_id], name: "company_id")
+  @@index([companyId], name: "companyId")
   @@map("account_balance")
 }
 
 model AccountBalanceLog {
-  id                   Int    @id @default(autoincrement())
-  company_id           Int
-  contact_id           Int
-  insurance_company_id Int
-  amount               Float
-  date_time            Int
-  product_id           Int?
-  description          String
-  sale_id              Int
-  referral_id          Int
-  imported             Int
-  ref_sale_id          Int
+  id                 Int    @id @default(autoincrement())
+  companyId          Int    @map("company_id")
+  contactId          Int    @map("contact_id")
+  insuranceCompanyId Int    @map("insurance_companyId")
+  amount             Float
+  dateTime           Int    @map("date_time")
+  productId          Int?   @map("product_id")
+  description        String
+  saleId             Int    @map("sale_id")
+  referralId         Int    @map("referral_id")
+  imported           Int
+  refSaleId          Int    @map("ref_saleId")
 
-
-  @@index([company_id], name: "comnpany_id")
-  @@index([company_id, date_time], name: "company_time")
+  @@index([companyId], name: "comnpany_id")
+  @@index([companyId, dateTime], name: "company_time")
   @@map("account_balance_log")
 }
 
 model AccountManager {
-  id                  Int       @id @default(autoincrement())
-  organisation_name   String?
-  organisation_status Int
-  organisation_type   Int?
-  organisation_number String?
-  organisation_owner  Int?
-  address1            String?
-  address2            String?
-  address3            String?
-  town                String?
-  county              String?
-  post_code           String?
-  country             String?
-  tel                 String?
-  alt_tel             String?
-  email               String?
-  fax                 String?
-  website             String?
-  sla_contract        Int?
-  vat_reg_id          String
-  created_date        DateTime?
-  modified_date       DateTime?
-  occupier            Int?
-  con_per_1           String
-  con_num_1           String
-  con_per_2           String
-  con_num_2           String
-  con_per_3           String
-  con_num_3           String
-
+  id                 Int       @id @default(autoincrement())
+  organisationName   String?   @map("organisation_name")
+  organisationStatus Int       @map("organisation_status")
+  organisationType   Int?      @map("organisation_type")
+  organisationNumber String?   @map("organisation_number")
+  organisationOwner  Int?      @map("organisation_owner")
+  address1           String?
+  address2           String?
+  address3           String?
+  town               String?
+  county             String?
+  postCode           String?   @map("post_code")
+  country            String?
+  tel                String?
+  altTel             String?   @map("alt_tel")
+  email              String?
+  fax                String?
+  website            String?
+  slaContract        Int?      @map("sla_contract")
+  vatRegId           String    @map("vat_reg_id")
+  createdDate        DateTime? @map("created_date")
+  modifiedDate       DateTime? @map("modified_date")
+  occupier           Int?
+  conPer1            String    @map("con_per_1")
+  conNum1            String    @map("con_num_1")
+  conPer2            String    @map("con_per_2")
+  conNum2            String    @map("con_num_2")
+  conPer3            String    @map("con_per_3")
+  conNum3            String    @map("con_num_3")
 
   @@map("account_manager")
 }
 
 model AcLog {
+  id        Int      @id @default(autoincrement())
+  urlId     Int      @map("url_id")
+  actionId  Int      @map("action_id")
+  critical  Boolean
+  occupier  Int
+  userId    Int      @map("user_id")
+  date      DateTime
+  humanize  String?
+  userAgent String   @map("user_agent")
+  ipv4      Int
+  rowAff    Int      @map("row_aff")
+  rowId     Int      @map("row_id")
+  rowData   String?  @map("row_data")
 
-  id         Int      @id @default(autoincrement())
-  url_id     Int
-  action_id  Int
-  critical   Boolean
-  occupier   Int
-  user_id    Int
-  date       DateTime
-  humanize   String?
-  user_agent String
-  ipv4       Int
-  row_aff    Int
-  row_id     Int
-  row_data   String?
-
-
-  @@index([action_id], name: "action")
+  @@index([actionId], name: "action")
   @@index([humanize], name: "humanize")
   @@index([occupier], name: "occupier")
-  @@index([row_aff], name: "row_aff")
-  @@index([row_id], name: "row_id")
-  @@index([url_id, action_id], name: "url_id")
-  @@index([user_id], name: "user_id")
+  @@index([rowAff], name: "rowAff")
+  @@index([rowId], name: "rowId")
+  @@index([urlId, actionId], name: "urlId")
+  @@index([userId], name: "userId")
   @@map("ac_logs")
 }
 
 model AcLogAction {
-  id            Int     @id @default(autoincrement())
-  pabauid       String
-  action_name   String
-  action_status Boolean
-  command       String
-  table_aff     String
-  row_aff       Int
-  row_id        Int
+  id           Int     @id @default(autoincrement())
+  pabauid      String
+  actionName   String  @map("action_name")
+  actionStatus Boolean @map("action_status")
+  command      String
+  tableAff     String  @map("table_aff")
+  rowAff       Int     @map("row_aff")
+  rowId        Int     @map("row_id")
 
-  @@index([action_name], name: "action_name")
-  @@index([action_status], name: "action_status")
+  @@index([actionName], name: "actionName")
+  @@index([actionStatus], name: "actionStatus")
   @@index([command], name: "command")
-  @@index([table_aff], name: "table_aff")
+  @@index([tableAff], name: "tableAff")
   @@map("ac_log_actions")
 }
 
@@ -173,12 +169,12 @@ model Company {
   user             String
   digit8           Int
   admin            Int
-  creation_date    DateTime
+  creationDate     DateTime             @map("creation_date")
   image            String
   slug             String               @unique
-  remote_url       String
-  remote_connect   String
-  cron_enabled     Boolean
+  remoteUrl        String               @map("remote_url")
+  remoteConnect    String               @map("remote_connect")
+  cronEnabled      Boolean              @map("cron_enabled")
   Details          CompanyDetails?
   Subscription     CompanySubscription?
   TwoFactorHistory TwoFactorHistory[]
@@ -191,70 +187,69 @@ model Company {
   CmCampaign       CmCampaign[]
   User             User[]
 
-
   @@map("admin")
 }
 
 model AdvertCampaign {
-  id                Int    @id @default(autoincrement())
-  advert_name       String
-  advert_type       String
-  campaign_budget   String
-  campaign_interval String
-  campaign_audience String
-  campaign_id       Int
-  cid               Int
-  attach_id         Int
-  engagement        String
-  advert_reach      Int
-  Clicks            Int
-  start             String
-  end               String
-  url               String
-  attached_by       String
-  attach_time       String
+  id               Int    @id @default(autoincrement())
+  advertName       String @map("advert_name")
+  advertType       String @map("advert_type")
+  campaignBudget   String @map("campaign_budget")
+  campaignInterval String @map("campaign_interval")
+  campaignAudience String @map("campaign_audience")
+  campaignId       Int    @map("campaign_id")
+  cid              Int
+  attachId         Int    @map("attach_id")
+  engagement       String
+  advertReach      Int    @map("advert_reach")
+  Clicks           Int
+  start            String
+  end              String
+  url              String
+  attachedBy       String @map("attached_by")
+  attachTime       String @map("attach_time")
 
   @@map("advert_campaign")
 }
 
 model ApiDebug {
-  id            Int      @id @default(autoincrement())
-  data_received String
-  company_id    Int
-  api_code      Int
-  created_date  DateTime
-  data_type     String
+  id           Int      @id @default(autoincrement())
+  dataReceived String   @map("data_received")
+  companyId    Int      @map("company_id")
+  apiCode      Int      @map("api_code")
+  createdDate  DateTime @map("created_date")
+  dataType     String   @map("data_type")
 
   @@map("api_debug")
 }
 
 model ApiKey {
-  id            Int      @id @default(autoincrement())
-  company_id    Int
-  api_key       String
-  app_type      String
-  created_date  DateTime
-  contacts      Int      @default(0)
-  bookings      Int      @default(0)
-  invoices      Int      @default(0)
-  locations     Int      @default(0)
-  services      Int      @default(0)
-  staff         Int      @default(0)
-  financials    Int
-  leads         Int
-  medical_forms Int
-  reports       Int      @default(0)
+  id           Int      @id @default(autoincrement())
+  companyId    Int      @map("company_id")
+  apiKey       String   @map("api_key")
+  appType      String   @map("app_type")
+  createdDate  DateTime @map("created_date")
+  contacts     Int      @default(0)
+  bookings     Int      @default(0)
+  invoices     Int      @default(0)
+  locations    Int      @default(0)
+  services     Int      @default(0)
+  staff        Int      @default(0)
+  financials   Int
+  leads        Int
+  medicalForms Int      @map("medical_forms")
+  reports      Int      @default(0)
 
   @@map("api_key")
 }
 
 model AppBeforeAfter {
-  id         Int    @id @default(autoincrement())
-  company_id Int
-  contact_id Int
-  before_img String
-  after_img  String
-  pass_key   String
+  id        Int    @id @default(autoincrement())
+  companyId Int    @map("company_id")
+  contactId Int    @map("contact_id")
+  beforeImg String @map("before_img")
+  afterImg  String @map("after_img")
+  passKey   String @map("pass_key")
 
   @@map("app_before_after")
 }
@@ -271,48 +266,48 @@ model AppPermission {
 
 model AppSubscription {
   id          Int    @id @default(autoincrement())
-  key_value   String
+  keyValue    String @map("key_value")
   name        String
   Description String
   price       Float
 
-  @@index([key_value], name: "key_value")
+  @@index([keyValue], name: "keyValue")
   @@map("app_subscriptions")
 }
 
 model AppSubscriptionsCompanyPrice {
-  id            Int    @id @default(autoincrement())
-  occupier      Int
-  app_key_value String
-  price         Float
+  id          Int    @id @default(autoincrement())
+  occupier    Int
+  appKeyValue String @map("app_key_value")
+  price       Float
 
-  @@index([app_key_value], name: "app_key_value")
+  @@index([appKeyValue], name: "appKeyValue")
   @@map("app_subscriptions_company_prices")
 }
 
 model AttachmentHelperLite {
-  id         Int    @id @default(autoincrement())
-  contact_id Int
-  f          String
-  x          String
-  type       Int
+  id        Int    @id @default(autoincrement())
+  contactId Int    @map("contact_id")
+  f         String
+  x         String
+  type      Int
 
   @@map("attachment_helper_lite")
 }
 
 model AtAnswer {
-  id          Int    @id @default(autoincrement())
-  question_id Int
-  name        String
-  image       String
+  id         Int    @id @default(autoincrement())
+  questionId Int    @map("question_id")
+  name       String
+  image      String
 
   @@map("at_answers")
 }
 
 model SecondAtAnswer {
-  id          Int    @id @default(autoincrement())
-  question_id Int
-  name        String
+  id         Int    @id @default(autoincrement())
+  questionId Int    @map("question_id")
+  name       String
 
   @@map("at_answers2")
 }
@@ -340,100 +335,98 @@ model AtConcern {
 // }
 
 model AtQuestion {
-  id         Int    @id @default(autoincrement())
-  company_id Int
-  name       String
-  order      Int
-  region     String
+  id        Int    @id @default(autoincrement())
+  companyId Int    @map("company_id")
+  name      String
+  order     Int
+  region    String
 
   @@map("at_questions")
 }
 
 model SecondAtQuestion {
-  id         Int    @id @default(autoincrement())
-  company_id Int
-  name       String
-  type       String
+  id        Int    @id @default(autoincrement())
+  companyId Int    @map("company_id")
+  name      String
+  type      String
 
   @@map("at_questions2")
 }
 
 model AtQuestionsRelation {
-  company_id Int
-  answer_id  Int
-  product_id Int
+  companyId Int @map("company_id")
+  answerId  Int @map("answer_id")
+  productId Int @map("product_id")
 
-  @@id([company_id, answer_id, product_id])
+  @@id([companyId, answerId, productId])
   @@map("at_question_relations")
 }
 
 model AtQuizTake {
-  id         Int      @id @default(autoincrement())
-  company_id Int
-  name       String
-  email      String
-  take_date  DateTime
-  answers    String
-  concerns   String
-  answers2   String
-  products   String
-
+  id        Int      @id @default(autoincrement())
+  companyId Int      @map("company_id")
+  name      String
+  email     String
+  takeDate  DateTime @map("take_date")
+  answers   String
+  concerns  String
+  answers2  String
+  products  String
 
   @@map("at_quiz_takes")
 }
 
 model AtSetting {
-  id          Int    @id @default(autoincrement())
-  company_id  Int
-  logo        String
-  background  String
-  font_family String
+  id         Int    @id @default(autoincrement())
+  companyId  Int    @map("company_id")
+  logo       String
+  background String
+  fontFamily String @map("font_family")
 
   @@map("at_settings")
 }
 
 model AtTreatment {
   id          Int    @id @default(autoincrement())
-  company_id  Int
+  companyId   Int    @map("company_id")
   name        String
   image       String
   description String
-
 
   @@map("at_treatments")
 }
 
 model AutomationAction {
-  id          Int    @id @default(autoincrement())
-  trigger_id  Int
-  company     Int
-  code        String
-  action_data String
-  order       Int
+  id         Int    @id @default(autoincrement())
+  triggerId  Int    @map("trigger_id")
+  company    Int
+  code       String
+  actionData String @map("action_data")
+  order      Int
 
   @@index([company], name: "company")
   @@map("automation_actions")
 }
 
 model AutomationDelay {
-  id             Int      @id @default(autoincrement())
-  action_rows    String
-  data_array     String
-  code           String
-  company        Int
-  delay          Int
-  date_queued    DateTime
-  appointment_id Int?
+  id            Int      @id @default(autoincrement())
+  actionRows    String   @map("action_rows")
+  dataArray     String   @map("data_array")
+  code          String
+  company       Int
+  delay         Int
+  dateQueued    DateTime @map("date_queued")
+  appointmentId Int?     @map("appointment_id")
 
   @@index([company], name: "company")
-  @@index([date_queued], name: "date_queued")
+  @@index([dateQueued], name: "dateQueued")
   @@index([delay], name: "delay")
   @@map("automation_delay")
 }
 
 model AutomationFolder {
   id          Int    @id @default(autoincrement())
-  company_id  Int
+  companyId   Int    @map("company_id")
   name        String
   description String
 
@@ -441,48 +434,47 @@ model AutomationFolder {
 }
 
 model AutomationLog {
-  id           Int      @id @default(autoincrement())
-  company      Int
-  date_created DateTime @default(now())
-  message      String
-  parent_id    Int?
-  uid          Int?
+  id          Int      @id @default(autoincrement())
+  company     Int
+  dateCreated DateTime @default(now()) @map("date_created")
+  message     String
+  parentId    Int?     @map("parent_id")
+  uid         Int?
 
   @@map("automation_log")
 }
 
 model AutomationRule {
-  id           Int       @id @default(autoincrement())
-  name         String
-  company      Int
-  active       Boolean   @default(false)
-  source       String
-  date_start   DateTime?
-  date_end     DateTime?
-  description  String
-  needs_config Int
-  folder_id    Int       @default(1)
+  id          Int       @id @default(autoincrement())
+  name        String
+  company     Int
+  active      Boolean   @default(false)
+  source      String
+  dateStart   DateTime? @map("date_start")
+  dateEnd     DateTime? @map("date_end")
+  description String
+  needsConfig Int       @map("needs_config")
+  folderId    Int       @default(1) @map("folder_id")
 
   @@index([active], name: "active")
   @@index([company], name: "company")
-  @@index([date_end], name: "date_end")
-  @@index([date_start], name: "date_start")
+  @@index([dateEnd], name: "dateEnd")
+  @@index([dateStart], name: "dateStart")
   @@map("automation_rules")
 }
 
 model AutomationTrigger {
-  id           Int    @id @default(autoincrement())
-  rule_id      Int
-  name         String
-  company      Int
-  code         String
-  trigger_data String
-  order        Int
-
+  id          Int    @id @default(autoincrement())
+  ruleId      Int    @map("rule_id")
+  name        String
+  company     Int
+  code        String
+  triggerData String @map("trigger_data")
+  order       Int
 
   @@index([code], name: "code")
   @@index([company], name: "company")
-  @@index([rule_id], name: "rule_id")
+  @@index([ruleId], name: "ruleId")
   @@map("automation_triggers")
 }
 
@@ -498,328 +490,325 @@ model AvilableDatesLog {
 }
 
 model BacsAccount {
-  id             Int    @id @default(autoincrement())
-  bank_tag       String
-  comp_id        Int
-  branch_name    String
-  account_holder String
-  account_no     Int
-  sort_code      String
+  id            Int    @id @default(autoincrement())
+  bankTag       String @map("bank_tag")
+  compId        Int    @map("comp_id")
+  branchName    String @map("branch_name")
+  accountHolder String @map("account_holder")
+  accountNo     Int    @map("account_no")
+  sortCode      String @map("sort_code")
 
   @@map("bacs_account")
 }
 
 model Batch {
-  id            Int       @id @default(autoincrement())
-  company_id    Int
-  order_id      Int       @default(0)
-  order_item_id String?
-  batch_no      String
-  qty           Int
-  uid           Int
-  creation_date DateTime
-  expiry_date   DateTime?
+  id           Int       @id @default(autoincrement())
+  companyId    Int       @map("company_id")
+  orderId      Int       @default(0) @map("order_id")
+  orderItemId  String?   @map("order_item_id")
+  batchNo      String    @map("batch_no")
+  qty          Int
+  uid          Int
+  creationDate DateTime  @map("creation_date")
+  expiryDate   DateTime? @map("expiry_date")
 
-  @@index([batch_no], name: "batch_no")
-  @@index([company_id], name: "company_id")
-  @@index([order_id], name: "order_id")
+  @@index([batchNo], name: "batchNo")
+  @@index([companyId], name: "companyId")
+  @@index([orderId], name: "orderId")
   @@map("batches")
 }
 
 model BatchItem {
-  id             Int      @id @default(autoincrement())
-  batch_id       Int
-  company_id     Int
-  product_id     Int
-  usage_date     DateTime
-  patient_id     Int
-  created_by_id  Int
-  qty            Int      @default(0)
-  appointment_id Int
-  batch_flag     Int      @default(0)
+  id            Int      @id @default(autoincrement())
+  batchId       Int      @map("batch_id")
+  companyId     Int      @map("company_id")
+  productId     Int      @map("product_id")
+  usageDate     DateTime @map("usage_date")
+  patientId     Int      @map("patient_id")
+  createdById   Int      @map("created_by_id")
+  qty           Int      @default(0)
+  appointmentId Int      @map("appointment_id")
+  batchFlag     Int      @default(0) @map("batch_flag")
 
   @@map("batch_items")
 }
 
 model BlockReason {
-  id           Int     @id @default(autoincrement())
-  reason_name  String
-  occupier     String
-  is_active    Int
-  block_color  String
-  is_paid      Int
-  default_time String?
-  type         Int     @default(0)
-  custom_id    Int
+  id          Int     @id @default(autoincrement())
+  reasonName  String  @map("reason_name")
+  occupier    String
+  isActive    Int     @map("is_active")
+  blockColor  String  @map("block_color")
+  isPaid      Int     @map("is_paid")
+  defaultTime String? @map("default_time")
+  type        Int     @default(0)
+  customId    Int     @map("custom_id")
 
-  @@index([is_active], name: "is_active")
+  @@index([isActive], name: "isActive")
   @@index([occupier], name: "occupier")
   @@map("block_reason")
 }
 
 model BnfDrug {
-  id                 Int     @id @default(autoincrement())
-  url                String
-  page               String
-  drug_name          String
-  indications_dosage String?
-  contra_indications String?
-  cautions           String?
-  side_effects       String?
-  pregnancy          String?
-  breast_feeding     String?
-  prescribing_info   String?
-  patient_advice     String?
-  directions         String?
-  specific_info      String?
+  id                Int     @id @default(autoincrement())
+  url               String
+  page              String
+  drugName          String  @map("drug_name")
+  indicationsDosage String? @map("indications_dosage")
+  contraIndications String? @map("contra_indications")
+  cautions          String?
+  sideEffects       String? @map("side_effects")
+  pregnancy         String?
+  breastFeeding     String? @map("breast_feeding")
+  prescribingInfo   String? @map("prescribing_info")
+  patientAdvice     String? @map("patient_advice")
+  directions        String?
+  specificInfo      String? @map("specific_info")
 
   @@map("bnf_drugs")
 }
 
 model BodyChartTemplate {
-  id            Int      @id @default(autoincrement())
-  template_name String
-  template_url  String
-  tags          String
-  occupier      Int
-  uid           Int
-  creation_date DateTime @default(now())
-  chart_order   Int      @default(0)
-  template_type Int      @default(1)
+  id           Int      @id @default(autoincrement())
+  templateName String   @map("template_name")
+  templateUrl  String   @map("template_url")
+  tags         String
+  occupier     Int
+  uid          Int
+  creationDate DateTime @default(now()) @map("creation_date")
+  chartOrder   Int      @default(0) @map("chart_order")
+  templateType Int      @default(1) @map("template_type")
 
   @@map("body_chart_templates")
 }
 
 model BookingSetting {
+  id                            Int      @id @default(autoincrement())
+  occupier                      Int
+  emailMode                     Int      @map("email_mode")
+  smsMode                       Int      @map("sms_mode")
+  emailId                       Int?     @map("email_id")
+  emailConfirmId                Int      @map("email_confirm_id")
+  smsId                         Int      @map("sms_id")
+  emailReminderId               Int      @map("email_reminder_id")
+  autoCal                       Int?     @map("auto_cal")
+  autoEmail                     Int?     @map("auto_email")
+  autoSms                       Int?     @map("auto_sms")
+  autoCon                       Int?     @map("auto_con")
+  feedbackMode                  Int      @map("feedback_mode")
+  feedbackId                    Int      @map("feedback_id")
+  smsName                       String   @map("sms_name")
+  feedbackDaysAfter             Int      @map("feedback_days_after")
+  feedbackSendTime              DateTime @map("feedback_sendTime")
+  reminderMode                  Int      @map("reminder_mode")
+  daysBefore                    Int      @default(0) @map("days_before")
+  sendTime                      DateTime @map("sendTime")
+  smsDaysBefore                 Int      @map("sms_daysBefore")
+  smsSendTime                   DateTime @map("sms_sendTime")
+  classSmsDaysBefore            Int      @map("class_sms_daysBefore")
+  classSmsSendTime              DateTime @map("class_sms_sendTime")
+  roomSupport                   Int      @default(0) @map("room_support")
+  feedbackFromemail             String   @map("feedback_fromemail")
+  confirmFromemail              String   @map("confirm_fromemail")
+  smsFrom                       String?  @map("sms_from")
+  reminderFromemail             String   @map("reminder_fromemail")
+  sendSms                       Int      @map("send_sms")
+  sendEmail                     Int      @map("send_email")
+  sendReminder                  Int      @map("send_reminder")
+  sendFeedback                  Int      @map("send_feedback")
+  attachInvoice                 Int      @map("attach_invoice")
+  startTime                     String   @map("start_time")
+  endTime                       String   @map("end_time")
+  bookingEmails                 String   @map("booking_emails")
+  slotInterval                  Int      @default(15) @map("slot_interval")
+  fontColor                     String   @map("font_color")
+  disableSecondCal              Int      @map("disable_second_cal")
+  fontSize                      Int      @default(13) @map("font_size")
+  disableTime                   Int      @map("disable_time")
+  lockTimer                     Int      @default(120) @map("lock_timer")
+  disableSurname                Int      @map("disable_surname")
+  arrivedColor                  String   @default("#FF0000") @map("arrived_color")
+  completeColor                 String   @default("#00ff00") @map("complete_color")
+  cancelSmsNotify               Int      @map("cancel_sms_notify")
+  cancelEmailNotify             Int      @default(1) @map("cancel_email_notify")
+  rescheduleSmsNotify           Int      @map("reschedule_sms_notify")
+  rescheduleEmailNotify         Int      @default(1) @map("reschedule_email_notify")
+  noshowEmailNotify             Int      @map("noshow_email_notify")
+  classNoshowEmailNotify        Int      @map("class_noshowEmailNotify")
+  classRescheduleEmailNotify    Int      @map("class_rescheduleEmailNotify")
+  classReminderEmailNotify      Int      @map("class_reminder_email_notify")
+  classNoshowSmsNotify          Int      @map("class_noshowSmsNotify")
+  classRescheduleSmsNotify      Int      @map("class_rescheduleSmsNotify")
+  classReminderSmsNotify        Int      @map("class_reminder_sms_notify")
+  noshowSmsNotify               Int      @map("noshow_sms_notify")
+  locationSupport               Int      @default(1) @map("location_support")
+  noshowCount                   Int      @default(3) @map("noshow_count")
+  rescheduleSmsFrom             String   @map("reschedule_smsFrom")
+  rescheduleSmsTmpl             Int      @map("reschedule_sms_tmpl")
+  rescheduleEmailFrom           String   @map("reschedule_email_from")
+  rescheduleEmailTmpl           Int      @map("reschedule_email_tmpl")
+  cancelSmsFrom                 String   @map("cancel_smsFrom")
+  cancelSmsTmpl                 Int      @map("cancel_sms_tmpl")
+  cancelEmailFrom               String   @map("cancel_email_from")
+  cancelEmailTmpl               Int      @map("cancel_email_tmpl")
+  smsConfirmId                  Int      @map("sms_confirm_id")
+  noshowEmailFrom               String   @map("noshow_email_from")
+  noshowEmailTmpl               Int      @map("noshow_email_tmpl")
+  classNoshowEmailTmpl          Int      @map("class_noshowEmailTmpl")
+  classRescheduleEmailTmpl      Int      @map("class_rescheduleEmailTmpl")
+  classReminderEmailTmpl        Int      @map("class_reminder_email_tmpl")
+  classNoshowSmsTmpl            Int      @map("class_noshowSmsTmpl")
+  classRescheduleSmsTmpl        Int      @map("class_rescheduleSmsTmpl")
+  classReminderSmsTmpl          Int      @map("class_reminder_sms_tmpl")
+  noshowSmsFrom                 String   @map("noshow_smsFrom")
+  noshowSmsTmpl                 Int      @map("noshow_sms_tmpl")
+  columnTotal                   Int      @map("column_total")
+  tooltipHead                   String   @default("full_name") @map("tooltip_head")
+  tooltipBody                   String   @default("[\"service_name\",\"employee\",\"appt_duration\",\"created_by\",\"modifiedBy\",\"appt_note\"]") @map("tooltip_body")
+  apptHead                      String   @default("full_name") @map("appt_head")
+  apptBody                      String   @default("[\"service_name\",\"appt_loc\",\"appt_note\"]") @map("appt_body")
+  holidayResetDate              Int?     @map("holiday_reset_date")
+  holidayUsualDay               String?  @map("holiday_usual_day")
+  holidayPerMonth               String?  @map("holiday_per_month")
+  holidayDefault                String?  @map("holiday_default")
+  groupBookingChangeEmailEnable Int?     @map("group_booking_change_email_enable")
+  groupBookingChangeTemplateId  Int?     @map("group_booking_change_template_id")
+  groupBookingCancelEmailEnable Boolean  @map("group_booking_cancel_email_enable")
+  groupBookingCancelTemplateId  Int      @map("group_booking_cancel_template_id")
+  packageUsedEmailEnable        Int      @map("package_used_email_enable")
+  packageUsedTemplateId         Int      @map("package_used_template_id")
+  disableIcs                    Int?     @default(0) @map("disable_ics")
+  initials                      Int      @default(0)
+  disableServiceFilter          Int      @default(0) @map("disable_service_filter")
+  disableBookByPackage          Int      @default(0) @map("disable_book_by_package")
+  allowOverlappingAppts         Int      @default(0) @map("allow_overlapping_appts")
+  modifiedBy                    Int      @map("modified_by")
+  modifiedDate                  DateTime @map("modified_date")
+  conferenceReminderId          Int?     @map("conference_reminder_id")
 
-  id                                Int      @id @default(autoincrement())
-  occupier                          Int
-  email_mode                        Int
-  sms_mode                          Int
-  email_id                          Int?
-  email_confirm_id                  Int
-  sms_id                            Int
-  email_reminder_id                 Int
-  auto_cal                          Int?
-  auto_email                        Int?
-  auto_sms                          Int?
-  auto_con                          Int?
-  feedback_mode                     Int
-  feedback_id                       Int
-  sms_name                          String
-  feedback_days_after               Int
-  feedback_send_time                DateTime
-  reminder_mode                     Int
-  days_before                       Int      @default(0)
-  send_time                         DateTime
-  sms_days_before                   Int
-  sms_send_time                     DateTime
-  class_sms_days_before             Int
-  class_sms_send_time               DateTime
-  room_support                      Int      @default(0)
-  feedback_fromemail                String
-  confirm_fromemail                 String
-  sms_from                          String?
-  reminder_fromemail                String
-  send_sms                          Int
-  send_email                        Int
-  send_reminder                     Int
-  send_feedback                     Int
-  attach_invoice                    Int
-  start_time                        String
-  end_time                          String
-  booking_emails                    String
-  slot_interval                     Int      @default(15)
-  font_color                        String
-  disable_second_cal                Int
-  font_size                         Int      @default(13)
-  disable_time                      Int
-  lock_timer                        Int      @default(120)
-  disable_surname                   Int
-  arrived_color                     String   @default("#FF0000")
-  complete_color                    String   @default("#00ff00")
-  cancel_sms_notify                 Int
-  cancel_email_notify               Int      @default(1)
-  reschedule_sms_notify             Int
-  reschedule_email_notify           Int      @default(1)
-  noshow_email_notify               Int
-  class_noshow_email_notify         Int
-  class_reschedule_email_notify     Int
-  class_reminder_email_notify       Int
-  class_noshow_sms_notify           Int
-  class_reschedule_sms_notify       Int
-  class_reminder_sms_notify         Int
-  noshow_sms_notify                 Int
-  location_support                  Int      @default(1)
-  noshow_count                      Int      @default(3)
-  reschedule_sms_from               String
-  reschedule_sms_tmpl               Int
-  reschedule_email_from             String
-  reschedule_email_tmpl             Int
-  cancel_sms_from                   String
-  cancel_sms_tmpl                   Int
-  cancel_email_from                 String
-  cancel_email_tmpl                 Int
-  sms_confirm_id                    Int
-  noshow_email_from                 String
-  noshow_email_tmpl                 Int
-  class_noshow_email_tmpl           Int
-  class_reschedule_email_tmpl       Int
-  class_reminder_email_tmpl         Int
-  class_noshow_sms_tmpl             Int
-  class_reschedule_sms_tmpl         Int
-  class_reminder_sms_tmpl           Int
-  noshow_sms_from                   String
-  noshow_sms_tmpl                   Int
-  column_total                      Int
-  tooltip_head                      String   @default("full_name")
-  tooltip_body                      String   @default("[\"service_name\",\"employee\",\"appt_duration\",\"created_by\",\"modified_by\",\"appt_note\"]")
-  appt_head                         String   @default("full_name")
-  appt_body                         String   @default("[\"service_name\",\"appt_loc\",\"appt_note\"]")
-  holiday_reset_date                Int?
-  holiday_usual_day                 String?
-  holiday_per_month                 String?
-  holiday_default                   String?
-  group_booking_change_email_enable Int?
-  group_booking_change_template_id  Int?
-  group_booking_cancel_email_enable Boolean
-  group_booking_cancel_template_id  Int
-  package_used_email_enable         Int
-  package_used_template_id          Int
-  disable_ics                       Int?     @default(0)
-  initials                          Int      @default(0)
-  disable_service_filter            Int      @default(0)
-  disable_book_by_package           Int      @default(0)
-  allow_overlapping_appts           Int      @default(0)
-  modified_by                       Int
-  modified_date                     DateTime
-  conference_reminder_id            Int?
-
-  @@index([email_id], name: "email_id")
-  @@index([email_reminder_id], name: "email_reminder_id")
+  @@index([emailId], name: "emailId")
+  @@index([emailReminderId], name: "emailReminderId")
   @@index([occupier], name: "occupier")
   @@map("bookings_settings")
 }
 
 model BookingMaster {
-  id             Int                           @id @default(autoincrement())
-  class_id       String
-  user_id        String
-  booking_date   String?
-  payment_status booking_master_payment_status
-  cancel_status  booking_master_cancel_status
-  cancel_date    String
-  company_id     String
-  class_currency String?
-  class_price    String?
-  checked_in     Int
-  payed_by       String
-  waiting        Int
+  id            Int                           @id @default(autoincrement())
+  classId       String                        @map("class_id")
+  userId        String                        @map("user_id")
+  bookingDate   String?                       @map("booking_date")
+  paymentStatus booking_master_payment_status @map("payment_status")
+  cancelStatus  booking_master_cancel_status  @map("cancel_status")
+  cancelDate    String                        @map("cancel_date")
+  companyId     String                        @map("company_id")
+  classCurrency String?                       @map("class_currency")
+  classPrice    String?                       @map("class_price")
+  checkedIn     Int                           @map("checked_in")
+  payedBy       String                        @map("payed_by")
+  waiting       Int
 
-  @@index([class_id], name: "class_id")
-  @@index([user_id], name: "user_id")
+  @@index([classId], name: "classId")
+  @@index([userId], name: "userId")
   @@map("booking_master")
 }
 
 model BookingStatus {
+  id         Int                         @id @default(autoincrement())
+  name       String
+  value      String
+  icon       String
+  iconColor  String                      @map("icon_color")
+  companyId  Int                         @map("company_id")
+  indicator  booking_statuses_indicator? @default(EMPTY_ENUM_VALUE)
+  basicField Boolean                     @map("basic_field")
+  ord        Float
+  trackTime  Boolean                     @default(false) @map("track_time")
 
-  id          Int                         @id @default(autoincrement())
-  name        String
-  value       String
-  icon        String
-  icon_color  String
-  company_id  Int
-  indicator   booking_statuses_indicator? @default(EMPTY_ENUM_VALUE)
-  basic_field Boolean
-  ord         Float
-  track_time  Boolean                     @default(false)
-
-  @@unique([value, company_id], name: "value")
+  @@unique([value, companyId], name: "value")
   @@map("booking_statuses")
 }
 
 model BookingStatusChange {
-  id         Int       @id @default(autoincrement())
-  booking_id Int
-  status     String
-  start_date DateTime
-  end_date   DateTime?
-  company_id Int
-  user_id    Int
+  id        Int       @id @default(autoincrement())
+  bookingId Int       @map("booking_id")
+  status    String
+  startDate DateTime  @map("start_date")
+  endDate   DateTime? @map("end_date")
+  companyId Int       @map("company_id")
+  userId    Int       @map("user_id")
 
-  @@index([booking_id], name: "booking_id")
+  @@index([bookingId], name: "bookingId")
   @@index([status], name: "status")
   @@map("booking_status_changes")
 }
 
 model BookitProGeneral {
-
-  id                         Int                                   @id @default(autoincrement())
-  occupier                   String
-  advance_time               String
-  enable_payments            String
-  paypal_address             String
-  receive_email              String
-  create_invoice             String
-  deposit                    Float
-  show_prices                String
-  show_duration              String
-  show_description           Boolean                               @default(false)
-  header_color               String
-  booking_emails             String
-  online_color               String
-  warning_message            String
-  allow_cancel               Int
-  disable_facebook           Int
-  interval                   Int                                   @default(15)
-  disable_extra_information  Int
-  coupon_active              Int
-  payment_api_url            String
-  account_deposit            Float
-  replace_job_titles         Int
-  hide_facebook_share        Int
-  enable_bookings            Int
-  default_payment            String                                @default("Card")
-  registration_optional      Int
-  consultations_only         Boolean?                              @default(false)
-  only_existing              Boolean                               @default(false)
-  stripe_reciever            Int
-  stripe_public_key          String
-  stripe_private_key         String
-  offline_message            String
-  disable_locations          Int
-  theme                      String                                @default("classic")
-  promo_codes                Boolean                               @default(true)
-  terms_conditions           String
-  ga_analytics               String
-  gt_manager                 String?
-  fb_code                    String
-  fb_event                   String
-  doc_shared_template        Int
-  classes_email_confirm      Int
-  sage_vendor                String
-  sage_username              String
-  sage_password              String
-  gc_public_key              String
-  gc_private_key             String
-  enable_title               Int?                                  @default(0)
-  group_by_region            Boolean                               @default(false)
-  use_new_connect            Boolean                               @default(false)
-  disable_reviews            Int
-  allow_rating               Boolean                               @default(true)
-  show_cat_photos            Boolean                               @default(true)
-  class_columns              String
-  no_vat_prices              Boolean                               @default(false)
-  integration_method         bookitpro_general_integration_method?
-  rolling_deposit            Int
-  one_touch_book             Boolean                               @default(false)
-  new_stripe                 Int                                   @default(1)
-  enable_master_cat          Boolean                               @default(true)
-  stripe_fee                 Float                                 @default(1.00)
-  reccuring_search_btn       String                                @default("default")
-  force_new_existing_patient Boolean                               @default(false)
-  redirect_url               String
-  connect_url                String?
+  id                      Int                                   @id @default(autoincrement())
+  occupier                String
+  advanceTime             String                                @map("advance_time")
+  enablePayments          String                                @map("enable_payments")
+  paypalAddress           String                                @map("paypal_address")
+  receiveEmail            String                                @map("receive_email")
+  createInvoice           String                                @map("create_invoice")
+  deposit                 Float
+  showPrices              String                                @map("show_prices")
+  showDuration            String                                @map("show_duration")
+  showDescription         Boolean                               @default(false) @map("show_description")
+  headerColor             String                                @map("header_color")
+  bookingEmails           String                                @map("booking_emails")
+  onlineColor             String                                @map("online_color")
+  warningMessage          String                                @map("warning_message")
+  allowCancel             Int                                   @map("allow_cancel")
+  disableFacebook         Int                                   @map("disable_facebook")
+  interval                Int                                   @default(15)
+  disableExtraInformation Int                                   @map("disable_extra_information")
+  couponActive            Int                                   @map("coupon_active")
+  paymentApiUrl           String                                @map("payment_api_url")
+  accountDeposit          Float                                 @map("account_deposit")
+  replaceJobTitles        Int                                   @map("replace_job_titles")
+  hideFacebookShare       Int                                   @map("hide_facebook_share")
+  enableBookings          Int                                   @map("enable_bookings")
+  defaultPayment          String                                @default("Card") @map("default_payment")
+  registrationOptional    Int                                   @map("registration_optional")
+  consultationsOnly       Boolean?                              @default(false) @map("consultations_only")
+  onlyExisting            Boolean                               @default(false) @map("only_existing")
+  stripeReciever          Int                                   @map("stripe_reciever")
+  stripePublicKey         String                                @map("stripe_public_key")
+  stripePrivateKey        String                                @map("stripe_private_key")
+  offlineMessage          String                                @map("offline_message")
+  disableLocations        Int                                   @map("disable_locations")
+  theme                   String                                @default("classic")
+  promoCodes              Boolean                               @default(true) @map("promo_codes")
+  termsConditions         String                                @map("terms_conditions")
+  gaAnalytics             String                                @map("ga_analytics")
+  gtManager               String?                               @map("gt_manager")
+  fbCode                  String                                @map("fb_code")
+  fbEvent                 String                                @map("fb_event")
+  docSharedTemplate       Int                                   @map("doc_shared_template")
+  classesEmailConfirm     Int                                   @map("classes_email_confirm")
+  sageVendor              String                                @map("sage_vendor")
+  sageUsername            String                                @map("sage_username")
+  sagePassword            String                                @map("sage_password")
+  gcPublicKey             String                                @map("gc_public_key")
+  gcPrivateKey            String                                @map("gc_private_key")
+  enableTitle             Int?                                  @default(0) @map("enable_title")
+  groupByRegion           Boolean                               @default(false) @map("group_by_region")
+  useNewConnect           Boolean                               @default(false) @map("use_new_connect")
+  disableReviews          Int                                   @map("disable_reviews")
+  allowRating             Boolean                               @default(true) @map("allow_rating")
+  showCatPhotos           Boolean                               @default(true) @map("show_cat_photos")
+  classColumns            String                                @map("class_columns")
+  noVatPrices             Boolean                               @default(false) @map("no_vat_prices")
+  integrationMethod       bookitpro_general_integration_method? @map("integration_method")
+  rollingDeposit          Int                                   @map("rolling_deposit")
+  oneTouchBook            Boolean                               @default(false) @map("one_touch_book")
+  newStripe               Int                                   @default(1) @map("new_stripe")
+  enableMasterCat         Boolean                               @default(true) @map("enable_master_cat")
+  stripeFee               Float                                 @default(1.00) @map("stripe_fee")
+  reccuringSearchBtn      String                                @default("default") @map("reccuring_search_btn")
+  forceNewExistingPatient Boolean                               @default(false) @map("force_new_existing_patient")
+  redirectUrl             String                                @map("redirect_url")
+  connectUrl              String?                               @map("connect_url")
 
   @@map("bookitpro_general")
 }
@@ -847,11 +836,11 @@ model BookmarkedPage {
 }
 
 model BugLog {
-  id          Int    @id @default(autoincrement())
-  bug_message String
-  datetime    Int
-  uid         Int
-  related_id  Int
+  id         Int    @id @default(autoincrement())
+  bugMessage String @map("bug_message")
+  datetime   Int
+  uid        Int
+  relatedId  Int    @map("related_id")
 
   @@map("bug_log")
 }
@@ -859,7 +848,7 @@ model BugLog {
 model CalendarView {
   id                     Int    @id @default(autoincrement())
   occupier               Int
-  user_id                Int
+  userId                 Int    @map("user_id")
   viewMode               String
   dayViewMode            String
   employeesViewMode      String
@@ -870,541 +859,533 @@ model CalendarView {
   serviceGroupsViewMode  String
   servicesViewMode       String
   appointmentSize        Int    @default(15)
-  favorite_name          String
-  favorite_shared        Int    @default(0)
+  favoriteName           String @map("favorite_name")
+  favoriteShared         Int    @default(0) @map("favorite_shared")
   favorite               Int    @default(0)
-  favorite_id            Int    @default(-1)
+  favoriteId             Int    @default(-1) @map("favorite_id")
 
   @@index([occupier], name: "occupier")
-  @@index([user_id], name: "user_id")
+  @@index([userId], name: "userId")
   @@map("calendar_views")
 }
 
 model CalRangeRequest {
-  id         Int      @id @default(autoincrement())
-  minutes    Int
-  company_id Int
-  start_date DateTime
-  end_date   DateTime
+  id        Int      @id @default(autoincrement())
+  minutes   Int
+  companyId Int      @map("company_id")
+  startDate DateTime @map("start_date")
+  endDate   DateTime @map("end_date")
 
   @@map("cal_range_requests")
 }
 
 model CampaignAttachment {
-  id               Int    @id @default(autoincrement())
-  campaign_id      Int
-  occupier         Int
-  attach_time      String
-  attach_user_name String
-  attachment_type  String
-  attach_id        Int
+  id             Int    @id @default(autoincrement())
+  campaignId     Int    @map("campaign_id")
+  occupier       Int
+  attachTime     String @map("attach_time")
+  attachUserName String @map("attach_user_name")
+  attachmentType String @map("attachment_type")
+  attachId       Int    @map("attach_id")
 
   @@map("campaign_attachments")
 }
 
 model CancellationPolicy {
-  id                        Int       @id @default(autoincrement())
-  is_active                 Int
-  policy_type               Int       @default(0)
-  policy_action             Int
-  policy_value              Float     @default(0.00)
-  policy_notice             String
-  policy_message            String?
-  policy_override           Int
-  payment_protection        Int
-  advanced_cancellation_fee Int
-  no_show_fee               Int
-  occupier                  Int
-  creation_date             DateTime?
-  modified_date             DateTime?
+  id                      Int       @id @default(autoincrement())
+  isActive                Int       @map("is_active")
+  policyType              Int       @default(0) @map("policy_type")
+  policyAction            Int       @map("policy_action")
+  policyValue             Float     @default(0.00) @map("policy_value")
+  policyNotice            String    @map("policy_notice")
+  policyMessage           String?   @map("policy_message")
+  policyOverride          Int       @map("policy_override")
+  paymentProtection       Int       @map("payment_protection")
+  advancedCancellationFee Int       @map("advanced_cancellation_fee")
+  noShowFee               Int       @map("no_show_fee")
+  occupier                Int
+  creationDate            DateTime? @map("creation_date")
+  modifiedDate            DateTime? @map("modified_date")
 
   @@map("cancellation_policy")
 }
 
 model MarketingSource {
-  id         Int     @id @default(autoincrement())
-  name       String  @map("source_name")
-  company_id Int     @map("occupier")
-  custom_id  Int
-  isActive   Int     @map("public")
-  imported   Int
-  company    Company @relation(fields: [company_id], references: [id])
+  id        Int     @id @default(autoincrement())
+  name      String  @map("source_name")
+  companyId Int     @map("occupier")
+  customId  Int     @map("custom_id")
+  isActive  Int     @map("public")
+  imported  Int
+  company   Company @relation(fields: [companyId], references: [id])
 
-
-  @@index([company_id], name: "company_id")
+  @@index([companyId], name: "companyId")
   @@index([isActive], name: "public")
   @@index([name], name: "source_name")
   @@map("marketing_sources")
 }
 
 model MediaLlibraryAttachments {
-  id                      Int      @id @default(autoincrement())
-  file_url                String
-  company_id              Int
-  contact_id              Int
-  communication_id        Int      @default(0)
-  medical_form_contact_id Int      @default(0)
-  contact_attachment_id   Int      @default(0)
-  sales_id                Int      @default(0)
-  statement_id            Int      @default(0)
-  creation_date           DateTime
+  id                   Int      @id @default(autoincrement())
+  fileUrl              String   @map("file_url")
+  companyId            Int      @map("company_id")
+  contactId            Int      @map("contact_id")
+  communicationId      Int      @default(0) @map("communication_id")
+  medicalFormContactId Int      @default(0) @map("medical_form_contact_id")
+  contactAttachmentId  Int      @default(0) @map("contact_attachment_id")
+  salesId              Int      @default(0) @map("sales_id")
+  statementId          Int      @default(0) @map("statement_id")
+  creationDate         DateTime @map("creation_date")
 
-
-  @@index([communication_id], name: "communication_id")
-  @@index([company_id], name: "company_id")
-  @@index([contact_attachment_id], name: "contact_attachment_id")
-  @@index([contact_id], name: "contact_id")
-  @@index([medical_form_contact_id], name: "medical_form_contact_id")
-  @@index([sales_id], name: "sales_id")
+  @@index([communicationId], name: "communicationId")
+  @@index([companyId], name: "companyId")
+  @@index([contactAttachmentId], name: "contactAttachmentId")
+  @@index([contactId], name: "contactId")
+  @@index([medicalFormContactId], name: "medical_form_contact_id")
+  @@index([salesId], name: "salesId")
   @@map("media_library_attachments")
 }
 
 model CancelReason {
-  id                        Int      @id @default(autoincrement())
-  reason_name               String
-  occupier                  String
-  late_cancel               Int
-  apply_cancellation_policy Int
-  created_at                DateTime
-  modified_at               DateTime
-
+  id                      Int      @id @default(autoincrement())
+  reasonName              String   @map("reason_name")
+  occupier                String
+  lateCancel              Int      @map("late_cancel")
+  applyCancellationPolicy Int      @map("apply_cancellation_policy")
+  createdAt               DateTime @map("created_at")
+  modifiedAt              DateTime @map("modified_at")
 
   @@index([occupier], name: "occupier")
   @@map("cancel_reason")
 }
 
 model candidate {
-  id               Int      @id @default(autoincrement())
-  contact_id       Int
-  created_date     DateTime
-  opening_id       Int
-  rating           Int      @default(1)
-  candidate_status String?  @default("WAITING")
-  job_references   String
-  how_heard        String
-  referred_by      String
-  cover_letter     String
-  resume           String
-  date_available   DateTime
-  linkedin         String
-  company_id       Int
+  id              Int      @id @default(autoincrement())
+  contactId       Int      @map("contact_id")
+  createdDate     DateTime @map("created_date")
+  openingId       Int      @map("opening_id")
+  rating          Int      @default(1)
+  candidateStatus String?  @default("WAITING") @map("candidate_status")
+  jobReferences   String   @map("job_references")
+  howHeard        String   @map("how_heard")
+  referredBy      String   @map("referred_by")
+  coverLetter     String   @map("cover_letter")
+  resume          String
+  dateAvailable   DateTime @map("date_available")
+  linkedin        String
+  companyId       Int      @map("company_id")
 }
 
 model CardTypes {
-  id                       Int   @id @default(autoincrement())
-  company_id               Int
-  mastercard               Int
-  visa                     Int
-  amex                     Int
-  visa_credit              Int
-  maestro                  Int
-  worldpay                 Int
-  visa_credit_charge       Float
-  amex_credit_charge       Float
-  mastercard_credit_charge Float
-  enable_reference         Int
+  id                     Int   @id @default(autoincrement())
+  companyId              Int   @map("company_id")
+  mastercard             Int
+  visa                   Int
+  amex                   Int
+  visaCredit             Int   @map("visa_credit")
+  maestro                Int
+  worldpay               Int
+  visaCreditCharge       Float @map("visaCredit_charge")
+  amexCreditCharge       Float @map("amex_credit_charge")
+  mastercardCreditCharge Float @map("mastercard_credit_charge")
+  enableReference        Int   @map("enable_reference")
 
-  @@index([company_id], name: "company_id")
+  @@index([companyId], name: "companyId")
   @@map("card_types")
 }
 
 model CashupReport {
-  id                     Int      @id @default(autoincrement())
-  company_id             Int
-  staff_id               Int
-  location_id            Int      @default(0)
-  float_amount           Float
-  opening_balance        Float
-  cash_amount            Float
-  cash_actual            Float
-  cash_difference        Float
-  cheque_amount          Float
-  cheque_actual          Float
-  cheque_difference      Float
-  card_amount            Float
-  card_actual            Float
-  card_difference        Float
-  giftvoucher_amount     Float
-  giftvoucher_actual     Float
-  giftvoucher_difference Float
-  comments               String
-  cashup_date            DateTime
-  finance_id             Int
+  id                    Int      @id @default(autoincrement())
+  companyId             Int      @map("company_id")
+  staffId               Int      @map("staff_id")
+  locationId            Int      @default(0) @map("location_id")
+  floatAmount           Float    @map("float_amount")
+  openingBalance        Float    @map("opening_balance")
+  cashAmount            Float    @map("cash_amount")
+  cashActual            Float    @map("cash_actual")
+  cashDifference        Float    @map("cash_difference")
+  chequeAmount          Float    @map("cheque_amount")
+  chequeActual          Float    @map("cheque_actual")
+  chequeDifference      Float    @map("cheque_difference")
+  cardAmount            Float    @map("card_amount")
+  cardActual            Float    @map("card_actual")
+  cardDifference        Float    @map("card_difference")
+  giftvoucherAmount     Float    @map("giftvoucher_amount")
+  giftvoucherActual     Float    @map("giftvoucher_actual")
+  giftvoucherDifference Float    @map("giftvoucher_difference")
+  comments              String
+  cashupDate            DateTime @map("cashup_date")
+  financeId             Int      @map("finance_id")
 
-  @@index([cashup_date], name: "cashup_date")
+  @@index([cashupDate], name: "cashupDate")
   @@map("cashup_report")
 }
 
 model CashupReportCustom {
-  id                Int      @id @default(autoincrement())
-  company_id        String
-  location_id       Int      @default(0)
-  cashup_date       DateTime
-  custom_type       String
-  custom_amount     Float
-  custom_actual     Float
-  custom_difference Float
-  card_type         String
-
+  id               Int      @id @default(autoincrement())
+  companyId        String   @map("company_id")
+  locationId       Int      @default(0) @map("location_id")
+  cashupDate       DateTime @map("cashup_date")
+  customType       String   @map("custom_type")
+  customAmount     Float    @map("custom_amount")
+  customActual     Float    @map("custom_actual")
+  customDifference Float    @map("custom_difference")
+  cardType         String   @map("card_type")
 
   @@map("cashup_report_custom")
 }
 
 model CheckinAppt {
-  id          Int    @id @default(autoincrement())
-  appt_id     Int
-  spotify_uri String
+  id         Int    @id @default(autoincrement())
+  apptId     Int    @map("appt_id")
+  spotifyUri String @map("spotify_uri")
 
   @@map("checkin_appts")
 }
 
 model CheckinAverages {
-  id               Int @id @default(autoincrement())
-  uid              Int
-  product_id       Int
-  avg_time_seconds Int
+  id             Int @id @default(autoincrement())
+  uid            Int
+  productId      Int @map("product_id")
+  avgTimeSeconds Int @map("avg_time_seconds")
 
-  @@index([product_id], name: "product_id")
+  @@index([productId], name: "productId")
   @@index([uid], name: "uid")
-  @@index([uid, product_id], name: "uid_product")
+  @@index([uid, productId], name: "uid_product")
   @@map("checkin_averages")
 }
 
 model CheckinAveragesIdle {
-  id                    Int    @id @default(autoincrement())
-  username              String @unique
-  uid                   Int
-  avg                   Float?
-  retailutilisation_avg Float?
+  id                   Int    @id @default(autoincrement())
+  username             String @unique
+  uid                  Int
+  avg                  Float?
+  retailutilisationAvg Float? @map("retailutilisation_avg")
 
   @@map("checkin_averages_idle")
 }
 
 model CheckinProduct {
-  id             Int       @id @default(autoincrement())
-  queue_id       Int
-  product_id     Int
-  date_start     DateTime?
-  date_end       DateTime?
-  inv_product_id Int       @default(0)
+  id           Int       @id @default(autoincrement())
+  queueId      Int       @map("queue_id")
+  productId    Int       @map("product_id")
+  dateStart    DateTime? @map("date_start")
+  dateEnd      DateTime? @map("date_end")
+  invProductId Int       @default(0) @map("inv_productId")
 
-
-  @@index([queue_id], name: "queue_id")
+  @@index([queueId], name: "queueId")
   @@map("checkin_products")
 }
 
 model CheckinQueue {
-  id            Int       @id @default(autoincrement())
-  uid           Int
-  been_before   Boolean
-  date_start    DateTime
-  accepted      Boolean   @default(false)
-  is_lunch      Boolean   @default(false)
-  name          String
-  date_accepted DateTime?
-  date_end      DateTime?
-  was_anyone    Boolean
-  finalise      Boolean?
-  sms_number    String?
-  sms_sent      DateTime?
-  sms_wanted    Boolean?
-  skips         Int       @default(0)
-  connect_id    Int?
-  order         Int
-  spotify_uri   String?
-  date_binned   DateTime?
-
+  id           Int       @id @default(autoincrement())
+  uid          Int
+  beenBefore   Boolean   @map("been_before")
+  dateStart    DateTime  @map("date_start")
+  accepted     Boolean   @default(false)
+  isLunch      Boolean   @default(false) @map("is_lunch")
+  name         String
+  dateAccepted DateTime? @map("date_accepted")
+  dateEnd      DateTime? @map("date_end")
+  wasAnyone    Boolean   @map("was_anyone")
+  finalise     Boolean?
+  smsNumber    String?   @map("sms_number")
+  smsSent      DateTime? @map("sms_sent")
+  smsWanted    Boolean?  @map("sms_wanted")
+  skips        Int       @default(0)
+  connectId    Int?      @map("connect_id")
+  order        Int
+  spotifyUri   String?   @map("spotify_uri")
+  dateBinned   DateTime? @map("date_binned")
 
   @@index([accepted], name: "accepted")
-  @@index([date_accepted], name: "date_accepted")
-  @@index([date_end], name: "date_end")
-  @@index([date_start], name: "date_start")
+  @@index([dateAccepted], name: "dateAccepted")
+  @@index([dateEnd], name: "dateEnd")
+  @@index([dateStart], name: "dateStart")
   @@index([finalise], name: "finalise")
   @@index([uid], name: "uid")
   @@map("checkin_queue")
 }
 
 model ClasstypeMaster {
-  ctype_id                Int     @id @default(autoincrement())
-  ctype_name              String?
-  ctype_compid            String
-  ctype_date              String
-  ctype_color             String
-  ctype_description       String
-  payment_option_disabled Int
-  credit_option_disabled  Int
+  ctypeId               Int     @id @default(autoincrement()) @map("ctype_id")
+  ctypeName             String? @map("ctype_name")
+  ctypeCompid           String  @map("ctype_compid")
+  ctypeDate             String  @map("ctype_date")
+  ctypeColor            String  @map("ctype_color")
+  ctypeDescription      String  @map("ctype_description")
+  paymentOptionDisabled Int     @map("payment_option_disabled")
+  creditOptionDisabled  Int     @map("credit_option_disabled")
 
   @@map("classtype_master")
 }
 
 model ClassCategories {
-  id            Int       @id @default(autoincrement())
-  code          String
-  name          String
-  occupier      Int?
-  uid           Int?
-  created_date  DateTime?
-  modified_date DateTime?
+  id           Int       @id @default(autoincrement())
+  code         String
+  name         String
+  occupier     Int?
+  uid          Int?
+  createdDate  DateTime? @map("created_date")
+  modifiedDate DateTime? @map("modified_date")
 
   @@map("class_categories")
 }
 
 model ClassGuests {
-  id            Int    @id @default(autoincrement())
-  guest_name    String
-  signing_date  Int
-  class_id      Int
-  company_id    Int
-  cancel_status Int
-  mobile        String
+  id           Int    @id @default(autoincrement())
+  guestName    String @map("guest_name")
+  signingDate  Int    @map("signing_date")
+  classId      Int    @map("class_id")
+  companyId    Int    @map("company_id")
+  cancelStatus Int    @map("cancel_status")
+  mobile       String
 
   @@map("class_guests")
 }
 
 model ClassMaster {
-  c_id              Int                     @id @default(autoincrement())
-  c_companyid       Int?
-  c_type            Int?
-  c_teacher         Int?
-  c_location        Int?
-  c_room            Int?
-  c_slots           String?
-  c_price           Float?
-  c_date            String?
-  c_time            String?
-  c_duration        String?
-  c_day             String?
-  c_exptime         String?
-  c_book            String?
-  c_empty           String?
-  c_formattime      String?
-  c_startformattime String?
-  class_pay         class_master_class_pay?
-  cancel_status     Int
-  product_id        Int
-  sign_in_type      String
+  cId              Int                     @id @default(autoincrement()) @map("c_id")
+  cCompanyid       Int?                    @map("c_companyid")
+  cType            Int?                    @map("c_type")
+  cTeacher         Int?                    @map("c_teacher")
+  cLocation        Int?                    @map("c_location")
+  cRoom            Int?                    @map("c_room")
+  cSlots           String?                 @map("c_slots")
+  cPrice           Float?                  @map("c_price")
+  cDate            String?                 @map("c_date")
+  cTime            String?                 @map("c_time")
+  cDuration        String?                 @map("c_duration")
+  cDay             String?                 @map("c_day")
+  cExptime         String?                 @map("c_exptime")
+  cBook            String?                 @map("c_book")
+  cEmpty           String?                 @map("c_empty")
+  cFormattime      String?                 @map("c_formattime")
+  cStartformattime String?                 @map("c_startformattime")
+  classPay         class_master_class_pay? @map("class_pay")
+  cancelStatus     Int                     @map("cancel_status")
+  productId        Int                     @map("product_id")
+  signInType       String                  @map("sign_in_type")
 
   @@map("class_master")
 }
 
 model ClassNotes {
-  id        Int    @id @default(autoincrement())
-  class_id  Int
-  note      String
-  author    String
-  public    Int
-  avatar    String
-  post_date String
+  id       Int    @id @default(autoincrement())
+  classId  Int    @map("class_id")
+  note     String
+  author   String
+  public   Int
+  avatar   String
+  postDate String @map("post_date")
 
   @@map("class_notes")
 }
 
 model CompanyDetails {
-  details_id              Int                      @id @default(autoincrement())
-  company_id              Int
-  company_name            String
-  subscription            String
-  industry_sector         String
-  employees               String
-  website                 String
-  street                  String
-  city                    String
-  county                  String
-  post_code               String
-  country                 String                   @default("United Kingdom")
-  phone                   String
-  fax                     String
-  info_email              String
-  admin                   Int
-  logo                    String
-  currency                String                   @default("GBP")
-  facebook_page           String
-  twitter_page            String
-  head_office             Int
-  footer_logo             String
-  header_logo             String
-  vat                     String
-  date_format             String                   @default("d/m/Y")
-  week_start_day          String                   @default("sunday")
-  auto_sms                Int                      @default(1)
-  sms_active              Int
-  db_lock                 Int
-  stock_manager           String
-  company_notes           String
-  timezone_id             Int                      @default(511)
-  converted_value         Float
-  enable_2fa              Int
-  enable_ad               Int                      @default(0)
-  enable_ad_code          String?
-  enable_ip_filter        Int?
-  demo_mode               Int
-  linkedin_page           String
-  youtube_page            String
-  is_surgical             Int
-  private_treatment_notes Int
-  accept_insurance        Int
-  phone_prefix            Int
-  tax_name                company_details_tax_name @default(VAT)
-  secure_medical_forms    Int                      @default(1)
-  debrand_logo            Int
-  default_search          String                   @default("contact")
-  calendar_version        String
-  contact_term_singular   String                   @default("Patient")
-  contact_term_plural     String                   @default("Patients")
-  flag_enabled            Int                      @default(1)
-  lock_prescription       Int
-  show_report_logo        Boolean                  @default(false)
-  rota_version            String
-  use_google_auth         Boolean                  @default(false)
-  employee_clock_track    Boolean                  @default(false)
-  slug                    String?                  @unique
-  default_inv_template_id Int
-  diagnosis_codes_type    String                   @default("icd10")
-  append_client_pref      Int
-  capital_surname         Boolean                  @default(false)
-  disable_prescriptions   Int
-  cycles_display          Int                      @default(0)
-  enable_sens_data        Int
-  class_term_singular     String                   @default("Class")
-  class_term_plural       String                   @default("Classes")
-  sensitive_data_question Int                      @default(2)
-  legacy_consultations    Boolean                  @default(false)
-  class_teacher_singular  String                   @default("Teacher")
-  employee_term_singular  String                   @default("Employee")
-  employee_term_plural    String                   @default("Employees")
-  medical_approvals       Int
-  new_reports             Int
-  merge_bookings_tabs     Boolean                  @default(false)
-  preferences_sms         Int                      @default(1)
-  preferences_email       Int                      @default(1)
-  preferences_post        Int                      @default(1)
-  preferences_newsletters Int                      @default(1)
-  healthcode_live         Boolean?
-  lock_export             Int
-  language                String
-  completed_setup         Boolean                  @default(false)
-  timezone                Timezone                 @relation(fields: [timezone_id], references: [timezone_id])
-  company                 Company                  @relation(fields: [company_id], references: [id])
+  detailsId              Int                      @id @default(autoincrement()) @map("details_id")
+  companyId              Int                      @map("company_id")
+  companyName            String                   @map("company_name")
+  subscription           String
+  industrySector         String                   @map("industry_sector")
+  employees              String
+  website                String
+  street                 String
+  city                   String
+  county                 String
+  postCode               String                   @map("post_code")
+  country                String                   @default("United Kingdom")
+  phone                  String
+  fax                    String
+  infoEmail              String                   @map("info_email")
+  admin                  Int
+  logo                   String
+  currency               String                   @default("GBP")
+  facebookPage           String                   @map("facebook_page")
+  twitterPage            String                   @map("twitter_page")
+  headOffice             Int                      @map("head_office")
+  footerLogo             String                   @map("footer_logo")
+  headerLogo             String                   @map("header_logo")
+  vat                    String
+  dateFormat             String                   @default("d/m/Y") @map("date_format")
+  weekStartDay           String                   @default("sunday") @map("week_start_day")
+  autoSms                Int                      @default(1) @map("auto_sms")
+  smsActive              Int                      @map("sms_active")
+  dbLock                 Int                      @map("db_lock")
+  stockManager           String                   @map("stock_manager")
+  companyNotes           String                   @map("company_notes")
+  timezoneId             Int                      @default(511) @map("timezone_id")
+  convertedValue         Float                    @map("converted_value")
+  enable2fa              Int                      @map("enable_2fa")
+  enableAd               Int                      @default(0) @map("enable_ad")
+  enableAdCode           String?                  @map("enableAd_code")
+  enableIpFilter         Int?                     @map("enable_ip_filter")
+  demoMode               Int                      @map("demo_mode")
+  linkedinPage           String                   @map("linkedin_page")
+  youtubePage            String                   @map("youtube_page")
+  isSurgical             Int                      @map("is_surgical")
+  privateTreatmentNotes  Int                      @map("private_treatment_notes")
+  acceptInsurance        Int                      @map("accept_insurance")
+  phonePrefix            Int                      @map("phone_prefix")
+  taxName                company_details_tax_name @default(VAT) @map("tax_name")
+  secureMedicalForms     Int                      @default(1) @map("secure_medical_forms")
+  debrandLogo            Int                      @map("debrand_logo")
+  defaultSearch          String                   @default("contact") @map("default_search")
+  calendarVersion        String                   @map("calendar_version")
+  contactTermSingular    String                   @default("Patient") @map("contact_term_singular")
+  contactTermPlural      String                   @default("Patients") @map("contact_term_plural")
+  flagEnabled            Int                      @default(1) @map("flag_enabled")
+  lockPrescription       Int                      @map("lock_prescription")
+  showReportLogo         Boolean                  @default(false) @map("show_report_logo")
+  rotaVersion            String                   @map("rota_version")
+  useGoogleAuth          Boolean                  @default(false) @map("use_google_auth")
+  employeeClockTrack     Boolean                  @default(false) @map("employee_clock_track")
+  slug                   String?                  @unique
+  defaultInvTemplateId   Int                      @map("default_inv_template_id")
+  diagnosisCodesType     String                   @default("icd10") @map("diagnosis_codes_type")
+  appendClientPref       Int                      @map("append_client_pref")
+  capitalSurname         Boolean                  @default(false) @map("capital_surname")
+  disablePrescriptions   Int                      @map("disable_prescriptions")
+  cyclesDisplay          Int                      @default(0) @map("cycles_display")
+  enableSensData         Int                      @map("enable_sens_data")
+  classTermSingular      String                   @default("Class") @map("class_term_singular")
+  classTermPlural        String                   @default("Classes") @map("class_term_plural")
+  sensitiveDataQuestion  Int                      @default(2) @map("sensitive_data_question")
+  legacyConsultations    Boolean                  @default(false) @map("legacy_consultations")
+  classTeacherSingular   String                   @default("Teacher") @map("class_teacher_singular")
+  employeeTermSingular   String                   @default("Employee") @map("employee_term_singular")
+  employeeTermPlural     String                   @default("Employees") @map("employee_term_plural")
+  medicalApprovals       Int                      @map("medical_approvals")
+  newReports             Int                      @map("new_reports")
+  mergeBookingsTabs      Boolean                  @default(false) @map("merge_bookings_tabs")
+  preferencesSms         Int                      @default(1) @map("preferences_sms")
+  preferencesEmail       Int                      @default(1) @map("preferences_email")
+  preferencesPost        Int                      @default(1) @map("preferences_post")
+  preferencesNewsletters Int                      @default(1) @map("preferences_newsletters")
+  healthcodeLive         Boolean?                 @map("healthcode_live")
+  lockExport             Int                      @map("lock_export")
+  language               String
+  completedSetup         Boolean                  @default(false) @map("completed_setup")
+  timezone               Timezone                 @relation(fields: [timezoneId], references: [timezoneId])
+  company                Company                  @relation(fields: [companyId], references: [id])
 
-
-  @@index([company_id], name: "company_id")
-  @@index([timezone_id], name: "timezone_id")
+  @@index([companyId], name: "companyId")
+  @@index([timezoneId], name: "timezoneId")
   @@map("company_details")
 }
 
 model CompanySubscription {
-  license_id               Int       @id @default(autoincrement())
-  company_id               Int
-  company                  Company   @relation(fields: [company_id], references: [id])
-  license_type             Int
-  license_expiry           DateTime
-  active                   Int
-  code                     String
-  max_user_count           Int
-  uid                      Int
-  suspend_sms              Int
-  sms_rate                 Float     @default(0.080)
-  setup_stage              String
-  disable_sms              Int
-  payment_id               String
-  warning_level            String
-  subscription_name        String
-  subscription_fee         Float
-  suspended_on             String
-  demo_account             Int
-  suspension_reason        String
-  pabau_score              Int
-  gc_email                 String
-  payment_bounces          Int
-  training_status          Int
-  setup_status             Int
-  order_sheet              Int
-  complete_account         Int
-  complete_notes           String
-  details_status           Int
-  training_date            String
-  bill_cycle               DateTime
-  renew_interval           String    @default("month")
-  exclude_reports          Int
-  sub_start_date           DateTime
-  price_range              String    @default("uk_pricing")
-  stripe_customer_id       String
-  stripe_subscription_id   String
-  trial                    Boolean   @default(false)
-  storage                  Float     @default(2000.00)
-  free_users               Int
-  gc_customer_id           String
-  low_credit_amount        Int       @default(5)
-  low_sms_action           Int       @default(2)
-  activity_logs            Int
-  account_live             Int
-  discount                 Float
-  gc_plan_id               String
-  support_plan             String
-  support_fee              Float
-  gc_support_plan_id       String
-  enterprise_user_cost     Float     @default(12.00)
-  gc_enterprise_plan_id    String
-  enterprise_fee           Float
-  gc_amount                Float
-  leave_alert              Boolean   @default(false)
-  stripe_fee               Float     @default(1.60)
-  stripe_fee_type          String    @default("percentage")
-  previous_system          String
-  am_group                 String
-  phone_support            Int       @default(1)
-  slack_support            Int       @default(0)
-  whatsapp_support         Int       @default(0)
-  multiple_locations       Int
-  commission_rate          Float
-  live_server              String    @default("crm.pabau.com")
-  sandbox_server           String
-  server_comp_id           Int
-  partner_id               String
-  advanced_marketing_addon Int
-  free_months              Int?      @default(0)
-  hide_in_comps            Boolean?  @default(false)
-  am_start_date            DateTime?
-  trainer_id               Int?
-  onboarder_id             Int?
-  is_referral              Int?      @default(0)
+  licenseId              Int       @id @default(autoincrement()) @map("license_id")
+  companyId              Int       @map("company_id")
+  company                Company   @relation(fields: [companyId], references: [id])
+  licenseType            Int       @map("license_type")
+  licenseExpiry          DateTime  @map("license_expiry")
+  active                 Int
+  code                   String
+  maxUserCount           Int       @map("max_user_count")
+  uid                    Int
+  suspendSms             Int       @map("suspend_sms")
+  smsRate                Float     @default(0.080) @map("sms_rate")
+  setupStage             String    @map("setup_stage")
+  disableSms             Int       @map("disable_sms")
+  paymentId              String    @map("payment_id")
+  warningLevel           String    @map("warning_level")
+  subscriptionName       String    @map("subscription_name")
+  subscriptionFee        Float     @map("subscription_fee")
+  suspendedOn            String    @map("suspended_on")
+  demoAccount            Int       @map("demo_account")
+  suspensionReason       String    @map("suspension_reason")
+  pabauScore             Int       @map("pabau_score")
+  gcEmail                String    @map("gc_email")
+  paymentBounces         Int       @map("payment_bounces")
+  trainingStatus         Int       @map("training_status")
+  setupStatus            Int       @map("setup_status")
+  orderSheet             Int       @map("order_sheet")
+  completeAccount        Int       @map("complete_account")
+  completeNotes          String    @map("complete_notes")
+  detailsStatus          Int       @map("details_status")
+  trainingDate           String    @map("training_date")
+  billCycle              DateTime  @map("bill_cycle")
+  renewInterval          String    @default("month") @map("renew_interval")
+  excludeReports         Int       @map("exclude_reports")
+  subStartDate           DateTime  @map("sub_start_date")
+  priceRange             String    @default("uk_pricing") @map("price_range")
+  stripeCustomerId       String    @map("stripe_customer_id")
+  stripeSubscriptionId   String    @map("stripe_subscription_id")
+  trial                  Boolean   @default(false)
+  storage                Float     @default(2000.00)
+  freeUsers              Int       @map("free_users")
+  gcCustomerId           String    @map("gc_customer_id")
+  lowCreditAmount        Int       @default(5) @map("low_credit_amount")
+  lowSmsAction           Int       @default(2) @map("low_sms_action")
+  activityLogs           Int       @map("activity_logs")
+  accountLive            Int       @map("account_live")
+  discount               Float
+  gcPlanId               String    @map("gc_plan_id")
+  supportPlan            String    @map("support_plan")
+  supportFee             Float     @map("support_fee")
+  gcSupportPlanId        String    @map("gc_supportPlan_id")
+  enterpriseUserCost     Float     @default(12.00) @map("enterprise_user_cost")
+  gcEnterprisePlanId     String    @map("gc_enterprise_plan_id")
+  enterpriseFee          Float     @map("enterprise_fee")
+  gcAmount               Float     @map("gc_amount")
+  leaveAlert             Boolean   @default(false) @map("leave_alert")
+  stripeFee              Float     @default(1.60) @map("stripe_fee")
+  stripeFeeType          String    @default("percentage") @map("stripeFee_type")
+  previousSystem         String    @map("previous_system")
+  amGroup                String    @map("am_group")
+  phoneSupport           Int       @default(1) @map("phone_support")
+  slackSupport           Int       @default(0) @map("slack_support")
+  whatsappSupport        Int       @default(0) @map("whatsapp_support")
+  multipleLocations      Int       @map("multiple_locations")
+  commissionRate         Float     @map("commission_rate")
+  liveServer             String    @default("crm.pabau.com") @map("live_server")
+  sandboxServer          String    @map("sandbox_server")
+  serverCompId           Int       @map("server_comp_id")
+  partnerId              String    @map("partner_id")
+  advancedMarketingAddon Int       @map("advanced_marketing_addon")
+  freeMonths             Int?      @default(0) @map("free_months")
+  hideInComps            Boolean?  @default(false) @map("hide_in_comps")
+  amStartDate            DateTime? @map("am_start_date")
+  trainerId              Int?      @map("trainer_id")
+  onboarderId            Int?      @map("onboarder_id")
+  isReferral             Int?      @default(0) @map("is_referral")
 
-  @@index([company_id], name: "company_id")
-  @@index([license_type], name: "lic_type")
+  @@index([companyId], name: "companyId")
+  @@index([licenseType], name: "lic_type")
   @@map("company_subscription")
 }
 
 model Timezone {
-  timezone_id    Int     @id @default(autoincrement())
+  timezoneId     Int              @id @default(autoincrement()) @map("timezone_id")
   label          String
-  php_format     String
-  db_format      String
-  offset_seconds Int
+  phpFormat      String           @map("php_format")
+  dbFormat       String           @map("db_format")
+  offsetSeconds  Int              @map("offset_seconds")
   supported      Boolean
-
   CompanyDetails CompanyDetails[]
+
   @@map("timezone")
 }
 
 model ClassProduct {
-  id             Int       @id @default(autoincrement())
-  code           String
-  name           String
-  unit           String?
-  size           String
-  product_order  Int?
-  um             String
-  cost           Float?
-  price          Float
-  alert_quantity Int       @default(20)
-  image          String?   @default("no_image.jpg")
-  category_id    Int
-  occupier       Int?
-  uid            Int?
-  created_date   DateTime?
-  modified_date  DateTime?
-  product_desc   String
-
+  id            Int       @id @default(autoincrement())
+  code          String
+  name          String
+  unit          String?
+  size          String
+  productOrder  Int?      @map("product_order")
+  um            String
+  cost          Float?
+  price         Float
+  alertQuantity Int       @default(20) @map("alert_quantity")
+  image         String?   @default("no_image.jpg")
+  categoryId    Int       @map("category_id")
+  occupier      Int?
+  uid           Int?
+  createdDate   DateTime? @map("created_date")
+  modifiedDate  DateTime? @map("modified_date")
+  productDesc   String    @map("product_desc")
 
   @@map("class_products")
 }
@@ -1412,55 +1393,53 @@ model ClassProduct {
 //
 model ClassSmsHistory {
   id       Int    @id @default(autoincrement())
-  class_id Int
-  user_id  Int
+  classId  Int    @map("class_id")
+  userId   Int    @map("user_id")
   message  String
   datetime String
-
 
   @@map("class_sms_history")
 }
 
 //
 model ClassTemplateSetting {
-  id                                  Int       @id @default(autoincrement())
-  company_id                          Int       @default(0)
-  class_wait_list_template_enable     Int?      @default(0)
-  class_wait_list_template_id         Int?      @default(0)
-  class_wait_list_sms_template_enable Int       @default(0)
-  class_wait_list_sms_template_id     Int       @default(0)
-  uid                                 Int?
-  creation_date                       DateTime?
-  modified_date                       DateTime?
+  id                             Int       @id @default(autoincrement())
+  companyId                      Int       @default(0) @map("company_id")
+  classWaitListTemplateEnable    Int?      @default(0) @map("class_wait_list_template_enable")
+  classWaitListTemplateId        Int?      @default(0) @map("class_wait_list_template_id")
+  classWaitListSmsTemplateEnable Int       @default(0) @map("class_wait_list_sms_template_enable")
+  classWaitListSmsTemplateId     Int       @default(0) @map("class_wait_list_sms_template_id")
+  uid                            Int?
+  creationDate                   DateTime? @map("creation_date")
+  modifiedDate                   DateTime? @map("modified_date")
 
   @@map("class_template_settings")
 }
 
 //
 model CleverpinSetting {
-  id         Int    @id @default(autoincrement())
-  image_url  String
-  company_id Int
+  id        Int    @id @default(autoincrement())
+  imageUrl  String @map("image_url")
+  companyId Int    @map("company_id")
 
   @@map("cleverpin_settings")
 }
 
 //
 model ClientFormSetting {
-  id                  Int @id @default(autoincrement())
-  company_id          Int
-  enable_medical      Int
-  form_id             Int
-  not_seen_months     Int
-  enable_new_and_old  Int
-  checked_by_default  Int
-  new_client_template Int
-  not_seen_template   Int
+  id                Int @id @default(autoincrement())
+  companyId         Int @map("company_id")
+  enableMedical     Int @map("enable_medical")
+  formId            Int @map("form_id")
+  notSeenMonths     Int @map("not_seen_months")
+  enableNewAndOld   Int @map("enable_new_and_old")
+  checkedByDefault  Int @map("checked_by_default")
+  newClientTemplate Int @map("new_client_template")
+  notSeenTemplate   Int @map("not_seen_template")
 
   @@map("client_form_settings")
 }
 
-//
 model ClinicalSoftware {
   id         Int    @id @default(autoincrement())
   name       String
@@ -1472,40 +1451,40 @@ model ClinicalSoftware {
 
 //
 model ClockinBreak {
-  break_time_id    Int @id @default(autoincrement())
-  clock_id         Int
-  break_time_start Int @default(0)
-  break_time_out   Int @default(0)
+  breakTimeId    Int @id @default(autoincrement()) @map("break_time_id")
+  clockId        Int @map("clock_id")
+  breakTimeStart Int @default(0) @map("break_time_start")
+  breakTimeOut   Int @default(0) @map("break_time_out")
 
   @@map("clockin_break")
 }
 
 model ClockinLongpoll {
-  id          Int     @id @default(autoincrement())
-  clocked_out Boolean
-  uid         Int
-  occupier    Int
+  id         Int     @id @default(autoincrement())
+  clockedOut Boolean @map("clocked_out")
+  uid        Int
+  occupier   Int
 
   @@index([occupier], name: "occupier")
   @@map("clockin_longpoll")
 }
 
 model ClockinTimesheet {
-  clock_id           Int     @id @default(autoincrement())
-  staff_uid          Int
-  company_id         Int
-  clockin            Int
-  clockout           Int
-  total_break_time   Int     @default(0)
-  total_working_time Int     @default(0)
-  notes              String
-  approved           Boolean
-  staff_name         String
-  ip_address         String
+  clockId          Int     @id @default(autoincrement()) @map("clock_id")
+  staffUid         Int     @map("staff_uid")
+  companyId        Int     @map("company_id")
+  clockin          Int
+  clockout         Int
+  totalBreakTime   Int     @default(0) @map("total_break_time")
+  totalWorkingTime Int     @default(0) @map("total_working_time")
+  notes            String
+  approved         Boolean
+  staffName        String  @map("staff_name")
+  ipAddress        String  @map("ip_address")
 
-  @@index([company_id], name: "company_id")
-  @@index([staff_uid], name: "staff_uid")
-  @@index([company_id, staff_uid], name: "uid_occupier")
+  @@index([companyId], name: "companyId")
+  @@index([staffUid], name: "staffUid")
+  @@index([companyId, staffUid], name: "uid_occupier")
   @@map("clockin_timesheets")
 }
 
@@ -1522,43 +1501,42 @@ model CmAccountNote {
 }
 
 model CmAppointmentsCustomImportHelper {
-  id                    Int     @id @default(autoincrement())
-  occupier              Int
-  custom_appointment_id Int
-  custom_contact_name   String
-  custom_field_name     String
-  custom_field_value    String?
-  added                 Int
-  appointment_id        Int
+  id                  Int     @id @default(autoincrement())
+  occupier            Int
+  customAppointmentId Int     @map("custom_appointmentId")
+  customContactName   String  @map("custom_contact_name")
+  customFieldName     String  @map("custom_field_name")
+  customFieldValue    String? @map("custom_field_value")
+  added               Int
+  appointmentId       Int     @map("appointment_id")
 
-  @@index([custom_appointment_id], name: "custom_appointment_id")
+  @@index([customAppointmentId], name: "customAppointmentId")
   @@map("cm_appointments_custom_import_helper")
 }
 
 model CmAppointmentCustom {
-  id                 Int    @id @default(autoincrement())
-  appointment_id     Int
-  occupier           Int
-  custom_field_id    Int
-  custom_field_value String
-  imported           Int
+  id               Int    @id @default(autoincrement())
+  appointmentId    Int    @map("appointment_id")
+  occupier         Int
+  customFieldId    Int    @map("custom_field_id")
+  customFieldValue String @map("custom_field_value")
+  imported         Int
 
-  @@index([appointment_id], name: "appointment_id")
-  @@index([custom_field_id], name: "custom_field_id")
-  @@index([custom_field_value], name: "custom_field_value")
+  @@index([appointmentId], name: "appointmentId")
+  @@index([customFieldId], name: "customFieldId")
+  @@index([customFieldValue], name: "customFieldValue")
   @@index([occupier], name: "occupier")
   @@map("cm_appointment_custom")
 }
 
 model CmAuthorization {
-  id             Int    @id @default(autoincrement())
-  company_id     Int
-  appointment_id Int
-  contact_id     Int
-  title          String
-  total_sessions Int
-  diagnosis_code String
-
+  id            Int    @id @default(autoincrement())
+  companyId     Int    @map("company_id")
+  appointmentId Int    @map("appointment_id")
+  contactId     Int    @map("contact_id")
+  title         String
+  totalSessions Int    @map("total_sessions")
+  diagnosisCode String @map("diagnosis_code")
 
   @@map("cm_authorization")
 }
@@ -1576,31 +1554,31 @@ model CmBookingNote {
 }
 
 model CmCase {
-  id           Int     @id @default(autoincrement())
-  case_number  String
-  type         String?
-  contact      String?
-  email        String?
-  subject      String?
-  phone        String?
-  request      String?
-  critical     String?
-  description  String?
-  related_to   Int?
-  module_type  Int?
-  user_id      Int?
-  module2_type Int?
-  user2_id     Int?
-  ownerid      Int?
-  status       String?
-  priority     String?
-  reason       String?
-  reported_by  String?
-  comments     String?
-  CreatedDate  Int?
-  IpAddress    String?
-  company_id   Int     @map("occupier")
-  company      Company @relation(fields: [company_id], references: [id])
+  id          Int     @id @default(autoincrement())
+  caseNumber  String  @map("case_number")
+  type        String?
+  contact     String?
+  email       String?
+  subject     String?
+  phone       String?
+  request     String?
+  critical    String?
+  description String?
+  relatedTo   Int?    @map("related_to")
+  moduleType  Int?    @map("module_type")
+  userId      Int?    @map("user_id")
+  module2Type Int?    @map("module2_type")
+  user2Id     Int?    @map("user2_id")
+  ownerid     Int?
+  status      String?
+  priority    String?
+  reason      String?
+  reportedBy  String? @map("reported_by")
+  comments    String?
+  CreatedDate Int?
+  IpAddress   String?
+  companyId   Int     @map("occupier")
+  company     Company @relation(fields: [companyId], references: [id])
 
   @@map("cm_cases")
 }
@@ -1646,14 +1624,13 @@ model CmCampaign {
   Description      String
   CreatedDate      DateTime
   IpAddress        Int
-  company_id       Int      @map("Occupier")
-  company          Company  @relation(fields: [company_id], references: [id])
+  companyId        Int      @map("Occupier")
+  company          Company  @relation(fields: [companyId], references: [id])
 
   @@map("cm_compaigns")
 }
 
 model CmCampaignNote {
-
   ID          Int                      @id @default(autoincrement())
   OwnerID     Int
   BookingID   Int
@@ -1672,7 +1649,7 @@ model CmContact {
   Salutation               String                      @default("None")
   Fname                    String
   Occupier                 Int
-  location_id              Int                         @default(0)
+  locationId               Int                         @default(0) @map("location_id")
   Email                    String
   Phone                    String
   OtherPhone               String
@@ -1710,36 +1687,35 @@ model CmContact {
   MarketingSource          Int
   RefferalSource           String?
   LeadID                   Int
-  group_tag                String
-  polite_notice            String
-  custom_id                String
+  groupTag                 String                      @map("group_tag")
+  politeNotice             String                      @map("polite_notice")
+  customId                 String                      @map("custom_id")
   gender                   String
   MarketingOptInAll        Int?
   MarketingOptInEmail      Int?
   MarketingOptInPhone      Int?
   MarketingOptInPost       Int?
   MarketingOptInText       Int?
-  notes_drop               String
+  notesDrop                String                      @map("notes_drop")
   imported                 Int
-  alerts_drop              String
+  alertsDrop               String                      @map("alerts_drop")
   MarketingSourceRelated   Int
-  customer_reference       String
+  customerReference        String                      @map("customer_reference")
   MarketingOptInNewsletter Int                         @default(1)
-  custom_marketing_source  String
-  insurer_id               Int
-  is_active                Int                         @default(1)
-  xero_contact_id          String
-  is_ambassador            Int                         @default(0)
+  customMarketingSource    String                      @map("custom_marketing_source")
+  insurerId                Int                         @map("insurer_id")
+  isActive                 Int                         @default(1) @map("is_active")
+  xeroContactId            String                      @map("xero_contact_id")
+  isAmbassador             Int                         @default(0) @map("is_ambassador")
   UpdatedDate              DateTime
-  xero_updated_date        DateTime
-  discount_type            Int
-  custom_clinic_id         Int
-  ambassador_id            Int
-  contract_id              Int
-  privacy_policy           String
-  need_to_knows            Boolean                     @default(false)
-  contact_type             Int                         @default(0)
-
+  xeroUpdatedDate          DateTime                    @map("xero_updated_date")
+  discountType             Int                         @map("discount_type")
+  customClinicId           Int                         @map("custom_clinic_id")
+  ambassadorId             Int                         @map("ambassador_id")
+  contractId               Int                         @map("contract_id")
+  privacyPolicy            String                      @map("privacy_policy")
+  needToKnows              Boolean                     @default(false) @map("need_to_knows")
+  contactType              Int                         @default(0) @map("contact_type")
 
   @@index([CreatedDate], name: "CreatedDate")
   @@index([Email], name: "Email")
@@ -1748,17 +1724,124 @@ model CmContact {
   @@index([Lname], name: "Lname")
   @@index([Mobile], name: "Mobile")
   @@index([Occupier], name: "Occupier")
-  @@index([Occupier, is_active], name: "Occupier_2")
+  @@index([Occupier, isActive], name: "Occupier_2")
   @@index([OwnerID], name: "OwnerID")
   @@index([Fname, Lname, Occupier], name: "cm_leads_index")
-  @@index([contract_id], name: "contract_id")
-  @@index([custom_id], name: "custom_id")
-  @@index([customer_reference], name: "customer_reference")
-  @@index([is_active], name: "is_active")
+  @@index([contractId], name: "contractId")
+  @@index([customId], name: "customId")
+  @@index([customerReference], name: "customerReference")
+  @@index([isActive], name: "isActive")
   @@index([OwnerID, Occupier], name: "owner_company")
   @@map("cm_contacts")
 }
 
+model User {
+  id                             Int                          @id @default(autoincrement())
+  username                       String?
+  fullName                       String                       @map("full_name")
+  password                       String?
+  passwordAlgor                  Int?                         @default(1) @map("password_algor")
+  salt                           String?
+  created                        DateTime?
+  lastLogin                      DateTime?                    @map("last_login")
+  companyId                      Int?                         @map("company")
+  hash                           String
+  email                          String
+  admin                          Int
+  address                        String
+  timezone                       String
+  locale                         String
+  language                       String
+  jobTitle                       String                       @map("job_title")
+  department                     String
+  division                       String
+  super                          Int
+  defaultPage                    String                       @map("default_page")
+  signature                      String
+  image                          String
+  position                       String
+  location                       String
+  deleted                        Int
+  passCode                       String                       @map("pass_code")
+  phoneNumber                    String                       @map("phone_number")
+  hideOnlineBookings             Int                          @map("hide_online_bookings")
+  passcode                       String
+  lastLoadedPage                 String                       @map("last_loaded_page")
+  temporaryPassword              Boolean                      @map("temporary_password")
+  customId                       String                       @map("custom_id")
+  hideCalendar                   Int                          @map("hide_calendar")
+  calendarOrder                  Int                          @map("calendar_order")
+  clockedIn                      DateTime?                    @map("clocked_in")
+  clockedOut                     DateTime?                    @map("clocked_out")
+  lastPasswordReset              Int                          @map("last_password_reset")
+  forcePassword                  Int                          @map("force_password")
+  limitedUser                    Int                          @map("limited_user")
+  canVoid                        Int                          @default(1) @map("can_void")
+  canRefund                      Boolean                      @default(true) @map("can_refund")
+  canReport                      Int                          @default(1) @map("can_report")
+  canRota                        Int                          @default(1) @map("can_rota")
+  staffReadOnly                  Int                          @map("staff_read_only")
+  stockReadOnly                  Int                          @map("stock_read_only")
+  allReports                     Int                          @default(1) @map("all_reports")
+  performanceStats               Int                          @map("performance_stats")
+  disableTutorial                Int                          @map("disable_tutorial")
+  allServices                    Int                          @default(1) @map("all_services")
+  deleteTreatment                Int                          @default(0) @map("delete_treatment")
+  adminTasks                     Int                          @map("admin_tasks")
+  adminLeads                     Int                          @map("admin_leads")
+  imported                       Int
+  loginFailCount                 Int                          @map("login_fail_count")
+  canEditBookingTime             Int                          @default(1) @map("can_edit_booking_time")
+  userColor                      String                       @map("user_color")
+  disableMultipleClinics         Int                          @map("disable_multiple_clinics")
+  isHcp                          Int                          @default(0) @map("is_hcp")
+  loginDisabled                  Int                          @map("login_disabled")
+  canPatientAppoint              Int                          @default(1) @map("can_patient_appoint")
+  canPatientCommunicatons        Int                          @default(1) @map("can_patient_communicatons")
+  canPatientPhotos               Int                          @default(1) @map("can_patient_photos")
+  canPatientFiancials            Int                          @default(1) @map("can_patient_fiancials")
+  canPatientTreatments           Int                          @default(1) @map("can_patient_treatments")
+  canPatientDocs                 Int                          @default(1) @map("can_patient_docs")
+  canPatientPackages             Int                          @default(1) @map("can_patient_packages")
+  canPatientPrescription         Int                          @default(1) @map("can_patient_prescription")
+  canPatientConsents             Int                          @default(1) @map("can_patient_consents")
+  canPatientGiftvoucher          Int                          @default(1) @map("can_patient_giftvoucher")
+  canPatientLoyalty              Int                          @default(1) @map("can_patient_loyalty")
+  canPatientRecall               Int                          @default(1) @map("can_patient_recall")
+  canPatientMemberships          Int                          @default(1) @map("can_patient_memberships")
+  canCancelBooking               Int                          @default(1) @map("can_cancel_booking")
+  notifyOnBooking                Boolean                      @map("notify_on_booking")
+  canEditCommunications          Boolean                      @default(true) @map("can_edit_communications")
+  canDeleteCommunications        Boolean                      @default(true) @map("can_delete_communications")
+  canViewFullCal                 Boolean                      @default(true) @map("can_view_full_cal")
+  permissionLastRole             String                       @default("") @map("permission_last_role")
+  canMerge                       Boolean                      @default(true) @map("can_merge")
+  canDiscount                    Int?                         @default(1) @map("can_discount")
+  canDiscountSingle              Boolean                      @default(true) @map("can_discount_single")
+  restored                       Int
+  googleAuthSecret               String?                      @map("google_auth_secret")
+  defaultContractId              Int                          @map("default_contract_id")
+  canSeePersonal                 Int                          @default(1) @map("can_see_personal")
+  appearOnRota                   Int                          @default(1) @map("appear_on_rota")
+  canPatientMedicalHistory       Int                          @default(1) @map("can_patient_medical_history")
+  canLabRequests                 Boolean                      @default(false) @map("can_lab_requests")
+  detailedView                   Int                          @map("detailed_view")
+  canMakeBlockout                Int                          @default(1) @map("can_make_blockout")
+  canDeleteBlockout              Int                          @default(1) @map("can_delete_blockout")
+  canMoveBlockout                Int                          @default(1) @map("can_move_blockout")
+  mainContact                    Boolean                      @map("main_contact")
+  company                        Company?                     @relation(fields: [companyId], references: [id])
+
+  @@index([calendarOrder], name: "calendarOrder")
+  @@index([companyId], name: "company")
+  @@index([deleted], name: "deleted")
+  @@index([email], name: "email")
+  @@index([fullName], name: "fullName")
+  @@index([hash], name: "hash_index")
+  @@index([username], name: "username")
+  @@map("users")
+}
+//
 //model cm_contacts_alerts_import_helper {
 //
 //  id                Int    @id @default(autoincrement())
@@ -1773,7 +1856,6 @@ model CmContact {
 //
 //  @@index([contact_custom_id], name: "contact_custom_id")
 //}
-
 //
 //model cm_contacts_backup_hb {
 //  ID                     Int                                   @id @default(autoincrement())
@@ -11300,12 +11382,12 @@ model CmContact {
 //  description String
 //}
 //
-
+//
 //
 //model tmax_jobs {
 //  id         Int      @id @default(autoincrement())
 //  company    Int
-//  date_added DateTim
+//  date_added DateTime
 //  slot       Int
 //  delay      Int
 //  time       Int
@@ -11585,116 +11667,6 @@ model CmContact {
 //  @@index([mobile], name: "mobile")
 //  @@index([sms_campaign_id], name: "sms_campaign_id")
 //}
-//
-model User {
-  id                             Int                          @id @default(autoincrement())
-  username                       String?
-  full_name                      String
-  password                       String?
-  password_algor                 Int?                         @default(1)
-  salt                           String?
-  created                        DateTime?
-  last_login                     DateTime?
-  company_id                     Int?                          @map("company")
-  hash                           String
-  email                          String
-  admin                          Int
-  address                        String
-  timezone                       String
-  locale                         String
-  language                       String
-  job_title                      String
-  department                     String
-  division                       String
-  super                          Int
-  default_page                   String
-  signature                      String
-  image                          String
-  position                       String
-  location                       String
-  deleted                        Int
-  pass_code                      String
-  phone_number                   String
-  hide_online_bookings           Int
-  passcode                       String
-  last_loaded_page               String
-  temporary_password             Boolean
-  custom_id                      String
-  hide_calendar                  Int
-  calendar_order                 Int
-  clocked_in                     DateTime?
-  clocked_out                    DateTime?
-  last_password_reset            Int
-  force_password                 Int
-  limited_user                   Int
-  can_void                       Int                          @default(1)
-  can_refund                     Boolean                      @default(true)
-  can_report                     Int                          @default(1)
-  can_rota                       Int                          @default(1)
-  staff_read_only                Int
-  stock_read_only                Int
-  all_reports                    Int                          @default(1)
-  performance_stats              Int
-  disable_tutorial               Int
-  all_services                   Int                          @default(1)
-  delete_treatment               Int                          @default(0)
-  admin_tasks                    Int
-  admin_leads                    Int
-  imported                       Int
-  login_fail_count               Int
-  can_edit_booking_time          Int                          @default(1)
-  user_color                     String
-  disable_multiple_clinics       Int
-  is_hcp                         Int                          @default(0)
-  login_disabled                 Int
-  can_patient_appoint            Int                          @default(1)
-  can_patient_communicatons      Int                          @default(1)
-  can_patient_photos             Int                          @default(1)
-  can_patient_fiancials          Int                          @default(1)
-  can_patient_treatments         Int                          @default(1)
-  can_patient_docs               Int                          @default(1)
-  can_patient_packages           Int                          @default(1)
-  can_patient_prescription       Int                          @default(1)
-  can_patient_consents           Int                          @default(1)
-  can_patient_giftvoucher        Int                          @default(1)
-  can_patient_loyalty            Int                          @default(1)
-  can_patient_recall             Int                          @default(1)
-  can_patient_memberships        Int                          @default(1)
-  can_cancel_booking             Int                          @default(1)
-  notify_on_booking              Boolean
-  can_edit_communications        Boolean                      @default(true)
-  can_delete_communications      Boolean                      @default(true)
-  can_view_full_cal              Boolean                      @default(true)
-  permission_last_role           String                       @default("")
-  can_merge                      Boolean                      @default(true)
-  can_discount                   Int?                         @default(1)
-  can_discount_single            Boolean                      @default(true)
-  restored                       Int
-  google_auth_secret             String?
-  default_contract_id            Int
-  can_see_personal               Int                          @default(1)
-  appear_on_rota                 Int                          @default(1)
-  can_patient_medical_history    Int                          @default(1)
-  can_lab_requests               Boolean                      @default(false)
-  detailed_view                  Int
-  can_make_blockout              Int                          @default(1)
-  can_delete_blockout            Int                          @default(1)
-  can_move_blockout              Int                          @default(1)
-  main_contact                   Boolean
-  user_security_questions_answer UserSecurityQuestionsAnser[]
-  company                        Company?                      @relation(fields: [company_id], references: [id])
-
-
-  @@index([calendar_order], name: "calendar_order")
-  @@index([company_id], name: "company")
-  @@index([deleted], name: "deleted")
-  @@index([email], name: "email")
-  @@index([full_name], name: "full_name")
-  @@index([hash], name: "hash_index")
-  @@index([username], name: "username")
-  @@map("users")
-}
-
 //
 //model users_hours {
 //  id         Int       @id @default(autoincrement())
@@ -12017,18 +11989,18 @@ model User {
 //  last_name     String
 //}
 //
-model UserSecurityQuestionsAnser {
-  id          Int    @id @default(autoincrement())
-  user_id     Int
-  question    String
-  question_no Int
-  answer      String
-  users       User   @relation(fields: [user_id], references: [id])
-
-  @@index([user_id], name: "user_id")
-  @@map("user_security_questions_answer")
-}
-
+//model UserSecurityQuestionsAnser {
+//  id         Int    @id @default(autoincrement())
+//  userId     Int    @map("user_id")
+//  question   String
+//  questionNo Int    @map("question_no")
+//  answer     String
+//  users      User   @relation(fields: [userId], references: [id])
+//
+//  @@index([userId], name: "userId")
+//  @@map("user_security_questions_answer")
+//}
+//
 //
 //model user_targets {
 //  id           Int      @id @default(autoincrement())
@@ -13533,10 +13505,10 @@ enum train_course_difficulty {
   Pro
 }
 
-//enum train_course_dates_status {
-//  is_false  @map("0")
-//  is_true   @map("1")
-//}
+enum train_course_dates_status {
+  is_false  @map("0")
+  is_true   @map("1")
+}
 
 enum treatment_plans_status {
   OPEN

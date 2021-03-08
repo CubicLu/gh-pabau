@@ -1,5 +1,5 @@
 import { LoginInputDto, JwtPayloadDto, LogoutInputDto } from "./dto";
-import { User } from '../../../prisma/schema'
+import { User } from '../../generated/schema'
 import jwt from 'jsonwebtoken'
 import { Context } from "../../context";
 import { createHash, BinaryToTextEncoding } from "crypto";
@@ -27,7 +27,7 @@ export class AuthenticationService {
   public async handleLogoutRequest(logoutInputDto: LogoutInputDto):Promise<boolean> {
     return !!(await this.ctx.prisma.user.findFirst({
       where:{
-        id:logoutInputDto.userId
+        id: logoutInputDto.userId
       }
     }))
   }
@@ -46,7 +46,7 @@ export class AuthenticationService {
   private async generateJWT(key: string): Promise<string>{
     return jwt.sign(<JwtPayloadDto> {
       'user': this.user.id,
-      'company': this.user.company_id,
+      'company': this.user.companyId,
       'username': this.user.username,
       'https://hasura.io/jwt/claims': {
         "x-hasura-allowed-roles": [
@@ -54,7 +54,7 @@ export class AuthenticationService {
         ],
         'x-hasura-default-role': 'public',
         'x-hasura-user-id': this.user.id,
-        'x-hasura-org-id': this.user.company_id,
+        'x-hasura-org-id': this.user.companyId,
         'x-hasura-james': 123
       }
     }, key)
@@ -68,7 +68,7 @@ export class AuthenticationService {
    * @private
    */
   private generatePassword(user: User, loginInput:LoginInputDto): string {
-    switch (user.password_algor) {
+    switch (user.passwordAlgor) {
       case 1:
         return this.generateHash(loginInput.password, 'md5', 'hex')
       case 2:
