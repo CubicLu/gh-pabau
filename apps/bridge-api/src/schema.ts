@@ -1,7 +1,8 @@
 import { makeSchema  } from 'nexus'
 import { nexusPrisma } from 'nexus-plugin-prisma'
 import { PrismaClient } from '@prisma/client'
-import * as types from './generated/types'
+import * as generatedTypes from './generated/types'
+import * as customTypes from '../src/schema/types'
 import { GraphQLSchema } from 'graphql';
 import { NexusSchemaExtension } from 'nexus/dist/extensions';
 import { paljs } from '@paljs/nexus';
@@ -9,7 +10,7 @@ import { paljs } from '@paljs/nexus';
 const prisma = new PrismaClient()
 
 export const schema: Omit<GraphQLSchema, "extensions"> & { extensions: { nexus: NexusSchemaExtension } } = makeSchema({
-  types,
+  types: [generatedTypes, customTypes],
   plugins: [
     paljs(),
     nexusPrisma({

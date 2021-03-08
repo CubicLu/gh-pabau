@@ -25303,6 +25303,7 @@ type Query {
   marketingSourcesCount(where: MarketingSourceWhereInput): Int
   mediaLlibraryAttachments(after: MediaLlibraryAttachmentsWhereUniqueInput, before: MediaLlibraryAttachmentsWhereUniqueInput, first: Int, last: Int, orderBy: [MediaLlibraryAttachmentsOrderByInput!], where: MediaLlibraryAttachmentsWhereInput): [MediaLlibraryAttachments!]!
   mediaLlibraryAttachmentsCount(where: MediaLlibraryAttachmentsWhereInput): Int
+  ping: String
   secondAtAnswer(where: SecondAtAnswerWhereUniqueInput!): SecondAtAnswer
   secondAtAnswers(after: SecondAtAnswerWhereUniqueInput, before: SecondAtAnswerWhereUniqueInput, first: Int, last: Int, orderBy: [SecondAtAnswerOrderByInput!], where: SecondAtAnswerWhereInput): [SecondAtAnswer!]!
   secondAtAnswersCount(where: SecondAtAnswerWhereInput): Int

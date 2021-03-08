@@ -59,19 +59,25 @@ export const Authentication = extendType({
         }
       }
     })
-    // t.field('authenticatedUser', {
-    //   type: 'User',
-    //   async resolve(_, args, ctx:Context){
-    //     console.log(ctx)
-    //     if(!ctx.req.authenticatedUser){
-    //       throw new Error('Unauthorized access')
-    //     }
-    //     return ctx.prisma.user.findFirst({
-    //       where: {
-    //         id: ctx.req.authenticatedUser.user
-    //       }
-    //     })
-    //   }
-    // })
   },
 });
+
+// export const AuthenticatedUser = extendType({
+//   type: 'Query',
+//   definition(t) {
+//     t.field('authenticatedUser', {
+//       type: 'User',
+//       async resolve(_, args, ctx:Context){
+//         console.log(ctx)
+//         if(!ctx.req.authenticatedUser){
+//           throw new Error('Unauthorized access')
+//         }
+//         return ctx.prisma.user.findFirst({
+//           where: {
+//             id: ctx.req.authenticatedUser.user
+//           }
+//         })
+//       }
+//     })
+//   }
+// })

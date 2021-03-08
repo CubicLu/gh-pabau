@@ -32643,6 +32643,7 @@ export interface NexusGenFieldTypes {
     marketingSourcesCount: number | null; // Int
     mediaLlibraryAttachments: NexusGenRootTypes['MediaLlibraryAttachments'][]; // [MediaLlibraryAttachments!]!
     mediaLlibraryAttachmentsCount: number | null; // Int
+    ping: string | null; // String
     secondAtAnswer: NexusGenRootTypes['SecondAtAnswer'] | null; // SecondAtAnswer
     secondAtAnswers: NexusGenRootTypes['SecondAtAnswer'][]; // [SecondAtAnswer!]!
     secondAtAnswersCount: number | null; // Int
@@ -41643,6 +41644,7 @@ export interface NexusGenFieldTypeNames {
     marketingSourcesCount: 'Int'
     mediaLlibraryAttachments: 'MediaLlibraryAttachments'
     mediaLlibraryAttachmentsCount: 'Int'
+    ping: 'String'
     secondAtAnswer: 'SecondAtAnswer'
     secondAtAnswers: 'SecondAtAnswer'
     secondAtAnswersCount: 'Int'
