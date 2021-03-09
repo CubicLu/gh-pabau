@@ -64,11 +64,6 @@ const CrudTable: FC<P> = ({
   const crudTableRef = useRef(null)
   const router = useRouter()
   const user = useContext(UserContext)
-
-  useEffect(() => {
-    console.log('Current context')
-    console.log(user)
-  }, [user])
   // eslint-disable-next-line graphql/template-strings
   const [editMutation] = useMutation(editQuery, {
     onCompleted(data) {

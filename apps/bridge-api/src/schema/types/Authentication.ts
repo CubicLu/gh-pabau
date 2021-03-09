@@ -61,9 +61,9 @@ export const Authentication = extendType({
     })
   },
 });
-//TODO resolve it later on, circular dependency with User cxt type
+// TODO resolve it later on, circular dependency with User cxt type
 // export const AuthenticatedUser = extendType({
-//   type: 'Query',
+//   type: User,
 //   definition(t) {
 //     t.field('authenticatedUser', {
 //       type: 'User',

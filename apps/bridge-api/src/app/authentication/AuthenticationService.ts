@@ -51,7 +51,8 @@ export class AuthenticationService {
     }, key)
   }
   /**
-   * Generates a valid Pabau password, user.password_algor value [1: md5, 2:sha1]
+   * Generates a valid Pabau password, based upon the the user.password_algor db value
+   * Enum: [1: md5, 2:sha1]
    * @param user
    * @param loginInput
    *

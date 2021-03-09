@@ -9,19 +9,19 @@ const CURRENT_USER = gql`
       id
       username
       full_name
-    }
-    company(where: { id: $CompanyId }) {
-      id
-      Details {
-        company_name
-        language
+      company {
+        id
+        details {
+          company_name
+          language
+        }
       }
     }
   }
 `
 
 const ContextWrapper: FC = ({ children }) => {
-  const [authenticated, user] = useLogin()
+  const [authenticated, user] = useLogin(false)
   const { data } = useQuery(CURRENT_USER, {
     variables: {
       Id: user?.user ?? null,
