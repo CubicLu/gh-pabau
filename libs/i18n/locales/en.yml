@@ -37,3 +37,4 @@ en:
     james-testing-1: 'test one'
     james-testing-2: 'test two'
     james-test-3: 'Hello World!=)'
+    login.title: 'Log In'
