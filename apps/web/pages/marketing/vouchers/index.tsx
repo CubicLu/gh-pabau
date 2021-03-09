@@ -5,13 +5,12 @@ import {
   FilterOutlined,
   ApartmentOutlined,
 } from '@ant-design/icons'
-import { Anchor, Input } from 'antd'
+import { Input } from 'antd'
 import { TabbedTable, Button, VoucherCard, Pagination, Table } from '@pabau/ui'
 import VoucherIcon from '../../../components/Marketing/GiftVouchersList/assets/VocherIcon'
 import { Card, Row, Col } from 'antd'
+import Link from 'next/link'
 import styles from './index.module.less'
-
-const { Link } = Anchor
 
 const giftCardSettings = {
   cardWidth: 500,
@@ -211,16 +210,11 @@ const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
       </div>
       <div className="rightDiv">
         {activeTab === tabItems[0] && (
-          <Anchor>
-            <Link
-              href="/marketing/vouchers/create"
-              title={
-                <Button type="primary" size="large">
-                  Create Voucher
-                </Button>
-              }
-            />
-          </Anchor>
+          <Link href="/marketing/vouchers/create">
+            <Button type="primary" size="large">
+              Create Voucher
+            </Button>
+          </Link>
         )}
         {activeTab === tabItems[1] && (
           <div>
@@ -318,16 +312,11 @@ const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
                           </div>
                           <h2>Add a voucher</h2>
                           <p>You have no active vouchers</p>
-                          <Anchor>
-                            <Link
-                              href="/marketing/vouchers/create"
-                              title={
-                                <Button type="primary" size="large">
-                                  Create Voucher
-                                </Button>
-                              }
-                            />
-                          </Anchor>
+                          <Link href="/marketing/vouchers/create">
+                            <Button type="primary" size="large">
+                              Create Voucher
+                            </Button>
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -336,7 +325,7 @@ const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
               </div>
               <div className={styles.tableSheet}>
                 <Table
-                  draggable={true}
+                  draggable={false}
                   columns={columns}
                   searchTerm={searchTerm}
                   noDataText="Circulation"

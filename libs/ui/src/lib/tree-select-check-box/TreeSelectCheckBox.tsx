@@ -16,8 +16,9 @@ export interface TreeSelectCheckBoxProps {
   onClose: () => void
   inputPlaceholder: string
   data: SingleCheckBoxDropDown[]
-  defaultChecked?: []
+  defaultChecked?: string[]
   defaultExpandedAll?: boolean
+  defaultCheckedAll?: boolean
   modalWidth?: number
   onSave?: (selected) => void
 }
@@ -46,6 +47,7 @@ export const TreeSelectCheckBox: FC<TreeSelectCheckBoxProps> = ({
   data,
   defaultChecked = [],
   defaultExpandedAll = false,
+  defaultCheckedAll = false,
   modalWidth = 800,
   onSave,
   ...rest
@@ -58,13 +60,16 @@ export const TreeSelectCheckBox: FC<TreeSelectCheckBoxProps> = ({
   }
 
   useEffect(() => {
+    const keys = [...defaultChecked]
     const firsObj: SingleCheckBoxDropDown = {
       title: arrangeTitle('Select All'),
       key: 'all',
       children: data,
     }
     setTreeData([firsObj])
-  }, [data])
+    keys.push('all')
+    setCheckedKeys(keys)
+  }, [data, defaultChecked])
 
   const save = () => {
     const keys = [...checkedKeys]

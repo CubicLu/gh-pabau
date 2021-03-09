@@ -14,7 +14,10 @@ import {
   TabMenu,
   PabauPlus,
   Button,
+  Notification,
+  NotificationType,
 } from '@pabau/ui'
+import Link from 'next/link'
 import styles from './index.module.less'
 
 const { TextArea } = Input
@@ -64,6 +67,7 @@ export interface CreateVoucherProps {
 export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
   const aligns = [styles.pRight, styles.pX, styles.pX, styles.pLeft]
   const bgSelectRef = useRef<HTMLInputElement>(null)
+  const spanLink = useRef<HTMLSpanElement>(null)
 
   const steps = [
     {
@@ -481,6 +485,13 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
     }
   }
 
+  const createVoucher = () => {
+    Notification(NotificationType['success'], 'Voucher Created Successfully')
+    if (spanLink?.current) {
+      spanLink?.current.click()
+    }
+  }
+
   return (
     <Layout>
       <div className={styles.mainCreateVoucher}>
@@ -505,6 +516,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
                     Create <RightOutlined />
                   </span>
                 }
+                extraBtnClick={createVoucher}
               >
                 <Row
                   className={classNames(
@@ -582,6 +594,13 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
                 ref={bgSelectRef}
                 onChange={addNewBgImage}
               />
+            </Col>
+          </Row>
+          <Row>
+            <Col md={24}>
+              <Link href="/marketing/vouchers">
+                <span ref={spanLink}></span>
+              </Link>
             </Col>
           </Row>
         </Card>

@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { Input } from 'antd'
 import { TreeSelectCheckBox } from '@pabau/ui'
 import { EditOutlined } from '@ant-design/icons'
@@ -83,12 +83,30 @@ const treeData = [
 
 export const SelectService: FC = () => {
   const [servicesModal, toggleServicesModal] = useState(false)
-  const [selectedServices, setSelectedServices] = useState(0)
+  const [selectedServices, setSelectedServices] = useState([])
+  const [totalService, setTotalService] = useState(0)
 
   const onSave = (data) => {
     toggleServicesModal((servicesModal) => !servicesModal)
-    setSelectedServices(data?.length)
+    setSelectedServices(data)
   }
+
+  useEffect(() => {
+    let keys: string[] = []
+    function countKeys(data) {
+      keys = [...keys, ...data.map((el) => el.key)]
+      for (const el of data) {
+        if (el.children) {
+          countKeys(el.children)
+        }
+      }
+    }
+    countKeys(treeData)
+    if (keys.length > 0) {
+      setTotalService(keys.length)
+      setSelectedServices(keys)
+    }
+  }, [])
 
   return (
     <div className={styles.selectService}>
@@ -96,7 +114,13 @@ export const SelectService: FC = () => {
         className="services-input"
         type="text"
         size="large"
-        value={selectedServices > 0 ? `${selectedServices} services` : null}
+        value={
+          selectedServices.length === totalService
+            ? 'All Services'
+            : selectedServices.length > 0
+            ? `${selectedServices.length} services`
+            : null
+        }
         disabled={true}
         suffix={
           <EditOutlined
@@ -115,6 +139,7 @@ export const SelectService: FC = () => {
         inputPlaceholder="Search Services"
         onClose={() => toggleServicesModal((servicesModal) => !servicesModal)}
         defaultExpandedAll={true}
+        defaultChecked={selectedServices}
         modalWidth={800}
         onSave={(data) => onSave(data)}
       />
