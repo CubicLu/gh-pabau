@@ -1,5 +1,5 @@
 it:
-    marketingsource-header-create: 'Modifica origine marketing'
+    marketingsource-header-create.translation: ''
     marketingsource-title: 'Modifica origine marketing'
     marketingsource-name-textfield: Nome
     marketingsource-name-placeholder: 'per esempio. Facebook'

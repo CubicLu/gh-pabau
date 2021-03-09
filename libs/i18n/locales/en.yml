@@ -1,5 +1,5 @@
 en:
-    marketingsource-header-create: 'Create Marketing Source'
+    marketingsource-header-create.translation: 'Create Marketing Source'
     marketingsource-title: 'Marketing Sources'
     marketingsource-name-textfield: Name
     marketingsource-name-placeholder: 'eg. Facebook'
