@@ -171,18 +171,18 @@ model AcLogUrl {
 }
 
 model Company {
-  id             Int                  @id @default(autoincrement())
-  user           String
-  digit8         Int
-  admin          Int
-  creation_date  DateTime
-  image          String
-  slug           String?              @unique
-  remote_url     String?
-  remote_connect String?
-  cron_enabled   Boolean?
-  details        CompanyDetails?
-  subscription   CompanySubscription?
+  id               Int                  @id @default(autoincrement())
+  user             String
+  digit8           Int
+  admin            Int
+  creation_date    DateTime
+  image            String
+  slug             String?              @unique
+  remote_url       String?
+  remote_connect   String?
+  cron_enabled     Boolean?
+  details          CompanyDetails?
+  subscription     CompanySubscription?
   TwoFactorHistory TwoFactorHistory[]
   ThirdPartyAcces  ThirdPartyAcces[]
   AcceptEmailToken AcceptEmailToken[]
@@ -192,7 +192,7 @@ model Company {
   CmCaseReply      CmCaseReply[]
   CmCampaign       CmCampaign[]
   User             User[]
-  
+
   @@map("admin")
 }
 
