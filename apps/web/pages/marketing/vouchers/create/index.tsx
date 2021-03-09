@@ -364,7 +364,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
           <div className={styles.themesDiv}>
             <div>
               <span>Voucher Theme</span>
-              <PabauPlus label="plus" />
+              <PabauPlus label="Plus" />
             </div>
             <div>
               <Row>
