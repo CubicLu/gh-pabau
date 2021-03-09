@@ -29,7 +29,7 @@ export interface SenderItem {
   replyTo?: string
   isDefaultSender: boolean
   isEnableReplies?: boolean
-  isUseComapnyEmail?: boolean
+  isUseCompanyEmail?: boolean
   isAutoUploadReplies?: boolean
   isEnterpriseEmail?: string
   masterCriteria?: string
