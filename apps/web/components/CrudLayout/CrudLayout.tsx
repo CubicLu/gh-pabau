@@ -34,6 +34,8 @@ interface P {
   addFilter?: boolean
   setEditPage?(e: EditFieldsTypes): void
   needTranslation?: boolean
+  editPage?: boolean
+  editPageRouteLink?: string
 }
 
 const CrudLayout: FC<P> = ({ ...props }) => <CrudTable {...props} />

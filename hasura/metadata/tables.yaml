@@ -945,51 +945,49 @@
       filter: {}
 - table:
     schema: public
-    name: library_installers
+    name: library
   insert_permissions:
   - role: public
     permission:
       check: {}
       columns:
-      - id
-      - library_name
-      - library_description
-      - library_image
-      - library_location
-      - library_language
-      - data
-      - created_date
-      - is_plus
+      - email
+      - is_active
+      - name
+      - order
+      - phone
+      - provider_no
+      - type
       backend_only: false
   select_permissions:
   - role: public
     permission:
       columns:
-      - is_plus
+      - is_active
+      - order
+      - email
+      - name
+      - phone
+      - provider_no
+      - type
+      - created_at
+      - updated_at
       - id
-      - data
-      - library_description
-      - library_image
-      - library_language
-      - library_location
-      - library_name
-      - created_date
       filter: {}
+      allow_aggregations: true
   update_permissions:
   - role: public
     permission:
       columns:
-      - is_plus
-      - id
-      - data
-      - library_description
-      - library_image
-      - library_language
-      - library_location
-      - library_name
-      - created_date
+      - email
+      - is_active
+      - name
+      - order
+      - phone
+      - provider_no
+      - type
       filter: {}
-      check: {}
+      check: null
   delete_permissions:
   - role: public
     permission:

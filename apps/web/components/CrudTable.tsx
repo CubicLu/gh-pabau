@@ -56,6 +56,8 @@ interface P {
   addFilter?: boolean
   setEditPage?(e: EditFieldsTypes): void
   needTranslation?: boolean
+  editPage?: boolean
+  editPageRouteLink?: string
 }
 
 const CrudTable: FC<P> = ({
@@ -74,6 +76,8 @@ const CrudTable: FC<P> = ({
   addFilter = true,
   setEditPage,
   needTranslation = false,
+  editPage = false,
+  editPageRouteLink,
 }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isActive, setIsActive] = useState(true)
@@ -549,7 +553,9 @@ const CrudTable: FC<P> = ({
               noDataBtnText={schema.full}
               noDataText={schema.fullLower}
               padlocked={schema.padlocked}
-              onAddTemplate={() => createNew()}
+              onAddTemplate={
+                createPage ? () => createPageOnClick() : () => createNew()
+              }
               searchTerm={searchTerm}
               columns={[
                 ...Object.entries(schema.fields).map(([k, v]) => ({
@@ -588,11 +594,13 @@ const CrudTable: FC<P> = ({
                 })
               }}
               onRowClick={(e) => {
-                if (!createPage) {
+                if (editPage) {
+                  router.push(`${editPageRouteLink}/${e.id}`)
+                } else if (createPage) {
+                  setEditPage(e)
+                } else {
                   setEditingRow(e)
                   setModalShowing((e) => !e)
-                } else {
-                  setEditPage(e)
                 }
               }}
               needTranslation={needTranslation}
