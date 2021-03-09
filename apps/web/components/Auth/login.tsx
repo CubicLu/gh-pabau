@@ -53,7 +53,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
     <div>
       <div className={styles.signInForm}>
         <div className={styles.formHead}>
-          <h6>{t('common', 'login.title')}</h6>
+          <h6>{t('login.title')}</h6>
           <span>
             Do not have an account? <a>Start a free trial</a>
           </span>

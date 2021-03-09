@@ -146,7 +146,7 @@ const client = new ApolloClient({
   ]),
   cache,
 })
-
+console.log(languages)
 i18next.use(initReactI18next).init({
   interpolation: { escapeValue: false },
   lng: 'en',
