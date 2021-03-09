@@ -117,6 +117,7 @@ export const TeamReport: FC<TeamReportParams> = ({
       scroll={{ x: 1200, y: 1200 }}
       loading={loading}
       size="small"
+      pagination={{ pageSize: 100 }}
       expandable={{
         expandedRowRender: (record) => record.desc,
         expandIconColumnIndex: 1,
