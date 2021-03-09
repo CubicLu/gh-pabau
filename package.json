@@ -39,7 +39,7 @@
     "prisma:convert" : "node_modules/.bin/pal schema apps/bridge-api/src/schema",
     "prisma:migrate": "node_modules/.bin/prisma migrate dev --preview-feature",
     "prisma:generate:types": "node_modules/.bin/pal g",
-    "bridge:generate": "node_modules/.bin/prisma generate && pal g && pal schema typescript -o apps/bridge-api/src/generated && ts-node-dev --transpile-only apps/bridge-api/src/schema",
+    "bridge:generate": "prisma format && prisma generate && pal g && pal schema typescript -o apps/bridge-api/src/generated && ts-node-dev --transpile-only apps/bridge-api/src/schema",
     "postinstall": "node_modules/.bin/husky install"
   },
   "private": true,

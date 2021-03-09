@@ -2,15 +2,14 @@
 set -e
 APP_NAME="$(basename "$(dirname "$(cd "$(dirname "${0}")"; pwd)")")"
 
-
 echo "DEBUG: pwd=$(pwd)"
 echo "DEBUG: app_name=${APP_NAME}"
 echo "DEBUG: DOCKER_HOSTNAME=${DOCKER_HOSTNAME}"
 echo "DEBUG: DOCKER_USERNAME=${DOCKER_USERNAME}"
 echo "DEBUG: DOCKER_PASSWORD=${DOCKER_PASSWORD}"
 
-echo "ABORTING UNTIL https://github.com/prisma/prisma/issues/5304 IS FIXED!!!!"
-exit;
+#echo "ABORTING UNTIL https://github.com/prisma/prisma/issues/5304 IS FIXED!!!!"
+#exit;
 
 echo "Building..."
 yarn run nx run "${APP_NAME}:build" --prod
@@ -18,7 +17,7 @@ echo "Done"
 
 echo "Copying assets..."
 cp "apps/${APP_NAME}/package.json-prod" "dist/apps/${APP_NAME}/"
-cp -r "apps/${APP_NAME}/prisma" "dist/apps/${APP_NAME}/prisma"
+cp "apps/${APP_NAME}/prisma/schema.prisma" "dist/apps/${APP_NAME}/prisma/schema.prisma"
 echo "Done"
 
 echo "Docker build..."

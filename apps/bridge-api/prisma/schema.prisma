@@ -183,9 +183,17 @@ model Company {
   cron_enabled   Boolean?
   details        CompanyDetails?
   subscription   CompanySubscription?
-
+  TwoFactorHistory TwoFactorHistory[]
+  ThirdPartyAcces  ThirdPartyAcces[]
+  AcceptEmailToken AcceptEmailToken[]
+  AccountBalance   AccountBalance[]
+  MarketingSource  MarketingSource[]
+  CmCase           CmCase[]
+  CmCaseReply      CmCaseReply[]
+  CmCampaign       CmCampaign[]
+  User             User[]
+  
   @@map("admin")
-
 }
 
 model AdvertCampaign {
@@ -5928,21 +5936,24 @@ model CmContact {
 //  @@index([custom_insurer_id], name: "custom_insurer_id")
 //}
 //
-//model inv_payment_types {
-//  id            Int       @id @default(autoincrement())
-//  name          String?
-//  epos_display  Int?
-//  description   String?
-//  occupier      Int?
-//  uid           Int?
-//  created_date  DateTime?
-//  modified_date DateTime?
-//  is_active     Int
-//  is_money      Int
-//  type          String    @default("money")
-//
-//  @@index([occupier], name: "occupier")
-//}
+model invPaymentType {
+  id            Int       @id @default(autoincrement())
+  name          String?
+  epos_display  Int?
+  description   String?
+  company_id    Int       @map("occupier")
+  uid           Int?
+  created_date  DateTime?
+  modified_date DateTime?
+  is_active     Int
+  is_money      Int
+  type          String    @default("money")
+
+
+  @@index([company_id], name: "occupier")
+  @@map("inv_payment_types")
+}
+
 //
 //model inv_products {
 //  id                        Int       @id @default(autoincrement())
@@ -11587,7 +11598,7 @@ model User {
   salt                           String?
   created                        DateTime?
   last_login                     DateTime?
-  company_id                     Int                          @map("company")
+  company_id                     Int?                         @map("company")
   hash                           String
   email                          String
   admin                          Int
@@ -11674,7 +11685,7 @@ model User {
   can_move_blockout              Int                          @default(1)
   main_contact                   Boolean
   user_security_questions_answer UserSecurityQuestionsAnser[]
-  company                        Company                      @relation(fields: [company_id], references: [id])
+  company                        Company?                     @relation(fields: [company_id], references: [id])
 
 
   @@index([calendar_order], name: "calendar_order")

@@ -134,6 +134,15 @@ export interface Company {
   cron_enabled?: boolean;
   details?: CompanyDetails;
   subscription?: CompanySubscription;
+  TwoFactorHistory?: TwoFactorHistory[];
+  ThirdPartyAcces?: ThirdPartyAcces[];
+  AcceptEmailToken?: AcceptEmailToken[];
+  AccountBalance?: AccountBalance[];
+  MarketingSource?: MarketingSource[];
+  CmCase?: CmCase[];
+  CmCaseReply?: CmCaseReply[];
+  CmCampaign?: CmCampaign[];
+  User?: User[];
 }
 
 export interface AdvertCampaign {
@@ -1420,6 +1429,20 @@ export interface CmContact {
   contact_type: number;
 }
 
+export interface invPaymentType {
+  id: number;
+  name?: string;
+  epos_display?: number;
+  description?: string;
+  company_id: number;
+  uid?: number;
+  created_date?: Date;
+  modified_date?: Date;
+  is_active: number;
+  is_money: number;
+  type: string;
+}
+
 export interface User {
   id: number;
   username?: string;
@@ -1429,7 +1452,7 @@ export interface User {
   salt?: string;
   created?: Date;
   last_login?: Date;
-  company_id: number;
+  company_id?: number;
   hash: string;
   email: string;
   admin: number;

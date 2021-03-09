@@ -13110,10 +13110,12 @@ export interface NexusGenInputs {
     update?: NexusGenInputs['CompanyUncheckedUpdateWithoutTwoFactorHistoryInput'] | null; // CompanyUncheckedUpdateWithoutTwoFactorHistoryInput
     upsert?: NexusGenInputs['CompanyUpsertWithoutTwoFactorHistoryInput'] | null; // CompanyUpsertWithoutTwoFactorHistoryInput
   }
-  CompanyUpdateOneRequiredWithoutUserInput: { // input type
+  CompanyUpdateOneWithoutUserInput: { // input type
     connect?: NexusGenInputs['CompanyWhereUniqueInput'] | null; // CompanyWhereUniqueInput
     connectOrCreate?: NexusGenInputs['CompanyCreateOrConnectWithoutUserInput'] | null; // CompanyCreateOrConnectWithoutUserInput
     create?: NexusGenInputs['CompanyUncheckedCreateWithoutUserInput'] | null; // CompanyUncheckedCreateWithoutUserInput
+    delete?: boolean | null; // Boolean
+    disconnect?: boolean | null; // Boolean
     update?: NexusGenInputs['CompanyUncheckedUpdateWithoutUserInput'] | null; // CompanyUncheckedUpdateWithoutUserInput
     upsert?: NexusGenInputs['CompanyUpsertWithoutUserInput'] | null; // CompanyUpsertWithoutUserInput
   }
@@ -14761,7 +14763,7 @@ export interface NexusGenInputs {
     can_void?: number | null; // Int
     clocked_in?: NexusGenScalars['DateTime'] | null; // DateTime
     clocked_out?: NexusGenScalars['DateTime'] | null; // DateTime
-    company: NexusGenInputs['CompanyCreateNestedOneWithoutUserInput']; // CompanyCreateNestedOneWithoutUserInput!
+    company?: NexusGenInputs['CompanyCreateNestedOneWithoutUserInput'] | null; // CompanyCreateNestedOneWithoutUserInput
     created?: NexusGenScalars['DateTime'] | null; // DateTime
     custom_id: string; // String!
     default_contract_id: number; // Int!
@@ -14970,7 +14972,7 @@ export interface NexusGenInputs {
     can_void?: number | null; // Int
     clocked_in?: NexusGenScalars['DateTime'] | null; // DateTime
     clocked_out?: NexusGenScalars['DateTime'] | null; // DateTime
-    company: NexusGenInputs['CompanyCreateNestedOneWithoutUserInput']; // CompanyCreateNestedOneWithoutUserInput!
+    company?: NexusGenInputs['CompanyCreateNestedOneWithoutUserInput'] | null; // CompanyCreateNestedOneWithoutUserInput
     created?: NexusGenScalars['DateTime'] | null; // DateTime
     custom_id: string; // String!
     default_contract_id: number; // Int!
@@ -15174,7 +15176,7 @@ export interface NexusGenInputs {
     can_void?: NexusGenInputs['IntFilter'] | null; // IntFilter
     clocked_in?: NexusGenInputs['DateTimeNullableFilter'] | null; // DateTimeNullableFilter
     clocked_out?: NexusGenInputs['DateTimeNullableFilter'] | null; // DateTimeNullableFilter
-    company_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    company_id?: NexusGenInputs['IntNullableFilter'] | null; // IntNullableFilter
     created?: NexusGenInputs['DateTimeNullableFilter'] | null; // DateTimeNullableFilter
     custom_id?: NexusGenInputs['StringFilter'] | null; // StringFilter
     default_contract_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
@@ -15424,7 +15426,7 @@ export interface NexusGenInputs {
     can_void?: number | null; // Int
     clocked_in?: NexusGenScalars['DateTime'] | null; // DateTime
     clocked_out?: NexusGenScalars['DateTime'] | null; // DateTime
-    company_id: number; // Int!
+    company_id?: number | null; // Int
     created?: NexusGenScalars['DateTime'] | null; // DateTime
     custom_id: string; // String!
     default_contract_id: number; // Int!
@@ -15622,7 +15624,7 @@ export interface NexusGenInputs {
     can_void?: number | null; // Int
     clocked_in?: NexusGenScalars['DateTime'] | null; // DateTime
     clocked_out?: NexusGenScalars['DateTime'] | null; // DateTime
-    company_id: number; // Int!
+    company_id?: number | null; // Int
     created?: NexusGenScalars['DateTime'] | null; // DateTime
     custom_id: string; // String!
     default_contract_id: number; // Int!
@@ -15718,7 +15720,7 @@ export interface NexusGenInputs {
     can_void?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     clocked_in?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     clocked_out?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
-    company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    company_id?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     created?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     custom_id?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     default_contract_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -15815,7 +15817,7 @@ export interface NexusGenInputs {
     can_void?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     clocked_in?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     clocked_out?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
-    company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    company_id?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     created?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     custom_id?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     default_contract_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -16114,7 +16116,7 @@ export interface NexusGenInputs {
     can_void?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     clocked_in?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     clocked_out?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
-    company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    company_id?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     created?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     custom_id?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     default_contract_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -16210,7 +16212,7 @@ export interface NexusGenInputs {
     can_void?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     clocked_in?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     clocked_out?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
-    company?: NexusGenInputs['CompanyUpdateOneRequiredWithoutUserInput'] | null; // CompanyUpdateOneRequiredWithoutUserInput
+    company?: NexusGenInputs['CompanyUpdateOneWithoutUserInput'] | null; // CompanyUpdateOneWithoutUserInput
     created?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     custom_id?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     default_contract_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -16522,7 +16524,7 @@ export interface NexusGenInputs {
     can_void?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     clocked_in?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     clocked_out?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
-    company?: NexusGenInputs['CompanyUpdateOneRequiredWithoutUserInput'] | null; // CompanyUpdateOneRequiredWithoutUserInput
+    company?: NexusGenInputs['CompanyUpdateOneWithoutUserInput'] | null; // CompanyUpdateOneWithoutUserInput
     created?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     custom_id?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     default_contract_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -16630,7 +16632,7 @@ export interface NexusGenInputs {
     clocked_in?: NexusGenInputs['DateTimeNullableFilter'] | null; // DateTimeNullableFilter
     clocked_out?: NexusGenInputs['DateTimeNullableFilter'] | null; // DateTimeNullableFilter
     company?: NexusGenInputs['CompanyWhereInput'] | null; // CompanyWhereInput
-    company_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    company_id?: NexusGenInputs['IntNullableFilter'] | null; // IntNullableFilter
     created?: NexusGenInputs['DateTimeNullableFilter'] | null; // DateTimeNullableFilter
     custom_id?: NexusGenInputs['StringFilter'] | null; // StringFilter
     default_contract_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
@@ -16819,6 +16821,113 @@ export interface NexusGenInputs {
   candidateWhereUniqueInput: { // input type
     id?: number | null; // Int
   }
+  invPaymentTypeCreateInput: { // input type
+    company_id: number; // Int!
+    created_date?: NexusGenScalars['DateTime'] | null; // DateTime
+    description?: string | null; // String
+    epos_display?: number | null; // Int
+    is_active: number; // Int!
+    is_money: number; // Int!
+    modified_date?: NexusGenScalars['DateTime'] | null; // DateTime
+    name?: string | null; // String
+    type?: string | null; // String
+    uid?: number | null; // Int
+  }
+  invPaymentTypeOrderByInput: { // input type
+    company_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    created_date?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    description?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    epos_display?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    is_active?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    is_money?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    modified_date?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    name?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    type?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    uid?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
+  invPaymentTypeUncheckedCreateInput: { // input type
+    company_id: number; // Int!
+    created_date?: NexusGenScalars['DateTime'] | null; // DateTime
+    description?: string | null; // String
+    epos_display?: number | null; // Int
+    id?: number | null; // Int
+    is_active: number; // Int!
+    is_money: number; // Int!
+    modified_date?: NexusGenScalars['DateTime'] | null; // DateTime
+    name?: string | null; // String
+    type?: string | null; // String
+    uid?: number | null; // Int
+  }
+  invPaymentTypeUncheckedUpdateInput: { // input type
+    company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    created_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
+    description?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
+    epos_display?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
+    id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    is_active?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    is_money?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    modified_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
+    name?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
+    type?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+    uid?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
+  }
+  invPaymentTypeUncheckedUpdateManyInput: { // input type
+    company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    created_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
+    description?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
+    epos_display?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
+    id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    is_active?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    is_money?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    modified_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
+    name?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
+    type?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+    uid?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
+  }
+  invPaymentTypeUpdateInput: { // input type
+    company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    created_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
+    description?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
+    epos_display?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
+    is_active?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    is_money?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    modified_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
+    name?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
+    type?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+    uid?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
+  }
+  invPaymentTypeUpdateManyMutationInput: { // input type
+    company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    created_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
+    description?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
+    epos_display?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
+    is_active?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    is_money?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    modified_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
+    name?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
+    type?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+    uid?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
+  }
+  invPaymentTypeWhereInput: { // input type
+    AND?: Array<NexusGenInputs['invPaymentTypeWhereInput'] | null> | null; // [invPaymentTypeWhereInput]
+    NOT?: Array<NexusGenInputs['invPaymentTypeWhereInput'] | null> | null; // [invPaymentTypeWhereInput]
+    OR?: Array<NexusGenInputs['invPaymentTypeWhereInput'] | null> | null; // [invPaymentTypeWhereInput]
+    company_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    created_date?: NexusGenInputs['DateTimeNullableFilter'] | null; // DateTimeNullableFilter
+    description?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    epos_display?: NexusGenInputs['IntNullableFilter'] | null; // IntNullableFilter
+    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    is_active?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    is_money?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    modified_date?: NexusGenInputs['DateTimeNullableFilter'] | null; // DateTimeNullableFilter
+    name?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    type?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    uid?: NexusGenInputs['IntNullableFilter'] | null; // IntNullableFilter
+  }
+  invPaymentTypeWhereUniqueInput: { // input type
+    id?: number | null; // Int
+  }
 }
 
 export interface NexusGenEnums {
@@ -16907,6 +17016,7 @@ export interface NexusGenEnums {
   CompanyDetailsScalarFieldEnum: "accept_insurance" | "admin" | "append_client_pref" | "auto_sms" | "calendar_version" | "capital_surname" | "city" | "class_teacher_singular" | "class_term_plural" | "class_term_singular" | "company_id" | "company_name" | "company_notes" | "completed_setup" | "contact_term_plural" | "contact_term_singular" | "converted_value" | "country" | "county" | "currency" | "cycles_display" | "date_format" | "db_lock" | "debrand_logo" | "default_inv_template_id" | "default_search" | "demo_mode" | "details_id" | "diagnosis_codes_type" | "disable_prescriptions" | "employee_clock_track" | "employee_term_plural" | "employee_term_singular" | "employees" | "enable_2fa" | "enable_ad" | "enable_ad_code" | "enable_ip_filter" | "enable_sens_data" | "facebook_page" | "fax" | "flag_enabled" | "footer_logo" | "head_office" | "header_logo" | "healthcode_live" | "industry_sector" | "info_email" | "is_surgical" | "language" | "legacy_consultations" | "linkedin_page" | "lock_export" | "lock_prescription" | "logo" | "medical_approvals" | "merge_bookings_tabs" | "new_reports" | "phone" | "phone_prefix" | "post_code" | "preferences_email" | "preferences_newsletters" | "preferences_post" | "preferences_sms" | "private_treatment_notes" | "rota_version" | "secure_medical_forms" | "sensitive_data_question" | "show_report_logo" | "slug" | "sms_active" | "stock_manager" | "street" | "subscription" | "tax_name" | "timezone_id" | "twitter_page" | "use_google_auth" | "vat" | "website" | "week_start_day" | "youtube_page"
   CompanyScalarFieldEnum: "admin" | "creation_date" | "cron_enabled" | "digit8" | "id" | "image" | "remote_connect" | "remote_url" | "slug" | "user"
   CompanySubscriptionScalarFieldEnum: "account_live" | "active" | "activity_logs" | "advanced_marketing_addon" | "am_group" | "am_start_date" | "bill_cycle" | "code" | "commission_rate" | "company_id" | "complete_account" | "complete_notes" | "demo_account" | "details_status" | "disable_sms" | "discount" | "enterprise_fee" | "enterprise_user_cost" | "exclude_reports" | "free_months" | "free_users" | "gc_amount" | "gc_customer_id" | "gc_email" | "gc_enterprise_plan_id" | "gc_plan_id" | "gc_support_plan_id" | "hide_in_comps" | "is_referral" | "leave_alert" | "license_expiry" | "license_id" | "license_type" | "live_server" | "low_credit_amount" | "low_sms_action" | "max_user_count" | "multiple_locations" | "onboarder_id" | "order_sheet" | "pabau_score" | "partner_id" | "payment_bounces" | "payment_id" | "phone_support" | "previous_system" | "price_range" | "renew_interval" | "sandbox_server" | "server_comp_id" | "setup_stage" | "setup_status" | "slack_support" | "sms_rate" | "storage" | "stripe_customer_id" | "stripe_fee" | "stripe_fee_type" | "stripe_subscription_id" | "sub_start_date" | "subscription_fee" | "subscription_name" | "support_fee" | "support_plan" | "suspend_sms" | "suspended_on" | "suspension_reason" | "trainer_id" | "training_date" | "training_status" | "trial" | "uid" | "warning_level" | "whatsapp_support"
+  InvPaymentTypeScalarFieldEnum: "company_id" | "created_date" | "description" | "epos_display" | "id" | "is_active" | "is_money" | "modified_date" | "name" | "type" | "uid"
   MarketingSourceScalarFieldEnum: "company_id" | "custom_id" | "id" | "imported" | "public" | "source_name"
   MediaLlibraryAttachmentsScalarFieldEnum: "communication_id" | "company_id" | "contact_attachment_id" | "contact_id" | "creation_date" | "file_url" | "id" | "medical_form_contact_id" | "sales_id" | "statement_id"
   SecondAtAnswerScalarFieldEnum: "id" | "name" | "question_id"
@@ -18105,6 +18215,13 @@ export interface NexusGenObjects {
     max?: NexusGenRootTypes['CompanySubscriptionMaxAggregateOutputType'] | null; // CompanySubscriptionMaxAggregateOutputType
     min?: NexusGenRootTypes['CompanySubscriptionMinAggregateOutputType'] | null; // CompanySubscriptionMinAggregateOutputType
     sum?: NexusGenRootTypes['CompanySubscriptionSumAggregateOutputType'] | null; // CompanySubscriptionSumAggregateOutputType
+  }
+  AggregateInvPaymentType: { // root type
+    avg?: NexusGenRootTypes['InvPaymentTypeAvgAggregateOutputType'] | null; // InvPaymentTypeAvgAggregateOutputType
+    count?: NexusGenRootTypes['InvPaymentTypeCountAggregateOutputType'] | null; // InvPaymentTypeCountAggregateOutputType
+    max?: NexusGenRootTypes['InvPaymentTypeMaxAggregateOutputType'] | null; // InvPaymentTypeMaxAggregateOutputType
+    min?: NexusGenRootTypes['InvPaymentTypeMinAggregateOutputType'] | null; // InvPaymentTypeMinAggregateOutputType
+    sum?: NexusGenRootTypes['InvPaymentTypeSumAggregateOutputType'] | null; // InvPaymentTypeSumAggregateOutputType
   }
   AggregateMarketingSource: { // root type
     avg?: NexusGenRootTypes['MarketingSourceAvgAggregateOutputType'] | null; // MarketingSourceAvgAggregateOutputType
@@ -24161,6 +24278,62 @@ export interface NexusGenObjects {
     digit8: number; // Int!
     id: number; // Int!
   }
+  InvPaymentTypeAvgAggregateOutputType: { // root type
+    company_id: number; // Float!
+    epos_display?: number | null; // Float
+    id: number; // Float!
+    is_active: number; // Float!
+    is_money: number; // Float!
+    uid?: number | null; // Float
+  }
+  InvPaymentTypeCountAggregateOutputType: { // root type
+    _all: number; // Int!
+    company_id: number; // Int!
+    created_date?: number | null; // Int
+    description?: number | null; // Int
+    epos_display?: number | null; // Int
+    id: number; // Int!
+    is_active: number; // Int!
+    is_money: number; // Int!
+    modified_date?: number | null; // Int
+    name?: number | null; // Int
+    type?: number | null; // Int
+    uid?: number | null; // Int
+  }
+  InvPaymentTypeMaxAggregateOutputType: { // root type
+    company_id: number; // Int!
+    created_date?: NexusGenScalars['DateTime'] | null; // DateTime
+    description?: string | null; // String
+    epos_display?: number | null; // Int
+    id: number; // Int!
+    is_active: number; // Int!
+    is_money: number; // Int!
+    modified_date?: NexusGenScalars['DateTime'] | null; // DateTime
+    name?: string | null; // String
+    type?: string | null; // String
+    uid?: number | null; // Int
+  }
+  InvPaymentTypeMinAggregateOutputType: { // root type
+    company_id: number; // Int!
+    created_date?: NexusGenScalars['DateTime'] | null; // DateTime
+    description?: string | null; // String
+    epos_display?: number | null; // Int
+    id: number; // Int!
+    is_active: number; // Int!
+    is_money: number; // Int!
+    modified_date?: NexusGenScalars['DateTime'] | null; // DateTime
+    name?: string | null; // String
+    type?: string | null; // String
+    uid?: number | null; // Int
+  }
+  InvPaymentTypeSumAggregateOutputType: { // root type
+    company_id: number; // Int!
+    epos_display?: number | null; // Int
+    id: number; // Int!
+    is_active: number; // Int!
+    is_money: number; // Int!
+    uid?: number | null; // Int
+  }
   MarketingSource: { // root type
     company_id: number; // Int!
     custom_id: number; // Int!
@@ -24532,7 +24705,7 @@ export interface NexusGenObjects {
     can_void: number; // Int!
     clocked_in?: NexusGenScalars['DateTime'] | null; // DateTime
     clocked_out?: NexusGenScalars['DateTime'] | null; // DateTime
-    company_id: number; // Int!
+    company_id?: number | null; // Int
     created?: NexusGenScalars['DateTime'] | null; // DateTime
     custom_id: string; // String!
     default_contract_id: number; // Int!
@@ -24618,7 +24791,7 @@ export interface NexusGenObjects {
     can_rota: number; // Float!
     can_see_personal: number; // Float!
     can_void: number; // Float!
-    company_id: number; // Float!
+    company_id?: number | null; // Float
     default_contract_id: number; // Float!
     delete_treatment: number; // Float!
     deleted: number; // Float!
@@ -24685,7 +24858,7 @@ export interface NexusGenObjects {
     can_void: number; // Int!
     clocked_in?: number | null; // Int
     clocked_out?: number | null; // Int
-    company_id: number; // Int!
+    company_id?: number | null; // Int
     created?: number | null; // Int
     custom_id?: number | null; // Int
     default_contract_id: number; // Int!
@@ -24781,7 +24954,7 @@ export interface NexusGenObjects {
     can_void: number; // Int!
     clocked_in?: NexusGenScalars['DateTime'] | null; // DateTime
     clocked_out?: NexusGenScalars['DateTime'] | null; // DateTime
-    company_id: number; // Int!
+    company_id?: number | null; // Int
     created?: NexusGenScalars['DateTime'] | null; // DateTime
     custom_id?: string | null; // String
     default_contract_id: number; // Int!
@@ -24877,7 +25050,7 @@ export interface NexusGenObjects {
     can_void: number; // Int!
     clocked_in?: NexusGenScalars['DateTime'] | null; // DateTime
     clocked_out?: NexusGenScalars['DateTime'] | null; // DateTime
-    company_id: number; // Int!
+    company_id?: number | null; // Int
     created?: NexusGenScalars['DateTime'] | null; // DateTime
     custom_id?: string | null; // String
     default_contract_id: number; // Int!
@@ -25002,7 +25175,7 @@ export interface NexusGenObjects {
     can_rota: number; // Int!
     can_see_personal: number; // Int!
     can_void: number; // Int!
-    company_id: number; // Int!
+    company_id?: number | null; // Int
     default_contract_id: number; // Int!
     delete_treatment: number; // Int!
     deleted: number; // Int!
@@ -25041,6 +25214,19 @@ export interface NexusGenObjects {
     rating: number; // Int!
     referred_by: string; // String!
     resume: string; // String!
+  }
+  invPaymentType: { // root type
+    company_id: number; // Int!
+    created_date?: NexusGenScalars['DateTime'] | null; // DateTime
+    description?: string | null; // String
+    epos_display?: number | null; // Int
+    id: number; // Int!
+    is_active: number; // Int!
+    is_money: number; // Int!
+    modified_date?: NexusGenScalars['DateTime'] | null; // DateTime
+    name?: string | null; // String
+    type: string; // String!
+    uid?: number | null; // Int
   }
 }
 
@@ -26218,6 +26404,13 @@ export interface NexusGenFieldTypes {
     max: NexusGenRootTypes['CompanySubscriptionMaxAggregateOutputType'] | null; // CompanySubscriptionMaxAggregateOutputType
     min: NexusGenRootTypes['CompanySubscriptionMinAggregateOutputType'] | null; // CompanySubscriptionMinAggregateOutputType
     sum: NexusGenRootTypes['CompanySubscriptionSumAggregateOutputType'] | null; // CompanySubscriptionSumAggregateOutputType
+  }
+  AggregateInvPaymentType: { // field return type
+    avg: NexusGenRootTypes['InvPaymentTypeAvgAggregateOutputType'] | null; // InvPaymentTypeAvgAggregateOutputType
+    count: NexusGenRootTypes['InvPaymentTypeCountAggregateOutputType'] | null; // InvPaymentTypeCountAggregateOutputType
+    max: NexusGenRootTypes['InvPaymentTypeMaxAggregateOutputType'] | null; // InvPaymentTypeMaxAggregateOutputType
+    min: NexusGenRootTypes['InvPaymentTypeMinAggregateOutputType'] | null; // InvPaymentTypeMinAggregateOutputType
+    sum: NexusGenRootTypes['InvPaymentTypeSumAggregateOutputType'] | null; // InvPaymentTypeSumAggregateOutputType
   }
   AggregateMarketingSource: { // field return type
     avg: NexusGenRootTypes['MarketingSourceAvgAggregateOutputType'] | null; // MarketingSourceAvgAggregateOutputType
@@ -32291,6 +32484,62 @@ export interface NexusGenFieldTypes {
     digit8: number; // Int!
     id: number; // Int!
   }
+  InvPaymentTypeAvgAggregateOutputType: { // field return type
+    company_id: number; // Float!
+    epos_display: number | null; // Float
+    id: number; // Float!
+    is_active: number; // Float!
+    is_money: number; // Float!
+    uid: number | null; // Float
+  }
+  InvPaymentTypeCountAggregateOutputType: { // field return type
+    _all: number; // Int!
+    company_id: number; // Int!
+    created_date: number | null; // Int
+    description: number | null; // Int
+    epos_display: number | null; // Int
+    id: number; // Int!
+    is_active: number; // Int!
+    is_money: number; // Int!
+    modified_date: number | null; // Int
+    name: number | null; // Int
+    type: number | null; // Int
+    uid: number | null; // Int
+  }
+  InvPaymentTypeMaxAggregateOutputType: { // field return type
+    company_id: number; // Int!
+    created_date: NexusGenScalars['DateTime'] | null; // DateTime
+    description: string | null; // String
+    epos_display: number | null; // Int
+    id: number; // Int!
+    is_active: number; // Int!
+    is_money: number; // Int!
+    modified_date: NexusGenScalars['DateTime'] | null; // DateTime
+    name: string | null; // String
+    type: string | null; // String
+    uid: number | null; // Int
+  }
+  InvPaymentTypeMinAggregateOutputType: { // field return type
+    company_id: number; // Int!
+    created_date: NexusGenScalars['DateTime'] | null; // DateTime
+    description: string | null; // String
+    epos_display: number | null; // Int
+    id: number; // Int!
+    is_active: number; // Int!
+    is_money: number; // Int!
+    modified_date: NexusGenScalars['DateTime'] | null; // DateTime
+    name: string | null; // String
+    type: string | null; // String
+    uid: number | null; // Int
+  }
+  InvPaymentTypeSumAggregateOutputType: { // field return type
+    company_id: number; // Int!
+    epos_display: number | null; // Int
+    id: number; // Int!
+    is_active: number; // Int!
+    is_money: number; // Int!
+    uid: number | null; // Int
+  }
   MarketingSource: { // field return type
     company: NexusGenRootTypes['Company']; // Company!
     company_id: number; // Int!
@@ -32503,6 +32752,7 @@ export interface NexusGenFieldTypes {
     createOneUser: NexusGenRootTypes['User']; // User!
     createOneUserSecurityQuestionsAnser: NexusGenRootTypes['UserSecurityQuestionsAnser']; // UserSecurityQuestionsAnser!
     createOnecandidate: NexusGenRootTypes['candidate']; // candidate!
+    createOneinvPaymentType: NexusGenRootTypes['invPaymentType']; // invPaymentType!
     deleteManyAcLog: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     deleteManyAcLogAction: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     deleteManyAcLogUrl: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
@@ -32597,6 +32847,7 @@ export interface NexusGenFieldTypes {
     deleteManyUser: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     deleteManyUserSecurityQuestionsAnser: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     deleteManycandidate: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
+    deleteManyinvPaymentType: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     deleteOneAcLog: NexusGenRootTypes['AcLog'] | null; // AcLog
     deleteOneAcLogAction: NexusGenRootTypes['AcLogAction'] | null; // AcLogAction
     deleteOneAcLogUrl: NexusGenRootTypes['AcLogUrl'] | null; // AcLogUrl
@@ -32691,6 +32942,7 @@ export interface NexusGenFieldTypes {
     deleteOneUser: NexusGenRootTypes['User'] | null; // User
     deleteOneUserSecurityQuestionsAnser: NexusGenRootTypes['UserSecurityQuestionsAnser'] | null; // UserSecurityQuestionsAnser
     deleteOnecandidate: NexusGenRootTypes['candidate'] | null; // candidate
+    deleteOneinvPaymentType: NexusGenRootTypes['invPaymentType'] | null; // invPaymentType
     login: string | null; // String
     logout: boolean | null; // Boolean
     updateManyAcLog: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
@@ -32787,6 +33039,7 @@ export interface NexusGenFieldTypes {
     updateManyUser: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     updateManyUserSecurityQuestionsAnser: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     updateManycandidate: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
+    updateManyinvPaymentType: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     updateOneAcLog: NexusGenRootTypes['AcLog'] | null; // AcLog
     updateOneAcLogAction: NexusGenRootTypes['AcLogAction'] | null; // AcLogAction
     updateOneAcLogUrl: NexusGenRootTypes['AcLogUrl'] | null; // AcLogUrl
@@ -32881,6 +33134,7 @@ export interface NexusGenFieldTypes {
     updateOneUser: NexusGenRootTypes['User'] | null; // User
     updateOneUserSecurityQuestionsAnser: NexusGenRootTypes['UserSecurityQuestionsAnser'] | null; // UserSecurityQuestionsAnser
     updateOnecandidate: NexusGenRootTypes['candidate'] | null; // candidate
+    updateOneinvPaymentType: NexusGenRootTypes['invPaymentType'] | null; // invPaymentType
     upsertOneAcLog: NexusGenRootTypes['AcLog']; // AcLog!
     upsertOneAcLogAction: NexusGenRootTypes['AcLogAction']; // AcLogAction!
     upsertOneAcLogUrl: NexusGenRootTypes['AcLogUrl']; // AcLogUrl!
@@ -32975,6 +33229,7 @@ export interface NexusGenFieldTypes {
     upsertOneUser: NexusGenRootTypes['User']; // User!
     upsertOneUserSecurityQuestionsAnser: NexusGenRootTypes['UserSecurityQuestionsAnser']; // UserSecurityQuestionsAnser!
     upsertOnecandidate: NexusGenRootTypes['candidate']; // candidate!
+    upsertOneinvPaymentType: NexusGenRootTypes['invPaymentType']; // invPaymentType!
   }
   Query: { // field return type
     acLog: NexusGenRootTypes['AcLog'] | null; // AcLog
@@ -33320,6 +33575,10 @@ export interface NexusGenFieldTypes {
     findFirstUser: NexusGenRootTypes['User'] | null; // User
     findFirstUserSecurityQuestionsAnser: NexusGenRootTypes['UserSecurityQuestionsAnser'] | null; // UserSecurityQuestionsAnser
     findFirstcandidate: NexusGenRootTypes['candidate'] | null; // candidate
+    findFirstinvPaymentType: NexusGenRootTypes['invPaymentType'] | null; // invPaymentType
+    invPaymentType: NexusGenRootTypes['invPaymentType'] | null; // invPaymentType
+    invPaymentTypes: NexusGenRootTypes['invPaymentType'][]; // [invPaymentType!]!
+    invPaymentTypesCount: number | null; // Int
     marketingSource: NexusGenRootTypes['MarketingSource'] | null; // MarketingSource
     marketingSources: NexusGenRootTypes['MarketingSource'][]; // [MarketingSource!]!
     marketingSourcesCount: number | null; // Int
@@ -33603,8 +33862,8 @@ export interface NexusGenFieldTypes {
     can_void: number; // Int!
     clocked_in: NexusGenScalars['DateTime'] | null; // DateTime
     clocked_out: NexusGenScalars['DateTime'] | null; // DateTime
-    company: NexusGenRootTypes['Company']; // Company!
-    company_id: number; // Int!
+    company: NexusGenRootTypes['Company'] | null; // Company
+    company_id: number | null; // Int
     created: NexusGenScalars['DateTime'] | null; // DateTime
     custom_id: string; // String!
     default_contract_id: number; // Int!
@@ -33691,7 +33950,7 @@ export interface NexusGenFieldTypes {
     can_rota: number; // Float!
     can_see_personal: number; // Float!
     can_void: number; // Float!
-    company_id: number; // Float!
+    company_id: number | null; // Float
     default_contract_id: number; // Float!
     delete_treatment: number; // Float!
     deleted: number; // Float!
@@ -33758,7 +34017,7 @@ export interface NexusGenFieldTypes {
     can_void: number; // Int!
     clocked_in: number | null; // Int
     clocked_out: number | null; // Int
-    company_id: number; // Int!
+    company_id: number | null; // Int
     created: number | null; // Int
     custom_id: number | null; // Int
     default_contract_id: number; // Int!
@@ -33854,7 +34113,7 @@ export interface NexusGenFieldTypes {
     can_void: number; // Int!
     clocked_in: NexusGenScalars['DateTime'] | null; // DateTime
     clocked_out: NexusGenScalars['DateTime'] | null; // DateTime
-    company_id: number; // Int!
+    company_id: number | null; // Int
     created: NexusGenScalars['DateTime'] | null; // DateTime
     custom_id: string | null; // String
     default_contract_id: number; // Int!
@@ -33950,7 +34209,7 @@ export interface NexusGenFieldTypes {
     can_void: number; // Int!
     clocked_in: NexusGenScalars['DateTime'] | null; // DateTime
     clocked_out: NexusGenScalars['DateTime'] | null; // DateTime
-    company_id: number; // Int!
+    company_id: number | null; // Int
     created: NexusGenScalars['DateTime'] | null; // DateTime
     custom_id: string | null; // String
     default_contract_id: number; // Int!
@@ -34076,7 +34335,7 @@ export interface NexusGenFieldTypes {
     can_rota: number; // Int!
     can_see_personal: number; // Int!
     can_void: number; // Int!
-    company_id: number; // Int!
+    company_id: number | null; // Int
     default_contract_id: number; // Int!
     delete_treatment: number; // Int!
     deleted: number; // Int!
@@ -34115,6 +34374,19 @@ export interface NexusGenFieldTypes {
     rating: number; // Int!
     referred_by: string; // String!
     resume: string; // String!
+  }
+  invPaymentType: { // field return type
+    company_id: number; // Int!
+    created_date: NexusGenScalars['DateTime'] | null; // DateTime
+    description: string | null; // String
+    epos_display: number | null; // Int
+    id: number; // Int!
+    is_active: number; // Int!
+    is_money: number; // Int!
+    modified_date: NexusGenScalars['DateTime'] | null; // DateTime
+    name: string | null; // String
+    type: string; // String!
+    uid: number | null; // Int
   }
 }
 
@@ -35282,6 +35554,13 @@ export interface NexusGenFieldTypeNames {
     max: 'CompanySubscriptionMaxAggregateOutputType'
     min: 'CompanySubscriptionMinAggregateOutputType'
     sum: 'CompanySubscriptionSumAggregateOutputType'
+  }
+  AggregateInvPaymentType: { // field return type name
+    avg: 'InvPaymentTypeAvgAggregateOutputType'
+    count: 'InvPaymentTypeCountAggregateOutputType'
+    max: 'InvPaymentTypeMaxAggregateOutputType'
+    min: 'InvPaymentTypeMinAggregateOutputType'
+    sum: 'InvPaymentTypeSumAggregateOutputType'
   }
   AggregateMarketingSource: { // field return type name
     avg: 'MarketingSourceAvgAggregateOutputType'
@@ -41355,6 +41634,62 @@ export interface NexusGenFieldTypeNames {
     digit8: 'Int'
     id: 'Int'
   }
+  InvPaymentTypeAvgAggregateOutputType: { // field return type name
+    company_id: 'Float'
+    epos_display: 'Float'
+    id: 'Float'
+    is_active: 'Float'
+    is_money: 'Float'
+    uid: 'Float'
+  }
+  InvPaymentTypeCountAggregateOutputType: { // field return type name
+    _all: 'Int'
+    company_id: 'Int'
+    created_date: 'Int'
+    description: 'Int'
+    epos_display: 'Int'
+    id: 'Int'
+    is_active: 'Int'
+    is_money: 'Int'
+    modified_date: 'Int'
+    name: 'Int'
+    type: 'Int'
+    uid: 'Int'
+  }
+  InvPaymentTypeMaxAggregateOutputType: { // field return type name
+    company_id: 'Int'
+    created_date: 'DateTime'
+    description: 'String'
+    epos_display: 'Int'
+    id: 'Int'
+    is_active: 'Int'
+    is_money: 'Int'
+    modified_date: 'DateTime'
+    name: 'String'
+    type: 'String'
+    uid: 'Int'
+  }
+  InvPaymentTypeMinAggregateOutputType: { // field return type name
+    company_id: 'Int'
+    created_date: 'DateTime'
+    description: 'String'
+    epos_display: 'Int'
+    id: 'Int'
+    is_active: 'Int'
+    is_money: 'Int'
+    modified_date: 'DateTime'
+    name: 'String'
+    type: 'String'
+    uid: 'Int'
+  }
+  InvPaymentTypeSumAggregateOutputType: { // field return type name
+    company_id: 'Int'
+    epos_display: 'Int'
+    id: 'Int'
+    is_active: 'Int'
+    is_money: 'Int'
+    uid: 'Int'
+  }
   MarketingSource: { // field return type name
     company: 'Company'
     company_id: 'Int'
@@ -41567,6 +41902,7 @@ export interface NexusGenFieldTypeNames {
     createOneUser: 'User'
     createOneUserSecurityQuestionsAnser: 'UserSecurityQuestionsAnser'
     createOnecandidate: 'candidate'
+    createOneinvPaymentType: 'invPaymentType'
     deleteManyAcLog: 'AffectedRowsOutput'
     deleteManyAcLogAction: 'AffectedRowsOutput'
     deleteManyAcLogUrl: 'AffectedRowsOutput'
@@ -41661,6 +41997,7 @@ export interface NexusGenFieldTypeNames {
     deleteManyUser: 'AffectedRowsOutput'
     deleteManyUserSecurityQuestionsAnser: 'AffectedRowsOutput'
     deleteManycandidate: 'AffectedRowsOutput'
+    deleteManyinvPaymentType: 'AffectedRowsOutput'
     deleteOneAcLog: 'AcLog'
     deleteOneAcLogAction: 'AcLogAction'
     deleteOneAcLogUrl: 'AcLogUrl'
@@ -41755,6 +42092,7 @@ export interface NexusGenFieldTypeNames {
     deleteOneUser: 'User'
     deleteOneUserSecurityQuestionsAnser: 'UserSecurityQuestionsAnser'
     deleteOnecandidate: 'candidate'
+    deleteOneinvPaymentType: 'invPaymentType'
     login: 'String'
     logout: 'Boolean'
     updateManyAcLog: 'AffectedRowsOutput'
@@ -41851,6 +42189,7 @@ export interface NexusGenFieldTypeNames {
     updateManyUser: 'AffectedRowsOutput'
     updateManyUserSecurityQuestionsAnser: 'AffectedRowsOutput'
     updateManycandidate: 'AffectedRowsOutput'
+    updateManyinvPaymentType: 'AffectedRowsOutput'
     updateOneAcLog: 'AcLog'
     updateOneAcLogAction: 'AcLogAction'
     updateOneAcLogUrl: 'AcLogUrl'
@@ -41945,6 +42284,7 @@ export interface NexusGenFieldTypeNames {
     updateOneUser: 'User'
     updateOneUserSecurityQuestionsAnser: 'UserSecurityQuestionsAnser'
     updateOnecandidate: 'candidate'
+    updateOneinvPaymentType: 'invPaymentType'
     upsertOneAcLog: 'AcLog'
     upsertOneAcLogAction: 'AcLogAction'
     upsertOneAcLogUrl: 'AcLogUrl'
@@ -42039,6 +42379,7 @@ export interface NexusGenFieldTypeNames {
     upsertOneUser: 'User'
     upsertOneUserSecurityQuestionsAnser: 'UserSecurityQuestionsAnser'
     upsertOnecandidate: 'candidate'
+    upsertOneinvPaymentType: 'invPaymentType'
   }
   Query: { // field return type name
     acLog: 'AcLog'
@@ -42384,6 +42725,10 @@ export interface NexusGenFieldTypeNames {
     findFirstUser: 'User'
     findFirstUserSecurityQuestionsAnser: 'UserSecurityQuestionsAnser'
     findFirstcandidate: 'candidate'
+    findFirstinvPaymentType: 'invPaymentType'
+    invPaymentType: 'invPaymentType'
+    invPaymentTypes: 'invPaymentType'
+    invPaymentTypesCount: 'Int'
     marketingSource: 'MarketingSource'
     marketingSources: 'MarketingSource'
     marketingSourcesCount: 'Int'
@@ -43180,6 +43525,19 @@ export interface NexusGenFieldTypeNames {
     referred_by: 'String'
     resume: 'String'
   }
+  invPaymentType: { // field return type name
+    company_id: 'Int'
+    created_date: 'DateTime'
+    description: 'String'
+    epos_display: 'Int'
+    id: 'Int'
+    is_active: 'Int'
+    is_money: 'Int'
+    modified_date: 'DateTime'
+    name: 'String'
+    type: 'String'
+    uid: 'Int'
+  }
 }
 
 export interface NexusGenArgTypes {
@@ -43522,6 +43880,9 @@ export interface NexusGenArgTypes {
     createOnecandidate: { // args
       data: NexusGenInputs['candidateCreateInput']; // candidateCreateInput!
     }
+    createOneinvPaymentType: { // args
+      data: NexusGenInputs['invPaymentTypeCreateInput']; // invPaymentTypeCreateInput!
+    }
     deleteManyAcLog: { // args
       where?: NexusGenInputs['AcLogWhereInput'] | null; // AcLogWhereInput
     }
@@ -43804,6 +44165,9 @@ export interface NexusGenArgTypes {
     deleteManycandidate: { // args
       where?: NexusGenInputs['candidateWhereInput'] | null; // candidateWhereInput
     }
+    deleteManyinvPaymentType: { // args
+      where?: NexusGenInputs['invPaymentTypeWhereInput'] | null; // invPaymentTypeWhereInput
+    }
     deleteOneAcLog: { // args
       where: NexusGenInputs['AcLogWhereUniqueInput']; // AcLogWhereUniqueInput!
     }
@@ -44085,6 +44449,9 @@ export interface NexusGenArgTypes {
     }
     deleteOnecandidate: { // args
       where: NexusGenInputs['candidateWhereUniqueInput']; // candidateWhereUniqueInput!
+    }
+    deleteOneinvPaymentType: { // args
+      where: NexusGenInputs['invPaymentTypeWhereUniqueInput']; // invPaymentTypeWhereUniqueInput!
     }
     login: { // args
       password: string; // String!
@@ -44469,6 +44836,10 @@ export interface NexusGenArgTypes {
       data: NexusGenInputs['candidateUpdateManyMutationInput']; // candidateUpdateManyMutationInput!
       where?: NexusGenInputs['candidateWhereInput'] | null; // candidateWhereInput
     }
+    updateManyinvPaymentType: { // args
+      data: NexusGenInputs['invPaymentTypeUpdateManyMutationInput']; // invPaymentTypeUpdateManyMutationInput!
+      where?: NexusGenInputs['invPaymentTypeWhereInput'] | null; // invPaymentTypeWhereInput
+    }
     updateOneAcLog: { // args
       data: NexusGenInputs['AcLogUpdateInput']; // AcLogUpdateInput!
       where: NexusGenInputs['AcLogWhereUniqueInput']; // AcLogWhereUniqueInput!
@@ -44844,6 +45215,10 @@ export interface NexusGenArgTypes {
     updateOnecandidate: { // args
       data: NexusGenInputs['candidateUpdateInput']; // candidateUpdateInput!
       where: NexusGenInputs['candidateWhereUniqueInput']; // candidateWhereUniqueInput!
+    }
+    updateOneinvPaymentType: { // args
+      data: NexusGenInputs['invPaymentTypeUpdateInput']; // invPaymentTypeUpdateInput!
+      where: NexusGenInputs['invPaymentTypeWhereUniqueInput']; // invPaymentTypeWhereUniqueInput!
     }
     upsertOneAcLog: { // args
       create: NexusGenInputs['AcLogCreateInput']; // AcLogCreateInput!
@@ -45314,6 +45689,11 @@ export interface NexusGenArgTypes {
       create: NexusGenInputs['candidateCreateInput']; // candidateCreateInput!
       update: NexusGenInputs['candidateUpdateInput']; // candidateUpdateInput!
       where: NexusGenInputs['candidateWhereUniqueInput']; // candidateWhereUniqueInput!
+    }
+    upsertOneinvPaymentType: { // args
+      create: NexusGenInputs['invPaymentTypeCreateInput']; // invPaymentTypeCreateInput!
+      update: NexusGenInputs['invPaymentTypeUpdateInput']; // invPaymentTypeUpdateInput!
+      where: NexusGenInputs['invPaymentTypeWhereUniqueInput']; // invPaymentTypeWhereUniqueInput!
     }
   }
   Query: {
@@ -47146,6 +47526,27 @@ export interface NexusGenArgTypes {
       skip?: number | null; // Int
       take?: number | null; // Int
       where?: NexusGenInputs['candidateWhereInput'] | null; // candidateWhereInput
+    }
+    findFirstinvPaymentType: { // args
+      cursor?: NexusGenInputs['invPaymentTypeWhereUniqueInput'] | null; // invPaymentTypeWhereUniqueInput
+      orderBy?: NexusGenInputs['invPaymentTypeOrderByInput'] | null; // invPaymentTypeOrderByInput
+      skip?: number | null; // Int
+      take?: number | null; // Int
+      where?: NexusGenInputs['invPaymentTypeWhereInput'] | null; // invPaymentTypeWhereInput
+    }
+    invPaymentType: { // args
+      where: NexusGenInputs['invPaymentTypeWhereUniqueInput']; // invPaymentTypeWhereUniqueInput!
+    }
+    invPaymentTypes: { // args
+      after?: NexusGenInputs['invPaymentTypeWhereUniqueInput'] | null; // invPaymentTypeWhereUniqueInput
+      before?: NexusGenInputs['invPaymentTypeWhereUniqueInput'] | null; // invPaymentTypeWhereUniqueInput
+      first?: number | null; // Int
+      last?: number | null; // Int
+      orderBy?: NexusGenInputs['invPaymentTypeOrderByInput'][] | null; // [invPaymentTypeOrderByInput!]
+      where?: NexusGenInputs['invPaymentTypeWhereInput'] | null; // invPaymentTypeWhereInput
+    }
+    invPaymentTypesCount: { // args
+      where?: NexusGenInputs['invPaymentTypeWhereInput'] | null; // invPaymentTypeWhereInput
     }
     marketingSource: { // args
       where: NexusGenInputs['MarketingSourceWhereUniqueInput']; // MarketingSourceWhereUniqueInput!

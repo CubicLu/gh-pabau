@@ -2606,6 +2606,14 @@ type AggregateCompanySubscription {
   sum: CompanySubscriptionSumAggregateOutputType
 }
 
+type AggregateInvPaymentType {
+  avg: InvPaymentTypeAvgAggregateOutputType
+  count: InvPaymentTypeCountAggregateOutputType
+  max: InvPaymentTypeMaxAggregateOutputType
+  min: InvPaymentTypeMinAggregateOutputType
+  sum: InvPaymentTypeSumAggregateOutputType
+}
+
 type AggregateMarketingSource {
   avg: MarketingSourceAvgAggregateOutputType
   count: MarketingSourceCountAggregateOutputType
@@ -23187,10 +23195,12 @@ input CompanyUpdateOneRequiredWithoutTwoFactorHistoryInput {
   upsert: CompanyUpsertWithoutTwoFactorHistoryInput
 }
 
-input CompanyUpdateOneRequiredWithoutUserInput {
+input CompanyUpdateOneWithoutUserInput {
   connect: CompanyWhereUniqueInput
   connectOrCreate: CompanyCreateOrConnectWithoutUserInput
   create: CompanyUncheckedCreateWithoutUserInput
+  delete: Boolean
+  disconnect: Boolean
   update: CompanyUncheckedUpdateWithoutUserInput
   upsert: CompanyUpsertWithoutUserInput
 }
@@ -23747,6 +23757,81 @@ input IntNullableFilter {
   notIn: [Int]
 }
 
+type InvPaymentTypeAvgAggregateOutputType {
+  company_id: Float!
+  epos_display: Float
+  id: Float!
+  is_active: Float!
+  is_money: Float!
+  uid: Float
+}
+
+type InvPaymentTypeCountAggregateOutputType {
+  _all: Int!
+  company_id: Int!
+  created_date: Int
+  description: Int
+  epos_display: Int
+  id: Int!
+  is_active: Int!
+  is_money: Int!
+  modified_date: Int
+  name: Int
+  type: Int
+  uid: Int
+}
+
+type InvPaymentTypeMaxAggregateOutputType {
+  company_id: Int!
+  created_date: DateTime
+  description: String
+  epos_display: Int
+  id: Int!
+  is_active: Int!
+  is_money: Int!
+  modified_date: DateTime
+  name: String
+  type: String
+  uid: Int
+}
+
+type InvPaymentTypeMinAggregateOutputType {
+  company_id: Int!
+  created_date: DateTime
+  description: String
+  epos_display: Int
+  id: Int!
+  is_active: Int!
+  is_money: Int!
+  modified_date: DateTime
+  name: String
+  type: String
+  uid: Int
+}
+
+enum InvPaymentTypeScalarFieldEnum {
+  company_id
+  created_date
+  description
+  epos_display
+  id
+  is_active
+  is_money
+  modified_date
+  name
+  type
+  uid
+}
+
+type InvPaymentTypeSumAggregateOutputType {
+  company_id: Int!
+  epos_display: Int
+  id: Int!
+  is_active: Int!
+  is_money: Int!
+  uid: Int
+}
+
 """Json custom scalar type"""
 scalar Json
 
@@ -24296,6 +24381,7 @@ type Mutation {
   createOneUser(data: UserCreateInput!): User!
   createOneUserSecurityQuestionsAnser(data: UserSecurityQuestionsAnserCreateInput!): UserSecurityQuestionsAnser!
   createOnecandidate(data: candidateCreateInput!): candidate!
+  createOneinvPaymentType(data: invPaymentTypeCreateInput!): invPaymentType!
   deleteManyAcLog(where: AcLogWhereInput): AffectedRowsOutput!
   deleteManyAcLogAction(where: AcLogActionWhereInput): AffectedRowsOutput!
   deleteManyAcLogUrl(where: AcLogUrlWhereInput): AffectedRowsOutput!
@@ -24390,6 +24476,7 @@ type Mutation {
   deleteManyUser(where: UserWhereInput): AffectedRowsOutput!
   deleteManyUserSecurityQuestionsAnser(where: UserSecurityQuestionsAnserWhereInput): AffectedRowsOutput!
   deleteManycandidate(where: candidateWhereInput): AffectedRowsOutput!
+  deleteManyinvPaymentType(where: invPaymentTypeWhereInput): AffectedRowsOutput!
   deleteOneAcLog(where: AcLogWhereUniqueInput!): AcLog
   deleteOneAcLogAction(where: AcLogActionWhereUniqueInput!): AcLogAction
   deleteOneAcLogUrl(where: AcLogUrlWhereUniqueInput!): AcLogUrl
@@ -24484,6 +24571,7 @@ type Mutation {
   deleteOneUser(where: UserWhereUniqueInput!): User
   deleteOneUserSecurityQuestionsAnser(where: UserSecurityQuestionsAnserWhereUniqueInput!): UserSecurityQuestionsAnser
   deleteOnecandidate(where: candidateWhereUniqueInput!): candidate
+  deleteOneinvPaymentType(where: invPaymentTypeWhereUniqueInput!): invPaymentType
   login(password: String!, username: String!): String
   logout(userId: Int!): Boolean
   updateManyAcLog(data: AcLogUpdateManyMutationInput!, where: AcLogWhereInput): AffectedRowsOutput!
@@ -24580,6 +24668,7 @@ type Mutation {
   updateManyUser(data: UserUpdateManyMutationInput!, where: UserWhereInput): AffectedRowsOutput!
   updateManyUserSecurityQuestionsAnser(data: UserSecurityQuestionsAnserUpdateManyMutationInput!, where: UserSecurityQuestionsAnserWhereInput): AffectedRowsOutput!
   updateManycandidate(data: candidateUpdateManyMutationInput!, where: candidateWhereInput): AffectedRowsOutput!
+  updateManyinvPaymentType(data: invPaymentTypeUpdateManyMutationInput!, where: invPaymentTypeWhereInput): AffectedRowsOutput!
   updateOneAcLog(data: AcLogUpdateInput!, where: AcLogWhereUniqueInput!): AcLog
   updateOneAcLogAction(data: AcLogActionUpdateInput!, where: AcLogActionWhereUniqueInput!): AcLogAction
   updateOneAcLogUrl(data: AcLogUrlUpdateInput!, where: AcLogUrlWhereUniqueInput!): AcLogUrl
@@ -24674,6 +24763,7 @@ type Mutation {
   updateOneUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateOneUserSecurityQuestionsAnser(data: UserSecurityQuestionsAnserUpdateInput!, where: UserSecurityQuestionsAnserWhereUniqueInput!): UserSecurityQuestionsAnser
   updateOnecandidate(data: candidateUpdateInput!, where: candidateWhereUniqueInput!): candidate
+  updateOneinvPaymentType(data: invPaymentTypeUpdateInput!, where: invPaymentTypeWhereUniqueInput!): invPaymentType
   upsertOneAcLog(create: AcLogCreateInput!, update: AcLogUpdateInput!, where: AcLogWhereUniqueInput!): AcLog!
   upsertOneAcLogAction(create: AcLogActionCreateInput!, update: AcLogActionUpdateInput!, where: AcLogActionWhereUniqueInput!): AcLogAction!
   upsertOneAcLogUrl(create: AcLogUrlCreateInput!, update: AcLogUrlUpdateInput!, where: AcLogUrlWhereUniqueInput!): AcLogUrl!
@@ -24768,6 +24858,7 @@ type Mutation {
   upsertOneUser(create: UserCreateInput!, update: UserUpdateInput!, where: UserWhereUniqueInput!): User!
   upsertOneUserSecurityQuestionsAnser(create: UserSecurityQuestionsAnserCreateInput!, update: UserSecurityQuestionsAnserUpdateInput!, where: UserSecurityQuestionsAnserWhereUniqueInput!): UserSecurityQuestionsAnser!
   upsertOnecandidate(create: candidateCreateInput!, update: candidateUpdateInput!, where: candidateWhereUniqueInput!): candidate!
+  upsertOneinvPaymentType(create: invPaymentTypeCreateInput!, update: invPaymentTypeUpdateInput!, where: invPaymentTypeWhereUniqueInput!): invPaymentType!
 }
 
 input NestedBoolFilter {
@@ -25349,6 +25440,10 @@ type Query {
   findFirstUser(cursor: UserWhereUniqueInput, orderBy: UserOrderByInput, skip: Int, take: Int, where: UserWhereInput): User
   findFirstUserSecurityQuestionsAnser(cursor: UserSecurityQuestionsAnserWhereUniqueInput, orderBy: UserSecurityQuestionsAnserOrderByInput, skip: Int, take: Int, where: UserSecurityQuestionsAnserWhereInput): UserSecurityQuestionsAnser
   findFirstcandidate(cursor: candidateWhereUniqueInput, orderBy: candidateOrderByInput, skip: Int, take: Int, where: candidateWhereInput): candidate
+  findFirstinvPaymentType(cursor: invPaymentTypeWhereUniqueInput, orderBy: invPaymentTypeOrderByInput, skip: Int, take: Int, where: invPaymentTypeWhereInput): invPaymentType
+  invPaymentType(where: invPaymentTypeWhereUniqueInput!): invPaymentType
+  invPaymentTypes(after: invPaymentTypeWhereUniqueInput, before: invPaymentTypeWhereUniqueInput, first: Int, last: Int, orderBy: [invPaymentTypeOrderByInput!], where: invPaymentTypeWhereInput): [invPaymentType!]!
+  invPaymentTypesCount(where: invPaymentTypeWhereInput): Int
   marketingSource(where: MarketingSourceWhereUniqueInput!): MarketingSource
   marketingSources(after: MarketingSourceWhereUniqueInput, before: MarketingSourceWhereUniqueInput, first: Int, last: Int, orderBy: [MarketingSourceOrderByInput!], where: MarketingSourceWhereInput): [MarketingSource!]!
   marketingSourcesCount(where: MarketingSourceWhereInput): Int
@@ -26440,8 +26535,8 @@ type User {
   can_void: Int!
   clocked_in: DateTime
   clocked_out: DateTime
-  company: Company!
-  company_id: Int!
+  company: Company
+  company_id: Int
   created: DateTime
   custom_id: String!
   default_contract_id: Int!
@@ -26529,7 +26624,7 @@ type UserAvgAggregateOutputType {
   can_rota: Float!
   can_see_personal: Float!
   can_void: Float!
-  company_id: Float!
+  company_id: Float
   default_contract_id: Float!
   delete_treatment: Float!
   deleted: Float!
@@ -26597,7 +26692,7 @@ type UserCountAggregateOutputType {
   can_void: Int!
   clocked_in: Int
   clocked_out: Int
-  company_id: Int!
+  company_id: Int
   created: Int
   custom_id: Int
   default_contract_id: Int!
@@ -26694,7 +26789,7 @@ input UserCreateInput {
   can_void: Int
   clocked_in: DateTime
   clocked_out: DateTime
-  company: CompanyCreateNestedOneWithoutUserInput!
+  company: CompanyCreateNestedOneWithoutUserInput
   created: DateTime
   custom_id: String!
   default_contract_id: Int!
@@ -26909,7 +27004,7 @@ input UserCreateWithoutUser_security_questions_answerInput {
   can_void: Int
   clocked_in: DateTime
   clocked_out: DateTime
-  company: CompanyCreateNestedOneWithoutUserInput!
+  company: CompanyCreateNestedOneWithoutUserInput
   created: DateTime
   custom_id: String!
   default_contract_id: Int!
@@ -27011,7 +27106,7 @@ type UserMaxAggregateOutputType {
   can_void: Int!
   clocked_in: DateTime
   clocked_out: DateTime
-  company_id: Int!
+  company_id: Int
   created: DateTime
   custom_id: String
   default_contract_id: Int!
@@ -27108,7 +27203,7 @@ type UserMinAggregateOutputType {
   can_void: Int!
   clocked_in: DateTime
   clocked_out: DateTime
-  company_id: Int!
+  company_id: Int
   created: DateTime
   custom_id: String
   default_contract_id: Int!
@@ -27408,7 +27503,7 @@ input UserScalarWhereInput {
   can_void: IntFilter
   clocked_in: DateTimeNullableFilter
   clocked_out: DateTimeNullableFilter
-  company_id: IntFilter
+  company_id: IntNullableFilter
   created: DateTimeNullableFilter
   custom_id: StringFilter
   default_contract_id: IntFilter
@@ -27727,7 +27822,7 @@ type UserSumAggregateOutputType {
   can_rota: Int!
   can_see_personal: Int!
   can_void: Int!
-  company_id: Int!
+  company_id: Int
   default_contract_id: Int!
   delete_treatment: Int!
   deleted: Int!
@@ -27794,7 +27889,7 @@ input UserUncheckedCreateInput {
   can_void: Int
   clocked_in: DateTime
   clocked_out: DateTime
-  company_id: Int!
+  company_id: Int
   created: DateTime
   custom_id: String!
   default_contract_id: Int!
@@ -27995,7 +28090,7 @@ input UserUncheckedCreateWithoutUser_security_questions_answerInput {
   can_void: Int
   clocked_in: DateTime
   clocked_out: DateTime
-  company_id: Int!
+  company_id: Int
   created: DateTime
   custom_id: String!
   default_contract_id: Int!
@@ -28092,7 +28187,7 @@ input UserUncheckedUpdateInput {
   can_void: IntFieldUpdateOperationsInput
   clocked_in: NullableDateTimeFieldUpdateOperationsInput
   clocked_out: NullableDateTimeFieldUpdateOperationsInput
-  company_id: IntFieldUpdateOperationsInput
+  company_id: NullableIntFieldUpdateOperationsInput
   created: NullableDateTimeFieldUpdateOperationsInput
   custom_id: StringFieldUpdateOperationsInput
   default_contract_id: IntFieldUpdateOperationsInput
@@ -28190,7 +28285,7 @@ input UserUncheckedUpdateManyInput {
   can_void: IntFieldUpdateOperationsInput
   clocked_in: NullableDateTimeFieldUpdateOperationsInput
   clocked_out: NullableDateTimeFieldUpdateOperationsInput
-  company_id: IntFieldUpdateOperationsInput
+  company_id: NullableIntFieldUpdateOperationsInput
   created: NullableDateTimeFieldUpdateOperationsInput
   custom_id: StringFieldUpdateOperationsInput
   default_contract_id: IntFieldUpdateOperationsInput
@@ -28493,7 +28588,7 @@ input UserUncheckedUpdateWithoutUser_security_questions_answerInput {
   can_void: IntFieldUpdateOperationsInput
   clocked_in: NullableDateTimeFieldUpdateOperationsInput
   clocked_out: NullableDateTimeFieldUpdateOperationsInput
-  company_id: IntFieldUpdateOperationsInput
+  company_id: NullableIntFieldUpdateOperationsInput
   created: NullableDateTimeFieldUpdateOperationsInput
   custom_id: StringFieldUpdateOperationsInput
   default_contract_id: IntFieldUpdateOperationsInput
@@ -28590,7 +28685,7 @@ input UserUpdateInput {
   can_void: IntFieldUpdateOperationsInput
   clocked_in: NullableDateTimeFieldUpdateOperationsInput
   clocked_out: NullableDateTimeFieldUpdateOperationsInput
-  company: CompanyUpdateOneRequiredWithoutUserInput
+  company: CompanyUpdateOneWithoutUserInput
   created: NullableDateTimeFieldUpdateOperationsInput
   custom_id: StringFieldUpdateOperationsInput
   default_contract_id: IntFieldUpdateOperationsInput
@@ -28909,7 +29004,7 @@ input UserUpdateWithoutUser_security_questions_answerInput {
   can_void: IntFieldUpdateOperationsInput
   clocked_in: NullableDateTimeFieldUpdateOperationsInput
   clocked_out: NullableDateTimeFieldUpdateOperationsInput
-  company: CompanyUpdateOneRequiredWithoutUserInput
+  company: CompanyUpdateOneWithoutUserInput
   created: NullableDateTimeFieldUpdateOperationsInput
   custom_id: StringFieldUpdateOperationsInput
   default_contract_id: IntFieldUpdateOperationsInput
@@ -29020,7 +29115,7 @@ input UserWhereInput {
   clocked_in: DateTimeNullableFilter
   clocked_out: DateTimeNullableFilter
   company: CompanyWhereInput
-  company_id: IntFilter
+  company_id: IntNullableFilter
   created: DateTimeNullableFilter
   custom_id: StringFilter
   default_contract_id: IntFilter
@@ -29303,4 +29398,134 @@ enum cm_contacts_Status {
 enum company_details_tax_name {
   GST
   VAT
+}
+
+type invPaymentType {
+  company_id: Int!
+  created_date: DateTime
+  description: String
+  epos_display: Int
+  id: Int!
+  is_active: Int!
+  is_money: Int!
+  modified_date: DateTime
+  name: String
+  type: String!
+  uid: Int
+}
+
+input invPaymentTypeCreateInput {
+  company_id: Int!
+  created_date: DateTime
+  description: String
+  epos_display: Int
+  is_active: Int!
+  is_money: Int!
+  modified_date: DateTime
+  name: String
+  type: String
+  uid: Int
+}
+
+input invPaymentTypeOrderByInput {
+  company_id: SortOrder
+  created_date: SortOrder
+  description: SortOrder
+  epos_display: SortOrder
+  id: SortOrder
+  is_active: SortOrder
+  is_money: SortOrder
+  modified_date: SortOrder
+  name: SortOrder
+  type: SortOrder
+  uid: SortOrder
+}
+
+input invPaymentTypeUncheckedCreateInput {
+  company_id: Int!
+  created_date: DateTime
+  description: String
+  epos_display: Int
+  id: Int
+  is_active: Int!
+  is_money: Int!
+  modified_date: DateTime
+  name: String
+  type: String
+  uid: Int
+}
+
+input invPaymentTypeUncheckedUpdateInput {
+  company_id: IntFieldUpdateOperationsInput
+  created_date: NullableDateTimeFieldUpdateOperationsInput
+  description: NullableStringFieldUpdateOperationsInput
+  epos_display: NullableIntFieldUpdateOperationsInput
+  id: IntFieldUpdateOperationsInput
+  is_active: IntFieldUpdateOperationsInput
+  is_money: IntFieldUpdateOperationsInput
+  modified_date: NullableDateTimeFieldUpdateOperationsInput
+  name: NullableStringFieldUpdateOperationsInput
+  type: StringFieldUpdateOperationsInput
+  uid: NullableIntFieldUpdateOperationsInput
+}
+
+input invPaymentTypeUncheckedUpdateManyInput {
+  company_id: IntFieldUpdateOperationsInput
+  created_date: NullableDateTimeFieldUpdateOperationsInput
+  description: NullableStringFieldUpdateOperationsInput
+  epos_display: NullableIntFieldUpdateOperationsInput
+  id: IntFieldUpdateOperationsInput
+  is_active: IntFieldUpdateOperationsInput
+  is_money: IntFieldUpdateOperationsInput
+  modified_date: NullableDateTimeFieldUpdateOperationsInput
+  name: NullableStringFieldUpdateOperationsInput
+  type: StringFieldUpdateOperationsInput
+  uid: NullableIntFieldUpdateOperationsInput
+}
+
+input invPaymentTypeUpdateInput {
+  company_id: IntFieldUpdateOperationsInput
+  created_date: NullableDateTimeFieldUpdateOperationsInput
+  description: NullableStringFieldUpdateOperationsInput
+  epos_display: NullableIntFieldUpdateOperationsInput
+  is_active: IntFieldUpdateOperationsInput
+  is_money: IntFieldUpdateOperationsInput
+  modified_date: NullableDateTimeFieldUpdateOperationsInput
+  name: NullableStringFieldUpdateOperationsInput
+  type: StringFieldUpdateOperationsInput
+  uid: NullableIntFieldUpdateOperationsInput
+}
+
+input invPaymentTypeUpdateManyMutationInput {
+  company_id: IntFieldUpdateOperationsInput
+  created_date: NullableDateTimeFieldUpdateOperationsInput
+  description: NullableStringFieldUpdateOperationsInput
+  epos_display: NullableIntFieldUpdateOperationsInput
+  is_active: IntFieldUpdateOperationsInput
+  is_money: IntFieldUpdateOperationsInput
+  modified_date: NullableDateTimeFieldUpdateOperationsInput
+  name: NullableStringFieldUpdateOperationsInput
+  type: StringFieldUpdateOperationsInput
+  uid: NullableIntFieldUpdateOperationsInput
+}
+
+input invPaymentTypeWhereInput {
+  AND: [invPaymentTypeWhereInput]
+  NOT: [invPaymentTypeWhereInput]
+  OR: [invPaymentTypeWhereInput]
+  company_id: IntFilter
+  created_date: DateTimeNullableFilter
+  description: StringNullableFilter
+  epos_display: IntNullableFilter
+  id: IntFilter
+  is_active: IntFilter
+  is_money: IntFilter
+  modified_date: DateTimeNullableFilter
+  name: StringNullableFilter
+  type: StringFilter
+  uid: IntNullableFilter
+}
+
+input invPaymentTypeWhereUniqueInput {
+  id: Int
 }

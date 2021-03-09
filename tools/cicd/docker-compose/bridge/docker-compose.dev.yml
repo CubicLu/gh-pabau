@@ -1,19 +1,57 @@
-version: '1'
+version: '2'
 services:
-  redis:
-    image: redis
-  datadog:
-    links:
-      - redis
-    image: gcr.io/datadoghq/agent:latest
-    environment:
-      - DD_SITE=datadoghq.com
+  crm-fpm:
+    image: crm-fpm-dev
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /proc/:/host/proc/:ro
-      - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
+      - ../../../../:/var/www/html/:ro
+    restart: unless-stopped
+    labels:
+      #important to flag it for /cron/period shell scripts and cron execution locally and on the pod
+      io.rancher.project_service.name: _dev_
+    environment:
+      IS_POD: 1
+      IS_LOCALDEV: 1
+  crm-apache:
+    image: crm-apache-dev
+
+    environment:
+      APACHE_DOCUMENT_ROOT: /var/www/html/app/
+      IS_POD: 1
+      IS_LOCALDEV: 1
+    volumes:
+      - ../../../../:/var/www/html/:ro
+    depends_on:
+      - db
+      - crm-fpm
+    ports:
+      - "5000:80"
+    restart: unless-stopped
+  connect-fpm:
+
+    image: connect-fpm
+    volumes:
+      - ../../../../:/var/www/html/:ro
+    restart: unless-stopped
+  connect-apache:
+
+    image: connect-apache
+    environment:
+      APACHE_DOCUMENT_ROOT: /var/www/html/app/modules/connect/
+      IS_POD: 1
+      IS_CONNECT: 1
+    volumes:
+      - ../../../../:/var/www/html/:ro
+    depends_on:
+      - crm-apache
+      - db
+      - connect-fpm
+    ports:
+      - "5001:80"
+    restart: unless-stopped
+
   db:
     image: mariadb:10.5
+
     environment:
       MYSQL_DATABASE: pabau
       MYSQL_PASSWORD: '456'
@@ -49,7 +87,92 @@ services:
     restart: unless-stopped
   phpmyadmin:
     image: phpmyadmin
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - ../master/phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php:ro
     ports:
       - 888:80/tcp
-  volumes:
-    db_data:
+    labels:
+      io.rancher.scheduler.affinity:host_label: pod_master=true
+  cron:
+    image: blacklabelops/cronium:latest
+    logging:
+      driver: json-file
+      options:
+        max-size: 50m
+        max-file: '10'
+    environment:
+      CUST_TAG: dev-prelive
+      JOB1NAME: 'minutely'
+      JOB1COMMAND: /script/docker_sibling.sh crm-php exec php /var/www/html/cron/_every_minute.php
+      JOB1CRON: '* * * * *'
+      JOB1CONTAINER: = 'TestContainer'
+
+      JOB3NAME: 'minutely'
+      JOB3COMMAND: /script/docker_sibling.sh crm-php exec php /var/www/html/cron/_every_minute.php
+      JOB3CRON: '* * * * *'
+      JOB3CONTAINER: = 'TestContainer'
+
+      JOB2NAME: 'hourly'
+      JOB2COMMAND: /script/docker_sibling.sh crm-php exec php /var/www/html/cron/_every_hour.php
+      JOB2CRON: '1 * * * *'
+      JOB2CONTAINER: = 'HourlyContainer'
+    #      JOB_NAME3: 'Cron Nightly'
+    #      JOB_COMMAND3: /script/docker_sibling.sh php exec php /var/www/html/cron/_every_night.php
+    #      JOB_TIME3: ' 3 0 * * *'
+    #      #As a reminder, cron timetable is like follows: : Second : Minute : Hour : Day of Month : Month : Day of Week
+    #      JOB_NAME4: 'Cron Weekly'
+    #      JOB_COMMAND4: /script/docker_sibling.sh php exec php /var/www/html/cron/_every_week.php
+    #      JOB_TIME4: ' 5 0 * * 0'
+    #      #As a reminder, cron timetable is like follows: : Second : Minute : Hour : Day of Month : Month : Day of Week
+    #      JOB_NAME5: 'Cron Monthly'
+    #      JOB_COMMAND5: /script/docker_sibling.sh php exec php /var/www/html/cron/_every_month.php
+    #      JOB_TIME5: ' 9 0 1 * *'
+    #      #As a reminder, cron timetable is like follows: : Second : Minute : Hour : Day of Month : Month : Day of Week
+    #      JOB_NAME6: 'Cron Yearly'
+    #      JOB_COMMAND6: /script/docker_sibling.sh php exec php /var/www/html/cron/_every_year.php
+    #      JOB_TIME6: ' 25 0 1 1 *'
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /usr/local/share/pabau/prelive/conf/pods/compose-images/node/:/script/:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    links:
+      - crm-fpm
+    depends_on:
+      - crm-fpm
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.scheduler.affinity:container_label: io.rancher.stack_service.name=$${stack_name}/php
+      io.rancher.stack.name: _dev_
+  redis:
+    image: redis
+  datadog:
+    links:
+      - redis
+    image: gcr.io/datadoghq/agent:latest
+    environment:
+      - DD_SITE=datadoghq.com
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
+  postgres:
+    image: postgres:12
+    restart: always
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgrespassword
+  graphql-engine:
+    image: hasura/graphql-engine:v1.3.3
+    ports:
+      - "8080:8080"
+    depends_on:
+      - "postgres"
+    restart: always
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      HASURA_GRAPHQL_ADMIN_SECRET: madskills
