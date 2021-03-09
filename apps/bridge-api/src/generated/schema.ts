@@ -1,29 +1,30 @@
 export interface TwoFactorHistory {
   id: number;
-  companyId: number;
+  company_id: number;
   passcode: string;
-  userId: number;
-  requestDate: Date;
-  isConfirmed: number;
+  user_id: number;
+  request_date: Date;
+  is_confirmed: number;
   company: Company;
 }
 
-export interface ThirdPartyAccess {
+export interface ThirdPartyAcces {
   id: number;
-  companyId: number;
-  companyName: string;
+  occupier: number;
+  company_id: number;
+  company_name: string;
   email: string;
   passcode: number;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   logo: string;
-  accessId: number;
+  access_id: number;
   company: Company;
 }
 
 export interface AcceptEmailToken {
   id: number;
-  companyId: number;
+  company_id: number;
   email: string;
   token: number;
   company: Company;
@@ -31,9 +32,9 @@ export interface AcceptEmailToken {
 
 export interface AccountBalance {
   id: number;
-  contactId?: number;
-  companyId: number;
-  insuranceCompanyId: number;
+  contact_id?: number;
+  company_id: number;
+  insurance_company_id: number;
   balance: number;
   imported: number;
   company: Company;
@@ -41,76 +42,76 @@ export interface AccountBalance {
 
 export interface AccountBalanceLog {
   id: number;
-  companyId: number;
-  contactId: number;
-  insuranceCompanyId: number;
+  company_id: number;
+  contact_id: number;
+  insurance_company_id: number;
   amount: number;
-  dateTime: number;
-  productId?: number;
+  date_time: number;
+  product_id?: number;
   description: string;
-  saleId: number;
-  referralId: number;
+  sale_id: number;
+  referral_id: number;
   imported: number;
-  refSaleId: number;
+  ref_sale_id: number;
 }
 
 export interface AccountManager {
   id: number;
-  organisationName?: string;
-  organisationStatus: number;
-  organisationType?: number;
-  organisationNumber?: string;
-  organisationOwner?: number;
+  organisation_name?: string;
+  organisation_status: number;
+  organisation_type?: number;
+  organisation_number?: string;
+  organisation_owner?: number;
   address1?: string;
   address2?: string;
   address3?: string;
   town?: string;
   county?: string;
-  postCode?: string;
+  post_code?: string;
   country?: string;
   tel?: string;
-  altTel?: string;
+  alt_tel?: string;
   email?: string;
   fax?: string;
   website?: string;
-  slaContract?: number;
-  vatRegId: string;
-  createdDate?: Date;
-  modifiedDate?: Date;
+  sla_contract?: number;
+  vat_reg_id: string;
+  created_date?: Date;
+  modified_date?: Date;
   occupier?: number;
-  conPer1: string;
-  conNum1: string;
-  conPer2: string;
-  conNum2: string;
-  conPer3: string;
-  conNum3: string;
+  con_per_1: string;
+  con_num_1: string;
+  con_per_2: string;
+  con_num_2: string;
+  con_per_3: string;
+  con_num_3: string;
 }
 
 export interface AcLog {
   id: number;
-  urlId: number;
-  actionId: number;
+  url_id: number;
+  action_id: number;
   critical: boolean;
   occupier: number;
-  userId: number;
+  user_id: number;
   date: Date;
   humanize?: string;
-  userAgent: string;
+  user_agent: string;
   ipv4: number;
-  rowAff: number;
-  rowId: number;
-  rowData?: string;
+  row_aff: number;
+  row_id: number;
+  row_data?: string;
 }
 
 export interface AcLogAction {
   id: number;
   pabauid: string;
-  actionName: string;
-  actionStatus: boolean;
+  action_name: string;
+  action_status: boolean;
   command: string;
-  tableAff: string;
-  rowAff: number;
-  rowId: number;
+  table_aff: string;
+  row_aff: number;
+  row_id: number;
 }
 
 export interface AcLogUrl {
@@ -125,60 +126,51 @@ export interface Company {
   user: string;
   digit8: number;
   admin: number;
-  creationDate: Date;
+  creation_date: Date;
   image: string;
-  slug: string;
-  remoteUrl: string;
-  remoteConnect: string;
-  cronEnabled: boolean;
-  Details?: CompanyDetails;
-  Subscription?: CompanySubscription;
-  TwoFactorHistory?: TwoFactorHistory[];
-  ThirdPartyAccess?: ThirdPartyAccess[];
-  AcceptEmailToken?: AcceptEmailToken[];
-  AccountBalance?: AccountBalance;
-  MarketingSource?: MarketingSource[];
-  CmCase?: CmCase[];
-  CmCaseReply?: CmCaseReply[];
-  CmCampaign?: CmCampaign[];
-  User?: User[];
+  slug?: string;
+  remote_url?: string;
+  remote_connect?: string;
+  cron_enabled?: boolean;
+  details?: CompanyDetails;
+  subscription?: CompanySubscription;
 }
 
 export interface AdvertCampaign {
   id: number;
-  advertName: string;
-  advertType: string;
-  campaignBudget: string;
-  campaignInterval: string;
-  campaignAudience: string;
-  campaignId: number;
+  advert_name: string;
+  advert_type: string;
+  campaign_budget: string;
+  campaign_interval: string;
+  campaign_audience: string;
+  campaign_id: number;
   cid: number;
-  attachId: number;
+  attach_id: number;
   engagement: string;
-  advertReach: number;
+  advert_reach: number;
   Clicks: number;
   start: string;
   end: string;
   url: string;
-  attachedBy: string;
-  attachTime: string;
+  attached_by: string;
+  attach_time: string;
 }
 
 export interface ApiDebug {
   id: number;
-  dataReceived: string;
-  companyId: number;
-  apiCode: number;
-  createdDate: Date;
-  dataType: string;
+  data_received: string;
+  company_id: number;
+  api_code: number;
+  created_date: Date;
+  data_type: string;
 }
 
 export interface ApiKey {
   id: number;
-  companyId: number;
-  apiKey: string;
-  appType: string;
-  createdDate: Date;
+  company_id: number;
+  api_key: string;
+  app_type: string;
+  created_date: Date;
   contacts: number;
   bookings: number;
   invoices: number;
@@ -187,17 +179,17 @@ export interface ApiKey {
   staff: number;
   financials: number;
   leads: number;
-  medicalForms: number;
+  medical_forms: number;
   reports: number;
 }
 
 export interface AppBeforeAfter {
   id: number;
-  companyId: number;
-  contactId: number;
-  beforeImg: string;
-  afterImg: string;
-  passKey: string;
+  company_id: number;
+  contact_id: number;
+  before_img: string;
+  after_img: string;
+  pass_key: string;
 }
 
 export interface AppPermission {
@@ -208,7 +200,7 @@ export interface AppPermission {
 
 export interface AppSubscription {
   id: number;
-  keyValue: string;
+  key_value: string;
   name: string;
   Description: string;
   price: number;
@@ -217,13 +209,13 @@ export interface AppSubscription {
 export interface AppSubscriptionsCompanyPrice {
   id: number;
   occupier: number;
-  appKeyValue: string;
+  app_key_value: string;
   price: number;
 }
 
 export interface AttachmentHelperLite {
   id: number;
-  contactId: number;
+  contact_id: number;
   f: string;
   x: string;
   type: number;
@@ -231,14 +223,14 @@ export interface AttachmentHelperLite {
 
 export interface AtAnswer {
   id: number;
-  questionId: number;
+  question_id: number;
   name: string;
   image: string;
 }
 
 export interface SecondAtAnswer {
   id: number;
-  questionId: number;
+  question_id: number;
   name: string;
 }
 
@@ -251,7 +243,7 @@ export interface AtConcern {
 
 export interface AtQuestion {
   id: number;
-  companyId: number;
+  company_id: number;
   name: string;
   order: number;
   region: string;
@@ -259,23 +251,23 @@ export interface AtQuestion {
 
 export interface SecondAtQuestion {
   id: number;
-  companyId: number;
+  company_id: number;
   name: string;
   type: string;
 }
 
 export interface AtQuestionsRelation {
-  companyId: number;
-  answerId: number;
-  productId: number;
+  company_id: number;
+  answer_id: number;
+  product_id: number;
 }
 
 export interface AtQuizTake {
   id: number;
-  companyId: number;
+  company_id: number;
   name: string;
   email: string;
-  takeDate: Date;
+  take_date: Date;
   answers: string;
   concerns: string;
   answers2: string;
@@ -284,15 +276,15 @@ export interface AtQuizTake {
 
 export interface AtSetting {
   id: number;
-  companyId: number;
+  company_id: number;
   logo: string;
   background: string;
-  fontFamily: string;
+  font_family: string;
 }
 
 export interface AtTreatment {
   id: number;
-  companyId: number;
+  company_id: number;
   name: string;
   image: string;
   description: string;
@@ -300,27 +292,27 @@ export interface AtTreatment {
 
 export interface AutomationAction {
   id: number;
-  triggerId: number;
+  trigger_id: number;
   company: number;
   code: string;
-  actionData: string;
+  action_data: string;
   order: number;
 }
 
 export interface AutomationDelay {
   id: number;
-  actionRows: string;
-  dataArray: string;
+  action_rows: string;
+  data_array: string;
   code: string;
   company: number;
   delay: number;
-  dateQueued: Date;
-  appointmentId?: number;
+  date_queued: Date;
+  appointment_id?: number;
 }
 
 export interface AutomationFolder {
   id: number;
-  companyId: number;
+  company_id: number;
   name: string;
   description: string;
 }
@@ -328,9 +320,9 @@ export interface AutomationFolder {
 export interface AutomationLog {
   id: number;
   company: number;
-  dateCreated: Date;
+  date_created: Date;
   message: string;
-  parentId?: number;
+  parent_id?: number;
   uid?: number;
 }
 
@@ -340,20 +332,20 @@ export interface AutomationRule {
   company: number;
   active: boolean;
   source: string;
-  dateStart?: Date;
-  dateEnd?: Date;
+  date_start?: Date;
+  date_end?: Date;
   description: string;
-  needsConfig: number;
-  folderId: number;
+  needs_config: number;
+  folder_id: number;
 }
 
 export interface AutomationTrigger {
   id: number;
-  ruleId: number;
+  rule_id: number;
   name: string;
   company: number;
   code: string;
-  triggerData: string;
+  trigger_data: string;
   order: number;
 }
 
@@ -368,198 +360,198 @@ export interface AvilableDatesLog {
 
 export interface BacsAccount {
   id: number;
-  bankTag: string;
-  compId: number;
-  branchName: string;
-  accountHolder: string;
-  accountNo: number;
-  sortCode: string;
+  bank_tag: string;
+  comp_id: number;
+  branch_name: string;
+  account_holder: string;
+  account_no: number;
+  sort_code: string;
 }
 
 export interface Batch {
   id: number;
-  companyId: number;
-  orderId: number;
-  orderItemId?: string;
-  batchNo: string;
+  company_id: number;
+  order_id: number;
+  order_item_id?: string;
+  batch_no: string;
   qty: number;
   uid: number;
-  creationDate: Date;
-  expiryDate?: Date;
+  creation_date: Date;
+  expiry_date?: Date;
 }
 
 export interface BatchItem {
   id: number;
-  batchId: number;
-  companyId: number;
-  productId: number;
-  usageDate: Date;
-  patientId: number;
-  createdById: number;
+  batch_id: number;
+  company_id: number;
+  product_id: number;
+  usage_date: Date;
+  patient_id: number;
+  created_by_id: number;
   qty: number;
-  appointmentId: number;
-  batchFlag: number;
+  appointment_id: number;
+  batch_flag: number;
 }
 
 export interface BlockReason {
   id: number;
-  reasonName: string;
+  reason_name: string;
   occupier: string;
-  isActive: number;
-  blockColor: string;
-  isPaid: number;
-  defaultTime?: string;
+  is_active: number;
+  block_color: string;
+  is_paid: number;
+  default_time?: string;
   type: number;
-  customId: number;
+  custom_id: number;
 }
 
 export interface BnfDrug {
   id: number;
   url: string;
   page: string;
-  drugName: string;
-  indicationsDosage?: string;
-  contraIndications?: string;
+  drug_name: string;
+  indications_dosage?: string;
+  contra_indications?: string;
   cautions?: string;
-  sideEffects?: string;
+  side_effects?: string;
   pregnancy?: string;
-  breastFeeding?: string;
-  prescribingInfo?: string;
-  patientAdvice?: string;
+  breast_feeding?: string;
+  prescribing_info?: string;
+  patient_advice?: string;
   directions?: string;
-  specificInfo?: string;
+  specific_info?: string;
 }
 
 export interface BodyChartTemplate {
   id: number;
-  templateName: string;
-  templateUrl: string;
+  template_name: string;
+  template_url: string;
   tags: string;
   occupier: number;
   uid: number;
-  creationDate: Date;
-  chartOrder: number;
-  templateType: number;
+  creation_date: Date;
+  chart_order: number;
+  template_type: number;
 }
 
 export interface BookingSetting {
   id: number;
   occupier: number;
-  emailMode: number;
-  smsMode: number;
-  emailId?: number;
-  emailConfirmId: number;
-  smsId: number;
-  emailReminderId: number;
-  autoCal?: number;
-  autoEmail?: number;
-  autoSms?: number;
-  autoCon?: number;
-  feedbackMode: number;
-  feedbackId: number;
-  smsName: string;
-  feedbackDaysAfter: number;
-  feedbackSendTime: Date;
-  reminderMode: number;
-  daysBefore: number;
-  sendTime: Date;
-  smsDaysBefore: number;
-  smsSendTime: Date;
-  classSmsDaysBefore: number;
-  classSmsSendTime: Date;
-  roomSupport: number;
-  feedbackFromemail: string;
-  confirmFromemail: string;
-  smsFrom?: string;
-  reminderFromemail: string;
-  sendSms: number;
-  sendEmail: number;
-  sendReminder: number;
-  sendFeedback: number;
-  attachInvoice: number;
-  startTime: string;
-  endTime: string;
-  bookingEmails: string;
-  slotInterval: number;
-  fontColor: string;
-  disableSecondCal: number;
-  fontSize: number;
-  disableTime: number;
-  lockTimer: number;
-  disableSurname: number;
-  arrivedColor: string;
-  completeColor: string;
-  cancelSmsNotify: number;
-  cancelEmailNotify: number;
-  rescheduleSmsNotify: number;
-  rescheduleEmailNotify: number;
-  noshowEmailNotify: number;
-  classNoshowEmailNotify: number;
-  classRescheduleEmailNotify: number;
-  classReminderEmailNotify: number;
-  classNoshowSmsNotify: number;
-  classRescheduleSmsNotify: number;
-  classReminderSmsNotify: number;
-  noshowSmsNotify: number;
-  locationSupport: number;
-  noshowCount: number;
-  rescheduleSmsFrom: string;
-  rescheduleSmsTmpl: number;
-  rescheduleEmailFrom: string;
-  rescheduleEmailTmpl: number;
-  cancelSmsFrom: string;
-  cancelSmsTmpl: number;
-  cancelEmailFrom: string;
-  cancelEmailTmpl: number;
-  smsConfirmId: number;
-  noshowEmailFrom: string;
-  noshowEmailTmpl: number;
-  classNoshowEmailTmpl: number;
-  classRescheduleEmailTmpl: number;
-  classReminderEmailTmpl: number;
-  classNoshowSmsTmpl: number;
-  classRescheduleSmsTmpl: number;
-  classReminderSmsTmpl: number;
-  noshowSmsFrom: string;
-  noshowSmsTmpl: number;
-  columnTotal: number;
-  tooltipHead: string;
-  tooltipBody: string;
-  apptHead: string;
-  apptBody: string;
-  holidayResetDate?: number;
-  holidayUsualDay?: string;
-  holidayPerMonth?: string;
-  holidayDefault?: string;
-  groupBookingChangeEmailEnable?: number;
-  groupBookingChangeTemplateId?: number;
-  groupBookingCancelEmailEnable: boolean;
-  groupBookingCancelTemplateId: number;
-  packageUsedEmailEnable: number;
-  packageUsedTemplateId: number;
-  disableIcs?: number;
+  email_mode: number;
+  sms_mode: number;
+  email_id?: number;
+  email_confirm_id: number;
+  sms_id: number;
+  email_reminder_id: number;
+  auto_cal?: number;
+  auto_email?: number;
+  auto_sms?: number;
+  auto_con?: number;
+  feedback_mode: number;
+  feedback_id: number;
+  sms_name: string;
+  feedback_days_after: number;
+  feedback_send_time: Date;
+  reminder_mode: number;
+  days_before: number;
+  send_time: Date;
+  sms_days_before: number;
+  sms_send_time: Date;
+  class_sms_days_before: number;
+  class_sms_send_time: Date;
+  room_support: number;
+  feedback_fromemail: string;
+  confirm_fromemail: string;
+  sms_from?: string;
+  reminder_fromemail: string;
+  send_sms: number;
+  send_email: number;
+  send_reminder: number;
+  send_feedback: number;
+  attach_invoice: number;
+  start_time: string;
+  end_time: string;
+  booking_emails: string;
+  slot_interval: number;
+  font_color: string;
+  disable_second_cal: number;
+  font_size: number;
+  disable_time: number;
+  lock_timer: number;
+  disable_surname: number;
+  arrived_color: string;
+  complete_color: string;
+  cancel_sms_notify: number;
+  cancel_email_notify: number;
+  reschedule_sms_notify: number;
+  reschedule_email_notify: number;
+  noshow_email_notify: number;
+  class_noshow_email_notify: number;
+  class_reschedule_email_notify: number;
+  class_reminder_email_notify: number;
+  class_noshow_sms_notify: number;
+  class_reschedule_sms_notify: number;
+  class_reminder_sms_notify: number;
+  noshow_sms_notify: number;
+  location_support: number;
+  noshow_count: number;
+  reschedule_sms_from: string;
+  reschedule_sms_tmpl: number;
+  reschedule_email_from: string;
+  reschedule_email_tmpl: number;
+  cancel_sms_from: string;
+  cancel_sms_tmpl: number;
+  cancel_email_from: string;
+  cancel_email_tmpl: number;
+  sms_confirm_id: number;
+  noshow_email_from: string;
+  noshow_email_tmpl: number;
+  class_noshow_email_tmpl: number;
+  class_reschedule_email_tmpl: number;
+  class_reminder_email_tmpl: number;
+  class_noshow_sms_tmpl: number;
+  class_reschedule_sms_tmpl: number;
+  class_reminder_sms_tmpl: number;
+  noshow_sms_from: string;
+  noshow_sms_tmpl: number;
+  column_total: number;
+  tooltip_head: string;
+  tooltip_body: string;
+  appt_head: string;
+  appt_body: string;
+  holiday_reset_date?: number;
+  holiday_usual_day?: string;
+  holiday_per_month?: string;
+  holiday_default?: string;
+  group_booking_change_email_enable?: number;
+  group_booking_change_template_id?: number;
+  group_booking_cancel_email_enable: boolean;
+  group_booking_cancel_template_id: number;
+  package_used_email_enable: number;
+  package_used_template_id: number;
+  disable_ics?: number;
   initials: number;
-  disableServiceFilter: number;
-  disableBookByPackage: number;
-  allowOverlappingAppts: number;
-  modifiedBy: number;
-  modifiedDate: Date;
-  conferenceReminderId?: number;
+  disable_service_filter: number;
+  disable_book_by_package: number;
+  allow_overlapping_appts: number;
+  modified_by: number;
+  modified_date: Date;
+  conference_reminder_id?: number;
 }
 
 export interface BookingMaster {
   id: number;
-  classId: string;
-  userId: string;
-  bookingDate?: string;
-  paymentStatus: booking_master_payment_status;
-  cancelStatus: booking_master_cancel_status;
-  cancelDate: string;
-  companyId: string;
-  classCurrency?: string;
-  classPrice?: string;
-  checkedIn: number;
-  payedBy: string;
+  class_id: string;
+  user_id: string;
+  booking_date?: string;
+  payment_status: booking_master_payment_status;
+  cancel_status: booking_master_cancel_status;
+  cancel_date: string;
+  company_id: string;
+  class_currency?: string;
+  class_price?: string;
+  checked_in: number;
+  payed_by: string;
   waiting: number;
 }
 
@@ -568,91 +560,91 @@ export interface BookingStatus {
   name: string;
   value: string;
   icon: string;
-  iconColor: string;
-  companyId: number;
+  icon_color: string;
+  company_id: number;
   indicator?: booking_statuses_indicator;
-  basicField: boolean;
+  basic_field: boolean;
   ord: number;
-  trackTime: boolean;
+  track_time: boolean;
 }
 
 export interface BookingStatusChange {
   id: number;
-  bookingId: number;
+  booking_id: number;
   status: string;
-  startDate: Date;
-  endDate?: Date;
-  companyId: number;
-  userId: number;
+  start_date: Date;
+  end_date?: Date;
+  company_id: number;
+  user_id: number;
 }
 
 export interface BookitProGeneral {
   id: number;
   occupier: string;
-  advanceTime: string;
-  enablePayments: string;
-  paypalAddress: string;
-  receiveEmail: string;
-  createInvoice: string;
+  advance_time: string;
+  enable_payments: string;
+  paypal_address: string;
+  receive_email: string;
+  create_invoice: string;
   deposit: number;
-  showPrices: string;
-  showDuration: string;
-  showDescription: boolean;
-  headerColor: string;
-  bookingEmails: string;
-  onlineColor: string;
-  warningMessage: string;
-  allowCancel: number;
-  disableFacebook: number;
+  show_prices: string;
+  show_duration: string;
+  show_description: boolean;
+  header_color: string;
+  booking_emails: string;
+  online_color: string;
+  warning_message: string;
+  allow_cancel: number;
+  disable_facebook: number;
   interval: number;
-  disableExtraInformation: number;
-  couponActive: number;
-  paymentApiUrl: string;
-  accountDeposit: number;
-  replaceJobTitles: number;
-  hideFacebookShare: number;
-  enableBookings: number;
-  defaultPayment: string;
-  registrationOptional: number;
-  consultationsOnly?: boolean;
-  onlyExisting: boolean;
-  stripeReciever: number;
-  stripePublicKey: string;
-  stripePrivateKey: string;
-  offlineMessage: string;
-  disableLocations: number;
+  disable_extra_information: number;
+  coupon_active: number;
+  payment_api_url: string;
+  account_deposit: number;
+  replace_job_titles: number;
+  hide_facebook_share: number;
+  enable_bookings: number;
+  default_payment: string;
+  registration_optional: number;
+  consultations_only?: boolean;
+  only_existing: boolean;
+  stripe_reciever: number;
+  stripe_public_key: string;
+  stripe_private_key: string;
+  offline_message: string;
+  disable_locations: number;
   theme: string;
-  promoCodes: boolean;
-  termsConditions: string;
-  gaAnalytics: string;
-  gtManager?: string;
-  fbCode: string;
-  fbEvent: string;
-  docSharedTemplate: number;
-  classesEmailConfirm: number;
-  sageVendor: string;
-  sageUsername: string;
-  sagePassword: string;
-  gcPublicKey: string;
-  gcPrivateKey: string;
-  enableTitle?: number;
-  groupByRegion: boolean;
-  useNewConnect: boolean;
-  disableReviews: number;
-  allowRating: boolean;
-  showCatPhotos: boolean;
-  classColumns: string;
-  noVatPrices: boolean;
-  integrationMethod?: bookitpro_general_integration_method;
-  rollingDeposit: number;
-  oneTouchBook: boolean;
-  newStripe: number;
-  enableMasterCat: boolean;
-  stripeFee: number;
-  reccuringSearchBtn: string;
-  forceNewExistingPatient: boolean;
-  redirectUrl: string;
-  connectUrl?: string;
+  promo_codes: boolean;
+  terms_conditions: string;
+  ga_analytics: string;
+  gt_manager?: string;
+  fb_code: string;
+  fb_event: string;
+  doc_shared_template: number;
+  classes_email_confirm: number;
+  sage_vendor: string;
+  sage_username: string;
+  sage_password: string;
+  gc_public_key: string;
+  gc_private_key: string;
+  enable_title?: number;
+  group_by_region: boolean;
+  use_new_connect: boolean;
+  disable_reviews: number;
+  allow_rating: boolean;
+  show_cat_photos: boolean;
+  class_columns: string;
+  no_vat_prices: boolean;
+  integration_method?: bookitpro_general_integration_method;
+  rolling_deposit: number;
+  one_touch_book: boolean;
+  new_stripe: number;
+  enable_master_cat: boolean;
+  stripe_fee: number;
+  reccuring_search_btn: string;
+  force_new_existing_patient: boolean;
+  redirect_url: string;
+  connect_url?: string;
 }
 
 export interface BookitProSlider {
@@ -675,16 +667,16 @@ export interface BookmarkedPage {
 
 export interface BugLog {
   id: number;
-  bugMessage: string;
+  bug_message: string;
   datetime: number;
   uid: number;
-  relatedId: number;
+  related_id: number;
 }
 
 export interface CalendarView {
   id: number;
   occupier: number;
-  userId: number;
+  user_id: number;
   viewMode: string;
   dayViewMode: string;
   employeesViewMode: string;
@@ -695,159 +687,159 @@ export interface CalendarView {
   serviceGroupsViewMode: string;
   servicesViewMode: string;
   appointmentSize: number;
-  favoriteName: string;
-  favoriteShared: number;
+  favorite_name: string;
+  favorite_shared: number;
   favorite: number;
-  favoriteId: number;
+  favorite_id: number;
 }
 
 export interface CalRangeRequest {
   id: number;
   minutes: number;
-  companyId: number;
-  startDate: Date;
-  endDate: Date;
+  company_id: number;
+  start_date: Date;
+  end_date: Date;
 }
 
 export interface CampaignAttachment {
   id: number;
-  campaignId: number;
+  campaign_id: number;
   occupier: number;
-  attachTime: string;
-  attachUserName: string;
-  attachmentType: string;
-  attachId: number;
+  attach_time: string;
+  attach_user_name: string;
+  attachment_type: string;
+  attach_id: number;
 }
 
 export interface CancellationPolicy {
   id: number;
-  isActive: number;
-  policyType: number;
-  policyAction: number;
-  policyValue: number;
-  policyNotice: string;
-  policyMessage?: string;
-  policyOverride: number;
-  paymentProtection: number;
-  advancedCancellationFee: number;
-  noShowFee: number;
+  is_active: number;
+  policy_type: number;
+  policy_action: number;
+  policy_value: number;
+  policy_notice: string;
+  policy_message?: string;
+  policy_override: number;
+  payment_protection: number;
+  advanced_cancellation_fee: number;
+  no_show_fee: number;
   occupier: number;
-  creationDate?: Date;
-  modifiedDate?: Date;
+  creation_date?: Date;
+  modified_date?: Date;
 }
 
 export interface MarketingSource {
   id: number;
-  name: string;
-  companyId: number;
-  customId: number;
-  isActive: number;
+  source_name: string;
+  company_id: number;
+  custom_id: number;
+  public: number;
   imported: number;
   company: Company;
 }
 
 export interface MediaLlibraryAttachments {
   id: number;
-  fileUrl: string;
-  companyId: number;
-  contactId: number;
-  communicationId: number;
-  medicalFormContactId: number;
-  contactAttachmentId: number;
-  salesId: number;
-  statementId: number;
-  creationDate: Date;
+  file_url: string;
+  company_id: number;
+  contact_id: number;
+  communication_id: number;
+  medical_form_contact_id: number;
+  contact_attachment_id: number;
+  sales_id: number;
+  statement_id: number;
+  creation_date: Date;
 }
 
 export interface CancelReason {
   id: number;
-  reasonName: string;
+  reason_name: string;
   occupier: string;
-  lateCancel: number;
-  applyCancellationPolicy: number;
-  createdAt: Date;
-  modifiedAt: Date;
+  late_cancel: number;
+  apply_cancellation_policy: number;
+  created_at: Date;
+  modified_at: Date;
 }
 
 export interface candidate {
   id: number;
-  contactId: number;
-  createdDate: Date;
-  openingId: number;
+  contact_id: number;
+  created_date: Date;
+  opening_id: number;
   rating: number;
-  candidateStatus?: string;
-  jobReferences: string;
-  howHeard: string;
-  referredBy: string;
-  coverLetter: string;
+  candidate_status?: string;
+  job_references: string;
+  how_heard: string;
+  referred_by: string;
+  cover_letter: string;
   resume: string;
-  dateAvailable: Date;
+  date_available: Date;
   linkedin: string;
-  companyId: number;
+  company_id: number;
 }
 
 export interface CardTypes {
   id: number;
-  companyId: number;
+  company_id: number;
   mastercard: number;
   visa: number;
   amex: number;
-  visaCredit: number;
+  visa_credit: number;
   maestro: number;
   worldpay: number;
-  visaCreditCharge: number;
-  amexCreditCharge: number;
-  mastercardCreditCharge: number;
-  enableReference: number;
+  visa_credit_charge: number;
+  amex_credit_charge: number;
+  mastercard_credit_charge: number;
+  enable_reference: number;
 }
 
 export interface CashupReport {
   id: number;
-  companyId: number;
-  staffId: number;
-  locationId: number;
-  floatAmount: number;
-  openingBalance: number;
-  cashAmount: number;
-  cashActual: number;
-  cashDifference: number;
-  chequeAmount: number;
-  chequeActual: number;
-  chequeDifference: number;
-  cardAmount: number;
-  cardActual: number;
-  cardDifference: number;
-  giftvoucherAmount: number;
-  giftvoucherActual: number;
-  giftvoucherDifference: number;
+  company_id: number;
+  staff_id: number;
+  location_id: number;
+  float_amount: number;
+  opening_balance: number;
+  cash_amount: number;
+  cash_actual: number;
+  cash_difference: number;
+  cheque_amount: number;
+  cheque_actual: number;
+  cheque_difference: number;
+  card_amount: number;
+  card_actual: number;
+  card_difference: number;
+  giftvoucher_amount: number;
+  giftvoucher_actual: number;
+  giftvoucher_difference: number;
   comments: string;
-  cashupDate: Date;
-  financeId: number;
+  cashup_date: Date;
+  finance_id: number;
 }
 
 export interface CashupReportCustom {
   id: number;
-  companyId: string;
-  locationId: number;
-  cashupDate: Date;
-  customType: string;
-  customAmount: number;
-  customActual: number;
-  customDifference: number;
-  cardType: string;
+  company_id: string;
+  location_id: number;
+  cashup_date: Date;
+  custom_type: string;
+  custom_amount: number;
+  custom_actual: number;
+  custom_difference: number;
+  card_type: string;
 }
 
 export interface CheckinAppt {
   id: number;
-  apptId: number;
-  spotifyUri: string;
+  appt_id: number;
+  spotify_uri: string;
 }
 
 export interface CheckinAverages {
   id: number;
   uid: number;
-  productId: number;
-  avgTimeSeconds: number;
+  product_id: number;
+  avg_time_seconds: number;
 }
 
 export interface CheckinAveragesIdle {
@@ -855,49 +847,49 @@ export interface CheckinAveragesIdle {
   username: string;
   uid: number;
   avg?: number;
-  retailutilisationAvg?: number;
+  retailutilisation_avg?: number;
 }
 
 export interface CheckinProduct {
   id: number;
-  queueId: number;
-  productId: number;
-  dateStart?: Date;
-  dateEnd?: Date;
-  invProductId: number;
+  queue_id: number;
+  product_id: number;
+  date_start?: Date;
+  date_end?: Date;
+  inv_product_id: number;
 }
 
 export interface CheckinQueue {
   id: number;
   uid: number;
-  beenBefore: boolean;
-  dateStart: Date;
+  been_before: boolean;
+  date_start: Date;
   accepted: boolean;
-  isLunch: boolean;
+  is_lunch: boolean;
   name: string;
-  dateAccepted?: Date;
-  dateEnd?: Date;
-  wasAnyone: boolean;
+  date_accepted?: Date;
+  date_end?: Date;
+  was_anyone: boolean;
   finalise?: boolean;
-  smsNumber?: string;
-  smsSent?: Date;
-  smsWanted?: boolean;
+  sms_number?: string;
+  sms_sent?: Date;
+  sms_wanted?: boolean;
   skips: number;
-  connectId?: number;
+  connect_id?: number;
   order: number;
-  spotifyUri?: string;
-  dateBinned?: Date;
+  spotify_uri?: string;
+  date_binned?: Date;
 }
 
 export interface ClasstypeMaster {
-  ctypeId: number;
-  ctypeName?: string;
-  ctypeCompid: string;
-  ctypeDate: string;
-  ctypeColor: string;
-  ctypeDescription: string;
-  paymentOptionDisabled: number;
-  creditOptionDisabled: number;
+  ctype_id: number;
+  ctype_name?: string;
+  ctype_compid: string;
+  ctype_date: string;
+  ctype_color: string;
+  ctype_description: string;
+  payment_option_disabled: number;
+  credit_option_disabled: number;
 }
 
 export interface ClassCategories {
@@ -906,226 +898,226 @@ export interface ClassCategories {
   name: string;
   occupier?: number;
   uid?: number;
-  createdDate?: Date;
-  modifiedDate?: Date;
+  created_date?: Date;
+  modified_date?: Date;
 }
 
 export interface ClassGuests {
   id: number;
-  guestName: string;
-  signingDate: number;
-  classId: number;
-  companyId: number;
-  cancelStatus: number;
+  guest_name: string;
+  signing_date: number;
+  class_id: number;
+  company_id: number;
+  cancel_status: number;
   mobile: string;
 }
 
 export interface ClassMaster {
-  cId: number;
-  cCompanyid?: number;
-  cType?: number;
-  cTeacher?: number;
-  cLocation?: number;
-  cRoom?: number;
-  cSlots?: string;
-  cPrice?: number;
-  cDate?: string;
-  cTime?: string;
-  cDuration?: string;
-  cDay?: string;
-  cExptime?: string;
-  cBook?: string;
-  cEmpty?: string;
-  cFormattime?: string;
-  cStartformattime?: string;
-  classPay?: class_master_class_pay;
-  cancelStatus: number;
-  productId: number;
-  signInType: string;
+  c_id: number;
+  c_companyid?: number;
+  c_type?: number;
+  c_teacher?: number;
+  c_location?: number;
+  c_room?: number;
+  c_slots?: string;
+  c_price?: number;
+  c_date?: string;
+  c_time?: string;
+  c_duration?: string;
+  c_day?: string;
+  c_exptime?: string;
+  c_book?: string;
+  c_empty?: string;
+  c_formattime?: string;
+  c_startformattime?: string;
+  class_pay?: class_master_class_pay;
+  cancel_status: number;
+  product_id: number;
+  sign_in_type: string;
 }
 
 export interface ClassNotes {
   id: number;
-  classId: number;
+  class_id: number;
   note: string;
   author: string;
   public: number;
   avatar: string;
-  postDate: string;
+  post_date: string;
 }
 
 export interface CompanyDetails {
-  detailsId: number;
-  companyId: number;
-  companyName: string;
+  details_id: number;
+  company_id: number;
+  company_name: string;
   subscription: string;
-  industrySector: string;
+  industry_sector: string;
   employees: string;
   website: string;
   street: string;
   city: string;
   county: string;
-  postCode: string;
+  post_code: string;
   country: string;
   phone: string;
   fax: string;
-  infoEmail: string;
+  info_email: string;
   admin: number;
   logo: string;
   currency: string;
-  facebookPage: string;
-  twitterPage: string;
-  headOffice: number;
-  footerLogo: string;
-  headerLogo: string;
+  facebook_page: string;
+  twitter_page: string;
+  head_office: number;
+  footer_logo: string;
+  header_logo: string;
   vat: string;
-  dateFormat: string;
-  weekStartDay: string;
-  autoSms: number;
-  smsActive: number;
-  dbLock: number;
-  stockManager: string;
-  companyNotes: string;
-  timezoneId: number;
-  convertedValue: number;
-  enable2fa: number;
-  enableAd: number;
-  enableAdCode?: string;
-  enableIpFilter?: number;
-  demoMode: number;
-  linkedinPage: string;
-  youtubePage: string;
-  isSurgical: number;
-  privateTreatmentNotes: number;
-  acceptInsurance: number;
-  phonePrefix: number;
-  taxName: company_details_tax_name;
-  secureMedicalForms: number;
-  debrandLogo: number;
-  defaultSearch: string;
-  calendarVersion: string;
-  contactTermSingular: string;
-  contactTermPlural: string;
-  flagEnabled: number;
-  lockPrescription: number;
-  showReportLogo: boolean;
-  rotaVersion: string;
-  useGoogleAuth: boolean;
-  employeeClockTrack: boolean;
+  date_format: string;
+  week_start_day: string;
+  auto_sms: number;
+  sms_active: number;
+  db_lock: number;
+  stock_manager: string;
+  company_notes: string;
+  timezone_id: number;
+  converted_value: number;
+  enable_2fa: number;
+  enable_ad: number;
+  enable_ad_code?: string;
+  enable_ip_filter?: number;
+  demo_mode: number;
+  linkedin_page: string;
+  youtube_page: string;
+  is_surgical: number;
+  private_treatment_notes: number;
+  accept_insurance: number;
+  phone_prefix: number;
+  tax_name: company_details_tax_name;
+  secure_medical_forms: number;
+  debrand_logo: number;
+  default_search: string;
+  calendar_version: string;
+  contact_term_singular: string;
+  contact_term_plural: string;
+  flag_enabled: number;
+  lock_prescription: number;
+  show_report_logo: boolean;
+  rota_version: string;
+  use_google_auth: boolean;
+  employee_clock_track: boolean;
   slug?: string;
-  defaultInvTemplateId: number;
-  diagnosisCodesType: string;
-  appendClientPref: number;
-  capitalSurname: boolean;
-  disablePrescriptions: number;
-  cyclesDisplay: number;
-  enableSensData: number;
-  classTermSingular: string;
-  classTermPlural: string;
-  sensitiveDataQuestion: number;
-  legacyConsultations: boolean;
-  classTeacherSingular: string;
-  employeeTermSingular: string;
-  employeeTermPlural: string;
-  medicalApprovals: number;
-  newReports: number;
-  mergeBookingsTabs: boolean;
-  preferencesSms: number;
-  preferencesEmail: number;
-  preferencesPost: number;
-  preferencesNewsletters: number;
-  healthcodeLive?: boolean;
-  lockExport: number;
+  default_inv_template_id: number;
+  diagnosis_codes_type: string;
+  append_client_pref: number;
+  capital_surname: boolean;
+  disable_prescriptions: number;
+  cycles_display: number;
+  enable_sens_data: number;
+  class_term_singular: string;
+  class_term_plural: string;
+  sensitive_data_question: number;
+  legacy_consultations: boolean;
+  class_teacher_singular: string;
+  employee_term_singular: string;
+  employee_term_plural: string;
+  medical_approvals: number;
+  new_reports: number;
+  merge_bookings_tabs: boolean;
+  preferences_sms: number;
+  preferences_email: number;
+  preferences_post: number;
+  preferences_newsletters: number;
+  healthcode_live?: boolean;
+  lock_export: number;
   language: string;
-  completedSetup: boolean;
+  completed_setup: boolean;
   timezone: Timezone;
   company: Company;
 }
 
 export interface CompanySubscription {
-  licenseId: number;
-  companyId: number;
+  license_id: number;
+  company_id: number;
   company: Company;
-  licenseType: number;
-  licenseExpiry: Date;
+  license_type: number;
+  license_expiry: Date;
   active: number;
   code: string;
-  maxUserCount: number;
+  max_user_count: number;
   uid: number;
-  suspendSms: number;
-  smsRate: number;
-  setupStage: string;
-  disableSms: number;
-  paymentId: string;
-  warningLevel: string;
-  subscriptionName: string;
-  subscriptionFee: number;
-  suspendedOn: string;
-  demoAccount: number;
-  suspensionReason: string;
-  pabauScore: number;
-  gcEmail: string;
-  paymentBounces: number;
-  trainingStatus: number;
-  setupStatus: number;
-  orderSheet: number;
-  completeAccount: number;
-  completeNotes: string;
-  detailsStatus: number;
-  trainingDate: string;
-  billCycle: Date;
-  renewInterval: string;
-  excludeReports: number;
-  subStartDate: Date;
-  priceRange: string;
-  stripeCustomerId: string;
-  stripeSubscriptionId: string;
+  suspend_sms: number;
+  sms_rate: number;
+  setup_stage: string;
+  disable_sms: number;
+  payment_id: string;
+  warning_level: string;
+  subscription_name: string;
+  subscription_fee: number;
+  suspended_on: string;
+  demo_account: number;
+  suspension_reason: string;
+  pabau_score: number;
+  gc_email: string;
+  payment_bounces: number;
+  training_status: number;
+  setup_status: number;
+  order_sheet: number;
+  complete_account: number;
+  complete_notes: string;
+  details_status: number;
+  training_date: string;
+  bill_cycle: Date;
+  renew_interval: string;
+  exclude_reports: number;
+  sub_start_date: Date;
+  price_range: string;
+  stripe_customer_id: string;
+  stripe_subscription_id: string;
   trial: boolean;
   storage: number;
-  freeUsers: number;
-  gcCustomerId: string;
-  lowCreditAmount: number;
-  lowSmsAction: number;
-  activityLogs: number;
-  accountLive: number;
+  free_users: number;
+  gc_customer_id: string;
+  low_credit_amount: number;
+  low_sms_action: number;
+  activity_logs: number;
+  account_live: number;
   discount: number;
-  gcPlanId: string;
-  supportPlan: string;
-  supportFee: number;
-  gcSupportPlanId: string;
-  enterpriseUserCost: number;
-  gcEnterprisePlanId: string;
-  enterpriseFee: number;
-  gcAmount: number;
-  leaveAlert: boolean;
-  stripeFee: number;
-  stripeFeeType: string;
-  previousSystem: string;
-  amGroup: string;
-  phoneSupport: number;
-  slackSupport: number;
-  whatsappSupport: number;
-  multipleLocations: number;
-  commissionRate: number;
-  liveServer: string;
-  sandboxServer: string;
-  serverCompId: number;
-  partnerId: string;
-  advancedMarketingAddon: number;
-  freeMonths?: number;
-  hideInComps?: boolean;
-  amStartDate?: Date;
-  trainerId?: number;
-  onboarderId?: number;
-  isReferral?: number;
+  gc_plan_id: string;
+  support_plan: string;
+  support_fee: number;
+  gc_support_plan_id: string;
+  enterprise_user_cost: number;
+  gc_enterprise_plan_id: string;
+  enterprise_fee: number;
+  gc_amount: number;
+  leave_alert: boolean;
+  stripe_fee: number;
+  stripe_fee_type: string;
+  previous_system: string;
+  am_group: string;
+  phone_support: number;
+  slack_support: number;
+  whatsapp_support: number;
+  multiple_locations: number;
+  commission_rate: number;
+  live_server: string;
+  sandbox_server: string;
+  server_comp_id: number;
+  partner_id: string;
+  advanced_marketing_addon: number;
+  free_months?: number;
+  hide_in_comps?: boolean;
+  am_start_date?: Date;
+  trainer_id?: number;
+  onboarder_id?: number;
+  is_referral?: number;
 }
 
 export interface Timezone {
-  timezoneId: number;
+  timezone_id: number;
   label: string;
-  phpFormat: string;
-  dbFormat: string;
-  offsetSeconds: number;
+  php_format: string;
+  db_format: string;
+  offset_seconds: number;
   supported: boolean;
   CompanyDetails?: CompanyDetails[];
 }
@@ -1136,56 +1128,56 @@ export interface ClassProduct {
   name: string;
   unit?: string;
   size: string;
-  productOrder?: number;
+  product_order?: number;
   um: string;
   cost?: number;
   price: number;
-  alertQuantity: number;
+  alert_quantity: number;
   image?: string;
-  categoryId: number;
+  category_id: number;
   occupier?: number;
   uid?: number;
-  createdDate?: Date;
-  modifiedDate?: Date;
-  productDesc: string;
+  created_date?: Date;
+  modified_date?: Date;
+  product_desc: string;
 }
 
 export interface ClassSmsHistory {
   id: number;
-  classId: number;
-  userId: number;
+  class_id: number;
+  user_id: number;
   message: string;
   datetime: string;
 }
 
 export interface ClassTemplateSetting {
   id: number;
-  companyId: number;
-  classWaitListTemplateEnable?: number;
-  classWaitListTemplateId?: number;
-  classWaitListSmsTemplateEnable: number;
-  classWaitListSmsTemplateId: number;
+  company_id: number;
+  class_wait_list_template_enable?: number;
+  class_wait_list_template_id?: number;
+  class_wait_list_sms_template_enable: number;
+  class_wait_list_sms_template_id: number;
   uid?: number;
-  creationDate?: Date;
-  modifiedDate?: Date;
+  creation_date?: Date;
+  modified_date?: Date;
 }
 
 export interface CleverpinSetting {
   id: number;
-  imageUrl: string;
-  companyId: number;
+  image_url: string;
+  company_id: number;
 }
 
 export interface ClientFormSetting {
   id: number;
-  companyId: number;
-  enableMedical: number;
-  formId: number;
-  notSeenMonths: number;
-  enableNewAndOld: number;
-  checkedByDefault: number;
-  newClientTemplate: number;
-  notSeenTemplate: number;
+  company_id: number;
+  enable_medical: number;
+  form_id: number;
+  not_seen_months: number;
+  enable_new_and_old: number;
+  checked_by_default: number;
+  new_client_template: number;
+  not_seen_template: number;
 }
 
 export interface ClinicalSoftware {
@@ -1196,31 +1188,31 @@ export interface ClinicalSoftware {
 }
 
 export interface ClockinBreak {
-  breakTimeId: number;
-  clockId: number;
-  breakTimeStart: number;
-  breakTimeOut: number;
+  break_time_id: number;
+  clock_id: number;
+  break_time_start: number;
+  break_time_out: number;
 }
 
 export interface ClockinLongpoll {
   id: number;
-  clockedOut: boolean;
+  clocked_out: boolean;
   uid: number;
   occupier: number;
 }
 
 export interface ClockinTimesheet {
-  clockId: number;
-  staffUid: number;
-  companyId: number;
+  clock_id: number;
+  staff_uid: number;
+  company_id: number;
   clockin: number;
   clockout: number;
-  totalBreakTime: number;
-  totalWorkingTime: number;
+  total_break_time: number;
+  total_working_time: number;
   notes: string;
   approved: boolean;
-  staffName: string;
-  ipAddress: string;
+  staff_name: string;
+  ip_address: string;
 }
 
 export interface CmAccountNote {
@@ -1236,31 +1228,31 @@ export interface CmAccountNote {
 export interface CmAppointmentsCustomImportHelper {
   id: number;
   occupier: number;
-  customAppointmentId: number;
-  customContactName: string;
-  customFieldName: string;
-  customFieldValue?: string;
+  custom_appointment_id: number;
+  custom_contact_name: string;
+  custom_field_name: string;
+  custom_field_value?: string;
   added: number;
-  appointmentId: number;
+  appointment_id: number;
 }
 
 export interface CmAppointmentCustom {
   id: number;
-  appointmentId: number;
+  appointment_id: number;
   occupier: number;
-  customFieldId: number;
-  customFieldValue: string;
+  custom_field_id: number;
+  custom_field_value: string;
   imported: number;
 }
 
 export interface CmAuthorization {
   id: number;
-  companyId: number;
-  appointmentId: number;
-  contactId: number;
+  company_id: number;
+  appointment_id: number;
+  contact_id: number;
   title: string;
-  totalSessions: number;
-  diagnosisCode: string;
+  total_sessions: number;
+  diagnosis_code: string;
 }
 
 export interface CmBookingNote {
@@ -1275,7 +1267,7 @@ export interface CmBookingNote {
 
 export interface CmCase {
   id: number;
-  caseNumber: string;
+  case_number: string;
   type?: string;
   contact?: string;
   email?: string;
@@ -1284,20 +1276,20 @@ export interface CmCase {
   request?: string;
   critical?: string;
   description?: string;
-  relatedTo?: number;
-  moduleType?: number;
-  userId?: number;
-  module2Type?: number;
-  user2Id?: number;
+  related_to?: number;
+  module_type?: number;
+  user_id?: number;
+  module2_type?: number;
+  user2_id?: number;
   ownerid?: number;
   status?: string;
   priority?: string;
   reason?: string;
-  reportedBy?: string;
+  reported_by?: string;
   comments?: string;
   CreatedDate?: number;
   IpAddress?: string;
-  companyId: number;
+  company_id: number;
   company: Company;
 }
 
@@ -1338,7 +1330,7 @@ export interface CmCampaign {
   Description: string;
   CreatedDate: Date;
   IpAddress: number;
-  companyId: number;
+  company_id: number;
   company: Company;
 }
 
@@ -1359,7 +1351,7 @@ export interface CmContact {
   Salutation: string;
   Fname: string;
   Occupier: number;
-  locationId: number;
+  location_id: number;
   Email: string;
   Phone: string;
   OtherPhone: string;
@@ -1397,47 +1389,47 @@ export interface CmContact {
   MarketingSource: number;
   RefferalSource?: string;
   LeadID: number;
-  groupTag: string;
-  politeNotice: string;
-  customId: string;
+  group_tag: string;
+  polite_notice: string;
+  custom_id: string;
   gender: string;
   MarketingOptInAll?: number;
   MarketingOptInEmail?: number;
   MarketingOptInPhone?: number;
   MarketingOptInPost?: number;
   MarketingOptInText?: number;
-  notesDrop: string;
+  notes_drop: string;
   imported: number;
-  alertsDrop: string;
+  alerts_drop: string;
   MarketingSourceRelated: number;
-  customerReference: string;
+  customer_reference: string;
   MarketingOptInNewsletter: number;
-  customMarketingSource: string;
-  insurerId: number;
-  isActive: number;
-  xeroContactId: string;
-  isAmbassador: number;
+  custom_marketing_source: string;
+  insurer_id: number;
+  is_active: number;
+  xero_contact_id: string;
+  is_ambassador: number;
   UpdatedDate: Date;
-  xeroUpdatedDate: Date;
-  discountType: number;
-  customClinicId: number;
-  ambassadorId: number;
-  contractId: number;
-  privacyPolicy: string;
-  needToKnows: boolean;
-  contactType: number;
+  xero_updated_date: Date;
+  discount_type: number;
+  custom_clinic_id: number;
+  ambassador_id: number;
+  contract_id: number;
+  privacy_policy: string;
+  need_to_knows: boolean;
+  contact_type: number;
 }
 
 export interface User {
   id: number;
   username?: string;
-  fullName: string;
+  full_name: string;
   password?: string;
-  passwordAlgor?: number;
+  password_algor?: number;
   salt?: string;
   created?: Date;
-  lastLogin?: Date;
-  companyId?: number;
+  last_login?: Date;
+  company_id: number;
   hash: string;
   email: string;
   admin: number;
@@ -1445,85 +1437,95 @@ export interface User {
   timezone: string;
   locale: string;
   language: string;
-  jobTitle: string;
+  job_title: string;
   department: string;
   division: string;
   super: number;
-  defaultPage: string;
+  default_page: string;
   signature: string;
   image: string;
   position: string;
   location: string;
   deleted: number;
-  passCode: string;
-  phoneNumber: string;
-  hideOnlineBookings: number;
+  pass_code: string;
+  phone_number: string;
+  hide_online_bookings: number;
   passcode: string;
-  lastLoadedPage: string;
-  temporaryPassword: boolean;
-  customId: string;
-  hideCalendar: number;
-  calendarOrder: number;
-  clockedIn?: Date;
-  clockedOut?: Date;
-  lastPasswordReset: number;
-  forcePassword: number;
-  limitedUser: number;
-  canVoid: number;
-  canRefund: boolean;
-  canReport: number;
-  canRota: number;
-  staffReadOnly: number;
-  stockReadOnly: number;
-  allReports: number;
-  performanceStats: number;
-  disableTutorial: number;
-  allServices: number;
-  deleteTreatment: number;
-  adminTasks: number;
-  adminLeads: number;
+  last_loaded_page: string;
+  temporary_password: boolean;
+  custom_id: string;
+  hide_calendar: number;
+  calendar_order: number;
+  clocked_in?: Date;
+  clocked_out?: Date;
+  last_password_reset: number;
+  force_password: number;
+  limited_user: number;
+  can_void: number;
+  can_refund: boolean;
+  can_report: number;
+  can_rota: number;
+  staff_read_only: number;
+  stock_read_only: number;
+  all_reports: number;
+  performance_stats: number;
+  disable_tutorial: number;
+  all_services: number;
+  delete_treatment: number;
+  admin_tasks: number;
+  admin_leads: number;
   imported: number;
-  loginFailCount: number;
-  canEditBookingTime: number;
-  userColor: string;
-  disableMultipleClinics: number;
-  isHcp: number;
-  loginDisabled: number;
-  canPatientAppoint: number;
-  canPatientCommunicatons: number;
-  canPatientPhotos: number;
-  canPatientFiancials: number;
-  canPatientTreatments: number;
-  canPatientDocs: number;
-  canPatientPackages: number;
-  canPatientPrescription: number;
-  canPatientConsents: number;
-  canPatientGiftvoucher: number;
-  canPatientLoyalty: number;
-  canPatientRecall: number;
-  canPatientMemberships: number;
-  canCancelBooking: number;
-  notifyOnBooking: boolean;
-  canEditCommunications: boolean;
-  canDeleteCommunications: boolean;
-  canViewFullCal: boolean;
-  permissionLastRole: string;
-  canMerge: boolean;
-  canDiscount?: number;
-  canDiscountSingle: boolean;
+  login_fail_count: number;
+  can_edit_booking_time: number;
+  user_color: string;
+  disable_multiple_clinics: number;
+  is_hcp: number;
+  login_disabled: number;
+  can_patient_appoint: number;
+  can_patient_communicatons: number;
+  can_patient_photos: number;
+  can_patient_fiancials: number;
+  can_patient_treatments: number;
+  can_patient_docs: number;
+  can_patient_packages: number;
+  can_patient_prescription: number;
+  can_patient_consents: number;
+  can_patient_giftvoucher: number;
+  can_patient_loyalty: number;
+  can_patient_recall: number;
+  can_patient_memberships: number;
+  can_cancel_booking: number;
+  notify_on_booking: boolean;
+  can_edit_communications: boolean;
+  can_delete_communications: boolean;
+  can_view_full_cal: boolean;
+  permission_last_role: string;
+  can_merge: boolean;
+  can_discount?: number;
+  can_discount_single: boolean;
   restored: number;
-  googleAuthSecret?: string;
-  defaultContractId: number;
-  canSeePersonal: number;
-  appearOnRota: number;
-  canPatientMedicalHistory: number;
-  canLabRequests: boolean;
-  detailedView: number;
-  canMakeBlockout: number;
-  canDeleteBlockout: number;
-  canMoveBlockout: number;
-  mainContact: boolean;
+  google_auth_secret?: string;
+  default_contract_id: number;
+  can_see_personal: number;
+  appear_on_rota: number;
+  can_patient_medical_history: number;
+  can_lab_requests: boolean;
+  detailed_view: number;
+  can_make_blockout: number;
+  can_delete_blockout: number;
+  can_move_blockout: number;
+  main_contact: boolean;
+  user_security_questions_answer?: UserSecurityQuestionsAnser[];
   company?: Company;
+}
+
+export interface UserSecurityQuestionsAnser {
+  id: number;
+  user_id: number;
+  question: string;
+  question_no: number;
+  answer: string;
+  users: User;
 }
 
 export enum booking_master_payment_status {

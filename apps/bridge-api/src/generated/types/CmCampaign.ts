@@ -18,7 +18,7 @@ export const CmCampaign = objectType({
     t.model.Description()
     t.model.CreatedDate()
     t.model.IpAddress()
-    t.model.companyId()
+    t.model.company_id()
     t.model.company()
   },
 })

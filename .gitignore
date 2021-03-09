@@ -1,5 +1,5 @@
 .env
-apps/web/.env.local
+.env.local
 package-lock.json
 
 # See http://help.github.com/ignore-files/ for more about ignoring files.
@@ -99,3 +99,4 @@ buck-out/
 ## Nested node_modules
 
 node_modules/
+/.env.local

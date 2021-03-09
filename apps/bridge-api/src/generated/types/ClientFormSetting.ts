@@ -4,14 +4,14 @@ export const ClientFormSetting = objectType({
   name: 'ClientFormSetting',
   definition(t) {
     t.model.id()
-    t.model.companyId()
-    t.model.enableMedical()
-    t.model.formId()
-    t.model.notSeenMonths()
-    t.model.enableNewAndOld()
-    t.model.checkedByDefault()
-    t.model.newClientTemplate()
-    t.model.notSeenTemplate()
+    t.model.company_id()
+    t.model.enable_medical()
+    t.model.form_id()
+    t.model.not_seen_months()
+    t.model.enable_new_and_old()
+    t.model.checked_by_default()
+    t.model.new_client_template()
+    t.model.not_seen_template()
   },
 })
 

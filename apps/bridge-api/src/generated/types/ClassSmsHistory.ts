@@ -4,8 +4,8 @@ export const ClassSmsHistory = objectType({
   name: 'ClassSmsHistory',
   definition(t) {
     t.model.id()
-    t.model.classId()
-    t.model.userId()
+    t.model.class_id()
+    t.model.user_id()
     t.model.message()
     t.model.datetime()
   },

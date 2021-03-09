@@ -4,11 +4,11 @@ export const CheckinProduct = objectType({
   name: 'CheckinProduct',
   definition(t) {
     t.model.id()
-    t.model.queueId()
-    t.model.productId()
-    t.model.dateStart()
-    t.model.dateEnd()
-    t.model.invProductId()
+    t.model.queue_id()
+    t.model.product_id()
+    t.model.date_start()
+    t.model.date_end()
+    t.model.inv_product_id()
   },
 })
 

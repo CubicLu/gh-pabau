@@ -7,12 +7,12 @@ export const BookingStatus = objectType({
     t.model.name()
     t.model.value()
     t.model.icon()
-    t.model.iconColor()
-    t.model.companyId()
+    t.model.icon_color()
+    t.model.company_id()
     t.model.indicator()
-    t.model.basicField()
+    t.model.basic_field()
     t.model.ord()
-    t.model.trackTime()
+    t.model.track_time()
   },
 })
 

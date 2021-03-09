@@ -4,10 +4,10 @@ export const ApiKey = objectType({
   name: 'ApiKey',
   definition(t) {
     t.model.id()
-    t.model.companyId()
-    t.model.apiKey()
-    t.model.appType()
-    t.model.createdDate()
+    t.model.company_id()
+    t.model.api_key()
+    t.model.app_type()
+    t.model.created_date()
     t.model.contacts()
     t.model.bookings()
     t.model.invoices()
@@ -16,7 +16,7 @@ export const ApiKey = objectType({
     t.model.staff()
     t.model.financials()
     t.model.leads()
-    t.model.medicalForms()
+    t.model.medical_forms()
     t.model.reports()
   },
 })

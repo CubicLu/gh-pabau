@@ -5,9 +5,9 @@ export const CalRangeRequest = objectType({
   definition(t) {
     t.model.id()
     t.model.minutes()
-    t.model.companyId()
-    t.model.startDate()
-    t.model.endDate()
+    t.model.company_id()
+    t.model.start_date()
+    t.model.end_date()
   },
 })
 

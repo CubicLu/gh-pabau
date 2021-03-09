@@ -4,15 +4,15 @@ export const MediaLlibraryAttachments = objectType({
   name: 'MediaLlibraryAttachments',
   definition(t) {
     t.model.id()
-    t.model.fileUrl()
-    t.model.companyId()
-    t.model.contactId()
-    t.model.communicationId()
-    t.model.medicalFormContactId()
-    t.model.contactAttachmentId()
-    t.model.salesId()
-    t.model.statementId()
-    t.model.creationDate()
+    t.model.file_url()
+    t.model.company_id()
+    t.model.contact_id()
+    t.model.communication_id()
+    t.model.medical_form_contact_id()
+    t.model.contact_attachment_id()
+    t.model.sales_id()
+    t.model.statement_id()
+    t.model.creation_date()
   },
 })
 

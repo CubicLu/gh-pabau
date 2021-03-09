@@ -4,12 +4,12 @@ export const ClassNotes = objectType({
   name: 'ClassNotes',
   definition(t) {
     t.model.id()
-    t.model.classId()
+    t.model.class_id()
     t.model.note()
     t.model.author()
     t.model.public()
     t.model.avatar()
-    t.model.postDate()
+    t.model.post_date()
   },
 })
 

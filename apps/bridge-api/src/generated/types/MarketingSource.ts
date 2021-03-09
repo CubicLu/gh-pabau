@@ -4,10 +4,10 @@ export const MarketingSource = objectType({
   name: 'MarketingSource',
   definition(t) {
     t.model.id()
-    t.model.name()
-    t.model.companyId()
-    t.model.customId()
-    t.model.isActive()
+    t.model.source_name()
+    t.model.company_id()
+    t.model.custom_id()
+    t.model.public()
     t.model.imported()
     t.model.company()
   },

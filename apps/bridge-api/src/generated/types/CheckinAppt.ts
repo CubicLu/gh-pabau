@@ -4,8 +4,8 @@ export const CheckinAppt = objectType({
   name: 'CheckinAppt',
   definition(t) {
     t.model.id()
-    t.model.apptId()
-    t.model.spotifyUri()
+    t.model.appt_id()
+    t.model.spotify_uri()
   },
 })
 

@@ -4,11 +4,11 @@ export const ApiDebug = objectType({
   name: 'ApiDebug',
   definition(t) {
     t.model.id()
-    t.model.dataReceived()
-    t.model.companyId()
-    t.model.apiCode()
-    t.model.createdDate()
-    t.model.dataType()
+    t.model.data_received()
+    t.model.company_id()
+    t.model.api_code()
+    t.model.created_date()
+    t.model.data_type()
   },
 })
 

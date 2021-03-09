@@ -4,10 +4,10 @@ export const AutomationAction = objectType({
   name: 'AutomationAction',
   definition(t) {
     t.model.id()
-    t.model.triggerId()
+    t.model.trigger_id()
     t.model.company()
     t.model.code()
-    t.model.actionData()
+    t.model.action_data()
     t.model.order()
   },
 })

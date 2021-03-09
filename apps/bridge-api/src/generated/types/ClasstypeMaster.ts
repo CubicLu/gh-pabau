@@ -3,14 +3,14 @@ import { objectType, arg, extendType } from 'nexus'
 export const ClasstypeMaster = objectType({
   name: 'ClasstypeMaster',
   definition(t) {
-    t.model.ctypeId()
-    t.model.ctypeName()
-    t.model.ctypeCompid()
-    t.model.ctypeDate()
-    t.model.ctypeColor()
-    t.model.ctypeDescription()
-    t.model.paymentOptionDisabled()
-    t.model.creditOptionDisabled()
+    t.model.ctype_id()
+    t.model.ctype_name()
+    t.model.ctype_compid()
+    t.model.ctype_date()
+    t.model.ctype_color()
+    t.model.ctype_description()
+    t.model.payment_option_disabled()
+    t.model.credit_option_disabled()
   },
 })
 

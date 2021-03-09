@@ -8,8 +8,8 @@ export const ClassCategories = objectType({
     t.model.name()
     t.model.occupier()
     t.model.uid()
-    t.model.createdDate()
-    t.model.modifiedDate()
+    t.model.created_date()
+    t.model.modified_date()
   },
 })
 

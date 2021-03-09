@@ -3,17 +3,17 @@ import { objectType, arg, extendType } from 'nexus'
 export const ClockinTimesheet = objectType({
   name: 'ClockinTimesheet',
   definition(t) {
-    t.model.clockId()
-    t.model.staffUid()
-    t.model.companyId()
+    t.model.clock_id()
+    t.model.staff_uid()
+    t.model.company_id()
     t.model.clockin()
     t.model.clockout()
-    t.model.totalBreakTime()
-    t.model.totalWorkingTime()
+    t.model.total_break_time()
+    t.model.total_working_time()
     t.model.notes()
     t.model.approved()
-    t.model.staffName()
-    t.model.ipAddress()
+    t.model.staff_name()
+    t.model.ip_address()
   },
 })
 

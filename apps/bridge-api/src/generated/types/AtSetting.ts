@@ -4,10 +4,10 @@ export const AtSetting = objectType({
   name: 'AtSetting',
   definition(t) {
     t.model.id()
-    t.model.companyId()
+    t.model.company_id()
     t.model.logo()
     t.model.background()
-    t.model.fontFamily()
+    t.model.font_family()
   },
 })
 

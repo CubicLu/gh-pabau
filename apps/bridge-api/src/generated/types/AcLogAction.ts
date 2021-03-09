@@ -5,12 +5,12 @@ export const AcLogAction = objectType({
   definition(t) {
     t.model.id()
     t.model.pabauid()
-    t.model.actionName()
-    t.model.actionStatus()
+    t.model.action_name()
+    t.model.action_status()
     t.model.command()
-    t.model.tableAff()
-    t.model.rowAff()
-    t.model.rowId()
+    t.model.table_aff()
+    t.model.row_aff()
+    t.model.row_id()
   },
 })
 

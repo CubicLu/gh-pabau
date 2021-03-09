@@ -4,7 +4,7 @@ export const AppSubscription = objectType({
   name: 'AppSubscription',
   definition(t) {
     t.model.id()
-    t.model.keyValue()
+    t.model.key_value()
     t.model.name()
     t.model.Description()
     t.model.price()

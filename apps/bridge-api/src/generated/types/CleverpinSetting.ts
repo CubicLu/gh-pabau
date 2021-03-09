@@ -4,8 +4,8 @@ export const CleverpinSetting = objectType({
   name: 'CleverpinSetting',
   definition(t) {
     t.model.id()
-    t.model.imageUrl()
-    t.model.companyId()
+    t.model.image_url()
+    t.model.company_id()
   },
 })
 

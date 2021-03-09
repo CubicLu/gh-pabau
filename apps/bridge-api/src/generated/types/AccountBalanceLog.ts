@@ -4,17 +4,17 @@ export const AccountBalanceLog = objectType({
   name: 'AccountBalanceLog',
   definition(t) {
     t.model.id()
-    t.model.companyId()
-    t.model.contactId()
-    t.model.insuranceCompanyId()
+    t.model.company_id()
+    t.model.contact_id()
+    t.model.insurance_company_id()
     t.model.amount()
-    t.model.dateTime()
-    t.model.productId()
+    t.model.date_time()
+    t.model.product_id()
     t.model.description()
-    t.model.saleId()
-    t.model.referralId()
+    t.model.sale_id()
+    t.model.referral_id()
     t.model.imported()
-    t.model.refSaleId()
+    t.model.ref_sale_id()
   },
 })
 

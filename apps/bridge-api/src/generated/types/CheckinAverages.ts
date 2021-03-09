@@ -5,8 +5,8 @@ export const CheckinAverages = objectType({
   definition(t) {
     t.model.id()
     t.model.uid()
-    t.model.productId()
-    t.model.avgTimeSeconds()
+    t.model.product_id()
+    t.model.avg_time_seconds()
   },
 })
 

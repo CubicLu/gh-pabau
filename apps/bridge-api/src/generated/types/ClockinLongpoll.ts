@@ -4,7 +4,7 @@ export const ClockinLongpoll = objectType({
   name: 'ClockinLongpoll',
   definition(t) {
     t.model.id()
-    t.model.clockedOut()
+    t.model.clocked_out()
     t.model.uid()
     t.model.occupier()
   },

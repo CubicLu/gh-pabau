@@ -4,7 +4,7 @@ export const AcceptEmailToken = objectType({
   name: 'AcceptEmailToken',
   definition(t) {
     t.model.id()
-    t.model.companyId()
+    t.model.company_id()
     t.model.email()
     t.model.token()
     t.model.company()

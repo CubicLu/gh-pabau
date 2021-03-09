@@ -4,7 +4,7 @@ export const AttachmentHelperLite = objectType({
   name: 'AttachmentHelperLite',
   definition(t) {
     t.model.id()
-    t.model.contactId()
+    t.model.contact_id()
     t.model.f()
     t.model.x()
     t.model.type()

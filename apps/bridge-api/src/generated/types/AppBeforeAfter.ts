@@ -4,11 +4,11 @@ export const AppBeforeAfter = objectType({
   name: 'AppBeforeAfter',
   definition(t) {
     t.model.id()
-    t.model.companyId()
-    t.model.contactId()
-    t.model.beforeImg()
-    t.model.afterImg()
-    t.model.passKey()
+    t.model.company_id()
+    t.model.contact_id()
+    t.model.before_img()
+    t.model.after_img()
+    t.model.pass_key()
   },
 })
 

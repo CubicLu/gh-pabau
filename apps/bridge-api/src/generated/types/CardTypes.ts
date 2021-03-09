@@ -4,17 +4,17 @@ export const CardTypes = objectType({
   name: 'CardTypes',
   definition(t) {
     t.model.id()
-    t.model.companyId()
+    t.model.company_id()
     t.model.mastercard()
     t.model.visa()
     t.model.amex()
-    t.model.visaCredit()
+    t.model.visa_credit()
     t.model.maestro()
     t.model.worldpay()
-    t.model.visaCreditCharge()
-    t.model.amexCreditCharge()
-    t.model.mastercardCreditCharge()
-    t.model.enableReference()
+    t.model.visa_credit_charge()
+    t.model.amex_credit_charge()
+    t.model.mastercard_credit_charge()
+    t.model.enable_reference()
   },
 })
 

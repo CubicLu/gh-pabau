@@ -4,10 +4,10 @@ export const CmAppointmentCustom = objectType({
   name: 'CmAppointmentCustom',
   definition(t) {
     t.model.id()
-    t.model.appointmentId()
+    t.model.appointment_id()
     t.model.occupier()
-    t.model.customFieldId()
-    t.model.customFieldValue()
+    t.model.custom_field_id()
+    t.model.custom_field_value()
     t.model.imported()
   },
 })

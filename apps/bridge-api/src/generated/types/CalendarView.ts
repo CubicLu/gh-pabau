@@ -5,7 +5,7 @@ export const CalendarView = objectType({
   definition(t) {
     t.model.id()
     t.model.occupier()
-    t.model.userId()
+    t.model.user_id()
     t.model.viewMode()
     t.model.dayViewMode()
     t.model.employeesViewMode()
@@ -16,10 +16,10 @@ export const CalendarView = objectType({
     t.model.serviceGroupsViewMode()
     t.model.servicesViewMode()
     t.model.appointmentSize()
-    t.model.favoriteName()
-    t.model.favoriteShared()
+    t.model.favorite_name()
+    t.model.favorite_shared()
     t.model.favorite()
-    t.model.favoriteId()
+    t.model.favorite_id()
   },
 })
 

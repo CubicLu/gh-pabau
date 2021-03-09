@@ -4,7 +4,7 @@ export const SecondAtAnswer = objectType({
   name: 'SecondAtAnswer',
   definition(t) {
     t.model.id()
-    t.model.questionId()
+    t.model.question_id()
     t.model.name()
   },
 })

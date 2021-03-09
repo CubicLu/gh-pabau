@@ -4,13 +4,13 @@ export const AutomationDelay = objectType({
   name: 'AutomationDelay',
   definition(t) {
     t.model.id()
-    t.model.actionRows()
-    t.model.dataArray()
+    t.model.action_rows()
+    t.model.data_array()
     t.model.code()
     t.model.company()
     t.model.delay()
-    t.model.dateQueued()
-    t.model.appointmentId()
+    t.model.date_queued()
+    t.model.appointment_id()
   },
 })
 

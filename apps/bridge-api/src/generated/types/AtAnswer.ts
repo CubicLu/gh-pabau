@@ -4,7 +4,7 @@ export const AtAnswer = objectType({
   name: 'AtAnswer',
   definition(t) {
     t.model.id()
-    t.model.questionId()
+    t.model.question_id()
     t.model.name()
     t.model.image()
   },

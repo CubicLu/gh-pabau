@@ -4,12 +4,12 @@ export const CmAuthorization = objectType({
   name: 'CmAuthorization',
   definition(t) {
     t.model.id()
-    t.model.companyId()
-    t.model.appointmentId()
-    t.model.contactId()
+    t.model.company_id()
+    t.model.appointment_id()
+    t.model.contact_id()
     t.model.title()
-    t.model.totalSessions()
-    t.model.diagnosisCode()
+    t.model.total_sessions()
+    t.model.diagnosis_code()
   },
 })
 

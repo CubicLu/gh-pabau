@@ -4,11 +4,11 @@ export const ClassGuests = objectType({
   name: 'ClassGuests',
   definition(t) {
     t.model.id()
-    t.model.guestName()
-    t.model.signingDate()
-    t.model.classId()
-    t.model.companyId()
-    t.model.cancelStatus()
+    t.model.guest_name()
+    t.model.signing_date()
+    t.model.class_id()
+    t.model.company_id()
+    t.model.cancel_status()
     t.model.mobile()
   },
 })

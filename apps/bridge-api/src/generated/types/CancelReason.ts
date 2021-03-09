@@ -4,12 +4,12 @@ export const CancelReason = objectType({
   name: 'CancelReason',
   definition(t) {
     t.model.id()
-    t.model.reasonName()
+    t.model.reason_name()
     t.model.occupier()
-    t.model.lateCancel()
-    t.model.applyCancellationPolicy()
-    t.model.createdAt()
-    t.model.modifiedAt()
+    t.model.late_cancel()
+    t.model.apply_cancellation_policy()
+    t.model.created_at()
+    t.model.modified_at()
   },
 })
 

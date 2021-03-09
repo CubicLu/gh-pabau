@@ -4,18 +4,18 @@ export const AcLog = objectType({
   name: 'AcLog',
   definition(t) {
     t.model.id()
-    t.model.urlId()
-    t.model.actionId()
+    t.model.url_id()
+    t.model.action_id()
     t.model.critical()
     t.model.occupier()
-    t.model.userId()
+    t.model.user_id()
     t.model.date()
     t.model.humanize()
-    t.model.userAgent()
+    t.model.user_agent()
     t.model.ipv4()
-    t.model.rowAff()
-    t.model.rowId()
-    t.model.rowData()
+    t.model.row_aff()
+    t.model.row_id()
+    t.model.row_data()
   },
 })
 

@@ -3,9 +3,9 @@ import { objectType, arg, extendType } from 'nexus'
 export const AtQuestionsRelation = objectType({
   name: 'AtQuestionsRelation',
   definition(t) {
-    t.model.companyId()
-    t.model.answerId()
-    t.model.productId()
+    t.model.company_id()
+    t.model.answer_id()
+    t.model.product_id()
   },
 })
 

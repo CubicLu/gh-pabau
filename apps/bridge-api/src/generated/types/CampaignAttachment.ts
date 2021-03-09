@@ -4,12 +4,12 @@ export const CampaignAttachment = objectType({
   name: 'CampaignAttachment',
   definition(t) {
     t.model.id()
-    t.model.campaignId()
+    t.model.campaign_id()
     t.model.occupier()
-    t.model.attachTime()
-    t.model.attachUserName()
-    t.model.attachmentType()
-    t.model.attachId()
+    t.model.attach_time()
+    t.model.attach_user_name()
+    t.model.attachment_type()
+    t.model.attach_id()
   },
 })
 

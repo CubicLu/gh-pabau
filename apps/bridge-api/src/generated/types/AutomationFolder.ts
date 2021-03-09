@@ -4,7 +4,7 @@ export const AutomationFolder = objectType({
   name: 'AutomationFolder',
   definition(t) {
     t.model.id()
-    t.model.companyId()
+    t.model.company_id()
     t.model.name()
     t.model.description()
   },

@@ -4,14 +4,14 @@ export const BodyChartTemplate = objectType({
   name: 'BodyChartTemplate',
   definition(t) {
     t.model.id()
-    t.model.templateName()
-    t.model.templateUrl()
+    t.model.template_name()
+    t.model.template_url()
     t.model.tags()
     t.model.occupier()
     t.model.uid()
-    t.model.creationDate()
-    t.model.chartOrder()
-    t.model.templateType()
+    t.model.creation_date()
+    t.model.chart_order()
+    t.model.template_type()
   },
 })
 

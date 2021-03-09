@@ -4,10 +4,10 @@ export const AtQuizTake = objectType({
   name: 'AtQuizTake',
   definition(t) {
     t.model.id()
-    t.model.companyId()
+    t.model.company_id()
     t.model.name()
     t.model.email()
-    t.model.takeDate()
+    t.model.take_date()
     t.model.answers()
     t.model.concerns()
     t.model.answers2()

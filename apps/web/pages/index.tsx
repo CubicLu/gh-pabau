@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react'
 import { Button } from '@pabau/ui'
-import { version } from '../../../package.json'
+import { version } from '../package.json'
 import useTranslation from '../hooks/useTranslation'
 import Grid from '../components/Grid'
 import Layout from '../components/Layout/Layout'

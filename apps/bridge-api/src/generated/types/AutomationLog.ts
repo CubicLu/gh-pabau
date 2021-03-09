@@ -5,9 +5,9 @@ export const AutomationLog = objectType({
   definition(t) {
     t.model.id()
     t.model.company()
-    t.model.dateCreated()
+    t.model.date_created()
     t.model.message()
-    t.model.parentId()
+    t.model.parent_id()
     t.model.uid()
   },
 })

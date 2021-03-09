@@ -3,11 +3,11 @@ import { objectType, arg, extendType } from 'nexus'
 export const Timezone = objectType({
   name: 'Timezone',
   definition(t) {
-    t.model.timezoneId()
+    t.model.timezone_id()
     t.model.label()
-    t.model.phpFormat()
-    t.model.dbFormat()
-    t.model.offsetSeconds()
+    t.model.php_format()
+    t.model.db_format()
+    t.model.offset_seconds()
     t.model.supported()
     t.model.CompanyDetails()
   },

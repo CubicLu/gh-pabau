@@ -4,14 +4,14 @@ export const BlockReason = objectType({
   name: 'BlockReason',
   definition(t) {
     t.model.id()
-    t.model.reasonName()
+    t.model.reason_name()
     t.model.occupier()
-    t.model.isActive()
-    t.model.blockColor()
-    t.model.isPaid()
-    t.model.defaultTime()
+    t.model.is_active()
+    t.model.block_color()
+    t.model.is_paid()
+    t.model.default_time()
     t.model.type()
-    t.model.customId()
+    t.model.custom_id()
   },
 })
 

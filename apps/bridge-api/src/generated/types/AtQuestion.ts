@@ -4,7 +4,7 @@ export const AtQuestion = objectType({
   name: 'AtQuestion',
   definition(t) {
     t.model.id()
-    t.model.companyId()
+    t.model.company_id()
     t.model.name()
     t.model.order()
     t.model.region()

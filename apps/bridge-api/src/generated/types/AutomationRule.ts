@@ -8,11 +8,11 @@ export const AutomationRule = objectType({
     t.model.company()
     t.model.active()
     t.model.source()
-    t.model.dateStart()
-    t.model.dateEnd()
+    t.model.date_start()
+    t.model.date_end()
     t.model.description()
-    t.model.needsConfig()
-    t.model.folderId()
+    t.model.needs_config()
+    t.model.folder_id()
   },
 })
 

@@ -7,7 +7,7 @@ export const CheckinAveragesIdle = objectType({
     t.model.username()
     t.model.uid()
     t.model.avg()
-    t.model.retailutilisationAvg()
+    t.model.retailutilisation_avg()
   },
 })
 

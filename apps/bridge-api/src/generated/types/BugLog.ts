@@ -4,10 +4,10 @@ export const BugLog = objectType({
   name: 'BugLog',
   definition(t) {
     t.model.id()
-    t.model.bugMessage()
+    t.model.bug_message()
     t.model.datetime()
     t.model.uid()
-    t.model.relatedId()
+    t.model.related_id()
   },
 })
 

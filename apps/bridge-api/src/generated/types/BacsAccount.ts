@@ -4,12 +4,12 @@ export const BacsAccount = objectType({
   name: 'BacsAccount',
   definition(t) {
     t.model.id()
-    t.model.bankTag()
-    t.model.compId()
-    t.model.branchName()
-    t.model.accountHolder()
-    t.model.accountNo()
-    t.model.sortCode()
+    t.model.bank_tag()
+    t.model.comp_id()
+    t.model.branch_name()
+    t.model.account_holder()
+    t.model.account_no()
+    t.model.sort_code()
   },
 })
 

@@ -4,9 +4,9 @@ export const AccountBalance = objectType({
   name: 'AccountBalance',
   definition(t) {
     t.model.id()
-    t.model.contactId()
-    t.model.companyId()
-    t.model.insuranceCompanyId()
+    t.model.contact_id()
+    t.model.company_id()
+    t.model.insurance_company_id()
     t.model.balance()
     t.model.imported()
     t.model.company()

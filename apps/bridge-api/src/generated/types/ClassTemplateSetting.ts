@@ -4,14 +4,14 @@ export const ClassTemplateSetting = objectType({
   name: 'ClassTemplateSetting',
   definition(t) {
     t.model.id()
-    t.model.companyId()
-    t.model.classWaitListTemplateEnable()
-    t.model.classWaitListTemplateId()
-    t.model.classWaitListSmsTemplateEnable()
-    t.model.classWaitListSmsTemplateId()
+    t.model.company_id()
+    t.model.class_wait_list_template_enable()
+    t.model.class_wait_list_template_id()
+    t.model.class_wait_list_sms_template_enable()
+    t.model.class_wait_list_sms_template_id()
     t.model.uid()
-    t.model.creationDate()
-    t.model.modifiedDate()
+    t.model.creation_date()
+    t.model.modified_date()
   },
 })
 

@@ -4,11 +4,11 @@ export const TwoFactorHistory = objectType({
   name: 'TwoFactorHistory',
   definition(t) {
     t.model.id()
-    t.model.companyId()
+    t.model.company_id()
     t.model.passcode()
-    t.model.userId()
-    t.model.requestDate()
-    t.model.isConfirmed()
+    t.model.user_id()
+    t.model.request_date()
+    t.model.is_confirmed()
     t.model.company()
   },
 })

@@ -31,22 +31,13 @@ export class AuthenticationService {
       }
     }))
   }
-  /**
-   * Generate md5 or sh1 hash
-   * @param password
-   * @param encryption
-   * @param encoding
-   *
-   * @return hashed password
-   * @protected
-   */
   private generateHash(password:string, encryption:string, encoding:BinaryToTextEncoding): string{
       return createHash(encryption).update(password).digest(encoding);
   }
   private async generateJWT(key: string): Promise<string>{
     return jwt.sign(<JwtPayloadDto> {
       'user': this.user.id,
-      'company': this.user.companyId,
+      'company': this.user.company_id,
       'username': this.user.username,
       'https://hasura.io/jwt/claims': {
         "x-hasura-allowed-roles": [
@@ -54,13 +45,13 @@ export class AuthenticationService {
         ],
         'x-hasura-default-role': 'public',
         'x-hasura-user-id': this.user.id,
-        'x-hasura-org-id': this.user.companyId,
+        'x-hasura-org-id': this.user.company_id,
         'x-hasura-james': 123
       }
     }, key)
   }
   /**
-   * Password enum [1: md5, 2:sha1]
+   * Generates a valid Pabau password, user.password_algor value [1: md5, 2:sha1]
    * @param user
    * @param loginInput
    *
@@ -68,7 +59,7 @@ export class AuthenticationService {
    * @private
    */
   private generatePassword(user: User, loginInput:LoginInputDto): string {
-    switch (user.passwordAlgor) {
+    switch (user.password_algor) {
       case 1:
         return this.generateHash(loginInput.password, 'md5', 'hex')
       case 2:
@@ -76,5 +67,8 @@ export class AuthenticationService {
       default:
         throw new Error('Password algorithm not supported')
     }
+  }
+  public getAuthenticatedUser() : Omit<User, "password" | "password_algor" | "hash" | "salt"> {
+    return this.user
   }
 }

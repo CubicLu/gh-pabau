@@ -4,15 +4,15 @@ export const BatchItem = objectType({
   name: 'BatchItem',
   definition(t) {
     t.model.id()
-    t.model.batchId()
-    t.model.companyId()
-    t.model.productId()
-    t.model.usageDate()
-    t.model.patientId()
-    t.model.createdById()
+    t.model.batch_id()
+    t.model.company_id()
+    t.model.product_id()
+    t.model.usage_date()
+    t.model.patient_id()
+    t.model.created_by_id()
     t.model.qty()
-    t.model.appointmentId()
-    t.model.batchFlag()
+    t.model.appointment_id()
+    t.model.batch_flag()
   },
 })
 

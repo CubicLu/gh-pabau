@@ -4,11 +4,11 @@ export const AutomationTrigger = objectType({
   name: 'AutomationTrigger',
   definition(t) {
     t.model.id()
-    t.model.ruleId()
+    t.model.rule_id()
     t.model.name()
     t.model.company()
     t.model.code()
-    t.model.triggerData()
+    t.model.trigger_data()
     t.model.order()
   },
 })

@@ -4,12 +4,12 @@ export const BookingStatusChange = objectType({
   name: 'BookingStatusChange',
   definition(t) {
     t.model.id()
-    t.model.bookingId()
+    t.model.booking_id()
     t.model.status()
-    t.model.startDate()
-    t.model.endDate()
-    t.model.companyId()
-    t.model.userId()
+    t.model.start_date()
+    t.model.end_date()
+    t.model.company_id()
+    t.model.user_id()
   },
 })
 

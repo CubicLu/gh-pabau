@@ -5,12 +5,12 @@ export const CmAppointmentsCustomImportHelper = objectType({
   definition(t) {
     t.model.id()
     t.model.occupier()
-    t.model.customAppointmentId()
-    t.model.customContactName()
-    t.model.customFieldName()
-    t.model.customFieldValue()
+    t.model.custom_appointment_id()
+    t.model.custom_contact_name()
+    t.model.custom_field_name()
+    t.model.custom_field_value()
     t.model.added()
-    t.model.appointmentId()
+    t.model.appointment_id()
   },
 })
 

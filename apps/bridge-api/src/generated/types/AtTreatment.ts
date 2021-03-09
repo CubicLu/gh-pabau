@@ -4,7 +4,7 @@ export const AtTreatment = objectType({
   name: 'AtTreatment',
   definition(t) {
     t.model.id()
-    t.model.companyId()
+    t.model.company_id()
     t.model.name()
     t.model.image()
     t.model.description()

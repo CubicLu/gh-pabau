@@ -3,10 +3,10 @@ import { objectType, arg, extendType } from 'nexus'
 export const ClockinBreak = objectType({
   name: 'ClockinBreak',
   definition(t) {
-    t.model.breakTimeId()
-    t.model.clockId()
-    t.model.breakTimeStart()
-    t.model.breakTimeOut()
+    t.model.break_time_id()
+    t.model.clock_id()
+    t.model.break_time_start()
+    t.model.break_time_out()
   },
 })
 

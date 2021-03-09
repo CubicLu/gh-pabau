@@ -4,14 +4,14 @@ export const CashupReportCustom = objectType({
   name: 'CashupReportCustom',
   definition(t) {
     t.model.id()
-    t.model.companyId()
-    t.model.locationId()
-    t.model.cashupDate()
-    t.model.customType()
-    t.model.customAmount()
-    t.model.customActual()
-    t.model.customDifference()
-    t.model.cardType()
+    t.model.company_id()
+    t.model.location_id()
+    t.model.cashup_date()
+    t.model.custom_type()
+    t.model.custom_amount()
+    t.model.custom_actual()
+    t.model.custom_difference()
+    t.model.card_type()
   },
 })
 
