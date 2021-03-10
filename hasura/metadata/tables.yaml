@@ -1433,6 +1433,7 @@
       - library_name
       - created_date
       filter: {}
+      allow_aggregations: true
   update_permissions:
   - role: public
     permission:

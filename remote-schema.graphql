@@ -19243,9 +19243,39 @@ type library_installers {
   library_name: String!
 }
 
+"""
+aggregated selection of "library_installers"
+"""
+type library_installers_aggregate {
+  aggregate: library_installers_aggregate_fields
+  nodes: [library_installers!]!
+}
+
+"""
+aggregate fields of "library_installers"
+"""
+type library_installers_aggregate_fields {
+  avg: library_installers_avg_fields
+  count(columns: [library_installers_select_column!], distinct: Boolean): Int!
+  max: library_installers_max_fields
+  min: library_installers_min_fields
+  stddev: library_installers_stddev_fields
+  stddev_pop: library_installers_stddev_pop_fields
+  stddev_samp: library_installers_stddev_samp_fields
+  sum: library_installers_sum_fields
+  var_pop: library_installers_var_pop_fields
+  var_samp: library_installers_var_samp_fields
+  variance: library_installers_variance_fields
+}
+
 """append existing jsonb value of filtered columns with new jsonb value"""
 input library_installers_append_input {
   data: jsonb
+}
+
+"""aggregate avg on columns"""
+type library_installers_avg_fields {
+  id: Float
 }
 
 """
@@ -19310,6 +19340,28 @@ input library_installers_insert_input {
   data: jsonb
   id: Int
   is_plus: Boolean
+  library_description: String
+  library_image: String
+  library_language: String
+  library_location: String
+  library_name: String
+}
+
+"""aggregate max on columns"""
+type library_installers_max_fields {
+  created_date: timestamptz
+  id: Int
+  library_description: String
+  library_image: String
+  library_language: String
+  library_location: String
+  library_name: String
+}
+
+"""aggregate min on columns"""
+type library_installers_min_fields {
+  created_date: timestamptz
+  id: Int
   library_description: String
   library_image: String
   library_language: String
@@ -19407,6 +19459,26 @@ input library_installers_set_input {
   library_name: String
 }
 
+"""aggregate stddev on columns"""
+type library_installers_stddev_fields {
+  id: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type library_installers_stddev_pop_fields {
+  id: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type library_installers_stddev_samp_fields {
+  id: Float
+}
+
+"""aggregate sum on columns"""
+type library_installers_sum_fields {
+  id: Int
+}
+
 """
 update columns of table "library_installers"
 """
@@ -19437,6 +19509,21 @@ enum library_installers_update_column {
 
   """column name"""
   library_name
+}
+
+"""aggregate var_pop on columns"""
+type library_installers_var_pop_fields {
+  id: Float
+}
+
+"""aggregate var_samp on columns"""
+type library_installers_var_samp_fields {
+  id: Float
+}
+
+"""aggregate variance on columns"""
+type library_installers_variance_fields {
+  id: Float
 }
 
 """aggregate max on columns"""
@@ -26285,6 +26372,26 @@ type query_root {
   ): [library_installers!]!
 
   """
+  fetch aggregated fields from the table: "library_installers"
+  """
+  library_installers_aggregate(
+    """distinct select on columns"""
+    distinct_on: [library_installers_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [library_installers_order_by!]
+
+    """filter the rows returned"""
+    where: library_installers_bool_exp
+  ): library_installers_aggregate!
+
+  """
   fetch data from the table: "library_installers" using primary key columns
   """
   library_installers_by_pk(id: Int!): library_installers
@@ -28756,6 +28863,26 @@ type subscription_root {
     """filter the rows returned"""
     where: library_installers_bool_exp
   ): [library_installers!]!
+
+  """
+  fetch aggregated fields from the table: "library_installers"
+  """
+  library_installers_aggregate(
+    """distinct select on columns"""
+    distinct_on: [library_installers_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [library_installers_order_by!]
+
+    """filter the rows returned"""
+    where: library_installers_bool_exp
+  ): library_installers_aggregate!
 
   """
   fetch data from the table: "library_installers" using primary key columns
