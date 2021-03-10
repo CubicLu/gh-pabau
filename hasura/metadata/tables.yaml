@@ -906,6 +906,55 @@
       filter: {}
 - table:
     schema: public
+    name: library
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - email
+      - is_active
+      - name
+      - order
+      - phone
+      - provider_no
+      - type
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - is_active
+      - order
+      - email
+      - name
+      - phone
+      - provider_no
+      - type
+      - created_at
+      - updated_at
+      - id
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - email
+      - is_active
+      - name
+      - order
+      - phone
+      - provider_no
+      - type
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
     name: locations
   insert_permissions:
   - role: public
@@ -1482,6 +1531,7 @@
     permission:
       check: {}
       columns:
+      - company
       - email
       - is_active
       - name
@@ -1494,22 +1544,24 @@
   - role: public
     permission:
       columns:
-      - created_at
-      - email
-      - id
       - is_active
-      - name
       - order
+      - company
+      - email
+      - name
       - phone
       - provider_no
       - type
+      - created_at
       - updated_at
+      - id
       filter: {}
       allow_aggregations: true
   update_permissions:
   - role: public
     permission:
       columns:
+      - company
       - email
       - is_active
       - name

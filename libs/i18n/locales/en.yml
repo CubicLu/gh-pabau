@@ -1,5 +1,5 @@
 en:
-    marketingsource-header-create: 'Create Marketing Source'
+    marketingsource-header-create.translation: 'Create Marketing Source'
     marketingsource-title: 'Marketing Sources'
     marketingsource-name-textfield: Name
     marketingsource-name-placeholder: 'eg. Facebook'
@@ -37,3 +37,4 @@ en:
     james-testing-1: 'test one'
     james-testing-2: 'test two'
     james-test-3: 'Hello World!=)'
+    login.title: 'Log In!!'
