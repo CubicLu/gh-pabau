@@ -8,27 +8,24 @@ export interface LoginProps {
   username?: string
 }
 
-export default function useLogin(registered = false): [boolean, LoginProps] {
+export default function useLogin(registered = false): [LoginProps, boolean] {
   const [cookie] = useCookies(['user'])
   const [authenticated, authenticate] = useState<boolean>(registered)
   const [user, setUser] = useState<LoginProps | null>(null)
 
-  const decodedValidToken = (needle): LoginProps | void => {
+  const decode: (encodedToken: string) => LoginProps | void = (
+    encodedToken: string
+  ) => {
     try {
-      return jwt.verify(
-        needle,
-        'madskills',
-        function (
-          err: Error,
-          decoded: { user: number; company: number; username: string }
-        ) {
-          return {
-            user: decoded.user,
-            company: decoded.company,
-            username: decoded.username,
-          } as LoginProps
-        }
-      )
+      const token = jwt.decode(encodedToken, {
+        complete: true,
+        json: true,
+      })
+      return {
+        user: token.user,
+        company: token.company,
+        username: token.username,
+      } as LoginProps
     } catch {
       throw new Error('Invalid token')
     }
@@ -36,7 +33,8 @@ export default function useLogin(registered = false): [boolean, LoginProps] {
 
   useEffect(() => {
     if ({}.propertyIsEnumerable.call(cookie, 'user')) {
-      const currentUser = decodedValidToken(cookie.user)
+      const currentUser = decode(cookie.user)
+      console.log(currentUser)
       if (currentUser) {
         authenticate(true)
         setUser(currentUser)
@@ -44,5 +42,5 @@ export default function useLogin(registered = false): [boolean, LoginProps] {
     }
   }, [authenticated, cookie])
 
-  return [authenticated ?? false, user]
+  return [user, authenticated ?? false]
 }
