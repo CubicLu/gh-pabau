@@ -2,6 +2,8 @@
 set -e
 APP_NAME="$(basename "$(dirname "$(cd "$(dirname "${0}")"; pwd)")")"
 
+
+
 echo "DEBUG: pwd=$(pwd)"
 echo "DEBUG: app_name=${APP_NAME}"
 echo "DEBUG: DOCKER_HOSTNAME=${DOCKER_HOSTNAME}"
@@ -17,6 +19,7 @@ echo "Done"
 
 echo "Copying assets..."
 cp "apps/${APP_NAME}/package.json-prod" "dist/apps/${APP_NAME}/"
+ls -l dist/apps/bridge-api/prisma
 cp "apps/${APP_NAME}/prisma/schema.prisma" "dist/apps/${APP_NAME}/prisma/schema.prisma"
 echo "Done"
 
