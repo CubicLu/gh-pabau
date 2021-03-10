@@ -10,6 +10,7 @@ import { ReactComponent as SSOIcon } from '../../assets/images/sso.svg'
 import { gql, useMutation } from '@apollo/client'
 import { useRouter } from 'next/router'
 import { useCookies } from 'react-cookie'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 
 export interface LoginFormProps {
   email: string
@@ -27,6 +28,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
   const [login] = useMutation(LOGIN_MUTATION)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [cookie, setCookie] = useCookies(['user'])
+  const { t } = useTranslationI18()
 
   const loginHandler = async (loginProps: LoginFormProps): Promise<boolean> => {
     const { email, password } = loginProps
@@ -51,7 +53,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
     <div>
       <div className={styles.signInForm}>
         <div className={styles.formHead}>
-          <h6>Log in</h6>
+          <h6>{t('login.title')}</h6>
           <span>
             Do not have an account? <a>Start a free trial</a>
           </span>
