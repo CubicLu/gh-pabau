@@ -25163,7 +25163,6 @@ type Query {
   attachmentHelperLite(where: AttachmentHelperLiteWhereUniqueInput!): AttachmentHelperLite
   attachmentHelperLites(after: AttachmentHelperLiteWhereUniqueInput, before: AttachmentHelperLiteWhereUniqueInput, first: Int, last: Int, orderBy: [AttachmentHelperLiteOrderByInput!], where: AttachmentHelperLiteWhereInput): [AttachmentHelperLite!]!
   attachmentHelperLitesCount(where: AttachmentHelperLiteWhereInput): Int
-  authenticatedUser: User
   automationAction(where: AutomationActionWhereUniqueInput!): AutomationAction
   automationActions(after: AutomationActionWhereUniqueInput, before: AutomationActionWhereUniqueInput, first: Int, last: Int, orderBy: [AutomationActionOrderByInput!], where: AutomationActionWhereInput): [AutomationAction!]!
   automationActionsCount(where: AutomationActionWhereInput): Int

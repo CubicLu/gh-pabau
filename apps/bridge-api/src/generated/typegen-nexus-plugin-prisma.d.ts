@@ -33298,7 +33298,6 @@ export interface NexusGenFieldTypes {
     attachmentHelperLite: NexusGenRootTypes['AttachmentHelperLite'] | null; // AttachmentHelperLite
     attachmentHelperLites: NexusGenRootTypes['AttachmentHelperLite'][]; // [AttachmentHelperLite!]!
     attachmentHelperLitesCount: number | null; // Int
-    authenticatedUser: NexusGenRootTypes['User'] | null; // User
     automationAction: NexusGenRootTypes['AutomationAction'] | null; // AutomationAction
     automationActions: NexusGenRootTypes['AutomationAction'][]; // [AutomationAction!]!
     automationActionsCount: number | null; // Int
@@ -42449,7 +42448,6 @@ export interface NexusGenFieldTypeNames {
     attachmentHelperLite: 'AttachmentHelperLite'
     attachmentHelperLites: 'AttachmentHelperLite'
     attachmentHelperLitesCount: 'Int'
-    authenticatedUser: 'User'
     automationAction: 'AutomationAction'
     automationActions: 'AutomationAction'
     automationActionsCount: 'Int'
