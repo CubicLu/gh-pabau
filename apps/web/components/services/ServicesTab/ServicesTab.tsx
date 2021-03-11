@@ -605,7 +605,11 @@ export const ServicesTab: FC<SP> = ({
               <Button type="default" size="large" className="hidden-lg circle">
                 <MenuFoldOutlined />
               </Button>
-              <Button type="default" size="large" className="hidden-sm">
+              <Button
+                type="default"
+                size="large"
+                className="toggleBtn hidden-sm"
+              >
                 <MenuFoldOutlined /> Toggle
               </Button>
             </div>
