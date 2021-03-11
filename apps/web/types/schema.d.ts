@@ -16,10 +16,12 @@ interface Schema {
   notification?: Record<NotificationItems>
   breadScrumbs?: array<BreadScrumb>
   createButtonLabel?: string
+  createModalHeader?: string
+  editModalHeader?: string
+  deleteModalHeader?: string
   inboxButton?: boolean
   deleteDescField?: string
   tooltip?: string
-  createButtonLabel?: string
   padlocked?: string[]
 }
 /* eslint-disable @typescript-eslint/no-explicit-any */

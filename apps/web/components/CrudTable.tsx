@@ -407,12 +407,7 @@ const CrudTable: FC<P> = ({
               <div className={styles.allContentAlignMobile}>
                 <div className={styles.marketingTextStyle}>
                   <LeftOutlined onClick={handleBack} />
-                  <p>
-                    {' '}
-                    {needTranslation
-                      ? t('marketingsource-title.translation')
-                      : schema.full || schema.short}{' '}
-                  </p>
+                  <p>{schema.full || schema.short} </p>
                 </div>
                 {addQuery && !createPage ? (
                   <AddButton
@@ -447,6 +442,7 @@ const CrudTable: FC<P> = ({
               listQuery={listQuery}
               deleteQuery={deleteQuery}
               onClose={() => setModalShowing(false)}
+              needTranslation={needTranslation}
             />
           )}
 
@@ -496,67 +492,70 @@ const CrudTable: FC<P> = ({
                 />
               )}
             </div>
-            <Table
-              loading={isLoading}
-              style={{ height: '100%' }}
-              sticky={{ offsetScroll: 80, offsetHeader: 80 }}
-              pagination={sourceData?.length > 10 ? {} : false}
-              draggable={true}
-              isCustomColorExist={checkCustomColorIconExsist('color')}
-              isCustomIconExist={checkCustomColorIconExsist('icon')}
-              noDataBtnText={schema.full}
-              noDataText={schema.fullLower}
-              padlocked={schema.padlocked}
-              onAddTemplate={
-                createPage ? () => createPageOnClick() : () => createNew()
-              }
-              searchTerm={searchTerm}
-              columns={[
-                ...Object.entries(schema.fields).map(([k, v]) => ({
-                  dataIndex: k,
-                  width: v.cssWidth,
-                  title: v.short || v.full,
-                  visible: Object.prototype.hasOwnProperty.call(v, 'visible')
-                    ? v.visible
-                    : true,
-                })),
-              ]}
-              // eslint-disable-next-line
-              dataSource={sourceData?.map((e: { id: any }) => ({
-                key: e.id,
-                ...e,
-              }))}
-              updateDataSource={({ newData, oldIndex, newIndex }) => {
-                newData = newData.map((data, i) => {
-                  data.order = sourceData[i].order
-                  return data
-                })
-                if (oldIndex > newIndex) {
-                  for (let i = newIndex; i <= oldIndex; i++) {
-                    updateOrder(newData[i])
-                  }
-                } else {
-                  for (let i = oldIndex; i <= newIndex; i++) {
-                    updateOrder(newData[i])
-                  }
+            <div className={styles.marketingSourcesTableContainer}>
+              <Table
+                loading={isLoading}
+                style={{ height: '100%' }}
+                sticky={{ offsetScroll: 80, offsetHeader: 80 }}
+                pagination={sourceData?.length > 10 ? {} : false}
+                draggable={true}
+                isCustomColorExist={checkCustomColorIconExsist('color')}
+                isCustomIconExist={checkCustomColorIconExsist('icon')}
+                noDataBtnText={schema.full}
+                noDataText={schema.fullLower}
+                padlocked={schema.padlocked}
+                scroll={{ x: 'max-content' }}
+                onAddTemplate={
+                  createPage ? () => createPageOnClick() : () => createNew()
                 }
-                setSourceData(newData)
-                console.log('newData, oldIndex, newIndex', {
-                  newData,
-                  oldIndex,
-                  newIndex,
-                })
-              }}
-              onRowClick={(e) => {
-                if (editPage) {
-                  router.push(`${editPageRouteLink}/${e.id}`)
-                } else {
-                  setEditingRow(e)
-                  setModalShowing((e) => !e)
-                }
-              }}
-              needTranslation={needTranslation}
-            />
+                searchTerm={searchTerm}
+                columns={[
+                  ...Object.entries(schema.fields).map(([k, v]) => ({
+                    dataIndex: k,
+                    width: v.cssWidth,
+                    title: v.short || v.full,
+                    visible: Object.prototype.hasOwnProperty.call(v, 'visible')
+                      ? v.visible
+                      : true,
+                  })),
+                ]}
+                // eslint-disable-next-line
+                dataSource={sourceData?.map((e: { id: any }) => ({
+                  key: e.id,
+                  ...e,
+                }))}
+                updateDataSource={({ newData, oldIndex, newIndex }) => {
+                  newData = newData.map((data, i) => {
+                    data.order = sourceData[i].order
+                    return data
+                  })
+                  if (oldIndex > newIndex) {
+                    for (let i = newIndex; i <= oldIndex; i++) {
+                      updateOrder(newData[i])
+                    }
+                  } else {
+                    for (let i = oldIndex; i <= newIndex; i++) {
+                      updateOrder(newData[i])
+                    }
+                  }
+                  setSourceData(newData)
+                  console.log('newData, oldIndex, newIndex', {
+                    newData,
+                    oldIndex,
+                    newIndex,
+                  })
+                }}
+                onRowClick={(e) => {
+                  if (editPage) {
+                    router.push(`${editPageRouteLink}/${e.id}`)
+                  } else {
+                    setEditingRow(e)
+                    setModalShowing((e) => !e)
+                  }
+                }}
+                needTranslation={needTranslation}
+              />
+            </div>
             <Pagination
               total={paginateData.total}
               defaultPageSize={50}

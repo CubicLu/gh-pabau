@@ -1,9 +1,23 @@
 en:
-    marketingsource-header-create.translation: 'Create Marketing Source'
+    marketingsource-header-create.translation: 'Create Source'
     marketingsource-title: 'Marketing Sources'
-    marketingsource-name-textfield: Name
-    marketingsource-name-placeholder: 'eg. Facebook'
+    marketingsource-name-textfield: 'Name'
+    marketingsource-status-field: 'Status'
+    marketingsource-name-placeholder: 'Facebook'
     marketingsource-header-edit: 'Edit Marketing Source'
+    marketingsource-header-create: 'Create marketing source'
+    marketingsource-header-delete: 'Delete Marketing Source'
+    marketingsource-delete-button-label: 'Yes, Delete Source'
+    marketingsource-status-label: 'Active'
+    marketingsource-create-button: 'Create'
+    marketingsource-save-button: 'Save'
+    marketingsource-delete-button: 'Delete'
+    marketingsource-header-breadcrumb-setup-link.translation: 'Setup'
+    marketingsource-input-search-placeholder.translation: 'Search'
+    marketingsource-button-filter.translation: 'Filter'
+    marketingsource-tableRow-active-btn.translation: 'Active'
+    marketingsource-tableRow-inActive-btn.translation: 'Inactive'
+    
     KEY: Text
     search.placeholder: 'Search clients or leads'
     avatar.balance: Balance

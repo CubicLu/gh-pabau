@@ -5,6 +5,7 @@ import { DocumentNode, useMutation } from '@apollo/client'
 import { useFormikContext } from 'formik'
 import { Tooltip } from 'antd'
 import { QuestionCircleOutlined } from '@ant-design/icons'
+import { useTranslationI18 } from '../hooks/useTranslationI18'
 
 interface P {
   schema: Schema
@@ -12,6 +13,7 @@ interface P {
   deleteQuery?: DocumentNode
   listQuery: DocumentNode
   editingRow?: Record<string, string | boolean | number>
+  needTranslation?: boolean
   onClose?: () => void
 }
 
@@ -22,8 +24,10 @@ const CrudModal: FC<P> = ({
   listQuery,
   onClose,
   editingRow,
+  needTranslation,
 }) => {
   const [openDeleteModal, setDeleteModal] = useState(false)
+  const { t } = useTranslationI18()
   const [deleteMutation] = useMutation(deleteQuery, {
     onCompleted(data) {
       Notification(
@@ -104,7 +108,7 @@ const CrudModal: FC<P> = ({
           onClose?.()
         }}
         visible={openDeleteModal}
-        title={`Delete ${schema.short}?`}
+        title={schema.deleteModalHeader || `Delete ${schema.short}?`}
         newButtonText={schema.deleteBtnLabel || 'Yes, Delete'}
         isValidate={true}
       >
@@ -136,7 +140,9 @@ const CrudModal: FC<P> = ({
         title={
           typeof editingRow === 'object' && editingRow.isCreate ? (
             <span>
-              {`Create ${schema.full}`}
+              {schema.createModalHeader
+                ? schema.createModalHeader
+                : `Create ${schema.full}`}
               {schema.tooltip && (
                 <Tooltip placement="top" title={schema.tooltip}>
                   <QuestionCircleOutlined
@@ -145,17 +151,29 @@ const CrudModal: FC<P> = ({
                 </Tooltip>
               )}
             </span>
+          ) : schema.editModalHeader ? (
+            schema.editModalHeader
           ) : (
             `Edit ${schema.full}`
           )
         }
         newButtonText={
           typeof editingRow === 'object' && editingRow.isCreate
-            ? `Create`
+            ? needTranslation
+              ? t('marketingsource-create-button')
+              : `Create`
+            : needTranslation
+            ? t('marketingsource-save-button')
             : 'Save'
         }
-        dangerButtonText={editingRow?.id && `Delete`}
-        specialBooleanLabel={!!specialFormElement && 'Active'}
+        dangerButtonText={
+          editingRow?.id &&
+          (needTranslation ? t('marketingsource-delete-button') : `Delete`)
+        }
+        specialBooleanLabel={
+          !!specialFormElement &&
+          (needTranslation ? t('marketingsource-status-label') : 'Active')
+        }
         specialBooleanValue={specialBoolean}
         onSpecialBooleanClick={() => {
           setSpecialBoolean((e) => !e)

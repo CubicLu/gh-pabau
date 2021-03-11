@@ -111,11 +111,14 @@ export const Index: NextPage = () => {
   }, [user, i18n])
 
   const schema: Schema = {
-    full: t('marketingsource-title.translation'),
-    fullLower: t('marketingsource-title.translation'),
+    full: t('marketingsource-title'),
+    fullLower: t('marketingsource-title'),
     short: 'Source',
     shortLower: 'source',
-    createButtonLabel: 'Create Source',
+    createButtonLabel: t('marketingsource-header-create.translation'),
+    createModalHeader: t('marketingsource-header-create'),
+    editModalHeader: t('marketingsource-header-edit'),
+    deleteModalHeader: t('marketingsource-header-delete'),
     messages: {
       create: {
         success: 'New marketings source created.',
@@ -130,22 +133,23 @@ export const Index: NextPage = () => {
         error: 'While deleting marketing sources.',
       },
     },
-    deleteBtnLabel: 'Yes, Delete Source',
+    deleteBtnLabel: t('marketingsource-delete-button-label'),
     fields: {
       name: {
         full: 'Friendly Name',
         fullLower: 'friendly name',
-        short: t('marketingsource-name-textfield.translation'),
+        short: t('marketingsource-name-textfield'),
         shortLower: 'name',
         min: 2,
-        example: t('marketingsource-name-textfield.translation'),
+        example: t('marketingsource-name-placeholder'),
         description: 'A friendly name',
         // extra: <i>Please note: blah blah blahh</i>,
         cssWidth: 'max',
         type: 'string',
+        max: 50,
       },
       is_active: {
-        full: t('marketingsource-tableColumn-active.translation'),
+        full: t('marketingsource-status-field'),
         type: 'boolean',
         defaultvalue: true,
       },
