@@ -3,7 +3,8 @@
   "ignorePatterns": [
     "!**/*",
     "src/generated/**",
-    "src/schema/graphql/**"
+    "src/schema/graphql/**",
+    "prisma/**"
   ],
   "rules": {
     "@typescript-eslint/no-namespace": [1, { "allowDeclarations": true }]

@@ -4,6 +4,7 @@ import { schema } from './schema'
 import { createContext } from './context'
 import cookieSession from 'cookie-session'
 import authenticatedUser from './middlewares/authenticatedUser'
+import cors from 'cors'
 
 const PORT = 4000;
 const app = express();
@@ -14,6 +15,10 @@ app.use(
     secure: false,
   })
 )
+app.use(cors())
+app.use(express.urlencoded({
+  extended: true
+}))
 app.use(authenticatedUser)
 const server = new ApolloServer({
   schema,

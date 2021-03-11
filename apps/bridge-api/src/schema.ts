@@ -11,10 +11,12 @@ const prisma = new PrismaClient()
 
 export const schema = applyMiddleware(makeSchema({
     types: [generatedTypes, customTypes],
+    shouldGenerateArtifacts: process.env.NODE_ENV === 'development',
     plugins: [
       paljs(),
       nexusPrisma({
-      experimentalCRUD: true, prismaClient: ctx => ctx.prisma = prisma })],
+      experimentalCRUD: true, prismaClient: ctx => ctx.prisma = prisma })
+    ],
     outputs: {
       schema: __dirname + '/generated/schema.gen.graphql',
       typegen:__dirname + '/generated/typegen-nexus-plugin-prisma.d.ts',
@@ -35,5 +37,6 @@ export const schema = applyMiddleware(makeSchema({
       },
     },
   }),
-  permissions
+  permissions,
 )
+
