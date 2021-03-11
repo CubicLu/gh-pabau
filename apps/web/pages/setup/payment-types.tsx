@@ -204,7 +204,6 @@ export const PaymentTypes: NextPage = () => {
       aggregateQuery={LIST_AGGREGATE_QUERY}
       updateOrderQuery={UPDATE_ORDER_MUTATION}
       showNotificationBanner={true}
-      needTranslation={true}
       notificationBanner={
         <NotificationBanner
           title="Enable online payment"
