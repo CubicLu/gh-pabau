@@ -100,13 +100,30 @@ const transformTableCell = (
   return ret
 }
 
+const transformTotalColumn = (
+  text: string | TeamReportCellValue,
+  record: TeamReportRow
+): JSX.Element => {
+  let badge = <Badge color="transparent" />
+  if (typeof text === 'object') {
+    badge = <Badge status={text.badge} />
+    text = text.value
+  }
+  return (
+    <Text style={{ fontWeight: 'bold' }}>
+      {text} {badge}
+    </Text>
+  )
+}
+
 export const TeamReport: FC<TeamReportParams> = ({
   source,
   columns,
   loading = false,
 }) => {
   columns = columns.map((col) => {
-    col.render = transformTableCell
+    if (col.key === 'total') col.render = transformTotalColumn
+    else col.render = transformTableCell
     return col
   })
 
@@ -117,7 +134,7 @@ export const TeamReport: FC<TeamReportParams> = ({
       scroll={{ x: 1200, y: 1200 }}
       loading={loading}
       size="small"
-      pagination={{ pageSize: 100 }}
+      pagination={false}
       expandable={{
         expandedRowRender: (record) => record.desc,
         expandIconColumnIndex: 1,
