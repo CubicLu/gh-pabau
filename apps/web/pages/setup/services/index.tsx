@@ -5,10 +5,13 @@ import CategoriesTab from '../../../components/services/CategoriesTab/Categories
 import LibrariesTab from '../../../components/services/LibrariesTab/LibrariesTab'
 import { TabMenu, Breadcrumb, Button, Pagination } from '@pabau/ui'
 import { Card, Input, Popover, Radio, Select } from 'antd'
+import className from 'classnames'
 import {
+  LeftOutlined,
   SearchOutlined,
   FilterOutlined,
   ExportOutlined,
+  PlusOutlined,
 } from '@ant-design/icons'
 import styles from './index.module.less'
 
@@ -98,19 +101,28 @@ export const Index: FC = () => {
   const CardHeader = (
     <div className={styles.header}>
       <div className="leftDiv">
-        <div>
+        <div className="hidden-sm">
           <Breadcrumb
             breadcrumbItems={[
               { breadcrumbName: 'Setup', path: 'setup' },
-              { breadcrumbName: 'Third Parties', path: '' },
+              { breadcrumbName: 'Services', path: '' },
             ]}
           />
         </div>
-        <h3 className={styles.servicesHeading}>Services</h3>
+        <h3 className={styles.servicesHeading}>
+          <span className="hidden-lg">
+            <LeftOutlined />
+          </span>{' '}
+          Services
+        </h3>
       </div>
       <div className="rightDiv">
+        <span className="hidden-lg">
+          <SearchOutlined />
+        </span>
         <Input
-          className={styles.searchDrugsListing}
+          value={searchTerm}
+          className={className(styles.searchDrugsListing, 'hidden-sm')}
           autoFocus
           placeholder="Search"
           suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
@@ -120,7 +132,10 @@ export const Index: FC = () => {
         />
         {showCreateBtn && (
           <div>
-            <Button type="default" size="large">
+            <span className="hidden-lg">
+              <ExportOutlined />
+            </span>
+            <Button type="default" size="large" className="hidden-sm">
               <ExportOutlined /> Export
             </Button>
             <Popover
@@ -129,14 +144,37 @@ export const Index: FC = () => {
               placement="bottomRight"
               overlayClassName={styles.filterPopover}
             >
-              <Button className={styles.filterBtn} size="large">
+              <span className="hidden-lg">
+                <FilterOutlined />
+              </span>
+              <Button
+                className={className(styles.filterBtn, 'hidden-sm')}
+                size="large"
+              >
                 <FilterOutlined /> Filter
               </Button>
             </Popover>
             {addBtnState && (
-              <Button type="primary" size="large" onClick={() => addBtnClick()}>
-                {addBtnLabel}
-              </Button>
+              <>
+                <Button
+                  type="primary"
+                  size="middle"
+                  className="hidden-lg"
+                  onClick={() => addBtnClick()}
+                >
+                  <span>
+                    <PlusOutlined />
+                  </span>
+                </Button>
+                <Button
+                  type="primary"
+                  size="large"
+                  className="hidden-sm"
+                  onClick={() => addBtnClick()}
+                >
+                  {addBtnLabel}
+                </Button>
+              </>
             )}
           </div>
         )}
@@ -147,16 +185,19 @@ export const Index: FC = () => {
   const onTabClick = (tab) => {
     switch (tab) {
       case TopTabMenuItems[0]:
+        setSearchTerm(null)
         setAddBtnState(true)
         setPaginationState(false)
         setAddBtnLabel(AddBtnLabels[0])
         break
       case TopTabMenuItems[1]:
+        setSearchTerm(null)
         setAddBtnState(true)
         setPaginationState(true)
         setAddBtnLabel(AddBtnLabels[1])
         break
       case TopTabMenuItems[2]:
+        setSearchTerm(null)
         setAddBtnState(false)
         setPaginationState(false)
         break

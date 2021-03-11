@@ -6,7 +6,8 @@
       }
       .ant-tabs-tab {
         height: 40px;
-        padding: 0 !important;
+        padding: 0px !important;
+
         &.ant-tabs-tab-active {
           background-color: #eef7fb !important;
         }
@@ -15,9 +16,78 @@
         }
       }
     }
+    .ant-tabs-top {
+      > .ant-tabs-nav {
+        > .ant-tabs-nav-wrap {
+          > .ant-tabs-nav-list {
+            > .ant-tabs-tab {
+              border-right: 1px solid #ecedf0;
+              padding: 0px !important;
+              &.ant-tabs-tab-active {
+                background-color: #eef7fb !important;
+              }
+            }
+
+            .services_tab_tabMenuItem__3HCvr {
+              display: flex;
+              justify-content: center;
+            }
+          }
+        }
+      }
+    }
+    .ant-table-thead {
+      th {
+        color: #9292a3;
+      }
+    }
+    .ant-table-tbody {
+      td {
+        color: #3d3d46;
+      }
+      .duration {
+        color: #9292a3;
+      }
+      .serviceName {
+        @media screen and (max-width: 768px) {
+          min-width: 350px !important;
+        }
+      }
+      .serviceStatus {
+        @media screen and (max-width: 768px) {
+          min-width: 250px;
+          button {
+            min-width: 150px !important;
+          }
+        }
+      }
+      .serviceEdit {
+        @media screen and (max-width: 768px) {
+          min-width: 300px !important;
+        }
+      }
+      @media screen and (max-width: 768px) {
+        tr td:first-child {
+          width: 50px !important;
+          padding-left: 30px;
+        }
+      }
+    }
     .ant-table-footer {
       padding: 0px 16px;
       background-color: #ffffff;
+    }
+
+    .hidden-lg {
+      @media screen and (min-width: 769px) {
+        display: none;
+      }
+    }
+
+    .hidden-sm {
+      @media screen and (max-width: 768px) {
+        display: none;
+      }
     }
   }
   .servicesSectionHeading {
@@ -27,6 +97,20 @@
     align-items: center;
     flex-wrap: wrap;
     padding: 15px 25px;
+
+    @media screen and (max-width: 768px) {
+      padding-right: 7.5px;
+    }
+
+    @media screen and (max-width: 393px) {
+      flex-direction: column-reverse;
+
+      & > div {
+        &:first-child {
+          margin-top: 10px;
+        }
+      }
+    }
 
     & > div {
       display: flex;
@@ -62,6 +146,15 @@
         button:last-child {
           padding: 1.5em;
         }
+      }
+    }
+
+    :global {
+      button.circle {
+        border-radius: 100%;
+        padding: 0.25em 1em !important;
+        height: 40px !important;
+        margin-right: 15px;
       }
     }
   }
@@ -145,6 +238,10 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 12px 0 24px;
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    padding: 0px 12px;
+  }
   > span {
     &:nth-child(1) {
       font-family: var(--font-family);
@@ -166,6 +263,11 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 12px 0 24px;
+
+  @media screen and (max-width: 768px) {
+    width: 150px;
+    padding: 0px 24px;
+  }
   > span {
     &:nth-child(1) {
       font-family: var(--font-family);
@@ -253,6 +355,18 @@
             padding-right: 20px;
           }
         }
+      }
+    }
+  }
+}
+
+.paginationDiv {
+  @media screen and (max-width: 768px) {
+    & > div {
+      padding-bottom: 15px;
+      & > div {
+        flex-direction: column;
+        align-items: center;
       }
     }
   }

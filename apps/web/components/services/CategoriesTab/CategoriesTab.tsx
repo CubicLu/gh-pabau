@@ -74,6 +74,7 @@ const columns = [
     title: 'Service Group',
     dataIndex: 'name',
     visible: true,
+    className: 'categoryGroup',
     render: function renderSourceName(val) {
       return (
         <div className={styles.categoryGroup}>

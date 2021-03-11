@@ -11,6 +11,7 @@ import {
   Switch,
   SearchTags,
   ImageSelectorModal,
+  BasicModal as Modal,
 } from '@pabau/ui'
 import { Button, Dropdown, Menu, Popover, Tooltip } from 'antd'
 import {
@@ -22,6 +23,7 @@ import {
   PlusCircleFilled,
   DeleteOutlined,
 } from '@ant-design/icons'
+import className from 'classnames'
 import { Donate, File, Folder, Injection, Key, Team, Globe } from '../assets'
 import { ReactComponent as Bupa } from '../../../assets/images/bupa.svg'
 import { ReactComponent as AxaPPP } from '../../../assets/images/axa-ppp.svg'
@@ -156,6 +158,8 @@ const columnsView1 = [
     title: 'Name',
     dataIndex: 'name',
     visible: true,
+    className: 'serviceName',
+    width: '40%',
     render: function renderSourceName(val, rowData) {
       return (
         <div className={styles.serviceName}>
@@ -178,11 +182,14 @@ const columnsView1 = [
     title: 'Duration',
     dataIndex: 'duration',
     visible: true,
+    className: 'duration',
+    width: '20%',
   },
   {
     title: 'Staff assigned',
     dataIndex: 'staff',
     visible: true,
+    width: '20%',
     render: function renderSourceName(val) {
       return (
         <div className={styles.staff}>
@@ -217,6 +224,7 @@ const columnsView1 = [
     title: 'Price',
     dataIndex: 'price',
     visible: true,
+    width: '20%',
   },
 ]
 
@@ -225,6 +233,7 @@ const columnsView2 = [
     title: 'Name',
     dataIndex: 'name',
     visible: true,
+    className: 'serviceName',
     width: '50%',
     render: function renderSourceName(val) {
       return (
@@ -238,6 +247,7 @@ const columnsView2 = [
     title: 'Status',
     dataIndex: 'status',
     visible: true,
+    className: 'serviceStatus',
     width: '25%',
     render: function renderSourceName(val) {
       return (
@@ -252,6 +262,7 @@ const columnsView2 = [
     dataIndex: 'edit',
     visible: true,
     width: '25%',
+    className: 'serviceEdit',
     render: function renderSourceName() {
       return (
         <div className={styles.editIconsDiv}>
@@ -354,6 +365,16 @@ const locations = [
   },
 ]
 
+const LeftTabs = [
+  'All',
+  'Appointments',
+  'Enrollments',
+  'Arrival',
+  'Pricing',
+  'Contracts',
+  'Injectables',
+]
+
 export interface SP {
   showCreateServiceModal: boolean
   onCloseCreateServiceModal?: () => void
@@ -363,12 +384,12 @@ export interface SP {
 
 export const ServicesTab: FC<SP> = ({
   searchTerm,
-  updatedCategories,
   showCreateServiceModal,
   onCloseCreateServiceModal,
 }) => {
   const services = ['Seasonal Offers', 'The Beauty & Skin Clinic – Prepaid']
   const togglesViews = ['Standard View', 'Detailed View']
+
   const [showCreateGroup, setShowCreateGroup] = useState(false)
   const [showImageSelector, setShowImageSelector] = useState(false)
   const [columns, setColumns] = useState(columnsView1)
@@ -376,6 +397,12 @@ export const ServicesTab: FC<SP> = ({
   const [selectedService, setSelectedService] = useState(services[0])
   const [paginationState] = useState(true)
   const [sourceData, setSourceData] = useState(null)
+
+  const [openDeleteTabModal, setDeleteTabModal] = useState(false)
+  const [deletingTab, setDeletingTab] = useState(null)
+
+  const [newServiceGroupName, setNewServiceGroupName] = useState(null)
+
   const GroupsItem = ({ onClick }) => {
     const [showOps, setShowOps] = useState(false)
     return (
@@ -384,9 +411,10 @@ export const ServicesTab: FC<SP> = ({
         onMouseEnter={() => setShowOps(true)}
         onMouseLeave={() => setShowOps(false)}
       >
-        <span>Groups</span>
+        <span className="hidden-sm">Groups</span>
         {showOps && (
           <PlusCircleFilled
+            className="hidden-sm"
             style={{
               color: 'var(--primary-color)',
               fontSize: '24px',
@@ -395,10 +423,19 @@ export const ServicesTab: FC<SP> = ({
             onClick={() => onClick()}
           />
         )}
+        <PlusCircleFilled
+          className="hidden-lg"
+          style={{
+            color: 'var(--primary-color)',
+            fontSize: '24px',
+            cursor: 'pointer',
+          }}
+          onClick={() => onClick()}
+        />
       </div>
     )
   }
-  const TabMenuItem = ({ title, onEdit, onDelete }) => {
+  const TabMenuItem = ({ title, onEdit, onDelete, showActions = true }) => {
     const [showOps, setShowOps] = useState(false)
     return (
       <div
@@ -407,8 +444,8 @@ export const ServicesTab: FC<SP> = ({
         onMouseLeave={() => setShowOps(false)}
       >
         <span>{title}</span>
-        {showOps && (
-          <div className={styles.tabMenuItemOps}>
+        {showOps && showActions && (
+          <div className={className(styles.tabMenuItemOps, 'hidden-sm')}>
             <div onClick={() => onEdit()}>
               <EditOutlined />
             </div>
@@ -420,81 +457,69 @@ export const ServicesTab: FC<SP> = ({
       </div>
     )
   }
-  const LeftTabMenuItems = [
+
+  const [leftTabs, setLeftTabs] = useState([
     <React.Fragment key="groups">
       <GroupsItem onClick={() => setShowCreateGroup(true)} />
     </React.Fragment>,
-    <React.Fragment key="appointment">
+    <React.Fragment key="All">
       <TabMenuItem
+        showActions={false}
+        title="All"
+        onEdit={() => {
+          return
+        }}
+        onDelete={() => {
+          setDeletingTab('All')
+          setDeleteTabModal(true)
+        }}
+      />
+    </React.Fragment>,
+    <React.Fragment key="Appointments">
+      <TabMenuItem
+        showActions={true}
         title="Appointments"
         onEdit={() => {
           return
         }}
         onDelete={() => {
-          return
+          setDeletingTab('Appointments')
+          setDeleteTabModal(true)
         }}
       />
     </React.Fragment>,
-    <React.Fragment key="enrollments">
-      <TabMenuItem
-        title="Enrollments"
-        onEdit={() => {
-          return
-        }}
-        onDelete={() => {
-          return
-        }}
-      />
-    </React.Fragment>,
-    <React.Fragment key="Arrivals">
-      <TabMenuItem
-        title="Arrivals"
-        onEdit={() => {
-          return
-        }}
-        onDelete={() => {
-          return
-        }}
-      />
-    </React.Fragment>,
-    <React.Fragment key="Pricing">
-      <TabMenuItem
-        title="Pricing"
-        onEdit={() => {
-          return
-        }}
-        onDelete={() => {
-          return
-        }}
-      />
-    </React.Fragment>,
-    <React.Fragment key="Contracts">
-      <TabMenuItem
-        title="Contracts"
-        onEdit={() => {
-          return
-        }}
-        onDelete={() => {
-          return
-        }}
-      />
-    </React.Fragment>,
-    <React.Fragment key="Injectables">
-      <TabMenuItem
-        title="Injectables"
-        onEdit={() => {
-          return
-        }}
-        onDelete={() => {
-          return
-        }}
-      />
-    </React.Fragment>,
-  ]
+  ])
 
   useEffect(() => {
     setSourceData(data)
-  }, [setSourceData])
+    if (LeftTabs?.length) {
+      const totalTabs = [...leftTabs]
+      if (totalTabs?.length < LeftTabs.length) {
+        for (const tab of LeftTabs) {
+          const existingTab = totalTabs.find((el) => el.key === tab)
+          if (!existingTab) {
+            totalTabs.push(
+              <React.Fragment key={tab}>
+                <TabMenuItem
+                  showActions={tab === 'All' ? false : true}
+                  title={tab}
+                  onEdit={() => {
+                    return
+                  }}
+                  onDelete={() => {
+                    setDeletingTab(tab)
+                    setDeleteTabModal(true)
+                  }}
+                />
+              </React.Fragment>
+            )
+          }
+        }
+        setLeftTabs(totalTabs)
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setSourceData, LeftTabs])
 
   const setTableView = (view) => {
     setSelectedToggleView(view)
@@ -553,7 +578,7 @@ export const ServicesTab: FC<SP> = ({
 
   const serviceHeader = () => {
     return (
-      <div className={styles.servicesSectionHeading}>
+      <div className={className(styles.servicesSectionHeading)}>
         <Dropdown
           overlay={servicesOverlay}
           trigger={['hover']}
@@ -564,15 +589,26 @@ export const ServicesTab: FC<SP> = ({
           </div>
         </Dropdown>
         <div>
+          <Button type="default" size="large" className="hidden-lg circle">
+            <EditOutlined />
+          </Button>
+          <Button type="default" size="large" className="hidden-lg circle">
+            <DeleteOutlined />
+          </Button>
           <Dropdown
             overlay={toggleOverlay}
             trigger={['click']}
             placement="bottomRight"
             arrow
           >
-            <Button type="default" size="large">
-              <MenuFoldOutlined /> Toggle
-            </Button>
+            <div>
+              <Button type="default" size="large" className="hidden-lg circle">
+                <MenuFoldOutlined />
+              </Button>
+              <Button type="default" size="large" className="hidden-sm">
+                <MenuFoldOutlined /> Toggle
+              </Button>
+            </div>
           </Dropdown>
           <Dropdown
             overlay={moreBtnOverlay}
@@ -593,7 +629,7 @@ export const ServicesTab: FC<SP> = ({
     return (
       <div>
         {paginationState && (
-          <div className={styles.paginationDiv}>
+          <div className={className(styles.paginationDiv, 'footerPagination')}>
             <Pagination
               showingRecords={sourceData?.length}
               defaultCurrent={1}
@@ -606,21 +642,14 @@ export const ServicesTab: FC<SP> = ({
     )
   }
 
-  return (
-    <div className={styles.servicesTabMain}>
-      <div>
-        <TabMenu
-          tabPosition="left"
-          menuItems={LeftTabMenuItems}
-          className={styles.leftTabMenu}
-          disabledKeys={[0]}
-          activeDefaultKey="1"
-          minHeight="50vh"
-          size="large"
-        >
-          <div></div>
-          <div className={styles.appointments}>
-            <div>{serviceHeader()}</div>
+  const renderTabContent = () => {
+    const arr = Array.from({ length: leftTabs?.length })
+    return (
+      leftTabs?.length > 0 &&
+      arr.map((el, index) =>
+        index === 1 || index === 2 ? (
+          <div className={styles.appointments} key={`tab-left-${index}`}>
+            <div className="hidden-sm">{serviceHeader()}</div>
             <div>
               <Table
                 draggable={true}
@@ -638,11 +667,77 @@ export const ServicesTab: FC<SP> = ({
               />
             </div>
           </div>
-          <div className={styles.appointments}>{serviceHeader()}</div>
-          <div className={styles.appointments}>{serviceHeader()}</div>
-          <div className={styles.appointments}>{serviceHeader()}</div>
-          <div className={styles.appointments}>{serviceHeader()}</div>
-          <div className={styles.appointments}>{serviceHeader()}</div>
+        ) : (
+          <div key={`tab-left-${index}`} className="hidden-sm">
+            {serviceHeader()}
+          </div>
+        )
+      )
+    )
+  }
+
+  const deleteTab = () => {
+    const totalTabs = [...leftTabs]
+    const tabData = totalTabs.find((el) => el.key === deletingTab)
+    const index = totalTabs.indexOf(tabData)
+    if (index !== -1) {
+      totalTabs.splice(index, 1)
+      setLeftTabs(totalTabs)
+    }
+    setDeleteTabModal(false)
+  }
+
+  const createTab = () => {
+    if (newServiceGroupName) {
+      const totalTabs = [...leftTabs]
+      totalTabs.push(
+        <React.Fragment key={newServiceGroupName}>
+          <TabMenuItem
+            showActions={true}
+            title={newServiceGroupName}
+            onEdit={() => {
+              return
+            }}
+            onDelete={() => {
+              setDeletingTab(newServiceGroupName)
+              setDeleteTabModal(true)
+            }}
+          />
+        </React.Fragment>
+      )
+      setLeftTabs(totalTabs)
+      setNewServiceGroupName(null)
+      setShowCreateGroup(false)
+    }
+  }
+
+  return (
+    <div className={styles.servicesTabMain}>
+      <div className="hidden-lg">{serviceHeader()}</div>
+      <div className="hidden-sm">
+        <TabMenu
+          tabPosition="left"
+          menuItems={leftTabs}
+          className={styles.leftTabMenu}
+          disabledKeys={[0]}
+          activeDefaultKey="1"
+          minHeight="70vh"
+          size="large"
+        >
+          {renderTabContent()}
+        </TabMenu>
+      </div>
+      <div className="hidden-lg">
+        <TabMenu
+          tabPosition="top"
+          menuItems={leftTabs}
+          className={styles.leftTabMenu}
+          disabledKeys={[0]}
+          activeDefaultKey="1"
+          minHeight="70vh"
+          size="large"
+        >
+          {renderTabContent()}
         </TabMenu>
       </div>
       <CreateService
@@ -654,6 +749,7 @@ export const ServicesTab: FC<SP> = ({
         employees={employees}
         locations={locations}
       />
+
       <CreateServiceGroup
         visible={showCreateGroup}
         modalWidth={500}
@@ -663,7 +759,10 @@ export const ServicesTab: FC<SP> = ({
       >
         <div className="nameInput">
           <label>Name</label>
-          <Input placeHolderText="Enter Name" />
+          <Input
+            placeHolderText="Enter Name"
+            onChange={(val) => setNewServiceGroupName(val)}
+          />
         </div>
         <div style={{ marginTop: '30px' }}>
           <SearchTags
@@ -699,7 +798,7 @@ export const ServicesTab: FC<SP> = ({
             </Button>
           </div>
           <div>
-            <Button type="primary" size="large">
+            <Button type="primary" size="large" onClick={() => createTab()}>
               Create
             </Button>
           </div>
@@ -715,6 +814,33 @@ export const ServicesTab: FC<SP> = ({
           setShowImageSelector(false)
         }}
       />
+
+      <Modal
+        modalWidth={682}
+        centered={true}
+        onCancel={() => {
+          setDeletingTab(null)
+          setDeleteTabModal(false)
+        }}
+        onOk={deleteTab}
+        visible={openDeleteTabModal}
+        title={`Delete ${deletingTab}`}
+        newButtonText={'Yes, Delete'}
+        isValidate={true}
+      >
+        <span
+          style={{
+            fontFamily: 'Circular-Std-Book',
+            fontWeight: 'normal',
+            fontSize: '16px',
+            lineHeight: '20px',
+            color: '#9292A3',
+          }}
+        >
+          {deletingTab ? `${deletingTab} tab` : 'This'} will be deleted. This
+          action is irreversable
+        </span>
+      </Modal>
     </div>
   )
 }

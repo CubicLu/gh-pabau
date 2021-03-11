@@ -9,6 +9,24 @@
       margin-right: 5px;
     }
   }
+  :global {
+    .ant-table-tbody {
+      td {
+        color: #3d3d46;
+      }
+      .categoryGroup {
+        @media screen and (max-width: 768px) {
+          min-width: 350px !important;
+        }
+      }
+      @media screen and (max-width: 768px) {
+        tr td:first-child {
+          width: 50px !important;
+          padding-left: 30px;
+        }
+      }
+    }
+  }
 }
 
 :global {

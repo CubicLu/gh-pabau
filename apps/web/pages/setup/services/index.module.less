@@ -6,6 +6,7 @@
       padding: 0px;
       border: none;
     }
+
     .leftPadding {
       padding-left: 30px !important;
     }
@@ -16,14 +17,37 @@
       background: #eef7fb !important;
     }
     .ant-tabs-top {
-      >.ant-tabs-nav {
-        >.ant-tabs-nav-wrap {
+      > .ant-tabs-nav {
+        > .ant-tabs-nav-wrap {
           border-bottom: 1px solid #ecedf0;
-          >.ant-tabs-nav-list {
-            >.ant-tabs-tab {
-              padding: 15px 50px !important;
+          > .ant-tabs-nav-list {
+            > .ant-tabs-tab {
+              padding: 15px 50px;
               background-color: transparent !important;
             }
+          }
+        }
+      }
+    }
+
+    .hidden-lg {
+      @media screen and (min-width: 769px) {
+        display: none;
+      }
+    }
+
+    .hidden-sm {
+      @media screen and (max-width: 768px) {
+        display: none;
+
+        & + h3 {
+          margin-bottom: 5px !important;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          span {
+            margin-right: 5px;
+            font-weight: normal !important;
           }
         }
       }
@@ -36,6 +60,10 @@
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid #ecedf0;
+
+    @media screen and (max-width: 768px) {
+      padding: 15px 20px 9.5px 20px;
+    }
 
     .searchDrugsListing {
       width: 256px;
@@ -77,6 +105,34 @@
       div.rightDiv {
         display: flex;
         align-items: center;
+        div {
+          display: flex;
+          align-items: center;
+        }
+
+        span.hidden-lg {
+          font-size: 25px;
+          margin-left: 20px;
+          line-height: 100%;
+          cursor: pointer;
+          svg {
+            fill: #9292a3;
+
+            &:active,
+            &:hover,
+            &:focus {
+              fill: #54b2d3;
+            }
+          }
+        }
+        button.hidden-lg {
+          margin-left: 20px;
+          padding: 4.5px 5px 10px 5px !important;
+          margin-top: -3px;
+          span {
+            font-size: 20px;
+          }
+        }
       }
     }
   }
@@ -213,6 +269,17 @@
             margin-bottom: 0px;
           }
         }
+      }
+    }
+  }
+}
+
+.paginationDiv {
+  @media screen and (max-width: 768px) {
+    & > div {
+      & > div {
+        flex-direction: column;
+        align-items: center;
       }
     }
   }
