@@ -2,8 +2,6 @@
 set -e
 APP_NAME="$(basename "$(dirname "$(cd "$(dirname "${0}")"; pwd)")")"
 
-
-
 echo "DEBUG: pwd=$(pwd)"
 echo "DEBUG: app_name=${APP_NAME}"
 echo "DEBUG: DOCKER_HOSTNAME=${DOCKER_HOSTNAME}"

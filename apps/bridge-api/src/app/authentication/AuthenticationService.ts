@@ -22,7 +22,7 @@ export class AuthenticationService {
     if(!this.user || Object.getOwnPropertyNames(this.user).length === 0){
       throw new Error('Unauthorized access')
     }
-    return this.generateJWT('madskills')
+    return this.generateJWT(process.env.JWT_SECRET)
   }
   public async handleLogoutRequest(logoutInputDto: LogoutInputDto):Promise<boolean> {
     return !!(await this.ctx.prisma.user.findFirst({
