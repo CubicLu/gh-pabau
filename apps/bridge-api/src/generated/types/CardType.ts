@@ -1,7 +1,7 @@
 import { objectType, arg, extendType } from 'nexus'
 
-export const CardTypes = objectType({
-  name: 'CardTypes',
+export const CardType = objectType({
+  name: 'CardType',
   definition(t) {
     t.model.id()
     t.model.company_id()
@@ -18,44 +18,44 @@ export const CardTypes = objectType({
   },
 })
 
-export const cardTypesQuery = extendType({
+export const cardTypeQuery = extendType({
   type: 'Query',
   definition(t) {
-    t.crud.cardTypes()
-    t.field('findFirstCardTypes', {
-      type: 'CardTypes',
+    t.crud.cardType()
+    t.field('findFirstCardType', {
+      type: 'CardType',
       args: {
-        where: 'CardTypesWhereInput',
-        orderBy: arg({ type: 'CardTypesOrderByInput' }),
-        cursor: 'CardTypesWhereUniqueInput',
+        where: 'CardTypeWhereInput',
+        orderBy: arg({ type: 'CardTypeOrderByInput' }),
+        cursor: 'CardTypeWhereUniqueInput',
         skip: 'Int',
         take: 'Int',
       },
       async resolve(_root, args, ctx) {
-        return ctx.prisma.cardTypes.findFirst(args as any)
+        return ctx.prisma.cardType.findFirst(args as any)
       },
     })
     t.crud.cardTypes({ filtering: true, ordering: true })
     t.field('cardTypesCount', {
       type: 'Int',
       args: {
-        where: 'CardTypesWhereInput',
+        where: 'CardTypeWhereInput',
       },
       async resolve(_root, args, ctx) {
-        return ctx.prisma.cardTypes.count(args as any)
+        return ctx.prisma.cardType.count(args as any)
       },
     })
   },
 })
 
-export const cardTypesMutation = extendType({
+export const cardTypeMutation = extendType({
   type: 'Mutation',
   definition(t) {
-    t.crud.createOneCardTypes()
-    t.crud.updateOneCardTypes()
-    t.crud.upsertOneCardTypes()
-    t.crud.deleteOneCardTypes()
-    t.crud.updateManyCardTypes()
-    t.crud.deleteManyCardTypes()
+    t.crud.createOneCardType()
+    t.crud.updateOneCardType()
+    t.crud.upsertOneCardType()
+    t.crud.deleteOneCardType()
+    t.crud.updateManyCardType()
+    t.crud.deleteManyCardType()
   },
 })

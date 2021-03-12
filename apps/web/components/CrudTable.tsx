@@ -121,7 +121,6 @@ const CrudTable: FC<P> = ({
   const getQueryVariables = () => {
     const queryOptions = {
       variables: {
-        companyId: user?.company?.id,
         isActive: Number(isActive),
         searchTerm: '%' + searchTerm + '%',
         offset: paginateData.offset,
@@ -141,7 +140,6 @@ const CrudTable: FC<P> = ({
   const getAggregateQueryVariables = () => {
     const queryOptions = {
       variables: {
-        companyId: user?.company?.id,
         isActive,
         searchTerm: '%' + searchTerm + '%',
       },

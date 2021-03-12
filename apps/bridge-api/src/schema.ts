@@ -1,4 +1,4 @@
-import { makeSchema  } from 'nexus'
+import { fieldAuthorizePlugin, makeSchema, queryComplexityPlugin } from 'nexus'
 import { nexusPrisma } from 'nexus-plugin-prisma'
 import { PrismaClient } from '@prisma/client'
 import * as generatedTypes from './generated/types'
@@ -11,14 +11,18 @@ const prisma = new PrismaClient()
 
 export const schema = applyMiddleware(makeSchema({
     types: [generatedTypes, customTypes],
-    shouldGenerateArtifacts: process.env.NODE_ENV === 'development',
     plugins: [
-      paljs(),
+      paljs({
+        includeAdmin: true,
+      }),
       nexusPrisma({
-      experimentalCRUD: true, prismaClient: ctx => ctx.prisma = prisma })
+      experimentalCRUD: true, prismaClient: ctx => ctx.prisma = prisma
+      }),
+      fieldAuthorizePlugin(),
+      queryComplexityPlugin(),
     ],
     outputs: {
-      schema: __dirname + '/generated/schema.gen.graphql',
+      schema: __dirname + '/generated/schema.graphql',
       typegen:__dirname + '/generated/typegen-nexus-plugin-prisma.d.ts',
     },
     sourceTypes: {
@@ -37,6 +41,5 @@ export const schema = applyMiddleware(makeSchema({
       },
     },
   }),
-  permissions,
+  permissions
 )
-

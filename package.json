@@ -32,11 +32,11 @@
     "update": "yarn upgrade-interactive && nx migrate latest",
     "workspace-schematic": "nx workspace-schematic",
     "dep-graph": "nx dep-graph",
-    "prisma": "prisma",
     "prisma:generate": "prisma generate",
     "prisma:format": "prisma format",
-    "nexus:generate": "cross-env NODE_ENV=development ts-node-dev --transpile-only apps/bridge-api/src/schema",
-    "bridge:generate": "prisma generate && pal g && pal schema typescript -o apps/bridge-api/src/generated && ts-node-dev --transpile-only apps/bridge-api/src/schema",
+    "nexus:generate": "ts-node-dev --transpile-only apps/bridge-api/src/schema",
+    "bridge:generate": "prisma generate & pal g && pal schema typescript -o apps/bridge-api/src/generated & yarn run nexus:generate",
+    "bridge:rebuild": "./apps/bridge-api/cicd/prune.sh & prisma validate & prisma format & yarn run bridge:generate",
     "postinstall": "husky install"
   },
   "private": true,
@@ -212,7 +212,8 @@
     "typescript": "^4.2.3",
     "url-loader": "^4.1.1",
     "vercel": "^21.3.3",
-    "yaml-loader": "^0.6.0"
+    "yaml-loader": "^0.6.0",
+    "prisma-json-schema-generator": "^1.2.1"
   },
   "resolutions": {
     "**/immer": "8.0.1",

@@ -9,17 +9,17 @@ import cors from 'cors'
 const PORT = 4000;
 const app = express();
 app.set('trust proxy', true);
-app.use(
-  cookieSession({
-    signed: false,
-    secure: false,
-  })
-)
 app.use(cors())
-app.use(express.urlencoded({
-  extended: true
-}))
-app.use(authenticatedUser)
+  .use(express.urlencoded({
+    extended: true
+  }))
+  .use(cookieSession({
+      signed: false,
+      secure: false,
+    }))
+  .use(authenticatedUser)
+
+
 const server = new ApolloServer({
   schema,
   context: createContext,

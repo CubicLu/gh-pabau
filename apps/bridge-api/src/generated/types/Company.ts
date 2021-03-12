@@ -16,7 +16,7 @@ export const Company = objectType({
     t.model.details()
     t.model.subscription()
     t.model.TwoFactorHistory()
-    t.model.ThirdPartyAcces()
+    t.model.ThirdPartyAccess()
     t.model.AcceptEmailToken()
     t.model.AccountBalance()
     t.model.MarketingSource()
@@ -24,6 +24,7 @@ export const Company = objectType({
     t.model.CmCaseReply()
     t.model.CmCampaign()
     t.model.User()
+    t.model.Candidate()
   },
 })
 

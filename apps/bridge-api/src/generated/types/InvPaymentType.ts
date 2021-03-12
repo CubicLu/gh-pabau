@@ -1,7 +1,7 @@
 import { objectType, arg, extendType } from 'nexus'
 
-export const invPaymentType = objectType({
-  name: 'invPaymentType',
+export const InvPaymentType = objectType({
+  name: 'InvPaymentType',
   definition(t) {
     t.model.id()
     t.model.name()
@@ -21,12 +21,12 @@ export const invPaymentTypeQuery = extendType({
   type: 'Query',
   definition(t) {
     t.crud.invPaymentType()
-    t.field('findFirstinvPaymentType', {
-      type: 'invPaymentType',
+    t.field('findFirstInvPaymentType', {
+      type: 'InvPaymentType',
       args: {
-        where: 'invPaymentTypeWhereInput',
-        orderBy: arg({ type: 'invPaymentTypeOrderByInput' }),
-        cursor: 'invPaymentTypeWhereUniqueInput',
+        where: 'InvPaymentTypeWhereInput',
+        orderBy: arg({ type: 'InvPaymentTypeOrderByInput' }),
+        cursor: 'InvPaymentTypeWhereUniqueInput',
         skip: 'Int',
         take: 'Int',
       },
@@ -38,7 +38,7 @@ export const invPaymentTypeQuery = extendType({
     t.field('invPaymentTypesCount', {
       type: 'Int',
       args: {
-        where: 'invPaymentTypeWhereInput',
+        where: 'InvPaymentTypeWhereInput',
       },
       async resolve(_root, args, ctx) {
         return ctx.prisma.invPaymentType.count(args as any)
@@ -50,11 +50,11 @@ export const invPaymentTypeQuery = extendType({
 export const invPaymentTypeMutation = extendType({
   type: 'Mutation',
   definition(t) {
-    t.crud.createOneinvPaymentType()
-    t.crud.updateOneinvPaymentType()
-    t.crud.upsertOneinvPaymentType()
-    t.crud.deleteOneinvPaymentType()
-    t.crud.updateManyinvPaymentType()
-    t.crud.deleteManyinvPaymentType()
+    t.crud.createOneInvPaymentType()
+    t.crud.updateOneInvPaymentType()
+    t.crud.upsertOneInvPaymentType()
+    t.crud.deleteOneInvPaymentType()
+    t.crud.updateManyInvPaymentType()
+    t.crud.deleteManyInvPaymentType()
   },
 })
