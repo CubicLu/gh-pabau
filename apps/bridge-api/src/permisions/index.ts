@@ -33,7 +33,6 @@ export const permissions = shield({
     updateOneMarketingSource: rules.isAuthenticated && rules.isMarketingSourceOwnedByCompany,
     upsertOneMarketingSource: rules.isAuthenticated && rules.isMarketingSourceOwnedByCompany,
     deleteOneMarketingSource: rules.isAuthenticated && rules.isMarketingSourceOwnedByCompany,
-    "*": rules.isAuthenticated,
     login: allow
   }
 

@@ -21,6 +21,28 @@ Prerequisites: Locally setup docker env && docker desktop running (for Windows u
 yarn && yarn nx deploy bridge-api && docker build --no-cache -t bridge -f tools/cicd/bridge.Dockerfile dist/apps/bridge-api/ && docker run --rm -it -p 4000:4000 bridge
 ```
 
+# Exposing GraphQL CRUD over a database table
+
+Most of the time ORM remapping should be handled the following way
+
+1.  Successful changes on the `schema.prisma`
+2. `prisma validate` to ensure no typos/errors exist in our `schema.prisma`
+3. `yarn bridge:generate`
+
+In rare instances if errors arise 
+
+1. `prisma validate`
+2. `yarn bridge:prune`
+3. `prisma format`
+4. `prisma generate`
+5. `pal g`
+6. `pal schema typescript -o apps/bridge-api/src/generated`
+7. `ts-node-dev --transpile-only apps/bridge-api/src/schema`
+
+To ensure that the graphql queries/mutations where exposed properly
+`nx serve bridge-api`
+
+
 # Relevant third-party modules documentation
 
 - prisma ```https://www.prisma.io/docs/concepts/components```

@@ -22,7 +22,8 @@ export class AuthenticationService {
     if(!this.user || Object.getOwnPropertyNames(this.user).length === 0){
       throw new Error('Unauthorized access')
     }
-    return this.generateJWT(process.env.JWT_SECRET)
+    console.log(process.env.JWT_SECRET)
+    return this.generateJWT()
   }
   public async handleLogoutRequest(logoutInputDto: LogoutInputDto):Promise<boolean> {
     return !!(await this.ctx.prisma.user.findFirst({
@@ -34,7 +35,7 @@ export class AuthenticationService {
   private generateHash(password:string, encryption:string, encoding:BinaryToTextEncoding): string{
       return createHash(encryption).update(password).digest(encoding);
   }
-  private async generateJWT(key: string): Promise<string>{
+  private async generateJWT(): Promise<string>{
     return jwt.sign(<JwtPayloadDto> {
       'user': this.user.id,
       'company': this.user.company_id,
@@ -48,7 +49,7 @@ export class AuthenticationService {
         'x-hasura-org-id': this.user.company_id,
         'x-hasura-james': 123
       }
-    }, key)
+    }, process.env.JWT_SECRET)
   }
   /**
    * Generates a valid Pabau password, based upon the the user.password_algor db value

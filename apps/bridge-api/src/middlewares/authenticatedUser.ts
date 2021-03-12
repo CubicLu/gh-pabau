@@ -15,7 +15,7 @@ const authenticatedUser = (req: Request, res: Response, next: NextFunction) => {
     if (!req.session?.jwt){
       console.error('Token not found')
     } else{
-      req.authenticatedUser = jwt.verify(req.session?.jwt, 'madskills') as JwtPayloadDto
+      req.authenticatedUser = jwt.verify(req.session?.jwt, process.env.JWT_SECRET) as JwtPayloadDto
     }
   } catch(error) {
     console.error(error)
