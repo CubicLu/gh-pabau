@@ -1,4 +1,4 @@
-import { arg, extendType, intArg, nonNull, stringArg } from 'nexus';
+import { extendType, intArg, nonNull, stringArg } from 'nexus';
 import { AuthenticationService } from "../../app/authentication/AuthenticationService";
 import { Context } from "../../context";
 import { LoginInputDto, LogoutInputDto } from "../../app/authentication/dto";
