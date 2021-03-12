@@ -1,0 +1,50 @@
+.checkbox-tree-wrapper {
+    .tree-checkbox {
+        :global .ant-tree-list {
+            .ant-tree-list-holder-inner {
+                .ant-tree-treenode {
+                    padding-bottom: 16px;
+                    &:first-child {
+                        .ant-tree-node-content-wrapper {
+                            .ant-tree-title {
+                                color: #9292A3;
+                            }
+                        }    
+                    }
+                    .ant-tree-node-content-wrapper {
+                        padding: 0;
+                        .ant-tree-title {
+                            color: #3D3D46;
+                            font-weight: normal;
+                            font-size: 14px;
+                            line-height: 18px;
+                            text-transform: capitalize;
+                        }
+                    }
+                    .ant-tree-checkbox {
+                        &.ant-tree-checkbox-indeterminate {
+                            .ant-tree-checkbox-inner {
+                                border-color: #54B2D3;
+                            }
+                        }
+                        &.ant-tree-checkbox-checked {
+                            .ant-tree-checkbox-inner {
+                                border-color: #54B2D3;
+                            }    
+                        }
+                        .ant-tree-checkbox-inner {
+                            border-color: #CFCFD7;
+                        }
+                    }
+                    .ant-tree-switcher {
+                        .anticon {
+                            svg {
+                                color: #9292A3;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
