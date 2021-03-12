@@ -5,6 +5,9 @@ import { dataSource, columns } from './mock'
 export default {
   component: TeamReport,
   title: 'Basics/Table',
+  parameters: {
+    layout: 'fullscreen',
+  },
   args: {
     loading: false,
     source: dataSource,

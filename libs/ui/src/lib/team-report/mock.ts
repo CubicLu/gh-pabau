@@ -47,54 +47,80 @@ export const dataSource = [
     'name-1': {
       value: '12.5',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-2': {
       value: '12.5',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-3': {
       value: '12.5',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-4': {
       value: '12.5',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-5': {
       value: '12.5',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     total: {
       value: '62.5',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
   },
   {
     key: 6,
     desc: 'Days Off',
+    Revenue: 100000,
+    Target: 105000,
     'name-1': {
       value: '8',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-2': {
       value: '8',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-3': {
       value: '8',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-4': {
       value: '8',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-5': {
       value: '8',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     total: {
       value: '40',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     children: [
       {
@@ -141,26 +167,38 @@ export const dataSource = [
     'name-1': {
       value: '£100,000.00',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-2': {
       value: '£100,000.00',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-3': {
       value: '£100,000.00',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-4': {
       value: '£100,000.00',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-5': {
       value: '£100,000.00',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     total: {
       value: '£500,000.00',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     children: [
       {
@@ -169,26 +207,38 @@ export const dataSource = [
         'name-1': {
           value: '£50,000.00',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-2': {
           value: '£50,000.00',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-3': {
           value: '£50,000.00',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-4': {
           value: '£50,000.00',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-5': {
           value: '£50,000.00',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         total: {
           value: '£250,000.00',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
       },
       {
@@ -197,26 +247,38 @@ export const dataSource = [
         'name-1': {
           value: '£50,000.00',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-2': {
           value: '£50,000.00',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-3': {
           value: '£50,000.00',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-4': {
           value: '£50,000.00',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-5': {
           value: '£50,000.00',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         total: {
           value: '£250,000.00',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
       },
       {
@@ -225,26 +287,38 @@ export const dataSource = [
         'name-1': {
           value: '£50,000.00',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-2': {
           value: '£50,000.00',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-3': {
           value: '£50,000.00',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-4': {
           value: '£50,000.00',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-5': {
           value: '£50,000.00',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         total: {
           value: '£250,000.00',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         children: [
           {
@@ -307,26 +381,38 @@ export const dataSource = [
     'name-1': {
       value: '£3,500.00',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-2': {
       value: '£3,500.00',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-3': {
       value: '£3,500.00',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-4': {
       value: '£3,500.00',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-5': {
       value: '£3,500.00',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     total: {
       value: '£17,500.00',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
   },
   {
@@ -335,26 +421,38 @@ export const dataSource = [
     'name-1': {
       value: '£3,500.00',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-2': {
       value: '£3,500.00',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-3': {
       value: '£3,500.00',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-4': {
       value: '£3,500.00',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-5': {
       value: '£3,500.00',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     total: {
       value: '£17,500.00',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
   },
   {
@@ -363,26 +461,38 @@ export const dataSource = [
     'name-1': {
       value: '£3,500.00',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-2': {
       value: '£3,500.00',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-3': {
       value: '£3,500.00',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-4': {
       value: '£3,500.00',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-5': {
       value: '£3,500.00',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     total: {
       value: '£17,500.00',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
   },
   {
@@ -397,26 +507,38 @@ export const dataSource = [
     'name-1': {
       value: '56',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-2': {
       value: '45',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-3': {
       value: '34',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-4': {
       value: '57',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-5': {
       value: '76',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     total: {
       value: '268',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
   },
   {
@@ -425,26 +547,38 @@ export const dataSource = [
     'name-1': {
       value: '5',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-2': {
       value: '3',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-3': {
       value: '10',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-4': {
       value: '3',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-5': {
       value: '23',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     total: {
       value: '44',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
 
     children: [
@@ -454,26 +588,38 @@ export const dataSource = [
         'name-1': {
           value: '4',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-2': {
           value: '4',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-3': {
           value: '5',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-4': {
           value: '3',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-5': {
           value: '4',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         total: {
           value: '20',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
       },
       {
@@ -482,26 +628,38 @@ export const dataSource = [
         'name-1': {
           value: '4',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-2': {
           value: '5',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-3': {
           value: '4',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-4': {
           value: '5',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-5': {
           value: '3',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         total: {
           value: '21',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
       },
       {
@@ -510,26 +668,38 @@ export const dataSource = [
         'name-1': {
           value: '5',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-2': {
           value: '7',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-3': {
           value: '6',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-4': {
           value: '4',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         'name-5': {
           value: '4',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         total: {
           value: '26',
           badge: 'success',
+          Revenue: 100000,
+          Target: 105000,
         },
         children: [
           {
@@ -592,26 +762,38 @@ export const dataSource = [
     'name-1': {
       value: '34',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-2': {
       value: '45',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-3': {
       value: '5',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-4': {
       value: '6',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-5': {
       value: '5',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     total: {
       value: '95',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
   },
   {
@@ -620,26 +802,38 @@ export const dataSource = [
     'name-1': {
       value: '5',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-2': {
       value: '5',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-3': {
       value: '5',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-4': {
       value: '5',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-5': {
       value: '5',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     total: {
       value: '25',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     children: [
       {
@@ -680,26 +874,38 @@ export const dataSource = [
     'name-1': {
       value: '£100,000.00',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-2': {
       value: '£100,000.00',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-3': {
       value: '£100,000.00',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-4': {
       value: '£100,000.00',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-5': {
       value: '£100,000.00',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     total: {
       value: '£500,000.00',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
   },
   {
@@ -708,26 +914,38 @@ export const dataSource = [
     'name-1': {
       value: '66',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-2': {
       value: '32',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-3': {
       value: '40',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-4': {
       value: '22',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-5': {
       value: '18',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     total: {
       value: '178',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     children: [
       {
@@ -768,26 +986,38 @@ export const dataSource = [
     'name-1': {
       value: '34',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-2': {
       value: '56',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-3': {
       value: '55',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-4': {
       value: '78',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-5': {
       value: '35',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     total: {
       value: '258',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
   },
   {
@@ -796,26 +1026,38 @@ export const dataSource = [
     'name-1': {
       value: '19',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-2': {
       value: '15',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-3': {
       value: '14',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-4': {
       value: '13',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-5': {
       value: '15',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     total: {
       value: '76',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
   },
   {
@@ -824,26 +1066,38 @@ export const dataSource = [
     'name-1': {
       value: '5',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-2': {
       value: '5',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-3': {
       value: '5',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-4': {
       value: '5',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-5': {
       value: '5',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     total: {
       value: '25',
       badge: 'success',
+      Revenue: 100000,
+      Target: 105000,
     },
     children: [
       {
@@ -924,26 +1178,38 @@ export const dataSource = [
     'name-1': {
       value: '45',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-2': {
       value: '16',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-3': {
       value: '49',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-4': {
       value: '29',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     'name-5': {
       value: '83',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
     total: {
       value: '222',
       badge: 'error',
+      Revenue: 100000,
+      Target: 105000,
     },
   },
 ]

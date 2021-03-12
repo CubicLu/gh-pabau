@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { Table, Badge, Typography } from 'antd'
+import { Table, Badge, Typography, Tooltip } from 'antd'
 import { LetterBadge, LetterBadgeColors } from '../letter-badge/LetterBadge'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
 import { PresetStatusColorType } from 'antd/lib/_util/colors'
@@ -19,6 +19,8 @@ export enum TableColAlign {
 interface TeamReportCellValue {
   value: string
   badge: PresetStatusColorType
+  Revenue: number
+  Target: number
 }
 
 interface TeamReportRow {
@@ -72,7 +74,18 @@ const transformTableCell = (
 ): JSX.Element => {
   let badge = <Badge color="transparent" />
   if (typeof text === 'object') {
-    badge = <Badge status={text.badge} />
+    const tootltip = (
+      <div>
+        Revenue £{text.Revenue}
+        <br />
+        Target £{text.Target}
+      </div>
+    )
+    badge = (
+      <Tooltip title={tootltip}>
+        <Badge status={text.badge} />
+      </Tooltip>
+    )
     text = text.value
   }
 
@@ -106,7 +119,18 @@ const transformTotalColumn = (
 ): JSX.Element => {
   let badge = <Badge color="transparent" />
   if (typeof text === 'object') {
-    badge = <Badge status={text.badge} />
+    const tootltip = (
+      <div>
+        Revenue £{text.Revenue}
+        <br />
+        Target £{text.Target}
+      </div>
+    )
+    badge = (
+      <Tooltip title={tootltip}>
+        <Badge status={text.badge} />
+      </Tooltip>
+    )
     text = text.value
   }
   return (
