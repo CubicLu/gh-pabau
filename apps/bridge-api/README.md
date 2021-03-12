@@ -10,7 +10,7 @@
 
 # Running the bridge locally
 
-Prerequisites: Locally setup docker env && docker desktop running (for Windows users)
+Prerequisites: Locally setup docker env && hasura docker image & docker desktop running (for Windows users)
 - Pull the latest build from our master branch ```git pull origin master```
 - If additional ORM mappings are required, implement the necessary changes at ```schema.prisma```
 - ```yarn bridge:generate``` to generate the files after successful changes
@@ -42,10 +42,15 @@ In rare instances if errors arise
 To ensure that the graphql queries/mutations where exposed properly
 `nx serve bridge-api`
 
+# Adjusting schema.prisma changes to our database
+
+1. prepare migrate.sql file 
+2. adjust `schema.prisma` models/create new model with the newly desired changes
+3. ran the steps outlined at `Exposing GraphQL CRUD over a database table`
 
 # Relevant third-party modules documentation
 
 - prisma ```https://www.prisma.io/docs/concepts/components```
 - nexus ```https://nexusjs.org/docs/```
 - pal.js ```https://paljs.com/```
-
+- hasura ```https://hasura.io/docs/latest/graphql/core/getting-started/docker-simple.html```

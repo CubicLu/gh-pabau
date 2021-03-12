@@ -132,6 +132,7 @@ export interface Company {
   remote_url?: string;
   remote_connect?: string;
   cron_enabled?: boolean;
+  migrated?: number;
   details?: CompanyDetails;
   subscription?: CompanySubscription;
   TwoFactorHistory?: TwoFactorHistory[];

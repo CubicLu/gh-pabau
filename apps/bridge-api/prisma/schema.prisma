@@ -182,6 +182,7 @@ model Company {
   remote_url     String?
   remote_connect String?
   cron_enabled   Boolean?
+  migrated       Int?
 
   details          CompanyDetails?
   subscription     CompanySubscription?
