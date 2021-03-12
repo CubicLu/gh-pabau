@@ -924,17 +924,48 @@
       filter: {}
 - table:
     schema: public
-    name: diagnostic_codes
+    name: colors
+  insert_permissions:
+    - role: public
+      permission:
+        check: {}
+        columns:
+          - id
+          - created_at
+          - updated_at
+          - color
+        backend_only: false
+  select_permissions:
+    - role: public
+      permission:
+        columns:
+          - color
+          - id
+          - updated_at
+        filter: {}
+- table:
+    schema: public
+    name: contacts
+  select_permissions:
+    - role: public
+      permission:
+        columns:
+          - mobile_number
+          - client_id
+          - first_name
+          - last_name
+          - created_at
+          - updated_at
+          - id
+        filter: {}
+- table:
+    schema: public
+    name: courses
   insert_permissions:
   - role: public
     permission:
       check: {}
       columns:
-      - ICD10_code
-      - ICD9_code
-      - OSICS10_code
-      - code
-      - description
       - is_active
       - layer1
       - layer2
@@ -1626,55 +1657,6 @@
       - payment_type
       filter: {}
       check: null
-  delete_permissions:
-  - role: public
-    permission:
-      filter: {}
-- table:
-    schema: public
-    name: payments
-  insert_permissions:
-  - role: public
-    permission:
-      check: {}
-      columns:
-      - account
-      - amount
-      - inv_date
-      - location
-      - payment_method
-      - payment_no
-      - user
-      backend_only: false
-  select_permissions:
-  - role: public
-    permission:
-      columns:
-      - account
-      - amount
-      - created_at
-      - id
-      - inv_date
-      - location
-      - payment_method
-      - payment_no
-      - updated_at
-      - user
-      filter: {}
-      allow_aggregations: true
-  update_permissions:
-  - role: public
-    permission:
-      columns:
-      - account
-      - amount
-      - inv_date
-      - location
-      - payment_method
-      - payment_no
-      - user
-      filter: {}
-      check: {}
   delete_permissions:
   - role: public
     permission:
