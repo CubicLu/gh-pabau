@@ -8,23 +8,33 @@
       columns:
       - amount
       - code
-      - name
+      - date
       - discount_rate
+      - employees
       - is_active
+      - locations
+      - name
       - order
-      - show_on_receipt
+      - services
+      - show_on_reciept
+      - type
       backend_only: false
   select_permissions:
   - role: public
     permission:
       columns:
+      - date
       - is_active
-      - show_on_receipt
       - order
+      - employees
+      - locations
+      - services
       - amount
       - code
-      - name
       - discount_rate
+      - name
+      - show_on_reciept
+      - type
       - created_at
       - updated_at
       - id
@@ -35,11 +45,16 @@
       columns:
       - amount
       - code
-      - name
+      - date
       - discount_rate
+      - employees
       - is_active
+      - locations
+      - name
       - order
-      - show_on_receipt
+      - services
+      - show_on_reciept
+      - type
       filter: {}
       check: null
   delete_permissions:
@@ -924,48 +939,17 @@
       filter: {}
 - table:
     schema: public
-    name: colors
-  insert_permissions:
-    - role: public
-      permission:
-        check: {}
-        columns:
-          - id
-          - created_at
-          - updated_at
-          - color
-        backend_only: false
-  select_permissions:
-    - role: public
-      permission:
-        columns:
-          - color
-          - id
-          - updated_at
-        filter: {}
-- table:
-    schema: public
-    name: contacts
-  select_permissions:
-    - role: public
-      permission:
-        columns:
-          - mobile_number
-          - client_id
-          - first_name
-          - last_name
-          - created_at
-          - updated_at
-          - id
-        filter: {}
-- table:
-    schema: public
-    name: courses
+    name: diagnostic_codes
   insert_permissions:
   - role: public
     permission:
       check: {}
       columns:
+      - ICD10_code
+      - ICD9_code
+      - OSICS10_code
+      - code
+      - description
       - is_active
       - layer1
       - layer2
@@ -1578,6 +1562,58 @@
       filter: {}
 - table:
     schema: public
+    name: marketing_referral
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - incentive
+      - date
+      - spend
+      - referee
+      - referer
+      - state
+      - created_at
+      - updated_at
+      - id
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - incentive
+      - date
+      - spend
+      - referee
+      - referer
+      - state
+      - created_at
+      - updated_at
+      - id
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - incentive
+      - date
+      - spend
+      - referee
+      - referer
+      - state
+      - created_at
+      - updated_at
+      - id
+      filter: {}
+      check: {}
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
     name: marketing_source
   insert_permissions:
   - role: public
@@ -1612,6 +1648,9 @@
   - role: public
     permission:
       filter: {}
+- table:
+    schema: public
+    name: news
 - table:
     schema: public
     name: packages
@@ -1657,6 +1696,55 @@
       - payment_type
       filter: {}
       check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
+    name: payments
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - account
+      - amount
+      - inv_date
+      - location
+      - payment_method
+      - payment_no
+      - user
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - account
+      - amount
+      - created_at
+      - id
+      - inv_date
+      - location
+      - payment_method
+      - payment_no
+      - updated_at
+      - user
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - account
+      - amount
+      - inv_date
+      - location
+      - payment_method
+      - payment_no
+      - user
+      filter: {}
+      check: {}
   delete_permissions:
   - role: public
     permission:
@@ -1858,17 +1946,16 @@
   - role: public
     permission:
       columns:
-      - created_at
-      - updated_at
-      - name
-      - days
-      - start_time
-      - end_time
       - is_active
       - order
+      - days
+      - name
+      - created_at
+      - updated_at
+      - end_time
+      - start_time
       - id
       filter: {}
-      allow_aggregations: true
   update_permissions:
   - role: public
     permission:
@@ -2069,7 +2156,6 @@
       check: {}
       columns:
       - city
-      - company
       - country
       - email
       - health_code_identifier
@@ -2087,23 +2173,22 @@
   - role: public
     permission:
       columns:
+      - is_active
+      - order
       - city
-      - company
       - country
-      - created_at
       - email
       - health_code_identifier
-      - id
-      - is_active
       - name
-      - order
       - phone
       - post_code
       - provider_no
       - street
       - type
-      - updated_at
       - website
+      - created_at
+      - updated_at
+      - id
       filter: {}
       allow_aggregations: true
   update_permissions:
@@ -2111,7 +2196,6 @@
     permission:
       columns:
       - city
-      - company
       - country
       - email
       - health_code_identifier

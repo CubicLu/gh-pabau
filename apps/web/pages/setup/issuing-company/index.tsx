@@ -460,11 +460,11 @@ export const IssuingCompany: NextPage = () => {
                   onChange={formik.handleChange}
                   value={formik.values.companyName}
                 />
-                {formik.errors.companyName ? (
+                {formik.errors.companyName && (
                   <div className={styles.error}>
                     {formik.errors.companyName}
                   </div>
-                ) : null}
+                )}
               </Form.Item>
               <Form.Item>
                 <PhoneNumberInput
