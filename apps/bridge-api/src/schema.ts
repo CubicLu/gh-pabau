@@ -1,4 +1,4 @@
-import { fieldAuthorizePlugin, makeSchema, queryComplexityPlugin } from 'nexus'
+import { fieldAuthorizePlugin, makeSchema, nullabilityGuardPlugin, queryComplexityPlugin } from 'nexus'
 import { nexusPrisma } from 'nexus-plugin-prisma'
 import { PrismaClient } from '@prisma/client'
 import * as generatedTypes from './generated/types'
@@ -16,10 +16,23 @@ export const schema = applyMiddleware(makeSchema({
         includeAdmin: true,
       }),
       nexusPrisma({
-      experimentalCRUD: true, prismaClient: ctx => ctx.prisma = prisma
+      experimentalCRUD: true,
+      prismaClient: ctx => ctx.prisma = prisma
       }),
       fieldAuthorizePlugin(),
       queryComplexityPlugin(),
+      nullabilityGuardPlugin({
+        onGuarded({ ctx, info }) {
+          console.error(`Error: Saw a null value for non-null field ${info.parentType.name}.${info.fieldName}`)
+          console.error(ctx)
+        },
+        fallbackValues: {
+          Int: () => 0,
+          String: () => '',
+          Boolean: () => false,
+          Float: () => 0
+        },
+      })
     ],
     outputs: {
       schema: __dirname + '/generated/schema.graphql',
