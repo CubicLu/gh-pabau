@@ -12,10 +12,10 @@ declare global {
 
 const authenticatedUser = (req: Request, res: Response, next: NextFunction) => {
   try{
-    if (!req.session?.jwt){
-      console.error('Token not found')
-    } else{
+    if (req.session?.jwt){
       req.authenticatedUser = jwt.verify(req.session?.jwt, process.env.JWT_SECRET) as JwtPayloadDto
+    } else if(req.header('authorization')) {
+      req.authenticatedUser = jwt.verify(req.header('authorization'), process.env.JWT_SECRET) as JwtPayloadDto
     }
   } catch(error) {
     console.error(error)

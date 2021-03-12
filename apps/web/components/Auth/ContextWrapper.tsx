@@ -1,11 +1,10 @@
-import React, { FC } from 'react'
-import useLogin from '../hooks/authentication/useLogin'
+import React, { FC, useEffect } from 'react'
 import { gql, QueryResult, useQuery } from '@apollo/client'
-import { UserContext } from '../context/UserContext'
+import { UserContext } from '../../context/UserContext'
 
 const CURRENT_USER = gql`
-  query retrieveAuthenticatedUser($Id: Int!, $CompanyId: Int!) {
-    user(where: { id: $Id }) {
+  query retrieveAuthenticatedUser {
+    me {
       id
       username
       full_name
@@ -38,13 +37,12 @@ interface Details {
 }
 
 const ContextWrapper: FC = ({ children }) => {
-  const [user] = useLogin(false)
-  const data: QueryResult<User> = useQuery(CURRENT_USER, {
-    variables: {
-      Id: user?.user ?? null,
-      CompanyId: user?.company ?? null,
-    },
+  const data: QueryResult<User> = useQuery(CURRENT_USER)
+
+  useEffect(() => {
+    console.log(data.data)
   })
+
   return <UserContext.Provider value={data}>{children}</UserContext.Provider>
 }
 

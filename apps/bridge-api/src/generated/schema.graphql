@@ -26134,6 +26134,7 @@ type Query {
   marketingSource(where: MarketingSourceWhereUniqueInput!): MarketingSource
   marketingSources(after: MarketingSourceWhereUniqueInput, before: MarketingSourceWhereUniqueInput, first: Int, last: Int, orderBy: [MarketingSourceOrderByInput!], where: MarketingSourceWhereInput): [MarketingSource!]!
   marketingSourcesCount(where: MarketingSourceWhereInput): Int
+  me: User
   mediaLlibraryAttachment(where: MediaLlibraryAttachmentWhereUniqueInput!): MediaLlibraryAttachment
   mediaLlibraryAttachments(after: MediaLlibraryAttachmentWhereUniqueInput, before: MediaLlibraryAttachmentWhereUniqueInput, first: Int, last: Int, orderBy: [MediaLlibraryAttachmentOrderByInput!], where: MediaLlibraryAttachmentWhereInput): [MediaLlibraryAttachment!]!
   mediaLlibraryAttachmentsCount(where: MediaLlibraryAttachmentWhereInput): Int

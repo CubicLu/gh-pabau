@@ -47,6 +47,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
       maxAge: 3600,
       sameSite: true,
     })
+    localStorage.setItem('token', result.data?.login)
     return true
   }
   return (

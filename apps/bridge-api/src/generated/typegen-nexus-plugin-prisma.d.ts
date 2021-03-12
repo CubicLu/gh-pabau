@@ -33995,6 +33995,7 @@ export interface NexusGenFieldTypes {
     marketingSource: NexusGenRootTypes['MarketingSource'] | null; // MarketingSource
     marketingSources: NexusGenRootTypes['MarketingSource'][]; // [MarketingSource!]!
     marketingSourcesCount: number | null; // Int
+    me: NexusGenRootTypes['User'] | null; // User
     mediaLlibraryAttachment: NexusGenRootTypes['MediaLlibraryAttachment'] | null; // MediaLlibraryAttachment
     mediaLlibraryAttachments: NexusGenRootTypes['MediaLlibraryAttachment'][]; // [MediaLlibraryAttachment!]!
     mediaLlibraryAttachmentsCount: number | null; // Int
@@ -43157,6 +43158,7 @@ export interface NexusGenFieldTypeNames {
     marketingSource: 'MarketingSource'
     marketingSources: 'MarketingSource'
     marketingSourcesCount: 'Int'
+    me: 'User'
     mediaLlibraryAttachment: 'MediaLlibraryAttachment'
     mediaLlibraryAttachments: 'MediaLlibraryAttachment'
     mediaLlibraryAttachmentsCount: 'Int'

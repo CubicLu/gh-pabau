@@ -26,9 +26,13 @@ const rules = {
 
 export const permissions = shield({
   Query: {
-    marketingSource: rules.isAuthenticated && rules.isMarketingSourceOwnedByCompany,
-    marketingSources: rules.isAuthenticated && rules.injectMarketingSources
+    "*": allow,
+    me: rules.isAuthenticated
   },
+  // Query: {
+  //   marketingSource: rules.isAuthenticated && rules.isMarketingSourceOwnedByCompany,
+  //   marketingSources: rules.isAuthenticated && rules.injectMarketingSources
+  // },
   Mutation: {
     updateOneMarketingSource: rules.isAuthenticated && rules.isMarketingSourceOwnedByCompany,
     upsertOneMarketingSource: rules.isAuthenticated && rules.isMarketingSourceOwnedByCompany,

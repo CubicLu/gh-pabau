@@ -16,6 +16,7 @@ app.use(cors())
   .use(cookieSession({
       signed: false,
       secure: false,
+      httpOnly: false
     }))
   .use(authenticatedUser)
 

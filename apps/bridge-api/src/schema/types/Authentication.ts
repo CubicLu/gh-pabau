@@ -1,4 +1,4 @@
-import { extendType, intArg, nonNull, stringArg } from 'nexus';
+import { arg, extendType, intArg, nonNull, stringArg } from 'nexus';
 import { AuthenticationService } from "../../app/authentication/AuthenticationService";
 import { Context } from "../../context";
 import { LoginInputDto, LogoutInputDto } from "../../app/authentication/dto";
@@ -37,7 +37,6 @@ export const Authentication = extendType({
         userId: nonNull(intArg())
       },
       async resolve(_, logoutInput:LogoutInputDto, ctx:Context){
-        console.log('request auth')
         console.log(ctx.req.authenticatedUser)
         if(!ctx.req.authenticatedUser){
           throw new Error('Invalid token')
@@ -47,7 +46,6 @@ export const Authentication = extendType({
         }
         try{
           const userExists = await new AuthenticationService(ctx).handleLogoutRequest(logoutInput);
-          console.log(userExists)
           if (userExists){
             ctx.req.session = null;
             return true;
@@ -61,3 +59,20 @@ export const Authentication = extendType({
     })
   },
 });
+
+export const Me = extendType({
+  type: 'Query',
+  definition(t) {
+    t.field('me', {
+      type: 'User',
+      async resolve(_root, args, ctx) {
+        console.log(ctx.req.authenticatedUser)
+        return ctx.prisma.user.findFirst({
+          where: {
+            id: ctx.req.authenticatedUser.user
+          }
+        })
+      },
+    })
+  }
+})

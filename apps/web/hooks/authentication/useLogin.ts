@@ -26,15 +26,14 @@ export default function useLogin(registered = false): [LoginProps, boolean] {
         company: token.company,
         username: token.username,
       } as LoginProps
-    } catch {
-      throw new Error('Invalid token')
+    } catch (error) {
+      console.log(error)
     }
   }
 
   useEffect(() => {
     if ({}.propertyIsEnumerable.call(cookie, 'user')) {
       const currentUser = decode(cookie.user)
-      console.log(currentUser)
       if (currentUser) {
         authenticate(true)
         setUser(currentUser)

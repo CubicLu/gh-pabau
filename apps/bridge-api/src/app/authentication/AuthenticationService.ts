@@ -22,7 +22,6 @@ export class AuthenticationService {
     if(!this.user || Object.getOwnPropertyNames(this.user).length === 0){
       throw new Error('Unauthorized access')
     }
-    console.log(process.env.JWT_SECRET)
     return this.generateJWT()
   }
   public async handleLogoutRequest(logoutInputDto: LogoutInputDto):Promise<boolean> {
