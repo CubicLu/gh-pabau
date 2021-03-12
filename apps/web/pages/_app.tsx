@@ -18,6 +18,7 @@ import { I18nextProvider, initReactI18next } from 'react-i18next'
 import 'react-phone-input-2/lib/style.css'
 import 'react-quill/dist/quill.snow.css'
 import ContextWrapper from '../components/ContextWrapper'
+import { HistoryWrapper } from '../components/HistoryWrapper'
 import { languages } from '@pabau/i18n'
 
 require('../styles/global.less')
@@ -180,7 +181,9 @@ export default function CustomApp({
           }
         `}</style>
         <ContextWrapper>
-          <Component {...pageProps} />
+          <HistoryWrapper>
+            <Component {...pageProps} />
+          </HistoryWrapper>
         </ContextWrapper>
       </I18nextProvider>
     </ApolloProvider>

@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { Layout } from '@pabau/ui'
 import CommonHeader from './common-header'
 import HeaderChip from './headerChip'
@@ -9,6 +9,7 @@ import GridMobile from './grid/grid-mobile'
 import GridSubMenuMobile from './grid/grid-sub-title-mobile'
 import { SetupSearchInput, SetupGridProps } from '@pabau/ui'
 import styles from './Setup.module.less'
+import { useHistory } from '../../components/HistoryWrapper'
 
 import clinicImage from '../../assets/images/our-clinic.png'
 import servicesImage from '../../assets/images/services.png'
@@ -17,12 +18,14 @@ import marketingImage from '../../assets/images/marketing.png'
 import financialImage from '../../assets/images/financial.png'
 import developerImage from '../../assets/images/developer.png'
 
-const Index: FC = () => {
+const Index: FC = (props) => {
   const [searchValue, setSearchValue] = useState<string>('')
   const [title, setTitle] = useState<string>('Setup')
   const [searchData, setSearchData] = useState([])
   const [showSubMenu, setShowSubMenu] = useState<boolean>(false)
   const [selectedMenuData, setMenuData] = useState<SetupGridProps[]>([])
+
+  const { history } = useHistory()
 
   const setupGridData = [
     {
@@ -109,7 +112,7 @@ const Index: FC = () => {
         { title: 'Discounts', data: [] },
         { title: 'Taxes', data: [] },
         { title: 'Invoice Templates', data: [] },
-        { title: 'Payment Types', data: [] },
+        { title: 'Payment Types', data: [], href: '/setup/payment-types' },
         { title: 'Contract Pricing', data: [] },
         { title: 'Cancellation Policy', data: [] },
       ],
@@ -153,6 +156,20 @@ const Index: FC = () => {
     },
   ]
 
+  useEffect(() => {
+    if (history.length > 0) {
+      const previousRoute = history[history.length - 1]
+      const selectedMenuData = setupGridData.filter((thread) =>
+        thread.subDataTitles.some((x) => x.href === previousRoute)
+      )
+      if (selectedMenuData.length > 0) {
+        setMenuData(selectedMenuData)
+        setShowSubMenu((value) => !value)
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const handleSearch = (searchTerm: string) => {
     setSearchValue(searchTerm)
     if (searchTerm) {
@@ -187,6 +204,7 @@ const Index: FC = () => {
     const data = setupGridData.filter((thread) => thread.title === title)
     setShowSubMenu(true)
     setMenuData(data)
+    console.log('data', data)
   }
 
   const handleBack = () => {

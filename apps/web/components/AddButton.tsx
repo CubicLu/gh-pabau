@@ -10,6 +10,8 @@ import {
 import { Drawer, Input, Popover, Radio } from 'antd'
 import classNames from 'classnames'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
+import { CloseCircleOutlined } from '@ant-design/icons'
+
 // import { isMobile, isTablet } from 'react-device-detect'
 // import { useKeyPressEvent } from 'react-use'
 
@@ -20,9 +22,11 @@ interface P {
   onClick?: () => void
   onFilterSource: () => void
   onSearch: (term: string) => void
+  setMobileSearch?: () => void
   tableSearch?: boolean
   addFilter?: boolean
   needTranslation?: boolean
+  mobileSearch?: boolean
 }
 
 const AddButton: FC<P> = ({
@@ -31,9 +35,11 @@ const AddButton: FC<P> = ({
   children,
   onFilterSource,
   onSearch,
+  setMobileSearch,
   tableSearch = true,
   addFilter = true,
   needTranslation,
+  mobileSearch,
 }) => {
   const [isActive, setIsActive] = useState(true)
   const [mobFilterDrawer, setMobFilterDrawer] = useState(false)
@@ -83,21 +89,55 @@ const AddButton: FC<P> = ({
   return (
     <>
       {/* Mobile header */}
-      <div className={classNames(styles.marketingIcon, styles.desktopViewNone)}>
-        {tableSearch && (
-          <SearchOutlined className={styles.marketingIconStyle} />
-        )}
-        {addFilter && (
-          <FilterOutlined
-            className={styles.marketingIconStyle}
-            onClick={() => setMobFilterDrawer((e) => !e)}
+      {mobileSearch && (
+        <div className={styles.mobileSearchInput}>
+          <Input
+            className={styles.searchMarketingStyle}
+            placeholder={
+              needTranslation
+                ? t('marketingsource-input-search-placeholder.translation')
+                : 'Search'
+            }
+            value={marketingSourceSearch}
+            onChange={(e) => setMarketingSourceSearch(e.target.value)}
+            suffix={
+              <CloseCircleOutlined
+                onClick={() => {
+                  setMobileSearch?.()
+                }}
+                style={{ color: '#CFCFD7' }}
+              />
+            }
+            autoFocus
           />
-        )}
-        <PlusSquareFilled
-          className={styles.plusIconStyle}
-          onClick={() => onClick?.()}
-        />
-      </div>
+        </div>
+      )}
+      {!mobileSearch && (
+        <div
+          className={classNames(styles.marketingIcon, styles.desktopViewNone)}
+        >
+          {tableSearch && (
+            <SearchOutlined
+              onClick={() => {
+                setMobileSearch?.()
+              }}
+              className={styles.marketingIconStyle}
+            />
+          )}
+          {addFilter && (
+            <FilterOutlined
+              className={styles.marketingIconStyle}
+              onClick={() => setMobFilterDrawer((e) => !e)}
+            />
+          )}
+
+          <PlusSquareFilled
+            className={styles.plusIconStyle}
+            onClick={() => onClick?.()}
+          />
+        </div>
+      )}
+
       <Drawer
         visible={mobFilterDrawer}
         className={styles.mobFilterDrawer}
@@ -108,7 +148,13 @@ const AddButton: FC<P> = ({
             <div className={styles.marketingTextStyle}>
               <span>Reset</span>
               <p> Filter </p>
-              <span>Cancel</span>
+              <span
+                onClick={() => {
+                  setMobFilterDrawer((e) => !e)
+                }}
+              >
+                Cancel
+              </span>
             </div>
           </div>
         </MobileHeader>

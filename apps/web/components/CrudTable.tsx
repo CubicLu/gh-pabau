@@ -63,6 +63,7 @@ const CrudTable: FC<P> = ({
   const [isLoading, setIsLoading] = useState(true)
   const [isActive, setIsActive] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
+  const [isMobileSearch, setMobileSearch] = useState(false)
   const { t } = useTranslationI18()
   const crudTableRef = useRef(null)
   const router = useRouter()
@@ -407,7 +408,7 @@ const CrudTable: FC<P> = ({
               <div className={styles.allContentAlignMobile}>
                 <div className={styles.marketingTextStyle}>
                   <LeftOutlined onClick={handleBack} />
-                  <p>{schema.full || schema.short} </p>
+                  {!isMobileSearch && <p>{schema.full || schema.short} </p>}
                 </div>
                 {addQuery && !createPage ? (
                   <AddButton
@@ -418,6 +419,10 @@ const CrudTable: FC<P> = ({
                     tableSearch={tableSearch}
                     needTranslation={needTranslation}
                     addFilter={addFilter}
+                    mobileSearch={isMobileSearch}
+                    setMobileSearch={() => {
+                      setMobileSearch((e) => !e)
+                    }}
                   />
                 ) : (
                   <AddButton
@@ -428,6 +433,10 @@ const CrudTable: FC<P> = ({
                     tableSearch={tableSearch}
                     addFilter={addFilter}
                     needTranslation={needTranslation}
+                    mobileSearch={isMobileSearch}
+                    setMobileSearch={() => {
+                      setMobileSearch((e) => !e)
+                    }}
                   />
                 )}
               </div>
