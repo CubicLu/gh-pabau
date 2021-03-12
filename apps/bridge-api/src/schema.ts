@@ -30,7 +30,10 @@ export const schema = applyMiddleware(makeSchema({
           Int: () => 0,
           String: () => '',
           Boolean: () => false,
-          Float: () => 0
+          Float: () => 0,
+          Decimal: () => 0,
+          DateTime: () => "1970-01-01T1:00:00+00:00",
+          Json: () => []
         },
       })
     ],

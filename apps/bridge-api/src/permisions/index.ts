@@ -15,11 +15,19 @@ const rules = {
     })
     return record.company_id === ctx.req.authenticatedUser.company
   }),
+  injectMarketingSources: rule()(async (root, args, ctx:Context): Promise<boolean> => {
+    args.where = {
+      ...args,
+      company_id: ctx.req.authenticatedUser.company
+    }
+    return true;
+  }),
 }
 
 export const permissions = shield({
   Query: {
-    marketingSource: rules.isMarketingSourceOwnedByCompany
+    marketingSource: rules.isAuthenticated && rules.isMarketingSourceOwnedByCompany,
+    marketingSources: rules.isAuthenticated && rules.injectMarketingSources
   },
   Mutation: {
     updateOneMarketingSource: rules.isAuthenticated && rules.isMarketingSourceOwnedByCompany,

@@ -1,5 +1,7 @@
 import { ConnectionFieldOpts } from "@packages/api-graphql/src/extensions/connectionType"
 
+import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
+import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
 import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
@@ -48088,6 +48090,27 @@ declare global {
   interface NexusGenPluginTypeConfig<TypeName extends string> {
   }
   interface NexusGenPluginFieldConfig<TypeName extends string, FieldName extends string> {
+    /**
+     * Authorization for an individual field. Returning "true"
+     * or "Promise<true>" means the field can be accessed.
+     * Returning "false" or "Promise<false>" will respond
+     * with a "Not Authorized" error for the field.
+     * Returning or throwing an error will also prevent the
+     * resolver from executing.
+     */
+    authorize?: FieldAuthorizeResolver<TypeName, FieldName>
+    /**
+     * The complexity for an individual field. Return a number
+     * or a function that returns a number to specify the
+     * complexity for this field.
+     */
+    complexity?: QueryComplexity<TypeName, FieldName>
+    /**
+     * The nullability guard can be helpful, but is also a potentially expensive operation for lists.
+     * We need to iterate the entire list to check for null items to guard against. Set this to true
+     * to skip the null guard on a specific field if you know there's no potential for unsafe types.
+     */
+    skipNullGuard?: boolean
   }
   interface NexusGenPluginInputFieldConfig<TypeName extends string, FieldName extends string> {
   }

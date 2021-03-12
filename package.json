@@ -35,8 +35,8 @@
     "prisma:generate": "prisma generate",
     "prisma:format": "prisma format",
     "nexus:generate": "ts-node-dev --transpile-only apps/bridge-api/src/schema",
-    "bridge:generate": "prisma generate & pal g && pal schema typescript -o apps/bridge-api/src/generated & yarn run nexus:generate",
-    "bridge:rebuild": "./apps/bridge-api/cicd/prune.sh & prisma validate & prisma format & yarn run bridge:generate",
+    "bridge:generate": "prisma generate && pal g && pal schema typescript -o apps/bridge-api/src/generated && yarn run nexus:generate",
+    "bridge:prune": "./apps/bridge-api/cicd/prune.sh",
     "postinstall": "husky install"
   },
   "private": true,
