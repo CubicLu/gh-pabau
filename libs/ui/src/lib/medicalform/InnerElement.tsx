@@ -5,7 +5,6 @@ import customCompanyIcon from '../../assets/images/medicalform_custom_company.sv
 import customDobIcon from '../../assets/images/medicalform_custom_dob.svg'
 import customGenderIcon from '../../assets/images/medicalform_custom_gender.svg'
 import customPhyAddressIcon from '../../assets/images/medicalform_custom_physical_address.svg'
-import customPostalAddressIcon from '../../assets/images/medicalform_custom_postal_address.svg'
 import customReferIcon from '../../assets/images/medicalform_custom_refer.svg'
 import customTelePhoneIcon from '../../assets/images/medicalform_custom_tele_phone.svg'
 import dobIcon from '../../assets/images/medicalform_dob.svg'
@@ -107,6 +106,13 @@ const InnerElement: FC<P> = ({
       iconUrl: drawingIcon,
       bgcolor: '#F78561',
       title: 'Drawing',
+    },
+    {
+      component: 'basic_staticimage',
+      type: { type },
+      iconUrl: drawingIcon,
+      bgcolor: '#F78561',
+      title: 'Image',
     },
     {
       component: 'basic_signature',
@@ -229,13 +235,6 @@ const InnerElement: FC<P> = ({
       title: 'Physical address',
     },
     {
-      component: 'custom_postaladdress',
-      type: { type },
-      iconUrl: customPostalAddressIcon,
-      bgcolor: '#88C65B',
-      title: 'Postal address',
-    },
-    {
       component: 'custom_referredby',
       type: { type },
       iconUrl: customReferIcon,
@@ -275,9 +274,26 @@ const InnerElement: FC<P> = ({
               formData.txtBlock !== '' ||
               formData.txtInputType !== '' ||
               formData.formName === 'basic_drawing' ||
-              (formData.arrItems && formData.arrItems.length > 0)) && (
+              formData.formName === 'basic_staticimage' ||
+              formData.arrItems?.length > 0) && (
               <InnerMedicalFormBody>
                 {formData.formName === 'basic_drawing' && (
+                  <img
+                    style={{
+                      width: '300px',
+                      display: 'block',
+                      marginLeft: 'auto',
+                      marginRight: 'auto',
+                    }}
+                    src={
+                      formData.arrItems?.length > 0
+                        ? `https://prelive-crm.pabau.com${formData.arrItems[0].name}`
+                        : innerDrawingIcon
+                    }
+                    alt=""
+                  />
+                )}
+                {formData.formName === 'basic_staticimage' && (
                   <img
                     style={{
                       width: '300px',
