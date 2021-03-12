@@ -36,13 +36,23 @@ export const DotButton: FC<P> = (props) => {
   }
 
   return (
-    <Popover content={prepareContent()} placement="leftTop" trigger="click">
-      <Button
-        className={styles.btnCircle}
-        shape="circle"
-        icon={<MoreOutlined />}
-      />
-    </Popover>
+    <div>
+      {menuList ? (
+        <Popover content={prepareContent()} placement="leftTop" trigger="click">
+          <Button
+            className={styles.btnCircle}
+            shape="circle"
+            icon={<MoreOutlined />}
+          />
+        </Popover>
+      ) : (
+        <Button
+          className={styles.btnCircle}
+          shape="circle"
+          icon={<MoreOutlined />}
+        />
+      )}
+    </div>
   )
 }
 

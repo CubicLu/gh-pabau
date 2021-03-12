@@ -1,6 +1,5 @@
 import React, { FC, useState, useEffect, ReactNode } from 'react'
 import classNames from 'classnames'
-import NumberFormat, { NumberFormatValues } from 'react-number-format'
 import {
   Avatar,
   Button,
@@ -16,6 +15,8 @@ import {
   FullScreenReportModal,
   OperationType,
   ImageSelectorModal,
+  PabauPlus,
+  CurrencyInput,
 } from '@pabau/ui'
 import {
   Collapse,
@@ -63,9 +64,17 @@ interface ContractItem {
 export interface CreateServiceProps {
   contracts: ContractItem[]
   employees: Employee[]
+  employeesTitle?: string
+  employeesDesc?: string
   locations: LocationItem[]
   rooms: Array<string>
+  roomsTitle?: string
+  roomsDesc?: string
+  roomsItemType?: string
   equipment: Array<string>
+  equipmentTitle?: string
+  equipmentDesc?: string
+  equipemntItemType?: string
   visible: boolean
   onClose: () => void
   onCreate?: () => void
@@ -74,9 +83,17 @@ export interface CreateServiceProps {
 export const CreateService: FC<CreateServiceProps> = ({
   contracts,
   employees,
+  employeesTitle,
+  employeesDesc,
   locations,
   rooms,
+  roomsDesc,
+  roomsItemType,
+  roomsTitle,
   equipment,
+  equipemntItemType,
+  equipmentDesc,
+  equipmentTitle,
   visible,
   onClose,
   onCreate,
@@ -90,7 +107,7 @@ export const CreateService: FC<CreateServiceProps> = ({
   const [serviceName, setServiceName] = useState('')
   const [selectedColor, setSelectedColor] = useState('')
   const [category, setCategory] = useState('')
-  const [servicePrice, setServicePrice] = useState('0')
+  const [servicePrice, setServicePrice] = useState(0)
   const [sliderValue, setSliderValue] = useState(1)
   const [paymentUnit, setPaymentUnit] = useState('%')
   const [duration, setDuration] = useState('')
@@ -309,6 +326,7 @@ export const CreateService: FC<CreateServiceProps> = ({
         onClose={() => {
           setShowChooseModal(false)
           setShowModal(false)
+          onClose()
         }}
       />
       <FullScreenReportModal
@@ -333,21 +351,8 @@ export const CreateService: FC<CreateServiceProps> = ({
             style={{ display: 'flex', alignItems: 'center' }}
           >
             Client pathway{' '}
-            <span
-              style={{
-                display: 'inline-block',
-                padding: '3px 12px',
-                fontFamily: 'var(--font-family)',
-                fontSize: '12px',
-                lineHeight: '14px',
-                fontWeight: 400,
-                color: 'var(--primary-color)',
-                backgroundColor: '#eef7fb',
-                borderRadius: '6px',
-                marginLeft: '8px',
-              }}
-            >
-              Plus
+            <span style={{ marginLeft: '8px' }}>
+              <PabauPlus label="Plus" modalType="Marketing" />
             </span>
           </div>,
         ]}
@@ -362,7 +367,9 @@ export const CreateService: FC<CreateServiceProps> = ({
       >
         <div className={styles.createServiceGeneral}>
           <div className={styles.createServiceSection}>
-            <h2 className={styles.createServiceSectionTitle}>Service info</h2>
+            <h2 className={styles.createServiceSectionTitle}>
+              Service details
+            </h2>
             <div className={styles.createServiceSectionItem}>
               <Input
                 label="Service name"
@@ -475,7 +482,6 @@ export const CreateService: FC<CreateServiceProps> = ({
                   visible={showImageSelector}
                   initialSearch={serviceName}
                   onOk={(image) => {
-                    console.log(image)
                     setSelectedImage(image.source)
                     setShowImageSelector(false)
                   }}
@@ -495,7 +501,7 @@ export const CreateService: FC<CreateServiceProps> = ({
                     style={{ margin: 0 }}
                   >
                     Bundling{' '}
-                    <Tooltip title="lorem ipsum">
+                    <Tooltip title="Bundling allows you to ">
                       <QuestionCircleOutlined
                         style={{
                           color: 'var(--light-grey-color)',
@@ -527,7 +533,7 @@ export const CreateService: FC<CreateServiceProps> = ({
                 <div className={styles.createServiceSection}>
                   <h2 className={styles.createServiceSectionTitle}>
                     Auto consumption{' '}
-                    <Tooltip title="lorem ipsum">
+                    <Tooltip title="We will automatically add this item to the checkout as a consumable when taking payment for an appointment.">
                       <QuestionCircleOutlined
                         style={{
                           color: 'var(--light-grey-color)',
@@ -565,27 +571,28 @@ export const CreateService: FC<CreateServiceProps> = ({
                   <div className={styles.createServiceSectionItem}>
                     <Input
                       label="Procedure code"
-                      placeHolderText="Enter procedure code"
+                      tooltip="Enter a procedure code for this service (usually used for integrations, diagnostic coding or reporting)"
+                      placeHolderText="eg. 71001"
                     />
                   </div>
                   <div className={styles.createServiceSectionItem}>
                     <Input
                       label="Invoice item name"
                       placeHolderText="Enter invoice item name"
-                      tooltip="lorem ipsum"
+                      tooltip="Enter a custom name for this service which will over-ride the service name."
                     />
                   </div>
                   <div className={styles.createServiceSectionItem}>
                     <Input
                       label="Display text on invoice"
                       placeHolderText="Enter display text"
-                      tooltip="lorem ipsum"
+                      tooltip="We will display this specific text on the invoice when this service is rendered."
                     />
                   </div>
                   <div>
                     <Checkbox defaultChecked={false}>
-                      Use a package sessio to pay for the service{' '}
-                      <Tooltip title="lorem ipsum">
+                      Use a package session to pay for the service{' '}
+                      <Tooltip title="This service can only be redeemed with a pre-paid package.">
                         <QuestionCircleOutlined
                           style={{
                             color: 'var(--light-grey-color)',
@@ -607,7 +614,7 @@ export const CreateService: FC<CreateServiceProps> = ({
               style={{ margin: 0 }}
             >
               Pricing & Duration{' '}
-              <Tooltip title="lorem ipsum">
+              <Tooltip title="lorem ipsum1">
                 <QuestionCircleOutlined
                   style={{
                     color: 'var(--light-grey-color)',
@@ -642,7 +649,7 @@ export const CreateService: FC<CreateServiceProps> = ({
                     <div className={styles.pricingChecked}>
                       <CheckCircleFilled />
                     </div>
-                    <Tooltip title="lorem ipsum" mouseLeaveDelay={2}>
+                    <Tooltip title="lorem ipsum2" mouseLeaveDelay={2}>
                       <div className={styles.tooltipContainer} />
                     </Tooltip>
                   </div>
@@ -652,18 +659,11 @@ export const CreateService: FC<CreateServiceProps> = ({
             <div className={styles.createServiceSectionItem}>
               <Form form={form} layout="vertical">
                 <Form.Item label="Service price">
-                  <div className={styles.currencyInput}>
-                    <NumberFormat
-                      className="ant-input"
-                      prefix="£"
-                      defaultValue="0"
-                      inputMode="numeric"
-                      value={servicePrice}
-                      onValueChange={(val: NumberFormatValues) =>
-                        setServicePrice(val.value)
-                      }
-                    />
-                  </div>
+                  <CurrencyInput
+                    unit="£"
+                    value={servicePrice}
+                    onChange={(val) => setServicePrice(val.value)}
+                  />
                 </Form.Item>
               </Form>
             </div>
@@ -687,78 +687,18 @@ export const CreateService: FC<CreateServiceProps> = ({
               <Form form={form} layout="vertical">
                 <Form.Item label="Tax">
                   <Select placeholder="Select tax">
-                    <Option value="defaultSetting">Default setting</Option>
+                    <Option selected value="defaultSetting">
+                      Default tax setting
+                    </Option>
                   </Select>
                 </Form.Item>
               </Form>
             </div>
           </div>
-          <div className={styles.createServiceSection}>
-            <h2
-              className={styles.createServiceSectionTitle}
-              style={{ margin: 0 }}
-            >
-              Deposits & Online Payments
-            </h2>
-            <h3
-              className={styles.createServiceSectionSubTitle}
-              style={{ marginBottom: '1rem' }}
-            >
-              Setup payments processing with Stripe in order to bill online for
-              services
-            </h3>
-            <div className={styles.createServiceSectionItem}>
-              <div className={styles.paymentProcessing}>
-                {paymentProcessing.map((option) => (
-                  <div
-                    key={option.type}
-                    className={
-                      option.selected
-                        ? styles.paymentProcessingOptionSelected
-                        : ''
-                    }
-                    onClick={() => handleSelectPaymentProcessingOption(option)}
-                  >
-                    <div className={styles.paymentProcessingOptionLogos}>
-                      {option.type === 'Amount' && <Money />}
-                      {option.type === 'Percent' && <PercentageOutlined />}
-                    </div>
-                    <div className={styles.paymentProcessingOptionTitle}>
-                      {option.type}
-                    </div>
-                    <div className={styles.paymentProcessingChecked}>
-                      <CheckCircleFilled />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className={styles.createServiceSectionItem}>
-              <Form form={form} layout="vertical">
-                <Form.Item label="Amount">
-                  <div className={styles.currencyInput}>
-                    <NumberFormat
-                      className="ant-input"
-                      prefix={paymentUnit}
-                      defaultValue={0}
-                    />
-                  </div>
-                </Form.Item>
-              </Form>
-            </div>
-            <div
-              className={styles.createServiceSectionItem}
-              style={{ margin: 0 }}
-            >
-              <Checkbox defaultChecked={false}>
-                Require payment before completing booking
-              </Checkbox>
-            </div>
-          </div>
           <div className={styles.advancedSettings}>
             <Collapse ghost>
               <Panel
-                header="Special Pricing Ootions"
+                header="Special Pricing Options"
                 key="special-pricing-options"
               >
                 <div className={styles.createServiceSection}>
@@ -789,11 +729,9 @@ export const CreateService: FC<CreateServiceProps> = ({
                       </div>
                       <div>
                         <div className={styles.currencyInput}>
-                          <NumberFormat
-                            className="ant-input"
-                            placeholder={`£${servicePrice}`}
-                            prefix="£"
-                            inputMode="numeric"
+                          <CurrencyInput
+                            placeholder={`${servicePrice}`}
+                            unit="£"
                           />
                         </div>
                         <div>
@@ -849,14 +787,10 @@ export const CreateService: FC<CreateServiceProps> = ({
                           </div>
                         </div>
                         <div>
-                          <div className={styles.currencyInput}>
-                            <NumberFormat
-                              className="ant-input"
-                              placeholder={`£${servicePrice}`}
-                              prefix="£"
-                              inputMode="numeric"
-                            />
-                          </div>
+                          <CurrencyInput
+                            placeholder={`${servicePrice}`}
+                            unit="£"
+                          />
                         </div>
                       </div>
                     ))}
@@ -888,20 +822,74 @@ export const CreateService: FC<CreateServiceProps> = ({
                         </div>
                       </div>
                       <div>
-                        <div className={styles.currencyInput}>
-                          <NumberFormat
-                            className="ant-input"
-                            placeholder={`£${servicePrice}`}
-                            prefix="£"
-                            inputMode="numeric"
-                          />
-                        </div>
+                        <CurrencyInput
+                          placeholder={`${servicePrice}`}
+                          unit="£"
+                        />
                       </div>
                     </div>
                   ))}
                 </div>
               </Panel>
             </Collapse>
+          </div>
+          <div className={styles.createServiceSection}>
+            <h2
+              className={styles.createServiceSectionTitle}
+              style={{ margin: 0 }}
+            >
+              Deposits & Online Payments
+            </h2>
+            <h3
+              className={styles.createServiceSectionSubTitle}
+              style={{ marginBottom: '1rem' }}
+            >
+              Take a deposit on the service prior to the client booking.
+            </h3>
+            <div className={styles.createServiceSectionItem}>
+              <div className={styles.paymentProcessing}>
+                {paymentProcessing.map((option) => (
+                  <div
+                    key={option.type}
+                    className={
+                      option.selected
+                        ? styles.paymentProcessingOptionSelected
+                        : ''
+                    }
+                    onClick={() => handleSelectPaymentProcessingOption(option)}
+                  >
+                    <div className={styles.paymentProcessingOptionLogos}>
+                      {option.type === 'Amount' && <Money />}
+                      {option.type === 'Percent' && <PercentageOutlined />}
+                    </div>
+                    <div className={styles.paymentProcessingOptionTitle}>
+                      {option.type}
+                    </div>
+                    <div className={styles.paymentProcessingChecked}>
+                      <CheckCircleFilled />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className={styles.createServiceSectionItem}>
+              <Form form={form} layout="vertical">
+                <Form.Item label="Amount">
+                  <CurrencyInput
+                    placeholder={`${servicePrice}`}
+                    unit={paymentUnit}
+                  />
+                </Form.Item>
+              </Form>
+            </div>
+            <div
+              className={styles.createServiceSectionItem}
+              style={{ margin: 0 }}
+            >
+              <Checkbox defaultChecked={true}>
+                Require payment before completing booking
+              </Checkbox>
+            </div>
           </div>
         </div>
         <TabMenu
@@ -913,6 +901,8 @@ export const CreateService: FC<CreateServiceProps> = ({
             <div className={styles.createServiceSection}>
               <Employees
                 employees={employees}
+                title={employeesTitle || ''}
+                description={employeesDesc || ''}
                 onSelected={(items) => setSelectedEmployees(items)}
               />
             </div>
@@ -920,18 +910,18 @@ export const CreateService: FC<CreateServiceProps> = ({
           <div className={styles.resoucesContainer}>
             <div className={styles.createServiceSection}>
               <SearchTags
-                title="Rooms"
-                description="Search rooms"
+                title={roomsTitle || ''}
+                description={roomsDesc || ''}
                 items={rooms}
-                itemType="room"
+                itemType={roomsItemType || 'room'}
               />
             </div>
             <div className={styles.createServiceSection}>
               <SearchTags
-                title="Equipment"
-                description="Select equipment"
+                title={equipmentTitle || ''}
+                description={equipmentDesc || ''}
                 items={equipment}
-                itemType="equipment"
+                itemType={equipemntItemType || 'equipment'}
               />
             </div>
           </div>
@@ -947,7 +937,7 @@ export const CreateService: FC<CreateServiceProps> = ({
                 className={styles.createServiceSectionSubTitle}
                 style={{ marginBottom: '1rem' }}
               >
-                Choose the locations this discount can be applied
+                Choose the locations this service is available at.
               </h3>
               <div className={styles.locationItem}>
                 <Checkbox
@@ -987,8 +977,8 @@ export const CreateService: FC<CreateServiceProps> = ({
             <div className={styles.createServiceSectionItem}>
               <Input
                 label="Friendly name"
-                placeHolderText="Enter friendly name"
-                tooltip="lorem ipsum"
+                placeHolderText="eg. Initial Consultation"
+                tooltip="This will display a different name to your service name (often used to make clients be more familiar with the service)."
               />
             </div>
             <div
