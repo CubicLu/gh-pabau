@@ -16,6 +16,7 @@ const authenticatedUser = (req: Request, res: Response, next: NextFunction) => {
       req.authenticatedUser = jwt.verify(req.session?.jwt, process.env.JWT_SECRET) as JwtPayloadDto
     } else if(req.header('authorization')) {
       req.authenticatedUser = jwt.verify(req.header('authorization'), process.env.JWT_SECRET) as JwtPayloadDto
+      console.log(req.authenticatedUser)
     }
   } catch(error) {
     console.error(error)
