@@ -10,7 +10,7 @@ import {
 import { Drawer, Input, Popover, Radio } from 'antd'
 import classNames from 'classnames'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
-import { CloseCircleOutlined } from '@ant-design/icons'
+import { ReactComponent as CloseIcon } from '../assets/images/close-icon.svg'
 
 // import { isMobile, isTablet } from 'react-device-detect'
 // import { useKeyPressEvent } from 'react-use'
@@ -101,11 +101,10 @@ const AddButton: FC<P> = ({
             value={marketingSourceSearch}
             onChange={(e) => setMarketingSourceSearch(e.target.value)}
             suffix={
-              <CloseCircleOutlined
+              <CloseIcon
                 onClick={() => {
                   setMobileSearch?.()
                 }}
-                style={{ color: '#CFCFD7' }}
               />
             }
             autoFocus
