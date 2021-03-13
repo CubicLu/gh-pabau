@@ -37,11 +37,11 @@ const Index: FC = (props) => {
         {
           title: 'General settings',
           data: [
-            'Index Settings',
+            'Calendar',
             'Loyalty',
-            'Performance Settings',
-            'Point of Sale Configuration',
-            'Referral Settings',
+            'Performance',
+            'Point of Sale',
+            'Referral',
           ],
         },
         { title: 'Integrations', data: [] },
@@ -53,10 +53,9 @@ const Index: FC = (props) => {
     {
       title: 'Services',
       subDataTitles: [
-        { title: 'Services', data: [] },
-        { title: 'Products', data: [] },
-        { title: 'Packages', data: [] },
-        { title: 'Gift Vouchers', data: [] },
+        { title: 'Services', data: [], href: '/setup/services' },
+        { title: 'Products', data: [], href: '/setup/products' },
+        { title: 'Packages', data: [], href: '/setup/packages' },
         { title: 'Resources', data: ['Rooms', 'Equipment'] },
         { title: 'Online Booking', data: [] },
       ],
@@ -108,8 +107,12 @@ const Index: FC = (props) => {
     {
       title: 'Financials',
       subDataTitles: [
-        { title: 'Payment Processing', data: [] },
-        { title: 'Discounts', data: [] },
+        {
+          title: 'Payment Processing',
+          data: [],
+          href: '/setup/payment-processing',
+        },
+        { title: 'Discounts', data: [], href: '/setup/discounts' },
         { title: 'Taxes', data: [] },
         { title: 'Invoice Templates', data: [] },
         { title: 'Payment Types', data: [], href: '/setup/payment-types' },

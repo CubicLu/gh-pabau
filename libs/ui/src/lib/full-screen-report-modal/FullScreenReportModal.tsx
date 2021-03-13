@@ -147,7 +147,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
     setVat(vatRegistered || false)
     setActive(activated || false)
   }, [activated, vatRegistered])
-  return (
+  return visible ? (
     <Modal
       visible={visible}
       closable={false}
@@ -250,11 +250,19 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
           </div>
         </div>
         <div className={styles.fullScreenModalBody}>
-          {subMenu.length > 0 ? (
+          {subMenu.length > 0 && Array.isArray(children) ? (
             <TabMenu menuItems={subMenu} tabPosition="top" minHeight="1px">
               {children
-                ? children
-                : subMenu.map((menu, i) => <div key={i}>{menu}</div>)}
+                ? children.map((child, i) => (
+                    <div className={styles.tabPaneItem} key={i}>
+                      {child}
+                    </div>
+                  ))
+                : subMenu.map((menu, i) => (
+                    <div className={styles.tabPaneItem} key={i}>
+                      {menu}
+                    </div>
+                  ))}
             </TabMenu>
           ) : (
             children
@@ -262,6 +270,8 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
         </div>
       </>
     </Modal>
+  ) : (
+    <div />
   )
 }
 
