@@ -21,6 +21,7 @@ import { LeftOutlined } from '@ant-design/icons'
 import classNames from 'classnames'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
 import { useRouter } from 'next/router'
+import { getParentSetupData } from '../mocks/SetupGridData'
 
 const { Title } = Typography
 interface P {
@@ -339,7 +340,15 @@ const CrudTable: FC<P> = ({
   }
 
   const handleBack = () => {
-    router.back()
+    const parentMenu = getParentSetupData(router.pathname)
+    if (parentMenu.length > 0) {
+      router.push({
+        pathname: '/setup',
+        query: { menu: parentMenu[0]?.title },
+      })
+    } else {
+      router.push('/setup')
+    }
   }
 
   return (
