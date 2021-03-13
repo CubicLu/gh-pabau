@@ -37,7 +37,6 @@ export default {
           'custom_dob',
           'custom_gender',
           'custom_physicaladdress',
-          'custom_postaladdress',
           'custom_referredby',
           'custom_telephonenumber',
         ],

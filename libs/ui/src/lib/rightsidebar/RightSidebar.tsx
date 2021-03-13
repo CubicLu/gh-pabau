@@ -10,6 +10,7 @@ interface P {
   display: boolean
   handlingFormSetting?: (componentID?: string) => void
   handlingDeleteForm?: (componentID?: string) => void
+  handlingSaveForm?: (form: MedicalFormTypes) => void
 }
 
 const RightSidebar: FC<P> = ({
@@ -19,6 +20,7 @@ const RightSidebar: FC<P> = ({
   display,
   handlingFormSetting,
   handlingDeleteForm,
+  handlingSaveForm,
 }) => {
   const [isVisible, setIsVisible] = useState(display)
 
@@ -32,7 +34,8 @@ const RightSidebar: FC<P> = ({
   const hideStyle = {
     right: '-100%',
   }
-  const handleSave = () => {
+  const handleSave = (form) => {
+    handlingSaveForm?.(form)
     setIsVisible(false)
     handlingFormSetting?.('')
   }

@@ -13,18 +13,12 @@ export const TabbedTable: FC<TabbedTableProps> = ({
   onTabChange,
 }) => {
   const onChangeTab = (key: number | string) => {
-    if (onTabChange) {
-      onTabChange(key)
-    }
+    onTabChange?.(key)
   }
 
   return (
     <div className={styles.tabbedTableContainer}>
-      <TabMenu
-        menuItems={tabItems || []}
-        tabPosition="top"
-        onChange={onChangeTab}
-      >
+      <TabMenu menuItems={tabItems} tabPosition="top" onChange={onChangeTab}>
         {children?.map((child) => child)}
       </TabMenu>
     </div>

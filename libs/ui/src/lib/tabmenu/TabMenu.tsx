@@ -24,10 +24,9 @@ export const TabMenu: FC<P> = ({
   activeDefaultKey = '0',
   ...props
 }) => {
+  const { onChange } = props
   const tabClick = (active: number | string) => {
-    if (props?.onChange) {
-      props.onChange(active)
-    }
+    onChange?.(active)
   }
   return (
     <div className={classNames(styles.calendarSettings, props.className)}>

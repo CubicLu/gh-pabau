@@ -1,14 +1,14 @@
 import React, { FC } from 'react'
 import { Pagination as AntPagination, Dropdown, Menu } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
-import { PaginationProps } from 'antd/es/pagination'
+import { PaginationProps as AntPaginationProps } from 'antd/es/pagination'
 import styles from './Pagination.module.less'
 
-interface PaginateProps {
+interface PaginationProps {
   showingRecords: number
   onPageSizeChange?: (pageSize?: number) => void
 }
-export const Pagination: FC<PaginateProps & PaginationProps> = ({
+export const Pagination: FC<PaginationProps & AntPaginationProps> = ({
   showingRecords,
   onPageSizeChange,
   ...props
