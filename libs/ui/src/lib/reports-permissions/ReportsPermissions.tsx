@@ -22,19 +22,42 @@ export interface ReportsPermissionsProps {
   subTitle: string
   permissions: string[]
   data: PermissionGroupType[]
-  viewAll?: boolean
-  onChange?: (permission: string, checked: boolean) => void
+  onChange?: (permissions: string[]) => void
 }
 
 export const ReportsPermissions: FC<ReportsPermissionsProps> = ({
   pageTitle,
   subTitle,
-  permissions,
+  permissions: defaultPermissions,
   data,
-  viewAll,
   onChange,
 }) => {
-  const [showAll, setShowAll] = useState(viewAll)
+  const allPermissions: string[] = data.reduce(
+    (acc, grp) => [...acc, ...(grp.children?.map((item) => item.key) || [])],
+    []
+  )
+  const [permissions, setPermissions] = useState<string[]>(
+    defaultPermissions || []
+  )
+
+  const handleChangePermission = (key: string) => {
+    const index = permissions.indexOf(key)
+    if (index === -1) permissions.push(key)
+    else if (index !== -1) permissions.splice(index, 1)
+
+    setPermissions([...permissions])
+    onChange?.([...permissions])
+  }
+
+  const handleShowAll = (checked: boolean) => {
+    if (checked) {
+      setPermissions([...allPermissions])
+      onChange?.([...allPermissions])
+    } else {
+      setPermissions([])
+      onChange?.([])
+    }
+  }
 
   return (
     <div className={styles.reportsPermissions}>
@@ -48,8 +71,8 @@ export const ReportsPermissions: FC<ReportsPermissionsProps> = ({
             />
           </span>
           <Switch
-            checked={showAll}
-            onChange={(checked) => setShowAll(checked)}
+            checked={permissions.length === allPermissions.length}
+            onChange={(checked) => handleShowAll(checked)}
           />
         </div>
         <h3 className={styles.pageTitle}>{pageTitle}</h3>
@@ -59,25 +82,6 @@ export const ReportsPermissions: FC<ReportsPermissionsProps> = ({
       </div>
 
       <div className={styles.reportsPermissionsList}>
-        {showAll && (
-          <Accordion headerLabel="All Reports">
-            <div className={styles.permissionGroup}>
-              {data
-                .reduce((acc, grp) => [...acc, ...(grp.children || [])], [])
-                .map((item) => (
-                  <div key={item.key} className={styles.permissionItem}>
-                    <div className={styles.label}>{item.name}</div>
-                    <div className={styles.permission}>
-                      <Switch
-                        defaultChecked={permissions.indexOf(item.key) !== -1}
-                        onChange={(checked) => onChange?.(item.key, checked)}
-                      />
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </Accordion>
-        )}
         {data.map((group) => (
           <Accordion key={group.key} headerLabel={group.name}>
             <div className={styles.permissionGroup}>
@@ -86,8 +90,8 @@ export const ReportsPermissions: FC<ReportsPermissionsProps> = ({
                   <div className={styles.label}>{item.name}</div>
                   <div className={styles.permission}>
                     <Switch
-                      defaultChecked={permissions.indexOf(item.key) !== -1}
-                      onChange={(checked) => onChange?.(item.key, checked)}
+                      checked={permissions.indexOf(item.key) !== -1}
+                      onChange={(checked) => handleChangePermission?.(item.key)}
                     />
                   </div>
                 </div>
