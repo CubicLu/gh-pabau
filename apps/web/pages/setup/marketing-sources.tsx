@@ -6,44 +6,38 @@ import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { UserContext } from '../../context/UserContext'
 import { languageMapper } from '../../helper/languageMapper'
 
-console.log(UserContext)
-
 const LIST_QUERY = gql`
   query marketing_sources(
-    $public: Int = 1
+    $isActive: Int = 1
     $searchTerm: String = ""
     $offset: Int = 0
     $limit: Int = 10
-    $companyId: Int!
   ) {
     marketingSources(
       first: $offset
       last: $limit
       orderBy: { name: desc }
       where: {
-        company_id: { equals: $companyId }
-        isActive: { equals: $public }
+        public: { equals: $isActive }
         OR: [{ AND: [{ name: { contains: $searchTerm } }] }]
       }
     ) {
       __typename
       id
       name
-      isActive
+      public
     }
   }
 `
 
 const LIST_AGGREGATE_QUERY = gql`
   query marketing_source_aggregate(
-    $public: Int = 1
+    $isActive: Int = 1
     $searchTerm: String = ""
-    $companyId: Int!
   ) {
     marketingSourcesCount(
       where: {
-        company_id: { equals: $companyId }
-        isActive: { equals: $public }
+        public: { equals: $isActive }
         OR: [{ AND: [{ name: { contains: $searchTerm } }] }]
       }
     )
@@ -60,18 +54,18 @@ const DELETE_MUTATION = gql`
 const ADD_MUTATION = gql`
   mutation add_marketing_source(
     $imported: Int = 0
-    $is_active: Int = 1
+    $isActive: Int = 1
     $name: String!
     $custom_id: Int = 0
     $companyId: Int!
   ) {
     createOneMarketingSource(
       data: {
-        company: { connect: { id: $companyId } }
         imported: $imported
-        source_name: $name
-        public: $is_active
+        name: $name
+        public: $isActive
         custom_id: $custom_id
+        company: { connect: { id: $companyId } }
       }
     ) {
       id
@@ -82,10 +76,10 @@ const EDIT_MUTATION = gql`
   mutation update_marketing_source_by_pk(
     $id: Int!
     $source_name: String
-    $public: Int = 1
+    $isActive: Int = 1
   ) {
     updateOneMarketingSource(
-      data: { source_name: { set: $source_name }, public: { set: $public } }
+      data: { name: { set: $source_name }, public: { set: $isActive } }
       where: { id: $id }
     ) {
       id
@@ -93,7 +87,7 @@ const EDIT_MUTATION = gql`
   }
 `
 const UPDATE_ORDER_MUTATION = gql`
-  mutation update_marketing_source_order($id: uuid!, $order: Int) {
+  mutation update_marketing_source_order($id: Int!, $order: Int) {
     update_marketing_source(
       where: { id: { _eq: $id } }
       _set: { order: $order }
@@ -105,12 +99,12 @@ const UPDATE_ORDER_MUTATION = gql`
 
 export const Index: NextPage = () => {
   const { t, i18n } = useTranslationI18()
-
   const user = useContext(UserContext)
 
   useEffect(() => {
     if (user) {
-      const lan = user.company?.details?.language
+      const lan = user?.data?.me?.company?.details?.language
+      console.log(user)
       const lanCode = lan ? languageMapper(lan) : 'en'
       i18n.changeLanguage(lanCode)
     }
@@ -138,7 +132,7 @@ export const Index: NextPage = () => {
     },
     deleteBtnLabel: 'Yes, Delete Source',
     fields: {
-      source_name: {
+      name: {
         full: 'Friendly Name',
         fullLower: 'friendly name',
         short: t('marketingsource-name-textfield.translation'),
@@ -146,7 +140,6 @@ export const Index: NextPage = () => {
         min: 2,
         example: t('marketingsource-name-textfield.translation'),
         description: 'A friendly name',
-        // extra: <i>Please note: blah blah blahh</i>,
         cssWidth: 'max',
         type: 'string',
       },
@@ -154,6 +147,16 @@ export const Index: NextPage = () => {
         full: t('marketingsource-tableColumn-active.translation'),
         type: 'number',
         defaultvalue: 1,
+      },
+      company_id: {
+        type: 'number',
+      },
+    },
+    filter: {
+      primary: {
+        name: 'public',
+        type: 'number',
+        default: 1,
       },
     },
   }
@@ -166,7 +169,7 @@ export const Index: NextPage = () => {
       editQuery={EDIT_MUTATION}
       aggregateQuery={LIST_AGGREGATE_QUERY}
       updateOrderQuery={UPDATE_ORDER_MUTATION}
-      needTranslation={true}
+      needTranslation={false}
     />
   )
 }

@@ -5,7 +5,6 @@ import { useCookies } from 'react-cookie'
 export interface LoginProps {
   user: number
   company: number
-  username?: string
 }
 
 export default function useLogin(registered = false): [LoginProps, boolean] {
@@ -23,8 +22,7 @@ export default function useLogin(registered = false): [LoginProps, boolean] {
       })
       return {
         user: token.user,
-        company: token.company,
-        username: token.username,
+        company: token.company
       } as LoginProps
     } catch (error) {
       console.log(error)

@@ -741,7 +741,7 @@ export interface CancellationPolicy {
 
 export interface MarketingSource {
   id: number;
-  source_name: string;
+  name: string;
   company_id: number;
   custom_id: number;
   public: number;

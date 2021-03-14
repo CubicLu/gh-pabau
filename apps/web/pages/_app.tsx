@@ -17,7 +17,7 @@ import React from 'react'
 import { I18nextProvider, initReactI18next } from 'react-i18next'
 import 'react-phone-input-2/lib/style.css'
 import 'react-quill/dist/quill.snow.css'
-import ContextWrapper from '../components/Auth/ContextWrapper'
+import ContextWrapper from '../ContextWrapper'
 import { languages } from '@pabau/i18n'
 import { setContext } from '@apollo/client/link/context'
 import { CookiesProvider } from 'react-cookie'
@@ -35,7 +35,7 @@ const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      authorization: token ? `Bearer ${token}` : '',
+      authorization: token ?? null,
     },
   }
 })
@@ -94,31 +94,31 @@ export default function CustomApp({
   pageProps,
 }: AppProps): JSX.Element {
   return (
-    <CookiesProvider>
-      <ApolloProvider client={client}>
-        <I18nextProvider i18n={i18next}>
-          <style jsx global>{`
-            @font-face {
-              font-family: 'Circular-Std-Black';
-              src: local('Circular-Std-Black'),
-                url(../public/fonts/CircularStd-Black.otf) format('opentype');
-            }
+    <ApolloProvider client={client}>
+      <I18nextProvider i18n={i18next}>
+        <style jsx global>{`
+          @font-face {
+            font-family: 'Circular-Std-Black';
+            src: local('Circular-Std-Black'),
+              url(../public/fonts/CircularStd-Black.otf) format('opentype');
+          }
 
-            @font-face {
-              font-family: 'Circular-Std-Book';
-              src: url('/fonts/CircularStd-Book.otf') format('opentype');
-            }
+          @font-face {
+            font-family: 'Circular-Std-Book';
+            src: url('/fonts/CircularStd-Book.otf') format('opentype');
+          }
 
-            @font-face {
-              font-family: 'Circular-Std-Medium';
-              src: url('/fonts/CircularStd-Medium.otf') format('opentype');
-            }
-          `}</style>
+          @font-face {
+            font-family: 'Circular-Std-Medium';
+            src: url('/fonts/CircularStd-Medium.otf') format('opentype');
+          }
+        `}</style>
+        <CookiesProvider>
           <ContextWrapper>
             <Component {...pageProps} />
           </ContextWrapper>
-        </I18nextProvider>
-      </ApolloProvider>
-    </CookiesProvider>
+        </CookiesProvider>
+      </I18nextProvider>
+    </ApolloProvider>
   )
 }

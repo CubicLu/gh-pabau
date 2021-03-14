@@ -34,8 +34,9 @@
     "dep-graph": "nx dep-graph",
     "prisma:generate": "prisma generate",
     "prisma:format": "prisma format",
+    "prisma:types": "pal schema typescript -o apps/bridge-api/src/generated",
     "nexus:generate": "ts-node-dev --transpile-only apps/bridge-api/src/schema",
-    "bridge:generate": "prisma generate && pal g && pal schema typescript -o apps/bridge-api/src/generated && yarn run nexus:generate",
+    "bridge:generate": "prisma generate && pal g && yarn run prisma:types && yarn run nexus:generate",
     "bridge:prune": "./apps/bridge-api/cicd/prune.sh",
     "postinstall": "husky install"
   },

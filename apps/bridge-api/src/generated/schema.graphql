@@ -24526,8 +24526,8 @@ type MarketingSource {
   custom_id: Int!
   id: Int!
   imported: Int!
+  name: String!
   public: Int!
-  source_name: String!
 }
 
 type MarketingSourceAvgAggregateOutputType {
@@ -24544,16 +24544,16 @@ type MarketingSourceCountAggregateOutputType {
   custom_id: Int!
   id: Int!
   imported: Int!
+  name: Int
   public: Int!
-  source_name: Int
 }
 
 input MarketingSourceCreateInput {
   company: CompanyCreateNestedOneWithoutMarketingSourceInput!
   custom_id: Int!
   imported: Int!
+  name: String!
   public: Int!
-  source_name: String!
 }
 
 input MarketingSourceCreateNestedManyWithoutCompanyInput {
@@ -24570,8 +24570,8 @@ input MarketingSourceCreateOrConnectWithoutCompanyInput {
 input MarketingSourceCreateWithoutCompanyInput {
   custom_id: Int!
   imported: Int!
+  name: String!
   public: Int!
-  source_name: String!
 }
 
 input MarketingSourceListRelationFilter {
@@ -24585,8 +24585,8 @@ type MarketingSourceMaxAggregateOutputType {
   custom_id: Int!
   id: Int!
   imported: Int!
+  name: String
   public: Int!
-  source_name: String
 }
 
 type MarketingSourceMinAggregateOutputType {
@@ -24594,8 +24594,8 @@ type MarketingSourceMinAggregateOutputType {
   custom_id: Int!
   id: Int!
   imported: Int!
+  name: String
   public: Int!
-  source_name: String
 }
 
 input MarketingSourceOrderByInput {
@@ -24604,8 +24604,8 @@ input MarketingSourceOrderByInput {
   custom_id: SortOrder
   id: SortOrder
   imported: SortOrder
+  name: SortOrder
   public: SortOrder
-  source_name: SortOrder
 }
 
 enum MarketingSourceScalarFieldEnum {
@@ -24613,8 +24613,8 @@ enum MarketingSourceScalarFieldEnum {
   custom_id
   id
   imported
+  name
   public
-  source_name
 }
 
 input MarketingSourceScalarWhereInput {
@@ -24625,8 +24625,8 @@ input MarketingSourceScalarWhereInput {
   custom_id: IntFilter
   id: IntFilter
   imported: IntFilter
+  name: StringFilter
   public: IntFilter
-  source_name: StringFilter
 }
 
 type MarketingSourceSumAggregateOutputType {
@@ -24642,8 +24642,8 @@ input MarketingSourceUncheckedCreateInput {
   custom_id: Int!
   id: Int
   imported: Int!
+  name: String!
   public: Int!
-  source_name: String!
 }
 
 input MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput {
@@ -24656,8 +24656,8 @@ input MarketingSourceUncheckedCreateWithoutCompanyInput {
   custom_id: Int!
   id: Int
   imported: Int!
+  name: String!
   public: Int!
-  source_name: String!
 }
 
 input MarketingSourceUncheckedUpdateInput {
@@ -24665,8 +24665,8 @@ input MarketingSourceUncheckedUpdateInput {
   custom_id: IntFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   imported: IntFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
   public: IntFieldUpdateOperationsInput
-  source_name: StringFieldUpdateOperationsInput
 }
 
 input MarketingSourceUncheckedUpdateManyInput {
@@ -24674,8 +24674,8 @@ input MarketingSourceUncheckedUpdateManyInput {
   custom_id: IntFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   imported: IntFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
   public: IntFieldUpdateOperationsInput
-  source_name: StringFieldUpdateOperationsInput
 }
 
 input MarketingSourceUncheckedUpdateManyWithoutCompanyInput {
@@ -24695,31 +24695,31 @@ input MarketingSourceUncheckedUpdateManyWithoutMarketingSourceInput {
   custom_id: IntFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   imported: IntFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
   public: IntFieldUpdateOperationsInput
-  source_name: StringFieldUpdateOperationsInput
 }
 
 input MarketingSourceUncheckedUpdateWithoutCompanyInput {
   custom_id: IntFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   imported: IntFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
   public: IntFieldUpdateOperationsInput
-  source_name: StringFieldUpdateOperationsInput
 }
 
 input MarketingSourceUpdateInput {
   company: CompanyUpdateOneRequiredWithoutMarketingSourceInput
   custom_id: IntFieldUpdateOperationsInput
   imported: IntFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
   public: IntFieldUpdateOperationsInput
-  source_name: StringFieldUpdateOperationsInput
 }
 
 input MarketingSourceUpdateManyMutationInput {
   custom_id: IntFieldUpdateOperationsInput
   imported: IntFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
   public: IntFieldUpdateOperationsInput
-  source_name: StringFieldUpdateOperationsInput
 }
 
 input MarketingSourceUpdateManyWithWhereWithoutCompanyInput {
@@ -24748,8 +24748,8 @@ input MarketingSourceUpdateWithWhereUniqueWithoutCompanyInput {
 input MarketingSourceUpdateWithoutCompanyInput {
   custom_id: IntFieldUpdateOperationsInput
   imported: IntFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
   public: IntFieldUpdateOperationsInput
-  source_name: StringFieldUpdateOperationsInput
 }
 
 input MarketingSourceUpsertWithWhereUniqueWithoutCompanyInput {
@@ -24767,8 +24767,8 @@ input MarketingSourceWhereInput {
   custom_id: IntFilter
   id: IntFilter
   imported: IntFilter
+  name: StringFilter
   public: IntFilter
-  source_name: StringFilter
 }
 
 input MarketingSourceWhereUniqueInput {

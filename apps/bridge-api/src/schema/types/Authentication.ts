@@ -37,7 +37,6 @@ export const Authentication = extendType({
         userId: nonNull(intArg())
       },
       async resolve(_, logoutInput:LogoutInputDto, ctx:Context){
-        console.log(ctx.req.authenticatedUser)
         if(!ctx.req.authenticatedUser){
           throw new Error('Invalid token')
         }

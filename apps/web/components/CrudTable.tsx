@@ -62,12 +62,15 @@ const CrudTable: FC<P> = ({
   editPageRouteLink,
 }) => {
   const [isLoading, setIsLoading] = useState(true)
-  const [isActive, setIsActive] = useState<boolean | number>(true)
+  const [isActive, setIsActive] = useState<string | boolean | number>(
+    schema?.filter?.primary?.default
+  )
   const [searchTerm, setSearchTerm] = useState('')
   const { t } = useTranslationI18()
   const crudTableRef = useRef(null)
   const router = useRouter()
   const user = useContext(UserContext)
+
   // eslint-disable-next-line graphql/template-strings
   const [editMutation] = useMutation(editQuery, {
     onCompleted(data) {
@@ -109,7 +112,7 @@ const CrudTable: FC<P> = ({
   const [paginateData, setPaginateData] = useState({
     total: 0,
     offset: 0,
-    limit: 20,
+    limit: 50,
     currentPage: 1,
     showingRecords: 0,
   })
@@ -121,7 +124,7 @@ const CrudTable: FC<P> = ({
   const getQueryVariables = () => {
     const queryOptions = {
       variables: {
-        isActive: Number(isActive),
+        isActive,
         searchTerm: '%' + searchTerm + '%',
         offset: paginateData.offset,
         limit: paginateData.limit,
@@ -179,7 +182,7 @@ const CrudTable: FC<P> = ({
     if (aggregateData) {
       setPaginateData({
         ...paginateData,
-        total: aggregateData,
+        total: aggregateData ?? aggregateData?.aggregate.count,
         showingRecords: data?.length,
       })
     }
@@ -195,7 +198,7 @@ const CrudTable: FC<P> = ({
 
   const onFilterMarketingSource = () => {
     resetPagination()
-    setIsActive((e) => !e)
+    setIsActive((e) => e)
   }
 
   const onSearch = async (val) => {
@@ -214,7 +217,7 @@ const CrudTable: FC<P> = ({
     setPaginateData({
       total: 0,
       offset: 0,
-      limit: 10,
+      limit: 50,
       currentPage: 1,
       showingRecords: 0,
     })
@@ -227,12 +230,10 @@ const CrudTable: FC<P> = ({
   const { fields } = schema
 
   const onSubmit = async (values, { resetForm }) => {
-    values['companyId'] = user?.company?.id
-    console.log(values)
     await (values.id
       ? editMutation({
           variables: values,
-          optimisticResponse: {},
+          optimisticResponse: { values },
           update: (proxy) => {
             if (listQuery) {
               const existing = proxy.readQuery({
@@ -251,8 +252,11 @@ const CrudTable: FC<P> = ({
           },
         })
       : addMutation({
-          variables: values,
-          optimisticResponse: {},
+          variables: {
+            ...values,
+            companyId: user?.data?.me?.company?.id,
+          },
+          optimisticResponse: { values },
           update: (proxy) => {
             if (listQuery) {
               const existing = proxy.readQuery({
@@ -264,7 +268,6 @@ const CrudTable: FC<P> = ({
                   query: listQuery,
                   data: {
                     [key]: [...existing[key], values],
-                    companyId: user?.company?.id,
                   },
                 })
               }
@@ -296,22 +299,20 @@ const CrudTable: FC<P> = ({
       case 'boolean':
       case 'checkbox':
         return defaultVal || true
-      case 'number':
-        return Number(defaultVal) || 1
       default:
         return defaultVal || ''
     }
   }
 
-  const checkCustomColorIconExsist = (type) => {
-    let isExist = false
+  const checkCustomColorIconExist = (type) => {
+    let exists = false
     sourceData?.map((data) => {
       if (data[type]) {
-        isExist = true
+        exists = true
       }
       return data
     })
-    return isExist
+    return exists
   }
 
   const updateOrder = async (values) => {
@@ -508,8 +509,8 @@ const CrudTable: FC<P> = ({
               sticky={{ offsetScroll: 80, offsetHeader: 80 }}
               pagination={sourceData?.length > 10 ? {} : false}
               draggable={true}
-              isCustomColorExist={checkCustomColorIconExsist('color')}
-              isCustomIconExist={checkCustomColorIconExsist('icon')}
+              isCustomColorExist={checkCustomColorIconExist('color')}
+              isCustomIconExist={checkCustomColorIconExist('icon')}
               noDataBtnText={schema.full}
               noDataText={schema.fullLower}
               padlocked={schema.padlocked}
@@ -565,7 +566,7 @@ const CrudTable: FC<P> = ({
             />
             <Pagination
               total={paginateData.total}
-              defaultPageSize={15}
+              defaultPageSize={50}
               showSizeChanger={false}
               onChange={onPaginationChange}
               pageSize={paginateData.limit}

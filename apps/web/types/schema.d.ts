@@ -21,7 +21,30 @@ interface Schema {
   tooltip?: string
   createButtonLabel?: string
   padlocked?: string[]
+  filter?: SchemaFilter
+  company?: number
 }
+
+type DefaultFilterType = number | boolean
+
+interface SchemaFilter {
+  primary: {
+    name: string
+    type: FilterTypes
+    default: string | number | boolean
+  }
+}
+
+type FilterTypes =
+  | 'string'
+  | 'boolean'
+  | 'number'
+  | 'radio-group'
+  | 'color-picker'
+  | 'checkbox'
+  | 'icon'
+  | 'select'
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 interface SchemaItem {
   full?: string
@@ -34,15 +57,7 @@ interface SchemaItem {
   description?: string
   extra?: JSX.Element
   cssWidth?: string
-  type?:
-    | 'string'
-    | 'boolean'
-    | 'number'
-    | 'radio-group'
-    | 'color-picker'
-    | 'checkbox'
-    | 'icon'
-    | 'select'
+  type?: FilterTypes
   defaultvalue?: string | number | boolean
   visible?: boolean
   required?: boolean

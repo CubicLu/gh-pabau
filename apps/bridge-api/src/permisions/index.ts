@@ -1,43 +1,18 @@
-import { allow, rule, shield } from 'graphql-shield'
-import { Context } from "../context";
-
-const rules = {
-  isAuthenticated: rule()(async (root, args, ctx:Context): Promise<boolean> => {
-    if (ctx.req.authenticatedUser){
-      return true
-    }
-  }),
-  isMarketingSourceOwnedByCompany: rule()(async (root, args, ctx:Context): Promise<boolean> => {
-    const record = await ctx.prisma.marketingSource.findFirst({
-      where: {
-        id:args.where.id
-      },
-    })
-    return record.company_id === ctx.req.authenticatedUser.company
-  }),
-  injectMarketingSources: rule()(async (root, args, ctx:Context): Promise<boolean> => {
-    args.where = {
-      ...args,
-      company_id: ctx.req.authenticatedUser.company
-    }
-    return true;
-  }),
-}
+import { allow, shield } from 'graphql-shield'
+import { rules } from './rules'
+import * as types from './types'
 
 export const permissions = shield({
   Query: {
-    "*": allow,
-    me: rules.isAuthenticated
+    "*": types.authenticated && rules.injectCompanyId,
+    me: types.authenticated,
   },
-  // Query: {
-  //   marketingSource: rules.isAuthenticated && rules.isMarketingSourceOwnedByCompany,
-  //   marketingSources: rules.isAuthenticated && rules.injectMarketingSources
-  // },
   Mutation: {
-    updateOneMarketingSource: rules.isAuthenticated && rules.isMarketingSourceOwnedByCompany,
-    upsertOneMarketingSource: rules.isAuthenticated && rules.isMarketingSourceOwnedByCompany,
-    deleteOneMarketingSource: rules.isAuthenticated && rules.isMarketingSourceOwnedByCompany,
+    updateOneMarketingSource: types.authenticated &&  types.isMarketingSourceOwnedByCompany,
+    upsertOneMarketingSource: types.authenticated &&  types.isMarketingSourceOwnedByCompany,
+    deleteOneMarketingSource: types.authenticated && rules.injectCompanyId && types.isMarketingSourceOwnedByCompany,
+    createOneMarketingSource: types.authenticated && rules.connectAuthenticatedCompany,
+    "*": allow,
     login: allow
   }
-
 })

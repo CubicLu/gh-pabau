@@ -14219,8 +14219,8 @@ export interface NexusGenInputs {
     company: NexusGenInputs['CompanyCreateNestedOneWithoutMarketingSourceInput']; // CompanyCreateNestedOneWithoutMarketingSourceInput!
     custom_id: number; // Int!
     imported: number; // Int!
+    name: string; // String!
     public: number; // Int!
-    source_name: string; // String!
   }
   MarketingSourceCreateNestedManyWithoutCompanyInput: { // input type
     connect?: Array<NexusGenInputs['MarketingSourceWhereUniqueInput'] | null> | null; // [MarketingSourceWhereUniqueInput]
@@ -14234,8 +14234,8 @@ export interface NexusGenInputs {
   MarketingSourceCreateWithoutCompanyInput: { // input type
     custom_id: number; // Int!
     imported: number; // Int!
+    name: string; // String!
     public: number; // Int!
-    source_name: string; // String!
   }
   MarketingSourceListRelationFilter: { // input type
     every?: NexusGenInputs['MarketingSourceWhereInput'] | null; // MarketingSourceWhereInput
@@ -14248,8 +14248,8 @@ export interface NexusGenInputs {
     custom_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
     id?: NexusGenEnums['SortOrder'] | null; // SortOrder
     imported?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    name?: NexusGenEnums['SortOrder'] | null; // SortOrder
     public?: NexusGenEnums['SortOrder'] | null; // SortOrder
-    source_name?: NexusGenEnums['SortOrder'] | null; // SortOrder
   }
   MarketingSourceScalarWhereInput: { // input type
     AND?: Array<NexusGenInputs['MarketingSourceScalarWhereInput'] | null> | null; // [MarketingSourceScalarWhereInput]
@@ -14259,16 +14259,16 @@ export interface NexusGenInputs {
     custom_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     imported?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    name?: NexusGenInputs['StringFilter'] | null; // StringFilter
     public?: NexusGenInputs['IntFilter'] | null; // IntFilter
-    source_name?: NexusGenInputs['StringFilter'] | null; // StringFilter
   }
   MarketingSourceUncheckedCreateInput: { // input type
     company_id: number; // Int!
     custom_id: number; // Int!
     id?: number | null; // Int
     imported: number; // Int!
+    name: string; // String!
     public: number; // Int!
-    source_name: string; // String!
   }
   MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput: { // input type
     connect?: Array<NexusGenInputs['MarketingSourceWhereUniqueInput'] | null> | null; // [MarketingSourceWhereUniqueInput]
@@ -14279,24 +14279,24 @@ export interface NexusGenInputs {
     custom_id: number; // Int!
     id?: number | null; // Int
     imported: number; // Int!
+    name: string; // String!
     public: number; // Int!
-    source_name: string; // String!
   }
   MarketingSourceUncheckedUpdateInput: { // input type
     company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     custom_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     imported?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     public?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
-    source_name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
   }
   MarketingSourceUncheckedUpdateManyInput: { // input type
     company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     custom_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     imported?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     public?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
-    source_name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
   }
   MarketingSourceUncheckedUpdateManyWithoutCompanyInput: { // input type
     connect?: Array<NexusGenInputs['MarketingSourceWhereUniqueInput'] | null> | null; // [MarketingSourceWhereUniqueInput]
@@ -14314,28 +14314,28 @@ export interface NexusGenInputs {
     custom_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     imported?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     public?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
-    source_name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
   }
   MarketingSourceUncheckedUpdateWithoutCompanyInput: { // input type
     custom_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     imported?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     public?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
-    source_name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
   }
   MarketingSourceUpdateInput: { // input type
     company?: NexusGenInputs['CompanyUpdateOneRequiredWithoutMarketingSourceInput'] | null; // CompanyUpdateOneRequiredWithoutMarketingSourceInput
     custom_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     imported?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     public?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
-    source_name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
   }
   MarketingSourceUpdateManyMutationInput: { // input type
     custom_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     imported?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     public?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
-    source_name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
   }
   MarketingSourceUpdateManyWithWhereWithoutCompanyInput: { // input type
     data: NexusGenInputs['MarketingSourceUncheckedUpdateManyWithoutMarketingSourceInput']; // MarketingSourceUncheckedUpdateManyWithoutMarketingSourceInput!
@@ -14360,8 +14360,8 @@ export interface NexusGenInputs {
   MarketingSourceUpdateWithoutCompanyInput: { // input type
     custom_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     imported?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     public?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
-    source_name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
   }
   MarketingSourceUpsertWithWhereUniqueWithoutCompanyInput: { // input type
     create: NexusGenInputs['MarketingSourceUncheckedCreateWithoutCompanyInput']; // MarketingSourceUncheckedCreateWithoutCompanyInput!
@@ -14377,8 +14377,8 @@ export interface NexusGenInputs {
     custom_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     imported?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    name?: NexusGenInputs['StringFilter'] | null; // StringFilter
     public?: NexusGenInputs['IntFilter'] | null; // IntFilter
-    source_name?: NexusGenInputs['StringFilter'] | null; // StringFilter
   }
   MarketingSourceWhereUniqueInput: { // input type
     id?: number | null; // Int
@@ -17385,7 +17385,7 @@ export interface NexusGenEnums {
   CompanyScalarFieldEnum: "admin" | "creation_date" | "cron_enabled" | "digit8" | "id" | "image" | "migrated" | "remote_connect" | "remote_url" | "slug" | "user"
   CompanySubscriptionScalarFieldEnum: "account_live" | "active" | "activity_logs" | "advanced_marketing_addon" | "am_group" | "am_start_date" | "bill_cycle" | "code" | "commission_rate" | "company_id" | "complete_account" | "complete_notes" | "demo_account" | "details_status" | "disable_sms" | "discount" | "enterprise_fee" | "enterprise_user_cost" | "exclude_reports" | "free_months" | "free_users" | "gc_amount" | "gc_customer_id" | "gc_email" | "gc_enterprise_plan_id" | "gc_plan_id" | "gc_support_plan_id" | "hide_in_comps" | "is_referral" | "leave_alert" | "license_expiry" | "license_id" | "license_type" | "live_server" | "low_credit_amount" | "low_sms_action" | "max_user_count" | "multiple_locations" | "onboarder_id" | "order_sheet" | "pabau_score" | "partner_id" | "payment_bounces" | "payment_id" | "phone_support" | "previous_system" | "price_range" | "renew_interval" | "sandbox_server" | "server_comp_id" | "setup_stage" | "setup_status" | "slack_support" | "sms_rate" | "storage" | "stripe_customer_id" | "stripe_fee" | "stripe_fee_type" | "stripe_subscription_id" | "sub_start_date" | "subscription_fee" | "subscription_name" | "support_fee" | "support_plan" | "suspend_sms" | "suspended_on" | "suspension_reason" | "trainer_id" | "training_date" | "training_status" | "trial" | "uid" | "warning_level" | "whatsapp_support"
   InvPaymentTypeScalarFieldEnum: "company_id" | "created_date" | "description" | "epos_display" | "id" | "is_active" | "is_money" | "modified_date" | "name" | "type" | "uid"
-  MarketingSourceScalarFieldEnum: "company_id" | "custom_id" | "id" | "imported" | "public" | "source_name"
+  MarketingSourceScalarFieldEnum: "company_id" | "custom_id" | "id" | "imported" | "name" | "public"
   MediaLlibraryAttachmentScalarFieldEnum: "communication_id" | "company_id" | "contact_attachment_id" | "contact_id" | "creation_date" | "file_url" | "id" | "medical_form_contact_id" | "sales_id" | "statement_id"
   SecondAtAnswerScalarFieldEnum: "id" | "name" | "question_id"
   SecondAtQuestionScalarFieldEnum: "company_id" | "id" | "name" | "type"
@@ -24742,8 +24742,8 @@ export interface NexusGenObjects {
     custom_id: number; // Int!
     id: number; // Int!
     imported: number; // Int!
+    name: string; // String!
     public: number; // Int!
-    source_name: string; // String!
   }
   MarketingSourceAvgAggregateOutputType: { // root type
     company_id: number; // Float!
@@ -24758,24 +24758,24 @@ export interface NexusGenObjects {
     custom_id: number; // Int!
     id: number; // Int!
     imported: number; // Int!
+    name?: number | null; // Int
     public: number; // Int!
-    source_name?: number | null; // Int
   }
   MarketingSourceMaxAggregateOutputType: { // root type
     company_id: number; // Int!
     custom_id: number; // Int!
     id: number; // Int!
     imported: number; // Int!
+    name?: string | null; // String
     public: number; // Int!
-    source_name?: string | null; // String
   }
   MarketingSourceMinAggregateOutputType: { // root type
     company_id: number; // Int!
     custom_id: number; // Int!
     id: number; // Int!
     imported: number; // Int!
+    name?: string | null; // String
     public: number; // Int!
-    source_name?: string | null; // String
   }
   MarketingSourceSumAggregateOutputType: { // root type
     company_id: number; // Int!
@@ -32957,8 +32957,8 @@ export interface NexusGenFieldTypes {
     custom_id: number; // Int!
     id: number; // Int!
     imported: number; // Int!
+    name: string; // String!
     public: number; // Int!
-    source_name: string; // String!
   }
   MarketingSourceAvgAggregateOutputType: { // field return type
     company_id: number; // Float!
@@ -32973,24 +32973,24 @@ export interface NexusGenFieldTypes {
     custom_id: number; // Int!
     id: number; // Int!
     imported: number; // Int!
+    name: number | null; // Int
     public: number; // Int!
-    source_name: number | null; // Int
   }
   MarketingSourceMaxAggregateOutputType: { // field return type
     company_id: number; // Int!
     custom_id: number; // Int!
     id: number; // Int!
     imported: number; // Int!
+    name: string | null; // String
     public: number; // Int!
-    source_name: string | null; // String
   }
   MarketingSourceMinAggregateOutputType: { // field return type
     company_id: number; // Int!
     custom_id: number; // Int!
     id: number; // Int!
     imported: number; // Int!
+    name: string | null; // String
     public: number; // Int!
-    source_name: string | null; // String
   }
   MarketingSourceSumAggregateOutputType: { // field return type
     company_id: number; // Int!
@@ -42120,8 +42120,8 @@ export interface NexusGenFieldTypeNames {
     custom_id: 'Int'
     id: 'Int'
     imported: 'Int'
+    name: 'String'
     public: 'Int'
-    source_name: 'String'
   }
   MarketingSourceAvgAggregateOutputType: { // field return type name
     company_id: 'Float'
@@ -42136,24 +42136,24 @@ export interface NexusGenFieldTypeNames {
     custom_id: 'Int'
     id: 'Int'
     imported: 'Int'
+    name: 'Int'
     public: 'Int'
-    source_name: 'Int'
   }
   MarketingSourceMaxAggregateOutputType: { // field return type name
     company_id: 'Int'
     custom_id: 'Int'
     id: 'Int'
     imported: 'Int'
+    name: 'String'
     public: 'Int'
-    source_name: 'String'
   }
   MarketingSourceMinAggregateOutputType: { // field return type name
     company_id: 'Int'
     custom_id: 'Int'
     id: 'Int'
     imported: 'Int'
+    name: 'String'
     public: 'Int'
-    source_name: 'String'
   }
   MarketingSourceSumAggregateOutputType: { // field return type name
     company_id: 'Int'

@@ -38,7 +38,6 @@ export class AuthenticationService {
     return jwt.sign(<JwtPayloadDto> {
       'user': this.user.id,
       'company': this.user.company_id,
-      'username': this.user.username,
       'https://hasura.io/jwt/claims': {
         "x-hasura-allowed-roles": [
           'public','admin'

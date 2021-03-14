@@ -1,6 +1,6 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC } from 'react'
 import { gql, QueryResult, useQuery } from '@apollo/client'
-import { UserContext } from '../../context/UserContext'
+import { UserContext } from './context/UserContext'
 
 const CURRENT_USER = gql`
   query retrieveAuthenticatedUser {
@@ -37,13 +37,9 @@ interface Details {
 }
 
 const ContextWrapper: FC = ({ children }) => {
-  const data: QueryResult<User> = useQuery(CURRENT_USER)
+  const me: QueryResult<User> = useQuery(CURRENT_USER)
 
-  useEffect(() => {
-    console.log(data.data)
-  })
-
-  return <UserContext.Provider value={data}>{children}</UserContext.Provider>
+  return <UserContext.Provider value={me}>{children}</UserContext.Provider>
 }
 
 export default ContextWrapper

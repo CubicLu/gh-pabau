@@ -928,7 +928,7 @@ model CancellationPolicy {
 
 model MarketingSource {
   id          Int     @id @default(autoincrement())
-  source_name String
+  name String  @map("source_name")
   company_id  Int     @map("occupier")
   custom_id   Int
   public      Int
@@ -938,7 +938,7 @@ model MarketingSource {
 
   @@index([company_id], name: "company_id")
   @@index([public], name: "public")
-  @@index([source_name], name: "source_name")
+  @@index([name], name: "source_name")
   @@map("marketing_sources")
 }
 

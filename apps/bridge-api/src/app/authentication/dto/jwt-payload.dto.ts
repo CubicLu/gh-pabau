@@ -11,6 +11,5 @@ interface Hasura {
 export interface JwtPayloadDto {
   user: number;
   company: number;
-  username?: string;
   "https://hasura.io/jwt/claims": Hasura
 }
