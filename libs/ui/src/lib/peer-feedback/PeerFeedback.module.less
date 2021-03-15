@@ -7,30 +7,43 @@
   box-sizing: border-box;
   padding: 28px 24px;
   width: 1000px;
-  // font-family: 'Circular-Std';
   font-style: normal;
   font-weight: normal;
   color: @color-main;
-
+  @media screen and (max-width: 991px) {
+    width: 100%;
+    padding: 20px;
+  }
   .main-title {
     display: flex;
     justify-content: space-between;
-
-    .main-title-text {
-      font-size: 20px;
-      font-weight: 700;
-      line-height: 40px;
+    align-items: flex-start;
+    @media screen and (max-width: 767px) {
+      flex-direction: column;
     }
 
     .remind-button-container {
-      margin-top: -4px;
-
+      margin-top: 0;
+      @media screen and (max-width: 767px) {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 15px;
+        width: 100%;
+        .remindButton {
+          width: 100%;
+        }
+      }
       .remindButton {
         font-weight: 500;
         font-size: 14px;
         line-height: 20px;
         color: @color-grey;
       }
+    }
+    .main-title-text {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 40px;
     }
   }
 
@@ -87,6 +100,9 @@
       .filled-progress-container {
         flex: 1;
         margin-top: -4px;
+        @media screen and (max-width: 767px) {
+          margin-top: 20px;
+        }
       }
     }
 

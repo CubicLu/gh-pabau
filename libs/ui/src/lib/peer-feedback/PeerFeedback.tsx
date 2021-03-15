@@ -60,7 +60,7 @@ interface Employee {
   myCustomCategory: number
 }
 
-interface Report {
+export interface ReportProps {
   id: number
   info: User
   requestedOn: string
@@ -77,7 +77,9 @@ export type PeerFeedbackProps = {
   filled: string
   reviewData: ReviewData
   employees: Employee[]
-  reports: Report[]
+  reports: ReportProps[]
+  onReportDelete?: (reportId: number) => void
+  onRemindClick?: () => void
 }
 
 export const PeerFeedback: FC<PeerFeedbackProps> = ({
@@ -90,6 +92,8 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
   reviewData,
   employees,
   reports,
+  onReportDelete,
+  onRemindClick,
   ...props
 }) => {
   interface ReviewPercent {
@@ -180,8 +184,8 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
     ) : null
   }
 
-  const RemoveColumn = () => {
-    return <DeleteOutlined />
+  const RemoveColumn = ({ info }) => {
+    return <DeleteOutlined onClick={() => onReportDelete?.(info.id)} />
   }
 
   const employeeColumns = [
@@ -246,7 +250,7 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
       className: styles.columnRemove,
       width: 66,
       // eslint-disable-next-line react/display-name
-      render: () => <RemoveColumn />,
+      render: (info: ReportProps) => <RemoveColumn info={info} />,
     },
   ]
 
@@ -291,25 +295,28 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
   return (
     <div className={styles.peerFeedbackStyles}>
       <div className={styles.mainTitle}>
-        <div className={styles.mainTitleText}>{title}</div>
+        <div>
+          <div className={styles.mainTitleText}>{title}</div>
+          <div className={styles.avatarList}>
+            <AvatarList users={users} />
+          </div>
+          <div className={styles.subText}>{lastSendOut}</div>
+          <div className={styles.subContent}>
+            {moment(reviewDate, 'YYYY-MM-DDTHH:MN:SS.MSSZ').fromNow()}(
+            {dateFormat(reviewDate)})
+          </div>
+        </div>
         <div className={styles.remindButtonContainer}>
           <Button
             type="default"
             size="large"
             className={styles.remindButton}
             icon={<BellOutlined />}
+            onClick={onRemindClick}
           >
             {'Remind'}
           </Button>
         </div>
-      </div>
-      <div className={styles.avatarList}>
-        <AvatarList users={users} />
-      </div>
-      <div className={styles.subText}>{lastSendOut}</div>
-      <div className={styles.subContent}>
-        {moment(reviewDate, 'YYYY-MM-DDTHH:MN:SS.MSSZ').fromNow()}(
-        {dateFormat(reviewDate)})
       </div>
       <div className={styles.reviewContainer}>
         <div className={styles.reviewFilledText}>{reviewFilled}</div>
@@ -334,7 +341,7 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
           </div>
         </Row>
       </div>
-      <Collapse className={styles.tableContainer}>
+      <Collapse className={styles.tableContainer} defaultActiveKey={'1'}>
         <Panel
           header="Overview by employees"
           key="1"
@@ -346,6 +353,7 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
             rowClassName={styles.employeeRow}
             summary={(employees) => <SummaryRow employees={employees} />}
             pagination={false}
+            scroll={{ x: 'max-content' }}
           />
         </Panel>
       </Collapse>
@@ -360,6 +368,7 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
             columns={reportColumns}
             rowClassName={styles.reportRow}
             pagination={false}
+            scroll={{ x: 'max-content' }}
           />
         </Panel>
       </Collapse>

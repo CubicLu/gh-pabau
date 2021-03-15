@@ -1,6 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons'
-import { Button, ButtonTypes } from '@pabau/ui'
-import { Input } from 'antd'
+import { Button, ButtonTypes, HelpTooltip, InputWithHelper } from '@pabau/ui'
 import React, { FC, useEffect, useState } from 'react'
 import styles from './Setting.module.less'
 
@@ -22,21 +21,23 @@ const SettingDefaultField: FC<linkedFieldProps> = ({
     setDefaultField(defaultFieldValue)
   }, [defaultFieldValue])
 
-  const onChange = (e) => {
-    setDefaultField(e.target.value)
-    onChangeDefaults(e.target.value)
+  const onChange = (value) => {
+    setDefaultField(value)
+    onChangeDefaults(value)
   }
 
   return (
     <>
-      <p style={{ marginTop: '20px' }}>{linkedLabel}</p>
+      <p style={{ marginTop: '20px' }}>
+        {linkedLabel} <HelpTooltip helpText="Hello" />
+      </p>
 
       {(addDefaultField || defaultFieldValue !== '') && (
         <div className={styles.linkedField}>
-          <Input
-            className={styles.optionInput}
+          <InputWithHelper
+            help="Personalize Default Field"
             value={defaultField}
-            onChange={(e) => onChange(e)}
+            onChangeValue={onChange}
           />
         </div>
       )}

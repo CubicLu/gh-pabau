@@ -1,6 +1,7 @@
 import { Button, ButtonTypes } from '@pabau/ui'
 import React, { FC, useEffect, useState } from 'react'
 import SettingDefaultField from './SettingDefaultField'
+import SettingElementTypeOption from './SettingElementTypeOption'
 import SettingLinkedField from './SettingLinkedField'
 
 interface P {
@@ -9,6 +10,9 @@ interface P {
   onChangeDefaults: (value: string) => void
   linkedFieldValue: string
   onChangeLinkedField: (value: string) => void
+  inputTypeValue: string
+  onChangeInputType: (value: string) => void
+  componentName: string
 }
 
 const SettingElementAdvanced: FC<P> = ({
@@ -17,6 +21,9 @@ const SettingElementAdvanced: FC<P> = ({
   onChangeDefaults,
   linkedFieldValue,
   onChangeLinkedField,
+  inputTypeValue,
+  onChangeInputType,
+  componentName,
 }) => {
   const [advanced, setAdvanced] = useState(false)
 
@@ -28,6 +35,13 @@ const SettingElementAdvanced: FC<P> = ({
     <>
       {advanced && (
         <>
+          {componentName === 'basic_shortanswer' && (
+            <SettingElementTypeOption
+              title="Input type"
+              value={inputTypeValue}
+              onChangeInputType={onChangeInputType}
+            />
+          )}
           <SettingLinkedField
             linkedLabel="Linked field"
             linkedFieldValue={linkedFieldValue}

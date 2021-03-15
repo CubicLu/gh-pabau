@@ -29,7 +29,6 @@ import SettingElementMultiOptions from './SettingElementMultiOptions'
 import SettingElementOption from './SettingElementOption'
 import SettingElementQuestion from './SettingElementQuestion'
 import SettingElementTextBlock from './SettingElementTextBlock'
-import SettingElementTypeOption from './SettingElementTypeOption'
 import SettingMedicalForm from './SettingMedicalForm'
 import SettingMedicalFormBody from './SettingMedicalFormBody'
 import SettingMedicalFormBottom from './SettingMedicalFormBottom'
@@ -394,6 +393,7 @@ const SettingElement: FC<P> = ({
                 onChangeQuestion={onChangeQuestion}
               />
             )}
+
             {(filteredComponent[0].component === 'basic_signature' ||
               filteredComponent[0].component === 'basic_drawing' ||
               filteredComponent[0].component === 'basic_staticimage') && (
@@ -414,13 +414,6 @@ const SettingElement: FC<P> = ({
               <SettingElementFileUpload
                 title="Image"
                 desc="Click or drag file to this area to upload"
-              />
-            )}
-            {filteredComponent[0].component === 'basic_shortanswer' && (
-              <SettingElementTypeOption
-                title="Input type"
-                value={form.txtInputType}
-                onChangeInputType={onChangeInputType}
               />
             )}
             {filteredComponent[0].component === 'basic_textblock' && (
@@ -459,6 +452,9 @@ const SettingElement: FC<P> = ({
                 onChangeDefaults={onChangeDefaults}
                 linkedFieldValue={form.txtLinkedField}
                 onChangeLinkedField={onChangeLinkedField}
+                inputTypeValue={form.txtInputType}
+                onChangeInputType={onChangeInputType}
+                componentName={filteredComponent[0].component}
               />
             )}
           </SettingMedicalFormBody>

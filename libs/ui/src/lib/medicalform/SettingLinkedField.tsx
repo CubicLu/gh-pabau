@@ -1,5 +1,5 @@
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
-import { Button, ButtonTypes } from '@pabau/ui'
+import { Button, ButtonTypes, HelpTooltip } from '@pabau/ui'
 import { Input, Select } from 'antd'
 import React, { FC, useState } from 'react'
 import styles from './Setting.module.less'
@@ -248,7 +248,9 @@ const SettingLinkedField: FC<linkedFieldProps> = ({
 
   return (
     <>
-      <p style={{ marginTop: '20px' }}>{linkedLabel}</p>
+      <p style={{ marginTop: '20px' }}>
+        {linkedLabel} <HelpTooltip helpText="Hello" />
+      </p>
       {linkedFieldValue !== '' ? (
         <div className={styles.linkedField}>
           <Input
@@ -257,6 +259,7 @@ const SettingLinkedField: FC<linkedFieldProps> = ({
             readOnly={true}
             value={getLinkedFileName(linkedFieldValue)}
           />
+
           <Button
             className={styles.optionBtn}
             size="small"
