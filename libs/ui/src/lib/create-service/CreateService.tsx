@@ -338,6 +338,11 @@ export const CreateService: FC<CreateServiceProps> = ({
           OperationType.create,
         ]}
         activated={true}
+        onBackClick={() => {
+          setShowModal(false)
+          setShowChooseModal(false)
+          onClose()
+        }}
         cancelBtnText="Cancel"
         createBtnText="Create"
         enableCreateBtn={!!serviceName && !!servicePrice && !!category}
@@ -364,6 +369,7 @@ export const CreateService: FC<CreateServiceProps> = ({
         onCreate={() => {
           onCreate?.()
         }}
+        footer={true}
       >
         <div className={styles.createServiceGeneral}>
           <div className={styles.createServiceSection}>

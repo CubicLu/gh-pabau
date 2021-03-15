@@ -7,6 +7,7 @@ import {
   Button,
   Switch,
 } from '@pabau/ui'
+import classNames from 'classnames'
 import { PlusOutlined } from '@ant-design/icons'
 import styles from './categories_tab.module.less'
 
@@ -126,15 +127,20 @@ export const CateogriesTab: FC<CP> = ({
   ...rest
 }) => {
   const appointmentColors = [
-    '#54B2D3',
-    '#FAAD14',
-    '#FF5B64',
-    '#65CD98',
-    '#4DC6FA',
-    '#ED72AA',
-    '#7B61E2',
-    '#CFCFD7',
-    '#3D3D46',
+    '#7986cb',
+    '#64b5f6',
+    '#4dd0e1',
+    '#9575cd',
+    '#ba68c8',
+    '#d46bd4',
+    '#ff679b',
+    '#fff176',
+    '#a1887f',
+    '#4db6ac',
+    '#81c784',
+    '#90a4ae',
+    '#ffc38e',
+    '#d2a3a3',
   ]
 
   const [sourceData, setSourceData] = useState(null)
@@ -195,29 +201,30 @@ export const CateogriesTab: FC<CP> = ({
             onChange={(val) => inputHandler('name', val)}
           />
         </div>
-        <div className="colorInput">
-          <label>Appointment Color</label>
-          <div className="colors">
-            {appointmentColors?.length &&
-              appointmentColors.map((color, key) => (
-                <span
-                  onClick={() => inputHandler('color', color)}
-                  key={`appointment-color-${key}`}
+        <div className={styles.appointmentColor}>
+          <p className={styles.appointmentColorTitle}>Appointment colour</p>
+          <div className={styles.appointmentColorItems}>
+            {appointmentColors.map((color) => (
+              <div
+                key={color}
+                className={
+                  color === newCategoryData?.color
+                    ? classNames(
+                        styles.appointmentColorItem,
+                        styles.appointmentColorSelected
+                      )
+                    : styles.appointmentColorItem
+                }
+                onClick={() => inputHandler('color', color)}
+              >
+                <div
                   style={{
-                    backgroundColor: `${color}`,
-                    borderColor: `${color}`,
+                    backgroundColor: color,
                   }}
-                ></span>
-              ))}
+                />
+              </div>
+            ))}
           </div>
-          {newCategoryData?.color && (
-            <div
-              className="selected"
-              style={{ backgroundColor: `${newCategoryData?.color}` }}
-            >
-              Selected
-            </div>
-          )}
         </div>
         <div className="chooseImageInput">
           <label>Image</label>
@@ -230,6 +237,7 @@ export const CateogriesTab: FC<CP> = ({
           <div>
             <label>Active</label>
             <Switch
+              size="small"
               defaultChecked={newCategoryData?.is_active}
               onChange={(check) => inputHandler('is_active', check)}
             />

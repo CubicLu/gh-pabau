@@ -401,7 +401,8 @@ export const ServicesTab: FC<SP> = ({
   const [openDeleteTabModal, setDeleteTabModal] = useState(false)
   const [deletingTab, setDeletingTab] = useState(null)
 
-  const [newServiceGroupName, setNewServiceGroupName] = useState(null)
+  const [serviceGroupName, setServiceGroupName] = useState(null)
+  const [editServiceGroupName, setEditServiceGroupName] = useState(null)
 
   const GroupsItem = ({ onClick }) => {
     const [showOps, setShowOps] = useState(false)
@@ -470,8 +471,7 @@ export const ServicesTab: FC<SP> = ({
           return
         }}
         onDelete={() => {
-          setDeletingTab('All')
-          setDeleteTabModal(true)
+          return
         }}
       />
     </React.Fragment>,
@@ -480,7 +480,9 @@ export const ServicesTab: FC<SP> = ({
         showActions={true}
         title="Appointments"
         onEdit={() => {
-          return
+          setEditServiceGroupName('Appointments')
+          setServiceGroupName('Appointments')
+          setShowCreateGroup(true)
         }}
         onDelete={() => {
           setDeletingTab('Appointments')
@@ -504,7 +506,9 @@ export const ServicesTab: FC<SP> = ({
                   showActions={tab === 'All' ? false : true}
                   title={tab}
                   onEdit={() => {
-                    return
+                    setEditServiceGroupName(tab)
+                    setServiceGroupName(tab)
+                    setShowCreateGroup(true)
                   }}
                   onDelete={() => {
                     setDeletingTab(tab)
@@ -692,25 +696,63 @@ export const ServicesTab: FC<SP> = ({
   }
 
   const createTab = () => {
-    if (newServiceGroupName) {
+    if (serviceGroupName) {
       const totalTabs = [...leftTabs]
       totalTabs.push(
-        <React.Fragment key={newServiceGroupName}>
+        <React.Fragment key={serviceGroupName}>
           <TabMenuItem
             showActions={true}
-            title={newServiceGroupName}
+            title={serviceGroupName}
             onEdit={() => {
-              return
+              setEditServiceGroupName(serviceGroupName)
+              setServiceGroupName(serviceGroupName)
+              setShowCreateGroup(true)
             }}
             onDelete={() => {
-              setDeletingTab(newServiceGroupName)
+              setDeletingTab(serviceGroupName)
               setDeleteTabModal(true)
             }}
           />
         </React.Fragment>
       )
       setLeftTabs(totalTabs)
-      setNewServiceGroupName(null)
+      setServiceGroupName(null)
+      setShowCreateGroup(false)
+    }
+  }
+
+  const updateTab = () => {
+    if (
+      serviceGroupName &&
+      editServiceGroupName &&
+      serviceGroupName !== editServiceGroupName
+    ) {
+      const totalTabs = [...leftTabs]
+      console.log(totalTabs)
+      const element = totalTabs.find((el) => el.key === editServiceGroupName)
+      const editTab = (
+        <React.Fragment key={serviceGroupName}>
+          <TabMenuItem
+            showActions={true}
+            title={serviceGroupName}
+            onEdit={() => {
+              setEditServiceGroupName(serviceGroupName)
+              setServiceGroupName(serviceGroupName)
+              setShowCreateGroup(true)
+            }}
+            onDelete={() => {
+              setDeletingTab(serviceGroupName)
+              setDeleteTabModal(true)
+            }}
+          />
+        </React.Fragment>
+      )
+      totalTabs.splice(totalTabs.indexOf(element), 1, editTab)
+      setLeftTabs(totalTabs)
+      setServiceGroupName(null)
+      setShowCreateGroup(false)
+    } else {
+      setServiceGroupName(null)
       setShowCreateGroup(false)
     }
   }
@@ -744,6 +786,7 @@ export const ServicesTab: FC<SP> = ({
           {renderTabContent()}
         </TabMenu>
       </div>
+
       <CreateService
         visible={showCreateServiceModal}
         onClose={() => onCloseCreateServiceModal?.()}
@@ -754,60 +797,74 @@ export const ServicesTab: FC<SP> = ({
         locations={locations}
       />
 
-      <CreateServiceGroup
-        visible={showCreateGroup}
-        modalWidth={500}
-        wrapClassName={styles.createServiceGroup}
-        title="Create service group"
-        onCancel={() => setShowCreateGroup(false)}
-      >
-        <div className="nameInput">
-          <label>Name</label>
-          <Input
-            placeHolderText="Enter Name"
-            onChange={(val) => setNewServiceGroupName(val)}
-          />
-        </div>
-        <div style={{ marginTop: '30px' }}>
-          <SearchTags
-            items={rooms}
-            description="Service categories"
-            itemType="room"
-          />
-        </div>
-        <div className="chooseImageInput">
-          <label>Image</label>
-          <Button
-            type="default"
-            size="small"
-            className={styles.chooseImgBtn}
-            onClick={() => setShowImageSelector(true)}
-          >
-            <PlusOutlined />
-            Choose from Library
-          </Button>
-        </div>
-        <div className="footerBtnInput">
-          <div>
-            <label>Active</label>
-            <Switch defaultChecked={true} />
+      {showCreateGroup && (
+        <CreateServiceGroup
+          visible={showCreateGroup}
+          modalWidth={500}
+          wrapClassName={styles.createServiceGroup}
+          title="Create service group"
+          onCancel={() => setShowCreateGroup(false)}
+        >
+          <div className="nameInput">
+            <label>Name</label>
+            <Input
+              text={serviceGroupName}
+              placeHolderText="Enter Name"
+              onChange={(val) => setServiceGroupName(val)}
+            />
           </div>
-          <div>
+          <div style={{ marginTop: '30px' }}>
+            <SearchTags
+              items={rooms}
+              description="Service categories"
+              itemType="room"
+            />
+          </div>
+          <div className="chooseImageInput">
+            <label>Image</label>
             <Button
               type="default"
-              size="large"
-              onClick={() => setShowCreateGroup(false)}
+              size="small"
+              className={styles.chooseImgBtn}
+              onClick={() => setShowImageSelector(true)}
             >
-              Cancel
+              <PlusOutlined />
+              Choose from Library
             </Button>
           </div>
-          <div>
-            <Button type="primary" size="large" onClick={() => createTab()}>
-              Create
-            </Button>
+          <div className="footerBtnInput">
+            <div>
+              <label>Active</label>
+              <Switch defaultChecked={true} />
+            </div>
+            <div>
+              <Button
+                type="default"
+                size="large"
+                onClick={() => {
+                  setServiceGroupName(null)
+                  setEditServiceGroupName(null)
+                  setShowCreateGroup(false)
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+            <div>
+              <Button
+                type="primary"
+                size="large"
+                onClick={() => {
+                  editServiceGroupName ? updateTab() : createTab()
+                }}
+              >
+                {editServiceGroupName ? 'Update' : 'Create'}
+              </Button>
+            </div>
           </div>
-        </div>
-      </CreateServiceGroup>
+        </CreateServiceGroup>
+      )}
+
       <ImageSelectorModal
         visible={showImageSelector}
         initialSearch={''}

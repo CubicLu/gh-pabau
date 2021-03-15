@@ -18,6 +18,8 @@ import styles from './index.module.less'
 const { Option } = Select
 
 export const Index: FC = () => {
+  const [showSearchInput, setShowSearchInput] = useState(false)
+
   const TopTabMenuItems = ['Services', 'Categories', 'Library']
   const AddBtnLabels = ['New Service', 'New Category']
 
@@ -118,8 +120,25 @@ export const Index: FC = () => {
       </div>
       <div className="rightDiv">
         <span className="hidden-lg">
-          <SearchOutlined />
+          {showSearchInput ? (
+            <Input
+              value={searchTerm}
+              autoFocus
+              placeholder="Search"
+              suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
+              onChange={(e) => {
+                setSearchTerm(e.target.value)
+              }}
+            />
+          ) : (
+            <SearchOutlined
+              onClick={() =>
+                setShowSearchInput((showSearchInput) => !showSearchInput)
+              }
+            />
+          )}
         </span>
+
         <Input
           value={searchTerm}
           className={className(styles.searchDrugsListing, 'hidden-sm')}
@@ -132,9 +151,6 @@ export const Index: FC = () => {
         />
         {showCreateBtn && (
           <div>
-            <span className="hidden-lg">
-              <ExportOutlined />
-            </span>
             <Button type="default" size="large" className="hidden-sm">
               <ExportOutlined /> Export
             </Button>

@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState, ReactNode } from 'react'
 import { useMedia } from 'react-use'
+import className from 'classnames'
 import { Button, TabMenu } from '@pabau/ui'
 import { Modal, Switch, Popover } from 'antd'
 import { LeftOutlined, MoreOutlined } from '@ant-design/icons'
@@ -36,6 +37,7 @@ export interface FullScreenReportModalProps {
   activated?: boolean
   vatRegistered?: boolean
   subMenu?: Array<ReactNode>
+  footer?: boolean
 }
 
 export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
@@ -60,6 +62,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
   vatRegistered,
   subMenu = [],
   children,
+  ...props
 }) => {
   const isMobile = useMedia('(max-width: 767px)', false)
   const [vat, setVat] = useState(true)
@@ -153,7 +156,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
       closable={false}
       footer={null}
       width={'100%'}
-      wrapClassName={styles.fullScreenModal}
+      wrapClassName={className(styles.fullScreenModal, 'fullScreenModal')}
     >
       <>
         <div className={styles.fullScreenModalHeader}>
@@ -268,6 +271,63 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
             children
           )}
         </div>
+        {isMobile && props.footer && (
+          <div className={styles.fullScreenModalFooter}>
+            {operations.map((operation) => (
+              <React.Fragment key={operation}>
+                {operation === OperationType.vat && (
+                  <div>
+                    VAT registered{' '}
+                    <Switch
+                      size="small"
+                      checked={vat}
+                      onChange={(checked) => handleChangeVat(checked)}
+                    />
+                  </div>
+                )}
+                {operation === OperationType.active && (
+                  <div>
+                    <label>{active ? 'Active' : 'Inactive'}</label>
+                    <Switch
+                      size="small"
+                      checked={active}
+                      onChange={(checked) => handleChangeActive(checked)}
+                    />
+                  </div>
+                )}
+                {operation === OperationType.reset && (
+                  <Button type="default" onClick={() => onReset?.()}>
+                    {resetBtnText || 'Reset'}
+                  </Button>
+                )}
+                {operation === OperationType.delete && (
+                  <Button type="default" onClick={() => onDelete?.()}>
+                    {deleteBtnText || 'Delete'}
+                  </Button>
+                )}
+                {operation === OperationType.save && (
+                  <Button type="primary" onClick={() => onSave?.()}>
+                    {saveBtnText || 'Save'}
+                  </Button>
+                )}
+                {operation === OperationType.cancel && (
+                  <Button type="default" onClick={() => onCancel?.()}>
+                    {cancelBtnText || 'Cancel'}
+                  </Button>
+                )}
+                {operation === OperationType.create && (
+                  <Button
+                    type="primary"
+                    disabled={!enableCreateBtn}
+                    onClick={() => onCreate?.()}
+                  >
+                    {createBtnText || 'Create'}
+                  </Button>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        )}
       </>
     </Modal>
   ) : (

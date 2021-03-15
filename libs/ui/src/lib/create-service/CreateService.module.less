@@ -1,3 +1,15 @@
+:global {
+  .fullScreenModal {
+    .ant-modal-body {
+      @media screen and (max-width: 767px) {
+        > div:first-child > div:last-child {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
 .createServiceGeneral,
 .createServicePricing,
 .createServiceOnlineBooking,
@@ -5,7 +17,7 @@
 .resoucesContainer,
 .locationsContainer {
   width: 100%;
-  padding: 40px 0;
+  padding: 40px 15px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -13,11 +25,18 @@
 
 .createServiceSection {
   background-color: white;
-  max-width: 596px;
+  max-width: 360px;
+  min-height: 266px;
   width: 100%;
   padding: 27px 32px 32px;
   border-radius: 4px;
   margin-bottom: 24px;
+  margin-right: 5px;
+  margin-left: 5px;
+
+  @media screen and (max-width: 1024px) {
+    max-width: 360px;
+  }
 }
 
 .createServiceSectionTitle {
@@ -43,6 +62,7 @@
 
 .createServiceSectionItem {
   margin-bottom: 20px;
+
   :global {
     .ant-select {
       width: 100%;
@@ -57,7 +77,7 @@
         font-size: 14px;
         font-weight: 400;
         line-height: 22px;
-        color: var(--light-grey-color); 
+        color: var(--light-grey-color);
       }
     }
   }
@@ -155,7 +175,21 @@
   grid-column-gap: 8px;
   margin-bottom: 12px;
 
+  @media screen and (max-width: 480px) {
+    display: flex;
+    flex-wrap: wrap;
+    > div {
+      padding-right: 5px;
+
+      &:first-child,
+      &:last-child {
+        padding-right: 0px;
+      }
+    }
+  }
+
   > div {
+    padding: 5px;
     :global {
       .ant-select {
         width: 100%;
@@ -176,7 +210,7 @@
         width: 100%;
       }
     }
-  } 
+  }
 }
 
 .pricingOptions {
@@ -192,6 +226,7 @@
     justify-content: center;
     align-items: center;
     border: 1px solid var(--border-color-base);
+
     &:nth-child(1) {
       border-radius: 4px 0 0 4px;
     }
@@ -224,6 +259,10 @@
       margin-left: 8px;
     }
   }
+  @media screen and (max-width: 425px) {
+    width: 46px;
+    height: 14px;
+  }
 }
 
 .pricingOptionTitle {
@@ -232,6 +271,9 @@
   line-height: 22px;
   font-weight: 400;
   color: var(--grey-text-color);
+  @media screen and (max-width: 425px) {
+    font-size: 12px;
+  }
 }
 
 .pricingChecked {
@@ -240,6 +282,10 @@
   right: 12px;
   top: 12px;
   color: var(--primary-color);
+  @media screen and (max-width: 425px) {
+    top: 5px;
+    right: 5px;
+  }
 }
 
 .pricingOptionSelected {
@@ -368,6 +414,9 @@
     &:nth-child(3) {
       border-radius: 0 4px 4px 0;
     }
+    @media screen and (max-width: 375px) {
+      padding: 0px 10px;
+    }
   }
 }
 
@@ -406,7 +455,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  >span {
+  > span {
     font-family: var(--font-family);
     font-size: 14px;
     line-height: 18px;
@@ -427,15 +476,28 @@
 .createServiceClientPathwayItemsContainer {
   max-width: 1116px;
   width: 100%;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-column-gap: 24px;
+  // display: grid;
+  // grid-template-columns: repeat(3, 1fr);
+  // grid-column-gap: 24px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+
+  @media screen and (max-width: 768px) {
+    justify-content: center;
+  }
 }
 
 .createServiceClientPathwayItems {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-column-gap: 1rem;
+
+  @media screen and (max-width: 375px) {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 
 .createServiceClientPathwayItem {
@@ -534,7 +596,8 @@
   }
 }
 
-.locationPricingHeader, .contractPricingHeader {
+.locationPricingHeader,
+.contractPricingHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -559,7 +622,7 @@
       grid-template-columns: 60px 1fr;
       grid-column-gap: 12px;
       align-content: center;
-      >div {
+      > div {
         &:nth-child(1) {
           width: 100%;
           height: 40px;
@@ -613,7 +676,7 @@
       grid-template-columns: 40px 1fr;
       grid-column-gap: 12px;
       align-content: center;
-      >div {
+      > div {
         &:nth-child(1) {
           width: 100%;
           height: 40px;
@@ -647,5 +710,5 @@
       display: flex;
       align-items: center;
     }
-  } 
+  }
 }
