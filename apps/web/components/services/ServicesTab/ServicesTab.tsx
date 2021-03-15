@@ -22,6 +22,7 @@ import {
   VideoCameraOutlined,
   PlusCircleFilled,
   DeleteOutlined,
+  PictureOutlined,
 } from '@ant-design/icons'
 import className from 'classnames'
 import { Donate, File, Folder, Injection, Key, Team, Globe } from '../assets'
@@ -390,6 +391,7 @@ export const ServicesTab: FC<SP> = ({
   const services = ['Seasonal Offers', 'The Beauty & Skin Clinic – Prepaid']
   const togglesViews = ['Standard View', 'Detailed View']
 
+  const [selectedImage, setSelectedImage] = useState('')
   const [showCreateGroup, setShowCreateGroup] = useState(false)
   const [showImageSelector, setShowImageSelector] = useState(false)
   const [columns, setColumns] = useState(columnsView1)
@@ -718,6 +720,7 @@ export const ServicesTab: FC<SP> = ({
       setLeftTabs(totalTabs)
       setServiceGroupName(null)
       setShowCreateGroup(false)
+      setSelectedImage('')
     }
   }
 
@@ -751,9 +754,11 @@ export const ServicesTab: FC<SP> = ({
       setLeftTabs(totalTabs)
       setServiceGroupName(null)
       setShowCreateGroup(false)
+      setSelectedImage('')
     } else {
       setServiceGroupName(null)
       setShowCreateGroup(false)
+      setSelectedImage('')
     }
   }
 
@@ -803,7 +808,10 @@ export const ServicesTab: FC<SP> = ({
           modalWidth={500}
           wrapClassName={styles.createServiceGroup}
           title="Create service group"
-          onCancel={() => setShowCreateGroup(false)}
+          onCancel={() => {
+            setShowCreateGroup(false)
+            setSelectedImage('')
+          }}
         >
           <div className="nameInput">
             <label>Name</label>
@@ -821,16 +829,36 @@ export const ServicesTab: FC<SP> = ({
             />
           </div>
           <div className="chooseImageInput">
-            <label>Image</label>
+            <p className={styles.createServiceSectionItemTitle}>Image</p>
+            <div
+              className={styles.createServiceImageContainer}
+              style={{ backgroundImage: `url(${selectedImage})` }}
+            >
+              {!selectedImage && (
+                <PictureOutlined
+                  style={{
+                    color: 'var(--light-grey-color)',
+                    fontSize: '32px',
+                  }}
+                />
+              )}
+            </div>
             <Button
-              type="default"
-              size="small"
-              className={styles.chooseImgBtn}
+              icon={<PlusOutlined />}
               onClick={() => setShowImageSelector(true)}
             >
-              <PlusOutlined />
-              Choose from Library
+              Choose from library
             </Button>
+            <ImageSelectorModal
+              visible={showImageSelector}
+              onOk={(image) => {
+                setSelectedImage(image.source)
+                setShowImageSelector(false)
+              }}
+              onCancel={() => {
+                setShowImageSelector(false)
+              }}
+            />
           </div>
           <div className="footerBtnInput">
             <div>
@@ -845,6 +873,7 @@ export const ServicesTab: FC<SP> = ({
                   setServiceGroupName(null)
                   setEditServiceGroupName(null)
                   setShowCreateGroup(false)
+                  setSelectedImage('')
                 }}
               >
                 Cancel
@@ -864,17 +893,6 @@ export const ServicesTab: FC<SP> = ({
           </div>
         </CreateServiceGroup>
       )}
-
-      <ImageSelectorModal
-        visible={showImageSelector}
-        initialSearch={''}
-        onOk={(image) => {
-          setShowImageSelector(false)
-        }}
-        onCancel={() => {
-          setShowImageSelector(false)
-        }}
-      />
 
       <Modal
         modalWidth={682}
