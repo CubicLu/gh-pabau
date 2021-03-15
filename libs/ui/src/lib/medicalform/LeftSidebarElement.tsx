@@ -27,9 +27,10 @@ import LeftSidebarMedicalFormTitle from './LeftSidebarMedicalFormTitle'
 interface P {
   type: string
   component: string
+  handlingClickLeft: (componentName: string) => void
 }
 
-const LeftSidebarElement: FC<P> = ({ type, component }) => {
+const LeftSidebarElement: FC<P> = ({ type, component, handlingClickLeft }) => {
   const componentInfos = [
     {
       component: 'basic_heading',
@@ -263,7 +264,10 @@ const LeftSidebarElement: FC<P> = ({ type, component }) => {
   )
 
   return (
-    <div className={styles.mainBody}>
+    <div
+      className={styles.mainBody}
+      onClick={() => handlingClickLeft?.(component)}
+    >
       {filteredComponent && (
         <LeftSidebarMedicalFormTitle
           iconUrl={filteredComponent[0].iconUrl}

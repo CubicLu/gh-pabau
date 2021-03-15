@@ -6,6 +6,7 @@ import {
 import { Collapse } from 'antd'
 import React, { FC, useEffect, useState } from 'react'
 import styles from './MedicalFormBuilder.module.less'
+import MedicalFormComponentMedicalHistory from './MedicalFormComponentMedicalHistory'
 import MedicalFormComponentPanel from './MedicalFormComponentPanel'
 import MedicalFormGeneralPanel from './MedicalFormGeneralPanel'
 import MedicalFormUploadButtons from './MedicalFormUploadButtons'
@@ -20,6 +21,7 @@ interface P {
   formName: string
   changeLayout: (noRight: boolean) => void
   runPreviewPdf: () => void
+  handlingClickLeft: (componentName: string) => void
 }
 
 const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
@@ -31,6 +33,7 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
     formName,
     changeLayout,
     runPreviewPdf,
+    handlingClickLeft,
   } = props
   const [selectedFormTypes, setSelectedFormTypes] = useState<SelectedForms>(
     defaultSelectedFormInfos
@@ -106,9 +109,13 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
         </Panel>
         {isEpaper === false && (
           <Panel header="COMPONENTS" key="2" className={componentClass}>
+            {selectedFormTypes.medicalHistory === true && (
+              <MedicalFormComponentMedicalHistory />
+            )}
             <MedicalFormComponentPanel
               selectedFormTypes={selectedFormTypes}
               medicalForms={medicalForms}
+              handlingClickLeft={handlingClickLeft}
             />
           </Panel>
         )}
