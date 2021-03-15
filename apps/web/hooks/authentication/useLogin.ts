@@ -22,7 +22,7 @@ export default function useLogin(registered = false): [LoginProps, boolean] {
       })
       return {
         user: token.user,
-        company: token.company
+        company: token.company,
       } as LoginProps
     } catch (error) {
       console.log(error)

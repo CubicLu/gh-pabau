@@ -1,18 +1,44 @@
-import { allow, shield } from 'graphql-shield'
-import { rules } from './rules'
-import * as types from './types'
-
-export const permissions = shield({
-  Query: {
-    "*": types.authenticated && rules.injectCompanyId,
-    me: types.authenticated,
+import { allow, rule, shield } from 'graphql-shield'
+import { Context } from '../context'
+// TODO
+// const companyColumns = ['occupier', 'company_id']
+const rules = {
+  isAuthenticated: rule('isAuthenticated')(
+    (root, args, ctx: Context): boolean => {
+      if (!ctx.req.authenticatedUser) throw new Error('Please login!')
+      return true
+    }
+  ),
+  sameCompany: rule('sameCompany')(
+    (root, args, ctx: Context, info): boolean => {
+      if (root && root.company_id !== ctx.req.authenticatedUser.company)
+        return false
+      if (info.returnType.toString().startsWith('['))
+        args.where = {
+          ...args.where,
+          company_id: { equals: ctx.req.authenticatedUser.company },
+        }
+      return true
+    }
+  ),
+  connectAuthenticatedCompany: rule()(async (root, args, ctx:Context): Promise<boolean> => {
+    args.data.company.connect.id = ctx.req.authenticatedUser.company
+    return true;
+  }),
+  injectCompanyId: rule()(async (root, args, ctx:Context): Promise<boolean> => {
+    args.where.company_id = ctx.req.authenticatedUser.company
+    return true;
+  }),
+}
+export const permissions = shield(
+  {
+    Mutation: {
+      login: allow
+    },
   },
-  Mutation: {
-    updateOneMarketingSource: types.authenticated &&  types.isMarketingSourceOwnedByCompany,
-    upsertOneMarketingSource: types.authenticated &&  types.isMarketingSourceOwnedByCompany,
-    deleteOneMarketingSource: types.authenticated && rules.injectCompanyId && types.isMarketingSourceOwnedByCompany,
-    createOneMarketingSource: types.authenticated && rules.connectAuthenticatedCompany,
-    "*": allow,
-    login: allow
+  {
+    fallbackRule: rules.isAuthenticated && rules.sameCompany,
+    fallbackError:
+      'You are not authorised to view this resource. Please login as the correct user.',
   }
-})
+)

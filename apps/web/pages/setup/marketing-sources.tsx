@@ -10,12 +10,12 @@ const LIST_QUERY = gql`
   query marketing_sources(
     $isActive: Int = 1
     $searchTerm: String = ""
-    $offset: Int = 0
-    $limit: Int = 10
+    $offset: Int
+    $limit: Int
   ) {
     marketingSources(
-      first: $offset
-      last: $limit
+      take: $limit
+      skip: $offset
       orderBy: { name: desc }
       where: {
         public: { equals: $isActive }

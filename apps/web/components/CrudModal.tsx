@@ -17,7 +17,6 @@ interface P {
 
 const CrudModal: FC<P> = ({
   schema,
-  addQuery,
   deleteQuery,
   listQuery,
   onClose,
@@ -25,7 +24,7 @@ const CrudModal: FC<P> = ({
 }) => {
   const [openDeleteModal, setDeleteModal] = useState(false)
   const [deleteMutation] = useMutation(deleteQuery, {
-    onCompleted(data) {
+    onCompleted() {
       Notification(
         NotificationType.success,
         `Success! ${schema.messages.delete.success}`
@@ -40,15 +39,14 @@ const CrudModal: FC<P> = ({
   })
   const formik = useFormikContext<unknown>()
 
-  //let formRef: { submitForm: () => void } | null = null
-  // const formRef = useEnsuredForwardedRef<{ submitForm: () => void }>(null)
-
   const schemaForm = { ...schema, fields: { ...schema.fields } }
   const specialFormElement =
     schemaForm.fields['is_active'] ||
     schemaForm.fields['public'] ||
     schemaForm.fields['isActive']
   delete schemaForm.fields['is_active']
+  delete schemaForm.fields['public']
+  delete schemaForm.fields['company_id']
   const [specialBoolean, setSpecialBoolean] = useState<boolean>(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -164,47 +162,12 @@ const CrudModal: FC<P> = ({
         onSpecialBooleanClick={() => {
           setSpecialBoolean((e) => !e)
           formik.setFieldValue('is_active', !specialBoolean)
-          // if (editingRow) {
-          //   editingRow.is_active = !specialBoolean
-          // }
         }}
         isValidate={
           editingRow?.isCreate ? formik.dirty && formik.isValid : formik.isValid
         }
       >
-        <Form
-          // ref={formRef} typeof editingRow === 'object' ? editingRow : undefined}
-          formik={formik}
-          schema={schemaForm}
-          // initialValues={typeof editingRow === 'object' ? editingRow : { name: 'erm' }}
-          // onSubmit={async (form: Record<string, unknown>) => {
-          //   console.log('ONsUBMIT', form)
-          //   return
-          //   if (specialFormElement) form['is_active'] = specialBoolean
-          //   debugger
-          //   await addMutation({
-          //     variables: form,
-          //     optimisticResponse: {},
-          //     update: (proxy) => {
-          //       if (listQuery) {
-          //         const existing = proxy.readQuery({
-          //           query: listQuery,
-          //         })
-          //         if (existing) {
-          //           const key = Object.keys(existing)[0]
-          //           proxy.writeQuery({
-          //             query: listQuery,
-          //             data: {
-          //               [key]: [...existing[key], form],
-          //             },
-          //           })
-          //         }
-          //       }
-          //     },
-          //   })
-          //   onClose?.()
-          // }}
-        />
+        <Form formik={formik} schema={schemaForm} />
       </Modal>
     </>
   )

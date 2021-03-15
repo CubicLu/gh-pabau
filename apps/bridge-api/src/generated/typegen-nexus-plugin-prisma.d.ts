@@ -43943,64 +43943,54 @@ export interface NexusGenFieldTypeNames {
 export interface NexusGenArgTypes {
   Company: {
     AcceptEmailToken: { // args
-      after?: NexusGenInputs['AcceptEmailTokenWhereUniqueInput'] | null; // AcceptEmailTokenWhereUniqueInput
-      before?: NexusGenInputs['AcceptEmailTokenWhereUniqueInput'] | null; // AcceptEmailTokenWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AcceptEmailTokenWhereUniqueInput'] | null; // AcceptEmailTokenWhereUniqueInput
+      skip?: number | null; // Int
+      take?: number | null; // Int
     }
     AccountBalance: { // args
-      after?: NexusGenInputs['AccountBalanceWhereUniqueInput'] | null; // AccountBalanceWhereUniqueInput
-      before?: NexusGenInputs['AccountBalanceWhereUniqueInput'] | null; // AccountBalanceWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AccountBalanceWhereUniqueInput'] | null; // AccountBalanceWhereUniqueInput
+      skip?: number | null; // Int
+      take?: number | null; // Int
     }
     Candidate: { // args
-      after?: NexusGenInputs['CandidateWhereUniqueInput'] | null; // CandidateWhereUniqueInput
-      before?: NexusGenInputs['CandidateWhereUniqueInput'] | null; // CandidateWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CandidateWhereUniqueInput'] | null; // CandidateWhereUniqueInput
+      skip?: number | null; // Int
+      take?: number | null; // Int
     }
     CmCampaign: { // args
-      after?: NexusGenInputs['CmCampaignWhereUniqueInput'] | null; // CmCampaignWhereUniqueInput
-      before?: NexusGenInputs['CmCampaignWhereUniqueInput'] | null; // CmCampaignWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CmCampaignWhereUniqueInput'] | null; // CmCampaignWhereUniqueInput
+      skip?: number | null; // Int
+      take?: number | null; // Int
     }
     CmCase: { // args
-      after?: NexusGenInputs['CmCaseWhereUniqueInput'] | null; // CmCaseWhereUniqueInput
-      before?: NexusGenInputs['CmCaseWhereUniqueInput'] | null; // CmCaseWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CmCaseWhereUniqueInput'] | null; // CmCaseWhereUniqueInput
+      skip?: number | null; // Int
+      take?: number | null; // Int
     }
     CmCaseReply: { // args
-      after?: NexusGenInputs['CmCaseReplyWhereUniqueInput'] | null; // CmCaseReplyWhereUniqueInput
-      before?: NexusGenInputs['CmCaseReplyWhereUniqueInput'] | null; // CmCaseReplyWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CmCaseReplyWhereUniqueInput'] | null; // CmCaseReplyWhereUniqueInput
+      skip?: number | null; // Int
+      take?: number | null; // Int
     }
     MarketingSource: { // args
-      after?: NexusGenInputs['MarketingSourceWhereUniqueInput'] | null; // MarketingSourceWhereUniqueInput
-      before?: NexusGenInputs['MarketingSourceWhereUniqueInput'] | null; // MarketingSourceWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['MarketingSourceWhereUniqueInput'] | null; // MarketingSourceWhereUniqueInput
+      skip?: number | null; // Int
+      take?: number | null; // Int
     }
     ThirdPartyAccess: { // args
-      after?: NexusGenInputs['ThirdPartyAccessWhereUniqueInput'] | null; // ThirdPartyAccessWhereUniqueInput
-      before?: NexusGenInputs['ThirdPartyAccessWhereUniqueInput'] | null; // ThirdPartyAccessWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['ThirdPartyAccessWhereUniqueInput'] | null; // ThirdPartyAccessWhereUniqueInput
+      skip?: number | null; // Int
+      take?: number | null; // Int
     }
     TwoFactorHistory: { // args
-      after?: NexusGenInputs['TwoFactorHistoryWhereUniqueInput'] | null; // TwoFactorHistoryWhereUniqueInput
-      before?: NexusGenInputs['TwoFactorHistoryWhereUniqueInput'] | null; // TwoFactorHistoryWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['TwoFactorHistoryWhereUniqueInput'] | null; // TwoFactorHistoryWhereUniqueInput
+      skip?: number | null; // Int
+      take?: number | null; // Int
     }
     User: { // args
-      after?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
-      before?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
+      skip?: number | null; // Int
+      take?: number | null; // Int
     }
   }
   Mutation: {
@@ -46110,11 +46100,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AcLogActionWhereUniqueInput']; // AcLogActionWhereUniqueInput!
     }
     acLogActions: { // args
-      after?: NexusGenInputs['AcLogActionWhereUniqueInput'] | null; // AcLogActionWhereUniqueInput
-      before?: NexusGenInputs['AcLogActionWhereUniqueInput'] | null; // AcLogActionWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AcLogActionWhereUniqueInput'] | null; // AcLogActionWhereUniqueInput
       orderBy?: NexusGenInputs['AcLogActionOrderByInput'][] | null; // [AcLogActionOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AcLogActionWhereInput'] | null; // AcLogActionWhereInput
     }
     acLogActionsCount: { // args
@@ -46124,22 +46113,20 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AcLogUrlWhereUniqueInput']; // AcLogUrlWhereUniqueInput!
     }
     acLogUrls: { // args
-      after?: NexusGenInputs['AcLogUrlWhereUniqueInput'] | null; // AcLogUrlWhereUniqueInput
-      before?: NexusGenInputs['AcLogUrlWhereUniqueInput'] | null; // AcLogUrlWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AcLogUrlWhereUniqueInput'] | null; // AcLogUrlWhereUniqueInput
       orderBy?: NexusGenInputs['AcLogUrlOrderByInput'][] | null; // [AcLogUrlOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AcLogUrlWhereInput'] | null; // AcLogUrlWhereInput
     }
     acLogUrlsCount: { // args
       where?: NexusGenInputs['AcLogUrlWhereInput'] | null; // AcLogUrlWhereInput
     }
     acLogs: { // args
-      after?: NexusGenInputs['AcLogWhereUniqueInput'] | null; // AcLogWhereUniqueInput
-      before?: NexusGenInputs['AcLogWhereUniqueInput'] | null; // AcLogWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AcLogWhereUniqueInput'] | null; // AcLogWhereUniqueInput
       orderBy?: NexusGenInputs['AcLogOrderByInput'][] | null; // [AcLogOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AcLogWhereInput'] | null; // AcLogWhereInput
     }
     acLogsCount: { // args
@@ -46149,11 +46136,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AcceptEmailTokenWhereUniqueInput']; // AcceptEmailTokenWhereUniqueInput!
     }
     acceptEmailTokens: { // args
-      after?: NexusGenInputs['AcceptEmailTokenWhereUniqueInput'] | null; // AcceptEmailTokenWhereUniqueInput
-      before?: NexusGenInputs['AcceptEmailTokenWhereUniqueInput'] | null; // AcceptEmailTokenWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AcceptEmailTokenWhereUniqueInput'] | null; // AcceptEmailTokenWhereUniqueInput
       orderBy?: NexusGenInputs['AcceptEmailTokenOrderByInput'][] | null; // [AcceptEmailTokenOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AcceptEmailTokenWhereInput'] | null; // AcceptEmailTokenWhereInput
     }
     acceptEmailTokensCount: { // args
@@ -46166,22 +46152,20 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AccountBalanceLogWhereUniqueInput']; // AccountBalanceLogWhereUniqueInput!
     }
     accountBalanceLogs: { // args
-      after?: NexusGenInputs['AccountBalanceLogWhereUniqueInput'] | null; // AccountBalanceLogWhereUniqueInput
-      before?: NexusGenInputs['AccountBalanceLogWhereUniqueInput'] | null; // AccountBalanceLogWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AccountBalanceLogWhereUniqueInput'] | null; // AccountBalanceLogWhereUniqueInput
       orderBy?: NexusGenInputs['AccountBalanceLogOrderByInput'][] | null; // [AccountBalanceLogOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AccountBalanceLogWhereInput'] | null; // AccountBalanceLogWhereInput
     }
     accountBalanceLogsCount: { // args
       where?: NexusGenInputs['AccountBalanceLogWhereInput'] | null; // AccountBalanceLogWhereInput
     }
     accountBalances: { // args
-      after?: NexusGenInputs['AccountBalanceWhereUniqueInput'] | null; // AccountBalanceWhereUniqueInput
-      before?: NexusGenInputs['AccountBalanceWhereUniqueInput'] | null; // AccountBalanceWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AccountBalanceWhereUniqueInput'] | null; // AccountBalanceWhereUniqueInput
       orderBy?: NexusGenInputs['AccountBalanceOrderByInput'][] | null; // [AccountBalanceOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AccountBalanceWhereInput'] | null; // AccountBalanceWhereInput
     }
     accountBalancesCount: { // args
@@ -46191,11 +46175,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AccountManagerWhereUniqueInput']; // AccountManagerWhereUniqueInput!
     }
     accountManagers: { // args
-      after?: NexusGenInputs['AccountManagerWhereUniqueInput'] | null; // AccountManagerWhereUniqueInput
-      before?: NexusGenInputs['AccountManagerWhereUniqueInput'] | null; // AccountManagerWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AccountManagerWhereUniqueInput'] | null; // AccountManagerWhereUniqueInput
       orderBy?: NexusGenInputs['AccountManagerOrderByInput'][] | null; // [AccountManagerOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AccountManagerWhereInput'] | null; // AccountManagerWhereInput
     }
     accountManagersCount: { // args
@@ -46205,11 +46188,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AdvertCampaignWhereUniqueInput']; // AdvertCampaignWhereUniqueInput!
     }
     advertCampaigns: { // args
-      after?: NexusGenInputs['AdvertCampaignWhereUniqueInput'] | null; // AdvertCampaignWhereUniqueInput
-      before?: NexusGenInputs['AdvertCampaignWhereUniqueInput'] | null; // AdvertCampaignWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AdvertCampaignWhereUniqueInput'] | null; // AdvertCampaignWhereUniqueInput
       orderBy?: NexusGenInputs['AdvertCampaignOrderByInput'][] | null; // [AdvertCampaignOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AdvertCampaignWhereInput'] | null; // AdvertCampaignWhereInput
     }
     advertCampaignsCount: { // args
@@ -46219,11 +46201,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['ApiDebugWhereUniqueInput']; // ApiDebugWhereUniqueInput!
     }
     apiDebugs: { // args
-      after?: NexusGenInputs['ApiDebugWhereUniqueInput'] | null; // ApiDebugWhereUniqueInput
-      before?: NexusGenInputs['ApiDebugWhereUniqueInput'] | null; // ApiDebugWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['ApiDebugWhereUniqueInput'] | null; // ApiDebugWhereUniqueInput
       orderBy?: NexusGenInputs['ApiDebugOrderByInput'][] | null; // [ApiDebugOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['ApiDebugWhereInput'] | null; // ApiDebugWhereInput
     }
     apiDebugsCount: { // args
@@ -46233,11 +46214,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['ApiKeyWhereUniqueInput']; // ApiKeyWhereUniqueInput!
     }
     apiKeys: { // args
-      after?: NexusGenInputs['ApiKeyWhereUniqueInput'] | null; // ApiKeyWhereUniqueInput
-      before?: NexusGenInputs['ApiKeyWhereUniqueInput'] | null; // ApiKeyWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['ApiKeyWhereUniqueInput'] | null; // ApiKeyWhereUniqueInput
       orderBy?: NexusGenInputs['ApiKeyOrderByInput'][] | null; // [ApiKeyOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['ApiKeyWhereInput'] | null; // ApiKeyWhereInput
     }
     apiKeysCount: { // args
@@ -46247,11 +46227,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AppBeforeAfterWhereUniqueInput']; // AppBeforeAfterWhereUniqueInput!
     }
     appBeforeAfters: { // args
-      after?: NexusGenInputs['AppBeforeAfterWhereUniqueInput'] | null; // AppBeforeAfterWhereUniqueInput
-      before?: NexusGenInputs['AppBeforeAfterWhereUniqueInput'] | null; // AppBeforeAfterWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AppBeforeAfterWhereUniqueInput'] | null; // AppBeforeAfterWhereUniqueInput
       orderBy?: NexusGenInputs['AppBeforeAfterOrderByInput'][] | null; // [AppBeforeAfterOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AppBeforeAfterWhereInput'] | null; // AppBeforeAfterWhereInput
     }
     appBeforeAftersCount: { // args
@@ -46261,11 +46240,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AppPermissionWhereUniqueInput']; // AppPermissionWhereUniqueInput!
     }
     appPermissions: { // args
-      after?: NexusGenInputs['AppPermissionWhereUniqueInput'] | null; // AppPermissionWhereUniqueInput
-      before?: NexusGenInputs['AppPermissionWhereUniqueInput'] | null; // AppPermissionWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AppPermissionWhereUniqueInput'] | null; // AppPermissionWhereUniqueInput
       orderBy?: NexusGenInputs['AppPermissionOrderByInput'][] | null; // [AppPermissionOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AppPermissionWhereInput'] | null; // AppPermissionWhereInput
     }
     appPermissionsCount: { // args
@@ -46275,22 +46253,20 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AppSubscriptionWhereUniqueInput']; // AppSubscriptionWhereUniqueInput!
     }
     appSubscriptions: { // args
-      after?: NexusGenInputs['AppSubscriptionWhereUniqueInput'] | null; // AppSubscriptionWhereUniqueInput
-      before?: NexusGenInputs['AppSubscriptionWhereUniqueInput'] | null; // AppSubscriptionWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AppSubscriptionWhereUniqueInput'] | null; // AppSubscriptionWhereUniqueInput
       orderBy?: NexusGenInputs['AppSubscriptionOrderByInput'][] | null; // [AppSubscriptionOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AppSubscriptionWhereInput'] | null; // AppSubscriptionWhereInput
     }
     appSubscriptionsCompanyPrice: { // args
       where: NexusGenInputs['AppSubscriptionsCompanyPriceWhereUniqueInput']; // AppSubscriptionsCompanyPriceWhereUniqueInput!
     }
     appSubscriptionsCompanyPrices: { // args
-      after?: NexusGenInputs['AppSubscriptionsCompanyPriceWhereUniqueInput'] | null; // AppSubscriptionsCompanyPriceWhereUniqueInput
-      before?: NexusGenInputs['AppSubscriptionsCompanyPriceWhereUniqueInput'] | null; // AppSubscriptionsCompanyPriceWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AppSubscriptionsCompanyPriceWhereUniqueInput'] | null; // AppSubscriptionsCompanyPriceWhereUniqueInput
       orderBy?: NexusGenInputs['AppSubscriptionsCompanyPriceOrderByInput'][] | null; // [AppSubscriptionsCompanyPriceOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AppSubscriptionsCompanyPriceWhereInput'] | null; // AppSubscriptionsCompanyPriceWhereInput
     }
     appSubscriptionsCompanyPricesCount: { // args
@@ -46303,11 +46279,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AtAnswerWhereUniqueInput']; // AtAnswerWhereUniqueInput!
     }
     atAnswers: { // args
-      after?: NexusGenInputs['AtAnswerWhereUniqueInput'] | null; // AtAnswerWhereUniqueInput
-      before?: NexusGenInputs['AtAnswerWhereUniqueInput'] | null; // AtAnswerWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AtAnswerWhereUniqueInput'] | null; // AtAnswerWhereUniqueInput
       orderBy?: NexusGenInputs['AtAnswerOrderByInput'][] | null; // [AtAnswerOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AtAnswerWhereInput'] | null; // AtAnswerWhereInput
     }
     atAnswersCount: { // args
@@ -46317,11 +46292,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AtConcernWhereUniqueInput']; // AtConcernWhereUniqueInput!
     }
     atConcerns: { // args
-      after?: NexusGenInputs['AtConcernWhereUniqueInput'] | null; // AtConcernWhereUniqueInput
-      before?: NexusGenInputs['AtConcernWhereUniqueInput'] | null; // AtConcernWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AtConcernWhereUniqueInput'] | null; // AtConcernWhereUniqueInput
       orderBy?: NexusGenInputs['AtConcernOrderByInput'][] | null; // [AtConcernOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AtConcernWhereInput'] | null; // AtConcernWhereInput
     }
     atConcernsCount: { // args
@@ -46331,11 +46305,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AtQuestionWhereUniqueInput']; // AtQuestionWhereUniqueInput!
     }
     atQuestions: { // args
-      after?: NexusGenInputs['AtQuestionWhereUniqueInput'] | null; // AtQuestionWhereUniqueInput
-      before?: NexusGenInputs['AtQuestionWhereUniqueInput'] | null; // AtQuestionWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AtQuestionWhereUniqueInput'] | null; // AtQuestionWhereUniqueInput
       orderBy?: NexusGenInputs['AtQuestionOrderByInput'][] | null; // [AtQuestionOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AtQuestionWhereInput'] | null; // AtQuestionWhereInput
     }
     atQuestionsCount: { // args
@@ -46345,11 +46318,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AtQuestionsRelationWhereUniqueInput']; // AtQuestionsRelationWhereUniqueInput!
     }
     atQuestionsRelations: { // args
-      after?: NexusGenInputs['AtQuestionsRelationWhereUniqueInput'] | null; // AtQuestionsRelationWhereUniqueInput
-      before?: NexusGenInputs['AtQuestionsRelationWhereUniqueInput'] | null; // AtQuestionsRelationWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AtQuestionsRelationWhereUniqueInput'] | null; // AtQuestionsRelationWhereUniqueInput
       orderBy?: NexusGenInputs['AtQuestionsRelationOrderByInput'][] | null; // [AtQuestionsRelationOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AtQuestionsRelationWhereInput'] | null; // AtQuestionsRelationWhereInput
     }
     atQuestionsRelationsCount: { // args
@@ -46359,11 +46331,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AtQuizTakeWhereUniqueInput']; // AtQuizTakeWhereUniqueInput!
     }
     atQuizTakes: { // args
-      after?: NexusGenInputs['AtQuizTakeWhereUniqueInput'] | null; // AtQuizTakeWhereUniqueInput
-      before?: NexusGenInputs['AtQuizTakeWhereUniqueInput'] | null; // AtQuizTakeWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AtQuizTakeWhereUniqueInput'] | null; // AtQuizTakeWhereUniqueInput
       orderBy?: NexusGenInputs['AtQuizTakeOrderByInput'][] | null; // [AtQuizTakeOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AtQuizTakeWhereInput'] | null; // AtQuizTakeWhereInput
     }
     atQuizTakesCount: { // args
@@ -46373,11 +46344,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AtSettingWhereUniqueInput']; // AtSettingWhereUniqueInput!
     }
     atSettings: { // args
-      after?: NexusGenInputs['AtSettingWhereUniqueInput'] | null; // AtSettingWhereUniqueInput
-      before?: NexusGenInputs['AtSettingWhereUniqueInput'] | null; // AtSettingWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AtSettingWhereUniqueInput'] | null; // AtSettingWhereUniqueInput
       orderBy?: NexusGenInputs['AtSettingOrderByInput'][] | null; // [AtSettingOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AtSettingWhereInput'] | null; // AtSettingWhereInput
     }
     atSettingsCount: { // args
@@ -46387,11 +46357,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AtTreatmentWhereUniqueInput']; // AtTreatmentWhereUniqueInput!
     }
     atTreatments: { // args
-      after?: NexusGenInputs['AtTreatmentWhereUniqueInput'] | null; // AtTreatmentWhereUniqueInput
-      before?: NexusGenInputs['AtTreatmentWhereUniqueInput'] | null; // AtTreatmentWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AtTreatmentWhereUniqueInput'] | null; // AtTreatmentWhereUniqueInput
       orderBy?: NexusGenInputs['AtTreatmentOrderByInput'][] | null; // [AtTreatmentOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AtTreatmentWhereInput'] | null; // AtTreatmentWhereInput
     }
     atTreatmentsCount: { // args
@@ -46401,11 +46370,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AttachmentHelperLiteWhereUniqueInput']; // AttachmentHelperLiteWhereUniqueInput!
     }
     attachmentHelperLites: { // args
-      after?: NexusGenInputs['AttachmentHelperLiteWhereUniqueInput'] | null; // AttachmentHelperLiteWhereUniqueInput
-      before?: NexusGenInputs['AttachmentHelperLiteWhereUniqueInput'] | null; // AttachmentHelperLiteWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AttachmentHelperLiteWhereUniqueInput'] | null; // AttachmentHelperLiteWhereUniqueInput
       orderBy?: NexusGenInputs['AttachmentHelperLiteOrderByInput'][] | null; // [AttachmentHelperLiteOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AttachmentHelperLiteWhereInput'] | null; // AttachmentHelperLiteWhereInput
     }
     attachmentHelperLitesCount: { // args
@@ -46415,11 +46383,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AutomationActionWhereUniqueInput']; // AutomationActionWhereUniqueInput!
     }
     automationActions: { // args
-      after?: NexusGenInputs['AutomationActionWhereUniqueInput'] | null; // AutomationActionWhereUniqueInput
-      before?: NexusGenInputs['AutomationActionWhereUniqueInput'] | null; // AutomationActionWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AutomationActionWhereUniqueInput'] | null; // AutomationActionWhereUniqueInput
       orderBy?: NexusGenInputs['AutomationActionOrderByInput'][] | null; // [AutomationActionOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AutomationActionWhereInput'] | null; // AutomationActionWhereInput
     }
     automationActionsCount: { // args
@@ -46429,11 +46396,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AutomationDelayWhereUniqueInput']; // AutomationDelayWhereUniqueInput!
     }
     automationDelays: { // args
-      after?: NexusGenInputs['AutomationDelayWhereUniqueInput'] | null; // AutomationDelayWhereUniqueInput
-      before?: NexusGenInputs['AutomationDelayWhereUniqueInput'] | null; // AutomationDelayWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AutomationDelayWhereUniqueInput'] | null; // AutomationDelayWhereUniqueInput
       orderBy?: NexusGenInputs['AutomationDelayOrderByInput'][] | null; // [AutomationDelayOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AutomationDelayWhereInput'] | null; // AutomationDelayWhereInput
     }
     automationDelaysCount: { // args
@@ -46443,11 +46409,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AutomationFolderWhereUniqueInput']; // AutomationFolderWhereUniqueInput!
     }
     automationFolders: { // args
-      after?: NexusGenInputs['AutomationFolderWhereUniqueInput'] | null; // AutomationFolderWhereUniqueInput
-      before?: NexusGenInputs['AutomationFolderWhereUniqueInput'] | null; // AutomationFolderWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AutomationFolderWhereUniqueInput'] | null; // AutomationFolderWhereUniqueInput
       orderBy?: NexusGenInputs['AutomationFolderOrderByInput'][] | null; // [AutomationFolderOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AutomationFolderWhereInput'] | null; // AutomationFolderWhereInput
     }
     automationFoldersCount: { // args
@@ -46457,11 +46422,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AutomationLogWhereUniqueInput']; // AutomationLogWhereUniqueInput!
     }
     automationLogs: { // args
-      after?: NexusGenInputs['AutomationLogWhereUniqueInput'] | null; // AutomationLogWhereUniqueInput
-      before?: NexusGenInputs['AutomationLogWhereUniqueInput'] | null; // AutomationLogWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AutomationLogWhereUniqueInput'] | null; // AutomationLogWhereUniqueInput
       orderBy?: NexusGenInputs['AutomationLogOrderByInput'][] | null; // [AutomationLogOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AutomationLogWhereInput'] | null; // AutomationLogWhereInput
     }
     automationLogsCount: { // args
@@ -46471,11 +46435,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AutomationRuleWhereUniqueInput']; // AutomationRuleWhereUniqueInput!
     }
     automationRules: { // args
-      after?: NexusGenInputs['AutomationRuleWhereUniqueInput'] | null; // AutomationRuleWhereUniqueInput
-      before?: NexusGenInputs['AutomationRuleWhereUniqueInput'] | null; // AutomationRuleWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AutomationRuleWhereUniqueInput'] | null; // AutomationRuleWhereUniqueInput
       orderBy?: NexusGenInputs['AutomationRuleOrderByInput'][] | null; // [AutomationRuleOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AutomationRuleWhereInput'] | null; // AutomationRuleWhereInput
     }
     automationRulesCount: { // args
@@ -46485,11 +46448,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AutomationTriggerWhereUniqueInput']; // AutomationTriggerWhereUniqueInput!
     }
     automationTriggers: { // args
-      after?: NexusGenInputs['AutomationTriggerWhereUniqueInput'] | null; // AutomationTriggerWhereUniqueInput
-      before?: NexusGenInputs['AutomationTriggerWhereUniqueInput'] | null; // AutomationTriggerWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AutomationTriggerWhereUniqueInput'] | null; // AutomationTriggerWhereUniqueInput
       orderBy?: NexusGenInputs['AutomationTriggerOrderByInput'][] | null; // [AutomationTriggerOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AutomationTriggerWhereInput'] | null; // AutomationTriggerWhereInput
     }
     automationTriggersCount: { // args
@@ -46499,11 +46461,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['AvilableDatesLogWhereUniqueInput']; // AvilableDatesLogWhereUniqueInput!
     }
     avilableDatesLogs: { // args
-      after?: NexusGenInputs['AvilableDatesLogWhereUniqueInput'] | null; // AvilableDatesLogWhereUniqueInput
-      before?: NexusGenInputs['AvilableDatesLogWhereUniqueInput'] | null; // AvilableDatesLogWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['AvilableDatesLogWhereUniqueInput'] | null; // AvilableDatesLogWhereUniqueInput
       orderBy?: NexusGenInputs['AvilableDatesLogOrderByInput'][] | null; // [AvilableDatesLogOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['AvilableDatesLogWhereInput'] | null; // AvilableDatesLogWhereInput
     }
     avilableDatesLogsCount: { // args
@@ -46513,11 +46474,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['BacsAccountWhereUniqueInput']; // BacsAccountWhereUniqueInput!
     }
     bacsAccounts: { // args
-      after?: NexusGenInputs['BacsAccountWhereUniqueInput'] | null; // BacsAccountWhereUniqueInput
-      before?: NexusGenInputs['BacsAccountWhereUniqueInput'] | null; // BacsAccountWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['BacsAccountWhereUniqueInput'] | null; // BacsAccountWhereUniqueInput
       orderBy?: NexusGenInputs['BacsAccountOrderByInput'][] | null; // [BacsAccountOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['BacsAccountWhereInput'] | null; // BacsAccountWhereInput
     }
     bacsAccountsCount: { // args
@@ -46530,22 +46490,20 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['BatchItemWhereUniqueInput']; // BatchItemWhereUniqueInput!
     }
     batchItems: { // args
-      after?: NexusGenInputs['BatchItemWhereUniqueInput'] | null; // BatchItemWhereUniqueInput
-      before?: NexusGenInputs['BatchItemWhereUniqueInput'] | null; // BatchItemWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['BatchItemWhereUniqueInput'] | null; // BatchItemWhereUniqueInput
       orderBy?: NexusGenInputs['BatchItemOrderByInput'][] | null; // [BatchItemOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['BatchItemWhereInput'] | null; // BatchItemWhereInput
     }
     batchItemsCount: { // args
       where?: NexusGenInputs['BatchItemWhereInput'] | null; // BatchItemWhereInput
     }
     batches: { // args
-      after?: NexusGenInputs['BatchWhereUniqueInput'] | null; // BatchWhereUniqueInput
-      before?: NexusGenInputs['BatchWhereUniqueInput'] | null; // BatchWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['BatchWhereUniqueInput'] | null; // BatchWhereUniqueInput
       orderBy?: NexusGenInputs['BatchOrderByInput'][] | null; // [BatchOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['BatchWhereInput'] | null; // BatchWhereInput
     }
     batchesCount: { // args
@@ -46555,11 +46513,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['BlockReasonWhereUniqueInput']; // BlockReasonWhereUniqueInput!
     }
     blockReasons: { // args
-      after?: NexusGenInputs['BlockReasonWhereUniqueInput'] | null; // BlockReasonWhereUniqueInput
-      before?: NexusGenInputs['BlockReasonWhereUniqueInput'] | null; // BlockReasonWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['BlockReasonWhereUniqueInput'] | null; // BlockReasonWhereUniqueInput
       orderBy?: NexusGenInputs['BlockReasonOrderByInput'][] | null; // [BlockReasonOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['BlockReasonWhereInput'] | null; // BlockReasonWhereInput
     }
     blockReasonsCount: { // args
@@ -46569,11 +46526,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['BnfDrugWhereUniqueInput']; // BnfDrugWhereUniqueInput!
     }
     bnfDrugs: { // args
-      after?: NexusGenInputs['BnfDrugWhereUniqueInput'] | null; // BnfDrugWhereUniqueInput
-      before?: NexusGenInputs['BnfDrugWhereUniqueInput'] | null; // BnfDrugWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['BnfDrugWhereUniqueInput'] | null; // BnfDrugWhereUniqueInput
       orderBy?: NexusGenInputs['BnfDrugOrderByInput'][] | null; // [BnfDrugOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['BnfDrugWhereInput'] | null; // BnfDrugWhereInput
     }
     bnfDrugsCount: { // args
@@ -46583,11 +46539,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['BodyChartTemplateWhereUniqueInput']; // BodyChartTemplateWhereUniqueInput!
     }
     bodyChartTemplates: { // args
-      after?: NexusGenInputs['BodyChartTemplateWhereUniqueInput'] | null; // BodyChartTemplateWhereUniqueInput
-      before?: NexusGenInputs['BodyChartTemplateWhereUniqueInput'] | null; // BodyChartTemplateWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['BodyChartTemplateWhereUniqueInput'] | null; // BodyChartTemplateWhereUniqueInput
       orderBy?: NexusGenInputs['BodyChartTemplateOrderByInput'][] | null; // [BodyChartTemplateOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['BodyChartTemplateWhereInput'] | null; // BodyChartTemplateWhereInput
     }
     bodyChartTemplatesCount: { // args
@@ -46597,11 +46552,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['BookingMasterWhereUniqueInput']; // BookingMasterWhereUniqueInput!
     }
     bookingMasters: { // args
-      after?: NexusGenInputs['BookingMasterWhereUniqueInput'] | null; // BookingMasterWhereUniqueInput
-      before?: NexusGenInputs['BookingMasterWhereUniqueInput'] | null; // BookingMasterWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['BookingMasterWhereUniqueInput'] | null; // BookingMasterWhereUniqueInput
       orderBy?: NexusGenInputs['BookingMasterOrderByInput'][] | null; // [BookingMasterOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['BookingMasterWhereInput'] | null; // BookingMasterWhereInput
     }
     bookingMastersCount: { // args
@@ -46611,11 +46565,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['BookingSettingWhereUniqueInput']; // BookingSettingWhereUniqueInput!
     }
     bookingSettings: { // args
-      after?: NexusGenInputs['BookingSettingWhereUniqueInput'] | null; // BookingSettingWhereUniqueInput
-      before?: NexusGenInputs['BookingSettingWhereUniqueInput'] | null; // BookingSettingWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['BookingSettingWhereUniqueInput'] | null; // BookingSettingWhereUniqueInput
       orderBy?: NexusGenInputs['BookingSettingOrderByInput'][] | null; // [BookingSettingOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['BookingSettingWhereInput'] | null; // BookingSettingWhereInput
     }
     bookingSettingsCount: { // args
@@ -46628,22 +46581,20 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['BookingStatusChangeWhereUniqueInput']; // BookingStatusChangeWhereUniqueInput!
     }
     bookingStatusChanges: { // args
-      after?: NexusGenInputs['BookingStatusChangeWhereUniqueInput'] | null; // BookingStatusChangeWhereUniqueInput
-      before?: NexusGenInputs['BookingStatusChangeWhereUniqueInput'] | null; // BookingStatusChangeWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['BookingStatusChangeWhereUniqueInput'] | null; // BookingStatusChangeWhereUniqueInput
       orderBy?: NexusGenInputs['BookingStatusChangeOrderByInput'][] | null; // [BookingStatusChangeOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['BookingStatusChangeWhereInput'] | null; // BookingStatusChangeWhereInput
     }
     bookingStatusChangesCount: { // args
       where?: NexusGenInputs['BookingStatusChangeWhereInput'] | null; // BookingStatusChangeWhereInput
     }
     bookingStatuses: { // args
-      after?: NexusGenInputs['BookingStatusWhereUniqueInput'] | null; // BookingStatusWhereUniqueInput
-      before?: NexusGenInputs['BookingStatusWhereUniqueInput'] | null; // BookingStatusWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['BookingStatusWhereUniqueInput'] | null; // BookingStatusWhereUniqueInput
       orderBy?: NexusGenInputs['BookingStatusOrderByInput'][] | null; // [BookingStatusOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['BookingStatusWhereInput'] | null; // BookingStatusWhereInput
     }
     bookingStatusesCount: { // args
@@ -46653,11 +46604,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['BookitProGeneralWhereUniqueInput']; // BookitProGeneralWhereUniqueInput!
     }
     bookitProGenerals: { // args
-      after?: NexusGenInputs['BookitProGeneralWhereUniqueInput'] | null; // BookitProGeneralWhereUniqueInput
-      before?: NexusGenInputs['BookitProGeneralWhereUniqueInput'] | null; // BookitProGeneralWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['BookitProGeneralWhereUniqueInput'] | null; // BookitProGeneralWhereUniqueInput
       orderBy?: NexusGenInputs['BookitProGeneralOrderByInput'][] | null; // [BookitProGeneralOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['BookitProGeneralWhereInput'] | null; // BookitProGeneralWhereInput
     }
     bookitProGeneralsCount: { // args
@@ -46667,11 +46617,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['BookitProSliderWhereUniqueInput']; // BookitProSliderWhereUniqueInput!
     }
     bookitProSliders: { // args
-      after?: NexusGenInputs['BookitProSliderWhereUniqueInput'] | null; // BookitProSliderWhereUniqueInput
-      before?: NexusGenInputs['BookitProSliderWhereUniqueInput'] | null; // BookitProSliderWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['BookitProSliderWhereUniqueInput'] | null; // BookitProSliderWhereUniqueInput
       orderBy?: NexusGenInputs['BookitProSliderOrderByInput'][] | null; // [BookitProSliderOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['BookitProSliderWhereInput'] | null; // BookitProSliderWhereInput
     }
     bookitProSlidersCount: { // args
@@ -46681,11 +46630,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['BookmarkedPageWhereUniqueInput']; // BookmarkedPageWhereUniqueInput!
     }
     bookmarkedPages: { // args
-      after?: NexusGenInputs['BookmarkedPageWhereUniqueInput'] | null; // BookmarkedPageWhereUniqueInput
-      before?: NexusGenInputs['BookmarkedPageWhereUniqueInput'] | null; // BookmarkedPageWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['BookmarkedPageWhereUniqueInput'] | null; // BookmarkedPageWhereUniqueInput
       orderBy?: NexusGenInputs['BookmarkedPageOrderByInput'][] | null; // [BookmarkedPageOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['BookmarkedPageWhereInput'] | null; // BookmarkedPageWhereInput
     }
     bookmarkedPagesCount: { // args
@@ -46695,11 +46643,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['BugLogWhereUniqueInput']; // BugLogWhereUniqueInput!
     }
     bugLogs: { // args
-      after?: NexusGenInputs['BugLogWhereUniqueInput'] | null; // BugLogWhereUniqueInput
-      before?: NexusGenInputs['BugLogWhereUniqueInput'] | null; // BugLogWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['BugLogWhereUniqueInput'] | null; // BugLogWhereUniqueInput
       orderBy?: NexusGenInputs['BugLogOrderByInput'][] | null; // [BugLogOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['BugLogWhereInput'] | null; // BugLogWhereInput
     }
     bugLogsCount: { // args
@@ -46709,11 +46656,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CalRangeRequestWhereUniqueInput']; // CalRangeRequestWhereUniqueInput!
     }
     calRangeRequests: { // args
-      after?: NexusGenInputs['CalRangeRequestWhereUniqueInput'] | null; // CalRangeRequestWhereUniqueInput
-      before?: NexusGenInputs['CalRangeRequestWhereUniqueInput'] | null; // CalRangeRequestWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CalRangeRequestWhereUniqueInput'] | null; // CalRangeRequestWhereUniqueInput
       orderBy?: NexusGenInputs['CalRangeRequestOrderByInput'][] | null; // [CalRangeRequestOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CalRangeRequestWhereInput'] | null; // CalRangeRequestWhereInput
     }
     calRangeRequestsCount: { // args
@@ -46723,11 +46669,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CalendarViewWhereUniqueInput']; // CalendarViewWhereUniqueInput!
     }
     calendarViews: { // args
-      after?: NexusGenInputs['CalendarViewWhereUniqueInput'] | null; // CalendarViewWhereUniqueInput
-      before?: NexusGenInputs['CalendarViewWhereUniqueInput'] | null; // CalendarViewWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CalendarViewWhereUniqueInput'] | null; // CalendarViewWhereUniqueInput
       orderBy?: NexusGenInputs['CalendarViewOrderByInput'][] | null; // [CalendarViewOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CalendarViewWhereInput'] | null; // CalendarViewWhereInput
     }
     calendarViewsCount: { // args
@@ -46737,11 +46682,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CampaignAttachmentWhereUniqueInput']; // CampaignAttachmentWhereUniqueInput!
     }
     campaignAttachments: { // args
-      after?: NexusGenInputs['CampaignAttachmentWhereUniqueInput'] | null; // CampaignAttachmentWhereUniqueInput
-      before?: NexusGenInputs['CampaignAttachmentWhereUniqueInput'] | null; // CampaignAttachmentWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CampaignAttachmentWhereUniqueInput'] | null; // CampaignAttachmentWhereUniqueInput
       orderBy?: NexusGenInputs['CampaignAttachmentOrderByInput'][] | null; // [CampaignAttachmentOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CampaignAttachmentWhereInput'] | null; // CampaignAttachmentWhereInput
     }
     campaignAttachmentsCount: { // args
@@ -46751,22 +46695,20 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CancelReasonWhereUniqueInput']; // CancelReasonWhereUniqueInput!
     }
     cancelReasons: { // args
-      after?: NexusGenInputs['CancelReasonWhereUniqueInput'] | null; // CancelReasonWhereUniqueInput
-      before?: NexusGenInputs['CancelReasonWhereUniqueInput'] | null; // CancelReasonWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CancelReasonWhereUniqueInput'] | null; // CancelReasonWhereUniqueInput
       orderBy?: NexusGenInputs['CancelReasonOrderByInput'][] | null; // [CancelReasonOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CancelReasonWhereInput'] | null; // CancelReasonWhereInput
     }
     cancelReasonsCount: { // args
       where?: NexusGenInputs['CancelReasonWhereInput'] | null; // CancelReasonWhereInput
     }
     cancellationPolicies: { // args
-      after?: NexusGenInputs['CancellationPolicyWhereUniqueInput'] | null; // CancellationPolicyWhereUniqueInput
-      before?: NexusGenInputs['CancellationPolicyWhereUniqueInput'] | null; // CancellationPolicyWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CancellationPolicyWhereUniqueInput'] | null; // CancellationPolicyWhereUniqueInput
       orderBy?: NexusGenInputs['CancellationPolicyOrderByInput'][] | null; // [CancellationPolicyOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CancellationPolicyWhereInput'] | null; // CancellationPolicyWhereInput
     }
     cancellationPoliciesCount: { // args
@@ -46779,11 +46721,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CandidateWhereUniqueInput']; // CandidateWhereUniqueInput!
     }
     candidates: { // args
-      after?: NexusGenInputs['CandidateWhereUniqueInput'] | null; // CandidateWhereUniqueInput
-      before?: NexusGenInputs['CandidateWhereUniqueInput'] | null; // CandidateWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CandidateWhereUniqueInput'] | null; // CandidateWhereUniqueInput
       orderBy?: NexusGenInputs['CandidateOrderByInput'][] | null; // [CandidateOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CandidateWhereInput'] | null; // CandidateWhereInput
     }
     candidatesCount: { // args
@@ -46793,11 +46734,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CardTypeWhereUniqueInput']; // CardTypeWhereUniqueInput!
     }
     cardTypes: { // args
-      after?: NexusGenInputs['CardTypeWhereUniqueInput'] | null; // CardTypeWhereUniqueInput
-      before?: NexusGenInputs['CardTypeWhereUniqueInput'] | null; // CardTypeWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CardTypeWhereUniqueInput'] | null; // CardTypeWhereUniqueInput
       orderBy?: NexusGenInputs['CardTypeOrderByInput'][] | null; // [CardTypeOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CardTypeWhereInput'] | null; // CardTypeWhereInput
     }
     cardTypesCount: { // args
@@ -46810,22 +46750,20 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CashupReportCustomWhereUniqueInput']; // CashupReportCustomWhereUniqueInput!
     }
     cashupReportCustoms: { // args
-      after?: NexusGenInputs['CashupReportCustomWhereUniqueInput'] | null; // CashupReportCustomWhereUniqueInput
-      before?: NexusGenInputs['CashupReportCustomWhereUniqueInput'] | null; // CashupReportCustomWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CashupReportCustomWhereUniqueInput'] | null; // CashupReportCustomWhereUniqueInput
       orderBy?: NexusGenInputs['CashupReportCustomOrderByInput'][] | null; // [CashupReportCustomOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CashupReportCustomWhereInput'] | null; // CashupReportCustomWhereInput
     }
     cashupReportCustomsCount: { // args
       where?: NexusGenInputs['CashupReportCustomWhereInput'] | null; // CashupReportCustomWhereInput
     }
     cashupReports: { // args
-      after?: NexusGenInputs['CashupReportWhereUniqueInput'] | null; // CashupReportWhereUniqueInput
-      before?: NexusGenInputs['CashupReportWhereUniqueInput'] | null; // CashupReportWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CashupReportWhereUniqueInput'] | null; // CashupReportWhereUniqueInput
       orderBy?: NexusGenInputs['CashupReportOrderByInput'][] | null; // [CashupReportOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CashupReportWhereInput'] | null; // CashupReportWhereInput
     }
     cashupReportsCount: { // args
@@ -46835,22 +46773,20 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CheckinApptWhereUniqueInput']; // CheckinApptWhereUniqueInput!
     }
     checkinAppts: { // args
-      after?: NexusGenInputs['CheckinApptWhereUniqueInput'] | null; // CheckinApptWhereUniqueInput
-      before?: NexusGenInputs['CheckinApptWhereUniqueInput'] | null; // CheckinApptWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CheckinApptWhereUniqueInput'] | null; // CheckinApptWhereUniqueInput
       orderBy?: NexusGenInputs['CheckinApptOrderByInput'][] | null; // [CheckinApptOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CheckinApptWhereInput'] | null; // CheckinApptWhereInput
     }
     checkinApptsCount: { // args
       where?: NexusGenInputs['CheckinApptWhereInput'] | null; // CheckinApptWhereInput
     }
     checkinAverages: { // args
-      after?: NexusGenInputs['CheckinAveragesWhereUniqueInput'] | null; // CheckinAveragesWhereUniqueInput
-      before?: NexusGenInputs['CheckinAveragesWhereUniqueInput'] | null; // CheckinAveragesWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CheckinAveragesWhereUniqueInput'] | null; // CheckinAveragesWhereUniqueInput
       orderBy?: NexusGenInputs['CheckinAveragesOrderByInput'][] | null; // [CheckinAveragesOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CheckinAveragesWhereInput'] | null; // CheckinAveragesWhereInput
     }
     checkinAveragesCount: { // args
@@ -46860,11 +46796,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CheckinAveragesIdleWhereUniqueInput']; // CheckinAveragesIdleWhereUniqueInput!
     }
     checkinAveragesIdles: { // args
-      after?: NexusGenInputs['CheckinAveragesIdleWhereUniqueInput'] | null; // CheckinAveragesIdleWhereUniqueInput
-      before?: NexusGenInputs['CheckinAveragesIdleWhereUniqueInput'] | null; // CheckinAveragesIdleWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CheckinAveragesIdleWhereUniqueInput'] | null; // CheckinAveragesIdleWhereUniqueInput
       orderBy?: NexusGenInputs['CheckinAveragesIdleOrderByInput'][] | null; // [CheckinAveragesIdleOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CheckinAveragesIdleWhereInput'] | null; // CheckinAveragesIdleWhereInput
     }
     checkinAveragesIdlesCount: { // args
@@ -46874,11 +46809,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CheckinProductWhereUniqueInput']; // CheckinProductWhereUniqueInput!
     }
     checkinProducts: { // args
-      after?: NexusGenInputs['CheckinProductWhereUniqueInput'] | null; // CheckinProductWhereUniqueInput
-      before?: NexusGenInputs['CheckinProductWhereUniqueInput'] | null; // CheckinProductWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CheckinProductWhereUniqueInput'] | null; // CheckinProductWhereUniqueInput
       orderBy?: NexusGenInputs['CheckinProductOrderByInput'][] | null; // [CheckinProductOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CheckinProductWhereInput'] | null; // CheckinProductWhereInput
     }
     checkinProductsCount: { // args
@@ -46888,22 +46822,20 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CheckinQueueWhereUniqueInput']; // CheckinQueueWhereUniqueInput!
     }
     checkinQueues: { // args
-      after?: NexusGenInputs['CheckinQueueWhereUniqueInput'] | null; // CheckinQueueWhereUniqueInput
-      before?: NexusGenInputs['CheckinQueueWhereUniqueInput'] | null; // CheckinQueueWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CheckinQueueWhereUniqueInput'] | null; // CheckinQueueWhereUniqueInput
       orderBy?: NexusGenInputs['CheckinQueueOrderByInput'][] | null; // [CheckinQueueOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CheckinQueueWhereInput'] | null; // CheckinQueueWhereInput
     }
     checkinQueuesCount: { // args
       where?: NexusGenInputs['CheckinQueueWhereInput'] | null; // CheckinQueueWhereInput
     }
     classCategories: { // args
-      after?: NexusGenInputs['ClassCategoryWhereUniqueInput'] | null; // ClassCategoryWhereUniqueInput
-      before?: NexusGenInputs['ClassCategoryWhereUniqueInput'] | null; // ClassCategoryWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['ClassCategoryWhereUniqueInput'] | null; // ClassCategoryWhereUniqueInput
       orderBy?: NexusGenInputs['ClassCategoryOrderByInput'][] | null; // [ClassCategoryOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['ClassCategoryWhereInput'] | null; // ClassCategoryWhereInput
     }
     classCategoriesCount: { // args
@@ -46913,11 +46845,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['ClassCategoryWhereUniqueInput']; // ClassCategoryWhereUniqueInput!
     }
     classGuests: { // args
-      after?: NexusGenInputs['ClassGuestsWhereUniqueInput'] | null; // ClassGuestsWhereUniqueInput
-      before?: NexusGenInputs['ClassGuestsWhereUniqueInput'] | null; // ClassGuestsWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['ClassGuestsWhereUniqueInput'] | null; // ClassGuestsWhereUniqueInput
       orderBy?: NexusGenInputs['ClassGuestsOrderByInput'][] | null; // [ClassGuestsOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['ClassGuestsWhereInput'] | null; // ClassGuestsWhereInput
     }
     classGuestsCount: { // args
@@ -46927,22 +46858,20 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['ClassMasterWhereUniqueInput']; // ClassMasterWhereUniqueInput!
     }
     classMasters: { // args
-      after?: NexusGenInputs['ClassMasterWhereUniqueInput'] | null; // ClassMasterWhereUniqueInput
-      before?: NexusGenInputs['ClassMasterWhereUniqueInput'] | null; // ClassMasterWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['ClassMasterWhereUniqueInput'] | null; // ClassMasterWhereUniqueInput
       orderBy?: NexusGenInputs['ClassMasterOrderByInput'][] | null; // [ClassMasterOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['ClassMasterWhereInput'] | null; // ClassMasterWhereInput
     }
     classMastersCount: { // args
       where?: NexusGenInputs['ClassMasterWhereInput'] | null; // ClassMasterWhereInput
     }
     classNotes: { // args
-      after?: NexusGenInputs['ClassNotesWhereUniqueInput'] | null; // ClassNotesWhereUniqueInput
-      before?: NexusGenInputs['ClassNotesWhereUniqueInput'] | null; // ClassNotesWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['ClassNotesWhereUniqueInput'] | null; // ClassNotesWhereUniqueInput
       orderBy?: NexusGenInputs['ClassNotesOrderByInput'][] | null; // [ClassNotesOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['ClassNotesWhereInput'] | null; // ClassNotesWhereInput
     }
     classNotesCount: { // args
@@ -46952,22 +46881,20 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['ClassProductWhereUniqueInput']; // ClassProductWhereUniqueInput!
     }
     classProducts: { // args
-      after?: NexusGenInputs['ClassProductWhereUniqueInput'] | null; // ClassProductWhereUniqueInput
-      before?: NexusGenInputs['ClassProductWhereUniqueInput'] | null; // ClassProductWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['ClassProductWhereUniqueInput'] | null; // ClassProductWhereUniqueInput
       orderBy?: NexusGenInputs['ClassProductOrderByInput'][] | null; // [ClassProductOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['ClassProductWhereInput'] | null; // ClassProductWhereInput
     }
     classProductsCount: { // args
       where?: NexusGenInputs['ClassProductWhereInput'] | null; // ClassProductWhereInput
     }
     classSmsHistories: { // args
-      after?: NexusGenInputs['ClassSmsHistoryWhereUniqueInput'] | null; // ClassSmsHistoryWhereUniqueInput
-      before?: NexusGenInputs['ClassSmsHistoryWhereUniqueInput'] | null; // ClassSmsHistoryWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['ClassSmsHistoryWhereUniqueInput'] | null; // ClassSmsHistoryWhereUniqueInput
       orderBy?: NexusGenInputs['ClassSmsHistoryOrderByInput'][] | null; // [ClassSmsHistoryOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['ClassSmsHistoryWhereInput'] | null; // ClassSmsHistoryWhereInput
     }
     classSmsHistoriesCount: { // args
@@ -46980,11 +46907,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['ClassTemplateSettingWhereUniqueInput']; // ClassTemplateSettingWhereUniqueInput!
     }
     classTemplateSettings: { // args
-      after?: NexusGenInputs['ClassTemplateSettingWhereUniqueInput'] | null; // ClassTemplateSettingWhereUniqueInput
-      before?: NexusGenInputs['ClassTemplateSettingWhereUniqueInput'] | null; // ClassTemplateSettingWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['ClassTemplateSettingWhereUniqueInput'] | null; // ClassTemplateSettingWhereUniqueInput
       orderBy?: NexusGenInputs['ClassTemplateSettingOrderByInput'][] | null; // [ClassTemplateSettingOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['ClassTemplateSettingWhereInput'] | null; // ClassTemplateSettingWhereInput
     }
     classTemplateSettingsCount: { // args
@@ -46994,11 +46920,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['ClasstypeMasterWhereUniqueInput']; // ClasstypeMasterWhereUniqueInput!
     }
     classtypeMasters: { // args
-      after?: NexusGenInputs['ClasstypeMasterWhereUniqueInput'] | null; // ClasstypeMasterWhereUniqueInput
-      before?: NexusGenInputs['ClasstypeMasterWhereUniqueInput'] | null; // ClasstypeMasterWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['ClasstypeMasterWhereUniqueInput'] | null; // ClasstypeMasterWhereUniqueInput
       orderBy?: NexusGenInputs['ClasstypeMasterOrderByInput'][] | null; // [ClasstypeMasterOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['ClasstypeMasterWhereInput'] | null; // ClasstypeMasterWhereInput
     }
     classtypeMastersCount: { // args
@@ -47008,11 +46933,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CleverpinSettingWhereUniqueInput']; // CleverpinSettingWhereUniqueInput!
     }
     cleverpinSettings: { // args
-      after?: NexusGenInputs['CleverpinSettingWhereUniqueInput'] | null; // CleverpinSettingWhereUniqueInput
-      before?: NexusGenInputs['CleverpinSettingWhereUniqueInput'] | null; // CleverpinSettingWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CleverpinSettingWhereUniqueInput'] | null; // CleverpinSettingWhereUniqueInput
       orderBy?: NexusGenInputs['CleverpinSettingOrderByInput'][] | null; // [CleverpinSettingOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CleverpinSettingWhereInput'] | null; // CleverpinSettingWhereInput
     }
     cleverpinSettingsCount: { // args
@@ -47022,11 +46946,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['ClientFormSettingWhereUniqueInput']; // ClientFormSettingWhereUniqueInput!
     }
     clientFormSettings: { // args
-      after?: NexusGenInputs['ClientFormSettingWhereUniqueInput'] | null; // ClientFormSettingWhereUniqueInput
-      before?: NexusGenInputs['ClientFormSettingWhereUniqueInput'] | null; // ClientFormSettingWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['ClientFormSettingWhereUniqueInput'] | null; // ClientFormSettingWhereUniqueInput
       orderBy?: NexusGenInputs['ClientFormSettingOrderByInput'][] | null; // [ClientFormSettingOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['ClientFormSettingWhereInput'] | null; // ClientFormSettingWhereInput
     }
     clientFormSettingsCount: { // args
@@ -47036,11 +46959,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['ClinicalSoftwareWhereUniqueInput']; // ClinicalSoftwareWhereUniqueInput!
     }
     clinicalSoftwares: { // args
-      after?: NexusGenInputs['ClinicalSoftwareWhereUniqueInput'] | null; // ClinicalSoftwareWhereUniqueInput
-      before?: NexusGenInputs['ClinicalSoftwareWhereUniqueInput'] | null; // ClinicalSoftwareWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['ClinicalSoftwareWhereUniqueInput'] | null; // ClinicalSoftwareWhereUniqueInput
       orderBy?: NexusGenInputs['ClinicalSoftwareOrderByInput'][] | null; // [ClinicalSoftwareOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['ClinicalSoftwareWhereInput'] | null; // ClinicalSoftwareWhereInput
     }
     clinicalSoftwaresCount: { // args
@@ -47050,11 +46972,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['ClockinBreakWhereUniqueInput']; // ClockinBreakWhereUniqueInput!
     }
     clockinBreaks: { // args
-      after?: NexusGenInputs['ClockinBreakWhereUniqueInput'] | null; // ClockinBreakWhereUniqueInput
-      before?: NexusGenInputs['ClockinBreakWhereUniqueInput'] | null; // ClockinBreakWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['ClockinBreakWhereUniqueInput'] | null; // ClockinBreakWhereUniqueInput
       orderBy?: NexusGenInputs['ClockinBreakOrderByInput'][] | null; // [ClockinBreakOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['ClockinBreakWhereInput'] | null; // ClockinBreakWhereInput
     }
     clockinBreaksCount: { // args
@@ -47064,11 +46985,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['ClockinLongpollWhereUniqueInput']; // ClockinLongpollWhereUniqueInput!
     }
     clockinLongpolls: { // args
-      after?: NexusGenInputs['ClockinLongpollWhereUniqueInput'] | null; // ClockinLongpollWhereUniqueInput
-      before?: NexusGenInputs['ClockinLongpollWhereUniqueInput'] | null; // ClockinLongpollWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['ClockinLongpollWhereUniqueInput'] | null; // ClockinLongpollWhereUniqueInput
       orderBy?: NexusGenInputs['ClockinLongpollOrderByInput'][] | null; // [ClockinLongpollOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['ClockinLongpollWhereInput'] | null; // ClockinLongpollWhereInput
     }
     clockinLongpollsCount: { // args
@@ -47078,11 +46998,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['ClockinTimesheetWhereUniqueInput']; // ClockinTimesheetWhereUniqueInput!
     }
     clockinTimesheets: { // args
-      after?: NexusGenInputs['ClockinTimesheetWhereUniqueInput'] | null; // ClockinTimesheetWhereUniqueInput
-      before?: NexusGenInputs['ClockinTimesheetWhereUniqueInput'] | null; // ClockinTimesheetWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['ClockinTimesheetWhereUniqueInput'] | null; // ClockinTimesheetWhereUniqueInput
       orderBy?: NexusGenInputs['ClockinTimesheetOrderByInput'][] | null; // [ClockinTimesheetOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['ClockinTimesheetWhereInput'] | null; // ClockinTimesheetWhereInput
     }
     clockinTimesheetsCount: { // args
@@ -47092,11 +47011,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CmAccountNoteWhereUniqueInput']; // CmAccountNoteWhereUniqueInput!
     }
     cmAccountNotes: { // args
-      after?: NexusGenInputs['CmAccountNoteWhereUniqueInput'] | null; // CmAccountNoteWhereUniqueInput
-      before?: NexusGenInputs['CmAccountNoteWhereUniqueInput'] | null; // CmAccountNoteWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CmAccountNoteWhereUniqueInput'] | null; // CmAccountNoteWhereUniqueInput
       orderBy?: NexusGenInputs['CmAccountNoteOrderByInput'][] | null; // [CmAccountNoteOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CmAccountNoteWhereInput'] | null; // CmAccountNoteWhereInput
     }
     cmAccountNotesCount: { // args
@@ -47106,11 +47024,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CmAppointmentCustomWhereUniqueInput']; // CmAppointmentCustomWhereUniqueInput!
     }
     cmAppointmentCustoms: { // args
-      after?: NexusGenInputs['CmAppointmentCustomWhereUniqueInput'] | null; // CmAppointmentCustomWhereUniqueInput
-      before?: NexusGenInputs['CmAppointmentCustomWhereUniqueInput'] | null; // CmAppointmentCustomWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CmAppointmentCustomWhereUniqueInput'] | null; // CmAppointmentCustomWhereUniqueInput
       orderBy?: NexusGenInputs['CmAppointmentCustomOrderByInput'][] | null; // [CmAppointmentCustomOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CmAppointmentCustomWhereInput'] | null; // CmAppointmentCustomWhereInput
     }
     cmAppointmentCustomsCount: { // args
@@ -47120,11 +47037,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CmAppointmentsCustomImportHelperWhereUniqueInput']; // CmAppointmentsCustomImportHelperWhereUniqueInput!
     }
     cmAppointmentsCustomImportHelpers: { // args
-      after?: NexusGenInputs['CmAppointmentsCustomImportHelperWhereUniqueInput'] | null; // CmAppointmentsCustomImportHelperWhereUniqueInput
-      before?: NexusGenInputs['CmAppointmentsCustomImportHelperWhereUniqueInput'] | null; // CmAppointmentsCustomImportHelperWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CmAppointmentsCustomImportHelperWhereUniqueInput'] | null; // CmAppointmentsCustomImportHelperWhereUniqueInput
       orderBy?: NexusGenInputs['CmAppointmentsCustomImportHelperOrderByInput'][] | null; // [CmAppointmentsCustomImportHelperOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CmAppointmentsCustomImportHelperWhereInput'] | null; // CmAppointmentsCustomImportHelperWhereInput
     }
     cmAppointmentsCustomImportHelpersCount: { // args
@@ -47134,11 +47050,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CmAuthorizationWhereUniqueInput']; // CmAuthorizationWhereUniqueInput!
     }
     cmAuthorizations: { // args
-      after?: NexusGenInputs['CmAuthorizationWhereUniqueInput'] | null; // CmAuthorizationWhereUniqueInput
-      before?: NexusGenInputs['CmAuthorizationWhereUniqueInput'] | null; // CmAuthorizationWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CmAuthorizationWhereUniqueInput'] | null; // CmAuthorizationWhereUniqueInput
       orderBy?: NexusGenInputs['CmAuthorizationOrderByInput'][] | null; // [CmAuthorizationOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CmAuthorizationWhereInput'] | null; // CmAuthorizationWhereInput
     }
     cmAuthorizationsCount: { // args
@@ -47148,11 +47063,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CmBookingNoteWhereUniqueInput']; // CmBookingNoteWhereUniqueInput!
     }
     cmBookingNotes: { // args
-      after?: NexusGenInputs['CmBookingNoteWhereUniqueInput'] | null; // CmBookingNoteWhereUniqueInput
-      before?: NexusGenInputs['CmBookingNoteWhereUniqueInput'] | null; // CmBookingNoteWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CmBookingNoteWhereUniqueInput'] | null; // CmBookingNoteWhereUniqueInput
       orderBy?: NexusGenInputs['CmBookingNoteOrderByInput'][] | null; // [CmBookingNoteOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CmBookingNoteWhereInput'] | null; // CmBookingNoteWhereInput
     }
     cmBookingNotesCount: { // args
@@ -47165,22 +47079,20 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CmCampaignNoteWhereUniqueInput']; // CmCampaignNoteWhereUniqueInput!
     }
     cmCampaignNotes: { // args
-      after?: NexusGenInputs['CmCampaignNoteWhereUniqueInput'] | null; // CmCampaignNoteWhereUniqueInput
-      before?: NexusGenInputs['CmCampaignNoteWhereUniqueInput'] | null; // CmCampaignNoteWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CmCampaignNoteWhereUniqueInput'] | null; // CmCampaignNoteWhereUniqueInput
       orderBy?: NexusGenInputs['CmCampaignNoteOrderByInput'][] | null; // [CmCampaignNoteOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CmCampaignNoteWhereInput'] | null; // CmCampaignNoteWhereInput
     }
     cmCampaignNotesCount: { // args
       where?: NexusGenInputs['CmCampaignNoteWhereInput'] | null; // CmCampaignNoteWhereInput
     }
     cmCampaigns: { // args
-      after?: NexusGenInputs['CmCampaignWhereUniqueInput'] | null; // CmCampaignWhereUniqueInput
-      before?: NexusGenInputs['CmCampaignWhereUniqueInput'] | null; // CmCampaignWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CmCampaignWhereUniqueInput'] | null; // CmCampaignWhereUniqueInput
       orderBy?: NexusGenInputs['CmCampaignOrderByInput'][] | null; // [CmCampaignOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CmCampaignWhereInput'] | null; // CmCampaignWhereInput
     }
     cmCampaignsCount: { // args
@@ -47193,22 +47105,20 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CmCaseNoteWhereUniqueInput']; // CmCaseNoteWhereUniqueInput!
     }
     cmCaseNotes: { // args
-      after?: NexusGenInputs['CmCaseNoteWhereUniqueInput'] | null; // CmCaseNoteWhereUniqueInput
-      before?: NexusGenInputs['CmCaseNoteWhereUniqueInput'] | null; // CmCaseNoteWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CmCaseNoteWhereUniqueInput'] | null; // CmCaseNoteWhereUniqueInput
       orderBy?: NexusGenInputs['CmCaseNoteOrderByInput'][] | null; // [CmCaseNoteOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CmCaseNoteWhereInput'] | null; // CmCaseNoteWhereInput
     }
     cmCaseNotesCount: { // args
       where?: NexusGenInputs['CmCaseNoteWhereInput'] | null; // CmCaseNoteWhereInput
     }
     cmCaseReplies: { // args
-      after?: NexusGenInputs['CmCaseReplyWhereUniqueInput'] | null; // CmCaseReplyWhereUniqueInput
-      before?: NexusGenInputs['CmCaseReplyWhereUniqueInput'] | null; // CmCaseReplyWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CmCaseReplyWhereUniqueInput'] | null; // CmCaseReplyWhereUniqueInput
       orderBy?: NexusGenInputs['CmCaseReplyOrderByInput'][] | null; // [CmCaseReplyOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CmCaseReplyWhereInput'] | null; // CmCaseReplyWhereInput
     }
     cmCaseRepliesCount: { // args
@@ -47218,11 +47128,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CmCaseReplyWhereUniqueInput']; // CmCaseReplyWhereUniqueInput!
     }
     cmCases: { // args
-      after?: NexusGenInputs['CmCaseWhereUniqueInput'] | null; // CmCaseWhereUniqueInput
-      before?: NexusGenInputs['CmCaseWhereUniqueInput'] | null; // CmCaseWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CmCaseWhereUniqueInput'] | null; // CmCaseWhereUniqueInput
       orderBy?: NexusGenInputs['CmCaseOrderByInput'][] | null; // [CmCaseOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CmCaseWhereInput'] | null; // CmCaseWhereInput
     }
     cmCasesCount: { // args
@@ -47232,22 +47141,20 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CmContactWhereUniqueInput']; // CmContactWhereUniqueInput!
     }
     cmContacts: { // args
-      after?: NexusGenInputs['CmContactWhereUniqueInput'] | null; // CmContactWhereUniqueInput
-      before?: NexusGenInputs['CmContactWhereUniqueInput'] | null; // CmContactWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CmContactWhereUniqueInput'] | null; // CmContactWhereUniqueInput
       orderBy?: NexusGenInputs['CmContactOrderByInput'][] | null; // [CmContactOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CmContactWhereInput'] | null; // CmContactWhereInput
     }
     cmContactsCount: { // args
       where?: NexusGenInputs['CmContactWhereInput'] | null; // CmContactWhereInput
     }
     companies: { // args
-      after?: NexusGenInputs['CompanyWhereUniqueInput'] | null; // CompanyWhereUniqueInput
-      before?: NexusGenInputs['CompanyWhereUniqueInput'] | null; // CompanyWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CompanyWhereUniqueInput'] | null; // CompanyWhereUniqueInput
       orderBy?: NexusGenInputs['CompanyOrderByInput'][] | null; // [CompanyOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CompanyWhereInput'] | null; // CompanyWhereInput
     }
     companiesCount: { // args
@@ -47257,11 +47164,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CompanyWhereUniqueInput']; // CompanyWhereUniqueInput!
     }
     companyDetails: { // args
-      after?: NexusGenInputs['CompanyDetailsWhereUniqueInput'] | null; // CompanyDetailsWhereUniqueInput
-      before?: NexusGenInputs['CompanyDetailsWhereUniqueInput'] | null; // CompanyDetailsWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CompanyDetailsWhereUniqueInput'] | null; // CompanyDetailsWhereUniqueInput
       orderBy?: NexusGenInputs['CompanyDetailsOrderByInput'][] | null; // [CompanyDetailsOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CompanyDetailsWhereInput'] | null; // CompanyDetailsWhereInput
     }
     companyDetailsCount: { // args
@@ -47271,11 +47177,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['CompanySubscriptionWhereUniqueInput']; // CompanySubscriptionWhereUniqueInput!
     }
     companySubscriptions: { // args
-      after?: NexusGenInputs['CompanySubscriptionWhereUniqueInput'] | null; // CompanySubscriptionWhereUniqueInput
-      before?: NexusGenInputs['CompanySubscriptionWhereUniqueInput'] | null; // CompanySubscriptionWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CompanySubscriptionWhereUniqueInput'] | null; // CompanySubscriptionWhereUniqueInput
       orderBy?: NexusGenInputs['CompanySubscriptionOrderByInput'][] | null; // [CompanySubscriptionOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['CompanySubscriptionWhereInput'] | null; // CompanySubscriptionWhereInput
     }
     companySubscriptionsCount: { // args
@@ -47950,11 +47855,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['InvPaymentTypeWhereUniqueInput']; // InvPaymentTypeWhereUniqueInput!
     }
     invPaymentTypes: { // args
-      after?: NexusGenInputs['InvPaymentTypeWhereUniqueInput'] | null; // InvPaymentTypeWhereUniqueInput
-      before?: NexusGenInputs['InvPaymentTypeWhereUniqueInput'] | null; // InvPaymentTypeWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['InvPaymentTypeWhereUniqueInput'] | null; // InvPaymentTypeWhereUniqueInput
       orderBy?: NexusGenInputs['InvPaymentTypeOrderByInput'][] | null; // [InvPaymentTypeOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['InvPaymentTypeWhereInput'] | null; // InvPaymentTypeWhereInput
     }
     invPaymentTypesCount: { // args
@@ -47964,11 +47868,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['MarketingSourceWhereUniqueInput']; // MarketingSourceWhereUniqueInput!
     }
     marketingSources: { // args
-      after?: NexusGenInputs['MarketingSourceWhereUniqueInput'] | null; // MarketingSourceWhereUniqueInput
-      before?: NexusGenInputs['MarketingSourceWhereUniqueInput'] | null; // MarketingSourceWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['MarketingSourceWhereUniqueInput'] | null; // MarketingSourceWhereUniqueInput
       orderBy?: NexusGenInputs['MarketingSourceOrderByInput'][] | null; // [MarketingSourceOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['MarketingSourceWhereInput'] | null; // MarketingSourceWhereInput
     }
     marketingSourcesCount: { // args
@@ -47978,11 +47881,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['MediaLlibraryAttachmentWhereUniqueInput']; // MediaLlibraryAttachmentWhereUniqueInput!
     }
     mediaLlibraryAttachments: { // args
-      after?: NexusGenInputs['MediaLlibraryAttachmentWhereUniqueInput'] | null; // MediaLlibraryAttachmentWhereUniqueInput
-      before?: NexusGenInputs['MediaLlibraryAttachmentWhereUniqueInput'] | null; // MediaLlibraryAttachmentWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['MediaLlibraryAttachmentWhereUniqueInput'] | null; // MediaLlibraryAttachmentWhereUniqueInput
       orderBy?: NexusGenInputs['MediaLlibraryAttachmentOrderByInput'][] | null; // [MediaLlibraryAttachmentOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['MediaLlibraryAttachmentWhereInput'] | null; // MediaLlibraryAttachmentWhereInput
     }
     mediaLlibraryAttachmentsCount: { // args
@@ -47992,11 +47894,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['SecondAtAnswerWhereUniqueInput']; // SecondAtAnswerWhereUniqueInput!
     }
     secondAtAnswers: { // args
-      after?: NexusGenInputs['SecondAtAnswerWhereUniqueInput'] | null; // SecondAtAnswerWhereUniqueInput
-      before?: NexusGenInputs['SecondAtAnswerWhereUniqueInput'] | null; // SecondAtAnswerWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['SecondAtAnswerWhereUniqueInput'] | null; // SecondAtAnswerWhereUniqueInput
       orderBy?: NexusGenInputs['SecondAtAnswerOrderByInput'][] | null; // [SecondAtAnswerOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['SecondAtAnswerWhereInput'] | null; // SecondAtAnswerWhereInput
     }
     secondAtAnswersCount: { // args
@@ -48006,11 +47907,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['SecondAtQuestionWhereUniqueInput']; // SecondAtQuestionWhereUniqueInput!
     }
     secondAtQuestions: { // args
-      after?: NexusGenInputs['SecondAtQuestionWhereUniqueInput'] | null; // SecondAtQuestionWhereUniqueInput
-      before?: NexusGenInputs['SecondAtQuestionWhereUniqueInput'] | null; // SecondAtQuestionWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['SecondAtQuestionWhereUniqueInput'] | null; // SecondAtQuestionWhereUniqueInput
       orderBy?: NexusGenInputs['SecondAtQuestionOrderByInput'][] | null; // [SecondAtQuestionOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['SecondAtQuestionWhereInput'] | null; // SecondAtQuestionWhereInput
     }
     secondAtQuestionsCount: { // args
@@ -48020,11 +47920,10 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['ThirdPartyAccessWhereUniqueInput']; // ThirdPartyAccessWhereUniqueInput!
     }
     thirdPartyAccesses: { // args
-      after?: NexusGenInputs['ThirdPartyAccessWhereUniqueInput'] | null; // ThirdPartyAccessWhereUniqueInput
-      before?: NexusGenInputs['ThirdPartyAccessWhereUniqueInput'] | null; // ThirdPartyAccessWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['ThirdPartyAccessWhereUniqueInput'] | null; // ThirdPartyAccessWhereUniqueInput
       orderBy?: NexusGenInputs['ThirdPartyAccessOrderByInput'][] | null; // [ThirdPartyAccessOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['ThirdPartyAccessWhereInput'] | null; // ThirdPartyAccessWhereInput
     }
     thirdPartyAccessesCount: { // args
@@ -48034,22 +47933,20 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['TimezoneWhereUniqueInput']; // TimezoneWhereUniqueInput!
     }
     timezones: { // args
-      after?: NexusGenInputs['TimezoneWhereUniqueInput'] | null; // TimezoneWhereUniqueInput
-      before?: NexusGenInputs['TimezoneWhereUniqueInput'] | null; // TimezoneWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['TimezoneWhereUniqueInput'] | null; // TimezoneWhereUniqueInput
       orderBy?: NexusGenInputs['TimezoneOrderByInput'][] | null; // [TimezoneOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['TimezoneWhereInput'] | null; // TimezoneWhereInput
     }
     timezonesCount: { // args
       where?: NexusGenInputs['TimezoneWhereInput'] | null; // TimezoneWhereInput
     }
     twoFactorHistories: { // args
-      after?: NexusGenInputs['TwoFactorHistoryWhereUniqueInput'] | null; // TwoFactorHistoryWhereUniqueInput
-      before?: NexusGenInputs['TwoFactorHistoryWhereUniqueInput'] | null; // TwoFactorHistoryWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['TwoFactorHistoryWhereUniqueInput'] | null; // TwoFactorHistoryWhereUniqueInput
       orderBy?: NexusGenInputs['TwoFactorHistoryOrderByInput'][] | null; // [TwoFactorHistoryOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['TwoFactorHistoryWhereInput'] | null; // TwoFactorHistoryWhereInput
     }
     twoFactorHistoriesCount: { // args
@@ -48065,22 +47962,20 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['UserSecurityQuestionsAnswerWhereUniqueInput']; // UserSecurityQuestionsAnswerWhereUniqueInput!
     }
     userSecurityQuestionsAnswers: { // args
-      after?: NexusGenInputs['UserSecurityQuestionsAnswerWhereUniqueInput'] | null; // UserSecurityQuestionsAnswerWhereUniqueInput
-      before?: NexusGenInputs['UserSecurityQuestionsAnswerWhereUniqueInput'] | null; // UserSecurityQuestionsAnswerWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['UserSecurityQuestionsAnswerWhereUniqueInput'] | null; // UserSecurityQuestionsAnswerWhereUniqueInput
       orderBy?: NexusGenInputs['UserSecurityQuestionsAnswerOrderByInput'][] | null; // [UserSecurityQuestionsAnswerOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['UserSecurityQuestionsAnswerWhereInput'] | null; // UserSecurityQuestionsAnswerWhereInput
     }
     userSecurityQuestionsAnswersCount: { // args
       where?: NexusGenInputs['UserSecurityQuestionsAnswerWhereInput'] | null; // UserSecurityQuestionsAnswerWhereInput
     }
     users: { // args
-      after?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
-      before?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
       orderBy?: NexusGenInputs['UserOrderByInput'][] | null; // [UserOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
       where?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
     }
     usersCount: { // args
@@ -48089,18 +47984,16 @@ export interface NexusGenArgTypes {
   }
   Timezone: {
     CompanyDetails: { // args
-      after?: NexusGenInputs['CompanyDetailsWhereUniqueInput'] | null; // CompanyDetailsWhereUniqueInput
-      before?: NexusGenInputs['CompanyDetailsWhereUniqueInput'] | null; // CompanyDetailsWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['CompanyDetailsWhereUniqueInput'] | null; // CompanyDetailsWhereUniqueInput
+      skip?: number | null; // Int
+      take?: number | null; // Int
     }
   }
   User: {
     user_security_questions_answer: { // args
-      after?: NexusGenInputs['UserSecurityQuestionsAnswerWhereUniqueInput'] | null; // UserSecurityQuestionsAnswerWhereUniqueInput
-      before?: NexusGenInputs['UserSecurityQuestionsAnswerWhereUniqueInput'] | null; // UserSecurityQuestionsAnswerWhereUniqueInput
-      first?: number | null; // Int
-      last?: number | null; // Int
+      cursor?: NexusGenInputs['UserSecurityQuestionsAnswerWhereUniqueInput'] | null; // UserSecurityQuestionsAnswerWhereUniqueInput
+      skip?: number | null; // Int
+      take?: number | null; // Int
     }
   }
 }

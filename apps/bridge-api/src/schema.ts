@@ -17,7 +17,8 @@ export const schema = applyMiddleware(makeSchema({
       }),
       nexusPrisma({
       experimentalCRUD: true,
-      prismaClient: ctx => ctx.prisma = prisma
+      prismaClient: ctx => ctx.prisma = prisma,
+      paginationStrategy: 'prisma'
       }),
       fieldAuthorizePlugin(),
       queryComplexityPlugin(),

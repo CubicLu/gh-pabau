@@ -48,6 +48,13 @@ To ensure that the graphql queries/mutations where exposed properly
 2. adjust `schema.prisma` models/create new model with the newly desired changes
 3. ran the steps outlined at `Exposing GraphQL CRUD over a database table`
 
+# Doing database modification 
+# [until introspect is implemented]
+
+# Adding a new model field that maps to a newly created database column
+1. Inside `apps/bridge-api/prisma/schema.prisma` locate the model that should be amended
+2. Example: `company_id  Int     @map("occupier")` if the db 
+
 # Relevant third-party modules documentation
 
 - prisma ```https://www.prisma.io/docs/concepts/components```

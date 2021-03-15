@@ -11,9 +11,7 @@ import { DocumentNode, useMutation } from '@apollo/client'
 import AddButton from './AddButton'
 import { Breadcrumb } from '@pabau/ui'
 import { Typography } from 'antd'
-// import pluralize from 'pluralize'
 import styles from './CrudTable.module.less'
-// import DeleteButton from './DeleteButton'
 import CrudModal from './CrudModal'
 import { Formik, FormikErrors } from 'formik'
 import Layout from './Layout/Layout'
@@ -112,7 +110,7 @@ const CrudTable: FC<P> = ({
   const [paginateData, setPaginateData] = useState({
     total: 0,
     offset: 0,
-    limit: 50,
+    limit: 15,
     currentPage: 1,
     showingRecords: 0,
   })
@@ -233,7 +231,7 @@ const CrudTable: FC<P> = ({
     await (values.id
       ? editMutation({
           variables: values,
-          optimisticResponse: { values },
+          optimisticResponse: {},
           update: (proxy) => {
             if (listQuery) {
               const existing = proxy.readQuery({
@@ -256,7 +254,8 @@ const CrudTable: FC<P> = ({
             ...values,
             companyId: user?.data?.me?.company?.id,
           },
-          optimisticResponse: { values },
+          optimisticResponse: {},
+          refetchQueries: [{ query: listQuery }],
           update: (proxy) => {
             if (listQuery) {
               const existing = proxy.readQuery({

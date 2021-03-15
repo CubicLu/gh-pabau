@@ -18732,16 +18732,16 @@ input CmContactWhereUniqueInput {
 }
 
 type Company {
-  AcceptEmailToken(after: AcceptEmailTokenWhereUniqueInput, before: AcceptEmailTokenWhereUniqueInput, first: Int, last: Int): [AcceptEmailToken!]!
-  AccountBalance(after: AccountBalanceWhereUniqueInput, before: AccountBalanceWhereUniqueInput, first: Int, last: Int): [AccountBalance!]!
-  Candidate(after: CandidateWhereUniqueInput, before: CandidateWhereUniqueInput, first: Int, last: Int): [Candidate!]!
-  CmCampaign(after: CmCampaignWhereUniqueInput, before: CmCampaignWhereUniqueInput, first: Int, last: Int): [CmCampaign!]!
-  CmCase(after: CmCaseWhereUniqueInput, before: CmCaseWhereUniqueInput, first: Int, last: Int): [CmCase!]!
-  CmCaseReply(after: CmCaseReplyWhereUniqueInput, before: CmCaseReplyWhereUniqueInput, first: Int, last: Int): [CmCaseReply!]!
-  MarketingSource(after: MarketingSourceWhereUniqueInput, before: MarketingSourceWhereUniqueInput, first: Int, last: Int): [MarketingSource!]!
-  ThirdPartyAccess(after: ThirdPartyAccessWhereUniqueInput, before: ThirdPartyAccessWhereUniqueInput, first: Int, last: Int): [ThirdPartyAccess!]!
-  TwoFactorHistory(after: TwoFactorHistoryWhereUniqueInput, before: TwoFactorHistoryWhereUniqueInput, first: Int, last: Int): [TwoFactorHistory!]!
-  User(after: UserWhereUniqueInput, before: UserWhereUniqueInput, first: Int, last: Int): [User!]!
+  AcceptEmailToken(cursor: AcceptEmailTokenWhereUniqueInput, skip: Int, take: Int): [AcceptEmailToken!]!
+  AccountBalance(cursor: AccountBalanceWhereUniqueInput, skip: Int, take: Int): [AccountBalance!]!
+  Candidate(cursor: CandidateWhereUniqueInput, skip: Int, take: Int): [Candidate!]!
+  CmCampaign(cursor: CmCampaignWhereUniqueInput, skip: Int, take: Int): [CmCampaign!]!
+  CmCase(cursor: CmCaseWhereUniqueInput, skip: Int, take: Int): [CmCase!]!
+  CmCaseReply(cursor: CmCaseReplyWhereUniqueInput, skip: Int, take: Int): [CmCaseReply!]!
+  MarketingSource(cursor: MarketingSourceWhereUniqueInput, skip: Int, take: Int): [MarketingSource!]!
+  ThirdPartyAccess(cursor: ThirdPartyAccessWhereUniqueInput, skip: Int, take: Int): [ThirdPartyAccess!]!
+  TwoFactorHistory(cursor: TwoFactorHistoryWhereUniqueInput, skip: Int, take: Int): [TwoFactorHistory!]!
+  User(cursor: UserWhereUniqueInput, skip: Int, take: Int): [User!]!
   admin: Int!
   creation_date: DateTime!
   cron_enabled: Boolean
@@ -25784,254 +25784,254 @@ input NullableStringFieldUpdateOperationsInput {
 type Query {
   acLog(where: AcLogWhereUniqueInput!): AcLog
   acLogAction(where: AcLogActionWhereUniqueInput!): AcLogAction
-  acLogActions(after: AcLogActionWhereUniqueInput, before: AcLogActionWhereUniqueInput, first: Int, last: Int, orderBy: [AcLogActionOrderByInput!], where: AcLogActionWhereInput): [AcLogAction!]!
+  acLogActions(cursor: AcLogActionWhereUniqueInput, orderBy: [AcLogActionOrderByInput!], skip: Int, take: Int, where: AcLogActionWhereInput): [AcLogAction!]!
   acLogActionsCount(where: AcLogActionWhereInput): Int
   acLogUrl(where: AcLogUrlWhereUniqueInput!): AcLogUrl
-  acLogUrls(after: AcLogUrlWhereUniqueInput, before: AcLogUrlWhereUniqueInput, first: Int, last: Int, orderBy: [AcLogUrlOrderByInput!], where: AcLogUrlWhereInput): [AcLogUrl!]!
+  acLogUrls(cursor: AcLogUrlWhereUniqueInput, orderBy: [AcLogUrlOrderByInput!], skip: Int, take: Int, where: AcLogUrlWhereInput): [AcLogUrl!]!
   acLogUrlsCount(where: AcLogUrlWhereInput): Int
-  acLogs(after: AcLogWhereUniqueInput, before: AcLogWhereUniqueInput, first: Int, last: Int, orderBy: [AcLogOrderByInput!], where: AcLogWhereInput): [AcLog!]!
+  acLogs(cursor: AcLogWhereUniqueInput, orderBy: [AcLogOrderByInput!], skip: Int, take: Int, where: AcLogWhereInput): [AcLog!]!
   acLogsCount(where: AcLogWhereInput): Int
   acceptEmailToken(where: AcceptEmailTokenWhereUniqueInput!): AcceptEmailToken
-  acceptEmailTokens(after: AcceptEmailTokenWhereUniqueInput, before: AcceptEmailTokenWhereUniqueInput, first: Int, last: Int, orderBy: [AcceptEmailTokenOrderByInput!], where: AcceptEmailTokenWhereInput): [AcceptEmailToken!]!
+  acceptEmailTokens(cursor: AcceptEmailTokenWhereUniqueInput, orderBy: [AcceptEmailTokenOrderByInput!], skip: Int, take: Int, where: AcceptEmailTokenWhereInput): [AcceptEmailToken!]!
   acceptEmailTokensCount(where: AcceptEmailTokenWhereInput): Int
   accountBalance(where: AccountBalanceWhereUniqueInput!): AccountBalance
   accountBalanceLog(where: AccountBalanceLogWhereUniqueInput!): AccountBalanceLog
-  accountBalanceLogs(after: AccountBalanceLogWhereUniqueInput, before: AccountBalanceLogWhereUniqueInput, first: Int, last: Int, orderBy: [AccountBalanceLogOrderByInput!], where: AccountBalanceLogWhereInput): [AccountBalanceLog!]!
+  accountBalanceLogs(cursor: AccountBalanceLogWhereUniqueInput, orderBy: [AccountBalanceLogOrderByInput!], skip: Int, take: Int, where: AccountBalanceLogWhereInput): [AccountBalanceLog!]!
   accountBalanceLogsCount(where: AccountBalanceLogWhereInput): Int
-  accountBalances(after: AccountBalanceWhereUniqueInput, before: AccountBalanceWhereUniqueInput, first: Int, last: Int, orderBy: [AccountBalanceOrderByInput!], where: AccountBalanceWhereInput): [AccountBalance!]!
+  accountBalances(cursor: AccountBalanceWhereUniqueInput, orderBy: [AccountBalanceOrderByInput!], skip: Int, take: Int, where: AccountBalanceWhereInput): [AccountBalance!]!
   accountBalancesCount(where: AccountBalanceWhereInput): Int
   accountManager(where: AccountManagerWhereUniqueInput!): AccountManager
-  accountManagers(after: AccountManagerWhereUniqueInput, before: AccountManagerWhereUniqueInput, first: Int, last: Int, orderBy: [AccountManagerOrderByInput!], where: AccountManagerWhereInput): [AccountManager!]!
+  accountManagers(cursor: AccountManagerWhereUniqueInput, orderBy: [AccountManagerOrderByInput!], skip: Int, take: Int, where: AccountManagerWhereInput): [AccountManager!]!
   accountManagersCount(where: AccountManagerWhereInput): Int
   advertCampaign(where: AdvertCampaignWhereUniqueInput!): AdvertCampaign
-  advertCampaigns(after: AdvertCampaignWhereUniqueInput, before: AdvertCampaignWhereUniqueInput, first: Int, last: Int, orderBy: [AdvertCampaignOrderByInput!], where: AdvertCampaignWhereInput): [AdvertCampaign!]!
+  advertCampaigns(cursor: AdvertCampaignWhereUniqueInput, orderBy: [AdvertCampaignOrderByInput!], skip: Int, take: Int, where: AdvertCampaignWhereInput): [AdvertCampaign!]!
   advertCampaignsCount(where: AdvertCampaignWhereInput): Int
   apiDebug(where: ApiDebugWhereUniqueInput!): ApiDebug
-  apiDebugs(after: ApiDebugWhereUniqueInput, before: ApiDebugWhereUniqueInput, first: Int, last: Int, orderBy: [ApiDebugOrderByInput!], where: ApiDebugWhereInput): [ApiDebug!]!
+  apiDebugs(cursor: ApiDebugWhereUniqueInput, orderBy: [ApiDebugOrderByInput!], skip: Int, take: Int, where: ApiDebugWhereInput): [ApiDebug!]!
   apiDebugsCount(where: ApiDebugWhereInput): Int
   apiKey(where: ApiKeyWhereUniqueInput!): ApiKey
-  apiKeys(after: ApiKeyWhereUniqueInput, before: ApiKeyWhereUniqueInput, first: Int, last: Int, orderBy: [ApiKeyOrderByInput!], where: ApiKeyWhereInput): [ApiKey!]!
+  apiKeys(cursor: ApiKeyWhereUniqueInput, orderBy: [ApiKeyOrderByInput!], skip: Int, take: Int, where: ApiKeyWhereInput): [ApiKey!]!
   apiKeysCount(where: ApiKeyWhereInput): Int
   appBeforeAfter(where: AppBeforeAfterWhereUniqueInput!): AppBeforeAfter
-  appBeforeAfters(after: AppBeforeAfterWhereUniqueInput, before: AppBeforeAfterWhereUniqueInput, first: Int, last: Int, orderBy: [AppBeforeAfterOrderByInput!], where: AppBeforeAfterWhereInput): [AppBeforeAfter!]!
+  appBeforeAfters(cursor: AppBeforeAfterWhereUniqueInput, orderBy: [AppBeforeAfterOrderByInput!], skip: Int, take: Int, where: AppBeforeAfterWhereInput): [AppBeforeAfter!]!
   appBeforeAftersCount(where: AppBeforeAfterWhereInput): Int
   appPermission(where: AppPermissionWhereUniqueInput!): AppPermission
-  appPermissions(after: AppPermissionWhereUniqueInput, before: AppPermissionWhereUniqueInput, first: Int, last: Int, orderBy: [AppPermissionOrderByInput!], where: AppPermissionWhereInput): [AppPermission!]!
+  appPermissions(cursor: AppPermissionWhereUniqueInput, orderBy: [AppPermissionOrderByInput!], skip: Int, take: Int, where: AppPermissionWhereInput): [AppPermission!]!
   appPermissionsCount(where: AppPermissionWhereInput): Int
   appSubscription(where: AppSubscriptionWhereUniqueInput!): AppSubscription
-  appSubscriptions(after: AppSubscriptionWhereUniqueInput, before: AppSubscriptionWhereUniqueInput, first: Int, last: Int, orderBy: [AppSubscriptionOrderByInput!], where: AppSubscriptionWhereInput): [AppSubscription!]!
+  appSubscriptions(cursor: AppSubscriptionWhereUniqueInput, orderBy: [AppSubscriptionOrderByInput!], skip: Int, take: Int, where: AppSubscriptionWhereInput): [AppSubscription!]!
   appSubscriptionsCompanyPrice(where: AppSubscriptionsCompanyPriceWhereUniqueInput!): AppSubscriptionsCompanyPrice
-  appSubscriptionsCompanyPrices(after: AppSubscriptionsCompanyPriceWhereUniqueInput, before: AppSubscriptionsCompanyPriceWhereUniqueInput, first: Int, last: Int, orderBy: [AppSubscriptionsCompanyPriceOrderByInput!], where: AppSubscriptionsCompanyPriceWhereInput): [AppSubscriptionsCompanyPrice!]!
+  appSubscriptionsCompanyPrices(cursor: AppSubscriptionsCompanyPriceWhereUniqueInput, orderBy: [AppSubscriptionsCompanyPriceOrderByInput!], skip: Int, take: Int, where: AppSubscriptionsCompanyPriceWhereInput): [AppSubscriptionsCompanyPrice!]!
   appSubscriptionsCompanyPricesCount(where: AppSubscriptionsCompanyPriceWhereInput): Int
   appSubscriptionsCount(where: AppSubscriptionWhereInput): Int
   atAnswer(where: AtAnswerWhereUniqueInput!): AtAnswer
-  atAnswers(after: AtAnswerWhereUniqueInput, before: AtAnswerWhereUniqueInput, first: Int, last: Int, orderBy: [AtAnswerOrderByInput!], where: AtAnswerWhereInput): [AtAnswer!]!
+  atAnswers(cursor: AtAnswerWhereUniqueInput, orderBy: [AtAnswerOrderByInput!], skip: Int, take: Int, where: AtAnswerWhereInput): [AtAnswer!]!
   atAnswersCount(where: AtAnswerWhereInput): Int
   atConcern(where: AtConcernWhereUniqueInput!): AtConcern
-  atConcerns(after: AtConcernWhereUniqueInput, before: AtConcernWhereUniqueInput, first: Int, last: Int, orderBy: [AtConcernOrderByInput!], where: AtConcernWhereInput): [AtConcern!]!
+  atConcerns(cursor: AtConcernWhereUniqueInput, orderBy: [AtConcernOrderByInput!], skip: Int, take: Int, where: AtConcernWhereInput): [AtConcern!]!
   atConcernsCount(where: AtConcernWhereInput): Int
   atQuestion(where: AtQuestionWhereUniqueInput!): AtQuestion
-  atQuestions(after: AtQuestionWhereUniqueInput, before: AtQuestionWhereUniqueInput, first: Int, last: Int, orderBy: [AtQuestionOrderByInput!], where: AtQuestionWhereInput): [AtQuestion!]!
+  atQuestions(cursor: AtQuestionWhereUniqueInput, orderBy: [AtQuestionOrderByInput!], skip: Int, take: Int, where: AtQuestionWhereInput): [AtQuestion!]!
   atQuestionsCount(where: AtQuestionWhereInput): Int
   atQuestionsRelation(where: AtQuestionsRelationWhereUniqueInput!): AtQuestionsRelation
-  atQuestionsRelations(after: AtQuestionsRelationWhereUniqueInput, before: AtQuestionsRelationWhereUniqueInput, first: Int, last: Int, orderBy: [AtQuestionsRelationOrderByInput!], where: AtQuestionsRelationWhereInput): [AtQuestionsRelation!]!
+  atQuestionsRelations(cursor: AtQuestionsRelationWhereUniqueInput, orderBy: [AtQuestionsRelationOrderByInput!], skip: Int, take: Int, where: AtQuestionsRelationWhereInput): [AtQuestionsRelation!]!
   atQuestionsRelationsCount(where: AtQuestionsRelationWhereInput): Int
   atQuizTake(where: AtQuizTakeWhereUniqueInput!): AtQuizTake
-  atQuizTakes(after: AtQuizTakeWhereUniqueInput, before: AtQuizTakeWhereUniqueInput, first: Int, last: Int, orderBy: [AtQuizTakeOrderByInput!], where: AtQuizTakeWhereInput): [AtQuizTake!]!
+  atQuizTakes(cursor: AtQuizTakeWhereUniqueInput, orderBy: [AtQuizTakeOrderByInput!], skip: Int, take: Int, where: AtQuizTakeWhereInput): [AtQuizTake!]!
   atQuizTakesCount(where: AtQuizTakeWhereInput): Int
   atSetting(where: AtSettingWhereUniqueInput!): AtSetting
-  atSettings(after: AtSettingWhereUniqueInput, before: AtSettingWhereUniqueInput, first: Int, last: Int, orderBy: [AtSettingOrderByInput!], where: AtSettingWhereInput): [AtSetting!]!
+  atSettings(cursor: AtSettingWhereUniqueInput, orderBy: [AtSettingOrderByInput!], skip: Int, take: Int, where: AtSettingWhereInput): [AtSetting!]!
   atSettingsCount(where: AtSettingWhereInput): Int
   atTreatment(where: AtTreatmentWhereUniqueInput!): AtTreatment
-  atTreatments(after: AtTreatmentWhereUniqueInput, before: AtTreatmentWhereUniqueInput, first: Int, last: Int, orderBy: [AtTreatmentOrderByInput!], where: AtTreatmentWhereInput): [AtTreatment!]!
+  atTreatments(cursor: AtTreatmentWhereUniqueInput, orderBy: [AtTreatmentOrderByInput!], skip: Int, take: Int, where: AtTreatmentWhereInput): [AtTreatment!]!
   atTreatmentsCount(where: AtTreatmentWhereInput): Int
   attachmentHelperLite(where: AttachmentHelperLiteWhereUniqueInput!): AttachmentHelperLite
-  attachmentHelperLites(after: AttachmentHelperLiteWhereUniqueInput, before: AttachmentHelperLiteWhereUniqueInput, first: Int, last: Int, orderBy: [AttachmentHelperLiteOrderByInput!], where: AttachmentHelperLiteWhereInput): [AttachmentHelperLite!]!
+  attachmentHelperLites(cursor: AttachmentHelperLiteWhereUniqueInput, orderBy: [AttachmentHelperLiteOrderByInput!], skip: Int, take: Int, where: AttachmentHelperLiteWhereInput): [AttachmentHelperLite!]!
   attachmentHelperLitesCount(where: AttachmentHelperLiteWhereInput): Int
   automationAction(where: AutomationActionWhereUniqueInput!): AutomationAction
-  automationActions(after: AutomationActionWhereUniqueInput, before: AutomationActionWhereUniqueInput, first: Int, last: Int, orderBy: [AutomationActionOrderByInput!], where: AutomationActionWhereInput): [AutomationAction!]!
+  automationActions(cursor: AutomationActionWhereUniqueInput, orderBy: [AutomationActionOrderByInput!], skip: Int, take: Int, where: AutomationActionWhereInput): [AutomationAction!]!
   automationActionsCount(where: AutomationActionWhereInput): Int
   automationDelay(where: AutomationDelayWhereUniqueInput!): AutomationDelay
-  automationDelays(after: AutomationDelayWhereUniqueInput, before: AutomationDelayWhereUniqueInput, first: Int, last: Int, orderBy: [AutomationDelayOrderByInput!], where: AutomationDelayWhereInput): [AutomationDelay!]!
+  automationDelays(cursor: AutomationDelayWhereUniqueInput, orderBy: [AutomationDelayOrderByInput!], skip: Int, take: Int, where: AutomationDelayWhereInput): [AutomationDelay!]!
   automationDelaysCount(where: AutomationDelayWhereInput): Int
   automationFolder(where: AutomationFolderWhereUniqueInput!): AutomationFolder
-  automationFolders(after: AutomationFolderWhereUniqueInput, before: AutomationFolderWhereUniqueInput, first: Int, last: Int, orderBy: [AutomationFolderOrderByInput!], where: AutomationFolderWhereInput): [AutomationFolder!]!
+  automationFolders(cursor: AutomationFolderWhereUniqueInput, orderBy: [AutomationFolderOrderByInput!], skip: Int, take: Int, where: AutomationFolderWhereInput): [AutomationFolder!]!
   automationFoldersCount(where: AutomationFolderWhereInput): Int
   automationLog(where: AutomationLogWhereUniqueInput!): AutomationLog
-  automationLogs(after: AutomationLogWhereUniqueInput, before: AutomationLogWhereUniqueInput, first: Int, last: Int, orderBy: [AutomationLogOrderByInput!], where: AutomationLogWhereInput): [AutomationLog!]!
+  automationLogs(cursor: AutomationLogWhereUniqueInput, orderBy: [AutomationLogOrderByInput!], skip: Int, take: Int, where: AutomationLogWhereInput): [AutomationLog!]!
   automationLogsCount(where: AutomationLogWhereInput): Int
   automationRule(where: AutomationRuleWhereUniqueInput!): AutomationRule
-  automationRules(after: AutomationRuleWhereUniqueInput, before: AutomationRuleWhereUniqueInput, first: Int, last: Int, orderBy: [AutomationRuleOrderByInput!], where: AutomationRuleWhereInput): [AutomationRule!]!
+  automationRules(cursor: AutomationRuleWhereUniqueInput, orderBy: [AutomationRuleOrderByInput!], skip: Int, take: Int, where: AutomationRuleWhereInput): [AutomationRule!]!
   automationRulesCount(where: AutomationRuleWhereInput): Int
   automationTrigger(where: AutomationTriggerWhereUniqueInput!): AutomationTrigger
-  automationTriggers(after: AutomationTriggerWhereUniqueInput, before: AutomationTriggerWhereUniqueInput, first: Int, last: Int, orderBy: [AutomationTriggerOrderByInput!], where: AutomationTriggerWhereInput): [AutomationTrigger!]!
+  automationTriggers(cursor: AutomationTriggerWhereUniqueInput, orderBy: [AutomationTriggerOrderByInput!], skip: Int, take: Int, where: AutomationTriggerWhereInput): [AutomationTrigger!]!
   automationTriggersCount(where: AutomationTriggerWhereInput): Int
   avilableDatesLog(where: AvilableDatesLogWhereUniqueInput!): AvilableDatesLog
-  avilableDatesLogs(after: AvilableDatesLogWhereUniqueInput, before: AvilableDatesLogWhereUniqueInput, first: Int, last: Int, orderBy: [AvilableDatesLogOrderByInput!], where: AvilableDatesLogWhereInput): [AvilableDatesLog!]!
+  avilableDatesLogs(cursor: AvilableDatesLogWhereUniqueInput, orderBy: [AvilableDatesLogOrderByInput!], skip: Int, take: Int, where: AvilableDatesLogWhereInput): [AvilableDatesLog!]!
   avilableDatesLogsCount(where: AvilableDatesLogWhereInput): Int
   bacsAccount(where: BacsAccountWhereUniqueInput!): BacsAccount
-  bacsAccounts(after: BacsAccountWhereUniqueInput, before: BacsAccountWhereUniqueInput, first: Int, last: Int, orderBy: [BacsAccountOrderByInput!], where: BacsAccountWhereInput): [BacsAccount!]!
+  bacsAccounts(cursor: BacsAccountWhereUniqueInput, orderBy: [BacsAccountOrderByInput!], skip: Int, take: Int, where: BacsAccountWhereInput): [BacsAccount!]!
   bacsAccountsCount(where: BacsAccountWhereInput): Int
   batch(where: BatchWhereUniqueInput!): Batch
   batchItem(where: BatchItemWhereUniqueInput!): BatchItem
-  batchItems(after: BatchItemWhereUniqueInput, before: BatchItemWhereUniqueInput, first: Int, last: Int, orderBy: [BatchItemOrderByInput!], where: BatchItemWhereInput): [BatchItem!]!
+  batchItems(cursor: BatchItemWhereUniqueInput, orderBy: [BatchItemOrderByInput!], skip: Int, take: Int, where: BatchItemWhereInput): [BatchItem!]!
   batchItemsCount(where: BatchItemWhereInput): Int
-  batches(after: BatchWhereUniqueInput, before: BatchWhereUniqueInput, first: Int, last: Int, orderBy: [BatchOrderByInput!], where: BatchWhereInput): [Batch!]!
+  batches(cursor: BatchWhereUniqueInput, orderBy: [BatchOrderByInput!], skip: Int, take: Int, where: BatchWhereInput): [Batch!]!
   batchesCount(where: BatchWhereInput): Int
   blockReason(where: BlockReasonWhereUniqueInput!): BlockReason
-  blockReasons(after: BlockReasonWhereUniqueInput, before: BlockReasonWhereUniqueInput, first: Int, last: Int, orderBy: [BlockReasonOrderByInput!], where: BlockReasonWhereInput): [BlockReason!]!
+  blockReasons(cursor: BlockReasonWhereUniqueInput, orderBy: [BlockReasonOrderByInput!], skip: Int, take: Int, where: BlockReasonWhereInput): [BlockReason!]!
   blockReasonsCount(where: BlockReasonWhereInput): Int
   bnfDrug(where: BnfDrugWhereUniqueInput!): BnfDrug
-  bnfDrugs(after: BnfDrugWhereUniqueInput, before: BnfDrugWhereUniqueInput, first: Int, last: Int, orderBy: [BnfDrugOrderByInput!], where: BnfDrugWhereInput): [BnfDrug!]!
+  bnfDrugs(cursor: BnfDrugWhereUniqueInput, orderBy: [BnfDrugOrderByInput!], skip: Int, take: Int, where: BnfDrugWhereInput): [BnfDrug!]!
   bnfDrugsCount(where: BnfDrugWhereInput): Int
   bodyChartTemplate(where: BodyChartTemplateWhereUniqueInput!): BodyChartTemplate
-  bodyChartTemplates(after: BodyChartTemplateWhereUniqueInput, before: BodyChartTemplateWhereUniqueInput, first: Int, last: Int, orderBy: [BodyChartTemplateOrderByInput!], where: BodyChartTemplateWhereInput): [BodyChartTemplate!]!
+  bodyChartTemplates(cursor: BodyChartTemplateWhereUniqueInput, orderBy: [BodyChartTemplateOrderByInput!], skip: Int, take: Int, where: BodyChartTemplateWhereInput): [BodyChartTemplate!]!
   bodyChartTemplatesCount(where: BodyChartTemplateWhereInput): Int
   bookingMaster(where: BookingMasterWhereUniqueInput!): BookingMaster
-  bookingMasters(after: BookingMasterWhereUniqueInput, before: BookingMasterWhereUniqueInput, first: Int, last: Int, orderBy: [BookingMasterOrderByInput!], where: BookingMasterWhereInput): [BookingMaster!]!
+  bookingMasters(cursor: BookingMasterWhereUniqueInput, orderBy: [BookingMasterOrderByInput!], skip: Int, take: Int, where: BookingMasterWhereInput): [BookingMaster!]!
   bookingMastersCount(where: BookingMasterWhereInput): Int
   bookingSetting(where: BookingSettingWhereUniqueInput!): BookingSetting
-  bookingSettings(after: BookingSettingWhereUniqueInput, before: BookingSettingWhereUniqueInput, first: Int, last: Int, orderBy: [BookingSettingOrderByInput!], where: BookingSettingWhereInput): [BookingSetting!]!
+  bookingSettings(cursor: BookingSettingWhereUniqueInput, orderBy: [BookingSettingOrderByInput!], skip: Int, take: Int, where: BookingSettingWhereInput): [BookingSetting!]!
   bookingSettingsCount(where: BookingSettingWhereInput): Int
   bookingStatus(where: BookingStatusWhereUniqueInput!): BookingStatus
   bookingStatusChange(where: BookingStatusChangeWhereUniqueInput!): BookingStatusChange
-  bookingStatusChanges(after: BookingStatusChangeWhereUniqueInput, before: BookingStatusChangeWhereUniqueInput, first: Int, last: Int, orderBy: [BookingStatusChangeOrderByInput!], where: BookingStatusChangeWhereInput): [BookingStatusChange!]!
+  bookingStatusChanges(cursor: BookingStatusChangeWhereUniqueInput, orderBy: [BookingStatusChangeOrderByInput!], skip: Int, take: Int, where: BookingStatusChangeWhereInput): [BookingStatusChange!]!
   bookingStatusChangesCount(where: BookingStatusChangeWhereInput): Int
-  bookingStatuses(after: BookingStatusWhereUniqueInput, before: BookingStatusWhereUniqueInput, first: Int, last: Int, orderBy: [BookingStatusOrderByInput!], where: BookingStatusWhereInput): [BookingStatus!]!
+  bookingStatuses(cursor: BookingStatusWhereUniqueInput, orderBy: [BookingStatusOrderByInput!], skip: Int, take: Int, where: BookingStatusWhereInput): [BookingStatus!]!
   bookingStatusesCount(where: BookingStatusWhereInput): Int
   bookitProGeneral(where: BookitProGeneralWhereUniqueInput!): BookitProGeneral
-  bookitProGenerals(after: BookitProGeneralWhereUniqueInput, before: BookitProGeneralWhereUniqueInput, first: Int, last: Int, orderBy: [BookitProGeneralOrderByInput!], where: BookitProGeneralWhereInput): [BookitProGeneral!]!
+  bookitProGenerals(cursor: BookitProGeneralWhereUniqueInput, orderBy: [BookitProGeneralOrderByInput!], skip: Int, take: Int, where: BookitProGeneralWhereInput): [BookitProGeneral!]!
   bookitProGeneralsCount(where: BookitProGeneralWhereInput): Int
   bookitProSlider(where: BookitProSliderWhereUniqueInput!): BookitProSlider
-  bookitProSliders(after: BookitProSliderWhereUniqueInput, before: BookitProSliderWhereUniqueInput, first: Int, last: Int, orderBy: [BookitProSliderOrderByInput!], where: BookitProSliderWhereInput): [BookitProSlider!]!
+  bookitProSliders(cursor: BookitProSliderWhereUniqueInput, orderBy: [BookitProSliderOrderByInput!], skip: Int, take: Int, where: BookitProSliderWhereInput): [BookitProSlider!]!
   bookitProSlidersCount(where: BookitProSliderWhereInput): Int
   bookmarkedPage(where: BookmarkedPageWhereUniqueInput!): BookmarkedPage
-  bookmarkedPages(after: BookmarkedPageWhereUniqueInput, before: BookmarkedPageWhereUniqueInput, first: Int, last: Int, orderBy: [BookmarkedPageOrderByInput!], where: BookmarkedPageWhereInput): [BookmarkedPage!]!
+  bookmarkedPages(cursor: BookmarkedPageWhereUniqueInput, orderBy: [BookmarkedPageOrderByInput!], skip: Int, take: Int, where: BookmarkedPageWhereInput): [BookmarkedPage!]!
   bookmarkedPagesCount(where: BookmarkedPageWhereInput): Int
   bugLog(where: BugLogWhereUniqueInput!): BugLog
-  bugLogs(after: BugLogWhereUniqueInput, before: BugLogWhereUniqueInput, first: Int, last: Int, orderBy: [BugLogOrderByInput!], where: BugLogWhereInput): [BugLog!]!
+  bugLogs(cursor: BugLogWhereUniqueInput, orderBy: [BugLogOrderByInput!], skip: Int, take: Int, where: BugLogWhereInput): [BugLog!]!
   bugLogsCount(where: BugLogWhereInput): Int
   calRangeRequest(where: CalRangeRequestWhereUniqueInput!): CalRangeRequest
-  calRangeRequests(after: CalRangeRequestWhereUniqueInput, before: CalRangeRequestWhereUniqueInput, first: Int, last: Int, orderBy: [CalRangeRequestOrderByInput!], where: CalRangeRequestWhereInput): [CalRangeRequest!]!
+  calRangeRequests(cursor: CalRangeRequestWhereUniqueInput, orderBy: [CalRangeRequestOrderByInput!], skip: Int, take: Int, where: CalRangeRequestWhereInput): [CalRangeRequest!]!
   calRangeRequestsCount(where: CalRangeRequestWhereInput): Int
   calendarView(where: CalendarViewWhereUniqueInput!): CalendarView
-  calendarViews(after: CalendarViewWhereUniqueInput, before: CalendarViewWhereUniqueInput, first: Int, last: Int, orderBy: [CalendarViewOrderByInput!], where: CalendarViewWhereInput): [CalendarView!]!
+  calendarViews(cursor: CalendarViewWhereUniqueInput, orderBy: [CalendarViewOrderByInput!], skip: Int, take: Int, where: CalendarViewWhereInput): [CalendarView!]!
   calendarViewsCount(where: CalendarViewWhereInput): Int
   campaignAttachment(where: CampaignAttachmentWhereUniqueInput!): CampaignAttachment
-  campaignAttachments(after: CampaignAttachmentWhereUniqueInput, before: CampaignAttachmentWhereUniqueInput, first: Int, last: Int, orderBy: [CampaignAttachmentOrderByInput!], where: CampaignAttachmentWhereInput): [CampaignAttachment!]!
+  campaignAttachments(cursor: CampaignAttachmentWhereUniqueInput, orderBy: [CampaignAttachmentOrderByInput!], skip: Int, take: Int, where: CampaignAttachmentWhereInput): [CampaignAttachment!]!
   campaignAttachmentsCount(where: CampaignAttachmentWhereInput): Int
   cancelReason(where: CancelReasonWhereUniqueInput!): CancelReason
-  cancelReasons(after: CancelReasonWhereUniqueInput, before: CancelReasonWhereUniqueInput, first: Int, last: Int, orderBy: [CancelReasonOrderByInput!], where: CancelReasonWhereInput): [CancelReason!]!
+  cancelReasons(cursor: CancelReasonWhereUniqueInput, orderBy: [CancelReasonOrderByInput!], skip: Int, take: Int, where: CancelReasonWhereInput): [CancelReason!]!
   cancelReasonsCount(where: CancelReasonWhereInput): Int
-  cancellationPolicies(after: CancellationPolicyWhereUniqueInput, before: CancellationPolicyWhereUniqueInput, first: Int, last: Int, orderBy: [CancellationPolicyOrderByInput!], where: CancellationPolicyWhereInput): [CancellationPolicy!]!
+  cancellationPolicies(cursor: CancellationPolicyWhereUniqueInput, orderBy: [CancellationPolicyOrderByInput!], skip: Int, take: Int, where: CancellationPolicyWhereInput): [CancellationPolicy!]!
   cancellationPoliciesCount(where: CancellationPolicyWhereInput): Int
   cancellationPolicy(where: CancellationPolicyWhereUniqueInput!): CancellationPolicy
   candidate(where: CandidateWhereUniqueInput!): Candidate
-  candidates(after: CandidateWhereUniqueInput, before: CandidateWhereUniqueInput, first: Int, last: Int, orderBy: [CandidateOrderByInput!], where: CandidateWhereInput): [Candidate!]!
+  candidates(cursor: CandidateWhereUniqueInput, orderBy: [CandidateOrderByInput!], skip: Int, take: Int, where: CandidateWhereInput): [Candidate!]!
   candidatesCount(where: CandidateWhereInput): Int
   cardType(where: CardTypeWhereUniqueInput!): CardType
-  cardTypes(after: CardTypeWhereUniqueInput, before: CardTypeWhereUniqueInput, first: Int, last: Int, orderBy: [CardTypeOrderByInput!], where: CardTypeWhereInput): [CardType!]!
+  cardTypes(cursor: CardTypeWhereUniqueInput, orderBy: [CardTypeOrderByInput!], skip: Int, take: Int, where: CardTypeWhereInput): [CardType!]!
   cardTypesCount(where: CardTypeWhereInput): Int
   cashupReport(where: CashupReportWhereUniqueInput!): CashupReport
   cashupReportCustom(where: CashupReportCustomWhereUniqueInput!): CashupReportCustom
-  cashupReportCustoms(after: CashupReportCustomWhereUniqueInput, before: CashupReportCustomWhereUniqueInput, first: Int, last: Int, orderBy: [CashupReportCustomOrderByInput!], where: CashupReportCustomWhereInput): [CashupReportCustom!]!
+  cashupReportCustoms(cursor: CashupReportCustomWhereUniqueInput, orderBy: [CashupReportCustomOrderByInput!], skip: Int, take: Int, where: CashupReportCustomWhereInput): [CashupReportCustom!]!
   cashupReportCustomsCount(where: CashupReportCustomWhereInput): Int
-  cashupReports(after: CashupReportWhereUniqueInput, before: CashupReportWhereUniqueInput, first: Int, last: Int, orderBy: [CashupReportOrderByInput!], where: CashupReportWhereInput): [CashupReport!]!
+  cashupReports(cursor: CashupReportWhereUniqueInput, orderBy: [CashupReportOrderByInput!], skip: Int, take: Int, where: CashupReportWhereInput): [CashupReport!]!
   cashupReportsCount(where: CashupReportWhereInput): Int
   checkinAppt(where: CheckinApptWhereUniqueInput!): CheckinAppt
-  checkinAppts(after: CheckinApptWhereUniqueInput, before: CheckinApptWhereUniqueInput, first: Int, last: Int, orderBy: [CheckinApptOrderByInput!], where: CheckinApptWhereInput): [CheckinAppt!]!
+  checkinAppts(cursor: CheckinApptWhereUniqueInput, orderBy: [CheckinApptOrderByInput!], skip: Int, take: Int, where: CheckinApptWhereInput): [CheckinAppt!]!
   checkinApptsCount(where: CheckinApptWhereInput): Int
-  checkinAverages(after: CheckinAveragesWhereUniqueInput, before: CheckinAveragesWhereUniqueInput, first: Int, last: Int, orderBy: [CheckinAveragesOrderByInput!], where: CheckinAveragesWhereInput): [CheckinAverages!]!
+  checkinAverages(cursor: CheckinAveragesWhereUniqueInput, orderBy: [CheckinAveragesOrderByInput!], skip: Int, take: Int, where: CheckinAveragesWhereInput): [CheckinAverages!]!
   checkinAveragesCount(where: CheckinAveragesWhereInput): Int
   checkinAveragesIdle(where: CheckinAveragesIdleWhereUniqueInput!): CheckinAveragesIdle
-  checkinAveragesIdles(after: CheckinAveragesIdleWhereUniqueInput, before: CheckinAveragesIdleWhereUniqueInput, first: Int, last: Int, orderBy: [CheckinAveragesIdleOrderByInput!], where: CheckinAveragesIdleWhereInput): [CheckinAveragesIdle!]!
+  checkinAveragesIdles(cursor: CheckinAveragesIdleWhereUniqueInput, orderBy: [CheckinAveragesIdleOrderByInput!], skip: Int, take: Int, where: CheckinAveragesIdleWhereInput): [CheckinAveragesIdle!]!
   checkinAveragesIdlesCount(where: CheckinAveragesIdleWhereInput): Int
   checkinProduct(where: CheckinProductWhereUniqueInput!): CheckinProduct
-  checkinProducts(after: CheckinProductWhereUniqueInput, before: CheckinProductWhereUniqueInput, first: Int, last: Int, orderBy: [CheckinProductOrderByInput!], where: CheckinProductWhereInput): [CheckinProduct!]!
+  checkinProducts(cursor: CheckinProductWhereUniqueInput, orderBy: [CheckinProductOrderByInput!], skip: Int, take: Int, where: CheckinProductWhereInput): [CheckinProduct!]!
   checkinProductsCount(where: CheckinProductWhereInput): Int
   checkinQueue(where: CheckinQueueWhereUniqueInput!): CheckinQueue
-  checkinQueues(after: CheckinQueueWhereUniqueInput, before: CheckinQueueWhereUniqueInput, first: Int, last: Int, orderBy: [CheckinQueueOrderByInput!], where: CheckinQueueWhereInput): [CheckinQueue!]!
+  checkinQueues(cursor: CheckinQueueWhereUniqueInput, orderBy: [CheckinQueueOrderByInput!], skip: Int, take: Int, where: CheckinQueueWhereInput): [CheckinQueue!]!
   checkinQueuesCount(where: CheckinQueueWhereInput): Int
-  classCategories(after: ClassCategoryWhereUniqueInput, before: ClassCategoryWhereUniqueInput, first: Int, last: Int, orderBy: [ClassCategoryOrderByInput!], where: ClassCategoryWhereInput): [ClassCategory!]!
+  classCategories(cursor: ClassCategoryWhereUniqueInput, orderBy: [ClassCategoryOrderByInput!], skip: Int, take: Int, where: ClassCategoryWhereInput): [ClassCategory!]!
   classCategoriesCount(where: ClassCategoryWhereInput): Int
   classCategory(where: ClassCategoryWhereUniqueInput!): ClassCategory
-  classGuests(after: ClassGuestsWhereUniqueInput, before: ClassGuestsWhereUniqueInput, first: Int, last: Int, orderBy: [ClassGuestsOrderByInput!], where: ClassGuestsWhereInput): [ClassGuests!]!
+  classGuests(cursor: ClassGuestsWhereUniqueInput, orderBy: [ClassGuestsOrderByInput!], skip: Int, take: Int, where: ClassGuestsWhereInput): [ClassGuests!]!
   classGuestsCount(where: ClassGuestsWhereInput): Int
   classMaster(where: ClassMasterWhereUniqueInput!): ClassMaster
-  classMasters(after: ClassMasterWhereUniqueInput, before: ClassMasterWhereUniqueInput, first: Int, last: Int, orderBy: [ClassMasterOrderByInput!], where: ClassMasterWhereInput): [ClassMaster!]!
+  classMasters(cursor: ClassMasterWhereUniqueInput, orderBy: [ClassMasterOrderByInput!], skip: Int, take: Int, where: ClassMasterWhereInput): [ClassMaster!]!
   classMastersCount(where: ClassMasterWhereInput): Int
-  classNotes(after: ClassNotesWhereUniqueInput, before: ClassNotesWhereUniqueInput, first: Int, last: Int, orderBy: [ClassNotesOrderByInput!], where: ClassNotesWhereInput): [ClassNotes!]!
+  classNotes(cursor: ClassNotesWhereUniqueInput, orderBy: [ClassNotesOrderByInput!], skip: Int, take: Int, where: ClassNotesWhereInput): [ClassNotes!]!
   classNotesCount(where: ClassNotesWhereInput): Int
   classProduct(where: ClassProductWhereUniqueInput!): ClassProduct
-  classProducts(after: ClassProductWhereUniqueInput, before: ClassProductWhereUniqueInput, first: Int, last: Int, orderBy: [ClassProductOrderByInput!], where: ClassProductWhereInput): [ClassProduct!]!
+  classProducts(cursor: ClassProductWhereUniqueInput, orderBy: [ClassProductOrderByInput!], skip: Int, take: Int, where: ClassProductWhereInput): [ClassProduct!]!
   classProductsCount(where: ClassProductWhereInput): Int
-  classSmsHistories(after: ClassSmsHistoryWhereUniqueInput, before: ClassSmsHistoryWhereUniqueInput, first: Int, last: Int, orderBy: [ClassSmsHistoryOrderByInput!], where: ClassSmsHistoryWhereInput): [ClassSmsHistory!]!
+  classSmsHistories(cursor: ClassSmsHistoryWhereUniqueInput, orderBy: [ClassSmsHistoryOrderByInput!], skip: Int, take: Int, where: ClassSmsHistoryWhereInput): [ClassSmsHistory!]!
   classSmsHistoriesCount(where: ClassSmsHistoryWhereInput): Int
   classSmsHistory(where: ClassSmsHistoryWhereUniqueInput!): ClassSmsHistory
   classTemplateSetting(where: ClassTemplateSettingWhereUniqueInput!): ClassTemplateSetting
-  classTemplateSettings(after: ClassTemplateSettingWhereUniqueInput, before: ClassTemplateSettingWhereUniqueInput, first: Int, last: Int, orderBy: [ClassTemplateSettingOrderByInput!], where: ClassTemplateSettingWhereInput): [ClassTemplateSetting!]!
+  classTemplateSettings(cursor: ClassTemplateSettingWhereUniqueInput, orderBy: [ClassTemplateSettingOrderByInput!], skip: Int, take: Int, where: ClassTemplateSettingWhereInput): [ClassTemplateSetting!]!
   classTemplateSettingsCount(where: ClassTemplateSettingWhereInput): Int
   classtypeMaster(where: ClasstypeMasterWhereUniqueInput!): ClasstypeMaster
-  classtypeMasters(after: ClasstypeMasterWhereUniqueInput, before: ClasstypeMasterWhereUniqueInput, first: Int, last: Int, orderBy: [ClasstypeMasterOrderByInput!], where: ClasstypeMasterWhereInput): [ClasstypeMaster!]!
+  classtypeMasters(cursor: ClasstypeMasterWhereUniqueInput, orderBy: [ClasstypeMasterOrderByInput!], skip: Int, take: Int, where: ClasstypeMasterWhereInput): [ClasstypeMaster!]!
   classtypeMastersCount(where: ClasstypeMasterWhereInput): Int
   cleverpinSetting(where: CleverpinSettingWhereUniqueInput!): CleverpinSetting
-  cleverpinSettings(after: CleverpinSettingWhereUniqueInput, before: CleverpinSettingWhereUniqueInput, first: Int, last: Int, orderBy: [CleverpinSettingOrderByInput!], where: CleverpinSettingWhereInput): [CleverpinSetting!]!
+  cleverpinSettings(cursor: CleverpinSettingWhereUniqueInput, orderBy: [CleverpinSettingOrderByInput!], skip: Int, take: Int, where: CleverpinSettingWhereInput): [CleverpinSetting!]!
   cleverpinSettingsCount(where: CleverpinSettingWhereInput): Int
   clientFormSetting(where: ClientFormSettingWhereUniqueInput!): ClientFormSetting
-  clientFormSettings(after: ClientFormSettingWhereUniqueInput, before: ClientFormSettingWhereUniqueInput, first: Int, last: Int, orderBy: [ClientFormSettingOrderByInput!], where: ClientFormSettingWhereInput): [ClientFormSetting!]!
+  clientFormSettings(cursor: ClientFormSettingWhereUniqueInput, orderBy: [ClientFormSettingOrderByInput!], skip: Int, take: Int, where: ClientFormSettingWhereInput): [ClientFormSetting!]!
   clientFormSettingsCount(where: ClientFormSettingWhereInput): Int
   clinicalSoftware(where: ClinicalSoftwareWhereUniqueInput!): ClinicalSoftware
-  clinicalSoftwares(after: ClinicalSoftwareWhereUniqueInput, before: ClinicalSoftwareWhereUniqueInput, first: Int, last: Int, orderBy: [ClinicalSoftwareOrderByInput!], where: ClinicalSoftwareWhereInput): [ClinicalSoftware!]!
+  clinicalSoftwares(cursor: ClinicalSoftwareWhereUniqueInput, orderBy: [ClinicalSoftwareOrderByInput!], skip: Int, take: Int, where: ClinicalSoftwareWhereInput): [ClinicalSoftware!]!
   clinicalSoftwaresCount(where: ClinicalSoftwareWhereInput): Int
   clockinBreak(where: ClockinBreakWhereUniqueInput!): ClockinBreak
-  clockinBreaks(after: ClockinBreakWhereUniqueInput, before: ClockinBreakWhereUniqueInput, first: Int, last: Int, orderBy: [ClockinBreakOrderByInput!], where: ClockinBreakWhereInput): [ClockinBreak!]!
+  clockinBreaks(cursor: ClockinBreakWhereUniqueInput, orderBy: [ClockinBreakOrderByInput!], skip: Int, take: Int, where: ClockinBreakWhereInput): [ClockinBreak!]!
   clockinBreaksCount(where: ClockinBreakWhereInput): Int
   clockinLongpoll(where: ClockinLongpollWhereUniqueInput!): ClockinLongpoll
-  clockinLongpolls(after: ClockinLongpollWhereUniqueInput, before: ClockinLongpollWhereUniqueInput, first: Int, last: Int, orderBy: [ClockinLongpollOrderByInput!], where: ClockinLongpollWhereInput): [ClockinLongpoll!]!
+  clockinLongpolls(cursor: ClockinLongpollWhereUniqueInput, orderBy: [ClockinLongpollOrderByInput!], skip: Int, take: Int, where: ClockinLongpollWhereInput): [ClockinLongpoll!]!
   clockinLongpollsCount(where: ClockinLongpollWhereInput): Int
   clockinTimesheet(where: ClockinTimesheetWhereUniqueInput!): ClockinTimesheet
-  clockinTimesheets(after: ClockinTimesheetWhereUniqueInput, before: ClockinTimesheetWhereUniqueInput, first: Int, last: Int, orderBy: [ClockinTimesheetOrderByInput!], where: ClockinTimesheetWhereInput): [ClockinTimesheet!]!
+  clockinTimesheets(cursor: ClockinTimesheetWhereUniqueInput, orderBy: [ClockinTimesheetOrderByInput!], skip: Int, take: Int, where: ClockinTimesheetWhereInput): [ClockinTimesheet!]!
   clockinTimesheetsCount(where: ClockinTimesheetWhereInput): Int
   cmAccountNote(where: CmAccountNoteWhereUniqueInput!): CmAccountNote
-  cmAccountNotes(after: CmAccountNoteWhereUniqueInput, before: CmAccountNoteWhereUniqueInput, first: Int, last: Int, orderBy: [CmAccountNoteOrderByInput!], where: CmAccountNoteWhereInput): [CmAccountNote!]!
+  cmAccountNotes(cursor: CmAccountNoteWhereUniqueInput, orderBy: [CmAccountNoteOrderByInput!], skip: Int, take: Int, where: CmAccountNoteWhereInput): [CmAccountNote!]!
   cmAccountNotesCount(where: CmAccountNoteWhereInput): Int
   cmAppointmentCustom(where: CmAppointmentCustomWhereUniqueInput!): CmAppointmentCustom
-  cmAppointmentCustoms(after: CmAppointmentCustomWhereUniqueInput, before: CmAppointmentCustomWhereUniqueInput, first: Int, last: Int, orderBy: [CmAppointmentCustomOrderByInput!], where: CmAppointmentCustomWhereInput): [CmAppointmentCustom!]!
+  cmAppointmentCustoms(cursor: CmAppointmentCustomWhereUniqueInput, orderBy: [CmAppointmentCustomOrderByInput!], skip: Int, take: Int, where: CmAppointmentCustomWhereInput): [CmAppointmentCustom!]!
   cmAppointmentCustomsCount(where: CmAppointmentCustomWhereInput): Int
   cmAppointmentsCustomImportHelper(where: CmAppointmentsCustomImportHelperWhereUniqueInput!): CmAppointmentsCustomImportHelper
-  cmAppointmentsCustomImportHelpers(after: CmAppointmentsCustomImportHelperWhereUniqueInput, before: CmAppointmentsCustomImportHelperWhereUniqueInput, first: Int, last: Int, orderBy: [CmAppointmentsCustomImportHelperOrderByInput!], where: CmAppointmentsCustomImportHelperWhereInput): [CmAppointmentsCustomImportHelper!]!
+  cmAppointmentsCustomImportHelpers(cursor: CmAppointmentsCustomImportHelperWhereUniqueInput, orderBy: [CmAppointmentsCustomImportHelperOrderByInput!], skip: Int, take: Int, where: CmAppointmentsCustomImportHelperWhereInput): [CmAppointmentsCustomImportHelper!]!
   cmAppointmentsCustomImportHelpersCount(where: CmAppointmentsCustomImportHelperWhereInput): Int
   cmAuthorization(where: CmAuthorizationWhereUniqueInput!): CmAuthorization
-  cmAuthorizations(after: CmAuthorizationWhereUniqueInput, before: CmAuthorizationWhereUniqueInput, first: Int, last: Int, orderBy: [CmAuthorizationOrderByInput!], where: CmAuthorizationWhereInput): [CmAuthorization!]!
+  cmAuthorizations(cursor: CmAuthorizationWhereUniqueInput, orderBy: [CmAuthorizationOrderByInput!], skip: Int, take: Int, where: CmAuthorizationWhereInput): [CmAuthorization!]!
   cmAuthorizationsCount(where: CmAuthorizationWhereInput): Int
   cmBookingNote(where: CmBookingNoteWhereUniqueInput!): CmBookingNote
-  cmBookingNotes(after: CmBookingNoteWhereUniqueInput, before: CmBookingNoteWhereUniqueInput, first: Int, last: Int, orderBy: [CmBookingNoteOrderByInput!], where: CmBookingNoteWhereInput): [CmBookingNote!]!
+  cmBookingNotes(cursor: CmBookingNoteWhereUniqueInput, orderBy: [CmBookingNoteOrderByInput!], skip: Int, take: Int, where: CmBookingNoteWhereInput): [CmBookingNote!]!
   cmBookingNotesCount(where: CmBookingNoteWhereInput): Int
   cmCampaign(where: CmCampaignWhereUniqueInput!): CmCampaign
   cmCampaignNote(where: CmCampaignNoteWhereUniqueInput!): CmCampaignNote
-  cmCampaignNotes(after: CmCampaignNoteWhereUniqueInput, before: CmCampaignNoteWhereUniqueInput, first: Int, last: Int, orderBy: [CmCampaignNoteOrderByInput!], where: CmCampaignNoteWhereInput): [CmCampaignNote!]!
+  cmCampaignNotes(cursor: CmCampaignNoteWhereUniqueInput, orderBy: [CmCampaignNoteOrderByInput!], skip: Int, take: Int, where: CmCampaignNoteWhereInput): [CmCampaignNote!]!
   cmCampaignNotesCount(where: CmCampaignNoteWhereInput): Int
-  cmCampaigns(after: CmCampaignWhereUniqueInput, before: CmCampaignWhereUniqueInput, first: Int, last: Int, orderBy: [CmCampaignOrderByInput!], where: CmCampaignWhereInput): [CmCampaign!]!
+  cmCampaigns(cursor: CmCampaignWhereUniqueInput, orderBy: [CmCampaignOrderByInput!], skip: Int, take: Int, where: CmCampaignWhereInput): [CmCampaign!]!
   cmCampaignsCount(where: CmCampaignWhereInput): Int
   cmCase(where: CmCaseWhereUniqueInput!): CmCase
   cmCaseNote(where: CmCaseNoteWhereUniqueInput!): CmCaseNote
-  cmCaseNotes(after: CmCaseNoteWhereUniqueInput, before: CmCaseNoteWhereUniqueInput, first: Int, last: Int, orderBy: [CmCaseNoteOrderByInput!], where: CmCaseNoteWhereInput): [CmCaseNote!]!
+  cmCaseNotes(cursor: CmCaseNoteWhereUniqueInput, orderBy: [CmCaseNoteOrderByInput!], skip: Int, take: Int, where: CmCaseNoteWhereInput): [CmCaseNote!]!
   cmCaseNotesCount(where: CmCaseNoteWhereInput): Int
-  cmCaseReplies(after: CmCaseReplyWhereUniqueInput, before: CmCaseReplyWhereUniqueInput, first: Int, last: Int, orderBy: [CmCaseReplyOrderByInput!], where: CmCaseReplyWhereInput): [CmCaseReply!]!
+  cmCaseReplies(cursor: CmCaseReplyWhereUniqueInput, orderBy: [CmCaseReplyOrderByInput!], skip: Int, take: Int, where: CmCaseReplyWhereInput): [CmCaseReply!]!
   cmCaseRepliesCount(where: CmCaseReplyWhereInput): Int
   cmCaseReply(where: CmCaseReplyWhereUniqueInput!): CmCaseReply
-  cmCases(after: CmCaseWhereUniqueInput, before: CmCaseWhereUniqueInput, first: Int, last: Int, orderBy: [CmCaseOrderByInput!], where: CmCaseWhereInput): [CmCase!]!
+  cmCases(cursor: CmCaseWhereUniqueInput, orderBy: [CmCaseOrderByInput!], skip: Int, take: Int, where: CmCaseWhereInput): [CmCase!]!
   cmCasesCount(where: CmCaseWhereInput): Int
   cmContact(where: CmContactWhereUniqueInput!): CmContact
-  cmContacts(after: CmContactWhereUniqueInput, before: CmContactWhereUniqueInput, first: Int, last: Int, orderBy: [CmContactOrderByInput!], where: CmContactWhereInput): [CmContact!]!
+  cmContacts(cursor: CmContactWhereUniqueInput, orderBy: [CmContactOrderByInput!], skip: Int, take: Int, where: CmContactWhereInput): [CmContact!]!
   cmContactsCount(where: CmContactWhereInput): Int
-  companies(after: CompanyWhereUniqueInput, before: CompanyWhereUniqueInput, first: Int, last: Int, orderBy: [CompanyOrderByInput!], where: CompanyWhereInput): [Company!]!
+  companies(cursor: CompanyWhereUniqueInput, orderBy: [CompanyOrderByInput!], skip: Int, take: Int, where: CompanyWhereInput): [Company!]!
   companiesCount(where: CompanyWhereInput): Int
   company(where: CompanyWhereUniqueInput!): Company
-  companyDetails(after: CompanyDetailsWhereUniqueInput, before: CompanyDetailsWhereUniqueInput, first: Int, last: Int, orderBy: [CompanyDetailsOrderByInput!], where: CompanyDetailsWhereInput): [CompanyDetails!]!
+  companyDetails(cursor: CompanyDetailsWhereUniqueInput, orderBy: [CompanyDetailsOrderByInput!], skip: Int, take: Int, where: CompanyDetailsWhereInput): [CompanyDetails!]!
   companyDetailsCount(where: CompanyDetailsWhereInput): Int
   companySubscription(where: CompanySubscriptionWhereUniqueInput!): CompanySubscription
-  companySubscriptions(after: CompanySubscriptionWhereUniqueInput, before: CompanySubscriptionWhereUniqueInput, first: Int, last: Int, orderBy: [CompanySubscriptionOrderByInput!], where: CompanySubscriptionWhereInput): [CompanySubscription!]!
+  companySubscriptions(cursor: CompanySubscriptionWhereUniqueInput, orderBy: [CompanySubscriptionOrderByInput!], skip: Int, take: Int, where: CompanySubscriptionWhereInput): [CompanySubscription!]!
   companySubscriptionsCount(where: CompanySubscriptionWhereInput): Int
   findFirstAcLog(cursor: AcLogWhereUniqueInput, orderBy: AcLogOrderByInput, skip: Int, take: Int, where: AcLogWhereInput): AcLog
   findFirstAcLogAction(cursor: AcLogActionWhereUniqueInput, orderBy: AcLogActionOrderByInput, skip: Int, take: Int, where: AcLogActionWhereInput): AcLogAction
@@ -26129,36 +26129,36 @@ type Query {
   findFirstUser(cursor: UserWhereUniqueInput, orderBy: UserOrderByInput, skip: Int, take: Int, where: UserWhereInput): User
   findFirstUserSecurityQuestionsAnswer(cursor: UserSecurityQuestionsAnswerWhereUniqueInput, orderBy: UserSecurityQuestionsAnswerOrderByInput, skip: Int, take: Int, where: UserSecurityQuestionsAnswerWhereInput): UserSecurityQuestionsAnswer
   invPaymentType(where: InvPaymentTypeWhereUniqueInput!): InvPaymentType
-  invPaymentTypes(after: InvPaymentTypeWhereUniqueInput, before: InvPaymentTypeWhereUniqueInput, first: Int, last: Int, orderBy: [InvPaymentTypeOrderByInput!], where: InvPaymentTypeWhereInput): [InvPaymentType!]!
+  invPaymentTypes(cursor: InvPaymentTypeWhereUniqueInput, orderBy: [InvPaymentTypeOrderByInput!], skip: Int, take: Int, where: InvPaymentTypeWhereInput): [InvPaymentType!]!
   invPaymentTypesCount(where: InvPaymentTypeWhereInput): Int
   marketingSource(where: MarketingSourceWhereUniqueInput!): MarketingSource
-  marketingSources(after: MarketingSourceWhereUniqueInput, before: MarketingSourceWhereUniqueInput, first: Int, last: Int, orderBy: [MarketingSourceOrderByInput!], where: MarketingSourceWhereInput): [MarketingSource!]!
+  marketingSources(cursor: MarketingSourceWhereUniqueInput, orderBy: [MarketingSourceOrderByInput!], skip: Int, take: Int, where: MarketingSourceWhereInput): [MarketingSource!]!
   marketingSourcesCount(where: MarketingSourceWhereInput): Int
   me: User
   mediaLlibraryAttachment(where: MediaLlibraryAttachmentWhereUniqueInput!): MediaLlibraryAttachment
-  mediaLlibraryAttachments(after: MediaLlibraryAttachmentWhereUniqueInput, before: MediaLlibraryAttachmentWhereUniqueInput, first: Int, last: Int, orderBy: [MediaLlibraryAttachmentOrderByInput!], where: MediaLlibraryAttachmentWhereInput): [MediaLlibraryAttachment!]!
+  mediaLlibraryAttachments(cursor: MediaLlibraryAttachmentWhereUniqueInput, orderBy: [MediaLlibraryAttachmentOrderByInput!], skip: Int, take: Int, where: MediaLlibraryAttachmentWhereInput): [MediaLlibraryAttachment!]!
   mediaLlibraryAttachmentsCount(where: MediaLlibraryAttachmentWhereInput): Int
   ping: String
   secondAtAnswer(where: SecondAtAnswerWhereUniqueInput!): SecondAtAnswer
-  secondAtAnswers(after: SecondAtAnswerWhereUniqueInput, before: SecondAtAnswerWhereUniqueInput, first: Int, last: Int, orderBy: [SecondAtAnswerOrderByInput!], where: SecondAtAnswerWhereInput): [SecondAtAnswer!]!
+  secondAtAnswers(cursor: SecondAtAnswerWhereUniqueInput, orderBy: [SecondAtAnswerOrderByInput!], skip: Int, take: Int, where: SecondAtAnswerWhereInput): [SecondAtAnswer!]!
   secondAtAnswersCount(where: SecondAtAnswerWhereInput): Int
   secondAtQuestion(where: SecondAtQuestionWhereUniqueInput!): SecondAtQuestion
-  secondAtQuestions(after: SecondAtQuestionWhereUniqueInput, before: SecondAtQuestionWhereUniqueInput, first: Int, last: Int, orderBy: [SecondAtQuestionOrderByInput!], where: SecondAtQuestionWhereInput): [SecondAtQuestion!]!
+  secondAtQuestions(cursor: SecondAtQuestionWhereUniqueInput, orderBy: [SecondAtQuestionOrderByInput!], skip: Int, take: Int, where: SecondAtQuestionWhereInput): [SecondAtQuestion!]!
   secondAtQuestionsCount(where: SecondAtQuestionWhereInput): Int
   thirdPartyAccess(where: ThirdPartyAccessWhereUniqueInput!): ThirdPartyAccess
-  thirdPartyAccesses(after: ThirdPartyAccessWhereUniqueInput, before: ThirdPartyAccessWhereUniqueInput, first: Int, last: Int, orderBy: [ThirdPartyAccessOrderByInput!], where: ThirdPartyAccessWhereInput): [ThirdPartyAccess!]!
+  thirdPartyAccesses(cursor: ThirdPartyAccessWhereUniqueInput, orderBy: [ThirdPartyAccessOrderByInput!], skip: Int, take: Int, where: ThirdPartyAccessWhereInput): [ThirdPartyAccess!]!
   thirdPartyAccessesCount(where: ThirdPartyAccessWhereInput): Int
   timezone(where: TimezoneWhereUniqueInput!): Timezone
-  timezones(after: TimezoneWhereUniqueInput, before: TimezoneWhereUniqueInput, first: Int, last: Int, orderBy: [TimezoneOrderByInput!], where: TimezoneWhereInput): [Timezone!]!
+  timezones(cursor: TimezoneWhereUniqueInput, orderBy: [TimezoneOrderByInput!], skip: Int, take: Int, where: TimezoneWhereInput): [Timezone!]!
   timezonesCount(where: TimezoneWhereInput): Int
-  twoFactorHistories(after: TwoFactorHistoryWhereUniqueInput, before: TwoFactorHistoryWhereUniqueInput, first: Int, last: Int, orderBy: [TwoFactorHistoryOrderByInput!], where: TwoFactorHistoryWhereInput): [TwoFactorHistory!]!
+  twoFactorHistories(cursor: TwoFactorHistoryWhereUniqueInput, orderBy: [TwoFactorHistoryOrderByInput!], skip: Int, take: Int, where: TwoFactorHistoryWhereInput): [TwoFactorHistory!]!
   twoFactorHistoriesCount(where: TwoFactorHistoryWhereInput): Int
   twoFactorHistory(where: TwoFactorHistoryWhereUniqueInput!): TwoFactorHistory
   user(where: UserWhereUniqueInput!): User
   userSecurityQuestionsAnswer(where: UserSecurityQuestionsAnswerWhereUniqueInput!): UserSecurityQuestionsAnswer
-  userSecurityQuestionsAnswers(after: UserSecurityQuestionsAnswerWhereUniqueInput, before: UserSecurityQuestionsAnswerWhereUniqueInput, first: Int, last: Int, orderBy: [UserSecurityQuestionsAnswerOrderByInput!], where: UserSecurityQuestionsAnswerWhereInput): [UserSecurityQuestionsAnswer!]!
+  userSecurityQuestionsAnswers(cursor: UserSecurityQuestionsAnswerWhereUniqueInput, orderBy: [UserSecurityQuestionsAnswerOrderByInput!], skip: Int, take: Int, where: UserSecurityQuestionsAnswerWhereInput): [UserSecurityQuestionsAnswer!]!
   userSecurityQuestionsAnswersCount(where: UserSecurityQuestionsAnswerWhereInput): Int
-  users(after: UserWhereUniqueInput, before: UserWhereUniqueInput, first: Int, last: Int, orderBy: [UserOrderByInput!], where: UserWhereInput): [User!]!
+  users(cursor: UserWhereUniqueInput, orderBy: [UserOrderByInput!], skip: Int, take: Int, where: UserWhereInput): [User!]!
   usersCount(where: UserWhereInput): Int
 }
 
@@ -26730,7 +26730,7 @@ input ThirdPartyAccessWhereUniqueInput {
 }
 
 type Timezone {
-  CompanyDetails(after: CompanyDetailsWhereUniqueInput, before: CompanyDetailsWhereUniqueInput, first: Int, last: Int): [CompanyDetails!]!
+  CompanyDetails(cursor: CompanyDetailsWhereUniqueInput, skip: Int, take: Int): [CompanyDetails!]!
   db_format: String!
   label: String!
   offset_seconds: Int!
@@ -27278,7 +27278,7 @@ type User {
   temporary_password: Boolean!
   timezone: String!
   user_color: String!
-  user_security_questions_answer(after: UserSecurityQuestionsAnswerWhereUniqueInput, before: UserSecurityQuestionsAnswerWhereUniqueInput, first: Int, last: Int): [UserSecurityQuestionsAnswer!]!
+  user_security_questions_answer(cursor: UserSecurityQuestionsAnswerWhereUniqueInput, skip: Int, take: Int): [UserSecurityQuestionsAnswer!]!
   username: String
 }
 
