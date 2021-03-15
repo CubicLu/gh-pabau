@@ -43,8 +43,9 @@ require('react-phone-input-2/lib/style.css')
 
 const cache = new InMemoryCache()
 const GRAPHQL_ENDPOINT = 'wss://api.new.pabau.com/v1/graphql'
-const LOCAL_GRAPHQL_ENDPOINT = 'http://docker.for.win.localhost:8080/v1/graphql'
-const NEXT_PUBLIC_GRAPHQL_ENDPOINT = LOCAL_GRAPHQL_ENDPOINT || GRAPHQL_ENDPOINT
+const GRAPHQL_HTTP_ENDPOINT =
+  process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
+  'https://api.new.pabau.com/v1/graphql'
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token')
@@ -60,7 +61,7 @@ const iconList = Object.keys(Icons)
   .map((icon) => Icons[icon])
 library.add(...iconList)
 const httpLink = new HttpLink({
-  uri: NEXT_PUBLIC_GRAPHQL_ENDPOINT,
+  uri: GRAPHQL_HTTP_ENDPOINT,
 })
 const wsLink = process.browser
   ? new WebSocketLink({
