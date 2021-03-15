@@ -14,7 +14,7 @@ const MedicalFormBuilder: FC<PreviewData> = ({ previewData }) => {
   const [formName, setFormName] = useState('IPL Treatment Record (Clone)')
   const [visiblePreview, setVisiblePreview] = useState(false)
   const [activatePanel, setActivatePanel] = useState('1')
-  const [clickedCreateForm, setClickedCreateForm] = useState(true)
+  const [clickedCreateForm, setClickedCreateForm] = useState(false)
 
   const changeFormName = (formName) => {
     setFormName(formName)
@@ -33,7 +33,11 @@ const MedicalFormBuilder: FC<PreviewData> = ({ previewData }) => {
   }
 
   const clickCreateFormBtn = () => {
-    setClickedCreateForm(!clickedCreateForm)
+    setClickedCreateForm(true)
+  }
+
+  const clearCreateFormBtn = () => {
+    setClickedCreateForm(false)
   }
 
   return (
@@ -60,6 +64,7 @@ const MedicalFormBuilder: FC<PreviewData> = ({ previewData }) => {
             previewData={previewData}
             changeFormName={changeFormName}
             clickedCreateForm={clickedCreateForm}
+            clearCreateFormBtn={clearCreateFormBtn}
             formName={'IPL Treatment Record (Clone)'}
           />
           {visiblePreview === true && (

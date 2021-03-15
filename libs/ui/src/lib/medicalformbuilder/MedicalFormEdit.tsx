@@ -234,6 +234,7 @@ interface P {
   previewData: string
   changeFormName: (formName: string) => void
   clickedCreateForm: boolean
+  clearCreateFormBtn: () => void
   formName: string
 }
 
@@ -241,6 +242,7 @@ const MedicalFormEdit: FC<P> = ({
   previewData,
   changeFormName,
   clickedCreateForm,
+  clearCreateFormBtn,
   formName,
 }) => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0)
@@ -253,7 +255,7 @@ const MedicalFormEdit: FC<P> = ({
   const [isModalVisible, setIsModalVisible] = useState(false)
 
   useEffect(() => {
-    if (draggedForms.length > 0) {
+    if (clickedCreateForm === true && draggedForms.length > 0) {
       setReservedFormData('')
       const reversedFormData = draggedForms.map((form) => reverseForm(form))
       const reversedFormObject = {
@@ -626,10 +628,12 @@ const MedicalFormEdit: FC<P> = ({
   )
 
   const handleOk = () => {
+    clearCreateFormBtn?.()
     setIsModalVisible(false)
   }
 
   const handleCancel = () => {
+    clearCreateFormBtn?.()
     setIsModalVisible(false)
   }
 
