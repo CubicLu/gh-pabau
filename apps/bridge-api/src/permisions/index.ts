@@ -11,8 +11,9 @@ const rules = {
   ),
   sameCompany: rule('sameCompany')(
     (root, args, ctx: Context, info): boolean => {
-      if (root && root.company_id !== ctx.req.authenticatedUser.company)
+      if (root && root.company_id !== ctx.req.authenticatedUser.company){
         return false
+      }
       if (info.returnType.toString().startsWith('['))
         args.where = {
           ...args.where,
@@ -21,11 +22,11 @@ const rules = {
       return true
     }
   ),
-  connectAuthenticatedCompany: rule()(async (root, args, ctx:Context): Promise<boolean> => {
+  connectAuthenticatedCompany: rule()( (root, args, ctx:Context): boolean => {
     args.data.company.connect.id = ctx.req.authenticatedUser.company
     return true;
   }),
-  injectCompanyId: rule()(async (root, args, ctx:Context): Promise<boolean> => {
+  injectCompanyId: rule()( (root, args, ctx:Context): boolean => {
     args.where.company_id = ctx.req.authenticatedUser.company
     return true;
   }),

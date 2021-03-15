@@ -31,7 +31,7 @@ Most of the time ORM remapping should be handled the following way
 
 In rare instances if errors arise 
 
-1. `prisma validate`
+1. `prisma validate` [Validates the current `prisma.schema`]
 2. `yarn bridge:prune`
 3. `prisma format`
 4. `prisma generate`
@@ -51,9 +51,10 @@ To ensure that the graphql queries/mutations where exposed properly
 # Doing database modification 
 # [until introspect is implemented]
 
-# Adding a new model field that maps to a newly created database column
+# Adding a new model property that maps to a newly created database column
 1. Inside `apps/bridge-api/prisma/schema.prisma` locate the model that should be amended
-2. Example: `company_id  Int     @map("occupier")` if the db 
+2. Example: `company_id  Int     @map("occupier")` to map a new model property `company_id` to a database column `occupier`
+3. Example: `company_id  Int` to use the same name for the both the model property name and the db column
 
 # Relevant third-party modules documentation
 
