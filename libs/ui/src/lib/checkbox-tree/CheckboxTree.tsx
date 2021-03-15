@@ -5,7 +5,7 @@ import style from './CheckboxTree.module.less'
 export interface TreeDataType {
   title: string
   key: string
-  children: TreeDataType[]
+  children?: TreeDataType[]
 }
 export interface CheckboxTreeProps {
   treeData: TreeDataType[]
