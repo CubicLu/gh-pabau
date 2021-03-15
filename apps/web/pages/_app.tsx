@@ -32,7 +32,8 @@ const iconList = Object.keys(Icons)
 library.add(...iconList)
 
 const cache = new InMemoryCache()
-const GRAPHQL_ENDPOINT = 'wss://api.new.pabau.com/v1/graphql'
+const GRAPHQL_WS_ENDPOINT =
+  process.env.NEXT_PUBLIC_WSS_ENDPOINT || 'wss://api.new.pabau.com/v1/graphql'
 const GRAPHQL_HTTP_ENDPOINT =
   process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
   'https://api.new.pabau.com/v1/graphql'
