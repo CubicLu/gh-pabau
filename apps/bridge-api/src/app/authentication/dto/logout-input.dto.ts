@@ -1,3 +1,3 @@
 export interface LogoutInputDto {
-  userId: number;
+  userId: number
 }
