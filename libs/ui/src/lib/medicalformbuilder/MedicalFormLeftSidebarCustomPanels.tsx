@@ -6,10 +6,11 @@ import styles from './MedicalFormBuilder.module.less'
 
 interface P {
   medicalForms: MedicalForms[]
+  handlingClickLeft: (componentName: string) => void
 }
 
 const MedicalFormLeftSidebarCustomPanels: FC<P> = ({ ...props }) => {
-  const { medicalForms } = props
+  const { medicalForms, handlingClickLeft } = props
   const getRenderItemCustom = () => {
     const MyChild = (provided, snapshot, rubric) => {
       const draggedForm = medicalForms.filter(
@@ -28,6 +29,7 @@ const MedicalFormLeftSidebarCustomPanels: FC<P> = ({ ...props }) => {
             <LeftSidebarElement
               type="custom"
               component={draggedForm[0].formName}
+              handlingClickLeft={handlingClickLeft}
             />
           )}
         </div>
@@ -49,7 +51,11 @@ const MedicalFormLeftSidebarCustomPanels: FC<P> = ({ ...props }) => {
             {medicalForms?.map((form) => {
               return snapshot.draggingFromThisWith === form.formName ? (
                 <div className={styles.dndCopy} key={form.id}>
-                  <LeftSidebarElement type="custom" component={form.formName} />
+                  <LeftSidebarElement
+                    type="custom"
+                    component={form.formName}
+                    handlingClickLeft={handlingClickLeft}
+                  />
                 </div>
               ) : (
                 <Draggable
@@ -68,6 +74,7 @@ const MedicalFormLeftSidebarCustomPanels: FC<P> = ({ ...props }) => {
                       <LeftSidebarElement
                         type="custom"
                         component={form.formName}
+                        handlingClickLeft={handlingClickLeft}
                       />
                     </div>
                   )}

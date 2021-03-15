@@ -1,5 +1,5 @@
 import { MedicalFormTypes } from '@pabau/ui'
-import { Col, Row } from 'antd'
+import { Col, Modal, Row } from 'antd'
 import _ from 'lodash'
 import React, { FC, useEffect, useReducer, useState } from 'react'
 import { DragDropContext } from 'react-beautiful-dnd'
@@ -45,7 +45,7 @@ const previewMapping = [
   { heading: 'basic_heading' },
   { staticText: 'basic_textblock' },
   { input_text: 'basic_shortanswer' },
-  { team: 'basic_shortanswer' },
+  { team: 'empty' },
   { textarea: 'basic_longanswer' },
   { checkbox: 'basic_multiplechoice' },
   { radio: 'basic_singlechoice' },
@@ -90,6 +90,71 @@ const copy = (source, destination, droppableSourceId, endIndex, formInfo) => {
     required: formInfo.required,
   })
   return destination
+}
+
+const reverseForm = (form) => {
+  const mappingInfo = previewMapping.filter(
+    (item) => Object.values(item)[0] === form.formName
+  )
+  let reverseObj = {}
+  if (mappingInfo?.length > 0) {
+    let cssClass = ''
+    let required = ''
+    let defaults = ''
+    let fldtype = ''
+    let linked = ''
+    let title = ''
+    let values = ''
+    const objectValues = {}
+
+    cssClass = Object.keys(mappingInfo[0])[0]
+    required = form.required === true ? 'true' : 'false'
+    defaults = form.txtDefaults
+    fldtype = form.txtInputType
+    linked = form.txtLinkedField
+    values = form.txtQuestion
+    if (cssClass === 'textarea') {
+      defaults = form.txtBlock
+    }
+    if (cssClass === 'staticText') {
+      values = form.txtBlock
+    }
+    if (cssClass === 'signature' || form.arrItems.length > 0) {
+      title = form.txtQuestion
+    }
+    reverseObj = {
+      cssClass: cssClass,
+      required: required,
+      defaults: defaults,
+      fldtype: fldtype,
+      linked: linked,
+      title: title,
+    }
+
+    if (form.arrItems.length > 0) {
+      title = form.txtQuestion
+      form.arrItems.map((item) => {
+        objectValues[item.id] = {
+          baseline: 'false',
+          critical: 'false',
+          desc: '',
+          trigger: 'null',
+          value: item.name,
+        }
+        return objectValues
+      })
+      reverseObj = {
+        ...reverseObj,
+        values: objectValues,
+      }
+    } else {
+      reverseObj = {
+        ...reverseObj,
+        values: values,
+      }
+    }
+  }
+  return reverseObj
 }
 
 const getFormInfo = (form) => {
@@ -168,16 +233,36 @@ const getFormInfo = (form) => {
 interface P {
   previewData: string
   changeFormName: (formName: string) => void
+  clickedCreateForm: boolean
   formName: string
 }
 
-const MedicalFormEdit: FC<P> = ({ previewData, changeFormName, formName }) => {
+const MedicalFormEdit: FC<P> = ({
+  previewData,
+  changeFormName,
+  clickedCreateForm,
+  formName,
+}) => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0)
   const [draggedForms, setDraggedForms] = useState<MedicalFormTypes[]>([])
+  const [reservedFormData, setReservedFormData] = useState('')
   const [selectedForm, setSelectedForm] = useState(defaultFormValue)
   const [displaySettingBar, setDisplaySettingBar] = useState(false)
   const [needRight, setNeedRight] = useState(true)
   const [previewPdf, setPreviewPdf] = useState(false)
+  const [isModalVisible, setIsModalVisible] = useState(false)
+
+  useEffect(() => {
+    if (draggedForms.length > 0) {
+      setReservedFormData('')
+      const reversedFormData = draggedForms.map((form) => reverseForm(form))
+      const reversedFormObject = {
+        form_structure: reversedFormData,
+      }
+      setReservedFormData(btoa(JSON.stringify(reversedFormObject)))
+      setIsModalVisible(true)
+    }
+  }, [clickedCreateForm, draggedForms])
 
   useEffect(() => {
     setDraggedForms([])
@@ -248,6 +333,137 @@ const MedicalFormEdit: FC<P> = ({ previewData, changeFormName, formName }) => {
 
   const runPreviewPdf = () => {
     setPreviewPdf(true)
+  }
+
+  const handlingClickLeft = (componentName) => {
+    const mappingForm = medicalForms.filter(
+      (item) => item.formName === componentName
+    )
+    if (mappingForm?.length > 0) {
+      const item = medicalForms[mappingForm[0].id]
+      const cloneFormInfo = _.cloneDeep(defaultFormValue)
+      if (item.formType === 'custom' && item.formName === 'custom_gender') {
+        const alterForm = medicalForms.filter(
+          (medicalForm) => medicalForm.formName === 'basic_singlechoice'
+        )
+        if (alterForm.length > 0) {
+          cloneFormInfo.txtQuestion = 'What is your gender?'
+          cloneFormInfo.txtLinkedField = 'Gender'
+          const arrItemsVaues = [
+            { id: 1, name: 'Male', editing: false },
+            { id: 2, name: 'Female', editing: false },
+          ]
+          cloneFormInfo.arrItems = arrItemsVaues
+          setDraggedForms(
+            copy(
+              medicalForms,
+              draggedForms,
+              alterForm[0].id,
+              draggedForms.length,
+              cloneFormInfo
+            )
+          )
+        }
+      } else if (
+        item.formType === 'custom' &&
+        item.formName === 'custom_telephonenumber'
+      ) {
+        const alterForm = medicalForms.filter(
+          (medicalForm) => medicalForm.formName === 'basic_shortanswer'
+        )
+        if (alterForm.length > 0) {
+          cloneFormInfo.txtQuestion = 'Phone number'
+          cloneFormInfo.txtLinkedField = 'Phone'
+          cloneFormInfo.txtDefaults = '[CLIENTPHONE]'
+          setDraggedForms(
+            copy(
+              medicalForms,
+              draggedForms,
+              alterForm[0].id,
+              draggedForms.length,
+              cloneFormInfo
+            )
+          )
+        }
+      } else if (item.formType === 'custom' && item.formName === 'custom_dob') {
+        const alterForm = medicalForms.filter(
+          (medicalForm) => medicalForm.formName === 'basic_shortanswer'
+        )
+        if (alterForm.length > 0) {
+          cloneFormInfo.txtQuestion = 'Date of birth'
+          cloneFormInfo.txtLinkedField = 'DOB'
+          cloneFormInfo.txtDefaults = '[CLIENTDOB]'
+          cloneFormInfo.txtInputType = 'date'
+          setDraggedForms(
+            copy(
+              medicalForms,
+              draggedForms,
+              alterForm[0].id,
+              draggedForms.length,
+              cloneFormInfo
+            )
+          )
+        }
+      } else if (
+        item.formType === 'custom' &&
+        item.formName === 'custom_physicaladdress'
+      ) {
+        const alterForm = medicalForms.filter(
+          (medicalForm) => medicalForm.formName === 'basic_shortanswer'
+        )
+        if (alterForm.length > 0) {
+          cloneFormInfo.txtQuestion = 'Postcode'
+          cloneFormInfo.txtLinkedField = 'MailingPostal'
+          cloneFormInfo.txtDefaults = '[Postal]'
+          setDraggedForms(
+            copy(
+              medicalForms,
+              draggedForms,
+              alterForm[0].id,
+              draggedForms.length,
+              cloneFormInfo
+            )
+          )
+
+          cloneFormInfo.txtQuestion = 'City'
+          cloneFormInfo.txtLinkedField = 'MailingCity'
+          cloneFormInfo.txtDefaults = '[City]'
+          setDraggedForms(
+            copy(
+              medicalForms,
+              draggedForms,
+              alterForm[0].id,
+              draggedForms.length,
+              cloneFormInfo
+            )
+          )
+
+          cloneFormInfo.txtQuestion = 'Street Address'
+          cloneFormInfo.txtLinkedField = 'MailingStreet'
+          cloneFormInfo.txtDefaults = '[Street]'
+          setDraggedForms(
+            copy(
+              medicalForms,
+              draggedForms,
+              alterForm[0].id,
+              draggedForms.length,
+              cloneFormInfo
+            )
+          )
+        }
+      } else {
+        setDraggedForms(
+          copy(
+            medicalForms,
+            draggedForms,
+            item.id,
+            draggedForms.length,
+            cloneFormInfo
+          )
+        )
+      }
+      forceUpdate()
+    }
   }
 
   const onDragEnd = React.useCallback(
@@ -350,7 +566,7 @@ const MedicalFormEdit: FC<P> = ({ previewData, changeFormName, formName }) => {
             )
             if (alterForm.length > 0) {
               cloneFormInfo.txtQuestion = 'Postcode'
-              cloneFormInfo.txtLinkedField = ''
+              cloneFormInfo.txtLinkedField = 'MailingPostal'
               cloneFormInfo.txtDefaults = '[Postal]'
               setDraggedForms((state) =>
                 copy(
@@ -408,8 +624,26 @@ const MedicalFormEdit: FC<P> = ({ previewData, changeFormName, formName }) => {
     },
     [setDraggedForms]
   )
+
+  const handleOk = () => {
+    setIsModalVisible(false)
+  }
+
+  const handleCancel = () => {
+    setIsModalVisible(false)
+  }
+
   return (
     <Row>
+      <Modal
+        title="Form Data"
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        width={1000}
+      >
+        <p>{reservedFormData}</p>
+      </Modal>
       <DragDropContext onDragEnd={onDragEnd}>
         <Col className={styles.MedicalFormEditLeft}>
           <MedicalFormEditLeft
@@ -420,6 +654,7 @@ const MedicalFormEdit: FC<P> = ({ previewData, changeFormName, formName }) => {
             formName={formName}
             changeLayout={changeLayout}
             runPreviewPdf={runPreviewPdf}
+            handlingClickLeft={handlingClickLeft}
           />
         </Col>
         <Col
