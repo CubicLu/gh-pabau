@@ -1,14 +1,14 @@
 export interface LoginOutputDto {
-  user: UserOutput;
-  company: CompanyOutput;
+  user: UserOutput
+  company: CompanyOutput
 }
 
 interface UserOutput {
-  user_id: number;
-  username: string;
+  user_id: number
+  username: string
 }
 
 interface CompanyOutput {
-  company_id: number;
-  language: string;
+  company_id: number
+  language: string
 }

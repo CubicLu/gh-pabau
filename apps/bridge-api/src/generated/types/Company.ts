@@ -13,7 +13,6 @@ export const Company = objectType({
     t.model.remote_url()
     t.model.remote_connect()
     t.model.cron_enabled()
-    t.model.migrated()
     t.model.details()
     t.model.subscription()
     t.model.TwoFactorHistory()

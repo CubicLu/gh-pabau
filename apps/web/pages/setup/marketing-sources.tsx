@@ -6,97 +6,6 @@ import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { UserContext } from '../../context/UserContext'
 import { languageMapper } from '../../helper/languageMapper'
 
-const LIST_QUERY = gql`
-  query marketing_sources(
-    $isActive: Int = 1
-    $searchTerm: String = ""
-    $offset: Int
-    $limit: Int
-  ) {
-    marketingSources(
-      take: $limit
-      skip: $offset
-      orderBy: { name: desc }
-      where: {
-        public: { equals: $isActive }
-        OR: [{ AND: [{ name: { contains: $searchTerm } }] }]
-      }
-    ) {
-      __typename
-      id
-      name
-      public
-    }
-  }
-`
-
-const LIST_AGGREGATE_QUERY = gql`
-  query marketing_source_aggregate(
-    $isActive: Int = 1
-    $searchTerm: String = ""
-  ) {
-    marketingSourcesCount(
-      where: {
-        public: { equals: $isActive }
-        OR: [{ AND: [{ name: { contains: $searchTerm } }] }]
-      }
-    )
-  }
-`
-const DELETE_MUTATION = gql`
-  mutation delete_marketing_source($id: Int) {
-    deleteOneMarketingSource(where: { id: $id }) {
-      __typename
-      id
-    }
-  }
-`
-const ADD_MUTATION = gql`
-  mutation add_marketing_source(
-    $imported: Int = 0
-    $isActive: Int = 1
-    $name: String!
-    $custom_id: Int = 0
-    $companyId: Int!
-  ) {
-    createOneMarketingSource(
-      data: {
-        imported: $imported
-        name: $name
-        public: $isActive
-        custom_id: $custom_id
-        company: { connect: { id: $companyId } }
-      }
-    ) {
-      id
-    }
-  }
-`
-const EDIT_MUTATION = gql`
-  mutation update_marketing_source_by_pk(
-    $id: Int!
-    $source_name: String
-    $isActive: Int = 1
-  ) {
-    updateOneMarketingSource(
-      data: { name: { set: $source_name }, public: { set: $isActive } }
-      where: { id: $id }
-    ) {
-      id
-    }
-  }
-`
-const UPDATE_ORDER_MUTATION = gql`
-  mutation update_marketing_source_order($id: Int!, $order: Int) {
-    update_marketing_source(
-      where: { id: { _eq: $id } }
-      _set: { order: $order }
-    ) {
-      affected_rows
-    }
-  }
-`
-
 export const Index: NextPage = () => {
   const { t, i18n } = useTranslationI18()
   const user = useContext(UserContext)
@@ -104,7 +13,7 @@ export const Index: NextPage = () => {
   useEffect(() => {
     if (user) {
       const lan = user?.data?.me?.company?.details?.language
-      console.log(user)
+      console.log(user?.data?.me?.company?.id)
       const lanCode = lan ? languageMapper(lan) : 'en'
       i18n.changeLanguage(lanCode)
     }
@@ -160,6 +69,98 @@ export const Index: NextPage = () => {
       },
     },
   }
+  const LIST_QUERY = gql`
+    query marketing_sources(
+      $isActive: Int = 1
+      $searchTerm: String = ""
+      $offset: Int
+      $limit: Int
+    ) {
+      marketingSources(
+        take: $limit
+        skip: $offset
+        orderBy: { name: desc }
+        where: {
+          public: { equals: $isActive }
+          OR: [{ AND: [{ name: { contains: $searchTerm } }] }]
+        }
+      ) {
+        __typename
+        id
+        name
+        public
+      }
+    }
+  `
+
+  const LIST_AGGREGATE_QUERY = gql`
+    query marketing_source_aggregate(
+      $isActive: Int = 1
+      $searchTerm: String = ""
+    ) {
+      marketingSourcesCount(
+        where: {
+          public: { equals: $isActive }
+          OR: [{ AND: [{ name: { contains: $searchTerm } }] }]
+        }
+      )
+    }
+  `
+  const DELETE_MUTATION = gql`
+    mutation delete_marketing_source($id: Int) {
+      deleteOneMarketingSource(where: { id: $id }) {
+        __typename
+        id
+      }
+    }
+  `
+  const ADD_MUTATION = gql`
+    mutation add_marketing_source(
+      $imported: Int = 0
+      $isActive: Int = 1
+      $name: String!
+      $custom_id: Int = 0
+      $companyId: Int!
+    ) {
+      createOneMarketingSource(
+        data: {
+          imported: $imported
+          name: $name
+          public: $isActive
+          custom_id: $custom_id
+          company: { connect: { id: $companyId } }
+        }
+      ) {
+        __typename
+        id
+      }
+    }
+  `
+  const EDIT_MUTATION = gql`
+    mutation update_marketing_source_by_pk(
+      $id: Int!
+      $source_name: String
+      $isActive: Int = 1
+    ) {
+      updateOneMarketingSource(
+        data: { name: { set: $source_name }, public: { set: $isActive } }
+        where: { id: $id }
+      ) {
+        __typename
+        id
+      }
+    }
+  `
+  const UPDATE_ORDER_MUTATION = gql`
+    mutation update_marketing_source_order($id: Int!, $order: Int) {
+      update_marketing_source(
+        where: { id: { _eq: $id } }
+        _set: { order: $order }
+      ) {
+        affected_rows
+      }
+    }
+  `
   return (
     <CrudLayout
       schema={schema}

@@ -69,8 +69,13 @@ const CrudTable: FC<P> = ({
   const router = useRouter()
   const user = useContext(UserContext)
 
+  useEffect(() => {
+    console.log('this user', user)
+  })
+
   // eslint-disable-next-line graphql/template-strings
   const [editMutation] = useMutation(editQuery, {
+    awaitRefetchQueries: true,
     onCompleted(data) {
       Notification(
         NotificationType.success,
@@ -83,14 +88,18 @@ const CrudTable: FC<P> = ({
         `Error! ${schema.messages.update.error}`
       )
     },
+    optimisticResponse: {},
   })
   const [updateOrderMutation] = useMutation(updateOrderQuery, {
+    errorPolicy: 'ignore',
+    awaitRefetchQueries: true,
     onError(err) {
       Notification(
         NotificationType.error,
         `Error! ${schema.messages.update.error}`
       )
     },
+    optimisticResponse: {},
   })
   const [addMutation] = useMutation(addQuery, {
     onCompleted(data) {
@@ -105,12 +114,13 @@ const CrudTable: FC<P> = ({
         `Error! ${schema.messages.create.error}`
       )
     },
+    optimisticResponse: {},
   })
   const [sourceData, setSourceData] = useState(null)
   const [paginateData, setPaginateData] = useState({
     total: 0,
     offset: 0,
-    limit: 15,
+    limit: 10,
     currentPage: 1,
     showingRecords: 0,
   })
@@ -256,6 +266,7 @@ const CrudTable: FC<P> = ({
           },
           optimisticResponse: {},
           refetchQueries: [{ query: listQuery }],
+          awaitRefetchQueries: true,
           update: (proxy) => {
             if (listQuery) {
               const existing = proxy.readQuery({

@@ -4,17 +4,18 @@ import { Context } from '../context'
 // const companyColumns = ['occupier', 'company_id']
 const rules = {
   isAuthenticated: rule('isAuthenticated')(
-    (root, args, ctx: Context): boolean => {
-      if (!ctx.req.authenticatedUser) throw new Error('Please login!')
-      return true
+    async (root, args, ctx: Context): Promise<boolean> => {
+      if (ctx.req.authenticatedUser) return true
     }
   ),
   sameCompany: rule('sameCompany')(
-    (root, args, ctx: Context, info): boolean => {
-      if (root && root.company_id !== ctx.req.authenticatedUser.company){
+    async (root, args, ctx: Context, info): Promise<boolean> => {
+      if (root && root.company_id !== ctx.req.authenticatedUser.company)
         return false
-      }
-      if (info.returnType.toString().startsWith('['))
+      if (
+        info.returnType.toString().startsWith('[') ||
+        info.operation.name.value.includes('aggregate')
+      )
         args.where = {
           ...args.where,
           company_id: { equals: ctx.req.authenticatedUser.company },
@@ -22,24 +23,27 @@ const rules = {
       return true
     }
   ),
-  connectAuthenticatedCompany: rule()( (root, args, ctx:Context): boolean => {
-    args.data.company.connect.id = ctx.req.authenticatedUser.company
-    return true;
-  }),
-  injectCompanyId: rule()( (root, args, ctx:Context): boolean => {
-    args.where.company_id = ctx.req.authenticatedUser.company
-    return true;
-  }),
+  interceptMutation: rule('interceptMutation')(
+    async (root, args, ctx: Context, info): Promise<boolean> => {
+      console.log(info.returnType.toString)
+      console.log(info)
+      const record = await ctx.prisma.marketingSource.findFirst({
+        where: {
+          id: args.where.id,
+        },
+      })
+      return record.company_id === ctx.req.authenticatedUser.company
+    }
+  ),
 }
-export const permissions = shield(
-  {
-    Mutation: {
-      login: allow
-    },
+export const permissions = shield({
+  Mutation: {
+    login: allow,
+    logout: rules.isAuthenticated,
   },
-  {
-    fallbackRule: rules.isAuthenticated && rules.sameCompany,
-    fallbackError:
-      'You are not authorised to view this resource. Please login as the correct user.',
-  }
-)
+  Query: {
+    '*': rules.isAuthenticated && rules.sameCompany,
+    marketingSourcesCount: rules.isAuthenticated && rules.sameCompany,
+    me: rules.isAuthenticated,
+  },
+})

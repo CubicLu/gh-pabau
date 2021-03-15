@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { gql, QueryResult, useQuery } from '@apollo/client'
-import { UserContext } from './context/UserContext'
+import { UserContext } from '../context/UserContext'
 
 const CURRENT_USER = gql`
   query retrieveAuthenticatedUser {

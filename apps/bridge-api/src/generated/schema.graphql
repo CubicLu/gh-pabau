@@ -18749,7 +18749,6 @@ type Company {
   digit8: Int!
   id: Int!
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -18761,7 +18760,6 @@ type CompanyAvgAggregateOutputType {
   admin: Float!
   digit8: Float!
   id: Float!
-  migrated: Float
 }
 
 type CompanyCountAggregateOutputType {
@@ -18772,7 +18770,6 @@ type CompanyCountAggregateOutputType {
   digit8: Int!
   id: Int!
   image: Int
-  migrated: Int
   remote_connect: Int
   remote_url: Int
   slug: Int
@@ -18796,7 +18793,6 @@ input CompanyCreateInput {
   details: CompanyDetailsCreateNestedOneWithoutCompanyInput
   digit8: Int!
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -18952,7 +18948,6 @@ input CompanyCreateWithoutAcceptEmailTokenInput {
   details: CompanyDetailsCreateNestedOneWithoutCompanyInput
   digit8: Int!
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -18976,7 +18971,6 @@ input CompanyCreateWithoutAccountBalanceInput {
   details: CompanyDetailsCreateNestedOneWithoutCompanyInput
   digit8: Int!
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -19000,7 +18994,6 @@ input CompanyCreateWithoutCandidateInput {
   details: CompanyDetailsCreateNestedOneWithoutCompanyInput
   digit8: Int!
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -19024,7 +19017,6 @@ input CompanyCreateWithoutCmCampaignInput {
   details: CompanyDetailsCreateNestedOneWithoutCompanyInput
   digit8: Int!
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -19048,7 +19040,6 @@ input CompanyCreateWithoutCmCaseInput {
   details: CompanyDetailsCreateNestedOneWithoutCompanyInput
   digit8: Int!
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -19072,7 +19063,6 @@ input CompanyCreateWithoutCmCaseReplyInput {
   details: CompanyDetailsCreateNestedOneWithoutCompanyInput
   digit8: Int!
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -19096,7 +19086,6 @@ input CompanyCreateWithoutDetailsInput {
   cron_enabled: Boolean
   digit8: Int!
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -19120,7 +19109,6 @@ input CompanyCreateWithoutMarketingSourceInput {
   details: CompanyDetailsCreateNestedOneWithoutCompanyInput
   digit8: Int!
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -19145,7 +19133,6 @@ input CompanyCreateWithoutSubscriptionInput {
   details: CompanyDetailsCreateNestedOneWithoutCompanyInput
   digit8: Int!
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -19168,7 +19155,6 @@ input CompanyCreateWithoutThirdPartyAccessInput {
   details: CompanyDetailsCreateNestedOneWithoutCompanyInput
   digit8: Int!
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -19192,7 +19178,6 @@ input CompanyCreateWithoutTwoFactorHistoryInput {
   details: CompanyDetailsCreateNestedOneWithoutCompanyInput
   digit8: Int!
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -19216,7 +19201,6 @@ input CompanyCreateWithoutUserInput {
   details: CompanyDetailsCreateNestedOneWithoutCompanyInput
   digit8: Int!
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -21394,7 +21378,6 @@ type CompanyMaxAggregateOutputType {
   digit8: Int!
   id: Int!
   image: String
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -21408,7 +21391,6 @@ type CompanyMinAggregateOutputType {
   digit8: Int!
   id: Int!
   image: String
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -21423,7 +21405,6 @@ input CompanyOrderByInput {
   digit8: SortOrder
   id: SortOrder
   image: SortOrder
-  migrated: SortOrder
   remote_connect: SortOrder
   remote_url: SortOrder
   slug: SortOrder
@@ -21443,7 +21424,6 @@ enum CompanyScalarFieldEnum {
   digit8
   id
   image
-  migrated
   remote_connect
   remote_url
   slug
@@ -22900,7 +22880,6 @@ type CompanySumAggregateOutputType {
   admin: Int!
   digit8: Int!
   id: Int!
-  migrated: Int
 }
 
 input CompanyUncheckedCreateInput {
@@ -22921,7 +22900,6 @@ input CompanyUncheckedCreateInput {
   digit8: Int!
   id: Int
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -22946,7 +22924,6 @@ input CompanyUncheckedCreateWithoutAcceptEmailTokenInput {
   digit8: Int!
   id: Int
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -22971,7 +22948,6 @@ input CompanyUncheckedCreateWithoutAccountBalanceInput {
   digit8: Int!
   id: Int
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -22996,7 +22972,6 @@ input CompanyUncheckedCreateWithoutCandidateInput {
   digit8: Int!
   id: Int
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -23021,7 +22996,6 @@ input CompanyUncheckedCreateWithoutCmCampaignInput {
   digit8: Int!
   id: Int
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -23046,7 +23020,6 @@ input CompanyUncheckedCreateWithoutCmCaseInput {
   digit8: Int!
   id: Int
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -23071,7 +23044,6 @@ input CompanyUncheckedCreateWithoutCmCaseReplyInput {
   digit8: Int!
   id: Int
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -23096,7 +23068,6 @@ input CompanyUncheckedCreateWithoutDetailsInput {
   digit8: Int!
   id: Int
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -23121,7 +23092,6 @@ input CompanyUncheckedCreateWithoutMarketingSourceInput {
   digit8: Int!
   id: Int
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -23147,7 +23117,6 @@ input CompanyUncheckedCreateWithoutSubscriptionInput {
   digit8: Int!
   id: Int
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -23171,7 +23140,6 @@ input CompanyUncheckedCreateWithoutThirdPartyAccessInput {
   digit8: Int!
   id: Int
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -23196,7 +23164,6 @@ input CompanyUncheckedCreateWithoutTwoFactorHistoryInput {
   digit8: Int!
   id: Int
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -23221,7 +23188,6 @@ input CompanyUncheckedCreateWithoutUserInput {
   digit8: Int!
   id: Int
   image: String!
-  migrated: Int
   remote_connect: String
   remote_url: String
   slug: String
@@ -23247,7 +23213,6 @@ input CompanyUncheckedUpdateInput {
   digit8: IntFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23262,7 +23227,6 @@ input CompanyUncheckedUpdateManyInput {
   digit8: IntFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23286,7 +23250,6 @@ input CompanyUncheckedUpdateWithoutAcceptEmailTokenInput {
   digit8: IntFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23311,7 +23274,6 @@ input CompanyUncheckedUpdateWithoutAccountBalanceInput {
   digit8: IntFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23336,7 +23298,6 @@ input CompanyUncheckedUpdateWithoutCandidateInput {
   digit8: IntFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23361,7 +23322,6 @@ input CompanyUncheckedUpdateWithoutCmCampaignInput {
   digit8: IntFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23386,7 +23346,6 @@ input CompanyUncheckedUpdateWithoutCmCaseInput {
   digit8: IntFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23411,7 +23370,6 @@ input CompanyUncheckedUpdateWithoutCmCaseReplyInput {
   digit8: IntFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23436,7 +23394,6 @@ input CompanyUncheckedUpdateWithoutDetailsInput {
   digit8: IntFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23461,7 +23418,6 @@ input CompanyUncheckedUpdateWithoutMarketingSourceInput {
   digit8: IntFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23487,7 +23443,6 @@ input CompanyUncheckedUpdateWithoutSubscriptionInput {
   digit8: IntFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23511,7 +23466,6 @@ input CompanyUncheckedUpdateWithoutThirdPartyAccessInput {
   digit8: IntFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23536,7 +23490,6 @@ input CompanyUncheckedUpdateWithoutTwoFactorHistoryInput {
   digit8: IntFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23561,7 +23514,6 @@ input CompanyUncheckedUpdateWithoutUserInput {
   digit8: IntFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23586,7 +23538,6 @@ input CompanyUpdateInput {
   details: CompanyDetailsUpdateOneWithoutCompanyInput
   digit8: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23600,7 +23551,6 @@ input CompanyUpdateManyMutationInput {
   cron_enabled: NullableBoolFieldUpdateOperationsInput
   digit8: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23723,7 +23673,6 @@ input CompanyUpdateWithoutAcceptEmailTokenInput {
   details: CompanyDetailsUpdateOneWithoutCompanyInput
   digit8: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23747,7 +23696,6 @@ input CompanyUpdateWithoutAccountBalanceInput {
   details: CompanyDetailsUpdateOneWithoutCompanyInput
   digit8: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23771,7 +23719,6 @@ input CompanyUpdateWithoutCandidateInput {
   details: CompanyDetailsUpdateOneWithoutCompanyInput
   digit8: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23795,7 +23742,6 @@ input CompanyUpdateWithoutCmCampaignInput {
   details: CompanyDetailsUpdateOneWithoutCompanyInput
   digit8: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23819,7 +23765,6 @@ input CompanyUpdateWithoutCmCaseInput {
   details: CompanyDetailsUpdateOneWithoutCompanyInput
   digit8: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23843,7 +23788,6 @@ input CompanyUpdateWithoutCmCaseReplyInput {
   details: CompanyDetailsUpdateOneWithoutCompanyInput
   digit8: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23867,7 +23811,6 @@ input CompanyUpdateWithoutDetailsInput {
   cron_enabled: NullableBoolFieldUpdateOperationsInput
   digit8: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23891,7 +23834,6 @@ input CompanyUpdateWithoutMarketingSourceInput {
   details: CompanyDetailsUpdateOneWithoutCompanyInput
   digit8: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23916,7 +23858,6 @@ input CompanyUpdateWithoutSubscriptionInput {
   details: CompanyDetailsUpdateOneWithoutCompanyInput
   digit8: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23939,7 +23880,6 @@ input CompanyUpdateWithoutThirdPartyAccessInput {
   details: CompanyDetailsUpdateOneWithoutCompanyInput
   digit8: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23963,7 +23903,6 @@ input CompanyUpdateWithoutTwoFactorHistoryInput {
   details: CompanyDetailsUpdateOneWithoutCompanyInput
   digit8: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -23987,7 +23926,6 @@ input CompanyUpdateWithoutUserInput {
   details: CompanyDetailsUpdateOneWithoutCompanyInput
   digit8: IntFieldUpdateOperationsInput
   image: StringFieldUpdateOperationsInput
-  migrated: NullableIntFieldUpdateOperationsInput
   remote_connect: NullableStringFieldUpdateOperationsInput
   remote_url: NullableStringFieldUpdateOperationsInput
   slug: NullableStringFieldUpdateOperationsInput
@@ -24076,7 +24014,6 @@ input CompanyWhereInput {
   digit8: IntFilter
   id: IntFilter
   image: StringFilter
-  migrated: IntNullableFilter
   remote_connect: StringNullableFilter
   remote_url: StringNullableFilter
   slug: StringNullableFilter

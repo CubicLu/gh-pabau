@@ -9824,7 +9824,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsCreateNestedOneWithoutCompanyInput'] | null; // CompanyDetailsCreateNestedOneWithoutCompanyInput
     digit8: number; // Int!
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -9955,7 +9954,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsCreateNestedOneWithoutCompanyInput'] | null; // CompanyDetailsCreateNestedOneWithoutCompanyInput
     digit8: number; // Int!
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -9978,7 +9976,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsCreateNestedOneWithoutCompanyInput'] | null; // CompanyDetailsCreateNestedOneWithoutCompanyInput
     digit8: number; // Int!
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -10001,7 +9998,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsCreateNestedOneWithoutCompanyInput'] | null; // CompanyDetailsCreateNestedOneWithoutCompanyInput
     digit8: number; // Int!
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -10024,7 +10020,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsCreateNestedOneWithoutCompanyInput'] | null; // CompanyDetailsCreateNestedOneWithoutCompanyInput
     digit8: number; // Int!
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -10047,7 +10042,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsCreateNestedOneWithoutCompanyInput'] | null; // CompanyDetailsCreateNestedOneWithoutCompanyInput
     digit8: number; // Int!
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -10070,7 +10064,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsCreateNestedOneWithoutCompanyInput'] | null; // CompanyDetailsCreateNestedOneWithoutCompanyInput
     digit8: number; // Int!
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -10093,7 +10086,6 @@ export interface NexusGenInputs {
     cron_enabled?: boolean | null; // Boolean
     digit8: number; // Int!
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -10116,7 +10108,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsCreateNestedOneWithoutCompanyInput'] | null; // CompanyDetailsCreateNestedOneWithoutCompanyInput
     digit8: number; // Int!
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -10140,7 +10131,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsCreateNestedOneWithoutCompanyInput'] | null; // CompanyDetailsCreateNestedOneWithoutCompanyInput
     digit8: number; // Int!
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -10162,7 +10152,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsCreateNestedOneWithoutCompanyInput'] | null; // CompanyDetailsCreateNestedOneWithoutCompanyInput
     digit8: number; // Int!
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -10185,7 +10174,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsCreateNestedOneWithoutCompanyInput'] | null; // CompanyDetailsCreateNestedOneWithoutCompanyInput
     digit8: number; // Int!
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -10208,7 +10196,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsCreateNestedOneWithoutCompanyInput'] | null; // CompanyDetailsCreateNestedOneWithoutCompanyInput
     digit8: number; // Int!
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -11844,7 +11831,6 @@ export interface NexusGenInputs {
     digit8?: NexusGenEnums['SortOrder'] | null; // SortOrder
     id?: NexusGenEnums['SortOrder'] | null; // SortOrder
     image?: NexusGenEnums['SortOrder'] | null; // SortOrder
-    migrated?: NexusGenEnums['SortOrder'] | null; // SortOrder
     remote_connect?: NexusGenEnums['SortOrder'] | null; // SortOrder
     remote_url?: NexusGenEnums['SortOrder'] | null; // SortOrder
     slug?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -12822,7 +12808,6 @@ export interface NexusGenInputs {
     digit8: number; // Int!
     id?: number | null; // Int
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -12846,7 +12831,6 @@ export interface NexusGenInputs {
     digit8: number; // Int!
     id?: number | null; // Int
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -12870,7 +12854,6 @@ export interface NexusGenInputs {
     digit8: number; // Int!
     id?: number | null; // Int
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -12894,7 +12877,6 @@ export interface NexusGenInputs {
     digit8: number; // Int!
     id?: number | null; // Int
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -12918,7 +12900,6 @@ export interface NexusGenInputs {
     digit8: number; // Int!
     id?: number | null; // Int
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -12942,7 +12923,6 @@ export interface NexusGenInputs {
     digit8: number; // Int!
     id?: number | null; // Int
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -12966,7 +12946,6 @@ export interface NexusGenInputs {
     digit8: number; // Int!
     id?: number | null; // Int
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -12990,7 +12969,6 @@ export interface NexusGenInputs {
     digit8: number; // Int!
     id?: number | null; // Int
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -13014,7 +12992,6 @@ export interface NexusGenInputs {
     digit8: number; // Int!
     id?: number | null; // Int
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -13039,7 +13016,6 @@ export interface NexusGenInputs {
     digit8: number; // Int!
     id?: number | null; // Int
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -13062,7 +13038,6 @@ export interface NexusGenInputs {
     digit8: number; // Int!
     id?: number | null; // Int
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -13086,7 +13061,6 @@ export interface NexusGenInputs {
     digit8: number; // Int!
     id?: number | null; // Int
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -13110,7 +13084,6 @@ export interface NexusGenInputs {
     digit8: number; // Int!
     id?: number | null; // Int
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -13135,7 +13108,6 @@ export interface NexusGenInputs {
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13149,7 +13121,6 @@ export interface NexusGenInputs {
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13172,7 +13143,6 @@ export interface NexusGenInputs {
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13196,7 +13166,6 @@ export interface NexusGenInputs {
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13220,7 +13189,6 @@ export interface NexusGenInputs {
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13244,7 +13212,6 @@ export interface NexusGenInputs {
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13268,7 +13235,6 @@ export interface NexusGenInputs {
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13292,7 +13258,6 @@ export interface NexusGenInputs {
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13316,7 +13281,6 @@ export interface NexusGenInputs {
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13340,7 +13304,6 @@ export interface NexusGenInputs {
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13365,7 +13328,6 @@ export interface NexusGenInputs {
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13388,7 +13350,6 @@ export interface NexusGenInputs {
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13412,7 +13373,6 @@ export interface NexusGenInputs {
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13436,7 +13396,6 @@ export interface NexusGenInputs {
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13460,7 +13419,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsUpdateOneWithoutCompanyInput'] | null; // CompanyDetailsUpdateOneWithoutCompanyInput
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13473,7 +13431,6 @@ export interface NexusGenInputs {
     cron_enabled?: NexusGenInputs['NullableBoolFieldUpdateOperationsInput'] | null; // NullableBoolFieldUpdateOperationsInput
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13583,7 +13540,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsUpdateOneWithoutCompanyInput'] | null; // CompanyDetailsUpdateOneWithoutCompanyInput
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13606,7 +13562,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsUpdateOneWithoutCompanyInput'] | null; // CompanyDetailsUpdateOneWithoutCompanyInput
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13629,7 +13584,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsUpdateOneWithoutCompanyInput'] | null; // CompanyDetailsUpdateOneWithoutCompanyInput
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13652,7 +13606,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsUpdateOneWithoutCompanyInput'] | null; // CompanyDetailsUpdateOneWithoutCompanyInput
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13675,7 +13628,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsUpdateOneWithoutCompanyInput'] | null; // CompanyDetailsUpdateOneWithoutCompanyInput
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13698,7 +13650,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsUpdateOneWithoutCompanyInput'] | null; // CompanyDetailsUpdateOneWithoutCompanyInput
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13721,7 +13672,6 @@ export interface NexusGenInputs {
     cron_enabled?: NexusGenInputs['NullableBoolFieldUpdateOperationsInput'] | null; // NullableBoolFieldUpdateOperationsInput
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13744,7 +13694,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsUpdateOneWithoutCompanyInput'] | null; // CompanyDetailsUpdateOneWithoutCompanyInput
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13768,7 +13717,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsUpdateOneWithoutCompanyInput'] | null; // CompanyDetailsUpdateOneWithoutCompanyInput
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13790,7 +13738,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsUpdateOneWithoutCompanyInput'] | null; // CompanyDetailsUpdateOneWithoutCompanyInput
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13813,7 +13760,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsUpdateOneWithoutCompanyInput'] | null; // CompanyDetailsUpdateOneWithoutCompanyInput
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13836,7 +13782,6 @@ export interface NexusGenInputs {
     details?: NexusGenInputs['CompanyDetailsUpdateOneWithoutCompanyInput'] | null; // CompanyDetailsUpdateOneWithoutCompanyInput
     digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    migrated?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
     remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -13912,7 +13857,6 @@ export interface NexusGenInputs {
     digit8?: NexusGenInputs['IntFilter'] | null; // IntFilter
     id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     image?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    migrated?: NexusGenInputs['IntNullableFilter'] | null; // IntNullableFilter
     remote_connect?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     remote_url?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     slug?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
@@ -17382,7 +17326,7 @@ export interface NexusGenEnums {
   CmCaseScalarFieldEnum: "CreatedDate" | "IpAddress" | "case_number" | "comments" | "company_id" | "contact" | "critical" | "description" | "email" | "id" | "module2_type" | "module_type" | "ownerid" | "phone" | "priority" | "reason" | "related_to" | "reported_by" | "request" | "status" | "subject" | "type" | "user2_id" | "user_id"
   CmContactScalarFieldEnum: "AddToQuickBooks" | "Assistant" | "AsstPhone" | "Avatar" | "CreatedDate" | "DOB" | "Department" | "Description" | "Email" | "EmailOptOut" | "Fax" | "Fname" | "HomePhone" | "ID" | "IpAddress" | "LeadID" | "LeadSource" | "Lname" | "MailingCity" | "MailingCountry" | "MailingPostal" | "MailingProvince" | "MailingStreet" | "MarketingOptInAll" | "MarketingOptInEmail" | "MarketingOptInNewsletter" | "MarketingOptInPhone" | "MarketingOptInPost" | "MarketingOptInText" | "MarketingSource" | "MarketingSourceRelated" | "Mobile" | "Occupier" | "OtherCity" | "OtherCountry" | "OtherPhone" | "OtherPostal" | "OtherProvince" | "OtherStreet" | "OwnerID" | "Phone" | "RefferalSource" | "ReportsTo" | "Salutation" | "SecondaryEmail" | "SkypeId" | "Status" | "Title" | "Twitter" | "UpdatedDate" | "alerts_drop" | "ambassador_id" | "contact_type" | "contract_id" | "custom_clinic_id" | "custom_id" | "custom_marketing_source" | "customer_reference" | "discount_type" | "fbimg" | "gender" | "group_tag" | "imported" | "insurer_id" | "is_active" | "is_ambassador" | "location_id" | "need_to_knows" | "notes_drop" | "polite_notice" | "privacy_policy" | "xero_contact_id" | "xero_updated_date"
   CompanyDetailsScalarFieldEnum: "accept_insurance" | "admin" | "append_client_pref" | "auto_sms" | "calendar_version" | "capital_surname" | "city" | "class_teacher_singular" | "class_term_plural" | "class_term_singular" | "company_id" | "company_name" | "company_notes" | "completed_setup" | "contact_term_plural" | "contact_term_singular" | "converted_value" | "country" | "county" | "currency" | "cycles_display" | "date_format" | "db_lock" | "debrand_logo" | "default_inv_template_id" | "default_search" | "demo_mode" | "details_id" | "diagnosis_codes_type" | "disable_prescriptions" | "employee_clock_track" | "employee_term_plural" | "employee_term_singular" | "employees" | "enable_2fa" | "enable_ad" | "enable_ad_code" | "enable_ip_filter" | "enable_sens_data" | "facebook_page" | "fax" | "flag_enabled" | "footer_logo" | "head_office" | "header_logo" | "healthcode_live" | "industry_sector" | "info_email" | "is_surgical" | "language" | "legacy_consultations" | "linkedin_page" | "lock_export" | "lock_prescription" | "logo" | "medical_approvals" | "merge_bookings_tabs" | "new_reports" | "phone" | "phone_prefix" | "post_code" | "preferences_email" | "preferences_newsletters" | "preferences_post" | "preferences_sms" | "private_treatment_notes" | "rota_version" | "secure_medical_forms" | "sensitive_data_question" | "show_report_logo" | "slug" | "sms_active" | "stock_manager" | "street" | "subscription" | "tax_name" | "timezone_id" | "twitter_page" | "use_google_auth" | "vat" | "website" | "week_start_day" | "youtube_page"
-  CompanyScalarFieldEnum: "admin" | "creation_date" | "cron_enabled" | "digit8" | "id" | "image" | "migrated" | "remote_connect" | "remote_url" | "slug" | "user"
+  CompanyScalarFieldEnum: "admin" | "creation_date" | "cron_enabled" | "digit8" | "id" | "image" | "remote_connect" | "remote_url" | "slug" | "user"
   CompanySubscriptionScalarFieldEnum: "account_live" | "active" | "activity_logs" | "advanced_marketing_addon" | "am_group" | "am_start_date" | "bill_cycle" | "code" | "commission_rate" | "company_id" | "complete_account" | "complete_notes" | "demo_account" | "details_status" | "disable_sms" | "discount" | "enterprise_fee" | "enterprise_user_cost" | "exclude_reports" | "free_months" | "free_users" | "gc_amount" | "gc_customer_id" | "gc_email" | "gc_enterprise_plan_id" | "gc_plan_id" | "gc_support_plan_id" | "hide_in_comps" | "is_referral" | "leave_alert" | "license_expiry" | "license_id" | "license_type" | "live_server" | "low_credit_amount" | "low_sms_action" | "max_user_count" | "multiple_locations" | "onboarder_id" | "order_sheet" | "pabau_score" | "partner_id" | "payment_bounces" | "payment_id" | "phone_support" | "previous_system" | "price_range" | "renew_interval" | "sandbox_server" | "server_comp_id" | "setup_stage" | "setup_status" | "slack_support" | "sms_rate" | "storage" | "stripe_customer_id" | "stripe_fee" | "stripe_fee_type" | "stripe_subscription_id" | "sub_start_date" | "subscription_fee" | "subscription_name" | "support_fee" | "support_plan" | "suspend_sms" | "suspended_on" | "suspension_reason" | "trainer_id" | "training_date" | "training_status" | "trial" | "uid" | "warning_level" | "whatsapp_support"
   InvPaymentTypeScalarFieldEnum: "company_id" | "created_date" | "description" | "epos_display" | "id" | "is_active" | "is_money" | "modified_date" | "name" | "type" | "uid"
   MarketingSourceScalarFieldEnum: "company_id" | "custom_id" | "id" | "imported" | "name" | "public"
@@ -23804,7 +23748,6 @@ export interface NexusGenObjects {
     digit8: number; // Int!
     id: number; // Int!
     image: string; // String!
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -23814,7 +23757,6 @@ export interface NexusGenObjects {
     admin: number; // Float!
     digit8: number; // Float!
     id: number; // Float!
-    migrated?: number | null; // Float
   }
   CompanyCountAggregateOutputType: { // root type
     _all: number; // Int!
@@ -23824,7 +23766,6 @@ export interface NexusGenObjects {
     digit8: number; // Int!
     id: number; // Int!
     image?: number | null; // Int
-    migrated?: number | null; // Int
     remote_connect?: number | null; // Int
     remote_url?: number | null; // Int
     slug?: number | null; // Int
@@ -24250,7 +24191,6 @@ export interface NexusGenObjects {
     digit8: number; // Int!
     id: number; // Int!
     image?: string | null; // String
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -24263,7 +24203,6 @@ export interface NexusGenObjects {
     digit8: number; // Int!
     id: number; // Int!
     image?: string | null; // String
-    migrated?: number | null; // Int
     remote_connect?: string | null; // String
     remote_url?: string | null; // String
     slug?: string | null; // String
@@ -24666,7 +24605,6 @@ export interface NexusGenObjects {
     admin: number; // Int!
     digit8: number; // Int!
     id: number; // Int!
-    migrated?: number | null; // Int
   }
   InvPaymentType: { // root type
     company_id: number; // Int!
@@ -32014,7 +31952,6 @@ export interface NexusGenFieldTypes {
     digit8: number; // Int!
     id: number; // Int!
     image: string; // String!
-    migrated: number | null; // Int
     remote_connect: string | null; // String
     remote_url: string | null; // String
     slug: string | null; // String
@@ -32025,7 +31962,6 @@ export interface NexusGenFieldTypes {
     admin: number; // Float!
     digit8: number; // Float!
     id: number; // Float!
-    migrated: number | null; // Float
   }
   CompanyCountAggregateOutputType: { // field return type
     _all: number; // Int!
@@ -32035,7 +31971,6 @@ export interface NexusGenFieldTypes {
     digit8: number; // Int!
     id: number; // Int!
     image: number | null; // Int
-    migrated: number | null; // Int
     remote_connect: number | null; // Int
     remote_url: number | null; // Int
     slug: number | null; // Int
@@ -32463,7 +32398,6 @@ export interface NexusGenFieldTypes {
     digit8: number; // Int!
     id: number; // Int!
     image: string | null; // String
-    migrated: number | null; // Int
     remote_connect: string | null; // String
     remote_url: string | null; // String
     slug: string | null; // String
@@ -32476,7 +32410,6 @@ export interface NexusGenFieldTypes {
     digit8: number; // Int!
     id: number; // Int!
     image: string | null; // String
-    migrated: number | null; // Int
     remote_connect: string | null; // String
     remote_url: string | null; // String
     slug: string | null; // String
@@ -32880,7 +32813,6 @@ export interface NexusGenFieldTypes {
     admin: number; // Int!
     digit8: number; // Int!
     id: number; // Int!
-    migrated: number | null; // Int
   }
   InvPaymentType: { // field return type
     company_id: number; // Int!
@@ -41177,7 +41109,6 @@ export interface NexusGenFieldTypeNames {
     digit8: 'Int'
     id: 'Int'
     image: 'String'
-    migrated: 'Int'
     remote_connect: 'String'
     remote_url: 'String'
     slug: 'String'
@@ -41188,7 +41119,6 @@ export interface NexusGenFieldTypeNames {
     admin: 'Float'
     digit8: 'Float'
     id: 'Float'
-    migrated: 'Float'
   }
   CompanyCountAggregateOutputType: { // field return type name
     _all: 'Int'
@@ -41198,7 +41128,6 @@ export interface NexusGenFieldTypeNames {
     digit8: 'Int'
     id: 'Int'
     image: 'Int'
-    migrated: 'Int'
     remote_connect: 'Int'
     remote_url: 'Int'
     slug: 'Int'
@@ -41626,7 +41555,6 @@ export interface NexusGenFieldTypeNames {
     digit8: 'Int'
     id: 'Int'
     image: 'String'
-    migrated: 'Int'
     remote_connect: 'String'
     remote_url: 'String'
     slug: 'String'
@@ -41639,7 +41567,6 @@ export interface NexusGenFieldTypeNames {
     digit8: 'Int'
     id: 'Int'
     image: 'String'
-    migrated: 'Int'
     remote_connect: 'String'
     remote_url: 'String'
     slug: 'String'
@@ -42043,7 +41970,6 @@ export interface NexusGenFieldTypeNames {
     admin: 'Int'
     digit8: 'Int'
     id: 'Int'
-    migrated: 'Int'
   }
   InvPaymentType: { // field return type name
     company_id: 'Int'
