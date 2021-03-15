@@ -22,17 +22,21 @@
   .ant-table-thead > tr > th.ant-table-row-expand-icon-cell {
     position: sticky !important;
     z-index: 9999;
-    left: 192px;
+    left: 140px;
     background: #fafafa;
   }
   .ant-table-tbody > tr > td.ant-table-cell.ant-table-row-expand-icon-cell {
     border-right: 1px solid #f1f1f1;
     text-align: center;
     padding: 10px 16px;
-    background: #fff;
     position: sticky !important;
     z-index: 9999;
-    left: 192px;
+    left: 140px;
+  }
+  .ant-table-cell-fix-left-last {
+    &:after{
+      box-shadow: none;
+    }
   }
   .ant-table-expanded-row {
     display: none;
