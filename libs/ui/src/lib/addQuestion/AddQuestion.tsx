@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react'
 import { Input as AntInput } from 'antd'
-import { Button, Switch, QuestionBankModal } from '@pabau/ui'
+import { Button, Switch, QuestionBankModal, PabauPlus } from '@pabau/ui'
 import {
   CloseOutlined,
   PlusOutlined,
@@ -8,7 +8,6 @@ import {
 } from '@ant-design/icons'
 import { data, menuOptions } from '../questionBank/mock'
 import { IQuestionOptions } from '../questionBank/QuestionBank'
-
 import styles from './AddQuestion.module.less'
 
 export interface QuestionField {
@@ -62,7 +61,7 @@ export const AddQuestion: FC<AddQuestionProps> = ({
       <div className={styles.translate}>
         <span>
           Translate questions to clients local language.{' '}
-          <span className={styles.plusTag}>Plus</span>
+          <PabauPlus modalType="Marketing" />
         </span>
         <Switch size="small" />
       </div>

@@ -1,17 +1,36 @@
-import PabauLogo from './images/brands/Pabau.png'
-import FacebookLogo from './images/brands/Facebook.png'
-import GoogleLogo from './images/brands/Google.png'
-import TrustpilotLogo from './images/brands/Trustpilot.png'
-import DoctifyLogo from './images/brands/Doctify.png'
-import PabauBadge1 from './images/pabau-badge-1.png'
-import PabauBadge2 from './images/pabau-badge-2.png'
-import PabauWidget1 from './images/pabau-widget-1.png'
+import { IQuestionOptions } from '@pabau/ui'
+import PabauLogo from '../../../assets/images/brands/Pabau.png'
+import FacebookLogo from '../../../assets/images/brands/Facebook.png'
+import GoogleLogo from '../../../assets/images/brands/Google.png'
+import TrustpilotLogo from '../../../assets/images/brands/Trustpilot.png'
+import DoctifyLogo from '../../../assets/images/brands/Doctify.png'
+import PabauBadge1 from '../../../assets/images/pabau-badge-1.png'
+import PabauBadge2 from '../../../assets/images/pabau-badge-2.png'
+import PabauWidget1 from '../../../assets/images/pabau-widget-1.png'
+
+export interface FeedbackSurveyBuilder {
+  color: string
+  logotypePosition: string
+  logotypeSize: number
+  clientName: string
+  name: string
+  notifications: {
+    email: boolean
+    sms: boolean
+  }
+  voucherReward: string
+  surveyName: string
+  surveySubTitle: string
+  surveyFormat: boolean
+  questionsBank: IQuestionOptions[]
+}
 
 export const addQuestionData = {
   title: 'Questions',
   questionLabel: 'Question',
   addQuestionLabel: 'Add Question',
-  description: 'Choose the questions you wish to ask to the client.',
+  description:
+    'Choose the way in which you request feedback from clients who visit you',
   questions: [
     {
       title: 'How did you rate your consultation',
@@ -98,33 +117,50 @@ export const questionBankData = [
   },
 ]
 
+export const defaultBuilderSetting = {
+  color: '',
+  logotypePosition: 'Middle',
+  logotypeSize: 137,
+  clientName: 'Full Name',
+  name: 'Jamal Potter',
+  notifications: {
+    email: true,
+    sms: true,
+  },
+  voucherReward: 'No voucher issued',
+  surveyName: 'Client Feedback Survey',
+  surveySubTitle: 'Please, complete your responses below',
+  surveyFormat: false,
+  questionsBank: questionBankData,
+}
+
 export const integrations = {
   reviewData: [
     {
       header: 'Google reviews',
       description:
-        'Allow your clients to leave a review directly onto your Google page',
+        'Send events about certain actions to Google Analytics and create goals based on events to track conversations',
       logo: GoogleLogo,
       prefix: '',
     },
     {
       header: 'Facebook reviews',
       description:
-        'Allow your clients to leave a review directly onto your Facebook Page',
+        'Use Facebook Ads Pixel to track events, and create audiences based on their activities',
       logo: FacebookLogo,
       prefix: 'https://www.facebook.com/',
     },
     {
       header: 'Trust Pilot',
       description:
-        'Allow your clients to leave a review directly onto your Trust Pilot profile',
+        'Use Facebook Ads Pixel to track events, and create audiences based on their activities',
       logo: TrustpilotLogo,
       prefix: 'https://uk.trustpilot.com/evaluate/',
     },
     {
       header: 'Doctify',
       description:
-        'Allow your clients to leave a review directly onto your Doctify',
+        'Use Facebook Ads Pixel to track events, and create audiences based on their activities',
       logo: DoctifyLogo,
       prefix: 'https://www.doctify.co.uk/review/',
     },
@@ -132,21 +168,24 @@ export const integrations = {
   reviewedData: [
     {
       header: 'Pabau reviews',
-      description: 'Feedback results would feed directly in Pabau',
+      description: 'Feedback results would feed directly in Papau',
       logo: PabauLogo,
     },
   ],
 }
 
 const title = 'What our patients say'
+
 const execellentData = {
   name: 'EXCELLENT',
   value: 5,
 }
+
 const averageData = {
   name: 'Average',
   value: 4.95,
 }
+
 const reviewData = {
   name: 'Reviews',
   value: 539,
@@ -195,6 +234,37 @@ const reviews = [
   },
 ]
 
+interface WidgetPreview {
+  reviews: {
+    name: string
+    description: string
+    rating: number
+    key: number
+    reviewTime: string
+  }[]
+  title: string
+  execellentData: {
+    name: string
+    value: number
+  }
+  averageData: {
+    name: string
+    value: number
+  }
+  reviewData: {
+    name: string
+    value: number
+  }
+}
+
+export interface ReviewBadgeProp {
+  title: string
+  imgSrc: string
+  embedCode: string
+  wordpressPlugin?: string
+  preview?: WidgetPreview
+}
+
 export const reviewBadges = [
   {
     title: 'Pabau Badge 1',
@@ -221,7 +291,7 @@ export const reviewWidgets = [
   },
 ]
 
-export const defaultPreview = {
+export const defaultPreview: WidgetPreview = {
   reviews,
   title,
   execellentData,
