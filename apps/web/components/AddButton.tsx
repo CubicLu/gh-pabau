@@ -35,7 +35,9 @@ const AddButton: FC<P> = ({
   addFilter = true,
   needTranslation,
 }) => {
-  const [isActive, setIsActive] = useState(true)
+  const [isActive, setIsActive] = useState<boolean | number | string>(
+    schema?.fields?.filter?.defaultvalue ?? false
+  )
   const [mobFilterDrawer, setMobFilterDrawer] = useState(false)
   const [marketingSourceSearch, setMarketingSourceSearch] = useState('')
   const { t } = useTranslationI18()

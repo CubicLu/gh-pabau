@@ -139,11 +139,11 @@ export const Index: NextPage = () => {
   const EDIT_MUTATION = gql`
     mutation update_marketing_source_by_pk(
       $id: Int!
-      $source_name: String
-      $isActive: Int = 1
+      $name: String
+      $public: Int = 1
     ) {
       updateOneMarketingSource(
-        data: { name: { set: $source_name }, public: { set: $isActive } }
+        data: { name: { set: $name }, public: { set: $public } }
         where: { id: $id }
       ) {
         __typename

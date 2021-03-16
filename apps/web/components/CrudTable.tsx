@@ -69,10 +69,6 @@ const CrudTable: FC<P> = ({
   const router = useRouter()
   const user = useContext(UserContext)
 
-  useEffect(() => {
-    console.log('this user', user)
-  })
-
   // eslint-disable-next-line graphql/template-strings
   const [editMutation] = useMutation(editQuery, {
     awaitRefetchQueries: true,
@@ -143,6 +139,7 @@ const CrudTable: FC<P> = ({
       delete queryOptions.variables.searchTerm
     }
     if (!addFilter) {
+      console.log('my query vars', queryOptions.variables)
       delete queryOptions.variables.isActive
     }
     return queryOptions

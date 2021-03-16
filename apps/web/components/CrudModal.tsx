@@ -17,6 +17,7 @@ interface P {
 
 const CrudModal: FC<P> = ({
   schema,
+  addQuery,
   deleteQuery,
   listQuery,
   onClose,
@@ -24,7 +25,7 @@ const CrudModal: FC<P> = ({
 }) => {
   const [openDeleteModal, setDeleteModal] = useState(false)
   const [deleteMutation] = useMutation(deleteQuery, {
-    onCompleted() {
+    onCompleted(data) {
       Notification(
         NotificationType.success,
         `Success! ${schema.messages.delete.success}`
@@ -39,11 +40,12 @@ const CrudModal: FC<P> = ({
   })
   const formik = useFormikContext<unknown>()
 
+  //let formRef: { submitForm: () => void } | null = null
+  // const formRef = useEnsuredForwardedRef<{ submitForm: () => void }>(null)
+
   const schemaForm = { ...schema, fields: { ...schema.fields } }
   const specialFormElement =
-    schemaForm.fields['is_active'] ||
-    schemaForm.fields['public'] ||
-    schemaForm.fields['isActive']
+    schemaForm.fields['is_active'] || schemaForm.fields['public']
   delete schemaForm.fields['is_active']
   delete schemaForm.fields['public']
   delete schemaForm.fields['company_id']
@@ -51,17 +53,17 @@ const CrudModal: FC<P> = ({
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     (editingRow?.id && (editingRow?.is_active || editingRow?.public)) ??
-      ((typeof specialFormElement?.defaultvalue === 'boolean' ||
-        typeof specialFormElement?.defaultvalue === 'number') &&
-        specialFormElement.defaultvalue) ??
+      (editingRow?.is_active || editingRow?.public) ??
       true
   )
 
   useEffect(() => {
     setSpecialBoolean(
-      (editingRow?.id && (editingRow?.is_active as boolean)) ??
+      (editingRow?.id &&
+        ((editingRow?.is_active as boolean) ||
+          Boolean(editingRow?.public as number))) ??
         (typeof specialFormElement?.defaultvalue === 'boolean' &&
-          (Boolean(specialFormElement.defaultvalue) as boolean)) ??
+          (specialFormElement.defaultvalue as boolean)) ??
         true
     )
   }, [editingRow, specialFormElement])
@@ -78,7 +80,7 @@ const CrudModal: FC<P> = ({
           onClose?.()
         }}
         onOk={async () => {
-          const { id } = editingRow as { id: string }
+          const { id } = editingRow
           await deleteMutation({
             variables: { id },
             optimisticResponse: {},
@@ -158,10 +160,10 @@ const CrudModal: FC<P> = ({
         }
         dangerButtonText={editingRow?.id && `Delete`}
         specialBooleanLabel={!!specialFormElement && 'Active'}
-        specialBooleanValue={specialBoolean}
+        specialBooleanValue={Boolean(specialBoolean)}
         onSpecialBooleanClick={() => {
           setSpecialBoolean((e) => !e)
-          formik.setFieldValue('is_active', !specialBoolean)
+          formik.setFieldValue('is_active' || 'public', !specialBoolean)
         }}
         isValidate={
           editingRow?.isCreate ? formik.dirty && formik.isValid : formik.isValid
