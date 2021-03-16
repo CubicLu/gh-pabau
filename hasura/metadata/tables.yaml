@@ -7,21 +7,100 @@
       check: {}
       columns:
       - amount
-      - discount_code
-      - discount_name
+      - code
+      - date
+      - discount_rate
+      - employees
+      - is_active
+      - locations
+      - name
+      - order
+      - services
+      - show_on_reciept
+      - type
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - date
       - is_active
       - order
-      backend_only: false
+      - employees
+      - locations
+      - services
+      - amount
+      - code
+      - discount_rate
+      - name
+      - show_on_reciept
+      - type
+      - created_at
+      - updated_at
+      - id
+      filter: {}
   update_permissions:
   - role: public
     permission:
       columns:
       - amount
-      - discount_code
-      - discount_name
+      - code
+      - date
+      - discount_rate
+      - employees
       - is_active
+      - locations
+      - name
       - order
-      - updated_at
+      - services
+      - show_on_reciept
+      - type
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
+    name: LMS_slugs
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - id
+      - slug
+      - article_urls
+      - webinar
+      - blogs
+      - videos
+      - created_date
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - article_urls
+      - blogs
+      - videos
+      - slug
+      - webinar
+      - created_date
+      - id
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - article_urls
+      - blogs
+      - videos
+      - slug
+      - webinar
+      - created_date
+      - id
       filter: {}
       check: null
   delete_permissions:
@@ -98,6 +177,42 @@
 - table:
     schema: public
     name: Lists_campaign
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - members
+      - name
+      - order
+      - type
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - created_at
+      - id
+      - members
+      - name
+      - order
+      - type
+      - updated_at
+      filter: {}
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - members
+      - name
+      - order
+      - type
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
 - table:
     schema: public
     name: Newsletter_campaign
@@ -110,6 +225,7 @@
       - last_modified
       - name
       - opened
+      - order
       - revenue
       - sent_date
       - sent_to
@@ -118,16 +234,17 @@
   - role: public
     permission:
       columns:
-      - last_modified
-      - sent_date
       - clicked
-      - opened
-      - revenue
-      - sent_to
-      - name
       - created_at
-      - updated_at
       - id
+      - last_modified
+      - name
+      - opened
+      - order
+      - revenue
+      - sent_date
+      - sent_to
+      - updated_at
       filter: {}
       allow_aggregations: true
   update_permissions:
@@ -138,6 +255,7 @@
       - last_modified
       - name
       - opened
+      - order
       - revenue
       - sent_date
       - sent_to
@@ -150,6 +268,45 @@
 - table:
     schema: public
     name: SMS_campaign
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - last_modified
+      - name
+      - order
+      - sent_date
+      - sent_to
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - created_at
+      - id
+      - last_modified
+      - name
+      - order
+      - sent_date
+      - sent_to
+      - updated_at
+      filter: {}
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - last_modified
+      - name
+      - order
+      - sent_date
+      - sent_to
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
 - table:
     schema: public
     name: appointment_status
@@ -799,7 +956,6 @@
       columns:
       - is_active
       - name
-      - order
       backend_only: false
   select_permissions:
   - role: public
@@ -835,6 +991,9 @@
     permission:
       check: {}
       columns:
+      - ICD10_code
+      - ICD9_code
+      - OSICS10_code
       - code
       - description
       - is_active
@@ -848,6 +1007,9 @@
   - role: public
     permission:
       columns:
+      - ICD10_code
+      - ICD9_code
+      - OSICS10_code
       - code
       - created_at
       - description
@@ -860,10 +1022,14 @@
       - order
       - updated_at
       filter: {}
+      allow_aggregations: true
   update_permissions:
   - role: public
     permission:
       columns:
+      - ICD10_code
+      - ICD9_code
+      - OSICS10_code
       - code
       - description
       - is_active
@@ -905,6 +1071,7 @@
       - order
       - updated_at
       filter: {}
+      allow_aggregations: true
   update_permissions:
   - role: public
     permission:
@@ -1088,6 +1255,54 @@
       - street
       - vat_registered
       - website
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
+    name: job_openings
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - is_active
+      - hiring_lead
+      - id
+      - city
+      - country
+      - title
+      - created_at
+      - updated_at
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - is_active
+      - hiring_lead
+      - id
+      - city
+      - country
+      - title
+      - created_at
+      - updated_at
+      filter: {}
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - is_active
+      - hiring_lead
+      - id
+      - city
+      - country
+      - title
+      - created_at
+      - updated_at
       filter: {}
       check: null
   delete_permissions:
@@ -1327,6 +1542,7 @@
       - library_name
       - created_date
       filter: {}
+      allow_aggregations: true
   update_permissions:
   - role: public
     permission:
@@ -1440,6 +1656,58 @@
       filter: {}
 - table:
     schema: public
+    name: marketing_referral
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - incentive
+      - date
+      - spend
+      - referee
+      - referer
+      - state
+      - created_at
+      - updated_at
+      - id
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - incentive
+      - date
+      - spend
+      - referee
+      - referer
+      - state
+      - created_at
+      - updated_at
+      - id
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - incentive
+      - date
+      - spend
+      - referee
+      - referer
+      - state
+      - created_at
+      - updated_at
+      - id
+      filter: {}
+      check: {}
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
     name: marketing_source
   insert_permissions:
   - role: public
@@ -1474,6 +1742,9 @@
   - role: public
     permission:
       filter: {}
+- table:
+    schema: public
+    name: news
 - table:
     schema: public
     name: packages
@@ -1769,17 +2040,16 @@
   - role: public
     permission:
       columns:
-      - created_at
-      - updated_at
-      - name
-      - days
-      - start_time
-      - end_time
       - is_active
       - order
+      - days
+      - name
+      - created_at
+      - updated_at
+      - end_time
+      - start_time
       - id
       filter: {}
-      allow_aggregations: true
   update_permissions:
   - role: public
     permission:
@@ -1980,7 +2250,6 @@
       check: {}
       columns:
       - city
-      - company
       - country
       - email
       - health_code_identifier
@@ -1998,23 +2267,22 @@
   - role: public
     permission:
       columns:
+      - is_active
+      - order
       - city
-      - company
       - country
-      - created_at
       - email
       - health_code_identifier
-      - id
-      - is_active
       - name
-      - order
       - phone
       - post_code
       - provider_no
       - street
       - type
-      - updated_at
       - website
+      - created_at
+      - updated_at
+      - id
       filter: {}
       allow_aggregations: true
   update_permissions:
@@ -2022,7 +2290,6 @@
     permission:
       columns:
       - city
-      - company
       - country
       - email
       - health_code_identifier

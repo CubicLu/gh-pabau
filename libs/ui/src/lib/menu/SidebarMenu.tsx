@@ -38,12 +38,20 @@ export const sidebarMenu: SidebarMenuItem[] = [
         path: '/team/users',
       },
       {
-        menuName: 'Staff Targets',
+        menuName: 'Targets',
         path: '/team/targets',
       },
       {
         menuName: 'Schedule',
         path: '/team/schedule',
+      },
+      {
+        menuName: 'Hiring',
+        path: '/team/hiring',
+      },
+      {
+        menuName: 'Commissions',
+        path: '/team/commissions',
       },
     ],
   },

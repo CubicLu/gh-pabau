@@ -7,7 +7,12 @@ import {
   ProfileOutlined,
 } from '@ant-design/icons'
 import { Radio } from 'antd'
-import { BasicModal as Modal, ButtonTypes } from '@pabau/ui'
+import {
+  BasicModal as Modal,
+  ButtonTypes,
+  Notification,
+  NotificationType,
+} from '@pabau/ui'
 import SendLeadDevloperModal from './lead-forms/send-lead-devloper-modal'
 
 export const LeadIntegration: React.FC = () => {
@@ -18,6 +23,12 @@ export const LeadIntegration: React.FC = () => {
   const [openPabauLeadModal, setPabauLeadModal] = useState(false)
   const [typeOfIntegration, setTypeOfIntegration] = useState('Developer')
   const [sendToDeveloperModal, setSendToDeveloperModal] = useState(false)
+
+  const onSendToDeveloper = () => {
+    Notification(NotificationType.success, `Success! Sent to developer`)
+    setSendToDeveloperModal((e) => !e)
+    setPabauLeadModal((e) => !e)
+  }
 
   return (
     <>
@@ -86,7 +97,7 @@ export const LeadIntegration: React.FC = () => {
               </div>
               <div className={styles.leadTextChild}>
                 <h1>Documentation</h1>{' '}
-                <h5>Lorem ipsum dolor sit amet, consectetur adipiscing elit</h5>
+                <h5>Follow our simple integration guide</h5>
               </div>
             </div>
             <div
@@ -107,8 +118,7 @@ export const LeadIntegration: React.FC = () => {
                 </div>
               </div>
               <div className={styles.leadTextChild}>
-                <h1>Zapier</h1>{' '}
-                <h5>Lorem ipsum dolor sit amet, consectetur adipiscing elit</h5>
+                <h1>Zapier</h1> <h5>Integrate via a Zapier hook.</h5>
               </div>
             </div>
           </div>
@@ -160,9 +170,7 @@ export const LeadIntegration: React.FC = () => {
 
       <SendLeadDevloperModal
         openModal={sendToDeveloperModal}
-        onSendToDeveloper={() => {
-          setSendToDeveloperModal((e) => !e)
-        }}
+        onSendToDeveloper={onSendToDeveloper}
         onClose={() => setSendToDeveloperModal((e) => !e)}
       />
     </>

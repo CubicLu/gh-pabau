@@ -17,9 +17,13 @@ const { Step } = Steps
 interface P {
   reviewDate: Date
   isNote?: boolean
+  isReviewDatePeriodFrequency?: boolean
 }
 
-export const StaffPerformanceReview: FC<P> = ({ isNote }) => {
+export const StaffPerformanceReview: FC<P> = ({
+  isNote,
+  isReviewDatePeriodFrequency = true,
+}) => {
   const [reviewDate, setReviewDate] = useState(new Date())
   const [reviewPeriod, setReviewPeriod] = useState('Every 3 Months')
 
@@ -368,27 +372,29 @@ export const StaffPerformanceReview: FC<P> = ({ isNote }) => {
 
   return (
     <div>
-      <div className={styles.review}>
-        <div className={styles.drop}>
-          <label>Next Review Is Due...*</label>
-          <DatePicker
-            style={{ marginRight: '25px' }}
-            disabledDate={(current) => {
-              return (
-                moment().add(-1, 'days') >= current ||
-                moment().endOf('year') <= current
-              )
-            }}
-            onChange={onDateChange}
-          />
+      {isReviewDatePeriodFrequency && (
+        <div className={styles.review}>
+          <div className={styles.drop}>
+            <label>Next Review Is Due...*</label>
+            <DatePicker
+              style={{ marginRight: '25px' }}
+              disabledDate={(current) => {
+                return (
+                  moment().add(-1, 'days') >= current ||
+                  moment().endOf('year') <= current
+                )
+              }}
+              onChange={onDateChange}
+            />
+          </div>
+          <div className={styles.drop}>
+            <label>Review Period Frequency</label>
+            <Dropdown overlay={menu} placement="bottomCenter" arrow>
+              <Button>{reviewPeriod}</Button>
+            </Dropdown>
+          </div>
         </div>
-        <div className={styles.drop}>
-          <label>Review Period Frequency</label>
-          <Dropdown overlay={menu} placement="bottomCenter" arrow>
-            <Button>{reviewPeriod}</Button>
-          </Dropdown>
-        </div>
-      </div>
+      )}
       {isNote ? (
         <div className={styles.noteWrap}>
           <span>Note</span>

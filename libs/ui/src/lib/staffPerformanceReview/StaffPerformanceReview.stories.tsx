@@ -8,6 +8,7 @@ export default {
     reviewDate: new Date(new Date().setMonth(new Date().getMonth() + 1)),
     reviewPeriod: 'Every 3 Months',
     isNote: true,
+    isReviewDatePeriodFrequency: true,
   },
 }
 
@@ -32,4 +33,5 @@ staffPerformanceReview.args = {
   reviewDate: new Date(new Date().setMonth(new Date().getMonth() + 2)),
   reviewPeriod: 'Every 3 Months',
   isNote: false,
+  isReviewDatePeriodFrequency: true,
 }

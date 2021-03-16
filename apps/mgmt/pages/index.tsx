@@ -1,6 +1,6 @@
 import React from 'react'
 import { yup } from '@pabau/yup'
-import { Button, ButtonTypes } from '@pabau/ui'
+// import { Button, ButtonTypes } from '@pabau/ui'
 
 export function Index() {
   /*
@@ -10,7 +10,7 @@ export function Index() {
    */
   return (
     <div>
-      <Button type={ButtonTypes.primary}>mgmt</Button>
+      {/*<Button type={ButtonTypes.primary}>mgmt</Button>*/}
       <h2>Resources &amp; Tools</h2>
       <p>Thank you for using and showing some ♥ for Nx.</p>
       <div className="flex github-star-container">
