@@ -1,6 +1,6 @@
 {
   "name": "pabau",
-  "version": "2.0.208",
+  "version": "2.0.209",
   "license": "Copyright Hambrand Technologies Ltd",
   "bump-rebuild-all": 5,
   "scripts": {
@@ -176,6 +176,7 @@
     "@types/node": "~14.14.32",
     "@types/pluralize": "^0.0.29",
     "@types/react": "17.0.3",
+    "@types/react-custom-scrollbars": "^4.0.7",
     "@types/react-dom": "17.0.2",
     "@types/react-grid-layout": "^1.1.1",
     "@types/react-native": "0.63.51",
@@ -183,7 +184,6 @@
     "@typescript-eslint/eslint-plugin": "^4.17.0",
     "@typescript-eslint/parser": "^4.17.0",
     "@vercel/node": "^1.9.1",
-    "@types/react-custom-scrollbars": "^4.0.7",
     "babel-jest": "26.6.3",
     "babel-loader": "8.2.2",
     "bitbucket": "^2.5.1",
