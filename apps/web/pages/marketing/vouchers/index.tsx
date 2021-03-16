@@ -289,7 +289,7 @@ const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
             >
               <div className={styles.types}>
                 <Row>
-                  {gifts.length < 0 ? (
+                  {gifts.length > 0 ? (
                     gifts.map((gift, key) => (
                       <Col
                         lg={8}
