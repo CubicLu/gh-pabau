@@ -16,7 +16,7 @@ console.log(
 
 const PORT = process.env['PORT'] || 4000
 
-const app = express()
+export const app = express()
 app.set('trust proxy', true)
 app
   .use(cors())
@@ -28,7 +28,7 @@ app
   .use(
     cookieSession({
       signed: false,
-      secure: stringToBoolean(process.env['SECURE_COOKIES']),
+      secure: stringToBoolean(process.env.SECURE_COOKIES),
       httpOnly: true,
     })
   )
@@ -48,4 +48,8 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app })
 
-app.listen({ port: PORT }, () => console.log(`Server running on port ${PORT}`))
+if (process.env.JEST_WORKER_ID === undefined) {
+  app.listen({ port: PORT }, () =>
+    console.log(`Server running on port ${PORT}`)
+  )
+}

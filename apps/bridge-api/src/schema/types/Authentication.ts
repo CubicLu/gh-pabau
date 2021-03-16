@@ -16,18 +16,13 @@ export const Authentication = extendType({
         if (!loginInput.username || !loginInput.password) {
           throw new Error('Malformed Parameters')
         }
-        try {
-          const token = await new AuthenticationService(ctx).handleLoginRequest(
-            loginInput
-          )
-          ctx.req.session = {
-            jwt: token,
-          }
-          return token
-        } catch (error) {
-          console.error(error)
-          throw new Error('Unauthorized access')
-        }
+        const token = await new AuthenticationService(ctx).handleLoginRequest(
+          loginInput
+        )
+        // ctx.req.session = {
+        //   jwt: token,
+        // }
+        return token
       },
     })
 
@@ -35,7 +30,7 @@ export const Authentication = extendType({
       type: 'Boolean',
       args: {},
       async resolve(_, __, ctx: Context) {
-        ctx.req.session = null
+        // ctx.req.session = null
         return true
       },
     })
@@ -52,7 +47,8 @@ export const Me = extendType({
           where: {
             id: ctx.req.authenticatedUser.user,
           },
-        })
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        }) as any
       },
     })
   },
