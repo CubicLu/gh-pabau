@@ -9,7 +9,7 @@ const rules = {
     }
   ),
   sameCompany: rule('sameCompany')(
-    async (root, args, ctx: Context, info): Promise<boolean> => {
+    async (root, args, ctx, info): Promise<boolean> => {
       try {
         if (root && root.company_id !== ctx.req.authenticatedUser.company)
           return false

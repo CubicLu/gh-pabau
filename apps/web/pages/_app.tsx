@@ -44,8 +44,7 @@ require('react-phone-input-2/lib/style.css')
 const cache = new InMemoryCache()
 const GRAPHQL_ENDPOINT = 'wss://api.new.pabau.com/v1/graphql'
 const GRAPHQL_HTTP_ENDPOINT =
-  process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
-  'https://api.new.pabau.com/v1/graphql'
+  'http://localhost:4000/graphql' || 'https://api.new.pabau.com/v1/graphql'
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token')
@@ -98,6 +97,7 @@ const client = new ApolloClient({
   cache,
 })
 console.log(languages)
+
 i18next.init({
   interpolation: { escapeValue: false },
   lng: 'en',
