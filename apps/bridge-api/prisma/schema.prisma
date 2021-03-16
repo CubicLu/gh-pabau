@@ -4972,16 +4972,19 @@ model CmContact {
 //  value String
 //}
 //
-//model gl_codes {
-//  id          Int                  @id @default(autoincrement())
-//  company_id  Int
-//  code        String
-//  description gl_codes_description
-//  related_to  Int
-//
-//  @@index([company_id], name: "company_id")
-//  @@index([related_to], name: "related_to")
-//}
+model GlCode {
+  id          Int                  @id @default(autoincrement())
+  company_id  Int
+  code        String
+  description gl_codes_description
+  related_to  Int?
+  InvPaymentType     InvPaymentType?  @relation(fields: [related_to], references: [id])
+
+  @@map("gl_codes")
+
+  @@index([company_id], name: "company_id")
+  @@index([related_to], name: "related_to")
+}
 //
 //model gocardless_bills {
 //  primary_id         Int    @id @default(autoincrement())

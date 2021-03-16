@@ -1431,6 +1431,15 @@ export interface CmContact {
   contact_type: number;
 }
 
+export interface GlCode {
+  id: number;
+  company_id: number;
+  code: string;
+  description: gl_codes_description;
+  related_to?: number;
+  InvPaymentType?: InvPaymentType;
+}
+
 export interface InvPaymentType {
   id: number;
   name?: string;

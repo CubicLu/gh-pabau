@@ -28,6 +28,7 @@ const LIST_QUERY = gql`
     }
   }
 `
+
 const schema: Schema = {
   full: 'Tablesheet',
   fullLower: 'tablesheet',

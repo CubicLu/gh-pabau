@@ -14,6 +14,7 @@ export const InvPaymentType = objectType({
     t.model.is_active()
     t.model.is_money()
     t.model.type()
+    t.model.GlCode()
   },
 })
 

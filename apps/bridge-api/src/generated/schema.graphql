@@ -2606,6 +2606,14 @@ type AggregateCompanySubscription {
   sum: CompanySubscriptionSumAggregateOutputType
 }
 
+type AggregateGlCode {
+  avg: GlCodeAvgAggregateOutputType
+  count: GlCodeCountAggregateOutputType
+  max: GlCodeMaxAggregateOutputType
+  min: GlCodeMinAggregateOutputType
+  sum: GlCodeSumAggregateOutputType
+}
+
 type AggregateInvPaymentType {
   avg: InvPaymentTypeAvgAggregateOutputType
   count: InvPaymentTypeCountAggregateOutputType
@@ -24189,6 +24197,17 @@ input Enumcompany_details_tax_nameFilter {
   notIn: [company_details_tax_name]
 }
 
+input Enumgl_codes_descriptionFieldUpdateOperationsInput {
+  set: gl_codes_description
+}
+
+input Enumgl_codes_descriptionFilter {
+  equals: gl_codes_description
+  in: [gl_codes_description]
+  not: NestedEnumgl_codes_descriptionFilter
+  notIn: [gl_codes_description]
+}
+
 input FloatFieldUpdateOperationsInput {
   decrement: Float
   divide: Float
@@ -24217,6 +24236,238 @@ input FloatNullableFilter {
   lte: Float
   not: NestedFloatNullableFilter
   notIn: [Float]
+}
+
+type GlCode {
+  InvPaymentType: InvPaymentType
+  code: String!
+  company_id: Int!
+  description: gl_codes_description!
+  id: Int!
+  related_to: Int
+}
+
+type GlCodeAvgAggregateOutputType {
+  company_id: Float!
+  id: Float!
+  related_to: Float
+}
+
+type GlCodeCountAggregateOutputType {
+  _all: Int!
+  code: Int
+  company_id: Int!
+  description: Int
+  id: Int!
+  related_to: Int
+}
+
+input GlCodeCreateInput {
+  InvPaymentType: InvPaymentTypeCreateNestedOneWithoutGlCodeInput
+  code: String!
+  company_id: Int!
+  description: gl_codes_description!
+}
+
+input GlCodeCreateNestedManyWithoutInvPaymentTypeInput {
+  connect: [GlCodeWhereUniqueInput]
+  connectOrCreate: [GlCodeCreateOrConnectWithoutInvPaymentTypeInput]
+  create: [GlCodeCreateWithoutInvPaymentTypeInput]
+}
+
+input GlCodeCreateOrConnectWithoutInvPaymentTypeInput {
+  create: GlCodeUncheckedCreateWithoutInvPaymentTypeInput!
+  where: GlCodeWhereUniqueInput!
+}
+
+input GlCodeCreateWithoutInvPaymentTypeInput {
+  code: String!
+  company_id: Int!
+  description: gl_codes_description!
+}
+
+input GlCodeListRelationFilter {
+  every: GlCodeWhereInput
+  none: GlCodeWhereInput
+  some: GlCodeWhereInput
+}
+
+type GlCodeMaxAggregateOutputType {
+  code: String
+  company_id: Int!
+  description: gl_codes_description
+  id: Int!
+  related_to: Int
+}
+
+type GlCodeMinAggregateOutputType {
+  code: String
+  company_id: Int!
+  description: gl_codes_description
+  id: Int!
+  related_to: Int
+}
+
+input GlCodeOrderByInput {
+  InvPaymentType: InvPaymentTypeOrderByInput
+  code: SortOrder
+  company_id: SortOrder
+  description: SortOrder
+  id: SortOrder
+  related_to: SortOrder
+}
+
+enum GlCodeScalarFieldEnum {
+  code
+  company_id
+  description
+  id
+  related_to
+}
+
+input GlCodeScalarWhereInput {
+  AND: [GlCodeScalarWhereInput]
+  NOT: [GlCodeScalarWhereInput]
+  OR: [GlCodeScalarWhereInput]
+  code: StringFilter
+  company_id: IntFilter
+  description: Enumgl_codes_descriptionFilter
+  id: IntFilter
+  related_to: IntNullableFilter
+}
+
+type GlCodeSumAggregateOutputType {
+  company_id: Int!
+  id: Int!
+  related_to: Int
+}
+
+input GlCodeUncheckedCreateInput {
+  code: String!
+  company_id: Int!
+  description: gl_codes_description!
+  id: Int
+  related_to: Int
+}
+
+input GlCodeUncheckedCreateNestedManyWithoutInvPaymentTypeInput {
+  connect: [GlCodeWhereUniqueInput]
+  connectOrCreate: [GlCodeCreateOrConnectWithoutInvPaymentTypeInput]
+  create: [GlCodeCreateWithoutInvPaymentTypeInput]
+}
+
+input GlCodeUncheckedCreateWithoutInvPaymentTypeInput {
+  code: String!
+  company_id: Int!
+  description: gl_codes_description!
+  id: Int
+}
+
+input GlCodeUncheckedUpdateInput {
+  code: StringFieldUpdateOperationsInput
+  company_id: IntFieldUpdateOperationsInput
+  description: Enumgl_codes_descriptionFieldUpdateOperationsInput
+  id: IntFieldUpdateOperationsInput
+  related_to: NullableIntFieldUpdateOperationsInput
+}
+
+input GlCodeUncheckedUpdateManyInput {
+  code: StringFieldUpdateOperationsInput
+  company_id: IntFieldUpdateOperationsInput
+  description: Enumgl_codes_descriptionFieldUpdateOperationsInput
+  id: IntFieldUpdateOperationsInput
+  related_to: NullableIntFieldUpdateOperationsInput
+}
+
+input GlCodeUncheckedUpdateManyWithoutGlCodeInput {
+  code: StringFieldUpdateOperationsInput
+  company_id: IntFieldUpdateOperationsInput
+  description: Enumgl_codes_descriptionFieldUpdateOperationsInput
+  id: IntFieldUpdateOperationsInput
+}
+
+input GlCodeUncheckedUpdateManyWithoutInvPaymentTypeInput {
+  connect: [GlCodeWhereUniqueInput]
+  connectOrCreate: [GlCodeCreateOrConnectWithoutInvPaymentTypeInput]
+  create: [GlCodeCreateWithoutInvPaymentTypeInput]
+  delete: [GlCodeWhereUniqueInput]
+  deleteMany: [GlCodeScalarWhereInput]
+  disconnect: [GlCodeWhereUniqueInput]
+  set: [GlCodeWhereUniqueInput]
+  update: [GlCodeUpdateWithWhereUniqueWithoutInvPaymentTypeInput]
+  updateMany: [GlCodeUpdateManyWithWhereWithoutInvPaymentTypeInput]
+  upsert: [GlCodeUpsertWithWhereUniqueWithoutInvPaymentTypeInput]
+}
+
+input GlCodeUncheckedUpdateWithoutInvPaymentTypeInput {
+  code: StringFieldUpdateOperationsInput
+  company_id: IntFieldUpdateOperationsInput
+  description: Enumgl_codes_descriptionFieldUpdateOperationsInput
+  id: IntFieldUpdateOperationsInput
+}
+
+input GlCodeUpdateInput {
+  InvPaymentType: InvPaymentTypeUpdateOneWithoutGlCodeInput
+  code: StringFieldUpdateOperationsInput
+  company_id: IntFieldUpdateOperationsInput
+  description: Enumgl_codes_descriptionFieldUpdateOperationsInput
+}
+
+input GlCodeUpdateManyMutationInput {
+  code: StringFieldUpdateOperationsInput
+  company_id: IntFieldUpdateOperationsInput
+  description: Enumgl_codes_descriptionFieldUpdateOperationsInput
+}
+
+input GlCodeUpdateManyWithWhereWithoutInvPaymentTypeInput {
+  data: GlCodeUncheckedUpdateManyWithoutGlCodeInput!
+  where: GlCodeScalarWhereInput!
+}
+
+input GlCodeUpdateManyWithoutInvPaymentTypeInput {
+  connect: [GlCodeWhereUniqueInput]
+  connectOrCreate: [GlCodeCreateOrConnectWithoutInvPaymentTypeInput]
+  create: [GlCodeCreateWithoutInvPaymentTypeInput]
+  delete: [GlCodeWhereUniqueInput]
+  deleteMany: [GlCodeScalarWhereInput]
+  disconnect: [GlCodeWhereUniqueInput]
+  set: [GlCodeWhereUniqueInput]
+  update: [GlCodeUpdateWithWhereUniqueWithoutInvPaymentTypeInput]
+  updateMany: [GlCodeUpdateManyWithWhereWithoutInvPaymentTypeInput]
+  upsert: [GlCodeUpsertWithWhereUniqueWithoutInvPaymentTypeInput]
+}
+
+input GlCodeUpdateWithWhereUniqueWithoutInvPaymentTypeInput {
+  data: GlCodeUncheckedUpdateWithoutInvPaymentTypeInput!
+  where: GlCodeWhereUniqueInput!
+}
+
+input GlCodeUpdateWithoutInvPaymentTypeInput {
+  code: StringFieldUpdateOperationsInput
+  company_id: IntFieldUpdateOperationsInput
+  description: Enumgl_codes_descriptionFieldUpdateOperationsInput
+}
+
+input GlCodeUpsertWithWhereUniqueWithoutInvPaymentTypeInput {
+  create: GlCodeUncheckedCreateWithoutInvPaymentTypeInput!
+  update: GlCodeUncheckedUpdateWithoutInvPaymentTypeInput!
+  where: GlCodeWhereUniqueInput!
+}
+
+input GlCodeWhereInput {
+  AND: [GlCodeWhereInput]
+  InvPaymentType: InvPaymentTypeWhereInput
+  NOT: [GlCodeWhereInput]
+  OR: [GlCodeWhereInput]
+  code: StringFilter
+  company_id: IntFilter
+  description: Enumgl_codes_descriptionFilter
+  id: IntFilter
+  related_to: IntNullableFilter
+}
+
+input GlCodeWhereUniqueInput {
+  id: Int
 }
 
 input IntFieldUpdateOperationsInput {
@@ -24250,6 +24501,7 @@ input IntNullableFilter {
 }
 
 type InvPaymentType {
+  GlCode(cursor: GlCodeWhereUniqueInput, skip: Int, take: Int): [GlCode!]!
   company_id: Int!
   created_date: DateTime
   description: String
@@ -24288,6 +24540,31 @@ type InvPaymentTypeCountAggregateOutputType {
 }
 
 input InvPaymentTypeCreateInput {
+  GlCode: GlCodeCreateNestedManyWithoutInvPaymentTypeInput
+  company_id: Int!
+  created_date: DateTime
+  description: String
+  epos_display: Int
+  is_active: Int!
+  is_money: Int!
+  modified_date: DateTime
+  name: String
+  type: String
+  uid: Int
+}
+
+input InvPaymentTypeCreateNestedOneWithoutGlCodeInput {
+  connect: InvPaymentTypeWhereUniqueInput
+  connectOrCreate: InvPaymentTypeCreateOrConnectWithoutGlCodeInput
+  create: InvPaymentTypeUncheckedCreateWithoutGlCodeInput
+}
+
+input InvPaymentTypeCreateOrConnectWithoutGlCodeInput {
+  create: InvPaymentTypeUncheckedCreateWithoutGlCodeInput!
+  where: InvPaymentTypeWhereUniqueInput!
+}
+
+input InvPaymentTypeCreateWithoutGlCodeInput {
   company_id: Int!
   created_date: DateTime
   description: String
@@ -24342,6 +24619,11 @@ input InvPaymentTypeOrderByInput {
   uid: SortOrder
 }
 
+input InvPaymentTypeRelationFilter {
+  is: InvPaymentTypeWhereInput
+  isNot: InvPaymentTypeWhereInput
+}
+
 enum InvPaymentTypeScalarFieldEnum {
   company_id
   created_date
@@ -24366,6 +24648,21 @@ type InvPaymentTypeSumAggregateOutputType {
 }
 
 input InvPaymentTypeUncheckedCreateInput {
+  GlCode: GlCodeUncheckedCreateNestedManyWithoutInvPaymentTypeInput
+  company_id: Int!
+  created_date: DateTime
+  description: String
+  epos_display: Int
+  id: Int
+  is_active: Int!
+  is_money: Int!
+  modified_date: DateTime
+  name: String
+  type: String
+  uid: Int
+}
+
+input InvPaymentTypeUncheckedCreateWithoutGlCodeInput {
   company_id: Int!
   created_date: DateTime
   description: String
@@ -24380,6 +24677,7 @@ input InvPaymentTypeUncheckedCreateInput {
 }
 
 input InvPaymentTypeUncheckedUpdateInput {
+  GlCode: GlCodeUncheckedUpdateManyWithoutInvPaymentTypeInput
   company_id: IntFieldUpdateOperationsInput
   created_date: NullableDateTimeFieldUpdateOperationsInput
   description: NullableStringFieldUpdateOperationsInput
@@ -24407,7 +24705,22 @@ input InvPaymentTypeUncheckedUpdateManyInput {
   uid: NullableIntFieldUpdateOperationsInput
 }
 
+input InvPaymentTypeUncheckedUpdateWithoutGlCodeInput {
+  company_id: IntFieldUpdateOperationsInput
+  created_date: NullableDateTimeFieldUpdateOperationsInput
+  description: NullableStringFieldUpdateOperationsInput
+  epos_display: NullableIntFieldUpdateOperationsInput
+  id: IntFieldUpdateOperationsInput
+  is_active: IntFieldUpdateOperationsInput
+  is_money: IntFieldUpdateOperationsInput
+  modified_date: NullableDateTimeFieldUpdateOperationsInput
+  name: NullableStringFieldUpdateOperationsInput
+  type: StringFieldUpdateOperationsInput
+  uid: NullableIntFieldUpdateOperationsInput
+}
+
 input InvPaymentTypeUpdateInput {
+  GlCode: GlCodeUpdateManyWithoutInvPaymentTypeInput
   company_id: IntFieldUpdateOperationsInput
   created_date: NullableDateTimeFieldUpdateOperationsInput
   description: NullableStringFieldUpdateOperationsInput
@@ -24433,8 +24746,37 @@ input InvPaymentTypeUpdateManyMutationInput {
   uid: NullableIntFieldUpdateOperationsInput
 }
 
+input InvPaymentTypeUpdateOneWithoutGlCodeInput {
+  connect: InvPaymentTypeWhereUniqueInput
+  connectOrCreate: InvPaymentTypeCreateOrConnectWithoutGlCodeInput
+  create: InvPaymentTypeUncheckedCreateWithoutGlCodeInput
+  delete: Boolean
+  disconnect: Boolean
+  update: InvPaymentTypeUncheckedUpdateWithoutGlCodeInput
+  upsert: InvPaymentTypeUpsertWithoutGlCodeInput
+}
+
+input InvPaymentTypeUpdateWithoutGlCodeInput {
+  company_id: IntFieldUpdateOperationsInput
+  created_date: NullableDateTimeFieldUpdateOperationsInput
+  description: NullableStringFieldUpdateOperationsInput
+  epos_display: NullableIntFieldUpdateOperationsInput
+  is_active: IntFieldUpdateOperationsInput
+  is_money: IntFieldUpdateOperationsInput
+  modified_date: NullableDateTimeFieldUpdateOperationsInput
+  name: NullableStringFieldUpdateOperationsInput
+  type: StringFieldUpdateOperationsInput
+  uid: NullableIntFieldUpdateOperationsInput
+}
+
+input InvPaymentTypeUpsertWithoutGlCodeInput {
+  create: InvPaymentTypeUncheckedCreateWithoutGlCodeInput!
+  update: InvPaymentTypeUncheckedUpdateWithoutGlCodeInput!
+}
+
 input InvPaymentTypeWhereInput {
   AND: [InvPaymentTypeWhereInput]
+  GlCode: GlCodeListRelationFilter
   NOT: [InvPaymentTypeWhereInput]
   OR: [InvPaymentTypeWhereInput]
   company_id: IntFilter
@@ -24994,6 +25336,7 @@ type Mutation {
   createOneCompany(data: CompanyCreateInput!): Company!
   createOneCompanyDetails(data: CompanyDetailsCreateInput!): CompanyDetails!
   createOneCompanySubscription(data: CompanySubscriptionCreateInput!): CompanySubscription!
+  createOneGlCode(data: GlCodeCreateInput!): GlCode!
   createOneInvPaymentType(data: InvPaymentTypeCreateInput!): InvPaymentType!
   createOneMarketingSource(data: MarketingSourceCreateInput!): MarketingSource!
   createOneMediaLlibraryAttachment(data: MediaLlibraryAttachmentCreateInput!): MediaLlibraryAttachment!
@@ -25089,6 +25432,7 @@ type Mutation {
   deleteManyCompany(where: CompanyWhereInput): AffectedRowsOutput!
   deleteManyCompanyDetails(where: CompanyDetailsWhereInput): AffectedRowsOutput!
   deleteManyCompanySubscription(where: CompanySubscriptionWhereInput): AffectedRowsOutput!
+  deleteManyGlCode(where: GlCodeWhereInput): AffectedRowsOutput!
   deleteManyInvPaymentType(where: InvPaymentTypeWhereInput): AffectedRowsOutput!
   deleteManyMarketingSource(where: MarketingSourceWhereInput): AffectedRowsOutput!
   deleteManyMediaLlibraryAttachment(where: MediaLlibraryAttachmentWhereInput): AffectedRowsOutput!
@@ -25184,6 +25528,7 @@ type Mutation {
   deleteOneCompany(where: CompanyWhereUniqueInput!): Company
   deleteOneCompanyDetails(where: CompanyDetailsWhereUniqueInput!): CompanyDetails
   deleteOneCompanySubscription(where: CompanySubscriptionWhereUniqueInput!): CompanySubscription
+  deleteOneGlCode(where: GlCodeWhereUniqueInput!): GlCode
   deleteOneInvPaymentType(where: InvPaymentTypeWhereUniqueInput!): InvPaymentType
   deleteOneMarketingSource(where: MarketingSourceWhereUniqueInput!): MarketingSource
   deleteOneMediaLlibraryAttachment(where: MediaLlibraryAttachmentWhereUniqueInput!): MediaLlibraryAttachment
@@ -25281,6 +25626,7 @@ type Mutation {
   updateManyCompany(data: CompanyUpdateManyMutationInput!, where: CompanyWhereInput): AffectedRowsOutput!
   updateManyCompanyDetails(data: CompanyDetailsUpdateManyMutationInput!, where: CompanyDetailsWhereInput): AffectedRowsOutput!
   updateManyCompanySubscription(data: CompanySubscriptionUpdateManyMutationInput!, where: CompanySubscriptionWhereInput): AffectedRowsOutput!
+  updateManyGlCode(data: GlCodeUpdateManyMutationInput!, where: GlCodeWhereInput): AffectedRowsOutput!
   updateManyInvPaymentType(data: InvPaymentTypeUpdateManyMutationInput!, where: InvPaymentTypeWhereInput): AffectedRowsOutput!
   updateManyMarketingSource(data: MarketingSourceUpdateManyMutationInput!, where: MarketingSourceWhereInput): AffectedRowsOutput!
   updateManyMediaLlibraryAttachment(data: MediaLlibraryAttachmentUpdateManyMutationInput!, where: MediaLlibraryAttachmentWhereInput): AffectedRowsOutput!
@@ -25376,6 +25722,7 @@ type Mutation {
   updateOneCompany(data: CompanyUpdateInput!, where: CompanyWhereUniqueInput!): Company
   updateOneCompanyDetails(data: CompanyDetailsUpdateInput!, where: CompanyDetailsWhereUniqueInput!): CompanyDetails
   updateOneCompanySubscription(data: CompanySubscriptionUpdateInput!, where: CompanySubscriptionWhereUniqueInput!): CompanySubscription
+  updateOneGlCode(data: GlCodeUpdateInput!, where: GlCodeWhereUniqueInput!): GlCode
   updateOneInvPaymentType(data: InvPaymentTypeUpdateInput!, where: InvPaymentTypeWhereUniqueInput!): InvPaymentType
   updateOneMarketingSource(data: MarketingSourceUpdateInput!, where: MarketingSourceWhereUniqueInput!): MarketingSource
   updateOneMediaLlibraryAttachment(data: MediaLlibraryAttachmentUpdateInput!, where: MediaLlibraryAttachmentWhereUniqueInput!): MediaLlibraryAttachment
@@ -25471,6 +25818,7 @@ type Mutation {
   upsertOneCompany(create: CompanyCreateInput!, update: CompanyUpdateInput!, where: CompanyWhereUniqueInput!): Company!
   upsertOneCompanyDetails(create: CompanyDetailsCreateInput!, update: CompanyDetailsUpdateInput!, where: CompanyDetailsWhereUniqueInput!): CompanyDetails!
   upsertOneCompanySubscription(create: CompanySubscriptionCreateInput!, update: CompanySubscriptionUpdateInput!, where: CompanySubscriptionWhereUniqueInput!): CompanySubscription!
+  upsertOneGlCode(create: GlCodeCreateInput!, update: GlCodeUpdateInput!, where: GlCodeWhereUniqueInput!): GlCode!
   upsertOneInvPaymentType(create: InvPaymentTypeCreateInput!, update: InvPaymentTypeUpdateInput!, where: InvPaymentTypeWhereUniqueInput!): InvPaymentType!
   upsertOneMarketingSource(create: MarketingSourceCreateInput!, update: MarketingSourceUpdateInput!, where: MarketingSourceWhereUniqueInput!): MarketingSource!
   upsertOneMediaLlibraryAttachment(create: MediaLlibraryAttachmentCreateInput!, update: MediaLlibraryAttachmentUpdateInput!, where: MediaLlibraryAttachmentWhereUniqueInput!): MediaLlibraryAttachment!
@@ -25604,6 +25952,13 @@ input NestedEnumcompany_details_tax_nameFilter {
   in: [company_details_tax_name]
   not: NestedEnumcompany_details_tax_nameFilter
   notIn: [company_details_tax_name]
+}
+
+input NestedEnumgl_codes_descriptionFilter {
+  equals: gl_codes_description
+  in: [gl_codes_description]
+  not: NestedEnumgl_codes_descriptionFilter
+  notIn: [gl_codes_description]
 }
 
 input NestedFloatFilter {
@@ -26055,6 +26410,7 @@ type Query {
   findFirstCompany(cursor: CompanyWhereUniqueInput, orderBy: CompanyOrderByInput, skip: Int, take: Int, where: CompanyWhereInput): Company
   findFirstCompanyDetails(cursor: CompanyDetailsWhereUniqueInput, orderBy: CompanyDetailsOrderByInput, skip: Int, take: Int, where: CompanyDetailsWhereInput): CompanyDetails
   findFirstCompanySubscription(cursor: CompanySubscriptionWhereUniqueInput, orderBy: CompanySubscriptionOrderByInput, skip: Int, take: Int, where: CompanySubscriptionWhereInput): CompanySubscription
+  findFirstGlCode(cursor: GlCodeWhereUniqueInput, orderBy: GlCodeOrderByInput, skip: Int, take: Int, where: GlCodeWhereInput): GlCode
   findFirstInvPaymentType(cursor: InvPaymentTypeWhereUniqueInput, orderBy: InvPaymentTypeOrderByInput, skip: Int, take: Int, where: InvPaymentTypeWhereInput): InvPaymentType
   findFirstMarketingSource(cursor: MarketingSourceWhereUniqueInput, orderBy: MarketingSourceOrderByInput, skip: Int, take: Int, where: MarketingSourceWhereInput): MarketingSource
   findFirstMediaLlibraryAttachment(cursor: MediaLlibraryAttachmentWhereUniqueInput, orderBy: MediaLlibraryAttachmentOrderByInput, skip: Int, take: Int, where: MediaLlibraryAttachmentWhereInput): MediaLlibraryAttachment
@@ -26065,6 +26421,9 @@ type Query {
   findFirstTwoFactorHistory(cursor: TwoFactorHistoryWhereUniqueInput, orderBy: TwoFactorHistoryOrderByInput, skip: Int, take: Int, where: TwoFactorHistoryWhereInput): TwoFactorHistory
   findFirstUser(cursor: UserWhereUniqueInput, orderBy: UserOrderByInput, skip: Int, take: Int, where: UserWhereInput): User
   findFirstUserSecurityQuestionsAnswer(cursor: UserSecurityQuestionsAnswerWhereUniqueInput, orderBy: UserSecurityQuestionsAnswerOrderByInput, skip: Int, take: Int, where: UserSecurityQuestionsAnswerWhereInput): UserSecurityQuestionsAnswer
+  glCode(where: GlCodeWhereUniqueInput!): GlCode
+  glCodes(cursor: GlCodeWhereUniqueInput, orderBy: [GlCodeOrderByInput!], skip: Int, take: Int, where: GlCodeWhereInput): [GlCode!]!
+  glCodesCount(where: GlCodeWhereInput): Int
   invPaymentType(where: InvPaymentTypeWhereUniqueInput!): InvPaymentType
   invPaymentTypes(cursor: InvPaymentTypeWhereUniqueInput, orderBy: [InvPaymentTypeOrderByInput!], skip: Int, take: Int, where: InvPaymentTypeWhereInput): [InvPaymentType!]!
   invPaymentTypesCount(where: InvPaymentTypeWhereInput): Int
@@ -29868,4 +30227,14 @@ enum cm_contacts_Status {
 enum company_details_tax_name {
   GST
   VAT
+}
+
+enum gl_codes_description {
+  discount
+  location_code
+  payment_type
+  product_code
+  service_code
+  setup
+  tax_rate
 }
