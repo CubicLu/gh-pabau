@@ -17,6 +17,7 @@ import React from 'react'
 import { I18nextProvider, initReactI18next } from 'react-i18next'
 import 'react-phone-input-2/lib/style.css'
 import 'react-quill/dist/quill.snow.css'
+import 'react-image-crop/dist/ReactCrop.css'
 import ContextWrapper from '../components/ContextWrapper'
 import { languages } from '@pabau/i18n'
 

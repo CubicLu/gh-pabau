@@ -4,7 +4,6 @@ import customCompanyIcon from '../../assets/images/medicalform_custom_company.sv
 import customDobIcon from '../../assets/images/medicalform_custom_dob.svg'
 import customGenderIcon from '../../assets/images/medicalform_custom_gender.svg'
 import customPhyAddressIcon from '../../assets/images/medicalform_custom_physical_address.svg'
-import customPostalAddressIcon from '../../assets/images/medicalform_custom_postal_address.svg'
 import customReferIcon from '../../assets/images/medicalform_custom_refer.svg'
 import customTelePhoneIcon from '../../assets/images/medicalform_custom_tele_phone.svg'
 import dobIcon from '../../assets/images/medicalform_dob.svg'
@@ -28,9 +27,10 @@ import LeftSidebarMedicalFormTitle from './LeftSidebarMedicalFormTitle'
 interface P {
   type: string
   component: string
+  handlingClickLeft: (componentName: string) => void
 }
 
-const LeftSidebarElement: FC<P> = ({ type, component }) => {
+const LeftSidebarElement: FC<P> = ({ type, component, handlingClickLeft }) => {
   const componentInfos = [
     {
       component: 'basic_heading',
@@ -95,6 +95,14 @@ const LeftSidebarElement: FC<P> = ({ type, component }) => {
       bgcolor: '#F78561',
       title: 'Drawing',
       desc: 'Draw on an image or a photo',
+    },
+    {
+      component: 'basic_staticimage',
+      type: { type },
+      iconUrl: drawingIcon,
+      bgcolor: '#F78561',
+      title: 'Image',
+      desc: 'Show an image or a photo',
     },
     {
       component: 'basic_signature',
@@ -234,14 +242,6 @@ const LeftSidebarElement: FC<P> = ({ type, component }) => {
       desc: 'Confirm a clients physical address',
     },
     {
-      component: 'custom_postaladdress',
-      type: { type },
-      iconUrl: customPostalAddressIcon,
-      bgcolor: '#88C65B',
-      title: 'Postal address',
-      desc: 'Confirm a clients postal address',
-    },
-    {
       component: 'custom_referredby',
       type: { type },
       iconUrl: customReferIcon,
@@ -264,7 +264,10 @@ const LeftSidebarElement: FC<P> = ({ type, component }) => {
   )
 
   return (
-    <div className={styles.mainBody}>
+    <div
+      className={styles.mainBody}
+      onClick={() => handlingClickLeft?.(component)}
+    >
       {filteredComponent && (
         <LeftSidebarMedicalFormTitle
           iconUrl={filteredComponent[0].iconUrl}

@@ -1,11 +1,11 @@
 import { MedicalFormTypes } from '@pabau/ui'
+import _ from 'lodash'
 import React, { FC, useEffect, useState } from 'react'
 import conditionsIcon from '../../assets/images/medicalform_conditions.svg'
 import customCompanyIcon from '../../assets/images/medicalform_custom_company.svg'
 import customDobIcon from '../../assets/images/medicalform_custom_dob.svg'
 import customGenderIcon from '../../assets/images/medicalform_custom_gender.svg'
 import customPhyAddressIcon from '../../assets/images/medicalform_custom_physical_address.svg'
-import customPostalAddressIcon from '../../assets/images/medicalform_custom_postal_address.svg'
 import customReferIcon from '../../assets/images/medicalform_custom_refer.svg'
 import customTelePhoneIcon from '../../assets/images/medicalform_custom_tele_phone.svg'
 import dobIcon from '../../assets/images/medicalform_dob.svg'
@@ -29,8 +29,6 @@ import SettingElementMultiOptions from './SettingElementMultiOptions'
 import SettingElementOption from './SettingElementOption'
 import SettingElementQuestion from './SettingElementQuestion'
 import SettingElementTextBlock from './SettingElementTextBlock'
-import SettingElementTextBox from './SettingElementTextBox'
-import SettingElementTypeOption from './SettingElementTypeOption'
 import SettingMedicalForm from './SettingMedicalForm'
 import SettingMedicalFormBody from './SettingMedicalFormBody'
 import SettingMedicalFormBottom from './SettingMedicalFormBottom'
@@ -42,7 +40,7 @@ interface P {
   type: string
   component: string
   selectedForm: MedicalFormTypes
-  handleSave?: () => void
+  handleSave?: (form: MedicalFormTypes) => void
   handleDelete?: () => void
 }
 
@@ -53,8 +51,9 @@ const SettingElement: FC<P> = ({
   handleSave,
   handleDelete,
 }) => {
-  const [form, setForm] = useState(JSON.parse(JSON.stringify(selectedForm)))
+  const [form, setForm] = useState(_.cloneDeep(selectedForm))
   const [addedItems, setAddedItems] = useState(0)
+  const [changedForm, setChangedForm] = useState(false)
   const [errMsg, setErrMsg] = useState('')
   const componentInfos = [
     {
@@ -120,6 +119,14 @@ const SettingElement: FC<P> = ({
       bgcolor: '#F78561',
       title: 'Drawing',
       desc: 'Draw on an image or a photo',
+    },
+    {
+      component: 'basic_staticimage',
+      type: { type },
+      iconUrl: drawingIcon,
+      bgcolor: '#F78561',
+      title: 'Image',
+      desc: 'Show an image or a photo',
     },
     {
       component: 'basic_signature',
@@ -259,14 +266,6 @@ const SettingElement: FC<P> = ({
       desc: 'Confirm a clients physical address',
     },
     {
-      component: 'custom_postaladdress',
-      type: { type },
-      iconUrl: customPostalAddressIcon,
-      bgcolor: '#88C65B',
-      title: 'Postal address',
-      desc: 'Confirm a clients postal address',
-    },
-    {
       component: 'custom_referredby',
       type: { type },
       iconUrl: customReferIcon,
@@ -285,8 +284,9 @@ const SettingElement: FC<P> = ({
   ]
 
   useEffect(() => {
-    setForm(JSON.parse(JSON.stringify(selectedForm)))
+    setForm(_.cloneDeep(selectedForm))
     setAddedItems(selectedForm.arrItems.length)
+    setChangedForm((changedForm) => !changedForm)
   }, [selectedForm])
 
   const eventhandler = (addedItems) => {
@@ -297,13 +297,6 @@ const SettingElement: FC<P> = ({
   }
 
   const saveFunc = () => {
-    selectedForm.txtQuestion = form.txtQuestion
-    selectedForm.txtBlock = form.txtBlock
-    selectedForm.txtInputType = form.txtInputType
-    selectedForm.arrItems = form.arrItems
-    selectedForm.required = form.required
-    selectedForm.txtDefaults = form.txtDefaults
-
     if (
       component === 'basic_singlechoice' ||
       component === 'basic_multiplechoice' ||
@@ -311,12 +304,12 @@ const SettingElement: FC<P> = ({
     ) {
       if (addedItems > 0) {
         setErrMsg('')
-        handleSave?.()
+        handleSave?.(form)
       } else {
         setErrMsg('Please add an option')
       }
     } else {
-      handleSave?.()
+      handleSave?.(form)
     }
   }
 
@@ -340,6 +333,16 @@ const SettingElement: FC<P> = ({
 
   const onChangeDefaults = (value) => {
     const tempForm = { ...form, txtDefaults: value }
+    setForm(tempForm)
+  }
+
+  const onChangeLinkedField = (value) => {
+    const tempForm = { ...form, txtLinkedField: value }
+    setForm(tempForm)
+  }
+
+  const onChangeInputType = (value) => {
+    const tempForm = { ...form, txtInputType: value }
     setForm(tempForm)
   }
 
@@ -381,7 +384,6 @@ const SettingElement: FC<P> = ({
               filteredComponent[0].component === 'custom_dob' ||
               filteredComponent[0].component === 'custom_gender' ||
               filteredComponent[0].component === 'custom_physicaladdress' ||
-              filteredComponent[0].component === 'custom_postaladdress' ||
               filteredComponent[0].component === 'custom_referredby' ||
               filteredComponent[0].component === 'custom_telephonenumber') && (
               <SettingElementQuestion
@@ -391,8 +393,10 @@ const SettingElement: FC<P> = ({
                 onChangeQuestion={onChangeQuestion}
               />
             )}
+
             {(filteredComponent[0].component === 'basic_signature' ||
-              filteredComponent[0].component === 'basic_drawing') && (
+              filteredComponent[0].component === 'basic_drawing' ||
+              filteredComponent[0].component === 'basic_staticimage') && (
               <SettingElementQuestion
                 desc="Enter your title"
                 title="Title"
@@ -406,24 +410,15 @@ const SettingElement: FC<P> = ({
                 desc="Click or drag file to this area to upload"
               />
             )}
-
-            {filteredComponent[0].component === 'basic_shortanswer' && (
-              <SettingElementTypeOption
-                title="Input type"
-                value={form.txtInputType}
-              />
-            )}
-            {filteredComponent[0].component === 'basic_longanswer' && (
-              <SettingElementTextBox
-                desc="Enter your text"
-                title="Text"
-                value={form.txtBlock}
-                onChangeText={onChangeText}
+            {filteredComponent[0].component === 'basic_staticimage' && (
+              <SettingElementFileUpload
+                title="Image"
+                desc="Click or drag file to this area to upload"
               />
             )}
             {filteredComponent[0].component === 'basic_textblock' && (
               <SettingElementTextBlock
-                desc="Enter your text"
+                desc=""
                 title="Text"
                 value={form.txtBlock}
                 onChangeText={onChangeText}
@@ -452,8 +447,14 @@ const SettingElement: FC<P> = ({
               filteredComponent[0].component === 'basic_multiplechoice' ||
               filteredComponent[0].component === 'basic_dropdown') && (
               <SettingElementAdvanced
+                changedForm={changedForm}
                 defaultFieldValue={form.txtDefaults}
                 onChangeDefaults={onChangeDefaults}
+                linkedFieldValue={form.txtLinkedField}
+                onChangeLinkedField={onChangeLinkedField}
+                inputTypeValue={form.txtInputType}
+                onChangeInputType={onChangeInputType}
+                componentName={filteredComponent[0].component}
               />
             )}
           </SettingMedicalFormBody>
@@ -463,7 +464,9 @@ const SettingElement: FC<P> = ({
             requireFunc={requireFunc}
             required={selectedForm.required}
             needLeft={
-              filteredComponent[0].component === 'basic_textblock'
+              filteredComponent[0].component === 'basic_textblock' ||
+              filteredComponent[0].component === 'basic_heading' ||
+              filteredComponent[0].component === 'basic_conditions'
                 ? false
                 : true
             }

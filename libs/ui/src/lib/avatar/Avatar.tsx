@@ -4,6 +4,7 @@ import ClassNames from 'classnames'
 import { Avatar as AntAvatar, Tooltip } from 'antd'
 import { AvatarProps as NativeAvatarProps } from 'antd/lib/avatar/avatar'
 import { UserOutlined } from '@ant-design/icons'
+import { ReactComponent as EditIcon } from '../../assets/images/edit_icon.svg'
 import styles from './Avatar.module.less'
 
 enum Status {
@@ -18,6 +19,7 @@ export interface AvatarProps extends NativeAvatarProps {
   name?: string
   src?: string
   active?: Status
+  edit?: boolean
 }
 
 export const Avatar: FC<AvatarProps> = ({
@@ -27,6 +29,7 @@ export const Avatar: FC<AvatarProps> = ({
   name = '',
   src = '',
   active = 'default',
+  edit,
   ...props
 }) => {
   const [load, setLoad] = useState(true)
@@ -79,14 +82,20 @@ export const Avatar: FC<AvatarProps> = ({
                 {shortName}
               </AntAvatar>
             )}
-            {active !== Status.default && (
-              <div
-                className={
-                  active === Status.active
-                    ? styles.avatarStatus
-                    : ClassNames(styles.avatarStatus, styles.avatarInactive)
-                }
-              />
+            {edit ? (
+              <div className={styles.edit}>
+                <EditIcon />
+              </div>
+            ) : (
+              active !== Status.default && (
+                <div
+                  className={
+                    active === Status.active
+                      ? styles.avatarStatus
+                      : ClassNames(styles.avatarStatus, styles.avatarInactive)
+                  }
+                />
+              )
             )}
           </div>
         </Tooltip>

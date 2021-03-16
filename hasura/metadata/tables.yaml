@@ -515,14 +515,12 @@
         filter: {}
 - table:
     schema: public
-    name: credit_note_type
+    name: courses
   insert_permissions:
   - role: public
     permission:
       check: {}
       columns:
-      - code
-      - invoice_prefix
       - is_active
       - name
       backend_only: false
@@ -646,7 +644,6 @@
       - invoice_prefix
       - invoice_starting_number
       - invoice_template
-      - is_draft
       - is_active
       - name
       - order
@@ -660,23 +657,22 @@
   - role: public
     permission:
       columns:
+      - is_active
+      - vat_registered
+      - order
+      - invoice_starting_number
+      - post_code
       - city
       - country
-      - created_at
-      - id
       - invoice_prefix
-      - invoice_starting_number
       - invoice_template
-      - is_draft
-      - is_active
       - name
-      - order
       - phone
-      - post_code
       - street
-      - updated_at
-      - vat_registered
       - website
+      - created_at
+      - updated_at
+      - id
       filter: {}
       allow_aggregations: true
   update_permissions:
@@ -688,7 +684,6 @@
       - invoice_prefix
       - invoice_starting_number
       - invoice_template
-      - is_draft
       - is_active
       - name
       - order
@@ -1083,6 +1078,9 @@
       filter: {}
 - table:
     schema: public
+    name: packages
+- table:
+    schema: public
     name: payment_types
   insert_permissions:
   - role: public
@@ -1127,6 +1125,9 @@
   - role: public
     permission:
       filter: {}
+- table:
+    schema: public
+    name: peer_review
 - table:
     schema: public
     name: petty_cash_types
