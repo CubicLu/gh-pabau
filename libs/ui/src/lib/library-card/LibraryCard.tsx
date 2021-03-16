@@ -30,7 +30,7 @@ export const LibraryCard: FC<LibraryCardProps> = ({
         <span>
           <FileProtectOutlined color="#9292A3;" />
         </span>
-        {isPlus && <PabauPlus label="plus" modalType="Marketing" />}
+        {isPlus && <PabauPlus label="Plus" modalType="Care" />}
       </div>
       <h4>{title}</h4>
       <p>{bundleCount}</p>
