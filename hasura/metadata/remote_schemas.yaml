@@ -1,5 +1,5 @@
-- name: Legacy
+- name: LegacyLocal
   definition:
-    url: https://api-toshe.pabau.me/graphql
+    url: http://172.17.0.1:4000/graphql
     timeout_seconds: 60
     forward_client_headers: true

@@ -6,7 +6,7 @@ import {
   Notification,
   NotificationType,
 } from '@pabau/ui'
-import React, { FC, useEffect, useState, useRef, useContext } from 'react'
+import React, { FC, useEffect, useState, useRef, useMemo } from 'react'
 import { DocumentNode, useMutation } from '@apollo/client'
 import AddButton from './AddButton'
 import { Breadcrumb } from '@pabau/ui'
@@ -19,7 +19,6 @@ import { LeftOutlined } from '@ant-design/icons'
 import classNames from 'classnames'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
 import { useRouter } from 'next/router'
-import { UserContext } from '../context/UserContext'
 
 const { Title } = Typography
 interface P {
@@ -67,9 +66,7 @@ const CrudTable: FC<P> = ({
   const { t } = useTranslationI18()
   const crudTableRef = useRef(null)
   const router = useRouter()
-  const user = useContext(UserContext)
 
-  // eslint-disable-next-line graphql/template-strings
   const [editMutation] = useMutation(editQuery, {
     awaitRefetchQueries: true,
     onCompleted(data) {
@@ -110,7 +107,6 @@ const CrudTable: FC<P> = ({
         `Error! ${schema.messages.create.error}`
       )
     },
-    optimisticResponse: {},
   })
   const [sourceData, setSourceData] = useState(null)
   const [paginateData, setPaginateData] = useState({
@@ -125,7 +121,7 @@ const CrudTable: FC<P> = ({
     Record<string, string | boolean | number>
   >({})
 
-  const getQueryVariables = () => {
+  const getQueryVariables = useMemo(() => {
     const queryOptions = {
       variables: {
         isActive,
@@ -134,7 +130,6 @@ const CrudTable: FC<P> = ({
         limit: paginateData.limit,
       },
     }
-
     if (!tableSearch) {
       delete queryOptions.variables.searchTerm
     }
@@ -143,7 +138,14 @@ const CrudTable: FC<P> = ({
       delete queryOptions.variables.isActive
     }
     return queryOptions
-  }
+  }, [
+    searchTerm,
+    tableSearch,
+    addFilter,
+    paginateData.offset,
+    paginateData.limit,
+    isActive,
+  ])
 
   const getAggregateQueryVariables = () => {
     const queryOptions = {
@@ -162,7 +164,7 @@ const CrudTable: FC<P> = ({
     return queryOptions
   }
 
-  const { data, error, loading } = useLiveQuery(listQuery, getQueryVariables())
+  const { data, error, loading } = useLiveQuery(listQuery, getQueryVariables)
 
   const { data: aggregateData } = useLiveQuery(
     aggregateQuery,
@@ -257,27 +259,53 @@ const CrudTable: FC<P> = ({
           },
         })
       : addMutation({
-          variables: {
-            ...values,
-            companyId: user?.data?.me?.company?.id,
-          },
+          variables: values,
           optimisticResponse: {},
-          refetchQueries: [{ query: listQuery }],
-          awaitRefetchQueries: true,
+          //refetchQueries: [{ query: listQuery }],
+          //awaitRefetchQueries: true,
           update: (proxy) => {
+            console.log('OPTIMISIM NOW', !!listQuery)
             if (listQuery) {
+              console.log('reading cache', {
+                query: listQuery,
+                ...getQueryVariables,
+              })
+              console.log(
+                '1',
+                proxy.readQuery({
+                  query: listQuery,
+                })
+              )
+              console.log(
+                '2',
+                proxy.readQuery({
+                  query: listQuery,
+                  ...getQueryVariables,
+                })
+              )
+              console.log(
+                '3',
+                proxy.readQuery({
+                  query: listQuery,
+                  ...getQueryVariables,
+                  returnPartialData: true,
+                })
+              )
               const existing = proxy.readQuery({
                 query: listQuery,
+                ...getQueryVariables,
               })
               if (existing) {
                 const key = Object.keys(existing)[0]
                 proxy.writeQuery({
                   query: listQuery,
+                  ...getQueryVariables,
                   data: {
                     [key]: [...existing[key], values],
                   },
                 })
-              }
+                console.log('mutated cache!', key)
+              } else console.warn('No apollo cache was found to mutate!')
             }
           },
         }))

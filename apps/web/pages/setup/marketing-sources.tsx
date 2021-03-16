@@ -79,7 +79,7 @@ export const Index: NextPage = () => {
       marketingSources(
         take: $limit
         skip: $offset
-        orderBy: { name: desc }
+        orderBy: { id: desc }
         where: {
           public: { equals: $isActive }
           OR: [{ AND: [{ name: { contains: $searchTerm } }] }]
@@ -120,19 +120,19 @@ export const Index: NextPage = () => {
       $isActive: Int = 1
       $name: String!
       $custom_id: Int = 0
-      $companyId: Int!
     ) {
       createOneMarketingSource(
         data: {
           imported: $imported
+          company: {}
           name: $name
           public: $isActive
           custom_id: $custom_id
-          company: { connect: { id: $companyId } }
         }
       ) {
         __typename
         id
+        name
       }
     }
   `

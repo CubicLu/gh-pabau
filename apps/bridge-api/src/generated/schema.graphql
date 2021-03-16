@@ -25540,7 +25540,7 @@ type Mutation {
   deleteOneUser(where: UserWhereUniqueInput!): User
   deleteOneUserSecurityQuestionsAnswer(where: UserSecurityQuestionsAnswerWhereUniqueInput!): UserSecurityQuestionsAnswer
   login(password: String!, username: String!): String
-  logout(userId: Int!): Boolean
+  logout: Boolean
   updateManyAcLog(data: AcLogUpdateManyMutationInput!, where: AcLogWhereInput): AffectedRowsOutput!
   updateManyAcLogAction(data: AcLogActionUpdateManyMutationInput!, where: AcLogActionWhereInput): AffectedRowsOutput!
   updateManyAcLogUrl(data: AcLogUrlUpdateManyMutationInput!, where: AcLogUrlWhereInput): AffectedRowsOutput!

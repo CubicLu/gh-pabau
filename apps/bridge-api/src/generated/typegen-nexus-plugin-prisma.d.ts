@@ -45209,9 +45209,6 @@ export interface NexusGenArgTypes {
       password: string; // String!
       username: string; // String!
     }
-    logout: { // args
-      userId: number; // Int!
-    }
     updateManyAcLog: { // args
       data: NexusGenInputs['AcLogUpdateManyMutationInput']; // AcLogUpdateManyMutationInput!
       where?: NexusGenInputs['AcLogWhereInput'] | null; // AcLogWhereInput

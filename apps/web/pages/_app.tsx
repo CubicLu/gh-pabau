@@ -41,17 +41,24 @@ require('../styles/global.less')
 require('../../../libs/ui/src/styles/antd.less')
 require('react-phone-input-2/lib/style.css')
 
-const cache = new InMemoryCache()
-const GRAPHQL_ENDPOINT = 'wss://api.new.pabau.com/v1/graphql'
+const cache = new InMemoryCache({ resultCaching: true })
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+if (typeof window !== 'undefined') window.debug = { cache }
+
+const GRAPHQL_WS_ENDPOINT =
+  process.env.NEXT_PUBLIC_WSS_ENDPOINT || 'wss://api.new.pabau.com/v1/graphql'
 const GRAPHQL_HTTP_ENDPOINT =
-  'http://localhost:4000/graphql' || 'https://api.new.pabau.com/v1/graphql'
+  process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
+  'https://api.new.pabau.com/v1/graphql'
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token')
   return {
     headers: {
       ...headers,
-      authorization: token,
+      authorization: `Bearer ${token}`,
     },
   }
 })
@@ -64,7 +71,7 @@ const httpLink = new HttpLink({
 })
 const wsLink = process.browser
   ? new WebSocketLink({
-      uri: GRAPHQL_ENDPOINT,
+      uri: GRAPHQL_WS_ENDPOINT,
       options: {
         reconnect: true,
         connectionParams: {

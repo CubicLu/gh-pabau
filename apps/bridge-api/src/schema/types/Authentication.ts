@@ -1,7 +1,7 @@
-import { extendType, intArg, nonNull, stringArg } from 'nexus'
+import { extendType, nonNull, stringArg } from 'nexus'
 import { AuthenticationService } from '../../app/authentication/AuthenticationService'
 import { Context } from '../../context'
-import { LoginInputDto, LogoutInputDto } from '../../app/authentication/dto'
+import { LoginInputDto } from '../../app/authentication/dto'
 
 export const Authentication = extendType({
   type: 'Mutation',
@@ -30,31 +30,13 @@ export const Authentication = extendType({
         }
       },
     })
+
     t.field('logout', {
       type: 'Boolean',
-      args: {
-        userId: nonNull(intArg()),
-      },
-      async resolve(_, logoutInput: LogoutInputDto, ctx: Context) {
-        if (!ctx.req.authenticatedUser) {
-          throw new Error('Invalid token')
-        }
-        if (!logoutInput.userId) {
-          throw new Error('Malformed Parameters')
-        }
-        try {
-          const userExists = await new AuthenticationService(
-            ctx
-          ).handleLogoutRequest(logoutInput)
-          if (userExists) {
-            ctx.req.session = null
-            return true
-          }
-          return false
-        } catch (error) {
-          console.error(error)
-          throw new Error('Something went wrong please try again')
-        }
+      args: {},
+      async resolve(_, __, ctx: Context) {
+        ctx.req.session = null
+        return true
       },
     })
   },
@@ -65,8 +47,8 @@ export const Me = extendType({
   definition(t) {
     t.field('me', {
       type: 'User',
-      async resolve(_root, args, ctx) {
-        return await ctx.prisma.user.findFirst({
+      async resolve(_root, _args, ctx) {
+        return (ctx as Context).prisma.user.findUnique({
           where: {
             id: ctx.req.authenticatedUser.user,
           },
