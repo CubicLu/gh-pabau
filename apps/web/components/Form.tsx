@@ -140,7 +140,7 @@ const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
                     formik.handleChange(e)
                     formik.setFieldTouched(name, true)
                   }}
-                  placeholder={example && `eg ${example}`}
+                  placeholder={example && `eg. ${example}`}
                   autoFocus={i === 0}
                 />
               </AntForm.Item>
