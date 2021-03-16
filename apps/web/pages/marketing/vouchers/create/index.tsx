@@ -30,12 +30,12 @@ const defaultThemes = [
       'https://resize.indiatvnews.com/en/resize/newbucket/1200_-/2020/02/valentines-day-1581614371.jpg',
   },
   {
-    name: 'Birthday',
+    name: 'Birthday 1',
     url:
       'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/cute-birthday-instagram-captions-1584723902.jpg',
   },
   {
-    name: 'Birthday',
+    name: 'Birthday 2',
     url:
       'https://thumbs.dreamstime.com/b/happy-birthday-cupcake-celebration-message-160558421.jpg',
   },
@@ -198,10 +198,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
         <div className={styles.controls}>
           <div className={styles.contDiv}>
             <span className={styles.contHeading}>Voucher Settings</span>
-            <p>
-              Here you can customize the look and feel of client area to match
-              your brand colours.
-            </p>
+            <p>Give a background colour or theme to your voucher.</p>
           </div>
           <div className={styles.contDiv}>
             <span className={styles.contHeading}>Voucher Info</span>
@@ -284,7 +281,9 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
                 <Option value="1 year">1 year</Option>
                 <Option value="3 years">3 years</Option>
                 <Option value="5 years">5 years</Option>
-                <Option value="Forever">Forever</Option>
+                <Option default value="Forever">
+                  Forever
+                </Option>
               </Select>
             </div>
           </div>
@@ -306,8 +305,8 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
           <div className={styles.contDiv}>
             <span className={styles.contHeading}>Voucher Settings</span>
             <p>
-              Here you can customize the look and feel of client area to match
-              your brand colours.
+              Here you can customize the rules around your voucher such as an
+              expiry, its terms or what it can be used for.
             </p>
           </div>
           <div className={styles.contDiv}>
@@ -317,7 +316,10 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
           <div className={styles.contDiv}>
             <span className={styles.contHeadingMin}>Enable online booking</span>
             <label>
-              <span>Add buttons to the voucher.</span>
+              <span>
+                Allow clients to book online, and automatically apply the
+                voucher.
+              </span>
             </label>
             <div className={styles.topMargin}>
               <Switch
@@ -357,7 +359,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
           <div className={styles.contDiv}>
             <span className={styles.contHeading}>Appearance</span>
             <p>
-              Here you can customize the look and feel of client area to match
+              Here you can customize the look and feel of the voucher to match
               your brand colours.
             </p>
           </div>
