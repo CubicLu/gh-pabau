@@ -926,13 +926,13 @@ model CancellationPolicy {
 }
 
 model MarketingSource {
-  id          Int     @id @default(autoincrement())
-  name String  @map("source_name")
-  company_id  Int     @map("occupier")
-  custom_id   Int
-  public      Int
-  imported    Int
-  company     Company @relation(fields: [company_id], references: [id])
+  id         Int     @id @default(autoincrement())
+  name       String  @map("source_name")
+  company_id Int     @map("occupier")
+  custom_id  Int
+  public     Int
+  imported   Int
+  company    Company @relation(fields: [company_id], references: [id])
 
 
   @@index([company_id], name: "company_id")
@@ -4973,18 +4973,19 @@ model CmContact {
 //}
 //
 model GlCode {
-  id          Int                  @id @default(autoincrement())
-  company_id  Int
-  code        String
-  description gl_codes_description
-  related_to  Int?
-  InvPaymentType     InvPaymentType?  @relation(fields: [related_to], references: [id])
+  id             Int                  @id @default(autoincrement())
+  company_id     Int
+  code           String
+  description    gl_codes_description
+  related_to     Int?
+  InvPaymentType InvPaymentType?      @relation(fields: [related_to], references: [id])
 
-  @@map("gl_codes")
 
   @@index([company_id], name: "company_id")
   @@index([related_to], name: "related_to")
+  @@map("gl_codes")
 }
+
 //
 //model gocardless_bills {
 //  primary_id         Int    @id @default(autoincrement())
@@ -5962,6 +5963,7 @@ model InvPaymentType {
 
   @@index([company_id], name: "occupier")
   @@map("inv_payment_types")
+  GlCode GlCode?
 }
 
 //
