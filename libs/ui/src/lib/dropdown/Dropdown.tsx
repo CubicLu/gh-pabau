@@ -51,6 +51,7 @@ export const Dropdown: FC<DropDownInterface> = ({
   ...rest
 }): JSX.Element => {
   const [activeMenu, setActiveMenu] = useState('Menu')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [cookies, setCookie, removeCookie] = useCookies(['user'])
 
   // used for mobile device

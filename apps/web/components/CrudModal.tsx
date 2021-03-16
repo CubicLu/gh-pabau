@@ -1,5 +1,5 @@
 import Form from './Form'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { BasicModal as Modal, Notification, NotificationType } from '@pabau/ui'
 import { DocumentNode, useMutation } from '@apollo/client'
 import { useFormikContext } from 'formik'
