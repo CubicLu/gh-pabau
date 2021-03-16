@@ -64,11 +64,20 @@
 }
 
 .fullScreenModalBody {
+  width: 100%;
+  height: calc(100vh - 80px);
+  overflow-y: auto;
   :global {
     .ant-tabs-nav {
       background-color: white;
     }
   }
+}
+
+.tabPaneItem {
+  width: 100%;
+  height: calc(100vh - 122px);
+  overflow-y: auto;
 }
 
 .moreButton {

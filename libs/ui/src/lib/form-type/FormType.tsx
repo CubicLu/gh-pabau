@@ -135,7 +135,6 @@ export const FormType: FC<FormTypeProps> = ({
   }
 
   const handleClickItem = (name) => {
-    console.log('FormType:handleClickItem', isEditing?.())
     if (isEditing?.() === true) {
       showWarningMessage(name)
       return

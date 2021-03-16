@@ -6,43 +6,75 @@ import {
 import { Collapse } from 'antd'
 import React, { FC, useEffect, useState } from 'react'
 import styles from './MedicalFormBuilder.module.less'
+import MedicalFormComponentMedicalHistory from './MedicalFormComponentMedicalHistory'
 import MedicalFormComponentPanel from './MedicalFormComponentPanel'
 import MedicalFormGeneralPanel from './MedicalFormGeneralPanel'
+import MedicalFormUploadButtons from './MedicalFormUploadButtons'
 
 const { Panel } = Collapse
 
 interface P {
-  refreshDraggedFroms: () => void
+  refreshDraggedForms: () => void
   isEditing: () => boolean
   medicalForms: MedicalForms[]
   changeFormName: (formName: string) => void
   formName: string
+  changeLayout: (noRight: boolean) => void
+  runPreviewPdf: () => void
+  handlingClickLeft: (componentName: string) => void
 }
 
 const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
   const {
-    refreshDraggedFroms,
+    refreshDraggedForms,
     isEditing,
     medicalForms,
     changeFormName,
     formName,
+    changeLayout,
+    runPreviewPdf,
+    handlingClickLeft,
   } = props
   const [selectedFormTypes, setSelectedFormTypes] = useState<SelectedForms>(
     defaultSelectedFormInfos
   )
   const [componentClass, setComponentClass] = useState(
-    styles.medicalFormEditLeftPanelCollapseComponentCollapse
+    styles.medicalFormEditLeftPanelCollapseComponentExpend
   )
-  const [openPanel, setOpenPanel] = useState<string[]>(['1', '2'])
+  const [openPanel, setOpenPanel] = useState<string[]>(['1'])
+  const [isEpaper, setIsEpaper] = useState(false)
 
+  const isSelectedFormType = (setting) => {
+    const selectedFormType = Object.entries(setting).filter(
+      ([key, value]) => value === true
+    )
+    return selectedFormType.length === 0 ? false : true
+  }
   const onSelectFormType = (setting) => {
-    refreshDraggedFroms?.()
+    refreshDraggedForms?.()
     setSelectedFormTypes(setting)
-    setOpenPanel(['2'])
-    setComponentClass(styles.medicalFormEditLeftPanelCollapseComponentExpend)
+    setIsEpaper(setting.epaper)
+    changeLayout?.(!setting.epaper)
+    if (isSelectedFormType(setting) && setting.epaper === false) {
+      setOpenPanel(['2'])
+      setComponentClass(styles.medicalFormEditLeftPanelCollapseComponentExpend)
+    } else {
+      setOpenPanel(['1'])
+      setComponentClass(
+        styles.medicalFormEditLeftPanelCollapseComponentCollapse
+      )
+    }
   }
   const callback = (key) => {
-    setOpenPanel(key)
+    if (isSelectedFormType(selectedFormTypes)) {
+      setOpenPanel(key)
+    } else {
+      setOpenPanel(['1'])
+    }
+  }
+
+  const onPreviewPdf = () => {
+    runPreviewPdf?.()
   }
 
   useEffect(() => {
@@ -73,13 +105,20 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
             changeFormName={changeFormName}
             formName={formName}
           />
+          {isEpaper && <MedicalFormUploadButtons onPreviewPdf={onPreviewPdf} />}
         </Panel>
-        <Panel header="COMPONENTS" key="2" className={componentClass}>
-          <MedicalFormComponentPanel
-            selectedFormTypes={selectedFormTypes}
-            medicalForms={medicalForms}
-          />
-        </Panel>
+        {isEpaper === false && (
+          <Panel header="COMPONENTS" key="2" className={componentClass}>
+            {selectedFormTypes.medicalHistory === true && (
+              <MedicalFormComponentMedicalHistory />
+            )}
+            <MedicalFormComponentPanel
+              selectedFormTypes={selectedFormTypes}
+              medicalForms={medicalForms}
+              handlingClickLeft={handlingClickLeft}
+            />
+          </Panel>
+        )}
       </Collapse>
     </div>
   )

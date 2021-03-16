@@ -487,9 +487,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
 
   const createVoucher = () => {
     Notification(NotificationType['success'], 'Voucher Created Successfully')
-    if (spanLink?.current) {
-      spanLink?.current.click()
-    }
+    spanLink?.current?.click()
   }
 
   return (

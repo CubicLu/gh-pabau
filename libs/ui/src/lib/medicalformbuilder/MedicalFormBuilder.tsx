@@ -12,15 +12,44 @@ const { TabPane } = Tabs
 
 const MedicalFormBuilder: FC<PreviewData> = ({ previewData }) => {
   const [formName, setFormName] = useState('IPL Treatment Record (Clone)')
+  const [visiblePreview, setVisiblePreview] = useState(false)
+  const [activatePanel, setActivatePanel] = useState('1')
+  const [clickedCreateForm, setClickedCreateForm] = useState(false)
+
   const changeFormName = (formName) => {
     setFormName(formName)
+  }
+
+  const changeTab = (key) => {
+    setVisiblePreview(false)
+    if (key === '2') {
+      setVisiblePreview(true)
+    }
+    setActivatePanel('1')
+  }
+
+  const closePreviewDialog = () => {
+    setVisiblePreview(false)
+  }
+
+  const clickCreateFormBtn = () => {
+    setClickedCreateForm(true)
+  }
+
+  const clearCreateFormBtn = () => {
+    setClickedCreateForm(false)
   }
 
   return (
     <>
       <MedicalFormInfo formName={formName} />
-      <MedicalFormSetting />
-      <Tabs defaultActiveKey="1" centered className={styles.medicalFormMainTab}>
+      <MedicalFormSetting clickCreateFormBtn={clickCreateFormBtn} />
+      <Tabs
+        activeKey={activatePanel}
+        centered
+        className={styles.medicalFormMainTab}
+        onChange={changeTab}
+      >
         <TabPane
           tab={
             <span className={styles.tabName}>
@@ -34,8 +63,16 @@ const MedicalFormBuilder: FC<PreviewData> = ({ previewData }) => {
           <MedicalFormEdit
             previewData={previewData}
             changeFormName={changeFormName}
+            clickedCreateForm={clickedCreateForm}
+            clearCreateFormBtn={clearCreateFormBtn}
             formName={'IPL Treatment Record (Clone)'}
           />
+          {visiblePreview === true && (
+            <MedicalFormPreview
+              visible={visiblePreview}
+              closePreviewDialog={closePreviewDialog}
+            />
+          )}
         </TabPane>
         <TabPane
           tab={
@@ -45,9 +82,7 @@ const MedicalFormBuilder: FC<PreviewData> = ({ previewData }) => {
             </span>
           }
           key="2"
-        >
-          <MedicalFormPreview />
-        </TabPane>
+        ></TabPane>
       </Tabs>
     </>
   )
