@@ -33,26 +33,17 @@ const rules = {
   interceptMutation: rule('interceptMutation')(
     async (root, args, ctx: Context, info): Promise<boolean> => {
       console.log('interceptMutation')
-      console.log('args', args)
-      if (args?.where?.id) {
-        try {
-          const record = await ctx.prisma.marketingSource.findUnique({
-            rejectOnNotFound: false,
-            where: {
-              id: args?.where?.id,
-            },
-          })
-          console.log('done')
-          if (record.company_id !== ctx.req.authenticatedUser.company)
-            return false
-        } catch (error) {
-          console.error(error)
+      if (
+        info.operation.name.value.includes('create') &&
+        args.data.company &&
+        !args.data.company.connect.id
+      ) {
+        args.data = {
+          ...args.data,
+          company: { connect: { id: ctx.req.authenticatedUser.company } },
         }
       }
-      args.data = {
-        ...args.data,
-        company: { connect: { id: ctx.req.authenticatedUser.company } },
-      }
+
       console.log('returning')
       return true
     }
@@ -62,7 +53,7 @@ export const permissions = shield({
   Mutation: {
     login: allow,
     logout: rules.isAuthenticated,
-    '*': rules.interceptMutation,
+    '*': rules.isAuthenticated && rules.interceptMutation,
   },
   Query: {
     '*': rules.isAuthenticated && rules.sameCompany,

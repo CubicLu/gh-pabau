@@ -261,8 +261,6 @@ const CrudTable: FC<P> = ({
       : addMutation({
           variables: values,
           optimisticResponse: {},
-          //refetchQueries: [{ query: listQuery }],
-          //awaitRefetchQueries: true,
           update: (proxy) => {
             console.log('OPTIMISIM NOW', !!listQuery)
             if (listQuery) {

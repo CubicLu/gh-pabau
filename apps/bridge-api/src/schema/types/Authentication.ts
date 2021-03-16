@@ -48,7 +48,7 @@ export const Me = extendType({
     t.field('me', {
       type: 'User',
       async resolve(_root, _args, ctx) {
-        return (ctx as Context).prisma.user.findUnique({
+        return ctx.prisma.user.findUnique({
           where: {
             id: ctx.req.authenticatedUser.user,
           },
