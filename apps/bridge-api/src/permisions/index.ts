@@ -32,19 +32,15 @@ const rules = {
   ),
   interceptMutation: rule('interceptMutation')(
     async (root, args, ctx: Context, info): Promise<boolean> => {
-      console.log('interceptMutation')
       if (
-        info.operation.name.value.includes('create') &&
-        args.data.company &&
-        !args.data.company.connect.id
+        info.operation.name.value.includes('add') &&
+        !args.data?.company?.connect?.id
       ) {
         args.data = {
           ...args.data,
           company: { connect: { id: ctx.req.authenticatedUser.company } },
         }
       }
-
-      console.log('returning')
       return true
     }
   ),
