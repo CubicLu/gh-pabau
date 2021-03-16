@@ -203,7 +203,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
           <div className={styles.contDiv}>
             <span className={styles.contHeading}>Voucher Info</span>
             <p>
-              Add the voucher name, value and duration of the voucher. If ther
+              Add the voucher name, value and duration of the voucher. If the
               voucher value is higher than the retail price it will encourage
               more sales.
             </p>
