@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import Layout from '../../../components/Layout/Layout'
 import ServicesTab from '../../../components/services/ServicesTab/ServicesTab'
 import CategoriesTab from '../../../components/services/CategoriesTab/CategoriesTab'
@@ -6,6 +6,7 @@ import LibrariesTab from '../../../components/services/LibrariesTab/LibrariesTab
 import { TabMenu, Breadcrumb, Button, Pagination } from '@pabau/ui'
 import { Card, Input, Popover, Radio, Select } from 'antd'
 import className from 'classnames'
+import { useMedia } from 'react-use'
 import {
   LeftOutlined,
   SearchOutlined,
@@ -34,6 +35,8 @@ export const Index: FC = () => {
   const [addBtnLabel, setAddBtnLabel] = useState(AddBtnLabels[0])
   const [updatedCategories, setUpdatedCategories] = useState(null)
   const [addCategoryModal, setAddCategoryModal] = useState(false)
+
+  const isMobile = useMedia('(max-width: 768px)', false)
 
   const filterContent = (isMobile = false) => (
     <div className="filterContent">
@@ -120,8 +123,9 @@ export const Index: FC = () => {
       </div>
       <div className="rightDiv">
         <span className="hidden-lg">
-          {showSearchInput ? (
+          {isMobile && showSearchInput ? (
             <Input
+              className="isMobile-search-input"
               value={searchTerm}
               autoFocus
               placeholder="Search"
@@ -132,6 +136,7 @@ export const Index: FC = () => {
             />
           ) : (
             <SearchOutlined
+              className="isMobile-search-icon"
               onClick={() =>
                 setShowSearchInput((showSearchInput) => !showSearchInput)
               }
@@ -197,6 +202,16 @@ export const Index: FC = () => {
       </div>
     </div>
   )
+
+  const checkClickOutsideInput = (e) => {
+    if (e.key === 'Escape') {
+      setShowSearchInput(false)
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('keydown', checkClickOutsideInput)
+  }, [])
 
   const onTabClick = (tab) => {
     switch (tab) {

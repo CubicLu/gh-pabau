@@ -21,6 +21,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 70px;
 }
 
 .createServiceSection {
@@ -34,6 +35,10 @@
 
   @media screen and (max-width: 1024px) {
     max-width: 360px;
+  }
+
+  @media screen and (max-width: 768px) {
+    max-width: 490px;
   }
 }
 
@@ -149,6 +154,12 @@
 .advancedSettings {
   max-width: 596px;
   width: 100%;
+  @media screen and (max-width: 1024px) {
+    max-width: 360px;
+  }
+  @media screen and (max-width: 768px) {
+    max-width: 490px;
+  }
   :global {
     .ant-collapse {
       &-content-box {
@@ -490,6 +501,10 @@
 
   @media screen and (max-width: 768px) {
     justify-content: center;
+
+    .createServiceSection {
+      max-width: 490px;
+    }
   }
 }
 
@@ -551,6 +566,22 @@
   display: grid;
   grid-template-columns: 200px 1fr;
   grid-column-gap: 28px;
+
+  @media screen and (max-width: 475px) {
+    display: flex;
+
+    > div {
+      width: 100%;
+    }
+  }
+  @media screen and (max-width: 385px) {
+    flex-wrap: wrap;
+    height: auto;
+    > div {
+      padding-bottom: 5px;
+      padding-top: 5px;
+    }
+  }
   > div {
     &:nth-child(1) {
       display: flex;
@@ -591,6 +622,10 @@
   line-height: 22px;
   color: var(--light-grey-color);
   padding: 6px 0;
+  @media screen and (max-width: 385px) {
+    display: flex;
+    justify-content: space-between;
+  }
   > div {
     &:nth-child(2) {
       display: flex;
@@ -611,6 +646,10 @@
   line-height: 22px;
   color: var(--light-grey-color);
   padding: 6px 0;
+  @media screen and (max-width: 385px) {
+    display: flex;
+    justify-content: space-between;
+  }
 }
 
 .locationPricingItem {
@@ -620,6 +659,16 @@
   height: 80px;
   width: 100%;
   border-top: 1px solid var(--border-color-base);
+
+  @media screen and (max-width: 385px) {
+    display: flex;
+    flex-wrap: wrap;
+    height: auto;
+    > div {
+      padding-bottom: 5px;
+      padding-top: 5px;
+    }
+  }
   > div {
     &:nth-child(1) {
       display: grid;
