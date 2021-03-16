@@ -7,7 +7,7 @@ import {
 } from '@ant-design/icons'
 import { Input } from 'antd'
 import { TabbedTable, Button, VoucherCard, Pagination, Table } from '@pabau/ui'
-import VoucherIcon from '../../../components/Marketing/GiftVouchersList/assets/VocherIcon'
+import VoucherIcon from '../../../components/Marketing/GiftVouchersList/assets/VocherIcon.svg'
 import { Card, Row, Col } from 'antd'
 import Link from 'next/link'
 import styles from './index.module.less'
@@ -289,7 +289,7 @@ const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
             >
               <div className={styles.types}>
                 <Row>
-                  {gifts.length > 0 ? (
+                  {gifts.length < 0 ? (
                     gifts.map((gift, key) => (
                       <Col
                         lg={8}
@@ -308,7 +308,7 @@ const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
                       <div className={styles.noDataTableBox}>
                         <div className={styles.noDataTextStyle}>
                           <div className={styles.noDataIcon}>
-                            <VoucherIcon />
+                            <img src={VoucherIcon} alt="voucher-icon" />
                           </div>
                           <h2>Add a voucher</h2>
                           <p>You have no active vouchers</p>
