@@ -29,7 +29,7 @@ export interface BasicModalProps {
   /**
    * Creates a special tickbox next to the OK button
    */
-  specialBooleanValue?: boolean
+  specialBooleanValue?: boolean | number | string
 
   dangerButtonText?: string
   newButtonDisable?: boolean
@@ -75,7 +75,7 @@ export function BasicModal({
         <div className={styles.modalFooter}>
           {specialBooleanLabel && onSpecialBooleanClick && (
             <Checkbox
-              defaultChecked={specialBooleanValue}
+              defaultChecked={Boolean(specialBooleanValue)}
               onClick={onSpecialBooleanClick}
             >
               {specialBooleanLabel}

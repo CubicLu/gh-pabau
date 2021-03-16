@@ -31,7 +31,7 @@ interface SchemaFilter {
   primary: {
     name: string
     type: FilterTypes
-    default: string | number | boolean
+    default: number | boolean
   }
 }
 
@@ -65,6 +65,7 @@ interface SchemaItem {
   validateMsg?: string
   selectOptions?: TypeValues[]
   collapsible?: boolean
+  filter?: SchemaFilter
 }
 interface TypeValues {
   label: string

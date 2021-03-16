@@ -49,26 +49,17 @@ const CrudModal: FC<P> = ({
   delete schemaForm.fields['is_active']
   delete schemaForm.fields['public']
   delete schemaForm.fields['company_id']
-  const [specialBoolean, setSpecialBoolean] = useState<boolean>(
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    (editingRow?.id && (editingRow?.is_active || editingRow?.public)) ??
-      (editingRow?.is_active || editingRow?.public) ??
+  const [specialBoolean, setSpecialBoolean] = useState<
+    boolean | string | number
+  >(
+    schema.filter.primary.default ??
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      (editingRow?.id && editingRow?.is_active) ??
+      (typeof specialFormElement?.defaultvalue === 'boolean' &&
+        specialFormElement.defaultvalue) ??
       true
   )
-
-  useEffect(() => {
-    setSpecialBoolean(
-      (editingRow?.id &&
-        ((editingRow?.is_active as boolean) ||
-          Boolean(editingRow?.public as number))) ??
-        (typeof specialFormElement?.defaultvalue === 'boolean' &&
-          (specialFormElement.defaultvalue as boolean)) ??
-        true
-    )
-  }, [editingRow, specialFormElement])
-
-  console.log('formik', formik)
 
   return (
     <>
@@ -160,10 +151,14 @@ const CrudModal: FC<P> = ({
         }
         dangerButtonText={editingRow?.id && `Delete`}
         specialBooleanLabel={!!specialFormElement && 'Active'}
-        specialBooleanValue={Boolean(specialBoolean)}
+        specialBooleanValue={specialBoolean}
         onSpecialBooleanClick={() => {
-          setSpecialBoolean((e) => !e)
-          formik.setFieldValue('is_active' || 'public', !specialBoolean)
+          setSpecialBoolean((e) => {
+            console.log('set special boolean', e)
+            return !e
+          })
+          formik.setFieldValue('is_active', !specialBoolean)
+          formik.setFieldValue('public', Number(!specialBoolean))
         }}
         isValidate={
           editingRow?.isCreate ? formik.dirty && formik.isValid : formik.isValid

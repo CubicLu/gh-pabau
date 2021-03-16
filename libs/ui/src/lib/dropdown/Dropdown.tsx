@@ -22,6 +22,7 @@ import { ReactComponent as LaunchSVG } from '../../assets/images/launch.svg'
 import { ReactComponent as PABAULOGO } from '../../assets/images/pabaulogo.svg'
 import { ReactComponent as TaskSVG } from '../../assets/images/Vector.svg'
 import styles from './Dropdown.module.less'
+import { useCookies } from 'react-cookie'
 
 // import { isMobile, isTablet } from 'react-device-detect'
 export interface DropDownInterface {
@@ -50,6 +51,7 @@ export const Dropdown: FC<DropDownInterface> = ({
   ...rest
 }): JSX.Element => {
   const [activeMenu, setActiveMenu] = useState('Menu')
+  const [cookies, setCookie, removeCookie] = useCookies(['user'])
 
   // used for mobile device
   const [openProfileDrawer, setProfileDrawer] = useState(isOpen)
@@ -65,6 +67,11 @@ export const Dropdown: FC<DropDownInterface> = ({
     setCurrentUser(data['user'])
     setCurrentCompany(data['company'])
   }, [data, user, company])
+
+  function handleLogOut() {
+    localStorage.removeItem('token')
+    removeCookie('user')
+  }
 
   const menu = (
     <Menu className={styles.avatarMenu}>
@@ -144,7 +151,9 @@ export const Dropdown: FC<DropDownInterface> = ({
       <Menu.Item className={styles.dropdownMenu}>
         <div className={styles.dropdownHeader}>
           <ExportOutlined className={styles.dropdownIcon} />
-          <span className={styles.headerText}>Log out</span>
+          <span className={styles.headerText} onClick={handleLogOut}>
+            Log out
+          </span>
         </div>
       </Menu.Item>
       <div style={{ marginTop: '8px' }} />
