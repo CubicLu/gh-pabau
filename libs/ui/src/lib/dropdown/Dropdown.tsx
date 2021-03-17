@@ -28,12 +28,15 @@ import { useCookies } from 'react-cookie'
 export interface DropDownInterface {
   isOpen?: boolean
   onCloseDrawer?: () => void
-  data?: { user: UserProps; company: CompanyProps }
+  data?: {
+    me: UserProps
+  }
 }
 
 interface UserProps {
   full_name: string
   username?: string
+  company: CompanyProps
   _typename?: string
 }
 
@@ -57,16 +60,13 @@ export const Dropdown: FC<DropDownInterface> = ({
   // used for mobile device
   const [openProfileDrawer, setProfileDrawer] = useState(isOpen)
   const [activeMenuTitle, setActiveMenuTitle] = useState('Profile')
-  const data: Pick<
-    DropDownInterface & { children?: React.ReactNode },
-    'data' | 'children'
-  > = rest
+  const { data } = rest
   const [user, setCurrentUser] = useState<UserProps | null>(null)
   const [company, setCurrentCompany] = useState<CompanyProps | null>(null)
 
   useEffect(() => {
-    setCurrentUser(data['user'])
-    setCurrentCompany(data['company'])
+    setCurrentUser(data?.me || null)
+    setCurrentCompany(data?.me?.company || null)
   }, [data, user, company])
 
   function handleLogOut() {
