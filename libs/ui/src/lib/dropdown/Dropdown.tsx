@@ -72,6 +72,7 @@ export const Dropdown: FC<DropDownInterface> = ({
   function handleLogOut() {
     localStorage.removeItem('token')
     removeCookie('user')
+    window.location.pathname = '/'
   }
 
   const menu = (
@@ -279,7 +280,13 @@ export const Dropdown: FC<DropDownInterface> = ({
           return (
             <Menu.Item key={index} className={styles.languageTextAlign}>
               <div className={styles.languageFlagCenter}>
-                <Image src={lang.logo} alt={lang.label} />
+                <Image
+                  src={lang.logo}
+                  alt={lang.label}
+                  preview={false}
+                  width="16px"
+                  height="16px"
+                />
                 <span className={lang.selected ? styles.activeMenu : undefined}>
                   {lang.label}
                 </span>
