@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import jwt from 'jsonwebtoken'
-import { useCookies } from 'react-cookie'
 
 export interface LoginProps {
   user: number

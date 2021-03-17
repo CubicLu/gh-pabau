@@ -110,9 +110,11 @@ While running the server in development mode u have access to a set of tools to 
    Duration: 89ms`
 2. `http://localhost:4000/graphql` > Enable tracing. To trace the Graphql response till full request completion rate
 
+#!!IMPORTANT 
+
 Improper usage of middlewares leads to request delays
 Improper usage of context and queries leads to query performance issues
-If in doubt should u write a regular query or use `ctx.prisma` to retrieve data, for the majority of the cases u should use the latter
+If in doubt, should u write a regular query or use `ctx.prisma` to retrieve data, for the majority of the cases u should use the latter
 Use the tools to your advantage. 
 
 # Testing locally
@@ -149,10 +151,6 @@ Complex way if errors arise
 
 Afterwards to ensure that the graphql queries/mutations where exposed properly
 `nx serve bridge-api`
-
-# Doing database modification
-
-# [until introspect is implemented]
 
 # Adding a new model property that maps to a newly created database column
 
@@ -204,10 +202,10 @@ Examples:
 
 # TODO quality of life dev improvements
 
-1. docker-compose.yml for hasura - done in hasura/docker-compose.yml
+1. docker-compose.yml for hasura
 2. Generate commands should list the files they overwrite
 3. Use hasura cli-migrations to launch hasura with our schema
-4. Each dev should have be able to remotly connect to a separate remote db
+4. Each dev should have be able to remotly connect to his pod db db
 5. Docker deployment bug 
 
 # Big ticket items
@@ -224,5 +222,4 @@ Examples:
 # Testing
 # Common questions and bugs
 # Hasura export
-# Database migrations without using prisma introspect
-# Introspection
+# Doing database modification

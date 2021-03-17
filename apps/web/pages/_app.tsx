@@ -22,7 +22,6 @@ import ContextWrapper from '../components/ContextWrapper'
 import { languages } from '@pabau/i18n'
 import { setContext } from '@apollo/client/link/context'
 import { CookiesProvider } from 'react-cookie'
-import useLogin from '../hooks/authentication/useLogin'
 require('../styles/global.less')
 require('../../../libs/ui/src/styles/antd.less')
 require('react-phone-input-2/lib/style.css')

@@ -55,6 +55,7 @@ export const Dropdown: FC<DropDownInterface> = ({
   const [openProfileDrawer, setProfileDrawer] = useState(isOpen)
   const [activeMenuTitle, setActiveMenuTitle] = useState('Profile')
   const router = useRouter()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const data: Pick<
     DropDownInterface & { children?: React.ReactNode },
     'data' | 'children'
