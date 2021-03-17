@@ -28,18 +28,16 @@ interface User {
 
 interface Company {
   id: number
-  details: Details
-}
-
-interface Details {
-  company_name: string
-  language: string
+  details: {
+    company_name: string
+    language: string
+  }
 }
 
 const ContextWrapper: FC = ({ children }) => {
-  const me: QueryResult<User> = useQuery(CURRENT_USER)
+  const user: QueryResult<User> = useQuery(CURRENT_USER)
 
-  return <UserContext.Provider value={me}>{children}</UserContext.Provider>
+  return <UserContext.Provider value={user}>{children}</UserContext.Provider>
 }
 
 export default ContextWrapper

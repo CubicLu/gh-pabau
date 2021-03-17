@@ -60,8 +60,8 @@ const CrudTable: FC<P> = ({
   editPageRouteLink,
 }) => {
   const [isLoading, setIsLoading] = useState(true)
-  const [isActive, setIsActive] = useState<string | boolean | number>(
-    schema?.filter?.primary?.default
+  const [isActive, setIsActive] = useState<boolean | number>(
+    schema?.filter?.primary?.default ?? true
   )
   const [searchTerm, setSearchTerm] = useState('')
   const [isMobileSearch, setMobileSearch] = useState(false)
@@ -70,7 +70,6 @@ const CrudTable: FC<P> = ({
   const router = useRouter()
 
   const [editMutation] = useMutation(editQuery, {
-    awaitRefetchQueries: true,
     onCompleted(data) {
       Notification(
         NotificationType.success,
@@ -86,8 +85,6 @@ const CrudTable: FC<P> = ({
     optimisticResponse: {},
   })
   const [updateOrderMutation] = useMutation(updateOrderQuery, {
-    errorPolicy: 'ignore',
-    awaitRefetchQueries: true,
     onError(err) {
       Notification(
         NotificationType.error,
@@ -207,7 +204,16 @@ const CrudTable: FC<P> = ({
 
   const onFilterMarketingSource = () => {
     resetPagination()
-    setIsActive((e) => e)
+    setIsActive((e) => {
+      switch (typeof e) {
+        case 'boolean':
+          return !e
+        case 'number':
+          return e === schema?.filter.primary.active
+            ? schema.filter.primary.inactive
+            : schema.filter.primary.active
+      }
+    })
   }
 
   const onSearch = async (val) => {

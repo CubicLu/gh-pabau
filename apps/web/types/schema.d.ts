@@ -34,6 +34,8 @@ interface SchemaFilter {
     name: string
     type: FilterTypes
     default: number | boolean
+    active: number | boolean
+    inactive: number | boolean
   }
 }
 

@@ -15,7 +15,9 @@ const onCreateChannel = (name, description, isPrivate) => {
 
 const Layout: FC<LayoutProps> = ({ children, ...props }) => {
   const [authenticated] = useLogin(false)
-  return authenticated ? (
+  return !authenticated ? (
+    <Login />
+  ) : (
     <PabauLayout
       searchRender={() => <Search />}
       onCreateChannel={onCreateChannel}
@@ -24,8 +26,6 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
     >
       {children}
     </PabauLayout>
-  ) : (
-    <Login />
   )
 }
 

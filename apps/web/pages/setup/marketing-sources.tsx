@@ -164,6 +164,8 @@ export const Index: NextPage = () => {
         name: 'public',
         type: 'number',
         default: 1,
+        active: 1,
+        inactive: 0,
       },
     },
   }

@@ -41,8 +41,8 @@ const AddButton: FC<P> = ({
   needTranslation,
   mobileSearch,
 }) => {
-  const [isActive, setIsActive] = useState<boolean | number | string>(
-    schema?.fields?.filter?.defaultvalue ?? false
+  const [isActive, setIsActive] = useState<boolean | number>(
+    schema?.filter.primary.default ?? true
   )
   const [mobFilterDrawer, setMobFilterDrawer] = useState(false)
   const [marketingSourceSearch, setMarketingSourceSearch] = useState('')
@@ -53,6 +53,7 @@ const AddButton: FC<P> = ({
   // })
 
   useEffect(() => {
+    console.log(isActive)
     const timer = setTimeout(() => {
       onSearch?.(marketingSourceSearch)
     }, WAIT_INTERVAL)
@@ -72,15 +73,17 @@ const AddButton: FC<P> = ({
       <div className={styles.radioTextStyle}>
         <Radio.Group
           onChange={(e) => {
+            console.log('radio group value', e.target.value)
             setIsActive(e.target.value)
+            console.log('is active', isActive)
             !isMobile && onFilterSource()
           }}
           value={isActive}
         >
-          <Radio value={true}>
+          <Radio value={schema?.filter?.primary?.active ?? true}>
             <span>Active</span>
           </Radio>
-          <Radio value={false}>
+          <Radio value={schema?.filter?.primary?.inactive ?? false}>
             <span>Inactive</span>
           </Radio>
         </Radio.Group>
@@ -187,7 +190,10 @@ const AddButton: FC<P> = ({
                 : 'Search'
             }
             value={marketingSourceSearch}
-            onChange={(e) => setMarketingSourceSearch(e.target.value)}
+            onChange={(e) => {
+              console.log('set marketing search', e.target.value)
+              setMarketingSourceSearch(e.target.value)
+            }}
             suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
             autoFocus
           />
