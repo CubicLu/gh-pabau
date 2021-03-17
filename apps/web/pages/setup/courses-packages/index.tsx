@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import { Typography } from 'antd'
 import Layout from '../../../components/Layout/Layout'
 import {
@@ -232,6 +232,18 @@ export const Index: FC = () => {
   }
   const onSearch = () => {
     return
+  }
+  const [paginateData, setPaginateData] = useState({
+    total: 0,
+    offset: 0,
+    limit: 50,
+    currentPage: 1,
+    showingRecords: 0,
+  })
+
+  const onPaginationChange = (currentPage) => {
+    const offset = paginateData.limit * (currentPage - 1)
+    setPaginateData({ ...paginateData, offset, currentPage: currentPage })
   }
   return (
     <Layout>
