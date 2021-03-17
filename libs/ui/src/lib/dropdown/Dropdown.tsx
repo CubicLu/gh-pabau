@@ -16,24 +16,27 @@ import { Avatar, Badge, Drawer, Image, Menu, Popover } from 'antd'
 import classNames from 'classnames'
 import Link from 'next/link'
 import QueueAnim from 'rc-queue-anim'
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { languageMenu } from '../../assets/images/lang-logos'
 import { ReactComponent as LaunchSVG } from '../../assets/images/launch.svg'
 import { ReactComponent as PABAULOGO } from '../../assets/images/pabaulogo.svg'
 import { ReactComponent as TaskSVG } from '../../assets/images/Vector.svg'
 import styles from './Dropdown.module.less'
-import { useRouter } from 'next/router'
+import { useCookies } from 'react-cookie'
 
 // import { isMobile, isTablet } from 'react-device-detect'
 export interface DropDownInterface {
   isOpen?: boolean
   onCloseDrawer?: () => void
-  data?: { user: UserProps; company: CompanyProps }
+  data?: {
+    me: UserProps
+  }
 }
 
 interface UserProps {
   full_name: string
   username?: string
+  company: CompanyProps
   _typename?: string
 }
 
@@ -51,21 +54,25 @@ export const Dropdown: FC<DropDownInterface> = ({
   ...rest
 }): JSX.Element => {
   const [activeMenu, setActiveMenu] = useState('Menu')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [cookies, setCookie, removeCookie] = useCookies(['user'])
+
   // used for mobile device
   const [openProfileDrawer, setProfileDrawer] = useState(isOpen)
   const [activeMenuTitle, setActiveMenuTitle] = useState('Profile')
-  const router = useRouter()
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const data: Pick<
-    DropDownInterface & { children?: React.ReactNode },
-    'data' | 'children'
-  > = rest
+  const { data } = rest
+  const [user, setCurrentUser] = useState<UserProps | null>(null)
+  const [company, setCurrentCompany] = useState<CompanyProps | null>(null)
 
-  function handleLogOut() {
-    localStorage.removeItem('token')
-    const date = new Date()
-    new Date().setTime(date.getTime() + 2 * 24 * 60 * 60 * 1000)
-    router.push('/login')
+  useEffect(() => {
+    setCurrentUser(data?.me || null)
+    setCurrentCompany(data?.me?.company || null)
+  }, [data])
+
+  async function handleLogOut() {
+    await localStorage.removeItem('token')
+    await removeCookie('user')
+    window.location.pathname = '/'
   }
 
   const menu = (
@@ -76,12 +83,16 @@ export const Dropdown: FC<DropDownInterface> = ({
       >
         <div className={styles.dropdownHeader}>
           <PABAULOGO />
-          <span className={styles.headerText}>Pabau Clinic Software</span>
+          <span className={styles.headerText}>
+            {company?.details.company_name ?? 'Pabau Clinic Software'}
+          </span>
         </div>
         <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
       <Menu.Item className={styles.userinfo}>
-        <div className={styles.userName}>William Branham</div>
+        <div className={styles.userName}>
+          {user?.full_name ?? 'William Branham'}
+        </div>
         <div className={styles.userBalance}>
           <p>Balance</p>
           <span>9445,00</span>
@@ -174,7 +185,7 @@ export const Dropdown: FC<DropDownInterface> = ({
                 styles.activeMenu
               )}
             >
-              Pabau Clinic Software
+              {company?.details.company_name ?? 'Pabau Clinic Software'}
             </span>
           </div>
           <CheckCircleFilled
@@ -269,7 +280,13 @@ export const Dropdown: FC<DropDownInterface> = ({
           return (
             <Menu.Item key={index} className={styles.languageTextAlign}>
               <div className={styles.languageFlagCenter}>
-                <Image src={lang.logo} alt={lang.label} />
+                <Image
+                  src={lang.logo}
+                  alt={lang.label}
+                  preview={false}
+                  width="16px"
+                  height="16px"
+                />
                 <span className={lang.selected ? styles.activeMenu : undefined}>
                   {lang.label}
                 </span>

@@ -33,44 +33,6 @@ export class AuthenticationService {
   }
 
   private generateJWT(): string {
-    console.log('Generating jwt! secret=' + process.env.JWT_SECRET)
-    console.log(
-      '512: ' +
-        jwt.sign(
-          {
-            user: this.user.id,
-            company: this.user.company_id,
-            'https://hasura.io/jwt/claims': {
-              'x-hasura-allowed-roles': ['public', 'admin'],
-              'x-hasura-default-role': 'public',
-              'x-hasura-user-id': this.user.id,
-              'x-hasura-org-id': this.user.company_id,
-              'x-hasura-james': 123,
-            },
-          } as JwtPayloadDto,
-          process.env.JWT_SECRET,
-          { algorithm: 'HS512' }
-        )
-    )
-    console.log(
-      '256: ' +
-        jwt.sign(
-          {
-            user: this.user.id,
-            company: this.user.company_id,
-            'https://hasura.io/jwt/claims': {
-              'x-hasura-allowed-roles': ['public', 'admin'],
-              'x-hasura-default-role': 'public',
-              'x-hasura-user-id': this.user.id,
-              'x-hasura-org-id': this.user.company_id,
-              'x-hasura-james': 123,
-            },
-          } as JwtPayloadDto,
-          process.env.JWT_SECRET,
-          { algorithm: 'HS256' }
-        )
-    )
-
     return jwt.sign(
       {
         user: this.user.id,
