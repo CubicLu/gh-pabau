@@ -1,0 +1,51 @@
+.courses-wrapper {
+	background: #fff;
+	height: 88px;
+	border-bottom: 1px solid #ECEDF0;
+	display: flex;
+	justify-content: space-between;
+	@media screen and (max-width: 767px) {
+		height: 64px;
+		padding: 0 16px;
+		position: fixed;
+		top: 0;
+		width: 100%;
+		z-index: 9;
+		background: #fff;
+	}
+	.hide-mobile-view {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+		@media screen and (max-width: 767px) {
+			display: none;
+		}
+	}
+	.hide-desktop-view {
+		display: none;
+		@media screen and (max-width: 767px) {
+			display: flex;
+			width: 100%;
+			justify-content: space-between;
+			.course-wrap {
+				display: flex;
+				align-items: center;
+				h6 {
+					margin-bottom: 0;
+					font-size: 17px;
+					line-height: 22px;
+					text-transform: capitalize;
+					color: #3D3D46;
+					margin-left: 15px;
+				}
+			}
+		}
+	}
+}
+
+.table-background {
+	 :global .ant-tabs-nav {
+		background: #fff;
+	}
+}

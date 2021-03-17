@@ -29,7 +29,7 @@ export const Pagination: FC<PaginationProps & AntPaginationProps> = ({
 
   return (
     <div className={styles.tableFooter}>
-      <div>
+      <div className={styles.showWrapper}>
         <p className={styles.paginationText}>
           Showing <span>{showingRecords}</span> results from{' '}
           <span>{props.total}</span>

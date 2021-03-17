@@ -5,6 +5,16 @@
   display: flex;
   justify-content: space-between;
 
+  @media screen and (max-width: 767px) {
+    .show-wrapper {
+      display: flex;
+      justify-content: center;
+      p:first-child {
+        padding-right: 0px;
+      }
+    }
+  }
+
   & > div {
     display: flex;
     align-items: center;
