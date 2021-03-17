@@ -14,25 +14,25 @@ declare global {
 const authenticatedUser = (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.session?.jwt) {
-      console.log('verifying session jwt..')
+      // console.log('verifying session jwt..')
       req.authenticatedUser = jwt.verify(
         req.session?.jwt,
         process.env.JWT_SECRET,
         { algorithms: ['HS512'] }
       ) as JwtPayloadDto
     } else if (req.header('authorization')) {
-      console.log(
-        'verifying header jwt..',
-        req.header('authorization').replace(/^Bearer /, '')
-      )
+      req.header('authorization').replace(/^Bearer /, '')
+      // console.log(
+      //   // 'verifying header jwt..',
+      // )
       req.authenticatedUser = jwt.verify(
         req.header('authorization').replace(/^Bearer /, ''),
         process.env.JWT_SECRET,
         { algorithms: ['HS512'] }
       ) as JwtPayloadDto
     }
-  } catch (error) {
-    console.error(error)
+  } catch {
+    // console.error(error)
   } finally {
     next()
   }

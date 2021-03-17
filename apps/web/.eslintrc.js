@@ -37,7 +37,7 @@ module.exports = {
     'react/prop-types': 0,
     'react/react-in-jsx-scope': 0,
     'react/destructuring-assignment': ['error', 'always'],
-    // TODO temp disabling graphql/template-strings until we resolve issues sync issues
+    // TODO temp disabling graphql/template-strings until we resolve sync issues
     // 'graphql/template-strings': [
     //   'error',
     //   {

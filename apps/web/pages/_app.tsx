@@ -22,6 +22,7 @@ import ContextWrapper from '../components/ContextWrapper'
 import { languages } from '@pabau/i18n'
 import { setContext } from '@apollo/client/link/context'
 import { CookiesProvider } from 'react-cookie'
+import useLogin from '../hooks/authentication/useLogin'
 require('../styles/global.less')
 require('../../../libs/ui/src/styles/antd.less')
 require('react-phone-input-2/lib/style.css')
@@ -103,31 +104,31 @@ export default function CustomApp({
   pageProps,
 }: AppProps): JSX.Element {
   return (
-    <ApolloProvider client={client}>
-      <I18nextProvider i18n={i18next}>
-        <style jsx global>{`
-          @font-face {
-            font-family: 'Circular-Std-Black';
-            src: local('Circular-Std-Black'),
-              url(../public/fonts/CircularStd-Black.otf) format('opentype');
-          }
+    <CookiesProvider>
+      <ApolloProvider client={client}>
+        <I18nextProvider i18n={i18next}>
+          <style jsx global>{`
+            @font-face {
+              font-family: 'Circular-Std-Black';
+              src: local('Circular-Std-Black'),
+                url(../public/fonts/CircularStd-Black.otf) format('opentype');
+            }
 
-          @font-face {
-            font-family: 'Circular-Std-Book';
-            src: url('/fonts/CircularStd-Book.otf') format('opentype');
-          }
+            @font-face {
+              font-family: 'Circular-Std-Book';
+              src: url('/fonts/CircularStd-Book.otf') format('opentype');
+            }
 
-          @font-face {
-            font-family: 'Circular-Std-Medium';
-            src: url('/fonts/CircularStd-Medium.otf') format('opentype');
-          }
-        `}</style>
-        <CookiesProvider>
+            @font-face {
+              font-family: 'Circular-Std-Medium';
+              src: url('/fonts/CircularStd-Medium.otf') format('opentype');
+            }
+          `}</style>
           <ContextWrapper>
             <Component {...pageProps} />
           </ContextWrapper>
-        </CookiesProvider>
-      </I18nextProvider>
-    </ApolloProvider>
+        </I18nextProvider>
+      </ApolloProvider>
+    </CookiesProvider>
   )
 }

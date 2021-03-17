@@ -6,8 +6,18 @@ import { Operation } from '@apollo/client'
 import { Cookies } from 'react-cookie'
 import ResolverContextFunction = SchemaLink.ResolverContextFunction
 
-const prisma = new PrismaClient()
-
+const prisma = new PrismaClient({
+  log: [
+    {
+      emit: 'stdout',
+      level: 'error',
+    },
+    {
+      emit: 'stdout',
+      level: 'warn',
+    },
+  ],
+})
 export interface Context {
   prisma: PrismaClient
   req: Request

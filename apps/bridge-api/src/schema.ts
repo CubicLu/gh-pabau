@@ -12,7 +12,26 @@ import { applyMiddleware } from 'graphql-middleware'
 import { permissions } from './permisions'
 import { paljs } from '@paljs/nexus'
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({
+  log: [
+    {
+      emit: 'event',
+      level: 'query',
+    },
+    {
+      emit: 'stdout',
+      level: 'error',
+    },
+    {
+      emit: 'stdout',
+      level: 'info',
+    },
+    {
+      emit: 'stdout',
+      level: 'warn',
+    },
+  ],
+})
 
 export const schema = applyMiddleware(
   makeSchema({
@@ -68,3 +87,9 @@ export const schema = applyMiddleware(
   }),
   permissions
 )
+
+// Prisma middleware logger for query efficiency
+prisma.$on('query', (e) => {
+  console.log('Query: ' + e.query)
+  console.log('Duration: ' + e.duration + 'ms')
+})

@@ -27,8 +27,6 @@ const LOGIN_MUTATION = gql`
 `
 const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
   const [login] = useMutation(LOGIN_MUTATION)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [cookie, setCookie] = useCookies(['user'])
   const { t } = useTranslationI18()
 
   const loginHandler = async (loginProps: LoginFormProps): Promise<boolean> => {
@@ -42,11 +40,6 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
     if (!result) {
       throw new Error('Wrong user/password')
     }
-    setCookie('user', JSON.stringify(result.data?.login), {
-      path: '/',
-      maxAge: 3600,
-      sameSite: true,
-    })
     localStorage.setItem('token', result.data?.login)
     return true
   }

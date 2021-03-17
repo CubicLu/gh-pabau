@@ -7,8 +7,7 @@ export interface LoginProps {
   company: number
 }
 
-export default function useLogin(registered = false): [boolean, LoginProps] {
-  const [cookie] = useCookies(['user'])
+export default function useLogin(registered = false): [LoginProps, boolean] {
   const [authenticated, authenticate] = useState<boolean>(registered)
   const [user, setUser] = useState<LoginProps | null>(null)
 
@@ -30,14 +29,15 @@ export default function useLogin(registered = false): [boolean, LoginProps] {
   }
 
   useEffect(() => {
-    if ({}.propertyIsEnumerable.call(cookie, 'user')) {
-      const currentUser = decode(cookie.user)
+    if (typeof window !== 'undefined') {
+      const currentUser = decode(localStorage.getItem('token'))
+      console.log(currentUser)
       if (currentUser) {
         authenticate(true)
         setUser(currentUser)
       }
     }
-  }, [authenticated, cookie])
+  }, [authenticated, user])
 
-  return [authenticated ?? false, user]
+  return [user, authenticated ?? false]
 }
