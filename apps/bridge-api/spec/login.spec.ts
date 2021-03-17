@@ -22,16 +22,4 @@ test('denies invalid logins', async () => {
   })
 })
 
-// test('allows valid logins', async () => {
-//   await expect(
-//     ctx.client.request(
-//       gql`
-//         mutation {
-//           login(username: "toshe@pabau.me", password: "test")
-//         }
-//       `
-//     )
-//   ).resolves.toMatchObject({
-//     login: expect.anything(),
-//   })
-// })
+        mutation {
