@@ -16,34 +16,33 @@ Prerequisites:
 
 The following section is for windows users only:
 1. Docker desktop & WSL2 setup `https://docs.docker.com/docker-for-windows/wsl/`
-2. Pull the latest build from our master branch `git pull origin master`
-3. Hasura quick start with docker `https://www.google.com/search?q=hasura+docker&oq=hasura+docker&aqs=chrome.0.69i59j0l4j69i60l3.1492j0j7&sourceid=chrome&ie=UTF-8`
-4. Once you have fully completed the above request and have access to our pabau_crm repo, follow the instruction to setup a local copy of pabau 1 node which includes our docker database. The guide can be found at: `https://bitbucket.org/pabau/pabau-crm/src/prelive/conf/pods/compose-images/node/`
-5. After all the above steps have been completed open your local instance of docker desktop and ensure the following
-  -   Docker is running and no errors are being shown
-      U have both hasura and node running inside the container list
-6. Rename apps/bridge-api/prisma/.env.SAMPLE to apps/bridge-api/prisma/.env [contact James, Toshe  or Kostova to get the latest valid JWT token]
-7. `yarn nexus:generate` to generate the prisma client
-8. If no errors were thrown `yarn nx serve bridge-api`
-9. Navigate to http://localhost:8080/console > Remote Schemas > Add enter the following details to map the your local bridge-api instance created at step 8 with your local hasura docker container
+1. Pull the latest build from our master branch `git pull origin master`
+1. Hasura quick start with docker `https://www.google.com/search?q=hasura+docker&oq=hasura+docker&aqs=chrome.0.69i59j0l4j69i60l3.1492j0j7&sourceid=chrome&ie=UTF-8`
+1. Once you have fully completed the above request and have access to our pabau_crm repo, follow the instruction to setup a local copy of pabau 1 node which includes our docker database. The guide can be found at: `https://bitbucket.org/pabau/pabau-crm/src/prelive/conf/pods/compose-images/node/`
+1. After all the above steps have been completed open your local instance of docker desktop and ensure the following
+1. Docker is running and no errors are being shown
+1. U have both hasura and node running inside the container list
+1. Rename apps/bridge-api/prisma/.env.SAMPLE to apps/bridge-api/prisma/.env [contact James, Toshe  or Kostova to get the latest valid JWT token]
+1. `yarn nexus:generate` to generate the prisma client
+1. If no errors were thrown `yarn nx serve bridge-api`
+1. Navigate to http://localhost:8080/console > Remote Schemas > Add enter the following details to map the your local bridge-api instance created at step 8 with your local hasura docker container
    Name of schema: `bridge`
    Graphql Server URL: `http://docker.for.win.localhost:4000/graphql`
    Tick Forward all headers to the client
    Timeout in seconds `30`
    Click add remote schema
-10. Navigate to the graphql tab and add the following headers
+1. Navigate to the graphql tab and add the following headers
     - key: `authorization` 
    - value: `eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjo4Mzk4OCwiY29tcGFueSI6NDU1NSwiaHR0cHM6Ly9oYXN1cmEuaW8vand0L2NsYWltcyI6eyJ4LWhhc3VyYS1hbGxvd2VkLXJvbGVzIjpbInB1YmxpYyIsImFkbWluIl0sIngtaGFzdXJhLWRlZmF1bHQtcm9sZSI6InB1YmxpYyIsIngtaGFzdXJhLXVzZXItaWQiOiI4Mzk4OCIsIngtaGFzdXJhLW9yZy1pZCI6IjQ1NTUiLCJ4LWhhc3VyYS1qYW1lcyI6InRlc3QifSwiaWF0IjoxNjE1OTI5MzQyfQ.P0uIWtcjASpTGOdcoLeBaoggTsIq3wdi6L_3Zyx_yEP6FvoOnl9cNOAqvpZJLVQwLaSyaIuN7ksEbRE0DY9xIQ`
-
-11. Ran the following test query to ensure everything is working correctly, expected response would be to get a response in the form of the logged in user
+1. Ran the following test query to ensure everything is working correctly, expected response would be to get a response in the form of the logged in user
   `query {
     me {
       username
     }
   }`
 
-12. Rename `apps/web/.env.SAMPLE` to `apps/web/.env.local` and uncomment the second  ENV variable `NEXT_PUBLIC_GRAPHQL_ENDPOINT`
-13. `yarn nx serve dev` to run Pabau 2.0 locally and ensure everything is working as expected
+1. Rename `apps/web/.env.SAMPLE` to `apps/web/.env.local` and uncomment the second  ENV variable `NEXT_PUBLIC_GRAPHQL_ENDPOINT`
+1. `yarn nx serve dev` to run Pabau 2.0 locally and ensure everything is working as expected
 
 Helpful links for potential links that may occur
 1. The official docker documentation: `https://docs.docker.com/`
@@ -51,18 +50,16 @@ Helpful links for potential links that may occur
 3. `#pabau-2-dev` slack channel 
 
 Easy way:
-- If u prefer to use your pod database instead of a local docker img, contact [James, Toshe] 
-- skip steps 1, 3,4, 9 and uncomment the first ENV variable at step 12
-
+- If u prefer to use your pod database instead of a local docker img, contact [James, Toshe]
 
 # The bridge 
 
 Before working on the bridge-api please familiarise yourself with the following documentation and concepts
 Everything has been preconfigured already but knowledge of the core concepts is recommended
 
-- prisma `https://www.prisma.io/docs/concepts/components`
-- nexus `https://nexusjs.org/docs/`
-- ECMA script ES2017+
+1. prisma `https://www.prisma.io/docs/concepts/components`
+1. nexus `https://nexusjs.org/docs/`
+1. ECMA script ES2017+
 
 # Middlewares:
 
@@ -72,11 +69,10 @@ Everything has been preconfigured already but knowledge of the core concepts is 
 
 # Resolvers:
 
-Resolver : The function of the resolver is analog to the function of a controller in REST api's
-Graphl Nexus resolvers concepts `https://nexusjs.org/docs/plugins/prisma/overview`
-
-Your nexus resolvers are placed inside `apps/bridge-api/src/generated/types` 
-Your business logic resolvers are placed inside `apps/bridge-api/src/schema/types`
+- Resolver : The function of the resolver is analog to the function of a controller in REST api's
+- Graphl Nexus resolvers concepts `https://nexusjs.org/docs/plugins/prisma/overview`
+- Your nexus resolvers are placed inside `apps/bridge-api/src/generated/types` 
+- Your business logic resolvers are placed inside `apps/bridge-api/src/schema/types`
 
 # Running database queries inside your resolvers
 
@@ -205,18 +201,18 @@ Examples:
 1. docker-compose.yml for hasura
 2. Generate commands should list the files they overwrite
 3. Use hasura cli-migrations to launch hasura with our schema
-4. Each dev should have be able to remotly connect to his pod db db
-5. Docker deployment bug 
+4. Each dev should have be able to remotly connect to his pod db
+5. Docker deployment bug related to `https://github.com/prisma/prisma/issues/5304`
 
 # Big ticket items
+
 1. Node clustering for expensive queries, the server should replicate itself and create a separate node server that runs non a new thread on complex analytics queries
 2. Proxy or dedicated communication with 2 separate instances of appolo client
-3. cicd bug related to `https://github.com/prisma/prisma/issues/5304` or a
 
 # Important
 
 1. `nexus-plugin-prisma`, `nexus` `prisma` should always be kept not be updated automatically via `package.json`
-2. `bridge.Dockerfile` should be kept at the same LTS version as the rest of the system
+2. `bridge.Dockerfile` should be kept at the same LTS node version as the rest of the system
 
 
 # Testing
