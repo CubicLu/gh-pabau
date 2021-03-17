@@ -67,11 +67,11 @@ export const Dropdown: FC<DropDownInterface> = ({
   useEffect(() => {
     setCurrentUser(data?.me || null)
     setCurrentCompany(data?.me?.company || null)
-  }, [data, user, company])
+  }, [data])
 
-  function handleLogOut() {
-    localStorage.removeItem('token')
-    removeCookie('user')
+  async function handleLogOut() {
+    await localStorage.removeItem('token')
+    await removeCookie('user')
     window.location.pathname = '/'
   }
 

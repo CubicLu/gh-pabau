@@ -58,6 +58,7 @@ const CrudTable: FC<P> = ({
   needTranslation = false,
   editPage = false,
   editPageRouteLink,
+  ...props
 }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isActive, setIsActive] = useState<boolean | number>(
@@ -510,7 +511,7 @@ const CrudTable: FC<P> = ({
             />
           )}
 
-          <Layout>
+          <Layout {...props}>
             {showNotificationBanner && notificationBanner}
             <div
               className={classNames(

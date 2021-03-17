@@ -180,6 +180,7 @@ export const Index: NextPage = () => {
       aggregateQuery={LIST_AGGREGATE_QUERY}
       updateOrderQuery={UPDATE_ORDER_MUTATION}
       needTranslation={false}
+      {...user}
     />
   )
 }
