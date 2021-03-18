@@ -551,6 +551,8 @@ const CrudTable: FC<P> = ({
               onRowClick={(e) => {
                 if (editPage) {
                   router.push(`${editPageRouteLink}/${e.id}`)
+                } else if (createPage) {
+                  createPageOnClick()
                 } else {
                   setEditingRow(e)
                   setModalShowing((e) => !e)
