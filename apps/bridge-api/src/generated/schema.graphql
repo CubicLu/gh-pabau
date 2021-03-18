@@ -24269,10 +24269,10 @@ input GlCodeCreateInput {
   description: gl_codes_description!
 }
 
-input GlCodeCreateNestedManyWithoutInvPaymentTypeInput {
-  connect: [GlCodeWhereUniqueInput]
-  connectOrCreate: [GlCodeCreateOrConnectWithoutInvPaymentTypeInput]
-  create: [GlCodeCreateWithoutInvPaymentTypeInput]
+input GlCodeCreateNestedOneWithoutInvPaymentTypeInput {
+  connect: GlCodeWhereUniqueInput
+  connectOrCreate: GlCodeCreateOrConnectWithoutInvPaymentTypeInput
+  create: GlCodeUncheckedCreateWithoutInvPaymentTypeInput
 }
 
 input GlCodeCreateOrConnectWithoutInvPaymentTypeInput {
@@ -24284,12 +24284,6 @@ input GlCodeCreateWithoutInvPaymentTypeInput {
   code: String!
   company_id: Int!
   description: gl_codes_description!
-}
-
-input GlCodeListRelationFilter {
-  every: GlCodeWhereInput
-  none: GlCodeWhereInput
-  some: GlCodeWhereInput
 }
 
 type GlCodeMaxAggregateOutputType {
@@ -24317,23 +24311,17 @@ input GlCodeOrderByInput {
   related_to: SortOrder
 }
 
+input GlCodeRelationFilter {
+  is: GlCodeWhereInput
+  isNot: GlCodeWhereInput
+}
+
 enum GlCodeScalarFieldEnum {
   code
   company_id
   description
   id
   related_to
-}
-
-input GlCodeScalarWhereInput {
-  AND: [GlCodeScalarWhereInput]
-  NOT: [GlCodeScalarWhereInput]
-  OR: [GlCodeScalarWhereInput]
-  code: StringFilter
-  company_id: IntFilter
-  description: Enumgl_codes_descriptionFilter
-  id: IntFilter
-  related_to: IntNullableFilter
 }
 
 type GlCodeSumAggregateOutputType {
@@ -24350,10 +24338,10 @@ input GlCodeUncheckedCreateInput {
   related_to: Int
 }
 
-input GlCodeUncheckedCreateNestedManyWithoutInvPaymentTypeInput {
-  connect: [GlCodeWhereUniqueInput]
-  connectOrCreate: [GlCodeCreateOrConnectWithoutInvPaymentTypeInput]
-  create: [GlCodeCreateWithoutInvPaymentTypeInput]
+input GlCodeUncheckedCreateNestedOneWithoutInvPaymentTypeInput {
+  connect: GlCodeWhereUniqueInput
+  connectOrCreate: GlCodeCreateOrConnectWithoutInvPaymentTypeInput
+  create: GlCodeUncheckedCreateWithoutInvPaymentTypeInput
 }
 
 input GlCodeUncheckedCreateWithoutInvPaymentTypeInput {
@@ -24379,24 +24367,14 @@ input GlCodeUncheckedUpdateManyInput {
   related_to: NullableIntFieldUpdateOperationsInput
 }
 
-input GlCodeUncheckedUpdateManyWithoutGlCodeInput {
-  code: StringFieldUpdateOperationsInput
-  company_id: IntFieldUpdateOperationsInput
-  description: Enumgl_codes_descriptionFieldUpdateOperationsInput
-  id: IntFieldUpdateOperationsInput
-}
-
-input GlCodeUncheckedUpdateManyWithoutInvPaymentTypeInput {
-  connect: [GlCodeWhereUniqueInput]
-  connectOrCreate: [GlCodeCreateOrConnectWithoutInvPaymentTypeInput]
-  create: [GlCodeCreateWithoutInvPaymentTypeInput]
-  delete: [GlCodeWhereUniqueInput]
-  deleteMany: [GlCodeScalarWhereInput]
-  disconnect: [GlCodeWhereUniqueInput]
-  set: [GlCodeWhereUniqueInput]
-  update: [GlCodeUpdateWithWhereUniqueWithoutInvPaymentTypeInput]
-  updateMany: [GlCodeUpdateManyWithWhereWithoutInvPaymentTypeInput]
-  upsert: [GlCodeUpsertWithWhereUniqueWithoutInvPaymentTypeInput]
+input GlCodeUncheckedUpdateOneWithoutInvPaymentTypeInput {
+  connect: GlCodeWhereUniqueInput
+  connectOrCreate: GlCodeCreateOrConnectWithoutInvPaymentTypeInput
+  create: GlCodeUncheckedCreateWithoutInvPaymentTypeInput
+  delete: Boolean
+  disconnect: Boolean
+  update: GlCodeUncheckedUpdateWithoutInvPaymentTypeInput
+  upsert: GlCodeUpsertWithoutInvPaymentTypeInput
 }
 
 input GlCodeUncheckedUpdateWithoutInvPaymentTypeInput {
@@ -24419,27 +24397,14 @@ input GlCodeUpdateManyMutationInput {
   description: Enumgl_codes_descriptionFieldUpdateOperationsInput
 }
 
-input GlCodeUpdateManyWithWhereWithoutInvPaymentTypeInput {
-  data: GlCodeUncheckedUpdateManyWithoutGlCodeInput!
-  where: GlCodeScalarWhereInput!
-}
-
-input GlCodeUpdateManyWithoutInvPaymentTypeInput {
-  connect: [GlCodeWhereUniqueInput]
-  connectOrCreate: [GlCodeCreateOrConnectWithoutInvPaymentTypeInput]
-  create: [GlCodeCreateWithoutInvPaymentTypeInput]
-  delete: [GlCodeWhereUniqueInput]
-  deleteMany: [GlCodeScalarWhereInput]
-  disconnect: [GlCodeWhereUniqueInput]
-  set: [GlCodeWhereUniqueInput]
-  update: [GlCodeUpdateWithWhereUniqueWithoutInvPaymentTypeInput]
-  updateMany: [GlCodeUpdateManyWithWhereWithoutInvPaymentTypeInput]
-  upsert: [GlCodeUpsertWithWhereUniqueWithoutInvPaymentTypeInput]
-}
-
-input GlCodeUpdateWithWhereUniqueWithoutInvPaymentTypeInput {
-  data: GlCodeUncheckedUpdateWithoutInvPaymentTypeInput!
-  where: GlCodeWhereUniqueInput!
+input GlCodeUpdateOneWithoutInvPaymentTypeInput {
+  connect: GlCodeWhereUniqueInput
+  connectOrCreate: GlCodeCreateOrConnectWithoutInvPaymentTypeInput
+  create: GlCodeUncheckedCreateWithoutInvPaymentTypeInput
+  delete: Boolean
+  disconnect: Boolean
+  update: GlCodeUncheckedUpdateWithoutInvPaymentTypeInput
+  upsert: GlCodeUpsertWithoutInvPaymentTypeInput
 }
 
 input GlCodeUpdateWithoutInvPaymentTypeInput {
@@ -24448,10 +24413,9 @@ input GlCodeUpdateWithoutInvPaymentTypeInput {
   description: Enumgl_codes_descriptionFieldUpdateOperationsInput
 }
 
-input GlCodeUpsertWithWhereUniqueWithoutInvPaymentTypeInput {
+input GlCodeUpsertWithoutInvPaymentTypeInput {
   create: GlCodeUncheckedCreateWithoutInvPaymentTypeInput!
   update: GlCodeUncheckedUpdateWithoutInvPaymentTypeInput!
-  where: GlCodeWhereUniqueInput!
 }
 
 input GlCodeWhereInput {
@@ -24501,7 +24465,7 @@ input IntNullableFilter {
 }
 
 type InvPaymentType {
-  GlCode(cursor: GlCodeWhereUniqueInput, skip: Int, take: Int): [GlCode!]!
+  GlCode: GlCode
   company_id: Int!
   created_date: DateTime
   description: String
@@ -24540,7 +24504,7 @@ type InvPaymentTypeCountAggregateOutputType {
 }
 
 input InvPaymentTypeCreateInput {
-  GlCode: GlCodeCreateNestedManyWithoutInvPaymentTypeInput
+  GlCode: GlCodeCreateNestedOneWithoutInvPaymentTypeInput
   company_id: Int!
   created_date: DateTime
   description: String
@@ -24648,7 +24612,7 @@ type InvPaymentTypeSumAggregateOutputType {
 }
 
 input InvPaymentTypeUncheckedCreateInput {
-  GlCode: GlCodeUncheckedCreateNestedManyWithoutInvPaymentTypeInput
+  GlCode: GlCodeUncheckedCreateNestedOneWithoutInvPaymentTypeInput
   company_id: Int!
   created_date: DateTime
   description: String
@@ -24677,7 +24641,7 @@ input InvPaymentTypeUncheckedCreateWithoutGlCodeInput {
 }
 
 input InvPaymentTypeUncheckedUpdateInput {
-  GlCode: GlCodeUncheckedUpdateManyWithoutInvPaymentTypeInput
+  GlCode: GlCodeUncheckedUpdateOneWithoutInvPaymentTypeInput
   company_id: IntFieldUpdateOperationsInput
   created_date: NullableDateTimeFieldUpdateOperationsInput
   description: NullableStringFieldUpdateOperationsInput
@@ -24720,7 +24684,7 @@ input InvPaymentTypeUncheckedUpdateWithoutGlCodeInput {
 }
 
 input InvPaymentTypeUpdateInput {
-  GlCode: GlCodeUpdateManyWithoutInvPaymentTypeInput
+  GlCode: GlCodeUpdateOneWithoutInvPaymentTypeInput
   company_id: IntFieldUpdateOperationsInput
   created_date: NullableDateTimeFieldUpdateOperationsInput
   description: NullableStringFieldUpdateOperationsInput
@@ -24776,7 +24740,7 @@ input InvPaymentTypeUpsertWithoutGlCodeInput {
 
 input InvPaymentTypeWhereInput {
   AND: [InvPaymentTypeWhereInput]
-  GlCode: GlCodeListRelationFilter
+  GlCode: GlCodeWhereInput
   NOT: [InvPaymentTypeWhereInput]
   OR: [InvPaymentTypeWhereInput]
   company_id: IntFilter
@@ -26692,6 +26656,13 @@ input StringNullableFilter {
   not: NestedStringNullableFilter
   notIn: [String]
   startsWith: String
+}
+
+type Subscription {
+  """
+  Fires any time the current authenticated user details are updated or deleted
+  """
+  me: User
 }
 
 type ThirdPartyAccess {

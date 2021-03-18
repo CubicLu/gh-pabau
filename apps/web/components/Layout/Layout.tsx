@@ -15,6 +15,8 @@ const onCreateChannel = (name, description, isPrivate) => {
 
 const Layout: FC<LayoutProps> = ({ children, ...props }) => {
   const [authenticated] = useLogin(false)
+
+  if (typeof window === 'undefined') return <div>LOADING</div>
   return authenticated ? (
     <PabauLayout
       searchRender={() => <Search />}

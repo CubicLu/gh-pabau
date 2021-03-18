@@ -14040,10 +14040,10 @@ export interface NexusGenInputs {
     company_id: number; // Int!
     description: NexusGenEnums['gl_codes_description']; // gl_codes_description!
   }
-  GlCodeCreateNestedManyWithoutInvPaymentTypeInput: { // input type
-    connect?: Array<NexusGenInputs['GlCodeWhereUniqueInput'] | null> | null; // [GlCodeWhereUniqueInput]
-    connectOrCreate?: Array<NexusGenInputs['GlCodeCreateOrConnectWithoutInvPaymentTypeInput'] | null> | null; // [GlCodeCreateOrConnectWithoutInvPaymentTypeInput]
-    create?: Array<NexusGenInputs['GlCodeCreateWithoutInvPaymentTypeInput'] | null> | null; // [GlCodeCreateWithoutInvPaymentTypeInput]
+  GlCodeCreateNestedOneWithoutInvPaymentTypeInput: { // input type
+    connect?: NexusGenInputs['GlCodeWhereUniqueInput'] | null; // GlCodeWhereUniqueInput
+    connectOrCreate?: NexusGenInputs['GlCodeCreateOrConnectWithoutInvPaymentTypeInput'] | null; // GlCodeCreateOrConnectWithoutInvPaymentTypeInput
+    create?: NexusGenInputs['GlCodeUncheckedCreateWithoutInvPaymentTypeInput'] | null; // GlCodeUncheckedCreateWithoutInvPaymentTypeInput
   }
   GlCodeCreateOrConnectWithoutInvPaymentTypeInput: { // input type
     create: NexusGenInputs['GlCodeUncheckedCreateWithoutInvPaymentTypeInput']; // GlCodeUncheckedCreateWithoutInvPaymentTypeInput!
@@ -14054,11 +14054,6 @@ export interface NexusGenInputs {
     company_id: number; // Int!
     description: NexusGenEnums['gl_codes_description']; // gl_codes_description!
   }
-  GlCodeListRelationFilter: { // input type
-    every?: NexusGenInputs['GlCodeWhereInput'] | null; // GlCodeWhereInput
-    none?: NexusGenInputs['GlCodeWhereInput'] | null; // GlCodeWhereInput
-    some?: NexusGenInputs['GlCodeWhereInput'] | null; // GlCodeWhereInput
-  }
   GlCodeOrderByInput: { // input type
     InvPaymentType?: NexusGenInputs['InvPaymentTypeOrderByInput'] | null; // InvPaymentTypeOrderByInput
     code?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -14067,15 +14062,9 @@ export interface NexusGenInputs {
     id?: NexusGenEnums['SortOrder'] | null; // SortOrder
     related_to?: NexusGenEnums['SortOrder'] | null; // SortOrder
   }
-  GlCodeScalarWhereInput: { // input type
-    AND?: Array<NexusGenInputs['GlCodeScalarWhereInput'] | null> | null; // [GlCodeScalarWhereInput]
-    NOT?: Array<NexusGenInputs['GlCodeScalarWhereInput'] | null> | null; // [GlCodeScalarWhereInput]
-    OR?: Array<NexusGenInputs['GlCodeScalarWhereInput'] | null> | null; // [GlCodeScalarWhereInput]
-    code?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    company_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
-    description?: NexusGenInputs['Enumgl_codes_descriptionFilter'] | null; // Enumgl_codes_descriptionFilter
-    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
-    related_to?: NexusGenInputs['IntNullableFilter'] | null; // IntNullableFilter
+  GlCodeRelationFilter: { // input type
+    is?: NexusGenInputs['GlCodeWhereInput'] | null; // GlCodeWhereInput
+    isNot?: NexusGenInputs['GlCodeWhereInput'] | null; // GlCodeWhereInput
   }
   GlCodeUncheckedCreateInput: { // input type
     code: string; // String!
@@ -14084,10 +14073,10 @@ export interface NexusGenInputs {
     id?: number | null; // Int
     related_to?: number | null; // Int
   }
-  GlCodeUncheckedCreateNestedManyWithoutInvPaymentTypeInput: { // input type
-    connect?: Array<NexusGenInputs['GlCodeWhereUniqueInput'] | null> | null; // [GlCodeWhereUniqueInput]
-    connectOrCreate?: Array<NexusGenInputs['GlCodeCreateOrConnectWithoutInvPaymentTypeInput'] | null> | null; // [GlCodeCreateOrConnectWithoutInvPaymentTypeInput]
-    create?: Array<NexusGenInputs['GlCodeCreateWithoutInvPaymentTypeInput'] | null> | null; // [GlCodeCreateWithoutInvPaymentTypeInput]
+  GlCodeUncheckedCreateNestedOneWithoutInvPaymentTypeInput: { // input type
+    connect?: NexusGenInputs['GlCodeWhereUniqueInput'] | null; // GlCodeWhereUniqueInput
+    connectOrCreate?: NexusGenInputs['GlCodeCreateOrConnectWithoutInvPaymentTypeInput'] | null; // GlCodeCreateOrConnectWithoutInvPaymentTypeInput
+    create?: NexusGenInputs['GlCodeUncheckedCreateWithoutInvPaymentTypeInput'] | null; // GlCodeUncheckedCreateWithoutInvPaymentTypeInput
   }
   GlCodeUncheckedCreateWithoutInvPaymentTypeInput: { // input type
     code: string; // String!
@@ -14109,23 +14098,14 @@ export interface NexusGenInputs {
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     related_to?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
   }
-  GlCodeUncheckedUpdateManyWithoutGlCodeInput: { // input type
-    code?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
-    description?: NexusGenInputs['Enumgl_codes_descriptionFieldUpdateOperationsInput'] | null; // Enumgl_codes_descriptionFieldUpdateOperationsInput
-    id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
-  }
-  GlCodeUncheckedUpdateManyWithoutInvPaymentTypeInput: { // input type
-    connect?: Array<NexusGenInputs['GlCodeWhereUniqueInput'] | null> | null; // [GlCodeWhereUniqueInput]
-    connectOrCreate?: Array<NexusGenInputs['GlCodeCreateOrConnectWithoutInvPaymentTypeInput'] | null> | null; // [GlCodeCreateOrConnectWithoutInvPaymentTypeInput]
-    create?: Array<NexusGenInputs['GlCodeCreateWithoutInvPaymentTypeInput'] | null> | null; // [GlCodeCreateWithoutInvPaymentTypeInput]
-    delete?: Array<NexusGenInputs['GlCodeWhereUniqueInput'] | null> | null; // [GlCodeWhereUniqueInput]
-    deleteMany?: Array<NexusGenInputs['GlCodeScalarWhereInput'] | null> | null; // [GlCodeScalarWhereInput]
-    disconnect?: Array<NexusGenInputs['GlCodeWhereUniqueInput'] | null> | null; // [GlCodeWhereUniqueInput]
-    set?: Array<NexusGenInputs['GlCodeWhereUniqueInput'] | null> | null; // [GlCodeWhereUniqueInput]
-    update?: Array<NexusGenInputs['GlCodeUpdateWithWhereUniqueWithoutInvPaymentTypeInput'] | null> | null; // [GlCodeUpdateWithWhereUniqueWithoutInvPaymentTypeInput]
-    updateMany?: Array<NexusGenInputs['GlCodeUpdateManyWithWhereWithoutInvPaymentTypeInput'] | null> | null; // [GlCodeUpdateManyWithWhereWithoutInvPaymentTypeInput]
-    upsert?: Array<NexusGenInputs['GlCodeUpsertWithWhereUniqueWithoutInvPaymentTypeInput'] | null> | null; // [GlCodeUpsertWithWhereUniqueWithoutInvPaymentTypeInput]
+  GlCodeUncheckedUpdateOneWithoutInvPaymentTypeInput: { // input type
+    connect?: NexusGenInputs['GlCodeWhereUniqueInput'] | null; // GlCodeWhereUniqueInput
+    connectOrCreate?: NexusGenInputs['GlCodeCreateOrConnectWithoutInvPaymentTypeInput'] | null; // GlCodeCreateOrConnectWithoutInvPaymentTypeInput
+    create?: NexusGenInputs['GlCodeUncheckedCreateWithoutInvPaymentTypeInput'] | null; // GlCodeUncheckedCreateWithoutInvPaymentTypeInput
+    delete?: boolean | null; // Boolean
+    disconnect?: boolean | null; // Boolean
+    update?: NexusGenInputs['GlCodeUncheckedUpdateWithoutInvPaymentTypeInput'] | null; // GlCodeUncheckedUpdateWithoutInvPaymentTypeInput
+    upsert?: NexusGenInputs['GlCodeUpsertWithoutInvPaymentTypeInput'] | null; // GlCodeUpsertWithoutInvPaymentTypeInput
   }
   GlCodeUncheckedUpdateWithoutInvPaymentTypeInput: { // input type
     code?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
@@ -14144,35 +14124,23 @@ export interface NexusGenInputs {
     company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     description?: NexusGenInputs['Enumgl_codes_descriptionFieldUpdateOperationsInput'] | null; // Enumgl_codes_descriptionFieldUpdateOperationsInput
   }
-  GlCodeUpdateManyWithWhereWithoutInvPaymentTypeInput: { // input type
-    data: NexusGenInputs['GlCodeUncheckedUpdateManyWithoutGlCodeInput']; // GlCodeUncheckedUpdateManyWithoutGlCodeInput!
-    where: NexusGenInputs['GlCodeScalarWhereInput']; // GlCodeScalarWhereInput!
-  }
-  GlCodeUpdateManyWithoutInvPaymentTypeInput: { // input type
-    connect?: Array<NexusGenInputs['GlCodeWhereUniqueInput'] | null> | null; // [GlCodeWhereUniqueInput]
-    connectOrCreate?: Array<NexusGenInputs['GlCodeCreateOrConnectWithoutInvPaymentTypeInput'] | null> | null; // [GlCodeCreateOrConnectWithoutInvPaymentTypeInput]
-    create?: Array<NexusGenInputs['GlCodeCreateWithoutInvPaymentTypeInput'] | null> | null; // [GlCodeCreateWithoutInvPaymentTypeInput]
-    delete?: Array<NexusGenInputs['GlCodeWhereUniqueInput'] | null> | null; // [GlCodeWhereUniqueInput]
-    deleteMany?: Array<NexusGenInputs['GlCodeScalarWhereInput'] | null> | null; // [GlCodeScalarWhereInput]
-    disconnect?: Array<NexusGenInputs['GlCodeWhereUniqueInput'] | null> | null; // [GlCodeWhereUniqueInput]
-    set?: Array<NexusGenInputs['GlCodeWhereUniqueInput'] | null> | null; // [GlCodeWhereUniqueInput]
-    update?: Array<NexusGenInputs['GlCodeUpdateWithWhereUniqueWithoutInvPaymentTypeInput'] | null> | null; // [GlCodeUpdateWithWhereUniqueWithoutInvPaymentTypeInput]
-    updateMany?: Array<NexusGenInputs['GlCodeUpdateManyWithWhereWithoutInvPaymentTypeInput'] | null> | null; // [GlCodeUpdateManyWithWhereWithoutInvPaymentTypeInput]
-    upsert?: Array<NexusGenInputs['GlCodeUpsertWithWhereUniqueWithoutInvPaymentTypeInput'] | null> | null; // [GlCodeUpsertWithWhereUniqueWithoutInvPaymentTypeInput]
-  }
-  GlCodeUpdateWithWhereUniqueWithoutInvPaymentTypeInput: { // input type
-    data: NexusGenInputs['GlCodeUncheckedUpdateWithoutInvPaymentTypeInput']; // GlCodeUncheckedUpdateWithoutInvPaymentTypeInput!
-    where: NexusGenInputs['GlCodeWhereUniqueInput']; // GlCodeWhereUniqueInput!
+  GlCodeUpdateOneWithoutInvPaymentTypeInput: { // input type
+    connect?: NexusGenInputs['GlCodeWhereUniqueInput'] | null; // GlCodeWhereUniqueInput
+    connectOrCreate?: NexusGenInputs['GlCodeCreateOrConnectWithoutInvPaymentTypeInput'] | null; // GlCodeCreateOrConnectWithoutInvPaymentTypeInput
+    create?: NexusGenInputs['GlCodeUncheckedCreateWithoutInvPaymentTypeInput'] | null; // GlCodeUncheckedCreateWithoutInvPaymentTypeInput
+    delete?: boolean | null; // Boolean
+    disconnect?: boolean | null; // Boolean
+    update?: NexusGenInputs['GlCodeUncheckedUpdateWithoutInvPaymentTypeInput'] | null; // GlCodeUncheckedUpdateWithoutInvPaymentTypeInput
+    upsert?: NexusGenInputs['GlCodeUpsertWithoutInvPaymentTypeInput'] | null; // GlCodeUpsertWithoutInvPaymentTypeInput
   }
   GlCodeUpdateWithoutInvPaymentTypeInput: { // input type
     code?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     description?: NexusGenInputs['Enumgl_codes_descriptionFieldUpdateOperationsInput'] | null; // Enumgl_codes_descriptionFieldUpdateOperationsInput
   }
-  GlCodeUpsertWithWhereUniqueWithoutInvPaymentTypeInput: { // input type
+  GlCodeUpsertWithoutInvPaymentTypeInput: { // input type
     create: NexusGenInputs['GlCodeUncheckedCreateWithoutInvPaymentTypeInput']; // GlCodeUncheckedCreateWithoutInvPaymentTypeInput!
     update: NexusGenInputs['GlCodeUncheckedUpdateWithoutInvPaymentTypeInput']; // GlCodeUncheckedUpdateWithoutInvPaymentTypeInput!
-    where: NexusGenInputs['GlCodeWhereUniqueInput']; // GlCodeWhereUniqueInput!
   }
   GlCodeWhereInput: { // input type
     AND?: Array<NexusGenInputs['GlCodeWhereInput'] | null> | null; // [GlCodeWhereInput]
@@ -14216,7 +14184,7 @@ export interface NexusGenInputs {
     notIn?: Array<number | null> | null; // [Int]
   }
   InvPaymentTypeCreateInput: { // input type
-    GlCode?: NexusGenInputs['GlCodeCreateNestedManyWithoutInvPaymentTypeInput'] | null; // GlCodeCreateNestedManyWithoutInvPaymentTypeInput
+    GlCode?: NexusGenInputs['GlCodeCreateNestedOneWithoutInvPaymentTypeInput'] | null; // GlCodeCreateNestedOneWithoutInvPaymentTypeInput
     company_id: number; // Int!
     created_date?: NexusGenScalars['DateTime'] | null; // DateTime
     description?: string | null; // String
@@ -14267,7 +14235,7 @@ export interface NexusGenInputs {
     isNot?: NexusGenInputs['InvPaymentTypeWhereInput'] | null; // InvPaymentTypeWhereInput
   }
   InvPaymentTypeUncheckedCreateInput: { // input type
-    GlCode?: NexusGenInputs['GlCodeUncheckedCreateNestedManyWithoutInvPaymentTypeInput'] | null; // GlCodeUncheckedCreateNestedManyWithoutInvPaymentTypeInput
+    GlCode?: NexusGenInputs['GlCodeUncheckedCreateNestedOneWithoutInvPaymentTypeInput'] | null; // GlCodeUncheckedCreateNestedOneWithoutInvPaymentTypeInput
     company_id: number; // Int!
     created_date?: NexusGenScalars['DateTime'] | null; // DateTime
     description?: string | null; // String
@@ -14294,7 +14262,7 @@ export interface NexusGenInputs {
     uid?: number | null; // Int
   }
   InvPaymentTypeUncheckedUpdateInput: { // input type
-    GlCode?: NexusGenInputs['GlCodeUncheckedUpdateManyWithoutInvPaymentTypeInput'] | null; // GlCodeUncheckedUpdateManyWithoutInvPaymentTypeInput
+    GlCode?: NexusGenInputs['GlCodeUncheckedUpdateOneWithoutInvPaymentTypeInput'] | null; // GlCodeUncheckedUpdateOneWithoutInvPaymentTypeInput
     company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     created_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     description?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -14334,7 +14302,7 @@ export interface NexusGenInputs {
     uid?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
   }
   InvPaymentTypeUpdateInput: { // input type
-    GlCode?: NexusGenInputs['GlCodeUpdateManyWithoutInvPaymentTypeInput'] | null; // GlCodeUpdateManyWithoutInvPaymentTypeInput
+    GlCode?: NexusGenInputs['GlCodeUpdateOneWithoutInvPaymentTypeInput'] | null; // GlCodeUpdateOneWithoutInvPaymentTypeInput
     company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     created_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     description?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
@@ -14385,7 +14353,7 @@ export interface NexusGenInputs {
   }
   InvPaymentTypeWhereInput: { // input type
     AND?: Array<NexusGenInputs['InvPaymentTypeWhereInput'] | null> | null; // [InvPaymentTypeWhereInput]
-    GlCode?: NexusGenInputs['GlCodeListRelationFilter'] | null; // GlCodeListRelationFilter
+    GlCode?: NexusGenInputs['GlCodeWhereInput'] | null; // GlCodeWhereInput
     NOT?: Array<NexusGenInputs['InvPaymentTypeWhereInput'] | null> | null; // [InvPaymentTypeWhereInput]
     OR?: Array<NexusGenInputs['InvPaymentTypeWhereInput'] | null> | null; // [InvPaymentTypeWhereInput]
     company_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
@@ -25153,6 +25121,7 @@ export interface NexusGenObjects {
     company_id: number; // Int!
     id: number; // Int!
   }
+  Subscription: {};
   ThirdPartyAccess: { // root type
     access_id: number; // Int!
     company_id: number; // Int!
@@ -33160,7 +33129,7 @@ export interface NexusGenFieldTypes {
     related_to: number | null; // Int
   }
   InvPaymentType: { // field return type
-    GlCode: NexusGenRootTypes['GlCode'][]; // [GlCode!]!
+    GlCode: NexusGenRootTypes['GlCode'] | null; // GlCode
     company_id: number; // Int!
     created_date: NexusGenScalars['DateTime'] | null; // DateTime
     description: string | null; // String
@@ -34371,6 +34340,9 @@ export interface NexusGenFieldTypes {
   SecondAtQuestionSumAggregateOutputType: { // field return type
     company_id: number; // Int!
     id: number; // Int!
+  }
+  Subscription: { // field return type
+    me: NexusGenRootTypes['User'] | null; // User
   }
   ThirdPartyAccess: { // field return type
     access_id: number; // Int!
@@ -43587,6 +43559,9 @@ export interface NexusGenFieldTypeNames {
     company_id: 'Int'
     id: 'Int'
   }
+  Subscription: { // field return type name
+    me: 'User'
+  }
   ThirdPartyAccess: { // field return type name
     access_id: 'Int'
     company: 'Company'
@@ -44329,13 +44304,6 @@ export interface NexusGenArgTypes {
     }
     User: { // args
       cursor?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
-      skip?: number | null; // Int
-      take?: number | null; // Int
-    }
-  }
-  InvPaymentType: {
-    GlCode: { // args
-      cursor?: NexusGenInputs['GlCodeWhereUniqueInput'] | null; // GlCodeWhereUniqueInput
       skip?: number | null; // Int
       take?: number | null; // Int
     }

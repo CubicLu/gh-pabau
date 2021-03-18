@@ -1,10 +1,10 @@
 {
   "name": "pabau",
-  "version": "2.0.210",
+  "version": "2.0.211",
   "license": "Copyright Hambrand Technologies Ltd",
   "bump-rebuild-all": 5,
   "scripts": {
-    "nx": "nx",
+    "nx": "nx node --max_old_space_size=8192 ./node_modules/.bin/nx",
     "vercel": "vercel",
     "apollo": "apollo",
     "nest": "cd apps/backend && nest",

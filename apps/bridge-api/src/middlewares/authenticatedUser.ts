@@ -22,9 +22,6 @@ const authenticatedUser = (req: Request, res: Response, next: NextFunction) => {
       ) as JwtPayloadDto
     } else if (req.header('authorization')) {
       req.header('authorization').replace(/^Bearer /, '')
-      // console.log(
-      //   // 'verifying header jwt..',
-      // )
       req.authenticatedUser = jwt.verify(
         req.header('authorization').replace(/^Bearer /, ''),
         process.env.JWT_SECRET,

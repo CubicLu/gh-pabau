@@ -18,9 +18,10 @@ export default function useLogin(registered = false): [LoginProps, boolean] {
         complete: true,
         json: true,
       })
+      console.log(token)
       return {
-        user: token.user,
-        company: token.company,
+        user: token.payload.user,
+        company: token.payload.company,
       } as LoginProps
     } catch (error) {
       console.log(error)
@@ -36,7 +37,7 @@ export default function useLogin(registered = false): [LoginProps, boolean] {
         setUser(currentUser)
       }
     }
-  }, [authenticated, user])
+  }, [authenticated])
 
   return [user, authenticated ?? false]
 }

@@ -10,12 +10,16 @@ const PORT = 6006
 export function createTestContext(): TestContext {
   const ctx = {} as TestContext
   const graphqlCtx = graphqlTestContext()
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   beforeAll(async () => {
     const client = await graphqlCtx.before()
     Object.assign(ctx, {
       client,
     })
   }, 50000)
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   afterAll(async () => {
     await graphqlCtx.after()
   })

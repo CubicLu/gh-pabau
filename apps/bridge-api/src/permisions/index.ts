@@ -12,7 +12,6 @@ const rules = {
   ),
   sameCompany: rule('sameCompany')(
     async (root, args, ctx: Context, info): Promise<boolean> => {
-      if (!ctx.req.authenticatedUser) return false
       try {
         if (root && root.company_id !== ctx.req.authenticatedUser.company)
           return false
@@ -32,16 +31,20 @@ const rules = {
   ),
   interceptMutation: rule('interceptMutation')(
     async (root, args, ctx: Context, info): Promise<boolean> => {
-      if (
-        info.operation.name.value.includes('add') &&
-        !args.data?.company?.connect?.id
-      ) {
-        args.data = {
-          ...args.data,
-          company: { connect: { id: ctx.req.authenticatedUser.company } },
+      try {
+        if (
+          info.operation.name.value.includes('add') &&
+          !args.data?.company?.connect?.id
+        ) {
+          args.data = {
+            ...args.data,
+            company: { connect: { id: ctx.req.authenticatedUser.company } },
+          }
         }
+        return true
+      } catch (error) {
+        console.error(error)
       }
-      return true
     }
   ),
 }
