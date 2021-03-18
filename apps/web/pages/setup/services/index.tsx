@@ -1,26 +1,33 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import Layout from '../../../components/Layout/Layout'
 import ServicesTab from '../../../components/services/ServicesTab/ServicesTab'
 import CategoriesTab from '../../../components/services/CategoriesTab/CategoriesTab'
 import LibrariesTab from '../../../components/services/LibrariesTab/LibrariesTab'
 import { TabMenu, Breadcrumb, Button, Pagination } from '@pabau/ui'
 import { Card, Input, Popover, Radio, Select } from 'antd'
+import className from 'classnames'
+import { useMedia } from 'react-use'
 import {
+  LeftOutlined,
   SearchOutlined,
   FilterOutlined,
   ExportOutlined,
+  PlusOutlined,
 } from '@ant-design/icons'
 import styles from './index.module.less'
 
 const { Option } = Select
 
 export const Index: FC = () => {
+  const [showSearchInput, setShowSearchInput] = useState(false)
+
   const TopTabMenuItems = ['Services', 'Categories', 'Library']
   const AddBtnLabels = ['New Service', 'New Category']
 
   const [isStatusActive, setIsStatusActive] = useState(null)
   const [isBookingActive, setIsBookingActive] = useState(null)
   const [showCreateBtn] = useState(true)
+  const [showCreateService, setShowCreateService] = useState(false)
   const [totalCategories, setTotalCategories] = useState(0)
   const [paginationState, setPaginationState] = useState(false)
   const [searchTerm, setSearchTerm] = useState(null)
@@ -28,6 +35,8 @@ export const Index: FC = () => {
   const [addBtnLabel, setAddBtnLabel] = useState(AddBtnLabels[0])
   const [updatedCategories, setUpdatedCategories] = useState(null)
   const [addCategoryModal, setAddCategoryModal] = useState(false)
+
+  const isMobile = useMedia('(max-width: 768px)', false)
 
   const filterContent = (isMobile = false) => (
     <div className="filterContent">
@@ -84,6 +93,7 @@ export const Index: FC = () => {
   const addBtnClick = () => {
     switch (addBtnLabel) {
       case AddBtnLabels[0]:
+        setShowCreateService(true)
         break
       case AddBtnLabels[1]:
         setAddCategoryModal(true)
@@ -96,19 +106,47 @@ export const Index: FC = () => {
   const CardHeader = (
     <div className={styles.header}>
       <div className="leftDiv">
-        <div>
+        <div className="hidden-sm">
           <Breadcrumb
             breadcrumbItems={[
               { breadcrumbName: 'Setup', path: 'setup' },
-              { breadcrumbName: 'Third Parties', path: '' },
+              { breadcrumbName: 'Services', path: '' },
             ]}
           />
         </div>
-        <h3 className={styles.servicesHeading}>Services</h3>
+        <h3 className={styles.servicesHeading}>
+          <span className="hidden-lg">
+            <LeftOutlined />
+          </span>{' '}
+          Services
+        </h3>
       </div>
       <div className="rightDiv">
+        <span className="hidden-lg">
+          {isMobile && showSearchInput ? (
+            <Input
+              className="isMobile-search-input"
+              value={searchTerm}
+              autoFocus
+              placeholder="Search"
+              suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
+              onChange={(e) => {
+                setSearchTerm(e.target.value)
+              }}
+            />
+          ) : (
+            <SearchOutlined
+              className="isMobile-search-icon"
+              onClick={() =>
+                setShowSearchInput((showSearchInput) => !showSearchInput)
+              }
+            />
+          )}
+        </span>
+
         <Input
-          className={styles.searchDrugsListing}
+          value={searchTerm}
+          className={className(styles.searchDrugsListing, 'hidden-sm')}
           autoFocus
           placeholder="Search"
           suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
@@ -118,7 +156,7 @@ export const Index: FC = () => {
         />
         {showCreateBtn && (
           <div>
-            <Button type="default" size="large">
+            <Button type="default" size="large" className="hidden-sm">
               <ExportOutlined /> Export
             </Button>
             <Popover
@@ -127,14 +165,37 @@ export const Index: FC = () => {
               placement="bottomRight"
               overlayClassName={styles.filterPopover}
             >
-              <Button className={styles.filterBtn} size="large">
+              <span className="hidden-lg">
+                <FilterOutlined />
+              </span>
+              <Button
+                className={className(styles.filterBtn, 'hidden-sm')}
+                size="large"
+              >
                 <FilterOutlined /> Filter
               </Button>
             </Popover>
             {addBtnState && (
-              <Button type="primary" size="large" onClick={() => addBtnClick()}>
-                {addBtnLabel}
-              </Button>
+              <>
+                <Button
+                  type="primary"
+                  size="middle"
+                  className="hidden-lg"
+                  onClick={() => addBtnClick()}
+                >
+                  <span>
+                    <PlusOutlined />
+                  </span>
+                </Button>
+                <Button
+                  type="primary"
+                  size="large"
+                  className="hidden-sm"
+                  onClick={() => addBtnClick()}
+                >
+                  {addBtnLabel}
+                </Button>
+              </>
             )}
           </div>
         )}
@@ -142,19 +203,32 @@ export const Index: FC = () => {
     </div>
   )
 
+  const checkClickOutsideInput = (e) => {
+    if (e.key === 'Escape') {
+      setShowSearchInput(false)
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('keydown', checkClickOutsideInput)
+  }, [])
+
   const onTabClick = (tab) => {
     switch (tab) {
       case TopTabMenuItems[0]:
+        setSearchTerm(null)
         setAddBtnState(true)
         setPaginationState(false)
         setAddBtnLabel(AddBtnLabels[0])
         break
       case TopTabMenuItems[1]:
+        setSearchTerm(null)
         setAddBtnState(true)
         setPaginationState(true)
         setAddBtnLabel(AddBtnLabels[1])
         break
       case TopTabMenuItems[2]:
+        setSearchTerm(null)
         setAddBtnState(false)
         setPaginationState(false)
         break
@@ -182,6 +256,8 @@ export const Index: FC = () => {
               <div className={styles.servicesTab}>
                 <ServicesTab
                   searchTerm={searchTerm}
+                  showCreateServiceModal={showCreateService}
+                  onCloseCreateServiceModal={() => setShowCreateService(false)}
                   updatedCategories={updatedCategories}
                 />
               </div>

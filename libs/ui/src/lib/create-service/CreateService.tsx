@@ -338,6 +338,11 @@ export const CreateService: FC<CreateServiceProps> = ({
           OperationType.create,
         ]}
         activated={true}
+        onBackClick={() => {
+          setShowModal(false)
+          setShowChooseModal(false)
+          onClose()
+        }}
         cancelBtnText="Cancel"
         createBtnText="Create"
         enableCreateBtn={!!serviceName && !!servicePrice && !!category}
@@ -352,7 +357,7 @@ export const CreateService: FC<CreateServiceProps> = ({
           >
             Client pathway{' '}
             <span style={{ marginLeft: '8px' }}>
-              <PabauPlus label="Plus" modalType="Marketing" />
+              <PabauPlus label="Plus" modalType="Care" />
             </span>
           </div>,
         ]}
@@ -364,6 +369,7 @@ export const CreateService: FC<CreateServiceProps> = ({
         onCreate={() => {
           onCreate?.()
         }}
+        footer={true}
       >
         <div className={styles.createServiceGeneral}>
           <div className={styles.createServiceSection}>
@@ -697,10 +703,7 @@ export const CreateService: FC<CreateServiceProps> = ({
           </div>
           <div className={styles.advancedSettings}>
             <Collapse ghost>
-              <Panel
-                header="Special Pricing Options"
-                key="special-pricing-options"
-              >
+              <Panel header="Special Pricing" key="special-pricing-options">
                 <div className={styles.createServiceSection}>
                   <h2
                     className={styles.createServiceSectionTitle}
@@ -730,8 +733,8 @@ export const CreateService: FC<CreateServiceProps> = ({
                       <div>
                         <div className={styles.currencyInput}>
                           <CurrencyInput
-                            placeholder={`${servicePrice}`}
                             unit="£"
+                            placeholder={`${servicePrice}`}
                           />
                         </div>
                         <div>

@@ -1,5 +1,18 @@
 import React, { FC, useState, useEffect } from 'react'
-import { TabMenu, Table, DotButton, Pagination, Avatar } from '@pabau/ui'
+import {
+  TabMenu,
+  Table,
+  DotButton,
+  Pagination,
+  Avatar,
+  BasicModal as CreateServiceGroup,
+  CreateService,
+  Input,
+  Switch,
+  SearchTags,
+  ImageSelectorModal,
+  BasicModal as Modal,
+} from '@pabau/ui'
 import { Button, Dropdown, Menu, Popover, Tooltip } from 'antd'
 import {
   CaretDownFilled,
@@ -7,8 +20,14 @@ import {
   PlusOutlined,
   EditOutlined,
   VideoCameraOutlined,
+  PlusCircleFilled,
+  DeleteOutlined,
+  PictureOutlined,
 } from '@ant-design/icons'
+import className from 'classnames'
 import { Donate, File, Folder, Injection, Key, Team, Globe } from '../assets'
+import { ReactComponent as Bupa } from '../../../assets/images/bupa.svg'
+import { ReactComponent as AxaPPP } from '../../../assets/images/axa-ppp.svg'
 import Label from '../StatusLabel/label'
 import styles from './services_tab.module.less'
 
@@ -140,6 +159,8 @@ const columnsView1 = [
     title: 'Name',
     dataIndex: 'name',
     visible: true,
+    className: 'serviceName',
+    width: '40%',
     render: function renderSourceName(val, rowData) {
       return (
         <div className={styles.serviceName}>
@@ -162,11 +183,14 @@ const columnsView1 = [
     title: 'Duration',
     dataIndex: 'duration',
     visible: true,
+    className: 'duration',
+    width: '20%',
   },
   {
     title: 'Staff assigned',
     dataIndex: 'staff',
     visible: true,
+    width: '20%',
     render: function renderSourceName(val) {
       return (
         <div className={styles.staff}>
@@ -201,6 +225,7 @@ const columnsView1 = [
     title: 'Price',
     dataIndex: 'price',
     visible: true,
+    width: '20%',
   },
 ]
 
@@ -209,6 +234,7 @@ const columnsView2 = [
     title: 'Name',
     dataIndex: 'name',
     visible: true,
+    className: 'serviceName',
     width: '50%',
     render: function renderSourceName(val) {
       return (
@@ -222,6 +248,7 @@ const columnsView2 = [
     title: 'Status',
     dataIndex: 'status',
     visible: true,
+    className: 'serviceStatus',
     width: '25%',
     render: function renderSourceName(val) {
       return (
@@ -236,6 +263,7 @@ const columnsView2 = [
     dataIndex: 'edit',
     visible: true,
     width: '25%',
+    className: 'serviceEdit',
     render: function renderSourceName() {
       return (
         <div className={styles.editIconsDiv}>
@@ -280,37 +308,224 @@ const columnsView2 = [
   },
 ]
 
+const rooms = ['Botox', ' Theraphy', 'Massage', 'Lab']
+
+const equipment = [
+  'Equipment A',
+  'Equipment B',
+  'Equipment C',
+  'Equipment D',
+  'Equipment E',
+  'Equipment F',
+  'Equipment G',
+]
+
+const contracts = [
+  {
+    logo: <Bupa />,
+    name: 'BUPA',
+    type: 'Insurance',
+  },
+  {
+    logo: <AxaPPP />,
+    name: 'AXA PPP',
+    type: 'Insurance',
+  },
+]
+
+const employees = [
+  { name: 'Jessica Winter', selected: false },
+  { name: 'Jeff Hackley', selected: false },
+  { name: 'Alexander Wang', selected: false },
+  { name: 'Linda Davis', selected: false },
+  { name: 'William Tyson', selected: false },
+  { name: 'Max Starck', selected: false },
+  { name: 'Kyle Walsh', selected: false },
+  { name: 'Owen Phillips', selected: false },
+  { name: 'Aidan Kelly', selected: false },
+  { name: 'Ewan Morgan', selected: false },
+  { name: 'Jordan Martin', selected: false },
+  { name: 'Grant Dudley', selected: false },
+]
+
+const locations = [
+  {
+    location: 'The London Clinic',
+    detail: '20 Devonshire Pl, Marylebone, London W1G 6BW, UK',
+    selected: false,
+  },
+  {
+    location: 'Sloan Medical Centre',
+    detail: '2 Little London Rd, Meersbrook, Sheffield S8 0YH, UK',
+    selected: false,
+  },
+  {
+    location: 'Sheffield Late Night Pharmacy',
+    detail: '277 Fulwood Rd, Sheffield S10 3BD, UK',
+    selected: false,
+  },
+]
+
+const LeftTabs = [
+  'All',
+  'Appointments',
+  'Enrollments',
+  'Arrival',
+  'Pricing',
+  'Contracts',
+  'Injectables',
+]
+
 export interface SP {
+  showCreateServiceModal: boolean
+  onCloseCreateServiceModal?: () => void
   searchTerm?: string
   updatedCategories?: []
 }
 
 export const ServicesTab: FC<SP> = ({
   searchTerm,
-  updatedCategories,
-  ...rest
+  showCreateServiceModal,
+  onCloseCreateServiceModal,
 }) => {
   const services = ['Seasonal Offers', 'The Beauty & Skin Clinic – Prepaid']
   const togglesViews = ['Standard View', 'Detailed View']
-  const LeftTabMenuItems = [
-    'Groups',
-    'Appointments',
-    'Enrollments',
-    'Arrivals',
-    'Pricing',
-    'Contracts',
-    'Injectables',
-  ]
 
+  const [selectedImage, setSelectedImage] = useState('')
+  const [showCreateGroup, setShowCreateGroup] = useState(false)
+  const [showImageSelector, setShowImageSelector] = useState(false)
   const [columns, setColumns] = useState(columnsView1)
   const [selectedToggleView, setSelectedToggleView] = useState(togglesViews[0])
   const [selectedService, setSelectedService] = useState(services[0])
   const [paginationState] = useState(true)
   const [sourceData, setSourceData] = useState(null)
 
+  const [openDeleteTabModal, setDeleteTabModal] = useState(false)
+  const [deletingTab, setDeletingTab] = useState(null)
+
+  const [serviceGroupName, setServiceGroupName] = useState(null)
+  const [editServiceGroupName, setEditServiceGroupName] = useState(null)
+
+  const GroupsItem = ({ onClick }) => {
+    const [showOps, setShowOps] = useState(false)
+    return (
+      <div
+        className={styles.groupsItem}
+        onMouseEnter={() => setShowOps(true)}
+        onMouseLeave={() => setShowOps(false)}
+      >
+        <span className="hidden-sm">Groups</span>
+        {showOps && (
+          <PlusCircleFilled
+            className="hidden-sm"
+            style={{
+              color: 'var(--primary-color)',
+              fontSize: '24px',
+              cursor: 'pointer',
+            }}
+            onClick={() => onClick()}
+          />
+        )}
+        <PlusCircleFilled
+          className="hidden-lg"
+          style={{
+            color: 'var(--primary-color)',
+            fontSize: '24px',
+            cursor: 'pointer',
+          }}
+          onClick={() => onClick()}
+        />
+      </div>
+    )
+  }
+  const TabMenuItem = ({ title, onEdit, onDelete, showActions = true }) => {
+    const [showOps, setShowOps] = useState(false)
+    return (
+      <div
+        className={styles.tabMenuItem}
+        onMouseEnter={() => setShowOps(true)}
+        onMouseLeave={() => setShowOps(false)}
+      >
+        <span>{title}</span>
+        {showOps && showActions && (
+          <div className={className(styles.tabMenuItemOps, 'hidden-sm')}>
+            <div onClick={() => onEdit()}>
+              <EditOutlined />
+            </div>
+            <div onClick={() => onDelete()}>
+              <DeleteOutlined />
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  const [leftTabs, setLeftTabs] = useState([
+    <React.Fragment key="groups">
+      <GroupsItem onClick={() => setShowCreateGroup(true)} />
+    </React.Fragment>,
+    <React.Fragment key="All">
+      <TabMenuItem
+        showActions={false}
+        title="All"
+        onEdit={() => {
+          return
+        }}
+        onDelete={() => {
+          return
+        }}
+      />
+    </React.Fragment>,
+    <React.Fragment key="Appointments">
+      <TabMenuItem
+        showActions={true}
+        title="Appointments"
+        onEdit={() => {
+          setEditServiceGroupName('Appointments')
+          setServiceGroupName('Appointments')
+          setShowCreateGroup(true)
+        }}
+        onDelete={() => {
+          setDeletingTab('Appointments')
+          setDeleteTabModal(true)
+        }}
+      />
+    </React.Fragment>,
+  ])
+
   useEffect(() => {
     setSourceData(data)
-  }, [setSourceData])
+    if (LeftTabs?.length) {
+      const totalTabs = [...leftTabs]
+      if (totalTabs?.length < LeftTabs.length) {
+        for (const tab of LeftTabs) {
+          const existingTab = totalTabs.find((el) => el.key === tab)
+          if (!existingTab) {
+            totalTabs.push(
+              <React.Fragment key={tab}>
+                <TabMenuItem
+                  showActions={tab === 'All' ? false : true}
+                  title={tab}
+                  onEdit={() => {
+                    setEditServiceGroupName(tab)
+                    setServiceGroupName(tab)
+                    setShowCreateGroup(true)
+                  }}
+                  onDelete={() => {
+                    setDeletingTab(tab)
+                    setDeleteTabModal(true)
+                  }}
+                />
+              </React.Fragment>
+            )
+          }
+        }
+        setLeftTabs(totalTabs)
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setSourceData, LeftTabs])
 
   const setTableView = (view) => {
     setSelectedToggleView(view)
@@ -369,7 +584,7 @@ export const ServicesTab: FC<SP> = ({
 
   const serviceHeader = () => {
     return (
-      <div className={styles.servicesSectionHeading}>
+      <div className={className(styles.servicesSectionHeading)}>
         <Dropdown
           overlay={servicesOverlay}
           trigger={['hover']}
@@ -380,15 +595,30 @@ export const ServicesTab: FC<SP> = ({
           </div>
         </Dropdown>
         <div>
+          <Button type="default" size="large" className="hidden-lg circle">
+            <EditOutlined />
+          </Button>
+          <Button type="default" size="large" className="hidden-lg circle">
+            <DeleteOutlined />
+          </Button>
           <Dropdown
             overlay={toggleOverlay}
             trigger={['click']}
             placement="bottomRight"
             arrow
           >
-            <Button type="default" size="large">
-              <MenuFoldOutlined /> Toggle
-            </Button>
+            <div>
+              <Button type="default" size="large" className="hidden-lg circle">
+                <MenuFoldOutlined />
+              </Button>
+              <Button
+                type="default"
+                size="large"
+                className="toggleBtn hidden-sm"
+              >
+                <MenuFoldOutlined /> Toggle
+              </Button>
+            </div>
           </Dropdown>
           <Dropdown
             overlay={moreBtnOverlay}
@@ -409,7 +639,7 @@ export const ServicesTab: FC<SP> = ({
     return (
       <div>
         {paginationState && (
-          <div className={styles.paginationDiv}>
+          <div className={className(styles.paginationDiv, 'footerPagination')}>
             <Pagination
               showingRecords={sourceData?.length}
               defaultCurrent={1}
@@ -422,21 +652,14 @@ export const ServicesTab: FC<SP> = ({
     )
   }
 
-  return (
-    <div className={styles.servicesTabMain}>
-      <div>
-        <TabMenu
-          tabPosition="left"
-          menuItems={LeftTabMenuItems}
-          className={styles.leftTabMenu}
-          disabledKeys={[0]}
-          activeDefaultKey="1"
-          minHeight="50vh"
-          size="large"
-        >
-          <div></div>
-          <div className={styles.appointments}>
-            <div>{serviceHeader()}</div>
+  const renderTabContent = () => {
+    const arr = Array.from({ length: leftTabs?.length })
+    return (
+      leftTabs?.length > 0 &&
+      arr.map((el, index) =>
+        index === 1 || index === 2 ? (
+          <div className={styles.appointments} key={`tab-left-${index}`}>
+            <div className="hidden-sm">{serviceHeader()}</div>
             <div>
               <Table
                 draggable={true}
@@ -454,13 +677,249 @@ export const ServicesTab: FC<SP> = ({
               />
             </div>
           </div>
-          <div className={styles.appointments}>{serviceHeader()}</div>
-          <div className={styles.appointments}>{serviceHeader()}</div>
-          <div className={styles.appointments}>{serviceHeader()}</div>
-          <div className={styles.appointments}>{serviceHeader()}</div>
-          <div className={styles.appointments}>{serviceHeader()}</div>
+        ) : (
+          <div key={`tab-left-${index}`} className="hidden-sm">
+            {serviceHeader()}
+          </div>
+        )
+      )
+    )
+  }
+
+  const deleteTab = () => {
+    const totalTabs = [...leftTabs]
+    const tabData = totalTabs.find((el) => el.key === deletingTab)
+    const index = totalTabs.indexOf(tabData)
+    if (index !== -1) {
+      totalTabs.splice(index, 1)
+      setLeftTabs(totalTabs)
+    }
+    setDeleteTabModal(false)
+  }
+
+  const createTab = () => {
+    if (serviceGroupName) {
+      const totalTabs = [...leftTabs]
+      totalTabs.push(
+        <React.Fragment key={serviceGroupName}>
+          <TabMenuItem
+            showActions={true}
+            title={serviceGroupName}
+            onEdit={() => {
+              setEditServiceGroupName(serviceGroupName)
+              setServiceGroupName(serviceGroupName)
+              setShowCreateGroup(true)
+            }}
+            onDelete={() => {
+              setDeletingTab(serviceGroupName)
+              setDeleteTabModal(true)
+            }}
+          />
+        </React.Fragment>
+      )
+      setLeftTabs(totalTabs)
+      setServiceGroupName(null)
+      setShowCreateGroup(false)
+      setSelectedImage('')
+    }
+  }
+
+  const updateTab = () => {
+    if (
+      serviceGroupName &&
+      editServiceGroupName &&
+      serviceGroupName !== editServiceGroupName
+    ) {
+      const totalTabs = [...leftTabs]
+      console.log(totalTabs)
+      const element = totalTabs.find((el) => el.key === editServiceGroupName)
+      const editTab = (
+        <React.Fragment key={serviceGroupName}>
+          <TabMenuItem
+            showActions={true}
+            title={serviceGroupName}
+            onEdit={() => {
+              setEditServiceGroupName(serviceGroupName)
+              setServiceGroupName(serviceGroupName)
+              setShowCreateGroup(true)
+            }}
+            onDelete={() => {
+              setDeletingTab(serviceGroupName)
+              setDeleteTabModal(true)
+            }}
+          />
+        </React.Fragment>
+      )
+      totalTabs.splice(totalTabs.indexOf(element), 1, editTab)
+      setLeftTabs(totalTabs)
+      setServiceGroupName(null)
+      setShowCreateGroup(false)
+      setSelectedImage('')
+    } else {
+      setServiceGroupName(null)
+      setShowCreateGroup(false)
+      setSelectedImage('')
+    }
+  }
+
+  return (
+    <div className={styles.servicesTabMain}>
+      <div className="hidden-lg">{serviceHeader()}</div>
+      <div className="hidden-sm">
+        <TabMenu
+          tabPosition="left"
+          menuItems={leftTabs}
+          className={styles.leftTabMenu}
+          disabledKeys={[0]}
+          activeDefaultKey="1"
+          minHeight="70vh"
+          size="large"
+        >
+          {renderTabContent()}
         </TabMenu>
       </div>
+      <div className="hidden-lg">
+        <TabMenu
+          tabPosition="top"
+          menuItems={leftTabs}
+          className={styles.leftTabMenu}
+          disabledKeys={[0]}
+          activeDefaultKey="1"
+          minHeight="70vh"
+          size="large"
+        >
+          {renderTabContent()}
+        </TabMenu>
+      </div>
+
+      <CreateService
+        visible={showCreateServiceModal}
+        onClose={() => onCloseCreateServiceModal?.()}
+        rooms={rooms}
+        equipment={equipment}
+        contracts={contracts}
+        employees={employees}
+        locations={locations}
+      />
+
+      {showCreateGroup && (
+        <CreateServiceGroup
+          visible={showCreateGroup}
+          modalWidth={500}
+          wrapClassName={styles.createServiceGroup}
+          title="Create service group"
+          onCancel={() => {
+            setShowCreateGroup(false)
+            setSelectedImage('')
+          }}
+        >
+          <div className="nameInput">
+            <label>Name</label>
+            <Input
+              text={serviceGroupName}
+              placeHolderText="Enter Name"
+              onChange={(val) => setServiceGroupName(val)}
+            />
+          </div>
+          <div style={{ marginTop: '30px' }}>
+            <SearchTags
+              items={rooms}
+              description="Service categories"
+              itemType="room"
+            />
+          </div>
+          <div className="chooseImageInput">
+            <p className={styles.createServiceSectionItemTitle}>Image</p>
+            <div
+              className={styles.createServiceImageContainer}
+              style={{ backgroundImage: `url(${selectedImage})` }}
+            >
+              {!selectedImage && (
+                <PictureOutlined
+                  style={{
+                    color: 'var(--light-grey-color)',
+                    fontSize: '32px',
+                  }}
+                />
+              )}
+            </div>
+            <Button
+              icon={<PlusOutlined />}
+              onClick={() => setShowImageSelector(true)}
+            >
+              Choose from library
+            </Button>
+            <ImageSelectorModal
+              visible={showImageSelector}
+              onOk={(image) => {
+                setSelectedImage(image.source)
+                setShowImageSelector(false)
+              }}
+              onCancel={() => {
+                setShowImageSelector(false)
+              }}
+            />
+          </div>
+          <div className="footerBtnInput">
+            <div>
+              <label>Active</label>
+              <Switch defaultChecked={true} />
+            </div>
+            <div>
+              <Button
+                type="default"
+                size="large"
+                onClick={() => {
+                  setServiceGroupName(null)
+                  setEditServiceGroupName(null)
+                  setShowCreateGroup(false)
+                  setSelectedImage('')
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+            <div>
+              <Button
+                type="primary"
+                size="large"
+                onClick={() => {
+                  editServiceGroupName ? updateTab() : createTab()
+                }}
+              >
+                {editServiceGroupName ? 'Update' : 'Create'}
+              </Button>
+            </div>
+          </div>
+        </CreateServiceGroup>
+      )}
+
+      <Modal
+        modalWidth={682}
+        centered={true}
+        onCancel={() => {
+          setDeletingTab(null)
+          setDeleteTabModal(false)
+        }}
+        onOk={deleteTab}
+        visible={openDeleteTabModal}
+        title={`Delete ${deletingTab}`}
+        newButtonText={'Yes, Delete'}
+        isValidate={true}
+      >
+        <span
+          style={{
+            fontFamily: 'Circular-Std-Book',
+            fontWeight: 'normal',
+            fontSize: '16px',
+            lineHeight: '20px',
+            color: '#9292A3',
+          }}
+        >
+          {deletingTab ? `${deletingTab} tab` : 'This'} will be deleted. This
+          action is irreversable
+        </span>
+      </Modal>
     </div>
   )
 }
