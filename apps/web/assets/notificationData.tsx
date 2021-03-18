@@ -12,7 +12,6 @@ import {
   MoneyCollectOutlined,
   RiseOutlined,
   GiftOutlined,
-  MailOutlined,
   BarChartOutlined,
   SafetyOutlined,
   InteractionOutlined,
@@ -30,7 +29,7 @@ const notificationData = {
         'Automatically sends to clients when they book their appointment',
       icon: <ScheduleOutlined />,
       smartDelivery: true,
-      link: null,
+      link: '/client-notifications/new-appointment',
       disabled: true,
     },
     {
@@ -38,7 +37,7 @@ const notificationData = {
       description: 'Automatically sends to clients ahead of their appointment',
       icon: <BellOutlined />,
       smartDelivery: true,
-      link: null,
+      link: '/client-notifications/appointment-reminder',
       disabled: true,
     },
     {
@@ -47,7 +46,7 @@ const notificationData = {
         'Automatically sends to clients when their appointment start time is changed',
       icon: <SyncOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/rescheduled-appointment',
       disabled: true,
     },
     {
@@ -56,7 +55,7 @@ const notificationData = {
         'Automatically sends to clients when an appointment is checked out',
       icon: <StarOutlined />,
       smartDelivery: true,
-      link: null,
+      link: '/client-notifications/request-feedback',
       disabled: true,
     },
     {
@@ -65,7 +64,7 @@ const notificationData = {
         'Automatically sends to clients when an appointment is cancelled',
       icon: <CloseCircleOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/cancelled-appointment',
       disabled: true,
     },
     {
@@ -74,7 +73,7 @@ const notificationData = {
         'Automatically sends to clients when an appointment is marked as no show',
       icon: <UserDeleteOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/noshow-appointment',
       disabled: true,
     },
     {
@@ -83,7 +82,7 @@ const notificationData = {
         'Automatically sends to clients when an appointment slot becomes available',
       icon: <FileSyncOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/waitlist',
       disabled: true,
     },
   ],
@@ -94,7 +93,7 @@ const notificationData = {
         "Automatically sends to clients when they're booked for a class",
       icon: <ScheduleOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/class-booked',
       disabled: true,
     },
     {
@@ -112,7 +111,7 @@ const notificationData = {
         'Automatically sends to clients when they cancel a class booking',
       icon: <CloseCircleOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/cancelled-class-booking',
       disabled: true,
     },
     {
@@ -121,7 +120,7 @@ const notificationData = {
         "Automatically sends to clients when they don't show for a class",
       icon: <UserDeleteOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/class-noshow',
       disabled: true,
     },
     {
@@ -129,7 +128,7 @@ const notificationData = {
       description: 'Automatically sends to clients when a class is rescheduled',
       icon: <SyncOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/class-rescheduled',
       disabled: true,
     },
     {
@@ -138,7 +137,7 @@ const notificationData = {
         'Automatically sends a reminder to a client who has registered to a class',
       icon: <BellOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/class-reminder',
       disabled: true,
     },
     {
@@ -147,7 +146,7 @@ const notificationData = {
         'Automatically sends to clients when a class slot becomes available',
       icon: <FileDoneOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/class-spot-available',
       disabled: true,
     },
   ],
@@ -158,7 +157,7 @@ const notificationData = {
         'The default email template you will send when someone is being referred into the business',
       icon: <GoldOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/referral',
       disabled: true,
     },
     {
@@ -167,7 +166,7 @@ const notificationData = {
         'The default email template you will send with a clients invoice attached',
       icon: <MoneyCollectOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/invoice',
       disabled: true,
     },
     {
@@ -176,7 +175,7 @@ const notificationData = {
         'The default email template you will send to your lead when they submit their lead form',
       icon: <RiseOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/lead-responses',
       disabled: true,
     },
     {
@@ -185,7 +184,16 @@ const notificationData = {
         'The default email template you will send when clients purchase a gift voucher',
       icon: <GiftOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/gift-vouchers',
+      disabled: true,
+    },
+    {
+      header: 'Outstanding Invoice',
+      description:
+        'The default email template you will send with a clients Outstanding invoice attached',
+      icon: <MoneyCollectOutlined />,
+      smartDelivery: false,
+      link: '/client-notifications/outstanding-invoice',
       disabled: true,
     },
   ],
@@ -196,16 +204,7 @@ const notificationData = {
         'he default email template you will send when a client has used all their package sessions',
       icon: <ScheduleOutlined />,
       smartDelivery: false,
-      link: null,
-      disabled: true,
-    },
-    {
-      header: 'Clinic requested email',
-      description:
-        'Here you can select the default appointment confirmation which gets out via email',
-      icon: <MailOutlined />,
-      smartDelivery: false,
-      link: null,
+      link: '/client-notifications/package-session-used',
       disabled: true,
     },
     {
@@ -214,7 +213,7 @@ const notificationData = {
         "The email you will send when you are emailing a client's timeline",
       icon: <BarChartOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/clinic-emailing-timeline',
       disabled: true,
     },
     {
@@ -223,7 +222,7 @@ const notificationData = {
         'The default secure email template which gets sent out via email',
       icon: <SafetyOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/secure-email-template',
       disabled: true,
     },
     {
@@ -232,7 +231,7 @@ const notificationData = {
         'The email the client receives when they register to your Online Booking portal',
       icon: <InteractionOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/connect-registration',
       disabled: true,
     },
     {
@@ -241,7 +240,7 @@ const notificationData = {
         'The email you will send when you email someone a copy of their prescription',
       icon: <ReconciliationOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/medical-forms',
       disabled: true,
     },
     {
@@ -250,7 +249,7 @@ const notificationData = {
         'The email you will send when you share a document with a client through Pabau Connect',
       icon: <ExportOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/document-shared',
       disabled: true,
     },
     {
@@ -259,7 +258,7 @@ const notificationData = {
         'The email you will send if someone requested a list of their appointment history',
       icon: <CalendarOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/email-appointments',
       disabled: true,
     },
     {
@@ -268,7 +267,7 @@ const notificationData = {
         "The default email template you will send if it's a client's birthday",
       icon: <CrownOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/birthday',
       disabled: true,
     },
   ],

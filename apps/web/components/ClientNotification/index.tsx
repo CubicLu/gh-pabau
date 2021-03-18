@@ -1,5 +1,50 @@
-import React, { FC, useState, forwardRef } from 'react'
+import React, {
+  FC,
+  useState,
+  forwardRef,
+  ForwardedRef,
+  useImperativeHandle,
+} from 'react'
 import { ClientNotification, Standard, Appointment, Smstext } from '@pabau/ui'
+import CancelAppointmentPreview from '../ClientNotificationPreview/CancelAppointmentPreview'
+import NoShowAppointmentPreview from '../ClientNotificationPreview/NoShowAppointmentPreview'
+import NewAppointmentPreview from '../ClientNotificationPreview/NewAppointmentPreview'
+import RescheduleAppointmentPreview from '../ClientNotificationPreview/RescheduleAppointmentPreview'
+import BookedOntoClassPreview from '../ClientNotificationPreview/BookedOntoClassPreview'
+import WaitListPreview from '../ClientNotificationPreview/WaitListPreview'
+import MedicalFormsPreview from '../ClientNotificationPreview/MedicalFormsPreview'
+import InvoicePreview from '../ClientNotificationPreview/InvoicePreview'
+import OutstandingInvoicePreview from '../ClientNotificationPreview/OutstandingInvoicePreview'
+import BirthdayPreview from '../ClientNotificationPreview/BirthdayPreview'
+import PackageSessionPreview from '../ClientNotificationPreview/PackageSessionPreview'
+import ClassSpotAvailablePreview from '../ClientNotificationPreview/ClassSpotAvailablePreview'
+import GiftVoucherPreview from '../ClientNotificationPreview/GiftVouchersPreview'
+import RequestFeedbackPreview from '../ClientNotificationPreview/RequsetFeedbackPreview'
+import ConnectRegistrationPreview from '../ClientNotificationPreview/ConnectRegistrationPreview'
+import LeadResponsesPreview from '../ClientNotificationPreview/LeadResponsesPreview'
+import ReferralPreview from '../ClientNotificationPreview/ReferralPreview'
+import DocumentSharedPreview from '../ClientNotificationPreview/DocumnetSharedPreview'
+
+interface refProps {
+  propsData?: () => DataProps
+}
+
+interface DataProps {
+  requestConfirm?: boolean
+  allowRescheduling?: boolean
+  allowCancellation?: boolean
+  displayPolicy?: boolean
+  showService?: boolean
+  showEmployeeName?: boolean
+  addMedicalHisButton?: boolean
+  selectLanguage?: string
+  backGroundColor?: string
+  buttonColor?: string
+  informationMessage?: string
+  medicalMessage?: string
+  standardTapIndex?: string
+  activeSocialIcons?: string[]
+}
 
 interface P {
   onSeletedTab: (number) => void
@@ -8,7 +53,20 @@ interface P {
   isSmsComponent?: boolean
   displayRadioGroup?: boolean
   displayButtons?: boolean
-  ref?: unknown
+  ref?: ForwardedRef<refProps>
+  standardMessage?: string
+  hideReminderTimeFrameTabPane?: boolean
+  hideReminderSettingTabPane?: boolean
+  hideRequestConfirmationOption?: boolean
+  hideMedicalHistoryOption?: boolean
+  hideAllowReschedulingOption?: boolean
+  hideAllowCancellationOption?: boolean
+  hideDisplayPolicyOption?: boolean
+  hideServiceOption?: boolean
+  hideEmployeeNameOption?: boolean
+  type?: string
+  smsCustom?: string
+  hideEnablePay?: boolean
 }
 
 // eslint-disable-next-line react/display-name
@@ -16,22 +74,37 @@ const Index: FC<P> = forwardRef(
   (
     {
       onSeletedTab,
+      standardMessage,
+      hideReminderTimeFrameTabPane = false,
+      hideRequestConfirmationOption = false,
+      hideMedicalHistoryOption = false,
+      hideAllowReschedulingOption = false,
+      hideAllowCancellationOption = false,
+      hideDisplayPolicyOption = false,
+      hideServiceOption = false,
+      hideEmployeeNameOption = false,
+      hideReminderSettingTabPane = true,
+      type = '',
+      smsCustom = '',
       isTabComponent = true,
       isPreviewComponent = true,
       isSmsComponent = true,
       displayRadioGroup = true,
       displayButtons = true,
+      hideEnablePay = true,
     },
     ref
   ) => {
     const [enableReminder, setEnableReminder] = useState(false)
     const [smartDelivery, setSmartDelivery] = useState(false)
+    const [smartFramework, setSmartFramework] = useState(false)
     const [requestConfirmation, setRequestConfirmation] = useState(true)
     const [allowRescheduling, setAllowRescheduling] = useState(true)
     const [allowCancellation, setAllowCancellation] = useState(true)
     const [displayPolicy, setDisplayPolicy] = useState(true)
     const [showService, setShowService] = useState(true)
     const [showEmployeeName, setShowEmployeeName] = useState(true)
+    const [showEnablePay, setShowEnablePay] = useState(true)
     const [addMedicalHisButton, setAddMedicalHisButton] = useState(true)
     const [backGroundColor, setBackGroundColor] = useState('')
     const [buttonColor, setButtonColor] = useState('')
@@ -40,12 +113,12 @@ const Index: FC<P> = forwardRef(
     const [informationMessage, setInformationMessage] = useState('')
     const [standardTapIndex, setStandardTap] = useState('1')
     const [hideAppearanceTabPane, setHideAppearanceTabPane] = useState(true)
-    const [smsMessage, setSmsMessage] = useState('Hi, Kristy')
+    const [smsMessage, setSmsMessage] = useState(smsCustom || 'Hi, Kristy')
 
-    const [activeSocialIcons, setActiveSocialIcons] = React.useState([])
+    const [activeSocialIcons, setActiveSocialIcons] = useState([])
     const [disableCustomTab, setDisableCustomTab] = useState(false)
 
-    React.useImperativeHandle(ref, () => ({
+    useImperativeHandle(ref, () => ({
       propsData: () => {
         return {
           requestConfirm: requestConfirmation,
@@ -78,6 +151,7 @@ const Index: FC<P> = forwardRef(
             setEnableReminder(true)
             setSmartDelivery(true)
             setHideAppearanceTabPane(false)
+            setStandardTap('1')
           } else {
             console.log('this is email tab')
             handleSelectedTab(value)
@@ -96,6 +170,8 @@ const Index: FC<P> = forwardRef(
               onEnableReminder={(value) => setEnableReminder(value)}
               smartDelivery={smartDelivery}
               onSmartDelivery={(value) => setSmartDelivery(value)}
+              smartFramework={smartFramework}
+              onSmartFramework={(value) => setSmartFramework(value)}
               requestConfirmation={requestConfirmation}
               onRequestConfirmation={(value) => setRequestConfirmation(value)}
               allowRescheduling={allowRescheduling}
@@ -126,11 +202,220 @@ const Index: FC<P> = forwardRef(
               onActiveSocialIcon={(value) => {
                 setActiveSocialIcons(value.map((e) => e))
               }}
+              standardMessage={standardMessage}
+              hideRequestConfirmationOption={hideRequestConfirmationOption}
+              hideAllowReschedulingOption={hideAllowReschedulingOption}
+              hideAllowCancellationOption={hideAllowCancellationOption}
+              hideDisplayPolicyOption={hideDisplayPolicyOption}
+              hideMedicalHistoryOption={hideMedicalHistoryOption}
+              hideReminderTimeFrameTabPane={hideReminderTimeFrameTabPane}
+              hideReminderSettingTabPane={hideReminderSettingTabPane}
+              hideEmployeeNameOption={hideEmployeeNameOption}
+              hideServiceOption={hideServiceOption}
+              hideEnablePay={hideEnablePay}
+              onShowEnablePay={(value) => setShowEnablePay(value)}
+              showEnablePay={showEnablePay}
             />
           )
         }
         previewComponent={
-          isPreviewComponent && (
+          isPreviewComponent &&
+          (type === 'cancel' || type === 'cancelClassBooking' ? (
+            <CancelAppointmentPreview
+              standardTapIndex={standardTapIndex}
+              backGroundColor={backGroundColor}
+              activeSocialIcons={activeSocialIcons}
+              selectLanguage={selectLanguage}
+              showService={showService}
+              showEmployeeName={showEmployeeName}
+              buttonColor={buttonColor}
+              informationMessage={informationMessage}
+              type={type}
+            />
+          ) : type === 'noShowAppointment' || type === 'missedAClass' ? (
+            <NoShowAppointmentPreview
+              standardTapIndex={standardTapIndex}
+              backGroundColor={backGroundColor}
+              activeSocialIcons={activeSocialIcons}
+              selectLanguage={selectLanguage}
+              buttonColor={buttonColor}
+              informationMessage={informationMessage}
+            />
+          ) : type === 'newAppointment' ? (
+            <NewAppointmentPreview
+              requestConfirm={requestConfirmation}
+              allowRescheduling={allowRescheduling}
+              allowCancellation={allowCancellation}
+              addMedicalHisButton={addMedicalHisButton}
+              medicalMessage={medicalMessage}
+              displayPolicy={displayPolicy}
+              showService={showService}
+              showEmployeeName={showEmployeeName}
+              selectLanguage={selectLanguage}
+              backGroundColor={backGroundColor}
+              buttonColor={buttonColor}
+              informationMessage={informationMessage}
+              standardTapIndex={standardTapIndex}
+              activeSocialIcons={activeSocialIcons}
+            />
+          ) : type === 'invoice' ? (
+            <InvoicePreview
+              informationMessage={informationMessage}
+              buttonColor={buttonColor}
+              selectLanguage={selectLanguage}
+              activeSocialIcons={activeSocialIcons}
+              backGroundColor={backGroundColor}
+              standardTapIndex={standardTapIndex}
+            />
+          ) : type === 'outstandingInvoice' ? (
+            <OutstandingInvoicePreview
+              informationMessage={informationMessage}
+              buttonColor={buttonColor}
+              selectLanguage={selectLanguage}
+              activeSocialIcons={activeSocialIcons}
+              backGroundColor={backGroundColor}
+              standardTapIndex={standardTapIndex}
+              showEnablePay={showEnablePay}
+            />
+          ) : type === 'reschedule' || type === 'classReschedule' ? (
+            <RescheduleAppointmentPreview
+              requestConfirm={requestConfirmation}
+              allowRescheduling={allowRescheduling}
+              allowCancellation={allowCancellation}
+              displayPolicy={displayPolicy}
+              showService={showService}
+              showEmployeeName={showEmployeeName}
+              selectLanguage={selectLanguage}
+              backGroundColor={backGroundColor}
+              buttonColor={buttonColor}
+              informationMessage={informationMessage}
+              standardTapIndex={standardTapIndex}
+              activeSocialIcons={activeSocialIcons}
+              addMedicalHisButton={addMedicalHisButton}
+              medicalMessage={medicalMessage}
+            />
+          ) : type === 'bookedOntoClass' ? (
+            <BookedOntoClassPreview
+              standardTapIndex={standardTapIndex}
+              backGroundColor={backGroundColor}
+              activeSocialIcons={activeSocialIcons}
+              selectLanguage={selectLanguage}
+              showService={showService}
+              showEmployeeName={showEmployeeName}
+              buttonColor={buttonColor}
+              informationMessage={informationMessage}
+              type={type}
+            />
+          ) : type === 'waitList' ? (
+            <WaitListPreview
+              standardTapIndex={standardTapIndex}
+              backGroundColor={backGroundColor}
+              activeSocialIcons={activeSocialIcons}
+              selectLanguage={selectLanguage}
+              buttonColor={buttonColor}
+              informationMessage={informationMessage}
+              type={type}
+            />
+          ) : type === 'documentShared' || type === 'secureEmailTemplate' ? (
+            <DocumentSharedPreview
+              standardTapIndex={standardTapIndex}
+              backGroundColor={backGroundColor}
+              activeSocialIcons={activeSocialIcons}
+              selectLanguage={selectLanguage}
+              buttonColor={buttonColor}
+              informationMessage={informationMessage}
+              type={type}
+            />
+          ) : type === 'referral' ? (
+            <ReferralPreview
+              standardTapIndex={standardTapIndex}
+              backGroundColor={backGroundColor}
+              activeSocialIcons={activeSocialIcons}
+              selectLanguage={selectLanguage}
+              buttonColor={buttonColor}
+              informationMessage={informationMessage}
+              type={type}
+            />
+          ) : type === 'leadResponses' ? (
+            <LeadResponsesPreview
+              standardTapIndex={standardTapIndex}
+              backGroundColor={backGroundColor}
+              activeSocialIcons={activeSocialIcons}
+              selectLanguage={selectLanguage}
+              buttonColor={buttonColor}
+              informationMessage={informationMessage}
+              type={type}
+            />
+          ) : type === 'connectRegistration' ? (
+            <ConnectRegistrationPreview
+              standardTapIndex={standardTapIndex}
+              backGroundColor={backGroundColor}
+              activeSocialIcons={activeSocialIcons}
+              selectLanguage={selectLanguage}
+              buttonColor={buttonColor}
+              informationMessage={informationMessage}
+              type={type}
+            />
+          ) : type === 'classSpotAvailable' ? (
+            <ClassSpotAvailablePreview
+              standardTapIndex={standardTapIndex}
+              backGroundColor={backGroundColor}
+              activeSocialIcons={activeSocialIcons}
+              selectLanguage={selectLanguage}
+              buttonColor={buttonColor}
+              informationMessage={informationMessage}
+              type={type}
+            />
+          ) : type === 'giftVoucher' ? (
+            <GiftVoucherPreview
+              standardTapIndex={standardTapIndex}
+              backGroundColor={backGroundColor}
+              activeSocialIcons={activeSocialIcons}
+              selectLanguage={selectLanguage}
+              buttonColor={buttonColor}
+              informationMessage={informationMessage}
+              type={type}
+            />
+          ) : type === 'requestFeedback' ? (
+            <RequestFeedbackPreview
+              standardTapIndex={standardTapIndex}
+              backGroundColor={backGroundColor}
+              activeSocialIcons={activeSocialIcons}
+              selectLanguage={selectLanguage}
+              buttonColor={buttonColor}
+              informationMessage={informationMessage}
+              type={type}
+            />
+          ) : type === 'medical-forms' ||
+            type === 'clinic-emailing-timeline' ||
+            type === 'emailAppointment' ? (
+            <MedicalFormsPreview
+              standardTapIndex={standardTapIndex}
+              backGroundColor={backGroundColor}
+              activeSocialIcons={activeSocialIcons}
+              selectLanguage={selectLanguage}
+              buttonColor={buttonColor}
+              type={type}
+            />
+          ) : type === 'birthday' ? (
+            <BirthdayPreview
+              standardTapIndex={standardTapIndex}
+              backGroundColor={backGroundColor}
+              activeSocialIcons={activeSocialIcons}
+              selectLanguage={selectLanguage}
+              buttonColor={buttonColor}
+              informationMessage={informationMessage}
+              type={type}
+            />
+          ) : type === 'package-session-used' ? (
+            <PackageSessionPreview
+              standardTapIndex={standardTapIndex}
+              backGroundColor={backGroundColor}
+              activeSocialIcons={activeSocialIcons}
+              selectLanguage={selectLanguage}
+              buttonColor={buttonColor}
+            />
+          ) : (
             <Appointment
               requestConfirm={requestConfirmation}
               allowRescheduling={allowRescheduling}
@@ -147,7 +432,7 @@ const Index: FC<P> = forwardRef(
               standardTapIndex={standardTapIndex}
               activeSocialIcons={activeSocialIcons}
             />
-          )
+          ))
         }
         smsComponent={
           isSmsComponent && (
