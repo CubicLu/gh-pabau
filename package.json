@@ -1,6 +1,6 @@
 {
   "name": "pabau",
-  "version": "2.0.209",
+  "version": "2.0.216",
   "license": "Copyright Hambrand Technologies Ltd",
   "bump-rebuild-all": 5,
   "scripts": {
@@ -171,6 +171,7 @@
     "@testing-library/jest-native": "4.0.1",
     "@testing-library/react": "11.2.5",
     "@testing-library/react-native": "7.2.0",
+    "@types/classnames": "^2.2.11",
     "@types/cookie-session": "^2.0.42",
     "@types/jest": "^26.0.20",
     "@types/jsonwebtoken": "^8.5.0",
@@ -203,6 +204,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-sonarjs": "^0.6.0",
     "graphql-shield": "^7.5.0",
+    "husky": "^5.0.9",
     "jest": "^26.2.2",
     "jest-react-native": "18.0.0",
     "metro-react-native-babel-preset": "0.65.2",

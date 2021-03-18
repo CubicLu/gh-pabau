@@ -1,0 +1,406 @@
+.servicesTabMain {
+  :global {
+    .ant-tabs-left {
+      .ant-tabs-nav-wrap {
+        border-bottom: 1px solid #ecedf0;
+      }
+      .ant-tabs-tab {
+        height: 40px;
+        padding: 0px !important;
+
+        &.ant-tabs-tab-active {
+          background-color: #eef7fb !important;
+        }
+        &.ant-tabs-tab-disabled {
+          cursor: default;
+        }
+      }
+    }
+    .ant-tabs-top {
+      > .ant-tabs-nav {
+        > .ant-tabs-nav-wrap {
+          > .ant-tabs-nav-list {
+            > .ant-tabs-tab {
+              border-right: 1px solid #ecedf0;
+              padding: 0px !important;
+              &.ant-tabs-tab-active {
+                background-color: #eef7fb !important;
+              }
+            }
+
+            .services_tab_tabMenuItem__3HCvr {
+              display: flex;
+              justify-content: center;
+            }
+          }
+        }
+      }
+    }
+    .ant-table-thead {
+      th {
+        color: #9292a3;
+      }
+    }
+    .ant-table-tbody {
+      td {
+        color: #3d3d46;
+      }
+      .duration {
+        color: #9292a3;
+      }
+      .serviceName {
+        @media screen and (max-width: 768px) {
+          min-width: 350px !important;
+        }
+      }
+      .serviceStatus {
+        @media screen and (max-width: 768px) {
+          min-width: 250px;
+          button {
+            min-width: 150px !important;
+          }
+        }
+      }
+      .serviceEdit {
+        @media screen and (max-width: 768px) {
+          min-width: 300px !important;
+        }
+      }
+      @media screen and (max-width: 768px) {
+        tr td:first-child {
+          width: 50px !important;
+          padding-left: 30px;
+        }
+      }
+    }
+    .ant-table-footer {
+      padding: 0px 16px;
+      background-color: #ffffff;
+    }
+
+    .hidden-lg {
+      @media screen and (min-width: 769px) {
+        display: none;
+      }
+    }
+
+    .hidden-sm {
+      @media screen and (max-width: 768px) {
+        display: none;
+      }
+    }
+  }
+  .servicesSectionHeading {
+    border-bottom: 1px solid #ecedf0 !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 15px 25px;
+
+    @media screen and (max-width: 768px) {
+      padding-right: 7.5px;
+    }
+
+    @media screen and (max-width: 430px) {
+      flex-direction: column-reverse;
+
+      & > div {
+        &:first-child {
+          margin-top: 10px;
+        }
+      }
+    }
+
+    & > div {
+      display: flex;
+      align-items: center;
+
+      &:first-child {
+        cursor: pointer;
+        div {
+          font-weight: normal;
+          font-size: 16px;
+          line-height: 24px;
+          color: #3d3d46;
+          margin-right: 10px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+
+          @media screen and (max-width: 530px) {
+            max-width: 200px;
+          }
+          @media screen and (max-width: 480px) {
+            max-width: 150px;
+          }
+          @media screen and (max-width: 430px) {
+            max-width: 250px;
+          }
+        }
+        svg {
+          margin-top: 2.5px;
+          fill: #9292a3;
+          transition: all 0.25s;
+        }
+        &:hover {
+          svg {
+            transform: rotate(180deg);
+            fill: #54b2d3;
+          }
+        }
+      }
+      &:last-child {
+        button:first-child {
+          margin-right: 15px;
+          padding-left: 1.5em;
+          padding-right: 1.5em;
+        }
+        button:last-child {
+          padding: 1.5em;
+        }
+        :global .toggleBtn {
+          margin-right: 15px;
+          padding: 0em 1.5em !important;
+        }
+      }
+    }
+
+    :global {
+      button.circle {
+        border-radius: 100%;
+        padding: 0.25em 1em !important;
+        height: 40px !important;
+        margin-right: 15px;
+      }
+    }
+  }
+  .serviceName {
+    display: flex;
+    align-items: center;
+
+    span {
+      margin-right: 7.5px;
+    }
+
+    span.dot {
+      width: 7px;
+      height: 7px;
+      margin-top: -2px;
+      border-width: 2px;
+      border-style: solid;
+      border-radius: 50%;
+    }
+  }
+
+  .staff {
+    span.staffCount:hover {
+      color: #54b2d3;
+    }
+  }
+
+  .editIconsDiv {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+
+    span {
+      margin-right: 12.5px;
+
+      &:hover {
+        svg path {
+          fill: #54b2d3 !important;
+        }
+      }
+    }
+  }
+}
+.createServiceImageContainer {
+  width: 100%;
+  height: 236px;
+  background-color: #f7f7f9;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+:global {
+  .ant-dropdown-menu {
+    border-radius: 2px;
+    padding: 0px;
+
+    .ant-dropdown-menu-item {
+      color: #9292a3;
+      padding: 10px 3em 10px 10px;
+      background-color: transparent;
+      &.active {
+        color: #54b2d3;
+        background-color: #eef7fb;
+      }
+      &:hover {
+        background-color: #eef7fb;
+      }
+    }
+  }
+
+  .ant-popover-inner-content {
+    .avatarsPopover {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 12px;
+      max-width: 184px !important;
+    }
+  }
+}
+
+.groupsItem {
+  width: 200px;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px 0 24px;
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    padding: 0px 12px;
+  }
+  > span {
+    &:nth-child(1) {
+      font-family: var(--font-family);
+      font-size: 14px;
+      line-height: 18px;
+    }
+  }
+  :global {
+    .anticon {
+      margin: 0 !important;
+    }
+  }
+}
+
+.tabMenuItem {
+  width: 200px;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px 0 24px;
+
+  @media screen and (max-width: 768px) {
+    width: 150px;
+    padding: 0px 24px;
+  }
+  > span {
+    &:nth-child(1) {
+      font-family: var(--font-family);
+      font-size: 14px;
+      line-height: 18px;
+    }
+  }
+  &:hover {
+    > span {
+      &:nth-child(1) {
+        color: var(--primary-color);
+      }
+    }
+  }
+}
+
+.tabMenuItemOps {
+  display: flex;
+  align-items: center;
+  > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-left: 12px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color-base);
+    font-size: 14px;
+    color: var(--light-grey-color);
+    :global {
+      .anticon {
+        margin: 0 !important;
+      }
+    }
+  }
+}
+
+.createServiceGroup {
+  :global {
+    .ant-modal {
+      padding: 0;
+    }
+    .ant-modal-body {
+      & > div {
+        label {
+          font-weight: normal;
+          font-size: 14px;
+          line-height: 22px;
+          display: flex;
+          align-items: center;
+          color: #9292a3;
+          padding-top: 30px;
+          margin-bottom: 2.5px;
+        }
+      }
+      .chooseImageInput button {
+        padding-left: 20px;
+        padding-right: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 32px;
+      }
+      .footerBtnInput {
+        margin-top: 30px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        div:first-child {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          label {
+            margin-top: 5px;
+            padding: 0px 10px 0px 0px;
+          }
+        }
+        div:not(:first-child) {
+          button {
+            margin-left: 15px;
+            padding-left: 20px;
+            padding-right: 20px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.paginationDiv {
+  @media screen and (max-width: 768px) {
+    & > div {
+      padding-bottom: 15px;
+      & > div {
+        flex-direction: column;
+        align-items: center;
+        p {
+          padding-left: 5px !important;
+          padding-right: 5px !important;
+        }
+      }
+    }
+  }
+}

@@ -15,7 +15,7 @@ interface P {
   menuList?: IOption[]
 }
 
-export const DotButton: FC<P> = (props) => {
+export const DotButton: FC<P> = ({ ...props }) => {
   const { menuList } = props
 
   const prepareContent = () => {
