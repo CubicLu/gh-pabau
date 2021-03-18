@@ -21223,36 +21223,6 @@ type labs_dashboard {
 }
 
 """
-aggregated selection of "labs_dashboard"
-"""
-type labs_dashboard_aggregate {
-  aggregate: labs_dashboard_aggregate_fields
-  nodes: [labs_dashboard!]!
-}
-
-"""
-aggregate fields of "labs_dashboard"
-"""
-type labs_dashboard_aggregate_fields {
-  avg: labs_dashboard_avg_fields
-  count(columns: [labs_dashboard_select_column!], distinct: Boolean): Int!
-  max: labs_dashboard_max_fields
-  min: labs_dashboard_min_fields
-  stddev: labs_dashboard_stddev_fields
-  stddev_pop: labs_dashboard_stddev_pop_fields
-  stddev_samp: labs_dashboard_stddev_samp_fields
-  sum: labs_dashboard_sum_fields
-  var_pop: labs_dashboard_var_pop_fields
-  var_samp: labs_dashboard_var_samp_fields
-  variance: labs_dashboard_variance_fields
-}
-
-"""aggregate avg on columns"""
-type labs_dashboard_avg_fields {
-  labNo: Float
-}
-
-"""
 Boolean expression to filter rows from the table "labs_dashboard". All fields are combined with a logical 'AND'.
 """
 input labs_dashboard_bool_exp {
@@ -21288,30 +21258,6 @@ input labs_dashboard_inc_input {
 input type for inserting data into table "labs_dashboard"
 """
 input labs_dashboard_insert_input {
-  client: String
-  lab: String
-  labNo: Int
-  lastUpdate: String
-  public: String
-  requested: String
-  requester: String
-  test: String
-}
-
-"""aggregate max on columns"""
-type labs_dashboard_max_fields {
-  client: String
-  lab: String
-  labNo: Int
-  lastUpdate: String
-  public: String
-  requested: String
-  requester: String
-  test: String
-}
-
-"""aggregate min on columns"""
-type labs_dashboard_min_fields {
   client: String
   lab: String
   labNo: Int
@@ -21402,26 +21348,6 @@ input labs_dashboard_set_input {
   test: String
 }
 
-"""aggregate stddev on columns"""
-type labs_dashboard_stddev_fields {
-  labNo: Float
-}
-
-"""aggregate stddev_pop on columns"""
-type labs_dashboard_stddev_pop_fields {
-  labNo: Float
-}
-
-"""aggregate stddev_samp on columns"""
-type labs_dashboard_stddev_samp_fields {
-  labNo: Float
-}
-
-"""aggregate sum on columns"""
-type labs_dashboard_sum_fields {
-  labNo: Int
-}
-
 """
 update columns of table "labs_dashboard"
 """
@@ -21449,21 +21375,6 @@ enum labs_dashboard_update_column {
 
   """column name"""
   test
-}
-
-"""aggregate var_pop on columns"""
-type labs_dashboard_var_pop_fields {
-  labNo: Float
-}
-
-"""aggregate var_samp on columns"""
-type labs_dashboard_var_samp_fields {
-  labNo: Float
-}
-
-"""aggregate variance on columns"""
-type labs_dashboard_variance_fields {
-  labNo: Float
 }
 
 """
@@ -29718,26 +29629,6 @@ type query_root {
     where: labs_dashboard_bool_exp
   ): [labs_dashboard!]!
 
-  """
-  fetch aggregated fields from the table: "labs_dashboard"
-  """
-  labs_dashboard_aggregate(
-    """distinct select on columns"""
-    distinct_on: [labs_dashboard_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [labs_dashboard_order_by!]
-
-    """filter the rows returned"""
-    where: labs_dashboard_bool_exp
-  ): labs_dashboard_aggregate!
-
   """fetch data from the table: "labs_dashboard" using primary key columns"""
   labs_dashboard_by_pk(labNo: Int!): labs_dashboard
 
@@ -30362,26 +30253,6 @@ type query_root {
     where: rota_templates_bool_exp
   ): [rota_templates!]!
 
-  """
-  fetch aggregated fields from the table: "rota_templates"
-  """
-  rota_templates_aggregate(
-    """distinct select on columns"""
-    distinct_on: [rota_templates_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [rota_templates_order_by!]
-
-    """filter the rows returned"""
-    where: rota_templates_bool_exp
-  ): rota_templates_aggregate!
-
   """fetch data from the table: "rota_templates" using primary key columns"""
   rota_templates_by_pk(id: uuid!): rota_templates
 
@@ -30880,36 +30751,6 @@ type rota_templates {
 }
 
 """
-aggregated selection of "rota_templates"
-"""
-type rota_templates_aggregate {
-  aggregate: rota_templates_aggregate_fields
-  nodes: [rota_templates!]!
-}
-
-"""
-aggregate fields of "rota_templates"
-"""
-type rota_templates_aggregate_fields {
-  avg: rota_templates_avg_fields
-  count(columns: [rota_templates_select_column!], distinct: Boolean): Int!
-  max: rota_templates_max_fields
-  min: rota_templates_min_fields
-  stddev: rota_templates_stddev_fields
-  stddev_pop: rota_templates_stddev_pop_fields
-  stddev_samp: rota_templates_stddev_samp_fields
-  sum: rota_templates_sum_fields
-  var_pop: rota_templates_var_pop_fields
-  var_samp: rota_templates_var_samp_fields
-  variance: rota_templates_variance_fields
-}
-
-"""aggregate avg on columns"""
-type rota_templates_avg_fields {
-  order: Float
-}
-
-"""
 Boolean expression to filter rows from the table "rota_templates". All fields are combined with a logical 'AND'.
 """
 input rota_templates_bool_exp {
@@ -30955,28 +30796,6 @@ input rota_templates_insert_input {
   name: String
   order: Int
   start_time: timetz
-}
-
-"""aggregate max on columns"""
-type rota_templates_max_fields {
-  created_at: timestamptz
-  end_time: timetz
-  id: uuid
-  name: String
-  order: Int
-  start_time: timetz
-  updated_at: timestamptz
-}
-
-"""aggregate min on columns"""
-type rota_templates_min_fields {
-  created_at: timestamptz
-  end_time: timetz
-  id: uuid
-  name: String
-  order: Int
-  start_time: timetz
-  updated_at: timestamptz
 }
 
 """
@@ -31061,26 +30880,6 @@ input rota_templates_set_input {
   start_time: timetz
 }
 
-"""aggregate stddev on columns"""
-type rota_templates_stddev_fields {
-  order: Float
-}
-
-"""aggregate stddev_pop on columns"""
-type rota_templates_stddev_pop_fields {
-  order: Float
-}
-
-"""aggregate stddev_samp on columns"""
-type rota_templates_stddev_samp_fields {
-  order: Float
-}
-
-"""aggregate sum on columns"""
-type rota_templates_sum_fields {
-  order: Int
-}
-
 """
 update columns of table "rota_templates"
 """
@@ -31102,21 +30901,6 @@ enum rota_templates_update_column {
 
   """column name"""
   start_time
-}
-
-"""aggregate var_pop on columns"""
-type rota_templates_var_pop_fields {
-  order: Float
-}
-
-"""aggregate var_samp on columns"""
-type rota_templates_var_samp_fields {
-  order: Float
-}
-
-"""aggregate variance on columns"""
-type rota_templates_variance_fields {
-  order: Float
 }
 
 """
@@ -32668,26 +32452,6 @@ type subscription_root {
     where: labs_dashboard_bool_exp
   ): [labs_dashboard!]!
 
-  """
-  fetch aggregated fields from the table: "labs_dashboard"
-  """
-  labs_dashboard_aggregate(
-    """distinct select on columns"""
-    distinct_on: [labs_dashboard_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [labs_dashboard_order_by!]
-
-    """filter the rows returned"""
-    where: labs_dashboard_bool_exp
-  ): labs_dashboard_aggregate!
-
   """fetch data from the table: "labs_dashboard" using primary key columns"""
   labs_dashboard_by_pk(labNo: Int!): labs_dashboard
 
@@ -33302,26 +33066,6 @@ type subscription_root {
     """filter the rows returned"""
     where: rota_templates_bool_exp
   ): [rota_templates!]!
-
-  """
-  fetch aggregated fields from the table: "rota_templates"
-  """
-  rota_templates_aggregate(
-    """distinct select on columns"""
-    distinct_on: [rota_templates_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [rota_templates_order_by!]
-
-    """filter the rows returned"""
-    where: rota_templates_bool_exp
-  ): rota_templates_aggregate!
 
   """fetch data from the table: "rota_templates" using primary key columns"""
   rota_templates_by_pk(id: uuid!): rota_templates

@@ -1,5 +1,6 @@
 .color-picker-wrap {
   display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
 }
 .color-item {
@@ -8,24 +9,17 @@
   height: 36px;
   margin: 4px 4px 4px 0;
   border-radius: 4px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   // opacity: 0.2;
   // &:hover {
   //   opacity: 1;
   // }
   .badge {
     opacity: 0;
-    font-size: 8px;
+    position: absolute;
+    right: 5px;
+    top: 4px;
     color: #fff;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--primary-color);
+    font-size: 8px;
   }
 }
 .toggle-opacity {
@@ -37,13 +31,9 @@
 .color-item:hover .badge {
   opacity: 1;
 }
-.color-item:hover {
-  border: 2px solid #54b2d34d;
-}
 .selected-color {
   opacity: 1;
-  border: 2px solid #54b2d34d;
-  border-radius: 2px;
+  border: 1px solid var(--primary-color);
   .badge {
     opacity: 1;
   }
@@ -53,29 +43,12 @@
   font-size: 14px;
   line-height: 18px;
 }
-.add-color {
-  position: relative;
-  width: 36px;
-  height: 36px;
-  margin: 4px 4px 4px 0;
-  border-radius: 4px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid #b5bbbb4d;
-}
-.custom-picker{
-  margin-left: 150px;
-}
-.add-color:hover {
-  border: 2px solid #54b2d34d;
 
-  @media (min-width: 200px) and (max-width: 767px) {
-    .color-item {
-      margin: 4px;
-    }
-    .color-picker-wrap {
-      justify-content: flex-start;
-    }
+@media (min-width: 200px) and (max-width: 767px) {
+  .color-item {
+    margin: 4px;
+  }
+  .color-picker-wrap {
+    justify-content: flex-start;
   }
 }

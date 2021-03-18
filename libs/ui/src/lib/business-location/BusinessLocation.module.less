@@ -12,24 +12,16 @@
 
   :global {
     .google-places-autocomplete {
-      z-index: 2;
-      position: relative;
-      .google-places-autocomplete__suggestions-container {
-        position: absolute;
+      input {
         width: 100%;
-        top: 40px;
-        left: 0;
-        padding: 8px;
-        background-color: white;
+        box-shadow: none;
+        border: 1px solid #ecedf0;
         border-radius: 2px;
-        border: 1px solid var(--border-color-base);
-        box-shadow: var(--box-shadow-base);
-
-        > div {
-          cursor: pointer;
-          height: 30px;
-          line-height: 30px;
-        }
+        padding: 8px 12px;
+        font-family: 'Circular-Std-Book';
+        font-size: 14px;
+        line-height: 16px;
+        color: #595959;
       }
     }
   }
@@ -41,7 +33,6 @@
   border-radius: 2px;
   margin-top: 28px;
   position: relative;
-  z-index: 1;
 }
 
 .location-item-edit {
@@ -53,7 +44,7 @@
   line-height: 17.71px;
   color: #54b2d3;
   margin: 0;
-  z-index: 1;
+  z-index: 9;
   cursor: pointer;
 }
 

@@ -2,8 +2,7 @@ import React, { FC, useEffect, useState } from 'react'
 // import { ReactComponent as CheckBadge } from '../../assets/images/check-badge.svg'
 import styles from './ColorPicker.module.less'
 import classNames from 'classnames'
-import { CheckOutlined, PlusOutlined } from '@ant-design/icons'
-import { SketchPicker } from 'react-color'
+import { CheckOutlined } from '@ant-design/icons'
 interface P {
   color: string
   selected: boolean
@@ -29,7 +28,7 @@ const ColorItem: FC<P> = ({
         !isDarkColor && styles.toggleOpacity
       )}
       style={{
-        backgroundColor: selected ? '#fff' : color,
+        backgroundColor: color,
         // border: hovering || selected ? '1px solid #54B2D3' : 'none',
         boxSizing: 'border-box',
         // opacity: hovering || selected ? '1' : '0.2',
@@ -54,24 +53,6 @@ interface PickerProps {
   onLeave?(val): void
 }
 
-const colorData = [
-  '#03dbfc',
-  '#fca903',
-  '#8c03fc',
-  '#0ffc03',
-  '#03fcfc',
-  '#5e03fc',
-  '#03e7fc',
-  '#45fc03',
-  '#84fc03',
-  '#fcf403',
-  '#fcce03',
-  '#d2fc03',
-  '#f4fc03',
-  '#bf15c2',
-  '#486578',
-]
-
 export const ColorPicker: FC<PickerProps> = ({
   heading = 'Background color',
   selectedColor = '',
@@ -80,10 +61,26 @@ export const ColorPicker: FC<PickerProps> = ({
   onHover,
   onLeave,
 }) => {
-  const [colorList, setColorList] = useState(colorData)
+  const colorData = [
+    '#03dbfc',
+    '#fca903',
+    '#8c03fc',
+    '#0ffc03',
+    '#03fcfc',
+    '#5e03fc',
+    '#03e7fc',
+    '#45fc03',
+    '#84fc03',
+    '#fcf403',
+    '#fcce03',
+    '#d2fc03',
+    '#f4fc03',
+    '#bf15c2',
+    '#486578',
+    '#9a3ac9',
+  ]
 
   const [selColor, setSelColor] = useState(selectedColor)
-  const [isAddingColor, setIsAddingColor] = useState(false)
 
   useEffect(() => {
     setSelColor(selectedColor)
@@ -93,16 +90,6 @@ export const ColorPicker: FC<PickerProps> = ({
     setSelColor(color)
     onSelected(color)
   }
-  const onClickAddCustomColor = () => {
-    setIsAddingColor((e) => !e)
-  }
-  const handleChangeComplete = (color) => {
-    onClickColorItem(color.hex)
-    colorData.pop()
-    colorData.push(color.hex)
-    setColorList(colorData)
-    setIsAddingColor((e) => !e)
-  }
 
   return (
     <div>
@@ -110,7 +97,7 @@ export const ColorPicker: FC<PickerProps> = ({
       {/*  style={{ marginTop: '16px' }} */}
       <span className={styles.heading}>{heading}</span>
       <div className={styles.colorPickerWrap}>
-        {colorList.map((color) => (
+        {colorData.map((color) => (
           <ColorItem
             key={`${heading}${color}`}
             color={color}
@@ -121,22 +108,7 @@ export const ColorPicker: FC<PickerProps> = ({
             onLeave={() => onLeave?.(color)}
           />
         ))}
-        <div
-          className={styles.addColor}
-          onClick={() => onClickAddCustomColor()}
-        >
-          <PlusOutlined />
-        </div>
       </div>
-      {isAddingColor && (
-        <SketchPicker
-          className={styles.customPicker}
-          color={selColor}
-          presetColors={[]}
-          disableAlpha={true}
-          onChangeComplete={(color) => handleChangeComplete(color)}
-        />
-      )}
     </div>
   )
 }

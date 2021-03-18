@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC } from 'react'
 import { Typography, Input, Modal } from 'antd'
 import { Button, Breadcrumb, PhoneNumberInput, Notification } from '@pabau/ui'
 import Layout from '../../components/Layout/Layout'
@@ -17,9 +17,9 @@ enum NotificationType {
 }
 
 const Index: FC = () => {
-  const [setIndexTab, setSelectedTab] = useState(1)
-  const [sendEmail, setSendEmail] = useState(false)
-  const [valideEmail, setValidEmail] = useState(false)
+  const [setIndexTab, setSelectedTab] = React.useState(1)
+  const [sendEmail, setSendEmail] = React.useState(false)
+  const [valideEmail, setValidEmail] = React.useState(false)
 
   function handleSendEmailBtn(value) {
     setSendEmail(value)

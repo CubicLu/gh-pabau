@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { FC, ReactNode } from 'react'
 import { Breadcrumb } from '@pabau/ui'
 import CrudLayout from '../../../components/CrudLayout/CrudLayout'
@@ -15,6 +14,70 @@ labs+482@pabau.com, and then you can automatically match the results
 against the patient.`
 const notificationTitle = 'Integrate your Lab'
 
+const ADD_MUTATION = gql`
+  mutation insert_drugs(
+    $is_active: Boolean = false
+    $name: String
+    $route: String
+    $frequency: String
+    $unit: String
+    $dosage: String
+    $comment: String
+  ) {
+    insert_drugs_one(
+      object: {
+        comment: $comment
+        dosage: $dosage
+        frequency: $frequency
+        is_active: $is_active
+        name: $name
+        route: $route
+        unit: $unit
+      }
+    ) {
+      __typename
+      id
+    }
+  }
+`
+
+const EDIT_MUTATION = gql`
+  mutation update_drugs_by_pk(
+    $id: uuid!
+    $is_active: Boolean
+    $name: String
+    $route: String
+    $unit: String
+    $frequency: String
+    $dosage: String
+    $comment: String
+  ) {
+    update_drugs_by_pk(
+      pk_columns: { id: $id }
+      _set: {
+        is_active: $is_active
+        name: $name
+        route: $route
+        unit: $unit
+        frequency: $frequency
+        dosage: $dosage
+        comment: $comment
+      }
+    ) {
+      __typename
+      id
+    }
+  }
+`
+
+const DELETE_MUTATION = gql`
+  mutation delete_drugs_by_pk($id: uuid!) {
+    delete_drugs_by_pk(id: $id) {
+      __typename
+      id
+    }
+  }
+`
 const LIST_QUERY = gql`
   query labs_dashboard($limit: Int = 1) {
     labs_dashboard(limit: $limit) {
@@ -40,50 +103,7 @@ const LIST_AGGREGATE_QUERY = gql`
     }
   }
 `
-const DELETE_MUTATION = gql`
-  mutation delete_marketing_source($id: Int) {
-    deleteOneMarketingSource(where: { id: $id }) {
-      __typename
-      id
-    }
-  }
-`
 
-const ADD_MUTATION = gql`
-  mutation add_marketing_source(
-    $imported: Int = 0
-    $is_active: Int = 1
-    $name: String!
-    $custom_id: Int = 0
-    $company_id: Int = 8901 #TODO refactor with actual company_id
-  ) {
-    createOneMarketingSource(
-      data: {
-        company: { connect: { id: $company_id } }
-        imported: $imported
-        source_name: $name
-        public: $is_active
-        custom_id: $custom_id
-      }
-    ) {
-      id
-    }
-  }
-`
-const EDIT_MUTATION = gql`
-  mutation update_marketing_source_by_pk(
-    $id: Int!
-    $source_name: String
-    $public: Int = 1
-  ) {
-    updateOneMarketingSource(
-      data: { source_name: { set: $source_name }, public: { set: $public } }
-      where: { id: $id }
-    ) {
-      id
-    }
-  }
-`
 /**
  * TODO refactor UPDATE_ORDER_MUTATION with legacy db
  */
