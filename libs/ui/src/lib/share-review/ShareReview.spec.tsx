@@ -1,11 +1,12 @@
+/* eslint-disable */
 import React from 'react'
 import { render } from '@testing-library/react'
 
-import Appointment from './Appointment'
+import ShareReview from './ShareReview'
 
-describe('Appointment', () => {
+describe('ShareReview', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Appointment selectLanguage="en" />)
+    const { baseElement } = render(<ShareReview />)
     expect(baseElement).toBeTruthy()
   })
 })

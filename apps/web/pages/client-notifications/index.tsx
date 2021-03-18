@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import { Typography, Modal } from 'antd'
 import { PauseCircleOutlined, MessageOutlined } from '@ant-design/icons'
 import {
@@ -13,12 +13,14 @@ import CommonHeader from '../setup/common-header'
 import notificationData from '../../assets/notificationData'
 import notificationBannerImage from '../../assets/images/notification-image.png'
 import styles from './style.module.less'
+import { useRouter } from 'next/router'
 
 const { Title } = Typography
 
 const Index: FC = () => {
-  const [hideBanner, setHideBanner] = React.useState(false)
+  const [hideBanner, setHideBanner] = useState(false)
   const menuItems = ['Appointments', 'Engagement', 'Classes', 'Other']
+  const router = useRouter()
   const options = [
     {
       title: 'Pause notifications',
@@ -48,6 +50,13 @@ const Index: FC = () => {
         break
     }
   }
+
+  const handleNotificationClick = (link) => {
+    if (link) {
+      router.push(link)
+    }
+  }
+
   return (
     <>
       <CommonHeader />
@@ -89,6 +98,7 @@ const Index: FC = () => {
                 <NotificationMessages
                   key={item}
                   notificationData={notificationData[item]}
+                  onClick={handleNotificationClick}
                 />
               ))}
             </TabMenu>

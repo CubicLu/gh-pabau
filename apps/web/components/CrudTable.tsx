@@ -499,6 +499,7 @@ const CrudTable: FC<P> = ({
             <Table
               loading={isLoading}
               style={{ height: '100%' }}
+              scroll={{ x: 'max-content' }}
               sticky={{ offsetScroll: 80, offsetHeader: 80 }}
               pagination={sourceData?.length > 10 ? {} : false}
               draggable={true}

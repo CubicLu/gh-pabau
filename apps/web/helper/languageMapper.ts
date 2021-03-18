@@ -2,6 +2,7 @@ const languageMap = {
   french: 'fr',
   german: 'de',
   'english (uk)': 'en',
+  english: 'en',
 }
 
 export const languageMapper = (language: string) => {

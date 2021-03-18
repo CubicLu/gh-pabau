@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, ReactNode } from 'react'
+import React, { PropsWithChildren, ReactNode, useState } from 'react'
 import { Row, Col, Divider, Radio } from 'antd'
 import styles from './EmailSmsPreview.module.less'
 import { ReactComponent as NormalClinicLogo } from '../../assets/images/normal-clinic-logo.svg'
@@ -8,6 +8,7 @@ import {
   WhatsAppOutlined,
   InstagramOutlined,
   TwitterOutlined,
+  LinkedinOutlined,
 } from '@ant-design/icons'
 
 export interface EmailSMSPreviewProps {
@@ -24,6 +25,14 @@ export interface EmailSMSPreviewProps {
   footer?: boolean
   isGiftVoucher?: boolean
   hideLogo?: boolean
+  previewButtonGroup?: boolean
+  previewCustomStatus?: string
+  activeSocialIcons?: string[]
+  buttonColor?: string
+  backGroundColor?: string
+  contactEmail?: string
+  contactInfoNumber?: string
+  displayContactMessage?: boolean
 }
 
 export interface FooterProps {
@@ -31,11 +40,17 @@ export interface FooterProps {
   contact?: boolean
   text?: string
   isFooterText?: boolean
+  activeSocialIcons?: string[]
+  contactEmail?: string
+  contactInfoNumber?: string
+  displayContactMessage?: boolean
 }
 
 export interface NoShowAppointmentProps {
   message?: string
   contactNumber?: string
+  closingText?: string
+  signatureBlock?: string
 }
 
 export interface BookedOntoClassProps {
@@ -59,6 +74,13 @@ export interface ClassRescheduledProps {
   message?: string
 }
 
+export interface RequestFeedbackProps {
+  message?: string
+  message1?: string
+  closingText?: string
+  signatureBlock?: string
+}
+
 export interface ReminderForClassProps {
   message?: string
   contactNumber?: number
@@ -72,16 +94,25 @@ export interface MissedAClassProps {
 export interface ReferralProps {
   message?: string
   footerText?: string
+  description?: string
 }
 
 export interface InvoicesProps {
-  message?: string
+  message?: string[]
   footerText?: string
+  showInvoiceButton?: boolean
+  bestRegards?: string
+  senderFirstName?: string
+  showEnablePay?: boolean
 }
 
 export interface LeadResponsesProps {
   message?: string
   text?: string
+  companyEmail?: string
+  companyPhone?: string
+  description?: string
+  messageLine?: string
 }
 
 export interface GiftVoucherProps {
@@ -89,6 +120,7 @@ export interface GiftVoucherProps {
   voucherCode?: string
   expiry?: string
   consultancyName?: string
+  displayViewButton?: boolean
 }
 
 export interface ConnectRegistrationProps {
@@ -99,10 +131,26 @@ export interface ConnectRegistrationProps {
   text?: string
 }
 
+export interface DocumentSharedProps {
+  userEmail?: string
+  userName?: string
+  buttonName?: string
+  clinicName?: string
+  infoText?: string
+  closingText?: string
+  signatureBlock?: string
+  messageLine1?: string
+  messageLine2?: string
+}
+
 export interface MedicalFormProps {
   message?: string
   contactNumber?: string
   text?: string
+}
+
+export interface PackageSessionProps {
+  message?: string
 }
 
 export interface NewAppoinmentsIsBookedProps {
@@ -123,33 +171,64 @@ export interface UpComingAppoinmentReminderProps {
   contactNumber?: number
 }
 
+export interface BirthDayPreviewProps {
+  wishingMessage?: string
+  messages?: string[]
+  closingText?: string
+  signatureBlock?: string
+}
+
 export function EmailSMSFooter(props: FooterProps): JSX.Element {
   const {
     iconGroup = true,
     contact = false,
     text,
     isFooterText = false,
+    activeSocialIcons = [],
+    contactInfoNumber,
+    contactEmail,
+    displayContactMessage = true,
   } = props
+
+  const setSocialIcon = (value) => {
+    if (value.includes('facebook')) {
+      return <FacebookOutlined className={styles.color} />
+    } else if (value.includes('whatsApp')) {
+      return <WhatsAppOutlined className={styles.color} />
+    } else if (value.includes('linksIn')) {
+      return <LinkedinOutlined className={styles.color} />
+    } else if (value.includes('instagram')) {
+      return <InstagramOutlined className={styles.color} />
+    } else if (value.includes('twitter')) {
+      return <TwitterOutlined className={styles.color} />
+    }
+  }
   return (
     <>
       <Divider className={styles.dividerHr} />
       {contact && (
         <>
+          {displayContactMessage && (
+            <Row gutter={[0, 4]} className={styles.bookAppointment}>
+              <Col>
+                <span className={styles.message}>
+                  Or get in touch with us via Phone or Email:
+                </span>
+              </Col>
+            </Row>
+          )}
           <Row gutter={[0, 4]} className={styles.bookAppointment}>
             <Col>
-              <span className={styles.message}>
-                Or get in touch with us via Phone or Email:
+              <span className={styles.contactInfo}>
+                {contactInfoNumber || '+44 000 987 507'}
               </span>
             </Col>
           </Row>
           <Row gutter={[0, 4]} className={styles.bookAppointment}>
             <Col>
-              <span className={styles.contactInfo}>+44 000 987 507</span>
-            </Col>
-          </Row>
-          <Row gutter={[0, 4]} className={styles.bookAppointment}>
-            <Col>
-              <span className={styles.contactInfo}>info@theclinic.com</span>
+              <span className={styles.contactInfo}>
+                {contactEmail || 'info@theclinic.com'}
+              </span>
             </Col>
           </Row>
         </>
@@ -158,7 +237,7 @@ export function EmailSMSFooter(props: FooterProps): JSX.Element {
         <Row gutter={[0, 4]} className={styles.textBox}>
           <Col>
             <span
-              className={styles.text}
+              className={`${styles.text} ${styles.footerText}`}
               dangerouslySetInnerHTML={{ __html: text || '' }}
             ></span>
           </Col>
@@ -168,10 +247,7 @@ export function EmailSMSFooter(props: FooterProps): JSX.Element {
         <Row className={styles.footerIcon}>
           <Col>
             <div className={styles.iconGroup}>
-              <FacebookOutlined className={styles.color} />
-              <WhatsAppOutlined className={styles.color} />
-              <InstagramOutlined className={styles.color} />
-              <TwitterOutlined className={styles.color} />
+              {activeSocialIcons.map((value, index) => setSocialIcon(value))}
             </div>
           </Col>
         </Row>
@@ -197,35 +273,47 @@ export const EmailSmsPreview = (
     footer = true,
     isGiftVoucher = false,
     hideLogo = false,
+    previewButtonGroup = true,
+    previewCustomStatus,
+    backGroundColor = '',
+    contactEmail,
+    contactInfoNumber,
+    activeSocialIcons = ['facebook', 'whatsApp', 'instagram', 'twitter'],
+    displayContactMessage = true,
   } = props
-  const [previewStatus, setPreviewStatus] = React.useState('email')
+  const [previewStatus, setPreviewStatus] = useState(
+    previewCustomStatus || 'email'
+  )
 
   const handleSmsTabChanged = (value) => {
     setPreviewStatus(value)
   }
 
   return (
-    <div className={styles.previewWrapper}>
-      <Row justify="center" className={styles.previewButtonGroup}>
-        <Radio.Group defaultValue="email" buttonStyle="solid">
-          <Radio.Button
-            className={styles.radioLeftButton}
-            value="email"
-            onClick={() => handleSmsTabChanged('email')}
-          >
-            Email
-          </Radio.Button>
-          <Radio.Button
-            className={styles.radioRightButton}
-            value="sms"
-            onClick={() => handleSmsTabChanged('sms')}
-          >
-            SMS Text
-          </Radio.Button>
-        </Radio.Group>
-      </Row>
+    <div>
+      {previewButtonGroup && (
+        <Row justify="center" className={styles.previewButtonGroup}>
+          <Radio.Group defaultValue="email" buttonStyle="solid">
+            <Radio.Button
+              className={styles.radioLeftButton}
+              value="email"
+              onClick={() => handleSmsTabChanged('email')}
+            >
+              Email
+            </Radio.Button>
+            <Radio.Button
+              className={styles.radioRightButton}
+              value="sms"
+              onClick={() => handleSmsTabChanged('sms')}
+            >
+              SMS Text
+            </Radio.Button>
+          </Radio.Group>
+        </Row>
+      )}
       {previewStatus === 'email' && (
         <div
+          style={{ backgroundColor: backGroundColor }}
           className={`${styles.emailPreview} ${
             isGiftVoucher && `${styles.giftVoucher}`
           }`}
@@ -266,6 +354,10 @@ export const EmailSmsPreview = (
                 iconGroup={footerIconGroup}
                 text={footerText}
                 isFooterText={isFooterText}
+                activeSocialIcons={activeSocialIcons}
+                contactInfoNumber={contactInfoNumber}
+                contactEmail={contactEmail}
+                displayContactMessage={displayContactMessage}
               />
             )}
           </div>
