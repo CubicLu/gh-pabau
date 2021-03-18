@@ -8,16 +8,32 @@ import {
   OperationType,
   Button,
 } from '@pabau/ui'
-import { TaxOption, employeeList } from '../../../mocks/CoursesPackages'
+import * as Yup from 'yup'
+import { TaxOption } from '../../../mocks/CoursesPackages'
 import { PlusOutlined } from '@ant-design/icons'
 import styles from './index.module.less'
 
 const { TextArea } = Input
+export interface InitialCoursesProps {
+  id: string
+  name: string
+  session: number
+  description: string
+  isActive: boolean
+  price: number
+  tax: string
+  category: string
+  employees: string[]
+}
 
 interface GeneralTabProps {
-  setFieldValue(key, value): void
+  value: InitialCoursesProps
+  setFieldValue(
+    field: keyof InitialCoursesProps,
+    value: string | string[] | boolean | number
+  ): void
 }
-const General: FC<GeneralTabProps> = ({ setFieldValue }) => {
+const General: FC<GeneralTabProps> = ({ value, setFieldValue }) => {
   return (
     <div className={styles.generalFormWrapper}>
       <Form
@@ -34,32 +50,48 @@ const General: FC<GeneralTabProps> = ({ setFieldValue }) => {
               name="name"
               autoComplete="off"
               placeholder="Enter course name"
+              size="large"
             />
           </Form.Item>
           <Form.Item label="Session count" name="session_count">
             <InputNumber
               name="session_count"
+              type="number"
+              value={value.session}
+              onChange={(data) => setFieldValue('session', data)}
               size="large"
-              min={1}
-              max={100000}
-              defaultValue={20}
             />
           </Form.Item>
           <Form.Item label="Description" name="description">
-            <TextArea rows={4} name="description" />
+            <TextArea
+              rows={4}
+              name="description"
+              placeholder="Enter description"
+            />
           </Form.Item>
           <Form.Item label="Price" name="price">
-            <Input name="price" autoComplete="off" placeholder="£0.00" />
+            <InputNumber
+              name="price"
+              type="number"
+              size="large"
+              placeholder="£0.00"
+              value={value.price}
+              onChange={(data) => setFieldValue('price', data)}
+            />
           </Form.Item>
           <SimpleDropdown
             label="Tax"
             name="tax"
+            size="large"
+            placeHolderText={'Select tax'}
             dropdownItems={TaxOption.map((item) => item || '')}
             onSelected={(value) => setFieldValue('tax', value)}
           />
           <SimpleDropdown
             label="Category"
+            size="large"
             name="category"
+            placeHolderText={'Select a category'}
             dropdownItems={TaxOption.map((item) => item || '')}
             onSelected={(value) => setFieldValue('category', value)}
           />
@@ -79,14 +111,21 @@ const General: FC<GeneralTabProps> = ({ setFieldValue }) => {
   )
 }
 
-export const CreateCourse = ({ visible, setVisible }) => {
+export const CreateCourse = ({
+  visible,
+  setVisible,
+  initialValue,
+  employeeList,
+}) => {
   const handleOperations = () => {
-    return [
-      OperationType.active,
-      OperationType.cancel,
-      OperationType.delete,
-      OperationType.save,
-    ]
+    return !initialValue.id
+      ? [OperationType.active, OperationType.cancel, OperationType.create]
+      : [
+          OperationType.active,
+          OperationType.cancel,
+          OperationType.delete,
+          OperationType.save,
+        ]
   }
 
   const handleFullScreenModalBackClick = (handleReset) => {
@@ -106,12 +145,11 @@ export const CreateCourse = ({ visible, setVisible }) => {
 
   return (
     <Formik
-      initialValues={{
-        isActive: true,
-      }}
+      initialValues={initialValue}
       enableReinitialize={true}
-      // validationSchema={Yup.object().shape({
-      // })}
+      validationSchema={Yup.object().shape({
+        name: Yup.string().required('Discount Name is required'),
+      })}
       onSubmit={async (values, { resetForm }) => {
         console.log(values)
       }}
@@ -119,7 +157,7 @@ export const CreateCourse = ({ visible, setVisible }) => {
       {({ setFieldValue, handleSubmit, values, handleReset }) => (
         <FullScreenReportModal
           operations={handleOperations()}
-          title={`Create Course`}
+          title={values.id ? `Edit Course` : `Create Course`}
           visible={visible}
           onBackClick={() => handleFullScreenModalBackClick(handleReset)}
           onCancel={() => handleFullScreenModalBackClick(handleReset)}
@@ -130,9 +168,9 @@ export const CreateCourse = ({ visible, setVisible }) => {
           onCreate={handleSubmit}
           onSave={handleSubmit}
           //onDelete={showDeleteConfirmDialog}
-          subMenu={['General', 'Build']}
+          subMenu={['General', 'Employees']}
         >
-          <General setFieldValue={setFieldValue} />
+          <General setFieldValue={setFieldValue} value={values} />
           <div className={styles.empSection}>
             <Employees
               description="Choose which team members would requred access to this location"

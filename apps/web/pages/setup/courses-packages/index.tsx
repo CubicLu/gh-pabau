@@ -16,8 +16,11 @@ import {
   packageData,
   courseSchema,
   packageSchema,
+  employeeList,
 } from '../../../mocks/CoursesPackages'
-import CreateCourse from '../../../components/Setup/CoursesPackages/CreateCourse'
+import CreateCourse, {
+  InitialCoursesProps,
+} from '../../../components/Setup/CoursesPackages/CreateCourse'
 import CreatePackage from '../../../components/Setup/CoursesPackages/CreatePackage'
 import styles from './index.module.less'
 
@@ -47,6 +50,18 @@ const packageColumns = [
   },
 ]
 
+const coursesFormikInitialValue: InitialCoursesProps = {
+  id: '',
+  name: '',
+  session: 20,
+  description: '',
+  price: undefined,
+  tax: '',
+  category: '',
+  isActive: true,
+  employees: [],
+}
+
 export const Index: FC = () => {
   const onFilterSource = () => {
     return
@@ -64,6 +79,11 @@ export const Index: FC = () => {
   const [showCreateCourseModal, setShowCreateCourseModal] = useState(false)
   const [showCreatePackageModal, setShowCreatePackageModal] = useState(false)
   const [currentTab, setCurrentTab] = useState('0')
+  const [
+    courseInitialValue,
+    setCourseInitialValue,
+  ] = useState<InitialCoursesProps>(coursesFormikInitialValue)
+  const [employeeListData, setEmployeeListData] = useState(employeeList)
 
   const onPaginationChange = (currentPage) => {
     const offset = paginateData.limit * (currentPage - 1)
@@ -77,6 +97,20 @@ export const Index: FC = () => {
     currentTab === '0'
       ? setShowCreateCourseModal(true)
       : setShowCreatePackageModal(true)
+
+    const data = employeeList.map((value) => {
+      return {
+        ...value,
+        selected: false,
+      }
+    })
+    setEmployeeListData(data)
+    setCourseInitialValue(coursesFormikInitialValue)
+  }
+
+  const onCourseTableRowClick = (value) => {
+    setCourseInitialValue(value)
+    setShowCreateCourseModal(true)
   }
 
   return (
@@ -135,6 +169,7 @@ export const Index: FC = () => {
                 dataSource={coursesData as never[]}
                 draggable={true}
                 columns={coursesColumns}
+                onRowClick={onCourseTableRowClick}
               />
               <Pagination
                 total={coursesData.length}
@@ -153,6 +188,9 @@ export const Index: FC = () => {
                 dataSource={packageData as never[]}
                 draggable={true}
                 columns={packageColumns}
+                onRowClick={(e) => {
+                  setShowCreatePackageModal(true)
+                }}
               />
               <Pagination
                 total={packageData.length}
@@ -171,6 +209,8 @@ export const Index: FC = () => {
       <CreateCourse
         visible={showCreateCourseModal}
         setVisible={setShowCreateCourseModal}
+        initialValue={courseInitialValue}
+        employeeList={employeeListData}
       />
       <CreatePackage
         visible={showCreatePackageModal}
