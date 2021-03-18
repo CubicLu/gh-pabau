@@ -102,7 +102,7 @@
     "react-custom-scrollbars": "^4.2.1",
     "react-device-detect": "^1.15.0",
     "react-dom": "17.0.1",
-    "react-google-places-autocomplete": "3.2.2",
+    "react-google-places-autocomplete": "2.3.2",
     "react-grid-layout": "^1.2.2",
     "react-highlight-words": "^0.17.0",
     "react-i18next": "^11.8.9",
