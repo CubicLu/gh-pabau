@@ -1,14 +1,5 @@
 import React from 'react'
-import {
-  TeamOutlined,
-  HeatMapOutlined,
-  ContainerOutlined,
-  FormOutlined,
-  AreaChartOutlined,
-  BookOutlined,
-  PieChartOutlined,
-  DashboardOutlined,
-} from '@ant-design/icons'
+import { TeamOutlined, HeatMapOutlined } from '@ant-design/icons'
 import { ReactComponent as Shuffle } from '../../assets/images/shuffle.svg'
 import { ReactComponent as ApplicationSave } from '../../assets/images/application-save.svg'
 import { ReactComponent as ApplicationBook } from '../../assets/images/application-book.svg'
@@ -22,18 +13,17 @@ export const modalTypes = [
 
 export const modalContent = {
   marketing: {
-    title: 'Upgrade to Marketing Plus',
+    title: 'Upgrade to Accelerate plan',
     plan: 'from $499.00/month',
     description:
-      'We’ll ask you about your needs, help you understand how pricing works, and get you started with new features.',
-    btnText: 'Chat with us',
+      'We’ll ask you about your needs, help you understand ow pricing works, and get you started with new features.',
+    btnText: 'Start Trial',
     sectionTitle: 'Scale with advanced workflows and security',
     sectionData: [
       {
-        icon: <ContainerOutlined />,
-        title: '100+ Newsletters',
-        description:
-          'You get 100+ ready-to-use templates for your newsletter campaigns.',
+        icon: <TeamOutlined />,
+        title: 'Collaborate as a team',
+        description: 'Drive faster responses with shared team inboxes',
       },
       {
         icon: <HeatMapOutlined />,
@@ -41,15 +31,14 @@ export const modalContent = {
         description: 'Integrate all your reviews into one place.',
       },
       {
-        icon: <FormOutlined />,
-        title: 'Smart Surveys',
-        description: 'Choose from unique survey templates.',
+        icon: <ApplicationSave />,
+        title: 'Reduce workload with bots',
+        description: 'Automate actions with customizable conversational bots',
       },
       {
         icon: <ApplicationBook />,
-        title: 'Multiple Languages',
-        description:
-          'Stand out for your competitors and tailor your communications specific to your clients native language.',
+        title: 'Provide global support',
+        description: 'Support customers with a multilingual help center',
       },
     ],
     sectionUpgradeTitle: 'Everything you get with the upgrade',
@@ -81,8 +70,8 @@ export const modalContent = {
     title: 'Upgrade to Care Plus',
     plan: 'from $599.00/month',
     description:
-      'We’ll ask you about your needs, help you understand how pricing works, and get you started with new features.',
-    btnText: 'Chat with us',
+      'We’ll ask you about your needs, help you understand ow pricing works, and get you started with new features.',
+    btnText: 'Start Trial',
     sectionTitle: 'Scale with advanced workflows and security',
     sectionData: [
       {
@@ -123,11 +112,11 @@ export const modalContent = {
     linkText: 'Compare all plans',
   },
   staff: {
-    title: 'Upgrade to Team Plus',
+    title: 'Staff: Upgrade to Accelerate plan',
     plan: 'from $699.00/month',
     description:
-      'We’ll ask you about your needs, help you understand how pricing works, and get you started with new features.',
-    btnText: 'Chat with us',
+      'We’ll ask you about your needs, help you understand ow pricing works, and get you started with new features.',
+    btnText: 'Start Trial',
     sectionTitle: 'Scale with advanced workflows and security',
     sectionData: [
       {
@@ -167,36 +156,32 @@ export const modalContent = {
     linkText: 'Compare all plans',
   },
   intelligence: {
-    title: 'Upgrade to Intelligence Plus',
+    title: 'Intelligence: Upgrade to Accelerate plan',
     plan: 'from $799.00/month',
     description:
-      'We’ll ask you about your needs, help you understand how pricing works, and get you started with new features.',
-    btnText: 'Chat with us',
+      'We’ll ask you about your needs, help you understand ow pricing works, and get you started with new features.',
+    btnText: 'Start Trial',
     sectionTitle: 'Scale with advanced workflows and security',
     sectionData: [
       {
-        icon: <DashboardOutlined />,
-        title: 'Unlock Dashboards',
-        description:
-          'Understand the financial impact of your business, know which decisions to make, and when to take action.',
+        icon: <Shuffle />,
+        title: 'Automate team workflows',
+        description: 'Leverage powerful assignment rules to automate workflows',
       },
       {
-        icon: <AreaChartOutlined />,
-        title: 'Report Graphs',
-        description:
-          'Choose from a range of ready-to-use charts, graphs and visualisations.',
+        icon: <ApplicationSave />,
+        title: 'Reduce workload with bots',
+        description: 'Automate actions with customizable conversational bots',
       },
       {
-        icon: <PieChartOutlined />,
-        title: 'Trends',
-        description:
-          'Trend historical data to view business performance over time.',
+        icon: <ApplicationBook />,
+        title: 'Provide global support',
+        description: 'Support customers with a multilingual help center',
       },
       {
-        icon: <BookOutlined />,
-        title: 'Benchmarks',
-        description:
-          'Receive industry metrics and see how you compare against the sector with Pabau’s benchmarking.',
+        icon: <TeamOutlined />,
+        title: 'Collaborate as a team',
+        description: 'Drive faster responses with shared team inboxes',
       },
     ],
     sectionUpgradeTitle: 'Everything you get with the upgrade',
@@ -213,8 +198,8 @@ export const modalContent = {
 export const title = 'Upgrade to Accelerate plan'
 export const plan = 'from $499.00/month'
 export const description =
-  'We’ll ask you about your needs, help you understand how pricing works, and get you started with new features.'
-export const btnText = 'Chat with us'
+  'We’ll ask you about your needs, help you understand ow pricing works, and get you started with new features.'
+export const btnText = 'Start Trial'
 export const sectionTitle = 'Scale with advanced workflows and security'
 export const sectionData = [
   {

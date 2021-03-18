@@ -240,7 +240,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                   )}
                 </React.Fragment>
               ))}
-            {isMobile && (
+            {isMobile && !props.footer && (
               <Popover
                 content={mobileVersionOperations}
                 placement="bottomRight"
