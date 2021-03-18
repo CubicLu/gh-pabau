@@ -320,3 +320,12 @@ export const packageSchema: Schema = {
     },
   },
 }
+
+export const buildPackagesColumnsData = [
+  {
+    key: '1',
+    service: 'Treatment',
+    quantity: 10,
+    price: '£650.00',
+  },
+]
