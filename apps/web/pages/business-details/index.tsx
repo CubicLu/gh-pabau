@@ -38,7 +38,7 @@ export const Index: FC = () => {
         </div>
         <div className={styles.tabsForDesktop}>
           <TabMenu tabPosition="left" menuItems={tabMenuItems} minHeight="auto">
-            <BusinessDetails />
+            <BusinessDetails apiKey={process.env.google_api_key} />
             <Terminology />
             <System />
             <Security />
@@ -47,7 +47,7 @@ export const Index: FC = () => {
         </div>
         <div className={styles.tabsForMobile}>
           <TabMenu tabPosition="top" menuItems={tabMenuItems} minHeight="auto">
-            <BusinessDetails />
+            <BusinessDetails apiKey={process.env.google_api_key} />
             <Terminology />
             <System />
             <Security />

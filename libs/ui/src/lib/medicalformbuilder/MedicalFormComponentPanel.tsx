@@ -10,6 +10,7 @@ const { TabPane } = Tabs
 interface P {
   selectedFormTypes: SelectedForms
   medicalForms: MedicalForms[]
+  handlingClickLeft: (componentName: string) => void
 }
 
 interface HideForm {
@@ -53,7 +54,7 @@ const hideFormInfos: HideForm = {
 }
 
 const MedicalFormComponentPanel: FC<P> = ({ ...props }) => {
-  const { selectedFormTypes, medicalForms } = props
+  const { selectedFormTypes, medicalForms, handlingClickLeft } = props
   const hideForms: string[] = []
 
   const checkedFormTypes = Object.entries(selectedFormTypes)
@@ -77,11 +78,15 @@ const MedicalFormComponentPanel: FC<P> = ({ ...props }) => {
     <div className={styles.MedicalFormComponentPanel}>
       <Tabs defaultActiveKey="1" centered>
         <TabPane tab={<span className={styles.tabName}>Basic</span>} key="1">
-          <MedicalFormLeftSidebarBasicPanels medicalForms={basicMedicalForms} />
+          <MedicalFormLeftSidebarBasicPanels
+            medicalForms={basicMedicalForms}
+            handlingClickLeft={handlingClickLeft}
+          />
         </TabPane>
         <TabPane tab={<span className={styles.tabName}>Custom</span>} key="2">
           <MedicalFormLeftSidebarCustomPanels
             medicalForms={customMedicalForms}
+            handlingClickLeft={handlingClickLeft}
           />
         </TabPane>
       </Tabs>

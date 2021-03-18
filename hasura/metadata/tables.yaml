@@ -63,6 +63,52 @@
       filter: {}
 - table:
     schema: public
+    name: LMS_slugs
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - id
+      - slug
+      - article_urls
+      - webinar
+      - blogs
+      - videos
+      - created_date
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - article_urls
+      - blogs
+      - videos
+      - slug
+      - webinar
+      - created_date
+      - id
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - article_urls
+      - blogs
+      - videos
+      - slug
+      - webinar
+      - created_date
+      - id
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
     name: Labs
   insert_permissions:
   - role: public
@@ -902,7 +948,340 @@
       filter: {}
 - table:
     schema: public
-    name: departments
+    name: cancellation_reasons
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - cancellation_policy
+      - is_active
+      - name
+      - order
+      - type
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - is_active
+      - order
+      - cancellation_policy
+      - name
+      - type
+      - created_at
+      - updated_at
+      - id
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - cancellation_policy
+      - is_active
+      - name
+      - order
+      - type
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
+    name: category
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - groupName
+      - is_active
+      - name
+      - order
+      - productsAssigned
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - created_at
+      - groupName
+      - id
+      - is_active
+      - name
+      - order
+      - productsAssigned
+      - updated_at
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - groupName
+      - is_active
+      - name
+      - order
+      - productsAssigned
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
+    name: colors
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - id
+      - created_at
+      - updated_at
+      - color
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - color
+      - id
+      - updated_at
+      filter: {}
+- table:
+    schema: public
+    name: contacts
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - mobile_number
+      - client_id
+      - first_name
+      - last_name
+      - created_at
+      - updated_at
+      - id
+      filter: {}
+- table:
+    schema: public
+    name: courses
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - ICD10_code
+      - ICD9_code
+      - OSICS10_code
+      - code
+      - description
+      - is_active
+      - name
+      - order
+      - service
+      - session
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - created_at
+      - id
+      - is_active
+      - name
+      - order
+      - service
+      - session
+      - updated_at
+      filter: {}
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - is_active
+      - name
+      - order
+      - service
+      - session
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
+    name: courses_setup
+- table:
+    schema: public
+    name: credit_note_type
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - code
+      - invoice_prefix
+      - is_active
+      - name
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - ICD10_code
+      - ICD9_code
+      - OSICS10_code
+      - code
+      - created_at
+      - description
+      - id
+      - is_active
+      - layer1
+      - layer2
+      - layer3
+      - layer4
+      - order
+      - updated_at
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - ICD10_code
+      - ICD9_code
+      - OSICS10_code
+      - code
+      - description
+      - is_active
+      - layer1
+      - layer2
+      - layer3
+      - layer4
+      - order
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
+    name: credit_notes
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - debtor
+      - credit_date
+      - credit_no
+      - customer
+      - invoice_no
+      - location
+      - total
+      - type
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - debtor
+      - created_at
+      - credit_date
+      - credit_no
+      - customer
+      - id
+      - invoice_no
+      - location
+      - total
+      - type
+      - updated_at
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - debtor
+      - credit_date
+      - credit_no
+      - customer
+      - invoice_no
+      - location
+      - total
+      - type
+      filter: {}
+      check: {}
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
+    name: debt
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - age
+      - balance
+      - customer
+      - debtor
+      - inv_date
+      - invoice_no
+      - last_action
+      - location
+      - status
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - age
+      - balance
+      - created_at
+      - customer
+      - debtor
+      - id
+      - inv_date
+      - invoice_no
+      - last_action
+      - location
+      - status
+      - updated_at
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - age
+      - balance
+      - customer
+      - debtor
+      - inv_date
+      - invoice_no
+      - last_action
+      - location
+      - status
+      filter: {}
+      check: {}
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
+    name: diagnostic_codeset
   insert_permissions:
   - role: public
     permission:
@@ -1037,6 +1416,58 @@
       - order
       filter: {}
       check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
+    name: drugs
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - comment
+      - created_date
+      - dosage
+      - frequency
+      - id
+      - is_active
+      - name
+      - route
+      - unit
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - comment
+      - created_date
+      - dosage
+      - frequency
+      - id
+      - is_active
+      - name
+      - route
+      - unit
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - comment
+      - created_date
+      - dosage
+      - frequency
+      - id
+      - is_active
+      - name
+      - route
+      - unit
+      filter: {}
+      check: {}
   delete_permissions:
   - role: public
     permission:
@@ -1217,6 +1648,54 @@
       filter: {}
 - table:
     schema: public
+    name: job_openings
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - is_active
+      - hiring_lead
+      - id
+      - city
+      - country
+      - title
+      - created_at
+      - updated_at
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - is_active
+      - hiring_lead
+      - id
+      - city
+      - country
+      - title
+      - created_at
+      - updated_at
+      filter: {}
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - is_active
+      - hiring_lead
+      - id
+      - city
+      - country
+      - title
+      - created_at
+      - updated_at
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
     name: job_title
   insert_permissions:
   - role: public
@@ -1283,6 +1762,7 @@
       - requester
       - test
       filter: {}
+      allow_aggregations: true
   update_permissions:
   - role: public
     permission:
@@ -1656,6 +2136,19 @@
     name: packages
 - table:
     schema: public
+    name: packages_setup
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - is_active
+      - name
+      - order
+      - quantity
+      backend_only: false
+- table:
+    schema: public
     name: payment_types
   insert_permissions:
   - role: public
@@ -1923,6 +2416,46 @@
       - total_cost
       filter: {}
       check: {}
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
+    name: rooms
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - is_active
+      - location
+      - order
+      - room_name
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - is_active
+      - id
+      - order
+      - location
+      - room_name
+      - created_at
+      - updated_at
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - is_active
+      - location
+      - order
+      - room_name
+      filter: {}
+      check: null
   delete_permissions:
   - role: public
     permission:

@@ -9,6 +9,7 @@ export interface SimpleDropdownProps extends FormProps {
   value?: string
   tooltip?: string
   placeHolderText?: string
+  defaultValue?: string
   size?: SizeType
   dropdownItems: Array<string>
   onSelected(val): void
@@ -21,6 +22,7 @@ export const SimpleDropdown: FC<SimpleDropdownProps> = ({
   tooltip,
   placeHolderText = '',
   size = 'middle',
+  defaultValue,
   onSelected,
   ...props
 }) => {
@@ -38,6 +40,7 @@ export const SimpleDropdown: FC<SimpleDropdownProps> = ({
             value={selected}
             onSelect={(value) => handleClickSelect(value)}
             size={size}
+            defaultValue={defaultValue}
             placeholder={placeHolderText}
           >
             {dropdownItems?.map((item) => (

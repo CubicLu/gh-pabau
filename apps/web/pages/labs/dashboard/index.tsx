@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { FC, ReactNode } from 'react'
 import { Breadcrumb } from '@pabau/ui'
 import CrudLayout from '../../../components/CrudLayout/CrudLayout'
