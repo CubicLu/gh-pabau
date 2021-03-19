@@ -25,7 +25,6 @@ export const Authentication = extendType({
         return token
       },
     })
-
     t.field('logout', {
       type: 'Boolean',
       args: {},

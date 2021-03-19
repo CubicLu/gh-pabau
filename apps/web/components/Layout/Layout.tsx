@@ -1,8 +1,8 @@
 import React, { FC } from 'react'
 import { Layout as PabauLayout, LayoutProps } from '@pabau/ui'
 import Search from '../Search'
-import Login from '../../pages/login'
 import useLogin from '../../hooks/authentication/useLogin'
+import Login from '../../pages/login'
 
 const onMessageType = () => {
   //add mutation for send message textbox
@@ -16,8 +16,10 @@ const onCreateChannel = (name, description, isPrivate) => {
 const Layout: FC<LayoutProps> = ({ children, ...props }) => {
   const [authenticated] = useLogin(false)
 
-  if (typeof window === 'undefined') return <div>LOADING</div>
-  return authenticated ? (
+  if (typeof window === 'undefined')
+    return <PabauLayout> Loading animation placeholder </PabauLayout>
+
+  return authenticated && localStorage?.getItem('token') ? (
     <PabauLayout
       searchRender={() => <Search />}
       onCreateChannel={onCreateChannel}

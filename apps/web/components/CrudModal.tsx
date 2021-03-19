@@ -15,6 +15,7 @@ interface P {
   editingRow?: Record<string, string | boolean | number>
   needTranslation?: boolean
   onClose?: () => void
+  queryVariables: any
 }
 
 const CrudModal: FC<P> = ({
@@ -25,6 +26,7 @@ const CrudModal: FC<P> = ({
   onClose,
   editingRow,
   needTranslation,
+  queryVariables,
 }) => {
   const [openDeleteModal, setDeleteModal] = useState(false)
   const { t } = useTranslationI18()
@@ -48,10 +50,11 @@ const CrudModal: FC<P> = ({
   // const formRef = useEnsuredForwardedRef<{ submitForm: () => void }>(null)
 
   const schemaForm = { ...schema, fields: { ...schema.fields } }
+  const filterableField = schema.filter.primary.name
   const specialFormElement =
     schemaForm.fields['is_active'] || schemaForm.fields['public']
   delete schemaForm.fields['is_active']
-  delete schemaForm.fields['public']
+  delete schemaForm.fields[schema.filter.primary.name]
   delete schemaForm.fields['company_id']
   const [specialBoolean, setSpecialBoolean] = useState<
     boolean | string | number
@@ -79,25 +82,12 @@ const CrudModal: FC<P> = ({
           await deleteMutation({
             variables: { id },
             optimisticResponse: {},
-            update: (cache) => {
-              const existing = cache.readQuery({
+            refetchQueries: [
+              {
                 query: listQuery,
-              })
-              if (existing) {
-                // eslint-disable-next-line @typescript-eslint/ban-types
-                const key = Object.keys(existing as object)[0]
-                cache.writeQuery({
-                  query: listQuery,
-                  data: {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    [key]: (existing[key] as Record<string, never>).filter(
-                      (e) => e.id !== id
-                    ),
-                  },
-                })
-              }
-            },
+                ...queryVariables,
+              },
+            ],
           })
           setDeleteModal(false)
           onClose?.()

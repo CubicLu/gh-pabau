@@ -30,7 +30,7 @@ interface Schema {
 type DefaultFilterType = number | boolean
 
 interface SchemaFilter {
-  primary: {
+  primary?: {
     name: string
     type: FilterTypes
     default: number | boolean

@@ -38,6 +38,7 @@ const server = new ApolloServer({
   schema,
   context: createContext,
   tracing: true,
+  persistedQueries: false,
   playground: {
     settings: {
       'schema.polling.enable': false,

@@ -250,100 +250,22 @@ const CrudTable: FC<P> = ({
       ? editMutation({
           variables: values,
           optimisticResponse: {},
-          update: (proxy) => {
-            console.log('OPTIMISIM NOW', !!listQuery)
-            if (listQuery) {
-              console.log('reading cache', {
-                query: listQuery,
-                ...getQueryVariables,
-              })
-              console.log(
-                '1',
-                proxy.readQuery({
-                  query: listQuery,
-                })
-              )
-              console.log(
-                '2',
-                proxy.readQuery({
-                  query: listQuery,
-                  ...getQueryVariables,
-                })
-              )
-              console.log(
-                '3',
-                proxy.readQuery({
-                  query: listQuery,
-                  ...getQueryVariables,
-                  returnPartialData: true,
-                })
-              )
-              const existing = proxy.readQuery({
-                query: listQuery,
-                ...getQueryVariables,
-              })
-              if (existing) {
-                const key = Object.keys(existing)[0]
-                proxy.writeQuery({
-                  query: listQuery,
-                  ...getQueryVariables,
-                  data: {
-                    [key]: [...existing[key], values],
-                  },
-                })
-                console.log('mutated cache!', key)
-              } else console.warn('No apollo cache was found to mutate!')
-            }
-          },
+          refetchQueries: [
+            {
+              query: listQuery,
+              ...getQueryVariables,
+            },
+          ],
         })
       : addMutation({
           variables: values,
           optimisticResponse: {},
-          update: (proxy) => {
-            console.log('OPTIMISIM NOW', !!listQuery)
-            if (listQuery) {
-              console.log('reading cache', {
-                query: listQuery,
-                ...getQueryVariables,
-              })
-              console.log(
-                '1',
-                proxy.readQuery({
-                  query: listQuery,
-                })
-              )
-              console.log(
-                '2',
-                proxy.readQuery({
-                  query: listQuery,
-                  ...getQueryVariables,
-                })
-              )
-              console.log(
-                '3',
-                proxy.readQuery({
-                  query: listQuery,
-                  ...getQueryVariables,
-                  returnPartialData: true,
-                })
-              )
-              const existing = proxy.readQuery({
-                query: listQuery,
-                ...getQueryVariables,
-              })
-              if (existing) {
-                const key = Object.keys(existing)[0]
-                proxy.writeQuery({
-                  query: listQuery,
-                  ...getQueryVariables,
-                  data: {
-                    [key]: [...existing[key], values],
-                  },
-                })
-                console.log('mutated cache!', key)
-              } else console.warn('No apollo cache was found to mutate!')
-            }
-          },
+          refetchQueries: [
+            {
+              query: listQuery,
+              ...getQueryVariables,
+            },
+          ],
         }))
     resetForm()
     setModalShowing(false)
@@ -537,6 +459,7 @@ const CrudTable: FC<P> = ({
               deleteQuery={deleteQuery}
               onClose={() => setModalShowing(false)}
               needTranslation={needTranslation}
+              queryVariables={getQueryVariables}
             />
           )}
 

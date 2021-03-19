@@ -21,6 +21,7 @@ import 'react-image-crop/dist/ReactCrop.css'
 import ContextWrapper from '../components/ContextWrapper'
 import { languages } from '@pabau/i18n'
 import { setContext } from '@apollo/client/link/context'
+import { CookiesProvider } from 'react-cookie'
 require('../styles/global.less')
 require('../../../libs/ui/src/styles/antd.less')
 require('react-phone-input-2/lib/style.css')
@@ -87,8 +88,6 @@ const client = new ApolloClient({
   link: ApolloLink.from([authLink, terminatingLink]),
   cache,
 })
-console.log(languages)
-
 i18next.use(initReactI18next).init({
   interpolation: { escapeValue: false },
   lng: 'en',
@@ -110,7 +109,6 @@ export default function CustomApp({
             src: local('Circular-Std-Black'),
               url(../public/fonts/CircularStd-Black.otf) format('opentype');
           }
-
           @font-face {
             font-family: 'Circular-Std-Book';
             src: url('/fonts/CircularStd-Book.otf') format('opentype');
@@ -121,9 +119,11 @@ export default function CustomApp({
             src: url('/fonts/CircularStd-Medium.otf') format('opentype');
           }
         `}</style>
-        <ContextWrapper>
-          <Component {...pageProps} />
-        </ContextWrapper>
+        <CookiesProvider>
+          <ContextWrapper>
+            <Component {...pageProps} />
+          </ContextWrapper>
+        </CookiesProvider>
       </I18nextProvider>
     </ApolloProvider>
   )

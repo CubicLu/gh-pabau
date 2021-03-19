@@ -42,15 +42,11 @@ const AddButton: FC<P> = ({
   mobileSearch,
 }) => {
   const [isActive, setIsActive] = useState<boolean | number>(
-    schema?.filter.primary.default ?? true
+    schema?.filter?.primary?.default ?? true
   )
   const [mobFilterDrawer, setMobFilterDrawer] = useState(false)
   const [marketingSourceSearch, setMarketingSourceSearch] = useState('')
   const { t } = useTranslationI18()
-
-  // useKeyPressEvent('n', () => {
-  //   onClick?.()
-  // })
 
   useEffect(() => {
     console.log(isActive)
