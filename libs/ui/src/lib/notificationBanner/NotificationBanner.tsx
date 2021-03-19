@@ -1,5 +1,4 @@
 import React, { FC } from 'react'
-
 import { Button } from '../button/Button'
 import styles from './NotificationBanner.module.less'
 import { Row, Col } from 'antd'
@@ -12,6 +11,7 @@ interface P {
   allowClose?: boolean
   setHide: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   showPaymentButton?: boolean
+  showPaymentTitle?: string
   email?: string
   showEmail?: boolean
 }
@@ -27,12 +27,13 @@ export const NotificationBanner: FC<P> = ({
   // childHook: [isHide, React.Dispatch<React.SetStateAction<[]>>]
   // const [isHide, setHide] = useState(false)
   showPaymentButton = true,
+  showPaymentTitle = '',
   showEmail = false,
 }) => {
   return (
     <div
       className={isHide ? styles.hideBlock : styles.notificationBody}
-      style={{ backgroundImage: `url(${imgPath})` }}
+      style={{ backgroundImage: `url(${imgPath})`, backgroundSize: 'contain' }}
     >
       <Row className={styles.rowPosition}>
         <Col md={16} sm={12}>
@@ -46,7 +47,7 @@ export const NotificationBanner: FC<P> = ({
               size="middle"
               type="link"
             >
-              Enable Payments
+              {showPaymentTitle || 'Enable Payments'}
             </Button>
           )}
         </Col>

@@ -11,8 +11,7 @@ export const addQuestionData = {
   title: 'Questions',
   questionLabel: 'Question',
   addQuestionLabel: 'Add Question',
-  description:
-    'Choose the way in which you request feedback from clients who visit you',
+  description: 'Choose the questions you wish to ask to the client.',
   questions: [
     {
       title: 'How did you rate your consultation',
@@ -104,28 +103,28 @@ export const integrations = {
     {
       header: 'Google reviews',
       description:
-        'Send events about certain actions to Google Analytics and create goals based on events to track conversations',
+        'Allow your clients to leave a review directly onto your Google page',
       logo: GoogleLogo,
       prefix: '',
     },
     {
       header: 'Facebook reviews',
       description:
-        'Use Facebook Ads Pixel to track events, and create audiences based on their activities',
+        'Allow your clients to leave a review directly onto your Facebook Page',
       logo: FacebookLogo,
       prefix: 'https://www.facebook.com/',
     },
     {
       header: 'Trust Pilot',
       description:
-        'Use Facebook Ads Pixel to track events, and create audiences based on their activities',
+        'Allow your clients to leave a review directly onto your Trust Pilot profile',
       logo: TrustpilotLogo,
       prefix: 'https://uk.trustpilot.com/evaluate/',
     },
     {
       header: 'Doctify',
       description:
-        'Use Facebook Ads Pixel to track events, and create audiences based on their activities',
+        'Allow your clients to leave a review directly onto your Doctify',
       logo: DoctifyLogo,
       prefix: 'https://www.doctify.co.uk/review/',
     },
@@ -133,7 +132,7 @@ export const integrations = {
   reviewedData: [
     {
       header: 'Pabau reviews',
-      description: 'Feedback results would feed directly in Papau',
+      description: 'Feedback results would feed directly in Pabau',
       logo: PabauLogo,
     },
   ],

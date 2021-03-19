@@ -16,7 +16,9 @@
         .heading {
             display: flex;
             align-items: center;
-
+            @media screen and (max-width: 767px) {
+              display: none;
+            }
             :global {
                 h3 {
                     margin: 0;
@@ -33,7 +35,7 @@
             display: flex;
             align-items: center;
             flex-wrap: wrap;
-                        
+
             .sortBy {
                 display: flex;
                 align-items: center;
@@ -67,7 +69,7 @@
                 justify-content: center;
                 align-items: center;
             }
-            
+
             .upload {
                 padding: 9px 14px;
                 border-radius: 5px;
@@ -75,7 +77,7 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                
+
                 :global {
                     div {
                         margin-left: 5px;
@@ -94,7 +96,9 @@
 
         .folderPanel {
             padding: 0px 5px;
-
+            @media screen and (max-width: 767px) {
+              padding: 0;
+            }
             .subFolderDiv {
                 display: flex;
                 justify-content: space-between;
@@ -102,25 +106,44 @@
                 flex-wrap: wrap;
                 border-bottom: 1px solid #eee;
                 padding: 15px 25px;
-
+                @media screen and (max-width: 576px) {
+                  padding: 15px;
+                  flex-wrap: nowrap;
+                  align-items: flex-start;
+                }
                 :global {
                     .detailsWithControls {
                         display: flex;
                         justify-content: flex-start;
                         align-items: center;
                         flex-wrap: wrap;
-
+                        @media screen and (max-width: 576px) {
+                          flex-wrap: nowrap;
+                          align-items: flex-start;
+                        }
                         .checkBoxDiv {
                             padding-right: 30px;
+                            @media screen and (max-width: 576px) {
+                              padding-right: 10px;
+                            }
                         }
                         .details {
                             display: flex;
                             justify-content: flex-start;
                             align-items: center;
                             flex-wrap: wrap;
-
+                            @media screen and (max-width: 576px) {
+                              align-items: flex-start;
+                              flex-wrap: nowrap;
+                            }
                             .fileIcon {
                                 margin-right: 15px;
+                                @media screen and (max-width: 576px) {
+                                  img {
+                                    width: 22px;
+                                    height: 22px;
+                                  }
+                                }
                             }
                             .fileDetails {
                                 display: flex;
@@ -128,29 +151,37 @@
                                 justify-content: space-between;
                                 align-items: flex-start;
                                 flex-wrap: wrap;
-
+                                @media screen and (max-width: 576px) {
+                                  flex-wrap: nowrap;
+                                }
                                 div.nameStatus, div.dateSize {
                                     display: flex;
                                     justify-content: space-between;
                                     align-items: center;
                                     flex-wrap: wrap;
-
+                                    @media screen and (max-width: 576px) {
+                                      flex-wrap: nowrap;
+                                      flex-direction: column;
+                                      align-items: flex-start;
+                                    }
                                     .seperator {
                                         border-right: 1px solid #CFCFD7;
                                         border-width: 1.5px !important;
                                         min-height: 15px;
                                         height: auto;
                                         margin: 0px 10px;
+                                        @media screen and (max-width: 576px) {
+                                          display: none;
+                                        }
                                     }
                                 }
 
                                 div.nameStatus {
                                     span {
-                                        line-height: 10px;
                                         font-style: normal;
                                         font-weight: normal;
                                         font-size: 14px;
-                                        line-height: 25px;
+                                        line-height: 15px;
                                     }
                                     .name {
                                         color: #54B2D3;
@@ -183,4 +214,28 @@
             }
         }
     }
+}
+
+.document-modal{
+  .label {
+    color: #9292A3;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 22px;
+    margin-bottom: 2px;
+  }
+  .modal-button{
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    .btn-cancel {
+      margin-right: 15px;
+    }
+  }
+  .message{
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 18px;
+    color: #9292A3;
+  }
 }

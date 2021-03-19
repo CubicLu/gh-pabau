@@ -5,6 +5,7 @@ import Backend from 'i18next-xhr-backend'
 import { initReactI18next } from 'react-i18next'
 import 'react-phone-input-2/lib/style.css'
 import 'react-quill/dist/quill.snow.css'
+import 'react-image-crop/dist/ReactCrop.css'
 import { withI18next } from 'storybook-addon-i18next'
 import '../src/assets/fonts/fonts.css'
 require('../src/styles/antd.less')

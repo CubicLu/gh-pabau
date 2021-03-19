@@ -9,19 +9,18 @@ import {
 import { WebSocketLink } from '@apollo/client/link/ws'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { library } from '@fortawesome/fontawesome-svg-core'
-// import 'react-google-places-autocomplete/dist/index.min.css'
 import * as Icons from '@fortawesome/free-solid-svg-icons'
 import { OperationDefinitionNode } from 'graphql'
 import i18next from 'i18next'
 import { AppProps } from 'next/app'
 import React from 'react'
-import { I18nextProvider } from 'react-i18next'
+import { I18nextProvider, initReactI18next } from 'react-i18next'
 import 'react-phone-input-2/lib/style.css'
 import 'react-quill/dist/quill.snow.css'
-import de from '../locales/de.json'
-import en from '../locales/en.json'
-import fr from '../locales/fr.json'
+import 'react-image-crop/dist/ReactCrop.css'
 import ContextWrapper from '../components/ContextWrapper'
+import { languages } from '@pabau/i18n'
+
 require('../styles/global.less')
 require('../../../libs/ui/src/styles/antd.less')
 require('react-phone-input-2/lib/style.css')
@@ -148,21 +147,13 @@ const client = new ApolloClient({
   ]),
   cache,
 })
-
-i18next.init({
+console.log(languages)
+i18next.use(initReactI18next).init({
   interpolation: { escapeValue: false },
   lng: 'en',
-  resources: {
-    en: {
-      common: en,
-    },
-    de: {
-      common: de,
-    },
-    fr: {
-      common: fr,
-    },
-  },
+  fallbackLng: 'en',
+  keySeparator: false,
+  resources: languages,
 })
 
 export default function CustomApp({

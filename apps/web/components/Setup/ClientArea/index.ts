@@ -1,0 +1,5 @@
+export * from './ClientAreaFooter'
+export * from './ClientAreaStepOne'
+export * from './ClientAreaStepTwo'
+export * from './ClientAreaStepThree'
+export * from './ClientAreaSetting'

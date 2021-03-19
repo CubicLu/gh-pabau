@@ -7,10 +7,11 @@ import MedicalFormLeftSidebarDivider from './MedicalFormLeftSidebarDivider'
 
 interface P {
   medicalForms: MedicalForms[]
+  handlingClickLeft: (componentName: string) => void
 }
 
 const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
-  const { medicalForms } = props
+  const { medicalForms, handlingClickLeft } = props
   const getRenderItemBasic = () => {
     const MyChild = (provided, snapshot, rubric) => {
       const draggedForm = medicalForms.filter(
@@ -29,6 +30,7 @@ const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
             <LeftSidebarElement
               type="basic"
               component={draggedForm[0].formName}
+              handlingClickLeft={handlingClickLeft}
             />
           )}
         </div>
@@ -62,6 +64,7 @@ const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
                     <LeftSidebarElement
                       type="basic"
                       component={form.formName}
+                      handlingClickLeft={handlingClickLeft}
                     />
                   </div>
                 ) : (
@@ -83,6 +86,7 @@ const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
                         <LeftSidebarElement
                           type="basic"
                           component={form.formName}
+                          handlingClickLeft={handlingClickLeft}
                         />
                       </div>
                     )}
@@ -103,6 +107,7 @@ const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
                     <LeftSidebarElement
                       type="basic"
                       component={form.formName}
+                      handlingClickLeft={handlingClickLeft}
                     />
                   </div>
                 ) : (
@@ -124,6 +129,7 @@ const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
                         <LeftSidebarElement
                           type="basic"
                           component={form.formName}
+                          handlingClickLeft={handlingClickLeft}
                         />
                       </div>
                     )}
@@ -135,6 +141,7 @@ const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
               ?.filter(
                 (form) =>
                   form.formName === 'basic_drawing' ||
+                  form.formName === 'basic_staticimage' ||
                   form.formName === 'basic_signature'
               )
               .map((form) => {
@@ -143,6 +150,7 @@ const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
                     <LeftSidebarElement
                       type="basic"
                       component={form.formName}
+                      handlingClickLeft={handlingClickLeft}
                     />
                   </div>
                 ) : (
@@ -164,6 +172,7 @@ const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
                         <LeftSidebarElement
                           type="basic"
                           component={form.formName}
+                          handlingClickLeft={handlingClickLeft}
                         />
                       </div>
                     )}
@@ -187,6 +196,7 @@ const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
                     <LeftSidebarElement
                       type="basic"
                       component={form.formName}
+                      handlingClickLeft={handlingClickLeft}
                     />
                   </div>
                 ) : (
@@ -208,6 +218,7 @@ const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
                         <LeftSidebarElement
                           type="basic"
                           component={form.formName}
+                          handlingClickLeft={handlingClickLeft}
                         />
                       </div>
                     )}
