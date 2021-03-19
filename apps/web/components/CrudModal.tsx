@@ -50,7 +50,6 @@ const CrudModal: FC<P> = ({
   // const formRef = useEnsuredForwardedRef<{ submitForm: () => void }>(null)
 
   const schemaForm = { ...schema, fields: { ...schema.fields } }
-  const filterableField = schema.filter.primary.name
   const specialFormElement =
     schemaForm.fields['is_active'] || schemaForm.fields['public']
   delete schemaForm.fields['is_active']
