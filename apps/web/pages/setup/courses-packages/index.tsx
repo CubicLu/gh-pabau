@@ -21,7 +21,9 @@ import {
 import CreateCourse, {
   InitialCoursesProps,
 } from '../../../components/Setup/CoursesPackages/CreateCourse'
-import CreatePackage from '../../../components/Setup/CoursesPackages/CreatePackage'
+import CreatePackage, {
+  InitialPackagesProps,
+} from '../../../components/Setup/CoursesPackages/CreatePackage'
 import styles from './index.module.less'
 
 const { Title } = Typography
@@ -60,6 +62,15 @@ const coursesFormikInitialValue: InitialCoursesProps = {
   category: '',
   isActive: true,
   employees: [],
+}
+
+const packageFormikInitialValue: InitialPackagesProps = {
+  id: '',
+  packageName: '',
+  price: undefined,
+  category: '',
+  tax: '',
+  onlinePurchase: false,
 }
 
 export const Index: FC = () => {
@@ -215,6 +226,7 @@ export const Index: FC = () => {
       <CreatePackage
         visible={showCreatePackageModal}
         setVisible={setShowCreatePackageModal}
+        initialValue={packageFormikInitialValue}
       />
     </>
   )

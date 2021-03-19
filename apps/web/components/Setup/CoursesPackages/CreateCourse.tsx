@@ -150,7 +150,7 @@ export const CreateCourse = ({
       validationSchema={Yup.object().shape({
         name: Yup.string().required('Discount Name is required'),
       })}
-      onSubmit={async (values, { resetForm }) => {
+      onSubmit={(values) => {
         console.log(values)
       }}
     >

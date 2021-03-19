@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react'
+import { useMedia } from 'react-use'
 import { Formik } from 'formik'
-import { Form, Input, InputNumber } from 'formik-antd'
+import { Form, Input, InputNumber, SubmitButton } from 'formik-antd'
 import {
   FullScreenReportModal,
   SimpleDropdown,
@@ -9,6 +10,7 @@ import {
   Switch,
   Table,
 } from '@pabau/ui'
+import { Drawer } from 'antd'
 import {
   TaxOption,
   buildPackagesColumnsData,
@@ -21,6 +23,26 @@ import {
   CheckOutlined,
 } from '@ant-design/icons'
 import styles from './index.module.less'
+
+export interface InitialPackagesProps {
+  id: string
+  packageName: string
+  price: number
+  tax: string
+  category: string
+  onlinePurchase: boolean
+}
+
+interface BuildIntialValueProps {
+  service: string
+  quantity: number
+  price: number
+}
+
+interface DrawerContentProps {
+  buildIntialValues: BuildIntialValueProps
+  setDrawerVisible?(values: boolean): void
+}
 
 const buildPackagesColumns = [
   {
@@ -40,7 +62,7 @@ const buildPackagesColumns = [
   },
   {
     title: 'Online purchase',
-    dataIndex: 'online_purchase',
+    dataIndex: 'onlinePurchase',
     render: function renderSourceName(val, rowData) {
       return val ? <CheckOutlined /> : ''
     },
@@ -48,11 +70,21 @@ const buildPackagesColumns = [
   },
 ]
 
-interface GeneralTabProps {
-  setFieldValue(key, value): void
+const buildIntialValue = {
+  service: '',
+  quantity: undefined,
+  price: undefined,
 }
 
-const General: FC<GeneralTabProps> = ({ setFieldValue }) => {
+interface GeneralTabProps {
+  setFieldValue(
+    field: keyof InitialPackagesProps,
+    value: string | boolean | number
+  ): void
+  value: InitialPackagesProps
+}
+
+const General: FC<GeneralTabProps> = ({ setFieldValue, value }) => {
   return (
     <div className={styles.generalFormWrapper}>
       <Form
@@ -65,14 +97,15 @@ const General: FC<GeneralTabProps> = ({ setFieldValue }) => {
         <div className={styles.generalSection}>
           <Form.Item
             label="Package name"
-            name="package_name"
+            name="packageName"
             className={styles.generalList}
           >
             <Input
               size="large"
-              name="package_name"
+              name="packageName"
               autoComplete="off"
               placeholder="Enter package name"
+              value={value.packageName}
             />
           </Form.Item>
           <Form.Item label="Price" name="price" className={styles.generalList}>
@@ -82,6 +115,7 @@ const General: FC<GeneralTabProps> = ({ setFieldValue }) => {
               type="number"
               autoComplete="off"
               placeholder="£"
+              value={value.price}
             />
           </Form.Item>
           <SimpleDropdown
@@ -89,6 +123,7 @@ const General: FC<GeneralTabProps> = ({ setFieldValue }) => {
             size="large"
             label="Category"
             name="category"
+            value={value.category}
             placeHolderText="Select a category"
             dropdownItems={TaxOption.map((item) => item || '')}
             onSelected={(value) => setFieldValue('category', value)}
@@ -98,6 +133,7 @@ const General: FC<GeneralTabProps> = ({ setFieldValue }) => {
             size="large"
             label="Tax"
             name="tax"
+            value={value.tax}
             placeHolderText="Select a tax"
             dropdownItems={TaxOption.map((item) => item || '')}
             onSelected={(value) => setFieldValue('tax', value)}
@@ -114,7 +150,8 @@ const General: FC<GeneralTabProps> = ({ setFieldValue }) => {
           </Form.Item>
           <div className={styles.generalListSwitch}>
             <Switch
-              onChange={(checked) => setFieldValue('online_purchase', checked)}
+              checked={value.onlinePurchase}
+              onChange={(checked) => setFieldValue('onlinePurchase', checked)}
             />{' '}
             <span>Enable online purchase</span>
           </div>
@@ -124,16 +161,122 @@ const General: FC<GeneralTabProps> = ({ setFieldValue }) => {
   )
 }
 
-const Build: FC = () => {
-  const [drawer, setDrawer] = useState(false)
-
-  const handleSave = (handleSubmit) => {
-    setDrawer(false)
-    handleSubmit()
-  }
+const DrawerContent: FC<DrawerContentProps> = ({
+  setDrawerVisible,
+  buildIntialValues,
+}) => {
   return (
-    <div className={styles.createPk} style={drawer ? { display: 'flex' } : {}}>
-      <div className={drawer ? styles.build : styles.buildPackage}>
+    <Formik
+      initialValues={buildIntialValues}
+      enableReinitialize={true}
+      validationSchema={Yup.object({
+        quantity: Yup.number().required('Quantity is required'),
+        price: Yup.string()
+          .required('Price is required')
+          .matches(/^\d+$/g, 'Price should be numbers'),
+      })}
+      onSubmit={(values) => {
+        console.log(values)
+        setDrawerVisible(false)
+      }}
+    >
+      {({ setFieldValue, handleSubmit, values, handleReset }) => (
+        <div className={styles.drawer}>
+          <Form
+            name="basic"
+            initialValues={{
+              remember: true,
+            }}
+            layout="vertical"
+          >
+            <div className={styles.drawerBlock}>
+              <SimpleDropdown
+                className={styles.drawerList}
+                size="large"
+                label="Service"
+                name="service"
+                value={values.service}
+                placeHolderText="Select a service"
+                dropdownItems={TaxOption.map((item) => item || '')}
+                onSelected={(value) => setFieldValue('service', value)}
+              />
+              <Form.Item
+                label="Quantity"
+                name="quantity"
+                className={styles.drawerList}
+              >
+                <InputNumber
+                  type="number"
+                  name="quantity"
+                  size="large"
+                  min={1}
+                  max={100000}
+                  value={values.quantity}
+                  onChange={(data) => setFieldValue('quantity', data)}
+                />
+              </Form.Item>
+              <Form.Item
+                label="Price"
+                name="price"
+                className={styles.drawerList}
+              >
+                <InputNumber
+                  value={values.price}
+                  size="large"
+                  name="price"
+                  placeholder="£650.00"
+                  formatter={(data) => `£${data}`}
+                  parser={(data) => data.replace(/£\s?|(,*)/g, '')}
+                  onChange={(data) => setFieldValue('price', data)}
+                />
+              </Form.Item>
+            </div>
+            <div className={styles.drawerButtons}>
+              <SubmitButton
+                type={'primary'}
+                htmlType="submit"
+                className={styles.buttonsFilter}
+              >
+                Save
+              </SubmitButton>
+              <Button
+                icon={<DeleteOutlined />}
+                onClick={() => setDrawerVisible(false)}
+              >
+                Delete
+              </Button>
+            </div>
+          </Form>
+        </div>
+      )}
+    </Formik>
+  )
+}
+
+const Build: FC = () => {
+  const [drawer, setDrawer] = useState<boolean>(false)
+  const [
+    buildIntialValues,
+    setBuildIntialValue,
+  ] = useState<BuildIntialValueProps>(buildIntialValue)
+  const isMobile = useMedia('(max-width: 768px)', false)
+
+  const onCourseTableRowClick = (value) => {
+    setDrawer(true)
+    setBuildIntialValue({
+      ...value,
+      price: value.price.replace('£', ''),
+    })
+  }
+
+  const handleAddButton = () => {
+    setDrawer(true)
+    setBuildIntialValue(buildIntialValue)
+  }
+
+  const BuildHeader = () => {
+    return (
+      <>
         <div className={styles.headerWrap}>
           <div className={styles.title}>Items in your package</div>
           <div className={styles.buttons}>
@@ -143,7 +286,7 @@ const Build: FC = () => {
             <Button
               icon={<PlusOutlined />}
               type={'primary'}
-              onClick={() => setDrawer(true)}
+              onClick={handleAddButton}
             >
               Add
             </Button>
@@ -151,102 +294,62 @@ const Build: FC = () => {
         </div>
         <Table
           scroll={{ x: 'max-content' }}
-          sticky={{ offsetScroll: 80, offsetHeader: 80 }}
+          sticky={{ offsetScroll: 80, offsetHeader: 0 }}
           dataSource={buildPackagesColumnsData as never[]}
           draggable={false}
           columns={buildPackagesColumns}
+          onRowClick={onCourseTableRowClick}
         />
-      </div>
-      {drawer && (
-        <Formik
-          initialValues={{
-            isActive: true,
-            amount: undefined,
-          }}
-          enableReinitialize={true}
-          onSubmit={async (values, { resetForm }) => {
-            console.log(values)
-          }}
-        >
-          {({ setFieldValue, handleSubmit, values, handleReset }) => (
-            <div className={styles.drawer}>
-              <Form
-                name="basic"
-                initialValues={{
-                  remember: true,
-                }}
-                layout="vertical"
-              >
-                <div className={styles.drawerBlock}>
-                  <SimpleDropdown
-                    className={styles.drawerList}
-                    size="large"
-                    label="Service"
-                    name="service"
-                    placeHolderText="Select a service"
-                    dropdownItems={TaxOption.map((item) => item || '')}
-                    onSelected={(value) => setFieldValue('service', value)}
-                  />
-                  <Form.Item
-                    label="Quantity"
-                    name="quantity"
-                    className={styles.drawerList}
-                  >
-                    <InputNumber
-                      type="number"
-                      name="quality"
-                      size="large"
-                      min={1}
-                      max={100000}
-                      defaultValue={20}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    label="Price"
-                    name="price"
-                    className={styles.drawerList}
-                  >
-                    <InputNumber
-                      value={values.amount}
-                      size="large"
-                      name="price"
-                      placeholder="£650.00"
-                      formatter={(data) => `£${data}`}
-                      parser={(data) => data.replace(/£\s?|(,*)/g, '')}
-                      onChange={(data) => setFieldValue('amount', data)}
-                    />
-                  </Form.Item>
-                </div>
-                <div className={styles.drawerButtons}>
-                  <Button
-                    className={styles.buttonsFilter}
-                    icon={<DeleteOutlined />}
-                  >
-                    Delete
-                  </Button>
-                  <Button
-                    type={'primary'}
-                    onClick={() => handleSave(handleSubmit)}
-                  >
-                    Save
-                  </Button>
-                </div>
-              </Form>
-            </div>
-          )}
-        </Formik>
+      </>
+    )
+  }
+  return (
+    <div className={styles.createPk}>
+      {isMobile ? (
+        <BuildHeader />
+      ) : (
+        <div className={drawer ? styles.build : styles.buildPackage}>
+          <BuildHeader />
+        </div>
       )}
+      {drawer &&
+        (isMobile ? (
+          <Drawer
+            placement={'bottom'}
+            closable={false}
+            onClose={() => setDrawer(false)}
+            visible={drawer}
+            key={'bottom'}
+            height="448px"
+            className={styles.mobile}
+          >
+            <div className={styles.mobileDrawer}>
+              <span className={styles.line} />
+              <DrawerContent
+                setDrawerVisible={setDrawer}
+                buildIntialValues={buildIntialValues}
+              />
+            </div>
+          </Drawer>
+        ) : (
+          <DrawerContent
+            setDrawerVisible={setDrawer}
+            buildIntialValues={buildIntialValues}
+          />
+        ))}
     </div>
   )
 }
-export const CreatePackage = ({ visible, setVisible }) => {
+export const CreatePackage = ({ visible, setVisible, initialValue }) => {
   const handleOperations = () => {
-    return [
-      OperationType.active,
-      OperationType.cancel,
-      OperationType.delete,
-      OperationType.save,
-    ]
+    return !initialValue.id
+      ? [OperationType.active, OperationType.cancel, OperationType.create]
+      : [
+          OperationType.active,
+          OperationType.cancel,
+          OperationType.delete,
+          OperationType.save,
+        ]
   }
 
   const handleFullScreenModalBackClick = (handleReset) => {
@@ -256,14 +359,12 @@ export const CreatePackage = ({ visible, setVisible }) => {
 
   return (
     <Formik
-      initialValues={{
-        isActive: true,
-      }}
+      initialValues={initialValue}
       enableReinitialize={true}
       validationSchema={Yup.object().shape({
-        name: Yup.string().required('Discount Name is required'),
+        packageName: Yup.string().required('Package Name is required'),
       })}
-      onSubmit={async (values, { resetForm }) => {
+      onSubmit={(values) => {
         console.log(values)
       }}
     >
@@ -283,7 +384,7 @@ export const CreatePackage = ({ visible, setVisible }) => {
           //onDelete={showDeleteConfirmDialog}
           subMenu={['General', 'Build']}
         >
-          <General setFieldValue={setFieldValue} />
+          <General setFieldValue={setFieldValue} value={values} />
           <Build />
         </FullScreenReportModal>
       )}
