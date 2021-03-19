@@ -155,7 +155,8 @@ export const Index: FC = () => {
           </div>
           <div className={styles.hideDesktopView}>
             <div className={styles.courseWrap}>
-              <LeftOutlined /> <h6> {'Courses & Packages'}</h6>
+              <LeftOutlined className={styles.leftIcon} />{' '}
+              <h6> {'Courses & Packages'}</h6>
             </div>
             <AddButton
               onFilterSource={onFilterSource}

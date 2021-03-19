@@ -153,7 +153,7 @@ const General: FC<GeneralTabProps> = ({ setFieldValue, value }) => {
               checked={value.onlinePurchase}
               onChange={(checked) => setFieldValue('onlinePurchase', checked)}
             />{' '}
-            <span>Enable online purchase</span>
+            <span className={styles.switchLabel}>Enable online purchase</span>
           </div>
         </div>
       </Form>
@@ -180,7 +180,7 @@ const DrawerContent: FC<DrawerContentProps> = ({
         setDrawerVisible(false)
       }}
     >
-      {({ setFieldValue, handleSubmit, values, handleReset }) => (
+      {({ setFieldValue, values }) => (
         <div className={styles.drawer}>
           <Form
             name="basic"
@@ -381,7 +381,6 @@ export const CreatePackage = ({ visible, setVisible, initialValue }) => {
           onActivated={(value) => setFieldValue('isActive', value)}
           onCreate={handleSubmit}
           onSave={handleSubmit}
-          //onDelete={showDeleteConfirmDialog}
           subMenu={['General', 'Build']}
         >
           <General setFieldValue={setFieldValue} value={values} />

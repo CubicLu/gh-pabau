@@ -167,13 +167,12 @@ export const CreateCourse = ({
           onActivated={(value) => setFieldValue('isActive', value)}
           onCreate={handleSubmit}
           onSave={handleSubmit}
-          //onDelete={showDeleteConfirmDialog}
           subMenu={['General', 'Employees']}
         >
           <General setFieldValue={setFieldValue} value={values} />
           <div className={styles.empSection}>
             <Employees
-              description="Choose which team members would requred access to this location"
+              description="Choose which employees can offer the services in this course"
               employees={employeeList}
               onSelected={(value) => prepareEmployeeList(value, setFieldValue)}
               title="Employees"
