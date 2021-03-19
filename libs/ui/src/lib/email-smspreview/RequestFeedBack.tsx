@@ -1,12 +1,12 @@
 import React, { FC } from 'react'
-import { EmailSMSPreviewProps, RequestFeedbackProps } from './EmailSmsPreview'
+import { EmailSMSPreviewProps, ClassRescheduledProps } from './EmailSmsPreview'
 import { Col, Row } from 'antd'
 import styles from './EmailSmsPreview.module.less'
 import { Button } from '../button/Button'
 
 export const RequestFeedBack: FC<
-  RequestFeedbackProps & EmailSMSPreviewProps
-> = ({ message, message1, buttonColor, closingText, signatureBlock }) => {
+  ClassRescheduledProps & EmailSMSPreviewProps
+> = ({ message }) => {
   return (
     <>
       <Row gutter={[0, 4]} className={styles.break}>
@@ -16,18 +16,20 @@ export const RequestFeedBack: FC<
       </Row>
       <Row gutter={[0, 4]} className={styles.titleRow}>
         <Col>
-          <span className={styles.message}>{message1}</span>
+          <span className={styles.message}>
+            We&apos;d love to hear about your experience in the survey below.
+            Your feedback helps us create a better experience for you and for
+            all of our customers.
+          </span>
         </Col>
       </Row>
       <Row gutter={[0, 4]} className={styles.bookAppointment}>
-        <Button backgroundColor={buttonColor} className={styles.bookButton}>
-          Tell us how it went
-        </Button>
+        <Button className={styles.bookButton}>Tell us how it went</Button>
       </Row>
       <Row gutter={[0, 4]} className={styles.textBox}>
         <Col>
-          <p>{closingText}</p>
-          <p>{signatureBlock}</p>
+          <p>Thank you for your support!</p>
+          <p>Your friends at The Clinic</p>
         </Col>
       </Row>
     </>

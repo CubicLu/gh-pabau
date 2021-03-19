@@ -117,7 +117,7 @@ export const Departments: NextPage = () => {
   return (
     <CrudLayout
       schema={schema}
-      tableSearch={false}
+      tableSearch={true}
       addQuery={ADD_MUTATION}
       deleteQuery={DELETE_MUTATION}
       listQuery={LIST_QUERY}

@@ -16,7 +16,6 @@ export const CancelAClassBooking: FC<
   message,
   address,
   text,
-  buttonColor,
 }) => {
   return (
     <>
@@ -53,11 +52,7 @@ export const CancelAClassBooking: FC<
       </Row>
       <Row className={styles.rebookBtn}>
         <Col>
-          <Button
-            size="middle"
-            className={styles.btnRebook}
-            backgroundColor={buttonColor}
-          >
+          <Button size="middle" className={styles.btnRebook}>
             Rebook
           </Button>
         </Col>

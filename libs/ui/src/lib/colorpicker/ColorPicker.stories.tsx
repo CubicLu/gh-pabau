@@ -4,19 +4,17 @@ import ColorPicker from './ColorPicker'
 export default {
   component: ColorPicker,
   title: 'UI/ColorPicker',
-  args: { heading: 'Background color', isDarkColor: false },
+  args: { heading: 'Background color' },
   argsTypes: {
     heading: { control: { type: 'text' } },
-    isDarkColor: { control: { type: 'boolean' } },
   },
 }
 
 interface P {
   heading: string
-  isDarkColor: boolean
 }
 
-export const DefaultColorPicker: FC<P> = ({ heading, isDarkColor }) => {
+export const DefaultColorPicker: FC<P> = ({ heading }) => {
   const [selectColor, setSelectColor] = useState('')
   const [hoverColor, setHoverolor] = useState('')
   return (
@@ -27,7 +25,6 @@ export const DefaultColorPicker: FC<P> = ({ heading, isDarkColor }) => {
         onSelected={(val) => setSelectColor(val)}
         onHover={(val) => setHoverolor(val)}
         onLeave={(val) => setHoverolor('')}
-        isDarkColor={isDarkColor}
       />
       <div
         style={{

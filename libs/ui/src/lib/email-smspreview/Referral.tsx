@@ -7,8 +7,6 @@ import { Button } from '../button/Button'
 export const Referral: FC<EmailSMSPreviewProps & ReferralProps> = ({
   message,
   footerText,
-  buttonColor,
-  description,
 }) => {
   return (
     <>
@@ -19,13 +17,14 @@ export const Referral: FC<EmailSMSPreviewProps & ReferralProps> = ({
       </Row>
       <Row gutter={[0, 4]} className={styles.break}>
         <Col>
-          <span className={styles.message}>{description}</span>
+          <span className={styles.message}>
+            As a loyal client, we would like to offer you [REWARD] OFF for your
+            next visit. Please find your voucher code below.
+          </span>
         </Col>
       </Row>
       <Row gutter={[0, 4]} className={styles.bookAppointment}>
-        <Button backgroundColor={buttonColor} className={styles.bookButton}>
-          View Voucher
-        </Button>
+        <Button className={styles.bookButton}>Voucher Code</Button>
       </Row>
       <Row gutter={[0, 4]} className={styles.textBox}>
         <Col>
