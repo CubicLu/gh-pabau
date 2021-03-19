@@ -6,10 +6,6 @@
       border-radius: 4px;
       margin: 40px auto;
       padding: 27px 32px;
-      @media screen and (max-width: 767px) {
-        padding: 12px;
-        margin-top: 24px;
-      }
       :global .ant-form-item {
         margin-bottom: 20px;
         .ant-form-item-label {
@@ -35,9 +31,6 @@
         line-height: 24px;
         color: #3d3d46;
         margin-bottom: 20px;
-        @media screen and (max-width: 767px) {
-          display: none;
-        }
       }
       .modal-add-button {
         color: #9292a3;
@@ -52,9 +45,6 @@
       }
     }
   }
-  @media screen and (max-width: 767px) {
-    padding: 0 8px;
-  }
 }
 
 .emp-section {
@@ -63,11 +53,6 @@
   border-radius: 4px;
   margin: 40px auto;
   padding: 27px 32px;
-  @media screen and (max-width: 767px) {
-    padding: 0 8px;
-    margin-top: 24px;
-    background: transparent;
-  }
 }
 
 .create-pk {
@@ -226,6 +211,23 @@
         flex-direction: row-reverse;
         .buttons-filter {
           margin-left: 16px;
+        }
+      }
+    }
+  }
+  .emp-section {
+    padding: 0 8px;
+    margin: 24px 0 80px;
+    background: transparent;
+  }
+  .general-form-wrapper {
+    padding: 0 8px;
+    form {
+      .general-section {
+        padding: 12px;
+        margin: 24px 0 80px;
+        h4 {
+          display: none;
         }
       }
     }

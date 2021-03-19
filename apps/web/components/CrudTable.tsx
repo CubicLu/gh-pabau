@@ -40,6 +40,7 @@ interface P {
   needTranslation?: boolean
   editPage?: boolean
   editPageRouteLink?: string
+  setEditPage?(e): void
 }
 
 const CrudTable: FC<P> = ({
@@ -59,6 +60,7 @@ const CrudTable: FC<P> = ({
   needTranslation = false,
   editPage = false,
   editPageRouteLink,
+  setEditPage,
 }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isActive, setIsActive] = useState(true)
@@ -499,6 +501,7 @@ const CrudTable: FC<P> = ({
             <Table
               loading={isLoading}
               style={{ height: '100%' }}
+              scroll={{ x: 'max-content' }}
               sticky={{ offsetScroll: 80, offsetHeader: 80 }}
               pagination={sourceData?.length > 10 ? {} : false}
               draggable={true}
@@ -550,6 +553,8 @@ const CrudTable: FC<P> = ({
               onRowClick={(e) => {
                 if (editPage) {
                   router.push(`${editPageRouteLink}/${e.id}`)
+                } else if (createPage) {
+                  setEditPage(e)
                 } else {
                   setEditingRow(e)
                   setModalShowing((e) => !e)

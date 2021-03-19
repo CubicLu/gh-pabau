@@ -17351,6 +17351,196 @@ type cancellation_reasons_variance_fields {
 }
 
 """
+columns and relationships of "candidate_list"
+"""
+type candidate_list {
+  created_at: timestamptz!
+  first_name: String!
+  id: Int!
+
+  """An array relationship"""
+  job_candidates(
+    """distinct select on columns"""
+    distinct_on: [job_candidates_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [job_candidates_order_by!]
+
+    """filter the rows returned"""
+    where: job_candidates_bool_exp
+  ): [job_candidates!]!
+  last_name: String!
+  phone: String!
+  rating: Int!
+  updated_at: timestamptz!
+}
+
+"""
+Boolean expression to filter rows from the table "candidate_list". All fields are combined with a logical 'AND'.
+"""
+input candidate_list_bool_exp {
+  _and: [candidate_list_bool_exp!]
+  _not: candidate_list_bool_exp
+  _or: [candidate_list_bool_exp!]
+  created_at: timestamptz_comparison_exp
+  first_name: String_comparison_exp
+  id: Int_comparison_exp
+  job_candidates: job_candidates_bool_exp
+  last_name: String_comparison_exp
+  phone: String_comparison_exp
+  rating: Int_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "candidate_list"
+"""
+enum candidate_list_constraint {
+  """unique or primary key constraint"""
+  candidate_list_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "candidate_list"
+"""
+input candidate_list_inc_input {
+  id: Int
+  rating: Int
+}
+
+"""
+input type for inserting data into table "candidate_list"
+"""
+input candidate_list_insert_input {
+  created_at: timestamptz
+  first_name: String
+  id: Int
+  job_candidates: job_candidates_arr_rel_insert_input
+  last_name: String
+  phone: String
+  rating: Int
+  updated_at: timestamptz
+}
+
+"""
+response of any mutation on the table "candidate_list"
+"""
+type candidate_list_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [candidate_list!]!
+}
+
+"""
+input type for inserting object relation for remote table "candidate_list"
+"""
+input candidate_list_obj_rel_insert_input {
+  data: candidate_list_insert_input!
+
+  """on conflict condition"""
+  on_conflict: candidate_list_on_conflict
+}
+
+"""
+on conflict condition type for table "candidate_list"
+"""
+input candidate_list_on_conflict {
+  constraint: candidate_list_constraint!
+  update_columns: [candidate_list_update_column!]!
+  where: candidate_list_bool_exp
+}
+
+"""Ordering options when selecting data from "candidate_list"."""
+input candidate_list_order_by {
+  created_at: order_by
+  first_name: order_by
+  id: order_by
+  job_candidates_aggregate: job_candidates_aggregate_order_by
+  last_name: order_by
+  phone: order_by
+  rating: order_by
+  updated_at: order_by
+}
+
+"""primary key columns input for table: candidate_list"""
+input candidate_list_pk_columns_input {
+  id: Int!
+}
+
+"""
+select columns of table "candidate_list"
+"""
+enum candidate_list_select_column {
+  """column name"""
+  created_at
+
+  """column name"""
+  first_name
+
+  """column name"""
+  id
+
+  """column name"""
+  last_name
+
+  """column name"""
+  phone
+
+  """column name"""
+  rating
+
+  """column name"""
+  updated_at
+}
+
+"""
+input type for updating data in table "candidate_list"
+"""
+input candidate_list_set_input {
+  created_at: timestamptz
+  first_name: String
+  id: Int
+  last_name: String
+  phone: String
+  rating: Int
+  updated_at: timestamptz
+}
+
+"""
+update columns of table "candidate_list"
+"""
+enum candidate_list_update_column {
+  """column name"""
+  created_at
+
+  """column name"""
+  first_name
+
+  """column name"""
+  id
+
+  """column name"""
+  last_name
+
+  """column name"""
+  phone
+
+  """column name"""
+  rating
+
+  """column name"""
+  updated_at
+}
+
+"""
 columns and relationships of "category"
 """
 type category {
@@ -17908,25 +18098,6 @@ input courses_set_input {
   order: Int
   service: String
   session: Int
-}
-
-"""
-input type for inserting data into table "courses_setup"
-"""
-input courses_setup_insert_input {
-  is_active: Boolean
-  name: String
-  order: Int
-  service: String
-  session: Int
-}
-
-"""
-response of any mutation on the table "courses_setup"
-"""
-type courses_setup_mutation_response {
-  """number of rows affected by the mutation"""
-  affected_rows: Int!
 }
 
 """
@@ -19585,6 +19756,220 @@ type diagnostic_codeset_variance_fields {
 }
 
 """
+columns and relationships of "drugs"
+"""
+type drugs {
+  comment: String
+  created_date: timestamptz!
+  dosage: String!
+  frequency: String!
+  id: uuid!
+  is_active: Boolean!
+  name: String!
+  route: String!
+  unit: String!
+}
+
+"""
+aggregated selection of "drugs"
+"""
+type drugs_aggregate {
+  aggregate: drugs_aggregate_fields
+  nodes: [drugs!]!
+}
+
+"""
+aggregate fields of "drugs"
+"""
+type drugs_aggregate_fields {
+  count(columns: [drugs_select_column!], distinct: Boolean): Int!
+  max: drugs_max_fields
+  min: drugs_min_fields
+}
+
+"""
+Boolean expression to filter rows from the table "drugs". All fields are combined with a logical 'AND'.
+"""
+input drugs_bool_exp {
+  _and: [drugs_bool_exp!]
+  _not: drugs_bool_exp
+  _or: [drugs_bool_exp!]
+  comment: String_comparison_exp
+  created_date: timestamptz_comparison_exp
+  dosage: String_comparison_exp
+  frequency: String_comparison_exp
+  id: uuid_comparison_exp
+  is_active: Boolean_comparison_exp
+  name: String_comparison_exp
+  route: String_comparison_exp
+  unit: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "drugs"
+"""
+enum drugs_constraint {
+  """unique or primary key constraint"""
+  drugs_pkey
+}
+
+"""
+input type for inserting data into table "drugs"
+"""
+input drugs_insert_input {
+  comment: String
+  created_date: timestamptz
+  dosage: String
+  frequency: String
+  id: uuid
+  is_active: Boolean
+  name: String
+  route: String
+  unit: String
+}
+
+"""aggregate max on columns"""
+type drugs_max_fields {
+  comment: String
+  created_date: timestamptz
+  dosage: String
+  frequency: String
+  id: uuid
+  name: String
+  route: String
+  unit: String
+}
+
+"""aggregate min on columns"""
+type drugs_min_fields {
+  comment: String
+  created_date: timestamptz
+  dosage: String
+  frequency: String
+  id: uuid
+  name: String
+  route: String
+  unit: String
+}
+
+"""
+response of any mutation on the table "drugs"
+"""
+type drugs_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [drugs!]!
+}
+
+"""
+on conflict condition type for table "drugs"
+"""
+input drugs_on_conflict {
+  constraint: drugs_constraint!
+  update_columns: [drugs_update_column!]!
+  where: drugs_bool_exp
+}
+
+"""Ordering options when selecting data from "drugs"."""
+input drugs_order_by {
+  comment: order_by
+  created_date: order_by
+  dosage: order_by
+  frequency: order_by
+  id: order_by
+  is_active: order_by
+  name: order_by
+  route: order_by
+  unit: order_by
+}
+
+"""primary key columns input for table: drugs"""
+input drugs_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "drugs"
+"""
+enum drugs_select_column {
+  """column name"""
+  comment
+
+  """column name"""
+  created_date
+
+  """column name"""
+  dosage
+
+  """column name"""
+  frequency
+
+  """column name"""
+  id
+
+  """column name"""
+  is_active
+
+  """column name"""
+  name
+
+  """column name"""
+  route
+
+  """column name"""
+  unit
+}
+
+"""
+input type for updating data in table "drugs"
+"""
+input drugs_set_input {
+  comment: String
+  created_date: timestamptz
+  dosage: String
+  frequency: String
+  id: uuid
+  is_active: Boolean
+  name: String
+  route: String
+  unit: String
+}
+
+"""
+update columns of table "drugs"
+"""
+enum drugs_update_column {
+  """column name"""
+  comment
+
+  """column name"""
+  created_date
+
+  """column name"""
+  dosage
+
+  """column name"""
+  frequency
+
+  """column name"""
+  id
+
+  """column name"""
+  is_active
+
+  """column name"""
+  name
+
+  """column name"""
+  route
+
+  """column name"""
+  unit
+}
+
+"""
 family_relationships
 
 
@@ -20577,6 +20962,301 @@ type issuing_company_variance_fields {
 }
 
 """
+columns and relationships of "job_candidates"
+"""
+type job_candidates {
+  candidate_id: Int!
+
+  """An object relationship"""
+  candidate_list: candidate_list!
+  created_at: timestamptz!
+  id: Int!
+  is_new: Boolean!
+
+  """An object relationship"""
+  job_opening: job_openings!
+  job_opening_id: Int!
+  status: String!
+  updated_at: timestamptz!
+}
+
+"""
+order by aggregate values of table "job_candidates"
+"""
+input job_candidates_aggregate_order_by {
+  avg: job_candidates_avg_order_by
+  count: order_by
+  max: job_candidates_max_order_by
+  min: job_candidates_min_order_by
+  stddev: job_candidates_stddev_order_by
+  stddev_pop: job_candidates_stddev_pop_order_by
+  stddev_samp: job_candidates_stddev_samp_order_by
+  sum: job_candidates_sum_order_by
+  var_pop: job_candidates_var_pop_order_by
+  var_samp: job_candidates_var_samp_order_by
+  variance: job_candidates_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "job_candidates"
+"""
+input job_candidates_arr_rel_insert_input {
+  data: [job_candidates_insert_input!]!
+
+  """on conflict condition"""
+  on_conflict: job_candidates_on_conflict
+}
+
+"""
+order by avg() on columns of table "job_candidates"
+"""
+input job_candidates_avg_order_by {
+  candidate_id: order_by
+  id: order_by
+  job_opening_id: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "job_candidates". All fields are combined with a logical 'AND'.
+"""
+input job_candidates_bool_exp {
+  _and: [job_candidates_bool_exp!]
+  _not: job_candidates_bool_exp
+  _or: [job_candidates_bool_exp!]
+  candidate_id: Int_comparison_exp
+  candidate_list: candidate_list_bool_exp
+  created_at: timestamptz_comparison_exp
+  id: Int_comparison_exp
+  is_new: Boolean_comparison_exp
+  job_opening: job_openings_bool_exp
+  job_opening_id: Int_comparison_exp
+  status: String_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "job_candidates"
+"""
+enum job_candidates_constraint {
+  """unique or primary key constraint"""
+  job_candidates_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "job_candidates"
+"""
+input job_candidates_inc_input {
+  candidate_id: Int
+  id: Int
+  job_opening_id: Int
+}
+
+"""
+input type for inserting data into table "job_candidates"
+"""
+input job_candidates_insert_input {
+  candidate_id: Int
+  candidate_list: candidate_list_obj_rel_insert_input
+  created_at: timestamptz
+  id: Int
+  is_new: Boolean
+  job_opening: job_openings_obj_rel_insert_input
+  job_opening_id: Int
+  status: String
+  updated_at: timestamptz
+}
+
+"""
+order by max() on columns of table "job_candidates"
+"""
+input job_candidates_max_order_by {
+  candidate_id: order_by
+  created_at: order_by
+  id: order_by
+  job_opening_id: order_by
+  status: order_by
+  updated_at: order_by
+}
+
+"""
+order by min() on columns of table "job_candidates"
+"""
+input job_candidates_min_order_by {
+  candidate_id: order_by
+  created_at: order_by
+  id: order_by
+  job_opening_id: order_by
+  status: order_by
+  updated_at: order_by
+}
+
+"""
+response of any mutation on the table "job_candidates"
+"""
+type job_candidates_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [job_candidates!]!
+}
+
+"""
+on conflict condition type for table "job_candidates"
+"""
+input job_candidates_on_conflict {
+  constraint: job_candidates_constraint!
+  update_columns: [job_candidates_update_column!]!
+  where: job_candidates_bool_exp
+}
+
+"""Ordering options when selecting data from "job_candidates"."""
+input job_candidates_order_by {
+  candidate_id: order_by
+  candidate_list: candidate_list_order_by
+  created_at: order_by
+  id: order_by
+  is_new: order_by
+  job_opening: job_openings_order_by
+  job_opening_id: order_by
+  status: order_by
+  updated_at: order_by
+}
+
+"""primary key columns input for table: job_candidates"""
+input job_candidates_pk_columns_input {
+  id: Int!
+}
+
+"""
+select columns of table "job_candidates"
+"""
+enum job_candidates_select_column {
+  """column name"""
+  candidate_id
+
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  is_new
+
+  """column name"""
+  job_opening_id
+
+  """column name"""
+  status
+
+  """column name"""
+  updated_at
+}
+
+"""
+input type for updating data in table "job_candidates"
+"""
+input job_candidates_set_input {
+  candidate_id: Int
+  created_at: timestamptz
+  id: Int
+  is_new: Boolean
+  job_opening_id: Int
+  status: String
+  updated_at: timestamptz
+}
+
+"""
+order by stddev() on columns of table "job_candidates"
+"""
+input job_candidates_stddev_order_by {
+  candidate_id: order_by
+  id: order_by
+  job_opening_id: order_by
+}
+
+"""
+order by stddev_pop() on columns of table "job_candidates"
+"""
+input job_candidates_stddev_pop_order_by {
+  candidate_id: order_by
+  id: order_by
+  job_opening_id: order_by
+}
+
+"""
+order by stddev_samp() on columns of table "job_candidates"
+"""
+input job_candidates_stddev_samp_order_by {
+  candidate_id: order_by
+  id: order_by
+  job_opening_id: order_by
+}
+
+"""
+order by sum() on columns of table "job_candidates"
+"""
+input job_candidates_sum_order_by {
+  candidate_id: order_by
+  id: order_by
+  job_opening_id: order_by
+}
+
+"""
+update columns of table "job_candidates"
+"""
+enum job_candidates_update_column {
+  """column name"""
+  candidate_id
+
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  is_new
+
+  """column name"""
+  job_opening_id
+
+  """column name"""
+  status
+
+  """column name"""
+  updated_at
+}
+
+"""
+order by var_pop() on columns of table "job_candidates"
+"""
+input job_candidates_var_pop_order_by {
+  candidate_id: order_by
+  id: order_by
+  job_opening_id: order_by
+}
+
+"""
+order by var_samp() on columns of table "job_candidates"
+"""
+input job_candidates_var_samp_order_by {
+  candidate_id: order_by
+  id: order_by
+  job_opening_id: order_by
+}
+
+"""
+order by variance() on columns of table "job_candidates"
+"""
+input job_candidates_variance_order_by {
+  candidate_id: order_by
+  id: order_by
+  job_opening_id: order_by
+}
+
+"""
 columns and relationships of "job_openings"
 """
 type job_openings {
@@ -20586,6 +21266,24 @@ type job_openings {
   hiring_lead: Int!
   id: Int!
   is_active: Boolean
+
+  """An array relationship"""
+  job_candidates(
+    """distinct select on columns"""
+    distinct_on: [job_candidates_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [job_candidates_order_by!]
+
+    """filter the rows returned"""
+    where: job_candidates_bool_exp
+  ): [job_candidates!]!
   title: String!
   updated_at: timestamptz!
 }
@@ -20603,6 +21301,7 @@ input job_openings_bool_exp {
   hiring_lead: Int_comparison_exp
   id: Int_comparison_exp
   is_active: Boolean_comparison_exp
+  job_candidates: job_candidates_bool_exp
   title: String_comparison_exp
   updated_at: timestamptz_comparison_exp
 }
@@ -20633,6 +21332,7 @@ input job_openings_insert_input {
   hiring_lead: Int
   id: Int
   is_active: Boolean
+  job_candidates: job_candidates_arr_rel_insert_input
   title: String
   updated_at: timestamptz
 }
@@ -20646,6 +21346,16 @@ type job_openings_mutation_response {
 
   """data from the rows affected by the mutation"""
   returning: [job_openings!]!
+}
+
+"""
+input type for inserting object relation for remote table "job_openings"
+"""
+input job_openings_obj_rel_insert_input {
+  data: job_openings_insert_input!
+
+  """on conflict condition"""
+  on_conflict: job_openings_on_conflict
 }
 
 """
@@ -20665,6 +21375,7 @@ input job_openings_order_by {
   hiring_lead: order_by
   id: order_by
   is_active: order_by
+  job_candidates_aggregate: job_candidates_aggregate_order_by
   title: order_by
   updated_at: order_by
 }
@@ -21028,6 +21739,36 @@ type labs_dashboard {
 }
 
 """
+aggregated selection of "labs_dashboard"
+"""
+type labs_dashboard_aggregate {
+  aggregate: labs_dashboard_aggregate_fields
+  nodes: [labs_dashboard!]!
+}
+
+"""
+aggregate fields of "labs_dashboard"
+"""
+type labs_dashboard_aggregate_fields {
+  avg: labs_dashboard_avg_fields
+  count(columns: [labs_dashboard_select_column!], distinct: Boolean): Int!
+  max: labs_dashboard_max_fields
+  min: labs_dashboard_min_fields
+  stddev: labs_dashboard_stddev_fields
+  stddev_pop: labs_dashboard_stddev_pop_fields
+  stddev_samp: labs_dashboard_stddev_samp_fields
+  sum: labs_dashboard_sum_fields
+  var_pop: labs_dashboard_var_pop_fields
+  var_samp: labs_dashboard_var_samp_fields
+  variance: labs_dashboard_variance_fields
+}
+
+"""aggregate avg on columns"""
+type labs_dashboard_avg_fields {
+  labNo: Float
+}
+
+"""
 Boolean expression to filter rows from the table "labs_dashboard". All fields are combined with a logical 'AND'.
 """
 input labs_dashboard_bool_exp {
@@ -21063,6 +21804,30 @@ input labs_dashboard_inc_input {
 input type for inserting data into table "labs_dashboard"
 """
 input labs_dashboard_insert_input {
+  client: String
+  lab: String
+  labNo: Int
+  lastUpdate: String
+  public: String
+  requested: String
+  requester: String
+  test: String
+}
+
+"""aggregate max on columns"""
+type labs_dashboard_max_fields {
+  client: String
+  lab: String
+  labNo: Int
+  lastUpdate: String
+  public: String
+  requested: String
+  requester: String
+  test: String
+}
+
+"""aggregate min on columns"""
+type labs_dashboard_min_fields {
   client: String
   lab: String
   labNo: Int
@@ -21153,6 +21918,26 @@ input labs_dashboard_set_input {
   test: String
 }
 
+"""aggregate stddev on columns"""
+type labs_dashboard_stddev_fields {
+  labNo: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type labs_dashboard_stddev_pop_fields {
+  labNo: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type labs_dashboard_stddev_samp_fields {
+  labNo: Float
+}
+
+"""aggregate sum on columns"""
+type labs_dashboard_sum_fields {
+  labNo: Int
+}
+
 """
 update columns of table "labs_dashboard"
 """
@@ -21182,8 +21967,23 @@ enum labs_dashboard_update_column {
   test
 }
 
+"""aggregate var_pop on columns"""
+type labs_dashboard_var_pop_fields {
+  labNo: Float
+}
+
+"""aggregate var_samp on columns"""
+type labs_dashboard_var_samp_fields {
+  labNo: Float
+}
+
+"""aggregate variance on columns"""
+type labs_dashboard_variance_fields {
+  labNo: Float
+}
+
 """
-lead view 
+lead view
 
 
 columns and relationships of "lead"
@@ -23418,6 +24218,19 @@ type mutation_root {
   delete_cancellation_reasons_by_pk(id: uuid!): cancellation_reasons
 
   """
+  delete data from the table: "candidate_list"
+  """
+  delete_candidate_list(
+    """filter the rows which have to be deleted"""
+    where: candidate_list_bool_exp!
+  ): candidate_list_mutation_response
+
+  """
+  delete single row from the table: "candidate_list"
+  """
+  delete_candidate_list_by_pk(id: Int!): candidate_list
+
+  """
   delete data from the table: "category"
   """
   delete_category(
@@ -23522,6 +24335,19 @@ type mutation_root {
   delete_diagnostic_codeset_by_pk(id: uuid!): diagnostic_codeset
 
   """
+  delete data from the table: "drugs"
+  """
+  delete_drugs(
+    """filter the rows which have to be deleted"""
+    where: drugs_bool_exp!
+  ): drugs_mutation_response
+
+  """
+  delete single row from the table: "drugs"
+  """
+  delete_drugs_by_pk(id: uuid!): drugs
+
+  """
   delete data from the table: "family_relationships"
   """
   delete_family_relationships(
@@ -23559,6 +24385,19 @@ type mutation_root {
   delete single row from the table: "issuing_company"
   """
   delete_issuing_company_by_pk(id: uuid!): issuing_company
+
+  """
+  delete data from the table: "job_candidates"
+  """
+  delete_job_candidates(
+    """filter the rows which have to be deleted"""
+    where: job_candidates_bool_exp!
+  ): job_candidates_mutation_response
+
+  """
+  delete single row from the table: "job_candidates"
+  """
+  delete_job_candidates_by_pk(id: Int!): job_candidates
 
   """
   delete data from the table: "job_openings"
@@ -24102,6 +24941,28 @@ type mutation_root {
   ): cancellation_reasons
 
   """
+  insert data into the table: "candidate_list"
+  """
+  insert_candidate_list(
+    """the rows to be inserted"""
+    objects: [candidate_list_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: candidate_list_on_conflict
+  ): candidate_list_mutation_response
+
+  """
+  insert a single row into the table: "candidate_list"
+  """
+  insert_candidate_list_one(
+    """the row to be inserted"""
+    object: candidate_list_insert_input!
+
+    """on conflict condition"""
+    on_conflict: candidate_list_on_conflict
+  ): candidate_list
+
+  """
   insert data into the table: "category"
   """
   insert_category(
@@ -24160,14 +25021,6 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: courses_on_conflict
   ): courses
-
-  """
-  insert data into the table: "courses_setup"
-  """
-  insert_courses_setup(
-    """the rows to be inserted"""
-    objects: [courses_setup_insert_input!]!
-  ): courses_setup_mutation_response
 
   """
   insert data into the table: "credit_note_type"
@@ -24302,6 +25155,28 @@ type mutation_root {
   ): diagnostic_codeset
 
   """
+  insert data into the table: "drugs"
+  """
+  insert_drugs(
+    """the rows to be inserted"""
+    objects: [drugs_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: drugs_on_conflict
+  ): drugs_mutation_response
+
+  """
+  insert a single row into the table: "drugs"
+  """
+  insert_drugs_one(
+    """the row to be inserted"""
+    object: drugs_insert_input!
+
+    """on conflict condition"""
+    on_conflict: drugs_on_conflict
+  ): drugs
+
+  """
   insert data into the table: "family_relationships"
   """
   insert_family_relationships(
@@ -24366,6 +25241,28 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: issuing_company_on_conflict
   ): issuing_company
+
+  """
+  insert data into the table: "job_candidates"
+  """
+  insert_job_candidates(
+    """the rows to be inserted"""
+    objects: [job_candidates_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: job_candidates_on_conflict
+  ): job_candidates_mutation_response
+
+  """
+  insert a single row into the table: "job_candidates"
+  """
+  insert_job_candidates_one(
+    """the row to be inserted"""
+    object: job_candidates_insert_input!
+
+    """on conflict condition"""
+    on_conflict: job_candidates_on_conflict
+  ): job_candidates
 
   """
   insert data into the table: "job_openings"
@@ -25398,6 +26295,32 @@ type mutation_root {
   ): cancellation_reasons
 
   """
+  update data of the table: "candidate_list"
+  """
+  update_candidate_list(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: candidate_list_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: candidate_list_set_input
+
+    """filter the rows which have to be updated"""
+    where: candidate_list_bool_exp!
+  ): candidate_list_mutation_response
+
+  """
+  update single row of the table: "candidate_list"
+  """
+  update_candidate_list_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: candidate_list_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: candidate_list_set_input
+    pk_columns: candidate_list_pk_columns_input!
+  ): candidate_list
+
+  """
   update data of the table: "category"
   """
   update_category(
@@ -25606,6 +26529,26 @@ type mutation_root {
   ): diagnostic_codeset
 
   """
+  update data of the table: "drugs"
+  """
+  update_drugs(
+    """sets the columns of the filtered rows to the given values"""
+    _set: drugs_set_input
+
+    """filter the rows which have to be updated"""
+    where: drugs_bool_exp!
+  ): drugs_mutation_response
+
+  """
+  update single row of the table: "drugs"
+  """
+  update_drugs_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: drugs_set_input
+    pk_columns: drugs_pk_columns_input!
+  ): drugs
+
+  """
   update data of the table: "family_relationships"
   """
   update_family_relationships(
@@ -25682,6 +26625,32 @@ type mutation_root {
     _set: issuing_company_set_input
     pk_columns: issuing_company_pk_columns_input!
   ): issuing_company
+
+  """
+  update data of the table: "job_candidates"
+  """
+  update_job_candidates(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: job_candidates_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: job_candidates_set_input
+
+    """filter the rows which have to be updated"""
+    where: job_candidates_bool_exp!
+  ): job_candidates_mutation_response
+
+  """
+  update single row of the table: "job_candidates"
+  """
+  update_job_candidates_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: job_candidates_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: job_candidates_set_input
+    pk_columns: job_candidates_pk_columns_input!
+  ): job_candidates
 
   """
   update data of the table: "job_openings"
@@ -28542,6 +29511,29 @@ type query_root {
   """
   cancellation_reasons_by_pk(id: uuid!): cancellation_reasons
   candidate(where: CandidateWhereUniqueInput!): Candidate
+
+  """
+  fetch data from the table: "candidate_list"
+  """
+  candidate_list(
+    """distinct select on columns"""
+    distinct_on: [candidate_list_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [candidate_list_order_by!]
+
+    """filter the rows returned"""
+    where: candidate_list_bool_exp
+  ): [candidate_list!]!
+
+  """fetch data from the table: "candidate_list" using primary key columns"""
+  candidate_list_by_pk(id: Int!): candidate_list
   candidates(cursor: CandidateWhereUniqueInput, orderBy: [CandidateOrderByInput!], skip: Int, take: Int, where: CandidateWhereInput): [Candidate]!
   candidatesCount(where: CandidateWhereInput): Int
   cardType(where: CardTypeWhereUniqueInput!): CardType
@@ -29026,6 +30018,49 @@ type query_root {
   diagnostic_codeset_by_pk(id: uuid!): diagnostic_codeset
 
   """
+  fetch data from the table: "drugs"
+  """
+  drugs(
+    """distinct select on columns"""
+    distinct_on: [drugs_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [drugs_order_by!]
+
+    """filter the rows returned"""
+    where: drugs_bool_exp
+  ): [drugs!]!
+
+  """
+  fetch aggregated fields from the table: "drugs"
+  """
+  drugs_aggregate(
+    """distinct select on columns"""
+    distinct_on: [drugs_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [drugs_order_by!]
+
+    """filter the rows returned"""
+    where: drugs_bool_exp
+  ): drugs_aggregate!
+
+  """fetch data from the table: "drugs" using primary key columns"""
+  drugs_by_pk(id: uuid!): drugs
+
+  """
   fetch data from the table: "family_relationships"
   """
   family_relationships(
@@ -29259,6 +30294,29 @@ type query_root {
   issuing_company_by_pk(id: uuid!): issuing_company
 
   """
+  fetch data from the table: "job_candidates"
+  """
+  job_candidates(
+    """distinct select on columns"""
+    distinct_on: [job_candidates_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [job_candidates_order_by!]
+
+    """filter the rows returned"""
+    where: job_candidates_bool_exp
+  ): [job_candidates!]!
+
+  """fetch data from the table: "job_candidates" using primary key columns"""
+  job_candidates_by_pk(id: Int!): job_candidates
+
+  """
   fetch data from the table: "job_openings"
   """
   job_openings(
@@ -29343,6 +30401,26 @@ type query_root {
     """filter the rows returned"""
     where: labs_dashboard_bool_exp
   ): [labs_dashboard!]!
+
+  """
+  fetch aggregated fields from the table: "labs_dashboard"
+  """
+  labs_dashboard_aggregate(
+    """distinct select on columns"""
+    distinct_on: [labs_dashboard_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [labs_dashboard_order_by!]
+
+    """filter the rows returned"""
+    where: labs_dashboard_bool_exp
+  ): labs_dashboard_aggregate!
 
   """fetch data from the table: "labs_dashboard" using primary key columns"""
   labs_dashboard_by_pk(labNo: Int!): labs_dashboard
@@ -29968,6 +31046,26 @@ type query_root {
     where: rota_templates_bool_exp
   ): [rota_templates!]!
 
+  """
+  fetch aggregated fields from the table: "rota_templates"
+  """
+  rota_templates_aggregate(
+    """distinct select on columns"""
+    distinct_on: [rota_templates_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [rota_templates_order_by!]
+
+    """filter the rows returned"""
+    where: rota_templates_bool_exp
+  ): rota_templates_aggregate!
+
   """fetch data from the table: "rota_templates" using primary key columns"""
   rota_templates_by_pk(id: uuid!): rota_templates
 
@@ -30466,6 +31564,36 @@ type rota_templates {
 }
 
 """
+aggregated selection of "rota_templates"
+"""
+type rota_templates_aggregate {
+  aggregate: rota_templates_aggregate_fields
+  nodes: [rota_templates!]!
+}
+
+"""
+aggregate fields of "rota_templates"
+"""
+type rota_templates_aggregate_fields {
+  avg: rota_templates_avg_fields
+  count(columns: [rota_templates_select_column!], distinct: Boolean): Int!
+  max: rota_templates_max_fields
+  min: rota_templates_min_fields
+  stddev: rota_templates_stddev_fields
+  stddev_pop: rota_templates_stddev_pop_fields
+  stddev_samp: rota_templates_stddev_samp_fields
+  sum: rota_templates_sum_fields
+  var_pop: rota_templates_var_pop_fields
+  var_samp: rota_templates_var_samp_fields
+  variance: rota_templates_variance_fields
+}
+
+"""aggregate avg on columns"""
+type rota_templates_avg_fields {
+  order: Float
+}
+
+"""
 Boolean expression to filter rows from the table "rota_templates". All fields are combined with a logical 'AND'.
 """
 input rota_templates_bool_exp {
@@ -30511,6 +31639,28 @@ input rota_templates_insert_input {
   name: String
   order: Int
   start_time: timetz
+}
+
+"""aggregate max on columns"""
+type rota_templates_max_fields {
+  created_at: timestamptz
+  end_time: timetz
+  id: uuid
+  name: String
+  order: Int
+  start_time: timetz
+  updated_at: timestamptz
+}
+
+"""aggregate min on columns"""
+type rota_templates_min_fields {
+  created_at: timestamptz
+  end_time: timetz
+  id: uuid
+  name: String
+  order: Int
+  start_time: timetz
+  updated_at: timestamptz
 }
 
 """
@@ -30595,6 +31745,26 @@ input rota_templates_set_input {
   start_time: timetz
 }
 
+"""aggregate stddev on columns"""
+type rota_templates_stddev_fields {
+  order: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type rota_templates_stddev_pop_fields {
+  order: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type rota_templates_stddev_samp_fields {
+  order: Float
+}
+
+"""aggregate sum on columns"""
+type rota_templates_sum_fields {
+  order: Int
+}
+
 """
 update columns of table "rota_templates"
 """
@@ -30616,6 +31786,21 @@ enum rota_templates_update_column {
 
   """column name"""
   start_time
+}
+
+"""aggregate var_pop on columns"""
+type rota_templates_var_pop_fields {
+  order: Float
+}
+
+"""aggregate var_samp on columns"""
+type rota_templates_var_samp_fields {
+  order: Float
+}
+
+"""aggregate variance on columns"""
+type rota_templates_variance_fields {
+  order: Float
 }
 
 """
@@ -31532,6 +32717,29 @@ type subscription_root {
   cancellation_reasons_by_pk(id: uuid!): cancellation_reasons
 
   """
+  fetch data from the table: "candidate_list"
+  """
+  candidate_list(
+    """distinct select on columns"""
+    distinct_on: [candidate_list_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [candidate_list_order_by!]
+
+    """filter the rows returned"""
+    where: candidate_list_bool_exp
+  ): [candidate_list!]!
+
+  """fetch data from the table: "candidate_list" using primary key columns"""
+  candidate_list_by_pk(id: Int!): candidate_list
+
+  """
   fetch data from the table: "category"
   """
   category(
@@ -31908,6 +33116,49 @@ type subscription_root {
   diagnostic_codeset_by_pk(id: uuid!): diagnostic_codeset
 
   """
+  fetch data from the table: "drugs"
+  """
+  drugs(
+    """distinct select on columns"""
+    distinct_on: [drugs_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [drugs_order_by!]
+
+    """filter the rows returned"""
+    where: drugs_bool_exp
+  ): [drugs!]!
+
+  """
+  fetch aggregated fields from the table: "drugs"
+  """
+  drugs_aggregate(
+    """distinct select on columns"""
+    distinct_on: [drugs_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [drugs_order_by!]
+
+    """filter the rows returned"""
+    where: drugs_bool_exp
+  ): drugs_aggregate!
+
+  """fetch data from the table: "drugs" using primary key columns"""
+  drugs_by_pk(id: uuid!): drugs
+
+  """
   fetch data from the table: "family_relationships"
   """
   family_relationships(
@@ -32039,6 +33290,29 @@ type subscription_root {
   issuing_company_by_pk(id: uuid!): issuing_company
 
   """
+  fetch data from the table: "job_candidates"
+  """
+  job_candidates(
+    """distinct select on columns"""
+    distinct_on: [job_candidates_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [job_candidates_order_by!]
+
+    """filter the rows returned"""
+    where: job_candidates_bool_exp
+  ): [job_candidates!]!
+
+  """fetch data from the table: "job_candidates" using primary key columns"""
+  job_candidates_by_pk(id: Int!): job_candidates
+
+  """
   fetch data from the table: "job_openings"
   """
   job_openings(
@@ -32123,6 +33397,26 @@ type subscription_root {
     """filter the rows returned"""
     where: labs_dashboard_bool_exp
   ): [labs_dashboard!]!
+
+  """
+  fetch aggregated fields from the table: "labs_dashboard"
+  """
+  labs_dashboard_aggregate(
+    """distinct select on columns"""
+    distinct_on: [labs_dashboard_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [labs_dashboard_order_by!]
+
+    """filter the rows returned"""
+    where: labs_dashboard_bool_exp
+  ): labs_dashboard_aggregate!
 
   """fetch data from the table: "labs_dashboard" using primary key columns"""
   labs_dashboard_by_pk(labNo: Int!): labs_dashboard
@@ -32738,6 +34032,26 @@ type subscription_root {
     """filter the rows returned"""
     where: rota_templates_bool_exp
   ): [rota_templates!]!
+
+  """
+  fetch aggregated fields from the table: "rota_templates"
+  """
+  rota_templates_aggregate(
+    """distinct select on columns"""
+    distinct_on: [rota_templates_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [rota_templates_order_by!]
+
+    """filter the rows returned"""
+    where: rota_templates_bool_exp
+  ): rota_templates_aggregate!
 
   """fetch data from the table: "rota_templates" using primary key columns"""
   rota_templates_by_pk(id: uuid!): rota_templates

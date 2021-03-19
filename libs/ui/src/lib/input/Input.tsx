@@ -3,7 +3,7 @@ import { Form, Input as AntInput } from 'antd'
 import { FormProps, Rule } from 'antd/lib/form'
 import styles from './Input.module.less'
 
-enum ButtonSize {
+export enum ButtonSize {
   small = 'small',
   middle = 'middle',
   large = 'large',
@@ -17,6 +17,7 @@ export interface CheckBoxProps extends FormProps {
   reqiredMsg?: string
   type?: string
   tooltip?: string
+  suffix?: JSX.Element
   onChange?(val): void
 }
 
@@ -30,6 +31,7 @@ export function Input({
   reqiredMsg,
   type,
   tooltip,
+  suffix,
   onChange,
   ...props
 }: PropsWithChildren<CheckBoxProps>): JSX.Element {
@@ -86,6 +88,7 @@ export function Input({
             // defaultValue={text}
             size={size}
             disabled={disabled}
+            suffix={suffix}
             onChange={(e) => handleInputChange(e)}
           />
         </Form.Item>

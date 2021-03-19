@@ -168,6 +168,7 @@ export const CreateCourse = ({
           onCreate={handleSubmit}
           onSave={handleSubmit}
           subMenu={['General', 'Employees']}
+          footer={true}
         >
           <General setFieldValue={setFieldValue} value={values} />
           <div className={styles.empSection}>

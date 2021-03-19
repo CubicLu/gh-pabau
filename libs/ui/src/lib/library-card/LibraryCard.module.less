@@ -1,0 +1,48 @@
+.libraryCard {
+  min-height: 144px;
+  background: #ffffff;
+  border: 1px solid #ecedf0;
+  border-radius: 4px;
+  box-sizing: border-box;
+  border-radius: 3px 4px 4px 3px;
+
+  padding: 20px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  > div {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  h4 {
+    font-style: normal;
+    font-size: 14px;
+    line-height: 20px;
+    text-transform: capitalize;
+    color: #3d3d46;
+    margin-bottom: 0px;
+  }
+  p {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 22px;
+    color: #9292a3 !important;
+    margin-bottom: 0px;
+  }
+
+  &:hover {
+    cursor: pointer;
+    border-color: transparent;
+    box-shadow: 4px 0px 20px rgba(0, 34, 65, 0.1);
+
+    * {
+      color: #54b2d3;
+    }
+  }
+}

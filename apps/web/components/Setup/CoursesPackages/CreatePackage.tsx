@@ -382,6 +382,7 @@ export const CreatePackage = ({ visible, setVisible, initialValue }) => {
           onCreate={handleSubmit}
           onSave={handleSubmit}
           subMenu={['General', 'Build']}
+          footer={true}
         >
           <General setFieldValue={setFieldValue} value={values} />
           <Build />
