@@ -1,5 +1,6 @@
 import React, { FC, useState, forwardRef } from 'react'
 import { ClientNotification, Standard, Appointment, Smstext } from '@pabau/ui'
+import CancelAppointmentPreview from '../../pages/client-notifications/cancelled-appointment/CancelAppointmentPreview'
 
 interface P {
   onSeletedTab: (number) => void
@@ -9,6 +10,14 @@ interface P {
   displayRadioGroup?: boolean
   displayButtons?: boolean
   ref?: unknown
+  standardMessage?: string
+  hideReminderTimeFrameTabPane?: boolean
+  hideRequestConfirmationOption?: boolean
+  hideMedicalHistoryOption?: boolean
+  hideAllowReschedulingOption?: boolean
+  hideAllowCancellationOption?: boolean
+  hideDisplayPolicyOption?: boolean
+  type?: string
 }
 
 // eslint-disable-next-line react/display-name
@@ -21,6 +30,14 @@ const Index: FC<P> = forwardRef(
       isSmsComponent = true,
       displayRadioGroup = true,
       displayButtons = true,
+      standardMessage,
+      hideReminderTimeFrameTabPane = false,
+      hideRequestConfirmationOption = false,
+      hideMedicalHistoryOption = false,
+      hideAllowReschedulingOption = false,
+      hideAllowCancellationOption = false,
+      hideDisplayPolicyOption = false,
+      type = '',
     },
     ref
   ) => {
@@ -78,6 +95,7 @@ const Index: FC<P> = forwardRef(
             setEnableReminder(true)
             setSmartDelivery(true)
             setHideAppearanceTabPane(false)
+            setStandardTap('1')
           } else {
             console.log('this is email tab')
             handleSelectedTab(value)
@@ -126,11 +144,30 @@ const Index: FC<P> = forwardRef(
               onActiveSocialIcon={(value) => {
                 setActiveSocialIcons(value.map((e) => e))
               }}
+              standardMessage={standardMessage}
+              hideRequestConfirmationOption={hideRequestConfirmationOption}
+              hideAllowReschedulingOption={hideAllowReschedulingOption}
+              hideAllowCancellationOption={hideAllowCancellationOption}
+              hideDisplayPolicyOption={hideDisplayPolicyOption}
+              hideMedicalHistoryOption={hideMedicalHistoryOption}
+              hideReminderTimeFrameTabPane={hideReminderTimeFrameTabPane}
             />
           )
         }
         previewComponent={
-          isPreviewComponent && (
+          isPreviewComponent &&
+          (type === 'cancel' ? (
+            <CancelAppointmentPreview
+              standardTapIndex={standardTapIndex}
+              backGroundColor={backGroundColor}
+              activeSocialIcons={activeSocialIcons}
+              selectLanguage={selectLanguage}
+              showService={showService}
+              showEmployeeName={showEmployeeName}
+              buttonColor={buttonColor}
+              informationMessage={informationMessage}
+            />
+          ) : (
             <Appointment
               requestConfirm={requestConfirmation}
               allowRescheduling={allowRescheduling}
@@ -147,7 +184,7 @@ const Index: FC<P> = forwardRef(
               standardTapIndex={standardTapIndex}
               activeSocialIcons={activeSocialIcons}
             />
-          )
+          ))
         }
         smsComponent={
           isSmsComponent && (
