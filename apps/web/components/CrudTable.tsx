@@ -71,13 +71,13 @@ const CrudTable: FC<P> = ({
   const router = useRouter()
 
   const [editMutation] = useMutation(editQuery, {
-    onCompleted(data) {
+    onCompleted() {
       Notification(
         NotificationType.success,
         `Success! ${schema.messages.update.success}`
       )
     },
-    onError(err) {
+    onError() {
       Notification(
         NotificationType.error,
         `Error! ${schema.messages.update.error}`
@@ -86,7 +86,7 @@ const CrudTable: FC<P> = ({
     optimisticResponse: {},
   })
   const [updateOrderMutation] = useMutation(updateOrderQuery, {
-    onError(err) {
+    onError() {
       Notification(
         NotificationType.error,
         `Error! ${schema.messages.update.error}`
@@ -95,13 +95,13 @@ const CrudTable: FC<P> = ({
     optimisticResponse: {},
   })
   const [addMutation] = useMutation(addQuery, {
-    onCompleted(data) {
+    onCompleted() {
       Notification(
         NotificationType.success,
         `Success! ${schema.messages.create.success}`
       )
     },
-    onError(err) {
+    onError() {
       Notification(
         NotificationType.error,
         `Error! ${schema.messages.create.error}`
@@ -385,7 +385,7 @@ const CrudTable: FC<P> = ({
               e[c[0]] &&
               c[1].type === 'number' &&
               // eslint-disable-next-line
-              !/^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?$/.test(
+              !/^[+]?([0-9]+(?:\.][0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?$/.test(
                 e[c[0]].toString()
               )
             ) {
@@ -556,11 +556,11 @@ const CrudTable: FC<P> = ({
                     }
                   }
                   setSourceData(newData)
-                  console.log('newData, oldIndex, newIndex', {
-                    newData,
-                    oldIndex,
-                    newIndex,
-                  })
+                  // console.log('newData, oldIndex, newIndex', {
+                  //   newData,
+                  //   oldIndex,
+                  //   newIndex,
+                  // })
                 }}
                 onRowClick={(e) => {
                   if (editPage) {

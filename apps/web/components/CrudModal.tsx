@@ -20,7 +20,6 @@ interface P {
 
 const CrudModal: FC<P> = ({
   schema,
-  addQuery,
   deleteQuery,
   listQuery,
   onClose,
@@ -31,7 +30,7 @@ const CrudModal: FC<P> = ({
   const [openDeleteModal, setDeleteModal] = useState(false)
   const { t } = useTranslationI18()
   const [deleteMutation] = useMutation(deleteQuery, {
-    onCompleted(data) {
+    onCompleted() {
       Notification(
         NotificationType.success,
         `Success! ${schema.messages.delete.success}`
@@ -46,9 +45,6 @@ const CrudModal: FC<P> = ({
   })
   const formik = useFormikContext<unknown>()
 
-  //let formRef: { submitForm: () => void } | null = null
-  // const formRef = useEnsuredForwardedRef<{ submitForm: () => void }>(null)
-
   const schemaForm = { ...schema, fields: { ...schema.fields } }
   const specialFormElement =
     schemaForm.fields['is_active'] || schemaForm.fields['public']
@@ -59,8 +55,6 @@ const CrudModal: FC<P> = ({
     boolean | string | number
   >(
     schema.filter.primary.default ??
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       (editingRow?.id && editingRow?.is_active) ??
       (typeof specialFormElement?.defaultvalue === 'boolean' &&
         specialFormElement.defaultvalue) ??
