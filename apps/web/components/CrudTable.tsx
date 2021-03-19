@@ -40,6 +40,7 @@ interface P {
   needTranslation?: boolean
   editPage?: boolean
   editPageRouteLink?: string
+  setEditPage?(e): void
 }
 
 const CrudTable: FC<P> = ({
@@ -59,6 +60,7 @@ const CrudTable: FC<P> = ({
   needTranslation = false,
   editPage = false,
   editPageRouteLink,
+  setEditPage,
 }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isActive, setIsActive] = useState(true)
@@ -552,7 +554,7 @@ const CrudTable: FC<P> = ({
                 if (editPage) {
                   router.push(`${editPageRouteLink}/${e.id}`)
                 } else if (createPage) {
-                  createPageOnClick()
+                  setEditPage(e)
                 } else {
                   setEditingRow(e)
                   setModalShowing((e) => !e)
