@@ -147,6 +147,7 @@ const schema: Schema = {
     },
   },
 }
+/* eslint-disable graphql/template-strings */
 export const LIST_QUERY = gql`
   query rooms($isActive: Boolean = true, $offset: Int, $limit: Int) {
     rooms(
@@ -307,6 +308,10 @@ export function Rooms() {
     }
   }
 
+  const handleSetEditPage = () => {
+    setShowModal(true)
+  }
+
   return (
     <div>
       <CrudLayout
@@ -321,6 +326,7 @@ export function Rooms() {
         showNotificationBanner={true}
         createPage={true}
         createPageOnClick={createPageOnClick}
+        setEditPage={handleSetEditPage}
       />
       <FullScreenReportModal
         title="Create Rooms"
