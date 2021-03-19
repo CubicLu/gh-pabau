@@ -58,7 +58,6 @@ const CrudTable: FC<P> = ({
   createPage = false,
   createPageOnClick,
   addFilter = true,
-  setEditPage,
   needTranslation = false,
   editPage = false,
   editPageRouteLink,

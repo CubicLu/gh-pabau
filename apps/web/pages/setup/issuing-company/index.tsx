@@ -438,7 +438,7 @@ export const IssuingCompany: NextPage = () => {
         ]
   }
 
-  const modalContents = () => {
+  const ModalContents = (): JSX.Element => {
     return (
       <div className={styles.mainWrapper}>
         <Form layout="vertical">
@@ -614,8 +614,9 @@ export const IssuingCompany: NextPage = () => {
         onCreate={() => formik.handleSubmit()}
         onSave={() => formik.handleSubmit()}
         onDelete={showDeleteConfirmDialog}
+        footer={true}
       >
-        {modalContents()}
+        <ModalContents />
       </FullScreenReportModal>
       <Modal
         modalWidth={682}
