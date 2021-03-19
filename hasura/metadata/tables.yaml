@@ -678,6 +678,59 @@
       filter: {}
 - table:
     schema: public
+    name: candidate_list
+  array_relationships:
+  - name: job_candidates
+    using:
+      foreign_key_constraint_on:
+        column: candidate_id
+        table:
+          schema: public
+          name: job_candidates
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - id
+      - first_name
+      - last_name
+      - rating
+      - phone
+      - created_at
+      - updated_at
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - id
+      - first_name
+      - last_name
+      - rating
+      - phone
+      - created_at
+      - updated_at
+      filter: {}
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - id
+      - first_name
+      - last_name
+      - rating
+      - phone
+      - created_at
+      - updated_at
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
     name: category
   insert_permissions:
   - role: public
@@ -763,324 +816,6 @@
     permission:
       check: {}
       columns:
-      - is_active
-      - name
-      - order
-      - service
-      - session
-      backend_only: false
-  select_permissions:
-  - role: public
-    permission:
-      columns:
-      - created_at
-      - id
-      - is_active
-      - name
-      - order
-      - service
-      - session
-      - updated_at
-      filter: {}
-  update_permissions:
-  - role: public
-    permission:
-      columns:
-      - is_active
-      - name
-      - order
-      - service
-      - session
-      filter: {}
-      check: null
-  delete_permissions:
-  - role: public
-    permission:
-      filter: {}
-- table:
-    schema: public
-    name: credit_note_type
-  insert_permissions:
-  - role: public
-    permission:
-      check: {}
-      columns:
-      - code
-      - invoice_prefix
-      - is_active
-      - name
-      backend_only: false
-  select_permissions:
-  - role: public
-    permission:
-      columns:
-      - is_active
-      - order
-      - code
-      - invoice_prefix
-      - name
-      - created_at
-      - updated_at
-      - id
-      filter: {}
-      allow_aggregations: true
-  update_permissions:
-  - role: public
-    permission:
-      columns:
-      - code
-      - invoice_prefix
-      - is_active
-      - name
-      - order
-      filter: {}
-      check: null
-  delete_permissions:
-  - role: public
-    permission:
-      filter: {}
-- table:
-    schema: public
-    name: credit_notes
-  insert_permissions:
-  - role: public
-    permission:
-      check: {}
-      columns:
-      - debtor
-      - credit_date
-      - credit_no
-      - customer
-      - invoice_no
-      - location
-      - total
-      - type
-      backend_only: false
-  select_permissions:
-  - role: public
-    permission:
-      columns:
-      - debtor
-      - created_at
-      - credit_date
-      - credit_no
-      - customer
-      - id
-      - invoice_no
-      - location
-      - total
-      - type
-      - updated_at
-      filter: {}
-      allow_aggregations: true
-  update_permissions:
-  - role: public
-    permission:
-      columns:
-      - debtor
-      - credit_date
-      - credit_no
-      - customer
-      - invoice_no
-      - location
-      - total
-      - type
-      filter: {}
-      check: {}
-  delete_permissions:
-  - role: public
-    permission:
-      filter: {}
-- table:
-    schema: public
-    name: debt
-  insert_permissions:
-  - role: public
-    permission:
-      check: {}
-      columns:
-      - age
-      - balance
-      - customer
-      - debtor
-      - inv_date
-      - invoice_no
-      - last_action
-      - location
-      - status
-      backend_only: false
-  select_permissions:
-  - role: public
-    permission:
-      columns:
-      - age
-      - balance
-      - created_at
-      - customer
-      - debtor
-      - id
-      - inv_date
-      - invoice_no
-      - last_action
-      - location
-      - status
-      - updated_at
-      filter: {}
-      allow_aggregations: true
-  update_permissions:
-  - role: public
-    permission:
-      columns:
-      - age
-      - balance
-      - customer
-      - debtor
-      - inv_date
-      - invoice_no
-      - last_action
-      - location
-      - status
-      filter: {}
-      check: {}
-  delete_permissions:
-  - role: public
-    permission:
-      filter: {}
-- table:
-    schema: public
-    name: cancellation_reasons
-  insert_permissions:
-  - role: public
-    permission:
-      check: {}
-      columns:
-      - cancellation_policy
-      - is_active
-      - name
-      - order
-      - type
-      backend_only: false
-  select_permissions:
-  - role: public
-    permission:
-      columns:
-      - is_active
-      - order
-      - cancellation_policy
-      - name
-      - type
-      - created_at
-      - updated_at
-      - id
-      filter: {}
-      allow_aggregations: true
-  update_permissions:
-  - role: public
-    permission:
-      columns:
-      - cancellation_policy
-      - is_active
-      - name
-      - order
-      - type
-      filter: {}
-      check: null
-  delete_permissions:
-  - role: public
-    permission:
-      filter: {}
-- table:
-    schema: public
-    name: category
-  insert_permissions:
-  - role: public
-    permission:
-      check: {}
-      columns:
-      - groupName
-      - is_active
-      - name
-      - order
-      - productsAssigned
-      backend_only: false
-  select_permissions:
-  - role: public
-    permission:
-      columns:
-      - created_at
-      - groupName
-      - id
-      - is_active
-      - name
-      - order
-      - productsAssigned
-      - updated_at
-      filter: {}
-      allow_aggregations: true
-  update_permissions:
-  - role: public
-    permission:
-      columns:
-      - groupName
-      - is_active
-      - name
-      - order
-      - productsAssigned
-      filter: {}
-      check: null
-  delete_permissions:
-  - role: public
-    permission:
-      filter: {}
-- table:
-    schema: public
-    name: colors
-  insert_permissions:
-  - role: public
-    permission:
-      check: {}
-      columns:
-      - id
-      - created_at
-      - updated_at
-      - color
-      backend_only: false
-  select_permissions:
-  - role: public
-    permission:
-      columns:
-      - color
-      - id
-      - updated_at
-      filter: {}
-- table:
-    schema: public
-    name: contacts
-  select_permissions:
-  - role: public
-    permission:
-      columns:
-      - mobile_number
-      - client_id
-      - first_name
-      - last_name
-      - created_at
-      - updated_at
-      - id
-      filter: {}
-- table:
-    schema: public
-    name: courses
-  insert_permissions:
-  - role: public
-    permission:
-      check: {}
-      columns:
-      - ICD10_code
-      - ICD9_code
-      - OSICS10_code
-      - code
-      - description
       - is_active
       - name
       - order
@@ -1135,36 +870,24 @@
   - role: public
     permission:
       columns:
-      - ICD10_code
-      - ICD9_code
-      - OSICS10_code
-      - code
-      - created_at
-      - description
-      - id
       - is_active
-      - layer1
-      - layer2
-      - layer3
-      - layer4
       - order
+      - code
+      - invoice_prefix
+      - name
+      - created_at
       - updated_at
+      - id
       filter: {}
       allow_aggregations: true
   update_permissions:
   - role: public
     permission:
       columns:
-      - ICD10_code
-      - ICD9_code
-      - OSICS10_code
       - code
-      - description
+      - invoice_prefix
       - is_active
-      - layer1
-      - layer2
-      - layer3
-      - layer4
+      - name
       - order
       filter: {}
       check: null
@@ -1281,7 +1004,7 @@
       filter: {}
 - table:
     schema: public
-    name: diagnostic_codeset
+    name: departments
   insert_permissions:
   - role: public
     permission:
@@ -1648,7 +1371,67 @@
       filter: {}
 - table:
     schema: public
+    name: job_candidates
+  object_relationships:
+  - name: candidate_list
+    using:
+      foreign_key_constraint_on: candidate_id
+  - name: job_opening
+    using:
+      foreign_key_constraint_on: job_opening_id
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - is_new
+      - candidate_id
+      - id
+      - job_opening_id
+      - status
+      - created_at
+      - updated_at
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - is_new
+      - candidate_id
+      - id
+      - job_opening_id
+      - status
+      - created_at
+      - updated_at
+      filter: {}
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - is_new
+      - candidate_id
+      - id
+      - job_opening_id
+      - status
+      - created_at
+      - updated_at
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
     name: job_openings
+  array_relationships:
+  - name: job_candidates
+    using:
+      foreign_key_constraint_on:
+        column: job_opening_id
+        table:
+          schema: public
+          name: job_candidates
   insert_permissions:
   - role: public
     permission:
@@ -1957,7 +1740,13 @@
       check: {}
       columns:
       - address
-      - image
+      - apt
+      - badges
+      - bookable
+      - email
+      - employees
+      - hasCalender
+      - img
       - is_active
       - is_day
       - is_night
@@ -1965,7 +1754,10 @@
       - is_pharmacy
       - is_time
       - name
-      - order
+      - phone
+      - postcode
+      - showOnline
+      - website
       backend_only: false
   select_permissions:
   - role: public
@@ -1974,7 +1766,7 @@
       - address
       - created_at
       - id
-      - image
+      - img
       - is_active
       - is_day
       - is_night
@@ -1991,7 +1783,7 @@
     permission:
       columns:
       - address
-      - image
+      - img
       - is_active
       - is_day
       - is_night
@@ -2422,6 +2214,46 @@
       filter: {}
 - table:
     schema: public
+    name: resources
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - location
+      - is_active
+      - name
+      - order
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - created_at
+      - updated_at
+      - order
+      - name
+      - location
+      - is_active
+      - id
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - location
+      - is_active
+      - name
+      - order
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
     name: rooms
   insert_permissions:
   - role: public
@@ -2489,6 +2321,7 @@
       - start_time
       - id
       filter: {}
+      allow_aggregations: true
   update_permissions:
   - role: public
     permission:

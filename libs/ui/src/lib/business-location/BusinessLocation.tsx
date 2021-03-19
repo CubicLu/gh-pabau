@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useState, useEffect, useCallback } from 'react'
 import { Row, Col, Modal } from 'antd'
 import fetch from 'node-fetch'
 import { Input } from '@pabau/ui'
@@ -15,13 +15,13 @@ interface AddressDetails {
 }
 
 export interface BusinessLocationProps {
-  apiKey: string
   value?: string
   onChange?(address, detailedAddress): void
 }
 
+const apiKey = process.env.google_api_key
+
 export const BusinessLocation: FC<BusinessLocationProps> = ({
-  apiKey,
   value,
   onChange,
 }) => {
@@ -29,13 +29,9 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
   const [showModal, setShowModal] = useState(false)
   const [detail, setDetail] = useState<AddressDetails>({})
   const [detailForModal, setDetailForModal] = useState<AddressDetails>({})
-
-  useEffect(() => {
-    setLocation(value || '')
-  }, [value])
-
-  useEffect(() => {
-    const handleChange = (address) => {
+  const handleChange = useCallback(
+    (address) => {
+      setLocation(address)
       fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${address.replace(
           /\s/g,
@@ -85,15 +81,22 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
             }
             console.log('get detailed information', detailedAddress)
             setDetail(detailedAddress)
-            onChange?.(address, detailedAddress)
+            if (onChange) onChange(address, detailedAddress)
           }
         })
         .catch((error) => {
           console.error(error)
         })
+    },
+    [onChange]
+  )
+
+  useEffect(() => {
+    if (value) {
+      setLocation(value)
+      handleChange(value)
     }
-    handleChange(location)
-  }, [location, apiKey, onChange])
+  }, [value, handleChange])
 
   useEffect(() => {
     console.log('detailForModal changed >>>', detailForModal)
@@ -104,10 +107,11 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
       <p>Where is your business located?</p>
       <GooglePlacesAutocomplete
         apiKey={apiKey}
-        initialValue={location}
-        inputClassName="ant-input"
-        onSelect={(val) => {
-          setLocation(val.description)
+        selectProps={{
+          value: location,
+          inputValue: location,
+          onInputChange: (val) => setLocation(val),
+          onChange: (result) => handleChange(result.value.description),
         }}
       />
       <div className={styles.businessLocationDetails}>

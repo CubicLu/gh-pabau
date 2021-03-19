@@ -1,0 +1,195 @@
+.permission-main-wrap {
+  background: #ffffff;
+  .desk-top-view-none {
+    display: none;
+    @media screen and (max-width: 767px) {
+      display: block;
+      padding: 0 17px;
+    }
+  }
+}
+.popover-wrap {
+  :global {
+    .ant-popover-content {
+      .ant-popover-arrow {
+        border-top-color: #595959;
+        border-left-color: #595959;
+      }
+    }
+    .ant-popover-inner {
+      border-radius: 6px;
+      background: #595959;
+      box-shadow: 4px 0 15px rgba(0, 34, 65, 0.1);
+    }
+    .ant-popover-inner-content {
+      width: 230px;
+      padding: 16px;
+      color: #ffffff;
+    }
+  }
+}
+.assign-wrapper {
+  padding: 20px 24px;
+  @media screen and (max-width: 767px) {
+    padding: 0;
+    h4 {
+      padding: 20px 24px 0;
+      color: #3D3D46 !important;
+    }
+    p {
+      padding: 0 24px 20px;
+      color: #3D3D46 !important;
+    }
+  }
+  h4 {
+    font-size: 16px;
+    line-height: 20px;
+    color: #3D3D46;
+  }
+  p {
+    font-size: 14px;
+    line-height: 18px;
+    color: #9292A3;
+  }
+  .team-mate {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    @media screen and (max-width: 767px) {
+      padding: 0 20px 16px;
+      border-bottom:1px solid #ECEDF0;
+    }
+    .team-wrap {
+      cursor: pointer;
+      border: 1px solid #ECEDF0;
+      box-sizing: border-box;
+      border-radius: 4px;
+      padding: 12px 16px;
+      min-width: 166px;
+      margin-right: 16px;
+      position: relative;
+      .user-info {
+        .user {
+
+          svg {
+            fill: #9292A3;
+            font-size: 18px;
+          }
+        }
+        h5 {
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 21px;
+          margin-top: 18px;
+          color: #3D3D46;
+          margin-bottom: 0;
+        }
+      }
+      .verify {
+        display: none;
+      }
+      .question-active {
+        @media screen and (max-width: 767px) {
+          :global .anticon-question-circle {
+            svg {
+              fill: #54B2D3 !important;
+              width: 21px;
+              height: 21px;
+            }
+          }
+        }
+      }
+      &.active {
+        border: 1px solid #54B2D3;
+        box-sizing: border-box;
+        border-radius: 4px;
+        @media screen and (max-width: 767px) {
+          .user-info {
+            .user {
+              svg {
+                fill: #54B2D3;
+                font-size: 18px;
+              }
+            }
+            h5 {
+              color: #54B2D3;
+            }
+          }
+        }
+        .verify {
+          display: flex;
+          position: absolute;
+          right: 10px;
+          top: 10px;
+          :global .anticon-question-circle {
+            display: none;
+          }
+          @media screen and (max-width: 767px) {
+            top: 50%;
+            transform: translateY(-50%);
+            :global .anticon-question-circle {
+              display: block;
+            }
+          }
+          svg {
+            fill: #54B2D3;
+            width: 21px;
+            height: 21px;
+          }
+        }
+      }
+    }
+    @media screen and (max-width: 767px) {
+      flex-direction: column;
+      .team-wrap {
+        margin-bottom: 16px;
+        .verify {
+          :global .anticon-question-circle {
+            margin-right: 19px;
+            svg {
+              fill: #9292A3;
+            }
+          }
+        }
+        .user-info {
+          display: flex;
+          align-items: center;
+          h5 {
+            margin-top: 0;
+            margin-bottom: 0;
+            margin-left: 18px;
+          }
+        }
+      }
+    }
+  }
+
+}
+.permission-content {
+  @media screen and (max-width: 767px) {
+    padding: 0 20px;
+  }
+}
+.access-tooltip {
+  h5 {
+    font-size: 12px;
+    line-height: 15px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #FFFFFF;
+  }
+  .accessContent {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    p {
+      font-size: 12px;
+      line-height: 16px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 0;
+      color: #FFFFFF;
+      margin-left: 10px;
+    }
+  }
+}

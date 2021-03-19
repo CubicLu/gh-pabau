@@ -24,22 +24,6 @@ import { useRouter } from 'next/router'
 
 const { Title } = Typography
 
-interface EditFieldsTypes {
-  id: string
-  name: string
-  phone: string
-  website: string
-  country: string
-  city: string
-  street: string
-  post_code: string
-  invoice_template: string
-  invoice_prefix: string
-  invoice_starting_number: string
-  vat_registered: boolean
-  is_active: boolean
-}
-
 interface P {
   schema: Schema
   addQuery?: DocumentNode
@@ -54,10 +38,10 @@ interface P {
   notificationBanner?: React.ReactNode
   createPageOnClick?(): void
   addFilter?: boolean
-  setEditPage?(e: EditFieldsTypes): void
   needTranslation?: boolean
   editPage?: boolean
   editPageRouteLink?: string
+  setEditPage?(e): void
 }
 
 const CrudTable: FC<P> = ({
@@ -78,6 +62,7 @@ const CrudTable: FC<P> = ({
   needTranslation = false,
   editPage = false,
   editPageRouteLink,
+  setEditPage,
 }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isActive, setIsActive] = useState(true)
