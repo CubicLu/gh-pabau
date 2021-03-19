@@ -499,6 +499,7 @@ const CrudTable: FC<P> = ({
             <Table
               loading={isLoading}
               style={{ height: '100%' }}
+              scroll={{ x: 'max-content' }}
               sticky={{ offsetScroll: 80, offsetHeader: 80 }}
               pagination={sourceData?.length > 10 ? {} : false}
               draggable={true}
@@ -550,6 +551,8 @@ const CrudTable: FC<P> = ({
               onRowClick={(e) => {
                 if (editPage) {
                   router.push(`${editPageRouteLink}/${e.id}`)
+                } else if (createPage) {
+                  createPageOnClick()
                 } else {
                   setEditingRow(e)
                   setModalShowing((e) => !e)

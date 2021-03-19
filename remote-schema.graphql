@@ -291,7 +291,6 @@ input AcceptEmailTokenListRelationFilter {
 }
 
 input AcceptEmailTokenOrderByInput {
-  company: CompanyOrderByInput
   company_id: SortOrder
   email: SortOrder
   id: SortOrder
@@ -538,7 +537,6 @@ input AccountBalanceLogWhereUniqueInput {
 
 input AccountBalanceOrderByInput {
   balance: SortOrder
-  company: CompanyOrderByInput
   company_id: SortOrder
   contact_id: SortOrder
   id: SortOrder
@@ -4673,7 +4671,6 @@ input CandidateListRelationFilter {
 
 input CandidateOrderByInput {
   candidate_status: SortOrder
-  company: CompanyOrderByInput
   company_id: SortOrder
   contact_id: SortOrder
   cover_letter: SortOrder
@@ -6988,7 +6985,6 @@ input CmCampaignOrderByInput {
   StartDate: SortOrder
   Status: SortOrder
   Type: SortOrder
-  company: CompanyOrderByInput
   company_id: SortOrder
 }
 
@@ -7343,7 +7339,6 @@ input CmCaseOrderByInput {
   IpAddress: SortOrder
   case_number: SortOrder
   comments: SortOrder
-  company: CompanyOrderByInput
   company_id: SortOrder
   contact: SortOrder
   critical: SortOrder
@@ -7419,7 +7414,6 @@ input CmCaseReplyOrderByInput {
   ID: SortOrder
   IpAddress: SortOrder
   OwnerID: SortOrder
-  company: CompanyOrderByInput
 }
 
 input CmCaseReplyScalarWhereInput {
@@ -8790,7 +8784,6 @@ input CompanyDetailsOrderByInput {
   street: SortOrder
   subscription: SortOrder
   tax_name: SortOrder
-  timezone: TimezoneOrderByInput
   timezone_id: SortOrder
   twitter_page: SortOrder
   use_google_auth: SortOrder
@@ -9642,14 +9635,12 @@ input CompanyOrderByInput {
   admin: SortOrder
   creation_date: SortOrder
   cron_enabled: SortOrder
-  details: CompanyDetailsOrderByInput
   digit8: SortOrder
   id: SortOrder
   image: SortOrder
   remote_connect: SortOrder
   remote_url: SortOrder
   slug: SortOrder
-  subscription: CompanySubscriptionOrderByInput
   user: SortOrder
 }
 
@@ -11519,6 +11510,17 @@ input Enumcompany_details_tax_nameFilter {
   notIn: [company_details_tax_name]
 }
 
+input Enumgl_codes_descriptionFieldUpdateOperationsInput {
+  set: gl_codes_description
+}
+
+input Enumgl_codes_descriptionFilter {
+  equals: gl_codes_description
+  in: [gl_codes_description]
+  not: NestedEnumgl_codes_descriptionFilter
+  notIn: [gl_codes_description]
+}
+
 input FloatFieldUpdateOperationsInput {
   decrement: Float
   divide: Float
@@ -11562,6 +11564,99 @@ input Float_comparison_exp {
   _lte: Float
   _neq: Float
   _nin: [Float!]
+}
+
+type GlCode {
+  InvPaymentType: InvPaymentType
+  code: String
+  company_id: Int
+  description: gl_codes_description
+  id: Int
+  related_to: Int
+}
+
+input GlCodeCreateInput {
+  InvPaymentType: InvPaymentTypeCreateNestedOneWithoutGlCodeInput
+  code: String!
+  company_id: Int!
+  description: gl_codes_description!
+}
+
+input GlCodeCreateNestedOneWithoutInvPaymentTypeInput {
+  connect: GlCodeWhereUniqueInput
+  connectOrCreate: GlCodeCreateOrConnectWithoutInvPaymentTypeInput
+  create: GlCodeUncheckedCreateWithoutInvPaymentTypeInput
+}
+
+input GlCodeCreateOrConnectWithoutInvPaymentTypeInput {
+  create: GlCodeUncheckedCreateWithoutInvPaymentTypeInput!
+  where: GlCodeWhereUniqueInput!
+}
+
+input GlCodeOrderByInput {
+  code: SortOrder
+  company_id: SortOrder
+  description: SortOrder
+  id: SortOrder
+  related_to: SortOrder
+}
+
+input GlCodeUncheckedCreateWithoutInvPaymentTypeInput {
+  code: String!
+  company_id: Int!
+  description: gl_codes_description!
+  id: Int
+}
+
+input GlCodeUncheckedUpdateWithoutInvPaymentTypeInput {
+  code: StringFieldUpdateOperationsInput
+  company_id: IntFieldUpdateOperationsInput
+  description: Enumgl_codes_descriptionFieldUpdateOperationsInput
+  id: IntFieldUpdateOperationsInput
+}
+
+input GlCodeUpdateInput {
+  InvPaymentType: InvPaymentTypeUpdateOneWithoutGlCodeInput
+  code: StringFieldUpdateOperationsInput
+  company_id: IntFieldUpdateOperationsInput
+  description: Enumgl_codes_descriptionFieldUpdateOperationsInput
+}
+
+input GlCodeUpdateManyMutationInput {
+  code: StringFieldUpdateOperationsInput
+  company_id: IntFieldUpdateOperationsInput
+  description: Enumgl_codes_descriptionFieldUpdateOperationsInput
+}
+
+input GlCodeUpdateOneWithoutInvPaymentTypeInput {
+  connect: GlCodeWhereUniqueInput
+  connectOrCreate: GlCodeCreateOrConnectWithoutInvPaymentTypeInput
+  create: GlCodeUncheckedCreateWithoutInvPaymentTypeInput
+  delete: Boolean
+  disconnect: Boolean
+  update: GlCodeUncheckedUpdateWithoutInvPaymentTypeInput
+  upsert: GlCodeUpsertWithoutInvPaymentTypeInput
+}
+
+input GlCodeUpsertWithoutInvPaymentTypeInput {
+  create: GlCodeUncheckedCreateWithoutInvPaymentTypeInput!
+  update: GlCodeUncheckedUpdateWithoutInvPaymentTypeInput!
+}
+
+input GlCodeWhereInput {
+  AND: [GlCodeWhereInput]
+  InvPaymentType: InvPaymentTypeWhereInput
+  NOT: [GlCodeWhereInput]
+  OR: [GlCodeWhereInput]
+  code: StringFilter
+  company_id: IntFilter
+  description: Enumgl_codes_descriptionFilter
+  id: IntFilter
+  related_to: IntNullableFilter
+}
+
+input GlCodeWhereUniqueInput {
+  id: Int
 }
 
 input IntFieldUpdateOperationsInput {
@@ -11610,6 +11705,7 @@ input Int_comparison_exp {
 }
 
 type InvPaymentType {
+  GlCode: GlCode
   company_id: Int
   created_date: DateTime
   description: String
@@ -11624,6 +11720,7 @@ type InvPaymentType {
 }
 
 input InvPaymentTypeCreateInput {
+  GlCode: GlCodeCreateNestedOneWithoutInvPaymentTypeInput
   company_id: Int!
   created_date: DateTime
   description: String
@@ -11634,6 +11731,17 @@ input InvPaymentTypeCreateInput {
   name: String
   type: String
   uid: Int
+}
+
+input InvPaymentTypeCreateNestedOneWithoutGlCodeInput {
+  connect: InvPaymentTypeWhereUniqueInput
+  connectOrCreate: InvPaymentTypeCreateOrConnectWithoutGlCodeInput
+  create: InvPaymentTypeUncheckedCreateWithoutGlCodeInput
+}
+
+input InvPaymentTypeCreateOrConnectWithoutGlCodeInput {
+  create: InvPaymentTypeUncheckedCreateWithoutGlCodeInput!
+  where: InvPaymentTypeWhereUniqueInput!
 }
 
 input InvPaymentTypeOrderByInput {
@@ -11650,7 +11758,36 @@ input InvPaymentTypeOrderByInput {
   uid: SortOrder
 }
 
+input InvPaymentTypeUncheckedCreateWithoutGlCodeInput {
+  company_id: Int!
+  created_date: DateTime
+  description: String
+  epos_display: Int
+  id: Int
+  is_active: Int!
+  is_money: Int!
+  modified_date: DateTime
+  name: String
+  type: String
+  uid: Int
+}
+
+input InvPaymentTypeUncheckedUpdateWithoutGlCodeInput {
+  company_id: IntFieldUpdateOperationsInput
+  created_date: NullableDateTimeFieldUpdateOperationsInput
+  description: NullableStringFieldUpdateOperationsInput
+  epos_display: NullableIntFieldUpdateOperationsInput
+  id: IntFieldUpdateOperationsInput
+  is_active: IntFieldUpdateOperationsInput
+  is_money: IntFieldUpdateOperationsInput
+  modified_date: NullableDateTimeFieldUpdateOperationsInput
+  name: NullableStringFieldUpdateOperationsInput
+  type: StringFieldUpdateOperationsInput
+  uid: NullableIntFieldUpdateOperationsInput
+}
+
 input InvPaymentTypeUpdateInput {
+  GlCode: GlCodeUpdateOneWithoutInvPaymentTypeInput
   company_id: IntFieldUpdateOperationsInput
   created_date: NullableDateTimeFieldUpdateOperationsInput
   description: NullableStringFieldUpdateOperationsInput
@@ -11676,8 +11813,24 @@ input InvPaymentTypeUpdateManyMutationInput {
   uid: NullableIntFieldUpdateOperationsInput
 }
 
+input InvPaymentTypeUpdateOneWithoutGlCodeInput {
+  connect: InvPaymentTypeWhereUniqueInput
+  connectOrCreate: InvPaymentTypeCreateOrConnectWithoutGlCodeInput
+  create: InvPaymentTypeUncheckedCreateWithoutGlCodeInput
+  delete: Boolean
+  disconnect: Boolean
+  update: InvPaymentTypeUncheckedUpdateWithoutGlCodeInput
+  upsert: InvPaymentTypeUpsertWithoutGlCodeInput
+}
+
+input InvPaymentTypeUpsertWithoutGlCodeInput {
+  create: InvPaymentTypeUncheckedCreateWithoutGlCodeInput!
+  update: InvPaymentTypeUncheckedUpdateWithoutGlCodeInput!
+}
+
 input InvPaymentTypeWhereInput {
   AND: [InvPaymentTypeWhereInput]
+  GlCode: GlCodeWhereInput
   NOT: [InvPaymentTypeWhereInput]
   OR: [InvPaymentTypeWhereInput]
   company_id: IntFilter
@@ -12484,7 +12637,6 @@ input MarketingSourceListRelationFilter {
 }
 
 input MarketingSourceOrderByInput {
-  company: CompanyOrderByInput
   company_id: SortOrder
   custom_id: SortOrder
   id: SortOrder
@@ -12812,6 +12964,13 @@ input NestedEnumcompany_details_tax_nameFilter {
   in: [company_details_tax_name]
   not: NestedEnumcompany_details_tax_nameFilter
   notIn: [company_details_tax_name]
+}
+
+input NestedEnumgl_codes_descriptionFilter {
+  equals: gl_codes_description
+  in: [gl_codes_description]
+  not: NestedEnumgl_codes_descriptionFilter
+  notIn: [gl_codes_description]
 }
 
 input NestedFloatFilter {
@@ -13611,7 +13770,6 @@ input ThirdPartyAccessListRelationFilter {
 
 input ThirdPartyAccessOrderByInput {
   access_id: SortOrder
-  company: CompanyOrderByInput
   company_id: SortOrder
   company_name: SortOrder
   email: SortOrder
@@ -13914,7 +14072,6 @@ input TwoFactorHistoryListRelationFilter {
 }
 
 input TwoFactorHistoryOrderByInput {
-  company: CompanyOrderByInput
   company_id: SortOrder
   id: SortOrder
   is_confirmed: SortOrder
@@ -14401,7 +14558,6 @@ input UserOrderByInput {
   can_void: SortOrder
   clocked_in: SortOrder
   clocked_out: SortOrder
-  company: CompanyOrderByInput
   company_id: SortOrder
   created: SortOrder
   custom_id: SortOrder
@@ -14602,7 +14758,6 @@ input UserSecurityQuestionsAnswerOrderByInput {
   question: SortOrder
   question_no: SortOrder
   user_id: SortOrder
-  users: UserOrderByInput
 }
 
 input UserSecurityQuestionsAnswerScalarWhereInput {
@@ -19411,6 +19566,220 @@ type diagnostic_codeset_variance_fields {
 }
 
 """
+columns and relationships of "drugs"
+"""
+type drugs {
+  comment: String
+  created_date: timestamptz!
+  dosage: String!
+  frequency: String!
+  id: uuid!
+  is_active: Boolean!
+  name: String!
+  route: String!
+  unit: String!
+}
+
+"""
+aggregated selection of "drugs"
+"""
+type drugs_aggregate {
+  aggregate: drugs_aggregate_fields
+  nodes: [drugs!]!
+}
+
+"""
+aggregate fields of "drugs"
+"""
+type drugs_aggregate_fields {
+  count(columns: [drugs_select_column!], distinct: Boolean): Int!
+  max: drugs_max_fields
+  min: drugs_min_fields
+}
+
+"""
+Boolean expression to filter rows from the table "drugs". All fields are combined with a logical 'AND'.
+"""
+input drugs_bool_exp {
+  _and: [drugs_bool_exp!]
+  _not: drugs_bool_exp
+  _or: [drugs_bool_exp!]
+  comment: String_comparison_exp
+  created_date: timestamptz_comparison_exp
+  dosage: String_comparison_exp
+  frequency: String_comparison_exp
+  id: uuid_comparison_exp
+  is_active: Boolean_comparison_exp
+  name: String_comparison_exp
+  route: String_comparison_exp
+  unit: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "drugs"
+"""
+enum drugs_constraint {
+  """unique or primary key constraint"""
+  drugs_pkey
+}
+
+"""
+input type for inserting data into table "drugs"
+"""
+input drugs_insert_input {
+  comment: String
+  created_date: timestamptz
+  dosage: String
+  frequency: String
+  id: uuid
+  is_active: Boolean
+  name: String
+  route: String
+  unit: String
+}
+
+"""aggregate max on columns"""
+type drugs_max_fields {
+  comment: String
+  created_date: timestamptz
+  dosage: String
+  frequency: String
+  id: uuid
+  name: String
+  route: String
+  unit: String
+}
+
+"""aggregate min on columns"""
+type drugs_min_fields {
+  comment: String
+  created_date: timestamptz
+  dosage: String
+  frequency: String
+  id: uuid
+  name: String
+  route: String
+  unit: String
+}
+
+"""
+response of any mutation on the table "drugs"
+"""
+type drugs_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [drugs!]!
+}
+
+"""
+on conflict condition type for table "drugs"
+"""
+input drugs_on_conflict {
+  constraint: drugs_constraint!
+  update_columns: [drugs_update_column!]!
+  where: drugs_bool_exp
+}
+
+"""Ordering options when selecting data from "drugs"."""
+input drugs_order_by {
+  comment: order_by
+  created_date: order_by
+  dosage: order_by
+  frequency: order_by
+  id: order_by
+  is_active: order_by
+  name: order_by
+  route: order_by
+  unit: order_by
+}
+
+"""primary key columns input for table: drugs"""
+input drugs_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "drugs"
+"""
+enum drugs_select_column {
+  """column name"""
+  comment
+
+  """column name"""
+  created_date
+
+  """column name"""
+  dosage
+
+  """column name"""
+  frequency
+
+  """column name"""
+  id
+
+  """column name"""
+  is_active
+
+  """column name"""
+  name
+
+  """column name"""
+  route
+
+  """column name"""
+  unit
+}
+
+"""
+input type for updating data in table "drugs"
+"""
+input drugs_set_input {
+  comment: String
+  created_date: timestamptz
+  dosage: String
+  frequency: String
+  id: uuid
+  is_active: Boolean
+  name: String
+  route: String
+  unit: String
+}
+
+"""
+update columns of table "drugs"
+"""
+enum drugs_update_column {
+  """column name"""
+  comment
+
+  """column name"""
+  created_date
+
+  """column name"""
+  dosage
+
+  """column name"""
+  frequency
+
+  """column name"""
+  id
+
+  """column name"""
+  is_active
+
+  """column name"""
+  name
+
+  """column name"""
+  route
+
+  """column name"""
+  unit
+}
+
+"""
 family_relationships
 
 
@@ -19639,6 +20008,16 @@ type family_relationships_var_samp_fields {
 """aggregate variance on columns"""
 type family_relationships_variance_fields {
   order: Float
+}
+
+enum gl_codes_description {
+  discount
+  location_code
+  payment_type
+  product_code
+  service_code
+  setup
+  tax_rate
 }
 
 """
@@ -22886,6 +23265,7 @@ type mutation_root {
   createOneCompany(data: CompanyCreateInput!): Company
   createOneCompanyDetails(data: CompanyDetailsCreateInput!): CompanyDetails
   createOneCompanySubscription(data: CompanySubscriptionCreateInput!): CompanySubscription
+  createOneGlCode(data: GlCodeCreateInput!): GlCode
   createOneInvPaymentType(data: InvPaymentTypeCreateInput!): InvPaymentType
   createOneMarketingSource(data: MarketingSourceCreateInput!): MarketingSource
   createOneMediaLlibraryAttachment(data: MediaLlibraryAttachmentCreateInput!): MediaLlibraryAttachment
@@ -22981,6 +23361,7 @@ type mutation_root {
   deleteManyCompany(where: CompanyWhereInput): AffectedRowsOutput
   deleteManyCompanyDetails(where: CompanyDetailsWhereInput): AffectedRowsOutput
   deleteManyCompanySubscription(where: CompanySubscriptionWhereInput): AffectedRowsOutput
+  deleteManyGlCode(where: GlCodeWhereInput): AffectedRowsOutput
   deleteManyInvPaymentType(where: InvPaymentTypeWhereInput): AffectedRowsOutput
   deleteManyMarketingSource(where: MarketingSourceWhereInput): AffectedRowsOutput
   deleteManyMediaLlibraryAttachment(where: MediaLlibraryAttachmentWhereInput): AffectedRowsOutput
@@ -23076,6 +23457,7 @@ type mutation_root {
   deleteOneCompany(where: CompanyWhereUniqueInput!): Company
   deleteOneCompanyDetails(where: CompanyDetailsWhereUniqueInput!): CompanyDetails
   deleteOneCompanySubscription(where: CompanySubscriptionWhereUniqueInput!): CompanySubscription
+  deleteOneGlCode(where: GlCodeWhereUniqueInput!): GlCode
   deleteOneInvPaymentType(where: InvPaymentTypeWhereUniqueInput!): InvPaymentType
   deleteOneMarketingSource(where: MarketingSourceWhereUniqueInput!): MarketingSource
   deleteOneMediaLlibraryAttachment(where: MediaLlibraryAttachmentWhereUniqueInput!): MediaLlibraryAttachment
@@ -23335,6 +23717,19 @@ type mutation_root {
   delete_diagnostic_codeset_by_pk(id: uuid!): diagnostic_codeset
 
   """
+  delete data from the table: "drugs"
+  """
+  delete_drugs(
+    """filter the rows which have to be deleted"""
+    where: drugs_bool_exp!
+  ): drugs_mutation_response
+
+  """
+  delete single row from the table: "drugs"
+  """
+  delete_drugs_by_pk(id: uuid!): drugs
+
+  """
   delete data from the table: "family_relationships"
   """
   delete_family_relationships(
@@ -23580,6 +23975,19 @@ type mutation_root {
   delete single row from the table: "purchase_order"
   """
   delete_purchase_order_by_pk(id: uuid!): purchase_order
+
+  """
+  delete data from the table: "rooms"
+  """
+  delete_rooms(
+    """filter the rows which have to be deleted"""
+    where: rooms_bool_exp!
+  ): rooms_mutation_response
+
+  """
+  delete single row from the table: "rooms"
+  """
+  delete_rooms_by_pk(id: Int!): rooms
 
   """
   delete data from the table: "rota_templates"
@@ -24094,6 +24502,28 @@ type mutation_root {
   ): diagnostic_codeset
 
   """
+  insert data into the table: "drugs"
+  """
+  insert_drugs(
+    """the rows to be inserted"""
+    objects: [drugs_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: drugs_on_conflict
+  ): drugs_mutation_response
+
+  """
+  insert a single row into the table: "drugs"
+  """
+  insert_drugs_one(
+    """the row to be inserted"""
+    object: drugs_insert_input!
+
+    """on conflict condition"""
+    on_conflict: drugs_on_conflict
+  ): drugs
+
+  """
   insert data into the table: "family_relationships"
   """
   insert_family_relationships(
@@ -24380,6 +24810,14 @@ type mutation_root {
   ): marketing_source
 
   """
+  insert data into the table: "packages_setup"
+  """
+  insert_packages_setup(
+    """the rows to be inserted"""
+    objects: [packages_setup_insert_input!]!
+  ): packages_setup_mutation_response
+
+  """
   insert data into the table: "payment_types"
   """
   insert_payment_types(
@@ -24510,6 +24948,28 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: purchase_order_on_conflict
   ): purchase_order
+
+  """
+  insert data into the table: "rooms"
+  """
+  insert_rooms(
+    """the rows to be inserted"""
+    objects: [rooms_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: rooms_on_conflict
+  ): rooms_mutation_response
+
+  """
+  insert a single row into the table: "rooms"
+  """
+  insert_rooms_one(
+    """the row to be inserted"""
+    object: rooms_insert_input!
+
+    """on conflict condition"""
+    on_conflict: rooms_on_conflict
+  ): rooms
 
   """
   insert data into the table: "rota_templates"
@@ -24643,7 +25103,7 @@ type mutation_root {
     on_conflict: third_parties_on_conflict
   ): third_parties
   login(password: String!, username: String!): String
-  logout(userId: Int!): Boolean
+  logout: Boolean
   updateManyAcLog(data: AcLogUpdateManyMutationInput!, where: AcLogWhereInput): AffectedRowsOutput
   updateManyAcLogAction(data: AcLogActionUpdateManyMutationInput!, where: AcLogActionWhereInput): AffectedRowsOutput
   updateManyAcLogUrl(data: AcLogUrlUpdateManyMutationInput!, where: AcLogUrlWhereInput): AffectedRowsOutput
@@ -24729,6 +25189,7 @@ type mutation_root {
   updateManyCompany(data: CompanyUpdateManyMutationInput!, where: CompanyWhereInput): AffectedRowsOutput
   updateManyCompanyDetails(data: CompanyDetailsUpdateManyMutationInput!, where: CompanyDetailsWhereInput): AffectedRowsOutput
   updateManyCompanySubscription(data: CompanySubscriptionUpdateManyMutationInput!, where: CompanySubscriptionWhereInput): AffectedRowsOutput
+  updateManyGlCode(data: GlCodeUpdateManyMutationInput!, where: GlCodeWhereInput): AffectedRowsOutput
   updateManyInvPaymentType(data: InvPaymentTypeUpdateManyMutationInput!, where: InvPaymentTypeWhereInput): AffectedRowsOutput
   updateManyMarketingSource(data: MarketingSourceUpdateManyMutationInput!, where: MarketingSourceWhereInput): AffectedRowsOutput
   updateManyMediaLlibraryAttachment(data: MediaLlibraryAttachmentUpdateManyMutationInput!, where: MediaLlibraryAttachmentWhereInput): AffectedRowsOutput
@@ -24824,6 +25285,7 @@ type mutation_root {
   updateOneCompany(data: CompanyUpdateInput!, where: CompanyWhereUniqueInput!): Company
   updateOneCompanyDetails(data: CompanyDetailsUpdateInput!, where: CompanyDetailsWhereUniqueInput!): CompanyDetails
   updateOneCompanySubscription(data: CompanySubscriptionUpdateInput!, where: CompanySubscriptionWhereUniqueInput!): CompanySubscription
+  updateOneGlCode(data: GlCodeUpdateInput!, where: GlCodeWhereUniqueInput!): GlCode
   updateOneInvPaymentType(data: InvPaymentTypeUpdateInput!, where: InvPaymentTypeWhereUniqueInput!): InvPaymentType
   updateOneMarketingSource(data: MarketingSourceUpdateInput!, where: MarketingSourceWhereUniqueInput!): MarketingSource
   updateOneMediaLlibraryAttachment(data: MediaLlibraryAttachmentUpdateInput!, where: MediaLlibraryAttachmentWhereUniqueInput!): MediaLlibraryAttachment
@@ -25366,6 +25828,26 @@ type mutation_root {
   ): diagnostic_codeset
 
   """
+  update data of the table: "drugs"
+  """
+  update_drugs(
+    """sets the columns of the filtered rows to the given values"""
+    _set: drugs_set_input
+
+    """filter the rows which have to be updated"""
+    where: drugs_bool_exp!
+  ): drugs_mutation_response
+
+  """
+  update single row of the table: "drugs"
+  """
+  update_drugs_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: drugs_set_input
+    pk_columns: drugs_pk_columns_input!
+  ): drugs
+
+  """
   update data of the table: "family_relationships"
   """
   update_family_relationships(
@@ -25902,6 +26384,32 @@ type mutation_root {
   ): purchase_order
 
   """
+  update data of the table: "rooms"
+  """
+  update_rooms(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: rooms_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: rooms_set_input
+
+    """filter the rows which have to be updated"""
+    where: rooms_bool_exp!
+  ): rooms_mutation_response
+
+  """
+  update single row of the table: "rooms"
+  """
+  update_rooms_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: rooms_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: rooms_set_input
+    pk_columns: rooms_pk_columns_input!
+  ): rooms
+
+  """
   update data of the table: "rota_templates"
   """
   update_rota_templates(
@@ -26141,6 +26649,7 @@ type mutation_root {
   upsertOneCompany(create: CompanyCreateInput!, update: CompanyUpdateInput!, where: CompanyWhereUniqueInput!): Company
   upsertOneCompanyDetails(create: CompanyDetailsCreateInput!, update: CompanyDetailsUpdateInput!, where: CompanyDetailsWhereUniqueInput!): CompanyDetails
   upsertOneCompanySubscription(create: CompanySubscriptionCreateInput!, update: CompanySubscriptionUpdateInput!, where: CompanySubscriptionWhereUniqueInput!): CompanySubscription
+  upsertOneGlCode(create: GlCodeCreateInput!, update: GlCodeUpdateInput!, where: GlCodeWhereUniqueInput!): GlCode
   upsertOneInvPaymentType(create: InvPaymentTypeCreateInput!, update: InvPaymentTypeUpdateInput!, where: InvPaymentTypeWhereUniqueInput!): InvPaymentType
   upsertOneMarketingSource(create: MarketingSourceCreateInput!, update: MarketingSourceUpdateInput!, where: MarketingSourceWhereUniqueInput!): MarketingSource
   upsertOneMediaLlibraryAttachment(create: MediaLlibraryAttachmentCreateInput!, update: MediaLlibraryAttachmentUpdateInput!, where: MediaLlibraryAttachmentWhereUniqueInput!): MediaLlibraryAttachment
@@ -26189,6 +26698,24 @@ enum order_by {
 
   """in descending order, nulls last"""
   desc_nulls_last
+}
+
+"""
+input type for inserting data into table "packages_setup"
+"""
+input packages_setup_insert_input {
+  is_active: Boolean
+  name: String
+  order: Int
+  quantity: json
+}
+
+"""
+response of any mutation on the table "packages_setup"
+"""
+type packages_setup_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
 }
 
 """
@@ -28741,6 +29268,49 @@ type query_root {
   diagnostic_codeset_by_pk(id: uuid!): diagnostic_codeset
 
   """
+  fetch data from the table: "drugs"
+  """
+  drugs(
+    """distinct select on columns"""
+    distinct_on: [drugs_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [drugs_order_by!]
+
+    """filter the rows returned"""
+    where: drugs_bool_exp
+  ): [drugs!]!
+
+  """
+  fetch aggregated fields from the table: "drugs"
+  """
+  drugs_aggregate(
+    """distinct select on columns"""
+    distinct_on: [drugs_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [drugs_order_by!]
+
+    """filter the rows returned"""
+    where: drugs_bool_exp
+  ): drugs_aggregate!
+
+  """fetch data from the table: "drugs" using primary key columns"""
+  drugs_by_pk(id: uuid!): drugs
+
+  """
   fetch data from the table: "family_relationships"
   """
   family_relationships(
@@ -28869,6 +29439,7 @@ type query_root {
   findFirstCompany(cursor: CompanyWhereUniqueInput, orderBy: CompanyOrderByInput, skip: Int, take: Int, where: CompanyWhereInput): Company
   findFirstCompanyDetails(cursor: CompanyDetailsWhereUniqueInput, orderBy: CompanyDetailsOrderByInput, skip: Int, take: Int, where: CompanyDetailsWhereInput): CompanyDetails
   findFirstCompanySubscription(cursor: CompanySubscriptionWhereUniqueInput, orderBy: CompanySubscriptionOrderByInput, skip: Int, take: Int, where: CompanySubscriptionWhereInput): CompanySubscription
+  findFirstGlCode(cursor: GlCodeWhereUniqueInput, orderBy: GlCodeOrderByInput, skip: Int, take: Int, where: GlCodeWhereInput): GlCode
   findFirstInvPaymentType(cursor: InvPaymentTypeWhereUniqueInput, orderBy: InvPaymentTypeOrderByInput, skip: Int, take: Int, where: InvPaymentTypeWhereInput): InvPaymentType
   findFirstMarketingSource(cursor: MarketingSourceWhereUniqueInput, orderBy: MarketingSourceOrderByInput, skip: Int, take: Int, where: MarketingSourceWhereInput): MarketingSource
   findFirstMediaLlibraryAttachment(cursor: MediaLlibraryAttachmentWhereUniqueInput, orderBy: MediaLlibraryAttachmentOrderByInput, skip: Int, take: Int, where: MediaLlibraryAttachmentWhereInput): MediaLlibraryAttachment
@@ -28879,6 +29450,9 @@ type query_root {
   findFirstTwoFactorHistory(cursor: TwoFactorHistoryWhereUniqueInput, orderBy: TwoFactorHistoryOrderByInput, skip: Int, take: Int, where: TwoFactorHistoryWhereInput): TwoFactorHistory
   findFirstUser(cursor: UserWhereUniqueInput, orderBy: UserOrderByInput, skip: Int, take: Int, where: UserWhereInput): User
   findFirstUserSecurityQuestionsAnswer(cursor: UserSecurityQuestionsAnswerWhereUniqueInput, orderBy: UserSecurityQuestionsAnswerOrderByInput, skip: Int, take: Int, where: UserSecurityQuestionsAnswerWhereInput): UserSecurityQuestionsAnswer
+  glCode(where: GlCodeWhereUniqueInput!): GlCode
+  glCodes(cursor: GlCodeWhereUniqueInput, orderBy: [GlCodeOrderByInput!], skip: Int, take: Int, where: GlCodeWhereInput): [GlCode]!
+  glCodesCount(where: GlCodeWhereInput): Int
   invPaymentType(where: InvPaymentTypeWhereUniqueInput!): InvPaymentType
   invPaymentTypes(cursor: InvPaymentTypeWhereUniqueInput, orderBy: [InvPaymentTypeOrderByInput!], skip: Int, take: Int, where: InvPaymentTypeWhereInput): [InvPaymentType]!
   invPaymentTypesCount(where: InvPaymentTypeWhereInput): Int
@@ -29617,6 +30191,49 @@ type query_root {
   purchase_order_by_pk(id: uuid!): purchase_order
 
   """
+  fetch data from the table: "rooms"
+  """
+  rooms(
+    """distinct select on columns"""
+    distinct_on: [rooms_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [rooms_order_by!]
+
+    """filter the rows returned"""
+    where: rooms_bool_exp
+  ): [rooms!]!
+
+  """
+  fetch aggregated fields from the table: "rooms"
+  """
+  rooms_aggregate(
+    """distinct select on columns"""
+    distinct_on: [rooms_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [rooms_order_by!]
+
+    """filter the rows returned"""
+    where: rooms_bool_exp
+  ): rooms_aggregate!
+
+  """fetch data from the table: "rooms" using primary key columns"""
+  rooms_by_pk(id: Int!): rooms
+
+  """
   fetch data from the table: "rota_templates"
   """
   rota_templates(
@@ -29874,6 +30491,242 @@ type query_root {
   userSecurityQuestionsAnswersCount(where: UserSecurityQuestionsAnswerWhereInput): Int
   users(cursor: UserWhereUniqueInput, orderBy: [UserOrderByInput!], skip: Int, take: Int, where: UserWhereInput): [User]!
   usersCount(where: UserWhereInput): Int
+}
+
+"""
+columns and relationships of "rooms"
+"""
+type rooms {
+  created_at: timestamptz!
+  id: Int!
+  is_active: Boolean!
+  location: String!
+  order: Int!
+  room_name: String!
+  updated_at: timestamptz!
+}
+
+"""
+aggregated selection of "rooms"
+"""
+type rooms_aggregate {
+  aggregate: rooms_aggregate_fields
+  nodes: [rooms!]!
+}
+
+"""
+aggregate fields of "rooms"
+"""
+type rooms_aggregate_fields {
+  avg: rooms_avg_fields
+  count(columns: [rooms_select_column!], distinct: Boolean): Int!
+  max: rooms_max_fields
+  min: rooms_min_fields
+  stddev: rooms_stddev_fields
+  stddev_pop: rooms_stddev_pop_fields
+  stddev_samp: rooms_stddev_samp_fields
+  sum: rooms_sum_fields
+  var_pop: rooms_var_pop_fields
+  var_samp: rooms_var_samp_fields
+  variance: rooms_variance_fields
+}
+
+"""aggregate avg on columns"""
+type rooms_avg_fields {
+  id: Float
+  order: Float
+}
+
+"""
+Boolean expression to filter rows from the table "rooms". All fields are combined with a logical 'AND'.
+"""
+input rooms_bool_exp {
+  _and: [rooms_bool_exp!]
+  _not: rooms_bool_exp
+  _or: [rooms_bool_exp!]
+  created_at: timestamptz_comparison_exp
+  id: Int_comparison_exp
+  is_active: Boolean_comparison_exp
+  location: String_comparison_exp
+  order: Int_comparison_exp
+  room_name: String_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "rooms"
+"""
+enum rooms_constraint {
+  """unique or primary key constraint"""
+  rooms_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "rooms"
+"""
+input rooms_inc_input {
+  order: Int
+}
+
+"""
+input type for inserting data into table "rooms"
+"""
+input rooms_insert_input {
+  is_active: Boolean
+  location: String
+  order: Int
+  room_name: String
+}
+
+"""aggregate max on columns"""
+type rooms_max_fields {
+  created_at: timestamptz
+  id: Int
+  location: String
+  order: Int
+  room_name: String
+  updated_at: timestamptz
+}
+
+"""aggregate min on columns"""
+type rooms_min_fields {
+  created_at: timestamptz
+  id: Int
+  location: String
+  order: Int
+  room_name: String
+  updated_at: timestamptz
+}
+
+"""
+response of any mutation on the table "rooms"
+"""
+type rooms_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [rooms!]!
+}
+
+"""
+on conflict condition type for table "rooms"
+"""
+input rooms_on_conflict {
+  constraint: rooms_constraint!
+  update_columns: [rooms_update_column!]!
+  where: rooms_bool_exp
+}
+
+"""Ordering options when selecting data from "rooms"."""
+input rooms_order_by {
+  created_at: order_by
+  id: order_by
+  is_active: order_by
+  location: order_by
+  order: order_by
+  room_name: order_by
+  updated_at: order_by
+}
+
+"""primary key columns input for table: rooms"""
+input rooms_pk_columns_input {
+  id: Int!
+}
+
+"""
+select columns of table "rooms"
+"""
+enum rooms_select_column {
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  is_active
+
+  """column name"""
+  location
+
+  """column name"""
+  order
+
+  """column name"""
+  room_name
+
+  """column name"""
+  updated_at
+}
+
+"""
+input type for updating data in table "rooms"
+"""
+input rooms_set_input {
+  is_active: Boolean
+  location: String
+  order: Int
+  room_name: String
+}
+
+"""aggregate stddev on columns"""
+type rooms_stddev_fields {
+  id: Float
+  order: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type rooms_stddev_pop_fields {
+  id: Float
+  order: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type rooms_stddev_samp_fields {
+  id: Float
+  order: Float
+}
+
+"""aggregate sum on columns"""
+type rooms_sum_fields {
+  id: Int
+  order: Int
+}
+
+"""
+update columns of table "rooms"
+"""
+enum rooms_update_column {
+  """column name"""
+  is_active
+
+  """column name"""
+  location
+
+  """column name"""
+  order
+
+  """column name"""
+  room_name
+}
+
+"""aggregate var_pop on columns"""
+type rooms_var_pop_fields {
+  id: Float
+  order: Float
+}
+
+"""aggregate var_samp on columns"""
+type rooms_var_samp_fields {
+  id: Float
+  order: Float
+}
+
+"""aggregate variance on columns"""
+type rooms_variance_fields {
+  id: Float
+  order: Float
 }
 
 """
@@ -31340,6 +32193,49 @@ type subscription_root {
   diagnostic_codeset_by_pk(id: uuid!): diagnostic_codeset
 
   """
+  fetch data from the table: "drugs"
+  """
+  drugs(
+    """distinct select on columns"""
+    distinct_on: [drugs_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [drugs_order_by!]
+
+    """filter the rows returned"""
+    where: drugs_bool_exp
+  ): [drugs!]!
+
+  """
+  fetch aggregated fields from the table: "drugs"
+  """
+  drugs_aggregate(
+    """distinct select on columns"""
+    distinct_on: [drugs_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [drugs_order_by!]
+
+    """filter the rows returned"""
+    where: drugs_bool_exp
+  ): drugs_aggregate!
+
+  """fetch data from the table: "drugs" using primary key columns"""
+  drugs_by_pk(id: uuid!): drugs
+
+  """
   fetch data from the table: "family_relationships"
   """
   family_relationships(
@@ -32107,6 +33003,49 @@ type subscription_root {
 
   """fetch data from the table: "purchase_order" using primary key columns"""
   purchase_order_by_pk(id: uuid!): purchase_order
+
+  """
+  fetch data from the table: "rooms"
+  """
+  rooms(
+    """distinct select on columns"""
+    distinct_on: [rooms_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [rooms_order_by!]
+
+    """filter the rows returned"""
+    where: rooms_bool_exp
+  ): [rooms!]!
+
+  """
+  fetch aggregated fields from the table: "rooms"
+  """
+  rooms_aggregate(
+    """distinct select on columns"""
+    distinct_on: [rooms_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [rooms_order_by!]
+
+    """filter the rows returned"""
+    where: rooms_bool_exp
+  ): rooms_aggregate!
+
+  """fetch data from the table: "rooms" using primary key columns"""
+  rooms_by_pk(id: Int!): rooms
 
   """
   fetch data from the table: "rota_templates"

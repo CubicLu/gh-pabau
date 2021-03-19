@@ -6,12 +6,78 @@ import ProcessingIcon from './assets/ProcessingIcon'
 import SendIcon from './assets/SendIcon'
 import notificationImage from '../../../assets/images/Illustration.svg'
 import styles from './index.module.less'
+
 const notificationDescription = `We noticed that you are processing lab results, however have not
-setup integration for "UD Labs". To receive these automatically.
+setup integration for “UD Labs”. To receive these automatically.
 Just have your lab provider send those results to
 labs+482@pabau.com, and then you can automatically match the results
 against the patient.`
 const notificationTitle = 'Integrate your Lab'
+
+const ADD_MUTATION = gql`
+  mutation insert_drugs(
+    $is_active: Boolean = false
+    $name: String
+    $route: String
+    $frequency: String
+    $unit: String
+    $dosage: String
+    $comment: String
+  ) {
+    insert_drugs_one(
+      object: {
+        comment: $comment
+        dosage: $dosage
+        frequency: $frequency
+        is_active: $is_active
+        name: $name
+        route: $route
+        unit: $unit
+      }
+    ) {
+      __typename
+      id
+    }
+  }
+`
+
+const EDIT_MUTATION = gql`
+  mutation update_drugs_by_pk(
+    $id: uuid!
+    $is_active: Boolean
+    $name: String
+    $route: String
+    $unit: String
+    $frequency: String
+    $dosage: String
+    $comment: String
+  ) {
+    update_drugs_by_pk(
+      pk_columns: { id: $id }
+      _set: {
+        is_active: $is_active
+        name: $name
+        route: $route
+        unit: $unit
+        frequency: $frequency
+        dosage: $dosage
+        comment: $comment
+      }
+    ) {
+      __typename
+      id
+    }
+  }
+`
+
+const DELETE_MUTATION = gql`
+  mutation delete_drugs_by_pk($id: uuid!) {
+    delete_drugs_by_pk(id: $id) {
+      __typename
+      id
+    }
+  }
+`
 const LIST_QUERY = gql`
   query labs_dashboard($limit: Int = 1) {
     labs_dashboard(limit: $limit) {
@@ -23,6 +89,31 @@ const LIST_QUERY = gql`
       requester
       lastUpdate
       public
+    }
+  }
+`
+const LIST_AGGREGATE_QUERY = gql`
+  query marketing_source_aggregate($searchTerm: String = "") {
+    marketing_source_aggregate(
+      where: { _or: [{ _and: [{ name: { _ilike: $searchTerm } }] }] }
+    ) {
+      aggregate {
+        count
+      }
+    }
+  }
+`
+
+/**
+ * TODO refactor UPDATE_ORDER_MUTATION with legacy db
+ */
+const UPDATE_ORDER_MUTATION = gql`
+  mutation update_marketing_source_order($id: uuid!, $order: Int) {
+    update_marketing_source(
+      where: { id: { _eq: $id } }
+      _set: { order: $order }
+    ) {
+      affected_rows
     }
   }
 `
@@ -98,6 +189,7 @@ const schema: Schema = {
     { breadcrumbName: 'Dashboard', path: '' },
   ],
 }
+
 interface TitleCard {
   title: string
   subTitle: string
@@ -115,16 +207,17 @@ const Tab: FC<TitleCard> = ({ title, subTitle, className, icon }) => {
     </div>
   )
 }
+
 export const Index: FC = () => {
   return (
     <CrudLayout
       schema={schema}
-      addQuery={null}
-      deleteQuery={null}
+      addQuery={ADD_MUTATION}
+      deleteQuery={DELETE_MUTATION}
       listQuery={LIST_QUERY}
-      editQuery={null}
-      aggregateQuery={null}
-      updateOrderQuery={null}
+      editQuery={EDIT_MUTATION}
+      aggregateQuery={LIST_AGGREGATE_QUERY}
+      updateOrderQuery={UPDATE_ORDER_MUTATION}
     >
       <div className={styles.labsDashboard}>
         <div className={styles.labsDashboardCard}>
@@ -171,4 +264,5 @@ export const Index: FC = () => {
     </CrudLayout>
   )
 }
+
 export default Index
