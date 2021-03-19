@@ -312,7 +312,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                   </Button>
                 )}
                 {operation === OperationType.cancel && (
-                  <Button type="default" onClick={() => onCancel?.()}>
+                  <Button type="default" onClick={(e) => onCancel?.(e)}>
                     {cancelBtnText || 'Cancel'}
                   </Button>
                 )}
