@@ -19,6 +19,8 @@ interface P {
   needTranslation?: boolean
   editPage?: boolean
   editPageRouteLink?: string
+  isCustomFilter?: boolean
+  customFilter?: () => JSX.Element
   setEditPage?(e): void
 }
 
