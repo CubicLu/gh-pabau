@@ -263,7 +263,7 @@ const DrawerContent: FC<DrawerContentProps> = ({
   )
 }
 
-const Build: FC = () => {
+const Pricing: FC = () => {
   const [drawer, setDrawer] = useState<boolean>(false)
   const [
     buildIntialValues,
@@ -284,7 +284,7 @@ const Build: FC = () => {
     setBuildIntialValue(buildIntialValue)
   }
 
-  const BuildHeader = () => {
+  const PricingHeader = () => {
     return (
       <>
         <div className={styles.headerWrap}>
@@ -316,10 +316,10 @@ const Build: FC = () => {
   return (
     <div className={styles.createPk}>
       {isMobile ? (
-        <BuildHeader />
+        <PricingHeader />
       ) : (
         <div className={drawer ? styles.build : styles.buildPackage}>
-          <BuildHeader />
+          <PricingHeader />
         </div>
       )}
       {drawer &&
@@ -395,7 +395,7 @@ export const CreatePackage = ({ visible, setVisible, initialValue }) => {
           footer={true}
         >
           <General setFieldValue={setFieldValue} value={values} />
-          <Build />
+          <Pricing />
         </FullScreenReportModal>
       )}
     </Formik>
