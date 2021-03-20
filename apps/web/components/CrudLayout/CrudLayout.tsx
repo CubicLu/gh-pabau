@@ -19,6 +19,7 @@ interface P {
   needTranslation?: boolean
   editPage?: boolean
   editPageRouteLink?: string
+  setEditPage?(e): void
 }
 
 const CrudLayout: FC<P> = ({ ...props }) => <CrudTable {...props} />
