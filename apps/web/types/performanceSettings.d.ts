@@ -3,29 +3,29 @@ interface FeaturePerformance {
   value?: string
 }
 
-interface peopleList {
+interface PeopleList {
   name: string
   selected: boolean
 }
 
-interface peerAssessmentList {
+interface PeerAssessmentList {
   peerSelfAssessmentQuestion: Array<FeaturePerformance>
   questionEmployee: Array<FeaturePerformance>
 }
 interface AssessmentList {
   selfAssessmentQuestion: Array<FeaturePerformance>
   questionManager: Array<FeaturePerformance>
-  peerAssessmentList: peerAssessmentList
+  peerAssessmentList: PeerAssessmentList
 }
 
-interface reviewScheduleConfig {
+interface ReviewScheduleConfig {
   date: Date
 }
 
-interface assessmentScheduleConfig {
+interface AssessmentScheduleConfig {
   assessment: AssessmentList
 }
 
-interface peopleConfig {
-  peopleList: Array<peopleList>
+interface PeopleConfig {
+  peopleList: Array<PeopleList>
 }

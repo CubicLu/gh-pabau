@@ -1,9 +1,15 @@
 .review{
   padding: 24px;
   display: flex;
+  @media screen and (max-width: 767px) {
+    flex-direction: column;
+  }
   .drop {
     display: flex;
     flex-direction: column;
+    @media screen and (max-width: 767px) {
+      margin: 5px 0;
+    }
     label {
       font-size: 14px;
       line-height: 22px;

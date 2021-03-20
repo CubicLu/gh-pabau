@@ -5,8 +5,8 @@ import { Employees } from '@pabau/ui'
 import GeneralLayout from '../GeneralLayout'
 
 interface P {
-  handleChange: (key: string, obj: peopleConfig) => void
-  peopleList: peopleConfig
+  handleChange: (key: string, obj: PeopleConfig) => void
+  peopleList: PeopleConfig
 }
 
 const PeopleSettings: FC<P> = ({

@@ -1,11 +1,11 @@
 import React, { FC } from 'react'
 import { useMedia } from 'react-use'
 
-import { Button, TabMenu } from '@pabau/ui'
+import { Breadcrumb, Button, TabMenu } from '@pabau/ui'
 import { Row, Col, Card } from 'antd'
 import { Layout } from '@pabau/ui'
 
-import { RightOutlined, LeftOutlined } from '@ant-design/icons'
+import { LeftOutlined } from '@ant-design/icons'
 
 import { PerformanceConfigObj } from '../../../mocks/PerformanceSettings'
 
@@ -13,12 +13,12 @@ import ReviewSettings from '../../../components/Setup/Settings/ReviewSettings/Re
 import AssessmentSettings from '../../../components/Setup/Settings/AssessmentSettings/AssessmentSettings'
 import PeopleSettings from '../../../components/Setup/Settings/PeopleSettings/PeopleSettings'
 
-import styles from './pos-configuration.module.less'
+import styles from './performance.module.less'
 
 interface P {
-  review: reviewScheduleConfig
-  assessment: assessmentScheduleConfig
-  people: peopleConfig
+  review: ReviewScheduleConfig
+  assessment: AssessmentScheduleConfig
+  people: PeopleConfig
 }
 
 const Performance: FC<P> = () => {
@@ -26,7 +26,7 @@ const Performance: FC<P> = () => {
 
   const handleChange = (
     key: string,
-    obj: reviewScheduleConfig | assessmentScheduleConfig | peopleConfig
+    obj: ReviewScheduleConfig | AssessmentScheduleConfig | PeopleConfig
   ) => {
     console.log(obj)
   }
@@ -40,8 +40,8 @@ const Performance: FC<P> = () => {
   return (
     <div className={styles.mainWrapper}>
       <Layout>
-        <Card className={styles.posConfigurationContainer}>
-          {isMobile ? (
+        <Card className={styles.performanceContainer}>
+          <div className={styles.hideDesktopView}>
             <Row className={styles.mobDevice}>
               <Col>
                 <div className={styles.mobTopHead}>
@@ -51,16 +51,19 @@ const Performance: FC<P> = () => {
                 </div>
               </Col>
             </Row>
-          ) : (
+          </div>
+          <div className={styles.hideMobileView}>
             <Row className={styles.mainWrapper}>
               <Col span={20} className={styles.titleWrapper}>
-                <p className={styles.titleTagLine}>
-                  {'Setup'}
-                  <span>
-                    <RightOutlined /> {'Settings'}
-                  </span>
-                </p>
-                <h4>{'Settings'}</h4>
+                <Breadcrumb
+                  breadcrumbItems={[
+                    { breadcrumbName: 'Setup', path: 'setup' },
+                    { breadcrumbName: 'Settings', path: '' },
+                  ]}
+                />
+                <div className={styles.posConfigHeader}>
+                  <h4>{'Settings'}</h4>
+                </div>
               </Col>
               <Col span={'auto'} className={styles.titleSaveBtn}>
                 <Button
@@ -72,7 +75,7 @@ const Performance: FC<P> = () => {
                 </Button>
               </Col>
             </Row>
-          )}
+          </div>
           <TabMenu tabPosition={isMobile ? 'top' : 'left'} menuItems={tabItems}>
             <ReviewSettings
               date={PerformanceConfigObj.review}

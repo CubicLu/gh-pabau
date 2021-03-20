@@ -7,14 +7,17 @@ import { PlusCircleOutlined } from '@ant-design/icons'
 import styles from '../PosConfiguration/common.module.less'
 
 interface P {
-  handleChange: (key: string, obj: assessmentScheduleConfig) => void
+  handleChange: (key: string, obj: AssessmentScheduleConfig) => void
   listAssessment: AssessmentList
 }
 
-const QuestionTitle = ['Self Assessment Questions:', 'Questions for Manager:']
+const QuestionTitle = [
+  { id: 1, name: 'Self Assessment Questions:' },
+  { id: 2, name: 'Questions for Manager:' },
+]
 const peerAssessmentTitle = [
-  'Self Assessment Questions:',
-  'This question is to determine if the employee is a...',
+  { id: 1, name: 'Self Assessment Questions:' },
+  { id: 2, name: 'This question is to determine if the employee is a...' },
 ]
 
 const AssessmentSettings: FC<P> = ({
@@ -68,15 +71,15 @@ const AssessmentSettings: FC<P> = ({
           </div>
           <div>
             <Row>
-              {QuestionTitle.map((data: string, index) => (
-                <Col span={12} key={index}>
+              {QuestionTitle.map((data, index) => (
+                <Col span={12} key={data.id}>
                   <span
-                    key={index}
+                    key={data.id}
                     className={
-                      index === 0 ? styles.inputBoxLeft : styles.inputBoxRight
+                      data.id === 0 ? styles.inputBoxLeft : styles.inputBoxRight
                     }
                   >
-                    {data}
+                    {data.name}
                   </span>
                 </Col>
               ))}
@@ -125,15 +128,15 @@ const AssessmentSettings: FC<P> = ({
           </div>
           <div>
             <Row>
-              {peerAssessmentTitle.map((data: string, index) => (
-                <Col span={12} key={index}>
+              {peerAssessmentTitle.map((data) => (
+                <Col span={12} key={data.id}>
                   <span
-                    key={index}
+                    key={data.id}
                     className={
-                      index === 0 ? styles.inputBoxLeft : styles.inputBoxRight
+                      data.id === 0 ? styles.inputBoxLeft : styles.inputBoxRight
                     }
                   >
-                    {data}
+                    {data.name}
                   </span>
                 </Col>
               ))}
