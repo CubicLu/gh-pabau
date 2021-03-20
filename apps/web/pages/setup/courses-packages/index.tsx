@@ -62,15 +62,15 @@ const coursesFormikInitialValue: InitialCoursesProps = {
   category: '',
   isActive: true,
   employees: [],
+  image: '',
 }
 
 const packageFormikInitialValue: InitialPackagesProps = {
   id: '',
   packageName: '',
-  price: undefined,
   category: '',
-  tax: '',
   onlinePurchase: false,
+  image: '',
 }
 
 export const Index: FC = () => {

@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import { Formik } from 'formik'
 import { Form, Input, InputNumber } from 'formik-antd'
 import {
@@ -7,10 +7,11 @@ import {
   SimpleDropdown,
   OperationType,
   Button,
+  ImageSelectorModal,
 } from '@pabau/ui'
 import * as Yup from 'yup'
 import { TaxOption } from '../../../mocks/CoursesPackages'
-import { PlusOutlined } from '@ant-design/icons'
+import { PlusOutlined, PictureOutlined } from '@ant-design/icons'
 import styles from './index.module.less'
 
 const { TextArea } = Input
@@ -24,6 +25,7 @@ export interface InitialCoursesProps {
   tax: string
   category: string
   employees: string[]
+  image: string
 }
 
 interface GeneralTabProps {
@@ -34,6 +36,8 @@ interface GeneralTabProps {
   ): void
 }
 const General: FC<GeneralTabProps> = ({ value, setFieldValue }) => {
+  const [showImageSelector, setShowImageSelector] = useState(false)
+  const [selectedImage, setSelectedImage] = useState('')
   return (
     <div className={styles.generalFormWrapper}>
       <Form
@@ -96,15 +100,41 @@ const General: FC<GeneralTabProps> = ({ value, setFieldValue }) => {
             onSelected={(value) => setFieldValue('category', value)}
           />
           <Form.Item label="Image" name="image">
+            <div
+              className={styles.createServiceImageContainer}
+              style={{ backgroundImage: `url(${selectedImage})` }}
+            >
+              {!selectedImage && (
+                <PictureOutlined
+                  style={{
+                    color: 'var(--light-grey-color)',
+                    fontSize: '32px',
+                  }}
+                />
+              )}
+            </div>
             <Button
               className={styles.modalAddButton}
               type="default"
               icon={<PlusOutlined />}
               size="middle"
+              onClick={() => setShowImageSelector(true)}
             >
               Choose from Library
             </Button>
           </Form.Item>
+          <ImageSelectorModal
+            visible={showImageSelector}
+            initialSearch={''}
+            onOk={(image) => {
+              setSelectedImage(image.source)
+              setFieldValue('image', image.source)
+              setShowImageSelector(false)
+            }}
+            onCancel={() => {
+              setShowImageSelector(false)
+            }}
+          />
         </div>
       </Form>
     </div>

@@ -9,6 +9,7 @@ import {
   Button,
   Switch,
   Table,
+  ImageSelectorModal,
 } from '@pabau/ui'
 import { Drawer } from 'antd'
 import {
@@ -21,16 +22,16 @@ import {
   FilterOutlined,
   DeleteOutlined,
   CheckOutlined,
+  PictureOutlined,
 } from '@ant-design/icons'
 import styles from './index.module.less'
 
 export interface InitialPackagesProps {
   id: string
   packageName: string
-  price: number
-  tax: string
   category: string
   onlinePurchase: boolean
+  image: string
 }
 
 interface BuildIntialValueProps {
@@ -85,6 +86,9 @@ interface GeneralTabProps {
 }
 
 const General: FC<GeneralTabProps> = ({ setFieldValue, value }) => {
+  const [showImageSelector, setShowImageSelector] = useState(false)
+  const [selectedImage, setSelectedImage] = useState('')
+
   return (
     <div className={styles.generalFormWrapper}>
       <Form
@@ -108,16 +112,6 @@ const General: FC<GeneralTabProps> = ({ setFieldValue, value }) => {
               value={value.packageName}
             />
           </Form.Item>
-          <Form.Item label="Price" name="price" className={styles.generalList}>
-            <InputNumber
-              size="large"
-              name="price"
-              type="number"
-              autoComplete="off"
-              placeholder="£"
-              value={value.price}
-            />
-          </Form.Item>
           <SimpleDropdown
             className={styles.generalList}
             size="large"
@@ -128,26 +122,42 @@ const General: FC<GeneralTabProps> = ({ setFieldValue, value }) => {
             dropdownItems={TaxOption.map((item) => item || '')}
             onSelected={(value) => setFieldValue('category', value)}
           />
-          <SimpleDropdown
-            className={styles.generalList}
-            size="large"
-            label="Tax"
-            name="tax"
-            value={value.tax}
-            placeHolderText="Select a tax"
-            dropdownItems={TaxOption.map((item) => item || '')}
-            onSelected={(value) => setFieldValue('tax', value)}
-          />
           <Form.Item label="Image" name="image" className={styles.generalList}>
+            <div
+              className={styles.createServiceImageContainer}
+              style={{ backgroundImage: `url(${selectedImage})` }}
+            >
+              {!selectedImage && (
+                <PictureOutlined
+                  style={{
+                    color: 'var(--light-grey-color)',
+                    fontSize: '32px',
+                  }}
+                />
+              )}
+            </div>
             <Button
               className={styles.modalAddButton}
               type="default"
               icon={<PlusOutlined />}
               size="middle"
+              onClick={() => setShowImageSelector(true)}
             >
               Choose from Library
             </Button>
           </Form.Item>
+          <ImageSelectorModal
+            visible={showImageSelector}
+            initialSearch={''}
+            onOk={(image) => {
+              setSelectedImage(image.source)
+              setFieldValue('image', image.source)
+              setShowImageSelector(false)
+            }}
+            onCancel={() => {
+              setShowImageSelector(false)
+            }}
+          />
           <div className={styles.generalListSwitch}>
             <Switch
               checked={value.onlinePurchase}
@@ -381,7 +391,7 @@ export const CreatePackage = ({ visible, setVisible, initialValue }) => {
           onActivated={(value) => setFieldValue('isActive', value)}
           onCreate={handleSubmit}
           onSave={handleSubmit}
-          subMenu={['General', 'Build']}
+          subMenu={['General', 'Pricing']}
           footer={true}
         >
           <General setFieldValue={setFieldValue} value={values} />
