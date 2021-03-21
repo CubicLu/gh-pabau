@@ -14,25 +14,25 @@
     "marketingsource-header-edit": {
       "translation": "Създайте маркетингов източник"
     },
-    "marketingsource-input-search-placeholder": {
+    "basic-crud-table-input-search-placeholder": {
       "translation": "Потърсете"
     },
-    "marketingsource-button-filter": {
+    "basic-crud-table-button-filter": {
       "translation": "Филтрирано"
     },
-    "marketingsource-tableColumn-active": {
+    "basic-crud-table-column--active": {
       "translation": "Активен"
     },
-    "marketingsource-tableRow-active-btn": {
+    "basic-crud-table-button-active": {
       "translation": "Aktiv"
     },
-    "marketingsource-tableRow-inActive-btn": {
+    "basic-crud-table-button-inactive": {
       "translation": "Неактивен"
     },
-    "marketingsource-header-create-btn": {
+    "basic-crud-table-header-button-create": {
       "translation": "Създайте източник"
     },
-    "marketingsource-header-breadcrumb-setup-link": {
+    "basic-crud-table-header-breadcrumb-setup-link": {
       "translation": "Инсталирай"
     }
   }

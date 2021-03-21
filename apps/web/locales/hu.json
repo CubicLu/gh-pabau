@@ -14,25 +14,25 @@
     "marketingsource-header-edit": {
       "translation": "Hozzon létre egy marketing forrást"
     },
-    "marketingsource-input-search-placeholder": {
+    "basic-crud-table-input-search-placeholder": {
       "translation": "Keres"
     },
-    "marketingsource-button-filter": {
+    "basic-crud-table-button-filter": {
       "translation": "Szűrt"
     },
-    "marketingsource-tableColumn-active": {
+    "basic-crud-table-column--active": {
       "translation": "Aktív"
     },
-    "marketingsource-tableRow-active-btn": {
+    "basic-crud-table-button-active": {
       "translation": "Aktiv"
     },
-    "marketingsource-tableRow-inActive-btn": {
+    "basic-crud-table-button-inactive": {
       "translation": "Inaktiv"
     },
-    "marketingsource-header-create-btn": {
+    "basic-crud-table-header-button-create": {
       "translation": "Opret in kilde"
     },
-    "marketingsource-header-breadcrumb-setup-link": {
+    "basic-crud-table-header-breadcrumb-setup-link": {
       "translation": "Telepítés"
     }
   }

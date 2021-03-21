@@ -101,25 +101,25 @@
     "news.learn": {
         "translation": "Aprende más"
     },
-    "marketingsource-input-search-placeholder": {
+    "basic-crud-table-input-search-placeholder": {
         "translation": "Buscar"
     },
-    "marketingsource-button-filter": {
+    "basic-crud-table-button-filter": {
         "translation": "Filtrar"
     },
-    "marketingsource-tableColumn-active": {
+    "basic-crud-table-column--active": {
         "translation": "Activo"
     },
-    "marketingsource-tableRow-active-btn": {
+    "basic-crud-table-button-active": {
         "translation": "Aktiv"
     },
-    "marketingsource-tableRow-inActive-btn": {
+    "basic-crud-table-button-inactive": {
         "translation": "Inactivo"
     },
-    "marketingsource-header-create-btn": {
+    "basic-crud-table-header-button-create": {
         "translation": "Crear fuente"
     },
-    "marketingsource-header-breadcrumb-setup-link": {
+    "basic-crud-table-header-breadcrumb-setup-link": {
         "translation": "Configuración"
     }
 }

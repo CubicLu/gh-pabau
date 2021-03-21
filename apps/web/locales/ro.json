@@ -14,25 +14,25 @@
     "marketingsource-header-edit": {
       "translation": "Editați sursa de marketing"
     },
-    "marketingsource-input-search-placeholder": {
+    "basic-crud-table-input-search-placeholder": {
       "translation": "Căutare"
     },
-    "marketingsource-button-filter": {
+    "basic-crud-table-button-filter": {
       "translation": "Filtru"
     },
-    "marketingsource-tableColumn-active": {
+    "basic-crud-table-column--active": {
       "translation": "Activ"
     },
-    "marketingsource-tableRow-active-btn": {
+    "basic-crud-table-button-active": {
       "translation": "Aktiv"
     },
-    "marketingsource-tableRow-inActive-btn": {
+    "basic-crud-table-button-inactive": {
       "translation": "Inactiv"
     },
-    "marketingsource-header-create-btn": {
+    "basic-crud-table-header-button-create": {
       "translation": "Creați sursă"
     },
-    "marketingsource-header-breadcrumb-setup-link": {
+    "basic-crud-table-header-breadcrumb-setup-link": {
       "translation": "Înființat"
     }
   }

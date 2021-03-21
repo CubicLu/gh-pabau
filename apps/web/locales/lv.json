@@ -14,25 +14,25 @@
     "marketingsource-header-edit": {
       "translation": "Izveidojiet mārketinga avotu"
     },
-    "marketingsource-input-search-placeholder": {
+    "basic-crud-table-input-search-placeholder": {
       "translation": "Meklēt"
     },
-    "marketingsource-button-filter": {
+    "basic-crud-table-button-filter": {
       "translation": "Filtrēts"
     },
-    "marketingsource-tableColumn-active": {
+    "basic-crud-table-column--active": {
       "translation": "Aktīvs"
     },
-    "marketingsource-tableRow-active-btn": {
+    "basic-crud-table-button-active": {
       "translation": "Aktiv"
     },
-    "marketingsource-tableRow-inActive-btn": {
+    "basic-crud-table-button-inactive": {
       "translation": "Inaktiv"
     },
-    "marketingsource-header-create-btn": {
+    "basic-crud-table-header-button-create": {
       "translation": "Opret kildē"
     },
-    "marketingsource-header-breadcrumb-setup-link": {
+    "basic-crud-table-header-breadcrumb-setup-link": {
       "translation": "Uzstādīt"
     }
   }
