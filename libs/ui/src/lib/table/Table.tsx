@@ -50,6 +50,7 @@ export type TableType = {
   onAddTemplate?: () => void
   searchTerm?: string
   needTranslation?: boolean
+  showSizeChanger?: boolean
 } & TableProps<never> &
   DragProps
 
@@ -66,6 +67,7 @@ export const Table: FC<TableType> = ({
   onAddTemplate,
   searchTerm = '',
   needTranslation,
+  showSizeChanger,
   ...props
 }) => {
   const onSortEnd = ({ oldIndex, newIndex }) => {
@@ -241,7 +243,9 @@ export const Table: FC<TableType> = ({
           //   onMouseLeave: (event) => {}, // mouse leave row
         }
       }}
-      pagination={false}
+      pagination={
+        showSizeChanger ? { showSizeChanger: showSizeChanger } : false
+      }
       dataSource={dataSource}
       columns={renderSortHandler()}
       rowKey="key"
