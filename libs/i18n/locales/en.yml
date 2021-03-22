@@ -4,6 +4,19 @@ en:
     marketingsource-name-textfield: Name
     marketingsource-name-placeholder: 'eg. Facebook'
     marketingsource-header-edit: 'Edit Marketing Source'
+    settings-header: 'Settings'
+    settings-performance-save: 'Save Changes'
+    settings-performance-tab-header1: 'Review Schedule'
+    settings-performance-tab-header2: 'Assessment'
+    settings-performance-tab-header3: 'People'
+    settings-performance-assessment-question-title1: 'Self Assessment Questions:'
+    settings-performance-assessment-question-title2: 'Questions for Manager:'
+    settings-performance-peer-assessment-question-title: 'This question is to determine if the employee is a...'
+    settings-performance-assessment-question: 'Add Question'
+    settings-performance-assessment-note: 'One way to keep our Assessments awesome is by keeping them short.'
+    settings-performance-assessment-head1: 'Self & Manager Assessment'
+    settings-performance-assessment-head2: 'Peer Assessment'
+    settings-performance-people-header: 'Participating in Performance'
     KEY: Text
     search.placeholder: 'Search clients or leads'
     avatar.balance: Balance

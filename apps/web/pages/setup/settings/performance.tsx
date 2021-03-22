@@ -5,6 +5,7 @@ import { Row, Col, Card } from 'antd'
 import { Layout } from '@pabau/ui'
 import { LeftOutlined } from '@ant-design/icons'
 import { PerformanceConfigObj } from '../../../mocks/PerformanceSettings'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import ReviewSettings from '../../../components/Setup/Settings/ReviewSettings/ReviewSettings'
 import AssessmentSettings from '../../../components/Setup/Settings/AssessmentSettings/AssessmentSettings'
 import PeopleSettings from '../../../components/Setup/Settings/PeopleSettings/PeopleSettings'
@@ -19,6 +20,7 @@ interface P {
 
 const Performance: FC<P> = () => {
   const isMobile = useMedia('(max-width: 768px)', false)
+  const { t } = useTranslationI18()
 
   const handleChange = (
     key: string,
@@ -31,7 +33,11 @@ const Performance: FC<P> = () => {
     console.log('Save Object')
   }
 
-  const tabItems = ['Review Schedule', 'Assessment', 'People']
+  const tabItems = [
+    t('settings-performance-tab-header1'),
+    t('settings-performance-tab-header2'),
+    t('settings-performance-tab-header3'),
+  ]
 
   return (
     <div className={styles.mainWrapper}>
@@ -42,7 +48,7 @@ const Performance: FC<P> = () => {
               <Col>
                 <div className={styles.mobTopHead}>
                   <div className={styles.mobTopHeadRow}>
-                    <LeftOutlined /> <h6> {'Settings'}</h6>
+                    <LeftOutlined /> <h6> {t('settings-header')}</h6>
                   </div>
                 </div>
               </Col>
@@ -54,11 +60,11 @@ const Performance: FC<P> = () => {
                 <Breadcrumb
                   breadcrumbItems={[
                     { breadcrumbName: 'Setup', path: 'setup' },
-                    { breadcrumbName: 'Settings', path: '' },
+                    { breadcrumbName: t('settings-header'), path: '' },
                   ]}
                 />
                 <div className={styles.posConfigHeader}>
-                  <h4>{'Settings'}</h4>
+                  <h4>{t('settings-header')}</h4>
                 </div>
               </Col>
               <Col span={'auto'} className={styles.titleSaveBtn}>
@@ -67,7 +73,7 @@ const Performance: FC<P> = () => {
                   className={styles.saveBtn}
                   onClick={handleSave}
                 >
-                  {'Save Changes'}
+                  {t('settings-performance-save')}
                 </Button>
               </Col>
             </Row>
@@ -88,7 +94,7 @@ const Performance: FC<P> = () => {
           </TabMenu>
           {isMobile && (
             <div className={styles.mobSaveBtn} onClick={handleSave}>
-              <Button type={'primary'}>{'Save Changes'}</Button>
+              <Button type={'primary'}>{t('settings-performance-save')}</Button>
             </div>
           )}
         </Card>

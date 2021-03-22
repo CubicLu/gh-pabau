@@ -104,5 +104,5 @@ export const PerformanceConfigObj = {
     date: reviewScheduleValue.reviewDate,
   },
   assessment: AssessmentList,
-  peopleList: { peopleList: peopleList },
+  peopleList: { peopleList },
 }

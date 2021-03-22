@@ -1,23 +1,16 @@
 import React, { FC, useState } from 'react'
 import { Button, Input } from '@pabau/ui'
 import { Row, Col } from 'antd'
+import className from 'classnames'
 import GeneralLayout from '../GeneralLayout'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import styles from '../PosConfiguration/common.module.less'
+import { useTranslationI18 } from '../../../../hooks/useTranslationI18'
 
 interface P {
-  handleChange: (key: string, obj: AssessmentScheduleConfig) => void
+  handleChange: (key: string, config: AssessmentScheduleConfig) => void
   listAssessment: AssessmentList
 }
-
-const QuestionTitle = [
-  { id: 1, name: 'Self Assessment Questions:' },
-  { id: 2, name: 'Questions for Manager:' },
-]
-const peerAssessmentTitle = [
-  { id: 1, name: 'Self Assessment Questions:' },
-  { id: 2, name: 'This question is to determine if the employee is a...' },
-]
 
 const AssessmentSettings: FC<P> = ({
   handleChange,
@@ -36,6 +29,16 @@ const AssessmentSettings: FC<P> = ({
   const [peerSelfAssessmentQuestions, setPeerSelfAssessmentQuestion] = useState(
     peerSelfAssessmentQuestion
   )
+  const { t } = useTranslationI18()
+
+  const QuestionTitle = [
+    { id: 1, name: t('settings-performance-assessment-question-title1') },
+    { id: 2, name: t('settings-performance-assessment-question-title2') },
+  ]
+  const peerAssessmentTitle = [
+    { id: 1, name: t('settings-performance-assessment-question-title1') },
+    { id: 2, name: t('settings-performance-peer-assessment-question-title') },
+  ]
 
   const handleAddQuestion = () => {
     setAssumptionQuestion((e) => [
@@ -64,7 +67,7 @@ const AssessmentSettings: FC<P> = ({
       <div>
         <div className={styles.btnWrapper}>
           <Button icon={<PlusCircleOutlined />} onClick={handleAddQuestion}>
-            Add Question
+            {t('settings-performance-assessment-question')}
           </Button>
         </div>
         <div>
@@ -74,7 +77,9 @@ const AssessmentSettings: FC<P> = ({
                 <span
                   key={data.id}
                   className={
-                    data.id === 0 ? styles.inputBoxLeft : styles.inputBoxRight
+                    data.id === 1
+                      ? styles.inputBox
+                      : className(styles.inputBox, styles.inputBoxRightWrap)
                   }
                 >
                   {data.name}
@@ -88,7 +93,8 @@ const AssessmentSettings: FC<P> = ({
                   <Input
                     text={data.value}
                     key={data.id}
-                    className={styles.inputBoxLeft}
+                    className={styles.inputBox}
+                    style={{ marginRight: '6px' }}
                   />
                 </div>
               ))}
@@ -98,13 +104,14 @@ const AssessmentSettings: FC<P> = ({
                 <Input
                   text={data.value}
                   key={data.id}
-                  className={styles.inputBoxRight}
+                  className={styles.inputBox}
+                  style={{ marginLeft: '6px' }}
                 />
               ))}
             </Col>
           </Row>
           <span className={styles.noteWrapper}>
-            *One way to keep our Assessments awesome is by keeping them short.
+            *{t('settings-performance-assessment-note')}
           </span>
         </div>
       </div>
@@ -116,7 +123,7 @@ const AssessmentSettings: FC<P> = ({
       <div>
         <div className={styles.btnWrapper}>
           <Button icon={<PlusCircleOutlined />} onClick={handlePeerAddQuestion}>
-            Add Question
+            {t('settings-performance-assessment-question')}
           </Button>
         </div>
         <div>
@@ -126,7 +133,9 @@ const AssessmentSettings: FC<P> = ({
                 <span
                   key={data.id}
                   className={
-                    data.id === 0 ? styles.inputBoxLeft : styles.inputBoxRight
+                    data.id === 1
+                      ? styles.inputBox
+                      : className(styles.inputBox, styles.inputBoxRightWrap)
                   }
                 >
                   {data.name}
@@ -140,7 +149,8 @@ const AssessmentSettings: FC<P> = ({
                   <Input
                     text={data.value}
                     key={data.id}
-                    className={styles.inputBoxLeft}
+                    className={styles.inputBox}
+                    style={{ marginRight: '6px' }}
                   />
                 </div>
               ))}
@@ -150,7 +160,8 @@ const AssessmentSettings: FC<P> = ({
                 <Input
                   text={data.value}
                   key={data.id}
-                  className={styles.inputBoxRight}
+                  className={styles.inputBox}
+                  style={{ marginLeft: '6px' }}
                 />
               ))}
             </Col>
@@ -163,7 +174,7 @@ const AssessmentSettings: FC<P> = ({
   return (
     <div>
       <GeneralLayout
-        title={'Self & Manager Assessment'}
+        title={t('settings-performance-assessment-head1')}
         description={
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.'
         }
@@ -172,7 +183,7 @@ const AssessmentSettings: FC<P> = ({
       </GeneralLayout>
       <div className={styles.peerMainWrapper}>
         <GeneralLayout
-          title={'Peer Assessment'}
+          title={t('settings-performance-assessment-head2')}
           description={
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.'
           }
