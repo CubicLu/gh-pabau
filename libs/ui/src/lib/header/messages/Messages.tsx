@@ -272,7 +272,7 @@ export const PabauMessages: FC<MessagesProps> = ({
           selectedGroup.slice(1)
       )
     }
-  }, [selectedGroup])
+  }, [selectedGroup, t])
 
   const handleGroupClick = (e, type) => {
     setShowGroupChatBox(true)
@@ -338,7 +338,7 @@ export const PabauMessages: FC<MessagesProps> = ({
         <div className={styles.chatSpace}>
           <div className={styles.messagesAlign}>
             <div>
-              <h1>Chat</h1>
+              <h1>{t('chat.header')}</h1>
             </div>
             <div>
               <EditOutlined
@@ -400,9 +400,7 @@ export const PabauMessages: FC<MessagesProps> = ({
           onDelete={toggleCreateChannel}
           visible={isCreateChannel}
         >
-          <div className={styles.content}>
-            {t('chat.create.channel.title')}
-          </div>
+          <div className={styles.content}>{t('chat.create.channel.title')}</div>
           <div className={styles.textControl}>
             <div>{t('chat.create.channel.name')}</div>
             <Input

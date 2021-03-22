@@ -19,7 +19,7 @@ export const Pagination: FC<PaginationProps & AntPaginationProps> = ({
   const { t } = useTranslation('common')
   const pageSizesMenu = (
     <Menu>
-      {pageSizeOptions.map((pageSize, key) => (
+      {pageSizeOptions?.map((pageSize, key) => (
         <Menu.Item
           key={`page-size-${key}`}
           onClick={() => onPageSizeChange?.(Number(pageSize))}

@@ -106,7 +106,9 @@ export const Dropdown: FC<DropDownInterface> = ({
         <div className={styles.dropdownHeader}>
           <UserOutlined style={{ color: '#9292A3' }} />
           <Link href="/account/settings">
-            <span className={styles.headerText}>{t('avatar.account.settings')}</span>
+            <span className={styles.headerText}>
+              {t('avatar.account.settings')}
+            </span>
           </Link>
         </div>
         <LaunchSVG className={styles.launchLogo} />
@@ -174,7 +176,9 @@ export const Dropdown: FC<DropDownInterface> = ({
         >
           <div className={styles.subDropdownListHeader}>
             <LeftOutlined className={styles.subLogo} />
-            <span className={styles.subHeaderText}>{t('avatar.change.company')}</span>
+            <span className={styles.subHeaderText}>
+              {t('avatar.change.company')}
+            </span>
           </div>
         </Menu.Item>
         <Menu.Item className={styles.subDropdownList}>
@@ -209,19 +213,21 @@ export const Dropdown: FC<DropDownInterface> = ({
         >
           <div className={styles.feedbackAlignContent}>
             <LeftOutlined className={styles.subLogo} />
-            <p className={styles.subHeaderText}>Give us feedback</p>
+            <p className={styles.subHeaderText}>
+              {t('avatar.give.feedback.giveus')}
+            </p>
           </div>
         </Menu.Item>
         <Menu.Item className={styles.avatarHelpSubList}>
           <div className={styles.feedbackAlignContent}>
             <InfoCircleOutlined className="" />
-            <span className="">Help us improve Pabau</span>
+            <span className="">{t('avatar.give.feedback.helpus')}</span>
           </div>
         </Menu.Item>
         <Menu.Item className={styles.avatarHelpSubList}>
           <div className={styles.feedbackAlignContent}>
             <ExclamationOutlined className="" />
-            <span className="">Something went wrong</span>
+            <span className="">{t('avatar.give.feedback.somethingwrong')}</span>
           </div>
         </Menu.Item>
         <div style={{ marginTop: '8px' }} />
@@ -239,7 +245,9 @@ export const Dropdown: FC<DropDownInterface> = ({
         >
           <div className={styles.feedbackAlignContent}>
             <LeftOutlined className={styles.subLogo} />
-            <p className={styles.subHeaderText}>{t('avatar.help.support.header')}</p>
+            <p className={styles.subHeaderText}>
+              {t('avatar.help.support.header')}
+            </p>
           </div>
         </Menu.Item>
         <Menu.Item className={styles.avatarHelpSubList}>

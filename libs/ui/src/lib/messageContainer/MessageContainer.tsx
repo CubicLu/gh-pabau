@@ -87,7 +87,9 @@ export const MessageContainer: FC<P> = ({ ...props }) => {
               <p className={styles.chatHeaderName}>
                 {selectedContact.userName}
               </p>
-              <p className={styles.chatHeaderSub}>{t('message.managingdirector')}</p>
+              <p className={styles.chatHeaderSub}>
+                {t('message.managingdirector')}
+              </p>
             </div>
           </div>
           <div className={styles.chatHeaderContact}>
@@ -193,7 +195,9 @@ export const MessageContainer: FC<P> = ({ ...props }) => {
       <div className={styles.messageContainer}>
         <div className={styles.messageContainerInner}>
           {messages && messages?.length <= 0 ? (
-            <div className={styles.invalidMessage}>{t('message.empty.msg')}</div>
+            <div className={styles.invalidMessage}>
+              {t('message.empty.msg')}
+            </div>
           ) : (
             <div>
               <div className={styles.dayPast}>
