@@ -19,7 +19,6 @@ import english from 'i18n-iso-countries/langs/en.json'
 
 import styles from './issuing-company.module.less'
 
-/* eslint-disable graphql/template-strings */
 const LIST_QUERY = gql`
   query issuing_company($isActive: Boolean = true, $offset: Int, $limit: Int) {
     issuing_company(
