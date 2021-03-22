@@ -23,6 +23,8 @@ interface P {
   tableSearch?: boolean
   addFilter?: boolean
   needTranslation?: boolean
+  isCustomFilter?: boolean
+  customFilter?: () => JSX.Element
 }
 
 const AddButton: FC<P> = ({
@@ -34,6 +36,8 @@ const AddButton: FC<P> = ({
   tableSearch = true,
   addFilter = true,
   needTranslation,
+  isCustomFilter = false,
+  customFilter,
 }) => {
   const [isActive, setIsActive] = useState(true)
   const [mobFilterDrawer, setMobFilterDrawer] = useState(false)
@@ -52,6 +56,11 @@ const AddButton: FC<P> = ({
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [marketingSourceSearch])
+
+  const handleMobileDrawerApply = () => {
+    onFilterSource()
+    setMobFilterDrawer((e) => !e)
+  }
 
   const filterContent = (isMobile = false) => (
     <div className={styles.filterContent}>
@@ -108,20 +117,17 @@ const AddButton: FC<P> = ({
             <div className={styles.marketingTextStyle}>
               <span>Reset</span>
               <p> Filter </p>
-              <span>Cancel</span>
+              <span onClick={() => setMobFilterDrawer((e) => !e)}>Cancel</span>
             </div>
           </div>
         </MobileHeader>
         <div style={{ marginTop: '91px', paddingLeft: '24px' }}>
-          {filterContent(true)}
+          {isCustomFilter === false ? filterContent(true) : customFilter()}
         </div>
         <Button
           type="primary"
           className={styles.applyButton}
-          onClick={() => {
-            onFilterSource()
-            setMobFilterDrawer((e) => !e)
-          }}
+          onClick={handleMobileDrawerApply}
         >
           Apply
         </Button>
@@ -147,9 +153,13 @@ const AddButton: FC<P> = ({
         )}
         <Popover
           trigger="click"
-          content={filterContent}
+          content={isCustomFilter ? customFilter : filterContent}
           placement="bottomRight"
-          overlayClassName={styles.filterPopover}
+          overlayClassName={
+            isCustomFilter === false
+              ? styles.filterPopover
+              : styles.customFilterPopover
+          }
         >
           {addFilter && (
             <Button className={styles.filterBtn}>
