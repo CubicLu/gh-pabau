@@ -60,3 +60,8 @@ fr:
     james-testing-2: ''
     james-test-3: ''
     login.title: ''
+    quickcreate.client: 'Client'
+    quickcreate.lead: 'Mener'
+    quickcreate.sms: 'SMS'
+    quickcreate.sale: 'Vente'
+    quickcreate.newsletter: 'Bulletin'

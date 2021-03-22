@@ -6,6 +6,7 @@ import { ReactComponent as EmptySVG } from '../../assets/images/notification-emp
 import { ReactComponent as Lead1SVG } from '../../assets/images/lead.svg'
 import { ReactComponent as Lead2SVG } from '../../assets/images/lead1.svg'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 interface Notification {
   notificationTime: string
@@ -31,7 +32,7 @@ export const NotificationDrawer: FC<P> = ({
   closeDrawer,
   notifications = [],
 }) => {
-  console.log('notifications', notifications)
+  const { t } = useTranslation('common')
   const [notificationDrawer, setNotificationDrawer] = useState(openDrawer)
   const [notifyTab, setNotifyTab] = useState('Activity')
   const [notificationData, setNotificationData] = useState<NotificationData[]>(
@@ -100,7 +101,7 @@ export const NotificationDrawer: FC<P> = ({
     >
       <div className={styles.notificationHeader}>
         <div className={styles.notificationAlign}>
-          <h1> Notifications</h1>
+          <h1>{t('notifications.header')}</h1>
           <CloseOutlined
             onClick={closeDrawerMenu}
             className={styles.searchIconSize}
@@ -116,7 +117,7 @@ export const NotificationDrawer: FC<P> = ({
             )}
             onClick={() => setNotifyTab('Activity')}
           >
-            Activity
+            {t('notifications.tab.activity')}
           </button>
           <button
             className={classNames(
@@ -125,7 +126,7 @@ export const NotificationDrawer: FC<P> = ({
             )}
             onClick={() => setNotifyTab('News')}
           >
-            News
+            {t('notifications.tab.news')}
           </button>
         </div>
       </div>
@@ -141,7 +142,7 @@ export const NotificationDrawer: FC<P> = ({
                     styles.todayTextTopSpace
                   )}
                 >
-                  <h2>{notify[notification].length > 0 && notification}</h2>
+                  <h2>{notify[notification].length > 0 && (notification === 'Today' ? t('notifications.today') : notification === 'Yesterday' ? t('notifications.yesterday') : notification)}</h2>
                 </div>
                 {notify[notification].map((dayNotify, dayIndex) => {
                   return (
@@ -199,12 +200,12 @@ export const NotificationDrawer: FC<P> = ({
         notifyTab === 'Activity' && (
           <div className={styles.notificationEmpty}>
             <EmptySVG />
-            <p className={styles.emptyMessage}>No notifications yet</p>
+            <p className={styles.emptyMessage}>{t('notifications.empty.msg')}</p>
             <p className={styles.emptyHint}>
-              Stay tuned! Notifications about your activity will show up here.
+              {t('notifications.empty.hint')}
             </p>
             <a href="#test" className={styles.emptyAnchor}>
-              Notification settings {'>'}
+              {t('notifications.empty.anchor')} {'>'}
             </a>
           </div>
         )}
@@ -220,7 +221,7 @@ export const NotificationDrawer: FC<P> = ({
                     styles.todayTextTopSpace
                   )}
                 >
-                  <h2>{notification}</h2>
+                  <h2>{notification === 'Today' ? t('notifications.today') : notification === 'Yesterday' ? t('notifications.yesterday') : notification}</h2>
                 </div>
                 {notify[notification].map((dayNotify, index) => {
                   return (
@@ -251,7 +252,7 @@ export const NotificationDrawer: FC<P> = ({
                             styles.learnMore
                           )}
                         >
-                          Learn more
+                          {t('news.learn')}
                         </span>
                       </div>
                       <div className={styles.cardBorder} />
