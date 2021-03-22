@@ -1237,6 +1237,9 @@
       filter: {}
 - table:
     schema: public
+    name: feature_flags
+- table:
+    schema: public
     name: invoices
   insert_permissions:
   - role: public
