@@ -9,7 +9,6 @@ import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import ReviewSettings from '../../../components/Setup/Settings/ReviewSettings/ReviewSettings'
 import AssessmentSettings from '../../../components/Setup/Settings/AssessmentSettings/AssessmentSettings'
 import PeopleSettings from '../../../components/Setup/Settings/PeopleSettings/PeopleSettings'
-
 import styles from './performance.module.less'
 
 interface P {
