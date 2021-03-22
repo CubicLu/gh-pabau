@@ -1,6 +1,8 @@
-import React, { FC, useEffect } from 'react'
-import { gql, QueryResult, useQuery } from '@apollo/client'
+import React, { FC } from 'react'
+import { gql, useQuery } from '@apollo/client'
 import { UserContext } from '../context/UserContext'
+import { GetStaticProps, InferGetStaticPropsType } from 'next'
+import { getApolloClient } from '../pages/_app'
 
 const CURRENT_USER = gql`
   query retrieveAuthenticatedUser {
@@ -34,10 +36,44 @@ interface Company {
   }
 }
 
-const ContextWrapper: FC = ({ children, ...props }) => {
-  const user: QueryResult<User> = useQuery(CURRENT_USER)
+const ContextWrapper: FC = ({
+  children,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const { loading, error, data } = useQuery(CURRENT_USER, { ssr: false })
+  if (error) {
+    console.error(error)
+  }
+  if (loading) {
+    return <div>Loading </div>
+  }
 
-  return <UserContext.Provider value={user}>{children}</UserContext.Provider>
+  return (
+    <UserContext.Provider value={data as User}>{children}</UserContext.Provider>
+  )
+}
+
+export const getStaticProps: GetStaticProps = async () => {
+  const apolloClient = getApolloClient()
+  const user = await apolloClient.query({
+    query: CURRENT_USER,
+  })
+
+  if (!user) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: {
+      test: 'test',
+      currentUser: user,
+    },
+    revalidate: 1,
+  }
 }
 
 export default ContextWrapper

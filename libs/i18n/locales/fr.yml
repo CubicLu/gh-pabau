@@ -40,7 +40,6 @@ fr:
     menu-main-title-dashboard: 'Dashboard'
 
 
-
     KEY: ''
     search.placeholder: ''
     avatar.balance: ''
@@ -75,3 +74,8 @@ fr:
     james-testing-2: ''
     james-test-3: ''
     login.title: ''
+    quickcreate.client: 'Client'
+    quickcreate.lead: 'Mener'
+    quickcreate.sms: 'SMS'
+    quickcreate.sale: 'Vente'
+    quickcreate.newsletter: 'Bulletin'

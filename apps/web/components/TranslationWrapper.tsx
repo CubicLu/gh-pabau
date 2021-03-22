@@ -5,13 +5,11 @@ import { I18nextProvider, initReactI18next } from 'react-i18next'
 import { languages } from '@pabau/i18n'
 
 const TranslationWrapper: FC = ({ children }) => {
-  const user = useContext(UserContext)
+  const me = useContext(UserContext)
 
   i18next.use(initReactI18next).init({
     interpolation: { escapeValue: false },
-    lng:
-      user?.data?.me?.company?.details?.language?.toString().slice(0, 2) ??
-      'en',
+    lng: me?.me?.company?.details?.language?.toString().slice(0, 2),
     fallbackLng: 'en',
     keySeparator: false,
     resources: languages,

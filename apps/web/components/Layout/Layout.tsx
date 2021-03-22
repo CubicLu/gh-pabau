@@ -14,23 +14,29 @@ const onCreateChannel = (name, description, isPrivate) => {
 }
 
 const Layout: FC<LayoutProps> = ({ children, ...props }) => {
-  const [authenticated] = useLogin(false)
+  const [authenticated, user] = useLogin(false)
 
-  if (typeof window === 'undefined')
+  if (typeof window === 'undefined') {
     return <PabauLayout> Loading animation placeholder </PabauLayout>
-
-  return authenticated && localStorage?.getItem('token') ? (
-    <PabauLayout
-      searchRender={() => <Search />}
-      onCreateChannel={onCreateChannel}
-      onMessageType={onMessageType}
-      {...props}
-    >
-      {children}
-    </PabauLayout>
-  ) : (
-    <Login />
-  )
+  }
+  if (
+    typeof window !== 'undefined' &&
+    authenticated &&
+    user &&
+    localStorage?.getItem('token')
+  ) {
+    return (
+      <PabauLayout
+        searchRender={() => <Search />}
+        onCreateChannel={onCreateChannel}
+        onMessageType={onMessageType}
+        {...props}
+      >
+        {children}
+      </PabauLayout>
+    )
+  }
+  return <Login />
 }
 
 export default Layout

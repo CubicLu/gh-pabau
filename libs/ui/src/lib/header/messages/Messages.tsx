@@ -28,6 +28,7 @@ import Walter from '../../../assets/images/users/walter.png'
 import Liza from '../../../assets/images/users/liza.png'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 export interface MessagesProps {
   openDrawer: boolean
@@ -139,6 +140,7 @@ export const PabauMessages: FC<MessagesProps> = ({
     MessageBox: 392,
     ChatBox: 522,
   }
+  const { t } = useTranslation('common')
   const [messageDrawer, setMessageDrawer] = useState(openDrawer)
   const [selectedContact, setSelectedContact] = useState<Contact>()
   const [drawerWidth, setDrawerWidth] = useState(WidthEnum.MessageBox)
@@ -265,12 +267,12 @@ export const PabauMessages: FC<MessagesProps> = ({
     if (selectedGroup !== '') {
       setMemberModalTitle(
         Object.keys(groupData[selectedGroup]).length +
-          ' Members In #' +
+          t('chat.members.in') +
           selectedGroup.charAt(0).toUpperCase() +
           selectedGroup.slice(1)
       )
     }
-  }, [selectedGroup])
+  }, [selectedGroup, t])
 
   const handleGroupClick = (e, type) => {
     setShowGroupChatBox(true)
@@ -388,43 +390,39 @@ export const PabauMessages: FC<MessagesProps> = ({
         <BasicModal
           modalWidth={682}
           centered={true}
-          title="create A Channel"
-          newButtonText={'Create'}
+          title={t('chat.create.channel')}
+          newButtonText={t('chat.create')}
           className={styles.createChannelModal}
           newButtonDisable={name.length <= 0}
           onOk={() => onCreate()}
-          dangerButtonText={`Cancel`}
+          dangerButtonText={t('chat.cancel')}
           onCancel={toggleCreateChannel}
           onDelete={toggleCreateChannel}
           visible={isCreateChannel}
         >
-          <div className={styles.content}>
-            Channels are where your team communicates. They’re best when
-            organized around a topic – #marketing, for example.
-          </div>
+          <div className={styles.content}>{t('chat.create.channel.title')}</div>
           <div className={styles.textControl}>
-            <div>Name</div>
+            <div>{t('chat.create.channel.name')}</div>
             <Input
               className={styles.nameInput}
-              placeholder="# e.g. plan-budget"
+              placeholder={t('chat.create.channel.name.placeholder')}
               onChange={handleNameChange}
               value={name}
               suffix={80 - name.length}
             />
           </div>
           <div className={styles.textControl}>
-            <div>Description</div>
+            <div>{t('chat.create.channel.description')}</div>
             <Input
-              placeholder="What’s this channel about?"
+              placeholder={t('chat.create.channel.description.placeholder')}
               onChange={handleDescriptionChange}
             />
           </div>
           <div>
-            <div>Make private</div>
+            <div>{t('chat.create.channel.makeprivate')}</div>
             <div className={styles.switchContent}>
               <div className={styles.switchText}>
-                When a channel is set to private, it can be only be viewed or
-                joined by invitation.
+                {t('chat.create.channel.makeprivate.text')}
               </div>
               <div className={styles.switch}>
                 <Switch onChange={onChangeToPrivate} />

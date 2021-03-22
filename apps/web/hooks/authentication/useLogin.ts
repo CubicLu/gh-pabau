@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import jwt from 'jsonwebtoken'
-import { useCookies } from 'react-cookie'
 
 export interface LoginProps {
   user: number
@@ -8,7 +7,6 @@ export interface LoginProps {
 }
 
 export default function useLogin(registered = false): [boolean, LoginProps] {
-  const [cookie] = useCookies(['user'])
   const [authenticated, authenticate] = useState<boolean>(registered)
   const [user, setUser] = useState<LoginProps | null>(null)
 
@@ -30,14 +28,14 @@ export default function useLogin(registered = false): [boolean, LoginProps] {
   }
 
   useEffect(() => {
-    if ({}.propertyIsEnumerable.call(cookie, 'user')) {
-      const currentUser = decode(cookie.user)
+    if (typeof window !== 'undefined') {
+      const currentUser = decode(localStorage.getItem('token'))
       if (currentUser) {
         authenticate(true)
         setUser(currentUser)
       }
     }
-  }, [authenticated, cookie])
+  }, [authenticated])
 
   return [authenticated ?? false, user]
 }

@@ -68,6 +68,7 @@ const CrudTable: FC<P> = ({
   )
   const [searchTerm, setSearchTerm] = useState('')
   const [isMobileSearch, setMobileSearch] = useState(false)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [formSubmitAllowed, setFormSubmitAllowedStatus] = useState(true)
   const { t } = useTranslationI18()
   const crudTableRef = useRef(null)

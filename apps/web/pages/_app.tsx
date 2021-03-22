@@ -2,7 +2,6 @@ import {
   ApolloClient,
   ApolloLink,
   ApolloProvider,
-  gql,
   HttpLink,
   InMemoryCache,
   split,
@@ -13,7 +12,6 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import * as Icons from '@fortawesome/free-solid-svg-icons'
 import { OperationDefinitionNode } from 'graphql'
 import { AppProps } from 'next/app'
-import React, { useEffect } from 'react'
 import 'react-phone-input-2/lib/style.css'
 import 'react-quill/dist/quill.snow.css'
 import 'react-image-crop/dist/ReactCrop.css'
@@ -21,8 +19,6 @@ import ContextWrapper from '../components/ContextWrapper'
 import { setContext } from '@apollo/client/link/context'
 import { CookiesProvider } from 'react-cookie'
 import TranslationWrapper from '../components/TranslationWrapper'
-import { GetServerSideProps } from 'next'
-
 require('../styles/global.less')
 require('../../../libs/ui/src/styles/antd.less')
 require('react-phone-input-2/lib/style.css')
@@ -35,9 +31,10 @@ if (typeof window !== 'undefined') window.debug = { cache }
 
 const GRAPHQL_WS_ENDPOINT =
   process.env.NEXT_PUBLIC_WSS_ENDPOINT || 'wss://api.new.pabau.com/v1/graphql'
-const GRAPHQL_HTTP_ENDPOINT =
-  process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
-  'https://api.new.pabau.com/v1/graphql'
+// const GRAPHQL_HTTP_ENDPOINT =
+//   process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
+//   'https://api.new.pabau.com/v1/graphql'
+const GRAPHQL_HTTP_ENDPOINT = 'https://api-toshe.pabau.me/graphql'
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token')
@@ -84,6 +81,7 @@ const terminatingLink = wsLink
       httpLink
     )
   : httpLink
+
 export const getApolloClient = () => {
   return new ApolloClient({
     ssrMode: false,
@@ -91,30 +89,10 @@ export const getApolloClient = () => {
     cache,
   })
 }
-const CURRENT_USER = gql`
-  query retrieveAuthenticatedUser {
-    me {
-      id
-      username
-      full_name
-      company {
-        id
-        details {
-          company_name
-          language
-        }
-      }
-    }
-  }
-`
 export default function CustomApp({
   Component,
   pageProps,
 }: AppProps): JSX.Element {
-  useEffect(() => {
-    console.log(pageProps)
-  })
-
   return (
     <ApolloProvider client={getApolloClient()}>
       <style jsx global>{`
@@ -142,14 +120,4 @@ export default function CustomApp({
       </CookiesProvider>
     </ApolloProvider>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const apolloClient = getApolloClient()
-  const user = await apolloClient.query({
-    query: CURRENT_USER,
-  })
-  return {
-    props: { user },
-  }
 }

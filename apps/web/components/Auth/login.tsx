@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react'
+import React, { FC } from 'react'
 import styles from '../../pages/login.module.less'
 import { Button, Notification, NotificationType } from '@pabau/ui'
 import * as Yup from 'yup'
@@ -8,9 +8,8 @@ import { EyeInvisibleOutlined, LinkedinFilled } from '@ant-design/icons'
 import { ReactComponent as GoogleIcon } from '../../assets/images/google.svg'
 import { ReactComponent as SSOIcon } from '../../assets/images/sso.svg'
 import { gql, useMutation } from '@apollo/client'
-import { useCookies } from 'react-cookie'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import { UserContext } from "../../context/UserContext";
+import { useRouter } from 'next/router'
 
 export interface LoginFormProps {
   email: string
@@ -28,11 +27,8 @@ const LOGIN_MUTATION = gql`
 `
 const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
   const [login] = useMutation(LOGIN_MUTATION)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [cookie, setCookie] = useCookies(['user'])
   const { t } = useTranslationI18()
-  const user = useContext(UserContext)
-
+  const router = useRouter()
 
   const loginHandler = async (loginProps: LoginFormProps): Promise<boolean> => {
     if (localStorage?.getItem('token')) {
@@ -48,14 +44,15 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
     if (!result) {
       throw new Error('Wrong user/password')
     }
-    setCookie('user', JSON.stringify(result.data?.login), {
-      path: '/',
-      maxAge: 3600,
-      sameSite: true,
-    })
+    // setCookie('user', JSON.stringify(result.data?.login), {
+    //   path: '/',
+    //   maxAge: 3600,
+    //   sameSite: true,
+    // })
     localStorage.setItem('token', result.data?.login)
     return true
   }
+
   return (
     <div>
       <div className={styles.signInForm}>
@@ -82,6 +79,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
           onSubmit={async (value: LoginFormProps) => {
             try {
               await loginHandler(value)
+              router.reload()
             } catch (error) {
               if (localStorage?.getItem('token')) {
                 localStorage.removeItem('token')

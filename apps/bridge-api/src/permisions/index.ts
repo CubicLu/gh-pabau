@@ -8,7 +8,12 @@ const rules = {
   isAuthenticated: rule('isAuthenticated')(
     async (root, args, ctx: Context): Promise<boolean> => {
       console.log(ctx.req.authenticatedUser)
-      if (ctx.req.authenticatedUser) return true
+      try {
+        if (ctx.req.authenticatedUser) return true
+      } catch (error) {
+        console.log(error)
+        return false
+      }
     }
   ),
   sameCompany: rule('sameCompany')(
