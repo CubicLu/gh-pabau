@@ -16,10 +16,10 @@ import { useTranslationI18 } from '../hooks/useTranslationI18'
 const WAIT_INTERVAL = 400
 
 interface P {
-  schema: Schema
+  schema: Partial<Schema>
   onClick?: () => void
   onFilterSource: () => void
-  onSearch: (term: string) => void
+  onSearch?: (term: string) => void
   tableSearch?: boolean
   addFilter?: boolean
   needTranslation?: boolean
@@ -56,6 +56,12 @@ const AddButton: FC<P> = ({
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [marketingSourceSearch])
+
+  const onReset = () => {
+    if (!isActive) {
+      setIsActive(!isActive)
+    }
+  }
 
   const handleMobileDrawerApply = () => {
     onFilterSource()
@@ -115,9 +121,16 @@ const AddButton: FC<P> = ({
         <MobileHeader className={styles.marketingSourceFilterHeader}>
           <div className={styles.allContentAlignMobile}>
             <div className={styles.marketingTextStyle}>
-              <span>Reset</span>
+              <span style={{ cursor: 'pointer' }} onClick={onReset}>
+                Reset
+              </span>
               <p> Filter </p>
-              <span onClick={() => setMobFilterDrawer((e) => !e)}>Cancel</span>
+              <span
+                onClick={() => setMobFilterDrawer((e) => !e)}
+                style={{ cursor: 'pointer' }}
+              >
+                Cancel
+              </span>
             </div>
           </div>
         </MobileHeader>
