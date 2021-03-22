@@ -10,6 +10,7 @@ interface P {
 
 const ReviewSettings: FC<P> = ({ handleChange, date: { date } }) => {
   const { t } = useTranslationI18()
+
   return (
     <GeneralLayout
       title={t('settings-performance-tab-header1')}
