@@ -30,7 +30,7 @@ interface P {
   editQuery: DocumentNode
   aggregateQuery?: DocumentNode
   tableSearch?: boolean
-  updateOrderQuery?: DocumentNode
+  updateOrderQuery?: DocumentNode | null
   showNotificationBanner?: boolean
   createPage?: boolean
   notificationBanner?: React.ReactNode
@@ -39,6 +39,7 @@ interface P {
   needTranslation?: boolean
   editPage?: boolean
   editPageRouteLink?: string
+  draggable?: boolean
 }
 
 const CrudTable: FC<P> = ({
@@ -58,10 +59,11 @@ const CrudTable: FC<P> = ({
   needTranslation = false,
   editPage = false,
   editPageRouteLink,
+  draggable = false,
   ...props
 }) => {
   const [isLoading, setIsLoading] = useState(true)
-  const [isActive, setIsActive] = useState<boolean | number>(
+  const [isActive, setIsActive] = useState<boolean>(
     schema?.filter?.primary?.default ?? true
   )
   const [searchTerm, setSearchTerm] = useState('')
@@ -201,20 +203,11 @@ const CrudTable: FC<P> = ({
     if (crudTableRef.current) {
       crudTableRef.current.scrollIntoView({ behavior: 'smooth' })
     }
-  }, [paginateData.currentPage])
+  }, [paginateData.currentPage, paginateData.limit])
 
   const onFilterMarketingSource = () => {
     resetPagination()
-    setIsActive((e) => {
-      switch (typeof e) {
-        case 'boolean':
-          return !e
-        case 'number':
-          return e === schema?.filter.primary.active
-            ? schema.filter.primary.inactive
-            : schema.filter.primary.active
-      }
-    })
+    setIsActive((e) => !e)
   }
 
   const onSearch = async (val) => {
@@ -224,16 +217,21 @@ const CrudTable: FC<P> = ({
     }
   }
 
-  const onPaginationChange = (currentPage) => {
+  const onPaginationChange = (currentPage, limit) => {
     const offset = paginateData.limit * (currentPage - 1)
-    setPaginateData({ ...paginateData, offset, currentPage: currentPage })
+    setPaginateData({
+      ...paginateData,
+      offset,
+      limit,
+      currentPage: currentPage,
+    })
   }
 
   const resetPagination = () => {
     setPaginateData({
       total: 0,
       offset: 0,
-      limit: 50,
+      limit: 10,
       currentPage: 1,
       showingRecords: 0,
     })
@@ -246,6 +244,7 @@ const CrudTable: FC<P> = ({
   const { fields } = schema
 
   const onSubmit = async (values, { resetForm }) => {
+    console.log(values?.public)
     await (values.id
       ? editMutation({
           variables: values,
@@ -254,6 +253,10 @@ const CrudTable: FC<P> = ({
             {
               query: listQuery,
               ...getQueryVariables,
+            },
+            {
+              query: aggregateQuery,
+              ...getAggregateQueryVariables(),
             },
           ],
         })
@@ -264,6 +267,10 @@ const CrudTable: FC<P> = ({
             {
               query: listQuery,
               ...getQueryVariables,
+            },
+            {
+              query: aggregateQuery,
+              ...getAggregateQueryVariables(),
             },
           ],
         }))
@@ -396,10 +403,8 @@ const CrudTable: FC<P> = ({
           }, {} as FormikErrors<any>)
         }
         onSubmit={(values, { resetForm }) => {
-          console.log('formik onsubmit', values)
           onSubmit(values, { resetForm })
         }}
-        //initialValues={typeof modalShowing === 'object' ? modalShowing : undefined}
         initialValues={
           editingRow?.id ? editingRow : formikFields() //TODO: remove this, it should come from schema.fields[].*
         }
@@ -455,11 +460,13 @@ const CrudTable: FC<P> = ({
               schema={schema}
               editingRow={editingRow}
               addQuery={addQuery}
-              listQuery={listQuery}
               deleteQuery={deleteQuery}
               onClose={() => setModalShowing(false)}
               needTranslation={needTranslation}
-              queryVariables={getQueryVariables}
+              listQuery={listQuery}
+              listQueryVariables={getQueryVariables}
+              aggregateQuery={aggregateQuery}
+              aggregateQueryVariables={getAggregateQueryVariables}
             />
           )}
 
@@ -475,11 +482,7 @@ const CrudTable: FC<P> = ({
                 <Breadcrumb
                   breadcrumbItems={[
                     {
-                      breadcrumbName: needTranslation
-                        ? t(
-                            'marketingsource-header-breadcrumb-setup-link.translation'
-                          )
-                        : 'Setup',
+                      breadcrumbName: t('navigation-breadcrumb-setup'),
                       path: 'setup',
                     },
                     { breadcrumbName: schema.full || schema.short, path: '' },
@@ -515,7 +518,7 @@ const CrudTable: FC<P> = ({
                 style={{ height: '100%' }}
                 sticky={{ offsetScroll: 80, offsetHeader: 80 }}
                 pagination={sourceData?.length > 10 ? {} : false}
-                draggable={true}
+                draggable={draggable}
                 isCustomColorExist={checkCustomColorIconExist('color')}
                 isCustomIconExist={checkCustomColorIconExist('icon')}
                 noDataBtnText={schema.full}
@@ -536,8 +539,7 @@ const CrudTable: FC<P> = ({
                       : true,
                   })),
                 ]}
-                // eslint-disable-next-line
-                dataSource={sourceData?.map((e: { id: any }) => ({
+                dataSource={sourceData?.map((e: { id: string | number }) => ({
                   key: e.id,
                   ...e,
                 }))}
@@ -556,11 +558,6 @@ const CrudTable: FC<P> = ({
                     }
                   }
                   setSourceData(newData)
-                  // console.log('newData, oldIndex, newIndex', {
-                  //   newData,
-                  //   oldIndex,
-                  //   newIndex,
-                  // })
                 }}
                 onRowClick={(e) => {
                   if (editPage) {
@@ -575,9 +572,15 @@ const CrudTable: FC<P> = ({
             </div>
             <Pagination
               total={paginateData.total}
-              defaultPageSize={50}
-              showSizeChanger={false}
+              defaultPageSize={10}
               onChange={onPaginationChange}
+              pageSizeOptions={['10', '25', '50', '100']}
+              onPageSizeChange={(pageSize) => {
+                setPaginateData({
+                  ...paginateData,
+                  limit: pageSize,
+                })
+              }}
               pageSize={paginateData.limit}
               current={paginateData.currentPage}
               showingRecords={paginateData.showingRecords}
@@ -588,5 +591,4 @@ const CrudTable: FC<P> = ({
     </div>
   )
 }
-
 export default CrudTable

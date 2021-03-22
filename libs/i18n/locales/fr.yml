@@ -1,9 +1,31 @@
 fr:
     marketingsource-header-create.translation: 'Créer une source marketing'
-    marketingsource-title: 'Créer une source marketing!123'
-    marketingsource-name-textfield: Nom
+    marketingsource-title: 'Créer une source marketing!'
+    marketingsource-name-textfield: 'Nom'
     marketingsource-name-placeholder: 'par exemple. Facebook'
-    marketingsource-header-edit: 'Créer une source marketing!x'
+    marketingsource-header-edit: 'Mettre à jour cette source marketing'
+    basic-crud-table-input-search-placeholder: 'Chercher'
+    basic-crud-table-button-filter: 'Filtres'
+    basic-crud-table-button-active: 'Actif'
+    basic-crud-table-button-inactive: 'Inactif'
+    crud-table-pagination-text-showing: 'Montrant'
+    crud-table-pagination-text-results: 'Résultats de'
+    crud-table-pagination-test-displaying: 'Lignes par page'
+
+    navigation-breadcrumb-setup: 'Installer'
+
+    add-button-filter-header-text-filter: 'Filtrer par'
+    add-button-filter-header-text-status: 'Statut'
+    add-button-filter: 'Filtrer'
+    add-button-filter-reset: 'Réinitialiser'
+    add-button-filter-cancel: 'Annuler'
+
+    common-label-delete: 'Effacer'
+    common-label-add: 'Ajouter'
+    common-label-create: 'Créer'
+    common-label-save: 'Sauvegarder'
+    common-label-delete-warning: 'sera supprimé. Cette action est irréversible'
+
     KEY: ''
     search.placeholder: ''
     avatar.balance: ''

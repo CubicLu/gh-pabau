@@ -2818,7 +2818,7 @@ export interface NexusGenInputs {
     block_color: string; // String!
     custom_id: number; // Int!
     default_time?: string | null; // String
-    is_active: number; // Int!
+    is_active: boolean; // Boolean!
     is_paid: number; // Int!
     occupier: string; // String!
     reason_name: string; // String!
@@ -2840,7 +2840,7 @@ export interface NexusGenInputs {
     custom_id: number; // Int!
     default_time?: string | null; // String
     id?: number | null; // Int
-    is_active: number; // Int!
+    is_active: boolean; // Boolean!
     is_paid: number; // Int!
     occupier: string; // String!
     reason_name: string; // String!
@@ -2851,7 +2851,7 @@ export interface NexusGenInputs {
     custom_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     default_time?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
-    is_active?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    is_active?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
     is_paid?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     occupier?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     reason_name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
@@ -2862,7 +2862,7 @@ export interface NexusGenInputs {
     custom_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     default_time?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
-    is_active?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    is_active?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
     is_paid?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     occupier?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     reason_name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
@@ -2872,7 +2872,7 @@ export interface NexusGenInputs {
     block_color?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     custom_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     default_time?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
-    is_active?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    is_active?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
     is_paid?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     occupier?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     reason_name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
@@ -2882,7 +2882,7 @@ export interface NexusGenInputs {
     block_color?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     custom_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     default_time?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
-    is_active?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    is_active?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
     is_paid?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     occupier?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     reason_name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
@@ -2896,7 +2896,7 @@ export interface NexusGenInputs {
     custom_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     default_time?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     id?: NexusGenInputs['IntFilter'] | null; // IntFilter
-    is_active?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    is_active?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
     is_paid?: NexusGenInputs['IntFilter'] | null; // IntFilter
     occupier?: NexusGenInputs['StringFilter'] | null; // StringFilter
     reason_name?: NexusGenInputs['StringFilter'] | null; // StringFilter
@@ -4162,17 +4162,42 @@ export interface NexusGenInputs {
   }
   BookingStatusCreateInput: { // input type
     basic_field: boolean; // Boolean!
-    company_id: number; // Int!
+    company: NexusGenInputs['CompanyCreateNestedOneWithoutBookingStatusInput']; // CompanyCreateNestedOneWithoutBookingStatusInput!
     icon: string; // String!
     icon_color: string; // String!
     indicator?: NexusGenEnums['booking_statuses_indicator'] | null; // booking_statuses_indicator
     name: string; // String!
-    ord: number; // Float!
-    track_time?: boolean | null; // Boolean
+    ord?: number | null; // Float
+    track_time?: number | null; // Int
     value: string; // String!
+  }
+  BookingStatusCreateNestedManyWithoutCompanyInput: { // input type
+    connect?: Array<NexusGenInputs['BookingStatusWhereUniqueInput'] | null> | null; // [BookingStatusWhereUniqueInput]
+    connectOrCreate?: Array<NexusGenInputs['BookingStatusCreateOrConnectWithoutCompanyInput'] | null> | null; // [BookingStatusCreateOrConnectWithoutCompanyInput]
+    create?: Array<NexusGenInputs['BookingStatusCreateWithoutCompanyInput'] | null> | null; // [BookingStatusCreateWithoutCompanyInput]
+  }
+  BookingStatusCreateOrConnectWithoutCompanyInput: { // input type
+    create: NexusGenInputs['BookingStatusUncheckedCreateWithoutCompanyInput']; // BookingStatusUncheckedCreateWithoutCompanyInput!
+    where: NexusGenInputs['BookingStatusWhereUniqueInput']; // BookingStatusWhereUniqueInput!
+  }
+  BookingStatusCreateWithoutCompanyInput: { // input type
+    basic_field: boolean; // Boolean!
+    icon: string; // String!
+    icon_color: string; // String!
+    indicator?: NexusGenEnums['booking_statuses_indicator'] | null; // booking_statuses_indicator
+    name: string; // String!
+    ord?: number | null; // Float
+    track_time?: number | null; // Int
+    value: string; // String!
+  }
+  BookingStatusListRelationFilter: { // input type
+    every?: NexusGenInputs['BookingStatusWhereInput'] | null; // BookingStatusWhereInput
+    none?: NexusGenInputs['BookingStatusWhereInput'] | null; // BookingStatusWhereInput
+    some?: NexusGenInputs['BookingStatusWhereInput'] | null; // BookingStatusWhereInput
   }
   BookingStatusOrderByInput: { // input type
     basic_field?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    company?: NexusGenInputs['CompanyOrderByInput'] | null; // CompanyOrderByInput
     company_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
     icon?: NexusGenEnums['SortOrder'] | null; // SortOrder
     icon_color?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -4183,6 +4208,21 @@ export interface NexusGenInputs {
     track_time?: NexusGenEnums['SortOrder'] | null; // SortOrder
     value?: NexusGenEnums['SortOrder'] | null; // SortOrder
   }
+  BookingStatusScalarWhereInput: { // input type
+    AND?: Array<NexusGenInputs['BookingStatusScalarWhereInput'] | null> | null; // [BookingStatusScalarWhereInput]
+    NOT?: Array<NexusGenInputs['BookingStatusScalarWhereInput'] | null> | null; // [BookingStatusScalarWhereInput]
+    OR?: Array<NexusGenInputs['BookingStatusScalarWhereInput'] | null> | null; // [BookingStatusScalarWhereInput]
+    basic_field?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
+    company_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    icon?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    icon_color?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    indicator?: NexusGenInputs['Enumbooking_statuses_indicatorNullableFilter'] | null; // Enumbooking_statuses_indicatorNullableFilter
+    name?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    ord?: NexusGenInputs['FloatNullableFilter'] | null; // FloatNullableFilter
+    track_time?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    value?: NexusGenInputs['StringFilter'] | null; // StringFilter
+  }
   BookingStatusUncheckedCreateInput: { // input type
     basic_field: boolean; // Boolean!
     company_id: number; // Int!
@@ -4191,8 +4231,24 @@ export interface NexusGenInputs {
     id?: number | null; // Int
     indicator?: NexusGenEnums['booking_statuses_indicator'] | null; // booking_statuses_indicator
     name: string; // String!
-    ord: number; // Float!
-    track_time?: boolean | null; // Boolean
+    ord?: number | null; // Float
+    track_time?: number | null; // Int
+    value: string; // String!
+  }
+  BookingStatusUncheckedCreateNestedManyWithoutCompanyInput: { // input type
+    connect?: Array<NexusGenInputs['BookingStatusWhereUniqueInput'] | null> | null; // [BookingStatusWhereUniqueInput]
+    connectOrCreate?: Array<NexusGenInputs['BookingStatusCreateOrConnectWithoutCompanyInput'] | null> | null; // [BookingStatusCreateOrConnectWithoutCompanyInput]
+    create?: Array<NexusGenInputs['BookingStatusCreateWithoutCompanyInput'] | null> | null; // [BookingStatusCreateWithoutCompanyInput]
+  }
+  BookingStatusUncheckedCreateWithoutCompanyInput: { // input type
+    basic_field: boolean; // Boolean!
+    icon: string; // String!
+    icon_color: string; // String!
+    id?: number | null; // Int
+    indicator?: NexusGenEnums['booking_statuses_indicator'] | null; // booking_statuses_indicator
+    name: string; // String!
+    ord?: number | null; // Float
+    track_time?: number | null; // Int
     value: string; // String!
   }
   BookingStatusUncheckedUpdateInput: { // input type
@@ -4203,8 +4259,8 @@ export interface NexusGenInputs {
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     indicator?: NexusGenInputs['NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput'] | null; // NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput
     name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    ord?: NexusGenInputs['FloatFieldUpdateOperationsInput'] | null; // FloatFieldUpdateOperationsInput
-    track_time?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
+    ord?: NexusGenInputs['NullableFloatFieldUpdateOperationsInput'] | null; // NullableFloatFieldUpdateOperationsInput
+    track_time?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     value?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
   }
   BookingStatusUncheckedUpdateManyInput: { // input type
@@ -4215,31 +4271,99 @@ export interface NexusGenInputs {
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     indicator?: NexusGenInputs['NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput'] | null; // NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput
     name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    ord?: NexusGenInputs['FloatFieldUpdateOperationsInput'] | null; // FloatFieldUpdateOperationsInput
-    track_time?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
+    ord?: NexusGenInputs['NullableFloatFieldUpdateOperationsInput'] | null; // NullableFloatFieldUpdateOperationsInput
+    track_time?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    value?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+  }
+  BookingStatusUncheckedUpdateManyWithoutBookingStatusInput: { // input type
+    basic_field?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
+    icon?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+    icon_color?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+    id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    indicator?: NexusGenInputs['NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput'] | null; // NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput
+    name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+    ord?: NexusGenInputs['NullableFloatFieldUpdateOperationsInput'] | null; // NullableFloatFieldUpdateOperationsInput
+    track_time?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    value?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+  }
+  BookingStatusUncheckedUpdateManyWithoutCompanyInput: { // input type
+    connect?: Array<NexusGenInputs['BookingStatusWhereUniqueInput'] | null> | null; // [BookingStatusWhereUniqueInput]
+    connectOrCreate?: Array<NexusGenInputs['BookingStatusCreateOrConnectWithoutCompanyInput'] | null> | null; // [BookingStatusCreateOrConnectWithoutCompanyInput]
+    create?: Array<NexusGenInputs['BookingStatusCreateWithoutCompanyInput'] | null> | null; // [BookingStatusCreateWithoutCompanyInput]
+    delete?: Array<NexusGenInputs['BookingStatusWhereUniqueInput'] | null> | null; // [BookingStatusWhereUniqueInput]
+    deleteMany?: Array<NexusGenInputs['BookingStatusScalarWhereInput'] | null> | null; // [BookingStatusScalarWhereInput]
+    disconnect?: Array<NexusGenInputs['BookingStatusWhereUniqueInput'] | null> | null; // [BookingStatusWhereUniqueInput]
+    set?: Array<NexusGenInputs['BookingStatusWhereUniqueInput'] | null> | null; // [BookingStatusWhereUniqueInput]
+    update?: Array<NexusGenInputs['BookingStatusUpdateWithWhereUniqueWithoutCompanyInput'] | null> | null; // [BookingStatusUpdateWithWhereUniqueWithoutCompanyInput]
+    updateMany?: Array<NexusGenInputs['BookingStatusUpdateManyWithWhereWithoutCompanyInput'] | null> | null; // [BookingStatusUpdateManyWithWhereWithoutCompanyInput]
+    upsert?: Array<NexusGenInputs['BookingStatusUpsertWithWhereUniqueWithoutCompanyInput'] | null> | null; // [BookingStatusUpsertWithWhereUniqueWithoutCompanyInput]
+  }
+  BookingStatusUncheckedUpdateWithoutCompanyInput: { // input type
+    basic_field?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
+    icon?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+    icon_color?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+    id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    indicator?: NexusGenInputs['NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput'] | null; // NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput
+    name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+    ord?: NexusGenInputs['NullableFloatFieldUpdateOperationsInput'] | null; // NullableFloatFieldUpdateOperationsInput
+    track_time?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     value?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
   }
   BookingStatusUpdateInput: { // input type
     basic_field?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
-    company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    company?: NexusGenInputs['CompanyUpdateOneRequiredWithoutBookingStatusInput'] | null; // CompanyUpdateOneRequiredWithoutBookingStatusInput
     icon?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     icon_color?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     indicator?: NexusGenInputs['NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput'] | null; // NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput
     name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    ord?: NexusGenInputs['FloatFieldUpdateOperationsInput'] | null; // FloatFieldUpdateOperationsInput
-    track_time?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
+    ord?: NexusGenInputs['NullableFloatFieldUpdateOperationsInput'] | null; // NullableFloatFieldUpdateOperationsInput
+    track_time?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     value?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
   }
   BookingStatusUpdateManyMutationInput: { // input type
     basic_field?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
-    company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     icon?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     icon_color?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     indicator?: NexusGenInputs['NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput'] | null; // NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput
     name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    ord?: NexusGenInputs['FloatFieldUpdateOperationsInput'] | null; // FloatFieldUpdateOperationsInput
-    track_time?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
+    ord?: NexusGenInputs['NullableFloatFieldUpdateOperationsInput'] | null; // NullableFloatFieldUpdateOperationsInput
+    track_time?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     value?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+  }
+  BookingStatusUpdateManyWithWhereWithoutCompanyInput: { // input type
+    data: NexusGenInputs['BookingStatusUncheckedUpdateManyWithoutBookingStatusInput']; // BookingStatusUncheckedUpdateManyWithoutBookingStatusInput!
+    where: NexusGenInputs['BookingStatusScalarWhereInput']; // BookingStatusScalarWhereInput!
+  }
+  BookingStatusUpdateManyWithoutCompanyInput: { // input type
+    connect?: Array<NexusGenInputs['BookingStatusWhereUniqueInput'] | null> | null; // [BookingStatusWhereUniqueInput]
+    connectOrCreate?: Array<NexusGenInputs['BookingStatusCreateOrConnectWithoutCompanyInput'] | null> | null; // [BookingStatusCreateOrConnectWithoutCompanyInput]
+    create?: Array<NexusGenInputs['BookingStatusCreateWithoutCompanyInput'] | null> | null; // [BookingStatusCreateWithoutCompanyInput]
+    delete?: Array<NexusGenInputs['BookingStatusWhereUniqueInput'] | null> | null; // [BookingStatusWhereUniqueInput]
+    deleteMany?: Array<NexusGenInputs['BookingStatusScalarWhereInput'] | null> | null; // [BookingStatusScalarWhereInput]
+    disconnect?: Array<NexusGenInputs['BookingStatusWhereUniqueInput'] | null> | null; // [BookingStatusWhereUniqueInput]
+    set?: Array<NexusGenInputs['BookingStatusWhereUniqueInput'] | null> | null; // [BookingStatusWhereUniqueInput]
+    update?: Array<NexusGenInputs['BookingStatusUpdateWithWhereUniqueWithoutCompanyInput'] | null> | null; // [BookingStatusUpdateWithWhereUniqueWithoutCompanyInput]
+    updateMany?: Array<NexusGenInputs['BookingStatusUpdateManyWithWhereWithoutCompanyInput'] | null> | null; // [BookingStatusUpdateManyWithWhereWithoutCompanyInput]
+    upsert?: Array<NexusGenInputs['BookingStatusUpsertWithWhereUniqueWithoutCompanyInput'] | null> | null; // [BookingStatusUpsertWithWhereUniqueWithoutCompanyInput]
+  }
+  BookingStatusUpdateWithWhereUniqueWithoutCompanyInput: { // input type
+    data: NexusGenInputs['BookingStatusUncheckedUpdateWithoutCompanyInput']; // BookingStatusUncheckedUpdateWithoutCompanyInput!
+    where: NexusGenInputs['BookingStatusWhereUniqueInput']; // BookingStatusWhereUniqueInput!
+  }
+  BookingStatusUpdateWithoutCompanyInput: { // input type
+    basic_field?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
+    icon?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+    icon_color?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+    indicator?: NexusGenInputs['NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput'] | null; // NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput
+    name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+    ord?: NexusGenInputs['NullableFloatFieldUpdateOperationsInput'] | null; // NullableFloatFieldUpdateOperationsInput
+    track_time?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    value?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+  }
+  BookingStatusUpsertWithWhereUniqueWithoutCompanyInput: { // input type
+    create: NexusGenInputs['BookingStatusUncheckedCreateWithoutCompanyInput']; // BookingStatusUncheckedCreateWithoutCompanyInput!
+    update: NexusGenInputs['BookingStatusUncheckedUpdateWithoutCompanyInput']; // BookingStatusUncheckedUpdateWithoutCompanyInput!
+    where: NexusGenInputs['BookingStatusWhereUniqueInput']; // BookingStatusWhereUniqueInput!
   }
   BookingStatusValueCompoundUniqueInput: { // input type
     company_id: number; // Int!
@@ -4250,14 +4374,15 @@ export interface NexusGenInputs {
     NOT?: Array<NexusGenInputs['BookingStatusWhereInput'] | null> | null; // [BookingStatusWhereInput]
     OR?: Array<NexusGenInputs['BookingStatusWhereInput'] | null> | null; // [BookingStatusWhereInput]
     basic_field?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
+    company?: NexusGenInputs['CompanyWhereInput'] | null; // CompanyWhereInput
     company_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     icon?: NexusGenInputs['StringFilter'] | null; // StringFilter
     icon_color?: NexusGenInputs['StringFilter'] | null; // StringFilter
     id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     indicator?: NexusGenInputs['Enumbooking_statuses_indicatorNullableFilter'] | null; // Enumbooking_statuses_indicatorNullableFilter
     name?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    ord?: NexusGenInputs['FloatFilter'] | null; // FloatFilter
-    track_time?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
+    ord?: NexusGenInputs['FloatNullableFilter'] | null; // FloatNullableFilter
+    track_time?: NexusGenInputs['IntFilter'] | null; // IntFilter
     value?: NexusGenInputs['StringFilter'] | null; // StringFilter
   }
   BookingStatusWhereUniqueInput: { // input type
@@ -5382,7 +5507,7 @@ export interface NexusGenInputs {
   CancellationPolicyCreateInput: { // input type
     advanced_cancellation_fee: number; // Int!
     creation_date?: NexusGenScalars['DateTime'] | null; // DateTime
-    is_active: number; // Int!
+    is_active: boolean; // Boolean!
     modified_date?: NexusGenScalars['DateTime'] | null; // DateTime
     no_show_fee: number; // Int!
     occupier: number; // Int!
@@ -5414,7 +5539,7 @@ export interface NexusGenInputs {
     advanced_cancellation_fee: number; // Int!
     creation_date?: NexusGenScalars['DateTime'] | null; // DateTime
     id?: number | null; // Int
-    is_active: number; // Int!
+    is_active: boolean; // Boolean!
     modified_date?: NexusGenScalars['DateTime'] | null; // DateTime
     no_show_fee: number; // Int!
     occupier: number; // Int!
@@ -5430,7 +5555,7 @@ export interface NexusGenInputs {
     advanced_cancellation_fee?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     creation_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
-    is_active?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    is_active?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
     modified_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     no_show_fee?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     occupier?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -5446,7 +5571,7 @@ export interface NexusGenInputs {
     advanced_cancellation_fee?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     creation_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
-    is_active?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    is_active?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
     modified_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     no_show_fee?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     occupier?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -5461,7 +5586,7 @@ export interface NexusGenInputs {
   CancellationPolicyUpdateInput: { // input type
     advanced_cancellation_fee?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     creation_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
-    is_active?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    is_active?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
     modified_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     no_show_fee?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     occupier?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -5476,7 +5601,7 @@ export interface NexusGenInputs {
   CancellationPolicyUpdateManyMutationInput: { // input type
     advanced_cancellation_fee?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     creation_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
-    is_active?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    is_active?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
     modified_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     no_show_fee?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     occupier?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -5495,7 +5620,7 @@ export interface NexusGenInputs {
     advanced_cancellation_fee?: NexusGenInputs['IntFilter'] | null; // IntFilter
     creation_date?: NexusGenInputs['DateTimeNullableFilter'] | null; // DateTimeNullableFilter
     id?: NexusGenInputs['IntFilter'] | null; // IntFilter
-    is_active?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    is_active?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
     modified_date?: NexusGenInputs['DateTimeNullableFilter'] | null; // DateTimeNullableFilter
     no_show_fee?: NexusGenInputs['IntFilter'] | null; // IntFilter
     occupier?: NexusGenInputs['IntFilter'] | null; // IntFilter
@@ -6918,7 +7043,7 @@ export interface NexusGenInputs {
     class_id: number; // Int!
     note: string; // String!
     post_date: string; // String!
-    public: number; // Int!
+    public: boolean; // Boolean!
   }
   ClassNotesOrderByInput: { // input type
     author?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -6936,7 +7061,7 @@ export interface NexusGenInputs {
     id?: number | null; // Int
     note: string; // String!
     post_date: string; // String!
-    public: number; // Int!
+    public: boolean; // Boolean!
   }
   ClassNotesUncheckedUpdateInput: { // input type
     author?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
@@ -6945,7 +7070,7 @@ export interface NexusGenInputs {
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     note?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     post_date?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    public?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    public?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
   }
   ClassNotesUncheckedUpdateManyInput: { // input type
     author?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
@@ -6954,7 +7079,7 @@ export interface NexusGenInputs {
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     note?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     post_date?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    public?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    public?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
   }
   ClassNotesUpdateInput: { // input type
     author?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
@@ -6962,7 +7087,7 @@ export interface NexusGenInputs {
     class_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     note?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     post_date?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    public?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    public?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
   }
   ClassNotesUpdateManyMutationInput: { // input type
     author?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
@@ -6970,7 +7095,7 @@ export interface NexusGenInputs {
     class_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     note?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     post_date?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    public?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    public?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
   }
   ClassNotesWhereInput: { // input type
     AND?: Array<NexusGenInputs['ClassNotesWhereInput'] | null> | null; // [ClassNotesWhereInput]
@@ -6982,7 +7107,7 @@ export interface NexusGenInputs {
     id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     note?: NexusGenInputs['StringFilter'] | null; // StringFilter
     post_date?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    public?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    public?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
   }
   ClassNotesWhereUniqueInput: { // input type
     id?: number | null; // Int
@@ -9810,6 +9935,7 @@ export interface NexusGenInputs {
   CompanyCreateInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateCreateNestedManyWithoutCompanyInput'] | null; // CandidateCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
@@ -9839,6 +9965,11 @@ export interface NexusGenInputs {
     connect?: NexusGenInputs['CompanyWhereUniqueInput'] | null; // CompanyWhereUniqueInput
     connectOrCreate?: NexusGenInputs['CompanyCreateOrConnectWithoutAccountBalanceInput'] | null; // CompanyCreateOrConnectWithoutAccountBalanceInput
     create?: NexusGenInputs['CompanyUncheckedCreateWithoutAccountBalanceInput'] | null; // CompanyUncheckedCreateWithoutAccountBalanceInput
+  }
+  CompanyCreateNestedOneWithoutBookingStatusInput: { // input type
+    connect?: NexusGenInputs['CompanyWhereUniqueInput'] | null; // CompanyWhereUniqueInput
+    connectOrCreate?: NexusGenInputs['CompanyCreateOrConnectWithoutBookingStatusInput'] | null; // CompanyCreateOrConnectWithoutBookingStatusInput
+    create?: NexusGenInputs['CompanyUncheckedCreateWithoutBookingStatusInput'] | null; // CompanyUncheckedCreateWithoutBookingStatusInput
   }
   CompanyCreateNestedOneWithoutCandidateInput: { // input type
     connect?: NexusGenInputs['CompanyWhereUniqueInput'] | null; // CompanyWhereUniqueInput
@@ -9898,6 +10029,10 @@ export interface NexusGenInputs {
     create: NexusGenInputs['CompanyUncheckedCreateWithoutAccountBalanceInput']; // CompanyUncheckedCreateWithoutAccountBalanceInput!
     where: NexusGenInputs['CompanyWhereUniqueInput']; // CompanyWhereUniqueInput!
   }
+  CompanyCreateOrConnectWithoutBookingStatusInput: { // input type
+    create: NexusGenInputs['CompanyUncheckedCreateWithoutBookingStatusInput']; // CompanyUncheckedCreateWithoutBookingStatusInput!
+    where: NexusGenInputs['CompanyWhereUniqueInput']; // CompanyWhereUniqueInput!
+  }
   CompanyCreateOrConnectWithoutCandidateInput: { // input type
     create: NexusGenInputs['CompanyUncheckedCreateWithoutCandidateInput']; // CompanyUncheckedCreateWithoutCandidateInput!
     where: NexusGenInputs['CompanyWhereUniqueInput']; // CompanyWhereUniqueInput!
@@ -9940,6 +10075,7 @@ export interface NexusGenInputs {
   }
   CompanyCreateWithoutAcceptEmailTokenInput: { // input type
     AccountBalance?: NexusGenInputs['AccountBalanceCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateCreateNestedManyWithoutCompanyInput'] | null; // CandidateCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
@@ -9962,6 +10098,30 @@ export interface NexusGenInputs {
   }
   CompanyCreateWithoutAccountBalanceInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusCreateNestedManyWithoutCompanyInput
+    Candidate?: NexusGenInputs['CandidateCreateNestedManyWithoutCompanyInput'] | null; // CandidateCreateNestedManyWithoutCompanyInput
+    CmCampaign?: NexusGenInputs['CmCampaignCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignCreateNestedManyWithoutCompanyInput
+    CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
+    CmCaseReply?: NexusGenInputs['CmCaseReplyCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyCreateNestedManyWithoutCompanyInput
+    MarketingSource?: NexusGenInputs['MarketingSourceCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceCreateNestedManyWithoutCompanyInput
+    ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessCreateNestedManyWithoutCompanyInput
+    TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryCreateNestedManyWithoutCompanyInput
+    User?: NexusGenInputs['UserCreateNestedManyWithoutCompanyInput'] | null; // UserCreateNestedManyWithoutCompanyInput
+    admin: number; // Int!
+    creation_date: NexusGenScalars['DateTime']; // DateTime!
+    cron_enabled?: boolean | null; // Boolean
+    details?: NexusGenInputs['CompanyDetailsCreateNestedOneWithoutCompanyInput'] | null; // CompanyDetailsCreateNestedOneWithoutCompanyInput
+    digit8: number; // Int!
+    image: string; // String!
+    remote_connect?: string | null; // String
+    remote_url?: string | null; // String
+    slug?: string | null; // String
+    subscription?: NexusGenInputs['CompanySubscriptionCreateNestedOneWithoutCompanyInput'] | null; // CompanySubscriptionCreateNestedOneWithoutCompanyInput
+    user: string; // String!
+  }
+  CompanyCreateWithoutBookingStatusInput: { // input type
+    AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenCreateNestedManyWithoutCompanyInput
+    AccountBalance?: NexusGenInputs['AccountBalanceCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateCreateNestedManyWithoutCompanyInput'] | null; // CandidateCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
@@ -9985,6 +10145,7 @@ export interface NexusGenInputs {
   CompanyCreateWithoutCandidateInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyCreateNestedManyWithoutCompanyInput
@@ -10007,6 +10168,7 @@ export interface NexusGenInputs {
   CompanyCreateWithoutCmCampaignInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateCreateNestedManyWithoutCompanyInput'] | null; // CandidateCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyCreateNestedManyWithoutCompanyInput
@@ -10029,6 +10191,7 @@ export interface NexusGenInputs {
   CompanyCreateWithoutCmCaseInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateCreateNestedManyWithoutCompanyInput'] | null; // CandidateCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyCreateNestedManyWithoutCompanyInput
@@ -10051,6 +10214,7 @@ export interface NexusGenInputs {
   CompanyCreateWithoutCmCaseReplyInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateCreateNestedManyWithoutCompanyInput'] | null; // CandidateCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
@@ -10073,6 +10237,7 @@ export interface NexusGenInputs {
   CompanyCreateWithoutDetailsInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateCreateNestedManyWithoutCompanyInput'] | null; // CandidateCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
@@ -10095,6 +10260,7 @@ export interface NexusGenInputs {
   CompanyCreateWithoutMarketingSourceInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateCreateNestedManyWithoutCompanyInput'] | null; // CandidateCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
@@ -10117,6 +10283,7 @@ export interface NexusGenInputs {
   CompanyCreateWithoutSubscriptionInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateCreateNestedManyWithoutCompanyInput'] | null; // CandidateCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
@@ -10139,6 +10306,7 @@ export interface NexusGenInputs {
   CompanyCreateWithoutThirdPartyAccessInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateCreateNestedManyWithoutCompanyInput'] | null; // CandidateCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
@@ -10161,6 +10329,7 @@ export interface NexusGenInputs {
   CompanyCreateWithoutTwoFactorHistoryInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateCreateNestedManyWithoutCompanyInput'] | null; // CandidateCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
@@ -10183,6 +10352,7 @@ export interface NexusGenInputs {
   CompanyCreateWithoutUserInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateCreateNestedManyWithoutCompanyInput'] | null; // CandidateCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
@@ -12793,6 +12963,7 @@ export interface NexusGenInputs {
   CompanyUncheckedCreateInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CandidateUncheckedCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -12816,6 +12987,7 @@ export interface NexusGenInputs {
   }
   CompanyUncheckedCreateWithoutAcceptEmailTokenInput: { // input type
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CandidateUncheckedCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -12839,6 +13011,31 @@ export interface NexusGenInputs {
   }
   CompanyUncheckedCreateWithoutAccountBalanceInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
+    Candidate?: NexusGenInputs['CandidateUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CandidateUncheckedCreateNestedManyWithoutCompanyInput
+    CmCampaign?: NexusGenInputs['CmCampaignUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
+    CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
+    CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
+    MarketingSource?: NexusGenInputs['MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+    ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
+    TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
+    User?: NexusGenInputs['UserUncheckedCreateNestedManyWithoutCompanyInput'] | null; // UserUncheckedCreateNestedManyWithoutCompanyInput
+    admin: number; // Int!
+    creation_date: NexusGenScalars['DateTime']; // DateTime!
+    cron_enabled?: boolean | null; // Boolean
+    details?: NexusGenInputs['CompanyDetailsUncheckedCreateNestedOneWithoutCompanyInput'] | null; // CompanyDetailsUncheckedCreateNestedOneWithoutCompanyInput
+    digit8: number; // Int!
+    id?: number | null; // Int
+    image: string; // String!
+    remote_connect?: string | null; // String
+    remote_url?: string | null; // String
+    slug?: string | null; // String
+    subscription?: NexusGenInputs['CompanySubscriptionUncheckedCreateNestedOneWithoutCompanyInput'] | null; // CompanySubscriptionUncheckedCreateNestedOneWithoutCompanyInput
+    user: string; // String!
+  }
+  CompanyUncheckedCreateWithoutBookingStatusInput: { // input type
+    AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
+    AccountBalance?: NexusGenInputs['AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CandidateUncheckedCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -12863,6 +13060,7 @@ export interface NexusGenInputs {
   CompanyUncheckedCreateWithoutCandidateInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
@@ -12886,6 +13084,7 @@ export interface NexusGenInputs {
   CompanyUncheckedCreateWithoutCmCampaignInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CandidateUncheckedCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
@@ -12909,6 +13108,7 @@ export interface NexusGenInputs {
   CompanyUncheckedCreateWithoutCmCaseInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CandidateUncheckedCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
@@ -12932,6 +13132,7 @@ export interface NexusGenInputs {
   CompanyUncheckedCreateWithoutCmCaseReplyInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CandidateUncheckedCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -12955,6 +13156,7 @@ export interface NexusGenInputs {
   CompanyUncheckedCreateWithoutDetailsInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CandidateUncheckedCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -12978,6 +13180,7 @@ export interface NexusGenInputs {
   CompanyUncheckedCreateWithoutMarketingSourceInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CandidateUncheckedCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -13001,6 +13204,7 @@ export interface NexusGenInputs {
   CompanyUncheckedCreateWithoutSubscriptionInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CandidateUncheckedCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -13024,6 +13228,7 @@ export interface NexusGenInputs {
   CompanyUncheckedCreateWithoutThirdPartyAccessInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CandidateUncheckedCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -13047,6 +13252,7 @@ export interface NexusGenInputs {
   CompanyUncheckedCreateWithoutTwoFactorHistoryInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CandidateUncheckedCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -13070,6 +13276,7 @@ export interface NexusGenInputs {
   CompanyUncheckedCreateWithoutUserInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CandidateUncheckedCreateNestedManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -13093,6 +13300,7 @@ export interface NexusGenInputs {
   CompanyUncheckedUpdateInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedUpdateManyWithoutCompanyInput'] | null; // BookingStatusUncheckedUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedUpdateManyWithoutCompanyInput'] | null; // CandidateUncheckedUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCampaignUncheckedUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -13128,6 +13336,7 @@ export interface NexusGenInputs {
   }
   CompanyUncheckedUpdateWithoutAcceptEmailTokenInput: { // input type
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedUpdateManyWithoutCompanyInput'] | null; // BookingStatusUncheckedUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedUpdateManyWithoutCompanyInput'] | null; // CandidateUncheckedUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCampaignUncheckedUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -13151,6 +13360,31 @@ export interface NexusGenInputs {
   }
   CompanyUncheckedUpdateWithoutAccountBalanceInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedUpdateManyWithoutCompanyInput'] | null; // BookingStatusUncheckedUpdateManyWithoutCompanyInput
+    Candidate?: NexusGenInputs['CandidateUncheckedUpdateManyWithoutCompanyInput'] | null; // CandidateUncheckedUpdateManyWithoutCompanyInput
+    CmCampaign?: NexusGenInputs['CmCampaignUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCampaignUncheckedUpdateManyWithoutCompanyInput
+    CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
+    CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
+    MarketingSource?: NexusGenInputs['MarketingSourceUncheckedUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+    ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
+    TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
+    User?: NexusGenInputs['UserUncheckedUpdateManyWithoutCompanyInput'] | null; // UserUncheckedUpdateManyWithoutCompanyInput
+    admin?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    creation_date?: NexusGenInputs['DateTimeFieldUpdateOperationsInput'] | null; // DateTimeFieldUpdateOperationsInput
+    cron_enabled?: NexusGenInputs['NullableBoolFieldUpdateOperationsInput'] | null; // NullableBoolFieldUpdateOperationsInput
+    details?: NexusGenInputs['CompanyDetailsUncheckedUpdateOneWithoutCompanyInput'] | null; // CompanyDetailsUncheckedUpdateOneWithoutCompanyInput
+    digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+    remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
+    remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
+    slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
+    subscription?: NexusGenInputs['CompanySubscriptionUncheckedUpdateOneWithoutCompanyInput'] | null; // CompanySubscriptionUncheckedUpdateOneWithoutCompanyInput
+    user?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+  }
+  CompanyUncheckedUpdateWithoutBookingStatusInput: { // input type
+    AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
+    AccountBalance?: NexusGenInputs['AccountBalanceUncheckedUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedUpdateManyWithoutCompanyInput'] | null; // CandidateUncheckedUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCampaignUncheckedUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -13175,6 +13409,7 @@ export interface NexusGenInputs {
   CompanyUncheckedUpdateWithoutCandidateInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedUpdateManyWithoutCompanyInput'] | null; // BookingStatusUncheckedUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCampaignUncheckedUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
@@ -13198,6 +13433,7 @@ export interface NexusGenInputs {
   CompanyUncheckedUpdateWithoutCmCampaignInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedUpdateManyWithoutCompanyInput'] | null; // BookingStatusUncheckedUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedUpdateManyWithoutCompanyInput'] | null; // CandidateUncheckedUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
@@ -13221,6 +13457,7 @@ export interface NexusGenInputs {
   CompanyUncheckedUpdateWithoutCmCaseInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedUpdateManyWithoutCompanyInput'] | null; // BookingStatusUncheckedUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedUpdateManyWithoutCompanyInput'] | null; // CandidateUncheckedUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCampaignUncheckedUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
@@ -13244,6 +13481,7 @@ export interface NexusGenInputs {
   CompanyUncheckedUpdateWithoutCmCaseReplyInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedUpdateManyWithoutCompanyInput'] | null; // BookingStatusUncheckedUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedUpdateManyWithoutCompanyInput'] | null; // CandidateUncheckedUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCampaignUncheckedUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -13267,6 +13505,7 @@ export interface NexusGenInputs {
   CompanyUncheckedUpdateWithoutDetailsInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedUpdateManyWithoutCompanyInput'] | null; // BookingStatusUncheckedUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedUpdateManyWithoutCompanyInput'] | null; // CandidateUncheckedUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCampaignUncheckedUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -13290,6 +13529,7 @@ export interface NexusGenInputs {
   CompanyUncheckedUpdateWithoutMarketingSourceInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedUpdateManyWithoutCompanyInput'] | null; // BookingStatusUncheckedUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedUpdateManyWithoutCompanyInput'] | null; // CandidateUncheckedUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCampaignUncheckedUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -13313,6 +13553,7 @@ export interface NexusGenInputs {
   CompanyUncheckedUpdateWithoutSubscriptionInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedUpdateManyWithoutCompanyInput'] | null; // BookingStatusUncheckedUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedUpdateManyWithoutCompanyInput'] | null; // CandidateUncheckedUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCampaignUncheckedUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -13336,6 +13577,7 @@ export interface NexusGenInputs {
   CompanyUncheckedUpdateWithoutThirdPartyAccessInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedUpdateManyWithoutCompanyInput'] | null; // BookingStatusUncheckedUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedUpdateManyWithoutCompanyInput'] | null; // CandidateUncheckedUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCampaignUncheckedUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -13359,6 +13601,7 @@ export interface NexusGenInputs {
   CompanyUncheckedUpdateWithoutTwoFactorHistoryInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedUpdateManyWithoutCompanyInput'] | null; // BookingStatusUncheckedUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedUpdateManyWithoutCompanyInput'] | null; // CandidateUncheckedUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCampaignUncheckedUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -13382,6 +13625,7 @@ export interface NexusGenInputs {
   CompanyUncheckedUpdateWithoutUserInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUncheckedUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedUpdateManyWithoutCompanyInput'] | null; // BookingStatusUncheckedUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUncheckedUpdateManyWithoutCompanyInput'] | null; // CandidateUncheckedUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCampaignUncheckedUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -13405,6 +13649,7 @@ export interface NexusGenInputs {
   CompanyUpdateInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUpdateManyWithoutCompanyInput'] | null; // BookingStatusUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUpdateManyWithoutCompanyInput'] | null; // CandidateUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUpdateManyWithoutCompanyInput'] | null; // CmCampaignUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
@@ -13449,6 +13694,13 @@ export interface NexusGenInputs {
     create?: NexusGenInputs['CompanyUncheckedCreateWithoutAccountBalanceInput'] | null; // CompanyUncheckedCreateWithoutAccountBalanceInput
     update?: NexusGenInputs['CompanyUncheckedUpdateWithoutAccountBalanceInput'] | null; // CompanyUncheckedUpdateWithoutAccountBalanceInput
     upsert?: NexusGenInputs['CompanyUpsertWithoutAccountBalanceInput'] | null; // CompanyUpsertWithoutAccountBalanceInput
+  }
+  CompanyUpdateOneRequiredWithoutBookingStatusInput: { // input type
+    connect?: NexusGenInputs['CompanyWhereUniqueInput'] | null; // CompanyWhereUniqueInput
+    connectOrCreate?: NexusGenInputs['CompanyCreateOrConnectWithoutBookingStatusInput'] | null; // CompanyCreateOrConnectWithoutBookingStatusInput
+    create?: NexusGenInputs['CompanyUncheckedCreateWithoutBookingStatusInput'] | null; // CompanyUncheckedCreateWithoutBookingStatusInput
+    update?: NexusGenInputs['CompanyUncheckedUpdateWithoutBookingStatusInput'] | null; // CompanyUncheckedUpdateWithoutBookingStatusInput
+    upsert?: NexusGenInputs['CompanyUpsertWithoutBookingStatusInput'] | null; // CompanyUpsertWithoutBookingStatusInput
   }
   CompanyUpdateOneRequiredWithoutCmCampaignInput: { // input type
     connect?: NexusGenInputs['CompanyWhereUniqueInput'] | null; // CompanyWhereUniqueInput
@@ -13526,6 +13778,7 @@ export interface NexusGenInputs {
   }
   CompanyUpdateWithoutAcceptEmailTokenInput: { // input type
     AccountBalance?: NexusGenInputs['AccountBalanceUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUpdateManyWithoutCompanyInput'] | null; // BookingStatusUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUpdateManyWithoutCompanyInput'] | null; // CandidateUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUpdateManyWithoutCompanyInput'] | null; // CmCampaignUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
@@ -13548,6 +13801,30 @@ export interface NexusGenInputs {
   }
   CompanyUpdateWithoutAccountBalanceInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUpdateManyWithoutCompanyInput'] | null; // BookingStatusUpdateManyWithoutCompanyInput
+    Candidate?: NexusGenInputs['CandidateUpdateManyWithoutCompanyInput'] | null; // CandidateUpdateManyWithoutCompanyInput
+    CmCampaign?: NexusGenInputs['CmCampaignUpdateManyWithoutCompanyInput'] | null; // CmCampaignUpdateManyWithoutCompanyInput
+    CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
+    CmCaseReply?: NexusGenInputs['CmCaseReplyUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUpdateManyWithoutCompanyInput
+    MarketingSource?: NexusGenInputs['MarketingSourceUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUpdateManyWithoutCompanyInput
+    ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUpdateManyWithoutCompanyInput
+    TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUpdateManyWithoutCompanyInput
+    User?: NexusGenInputs['UserUpdateManyWithoutCompanyInput'] | null; // UserUpdateManyWithoutCompanyInput
+    admin?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    creation_date?: NexusGenInputs['DateTimeFieldUpdateOperationsInput'] | null; // DateTimeFieldUpdateOperationsInput
+    cron_enabled?: NexusGenInputs['NullableBoolFieldUpdateOperationsInput'] | null; // NullableBoolFieldUpdateOperationsInput
+    details?: NexusGenInputs['CompanyDetailsUpdateOneWithoutCompanyInput'] | null; // CompanyDetailsUpdateOneWithoutCompanyInput
+    digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+    remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
+    remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
+    slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
+    subscription?: NexusGenInputs['CompanySubscriptionUpdateOneWithoutCompanyInput'] | null; // CompanySubscriptionUpdateOneWithoutCompanyInput
+    user?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+  }
+  CompanyUpdateWithoutBookingStatusInput: { // input type
+    AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUpdateManyWithoutCompanyInput
+    AccountBalance?: NexusGenInputs['AccountBalanceUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUpdateManyWithoutCompanyInput'] | null; // CandidateUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUpdateManyWithoutCompanyInput'] | null; // CmCampaignUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
@@ -13571,6 +13848,7 @@ export interface NexusGenInputs {
   CompanyUpdateWithoutCandidateInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUpdateManyWithoutCompanyInput'] | null; // BookingStatusUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUpdateManyWithoutCompanyInput'] | null; // CmCampaignUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUpdateManyWithoutCompanyInput
@@ -13593,6 +13871,7 @@ export interface NexusGenInputs {
   CompanyUpdateWithoutCmCampaignInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUpdateManyWithoutCompanyInput'] | null; // BookingStatusUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUpdateManyWithoutCompanyInput'] | null; // CandidateUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUpdateManyWithoutCompanyInput
@@ -13615,6 +13894,7 @@ export interface NexusGenInputs {
   CompanyUpdateWithoutCmCaseInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUpdateManyWithoutCompanyInput'] | null; // BookingStatusUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUpdateManyWithoutCompanyInput'] | null; // CandidateUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUpdateManyWithoutCompanyInput'] | null; // CmCampaignUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUpdateManyWithoutCompanyInput
@@ -13637,6 +13917,7 @@ export interface NexusGenInputs {
   CompanyUpdateWithoutCmCaseReplyInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUpdateManyWithoutCompanyInput'] | null; // BookingStatusUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUpdateManyWithoutCompanyInput'] | null; // CandidateUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUpdateManyWithoutCompanyInput'] | null; // CmCampaignUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
@@ -13659,6 +13940,7 @@ export interface NexusGenInputs {
   CompanyUpdateWithoutDetailsInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUpdateManyWithoutCompanyInput'] | null; // BookingStatusUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUpdateManyWithoutCompanyInput'] | null; // CandidateUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUpdateManyWithoutCompanyInput'] | null; // CmCampaignUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
@@ -13681,6 +13963,7 @@ export interface NexusGenInputs {
   CompanyUpdateWithoutMarketingSourceInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUpdateManyWithoutCompanyInput'] | null; // BookingStatusUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUpdateManyWithoutCompanyInput'] | null; // CandidateUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUpdateManyWithoutCompanyInput'] | null; // CmCampaignUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
@@ -13703,6 +13986,7 @@ export interface NexusGenInputs {
   CompanyUpdateWithoutSubscriptionInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUpdateManyWithoutCompanyInput'] | null; // BookingStatusUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUpdateManyWithoutCompanyInput'] | null; // CandidateUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUpdateManyWithoutCompanyInput'] | null; // CmCampaignUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
@@ -13725,6 +14009,7 @@ export interface NexusGenInputs {
   CompanyUpdateWithoutThirdPartyAccessInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUpdateManyWithoutCompanyInput'] | null; // BookingStatusUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUpdateManyWithoutCompanyInput'] | null; // CandidateUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUpdateManyWithoutCompanyInput'] | null; // CmCampaignUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
@@ -13747,6 +14032,7 @@ export interface NexusGenInputs {
   CompanyUpdateWithoutTwoFactorHistoryInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUpdateManyWithoutCompanyInput'] | null; // BookingStatusUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUpdateManyWithoutCompanyInput'] | null; // CandidateUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUpdateManyWithoutCompanyInput'] | null; // CmCampaignUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
@@ -13769,6 +14055,7 @@ export interface NexusGenInputs {
   CompanyUpdateWithoutUserInput: { // input type
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUpdateManyWithoutCompanyInput
     AccountBalance?: NexusGenInputs['AccountBalanceUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUpdateManyWithoutCompanyInput'] | null; // BookingStatusUpdateManyWithoutCompanyInput
     Candidate?: NexusGenInputs['CandidateUpdateManyWithoutCompanyInput'] | null; // CandidateUpdateManyWithoutCompanyInput
     CmCampaign?: NexusGenInputs['CmCampaignUpdateManyWithoutCompanyInput'] | null; // CmCampaignUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
@@ -13795,6 +14082,10 @@ export interface NexusGenInputs {
   CompanyUpsertWithoutAccountBalanceInput: { // input type
     create: NexusGenInputs['CompanyUncheckedCreateWithoutAccountBalanceInput']; // CompanyUncheckedCreateWithoutAccountBalanceInput!
     update: NexusGenInputs['CompanyUncheckedUpdateWithoutAccountBalanceInput']; // CompanyUncheckedUpdateWithoutAccountBalanceInput!
+  }
+  CompanyUpsertWithoutBookingStatusInput: { // input type
+    create: NexusGenInputs['CompanyUncheckedCreateWithoutBookingStatusInput']; // CompanyUncheckedCreateWithoutBookingStatusInput!
+    update: NexusGenInputs['CompanyUncheckedUpdateWithoutBookingStatusInput']; // CompanyUncheckedUpdateWithoutBookingStatusInput!
   }
   CompanyUpsertWithoutCandidateInput: { // input type
     create: NexusGenInputs['CompanyUncheckedCreateWithoutCandidateInput']; // CompanyUncheckedCreateWithoutCandidateInput!
@@ -13840,6 +14131,7 @@ export interface NexusGenInputs {
     AND?: Array<NexusGenInputs['CompanyWhereInput'] | null> | null; // [CompanyWhereInput]
     AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenListRelationFilter'] | null; // AcceptEmailTokenListRelationFilter
     AccountBalance?: NexusGenInputs['AccountBalanceListRelationFilter'] | null; // AccountBalanceListRelationFilter
+    BookingStatus?: NexusGenInputs['BookingStatusListRelationFilter'] | null; // BookingStatusListRelationFilter
     Candidate?: NexusGenInputs['CandidateListRelationFilter'] | null; // CandidateListRelationFilter
     CmCampaign?: NexusGenInputs['CmCampaignListRelationFilter'] | null; // CmCampaignListRelationFilter
     CmCase?: NexusGenInputs['CmCaseListRelationFilter'] | null; // CmCaseListRelationFilter
@@ -14376,7 +14668,7 @@ export interface NexusGenInputs {
     custom_id: number; // Int!
     imported: number; // Int!
     name: string; // String!
-    public: number; // Int!
+    public: boolean; // Boolean!
   }
   MarketingSourceCreateNestedManyWithoutCompanyInput: { // input type
     connect?: Array<NexusGenInputs['MarketingSourceWhereUniqueInput'] | null> | null; // [MarketingSourceWhereUniqueInput]
@@ -14391,7 +14683,7 @@ export interface NexusGenInputs {
     custom_id: number; // Int!
     imported: number; // Int!
     name: string; // String!
-    public: number; // Int!
+    public: boolean; // Boolean!
   }
   MarketingSourceListRelationFilter: { // input type
     every?: NexusGenInputs['MarketingSourceWhereInput'] | null; // MarketingSourceWhereInput
@@ -14416,7 +14708,7 @@ export interface NexusGenInputs {
     id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     imported?: NexusGenInputs['IntFilter'] | null; // IntFilter
     name?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    public?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    public?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
   }
   MarketingSourceUncheckedCreateInput: { // input type
     company_id: number; // Int!
@@ -14424,7 +14716,7 @@ export interface NexusGenInputs {
     id?: number | null; // Int
     imported: number; // Int!
     name: string; // String!
-    public: number; // Int!
+    public: boolean; // Boolean!
   }
   MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput: { // input type
     connect?: Array<NexusGenInputs['MarketingSourceWhereUniqueInput'] | null> | null; // [MarketingSourceWhereUniqueInput]
@@ -14436,7 +14728,7 @@ export interface NexusGenInputs {
     id?: number | null; // Int
     imported: number; // Int!
     name: string; // String!
-    public: number; // Int!
+    public: boolean; // Boolean!
   }
   MarketingSourceUncheckedUpdateInput: { // input type
     company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -14444,7 +14736,7 @@ export interface NexusGenInputs {
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     imported?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    public?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    public?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
   }
   MarketingSourceUncheckedUpdateManyInput: { // input type
     company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -14452,7 +14744,7 @@ export interface NexusGenInputs {
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     imported?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    public?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    public?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
   }
   MarketingSourceUncheckedUpdateManyWithoutCompanyInput: { // input type
     connect?: Array<NexusGenInputs['MarketingSourceWhereUniqueInput'] | null> | null; // [MarketingSourceWhereUniqueInput]
@@ -14471,27 +14763,27 @@ export interface NexusGenInputs {
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     imported?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    public?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    public?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
   }
   MarketingSourceUncheckedUpdateWithoutCompanyInput: { // input type
     custom_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     imported?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    public?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    public?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
   }
   MarketingSourceUpdateInput: { // input type
     company?: NexusGenInputs['CompanyUpdateOneRequiredWithoutMarketingSourceInput'] | null; // CompanyUpdateOneRequiredWithoutMarketingSourceInput
     custom_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     imported?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    public?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    public?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
   }
   MarketingSourceUpdateManyMutationInput: { // input type
     custom_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     imported?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    public?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    public?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
   }
   MarketingSourceUpdateManyWithWhereWithoutCompanyInput: { // input type
     data: NexusGenInputs['MarketingSourceUncheckedUpdateManyWithoutMarketingSourceInput']; // MarketingSourceUncheckedUpdateManyWithoutMarketingSourceInput!
@@ -14517,7 +14809,7 @@ export interface NexusGenInputs {
     custom_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     imported?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    public?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    public?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
   }
   MarketingSourceUpsertWithWhereUniqueWithoutCompanyInput: { // input type
     create: NexusGenInputs['MarketingSourceUncheckedCreateWithoutCompanyInput']; // MarketingSourceUncheckedCreateWithoutCompanyInput!
@@ -14534,7 +14826,7 @@ export interface NexusGenInputs {
     id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     imported?: NexusGenInputs['IntFilter'] | null; // IntFilter
     name?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    public?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    public?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
   }
   MarketingSourceWhereUniqueInput: { // input type
     id?: number | null; // Int
@@ -19921,7 +20213,7 @@ export interface NexusGenObjects {
     custom_id: number; // Int!
     default_time?: string | null; // String
     id: number; // Int!
-    is_active: number; // Int!
+    is_active: boolean; // Boolean!
     is_paid: number; // Int!
     occupier: string; // String!
     reason_name: string; // String!
@@ -19930,7 +20222,6 @@ export interface NexusGenObjects {
   BlockReasonAvgAggregateOutputType: { // root type
     custom_id: number; // Float!
     id: number; // Float!
-    is_active: number; // Float!
     is_paid: number; // Float!
     type: number; // Float!
   }
@@ -19940,7 +20231,7 @@ export interface NexusGenObjects {
     custom_id: number; // Int!
     default_time?: number | null; // Int
     id: number; // Int!
-    is_active: number; // Int!
+    is_active?: number | null; // Int
     is_paid: number; // Int!
     occupier?: number | null; // Int
     reason_name?: number | null; // Int
@@ -19951,7 +20242,7 @@ export interface NexusGenObjects {
     custom_id: number; // Int!
     default_time?: string | null; // String
     id: number; // Int!
-    is_active: number; // Int!
+    is_active?: boolean | null; // Boolean
     is_paid: number; // Int!
     occupier?: string | null; // String
     reason_name?: string | null; // String
@@ -19962,7 +20253,7 @@ export interface NexusGenObjects {
     custom_id: number; // Int!
     default_time?: string | null; // String
     id: number; // Int!
-    is_active: number; // Int!
+    is_active?: boolean | null; // Boolean
     is_paid: number; // Int!
     occupier?: string | null; // String
     reason_name?: string | null; // String
@@ -19971,7 +20262,6 @@ export interface NexusGenObjects {
   BlockReasonSumAggregateOutputType: { // root type
     custom_id: number; // Int!
     id: number; // Int!
-    is_active: number; // Int!
     is_paid: number; // Int!
     type: number; // Int!
   }
@@ -20749,14 +21039,15 @@ export interface NexusGenObjects {
     id: number; // Int!
     indicator?: NexusGenEnums['booking_statuses_indicator'] | null; // booking_statuses_indicator
     name: string; // String!
-    ord: number; // Float!
-    track_time: boolean; // Boolean!
+    ord?: number | null; // Float
+    track_time: number; // Int!
     value: string; // String!
   }
   BookingStatusAvgAggregateOutputType: { // root type
     company_id: number; // Float!
     id: number; // Float!
-    ord: number; // Float!
+    ord?: number | null; // Float
+    track_time: number; // Float!
   }
   BookingStatusChange: { // root type
     booking_id: number; // Int!
@@ -20816,8 +21107,8 @@ export interface NexusGenObjects {
     id: number; // Int!
     indicator?: number | null; // Int
     name?: number | null; // Int
-    ord: number; // Int!
-    track_time?: number | null; // Int
+    ord?: number | null; // Int
+    track_time: number; // Int!
     value?: number | null; // Int
   }
   BookingStatusMaxAggregateOutputType: { // root type
@@ -20828,8 +21119,8 @@ export interface NexusGenObjects {
     id: number; // Int!
     indicator?: NexusGenEnums['booking_statuses_indicator'] | null; // booking_statuses_indicator
     name?: string | null; // String
-    ord: number; // Float!
-    track_time?: boolean | null; // Boolean
+    ord?: number | null; // Float
+    track_time: number; // Int!
     value?: string | null; // String
   }
   BookingStatusMinAggregateOutputType: { // root type
@@ -20840,14 +21131,15 @@ export interface NexusGenObjects {
     id: number; // Int!
     indicator?: NexusGenEnums['booking_statuses_indicator'] | null; // booking_statuses_indicator
     name?: string | null; // String
-    ord: number; // Float!
-    track_time?: boolean | null; // Boolean
+    ord?: number | null; // Float
+    track_time: number; // Int!
     value?: string | null; // String
   }
   BookingStatusSumAggregateOutputType: { // root type
     company_id: number; // Int!
     id: number; // Int!
-    ord: number; // Float!
+    ord?: number | null; // Float
+    track_time: number; // Int!
   }
   BookitProGeneral: { // root type
     account_deposit: number; // Float!
@@ -21525,7 +21817,7 @@ export interface NexusGenObjects {
     advanced_cancellation_fee: number; // Int!
     creation_date?: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
-    is_active: number; // Int!
+    is_active: boolean; // Boolean!
     modified_date?: NexusGenScalars['DateTime'] | null; // DateTime
     no_show_fee: number; // Int!
     occupier: number; // Int!
@@ -21540,7 +21832,6 @@ export interface NexusGenObjects {
   CancellationPolicyAvgAggregateOutputType: { // root type
     advanced_cancellation_fee: number; // Float!
     id: number; // Float!
-    is_active: number; // Float!
     no_show_fee: number; // Float!
     occupier: number; // Float!
     payment_protection: number; // Float!
@@ -21554,7 +21845,7 @@ export interface NexusGenObjects {
     advanced_cancellation_fee: number; // Int!
     creation_date?: number | null; // Int
     id: number; // Int!
-    is_active: number; // Int!
+    is_active?: number | null; // Int
     modified_date?: number | null; // Int
     no_show_fee: number; // Int!
     occupier: number; // Int!
@@ -21570,7 +21861,7 @@ export interface NexusGenObjects {
     advanced_cancellation_fee: number; // Int!
     creation_date?: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
-    is_active: number; // Int!
+    is_active?: boolean | null; // Boolean
     modified_date?: NexusGenScalars['DateTime'] | null; // DateTime
     no_show_fee: number; // Int!
     occupier: number; // Int!
@@ -21586,7 +21877,7 @@ export interface NexusGenObjects {
     advanced_cancellation_fee: number; // Int!
     creation_date?: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
-    is_active: number; // Int!
+    is_active?: boolean | null; // Boolean
     modified_date?: NexusGenScalars['DateTime'] | null; // DateTime
     no_show_fee: number; // Int!
     occupier: number; // Int!
@@ -21601,7 +21892,6 @@ export interface NexusGenObjects {
   CancellationPolicySumAggregateOutputType: { // root type
     advanced_cancellation_fee: number; // Int!
     id: number; // Int!
-    is_active: number; // Int!
     no_show_fee: number; // Int!
     occupier: number; // Int!
     payment_protection: number; // Int!
@@ -22439,12 +22729,11 @@ export interface NexusGenObjects {
     id: number; // Int!
     note: string; // String!
     post_date: string; // String!
-    public: number; // Int!
+    public: boolean; // Boolean!
   }
   ClassNotesAvgAggregateOutputType: { // root type
     class_id: number; // Float!
     id: number; // Float!
-    public: number; // Float!
   }
   ClassNotesCountAggregateOutputType: { // root type
     _all: number; // Int!
@@ -22454,7 +22743,7 @@ export interface NexusGenObjects {
     id: number; // Int!
     note?: number | null; // Int
     post_date?: number | null; // Int
-    public: number; // Int!
+    public?: number | null; // Int
   }
   ClassNotesMaxAggregateOutputType: { // root type
     author?: string | null; // String
@@ -22463,7 +22752,7 @@ export interface NexusGenObjects {
     id: number; // Int!
     note?: string | null; // String
     post_date?: string | null; // String
-    public: number; // Int!
+    public?: boolean | null; // Boolean
   }
   ClassNotesMinAggregateOutputType: { // root type
     author?: string | null; // String
@@ -22472,12 +22761,11 @@ export interface NexusGenObjects {
     id: number; // Int!
     note?: string | null; // String
     post_date?: string | null; // String
-    public: number; // Int!
+    public?: boolean | null; // Boolean
   }
   ClassNotesSumAggregateOutputType: { // root type
     class_id: number; // Int!
     id: number; // Int!
-    public: number; // Int!
   }
   ClassProduct: { // root type
     alert_quantity: number; // Int!
@@ -24947,14 +25235,13 @@ export interface NexusGenObjects {
     id: number; // Int!
     imported: number; // Int!
     name: string; // String!
-    public: number; // Int!
+    public: boolean; // Boolean!
   }
   MarketingSourceAvgAggregateOutputType: { // root type
     company_id: number; // Float!
     custom_id: number; // Float!
     id: number; // Float!
     imported: number; // Float!
-    public: number; // Float!
   }
   MarketingSourceCountAggregateOutputType: { // root type
     _all: number; // Int!
@@ -24963,7 +25250,7 @@ export interface NexusGenObjects {
     id: number; // Int!
     imported: number; // Int!
     name?: number | null; // Int
-    public: number; // Int!
+    public?: number | null; // Int
   }
   MarketingSourceMaxAggregateOutputType: { // root type
     company_id: number; // Int!
@@ -24971,7 +25258,7 @@ export interface NexusGenObjects {
     id: number; // Int!
     imported: number; // Int!
     name?: string | null; // String
-    public: number; // Int!
+    public?: boolean | null; // Boolean
   }
   MarketingSourceMinAggregateOutputType: { // root type
     company_id: number; // Int!
@@ -24979,14 +25266,13 @@ export interface NexusGenObjects {
     id: number; // Int!
     imported: number; // Int!
     name?: string | null; // String
-    public: number; // Int!
+    public?: boolean | null; // Boolean
   }
   MarketingSourceSumAggregateOutputType: { // root type
     company_id: number; // Int!
     custom_id: number; // Int!
     id: number; // Int!
     imported: number; // Int!
-    public: number; // Int!
   }
   MediaLlibraryAttachment: { // root type
     communication_id: number; // Int!
@@ -25121,7 +25407,6 @@ export interface NexusGenObjects {
     company_id: number; // Int!
     id: number; // Int!
   }
-  Subscription: {};
   ThirdPartyAccess: { // root type
     access_id: number; // Int!
     company_id: number; // Int!
@@ -28157,7 +28442,7 @@ export interface NexusGenFieldTypes {
     custom_id: number; // Int!
     default_time: string | null; // String
     id: number; // Int!
-    is_active: number; // Int!
+    is_active: boolean; // Boolean!
     is_paid: number; // Int!
     occupier: string; // String!
     reason_name: string; // String!
@@ -28166,7 +28451,6 @@ export interface NexusGenFieldTypes {
   BlockReasonAvgAggregateOutputType: { // field return type
     custom_id: number; // Float!
     id: number; // Float!
-    is_active: number; // Float!
     is_paid: number; // Float!
     type: number; // Float!
   }
@@ -28176,7 +28460,7 @@ export interface NexusGenFieldTypes {
     custom_id: number; // Int!
     default_time: number | null; // Int
     id: number; // Int!
-    is_active: number; // Int!
+    is_active: number | null; // Int
     is_paid: number; // Int!
     occupier: number | null; // Int
     reason_name: number | null; // Int
@@ -28187,7 +28471,7 @@ export interface NexusGenFieldTypes {
     custom_id: number; // Int!
     default_time: string | null; // String
     id: number; // Int!
-    is_active: number; // Int!
+    is_active: boolean | null; // Boolean
     is_paid: number; // Int!
     occupier: string | null; // String
     reason_name: string | null; // String
@@ -28198,7 +28482,7 @@ export interface NexusGenFieldTypes {
     custom_id: number; // Int!
     default_time: string | null; // String
     id: number; // Int!
-    is_active: number; // Int!
+    is_active: boolean | null; // Boolean
     is_paid: number; // Int!
     occupier: string | null; // String
     reason_name: string | null; // String
@@ -28207,7 +28491,6 @@ export interface NexusGenFieldTypes {
   BlockReasonSumAggregateOutputType: { // field return type
     custom_id: number; // Int!
     id: number; // Int!
-    is_active: number; // Int!
     is_paid: number; // Int!
     type: number; // Int!
   }
@@ -28979,20 +29262,22 @@ export interface NexusGenFieldTypes {
   }
   BookingStatus: { // field return type
     basic_field: boolean; // Boolean!
+    company: NexusGenRootTypes['Company']; // Company!
     company_id: number; // Int!
     icon: string; // String!
     icon_color: string; // String!
     id: number; // Int!
     indicator: NexusGenEnums['booking_statuses_indicator'] | null; // booking_statuses_indicator
     name: string; // String!
-    ord: number; // Float!
-    track_time: boolean; // Boolean!
+    ord: number | null; // Float
+    track_time: number; // Int!
     value: string; // String!
   }
   BookingStatusAvgAggregateOutputType: { // field return type
     company_id: number; // Float!
     id: number; // Float!
-    ord: number; // Float!
+    ord: number | null; // Float
+    track_time: number; // Float!
   }
   BookingStatusChange: { // field return type
     booking_id: number; // Int!
@@ -29052,8 +29337,8 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     indicator: number | null; // Int
     name: number | null; // Int
-    ord: number; // Int!
-    track_time: number | null; // Int
+    ord: number | null; // Int
+    track_time: number; // Int!
     value: number | null; // Int
   }
   BookingStatusMaxAggregateOutputType: { // field return type
@@ -29064,8 +29349,8 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     indicator: NexusGenEnums['booking_statuses_indicator'] | null; // booking_statuses_indicator
     name: string | null; // String
-    ord: number; // Float!
-    track_time: boolean | null; // Boolean
+    ord: number | null; // Float
+    track_time: number; // Int!
     value: string | null; // String
   }
   BookingStatusMinAggregateOutputType: { // field return type
@@ -29076,14 +29361,15 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     indicator: NexusGenEnums['booking_statuses_indicator'] | null; // booking_statuses_indicator
     name: string | null; // String
-    ord: number; // Float!
-    track_time: boolean | null; // Boolean
+    ord: number | null; // Float
+    track_time: number; // Int!
     value: string | null; // String
   }
   BookingStatusSumAggregateOutputType: { // field return type
     company_id: number; // Int!
     id: number; // Int!
-    ord: number; // Float!
+    ord: number | null; // Float
+    track_time: number; // Int!
   }
   BookitProGeneral: { // field return type
     account_deposit: number; // Float!
@@ -29761,7 +30047,7 @@ export interface NexusGenFieldTypes {
     advanced_cancellation_fee: number; // Int!
     creation_date: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
-    is_active: number; // Int!
+    is_active: boolean; // Boolean!
     modified_date: NexusGenScalars['DateTime'] | null; // DateTime
     no_show_fee: number; // Int!
     occupier: number; // Int!
@@ -29776,7 +30062,6 @@ export interface NexusGenFieldTypes {
   CancellationPolicyAvgAggregateOutputType: { // field return type
     advanced_cancellation_fee: number; // Float!
     id: number; // Float!
-    is_active: number; // Float!
     no_show_fee: number; // Float!
     occupier: number; // Float!
     payment_protection: number; // Float!
@@ -29790,7 +30075,7 @@ export interface NexusGenFieldTypes {
     advanced_cancellation_fee: number; // Int!
     creation_date: number | null; // Int
     id: number; // Int!
-    is_active: number; // Int!
+    is_active: number | null; // Int
     modified_date: number | null; // Int
     no_show_fee: number; // Int!
     occupier: number; // Int!
@@ -29806,7 +30091,7 @@ export interface NexusGenFieldTypes {
     advanced_cancellation_fee: number; // Int!
     creation_date: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
-    is_active: number; // Int!
+    is_active: boolean | null; // Boolean
     modified_date: NexusGenScalars['DateTime'] | null; // DateTime
     no_show_fee: number; // Int!
     occupier: number; // Int!
@@ -29822,7 +30107,7 @@ export interface NexusGenFieldTypes {
     advanced_cancellation_fee: number; // Int!
     creation_date: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
-    is_active: number; // Int!
+    is_active: boolean | null; // Boolean
     modified_date: NexusGenScalars['DateTime'] | null; // DateTime
     no_show_fee: number; // Int!
     occupier: number; // Int!
@@ -29837,7 +30122,6 @@ export interface NexusGenFieldTypes {
   CancellationPolicySumAggregateOutputType: { // field return type
     advanced_cancellation_fee: number; // Int!
     id: number; // Int!
-    is_active: number; // Int!
     no_show_fee: number; // Int!
     occupier: number; // Int!
     payment_protection: number; // Int!
@@ -30676,12 +30960,11 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     note: string; // String!
     post_date: string; // String!
-    public: number; // Int!
+    public: boolean; // Boolean!
   }
   ClassNotesAvgAggregateOutputType: { // field return type
     class_id: number; // Float!
     id: number; // Float!
-    public: number; // Float!
   }
   ClassNotesCountAggregateOutputType: { // field return type
     _all: number; // Int!
@@ -30691,7 +30974,7 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     note: number | null; // Int
     post_date: number | null; // Int
-    public: number; // Int!
+    public: number | null; // Int
   }
   ClassNotesMaxAggregateOutputType: { // field return type
     author: string | null; // String
@@ -30700,7 +30983,7 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     note: string | null; // String
     post_date: string | null; // String
-    public: number; // Int!
+    public: boolean | null; // Boolean
   }
   ClassNotesMinAggregateOutputType: { // field return type
     author: string | null; // String
@@ -30709,12 +30992,11 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     note: string | null; // String
     post_date: string | null; // String
-    public: number; // Int!
+    public: boolean | null; // Boolean
   }
   ClassNotesSumAggregateOutputType: { // field return type
     class_id: number; // Int!
     id: number; // Int!
-    public: number; // Int!
   }
   ClassProduct: { // field return type
     alert_quantity: number; // Int!
@@ -32211,6 +32493,7 @@ export interface NexusGenFieldTypes {
   Company: { // field return type
     AcceptEmailToken: NexusGenRootTypes['AcceptEmailToken'][]; // [AcceptEmailToken!]!
     AccountBalance: NexusGenRootTypes['AccountBalance'][]; // [AccountBalance!]!
+    BookingStatus: NexusGenRootTypes['BookingStatus'][]; // [BookingStatus!]!
     Candidate: NexusGenRootTypes['Candidate'][]; // [Candidate!]!
     CmCampaign: NexusGenRootTypes['CmCampaign'][]; // [CmCampaign!]!
     CmCase: NexusGenRootTypes['CmCase'][]; // [CmCase!]!
@@ -33205,14 +33488,13 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     imported: number; // Int!
     name: string; // String!
-    public: number; // Int!
+    public: boolean; // Boolean!
   }
   MarketingSourceAvgAggregateOutputType: { // field return type
     company_id: number; // Float!
     custom_id: number; // Float!
     id: number; // Float!
     imported: number; // Float!
-    public: number; // Float!
   }
   MarketingSourceCountAggregateOutputType: { // field return type
     _all: number; // Int!
@@ -33221,7 +33503,7 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     imported: number; // Int!
     name: number | null; // Int
-    public: number; // Int!
+    public: number | null; // Int
   }
   MarketingSourceMaxAggregateOutputType: { // field return type
     company_id: number; // Int!
@@ -33229,7 +33511,7 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     imported: number; // Int!
     name: string | null; // String
-    public: number; // Int!
+    public: boolean | null; // Boolean
   }
   MarketingSourceMinAggregateOutputType: { // field return type
     company_id: number; // Int!
@@ -33237,14 +33519,13 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     imported: number; // Int!
     name: string | null; // String
-    public: number; // Int!
+    public: boolean | null; // Boolean
   }
   MarketingSourceSumAggregateOutputType: { // field return type
     company_id: number; // Int!
     custom_id: number; // Int!
     id: number; // Int!
     imported: number; // Int!
-    public: number; // Int!
   }
   MediaLlibraryAttachment: { // field return type
     communication_id: number; // Int!
@@ -34340,9 +34621,6 @@ export interface NexusGenFieldTypes {
   SecondAtQuestionSumAggregateOutputType: { // field return type
     company_id: number; // Int!
     id: number; // Int!
-  }
-  Subscription: { // field return type
-    me: NexusGenRootTypes['User'] | null; // User
   }
   ThirdPartyAccess: { // field return type
     access_id: number; // Int!
@@ -37375,7 +37653,7 @@ export interface NexusGenFieldTypeNames {
     custom_id: 'Int'
     default_time: 'String'
     id: 'Int'
-    is_active: 'Int'
+    is_active: 'Boolean'
     is_paid: 'Int'
     occupier: 'String'
     reason_name: 'String'
@@ -37384,7 +37662,6 @@ export interface NexusGenFieldTypeNames {
   BlockReasonAvgAggregateOutputType: { // field return type name
     custom_id: 'Float'
     id: 'Float'
-    is_active: 'Float'
     is_paid: 'Float'
     type: 'Float'
   }
@@ -37405,7 +37682,7 @@ export interface NexusGenFieldTypeNames {
     custom_id: 'Int'
     default_time: 'String'
     id: 'Int'
-    is_active: 'Int'
+    is_active: 'Boolean'
     is_paid: 'Int'
     occupier: 'String'
     reason_name: 'String'
@@ -37416,7 +37693,7 @@ export interface NexusGenFieldTypeNames {
     custom_id: 'Int'
     default_time: 'String'
     id: 'Int'
-    is_active: 'Int'
+    is_active: 'Boolean'
     is_paid: 'Int'
     occupier: 'String'
     reason_name: 'String'
@@ -37425,7 +37702,6 @@ export interface NexusGenFieldTypeNames {
   BlockReasonSumAggregateOutputType: { // field return type name
     custom_id: 'Int'
     id: 'Int'
-    is_active: 'Int'
     is_paid: 'Int'
     type: 'Int'
   }
@@ -38197,6 +38473,7 @@ export interface NexusGenFieldTypeNames {
   }
   BookingStatus: { // field return type name
     basic_field: 'Boolean'
+    company: 'Company'
     company_id: 'Int'
     icon: 'String'
     icon_color: 'String'
@@ -38204,13 +38481,14 @@ export interface NexusGenFieldTypeNames {
     indicator: 'booking_statuses_indicator'
     name: 'String'
     ord: 'Float'
-    track_time: 'Boolean'
+    track_time: 'Int'
     value: 'String'
   }
   BookingStatusAvgAggregateOutputType: { // field return type name
     company_id: 'Float'
     id: 'Float'
     ord: 'Float'
+    track_time: 'Float'
   }
   BookingStatusChange: { // field return type name
     booking_id: 'Int'
@@ -38283,7 +38561,7 @@ export interface NexusGenFieldTypeNames {
     indicator: 'booking_statuses_indicator'
     name: 'String'
     ord: 'Float'
-    track_time: 'Boolean'
+    track_time: 'Int'
     value: 'String'
   }
   BookingStatusMinAggregateOutputType: { // field return type name
@@ -38295,13 +38573,14 @@ export interface NexusGenFieldTypeNames {
     indicator: 'booking_statuses_indicator'
     name: 'String'
     ord: 'Float'
-    track_time: 'Boolean'
+    track_time: 'Int'
     value: 'String'
   }
   BookingStatusSumAggregateOutputType: { // field return type name
     company_id: 'Int'
     id: 'Int'
     ord: 'Float'
+    track_time: 'Int'
   }
   BookitProGeneral: { // field return type name
     account_deposit: 'Float'
@@ -38979,7 +39258,7 @@ export interface NexusGenFieldTypeNames {
     advanced_cancellation_fee: 'Int'
     creation_date: 'DateTime'
     id: 'Int'
-    is_active: 'Int'
+    is_active: 'Boolean'
     modified_date: 'DateTime'
     no_show_fee: 'Int'
     occupier: 'Int'
@@ -38994,7 +39273,6 @@ export interface NexusGenFieldTypeNames {
   CancellationPolicyAvgAggregateOutputType: { // field return type name
     advanced_cancellation_fee: 'Float'
     id: 'Float'
-    is_active: 'Float'
     no_show_fee: 'Float'
     occupier: 'Float'
     payment_protection: 'Float'
@@ -39024,7 +39302,7 @@ export interface NexusGenFieldTypeNames {
     advanced_cancellation_fee: 'Int'
     creation_date: 'DateTime'
     id: 'Int'
-    is_active: 'Int'
+    is_active: 'Boolean'
     modified_date: 'DateTime'
     no_show_fee: 'Int'
     occupier: 'Int'
@@ -39040,7 +39318,7 @@ export interface NexusGenFieldTypeNames {
     advanced_cancellation_fee: 'Int'
     creation_date: 'DateTime'
     id: 'Int'
-    is_active: 'Int'
+    is_active: 'Boolean'
     modified_date: 'DateTime'
     no_show_fee: 'Int'
     occupier: 'Int'
@@ -39055,7 +39333,6 @@ export interface NexusGenFieldTypeNames {
   CancellationPolicySumAggregateOutputType: { // field return type name
     advanced_cancellation_fee: 'Int'
     id: 'Int'
-    is_active: 'Int'
     no_show_fee: 'Int'
     occupier: 'Int'
     payment_protection: 'Int'
@@ -39894,12 +40171,11 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     note: 'String'
     post_date: 'String'
-    public: 'Int'
+    public: 'Boolean'
   }
   ClassNotesAvgAggregateOutputType: { // field return type name
     class_id: 'Float'
     id: 'Float'
-    public: 'Float'
   }
   ClassNotesCountAggregateOutputType: { // field return type name
     _all: 'Int'
@@ -39918,7 +40194,7 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     note: 'String'
     post_date: 'String'
-    public: 'Int'
+    public: 'Boolean'
   }
   ClassNotesMinAggregateOutputType: { // field return type name
     author: 'String'
@@ -39927,12 +40203,11 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     note: 'String'
     post_date: 'String'
-    public: 'Int'
+    public: 'Boolean'
   }
   ClassNotesSumAggregateOutputType: { // field return type name
     class_id: 'Int'
     id: 'Int'
-    public: 'Int'
   }
   ClassProduct: { // field return type name
     alert_quantity: 'Int'
@@ -41429,6 +41704,7 @@ export interface NexusGenFieldTypeNames {
   Company: { // field return type name
     AcceptEmailToken: 'AcceptEmailToken'
     AccountBalance: 'AccountBalance'
+    BookingStatus: 'BookingStatus'
     Candidate: 'Candidate'
     CmCampaign: 'CmCampaign'
     CmCase: 'CmCase'
@@ -42423,14 +42699,13 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     imported: 'Int'
     name: 'String'
-    public: 'Int'
+    public: 'Boolean'
   }
   MarketingSourceAvgAggregateOutputType: { // field return type name
     company_id: 'Float'
     custom_id: 'Float'
     id: 'Float'
     imported: 'Float'
-    public: 'Float'
   }
   MarketingSourceCountAggregateOutputType: { // field return type name
     _all: 'Int'
@@ -42447,7 +42722,7 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     imported: 'Int'
     name: 'String'
-    public: 'Int'
+    public: 'Boolean'
   }
   MarketingSourceMinAggregateOutputType: { // field return type name
     company_id: 'Int'
@@ -42455,14 +42730,13 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     imported: 'Int'
     name: 'String'
-    public: 'Int'
+    public: 'Boolean'
   }
   MarketingSourceSumAggregateOutputType: { // field return type name
     company_id: 'Int'
     custom_id: 'Int'
     id: 'Int'
     imported: 'Int'
-    public: 'Int'
   }
   MediaLlibraryAttachment: { // field return type name
     communication_id: 'Int'
@@ -43559,9 +43833,6 @@ export interface NexusGenFieldTypeNames {
     company_id: 'Int'
     id: 'Int'
   }
-  Subscription: { // field return type name
-    me: 'User'
-  }
   ThirdPartyAccess: { // field return type name
     access_id: 'Int'
     company: 'Company'
@@ -44264,6 +44535,11 @@ export interface NexusGenArgTypes {
     }
     AccountBalance: { // args
       cursor?: NexusGenInputs['AccountBalanceWhereUniqueInput'] | null; // AccountBalanceWhereUniqueInput
+      skip?: number | null; // Int
+      take?: number | null; // Int
+    }
+    BookingStatus: { // args
+      cursor?: NexusGenInputs['BookingStatusWhereUniqueInput'] | null; // BookingStatusWhereUniqueInput
       skip?: number | null; // Int
       take?: number | null; // Int
     }

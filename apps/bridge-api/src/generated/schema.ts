@@ -144,6 +144,7 @@ export interface Company {
   CmCampaign?: CmCampaign[];
   User?: User[];
   Candidate?: Candidate[];
+  BookingStatus?: BookingStatus[];
 }
 
 export interface AdvertCampaign {
@@ -407,7 +408,7 @@ export interface BlockReason {
   id: number;
   reason_name: string;
   occupier: string;
-  is_active: number;
+  is_active: boolean;
   block_color: string;
   is_paid: number;
   default_time?: string;
@@ -576,6 +577,7 @@ export interface BookingStatus {
   basic_field: boolean;
   ord: number;
   track_time: boolean;
+  company: Company;
 }
 
 export interface BookingStatusChange {
@@ -723,7 +725,7 @@ export interface CampaignAttachment {
 
 export interface CancellationPolicy {
   id: number;
-  is_active: number;
+  is_active: boolean;
   policy_type: number;
   policy_action: number;
   policy_value: number;
@@ -743,7 +745,7 @@ export interface MarketingSource {
   name: string;
   company_id: number;
   custom_id: number;
-  public: number;
+  public: boolean;
   imported: number;
   company: Company;
 }
@@ -952,7 +954,7 @@ export interface ClassNotes {
   class_id: number;
   note: string;
   author: string;
-  public: number;
+  public: boolean;
   avatar: string;
   post_date: string;
 }
@@ -1452,6 +1454,7 @@ export interface InvPaymentType {
   is_active: number;
   is_money: number;
   type: string;
+  GlCode?: GlCode;
 }
 
 export interface User {

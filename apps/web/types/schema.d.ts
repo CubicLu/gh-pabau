@@ -32,10 +32,9 @@ type DefaultFilterType = number | boolean
 interface SchemaFilter {
   primary?: {
     name: string
-    type: FilterTypes
-    default: number | boolean
-    active: number | boolean
-    inactive: number | boolean
+    default: boolean
+    active: boolean
+    inactive: boolean
   }
 }
 

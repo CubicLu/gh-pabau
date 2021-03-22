@@ -1,5 +1,5 @@
 import Form from './Form'
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { BasicModal as Modal, Notification, NotificationType } from '@pabau/ui'
 import { DocumentNode, useMutation } from '@apollo/client'
 import { useFormikContext } from 'formik'
@@ -15,17 +15,20 @@ interface P {
   editingRow?: Record<string, string | boolean | number>
   needTranslation?: boolean
   onClose?: () => void
-  queryVariables: any
+  listQueryVariables: any
+  aggregateQuery?: DocumentNode
+  aggregateQueryVariables?: any
 }
 
 const CrudModal: FC<P> = ({
   schema,
   deleteQuery,
   listQuery,
+  listQueryVariables,
   onClose,
   editingRow,
-  needTranslation,
-  queryVariables,
+  aggregateQuery,
+  aggregateQueryVariables,
 }) => {
   const [openDeleteModal, setDeleteModal] = useState(false)
   const { t } = useTranslationI18()
@@ -47,19 +50,42 @@ const CrudModal: FC<P> = ({
 
   const schemaForm = { ...schema, fields: { ...schema.fields } }
   const specialFormElement =
-    schemaForm.fields['is_active'] || schemaForm.fields['public']
+    schemaForm.fields[schema?.filter?.primary?.name] ??
+    schemaForm.fields['is_active']
   delete schemaForm.fields['is_active']
-  delete schemaForm.fields[schema.filter.primary.name]
+  delete schemaForm.fields[schema?.filter?.primary?.name]
   delete schemaForm.fields['company_id']
-  const [specialBoolean, setSpecialBoolean] = useState<
-    boolean | string | number
-  >(
-    schema.filter.primary.default ??
-      (editingRow?.id && editingRow?.is_active) ??
-      (typeof specialFormElement?.defaultvalue === 'boolean' &&
-        specialFormElement.defaultvalue) ??
-      true
+  const [specialBoolean, setSpecialBoolean] = useState<boolean>(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    schema?.filter?.primary?.name
+      ? (editingRow?.id &&
+          editingRow?.[schema?.filter?.primary?.name?.toString()]) ??
+          (typeof specialFormElement?.defaultvalue === 'boolean' &&
+            specialFormElement.defaultvalue) ??
+          true
+      : (editingRow?.id && editingRow?.is_active) ?? //TODO remove this later on when no pages have hardcoded is_active
+          (typeof specialFormElement?.defaultvalue === 'boolean' &&
+            specialFormElement.defaultvalue) ??
+          true
   )
+
+  useEffect(() => {
+    setSpecialBoolean(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      schema?.filter?.primary?.name
+        ? (editingRow?.id &&
+            editingRow?.[schema?.filter?.primary?.name?.toString()]) ??
+            (typeof specialFormElement?.defaultvalue === 'boolean' &&
+              specialFormElement.defaultvalue) ??
+            true
+        : (editingRow?.id && editingRow?.is_active) ?? //TODO remove this later on when no pages have hardcoded is_active
+            (typeof specialFormElement?.defaultvalue === 'boolean' &&
+              specialFormElement.defaultvalue) ??
+            true
+    )
+  }, [editingRow, schema?.filter?.primary?.name, specialFormElement])
 
   return (
     <>
@@ -78,7 +104,11 @@ const CrudModal: FC<P> = ({
             refetchQueries: [
               {
                 query: listQuery,
-                ...queryVariables,
+                ...listQueryVariables,
+              },
+              {
+                query: aggregateQuery,
+                ...aggregateQueryVariables(),
               },
             ],
           })
@@ -102,7 +132,7 @@ const CrudModal: FC<P> = ({
           {schema.deleteDescField
             ? editingRow[schema.deleteDescField]
             : editingRow?.name}{' '}
-          will be deleted. This action is irreversable
+          {t('common-label-delete-warning')}
         </span>
       </Modal>
       <Modal
@@ -136,30 +166,23 @@ const CrudModal: FC<P> = ({
           )
         }
         newButtonText={
-          typeof editingRow === 'object' && editingRow.isCreate
-            ? needTranslation
-              ? t('marketingsource-create-button')
-              : `Create`
-            : needTranslation
-            ? t('marketingsource-save-button')
-            : 'Save'
+          typeof editingRow === 'object' && editingRow?.isCreate
+            ? t('common-label-create')
+            : t('common-label-save')
         }
-        dangerButtonText={
-          editingRow?.id &&
-          (needTranslation ? t('marketingsource-delete-button') : `Delete`)
-        }
+        dangerButtonText={editingRow?.id && t('common-label-delete')}
         specialBooleanLabel={
-          !!specialFormElement &&
-          (needTranslation ? t('marketingsource-status-label') : 'Active')
+          !!specialFormElement && t('marketingsource-status-label')
         }
         specialBooleanValue={specialBoolean}
         onSpecialBooleanClick={() => {
-          setSpecialBoolean((e) => {
-            console.log('set special boolean', e)
-            return !e
-          })
-          formik.setFieldValue('is_active', !specialBoolean)
-          formik.setFieldValue('public', Number(!specialBoolean))
+          setSpecialBoolean((e) => e)
+          schema?.filter?.primary?.name
+            ? formik.setFieldValue(
+                schema?.filter?.primary?.name?.toString(),
+                !specialBoolean
+              )
+            : formik.setFieldValue('is_active', !specialBoolean) //TODO remove this later on when no pages have hardcoded is_active
         }}
         isValidate={
           editingRow?.isCreate ? formik.dirty && formik.isValid : formik.isValid

@@ -25,6 +25,7 @@ export const Company = objectType({
     t.model.CmCampaign()
     t.model.User()
     t.model.Candidate()
+    t.model.BookingStatus()
   },
 })
 

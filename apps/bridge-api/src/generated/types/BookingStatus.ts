@@ -13,6 +13,7 @@ export const BookingStatus = objectType({
     t.model.basic_field()
     t.model.ord()
     t.model.track_time()
+    t.model.company()
   },
 })
 

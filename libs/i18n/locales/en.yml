@@ -8,16 +8,39 @@ en:
     marketingsource-header-create: 'Create marketing source'
     marketingsource-header-delete: 'Delete Marketing Source'
     marketingsource-delete-button-label: 'Yes, Delete Source'
+    marketingsource-notification-delete-success: 'Marketings source deleted'
+    marketingsource-notification-delete-error: 'While deleting marketing sources'
+    marketingsource-notification-update-success: 'Marketings source updated'
+    marketingsource-notification-update-error: 'While updating marketings source'
     marketingsource-status-label: 'Active'
     marketingsource-create-button: 'Create'
     marketingsource-save-button: 'Save'
     marketingsource-delete-button: 'Delete'
-    marketingsource-header-breadcrumb-setup-link.translation: 'Setup'
-    marketingsource-input-search-placeholder.translation: 'Search'
-    marketingsource-button-filter.translation: 'Filter'
-    marketingsource-tableRow-active-btn.translation: 'Active'
-    marketingsource-tableRow-inActive-btn.translation: 'Inactive'
-    
+
+    basic-crud-table-header-breadcrumb-setup-link: 'Setup'
+    basic-crud-table-input-search-placeholder: 'Search'
+    basic-crud-table-button-filter: 'Filter'
+    basic-crud-table-button-active: 'Active'
+    basic-crud-table-button-inactive: 'Inactive'
+    basic-crud-table-text-status: 'Status'
+    crud-table-pagination-text-showing: 'Showing'
+    crud-table-pagination-text-results: 'results from'
+    crud-table-pagination-test-displaying: 'Rows per page'
+
+    add-button-filter: 'Filter'
+    add-button-filter-header-text-filter: 'Filter by'
+    add-button-filter-reset: 'Reset'
+    add-button-filter-cancel: 'Cancel'
+    add-button-filter-header-text-status: 'Status'
+
+    navigation-breadcrumb-setup: 'Setup'
+
+    common-label-delete: 'Delete'
+    common-label-add: 'Add'
+    common-label-create: 'Create'
+    common-label-save: 'Save'
+    common-label-delete-warning: 'will be deleted. This action is irreversible'
+
     KEY: Text
     search.placeholder: 'Search clients or leads'
     avatar.balance: Balance
@@ -52,3 +75,4 @@ en:
     james-testing-2: 'test two'
     james-test-3: 'Hello World!=)'
     login.title: 'Log In!!'
+

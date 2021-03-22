@@ -7,6 +7,7 @@ import { Context } from '../context'
 const rules = {
   isAuthenticated: rule('isAuthenticated')(
     async (root, args, ctx: Context): Promise<boolean> => {
+      console.log(ctx.req.authenticatedUser)
       if (ctx.req.authenticatedUser) return true
     }
   ),
@@ -25,7 +26,7 @@ const rules = {
           }
         return true
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
     }
   ),

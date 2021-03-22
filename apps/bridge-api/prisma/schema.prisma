@@ -196,6 +196,7 @@ model Company {
   User             User[]
   Candidate        Candidate[]
 
+  BookingStatus BookingStatus[]
   @@map("admin")
 }
 
@@ -549,7 +550,7 @@ model BlockReason {
   id           Int     @id @default(autoincrement())
   reason_name  String
   occupier     String
-  is_active    Int
+  is_active    Boolean
   block_color  String
   is_paid      Int
   default_time String?
@@ -735,8 +736,11 @@ model BookingStatus {
   company_id  Int
   indicator   booking_statuses_indicator? @default(EMPTY_ENUM_VALUE)
   basic_field Boolean
-  ord         Float
-  track_time  Boolean                     @default(false)
+  ord         Float?
+  track_time  Int                         @default(1)
+  company     Company                     @relation(fields: [company_id], references: [id])
+
+
 
   @@unique([value, company_id], name: "value")
   @@map("booking_statuses")
@@ -908,7 +912,7 @@ model CampaignAttachment {
 
 model CancellationPolicy {
   id                        Int       @id @default(autoincrement())
-  is_active                 Int
+  is_active                 Boolean
   policy_type               Int       @default(0)
   policy_action             Int
   policy_value              Float     @default(0.00)
@@ -930,7 +934,7 @@ model MarketingSource {
   name       String  @map("source_name")
   company_id Int     @map("occupier")
   custom_id  Int
-  public     Int
+  public     Boolean
   imported   Int
   company    Company @relation(fields: [company_id], references: [id])
 
@@ -1196,11 +1200,11 @@ model ClassMaster {
 }
 
 model ClassNotes {
-  id        Int    @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   class_id  Int
   note      String
   author    String
-  public    Int
+  public    Boolean
   avatar    String
   post_date String
 
@@ -3894,8 +3898,8 @@ model CmContact {
 //  attach_name       String
 //  user_id           Int
 //  attachment_type   String
-//  connect_public    Int
-//  website_public    Int
+//  connect_public    Boolean
+//  website_public    Boolean
 //  attachment_title  String
 //  cloud             Boolean @default(false)
 //  custom_id         Int
@@ -3995,8 +3999,8 @@ model CmContact {
 //  date              Int
 //  attach_name       String
 //  attachment_type   String
-//  connect_public    Int
-//  website_public    Int
+//  connect_public    Boolean
+//  website_public    Boolean
 //  attachment_title  String
 //  cloud             Boolean @default(false)
 //  custom_id         Int
@@ -4257,7 +4261,7 @@ model CmContact {
 //  pathway_name      String
 //  company_id        Int
 //  description       String
-//  is_active         Int
+//  is_active         Boolean
 //  order             Int?                @default(0)
 //  cp_pathways_taken cp_pathways_taken[]
 //  cp_steps          cp_steps[]
@@ -5961,9 +5965,9 @@ model InvPaymentType {
   type          String    @default("money")
 
 
+  GlCode GlCode?
   @@index([company_id], name: "occupier")
   @@map("inv_payment_types")
-  GlCode GlCode?
 }
 
 //
@@ -11110,7 +11114,7 @@ model InvPaymentType {
 //  module_id         Int?
 //  field_name        String?
 //  field_label       String?
-//  is_active         Int?
+//  is_active         Boolean?
 //  is_required       Int
 //  occupier          Int?
 //  uid               Int?

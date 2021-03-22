@@ -6056,7 +6056,7 @@ type BlockReason {
   custom_id: Int!
   default_time: String
   id: Int!
-  is_active: Int!
+  is_active: Boolean!
   is_paid: Int!
   occupier: String!
   reason_name: String!
@@ -6066,7 +6066,6 @@ type BlockReason {
 type BlockReasonAvgAggregateOutputType {
   custom_id: Float!
   id: Float!
-  is_active: Float!
   is_paid: Float!
   type: Float!
 }
@@ -6077,7 +6076,7 @@ type BlockReasonCountAggregateOutputType {
   custom_id: Int!
   default_time: Int
   id: Int!
-  is_active: Int!
+  is_active: Int
   is_paid: Int!
   occupier: Int
   reason_name: Int
@@ -6088,7 +6087,7 @@ input BlockReasonCreateInput {
   block_color: String!
   custom_id: Int!
   default_time: String
-  is_active: Int!
+  is_active: Boolean!
   is_paid: Int!
   occupier: String!
   reason_name: String!
@@ -6100,7 +6099,7 @@ type BlockReasonMaxAggregateOutputType {
   custom_id: Int!
   default_time: String
   id: Int!
-  is_active: Int!
+  is_active: Boolean
   is_paid: Int!
   occupier: String
   reason_name: String
@@ -6112,7 +6111,7 @@ type BlockReasonMinAggregateOutputType {
   custom_id: Int!
   default_time: String
   id: Int!
-  is_active: Int!
+  is_active: Boolean
   is_paid: Int!
   occupier: String
   reason_name: String
@@ -6146,7 +6145,6 @@ enum BlockReasonScalarFieldEnum {
 type BlockReasonSumAggregateOutputType {
   custom_id: Int!
   id: Int!
-  is_active: Int!
   is_paid: Int!
   type: Int!
 }
@@ -6156,7 +6154,7 @@ input BlockReasonUncheckedCreateInput {
   custom_id: Int!
   default_time: String
   id: Int
-  is_active: Int!
+  is_active: Boolean!
   is_paid: Int!
   occupier: String!
   reason_name: String!
@@ -6168,7 +6166,7 @@ input BlockReasonUncheckedUpdateInput {
   custom_id: IntFieldUpdateOperationsInput
   default_time: NullableStringFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
-  is_active: IntFieldUpdateOperationsInput
+  is_active: BoolFieldUpdateOperationsInput
   is_paid: IntFieldUpdateOperationsInput
   occupier: StringFieldUpdateOperationsInput
   reason_name: StringFieldUpdateOperationsInput
@@ -6180,7 +6178,7 @@ input BlockReasonUncheckedUpdateManyInput {
   custom_id: IntFieldUpdateOperationsInput
   default_time: NullableStringFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
-  is_active: IntFieldUpdateOperationsInput
+  is_active: BoolFieldUpdateOperationsInput
   is_paid: IntFieldUpdateOperationsInput
   occupier: StringFieldUpdateOperationsInput
   reason_name: StringFieldUpdateOperationsInput
@@ -6191,7 +6189,7 @@ input BlockReasonUpdateInput {
   block_color: StringFieldUpdateOperationsInput
   custom_id: IntFieldUpdateOperationsInput
   default_time: NullableStringFieldUpdateOperationsInput
-  is_active: IntFieldUpdateOperationsInput
+  is_active: BoolFieldUpdateOperationsInput
   is_paid: IntFieldUpdateOperationsInput
   occupier: StringFieldUpdateOperationsInput
   reason_name: StringFieldUpdateOperationsInput
@@ -6202,7 +6200,7 @@ input BlockReasonUpdateManyMutationInput {
   block_color: StringFieldUpdateOperationsInput
   custom_id: IntFieldUpdateOperationsInput
   default_time: NullableStringFieldUpdateOperationsInput
-  is_active: IntFieldUpdateOperationsInput
+  is_active: BoolFieldUpdateOperationsInput
   is_paid: IntFieldUpdateOperationsInput
   occupier: StringFieldUpdateOperationsInput
   reason_name: StringFieldUpdateOperationsInput
@@ -6217,7 +6215,7 @@ input BlockReasonWhereInput {
   custom_id: IntFilter
   default_time: StringNullableFilter
   id: IntFilter
-  is_active: IntFilter
+  is_active: BoolFilter
   is_paid: IntFilter
   occupier: StringFilter
   reason_name: StringFilter
@@ -8386,21 +8384,23 @@ input BookingSettingWhereUniqueInput {
 
 type BookingStatus {
   basic_field: Boolean!
+  company: Company!
   company_id: Int!
   icon: String!
   icon_color: String!
   id: Int!
   indicator: booking_statuses_indicator
   name: String!
-  ord: Float!
-  track_time: Boolean!
+  ord: Float
+  track_time: Int!
   value: String!
 }
 
 type BookingStatusAvgAggregateOutputType {
   company_id: Float!
   id: Float!
-  ord: Float!
+  ord: Float
+  track_time: Float!
 }
 
 type BookingStatusChange {
@@ -8561,21 +8561,49 @@ type BookingStatusCountAggregateOutputType {
   id: Int!
   indicator: Int
   name: Int
-  ord: Int!
-  track_time: Int
+  ord: Int
+  track_time: Int!
   value: Int
 }
 
 input BookingStatusCreateInput {
   basic_field: Boolean!
-  company_id: Int!
+  company: CompanyCreateNestedOneWithoutBookingStatusInput!
   icon: String!
   icon_color: String!
   indicator: booking_statuses_indicator
   name: String!
-  ord: Float!
-  track_time: Boolean
+  ord: Float
+  track_time: Int
   value: String!
+}
+
+input BookingStatusCreateNestedManyWithoutCompanyInput {
+  connect: [BookingStatusWhereUniqueInput]
+  connectOrCreate: [BookingStatusCreateOrConnectWithoutCompanyInput]
+  create: [BookingStatusCreateWithoutCompanyInput]
+}
+
+input BookingStatusCreateOrConnectWithoutCompanyInput {
+  create: BookingStatusUncheckedCreateWithoutCompanyInput!
+  where: BookingStatusWhereUniqueInput!
+}
+
+input BookingStatusCreateWithoutCompanyInput {
+  basic_field: Boolean!
+  icon: String!
+  icon_color: String!
+  indicator: booking_statuses_indicator
+  name: String!
+  ord: Float
+  track_time: Int
+  value: String!
+}
+
+input BookingStatusListRelationFilter {
+  every: BookingStatusWhereInput
+  none: BookingStatusWhereInput
+  some: BookingStatusWhereInput
 }
 
 type BookingStatusMaxAggregateOutputType {
@@ -8586,8 +8614,8 @@ type BookingStatusMaxAggregateOutputType {
   id: Int!
   indicator: booking_statuses_indicator
   name: String
-  ord: Float!
-  track_time: Boolean
+  ord: Float
+  track_time: Int!
   value: String
 }
 
@@ -8599,13 +8627,14 @@ type BookingStatusMinAggregateOutputType {
   id: Int!
   indicator: booking_statuses_indicator
   name: String
-  ord: Float!
-  track_time: Boolean
+  ord: Float
+  track_time: Int!
   value: String
 }
 
 input BookingStatusOrderByInput {
   basic_field: SortOrder
+  company: CompanyOrderByInput
   company_id: SortOrder
   icon: SortOrder
   icon_color: SortOrder
@@ -8630,10 +8659,27 @@ enum BookingStatusScalarFieldEnum {
   value
 }
 
+input BookingStatusScalarWhereInput {
+  AND: [BookingStatusScalarWhereInput]
+  NOT: [BookingStatusScalarWhereInput]
+  OR: [BookingStatusScalarWhereInput]
+  basic_field: BoolFilter
+  company_id: IntFilter
+  icon: StringFilter
+  icon_color: StringFilter
+  id: IntFilter
+  indicator: Enumbooking_statuses_indicatorNullableFilter
+  name: StringFilter
+  ord: FloatNullableFilter
+  track_time: IntFilter
+  value: StringFilter
+}
+
 type BookingStatusSumAggregateOutputType {
   company_id: Int!
   id: Int!
-  ord: Float!
+  ord: Float
+  track_time: Int!
 }
 
 input BookingStatusUncheckedCreateInput {
@@ -8644,8 +8690,26 @@ input BookingStatusUncheckedCreateInput {
   id: Int
   indicator: booking_statuses_indicator
   name: String!
-  ord: Float!
-  track_time: Boolean
+  ord: Float
+  track_time: Int
+  value: String!
+}
+
+input BookingStatusUncheckedCreateNestedManyWithoutCompanyInput {
+  connect: [BookingStatusWhereUniqueInput]
+  connectOrCreate: [BookingStatusCreateOrConnectWithoutCompanyInput]
+  create: [BookingStatusCreateWithoutCompanyInput]
+}
+
+input BookingStatusUncheckedCreateWithoutCompanyInput {
+  basic_field: Boolean!
+  icon: String!
+  icon_color: String!
+  id: Int
+  indicator: booking_statuses_indicator
+  name: String!
+  ord: Float
+  track_time: Int
   value: String!
 }
 
@@ -8657,8 +8721,8 @@ input BookingStatusUncheckedUpdateInput {
   id: IntFieldUpdateOperationsInput
   indicator: NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  ord: FloatFieldUpdateOperationsInput
-  track_time: BoolFieldUpdateOperationsInput
+  ord: NullableFloatFieldUpdateOperationsInput
+  track_time: IntFieldUpdateOperationsInput
   value: StringFieldUpdateOperationsInput
 }
 
@@ -8670,33 +8734,109 @@ input BookingStatusUncheckedUpdateManyInput {
   id: IntFieldUpdateOperationsInput
   indicator: NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  ord: FloatFieldUpdateOperationsInput
-  track_time: BoolFieldUpdateOperationsInput
+  ord: NullableFloatFieldUpdateOperationsInput
+  track_time: IntFieldUpdateOperationsInput
+  value: StringFieldUpdateOperationsInput
+}
+
+input BookingStatusUncheckedUpdateManyWithoutBookingStatusInput {
+  basic_field: BoolFieldUpdateOperationsInput
+  icon: StringFieldUpdateOperationsInput
+  icon_color: StringFieldUpdateOperationsInput
+  id: IntFieldUpdateOperationsInput
+  indicator: NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
+  ord: NullableFloatFieldUpdateOperationsInput
+  track_time: IntFieldUpdateOperationsInput
+  value: StringFieldUpdateOperationsInput
+}
+
+input BookingStatusUncheckedUpdateManyWithoutCompanyInput {
+  connect: [BookingStatusWhereUniqueInput]
+  connectOrCreate: [BookingStatusCreateOrConnectWithoutCompanyInput]
+  create: [BookingStatusCreateWithoutCompanyInput]
+  delete: [BookingStatusWhereUniqueInput]
+  deleteMany: [BookingStatusScalarWhereInput]
+  disconnect: [BookingStatusWhereUniqueInput]
+  set: [BookingStatusWhereUniqueInput]
+  update: [BookingStatusUpdateWithWhereUniqueWithoutCompanyInput]
+  updateMany: [BookingStatusUpdateManyWithWhereWithoutCompanyInput]
+  upsert: [BookingStatusUpsertWithWhereUniqueWithoutCompanyInput]
+}
+
+input BookingStatusUncheckedUpdateWithoutCompanyInput {
+  basic_field: BoolFieldUpdateOperationsInput
+  icon: StringFieldUpdateOperationsInput
+  icon_color: StringFieldUpdateOperationsInput
+  id: IntFieldUpdateOperationsInput
+  indicator: NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
+  ord: NullableFloatFieldUpdateOperationsInput
+  track_time: IntFieldUpdateOperationsInput
   value: StringFieldUpdateOperationsInput
 }
 
 input BookingStatusUpdateInput {
   basic_field: BoolFieldUpdateOperationsInput
-  company_id: IntFieldUpdateOperationsInput
+  company: CompanyUpdateOneRequiredWithoutBookingStatusInput
   icon: StringFieldUpdateOperationsInput
   icon_color: StringFieldUpdateOperationsInput
   indicator: NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  ord: FloatFieldUpdateOperationsInput
-  track_time: BoolFieldUpdateOperationsInput
+  ord: NullableFloatFieldUpdateOperationsInput
+  track_time: IntFieldUpdateOperationsInput
   value: StringFieldUpdateOperationsInput
 }
 
 input BookingStatusUpdateManyMutationInput {
   basic_field: BoolFieldUpdateOperationsInput
-  company_id: IntFieldUpdateOperationsInput
   icon: StringFieldUpdateOperationsInput
   icon_color: StringFieldUpdateOperationsInput
   indicator: NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  ord: FloatFieldUpdateOperationsInput
-  track_time: BoolFieldUpdateOperationsInput
+  ord: NullableFloatFieldUpdateOperationsInput
+  track_time: IntFieldUpdateOperationsInput
   value: StringFieldUpdateOperationsInput
+}
+
+input BookingStatusUpdateManyWithWhereWithoutCompanyInput {
+  data: BookingStatusUncheckedUpdateManyWithoutBookingStatusInput!
+  where: BookingStatusScalarWhereInput!
+}
+
+input BookingStatusUpdateManyWithoutCompanyInput {
+  connect: [BookingStatusWhereUniqueInput]
+  connectOrCreate: [BookingStatusCreateOrConnectWithoutCompanyInput]
+  create: [BookingStatusCreateWithoutCompanyInput]
+  delete: [BookingStatusWhereUniqueInput]
+  deleteMany: [BookingStatusScalarWhereInput]
+  disconnect: [BookingStatusWhereUniqueInput]
+  set: [BookingStatusWhereUniqueInput]
+  update: [BookingStatusUpdateWithWhereUniqueWithoutCompanyInput]
+  updateMany: [BookingStatusUpdateManyWithWhereWithoutCompanyInput]
+  upsert: [BookingStatusUpsertWithWhereUniqueWithoutCompanyInput]
+}
+
+input BookingStatusUpdateWithWhereUniqueWithoutCompanyInput {
+  data: BookingStatusUncheckedUpdateWithoutCompanyInput!
+  where: BookingStatusWhereUniqueInput!
+}
+
+input BookingStatusUpdateWithoutCompanyInput {
+  basic_field: BoolFieldUpdateOperationsInput
+  icon: StringFieldUpdateOperationsInput
+  icon_color: StringFieldUpdateOperationsInput
+  indicator: NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
+  ord: NullableFloatFieldUpdateOperationsInput
+  track_time: IntFieldUpdateOperationsInput
+  value: StringFieldUpdateOperationsInput
+}
+
+input BookingStatusUpsertWithWhereUniqueWithoutCompanyInput {
+  create: BookingStatusUncheckedCreateWithoutCompanyInput!
+  update: BookingStatusUncheckedUpdateWithoutCompanyInput!
+  where: BookingStatusWhereUniqueInput!
 }
 
 input BookingStatusValueCompoundUniqueInput {
@@ -8709,14 +8849,15 @@ input BookingStatusWhereInput {
   NOT: [BookingStatusWhereInput]
   OR: [BookingStatusWhereInput]
   basic_field: BoolFilter
+  company: CompanyWhereInput
   company_id: IntFilter
   icon: StringFilter
   icon_color: StringFilter
   id: IntFilter
   indicator: Enumbooking_statuses_indicatorNullableFilter
   name: StringFilter
-  ord: FloatFilter
-  track_time: BoolFilter
+  ord: FloatNullableFilter
+  track_time: IntFilter
   value: StringFilter
 }
 
@@ -10782,7 +10923,7 @@ type CancellationPolicy {
   advanced_cancellation_fee: Int!
   creation_date: DateTime
   id: Int!
-  is_active: Int!
+  is_active: Boolean!
   modified_date: DateTime
   no_show_fee: Int!
   occupier: Int!
@@ -10798,7 +10939,6 @@ type CancellationPolicy {
 type CancellationPolicyAvgAggregateOutputType {
   advanced_cancellation_fee: Float!
   id: Float!
-  is_active: Float!
   no_show_fee: Float!
   occupier: Float!
   payment_protection: Float!
@@ -10813,7 +10953,7 @@ type CancellationPolicyCountAggregateOutputType {
   advanced_cancellation_fee: Int!
   creation_date: Int
   id: Int!
-  is_active: Int!
+  is_active: Int
   modified_date: Int
   no_show_fee: Int!
   occupier: Int!
@@ -10829,7 +10969,7 @@ type CancellationPolicyCountAggregateOutputType {
 input CancellationPolicyCreateInput {
   advanced_cancellation_fee: Int!
   creation_date: DateTime
-  is_active: Int!
+  is_active: Boolean!
   modified_date: DateTime
   no_show_fee: Int!
   occupier: Int!
@@ -10846,7 +10986,7 @@ type CancellationPolicyMaxAggregateOutputType {
   advanced_cancellation_fee: Int!
   creation_date: DateTime
   id: Int!
-  is_active: Int!
+  is_active: Boolean
   modified_date: DateTime
   no_show_fee: Int!
   occupier: Int!
@@ -10863,7 +11003,7 @@ type CancellationPolicyMinAggregateOutputType {
   advanced_cancellation_fee: Int!
   creation_date: DateTime
   id: Int!
-  is_active: Int!
+  is_active: Boolean
   modified_date: DateTime
   no_show_fee: Int!
   occupier: Int!
@@ -10913,7 +11053,6 @@ enum CancellationPolicyScalarFieldEnum {
 type CancellationPolicySumAggregateOutputType {
   advanced_cancellation_fee: Int!
   id: Int!
-  is_active: Int!
   no_show_fee: Int!
   occupier: Int!
   payment_protection: Int!
@@ -10927,7 +11066,7 @@ input CancellationPolicyUncheckedCreateInput {
   advanced_cancellation_fee: Int!
   creation_date: DateTime
   id: Int
-  is_active: Int!
+  is_active: Boolean!
   modified_date: DateTime
   no_show_fee: Int!
   occupier: Int!
@@ -10944,7 +11083,7 @@ input CancellationPolicyUncheckedUpdateInput {
   advanced_cancellation_fee: IntFieldUpdateOperationsInput
   creation_date: NullableDateTimeFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
-  is_active: IntFieldUpdateOperationsInput
+  is_active: BoolFieldUpdateOperationsInput
   modified_date: NullableDateTimeFieldUpdateOperationsInput
   no_show_fee: IntFieldUpdateOperationsInput
   occupier: IntFieldUpdateOperationsInput
@@ -10961,7 +11100,7 @@ input CancellationPolicyUncheckedUpdateManyInput {
   advanced_cancellation_fee: IntFieldUpdateOperationsInput
   creation_date: NullableDateTimeFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
-  is_active: IntFieldUpdateOperationsInput
+  is_active: BoolFieldUpdateOperationsInput
   modified_date: NullableDateTimeFieldUpdateOperationsInput
   no_show_fee: IntFieldUpdateOperationsInput
   occupier: IntFieldUpdateOperationsInput
@@ -10977,7 +11116,7 @@ input CancellationPolicyUncheckedUpdateManyInput {
 input CancellationPolicyUpdateInput {
   advanced_cancellation_fee: IntFieldUpdateOperationsInput
   creation_date: NullableDateTimeFieldUpdateOperationsInput
-  is_active: IntFieldUpdateOperationsInput
+  is_active: BoolFieldUpdateOperationsInput
   modified_date: NullableDateTimeFieldUpdateOperationsInput
   no_show_fee: IntFieldUpdateOperationsInput
   occupier: IntFieldUpdateOperationsInput
@@ -10993,7 +11132,7 @@ input CancellationPolicyUpdateInput {
 input CancellationPolicyUpdateManyMutationInput {
   advanced_cancellation_fee: IntFieldUpdateOperationsInput
   creation_date: NullableDateTimeFieldUpdateOperationsInput
-  is_active: IntFieldUpdateOperationsInput
+  is_active: BoolFieldUpdateOperationsInput
   modified_date: NullableDateTimeFieldUpdateOperationsInput
   no_show_fee: IntFieldUpdateOperationsInput
   occupier: IntFieldUpdateOperationsInput
@@ -11013,7 +11152,7 @@ input CancellationPolicyWhereInput {
   advanced_cancellation_fee: IntFilter
   creation_date: DateTimeNullableFilter
   id: IntFilter
-  is_active: IntFilter
+  is_active: BoolFilter
   modified_date: DateTimeNullableFilter
   no_show_fee: IntFilter
   occupier: IntFilter
@@ -13621,13 +13760,12 @@ type ClassNotes {
   id: Int!
   note: String!
   post_date: String!
-  public: Int!
+  public: Boolean!
 }
 
 type ClassNotesAvgAggregateOutputType {
   class_id: Float!
   id: Float!
-  public: Float!
 }
 
 type ClassNotesCountAggregateOutputType {
@@ -13638,7 +13776,7 @@ type ClassNotesCountAggregateOutputType {
   id: Int!
   note: Int
   post_date: Int
-  public: Int!
+  public: Int
 }
 
 input ClassNotesCreateInput {
@@ -13647,7 +13785,7 @@ input ClassNotesCreateInput {
   class_id: Int!
   note: String!
   post_date: String!
-  public: Int!
+  public: Boolean!
 }
 
 type ClassNotesMaxAggregateOutputType {
@@ -13657,7 +13795,7 @@ type ClassNotesMaxAggregateOutputType {
   id: Int!
   note: String
   post_date: String
-  public: Int!
+  public: Boolean
 }
 
 type ClassNotesMinAggregateOutputType {
@@ -13667,7 +13805,7 @@ type ClassNotesMinAggregateOutputType {
   id: Int!
   note: String
   post_date: String
-  public: Int!
+  public: Boolean
 }
 
 input ClassNotesOrderByInput {
@@ -13693,7 +13831,6 @@ enum ClassNotesScalarFieldEnum {
 type ClassNotesSumAggregateOutputType {
   class_id: Int!
   id: Int!
-  public: Int!
 }
 
 input ClassNotesUncheckedCreateInput {
@@ -13703,7 +13840,7 @@ input ClassNotesUncheckedCreateInput {
   id: Int
   note: String!
   post_date: String!
-  public: Int!
+  public: Boolean!
 }
 
 input ClassNotesUncheckedUpdateInput {
@@ -13713,7 +13850,7 @@ input ClassNotesUncheckedUpdateInput {
   id: IntFieldUpdateOperationsInput
   note: StringFieldUpdateOperationsInput
   post_date: StringFieldUpdateOperationsInput
-  public: IntFieldUpdateOperationsInput
+  public: BoolFieldUpdateOperationsInput
 }
 
 input ClassNotesUncheckedUpdateManyInput {
@@ -13723,7 +13860,7 @@ input ClassNotesUncheckedUpdateManyInput {
   id: IntFieldUpdateOperationsInput
   note: StringFieldUpdateOperationsInput
   post_date: StringFieldUpdateOperationsInput
-  public: IntFieldUpdateOperationsInput
+  public: BoolFieldUpdateOperationsInput
 }
 
 input ClassNotesUpdateInput {
@@ -13732,7 +13869,7 @@ input ClassNotesUpdateInput {
   class_id: IntFieldUpdateOperationsInput
   note: StringFieldUpdateOperationsInput
   post_date: StringFieldUpdateOperationsInput
-  public: IntFieldUpdateOperationsInput
+  public: BoolFieldUpdateOperationsInput
 }
 
 input ClassNotesUpdateManyMutationInput {
@@ -13741,7 +13878,7 @@ input ClassNotesUpdateManyMutationInput {
   class_id: IntFieldUpdateOperationsInput
   note: StringFieldUpdateOperationsInput
   post_date: StringFieldUpdateOperationsInput
-  public: IntFieldUpdateOperationsInput
+  public: BoolFieldUpdateOperationsInput
 }
 
 input ClassNotesWhereInput {
@@ -13754,7 +13891,7 @@ input ClassNotesWhereInput {
   id: IntFilter
   note: StringFilter
   post_date: StringFilter
-  public: IntFilter
+  public: BoolFilter
 }
 
 input ClassNotesWhereUniqueInput {
@@ -18742,6 +18879,7 @@ input CmContactWhereUniqueInput {
 type Company {
   AcceptEmailToken(cursor: AcceptEmailTokenWhereUniqueInput, skip: Int, take: Int): [AcceptEmailToken!]!
   AccountBalance(cursor: AccountBalanceWhereUniqueInput, skip: Int, take: Int): [AccountBalance!]!
+  BookingStatus(cursor: BookingStatusWhereUniqueInput, skip: Int, take: Int): [BookingStatus!]!
   Candidate(cursor: CandidateWhereUniqueInput, skip: Int, take: Int): [Candidate!]!
   CmCampaign(cursor: CmCampaignWhereUniqueInput, skip: Int, take: Int): [CmCampaign!]!
   CmCase(cursor: CmCaseWhereUniqueInput, skip: Int, take: Int): [CmCase!]!
@@ -18787,6 +18925,7 @@ type CompanyCountAggregateOutputType {
 input CompanyCreateInput {
   AcceptEmailToken: AcceptEmailTokenCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusCreateNestedManyWithoutCompanyInput
   Candidate: CandidateCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
@@ -18818,6 +18957,12 @@ input CompanyCreateNestedOneWithoutAccountBalanceInput {
   connect: CompanyWhereUniqueInput
   connectOrCreate: CompanyCreateOrConnectWithoutAccountBalanceInput
   create: CompanyUncheckedCreateWithoutAccountBalanceInput
+}
+
+input CompanyCreateNestedOneWithoutBookingStatusInput {
+  connect: CompanyWhereUniqueInput
+  connectOrCreate: CompanyCreateOrConnectWithoutBookingStatusInput
+  create: CompanyUncheckedCreateWithoutBookingStatusInput
 }
 
 input CompanyCreateNestedOneWithoutCandidateInput {
@@ -18890,6 +19035,11 @@ input CompanyCreateOrConnectWithoutAccountBalanceInput {
   where: CompanyWhereUniqueInput!
 }
 
+input CompanyCreateOrConnectWithoutBookingStatusInput {
+  create: CompanyUncheckedCreateWithoutBookingStatusInput!
+  where: CompanyWhereUniqueInput!
+}
+
 input CompanyCreateOrConnectWithoutCandidateInput {
   create: CompanyUncheckedCreateWithoutCandidateInput!
   where: CompanyWhereUniqueInput!
@@ -18942,6 +19092,7 @@ input CompanyCreateOrConnectWithoutUserInput {
 
 input CompanyCreateWithoutAcceptEmailTokenInput {
   AccountBalance: AccountBalanceCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusCreateNestedManyWithoutCompanyInput
   Candidate: CandidateCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
@@ -18965,6 +19116,31 @@ input CompanyCreateWithoutAcceptEmailTokenInput {
 
 input CompanyCreateWithoutAccountBalanceInput {
   AcceptEmailToken: AcceptEmailTokenCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusCreateNestedManyWithoutCompanyInput
+  Candidate: CandidateCreateNestedManyWithoutCompanyInput
+  CmCampaign: CmCampaignCreateNestedManyWithoutCompanyInput
+  CmCase: CmCaseCreateNestedManyWithoutCompanyInput
+  CmCaseReply: CmCaseReplyCreateNestedManyWithoutCompanyInput
+  MarketingSource: MarketingSourceCreateNestedManyWithoutCompanyInput
+  ThirdPartyAccess: ThirdPartyAccessCreateNestedManyWithoutCompanyInput
+  TwoFactorHistory: TwoFactorHistoryCreateNestedManyWithoutCompanyInput
+  User: UserCreateNestedManyWithoutCompanyInput
+  admin: Int!
+  creation_date: DateTime!
+  cron_enabled: Boolean
+  details: CompanyDetailsCreateNestedOneWithoutCompanyInput
+  digit8: Int!
+  image: String!
+  remote_connect: String
+  remote_url: String
+  slug: String
+  subscription: CompanySubscriptionCreateNestedOneWithoutCompanyInput
+  user: String!
+}
+
+input CompanyCreateWithoutBookingStatusInput {
+  AcceptEmailToken: AcceptEmailTokenCreateNestedManyWithoutCompanyInput
+  AccountBalance: AccountBalanceCreateNestedManyWithoutCompanyInput
   Candidate: CandidateCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
@@ -18989,6 +19165,7 @@ input CompanyCreateWithoutAccountBalanceInput {
 input CompanyCreateWithoutCandidateInput {
   AcceptEmailToken: AcceptEmailTokenCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyCreateNestedManyWithoutCompanyInput
@@ -19012,6 +19189,7 @@ input CompanyCreateWithoutCandidateInput {
 input CompanyCreateWithoutCmCampaignInput {
   AcceptEmailToken: AcceptEmailTokenCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusCreateNestedManyWithoutCompanyInput
   Candidate: CandidateCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyCreateNestedManyWithoutCompanyInput
@@ -19035,6 +19213,7 @@ input CompanyCreateWithoutCmCampaignInput {
 input CompanyCreateWithoutCmCaseInput {
   AcceptEmailToken: AcceptEmailTokenCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusCreateNestedManyWithoutCompanyInput
   Candidate: CandidateCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyCreateNestedManyWithoutCompanyInput
@@ -19058,6 +19237,7 @@ input CompanyCreateWithoutCmCaseInput {
 input CompanyCreateWithoutCmCaseReplyInput {
   AcceptEmailToken: AcceptEmailTokenCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusCreateNestedManyWithoutCompanyInput
   Candidate: CandidateCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
@@ -19081,6 +19261,7 @@ input CompanyCreateWithoutCmCaseReplyInput {
 input CompanyCreateWithoutDetailsInput {
   AcceptEmailToken: AcceptEmailTokenCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusCreateNestedManyWithoutCompanyInput
   Candidate: CandidateCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
@@ -19104,6 +19285,7 @@ input CompanyCreateWithoutDetailsInput {
 input CompanyCreateWithoutMarketingSourceInput {
   AcceptEmailToken: AcceptEmailTokenCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusCreateNestedManyWithoutCompanyInput
   Candidate: CandidateCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
@@ -19127,6 +19309,7 @@ input CompanyCreateWithoutMarketingSourceInput {
 input CompanyCreateWithoutSubscriptionInput {
   AcceptEmailToken: AcceptEmailTokenCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusCreateNestedManyWithoutCompanyInput
   Candidate: CandidateCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
@@ -19150,6 +19333,7 @@ input CompanyCreateWithoutSubscriptionInput {
 input CompanyCreateWithoutThirdPartyAccessInput {
   AcceptEmailToken: AcceptEmailTokenCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusCreateNestedManyWithoutCompanyInput
   Candidate: CandidateCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
@@ -19173,6 +19357,7 @@ input CompanyCreateWithoutThirdPartyAccessInput {
 input CompanyCreateWithoutTwoFactorHistoryInput {
   AcceptEmailToken: AcceptEmailTokenCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusCreateNestedManyWithoutCompanyInput
   Candidate: CandidateCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
@@ -19196,6 +19381,7 @@ input CompanyCreateWithoutTwoFactorHistoryInput {
 input CompanyCreateWithoutUserInput {
   AcceptEmailToken: AcceptEmailTokenCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusCreateNestedManyWithoutCompanyInput
   Candidate: CandidateCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
@@ -22893,6 +23079,7 @@ type CompanySumAggregateOutputType {
 input CompanyUncheckedCreateInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -22917,6 +23104,7 @@ input CompanyUncheckedCreateInput {
 
 input CompanyUncheckedCreateWithoutAcceptEmailTokenInput {
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -22941,6 +23129,32 @@ input CompanyUncheckedCreateWithoutAcceptEmailTokenInput {
 
 input CompanyUncheckedCreateWithoutAccountBalanceInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
+  Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
+  CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
+  CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
+  CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
+  MarketingSource: MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+  ThirdPartyAccess: ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
+  TwoFactorHistory: TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
+  User: UserUncheckedCreateNestedManyWithoutCompanyInput
+  admin: Int!
+  creation_date: DateTime!
+  cron_enabled: Boolean
+  details: CompanyDetailsUncheckedCreateNestedOneWithoutCompanyInput
+  digit8: Int!
+  id: Int
+  image: String!
+  remote_connect: String
+  remote_url: String
+  slug: String
+  subscription: CompanySubscriptionUncheckedCreateNestedOneWithoutCompanyInput
+  user: String!
+}
+
+input CompanyUncheckedCreateWithoutBookingStatusInput {
+  AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
+  AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -22966,6 +23180,7 @@ input CompanyUncheckedCreateWithoutAccountBalanceInput {
 input CompanyUncheckedCreateWithoutCandidateInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
@@ -22990,6 +23205,7 @@ input CompanyUncheckedCreateWithoutCandidateInput {
 input CompanyUncheckedCreateWithoutCmCampaignInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
@@ -23014,6 +23230,7 @@ input CompanyUncheckedCreateWithoutCmCampaignInput {
 input CompanyUncheckedCreateWithoutCmCaseInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
@@ -23038,6 +23255,7 @@ input CompanyUncheckedCreateWithoutCmCaseInput {
 input CompanyUncheckedCreateWithoutCmCaseReplyInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -23062,6 +23280,7 @@ input CompanyUncheckedCreateWithoutCmCaseReplyInput {
 input CompanyUncheckedCreateWithoutDetailsInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -23086,6 +23305,7 @@ input CompanyUncheckedCreateWithoutDetailsInput {
 input CompanyUncheckedCreateWithoutMarketingSourceInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -23110,6 +23330,7 @@ input CompanyUncheckedCreateWithoutMarketingSourceInput {
 input CompanyUncheckedCreateWithoutSubscriptionInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -23134,6 +23355,7 @@ input CompanyUncheckedCreateWithoutSubscriptionInput {
 input CompanyUncheckedCreateWithoutThirdPartyAccessInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -23158,6 +23380,7 @@ input CompanyUncheckedCreateWithoutThirdPartyAccessInput {
 input CompanyUncheckedCreateWithoutTwoFactorHistoryInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -23182,6 +23405,7 @@ input CompanyUncheckedCreateWithoutTwoFactorHistoryInput {
 input CompanyUncheckedCreateWithoutUserInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -23206,6 +23430,7 @@ input CompanyUncheckedCreateWithoutUserInput {
 input CompanyUncheckedUpdateInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -23243,6 +23468,7 @@ input CompanyUncheckedUpdateManyInput {
 
 input CompanyUncheckedUpdateWithoutAcceptEmailTokenInput {
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -23267,6 +23493,32 @@ input CompanyUncheckedUpdateWithoutAcceptEmailTokenInput {
 
 input CompanyUncheckedUpdateWithoutAccountBalanceInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
+  Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
+  CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
+  CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
+  CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
+  MarketingSource: MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+  ThirdPartyAccess: ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
+  TwoFactorHistory: TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
+  User: UserUncheckedUpdateManyWithoutCompanyInput
+  admin: IntFieldUpdateOperationsInput
+  creation_date: DateTimeFieldUpdateOperationsInput
+  cron_enabled: NullableBoolFieldUpdateOperationsInput
+  details: CompanyDetailsUncheckedUpdateOneWithoutCompanyInput
+  digit8: IntFieldUpdateOperationsInput
+  id: IntFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
+  remote_connect: NullableStringFieldUpdateOperationsInput
+  remote_url: NullableStringFieldUpdateOperationsInput
+  slug: NullableStringFieldUpdateOperationsInput
+  subscription: CompanySubscriptionUncheckedUpdateOneWithoutCompanyInput
+  user: StringFieldUpdateOperationsInput
+}
+
+input CompanyUncheckedUpdateWithoutBookingStatusInput {
+  AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
+  AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -23292,6 +23544,7 @@ input CompanyUncheckedUpdateWithoutAccountBalanceInput {
 input CompanyUncheckedUpdateWithoutCandidateInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
@@ -23316,6 +23569,7 @@ input CompanyUncheckedUpdateWithoutCandidateInput {
 input CompanyUncheckedUpdateWithoutCmCampaignInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
@@ -23340,6 +23594,7 @@ input CompanyUncheckedUpdateWithoutCmCampaignInput {
 input CompanyUncheckedUpdateWithoutCmCaseInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
@@ -23364,6 +23619,7 @@ input CompanyUncheckedUpdateWithoutCmCaseInput {
 input CompanyUncheckedUpdateWithoutCmCaseReplyInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -23388,6 +23644,7 @@ input CompanyUncheckedUpdateWithoutCmCaseReplyInput {
 input CompanyUncheckedUpdateWithoutDetailsInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -23412,6 +23669,7 @@ input CompanyUncheckedUpdateWithoutDetailsInput {
 input CompanyUncheckedUpdateWithoutMarketingSourceInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -23436,6 +23694,7 @@ input CompanyUncheckedUpdateWithoutMarketingSourceInput {
 input CompanyUncheckedUpdateWithoutSubscriptionInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -23460,6 +23719,7 @@ input CompanyUncheckedUpdateWithoutSubscriptionInput {
 input CompanyUncheckedUpdateWithoutThirdPartyAccessInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -23484,6 +23744,7 @@ input CompanyUncheckedUpdateWithoutThirdPartyAccessInput {
 input CompanyUncheckedUpdateWithoutTwoFactorHistoryInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -23508,6 +23769,7 @@ input CompanyUncheckedUpdateWithoutTwoFactorHistoryInput {
 input CompanyUncheckedUpdateWithoutUserInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -23532,6 +23794,7 @@ input CompanyUncheckedUpdateWithoutUserInput {
 input CompanyUpdateInput {
   AcceptEmailToken: AcceptEmailTokenUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUpdateManyWithoutCompanyInput
   Candidate: CandidateUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUpdateManyWithoutCompanyInput
   CmCase: CmCaseUpdateManyWithoutCompanyInput
@@ -23579,6 +23842,14 @@ input CompanyUpdateOneRequiredWithoutAccountBalanceInput {
   create: CompanyUncheckedCreateWithoutAccountBalanceInput
   update: CompanyUncheckedUpdateWithoutAccountBalanceInput
   upsert: CompanyUpsertWithoutAccountBalanceInput
+}
+
+input CompanyUpdateOneRequiredWithoutBookingStatusInput {
+  connect: CompanyWhereUniqueInput
+  connectOrCreate: CompanyCreateOrConnectWithoutBookingStatusInput
+  create: CompanyUncheckedCreateWithoutBookingStatusInput
+  update: CompanyUncheckedUpdateWithoutBookingStatusInput
+  upsert: CompanyUpsertWithoutBookingStatusInput
 }
 
 input CompanyUpdateOneRequiredWithoutCmCampaignInput {
@@ -23667,6 +23938,7 @@ input CompanyUpdateOneWithoutUserInput {
 
 input CompanyUpdateWithoutAcceptEmailTokenInput {
   AccountBalance: AccountBalanceUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUpdateManyWithoutCompanyInput
   Candidate: CandidateUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUpdateManyWithoutCompanyInput
   CmCase: CmCaseUpdateManyWithoutCompanyInput
@@ -23690,6 +23962,31 @@ input CompanyUpdateWithoutAcceptEmailTokenInput {
 
 input CompanyUpdateWithoutAccountBalanceInput {
   AcceptEmailToken: AcceptEmailTokenUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUpdateManyWithoutCompanyInput
+  Candidate: CandidateUpdateManyWithoutCompanyInput
+  CmCampaign: CmCampaignUpdateManyWithoutCompanyInput
+  CmCase: CmCaseUpdateManyWithoutCompanyInput
+  CmCaseReply: CmCaseReplyUpdateManyWithoutCompanyInput
+  MarketingSource: MarketingSourceUpdateManyWithoutCompanyInput
+  ThirdPartyAccess: ThirdPartyAccessUpdateManyWithoutCompanyInput
+  TwoFactorHistory: TwoFactorHistoryUpdateManyWithoutCompanyInput
+  User: UserUpdateManyWithoutCompanyInput
+  admin: IntFieldUpdateOperationsInput
+  creation_date: DateTimeFieldUpdateOperationsInput
+  cron_enabled: NullableBoolFieldUpdateOperationsInput
+  details: CompanyDetailsUpdateOneWithoutCompanyInput
+  digit8: IntFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
+  remote_connect: NullableStringFieldUpdateOperationsInput
+  remote_url: NullableStringFieldUpdateOperationsInput
+  slug: NullableStringFieldUpdateOperationsInput
+  subscription: CompanySubscriptionUpdateOneWithoutCompanyInput
+  user: StringFieldUpdateOperationsInput
+}
+
+input CompanyUpdateWithoutBookingStatusInput {
+  AcceptEmailToken: AcceptEmailTokenUpdateManyWithoutCompanyInput
+  AccountBalance: AccountBalanceUpdateManyWithoutCompanyInput
   Candidate: CandidateUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUpdateManyWithoutCompanyInput
   CmCase: CmCaseUpdateManyWithoutCompanyInput
@@ -23714,6 +24011,7 @@ input CompanyUpdateWithoutAccountBalanceInput {
 input CompanyUpdateWithoutCandidateInput {
   AcceptEmailToken: AcceptEmailTokenUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUpdateManyWithoutCompanyInput
   CmCase: CmCaseUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUpdateManyWithoutCompanyInput
@@ -23737,6 +24035,7 @@ input CompanyUpdateWithoutCandidateInput {
 input CompanyUpdateWithoutCmCampaignInput {
   AcceptEmailToken: AcceptEmailTokenUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUpdateManyWithoutCompanyInput
   Candidate: CandidateUpdateManyWithoutCompanyInput
   CmCase: CmCaseUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUpdateManyWithoutCompanyInput
@@ -23760,6 +24059,7 @@ input CompanyUpdateWithoutCmCampaignInput {
 input CompanyUpdateWithoutCmCaseInput {
   AcceptEmailToken: AcceptEmailTokenUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUpdateManyWithoutCompanyInput
   Candidate: CandidateUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUpdateManyWithoutCompanyInput
@@ -23783,6 +24083,7 @@ input CompanyUpdateWithoutCmCaseInput {
 input CompanyUpdateWithoutCmCaseReplyInput {
   AcceptEmailToken: AcceptEmailTokenUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUpdateManyWithoutCompanyInput
   Candidate: CandidateUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUpdateManyWithoutCompanyInput
   CmCase: CmCaseUpdateManyWithoutCompanyInput
@@ -23806,6 +24107,7 @@ input CompanyUpdateWithoutCmCaseReplyInput {
 input CompanyUpdateWithoutDetailsInput {
   AcceptEmailToken: AcceptEmailTokenUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUpdateManyWithoutCompanyInput
   Candidate: CandidateUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUpdateManyWithoutCompanyInput
   CmCase: CmCaseUpdateManyWithoutCompanyInput
@@ -23829,6 +24131,7 @@ input CompanyUpdateWithoutDetailsInput {
 input CompanyUpdateWithoutMarketingSourceInput {
   AcceptEmailToken: AcceptEmailTokenUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUpdateManyWithoutCompanyInput
   Candidate: CandidateUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUpdateManyWithoutCompanyInput
   CmCase: CmCaseUpdateManyWithoutCompanyInput
@@ -23852,6 +24155,7 @@ input CompanyUpdateWithoutMarketingSourceInput {
 input CompanyUpdateWithoutSubscriptionInput {
   AcceptEmailToken: AcceptEmailTokenUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUpdateManyWithoutCompanyInput
   Candidate: CandidateUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUpdateManyWithoutCompanyInput
   CmCase: CmCaseUpdateManyWithoutCompanyInput
@@ -23875,6 +24179,7 @@ input CompanyUpdateWithoutSubscriptionInput {
 input CompanyUpdateWithoutThirdPartyAccessInput {
   AcceptEmailToken: AcceptEmailTokenUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUpdateManyWithoutCompanyInput
   Candidate: CandidateUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUpdateManyWithoutCompanyInput
   CmCase: CmCaseUpdateManyWithoutCompanyInput
@@ -23898,6 +24203,7 @@ input CompanyUpdateWithoutThirdPartyAccessInput {
 input CompanyUpdateWithoutTwoFactorHistoryInput {
   AcceptEmailToken: AcceptEmailTokenUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUpdateManyWithoutCompanyInput
   Candidate: CandidateUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUpdateManyWithoutCompanyInput
   CmCase: CmCaseUpdateManyWithoutCompanyInput
@@ -23921,6 +24227,7 @@ input CompanyUpdateWithoutTwoFactorHistoryInput {
 input CompanyUpdateWithoutUserInput {
   AcceptEmailToken: AcceptEmailTokenUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUpdateManyWithoutCompanyInput
   Candidate: CandidateUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUpdateManyWithoutCompanyInput
   CmCase: CmCaseUpdateManyWithoutCompanyInput
@@ -23949,6 +24256,11 @@ input CompanyUpsertWithoutAcceptEmailTokenInput {
 input CompanyUpsertWithoutAccountBalanceInput {
   create: CompanyUncheckedCreateWithoutAccountBalanceInput!
   update: CompanyUncheckedUpdateWithoutAccountBalanceInput!
+}
+
+input CompanyUpsertWithoutBookingStatusInput {
+  create: CompanyUncheckedCreateWithoutBookingStatusInput!
+  update: CompanyUncheckedUpdateWithoutBookingStatusInput!
 }
 
 input CompanyUpsertWithoutCandidateInput {
@@ -24005,6 +24317,7 @@ input CompanyWhereInput {
   AND: [CompanyWhereInput]
   AcceptEmailToken: AcceptEmailTokenListRelationFilter
   AccountBalance: AccountBalanceListRelationFilter
+  BookingStatus: BookingStatusListRelationFilter
   Candidate: CandidateListRelationFilter
   CmCampaign: CmCampaignListRelationFilter
   CmCase: CmCaseListRelationFilter
@@ -24770,7 +25083,7 @@ type MarketingSource {
   id: Int!
   imported: Int!
   name: String!
-  public: Int!
+  public: Boolean!
 }
 
 type MarketingSourceAvgAggregateOutputType {
@@ -24778,7 +25091,6 @@ type MarketingSourceAvgAggregateOutputType {
   custom_id: Float!
   id: Float!
   imported: Float!
-  public: Float!
 }
 
 type MarketingSourceCountAggregateOutputType {
@@ -24788,7 +25100,7 @@ type MarketingSourceCountAggregateOutputType {
   id: Int!
   imported: Int!
   name: Int
-  public: Int!
+  public: Int
 }
 
 input MarketingSourceCreateInput {
@@ -24796,7 +25108,7 @@ input MarketingSourceCreateInput {
   custom_id: Int!
   imported: Int!
   name: String!
-  public: Int!
+  public: Boolean!
 }
 
 input MarketingSourceCreateNestedManyWithoutCompanyInput {
@@ -24814,7 +25126,7 @@ input MarketingSourceCreateWithoutCompanyInput {
   custom_id: Int!
   imported: Int!
   name: String!
-  public: Int!
+  public: Boolean!
 }
 
 input MarketingSourceListRelationFilter {
@@ -24829,7 +25141,7 @@ type MarketingSourceMaxAggregateOutputType {
   id: Int!
   imported: Int!
   name: String
-  public: Int!
+  public: Boolean
 }
 
 type MarketingSourceMinAggregateOutputType {
@@ -24838,7 +25150,7 @@ type MarketingSourceMinAggregateOutputType {
   id: Int!
   imported: Int!
   name: String
-  public: Int!
+  public: Boolean
 }
 
 input MarketingSourceOrderByInput {
@@ -24869,7 +25181,7 @@ input MarketingSourceScalarWhereInput {
   id: IntFilter
   imported: IntFilter
   name: StringFilter
-  public: IntFilter
+  public: BoolFilter
 }
 
 type MarketingSourceSumAggregateOutputType {
@@ -24877,7 +25189,6 @@ type MarketingSourceSumAggregateOutputType {
   custom_id: Int!
   id: Int!
   imported: Int!
-  public: Int!
 }
 
 input MarketingSourceUncheckedCreateInput {
@@ -24886,7 +25197,7 @@ input MarketingSourceUncheckedCreateInput {
   id: Int
   imported: Int!
   name: String!
-  public: Int!
+  public: Boolean!
 }
 
 input MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput {
@@ -24900,7 +25211,7 @@ input MarketingSourceUncheckedCreateWithoutCompanyInput {
   id: Int
   imported: Int!
   name: String!
-  public: Int!
+  public: Boolean!
 }
 
 input MarketingSourceUncheckedUpdateInput {
@@ -24909,7 +25220,7 @@ input MarketingSourceUncheckedUpdateInput {
   id: IntFieldUpdateOperationsInput
   imported: IntFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  public: IntFieldUpdateOperationsInput
+  public: BoolFieldUpdateOperationsInput
 }
 
 input MarketingSourceUncheckedUpdateManyInput {
@@ -24918,7 +25229,7 @@ input MarketingSourceUncheckedUpdateManyInput {
   id: IntFieldUpdateOperationsInput
   imported: IntFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  public: IntFieldUpdateOperationsInput
+  public: BoolFieldUpdateOperationsInput
 }
 
 input MarketingSourceUncheckedUpdateManyWithoutCompanyInput {
@@ -24939,7 +25250,7 @@ input MarketingSourceUncheckedUpdateManyWithoutMarketingSourceInput {
   id: IntFieldUpdateOperationsInput
   imported: IntFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  public: IntFieldUpdateOperationsInput
+  public: BoolFieldUpdateOperationsInput
 }
 
 input MarketingSourceUncheckedUpdateWithoutCompanyInput {
@@ -24947,7 +25258,7 @@ input MarketingSourceUncheckedUpdateWithoutCompanyInput {
   id: IntFieldUpdateOperationsInput
   imported: IntFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  public: IntFieldUpdateOperationsInput
+  public: BoolFieldUpdateOperationsInput
 }
 
 input MarketingSourceUpdateInput {
@@ -24955,14 +25266,14 @@ input MarketingSourceUpdateInput {
   custom_id: IntFieldUpdateOperationsInput
   imported: IntFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  public: IntFieldUpdateOperationsInput
+  public: BoolFieldUpdateOperationsInput
 }
 
 input MarketingSourceUpdateManyMutationInput {
   custom_id: IntFieldUpdateOperationsInput
   imported: IntFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  public: IntFieldUpdateOperationsInput
+  public: BoolFieldUpdateOperationsInput
 }
 
 input MarketingSourceUpdateManyWithWhereWithoutCompanyInput {
@@ -24992,7 +25303,7 @@ input MarketingSourceUpdateWithoutCompanyInput {
   custom_id: IntFieldUpdateOperationsInput
   imported: IntFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  public: IntFieldUpdateOperationsInput
+  public: BoolFieldUpdateOperationsInput
 }
 
 input MarketingSourceUpsertWithWhereUniqueWithoutCompanyInput {
@@ -25011,7 +25322,7 @@ input MarketingSourceWhereInput {
   id: IntFilter
   imported: IntFilter
   name: StringFilter
-  public: IntFilter
+  public: BoolFilter
 }
 
 input MarketingSourceWhereUniqueInput {
@@ -26656,13 +26967,6 @@ input StringNullableFilter {
   not: NestedStringNullableFilter
   notIn: [String]
   startsWith: String
-}
-
-type Subscription {
-  """
-  Fires any time the current authenticated user details are updated or deleted
-  """
-  me: User
 }
 
 type ThirdPartyAccess {

@@ -62,8 +62,8 @@ const AddButton: FC<P> = ({
     <div className={styles.filterContent}>
       {!isMobile && (
         <div className={classNames(styles.filterHeader)}>
-          <h6>Filter by</h6>
-          <p>Status</p>
+          <h6>{t('add-button-filter-header-text-filter')}:</h6>
+          <p>{t('add-button-filter-header-text-status')}</p>
         </div>
       )}
       <div className={styles.radioTextStyle}>
@@ -77,10 +77,10 @@ const AddButton: FC<P> = ({
           value={isActive}
         >
           <Radio value={schema?.filter?.primary?.active ?? true}>
-            <span>Active</span>
+            <span>{t('basic-crud-table-button-active')}</span>
           </Radio>
           <Radio value={schema?.filter?.primary?.inactive ?? false}>
-            <span>Inactive</span>
+            <span>{t('basic-crud-table-button-inactive')}</span>
           </Radio>
         </Radio.Group>
       </div>
@@ -94,12 +94,7 @@ const AddButton: FC<P> = ({
         <div className={styles.mobileSearchInput}>
           <Input
             className={styles.searchMarketingStyle}
-            placeholder={
-              needTranslation
-                ? t('marketingsource-input-search-placeholder.translation')
-                : 'Search'
-            }
-            value={marketingSourceSearch}
+            placeholder={t('basic-crud-table-input-search-placeholder')}
             onChange={(e) => setMarketingSourceSearch(e.target.value)}
             suffix={
               <CloseIcon
@@ -146,14 +141,14 @@ const AddButton: FC<P> = ({
         <MobileHeader className={styles.marketingSourceFilterHeader}>
           <div className={styles.allContentAlignMobile}>
             <div className={styles.marketingTextStyle}>
-              <span>Reset</span>
-              <p> Filter </p>
+              <span>{t('add-button-filter-reset')}</span>
+              <p>{t('add-button-filter')}</p>
               <span
                 onClick={() => {
                   setMobFilterDrawer((e) => !e)
                 }}
               >
-                Cancel
+                {t('add-button-filter-cancel')}
               </span>
             </div>
           </div>
@@ -180,11 +175,7 @@ const AddButton: FC<P> = ({
         {tableSearch && (
           <Input
             className={styles.searchMarketingStyle}
-            placeholder={
-              needTranslation
-                ? t('marketingsource-input-search-placeholder.translation')
-                : 'Search'
-            }
+            placeholder={t('basic-crud-table-input-search-placeholder')}
             value={marketingSourceSearch}
             onChange={(e) => {
               console.log('set marketing search', e.target.value)
@@ -202,10 +193,7 @@ const AddButton: FC<P> = ({
         >
           {addFilter && (
             <Button className={styles.filterBtn}>
-              <FilterOutlined />{' '}
-              {needTranslation
-                ? t('marketingsource-button-filter.translation')
-                : 'Filter'}
+              <FilterOutlined /> {t('basic-crud-table-button-filter')}
             </Button>
           )}
         </Popover>
@@ -215,9 +203,7 @@ const AddButton: FC<P> = ({
             type="primary"
             onClick={() => onClick?.()}
           >
-            {needTranslation
-              ? t('marketingsource-header-create.translation')
-              : schema.createButtonLabel}
+            {t(schema.createButtonLabel)}
           </Button>
         )}
         {schema.inboxButton && (
@@ -226,10 +212,7 @@ const AddButton: FC<P> = ({
             type="primary"
             onClick={() => onClick?.()}
           >
-            <InboxOutlined />{' '}
-            {needTranslation
-              ? t('marketingsource-header-create.translation')
-              : 'Inbox'}
+            <InboxOutlined /> {t(schema.createButtonLabel) ?? 'Inbox'}
             <span className={styles.inboxMsgNum}> 3</span>
           </Button>
         )}

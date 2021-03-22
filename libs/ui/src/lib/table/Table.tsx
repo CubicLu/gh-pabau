@@ -107,13 +107,9 @@ export const Table: FC<TableType> = ({
         className={isActive ? styles.activeBtn : styles.disableSourceBtn}
         disabled={!isActive}
       >
-        {needTranslation
-          ? isActive
-            ? t('marketingsource-tableRow-active-btn.translation')
-            : t('marketingsource-tableRow-inActive-btn.translation')
-          : isActive
-          ? 'Active'
-          : 'Inactive'}
+        {isActive
+          ? t('basic-crud-table-button-active')
+          : t('basic-crud-table-button-inactive')}
       </Button>
     )
   }
@@ -140,19 +136,19 @@ export const Table: FC<TableType> = ({
       <div
         style={{ background: rowData.color }}
         className={styles.customColor}
-      ></div>
+      />
     )
   }
 
   const checkPadLocks = (record) => {
-    let alloWClicked = true
+    let clickable = true
     Object.keys(record).map((key) => {
       if (padlocked?.includes(record[key])) {
-        alloWClicked = false
+        clickable = false
       }
       return key
     })
-    return alloWClicked
+    return clickable
   }
 
   const renderSortHandler = () => {
@@ -184,14 +180,14 @@ export const Table: FC<TableType> = ({
     <div className={styles.noDataTableBox}>
       <div className={styles.noDataTextStyle}>
         <Avatar icon={noDataIcon} size="large" className={styles.roundDesign} />
-        <p>{`Add ${noDataText} to create more shifts faster`}</p>
-        <div className={styles.spaceBetweenText}></div>
+        <p>{`${noDataText}`}</p>
+        <div className={styles.spaceBetweenText} />
         <Button
           className={styles.createTemaplateBtn}
           type="primary"
           onClick={() => onAddTemplate?.()}
         >
-          {`Add ${noDataBtnText}`}
+          {`${noDataBtnText}`}
         </Button>
       </div>
     </div>

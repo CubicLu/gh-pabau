@@ -14,7 +14,6 @@ declare global {
 const authenticatedUser = (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.session?.jwt) {
-      // console.log('verifying session jwt..')
       req.authenticatedUser = jwt.verify(
         req.session?.jwt,
         process.env.JWT_SECRET,

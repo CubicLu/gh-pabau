@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import styles from '../../pages/login.module.less'
-import { Button } from '@pabau/ui'
+import { Button, Notification, NotificationType } from '@pabau/ui'
 import * as Yup from 'yup'
 import { Form, Input, Checkbox, SubmitButton } from 'formik-antd'
 import { Formik } from 'formik'
@@ -77,7 +77,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
             try {
               await loginHandler(value)
             } catch (error) {
-              console.error(error)
+              Notification(NotificationType.error, error.toString())
             }
           }}
           render={() => (

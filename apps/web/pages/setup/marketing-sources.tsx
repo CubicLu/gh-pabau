@@ -1,14 +1,13 @@
 import { gql } from '@apollo/client'
 import { NextPage } from 'next'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import CrudLayout from '../../components/CrudLayout/CrudLayout'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { UserContext } from '../../context/UserContext'
-import { languageMapper } from '../../helper/languageMapper'
 
 const LIST_QUERY = gql`
   query marketing_sources(
-    $isActive: Int = 1
+    $isActive: Boolean = true
     $searchTerm: String = ""
     $offset: Int
     $limit: Int
@@ -32,7 +31,7 @@ const LIST_QUERY = gql`
 
 const LIST_AGGREGATE_QUERY = gql`
   query marketing_source_aggregate(
-    $isActive: Int = 1
+    $isActive: Boolean = true
     $searchTerm: String = ""
   ) {
     marketingSourcesCount(
@@ -54,7 +53,7 @@ const DELETE_MUTATION = gql`
 const ADD_MUTATION = gql`
   mutation add_marketing_source(
     $imported: Int = 0
-    $isActive: Int = 1
+    $public: Boolean = true
     $name: String!
     $custom_id: Int = 0
   ) {
@@ -63,7 +62,7 @@ const ADD_MUTATION = gql`
         imported: $imported
         company: {}
         name: $name
-        public: $isActive
+        public: $public
         custom_id: $custom_id
       }
     ) {
@@ -77,7 +76,7 @@ const EDIT_MUTATION = gql`
   mutation update_marketing_source_by_pk(
     $id: Int!
     $name: String
-    $public: Int = 1
+    $public: Boolean
   ) {
     updateOneMarketingSource(
       data: { name: { set: $name }, public: { set: $public } }
@@ -100,18 +99,9 @@ const UPDATE_ORDER_MUTATION = gql`
 `
 
 export const Index: NextPage = () => {
-  const { t, i18n } = useTranslationI18()
+  const { t } = useTranslationI18()
 
   const user = useContext(UserContext)
-
-  useEffect(() => {
-    if (user) {
-      const lan = user?.data?.me?.company?.details?.language
-      console.log(user?.data?.me?.company?.id)
-      const lanCode = lan ? languageMapper(lan) : 'en'
-      i18n.changeLanguage(lanCode)
-    }
-  }, [user, i18n])
 
   const schema: Schema = {
     full: t('marketingsource-title'),
@@ -128,12 +118,12 @@ export const Index: NextPage = () => {
         error: 'While creating marketing source.',
       },
       update: {
-        success: 'Marketings source updated.',
-        error: 'While updating marketings source.',
+        success: t('marketingsource-notification-update-success'),
+        error: t('marketingsource-notification-update-error'),
       },
       delete: {
-        success: 'Marketings source deleted.',
-        error: 'While deleting marketing sources.',
+        success: t('marketingsource-notification-delete-success'),
+        error: t('marketingsource-notification-delete-error'),
       },
     },
     deleteBtnLabel: t('marketingsource-delete-button-label'),
@@ -162,10 +152,9 @@ export const Index: NextPage = () => {
     filter: {
       primary: {
         name: 'public',
-        type: 'number',
-        default: 1,
-        active: 1,
-        inactive: 0,
+        default: true,
+        active: true,
+        inactive: false,
       },
     },
   }
@@ -180,6 +169,7 @@ export const Index: NextPage = () => {
       aggregateQuery={LIST_AGGREGATE_QUERY}
       updateOrderQuery={UPDATE_ORDER_MUTATION}
       needTranslation={false}
+      draggable={false}
       {...user}
     />
   )
