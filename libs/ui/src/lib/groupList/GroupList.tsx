@@ -9,6 +9,7 @@ interface P {
   onCreateModalClick?: () => void
   showChatBox?: boolean
   isNewDm?: boolean
+  isHeaderShow?: boolean
 }
 export const GroupList: FC<P> = ({ ...props }) => {
   const [active, setActive] = useState<boolean>(false)
@@ -31,26 +32,28 @@ export const GroupList: FC<P> = ({ ...props }) => {
 
   return (
     <div>
-      <div
-        className={classNames(
-          styles.channelsText,
-          styles.dFlex,
-          styles.channelsHead
-        )}
-        style={{ cursor: 'pointer', transition: 'all 0.5s' }}
-      >
-        <span className={classNames(styles.textSm, styles.grayTextColor)}>
-          channels
-        </span>
-        <PlusCircleFilled
-          onClick={() => props.onCreateModalClick?.()}
-          className={styles.addChannelIcon}
-          style={{
-            color: 'var(--primary-color)',
-            fontSize: 'var(--font-size-base)',
-          }}
-        />
-      </div>
+      {props.isHeaderShow && (
+        <div
+          className={classNames(
+            styles.channelsText,
+            styles.dFlex,
+            styles.channelsHead
+          )}
+          style={{ cursor: 'pointer', transition: 'all 0.5s' }}
+        >
+          <span className={classNames(styles.textSm, styles.grayTextColor)}>
+            channels
+          </span>
+          <PlusCircleFilled
+            onClick={() => props.onCreateModalClick?.()}
+            className={styles.addChannelIcon}
+            style={{
+              color: 'var(--primary-color)',
+              fontSize: 'var(--font-size-base)',
+            }}
+          />
+        </div>
+      )}
       <div
         onClick={() => handleClick('general')}
         className={classNames(

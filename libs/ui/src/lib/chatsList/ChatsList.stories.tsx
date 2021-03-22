@@ -80,4 +80,5 @@ ListChat.args = {
       profileURL: Liza,
     },
   ],
+  isHeaderShow: true,
 }

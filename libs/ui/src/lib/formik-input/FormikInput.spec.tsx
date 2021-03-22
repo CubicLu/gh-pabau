@@ -1,11 +1,11 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 
-import InventoryLabel from './InventoryLabel'
+import FormikInput from './FormikInput'
 
-describe('InventoryLabel', () => {
+describe('FormikInput', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<InventoryLabel />)
+    const { baseElement } = render(<FormikInput />)
     expect(baseElement).toBeTruthy()
   })
 })

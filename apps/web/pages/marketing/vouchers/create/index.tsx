@@ -136,18 +136,6 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
         <div className={styles.heading}>Gift Voucher</div>
       </div>
       <div className={styles.rightCardHeadBtns}>
-        {/* <div className={styles.switchDiv}>
-          <span>Sell this voucher online</span>
-          <span>
-            <Switch defaultChecked={true} />
-          </span>
-        </div>
-        <div className={styles.hrefDiv}>
-          <a href="https://connect-lutetia.pabau.me/booking">
-            https://connect-lutetia.pabau.me/booking{' '}
-            <img src={ExternalLink} alt="External Link" />
-          </a>
-        </div> */}
         <div>
           <Button type="default" size="large">
             Send Test Email
@@ -366,7 +354,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
           <div className={styles.themesDiv}>
             <div>
               <span>Voucher Theme</span>
-              <PabauPlus label="Plus" />
+              <PabauPlus label="Plus" modalType="Marketing" />
             </div>
             <div>
               <Row>

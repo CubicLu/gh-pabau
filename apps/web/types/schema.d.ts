@@ -41,8 +41,10 @@ interface SchemaItem {
     | 'radio-group'
     | 'color-picker'
     | 'checkbox'
+    | 'days-checkbox'
     | 'icon'
     | 'select'
+    | 'time'
   defaultvalue?: string | number | boolean
   visible?: boolean
   required?: boolean
@@ -50,6 +52,7 @@ interface SchemaItem {
   validateMsg?: string
   selectOptions?: TypeValues[]
   collapsible?: boolean
+  col?: number
 }
 interface TypeValues {
   label: string

@@ -3,9 +3,9 @@ import { useMedia } from 'react-use'
 
 import { Button, TabMenu } from '@pabau/ui'
 import { Row, Col, Card } from 'antd'
-import { Layout } from '@pabau/ui'
+import { Layout, Breadcrumb } from '@pabau/ui'
 
-import { RightOutlined, LeftOutlined } from '@ant-design/icons'
+import { LeftOutlined } from '@ant-design/icons'
 
 import { PosConfigObj } from '../../../mocks/PosConfiguration'
 
@@ -41,7 +41,7 @@ const PosConfiguration: FC<P> = () => {
     <div className={styles.mainWrapper}>
       <Layout>
         <Card className={styles.posConfigurationContainer}>
-          {isMobile ? (
+          <div className={styles.hideDesktopView}>
             <Row className={styles.mobDevice}>
               <Col>
                 <div className={styles.mobTopHead}>
@@ -56,21 +56,24 @@ const PosConfiguration: FC<P> = () => {
                 </div>
               </Col>
             </Row>
-          ) : (
+          </div>
+          <div className={styles.hideMobileView}>
             <Row className={styles.mainWrapper}>
               <Col span={20} className={styles.titleWrapper}>
-                <p className={styles.titleTagLine}>
-                  {'Setup'}
-                  <span>
-                    <RightOutlined /> {'Point Of Sale Settings'}
-                  </span>
-                </p>
-                <h4>{'POS Configuration'}</h4>
-                <p className={styles.description}>
-                  {
-                    'Take control over which features are enabled on your point of sale screen.'
-                  }
-                </p>
+                <Breadcrumb
+                  breadcrumbItems={[
+                    { breadcrumbName: 'Setup', path: 'setup' },
+                    { breadcrumbName: 'Point Of Sale Settings', path: '' },
+                  ]}
+                />
+                <div className={styles.posConfigHeader}>
+                  <h4>{'POS Configuration'}</h4>
+                  <p className={styles.description}>
+                    {
+                      'Take control over which features are enabled on your point of sale screen.'
+                    }
+                  </p>
+                </div>
               </Col>
               <Col span={'auto'} className={styles.titleSaveBtn}>
                 <Button
@@ -82,7 +85,7 @@ const PosConfiguration: FC<P> = () => {
                 </Button>
               </Col>
             </Row>
-          )}
+          </div>
           <TabMenu tabPosition={isMobile ? 'top' : 'left'} menuItems={tabItems}>
             <General
               generalObj={posConfigObj.general}

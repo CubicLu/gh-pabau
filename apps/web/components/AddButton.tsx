@@ -16,13 +16,15 @@ import { useTranslationI18 } from '../hooks/useTranslationI18'
 const WAIT_INTERVAL = 400
 
 interface P {
-  schema: Schema
+  schema: Partial<Schema>
   onClick?: () => void
   onFilterSource: () => void
-  onSearch: (term: string) => void
+  onSearch?: (term: string) => void
   tableSearch?: boolean
   addFilter?: boolean
   needTranslation?: boolean
+  isCustomFilter?: boolean
+  customFilter?: () => JSX.Element
 }
 
 const AddButton: FC<P> = ({
@@ -34,15 +36,13 @@ const AddButton: FC<P> = ({
   tableSearch = true,
   addFilter = true,
   needTranslation,
+  isCustomFilter = false,
+  customFilter,
 }) => {
   const [isActive, setIsActive] = useState(true)
   const [mobFilterDrawer, setMobFilterDrawer] = useState(false)
   const [marketingSourceSearch, setMarketingSourceSearch] = useState('')
   const { t } = useTranslationI18()
-
-  // useKeyPressEvent('n', () => {
-  //   onClick?.()
-  // })
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -52,6 +52,17 @@ const AddButton: FC<P> = ({
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [marketingSourceSearch])
+
+  const onReset = () => {
+    if (!isActive) {
+      setIsActive(!isActive)
+    }
+  }
+
+  const handleMobileDrawerApply = () => {
+    onFilterSource()
+    setMobFilterDrawer((e) => !e)
+  }
 
   const filterContent = (isMobile = false) => (
     <div className={styles.filterContent}>
@@ -106,22 +117,26 @@ const AddButton: FC<P> = ({
         <MobileHeader className={styles.marketingSourceFilterHeader}>
           <div className={styles.allContentAlignMobile}>
             <div className={styles.marketingTextStyle}>
-              <span>Reset</span>
+              <span style={{ cursor: 'pointer' }} onClick={onReset}>
+                Reset
+              </span>
               <p> Filter </p>
-              <span>Cancel</span>
+              <span
+                onClick={() => setMobFilterDrawer((e) => !e)}
+                style={{ cursor: 'pointer' }}
+              >
+                Cancel
+              </span>
             </div>
           </div>
         </MobileHeader>
         <div style={{ marginTop: '91px', paddingLeft: '24px' }}>
-          {filterContent(true)}
+          {isCustomFilter === false ? filterContent(true) : customFilter()}
         </div>
         <Button
           type="primary"
           className={styles.applyButton}
-          onClick={() => {
-            onFilterSource()
-            setMobFilterDrawer((e) => !e)
-          }}
+          onClick={handleMobileDrawerApply}
         >
           Apply
         </Button>
@@ -147,9 +162,13 @@ const AddButton: FC<P> = ({
         )}
         <Popover
           trigger="click"
-          content={filterContent}
+          content={isCustomFilter ? customFilter : filterContent}
           placement="bottomRight"
-          overlayClassName={styles.filterPopover}
+          overlayClassName={
+            isCustomFilter === false
+              ? styles.filterPopover
+              : styles.customFilterPopover
+          }
         >
           {addFilter && (
             <Button className={styles.filterBtn}>

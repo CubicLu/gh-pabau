@@ -1,0 +1,81 @@
+.desktop-view-none {
+  display: none;
+}
+
+.mobileHeaderContainer {
+  background-color: #fff;
+}
+
+.desktopHeader {
+  background-color: #FFF;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 24px;
+
+  .searchInput {
+    max-width: 250px;
+  }
+  button {
+    margin-left: 16px;
+    color: #9292A3;
+  }
+}
+
+.date-filter-container {
+  width: 95vw;
+  max-width: 500px;
+  background-color: #FFF;
+  padding: 16px;
+  filter: drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.15));
+
+  .range-picker {
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 24px;
+  }
+}
+
+@media (min-width: 200px) and (max-width: 767px) {
+  .mobile-view-none {
+    display: none;
+  }
+
+  .desktop-view-none {
+    display: block;
+  }
+}
+
+.reminder-text-2 {
+  margin-left: 5px;
+  color: #54b2d3;
+  width: 18px;
+  height: 18px;
+  padding: 0px 2px;
+  background: white;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+.search-input-text {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mobile-header {
+  flex : 1;
+  display: flex;
+  .left-outlined {
+    font-size: 20px;
+  }
+  .title {
+    margin-left: 16px;
+  }
+}

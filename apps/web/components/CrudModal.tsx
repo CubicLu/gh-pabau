@@ -13,6 +13,7 @@ interface P {
   listQuery: DocumentNode
   editingRow?: Record<string, string | boolean | number>
   onClose?: () => void
+  showModalInitially?: boolean
 }
 
 const CrudModal: FC<P> = ({
@@ -22,8 +23,11 @@ const CrudModal: FC<P> = ({
   listQuery,
   onClose,
   editingRow,
+  showModalInitially,
 }) => {
-  const [openDeleteModal, setDeleteModal] = useState(false)
+  const [openDeleteModal, setDeleteModal] = useState(
+    showModalInitially || false
+  )
   const [deleteMutation] = useMutation(deleteQuery, {
     onCompleted(data) {
       Notification(
@@ -165,7 +169,9 @@ const CrudModal: FC<P> = ({
           // }
         }}
         isValidate={
-          editingRow?.isCreate ? formik.dirty && formik.isValid : formik.isValid
+          editingRow?.isCreate
+            ? formik?.dirty && formik?.isValid
+            : formik?.isValid
         }
       >
         <Form

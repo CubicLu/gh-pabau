@@ -678,6 +678,59 @@
       filter: {}
 - table:
     schema: public
+    name: candidate_list
+  array_relationships:
+  - name: job_candidates
+    using:
+      foreign_key_constraint_on:
+        column: candidate_id
+        table:
+          schema: public
+          name: job_candidates
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - id
+      - first_name
+      - last_name
+      - rating
+      - phone
+      - created_at
+      - updated_at
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - id
+      - first_name
+      - last_name
+      - rating
+      - phone
+      - created_at
+      - updated_at
+      filter: {}
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - id
+      - first_name
+      - last_name
+      - rating
+      - phone
+      - created_at
+      - updated_at
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
     name: category
   insert_permissions:
   - role: public
@@ -1184,6 +1237,9 @@
       filter: {}
 - table:
     schema: public
+    name: feature_flags
+- table:
+    schema: public
     name: invoices
   insert_permissions:
   - role: public
@@ -1318,7 +1374,67 @@
       filter: {}
 - table:
     schema: public
+    name: job_candidates
+  object_relationships:
+  - name: candidate_list
+    using:
+      foreign_key_constraint_on: candidate_id
+  - name: job_opening
+    using:
+      foreign_key_constraint_on: job_opening_id
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - is_new
+      - candidate_id
+      - id
+      - job_opening_id
+      - status
+      - created_at
+      - updated_at
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - is_new
+      - candidate_id
+      - id
+      - job_opening_id
+      - status
+      - created_at
+      - updated_at
+      filter: {}
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - is_new
+      - candidate_id
+      - id
+      - job_opening_id
+      - status
+      - created_at
+      - updated_at
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
     name: job_openings
+  array_relationships:
+  - name: job_candidates
+    using:
+      foreign_key_constraint_on:
+        column: job_opening_id
+        table:
+          schema: public
+          name: job_candidates
   insert_permissions:
   - role: public
     permission:
@@ -1432,6 +1548,7 @@
       - requester
       - test
       filter: {}
+      allow_aggregations: true
   update_permissions:
   - role: public
     permission:
@@ -1626,7 +1743,14 @@
       check: {}
       columns:
       - address
-      - image
+      - apt
+      - badges
+      - badgesIcon
+      - bookable
+      - email
+      - employees
+      - hasCalender
+      - img
       - is_active
       - is_day
       - is_night
@@ -1634,16 +1758,26 @@
       - is_pharmacy
       - is_time
       - name
-      - order
+      - phone
+      - postcode
+      - showOnline
+      - website
       backend_only: false
   select_permissions:
   - role: public
     permission:
       columns:
       - address
+      - apt
+      - badges
+      - badgesIcon
+      - bookable
       - created_at
+      - email
+      - employees
+      - hasCalender
       - id
-      - image
+      - img
       - is_active
       - is_day
       - is_night
@@ -1652,7 +1786,11 @@
       - is_time
       - name
       - order
+      - phone
+      - postcode
+      - showOnline
       - updated_at
+      - website
       filter: {}
       allow_aggregations: true
   update_permissions:
@@ -1660,7 +1798,7 @@
     permission:
       columns:
       - address
-      - image
+      - img
       - is_active
       - is_day
       - is_night
@@ -2091,6 +2229,46 @@
       filter: {}
 - table:
     schema: public
+    name: resources
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - location
+      - is_active
+      - name
+      - order
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - created_at
+      - updated_at
+      - order
+      - name
+      - location
+      - is_active
+      - id
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - location
+      - is_active
+      - name
+      - order
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
     name: rooms
   insert_permissions:
   - role: public
@@ -2158,6 +2336,7 @@
       - start_time
       - id
       filter: {}
+      allow_aggregations: true
   update_permissions:
   - role: public
     permission:

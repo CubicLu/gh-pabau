@@ -1,0 +1,560 @@
+.create-service-general,
+.create-service-pricing,
+.create-service-online-booking,
+.employees-container,
+.resouces-container,
+.locations-container {
+  width: 100%;
+  padding: 40px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.create-service-section {
+  background-color: white;
+  max-width: 502px;
+  width: 100%;
+  padding: 27px 32px 32px;
+  border-radius: 4px;
+  margin-bottom: 24px;
+
+  .services-content{
+    .services-titleHead{
+      h5{
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 24px;
+        color: #3D3D46;
+      }
+      .desc{
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 22px;
+        color: #9292A3;
+        margin-bottom: 29px;
+      }
+    }
+  }
+  .select-all-checkbox {
+    margin-bottom: 16px;
+  }
+}
+
+.create-service-section-title {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  color: var(--grey-text-color);
+  margin: 0;
+  margin-bottom: 8px;
+}
+
+.create-service-section-sub-title {
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--light-grey-color);
+  margin: 0;
+}
+
+.create-service-section-item {
+  margin-bottom: 20px;
+  :global {
+    .ant-select {
+      width: 100%;
+    }
+    .ant-form-item {
+      margin: 0;
+    }
+    .ant-form-item-label {
+      padding-bottom: 2px;
+      label {
+        font-family: var(--font-family);
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 22px;
+        color: var(--light-grey-color); 
+      }
+    }
+  }
+  .subtitle {
+    font-size: 14px;
+    color: var(--light-grey-color);
+  }
+  .switch-btn {
+    margin-right: 8px;
+  }
+  .list-container {
+    margin: 10px 0;
+  }
+  .checkbox {
+    margin-right: 10px;
+  }
+  .icon {
+    font-size: 12px;
+    color: var(--light-grey-color);
+    margin-right: 10px;
+  }
+  .service-title {
+    color: var(--grey-text-color);
+  }
+}
+
+.room-fee-input {
+  margin-top: 20px;
+}
+
+.create-service-section-item-title {
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--light-grey-color);
+  margin: 0;
+  margin-bottom: 2px;
+}
+
+.appointment-color {
+  margin-bottom: 8px;
+}
+
+.appointment-color-title {
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--light-grey-color);
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.appointment-color-items {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.appointment-color-item {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin: 0 12px 12px 0;
+  > div {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+}
+
+.appointment-color-selected {
+  border: 1px solid var(--primary-color);
+  > div {
+    border: 1px solid white;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+  }
+}
+
+.create-service-image-container {
+  width: 100%;
+  height: 236px;
+  background-color: #f7f7f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.advanced-settings {
+  max-width: 502px;
+  width: 100%;
+
+  .header {
+    color: var(--light-grey-color);
+  }
+
+  :global {
+    .ant-collapse {
+      &-content-box {
+        padding: 0 !important;
+      }
+      &-header {
+        padding-left: 22px !important;
+        padding-top: 0 !important;
+      }
+      &-arrow {
+        left: 0 !important;
+        padding: 0 !important;
+        transform: rotateX(-180deg) !important;
+      }
+    }
+  }
+}
+
+.create-service-bundling {
+  display: grid;
+  grid-template-columns: 1fr 2fr 80px;
+  grid-column-gap: 8px;
+  margin-bottom: 12px;
+
+  > div {
+    :global {
+      .ant-select {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.create-service-auto-consumption {
+  display: grid;
+  grid-template-columns: 1fr 80px;
+  grid-column-gap: 8px;
+  margin-bottom: 15px;
+
+  > div {
+    :global {
+      .ant-select {
+        width: 100%;
+      }
+    }
+  } 
+}
+
+.pricing-options {
+  width: 100%;
+  height: 76px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  > div {
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid var(--border-color-base);
+    &:nth-child(1) {
+      border-radius: 4px 0 0 4px;
+    }
+    &:nth-child(2) {
+      border-radius: 0;
+    }
+    &:nth-child(3) {
+      border-radius: 0 4px 4px 0;
+    }
+  }
+}
+
+.tooltip-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.pricing-option-logos {
+  width: 56px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 4px;
+  > svg {
+    &:nth-child(2) {
+      margin-left: 8px;
+    }
+  }
+}
+
+.pricing-option-title {
+  font-family: var(--font-family);
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  color: var(--grey-text-color);
+}
+
+.pricing-checked {
+  display: none;
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  color: var(--primary-color);
+}
+
+.pricing-option-selected {
+  background-color: #eef7fb;
+  border: 1px solid var(--primary-color) !important;
+  .pricingChecked {
+    display: block;
+  }
+}
+
+.enable-online-payment {
+  width: 100%;
+  padding: 20px;
+  background-color: #e9faff;
+  border: 1px solid var(--border-color-base);
+  border-radius: 4px;
+  > p {
+    margin: 0;
+    font-family: var(--font-family);
+    font-size: 14px;
+    line-height: 22px;
+    &:nth-child(1) {
+      margin-bottom: 8px;
+      font-weight: 700;
+      color: var(--grey-text-color);
+    }
+    &:nth-child(2) {
+      margin-bottom: 8px;
+      font-weight: 400;
+      color: var(--grey-text-color);
+    }
+    &:nth-child(3) {
+      cursor: pointer;
+      font-weight: 400;
+      color: var(--primary-color);
+    }
+  }
+}
+
+.currency-input {
+  > input {
+    padding: 0 11px;
+    width: 100%;
+    height: 30px;
+    border: 1px solid var(--border-color-base);
+    border-radius: 2px;
+    outline: none;
+  }
+}
+
+.payment-processing {
+  width: 100%;
+  height: 76px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  > div {
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid var(--border-color-base);
+    &:nth-child(1) {
+      border-radius: 4px 0 0 4px;
+    }
+    &:nth-child(2) {
+      border-radius: 0 4px 4px 0;
+    }
+  }
+}
+
+.payment-processing-option-logos {
+  width: 100%;
+  height: 24px;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 4px;
+  color: var(--primary-color);
+}
+
+.payment-processing-option-title {
+  font-family: var(--font-family);
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  color: var(--grey-text-color);
+}
+
+.payment-processing-checked {
+  display: none;
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  color: var(--primary-color);
+}
+
+.payment-processing-option-selected {
+  background-color: #eef7fb;
+  border: 1px solid var(--primary-color) !important;
+  .payment-processing-checked {
+    display: block;
+  }
+}
+
+.patient-bookings {
+  width: 100%;
+  height: 76px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  > div {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid var(--border-color-base);
+    &:nth-child(1) {
+      border-radius: 4px 0 0 4px;
+    }
+    &:nth-child(2) {
+      border-radius: 0;
+    }
+    &:nth-child(3) {
+      border-radius: 0 4px 4px 0;
+    }
+  }
+}
+
+.patient-bookings-title {
+  font-family: var(--font-family);
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  color: var(--grey-text-color);
+}
+
+.patient-bookings-checked {
+  opacity: 0;
+  color: var(--primary-color);
+  font-size: 14px;
+}
+
+.patient-bookings-selected {
+  background-color: #eef7fb;
+  border: 1px solid var(--primary-color) !important;
+  .patient-bookings-checked {
+    opacity: 1;
+  }
+}
+
+.available-on {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.available-on-item {
+  width: 38px;
+  padding: 8px 2px 2px;
+  margin-right: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  >span {
+    font-family: var(--font-family);
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 400;
+    margin-top: 8px;
+    color: var(--grey-text-color);
+  }
+}
+
+.create-service-client-pathway {
+  width: 100%;
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.create-service-client-pathway-items-container {
+  max-width: 1116px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-column-gap: 24px;
+}
+
+.create-service-client-pathway-items {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-column-gap: 1rem;
+}
+
+.create-service-client-pathway-item {
+  width: 100%;
+  max-width: 85px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 85px;
+    height: 85px;
+    border: 1px solid var(--border-color-base);
+    border-radius: 4px;
+  }
+  > p {
+    text-align: center;
+    font-family: var(--font-family);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 15px;
+    color: var(--light-grey-color);
+    margin: 0;
+    margin-top: 8px;
+  }
+}
+
+.enable-service-online {
+  display: flex;
+  align-items: center;
+}
+
+.location-item {
+  margin-bottom: 1rem;
+  &:last-child {
+    margin: 0;
+  }
+}
+
+.label {
+  padding: 0 0 8px;
+  line-height: 1.5;
+  white-space: normal;
+  white-space: initial;
+  text-align: left;
+  color: var(--light-grey-color);
+}
+.checkbox-wrapper {
+  .label-text {
+    font-size: 14px;
+    line-height: 18px;
+    color: #9292A3;
+    margin-top: 24px;
+    margin-bottom: 16px;
+  }
+
+  :global .ant-checkbox-wrapper {
+    display: flex;
+    margin-left: 0;
+    .ant-checkbox {
+      margin-left: 0;
+      margin-bottom: 22px;
+      display: flex;
+      .ant-checkbox {
+        @media screen and (max-width: 992px) {
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+  }
+}
