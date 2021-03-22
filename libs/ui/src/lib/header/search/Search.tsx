@@ -65,7 +65,7 @@ export const Search: FC<P> = ({
             )}
             onClick={() => setSearchTab('Clients')}
           >
-            Clients
+            {t('search.client.label')}
           </button>
           <button
             className={classNames(
@@ -74,7 +74,7 @@ export const Search: FC<P> = ({
             )}
             onClick={() => setSearchTab('Leads')}
           >
-            Leads
+            {t('search.lead.label')}
           </button>
         </div>
         {searchTab === 'Clients' && (
@@ -82,7 +82,7 @@ export const Search: FC<P> = ({
             {searchResults && searchResults.length > 0 && (
               <>
                 <div className={styles.resultText}>
-                  <h1>Top Result</h1>
+                  <h1>{t('search.result.one')}</h1>
                 </div>
 
                 <div className={styles.contentAlignProfile}>
@@ -108,7 +108,7 @@ export const Search: FC<P> = ({
                     styles.resultTextTopSpace
                   )}
                 >
-                  <h1>All results</h1>
+                  <h1>{t('search.result.two')}</h1>
                 </div>
                 {searchResults
                   .filter((_, i) => i !== 0)
@@ -141,7 +141,7 @@ export const Search: FC<P> = ({
                 />
               </div>
               <div className={styles.clientProfileText}>
-                <span>Add new client</span>
+                <span>{t('search.new.client')}</span>
               </div>
             </div>
             <div
@@ -151,7 +151,7 @@ export const Search: FC<P> = ({
                 setSearchPopUp(true)
               }}
             >
-              <p> Advanced Search </p>
+              <p>{t('search.advanced.search')}</p>
               <RightOutlined className={styles.rightArrowColor} />
             </div>
           </div>
@@ -173,7 +173,7 @@ export const Search: FC<P> = ({
             }}
           >
             <LeftOutlined className={styles.rightArrowColor} />
-            <h6> Back to basic search</h6>
+            <h6>{t('search.basic.search')}</h6>
           </div>
           <div>
             <CloseOutlined
@@ -186,7 +186,7 @@ export const Search: FC<P> = ({
         </div>
 
         <div className={styles.advanceSearchText}>
-          <h1>Advance Search</h1>
+          <h1>{t('search.advanced.search')}</h1>
         </div>
         <div className={classNames(styles.cusTabs, styles.cusTabsTopSpace)}>
           <button
@@ -196,7 +196,7 @@ export const Search: FC<P> = ({
             )}
             onClick={() => setSearchTab('Clients')}
           >
-            Clients
+            {t('search.client.label')}
           </button>
           <button
             className={classNames(
@@ -205,7 +205,7 @@ export const Search: FC<P> = ({
             )}
             onClick={() => setSearchTab('Leads')}
           >
-            Leads
+            {t('search.lead.label')}
           </button>
         </div>
         <Form
@@ -214,40 +214,91 @@ export const Search: FC<P> = ({
           layout="vertical"
           className={classNames(styles.advSearchForm, styles.advSearchTopSpace)}
         >
-          <Form.Item className={styles.searchForm} label="First name">
-            <Input className={styles.advSearchInput} placeholder="First name" />
-          </Form.Item>
-          <Form.Item className={styles.searchForm} label="Email">
-            <Input className={styles.advSearchInput} placeholder="Email" />
-          </Form.Item>
-          <Form.Item className={styles.searchForm} label="Date of birth">
-            <Input className={styles.advSearchInput} placeholder="DD/MM/YYYY" />
-          </Form.Item>
-          <Form.Item className={styles.searchForm} label="Phone">
-            <Input className={styles.advSearchInput} placeholder="Phone" />
-          </Form.Item>
-          <Form.Item className={styles.searchForm} label="Mobile">
-            <Input className={styles.advSearchInput} placeholder="Mobile" />
-          </Form.Item>
-          <Form.Item className={styles.searchForm} label="Post code">
-            <Input className={styles.advSearchInput} placeholder="Post code" />
-          </Form.Item>
-          <Form.Item className={styles.searchForm} label="Policy number">
+          <Form.Item
+            className={styles.searchForm}
+            label={t('search.advanced.search.firstname.label')}
+          >
             <Input
               className={styles.advSearchInput}
-              placeholder="Policy number"
+              placeholder={t('search.advanced.search.firstname.placeholder')}
             />
           </Form.Item>
-          <Form.Item className={styles.searchForm} label="Patient ID">
-            <Input className={styles.advSearchInput} placeholder="Patient ID" />
+          <Form.Item
+            className={styles.searchForm}
+            label={t('search.advanced.search.email.label')}
+          >
+            <Input
+              className={styles.advSearchInput}
+              placeholder={t('search.advanced.search.email.placeholder')}
+            />
           </Form.Item>
-          <Form.Item className={styles.searchForm} label="Invoice NO">
-            <Input className={styles.advSearchInput} placeholder="Invoice NO" />
+          <Form.Item
+            className={styles.searchForm}
+            label={t('search.advanced.search.birthdate.label')}
+          >
+            <Input
+              className={styles.advSearchInput}
+              placeholder={t('search.advanced.search.birthdate.placeholder')}
+            />
+          </Form.Item>
+          <Form.Item
+            className={styles.searchForm}
+            label={t('search.advanced.search.phone.label')}
+          >
+            <Input
+              className={styles.advSearchInput}
+              placeholder={t('search.advanced.search.phone.placeholder')}
+            />
+          </Form.Item>
+          <Form.Item
+            className={styles.searchForm}
+            label={t('search.advanced.search.mobile.label')}
+          >
+            <Input
+              className={styles.advSearchInput}
+              placeholder={t('search.advanced.search.mobile.placeholder')}
+            />
+          </Form.Item>
+          <Form.Item
+            className={styles.searchForm}
+            label={t('search.advanced.search.postcode.label')}
+          >
+            <Input
+              className={styles.advSearchInput}
+              placeholder={t('search.advanced.search.postcode.placeholder')}
+            />
+          </Form.Item>
+          <Form.Item
+            className={styles.searchForm}
+            label={t('search.advanced.search.policynumber.label')}
+          >
+            <Input
+              className={styles.advSearchInput}
+              placeholder={t('search.advanced.search.policynumber.placeholder')}
+            />
+          </Form.Item>
+          <Form.Item
+            className={styles.searchForm}
+            label={t('search.advanced.search.patientid.label')}
+          >
+            <Input
+              className={styles.advSearchInput}
+              placeholder={t('search.advanced.search.patientid.placeholder')}
+            />
+          </Form.Item>
+          <Form.Item
+            className={styles.searchForm}
+            label={t('search.advanced.search.invoiceno.label')}
+          >
+            <Input
+              className={styles.advSearchInput}
+              placeholder={t('search.advanced.search.invoiceno.placeholder')}
+            />
           </Form.Item>
           <Checkbox>
             <span className={styles.inactiveClientText}>
               {' '}
-              Show inactive clients
+              {t('search.advanced.search.inactiveclients.label')}
             </span>{' '}
           </Checkbox>
           <div className={classNames(styles.buttonEnd, styles.searchBtnBlock)}>
@@ -259,7 +310,7 @@ export const Search: FC<P> = ({
               disabled={true}
               size="large"
             >
-              Search
+              {t('search.advanced.search.search')}
             </Button>
           </div>
         </Form>
@@ -282,7 +333,7 @@ export const Search: FC<P> = ({
           <div>
             <Input
               className={styles.searchInputStyle}
-              placeholder={t('header-search-text-placeholder')}
+              placeholder={placeHolder ? placeHolder : t('search.placeholder')}
               value={searchTerm}
               prefix={<SearchOutlined style={{ color: '#BFBFBF' }} />}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -311,7 +362,7 @@ export const Search: FC<P> = ({
           >
             <Input
               className={styles.searchInputStyle}
-              placeholder={t('header-search-text-placeholder')}
+              placeholder={placeHolder ? placeHolder : t('search.placeholder')}
               value={searchTerm}
               prefix={<SearchOutlined style={{ color: '#BFBFBF' }} />}
               onChange={(e) => setSearchTerm(e.target.value)}

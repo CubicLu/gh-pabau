@@ -338,7 +338,7 @@ export const PabauMessages: FC<MessagesProps> = ({
         <div className={styles.chatSpace}>
           <div className={styles.messagesAlign}>
             <div>
-              <h1>Chat</h1>
+              <h1>{t('chat.header')}</h1>
             </div>
             <div>
               <EditOutlined

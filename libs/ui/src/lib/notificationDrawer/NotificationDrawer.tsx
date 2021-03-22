@@ -38,6 +38,16 @@ export const NotificationDrawer: FC<P> = ({
   const [notificationData, setNotificationData] = useState<NotificationData[]>(
     notifications
   )
+  const notificationTypes = {
+    report: 'notifications.report',
+    appointment: 'notifications.appointment',
+    review: 'notifications.review',
+    smscampaign: 'notifications.smscampaign',
+    newslettercampaign: 'notifications.newslettercampaign',
+    holidayrequest: 'notifications.holidayrequest',
+    businessrefer: 'notifications.businessrefer',
+    lead: 'notifications.lead',
+  }
 
   const notificationLeadsData = [
     {
@@ -159,7 +169,19 @@ export const NotificationDrawer: FC<P> = ({
                           <div className={classNames(styles.logo, styles.flex)}>
                             <Image src={dayNotify.notificationTypeIcon} />
                             <p className={styles.textSm}>
-                              {dayNotify.notificationType}
+                              {notificationTypes[
+                                dayNotify.notificationType
+                                  ?.toLowerCase()
+                                  ?.replace(' ', '')
+                              ]
+                                ? t(
+                                    notificationTypes[
+                                      dayNotify.notificationType
+                                        ?.toLowerCase()
+                                        ?.replace(' ', '')
+                                    ]
+                                  )
+                                : dayNotify.notificationType}
                             </p>
                           </div>
                           <div className={styles.time}>
@@ -251,7 +273,19 @@ export const NotificationDrawer: FC<P> = ({
                               <Lead2SVG />
                             )}
                             <p className={styles.textSm}>
-                              {dayNotify.notificationType}
+                              {notificationTypes[
+                                dayNotify.notificationType
+                                  ?.toLowerCase()
+                                  ?.replace(' ', '')
+                              ]
+                                ? t(
+                                    notificationTypes[
+                                      dayNotify.notificationType
+                                        ?.toLowerCase()
+                                        ?.replace(' ', '')
+                                    ]
+                                  )
+                                : dayNotify.notificationType}
                             </p>
                           </div>
                         </div>

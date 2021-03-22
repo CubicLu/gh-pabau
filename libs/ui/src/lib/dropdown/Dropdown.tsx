@@ -201,19 +201,21 @@ export const Dropdown: FC<DropDownInterface> = ({
         >
           <div className={styles.feedbackAlignContent}>
             <LeftOutlined className={styles.subLogo} />
-            <p className={styles.subHeaderText}>Give us feedback</p>
+            <p className={styles.subHeaderText}>
+              {t('avatar.give.feedback.giveus')}
+            </p>
           </div>
         </Menu.Item>
         <Menu.Item className={styles.avatarHelpSubList}>
           <div className={styles.feedbackAlignContent}>
             <InfoCircleOutlined className="" />
-            <span className="">Help us improve Pabau</span>
+            <span className="">{t('avatar.give.feedback.helpus')}</span>
           </div>
         </Menu.Item>
         <Menu.Item className={styles.avatarHelpSubList}>
           <div className={styles.feedbackAlignContent}>
             <ExclamationOutlined className="" />
-            <span className="">Something went wrong</span>
+            <span className="">{t('avatar.give.feedback.somethingwrong')}</span>
           </div>
         </Menu.Item>
         <div style={{ marginTop: '8px' }} />

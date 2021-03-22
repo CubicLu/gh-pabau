@@ -3,6 +3,8 @@ import { gql, useQuery } from '@apollo/client'
 import { UserContext } from '../context/UserContext'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { getApolloClient } from '../pages/_app'
+import { Spin } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
 
 const CURRENT_USER = gql`
   query retrieveAuthenticatedUser {
@@ -40,11 +42,28 @@ const ContextWrapper: FC = ({
   children,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { loading, error, data } = useQuery(CURRENT_USER, { ssr: false })
+  const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
+
   if (error) {
     console.error(error)
   }
   if (loading) {
-    return <div>Loading </div>
+    // return <LoadingOutlined size={'large'} className={styles.loader} spin />
+    return (
+      <Spin
+        style={{
+          position: 'absolute',
+          margin: 'auto',
+          left: 700,
+          top: 400,
+          textAlign: 'center',
+        }}
+        size={'large'}
+        delay={0}
+        spinning={true}
+        indicator={antIcon}
+      />
+    )
   }
 
   return (
