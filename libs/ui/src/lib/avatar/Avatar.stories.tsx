@@ -73,3 +73,10 @@ Inactive.args = {
   name: 'user',
   active: 'inactive',
 }
+
+export const EditOnHover = AvatarStory.bind({})
+EditOnHover.args = {
+  size: 'large',
+  src: userImage,
+  edit: true,
+}

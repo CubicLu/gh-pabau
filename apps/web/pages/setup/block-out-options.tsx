@@ -206,13 +206,12 @@ export function BlockOutOptions(props: BlockOutOptionsProps) {
 
   useEffect(() => {
     if (aggregateData) {
-      setPaginateData({
+      setPaginateData((paginateData) => ({
         ...paginateData,
         total: aggregateData.aggregate?.count,
         showingRecords: data?.length,
-      })
+      }))
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, aggregateData])
 
   const onRowClick = (data) => {

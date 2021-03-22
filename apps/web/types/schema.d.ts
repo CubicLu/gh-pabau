@@ -12,6 +12,11 @@ interface Schema {
   messages?: messages
   fields: Record<string, SchemaItem>
   shemaType?: string
+  draggable?: boolean
+  notification?: Record<NotificationItems>
+  breadScrumbs?: array<BreadScrumb>
+  createButtonLabel?: string
+  inboxButton?: boolean
   deleteDescField?: string
   tooltip?: string
   createButtonLabel?: string
@@ -36,8 +41,10 @@ interface SchemaItem {
     | 'radio-group'
     | 'color-picker'
     | 'checkbox'
+    | 'days-checkbox'
     | 'icon'
     | 'select'
+    | 'time'
   defaultvalue?: string | number | boolean
   visible?: boolean
   required?: boolean
@@ -45,8 +52,21 @@ interface SchemaItem {
   validateMsg?: string
   selectOptions?: TypeValues[]
   collapsible?: boolean
+  col?: number
 }
 interface TypeValues {
   label: string
   value: string
+}
+
+interface NotificationItems {
+  title: string
+  description: string
+  imgPath: string
+  allowClose?: boolean
+}
+
+interface BreadScrumb {
+  breadcrumbName: string
+  path: string
 }

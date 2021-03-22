@@ -1,14 +1,6 @@
-import React, { FC, useState } from 'react'
-import { EyeOutlined } from '@ant-design/icons'
+import { Avatar, BasicModal, Stepper, StepperItem, TabMenu } from '@pabau/ui'
 import { Divider, Tag } from 'antd'
-import {
-  Button,
-  TabMenu,
-  BasicModal,
-  Stepper,
-  StepperItem,
-  Avatar,
-} from '@pabau/ui'
+import React, { FC } from 'react'
 import styles from './MedicalFormPreview.module.less'
 
 interface MedicalPreviewUserProps {
@@ -24,6 +16,8 @@ export interface MedicalFormPreviewProps {
   appTemp: string
   step: number
   stepData: StepperItem[]
+  visible: boolean
+  closePreviewDialog?: () => void
 }
 
 export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
@@ -32,13 +26,14 @@ export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
   appTemp,
   step,
   stepData,
+  visible,
+  closePreviewDialog,
 }) => {
-  const [visible, setVisible] = useState(false)
+  const onCancel = () => {
+    closePreviewDialog?.()
+  }
   return (
-    <>
-      <Button icon={<EyeOutlined />} onClick={() => setVisible(true)}>
-        Preview
-      </Button>
+    <div>
       {visible && (
         <BasicModal
           wrapClassName={styles.tempPreviewContainer}
@@ -46,7 +41,7 @@ export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
           visible={visible}
           newButtonText="Test As Client"
           width="50%"
-          onCancel={() => setVisible(false)}
+          onCancel={onCancel}
         >
           <div className={styles.tempPreviewTabMenuContainer}>
             <TabMenu tabPosition="top" menuItems={['Desktop', 'App']}>
@@ -77,7 +72,7 @@ export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
           </div>
         </BasicModal>
       )}
-    </>
+    </div>
   )
 }
 

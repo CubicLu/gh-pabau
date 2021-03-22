@@ -38,7 +38,7 @@ const notificationData = {
       description: 'Automatically sends to clients ahead of their appointment',
       icon: <BellOutlined />,
       smartDelivery: true,
-      link: null,
+      link: '/client-notifications/appointment-reminder',
       disabled: true,
     },
     {
@@ -65,7 +65,7 @@ const notificationData = {
         'Automatically sends to clients when an appointment is cancelled',
       icon: <CloseCircleOutlined />,
       smartDelivery: false,
-      link: null,
+      link: '/client-notifications/cancelled-appointment',
       disabled: true,
     },
     {
@@ -137,15 +137,6 @@ const notificationData = {
       description:
         'Automatically sends a reminder to a client who has registered to a class',
       icon: <BellOutlined />,
-      smartDelivery: false,
-      link: null,
-      disabled: true,
-    },
-    {
-      header: 'Class wait list',
-      description:
-        'Automatically sends to clients when a class becomes available',
-      icon: <FileSyncOutlined />,
       smartDelivery: false,
       link: null,
       disabled: true,

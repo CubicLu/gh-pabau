@@ -1,5 +1,4 @@
-import React, { FC, useState, useEffect } from 'react'
-
+import React, { FC, useEffect, useState } from 'react'
 import Epaper from './Epaper'
 
 export default {

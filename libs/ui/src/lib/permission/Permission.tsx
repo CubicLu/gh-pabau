@@ -1,14 +1,14 @@
 import React, { FC } from 'react'
-import { Switch, Row, Col } from 'antd'
+import { Switch, Row, Col, Tooltip } from 'antd'
 import { Button } from '@pabau/ui'
 import styles from './Permission.module.less'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 
-/* eslint-disable-next-line */
 export interface ContainerType {
   name: string
   value: boolean
   key: number
+  tooltipMessage?: string
 }
 export interface PermissionFieldType {
   name: string
@@ -20,17 +20,19 @@ export interface PermissionProps {
   title?: string
   description?: string
   fields?: PermissionFieldType[]
-  onChange?: (index: number, ind: number) => void
-  CheckAll?: () => void
-  UnCheckAll?: () => void
+  onChange?: (index: number, ind: number, rowId?: string) => void
+  onCheckAllClicked?: (rowId?: string) => void
+  onUnCheckAllClicked?: (rowId?: string) => void
+  rowId?: string
 }
 export const Permission: FC<PermissionProps> = ({
   title,
   description,
   fields,
   onChange,
-  CheckAll,
-  UnCheckAll,
+  onCheckAllClicked,
+  onUnCheckAllClicked,
+  rowId,
 }) => {
   return (
     <div className={styles.PermissiononWrap}>
@@ -39,10 +41,10 @@ export const Permission: FC<PermissionProps> = ({
       <Row>
         <Col span={24}>
           <div className={styles.CheckBtn}>
-            <Button type="link" onClick={CheckAll}>
+            <Button type="link" onClick={() => onCheckAllClicked?.(rowId)}>
               CheckAll
             </Button>
-            <Button type="link" onClick={UnCheckAll}>
+            <Button type="link" onClick={() => onUnCheckAllClicked?.(rowId)}>
               UncheckAll
             </Button>
           </div>
@@ -60,13 +62,15 @@ export const Permission: FC<PermissionProps> = ({
                 <div>
                   <div className={styles.dataname}>
                     <p>{data.name}</p>
-                    <QuestionCircleOutlined />
+                    <Tooltip title={data.tooltipMessage}>
+                      <QuestionCircleOutlined />
+                    </Tooltip>
                   </div>
                 </div>
                 <div>
                   <Switch
                     checked={data.value}
-                    onClick={() => onChange?.(index, ind)}
+                    onClick={() => onChange?.(index, ind, rowId)}
                   />
                 </div>
               </div>

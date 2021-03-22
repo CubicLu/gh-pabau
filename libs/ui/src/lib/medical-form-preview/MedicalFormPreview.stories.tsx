@@ -19,6 +19,7 @@ Basic.args = {
   appTemp: 'https://fresha.com/',
   step: 2,
   stepData: data,
+  visible: true,
   user: {
     name: 'Sylvia Cole',
     date: 'December 24, 1992',

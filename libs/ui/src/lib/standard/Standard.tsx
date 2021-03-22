@@ -24,22 +24,29 @@ import { PabauPlus } from '../badge/Badge'
 interface P {
   enableReminder: boolean
   onEnableReminder: (boolean) => void
+  standardMessage?: string
+  hideReminderTimeFrameTabPane?: boolean
   smartDelivery: boolean
   onSmartDelivery: (boolean) => void
   requestConfirmation: boolean
   onRequestConfirmation: (boolean) => void
+  hideRequestConfirmationOption?: boolean
   allowRescheduling: boolean
   onAllowRescheduling: (boolean) => void
+  hideAllowReschedulingOption?: boolean
   allowCancellation: boolean
   onAllowCancellation: (boolean) => void
+  hideAllowCancellationOption?: boolean
   displayPolicy: boolean
   onDisplayPolicy: (boolean) => void
+  hideDisplayPolicyOption?: boolean
   showService: boolean
   onShowService: (boolean) => void
   showEmployeeName: boolean
   onShowEmployeeName: (boolean) => void
   addMedicalHisButton: boolean
   onAddMedicalHisButton: (boolean) => void
+  hideMedicalHistoryOption?: boolean
   backGroundColor: string
   onBackGroundColor: (string) => void
   buttonColor: string
@@ -66,22 +73,29 @@ const { TextArea } = Input
 export const Standard: FC<P> = ({
   enableReminder,
   onEnableReminder,
+  standardMessage,
   smartDelivery,
   onSmartDelivery,
+  hideReminderTimeFrameTabPane = false,
   requestConfirmation,
   onRequestConfirmation,
+  hideRequestConfirmationOption = false,
   allowRescheduling,
   onAllowRescheduling,
+  hideAllowReschedulingOption = false,
   allowCancellation,
   onAllowCancellation,
+  hideAllowCancellationOption = false,
   displayPolicy,
   onDisplayPolicy,
+  hideDisplayPolicyOption = false,
   showService,
   onShowService,
   showEmployeeName,
   onShowEmployeeName,
   addMedicalHisButton,
   onAddMedicalHisButton,
+  hideMedicalHistoryOption = false,
   backGroundColor,
   onBackGroundColor,
   buttonColor,
@@ -142,8 +156,8 @@ export const Standard: FC<P> = ({
           <div style={{ padding: '10px 9px' }}>
             <Row style={{ padding: '0 15px' }}>
               <span className={styles.line1}>
-                This notification automatically sends to clients the moment
-                their appointment is booked.
+                {standardMessage ||
+                  'This notification automatically sends to clients the moment their appointment is booked.'}
                 {/* <span className={styles.anchor}>
                   <Button type="link">Learn more</Button>
                 </span> */}
@@ -156,122 +170,135 @@ export const Standard: FC<P> = ({
               expandIconPosition="right"
               style={{ backgroundColor: 'white' }}
             >
-              <Panel
-                className={styles.panelAlign}
-                header="Reminder timeframe"
-                key="1"
-              >
-                <Row align="middle">
-                  <Checkbox
-                    className={styles.checkboxStyle}
-                    value="smart_delivery"
-                    checked={smartDelivery}
-                    onChange={() => onSmartDelivery(!smartDelivery)}
-                  >
-                    Smart delivery
-                  </Checkbox>
-                  <Tooltip
-                    placement="topLeft"
-                    color="#595959"
-                    title={`"We will intelligently schedule additional confirmations to clients who have a history of forgetting"`}
-                  >
-                    <QuestionCircleOutlined />
-                  </Tooltip>
-                </Row>
-                <Row gutter={[0, 16]}>
-                  <Col>
-                    <span className={styles.line1}>
-                      Choose how far in advance your reminder notification
-                      messages are sent to clients
-                    </span>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <span className={styles.reminder}>
-                      Reminder advance notice
-                    </span>
-                  </Col>
-                </Row>
-                <Select defaultValue="48" style={{ width: '100%' }}>
-                  <Option value="48">48 hours</Option>
-                  <Option value="24">24 hours</Option>
-                  <Option value="12">12 hours</Option>
-                  <Option value="6">6 hours</Option>
-                </Select>
-
-                {!hideAppearanceTabPane && (
+              {!hideReminderTimeFrameTabPane && (
+                <Panel
+                  className={styles.panelAlign}
+                  header="Reminder timeframe"
+                  key="1"
+                >
                   <>
-                    <Row>
-                      <span className={styles.textareaLabel}>Message</span>
+                    <Row align="middle">
+                      <Checkbox
+                        className={styles.checkboxStyle}
+                        value="smart_delivery"
+                        checked={smartDelivery}
+                        onChange={() => onSmartDelivery(!smartDelivery)}
+                      >
+                        Smart delivery
+                      </Checkbox>
+                      <Tooltip
+                        placement="topLeft"
+                        color="#595959"
+                        title={`"We will intelligently schedule additional confirmations to clients who have a history of forgetting"`}
+                      >
+                        <QuestionCircleOutlined />
+                      </Tooltip>
+                    </Row>
+                    <Row gutter={[0, 16]}>
+                      <Col>
+                        <span className={styles.line1}>
+                          Choose how far in advance your reminder notification
+                          messages are sent to clients
+                        </span>
+                      </Col>
                     </Row>
                     <Row>
-                      <TextArea
-                        className={styles.textareaStyle}
-                        autoSize={{ minRows: 3, maxRows: 3 }}
-                        onChange={(event) => onSmsMessage(event.target.value)}
-                        maxLength={size.width > 768 ? 500 : 160}
-                        value={smsMessage}
-                      />
+                      <Col>
+                        <span className={styles.reminder}>
+                          Reminder advance notice
+                        </span>
+                      </Col>
                     </Row>
+                    <Select defaultValue="48" style={{ width: '100%' }}>
+                      <Option value="48">48 hours</Option>
+                      <Option value="24">24 hours</Option>
+                      <Option value="12">12 hours</Option>
+                      <Option value="6">6 hours</Option>
+                    </Select>
                   </>
-                )}
-              </Panel>
+                </Panel>
+              )}
+              {!hideAppearanceTabPane && (
+                <div
+                  className={`${styles.panelAlign} ${styles.messageSection}`}
+                >
+                  <Row>
+                    <span className={styles.textareaLabel}>Message</span>
+                  </Row>
+                  <Row>
+                    <TextArea
+                      className={styles.textareaStyle}
+                      autoSize={{ minRows: 3, maxRows: 3 }}
+                      onChange={(event) => onSmsMessage(event.target.value)}
+                      maxLength={size.width > 768 ? 500 : 160}
+                      value={smsMessage}
+                    />
+                  </Row>
+                </div>
+              )}
               {hideAppearanceTabPane && (
                 <Panel
                   className={styles.panelAlign}
                   header="Appearance"
                   key="2"
                 >
-                  <Row align="middle">
-                    <Checkbox
-                      className={styles.checkboxStyle}
-                      value="request_confirmation"
-                      checked={requestConfirmation}
-                      onChange={() =>
-                        onRequestConfirmation(!requestConfirmation)
-                      }
-                    >
-                      Request confirmation
-                    </Checkbox>
-                    <Tooltip
-                      placement="topLeft"
-                      color="#595959"
-                      title={`"We will intelligently schedule additional confirmations to clients who have a history of forgetting"`}
-                    >
-                      <QuestionCircleOutlined />
-                    </Tooltip>
-                  </Row>
-                  <Row>
-                    <Checkbox
-                      className={styles.checkboxStyle}
-                      value="allow_reschedule"
-                      checked={allowRescheduling}
-                      onChange={() => onAllowRescheduling(!allowRescheduling)}
-                    >
-                      Allow rescheduling
-                    </Checkbox>
-                  </Row>
-                  <Row>
-                    <Checkbox
-                      className={styles.checkboxStyle}
-                      value="allow_cancellation"
-                      checked={allowCancellation}
-                      onChange={() => onAllowCancellation(!allowCancellation)}
-                    >
-                      Allow cancellation
-                    </Checkbox>
-                  </Row>
-                  <Row>
-                    <Checkbox
-                      className={styles.checkboxStyle}
-                      value="display_policy"
-                      checked={displayPolicy}
-                      onChange={() => onDisplayPolicy(!displayPolicy)}
-                    >
-                      Display policy
-                    </Checkbox>
-                  </Row>
+                  {!hideRequestConfirmationOption && (
+                    <Row align="middle">
+                      <Checkbox
+                        className={styles.checkboxStyle}
+                        value="request_confirmation"
+                        checked={requestConfirmation}
+                        onChange={() =>
+                          onRequestConfirmation(!requestConfirmation)
+                        }
+                      >
+                        Request confirmation
+                      </Checkbox>
+                      <Tooltip
+                        placement="topLeft"
+                        color="#595959"
+                        title={`"We will intelligently schedule additional confirmations to clients who have a history of forgetting"`}
+                      >
+                        <QuestionCircleOutlined />
+                      </Tooltip>
+                    </Row>
+                  )}
+                  {!hideAllowReschedulingOption && (
+                    <Row>
+                      <Checkbox
+                        className={styles.checkboxStyle}
+                        value="allow_reschedule"
+                        checked={allowRescheduling}
+                        onChange={() => onAllowRescheduling(!allowRescheduling)}
+                      >
+                        Allow rescheduling
+                      </Checkbox>
+                    </Row>
+                  )}
+                  {!hideAllowCancellationOption && (
+                    <Row>
+                      <Checkbox
+                        className={styles.checkboxStyle}
+                        value="allow_cancellation"
+                        checked={allowCancellation}
+                        onChange={() => onAllowCancellation(!allowCancellation)}
+                      >
+                        Allow cancellation
+                      </Checkbox>
+                    </Row>
+                  )}
+                  {!hideDisplayPolicyOption && (
+                    <Row>
+                      <Checkbox
+                        className={styles.checkboxStyle}
+                        value="display_policy"
+                        checked={displayPolicy}
+                        onChange={() => onDisplayPolicy(!displayPolicy)}
+                      >
+                        Display policy
+                      </Checkbox>
+                    </Row>
+                  )}
                   <Row>
                     <Checkbox
                       className={styles.checkboxStyle}
@@ -292,53 +319,56 @@ export const Standard: FC<P> = ({
                       Show employee name
                     </Checkbox>
                   </Row>
-                  <Row>
-                    <span className={styles.separateText}>
-                      Medical History settings
-                    </span>
-                  </Row>
-                  <Row>
-                    <Checkbox
-                      className={styles.checkboxStyle}
-                      value="add_his_button"
-                      checked={addMedicalHisButton}
-                      onChange={() =>
-                        onAddMedicalHisButton(!addMedicalHisButton)
-                      }
-                    >
-                      Add Medical History button
-                    </Checkbox>
-                  </Row>
-                  <div className={styles.hidesection}>
-                    {addMedicalHisButton && (
-                      <>
-                        <Row>
-                          <Checkbox
-                            className={styles.checkboxStyle}
-                            value="hide_his_completed"
-                          >
-                            Hide if history is already completed
-                          </Checkbox>
-                        </Row>
-
-                        <Row>
-                          <span className={styles.reminder}>
-                            Medical History message
-                          </span>
-                        </Row>
-                        <Row>
-                          <TextArea
-                            className={styles.textareaStyle}
-                            autoSize={{ minRows: 3, maxRows: 3 }}
-                            maxLength={size.width > 768 ? 500 : 160}
-                            onChange={(event) =>
-                              onMedicalMessage(event.target.value)
-                            }
-                          />
-                        </Row>
-                      </>
-                    )}
-                  </div>
+                  {!hideMedicalHistoryOption && (
+                    <>
+                      <Row>
+                        <span className={styles.separateText}>
+                          Medical History settings
+                        </span>
+                      </Row>
+                      <Row>
+                        <Checkbox
+                          className={styles.checkboxStyle}
+                          value="add_his_button"
+                          checked={addMedicalHisButton}
+                          onChange={() =>
+                            onAddMedicalHisButton(!addMedicalHisButton)
+                          }
+                        >
+                          Add Medical History button
+                        </Checkbox>
+                      </Row>
+                      <div className={styles.hidesection}>
+                        {addMedicalHisButton && (
+                          <>
+                            <Row>
+                              <Checkbox
+                                className={styles.checkboxStyle}
+                                value="hide_his_completed"
+                              >
+                                Hide if history is already completed
+                              </Checkbox>
+                            </Row>
+                            <Row>
+                              <span className={styles.reminder}>
+                                Medical History message
+                              </span>
+                            </Row>
+                            <Row>
+                              <TextArea
+                                className={styles.textareaStyle}
+                                autoSize={{ minRows: 3, maxRows: 3 }}
+                                maxLength={size.width > 768 ? 500 : 160}
+                                onChange={(event) =>
+                                  onMedicalMessage(event.target.value)
+                                }
+                              />
+                            </Row>
+                          </>
+                        )}
+                      </div>
+                    </>
+                  )}
                   <ColorPicker
                     heading="Background color"
                     onSelected={(val) => onBackGroundColor(val)}
@@ -405,7 +435,7 @@ export const Standard: FC<P> = ({
               )}
               <div className={styles.clientLang}>
                 <div className={styles.papauPlusContainer}>
-                  <PabauPlus label="Plus" />
+                  <PabauPlus label="Plus" modalType="Care" />
                 </div>
               </div>
 
@@ -444,26 +474,29 @@ export const Standard: FC<P> = ({
                   </span>
                 </span>
               </Row>
-              <Row style={{ padding: '0 15px' }}>
-                <Col>
-                  <span className={styles.reminder}>
-                    Reminder advance notice
-                  </span>
-                </Col>
-              </Row>
+              {!hideReminderTimeFrameTabPane && (
+                <>
+                  <Row style={{ padding: '0 15px' }}>
+                    <Col>
+                      <span className={styles.reminder}>
+                        Reminder advance notice
+                      </span>
+                    </Col>
+                  </Row>
 
-              <Row style={{ padding: '0 15px' }}>
-                <Select defaultValue="48" style={{ width: '100%' }}>
-                  <Option value="48">48 hours</Option>
-                  <Option value="24">24 hours</Option>
-                  <Option value="12">12 hours</Option>
-                  <Option value="6">6 hours</Option>
-                </Select>
-              </Row>
-
+                  <Row style={{ padding: '0 15px' }}>
+                    <Select defaultValue="48" style={{ width: '100%' }}>
+                      <Option value="48">48 hours</Option>
+                      <Option value="24">24 hours</Option>
+                      <Option value="12">12 hours</Option>
+                      <Option value="6">6 hours</Option>
+                    </Select>
+                  </Row>
+                </>
+              )}
               <div className={styles.clientLang}>
                 <div className={styles.papauPlusContainer}>
-                  <PabauPlus label="Plus" />
+                  <PabauPlus label="Plus" modalType="Marketing" />
                 </div>
               </div>
 

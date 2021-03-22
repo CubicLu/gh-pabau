@@ -5,10 +5,13 @@ import {
   FilterOutlined,
   PlusSquareFilled,
   SearchOutlined,
+  InboxOutlined,
 } from '@ant-design/icons'
 import { Drawer, Input, Popover, Radio } from 'antd'
 import classNames from 'classnames'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
+// import { isMobile, isTablet } from 'react-device-detect'
+// import { useKeyPressEvent } from 'react-use'
 
 const WAIT_INTERVAL = 400
 
@@ -20,6 +23,8 @@ interface P {
   tableSearch?: boolean
   addFilter?: boolean
   needTranslation?: boolean
+  isCustomFilter?: boolean
+  customFilter?: () => JSX.Element
 }
 
 const AddButton: FC<P> = ({
@@ -31,6 +36,8 @@ const AddButton: FC<P> = ({
   tableSearch = true,
   addFilter = true,
   needTranslation,
+  isCustomFilter = false,
+  customFilter,
 }) => {
   const [isActive, setIsActive] = useState(true)
   const [mobFilterDrawer, setMobFilterDrawer] = useState(false)
@@ -52,8 +59,13 @@ const AddButton: FC<P> = ({
 
   const onReset = () => {
     if (!isActive) {
-      setIsActive(true)
+      setIsActive(!isActive)
     }
+  }
+
+  const handleMobileDrawerApply = () => {
+    onFilterSource()
+    setMobFilterDrawer((e) => !e)
   }
 
   const filterContent = (isMobile = false) => (
@@ -123,15 +135,12 @@ const AddButton: FC<P> = ({
           </div>
         </MobileHeader>
         <div style={{ marginTop: '91px', paddingLeft: '24px' }}>
-          {filterContent(true)}
+          {isCustomFilter === false ? filterContent(true) : customFilter()}
         </div>
         <Button
           type="primary"
           className={styles.applyButton}
-          onClick={() => {
-            onFilterSource()
-            setMobFilterDrawer((e) => !e)
-          }}
+          onClick={handleMobileDrawerApply}
         >
           Apply
         </Button>
@@ -157,9 +166,13 @@ const AddButton: FC<P> = ({
         )}
         <Popover
           trigger="click"
-          content={filterContent}
+          content={isCustomFilter ? customFilter : filterContent}
           placement="bottomRight"
-          overlayClassName={styles.filterPopover}
+          overlayClassName={
+            isCustomFilter === false
+              ? styles.filterPopover
+              : styles.customFilterPopover
+          }
         >
           {addFilter && (
             <Button className={styles.filterBtn}>
@@ -170,15 +183,30 @@ const AddButton: FC<P> = ({
             </Button>
           )}
         </Popover>
-        <Button
-          className={styles.createSourceBtn}
-          type="primary"
-          onClick={() => onClick?.()}
-        >
-          {needTranslation
-            ? t('marketingsource-header-create-btn.translation')
-            : schema.createButtonLabel}
-        </Button>
+        {schema.createButtonLabel && (
+          <Button
+            className={styles.createSourceBtn}
+            type="primary"
+            onClick={() => onClick?.()}
+          >
+            {needTranslation
+              ? t('marketingsource-header-create.translation')
+              : schema.createButtonLabel}
+          </Button>
+        )}
+        {schema.inboxButton && (
+          <Button
+            className={styles.inboxSourceBtn}
+            type="primary"
+            onClick={() => onClick?.()}
+          >
+            <InboxOutlined />{' '}
+            {needTranslation
+              ? t('marketingsource-header-create.translation')
+              : 'Inbox'}
+            <span className={styles.inboxMsgNum}> 3</span>
+          </Button>
+        )}
       </div>
     </>
   )

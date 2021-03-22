@@ -92,6 +92,15 @@ LeftSidebarBasicDrawing.args = {
   component: 'basic_drawing',
 }
 
+const LeftSidebarBasicStaticImageStory = ({ type, component, ...rest }) => (
+  <LeftSidebarElement type={type} component={component} {...rest} />
+)
+export const LeftSidebarStaticImage = LeftSidebarBasicStaticImageStory.bind({})
+LeftSidebarStaticImage.args = {
+  type: 'basic',
+  component: 'basic_staticimage',
+}
+
 const LeftSidebarBasicSignatureStory = ({ type, component, ...rest }) => (
   <LeftSidebarElement type={type} component={component} {...rest} />
 )
@@ -277,17 +286,6 @@ export const LeftSidebarCustomPhysicalAddress = LeftSidebarCustomPhysicalAddress
 LeftSidebarCustomPhysicalAddress.args = {
   type: 'custom',
   component: 'custom_physicaladdress',
-}
-
-const LeftSidebarCustomPostalAddressStory = ({ type, component, ...rest }) => (
-  <LeftSidebarElement type={type} component={component} {...rest} />
-)
-export const LeftSidebarCustomPostalAddress = LeftSidebarCustomPostalAddressStory.bind(
-  {}
-)
-LeftSidebarCustomPostalAddress.args = {
-  type: 'custom',
-  component: 'custom_postaladdress',
 }
 
 const LeftSidebarCustomReferredByStory = ({ type, component, ...rest }) => (
@@ -512,6 +510,31 @@ export const InnerBasicDrawing = InnerBasicDrawingStory.bind({})
 InnerBasicDrawing.args = {
   type: 'basic',
   component: 'basic_drawing',
+}
+
+const InnerBasicStaticImageStory = ({
+  required,
+  activate,
+  type,
+  component,
+  handleId,
+  formData,
+  ...rest
+}) => (
+  <InnerElement
+    required={required}
+    activate={activate}
+    type={type}
+    component={component}
+    handleId={handleId}
+    formData={formData}
+    {...rest}
+  />
+)
+export const InnerBasicStaticImage = InnerBasicStaticImageStory.bind({})
+InnerBasicStaticImage.args = {
+  type: 'basic',
+  component: 'basic_staticimage',
 }
 
 const InnerBasicSignatureStory = ({
@@ -951,31 +974,6 @@ InnerCustomPhysicalAddress.args = {
   component: 'custom_physicaladdress',
 }
 
-const InnerCustomPostalAddressStory = ({
-  required,
-  activate,
-  type,
-  component,
-  handleId,
-  formData,
-  ...rest
-}) => (
-  <InnerElement
-    required={required}
-    activate={activate}
-    type={type}
-    component={component}
-    handleId={handleId}
-    formData={formData}
-    {...rest}
-  />
-)
-export const InnerCustomPostalAddress = InnerCustomPostalAddressStory.bind({})
-InnerCustomPostalAddress.args = {
-  type: 'custom',
-  component: 'custom_postaladdress',
-}
-
 const InnerCustomReferredByStory = ({
   required,
   activate,
@@ -1180,6 +1178,25 @@ export const SettingBasicDrawing = SettingBasicDrawingStory.bind({})
 SettingBasicDrawing.args = {
   type: 'basic',
   component: 'basic_drawing',
+}
+
+const SettingBasicStaticImageStory = ({
+  type,
+  component,
+  selectedForm,
+  ...rest
+}) => (
+  <SettingElement
+    type={type}
+    component={component}
+    selectedForm={selectedForm}
+    {...rest}
+  />
+)
+export const SettingBasicStaticImage = SettingBasicStaticImageStory.bind({})
+SettingBasicDrawing.args = {
+  type: 'basic',
+  component: 'basic_staticimage',
 }
 
 const SettingBasicSignatureStory = ({
@@ -1509,27 +1526,6 @@ export const SettingCustomPhysicalAddress = SettingCustomPhysicalAddressStory.bi
 SettingCustomPhysicalAddress.args = {
   type: 'custom',
   component: 'custom_physicaladdress',
-}
-
-const SettingCustomPostalAddressStory = ({
-  type,
-  component,
-  selectedForm,
-  ...rest
-}) => (
-  <SettingElement
-    type={type}
-    component={component}
-    selectedForm={selectedForm}
-    {...rest}
-  />
-)
-export const SettingCustomPostalAddress = SettingCustomPostalAddressStory.bind(
-  {}
-)
-SettingCustomPostalAddress.args = {
-  type: 'custom',
-  component: 'custom_postaladdress',
 }
 
 const SettingCustomReferredByStory = ({

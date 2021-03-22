@@ -119,7 +119,7 @@ export const ReviewChoice: FC<P> = ({
               <div className={styles.descriptionHead}>
                 <span className={styles.descriptionTitle}>{review.header}</span>
                 <span className={styles.plusLabel}>
-                  <PabauPlus label="plus" />
+                  <PabauPlus label="plus" modalType="Marketing" />
                 </span>
               </div>
               <Badge label="Disabled" disabled={false} />
@@ -197,33 +197,29 @@ export const ReviewChoice: FC<P> = ({
         <div className={styles.descriptionMainWrapper}>
           {yetToReview && yetToReview?.length > 0 && (
             <div>
-              {!isMobile ? (
-                <div className={styles.btnShowWrapper}>
-                  {!showYetToReviewCards ? (
-                    <Button
-                      className={styles.btnMore}
-                      onClick={() => setShowYetToReviewCards(true)}
-                    >
-                      Show more ({yetToReview?.length}) <DownOutlined />
-                    </Button>
-                  ) : (
-                    <div>
-                      <div>{yetToReviewCard()}</div>
-                      <div className={styles.btnShowWrapper}>
-                        <Button
-                          className={styles.btnMore}
-                          onClick={() => setShowYetToReviewCards(false)}
-                        >
-                          Collapse
-                          <UpOutlined />
-                        </Button>
-                      </div>
+              <div className={styles.btnShowWrapper}>
+                {!showYetToReviewCards ? (
+                  <Button
+                    className={styles.btnMore}
+                    onClick={() => setShowYetToReviewCards(true)}
+                  >
+                    Show more ({yetToReview?.length}) <DownOutlined />
+                  </Button>
+                ) : (
+                  <div>
+                    <div>{yetToReviewCard()}</div>
+                    <div className={styles.btnShowWrapper}>
+                      <Button
+                        className={styles.btnMore}
+                        onClick={() => setShowYetToReviewCards(false)}
+                      >
+                        Collapse
+                        <UpOutlined />
+                      </Button>
                     </div>
-                  )}
-                </div>
-              ) : (
-                <div>{yetToReviewCard()}</div>
-              )}
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>

@@ -1,9 +1,10 @@
 import { Radio } from 'antd'
-import React, { FC, useState } from 'react'
+import React, { FC } from 'react'
 
 interface P {
   title: string
   value: string
+  onChangeInputType: (value: string) => void
 }
 
 const typeOptions = [
@@ -13,16 +14,21 @@ const typeOptions = [
   { label: 'Date', value: 'date' },
 ]
 
-const SettingElementTypeOption: FC<P> = ({ title, value }) => {
-  const [selOption, setSelOption] = useState(value)
+const SettingElementTypeOption: FC<P> = ({
+  title,
+  value,
+  onChangeInputType,
+}) => {
+  const onInputTypeChange = (e) => {
+    onChangeInputType?.(e.target.value)
+  }
   return (
     <>
       <h3 style={{ marginTop: '20px' }}>{title}</h3>
       <Radio.Group
         options={typeOptions}
-        defaultValue={selOption}
         value={value}
-        onChange={(e) => setSelOption(e.target.value)}
+        onChange={onInputTypeChange}
         optionType="button"
         buttonStyle="solid"
       />

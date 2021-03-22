@@ -1,12 +1,10 @@
 .notification-body {
-  background: #e9faff;
-  background-position: right bottom;
-  background-repeat: no-repeat;
+  background: #e9faff no-repeat right bottom;
   margin-bottom: 32px;
   min-height: 144px;
-  @media screen and (max-width:767px) {
-    background-image:unset !important;
+  @media screen and (max-width: 767px) {
     margin-top: 15px;
+    background-position: top;
   }
 }
 
@@ -40,7 +38,7 @@
 }
 
 .link-email {
-  color: #54B2D3;
+  color: #54b2d3;
   font-size: 14px;
   font-weight: 400;
   margin-bottom: 0;
@@ -57,6 +55,7 @@
   text-align: left;
   margin-top: 2px;
   margin-left: 10px;
+  margin-bottom: 10px;
   color: #54b2d3;
   position: absolute;
   bottom: 0;
@@ -72,6 +71,11 @@
 .rowPosition {
   position: relative !important;
   min-height: 144px;
+  @media screen and (max-width: 767px) {
+   :global .ant-col {
+     margin-top: 110px;
+   }
+  }
 }
 
 .iconClose {

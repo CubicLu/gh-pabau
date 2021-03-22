@@ -38,6 +38,11 @@ interface P {
   createPageOnClick?(): void
   addFilter?: boolean
   needTranslation?: boolean
+  editPage?: boolean
+  editPageRouteLink?: string
+  isCustomFilter?: boolean
+  customFilter?: () => JSX.Element
+  setEditPage?(e): void
 }
 
 const CrudTable: FC<P> = ({
@@ -55,6 +60,11 @@ const CrudTable: FC<P> = ({
   createPageOnClick,
   addFilter = true,
   needTranslation = false,
+  editPage = false,
+  editPageRouteLink,
+  isCustomFilter,
+  customFilter,
+  setEditPage,
 }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isActive, setIsActive] = useState(true)
@@ -419,6 +429,8 @@ const CrudTable: FC<P> = ({
                     tableSearch={tableSearch}
                     needTranslation={needTranslation}
                     addFilter={addFilter}
+                    isCustomFilter={isCustomFilter}
+                    customFilter={customFilter}
                   />
                 ) : (
                   <AddButton
@@ -429,6 +441,8 @@ const CrudTable: FC<P> = ({
                     tableSearch={tableSearch}
                     addFilter={addFilter}
                     needTranslation={needTranslation}
+                    isCustomFilter={isCustomFilter}
+                    customFilter={customFilter}
                   />
                 )}
               </div>
@@ -479,6 +493,8 @@ const CrudTable: FC<P> = ({
                   tableSearch={tableSearch}
                   needTranslation={needTranslation}
                   addFilter={addFilter}
+                  isCustomFilter={isCustomFilter}
+                  customFilter={customFilter}
                 />
               ) : (
                 <AddButton
@@ -489,12 +505,15 @@ const CrudTable: FC<P> = ({
                   tableSearch={tableSearch}
                   addFilter={addFilter}
                   needTranslation={needTranslation}
+                  isCustomFilter={isCustomFilter}
+                  customFilter={customFilter}
                 />
               )}
             </div>
             <Table
               loading={isLoading}
               style={{ height: '100%' }}
+              scroll={{ x: 'max-content' }}
               sticky={{ offsetScroll: 80, offsetHeader: 80 }}
               pagination={sourceData?.length > 10 ? {} : false}
               draggable={true}
@@ -503,7 +522,9 @@ const CrudTable: FC<P> = ({
               noDataBtnText={schema.full}
               noDataText={schema.fullLower}
               padlocked={schema.padlocked}
-              onAddTemplate={() => createNew()}
+              onAddTemplate={
+                createPage ? () => createPageOnClick() : () => createNew()
+              }
               searchTerm={searchTerm}
               columns={[
                 ...Object.entries(schema.fields).map(([k, v]) => ({
@@ -542,8 +563,14 @@ const CrudTable: FC<P> = ({
                 })
               }}
               onRowClick={(e) => {
-                setEditingRow(e)
-                setModalShowing((e) => !e)
+                if (editPage) {
+                  router.push(`${editPageRouteLink}/${e.id}`)
+                } else if (createPage) {
+                  setEditPage(e)
+                } else {
+                  setEditingRow(e)
+                  setModalShowing((e) => !e)
+                }
               }}
               needTranslation={needTranslation}
             />

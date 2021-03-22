@@ -1,5 +1,6 @@
 import React, { FC } from 'react'
 import { Button, Table as AntTable, Avatar } from 'antd'
+import { Daily } from '@pabau/ui'
 import {
   SortableContainer,
   SortableElement,
@@ -103,7 +104,10 @@ export const Table: FC<TableType> = ({
   }
   const renderActiveButton = (isActive) => {
     return (
-      <Button className={styles.activeBtn}>
+      <Button
+        className={isActive ? styles.activeBtn : styles.disableSourceBtn}
+        disabled={!isActive}
+      >
         {needTranslation
           ? isActive
             ? t('marketingsource-tableRow-active-btn.translation')
@@ -152,6 +156,27 @@ export const Table: FC<TableType> = ({
     return alloWClicked
   }
 
+  const renderDays = (data) => {
+    const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    const resultPassedData: Array<number> = []
+    weekDays.map((item, index: number) => {
+      if (data.includes(item)) {
+        resultPassedData.push(index + 1)
+        return item
+      }
+      return item
+    })
+    return (
+      <div>
+        <Daily tickedDays={resultPassedData} />
+      </div>
+    )
+  }
+
+  const renderTime = (val) => {
+    return <div className={styles.alignItems}>{val.slice(0, 5)}</div>
+  }
+
   const renderSortHandler = () => {
     if (props?.columns) {
       props.columns = props.columns
@@ -166,6 +191,13 @@ export const Table: FC<TableType> = ({
               col.dataIndex === 'integration')
           ) {
             col.render = renderActiveButton
+          } else if (col.dataIndex === 'days') {
+            col.render = renderDays
+          } else if (
+            col.dataIndex === 'start_time' ||
+            col.dataIndex === 'end_time'
+          ) {
+            col.render = renderTime
           } else if (!col.render) {
             col.render = renderTableSource
           }
