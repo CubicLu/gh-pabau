@@ -21,7 +21,7 @@ interface P {
 }
 
 export const StaffPerformanceReview: FC<P> = ({
-  isNote,
+  isNote = false,
   isReviewDatePeriodFrequency = true,
 }) => {
   const [reviewDate, setReviewDate] = useState(new Date())

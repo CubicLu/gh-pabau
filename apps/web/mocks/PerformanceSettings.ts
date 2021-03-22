@@ -5,40 +5,40 @@ const reviewScheduleValue = {
 const peerQuestionList = {
   peerSelfAssessmentQuestion: [
     {
-      key: 1,
+      id: 1,
       value:
         '(Name) takes careful consideration before attempting tasks, before executing them with perfection.',
     },
     {
-      key: 2,
+      id: 2,
       value:
         '(Name) takes time to help the team, often taken time away from performing their own tasks.',
     },
     {
-      key: 3,
+      id: 3,
       value:
         '(Name) turns up to work with enthuism and energy to plough through.',
     },
     {
-      key: 4,
+      id: 4,
       value: '(Name) is dedicated to his job.',
     },
   ],
   questionEmployee: [
     {
-      key: 1,
+      id: 1,
       value: 'Good Thinker',
     },
     {
-      key: 2,
+      id: 2,
       value: 'Team Player',
     },
     {
-      key: 3,
+      id: 3,
       value: 'Motivated',
     },
     {
-      key: 4,
+      id: 4,
       value: 'Dedication',
     },
   ],
@@ -47,37 +47,37 @@ const peerQuestionList = {
 const AssessmentList = {
   selfAssessmentQuestion: [
     {
-      key: 1,
+      id: 1,
       value: 'How well daes (Company) recognize my value?',
     },
     {
-      key: 2,
+      id: 2,
       value: 'What would have the greatest impact on my ability to do...',
     },
     {
-      key: 3,
+      id: 3,
       value: 'What are some things I do well?',
     },
     {
-      key: 4,
+      id: 4,
       value: 'How could I improve?',
     },
   ],
   questionManager: [
     {
-      key: 1,
+      id: 1,
       value: 'If (Name) got a job offer elsewhere, I would...',
     },
     {
-      key: 2,
+      id: 2,
       value: 'How engaged is (Name) at work?',
     },
     {
-      key: 3,
+      id: 3,
       value: 'What are some things (Name) does well?',
     },
     {
-      key: 4,
+      id: 4,
       value: 'How could (Name) improve?',
     },
   ],

@@ -1,14 +1,10 @@
 import React, { FC } from 'react'
 import { useMedia } from 'react-use'
-
 import { Breadcrumb, Button, TabMenu } from '@pabau/ui'
 import { Row, Col, Card } from 'antd'
 import { Layout } from '@pabau/ui'
-
 import { LeftOutlined } from '@ant-design/icons'
-
 import { PerformanceConfigObj } from '../../../mocks/PerformanceSettings'
-
 import ReviewSettings from '../../../components/Setup/Settings/ReviewSettings/ReviewSettings'
 import AssessmentSettings from '../../../components/Setup/Settings/AssessmentSettings/AssessmentSettings'
 import PeopleSettings from '../../../components/Setup/Settings/PeopleSettings/PeopleSettings'
@@ -26,9 +22,9 @@ const Performance: FC<P> = () => {
 
   const handleChange = (
     key: string,
-    obj: ReviewScheduleConfig | AssessmentScheduleConfig | PeopleConfig
+    config: ReviewScheduleConfig | AssessmentScheduleConfig | PeopleConfig
   ) => {
-    console.log(obj)
+    console.log(config)
   }
 
   const handleSave = (): void => {

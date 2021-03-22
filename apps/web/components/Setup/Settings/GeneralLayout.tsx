@@ -6,10 +6,9 @@ import styles from './GeneralLayout.module.less'
 interface P {
   title: string
   description: string
-  bodyContent: JSX.Element
 }
 
-const GeneralLayout: FC<P> = ({ title, description, bodyContent }) => {
+const GeneralLayout: FC<P> = ({ title, description, children }) => {
   const { Title } = Typography
   return (
     <div className={styles.generalLayoutContainer}>
@@ -17,7 +16,7 @@ const GeneralLayout: FC<P> = ({ title, description, bodyContent }) => {
         <Title>{title}</Title>
         <span>{description}</span>
       </Card>
-      <div className={styles.containerBody}>{bodyContent}</div>
+      <div className={styles.containerBody}>{children}</div>
     </div>
   )
 }

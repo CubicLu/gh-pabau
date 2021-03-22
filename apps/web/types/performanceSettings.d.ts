@@ -1,5 +1,5 @@
 interface FeaturePerformance {
-  key: number
+  id: number
   value?: string
 }
 
