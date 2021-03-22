@@ -44,10 +44,6 @@ const AddButton: FC<P> = ({
   const [marketingSourceSearch, setMarketingSourceSearch] = useState('')
   const { t } = useTranslationI18()
 
-  // useKeyPressEvent('n', () => {
-  //   onClick?.()
-  // })
-
   useEffect(() => {
     const timer = setTimeout(() => {
       onSearch?.(marketingSourceSearch)
