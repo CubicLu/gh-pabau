@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import styles from '../../pages/login.module.less'
 import { Button, Notification, NotificationType } from '@pabau/ui'
 import * as Yup from 'yup'
@@ -10,6 +10,7 @@ import { ReactComponent as SSOIcon } from '../../assets/images/sso.svg'
 import { gql, useMutation } from '@apollo/client'
 import { useCookies } from 'react-cookie'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { UserContext } from "../../context/UserContext";
 
 export interface LoginFormProps {
   email: string
@@ -30,8 +31,13 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [cookie, setCookie] = useCookies(['user'])
   const { t } = useTranslationI18()
+  const user = useContext(UserContext)
+
 
   const loginHandler = async (loginProps: LoginFormProps): Promise<boolean> => {
+    if (localStorage?.getItem('token')) {
+      localStorage.removeItem('token')
+    }
     const { email, password } = loginProps
     const result = await login({
       variables: {
@@ -77,6 +83,9 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
             try {
               await loginHandler(value)
             } catch (error) {
+              if (localStorage?.getItem('token')) {
+                localStorage.removeItem('token')
+              }
               Notification(NotificationType.error, error.toString())
             }
           }}

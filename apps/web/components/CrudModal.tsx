@@ -18,6 +18,7 @@ interface P {
   listQueryVariables: any
   aggregateQuery?: DocumentNode
   aggregateQueryVariables?: any
+  submitting?: boolean
 }
 
 const CrudModal: FC<P> = ({
@@ -29,6 +30,7 @@ const CrudModal: FC<P> = ({
   editingRow,
   aggregateQuery,
   aggregateQueryVariables,
+  submitting = false,
 }) => {
   const [openDeleteModal, setDeleteModal] = useState(false)
   const { t } = useTranslationI18()
@@ -51,10 +53,10 @@ const CrudModal: FC<P> = ({
   const schemaForm = { ...schema, fields: { ...schema.fields } }
   const specialFormElement =
     schemaForm.fields[schema?.filter?.primary?.name] ??
-    schemaForm.fields['is_active']
-  delete schemaForm.fields['is_active']
+    schemaForm.fields['is_active'] //TODO remove it ONCE is_active is fully refactored
+  delete schemaForm.fields['is_active'] //TODO remove it ONCE is_active is fully refactored
   delete schemaForm.fields[schema?.filter?.primary?.name]
-  delete schemaForm.fields['company_id']
+  delete schemaForm.fields[schema?.company?.toString()]
   const [specialBoolean, setSpecialBoolean] = useState<boolean>(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -64,11 +66,12 @@ const CrudModal: FC<P> = ({
           (typeof specialFormElement?.defaultvalue === 'boolean' &&
             specialFormElement.defaultvalue) ??
           true
-      : (editingRow?.id && editingRow?.is_active) ?? //TODO remove this later on when no pages have hardcoded is_active
+      : (editingRow?.id && editingRow?.is_active) ?? //TODO remove it ONCE is_active is fully refactored
           (typeof specialFormElement?.defaultvalue === 'boolean' &&
             specialFormElement.defaultvalue) ??
           true
   )
+  const [formSubmitting, setFormSubmitting] = useState(submitting)
 
   useEffect(() => {
     setSpecialBoolean(
@@ -98,6 +101,7 @@ const CrudModal: FC<P> = ({
         }}
         onOk={async () => {
           const { id } = editingRow
+          setFormSubmitting(true)
           await deleteMutation({
             variables: { id },
             optimisticResponse: {},
@@ -114,6 +118,7 @@ const CrudModal: FC<P> = ({
           })
           setDeleteModal(false)
           onClose?.()
+          setFormSubmitting(false)
         }}
         visible={openDeleteModal}
         title={schema.deleteModalHeader || `Delete ${schema.short}?`}
@@ -138,12 +143,16 @@ const CrudModal: FC<P> = ({
       <Modal
         modalWidth={682}
         centered={true}
+        submitting={formSubmitting}
         onCancel={() => {
           onClose?.()
           formik.resetForm()
         }}
         onDelete={() => setDeleteModal(true)}
-        onOk={() => formik.submitForm()}
+        onOk={() => {
+          setFormSubmitting(true)
+          formik.submitForm()
+        }}
         visible={!openDeleteModal}
         title={
           typeof editingRow === 'object' && editingRow.isCreate ? (

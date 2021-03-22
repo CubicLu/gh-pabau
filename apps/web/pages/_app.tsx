@@ -2,6 +2,7 @@ import {
   ApolloClient,
   ApolloLink,
   ApolloProvider,
+  gql,
   HttpLink,
   InMemoryCache,
   split,
@@ -12,7 +13,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import * as Icons from '@fortawesome/free-solid-svg-icons'
 import { OperationDefinitionNode } from 'graphql'
 import { AppProps } from 'next/app'
-import React from 'react'
+import React, { useEffect } from 'react'
 import 'react-phone-input-2/lib/style.css'
 import 'react-quill/dist/quill.snow.css'
 import 'react-image-crop/dist/ReactCrop.css'
@@ -20,6 +21,8 @@ import ContextWrapper from '../components/ContextWrapper'
 import { setContext } from '@apollo/client/link/context'
 import { CookiesProvider } from 'react-cookie'
 import TranslationWrapper from '../components/TranslationWrapper'
+import { GetServerSideProps } from 'next'
+
 require('../styles/global.less')
 require('../../../libs/ui/src/styles/antd.less')
 require('react-phone-input-2/lib/style.css')
@@ -81,18 +84,39 @@ const terminatingLink = wsLink
       httpLink
     )
   : httpLink
-const client = new ApolloClient({
-  ssrMode: false,
-  link: ApolloLink.from([authLink, terminatingLink]),
-  cache,
-})
-
+export const getApolloClient = () => {
+  return new ApolloClient({
+    ssrMode: false,
+    link: ApolloLink.from([authLink, terminatingLink]),
+    cache,
+  })
+}
+const CURRENT_USER = gql`
+  query retrieveAuthenticatedUser {
+    me {
+      id
+      username
+      full_name
+      company {
+        id
+        details {
+          company_name
+          language
+        }
+      }
+    }
+  }
+`
 export default function CustomApp({
   Component,
   pageProps,
 }: AppProps): JSX.Element {
+  useEffect(() => {
+    console.log(pageProps)
+  })
+
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={getApolloClient()}>
       <style jsx global>{`
         @font-face {
           font-family: 'Circular-Std-Black';
@@ -118,4 +142,14 @@ export default function CustomApp({
       </CookiesProvider>
     </ApolloProvider>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const apolloClient = getApolloClient()
+  const user = await apolloClient.query({
+    query: CURRENT_USER,
+  })
+  return {
+    props: { user },
+  }
 }

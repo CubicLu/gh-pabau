@@ -68,6 +68,7 @@ const CrudTable: FC<P> = ({
   )
   const [searchTerm, setSearchTerm] = useState('')
   const [isMobileSearch, setMobileSearch] = useState(false)
+  const [formSubmitAllowed, setFormSubmitAllowedStatus] = useState(true)
   const { t } = useTranslationI18()
   const crudTableRef = useRef(null)
   const router = useRouter()
@@ -244,6 +245,7 @@ const CrudTable: FC<P> = ({
   const { fields } = schema
 
   const onSubmit = async (values, { resetForm }) => {
+    setFormSubmitAllowedStatus(false)
     console.log(values?.public)
     await (values.id
       ? editMutation({

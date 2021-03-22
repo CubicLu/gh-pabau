@@ -12,6 +12,7 @@ import {
 } from '@ant-design/icons'
 import User from '../../../assets/images/user.png'
 import classNames from 'classnames'
+import { useTranslation } from "react-i18next";
 // import { isMobile, isTablet } from 'react-device-detect'
 
 const WAIT_INTERVAL = 400
@@ -272,6 +273,8 @@ export const Search: FC<P> = ({
     }
     return searchMenu()
   }
+  const { t } = useTranslation('common')
+
 
   return (
     <div style={{ width: '100%' }}>
@@ -280,9 +283,7 @@ export const Search: FC<P> = ({
           <div>
             <Input
               className={styles.searchInputStyle}
-              placeholder={
-                placeHolder ? placeHolder : 'Search clients or leads'
-              }
+              placeholder={t('header-search-text-placeholder')}
               value={searchTerm}
               prefix={<SearchOutlined style={{ color: '#BFBFBF' }} />}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -311,9 +312,7 @@ export const Search: FC<P> = ({
           >
             <Input
               className={styles.searchInputStyle}
-              placeholder={
-                placeHolder ? placeHolder : 'Search clients or leads'
-              }
+              placeholder={t('header-search-text-placeholder')}
               value={searchTerm}
               prefix={<SearchOutlined style={{ color: '#BFBFBF' }} />}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -335,7 +334,7 @@ export const Search: FC<P> = ({
       <div className={styles.desktopViewNone}>
         <Input
           className={classNames(styles.searchInputStyle)}
-          placeholder={placeHolder ? placeHolder : 'Search clients or leads'}
+          placeholder={t('header-search-text-placeholder')}
           value={searchTerm}
           prefix={<SearchOutlined style={{ color: '#BFBFBF' }} />}
           onChange={(e) => setSearchTerm(e.target.value)}

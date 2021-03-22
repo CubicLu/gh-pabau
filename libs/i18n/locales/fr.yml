@@ -11,6 +11,7 @@ fr:
     crud-table-pagination-text-showing: 'Montrant'
     crud-table-pagination-text-results: 'Résultats de'
     crud-table-pagination-test-displaying: 'Lignes par page'
+    search-header-placehodlder: 'Search clients or leads. FR'
 
     navigation-breadcrumb-setup: 'Installer'
 
@@ -25,6 +26,20 @@ fr:
     common-label-create: 'Créer'
     common-label-save: 'Sauvegarder'
     common-label-delete-warning: 'sera supprimé. Cette action est irréversible'
+
+    footer-guides-header-status-text: 'Guides associés'
+
+    webinar-header-recomended-webinar: 'Webinaire recommandé'
+    intercom-title-type-article: 'Article'
+    webinar-body-type-video: 'Vidéo'
+    intercom-article-title-setting-up-a-marketing-source: 'Configurer une source marketing'
+    intercom-article-title-create-a-marketing-source: 'Créer une source marketing'
+
+    header-search-text-placeholder: 'Rechercher des clients ou des prospects'
+
+    menu-main-title-dashboard: 'Dashboard'
+
+
 
     KEY: ''
     search.placeholder: ''

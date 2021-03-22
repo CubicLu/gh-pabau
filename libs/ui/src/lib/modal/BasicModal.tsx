@@ -15,6 +15,7 @@ export interface BasicModalProps {
   modalWidth?: number
   isValidate?: boolean
   footer?: boolean
+  submitting?: boolean
 
   /**
    * Creates a special tickbox next to the OK button
@@ -53,6 +54,7 @@ export function BasicModal({
   isValidate = true,
   footer = true,
   wrapClassName,
+  submitting = false,
   btnType = ButtonTypes.primary,
   ...props
 }: PropsWithChildren<BasicModalProps & ModalProps>): JSX.Element {
@@ -94,8 +96,12 @@ export function BasicModal({
             <Button
               type={btnType}
               className={styles.btnStyle}
-              disabled={newButtonDisable || !isValidate}
-              onClick={() => onOk?.()}
+              disabled={newButtonDisable || !isValidate || submitting}
+              onClick={() => {
+                submitting = true
+                onOk?.()
+                submitting = false
+              }}
             >
               {newButtonText}
             </Button>

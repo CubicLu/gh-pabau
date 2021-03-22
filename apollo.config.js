@@ -1,7 +1,7 @@
 module.exports = {
   client: {
     service: {
-      url: 'http://localhost:8080/v1/graphql',
+      url: 'https://api.new.pabau.com/v1/graphql',
     },
   },
 };

@@ -24,7 +24,7 @@ interface Schema {
   tooltip?: string
   padlocked?: string[]
   filter?: SchemaFilter
-  company?: number
+  company?: string
 }
 
 type DefaultFilterType = number | boolean

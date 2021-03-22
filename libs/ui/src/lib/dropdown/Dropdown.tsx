@@ -84,14 +84,14 @@ export const Dropdown: FC<DropDownInterface> = ({
         <div className={styles.dropdownHeader}>
           <PABAULOGO />
           <span className={styles.headerText}>
-            {company?.details.company_name ?? 'Pabau Clinic Software'}
+            {company?.details.company_name}
           </span>
         </div>
         <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
       <Menu.Item className={styles.userinfo}>
         <div className={styles.userName}>
-          {user?.full_name ?? 'William Branham'}
+          {user?.full_name}
         </div>
         <div className={styles.userBalance}>
           <p>Balance</p>
@@ -185,7 +185,7 @@ export const Dropdown: FC<DropDownInterface> = ({
                 styles.activeMenu
               )}
             >
-              {company?.details.company_name ?? 'Pabau Clinic Software'}
+              {company?.details.company_name}
             </span>
           </div>
           <CheckCircleFilled

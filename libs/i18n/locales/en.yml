@@ -16,6 +16,7 @@ en:
     marketingsource-create-button: 'Create'
     marketingsource-save-button: 'Save'
     marketingsource-delete-button: 'Delete'
+    search-header-placehodlder: 'Search clients or leads'
 
     basic-crud-table-header-breadcrumb-setup-link: 'Setup'
     basic-crud-table-input-search-placeholder: 'Search'
@@ -26,6 +27,7 @@ en:
     crud-table-pagination-text-showing: 'Showing'
     crud-table-pagination-text-results: 'results from'
     crud-table-pagination-test-displaying: 'Rows per page'
+
 
     add-button-filter: 'Filter'
     add-button-filter-header-text-filter: 'Filter by'
@@ -40,6 +42,14 @@ en:
     common-label-create: 'Create'
     common-label-save: 'Save'
     common-label-delete-warning: 'will be deleted. This action is irreversible'
+
+    webinar-header-recomended-webinar: 'Recommended Webinar'
+    intercom-title-type-article: 'Article'
+    webinar-body-type-video: 'Video'
+    intercom-article-title-setting-up-a-marketing-source: 'Setting up a Marketing Source'
+    intercom-article-title-create-a-marketing-source: 'Creating a Marketing Source'
+
+    header-search-text-placeholder: 'Search clients or leads'
 
     KEY: Text
     search.placeholder: 'Search clients or leads'

@@ -145,9 +145,6 @@ export const Index: NextPage = () => {
         type: 'boolean',
         defaultvalue: true,
       },
-      company_id: {
-        type: 'number',
-      },
     },
     filter: {
       primary: {
@@ -157,6 +154,7 @@ export const Index: NextPage = () => {
         inactive: false,
       },
     },
+    company: 'company_id',
   }
 
   return (

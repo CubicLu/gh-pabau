@@ -20,7 +20,7 @@ export interface SidebarMenuItem {
 
 export const sidebarMenu: SidebarMenuItem[] = [
   {
-    menuName: 'Dashboard',
+    menuName: 'Some menu',
     icon: <DashboardOutlined />,
     path: '/dashboard',
   },

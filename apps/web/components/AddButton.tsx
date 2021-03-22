@@ -38,7 +38,6 @@ const AddButton: FC<P> = ({
   setMobileSearch,
   tableSearch = true,
   addFilter = true,
-  needTranslation,
   mobileSearch,
 }) => {
   const [isActive, setIsActive] = useState<boolean | number>(
@@ -167,8 +166,6 @@ const AddButton: FC<P> = ({
           Apply
         </Button>
       </Drawer>
-
-      {/* Desktop header */}
       <div
         className={classNames(styles.marketingSource, styles.mobileViewNone)}
       >

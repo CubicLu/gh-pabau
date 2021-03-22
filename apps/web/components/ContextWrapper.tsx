@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import { gql, QueryResult, useQuery } from '@apollo/client'
 import { UserContext } from '../context/UserContext'
 
@@ -34,7 +34,7 @@ interface Company {
   }
 }
 
-const ContextWrapper: FC = ({ children }) => {
+const ContextWrapper: FC = ({ children, ...props }) => {
   const user: QueryResult<User> = useQuery(CURRENT_USER)
 
   return <UserContext.Provider value={user}>{children}</UserContext.Provider>

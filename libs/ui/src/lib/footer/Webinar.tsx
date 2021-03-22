@@ -3,8 +3,10 @@ import styles from './Footer.module.less'
 import { Button, WebinarModal, WebinarModalProps } from '@pabau/ui'
 import { PlayCircleOutlined } from '@ant-design/icons'
 import BackgroundImage from '../../assets/images/footer.png'
+import { useTranslation } from 'react-i18next'
 
 export const Webinar: FC = () => {
+  const { t } = useTranslation('common')
   const [isOpenModal, setIsOpen] = useState<boolean>(false)
   const [modalData, setModalData] = useState({})
 
@@ -32,7 +34,7 @@ export const Webinar: FC = () => {
       <div className={styles.webinarBannerEnd}>
         <div>
           <div className={styles.footerHeading}>
-            <h1>Recommended Webinar</h1>
+            <h1>{t('webinar-header-recomended-webinar')}</h1>
           </div>
           <div className={styles.webinarBox} style={{ marginTop: '12px' }}>
             <div className={styles.webinarBanner}> </div>
