@@ -22795,7 +22795,23 @@ columns and relationships of "locations"
 """
 type locations {
   address: String!
+  apt: String
+  badges(
+    """JSON select path"""
+    path: String
+  ): json
+  badgesIcon(
+    """JSON select path"""
+    path: String
+  ): json
+  bookable: Boolean!
   created_at: timestamptz!
+  email: String
+  employees(
+    """JSON select path"""
+    path: String
+  ): json
+  hasCalender: Boolean!
   id: uuid!
   img: String!
   is_active: Boolean!
@@ -22806,7 +22822,11 @@ type locations {
   is_time: Boolean!
   name: String!
   order: Int!
+  phone: String
+  postcode: String
+  showOnline: Boolean!
   updated_at: timestamptz!
+  website: String
 }
 
 """
@@ -22847,7 +22867,14 @@ input locations_bool_exp {
   _not: locations_bool_exp
   _or: [locations_bool_exp!]
   address: String_comparison_exp
+  apt: String_comparison_exp
+  badges: json_comparison_exp
+  badgesIcon: json_comparison_exp
+  bookable: Boolean_comparison_exp
   created_at: timestamptz_comparison_exp
+  email: String_comparison_exp
+  employees: json_comparison_exp
+  hasCalender: Boolean_comparison_exp
   id: uuid_comparison_exp
   img: String_comparison_exp
   is_active: Boolean_comparison_exp
@@ -22858,7 +22885,11 @@ input locations_bool_exp {
   is_time: Boolean_comparison_exp
   name: String_comparison_exp
   order: Int_comparison_exp
+  phone: String_comparison_exp
+  postcode: String_comparison_exp
+  showOnline: Boolean_comparison_exp
   updated_at: timestamptz_comparison_exp
+  website: String_comparison_exp
 }
 
 """
@@ -22883,6 +22914,7 @@ input locations_insert_input {
   address: String
   apt: String
   badges: json
+  badgesIcon: json
   bookable: Boolean
   email: String
   employees: json
@@ -22904,23 +22936,33 @@ input locations_insert_input {
 """aggregate max on columns"""
 type locations_max_fields {
   address: String
+  apt: String
   created_at: timestamptz
+  email: String
   id: uuid
   img: String
   name: String
   order: Int
+  phone: String
+  postcode: String
   updated_at: timestamptz
+  website: String
 }
 
 """aggregate min on columns"""
 type locations_min_fields {
   address: String
+  apt: String
   created_at: timestamptz
+  email: String
   id: uuid
   img: String
   name: String
   order: Int
+  phone: String
+  postcode: String
   updated_at: timestamptz
+  website: String
 }
 
 """
@@ -22946,7 +22988,14 @@ input locations_on_conflict {
 """Ordering options when selecting data from "locations"."""
 input locations_order_by {
   address: order_by
+  apt: order_by
+  badges: order_by
+  badgesIcon: order_by
+  bookable: order_by
   created_at: order_by
+  email: order_by
+  employees: order_by
+  hasCalender: order_by
   id: order_by
   img: order_by
   is_active: order_by
@@ -22957,7 +23006,11 @@ input locations_order_by {
   is_time: order_by
   name: order_by
   order: order_by
+  phone: order_by
+  postcode: order_by
+  showOnline: order_by
   updated_at: order_by
+  website: order_by
 }
 
 """primary key columns input for table: locations"""
@@ -22973,7 +23026,28 @@ enum locations_select_column {
   address
 
   """column name"""
+  apt
+
+  """column name"""
+  badges
+
+  """column name"""
+  badgesIcon
+
+  """column name"""
+  bookable
+
+  """column name"""
   created_at
+
+  """column name"""
+  email
+
+  """column name"""
+  employees
+
+  """column name"""
+  hasCalender
 
   """column name"""
   id
@@ -23006,7 +23080,19 @@ enum locations_select_column {
   order
 
   """column name"""
+  phone
+
+  """column name"""
+  postcode
+
+  """column name"""
+  showOnline
+
+  """column name"""
   updated_at
+
+  """column name"""
+  website
 }
 
 """

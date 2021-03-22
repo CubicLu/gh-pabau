@@ -1742,6 +1742,7 @@
       - address
       - apt
       - badges
+      - badgesIcon
       - bookable
       - email
       - employees
@@ -1764,7 +1765,14 @@
     permission:
       columns:
       - address
+      - apt
+      - badges
+      - badgesIcon
+      - bookable
       - created_at
+      - email
+      - employees
+      - hasCalender
       - id
       - img
       - is_active
@@ -1775,7 +1783,11 @@
       - is_time
       - name
       - order
+      - phone
+      - postcode
+      - showOnline
       - updated_at
+      - website
       filter: {}
       allow_aggregations: true
   update_permissions:
