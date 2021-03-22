@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { Form as AntForm, Input, Radio, Checkbox } from 'formik-antd'
+import { Form as AntForm, Input, Radio, Checkbox, Select } from 'formik-antd'
 // import { Radio } from 'antd'
 import { Col, Row, Collapse } from 'antd'
 import styles from './CrudTable.module.less'
@@ -126,7 +126,19 @@ const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
                   />
                 </AntForm.Item>
               )}
-
+              {type === 'select' && (
+                <AntForm.Item label={full} name={name} required>
+                  <Select name={name} style={{ width: '100%' }}>
+                    {selectOptions?.map((option) => {
+                      return (
+                        <Select.Option value={option.value} key={option.label}>
+                          {option.label}
+                        </Select.Option>
+                      )
+                    })}
+                  </Select>
+                </AntForm.Item>
+              )}
               {type === 'color-picker' && (
                 <AntForm.Item key={name} name={name} required={required}>
                   <div style={{ width: '344px' }}>
