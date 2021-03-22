@@ -438,7 +438,7 @@ export const IssuingCompany: NextPage = () => {
         ]
   }
 
-  const ModalContents = (): JSX.Element => {
+  const ModalContents = () => {
     return (
       <div className={styles.mainWrapper}>
         <Form layout="vertical">
@@ -616,7 +616,7 @@ export const IssuingCompany: NextPage = () => {
         onDelete={showDeleteConfirmDialog}
         footer={true}
       >
-        <ModalContents />
+        {ModalContents()}
       </FullScreenReportModal>
       <Modal
         modalWidth={682}
