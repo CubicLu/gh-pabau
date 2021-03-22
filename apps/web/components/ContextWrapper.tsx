@@ -54,7 +54,7 @@ const ContextWrapper: FC = ({
         style={{
           position: 'absolute',
           margin: 'auto',
-          left: 700,
+          left: 800,
           top: 400,
           textAlign: 'center',
         }}
