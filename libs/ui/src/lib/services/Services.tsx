@@ -107,25 +107,22 @@ export const Services: FC<ServicesProps> = ({
                   key="true"
                 >
                   <div className={styles.panel}>
-                    {thread.subServices.length > 0 &&
-                      thread.subServices.map((subService) => {
-                        return (
-                          <Checkbox
-                            className={styles.subText}
-                            key={subService.key}
-                            onChange={(event) =>
-                              handleSubServiceChange?.(
-                                event.target.checked,
-                                subService.key,
-                                thread.key
-                              )
-                            }
-                            checked={subService.checked}
-                          >
-                            {subService.name}
-                          </Checkbox>
-                        )
-                      })}
+                    {thread?.subServices.map((subService) => (
+                      <Checkbox
+                        className={styles.subText}
+                        key={subService.key}
+                        onChange={(event) =>
+                          handleSubServiceChange?.(
+                            event.target.checked,
+                            subService.key,
+                            thread.key
+                          )
+                        }
+                        checked={subService.checked}
+                      >
+                        {subService.name}
+                      </Checkbox>
+                    ))}
                   </div>
                 </Panel>
               </Collapse>
