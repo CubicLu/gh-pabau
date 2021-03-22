@@ -41,6 +41,8 @@ interface P {
   needTranslation?: boolean
   editPage?: boolean
   editPageRouteLink?: string
+  isCustomFilter?: boolean
+  customFilter?: () => JSX.Element
   setEditPage?(e): void
 }
 
@@ -61,6 +63,8 @@ const CrudTable: FC<P> = ({
   needTranslation = false,
   editPage = false,
   editPageRouteLink,
+  isCustomFilter,
+  customFilter,
   setEditPage,
 }) => {
   const [isLoading, setIsLoading] = useState(true)
@@ -452,6 +456,8 @@ const CrudTable: FC<P> = ({
                     tableSearch={tableSearch}
                     needTranslation={needTranslation}
                     addFilter={addFilter}
+                    isCustomFilter={isCustomFilter}
+                    customFilter={customFilter}
                   />
                 ) : (
                   <AddButton
@@ -462,6 +468,8 @@ const CrudTable: FC<P> = ({
                     tableSearch={tableSearch}
                     addFilter={addFilter}
                     needTranslation={needTranslation}
+                    isCustomFilter={isCustomFilter}
+                    customFilter={customFilter}
                   />
                 )}
               </div>
@@ -512,6 +520,8 @@ const CrudTable: FC<P> = ({
                   tableSearch={tableSearch}
                   needTranslation={needTranslation}
                   addFilter={addFilter}
+                  isCustomFilter={isCustomFilter}
+                  customFilter={customFilter}
                 />
               ) : (
                 <AddButton
@@ -522,6 +532,8 @@ const CrudTable: FC<P> = ({
                   tableSearch={tableSearch}
                   addFilter={addFilter}
                   needTranslation={needTranslation}
+                  isCustomFilter={isCustomFilter}
+                  customFilter={customFilter}
                 />
               )}
             </div>

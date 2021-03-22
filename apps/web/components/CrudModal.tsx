@@ -13,7 +13,7 @@ interface P {
   listQuery: DocumentNode
   editingRow?: Record<string, string | boolean | number>
   onClose?: () => void
-  deleteModal?: boolean
+  showModalInitially?: boolean
 }
 
 const CrudModal: FC<P> = ({
@@ -23,9 +23,11 @@ const CrudModal: FC<P> = ({
   listQuery,
   onClose,
   editingRow,
-  deleteModal,
+  showModalInitially,
 }) => {
-  const [openDeleteModal, setDeleteModal] = useState(deleteModal || false)
+  const [openDeleteModal, setDeleteModal] = useState(
+    showModalInitially || false
+  )
   const [deleteMutation] = useMutation(deleteQuery, {
     onCompleted(data) {
       Notification(
