@@ -5,33 +5,12 @@ import {
   queryComplexityPlugin,
 } from 'nexus'
 import { nexusPrisma } from 'nexus-plugin-prisma'
-import { PrismaClient } from '@prisma/client'
 import * as generatedTypes from './generated/types'
 import * as customTypes from '../src/schema/types'
 import { applyMiddleware } from 'graphql-middleware'
-import { permissions } from './permisions'
+import { permissions } from './permissions'
 import { paljs } from '@paljs/nexus'
-
-const prisma = new PrismaClient({
-  log: [
-    {
-      emit: 'event',
-      level: 'query',
-    },
-    {
-      emit: 'stdout',
-      level: 'error',
-    },
-    {
-      emit: 'stdout',
-      level: 'info',
-    },
-    {
-      emit: 'stdout',
-      level: 'warn',
-    },
-  ],
-})
+import { prisma } from './prisma'
 
 export const schema = applyMiddleware(
   makeSchema({
@@ -42,7 +21,7 @@ export const schema = applyMiddleware(
       }),
       nexusPrisma({
         experimentalCRUD: true,
-        prismaClient: (ctx) => (ctx.prisma = prisma),
+        prismaClient: (ctx) => prisma,
         paginationStrategy: 'prisma',
       }),
       fieldAuthorizePlugin(),
@@ -88,8 +67,8 @@ export const schema = applyMiddleware(
   permissions
 )
 
-// Prisma middleware logger for query efficiency
-prisma.$on('query', (e) => {
-  console.log('Query: ' + e.query)
-  console.log('Duration: ' + e.duration + 'ms')
-})
+// // Prisma middleware logger for query efficiency
+// prisma.$on('query', (e) => {
+//   console.log('Query: ' + e.query)
+//   console.log('Duration: ' + e.duration + 'ms')
+// })

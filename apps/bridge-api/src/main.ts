@@ -6,7 +6,6 @@ import cors from 'cors'
 import { stringToBoolean } from './utils'
 import { version } from '../../../package.json'
 import { createContext } from './context'
-import authenticatedUser from './middlewares/authenticatedUser'
 
 console.log(`Starting bridge-api version ${version}`)
 console.log(
@@ -32,7 +31,7 @@ app
       httpOnly: true,
     })
   )
-  .use(authenticatedUser)
+//.use(authenticatedUser)
 
 const server = new ApolloServer({
   schema,
@@ -53,4 +52,6 @@ if (process.env.JEST_WORKER_ID === undefined) {
   app.listen({ port: PORT }, () =>
     console.log(`Server running on port ${PORT}`)
   )
+} else {
+  console.log('Jest mode!')
 }

@@ -1,5 +1,5 @@
 import { allow, rule, shield } from 'graphql-shield'
-import { Context } from '../context'
+import { Context } from './context'
 
 // TODO
 // const companyColumns = ['occupier', 'company_id']
@@ -7,22 +7,31 @@ import { Context } from '../context'
 const rules = {
   isAuthenticated: rule('isAuthenticated')(
     async (root, args, ctx: Context): Promise<boolean> => {
-      if (ctx.req.authenticatedUser) return true
+      console.log('isAuthenticated', !!ctx.user)
+      if (ctx.user) return true
     }
   ),
   sameCompany: rule('sameCompany')(
     async (root, args, ctx: Context, info): Promise<boolean> => {
       try {
-        if (root && root.company_id !== ctx.req.authenticatedUser.company)
+        console.log(
+          'sameCompany',
+          ctx.user,
+          !!(root && root.company_id !== ctx.user.company),
+          info.operation
+        )
+
+        if (!ctx.user || (root && root.company_id !== ctx.user.company))
           return false
         if (
           info.returnType.toString().startsWith('[') ||
-          info.operation.name.value.includes('aggregate')
+          info.operation.name?.value.includes('aggregate')
         )
           args.where = {
             ...args.where,
-            company_id: { equals: ctx.req.authenticatedUser.company },
+            company_id: { equals: ctx.user.company },
           }
+        console.log('allowed')
         return true
       } catch (error) {
         console.log(error)
@@ -31,6 +40,7 @@ const rules = {
   ),
   interceptMutation: rule('interceptMutation')(
     async (root, args, ctx: Context, info): Promise<boolean> => {
+      if (!ctx.user) return false
       try {
         if (
           info.operation.name.value.includes('add') &&
@@ -38,7 +48,7 @@ const rules = {
         ) {
           args.data = {
             ...args.data,
-            company: { connect: { id: ctx.req.authenticatedUser.company } },
+            company: { connect: { id: ctx.user.company } },
           }
         }
         return true
@@ -52,11 +62,12 @@ export const permissions = shield({
   Mutation: {
     login: allow,
     logout: rules.isAuthenticated,
-    '*': rules.isAuthenticated && rules.interceptMutation,
+    //'*': rules.isAuthenticated && rules.interceptMutation,
   },
   Query: {
-    '*': rules.isAuthenticated && rules.sameCompany,
     marketingSourcesCount: rules.isAuthenticated && rules.sameCompany,
     me: rules.isAuthenticated,
+    ping: allow,
+    '*': rules.isAuthenticated && rules.sameCompany,
   },
 })

@@ -3,6 +3,7 @@ import { User } from '../../generated/schema'
 import jwt from 'jsonwebtoken'
 import { Context } from '../../context'
 import { createHash } from 'crypto'
+import { prisma } from '../../prisma'
 
 export class AuthenticationService {
   private user: User
@@ -11,7 +12,7 @@ export class AuthenticationService {
 
   //TODO Refactor once company select screen is defined
   public async handleLoginRequest(loginInput: LoginInputDto): Promise<string> {
-    const users = await this.ctx.prisma.user.findMany({
+    const users = await prisma.user.findMany({
       where: {
         username: {
           equals: loginInput.username,

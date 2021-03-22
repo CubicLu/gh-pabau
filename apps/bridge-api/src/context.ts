@@ -1,23 +1,23 @@
-import { PrismaClient } from '@prisma/client'
-import { SchemaLink } from '@apollo/client/link/schema'
-import { Request, Response } from 'express'
-import { PubSub } from 'apollo-server'
-import { Operation } from '@apollo/client'
-import { Cookies } from 'react-cookie'
-import ResolverContextFunction = SchemaLink.ResolverContextFunction
-
-const prisma = new PrismaClient()
+import { Request } from 'express'
+import { JwtPayloadDto } from './app/authentication/dto'
+import jwt from 'jsonwebtoken'
 
 export interface Context {
-  prisma: PrismaClient
   req: Request
-  res: Response
-  cookie: Cookies
-  pubSub: PubSub
+  user?: JwtPayloadDto
 }
 
-export const createContext: ResolverContextFunction = (req: Operation) => ({
-  ...req,
-  PubSub,
-  prisma,
-})
+export const createContext = ({ req }: { req: Request }) => {
+  const authHeader = req.header('authorization')
+
+  const user =
+    authHeader &&
+    (jwt.verify(authHeader.replace(/^Bearer /, ''), process.env.JWT_SECRET, {
+      algorithms: ['HS512'],
+    }) as JwtPayloadDto)
+
+  return {
+    req,
+    user,
+  } as Context
+}
