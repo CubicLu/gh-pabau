@@ -14,6 +14,7 @@ export default {
   title: 'Chat/MessageContainer',
   onClick: { action: 'onClick' },
   actions: { argTypesRegex: '^on[A-Z].*' },
+  chatSearch: false,
 }
 
 const MessageContainerStory = ({ ...args }) => <MessageContainer {...args} />

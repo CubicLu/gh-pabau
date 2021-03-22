@@ -1545,6 +1545,7 @@
       - requester
       - test
       filter: {}
+      allow_aggregations: true
   update_permissions:
   - role: public
     permission:
@@ -1739,7 +1740,13 @@
       check: {}
       columns:
       - address
-      - image
+      - apt
+      - badges
+      - bookable
+      - email
+      - employees
+      - hasCalender
+      - img
       - is_active
       - is_day
       - is_night
@@ -1747,7 +1754,10 @@
       - is_pharmacy
       - is_time
       - name
-      - order
+      - phone
+      - postcode
+      - showOnline
+      - website
       backend_only: false
   select_permissions:
   - role: public
@@ -1756,7 +1766,7 @@
       - address
       - created_at
       - id
-      - image
+      - img
       - is_active
       - is_day
       - is_night
@@ -1773,7 +1783,7 @@
     permission:
       columns:
       - address
-      - image
+      - img
       - is_active
       - is_day
       - is_night
@@ -2204,6 +2214,46 @@
       filter: {}
 - table:
     schema: public
+    name: resources
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - location
+      - is_active
+      - name
+      - order
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - created_at
+      - updated_at
+      - order
+      - name
+      - location
+      - is_active
+      - id
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - location
+      - is_active
+      - name
+      - order
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
     name: rooms
   insert_permissions:
   - role: public
@@ -2271,6 +2321,7 @@
       - start_time
       - id
       filter: {}
+      allow_aggregations: true
   update_permissions:
   - role: public
     permission:
