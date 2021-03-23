@@ -29,11 +29,9 @@ import { Formik } from 'formik'
 import { useMedia } from 'react-use'
 import { NextPage } from 'next'
 
-/* eslint-disable graphql/template-strings */
 const LIST_QUERY = gql`
   query third_parties(
     $isActive: Boolean = true
-    $type: [String!]
     $offset: Int
     $limit: Int
     $searchTerm: String = ""
@@ -67,7 +65,6 @@ const LIST_QUERY = gql`
 const LIST_AGGREGATE_QUERY = gql`
   query third_parties_aggregate(
     $isActive: Boolean = true
-    $type: [String!]
     $searchTerm: String = ""
   ) {
     third_parties_aggregate(

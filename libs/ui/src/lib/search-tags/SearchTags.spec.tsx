@@ -10,6 +10,7 @@ describe('SearchTags', () => {
         title="title"
         description="description"
         items={[]}
+        selectedItems={[]}
         itemType=""
       />
     )
