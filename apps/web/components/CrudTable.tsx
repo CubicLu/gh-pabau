@@ -220,11 +220,19 @@ const CrudTable: FC<P> = ({
       }
     }
     if (aggregateData) {
-      setPaginateData({
-        ...paginateData,
-        total: aggregateData ?? aggregateData?.aggregate.count,
-        showingRecords: data?.length,
-      })
+      if (aggregateData?.aggregate?.count) {
+        setPaginateData({
+          ...paginateData,
+          total: aggregateData?.aggregate.count,
+          showingRecords: data?.length,
+        })
+      } else {
+        setPaginateData({
+          ...paginateData,
+          total: aggregateData,
+          showingRecords: data?.length,
+        })
+      }
     }
     if (!loading && data) setIsLoading(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -609,6 +617,7 @@ const CrudTable: FC<P> = ({
             <Pagination
               total={paginateData.total}
               defaultPageSize={10}
+              showSizeChanger={false}
               onChange={onPaginationChange}
               pageSizeOptions={['10', '25', '50', '100']}
               onPageSizeChange={(pageSize) => {
