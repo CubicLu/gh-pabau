@@ -1,4 +1,9 @@
-import { LanguageDropdown, Avatar } from '@pabau/ui'
+import {
+  Avatar,
+  Language,
+  AvatarUploader,
+  timezone as timezones,
+} from '@pabau/ui'
 import {
   Button,
   Col,
@@ -10,8 +15,10 @@ import {
   Select,
 } from 'antd'
 import dynamic from 'next/dynamic'
-import React, { FC } from 'react'
-
+import React, { FC, useState } from 'react'
+import useWindowSize from '../../../hooks/useWindowSize'
+import userImage from '../../../assets/images/avatar.png'
+import styles from './index.module.less'
 const { TextArea } = Input
 
 const ReactQuill = dynamic(() => import('../../../components/MyReactQuill'), {
@@ -20,9 +27,11 @@ const ReactQuill = dynamic(() => import('../../../components/MyReactQuill'), {
 
 const Profile: FC = () => {
   const { Option } = Select
+  const size = useWindowSize()
+  const [showAvatarUploader, setShowAvatarUploader] = useState(false)
 
   const uploadPhoto = () => {
-    return
+    setShowAvatarUploader(true)
   }
   const deletePhoto = () => {
     return
@@ -38,36 +47,63 @@ const Profile: FC = () => {
       <Divider />
       <Form layout="vertical">
         <Form.Item>
-          <Avatar
-            src={
-              'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-            }
-            size={128}
-            name={'Zhen'}
-          />
-          <Button
-            style={{ margin: '0 16px', verticalAlign: 'middle' }}
-            onClick={uploadPhoto}
-          >
-            Upload Photo
-          </Button>
-          <Button style={{ verticalAlign: 'middle' }} onClick={deletePhoto}>
-            Delete
-          </Button>
+          <div className={styles.avtarWrapper}>
+            <Avatar
+              src={
+                'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
+              }
+              size={size.width > 767 ? 128 : 88}
+              name={'Zhen'}
+            />
+            <div className={styles.btnAvatarWrapper}>
+              <Button
+                style={
+                  size.width > 767
+                    ? { margin: '0 16px', verticalAlign: 'middle' }
+                    : { margin: '0 10px', verticalAlign: 'middle' }
+                }
+                onClick={uploadPhoto}
+              >
+                Upload Photo
+              </Button>
+              <Button style={{ verticalAlign: 'middle' }} onClick={deletePhoto}>
+                Delete
+              </Button>
+            </div>
+          </div>
         </Form.Item>
-        <Row>
-          <Col span={11}>
-            <Form.Item label="First name">
-              <Input placeholder="First name" />
-            </Form.Item>
-          </Col>
-          <Col span={2}></Col>
-          <Col span={11}>
-            <Form.Item label="Last name">
-              <Input placeholder="Last name" />
-            </Form.Item>
-          </Col>
-        </Row>
+        {size.width > 767 ? (
+          <Row>
+            <Col span={11}>
+              <Form.Item label="First name">
+                <Input placeholder="First name" />
+              </Form.Item>
+            </Col>
+            <Col span={2}></Col>
+            <Col span={11}>
+              <Form.Item label="Last name">
+                <Input placeholder="Last name" />
+              </Form.Item>
+            </Col>
+          </Row>
+        ) : (
+          <>
+            <Row>
+              <Col span={24}>
+                <Form.Item label="First name">
+                  <Input placeholder="First name" />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={24}>
+                <Form.Item label="Last name">
+                  <Input placeholder="Last name" />
+                </Form.Item>
+              </Col>
+            </Row>
+          </>
+        )}
         <Row>
           <Col span={24}>
             <Form.Item label="Mobile phone">
@@ -91,20 +127,33 @@ const Profile: FC = () => {
         </Row>
         <Row>
           <Col span={24}>
-            <LanguageDropdown label={'Language'} />
+            <Form.Item label="Language">
+              <Language />
+            </Form.Item>
           </Col>
         </Row>
         <Row>
           <Col span={24}>
             <Form.Item label="Timezone">
-              <Select defaultValue="london" placeholder="Language">
-                <Option value="london">London/Europe</Option>
-                <Option value="beijing">Bejing/China</Option>
+              <Select showSearch defaultValue={'Europe/London'}>
+                {timezones.map(
+                  (item: { timezone: string; text: string }, index) => (
+                    <Option key={index} value={item.timezone}>
+                      {item.timezone}
+                    </Option>
+                  )
+                )}
               </Select>
             </Form.Item>
           </Col>
         </Row>
       </Form>
+      <AvatarUploader
+        visible={showAvatarUploader}
+        title="Upload Avatar Photo"
+        imageURL={userImage}
+        onCancel={() => setShowAvatarUploader(false)}
+      />
     </>
   )
 }

@@ -1,4 +1,4 @@
-const timezone = [
+export const timezone = [
   { timezone: 'Pacific/Pago_Pago', text: '(GMT -11:00) Pago Pago' },
   { timezone: 'Pacific/Niue', text: '(GMT -11:00) Niue' },
   { timezone: 'Pacific/Midway', text: '(GMT -11:00) Midway' },
