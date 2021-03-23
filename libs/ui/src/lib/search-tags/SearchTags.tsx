@@ -13,7 +13,9 @@ export interface SearchTagsProps {
   title?: string
   description?: string
   items: Array<string>
+  selectedItems?: Array<string>
   itemType?: string
+  onChange?: (items: Array<string>) => void
 }
 
 export interface SearchTag {
@@ -26,6 +28,8 @@ export const SearchTags: FC<SearchTagsProps> = ({
   description,
   items,
   itemType,
+  selectedItems = [],
+  onChange,
 }) => {
   const [searchQuery, setSearchQuery] = useState('')
   const [searchTagItems, setSearchTagItems] = useState<SearchTag[]>([])
@@ -36,6 +40,7 @@ export const SearchTags: FC<SearchTagsProps> = ({
       searchTagItems.map((item) => ({ ...item, selected: true }))
     )
     setShowSelectAll(false)
+    onChange?.(searchTagItems.map((item) => item.title))
   }
   const handleSelectItem = (tag) => {
     const items = [...searchTagItems]
@@ -48,6 +53,9 @@ export const SearchTags: FC<SearchTagsProps> = ({
     }
     setSearchTagItems([...items])
     setShowSelectAll(!showAll)
+    onChange?.(
+      items.filter((item) => item.selected === true).map((item) => item.title)
+    )
   }
   const handleSearch = (e) => {
     const query = e.target.value
@@ -59,8 +67,13 @@ export const SearchTags: FC<SearchTagsProps> = ({
     setShowSearchInput(false)
   }
   useEffect(() => {
-    setSearchTagItems(items.map((item) => ({ title: item, selected: false })))
-  }, [items])
+    setSearchTagItems(
+      items.map((item) => ({
+        title: item,
+        selected: selectedItems?.includes(item),
+      }))
+    )
+  }, [items, selectedItems])
   return (
     <div className={styles.searchTags}>
       {title && <h2>{title}</h2>}
