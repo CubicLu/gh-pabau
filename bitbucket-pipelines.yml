@@ -61,8 +61,7 @@ pipelines:
 
             - yarn affected --base=origin/master --target=lint --with-deps --parallel
             - yarn affected --base=origin/master --target=test
-            - yarn affected --base=origin/master --target=export --prod
-            - yarn affected --base=origin/master --target=deploy
+            - sh -c "NODE_OPTIONS=--max_old_space_size=8192 yarn affected --base=origin/master --target=deploy"
             - cat /tmp/bot_message.txt
 
             - npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "origin/master" "$(cat /tmp/bot_url_web.txt)" "$(cat /tmp/bot_url_ui.txt)" >> /tmp/bot_message.txt

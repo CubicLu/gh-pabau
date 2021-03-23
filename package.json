@@ -4,7 +4,7 @@
   "license": "Copyright Hambrand Technologies Ltd",
   "bump-rebuild-all": 5,
   "scripts": {
-    "nx": "nx",
+    "nx": "node --max_old_space_size=4096 ./node_modules/@nrwl/cli/bin/nx",
     "vercel": "vercel",
     "apollo": "apollo",
     "nest": "cd apps/backend && nest",
