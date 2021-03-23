@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { Badge } from 'antd'
 import { PlusCircleFilled } from '@ant-design/icons'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import styles from './GroupList.module.less'
 
 interface P {
@@ -14,6 +15,7 @@ interface P {
 export const GroupList: FC<P> = ({ ...props }) => {
   const [active, setActive] = useState<boolean>(false)
   const [group, setGroup] = useState<string>('')
+  const { t } = useTranslation('common')
 
   useEffect(() => {
     if (props.showChatBox) {
@@ -42,7 +44,7 @@ export const GroupList: FC<P> = ({ ...props }) => {
           style={{ cursor: 'pointer', transition: 'all 0.5s' }}
         >
           <span className={classNames(styles.textSm, styles.grayTextColor)}>
-            channels
+            {t('chat.channel')}
           </span>
           <PlusCircleFilled
             onClick={() => props.onCreateModalClick?.()}

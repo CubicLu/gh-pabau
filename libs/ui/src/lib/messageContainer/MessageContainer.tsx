@@ -1,5 +1,6 @@
 import React, { FC, MouseEvent, useState } from 'react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 import { Badge, Select, Avatar, Input } from 'antd'
 import {
   CloseOutlined,
@@ -69,6 +70,8 @@ export const MessageContainer: FC<P> = ({ ...props }) => {
     messages,
   } = props
 
+  const { t } = useTranslation('common')
+
   const [chatSearchValue, setChatSearchValue] = useState('')
 
   const handleSelectChange = (value) => {
@@ -112,6 +115,9 @@ export const MessageContainer: FC<P> = ({ ...props }) => {
                   ? renderMultipleField(selectedContact.data)
                   : selectedContact.userName}
               </p>
+              <p className={styles.chatHeaderSub}>
+                {t('message.managingdirector')}
+              </p>
               {!selectedContact.isMultiple && (
                 <p className={styles.chatHeaderSub}>Managing Director</p>
               )}
@@ -134,7 +140,7 @@ export const MessageContainer: FC<P> = ({ ...props }) => {
           )}
         >
           <div className={styles.chatHeader}>
-            <p className={styles.chatHeaderName}>New message</p>
+            <p className={styles.chatHeaderName}>{t('message.newmessage')}</p>
             <CloseOutlined
               className={classNames(styles.grayTextColor, styles.chatIconStyle)}
               onClick={() => onCloseNewDm?.()}
@@ -145,7 +151,7 @@ export const MessageContainer: FC<P> = ({ ...props }) => {
               <Select
                 mode="multiple"
                 style={{ width: '100%' }}
-                placeholder=" Type the name of a channel or people"
+                placeholder={t('message.select.placeholder')}
                 onChange={handleSelectChange}
               >
                 {members?.map((member) => (
@@ -364,7 +370,9 @@ export const MessageContainer: FC<P> = ({ ...props }) => {
       <div className={styles.messageContainer}>
         <div className={styles.messageContainerInner}>
           {messages && messages?.length <= 0 ? (
-            <div className={styles.invalidMessage}>No messages here yet</div>
+            <div className={styles.invalidMessage}>
+              {t('message.empty.msg')}
+            </div>
           ) : (
             <div>
               <div className={styles.dayPast}>

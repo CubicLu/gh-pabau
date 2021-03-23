@@ -1,8 +1,9 @@
 import { PrismaClient } from '@prisma/client'
 import { SchemaLink } from '@apollo/client/link/schema'
+import { Request, Response } from 'express'
+import { PubSub } from 'apollo-server'
+import { Operation } from '@apollo/client'
 import ResolverContextFunction = SchemaLink.ResolverContextFunction
-import { Request, Response } from "express";
-import { PubSub } from "apollo-server";
 
 const prisma = new PrismaClient()
 
@@ -13,8 +14,8 @@ export interface Context {
   pubSub: PubSub
 }
 
-export const createContext:ResolverContextFunction  = (req) => ({
+export const createContext: ResolverContextFunction = (req: Operation) => ({
   ...req,
   PubSub,
-  prisma
+  prisma,
 })

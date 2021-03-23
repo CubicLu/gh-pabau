@@ -16,12 +16,38 @@ interface Schema {
   notification?: Record<NotificationItems>
   breadScrumbs?: array<BreadScrumb>
   createButtonLabel?: string
+  createModalHeader?: string
+  editModalHeader?: string
+  deleteModalHeader?: string
   inboxButton?: boolean
   deleteDescField?: string
   tooltip?: string
-  createButtonLabel?: string
   padlocked?: string[]
+  filter?: SchemaFilter
+  company?: string
 }
+
+type DefaultFilterType = number | boolean
+
+interface SchemaFilter {
+  primary?: {
+    name: string
+    default: boolean
+    active: boolean
+    inactive: boolean
+  }
+}
+
+type FilterTypes =
+  | 'string'
+  | 'boolean'
+  | 'number'
+  | 'radio-group'
+  | 'color-picker'
+  | 'checkbox'
+  | 'icon'
+  | 'select'
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 interface SchemaItem {
   full?: string
@@ -30,7 +56,8 @@ interface SchemaItem {
   shortLower?: string
   min?: number
   max?: number
-  example?: string | number | any
+  placeholder?: string
+  tooltip?: string
   description?: string
   extra?: JSX.Element
   cssWidth?: string
@@ -53,6 +80,8 @@ interface SchemaItem {
   selectOptions?: TypeValues[]
   collapsible?: boolean
   col?: number
+  filter?: SchemaFilter
+  example?: string | number | boolean
 }
 interface TypeValues {
   label: string

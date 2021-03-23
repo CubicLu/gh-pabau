@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { Button, Table as AntTable, Avatar } from 'antd'
+import { Button, Table as AntTable, Avatar, Image } from 'antd'
 import { Daily } from '@pabau/ui'
 import {
   SortableContainer,
@@ -7,10 +7,12 @@ import {
   SortableHandle,
 } from 'react-sortable-hoc'
 import { ContactsOutlined, LockOutlined, MenuOutlined } from '@ant-design/icons'
-import styles from './Table.module.less'
 import { TableProps } from 'antd/es/table'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useTranslation } from 'react-i18next'
+import searchEmpty from '../../assets/images/empty.png'
+import styles from './Table.module.less'
+
 export interface DragProps {
   draggable?: boolean
   isCustomColorExist?: boolean
@@ -110,13 +112,9 @@ export const Table: FC<TableType> = ({
         className={isActive ? styles.activeBtn : styles.disableSourceBtn}
         disabled={!isActive}
       >
-        {needTranslation
-          ? isActive
-            ? t('marketingsource-tableRow-active-btn.translation')
-            : t('marketingsource-tableRow-inActive-btn.translation')
-          : isActive
-          ? 'Active'
-          : 'Inactive'}
+        {isActive
+          ? t('basic-crud-table-button-active')
+          : t('basic-crud-table-button-inactive')}
       </Button>
     )
   }
@@ -143,19 +141,19 @@ export const Table: FC<TableType> = ({
       <div
         style={{ background: rowData.color }}
         className={styles.customColor}
-      ></div>
+      />
     )
   }
 
   const checkPadLocks = (record) => {
-    let alloWClicked = true
+    let clickable = true
     Object.keys(record).map((key) => {
       if (padlocked?.includes(record[key])) {
-        alloWClicked = false
+        clickable = false
       }
       return key
     })
-    return alloWClicked
+    return clickable
   }
 
   const renderDays = (data) => {
@@ -215,16 +213,24 @@ export const Table: FC<TableType> = ({
     <div className={styles.noDataTableBox}>
       <div className={styles.noDataTextStyle}>
         <Avatar icon={noDataIcon} size="large" className={styles.roundDesign} />
-        <p>{`Add ${noDataText} to create more shifts faster`}</p>
-        <div className={styles.spaceBetweenText}></div>
+        <p>{`${noDataText}`}</p>
+        <div className={styles.spaceBetweenText} />
         <Button
           className={styles.createTemaplateBtn}
           type="primary"
           onClick={() => onAddTemplate?.()}
         >
-          {`Add ${noDataBtnText}`}
+          {`${noDataBtnText}`}
         </Button>
       </div>
+    </div>
+  ) : !dataSource?.length && !props.loading && searchTerm ? (
+    <div className={styles.noSearchResult}>
+      <Image src={searchEmpty} preview={false} />
+      <p className={styles.noResultsText}>
+        {t('crud-table-no-search-results')}
+      </p>
+      <p className={styles.tryAdjustText}>{t('crud-table-try-adjust')}</p>
     </div>
   ) : (
     <AntTable
@@ -236,11 +242,7 @@ export const Table: FC<TableType> = ({
               onRowClick?.(record)
               console.log(event, record)
             }
-          }, // click row
-          //   onDoubleClick: (event) => {}, // double click row
-          //   onContextMenu: (event) => {}, // right button click row
-          //   onMouseEnter: (event) => {}, // mouse enter row
-          //   onMouseLeave: (event) => {}, // mouse leave row
+          },
         }
       }}
       pagination={
@@ -250,9 +252,6 @@ export const Table: FC<TableType> = ({
       columns={renderSortHandler()}
       rowKey="key"
       className={styles.dragTable}
-      locale={{
-        emptyText: !props.loading && searchTerm && 'No results found',
-      }}
       components={{
         body: {
           wrapper: DraggableContainer,

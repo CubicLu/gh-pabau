@@ -3,23 +3,26 @@ import { Pagination as AntPagination, Dropdown, Menu } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import { PaginationProps as AntPaginationProps } from 'antd/es/pagination'
 import styles from './Pagination.module.less'
+import { useTranslation } from 'react-i18next'
 
 interface PaginationProps {
   showingRecords: number
+  pageSizeOptions?: string[]
   onPageSizeChange?: (pageSize?: number) => void
 }
 export const Pagination: FC<PaginationProps & AntPaginationProps> = ({
   showingRecords,
+  pageSizeOptions,
   onPageSizeChange,
   ...props
 }) => {
-  const pageSizes = [10, 25, 50, 100]
+  const { t } = useTranslation('common')
   const pageSizesMenu = (
     <Menu>
-      {pageSizes.map((pageSize, key) => (
+      {pageSizeOptions?.map((pageSize, key) => (
         <Menu.Item
           key={`page-size-${key}`}
-          onClick={() => onPageSizeChange?.(pageSize)}
+          onClick={() => onPageSizeChange?.(Number(pageSize))}
         >
           {pageSize}
         </Menu.Item>
@@ -31,11 +34,13 @@ export const Pagination: FC<PaginationProps & AntPaginationProps> = ({
     <div className={styles.tableFooter}>
       <div>
         <p className={styles.paginationText}>
-          Showing <span>{showingRecords}</span> results from{' '}
-          <span>{props.total}</span>
+          {t('crud-table-pagination-text-showing')}{' '}
+          <span>{showingRecords}</span>
+          {t('crud-table-pagination-text-results')} <span>{props.total}</span>
         </p>
         <p className={styles.paginationText}>
-          Rows per page <span>{props.pageSize}</span>
+          {t('crud-table-pagination-test-displaying')}{' '}
+          <span>{props.pageSize}</span>
           <Dropdown
             overlay={pageSizesMenu}
             trigger={['click']}

@@ -3,7 +3,7 @@
     "translation": "Créer une source marketing"
   },
   "marketingsource-title": {
-    "translation": "Créer une source marketing"
+    "translation": "Sources de marketing"
   },
   "marketingsource-name-textfield": {
     "translation": "Nom"
@@ -14,25 +14,25 @@
   "marketingsource-header-edit": {
     "translation": "Créer une source marketing"
   },
-  "marketingsource-input-search-placeholder": {
+  "basic-crud-table-input-search-placeholder": {
     "translation": "Chercher"
   },
-  "marketingsource-button-filter": {
+  "basic-crud-table-button-filter": {
     "translation": "Filtre"
   },
-  "marketingsource-tableColumn-active": {
+  "basic-crud-table-column--active": {
     "translation": "Actif"
   },
-  "marketingsource-tableRow-active-btn": {
+  "basic-crud-table-button-active": {
     "translation": "Actif"
   },
-  "marketingsource-tableRow-inActive-btn": {
+  "basic-crud-table-button-inactive": {
     "translation": "Inactif"
   },
-  "marketingsource-header-create-btn": {
+  "basic-crud-table-header-button-create": {
     "translation": "Créer une source"
   },
-  "marketingsource-header-breadcrumb-setup-link": {
+  "basic-crud-table-header-breadcrumb-setup-link": {
     "translation": "Installer"
   }
 }
