@@ -1,9 +1,9 @@
 import { gql } from '@apollo/client'
 import { NextPage } from 'next'
 import React, { useContext } from 'react'
-import CrudLayout from '../../components/CrudLayout/CrudLayout'
-import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import { UserContext } from '../../context/UserContext'
+import CrudLayout from '../../../components/CrudLayout/CrudLayout'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import { UserContext } from '../../../context/UserContext'
 
 const LIST_QUERY = gql`
   query marketing_sources(

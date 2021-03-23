@@ -1,5 +1,5 @@
 import { GraphQLClient } from 'graphql-request'
-import { app as server } from '../src/main'
+import { app as server } from '../../src/main'
 
 type TestContext = {
   client: GraphQLClient

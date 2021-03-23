@@ -34,7 +34,6 @@ const GRAPHQL_WS_ENDPOINT =
 const GRAPHQL_HTTP_ENDPOINT =
   process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
   'https://api.new.pabau.com/v1/graphql'
-// const GRAPHQL_HTTP_ENDPOINT = 'https://api.new.pabau.com/v1/graphql'
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token')

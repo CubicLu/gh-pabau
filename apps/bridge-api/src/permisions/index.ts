@@ -1,13 +1,9 @@
 import { allow, rule, shield } from 'graphql-shield'
 import { Context } from '../context'
 
-// TODO
-// const companyColumns = ['occupier', 'company_id']
-
 const rules = {
   isAuthenticated: rule('isAuthenticated')(
     async (root, args, ctx: Context): Promise<boolean> => {
-      console.log(ctx.req.authenticatedUser)
       try {
         if (ctx.req.authenticatedUser) return true
       } catch (error) {
@@ -19,8 +15,6 @@ const rules = {
   sameCompany: rule('sameCompany')(
     async (root, args, ctx: Context, info): Promise<boolean> => {
       try {
-        if (root && root.company_id !== ctx.req.authenticatedUser.company)
-          return false
         if (
           info.returnType.toString().startsWith('[') ||
           info.operation.name.value.includes('aggregate')
@@ -64,5 +58,6 @@ export const permissions = shield({
     '*': rules.isAuthenticated && rules.sameCompany,
     marketingSourcesCount: rules.isAuthenticated && rules.sameCompany,
     me: rules.isAuthenticated,
+    ping: allow,
   },
 })

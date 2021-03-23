@@ -19,9 +19,6 @@ export const Authentication = extendType({
         const token = await new AuthenticationService(ctx).handleLoginRequest(
           loginInput
         )
-        ctx.req.session = {
-          jwt: token,
-        }
         return token
       },
     })
@@ -29,7 +26,6 @@ export const Authentication = extendType({
       type: 'Boolean',
       args: {},
       async resolve(_, __, ctx: Context) {
-        ctx.req.session = null
         return true
       },
     })

@@ -12,8 +12,8 @@ const authenticatedUser = (req: Request, res: Response, next: NextFunction) => {
         { algorithms: ['HS512'] }
       ) as JwtPayloadDto
     }
-  } catch {
-    // console.error(error)
+  } catch (error) {
+    console.error(error)
   } finally {
     next()
   }
