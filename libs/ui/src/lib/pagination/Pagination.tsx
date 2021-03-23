@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 interface PaginationProps {
   showingRecords: number
-  pageSizeOptions: string[]
+  pageSizeOptions?: string[]
   onPageSizeChange?: (pageSize?: number) => void
 }
 export const Pagination: FC<PaginationProps & AntPaginationProps> = ({
