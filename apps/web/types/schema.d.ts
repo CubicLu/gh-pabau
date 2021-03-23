@@ -81,6 +81,7 @@ interface SchemaItem {
   collapsible?: boolean
   col?: number
   filter?: SchemaFilter
+  example?: string
 }
 interface TypeValues {
   label: string
