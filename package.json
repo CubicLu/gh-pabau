@@ -73,6 +73,8 @@
     "formik-antd": "^2.0.1",
     "google-libphonenumber": "^3.2.18",
     "graphql": "^15.4.0",
+    "highcharts": "^9.0.1",
+    "highcharts-react-official": "^3.0.0",
     "graphql-middleware": "^6.0.4",
     "highcharts": "^9.0.1",
     "highcharts-react-official": "^3.0.0",

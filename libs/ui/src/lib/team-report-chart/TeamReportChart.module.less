@@ -1,0 +1,43 @@
+.team-report-chart-wrapper {
+  width: 100%;
+  padding: 12px 24px;
+
+  .team-report-chart-header {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .team-report-chart {
+    margin-top: 40px;
+    font-family: Circular-Std-Book, -apple-system, sans-serif;
+  }
+
+  .team-report-mini-chart {
+    margin: 0px;
+    width: 100%;
+  }
+
+  .team-report-table {
+    margin-top: 40px;
+    width: 100%;
+    border: 1px solid #ecedf0;
+    border-radius: 4px;
+
+    .actual,
+    .target {
+      display: flex;
+      align-items: center;
+      &::before {
+        content: ' ';
+        border-top: 1px solid #54b2d3;
+        width: 16px;
+        margin-right: 8px;
+      }
+
+      &.target::before {
+        border-top-style: dashed;
+      }
+    }
+  }
+}
