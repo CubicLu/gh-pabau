@@ -91,7 +91,6 @@ const schema: Schema = {
   },
 }
 
-/* eslint-disable graphql/template-strings */
 export const LIST_QUERY = gql`
   query rota_templates($isActive: Boolean = true, $offset: Int, $limit: Int) {
     rota_templates(

@@ -3,7 +3,6 @@ import { NextPage } from 'next'
 import React from 'react'
 import CrudLayout from '../../components/CrudLayout/CrudLayout'
 
-/* eslint-disable graphql/template-strings */
 const LIST_QUERY = gql`
   query salutation($isActive: Boolean = true, $offset: Int, $limit: Int) {
     salutation(
