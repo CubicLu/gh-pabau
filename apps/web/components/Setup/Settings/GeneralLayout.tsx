@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
 import { Typography, Card } from 'antd'
-
 import styles from './GeneralLayout.module.less'
 
 interface P {
