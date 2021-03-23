@@ -10,7 +10,7 @@ import React, { FC, useEffect, useState, useRef, useMemo } from 'react'
 import { DocumentNode, useMutation } from '@apollo/client'
 import AddButton from './AddButton'
 import { Breadcrumb } from '@pabau/ui'
-import { Typography, Image } from 'antd'
+import { Typography } from 'antd'
 import styles from './CrudTable.module.less'
 import CrudModal from './CrudModal'
 import { Formik, FormikErrors } from 'formik'
@@ -20,7 +20,6 @@ import classNames from 'classnames'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
 import { useRouter } from 'next/router'
 import { getParentSetupData } from '../mocks/SetupGridData'
-import searchEmpty from '../assets/images/empty.png'
 
 const { Title } = Typography
 interface P {
@@ -417,9 +416,10 @@ const CrudTable: FC<P> = ({
             ) {
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
-              a[
-                c[0]
-              ] = t('crud-table-input-min-length-validate', { what: c[1].shortLower, min: c[1].min })
+              a[c[0]] = t('crud-table-input-min-length-validate', {
+                what: c[1].shortLower,
+                min: c[1].min,
+              })
             } else if (
               c[1].required && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
@@ -432,7 +432,9 @@ const CrudTable: FC<P> = ({
               // @ts-ignore
               c[1].max < e[c[0]]?.toString().length
             ) {
-              a[c[0]] = t('crud-table-input-max-length-validate', { max: c[1].max })
+              a[c[0]] = t('crud-table-input-max-length-validate', {
+                max: c[1].max,
+              })
             } else if (
               e[c[0]] &&
               c[1].type === 'number' &&
@@ -441,7 +443,9 @@ const CrudTable: FC<P> = ({
                 e[c[0]].toString()
               )
             ) {
-              a[c[0]] = t('crud-table-input-invalid-validate', { what: c[1].shortLower })
+              a[c[0]] = t('crud-table-input-invalid-validate', {
+                what: c[1].shortLower,
+              })
             }
             return a
             // eslint-disable-next-line

@@ -106,7 +106,7 @@ export const Index: NextPage = () => {
   const schema: Schema = {
     full: t('marketingsource-title'),
     fullLower: t('marketingsource-title'),
-    short:  t('marketingsource-title-short'),
+    short: t('marketingsource-title-short'),
     shortLower: t('marketingsource-title-short'),
     createButtonLabel: t('marketingsource-header-create.translation'),
     createModalHeader: t('marketingsource-header-create'),
