@@ -1,3 +1,4 @@
+export * from './lib/report-help-sidebar/ReportHelpSidebar'
 export * from './lib/custom-scrollbar/CustomScrollbar'
 export * from './lib/radio-button/RadioButton'
 export * from './lib/custom-progress/CustomProgress'

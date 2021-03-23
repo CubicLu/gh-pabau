@@ -148,3 +148,40 @@ en:
     notifications.documnetshared.signatureBlock: 'The Clinic Team'
     notifications.documnetshared.infoText:
         "We're required by EU law to send your personal information in an encrypted format. It is free to view and all you have to do is click on the link in the email below that reads \"Click to read this secure email online\". This will take you through to a secure page with 'Pabau'."
+    ui.report-help-sidebar.payroll-title: payroll
+    ui.report-help-sidebar.payroll-team-commission-title: Team Comission
+    ui.report-help-sidebar.payroll-team-commission-content: ui.report-help-sidebar.payroll-team-commission-content-en
+    ui.report-help-sidebar.payroll-team-wages-title: Team Wages
+    ui.report-help-sidebar.payroll-team-wages-content: ui.report-help-sidebar.payroll-team-wages-content-en
+    ui.report-help-sidebar.shifts-days-worked-title: Days Worked
+    ui.report-help-sidebar.shifts-days-worked-content: ui.report-help-sidebar.shifts-days-worked-content-en
+    ui.report-help-sidebar.shifts-days-off-title: Days Off
+    ui.report-help-sidebar.shifts-days-off-content: ui.report-help-sidebar.shifts-days-off-content-en
+    ui.report-help-sidebar.performance-title: performance
+    ui.report-help-sidebar.performance-services-title: Services
+    ui.report-help-sidebar.performance-services-content: ui.report-help-sidebar.performance-services-content-en
+    ui.report-help-sidebar.performance-products-title: Products
+    ui.report-help-sidebar.performance-products-content: ui.report-help-sidebar.performance-products-content-en
+    ui.report-help-sidebar.performance-packages-title: Packages
+    ui.report-help-sidebar.performance-packages-content: ui.report-help-sidebar.performance-packages-content-en
+    ui.report-help-sidebar.performance-vouchers-title: Vouchers
+    ui.report-help-sidebar.performance-vouchers-content: ui.report-help-sidebar.performance-vouchers-content-en
+    ui.report-help-sidebar.kpis-title: kpis
+    ui.report-help-sidebar.kpis-services-title: Services
+    ui.report-help-sidebar.kpis-services-content: ui.report-help-sidebar.kpis-services-content-en
+    ui.report-help-sidebar.kpis-products-title: Products
+    ui.report-help-sidebar.kpis-products-content: ui.report-help-sidebar.kpis-products-content-en
+    ui.report-help-sidebar.kpis-avg-bill-title: Avg Bill (per visit)
+    ui.report-help-sidebar.kpis-avg-bill-content: ui.report-help-sidebar.kpis-avg-bill-content-en
+    ui.report-help-sidebar.kpis-client-visits-title: Client Visits
+    ui.report-help-sidebar.kpis-client-visits-content: ui.report-help-sidebar.kpis-client-visits-content-en
+    ui.report-help-sidebar.kpis-rebook-title: Rebook
+    ui.report-help-sidebar.kpis-rebook-content: ui.report-help-sidebar.kpis-rebook-content-en
+    ui.report-help-sidebar.kpis-utilization-title: Utilization
+    ui.report-help-sidebar.kpis-utilization-content: ui.report-help-sidebar.kpis-utilization-content-en
+    ui.report-help-sidebar.kpis-review-score-title: Review Score
+    ui.report-help-sidebar.kpis-review-score-content: ui.report-help-sidebar.kpis-review-score-content-en
+    ui.report-help-sidebar.kpis-care-factor-title: Care Factor
+    ui.report-help-sidebar.kpis-care-factor-content: ui.report-help-sidebar.kpis-care-factor-content-en
+    ui.report-help-sidebar.kpis-vouchers-title: Vouchers
+    ui.report-help-sidebar.kpis-vouchers-content: ui.report-help-sidebar.kpis-vouchers-content_en
