@@ -33,6 +33,9 @@ fr:
   crud-table-pagination-test-displaying: 'Lignes par page'
   crud-table-no-search-results: 'Aucun résultat trouvé'
   crud-table-try-adjust: 'Essayez d`ajuster votre recherche pour trouver ce que vous recherchez'
+  crud-table-input-min-length-validate: 'La valeur pour {{what}} d`au moins {{min}} caractères.'
+  crud-table-input-max-length-validate: 'La longueur maximale de {{max}} caractères est atteinte.'
+  crud-table-input-invalid-validate: '{{what}} invalide'
   search-header-placehodlder: 'Search clients or leads. FR'
 
   add-button-filter: 'Filtre'

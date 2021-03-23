@@ -419,7 +419,7 @@ const CrudTable: FC<P> = ({
               // @ts-ignore
               a[
                 c[0]
-              ] = `The value for ${c[1].shortLower} at least ${c[1].min} characters.`
+              ] = t('crud-table-input-min-length-validate', { what: c[1].shortLower, min: c[1].min })
             } else if (
               c[1].required && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
@@ -432,7 +432,7 @@ const CrudTable: FC<P> = ({
               // @ts-ignore
               c[1].max < e[c[0]]?.toString().length
             ) {
-              a[c[0]] = `The max length of ${c[1].max} characters is reached.`
+              a[c[0]] = t('crud-table-input-max-length-validate', { max: c[1].max })
             } else if (
               e[c[0]] &&
               c[1].type === 'number' &&
@@ -441,7 +441,7 @@ const CrudTable: FC<P> = ({
                 e[c[0]].toString()
               )
             ) {
-              a[c[0]] = `Invalid ${c[1].shortLower}.`
+              a[c[0]] = t('crud-table-input-invalid-validate', { what: c[1].shortLower })
             }
             return a
             // eslint-disable-next-line
@@ -557,91 +557,80 @@ const CrudTable: FC<P> = ({
                 />
               )}
             </div>
-            {!isLoading && sourceData.length !== 0 && (
-              <>
-                <div className={styles.marketingSourcesTableContainer}>
-                  <Table
-                    loading={isLoading}
-                    style={{ height: '100%' }}
-                    sticky={{ offsetScroll: 80, offsetHeader: 80 }}
-                    pagination={sourceData?.length > 10 ? {} : false}
-                    draggable={draggable}
-                    isCustomColorExist={checkCustomColorIconExist('color')}
-                    isCustomIconExist={checkCustomColorIconExist('icon')}
-                    noDataBtnText={schema.full}
-                    noDataText={schema.fullLower}
-                    padlocked={schema.padlocked}
-                    scroll={{ x: 'max-content' }}
-                    onAddTemplate={
-                      createPage ? () => createPageOnClick() : () => createNew()
+            <div className={styles.marketingSourcesTableContainer}>
+              <Table
+                loading={isLoading}
+                style={{ height: '100%' }}
+                sticky={{ offsetScroll: 80, offsetHeader: 80 }}
+                pagination={sourceData?.length > 10 ? {} : false}
+                draggable={draggable}
+                isCustomColorExist={checkCustomColorIconExist('color')}
+                isCustomIconExist={checkCustomColorIconExist('icon')}
+                noDataBtnText={schema.full}
+                noDataText={schema.fullLower}
+                padlocked={schema.padlocked}
+                scroll={{ x: 'max-content' }}
+                onAddTemplate={
+                  createPage ? () => createPageOnClick() : () => createNew()
+                }
+                searchTerm={searchTerm}
+                columns={[
+                  ...Object.entries(schema.fields).map(([k, v]) => ({
+                    dataIndex: k,
+                    width: v.cssWidth,
+                    title: v.short || v.full,
+                    visible: Object.prototype.hasOwnProperty.call(v, 'visible')
+                      ? v.visible
+                      : true,
+                  })),
+                ]}
+                dataSource={sourceData?.map((e: { id: string | number }) => ({
+                  key: e.id,
+                  ...e,
+                }))}
+                updateDataSource={({ newData, oldIndex, newIndex }) => {
+                  newData = newData.map((data, i) => {
+                    data.order = sourceData[i].order
+                    return data
+                  })
+                  if (oldIndex > newIndex) {
+                    for (let i = newIndex; i <= oldIndex; i++) {
+                      updateOrder(newData[i])
                     }
-                    searchTerm={searchTerm}
-                    columns={[
-                      ...Object.entries(schema.fields).map(([k, v]) => ({
-                        dataIndex: k,
-                        width: v.cssWidth,
-                        title: v.short || v.full,
-                        visible: Object.prototype.hasOwnProperty.call(v, 'visible')
-                          ? v.visible
-                          : true,
-                      })),
-                    ]}
-                    dataSource={sourceData?.map((e: { id: string | number }) => ({
-                      key: e.id,
-                      ...e,
-                    }))}
-                    updateDataSource={({ newData, oldIndex, newIndex }) => {
-                      newData = newData.map((data, i) => {
-                        data.order = sourceData[i].order
-                        return data
-                      })
-                      if (oldIndex > newIndex) {
-                        for (let i = newIndex; i <= oldIndex; i++) {
-                          updateOrder(newData[i])
-                        }
-                      } else {
-                        for (let i = oldIndex; i <= newIndex; i++) {
-                          updateOrder(newData[i])
-                        }
-                      }
-                      setSourceData(newData)
-                    }}
-                    onRowClick={(e) => {
-                      if (editPage) {
-                        router.push(`${editPageRouteLink}/${e.id}`)
-                      } else {
-                        setEditingRow(e)
-                        setModalShowing((e) => !e)
-                      }
-                    }}
-                    needTranslation={needTranslation}
-                  />
-                </div>
-                <Pagination
-                  total={paginateData.total}
-                  defaultPageSize={10}
-                  showSizeChanger={false}
-                  onChange={onPaginationChange}
-                  pageSizeOptions={['10', '25', '50', '100']}
-                  onPageSizeChange={(pageSize) => {
-                    setPaginateData({
-                      ...paginateData,
-                      limit: pageSize,
-                    })
-                  }}
-                  pageSize={paginateData.limit}
-                  current={paginateData.currentPage}
-                  showingRecords={paginateData.showingRecords}
-                />
-              </>
-            )}
-            {!isLoading && sourceData.length === 0 && (
-              <div className={styles.noSearchResult}>
-                <Image src={searchEmpty} preview={false} />
-                <p className={styles.noResultsText}>{t('crud-table-no-search-results')}</p>
-                <p className={styles.tryAdjustText}>{t('crud-table-try-adjust')}</p>
-              </div>
-            )}
+                  } else {
+                    for (let i = oldIndex; i <= newIndex; i++) {
+                      updateOrder(newData[i])
+                    }
+                  }
+                  setSourceData(newData)
+                }}
+                onRowClick={(e) => {
+                  if (editPage) {
+                    router.push(`${editPageRouteLink}/${e.id}`)
+                  } else {
+                    setEditingRow(e)
+                    setModalShowing((e) => !e)
+                  }
+                }}
+                needTranslation={needTranslation}
+              />
+            </div>
+            <Pagination
+              total={paginateData.total}
+              defaultPageSize={10}
+              showSizeChanger={false}
+              onChange={onPaginationChange}
+              pageSizeOptions={['10', '25', '50', '100']}
+              onPageSizeChange={(pageSize) => {
+                setPaginateData({
+                  ...paginateData,
+                  limit: pageSize,
+                })
+              }}
+              pageSize={paginateData.limit}
+              current={paginateData.currentPage}
+              showingRecords={paginateData.showingRecords}
+            />
           </Layout>
         </>
       </Formik>

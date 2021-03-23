@@ -35,6 +35,9 @@ en:
   crud-table-pagination-test-displaying: 'Rows per page'
   crud-table-no-search-results: 'No results found'
   crud-table-try-adjust: 'Try adjusting your search to find what you’re looking for'
+  crud-table-input-min-length-validate: 'The value for {{what}} at least {{min}} characters.'
+  crud-table-input-max-length-validate: 'The max length of {{max}} is reached.'
+  crud-table-input-invalid-validate: 'Invalid {{what}}'
 
   add-button-filter: 'Filter'
   add-button-filter-header-text-filter: 'Filter by'

@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { Button, Table as AntTable, Avatar } from 'antd'
+import { Button, Table as AntTable, Avatar, Image } from 'antd'
 import { Daily } from '@pabau/ui'
 import {
   SortableContainer,
@@ -7,10 +7,12 @@ import {
   SortableHandle,
 } from 'react-sortable-hoc'
 import { ContactsOutlined, LockOutlined, MenuOutlined } from '@ant-design/icons'
-import styles from './Table.module.less'
 import { TableProps } from 'antd/es/table'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useTranslation } from 'react-i18next'
+import searchEmpty from '../../assets/images/empty.png'
+import styles from './Table.module.less'
+
 export interface DragProps {
   draggable?: boolean
   isCustomColorExist?: boolean
@@ -222,7 +224,12 @@ export const Table: FC<TableType> = ({
         </Button>
       </div>
     </div>
-  ) : (
+  ) : (!dataSource?.length && !props.loading && searchTerm) ? (
+    <div className={styles.noSearchResult}>
+    <Image src={searchEmpty} preview={false} />
+    <p className={styles.noResultsText}>{t('crud-table-no-search-results')}</p>
+    <p className={styles.tryAdjustText}>{t('crud-table-try-adjust')}</p>
+  </div>) : (
     <AntTable
       {...props}
       onRow={(record, rowIndex) => {
@@ -232,11 +239,7 @@ export const Table: FC<TableType> = ({
               onRowClick?.(record)
               console.log(event, record)
             }
-          }, // click row
-          //   onDoubleClick: (event) => {}, // double click row
-          //   onContextMenu: (event) => {}, // right button click row
-          //   onMouseEnter: (event) => {}, // mouse enter row
-          //   onMouseLeave: (event) => {}, // mouse leave row
+          },
         }
       }}
       pagination={
@@ -246,9 +249,6 @@ export const Table: FC<TableType> = ({
       columns={renderSortHandler()}
       rowKey="key"
       className={styles.dragTable}
-      locale={{
-        emptyText: !props.loading && searchTerm && 'No results found',
-      }}
       components={{
         body: {
           wrapper: DraggableContainer,
