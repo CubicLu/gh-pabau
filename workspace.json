@@ -541,6 +541,14 @@
             "passWithNoTests": true
           }
         },
+        "e2e": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/bridge-api-e2e"],
+          "options": {
+            "jestConfig": "apps/bridge-api/jest.e2e.config.js",
+            "passWithNoTests": true
+          }
+        },
         "deploy": {
           "builder": "@nrwl/workspace:run-commands",
           "outputs": [],

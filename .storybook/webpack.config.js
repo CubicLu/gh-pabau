@@ -5,11 +5,11 @@
  * @param {'DEVELOPMENT' | 'PRODUCTION'} options.mode - change the build configuration. 'PRODUCTION' is used when building the static version of storybook.
  */
 module.exports = async ({ config, mode }) => {
-
   // Support importing yml files
   config.module.rules.push({
     test: /\.ya?ml$/,
-    use: 'js-yaml-loader',
+    type: 'json',
+    use: 'yaml-loader',
   })
 
   return config

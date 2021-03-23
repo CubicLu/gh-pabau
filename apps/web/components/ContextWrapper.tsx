@@ -1,27 +1,8 @@
-import React, { FC } from 'react'
+import React, { FunctionComponent } from 'react'
 import { gql, useQuery } from '@apollo/client'
 import { UserContext } from '../context/UserContext'
-import { GetStaticProps, InferGetStaticPropsType } from 'next'
-import { getApolloClient } from '../pages/_app'
 import { Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
-
-const CURRENT_USER = gql`
-  query retrieveAuthenticatedUser {
-    me {
-      id
-      username
-      full_name
-      company {
-        id
-        details {
-          company_name
-          language
-        }
-      }
-    }
-  }
-`
 
 interface User {
   id: string
@@ -38,24 +19,39 @@ interface Company {
   }
 }
 
-const ContextWrapper: FC = ({
-  children,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { loading, error, data } = useQuery(CURRENT_USER, { ssr: false })
+const ContextWrapper: FunctionComponent = ({ children }) => {
+  const { loading, error, data } = useQuery(
+    gql`
+      query retrieveAuthenticatedUser {
+        me {
+          id
+          username
+          full_name
+          company {
+            id
+            details {
+              company_name
+              language
+            }
+          }
+        }
+      }
+    `,
+    { ssr: false }
+  )
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
 
   if (error) {
     console.error(error)
   }
   if (loading) {
-    // return <LoadingOutlined size={'large'} className={styles.loader} spin />
     return (
       <Spin
         style={{
           position: 'absolute',
           margin: 'auto',
-          left: 800,
-          top: 400,
+          left: '50%',
+          top: '45%',
           textAlign: 'center',
         }}
         size={'large'}
@@ -69,30 +65,6 @@ const ContextWrapper: FC = ({
   return (
     <UserContext.Provider value={data as User}>{children}</UserContext.Provider>
   )
-}
-
-export const getStaticProps: GetStaticProps = async () => {
-  const apolloClient = getApolloClient()
-  const user = await apolloClient.query({
-    query: CURRENT_USER,
-  })
-
-  if (!user) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    }
-  }
-
-  return {
-    props: {
-      test: 'test',
-      currentUser: user,
-    },
-    revalidate: 1,
-  }
 }
 
 export default ContextWrapper

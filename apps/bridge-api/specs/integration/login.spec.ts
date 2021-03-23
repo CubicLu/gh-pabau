@@ -31,7 +31,7 @@ test('denies invalid logins', async () => {
   })
 })
 
-test.skip('allows valid logins', async () => {
+test('allows valid logins', async () => {
   await expect(
     ctx.client.request(
       gql`
