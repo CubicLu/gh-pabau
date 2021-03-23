@@ -60,7 +60,17 @@ interface SchemaItem {
   description?: string
   extra?: JSX.Element
   cssWidth?: string
-  type?: FilterTypes
+  type?:
+    | 'string'
+    | 'boolean'
+    | 'number'
+    | 'radio-group'
+    | 'color-picker'
+    | 'checkbox'
+    | 'days-checkbox'
+    | 'icon'
+    | 'select'
+    | 'time'
   defaultvalue?: string | number | boolean
   visible?: boolean
   required?: boolean
