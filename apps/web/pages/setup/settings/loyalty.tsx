@@ -41,7 +41,7 @@ const LoyaltySettings: FC<P> = () => {
     <div className={styles.loyaltyMainWrapper}>
       <Layout>
         <Card className={styles.loyaltyContainer}>
-          {isMobile ? (
+          <div className={styles.hideDesktopView}>
             <Row className={styles.mobDevice}>
               <Col>
                 <div className={styles.mobTopHead}>
@@ -56,8 +56,9 @@ const LoyaltySettings: FC<P> = () => {
                 </div>
               </Col>
             </Row>
-          ) : (
-            <Row className={styles.loyaltyMainWrapper}>
+          </div>
+          <div className={styles.hideMobileView}>
+            <Row className={styles.loyaltyWrapper}>
               <Col span={20} className={styles.titleWrapper}>
                 <Breadcrumb
                   breadcrumbItems={[
@@ -82,7 +83,7 @@ const LoyaltySettings: FC<P> = () => {
                 </Button>
               </Col>
             </Row>
-          )}
+          </div>
           <General
             generalObj={LoyaltySettingsObj.general}
             values={loyaltyFormik.values}

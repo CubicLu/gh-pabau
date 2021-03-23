@@ -6,6 +6,7 @@ import { Button } from '../button/Button'
 
 export const ClassWaitList: FC<ClassWaitListProps & EmailSMSPreviewProps> = ({
   message,
+  buttonColor,
 }) => {
   return (
     <>
@@ -22,7 +23,9 @@ export const ClassWaitList: FC<ClassWaitListProps & EmailSMSPreviewProps> = ({
         </Col>
       </Row>
       <Row gutter={[0, 4]} className={styles.bookAppointment}>
-        <Button className={styles.bookButton}>Book now</Button>
+        <Button backgroundColor={buttonColor} className={styles.bookButton}>
+          Book now
+        </Button>
       </Row>
     </>
   )

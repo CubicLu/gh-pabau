@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 
 interface LangData {
   [key: string]: Email
@@ -278,12 +278,12 @@ export const AppointmentEmailPreview: FC<P> = ({
   buttonColor,
   activeSocialIcons = [],
 }) => {
-  const [selectLangData, setSelectLangData] = React.useState<Email>(
+  const [selectLangData, setSelectLangData] = useState<Email>(
     langData[selectLanguage?.toLowerCase() || 'en']
   )
 
   // const selectLangData = langData['en']
-  React.useEffect(() => {
+  useEffect(() => {
     if (langData[`${selectLanguage?.toLowerCase()}`]) {
       setSelectLangData({ ...langData[`${selectLanguage.toLowerCase()}`] })
     }

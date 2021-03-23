@@ -28,6 +28,9 @@ interface P {
   hideReminderTimeFrameTabPane?: boolean
   smartDelivery: boolean
   onSmartDelivery: (boolean) => void
+  hideReminderSettingTabPane?: boolean
+  smartFramework: boolean
+  onSmartFramework: (boolean) => void
   requestConfirmation: boolean
   onRequestConfirmation: (boolean) => void
   hideRequestConfirmationOption?: boolean
@@ -42,8 +45,10 @@ interface P {
   hideDisplayPolicyOption?: boolean
   showService: boolean
   onShowService: (boolean) => void
+  hideServiceOption?: boolean
   showEmployeeName: boolean
   onShowEmployeeName: (boolean) => void
+  hideEmployeeNameOption?: boolean
   addMedicalHisButton: boolean
   onAddMedicalHisButton: (boolean) => void
   hideMedicalHistoryOption?: boolean
@@ -63,6 +68,9 @@ interface P {
   onSmsMessage: (string) => void
   onActiveSocialIcon: (value: string[]) => void
   disableCustomTab: boolean
+  hideEnablePay?: boolean
+  onShowEnablePay: (boolean) => void
+  showEnablePay?: boolean
 }
 
 const { TabPane } = Tabs
@@ -77,6 +85,9 @@ export const Standard: FC<P> = ({
   smartDelivery,
   onSmartDelivery,
   hideReminderTimeFrameTabPane = false,
+  smartFramework,
+  onSmartFramework,
+  hideReminderSettingTabPane = true,
   requestConfirmation,
   onRequestConfirmation,
   hideRequestConfirmationOption = false,
@@ -91,8 +102,10 @@ export const Standard: FC<P> = ({
   hideDisplayPolicyOption = false,
   showService,
   onShowService,
+  hideServiceOption = false,
   showEmployeeName,
   onShowEmployeeName,
+  hideEmployeeNameOption = false,
   addMedicalHisButton,
   onAddMedicalHisButton,
   hideMedicalHistoryOption = false,
@@ -112,6 +125,9 @@ export const Standard: FC<P> = ({
   onSmsMessage,
   onActiveSocialIcon,
   disableCustomTab,
+  hideEnablePay = false,
+  showEnablePay,
+  onShowEnablePay,
 }) => {
   function callback(key) {
     onStandardTabChanged(key)
@@ -218,6 +234,54 @@ export const Standard: FC<P> = ({
                   </>
                 </Panel>
               )}
+              {!hideReminderSettingTabPane && (
+                <Panel
+                  className={styles.panelAlign}
+                  header="Reminder Setting"
+                  key="1"
+                >
+                  <>
+                    <Row align="middle">
+                      <Checkbox
+                        className={styles.checkboxStyle}
+                        value="smart_framework"
+                        checked={smartFramework}
+                        onChange={() => onSmartFramework(!smartFramework)}
+                      >
+                        Smart Framework
+                      </Checkbox>
+                      <Tooltip
+                        placement="topLeft"
+                        color="#595959"
+                        title={`"We will intelligently schedule additional confirmations to clients who have a history of forgetting"`}
+                      >
+                        <QuestionCircleOutlined />
+                      </Tooltip>
+                    </Row>
+                    <Row gutter={[0, 16]}>
+                      <Col>
+                        <span className={styles.line1}>
+                          Choose how far in after your reminder notification
+                          messages are sent to clients
+                        </span>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <span className={styles.reminder}>
+                          Reminder after notice
+                        </span>
+                      </Col>
+                    </Row>
+                    <Select defaultValue="48" style={{ width: '100%' }}>
+                      <Option value="48">48 hours</Option>
+                      <Option value="24">24 hours</Option>
+                      <Option value="12">12 hours</Option>
+                      <Option value="6">6 hours</Option>
+                    </Select>
+                  </>
+                </Panel>
+              )}
               {!hideAppearanceTabPane && (
                 <div
                   className={`${styles.panelAlign} ${styles.messageSection}`}
@@ -299,26 +363,50 @@ export const Standard: FC<P> = ({
                       </Checkbox>
                     </Row>
                   )}
-                  <Row>
-                    <Checkbox
-                      className={styles.checkboxStyle}
-                      value="show_service"
-                      checked={showService}
-                      onChange={() => onShowService(!showService)}
-                    >
-                      Show service
-                    </Checkbox>
-                  </Row>
-                  <Row>
-                    <Checkbox
-                      className={styles.checkboxStyle}
-                      value="show_employee_name"
-                      checked={showEmployeeName}
-                      onChange={() => onShowEmployeeName(!showEmployeeName)}
-                    >
-                      Show employee name
-                    </Checkbox>
-                  </Row>
+                  {!hideServiceOption && (
+                    <Row>
+                      <Checkbox
+                        className={styles.checkboxStyle}
+                        value="show_service"
+                        checked={showService}
+                        onChange={() => onShowService(!showService)}
+                      >
+                        Show service
+                      </Checkbox>
+                    </Row>
+                  )}
+                  {!hideEmployeeNameOption && (
+                    <Row>
+                      <Checkbox
+                        className={styles.checkboxStyle}
+                        value="show_employee_name"
+                        checked={showEmployeeName}
+                        onChange={() => onShowEmployeeName(!showEmployeeName)}
+                      >
+                        Show employee name
+                      </Checkbox>
+                    </Row>
+                  )}
+                  {!hideEnablePay && (
+                    <Row align="middle">
+                      <Checkbox
+                        className={styles.checkboxStyle}
+                        value="show_enable_pay"
+                        checked={showEnablePay}
+                        onChange={() => onShowEnablePay(!showEnablePay)}
+                      >
+                        Enable pay button
+                      </Checkbox>
+                      <Tooltip
+                        className={styles.tooltipStyle}
+                        placement="topLeft"
+                        color="#595959"
+                        title={`This will Enable Pay Invoice Button`}
+                      >
+                        <QuestionCircleOutlined />
+                      </Tooltip>
+                    </Row>
+                  )}
                   {!hideMedicalHistoryOption && (
                     <>
                       <Row>
