@@ -10,7 +10,7 @@ import React, { FC, useEffect, useState, useRef, useMemo } from 'react'
 import { DocumentNode, useMutation } from '@apollo/client'
 import AddButton from './AddButton'
 import { Breadcrumb } from '@pabau/ui'
-import { Typography } from 'antd'
+import { Typography, Image } from 'antd'
 import styles from './CrudTable.module.less'
 import CrudModal from './CrudModal'
 import { Formik, FormikErrors } from 'formik'
@@ -20,6 +20,7 @@ import classNames from 'classnames'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
 import { useRouter } from 'next/router'
 import { getParentSetupData } from '../mocks/SetupGridData'
+import searchEmpty from '../assets/images/empty.png'
 
 const { Title } = Typography
 interface P {
@@ -556,80 +557,91 @@ const CrudTable: FC<P> = ({
                 />
               )}
             </div>
-            <div className={styles.marketingSourcesTableContainer}>
-              <Table
-                loading={isLoading}
-                style={{ height: '100%' }}
-                sticky={{ offsetScroll: 80, offsetHeader: 80 }}
-                pagination={sourceData?.length > 10 ? {} : false}
-                draggable={draggable}
-                isCustomColorExist={checkCustomColorIconExist('color')}
-                isCustomIconExist={checkCustomColorIconExist('icon')}
-                noDataBtnText={schema.full}
-                noDataText={schema.fullLower}
-                padlocked={schema.padlocked}
-                scroll={{ x: 'max-content' }}
-                onAddTemplate={
-                  createPage ? () => createPageOnClick() : () => createNew()
-                }
-                searchTerm={searchTerm}
-                columns={[
-                  ...Object.entries(schema.fields).map(([k, v]) => ({
-                    dataIndex: k,
-                    width: v.cssWidth,
-                    title: v.short || v.full,
-                    visible: Object.prototype.hasOwnProperty.call(v, 'visible')
-                      ? v.visible
-                      : true,
-                  })),
-                ]}
-                dataSource={sourceData?.map((e: { id: string | number }) => ({
-                  key: e.id,
-                  ...e,
-                }))}
-                updateDataSource={({ newData, oldIndex, newIndex }) => {
-                  newData = newData.map((data, i) => {
-                    data.order = sourceData[i].order
-                    return data
-                  })
-                  if (oldIndex > newIndex) {
-                    for (let i = newIndex; i <= oldIndex; i++) {
-                      updateOrder(newData[i])
+            {!isLoading && sourceData.length !== 0 && (
+              <>
+                <div className={styles.marketingSourcesTableContainer}>
+                  <Table
+                    loading={isLoading}
+                    style={{ height: '100%' }}
+                    sticky={{ offsetScroll: 80, offsetHeader: 80 }}
+                    pagination={sourceData?.length > 10 ? {} : false}
+                    draggable={draggable}
+                    isCustomColorExist={checkCustomColorIconExist('color')}
+                    isCustomIconExist={checkCustomColorIconExist('icon')}
+                    noDataBtnText={schema.full}
+                    noDataText={schema.fullLower}
+                    padlocked={schema.padlocked}
+                    scroll={{ x: 'max-content' }}
+                    onAddTemplate={
+                      createPage ? () => createPageOnClick() : () => createNew()
                     }
-                  } else {
-                    for (let i = oldIndex; i <= newIndex; i++) {
-                      updateOrder(newData[i])
-                    }
-                  }
-                  setSourceData(newData)
-                }}
-                onRowClick={(e) => {
-                  if (editPage) {
-                    router.push(`${editPageRouteLink}/${e.id}`)
-                  } else {
-                    setEditingRow(e)
-                    setModalShowing((e) => !e)
-                  }
-                }}
-                needTranslation={needTranslation}
-              />
-            </div>
-            <Pagination
-              total={paginateData.total}
-              defaultPageSize={10}
-              showSizeChanger={false}
-              onChange={onPaginationChange}
-              pageSizeOptions={['10', '25', '50', '100']}
-              onPageSizeChange={(pageSize) => {
-                setPaginateData({
-                  ...paginateData,
-                  limit: pageSize,
-                })
-              }}
-              pageSize={paginateData.limit}
-              current={paginateData.currentPage}
-              showingRecords={paginateData.showingRecords}
-            />
+                    searchTerm={searchTerm}
+                    columns={[
+                      ...Object.entries(schema.fields).map(([k, v]) => ({
+                        dataIndex: k,
+                        width: v.cssWidth,
+                        title: v.short || v.full,
+                        visible: Object.prototype.hasOwnProperty.call(v, 'visible')
+                          ? v.visible
+                          : true,
+                      })),
+                    ]}
+                    dataSource={sourceData?.map((e: { id: string | number }) => ({
+                      key: e.id,
+                      ...e,
+                    }))}
+                    updateDataSource={({ newData, oldIndex, newIndex }) => {
+                      newData = newData.map((data, i) => {
+                        data.order = sourceData[i].order
+                        return data
+                      })
+                      if (oldIndex > newIndex) {
+                        for (let i = newIndex; i <= oldIndex; i++) {
+                          updateOrder(newData[i])
+                        }
+                      } else {
+                        for (let i = oldIndex; i <= newIndex; i++) {
+                          updateOrder(newData[i])
+                        }
+                      }
+                      setSourceData(newData)
+                    }}
+                    onRowClick={(e) => {
+                      if (editPage) {
+                        router.push(`${editPageRouteLink}/${e.id}`)
+                      } else {
+                        setEditingRow(e)
+                        setModalShowing((e) => !e)
+                      }
+                    }}
+                    needTranslation={needTranslation}
+                  />
+                </div>
+                <Pagination
+                  total={paginateData.total}
+                  defaultPageSize={10}
+                  showSizeChanger={false}
+                  onChange={onPaginationChange}
+                  pageSizeOptions={['10', '25', '50', '100']}
+                  onPageSizeChange={(pageSize) => {
+                    setPaginateData({
+                      ...paginateData,
+                      limit: pageSize,
+                    })
+                  }}
+                  pageSize={paginateData.limit}
+                  current={paginateData.currentPage}
+                  showingRecords={paginateData.showingRecords}
+                />
+              </>
+            )}
+            {!isLoading && sourceData.length === 0 && (
+              <div className={styles.noSearchResult}>
+                <Image src={searchEmpty} preview={false} />
+                <p className={styles.noResultsText}>{t('crud-table-no-search-results')}</p>
+                <p className={styles.tryAdjustText}>{t('crud-table-try-adjust')}</p>
+              </div>
+            )}
           </Layout>
         </>
       </Formik>

@@ -54,7 +54,7 @@ export const sidebarTranslations = {
 
 export const sidebarMenu: SidebarMenuItem[] = [
   {
-    menuName: 'Some menu',
+    menuName: 'Dashboard',
     icon: <DashboardOutlined />,
     path: '/dashboard',
   },

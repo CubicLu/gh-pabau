@@ -56,7 +56,8 @@ interface SchemaItem {
   shortLower?: string
   min?: number
   max?: number
-  example?: string | number | any
+  placeholder?: string
+  tooltip?: string
   description?: string
   extra?: JSX.Element
   cssWidth?: string
