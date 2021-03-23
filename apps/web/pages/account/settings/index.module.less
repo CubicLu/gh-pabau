@@ -1,6 +1,30 @@
+.main-page-wrapper {
+  @media screen and (max-width: 767px) {
+    padding: 0 0 64px;
+  }
+}
 .container {
   font-style: normal;
   color: #9292a3;
+  .account-mobile-save {
+    width: 100%;
+    display: block;
+    position: fixed;
+    bottom: 0;
+    z-index: 9;
+    .btn-save-mobile {
+      padding: 16px;
+      background-color: #fff;
+      button {
+        width: 100%;
+      }
+    }
+  }
+  :global .ant-tabs {
+    @media (max-width: 767px) {
+        margin-top: 16px; 
+    }
+  }
 }
 .container h1 {
   font-weight: bold;
@@ -13,21 +37,19 @@
   background: #ffffff;
 }
 
-:global {
-  .Btn {
-    font-weight: 500;
-    font-size: 14px;
-    border-radius: 4px;
-    line-height: 20px;
-  }
-  .Btn.Save {
+.button-wrapper {
+  font-weight: 500;
+  font-size: 14px;
+  border-radius: 4px;
+  line-height: 20px;
+  .btn-save {
     float: right;
     background: #54b2d3;
     color: #ffffff !important;
   }
-  .Btn.Back {
-    color: #9292a3;
-  }
+}
+
+:global {
   .ant-tabs-tab.ant-tabs-tab-active {
     background: #eef7fb;
   }
@@ -137,5 +159,48 @@
     font-weight: 400;
     font-size: 14px;
     font-style: normal;
+  }
+}
+
+.account-settings-mobile {
+  background-color: #fff;
+  border: 1px solid #ECEDF0;
+  .all-content-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .text-style {
+      display: flex;
+      align-items: center;
+      p {
+        margin-bottom: 0px;
+        font-family: Circular-Std-Medium;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 17px;
+        line-height: 22px;
+        text-transform: capitalize;
+        color: var(--grey-text-color);
+        padding-left: 10px;
+      }
+    }
+  }  
+}
+.avtar-wrapper {
+  display: flex;
+  align-items: center;
+  .btn-avatar-wrapper {
+    display: flex;
+    flex-direction: row;
+    @media screen and (max-width:359px) {
+      flex-direction: column;
+      margin-left: 16px;
+      button {
+        margin: 0 0 16px !important;
+        &:last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+    }
   }
 }

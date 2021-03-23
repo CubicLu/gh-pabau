@@ -1,6 +1,7 @@
 import { ButtonCheckbox } from '@pabau/ui'
 import { Checkbox as AntCheckbox, Descriptions, Divider, Form } from 'antd'
 import React, { FC } from 'react'
+import useWindowSize from '../../../hooks/useWindowSize'
 
 const Notification: FC = () => {
   const btnOptions = [
@@ -9,17 +10,8 @@ const Notification: FC = () => {
     { key: 3, label: 'SMS', disabled: false },
     { key: 4, label: 'Pabau Web', disabled: false },
   ]
+  const size = useWindowSize()
   const generalNotifications = [
-    {
-      key: 'feed_post',
-      label: 'Feed Post',
-      desc: 'When someone makes a post to the buzzfeeed',
-    },
-    {
-      key: 'like_post',
-      label: 'Like a post',
-      desc: 'When someone likes their wall post',
-    },
     {
       key: 'scheduled_report',
       label: 'Scheduled report',
@@ -36,9 +28,14 @@ const Notification: FC = () => {
       desc: 'When an appointment is cancelled',
     },
     {
-      key: 'lead_enquiry',
-      label: 'Lead Enquiry',
-      desc: 'When you receive new enquiry',
+      key: 'alert_when_you_hit_target',
+      label: 'Alert when you hit your target',
+      desc: 'When you hit the target',
+    },
+    {
+      key: 'alert_when_client_arrives',
+      label: 'Alert when a client arrives',
+      desc: 'When client arrives',
     },
   ]
   const apptNotifications = [
@@ -66,7 +63,12 @@ const Notification: FC = () => {
               <br />
               <br />
               {btnOptions.map(({ key, label, disabled }) => (
-                <ButtonCheckbox key={key} label={label} disabled={disabled} />
+                <ButtonCheckbox
+                  key={key}
+                  label={label}
+                  disabled={disabled}
+                  size={size.width <= 767 ? 'small' : null}
+                />
               ))}
             </Form.Item>
             <Divider />
