@@ -224,12 +224,15 @@ export const Table: FC<TableType> = ({
         </Button>
       </div>
     </div>
-  ) : (!dataSource?.length && !props.loading && searchTerm) ? (
+  ) : !dataSource?.length && !props.loading && searchTerm ? (
     <div className={styles.noSearchResult}>
-    <Image src={searchEmpty} preview={false} />
-    <p className={styles.noResultsText}>{t('crud-table-no-search-results')}</p>
-    <p className={styles.tryAdjustText}>{t('crud-table-try-adjust')}</p>
-  </div>) : (
+      <Image src={searchEmpty} preview={false} />
+      <p className={styles.noResultsText}>
+        {t('crud-table-no-search-results')}
+      </p>
+      <p className={styles.tryAdjustText}>{t('crud-table-try-adjust')}</p>
+    </div>
+  ) : (
     <AntTable
       {...props}
       onRow={(record, rowIndex) => {
