@@ -145,6 +145,7 @@ export interface Company {
   User?: User[];
   Candidate?: Candidate[];
   BookingStatus?: BookingStatus[];
+  Salutation?: Salutation[];
 }
 
 export interface AdvertCampaign {
@@ -575,8 +576,8 @@ export interface BookingStatus {
   company_id: number;
   indicator?: booking_statuses_indicator;
   basic_field: boolean;
-  ord: number;
-  track_time: boolean;
+  ord?: number;
+  track_time: number;
   company: Company;
 }
 
@@ -1455,6 +1456,13 @@ export interface InvPaymentType {
   is_money: number;
   type: string;
   GlCode?: GlCode;
+}
+
+export interface Salutation {
+  id: number;
+  name: string;
+  company_id?: number;
+  Company?: Company;
 }
 
 export interface User {
