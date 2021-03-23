@@ -13,6 +13,8 @@ export interface chatMessage {
   dateTime: string
   isOnline: boolean
   profileURL: string
+  isMultiple?: boolean
+  data?: chatMessage[]
 }
 
 interface P {
@@ -23,6 +25,7 @@ interface P {
   onClick?: (selectedContact: chatMessage) => void
   showGroupChatBox?: boolean
   isNewDm?: boolean
+  isHeaderShow?: boolean
 }
 
 export const ChatsList: FC<P> = ({ ...props }) => {
@@ -54,13 +57,22 @@ export const ChatsList: FC<P> = ({ ...props }) => {
     }
   }
 
+  const renderMultipleField = (item) => {
+    const result = item.map((dataItem) => {
+      return dataItem.userName
+    })
+    return result.join(', ')
+  }
+
   return (
     <div>
-      <div className={classNames(styles.channelsText, styles.channelsHead)}>
+      {props.isHeaderShow && (
+        <div className={classNames(styles.channelsText, styles.channelsHead)}>
         <p className={classNames(styles.grayTextColor, styles.textSm)}>
           {t('chat.chats')}
         </p>
-      </div>
+        </div>
+      )}
       <div>
         {chatMessages?.map((chat, index) => {
           return (
@@ -78,19 +90,25 @@ export const ChatsList: FC<P> = ({ ...props }) => {
                 )}
               >
                 <div className={styles.chatProfile}>
-                  <Badge
-                    dot
-                    color={chat.isOnline ? '#65CD98' : '#FF9E44'}
-                    offset={[-2, 32]}
-                    size="default"
-                    style={{
-                      height: '12px',
-                      width: '12px',
-                      border: '2px solid #fff',
-                    }}
-                  >
-                    <Avatar size={40} src={chat.profileURL} />
-                  </Badge>
+                  {chat.isMultiple ? (
+                    <div className={styles.profileCircle}>
+                      {chat.data?.length}
+                    </div>
+                  ) : (
+                    <Badge
+                      dot
+                      color={chat.isOnline ? '#65CD98' : '#FF9E44'}
+                      offset={[-2, 32]}
+                      size="default"
+                      style={{
+                        height: '12px',
+                        width: '12px',
+                        border: '2px solid #fff',
+                      }}
+                    >
+                      <Avatar size={40} src={chat.profileURL} />
+                    </Badge>
+                  )}
                 </div>
                 <div className={styles.chatText}>
                   <div className={classNames(styles.dFlex, styles.userDetails)}>
@@ -101,7 +119,9 @@ export const ChatsList: FC<P> = ({ ...props }) => {
                         styles.textMd
                       )}
                     >
-                      {chat.userName}
+                      {chat.isMultiple
+                        ? renderMultipleField(chat.data)
+                        : chat.userName}
                     </p>
                     <p
                       className={classNames(

@@ -18,15 +18,15 @@ import { ReactComponent as CloseIcon } from '../assets/images/close-icon.svg'
 const WAIT_INTERVAL = 400
 
 interface P {
-  schema: Schema
+  schema: Partial<Schema>
   onClick?: () => void
   onFilterSource: () => void
-  onSearch: (term: string) => void
-  setMobileSearch?: () => void
+  onSearch?: (term: string) => void
   tableSearch?: boolean
   addFilter?: boolean
   needTranslation?: boolean
-  mobileSearch?: boolean
+  isCustomFilter?: boolean
+  customFilter?: () => JSX.Element
 }
 
 const AddButton: FC<P> = ({
@@ -38,7 +38,9 @@ const AddButton: FC<P> = ({
   setMobileSearch,
   tableSearch = true,
   addFilter = true,
-  mobileSearch,
+  needTranslation,
+  isCustomFilter = false,
+  customFilter,
 }) => {
   const [isActive, setIsActive] = useState<boolean | number>(
     schema?.filter?.primary?.default ?? true
@@ -56,6 +58,17 @@ const AddButton: FC<P> = ({
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [marketingSourceSearch])
+
+  const onReset = () => {
+    if (!isActive) {
+      setIsActive(!isActive)
+    }
+  }
+
+  const handleMobileDrawerApply = () => {
+    onFilterSource()
+    setMobFilterDrawer((e) => !e)
+  }
 
   const filterContent = (isMobile = false) => (
     <div className={styles.filterContent}>
@@ -153,15 +166,12 @@ const AddButton: FC<P> = ({
           </div>
         </MobileHeader>
         <div style={{ marginTop: '91px', paddingLeft: '24px' }}>
-          {filterContent(true)}
+          {isCustomFilter === false ? filterContent(true) : customFilter()}
         </div>
         <Button
           type="primary"
           className={styles.applyButton}
-          onClick={() => {
-            onFilterSource()
-            setMobFilterDrawer((e) => !e)
-          }}
+          onClick={handleMobileDrawerApply}
         >
           Apply
         </Button>
@@ -184,9 +194,13 @@ const AddButton: FC<P> = ({
         )}
         <Popover
           trigger="click"
-          content={filterContent}
+          content={isCustomFilter ? customFilter : filterContent}
           placement="bottomRight"
-          overlayClassName={styles.filterPopover}
+          overlayClassName={
+            isCustomFilter === false
+              ? styles.filterPopover
+              : styles.customFilterPopover
+          }
         >
           {addFilter && (
             <Button className={styles.filterBtn}>

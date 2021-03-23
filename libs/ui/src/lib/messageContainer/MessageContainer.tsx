@@ -1,8 +1,15 @@
-import React, { FC, MouseEvent } from 'react'
+import React, { FC, MouseEvent, useState } from 'react'
 import classNames from 'classnames'
 import { Badge, Select, Avatar } from 'antd'
 import { CloseOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
+import { Badge, Select, Avatar, Input } from 'antd'
+import {
+  CloseOutlined,
+  SearchOutlined,
+  DownOutlined,
+  UpOutlined,
+} from '@ant-design/icons'
 
 import Stephen from '../../assets/images/users/stephen.png'
 import Linda from '../../assets/images/users/linda.png'
@@ -23,6 +30,8 @@ interface SelectedContact {
   dateTime: string
   isOnline: boolean
   profileURL: string
+  isMultiple?: boolean
+  data?: SelectedContact[]
 }
 
 interface Member {
@@ -65,8 +74,21 @@ export const MessageContainer: FC<P> = ({ ...props }) => {
 
   const { t } = useTranslation('common')
 
+  const [chatSearchValue, setChatSearchValue] = useState('')
+
   const handleSelectChange = (value) => {
     console.log(`selected ${value}`)
+  }
+
+  const onHandleChatSearch = (value: string) => {
+    setChatSearchValue(value)
+  }
+
+  const renderMultipleField = (item) => {
+    const result = item.map((dataItem) => {
+      return dataItem.userName
+    })
+    return result.join(', ')
   }
 
   return (
@@ -74,22 +96,33 @@ export const MessageContainer: FC<P> = ({ ...props }) => {
       {selectedContact && (
         <div className={styles.chatHeaderContainer}>
           <div className={styles.chatHeaderContact}>
-            <Badge
-              dot
-              color={selectedContact.isOnline ? '#65CD98' : '#FF9E44'}
-              offset={[-2, 32]}
-              size="default"
-              style={{ height: '8px', width: '8px' }}
-            >
-              <Avatar size={40} src={selectedContact.profileURL} />
-            </Badge>
+            {selectedContact.isMultiple ? (
+              <div className={styles.profileCircle}>
+                {selectedContact.data?.length}
+              </div>
+            ) : (
+              <Badge
+                dot
+                color={selectedContact.isOnline ? '#65CD98' : '#FF9E44'}
+                offset={[-2, 32]}
+                size="default"
+                style={{ height: '8px', width: '8px' }}
+              >
+                <Avatar size={40} src={selectedContact.profileURL} />
+              </Badge>
+            )}
             <div className={styles.chatHeaderRight}>
               <p className={styles.chatHeaderName}>
-                {selectedContact.userName}
+                {selectedContact.isMultiple
+                  ? renderMultipleField(selectedContact.data)
+                  : selectedContact.userName}
               </p>
               <p className={styles.chatHeaderSub}>
                 {t('message.managingdirector')}
               </p>
+              {!selectedContact.isMultiple && (
+                <p className={styles.chatHeaderSub}>Managing Director</p>
+              )}
             </div>
           </div>
           <div className={styles.chatHeaderContact}>
@@ -190,6 +223,150 @@ export const MessageContainer: FC<P> = ({ ...props }) => {
               />
             </div>
           </div>
+        </div>
+      )}
+      {!isNewDm && (
+        <div
+          className={classNames(
+            styles.chatHeaderContainer,
+            styles.chatHeaderSearch
+          )}
+        >
+          <div className={styles.chatWrapInput}>
+            <div className={styles.chatIcon}>
+              <UpOutlined />
+              <DownOutlined />
+            </div>
+            <div className={styles.chatHeaderContainer}>
+              <Input
+                size="large"
+                allowClear
+                value={chatSearchValue}
+                prefix={
+                  <SearchOutlined
+                    className={classNames(styles.searchIconStyle)}
+                  />
+                }
+                onChange={(e) => onHandleChatSearch(e.target.value)}
+              />
+            </div>
+          </div>
+          {chatSearchValue.length > 0 && (
+            <>
+              <div className={styles.searchListWrap}>
+                <div className={styles.chatProfile}>
+                  <Badge
+                    offset={[-2, 32]}
+                    size="default"
+                    style={{
+                      height: '12px',
+                      width: '12px',
+                      border: '2px solid #fff',
+                    }}
+                  >
+                    <Avatar size={40} src={Linda} />
+                  </Badge>
+                </div>
+                <div className={styles.chatText}>
+                  <div className={classNames(styles.dFlex, styles.userDetails)}>
+                    <p
+                      className={classNames(
+                        styles.textBlack,
+                        styles.mb,
+                        styles.textMd
+                      )}
+                    >
+                      {'Linda Starck'}
+                    </p>
+                    <p
+                      className={classNames(
+                        styles.grayTextColor,
+                        styles.mb,
+                        styles.textSm
+                      )}
+                    >
+                      {'19.02.21'}
+                    </p>
+                  </div>
+                  <div className={styles.dFlex}>
+                    <span
+                      className={classNames(
+                        styles.grayTextColor,
+                        styles.mb,
+                        styles.fontMedium,
+                        styles.textSm,
+                        styles.userMessage
+                      )}
+                    >
+                      {'Can you send me a file?'}
+                    </span>
+                    <h6
+                      className={classNames(
+                        styles.grayTextColor,
+                        styles.textSm,
+                        styles.mb
+                      )}
+                    >
+                      {''}
+                    </h6>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.searchListWrap}>
+                <div className={styles.chatProfile}>
+                  <Badge
+                    offset={[-2, 32]}
+                    size="default"
+                    style={{
+                      height: '12px',
+                      width: '12px',
+                      border: '2px solid #fff',
+                    }}
+                  >
+                    <Avatar size={40} src={Linda} />
+                  </Badge>
+                </div>
+                <div className={styles.chatText}>
+                  <div className={classNames(styles.dFlex, styles.userDetails)}>
+                    <p
+                      className={classNames(
+                        styles.textBlack,
+                        styles.mb,
+                        styles.textMd
+                      )}
+                    >
+                      {'Linda Starck'}
+                    </p>
+                    <p
+                      className={classNames(
+                        styles.grayTextColor,
+                        styles.mb,
+                        styles.textSm
+                      )}
+                    >
+                      {''}
+                    </p>
+                  </div>
+                  <div className={styles.dFlex}>
+                    <span
+                      className={classNames(
+                        styles.grayTextColor,
+                        styles.mb,
+                        styles.fontMedium,
+                        styles.textSm,
+                        styles.userMessage
+                      )}
+                    >
+                      {'Could you send our presentation?'}
+                    </span>
+                    <p className={classNames(styles.grayTextColor, styles.mb)}>
+                      {'Thu'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       )}
       <div className={styles.messageContainer}>

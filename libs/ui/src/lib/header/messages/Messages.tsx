@@ -162,65 +162,116 @@ export const PabauMessages: FC<MessagesProps> = ({
   const [isNewDm, setIsNewDm] = useState(false)
 
   const chatMessages = [
-    {
-      userName: 'Stephen Cox',
-      message: '2 unread messages',
-      unread: 2,
-      dateTime: '11:20 AM',
-      isOnline: true,
-      profileURL: Stephen,
-    },
-    {
-      userName: 'Linda Starck',
-      message: 'Sounds good to me!',
-      dateTime: '11:20 AM',
-      isOnline: true,
-      profileURL: Linda,
-    },
-    {
-      userName: 'Alex Johnson',
-      message: 'Yes, we can try it.',
-      dateTime: '11:20 AM',
-      isOnline: false,
-      profileURL: Alex,
-    },
-    {
-      userName: 'Arya Davis',
-      message: 'Hi, Arya',
-      dateTime: '11:20 AM',
-      isOnline: false,
-      profileURL: Arya,
-    },
-    {
-      userName: 'James Ocean',
-      message: 'Yes, look! This is awesome',
-      dateTime: '11:20 AM',
-      isOnline: true,
-      profileURL: James,
-    },
-    {
-      userName: 'Austin Winter',
-      message: 'On Friday',
-      dateTime: '11:20 AM',
-      isOnline: true,
-      profileURL: Austin,
-    },
-    {
-      userName: 'Walter Brown',
-      message:
-        'We can schedule a meeting at 8:00 PM today. I think we will discuss...',
-      dateTime: '11:20 AM',
-      isOnline: true,
-      profileURL: Walter,
-    },
-    {
-      userName: 'Liza Frank',
-      message: 'On Friday',
-      dateTime: '11:20 AM',
-      isOnline: true,
-      profileURL: Liza,
-    },
-  ]
+const chatListData = [
+  {
+    userName: 'Stephen Cox',
+    message: '2 unread messages',
+    unread: 2,
+    dateTime: '11:20 AM',
+    isOnline: true,
+    profileURL: Stephen,
+  },
+  {
+    userName: 'Linda Starck',
+    message: 'Sounds good to me!',
+    dateTime: '11:20 AM',
+    isOnline: true,
+    profileURL: Linda,
+  },
+  {
+    userName: 'Alex Johnson',
+    message: 'Yes, we can try it.',
+    dateTime: '11:20 AM',
+    isOnline: false,
+    profileURL: Alex,
+  },
+  {
+    userName: 'Arya Davis',
+    message: 'Hi, Arya',
+    dateTime: '11:20 AM',
+    isOnline: false,
+    profileURL: Arya,
+    isMultiple: true,
+    data: [
+      {
+        userName: 'Arya Davis',
+        message: 'Hi, Arya',
+        dateTime: '11:20 AM',
+        isOnline: false,
+        profileURL: Arya,
+      },
+      {
+        userName: 'James Ocean',
+        message: 'Yes, look! This is awesome',
+        dateTime: '11:20 AM',
+        isOnline: true,
+        profileURL: James,
+      },
+    ],
+  },
+  {
+    userName: 'James Ocean',
+    message: 'Yes, look! This is awesome',
+    dateTime: '11:20 AM',
+    isOnline: true,
+    profileURL: James,
+  },
+  {
+    userName: 'Austin Winter',
+    message: 'On Friday',
+    dateTime: '11:20 AM',
+    isOnline: true,
+    profileURL: Austin,
+  },
+  {
+    userName: 'Walter Brown',
+    message:
+      'We can schedule a meeting at 8:00 PM today. I think we will discuss...',
+    dateTime: '11:20 AM',
+    isOnline: true,
+    profileURL: Walter,
+  },
+  {
+    userName: 'Liza Frank',
+    message: 'On Friday',
+    dateTime: '11:20 AM',
+    isOnline: true,
+    profileURL: Liza,
+  },
+]
+
+export const PabauMessages: FC<MessagesProps> = ({
+  openDrawer = false,
+  closeDrawer,
+  onMessageType,
+  onCreateChannel,
+}: PropsWithChildren<MessagesProps>) => {
+  const WidthEnum = {
+    MessageBox: 392,
+    ChatBox: 522,
+  }
+  const [messageDrawer, setMessageDrawer] = useState(openDrawer)
+  const [selectedContact, setSelectedContact] = useState<Contact>()
+  const [drawerWidth, setDrawerWidth] = useState(WidthEnum.MessageBox)
+  const [showChatBox, setShowChatBox] = useState(false)
+  const [showGlobalSearch, setGlobalSearch] = useState(false)
+  const [showGroupChatBox, setShowGroupChatBox] = useState(false)
+  const [selectedGroup, setSelectedGroup] = useState('general')
+  const [isGroupModalVisible, setIsGroupModalVisible] = useState(false)
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false)
+  const [memberModalTitle, setMemberModalTitle] = useState('')
+  const [chatMessages, setChatMessage] = useState(chatListData)
+  const [globalSearchValue, setGlobalSearchValue] = useState('')
+  const [typingContact, setTypingContact] = useState<Contact>()
+
+  //createChaneel
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
+  const [isPrivate, setIsPrivate] = useState(false)
+  const [isCreateChannel, setIsCreateChannel] = useState(false)
+
+  //new DM
+  const [isNewDm, setIsNewDm] = useState(false)
 
   const handleNameChange = (e): void => {
     if (e.target.value.length < 80) {
@@ -325,6 +376,22 @@ export const PabauMessages: FC<MessagesProps> = ({
     onMessageType?.(e)
   }
 
+  const globalSearch = () => {
+    setGlobalSearch((e) => !e)
+  }
+
+  const onHandleGlobalSearch = (value: string) => {
+    const reg = new RegExp(value.split('').join('\\w*').replace(/\W/, ''), 'i')
+    // eslint-disable-next-line array-callback-return
+    const resultData = chatListData.filter((person) => {
+      if (reg.test(person.userName)) {
+        return person
+      }
+    })
+    setGlobalSearchValue(value)
+    setChatMessage(resultData)
+  }
+
   return (
     <Drawer
       width={drawerWidth}
@@ -335,46 +402,82 @@ export const PabauMessages: FC<MessagesProps> = ({
       className={styles.messagesDrawer}
     >
       <div className={styles.messageBox}>
-        <div className={styles.chatSpace}>
-          <div className={styles.messagesAlign}>
-            <div>
-              <h1>{t('chat.header')}</h1>
-            </div>
-            <div>
-              <EditOutlined
-                onClick={toggleNewDm}
-                className={classNames(
-                  styles.grayTextColor,
-                  styles.pr5,
-                  styles.chatIconStyle
-                )}
-              />
-              <SearchOutlined
-                className={classNames(
-                  styles.grayTextColor,
-                  styles.pr5,
-                  styles.chatIconStyle
-                )}
-              />
-              {!showChatBox && !showGroupChatBox && (
-                <CloseOutlined
+        <div
+          className={
+            showGlobalSearch
+              ? classNames(styles.chatSpace, styles.globalSearch)
+              : styles.chatSpace
+          }
+        >
+          {showGlobalSearch ? (
+            <Input
+              size="large"
+              allowClear
+              value={globalSearchValue}
+              prefix={
+                <SearchOutlined
                   className={classNames(
                     styles.grayTextColor,
-                    styles.chatIconStyle,
-                    styles.closeIcon
+                    styles.pr5,
+                    styles.chatIconStyle
                   )}
-                  onClick={closeDrawerMenu}
                 />
-              )}
+              }
+              onChange={(e) => onHandleGlobalSearch(e.target.value)}
+              onBlur={() => globalSearch()}
+            />
+          ) : (
+            <div className={styles.messagesAlign}>
+              <div>
+              <h1>{t('chat.header')}</h1>
+              </div>
+              <div>
+                <EditOutlined
+                  onClick={toggleNewDm}
+                  className={classNames(
+                    styles.grayTextColor,
+                    styles.pr5,
+                    styles.chatIconStyle
+                  )}
+                />
+                <SearchOutlined
+                  className={classNames(
+                    styles.grayTextColor,
+                    styles.pr5,
+                    styles.chatIconStyle
+                  )}
+                  onClick={globalSearch}
+                />
+                {!showChatBox && !showGroupChatBox && (
+                  <CloseOutlined
+                    className={classNames(
+                      styles.grayTextColor,
+                      styles.chatIconStyle,
+                      styles.closeIcon
+                    )}
+                    onClick={closeDrawerMenu}
+                  />
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <div className={styles.chatPanel}>
+          {showGlobalSearch && (
+            <div
+              className={classNames(styles.channelsText, styles.channelsHead)}
+            >
+              <p className={classNames(styles.grayTextColor, styles.textSm)}>
+                chats & channels
+              </p>
+            </div>
+          )}
           <GroupList
             onClick={handleGroupClick}
             showChatBox={showChatBox}
             isNewDm={isNewDm}
             onCreateModalClick={toggleCreateChannel}
+            isHeaderShow={!showGlobalSearch}
           />
           <ChatsList
             chatMessages={chatMessages}
@@ -384,6 +487,7 @@ export const PabauMessages: FC<MessagesProps> = ({
             showChatBox={showChatBox}
             isNewDm={isNewDm}
             selectedContact={selectedContact}
+            isHeaderShow={!showGlobalSearch}
           />
         </div>
 

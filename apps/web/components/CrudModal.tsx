@@ -19,6 +19,7 @@ interface P {
   aggregateQuery?: DocumentNode
   aggregateQueryVariables?: any
   submitting?: boolean
+  showModalInitially?: boolean
 }
 
 const CrudModal: FC<P> = ({
@@ -28,12 +29,16 @@ const CrudModal: FC<P> = ({
   listQueryVariables,
   onClose,
   editingRow,
+  showModalInitially,
   aggregateQuery,
   aggregateQueryVariables,
   submitting = false,
 }) => {
   const [openDeleteModal, setDeleteModal] = useState(false)
   const { t } = useTranslationI18()
+  const [openDeleteModal, setDeleteModal] = useState(
+    showModalInitially || false
+  )
   const [deleteMutation] = useMutation(deleteQuery, {
     onCompleted() {
       Notification(
