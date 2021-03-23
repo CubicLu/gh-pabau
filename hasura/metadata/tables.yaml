@@ -1238,6 +1238,25 @@
 - table:
     schema: public
     name: feature_flags
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - status
+      - fallback_slug
+      - page_slug
+      - id
+      filter: {}
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - id
+      - page_slug
+      - fallback_slug
+      - status
+      filter: {}
+      check: null
 - table:
     schema: public
     name: invoices
@@ -1752,11 +1771,6 @@
       - hasCalender
       - img
       - is_active
-      - is_day
-      - is_night
-      - is_parking
-      - is_pharmacy
-      - is_time
       - name
       - phone
       - postcode
@@ -1779,11 +1793,6 @@
       - id
       - img
       - is_active
-      - is_day
-      - is_night
-      - is_parking
-      - is_pharmacy
-      - is_time
       - name
       - order
       - phone
@@ -1800,11 +1809,6 @@
       - address
       - img
       - is_active
-      - is_day
-      - is_night
-      - is_parking
-      - is_pharmacy
-      - is_time
       - name
       - order
       filter: {}

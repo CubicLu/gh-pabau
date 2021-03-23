@@ -20431,6 +20431,83 @@ type family_relationships_variance_fields {
   order: Float
 }
 
+"""
+If status flag is 0 id prevents the default page content and renders the fallback slug in iframe
+
+
+columns and relationships of "feature_flags"
+"""
+type feature_flags {
+  fallback_slug: String!
+  id: uuid!
+  page_slug: String!
+  status: Boolean!
+}
+
+"""
+Boolean expression to filter rows from the table "feature_flags". All fields are combined with a logical 'AND'.
+"""
+input feature_flags_bool_exp {
+  _and: [feature_flags_bool_exp!]
+  _not: feature_flags_bool_exp
+  _or: [feature_flags_bool_exp!]
+  fallback_slug: String_comparison_exp
+  id: uuid_comparison_exp
+  page_slug: String_comparison_exp
+  status: Boolean_comparison_exp
+}
+
+"""
+response of any mutation on the table "feature_flags"
+"""
+type feature_flags_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [feature_flags!]!
+}
+
+"""Ordering options when selecting data from "feature_flags"."""
+input feature_flags_order_by {
+  fallback_slug: order_by
+  id: order_by
+  page_slug: order_by
+  status: order_by
+}
+
+"""primary key columns input for table: feature_flags"""
+input feature_flags_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "feature_flags"
+"""
+enum feature_flags_select_column {
+  """column name"""
+  fallback_slug
+
+  """column name"""
+  id
+
+  """column name"""
+  page_slug
+
+  """column name"""
+  status
+}
+
+"""
+input type for updating data in table "feature_flags"
+"""
+input feature_flags_set_input {
+  fallback_slug: String
+  id: uuid
+  page_slug: String
+  status: Boolean
+}
+
 enum gl_codes_description {
   discount
   location_code
@@ -23046,11 +23123,6 @@ type locations {
   id: uuid!
   img: String!
   is_active: Boolean!
-  is_day: Boolean!
-  is_night: Boolean!
-  is_parking: Boolean!
-  is_pharmacy: Boolean!
-  is_time: Boolean!
   name: String!
   order: Int!
   phone: String
@@ -23109,11 +23181,6 @@ input locations_bool_exp {
   id: uuid_comparison_exp
   img: String_comparison_exp
   is_active: Boolean_comparison_exp
-  is_day: Boolean_comparison_exp
-  is_night: Boolean_comparison_exp
-  is_parking: Boolean_comparison_exp
-  is_pharmacy: Boolean_comparison_exp
-  is_time: Boolean_comparison_exp
   name: String_comparison_exp
   order: Int_comparison_exp
   phone: String_comparison_exp
@@ -23152,11 +23219,6 @@ input locations_insert_input {
   hasCalender: Boolean
   img: String
   is_active: Boolean
-  is_day: Boolean
-  is_night: Boolean
-  is_parking: Boolean
-  is_pharmacy: Boolean
-  is_time: Boolean
   name: String
   phone: String
   postcode: String
@@ -23230,11 +23292,6 @@ input locations_order_by {
   id: order_by
   img: order_by
   is_active: order_by
-  is_day: order_by
-  is_night: order_by
-  is_parking: order_by
-  is_pharmacy: order_by
-  is_time: order_by
   name: order_by
   order: order_by
   phone: order_by
@@ -23290,21 +23347,6 @@ enum locations_select_column {
   is_active
 
   """column name"""
-  is_day
-
-  """column name"""
-  is_night
-
-  """column name"""
-  is_parking
-
-  """column name"""
-  is_pharmacy
-
-  """column name"""
-  is_time
-
-  """column name"""
   name
 
   """column name"""
@@ -23333,11 +23375,6 @@ input locations_set_input {
   address: String
   img: String
   is_active: Boolean
-  is_day: Boolean
-  is_night: Boolean
-  is_parking: Boolean
-  is_pharmacy: Boolean
-  is_time: Boolean
   name: String
   order: Int
 }
@@ -23374,21 +23411,6 @@ enum locations_update_column {
 
   """column name"""
   is_active
-
-  """column name"""
-  is_day
-
-  """column name"""
-  is_night
-
-  """column name"""
-  is_parking
-
-  """column name"""
-  is_pharmacy
-
-  """column name"""
-  is_time
 
   """column name"""
   name
@@ -26934,6 +26956,26 @@ type mutation_root {
     _set: family_relationships_set_input
     pk_columns: family_relationships_pk_columns_input!
   ): family_relationships
+
+  """
+  update data of the table: "feature_flags"
+  """
+  update_feature_flags(
+    """sets the columns of the filtered rows to the given values"""
+    _set: feature_flags_set_input
+
+    """filter the rows which have to be updated"""
+    where: feature_flags_bool_exp!
+  ): feature_flags_mutation_response
+
+  """
+  update single row of the table: "feature_flags"
+  """
+  update_feature_flags_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: feature_flags_set_input
+    pk_columns: feature_flags_pk_columns_input!
+  ): feature_flags
 
   """
   update data of the table: "invoices"
@@ -30491,6 +30533,29 @@ type query_root {
   fetch data from the table: "family_relationships" using primary key columns
   """
   family_relationships_by_pk(id: uuid!): family_relationships
+
+  """
+  fetch data from the table: "feature_flags"
+  """
+  feature_flags(
+    """distinct select on columns"""
+    distinct_on: [feature_flags_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [feature_flags_order_by!]
+
+    """filter the rows returned"""
+    where: feature_flags_bool_exp
+  ): [feature_flags!]!
+
+  """fetch data from the table: "feature_flags" using primary key columns"""
+  feature_flags_by_pk(id: uuid!): feature_flags
   findFirstAcLog(cursor: AcLogWhereUniqueInput, orderBy: AcLogOrderByInput, skip: Int, take: Int, where: AcLogWhereInput): AcLog
   findFirstAcLogAction(cursor: AcLogActionWhereUniqueInput, orderBy: AcLogActionOrderByInput, skip: Int, take: Int, where: AcLogActionWhereInput): AcLogAction
   findFirstAcLogUrl(cursor: AcLogUrlWhereUniqueInput, orderBy: AcLogUrlOrderByInput, skip: Int, take: Int, where: AcLogUrlWhereInput): AcLogUrl
@@ -33860,6 +33925,29 @@ type subscription_root {
   fetch data from the table: "family_relationships" using primary key columns
   """
   family_relationships_by_pk(id: uuid!): family_relationships
+
+  """
+  fetch data from the table: "feature_flags"
+  """
+  feature_flags(
+    """distinct select on columns"""
+    distinct_on: [feature_flags_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [feature_flags_order_by!]
+
+    """filter the rows returned"""
+    where: feature_flags_bool_exp
+  ): [feature_flags!]!
+
+  """fetch data from the table: "feature_flags" using primary key columns"""
+  feature_flags_by_pk(id: uuid!): feature_flags
 
   """
   fetch data from the table: "invoices"
