@@ -44,7 +44,7 @@ export const GroupList: FC<P> = ({ ...props }) => {
           style={{ cursor: 'pointer', transition: 'all 0.5s' }}
         >
           <span className={classNames(styles.textSm, styles.grayTextColor)}>
-          {t('chat.channel')}
+            {t('chat.channel')}
           </span>
           <PlusCircleFilled
             onClick={() => props.onCreateModalClick?.()}

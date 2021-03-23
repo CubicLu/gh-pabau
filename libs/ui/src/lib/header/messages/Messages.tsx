@@ -28,7 +28,6 @@ import Walter from '../../../assets/images/users/walter.png'
 import Liza from '../../../assets/images/users/liza.png'
 
 import classNames from 'classnames'
-import { useTranslation } from 'react-i18next'
 
 export interface MessagesProps {
   openDrawer: boolean
@@ -130,38 +129,6 @@ const groupData = {
   ],
 }
 
-export const PabauMessages: FC<MessagesProps> = ({
-  openDrawer = false,
-  closeDrawer,
-  onMessageType,
-  onCreateChannel,
-}: PropsWithChildren<MessagesProps>) => {
-  const WidthEnum = {
-    MessageBox: 392,
-    ChatBox: 522,
-  }
-  const { t } = useTranslation('common')
-  const [messageDrawer, setMessageDrawer] = useState(openDrawer)
-  const [selectedContact, setSelectedContact] = useState<Contact>()
-  const [drawerWidth, setDrawerWidth] = useState(WidthEnum.MessageBox)
-  const [showChatBox, setShowChatBox] = useState(false)
-  const [showGroupChatBox, setShowGroupChatBox] = useState(false)
-  const [selectedGroup, setSelectedGroup] = useState('general')
-  const [isGroupModalVisible, setIsGroupModalVisible] = useState(false)
-  const [isAddModalVisible, setIsAddModalVisible] = useState(false)
-  const [memberModalTitle, setMemberModalTitle] = useState('')
-  const [typingContact, setTypingContact] = useState<Contact>()
-
-  //createChaneel
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [isPrivate, setIsPrivate] = useState(false)
-  const [isCreateChannel, setIsCreateChannel] = useState(false)
-
-  //new DM
-  const [isNewDm, setIsNewDm] = useState(false)
-
-  const chatMessages = [
 const chatListData = [
   {
     userName: 'Stephen Cox',
@@ -318,12 +285,12 @@ export const PabauMessages: FC<MessagesProps> = ({
     if (selectedGroup !== '') {
       setMemberModalTitle(
         Object.keys(groupData[selectedGroup]).length +
-          t('chat.members.in') +
+          ' Members In #' +
           selectedGroup.charAt(0).toUpperCase() +
           selectedGroup.slice(1)
       )
     }
-  }, [selectedGroup, t])
+  }, [selectedGroup])
 
   const handleGroupClick = (e, type) => {
     setShowGroupChatBox(true)
@@ -429,7 +396,7 @@ export const PabauMessages: FC<MessagesProps> = ({
           ) : (
             <div className={styles.messagesAlign}>
               <div>
-              <h1>{t('chat.header')}</h1>
+                <h1>Chat</h1>
               </div>
               <div>
                 <EditOutlined
@@ -494,39 +461,43 @@ export const PabauMessages: FC<MessagesProps> = ({
         <BasicModal
           modalWidth={682}
           centered={true}
-          title={t('chat.create.channel')}
-          newButtonText={t('chat.create')}
+          title="create A Channel"
+          newButtonText={'Create'}
           className={styles.createChannelModal}
           newButtonDisable={name.length <= 0}
           onOk={() => onCreate()}
-          dangerButtonText={t('chat.cancel')}
+          dangerButtonText={`Cancel`}
           onCancel={toggleCreateChannel}
           onDelete={toggleCreateChannel}
           visible={isCreateChannel}
         >
-          <div className={styles.content}>{t('chat.create.channel.title')}</div>
+          <div className={styles.content}>
+            Channels are where your team communicates. They’re best when
+            organized around a topic – #marketing, for example.
+          </div>
           <div className={styles.textControl}>
-            <div>{t('chat.create.channel.name')}</div>
+            <div>Name</div>
             <Input
               className={styles.nameInput}
-              placeholder={t('chat.create.channel.name.placeholder')}
+              placeholder="# e.g. plan-budget"
               onChange={handleNameChange}
               value={name}
               suffix={80 - name.length}
             />
           </div>
           <div className={styles.textControl}>
-            <div>{t('chat.create.channel.description')}</div>
+            <div>Description</div>
             <Input
-              placeholder={t('chat.create.channel.description.placeholder')}
+              placeholder="What’s this channel about?"
               onChange={handleDescriptionChange}
             />
           </div>
           <div>
-            <div>{t('chat.create.channel.makeprivate')}</div>
+            <div>Make private</div>
             <div className={styles.switchContent}>
               <div className={styles.switchText}>
-                {t('chat.create.channel.makeprivate.text')}
+                When a channel is set to private, it can be only be viewed or
+                joined by invitation.
               </div>
               <div className={styles.switch}>
                 <Switch onChange={onChangeToPrivate} />

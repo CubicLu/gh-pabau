@@ -34,7 +34,6 @@ const CrudModal: FC<P> = ({
   aggregateQueryVariables,
   submitting = false,
 }) => {
-  const [openDeleteModal, setDeleteModal] = useState(false)
   const { t } = useTranslationI18()
   const [openDeleteModal, setDeleteModal] = useState(
     showModalInitially || false

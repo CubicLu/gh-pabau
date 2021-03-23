@@ -21,7 +21,6 @@ const CheckboxGroup = Checkbox.Group
 const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
   const { fields } = schema
   const { values } = formik
-
   return (
     <AntForm layout={layout} requiredMark={false}>
       <Row>
@@ -216,7 +215,7 @@ const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
                       formik.handleChange(e)
                       formik.setFieldTouched(name, true)
                     }}
-                  placeholder={example && `eg. ${example}`}
+                    placeholder={example && `eg. ${example}`}
                     autoFocus={i === 0}
                   />
                 </AntForm.Item>

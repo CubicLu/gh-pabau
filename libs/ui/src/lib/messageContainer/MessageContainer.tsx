@@ -1,7 +1,5 @@
 import React, { FC, MouseEvent, useState } from 'react'
 import classNames from 'classnames'
-import { Badge, Select, Avatar } from 'antd'
-import { CloseOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import { Badge, Select, Avatar, Input } from 'antd'
 import {

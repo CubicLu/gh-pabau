@@ -68,9 +68,9 @@ export const ChatsList: FC<P> = ({ ...props }) => {
     <div>
       {props.isHeaderShow && (
         <div className={classNames(styles.channelsText, styles.channelsHead)}>
-        <p className={classNames(styles.grayTextColor, styles.textSm)}>
-          {t('chat.chats')}
-        </p>
+          <p className={classNames(styles.grayTextColor, styles.textSm)}>
+            {t('chat.chats')}
+          </p>
         </div>
       )}
       <div>

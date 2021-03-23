@@ -3,14 +3,12 @@ import { Button, MobileHeader } from '@pabau/ui'
 import styles from './AddButton.module.less'
 import {
   FilterOutlined,
-  PlusSquareFilled,
   SearchOutlined,
   InboxOutlined,
 } from '@ant-design/icons'
 import { Drawer, Input, Popover, Radio } from 'antd'
 import classNames from 'classnames'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
-import { ReactComponent as CloseIcon } from '../assets/images/close-icon.svg'
 
 // import { isMobile, isTablet } from 'react-device-detect'
 // import { useKeyPressEvent } from 'react-use'
@@ -35,7 +33,6 @@ const AddButton: FC<P> = ({
   children,
   onFilterSource,
   onSearch,
-  setMobileSearch,
   tableSearch = true,
   addFilter = true,
   needTranslation,
@@ -59,6 +56,7 @@ const AddButton: FC<P> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [marketingSourceSearch])
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onReset = () => {
     if (!isActive) {
       setIsActive(!isActive)
@@ -98,52 +96,52 @@ const AddButton: FC<P> = ({
       </div>
     </div>
   )
-
+  //TODO INVESTIGATE which branch this changes came from and are they needed
   return (
     <>
       {/* Mobile header */}
-      {mobileSearch && (
-        <div className={styles.mobileSearchInput}>
-          <Input
-            className={styles.searchMarketingStyle}
-            placeholder={t('basic-crud-table-input-search-placeholder')}
-            onChange={(e) => setMarketingSourceSearch(e.target.value)}
-            suffix={
-              <CloseIcon
-                onClick={() => {
-                  setMobileSearch?.()
-                }}
-              />
-            }
-            autoFocus
-          />
-        </div>
-      )}
-      {!mobileSearch && (
-        <div
-          className={classNames(styles.marketingIcon, styles.desktopViewNone)}
-        >
-          {tableSearch && (
-            <SearchOutlined
-              onClick={() => {
-                setMobileSearch?.()
-              }}
-              className={styles.marketingIconStyle}
-            />
-          )}
-          {addFilter && (
-            <FilterOutlined
-              className={styles.marketingIconStyle}
-              onClick={() => setMobFilterDrawer((e) => !e)}
-            />
-          )}
+      {/*{mobileSearch && (*/}
+      {/*  <div className={styles.mobileSearchInput}>*/}
+      {/*    <Input*/}
+      {/*      className={styles.searchMarketingStyle}*/}
+      {/*      placeholder={t('basic-crud-table-input-search-placeholder')}*/}
+      {/*      onChange={(e) => setMarketingSourceSearch(e.target.value)}*/}
+      {/*      suffix={*/}
+      {/*        <CloseIcon*/}
+      {/*          onClick={() => {*/}
+      {/*            setMobileSearch?.()*/}
+      {/*          }}*/}
+      {/*        />*/}
+      {/*      }*/}
+      {/*      autoFocus*/}
+      {/*    />*/}
+      {/*  </div>*/}
+      {/*)}*/}
+      {/*{!mobileSearch && (*/}
+      {/*  <div*/}
+      {/*    className={classNames(styles.marketingIcon, styles.desktopViewNone)}*/}
+      {/*  >*/}
+      {/*    {tableSearch && (*/}
+      {/*      <SearchOutlined*/}
+      {/*        onClick={() => {*/}
+      {/*          setMobileSearch?.()*/}
+      {/*        }}*/}
+      {/*        className={styles.marketingIconStyle}*/}
+      {/*      />*/}
+      {/*    )}*/}
+      {/*    {addFilter && (*/}
+      {/*      <FilterOutlined*/}
+      {/*        className={styles.marketingIconStyle}*/}
+      {/*        onClick={() => setMobFilterDrawer((e) => !e)}*/}
+      {/*      />*/}
+      {/*    )}*/}
 
-          <PlusSquareFilled
-            className={styles.plusIconStyle}
-            onClick={() => onClick?.()}
-          />
-        </div>
-      )}
+      {/*    <PlusSquareFilled*/}
+      {/*      className={styles.plusIconStyle}*/}
+      {/*      onClick={() => onClick?.()}*/}
+      {/*    />*/}
+      {/*  </div>*/}
+      {/*)}*/}
 
       <Drawer
         visible={mobFilterDrawer}

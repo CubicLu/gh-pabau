@@ -22,7 +22,6 @@ import { useRouter } from 'next/router'
 import { getParentSetupData } from '../mocks/SetupGridData'
 
 const { Title } = Typography
-
 interface P {
   schema: Schema
   addQuery?: DocumentNode
@@ -74,6 +73,7 @@ const CrudTable: FC<P> = ({
     schema?.filter?.primary?.default ?? true
   )
   const [searchTerm, setSearchTerm] = useState('')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isMobileSearch, setMobileSearch] = useState(false)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [formSubmitAllowed, setFormSubmitAllowedStatus] = useState(true)
@@ -467,10 +467,6 @@ const CrudTable: FC<P> = ({
                     tableSearch={tableSearch}
                     needTranslation={needTranslation}
                     addFilter={addFilter}
-                    mobileSearch={isMobileSearch}
-                    setMobileSearch={() => {
-                      setMobileSearch((e) => !e)
-                    }}
                     isCustomFilter={isCustomFilter}
                     customFilter={customFilter}
                   />
@@ -485,10 +481,6 @@ const CrudTable: FC<P> = ({
                     needTranslation={needTranslation}
                     isCustomFilter={isCustomFilter}
                     customFilter={customFilter}
-                    mobileSearch={isMobileSearch}
-                    setMobileSearch={() => {
-                      setMobileSearch((e) => !e)
-                    }}
                   />
                 )}
               </div>
