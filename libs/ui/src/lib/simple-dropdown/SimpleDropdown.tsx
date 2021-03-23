@@ -8,6 +8,7 @@ export interface SimpleDropdownProps extends FormProps {
   label?: string
   value?: string | undefined
   tooltip?: string
+  dropdown?: boolean
   placeHolderText?: string
   defaultValue?: string
   size?: SizeType
@@ -17,6 +18,7 @@ export interface SimpleDropdownProps extends FormProps {
 
 export const SimpleDropdown: FC<SimpleDropdownProps> = ({
   label,
+  dropdown,
   value,
   dropdownItems,
   tooltip,
@@ -28,13 +30,16 @@ export const SimpleDropdown: FC<SimpleDropdownProps> = ({
 }) => {
   const [form] = Form.useForm()
   const [selected, setSelected] = useState<string | undefined>('')
+
+  useEffect(() => {
+    setSelected(value)
+  }, [value])
+
   const handleClickSelect = (value) => {
     setSelected(value)
     onSelected(value)
   }
-  useEffect(() => {
-    setSelected(value)
-  }, [value])
+
   return (
     <div className={styles.simpleDropdownContainer}>
       <Form form={form} layout="vertical" {...props}>

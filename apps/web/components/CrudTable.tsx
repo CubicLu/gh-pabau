@@ -23,6 +23,7 @@ import { useTranslationI18 } from '../hooks/useTranslationI18'
 import { useRouter } from 'next/router'
 
 const { Title } = Typography
+
 interface P {
   schema: Schema
   addQuery?: DocumentNode
@@ -40,6 +41,8 @@ interface P {
   needTranslation?: boolean
   editPage?: boolean
   editPageRouteLink?: string
+  isCustomFilter?: boolean
+  customFilter?: () => JSX.Element
   setEditPage?(e): void
 }
 
@@ -60,6 +63,8 @@ const CrudTable: FC<P> = ({
   needTranslation = false,
   editPage = false,
   editPageRouteLink,
+  isCustomFilter,
+  customFilter,
   setEditPage,
 }) => {
   const [isLoading, setIsLoading] = useState(true)
@@ -162,14 +167,36 @@ const CrudTable: FC<P> = ({
     getAggregateQueryVariables()
   )
 
+  const getAddress = (data) => {
+    const addressPreference = new Set([
+      'country',
+      'city',
+      'street',
+      'post_code',
+    ])
+    const { country, city, street, post_code } = data
+    let address
+    const addressPart = []
+    if (!country && !city && !street && !post_code) {
+      address = 'No address found'
+    } else {
+      for (const key in data) {
+        if (addressPreference.has(key) && data[key]) {
+          addressPart.push(data[key])
+        }
+      }
+      address = addressPart.join(',').toString().replace(/,/g, ', ')
+    }
+    return address
+  }
+
   useEffect(() => {
     if (data) {
       if (schema.full === 'Issuing Company') {
         const newData = data.map((d) => {
-          const { country, city, street, post_code } = d
           return {
             ...d,
-            address: country + ', ' + city + ', ' + street + ', ' + post_code,
+            address: getAddress(d),
           }
         })
         setSourceData(newData)
@@ -335,8 +362,12 @@ const CrudTable: FC<P> = ({
   }
 
   const createNew = () => {
-    setModalShowing((e) => !e)
-    setEditingRow({ name: '', isCreate: true })
+    if (!createPage) {
+      setModalShowing((e) => !e)
+      setEditingRow({ name: '', isCreate: true })
+    } else {
+      createPageOnClick()
+    }
   }
 
   const handleBack = () => {
@@ -425,6 +456,8 @@ const CrudTable: FC<P> = ({
                     tableSearch={tableSearch}
                     needTranslation={needTranslation}
                     addFilter={addFilter}
+                    isCustomFilter={isCustomFilter}
+                    customFilter={customFilter}
                   />
                 ) : (
                   <AddButton
@@ -435,6 +468,8 @@ const CrudTable: FC<P> = ({
                     tableSearch={tableSearch}
                     addFilter={addFilter}
                     needTranslation={needTranslation}
+                    isCustomFilter={isCustomFilter}
+                    customFilter={customFilter}
                   />
                 )}
               </div>
@@ -485,6 +520,8 @@ const CrudTable: FC<P> = ({
                   tableSearch={tableSearch}
                   needTranslation={needTranslation}
                   addFilter={addFilter}
+                  isCustomFilter={isCustomFilter}
+                  customFilter={customFilter}
                 />
               ) : (
                 <AddButton
@@ -495,6 +532,8 @@ const CrudTable: FC<P> = ({
                   tableSearch={tableSearch}
                   addFilter={addFilter}
                   needTranslation={needTranslation}
+                  isCustomFilter={isCustomFilter}
+                  customFilter={customFilter}
                 />
               )}
             </div>

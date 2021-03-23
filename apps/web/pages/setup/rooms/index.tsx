@@ -147,7 +147,6 @@ const schema: Schema = {
     },
   },
 }
-/* eslint-disable graphql/template-strings */
 export const LIST_QUERY = gql`
   query rooms($isActive: Boolean = true, $offset: Int, $limit: Int) {
     rooms(

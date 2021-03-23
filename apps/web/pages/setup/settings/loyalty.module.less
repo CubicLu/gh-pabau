@@ -1,143 +1,174 @@
-.loyalty-container {
-  background: #ffffff;
-  border-radius: 4px;
-  min-height: 100vh;
-  border: none;
+.loyalty-main-wrapper {
+	.loyalty-container {
+		background: #ffffff;
+		border-radius: 4px;
+		min-height: 100vh;
+		border: none;
+		.hide-mobile-view {
+			.loyalty-wrapper {
+				display: flex;
+				justify-content: space-between;
+				border-bottom: 1px solid #ecedf0;
+				.title-wrapper {
+					h1 {
+						font-weight: bold;
+						font-size: 20px;
+						line-height: 25px;
+						color: #3d3d46;
+						margin-top: 8px;
+						margin-bottom: 16px;
+					}
+					h4 {
+						color: #3d3d46;
+						font-weight: bold;
+						font-size: 20px;
+						line-height: 25px;
+						margin-bottom: 16px;
+						padding-left: 24px;
+					}
+					p {
+						color: #9292a3;
+						font-weight: normal;
+						font-size: 14px;
+						line-height: 18px;
+						max-width: 468px;
+						margin-bottom: 24px;
+						padding-left: 24px;
+					}
+				}
+				.title-save-btn {
+					display: flex;
+					justify-content: flex-end;
+					align-items: flex-start;
+					padding: 24px 24px 0 0;
+					.save-btn {
+						padding: 9px 16px;
+						height: auto;
+					}
+				}
+			}
+		}
+		.hide-desktop-view {
+			display: none;
+			.mob-device {
+				padding-bottom: 16px;
+				background: #ffffff;
+				.mob-top-head {
+					.mobTopHeadRow {
+						padding: 20px 16px;
+						border-bottom: 1px solid #ecedf0;
+						display: flex;
+						align-items: center;
+						position: fixed;
+						top: 0;
+						background: #fff;
+						width: 100%;
+						z-index: 9;
+						span {
+							svg {
+								font-size: 17px;
+								color: #9292a3;
+							}
+						}
+						h6 {
+							margin-bottom: 0;
+							margin-left: 15px;
+							color: #3d3d46;
+							font-weight: 500;
+							font-size: 17px;
+							line-height: 22px;
+						}
+					}
+					p {
+						margin: 0;
+						padding: 16px;
+						color: #9292a3;
+						font-weight: normal;
+						font-size: 14px;
+						line-height: 22px;
+						border-bottom: 1px solid #ecedf0;
+					}
+				}
+			}
+		}
+		 :global .ant-card-body {
+			padding: 0;
+			.ant-tabs {
+				.ant-tabs-nav {
+					.ant-tabs-nav-wrap {
+						.ant-tabs-nav-list {
+							width: 100%;
+						}
+					}
+				}
+			}
+		}
+		.mob-save-btn {
+			padding: 16px;
+			background: #ffffff;
+			button {
+				width: 100%;
+			}
+		}
+	}
+}
 
-  @media screen and (max-width: 480px) {
-    height: 100vh;
-  }
-  :global .ant-card-body {
-    padding: 0;
-    .ant-tabs {
-      @media screen and (max-width: 767px) {
-        background: #ffffff;
-      }
-      .ant-tabs-nav {
-        .ant-tabs-nav-wrap {
-          .ant-tabs-nav-list {
-            width: 100%;
-            .ant-tabs-tab {
-              @media screen and (max-width: 767px) {
-                width: 100%;
-                justify-content: center;
-              }
-              &.ant-tabs-tab-active {
-                @media screen and (max-width: 767px) {
-                  background: transparent;
-                }
-              }
-            }
+@media screen and (max-width: 767px) {
+	.loyalty-main-wrapper {
+		padding: 0 0 64px;
+		.loyalty-container {
+			.hide-mobile-view {
+				display: none;
+			}
+			.hide-desktop-view {
+				display: block;
+			}
+			 :global .ant-card-body {
+				height: inherit;
+				display: flex;
+				flex-direction: column;
+				flex-grow: 1;
+				.ant-tabs {
+					background: #ffffff;
+					.ant-tabs-nav {
+						.ant-tabs-nav-wrap {
+							.ant-tabs-nav-list {
+								.ant-tabs-tab {
+									width: 100%;
+									justify-content: center;
+									&.ant-tabs-tab-active {
+										background: transparent;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			.mob-save-btn {
+				flex-grow: 1;
+				display: flex;
+				justify-content: flex-end;
+				align-items: flex-end;
+				position: fixed;
+				bottom: 0;
+				z-index: 9;
+				width: 100%;
+			}
+		}
+	}
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .loyalty-main-wrapper {
+    .loyalty-container {
+      .hide-mobile-view {
+        .loyalty-wrapper {
+          .title-wrapper {
+            max-width: 75%;
           }
         }
       }
     }
-    @media screen and (max-width: 767px) {
-      height: inherit;
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-    }
-  }
-
-  .loyalty-main-wrapper {
-    display: flex;
-    justify-content: space-between;
-    padding: 24px;
-    border-bottom: 1px solid #ecedf0;
-
-    .title-wrapper {
-      :global .ant-breadcrumb {
-        padding-left: 0;
-      }
-      h1 {
-        font-weight: bold;
-        font-size: 20px;
-        line-height: 25px;
-        color: #3d3d46;
-        margin-top: 8px;
-        margin-bottom: 16px;
-      }
-      h4 {
-        color: #3d3d46;
-        font-weight: bold;
-        font-size: 20px;
-        line-height: 25px;
-        margin-bottom: 16px;
-      }
-      p {
-        color: #9292a3;
-        font-weight: normal;
-        font-size: 14px;
-        line-height: 18px;
-        max-width: 448px;
-        margin-bottom: 0;
-      }
-    }
-    .title-save-btn {
-      display: flex;
-      justify-content: flex-end;
-      align-items: flex-start;
-
-      .save-btn {
-        padding: 9px 16px;
-        height: auto;
-      }
-    }
-  }
-  .mob-save-btn {
-    padding: 26px;
-    background: #ffffff;
-    @media screen and (max-width: 767px) {
-      flex-grow: 1;
-      display: flex;
-      justify-content: flex-end;
-      align-items: flex-end;
-    }
-    button {
-      width: 100%;
-    }
-  }
-}
-
-.mob-device {
-  padding-bottom: 16px;
-  background: #ffffff;
-  .mob-top-head {
-    .mobTopHeadRow {
-      padding: 20px 16px;
-      border-bottom: 1px solid #ecedf0;
-      display: flex;
-      align-items: center;
-      span {
-        svg {
-          font-size: 17px;
-          color: #9292a3;
-        }
-      }
-      h6 {
-        margin-bottom: 0;
-        margin-left: 15px;
-        color: #3d3d46;
-        font-weight: 500;
-        font-size: 17px;
-        line-height: 22px;
-      }
-    }
-    p {
-      margin: 0;
-      padding: 16px;
-      color: #9292a3;
-      font-weight: normal;
-      font-size: 14px;
-      line-height: 22px;
-      border-bottom: 1px solid #ecedf0;
-    }
-  }
-}
-
-@media screen and (max-width: 767px) {
-  :global .ant-layout {
-    margin: 0;
   }
 }

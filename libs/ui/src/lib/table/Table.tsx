@@ -1,5 +1,6 @@
 import React, { FC } from 'react'
 import { Button, Table as AntTable, Avatar } from 'antd'
+import { Daily } from '@pabau/ui'
 import {
   SortableContainer,
   SortableElement,
@@ -49,6 +50,7 @@ export type TableType = {
   onAddTemplate?: () => void
   searchTerm?: string
   needTranslation?: boolean
+  showSizeChanger?: boolean
 } & TableProps<never> &
   DragProps
 
@@ -65,6 +67,7 @@ export const Table: FC<TableType> = ({
   onAddTemplate,
   searchTerm = '',
   needTranslation,
+  showSizeChanger,
   ...props
 }) => {
   const onSortEnd = ({ oldIndex, newIndex }) => {
@@ -155,6 +158,27 @@ export const Table: FC<TableType> = ({
     return alloWClicked
   }
 
+  const renderDays = (data) => {
+    const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    const resultPassedData: Array<number> = []
+    weekDays.map((item, index: number) => {
+      if (data.includes(item)) {
+        resultPassedData.push(index + 1)
+        return item
+      }
+      return item
+    })
+    return (
+      <div>
+        <Daily tickedDays={resultPassedData} />
+      </div>
+    )
+  }
+
+  const renderTime = (val) => {
+    return <div className={styles.alignItems}>{val.slice(0, 5)}</div>
+  }
+
   const renderSortHandler = () => {
     if (props?.columns) {
       props.columns = props.columns
@@ -169,6 +193,13 @@ export const Table: FC<TableType> = ({
               col.dataIndex === 'integration')
           ) {
             col.render = renderActiveButton
+          } else if (col.dataIndex === 'days') {
+            col.render = renderDays
+          } else if (
+            col.dataIndex === 'start_time' ||
+            col.dataIndex === 'end_time'
+          ) {
+            col.render = renderTime
           } else if (!col.render) {
             col.render = renderTableSource
           }
@@ -212,7 +243,9 @@ export const Table: FC<TableType> = ({
           //   onMouseLeave: (event) => {}, // mouse leave row
         }
       }}
-      pagination={false}
+      pagination={
+        showSizeChanger ? { showSizeChanger: showSizeChanger } : false
+      }
       dataSource={dataSource}
       columns={renderSortHandler()}
       rowKey="key"

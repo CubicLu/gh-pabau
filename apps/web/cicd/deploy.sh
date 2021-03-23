@@ -30,6 +30,7 @@ VERCEL_JSON_LOCATION=$(cd "${APP_TYPE}/${APP_NAME}" && pwd)
 
 echo "----- DEBUG -----"
 echo "(pwd)=$(pwd)"
+echo "NODE_OPTIONS=${NODE_OPTIONS}"
 echo "APP_NAME=${APP_NAME}"
 echo "APP_TYPE=${APP_TYPE}"
 echo "VERCEL_JSON_LOCATION=${VERCEL_JSON_LOCATION}"

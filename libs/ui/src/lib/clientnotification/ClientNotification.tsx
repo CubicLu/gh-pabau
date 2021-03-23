@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import { Row, Col, Radio, Input, Modal } from 'antd'
 import styles from './ClientNotification.module.less'
 import { Button, Notification } from '@pabau/ui'
@@ -29,7 +29,7 @@ export const ClientNotification: FC<P> = ({
   displayButtons = true,
   displayRadioGroup = true,
 }) => {
-  const [previewStatus, setPreviewStatus] = React.useState(1)
+  const [previewStatus, setPreviewStatus] = useState(1)
 
   function handleSmsTabChanged(value) {
     setPreviewStatus(value)
@@ -38,8 +38,8 @@ export const ClientNotification: FC<P> = ({
     }
   }
 
-  const [visibleModal, setVisibleModal] = React.useState(false)
-  const [valideEmail, setValidEmail] = React.useState(false)
+  const [visibleModal, setVisibleModal] = useState(false)
+  const [valideEmail, setValidEmail] = useState(false)
 
   function showNotification() {
     if (valideEmail) {

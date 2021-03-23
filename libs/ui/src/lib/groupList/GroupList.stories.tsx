@@ -11,4 +11,6 @@ export default {
 const GroupListStory = ({ ...args }) => <GroupList {...args} />
 
 export const ListGroup = GroupListStory.bind({})
-ListGroup.args = {}
+ListGroup.args = {
+  isHeaderShow: true,
+}

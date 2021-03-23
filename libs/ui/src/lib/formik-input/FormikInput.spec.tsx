@@ -1,11 +1,11 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 
-import Appointment from './Appointment'
+import FormikInput from './FormikInput'
 
-describe('Appointment', () => {
+describe('FormikInput', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Appointment selectLanguage="en" />)
+    const { baseElement } = render(<FormikInput />)
     expect(baseElement).toBeTruthy()
   })
 })

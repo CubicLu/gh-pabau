@@ -61,8 +61,7 @@ pipelines:
 
             - yarn affected --base=origin/master --target=lint --with-deps --parallel
             - yarn affected --base=origin/master --target=test
-            - yarn affected --base=origin/master --target=export --prod
-            - yarn affected --base=origin/master --target=deploy
+            - sh -c "NODE_OPTIONS=--max_old_space_size=8192 yarn affected --base=origin/master --target=deploy"
             - cat /tmp/bot_message.txt
 
             - npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "origin/master" "$(cat /tmp/bot_url_web.txt)" "$(cat /tmp/bot_url_ui.txt)" >> /tmp/bot_message.txt
@@ -135,9 +134,9 @@ pipelines:
             - git push && git push --tags
             - export PACKAGE_JSON_VERSION=$(jq -r .version < package.json)
 
-            - /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=export --prod
-            - /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=build-storybook --prod
-            - /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=deploy --prod
+            - sh -c "NODE_OPTIONS=--max_old_space_size=8192 /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=export --prod"
+            - sh -c "NODE_OPTIONS=--max_old_space_size=8192 /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=build-storybook --prod"
+            - sh -c "NODE_OPTIONS=--max_old_space_size=8192 /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=deploy --prod"
 
             - npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "HEAD~2" "$(cat /tmp/bot_url_web.txt)" "$(cat /tmp/bot_url_ui.txt)" >> /tmp/bot_message.txt
             - |

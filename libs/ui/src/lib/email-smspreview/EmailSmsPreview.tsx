@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, ReactNode } from 'react'
+import React, { PropsWithChildren, ReactNode, useState } from 'react'
 import { Row, Col, Divider, Radio } from 'antd'
 import styles from './EmailSmsPreview.module.less'
 import { ReactComponent as NormalClinicLogo } from '../../assets/images/normal-clinic-logo.svg'
@@ -30,6 +30,9 @@ export interface EmailSMSPreviewProps {
   activeSocialIcons?: string[]
   buttonColor?: string
   backGroundColor?: string
+  contactEmail?: string
+  contactInfoNumber?: string
+  displayContactMessage?: boolean
 }
 
 export interface FooterProps {
@@ -38,11 +41,16 @@ export interface FooterProps {
   text?: string
   isFooterText?: boolean
   activeSocialIcons?: string[]
+  contactEmail?: string
+  contactInfoNumber?: string
+  displayContactMessage?: boolean
 }
 
 export interface NoShowAppointmentProps {
   message?: string
   contactNumber?: string
+  closingText?: string
+  signatureBlock?: string
 }
 
 export interface BookedOntoClassProps {
@@ -66,6 +74,13 @@ export interface ClassRescheduledProps {
   message?: string
 }
 
+export interface RequestFeedbackProps {
+  message?: string
+  message1?: string
+  closingText?: string
+  signatureBlock?: string
+}
+
 export interface ReminderForClassProps {
   message?: string
   contactNumber?: number
@@ -79,16 +94,25 @@ export interface MissedAClassProps {
 export interface ReferralProps {
   message?: string
   footerText?: string
+  description?: string
 }
 
 export interface InvoicesProps {
-  message?: string
+  message?: string[]
   footerText?: string
+  showInvoiceButton?: boolean
+  bestRegards?: string
+  senderFirstName?: string
+  showEnablePay?: boolean
 }
 
 export interface LeadResponsesProps {
   message?: string
   text?: string
+  companyEmail?: string
+  companyPhone?: string
+  description?: string
+  messageLine?: string
 }
 
 export interface GiftVoucherProps {
@@ -96,6 +120,7 @@ export interface GiftVoucherProps {
   voucherCode?: string
   expiry?: string
   consultancyName?: string
+  displayViewButton?: boolean
 }
 
 export interface ConnectRegistrationProps {
@@ -106,10 +131,26 @@ export interface ConnectRegistrationProps {
   text?: string
 }
 
+export interface DocumentSharedProps {
+  userEmail?: string
+  userName?: string
+  buttonName?: string
+  clinicName?: string
+  infoText?: string
+  closingText?: string
+  signatureBlock?: string
+  messageLine1?: string
+  messageLine2?: string
+}
+
 export interface MedicalFormProps {
   message?: string
   contactNumber?: string
   text?: string
+}
+
+export interface PackageSessionProps {
+  message?: string
 }
 
 export interface NewAppoinmentsIsBookedProps {
@@ -130,6 +171,13 @@ export interface UpComingAppoinmentReminderProps {
   contactNumber?: number
 }
 
+export interface BirthDayPreviewProps {
+  wishingMessage?: string
+  messages?: string[]
+  closingText?: string
+  signatureBlock?: string
+}
+
 export function EmailSMSFooter(props: FooterProps): JSX.Element {
   const {
     iconGroup = true,
@@ -137,6 +185,9 @@ export function EmailSMSFooter(props: FooterProps): JSX.Element {
     text,
     isFooterText = false,
     activeSocialIcons = [],
+    contactInfoNumber,
+    contactEmail,
+    displayContactMessage = true,
   } = props
 
   const setSocialIcon = (value) => {
@@ -157,21 +208,27 @@ export function EmailSMSFooter(props: FooterProps): JSX.Element {
       <Divider className={styles.dividerHr} />
       {contact && (
         <>
+          {displayContactMessage && (
+            <Row gutter={[0, 4]} className={styles.bookAppointment}>
+              <Col>
+                <span className={styles.message}>
+                  Or get in touch with us via Phone or Email:
+                </span>
+              </Col>
+            </Row>
+          )}
           <Row gutter={[0, 4]} className={styles.bookAppointment}>
             <Col>
-              <span className={styles.message}>
-                Or get in touch with us via Phone or Email:
+              <span className={styles.contactInfo}>
+                {contactInfoNumber || '+44 000 987 507'}
               </span>
             </Col>
           </Row>
           <Row gutter={[0, 4]} className={styles.bookAppointment}>
             <Col>
-              <span className={styles.contactInfo}>+44 000 987 507</span>
-            </Col>
-          </Row>
-          <Row gutter={[0, 4]} className={styles.bookAppointment}>
-            <Col>
-              <span className={styles.contactInfo}>info@theclinic.com</span>
+              <span className={styles.contactInfo}>
+                {contactEmail || 'info@theclinic.com'}
+              </span>
             </Col>
           </Row>
         </>
@@ -180,7 +237,7 @@ export function EmailSMSFooter(props: FooterProps): JSX.Element {
         <Row gutter={[0, 4]} className={styles.textBox}>
           <Col>
             <span
-              className={styles.text}
+              className={`${styles.text} ${styles.footerText}`}
               dangerouslySetInnerHTML={{ __html: text || '' }}
             ></span>
           </Col>
@@ -219,9 +276,12 @@ export const EmailSmsPreview = (
     previewButtonGroup = true,
     previewCustomStatus,
     backGroundColor = '',
+    contactEmail,
+    contactInfoNumber,
     activeSocialIcons = ['facebook', 'whatsApp', 'instagram', 'twitter'],
+    displayContactMessage = true,
   } = props
-  const [previewStatus, setPreviewStatus] = React.useState(
+  const [previewStatus, setPreviewStatus] = useState(
     previewCustomStatus || 'email'
   )
 
@@ -295,6 +355,9 @@ export const EmailSmsPreview = (
                 text={footerText}
                 isFooterText={isFooterText}
                 activeSocialIcons={activeSocialIcons}
+                contactInfoNumber={contactInfoNumber}
+                contactEmail={contactEmail}
+                displayContactMessage={displayContactMessage}
               />
             )}
           </div>
