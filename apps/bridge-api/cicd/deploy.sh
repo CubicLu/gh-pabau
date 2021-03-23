@@ -18,9 +18,10 @@ echo "Done"
 
 echo "Copying assets..."
 cp "apps/${APP_NAME}/package.json-prod" "dist/apps/${APP_NAME}/"
+ls -l "apps/${APP_NAME}/prisma"
 cp "apps/${APP_NAME}/prisma/schema.prisma" "dist/apps/${APP_NAME}/prisma/schema.prisma"
 cp "apps/${APP_NAME}/prisma/.env" "dist/apps/${APP_NAME}/prisma/.env"
-ls -l "dist/apps/${APP_NAME}/prisma/"
+ls -l "dist/apps/${APP_NAME}/prisma"
 echo "Done"
 
 echo "Docker build..."
