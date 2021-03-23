@@ -9941,6 +9941,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationCreateNestedManyWithoutCompanyInput'] | null; // SalutationCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserCreateNestedManyWithoutCompanyInput'] | null; // UserCreateNestedManyWithoutCompanyInput
@@ -10001,6 +10002,11 @@ export interface NexusGenInputs {
     connectOrCreate?: NexusGenInputs['CompanyCreateOrConnectWithoutMarketingSourceInput'] | null; // CompanyCreateOrConnectWithoutMarketingSourceInput
     create?: NexusGenInputs['CompanyUncheckedCreateWithoutMarketingSourceInput'] | null; // CompanyUncheckedCreateWithoutMarketingSourceInput
   }
+  CompanyCreateNestedOneWithoutSalutationInput: { // input type
+    connect?: NexusGenInputs['CompanyWhereUniqueInput'] | null; // CompanyWhereUniqueInput
+    connectOrCreate?: NexusGenInputs['CompanyCreateOrConnectWithoutSalutationInput'] | null; // CompanyCreateOrConnectWithoutSalutationInput
+    create?: NexusGenInputs['CompanyUncheckedCreateWithoutSalutationInput'] | null; // CompanyUncheckedCreateWithoutSalutationInput
+  }
   CompanyCreateNestedOneWithoutSubscriptionInput: { // input type
     connect?: NexusGenInputs['CompanyWhereUniqueInput'] | null; // CompanyWhereUniqueInput
     connectOrCreate?: NexusGenInputs['CompanyCreateOrConnectWithoutSubscriptionInput'] | null; // CompanyCreateOrConnectWithoutSubscriptionInput
@@ -10057,6 +10063,10 @@ export interface NexusGenInputs {
     create: NexusGenInputs['CompanyUncheckedCreateWithoutMarketingSourceInput']; // CompanyUncheckedCreateWithoutMarketingSourceInput!
     where: NexusGenInputs['CompanyWhereUniqueInput']; // CompanyWhereUniqueInput!
   }
+  CompanyCreateOrConnectWithoutSalutationInput: { // input type
+    create: NexusGenInputs['CompanyUncheckedCreateWithoutSalutationInput']; // CompanyUncheckedCreateWithoutSalutationInput!
+    where: NexusGenInputs['CompanyWhereUniqueInput']; // CompanyWhereUniqueInput!
+  }
   CompanyCreateOrConnectWithoutSubscriptionInput: { // input type
     create: NexusGenInputs['CompanyUncheckedCreateWithoutSubscriptionInput']; // CompanyUncheckedCreateWithoutSubscriptionInput!
     where: NexusGenInputs['CompanyWhereUniqueInput']; // CompanyWhereUniqueInput!
@@ -10081,6 +10091,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationCreateNestedManyWithoutCompanyInput'] | null; // SalutationCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserCreateNestedManyWithoutCompanyInput'] | null; // UserCreateNestedManyWithoutCompanyInput
@@ -10104,6 +10115,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationCreateNestedManyWithoutCompanyInput'] | null; // SalutationCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserCreateNestedManyWithoutCompanyInput'] | null; // UserCreateNestedManyWithoutCompanyInput
@@ -10127,6 +10139,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationCreateNestedManyWithoutCompanyInput'] | null; // SalutationCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserCreateNestedManyWithoutCompanyInput'] | null; // UserCreateNestedManyWithoutCompanyInput
@@ -10150,6 +10163,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationCreateNestedManyWithoutCompanyInput'] | null; // SalutationCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserCreateNestedManyWithoutCompanyInput'] | null; // UserCreateNestedManyWithoutCompanyInput
@@ -10173,6 +10187,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationCreateNestedManyWithoutCompanyInput'] | null; // SalutationCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserCreateNestedManyWithoutCompanyInput'] | null; // UserCreateNestedManyWithoutCompanyInput
@@ -10196,6 +10211,7 @@ export interface NexusGenInputs {
     CmCampaign?: NexusGenInputs['CmCampaignCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationCreateNestedManyWithoutCompanyInput'] | null; // SalutationCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserCreateNestedManyWithoutCompanyInput'] | null; // UserCreateNestedManyWithoutCompanyInput
@@ -10219,6 +10235,7 @@ export interface NexusGenInputs {
     CmCampaign?: NexusGenInputs['CmCampaignCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationCreateNestedManyWithoutCompanyInput'] | null; // SalutationCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserCreateNestedManyWithoutCompanyInput'] | null; // UserCreateNestedManyWithoutCompanyInput
@@ -10243,6 +10260,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationCreateNestedManyWithoutCompanyInput'] | null; // SalutationCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserCreateNestedManyWithoutCompanyInput'] | null; // UserCreateNestedManyWithoutCompanyInput
@@ -10265,6 +10283,31 @@ export interface NexusGenInputs {
     CmCampaign?: NexusGenInputs['CmCampaignCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationCreateNestedManyWithoutCompanyInput'] | null; // SalutationCreateNestedManyWithoutCompanyInput
+    ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessCreateNestedManyWithoutCompanyInput
+    TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryCreateNestedManyWithoutCompanyInput
+    User?: NexusGenInputs['UserCreateNestedManyWithoutCompanyInput'] | null; // UserCreateNestedManyWithoutCompanyInput
+    admin: number; // Int!
+    creation_date: NexusGenScalars['DateTime']; // DateTime!
+    cron_enabled?: boolean | null; // Boolean
+    details?: NexusGenInputs['CompanyDetailsCreateNestedOneWithoutCompanyInput'] | null; // CompanyDetailsCreateNestedOneWithoutCompanyInput
+    digit8: number; // Int!
+    image: string; // String!
+    remote_connect?: string | null; // String
+    remote_url?: string | null; // String
+    slug?: string | null; // String
+    subscription?: NexusGenInputs['CompanySubscriptionCreateNestedOneWithoutCompanyInput'] | null; // CompanySubscriptionCreateNestedOneWithoutCompanyInput
+    user: string; // String!
+  }
+  CompanyCreateWithoutSalutationInput: { // input type
+    AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenCreateNestedManyWithoutCompanyInput
+    AccountBalance?: NexusGenInputs['AccountBalanceCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusCreateNestedManyWithoutCompanyInput
+    Candidate?: NexusGenInputs['CandidateCreateNestedManyWithoutCompanyInput'] | null; // CandidateCreateNestedManyWithoutCompanyInput
+    CmCampaign?: NexusGenInputs['CmCampaignCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignCreateNestedManyWithoutCompanyInput
+    CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
+    CmCaseReply?: NexusGenInputs['CmCaseReplyCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyCreateNestedManyWithoutCompanyInput
+    MarketingSource?: NexusGenInputs['MarketingSourceCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserCreateNestedManyWithoutCompanyInput'] | null; // UserCreateNestedManyWithoutCompanyInput
@@ -10289,6 +10332,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationCreateNestedManyWithoutCompanyInput'] | null; // SalutationCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserCreateNestedManyWithoutCompanyInput'] | null; // UserCreateNestedManyWithoutCompanyInput
@@ -10312,6 +10356,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationCreateNestedManyWithoutCompanyInput'] | null; // SalutationCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserCreateNestedManyWithoutCompanyInput'] | null; // UserCreateNestedManyWithoutCompanyInput
     admin: number; // Int!
@@ -10335,6 +10380,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationCreateNestedManyWithoutCompanyInput'] | null; // SalutationCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserCreateNestedManyWithoutCompanyInput'] | null; // UserCreateNestedManyWithoutCompanyInput
     admin: number; // Int!
@@ -10358,6 +10404,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseCreateNestedManyWithoutCompanyInput'] | null; // CmCaseCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationCreateNestedManyWithoutCompanyInput'] | null; // SalutationCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryCreateNestedManyWithoutCompanyInput
     admin: number; // Int!
@@ -12969,6 +13016,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedCreateNestedManyWithoutCompanyInput'] | null; // SalutationUncheckedCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedCreateNestedManyWithoutCompanyInput'] | null; // UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -12993,6 +13041,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedCreateNestedManyWithoutCompanyInput'] | null; // SalutationUncheckedCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedCreateNestedManyWithoutCompanyInput'] | null; // UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -13017,6 +13066,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedCreateNestedManyWithoutCompanyInput'] | null; // SalutationUncheckedCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedCreateNestedManyWithoutCompanyInput'] | null; // UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -13041,6 +13091,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedCreateNestedManyWithoutCompanyInput'] | null; // SalutationUncheckedCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedCreateNestedManyWithoutCompanyInput'] | null; // UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -13065,6 +13116,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedCreateNestedManyWithoutCompanyInput'] | null; // SalutationUncheckedCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedCreateNestedManyWithoutCompanyInput'] | null; // UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -13089,6 +13141,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedCreateNestedManyWithoutCompanyInput'] | null; // SalutationUncheckedCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedCreateNestedManyWithoutCompanyInput'] | null; // UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -13113,6 +13166,7 @@ export interface NexusGenInputs {
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedCreateNestedManyWithoutCompanyInput'] | null; // SalutationUncheckedCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedCreateNestedManyWithoutCompanyInput'] | null; // UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -13137,6 +13191,7 @@ export interface NexusGenInputs {
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedCreateNestedManyWithoutCompanyInput'] | null; // SalutationUncheckedCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedCreateNestedManyWithoutCompanyInput'] | null; // UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -13162,6 +13217,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedCreateNestedManyWithoutCompanyInput'] | null; // SalutationUncheckedCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedCreateNestedManyWithoutCompanyInput'] | null; // UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -13185,6 +13241,32 @@ export interface NexusGenInputs {
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedCreateNestedManyWithoutCompanyInput'] | null; // SalutationUncheckedCreateNestedManyWithoutCompanyInput
+    ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
+    TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
+    User?: NexusGenInputs['UserUncheckedCreateNestedManyWithoutCompanyInput'] | null; // UserUncheckedCreateNestedManyWithoutCompanyInput
+    admin: number; // Int!
+    creation_date: NexusGenScalars['DateTime']; // DateTime!
+    cron_enabled?: boolean | null; // Boolean
+    details?: NexusGenInputs['CompanyDetailsUncheckedCreateNestedOneWithoutCompanyInput'] | null; // CompanyDetailsUncheckedCreateNestedOneWithoutCompanyInput
+    digit8: number; // Int!
+    id?: number | null; // Int
+    image: string; // String!
+    remote_connect?: string | null; // String
+    remote_url?: string | null; // String
+    slug?: string | null; // String
+    subscription?: NexusGenInputs['CompanySubscriptionUncheckedCreateNestedOneWithoutCompanyInput'] | null; // CompanySubscriptionUncheckedCreateNestedOneWithoutCompanyInput
+    user: string; // String!
+  }
+  CompanyUncheckedCreateWithoutSalutationInput: { // input type
+    AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
+    AccountBalance?: NexusGenInputs['AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedCreateNestedManyWithoutCompanyInput'] | null; // BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
+    Candidate?: NexusGenInputs['CandidateUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CandidateUncheckedCreateNestedManyWithoutCompanyInput
+    CmCampaign?: NexusGenInputs['CmCampaignUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
+    CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
+    CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
+    MarketingSource?: NexusGenInputs['MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedCreateNestedManyWithoutCompanyInput'] | null; // UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -13210,6 +13292,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedCreateNestedManyWithoutCompanyInput'] | null; // SalutationUncheckedCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedCreateNestedManyWithoutCompanyInput'] | null; // UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -13234,6 +13317,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedCreateNestedManyWithoutCompanyInput'] | null; // SalutationUncheckedCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedCreateNestedManyWithoutCompanyInput'] | null; // UserUncheckedCreateNestedManyWithoutCompanyInput
     admin: number; // Int!
@@ -13258,6 +13342,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedCreateNestedManyWithoutCompanyInput'] | null; // SalutationUncheckedCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedCreateNestedManyWithoutCompanyInput'] | null; // UserUncheckedCreateNestedManyWithoutCompanyInput
     admin: number; // Int!
@@ -13282,6 +13367,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseUncheckedCreateNestedManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedCreateNestedManyWithoutCompanyInput'] | null; // SalutationUncheckedCreateNestedManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
     admin: number; // Int!
@@ -13306,6 +13392,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedUpdateManyWithoutCompanyInput'] | null; // SalutationUncheckedUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedUpdateManyWithoutCompanyInput'] | null; // UserUncheckedUpdateManyWithoutCompanyInput
@@ -13342,6 +13429,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedUpdateManyWithoutCompanyInput'] | null; // SalutationUncheckedUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedUpdateManyWithoutCompanyInput'] | null; // UserUncheckedUpdateManyWithoutCompanyInput
@@ -13366,6 +13454,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedUpdateManyWithoutCompanyInput'] | null; // SalutationUncheckedUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedUpdateManyWithoutCompanyInput'] | null; // UserUncheckedUpdateManyWithoutCompanyInput
@@ -13390,6 +13479,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedUpdateManyWithoutCompanyInput'] | null; // SalutationUncheckedUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedUpdateManyWithoutCompanyInput'] | null; // UserUncheckedUpdateManyWithoutCompanyInput
@@ -13414,6 +13504,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedUpdateManyWithoutCompanyInput'] | null; // SalutationUncheckedUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedUpdateManyWithoutCompanyInput'] | null; // UserUncheckedUpdateManyWithoutCompanyInput
@@ -13438,6 +13529,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedUpdateManyWithoutCompanyInput'] | null; // SalutationUncheckedUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedUpdateManyWithoutCompanyInput'] | null; // UserUncheckedUpdateManyWithoutCompanyInput
@@ -13462,6 +13554,7 @@ export interface NexusGenInputs {
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCampaignUncheckedUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedUpdateManyWithoutCompanyInput'] | null; // SalutationUncheckedUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedUpdateManyWithoutCompanyInput'] | null; // UserUncheckedUpdateManyWithoutCompanyInput
@@ -13486,6 +13579,7 @@ export interface NexusGenInputs {
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCampaignUncheckedUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedUpdateManyWithoutCompanyInput'] | null; // SalutationUncheckedUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedUpdateManyWithoutCompanyInput'] | null; // UserUncheckedUpdateManyWithoutCompanyInput
@@ -13511,6 +13605,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedUpdateManyWithoutCompanyInput'] | null; // SalutationUncheckedUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedUpdateManyWithoutCompanyInput'] | null; // UserUncheckedUpdateManyWithoutCompanyInput
@@ -13534,6 +13629,32 @@ export interface NexusGenInputs {
     CmCampaign?: NexusGenInputs['CmCampaignUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCampaignUncheckedUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedUpdateManyWithoutCompanyInput'] | null; // SalutationUncheckedUpdateManyWithoutCompanyInput
+    ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
+    TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
+    User?: NexusGenInputs['UserUncheckedUpdateManyWithoutCompanyInput'] | null; // UserUncheckedUpdateManyWithoutCompanyInput
+    admin?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    creation_date?: NexusGenInputs['DateTimeFieldUpdateOperationsInput'] | null; // DateTimeFieldUpdateOperationsInput
+    cron_enabled?: NexusGenInputs['NullableBoolFieldUpdateOperationsInput'] | null; // NullableBoolFieldUpdateOperationsInput
+    details?: NexusGenInputs['CompanyDetailsUncheckedUpdateOneWithoutCompanyInput'] | null; // CompanyDetailsUncheckedUpdateOneWithoutCompanyInput
+    digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+    remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
+    remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
+    slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
+    subscription?: NexusGenInputs['CompanySubscriptionUncheckedUpdateOneWithoutCompanyInput'] | null; // CompanySubscriptionUncheckedUpdateOneWithoutCompanyInput
+    user?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+  }
+  CompanyUncheckedUpdateWithoutSalutationInput: { // input type
+    AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
+    AccountBalance?: NexusGenInputs['AccountBalanceUncheckedUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUncheckedUpdateManyWithoutCompanyInput'] | null; // BookingStatusUncheckedUpdateManyWithoutCompanyInput
+    Candidate?: NexusGenInputs['CandidateUncheckedUpdateManyWithoutCompanyInput'] | null; // CandidateUncheckedUpdateManyWithoutCompanyInput
+    CmCampaign?: NexusGenInputs['CmCampaignUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCampaignUncheckedUpdateManyWithoutCompanyInput
+    CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
+    CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
+    MarketingSource?: NexusGenInputs['MarketingSourceUncheckedUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedUpdateManyWithoutCompanyInput'] | null; // UserUncheckedUpdateManyWithoutCompanyInput
@@ -13559,6 +13680,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedUpdateManyWithoutCompanyInput'] | null; // SalutationUncheckedUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedUpdateManyWithoutCompanyInput'] | null; // UserUncheckedUpdateManyWithoutCompanyInput
@@ -13583,6 +13705,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedUpdateManyWithoutCompanyInput'] | null; // SalutationUncheckedUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedUpdateManyWithoutCompanyInput'] | null; // UserUncheckedUpdateManyWithoutCompanyInput
     admin?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -13607,6 +13730,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedUpdateManyWithoutCompanyInput'] | null; // SalutationUncheckedUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUncheckedUpdateManyWithoutCompanyInput'] | null; // UserUncheckedUpdateManyWithoutCompanyInput
     admin?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -13631,6 +13755,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseUncheckedUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUncheckedUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUncheckedUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUncheckedUpdateManyWithoutCompanyInput'] | null; // SalutationUncheckedUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
     admin?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -13655,6 +13780,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUpdateManyWithoutCompanyInput'] | null; // SalutationUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUpdateManyWithoutCompanyInput'] | null; // UserUpdateManyWithoutCompanyInput
@@ -13767,6 +13893,15 @@ export interface NexusGenInputs {
     update?: NexusGenInputs['CompanyUncheckedUpdateWithoutCandidateInput'] | null; // CompanyUncheckedUpdateWithoutCandidateInput
     upsert?: NexusGenInputs['CompanyUpsertWithoutCandidateInput'] | null; // CompanyUpsertWithoutCandidateInput
   }
+  CompanyUpdateOneWithoutSalutationInput: { // input type
+    connect?: NexusGenInputs['CompanyWhereUniqueInput'] | null; // CompanyWhereUniqueInput
+    connectOrCreate?: NexusGenInputs['CompanyCreateOrConnectWithoutSalutationInput'] | null; // CompanyCreateOrConnectWithoutSalutationInput
+    create?: NexusGenInputs['CompanyUncheckedCreateWithoutSalutationInput'] | null; // CompanyUncheckedCreateWithoutSalutationInput
+    delete?: boolean | null; // Boolean
+    disconnect?: boolean | null; // Boolean
+    update?: NexusGenInputs['CompanyUncheckedUpdateWithoutSalutationInput'] | null; // CompanyUncheckedUpdateWithoutSalutationInput
+    upsert?: NexusGenInputs['CompanyUpsertWithoutSalutationInput'] | null; // CompanyUpsertWithoutSalutationInput
+  }
   CompanyUpdateOneWithoutUserInput: { // input type
     connect?: NexusGenInputs['CompanyWhereUniqueInput'] | null; // CompanyWhereUniqueInput
     connectOrCreate?: NexusGenInputs['CompanyCreateOrConnectWithoutUserInput'] | null; // CompanyCreateOrConnectWithoutUserInput
@@ -13784,6 +13919,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUpdateManyWithoutCompanyInput'] | null; // SalutationUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUpdateManyWithoutCompanyInput'] | null; // UserUpdateManyWithoutCompanyInput
@@ -13807,6 +13943,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUpdateManyWithoutCompanyInput'] | null; // SalutationUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUpdateManyWithoutCompanyInput'] | null; // UserUpdateManyWithoutCompanyInput
@@ -13830,6 +13967,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUpdateManyWithoutCompanyInput'] | null; // SalutationUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUpdateManyWithoutCompanyInput'] | null; // UserUpdateManyWithoutCompanyInput
@@ -13853,6 +13991,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUpdateManyWithoutCompanyInput'] | null; // SalutationUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUpdateManyWithoutCompanyInput'] | null; // UserUpdateManyWithoutCompanyInput
@@ -13876,6 +14015,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUpdateManyWithoutCompanyInput'] | null; // SalutationUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUpdateManyWithoutCompanyInput'] | null; // UserUpdateManyWithoutCompanyInput
@@ -13899,6 +14039,7 @@ export interface NexusGenInputs {
     CmCampaign?: NexusGenInputs['CmCampaignUpdateManyWithoutCompanyInput'] | null; // CmCampaignUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUpdateManyWithoutCompanyInput'] | null; // SalutationUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUpdateManyWithoutCompanyInput'] | null; // UserUpdateManyWithoutCompanyInput
@@ -13922,6 +14063,7 @@ export interface NexusGenInputs {
     CmCampaign?: NexusGenInputs['CmCampaignUpdateManyWithoutCompanyInput'] | null; // CmCampaignUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUpdateManyWithoutCompanyInput'] | null; // SalutationUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUpdateManyWithoutCompanyInput'] | null; // UserUpdateManyWithoutCompanyInput
@@ -13946,6 +14088,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUpdateManyWithoutCompanyInput'] | null; // SalutationUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUpdateManyWithoutCompanyInput'] | null; // UserUpdateManyWithoutCompanyInput
@@ -13968,6 +14111,31 @@ export interface NexusGenInputs {
     CmCampaign?: NexusGenInputs['CmCampaignUpdateManyWithoutCompanyInput'] | null; // CmCampaignUpdateManyWithoutCompanyInput
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUpdateManyWithoutCompanyInput'] | null; // SalutationUpdateManyWithoutCompanyInput
+    ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUpdateManyWithoutCompanyInput
+    TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUpdateManyWithoutCompanyInput
+    User?: NexusGenInputs['UserUpdateManyWithoutCompanyInput'] | null; // UserUpdateManyWithoutCompanyInput
+    admin?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    creation_date?: NexusGenInputs['DateTimeFieldUpdateOperationsInput'] | null; // DateTimeFieldUpdateOperationsInput
+    cron_enabled?: NexusGenInputs['NullableBoolFieldUpdateOperationsInput'] | null; // NullableBoolFieldUpdateOperationsInput
+    details?: NexusGenInputs['CompanyDetailsUpdateOneWithoutCompanyInput'] | null; // CompanyDetailsUpdateOneWithoutCompanyInput
+    digit8?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    image?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+    remote_connect?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
+    remote_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
+    slug?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
+    subscription?: NexusGenInputs['CompanySubscriptionUpdateOneWithoutCompanyInput'] | null; // CompanySubscriptionUpdateOneWithoutCompanyInput
+    user?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+  }
+  CompanyUpdateWithoutSalutationInput: { // input type
+    AcceptEmailToken?: NexusGenInputs['AcceptEmailTokenUpdateManyWithoutCompanyInput'] | null; // AcceptEmailTokenUpdateManyWithoutCompanyInput
+    AccountBalance?: NexusGenInputs['AccountBalanceUpdateManyWithoutCompanyInput'] | null; // AccountBalanceUpdateManyWithoutCompanyInput
+    BookingStatus?: NexusGenInputs['BookingStatusUpdateManyWithoutCompanyInput'] | null; // BookingStatusUpdateManyWithoutCompanyInput
+    Candidate?: NexusGenInputs['CandidateUpdateManyWithoutCompanyInput'] | null; // CandidateUpdateManyWithoutCompanyInput
+    CmCampaign?: NexusGenInputs['CmCampaignUpdateManyWithoutCompanyInput'] | null; // CmCampaignUpdateManyWithoutCompanyInput
+    CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
+    CmCaseReply?: NexusGenInputs['CmCaseReplyUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUpdateManyWithoutCompanyInput
+    MarketingSource?: NexusGenInputs['MarketingSourceUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUpdateManyWithoutCompanyInput'] | null; // UserUpdateManyWithoutCompanyInput
@@ -13992,6 +14160,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUpdateManyWithoutCompanyInput'] | null; // SalutationUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUpdateManyWithoutCompanyInput'] | null; // UserUpdateManyWithoutCompanyInput
@@ -14015,6 +14184,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUpdateManyWithoutCompanyInput'] | null; // SalutationUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUpdateManyWithoutCompanyInput'] | null; // UserUpdateManyWithoutCompanyInput
     admin?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -14038,6 +14208,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUpdateManyWithoutCompanyInput'] | null; // SalutationUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUpdateManyWithoutCompanyInput
     User?: NexusGenInputs['UserUpdateManyWithoutCompanyInput'] | null; // UserUpdateManyWithoutCompanyInput
     admin?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -14061,6 +14232,7 @@ export interface NexusGenInputs {
     CmCase?: NexusGenInputs['CmCaseUpdateManyWithoutCompanyInput'] | null; // CmCaseUpdateManyWithoutCompanyInput
     CmCaseReply?: NexusGenInputs['CmCaseReplyUpdateManyWithoutCompanyInput'] | null; // CmCaseReplyUpdateManyWithoutCompanyInput
     MarketingSource?: NexusGenInputs['MarketingSourceUpdateManyWithoutCompanyInput'] | null; // MarketingSourceUpdateManyWithoutCompanyInput
+    Salutation?: NexusGenInputs['SalutationUpdateManyWithoutCompanyInput'] | null; // SalutationUpdateManyWithoutCompanyInput
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessUpdateManyWithoutCompanyInput'] | null; // ThirdPartyAccessUpdateManyWithoutCompanyInput
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryUpdateManyWithoutCompanyInput'] | null; // TwoFactorHistoryUpdateManyWithoutCompanyInput
     admin?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -14111,6 +14283,10 @@ export interface NexusGenInputs {
     create: NexusGenInputs['CompanyUncheckedCreateWithoutMarketingSourceInput']; // CompanyUncheckedCreateWithoutMarketingSourceInput!
     update: NexusGenInputs['CompanyUncheckedUpdateWithoutMarketingSourceInput']; // CompanyUncheckedUpdateWithoutMarketingSourceInput!
   }
+  CompanyUpsertWithoutSalutationInput: { // input type
+    create: NexusGenInputs['CompanyUncheckedCreateWithoutSalutationInput']; // CompanyUncheckedCreateWithoutSalutationInput!
+    update: NexusGenInputs['CompanyUncheckedUpdateWithoutSalutationInput']; // CompanyUncheckedUpdateWithoutSalutationInput!
+  }
   CompanyUpsertWithoutSubscriptionInput: { // input type
     create: NexusGenInputs['CompanyUncheckedCreateWithoutSubscriptionInput']; // CompanyUncheckedCreateWithoutSubscriptionInput!
     update: NexusGenInputs['CompanyUncheckedUpdateWithoutSubscriptionInput']; // CompanyUncheckedUpdateWithoutSubscriptionInput!
@@ -14139,6 +14315,7 @@ export interface NexusGenInputs {
     MarketingSource?: NexusGenInputs['MarketingSourceListRelationFilter'] | null; // MarketingSourceListRelationFilter
     NOT?: Array<NexusGenInputs['CompanyWhereInput'] | null> | null; // [CompanyWhereInput]
     OR?: Array<NexusGenInputs['CompanyWhereInput'] | null> | null; // [CompanyWhereInput]
+    Salutation?: NexusGenInputs['SalutationListRelationFilter'] | null; // SalutationListRelationFilter
     ThirdPartyAccess?: NexusGenInputs['ThirdPartyAccessListRelationFilter'] | null; // ThirdPartyAccessListRelationFilter
     TwoFactorHistory?: NexusGenInputs['TwoFactorHistoryListRelationFilter'] | null; // TwoFactorHistoryListRelationFilter
     User?: NexusGenInputs['UserListRelationFilter'] | null; // UserListRelationFilter
@@ -15139,6 +15316,132 @@ export interface NexusGenInputs {
   }
   NullableStringFieldUpdateOperationsInput: { // input type
     set?: string | null; // String
+  }
+  SalutationCreateInput: { // input type
+    Company?: NexusGenInputs['CompanyCreateNestedOneWithoutSalutationInput'] | null; // CompanyCreateNestedOneWithoutSalutationInput
+    name: string; // String!
+  }
+  SalutationCreateNestedManyWithoutCompanyInput: { // input type
+    connect?: Array<NexusGenInputs['SalutationWhereUniqueInput'] | null> | null; // [SalutationWhereUniqueInput]
+    connectOrCreate?: Array<NexusGenInputs['SalutationCreateOrConnectWithoutCompanyInput'] | null> | null; // [SalutationCreateOrConnectWithoutCompanyInput]
+    create?: Array<NexusGenInputs['SalutationCreateWithoutCompanyInput'] | null> | null; // [SalutationCreateWithoutCompanyInput]
+  }
+  SalutationCreateOrConnectWithoutCompanyInput: { // input type
+    create: NexusGenInputs['SalutationUncheckedCreateWithoutCompanyInput']; // SalutationUncheckedCreateWithoutCompanyInput!
+    where: NexusGenInputs['SalutationWhereUniqueInput']; // SalutationWhereUniqueInput!
+  }
+  SalutationCreateWithoutCompanyInput: { // input type
+    name: string; // String!
+  }
+  SalutationListRelationFilter: { // input type
+    every?: NexusGenInputs['SalutationWhereInput'] | null; // SalutationWhereInput
+    none?: NexusGenInputs['SalutationWhereInput'] | null; // SalutationWhereInput
+    some?: NexusGenInputs['SalutationWhereInput'] | null; // SalutationWhereInput
+  }
+  SalutationOrderByInput: { // input type
+    Company?: NexusGenInputs['CompanyOrderByInput'] | null; // CompanyOrderByInput
+    company_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    name?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
+  SalutationScalarWhereInput: { // input type
+    AND?: Array<NexusGenInputs['SalutationScalarWhereInput'] | null> | null; // [SalutationScalarWhereInput]
+    NOT?: Array<NexusGenInputs['SalutationScalarWhereInput'] | null> | null; // [SalutationScalarWhereInput]
+    OR?: Array<NexusGenInputs['SalutationScalarWhereInput'] | null> | null; // [SalutationScalarWhereInput]
+    company_id?: NexusGenInputs['IntNullableFilter'] | null; // IntNullableFilter
+    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    name?: NexusGenInputs['StringFilter'] | null; // StringFilter
+  }
+  SalutationUncheckedCreateInput: { // input type
+    company_id?: number | null; // Int
+    id?: number | null; // Int
+    name: string; // String!
+  }
+  SalutationUncheckedCreateNestedManyWithoutCompanyInput: { // input type
+    connect?: Array<NexusGenInputs['SalutationWhereUniqueInput'] | null> | null; // [SalutationWhereUniqueInput]
+    connectOrCreate?: Array<NexusGenInputs['SalutationCreateOrConnectWithoutCompanyInput'] | null> | null; // [SalutationCreateOrConnectWithoutCompanyInput]
+    create?: Array<NexusGenInputs['SalutationCreateWithoutCompanyInput'] | null> | null; // [SalutationCreateWithoutCompanyInput]
+  }
+  SalutationUncheckedCreateWithoutCompanyInput: { // input type
+    id?: number | null; // Int
+    name: string; // String!
+  }
+  SalutationUncheckedUpdateInput: { // input type
+    company_id?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
+    id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+  }
+  SalutationUncheckedUpdateManyInput: { // input type
+    company_id?: NexusGenInputs['NullableIntFieldUpdateOperationsInput'] | null; // NullableIntFieldUpdateOperationsInput
+    id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+  }
+  SalutationUncheckedUpdateManyWithoutCompanyInput: { // input type
+    connect?: Array<NexusGenInputs['SalutationWhereUniqueInput'] | null> | null; // [SalutationWhereUniqueInput]
+    connectOrCreate?: Array<NexusGenInputs['SalutationCreateOrConnectWithoutCompanyInput'] | null> | null; // [SalutationCreateOrConnectWithoutCompanyInput]
+    create?: Array<NexusGenInputs['SalutationCreateWithoutCompanyInput'] | null> | null; // [SalutationCreateWithoutCompanyInput]
+    delete?: Array<NexusGenInputs['SalutationWhereUniqueInput'] | null> | null; // [SalutationWhereUniqueInput]
+    deleteMany?: Array<NexusGenInputs['SalutationScalarWhereInput'] | null> | null; // [SalutationScalarWhereInput]
+    disconnect?: Array<NexusGenInputs['SalutationWhereUniqueInput'] | null> | null; // [SalutationWhereUniqueInput]
+    set?: Array<NexusGenInputs['SalutationWhereUniqueInput'] | null> | null; // [SalutationWhereUniqueInput]
+    update?: Array<NexusGenInputs['SalutationUpdateWithWhereUniqueWithoutCompanyInput'] | null> | null; // [SalutationUpdateWithWhereUniqueWithoutCompanyInput]
+    updateMany?: Array<NexusGenInputs['SalutationUpdateManyWithWhereWithoutCompanyInput'] | null> | null; // [SalutationUpdateManyWithWhereWithoutCompanyInput]
+    upsert?: Array<NexusGenInputs['SalutationUpsertWithWhereUniqueWithoutCompanyInput'] | null> | null; // [SalutationUpsertWithWhereUniqueWithoutCompanyInput]
+  }
+  SalutationUncheckedUpdateManyWithoutSalutationInput: { // input type
+    id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+  }
+  SalutationUncheckedUpdateWithoutCompanyInput: { // input type
+    id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+  }
+  SalutationUpdateInput: { // input type
+    Company?: NexusGenInputs['CompanyUpdateOneWithoutSalutationInput'] | null; // CompanyUpdateOneWithoutSalutationInput
+    name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+  }
+  SalutationUpdateManyMutationInput: { // input type
+    name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+  }
+  SalutationUpdateManyWithWhereWithoutCompanyInput: { // input type
+    data: NexusGenInputs['SalutationUncheckedUpdateManyWithoutSalutationInput']; // SalutationUncheckedUpdateManyWithoutSalutationInput!
+    where: NexusGenInputs['SalutationScalarWhereInput']; // SalutationScalarWhereInput!
+  }
+  SalutationUpdateManyWithoutCompanyInput: { // input type
+    connect?: Array<NexusGenInputs['SalutationWhereUniqueInput'] | null> | null; // [SalutationWhereUniqueInput]
+    connectOrCreate?: Array<NexusGenInputs['SalutationCreateOrConnectWithoutCompanyInput'] | null> | null; // [SalutationCreateOrConnectWithoutCompanyInput]
+    create?: Array<NexusGenInputs['SalutationCreateWithoutCompanyInput'] | null> | null; // [SalutationCreateWithoutCompanyInput]
+    delete?: Array<NexusGenInputs['SalutationWhereUniqueInput'] | null> | null; // [SalutationWhereUniqueInput]
+    deleteMany?: Array<NexusGenInputs['SalutationScalarWhereInput'] | null> | null; // [SalutationScalarWhereInput]
+    disconnect?: Array<NexusGenInputs['SalutationWhereUniqueInput'] | null> | null; // [SalutationWhereUniqueInput]
+    set?: Array<NexusGenInputs['SalutationWhereUniqueInput'] | null> | null; // [SalutationWhereUniqueInput]
+    update?: Array<NexusGenInputs['SalutationUpdateWithWhereUniqueWithoutCompanyInput'] | null> | null; // [SalutationUpdateWithWhereUniqueWithoutCompanyInput]
+    updateMany?: Array<NexusGenInputs['SalutationUpdateManyWithWhereWithoutCompanyInput'] | null> | null; // [SalutationUpdateManyWithWhereWithoutCompanyInput]
+    upsert?: Array<NexusGenInputs['SalutationUpsertWithWhereUniqueWithoutCompanyInput'] | null> | null; // [SalutationUpsertWithWhereUniqueWithoutCompanyInput]
+  }
+  SalutationUpdateWithWhereUniqueWithoutCompanyInput: { // input type
+    data: NexusGenInputs['SalutationUncheckedUpdateWithoutCompanyInput']; // SalutationUncheckedUpdateWithoutCompanyInput!
+    where: NexusGenInputs['SalutationWhereUniqueInput']; // SalutationWhereUniqueInput!
+  }
+  SalutationUpdateWithoutCompanyInput: { // input type
+    name?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
+  }
+  SalutationUpsertWithWhereUniqueWithoutCompanyInput: { // input type
+    create: NexusGenInputs['SalutationUncheckedCreateWithoutCompanyInput']; // SalutationUncheckedCreateWithoutCompanyInput!
+    update: NexusGenInputs['SalutationUncheckedUpdateWithoutCompanyInput']; // SalutationUncheckedUpdateWithoutCompanyInput!
+    where: NexusGenInputs['SalutationWhereUniqueInput']; // SalutationWhereUniqueInput!
+  }
+  SalutationWhereInput: { // input type
+    AND?: Array<NexusGenInputs['SalutationWhereInput'] | null> | null; // [SalutationWhereInput]
+    Company?: NexusGenInputs['CompanyWhereInput'] | null; // CompanyWhereInput
+    NOT?: Array<NexusGenInputs['SalutationWhereInput'] | null> | null; // [SalutationWhereInput]
+    OR?: Array<NexusGenInputs['SalutationWhereInput'] | null> | null; // [SalutationWhereInput]
+    company_id?: NexusGenInputs['IntNullableFilter'] | null; // IntNullableFilter
+    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    name?: NexusGenInputs['StringFilter'] | null; // StringFilter
+  }
+  SalutationWhereUniqueInput: { // input type
+    id?: number | null; // Int
   }
   SecondAtAnswerCreateInput: { // input type
     name: string; // String!
@@ -17842,6 +18145,7 @@ export interface NexusGenEnums {
   InvPaymentTypeScalarFieldEnum: "company_id" | "created_date" | "description" | "epos_display" | "id" | "is_active" | "is_money" | "modified_date" | "name" | "type" | "uid"
   MarketingSourceScalarFieldEnum: "company_id" | "custom_id" | "id" | "imported" | "name" | "public"
   MediaLlibraryAttachmentScalarFieldEnum: "communication_id" | "company_id" | "contact_attachment_id" | "contact_id" | "creation_date" | "file_url" | "id" | "medical_form_contact_id" | "sales_id" | "statement_id"
+  SalutationScalarFieldEnum: "company_id" | "id" | "name"
   SecondAtAnswerScalarFieldEnum: "id" | "name" | "question_id"
   SecondAtQuestionScalarFieldEnum: "company_id" | "id" | "name" | "type"
   SortOrder: "asc" | "desc"
@@ -19067,6 +19371,13 @@ export interface NexusGenObjects {
     max?: NexusGenRootTypes['MediaLlibraryAttachmentMaxAggregateOutputType'] | null; // MediaLlibraryAttachmentMaxAggregateOutputType
     min?: NexusGenRootTypes['MediaLlibraryAttachmentMinAggregateOutputType'] | null; // MediaLlibraryAttachmentMinAggregateOutputType
     sum?: NexusGenRootTypes['MediaLlibraryAttachmentSumAggregateOutputType'] | null; // MediaLlibraryAttachmentSumAggregateOutputType
+  }
+  AggregateSalutation: { // root type
+    avg?: NexusGenRootTypes['SalutationAvgAggregateOutputType'] | null; // SalutationAvgAggregateOutputType
+    count?: NexusGenRootTypes['SalutationCountAggregateOutputType'] | null; // SalutationCountAggregateOutputType
+    max?: NexusGenRootTypes['SalutationMaxAggregateOutputType'] | null; // SalutationMaxAggregateOutputType
+    min?: NexusGenRootTypes['SalutationMinAggregateOutputType'] | null; // SalutationMinAggregateOutputType
+    sum?: NexusGenRootTypes['SalutationSumAggregateOutputType'] | null; // SalutationSumAggregateOutputType
   }
   AggregateSecondAtAnswer: { // root type
     avg?: NexusGenRootTypes['SecondAtAnswerAvgAggregateOutputType'] | null; // SecondAtAnswerAvgAggregateOutputType
@@ -25345,6 +25656,35 @@ export interface NexusGenObjects {
   }
   Mutation: {};
   Query: {};
+  Salutation: { // root type
+    company_id?: number | null; // Int
+    id: number; // Int!
+    name: string; // String!
+  }
+  SalutationAvgAggregateOutputType: { // root type
+    company_id?: number | null; // Float
+    id: number; // Float!
+  }
+  SalutationCountAggregateOutputType: { // root type
+    _all: number; // Int!
+    company_id?: number | null; // Int
+    id: number; // Int!
+    name?: number | null; // Int
+  }
+  SalutationMaxAggregateOutputType: { // root type
+    company_id?: number | null; // Int
+    id: number; // Int!
+    name?: string | null; // String
+  }
+  SalutationMinAggregateOutputType: { // root type
+    company_id?: number | null; // Int
+    id: number; // Int!
+    name?: string | null; // String
+  }
+  SalutationSumAggregateOutputType: { // root type
+    company_id?: number | null; // Int
+    id: number; // Int!
+  }
   SecondAtAnswer: { // root type
     id: number; // Int!
     name: string; // String!
@@ -27296,6 +27636,13 @@ export interface NexusGenFieldTypes {
     max: NexusGenRootTypes['MediaLlibraryAttachmentMaxAggregateOutputType'] | null; // MediaLlibraryAttachmentMaxAggregateOutputType
     min: NexusGenRootTypes['MediaLlibraryAttachmentMinAggregateOutputType'] | null; // MediaLlibraryAttachmentMinAggregateOutputType
     sum: NexusGenRootTypes['MediaLlibraryAttachmentSumAggregateOutputType'] | null; // MediaLlibraryAttachmentSumAggregateOutputType
+  }
+  AggregateSalutation: { // field return type
+    avg: NexusGenRootTypes['SalutationAvgAggregateOutputType'] | null; // SalutationAvgAggregateOutputType
+    count: NexusGenRootTypes['SalutationCountAggregateOutputType'] | null; // SalutationCountAggregateOutputType
+    max: NexusGenRootTypes['SalutationMaxAggregateOutputType'] | null; // SalutationMaxAggregateOutputType
+    min: NexusGenRootTypes['SalutationMinAggregateOutputType'] | null; // SalutationMinAggregateOutputType
+    sum: NexusGenRootTypes['SalutationSumAggregateOutputType'] | null; // SalutationSumAggregateOutputType
   }
   AggregateSecondAtAnswer: { // field return type
     avg: NexusGenRootTypes['SecondAtAnswerAvgAggregateOutputType'] | null; // SecondAtAnswerAvgAggregateOutputType
@@ -32499,6 +32846,7 @@ export interface NexusGenFieldTypes {
     CmCase: NexusGenRootTypes['CmCase'][]; // [CmCase!]!
     CmCaseReply: NexusGenRootTypes['CmCaseReply'][]; // [CmCaseReply!]!
     MarketingSource: NexusGenRootTypes['MarketingSource'][]; // [MarketingSource!]!
+    Salutation: NexusGenRootTypes['Salutation'][]; // [Salutation!]!
     ThirdPartyAccess: NexusGenRootTypes['ThirdPartyAccess'][]; // [ThirdPartyAccess!]!
     TwoFactorHistory: NexusGenRootTypes['TwoFactorHistory'][]; // [TwoFactorHistory!]!
     User: NexusGenRootTypes['User'][]; // [User!]!
@@ -33686,6 +34034,7 @@ export interface NexusGenFieldTypes {
     createOneInvPaymentType: NexusGenRootTypes['InvPaymentType']; // InvPaymentType!
     createOneMarketingSource: NexusGenRootTypes['MarketingSource']; // MarketingSource!
     createOneMediaLlibraryAttachment: NexusGenRootTypes['MediaLlibraryAttachment']; // MediaLlibraryAttachment!
+    createOneSalutation: NexusGenRootTypes['Salutation']; // Salutation!
     createOneSecondAtAnswer: NexusGenRootTypes['SecondAtAnswer']; // SecondAtAnswer!
     createOneSecondAtQuestion: NexusGenRootTypes['SecondAtQuestion']; // SecondAtQuestion!
     createOneThirdPartyAccess: NexusGenRootTypes['ThirdPartyAccess']; // ThirdPartyAccess!
@@ -33782,6 +34131,7 @@ export interface NexusGenFieldTypes {
     deleteManyInvPaymentType: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     deleteManyMarketingSource: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     deleteManyMediaLlibraryAttachment: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
+    deleteManySalutation: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     deleteManySecondAtAnswer: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     deleteManySecondAtQuestion: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     deleteManyThirdPartyAccess: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
@@ -33878,6 +34228,7 @@ export interface NexusGenFieldTypes {
     deleteOneInvPaymentType: NexusGenRootTypes['InvPaymentType'] | null; // InvPaymentType
     deleteOneMarketingSource: NexusGenRootTypes['MarketingSource'] | null; // MarketingSource
     deleteOneMediaLlibraryAttachment: NexusGenRootTypes['MediaLlibraryAttachment'] | null; // MediaLlibraryAttachment
+    deleteOneSalutation: NexusGenRootTypes['Salutation'] | null; // Salutation
     deleteOneSecondAtAnswer: NexusGenRootTypes['SecondAtAnswer'] | null; // SecondAtAnswer
     deleteOneSecondAtQuestion: NexusGenRootTypes['SecondAtQuestion'] | null; // SecondAtQuestion
     deleteOneThirdPartyAccess: NexusGenRootTypes['ThirdPartyAccess'] | null; // ThirdPartyAccess
@@ -33976,6 +34327,7 @@ export interface NexusGenFieldTypes {
     updateManyInvPaymentType: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     updateManyMarketingSource: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     updateManyMediaLlibraryAttachment: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
+    updateManySalutation: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     updateManySecondAtAnswer: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     updateManySecondAtQuestion: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     updateManyThirdPartyAccess: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
@@ -34072,6 +34424,7 @@ export interface NexusGenFieldTypes {
     updateOneInvPaymentType: NexusGenRootTypes['InvPaymentType'] | null; // InvPaymentType
     updateOneMarketingSource: NexusGenRootTypes['MarketingSource'] | null; // MarketingSource
     updateOneMediaLlibraryAttachment: NexusGenRootTypes['MediaLlibraryAttachment'] | null; // MediaLlibraryAttachment
+    updateOneSalutation: NexusGenRootTypes['Salutation'] | null; // Salutation
     updateOneSecondAtAnswer: NexusGenRootTypes['SecondAtAnswer'] | null; // SecondAtAnswer
     updateOneSecondAtQuestion: NexusGenRootTypes['SecondAtQuestion'] | null; // SecondAtQuestion
     updateOneThirdPartyAccess: NexusGenRootTypes['ThirdPartyAccess'] | null; // ThirdPartyAccess
@@ -34168,6 +34521,7 @@ export interface NexusGenFieldTypes {
     upsertOneInvPaymentType: NexusGenRootTypes['InvPaymentType']; // InvPaymentType!
     upsertOneMarketingSource: NexusGenRootTypes['MarketingSource']; // MarketingSource!
     upsertOneMediaLlibraryAttachment: NexusGenRootTypes['MediaLlibraryAttachment']; // MediaLlibraryAttachment!
+    upsertOneSalutation: NexusGenRootTypes['Salutation']; // Salutation!
     upsertOneSecondAtAnswer: NexusGenRootTypes['SecondAtAnswer']; // SecondAtAnswer!
     upsertOneSecondAtQuestion: NexusGenRootTypes['SecondAtQuestion']; // SecondAtQuestion!
     upsertOneThirdPartyAccess: NexusGenRootTypes['ThirdPartyAccess']; // ThirdPartyAccess!
@@ -34517,6 +34871,7 @@ export interface NexusGenFieldTypes {
     findFirstInvPaymentType: NexusGenRootTypes['InvPaymentType'] | null; // InvPaymentType
     findFirstMarketingSource: NexusGenRootTypes['MarketingSource'] | null; // MarketingSource
     findFirstMediaLlibraryAttachment: NexusGenRootTypes['MediaLlibraryAttachment'] | null; // MediaLlibraryAttachment
+    findFirstSalutation: NexusGenRootTypes['Salutation'] | null; // Salutation
     findFirstSecondAtAnswer: NexusGenRootTypes['SecondAtAnswer'] | null; // SecondAtAnswer
     findFirstSecondAtQuestion: NexusGenRootTypes['SecondAtQuestion'] | null; // SecondAtQuestion
     findFirstThirdPartyAccess: NexusGenRootTypes['ThirdPartyAccess'] | null; // ThirdPartyAccess
@@ -34538,6 +34893,9 @@ export interface NexusGenFieldTypes {
     mediaLlibraryAttachments: NexusGenRootTypes['MediaLlibraryAttachment'][]; // [MediaLlibraryAttachment!]!
     mediaLlibraryAttachmentsCount: number | null; // Int
     ping: string | null; // String
+    salutation: NexusGenRootTypes['Salutation'] | null; // Salutation
+    salutations: NexusGenRootTypes['Salutation'][]; // [Salutation!]!
+    salutationsCount: number | null; // Int
     secondAtAnswer: NexusGenRootTypes['SecondAtAnswer'] | null; // SecondAtAnswer
     secondAtAnswers: NexusGenRootTypes['SecondAtAnswer'][]; // [SecondAtAnswer!]!
     secondAtAnswersCount: number | null; // Int
@@ -34559,6 +34917,36 @@ export interface NexusGenFieldTypes {
     userSecurityQuestionsAnswersCount: number | null; // Int
     users: NexusGenRootTypes['User'][]; // [User!]!
     usersCount: number | null; // Int
+  }
+  Salutation: { // field return type
+    Company: NexusGenRootTypes['Company'] | null; // Company
+    company_id: number | null; // Int
+    id: number; // Int!
+    name: string; // String!
+  }
+  SalutationAvgAggregateOutputType: { // field return type
+    company_id: number | null; // Float
+    id: number; // Float!
+  }
+  SalutationCountAggregateOutputType: { // field return type
+    _all: number; // Int!
+    company_id: number | null; // Int
+    id: number; // Int!
+    name: number | null; // Int
+  }
+  SalutationMaxAggregateOutputType: { // field return type
+    company_id: number | null; // Int
+    id: number; // Int!
+    name: string | null; // String
+  }
+  SalutationMinAggregateOutputType: { // field return type
+    company_id: number | null; // Int
+    id: number; // Int!
+    name: string | null; // String
+  }
+  SalutationSumAggregateOutputType: { // field return type
+    company_id: number | null; // Int
+    id: number; // Int!
   }
   SecondAtAnswer: { // field return type
     id: number; // Int!
@@ -36507,6 +36895,13 @@ export interface NexusGenFieldTypeNames {
     max: 'MediaLlibraryAttachmentMaxAggregateOutputType'
     min: 'MediaLlibraryAttachmentMinAggregateOutputType'
     sum: 'MediaLlibraryAttachmentSumAggregateOutputType'
+  }
+  AggregateSalutation: { // field return type name
+    avg: 'SalutationAvgAggregateOutputType'
+    count: 'SalutationCountAggregateOutputType'
+    max: 'SalutationMaxAggregateOutputType'
+    min: 'SalutationMinAggregateOutputType'
+    sum: 'SalutationSumAggregateOutputType'
   }
   AggregateSecondAtAnswer: { // field return type name
     avg: 'SecondAtAnswerAvgAggregateOutputType'
@@ -41710,6 +42105,7 @@ export interface NexusGenFieldTypeNames {
     CmCase: 'CmCase'
     CmCaseReply: 'CmCaseReply'
     MarketingSource: 'MarketingSource'
+    Salutation: 'Salutation'
     ThirdPartyAccess: 'ThirdPartyAccess'
     TwoFactorHistory: 'TwoFactorHistory'
     User: 'User'
@@ -42897,6 +43293,7 @@ export interface NexusGenFieldTypeNames {
     createOneInvPaymentType: 'InvPaymentType'
     createOneMarketingSource: 'MarketingSource'
     createOneMediaLlibraryAttachment: 'MediaLlibraryAttachment'
+    createOneSalutation: 'Salutation'
     createOneSecondAtAnswer: 'SecondAtAnswer'
     createOneSecondAtQuestion: 'SecondAtQuestion'
     createOneThirdPartyAccess: 'ThirdPartyAccess'
@@ -42993,6 +43390,7 @@ export interface NexusGenFieldTypeNames {
     deleteManyInvPaymentType: 'AffectedRowsOutput'
     deleteManyMarketingSource: 'AffectedRowsOutput'
     deleteManyMediaLlibraryAttachment: 'AffectedRowsOutput'
+    deleteManySalutation: 'AffectedRowsOutput'
     deleteManySecondAtAnswer: 'AffectedRowsOutput'
     deleteManySecondAtQuestion: 'AffectedRowsOutput'
     deleteManyThirdPartyAccess: 'AffectedRowsOutput'
@@ -43089,6 +43487,7 @@ export interface NexusGenFieldTypeNames {
     deleteOneInvPaymentType: 'InvPaymentType'
     deleteOneMarketingSource: 'MarketingSource'
     deleteOneMediaLlibraryAttachment: 'MediaLlibraryAttachment'
+    deleteOneSalutation: 'Salutation'
     deleteOneSecondAtAnswer: 'SecondAtAnswer'
     deleteOneSecondAtQuestion: 'SecondAtQuestion'
     deleteOneThirdPartyAccess: 'ThirdPartyAccess'
@@ -43187,6 +43586,7 @@ export interface NexusGenFieldTypeNames {
     updateManyInvPaymentType: 'AffectedRowsOutput'
     updateManyMarketingSource: 'AffectedRowsOutput'
     updateManyMediaLlibraryAttachment: 'AffectedRowsOutput'
+    updateManySalutation: 'AffectedRowsOutput'
     updateManySecondAtAnswer: 'AffectedRowsOutput'
     updateManySecondAtQuestion: 'AffectedRowsOutput'
     updateManyThirdPartyAccess: 'AffectedRowsOutput'
@@ -43283,6 +43683,7 @@ export interface NexusGenFieldTypeNames {
     updateOneInvPaymentType: 'InvPaymentType'
     updateOneMarketingSource: 'MarketingSource'
     updateOneMediaLlibraryAttachment: 'MediaLlibraryAttachment'
+    updateOneSalutation: 'Salutation'
     updateOneSecondAtAnswer: 'SecondAtAnswer'
     updateOneSecondAtQuestion: 'SecondAtQuestion'
     updateOneThirdPartyAccess: 'ThirdPartyAccess'
@@ -43379,6 +43780,7 @@ export interface NexusGenFieldTypeNames {
     upsertOneInvPaymentType: 'InvPaymentType'
     upsertOneMarketingSource: 'MarketingSource'
     upsertOneMediaLlibraryAttachment: 'MediaLlibraryAttachment'
+    upsertOneSalutation: 'Salutation'
     upsertOneSecondAtAnswer: 'SecondAtAnswer'
     upsertOneSecondAtQuestion: 'SecondAtQuestion'
     upsertOneThirdPartyAccess: 'ThirdPartyAccess'
@@ -43728,6 +44130,7 @@ export interface NexusGenFieldTypeNames {
     findFirstInvPaymentType: 'InvPaymentType'
     findFirstMarketingSource: 'MarketingSource'
     findFirstMediaLlibraryAttachment: 'MediaLlibraryAttachment'
+    findFirstSalutation: 'Salutation'
     findFirstSecondAtAnswer: 'SecondAtAnswer'
     findFirstSecondAtQuestion: 'SecondAtQuestion'
     findFirstThirdPartyAccess: 'ThirdPartyAccess'
@@ -43749,6 +44152,9 @@ export interface NexusGenFieldTypeNames {
     mediaLlibraryAttachments: 'MediaLlibraryAttachment'
     mediaLlibraryAttachmentsCount: 'Int'
     ping: 'String'
+    salutation: 'Salutation'
+    salutations: 'Salutation'
+    salutationsCount: 'Int'
     secondAtAnswer: 'SecondAtAnswer'
     secondAtAnswers: 'SecondAtAnswer'
     secondAtAnswersCount: 'Int'
@@ -43770,6 +44176,36 @@ export interface NexusGenFieldTypeNames {
     userSecurityQuestionsAnswersCount: 'Int'
     users: 'User'
     usersCount: 'Int'
+  }
+  Salutation: { // field return type name
+    Company: 'Company'
+    company_id: 'Int'
+    id: 'Int'
+    name: 'String'
+  }
+  SalutationAvgAggregateOutputType: { // field return type name
+    company_id: 'Float'
+    id: 'Float'
+  }
+  SalutationCountAggregateOutputType: { // field return type name
+    _all: 'Int'
+    company_id: 'Int'
+    id: 'Int'
+    name: 'Int'
+  }
+  SalutationMaxAggregateOutputType: { // field return type name
+    company_id: 'Int'
+    id: 'Int'
+    name: 'String'
+  }
+  SalutationMinAggregateOutputType: { // field return type name
+    company_id: 'Int'
+    id: 'Int'
+    name: 'String'
+  }
+  SalutationSumAggregateOutputType: { // field return type name
+    company_id: 'Int'
+    id: 'Int'
   }
   SecondAtAnswer: { // field return type name
     id: 'Int'
@@ -44568,6 +45004,11 @@ export interface NexusGenArgTypes {
       skip?: number | null; // Int
       take?: number | null; // Int
     }
+    Salutation: { // args
+      cursor?: NexusGenInputs['SalutationWhereUniqueInput'] | null; // SalutationWhereUniqueInput
+      skip?: number | null; // Int
+      take?: number | null; // Int
+    }
     ThirdPartyAccess: { // args
       cursor?: NexusGenInputs['ThirdPartyAccessWhereUniqueInput'] | null; // ThirdPartyAccessWhereUniqueInput
       skip?: number | null; // Int
@@ -44851,6 +45292,9 @@ export interface NexusGenArgTypes {
     }
     createOneMediaLlibraryAttachment: { // args
       data: NexusGenInputs['MediaLlibraryAttachmentCreateInput']; // MediaLlibraryAttachmentCreateInput!
+    }
+    createOneSalutation: { // args
+      data: NexusGenInputs['SalutationCreateInput']; // SalutationCreateInput!
     }
     createOneSecondAtAnswer: { // args
       data: NexusGenInputs['SecondAtAnswerCreateInput']; // SecondAtAnswerCreateInput!
@@ -45140,6 +45584,9 @@ export interface NexusGenArgTypes {
     deleteManyMediaLlibraryAttachment: { // args
       where?: NexusGenInputs['MediaLlibraryAttachmentWhereInput'] | null; // MediaLlibraryAttachmentWhereInput
     }
+    deleteManySalutation: { // args
+      where?: NexusGenInputs['SalutationWhereInput'] | null; // SalutationWhereInput
+    }
     deleteManySecondAtAnswer: { // args
       where?: NexusGenInputs['SecondAtAnswerWhereInput'] | null; // SecondAtAnswerWhereInput
     }
@@ -45427,6 +45874,9 @@ export interface NexusGenArgTypes {
     }
     deleteOneMediaLlibraryAttachment: { // args
       where: NexusGenInputs['MediaLlibraryAttachmentWhereUniqueInput']; // MediaLlibraryAttachmentWhereUniqueInput!
+    }
+    deleteOneSalutation: { // args
+      where: NexusGenInputs['SalutationWhereUniqueInput']; // SalutationWhereUniqueInput!
     }
     deleteOneSecondAtAnswer: { // args
       where: NexusGenInputs['SecondAtAnswerWhereUniqueInput']; // SecondAtAnswerWhereUniqueInput!
@@ -45808,6 +46258,10 @@ export interface NexusGenArgTypes {
     updateManyMediaLlibraryAttachment: { // args
       data: NexusGenInputs['MediaLlibraryAttachmentUpdateManyMutationInput']; // MediaLlibraryAttachmentUpdateManyMutationInput!
       where?: NexusGenInputs['MediaLlibraryAttachmentWhereInput'] | null; // MediaLlibraryAttachmentWhereInput
+    }
+    updateManySalutation: { // args
+      data: NexusGenInputs['SalutationUpdateManyMutationInput']; // SalutationUpdateManyMutationInput!
+      where?: NexusGenInputs['SalutationWhereInput'] | null; // SalutationWhereInput
     }
     updateManySecondAtAnswer: { // args
       data: NexusGenInputs['SecondAtAnswerUpdateManyMutationInput']; // SecondAtAnswerUpdateManyMutationInput!
@@ -46192,6 +46646,10 @@ export interface NexusGenArgTypes {
     updateOneMediaLlibraryAttachment: { // args
       data: NexusGenInputs['MediaLlibraryAttachmentUpdateInput']; // MediaLlibraryAttachmentUpdateInput!
       where: NexusGenInputs['MediaLlibraryAttachmentWhereUniqueInput']; // MediaLlibraryAttachmentWhereUniqueInput!
+    }
+    updateOneSalutation: { // args
+      data: NexusGenInputs['SalutationUpdateInput']; // SalutationUpdateInput!
+      where: NexusGenInputs['SalutationWhereUniqueInput']; // SalutationWhereUniqueInput!
     }
     updateOneSecondAtAnswer: { // args
       data: NexusGenInputs['SecondAtAnswerUpdateInput']; // SecondAtAnswerUpdateInput!
@@ -46665,6 +47123,11 @@ export interface NexusGenArgTypes {
       create: NexusGenInputs['MediaLlibraryAttachmentCreateInput']; // MediaLlibraryAttachmentCreateInput!
       update: NexusGenInputs['MediaLlibraryAttachmentUpdateInput']; // MediaLlibraryAttachmentUpdateInput!
       where: NexusGenInputs['MediaLlibraryAttachmentWhereUniqueInput']; // MediaLlibraryAttachmentWhereUniqueInput!
+    }
+    upsertOneSalutation: { // args
+      create: NexusGenInputs['SalutationCreateInput']; // SalutationCreateInput!
+      update: NexusGenInputs['SalutationUpdateInput']; // SalutationUpdateInput!
+      where: NexusGenInputs['SalutationWhereUniqueInput']; // SalutationWhereUniqueInput!
     }
     upsertOneSecondAtAnswer: { // args
       create: NexusGenInputs['SecondAtAnswerCreateInput']; // SecondAtAnswerCreateInput!
@@ -48419,6 +48882,13 @@ export interface NexusGenArgTypes {
       take?: number | null; // Int
       where?: NexusGenInputs['MediaLlibraryAttachmentWhereInput'] | null; // MediaLlibraryAttachmentWhereInput
     }
+    findFirstSalutation: { // args
+      cursor?: NexusGenInputs['SalutationWhereUniqueInput'] | null; // SalutationWhereUniqueInput
+      orderBy?: NexusGenInputs['SalutationOrderByInput'] | null; // SalutationOrderByInput
+      skip?: number | null; // Int
+      take?: number | null; // Int
+      where?: NexusGenInputs['SalutationWhereInput'] | null; // SalutationWhereInput
+    }
     findFirstSecondAtAnswer: { // args
       cursor?: NexusGenInputs['SecondAtAnswerWhereUniqueInput'] | null; // SecondAtAnswerWhereUniqueInput
       orderBy?: NexusGenInputs['SecondAtAnswerOrderByInput'] | null; // SecondAtAnswerOrderByInput
@@ -48519,6 +48989,19 @@ export interface NexusGenArgTypes {
     }
     mediaLlibraryAttachmentsCount: { // args
       where?: NexusGenInputs['MediaLlibraryAttachmentWhereInput'] | null; // MediaLlibraryAttachmentWhereInput
+    }
+    salutation: { // args
+      where: NexusGenInputs['SalutationWhereUniqueInput']; // SalutationWhereUniqueInput!
+    }
+    salutations: { // args
+      cursor?: NexusGenInputs['SalutationWhereUniqueInput'] | null; // SalutationWhereUniqueInput
+      orderBy?: NexusGenInputs['SalutationOrderByInput'][] | null; // [SalutationOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
+      where?: NexusGenInputs['SalutationWhereInput'] | null; // SalutationWhereInput
+    }
+    salutationsCount: { // args
+      where?: NexusGenInputs['SalutationWhereInput'] | null; // SalutationWhereInput
     }
     secondAtAnswer: { // args
       where: NexusGenInputs['SecondAtAnswerWhereUniqueInput']; // SecondAtAnswerWhereUniqueInput!

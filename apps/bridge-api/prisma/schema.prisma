@@ -198,6 +198,7 @@ model Company {
 
   BookingStatus BookingStatus[]
   @@map("admin")
+  Salutation Salutation[]
 }
 
 model AdvertCampaign {
@@ -10100,11 +10101,15 @@ model InvPaymentType {
 //  updatedate Int?
 //}
 //
-//model salutations {
-//  id         Int    @id @default(autoincrement())
-//  name       String
-//  company_id Int
-//}
+model Salutation {
+  id         Int      @id @default(autoincrement())
+  name       String
+  company_id Int?
+  Company    Company? @relation(fields: [company_id], references: [id])
+
+  @@map("salutations")
+}
+
 //
 //model scanner_batches {
 //  id            Int      @id @default(autoincrement())

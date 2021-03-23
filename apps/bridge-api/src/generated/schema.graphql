@@ -2638,6 +2638,14 @@ type AggregateMediaLlibraryAttachment {
   sum: MediaLlibraryAttachmentSumAggregateOutputType
 }
 
+type AggregateSalutation {
+  avg: SalutationAvgAggregateOutputType
+  count: SalutationCountAggregateOutputType
+  max: SalutationMaxAggregateOutputType
+  min: SalutationMinAggregateOutputType
+  sum: SalutationSumAggregateOutputType
+}
+
 type AggregateSecondAtAnswer {
   avg: SecondAtAnswerAvgAggregateOutputType
   count: SecondAtAnswerCountAggregateOutputType
@@ -18885,6 +18893,7 @@ type Company {
   CmCase(cursor: CmCaseWhereUniqueInput, skip: Int, take: Int): [CmCase!]!
   CmCaseReply(cursor: CmCaseReplyWhereUniqueInput, skip: Int, take: Int): [CmCaseReply!]!
   MarketingSource(cursor: MarketingSourceWhereUniqueInput, skip: Int, take: Int): [MarketingSource!]!
+  Salutation(cursor: SalutationWhereUniqueInput, skip: Int, take: Int): [Salutation!]!
   ThirdPartyAccess(cursor: ThirdPartyAccessWhereUniqueInput, skip: Int, take: Int): [ThirdPartyAccess!]!
   TwoFactorHistory(cursor: TwoFactorHistoryWhereUniqueInput, skip: Int, take: Int): [TwoFactorHistory!]!
   User(cursor: UserWhereUniqueInput, skip: Int, take: Int): [User!]!
@@ -18931,6 +18940,7 @@ input CompanyCreateInput {
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryCreateNestedManyWithoutCompanyInput
   User: UserCreateNestedManyWithoutCompanyInput
@@ -18999,6 +19009,12 @@ input CompanyCreateNestedOneWithoutMarketingSourceInput {
   connect: CompanyWhereUniqueInput
   connectOrCreate: CompanyCreateOrConnectWithoutMarketingSourceInput
   create: CompanyUncheckedCreateWithoutMarketingSourceInput
+}
+
+input CompanyCreateNestedOneWithoutSalutationInput {
+  connect: CompanyWhereUniqueInput
+  connectOrCreate: CompanyCreateOrConnectWithoutSalutationInput
+  create: CompanyUncheckedCreateWithoutSalutationInput
 }
 
 input CompanyCreateNestedOneWithoutSubscriptionInput {
@@ -19070,6 +19086,11 @@ input CompanyCreateOrConnectWithoutMarketingSourceInput {
   where: CompanyWhereUniqueInput!
 }
 
+input CompanyCreateOrConnectWithoutSalutationInput {
+  create: CompanyUncheckedCreateWithoutSalutationInput!
+  where: CompanyWhereUniqueInput!
+}
+
 input CompanyCreateOrConnectWithoutSubscriptionInput {
   create: CompanyUncheckedCreateWithoutSubscriptionInput!
   where: CompanyWhereUniqueInput!
@@ -19098,6 +19119,7 @@ input CompanyCreateWithoutAcceptEmailTokenInput {
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryCreateNestedManyWithoutCompanyInput
   User: UserCreateNestedManyWithoutCompanyInput
@@ -19122,6 +19144,7 @@ input CompanyCreateWithoutAccountBalanceInput {
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryCreateNestedManyWithoutCompanyInput
   User: UserCreateNestedManyWithoutCompanyInput
@@ -19146,6 +19169,7 @@ input CompanyCreateWithoutBookingStatusInput {
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryCreateNestedManyWithoutCompanyInput
   User: UserCreateNestedManyWithoutCompanyInput
@@ -19170,6 +19194,7 @@ input CompanyCreateWithoutCandidateInput {
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryCreateNestedManyWithoutCompanyInput
   User: UserCreateNestedManyWithoutCompanyInput
@@ -19194,6 +19219,7 @@ input CompanyCreateWithoutCmCampaignInput {
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryCreateNestedManyWithoutCompanyInput
   User: UserCreateNestedManyWithoutCompanyInput
@@ -19218,6 +19244,7 @@ input CompanyCreateWithoutCmCaseInput {
   CmCampaign: CmCampaignCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryCreateNestedManyWithoutCompanyInput
   User: UserCreateNestedManyWithoutCompanyInput
@@ -19242,6 +19269,7 @@ input CompanyCreateWithoutCmCaseReplyInput {
   CmCampaign: CmCampaignCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryCreateNestedManyWithoutCompanyInput
   User: UserCreateNestedManyWithoutCompanyInput
@@ -19267,6 +19295,7 @@ input CompanyCreateWithoutDetailsInput {
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryCreateNestedManyWithoutCompanyInput
   User: UserCreateNestedManyWithoutCompanyInput
@@ -19290,6 +19319,32 @@ input CompanyCreateWithoutMarketingSourceInput {
   CmCampaign: CmCampaignCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationCreateNestedManyWithoutCompanyInput
+  ThirdPartyAccess: ThirdPartyAccessCreateNestedManyWithoutCompanyInput
+  TwoFactorHistory: TwoFactorHistoryCreateNestedManyWithoutCompanyInput
+  User: UserCreateNestedManyWithoutCompanyInput
+  admin: Int!
+  creation_date: DateTime!
+  cron_enabled: Boolean
+  details: CompanyDetailsCreateNestedOneWithoutCompanyInput
+  digit8: Int!
+  image: String!
+  remote_connect: String
+  remote_url: String
+  slug: String
+  subscription: CompanySubscriptionCreateNestedOneWithoutCompanyInput
+  user: String!
+}
+
+input CompanyCreateWithoutSalutationInput {
+  AcceptEmailToken: AcceptEmailTokenCreateNestedManyWithoutCompanyInput
+  AccountBalance: AccountBalanceCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusCreateNestedManyWithoutCompanyInput
+  Candidate: CandidateCreateNestedManyWithoutCompanyInput
+  CmCampaign: CmCampaignCreateNestedManyWithoutCompanyInput
+  CmCase: CmCaseCreateNestedManyWithoutCompanyInput
+  CmCaseReply: CmCaseReplyCreateNestedManyWithoutCompanyInput
+  MarketingSource: MarketingSourceCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryCreateNestedManyWithoutCompanyInput
   User: UserCreateNestedManyWithoutCompanyInput
@@ -19315,6 +19370,7 @@ input CompanyCreateWithoutSubscriptionInput {
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryCreateNestedManyWithoutCompanyInput
   User: UserCreateNestedManyWithoutCompanyInput
@@ -19339,6 +19395,7 @@ input CompanyCreateWithoutThirdPartyAccessInput {
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryCreateNestedManyWithoutCompanyInput
   User: UserCreateNestedManyWithoutCompanyInput
   admin: Int!
@@ -19363,6 +19420,7 @@ input CompanyCreateWithoutTwoFactorHistoryInput {
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessCreateNestedManyWithoutCompanyInput
   User: UserCreateNestedManyWithoutCompanyInput
   admin: Int!
@@ -19387,6 +19445,7 @@ input CompanyCreateWithoutUserInput {
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryCreateNestedManyWithoutCompanyInput
   admin: Int!
@@ -23085,6 +23144,7 @@ input CompanyUncheckedCreateInput {
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationUncheckedCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
   User: UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -23110,6 +23170,7 @@ input CompanyUncheckedCreateWithoutAcceptEmailTokenInput {
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationUncheckedCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
   User: UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -23135,6 +23196,7 @@ input CompanyUncheckedCreateWithoutAccountBalanceInput {
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationUncheckedCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
   User: UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -23160,6 +23222,7 @@ input CompanyUncheckedCreateWithoutBookingStatusInput {
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationUncheckedCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
   User: UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -23185,6 +23248,7 @@ input CompanyUncheckedCreateWithoutCandidateInput {
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationUncheckedCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
   User: UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -23210,6 +23274,7 @@ input CompanyUncheckedCreateWithoutCmCampaignInput {
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationUncheckedCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
   User: UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -23235,6 +23300,7 @@ input CompanyUncheckedCreateWithoutCmCaseInput {
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationUncheckedCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
   User: UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -23260,6 +23326,7 @@ input CompanyUncheckedCreateWithoutCmCaseReplyInput {
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationUncheckedCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
   User: UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -23286,6 +23353,7 @@ input CompanyUncheckedCreateWithoutDetailsInput {
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationUncheckedCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
   User: UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -23310,6 +23378,33 @@ input CompanyUncheckedCreateWithoutMarketingSourceInput {
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationUncheckedCreateNestedManyWithoutCompanyInput
+  ThirdPartyAccess: ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
+  TwoFactorHistory: TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
+  User: UserUncheckedCreateNestedManyWithoutCompanyInput
+  admin: Int!
+  creation_date: DateTime!
+  cron_enabled: Boolean
+  details: CompanyDetailsUncheckedCreateNestedOneWithoutCompanyInput
+  digit8: Int!
+  id: Int
+  image: String!
+  remote_connect: String
+  remote_url: String
+  slug: String
+  subscription: CompanySubscriptionUncheckedCreateNestedOneWithoutCompanyInput
+  user: String!
+}
+
+input CompanyUncheckedCreateWithoutSalutationInput {
+  AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
+  AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
+  Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
+  CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
+  CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
+  CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
+  MarketingSource: MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
   User: UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -23336,6 +23431,7 @@ input CompanyUncheckedCreateWithoutSubscriptionInput {
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationUncheckedCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
   User: UserUncheckedCreateNestedManyWithoutCompanyInput
@@ -23361,6 +23457,7 @@ input CompanyUncheckedCreateWithoutThirdPartyAccessInput {
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationUncheckedCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
   User: UserUncheckedCreateNestedManyWithoutCompanyInput
   admin: Int!
@@ -23386,6 +23483,7 @@ input CompanyUncheckedCreateWithoutTwoFactorHistoryInput {
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationUncheckedCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
   User: UserUncheckedCreateNestedManyWithoutCompanyInput
   admin: Int!
@@ -23411,6 +23509,7 @@ input CompanyUncheckedCreateWithoutUserInput {
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+  Salutation: SalutationUncheckedCreateNestedManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
   admin: Int!
@@ -23436,6 +23535,7 @@ input CompanyUncheckedUpdateInput {
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+  Salutation: SalutationUncheckedUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
   User: UserUncheckedUpdateManyWithoutCompanyInput
@@ -23474,6 +23574,7 @@ input CompanyUncheckedUpdateWithoutAcceptEmailTokenInput {
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+  Salutation: SalutationUncheckedUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
   User: UserUncheckedUpdateManyWithoutCompanyInput
@@ -23499,6 +23600,7 @@ input CompanyUncheckedUpdateWithoutAccountBalanceInput {
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+  Salutation: SalutationUncheckedUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
   User: UserUncheckedUpdateManyWithoutCompanyInput
@@ -23524,6 +23626,7 @@ input CompanyUncheckedUpdateWithoutBookingStatusInput {
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+  Salutation: SalutationUncheckedUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
   User: UserUncheckedUpdateManyWithoutCompanyInput
@@ -23549,6 +23652,7 @@ input CompanyUncheckedUpdateWithoutCandidateInput {
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+  Salutation: SalutationUncheckedUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
   User: UserUncheckedUpdateManyWithoutCompanyInput
@@ -23574,6 +23678,7 @@ input CompanyUncheckedUpdateWithoutCmCampaignInput {
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+  Salutation: SalutationUncheckedUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
   User: UserUncheckedUpdateManyWithoutCompanyInput
@@ -23599,6 +23704,7 @@ input CompanyUncheckedUpdateWithoutCmCaseInput {
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+  Salutation: SalutationUncheckedUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
   User: UserUncheckedUpdateManyWithoutCompanyInput
@@ -23624,6 +23730,7 @@ input CompanyUncheckedUpdateWithoutCmCaseReplyInput {
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+  Salutation: SalutationUncheckedUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
   User: UserUncheckedUpdateManyWithoutCompanyInput
@@ -23650,6 +23757,7 @@ input CompanyUncheckedUpdateWithoutDetailsInput {
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+  Salutation: SalutationUncheckedUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
   User: UserUncheckedUpdateManyWithoutCompanyInput
@@ -23674,6 +23782,33 @@ input CompanyUncheckedUpdateWithoutMarketingSourceInput {
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
+  Salutation: SalutationUncheckedUpdateManyWithoutCompanyInput
+  ThirdPartyAccess: ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
+  TwoFactorHistory: TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
+  User: UserUncheckedUpdateManyWithoutCompanyInput
+  admin: IntFieldUpdateOperationsInput
+  creation_date: DateTimeFieldUpdateOperationsInput
+  cron_enabled: NullableBoolFieldUpdateOperationsInput
+  details: CompanyDetailsUncheckedUpdateOneWithoutCompanyInput
+  digit8: IntFieldUpdateOperationsInput
+  id: IntFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
+  remote_connect: NullableStringFieldUpdateOperationsInput
+  remote_url: NullableStringFieldUpdateOperationsInput
+  slug: NullableStringFieldUpdateOperationsInput
+  subscription: CompanySubscriptionUncheckedUpdateOneWithoutCompanyInput
+  user: StringFieldUpdateOperationsInput
+}
+
+input CompanyUncheckedUpdateWithoutSalutationInput {
+  AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
+  AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
+  Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
+  CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
+  CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
+  CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
+  MarketingSource: MarketingSourceUncheckedUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
   User: UserUncheckedUpdateManyWithoutCompanyInput
@@ -23700,6 +23835,7 @@ input CompanyUncheckedUpdateWithoutSubscriptionInput {
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+  Salutation: SalutationUncheckedUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
   User: UserUncheckedUpdateManyWithoutCompanyInput
@@ -23725,6 +23861,7 @@ input CompanyUncheckedUpdateWithoutThirdPartyAccessInput {
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+  Salutation: SalutationUncheckedUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
   User: UserUncheckedUpdateManyWithoutCompanyInput
   admin: IntFieldUpdateOperationsInput
@@ -23750,6 +23887,7 @@ input CompanyUncheckedUpdateWithoutTwoFactorHistoryInput {
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+  Salutation: SalutationUncheckedUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
   User: UserUncheckedUpdateManyWithoutCompanyInput
   admin: IntFieldUpdateOperationsInput
@@ -23775,6 +23913,7 @@ input CompanyUncheckedUpdateWithoutUserInput {
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+  Salutation: SalutationUncheckedUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
   admin: IntFieldUpdateOperationsInput
@@ -23800,6 +23939,7 @@ input CompanyUpdateInput {
   CmCase: CmCaseUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUpdateManyWithoutCompanyInput
+  Salutation: SalutationUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUpdateManyWithoutCompanyInput
   User: UserUpdateManyWithoutCompanyInput
@@ -23926,6 +24066,16 @@ input CompanyUpdateOneWithoutCandidateInput {
   upsert: CompanyUpsertWithoutCandidateInput
 }
 
+input CompanyUpdateOneWithoutSalutationInput {
+  connect: CompanyWhereUniqueInput
+  connectOrCreate: CompanyCreateOrConnectWithoutSalutationInput
+  create: CompanyUncheckedCreateWithoutSalutationInput
+  delete: Boolean
+  disconnect: Boolean
+  update: CompanyUncheckedUpdateWithoutSalutationInput
+  upsert: CompanyUpsertWithoutSalutationInput
+}
+
 input CompanyUpdateOneWithoutUserInput {
   connect: CompanyWhereUniqueInput
   connectOrCreate: CompanyCreateOrConnectWithoutUserInput
@@ -23944,6 +24094,7 @@ input CompanyUpdateWithoutAcceptEmailTokenInput {
   CmCase: CmCaseUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUpdateManyWithoutCompanyInput
+  Salutation: SalutationUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUpdateManyWithoutCompanyInput
   User: UserUpdateManyWithoutCompanyInput
@@ -23968,6 +24119,7 @@ input CompanyUpdateWithoutAccountBalanceInput {
   CmCase: CmCaseUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUpdateManyWithoutCompanyInput
+  Salutation: SalutationUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUpdateManyWithoutCompanyInput
   User: UserUpdateManyWithoutCompanyInput
@@ -23992,6 +24144,7 @@ input CompanyUpdateWithoutBookingStatusInput {
   CmCase: CmCaseUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUpdateManyWithoutCompanyInput
+  Salutation: SalutationUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUpdateManyWithoutCompanyInput
   User: UserUpdateManyWithoutCompanyInput
@@ -24016,6 +24169,7 @@ input CompanyUpdateWithoutCandidateInput {
   CmCase: CmCaseUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUpdateManyWithoutCompanyInput
+  Salutation: SalutationUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUpdateManyWithoutCompanyInput
   User: UserUpdateManyWithoutCompanyInput
@@ -24040,6 +24194,7 @@ input CompanyUpdateWithoutCmCampaignInput {
   CmCase: CmCaseUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUpdateManyWithoutCompanyInput
+  Salutation: SalutationUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUpdateManyWithoutCompanyInput
   User: UserUpdateManyWithoutCompanyInput
@@ -24064,6 +24219,7 @@ input CompanyUpdateWithoutCmCaseInput {
   CmCampaign: CmCampaignUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUpdateManyWithoutCompanyInput
+  Salutation: SalutationUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUpdateManyWithoutCompanyInput
   User: UserUpdateManyWithoutCompanyInput
@@ -24088,6 +24244,7 @@ input CompanyUpdateWithoutCmCaseReplyInput {
   CmCampaign: CmCampaignUpdateManyWithoutCompanyInput
   CmCase: CmCaseUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUpdateManyWithoutCompanyInput
+  Salutation: SalutationUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUpdateManyWithoutCompanyInput
   User: UserUpdateManyWithoutCompanyInput
@@ -24113,6 +24270,7 @@ input CompanyUpdateWithoutDetailsInput {
   CmCase: CmCaseUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUpdateManyWithoutCompanyInput
+  Salutation: SalutationUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUpdateManyWithoutCompanyInput
   User: UserUpdateManyWithoutCompanyInput
@@ -24136,6 +24294,32 @@ input CompanyUpdateWithoutMarketingSourceInput {
   CmCampaign: CmCampaignUpdateManyWithoutCompanyInput
   CmCase: CmCaseUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUpdateManyWithoutCompanyInput
+  Salutation: SalutationUpdateManyWithoutCompanyInput
+  ThirdPartyAccess: ThirdPartyAccessUpdateManyWithoutCompanyInput
+  TwoFactorHistory: TwoFactorHistoryUpdateManyWithoutCompanyInput
+  User: UserUpdateManyWithoutCompanyInput
+  admin: IntFieldUpdateOperationsInput
+  creation_date: DateTimeFieldUpdateOperationsInput
+  cron_enabled: NullableBoolFieldUpdateOperationsInput
+  details: CompanyDetailsUpdateOneWithoutCompanyInput
+  digit8: IntFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
+  remote_connect: NullableStringFieldUpdateOperationsInput
+  remote_url: NullableStringFieldUpdateOperationsInput
+  slug: NullableStringFieldUpdateOperationsInput
+  subscription: CompanySubscriptionUpdateOneWithoutCompanyInput
+  user: StringFieldUpdateOperationsInput
+}
+
+input CompanyUpdateWithoutSalutationInput {
+  AcceptEmailToken: AcceptEmailTokenUpdateManyWithoutCompanyInput
+  AccountBalance: AccountBalanceUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUpdateManyWithoutCompanyInput
+  Candidate: CandidateUpdateManyWithoutCompanyInput
+  CmCampaign: CmCampaignUpdateManyWithoutCompanyInput
+  CmCase: CmCaseUpdateManyWithoutCompanyInput
+  CmCaseReply: CmCaseReplyUpdateManyWithoutCompanyInput
+  MarketingSource: MarketingSourceUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUpdateManyWithoutCompanyInput
   User: UserUpdateManyWithoutCompanyInput
@@ -24161,6 +24345,7 @@ input CompanyUpdateWithoutSubscriptionInput {
   CmCase: CmCaseUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUpdateManyWithoutCompanyInput
+  Salutation: SalutationUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUpdateManyWithoutCompanyInput
   User: UserUpdateManyWithoutCompanyInput
@@ -24185,6 +24370,7 @@ input CompanyUpdateWithoutThirdPartyAccessInput {
   CmCase: CmCaseUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUpdateManyWithoutCompanyInput
+  Salutation: SalutationUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUpdateManyWithoutCompanyInput
   User: UserUpdateManyWithoutCompanyInput
   admin: IntFieldUpdateOperationsInput
@@ -24209,6 +24395,7 @@ input CompanyUpdateWithoutTwoFactorHistoryInput {
   CmCase: CmCaseUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUpdateManyWithoutCompanyInput
+  Salutation: SalutationUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUpdateManyWithoutCompanyInput
   User: UserUpdateManyWithoutCompanyInput
   admin: IntFieldUpdateOperationsInput
@@ -24233,6 +24420,7 @@ input CompanyUpdateWithoutUserInput {
   CmCase: CmCaseUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUpdateManyWithoutCompanyInput
   MarketingSource: MarketingSourceUpdateManyWithoutCompanyInput
+  Salutation: SalutationUpdateManyWithoutCompanyInput
   ThirdPartyAccess: ThirdPartyAccessUpdateManyWithoutCompanyInput
   TwoFactorHistory: TwoFactorHistoryUpdateManyWithoutCompanyInput
   admin: IntFieldUpdateOperationsInput
@@ -24293,6 +24481,11 @@ input CompanyUpsertWithoutMarketingSourceInput {
   update: CompanyUncheckedUpdateWithoutMarketingSourceInput!
 }
 
+input CompanyUpsertWithoutSalutationInput {
+  create: CompanyUncheckedCreateWithoutSalutationInput!
+  update: CompanyUncheckedUpdateWithoutSalutationInput!
+}
+
 input CompanyUpsertWithoutSubscriptionInput {
   create: CompanyUncheckedCreateWithoutSubscriptionInput!
   update: CompanyUncheckedUpdateWithoutSubscriptionInput!
@@ -24325,6 +24518,7 @@ input CompanyWhereInput {
   MarketingSource: MarketingSourceListRelationFilter
   NOT: [CompanyWhereInput]
   OR: [CompanyWhereInput]
+  Salutation: SalutationListRelationFilter
   ThirdPartyAccess: ThirdPartyAccessListRelationFilter
   TwoFactorHistory: TwoFactorHistoryListRelationFilter
   User: UserListRelationFilter
@@ -25615,6 +25809,7 @@ type Mutation {
   createOneInvPaymentType(data: InvPaymentTypeCreateInput!): InvPaymentType!
   createOneMarketingSource(data: MarketingSourceCreateInput!): MarketingSource!
   createOneMediaLlibraryAttachment(data: MediaLlibraryAttachmentCreateInput!): MediaLlibraryAttachment!
+  createOneSalutation(data: SalutationCreateInput!): Salutation!
   createOneSecondAtAnswer(data: SecondAtAnswerCreateInput!): SecondAtAnswer!
   createOneSecondAtQuestion(data: SecondAtQuestionCreateInput!): SecondAtQuestion!
   createOneThirdPartyAccess(data: ThirdPartyAccessCreateInput!): ThirdPartyAccess!
@@ -25711,6 +25906,7 @@ type Mutation {
   deleteManyInvPaymentType(where: InvPaymentTypeWhereInput): AffectedRowsOutput!
   deleteManyMarketingSource(where: MarketingSourceWhereInput): AffectedRowsOutput!
   deleteManyMediaLlibraryAttachment(where: MediaLlibraryAttachmentWhereInput): AffectedRowsOutput!
+  deleteManySalutation(where: SalutationWhereInput): AffectedRowsOutput!
   deleteManySecondAtAnswer(where: SecondAtAnswerWhereInput): AffectedRowsOutput!
   deleteManySecondAtQuestion(where: SecondAtQuestionWhereInput): AffectedRowsOutput!
   deleteManyThirdPartyAccess(where: ThirdPartyAccessWhereInput): AffectedRowsOutput!
@@ -25807,6 +26003,7 @@ type Mutation {
   deleteOneInvPaymentType(where: InvPaymentTypeWhereUniqueInput!): InvPaymentType
   deleteOneMarketingSource(where: MarketingSourceWhereUniqueInput!): MarketingSource
   deleteOneMediaLlibraryAttachment(where: MediaLlibraryAttachmentWhereUniqueInput!): MediaLlibraryAttachment
+  deleteOneSalutation(where: SalutationWhereUniqueInput!): Salutation
   deleteOneSecondAtAnswer(where: SecondAtAnswerWhereUniqueInput!): SecondAtAnswer
   deleteOneSecondAtQuestion(where: SecondAtQuestionWhereUniqueInput!): SecondAtQuestion
   deleteOneThirdPartyAccess(where: ThirdPartyAccessWhereUniqueInput!): ThirdPartyAccess
@@ -25905,6 +26102,7 @@ type Mutation {
   updateManyInvPaymentType(data: InvPaymentTypeUpdateManyMutationInput!, where: InvPaymentTypeWhereInput): AffectedRowsOutput!
   updateManyMarketingSource(data: MarketingSourceUpdateManyMutationInput!, where: MarketingSourceWhereInput): AffectedRowsOutput!
   updateManyMediaLlibraryAttachment(data: MediaLlibraryAttachmentUpdateManyMutationInput!, where: MediaLlibraryAttachmentWhereInput): AffectedRowsOutput!
+  updateManySalutation(data: SalutationUpdateManyMutationInput!, where: SalutationWhereInput): AffectedRowsOutput!
   updateManySecondAtAnswer(data: SecondAtAnswerUpdateManyMutationInput!, where: SecondAtAnswerWhereInput): AffectedRowsOutput!
   updateManySecondAtQuestion(data: SecondAtQuestionUpdateManyMutationInput!, where: SecondAtQuestionWhereInput): AffectedRowsOutput!
   updateManyThirdPartyAccess(data: ThirdPartyAccessUpdateManyMutationInput!, where: ThirdPartyAccessWhereInput): AffectedRowsOutput!
@@ -26001,6 +26199,7 @@ type Mutation {
   updateOneInvPaymentType(data: InvPaymentTypeUpdateInput!, where: InvPaymentTypeWhereUniqueInput!): InvPaymentType
   updateOneMarketingSource(data: MarketingSourceUpdateInput!, where: MarketingSourceWhereUniqueInput!): MarketingSource
   updateOneMediaLlibraryAttachment(data: MediaLlibraryAttachmentUpdateInput!, where: MediaLlibraryAttachmentWhereUniqueInput!): MediaLlibraryAttachment
+  updateOneSalutation(data: SalutationUpdateInput!, where: SalutationWhereUniqueInput!): Salutation
   updateOneSecondAtAnswer(data: SecondAtAnswerUpdateInput!, where: SecondAtAnswerWhereUniqueInput!): SecondAtAnswer
   updateOneSecondAtQuestion(data: SecondAtQuestionUpdateInput!, where: SecondAtQuestionWhereUniqueInput!): SecondAtQuestion
   updateOneThirdPartyAccess(data: ThirdPartyAccessUpdateInput!, where: ThirdPartyAccessWhereUniqueInput!): ThirdPartyAccess
@@ -26097,6 +26296,7 @@ type Mutation {
   upsertOneInvPaymentType(create: InvPaymentTypeCreateInput!, update: InvPaymentTypeUpdateInput!, where: InvPaymentTypeWhereUniqueInput!): InvPaymentType!
   upsertOneMarketingSource(create: MarketingSourceCreateInput!, update: MarketingSourceUpdateInput!, where: MarketingSourceWhereUniqueInput!): MarketingSource!
   upsertOneMediaLlibraryAttachment(create: MediaLlibraryAttachmentCreateInput!, update: MediaLlibraryAttachmentUpdateInput!, where: MediaLlibraryAttachmentWhereUniqueInput!): MediaLlibraryAttachment!
+  upsertOneSalutation(create: SalutationCreateInput!, update: SalutationUpdateInput!, where: SalutationWhereUniqueInput!): Salutation!
   upsertOneSecondAtAnswer(create: SecondAtAnswerCreateInput!, update: SecondAtAnswerUpdateInput!, where: SecondAtAnswerWhereUniqueInput!): SecondAtAnswer!
   upsertOneSecondAtQuestion(create: SecondAtQuestionCreateInput!, update: SecondAtQuestionUpdateInput!, where: SecondAtQuestionWhereUniqueInput!): SecondAtQuestion!
   upsertOneThirdPartyAccess(create: ThirdPartyAccessCreateInput!, update: ThirdPartyAccessUpdateInput!, where: ThirdPartyAccessWhereUniqueInput!): ThirdPartyAccess!
@@ -26689,6 +26889,7 @@ type Query {
   findFirstInvPaymentType(cursor: InvPaymentTypeWhereUniqueInput, orderBy: InvPaymentTypeOrderByInput, skip: Int, take: Int, where: InvPaymentTypeWhereInput): InvPaymentType
   findFirstMarketingSource(cursor: MarketingSourceWhereUniqueInput, orderBy: MarketingSourceOrderByInput, skip: Int, take: Int, where: MarketingSourceWhereInput): MarketingSource
   findFirstMediaLlibraryAttachment(cursor: MediaLlibraryAttachmentWhereUniqueInput, orderBy: MediaLlibraryAttachmentOrderByInput, skip: Int, take: Int, where: MediaLlibraryAttachmentWhereInput): MediaLlibraryAttachment
+  findFirstSalutation(cursor: SalutationWhereUniqueInput, orderBy: SalutationOrderByInput, skip: Int, take: Int, where: SalutationWhereInput): Salutation
   findFirstSecondAtAnswer(cursor: SecondAtAnswerWhereUniqueInput, orderBy: SecondAtAnswerOrderByInput, skip: Int, take: Int, where: SecondAtAnswerWhereInput): SecondAtAnswer
   findFirstSecondAtQuestion(cursor: SecondAtQuestionWhereUniqueInput, orderBy: SecondAtQuestionOrderByInput, skip: Int, take: Int, where: SecondAtQuestionWhereInput): SecondAtQuestion
   findFirstThirdPartyAccess(cursor: ThirdPartyAccessWhereUniqueInput, orderBy: ThirdPartyAccessOrderByInput, skip: Int, take: Int, where: ThirdPartyAccessWhereInput): ThirdPartyAccess
@@ -26710,6 +26911,9 @@ type Query {
   mediaLlibraryAttachments(cursor: MediaLlibraryAttachmentWhereUniqueInput, orderBy: [MediaLlibraryAttachmentOrderByInput!], skip: Int, take: Int, where: MediaLlibraryAttachmentWhereInput): [MediaLlibraryAttachment!]!
   mediaLlibraryAttachmentsCount(where: MediaLlibraryAttachmentWhereInput): Int
   ping: String
+  salutation(where: SalutationWhereUniqueInput!): Salutation
+  salutations(cursor: SalutationWhereUniqueInput, orderBy: [SalutationOrderByInput!], skip: Int, take: Int, where: SalutationWhereInput): [Salutation!]!
+  salutationsCount(where: SalutationWhereInput): Int
   secondAtAnswer(where: SecondAtAnswerWhereUniqueInput!): SecondAtAnswer
   secondAtAnswers(cursor: SecondAtAnswerWhereUniqueInput, orderBy: [SecondAtAnswerOrderByInput!], skip: Int, take: Int, where: SecondAtAnswerWhereInput): [SecondAtAnswer!]!
   secondAtAnswersCount(where: SecondAtAnswerWhereInput): Int
@@ -26731,6 +26935,198 @@ type Query {
   userSecurityQuestionsAnswersCount(where: UserSecurityQuestionsAnswerWhereInput): Int
   users(cursor: UserWhereUniqueInput, orderBy: [UserOrderByInput!], skip: Int, take: Int, where: UserWhereInput): [User!]!
   usersCount(where: UserWhereInput): Int
+}
+
+type Salutation {
+  Company: Company
+  company_id: Int
+  id: Int!
+  name: String!
+}
+
+type SalutationAvgAggregateOutputType {
+  company_id: Float
+  id: Float!
+}
+
+type SalutationCountAggregateOutputType {
+  _all: Int!
+  company_id: Int
+  id: Int!
+  name: Int
+}
+
+input SalutationCreateInput {
+  Company: CompanyCreateNestedOneWithoutSalutationInput
+  name: String!
+}
+
+input SalutationCreateNestedManyWithoutCompanyInput {
+  connect: [SalutationWhereUniqueInput]
+  connectOrCreate: [SalutationCreateOrConnectWithoutCompanyInput]
+  create: [SalutationCreateWithoutCompanyInput]
+}
+
+input SalutationCreateOrConnectWithoutCompanyInput {
+  create: SalutationUncheckedCreateWithoutCompanyInput!
+  where: SalutationWhereUniqueInput!
+}
+
+input SalutationCreateWithoutCompanyInput {
+  name: String!
+}
+
+input SalutationListRelationFilter {
+  every: SalutationWhereInput
+  none: SalutationWhereInput
+  some: SalutationWhereInput
+}
+
+type SalutationMaxAggregateOutputType {
+  company_id: Int
+  id: Int!
+  name: String
+}
+
+type SalutationMinAggregateOutputType {
+  company_id: Int
+  id: Int!
+  name: String
+}
+
+input SalutationOrderByInput {
+  Company: CompanyOrderByInput
+  company_id: SortOrder
+  id: SortOrder
+  name: SortOrder
+}
+
+enum SalutationScalarFieldEnum {
+  company_id
+  id
+  name
+}
+
+input SalutationScalarWhereInput {
+  AND: [SalutationScalarWhereInput]
+  NOT: [SalutationScalarWhereInput]
+  OR: [SalutationScalarWhereInput]
+  company_id: IntNullableFilter
+  id: IntFilter
+  name: StringFilter
+}
+
+type SalutationSumAggregateOutputType {
+  company_id: Int
+  id: Int!
+}
+
+input SalutationUncheckedCreateInput {
+  company_id: Int
+  id: Int
+  name: String!
+}
+
+input SalutationUncheckedCreateNestedManyWithoutCompanyInput {
+  connect: [SalutationWhereUniqueInput]
+  connectOrCreate: [SalutationCreateOrConnectWithoutCompanyInput]
+  create: [SalutationCreateWithoutCompanyInput]
+}
+
+input SalutationUncheckedCreateWithoutCompanyInput {
+  id: Int
+  name: String!
+}
+
+input SalutationUncheckedUpdateInput {
+  company_id: NullableIntFieldUpdateOperationsInput
+  id: IntFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
+}
+
+input SalutationUncheckedUpdateManyInput {
+  company_id: NullableIntFieldUpdateOperationsInput
+  id: IntFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
+}
+
+input SalutationUncheckedUpdateManyWithoutCompanyInput {
+  connect: [SalutationWhereUniqueInput]
+  connectOrCreate: [SalutationCreateOrConnectWithoutCompanyInput]
+  create: [SalutationCreateWithoutCompanyInput]
+  delete: [SalutationWhereUniqueInput]
+  deleteMany: [SalutationScalarWhereInput]
+  disconnect: [SalutationWhereUniqueInput]
+  set: [SalutationWhereUniqueInput]
+  update: [SalutationUpdateWithWhereUniqueWithoutCompanyInput]
+  updateMany: [SalutationUpdateManyWithWhereWithoutCompanyInput]
+  upsert: [SalutationUpsertWithWhereUniqueWithoutCompanyInput]
+}
+
+input SalutationUncheckedUpdateManyWithoutSalutationInput {
+  id: IntFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
+}
+
+input SalutationUncheckedUpdateWithoutCompanyInput {
+  id: IntFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
+}
+
+input SalutationUpdateInput {
+  Company: CompanyUpdateOneWithoutSalutationInput
+  name: StringFieldUpdateOperationsInput
+}
+
+input SalutationUpdateManyMutationInput {
+  name: StringFieldUpdateOperationsInput
+}
+
+input SalutationUpdateManyWithWhereWithoutCompanyInput {
+  data: SalutationUncheckedUpdateManyWithoutSalutationInput!
+  where: SalutationScalarWhereInput!
+}
+
+input SalutationUpdateManyWithoutCompanyInput {
+  connect: [SalutationWhereUniqueInput]
+  connectOrCreate: [SalutationCreateOrConnectWithoutCompanyInput]
+  create: [SalutationCreateWithoutCompanyInput]
+  delete: [SalutationWhereUniqueInput]
+  deleteMany: [SalutationScalarWhereInput]
+  disconnect: [SalutationWhereUniqueInput]
+  set: [SalutationWhereUniqueInput]
+  update: [SalutationUpdateWithWhereUniqueWithoutCompanyInput]
+  updateMany: [SalutationUpdateManyWithWhereWithoutCompanyInput]
+  upsert: [SalutationUpsertWithWhereUniqueWithoutCompanyInput]
+}
+
+input SalutationUpdateWithWhereUniqueWithoutCompanyInput {
+  data: SalutationUncheckedUpdateWithoutCompanyInput!
+  where: SalutationWhereUniqueInput!
+}
+
+input SalutationUpdateWithoutCompanyInput {
+  name: StringFieldUpdateOperationsInput
+}
+
+input SalutationUpsertWithWhereUniqueWithoutCompanyInput {
+  create: SalutationUncheckedCreateWithoutCompanyInput!
+  update: SalutationUncheckedUpdateWithoutCompanyInput!
+  where: SalutationWhereUniqueInput!
+}
+
+input SalutationWhereInput {
+  AND: [SalutationWhereInput]
+  Company: CompanyWhereInput
+  NOT: [SalutationWhereInput]
+  OR: [SalutationWhereInput]
+  company_id: IntNullableFilter
+  id: IntFilter
+  name: StringFilter
+}
+
+input SalutationWhereUniqueInput {
+  id: Int
 }
 
 type SecondAtAnswer {
