@@ -22,6 +22,7 @@ interface P {
   isCustomFilter?: boolean
   customFilter?: () => JSX.Element
   setEditPage?(e): void
+  draggable?: boolean
 }
 
 const CrudLayout: FC<P> = ({ ...props }) => <CrudTable {...props} />
