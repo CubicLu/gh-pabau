@@ -65,7 +65,7 @@ const CrudTable: FC<P> = ({
   isCustomFilter,
   customFilter,
   setEditPage,
-  draggable = false,
+  draggable = true,
   ...props
 }) => {
   const [isLoading, setIsLoading] = useState(true)
