@@ -3,7 +3,11 @@ import { Drawer, Menu } from 'antd'
 import { Button, Search, Dropdown as AvatarDropDown } from '@pabau/ui'
 import styles from './MobileSidebar.module.less'
 import classNames from 'classnames'
-import { sidebarMenu, SidebarMenuItem } from './SidebarMenu'
+import {
+  sidebarMenu,
+  SidebarMenuItem,
+  sidebarTranslations,
+} from './SidebarMenu'
 import {
   BellOutlined,
   CloseOutlined,
@@ -16,6 +20,7 @@ import Avatar from 'antd/lib/avatar/avatar'
 import User from '../../assets/images/users/stephen.png'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useTranslation } from 'react-i18next'
 
 const { SubMenu } = Menu
 
@@ -32,6 +37,7 @@ export const MobileSidebar: FC<SidebarProps> = ({
   onClickNotificationDrawer,
   onClickChatDrawer,
 }) => {
+  const { t } = useTranslation('coomon')
   const router = useRouter()
   const [openKeys, setOpenKeys] = useState<string[]>([])
   const [selectedKeys, setSelectedKeys] = useState<string[]>([])
@@ -60,7 +66,7 @@ export const MobileSidebar: FC<SidebarProps> = ({
   const renderMenu = (index, menuName, icon) => {
     return (
       <Menu.Item key={index} icon={icon} className={styles.sidebarMenu}>
-        {menuName}
+        {t(sidebarTranslations[menuName.toLowerCase().replace(' ', '')])}
       </Menu.Item>
     )
   }
@@ -90,7 +96,7 @@ export const MobileSidebar: FC<SidebarProps> = ({
             className="menuHeaderIconColor"
             onClick={onSideBarClosed}
           />
-          <p>Menu</p>
+          <p>{t('sidebar.mobile.menu')}</p>
         </div>
       </div>
       <div className={styles.searchBox}>
@@ -116,7 +122,11 @@ export const MobileSidebar: FC<SidebarProps> = ({
             <SubMenu
               key={menuData.menuName + index}
               icon={menuData.icon}
-              title={menuData.menuName}
+              title={t(
+                sidebarTranslations[
+                  menuData.menuName.toLowerCase().replace(' ', '')
+                ]
+              )}
               onTitleClick={onClickMenu}
               className={classNames(
                 styles.sidebarSubMenu,
@@ -149,7 +159,7 @@ export const MobileSidebar: FC<SidebarProps> = ({
             setProfileDrawer(true)
           }}
         >
-          Profile
+          {t('sidebar.mobile.profile')}
           <RightOutlined style={{ fontSize: '14px' }} />
         </Menu.Item>
         {openProfileDrawer && (
@@ -163,7 +173,7 @@ export const MobileSidebar: FC<SidebarProps> = ({
             className={classNames(styles.buttonStyles, styles.createBtn)}
             icon={<PlusCircleFilled />}
           >
-            Create
+            {t('common-label-create')}
           </Button>
         </div>
         <div className={styles.buttonMenu}>
@@ -174,7 +184,7 @@ export const MobileSidebar: FC<SidebarProps> = ({
                 className={classNames(styles.buttonStyles, styles.setUpBtn)}
                 icon={<SettingOutlined />}
               >
-                Setup
+                {t('sidebar.setup')}
               </Button>
             </a>
           </Link>

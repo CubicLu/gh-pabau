@@ -18,6 +18,40 @@ export interface SidebarMenuItem {
   children?: SidebarMenuItem[]
 }
 
+export const sidebarTranslations = {
+  dashboard: 'sidebar.dashboard',
+  calendar: 'sidebar.calendar',
+  team: 'sidebar.team',
+  staffmanager: 'sidebar.team.staffmanager',
+  targets: 'sidebar.team.targets',
+  schedule: 'sidebar.team.schedule',
+  hiring: 'sidebar.team.hiring',
+  commissions: 'sidebar.team.commissions',
+  leads: 'sidebar.leads',
+  reports: 'sidebar.reports',
+  stock: 'sidebar.stock',
+  products: 'sidebar.stock.products',
+  inventorycount: 'sidebar.stock.inventorycount',
+  purchaseorder: 'sidebar.stock.purchaseorder',
+  suppliers: 'sidebar.stock.suppliers',
+  marketing: 'sidebar.marketing',
+  campaigns: 'sidebar.marketing.campaigns',
+  reviews: 'sidebar.marketing.reivews',
+  giftvouchers: 'sidebar.marketing.giftvouchers',
+  referraltracker: 'sidebar.marketing.referraltracker',
+  loyalty: 'sidebar.marketing.loyalty',
+  financials: 'sidebar.marketing.fanancials',
+  accounts: 'sidebar.financials.accounts',
+  cashup: 'sidebar.financials.cashup',
+  contacts: 'sidebar.contacts',
+  clients: 'sidebar.contacts.clients',
+  casemanager: 'sidebar.contacts.casemanager',
+  menu: 'sidebar.mobile.menu',
+  profile: 'sidebar.mobile.profile',
+  chat: 'sidebar.mobile.chat',
+  notifications: 'sidebar.mobile.notifications',
+}
+
 export const sidebarMenu: SidebarMenuItem[] = [
   {
     menuName: 'Dashboard',

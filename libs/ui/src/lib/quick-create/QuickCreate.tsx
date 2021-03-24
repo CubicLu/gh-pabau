@@ -10,10 +10,12 @@ import {
 } from '@ant-design/icons'
 import { Popover } from 'antd'
 import { Button } from '@pabau/ui'
+import { useTranslation } from 'react-i18next'
 import styles from './QuickCreate.module.less'
 
 export const QuickCreate: FC = () => {
   const [visible, setVisible] = useState(false)
+  const { t } = useTranslation('common')
 
   const QuickCreateContent = () => (
     <div className={styles.quickCreateContentConatiner}>
@@ -23,37 +25,37 @@ export const QuickCreate: FC = () => {
       >
         <CloseOutlined />
       </div>
-      <p>Create</p>
+      <p>{t('common-label-create')}</p>
       <div className={styles.quickCreateItemsContainer}>
         <div className={styles.quickCreateItem}>
           <div className={styles.quickCreateItemIcon}>
             <UserAddOutlined />
           </div>
-          <p>Client</p>
+          <p>{t('quickcreate.client')}</p>
         </div>
         <div className={styles.quickCreateItem}>
           <div className={styles.quickCreateItemIcon}>
             <RiseOutlined />
           </div>
-          <p>Lead</p>
+          <p>{t('quickcreate.lead')}</p>
         </div>
         <div className={styles.quickCreateItem}>
           <div className={styles.quickCreateItemIcon}>
             <MessageOutlined />
           </div>
-          <p>SMS</p>
+          <p>{t('quickcreate.sms')}</p>
         </div>
         <div className={styles.quickCreateItem}>
           <div className={styles.quickCreateItemIcon}>
             <WalletOutlined />
           </div>
-          <p>Sale</p>
+          <p>{t('quickcreate.sale')}</p>
         </div>
         <div className={styles.quickCreateItem}>
           <div className={styles.quickCreateItemIcon}>
             <MailOutlined />
           </div>
-          <p>Newsletter</p>
+          <p>{t('quickcreate.newsletter')}</p>
         </div>
       </div>
     </div>
@@ -72,7 +74,7 @@ export const QuickCreate: FC = () => {
           className={styles.createBtnStyle}
           onClick={() => setVisible(true)}
         >
-          <PlusCircleFilled /> Create
+          <PlusCircleFilled /> {t('common-label-create')}
         </Button>
       </Popover>
     </div>

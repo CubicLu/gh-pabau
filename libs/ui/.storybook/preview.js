@@ -8,29 +8,8 @@ import 'react-quill/dist/quill.snow.css'
 import 'react-image-crop/dist/ReactCrop.css'
 import { withI18next } from 'storybook-addon-i18next'
 import '../src/assets/fonts/fonts.css'
+import { languages } from '@pabau/i18n'
 require('../src/styles/antd.less')
-
-const en = {
-  welcome: {
-    title: 'Welcome',
-    desc: 'How are you?',
-  },
-}
-
-const de = {
-  welcome: {
-    title: 'Willkommen',
-    desc: 'Wie geht es dir?',
-  },
-}
-
-const fr = {
-  welcome: {
-    title: 'Bienvenue',
-    desc: 'Comment vas-tu?',
-  },
-}
-
 i18n
   .use(Backend)
   .use(LanguageDetector)
@@ -42,17 +21,8 @@ i18n
     interpolation: {
       escapeValue: false,
     },
-    resources: {
-      en: {
-        common: en,
-      },
-      de: {
-        common: de,
-      },
-      fr: {
-        common: fr,
-      },
-    },
+    resources: languages,
+    keySeparator: false,
   })
 
 addDecorator(
@@ -67,6 +37,6 @@ addDecorator(
 )
 
 export const parameters = {
-  actions: { argTypesRegex: "^on[A-Z].*" },
+  actions: { argTypesRegex: '^on[A-Z].*' },
   layout: 'centered',
 }

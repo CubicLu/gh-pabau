@@ -1,4 +1,5 @@
 import React, { FC, useState, MouseEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ReactComponent as EmojiIcon } from '../../assets/images/emoji-icon.svg'
 import { ReactComponent as AttachIcon } from '../../assets/images/attach-icon.svg'
 import { ReactComponent as Stroke } from '../../assets/images/stroke.svg'
@@ -10,6 +11,7 @@ interface P {
 }
 
 const ChatInput: FC<P> = ({ ...props }) => {
+  const { t } = useTranslation('common')
   const [message, setMessage] = useState<string>('')
 
   const handleChange = (e) => {
@@ -22,7 +24,7 @@ const ChatInput: FC<P> = ({ ...props }) => {
       <input
         className={styles.messageInput}
         type="text"
-        placeholder={'Message'}
+        placeholder={t('message.input.placeholder')}
         onChange={handleChange}
       />
       <div className={styles.messageSymbol}>

@@ -322,6 +322,7 @@ const MedicalFormEdit: FC<P> = ({
   }
 
   const handlingSaveForm = (form) => {
+    // eslint-disable-next-line you-dont-need-lodash-underscore/find-index
     const index = _.findIndex(draggedForms, (item) => item['id'] === form.id)
     if (index !== -1) {
       draggedForms.splice(index, 1, form)

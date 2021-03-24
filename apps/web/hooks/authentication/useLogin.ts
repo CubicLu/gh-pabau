@@ -1,48 +1,41 @@
 import { useEffect, useState } from 'react'
 import jwt from 'jsonwebtoken'
-import { useCookies } from 'react-cookie'
 
 export interface LoginProps {
   user: number
   company: number
-  username?: string
 }
 
 export default function useLogin(registered = false): [boolean, LoginProps] {
-  const [cookie] = useCookies(['user'])
   const [authenticated, authenticate] = useState<boolean>(registered)
   const [user, setUser] = useState<LoginProps | null>(null)
 
-  const decodedValidToken = (needle): LoginProps | void => {
+  const decode: (encodedToken: string) => LoginProps | void = (
+    encodedToken: string
+  ) => {
     try {
-      return jwt.verify(
-        needle,
-        'madskills',
-        function (
-          err: Error,
-          decoded: { user: number; company: number; username: string }
-        ) {
-          return {
-            user: decoded.user,
-            company: decoded.company,
-            username: decoded.username,
-          } as LoginProps
-        }
-      )
-    } catch {
-      throw new Error('Invalid token')
+      const token = jwt.decode(encodedToken, {
+        complete: true,
+        json: true,
+      })
+      return {
+        user: token.user,
+        company: token.company,
+      } as LoginProps
+    } catch (error) {
+      console.log(error)
     }
   }
 
   useEffect(() => {
-    if ({}.propertyIsEnumerable.call(cookie, 'user')) {
-      const currentUser = decodedValidToken(cookie.user)
+    if (typeof window !== 'undefined') {
+      const currentUser = decode(localStorage.getItem('token'))
       if (currentUser) {
         authenticate(true)
         setUser(currentUser)
       }
     }
-  }, [authenticated, cookie])
+  }, [authenticated])
 
   return [authenticated ?? false, user]
 }

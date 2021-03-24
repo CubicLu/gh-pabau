@@ -1,0 +1,38 @@
+{
+    "marketingsource-header-create": {
+      "translation": "Opret en marketingkilde"
+    },
+    "marketingsource-title": {
+      "translation": "Marketingkilder"
+    },
+    "marketingsource-name-textfield": {
+      "translation": "Efternavn"
+    },
+    "marketingsource-name-placeholder": {
+      "translation": "for eksempel. Facebook"
+    },
+    "marketingsource-header-edit": {
+      "translation": "Opret en marketingkilde"
+    },
+    "basic-crud-table-input-search-placeholder": {
+      "translation": "Lede efter"
+    },
+    "basic-crud-table-button-filter": {
+      "translation": "Filtreret"
+    },
+    "basic-crud-table-column--active": {
+      "translation": "Aktiv"
+    },
+    "basic-crud-table-button-active": {
+      "translation": "aktiv"
+    },
+    "basic-crud-table-button-inactive": {
+      "translation": "Inaktiv"
+    },
+    "basic-crud-table-header-button-create": {
+      "translation": "Opret kilde"
+    },
+    "basic-crud-table-header-breadcrumb-setup-link": {
+      "translation": "Installer"
+    }
+  }

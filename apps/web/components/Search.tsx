@@ -4,27 +4,27 @@ import { useLiveQuery, Search as PabauSearch } from '@pabau/ui'
 
 const QUERY = gql`
   query($searchTerm1: String = "", $searchTerm2: String = "") {
-    contacts(
+    cmContacts(
       where: {
-        _or: [
+        OR: [
           {
-            _and: [
-              { first_name: { _ilike: $searchTerm1 } }
-              { last_name: { _ilike: $searchTerm2 } }
+            AND: [
+              { Fname: { equals: $searchTerm1 } }
+              { Fname: { equals: $searchTerm2 } }
             ]
           }
           {
-            _and: [
-              { first_name: { _ilike: $searchTerm2 } }
-              { last_name: { _ilike: $searchTerm1 } }
+            AND: [
+              { Fname: { equals: $searchTerm2 } }
+              { Fname: { equals: $searchTerm1 } }
             ]
           }
         ]
       }
     ) {
-      id
-      first_name
-      last_name
+      ID
+      Fname
+      Lname
     }
   }
 `

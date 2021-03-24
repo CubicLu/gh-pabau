@@ -2,8 +2,10 @@
   "root": true,
   "ignorePatterns": ["**/*"],
   "plugins": ["@nrwl/nx"],
-  "extends": ["plugin:unicorn/recommended"],
+  "extends": ["plugin:unicorn/recommended", "plugin:you-dont-need-lodash-underscore/compatible"],
   "rules": {
+    "id-length": 0,
+    "babel/object-curly-spacing": 0,
     "@typescript-eslint/prefer-optional-chain": ["error"],
     "unicorn/no-abusive-eslint-disable": 0,
     "unicorn/consistent-destructuring": 0,

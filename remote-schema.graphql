@@ -21983,7 +21983,7 @@ type labs_dashboard_variance_fields {
 }
 
 """
-lead view 
+lead view
 
 
 columns and relationships of "lead"

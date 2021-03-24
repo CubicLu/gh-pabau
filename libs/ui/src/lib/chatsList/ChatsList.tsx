@@ -2,7 +2,7 @@ import React, { FC, useState, useEffect } from 'react'
 import classNames from 'classnames'
 import { Badge } from 'antd'
 import { Avatar } from '@pabau/ui'
-
+import { useTranslation } from 'react-i18next'
 import { ReactComponent as MessageRead } from '../../assets/images/message-read.svg'
 import styles from './ChatsList.module.less'
 
@@ -30,7 +30,7 @@ interface P {
 
 export const ChatsList: FC<P> = ({ ...props }) => {
   const { chatMessages, onClick, typingContact } = props
-
+  const { t } = useTranslation('common')
   const [activeIndex, setActiveIndex] = useState<number>(-1)
   const [isTyping, setIsTyping] = useState<number>(-1)
 
@@ -69,7 +69,7 @@ export const ChatsList: FC<P> = ({ ...props }) => {
       {props.isHeaderShow && (
         <div className={classNames(styles.channelsText, styles.channelsHead)}>
           <p className={classNames(styles.grayTextColor, styles.textSm)}>
-            chats
+            {t('chat.chats')}
           </p>
         </div>
       )}
