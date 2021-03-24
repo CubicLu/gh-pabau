@@ -1,22 +1,70 @@
-import React, { FC } from 'react'
-import useLogin from '../hooks/authentication/useLogin'
+import React, { FunctionComponent } from 'react'
 import { gql, useQuery } from '@apollo/client'
 import { UserContext } from '../context/UserContext'
+import { Spin } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
 
-// eslint-disable-next-line
-const CURRENT_USER = gql`  query retrieveAuthenticatedUser($Id: Int!, $CompanyId: Int!) { user(where: { id: $Id }) { username full_name } company(where: { id: $CompanyId }) { details {company_name,language  } }}`
+interface User {
+  id: string
+  username: string
+  full_name: string
+  company: Company
+}
 
-const ContextWrapper: FC = ({ children }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [authenticated, user] = useLogin(false)
-  const { data } = useQuery(CURRENT_USER, {
-    variables: {
-      Id: user?.user ?? null,
-      CompanyId: user?.company ?? null,
-    },
-  })
+interface Company {
+  id: number
+  details: {
+    company_name: string
+    language: string
+  }
+}
 
-  return <UserContext.Provider value={data}>{children}</UserContext.Provider>
+const ContextWrapper: FunctionComponent = ({ children }) => {
+  const { loading, error, data } = useQuery(
+    gql`
+      query retrieveAuthenticatedUser {
+        me {
+          id
+          username
+          full_name
+          company {
+            id
+            details {
+              company_name
+              language
+            }
+          }
+        }
+      }
+    `,
+    { ssr: false }
+  )
+  const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
+
+  if (error) {
+    console.error(error)
+  }
+  if (loading) {
+    return (
+      <Spin
+        style={{
+          position: 'absolute',
+          margin: 'auto',
+          left: '50%',
+          top: '45%',
+          textAlign: 'center',
+        }}
+        size={'large'}
+        delay={0}
+        spinning={true}
+        indicator={antIcon}
+      />
+    )
+  }
+
+  return (
+    <UserContext.Provider value={data as User}>{children}</UserContext.Provider>
+  )
 }
 
 export default ContextWrapper

@@ -2,6 +2,7 @@ import {
   CheckCircleFilled,
   CheckCircleTwoTone,
   EyeInvisibleOutlined,
+  EyeOutlined,
 } from '@ant-design/icons'
 import { Input, Popover } from 'antd'
 import React, { PropsWithChildren, useState } from 'react'
@@ -120,7 +121,9 @@ export function PasswordWithHelper({
       <Input.Password
         value={value}
         placeholder="New password"
-        iconRender={(visible) => <EyeInvisibleOutlined />}
+        iconRender={(visible) =>
+          visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
+        }
         style={{ width: width }}
         onChange={handleChange}
       />

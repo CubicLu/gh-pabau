@@ -9,7 +9,8 @@ import { Button } from '@pabau/ui'
 import styles from './Menu.module.less'
 import classNames from 'classnames'
 import Link from 'next/link'
-import { sidebarMenu } from './SidebarMenu'
+import { sidebarMenu, sidebarTranslations } from './SidebarMenu'
+import { useTranslation } from 'react-i18next'
 const { SubMenu } = AntMenu
 const { Sider } = Layout
 
@@ -19,6 +20,7 @@ interface P {
 }
 
 export const Menu: FC<P> = ({ onSideBarCollapsed, active }) => {
+  const { t } = useTranslation('common')
   const [collapsed, setCollapsed] = useState(true)
   const [openKeys, setOpenKeys] = useState<string[]>([])
   const [selectedKeys, setSelectedKeys] = useState<string[]>([])
@@ -47,7 +49,9 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active }) => {
         )}
         onClick={() => setActive('')}
       >
-        <Link href={path}>{menuName}</Link>
+        <Link href={path}>
+          {t(sidebarTranslations[menuName.toLowerCase().replace(' ', '')])}
+        </Link>
       </AntMenu.Item>
     )
   }
@@ -103,7 +107,11 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active }) => {
             <SubMenu
               key={menuData.menuName + index}
               icon={menuData.icon}
-              title={menuData.menuName}
+              title={t(
+                sidebarTranslations[
+                  menuData.menuName.toLowerCase().replace(' ', '')
+                ]
+              )}
               onTitleClick={onClickMenu}
               className={classNames(
                 styles.sidebarMenu,
@@ -124,7 +132,7 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active }) => {
           )
         })}
         <span>
-          <Tooltip title={collapsed ? 'Setup' : ''} placement="left">
+          <Tooltip title={collapsed ? t('sidebar.setup') : ''} placement="left">
             <div
               className={styles.sidebarBtnAlign}
               onClick={() => setActive('setup')}
@@ -151,7 +159,7 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active }) => {
                     }
                     className={styles.setupBtn}
                   >
-                    Setup
+                    {t('sidebar.setup')}
                   </Button>
                 )}
               </Link>

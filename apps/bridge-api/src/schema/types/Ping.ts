@@ -1,4 +1,4 @@
-import { extendType } from 'nexus';
+import { extendType } from 'nexus'
 
 export const ping = extendType({
   type: 'Query',
@@ -6,8 +6,8 @@ export const ping = extendType({
     t.field('ping', {
       type: 'String',
       async resolve() {
-        return "pong";
+        return 'pong'
       },
-    });
+    })
   },
-});
+})

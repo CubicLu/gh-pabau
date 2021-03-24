@@ -22,17 +22,20 @@ import { ReactComponent as LaunchSVG } from '../../assets/images/launch.svg'
 import { ReactComponent as PABAULOGO } from '../../assets/images/pabaulogo.svg'
 import { ReactComponent as TaskSVG } from '../../assets/images/Vector.svg'
 import styles from './Dropdown.module.less'
+import { useTranslation } from 'react-i18next'
+import Router from 'next/router'
 
 // import { isMobile, isTablet } from 'react-device-detect'
 export interface DropDownInterface {
   isOpen?: boolean
   onCloseDrawer?: () => void
-  data?: { user: UserProps; company: CompanyProps }
+  me?: UserProps
 }
 
 interface UserProps {
   full_name: string
   username?: string
+  company: CompanyProps
   _typename?: string
 }
 
@@ -49,22 +52,22 @@ export const Dropdown: FC<DropDownInterface> = ({
   onCloseDrawer,
   ...rest
 }): JSX.Element => {
+  const { t } = useTranslation('common')
   const [activeMenu, setActiveMenu] = useState('Menu')
-
-  // used for mobile device
   const [openProfileDrawer, setProfileDrawer] = useState(isOpen)
   const [activeMenuTitle, setActiveMenuTitle] = useState('Profile')
-  const data: Pick<
-    DropDownInterface & { children?: React.ReactNode },
-    'data' | 'children'
-  > = rest
+  const { me } = rest
   const [user, setCurrentUser] = useState<UserProps | null>(null)
-  const [company, setCurrentCompany] = useState<CompanyProps | null>(null)
 
   useEffect(() => {
-    setCurrentUser(data['user'])
-    setCurrentCompany(data['company'])
-  }, [data, user, company])
+    setCurrentUser(me ?? null)
+  }, [me])
+
+  async function handleLogOut() {
+    localStorage.removeItem('token')
+    window.location.pathname = '/'
+    await Router.push('/')
+  }
 
   const menu = (
     <Menu className={styles.avatarMenu}>
@@ -75,17 +78,15 @@ export const Dropdown: FC<DropDownInterface> = ({
         <div className={styles.dropdownHeader}>
           <PABAULOGO />
           <span className={styles.headerText}>
-            {company?.details.company_name ?? 'Pabau Clinic Software'}
+            {me?.company?.details.company_name}
           </span>
         </div>
         <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
       <Menu.Item className={styles.userinfo}>
-        <div className={styles.userName}>
-          {user?.full_name ?? 'William Branham'}
-        </div>
+        <div className={styles.userName}>{user?.full_name}</div>
         <div className={styles.userBalance}>
-          <p>Balance</p>
+          <p>{t('avatar.balance')}</p>
           <span>9445,00</span>
         </div>
       </Menu.Item>
@@ -95,7 +96,9 @@ export const Dropdown: FC<DropDownInterface> = ({
         <div className={styles.dropdownHeader}>
           <UserOutlined style={{ color: '#9292A3' }} />
           <Link href="/account/settings">
-            <span className={styles.headerText}>Account Settings</span>
+            <span className={styles.headerText}>
+              {t('avatar.account.settings')}
+            </span>
           </Link>
         </div>
         <LaunchSVG className={styles.launchLogo} />
@@ -107,7 +110,7 @@ export const Dropdown: FC<DropDownInterface> = ({
         <div className={styles.dropdownHeader}>
           <TaskSVG />
           <span className={classNames(styles.headerText, styles.taskText)}>
-            Tasks
+            {t('avatar.tasks')}
           </span>
         </div>
       </Menu.Item>
@@ -117,7 +120,7 @@ export const Dropdown: FC<DropDownInterface> = ({
       >
         <div className={styles.dropdownHeader}>
           <NotificationOutlined className={styles.dropdownIcon} />
-          <span className={styles.headerText}>Give feedback</span>
+          <span className={styles.headerText}>{t('avatar.give.feedback')}</span>
         </div>
         <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
@@ -127,7 +130,7 @@ export const Dropdown: FC<DropDownInterface> = ({
       >
         <div className={styles.dropdownHeader}>
           <QuestionCircleOutlined className={styles.dropdownIcon} />
-          <span className={styles.headerText}>Help & Support</span>
+          <span className={styles.headerText}>{t('avatar.help.support')}</span>
         </div>
         <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
@@ -141,10 +144,10 @@ export const Dropdown: FC<DropDownInterface> = ({
         </div>
         <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
-      <Menu.Item className={styles.dropdownMenu}>
+      <Menu.Item onClick={handleLogOut} className={styles.dropdownMenu}>
         <div className={styles.dropdownHeader}>
           <ExportOutlined className={styles.dropdownIcon} />
-          <span className={styles.headerText}>Log out</span>
+          <span className={styles.headerText}>{t('avatar.logout')}</span>
         </div>
       </Menu.Item>
       <div style={{ marginTop: '8px' }} />
@@ -161,7 +164,9 @@ export const Dropdown: FC<DropDownInterface> = ({
         >
           <div className={styles.subDropdownListHeader}>
             <LeftOutlined className={styles.subLogo} />
-            <span className={styles.subHeaderText}>Select company</span>
+            <span className={styles.subHeaderText}>
+              {t('avatar.change.company')}
+            </span>
           </div>
         </Menu.Item>
         <Menu.Item className={styles.subDropdownList}>
@@ -174,7 +179,7 @@ export const Dropdown: FC<DropDownInterface> = ({
                 styles.activeMenu
               )}
             >
-              {company?.details.company_name ?? 'Pabau Clinic Software'}
+              {me?.company?.details.company_name}
             </span>
           </div>
           <CheckCircleFilled
@@ -196,19 +201,21 @@ export const Dropdown: FC<DropDownInterface> = ({
         >
           <div className={styles.feedbackAlignContent}>
             <LeftOutlined className={styles.subLogo} />
-            <p className={styles.subHeaderText}>Give us feedback</p>
+            <p className={styles.subHeaderText}>
+              {t('avatar.give.feedback.giveus')}
+            </p>
           </div>
         </Menu.Item>
         <Menu.Item className={styles.avatarHelpSubList}>
           <div className={styles.feedbackAlignContent}>
             <InfoCircleOutlined className="" />
-            <span className="">Help us improve Pabau</span>
+            <span className="">{t('avatar.give.feedback.helpus')}</span>
           </div>
         </Menu.Item>
         <Menu.Item className={styles.avatarHelpSubList}>
           <div className={styles.feedbackAlignContent}>
             <ExclamationOutlined className="" />
-            <span className="">Something went wrong</span>
+            <span className="">{t('avatar.give.feedback.somethingwrong')}</span>
           </div>
         </Menu.Item>
         <div style={{ marginTop: '8px' }} />
@@ -226,25 +233,27 @@ export const Dropdown: FC<DropDownInterface> = ({
         >
           <div className={styles.feedbackAlignContent}>
             <LeftOutlined className={styles.subLogo} />
-            <p className={styles.subHeaderText}>Help & Support </p>
+            <p className={styles.subHeaderText}>
+              {t('avatar.help.support.header')}
+            </p>
           </div>
         </Menu.Item>
         <Menu.Item className={styles.avatarHelpSubList}>
           <div className={styles.feedbackAlignContent}>
             <QuestionCircleOutlined className="" />
-            <span className="">Help Centre</span>
+            <span className="">{t('avatar.help.support.centre')}</span>
           </div>
         </Menu.Item>
         <Menu.Item className={styles.avatarHelpSubList}>
           <div className={styles.feedbackAlignContent}>
             <PlaySquareOutlined className="" />
-            <span className="">Video Guides</span>
+            <span className="">{t('avatar.help.video.guides')}</span>
           </div>
         </Menu.Item>
         <Menu.Item className={styles.avatarHelpSubList}>
           <div className={styles.feedbackAlignContent}>
             <ExclamationOutlined className="" />
-            <span className="">Contact Support</span>
+            <span className="">{t('avatar.help.contact.support')}</span>
           </div>
         </Menu.Item>
         <div style={{ marginTop: '8px' }} />
@@ -262,14 +271,20 @@ export const Dropdown: FC<DropDownInterface> = ({
         >
           <div className={styles.langAlignContent}>
             <LeftOutlined className="" />
-            <p className="">Select language </p>
+            <p className="">{t('avatar.select.language')}</p>
           </div>
         </Menu.Item>
         {languageMenu.map((lang, index) => {
           return (
             <Menu.Item key={index} className={styles.languageTextAlign}>
               <div className={styles.languageFlagCenter}>
-                <Image src={lang.logo} alt={lang.label} />
+                <Image
+                  src={lang.logo}
+                  alt={lang.label}
+                  preview={false}
+                  width="16px"
+                  height="16px"
+                />
                 <span className={lang.selected ? styles.activeMenu : undefined}>
                   {lang.label}
                 </span>

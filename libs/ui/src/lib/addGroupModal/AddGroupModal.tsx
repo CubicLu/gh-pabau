@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Input } from 'antd'
 import { Button, BasicModal, Avatar } from '@pabau/ui'
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons'
@@ -27,6 +28,7 @@ interface P {
 }
 
 export const AddGroupModal: FC<P> = ({ ...props }) => {
+  const { t } = useTranslation('common')
   const {
     groupData,
     selectedGroup,
@@ -78,12 +80,12 @@ export const AddGroupModal: FC<P> = ({ ...props }) => {
           size="middle"
           onClick={() => onClick?.()}
         >
-          Add People
+          {t('addgroup.add')}
         </Button>
         <Input
           className={styles.modalSearchInput}
           size="large"
-          placeholder="Search members"
+          placeholder={t('addgroup.input.placeholder')}
           prefix={<SearchOutlined />}
           onChange={handleChange}
         />
@@ -100,7 +102,7 @@ export const AddGroupModal: FC<P> = ({ ...props }) => {
                 <span className={styles.memberName}>{userName}</span>
               </div>
               <Button type="default" size="middle">
-                Remove
+                {t('addgroup.remove')}
               </Button>
             </div>
           ))}
@@ -116,7 +118,7 @@ export const AddGroupModal: FC<P> = ({ ...props }) => {
                 <span className={styles.memberName}>{userName}</span>
               </div>
               <Button type="default" size="middle">
-                Remove
+                {t('addgroup.remove')}
               </Button>
             </div>
           ))}

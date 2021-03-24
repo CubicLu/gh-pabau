@@ -1,6 +1,6 @@
 version: 2
-endpoint: http://localhost:8080
+endpoint: https://api.new.pabau.com
 metadata_directory: metadata
 actions:
   kind: synchronous
-  handler_webhook_baseurl: http://localhost:3000
+  handler_webhook_baseurl: https://api.new.pabau.com

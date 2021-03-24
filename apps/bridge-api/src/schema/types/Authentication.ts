@@ -1,7 +1,7 @@
-import { extendType, nonNull, stringArg } from 'nexus';
-import { AuthenticationService } from "../../app/authentication/AuthenticationService";
-import { Context } from "../../context";
-import { LoginInputDto } from "../../app/authentication/dto";
+import { extendType, nonNull, stringArg } from 'nexus'
+import { AuthenticationService } from '../../app/authentication/AuthenticationService'
+import { Context } from '../../context'
+import { LoginInputDto } from '../../app/authentication/dto'
 
 export const Authentication = extendType({
   type: 'Mutation',
@@ -10,22 +10,40 @@ export const Authentication = extendType({
       type: 'String',
       args: {
         username: nonNull(stringArg()),
-        password: nonNull(stringArg())
+        password: nonNull(stringArg()),
       },
-      async resolve(_root,loginInput:LoginInputDto, ctx:Context) {
-        if(!loginInput.username || !loginInput.password){
-          throw new Error("Malformed Parameters")
+      async resolve(_, loginInput: LoginInputDto, ctx: Context) {
+        if (!loginInput.username || !loginInput.password) {
+          throw new Error('Malformed Parameters')
         }
-        try{
-          const token = new AuthenticationService(ctx, loginInput).handleLoginRequest();
-          ctx.req.session = {
-            jwt: await token
-          }
-          return await token
-        } catch {
-          throw new Error("Unauthorized access")
-        }
+        const token = await new AuthenticationService(ctx).handleLoginRequest(
+          loginInput
+        )
+        return token
       },
-    });
+    })
+    t.field('logout', {
+      type: 'Boolean',
+      args: {},
+      async resolve(_, __, ctx: Context) {
+        return true
+      },
+    })
   },
-});
+})
+
+export const Me = extendType({
+  type: 'Query',
+  definition(t) {
+    t.field('me', {
+      type: 'User',
+      async resolve(_root, _args, ctx) {
+        return ctx.prisma.user.findUnique({
+          where: {
+            id: ctx.req.authenticatedUser.user,
+          },
+        })
+      },
+    })
+  },
+})

@@ -21,7 +21,8 @@ const CheckboxGroup = Checkbox.Group
 const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
   const { fields } = schema
   const { values } = formik
-
+  console.log('formik', formik)
+  console.log('schema', schema)
   return (
     <AntForm layout={layout} requiredMark={false}>
       <Row>
@@ -32,7 +33,8 @@ const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
               {
                 short,
                 shortLower,
-                example,
+                placeholder,
+                tooltip,
                 description,
                 extra,
                 min,
@@ -186,7 +188,7 @@ const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
                         <Input
                           name={name}
                           type={type}
-                          placeholder={example && `eg ${example}`}
+                          placeholder={placeholder}
                           autoFocus={i === 0}
                         />
                       </AntForm.Item>
@@ -201,22 +203,17 @@ const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
                   label={short}
                   name={name}
                   required={!!min}
-                  tooltip={
-                    description &&
-                    `${description} for this ${shortLower}, eg: ${example}`
-                  }
-                  // showValidateSuccess={!!min}
+                  tooltip={tooltip}
                   extra={extra && <div>{extra}</div>}
                 >
                   <Input
-                    //disabled={isSubmitting}
                     name={name}
                     type={type}
                     onChange={(e) => {
                       formik.handleChange(e)
                       formik.setFieldTouched(name, true)
                     }}
-                    placeholder={example && `eg ${example}`}
+                    placeholder={placeholder}
                     autoFocus={i === 0}
                   />
                 </AntForm.Item>

@@ -5,8 +5,8 @@ import {
   MobileOutlined,
 } from '@ant-design/icons'
 import { Passcode, PasswordWithHelper, Button } from '@pabau/ui'
-import { Descriptions, Divider, Form, Input } from 'antd'
-import React, { FC } from 'react'
+import { Descriptions, Divider, Form, Input, Collapse } from 'antd'
+import React, { FC, useState } from 'react'
 
 // const Passcode = dynamic(() => import('../../../components/Passcode'), {
 //   ssr: false,
@@ -17,6 +17,8 @@ import React, { FC } from 'react'
 // })
 
 const Security: FC = () => {
+  const { Panel } = Collapse
+  const [passcode, setPasscode] = useState<string>('')
   return (
     <>
       <Descriptions title="Security">
@@ -33,7 +35,9 @@ const Security: FC = () => {
         <Form.Item label="Old password">
           <Input.Password
             placeholder="Old password"
-            iconRender={(visible) => <EyeOutlined />}
+            iconRender={(visible) =>
+              visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
+            }
           />
         </Form.Item>
         <Form.Item label="New password">
@@ -42,7 +46,9 @@ const Security: FC = () => {
         <Form.Item label="Confirm password">
           <Input.Password
             placeholder="Confirm password"
-            iconRender={(visible) => <EyeInvisibleOutlined />}
+            iconRender={(visible) =>
+              visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
+            }
           />
         </Form.Item>
         <Form.Item>
@@ -58,7 +64,7 @@ const Security: FC = () => {
           </span>
           <br />
           <br />
-          <Passcode />
+          <Passcode text={passcode} onChange={(val) => setPasscode(val)} />
         </Form.Item>
       </Form>
       <Divider />
@@ -110,19 +116,33 @@ const Security: FC = () => {
             </div>
           </div>
           <Divider className="smallDivider" />
-          <div className="whereLoggedIn">
-            <div className="iCon">
-              <MobileOutlined />
-            </div>
-            <div className="whereDescription">
-              <div className="osInfo">iPhone | Bicester, United Kingdom</div>
-              <div className="appInfo">
-                iOS | <span>About an hour ago</span>
+          <Collapse accordion key={'1'} style={{ background: '#fff' }}>
+            <Panel
+              header={
+                <div key={'1'}>
+                  <span>{'Show more'}</span>
+                </div>
+              }
+              key="1"
+              showArrow={false}
+            >
+              <Divider className="smallDivider" />
+              <div className="whereLoggedIn">
+                <div className="iCon">
+                  <MobileOutlined />
+                </div>
+                <div className="whereDescription">
+                  <div className="osInfo">
+                    iPhone | Bicester, United Kingdom
+                  </div>
+                  <div className="appInfo">
+                    iOS | <span>About an hour ago</span>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <Divider className="smallDivider" />
-          <span>Show more</span>
+              <Divider className="smallDivider" />
+            </Panel>
+          </Collapse>
         </Form.Item>
       </Form>
     </>

@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import styles from '../../pages/login.module.less'
-import { Button } from '@pabau/ui'
+import { Button, Notification, NotificationType } from '@pabau/ui'
 import * as Yup from 'yup'
 import { Form, Input, Checkbox, SubmitButton } from 'formik-antd'
 import { Formik } from 'formik'
@@ -8,9 +8,8 @@ import { EyeInvisibleOutlined, LinkedinFilled } from '@ant-design/icons'
 import { ReactComponent as GoogleIcon } from '../../assets/images/google.svg'
 import { ReactComponent as SSOIcon } from '../../assets/images/sso.svg'
 import { gql, useMutation } from '@apollo/client'
-import { useRouter } from 'next/router'
-import { useCookies } from 'react-cookie'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { useRouter } from 'next/router'
 
 export interface LoginFormProps {
   email: string
@@ -21,16 +20,20 @@ export interface LoginFormProps {
 interface LoginProps {
   handlePageShow: (page: string) => void
 }
-// eslint-disable-next-line
-const LOGIN_MUTATION = gql` mutation login($email: String!, $password: String!) { login(username: $email, password: $password) }`
+const LOGIN_MUTATION = gql`
+  mutation login($email: String!, $password: String!) {
+    login(username: $email, password: $password)
+  }
+`
 const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
-  const router = useRouter()
   const [login] = useMutation(LOGIN_MUTATION)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [cookie, setCookie] = useCookies(['user'])
   const { t } = useTranslationI18()
+  const router = useRouter()
 
   const loginHandler = async (loginProps: LoginFormProps): Promise<boolean> => {
+    if (localStorage?.getItem('token')) {
+      localStorage.removeItem('token')
+    }
     const { email, password } = loginProps
     const result = await login({
       variables: {
@@ -41,11 +44,12 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
     if (!result) {
       throw new Error('Wrong user/password')
     }
-    setCookie('user', JSON.stringify(result.data?.login), {
-      path: '/',
-      maxAge: 3600,
-      sameSite: true,
-    })
+    // setCookie('user', JSON.stringify(result.data?.login), {
+    //   path: '/',
+    //   maxAge: 3600,
+    //   sameSite: true,
+    // })
+    localStorage.setItem('token', result.data?.login)
     return true
   }
 
@@ -74,11 +78,13 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
           })}
           onSubmit={async (value: LoginFormProps) => {
             try {
-              if (await loginHandler(value)) {
-                await router.push('/index')
-              }
+              await loginHandler(value)
+              router.reload()
             } catch (error) {
-              console.error(error)
+              if (localStorage?.getItem('token')) {
+                localStorage.removeItem('token')
+              }
+              Notification(NotificationType.error, error.toString())
             }
           }}
           render={() => (

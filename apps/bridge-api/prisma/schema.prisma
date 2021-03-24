@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native"]
 }
 
 datasource db {
@@ -19,7 +20,7 @@ model TwoFactorHistory {
   @@map("2fa_history")
 }
 
-model ThirdPartyAcces {
+model ThirdPartyAccess {
   id           Int     @id @default(autoincrement())
   occupier     Int
   company_id   Int     @map("occupier")
@@ -171,21 +172,33 @@ model AcLogUrl {
 }
 
 model Company {
-  id             Int                  @id @default(autoincrement())
+  id             Int      @id @default(autoincrement())
   user           String
   digit8         Int
   admin          Int
   creation_date  DateTime
   image          String
-  slug           String?              @unique
+  slug           String?  @unique
   remote_url     String?
   remote_connect String?
   cron_enabled   Boolean?
-  details        CompanyDetails?
-  subscription   CompanySubscription?
 
+  details          CompanyDetails?
+  subscription     CompanySubscription?
+  TwoFactorHistory TwoFactorHistory[]
+  ThirdPartyAccess ThirdPartyAccess[]
+  AcceptEmailToken AcceptEmailToken[]
+  AccountBalance   AccountBalance[]
+  MarketingSource  MarketingSource[]
+  CmCase           CmCase[]
+  CmCaseReply      CmCaseReply[]
+  CmCampaign       CmCampaign[]
+  User             User[]
+  Candidate        Candidate[]
+
+  BookingStatus BookingStatus[]
   @@map("admin")
-
+  Salutation Salutation[]
 }
 
 model AdvertCampaign {
@@ -538,7 +551,7 @@ model BlockReason {
   id           Int     @id @default(autoincrement())
   reason_name  String
   occupier     String
-  is_active    Int
+  is_active    Boolean
   block_color  String
   is_paid      Int
   default_time String?
@@ -724,8 +737,11 @@ model BookingStatus {
   company_id  Int
   indicator   booking_statuses_indicator? @default(EMPTY_ENUM_VALUE)
   basic_field Boolean
-  ord         Float
-  track_time  Boolean                     @default(false)
+  ord         Float?
+  track_time  Int                         @default(1)
+  company     Company                     @relation(fields: [company_id], references: [id])
+
+
 
   @@unique([value, company_id], name: "value")
   @@map("booking_statuses")
@@ -897,7 +913,7 @@ model CampaignAttachment {
 
 model CancellationPolicy {
   id                        Int       @id @default(autoincrement())
-  is_active                 Int
+  is_active                 Boolean
   policy_type               Int       @default(0)
   policy_action             Int
   policy_value              Float     @default(0.00)
@@ -915,22 +931,22 @@ model CancellationPolicy {
 }
 
 model MarketingSource {
-  id          Int     @id @default(autoincrement())
-  source_name String
-  company_id  Int     @map("occupier")
-  custom_id   Int
-  public      Int
-  imported    Int
-  company     Company @relation(fields: [company_id], references: [id])
+  id         Int     @id @default(autoincrement())
+  name       String  @map("source_name")
+  company_id Int     @map("occupier")
+  custom_id  Int
+  public     Boolean
+  imported   Int
+  company    Company @relation(fields: [company_id], references: [id])
 
 
   @@index([company_id], name: "company_id")
   @@index([public], name: "public")
-  @@index([source_name], name: "source_name")
+  @@index([name], name: "source_name")
   @@map("marketing_sources")
 }
 
-model MediaLlibraryAttachments {
+model MediaLlibraryAttachment {
   id                      Int      @id @default(autoincrement())
   file_url                String
   company_id              Int
@@ -966,7 +982,7 @@ model CancelReason {
   @@map("cancel_reason")
 }
 
-model candidate {
+model Candidate {
   id               Int      @id @default(autoincrement())
   contact_id       Int
   created_date     DateTime
@@ -980,10 +996,14 @@ model candidate {
   resume           String
   date_available   DateTime
   linkedin         String
-  company_id       Int
+  company_id       Int?
+  company          Company? @relation(fields: [company_id], references: [id])
+
+
+  @@map("candidate")
 }
 
-model CardTypes {
+model CardType {
   id                       Int   @id @default(autoincrement())
   company_id               Int
   mastercard               Int
@@ -1130,7 +1150,7 @@ model ClasstypeMaster {
   @@map("classtype_master")
 }
 
-model ClassCategories {
+model ClassCategory {
   id            Int       @id @default(autoincrement())
   code          String
   name          String
@@ -1181,11 +1201,11 @@ model ClassMaster {
 }
 
 model ClassNotes {
-  id        Int    @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   class_id  Int
   note      String
   author    String
-  public    Int
+  public    Boolean
   avatar    String
   post_date String
 
@@ -3879,8 +3899,8 @@ model CmContact {
 //  attach_name       String
 //  user_id           Int
 //  attachment_type   String
-//  connect_public    Int
-//  website_public    Int
+//  connect_public    Boolean
+//  website_public    Boolean
 //  attachment_title  String
 //  cloud             Boolean @default(false)
 //  custom_id         Int
@@ -3980,8 +4000,8 @@ model CmContact {
 //  date              Int
 //  attach_name       String
 //  attachment_type   String
-//  connect_public    Int
-//  website_public    Int
+//  connect_public    Boolean
+//  website_public    Boolean
 //  attachment_title  String
 //  cloud             Boolean @default(false)
 //  custom_id         Int
@@ -4242,7 +4262,7 @@ model CmContact {
 //  pathway_name      String
 //  company_id        Int
 //  description       String
-//  is_active         Int
+//  is_active         Boolean
 //  order             Int?                @default(0)
 //  cp_pathways_taken cp_pathways_taken[]
 //  cp_steps          cp_steps[]
@@ -4957,16 +4977,20 @@ model CmContact {
 //  value String
 //}
 //
-//model gl_codes {
-//  id          Int                  @id @default(autoincrement())
-//  company_id  Int
-//  code        String
-//  description gl_codes_description
-//  related_to  Int
-//
-//  @@index([company_id], name: "company_id")
-//  @@index([related_to], name: "related_to")
-//}
+model GlCode {
+  id             Int                  @id @default(autoincrement())
+  company_id     Int
+  code           String
+  description    gl_codes_description
+  related_to     Int?
+  InvPaymentType InvPaymentType?      @relation(fields: [related_to], references: [id])
+
+
+  @@index([company_id], name: "company_id")
+  @@index([related_to], name: "related_to")
+  @@map("gl_codes")
+}
+
 //
 //model gocardless_bills {
 //  primary_id         Int    @id @default(autoincrement())
@@ -5928,21 +5952,25 @@ model CmContact {
 //  @@index([custom_insurer_id], name: "custom_insurer_id")
 //}
 //
-//model inv_payment_types {
-//  id            Int       @id @default(autoincrement())
-//  name          String?
-//  epos_display  Int?
-//  description   String?
-//  occupier      Int?
-//  uid           Int?
-//  created_date  DateTime?
-//  modified_date DateTime?
-//  is_active     Int
-//  is_money      Int
-//  type          String    @default("money")
-//
-//  @@index([occupier], name: "occupier")
-//}
+model InvPaymentType {
+  id            Int       @id @default(autoincrement())
+  name          String?
+  epos_display  Int?
+  description   String?
+  company_id    Int       @map("occupier")
+  uid           Int?
+  created_date  DateTime?
+  modified_date DateTime?
+  is_active     Int
+  is_money      Int
+  type          String    @default("money")
+
+
+  GlCode GlCode?
+  @@index([company_id], name: "occupier")
+  @@map("inv_payment_types")
+}
+
 //
 //model inv_products {
 //  id                        Int       @id @default(autoincrement())
@@ -10073,11 +10101,15 @@ model CmContact {
 //  updatedate Int?
 //}
 //
-//model salutations {
-//  id         Int    @id @default(autoincrement())
-//  name       String
-//  company_id Int
-//}
+model Salutation {
+  id         Int      @id @default(autoincrement())
+  name       String
+  company_id Int?
+  Company    Company? @relation(fields: [company_id], references: [id])
+
+  @@map("salutations")
+}
+
 //
 //model scanner_batches {
 //  id            Int      @id @default(autoincrement())
@@ -11087,7 +11119,7 @@ model CmContact {
 //  module_id         Int?
 //  field_name        String?
 //  field_label       String?
-//  is_active         Int?
+//  is_active         Boolean?
 //  is_required       Int
 //  occupier          Int?
 //  uid               Int?
@@ -11579,15 +11611,15 @@ model CmContact {
 //}
 //
 model User {
-  id                             Int                          @id @default(autoincrement())
+  id                             Int                           @id @default(autoincrement())
   username                       String?
   full_name                      String
   password                       String?
-  password_algor                 Int?                         @default(1)
+  password_algor                 Int?                          @default(1)
   salt                           String?
   created                        DateTime?
   last_login                     DateTime?
-  company_id                     Int                          @map("company")
+  company_id                     Int?                          @map("company")
   hash                           String
   email                          String
   admin                          Int
@@ -11619,62 +11651,62 @@ model User {
   last_password_reset            Int
   force_password                 Int
   limited_user                   Int
-  can_void                       Int                          @default(1)
-  can_refund                     Boolean                      @default(true)
-  can_report                     Int                          @default(1)
-  can_rota                       Int                          @default(1)
+  can_void                       Int                           @default(1)
+  can_refund                     Boolean                       @default(true)
+  can_report                     Int                           @default(1)
+  can_rota                       Int                           @default(1)
   staff_read_only                Int
   stock_read_only                Int
-  all_reports                    Int                          @default(1)
+  all_reports                    Int                           @default(1)
   performance_stats              Int
   disable_tutorial               Int
-  all_services                   Int                          @default(1)
-  delete_treatment               Int                          @default(0)
+  all_services                   Int                           @default(1)
+  delete_treatment               Int                           @default(0)
   admin_tasks                    Int
   admin_leads                    Int
   imported                       Int
   login_fail_count               Int
-  can_edit_booking_time          Int                          @default(1)
+  can_edit_booking_time          Int                           @default(1)
   user_color                     String
   disable_multiple_clinics       Int
-  is_hcp                         Int                          @default(0)
+  is_hcp                         Int                           @default(0)
   login_disabled                 Int
-  can_patient_appoint            Int                          @default(1)
-  can_patient_communicatons      Int                          @default(1)
-  can_patient_photos             Int                          @default(1)
-  can_patient_fiancials          Int                          @default(1)
-  can_patient_treatments         Int                          @default(1)
-  can_patient_docs               Int                          @default(1)
-  can_patient_packages           Int                          @default(1)
-  can_patient_prescription       Int                          @default(1)
-  can_patient_consents           Int                          @default(1)
-  can_patient_giftvoucher        Int                          @default(1)
-  can_patient_loyalty            Int                          @default(1)
-  can_patient_recall             Int                          @default(1)
-  can_patient_memberships        Int                          @default(1)
-  can_cancel_booking             Int                          @default(1)
+  can_patient_appoint            Int                           @default(1)
+  can_patient_communicatons      Int                           @default(1)
+  can_patient_photos             Int                           @default(1)
+  can_patient_fiancials          Int                           @default(1)
+  can_patient_treatments         Int                           @default(1)
+  can_patient_docs               Int                           @default(1)
+  can_patient_packages           Int                           @default(1)
+  can_patient_prescription       Int                           @default(1)
+  can_patient_consents           Int                           @default(1)
+  can_patient_giftvoucher        Int                           @default(1)
+  can_patient_loyalty            Int                           @default(1)
+  can_patient_recall             Int                           @default(1)
+  can_patient_memberships        Int                           @default(1)
+  can_cancel_booking             Int                           @default(1)
   notify_on_booking              Boolean
-  can_edit_communications        Boolean                      @default(true)
-  can_delete_communications      Boolean                      @default(true)
-  can_view_full_cal              Boolean                      @default(true)
-  permission_last_role           String                       @default("")
-  can_merge                      Boolean                      @default(true)
-  can_discount                   Int?                         @default(1)
-  can_discount_single            Boolean                      @default(true)
+  can_edit_communications        Boolean                       @default(true)
+  can_delete_communications      Boolean                       @default(true)
+  can_view_full_cal              Boolean                       @default(true)
+  permission_last_role           String                        @default("")
+  can_merge                      Boolean                       @default(true)
+  can_discount                   Int?                          @default(1)
+  can_discount_single            Boolean                       @default(true)
   restored                       Int
   google_auth_secret             String?
   default_contract_id            Int
-  can_see_personal               Int                          @default(1)
-  appear_on_rota                 Int                          @default(1)
-  can_patient_medical_history    Int                          @default(1)
-  can_lab_requests               Boolean                      @default(false)
+  can_see_personal               Int                           @default(1)
+  appear_on_rota                 Int                           @default(1)
+  can_patient_medical_history    Int                           @default(1)
+  can_lab_requests               Boolean                       @default(false)
   detailed_view                  Int
-  can_make_blockout              Int                          @default(1)
-  can_delete_blockout            Int                          @default(1)
-  can_move_blockout              Int                          @default(1)
+  can_make_blockout              Int                           @default(1)
+  can_delete_blockout            Int                           @default(1)
+  can_move_blockout              Int                           @default(1)
   main_contact                   Boolean
-  user_security_questions_answer UserSecurityQuestionsAnser[]
-  company                        Company                      @relation(fields: [company_id], references: [id])
+  user_security_questions_answer UserSecurityQuestionsAnswer[]
+  company                        Company?                      @relation(fields: [company_id], references: [id])
 
 
   @@index([calendar_order], name: "calendar_order")
@@ -12009,7 +12041,7 @@ model User {
 //  last_name     String
 //}
 //
-model UserSecurityQuestionsAnser {
+model UserSecurityQuestionsAnswer {
   id          Int    @id @default(autoincrement())
   user_id     Int
   question    String

@@ -107,25 +107,25 @@
     "marketingsource-input-search": {
         "translation": "Suche"
     },
-    "marketingsource-input-search-placeholder": {
+    "basic-crud-table-input-search-placeholder": {
         "translation": "Suche"
     },
-    "marketingsource-button-filter": {
+    "basic-crud-table-button-filter": {
         "translation": "Filter"
     },
-    "marketingsource-tableColumn-active": {
+    "basic-crud-table-column--active": {
         "translation": "Aktiv"
     },
-    "marketingsource-tableRow-active-btn": {
+    "basic-crud-table-button-active": {
         "translation": "Aktiv"
     },
-    "marketingsource-tableRow-inActive-btn": {
+    "basic-crud-table-button-inactive": {
         "translation": "Inaktiv"
     },
-    "marketingsource-header-create-btn": {
+    "basic-crud-table-header-button-create": {
         "translation": "Quelle erstellen"
     },
-    "marketingsource-header-breadcrumb-setup-link": {
+    "basic-crud-table-header-breadcrumb-setup-link": {
         "translation": "Einrichten"
     }
 }
