@@ -80,7 +80,14 @@ export const Index: FC = () => {
   const onSearch = () => {
     return
   }
-  const [paginateData, setPaginateData] = useState({
+  const [paginateCoursesData, setPaginateCoursesData] = useState({
+    total: 0,
+    offset: 0,
+    limit: 50,
+    currentPage: 1,
+    showingRecords: 0,
+  })
+  const [paginatePackagesData, setPaginatePackagesData] = useState({
     total: 0,
     offset: 0,
     limit: 50,
@@ -96,9 +103,22 @@ export const Index: FC = () => {
   ] = useState<InitialCoursesProps>(coursesFormikInitialValue)
   const [employeeListData, setEmployeeListData] = useState(employeeList)
 
-  const onPaginationChange = (currentPage) => {
-    const offset = paginateData.limit * (currentPage - 1)
-    setPaginateData({ ...paginateData, offset, currentPage: currentPage })
+  const onPaginationCoursesChange = (currentPage) => {
+    const offset = paginateCoursesData.limit * (currentPage - 1)
+    setPaginateCoursesData({
+      ...paginateCoursesData,
+      offset,
+      currentPage: currentPage,
+    })
+  }
+
+  const onPaginationPackageChange = (currentPage) => {
+    const offset = paginatePackagesData.limit * (currentPage - 1)
+    setPaginatePackagesData({
+      ...paginatePackagesData,
+      offset,
+      currentPage: currentPage,
+    })
   }
 
   const handleTab = (val) => {
@@ -187,10 +207,16 @@ export const Index: FC = () => {
                 total={coursesData.length}
                 defaultPageSize={50}
                 showSizeChanger={false}
-                onChange={onPaginationChange}
+                onChange={onPaginationCoursesChange}
                 pageSize={50}
                 current={1}
                 showingRecords={coursesData.length}
+                onPageSizeChange={(pageSize) => {
+                  setPaginateCoursesData({
+                    ...paginateCoursesData,
+                    limit: pageSize,
+                  })
+                }}
               />
             </div>
             <div className={styles.headerZIndex}>
@@ -208,10 +234,16 @@ export const Index: FC = () => {
                 total={packageData.length}
                 defaultPageSize={50}
                 showSizeChanger={false}
-                onChange={onPaginationChange}
+                onChange={onPaginationPackageChange}
                 pageSize={50}
                 current={1}
                 showingRecords={packageData.length}
+                onPageSizeChange={(pageSize) => {
+                  setPaginatePackagesData({
+                    ...paginatePackagesData,
+                    limit: pageSize,
+                  })
+                }}
               />
             </div>
           </TabbedTable>
