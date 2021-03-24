@@ -24,7 +24,7 @@ const Appearance: FC<P> = ({
     handleChange('appearance', { featureList: data })
   }
 
-  const renderContent = (): JSX.Element => {
+  const RenderContent = (): JSX.Element => {
     return (
       <div className={styles.appearanceContainer}>
         {featureList?.map(({ key, value, checked }) => (
@@ -50,8 +50,9 @@ const Appearance: FC<P> = ({
       description={
         'Choose to hide specific features from the point of sale. Don’t sell gift cards? -No problem, just go ahead and switch it off.'
       }
-      bodyContent={renderContent()}
-    />
+    >
+      <RenderContent />
+    </GeneralLayout>
   )
 }
 
