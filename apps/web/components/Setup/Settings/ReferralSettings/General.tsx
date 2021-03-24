@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 
-import { HelpTooltip, InputNumber } from '@pabau/ui'
+import { HelpTooltip, InputNumber, SimpleDropdown } from '@pabau/ui'
 
 import styles from './common.module.less'
 import {
@@ -17,7 +17,7 @@ interface P {
 }
 
 const General: FC<P> = ({
-  generalObj: { inputList },
+  generalObj: { inputList, dropdownList },
   values,
   setFieldValue,
   errors,
@@ -28,6 +28,20 @@ const General: FC<P> = ({
         <p>Referral configuration</p>
         <span>Configure key information about your referral system.</span>
       </div>
+      {dropdownList?.map(({ key, id, label, value, options, helpText }) => (
+        <div
+          key={`general-dropdown-list-${key}`}
+          className={styles.generalDropdownList}
+        >
+          <SimpleDropdown
+            label={label}
+            tooltip={helpText}
+            value={value}
+            dropdownItems={options}
+            onSelected={(val) => setFieldValue(id, val)}
+          />
+        </div>
+      ))}
       {inputList?.map(({ key, name, label, helpText, showCurrency }) => (
         <div
           key={`general-input-list-${key}`}
