@@ -7,12 +7,22 @@ interface Input {
   showCurrency?: boolean
 }
 
+interface Dropdown {
+  key: number
+  id: string
+  label: string
+  value?: string
+  options: Array<string>
+  helpText?: string
+}
+
 export interface GeneralReferralConfig {
   inputList: Array<Input>
+  dropdownList: Array<Dropdown>
 }
 
 export interface ReferralObjProp {
-  reward: number
-  refereeReward: number
+  reward: string
+  refereeReward: string
   expiryDays: number
 }
