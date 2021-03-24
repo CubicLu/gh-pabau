@@ -9,8 +9,9 @@
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   background: white;
   width: 440px;
-  //min-height: 442px;
-
+  @media screen and (max-width: 767px) {
+    width: 100%;
+  }
   &.gift-voucher {
     display: flex;
     position: relative;

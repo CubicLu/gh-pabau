@@ -142,9 +142,12 @@
       }
     }
     .preview-card {
-      //width: 440px;
       min-width: 440px;
       height: auto;
+      @media screen and (max-width: 767px) {
+        min-width: unset;
+        width: 100%;
+      }
     }
 
     .previewSms {
