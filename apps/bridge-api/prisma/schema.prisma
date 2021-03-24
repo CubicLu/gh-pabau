@@ -196,9 +196,15 @@ model Company {
   User             User[]
   Candidate        Candidate[]
 
-  BookingStatus BookingStatus[]
+  BookingStatus    BookingStatus[]
+  Salutation       Salutation[]
+  Job              Job[]
+  JobConfiguration JobConfiguration[]
+  JobOpening       JobOpening[]
+  JobStatus        JobStatus[]
   @@map("admin")
-  Salutation Salutation[]
+  CompanyDepartment  CompanyDepartment[]
+  PointOfSaleSetting PointOfSaleSetting[]
 }
 
 model AdvertCampaign {
@@ -3331,11 +3337,16 @@ model CmContact {
 //  @@unique([branch_id, key], name: "branch_id")
 //}
 //
-//model company_departments {
-//  id         Int    @id @default(autoincrement())
-//  company    Int
-//  department String
-//}
+model CompanyDepartment {
+  id         Int     @id @default(autoincrement())
+  company_id Int     @map("company")
+  department String
+  Company    Company @relation(fields: [company_id], references: [id])
+
+
+  @@map("company_departments")
+}
+
 //model company_emails {
 //  company_id       Int
 //  company_email    String
@@ -6783,71 +6794,84 @@ model InvPaymentType {
 //  raised_by_invoice_id Int
 //}
 //
-//model jobs {
-//  job_id            Int      @id @default(autoincrement())
-//  create_date       DateTime
-//  created_by_id     Int
-//  start_date        DateTime
-//  closing_date      DateTime
-//  opening_title     String
-//  job_location      String
-//  what_you_do       String
-//  is_closed         Int
-//  department        String
-//  job_country       String
-//  opening_job_blurb String
-//  employment_type   String
-//  company_id        Int
-//  experience        String
-//}
-//
-//model job_configuration {
-//  id             Int    @id @default(autoincrement())
-//  company_id     Int
-//  about_us       String
-//  color_scheme   String
-//  opening_blurb  String
-//  page_title     String
-//  first_name     String
-//  last_name      String
-//  email          String
-//  dob            String
-//  phone          String
-//  address        String
-//  city           String
-//  postal         String
-//  country        String
-//  cover_letter   String
-//  resume         String
-//  date_available String
-//  linkedin       String
-//  reference      String
-//  how_did_hear   String
-//  who_referred   String
-//  default_reply  String
-//}
-//
-//model job_openings {
-//  openingid      Int    @id @default(autoincrement())
-//  opening_title  String
-//  hiring_manager String
-//  start_date     String
-//  end_date       String
-//  status         String
-//  published      Int
-//  occupier       Int
-//  description    String
-//  attached_forms Int
-//  created_date   String
-//}
-//
-//model job_status {
-//  id         Int    @id @default(autoincrement())
-//  company_id Int
-//  name       String
-//  status     Int
-//  order      Int
-//}
+model Job {
+  job_id            Int      @id @default(autoincrement())
+  create_date       DateTime
+  created_by_id     Int
+  start_date        DateTime
+  closing_date      DateTime
+  opening_title     String
+  job_location      String
+  what_you_do       String
+  is_closed         Boolean
+  department        String
+  job_country       String
+  opening_job_blurb String
+  employment_type   String
+  company_id        Int
+  experience        String
+  Company           Company  @relation(fields: [company_id], references: [id])
+
+  @@map("jobs")
+}
+
+model JobConfiguration {
+  id             Int     @id @default(autoincrement())
+  company_id     Int
+  about_us       String
+  color_scheme   String
+  opening_blurb  String
+  page_title     String
+  first_name     String
+  last_name      String
+  email          String
+  dob            String
+  phone          String
+  address        String
+  city           String
+  postal         String
+  country        String
+  cover_letter   String
+  resume         String
+  date_available String
+  linkedin       String
+  reference      String
+  how_did_hear   String
+  who_referred   String
+  default_reply  String
+  Company        Company @relation(fields: [company_id], references: [id])
+
+  @@map("job_configuration")
+}
+
+model JobOpening {
+  openingid      Int     @id @default(autoincrement())
+  opening_title  String
+  hiring_manager String
+  start_date     String
+  end_date       String
+  status         String
+  published      Int
+  company_id     Int     @map("occupier")
+  description    String
+  attached_forms Int
+  created_date   String
+  Company        Company @relation(fields: [company_id], references: [id])
+
+  @@map("job_openings")
+}
+
+model JobStatus {
+  id         Int     @id @default(autoincrement())
+  company_id Int
+  name       String
+  status     Boolean
+  order      Int
+  Company    Company @relation(fields: [company_id], references: [id])
+
+  @@map("job_status")
+}
+
 //
 //model jw_aesthetic_contacts {
 //  id         Int @id @default(autoincrement())
@@ -8255,12 +8279,12 @@ model InvPaymentType {
 //  purchase_order_approval_email Int
 //}
 //
-//model nws_campaign {
-//  campaign_id   Int      @id @default(autoincrement())
-//  campaign_name String
-//  create_date   DateTime
-//  company       Int
-//}
+model nws_campaign {
+  campaign_id   Int      @id @default(autoincrement())
+  campaign_name String
+  create_date   DateTime
+  company       Int
+}
 //
 //model nws_campaign_member {
 //  id                    Int @id @default(autoincrement())
@@ -8270,8 +8294,8 @@ model InvPaymentType {
 //  join_time             Int
 //  company               Int
 //
-//  @@index([campaign_id, member_id], name: "campaign_id")
-//}
+  @@index([campaign_id, member_id], name: "campaign_id")
+}
 //
 //model nws_campaign_newsletter {
 //  id            Int @id @default(autoincrement())
@@ -8663,55 +8687,60 @@ model InvPaymentType {
 //  count       Int
 //}
 //
-//model pabau_pos_settings {
-//  id                      Int       @id @default(autoincrement())
-//  company_id              Int
-//  disable_service         Int
-//  disable_products        Int
-//  disable_packages        Int
-//  disable_giftcards       Int
-//  disable_account         Int
-//  disable_price_override  Int
-//  print_mode              String    @default("receipt")
-//  disable_discount        Int
-//  email_receipt_text      String
-//  theme_col               String
-//  bank_account            String
-//  bank_number             String
-//  sort_code               String
-//  bank_name               String
-//  iban                    String
-//  swift                   String
-//  cashup_settings         Int
-//  default_payment_type    String
-//  disable_loyalty         Int
-//  email_receipt_template  Int
-//  enable_bank_details     Int
-//  vat                     String
-//  enable_biller_settings  Int
-//  display_taxes           Int
-//  use_pabau_id            Int
-//  starting_invoice_number Int       @default(1)
-//  enable_next_appointment Int
-//  show_paid_label         Int
-//  paid_label              String
-//  display_quantity        Int
-//  display_unit_cost       Int
-//  logo_position           String    @default("left")
-//  force_discount_reason   Boolean   @default(false)
-//  automatic_booking       Int
-//  gift_msg_template_id    Int
-//  gift_sms_template_id    Int
-//  package_use_by_date     Int?
-//  locked                  Int
-//  cron_day                Int?      @default(1)
-//  lock_sale_date          DateTime?
-//  stock_mode              Int
-//  inv_template            String?
-//  lock_invoice_edit       Int
-//
-//  @@index([company_id], name: "company_id")
-//}
+model PointOfSaleSetting {
+
+  id                      Int       @id @default(autoincrement())
+  company_id              Int
+  disable_service         Int
+  disable_products        Int
+  disable_packages        Int
+  disable_giftcards       Int
+  disable_account         Int
+  disable_price_override  Int
+  print_mode              String    @default("receipt")
+  disable_discount        Int
+  email_receipt_text      String
+  theme_col               String
+  bank_account            String
+  bank_number             String
+  sort_code               String
+  bank_name               String
+  iban                    String
+  swift                   String
+  cashup_settings         Int
+  default_payment_type    String
+  disable_loyalty         Int
+  email_receipt_template  Int
+  enable_bank_details     Int
+  vat                     String
+  enable_biller_settings  Int
+  display_taxes           Int
+  use_pabau_id            Int
+  starting_invoice_number Int       @default(1)
+  enable_next_appointment Int
+  show_paid_label         Int
+  paid_label              String
+  display_quantity        Int
+  display_unit_cost       Int
+  logo_position           String    @default("left")
+  force_discount_reason   Boolean   @default(false)
+  automatic_booking       Int
+  gift_msg_template_id    Int
+  gift_sms_template_id    Int
+  package_use_by_date     Int?
+  locked                  Int
+  cron_day                Int?      @default(1)
+  lock_sale_date          DateTime?
+  stock_mode              Int
+  inv_template            String?
+  lock_invoice_edit       Int
+  Company                 Company   @relation(fields: [company_id], references: [id])
+
+
+  @@index([company_id], name: "company_id")
+  @@map("pabau_pos_settings")
+}
+
 //
 //model pabau_shortener {
 //  id            Int    @id @default(autoincrement())

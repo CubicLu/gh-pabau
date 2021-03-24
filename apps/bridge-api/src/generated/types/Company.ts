@@ -27,6 +27,12 @@ export const Company = objectType({
     t.model.Candidate()
     t.model.BookingStatus()
     t.model.Salutation()
+    t.model.Job()
+    t.model.JobConfiguration()
+    t.model.JobOpening()
+    t.model.JobStatus()
+    t.model.CompanyDepartment()
+    t.model.PointOfSaleSetting()
   },
 })
 

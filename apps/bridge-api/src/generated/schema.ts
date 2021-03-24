@@ -146,6 +146,12 @@ export interface Company {
   Candidate?: Candidate[];
   BookingStatus?: BookingStatus[];
   Salutation?: Salutation[];
+  Job?: Job[];
+  JobConfiguration?: JobConfiguration[];
+  JobOpening?: JobOpening[];
+  JobStatus?: JobStatus[];
+  CompanyDepartment?: CompanyDepartment[];
+  PointOfSaleSetting?: PointOfSaleSetting[];
 }
 
 export interface AdvertCampaign {
@@ -1434,6 +1440,13 @@ export interface CmContact {
   contact_type: number;
 }
 
+export interface CompanyDepartment {
+  id: number;
+  company_id: number;
+  department: string;
+  Company: Company;
+}
+
 export interface GlCode {
   id: number;
   company_id: number;
@@ -1456,6 +1469,125 @@ export interface InvPaymentType {
   is_money: number;
   type: string;
   GlCode?: GlCode;
+}
+
+export interface Job {
+  job_id: number;
+  create_date: Date;
+  created_by_id: number;
+  start_date: Date;
+  closing_date: Date;
+  opening_title: string;
+  job_location: string;
+  what_you_do: string;
+  is_closed: boolean;
+  department: string;
+  job_country: string;
+  opening_job_blurb: string;
+  employment_type: string;
+  company_id: number;
+  experience: string;
+  Company: Company;
+}
+
+export interface JobConfiguration {
+  id: number;
+  company_id: number;
+  about_us: string;
+  color_scheme: string;
+  opening_blurb: string;
+  page_title: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  dob: string;
+  phone: string;
+  address: string;
+  city: string;
+  postal: string;
+  country: string;
+  cover_letter: string;
+  resume: string;
+  date_available: string;
+  linkedin: string;
+  reference: string;
+  how_did_hear: string;
+  who_referred: string;
+  default_reply: string;
+  Company: Company;
+}
+
+export interface JobOpening {
+  openingid: number;
+  opening_title: string;
+  hiring_manager: string;
+  start_date: string;
+  end_date: string;
+  status: string;
+  published: number;
+  company_id: number;
+  description: string;
+  attached_forms: number;
+  created_date: string;
+  Company: Company;
+}
+
+export interface JobStatus {
+  id: number;
+  company_id: number;
+  name: string;
+  status: boolean;
+  order: number;
+  Company: Company;
+}
+
+export interface PointOfSaleSetting {
+  id: number;
+  company_id: number;
+  disable_service: number;
+  disable_products: number;
+  disable_packages: number;
+  disable_giftcards: number;
+  disable_account: number;
+  disable_price_override: number;
+  print_mode: string;
+  disable_discount: number;
+  email_receipt_text: string;
+  theme_col: string;
+  bank_account: string;
+  bank_number: string;
+  sort_code: string;
+  bank_name: string;
+  iban: string;
+  swift: string;
+  cashup_settings: number;
+  default_payment_type: string;
+  disable_loyalty: number;
+  email_receipt_template: number;
+  enable_bank_details: number;
+  vat: string;
+  enable_biller_settings: number;
+  display_taxes: number;
+  use_pabau_id: number;
+  starting_invoice_number: number;
+  enable_next_appointment: number;
+  show_paid_label: number;
+  paid_label: string;
+  display_quantity: number;
+  display_unit_cost: number;
+  logo_position: string;
+  force_discount_reason: boolean;
+  automatic_booking: number;
+  gift_msg_template_id: number;
+  gift_sms_template_id: number;
+  package_use_by_date?: number;
+  locked: number;
+  cron_day?: number;
+  lock_sale_date?: Date;
+  stock_mode: number;
+  inv_template?: string;
+  lock_invoice_edit: number;
+  Company: Company;
 }
 
 export interface Salutation {
