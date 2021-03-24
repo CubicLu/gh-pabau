@@ -42,6 +42,9 @@ echo "-----------------"
 
 yarn nx build backend
 build_output_path="dist/apps/backend"
+cp "${VERCEL_JSON_LOCATION}/package.prod.json" "${build_output_path}/package.json"
+cp "${build_output_path}/main.js" "${build_output_path}/server.js"
+rm "${build_output_path}/main.js.map"
 
 if [ -z "${BITBUCKET_PR_ID}" ]; then
 
