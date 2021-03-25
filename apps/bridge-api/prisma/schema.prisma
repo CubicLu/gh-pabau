@@ -181,7 +181,6 @@ model Company {
   remote_url     String?
   remote_connect String?
   cron_enabled   Boolean?
-
   details          CompanyDetails?
   subscription     CompanySubscription?
   TwoFactorHistory TwoFactorHistory[]
@@ -194,15 +193,20 @@ model Company {
   CmCampaign       CmCampaign[]
   User             User[]
   Candidate        Candidate[]
-
-  BookingStatus    BookingStatus[]
-  Salutation    Salutation[]
-  @@map("admin")
+  BookingStatus      BookingStatus[]
+  Salutation         Salutation[]
   CompanyBranch      CompanyBranch[]
   CompanyLocation    CompanyLocation[]
   CompanyRoom        CompanyRoom[]
   CompanyRoomService CompanyRoomService[]
   CompanyService     CompanyService[]
+  CompanyDepartment  CompanyDepartment[]
+  Job                Job[]
+  JobConfiguration   JobConfiguration[]
+  JobOpening         JobOpening[]
+  JobStatus          JobStatus[]
+  PointOfSaleSetting PointOfSaleSetting[]
+  @@map("admin")
 }
 
 model AdvertCampaign {
@@ -732,7 +736,6 @@ model BookingMaster {
 }
 
 model BookingStatus {
-
   id          Int                         @id @default(autoincrement())
   name        String
   value       String
@@ -743,7 +746,7 @@ model BookingStatus {
   basic_field Boolean
   ord         Float?
   track_time  Int                         @default(1)
-  company     Company                     @relation(fields: [company_id], references: [id])
+  Company     Company                     @relation(fields: [company_id], references: [id])
 
 
 
@@ -3296,10 +3299,10 @@ model CompanyBranch {
   notice              String?
   Company             Company @relation(fields: [company_id], references: [id])
 
+  CompanyRoomLocation CompanyRoomLocation[]
   @@index([company_id], name: "company_id")
   @@index([group_id], name: "group_id")
   @@map("company_branches")
-  CompanyRoomLocation CompanyRoomLocation[]
 }
 
 //
@@ -3518,10 +3521,10 @@ model CompanyRoom {
   custom_id     String
   Company       Company @relation(fields: [company_id], references: [id])
 
-  @@index([company_id], name: "company")
-  @@map("company_rooms")
   CompanyRoomLocation CompanyRoomLocation[]
   CompanyRoomService  CompanyRoomService[]
+  @@index([company_id], name: "company")
+  @@map("company_rooms")
 }
 
 model CompanyRoomLocation {
@@ -3599,13 +3602,13 @@ model CompanyService {
   Company                Company                           @relation(fields: [company_id], references: [id])
 
 
+  CompanyRoomService CompanyRoomService[]
   @@index([company_id], name: "company_index")
   @@index([group_id], name: "group_index")
   @@index([pos_only], name: "pos_only")
   @@index([product_id], name: "product_index")
   @@index([service], name: "service")
   @@map("company_services")
-  CompanyRoomService CompanyRoomService[]
 }
 
 //
@@ -8301,12 +8304,13 @@ model JobStatus {
 //  purchase_order_approval_email Int
 //}
 //
-model nws_campaign {
-  campaign_id   Int      @id @default(autoincrement())
-  campaign_name String
-  create_date   DateTime
-  company       Int
-}
+//model nws_campaign {
+//  campaign_id   Int      @id @default(autoincrement())
+//  campaign_name String
+//  create_date   DateTime
+//  company       Int
+//}
+
 //
 //model nws_campaign_member {
 //  id                    Int @id @default(autoincrement())
@@ -8316,8 +8320,8 @@ model nws_campaign {
 //  join_time             Int
 //  company               Int
 //
-  @@index([campaign_id, member_id], name: "campaign_id")
-}
+//  @@index([campaign_id, member_id], name: "campaign_id")
+//}
 //
 //model nws_campaign_newsletter {
 //  id            Int @id @default(autoincrement())

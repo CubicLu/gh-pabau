@@ -145,17 +145,17 @@ export interface Company {
   Candidate?: Candidate[];
   BookingStatus?: BookingStatus[];
   Salutation?: Salutation[];
-  Job?: Job[];
-  JobConfiguration?: JobConfiguration[];
-  JobOpening?: JobOpening[];
-  JobStatus?: JobStatus[];
-  CompanyDepartment?: CompanyDepartment[];
-  PointOfSaleSetting?: PointOfSaleSetting[];
   CompanyBranch?: CompanyBranch[];
   CompanyLocation?: CompanyLocation[];
   CompanyRoom?: CompanyRoom[];
   CompanyRoomService?: CompanyRoomService[];
   CompanyService?: CompanyService[];
+  CompanyDepartment?: CompanyDepartment[];
+  Job?: Job[];
+  JobConfiguration?: JobConfiguration[];
+  JobOpening?: JobOpening[];
+  JobStatus?: JobStatus[];
+  PointOfSaleSetting?: PointOfSaleSetting[];
 }
 
 export interface AdvertCampaign {
@@ -1444,13 +1444,6 @@ export interface CmContact {
   contact_type: number;
 }
 
-export interface CompanyDepartment {
-  id: number;
-  company_id: number;
-  department: string;
-  Company: Company;
-}
-
 export interface CompanyBranch {
   id: number;
   group_id: number;
@@ -1482,6 +1475,13 @@ export interface CompanyBranch {
   notice?: string;
   Company: Company;
   CompanyRoomLocation?: CompanyRoomLocation[];
+}
+
+export interface CompanyDepartment {
+  id: number;
+  company_id: number;
+  department: string;
+  Company: Company;
 }
 
 export interface CompanyLocation {

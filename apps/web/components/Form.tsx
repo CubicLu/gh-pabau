@@ -21,8 +21,6 @@ const CheckboxGroup = Checkbox.Group
 const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
   const { fields } = schema
   const { values } = formik
-  console.log('formik', formik)
-  console.log('schema', schema)
   return (
     <AntForm layout={layout} requiredMark={false}>
       <Row>

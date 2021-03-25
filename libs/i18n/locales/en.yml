@@ -231,6 +231,7 @@ en:
     common-label-create: Create
     common-label-cancel: Cancel
     common-label-save: Save
+    common-label-apply: Apply
     common-label-delete-warning: 'will be deleted. This action is irreversible'
     webinar-header-recomended-webinar: 'Recommended Webinar'
     intercom-title-type-article: Article
