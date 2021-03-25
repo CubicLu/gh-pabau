@@ -4161,8 +4161,8 @@ export interface NexusGenInputs {
     id?: number | null; // Int
   }
   BookingStatusCreateInput: { // input type
+    Company: NexusGenInputs['CompanyCreateNestedOneWithoutBookingStatusInput']; // CompanyCreateNestedOneWithoutBookingStatusInput!
     basic_field: boolean; // Boolean!
-    company: NexusGenInputs['CompanyCreateNestedOneWithoutBookingStatusInput']; // CompanyCreateNestedOneWithoutBookingStatusInput!
     icon: string; // String!
     icon_color: string; // String!
     indicator?: NexusGenEnums['booking_statuses_indicator'] | null; // booking_statuses_indicator
@@ -4196,8 +4196,8 @@ export interface NexusGenInputs {
     some?: NexusGenInputs['BookingStatusWhereInput'] | null; // BookingStatusWhereInput
   }
   BookingStatusOrderByInput: { // input type
+    Company?: NexusGenInputs['CompanyOrderByInput'] | null; // CompanyOrderByInput
     basic_field?: NexusGenEnums['SortOrder'] | null; // SortOrder
-    company?: NexusGenInputs['CompanyOrderByInput'] | null; // CompanyOrderByInput
     company_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
     icon?: NexusGenEnums['SortOrder'] | null; // SortOrder
     icon_color?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -4310,8 +4310,8 @@ export interface NexusGenInputs {
     value?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
   }
   BookingStatusUpdateInput: { // input type
+    Company?: NexusGenInputs['CompanyUpdateOneRequiredWithoutBookingStatusInput'] | null; // CompanyUpdateOneRequiredWithoutBookingStatusInput
     basic_field?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
-    company?: NexusGenInputs['CompanyUpdateOneRequiredWithoutBookingStatusInput'] | null; // CompanyUpdateOneRequiredWithoutBookingStatusInput
     icon?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     icon_color?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     indicator?: NexusGenInputs['NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput'] | null; // NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput
@@ -4371,10 +4371,10 @@ export interface NexusGenInputs {
   }
   BookingStatusWhereInput: { // input type
     AND?: Array<NexusGenInputs['BookingStatusWhereInput'] | null> | null; // [BookingStatusWhereInput]
+    Company?: NexusGenInputs['CompanyWhereInput'] | null; // CompanyWhereInput
     NOT?: Array<NexusGenInputs['BookingStatusWhereInput'] | null> | null; // [BookingStatusWhereInput]
     OR?: Array<NexusGenInputs['BookingStatusWhereInput'] | null> | null; // [BookingStatusWhereInput]
     basic_field?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
-    company?: NexusGenInputs['CompanyWhereInput'] | null; // CompanyWhereInput
     company_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     icon?: NexusGenInputs['StringFilter'] | null; // StringFilter
     icon_color?: NexusGenInputs['StringFilter'] | null; // StringFilter
@@ -4397,6 +4397,7 @@ export interface NexusGenInputs {
     booking_emails: string; // String!
     class_columns: string; // String!
     classes_email_confirm: number; // Int!
+    company_id: number; // Int!
     connect_url?: string | null; // String
     consultations_only?: boolean | null; // Boolean
     coupon_active: number; // Int!
@@ -4426,7 +4427,6 @@ export interface NexusGenInputs {
     interval?: number | null; // Int
     new_stripe?: number | null; // Int
     no_vat_prices?: boolean | null; // Boolean
-    occupier: string; // String!
     offline_message: string; // String!
     one_touch_book?: boolean | null; // Boolean
     online_color: string; // String!
@@ -4464,6 +4464,7 @@ export interface NexusGenInputs {
     booking_emails?: NexusGenEnums['SortOrder'] | null; // SortOrder
     class_columns?: NexusGenEnums['SortOrder'] | null; // SortOrder
     classes_email_confirm?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    company_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
     connect_url?: NexusGenEnums['SortOrder'] | null; // SortOrder
     consultations_only?: NexusGenEnums['SortOrder'] | null; // SortOrder
     coupon_active?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -4494,7 +4495,6 @@ export interface NexusGenInputs {
     interval?: NexusGenEnums['SortOrder'] | null; // SortOrder
     new_stripe?: NexusGenEnums['SortOrder'] | null; // SortOrder
     no_vat_prices?: NexusGenEnums['SortOrder'] | null; // SortOrder
-    occupier?: NexusGenEnums['SortOrder'] | null; // SortOrder
     offline_message?: NexusGenEnums['SortOrder'] | null; // SortOrder
     one_touch_book?: NexusGenEnums['SortOrder'] | null; // SortOrder
     online_color?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -4532,6 +4532,7 @@ export interface NexusGenInputs {
     booking_emails: string; // String!
     class_columns: string; // String!
     classes_email_confirm: number; // Int!
+    company_id: number; // Int!
     connect_url?: string | null; // String
     consultations_only?: boolean | null; // Boolean
     coupon_active: number; // Int!
@@ -4562,7 +4563,6 @@ export interface NexusGenInputs {
     interval?: number | null; // Int
     new_stripe?: number | null; // Int
     no_vat_prices?: boolean | null; // Boolean
-    occupier: string; // String!
     offline_message: string; // String!
     one_touch_book?: boolean | null; // Boolean
     online_color: string; // String!
@@ -4600,6 +4600,7 @@ export interface NexusGenInputs {
     booking_emails?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     class_columns?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     classes_email_confirm?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     connect_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     consultations_only?: NexusGenInputs['NullableBoolFieldUpdateOperationsInput'] | null; // NullableBoolFieldUpdateOperationsInput
     coupon_active?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -4630,7 +4631,6 @@ export interface NexusGenInputs {
     interval?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     new_stripe?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     no_vat_prices?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
-    occupier?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     offline_message?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     one_touch_book?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
     online_color?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
@@ -4668,6 +4668,7 @@ export interface NexusGenInputs {
     booking_emails?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     class_columns?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     classes_email_confirm?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     connect_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     consultations_only?: NexusGenInputs['NullableBoolFieldUpdateOperationsInput'] | null; // NullableBoolFieldUpdateOperationsInput
     coupon_active?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -4698,7 +4699,6 @@ export interface NexusGenInputs {
     interval?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     new_stripe?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     no_vat_prices?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
-    occupier?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     offline_message?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     one_touch_book?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
     online_color?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
@@ -4736,6 +4736,7 @@ export interface NexusGenInputs {
     booking_emails?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     class_columns?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     classes_email_confirm?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     connect_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     consultations_only?: NexusGenInputs['NullableBoolFieldUpdateOperationsInput'] | null; // NullableBoolFieldUpdateOperationsInput
     coupon_active?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -4765,7 +4766,6 @@ export interface NexusGenInputs {
     interval?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     new_stripe?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     no_vat_prices?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
-    occupier?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     offline_message?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     one_touch_book?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
     online_color?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
@@ -4803,6 +4803,7 @@ export interface NexusGenInputs {
     booking_emails?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     class_columns?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     classes_email_confirm?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
+    company_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     connect_url?: NexusGenInputs['NullableStringFieldUpdateOperationsInput'] | null; // NullableStringFieldUpdateOperationsInput
     consultations_only?: NexusGenInputs['NullableBoolFieldUpdateOperationsInput'] | null; // NullableBoolFieldUpdateOperationsInput
     coupon_active?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -4832,7 +4833,6 @@ export interface NexusGenInputs {
     interval?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     new_stripe?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     no_vat_prices?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
-    occupier?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     offline_message?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     one_touch_book?: NexusGenInputs['BoolFieldUpdateOperationsInput'] | null; // BoolFieldUpdateOperationsInput
     online_color?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
@@ -4873,6 +4873,7 @@ export interface NexusGenInputs {
     booking_emails?: NexusGenInputs['StringFilter'] | null; // StringFilter
     class_columns?: NexusGenInputs['StringFilter'] | null; // StringFilter
     classes_email_confirm?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    company_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     connect_url?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     consultations_only?: NexusGenInputs['BoolNullableFilter'] | null; // BoolNullableFilter
     coupon_active?: NexusGenInputs['IntFilter'] | null; // IntFilter
@@ -4903,7 +4904,6 @@ export interface NexusGenInputs {
     interval?: NexusGenInputs['IntFilter'] | null; // IntFilter
     new_stripe?: NexusGenInputs['IntFilter'] | null; // IntFilter
     no_vat_prices?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
-    occupier?: NexusGenInputs['StringFilter'] | null; // StringFilter
     offline_message?: NexusGenInputs['StringFilter'] | null; // StringFilter
     one_touch_book?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
     online_color?: NexusGenInputs['StringFilter'] | null; // StringFilter
@@ -25127,7 +25127,7 @@ export interface NexusGenEnums {
   BookingSettingScalarFieldEnum: "allow_overlapping_appts" | "appt_body" | "appt_head" | "arrived_color" | "attach_invoice" | "auto_cal" | "auto_con" | "auto_email" | "auto_sms" | "booking_emails" | "cancel_email_from" | "cancel_email_notify" | "cancel_email_tmpl" | "cancel_sms_from" | "cancel_sms_notify" | "cancel_sms_tmpl" | "class_noshow_email_notify" | "class_noshow_email_tmpl" | "class_noshow_sms_notify" | "class_noshow_sms_tmpl" | "class_reminder_email_notify" | "class_reminder_email_tmpl" | "class_reminder_sms_notify" | "class_reminder_sms_tmpl" | "class_reschedule_email_notify" | "class_reschedule_email_tmpl" | "class_reschedule_sms_notify" | "class_reschedule_sms_tmpl" | "class_sms_days_before" | "class_sms_send_time" | "column_total" | "complete_color" | "conference_reminder_id" | "confirm_fromemail" | "days_before" | "disable_book_by_package" | "disable_ics" | "disable_second_cal" | "disable_service_filter" | "disable_surname" | "disable_time" | "email_confirm_id" | "email_id" | "email_mode" | "email_reminder_id" | "end_time" | "feedback_days_after" | "feedback_fromemail" | "feedback_id" | "feedback_mode" | "feedback_send_time" | "font_color" | "font_size" | "group_booking_cancel_email_enable" | "group_booking_cancel_template_id" | "group_booking_change_email_enable" | "group_booking_change_template_id" | "holiday_default" | "holiday_per_month" | "holiday_reset_date" | "holiday_usual_day" | "id" | "initials" | "location_support" | "lock_timer" | "modified_by" | "modified_date" | "noshow_count" | "noshow_email_from" | "noshow_email_notify" | "noshow_email_tmpl" | "noshow_sms_from" | "noshow_sms_notify" | "noshow_sms_tmpl" | "occupier" | "package_used_email_enable" | "package_used_template_id" | "reminder_fromemail" | "reminder_mode" | "reschedule_email_from" | "reschedule_email_notify" | "reschedule_email_tmpl" | "reschedule_sms_from" | "reschedule_sms_notify" | "reschedule_sms_tmpl" | "room_support" | "send_email" | "send_feedback" | "send_reminder" | "send_sms" | "send_time" | "slot_interval" | "sms_confirm_id" | "sms_days_before" | "sms_from" | "sms_id" | "sms_mode" | "sms_name" | "sms_send_time" | "start_time" | "tooltip_body" | "tooltip_head"
   BookingStatusChangeScalarFieldEnum: "booking_id" | "company_id" | "end_date" | "id" | "start_date" | "status" | "user_id"
   BookingStatusScalarFieldEnum: "basic_field" | "company_id" | "icon" | "icon_color" | "id" | "indicator" | "name" | "ord" | "track_time" | "value"
-  BookitProGeneralScalarFieldEnum: "account_deposit" | "advance_time" | "allow_cancel" | "allow_rating" | "booking_emails" | "class_columns" | "classes_email_confirm" | "connect_url" | "consultations_only" | "coupon_active" | "create_invoice" | "default_payment" | "deposit" | "disable_extra_information" | "disable_facebook" | "disable_locations" | "disable_reviews" | "doc_shared_template" | "enable_bookings" | "enable_master_cat" | "enable_payments" | "enable_title" | "fb_code" | "fb_event" | "force_new_existing_patient" | "ga_analytics" | "gc_private_key" | "gc_public_key" | "group_by_region" | "gt_manager" | "header_color" | "hide_facebook_share" | "id" | "integration_method" | "interval" | "new_stripe" | "no_vat_prices" | "occupier" | "offline_message" | "one_touch_book" | "online_color" | "only_existing" | "payment_api_url" | "paypal_address" | "promo_codes" | "reccuring_search_btn" | "receive_email" | "redirect_url" | "registration_optional" | "replace_job_titles" | "rolling_deposit" | "sage_password" | "sage_username" | "sage_vendor" | "show_cat_photos" | "show_description" | "show_duration" | "show_prices" | "stripe_fee" | "stripe_private_key" | "stripe_public_key" | "stripe_reciever" | "terms_conditions" | "theme" | "use_new_connect" | "warning_message"
+  BookitProGeneralScalarFieldEnum: "account_deposit" | "advance_time" | "allow_cancel" | "allow_rating" | "booking_emails" | "class_columns" | "classes_email_confirm" | "company_id" | "connect_url" | "consultations_only" | "coupon_active" | "create_invoice" | "default_payment" | "deposit" | "disable_extra_information" | "disable_facebook" | "disable_locations" | "disable_reviews" | "doc_shared_template" | "enable_bookings" | "enable_master_cat" | "enable_payments" | "enable_title" | "fb_code" | "fb_event" | "force_new_existing_patient" | "ga_analytics" | "gc_private_key" | "gc_public_key" | "group_by_region" | "gt_manager" | "header_color" | "hide_facebook_share" | "id" | "integration_method" | "interval" | "new_stripe" | "no_vat_prices" | "offline_message" | "one_touch_book" | "online_color" | "only_existing" | "payment_api_url" | "paypal_address" | "promo_codes" | "reccuring_search_btn" | "receive_email" | "redirect_url" | "registration_optional" | "replace_job_titles" | "rolling_deposit" | "sage_password" | "sage_username" | "sage_vendor" | "show_cat_photos" | "show_description" | "show_duration" | "show_prices" | "stripe_fee" | "stripe_private_key" | "stripe_public_key" | "stripe_reciever" | "terms_conditions" | "theme" | "use_new_connect" | "warning_message"
   BookitProSliderScalarFieldEnum: "id" | "occupier" | "slider1" | "slider2" | "slider3" | "slider4"
   BookmarkedPageScalarFieldEnum: "companyid" | "icon" | "id" | "link" | "title" | "uid"
   BugLogScalarFieldEnum: "bug_message" | "datetime" | "id" | "related_id" | "uid"
@@ -28591,6 +28591,7 @@ export interface NexusGenObjects {
     booking_emails: string; // String!
     class_columns: string; // String!
     classes_email_confirm: number; // Int!
+    company_id: number; // Int!
     connect_url?: string | null; // String
     consultations_only?: boolean | null; // Boolean
     coupon_active: number; // Int!
@@ -28621,7 +28622,6 @@ export interface NexusGenObjects {
     interval: number; // Int!
     new_stripe: number; // Int!
     no_vat_prices: boolean; // Boolean!
-    occupier: string; // String!
     offline_message: string; // String!
     one_touch_book: boolean; // Boolean!
     online_color: string; // String!
@@ -28655,6 +28655,7 @@ export interface NexusGenObjects {
     account_deposit: number; // Float!
     allow_cancel: number; // Float!
     classes_email_confirm: number; // Float!
+    company_id: number; // Float!
     coupon_active: number; // Float!
     deposit: number; // Float!
     disable_extra_information: number; // Float!
@@ -28683,6 +28684,7 @@ export interface NexusGenObjects {
     booking_emails?: number | null; // Int
     class_columns?: number | null; // Int
     classes_email_confirm: number; // Int!
+    company_id: number; // Int!
     connect_url?: number | null; // Int
     consultations_only?: number | null; // Int
     coupon_active: number; // Int!
@@ -28713,7 +28715,6 @@ export interface NexusGenObjects {
     interval: number; // Int!
     new_stripe: number; // Int!
     no_vat_prices?: number | null; // Int
-    occupier?: number | null; // Int
     offline_message?: number | null; // Int
     one_touch_book?: number | null; // Int
     online_color?: number | null; // Int
@@ -28751,6 +28752,7 @@ export interface NexusGenObjects {
     booking_emails?: string | null; // String
     class_columns?: string | null; // String
     classes_email_confirm: number; // Int!
+    company_id: number; // Int!
     connect_url?: string | null; // String
     consultations_only?: boolean | null; // Boolean
     coupon_active: number; // Int!
@@ -28781,7 +28783,6 @@ export interface NexusGenObjects {
     interval: number; // Int!
     new_stripe: number; // Int!
     no_vat_prices?: boolean | null; // Boolean
-    occupier?: string | null; // String
     offline_message?: string | null; // String
     one_touch_book?: boolean | null; // Boolean
     online_color?: string | null; // String
@@ -28819,6 +28820,7 @@ export interface NexusGenObjects {
     booking_emails?: string | null; // String
     class_columns?: string | null; // String
     classes_email_confirm: number; // Int!
+    company_id: number; // Int!
     connect_url?: string | null; // String
     consultations_only?: boolean | null; // Boolean
     coupon_active: number; // Int!
@@ -28849,7 +28851,6 @@ export interface NexusGenObjects {
     interval: number; // Int!
     new_stripe: number; // Int!
     no_vat_prices?: boolean | null; // Boolean
-    occupier?: string | null; // String
     offline_message?: string | null; // String
     one_touch_book?: boolean | null; // Boolean
     online_color?: string | null; // String
@@ -28883,6 +28884,7 @@ export interface NexusGenObjects {
     account_deposit: number; // Float!
     allow_cancel: number; // Int!
     classes_email_confirm: number; // Int!
+    company_id: number; // Int!
     coupon_active: number; // Int!
     deposit: number; // Float!
     disable_extra_information: number; // Int!
@@ -37965,8 +37967,8 @@ export interface NexusGenFieldTypes {
     sms_mode: number; // Int!
   }
   BookingStatus: { // field return type
+    Company: NexusGenRootTypes['Company']; // Company!
     basic_field: boolean; // Boolean!
-    company: NexusGenRootTypes['Company']; // Company!
     company_id: number; // Int!
     icon: string; // String!
     icon_color: string; // String!
@@ -38083,6 +38085,7 @@ export interface NexusGenFieldTypes {
     booking_emails: string; // String!
     class_columns: string; // String!
     classes_email_confirm: number; // Int!
+    company_id: number; // Int!
     connect_url: string | null; // String
     consultations_only: boolean | null; // Boolean
     coupon_active: number; // Int!
@@ -38113,7 +38116,6 @@ export interface NexusGenFieldTypes {
     interval: number; // Int!
     new_stripe: number; // Int!
     no_vat_prices: boolean; // Boolean!
-    occupier: string; // String!
     offline_message: string; // String!
     one_touch_book: boolean; // Boolean!
     online_color: string; // String!
@@ -38147,6 +38149,7 @@ export interface NexusGenFieldTypes {
     account_deposit: number; // Float!
     allow_cancel: number; // Float!
     classes_email_confirm: number; // Float!
+    company_id: number; // Float!
     coupon_active: number; // Float!
     deposit: number; // Float!
     disable_extra_information: number; // Float!
@@ -38175,6 +38178,7 @@ export interface NexusGenFieldTypes {
     booking_emails: number | null; // Int
     class_columns: number | null; // Int
     classes_email_confirm: number; // Int!
+    company_id: number; // Int!
     connect_url: number | null; // Int
     consultations_only: number | null; // Int
     coupon_active: number; // Int!
@@ -38205,7 +38209,6 @@ export interface NexusGenFieldTypes {
     interval: number; // Int!
     new_stripe: number; // Int!
     no_vat_prices: number | null; // Int
-    occupier: number | null; // Int
     offline_message: number | null; // Int
     one_touch_book: number | null; // Int
     online_color: number | null; // Int
@@ -38243,6 +38246,7 @@ export interface NexusGenFieldTypes {
     booking_emails: string | null; // String
     class_columns: string | null; // String
     classes_email_confirm: number; // Int!
+    company_id: number; // Int!
     connect_url: string | null; // String
     consultations_only: boolean | null; // Boolean
     coupon_active: number; // Int!
@@ -38273,7 +38277,6 @@ export interface NexusGenFieldTypes {
     interval: number; // Int!
     new_stripe: number; // Int!
     no_vat_prices: boolean | null; // Boolean
-    occupier: string | null; // String
     offline_message: string | null; // String
     one_touch_book: boolean | null; // Boolean
     online_color: string | null; // String
@@ -38311,6 +38314,7 @@ export interface NexusGenFieldTypes {
     booking_emails: string | null; // String
     class_columns: string | null; // String
     classes_email_confirm: number; // Int!
+    company_id: number; // Int!
     connect_url: string | null; // String
     consultations_only: boolean | null; // Boolean
     coupon_active: number; // Int!
@@ -38341,7 +38345,6 @@ export interface NexusGenFieldTypes {
     interval: number; // Int!
     new_stripe: number; // Int!
     no_vat_prices: boolean | null; // Boolean
-    occupier: string | null; // String
     offline_message: string | null; // String
     one_touch_book: boolean | null; // Boolean
     online_color: string | null; // String
@@ -38375,6 +38378,7 @@ export interface NexusGenFieldTypes {
     account_deposit: number; // Float!
     allow_cancel: number; // Int!
     classes_email_confirm: number; // Int!
+    company_id: number; // Int!
     coupon_active: number; // Int!
     deposit: number; // Float!
     disable_extra_information: number; // Int!
@@ -48598,8 +48602,8 @@ export interface NexusGenFieldTypeNames {
     sms_mode: 'Int'
   }
   BookingStatus: { // field return type name
+    Company: 'Company'
     basic_field: 'Boolean'
-    company: 'Company'
     company_id: 'Int'
     icon: 'String'
     icon_color: 'String'
@@ -48716,6 +48720,7 @@ export interface NexusGenFieldTypeNames {
     booking_emails: 'String'
     class_columns: 'String'
     classes_email_confirm: 'Int'
+    company_id: 'Int'
     connect_url: 'String'
     consultations_only: 'Boolean'
     coupon_active: 'Int'
@@ -48746,7 +48751,6 @@ export interface NexusGenFieldTypeNames {
     interval: 'Int'
     new_stripe: 'Int'
     no_vat_prices: 'Boolean'
-    occupier: 'String'
     offline_message: 'String'
     one_touch_book: 'Boolean'
     online_color: 'String'
@@ -48780,6 +48784,7 @@ export interface NexusGenFieldTypeNames {
     account_deposit: 'Float'
     allow_cancel: 'Float'
     classes_email_confirm: 'Float'
+    company_id: 'Float'
     coupon_active: 'Float'
     deposit: 'Float'
     disable_extra_information: 'Float'
@@ -48808,6 +48813,7 @@ export interface NexusGenFieldTypeNames {
     booking_emails: 'Int'
     class_columns: 'Int'
     classes_email_confirm: 'Int'
+    company_id: 'Int'
     connect_url: 'Int'
     consultations_only: 'Int'
     coupon_active: 'Int'
@@ -48838,7 +48844,6 @@ export interface NexusGenFieldTypeNames {
     interval: 'Int'
     new_stripe: 'Int'
     no_vat_prices: 'Int'
-    occupier: 'Int'
     offline_message: 'Int'
     one_touch_book: 'Int'
     online_color: 'Int'
@@ -48876,6 +48881,7 @@ export interface NexusGenFieldTypeNames {
     booking_emails: 'String'
     class_columns: 'String'
     classes_email_confirm: 'Int'
+    company_id: 'Int'
     connect_url: 'String'
     consultations_only: 'Boolean'
     coupon_active: 'Int'
@@ -48906,7 +48912,6 @@ export interface NexusGenFieldTypeNames {
     interval: 'Int'
     new_stripe: 'Int'
     no_vat_prices: 'Boolean'
-    occupier: 'String'
     offline_message: 'String'
     one_touch_book: 'Boolean'
     online_color: 'String'
@@ -48944,6 +48949,7 @@ export interface NexusGenFieldTypeNames {
     booking_emails: 'String'
     class_columns: 'String'
     classes_email_confirm: 'Int'
+    company_id: 'Int'
     connect_url: 'String'
     consultations_only: 'Boolean'
     coupon_active: 'Int'
@@ -48974,7 +48980,6 @@ export interface NexusGenFieldTypeNames {
     interval: 'Int'
     new_stripe: 'Int'
     no_vat_prices: 'Boolean'
-    occupier: 'String'
     offline_message: 'String'
     one_touch_book: 'Boolean'
     online_color: 'String'
@@ -49008,6 +49013,7 @@ export interface NexusGenFieldTypeNames {
     account_deposit: 'Float'
     allow_cancel: 'Int'
     classes_email_confirm: 'Int'
+    company_id: 'Int'
     coupon_active: 'Int'
     deposit: 'Float'
     disable_extra_information: 'Int'

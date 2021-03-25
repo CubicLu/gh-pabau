@@ -4,7 +4,7 @@ export const BookitProGeneral = objectType({
   name: 'BookitProGeneral',
   definition(t) {
     t.model.id()
-    t.model.occupier()
+    t.model.company_id()
     t.model.advance_time()
     t.model.enable_payments()
     t.model.paypal_address()

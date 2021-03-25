@@ -588,7 +588,7 @@ export interface BookingStatus {
   basic_field: boolean;
   ord?: number;
   track_time: number;
-  company: Company;
+  Company: Company;
 }
 
 export interface BookingStatusChange {
@@ -603,7 +603,7 @@ export interface BookingStatusChange {
 
 export interface BookitProGeneral {
   id: number;
-  occupier: string;
+  company_id: string;
   advance_time: string;
   enable_payments: string;
   paypal_address: string;

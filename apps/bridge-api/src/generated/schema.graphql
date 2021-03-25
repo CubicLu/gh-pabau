@@ -8487,8 +8487,8 @@ input BookingSettingWhereUniqueInput {
 }
 
 type BookingStatus {
+  Company: Company!
   basic_field: Boolean!
-  company: Company!
   company_id: Int!
   icon: String!
   icon_color: String!
@@ -8671,8 +8671,8 @@ type BookingStatusCountAggregateOutputType {
 }
 
 input BookingStatusCreateInput {
+  Company: CompanyCreateNestedOneWithoutBookingStatusInput!
   basic_field: Boolean!
-  company: CompanyCreateNestedOneWithoutBookingStatusInput!
   icon: String!
   icon_color: String!
   indicator: booking_statuses_indicator
@@ -8737,8 +8737,8 @@ type BookingStatusMinAggregateOutputType {
 }
 
 input BookingStatusOrderByInput {
+  Company: CompanyOrderByInput
   basic_field: SortOrder
-  company: CompanyOrderByInput
   company_id: SortOrder
   icon: SortOrder
   icon_color: SortOrder
@@ -8881,8 +8881,8 @@ input BookingStatusUncheckedUpdateWithoutCompanyInput {
 }
 
 input BookingStatusUpdateInput {
+  Company: CompanyUpdateOneRequiredWithoutBookingStatusInput
   basic_field: BoolFieldUpdateOperationsInput
-  company: CompanyUpdateOneRequiredWithoutBookingStatusInput
   icon: StringFieldUpdateOperationsInput
   icon_color: StringFieldUpdateOperationsInput
   indicator: NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput
@@ -8950,10 +8950,10 @@ input BookingStatusValueCompoundUniqueInput {
 
 input BookingStatusWhereInput {
   AND: [BookingStatusWhereInput]
+  Company: CompanyWhereInput
   NOT: [BookingStatusWhereInput]
   OR: [BookingStatusWhereInput]
   basic_field: BoolFilter
-  company: CompanyWhereInput
   company_id: IntFilter
   icon: StringFilter
   icon_color: StringFilter
@@ -8978,6 +8978,7 @@ type BookitProGeneral {
   booking_emails: String!
   class_columns: String!
   classes_email_confirm: Int!
+  company_id: Int!
   connect_url: String
   consultations_only: Boolean
   coupon_active: Int!
@@ -9008,7 +9009,6 @@ type BookitProGeneral {
   interval: Int!
   new_stripe: Int!
   no_vat_prices: Boolean!
-  occupier: String!
   offline_message: String!
   one_touch_book: Boolean!
   online_color: String!
@@ -9043,6 +9043,7 @@ type BookitProGeneralAvgAggregateOutputType {
   account_deposit: Float!
   allow_cancel: Float!
   classes_email_confirm: Float!
+  company_id: Float!
   coupon_active: Float!
   deposit: Float!
   disable_extra_information: Float!
@@ -9072,6 +9073,7 @@ type BookitProGeneralCountAggregateOutputType {
   booking_emails: Int
   class_columns: Int
   classes_email_confirm: Int!
+  company_id: Int!
   connect_url: Int
   consultations_only: Int
   coupon_active: Int!
@@ -9102,7 +9104,6 @@ type BookitProGeneralCountAggregateOutputType {
   interval: Int!
   new_stripe: Int!
   no_vat_prices: Int
-  occupier: Int
   offline_message: Int
   one_touch_book: Int
   online_color: Int
@@ -9141,6 +9142,7 @@ input BookitProGeneralCreateInput {
   booking_emails: String!
   class_columns: String!
   classes_email_confirm: Int!
+  company_id: Int!
   connect_url: String
   consultations_only: Boolean
   coupon_active: Int!
@@ -9170,7 +9172,6 @@ input BookitProGeneralCreateInput {
   interval: Int
   new_stripe: Int
   no_vat_prices: Boolean
-  occupier: String!
   offline_message: String!
   one_touch_book: Boolean
   online_color: String!
@@ -9209,6 +9210,7 @@ type BookitProGeneralMaxAggregateOutputType {
   booking_emails: String
   class_columns: String
   classes_email_confirm: Int!
+  company_id: Int!
   connect_url: String
   consultations_only: Boolean
   coupon_active: Int!
@@ -9239,7 +9241,6 @@ type BookitProGeneralMaxAggregateOutputType {
   interval: Int!
   new_stripe: Int!
   no_vat_prices: Boolean
-  occupier: String
   offline_message: String
   one_touch_book: Boolean
   online_color: String
@@ -9278,6 +9279,7 @@ type BookitProGeneralMinAggregateOutputType {
   booking_emails: String
   class_columns: String
   classes_email_confirm: Int!
+  company_id: Int!
   connect_url: String
   consultations_only: Boolean
   coupon_active: Int!
@@ -9308,7 +9310,6 @@ type BookitProGeneralMinAggregateOutputType {
   interval: Int!
   new_stripe: Int!
   no_vat_prices: Boolean
-  occupier: String
   offline_message: String
   one_touch_book: Boolean
   online_color: String
@@ -9347,6 +9348,7 @@ input BookitProGeneralOrderByInput {
   booking_emails: SortOrder
   class_columns: SortOrder
   classes_email_confirm: SortOrder
+  company_id: SortOrder
   connect_url: SortOrder
   consultations_only: SortOrder
   coupon_active: SortOrder
@@ -9377,7 +9379,6 @@ input BookitProGeneralOrderByInput {
   interval: SortOrder
   new_stripe: SortOrder
   no_vat_prices: SortOrder
-  occupier: SortOrder
   offline_message: SortOrder
   one_touch_book: SortOrder
   online_color: SortOrder
@@ -9416,6 +9417,7 @@ enum BookitProGeneralScalarFieldEnum {
   booking_emails
   class_columns
   classes_email_confirm
+  company_id
   connect_url
   consultations_only
   coupon_active
@@ -9446,7 +9448,6 @@ enum BookitProGeneralScalarFieldEnum {
   interval
   new_stripe
   no_vat_prices
-  occupier
   offline_message
   one_touch_book
   online_color
@@ -9481,6 +9482,7 @@ type BookitProGeneralSumAggregateOutputType {
   account_deposit: Float!
   allow_cancel: Int!
   classes_email_confirm: Int!
+  company_id: Int!
   coupon_active: Int!
   deposit: Float!
   disable_extra_information: Int!
@@ -9509,6 +9511,7 @@ input BookitProGeneralUncheckedCreateInput {
   booking_emails: String!
   class_columns: String!
   classes_email_confirm: Int!
+  company_id: Int!
   connect_url: String
   consultations_only: Boolean
   coupon_active: Int!
@@ -9539,7 +9542,6 @@ input BookitProGeneralUncheckedCreateInput {
   interval: Int
   new_stripe: Int
   no_vat_prices: Boolean
-  occupier: String!
   offline_message: String!
   one_touch_book: Boolean
   online_color: String!
@@ -9578,6 +9580,7 @@ input BookitProGeneralUncheckedUpdateInput {
   booking_emails: StringFieldUpdateOperationsInput
   class_columns: StringFieldUpdateOperationsInput
   classes_email_confirm: IntFieldUpdateOperationsInput
+  company_id: IntFieldUpdateOperationsInput
   connect_url: NullableStringFieldUpdateOperationsInput
   consultations_only: NullableBoolFieldUpdateOperationsInput
   coupon_active: IntFieldUpdateOperationsInput
@@ -9608,7 +9611,6 @@ input BookitProGeneralUncheckedUpdateInput {
   interval: IntFieldUpdateOperationsInput
   new_stripe: IntFieldUpdateOperationsInput
   no_vat_prices: BoolFieldUpdateOperationsInput
-  occupier: StringFieldUpdateOperationsInput
   offline_message: StringFieldUpdateOperationsInput
   one_touch_book: BoolFieldUpdateOperationsInput
   online_color: StringFieldUpdateOperationsInput
@@ -9647,6 +9649,7 @@ input BookitProGeneralUncheckedUpdateManyInput {
   booking_emails: StringFieldUpdateOperationsInput
   class_columns: StringFieldUpdateOperationsInput
   classes_email_confirm: IntFieldUpdateOperationsInput
+  company_id: IntFieldUpdateOperationsInput
   connect_url: NullableStringFieldUpdateOperationsInput
   consultations_only: NullableBoolFieldUpdateOperationsInput
   coupon_active: IntFieldUpdateOperationsInput
@@ -9677,7 +9680,6 @@ input BookitProGeneralUncheckedUpdateManyInput {
   interval: IntFieldUpdateOperationsInput
   new_stripe: IntFieldUpdateOperationsInput
   no_vat_prices: BoolFieldUpdateOperationsInput
-  occupier: StringFieldUpdateOperationsInput
   offline_message: StringFieldUpdateOperationsInput
   one_touch_book: BoolFieldUpdateOperationsInput
   online_color: StringFieldUpdateOperationsInput
@@ -9716,6 +9718,7 @@ input BookitProGeneralUpdateInput {
   booking_emails: StringFieldUpdateOperationsInput
   class_columns: StringFieldUpdateOperationsInput
   classes_email_confirm: IntFieldUpdateOperationsInput
+  company_id: IntFieldUpdateOperationsInput
   connect_url: NullableStringFieldUpdateOperationsInput
   consultations_only: NullableBoolFieldUpdateOperationsInput
   coupon_active: IntFieldUpdateOperationsInput
@@ -9745,7 +9748,6 @@ input BookitProGeneralUpdateInput {
   interval: IntFieldUpdateOperationsInput
   new_stripe: IntFieldUpdateOperationsInput
   no_vat_prices: BoolFieldUpdateOperationsInput
-  occupier: StringFieldUpdateOperationsInput
   offline_message: StringFieldUpdateOperationsInput
   one_touch_book: BoolFieldUpdateOperationsInput
   online_color: StringFieldUpdateOperationsInput
@@ -9784,6 +9786,7 @@ input BookitProGeneralUpdateManyMutationInput {
   booking_emails: StringFieldUpdateOperationsInput
   class_columns: StringFieldUpdateOperationsInput
   classes_email_confirm: IntFieldUpdateOperationsInput
+  company_id: IntFieldUpdateOperationsInput
   connect_url: NullableStringFieldUpdateOperationsInput
   consultations_only: NullableBoolFieldUpdateOperationsInput
   coupon_active: IntFieldUpdateOperationsInput
@@ -9813,7 +9816,6 @@ input BookitProGeneralUpdateManyMutationInput {
   interval: IntFieldUpdateOperationsInput
   new_stripe: IntFieldUpdateOperationsInput
   no_vat_prices: BoolFieldUpdateOperationsInput
-  occupier: StringFieldUpdateOperationsInput
   offline_message: StringFieldUpdateOperationsInput
   one_touch_book: BoolFieldUpdateOperationsInput
   online_color: StringFieldUpdateOperationsInput
@@ -9855,6 +9857,7 @@ input BookitProGeneralWhereInput {
   booking_emails: StringFilter
   class_columns: StringFilter
   classes_email_confirm: IntFilter
+  company_id: IntFilter
   connect_url: StringNullableFilter
   consultations_only: BoolNullableFilter
   coupon_active: IntFilter
@@ -9885,7 +9888,6 @@ input BookitProGeneralWhereInput {
   interval: IntFilter
   new_stripe: IntFilter
   no_vat_prices: BoolFilter
-  occupier: StringFilter
   offline_message: StringFilter
   one_touch_book: BoolFilter
   online_color: StringFilter

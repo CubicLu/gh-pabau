@@ -171,28 +171,28 @@ model AcLogUrl {
 }
 
 model Company {
-  id             Int      @id @default(autoincrement())
-  user           String
-  digit8         Int
-  admin          Int
-  creation_date  DateTime
-  image          String
-  slug           String?  @unique
-  remote_url     String?
-  remote_connect String?
-  cron_enabled   Boolean?
-  details          CompanyDetails?
-  subscription     CompanySubscription?
-  TwoFactorHistory TwoFactorHistory[]
-  ThirdPartyAccess ThirdPartyAccess[]
-  AcceptEmailToken AcceptEmailToken[]
-  AccountBalance   AccountBalance[]
-  MarketingSource  MarketingSource[]
-  CmCase           CmCase[]
-  CmCaseReply      CmCaseReply[]
-  CmCampaign       CmCampaign[]
-  User             User[]
-  Candidate        Candidate[]
+  id                 Int                  @id @default(autoincrement())
+  user               String
+  digit8             Int
+  admin              Int
+  creation_date      DateTime
+  image              String
+  slug               String?              @unique
+  remote_url         String?
+  remote_connect     String?
+  cron_enabled       Boolean?
+  details            CompanyDetails?
+  subscription       CompanySubscription?
+  TwoFactorHistory   TwoFactorHistory[]
+  ThirdPartyAccess   ThirdPartyAccess[]
+  AcceptEmailToken   AcceptEmailToken[]
+  AccountBalance     AccountBalance[]
+  MarketingSource    MarketingSource[]
+  CmCase             CmCase[]
+  CmCaseReply        CmCaseReply[]
+  CmCampaign         CmCampaign[]
+  User               User[]
+  Candidate          Candidate[]
   BookingStatus      BookingStatus[]
   Salutation         Salutation[]
   CompanyBranch      CompanyBranch[]
@@ -206,6 +206,7 @@ model Company {
   JobOpening         JobOpening[]
   JobStatus          JobStatus[]
   PointOfSaleSetting PointOfSaleSetting[]
+
   @@map("admin")
 }
 
@@ -770,8 +771,8 @@ model BookingStatusChange {
 
 model BookitProGeneral {
 
-  id                         Int                                   @id @default(autoincrement())
-  occupier                   String
+  id                         Int                                @id @default(autoincrement())
+  company_id                 Int                                @map("occupier")
   advance_time               String
   enable_payments            String
   paypal_address             String
@@ -3506,23 +3507,23 @@ model CompanyLocation {
 //}
 //
 model CompanyRoom {
-  id            Int     @id @default(autoincrement())
-  company_id    Int     @map("company")
-  description   String
-  slots         Int
-  all_services  Int
-  is_active     Int
-  all_locations Boolean @default(true)
-  field_order   Int
-  room_fee_type String
-  room_fee      Float   @default(0.00)
-  prod_id       Int     @default(0)
-  imported      Int     @default(0)
-  custom_id     String
-  Company       Company @relation(fields: [company_id], references: [id])
-
+  id                  Int                   @id @default(autoincrement())
+  company_id          Int                   @map("company")
+  description         String
+  slots               Int
+  all_services        Int
+  is_active           Int
+  all_locations       Boolean               @default(true)
+  field_order         Int
+  room_fee_type       String
+  room_fee            Float                 @default(0.00)
+  prod_id             Int                   @default(0)
+  imported            Int                   @default(0)
+  custom_id           String
+  Company             Company               @relation(fields: [company_id], references: [id])
   CompanyRoomLocation CompanyRoomLocation[]
   CompanyRoomService  CompanyRoomService[]
+
   @@index([company_id], name: "company")
   @@map("company_rooms")
 }
