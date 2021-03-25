@@ -10,7 +10,6 @@ export interface TwoFactorHistory {
 
 export interface ThirdPartyAccess {
   id: number;
-  occupier: number;
   company_id: number;
   company_name: string;
   email: string;
@@ -19,7 +18,7 @@ export interface ThirdPartyAccess {
   last_name: string;
   logo: string;
   access_id: number;
-  company: Company;
+  Company: Company;
 }
 
 export interface AcceptEmailToken {
@@ -146,6 +145,11 @@ export interface Company {
   Candidate?: Candidate[];
   BookingStatus?: BookingStatus[];
   Salutation?: Salutation[];
+  CompanyBranch?: CompanyBranch[];
+  CompanyLocation?: CompanyLocation[];
+  CompanyRoom?: CompanyRoom[];
+  CompanyRoomService?: CompanyRoomService[];
+  CompanyService?: CompanyService[];
 }
 
 export interface AdvertCampaign {
@@ -1432,6 +1436,133 @@ export interface CmContact {
   privacy_policy: string;
   need_to_knows: boolean;
   contact_type: number;
+}
+
+export interface CompanyBranch {
+  id: number;
+  group_id: number;
+  company_id: number;
+  address: string;
+  street: string;
+  city: string;
+  county: string;
+  name: string;
+  postcode: string;
+  online_bookings: number;
+  phone: string;
+  website: string;
+  is_active: number;
+  bookable_online: number;
+  calendar_bookable: number;
+  is_default: boolean;
+  lat: number;
+  lng: number;
+  custom_id: string;
+  email: string;
+  send_conf_email: number;
+  show_online: number;
+  loc_order: number;
+  region: string;
+  invoice_template_id: number;
+  color: string;
+  notify_on_lead: boolean;
+  notice?: string;
+  Company: Company;
+  CompanyRoomLocation?: CompanyRoomLocation[];
+}
+
+export interface CompanyLocation {
+  id: number;
+  company_id: number;
+  location: string;
+  Company: Company;
+}
+
+export interface CompanyRoom {
+  id: number;
+  company_id: number;
+  description: string;
+  slots: number;
+  all_services: number;
+  is_active: number;
+  all_locations: boolean;
+  field_order: number;
+  room_fee_type: string;
+  room_fee: number;
+  prod_id: number;
+  imported: number;
+  custom_id: string;
+  Company: Company;
+  CompanyRoomLocation?: CompanyRoomLocation[];
+  CompanyRoomService?: CompanyRoomService[];
+}
+
+export interface CompanyRoomLocation {
+  id: number;
+  room_id: number;
+  location_id: number;
+  Room: CompanyRoom;
+  Location: CompanyBranch;
+}
+
+export interface CompanyRoomService {
+  id: number;
+  room_id: number;
+  service_id: number;
+  company_id: number;
+  priority_order: number;
+  imported: number;
+  Company: Company;
+  Room: CompanyRoom;
+  Service: CompanyService;
+}
+
+export interface CompanyService {
+  id: number;
+  company_id: number;
+  service: string;
+  duration: string;
+  description: string;
+  price: number;
+  disabledusers?: string;
+  color?: string;
+  group_id: number;
+  online_book: number;
+  product_id: number;
+  imported: number;
+  communication_template: number;
+  service_order: number;
+  sms_mode: number;
+  sms_name: string;
+  sms_days_after: number;
+  sms_send_time: string;
+  sms_id: number;
+  treatment_group_id: number;
+  custom_id: string;
+  pos_only: number;
+  prep_time: number;
+  finish_time: number;
+  deposit_amount: number;
+  friendly_name: string;
+  max_clients: number;
+  default_room_id: number;
+  follow_up_period: number;
+  deposit_type: company_services_deposit_type;
+  max_models: number;
+  availability: company_services_availability;
+  force_credit_payment: number;
+  disabled_locations: string;
+  addon_services: string;
+  service_participants?: string;
+  with_summary_title?: string;
+  online_book_type: company_services_online_book_type;
+  proc_code: string;
+  duration_day: number;
+  invoice_text?: string;
+  invoice_item_name?: string;
+  online_only_service: number;
+  Company: Company;
+  CompanyRoomService?: CompanyRoomService[];
 }
 
 export interface GlCode {
