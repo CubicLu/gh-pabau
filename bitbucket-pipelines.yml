@@ -3,13 +3,13 @@
 image: node:14-buster
 
 options:
-  max-time: 45 # max time in minutes for each step
+  max-time: 32 # max time in minutes for each step
 
 definitions:
   caches:
     nodemodules: node_modules/
     yarncustom: /usr/local/share/.cache/yarn
-    nextcache: .next/cache
+    nextcache: dist
     cypress: '/root/.cache/Cypress'
 #  services:
 #    docker:

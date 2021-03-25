@@ -103,9 +103,9 @@ Notes:
 
 The backend is a REST MVC framework. We are using NestJS and converting it into Serverless Vercel Functions at compile-time.
 
-The backend is designed to only be called from Hasura (Webhooks and Actions).
+The backend is designed to only be called from Hasura (Webhooks and Actions). Whenever you add a new route to the backend, you must wait for your PR to be merged to master before you will see it reflected on the live site. Once it's on the live site you then have to add an Action to Hasura for it. Choose async mode, and forward headers.
 
-To view the Backend, you can either visit [https://backend.new.pabau.com](https://backend.new.pabau.com) or run `yarn nx serve backend` to develop on it locally with live reloading (HMR).
+To view the Backend, you can either visit [https://backend.pabau.com](https://backend.pabau.com) or run `yarn nx serve backend` to develop on it locally with live reloading (HMR).
 
 ## Code Rules
 

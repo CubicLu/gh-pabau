@@ -30,6 +30,8 @@ VERCEL_JSON_LOCATION=$(cd "${APP_TYPE}/${APP_NAME}" && pwd)
 
 echo "----- DEBUG -----"
 echo "(pwd)=$(pwd)"
+echo "DOCKER_HOSTNAME=${DOCKER_HOSTNAME}"
+echo "DOCKER_USERNAME=${DOCKER_USERNAME}"
 echo "NODE_OPTIONS=${NODE_OPTIONS}"
 echo "APP_NAME=${APP_NAME}"
 echo "APP_TYPE=${APP_TYPE}"
@@ -45,34 +47,33 @@ build_output_path="dist/apps/backend"
 cp "${VERCEL_JSON_LOCATION}/package.prod.json" "${build_output_path}/package.json"
 cp "${build_output_path}/main.js" "${build_output_path}/server.js"
 rm "${build_output_path}/main.js.map"
+cp "apps/${APP_NAME}/package.prod.json" "${build_output_path}/package.json"
+
+# now we need a yarn.lock file really.
+# crazy idea but let's try the root one
+cp "yarn.lock" "${build_output_path}"
+
+echo "Docker build..."
+docker build --no-cache "dist/apps/${APP_NAME}" -t "${APP_NAME}" -f "tools/cicd/${APP_NAME}.Dockerfile"
+echo "Docker tag..."
+docker image tag "${APP_NAME}:latest" "${DOCKER_HOSTNAME}/monorepo/${APP_NAME}"
+echo "Docker login..."
+docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}" "${DOCKER_HOSTNAME}"
+echo "Docker push..."
+docker image push "${DOCKER_HOSTNAME}/monorepo/${APP_NAME}"
+echo "Rancher deploy..."
+#apt-get update -y && apt-get install git && git clone -b v1.6 --recursive https://github.com/rancher/cli.git rancher-cli && cd rancher-cli && make
+#docker run -v "$PWD:/files:ro" --rm -it --entrypoint rancher tagip/rancher-cli --url http://pods.pabau.com:8888 --access-key xxx --secret-key xxx --file /files/docker-compose.yml --rancher-file /files/rancher-compose.yml up -d --upgrade --stack pabau2-backend production
+echo "FOR NOW, ASK JAMES/MARTIN TO 'UPGRADE' THE 'PABAU2-BACKEND/PRODUCTION' CONTAINER IN RANCHER!"
+
+
 
 if [ -z "${BITBUCKET_PR_ID}" ]; then
-
-  echo "===== Processing type COMMIT ====="
-  OUTPUT=$(cd "${build_output_path}" && vercel -c -C --token "${VERCEL_TOKEN}" --scope pabau2 -A "${VERCEL_JSON_LOCATION}/vercel.json" --prod)
-  echo "errorlevel: $?"
-  echo "Output from vercel:"
-  echo "${OUTPUT}"
-  echo "--"
-  LAST_LINE=$(echo "${OUTPUT}" | tail -n1)
-  echo "last line: ${LAST_LINE}"
-  echo "${LAST_LINE}" > /tmp/bot_url_${APP_NAME}.txt
-
   message_body=''
   read_heredoc message_body <<HEREDOC
-${APP_NAME}: ${LAST_LINE}
+${APP_NAME}: https://backend.pabau.com
 HEREDOC
   echo "${message_body}" >> /tmp/bot_message.txt
-
-else
-  echo "===== Processing type PR ====="
-  OUTPUT=$(cd "${build_output_path}" && vercel -c -C --token "${VERCEL_TOKEN}" --scope pabau2 -A "${VERCEL_JSON_LOCATION}/vercel.json")
-  echo "errorlevel: $?"
-  echo "Output from vercel:"
-  echo "${OUTPUT}"
-  echo "--"
-  LAST_LINE=$(echo "${OUTPUT}" | tail -n1)
-  echo "last line: ${LAST_LINE}"
-  echo "${LAST_LINE}" > /tmp/bot_url_${APP_NAME}.txt
-
 fi
+
+echo "EOF"

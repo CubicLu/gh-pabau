@@ -9,7 +9,7 @@ export function Calendar(props: CalendarProps) {
   return (
     <div>
       <Layout active={'calendar'}>
-        <h1>Welcome to calendar!</h1>
+        <h1>Welcome to calendar! Or cal?</h1>
       </Layout>
     </div>
   )
