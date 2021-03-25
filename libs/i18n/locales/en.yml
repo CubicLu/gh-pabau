@@ -330,3 +330,91 @@ en:
     sidebar.contacts.clients: Clients
     sidebar.contacts.casemanager: 'Case Manager'
     sidebar.setup: Setup
+    setup.discount.data.selectall: Select all
+    setup.discount.data.subtitle1: Subcategory 1
+    setup.discount.data.subtitle2: Subcategory 2
+    setup.discount.data.subtitle3: Subcategory 3
+    setup.discount.data.accentprime: Accent prime
+    setup.discount.data.allinclusive: All-inclusive
+    setup.discount.data.botox: Botox
+    setup.discount.data.co2laser: CO2 Laser
+    setup.discount.data.consultation: Consultation
+    setup.discount.data.cooltech: Cooltech
+    setup.discount.data.cooltech+accentprime: Cooltech + Accent Prime
+    setup.discount.data.dermalux: Dermalux
+    setup.discount.data.londonroad,london,england: London Road, London, England
+    setup.discount.data.loremstreet,liverpool,england: Lorem Street, Liverpool, England
+    setup.discount.data.jeffhackley: Jeff Hackley 
+    setup.discount.data.jessicawinter: Jessica Winter 
+    setup.discount.data.alexanderwang: Alexander Wang
+    setup.discount.data.lindadavis: Linda Davis
+    setup.discount.data.williamtyson: William Tyson
+    setup.discount.data.maxstarck: Max Starck
+    setup.discount.data.kylewalsh: Kyle Walsh
+    setup.discount.data.owenphillips: Owen Phillips
+    setup.discount.data.aidankelly: Aidan Kelly
+    setup.discount.data.ewanmorgan: Ewan Morgan
+    setup.discount.data.jordanmartin: Jordan Martin
+    setup.discount.data.grantdudley: Grant Dudley
+    setup.discount.data.chooseservicediscount: Choose the services this discount can be applied
+    setup.discount.data.location: Locations
+    setup.discount.data.chooselocationdiscount: Choose the locations this discount can be applied
+    setup.discount.data.capitalizediscount: Discounts
+    setup.discount.data.lowercasediscount: discounts
+    setup.discount.data.creatediscount: Create Discount
+    setup.discount.data.creatediscountsuccessmessage: You have successfully created a discount
+    setup.discount.data.creatediscountsuccessfullymessage: Success! You have successfully created a discount
+    setup.discount.data.creatediscounterrormessage: While creating a discount
+    setup.discount.data.creatediscounterrormessages: Error! While creating a discount
+    setup.discount.data.updatediscountsuccessmessage: You have successfully updated a discount
+    setup.discount.data.updatediscountsuccessmessages: Success! You have successfully edited a discount
+    setup.discount.data.updatediscounterrormessage: While updating a discount
+    setup.discount.data.updatediscounterrormessages: Error! While editing a discount
+    setup.discount.data.deletediscountsuccessmessage: You have successfully deleted a discount
+    setup.discount.data.deletediscountsuccessmessages: Success! You have successfully deleted a discount
+    setup.discount.data.deletediscounterrormessage: While deleting a discount
+    setup.discount.data.deletediscounterrormessages: Error! While deleting a discount
+    setup.discount.data.capitalizeamount: Amount
+    setup.discount.data.lowercaseamount: amount
+    setup.discount.data.capitalizediscountrate: Discount Rate
+    setup.discount.data.lowercasediscountrate: discount rate
+    setup.discount.data.capitalizeshowonreciept: Show on Reciept
+    setup.discount.data.lowercaseshowonreciept: show on reciept
+    setup.discount.data.capitalizecode: Code
+    setup.discount.data.lowercasecode: code
+    setup.discount.data.namerequired: Discount Name is required
+    setup.discount.data.namemaxlength: Name should be 50 character maximum
+    setup.discount.data.namematch: name should be letters, numbers and special characters
+    setup.discount.data.amountrequired: Amount is required
+    setup.discount.data.codemaxlength: Discount code should be 50 character maximum
+    setup.discount.data.codematch: code should be letters, numbers and special characters
+    setup.discount.data.typerequired: Type is required
+    setup.discount.data.editdiscount: Edit Discount
+    setup.discount.data.general : General
+    setup.discount.data.services&locations : Services & Locations
+    setup.discount.data.employees : Employees
+    setup.discount.data.employeesubtitle : Choose which team members would requred access to this location
+    setup.discount.data.deletediscounttitle: Delete Discount?
+    setup.discount.data.yesdelete: Yes, Delete
+    setup.discount.data.deletedaction: will be deleted. This action is irreversable
+    setup.discount.data.discountnamelabel: Discount name
+    setup.discount.data.percentageamount: Percentage amount
+    setup.discount.data.flaterate: Flat rate
+    setup.discount.data.discountcode: Discount code
+    setup.discount.data.dateconstrained: Date constrained
+    setup.discount.data.type: Type
+    setup.discount.data.percentage: Percentage
+    setup.discount.data.reciept: Reciept
+    setup.discount.data.showonrecieptlabel: Show on reciept
+    setup.discount.data.selectlocation: Select location
+    setup.discount.data.service: Service
+    setup.discount.data.selectproduct: Select product
+    setup.discount.data.employeelabel: Emloyee
+    setup.discount.data.selectemployee: Select emloyee
+    setup.discount.data.clearallbutton: Clear all
+    setup.discount.data.applyfilterbutton: Apply filters
+    setup.discount.data.enterdiscountname: Enter discount's name
+    setup.discount.data.egpercentage: e.g. 15%
+    setup.discount.data.egpaund: e.g. £ 15
+    setup.discount.data.enterdiscountcode: Enter discount’s code
+    setup.discount.data.advancedsettings: Advanced settings

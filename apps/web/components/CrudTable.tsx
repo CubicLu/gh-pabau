@@ -62,7 +62,7 @@ const CrudTable: FC<P> = ({
   needTranslation = false,
   editPage = false,
   editPageRouteLink,
-  isCustomFilter,
+  isCustomFilter = false,
   customFilter,
   setEditPage,
   draggable = true,
@@ -611,6 +611,8 @@ const CrudTable: FC<P> = ({
                 onRowClick={(e) => {
                   if (editPage) {
                     router.push(`${editPageRouteLink}/${e.id}`)
+                  } else if (createPage) {
+                    setEditPage(e)
                   } else {
                     setEditingRow(e)
                     setModalShowing((e) => !e)

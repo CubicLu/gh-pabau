@@ -9,7 +9,7 @@ import {
 import { Drawer, Input, Popover, Radio } from 'antd'
 import classNames from 'classnames'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
-
+import { useMedia } from 'react-use'
 // import { isMobile, isTablet } from 'react-device-detect'
 // import { useKeyPressEvent } from 'react-use'
 
@@ -44,7 +44,15 @@ const AddButton: FC<P> = ({
   )
   const [mobFilterDrawer, setMobFilterDrawer] = useState(false)
   const [marketingSourceSearch, setMarketingSourceSearch] = useState('')
+  const [isPopOverVisible, setIsPopOverVisible] = useState(false)
   const { t } = useTranslationI18()
+  const isMobile = useMedia('(max-width: 768px)', false)
+
+  useEffect(() => {
+    if (!isMobile && mobFilterDrawer) {
+      setMobFilterDrawer(false)
+    }
+  }, [isMobile, mobFilterDrawer])
 
   useEffect(() => {
     console.log(isActive)
@@ -194,6 +202,8 @@ const AddButton: FC<P> = ({
           trigger="click"
           content={isCustomFilter ? customFilter : filterContent}
           placement="bottomRight"
+          visible={isPopOverVisible}
+          onVisibleChange={(visible) => setIsPopOverVisible(visible)}
           overlayClassName={
             isCustomFilter === false
               ? styles.filterPopover
@@ -201,7 +211,10 @@ const AddButton: FC<P> = ({
           }
         >
           {addFilter && (
-            <Button className={styles.filterBtn}>
+            <Button
+              className={styles.filterBtn}
+              onClick={() => setIsPopOverVisible(true)}
+            >
               <FilterOutlined /> {t('basic-crud-table-button-filter')}
             </Button>
           )}
