@@ -20,6 +20,7 @@ export interface LayoutProps {
     description: string,
     isPrivate: boolean
   ) => void
+  isDisplayingFooter?: boolean
   onMessageType?: (e: MouseEvent<HTMLElement>) => void
 }
 
@@ -30,6 +31,7 @@ export const Layout: FC<LayoutProps> = ({
   newButtonText,
   onNewClicked,
   onCancelClicked,
+  isDisplayingFooter = true,
   onMessageType,
   card,
   children,
@@ -76,7 +78,7 @@ export const Layout: FC<LayoutProps> = ({
                 </>
               )}
             </Content>
-            <Footer />
+            {isDisplayingFooter && <Footer />}
           </Content>
 
           {onNewClicked && (

@@ -22,19 +22,21 @@ interface Schema {
   inboxButton?: boolean
   deleteDescField?: string
   tooltip?: string
+  createButtonLabel?: string
   padlocked?: string[]
   filter?: SchemaFilter
-  company?: string
+  company?: number | string
 }
 
 type DefaultFilterType = number | boolean
 
 interface SchemaFilter {
-  primary?: {
+  primary: {
     name: string
+    type: FilterTypes
     default: boolean
-    active: boolean
-    inactive: boolean
+    active: number | boolean
+    inactive: number | boolean
   }
 }
 
@@ -72,6 +74,7 @@ interface SchemaItem {
     | 'icon'
     | 'select'
     | 'time'
+  type?: FilterTypes
   defaultvalue?: string | number | boolean
   visible?: boolean
   required?: boolean
@@ -81,7 +84,7 @@ interface SchemaItem {
   collapsible?: boolean
   col?: number
   filter?: SchemaFilter
-  example?: string | number | boolean
+  example?: string | number | any
 }
 interface TypeValues {
   label: string

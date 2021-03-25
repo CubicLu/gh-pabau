@@ -6,14 +6,17 @@ import { dasherize, underscore } from 'inflected'
 import * as child_process from 'child_process'
 
 function removeIndexTsx(input: string): string {
-  if (input.endsWith('/Index.tsx'))
-    return input.substr(0, input.length - '/Index.tsx'.length)
+  if (input.toLowerCase().endsWith('/index.tsx'))
+    return input.substr(0, input.length - '/index.tsx'.length)
   if (input.endsWith('.tsx'))
     return input.substr(0, input.length - '.tsx'.length)
+
+  // Ensure only .module.less files are used
   if (input.endsWith('.module.less'))
     return input.substr(0, input.length - '.module.less'.length)
   if (input.endsWith('.less'))
     throw new Error(`You should use LESS Modules instead of ${input}`)
+
   return input
 }
 
@@ -28,8 +31,9 @@ const lines = childProcess.stdout.toString().split('\n')
 
 for (const line of lines) {
   if (line.startsWith('apps/web/pages/')) {
+    const path = removeIndexTsx('/' + line.substr('apps/web/pages/'.length));
     output.push(
-      myArgs[1] + removeIndexTsx('/' + line.substr('apps/web/pages/'.length))
+      `<${myArgs[1]}${path}|${path}>`
     )
   }
 
@@ -62,7 +66,7 @@ for (const line of lines) {
     const namedExportRaw = (namedExportFirst as any).declaration
       .declarations?.[0]?.id.name
     const namedExport = dasherize(underscore(namedExportRaw))
-    output.push(myArgs[2] + `/?path=/story/${storybookName}--${namedExport}`)
+    output.push(`<${myArgs[2]}/?path=/story/${storybookName}--${namedExport}|${storybookName}--${namedExport}>`)
   }
 }
 

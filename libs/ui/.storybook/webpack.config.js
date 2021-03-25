@@ -3,7 +3,6 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const rootWebpackConfig = require('../../../.storybook/webpack.config')
 
-console.log('reading less vars...')
 const lessToJs = require('less-vars-to-js')
 const fs = require('fs')
 const path = require('path')
@@ -19,7 +18,6 @@ const lessVars = lessToJs(paletteLess, {
   resolveVariables: true,
   stripPrefix: true,
 })
-console.log('read less vars: ', lessVars)
 
 /**
  * Export a function. Accept the base config as the only param.

@@ -1,6 +1,6 @@
 {
   "name": "pabau",
-  "version": "2.0.245",
+  "version": "2.0.248",
   "license": "Copyright Hambrand Technologies Ltd",
   "bump-rebuild-all": 5,
   "scripts": {
@@ -113,6 +113,7 @@
     "react-i18next": "^11.8.9",
     "react-image-crop": "^8.6.6",
     "react-jsx-highcharts": "^4.2.0",
+    "react-lottie": "^1.2.3",
     "react-native": "0.63.4",
     "react-number-format": "^4.4.4",
     "react-pdf": "^5.2.0",

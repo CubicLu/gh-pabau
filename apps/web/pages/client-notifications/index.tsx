@@ -6,10 +6,10 @@ import {
   Breadcrumb,
   NotificationBanner,
   NotificationMessages,
-  DropdownButton,
+  DropdownButton as DropDownButton,
 } from '@pabau/ui'
 import Layout from '../../components/Layout/Layout'
-import CommonHeader from '../setup/common-header'
+import CommonHeader from '../../components/CommonHeader'
 import notificationData from '../../assets/notificationData'
 import notificationBannerImage from '../../assets/images/notification-image.png'
 import styles from './style.module.less'
@@ -84,12 +84,12 @@ const Index: FC = () => {
               </p>
             </div>
             <div className={styles.clientNotificationsOps}>
-              <DropdownButton
+              <DropDownButton
                 menuItems={options}
                 onMenuClick={(val) => handleOptionClick(val)}
               >
                 Manage Options
-              </DropdownButton>
+              </DropDownButton>
             </div>
           </div>
           <div className={styles.clientInnerNotifciationsDesktop}>

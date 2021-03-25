@@ -150,6 +150,7 @@ export const Index: NextPage = () => {
     filter: {
       primary: {
         name: 'public',
+        type: 'string',
         default: true,
         active: true,
         inactive: false,

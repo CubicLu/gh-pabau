@@ -17,7 +17,7 @@ import {
   ReviewsConfigStepFour,
 } from '../../../components/Setup/ReviewsConfig'
 import Layout from '../../../components/Layout/Layout'
-import CommonHeader from '../common-header'
+import CommonHeader from '../../../components/CommonHeader'
 import reviewsConfigBanner from '../../../assets/images/reviews-config-banner.png'
 import { ReactComponent as ExternalLink } from '../../../assets/images/external-link.svg'
 import {

@@ -10,7 +10,7 @@ import {
 } from '@pabau/ui'
 import { useFormik } from 'formik'
 import styles from '../../pages/client-notifications/style.module.less'
-import CommonHeader from '../../pages/setup/common-header'
+import CommonHeader from '../../components/CommonHeader'
 import { DownOutlined, LeftOutlined } from '@ant-design/icons'
 import * as Yup from 'yup'
 

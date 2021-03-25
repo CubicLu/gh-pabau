@@ -145,6 +145,14 @@ export const Table: FC<TableType> = ({
     )
   }
 
+  const renderCodeInput = (code) => {
+    return (
+      <Button type="dashed" className={styles.codeBtn}>
+        {code}
+      </Button>
+    )
+  }
+
   const checkPadLocks = (record) => {
     let clickable = true
     Object.keys(record).map((key) => {
@@ -198,6 +206,8 @@ export const Table: FC<TableType> = ({
             col.dataIndex === 'end_time'
           ) {
             col.render = renderTime
+          } else if (col.dataIndex === 'code') {
+            col.render = renderCodeInput
           } else if (!col.render) {
             col.render = renderTableSource
           }
