@@ -5,33 +5,33 @@ fr:
     marketingsource-name-placeholder: 'par exemple. Facebook'
     marketingsource-header-edit: 'Créer une source marketing!x'
     KEY: ''
-    search.placeholder: ''
-    avatar.balance: ''
-    avatar.account.settings: ''
-    avatar.tasks: ''
-    avatar.give.feedback: ''
-    avatar.help.support: ''
-    avatar.help.support.header: ''
-    avatar.help.support.centre: ''
-    avatar.help.video.guides: ''
-    avatar.help.contact.support: ''
-    avatar.select.language: ''
-    avatar.change.company: ''
-    avatar.logout: ''
-    search.client.label: ''
-    search.lead.label: ''
+    search.placeholder: 'Rechercher des clients ou des prospects'
+    avatar.balance: Équilibre
+    avatar.account.settings: 'Paramètres du compte'
+    avatar.tasks: Tâches
+    avatar.give.feedback: 'Donnez votre avis'
+    avatar.help.support: 'Support d''aide'
+    avatar.help.support.header: 'Support d''aide'
+    avatar.help.support.centre: 'Centre d''aide'
+    avatar.help.video.guides: 'Guides vidéo'
+    avatar.help.contact.support: 'Contactez le support'
+    avatar.select.language: 'Choisir la langue'
+    avatar.change.company: 'Sélectionnez une entreprise'
+    avatar.logout: 'Se déconnecter'
+    search.client.label: Clients
+    search.lead.label: Pistes
     search.result.one: ''
     search.result.two: ''
     search.new.client: ''
     search.advanced.search: ''
-    notifications.header: ''
-    notifications.tab.activity: ''
-    notifications.tab.news: ''
+    notifications.header: Notifications
+    notifications.tab.activity: Activité
+    notifications.tab.news: Nouvelles
     notifications.today: ''
     notifications.yesterday: ''
     notifications.report: ''
     notifications.appointment: ''
-    notifications.lead: ''
+    notifications.lead: Pistes
     news.learn: ''
     marketingsource-input-search: Chercher
     james-testing-1: ''
@@ -161,7 +161,7 @@ fr:
     ui.report-help-sidebar.kpis-products-content: ''
     ui.report-help-sidebar.kpis-avg-bill-title: ''
     ui.report-help-sidebar.kpis-avg-bill-content: ''
-    ui.report-help-sidebar.kpis-client-visits-title: ''
+    ui.report-help-sidebar.kpis-client-visits-title: Client
     ui.report-help-sidebar.kpis-client-visits-content: ''
     ui.report-help-sidebar.kpis-rebook-title: ''
     ui.report-help-sidebar.kpis-rebook-content: ''
@@ -192,7 +192,7 @@ fr:
     marketingsource-create-button: Créer
     marketingsource-save-button: Sauvegarder
     marketingsource-delete-button: Effacer
-    search-header-placehodlder: ''
+    search-header-placehodlder: 'Rechercher des clients ou des prospects'
     basic-crud-table-header-breadcrumb-setup-link: Installer
     basic-crud-table-input-search-placeholder: Chercher
     basic-crud-table-button-filter: Filtre
@@ -215,7 +215,7 @@ fr:
     navigation-breadcrumb-setup: Installer
     common-label-delete: Effacer
     common-label-add: ''
-    common-label-create: ''
+    common-label-create: Créer
     common-label-cancel: ''
     common-label-save: ''
     common-label-delete-warning: ''
@@ -226,9 +226,9 @@ fr:
     intercom-article-title-create-a-marketing-source: 'Créer une source marketing'
     header-search-text-placeholder: 'Rechercher des clients ou des prospects'
     footer-guides-header-status-text: ''
-    avatar.give.feedback.giveus: ''
-    avatar.give.feedback.helpus: ''
-    avatar.give.feedback.somethingwrong: ''
+    avatar.give.feedback.giveus: 'Donnez-nous vos commentaires'
+    avatar.give.feedback.helpus: 'Aidez-nous à améliorer Pabau'
+    avatar.give.feedback.somethingwrong: 'Un problème est survenu'
     search.advanced.search.firstname.label: ''
     search.advanced.search.firstname.placeholder: ''
     search.advanced.search.email.label: ''
@@ -258,18 +258,18 @@ fr:
     notifications.empty.msg: ''
     notifications.empty.hint: ''
     notifications.empty.anchor: ''
-    quickcreate.client: ''
-    quickcreate.lead: ''
+    quickcreate.client: Client
+    quickcreate.lead: Mener
     quickcreate.sms: ''
-    quickcreate.sale: ''
+    quickcreate.sale: Vente
     quickcreate.newsletter: ''
     chat.header: ''
     chat.channel: ''
     chat.chats: ''
     chat.members.in: ''
     chat.cancel: ''
-    chat.create: ''
-    chat.create.channel: ''
+    chat.create: Créer
+    chat.create.channel: 'Créer une chaîne'
     chat.create.channel.title: ''
     chat.create.channel.name: ''
     chat.create.channel.name.placeholder: ''
@@ -361,7 +361,7 @@ fr:
     setup.discount.data.chooselocationdiscount: ''
     setup.discount.data.capitalizediscount: ''
     setup.discount.data.lowercasediscount: ''
-    setup.discount.data.creatediscount: ''
+    setup.discount.data.creatediscount: 'Créer une remise'
     setup.discount.data.creatediscountsuccessmessage: ''
     setup.discount.data.creatediscountsuccessfullymessage: ''
     setup.discount.data.creatediscounterrormessage: ''
@@ -459,7 +459,7 @@ fr:
     setup.clinical.body: 'Diagrammes corporels'
     setup.marketing.title: 'Communication marketing'
     setup.marketing.communications: 'Les communications'
-    setup.marketing.communications.notification: 'Notifications client'
+    setup.marketing.communications.notification: 'Notifications aux clients'
     setup.marketing.communications.address: 'Adresses des expéditeurs'
     setup.marketing.communications.templates: Modèles
     setup.marketing.communications.sms.setting: 'Packs SMS et paramètres'
