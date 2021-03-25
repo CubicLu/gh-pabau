@@ -483,6 +483,10 @@ const CrudTable: FC<P> = ({
                     addFilter={addFilter}
                     isCustomFilter={isCustomFilter}
                     customFilter={customFilter}
+                    mobileSearch={isMobileSearch}
+                    setMobileSearch={() => {
+                      setMobileSearch((e) => !e)
+                    }}
                   />
                 ) : (
                   <AddButton
@@ -495,6 +499,10 @@ const CrudTable: FC<P> = ({
                     needTranslation={needTranslation}
                     isCustomFilter={isCustomFilter}
                     customFilter={customFilter}
+                    mobileSearch={isMobileSearch}
+                    setMobileSearch={() => {
+                      setMobileSearch((e) => !e)
+                    }}
                   />
                 )}
               </div>

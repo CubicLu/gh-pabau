@@ -22,7 +22,6 @@ model TwoFactorHistory {
 
 model ThirdPartyAccess {
   id           Int     @id @default(autoincrement())
-  occupier     Int
   company_id   Int     @map("occupier")
   company_name String
   email        String
@@ -31,7 +30,7 @@ model ThirdPartyAccess {
   last_name    String
   logo         String
   access_id    Int
-  company      Company @relation(fields: [company_id], references: [id])
+  Company      Company @relation(fields: [company_id], references: [id])
 
 
   @@map("3rd_party_access")
@@ -172,33 +171,43 @@ model AcLogUrl {
 }
 
 model Company {
-  id             Int      @id @default(autoincrement())
-  user           String
-  digit8         Int
-  admin          Int
-  creation_date  DateTime
-  image          String
-  slug           String?  @unique
-  remote_url     String?
-  remote_connect String?
-  cron_enabled   Boolean?
+  id                 Int                  @id @default(autoincrement())
+  user               String
+  digit8             Int
+  admin              Int
+  creation_date      DateTime
+  image              String
+  slug               String?              @unique
+  remote_url         String?
+  remote_connect     String?
+  cron_enabled       Boolean?
+  details            CompanyDetails?
+  subscription       CompanySubscription?
+  TwoFactorHistory   TwoFactorHistory[]
+  ThirdPartyAccess   ThirdPartyAccess[]
+  AcceptEmailToken   AcceptEmailToken[]
+  AccountBalance     AccountBalance[]
+  MarketingSource    MarketingSource[]
+  CmCase             CmCase[]
+  CmCaseReply        CmCaseReply[]
+  CmCampaign         CmCampaign[]
+  User               User[]
+  Candidate          Candidate[]
+  BookingStatus      BookingStatus[]
+  Salutation         Salutation[]
+  CompanyBranch      CompanyBranch[]
+  CompanyLocation    CompanyLocation[]
+  CompanyRoom        CompanyRoom[]
+  CompanyRoomService CompanyRoomService[]
+  CompanyService     CompanyService[]
+  CompanyDepartment  CompanyDepartment[]
+  Job                Job[]
+  JobConfiguration   JobConfiguration[]
+  JobOpening         JobOpening[]
+  JobStatus          JobStatus[]
+  PointOfSaleSetting PointOfSaleSetting[]
 
-  details          CompanyDetails?
-  subscription     CompanySubscription?
-  TwoFactorHistory TwoFactorHistory[]
-  ThirdPartyAccess ThirdPartyAccess[]
-  AcceptEmailToken AcceptEmailToken[]
-  AccountBalance   AccountBalance[]
-  MarketingSource  MarketingSource[]
-  CmCase           CmCase[]
-  CmCaseReply      CmCaseReply[]
-  CmCampaign       CmCampaign[]
-  User             User[]
-  Candidate        Candidate[]
-
-  BookingStatus BookingStatus[]
   @@map("admin")
-  Salutation Salutation[]
 }
 
 model AdvertCampaign {
@@ -728,7 +737,6 @@ model BookingMaster {
 }
 
 model BookingStatus {
-
   id          Int                         @id @default(autoincrement())
   name        String
   value       String
@@ -739,7 +747,7 @@ model BookingStatus {
   basic_field Boolean
   ord         Float?
   track_time  Int                         @default(1)
-  company     Company                     @relation(fields: [company_id], references: [id])
+  Company     Company                     @relation(fields: [company_id], references: [id])
 
 
 
@@ -763,8 +771,8 @@ model BookingStatusChange {
 
 model BookitProGeneral {
 
-  id                         Int                                   @id @default(autoincrement())
-  occupier                   String
+  id                         Int                                @id @default(autoincrement())
+  company_id                 Int                                @map("occupier")
   advance_time               String
   enable_payments            String
   paypal_address             String
@@ -3261,39 +3269,43 @@ model CmContact {
 //  sms_template_id   Int
 //}
 //
-//model company_branches {
-//  id                  Int     @id @default(autoincrement())
-//  group_id            Int
-//  company_id          Int
-//  address             String
-//  street              String
-//  city                String
-//  county              String
-//  name                String
-//  postcode            String
-//  online_bookings     Int
-//  phone               String
-//  website             String
-//  is_active           Int
-//  bookable_online     Int
-//  calendar_bookable   Int
-//  is_default          Boolean
-//  lat                 Float
-//  lng                 Float
-//  custom_id           String
-//  email               String
-//  send_conf_email     Int
-//  show_online         Int     @default(1)
-//  loc_order           Int
-//  region              String
-//  invoice_template_id Int     @default(0)
-//  color               String
-//  notify_on_lead      Boolean @default(false)
-//  notice              String?
-//
-//  @@index([company_id], name: "company_id")
-//  @@index([group_id], name: "group_id")
-//}
+model CompanyBranch {
+  id                  Int     @id @default(autoincrement())
+  group_id            Int
+  company_id          Int
+  address             String
+  street              String
+  city                String
+  county              String
+  name                String
+  postcode            String
+  online_bookings     Int
+  phone               String
+  website             String
+  is_active           Int
+  bookable_online     Int
+  calendar_bookable   Int
+  is_default          Boolean
+  lat                 Float
+  lng                 Float
+  custom_id           String
+  email               String
+  send_conf_email     Int
+  show_online         Int     @default(1)
+  loc_order           Int
+  region              String
+  invoice_template_id Int     @default(0)
+  color               String
+  notify_on_lead      Boolean @default(false)
+  notice              String?
+  Company             Company @relation(fields: [company_id], references: [id])
+
+  CompanyRoomLocation CompanyRoomLocation[]
+  @@index([company_id], name: "company_id")
+  @@index([group_id], name: "group_id")
+  @@map("company_branches")
+}
+
 //
 //model company_branches_attachments {
 //  id          Int                               @id @default(autoincrement())
@@ -3331,11 +3343,16 @@ model CmContact {
 //  @@unique([branch_id, key], name: "branch_id")
 //}
 //
-//model company_departments {
-//  id         Int    @id @default(autoincrement())
-//  company    Int
-//  department String
-//}
+model CompanyDepartment {
+  id         Int     @id @default(autoincrement())
+  company_id Int     @map("company")
+  department String
+  Company    Company @relation(fields: [company_id], references: [id])
+
+
+  @@map("company_departments")
+}
+
 //model company_emails {
 //  company_id       Int
 //  company_email    String
@@ -3404,13 +3421,16 @@ model CmContact {
 //  description String
 //}
 //
-//model company_locations {
-//  id       Int    @id @default(autoincrement())
-//  company  Int
-//  location String
-//
-//  @@index([company], name: "company")
-//}
+model CompanyLocation {
+  id         Int     @id @default(autoincrement())
+  company_id Int     @map("company")
+  location   String
+  Company    Company @relation(fields: [company_id], references: [id])
+
+  @@index([company_id], name: "company")
+  @@map("company_locations")
+}
+
 //
 //model company_log {
 //  id       Int      @id @default(autoincrement())
@@ -3486,95 +3506,112 @@ model CmContact {
 //  @@index([company], name: "company")
 //}
 //
-//model company_rooms {
-//  id            Int     @id @default(autoincrement())
-//  company       Int
-//  description   String
-//  slots         Int
-//  all_services  Int
-//  is_active     Int
-//  all_locations Boolean @default(true)
-//  field_order   Int
-//  room_fee_type String
-//  room_fee      Float   @default(0.00)
-//  prod_id       Int     @default(0)
-//  imported      Int     @default(0)
-//  custom_id     String
-//
-//  @@index([company], name: "company")
-//}
-//
-//model company_rooms_locations {
-//  id          Int @id @default(autoincrement())
-//  room_id     Int
-//  location_id Int
-//}
-//
-//model company_rooms_services {
-//  id             Int    @id @default(autoincrement())
-//  room_id        Int
-//  service_id     Int
-//  occupier       String
-//  priority_order Int
-//  imported       Int
-//
-//  @@index([room_id], name: "room_id")
-//  @@index([room_id], name: "room_id_2")
-//  @@index([service_id], name: "service_id")
-//  @@index([service_id], name: "service_id_2")
-//}
-//
-//model company_services {
-//  id                     Int                               @id @default(autoincrement())
-//  company                Int
-//  service                String
-//  duration               String
-//  description            String
-//  price                  Float
-//  disabledusers          String?
-//  color                  String?
-//  group_id               Int
-//  online_book            Int                               @default(1)
-//  product_id             Int
-//  imported               Int
-//  communication_template Int
-//  service_order          Int
-//  sms_mode               Int
-//  sms_name               String
-//  sms_days_after         Int
-//  sms_send_time          String
-//  sms_id                 Int
-//  treatment_group_id     Int
-//  custom_id              String
-//  pos_only               Int
-//  prep_time              Int
-//  finish_time            Int
-//  deposit_amount         Float
-//  friendly_name          String
-//  max_clients            Int                               @default(0)
-//  default_room_id        Int
-//  follow_up_period       Int
-//  deposit_type           company_services_deposit_type     @default(inherit)
-//  max_models             Int
-//  availability           company_services_availability     @default(ANY)
-//  force_credit_payment   Int                               @default(0)
-//  disabled_locations     String
-//  addon_services         String
-//  service_participants   String?
-//  with_summary_title     String?
-//  online_book_type       company_services_online_book_type @default(ALL)
-//  proc_code              String
-//  duration_day           Int                               @default(0)
-//  invoice_text           String?
-//  invoice_item_name      String?
-//  online_only_service    Int
-//
-//  @@index([company], name: "company_index")
-//  @@index([group_id], name: "group_index")
-//  @@index([pos_only], name: "pos_only")
-//  @@index([product_id], name: "product_index")
-//  @@index([service], name: "service")
-//}
+model CompanyRoom {
+  id                  Int                   @id @default(autoincrement())
+  company_id          Int                   @map("company")
+  description         String
+  slots               Int
+  all_services        Int
+  is_active           Int
+  all_locations       Boolean               @default(true)
+  field_order         Int
+  room_fee_type       String
+  room_fee            Float                 @default(0.00)
+  prod_id             Int                   @default(0)
+  imported            Int                   @default(0)
+  custom_id           String
+  Company             Company               @relation(fields: [company_id], references: [id])
+  CompanyRoomLocation CompanyRoomLocation[]
+  CompanyRoomService  CompanyRoomService[]
+
+  @@index([company_id], name: "company")
+  @@map("company_rooms")
+}
+
+model CompanyRoomLocation {
+  id          Int           @id @default(autoincrement())
+  room_id     Int
+  location_id Int
+  Room        CompanyRoom   @relation(fields: [room_id], references: [id])
+  Location    CompanyBranch @relation(fields: [location_id], references: [id])
+
+  @@map("company_rooms_locations")
+}
+
+model CompanyRoomService {
+  id             Int            @id @default(autoincrement())
+  room_id        Int
+  service_id     Int
+  company_id     Int            @map("occupier")
+  priority_order Int
+  imported       Int
+  Company        Company        @relation(fields: [company_id], references: [id])
+  Room           CompanyRoom    @relation(fields: [room_id], references: [id])
+  Service        CompanyService @relation(fields: [service_id], references: [id])
+
+  @@index([room_id], name: "room_id")
+  @@index([room_id], name: "room_id_2")
+  @@index([service_id], name: "service_id")
+  @@index([service_id], name: "service_id_2")
+  @@map("company_rooms_services")
+}
+
+model CompanyService {
+  id                     Int                               @id @default(autoincrement())
+  company_id             Int                               @map("company")
+  service                String
+  duration               String
+  description            String
+  price                  Float
+  disabledusers          String?
+  color                  String?
+  group_id               Int
+  online_book            Int                               @default(1)
+  product_id             Int
+  imported               Int
+  communication_template Int
+  service_order          Int
+  sms_mode               Int
+  sms_name               String
+  sms_days_after         Int
+  sms_send_time          String
+  sms_id                 Int
+  treatment_group_id     Int
+  custom_id              String
+  pos_only               Int
+  prep_time              Int
+  finish_time            Int
+  deposit_amount         Float
+  friendly_name          String
+  max_clients            Int                               @default(0)
+  default_room_id        Int
+  follow_up_period       Int
+  deposit_type           company_services_deposit_type     @default(inherit)
+  max_models             Int
+  availability           company_services_availability     @default(ANY)
+  force_credit_payment   Int                               @default(0)
+  disabled_locations     String
+  addon_services         String
+  service_participants   String?
+  with_summary_title     String?
+  online_book_type       company_services_online_book_type @default(ALL)
+  proc_code              String
+  duration_day           Int                               @default(0)
+  invoice_text           String?
+  invoice_item_name      String?
+  online_only_service    Int
+  Company                Company                           @relation(fields: [company_id], references: [id])
+
+
+  CompanyRoomService CompanyRoomService[]
+  @@index([company_id], name: "company_index")
+  @@index([group_id], name: "group_index")
+  @@index([pos_only], name: "pos_only")
+  @@index([product_id], name: "product_index")
+  @@index([service], name: "service")
+  @@map("company_services")
+}
+
 //
 //model company_services_backup {
 //  id                     Int                                  @id @default(autoincrement())
@@ -6783,71 +6820,84 @@ model InvPaymentType {
 //  raised_by_invoice_id Int
 //}
 //
-//model jobs {
-//  job_id            Int      @id @default(autoincrement())
-//  create_date       DateTime
-//  created_by_id     Int
-//  start_date        DateTime
-//  closing_date      DateTime
-//  opening_title     String
-//  job_location      String
-//  what_you_do       String
-//  is_closed         Int
-//  department        String
-//  job_country       String
-//  opening_job_blurb String
-//  employment_type   String
-//  company_id        Int
-//  experience        String
-//}
-//
-//model job_configuration {
-//  id             Int    @id @default(autoincrement())
-//  company_id     Int
-//  about_us       String
-//  color_scheme   String
-//  opening_blurb  String
-//  page_title     String
-//  first_name     String
-//  last_name      String
-//  email          String
-//  dob            String
-//  phone          String
-//  address        String
-//  city           String
-//  postal         String
-//  country        String
-//  cover_letter   String
-//  resume         String
-//  date_available String
-//  linkedin       String
-//  reference      String
-//  how_did_hear   String
-//  who_referred   String
-//  default_reply  String
-//}
-//
-//model job_openings {
-//  openingid      Int    @id @default(autoincrement())
-//  opening_title  String
-//  hiring_manager String
-//  start_date     String
-//  end_date       String
-//  status         String
-//  published      Int
-//  occupier       Int
-//  description    String
-//  attached_forms Int
-//  created_date   String
-//}
-//
-//model job_status {
-//  id         Int    @id @default(autoincrement())
-//  company_id Int
-//  name       String
-//  status     Int
-//  order      Int
-//}
+model Job {
+  job_id            Int      @id @default(autoincrement())
+  create_date       DateTime
+  created_by_id     Int
+  start_date        DateTime
+  closing_date      DateTime
+  opening_title     String
+  job_location      String
+  what_you_do       String
+  is_closed         Boolean
+  department        String
+  job_country       String
+  opening_job_blurb String
+  employment_type   String
+  company_id        Int
+  experience        String
+  Company           Company  @relation(fields: [company_id], references: [id])
+
+  @@map("jobs")
+}
+
+model JobConfiguration {
+  id             Int     @id @default(autoincrement())
+  company_id     Int
+  about_us       String
+  color_scheme   String
+  opening_blurb  String
+  page_title     String
+  first_name     String
+  last_name      String
+  email          String
+  dob            String
+  phone          String
+  address        String
+  city           String
+  postal         String
+  country        String
+  cover_letter   String
+  resume         String
+  date_available String
+  linkedin       String
+  reference      String
+  how_did_hear   String
+  who_referred   String
+  default_reply  String
+  Company        Company @relation(fields: [company_id], references: [id])
+
+  @@map("job_configuration")
+}
+
+model JobOpening {
+  openingid      Int     @id @default(autoincrement())
+  opening_title  String
+  hiring_manager String
+  start_date     String
+  end_date       String
+  status         String
+  published      Int
+  company_id     Int     @map("occupier")
+  description    String
+  attached_forms Int
+  created_date   String
+  Company        Company @relation(fields: [company_id], references: [id])
+
+  @@map("job_openings")
+}
+
+model JobStatus {
+  id         Int     @id @default(autoincrement())
+  company_id Int
+  name       String
+  status     Boolean
+  order      Int
+  Company    Company @relation(fields: [company_id], references: [id])
+
+  @@map("job_status")
+}
+
 //
 //model jw_aesthetic_contacts {
 //  id         Int @id @default(autoincrement())
@@ -8261,6 +8311,7 @@ model InvPaymentType {
 //  create_date   DateTime
 //  company       Int
 //}
+
 //
 //model nws_campaign_member {
 //  id                    Int @id @default(autoincrement())
@@ -8663,55 +8714,60 @@ model InvPaymentType {
 //  count       Int
 //}
 //
-//model pabau_pos_settings {
-//  id                      Int       @id @default(autoincrement())
-//  company_id              Int
-//  disable_service         Int
-//  disable_products        Int
-//  disable_packages        Int
-//  disable_giftcards       Int
-//  disable_account         Int
-//  disable_price_override  Int
-//  print_mode              String    @default("receipt")
-//  disable_discount        Int
-//  email_receipt_text      String
-//  theme_col               String
-//  bank_account            String
-//  bank_number             String
-//  sort_code               String
-//  bank_name               String
-//  iban                    String
-//  swift                   String
-//  cashup_settings         Int
-//  default_payment_type    String
-//  disable_loyalty         Int
-//  email_receipt_template  Int
-//  enable_bank_details     Int
-//  vat                     String
-//  enable_biller_settings  Int
-//  display_taxes           Int
-//  use_pabau_id            Int
-//  starting_invoice_number Int       @default(1)
-//  enable_next_appointment Int
-//  show_paid_label         Int
-//  paid_label              String
-//  display_quantity        Int
-//  display_unit_cost       Int
-//  logo_position           String    @default("left")
-//  force_discount_reason   Boolean   @default(false)
-//  automatic_booking       Int
-//  gift_msg_template_id    Int
-//  gift_sms_template_id    Int
-//  package_use_by_date     Int?
-//  locked                  Int
-//  cron_day                Int?      @default(1)
-//  lock_sale_date          DateTime?
-//  stock_mode              Int
-//  inv_template            String?
-//  lock_invoice_edit       Int
-//
-//  @@index([company_id], name: "company_id")
-//}
+model PointOfSaleSetting {
+
+  id                      Int       @id @default(autoincrement())
+  company_id              Int
+  disable_service         Int
+  disable_products        Int
+  disable_packages        Int
+  disable_giftcards       Int
+  disable_account         Int
+  disable_price_override  Int
+  print_mode              String    @default("receipt")
+  disable_discount        Int
+  email_receipt_text      String
+  theme_col               String
+  bank_account            String
+  bank_number             String
+  sort_code               String
+  bank_name               String
+  iban                    String
+  swift                   String
+  cashup_settings         Int
+  default_payment_type    String
+  disable_loyalty         Int
+  email_receipt_template  Int
+  enable_bank_details     Int
+  vat                     String
+  enable_biller_settings  Int
+  display_taxes           Int
+  use_pabau_id            Int
+  starting_invoice_number Int       @default(1)
+  enable_next_appointment Int
+  show_paid_label         Int
+  paid_label              String
+  display_quantity        Int
+  display_unit_cost       Int
+  logo_position           String    @default("left")
+  force_discount_reason   Boolean   @default(false)
+  automatic_booking       Int
+  gift_msg_template_id    Int
+  gift_sms_template_id    Int
+  package_use_by_date     Int?
+  locked                  Int
+  cron_day                Int?      @default(1)
+  lock_sale_date          DateTime?
+  stock_mode              Int
+  inv_template            String?
+  lock_invoice_edit       Int
+  Company                 Company   @relation(fields: [company_id], references: [id])
+
+
+  @@index([company_id], name: "company_id")
+  @@map("pabau_pos_settings")
+}
+
 //
 //model pabau_shortener {
 //  id            Int    @id @default(autoincrement())

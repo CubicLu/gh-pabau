@@ -10,7 +10,6 @@ export interface TwoFactorHistory {
 
 export interface ThirdPartyAccess {
   id: number;
-  occupier: number;
   company_id: number;
   company_name: string;
   email: string;
@@ -19,7 +18,7 @@ export interface ThirdPartyAccess {
   last_name: string;
   logo: string;
   access_id: number;
-  company: Company;
+  Company: Company;
 }
 
 export interface AcceptEmailToken {
@@ -146,6 +145,17 @@ export interface Company {
   Candidate?: Candidate[];
   BookingStatus?: BookingStatus[];
   Salutation?: Salutation[];
+  CompanyBranch?: CompanyBranch[];
+  CompanyLocation?: CompanyLocation[];
+  CompanyRoom?: CompanyRoom[];
+  CompanyRoomService?: CompanyRoomService[];
+  CompanyService?: CompanyService[];
+  CompanyDepartment?: CompanyDepartment[];
+  Job?: Job[];
+  JobConfiguration?: JobConfiguration[];
+  JobOpening?: JobOpening[];
+  JobStatus?: JobStatus[];
+  PointOfSaleSetting?: PointOfSaleSetting[];
 }
 
 export interface AdvertCampaign {
@@ -578,7 +588,7 @@ export interface BookingStatus {
   basic_field: boolean;
   ord?: number;
   track_time: number;
-  company: Company;
+  Company: Company;
 }
 
 export interface BookingStatusChange {
@@ -593,7 +603,7 @@ export interface BookingStatusChange {
 
 export interface BookitProGeneral {
   id: number;
-  occupier: string;
+  company_id: string;
   advance_time: string;
   enable_payments: string;
   paypal_address: string;
@@ -1434,6 +1444,140 @@ export interface CmContact {
   contact_type: number;
 }
 
+export interface CompanyBranch {
+  id: number;
+  group_id: number;
+  company_id: number;
+  address: string;
+  street: string;
+  city: string;
+  county: string;
+  name: string;
+  postcode: string;
+  online_bookings: number;
+  phone: string;
+  website: string;
+  is_active: number;
+  bookable_online: number;
+  calendar_bookable: number;
+  is_default: boolean;
+  lat: number;
+  lng: number;
+  custom_id: string;
+  email: string;
+  send_conf_email: number;
+  show_online: number;
+  loc_order: number;
+  region: string;
+  invoice_template_id: number;
+  color: string;
+  notify_on_lead: boolean;
+  notice?: string;
+  Company: Company;
+  CompanyRoomLocation?: CompanyRoomLocation[];
+}
+
+export interface CompanyDepartment {
+  id: number;
+  company_id: number;
+  department: string;
+  Company: Company;
+}
+
+export interface CompanyLocation {
+  id: number;
+  company_id: number;
+  location: string;
+  Company: Company;
+}
+
+export interface CompanyRoom {
+  id: number;
+  company_id: number;
+  description: string;
+  slots: number;
+  all_services: number;
+  is_active: number;
+  all_locations: boolean;
+  field_order: number;
+  room_fee_type: string;
+  room_fee: number;
+  prod_id: number;
+  imported: number;
+  custom_id: string;
+  Company: Company;
+  CompanyRoomLocation?: CompanyRoomLocation[];
+  CompanyRoomService?: CompanyRoomService[];
+}
+
+export interface CompanyRoomLocation {
+  id: number;
+  room_id: number;
+  location_id: number;
+  Room: CompanyRoom;
+  Location: CompanyBranch;
+}
+
+export interface CompanyRoomService {
+  id: number;
+  room_id: number;
+  service_id: number;
+  company_id: number;
+  priority_order: number;
+  imported: number;
+  Company: Company;
+  Room: CompanyRoom;
+  Service: CompanyService;
+}
+
+export interface CompanyService {
+  id: number;
+  company_id: number;
+  service: string;
+  duration: string;
+  description: string;
+  price: number;
+  disabledusers?: string;
+  color?: string;
+  group_id: number;
+  online_book: number;
+  product_id: number;
+  imported: number;
+  communication_template: number;
+  service_order: number;
+  sms_mode: number;
+  sms_name: string;
+  sms_days_after: number;
+  sms_send_time: string;
+  sms_id: number;
+  treatment_group_id: number;
+  custom_id: string;
+  pos_only: number;
+  prep_time: number;
+  finish_time: number;
+  deposit_amount: number;
+  friendly_name: string;
+  max_clients: number;
+  default_room_id: number;
+  follow_up_period: number;
+  deposit_type: company_services_deposit_type;
+  max_models: number;
+  availability: company_services_availability;
+  force_credit_payment: number;
+  disabled_locations: string;
+  addon_services: string;
+  service_participants?: string;
+  with_summary_title?: string;
+  online_book_type: company_services_online_book_type;
+  proc_code: string;
+  duration_day: number;
+  invoice_text?: string;
+  invoice_item_name?: string;
+  online_only_service: number;
+  Company: Company;
+  CompanyRoomService?: CompanyRoomService[];
+}
+
 export interface GlCode {
   id: number;
   company_id: number;
@@ -1456,6 +1600,125 @@ export interface InvPaymentType {
   is_money: number;
   type: string;
   GlCode?: GlCode;
+}
+
+export interface Job {
+  job_id: number;
+  create_date: Date;
+  created_by_id: number;
+  start_date: Date;
+  closing_date: Date;
+  opening_title: string;
+  job_location: string;
+  what_you_do: string;
+  is_closed: boolean;
+  department: string;
+  job_country: string;
+  opening_job_blurb: string;
+  employment_type: string;
+  company_id: number;
+  experience: string;
+  Company: Company;
+}
+
+export interface JobConfiguration {
+  id: number;
+  company_id: number;
+  about_us: string;
+  color_scheme: string;
+  opening_blurb: string;
+  page_title: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  dob: string;
+  phone: string;
+  address: string;
+  city: string;
+  postal: string;
+  country: string;
+  cover_letter: string;
+  resume: string;
+  date_available: string;
+  linkedin: string;
+  reference: string;
+  how_did_hear: string;
+  who_referred: string;
+  default_reply: string;
+  Company: Company;
+}
+
+export interface JobOpening {
+  openingid: number;
+  opening_title: string;
+  hiring_manager: string;
+  start_date: string;
+  end_date: string;
+  status: string;
+  published: number;
+  company_id: number;
+  description: string;
+  attached_forms: number;
+  created_date: string;
+  Company: Company;
+}
+
+export interface JobStatus {
+  id: number;
+  company_id: number;
+  name: string;
+  status: boolean;
+  order: number;
+  Company: Company;
+}
+
+export interface PointOfSaleSetting {
+  id: number;
+  company_id: number;
+  disable_service: number;
+  disable_products: number;
+  disable_packages: number;
+  disable_giftcards: number;
+  disable_account: number;
+  disable_price_override: number;
+  print_mode: string;
+  disable_discount: number;
+  email_receipt_text: string;
+  theme_col: string;
+  bank_account: string;
+  bank_number: string;
+  sort_code: string;
+  bank_name: string;
+  iban: string;
+  swift: string;
+  cashup_settings: number;
+  default_payment_type: string;
+  disable_loyalty: number;
+  email_receipt_template: number;
+  enable_bank_details: number;
+  vat: string;
+  enable_biller_settings: number;
+  display_taxes: number;
+  use_pabau_id: number;
+  starting_invoice_number: number;
+  enable_next_appointment: number;
+  show_paid_label: number;
+  paid_label: string;
+  display_quantity: number;
+  display_unit_cost: number;
+  logo_position: string;
+  force_discount_reason: boolean;
+  automatic_booking: number;
+  gift_msg_template_id: number;
+  gift_sms_template_id: number;
+  package_use_by_date?: number;
+  locked: number;
+  cron_day?: number;
+  lock_sale_date?: Date;
+  stock_mode: number;
+  inv_template?: string;
+  lock_invoice_edit: number;
+  Company: Company;
 }
 
 export interface Salutation {

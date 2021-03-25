@@ -314,6 +314,7 @@ fr:
     sidebar.financials.accounts: Comptes
     sidebar.financials.cashup: ''
     sidebar.contacts: ''
-    sidebar.contacts.clients: ''
+    sidebar.contacts.clients: sidebar.contacts.clients
     sidebar.contacts.casemanager: 'Chargé de dossiers'
-    sidebar.setup: Installer
+    sidebar.setup: 'Installer'
+    common-label-apply: common-label-apply

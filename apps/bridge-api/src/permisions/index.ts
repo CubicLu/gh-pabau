@@ -15,9 +15,10 @@ const rules = {
   sameCompany: rule('sameCompany')(
     async (root, args, ctx: Context, info): Promise<boolean> => {
       try {
+        console.log(info)
         if (
           info.returnType.toString().startsWith('[') ||
-          info.operation.name.value.includes('aggregate')
+          info.returnType.toString() === 'Int'
         )
           args.where = {
             ...args.where,
@@ -48,16 +49,35 @@ const rules = {
     }
   ),
 }
-export const permissions = shield({
-  Mutation: {
-    login: allow,
-    logout: rules.isAuthenticated,
-    '*': rules.isAuthenticated && rules.interceptMutation,
+export const permissions = shield(
+  {
+    Mutation: {
+      login: allow,
+      logout: rules.isAuthenticated,
+      '*': rules.isAuthenticated && rules.interceptMutation,
+    },
+    Query: {
+      '*': rules.isAuthenticated && rules.sameCompany,
+      me: rules.isAuthenticated,
+      marketingSourcesCount: rules.isAuthenticated && rules.sameCompany,
+      ping: allow,
+    },
   },
-  Query: {
-    '*': rules.isAuthenticated && rules.sameCompany,
-    marketingSourcesCount: rules.isAuthenticated && rules.sameCompany,
-    me: rules.isAuthenticated,
-    ping: allow,
-  },
-})
+  {
+    fallbackError: async (thrownThing, parent, args, context, info) => {
+      try {
+        console.error(
+          '\nThrown with args:',
+          args,
+          '\nResolver info :',
+          info.path,
+          '\nReturn type',
+          info.returnType
+        )
+        return new Error(thrownThing.toString())
+      } catch (error) {
+        console.log(error)
+      }
+    },
+  }
+)

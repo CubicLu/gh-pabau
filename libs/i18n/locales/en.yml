@@ -186,10 +186,10 @@ en:
     ui.report-help-sidebar.kpis-care-factor-content: ui.report-help-sidebar.kpis-care-factor-content-en
     ui.report-help-sidebar.kpis-vouchers-title: Vouchers
     ui.report-help-sidebar.kpis-vouchers-content: ui.report-help-sidebar.kpis-vouchers-content_en
-    marketingsource-title-short: Source
-    marketingsource-status-field: Status
-    marketingsource-name: Name
-    marketingsource-name-lower: name
+    marketingsource-title-short: 'Source'
+    marketingsource-status-field: 'Status'
+    marketingsource-name: 'Name'
+    marketingsource-name-lower: 'name'
     marketingsource-name-tooltip: 'A friendly name for this name, eg. Facebook'
     marketingsource-name-description: 'A friendly name'
     marketingsource-name-full: 'Friendly Name'
@@ -231,6 +231,7 @@ en:
     common-label-create: Create
     common-label-cancel: Cancel
     common-label-save: Save
+    common-label-apply: Apply
     common-label-delete-warning: 'will be deleted. This action is irreversible'
     webinar-header-recomended-webinar: 'Recommended Webinar'
     intercom-title-type-article: Article
