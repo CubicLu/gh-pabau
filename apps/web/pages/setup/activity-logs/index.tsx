@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from 'react'
-import CommonHeader from '../common-header'
+import CommonHeader from '../../../components/CommonHeader'
 import Layout from '../../../components/Layout/Layout'
 import { CustomScrollbar } from '../../../components/CustomScrollbar'
 import { Typography, Row, Popover, List } from 'antd'
