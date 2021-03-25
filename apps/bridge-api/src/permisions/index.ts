@@ -1,5 +1,6 @@
 import { allow, rule, shield } from 'graphql-shield'
 import { Context } from '../context'
+import { ApolloError } from '@apollo/client'
 
 const rules = {
   isAuthenticated: rule('isAuthenticated')(
@@ -48,16 +49,50 @@ const rules = {
     }
   ),
 }
-export const permissions = shield({
-  Mutation: {
-    login: allow,
-    logout: rules.isAuthenticated,
-    '*': rules.isAuthenticated && rules.interceptMutation,
+export const permissions = shield(
+  {
+    Mutation: {
+      login: allow,
+      logout: rules.isAuthenticated,
+      '*': rules.isAuthenticated && rules.interceptMutation,
+    },
+    Query: {
+      '*': rules.isAuthenticated && rules.sameCompany,
+      me: rules.isAuthenticated,
+      ping: allow,
+    },
   },
-  Query: {
-    '*': rules.isAuthenticated && rules.sameCompany,
-    marketingSourcesCount: rules.isAuthenticated && rules.sameCompany,
-    me: rules.isAuthenticated,
-    ping: allow,
-  },
-})
+  {
+    fallbackError: async (thrownThing, parent, args, context, info) => {
+      if (thrownThing instanceof ApolloError) {
+        return thrownThing
+      } else if (thrownThing instanceof Error) {
+        // unexpected errors
+        console.error(
+          'What is being thrown:',
+          thrownThing,
+          'Context:',
+          context,
+          'Resolver:',
+          info
+        )
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        return new ApolloError('Internal server error', 'ERR_INTERNAL_SERVER')
+      } else {
+        console.error(
+          'The resolver threw something that is not an error.',
+          'What is being thrown:',
+          thrownThing,
+          'Context:',
+          context,
+          'Resolver:',
+          info
+        )
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        return new ApolloError('Internal server error', 'ERR_INTERNAL_SERVER')
+      }
+    },
+  }
+)

@@ -26,7 +26,7 @@ const General: FC<P> = ({
     handleChange('general', { featureList: data, dropdownList })
   }
 
-  const renderContent = (): JSX.Element => {
+  const RenderContent = (): JSX.Element => {
     return (
       <div className={styles.generalContainer}>
         {featureList?.map(({ key, value, checked }) => (
@@ -68,8 +68,9 @@ const General: FC<P> = ({
       description={
         'Choose to disable particular features such as the ability to over-ride prices and more.'
       }
-      bodyContent={renderContent()}
-    />
+    >
+      <RenderContent />
+    </GeneralLayout>
   )
 }
 

@@ -4,6 +4,19 @@ en:
     marketingsource-name-textfield: Name
     marketingsource-name-placeholder: 'eg. Facebook'
     marketingsource-header-edit: 'Edit Marketing Source'
+    settings-header: 'Settings'
+    settings-performance-save: 'Save Changes'
+    settings-performance-tab-header1: 'Review Schedule'
+    settings-performance-tab-header2: 'Assessment'
+    settings-performance-tab-header3: 'People'
+    settings-performance-assessment-question-title1: 'Self Assessment Questions:'
+    settings-performance-assessment-question-title2: 'Questions for Manager:'
+    settings-performance-peer-assessment-question-title: 'This question is to determine if the employee is a...'
+    settings-performance-assessment-question: 'Add Question'
+    settings-performance-assessment-note: 'One way to keep our Assessments awesome is by keeping them short.'
+    settings-performance-assessment-head1: 'Self & Manager Assessment'
+    settings-performance-assessment-head2: 'Peer Assessment'
+    settings-performance-people-header: 'Participating in Performance'
     KEY: Text
     search.placeholder: 'Search clients or leads'
     avatar.balance: Balance
@@ -173,10 +186,10 @@ en:
     ui.report-help-sidebar.kpis-care-factor-content: ui.report-help-sidebar.kpis-care-factor-content-en
     ui.report-help-sidebar.kpis-vouchers-title: Vouchers
     ui.report-help-sidebar.kpis-vouchers-content: ui.report-help-sidebar.kpis-vouchers-content_en
-    marketingsource-title-short: Source
-    marketingsource-status-field: Status
-    marketingsource-name: Name
-    marketingsource-name-lower: name
+    marketingsource-title-short: 'Source'
+    marketingsource-status-field: 'Status'
+    marketingsource-name: 'Name'
+    marketingsource-name-lower: 'name'
     marketingsource-name-tooltip: 'A friendly name for this name, eg. Facebook'
     marketingsource-name-description: 'A friendly name'
     marketingsource-name-full: 'Friendly Name'

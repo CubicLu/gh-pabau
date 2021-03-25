@@ -32,7 +32,7 @@ export const Pagination: FC<PaginationProps & AntPaginationProps> = ({
 
   return (
     <div className={styles.tableFooter}>
-      <div>
+      <div className={styles.showWrapper}>
         <p className={styles.paginationText}>
           {t('crud-table-pagination-text-showing')}{' '}
           <span>{showingRecords}</span>
