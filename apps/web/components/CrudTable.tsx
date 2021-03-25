@@ -18,8 +18,8 @@ import Layout from './Layout/Layout'
 import { LeftOutlined } from '@ant-design/icons'
 import classNames from 'classnames'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
+import { useGridData } from '../hooks/useGridData'
 import { useRouter } from 'next/router'
-import { getParentSetupData } from '../mocks/SetupGridData'
 
 const { Title } = Typography
 interface P {
@@ -78,6 +78,7 @@ const CrudTable: FC<P> = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [formSubmitAllowed, setFormSubmitAllowedStatus] = useState(true)
   const { t } = useTranslationI18()
+  const { getParentSetupData } = useGridData(t)
   const crudTableRef = useRef(null)
   const router = useRouter()
 
@@ -393,7 +394,7 @@ const CrudTable: FC<P> = ({
     if (parentMenu.length > 0) {
       router.push({
         pathname: '/setup',
-        query: { menu: parentMenu[0]?.title },
+        query: { menu: parentMenu[0]?.keyValue },
       })
     } else {
       router.push('/setup')

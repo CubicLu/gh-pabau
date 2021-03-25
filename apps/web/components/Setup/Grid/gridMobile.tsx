@@ -6,6 +6,7 @@ interface SetupGridMobileProps {
   image: string
   title: string
   subDataTitles: SubDataTitle[]
+  keyValue: string
 }
 
 interface p {
@@ -18,6 +19,7 @@ const Grid = (props: p) => {
     <div className={styles.gridMobileWrapper}>
       {data?.map((value, index) => (
         <SetupGridMobile
+          keyValue={value.keyValue}
           key={index}
           {...value}
           onClick={props.handleShowSubMenuMobile}

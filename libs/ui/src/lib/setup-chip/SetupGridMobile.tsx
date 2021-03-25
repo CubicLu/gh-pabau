@@ -10,17 +10,17 @@ export interface SubDataTitleMobile {
 export interface SetupGridMobileProps {
   image: string
   title: string
+  keyValue: string
   subDataTitles: SubDataTitleMobile[]
   onClick: (index: string) => void
 }
 
 export function SetupGridMobile(props: SetupGridMobileProps): JSX.Element {
-  const { image, title, subDataTitles } = props
-
+  const { image, title, subDataTitles, keyValue } = props
   return (
     <div
       className={styles.gridMobileWrapper}
-      onClick={() => props.onClick(title)}
+      onClick={() => props.onClick(keyValue)}
     >
       <div className={styles.imgTitleWrap}>
         <img src={image} alt={title} />

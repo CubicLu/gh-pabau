@@ -10,8 +10,9 @@ import GridSubMenuMobile from '../../components/Setup/Grid/gridSubTitleMobile'
 import { SetupSearchInput, SetupGridProps } from '@pabau/ui'
 import styles from './Setup.module.less'
 import { useRouter } from 'next/router'
-import { setupGridData } from '../../mocks/SetupGridData'
 import { useMedia } from 'react-use'
+import { useGridData } from '../../hooks/useGridData'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 
 const Index: FC = (props) => {
   const [searchValue, setSearchValue] = useState<string>('')
@@ -21,12 +22,14 @@ const Index: FC = (props) => {
   const [selectedMenuData, setMenuData] = useState<SetupGridProps[]>([])
   const router = useRouter()
   const isMobile = useMedia('(max-width: 768px)', false)
+  const { t } = useTranslationI18()
+  const { setupGridData } = useGridData(t)
 
   useEffect(() => {
     if (router.query?.menu) {
       const menu = router.query.menu
       const selectedMenuData = setupGridData.filter(
-        (thread) => thread.title === menu
+        (thread) => thread.keyValue === menu
       )
       if (selectedMenuData.length > 0) {
         setMenuData(selectedMenuData)
@@ -68,10 +71,10 @@ const Index: FC = (props) => {
     }
   }
 
-  const handleShowSubMenuMobile = (title: string) => {
+  const handleShowSubMenuMobile = (key: string) => {
     router.push({
       pathname: '/setup',
-      query: { menu: title },
+      query: { menu: key },
     })
   }
 
