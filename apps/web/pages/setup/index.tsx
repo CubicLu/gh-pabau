@@ -56,6 +56,7 @@ const Index: FC = (props) => {
             ) {
               searchDataArray.push({
                 subTitle: subTitle.title,
+                href: subTitle.href,
                 title: data.title,
               })
             }
@@ -86,7 +87,7 @@ const Index: FC = (props) => {
   return (
     <div>
       <CommonHeader handleSearch={handleSearch} />
-      <Layout active={'setup'}>
+      <Layout active={'setup'} isDisplayingFooter={false}>
         <div className={styles.cardWrapper}>
           <div className={styles.titleWrapper}>
             <span className={styles.title}>{title}</span>

@@ -344,8 +344,8 @@ en:
     setup.discount.data.dermalux: Dermalux
     setup.discount.data.londonroad,london,england: London Road, London, England
     setup.discount.data.loremstreet,liverpool,england: Lorem Street, Liverpool, England
-    setup.discount.data.jeffhackley: Jeff Hackley 
-    setup.discount.data.jessicawinter: Jessica Winter 
+    setup.discount.data.jeffhackley: Jeff Hackley
+    setup.discount.data.jessicawinter: Jessica Winter
     setup.discount.data.alexanderwang: Alexander Wang
     setup.discount.data.lindadavis: Linda Davis
     setup.discount.data.williamtyson: William Tyson
@@ -418,3 +418,84 @@ en:
     setup.discount.data.egpaund: e.g. £ 15
     setup.discount.data.enterdiscountcode: Enter discount’s code
     setup.discount.data.advancedsettings: Advanced settings
+    setup.clinic: Our clinic
+    setup.clinic.bussiness.details: Business Details
+    setup.clinic.user: Users
+    setup.clinic.user.group: User Groups
+    setup.clinic.location: Locations
+    setup.clinic.general.setting: General settings
+    setup.clinic.general.calendar: Calendar
+    setup.clinic.general.loyalty: Loyalty
+    setup.clinic.general.performance: Performance
+    setup.clinic.general.pos: Point of Sale
+    setup.clinic.general.referral: Referral
+    setup.clinic.integrations: Integrations
+    setup.clinic.data: Data
+    setup.clinic.data.custom.field: Custom Fields
+    setup.clinic.data.imports: Data Imports
+    setup.clinic.subscription: Pabau Subscription
+    setup.clinic.subscription.billing: Billing Activity
+    setup.clinic.subscription.addons: Addons
+    setup.product.service.title: Products & Services
+    setup.services: Services
+    setup.product: Products
+    setup.packages: Packages
+    setup.resources: Resources
+    setup.resources.rooms: Rooms
+    setup.resources.equipment: Equipment
+    setup.booking: Online Booking
+    setup.clinical.title: Clinical
+    setup.clinical.care: Care Pathways
+    setup.clinical.medical.form: Medical form templates
+    setup.clinical.diagnostic: Diagnostic Codes
+    setup.clinical.labs: Labs
+    setup.clinical.drugs: Drugs
+    setup.clinical.medical: Medical Conditions
+    setup.clinical.medical.contraindication: Contraindication
+    setup.clinical.vaccine: Vaccine
+    setup.clinical.vaccines: Vaccines
+    setup.clinical.diseases: Diseases
+    setup.clinical.schedule: Vaccine Schedules
+    setup.clinical.body: Body Charts
+    setup.marketing.title: Marketing & Communication
+    setup.marketing.communications: Communications
+    setup.marketing.communications.notification: Client Notifications
+    setup.marketing.communications.address: Sender Addresses
+    setup.marketing.communications.templates: Templates
+    setup.marketing.communications.sms.setting: SMS Bundles & Settings
+    setup.marketing.client.portal: Client Portal
+    setup.marketing.feedback: Feedback Survey
+    setup.marketing.lead: Lead Forms
+    setup.marketing.sources: Marketing Sources
+    setup.financials: Financials
+    setup.financials.payment: Payment Processing
+    setup.financials.discounts: Discounts
+    setup.financials.taxes: Taxes
+    setup.financials.invoice: Invoice Templates
+    setup.financials.payment.type: Payment Types
+    setup.financials.contract: Contract Pricing
+    setup.financials.cancellation: Cancellation Policy
+    setup.developer: Developer & Other
+    setup.developer.webhooks: Webhooks
+    setup.developer.API: API keys
+    setup.developer.credit: Credit Note Types
+    setup.developer.departments: Departments
+    setup.developer.field: Field Capture Labels
+    setup.developer.block: Block Out Options
+    setup.developer.appointment: Appointment Statuses
+    setup.developer.lead: Lead Groups
+    setup.developer.petty.cash: Petty Cash Types
+    setup.developer.salutations: Salutations
+    setup.developer.training: Training titles
+    setup.developer.titles: Titles
+    setup.developer.photo: Photo Uploader
+    setup.developer.cancellation: Cancellation Reasons
+    setup.developer.lead.views: Lead views
+    setup.developer.lead.group: Lead groups
+    setup.developer.lead.assignment: Lead assignment rules
+    setup.developer.family: Family relationships
+    setup.developer.doc: Doc label manager
+    setup.developer.invoice.distribution: Invoice distribution
+    setup.developer.issuing.companies: Issuing companies
+    setup.developer.job.status: Job statues
+    setup.developer.supplier.categories: Supplier categories
