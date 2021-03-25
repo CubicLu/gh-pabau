@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { Switch } from '@pabau/ui'
 
-import GeneralLayout from '../GeneralLayout'
+import SettingsLayout from '../SettingsLayout'
 
 import styles from './common.module.less'
 
@@ -45,14 +45,14 @@ const Appearance: FC<P> = ({
     )
   }
   return (
-    <GeneralLayout
+    <SettingsLayout
       title={'Appearance'}
       description={
         'Choose to hide specific features from the point of sale. Don’t sell gift cards? -No problem, just go ahead and switch it off.'
       }
     >
       <RenderContent />
-    </GeneralLayout>
+    </SettingsLayout>
   )
 }
 

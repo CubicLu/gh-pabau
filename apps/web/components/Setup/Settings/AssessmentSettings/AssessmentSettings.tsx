@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react'
 import { Button, Input } from '@pabau/ui'
 import { Row, Col } from 'antd'
 import className from 'classnames'
-import GeneralLayout from '../GeneralLayout'
+import SettingsLayout from '../SettingsLayout'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import styles from '../PosConfiguration/common.module.less'
 import { useTranslationI18 } from '../../../../hooks/useTranslationI18'
@@ -173,23 +173,19 @@ const AssessmentSettings: FC<P> = ({
 
   return (
     <div>
-      <GeneralLayout
+      <SettingsLayout
         title={t('settings-performance-assessment-head1')}
-        description={
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.'
-        }
+        description={t('settings-performance-tab-header-description')}
       >
         <RenderContent />
-      </GeneralLayout>
+      </SettingsLayout>
       <div className={styles.peerMainWrapper}>
-        <GeneralLayout
+        <SettingsLayout
           title={t('settings-performance-assessment-head2')}
-          description={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.'
-          }
+          description={t('settings-performance-tab-header-description')}
         >
           <RenderPeerContent />
-        </GeneralLayout>
+        </SettingsLayout>
       </div>
     </div>
   )
