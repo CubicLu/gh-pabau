@@ -32,7 +32,7 @@ export const Badge: FC<P> = ({ label, disabled }) => {
 
 export default Badge
 
-type ModalType = 'Marketing' | 'Care' | 'Staff' | 'Intelligence'
+export type ModalType = 'Marketing' | 'Care' | 'Staff' | 'Intelligence'
 
 export interface PlusProps {
   label?: string

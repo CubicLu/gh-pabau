@@ -1,5 +1,6 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+yarn nx run ui:alphabeticalize
 yarn run affected:lint --uncommitted=true --parallel
 yarn nx affected --base=FETCH_HEAD --target=test

@@ -52,6 +52,11 @@ type FilterTypes =
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 interface SchemaItem {
+  render?(
+    value?: unknown,
+    values?: unknown,
+    row?: number
+  ): React.ReactNode | JSX.Element
   full?: string
   fullLower?: string
   short?: string
