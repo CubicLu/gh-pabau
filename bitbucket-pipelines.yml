@@ -21,6 +21,8 @@ pipelines:
       - step:
           name: PR pipeline
           size: 2x
+          services:
+            - docker
           caches:
             - nodemodules
             - yarncustom
@@ -96,6 +98,8 @@ pipelines:
           name: test (lint+unit), build, deploy
           deployment: Production
           size: 2x
+          services:
+            - docker
           caches:
             - nodemodules
             - yarncustom
