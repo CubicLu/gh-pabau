@@ -40,7 +40,7 @@
     "nexus:generate": "ts-node-dev --transpile-only apps/bridge-api/src/schema",
     "bridge:generate": "prisma generate && pal g && yarn run prisma:types && yarn run nexus:generate",
     "bridge:prune": "./apps/bridge-api/cicd/prune.sh",
-    "postinstall": "husky install"
+    "postinstall": "husky install && prisma generate"
   },
   "private": true,
   "dependencies": {
