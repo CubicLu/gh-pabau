@@ -3,7 +3,7 @@ fr:
     marketingsource-title: 'Créer une source marketing'
     marketingsource-name-textfield: Nom
     marketingsource-name-placeholder: 'par exemple. Facebook'
-    marketingsource-header-edit: 'Créer une source marketing!x'
+    marketingsource-header-edit: 'Modifier la source marketing'
     KEY: ''
     search.placeholder: 'Rechercher des clients ou des prospects'
     avatar.balance: Équilibre
@@ -184,9 +184,9 @@ fr:
     marketingsource-header-create: 'Créer une source marketing'
     marketingsource-header-delete: 'Créer une source marketing'
     marketingsource-delete-button-label: 'Créer une source marketing'
-    marketingsource-notification-delete-success: 'Créer une source marketing!x'
+    marketingsource-notification-delete-success: 'Source de marketing supprimée'
     marketingsource-notification-delete-error: 'Créer une source marketing'
-    marketingsource-notification-update-success: 'Créer une source marketing!x'
+    marketingsource-notification-update-success: 'Source marketing mise à jour'
     marketingsource-notification-update-error: 'Créer une source marketing'
     marketingsource-status-label: actif
     marketingsource-create-button: Créer
@@ -217,7 +217,7 @@ fr:
     common-label-add: ''
     common-label-create: Créer
     common-label-cancel: ''
-    common-label-save: ''
+    common-label-save: Sauvegarder
     common-label-delete-warning: ''
     webinar-header-recomended-webinar: ''
     intercom-title-type-article: ''
@@ -318,7 +318,7 @@ fr:
     sidebar.contacts.casemanager: 'Chargé de dossiers'
     sidebar.setup: Installer
     settings-header: ''
-    settings-performance-save: ''
+    settings-performance-save: 'Sauvegarder les modifications'
     settings-performance-tab-header1: ''
     settings-performance-tab-header2: ''
     settings-performance-tab-header3: ''
