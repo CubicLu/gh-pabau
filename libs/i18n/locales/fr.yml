@@ -21,7 +21,7 @@ fr:
     search.client.label: Clients
     search.lead.label: Pistes
     search.result.one: ''
-    search.result.two: ''
+    search.result.two: 'Tous les résultats'
     search.new.client: ''
     search.advanced.search: ''
     notifications.header: Notifications
@@ -199,9 +199,9 @@ fr:
     basic-crud-table-button-active: actif
     basic-crud-table-button-inactive: Inactif
     basic-crud-table-text-status: ''
-    crud-table-pagination-text-showing: ''
-    crud-table-pagination-text-results: ''
-    crud-table-pagination-test-displaying: ''
+    crud-table-pagination-text-showing: Montrant
+    crud-table-pagination-text-results: 'résultats de'
+    crud-table-pagination-test-displaying: 'Lignes par page'
     crud-table-no-search-results: ''
     crud-table-try-adjust: ''
     crud-table-input-min-length-validate: ''
@@ -225,7 +225,7 @@ fr:
     intercom-article-title-setting-up-a-marketing-source: 'Créer une source marketing'
     intercom-article-title-create-a-marketing-source: 'Créer une source marketing'
     header-search-text-placeholder: 'Rechercher des clients ou des prospects'
-    footer-guides-header-status-text: ''
+    footer-guides-header-status-text: 'Guides associés'
     avatar.give.feedback.giveus: 'Donnez-nous vos commentaires'
     avatar.give.feedback.helpus: 'Aidez-nous à améliorer Pabau'
     avatar.give.feedback.somethingwrong: 'Un problème est survenu'
