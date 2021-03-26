@@ -23,7 +23,7 @@ async function bootstrapDevServer() {
 }
 
 if (!process.env.VERCEL) {
-  console.log('STARTING DEV SERVER')
+  console.log('STARTING SERVER')
   bootstrapDevServer()
 }
 
