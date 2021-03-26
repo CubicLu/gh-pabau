@@ -1,26 +1,23 @@
-import React from 'react'
 import { AppProps } from 'next/app'
-import Head from 'next/head'
-import { ReactComponent as NxLogo } from '../public/nx-logo-white.svg'
-// import './styles.less'
+import React from 'react'
+import 'react-phone-input-2/lib/style.css'
+import 'react-quill/dist/quill.snow.css'
+import 'react-image-crop/dist/ReactCrop.css'
 
-function CustomApp({ Component, pageProps }: AppProps) {
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
+
+const client = new ApolloClient({
+  uri: 'https://api.new.pabau.com/v1/graphql',
+  cache: new InMemoryCache(),
+})
+
+export default function CustomApp({
+  Component,
+  pageProps,
+}: AppProps): JSX.Element {
   return (
-    <>
-      <Head>
-        <title>Welcome to mgmt!</title>
-      </Head>
-      <div className="app">
-        <header className="flex">
-          <NxLogo width="75" height="50" />
-          <h1>Welcome to mgmt!</h1>
-        </header>
-        <main>
-          <Component {...pageProps} />
-        </main>
-      </div>
-    </>
+    <ApolloProvider client={client}>
+      <Component {...pageProps} />
+    </ApolloProvider>
   )
 }
-
-export default CustomApp

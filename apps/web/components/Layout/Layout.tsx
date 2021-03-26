@@ -1,8 +1,10 @@
 import React, { FC } from 'react'
-import { Layout as PabauLayout, LayoutProps } from '@pabau/ui'
+import { Layout as PabauLayout, LayoutProps, Iframe } from '@pabau/ui'
 import Search from '../Search'
 import useLogin from '../../hooks/authentication/useLogin'
 import Login from '../../pages/login'
+import { useRouter } from 'next/router'
+import { useDisabledFeaturesQuery } from '@pabau/graphql'
 
 const onMessageType = () => {
   //add mutation for send message textbox
@@ -15,10 +17,30 @@ const onCreateChannel = (name, description, isPrivate) => {
 
 const Layout: FC<LayoutProps> = ({ children, ...props }) => {
   const [authenticated, user] = useLogin(false)
+  const router = useRouter()
+  const { data, error, loading } = useDisabledFeaturesQuery()
 
-  if (typeof window === 'undefined') {
+  if (error) {
+    return (
+      <div>
+        {error.graphQLErrors.map(({ message }, i) => (
+          <span key={i}>{message}</span>
+        ))}
+      </div>
+    )
+  }
+
+  if (typeof window === 'undefined' || !data || loading) {
     return <PabauLayout> Loading animation placeholder </PabauLayout>
   }
+
+  let legacyPage: boolean | string = false
+  for (const [, row] of data.feature_flags.entries()) {
+    if (router.pathname.substring(1) === row.page_slug) {
+      legacyPage = '/' + row.fallback_slug
+    }
+  }
+
   if (
     typeof window !== 'undefined' &&
     authenticated &&
@@ -30,9 +52,10 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
         searchRender={() => <Search />}
         onCreateChannel={onCreateChannel}
         onMessageType={onMessageType}
+        legacyContent={!!legacyPage}
         {...props}
       >
-        {children}
+        {!legacyPage ? children : <Iframe urlPath={legacyPage} />}
       </PabauLayout>
     )
   }

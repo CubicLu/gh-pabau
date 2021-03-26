@@ -4,7 +4,6 @@ import { Card, Layout as AntLayout } from 'antd'
 import { Footer, Header, Menu } from '@pabau/ui'
 import styles from './Layout.module.less'
 import classNames from 'classnames'
-// import { isMobile, isTablet } from 'react-device-detect'
 
 const { Content } = AntLayout
 export interface LayoutProps {
@@ -22,6 +21,7 @@ export interface LayoutProps {
   ) => void
   isDisplayingFooter?: boolean
   onMessageType?: (e: MouseEvent<HTMLElement>) => void
+  legacyContent?: boolean
 }
 
 export const Layout: FC<LayoutProps> = ({
@@ -36,6 +36,7 @@ export const Layout: FC<LayoutProps> = ({
   card,
   children,
   active,
+  legacyContent = false,
   ...rest
 }) => {
   const [collapsed, setCollapsed] = useState(true)
@@ -53,7 +54,7 @@ export const Layout: FC<LayoutProps> = ({
           <Menu onSideBarCollapsed={onSideBarCollapsed} active={active} />
           <Content
             className={classNames(
-              styles.layoutContent,
+              !legacyContent ? styles.layoutContent : styles.layoutIframed,
               collapsed ? styles.collapsedSidebarMargin : styles.sidebarMargin
             )}
           >

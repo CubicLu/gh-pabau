@@ -18,6 +18,7 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "paths": {
+      "@pabau/graphql": ["libs/graphql/generated/graphql.tsx"],
       "@pabau/ui": ["libs/ui/src/index.ts"],
       "@pabau/yup": ["libs/yup/src/index.ts"],
       "@pabau/i18n": ["libs/i18n/src/index.ts"]

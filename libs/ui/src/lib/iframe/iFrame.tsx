@@ -16,7 +16,7 @@ interface P extends HTMLProps<HTMLIFrameElement> {
   src?: never
 }
 
-const Iframe: FC<P> = ({ urlPath, title, ...rest }) => (
+export const Iframe: FC<P> = ({ urlPath, title, ...rest }) => (
   <iframe
     src={`https://crm.pabau.com${
       urlPath?.startsWith('/') ? urlPath : `/${urlPath}`
@@ -27,5 +27,3 @@ const Iframe: FC<P> = ({ urlPath, title, ...rest }) => (
     {...rest}
   />
 )
-
-export default Iframe
