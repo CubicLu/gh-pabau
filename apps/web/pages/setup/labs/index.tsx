@@ -159,6 +159,7 @@ export function Labs(props: LabsProps) {
   const createPageOnClick = () => {
     router.push('/setup/labs/create')
   }
+
   return (
     <div>
       <CrudLayout

@@ -4,20 +4,6 @@ en:
     marketingsource-name-textfield: Name
     marketingsource-name-placeholder: 'eg. Facebook'
     marketingsource-header-edit: 'Edit Marketing Source'
-    settings-header: 'Settings'
-    settings-performance-save: 'Save Changes'
-    settings-performance-tab-header-description: 'Lorem ipsum carrots, enhanced undergraduate developer, but they do occaecat time and vitality.'
-    settings-performance-tab-header1: 'Review Schedule'
-    settings-performance-tab-header2: 'Assessment'
-    settings-performance-tab-header3: 'People'
-    settings-performance-assessment-question-title1: 'Self Assessment Questions:'
-    settings-performance-assessment-question-title2: 'Questions for Manager:'
-    settings-performance-peer-assessment-question-title: 'This question is to determine if the employee is a...'
-    settings-performance-assessment-question: 'Add Question'
-    settings-performance-assessment-note: 'One way to keep our Assessments awesome is by keeping them short.'
-    settings-performance-assessment-head1: 'Self & Manager Assessment'
-    settings-performance-assessment-head2: 'Peer Assessment'
-    settings-performance-people-header: 'Participating in Performance'
     KEY: Text
     search.placeholder: 'Search clients or leads'
     avatar.balance: Balance
@@ -331,3 +317,187 @@ en:
     sidebar.contacts.clients: Clients
     sidebar.contacts.casemanager: 'Case Manager'
     sidebar.setup: Setup
+    settings-header: Settings
+    settings-performance-save: 'Save Changes'
+    settings-performance-tab-header-description: 'Lorem ipsum carrots, enhanced undergraduate developer, but they do occaecat time and vitality.'
+    settings-performance-tab-header1: 'Review Schedule'
+    settings-performance-tab-header2: Assessment
+    settings-performance-tab-header3: People
+    settings-performance-assessment-question-title1: 'Self Assessment Questions:'
+    settings-performance-assessment-question-title2: 'Questions for Manager:'
+    settings-performance-peer-assessment-question-title: 'This question is to determine if the employee is a...'
+    settings-performance-assessment-question: 'Add Question'
+    settings-performance-assessment-note: 'One way to keep our Assessments awesome is by keeping them short.'
+    settings-performance-assessment-head1: 'Self & Manager Assessment'
+    settings-performance-assessment-head2: 'Peer Assessment'
+    settings-performance-people-header: 'Participating in Performance'
+    setup.discount.data.selectall: 'Select all'
+    setup.discount.data.subtitle1: 'Subcategory 1'
+    setup.discount.data.subtitle2: 'Subcategory 2'
+    setup.discount.data.subtitle3: 'Subcategory 3'
+    setup.discount.data.accentprime: 'Accent prime'
+    setup.discount.data.allinclusive: All-inclusive
+    setup.discount.data.botox: Botox
+    setup.discount.data.co2laser: 'CO2 Laser'
+    setup.discount.data.consultation: Consultation
+    setup.discount.data.cooltech: Cooltech
+    setup.discount.data.cooltech+accentprime: 'Cooltech + Accent Prime'
+    setup.discount.data.dermalux: Dermalux
+    'setup.discount.data.londonroad,london,england': 'London Road, London, England'
+    'setup.discount.data.loremstreet,liverpool,england': 'Lorem Street, Liverpool, England'
+    setup.discount.data.jeffhackley: 'Jeff Hackley'
+    setup.discount.data.jessicawinter: 'Jessica Winter'
+    setup.discount.data.alexanderwang: 'Alexander Wang'
+    setup.discount.data.lindadavis: 'Linda Davis'
+    setup.discount.data.williamtyson: 'William Tyson'
+    setup.discount.data.maxstarck: 'Max Starck'
+    setup.discount.data.kylewalsh: 'Kyle Walsh'
+    setup.discount.data.owenphillips: 'Owen Phillips'
+    setup.discount.data.aidankelly: 'Aidan Kelly'
+    setup.discount.data.ewanmorgan: 'Ewan Morgan'
+    setup.discount.data.jordanmartin: 'Jordan Martin'
+    setup.discount.data.grantdudley: 'Grant Dudley'
+    setup.discount.data.chooseservicediscount: 'Choose the services this discount can be applied'
+    setup.discount.data.location: Locations
+    setup.discount.data.chooselocationdiscount: 'Choose the locations this discount can be applied'
+    setup.discount.data.capitalizediscount: Discounts
+    setup.discount.data.lowercasediscount: discounts
+    setup.discount.data.creatediscount: 'Create Discount'
+    setup.discount.data.creatediscountsuccessmessage: 'You have successfully created a discount'
+    setup.discount.data.creatediscountsuccessfullymessage: 'Success! You have successfully created a discount'
+    setup.discount.data.creatediscounterrormessage: 'While creating a discount'
+    setup.discount.data.creatediscounterrormessages: 'Error! While creating a discount'
+    setup.discount.data.updatediscountsuccessmessage: 'You have successfully updated a discount'
+    setup.discount.data.updatediscountsuccessmessages: 'Success! You have successfully edited a discount'
+    setup.discount.data.updatediscounterrormessage: 'While updating a discount'
+    setup.discount.data.updatediscounterrormessages: 'Error! While editing a discount'
+    setup.discount.data.deletediscountsuccessmessage: 'You have successfully deleted a discount'
+    setup.discount.data.deletediscountsuccessmessages: 'Success! You have successfully deleted a discount'
+    setup.discount.data.deletediscounterrormessage: 'While deleting a discount'
+    setup.discount.data.deletediscounterrormessages: 'Error! While deleting a discount'
+    setup.discount.data.capitalizeamount: Amount
+    setup.discount.data.lowercaseamount: amount
+    setup.discount.data.capitalizediscountrate: 'Discount Rate'
+    setup.discount.data.lowercasediscountrate: 'discount rate'
+    setup.discount.data.capitalizeshowonreciept: 'Show on Reciept'
+    setup.discount.data.lowercaseshowonreciept: 'show on reciept'
+    setup.discount.data.capitalizecode: Code
+    setup.discount.data.lowercasecode: code
+    setup.discount.data.namerequired: 'Discount Name is required'
+    setup.discount.data.namemaxlength: 'Name should be 50 character maximum'
+    setup.discount.data.namematch: 'name should be letters, numbers and special characters'
+    setup.discount.data.amountrequired: 'Amount is required'
+    setup.discount.data.codemaxlength: 'Discount code should be 50 character maximum'
+    setup.discount.data.codematch: 'code should be letters, numbers and special characters'
+    setup.discount.data.typerequired: 'Type is required'
+    setup.discount.data.editdiscount: 'Edit Discount'
+    setup.discount.data.general: General
+    'setup.discount.data.services&locations': 'Services & Locations'
+    setup.discount.data.employees: Employees
+    setup.discount.data.employeesubtitle: 'Choose which team members would requred access to this location'
+    setup.discount.data.deletediscounttitle: 'Delete Discount?'
+    setup.discount.data.yesdelete: 'Yes, Delete'
+    setup.discount.data.deletedaction: 'will be deleted. This action is irreversable'
+    setup.discount.data.discountnamelabel: 'Discount name'
+    setup.discount.data.percentageamount: 'Percentage amount'
+    setup.discount.data.flaterate: 'Flat rate'
+    setup.discount.data.discountcode: 'Discount code'
+    setup.discount.data.dateconstrained: 'Date constrained'
+    setup.discount.data.type: Type
+    setup.discount.data.percentage: Percentage
+    setup.discount.data.reciept: Reciept
+    setup.discount.data.showonrecieptlabel: 'Show on reciept'
+    setup.discount.data.selectlocation: 'Select location'
+    setup.discount.data.service: Service
+    setup.discount.data.selectproduct: 'Select product'
+    setup.discount.data.employeelabel: Emloyee
+    setup.discount.data.selectemployee: 'Select emloyee'
+    setup.discount.data.clearallbutton: 'Clear all'
+    setup.discount.data.applyfilterbutton: 'Apply filters'
+    setup.discount.data.enterdiscountname: 'Enter discount''s name'
+    setup.discount.data.egpercentage: 'e.g. 15%'
+    setup.discount.data.egpaund: 'e.g. £ 15'
+    setup.discount.data.enterdiscountcode: 'Enter discount’s code'
+    setup.discount.data.advancedsettings: 'Advanced settings'
+    setup.clinic: 'Our clinic'
+    setup.clinic.bussiness.details: 'Business Details'
+    setup.clinic.user: Users
+    setup.clinic.user.group: 'User Groups'
+    setup.clinic.location: Locations
+    setup.clinic.general.setting: 'General settings'
+    setup.clinic.general.calendar: Calendar
+    setup.clinic.general.loyalty: Loyalty
+    setup.clinic.general.performance: Performance
+    setup.clinic.general.pos: 'Point of Sale'
+    setup.clinic.general.referral: Referral
+    setup.clinic.integrations: Integrations
+    setup.clinic.data: Data
+    setup.clinic.data.custom.field: 'Custom Fields'
+    setup.clinic.data.imports: 'Data Imports'
+    setup.clinic.subscription: 'Pabau Subscription'
+    setup.clinic.subscription.billing: 'Billing Activity'
+    setup.clinic.subscription.addons: Addons
+    setup.product.service.title: 'Products & Services'
+    setup.services: Services
+    setup.product: Products
+    setup.packages: Packages
+    setup.resources: Resources
+    setup.resources.rooms: Rooms
+    setup.resources.equipment: Equipment
+    setup.booking: 'Online Booking'
+    setup.clinical.title: Clinical
+    setup.clinical.care: 'Care Pathways'
+    setup.clinical.medical.form: 'Medical form templates'
+    setup.clinical.diagnostic: 'Diagnostic Codes'
+    setup.clinical.labs: Labs
+    setup.clinical.drugs: Drugs
+    setup.clinical.medical: 'Medical Conditions'
+    setup.clinical.medical.contraindication: Contraindication
+    setup.clinical.vaccine: Vaccine
+    setup.clinical.vaccines: Vaccines
+    setup.clinical.diseases: Diseases
+    setup.clinical.schedule: 'Vaccine Schedules'
+    setup.clinical.body: 'Body Charts'
+    setup.marketing.title: 'Marketing & Communication'
+    setup.marketing.communications: Communications
+    setup.marketing.communications.notification: 'Client Notifications'
+    setup.marketing.communications.address: 'Sender Addresses'
+    setup.marketing.communications.templates: Templates
+    setup.marketing.communications.sms.setting: 'SMS Bundles & Settings'
+    setup.marketing.client.portal: 'Client Portal'
+    setup.marketing.feedback: 'Feedback Survey'
+    setup.marketing.lead: 'Lead Forms'
+    setup.marketing.sources: 'Marketing Sources'
+    setup.financials: Financials
+    setup.financials.payment: 'Payment Processing'
+    setup.financials.discounts: Discounts
+    setup.financials.taxes: Taxes
+    setup.financials.invoice: 'Invoice Templates'
+    setup.financials.payment.type: 'Payment Types'
+    setup.financials.contract: 'Contract Pricing'
+    setup.financials.cancellation: 'Cancellation Policy'
+    setup.developer: 'Developer & Other'
+    setup.developer.webhooks: Webhooks
+    setup.developer.API: 'API keys'
+    setup.developer.credit: 'Credit Note Types'
+    setup.developer.departments: Departments
+    setup.developer.field: 'Field Capture Labels'
+    setup.developer.block: 'Block Out Options'
+    setup.developer.appointment: 'Appointment Statuses'
+    setup.developer.lead: 'Lead Groups'
+    setup.developer.petty.cash: 'Petty Cash Types'
+    setup.developer.salutations: Salutations
+    setup.developer.training: 'Training titles'
+    setup.developer.titles: Titles
+    setup.developer.photo: 'Photo Uploader'
+    setup.developer.cancellation: 'Cancellation Reasons'
+    setup.developer.lead.views: 'Lead views'
+    setup.developer.lead.group: 'Lead groups'
+    setup.developer.lead.assignment: 'Lead assignment rules'
+    setup.developer.family: 'Family relationships'
+    setup.developer.doc: 'Doc label manager'
+    setup.developer.invoice.distribution: 'Invoice distribution'
+    setup.developer.issuing.companies: 'Issuing companies'
+    setup.developer.job.status: 'Job statues'
+    setup.developer.supplier.categories: 'Supplier categories'
+    common-label-apply: Apply

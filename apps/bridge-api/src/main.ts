@@ -37,7 +37,7 @@ app
 const server = new ApolloServer({
   schema,
   context: createContext,
-  tracing: true,
+  tracing: process.env.NODE_ENV === 'development',
   persistedQueries: false,
   playground: {
     settings: {
@@ -51,6 +51,10 @@ server.applyMiddleware({ app })
 
 if (process.env.JEST_WORKER_ID === undefined) {
   app.listen({ port: PORT }, () =>
-    console.log(`Server running on port ${PORT}`)
+    console.log(
+      `Server running on port ${PORT}`,
+      'env',
+      process.env.NODE_ENV === 'development'
+    )
   )
 }

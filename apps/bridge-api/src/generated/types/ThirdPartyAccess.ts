@@ -4,7 +4,6 @@ export const ThirdPartyAccess = objectType({
   name: 'ThirdPartyAccess',
   definition(t) {
     t.model.id()
-    t.model.occupier()
     t.model.company_id()
     t.model.company_name()
     t.model.email()
@@ -13,7 +12,7 @@ export const ThirdPartyAccess = objectType({
     t.model.last_name()
     t.model.logo()
     t.model.access_id()
-    t.model.company()
+    t.model.Company()
   },
 })
 

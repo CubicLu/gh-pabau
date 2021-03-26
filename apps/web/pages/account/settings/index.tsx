@@ -10,9 +10,9 @@ import React, { FC } from 'react'
 import { useRouter } from 'next/router'
 import styles from './index.module.less'
 import useWindowSize from '../../../hooks/useWindowSize'
-import Notification from './notifications'
-import Profile from './profile'
-import Security from './security'
+import Notification from '../../../components/Account/Settings/Notifications'
+import Profile from '../../../components/Account/Settings/Profile'
+import Security from '../../../components/Account/Settings/Security'
 
 const Index: FC = () => {
   const router = useRouter()

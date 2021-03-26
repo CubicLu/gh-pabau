@@ -4,7 +4,7 @@ import { Breadcrumb, Switch, Stepper } from '@pabau/ui'
 import { LeftOutlined } from '@ant-design/icons'
 import confetti from 'canvas-confetti'
 import Layout from '../../../components/Layout/Layout'
-import CommonHeader from '../common-header'
+import CommonHeader from '../../../components/CommonHeader'
 import {
   ClientAreaFooter,
   ClientAreaStepOne,

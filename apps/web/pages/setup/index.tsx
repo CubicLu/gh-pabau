@@ -1,17 +1,18 @@
 import React, { FC, useState, useEffect } from 'react'
 import { Layout } from '@pabau/ui'
-import CommonHeader from './common-header'
-import HeaderChip from './headerChip'
-import Grid from './grid'
-import WebinarCard from './webinar'
-import SearchResults from './searchResults'
-import GridMobile from './grid/grid-mobile'
-import GridSubMenuMobile from './grid/grid-sub-title-mobile'
+import CommonHeader from '../../components/CommonHeader'
+import HeaderChip from '../../components/Setup/HeaderChip'
+import Grid from '../../components/Setup/Grid'
+import WebinarCard from '../../components/Setup/Webinar'
+import SearchResults from '../../components/Setup/SearchResults'
+import GridMobile from '../../components/Setup/Grid/gridMobile'
+import GridSubMenuMobile from '../../components/Setup/Grid/gridSubTitleMobile'
 import { SetupSearchInput, SetupGridProps } from '@pabau/ui'
 import styles from './Setup.module.less'
 import { useRouter } from 'next/router'
-import { setupGridData } from '../../mocks/SetupGridData'
 import { useMedia } from 'react-use'
+import { useGridData } from '../../hooks/useGridData'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 
 const Index: FC = (props) => {
   const [searchValue, setSearchValue] = useState<string>('')
@@ -21,12 +22,14 @@ const Index: FC = (props) => {
   const [selectedMenuData, setMenuData] = useState<SetupGridProps[]>([])
   const router = useRouter()
   const isMobile = useMedia('(max-width: 768px)', false)
+  const { t } = useTranslationI18()
+  const { setupGridData } = useGridData(t)
 
   useEffect(() => {
     if (router.query?.menu) {
       const menu = router.query.menu
       const selectedMenuData = setupGridData.filter(
-        (thread) => thread.title === menu
+        (thread) => thread.keyValue === menu
       )
       if (selectedMenuData.length > 0) {
         setMenuData(selectedMenuData)
@@ -53,6 +56,7 @@ const Index: FC = (props) => {
             ) {
               searchDataArray.push({
                 subTitle: subTitle.title,
+                href: subTitle.href,
                 title: data.title,
               })
             }
@@ -68,10 +72,10 @@ const Index: FC = (props) => {
     }
   }
 
-  const handleShowSubMenuMobile = (title: string) => {
+  const handleShowSubMenuMobile = (key: string) => {
     router.push({
       pathname: '/setup',
-      query: { menu: title },
+      query: { menu: key },
     })
   }
 
@@ -83,7 +87,7 @@ const Index: FC = (props) => {
   return (
     <div>
       <CommonHeader handleSearch={handleSearch} />
-      <Layout active={'setup'}>
+      <Layout active={'setup'} isDisplayingFooter={false}>
         <div className={styles.cardWrapper}>
           <div className={styles.titleWrapper}>
             <span className={styles.title}>{title}</span>

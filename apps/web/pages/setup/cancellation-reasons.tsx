@@ -141,6 +141,7 @@ const schema: Schema = {
       min: 2,
       example: 'Name',
       description: 'A friendly name',
+      // extra: <i>Please note: blah blah blahh</i>,
       cssWidth: 'max',
       type: 'string',
     },

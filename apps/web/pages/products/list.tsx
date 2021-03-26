@@ -23,7 +23,7 @@ import PurchaseOrder from '../../components/Setup/ProductList/PurchaseOrder'
 import StokeTake from '../../components/Setup/ProductList/StokeTake'
 import Supplier from '../../components/Setup/ProductList/Supplier'
 import Layout from '../../components/Layout/Layout'
-import CommonHeader from '../setup/common-header'
+import CommonHeader from '../../components/CommonHeader'
 import styles from './list.module.less'
 
 const { Option } = Select

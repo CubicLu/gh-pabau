@@ -5,10 +5,13 @@ import {
   FilterOutlined,
   SearchOutlined,
   InboxOutlined,
+  PlusSquareFilled,
 } from '@ant-design/icons'
 import { Drawer, Input, Popover, Radio } from 'antd'
 import classNames from 'classnames'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
+import { useMedia } from 'react-use'
+import { ReactComponent as CloseIcon } from '../assets/images/close-icon.svg'
 
 // import { isMobile, isTablet } from 'react-device-detect'
 // import { useKeyPressEvent } from 'react-use'
@@ -25,6 +28,8 @@ interface P {
   needTranslation?: boolean
   isCustomFilter?: boolean
   customFilter?: () => JSX.Element
+  setMobileSearch?: () => void
+  mobileSearch?: boolean
 }
 
 const AddButton: FC<P> = ({
@@ -35,16 +40,25 @@ const AddButton: FC<P> = ({
   onSearch,
   tableSearch = true,
   addFilter = true,
-  needTranslation,
   isCustomFilter = false,
   customFilter,
+  setMobileSearch,
+  mobileSearch,
 }) => {
   const [isActive, setIsActive] = useState<boolean | number>(
     schema?.filter?.primary?.default ?? true
   )
   const [mobFilterDrawer, setMobFilterDrawer] = useState(false)
   const [marketingSourceSearch, setMarketingSourceSearch] = useState('')
+  const [isPopOverVisible, setIsPopOverVisible] = useState(false)
   const { t } = useTranslationI18()
+  const isMobile = useMedia('(max-width: 768px)', false)
+
+  useEffect(() => {
+    if (!isMobile && mobFilterDrawer) {
+      setMobFilterDrawer(false)
+    }
+  }, [isMobile, mobFilterDrawer])
 
   useEffect(() => {
     console.log(isActive)
@@ -99,50 +113,48 @@ const AddButton: FC<P> = ({
   //TODO INVESTIGATE which branch this changes came from and are they needed
   return (
     <>
-      {/* Mobile header */}
-      {/*{mobileSearch && (*/}
-      {/*  <div className={styles.mobileSearchInput}>*/}
-      {/*    <Input*/}
-      {/*      className={styles.searchMarketingStyle}*/}
-      {/*      placeholder={t('basic-crud-table-input-search-placeholder')}*/}
-      {/*      onChange={(e) => setMarketingSourceSearch(e.target.value)}*/}
-      {/*      suffix={*/}
-      {/*        <CloseIcon*/}
-      {/*          onClick={() => {*/}
-      {/*            setMobileSearch?.()*/}
-      {/*          }}*/}
-      {/*        />*/}
-      {/*      }*/}
-      {/*      autoFocus*/}
-      {/*    />*/}
-      {/*  </div>*/}
-      {/*)}*/}
-      {/*{!mobileSearch && (*/}
-      {/*  <div*/}
-      {/*    className={classNames(styles.marketingIcon, styles.desktopViewNone)}*/}
-      {/*  >*/}
-      {/*    {tableSearch && (*/}
-      {/*      <SearchOutlined*/}
-      {/*        onClick={() => {*/}
-      {/*          setMobileSearch?.()*/}
-      {/*        }}*/}
-      {/*        className={styles.marketingIconStyle}*/}
-      {/*      />*/}
-      {/*    )}*/}
-      {/*    {addFilter && (*/}
-      {/*      <FilterOutlined*/}
-      {/*        className={styles.marketingIconStyle}*/}
-      {/*        onClick={() => setMobFilterDrawer((e) => !e)}*/}
-      {/*      />*/}
-      {/*    )}*/}
+      {mobileSearch && (
+        <div className={styles.mobileSearchInput}>
+          <Input
+            className={styles.searchMarketingStyle}
+            placeholder={t('basic-crud-table-input-search-placeholder')}
+            onChange={(e) => setMarketingSourceSearch(e.target.value)}
+            suffix={
+              <CloseIcon
+                onClick={() => {
+                  setMobileSearch?.()
+                }}
+              />
+            }
+            autoFocus
+          />
+        </div>
+      )}
+      {!mobileSearch && (
+        <div
+          className={classNames(styles.marketingIcon, styles.desktopViewNone)}
+        >
+          {tableSearch && (
+            <SearchOutlined
+              onClick={() => {
+                setMobileSearch?.()
+              }}
+              className={styles.marketingIconStyle}
+            />
+          )}
+          {addFilter && (
+            <FilterOutlined
+              className={styles.marketingIconStyle}
+              onClick={() => setMobFilterDrawer((e) => !e)}
+            />
+          )}
 
-      {/*    <PlusSquareFilled*/}
-      {/*      className={styles.plusIconStyle}*/}
-      {/*      onClick={() => onClick?.()}*/}
-      {/*    />*/}
-      {/*  </div>*/}
-      {/*)}*/}
-
+          <PlusSquareFilled
+            className={styles.plusIconStyle}
+            onClick={() => onClick?.()}
+          />
+        </div>
+      )}
       <Drawer
         visible={mobFilterDrawer}
         className={styles.mobFilterDrawer}
@@ -171,7 +183,7 @@ const AddButton: FC<P> = ({
           className={styles.applyButton}
           onClick={handleMobileDrawerApply}
         >
-          Apply
+          {t('common-label-apply')}
         </Button>
       </Drawer>
       <div
@@ -194,6 +206,8 @@ const AddButton: FC<P> = ({
           trigger="click"
           content={isCustomFilter ? customFilter : filterContent}
           placement="bottomRight"
+          visible={isPopOverVisible}
+          onVisibleChange={(visible) => setIsPopOverVisible(visible)}
           overlayClassName={
             isCustomFilter === false
               ? styles.filterPopover
@@ -201,7 +215,10 @@ const AddButton: FC<P> = ({
           }
         >
           {addFilter && (
-            <Button className={styles.filterBtn}>
+            <Button
+              className={styles.filterBtn}
+              onClick={() => setIsPopOverVisible(true)}
+            >
               <FilterOutlined /> {t('basic-crud-table-button-filter')}
             </Button>
           )}
@@ -221,7 +238,7 @@ const AddButton: FC<P> = ({
             type="primary"
             onClick={() => onClick?.()}
           >
-            <InboxOutlined /> {t(schema.createButtonLabel) ?? 'Inbox'}
+            <InboxOutlined /> {t(schema.createButtonLabel)}
             <span className={styles.inboxMsgNum}> 3</span>
           </Button>
         )}
