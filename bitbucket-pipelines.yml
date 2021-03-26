@@ -61,7 +61,7 @@ pipelines:
             - tsc --noEmit -p libs/ui/tsconfig.lib.json
             - tsc --noEmit -p libs/yup/tsconfig.lib.json
 
-            - yarn affected --base=origin/master --target=lint --with-deps --parallel
+            - sh -c "NODE_OPTIONS=--max_old_space_size=8192 yarn affected --base=origin/master --target=lint --with-deps --parallel"
             - sh -c "NODE_OPTIONS=--max_old_space_size=8192 yarn affected --base=origin/master --target=test"
             - sh -c "NODE_OPTIONS=--max_old_space_size=8192 yarn affected --base=origin/master --target=deploy"
             - cat /tmp/bot_message.txt
@@ -119,7 +119,7 @@ pipelines:
             - tsc --noEmit -p libs/ui/tsconfig.lib.json
             - tsc --noEmit -p libs/yup/tsconfig.lib.json
 
-            - /usr/bin/time -v yarn affected:lint --base=HEAD~1 --with-deps --parallel
+            - NODE_OPTIONS=--max_old_space_size=8192 /usr/bin/time -v yarn affected:lint --base=HEAD~1 --with-deps --parallel
             - NODE_OPTIONS=--max_old_space_size=8192 /usr/bin/time -v yarn affected:test --base=HEAD~1
 
             # get the commit message for this merge
