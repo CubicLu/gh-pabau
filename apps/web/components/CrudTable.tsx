@@ -5,12 +5,11 @@ import {
   MobileHeader,
   Notification,
   NotificationType,
-  SpotlightButtons,
 } from '@pabau/ui'
 import React, { FC, useEffect, useState, useRef, useMemo } from 'react'
 import { DocumentNode, useMutation } from '@apollo/client'
 import AddButton from './AddButton'
-import { Breadcrumb, SpotlightButtonsProps } from '@pabau/ui'
+import { Breadcrumb } from '@pabau/ui'
 import { Typography } from 'antd'
 import styles from './CrudTable.module.less'
 import CrudModal from './CrudModal'
@@ -38,26 +37,14 @@ interface P {
   createPageOnClick?(): void
   addFilter?: boolean
   needTranslation?: boolean
-  spotlightButtons?: SpotlightButtonsProps
-  actions?: {
-    name: string
-    render?(value?: unknown, values?: unknown, row?: number): JSX.Element
-    visible?: boolean
-    title?: string
-    width?: string
-    value: unknown
-  }[]
-  allowReorder?: boolean
-  allowRowEditing?: boolean
-  onCreateNew?: () => boolean
   editPage?: boolean
   editPageRouteLink?: string
-  onRowClick?(e: unknown): void
   isCustomFilter?: boolean
   customFilter?: () => JSX.Element
   setEditPage?(e): void
   draggable?: boolean
 }
+
 const CrudTable: FC<P> = ({
   schema,
   addQuery,
@@ -73,14 +60,8 @@ const CrudTable: FC<P> = ({
   createPageOnClick,
   addFilter = true,
   needTranslation = false,
-  spotlightButtons,
-  actions,
-  allowReorder = true,
-  allowRowEditing = true,
-  onCreateNew,
   editPage = false,
   editPageRouteLink,
-  onRowClick,
   isCustomFilter = false,
   customFilter,
   setEditPage,
@@ -400,19 +381,11 @@ const CrudTable: FC<P> = ({
   }
 
   const createNew = () => {
-    let shouldRun = true
-    if (onCreateNew) {
-      shouldRun = onCreateNew()
-    }
-    if (shouldRun) {
+    if (!createPage) {
       setModalShowing((e) => !e)
       setEditingRow({ name: '', isCreate: true })
-      if (!createPage) {
-        setModalShowing((e) => !e)
-        setEditingRow({ name: '', isCreate: true })
-      } else {
-        createPageOnClick()
-      }
+    } else {
+      createPageOnClick()
     }
   }
 
@@ -426,35 +399,6 @@ const CrudTable: FC<P> = ({
     } else {
       router.push('/setup')
     }
-  }
-  const getActions = () => {
-    return (actions || []).map(
-      (action: {
-        name: string
-        render?(): React.ReactNode
-        visible?: boolean
-        title?: string
-        width?: string
-        value: unknown
-      }) => {
-        return {
-          ...action,
-          dataIndex: action.name,
-          visible: Boolean(action.visible),
-        }
-      }
-    )
-  }
-  const addActionsToData = (data) => {
-    const base = {}
-    for (const action of getActions()) {
-      Object.defineProperty(base, action.name, {
-        value: action.value,
-      })
-    }
-    return data?.map((entry: { [key: string]: unknown }) => {
-      return { ...entry, ...base }
-    })
   }
 
   return (
@@ -565,7 +509,7 @@ const CrudTable: FC<P> = ({
             </MobileHeader>
           </div>
 
-          {allowRowEditing && modalShowing && (
+          {modalShowing && (
             <CrudModal
               schema={schema}
               editingRow={editingRow}
@@ -626,11 +570,6 @@ const CrudTable: FC<P> = ({
                 />
               )}
             </div>
-            {spotlightButtons ? (
-              <div className={styles.spotlightButtons}>
-                <SpotlightButtons {...spotlightButtons}></SpotlightButtons>
-              </div>
-            ) : null}
             <div className={styles.marketingSourcesTableContainer}>
               <Table
                 loading={isLoading}
@@ -656,22 +595,12 @@ const CrudTable: FC<P> = ({
                     visible: Object.prototype.hasOwnProperty.call(v, 'visible')
                       ? v.visible
                       : true,
-                    render(value: unknown, values: unknown, row: number) {
-                      const RenderFn = schema.fields[k].render || null
-
-                      if (RenderFn === null) return value
-
-                      return RenderFn(value, values, row)
-                    },
                   })),
-                  ...getActions(),
                 ]}
-                dataSource={addActionsToData(
-                  sourceData?.map((e: { id: string | number }) => ({
-                    key: e.id,
-                    ...e,
-                  }))
-                )}
+                dataSource={sourceData?.map((e: { id: string | number }) => ({
+                  key: e.id,
+                  ...e,
+                }))}
                 updateDataSource={({ newData, oldIndex, newIndex }) => {
                   newData = newData.map((data, i) => {
                     data.order = sourceData[i].order

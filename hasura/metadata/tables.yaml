@@ -39,7 +39,6 @@
       - updated_at
       - id
       filter: {}
-      allow_aggregations: true
   update_permissions:
   - role: public
     permission:
@@ -775,67 +774,6 @@
       filter: {}
 - table:
     schema: public
-    name: clients_data
-  insert_permissions:
-  - role: public
-    permission:
-      check: {}
-      columns:
-      - id
-      - name
-      - is_liked
-      - is_locked
-      - label
-      - format
-      - fieldFor
-      - category
-      - is_mendatory
-      - is_private
-      - is_active
-      - created_date
-      backend_only: false
-  select_permissions:
-  - role: public
-    permission:
-      columns:
-      - category
-      - created_date
-      - fieldFor
-      - format
-      - id
-      - is_liked
-      - is_locked
-      - is_mendatory
-      - is_private
-      - is_active
-      - label
-      - name
-      filter: {}
-      allow_aggregations: true
-  update_permissions:
-  - role: public
-    permission:
-      columns:
-      - category
-      - created_date
-      - fieldFor
-      - format
-      - id
-      - is_liked
-      - is_locked
-      - is_mendatory
-      - is_private
-      - is_active
-      - label
-      - name
-      filter: {}
-      check: {}
-  delete_permissions:
-  - role: public
-    permission:
-      filter: {}
-- table:
-    schema: public
     name: colors
   insert_permissions:
   - role: public
@@ -1003,46 +941,6 @@
       - location
       - total
       - type
-      filter: {}
-      check: {}
-  delete_permissions:
-  - role: public
-    permission:
-      filter: {}
-- table:
-    schema: public
-    name: custom_fields_categories
-  insert_permissions:
-  - role: public
-    permission:
-      check: {}
-      columns:
-      - id
-      - category
-      - assigned_fields
-      - created_date
-      - is_active
-      backend_only: false
-  select_permissions:
-  - role: public
-    permission:
-      columns:
-      - is_active
-      - assigned_fields
-      - category
-      - created_date
-      - id
-      filter: {}
-      allow_aggregations: true
-  update_permissions:
-  - role: public
-    permission:
-      columns:
-      - is_active
-      - assigned_fields
-      - category
-      - created_date
-      - id
       filter: {}
       check: {}
   delete_permissions:
@@ -1340,16 +1238,6 @@
 - table:
     schema: public
     name: feature_flags
-  insert_permissions:
-  - role: public
-    permission:
-      check: {}
-      columns:
-      - id
-      - page_slug
-      - fallback_slug
-      - status
-      backend_only: false
   select_permissions:
   - role: public
     permission:
@@ -1766,64 +1654,6 @@
       filter: {}
 - table:
     schema: public
-    name: lead_fields
-  insert_permissions:
-  - role: public
-    permission:
-      check: {}
-      columns:
-      - id
-      - name
-      - label
-      - format
-      - fieldFor
-      - category
-      - is_mendatory
-      - is_private
-      - is_active
-      - is_locked
-      - created_date
-      backend_only: false
-  select_permissions:
-  - role: public
-    permission:
-      columns:
-      - is_active
-      - is_locked
-      - is_mendatory
-      - is_private
-      - category
-      - fieldFor
-      - format
-      - label
-      - name
-      - created_date
-      - id
-      filter: {}
-      allow_aggregations: true
-  update_permissions:
-  - role: public
-    permission:
-      columns:
-      - is_active
-      - is_locked
-      - is_mendatory
-      - is_private
-      - category
-      - fieldFor
-      - format
-      - label
-      - name
-      - created_date
-      - id
-      filter: {}
-      check: null
-  delete_permissions:
-  - role: public
-    permission:
-      filter: {}
-- table:
-    schema: public
     name: library
   insert_permissions:
   - role: public
@@ -1934,6 +1764,7 @@
       - address
       - apt
       - badges
+      - badgesIcon
       - bookable
       - email
       - employees
@@ -1942,7 +1773,6 @@
       - is_active
       - name
       - phone
-      - position
       - postcode
       - showOnline
       - website
@@ -1954,6 +1784,7 @@
       - address
       - apt
       - badges
+      - badgesIcon
       - bookable
       - created_at
       - email
@@ -1965,7 +1796,6 @@
       - name
       - order
       - phone
-      - position
       - postcode
       - showOnline
       - updated_at
@@ -1977,21 +1807,10 @@
     permission:
       columns:
       - address
-      - apt
-      - badges
-      - bookable
-      - email
-      - employees
-      - hasCalender
       - img
       - is_active
       - name
       - order
-      - phone
-      - position
-      - postcode
-      - showOnline
-      - website
       filter: {}
       check: null
   delete_permissions:

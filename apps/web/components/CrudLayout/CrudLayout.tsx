@@ -1,7 +1,6 @@
 import { FC } from 'react'
 import { DocumentNode } from '@apollo/client'
 import CrudTable from '../CrudTable'
-import { SpotlightButtonsProps } from '@pabau/ui'
 
 interface P {
   schema: Schema
@@ -18,21 +17,8 @@ interface P {
   createPageOnClick?(): void
   addFilter?: boolean
   needTranslation?: boolean
-  spotlightButtons?: SpotlightButtonsProps
-  actions?: {
-    name: string
-    render?(value?: unknown, values?: unknown, row?: number): JSX.Element
-    visible?: boolean
-    title?: string
-    width?: string
-    value: unknown
-  }[]
-  allowReorder?: boolean
-  allowRowEditing?: boolean
-  onCreateNew?: () => boolean
   editPage?: boolean
   editPageRouteLink?: string
-  onRowClick?(e: unknown): void
   isCustomFilter?: boolean
   customFilter?: () => JSX.Element
   setEditPage?(e): void

@@ -41,9 +41,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/web/**/*.{ts,tsx}"
-            ],
+            "lintFilePatterns": ["apps/web/**/*.{ts,tsx}"],
             "maxWarnings": 0
           }
         },
@@ -87,9 +85,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/web-e2e/**/*.{js,ts}"
-            ]
+            "lintFilePatterns": ["apps/web-e2e/**/*.{js,ts}"]
           }
         }
       }
@@ -103,9 +99,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "libs/ui/**/*.{ts,tsx,js,jsx}"
-            ],
+            "lintFilePatterns": ["libs/ui/**/*.{ts,tsx,js,jsx}"],
             "maxWarnings": 0
           }
         },
@@ -155,16 +149,6 @@
           "configurations": {
             "production": {}
           }
-        },
-        "alphabeticalize": {
-          "builder": "@nrwl/workspace:run-commands",
-          "outputs": [],
-          "options": {
-            "command": "node ./libs/ui/scripts/alphabeticalize.js"
-          },
-          "configurations": {
-            "production": {}
-          }
         }
       }
     },
@@ -189,9 +173,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/ui-e2e/**/*.{js,ts}"
-            ]
+            "lintFilePatterns": ["apps/ui-e2e/**/*.{js,ts}"]
           }
         }
       }
@@ -205,9 +187,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "libs/yup/**/*.ts"
-            ]
+            "lintFilePatterns": ["libs/yup/**/*.ts"]
           }
         },
         "test": {
@@ -227,16 +207,12 @@
       "architect": {
         "build": {
           "builder": "@nrwl/node:build",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "outputs": ["{options.outputPath}"],
           "options": {
             "outputPath": "dist/apps/backend",
             "main": "apps/backend/src/main.ts",
             "tsConfig": "apps/backend/tsconfig.app.json",
-            "assets": [
-              "apps/backend/src/assets"
-            ]
+            "assets": ["apps/backend/src/assets"]
           },
           "configurations": {
             "production": {
@@ -261,9 +237,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/backend/**/*.ts"
-            ]
+            "lintFilePatterns": ["apps/backend/**/*.ts"]
           }
         },
         "test": {
@@ -323,9 +297,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/mgmt/**/*.{ts,tsx}"
-            ]
+            "lintFilePatterns": ["apps/mgmt/**/*.{ts,tsx}"]
           }
         },
         "test": {
@@ -368,9 +340,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/mgmt-e2e/**/*.{js,ts}"
-            ]
+            "lintFilePatterns": ["apps/mgmt-e2e/**/*.{js,ts}"]
           }
         }
       }
@@ -413,9 +383,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/connect/**/*.{ts,tsx}"
-            ]
+            "lintFilePatterns": ["apps/connect/**/*.{ts,tsx}"]
           }
         },
         "test": {
@@ -448,9 +416,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/connect-e2e/**/*.{js,ts}"
-            ]
+            "lintFilePatterns": ["apps/connect-e2e/**/*.{js,ts}"]
           }
         }
       }
@@ -479,9 +445,7 @@
         },
         "bundle-ios": {
           "builder": "@nrwl/react-native:bundle",
-          "outputs": [
-            "apps/mobile/build"
-          ],
+          "outputs": ["apps/mobile/build"],
           "options": {
             "entryFile": "apps/mobile/src/main.tsx",
             "platform": "ios",
@@ -511,9 +475,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/mobile/**/*.{js,ts,tsx}"
-            ]
+            "lintFilePatterns": ["apps/mobile/**/*.{js,ts,tsx}"]
           }
         },
         "sync-deps": {
@@ -537,16 +499,12 @@
       "architect": {
         "build": {
           "builder": "@nrwl/node:build",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "outputs": ["{options.outputPath}"],
           "options": {
             "outputPath": "dist/apps/bridge-api",
             "main": "apps/bridge-api/src/main.ts",
             "tsConfig": "apps/bridge-api/tsconfig.app.json",
-            "assets": [
-              "apps/bridge-api/src/assets"
-            ]
+            "assets": ["apps/bridge-api/src/assets"]
           },
           "configurations": {
             "production": {
@@ -571,17 +529,13 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/bridge-api/**/*.ts"
-            ],
+            "lintFilePatterns": ["apps/bridge-api/**/*.ts"],
             "maxWarnings": 0
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/bridge-api"
-          ],
+          "outputs": ["coverage/apps/bridge-api"],
           "options": {
             "jestConfig": "apps/bridge-api/jest.config.js",
             "passWithNoTests": true
@@ -615,16 +569,12 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "libs/i18n/**/*.ts"
-            ]
+            "lintFilePatterns": ["libs/i18n/**/*.ts"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/i18n"
-          ],
+          "outputs": ["coverage/libs/i18n"],
           "options": {
             "jestConfig": "libs/i18n/jest.config.js",
             "passWithNoTests": true
