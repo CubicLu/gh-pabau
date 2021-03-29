@@ -55,7 +55,5 @@ export const invPaymentTypeMutation = extendType({
     t.crud.updateOneInvPaymentType()
     t.crud.upsertOneInvPaymentType()
     t.crud.deleteOneInvPaymentType()
-    t.crud.updateManyInvPaymentType()
-    t.crud.deleteManyInvPaymentType()
   },
 })

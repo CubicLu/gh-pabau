@@ -89,7 +89,5 @@ export const pointOfSaleSettingMutation = extendType({
     t.crud.updateOnePointOfSaleSetting()
     t.crud.upsertOnePointOfSaleSetting()
     t.crud.deleteOnePointOfSaleSetting()
-    t.crud.updateManyPointOfSaleSetting()
-    t.crud.deleteManyPointOfSaleSetting()
   },
 })

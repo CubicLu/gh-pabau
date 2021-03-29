@@ -53,7 +53,5 @@ export const mediaLlibraryAttachmentMutation = extendType({
     t.crud.updateOneMediaLlibraryAttachment()
     t.crud.upsertOneMediaLlibraryAttachment()
     t.crud.deleteOneMediaLlibraryAttachment()
-    t.crud.updateManyMediaLlibraryAttachment()
-    t.crud.deleteManyMediaLlibraryAttachment()
   },
 })

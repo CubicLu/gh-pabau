@@ -46,7 +46,5 @@ export const secondAtAnswerMutation = extendType({
     t.crud.updateOneSecondAtAnswer()
     t.crud.upsertOneSecondAtAnswer()
     t.crud.deleteOneSecondAtAnswer()
-    t.crud.updateManySecondAtAnswer()
-    t.crud.deleteManySecondAtAnswer()
   },
 })

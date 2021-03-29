@@ -50,7 +50,5 @@ export const classCategoryMutation = extendType({
     t.crud.updateOneClassCategory()
     t.crud.upsertOneClassCategory()
     t.crud.deleteOneClassCategory()
-    t.crud.updateManyClassCategory()
-    t.crud.deleteManyClassCategory()
   },
 })

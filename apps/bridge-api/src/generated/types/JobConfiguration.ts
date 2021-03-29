@@ -67,7 +67,5 @@ export const jobConfigurationMutation = extendType({
     t.crud.updateOneJobConfiguration()
     t.crud.upsertOneJobConfiguration()
     t.crud.deleteOneJobConfiguration()
-    t.crud.updateManyJobConfiguration()
-    t.crud.deleteManyJobConfiguration()
   },
 })

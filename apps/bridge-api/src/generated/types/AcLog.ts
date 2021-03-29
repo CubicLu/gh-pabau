@@ -56,7 +56,5 @@ export const acLogMutation = extendType({
     t.crud.updateOneAcLog()
     t.crud.upsertOneAcLog()
     t.crud.deleteOneAcLog()
-    t.crud.updateManyAcLog()
-    t.crud.deleteManyAcLog()
   },
 })

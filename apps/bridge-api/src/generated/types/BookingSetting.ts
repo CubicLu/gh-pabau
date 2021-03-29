@@ -145,7 +145,5 @@ export const bookingSettingMutation = extendType({
     t.crud.updateOneBookingSetting()
     t.crud.upsertOneBookingSetting()
     t.crud.deleteOneBookingSetting()
-    t.crud.updateManyBookingSetting()
-    t.crud.deleteManyBookingSetting()
   },
 })

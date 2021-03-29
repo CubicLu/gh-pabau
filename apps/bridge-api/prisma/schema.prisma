@@ -771,8 +771,8 @@ model BookingStatusChange {
 
 model BookitProGeneral {
 
-  id                         Int                                @id @default(autoincrement())
-  company_id                 Int                                @map("occupier")
+  id                         Int                                   @id @default(autoincrement())
+  company_id                 Int                                   @map("occupier")
   advance_time               String
   enable_payments            String
   paypal_address             String
@@ -1750,8 +1750,8 @@ model CmContact {
   is_active                Int                         @default(1)
   xero_contact_id          String
   is_ambassador            Int                         @default(0)
-  UpdatedDate              DateTime
-  xero_updated_date        DateTime
+  UpdatedDate              DateTime?
+  xero_updated_date        DateTime?
   discount_type            Int
   custom_clinic_id         Int
   ambassador_id            Int

@@ -47,7 +47,5 @@ export const clinicalSoftwareMutation = extendType({
     t.crud.updateOneClinicalSoftware()
     t.crud.upsertOneClinicalSoftware()
     t.crud.deleteOneClinicalSoftware()
-    t.crud.updateManyClinicalSoftware()
-    t.crud.deleteManyClinicalSoftware()
   },
 })

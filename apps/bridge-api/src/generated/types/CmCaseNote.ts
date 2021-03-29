@@ -50,7 +50,5 @@ export const cmCaseNoteMutation = extendType({
     t.crud.updateOneCmCaseNote()
     t.crud.upsertOneCmCaseNote()
     t.crud.deleteOneCmCaseNote()
-    t.crud.updateManyCmCaseNote()
-    t.crud.deleteManyCmCaseNote()
   },
 })

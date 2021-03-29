@@ -64,7 +64,5 @@ export const cashupReportMutation = extendType({
     t.crud.updateOneCashupReport()
     t.crud.upsertOneCashupReport()
     t.crud.deleteOneCashupReport()
-    t.crud.updateManyCashupReport()
-    t.crud.deleteManyCashupReport()
   },
 })

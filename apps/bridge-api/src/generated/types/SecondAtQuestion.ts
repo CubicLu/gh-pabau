@@ -47,7 +47,5 @@ export const secondAtQuestionMutation = extendType({
     t.crud.updateOneSecondAtQuestion()
     t.crud.upsertOneSecondAtQuestion()
     t.crud.deleteOneSecondAtQuestion()
-    t.crud.updateManySecondAtQuestion()
-    t.crud.deleteManySecondAtQuestion()
   },
 })

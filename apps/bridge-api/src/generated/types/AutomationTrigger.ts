@@ -50,7 +50,5 @@ export const automationTriggerMutation = extendType({
     t.crud.updateOneAutomationTrigger()
     t.crud.upsertOneAutomationTrigger()
     t.crud.deleteOneAutomationTrigger()
-    t.crud.updateManyAutomationTrigger()
-    t.crud.deleteManyAutomationTrigger()
   },
 })

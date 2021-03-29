@@ -50,7 +50,5 @@ export const cancelReasonMutation = extendType({
     t.crud.updateOneCancelReason()
     t.crud.upsertOneCancelReason()
     t.crud.deleteOneCancelReason()
-    t.crud.updateManyCancelReason()
-    t.crud.deleteManyCancelReason()
   },
 })

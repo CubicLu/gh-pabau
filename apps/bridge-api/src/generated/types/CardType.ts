@@ -55,7 +55,5 @@ export const cardTypeMutation = extendType({
     t.crud.updateOneCardType()
     t.crud.upsertOneCardType()
     t.crud.deleteOneCardType()
-    t.crud.updateManyCardType()
-    t.crud.deleteManyCardType()
   },
 })

@@ -109,7 +109,5 @@ export const bookitProGeneralMutation = extendType({
     t.crud.updateOneBookitProGeneral()
     t.crud.upsertOneBookitProGeneral()
     t.crud.deleteOneBookitProGeneral()
-    t.crud.updateManyBookitProGeneral()
-    t.crud.deleteManyBookitProGeneral()
   },
 })

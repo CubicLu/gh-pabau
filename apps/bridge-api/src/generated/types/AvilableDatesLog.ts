@@ -49,7 +49,5 @@ export const avilableDatesLogMutation = extendType({
     t.crud.updateOneAvilableDatesLog()
     t.crud.upsertOneAvilableDatesLog()
     t.crud.deleteOneAvilableDatesLog()
-    t.crud.updateManyAvilableDatesLog()
-    t.crud.deleteManyAvilableDatesLog()
   },
 })

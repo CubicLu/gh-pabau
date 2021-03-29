@@ -49,7 +49,5 @@ export const checkinProductMutation = extendType({
     t.crud.updateOneCheckinProduct()
     t.crud.upsertOneCheckinProduct()
     t.crud.deleteOneCheckinProduct()
-    t.crud.updateManyCheckinProduct()
-    t.crud.deleteManyCheckinProduct()
   },
 })

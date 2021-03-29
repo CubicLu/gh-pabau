@@ -47,7 +47,5 @@ export const atConcernMutation = extendType({
     t.crud.updateOneAtConcern()
     t.crud.upsertOneAtConcern()
     t.crud.deleteOneAtConcern()
-    t.crud.updateManyAtConcern()
-    t.crud.deleteManyAtConcern()
   },
 })

@@ -50,7 +50,5 @@ export const campaignAttachmentMutation = extendType({
     t.crud.updateOneCampaignAttachment()
     t.crud.upsertOneCampaignAttachment()
     t.crud.deleteOneCampaignAttachment()
-    t.crud.updateManyCampaignAttachment()
-    t.crud.deleteManyCampaignAttachment()
   },
 })

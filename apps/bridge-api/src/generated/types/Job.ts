@@ -59,7 +59,5 @@ export const jobMutation = extendType({
     t.crud.updateOneJob()
     t.crud.upsertOneJob()
     t.crud.deleteOneJob()
-    t.crud.updateManyJob()
-    t.crud.deleteManyJob()
   },
 })

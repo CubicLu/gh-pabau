@@ -48,7 +48,5 @@ export const atQuestionMutation = extendType({
     t.crud.updateOneAtQuestion()
     t.crud.upsertOneAtQuestion()
     t.crud.deleteOneAtQuestion()
-    t.crud.updateManyAtQuestion()
-    t.crud.deleteManyAtQuestion()
   },
 })

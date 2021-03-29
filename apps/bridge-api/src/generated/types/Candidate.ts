@@ -58,7 +58,5 @@ export const candidateMutation = extendType({
     t.crud.updateOneCandidate()
     t.crud.upsertOneCandidate()
     t.crud.deleteOneCandidate()
-    t.crud.updateManyCandidate()
-    t.crud.deleteManyCandidate()
   },
 })

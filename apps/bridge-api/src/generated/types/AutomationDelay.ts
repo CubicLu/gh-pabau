@@ -51,7 +51,5 @@ export const automationDelayMutation = extendType({
     t.crud.updateOneAutomationDelay()
     t.crud.upsertOneAutomationDelay()
     t.crud.deleteOneAutomationDelay()
-    t.crud.updateManyAutomationDelay()
-    t.crud.deleteManyAutomationDelay()
   },
 })

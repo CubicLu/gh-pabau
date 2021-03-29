@@ -49,7 +49,5 @@ export const cmAppointmentCustomMutation = extendType({
     t.crud.updateOneCmAppointmentCustom()
     t.crud.upsertOneCmAppointmentCustom()
     t.crud.deleteOneCmAppointmentCustom()
-    t.crud.updateManyCmAppointmentCustom()
-    t.crud.deleteManyCmAppointmentCustom()
   },
 })

@@ -49,7 +49,5 @@ export const bookitProSliderMutation = extendType({
     t.crud.updateOneBookitProSlider()
     t.crud.upsertOneBookitProSlider()
     t.crud.deleteOneBookitProSlider()
-    t.crud.updateManyBookitProSlider()
-    t.crud.deleteManyBookitProSlider()
   },
 })

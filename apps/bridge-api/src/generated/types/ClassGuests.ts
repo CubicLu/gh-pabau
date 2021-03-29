@@ -50,7 +50,5 @@ export const classGuestsMutation = extendType({
     t.crud.updateOneClassGuests()
     t.crud.upsertOneClassGuests()
     t.crud.deleteOneClassGuests()
-    t.crud.updateManyClassGuests()
-    t.crud.deleteManyClassGuests()
   },
 })

@@ -603,7 +603,7 @@ export interface BookingStatusChange {
 
 export interface BookitProGeneral {
   id: number;
-  company_id: string;
+  company_id: number;
   advance_time: string;
   enable_payments: string;
   paypal_address: string;
@@ -1433,8 +1433,8 @@ export interface CmContact {
   is_active: number;
   xero_contact_id: string;
   is_ambassador: number;
-  UpdatedDate: Date;
-  xero_updated_date: Date;
+  UpdatedDate?: Date;
+  xero_updated_date?: Date;
   discount_type: number;
   custom_clinic_id: number;
   ambassador_id: number;

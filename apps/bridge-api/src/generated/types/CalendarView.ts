@@ -60,7 +60,5 @@ export const calendarViewMutation = extendType({
     t.crud.updateOneCalendarView()
     t.crud.upsertOneCalendarView()
     t.crud.deleteOneCalendarView()
-    t.crud.updateManyCalendarView()
-    t.crud.deleteManyCalendarView()
   },
 })

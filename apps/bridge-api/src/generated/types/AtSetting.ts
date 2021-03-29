@@ -48,7 +48,5 @@ export const atSettingMutation = extendType({
     t.crud.updateOneAtSetting()
     t.crud.upsertOneAtSetting()
     t.crud.deleteOneAtSetting()
-    t.crud.updateManyAtSetting()
-    t.crud.deleteManyAtSetting()
   },
 })

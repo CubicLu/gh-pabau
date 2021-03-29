@@ -54,7 +54,5 @@ export const clockinTimesheetMutation = extendType({
     t.crud.updateOneClockinTimesheet()
     t.crud.upsertOneClockinTimesheet()
     t.crud.deleteOneClockinTimesheet()
-    t.crud.updateManyClockinTimesheet()
-    t.crud.deleteManyClockinTimesheet()
   },
 })

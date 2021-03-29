@@ -49,7 +49,5 @@ export const appBeforeAfterMutation = extendType({
     t.crud.updateOneAppBeforeAfter()
     t.crud.upsertOneAppBeforeAfter()
     t.crud.deleteOneAppBeforeAfter()
-    t.crud.updateManyAppBeforeAfter()
-    t.crud.deleteManyAppBeforeAfter()
   },
 })

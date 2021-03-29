@@ -52,7 +52,5 @@ export const classTemplateSettingMutation = extendType({
     t.crud.updateOneClassTemplateSetting()
     t.crud.upsertOneClassTemplateSetting()
     t.crud.deleteOneClassTemplateSetting()
-    t.crud.updateManyClassTemplateSetting()
-    t.crud.deleteManyClassTemplateSetting()
   },
 })

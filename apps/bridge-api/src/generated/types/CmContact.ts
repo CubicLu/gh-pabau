@@ -116,7 +116,5 @@ export const cmContactMutation = extendType({
     t.crud.updateOneCmContact()
     t.crud.upsertOneCmContact()
     t.crud.deleteOneCmContact()
-    t.crud.updateManyCmContact()
-    t.crud.deleteManyCmContact()
   },
 })

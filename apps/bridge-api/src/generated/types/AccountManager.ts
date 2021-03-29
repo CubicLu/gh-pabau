@@ -72,7 +72,5 @@ export const accountManagerMutation = extendType({
     t.crud.updateOneAccountManager()
     t.crud.upsertOneAccountManager()
     t.crud.deleteOneAccountManager()
-    t.crud.updateManyAccountManager()
-    t.crud.deleteManyAccountManager()
   },
 })

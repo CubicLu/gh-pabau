@@ -73,7 +73,5 @@ export const companyBranchMutation = extendType({
     t.crud.updateOneCompanyBranch()
     t.crud.upsertOneCompanyBranch()
     t.crud.deleteOneCompanyBranch()
-    t.crud.updateManyCompanyBranch()
-    t.crud.deleteManyCompanyBranch()
   },
 })

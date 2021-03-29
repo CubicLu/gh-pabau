@@ -48,7 +48,5 @@ export const calRangeRequestMutation = extendType({
     t.crud.updateOneCalRangeRequest()
     t.crud.upsertOneCalRangeRequest()
     t.crud.deleteOneCalRangeRequest()
-    t.crud.updateManyCalRangeRequest()
-    t.crud.deleteManyCalRangeRequest()
   },
 })

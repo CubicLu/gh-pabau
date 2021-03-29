@@ -48,7 +48,5 @@ export const appSubscriptionMutation = extendType({
     t.crud.updateOneAppSubscription()
     t.crud.upsertOneAppSubscription()
     t.crud.deleteOneAppSubscription()
-    t.crud.updateManyAppSubscription()
-    t.crud.deleteManyAppSubscription()
   },
 })

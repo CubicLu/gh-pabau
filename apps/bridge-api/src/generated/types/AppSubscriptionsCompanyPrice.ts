@@ -47,7 +47,5 @@ export const appSubscriptionsCompanyPriceMutation = extendType({
     t.crud.updateOneAppSubscriptionsCompanyPrice()
     t.crud.upsertOneAppSubscriptionsCompanyPrice()
     t.crud.deleteOneAppSubscriptionsCompanyPrice()
-    t.crud.updateManyAppSubscriptionsCompanyPrice()
-    t.crud.deleteManyAppSubscriptionsCompanyPrice()
   },
 })

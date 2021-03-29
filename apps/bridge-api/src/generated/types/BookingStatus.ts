@@ -54,7 +54,5 @@ export const bookingStatusMutation = extendType({
     t.crud.updateOneBookingStatus()
     t.crud.upsertOneBookingStatus()
     t.crud.deleteOneBookingStatus()
-    t.crud.updateManyBookingStatus()
-    t.crud.deleteManyBookingStatus()
   },
 })

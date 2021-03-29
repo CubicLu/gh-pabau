@@ -60,7 +60,5 @@ export const classProductMutation = extendType({
     t.crud.updateOneClassProduct()
     t.crud.upsertOneClassProduct()
     t.crud.deleteOneClassProduct()
-    t.crud.updateManyClassProduct()
-    t.crud.deleteManyClassProduct()
   },
 })

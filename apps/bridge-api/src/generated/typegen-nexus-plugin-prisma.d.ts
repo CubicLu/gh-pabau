@@ -9378,7 +9378,7 @@ export interface NexusGenInputs {
     Status?: NexusGenEnums['cm_contacts_Status'] | null; // cm_contacts_Status
     Title: string; // String!
     Twitter: string; // String!
-    UpdatedDate: NexusGenScalars['DateTime']; // DateTime!
+    UpdatedDate?: NexusGenScalars['DateTime'] | null; // DateTime
     alerts_drop: string; // String!
     ambassador_id: number; // Int!
     contact_type?: number | null; // Int
@@ -9401,7 +9401,7 @@ export interface NexusGenInputs {
     polite_notice: string; // String!
     privacy_policy: string; // String!
     xero_contact_id: string; // String!
-    xero_updated_date: NexusGenScalars['DateTime']; // DateTime!
+    xero_updated_date?: NexusGenScalars['DateTime'] | null; // DateTime
   }
   CmContactOrderByInput: { // input type
     AddToQuickBooks?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -9528,7 +9528,7 @@ export interface NexusGenInputs {
     Status?: NexusGenEnums['cm_contacts_Status'] | null; // cm_contacts_Status
     Title: string; // String!
     Twitter: string; // String!
-    UpdatedDate: NexusGenScalars['DateTime']; // DateTime!
+    UpdatedDate?: NexusGenScalars['DateTime'] | null; // DateTime
     alerts_drop: string; // String!
     ambassador_id: number; // Int!
     contact_type?: number | null; // Int
@@ -9551,7 +9551,7 @@ export interface NexusGenInputs {
     polite_notice: string; // String!
     privacy_policy: string; // String!
     xero_contact_id: string; // String!
-    xero_updated_date: NexusGenScalars['DateTime']; // DateTime!
+    xero_updated_date?: NexusGenScalars['DateTime'] | null; // DateTime
   }
   CmContactUncheckedUpdateInput: { // input type
     AddToQuickBooks?: NexusGenInputs['Enumcm_contacts_AddToQuickBooksFieldUpdateOperationsInput'] | null; // Enumcm_contacts_AddToQuickBooksFieldUpdateOperationsInput
@@ -9603,7 +9603,7 @@ export interface NexusGenInputs {
     Status?: NexusGenInputs['Enumcm_contacts_StatusFieldUpdateOperationsInput'] | null; // Enumcm_contacts_StatusFieldUpdateOperationsInput
     Title?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     Twitter?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    UpdatedDate?: NexusGenInputs['DateTimeFieldUpdateOperationsInput'] | null; // DateTimeFieldUpdateOperationsInput
+    UpdatedDate?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     alerts_drop?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     ambassador_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     contact_type?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -9626,7 +9626,7 @@ export interface NexusGenInputs {
     polite_notice?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     privacy_policy?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     xero_contact_id?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    xero_updated_date?: NexusGenInputs['DateTimeFieldUpdateOperationsInput'] | null; // DateTimeFieldUpdateOperationsInput
+    xero_updated_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
   }
   CmContactUncheckedUpdateManyInput: { // input type
     AddToQuickBooks?: NexusGenInputs['Enumcm_contacts_AddToQuickBooksFieldUpdateOperationsInput'] | null; // Enumcm_contacts_AddToQuickBooksFieldUpdateOperationsInput
@@ -9678,7 +9678,7 @@ export interface NexusGenInputs {
     Status?: NexusGenInputs['Enumcm_contacts_StatusFieldUpdateOperationsInput'] | null; // Enumcm_contacts_StatusFieldUpdateOperationsInput
     Title?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     Twitter?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    UpdatedDate?: NexusGenInputs['DateTimeFieldUpdateOperationsInput'] | null; // DateTimeFieldUpdateOperationsInput
+    UpdatedDate?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     alerts_drop?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     ambassador_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     contact_type?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -9701,7 +9701,7 @@ export interface NexusGenInputs {
     polite_notice?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     privacy_policy?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     xero_contact_id?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    xero_updated_date?: NexusGenInputs['DateTimeFieldUpdateOperationsInput'] | null; // DateTimeFieldUpdateOperationsInput
+    xero_updated_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
   }
   CmContactUpdateInput: { // input type
     AddToQuickBooks?: NexusGenInputs['Enumcm_contacts_AddToQuickBooksFieldUpdateOperationsInput'] | null; // Enumcm_contacts_AddToQuickBooksFieldUpdateOperationsInput
@@ -9752,7 +9752,7 @@ export interface NexusGenInputs {
     Status?: NexusGenInputs['Enumcm_contacts_StatusFieldUpdateOperationsInput'] | null; // Enumcm_contacts_StatusFieldUpdateOperationsInput
     Title?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     Twitter?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    UpdatedDate?: NexusGenInputs['DateTimeFieldUpdateOperationsInput'] | null; // DateTimeFieldUpdateOperationsInput
+    UpdatedDate?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     alerts_drop?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     ambassador_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     contact_type?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -9775,7 +9775,7 @@ export interface NexusGenInputs {
     polite_notice?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     privacy_policy?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     xero_contact_id?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    xero_updated_date?: NexusGenInputs['DateTimeFieldUpdateOperationsInput'] | null; // DateTimeFieldUpdateOperationsInput
+    xero_updated_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
   }
   CmContactUpdateManyMutationInput: { // input type
     AddToQuickBooks?: NexusGenInputs['Enumcm_contacts_AddToQuickBooksFieldUpdateOperationsInput'] | null; // Enumcm_contacts_AddToQuickBooksFieldUpdateOperationsInput
@@ -9826,7 +9826,7 @@ export interface NexusGenInputs {
     Status?: NexusGenInputs['Enumcm_contacts_StatusFieldUpdateOperationsInput'] | null; // Enumcm_contacts_StatusFieldUpdateOperationsInput
     Title?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     Twitter?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    UpdatedDate?: NexusGenInputs['DateTimeFieldUpdateOperationsInput'] | null; // DateTimeFieldUpdateOperationsInput
+    UpdatedDate?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
     alerts_drop?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     ambassador_id?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
     contact_type?: NexusGenInputs['IntFieldUpdateOperationsInput'] | null; // IntFieldUpdateOperationsInput
@@ -9849,7 +9849,7 @@ export interface NexusGenInputs {
     polite_notice?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     privacy_policy?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
     xero_contact_id?: NexusGenInputs['StringFieldUpdateOperationsInput'] | null; // StringFieldUpdateOperationsInput
-    xero_updated_date?: NexusGenInputs['DateTimeFieldUpdateOperationsInput'] | null; // DateTimeFieldUpdateOperationsInput
+    xero_updated_date?: NexusGenInputs['NullableDateTimeFieldUpdateOperationsInput'] | null; // NullableDateTimeFieldUpdateOperationsInput
   }
   CmContactWhereInput: { // input type
     AND?: Array<NexusGenInputs['CmContactWhereInput'] | null> | null; // [CmContactWhereInput]
@@ -9904,7 +9904,7 @@ export interface NexusGenInputs {
     Status?: NexusGenInputs['Enumcm_contacts_StatusFilter'] | null; // Enumcm_contacts_StatusFilter
     Title?: NexusGenInputs['StringFilter'] | null; // StringFilter
     Twitter?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    UpdatedDate?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    UpdatedDate?: NexusGenInputs['DateTimeNullableFilter'] | null; // DateTimeNullableFilter
     alerts_drop?: NexusGenInputs['StringFilter'] | null; // StringFilter
     ambassador_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     contact_type?: NexusGenInputs['IntFilter'] | null; // IntFilter
@@ -9927,7 +9927,7 @@ export interface NexusGenInputs {
     polite_notice?: NexusGenInputs['StringFilter'] | null; // StringFilter
     privacy_policy?: NexusGenInputs['StringFilter'] | null; // StringFilter
     xero_contact_id?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    xero_updated_date?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    xero_updated_date?: NexusGenInputs['DateTimeNullableFilter'] | null; // DateTimeNullableFilter
   }
   CmContactWhereUniqueInput: { // input type
     ID?: number | null; // Int
@@ -25793,9 +25793,6 @@ export interface NexusGenObjects {
     cid: number; // Int!
     id: number; // Int!
   }
-  AffectedRowsOutput: { // root type
-    count: number; // Int!
-  }
   AggregateAcLog: { // root type
     avg?: NexusGenRootTypes['AcLogAvgAggregateOutputType'] | null; // AcLogAvgAggregateOutputType
     count?: NexusGenRootTypes['AcLogCountAggregateOutputType'] | null; // AcLogCountAggregateOutputType
@@ -31399,7 +31396,7 @@ export interface NexusGenObjects {
     Status: NexusGenEnums['cm_contacts_Status']; // cm_contacts_Status!
     Title: string; // String!
     Twitter: string; // String!
-    UpdatedDate: NexusGenScalars['DateTime']; // DateTime!
+    UpdatedDate?: NexusGenScalars['DateTime'] | null; // DateTime
     alerts_drop: string; // String!
     ambassador_id: number; // Int!
     contact_type: number; // Int!
@@ -31422,7 +31419,7 @@ export interface NexusGenObjects {
     polite_notice: string; // String!
     privacy_policy: string; // String!
     xero_contact_id: string; // String!
-    xero_updated_date: NexusGenScalars['DateTime']; // DateTime!
+    xero_updated_date?: NexusGenScalars['DateTime'] | null; // DateTime
   }
   CmContactAvgAggregateOutputType: { // root type
     ID: number; // Float!
@@ -35285,9 +35282,6 @@ export interface NexusGenFieldTypes {
     campaign_id: number; // Int!
     cid: number; // Int!
     id: number; // Int!
-  }
-  AffectedRowsOutput: { // field return type
-    count: number; // Int!
   }
   AggregateAcLog: { // field return type
     avg: NexusGenRootTypes['AcLogAvgAggregateOutputType'] | null; // AcLogAvgAggregateOutputType
@@ -40897,7 +40891,7 @@ export interface NexusGenFieldTypes {
     Status: NexusGenEnums['cm_contacts_Status']; // cm_contacts_Status!
     Title: string; // String!
     Twitter: string; // String!
-    UpdatedDate: NexusGenScalars['DateTime']; // DateTime!
+    UpdatedDate: NexusGenScalars['DateTime'] | null; // DateTime
     alerts_drop: string; // String!
     ambassador_id: number; // Int!
     contact_type: number; // Int!
@@ -40920,7 +40914,7 @@ export interface NexusGenFieldTypes {
     polite_notice: string; // String!
     privacy_policy: string; // String!
     xero_contact_id: string; // String!
-    xero_updated_date: NexusGenScalars['DateTime']; // DateTime!
+    xero_updated_date: NexusGenScalars['DateTime'] | null; // DateTime
   }
   CmContactAvgAggregateOutputType: { // field return type
     ID: number; // Float!
@@ -43341,114 +43335,6 @@ export interface NexusGenFieldTypes {
     createOneTwoFactorHistory: NexusGenRootTypes['TwoFactorHistory']; // TwoFactorHistory!
     createOneUser: NexusGenRootTypes['User']; // User!
     createOneUserSecurityQuestionsAnswer: NexusGenRootTypes['UserSecurityQuestionsAnswer']; // UserSecurityQuestionsAnswer!
-    deleteManyAcLog: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAcLogAction: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAcLogUrl: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAcceptEmailToken: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAccountBalance: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAccountBalanceLog: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAccountManager: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAdvertCampaign: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyApiDebug: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyApiKey: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAppBeforeAfter: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAppPermission: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAppSubscription: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAppSubscriptionsCompanyPrice: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAtAnswer: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAtConcern: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAtQuestion: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAtQuestionsRelation: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAtQuizTake: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAtSetting: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAtTreatment: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAttachmentHelperLite: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAutomationAction: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAutomationDelay: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAutomationFolder: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAutomationLog: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAutomationRule: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAutomationTrigger: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyAvilableDatesLog: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyBacsAccount: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyBatch: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyBatchItem: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyBlockReason: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyBnfDrug: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyBodyChartTemplate: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyBookingMaster: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyBookingSetting: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyBookingStatus: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyBookingStatusChange: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyBookitProGeneral: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyBookitProSlider: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyBookmarkedPage: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyBugLog: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCalRangeRequest: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCalendarView: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCampaignAttachment: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCancelReason: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCancellationPolicy: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCandidate: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCardType: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCashupReport: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCashupReportCustom: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCheckinAppt: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCheckinAverages: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCheckinAveragesIdle: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCheckinProduct: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCheckinQueue: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyClassCategory: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyClassGuests: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyClassMaster: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyClassNotes: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyClassProduct: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyClassSmsHistory: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyClassTemplateSetting: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyClasstypeMaster: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCleverpinSetting: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyClientFormSetting: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyClinicalSoftware: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyClockinBreak: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyClockinLongpoll: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyClockinTimesheet: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCmAccountNote: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCmAppointmentCustom: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCmAppointmentsCustomImportHelper: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCmAuthorization: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCmBookingNote: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCmCampaign: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCmCampaignNote: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCmCase: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCmCaseNote: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCmCaseReply: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCmContact: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCompany: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCompanyBranch: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCompanyDepartment: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCompanyDetails: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCompanyLocation: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCompanyRoom: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCompanyRoomService: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCompanyService: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyCompanySubscription: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyGlCode: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyInvPaymentType: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyJob: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyJobConfiguration: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyJobOpening: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyJobStatus: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyMarketingSource: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyMediaLlibraryAttachment: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyPointOfSaleSetting: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManySalutation: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManySecondAtAnswer: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManySecondAtQuestion: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyThirdPartyAccess: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyTimezone: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyTwoFactorHistory: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyUser: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    deleteManyUserSecurityQuestionsAnswer: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     deleteOneAcLog: NexusGenRootTypes['AcLog'] | null; // AcLog
     deleteOneAcLogAction: NexusGenRootTypes['AcLogAction'] | null; // AcLogAction
     deleteOneAcLogUrl: NexusGenRootTypes['AcLogUrl'] | null; // AcLogUrl
@@ -43560,114 +43446,6 @@ export interface NexusGenFieldTypes {
     deleteOneUserSecurityQuestionsAnswer: NexusGenRootTypes['UserSecurityQuestionsAnswer'] | null; // UserSecurityQuestionsAnswer
     login: string | null; // String
     logout: boolean | null; // Boolean
-    updateManyAcLog: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAcLogAction: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAcLogUrl: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAcceptEmailToken: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAccountBalance: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAccountBalanceLog: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAccountManager: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAdvertCampaign: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyApiDebug: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyApiKey: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAppBeforeAfter: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAppPermission: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAppSubscription: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAppSubscriptionsCompanyPrice: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAtAnswer: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAtConcern: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAtQuestion: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAtQuestionsRelation: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAtQuizTake: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAtSetting: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAtTreatment: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAttachmentHelperLite: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAutomationAction: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAutomationDelay: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAutomationFolder: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAutomationLog: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAutomationRule: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAutomationTrigger: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyAvilableDatesLog: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyBacsAccount: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyBatch: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyBatchItem: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyBlockReason: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyBnfDrug: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyBodyChartTemplate: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyBookingMaster: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyBookingSetting: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyBookingStatus: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyBookingStatusChange: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyBookitProGeneral: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyBookitProSlider: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyBookmarkedPage: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyBugLog: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCalRangeRequest: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCalendarView: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCampaignAttachment: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCancelReason: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCancellationPolicy: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCandidate: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCardType: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCashupReport: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCashupReportCustom: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCheckinAppt: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCheckinAverages: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCheckinAveragesIdle: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCheckinProduct: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCheckinQueue: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyClassCategory: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyClassGuests: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyClassMaster: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyClassNotes: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyClassProduct: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyClassSmsHistory: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyClassTemplateSetting: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyClasstypeMaster: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCleverpinSetting: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyClientFormSetting: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyClinicalSoftware: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyClockinBreak: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyClockinLongpoll: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyClockinTimesheet: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCmAccountNote: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCmAppointmentCustom: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCmAppointmentsCustomImportHelper: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCmAuthorization: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCmBookingNote: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCmCampaign: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCmCampaignNote: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCmCase: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCmCaseNote: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCmCaseReply: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCmContact: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCompany: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCompanyBranch: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCompanyDepartment: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCompanyDetails: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCompanyLocation: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCompanyRoom: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCompanyRoomService: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCompanyService: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyCompanySubscription: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyGlCode: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyInvPaymentType: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyJob: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyJobConfiguration: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyJobOpening: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyJobStatus: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyMarketingSource: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyMediaLlibraryAttachment: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyPointOfSaleSetting: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManySalutation: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManySecondAtAnswer: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManySecondAtQuestion: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyThirdPartyAccess: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyTimezone: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyTwoFactorHistory: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyUser: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
-    updateManyUserSecurityQuestionsAnswer: NexusGenRootTypes['AffectedRowsOutput']; // AffectedRowsOutput!
     updateOneAcLog: NexusGenRootTypes['AcLog'] | null; // AcLog
     updateOneAcLogAction: NexusGenRootTypes['AcLogAction'] | null; // AcLogAction
     updateOneAcLogUrl: NexusGenRootTypes['AcLogUrl'] | null; // AcLogUrl
@@ -45920,9 +45698,6 @@ export interface NexusGenFieldTypeNames {
     campaign_id: 'Int'
     cid: 'Int'
     id: 'Int'
-  }
-  AffectedRowsOutput: { // field return type name
-    count: 'Int'
   }
   AggregateAcLog: { // field return type name
     avg: 'AcLogAvgAggregateOutputType'
@@ -53976,114 +53751,6 @@ export interface NexusGenFieldTypeNames {
     createOneTwoFactorHistory: 'TwoFactorHistory'
     createOneUser: 'User'
     createOneUserSecurityQuestionsAnswer: 'UserSecurityQuestionsAnswer'
-    deleteManyAcLog: 'AffectedRowsOutput'
-    deleteManyAcLogAction: 'AffectedRowsOutput'
-    deleteManyAcLogUrl: 'AffectedRowsOutput'
-    deleteManyAcceptEmailToken: 'AffectedRowsOutput'
-    deleteManyAccountBalance: 'AffectedRowsOutput'
-    deleteManyAccountBalanceLog: 'AffectedRowsOutput'
-    deleteManyAccountManager: 'AffectedRowsOutput'
-    deleteManyAdvertCampaign: 'AffectedRowsOutput'
-    deleteManyApiDebug: 'AffectedRowsOutput'
-    deleteManyApiKey: 'AffectedRowsOutput'
-    deleteManyAppBeforeAfter: 'AffectedRowsOutput'
-    deleteManyAppPermission: 'AffectedRowsOutput'
-    deleteManyAppSubscription: 'AffectedRowsOutput'
-    deleteManyAppSubscriptionsCompanyPrice: 'AffectedRowsOutput'
-    deleteManyAtAnswer: 'AffectedRowsOutput'
-    deleteManyAtConcern: 'AffectedRowsOutput'
-    deleteManyAtQuestion: 'AffectedRowsOutput'
-    deleteManyAtQuestionsRelation: 'AffectedRowsOutput'
-    deleteManyAtQuizTake: 'AffectedRowsOutput'
-    deleteManyAtSetting: 'AffectedRowsOutput'
-    deleteManyAtTreatment: 'AffectedRowsOutput'
-    deleteManyAttachmentHelperLite: 'AffectedRowsOutput'
-    deleteManyAutomationAction: 'AffectedRowsOutput'
-    deleteManyAutomationDelay: 'AffectedRowsOutput'
-    deleteManyAutomationFolder: 'AffectedRowsOutput'
-    deleteManyAutomationLog: 'AffectedRowsOutput'
-    deleteManyAutomationRule: 'AffectedRowsOutput'
-    deleteManyAutomationTrigger: 'AffectedRowsOutput'
-    deleteManyAvilableDatesLog: 'AffectedRowsOutput'
-    deleteManyBacsAccount: 'AffectedRowsOutput'
-    deleteManyBatch: 'AffectedRowsOutput'
-    deleteManyBatchItem: 'AffectedRowsOutput'
-    deleteManyBlockReason: 'AffectedRowsOutput'
-    deleteManyBnfDrug: 'AffectedRowsOutput'
-    deleteManyBodyChartTemplate: 'AffectedRowsOutput'
-    deleteManyBookingMaster: 'AffectedRowsOutput'
-    deleteManyBookingSetting: 'AffectedRowsOutput'
-    deleteManyBookingStatus: 'AffectedRowsOutput'
-    deleteManyBookingStatusChange: 'AffectedRowsOutput'
-    deleteManyBookitProGeneral: 'AffectedRowsOutput'
-    deleteManyBookitProSlider: 'AffectedRowsOutput'
-    deleteManyBookmarkedPage: 'AffectedRowsOutput'
-    deleteManyBugLog: 'AffectedRowsOutput'
-    deleteManyCalRangeRequest: 'AffectedRowsOutput'
-    deleteManyCalendarView: 'AffectedRowsOutput'
-    deleteManyCampaignAttachment: 'AffectedRowsOutput'
-    deleteManyCancelReason: 'AffectedRowsOutput'
-    deleteManyCancellationPolicy: 'AffectedRowsOutput'
-    deleteManyCandidate: 'AffectedRowsOutput'
-    deleteManyCardType: 'AffectedRowsOutput'
-    deleteManyCashupReport: 'AffectedRowsOutput'
-    deleteManyCashupReportCustom: 'AffectedRowsOutput'
-    deleteManyCheckinAppt: 'AffectedRowsOutput'
-    deleteManyCheckinAverages: 'AffectedRowsOutput'
-    deleteManyCheckinAveragesIdle: 'AffectedRowsOutput'
-    deleteManyCheckinProduct: 'AffectedRowsOutput'
-    deleteManyCheckinQueue: 'AffectedRowsOutput'
-    deleteManyClassCategory: 'AffectedRowsOutput'
-    deleteManyClassGuests: 'AffectedRowsOutput'
-    deleteManyClassMaster: 'AffectedRowsOutput'
-    deleteManyClassNotes: 'AffectedRowsOutput'
-    deleteManyClassProduct: 'AffectedRowsOutput'
-    deleteManyClassSmsHistory: 'AffectedRowsOutput'
-    deleteManyClassTemplateSetting: 'AffectedRowsOutput'
-    deleteManyClasstypeMaster: 'AffectedRowsOutput'
-    deleteManyCleverpinSetting: 'AffectedRowsOutput'
-    deleteManyClientFormSetting: 'AffectedRowsOutput'
-    deleteManyClinicalSoftware: 'AffectedRowsOutput'
-    deleteManyClockinBreak: 'AffectedRowsOutput'
-    deleteManyClockinLongpoll: 'AffectedRowsOutput'
-    deleteManyClockinTimesheet: 'AffectedRowsOutput'
-    deleteManyCmAccountNote: 'AffectedRowsOutput'
-    deleteManyCmAppointmentCustom: 'AffectedRowsOutput'
-    deleteManyCmAppointmentsCustomImportHelper: 'AffectedRowsOutput'
-    deleteManyCmAuthorization: 'AffectedRowsOutput'
-    deleteManyCmBookingNote: 'AffectedRowsOutput'
-    deleteManyCmCampaign: 'AffectedRowsOutput'
-    deleteManyCmCampaignNote: 'AffectedRowsOutput'
-    deleteManyCmCase: 'AffectedRowsOutput'
-    deleteManyCmCaseNote: 'AffectedRowsOutput'
-    deleteManyCmCaseReply: 'AffectedRowsOutput'
-    deleteManyCmContact: 'AffectedRowsOutput'
-    deleteManyCompany: 'AffectedRowsOutput'
-    deleteManyCompanyBranch: 'AffectedRowsOutput'
-    deleteManyCompanyDepartment: 'AffectedRowsOutput'
-    deleteManyCompanyDetails: 'AffectedRowsOutput'
-    deleteManyCompanyLocation: 'AffectedRowsOutput'
-    deleteManyCompanyRoom: 'AffectedRowsOutput'
-    deleteManyCompanyRoomService: 'AffectedRowsOutput'
-    deleteManyCompanyService: 'AffectedRowsOutput'
-    deleteManyCompanySubscription: 'AffectedRowsOutput'
-    deleteManyGlCode: 'AffectedRowsOutput'
-    deleteManyInvPaymentType: 'AffectedRowsOutput'
-    deleteManyJob: 'AffectedRowsOutput'
-    deleteManyJobConfiguration: 'AffectedRowsOutput'
-    deleteManyJobOpening: 'AffectedRowsOutput'
-    deleteManyJobStatus: 'AffectedRowsOutput'
-    deleteManyMarketingSource: 'AffectedRowsOutput'
-    deleteManyMediaLlibraryAttachment: 'AffectedRowsOutput'
-    deleteManyPointOfSaleSetting: 'AffectedRowsOutput'
-    deleteManySalutation: 'AffectedRowsOutput'
-    deleteManySecondAtAnswer: 'AffectedRowsOutput'
-    deleteManySecondAtQuestion: 'AffectedRowsOutput'
-    deleteManyThirdPartyAccess: 'AffectedRowsOutput'
-    deleteManyTimezone: 'AffectedRowsOutput'
-    deleteManyTwoFactorHistory: 'AffectedRowsOutput'
-    deleteManyUser: 'AffectedRowsOutput'
-    deleteManyUserSecurityQuestionsAnswer: 'AffectedRowsOutput'
     deleteOneAcLog: 'AcLog'
     deleteOneAcLogAction: 'AcLogAction'
     deleteOneAcLogUrl: 'AcLogUrl'
@@ -54195,114 +53862,6 @@ export interface NexusGenFieldTypeNames {
     deleteOneUserSecurityQuestionsAnswer: 'UserSecurityQuestionsAnswer'
     login: 'String'
     logout: 'Boolean'
-    updateManyAcLog: 'AffectedRowsOutput'
-    updateManyAcLogAction: 'AffectedRowsOutput'
-    updateManyAcLogUrl: 'AffectedRowsOutput'
-    updateManyAcceptEmailToken: 'AffectedRowsOutput'
-    updateManyAccountBalance: 'AffectedRowsOutput'
-    updateManyAccountBalanceLog: 'AffectedRowsOutput'
-    updateManyAccountManager: 'AffectedRowsOutput'
-    updateManyAdvertCampaign: 'AffectedRowsOutput'
-    updateManyApiDebug: 'AffectedRowsOutput'
-    updateManyApiKey: 'AffectedRowsOutput'
-    updateManyAppBeforeAfter: 'AffectedRowsOutput'
-    updateManyAppPermission: 'AffectedRowsOutput'
-    updateManyAppSubscription: 'AffectedRowsOutput'
-    updateManyAppSubscriptionsCompanyPrice: 'AffectedRowsOutput'
-    updateManyAtAnswer: 'AffectedRowsOutput'
-    updateManyAtConcern: 'AffectedRowsOutput'
-    updateManyAtQuestion: 'AffectedRowsOutput'
-    updateManyAtQuestionsRelation: 'AffectedRowsOutput'
-    updateManyAtQuizTake: 'AffectedRowsOutput'
-    updateManyAtSetting: 'AffectedRowsOutput'
-    updateManyAtTreatment: 'AffectedRowsOutput'
-    updateManyAttachmentHelperLite: 'AffectedRowsOutput'
-    updateManyAutomationAction: 'AffectedRowsOutput'
-    updateManyAutomationDelay: 'AffectedRowsOutput'
-    updateManyAutomationFolder: 'AffectedRowsOutput'
-    updateManyAutomationLog: 'AffectedRowsOutput'
-    updateManyAutomationRule: 'AffectedRowsOutput'
-    updateManyAutomationTrigger: 'AffectedRowsOutput'
-    updateManyAvilableDatesLog: 'AffectedRowsOutput'
-    updateManyBacsAccount: 'AffectedRowsOutput'
-    updateManyBatch: 'AffectedRowsOutput'
-    updateManyBatchItem: 'AffectedRowsOutput'
-    updateManyBlockReason: 'AffectedRowsOutput'
-    updateManyBnfDrug: 'AffectedRowsOutput'
-    updateManyBodyChartTemplate: 'AffectedRowsOutput'
-    updateManyBookingMaster: 'AffectedRowsOutput'
-    updateManyBookingSetting: 'AffectedRowsOutput'
-    updateManyBookingStatus: 'AffectedRowsOutput'
-    updateManyBookingStatusChange: 'AffectedRowsOutput'
-    updateManyBookitProGeneral: 'AffectedRowsOutput'
-    updateManyBookitProSlider: 'AffectedRowsOutput'
-    updateManyBookmarkedPage: 'AffectedRowsOutput'
-    updateManyBugLog: 'AffectedRowsOutput'
-    updateManyCalRangeRequest: 'AffectedRowsOutput'
-    updateManyCalendarView: 'AffectedRowsOutput'
-    updateManyCampaignAttachment: 'AffectedRowsOutput'
-    updateManyCancelReason: 'AffectedRowsOutput'
-    updateManyCancellationPolicy: 'AffectedRowsOutput'
-    updateManyCandidate: 'AffectedRowsOutput'
-    updateManyCardType: 'AffectedRowsOutput'
-    updateManyCashupReport: 'AffectedRowsOutput'
-    updateManyCashupReportCustom: 'AffectedRowsOutput'
-    updateManyCheckinAppt: 'AffectedRowsOutput'
-    updateManyCheckinAverages: 'AffectedRowsOutput'
-    updateManyCheckinAveragesIdle: 'AffectedRowsOutput'
-    updateManyCheckinProduct: 'AffectedRowsOutput'
-    updateManyCheckinQueue: 'AffectedRowsOutput'
-    updateManyClassCategory: 'AffectedRowsOutput'
-    updateManyClassGuests: 'AffectedRowsOutput'
-    updateManyClassMaster: 'AffectedRowsOutput'
-    updateManyClassNotes: 'AffectedRowsOutput'
-    updateManyClassProduct: 'AffectedRowsOutput'
-    updateManyClassSmsHistory: 'AffectedRowsOutput'
-    updateManyClassTemplateSetting: 'AffectedRowsOutput'
-    updateManyClasstypeMaster: 'AffectedRowsOutput'
-    updateManyCleverpinSetting: 'AffectedRowsOutput'
-    updateManyClientFormSetting: 'AffectedRowsOutput'
-    updateManyClinicalSoftware: 'AffectedRowsOutput'
-    updateManyClockinBreak: 'AffectedRowsOutput'
-    updateManyClockinLongpoll: 'AffectedRowsOutput'
-    updateManyClockinTimesheet: 'AffectedRowsOutput'
-    updateManyCmAccountNote: 'AffectedRowsOutput'
-    updateManyCmAppointmentCustom: 'AffectedRowsOutput'
-    updateManyCmAppointmentsCustomImportHelper: 'AffectedRowsOutput'
-    updateManyCmAuthorization: 'AffectedRowsOutput'
-    updateManyCmBookingNote: 'AffectedRowsOutput'
-    updateManyCmCampaign: 'AffectedRowsOutput'
-    updateManyCmCampaignNote: 'AffectedRowsOutput'
-    updateManyCmCase: 'AffectedRowsOutput'
-    updateManyCmCaseNote: 'AffectedRowsOutput'
-    updateManyCmCaseReply: 'AffectedRowsOutput'
-    updateManyCmContact: 'AffectedRowsOutput'
-    updateManyCompany: 'AffectedRowsOutput'
-    updateManyCompanyBranch: 'AffectedRowsOutput'
-    updateManyCompanyDepartment: 'AffectedRowsOutput'
-    updateManyCompanyDetails: 'AffectedRowsOutput'
-    updateManyCompanyLocation: 'AffectedRowsOutput'
-    updateManyCompanyRoom: 'AffectedRowsOutput'
-    updateManyCompanyRoomService: 'AffectedRowsOutput'
-    updateManyCompanyService: 'AffectedRowsOutput'
-    updateManyCompanySubscription: 'AffectedRowsOutput'
-    updateManyGlCode: 'AffectedRowsOutput'
-    updateManyInvPaymentType: 'AffectedRowsOutput'
-    updateManyJob: 'AffectedRowsOutput'
-    updateManyJobConfiguration: 'AffectedRowsOutput'
-    updateManyJobOpening: 'AffectedRowsOutput'
-    updateManyJobStatus: 'AffectedRowsOutput'
-    updateManyMarketingSource: 'AffectedRowsOutput'
-    updateManyMediaLlibraryAttachment: 'AffectedRowsOutput'
-    updateManyPointOfSaleSetting: 'AffectedRowsOutput'
-    updateManySalutation: 'AffectedRowsOutput'
-    updateManySecondAtAnswer: 'AffectedRowsOutput'
-    updateManySecondAtQuestion: 'AffectedRowsOutput'
-    updateManyThirdPartyAccess: 'AffectedRowsOutput'
-    updateManyTimezone: 'AffectedRowsOutput'
-    updateManyTwoFactorHistory: 'AffectedRowsOutput'
-    updateManyUser: 'AffectedRowsOutput'
-    updateManyUserSecurityQuestionsAnswer: 'AffectedRowsOutput'
     updateOneAcLog: 'AcLog'
     updateOneAcLogAction: 'AcLogAction'
     updateOneAcLogUrl: 'AcLogUrl'
@@ -56461,330 +56020,6 @@ export interface NexusGenArgTypes {
     createOneUserSecurityQuestionsAnswer: { // args
       data: NexusGenInputs['UserSecurityQuestionsAnswerCreateInput']; // UserSecurityQuestionsAnswerCreateInput!
     }
-    deleteManyAcLog: { // args
-      where?: NexusGenInputs['AcLogWhereInput'] | null; // AcLogWhereInput
-    }
-    deleteManyAcLogAction: { // args
-      where?: NexusGenInputs['AcLogActionWhereInput'] | null; // AcLogActionWhereInput
-    }
-    deleteManyAcLogUrl: { // args
-      where?: NexusGenInputs['AcLogUrlWhereInput'] | null; // AcLogUrlWhereInput
-    }
-    deleteManyAcceptEmailToken: { // args
-      where?: NexusGenInputs['AcceptEmailTokenWhereInput'] | null; // AcceptEmailTokenWhereInput
-    }
-    deleteManyAccountBalance: { // args
-      where?: NexusGenInputs['AccountBalanceWhereInput'] | null; // AccountBalanceWhereInput
-    }
-    deleteManyAccountBalanceLog: { // args
-      where?: NexusGenInputs['AccountBalanceLogWhereInput'] | null; // AccountBalanceLogWhereInput
-    }
-    deleteManyAccountManager: { // args
-      where?: NexusGenInputs['AccountManagerWhereInput'] | null; // AccountManagerWhereInput
-    }
-    deleteManyAdvertCampaign: { // args
-      where?: NexusGenInputs['AdvertCampaignWhereInput'] | null; // AdvertCampaignWhereInput
-    }
-    deleteManyApiDebug: { // args
-      where?: NexusGenInputs['ApiDebugWhereInput'] | null; // ApiDebugWhereInput
-    }
-    deleteManyApiKey: { // args
-      where?: NexusGenInputs['ApiKeyWhereInput'] | null; // ApiKeyWhereInput
-    }
-    deleteManyAppBeforeAfter: { // args
-      where?: NexusGenInputs['AppBeforeAfterWhereInput'] | null; // AppBeforeAfterWhereInput
-    }
-    deleteManyAppPermission: { // args
-      where?: NexusGenInputs['AppPermissionWhereInput'] | null; // AppPermissionWhereInput
-    }
-    deleteManyAppSubscription: { // args
-      where?: NexusGenInputs['AppSubscriptionWhereInput'] | null; // AppSubscriptionWhereInput
-    }
-    deleteManyAppSubscriptionsCompanyPrice: { // args
-      where?: NexusGenInputs['AppSubscriptionsCompanyPriceWhereInput'] | null; // AppSubscriptionsCompanyPriceWhereInput
-    }
-    deleteManyAtAnswer: { // args
-      where?: NexusGenInputs['AtAnswerWhereInput'] | null; // AtAnswerWhereInput
-    }
-    deleteManyAtConcern: { // args
-      where?: NexusGenInputs['AtConcernWhereInput'] | null; // AtConcernWhereInput
-    }
-    deleteManyAtQuestion: { // args
-      where?: NexusGenInputs['AtQuestionWhereInput'] | null; // AtQuestionWhereInput
-    }
-    deleteManyAtQuestionsRelation: { // args
-      where?: NexusGenInputs['AtQuestionsRelationWhereInput'] | null; // AtQuestionsRelationWhereInput
-    }
-    deleteManyAtQuizTake: { // args
-      where?: NexusGenInputs['AtQuizTakeWhereInput'] | null; // AtQuizTakeWhereInput
-    }
-    deleteManyAtSetting: { // args
-      where?: NexusGenInputs['AtSettingWhereInput'] | null; // AtSettingWhereInput
-    }
-    deleteManyAtTreatment: { // args
-      where?: NexusGenInputs['AtTreatmentWhereInput'] | null; // AtTreatmentWhereInput
-    }
-    deleteManyAttachmentHelperLite: { // args
-      where?: NexusGenInputs['AttachmentHelperLiteWhereInput'] | null; // AttachmentHelperLiteWhereInput
-    }
-    deleteManyAutomationAction: { // args
-      where?: NexusGenInputs['AutomationActionWhereInput'] | null; // AutomationActionWhereInput
-    }
-    deleteManyAutomationDelay: { // args
-      where?: NexusGenInputs['AutomationDelayWhereInput'] | null; // AutomationDelayWhereInput
-    }
-    deleteManyAutomationFolder: { // args
-      where?: NexusGenInputs['AutomationFolderWhereInput'] | null; // AutomationFolderWhereInput
-    }
-    deleteManyAutomationLog: { // args
-      where?: NexusGenInputs['AutomationLogWhereInput'] | null; // AutomationLogWhereInput
-    }
-    deleteManyAutomationRule: { // args
-      where?: NexusGenInputs['AutomationRuleWhereInput'] | null; // AutomationRuleWhereInput
-    }
-    deleteManyAutomationTrigger: { // args
-      where?: NexusGenInputs['AutomationTriggerWhereInput'] | null; // AutomationTriggerWhereInput
-    }
-    deleteManyAvilableDatesLog: { // args
-      where?: NexusGenInputs['AvilableDatesLogWhereInput'] | null; // AvilableDatesLogWhereInput
-    }
-    deleteManyBacsAccount: { // args
-      where?: NexusGenInputs['BacsAccountWhereInput'] | null; // BacsAccountWhereInput
-    }
-    deleteManyBatch: { // args
-      where?: NexusGenInputs['BatchWhereInput'] | null; // BatchWhereInput
-    }
-    deleteManyBatchItem: { // args
-      where?: NexusGenInputs['BatchItemWhereInput'] | null; // BatchItemWhereInput
-    }
-    deleteManyBlockReason: { // args
-      where?: NexusGenInputs['BlockReasonWhereInput'] | null; // BlockReasonWhereInput
-    }
-    deleteManyBnfDrug: { // args
-      where?: NexusGenInputs['BnfDrugWhereInput'] | null; // BnfDrugWhereInput
-    }
-    deleteManyBodyChartTemplate: { // args
-      where?: NexusGenInputs['BodyChartTemplateWhereInput'] | null; // BodyChartTemplateWhereInput
-    }
-    deleteManyBookingMaster: { // args
-      where?: NexusGenInputs['BookingMasterWhereInput'] | null; // BookingMasterWhereInput
-    }
-    deleteManyBookingSetting: { // args
-      where?: NexusGenInputs['BookingSettingWhereInput'] | null; // BookingSettingWhereInput
-    }
-    deleteManyBookingStatus: { // args
-      where?: NexusGenInputs['BookingStatusWhereInput'] | null; // BookingStatusWhereInput
-    }
-    deleteManyBookingStatusChange: { // args
-      where?: NexusGenInputs['BookingStatusChangeWhereInput'] | null; // BookingStatusChangeWhereInput
-    }
-    deleteManyBookitProGeneral: { // args
-      where?: NexusGenInputs['BookitProGeneralWhereInput'] | null; // BookitProGeneralWhereInput
-    }
-    deleteManyBookitProSlider: { // args
-      where?: NexusGenInputs['BookitProSliderWhereInput'] | null; // BookitProSliderWhereInput
-    }
-    deleteManyBookmarkedPage: { // args
-      where?: NexusGenInputs['BookmarkedPageWhereInput'] | null; // BookmarkedPageWhereInput
-    }
-    deleteManyBugLog: { // args
-      where?: NexusGenInputs['BugLogWhereInput'] | null; // BugLogWhereInput
-    }
-    deleteManyCalRangeRequest: { // args
-      where?: NexusGenInputs['CalRangeRequestWhereInput'] | null; // CalRangeRequestWhereInput
-    }
-    deleteManyCalendarView: { // args
-      where?: NexusGenInputs['CalendarViewWhereInput'] | null; // CalendarViewWhereInput
-    }
-    deleteManyCampaignAttachment: { // args
-      where?: NexusGenInputs['CampaignAttachmentWhereInput'] | null; // CampaignAttachmentWhereInput
-    }
-    deleteManyCancelReason: { // args
-      where?: NexusGenInputs['CancelReasonWhereInput'] | null; // CancelReasonWhereInput
-    }
-    deleteManyCancellationPolicy: { // args
-      where?: NexusGenInputs['CancellationPolicyWhereInput'] | null; // CancellationPolicyWhereInput
-    }
-    deleteManyCandidate: { // args
-      where?: NexusGenInputs['CandidateWhereInput'] | null; // CandidateWhereInput
-    }
-    deleteManyCardType: { // args
-      where?: NexusGenInputs['CardTypeWhereInput'] | null; // CardTypeWhereInput
-    }
-    deleteManyCashupReport: { // args
-      where?: NexusGenInputs['CashupReportWhereInput'] | null; // CashupReportWhereInput
-    }
-    deleteManyCashupReportCustom: { // args
-      where?: NexusGenInputs['CashupReportCustomWhereInput'] | null; // CashupReportCustomWhereInput
-    }
-    deleteManyCheckinAppt: { // args
-      where?: NexusGenInputs['CheckinApptWhereInput'] | null; // CheckinApptWhereInput
-    }
-    deleteManyCheckinAverages: { // args
-      where?: NexusGenInputs['CheckinAveragesWhereInput'] | null; // CheckinAveragesWhereInput
-    }
-    deleteManyCheckinAveragesIdle: { // args
-      where?: NexusGenInputs['CheckinAveragesIdleWhereInput'] | null; // CheckinAveragesIdleWhereInput
-    }
-    deleteManyCheckinProduct: { // args
-      where?: NexusGenInputs['CheckinProductWhereInput'] | null; // CheckinProductWhereInput
-    }
-    deleteManyCheckinQueue: { // args
-      where?: NexusGenInputs['CheckinQueueWhereInput'] | null; // CheckinQueueWhereInput
-    }
-    deleteManyClassCategory: { // args
-      where?: NexusGenInputs['ClassCategoryWhereInput'] | null; // ClassCategoryWhereInput
-    }
-    deleteManyClassGuests: { // args
-      where?: NexusGenInputs['ClassGuestsWhereInput'] | null; // ClassGuestsWhereInput
-    }
-    deleteManyClassMaster: { // args
-      where?: NexusGenInputs['ClassMasterWhereInput'] | null; // ClassMasterWhereInput
-    }
-    deleteManyClassNotes: { // args
-      where?: NexusGenInputs['ClassNotesWhereInput'] | null; // ClassNotesWhereInput
-    }
-    deleteManyClassProduct: { // args
-      where?: NexusGenInputs['ClassProductWhereInput'] | null; // ClassProductWhereInput
-    }
-    deleteManyClassSmsHistory: { // args
-      where?: NexusGenInputs['ClassSmsHistoryWhereInput'] | null; // ClassSmsHistoryWhereInput
-    }
-    deleteManyClassTemplateSetting: { // args
-      where?: NexusGenInputs['ClassTemplateSettingWhereInput'] | null; // ClassTemplateSettingWhereInput
-    }
-    deleteManyClasstypeMaster: { // args
-      where?: NexusGenInputs['ClasstypeMasterWhereInput'] | null; // ClasstypeMasterWhereInput
-    }
-    deleteManyCleverpinSetting: { // args
-      where?: NexusGenInputs['CleverpinSettingWhereInput'] | null; // CleverpinSettingWhereInput
-    }
-    deleteManyClientFormSetting: { // args
-      where?: NexusGenInputs['ClientFormSettingWhereInput'] | null; // ClientFormSettingWhereInput
-    }
-    deleteManyClinicalSoftware: { // args
-      where?: NexusGenInputs['ClinicalSoftwareWhereInput'] | null; // ClinicalSoftwareWhereInput
-    }
-    deleteManyClockinBreak: { // args
-      where?: NexusGenInputs['ClockinBreakWhereInput'] | null; // ClockinBreakWhereInput
-    }
-    deleteManyClockinLongpoll: { // args
-      where?: NexusGenInputs['ClockinLongpollWhereInput'] | null; // ClockinLongpollWhereInput
-    }
-    deleteManyClockinTimesheet: { // args
-      where?: NexusGenInputs['ClockinTimesheetWhereInput'] | null; // ClockinTimesheetWhereInput
-    }
-    deleteManyCmAccountNote: { // args
-      where?: NexusGenInputs['CmAccountNoteWhereInput'] | null; // CmAccountNoteWhereInput
-    }
-    deleteManyCmAppointmentCustom: { // args
-      where?: NexusGenInputs['CmAppointmentCustomWhereInput'] | null; // CmAppointmentCustomWhereInput
-    }
-    deleteManyCmAppointmentsCustomImportHelper: { // args
-      where?: NexusGenInputs['CmAppointmentsCustomImportHelperWhereInput'] | null; // CmAppointmentsCustomImportHelperWhereInput
-    }
-    deleteManyCmAuthorization: { // args
-      where?: NexusGenInputs['CmAuthorizationWhereInput'] | null; // CmAuthorizationWhereInput
-    }
-    deleteManyCmBookingNote: { // args
-      where?: NexusGenInputs['CmBookingNoteWhereInput'] | null; // CmBookingNoteWhereInput
-    }
-    deleteManyCmCampaign: { // args
-      where?: NexusGenInputs['CmCampaignWhereInput'] | null; // CmCampaignWhereInput
-    }
-    deleteManyCmCampaignNote: { // args
-      where?: NexusGenInputs['CmCampaignNoteWhereInput'] | null; // CmCampaignNoteWhereInput
-    }
-    deleteManyCmCase: { // args
-      where?: NexusGenInputs['CmCaseWhereInput'] | null; // CmCaseWhereInput
-    }
-    deleteManyCmCaseNote: { // args
-      where?: NexusGenInputs['CmCaseNoteWhereInput'] | null; // CmCaseNoteWhereInput
-    }
-    deleteManyCmCaseReply: { // args
-      where?: NexusGenInputs['CmCaseReplyWhereInput'] | null; // CmCaseReplyWhereInput
-    }
-    deleteManyCmContact: { // args
-      where?: NexusGenInputs['CmContactWhereInput'] | null; // CmContactWhereInput
-    }
-    deleteManyCompany: { // args
-      where?: NexusGenInputs['CompanyWhereInput'] | null; // CompanyWhereInput
-    }
-    deleteManyCompanyBranch: { // args
-      where?: NexusGenInputs['CompanyBranchWhereInput'] | null; // CompanyBranchWhereInput
-    }
-    deleteManyCompanyDepartment: { // args
-      where?: NexusGenInputs['CompanyDepartmentWhereInput'] | null; // CompanyDepartmentWhereInput
-    }
-    deleteManyCompanyDetails: { // args
-      where?: NexusGenInputs['CompanyDetailsWhereInput'] | null; // CompanyDetailsWhereInput
-    }
-    deleteManyCompanyLocation: { // args
-      where?: NexusGenInputs['CompanyLocationWhereInput'] | null; // CompanyLocationWhereInput
-    }
-    deleteManyCompanyRoom: { // args
-      where?: NexusGenInputs['CompanyRoomWhereInput'] | null; // CompanyRoomWhereInput
-    }
-    deleteManyCompanyRoomService: { // args
-      where?: NexusGenInputs['CompanyRoomServiceWhereInput'] | null; // CompanyRoomServiceWhereInput
-    }
-    deleteManyCompanyService: { // args
-      where?: NexusGenInputs['CompanyServiceWhereInput'] | null; // CompanyServiceWhereInput
-    }
-    deleteManyCompanySubscription: { // args
-      where?: NexusGenInputs['CompanySubscriptionWhereInput'] | null; // CompanySubscriptionWhereInput
-    }
-    deleteManyGlCode: { // args
-      where?: NexusGenInputs['GlCodeWhereInput'] | null; // GlCodeWhereInput
-    }
-    deleteManyInvPaymentType: { // args
-      where?: NexusGenInputs['InvPaymentTypeWhereInput'] | null; // InvPaymentTypeWhereInput
-    }
-    deleteManyJob: { // args
-      where?: NexusGenInputs['JobWhereInput'] | null; // JobWhereInput
-    }
-    deleteManyJobConfiguration: { // args
-      where?: NexusGenInputs['JobConfigurationWhereInput'] | null; // JobConfigurationWhereInput
-    }
-    deleteManyJobOpening: { // args
-      where?: NexusGenInputs['JobOpeningWhereInput'] | null; // JobOpeningWhereInput
-    }
-    deleteManyJobStatus: { // args
-      where?: NexusGenInputs['JobStatusWhereInput'] | null; // JobStatusWhereInput
-    }
-    deleteManyMarketingSource: { // args
-      where?: NexusGenInputs['MarketingSourceWhereInput'] | null; // MarketingSourceWhereInput
-    }
-    deleteManyMediaLlibraryAttachment: { // args
-      where?: NexusGenInputs['MediaLlibraryAttachmentWhereInput'] | null; // MediaLlibraryAttachmentWhereInput
-    }
-    deleteManyPointOfSaleSetting: { // args
-      where?: NexusGenInputs['PointOfSaleSettingWhereInput'] | null; // PointOfSaleSettingWhereInput
-    }
-    deleteManySalutation: { // args
-      where?: NexusGenInputs['SalutationWhereInput'] | null; // SalutationWhereInput
-    }
-    deleteManySecondAtAnswer: { // args
-      where?: NexusGenInputs['SecondAtAnswerWhereInput'] | null; // SecondAtAnswerWhereInput
-    }
-    deleteManySecondAtQuestion: { // args
-      where?: NexusGenInputs['SecondAtQuestionWhereInput'] | null; // SecondAtQuestionWhereInput
-    }
-    deleteManyThirdPartyAccess: { // args
-      where?: NexusGenInputs['ThirdPartyAccessWhereInput'] | null; // ThirdPartyAccessWhereInput
-    }
-    deleteManyTimezone: { // args
-      where?: NexusGenInputs['TimezoneWhereInput'] | null; // TimezoneWhereInput
-    }
-    deleteManyTwoFactorHistory: { // args
-      where?: NexusGenInputs['TwoFactorHistoryWhereInput'] | null; // TwoFactorHistoryWhereInput
-    }
-    deleteManyUser: { // args
-      where?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
-    }
-    deleteManyUserSecurityQuestionsAnswer: { // args
-      where?: NexusGenInputs['UserSecurityQuestionsAnswerWhereInput'] | null; // UserSecurityQuestionsAnswerWhereInput
-    }
     deleteOneAcLog: { // args
       where: NexusGenInputs['AcLogWhereUniqueInput']; // AcLogWhereUniqueInput!
     }
@@ -57115,438 +56350,6 @@ export interface NexusGenArgTypes {
     login: { // args
       password: string; // String!
       username: string; // String!
-    }
-    updateManyAcLog: { // args
-      data: NexusGenInputs['AcLogUpdateManyMutationInput']; // AcLogUpdateManyMutationInput!
-      where?: NexusGenInputs['AcLogWhereInput'] | null; // AcLogWhereInput
-    }
-    updateManyAcLogAction: { // args
-      data: NexusGenInputs['AcLogActionUpdateManyMutationInput']; // AcLogActionUpdateManyMutationInput!
-      where?: NexusGenInputs['AcLogActionWhereInput'] | null; // AcLogActionWhereInput
-    }
-    updateManyAcLogUrl: { // args
-      data: NexusGenInputs['AcLogUrlUpdateManyMutationInput']; // AcLogUrlUpdateManyMutationInput!
-      where?: NexusGenInputs['AcLogUrlWhereInput'] | null; // AcLogUrlWhereInput
-    }
-    updateManyAcceptEmailToken: { // args
-      data: NexusGenInputs['AcceptEmailTokenUpdateManyMutationInput']; // AcceptEmailTokenUpdateManyMutationInput!
-      where?: NexusGenInputs['AcceptEmailTokenWhereInput'] | null; // AcceptEmailTokenWhereInput
-    }
-    updateManyAccountBalance: { // args
-      data: NexusGenInputs['AccountBalanceUpdateManyMutationInput']; // AccountBalanceUpdateManyMutationInput!
-      where?: NexusGenInputs['AccountBalanceWhereInput'] | null; // AccountBalanceWhereInput
-    }
-    updateManyAccountBalanceLog: { // args
-      data: NexusGenInputs['AccountBalanceLogUpdateManyMutationInput']; // AccountBalanceLogUpdateManyMutationInput!
-      where?: NexusGenInputs['AccountBalanceLogWhereInput'] | null; // AccountBalanceLogWhereInput
-    }
-    updateManyAccountManager: { // args
-      data: NexusGenInputs['AccountManagerUpdateManyMutationInput']; // AccountManagerUpdateManyMutationInput!
-      where?: NexusGenInputs['AccountManagerWhereInput'] | null; // AccountManagerWhereInput
-    }
-    updateManyAdvertCampaign: { // args
-      data: NexusGenInputs['AdvertCampaignUpdateManyMutationInput']; // AdvertCampaignUpdateManyMutationInput!
-      where?: NexusGenInputs['AdvertCampaignWhereInput'] | null; // AdvertCampaignWhereInput
-    }
-    updateManyApiDebug: { // args
-      data: NexusGenInputs['ApiDebugUpdateManyMutationInput']; // ApiDebugUpdateManyMutationInput!
-      where?: NexusGenInputs['ApiDebugWhereInput'] | null; // ApiDebugWhereInput
-    }
-    updateManyApiKey: { // args
-      data: NexusGenInputs['ApiKeyUpdateManyMutationInput']; // ApiKeyUpdateManyMutationInput!
-      where?: NexusGenInputs['ApiKeyWhereInput'] | null; // ApiKeyWhereInput
-    }
-    updateManyAppBeforeAfter: { // args
-      data: NexusGenInputs['AppBeforeAfterUpdateManyMutationInput']; // AppBeforeAfterUpdateManyMutationInput!
-      where?: NexusGenInputs['AppBeforeAfterWhereInput'] | null; // AppBeforeAfterWhereInput
-    }
-    updateManyAppPermission: { // args
-      data: NexusGenInputs['AppPermissionUpdateManyMutationInput']; // AppPermissionUpdateManyMutationInput!
-      where?: NexusGenInputs['AppPermissionWhereInput'] | null; // AppPermissionWhereInput
-    }
-    updateManyAppSubscription: { // args
-      data: NexusGenInputs['AppSubscriptionUpdateManyMutationInput']; // AppSubscriptionUpdateManyMutationInput!
-      where?: NexusGenInputs['AppSubscriptionWhereInput'] | null; // AppSubscriptionWhereInput
-    }
-    updateManyAppSubscriptionsCompanyPrice: { // args
-      data: NexusGenInputs['AppSubscriptionsCompanyPriceUpdateManyMutationInput']; // AppSubscriptionsCompanyPriceUpdateManyMutationInput!
-      where?: NexusGenInputs['AppSubscriptionsCompanyPriceWhereInput'] | null; // AppSubscriptionsCompanyPriceWhereInput
-    }
-    updateManyAtAnswer: { // args
-      data: NexusGenInputs['AtAnswerUpdateManyMutationInput']; // AtAnswerUpdateManyMutationInput!
-      where?: NexusGenInputs['AtAnswerWhereInput'] | null; // AtAnswerWhereInput
-    }
-    updateManyAtConcern: { // args
-      data: NexusGenInputs['AtConcernUpdateManyMutationInput']; // AtConcernUpdateManyMutationInput!
-      where?: NexusGenInputs['AtConcernWhereInput'] | null; // AtConcernWhereInput
-    }
-    updateManyAtQuestion: { // args
-      data: NexusGenInputs['AtQuestionUpdateManyMutationInput']; // AtQuestionUpdateManyMutationInput!
-      where?: NexusGenInputs['AtQuestionWhereInput'] | null; // AtQuestionWhereInput
-    }
-    updateManyAtQuestionsRelation: { // args
-      data: NexusGenInputs['AtQuestionsRelationUpdateManyMutationInput']; // AtQuestionsRelationUpdateManyMutationInput!
-      where?: NexusGenInputs['AtQuestionsRelationWhereInput'] | null; // AtQuestionsRelationWhereInput
-    }
-    updateManyAtQuizTake: { // args
-      data: NexusGenInputs['AtQuizTakeUpdateManyMutationInput']; // AtQuizTakeUpdateManyMutationInput!
-      where?: NexusGenInputs['AtQuizTakeWhereInput'] | null; // AtQuizTakeWhereInput
-    }
-    updateManyAtSetting: { // args
-      data: NexusGenInputs['AtSettingUpdateManyMutationInput']; // AtSettingUpdateManyMutationInput!
-      where?: NexusGenInputs['AtSettingWhereInput'] | null; // AtSettingWhereInput
-    }
-    updateManyAtTreatment: { // args
-      data: NexusGenInputs['AtTreatmentUpdateManyMutationInput']; // AtTreatmentUpdateManyMutationInput!
-      where?: NexusGenInputs['AtTreatmentWhereInput'] | null; // AtTreatmentWhereInput
-    }
-    updateManyAttachmentHelperLite: { // args
-      data: NexusGenInputs['AttachmentHelperLiteUpdateManyMutationInput']; // AttachmentHelperLiteUpdateManyMutationInput!
-      where?: NexusGenInputs['AttachmentHelperLiteWhereInput'] | null; // AttachmentHelperLiteWhereInput
-    }
-    updateManyAutomationAction: { // args
-      data: NexusGenInputs['AutomationActionUpdateManyMutationInput']; // AutomationActionUpdateManyMutationInput!
-      where?: NexusGenInputs['AutomationActionWhereInput'] | null; // AutomationActionWhereInput
-    }
-    updateManyAutomationDelay: { // args
-      data: NexusGenInputs['AutomationDelayUpdateManyMutationInput']; // AutomationDelayUpdateManyMutationInput!
-      where?: NexusGenInputs['AutomationDelayWhereInput'] | null; // AutomationDelayWhereInput
-    }
-    updateManyAutomationFolder: { // args
-      data: NexusGenInputs['AutomationFolderUpdateManyMutationInput']; // AutomationFolderUpdateManyMutationInput!
-      where?: NexusGenInputs['AutomationFolderWhereInput'] | null; // AutomationFolderWhereInput
-    }
-    updateManyAutomationLog: { // args
-      data: NexusGenInputs['AutomationLogUpdateManyMutationInput']; // AutomationLogUpdateManyMutationInput!
-      where?: NexusGenInputs['AutomationLogWhereInput'] | null; // AutomationLogWhereInput
-    }
-    updateManyAutomationRule: { // args
-      data: NexusGenInputs['AutomationRuleUpdateManyMutationInput']; // AutomationRuleUpdateManyMutationInput!
-      where?: NexusGenInputs['AutomationRuleWhereInput'] | null; // AutomationRuleWhereInput
-    }
-    updateManyAutomationTrigger: { // args
-      data: NexusGenInputs['AutomationTriggerUpdateManyMutationInput']; // AutomationTriggerUpdateManyMutationInput!
-      where?: NexusGenInputs['AutomationTriggerWhereInput'] | null; // AutomationTriggerWhereInput
-    }
-    updateManyAvilableDatesLog: { // args
-      data: NexusGenInputs['AvilableDatesLogUpdateManyMutationInput']; // AvilableDatesLogUpdateManyMutationInput!
-      where?: NexusGenInputs['AvilableDatesLogWhereInput'] | null; // AvilableDatesLogWhereInput
-    }
-    updateManyBacsAccount: { // args
-      data: NexusGenInputs['BacsAccountUpdateManyMutationInput']; // BacsAccountUpdateManyMutationInput!
-      where?: NexusGenInputs['BacsAccountWhereInput'] | null; // BacsAccountWhereInput
-    }
-    updateManyBatch: { // args
-      data: NexusGenInputs['BatchUpdateManyMutationInput']; // BatchUpdateManyMutationInput!
-      where?: NexusGenInputs['BatchWhereInput'] | null; // BatchWhereInput
-    }
-    updateManyBatchItem: { // args
-      data: NexusGenInputs['BatchItemUpdateManyMutationInput']; // BatchItemUpdateManyMutationInput!
-      where?: NexusGenInputs['BatchItemWhereInput'] | null; // BatchItemWhereInput
-    }
-    updateManyBlockReason: { // args
-      data: NexusGenInputs['BlockReasonUpdateManyMutationInput']; // BlockReasonUpdateManyMutationInput!
-      where?: NexusGenInputs['BlockReasonWhereInput'] | null; // BlockReasonWhereInput
-    }
-    updateManyBnfDrug: { // args
-      data: NexusGenInputs['BnfDrugUpdateManyMutationInput']; // BnfDrugUpdateManyMutationInput!
-      where?: NexusGenInputs['BnfDrugWhereInput'] | null; // BnfDrugWhereInput
-    }
-    updateManyBodyChartTemplate: { // args
-      data: NexusGenInputs['BodyChartTemplateUpdateManyMutationInput']; // BodyChartTemplateUpdateManyMutationInput!
-      where?: NexusGenInputs['BodyChartTemplateWhereInput'] | null; // BodyChartTemplateWhereInput
-    }
-    updateManyBookingMaster: { // args
-      data: NexusGenInputs['BookingMasterUpdateManyMutationInput']; // BookingMasterUpdateManyMutationInput!
-      where?: NexusGenInputs['BookingMasterWhereInput'] | null; // BookingMasterWhereInput
-    }
-    updateManyBookingSetting: { // args
-      data: NexusGenInputs['BookingSettingUpdateManyMutationInput']; // BookingSettingUpdateManyMutationInput!
-      where?: NexusGenInputs['BookingSettingWhereInput'] | null; // BookingSettingWhereInput
-    }
-    updateManyBookingStatus: { // args
-      data: NexusGenInputs['BookingStatusUpdateManyMutationInput']; // BookingStatusUpdateManyMutationInput!
-      where?: NexusGenInputs['BookingStatusWhereInput'] | null; // BookingStatusWhereInput
-    }
-    updateManyBookingStatusChange: { // args
-      data: NexusGenInputs['BookingStatusChangeUpdateManyMutationInput']; // BookingStatusChangeUpdateManyMutationInput!
-      where?: NexusGenInputs['BookingStatusChangeWhereInput'] | null; // BookingStatusChangeWhereInput
-    }
-    updateManyBookitProGeneral: { // args
-      data: NexusGenInputs['BookitProGeneralUpdateManyMutationInput']; // BookitProGeneralUpdateManyMutationInput!
-      where?: NexusGenInputs['BookitProGeneralWhereInput'] | null; // BookitProGeneralWhereInput
-    }
-    updateManyBookitProSlider: { // args
-      data: NexusGenInputs['BookitProSliderUpdateManyMutationInput']; // BookitProSliderUpdateManyMutationInput!
-      where?: NexusGenInputs['BookitProSliderWhereInput'] | null; // BookitProSliderWhereInput
-    }
-    updateManyBookmarkedPage: { // args
-      data: NexusGenInputs['BookmarkedPageUpdateManyMutationInput']; // BookmarkedPageUpdateManyMutationInput!
-      where?: NexusGenInputs['BookmarkedPageWhereInput'] | null; // BookmarkedPageWhereInput
-    }
-    updateManyBugLog: { // args
-      data: NexusGenInputs['BugLogUpdateManyMutationInput']; // BugLogUpdateManyMutationInput!
-      where?: NexusGenInputs['BugLogWhereInput'] | null; // BugLogWhereInput
-    }
-    updateManyCalRangeRequest: { // args
-      data: NexusGenInputs['CalRangeRequestUpdateManyMutationInput']; // CalRangeRequestUpdateManyMutationInput!
-      where?: NexusGenInputs['CalRangeRequestWhereInput'] | null; // CalRangeRequestWhereInput
-    }
-    updateManyCalendarView: { // args
-      data: NexusGenInputs['CalendarViewUpdateManyMutationInput']; // CalendarViewUpdateManyMutationInput!
-      where?: NexusGenInputs['CalendarViewWhereInput'] | null; // CalendarViewWhereInput
-    }
-    updateManyCampaignAttachment: { // args
-      data: NexusGenInputs['CampaignAttachmentUpdateManyMutationInput']; // CampaignAttachmentUpdateManyMutationInput!
-      where?: NexusGenInputs['CampaignAttachmentWhereInput'] | null; // CampaignAttachmentWhereInput
-    }
-    updateManyCancelReason: { // args
-      data: NexusGenInputs['CancelReasonUpdateManyMutationInput']; // CancelReasonUpdateManyMutationInput!
-      where?: NexusGenInputs['CancelReasonWhereInput'] | null; // CancelReasonWhereInput
-    }
-    updateManyCancellationPolicy: { // args
-      data: NexusGenInputs['CancellationPolicyUpdateManyMutationInput']; // CancellationPolicyUpdateManyMutationInput!
-      where?: NexusGenInputs['CancellationPolicyWhereInput'] | null; // CancellationPolicyWhereInput
-    }
-    updateManyCandidate: { // args
-      data: NexusGenInputs['CandidateUpdateManyMutationInput']; // CandidateUpdateManyMutationInput!
-      where?: NexusGenInputs['CandidateWhereInput'] | null; // CandidateWhereInput
-    }
-    updateManyCardType: { // args
-      data: NexusGenInputs['CardTypeUpdateManyMutationInput']; // CardTypeUpdateManyMutationInput!
-      where?: NexusGenInputs['CardTypeWhereInput'] | null; // CardTypeWhereInput
-    }
-    updateManyCashupReport: { // args
-      data: NexusGenInputs['CashupReportUpdateManyMutationInput']; // CashupReportUpdateManyMutationInput!
-      where?: NexusGenInputs['CashupReportWhereInput'] | null; // CashupReportWhereInput
-    }
-    updateManyCashupReportCustom: { // args
-      data: NexusGenInputs['CashupReportCustomUpdateManyMutationInput']; // CashupReportCustomUpdateManyMutationInput!
-      where?: NexusGenInputs['CashupReportCustomWhereInput'] | null; // CashupReportCustomWhereInput
-    }
-    updateManyCheckinAppt: { // args
-      data: NexusGenInputs['CheckinApptUpdateManyMutationInput']; // CheckinApptUpdateManyMutationInput!
-      where?: NexusGenInputs['CheckinApptWhereInput'] | null; // CheckinApptWhereInput
-    }
-    updateManyCheckinAverages: { // args
-      data: NexusGenInputs['CheckinAveragesUpdateManyMutationInput']; // CheckinAveragesUpdateManyMutationInput!
-      where?: NexusGenInputs['CheckinAveragesWhereInput'] | null; // CheckinAveragesWhereInput
-    }
-    updateManyCheckinAveragesIdle: { // args
-      data: NexusGenInputs['CheckinAveragesIdleUpdateManyMutationInput']; // CheckinAveragesIdleUpdateManyMutationInput!
-      where?: NexusGenInputs['CheckinAveragesIdleWhereInput'] | null; // CheckinAveragesIdleWhereInput
-    }
-    updateManyCheckinProduct: { // args
-      data: NexusGenInputs['CheckinProductUpdateManyMutationInput']; // CheckinProductUpdateManyMutationInput!
-      where?: NexusGenInputs['CheckinProductWhereInput'] | null; // CheckinProductWhereInput
-    }
-    updateManyCheckinQueue: { // args
-      data: NexusGenInputs['CheckinQueueUpdateManyMutationInput']; // CheckinQueueUpdateManyMutationInput!
-      where?: NexusGenInputs['CheckinQueueWhereInput'] | null; // CheckinQueueWhereInput
-    }
-    updateManyClassCategory: { // args
-      data: NexusGenInputs['ClassCategoryUpdateManyMutationInput']; // ClassCategoryUpdateManyMutationInput!
-      where?: NexusGenInputs['ClassCategoryWhereInput'] | null; // ClassCategoryWhereInput
-    }
-    updateManyClassGuests: { // args
-      data: NexusGenInputs['ClassGuestsUpdateManyMutationInput']; // ClassGuestsUpdateManyMutationInput!
-      where?: NexusGenInputs['ClassGuestsWhereInput'] | null; // ClassGuestsWhereInput
-    }
-    updateManyClassMaster: { // args
-      data: NexusGenInputs['ClassMasterUpdateManyMutationInput']; // ClassMasterUpdateManyMutationInput!
-      where?: NexusGenInputs['ClassMasterWhereInput'] | null; // ClassMasterWhereInput
-    }
-    updateManyClassNotes: { // args
-      data: NexusGenInputs['ClassNotesUpdateManyMutationInput']; // ClassNotesUpdateManyMutationInput!
-      where?: NexusGenInputs['ClassNotesWhereInput'] | null; // ClassNotesWhereInput
-    }
-    updateManyClassProduct: { // args
-      data: NexusGenInputs['ClassProductUpdateManyMutationInput']; // ClassProductUpdateManyMutationInput!
-      where?: NexusGenInputs['ClassProductWhereInput'] | null; // ClassProductWhereInput
-    }
-    updateManyClassSmsHistory: { // args
-      data: NexusGenInputs['ClassSmsHistoryUpdateManyMutationInput']; // ClassSmsHistoryUpdateManyMutationInput!
-      where?: NexusGenInputs['ClassSmsHistoryWhereInput'] | null; // ClassSmsHistoryWhereInput
-    }
-    updateManyClassTemplateSetting: { // args
-      data: NexusGenInputs['ClassTemplateSettingUpdateManyMutationInput']; // ClassTemplateSettingUpdateManyMutationInput!
-      where?: NexusGenInputs['ClassTemplateSettingWhereInput'] | null; // ClassTemplateSettingWhereInput
-    }
-    updateManyClasstypeMaster: { // args
-      data: NexusGenInputs['ClasstypeMasterUpdateManyMutationInput']; // ClasstypeMasterUpdateManyMutationInput!
-      where?: NexusGenInputs['ClasstypeMasterWhereInput'] | null; // ClasstypeMasterWhereInput
-    }
-    updateManyCleverpinSetting: { // args
-      data: NexusGenInputs['CleverpinSettingUpdateManyMutationInput']; // CleverpinSettingUpdateManyMutationInput!
-      where?: NexusGenInputs['CleverpinSettingWhereInput'] | null; // CleverpinSettingWhereInput
-    }
-    updateManyClientFormSetting: { // args
-      data: NexusGenInputs['ClientFormSettingUpdateManyMutationInput']; // ClientFormSettingUpdateManyMutationInput!
-      where?: NexusGenInputs['ClientFormSettingWhereInput'] | null; // ClientFormSettingWhereInput
-    }
-    updateManyClinicalSoftware: { // args
-      data: NexusGenInputs['ClinicalSoftwareUpdateManyMutationInput']; // ClinicalSoftwareUpdateManyMutationInput!
-      where?: NexusGenInputs['ClinicalSoftwareWhereInput'] | null; // ClinicalSoftwareWhereInput
-    }
-    updateManyClockinBreak: { // args
-      data: NexusGenInputs['ClockinBreakUpdateManyMutationInput']; // ClockinBreakUpdateManyMutationInput!
-      where?: NexusGenInputs['ClockinBreakWhereInput'] | null; // ClockinBreakWhereInput
-    }
-    updateManyClockinLongpoll: { // args
-      data: NexusGenInputs['ClockinLongpollUpdateManyMutationInput']; // ClockinLongpollUpdateManyMutationInput!
-      where?: NexusGenInputs['ClockinLongpollWhereInput'] | null; // ClockinLongpollWhereInput
-    }
-    updateManyClockinTimesheet: { // args
-      data: NexusGenInputs['ClockinTimesheetUpdateManyMutationInput']; // ClockinTimesheetUpdateManyMutationInput!
-      where?: NexusGenInputs['ClockinTimesheetWhereInput'] | null; // ClockinTimesheetWhereInput
-    }
-    updateManyCmAccountNote: { // args
-      data: NexusGenInputs['CmAccountNoteUpdateManyMutationInput']; // CmAccountNoteUpdateManyMutationInput!
-      where?: NexusGenInputs['CmAccountNoteWhereInput'] | null; // CmAccountNoteWhereInput
-    }
-    updateManyCmAppointmentCustom: { // args
-      data: NexusGenInputs['CmAppointmentCustomUpdateManyMutationInput']; // CmAppointmentCustomUpdateManyMutationInput!
-      where?: NexusGenInputs['CmAppointmentCustomWhereInput'] | null; // CmAppointmentCustomWhereInput
-    }
-    updateManyCmAppointmentsCustomImportHelper: { // args
-      data: NexusGenInputs['CmAppointmentsCustomImportHelperUpdateManyMutationInput']; // CmAppointmentsCustomImportHelperUpdateManyMutationInput!
-      where?: NexusGenInputs['CmAppointmentsCustomImportHelperWhereInput'] | null; // CmAppointmentsCustomImportHelperWhereInput
-    }
-    updateManyCmAuthorization: { // args
-      data: NexusGenInputs['CmAuthorizationUpdateManyMutationInput']; // CmAuthorizationUpdateManyMutationInput!
-      where?: NexusGenInputs['CmAuthorizationWhereInput'] | null; // CmAuthorizationWhereInput
-    }
-    updateManyCmBookingNote: { // args
-      data: NexusGenInputs['CmBookingNoteUpdateManyMutationInput']; // CmBookingNoteUpdateManyMutationInput!
-      where?: NexusGenInputs['CmBookingNoteWhereInput'] | null; // CmBookingNoteWhereInput
-    }
-    updateManyCmCampaign: { // args
-      data: NexusGenInputs['CmCampaignUpdateManyMutationInput']; // CmCampaignUpdateManyMutationInput!
-      where?: NexusGenInputs['CmCampaignWhereInput'] | null; // CmCampaignWhereInput
-    }
-    updateManyCmCampaignNote: { // args
-      data: NexusGenInputs['CmCampaignNoteUpdateManyMutationInput']; // CmCampaignNoteUpdateManyMutationInput!
-      where?: NexusGenInputs['CmCampaignNoteWhereInput'] | null; // CmCampaignNoteWhereInput
-    }
-    updateManyCmCase: { // args
-      data: NexusGenInputs['CmCaseUpdateManyMutationInput']; // CmCaseUpdateManyMutationInput!
-      where?: NexusGenInputs['CmCaseWhereInput'] | null; // CmCaseWhereInput
-    }
-    updateManyCmCaseNote: { // args
-      data: NexusGenInputs['CmCaseNoteUpdateManyMutationInput']; // CmCaseNoteUpdateManyMutationInput!
-      where?: NexusGenInputs['CmCaseNoteWhereInput'] | null; // CmCaseNoteWhereInput
-    }
-    updateManyCmCaseReply: { // args
-      data: NexusGenInputs['CmCaseReplyUpdateManyMutationInput']; // CmCaseReplyUpdateManyMutationInput!
-      where?: NexusGenInputs['CmCaseReplyWhereInput'] | null; // CmCaseReplyWhereInput
-    }
-    updateManyCmContact: { // args
-      data: NexusGenInputs['CmContactUpdateManyMutationInput']; // CmContactUpdateManyMutationInput!
-      where?: NexusGenInputs['CmContactWhereInput'] | null; // CmContactWhereInput
-    }
-    updateManyCompany: { // args
-      data: NexusGenInputs['CompanyUpdateManyMutationInput']; // CompanyUpdateManyMutationInput!
-      where?: NexusGenInputs['CompanyWhereInput'] | null; // CompanyWhereInput
-    }
-    updateManyCompanyBranch: { // args
-      data: NexusGenInputs['CompanyBranchUpdateManyMutationInput']; // CompanyBranchUpdateManyMutationInput!
-      where?: NexusGenInputs['CompanyBranchWhereInput'] | null; // CompanyBranchWhereInput
-    }
-    updateManyCompanyDepartment: { // args
-      data: NexusGenInputs['CompanyDepartmentUpdateManyMutationInput']; // CompanyDepartmentUpdateManyMutationInput!
-      where?: NexusGenInputs['CompanyDepartmentWhereInput'] | null; // CompanyDepartmentWhereInput
-    }
-    updateManyCompanyDetails: { // args
-      data: NexusGenInputs['CompanyDetailsUpdateManyMutationInput']; // CompanyDetailsUpdateManyMutationInput!
-      where?: NexusGenInputs['CompanyDetailsWhereInput'] | null; // CompanyDetailsWhereInput
-    }
-    updateManyCompanyLocation: { // args
-      data: NexusGenInputs['CompanyLocationUpdateManyMutationInput']; // CompanyLocationUpdateManyMutationInput!
-      where?: NexusGenInputs['CompanyLocationWhereInput'] | null; // CompanyLocationWhereInput
-    }
-    updateManyCompanyRoom: { // args
-      data: NexusGenInputs['CompanyRoomUpdateManyMutationInput']; // CompanyRoomUpdateManyMutationInput!
-      where?: NexusGenInputs['CompanyRoomWhereInput'] | null; // CompanyRoomWhereInput
-    }
-    updateManyCompanyRoomService: { // args
-      data: NexusGenInputs['CompanyRoomServiceUpdateManyMutationInput']; // CompanyRoomServiceUpdateManyMutationInput!
-      where?: NexusGenInputs['CompanyRoomServiceWhereInput'] | null; // CompanyRoomServiceWhereInput
-    }
-    updateManyCompanyService: { // args
-      data: NexusGenInputs['CompanyServiceUpdateManyMutationInput']; // CompanyServiceUpdateManyMutationInput!
-      where?: NexusGenInputs['CompanyServiceWhereInput'] | null; // CompanyServiceWhereInput
-    }
-    updateManyCompanySubscription: { // args
-      data: NexusGenInputs['CompanySubscriptionUpdateManyMutationInput']; // CompanySubscriptionUpdateManyMutationInput!
-      where?: NexusGenInputs['CompanySubscriptionWhereInput'] | null; // CompanySubscriptionWhereInput
-    }
-    updateManyGlCode: { // args
-      data: NexusGenInputs['GlCodeUpdateManyMutationInput']; // GlCodeUpdateManyMutationInput!
-      where?: NexusGenInputs['GlCodeWhereInput'] | null; // GlCodeWhereInput
-    }
-    updateManyInvPaymentType: { // args
-      data: NexusGenInputs['InvPaymentTypeUpdateManyMutationInput']; // InvPaymentTypeUpdateManyMutationInput!
-      where?: NexusGenInputs['InvPaymentTypeWhereInput'] | null; // InvPaymentTypeWhereInput
-    }
-    updateManyJob: { // args
-      data: NexusGenInputs['JobUpdateManyMutationInput']; // JobUpdateManyMutationInput!
-      where?: NexusGenInputs['JobWhereInput'] | null; // JobWhereInput
-    }
-    updateManyJobConfiguration: { // args
-      data: NexusGenInputs['JobConfigurationUpdateManyMutationInput']; // JobConfigurationUpdateManyMutationInput!
-      where?: NexusGenInputs['JobConfigurationWhereInput'] | null; // JobConfigurationWhereInput
-    }
-    updateManyJobOpening: { // args
-      data: NexusGenInputs['JobOpeningUpdateManyMutationInput']; // JobOpeningUpdateManyMutationInput!
-      where?: NexusGenInputs['JobOpeningWhereInput'] | null; // JobOpeningWhereInput
-    }
-    updateManyJobStatus: { // args
-      data: NexusGenInputs['JobStatusUpdateManyMutationInput']; // JobStatusUpdateManyMutationInput!
-      where?: NexusGenInputs['JobStatusWhereInput'] | null; // JobStatusWhereInput
-    }
-    updateManyMarketingSource: { // args
-      data: NexusGenInputs['MarketingSourceUpdateManyMutationInput']; // MarketingSourceUpdateManyMutationInput!
-      where?: NexusGenInputs['MarketingSourceWhereInput'] | null; // MarketingSourceWhereInput
-    }
-    updateManyMediaLlibraryAttachment: { // args
-      data: NexusGenInputs['MediaLlibraryAttachmentUpdateManyMutationInput']; // MediaLlibraryAttachmentUpdateManyMutationInput!
-      where?: NexusGenInputs['MediaLlibraryAttachmentWhereInput'] | null; // MediaLlibraryAttachmentWhereInput
-    }
-    updateManyPointOfSaleSetting: { // args
-      data: NexusGenInputs['PointOfSaleSettingUpdateManyMutationInput']; // PointOfSaleSettingUpdateManyMutationInput!
-      where?: NexusGenInputs['PointOfSaleSettingWhereInput'] | null; // PointOfSaleSettingWhereInput
-    }
-    updateManySalutation: { // args
-      data: NexusGenInputs['SalutationUpdateManyMutationInput']; // SalutationUpdateManyMutationInput!
-      where?: NexusGenInputs['SalutationWhereInput'] | null; // SalutationWhereInput
-    }
-    updateManySecondAtAnswer: { // args
-      data: NexusGenInputs['SecondAtAnswerUpdateManyMutationInput']; // SecondAtAnswerUpdateManyMutationInput!
-      where?: NexusGenInputs['SecondAtAnswerWhereInput'] | null; // SecondAtAnswerWhereInput
-    }
-    updateManySecondAtQuestion: { // args
-      data: NexusGenInputs['SecondAtQuestionUpdateManyMutationInput']; // SecondAtQuestionUpdateManyMutationInput!
-      where?: NexusGenInputs['SecondAtQuestionWhereInput'] | null; // SecondAtQuestionWhereInput
-    }
-    updateManyThirdPartyAccess: { // args
-      data: NexusGenInputs['ThirdPartyAccessUpdateManyMutationInput']; // ThirdPartyAccessUpdateManyMutationInput!
-      where?: NexusGenInputs['ThirdPartyAccessWhereInput'] | null; // ThirdPartyAccessWhereInput
-    }
-    updateManyTimezone: { // args
-      data: NexusGenInputs['TimezoneUpdateManyMutationInput']; // TimezoneUpdateManyMutationInput!
-      where?: NexusGenInputs['TimezoneWhereInput'] | null; // TimezoneWhereInput
-    }
-    updateManyTwoFactorHistory: { // args
-      data: NexusGenInputs['TwoFactorHistoryUpdateManyMutationInput']; // TwoFactorHistoryUpdateManyMutationInput!
-      where?: NexusGenInputs['TwoFactorHistoryWhereInput'] | null; // TwoFactorHistoryWhereInput
-    }
-    updateManyUser: { // args
-      data: NexusGenInputs['UserUpdateManyMutationInput']; // UserUpdateManyMutationInput!
-      where?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
-    }
-    updateManyUserSecurityQuestionsAnswer: { // args
-      data: NexusGenInputs['UserSecurityQuestionsAnswerUpdateManyMutationInput']; // UserSecurityQuestionsAnswerUpdateManyMutationInput!
-      where?: NexusGenInputs['UserSecurityQuestionsAnswerWhereInput'] | null; // UserSecurityQuestionsAnswerWhereInput
     }
     updateOneAcLog: { // args
       data: NexusGenInputs['AcLogUpdateInput']; // AcLogUpdateInput!

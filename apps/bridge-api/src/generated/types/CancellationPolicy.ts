@@ -57,7 +57,5 @@ export const cancellationPolicyMutation = extendType({
     t.crud.updateOneCancellationPolicy()
     t.crud.upsertOneCancellationPolicy()
     t.crud.deleteOneCancellationPolicy()
-    t.crud.updateManyCancellationPolicy()
-    t.crud.deleteManyCancellationPolicy()
   },
 })

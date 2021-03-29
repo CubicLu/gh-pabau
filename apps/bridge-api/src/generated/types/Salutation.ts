@@ -47,7 +47,5 @@ export const salutationMutation = extendType({
     t.crud.updateOneSalutation()
     t.crud.upsertOneSalutation()
     t.crud.deleteOneSalutation()
-    t.crud.updateManySalutation()
-    t.crud.deleteManySalutation()
   },
 })

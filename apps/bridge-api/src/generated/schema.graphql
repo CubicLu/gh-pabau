@@ -1922,10 +1922,6 @@ input AdvertCampaignWhereUniqueInput {
   id: Int
 }
 
-type AffectedRowsOutput {
-  count: Int!
-}
-
 type AggregateAcLog {
   avg: AcLogAvgAggregateOutputType
   count: AcLogCountAggregateOutputType
@@ -17987,7 +17983,7 @@ type CmContact {
   Status: cm_contacts_Status!
   Title: String!
   Twitter: String!
-  UpdatedDate: DateTime!
+  UpdatedDate: DateTime
   alerts_drop: String!
   ambassador_id: Int!
   contact_type: Int!
@@ -18010,7 +18006,7 @@ type CmContact {
   polite_notice: String!
   privacy_policy: String!
   xero_contact_id: String!
-  xero_updated_date: DateTime!
+  xero_updated_date: DateTime
 }
 
 type CmContactAvgAggregateOutputType {
@@ -18165,7 +18161,7 @@ input CmContactCreateInput {
   Status: cm_contacts_Status
   Title: String!
   Twitter: String!
-  UpdatedDate: DateTime!
+  UpdatedDate: DateTime
   alerts_drop: String!
   ambassador_id: Int!
   contact_type: Int
@@ -18188,7 +18184,7 @@ input CmContactCreateInput {
   polite_notice: String!
   privacy_policy: String!
   xero_contact_id: String!
-  xero_updated_date: DateTime!
+  xero_updated_date: DateTime
 }
 
 type CmContactMaxAggregateOutputType {
@@ -18571,7 +18567,7 @@ input CmContactUncheckedCreateInput {
   Status: cm_contacts_Status
   Title: String!
   Twitter: String!
-  UpdatedDate: DateTime!
+  UpdatedDate: DateTime
   alerts_drop: String!
   ambassador_id: Int!
   contact_type: Int
@@ -18594,7 +18590,7 @@ input CmContactUncheckedCreateInput {
   polite_notice: String!
   privacy_policy: String!
   xero_contact_id: String!
-  xero_updated_date: DateTime!
+  xero_updated_date: DateTime
 }
 
 input CmContactUncheckedUpdateInput {
@@ -18647,7 +18643,7 @@ input CmContactUncheckedUpdateInput {
   Status: Enumcm_contacts_StatusFieldUpdateOperationsInput
   Title: StringFieldUpdateOperationsInput
   Twitter: StringFieldUpdateOperationsInput
-  UpdatedDate: DateTimeFieldUpdateOperationsInput
+  UpdatedDate: NullableDateTimeFieldUpdateOperationsInput
   alerts_drop: StringFieldUpdateOperationsInput
   ambassador_id: IntFieldUpdateOperationsInput
   contact_type: IntFieldUpdateOperationsInput
@@ -18670,7 +18666,7 @@ input CmContactUncheckedUpdateInput {
   polite_notice: StringFieldUpdateOperationsInput
   privacy_policy: StringFieldUpdateOperationsInput
   xero_contact_id: StringFieldUpdateOperationsInput
-  xero_updated_date: DateTimeFieldUpdateOperationsInput
+  xero_updated_date: NullableDateTimeFieldUpdateOperationsInput
 }
 
 input CmContactUncheckedUpdateManyInput {
@@ -18723,7 +18719,7 @@ input CmContactUncheckedUpdateManyInput {
   Status: Enumcm_contacts_StatusFieldUpdateOperationsInput
   Title: StringFieldUpdateOperationsInput
   Twitter: StringFieldUpdateOperationsInput
-  UpdatedDate: DateTimeFieldUpdateOperationsInput
+  UpdatedDate: NullableDateTimeFieldUpdateOperationsInput
   alerts_drop: StringFieldUpdateOperationsInput
   ambassador_id: IntFieldUpdateOperationsInput
   contact_type: IntFieldUpdateOperationsInput
@@ -18746,7 +18742,7 @@ input CmContactUncheckedUpdateManyInput {
   polite_notice: StringFieldUpdateOperationsInput
   privacy_policy: StringFieldUpdateOperationsInput
   xero_contact_id: StringFieldUpdateOperationsInput
-  xero_updated_date: DateTimeFieldUpdateOperationsInput
+  xero_updated_date: NullableDateTimeFieldUpdateOperationsInput
 }
 
 input CmContactUpdateInput {
@@ -18798,7 +18794,7 @@ input CmContactUpdateInput {
   Status: Enumcm_contacts_StatusFieldUpdateOperationsInput
   Title: StringFieldUpdateOperationsInput
   Twitter: StringFieldUpdateOperationsInput
-  UpdatedDate: DateTimeFieldUpdateOperationsInput
+  UpdatedDate: NullableDateTimeFieldUpdateOperationsInput
   alerts_drop: StringFieldUpdateOperationsInput
   ambassador_id: IntFieldUpdateOperationsInput
   contact_type: IntFieldUpdateOperationsInput
@@ -18821,7 +18817,7 @@ input CmContactUpdateInput {
   polite_notice: StringFieldUpdateOperationsInput
   privacy_policy: StringFieldUpdateOperationsInput
   xero_contact_id: StringFieldUpdateOperationsInput
-  xero_updated_date: DateTimeFieldUpdateOperationsInput
+  xero_updated_date: NullableDateTimeFieldUpdateOperationsInput
 }
 
 input CmContactUpdateManyMutationInput {
@@ -18873,7 +18869,7 @@ input CmContactUpdateManyMutationInput {
   Status: Enumcm_contacts_StatusFieldUpdateOperationsInput
   Title: StringFieldUpdateOperationsInput
   Twitter: StringFieldUpdateOperationsInput
-  UpdatedDate: DateTimeFieldUpdateOperationsInput
+  UpdatedDate: NullableDateTimeFieldUpdateOperationsInput
   alerts_drop: StringFieldUpdateOperationsInput
   ambassador_id: IntFieldUpdateOperationsInput
   contact_type: IntFieldUpdateOperationsInput
@@ -18896,7 +18892,7 @@ input CmContactUpdateManyMutationInput {
   polite_notice: StringFieldUpdateOperationsInput
   privacy_policy: StringFieldUpdateOperationsInput
   xero_contact_id: StringFieldUpdateOperationsInput
-  xero_updated_date: DateTimeFieldUpdateOperationsInput
+  xero_updated_date: NullableDateTimeFieldUpdateOperationsInput
 }
 
 input CmContactWhereInput {
@@ -18952,7 +18948,7 @@ input CmContactWhereInput {
   Status: Enumcm_contacts_StatusFilter
   Title: StringFilter
   Twitter: StringFilter
-  UpdatedDate: DateTimeFilter
+  UpdatedDate: DateTimeNullableFilter
   alerts_drop: StringFilter
   ambassador_id: IntFilter
   contact_type: IntFilter
@@ -18975,7 +18971,7 @@ input CmContactWhereInput {
   polite_notice: StringFilter
   privacy_policy: StringFilter
   xero_contact_id: StringFilter
-  xero_updated_date: DateTimeFilter
+  xero_updated_date: DateTimeNullableFilter
 }
 
 input CmContactWhereUniqueInput {
@@ -33847,114 +33843,6 @@ type Mutation {
   createOneTwoFactorHistory(data: TwoFactorHistoryCreateInput!): TwoFactorHistory!
   createOneUser(data: UserCreateInput!): User!
   createOneUserSecurityQuestionsAnswer(data: UserSecurityQuestionsAnswerCreateInput!): UserSecurityQuestionsAnswer!
-  deleteManyAcLog(where: AcLogWhereInput): AffectedRowsOutput!
-  deleteManyAcLogAction(where: AcLogActionWhereInput): AffectedRowsOutput!
-  deleteManyAcLogUrl(where: AcLogUrlWhereInput): AffectedRowsOutput!
-  deleteManyAcceptEmailToken(where: AcceptEmailTokenWhereInput): AffectedRowsOutput!
-  deleteManyAccountBalance(where: AccountBalanceWhereInput): AffectedRowsOutput!
-  deleteManyAccountBalanceLog(where: AccountBalanceLogWhereInput): AffectedRowsOutput!
-  deleteManyAccountManager(where: AccountManagerWhereInput): AffectedRowsOutput!
-  deleteManyAdvertCampaign(where: AdvertCampaignWhereInput): AffectedRowsOutput!
-  deleteManyApiDebug(where: ApiDebugWhereInput): AffectedRowsOutput!
-  deleteManyApiKey(where: ApiKeyWhereInput): AffectedRowsOutput!
-  deleteManyAppBeforeAfter(where: AppBeforeAfterWhereInput): AffectedRowsOutput!
-  deleteManyAppPermission(where: AppPermissionWhereInput): AffectedRowsOutput!
-  deleteManyAppSubscription(where: AppSubscriptionWhereInput): AffectedRowsOutput!
-  deleteManyAppSubscriptionsCompanyPrice(where: AppSubscriptionsCompanyPriceWhereInput): AffectedRowsOutput!
-  deleteManyAtAnswer(where: AtAnswerWhereInput): AffectedRowsOutput!
-  deleteManyAtConcern(where: AtConcernWhereInput): AffectedRowsOutput!
-  deleteManyAtQuestion(where: AtQuestionWhereInput): AffectedRowsOutput!
-  deleteManyAtQuestionsRelation(where: AtQuestionsRelationWhereInput): AffectedRowsOutput!
-  deleteManyAtQuizTake(where: AtQuizTakeWhereInput): AffectedRowsOutput!
-  deleteManyAtSetting(where: AtSettingWhereInput): AffectedRowsOutput!
-  deleteManyAtTreatment(where: AtTreatmentWhereInput): AffectedRowsOutput!
-  deleteManyAttachmentHelperLite(where: AttachmentHelperLiteWhereInput): AffectedRowsOutput!
-  deleteManyAutomationAction(where: AutomationActionWhereInput): AffectedRowsOutput!
-  deleteManyAutomationDelay(where: AutomationDelayWhereInput): AffectedRowsOutput!
-  deleteManyAutomationFolder(where: AutomationFolderWhereInput): AffectedRowsOutput!
-  deleteManyAutomationLog(where: AutomationLogWhereInput): AffectedRowsOutput!
-  deleteManyAutomationRule(where: AutomationRuleWhereInput): AffectedRowsOutput!
-  deleteManyAutomationTrigger(where: AutomationTriggerWhereInput): AffectedRowsOutput!
-  deleteManyAvilableDatesLog(where: AvilableDatesLogWhereInput): AffectedRowsOutput!
-  deleteManyBacsAccount(where: BacsAccountWhereInput): AffectedRowsOutput!
-  deleteManyBatch(where: BatchWhereInput): AffectedRowsOutput!
-  deleteManyBatchItem(where: BatchItemWhereInput): AffectedRowsOutput!
-  deleteManyBlockReason(where: BlockReasonWhereInput): AffectedRowsOutput!
-  deleteManyBnfDrug(where: BnfDrugWhereInput): AffectedRowsOutput!
-  deleteManyBodyChartTemplate(where: BodyChartTemplateWhereInput): AffectedRowsOutput!
-  deleteManyBookingMaster(where: BookingMasterWhereInput): AffectedRowsOutput!
-  deleteManyBookingSetting(where: BookingSettingWhereInput): AffectedRowsOutput!
-  deleteManyBookingStatus(where: BookingStatusWhereInput): AffectedRowsOutput!
-  deleteManyBookingStatusChange(where: BookingStatusChangeWhereInput): AffectedRowsOutput!
-  deleteManyBookitProGeneral(where: BookitProGeneralWhereInput): AffectedRowsOutput!
-  deleteManyBookitProSlider(where: BookitProSliderWhereInput): AffectedRowsOutput!
-  deleteManyBookmarkedPage(where: BookmarkedPageWhereInput): AffectedRowsOutput!
-  deleteManyBugLog(where: BugLogWhereInput): AffectedRowsOutput!
-  deleteManyCalRangeRequest(where: CalRangeRequestWhereInput): AffectedRowsOutput!
-  deleteManyCalendarView(where: CalendarViewWhereInput): AffectedRowsOutput!
-  deleteManyCampaignAttachment(where: CampaignAttachmentWhereInput): AffectedRowsOutput!
-  deleteManyCancelReason(where: CancelReasonWhereInput): AffectedRowsOutput!
-  deleteManyCancellationPolicy(where: CancellationPolicyWhereInput): AffectedRowsOutput!
-  deleteManyCandidate(where: CandidateWhereInput): AffectedRowsOutput!
-  deleteManyCardType(where: CardTypeWhereInput): AffectedRowsOutput!
-  deleteManyCashupReport(where: CashupReportWhereInput): AffectedRowsOutput!
-  deleteManyCashupReportCustom(where: CashupReportCustomWhereInput): AffectedRowsOutput!
-  deleteManyCheckinAppt(where: CheckinApptWhereInput): AffectedRowsOutput!
-  deleteManyCheckinAverages(where: CheckinAveragesWhereInput): AffectedRowsOutput!
-  deleteManyCheckinAveragesIdle(where: CheckinAveragesIdleWhereInput): AffectedRowsOutput!
-  deleteManyCheckinProduct(where: CheckinProductWhereInput): AffectedRowsOutput!
-  deleteManyCheckinQueue(where: CheckinQueueWhereInput): AffectedRowsOutput!
-  deleteManyClassCategory(where: ClassCategoryWhereInput): AffectedRowsOutput!
-  deleteManyClassGuests(where: ClassGuestsWhereInput): AffectedRowsOutput!
-  deleteManyClassMaster(where: ClassMasterWhereInput): AffectedRowsOutput!
-  deleteManyClassNotes(where: ClassNotesWhereInput): AffectedRowsOutput!
-  deleteManyClassProduct(where: ClassProductWhereInput): AffectedRowsOutput!
-  deleteManyClassSmsHistory(where: ClassSmsHistoryWhereInput): AffectedRowsOutput!
-  deleteManyClassTemplateSetting(where: ClassTemplateSettingWhereInput): AffectedRowsOutput!
-  deleteManyClasstypeMaster(where: ClasstypeMasterWhereInput): AffectedRowsOutput!
-  deleteManyCleverpinSetting(where: CleverpinSettingWhereInput): AffectedRowsOutput!
-  deleteManyClientFormSetting(where: ClientFormSettingWhereInput): AffectedRowsOutput!
-  deleteManyClinicalSoftware(where: ClinicalSoftwareWhereInput): AffectedRowsOutput!
-  deleteManyClockinBreak(where: ClockinBreakWhereInput): AffectedRowsOutput!
-  deleteManyClockinLongpoll(where: ClockinLongpollWhereInput): AffectedRowsOutput!
-  deleteManyClockinTimesheet(where: ClockinTimesheetWhereInput): AffectedRowsOutput!
-  deleteManyCmAccountNote(where: CmAccountNoteWhereInput): AffectedRowsOutput!
-  deleteManyCmAppointmentCustom(where: CmAppointmentCustomWhereInput): AffectedRowsOutput!
-  deleteManyCmAppointmentsCustomImportHelper(where: CmAppointmentsCustomImportHelperWhereInput): AffectedRowsOutput!
-  deleteManyCmAuthorization(where: CmAuthorizationWhereInput): AffectedRowsOutput!
-  deleteManyCmBookingNote(where: CmBookingNoteWhereInput): AffectedRowsOutput!
-  deleteManyCmCampaign(where: CmCampaignWhereInput): AffectedRowsOutput!
-  deleteManyCmCampaignNote(where: CmCampaignNoteWhereInput): AffectedRowsOutput!
-  deleteManyCmCase(where: CmCaseWhereInput): AffectedRowsOutput!
-  deleteManyCmCaseNote(where: CmCaseNoteWhereInput): AffectedRowsOutput!
-  deleteManyCmCaseReply(where: CmCaseReplyWhereInput): AffectedRowsOutput!
-  deleteManyCmContact(where: CmContactWhereInput): AffectedRowsOutput!
-  deleteManyCompany(where: CompanyWhereInput): AffectedRowsOutput!
-  deleteManyCompanyBranch(where: CompanyBranchWhereInput): AffectedRowsOutput!
-  deleteManyCompanyDepartment(where: CompanyDepartmentWhereInput): AffectedRowsOutput!
-  deleteManyCompanyDetails(where: CompanyDetailsWhereInput): AffectedRowsOutput!
-  deleteManyCompanyLocation(where: CompanyLocationWhereInput): AffectedRowsOutput!
-  deleteManyCompanyRoom(where: CompanyRoomWhereInput): AffectedRowsOutput!
-  deleteManyCompanyRoomService(where: CompanyRoomServiceWhereInput): AffectedRowsOutput!
-  deleteManyCompanyService(where: CompanyServiceWhereInput): AffectedRowsOutput!
-  deleteManyCompanySubscription(where: CompanySubscriptionWhereInput): AffectedRowsOutput!
-  deleteManyGlCode(where: GlCodeWhereInput): AffectedRowsOutput!
-  deleteManyInvPaymentType(where: InvPaymentTypeWhereInput): AffectedRowsOutput!
-  deleteManyJob(where: JobWhereInput): AffectedRowsOutput!
-  deleteManyJobConfiguration(where: JobConfigurationWhereInput): AffectedRowsOutput!
-  deleteManyJobOpening(where: JobOpeningWhereInput): AffectedRowsOutput!
-  deleteManyJobStatus(where: JobStatusWhereInput): AffectedRowsOutput!
-  deleteManyMarketingSource(where: MarketingSourceWhereInput): AffectedRowsOutput!
-  deleteManyMediaLlibraryAttachment(where: MediaLlibraryAttachmentWhereInput): AffectedRowsOutput!
-  deleteManyPointOfSaleSetting(where: PointOfSaleSettingWhereInput): AffectedRowsOutput!
-  deleteManySalutation(where: SalutationWhereInput): AffectedRowsOutput!
-  deleteManySecondAtAnswer(where: SecondAtAnswerWhereInput): AffectedRowsOutput!
-  deleteManySecondAtQuestion(where: SecondAtQuestionWhereInput): AffectedRowsOutput!
-  deleteManyThirdPartyAccess(where: ThirdPartyAccessWhereInput): AffectedRowsOutput!
-  deleteManyTimezone(where: TimezoneWhereInput): AffectedRowsOutput!
-  deleteManyTwoFactorHistory(where: TwoFactorHistoryWhereInput): AffectedRowsOutput!
-  deleteManyUser(where: UserWhereInput): AffectedRowsOutput!
-  deleteManyUserSecurityQuestionsAnswer(where: UserSecurityQuestionsAnswerWhereInput): AffectedRowsOutput!
   deleteOneAcLog(where: AcLogWhereUniqueInput!): AcLog
   deleteOneAcLogAction(where: AcLogActionWhereUniqueInput!): AcLogAction
   deleteOneAcLogUrl(where: AcLogUrlWhereUniqueInput!): AcLogUrl
@@ -34066,114 +33954,6 @@ type Mutation {
   deleteOneUserSecurityQuestionsAnswer(where: UserSecurityQuestionsAnswerWhereUniqueInput!): UserSecurityQuestionsAnswer
   login(password: String!, username: String!): String
   logout: Boolean
-  updateManyAcLog(data: AcLogUpdateManyMutationInput!, where: AcLogWhereInput): AffectedRowsOutput!
-  updateManyAcLogAction(data: AcLogActionUpdateManyMutationInput!, where: AcLogActionWhereInput): AffectedRowsOutput!
-  updateManyAcLogUrl(data: AcLogUrlUpdateManyMutationInput!, where: AcLogUrlWhereInput): AffectedRowsOutput!
-  updateManyAcceptEmailToken(data: AcceptEmailTokenUpdateManyMutationInput!, where: AcceptEmailTokenWhereInput): AffectedRowsOutput!
-  updateManyAccountBalance(data: AccountBalanceUpdateManyMutationInput!, where: AccountBalanceWhereInput): AffectedRowsOutput!
-  updateManyAccountBalanceLog(data: AccountBalanceLogUpdateManyMutationInput!, where: AccountBalanceLogWhereInput): AffectedRowsOutput!
-  updateManyAccountManager(data: AccountManagerUpdateManyMutationInput!, where: AccountManagerWhereInput): AffectedRowsOutput!
-  updateManyAdvertCampaign(data: AdvertCampaignUpdateManyMutationInput!, where: AdvertCampaignWhereInput): AffectedRowsOutput!
-  updateManyApiDebug(data: ApiDebugUpdateManyMutationInput!, where: ApiDebugWhereInput): AffectedRowsOutput!
-  updateManyApiKey(data: ApiKeyUpdateManyMutationInput!, where: ApiKeyWhereInput): AffectedRowsOutput!
-  updateManyAppBeforeAfter(data: AppBeforeAfterUpdateManyMutationInput!, where: AppBeforeAfterWhereInput): AffectedRowsOutput!
-  updateManyAppPermission(data: AppPermissionUpdateManyMutationInput!, where: AppPermissionWhereInput): AffectedRowsOutput!
-  updateManyAppSubscription(data: AppSubscriptionUpdateManyMutationInput!, where: AppSubscriptionWhereInput): AffectedRowsOutput!
-  updateManyAppSubscriptionsCompanyPrice(data: AppSubscriptionsCompanyPriceUpdateManyMutationInput!, where: AppSubscriptionsCompanyPriceWhereInput): AffectedRowsOutput!
-  updateManyAtAnswer(data: AtAnswerUpdateManyMutationInput!, where: AtAnswerWhereInput): AffectedRowsOutput!
-  updateManyAtConcern(data: AtConcernUpdateManyMutationInput!, where: AtConcernWhereInput): AffectedRowsOutput!
-  updateManyAtQuestion(data: AtQuestionUpdateManyMutationInput!, where: AtQuestionWhereInput): AffectedRowsOutput!
-  updateManyAtQuestionsRelation(data: AtQuestionsRelationUpdateManyMutationInput!, where: AtQuestionsRelationWhereInput): AffectedRowsOutput!
-  updateManyAtQuizTake(data: AtQuizTakeUpdateManyMutationInput!, where: AtQuizTakeWhereInput): AffectedRowsOutput!
-  updateManyAtSetting(data: AtSettingUpdateManyMutationInput!, where: AtSettingWhereInput): AffectedRowsOutput!
-  updateManyAtTreatment(data: AtTreatmentUpdateManyMutationInput!, where: AtTreatmentWhereInput): AffectedRowsOutput!
-  updateManyAttachmentHelperLite(data: AttachmentHelperLiteUpdateManyMutationInput!, where: AttachmentHelperLiteWhereInput): AffectedRowsOutput!
-  updateManyAutomationAction(data: AutomationActionUpdateManyMutationInput!, where: AutomationActionWhereInput): AffectedRowsOutput!
-  updateManyAutomationDelay(data: AutomationDelayUpdateManyMutationInput!, where: AutomationDelayWhereInput): AffectedRowsOutput!
-  updateManyAutomationFolder(data: AutomationFolderUpdateManyMutationInput!, where: AutomationFolderWhereInput): AffectedRowsOutput!
-  updateManyAutomationLog(data: AutomationLogUpdateManyMutationInput!, where: AutomationLogWhereInput): AffectedRowsOutput!
-  updateManyAutomationRule(data: AutomationRuleUpdateManyMutationInput!, where: AutomationRuleWhereInput): AffectedRowsOutput!
-  updateManyAutomationTrigger(data: AutomationTriggerUpdateManyMutationInput!, where: AutomationTriggerWhereInput): AffectedRowsOutput!
-  updateManyAvilableDatesLog(data: AvilableDatesLogUpdateManyMutationInput!, where: AvilableDatesLogWhereInput): AffectedRowsOutput!
-  updateManyBacsAccount(data: BacsAccountUpdateManyMutationInput!, where: BacsAccountWhereInput): AffectedRowsOutput!
-  updateManyBatch(data: BatchUpdateManyMutationInput!, where: BatchWhereInput): AffectedRowsOutput!
-  updateManyBatchItem(data: BatchItemUpdateManyMutationInput!, where: BatchItemWhereInput): AffectedRowsOutput!
-  updateManyBlockReason(data: BlockReasonUpdateManyMutationInput!, where: BlockReasonWhereInput): AffectedRowsOutput!
-  updateManyBnfDrug(data: BnfDrugUpdateManyMutationInput!, where: BnfDrugWhereInput): AffectedRowsOutput!
-  updateManyBodyChartTemplate(data: BodyChartTemplateUpdateManyMutationInput!, where: BodyChartTemplateWhereInput): AffectedRowsOutput!
-  updateManyBookingMaster(data: BookingMasterUpdateManyMutationInput!, where: BookingMasterWhereInput): AffectedRowsOutput!
-  updateManyBookingSetting(data: BookingSettingUpdateManyMutationInput!, where: BookingSettingWhereInput): AffectedRowsOutput!
-  updateManyBookingStatus(data: BookingStatusUpdateManyMutationInput!, where: BookingStatusWhereInput): AffectedRowsOutput!
-  updateManyBookingStatusChange(data: BookingStatusChangeUpdateManyMutationInput!, where: BookingStatusChangeWhereInput): AffectedRowsOutput!
-  updateManyBookitProGeneral(data: BookitProGeneralUpdateManyMutationInput!, where: BookitProGeneralWhereInput): AffectedRowsOutput!
-  updateManyBookitProSlider(data: BookitProSliderUpdateManyMutationInput!, where: BookitProSliderWhereInput): AffectedRowsOutput!
-  updateManyBookmarkedPage(data: BookmarkedPageUpdateManyMutationInput!, where: BookmarkedPageWhereInput): AffectedRowsOutput!
-  updateManyBugLog(data: BugLogUpdateManyMutationInput!, where: BugLogWhereInput): AffectedRowsOutput!
-  updateManyCalRangeRequest(data: CalRangeRequestUpdateManyMutationInput!, where: CalRangeRequestWhereInput): AffectedRowsOutput!
-  updateManyCalendarView(data: CalendarViewUpdateManyMutationInput!, where: CalendarViewWhereInput): AffectedRowsOutput!
-  updateManyCampaignAttachment(data: CampaignAttachmentUpdateManyMutationInput!, where: CampaignAttachmentWhereInput): AffectedRowsOutput!
-  updateManyCancelReason(data: CancelReasonUpdateManyMutationInput!, where: CancelReasonWhereInput): AffectedRowsOutput!
-  updateManyCancellationPolicy(data: CancellationPolicyUpdateManyMutationInput!, where: CancellationPolicyWhereInput): AffectedRowsOutput!
-  updateManyCandidate(data: CandidateUpdateManyMutationInput!, where: CandidateWhereInput): AffectedRowsOutput!
-  updateManyCardType(data: CardTypeUpdateManyMutationInput!, where: CardTypeWhereInput): AffectedRowsOutput!
-  updateManyCashupReport(data: CashupReportUpdateManyMutationInput!, where: CashupReportWhereInput): AffectedRowsOutput!
-  updateManyCashupReportCustom(data: CashupReportCustomUpdateManyMutationInput!, where: CashupReportCustomWhereInput): AffectedRowsOutput!
-  updateManyCheckinAppt(data: CheckinApptUpdateManyMutationInput!, where: CheckinApptWhereInput): AffectedRowsOutput!
-  updateManyCheckinAverages(data: CheckinAveragesUpdateManyMutationInput!, where: CheckinAveragesWhereInput): AffectedRowsOutput!
-  updateManyCheckinAveragesIdle(data: CheckinAveragesIdleUpdateManyMutationInput!, where: CheckinAveragesIdleWhereInput): AffectedRowsOutput!
-  updateManyCheckinProduct(data: CheckinProductUpdateManyMutationInput!, where: CheckinProductWhereInput): AffectedRowsOutput!
-  updateManyCheckinQueue(data: CheckinQueueUpdateManyMutationInput!, where: CheckinQueueWhereInput): AffectedRowsOutput!
-  updateManyClassCategory(data: ClassCategoryUpdateManyMutationInput!, where: ClassCategoryWhereInput): AffectedRowsOutput!
-  updateManyClassGuests(data: ClassGuestsUpdateManyMutationInput!, where: ClassGuestsWhereInput): AffectedRowsOutput!
-  updateManyClassMaster(data: ClassMasterUpdateManyMutationInput!, where: ClassMasterWhereInput): AffectedRowsOutput!
-  updateManyClassNotes(data: ClassNotesUpdateManyMutationInput!, where: ClassNotesWhereInput): AffectedRowsOutput!
-  updateManyClassProduct(data: ClassProductUpdateManyMutationInput!, where: ClassProductWhereInput): AffectedRowsOutput!
-  updateManyClassSmsHistory(data: ClassSmsHistoryUpdateManyMutationInput!, where: ClassSmsHistoryWhereInput): AffectedRowsOutput!
-  updateManyClassTemplateSetting(data: ClassTemplateSettingUpdateManyMutationInput!, where: ClassTemplateSettingWhereInput): AffectedRowsOutput!
-  updateManyClasstypeMaster(data: ClasstypeMasterUpdateManyMutationInput!, where: ClasstypeMasterWhereInput): AffectedRowsOutput!
-  updateManyCleverpinSetting(data: CleverpinSettingUpdateManyMutationInput!, where: CleverpinSettingWhereInput): AffectedRowsOutput!
-  updateManyClientFormSetting(data: ClientFormSettingUpdateManyMutationInput!, where: ClientFormSettingWhereInput): AffectedRowsOutput!
-  updateManyClinicalSoftware(data: ClinicalSoftwareUpdateManyMutationInput!, where: ClinicalSoftwareWhereInput): AffectedRowsOutput!
-  updateManyClockinBreak(data: ClockinBreakUpdateManyMutationInput!, where: ClockinBreakWhereInput): AffectedRowsOutput!
-  updateManyClockinLongpoll(data: ClockinLongpollUpdateManyMutationInput!, where: ClockinLongpollWhereInput): AffectedRowsOutput!
-  updateManyClockinTimesheet(data: ClockinTimesheetUpdateManyMutationInput!, where: ClockinTimesheetWhereInput): AffectedRowsOutput!
-  updateManyCmAccountNote(data: CmAccountNoteUpdateManyMutationInput!, where: CmAccountNoteWhereInput): AffectedRowsOutput!
-  updateManyCmAppointmentCustom(data: CmAppointmentCustomUpdateManyMutationInput!, where: CmAppointmentCustomWhereInput): AffectedRowsOutput!
-  updateManyCmAppointmentsCustomImportHelper(data: CmAppointmentsCustomImportHelperUpdateManyMutationInput!, where: CmAppointmentsCustomImportHelperWhereInput): AffectedRowsOutput!
-  updateManyCmAuthorization(data: CmAuthorizationUpdateManyMutationInput!, where: CmAuthorizationWhereInput): AffectedRowsOutput!
-  updateManyCmBookingNote(data: CmBookingNoteUpdateManyMutationInput!, where: CmBookingNoteWhereInput): AffectedRowsOutput!
-  updateManyCmCampaign(data: CmCampaignUpdateManyMutationInput!, where: CmCampaignWhereInput): AffectedRowsOutput!
-  updateManyCmCampaignNote(data: CmCampaignNoteUpdateManyMutationInput!, where: CmCampaignNoteWhereInput): AffectedRowsOutput!
-  updateManyCmCase(data: CmCaseUpdateManyMutationInput!, where: CmCaseWhereInput): AffectedRowsOutput!
-  updateManyCmCaseNote(data: CmCaseNoteUpdateManyMutationInput!, where: CmCaseNoteWhereInput): AffectedRowsOutput!
-  updateManyCmCaseReply(data: CmCaseReplyUpdateManyMutationInput!, where: CmCaseReplyWhereInput): AffectedRowsOutput!
-  updateManyCmContact(data: CmContactUpdateManyMutationInput!, where: CmContactWhereInput): AffectedRowsOutput!
-  updateManyCompany(data: CompanyUpdateManyMutationInput!, where: CompanyWhereInput): AffectedRowsOutput!
-  updateManyCompanyBranch(data: CompanyBranchUpdateManyMutationInput!, where: CompanyBranchWhereInput): AffectedRowsOutput!
-  updateManyCompanyDepartment(data: CompanyDepartmentUpdateManyMutationInput!, where: CompanyDepartmentWhereInput): AffectedRowsOutput!
-  updateManyCompanyDetails(data: CompanyDetailsUpdateManyMutationInput!, where: CompanyDetailsWhereInput): AffectedRowsOutput!
-  updateManyCompanyLocation(data: CompanyLocationUpdateManyMutationInput!, where: CompanyLocationWhereInput): AffectedRowsOutput!
-  updateManyCompanyRoom(data: CompanyRoomUpdateManyMutationInput!, where: CompanyRoomWhereInput): AffectedRowsOutput!
-  updateManyCompanyRoomService(data: CompanyRoomServiceUpdateManyMutationInput!, where: CompanyRoomServiceWhereInput): AffectedRowsOutput!
-  updateManyCompanyService(data: CompanyServiceUpdateManyMutationInput!, where: CompanyServiceWhereInput): AffectedRowsOutput!
-  updateManyCompanySubscription(data: CompanySubscriptionUpdateManyMutationInput!, where: CompanySubscriptionWhereInput): AffectedRowsOutput!
-  updateManyGlCode(data: GlCodeUpdateManyMutationInput!, where: GlCodeWhereInput): AffectedRowsOutput!
-  updateManyInvPaymentType(data: InvPaymentTypeUpdateManyMutationInput!, where: InvPaymentTypeWhereInput): AffectedRowsOutput!
-  updateManyJob(data: JobUpdateManyMutationInput!, where: JobWhereInput): AffectedRowsOutput!
-  updateManyJobConfiguration(data: JobConfigurationUpdateManyMutationInput!, where: JobConfigurationWhereInput): AffectedRowsOutput!
-  updateManyJobOpening(data: JobOpeningUpdateManyMutationInput!, where: JobOpeningWhereInput): AffectedRowsOutput!
-  updateManyJobStatus(data: JobStatusUpdateManyMutationInput!, where: JobStatusWhereInput): AffectedRowsOutput!
-  updateManyMarketingSource(data: MarketingSourceUpdateManyMutationInput!, where: MarketingSourceWhereInput): AffectedRowsOutput!
-  updateManyMediaLlibraryAttachment(data: MediaLlibraryAttachmentUpdateManyMutationInput!, where: MediaLlibraryAttachmentWhereInput): AffectedRowsOutput!
-  updateManyPointOfSaleSetting(data: PointOfSaleSettingUpdateManyMutationInput!, where: PointOfSaleSettingWhereInput): AffectedRowsOutput!
-  updateManySalutation(data: SalutationUpdateManyMutationInput!, where: SalutationWhereInput): AffectedRowsOutput!
-  updateManySecondAtAnswer(data: SecondAtAnswerUpdateManyMutationInput!, where: SecondAtAnswerWhereInput): AffectedRowsOutput!
-  updateManySecondAtQuestion(data: SecondAtQuestionUpdateManyMutationInput!, where: SecondAtQuestionWhereInput): AffectedRowsOutput!
-  updateManyThirdPartyAccess(data: ThirdPartyAccessUpdateManyMutationInput!, where: ThirdPartyAccessWhereInput): AffectedRowsOutput!
-  updateManyTimezone(data: TimezoneUpdateManyMutationInput!, where: TimezoneWhereInput): AffectedRowsOutput!
-  updateManyTwoFactorHistory(data: TwoFactorHistoryUpdateManyMutationInput!, where: TwoFactorHistoryWhereInput): AffectedRowsOutput!
-  updateManyUser(data: UserUpdateManyMutationInput!, where: UserWhereInput): AffectedRowsOutput!
-  updateManyUserSecurityQuestionsAnswer(data: UserSecurityQuestionsAnswerUpdateManyMutationInput!, where: UserSecurityQuestionsAnswerWhereInput): AffectedRowsOutput!
   updateOneAcLog(data: AcLogUpdateInput!, where: AcLogWhereUniqueInput!): AcLog
   updateOneAcLogAction(data: AcLogActionUpdateInput!, where: AcLogActionWhereUniqueInput!): AcLogAction
   updateOneAcLogUrl(data: AcLogUrlUpdateInput!, where: AcLogUrlWhereUniqueInput!): AcLogUrl

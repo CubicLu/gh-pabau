@@ -47,7 +47,5 @@ export const clockinLongpollMutation = extendType({
     t.crud.updateOneClockinLongpoll()
     t.crud.upsertOneClockinLongpoll()
     t.crud.deleteOneClockinLongpoll()
-    t.crud.updateManyClockinLongpoll()
-    t.crud.deleteManyClockinLongpoll()
   },
 })

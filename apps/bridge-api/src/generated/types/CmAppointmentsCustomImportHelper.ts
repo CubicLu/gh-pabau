@@ -56,7 +56,5 @@ export const cmAppointmentsCustomImportHelperMutation = extendType({
     t.crud.updateOneCmAppointmentsCustomImportHelper()
     t.crud.upsertOneCmAppointmentsCustomImportHelper()
     t.crud.deleteOneCmAppointmentsCustomImportHelper()
-    t.crud.updateManyCmAppointmentsCustomImportHelper()
-    t.crud.deleteManyCmAppointmentsCustomImportHelper()
   },
 })

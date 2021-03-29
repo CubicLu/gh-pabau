@@ -50,7 +50,5 @@ export const cmAccountNoteMutation = extendType({
     t.crud.updateOneCmAccountNote()
     t.crud.upsertOneCmAccountNote()
     t.crud.deleteOneCmAccountNote()
-    t.crud.updateManyCmAccountNote()
-    t.crud.deleteManyCmAccountNote()
   },
 })

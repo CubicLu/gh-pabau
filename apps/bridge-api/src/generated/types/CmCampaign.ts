@@ -60,7 +60,5 @@ export const cmCampaignMutation = extendType({
     t.crud.updateOneCmCampaign()
     t.crud.upsertOneCmCampaign()
     t.crud.deleteOneCmCampaign()
-    t.crud.updateManyCmCampaign()
-    t.crud.deleteManyCmCampaign()
   },
 })

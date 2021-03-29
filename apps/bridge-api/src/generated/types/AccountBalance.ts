@@ -50,7 +50,5 @@ export const accountBalanceMutation = extendType({
     t.crud.updateOneAccountBalance()
     t.crud.upsertOneAccountBalance()
     t.crud.deleteOneAccountBalance()
-    t.crud.updateManyAccountBalance()
-    t.crud.deleteManyAccountBalance()
   },
 })

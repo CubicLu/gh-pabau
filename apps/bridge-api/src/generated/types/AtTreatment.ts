@@ -48,7 +48,5 @@ export const atTreatmentMutation = extendType({
     t.crud.updateOneAtTreatment()
     t.crud.upsertOneAtTreatment()
     t.crud.deleteOneAtTreatment()
-    t.crud.updateManyAtTreatment()
-    t.crud.deleteManyAtTreatment()
   },
 })

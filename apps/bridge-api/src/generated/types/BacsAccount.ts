@@ -50,7 +50,5 @@ export const bacsAccountMutation = extendType({
     t.crud.updateOneBacsAccount()
     t.crud.upsertOneBacsAccount()
     t.crud.deleteOneBacsAccount()
-    t.crud.updateManyBacsAccount()
-    t.crud.deleteManyBacsAccount()
   },
 })

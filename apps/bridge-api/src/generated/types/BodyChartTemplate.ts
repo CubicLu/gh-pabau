@@ -52,7 +52,5 @@ export const bodyChartTemplateMutation = extendType({
     t.crud.updateOneBodyChartTemplate()
     t.crud.upsertOneBodyChartTemplate()
     t.crud.deleteOneBodyChartTemplate()
-    t.crud.updateManyBodyChartTemplate()
-    t.crud.deleteManyBodyChartTemplate()
   },
 })

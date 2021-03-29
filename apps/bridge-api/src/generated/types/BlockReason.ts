@@ -52,7 +52,5 @@ export const blockReasonMutation = extendType({
     t.crud.updateOneBlockReason()
     t.crud.upsertOneBlockReason()
     t.crud.deleteOneBlockReason()
-    t.crud.updateManyBlockReason()
-    t.crud.deleteManyBlockReason()
   },
 })

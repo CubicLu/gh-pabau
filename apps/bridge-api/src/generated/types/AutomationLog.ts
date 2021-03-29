@@ -49,7 +49,5 @@ export const automationLogMutation = extendType({
     t.crud.updateOneAutomationLog()
     t.crud.upsertOneAutomationLog()
     t.crud.deleteOneAutomationLog()
-    t.crud.updateManyAutomationLog()
-    t.crud.deleteManyAutomationLog()
   },
 })

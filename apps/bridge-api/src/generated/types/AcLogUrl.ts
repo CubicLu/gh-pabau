@@ -47,7 +47,5 @@ export const acLogUrlMutation = extendType({
     t.crud.updateOneAcLogUrl()
     t.crud.upsertOneAcLogUrl()
     t.crud.deleteOneAcLogUrl()
-    t.crud.updateManyAcLogUrl()
-    t.crud.deleteManyAcLogUrl()
   },
 })

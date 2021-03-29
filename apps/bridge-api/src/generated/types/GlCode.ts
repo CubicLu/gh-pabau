@@ -49,7 +49,5 @@ export const glCodeMutation = extendType({
     t.crud.updateOneGlCode()
     t.crud.upsertOneGlCode()
     t.crud.deleteOneGlCode()
-    t.crud.updateManyGlCode()
-    t.crud.deleteManyGlCode()
   },
 })

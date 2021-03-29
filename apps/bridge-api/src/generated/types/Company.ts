@@ -78,7 +78,5 @@ export const companyMutation = extendType({
     t.crud.updateOneCompany()
     t.crud.upsertOneCompany()
     t.crud.deleteOneCompany()
-    t.crud.updateManyCompany()
-    t.crud.deleteManyCompany()
   },
 })
