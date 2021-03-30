@@ -319,7 +319,6 @@ en:
     sidebar.setup: Setup
     settings-header: Settings
     settings-performance-save: 'Save Changes'
-    settings-performance-tab-header-description: 'Lorem ipsum carrots, enhanced undergraduate developer, but they do occaecat time and vitality.'
     settings-performance-tab-header1: 'Review Schedule'
     settings-performance-tab-header2: Assessment
     settings-performance-tab-header3: People
@@ -379,7 +378,7 @@ en:
     setup.discount.data.lowercaseamount: amount
     setup.discount.data.capitalizediscountrate: 'Discount Rate'
     setup.discount.data.lowercasediscountrate: 'discount rate'
-    setup.discount.data.capitalizeshowonreciept: 'Show on Reciept'
+    setup.discount.data.capitalizeshowonreciept: 'Show on Receipt'
     setup.discount.data.lowercaseshowonreciept: 'show on reciept'
     setup.discount.data.capitalizecode: Code
     setup.discount.data.lowercasecode: code
@@ -501,15 +500,30 @@ en:
     setup.developer.job.status: 'Job statues'
     setup.developer.supplier.categories: 'Supplier categories'
     common-label-apply: Apply
+    marketingreferral-title.translation: 'Marketing Referrals'
+    marketingreferral-buttons.configure: Configure
+    marketingreferral-fields.referrer: 'Referred by'
+    marketingreferral-fields.date: Date
+    marketingreferral-fields.spend: Spend
+    marketingreferral-fields.incentive: Incentive
+    marketingreferral-fields.state: State
+    marketingreferral-spotlights.client-referrals: 'Client Referrals'
+    marketingreferral-spotlights.sources: Sources
+    marketingreferral-spotlights.incentive: Incentive
+    marketingreferral-spotlights.leaderboard: Leaderboard
+    marketingreferral-leaderboard.rank: Rank
+    marketingreferral-leaderboard.name: Name
+    marketingreferral-leaderboard.points: Points
+    marketingreferral-misc.paid: Paid
     setup.business-details.header: 'Business Details'
-    setup.business-details.people.appointment.singular: 'Patient'
-    setup.business-details.people.appointment.plural: 'Patients'
-    setup.business-details.booking.attendees.singular: 'Class'
-    setup.business-details.booking.attendees.plural: 'Classes'
-    setup.business-details.employee.singular: 'Employee'
-    setup.business-details.employee.plural: 'Employees'
-    setup.business-details.teacher.singular: 'Teacher'
-    setup.business-details.teacher.plural: 'Teachers'
+    setup.business-details.people.appointment.singular: Patient
+    setup.business-details.people.appointment.plural: Patients
+    setup.business-details.booking.attendees.singular: Class
+    setup.business-details.booking.attendees.plural: Classes
+    setup.business-details.employee.singular: Employee
+    setup.business-details.employee.plural: Employees
+    setup.business-details.teacher.singular: Teacher
+    setup.business-details.teacher.plural: Teachers
     setup.business-details.client.postal: 'Whould you like to receive postal communications?'
     setup.business-details.client.sms: 'Whould you like to receive SMS messages from us?'
     setup.business-details.client.email: 'Whould you like to receive email communications?'
@@ -518,22 +532,23 @@ en:
     setup.business-details.leads.sms: 'Whould you like to receive SMS messages from us?'
     setup.business-details.leads.email: 'Whould you like to receive email communications?'
     setup.business-details.leads.phone: 'Whould you like to receive phone calls?'
+    settings-performance-tab-header-description: 'Lorem ipsum carrots, enhanced undergraduate developer, but they do occaecat time and vitality.'
     account.settings.header: Settings
-    account.settings.tab.header1: 'Profile'
-    account.settings.tab.header2: 'Security'
-    account.settings.tab.header3: 'Notifications'
+    account.settings.tab.header1: Profile
+    account.settings.tab.header2: Security
+    account.settings.tab.header3: Notifications
     account.settings.save: 'Save Changes'
     account.settings.profile.description: 'Choose how you want to be notified with certain interactions occur on Pabau'
     account.settings.profile.upload: 'Upload Photo'
-    account.settings.profile.delete: 'Delete'
+    account.settings.profile.delete: Delete
     account.settings.profile.firstname.label: 'First name'
     account.settings.profile.firstname.placeholder: 'First name'
     account.settings.profile.lastname.label: 'Last name'
     account.settings.profile.lastname.placeholder: 'Last name'
     account.settings.profile.mobilephone.label: 'Mobile phone'
     account.settings.profile.emailsignature.label: 'Email signature'
-    account.settings.profile.language.label: 'Language'
-    account.settings.profile.timezone.label: 'Timezone'
+    account.settings.profile.language.label: Language
+    account.settings.profile.timezone.label: Timezone
     account.settings.profile.avatarupload.title: 'Upload Avatar Photo'
     account.settings.security.description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
     account.settings.security.change-password.header: 'Change password'
@@ -544,24 +559,24 @@ en:
     account.settings.security.confirm-password.label: 'Confirm password'
     account.settings.security.confirm-password.placeholder: 'Confirm password'
     account.settings.security.change-password.button: 'Change Password'
-    account.settings.security.passcode.label: 'Passcode'
+    account.settings.security.passcode.label: Passcode
     account.settings.security.passcode.description: 'Your 4-digit code used to access Pabau Go (for iPad/iPhone)'
     account.settings.security.two-factor.label: 'Two-factor authentication'
-    account.settings.security.two-factor.label1: 'Disabled'
+    account.settings.security.two-factor.label1: Disabled
     account.settings.security.two-factor.description: 'Two factor authentication adds an extra layer of security to your Pabau account.'
-    account.settings.security.two-factor.label2: 'Details'
-    account.settings.security.two-factor.button: 'Enable'
+    account.settings.security.two-factor.label2: Details
+    account.settings.security.two-factor.button: Enable
     account.settings.security.security-question.label: 'Security questions'
     account.settings.security.security-question.description: 'Some description here.'
-    account.settings.security.security-question.button: 'Edit'
+    account.settings.security.security-question.button: Edit
     account.settings.security.logged-in.label: 'Where you logged in'
     account.settings.security.logged-in.description: 'Where you logged in'
     account.settings.security.logged-in.info: 'Windows PC | Bicester, United Kingdom'
-    account.settings.security.logged-in.info1: 'Chrome'
+    account.settings.security.logged-in.info1: Chrome
     account.settings.security.logged-in.info2: 'Active now'
     account.settings.security.logged-in.collapse.label: 'Show more'
     account.settings.security.logged-in.mobile.info: 'iPhone | Bicester, United Kingdom'
-    account.settings.security.logged-in.mobile.info1: 'iOS'
+    account.settings.security.logged-in.mobile.info1: iOS
     account.settings.security.logged-in.mobile.info2: 'About an hour ago'
     account.settings.notification.general.header1: 'Scheduled report'
     account.settings.notification.general.description1: 'When a scheduled report is delivered to you'
@@ -577,9 +592,9 @@ en:
     account.settings.notification.application.label2: 'New feature release'
     account.settings.notification.application.label3: 'New blog post'
     account.settings.notification.description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-    account.settings.notification.general.label: 'GENERAL'
-    account.settings.notification.application.label: 'APPLICATION'
-    account.settings.notification.general.button.label1: 'iOS'
-    account.settings.notification.general.button.label2: 'Email'
-    account.settings.notification.general.button.label3: 'SMS'
+    account.settings.notification.general.label: GENERAL
+    account.settings.notification.application.label: APPLICATION
+    account.settings.notification.general.button.label1: iOS
+    account.settings.notification.general.button.label2: Email
+    account.settings.notification.general.button.label3: SMS
     account.settings.notification.general.button.label4: 'Pabau Web'
