@@ -1,17 +1,17 @@
 import React, { FC } from 'react'
 import { Typography, Card } from 'antd'
-import styles from './GeneralLayout.module.less'
+import styles from './SettingsLayout.module.less'
 
 interface P {
   title: string
   description: string
 }
 
-const GeneralLayout: FC<P> = ({ title, description, children }) => {
+const SettingsLayout: FC<P> = ({ title, description, children }) => {
   const { Title } = Typography
   return (
-    <div className={styles.generalLayoutContainer}>
-      <Card className={styles.generalLayoutHead}>
+    <div className={styles.settingsLayoutContainer}>
+      <Card className={styles.settingsLayoutHead}>
         <Title>{title}</Title>
         <span>{description}</span>
       </Card>
@@ -20,4 +20,4 @@ const GeneralLayout: FC<P> = ({ title, description, children }) => {
   )
 }
 
-export default GeneralLayout
+export default SettingsLayout

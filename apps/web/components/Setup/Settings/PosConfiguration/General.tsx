@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 
 import { HelpTooltip, Switch, SimpleDropdown } from '@pabau/ui'
 
-import GeneralLayout from '../GeneralLayout'
+import SettingsLayout from '../SettingsLayout'
 import styles from './common.module.less'
 
 interface P {
@@ -63,14 +63,14 @@ const General: FC<P> = ({
     )
   }
   return (
-    <GeneralLayout
+    <SettingsLayout
       title={'General'}
       description={
         'Choose to disable particular features such as the ability to over-ride prices and more.'
       }
     >
       <RenderContent />
-    </GeneralLayout>
+    </SettingsLayout>
   )
 }
 

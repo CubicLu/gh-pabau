@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { Employees } from '@pabau/ui'
-import GeneralLayout from '../GeneralLayout'
+import SettingsLayout from '../SettingsLayout'
 import { useTranslationI18 } from '../../../../hooks/useTranslationI18'
 
 interface P {
@@ -14,14 +14,12 @@ const PeopleSettings: FC<P> = ({
 }) => {
   const { t } = useTranslationI18()
   return (
-    <GeneralLayout
+    <SettingsLayout
       title={t('settings-performance-people-header')}
-      description={
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.'
-      }
+      description={t('settings-performance-tab-header-description')}
     >
       <Employees employees={peopleList} />
-    </GeneralLayout>
+    </SettingsLayout>
   )
 }
 

@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { StaffPerformanceReview } from '@pabau/ui'
-import GeneralLayout from '../GeneralLayout'
+import SettingsLayout from '../SettingsLayout'
 import { useTranslationI18 } from '../../../../hooks/useTranslationI18'
 
 interface P {
@@ -12,14 +12,12 @@ const ReviewSettings: FC<P> = ({ handleChange, date: { date } }) => {
   const { t } = useTranslationI18()
 
   return (
-    <GeneralLayout
+    <SettingsLayout
       title={t('settings-performance-tab-header1')}
-      description={
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.'
-      }
+      description={t('settings-performance-tab-header-description')}
     >
       <StaffPerformanceReview reviewDate={date} isNote={true} />
-    </GeneralLayout>
+    </SettingsLayout>
   )
 }
 
