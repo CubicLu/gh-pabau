@@ -7,61 +7,63 @@ import {
 import { Passcode, PasswordWithHelper, Button } from '@pabau/ui'
 import { Descriptions, Divider, Form, Input, Collapse } from 'antd'
 import React, { FC, useState } from 'react'
-
-// const Passcode = dynamic(() => import('../../../components/Passcode'), {
-//   ssr: false,
-// })
-
-// const PasswordHelper = dynamic(() => import('../../../components/PasswordHelper'), {
-//   ssr: false,
-// })
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Security: FC = () => {
   const { Panel } = Collapse
+  const { t } = useTranslationI18()
   const [passcode, setPasscode] = useState<string>('')
   return (
     <>
-      <Descriptions title="Security">
+      <Descriptions title={t('account.settings.tab.header2')}>
         <Descriptions.Item>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          {t('account.settings.security.description')}
         </Descriptions.Item>
       </Descriptions>
       <Divider />
       <Form layout="vertical">
         <Form.Item>
-          <h2>Change password</h2>
-          <span>Changing your password will sign out of all your devices.</span>
+          <h2>{t('account.settings.security.change-password.header')}</h2>
+          <span>
+            {t('account.settings.security.change-password.description')}
+          </span>
         </Form.Item>
-        <Form.Item label="Old password">
+        <Form.Item label={t('account.settings.security.old-password.label')}>
           <Input.Password
-            placeholder="Old password"
+            placeholder={t(
+              'account.settings.security.old-password.placeholder'
+            )}
             iconRender={(visible) =>
               visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
             }
           />
         </Form.Item>
-        <Form.Item label="New password">
+        <Form.Item label={t('account.settings.security.new-password.label')}>
           <PasswordWithHelper stength={3} />
         </Form.Item>
-        <Form.Item label="Confirm password">
+        <Form.Item
+          label={t('account.settings.security.confirm-password.label')}
+        >
           <Input.Password
-            placeholder="Confirm password"
+            placeholder={t(
+              'account.settings.security.confirm-password.placeholder'
+            )}
             iconRender={(visible) =>
               visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
             }
           />
         </Form.Item>
         <Form.Item>
-          <Button>Change Password</Button>
+          <Button>
+            {t('account.settings.security.change-password.button')}
+          </Button>
         </Form.Item>
       </Form>
       <Divider />
       <Form layout="vertical">
         <Form.Item>
-          <h2>Passcode</h2>
-          <span>
-            Your 4-digit code used to access Pabau Go (for iPad/iPhone)
-          </span>
+          <h2>{t('account.settings.security.passcode.label')}</h2>
+          <span>{t('account.settings.security.passcode.description')}</span>
           <br />
           <br />
           <Passcode text={passcode} onChange={(val) => setPasscode(val)} />
@@ -71,35 +73,38 @@ const Security: FC = () => {
       <Form layout="vertical">
         <Form.Item>
           <h2>
-            Two-factor authentication
-            <span className="two-faceor-status"> Disabled</span>
+            {t('account.settings.security.two-factor.label')}
+            <span className="two-faceor-status">
+              {t('account.settings.security.two-factor.label1')}
+            </span>
           </h2>
+          <span>{t('account.settings.security.two-factor.description')}</span>
+          <br />
+          <span>{t('account.settings.security.two-factor.label2')}</span>
+          <br />
+          <br />
+          <Button>{t('account.settings.security.two-factor.button')}</Button>
+        </Form.Item>
+      </Form>
+      <Divider />
+      <Form layout="vertical">
+        <Form.Item>
+          <h2>{t('account.settings.security.security-question.label')}</h2>
           <span>
-            Two factor authentication adds an extra layer of security to your
-            Pabau account.
+            {t('account.settings.security.security-question.description')}
           </span>
           <br />
-          <span>Details</span>
           <br />
-          <br />
-          <Button>Enable</Button>
+          <Button>
+            {t('account.settings.security.security-question.button')}
+          </Button>
         </Form.Item>
       </Form>
       <Divider />
       <Form layout="vertical">
         <Form.Item>
-          <h2>Security questions</h2>
-          <span>Some description here.</span>
-          <br />
-          <br />
-          <Button>Edit</Button>
-        </Form.Item>
-      </Form>
-      <Divider />
-      <Form layout="vertical">
-        <Form.Item>
-          <h2>Where you logged in</h2>
-          <span>Where you logged in</span>
+          <h2>{t('account.settings.security.logged-in.label')}</h2>
+          <span>{t('account.settings.security.logged-in.description')}</span>
           <br />
           <Divider className="smallDivider" />
           <div className="whereLoggedIn">
@@ -108,10 +113,13 @@ const Security: FC = () => {
             </div>
             <div className="whereDescription">
               <div className="osInfo">
-                Windows PC | Bicester, United Kingdom
+                {t('account.settings.security.logged-in.info')}
               </div>
               <div className="appInfo">
-                Chrome | <span className="active">Active now</span>
+                {t('account.settings.security.logged-in.info1')} |{' '}
+                <span className="active">
+                  {t('account.settings.security.logged-in.info2')}
+                </span>
               </div>
             </div>
           </div>
@@ -120,7 +128,9 @@ const Security: FC = () => {
             <Panel
               header={
                 <div key={'1'}>
-                  <span>{'Show more'}</span>
+                  <span>
+                    {t('account.settings.security.logged-in.collapse.label')}
+                  </span>
                 </div>
               }
               key="1"
@@ -133,10 +143,13 @@ const Security: FC = () => {
                 </div>
                 <div className="whereDescription">
                   <div className="osInfo">
-                    iPhone | Bicester, United Kingdom
+                    {t('account.settings.security.logged-in.mobile.info')}
                   </div>
                   <div className="appInfo">
-                    iOS | <span>About an hour ago</span>
+                    {t('account.settings.security.logged-in.mobile.info1')} |{' '}
+                    <span>
+                      {t('account.settings.security.logged-in.mobile.info2')}
+                    </span>
                   </div>
                 </div>
               </div>

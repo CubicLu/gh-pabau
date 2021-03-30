@@ -13,10 +13,12 @@ import useWindowSize from '../../../hooks/useWindowSize'
 import Notification from '../../../components/Account/Settings/Notifications'
 import Profile from '../../../components/Account/Settings/Profile'
 import Security from '../../../components/Account/Settings/Security'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
   const router = useRouter()
   const size = useWindowSize()
+  const { t } = useTranslationI18()
   const handleBack = () => {
     router.back()
   }
@@ -27,7 +29,7 @@ const Index: FC = () => {
           <div className={styles.allContentMobile}>
             <div className={styles.textStyle}>
               <LeftOutlined onClick={handleBack} />
-              <p>Account Settings</p>
+              <p>{t('account.settings.header')}</p>
             </div>
           </div>
         </MobileHeader>
@@ -37,21 +39,21 @@ const Index: FC = () => {
           {size.width > 767 && <Col span={5}></Col>}
           <Col span={size.width > 767 ? 14 : 24}>
             <div className={styles.accountSettingWrapper}>
-              {size.width > 767 && <h1>Account Settings</h1>}
+              {size.width > 767 && <h1>{t('account.settings.header')}</h1>}
               <TabMenu
                 tabPosition={size.width > 767 ? 'left' : 'top'}
                 menuItems={[
                   <span key={'1'}>
                     <UserOutlined />
-                    Profile
+                    {t('account.settings.tab.header1')}
                   </span>,
                   <span key={'2'}>
                     <LockOutlined />
-                    Security
+                    {t('account.settings.tab.header2')}
                   </span>,
                   <span key={'3'}>
                     <BellOutlined />
-                    Notifications
+                    {t('account.settings.tab.header3')}
                   </span>,
                 ]}
                 className={styles.mainBody}
@@ -65,13 +67,15 @@ const Index: FC = () => {
           {size.width > 767 ? (
             <Col span={5}>
               <div className={styles.buttonWrapper}>
-                <Button className={styles.btnSave}>Save Changes</Button>
+                <Button className={styles.btnSave}>
+                  {t('account.settings.save')}
+                </Button>
               </div>
             </Col>
           ) : (
             <Row className={styles.accountMobileSave}>
               <div className={styles.btnSaveMobile}>
-                <Button type="primary">Save Changes</Button>
+                <Button type="primary">{t('account.settings.save')}</Button>
               </div>
             </Row>
           )}

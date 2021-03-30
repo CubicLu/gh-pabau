@@ -3,6 +3,7 @@ import {
   Language,
   AvatarUploader,
   timezone as timezones,
+  PhoneNumberInput,
 } from '@pabau/ui'
 import {
   Button,
@@ -17,8 +18,8 @@ import {
 import dynamic from 'next/dynamic'
 import React, { FC, useState } from 'react'
 import useWindowSize from '../../../hooks/useWindowSize'
-import userImage from '../../../assets/images/avatar.png'
-const { TextArea } = Input
+import AvatarImage from '../../../assets/images/setting-avatar.png'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const ReactQuill = dynamic(() => import('../../../components/MyReactQuill'), {
   ssr: false,
@@ -27,6 +28,8 @@ const ReactQuill = dynamic(() => import('../../../components/MyReactQuill'), {
 const Profile: FC = () => {
   const { Option } = Select
   const size = useWindowSize()
+  const { t } = useTranslationI18()
+  const [userImage, setUserImage] = useState<string>(AvatarImage)
   const [showAvatarUploader, setShowAvatarUploader] = useState(false)
 
   const uploadPhoto = () => {
@@ -35,25 +38,28 @@ const Profile: FC = () => {
   const deletePhoto = () => {
     return
   }
+  const handleChangeImage = (image: string) => {
+    setUserImage(image)
+  }
   return (
     <>
-      <Descriptions title="Profile">
+      <Descriptions title={t('account.settings.tab.header1')}>
         <Descriptions.Item>
-          Choose how you want to be notified with certain interactions occur on
-          Pabau
+          {t('account.settings.profile.description')}
         </Descriptions.Item>
       </Descriptions>
       <Divider />
       <Form layout="vertical">
         <Form.Item>
-          <div>
-            <Avatar
-              src={
-                'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-              }
-              size={size.width > 767 ? 128 : 88}
-              name={'Zhen'}
-            />
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div onClick={uploadPhoto}>
+              <Avatar
+                src={userImage}
+                size={size.width > 767 ? 128 : 88}
+                name={'Zhen'}
+                edit={true}
+              />
+            </div>
             <div>
               <Button
                 style={
@@ -63,10 +69,10 @@ const Profile: FC = () => {
                 }
                 onClick={uploadPhoto}
               >
-                Upload Photo
+                {t('account.settings.profile.upload')}
               </Button>
               <Button style={{ verticalAlign: 'middle' }} onClick={deletePhoto}>
-                Delete
+                {t('account.settings.profile.delete')}
               </Button>
             </div>
           </div>
@@ -74,14 +80,22 @@ const Profile: FC = () => {
         {size.width > 767 ? (
           <Row>
             <Col span={11}>
-              <Form.Item label="First name">
-                <Input placeholder="First name" />
+              <Form.Item label={t('account.settings.profile.firstname.label')}>
+                <Input
+                  placeholder={t(
+                    'account.settings.profile.firstname.placeholder'
+                  )}
+                />
               </Form.Item>
             </Col>
-            <Col span={2}></Col>
+            <Col span={2} />
             <Col span={11}>
-              <Form.Item label="Last name">
-                <Input placeholder="Last name" />
+              <Form.Item label={t('account.settings.profile.lastname.label')}>
+                <Input
+                  placeholder={t(
+                    'account.settings.profile.lastname.placeholder'
+                  )}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -89,15 +103,25 @@ const Profile: FC = () => {
           <>
             <Row>
               <Col span={24}>
-                <Form.Item label="First name">
-                  <Input placeholder="First name" />
+                <Form.Item
+                  label={t('account.settings.profile.firstname.label')}
+                >
+                  <Input
+                    placeholder={t(
+                      'account.settings.profile.firstname.placeholder'
+                    )}
+                  />
                 </Form.Item>
               </Col>
             </Row>
             <Row>
               <Col span={24}>
-                <Form.Item label="Last name">
-                  <Input placeholder="Last name" />
+                <Form.Item label={t('account.settings.profile.lastname.label')}>
+                  <Input
+                    placeholder={t(
+                      'account.settings.profile.lastname.placeholder'
+                    )}
+                  />
                 </Form.Item>
               </Col>
             </Row>
@@ -105,35 +129,35 @@ const Profile: FC = () => {
         )}
         <Row>
           <Col span={24}>
-            <Form.Item label="Mobile phone">
-              <Input placeholder="Mobile phone" />
+            <Form.Item>
+              <PhoneNumberInput
+                onChange={(val) => {
+                  console.log(val)
+                }}
+                label={t('account.settings.profile.mobilephone.label')}
+              />
             </Form.Item>
           </Col>
         </Row>
         <Row>
           <Col span={24}>
-            <Form.Item label="Biography">
-              <TextArea placeholder="Biography" style={{ width: '100%' }} />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={24}>
-            <Form.Item label="Email signature">
+            <Form.Item
+              label={t('account.settings.profile.emailsignature.label')}
+            >
               <ReactQuill />
             </Form.Item>
           </Col>
         </Row>
         <Row>
           <Col span={24}>
-            <Form.Item label="Language">
+            <Form.Item label={t('account.settings.profile.language.label')}>
               <Language />
             </Form.Item>
           </Col>
         </Row>
         <Row>
           <Col span={24}>
-            <Form.Item label="Timezone">
+            <Form.Item label={t('account.settings.profile.timezone.label')}>
               <Select showSearch defaultValue={'Europe/London'}>
                 {timezones.map(
                   (item: { timezone: string; text: string }, index) => (
@@ -149,7 +173,8 @@ const Profile: FC = () => {
       </Form>
       <AvatarUploader
         visible={showAvatarUploader}
-        title="Upload Avatar Photo"
+        title={t('account.settings.profile.avatarupload.title')}
+        onCreate={handleChangeImage}
         imageURL={userImage}
         onCancel={() => setShowAvatarUploader(false)}
       />

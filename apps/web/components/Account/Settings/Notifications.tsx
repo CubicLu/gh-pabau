@@ -2,58 +2,76 @@ import { ButtonCheckbox } from '@pabau/ui'
 import { Checkbox as AntCheckbox, Descriptions, Divider, Form } from 'antd'
 import React, { FC } from 'react'
 import useWindowSize from '../../../hooks/useWindowSize'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Notification: FC = () => {
+  const { t } = useTranslationI18()
   const btnOptions = [
-    { key: 1, label: 'iOS', disabled: false },
-    { key: 2, label: 'Email', disabled: false },
-    { key: 3, label: 'SMS', disabled: false },
-    { key: 4, label: 'Pabau Web', disabled: false },
+    {
+      key: 1,
+      label: t('account.settings.notification.general.button.label1'),
+      disabled: false,
+    },
+    {
+      key: 2,
+      label: t('account.settings.notification.general.button.label2'),
+      disabled: false,
+    },
+    {
+      key: 3,
+      label: t('account.settings.notification.general.button.label3'),
+      disabled: false,
+    },
+    {
+      key: 4,
+      label: t('account.settings.notification.general.button.label4'),
+      disabled: false,
+    },
   ]
   const size = useWindowSize()
   const generalNotifications = [
     {
       key: 'scheduled_report',
-      label: 'Scheduled report',
-      desc: 'When a scheduled report is delivered to you',
+      label: t('account.settings.notification.general.header1'),
+      desc: t('account.settings.notification.general.description1'),
     },
     {
       key: 'appt_booked',
-      label: 'Appointment booked',
-      desc: 'When an appointment is booked with them',
+      label: t('account.settings.notification.general.header2'),
+      desc: t('account.settings.notification.general.description2'),
     },
     {
       key: 'appt_cancelled',
-      label: 'Appointment cancelled',
-      desc: 'When an appointment is cancelled',
+      label: t('account.settings.notification.general.header3'),
+      desc: t('account.settings.notification.general.description3'),
     },
     {
       key: 'alert_when_you_hit_target',
-      label: 'Alert when you hit your target',
-      desc: 'When you hit the target',
+      label: t('account.settings.notification.general.header4'),
+      desc: t('account.settings.notification.general.description4'),
     },
     {
       key: 'alert_when_client_arrives',
-      label: 'Alert when a client arrives',
-      desc: 'When client arrives',
+      label: t('account.settings.notification.general.header5'),
+      desc: t('account.settings.notification.general.description5'),
     },
   ]
   const apptNotifications = [
-    { key: '1', label: 'News and announcements' },
-    { key: '2', label: 'New feature release' },
-    { key: '3', label: 'New blog post' },
+    { key: '1', label: t('account.settings.notification.application.label1') },
+    { key: '2', label: t('account.settings.notification.application.label2') },
+    { key: '3', label: t('account.settings.notification.application.label3') },
   ]
   return (
     <>
-      <Descriptions title="Notifications">
+      <Descriptions title={t('account.settings.tab.header3')}>
         <Descriptions.Item>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          {t('account.settings.notification.description')}
         </Descriptions.Item>
       </Descriptions>
       <Divider />
       <Form layout="vertical">
         <Form.Item>
-          <h1>GENERAL</h1>
+          <h1>{t('account.settings.notification.general.label')}</h1>
         </Form.Item>
         {generalNotifications.map(({ key, label, desc }) => (
           <>
@@ -76,7 +94,9 @@ const Notification: FC = () => {
         ))}
 
         <Form.Item>
-          <h1 className="nofiticaionApp">APPLICATION</h1>
+          <h1 className="nofiticaionApp">
+            {t('account.settings.notification.application.label')}
+          </h1>
           {apptNotifications.map(({ key, label }) => (
             <>
               <AntCheckbox className="nofiticaionAppChk" key={key}>
