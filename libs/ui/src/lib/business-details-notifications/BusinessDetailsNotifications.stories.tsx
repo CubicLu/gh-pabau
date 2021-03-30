@@ -3,7 +3,7 @@ import BusinessDetailsNotifications from './BusinessDetailsNotifications'
 
 export default {
   component: BusinessDetailsNotifications,
-  title: 'Business Details/Notifications',
+  title: 'UI/Notifications',
   args: {},
   argTypes: {},
 }

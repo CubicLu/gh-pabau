@@ -3,7 +3,7 @@ import BusinessDetails from './BusinessDetails'
 
 export default {
   component: BusinessDetails,
-  title: 'Business Details/Details',
+  title: 'UI/Details',
   args: {},
   argTypes: {},
 }

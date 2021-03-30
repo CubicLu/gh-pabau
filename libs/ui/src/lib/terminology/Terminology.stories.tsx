@@ -3,7 +3,7 @@ import Terminology, { TerminologyProps } from './Terminology'
 
 export default {
   component: Terminology,
-  title: 'Business Details/Terminology',
+  title: 'UI/Terminology',
   args: {},
   argTypes: {},
 }

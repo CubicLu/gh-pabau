@@ -2439,7 +2439,7 @@ type BlockReason {
   custom_id: Int
   default_time: String
   id: Int
-  is_active: Int
+  is_active: Boolean
   is_paid: Int
   occupier: String
   reason_name: String
@@ -2450,7 +2450,7 @@ input BlockReasonCreateInput {
   block_color: String!
   custom_id: Int!
   default_time: String
-  is_active: Int!
+  is_active: Boolean!
   is_paid: Int!
   occupier: String!
   reason_name: String!
@@ -2473,7 +2473,7 @@ input BlockReasonUpdateInput {
   block_color: StringFieldUpdateOperationsInput
   custom_id: IntFieldUpdateOperationsInput
   default_time: NullableStringFieldUpdateOperationsInput
-  is_active: IntFieldUpdateOperationsInput
+  is_active: BoolFieldUpdateOperationsInput
   is_paid: IntFieldUpdateOperationsInput
   occupier: StringFieldUpdateOperationsInput
   reason_name: StringFieldUpdateOperationsInput
@@ -2484,7 +2484,7 @@ input BlockReasonUpdateManyMutationInput {
   block_color: StringFieldUpdateOperationsInput
   custom_id: IntFieldUpdateOperationsInput
   default_time: NullableStringFieldUpdateOperationsInput
-  is_active: IntFieldUpdateOperationsInput
+  is_active: BoolFieldUpdateOperationsInput
   is_paid: IntFieldUpdateOperationsInput
   occupier: StringFieldUpdateOperationsInput
   reason_name: StringFieldUpdateOperationsInput
@@ -2499,7 +2499,7 @@ input BlockReasonWhereInput {
   custom_id: IntFilter
   default_time: StringNullableFilter
   id: IntFilter
-  is_active: IntFilter
+  is_active: BoolFilter
   is_paid: IntFilter
   occupier: StringFilter
   reason_name: StringFilter
@@ -3428,6 +3428,7 @@ input BookingSettingWhereUniqueInput {
 
 type BookingStatus {
   basic_field: Boolean
+  company: Company
   company_id: Int
   icon: String
   icon_color: String
@@ -3435,7 +3436,7 @@ type BookingStatus {
   indicator: booking_statuses_indicator
   name: String
   ord: Float
-  track_time: Boolean
+  track_time: Int
   value: String
 }
 
@@ -3505,14 +3506,42 @@ input BookingStatusChangeWhereUniqueInput {
 
 input BookingStatusCreateInput {
   basic_field: Boolean!
-  company_id: Int!
+  company: CompanyCreateNestedOneWithoutBookingStatusInput!
   icon: String!
   icon_color: String!
   indicator: booking_statuses_indicator
   name: String!
-  ord: Float!
-  track_time: Boolean
+  ord: Float
+  track_time: Int
   value: String!
+}
+
+input BookingStatusCreateNestedManyWithoutCompanyInput {
+  connect: [BookingStatusWhereUniqueInput]
+  connectOrCreate: [BookingStatusCreateOrConnectWithoutCompanyInput]
+  create: [BookingStatusCreateWithoutCompanyInput]
+}
+
+input BookingStatusCreateOrConnectWithoutCompanyInput {
+  create: BookingStatusUncheckedCreateWithoutCompanyInput!
+  where: BookingStatusWhereUniqueInput!
+}
+
+input BookingStatusCreateWithoutCompanyInput {
+  basic_field: Boolean!
+  icon: String!
+  icon_color: String!
+  indicator: booking_statuses_indicator
+  name: String!
+  ord: Float
+  track_time: Int
+  value: String!
+}
+
+input BookingStatusListRelationFilter {
+  every: BookingStatusWhereInput
+  none: BookingStatusWhereInput
+  some: BookingStatusWhereInput
 }
 
 input BookingStatusOrderByInput {
@@ -3528,28 +3557,127 @@ input BookingStatusOrderByInput {
   value: SortOrder
 }
 
+input BookingStatusScalarWhereInput {
+  AND: [BookingStatusScalarWhereInput]
+  NOT: [BookingStatusScalarWhereInput]
+  OR: [BookingStatusScalarWhereInput]
+  basic_field: BoolFilter
+  company_id: IntFilter
+  icon: StringFilter
+  icon_color: StringFilter
+  id: IntFilter
+  indicator: Enumbooking_statuses_indicatorNullableFilter
+  name: StringFilter
+  ord: FloatNullableFilter
+  track_time: IntFilter
+  value: StringFilter
+}
+
+input BookingStatusUncheckedCreateNestedManyWithoutCompanyInput {
+  connect: [BookingStatusWhereUniqueInput]
+  connectOrCreate: [BookingStatusCreateOrConnectWithoutCompanyInput]
+  create: [BookingStatusCreateWithoutCompanyInput]
+}
+
+input BookingStatusUncheckedCreateWithoutCompanyInput {
+  basic_field: Boolean!
+  icon: String!
+  icon_color: String!
+  id: Int
+  indicator: booking_statuses_indicator
+  name: String!
+  ord: Float
+  track_time: Int
+  value: String!
+}
+
+input BookingStatusUncheckedUpdateManyWithoutBookingStatusInput {
+  basic_field: BoolFieldUpdateOperationsInput
+  icon: StringFieldUpdateOperationsInput
+  icon_color: StringFieldUpdateOperationsInput
+  id: IntFieldUpdateOperationsInput
+  indicator: NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
+  ord: NullableFloatFieldUpdateOperationsInput
+  track_time: IntFieldUpdateOperationsInput
+  value: StringFieldUpdateOperationsInput
+}
+
+input BookingStatusUncheckedUpdateManyWithoutCompanyInput {
+  connect: [BookingStatusWhereUniqueInput]
+  connectOrCreate: [BookingStatusCreateOrConnectWithoutCompanyInput]
+  create: [BookingStatusCreateWithoutCompanyInput]
+  delete: [BookingStatusWhereUniqueInput]
+  deleteMany: [BookingStatusScalarWhereInput]
+  disconnect: [BookingStatusWhereUniqueInput]
+  set: [BookingStatusWhereUniqueInput]
+  update: [BookingStatusUpdateWithWhereUniqueWithoutCompanyInput]
+  updateMany: [BookingStatusUpdateManyWithWhereWithoutCompanyInput]
+  upsert: [BookingStatusUpsertWithWhereUniqueWithoutCompanyInput]
+}
+
+input BookingStatusUncheckedUpdateWithoutCompanyInput {
+  basic_field: BoolFieldUpdateOperationsInput
+  icon: StringFieldUpdateOperationsInput
+  icon_color: StringFieldUpdateOperationsInput
+  id: IntFieldUpdateOperationsInput
+  indicator: NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
+  ord: NullableFloatFieldUpdateOperationsInput
+  track_time: IntFieldUpdateOperationsInput
+  value: StringFieldUpdateOperationsInput
+}
+
 input BookingStatusUpdateInput {
   basic_field: BoolFieldUpdateOperationsInput
-  company_id: IntFieldUpdateOperationsInput
+  company: CompanyUpdateOneRequiredWithoutBookingStatusInput
   icon: StringFieldUpdateOperationsInput
   icon_color: StringFieldUpdateOperationsInput
   indicator: NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  ord: FloatFieldUpdateOperationsInput
-  track_time: BoolFieldUpdateOperationsInput
+  ord: NullableFloatFieldUpdateOperationsInput
+  track_time: IntFieldUpdateOperationsInput
   value: StringFieldUpdateOperationsInput
 }
 
 input BookingStatusUpdateManyMutationInput {
   basic_field: BoolFieldUpdateOperationsInput
-  company_id: IntFieldUpdateOperationsInput
   icon: StringFieldUpdateOperationsInput
   icon_color: StringFieldUpdateOperationsInput
   indicator: NullableEnumbooking_statuses_indicatorFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  ord: FloatFieldUpdateOperationsInput
-  track_time: BoolFieldUpdateOperationsInput
+  ord: NullableFloatFieldUpdateOperationsInput
+  track_time: IntFieldUpdateOperationsInput
   value: StringFieldUpdateOperationsInput
+}
+
+input BookingStatusUpdateManyWithWhereWithoutCompanyInput {
+  data: BookingStatusUncheckedUpdateManyWithoutBookingStatusInput!
+  where: BookingStatusScalarWhereInput!
+}
+
+input BookingStatusUpdateManyWithoutCompanyInput {
+  connect: [BookingStatusWhereUniqueInput]
+  connectOrCreate: [BookingStatusCreateOrConnectWithoutCompanyInput]
+  create: [BookingStatusCreateWithoutCompanyInput]
+  delete: [BookingStatusWhereUniqueInput]
+  deleteMany: [BookingStatusScalarWhereInput]
+  disconnect: [BookingStatusWhereUniqueInput]
+  set: [BookingStatusWhereUniqueInput]
+  update: [BookingStatusUpdateWithWhereUniqueWithoutCompanyInput]
+  updateMany: [BookingStatusUpdateManyWithWhereWithoutCompanyInput]
+  upsert: [BookingStatusUpsertWithWhereUniqueWithoutCompanyInput]
+}
+
+input BookingStatusUpdateWithWhereUniqueWithoutCompanyInput {
+  data: BookingStatusUncheckedUpdateWithoutCompanyInput!
+  where: BookingStatusWhereUniqueInput!
+}
+
+input BookingStatusUpsertWithWhereUniqueWithoutCompanyInput {
+  create: BookingStatusUncheckedCreateWithoutCompanyInput!
+  update: BookingStatusUncheckedUpdateWithoutCompanyInput!
+  where: BookingStatusWhereUniqueInput!
 }
 
 input BookingStatusValueCompoundUniqueInput {
@@ -3562,14 +3690,15 @@ input BookingStatusWhereInput {
   NOT: [BookingStatusWhereInput]
   OR: [BookingStatusWhereInput]
   basic_field: BoolFilter
+  company: CompanyWhereInput
   company_id: IntFilter
   icon: StringFilter
   icon_color: StringFilter
   id: IntFilter
   indicator: Enumbooking_statuses_indicatorNullableFilter
   name: StringFilter
-  ord: FloatFilter
-  track_time: BoolFilter
+  ord: FloatNullableFilter
+  track_time: IntFilter
   value: StringFilter
 }
 
@@ -4501,7 +4630,7 @@ type CancellationPolicy {
   advanced_cancellation_fee: Int
   creation_date: DateTime
   id: Int
-  is_active: Int
+  is_active: Boolean
   modified_date: DateTime
   no_show_fee: Int
   occupier: Int
@@ -4517,7 +4646,7 @@ type CancellationPolicy {
 input CancellationPolicyCreateInput {
   advanced_cancellation_fee: Int!
   creation_date: DateTime
-  is_active: Int!
+  is_active: Boolean!
   modified_date: DateTime
   no_show_fee: Int!
   occupier: Int!
@@ -4550,7 +4679,7 @@ input CancellationPolicyOrderByInput {
 input CancellationPolicyUpdateInput {
   advanced_cancellation_fee: IntFieldUpdateOperationsInput
   creation_date: NullableDateTimeFieldUpdateOperationsInput
-  is_active: IntFieldUpdateOperationsInput
+  is_active: BoolFieldUpdateOperationsInput
   modified_date: NullableDateTimeFieldUpdateOperationsInput
   no_show_fee: IntFieldUpdateOperationsInput
   occupier: IntFieldUpdateOperationsInput
@@ -4566,7 +4695,7 @@ input CancellationPolicyUpdateInput {
 input CancellationPolicyUpdateManyMutationInput {
   advanced_cancellation_fee: IntFieldUpdateOperationsInput
   creation_date: NullableDateTimeFieldUpdateOperationsInput
-  is_active: IntFieldUpdateOperationsInput
+  is_active: BoolFieldUpdateOperationsInput
   modified_date: NullableDateTimeFieldUpdateOperationsInput
   no_show_fee: IntFieldUpdateOperationsInput
   occupier: IntFieldUpdateOperationsInput
@@ -4586,7 +4715,7 @@ input CancellationPolicyWhereInput {
   advanced_cancellation_fee: IntFilter
   creation_date: DateTimeNullableFilter
   id: IntFilter
-  is_active: IntFilter
+  is_active: BoolFilter
   modified_date: DateTimeNullableFilter
   no_show_fee: IntFilter
   occupier: IntFilter
@@ -5792,7 +5921,7 @@ type ClassNotes {
   id: Int
   note: String
   post_date: String
-  public: Int
+  public: Boolean
 }
 
 input ClassNotesCreateInput {
@@ -5801,7 +5930,7 @@ input ClassNotesCreateInput {
   class_id: Int!
   note: String!
   post_date: String!
-  public: Int!
+  public: Boolean!
 }
 
 input ClassNotesOrderByInput {
@@ -5820,7 +5949,7 @@ input ClassNotesUpdateInput {
   class_id: IntFieldUpdateOperationsInput
   note: StringFieldUpdateOperationsInput
   post_date: StringFieldUpdateOperationsInput
-  public: IntFieldUpdateOperationsInput
+  public: BoolFieldUpdateOperationsInput
 }
 
 input ClassNotesUpdateManyMutationInput {
@@ -5829,7 +5958,7 @@ input ClassNotesUpdateManyMutationInput {
   class_id: IntFieldUpdateOperationsInput
   note: StringFieldUpdateOperationsInput
   post_date: StringFieldUpdateOperationsInput
-  public: IntFieldUpdateOperationsInput
+  public: BoolFieldUpdateOperationsInput
 }
 
 input ClassNotesWhereInput {
@@ -5842,7 +5971,7 @@ input ClassNotesWhereInput {
   id: IntFilter
   note: StringFilter
   post_date: StringFilter
-  public: IntFilter
+  public: BoolFilter
 }
 
 input ClassNotesWhereUniqueInput {
@@ -8244,6 +8373,7 @@ input CmContactWhereUniqueInput {
 type Company {
   AcceptEmailToken(cursor: AcceptEmailTokenWhereUniqueInput, skip: Int, take: Int): [AcceptEmailToken]!
   AccountBalance(cursor: AccountBalanceWhereUniqueInput, skip: Int, take: Int): [AccountBalance]!
+  BookingStatus(cursor: BookingStatusWhereUniqueInput, skip: Int, take: Int): [BookingStatus]!
   Candidate(cursor: CandidateWhereUniqueInput, skip: Int, take: Int): [Candidate]!
   CmCampaign(cursor: CmCampaignWhereUniqueInput, skip: Int, take: Int): [CmCampaign]!
   CmCase(cursor: CmCaseWhereUniqueInput, skip: Int, take: Int): [CmCase]!
@@ -8269,6 +8399,7 @@ type Company {
 input CompanyCreateInput {
   AcceptEmailToken: AcceptEmailTokenCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusCreateNestedManyWithoutCompanyInput
   Candidate: CandidateCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseCreateNestedManyWithoutCompanyInput
@@ -8300,6 +8431,12 @@ input CompanyCreateNestedOneWithoutAccountBalanceInput {
   connect: CompanyWhereUniqueInput
   connectOrCreate: CompanyCreateOrConnectWithoutAccountBalanceInput
   create: CompanyUncheckedCreateWithoutAccountBalanceInput
+}
+
+input CompanyCreateNestedOneWithoutBookingStatusInput {
+  connect: CompanyWhereUniqueInput
+  connectOrCreate: CompanyCreateOrConnectWithoutBookingStatusInput
+  create: CompanyUncheckedCreateWithoutBookingStatusInput
 }
 
 input CompanyCreateNestedOneWithoutCandidateInput {
@@ -8369,6 +8506,11 @@ input CompanyCreateOrConnectWithoutAcceptEmailTokenInput {
 
 input CompanyCreateOrConnectWithoutAccountBalanceInput {
   create: CompanyUncheckedCreateWithoutAccountBalanceInput!
+  where: CompanyWhereUniqueInput!
+}
+
+input CompanyCreateOrConnectWithoutBookingStatusInput {
+  create: CompanyUncheckedCreateWithoutBookingStatusInput!
   where: CompanyWhereUniqueInput!
 }
 
@@ -10307,6 +10449,7 @@ input CompanySubscriptionWhereUniqueInput {
 
 input CompanyUncheckedCreateWithoutAcceptEmailTokenInput {
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -10331,6 +10474,32 @@ input CompanyUncheckedCreateWithoutAcceptEmailTokenInput {
 
 input CompanyUncheckedCreateWithoutAccountBalanceInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
+  Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
+  CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
+  CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
+  CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
+  MarketingSource: MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+  ThirdPartyAccess: ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
+  TwoFactorHistory: TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
+  User: UserUncheckedCreateNestedManyWithoutCompanyInput
+  admin: Int!
+  creation_date: DateTime!
+  cron_enabled: Boolean
+  details: CompanyDetailsUncheckedCreateNestedOneWithoutCompanyInput
+  digit8: Int!
+  id: Int
+  image: String!
+  remote_connect: String
+  remote_url: String
+  slug: String
+  subscription: CompanySubscriptionUncheckedCreateNestedOneWithoutCompanyInput
+  user: String!
+}
+
+input CompanyUncheckedCreateWithoutBookingStatusInput {
+  AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
+  AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -10356,6 +10525,7 @@ input CompanyUncheckedCreateWithoutAccountBalanceInput {
 input CompanyUncheckedCreateWithoutCandidateInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
@@ -10380,6 +10550,7 @@ input CompanyUncheckedCreateWithoutCandidateInput {
 input CompanyUncheckedCreateWithoutCmCampaignInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
@@ -10404,6 +10575,7 @@ input CompanyUncheckedCreateWithoutCmCampaignInput {
 input CompanyUncheckedCreateWithoutCmCaseInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
@@ -10428,6 +10600,7 @@ input CompanyUncheckedCreateWithoutCmCaseInput {
 input CompanyUncheckedCreateWithoutCmCaseReplyInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -10452,6 +10625,7 @@ input CompanyUncheckedCreateWithoutCmCaseReplyInput {
 input CompanyUncheckedCreateWithoutDetailsInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -10476,6 +10650,7 @@ input CompanyUncheckedCreateWithoutDetailsInput {
 input CompanyUncheckedCreateWithoutMarketingSourceInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -10500,6 +10675,7 @@ input CompanyUncheckedCreateWithoutMarketingSourceInput {
 input CompanyUncheckedCreateWithoutSubscriptionInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -10524,6 +10700,7 @@ input CompanyUncheckedCreateWithoutSubscriptionInput {
 input CompanyUncheckedCreateWithoutThirdPartyAccessInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -10548,6 +10725,7 @@ input CompanyUncheckedCreateWithoutThirdPartyAccessInput {
 input CompanyUncheckedCreateWithoutTwoFactorHistoryInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -10572,6 +10750,7 @@ input CompanyUncheckedCreateWithoutTwoFactorHistoryInput {
 input CompanyUncheckedCreateWithoutUserInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
   Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
   CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
@@ -10595,6 +10774,7 @@ input CompanyUncheckedCreateWithoutUserInput {
 
 input CompanyUncheckedUpdateWithoutAcceptEmailTokenInput {
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -10619,6 +10799,32 @@ input CompanyUncheckedUpdateWithoutAcceptEmailTokenInput {
 
 input CompanyUncheckedUpdateWithoutAccountBalanceInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
+  Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
+  CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
+  CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
+  CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
+  MarketingSource: MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+  ThirdPartyAccess: ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
+  TwoFactorHistory: TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
+  User: UserUncheckedUpdateManyWithoutCompanyInput
+  admin: IntFieldUpdateOperationsInput
+  creation_date: DateTimeFieldUpdateOperationsInput
+  cron_enabled: NullableBoolFieldUpdateOperationsInput
+  details: CompanyDetailsUncheckedUpdateOneWithoutCompanyInput
+  digit8: IntFieldUpdateOperationsInput
+  id: IntFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
+  remote_connect: NullableStringFieldUpdateOperationsInput
+  remote_url: NullableStringFieldUpdateOperationsInput
+  slug: NullableStringFieldUpdateOperationsInput
+  subscription: CompanySubscriptionUncheckedUpdateOneWithoutCompanyInput
+  user: StringFieldUpdateOperationsInput
+}
+
+input CompanyUncheckedUpdateWithoutBookingStatusInput {
+  AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
+  AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -10644,6 +10850,7 @@ input CompanyUncheckedUpdateWithoutAccountBalanceInput {
 input CompanyUncheckedUpdateWithoutCandidateInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
@@ -10668,6 +10875,7 @@ input CompanyUncheckedUpdateWithoutCandidateInput {
 input CompanyUncheckedUpdateWithoutCmCampaignInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
@@ -10692,6 +10900,7 @@ input CompanyUncheckedUpdateWithoutCmCampaignInput {
 input CompanyUncheckedUpdateWithoutCmCaseInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
@@ -10716,6 +10925,7 @@ input CompanyUncheckedUpdateWithoutCmCaseInput {
 input CompanyUncheckedUpdateWithoutCmCaseReplyInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -10740,6 +10950,7 @@ input CompanyUncheckedUpdateWithoutCmCaseReplyInput {
 input CompanyUncheckedUpdateWithoutDetailsInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -10764,6 +10975,7 @@ input CompanyUncheckedUpdateWithoutDetailsInput {
 input CompanyUncheckedUpdateWithoutMarketingSourceInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -10788,6 +11000,7 @@ input CompanyUncheckedUpdateWithoutMarketingSourceInput {
 input CompanyUncheckedUpdateWithoutSubscriptionInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -10812,6 +11025,7 @@ input CompanyUncheckedUpdateWithoutSubscriptionInput {
 input CompanyUncheckedUpdateWithoutThirdPartyAccessInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -10836,6 +11050,7 @@ input CompanyUncheckedUpdateWithoutThirdPartyAccessInput {
 input CompanyUncheckedUpdateWithoutTwoFactorHistoryInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -10860,6 +11075,7 @@ input CompanyUncheckedUpdateWithoutTwoFactorHistoryInput {
 input CompanyUncheckedUpdateWithoutUserInput {
   AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
   Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
   CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
@@ -10884,6 +11100,7 @@ input CompanyUncheckedUpdateWithoutUserInput {
 input CompanyUpdateInput {
   AcceptEmailToken: AcceptEmailTokenUpdateManyWithoutCompanyInput
   AccountBalance: AccountBalanceUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUpdateManyWithoutCompanyInput
   Candidate: CandidateUpdateManyWithoutCompanyInput
   CmCampaign: CmCampaignUpdateManyWithoutCompanyInput
   CmCase: CmCaseUpdateManyWithoutCompanyInput
@@ -10931,6 +11148,14 @@ input CompanyUpdateOneRequiredWithoutAccountBalanceInput {
   create: CompanyUncheckedCreateWithoutAccountBalanceInput
   update: CompanyUncheckedUpdateWithoutAccountBalanceInput
   upsert: CompanyUpsertWithoutAccountBalanceInput
+}
+
+input CompanyUpdateOneRequiredWithoutBookingStatusInput {
+  connect: CompanyWhereUniqueInput
+  connectOrCreate: CompanyCreateOrConnectWithoutBookingStatusInput
+  create: CompanyUncheckedCreateWithoutBookingStatusInput
+  update: CompanyUncheckedUpdateWithoutBookingStatusInput
+  upsert: CompanyUpsertWithoutBookingStatusInput
 }
 
 input CompanyUpdateOneRequiredWithoutCmCampaignInput {
@@ -11027,6 +11252,11 @@ input CompanyUpsertWithoutAccountBalanceInput {
   update: CompanyUncheckedUpdateWithoutAccountBalanceInput!
 }
 
+input CompanyUpsertWithoutBookingStatusInput {
+  create: CompanyUncheckedCreateWithoutBookingStatusInput!
+  update: CompanyUncheckedUpdateWithoutBookingStatusInput!
+}
+
 input CompanyUpsertWithoutCandidateInput {
   create: CompanyUncheckedCreateWithoutCandidateInput!
   update: CompanyUncheckedUpdateWithoutCandidateInput!
@@ -11081,6 +11311,7 @@ input CompanyWhereInput {
   AND: [CompanyWhereInput]
   AcceptEmailToken: AcceptEmailTokenListRelationFilter
   AccountBalance: AccountBalanceListRelationFilter
+  BookingStatus: BookingStatusListRelationFilter
   Candidate: CandidateListRelationFilter
   CmCampaign: CmCampaignListRelationFilter
   CmCase: CmCaseListRelationFilter
@@ -11170,6 +11401,36 @@ type Discounts {
 }
 
 """
+aggregated selection of "Discounts"
+"""
+type Discounts_aggregate {
+  aggregate: Discounts_aggregate_fields
+  nodes: [Discounts!]!
+}
+
+"""
+aggregate fields of "Discounts"
+"""
+type Discounts_aggregate_fields {
+  avg: Discounts_avg_fields
+  count(columns: [Discounts_select_column!], distinct: Boolean): Int!
+  max: Discounts_max_fields
+  min: Discounts_min_fields
+  stddev: Discounts_stddev_fields
+  stddev_pop: Discounts_stddev_pop_fields
+  stddev_samp: Discounts_stddev_samp_fields
+  sum: Discounts_sum_fields
+  var_pop: Discounts_var_pop_fields
+  var_samp: Discounts_var_samp_fields
+  variance: Discounts_variance_fields
+}
+
+"""aggregate avg on columns"""
+type Discounts_avg_fields {
+  order: Float
+}
+
+"""
 Boolean expression to filter rows from the table "Discounts". All fields are combined with a logical 'AND'.
 """
 input Discounts_bool_exp {
@@ -11224,6 +11485,34 @@ input Discounts_insert_input {
   services: json
   show_on_reciept: String
   type: String
+}
+
+"""aggregate max on columns"""
+type Discounts_max_fields {
+  amount: String
+  code: String
+  created_at: timestamptz
+  discount_rate: String
+  id: uuid
+  name: String
+  order: Int
+  show_on_reciept: String
+  type: String
+  updated_at: timestamptz
+}
+
+"""aggregate min on columns"""
+type Discounts_min_fields {
+  amount: String
+  code: String
+  created_at: timestamptz
+  discount_rate: String
+  id: uuid
+  name: String
+  order: Int
+  show_on_reciept: String
+  type: String
+  updated_at: timestamptz
 }
 
 """
@@ -11338,6 +11627,26 @@ input Discounts_set_input {
   type: String
 }
 
+"""aggregate stddev on columns"""
+type Discounts_stddev_fields {
+  order: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type Discounts_stddev_pop_fields {
+  order: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type Discounts_stddev_samp_fields {
+  order: Float
+}
+
+"""aggregate sum on columns"""
+type Discounts_sum_fields {
+  order: Int
+}
+
 """
 update columns of table "Discounts"
 """
@@ -11377,6 +11686,21 @@ enum Discounts_update_column {
 
   """column name"""
   type
+}
+
+"""aggregate var_pop on columns"""
+type Discounts_var_pop_fields {
+  order: Float
+}
+
+"""aggregate var_samp on columns"""
+type Discounts_var_samp_fields {
+  order: Float
+}
+
+"""aggregate variance on columns"""
+type Discounts_variance_fields {
+  order: Float
 }
 
 input Enumbooking_master_cancel_statusFieldUpdateOperationsInput {
@@ -12589,11 +12913,6 @@ enum Lists_campaign_update_column {
   type
 }
 
-input LoginInput {
-  password: String!
-  username: String!
-}
-
 type MarketingSource {
   company: Company
   company_id: Int
@@ -12601,7 +12920,7 @@ type MarketingSource {
   id: Int
   imported: Int
   name: String
-  public: Int
+  public: Boolean
 }
 
 input MarketingSourceCreateInput {
@@ -12609,7 +12928,7 @@ input MarketingSourceCreateInput {
   custom_id: Int!
   imported: Int!
   name: String!
-  public: Int!
+  public: Boolean!
 }
 
 input MarketingSourceCreateNestedManyWithoutCompanyInput {
@@ -12627,7 +12946,7 @@ input MarketingSourceCreateWithoutCompanyInput {
   custom_id: Int!
   imported: Int!
   name: String!
-  public: Int!
+  public: Boolean!
 }
 
 input MarketingSourceListRelationFilter {
@@ -12654,7 +12973,7 @@ input MarketingSourceScalarWhereInput {
   id: IntFilter
   imported: IntFilter
   name: StringFilter
-  public: IntFilter
+  public: BoolFilter
 }
 
 input MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput {
@@ -12668,7 +12987,7 @@ input MarketingSourceUncheckedCreateWithoutCompanyInput {
   id: Int
   imported: Int!
   name: String!
-  public: Int!
+  public: Boolean!
 }
 
 input MarketingSourceUncheckedUpdateManyWithoutCompanyInput {
@@ -12689,7 +13008,7 @@ input MarketingSourceUncheckedUpdateManyWithoutMarketingSourceInput {
   id: IntFieldUpdateOperationsInput
   imported: IntFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  public: IntFieldUpdateOperationsInput
+  public: BoolFieldUpdateOperationsInput
 }
 
 input MarketingSourceUncheckedUpdateWithoutCompanyInput {
@@ -12697,7 +13016,7 @@ input MarketingSourceUncheckedUpdateWithoutCompanyInput {
   id: IntFieldUpdateOperationsInput
   imported: IntFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  public: IntFieldUpdateOperationsInput
+  public: BoolFieldUpdateOperationsInput
 }
 
 input MarketingSourceUpdateInput {
@@ -12705,14 +13024,14 @@ input MarketingSourceUpdateInput {
   custom_id: IntFieldUpdateOperationsInput
   imported: IntFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  public: IntFieldUpdateOperationsInput
+  public: BoolFieldUpdateOperationsInput
 }
 
 input MarketingSourceUpdateManyMutationInput {
   custom_id: IntFieldUpdateOperationsInput
   imported: IntFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  public: IntFieldUpdateOperationsInput
+  public: BoolFieldUpdateOperationsInput
 }
 
 input MarketingSourceUpdateManyWithWhereWithoutCompanyInput {
@@ -12754,7 +13073,7 @@ input MarketingSourceWhereInput {
   id: IntFilter
   imported: IntFilter
   name: StringFilter
-  public: IntFilter
+  public: BoolFilter
 }
 
 input MarketingSourceWhereUniqueInput {
@@ -17795,6 +18114,251 @@ enum class_master_class_pay {
   is_true
 }
 
+"""
+columns and relationships of "clients_data"
+"""
+type clients_data {
+  category: String
+  created_date: timestamptz!
+  fieldFor: String
+  format: String
+  id: uuid!
+  is_active: Boolean!
+  is_liked: Boolean!
+  is_locked: Boolean!
+  is_mendatory: Boolean!
+  is_private: Boolean!
+  label: String
+  name: String
+}
+
+"""
+aggregated selection of "clients_data"
+"""
+type clients_data_aggregate {
+  aggregate: clients_data_aggregate_fields
+  nodes: [clients_data!]!
+}
+
+"""
+aggregate fields of "clients_data"
+"""
+type clients_data_aggregate_fields {
+  count(columns: [clients_data_select_column!], distinct: Boolean): Int!
+  max: clients_data_max_fields
+  min: clients_data_min_fields
+}
+
+"""
+Boolean expression to filter rows from the table "clients_data". All fields are combined with a logical 'AND'.
+"""
+input clients_data_bool_exp {
+  _and: [clients_data_bool_exp!]
+  _not: clients_data_bool_exp
+  _or: [clients_data_bool_exp!]
+  category: String_comparison_exp
+  created_date: timestamptz_comparison_exp
+  fieldFor: String_comparison_exp
+  format: String_comparison_exp
+  id: uuid_comparison_exp
+  is_active: Boolean_comparison_exp
+  is_liked: Boolean_comparison_exp
+  is_locked: Boolean_comparison_exp
+  is_mendatory: Boolean_comparison_exp
+  is_private: Boolean_comparison_exp
+  label: String_comparison_exp
+  name: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "clients_data"
+"""
+enum clients_data_constraint {
+  """unique or primary key constraint"""
+  clients_data_pkey
+}
+
+"""
+input type for inserting data into table "clients_data"
+"""
+input clients_data_insert_input {
+  category: String
+  created_date: timestamptz
+  fieldFor: String
+  format: String
+  id: uuid
+  is_active: Boolean
+  is_liked: Boolean
+  is_locked: Boolean
+  is_mendatory: Boolean
+  is_private: Boolean
+  label: String
+  name: String
+}
+
+"""aggregate max on columns"""
+type clients_data_max_fields {
+  category: String
+  created_date: timestamptz
+  fieldFor: String
+  format: String
+  id: uuid
+  label: String
+  name: String
+}
+
+"""aggregate min on columns"""
+type clients_data_min_fields {
+  category: String
+  created_date: timestamptz
+  fieldFor: String
+  format: String
+  id: uuid
+  label: String
+  name: String
+}
+
+"""
+response of any mutation on the table "clients_data"
+"""
+type clients_data_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [clients_data!]!
+}
+
+"""
+on conflict condition type for table "clients_data"
+"""
+input clients_data_on_conflict {
+  constraint: clients_data_constraint!
+  update_columns: [clients_data_update_column!]!
+  where: clients_data_bool_exp
+}
+
+"""Ordering options when selecting data from "clients_data"."""
+input clients_data_order_by {
+  category: order_by
+  created_date: order_by
+  fieldFor: order_by
+  format: order_by
+  id: order_by
+  is_active: order_by
+  is_liked: order_by
+  is_locked: order_by
+  is_mendatory: order_by
+  is_private: order_by
+  label: order_by
+  name: order_by
+}
+
+"""primary key columns input for table: clients_data"""
+input clients_data_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "clients_data"
+"""
+enum clients_data_select_column {
+  """column name"""
+  category
+
+  """column name"""
+  created_date
+
+  """column name"""
+  fieldFor
+
+  """column name"""
+  format
+
+  """column name"""
+  id
+
+  """column name"""
+  is_active
+
+  """column name"""
+  is_liked
+
+  """column name"""
+  is_locked
+
+  """column name"""
+  is_mendatory
+
+  """column name"""
+  is_private
+
+  """column name"""
+  label
+
+  """column name"""
+  name
+}
+
+"""
+input type for updating data in table "clients_data"
+"""
+input clients_data_set_input {
+  category: String
+  created_date: timestamptz
+  fieldFor: String
+  format: String
+  id: uuid
+  is_active: Boolean
+  is_liked: Boolean
+  is_locked: Boolean
+  is_mendatory: Boolean
+  is_private: Boolean
+  label: String
+  name: String
+}
+
+"""
+update columns of table "clients_data"
+"""
+enum clients_data_update_column {
+  """column name"""
+  category
+
+  """column name"""
+  created_date
+
+  """column name"""
+  fieldFor
+
+  """column name"""
+  format
+
+  """column name"""
+  id
+
+  """column name"""
+  is_active
+
+  """column name"""
+  is_liked
+
+  """column name"""
+  is_locked
+
+  """column name"""
+  is_mendatory
+
+  """column name"""
+  is_private
+
+  """column name"""
+  label
+
+  """column name"""
+  name
+}
+
 enum cm_account_notes_Status {
   Disable
   Enable
@@ -18649,6 +19213,168 @@ type credit_notes_var_samp_fields {
 type credit_notes_variance_fields {
   invoice_no: Float
   total: Float
+}
+
+"""
+columns and relationships of "custom_fields_categories"
+"""
+type custom_fields_categories {
+  assigned_fields: String
+  category: String
+  created_date: timestamptz!
+  id: uuid!
+  is_active: Boolean!
+}
+
+"""
+aggregated selection of "custom_fields_categories"
+"""
+type custom_fields_categories_aggregate {
+  aggregate: custom_fields_categories_aggregate_fields
+  nodes: [custom_fields_categories!]!
+}
+
+"""
+aggregate fields of "custom_fields_categories"
+"""
+type custom_fields_categories_aggregate_fields {
+  count(columns: [custom_fields_categories_select_column!], distinct: Boolean): Int!
+  max: custom_fields_categories_max_fields
+  min: custom_fields_categories_min_fields
+}
+
+"""
+Boolean expression to filter rows from the table "custom_fields_categories". All fields are combined with a logical 'AND'.
+"""
+input custom_fields_categories_bool_exp {
+  _and: [custom_fields_categories_bool_exp!]
+  _not: custom_fields_categories_bool_exp
+  _or: [custom_fields_categories_bool_exp!]
+  assigned_fields: String_comparison_exp
+  category: String_comparison_exp
+  created_date: timestamptz_comparison_exp
+  id: uuid_comparison_exp
+  is_active: Boolean_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "custom_fields_categories"
+"""
+enum custom_fields_categories_constraint {
+  """unique or primary key constraint"""
+  custom_fields_categories_pkey
+}
+
+"""
+input type for inserting data into table "custom_fields_categories"
+"""
+input custom_fields_categories_insert_input {
+  assigned_fields: String
+  category: String
+  created_date: timestamptz
+  id: uuid
+  is_active: Boolean
+}
+
+"""aggregate max on columns"""
+type custom_fields_categories_max_fields {
+  assigned_fields: String
+  category: String
+  created_date: timestamptz
+  id: uuid
+}
+
+"""aggregate min on columns"""
+type custom_fields_categories_min_fields {
+  assigned_fields: String
+  category: String
+  created_date: timestamptz
+  id: uuid
+}
+
+"""
+response of any mutation on the table "custom_fields_categories"
+"""
+type custom_fields_categories_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [custom_fields_categories!]!
+}
+
+"""
+on conflict condition type for table "custom_fields_categories"
+"""
+input custom_fields_categories_on_conflict {
+  constraint: custom_fields_categories_constraint!
+  update_columns: [custom_fields_categories_update_column!]!
+  where: custom_fields_categories_bool_exp
+}
+
+"""Ordering options when selecting data from "custom_fields_categories"."""
+input custom_fields_categories_order_by {
+  assigned_fields: order_by
+  category: order_by
+  created_date: order_by
+  id: order_by
+  is_active: order_by
+}
+
+"""primary key columns input for table: custom_fields_categories"""
+input custom_fields_categories_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "custom_fields_categories"
+"""
+enum custom_fields_categories_select_column {
+  """column name"""
+  assigned_fields
+
+  """column name"""
+  category
+
+  """column name"""
+  created_date
+
+  """column name"""
+  id
+
+  """column name"""
+  is_active
+}
+
+"""
+input type for updating data in table "custom_fields_categories"
+"""
+input custom_fields_categories_set_input {
+  assigned_fields: String
+  category: String
+  created_date: timestamptz
+  id: uuid
+  is_active: Boolean
+}
+
+"""
+update columns of table "custom_fields_categories"
+"""
+enum custom_fields_categories_update_column {
+  """column name"""
+  assigned_fields
+
+  """column name"""
+  category
+
+  """column name"""
+  created_date
+
+  """column name"""
+  id
+
+  """column name"""
+  is_active
 }
 
 scalar date
@@ -20198,6 +20924,127 @@ type family_relationships_var_samp_fields {
 """aggregate variance on columns"""
 type family_relationships_variance_fields {
   order: Float
+}
+
+"""
+If status flag is 0 id prevents the default page content and renders the fallback slug in iframe
+
+
+columns and relationships of "feature_flags"
+"""
+type feature_flags {
+  fallback_slug: String!
+  id: uuid!
+  page_slug: String!
+  status: Boolean!
+}
+
+"""
+Boolean expression to filter rows from the table "feature_flags". All fields are combined with a logical 'AND'.
+"""
+input feature_flags_bool_exp {
+  _and: [feature_flags_bool_exp!]
+  _not: feature_flags_bool_exp
+  _or: [feature_flags_bool_exp!]
+  fallback_slug: String_comparison_exp
+  id: uuid_comparison_exp
+  page_slug: String_comparison_exp
+  status: Boolean_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "feature_flags"
+"""
+enum feature_flags_constraint {
+  """unique or primary key constraint"""
+  feature_flags_pkey
+}
+
+"""
+input type for inserting data into table "feature_flags"
+"""
+input feature_flags_insert_input {
+  fallback_slug: String
+  id: uuid
+  page_slug: String
+  status: Boolean
+}
+
+"""
+response of any mutation on the table "feature_flags"
+"""
+type feature_flags_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [feature_flags!]!
+}
+
+"""
+on conflict condition type for table "feature_flags"
+"""
+input feature_flags_on_conflict {
+  constraint: feature_flags_constraint!
+  update_columns: [feature_flags_update_column!]!
+  where: feature_flags_bool_exp
+}
+
+"""Ordering options when selecting data from "feature_flags"."""
+input feature_flags_order_by {
+  fallback_slug: order_by
+  id: order_by
+  page_slug: order_by
+  status: order_by
+}
+
+"""primary key columns input for table: feature_flags"""
+input feature_flags_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "feature_flags"
+"""
+enum feature_flags_select_column {
+  """column name"""
+  fallback_slug
+
+  """column name"""
+  id
+
+  """column name"""
+  page_slug
+
+  """column name"""
+  status
+}
+
+"""
+input type for updating data in table "feature_flags"
+"""
+input feature_flags_set_input {
+  fallback_slug: String
+  id: uuid
+  page_slug: String
+  status: Boolean
+}
+
+"""
+update columns of table "feature_flags"
+"""
+enum feature_flags_update_column {
+  """column name"""
+  fallback_slug
+
+  """column name"""
+  id
+
+  """column name"""
+  page_slug
+
+  """column name"""
+  status
 }
 
 enum gl_codes_description {
@@ -21983,7 +22830,7 @@ type labs_dashboard_variance_fields {
 }
 
 """
-lead view
+lead view 
 
 
 columns and relationships of "lead"
@@ -22034,6 +22881,240 @@ unique or primary key constraints on table "lead"
 enum lead_constraint {
   """unique or primary key constraint"""
   leads_pkey
+}
+
+"""
+columns and relationships of "lead_fields"
+"""
+type lead_fields {
+  category: String
+  created_date: timestamptz!
+  fieldFor: String
+  format: String
+  id: uuid!
+  is_active: Boolean!
+  is_locked: Boolean!
+  is_mendatory: Boolean!
+  is_private: Boolean!
+  label: String
+  name: String
+}
+
+"""
+aggregated selection of "lead_fields"
+"""
+type lead_fields_aggregate {
+  aggregate: lead_fields_aggregate_fields
+  nodes: [lead_fields!]!
+}
+
+"""
+aggregate fields of "lead_fields"
+"""
+type lead_fields_aggregate_fields {
+  count(columns: [lead_fields_select_column!], distinct: Boolean): Int!
+  max: lead_fields_max_fields
+  min: lead_fields_min_fields
+}
+
+"""
+Boolean expression to filter rows from the table "lead_fields". All fields are combined with a logical 'AND'.
+"""
+input lead_fields_bool_exp {
+  _and: [lead_fields_bool_exp!]
+  _not: lead_fields_bool_exp
+  _or: [lead_fields_bool_exp!]
+  category: String_comparison_exp
+  created_date: timestamptz_comparison_exp
+  fieldFor: String_comparison_exp
+  format: String_comparison_exp
+  id: uuid_comparison_exp
+  is_active: Boolean_comparison_exp
+  is_locked: Boolean_comparison_exp
+  is_mendatory: Boolean_comparison_exp
+  is_private: Boolean_comparison_exp
+  label: String_comparison_exp
+  name: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "lead_fields"
+"""
+enum lead_fields_constraint {
+  """unique or primary key constraint"""
+  lead_fields_pkey
+}
+
+"""
+input type for inserting data into table "lead_fields"
+"""
+input lead_fields_insert_input {
+  category: String
+  created_date: timestamptz
+  fieldFor: String
+  format: String
+  id: uuid
+  is_active: Boolean
+  is_locked: Boolean
+  is_mendatory: Boolean
+  is_private: Boolean
+  label: String
+  name: String
+}
+
+"""aggregate max on columns"""
+type lead_fields_max_fields {
+  category: String
+  created_date: timestamptz
+  fieldFor: String
+  format: String
+  id: uuid
+  label: String
+  name: String
+}
+
+"""aggregate min on columns"""
+type lead_fields_min_fields {
+  category: String
+  created_date: timestamptz
+  fieldFor: String
+  format: String
+  id: uuid
+  label: String
+  name: String
+}
+
+"""
+response of any mutation on the table "lead_fields"
+"""
+type lead_fields_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [lead_fields!]!
+}
+
+"""
+on conflict condition type for table "lead_fields"
+"""
+input lead_fields_on_conflict {
+  constraint: lead_fields_constraint!
+  update_columns: [lead_fields_update_column!]!
+  where: lead_fields_bool_exp
+}
+
+"""Ordering options when selecting data from "lead_fields"."""
+input lead_fields_order_by {
+  category: order_by
+  created_date: order_by
+  fieldFor: order_by
+  format: order_by
+  id: order_by
+  is_active: order_by
+  is_locked: order_by
+  is_mendatory: order_by
+  is_private: order_by
+  label: order_by
+  name: order_by
+}
+
+"""primary key columns input for table: lead_fields"""
+input lead_fields_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "lead_fields"
+"""
+enum lead_fields_select_column {
+  """column name"""
+  category
+
+  """column name"""
+  created_date
+
+  """column name"""
+  fieldFor
+
+  """column name"""
+  format
+
+  """column name"""
+  id
+
+  """column name"""
+  is_active
+
+  """column name"""
+  is_locked
+
+  """column name"""
+  is_mendatory
+
+  """column name"""
+  is_private
+
+  """column name"""
+  label
+
+  """column name"""
+  name
+}
+
+"""
+input type for updating data in table "lead_fields"
+"""
+input lead_fields_set_input {
+  category: String
+  created_date: timestamptz
+  fieldFor: String
+  format: String
+  id: uuid
+  is_active: Boolean
+  is_locked: Boolean
+  is_mendatory: Boolean
+  is_private: Boolean
+  label: String
+  name: String
+}
+
+"""
+update columns of table "lead_fields"
+"""
+enum lead_fields_update_column {
+  """column name"""
+  category
+
+  """column name"""
+  created_date
+
+  """column name"""
+  fieldFor
+
+  """column name"""
+  format
+
+  """column name"""
+  id
+
+  """column name"""
+  is_active
+
+  """column name"""
+  is_locked
+
+  """column name"""
+  is_mendatory
+
+  """column name"""
+  is_private
+
+  """column name"""
+  label
+
+  """column name"""
+  name
 }
 
 """
@@ -22794,19 +23875,30 @@ type library_variance_fields {
 columns and relationships of "locations"
 """
 type locations {
-  address: String!
+  address: String
+  apt: String
+  badges(
+    """JSON select path"""
+    path: String
+  ): json
+  bookable: Boolean!
   created_at: timestamptz!
+  email: String
+  employees(
+    """JSON select path"""
+    path: String
+  ): json
+  hasCalender: Boolean!
   id: uuid!
   img: String!
   is_active: Boolean!
-  is_day: Boolean!
-  is_night: Boolean!
-  is_parking: Boolean!
-  is_pharmacy: Boolean!
-  is_time: Boolean!
   name: String!
   order: Int!
+  phone: String
+  postcode: String
+  showOnline: Boolean!
   updated_at: timestamptz!
+  website: String
 }
 
 """
@@ -22847,18 +23939,23 @@ input locations_bool_exp {
   _not: locations_bool_exp
   _or: [locations_bool_exp!]
   address: String_comparison_exp
+  apt: String_comparison_exp
+  badges: json_comparison_exp
+  bookable: Boolean_comparison_exp
   created_at: timestamptz_comparison_exp
+  email: String_comparison_exp
+  employees: json_comparison_exp
+  hasCalender: Boolean_comparison_exp
   id: uuid_comparison_exp
   img: String_comparison_exp
   is_active: Boolean_comparison_exp
-  is_day: Boolean_comparison_exp
-  is_night: Boolean_comparison_exp
-  is_parking: Boolean_comparison_exp
-  is_pharmacy: Boolean_comparison_exp
-  is_time: Boolean_comparison_exp
   name: String_comparison_exp
   order: Int_comparison_exp
+  phone: String_comparison_exp
+  postcode: String_comparison_exp
+  showOnline: Boolean_comparison_exp
   updated_at: timestamptz_comparison_exp
+  website: String_comparison_exp
 }
 
 """
@@ -22889,11 +23986,6 @@ input locations_insert_input {
   hasCalender: Boolean
   img: String
   is_active: Boolean
-  is_day: Boolean
-  is_night: Boolean
-  is_parking: Boolean
-  is_pharmacy: Boolean
-  is_time: Boolean
   name: String
   phone: String
   postcode: String
@@ -22904,23 +23996,33 @@ input locations_insert_input {
 """aggregate max on columns"""
 type locations_max_fields {
   address: String
+  apt: String
   created_at: timestamptz
+  email: String
   id: uuid
   img: String
   name: String
   order: Int
+  phone: String
+  postcode: String
   updated_at: timestamptz
+  website: String
 }
 
 """aggregate min on columns"""
 type locations_min_fields {
   address: String
+  apt: String
   created_at: timestamptz
+  email: String
   id: uuid
   img: String
   name: String
   order: Int
+  phone: String
+  postcode: String
   updated_at: timestamptz
+  website: String
 }
 
 """
@@ -22946,18 +24048,23 @@ input locations_on_conflict {
 """Ordering options when selecting data from "locations"."""
 input locations_order_by {
   address: order_by
+  apt: order_by
+  badges: order_by
+  bookable: order_by
   created_at: order_by
+  email: order_by
+  employees: order_by
+  hasCalender: order_by
   id: order_by
   img: order_by
   is_active: order_by
-  is_day: order_by
-  is_night: order_by
-  is_parking: order_by
-  is_pharmacy: order_by
-  is_time: order_by
   name: order_by
   order: order_by
+  phone: order_by
+  postcode: order_by
+  showOnline: order_by
   updated_at: order_by
+  website: order_by
 }
 
 """primary key columns input for table: locations"""
@@ -22973,7 +24080,25 @@ enum locations_select_column {
   address
 
   """column name"""
+  apt
+
+  """column name"""
+  badges
+
+  """column name"""
+  bookable
+
+  """column name"""
   created_at
+
+  """column name"""
+  email
+
+  """column name"""
+  employees
+
+  """column name"""
+  hasCalender
 
   """column name"""
   id
@@ -22985,28 +24110,25 @@ enum locations_select_column {
   is_active
 
   """column name"""
-  is_day
-
-  """column name"""
-  is_night
-
-  """column name"""
-  is_parking
-
-  """column name"""
-  is_pharmacy
-
-  """column name"""
-  is_time
-
-  """column name"""
   name
 
   """column name"""
   order
 
   """column name"""
+  phone
+
+  """column name"""
+  postcode
+
+  """column name"""
+  showOnline
+
+  """column name"""
   updated_at
+
+  """column name"""
+  website
 }
 
 """
@@ -23014,15 +24136,20 @@ input type for updating data in table "locations"
 """
 input locations_set_input {
   address: String
+  apt: String
+  badges: json
+  bookable: Boolean
+  email: String
+  employees: json
+  hasCalender: Boolean
   img: String
   is_active: Boolean
-  is_day: Boolean
-  is_night: Boolean
-  is_parking: Boolean
-  is_pharmacy: Boolean
-  is_time: Boolean
   name: String
   order: Int
+  phone: String
+  postcode: String
+  showOnline: Boolean
+  website: String
 }
 
 """aggregate stddev on columns"""
@@ -23053,31 +24180,46 @@ enum locations_update_column {
   address
 
   """column name"""
+  apt
+
+  """column name"""
+  badges
+
+  """column name"""
+  bookable
+
+  """column name"""
+  email
+
+  """column name"""
+  employees
+
+  """column name"""
+  hasCalender
+
+  """column name"""
   img
 
   """column name"""
   is_active
 
   """column name"""
-  is_day
-
-  """column name"""
-  is_night
-
-  """column name"""
-  is_parking
-
-  """column name"""
-  is_pharmacy
-
-  """column name"""
-  is_time
-
-  """column name"""
   name
 
   """column name"""
   order
+
+  """column name"""
+  phone
+
+  """column name"""
+  postcode
+
+  """column name"""
+  showOnline
+
+  """column name"""
+  website
 }
 
 """aggregate var_pop on columns"""
@@ -23093,10 +24235,6 @@ type locations_var_samp_fields {
 """aggregate variance on columns"""
 type locations_variance_fields {
   order: Float
-}
-
-type loginOutput {
-  accessToken: String!
 }
 
 """
@@ -24253,6 +25391,19 @@ type mutation_root {
   delete_category_by_pk(id: uuid!): category
 
   """
+  delete data from the table: "clients_data"
+  """
+  delete_clients_data(
+    """filter the rows which have to be deleted"""
+    where: clients_data_bool_exp!
+  ): clients_data_mutation_response
+
+  """
+  delete single row from the table: "clients_data"
+  """
+  delete_clients_data_by_pk(id: uuid!): clients_data
+
+  """
   delete data from the table: "courses"
   """
   delete_courses(
@@ -24290,6 +25441,19 @@ type mutation_root {
   delete single row from the table: "credit_notes"
   """
   delete_credit_notes_by_pk(id: uuid!): credit_notes
+
+  """
+  delete data from the table: "custom_fields_categories"
+  """
+  delete_custom_fields_categories(
+    """filter the rows which have to be deleted"""
+    where: custom_fields_categories_bool_exp!
+  ): custom_fields_categories_mutation_response
+
+  """
+  delete single row from the table: "custom_fields_categories"
+  """
+  delete_custom_fields_categories_by_pk(id: uuid!): custom_fields_categories
 
   """
   delete data from the table: "debt"
@@ -24459,6 +25623,19 @@ type mutation_root {
   delete single row from the table: "lead"
   """
   delete_lead_by_pk(id: uuid!): lead
+
+  """
+  delete data from the table: "lead_fields"
+  """
+  delete_lead_fields(
+    """filter the rows which have to be deleted"""
+    where: lead_fields_bool_exp!
+  ): lead_fields_mutation_response
+
+  """
+  delete single row from the table: "lead_fields"
+  """
+  delete_lead_fields_by_pk(id: uuid!): lead_fields
 
   """
   delete data from the table: "library"
@@ -25007,6 +26184,28 @@ type mutation_root {
   ): category
 
   """
+  insert data into the table: "clients_data"
+  """
+  insert_clients_data(
+    """the rows to be inserted"""
+    objects: [clients_data_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: clients_data_on_conflict
+  ): clients_data_mutation_response
+
+  """
+  insert a single row into the table: "clients_data"
+  """
+  insert_clients_data_one(
+    """the row to be inserted"""
+    object: clients_data_insert_input!
+
+    """on conflict condition"""
+    on_conflict: clients_data_on_conflict
+  ): clients_data
+
+  """
   insert data into the table: "colors"
   """
   insert_colors(
@@ -25087,6 +26286,28 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: credit_notes_on_conflict
   ): credit_notes
+
+  """
+  insert data into the table: "custom_fields_categories"
+  """
+  insert_custom_fields_categories(
+    """the rows to be inserted"""
+    objects: [custom_fields_categories_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: custom_fields_categories_on_conflict
+  ): custom_fields_categories_mutation_response
+
+  """
+  insert a single row into the table: "custom_fields_categories"
+  """
+  insert_custom_fields_categories_one(
+    """the row to be inserted"""
+    object: custom_fields_categories_insert_input!
+
+    """on conflict condition"""
+    on_conflict: custom_fields_categories_on_conflict
+  ): custom_fields_categories
 
   """
   insert data into the table: "debt"
@@ -25219,6 +26440,28 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: family_relationships_on_conflict
   ): family_relationships
+
+  """
+  insert data into the table: "feature_flags"
+  """
+  insert_feature_flags(
+    """the rows to be inserted"""
+    objects: [feature_flags_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: feature_flags_on_conflict
+  ): feature_flags_mutation_response
+
+  """
+  insert a single row into the table: "feature_flags"
+  """
+  insert_feature_flags_one(
+    """the row to be inserted"""
+    object: feature_flags_insert_input!
+
+    """on conflict condition"""
+    on_conflict: feature_flags_on_conflict
+  ): feature_flags
 
   """
   insert data into the table: "invoices"
@@ -25362,6 +26605,28 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: lead_on_conflict
   ): lead_mutation_response
+
+  """
+  insert data into the table: "lead_fields"
+  """
+  insert_lead_fields(
+    """the rows to be inserted"""
+    objects: [lead_fields_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: lead_fields_on_conflict
+  ): lead_fields_mutation_response
+
+  """
+  insert a single row into the table: "lead_fields"
+  """
+  insert_lead_fields_one(
+    """the row to be inserted"""
+    object: lead_fields_insert_input!
+
+    """on conflict condition"""
+    on_conflict: lead_fields_on_conflict
+  ): lead_fields
 
   """
   insert a single row into the table: "lead"
@@ -26391,6 +27656,26 @@ type mutation_root {
   ): category
 
   """
+  update data of the table: "clients_data"
+  """
+  update_clients_data(
+    """sets the columns of the filtered rows to the given values"""
+    _set: clients_data_set_input
+
+    """filter the rows which have to be updated"""
+    where: clients_data_bool_exp!
+  ): clients_data_mutation_response
+
+  """
+  update single row of the table: "clients_data"
+  """
+  update_clients_data_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: clients_data_set_input
+    pk_columns: clients_data_pk_columns_input!
+  ): clients_data
+
+  """
   update data of the table: "courses"
   """
   update_courses(
@@ -26467,6 +27752,26 @@ type mutation_root {
     _set: credit_notes_set_input
     pk_columns: credit_notes_pk_columns_input!
   ): credit_notes
+
+  """
+  update data of the table: "custom_fields_categories"
+  """
+  update_custom_fields_categories(
+    """sets the columns of the filtered rows to the given values"""
+    _set: custom_fields_categories_set_input
+
+    """filter the rows which have to be updated"""
+    where: custom_fields_categories_bool_exp!
+  ): custom_fields_categories_mutation_response
+
+  """
+  update single row of the table: "custom_fields_categories"
+  """
+  update_custom_fields_categories_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: custom_fields_categories_set_input
+    pk_columns: custom_fields_categories_pk_columns_input!
+  ): custom_fields_categories
 
   """
   update data of the table: "debt"
@@ -26617,6 +27922,26 @@ type mutation_root {
     _set: family_relationships_set_input
     pk_columns: family_relationships_pk_columns_input!
   ): family_relationships
+
+  """
+  update data of the table: "feature_flags"
+  """
+  update_feature_flags(
+    """sets the columns of the filtered rows to the given values"""
+    _set: feature_flags_set_input
+
+    """filter the rows which have to be updated"""
+    where: feature_flags_bool_exp!
+  ): feature_flags_mutation_response
+
+  """
+  update single row of the table: "feature_flags"
+  """
+  update_feature_flags_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: feature_flags_set_input
+    pk_columns: feature_flags_pk_columns_input!
+  ): feature_flags
 
   """
   update data of the table: "invoices"
@@ -26799,6 +28124,26 @@ type mutation_root {
     _set: lead_set_input
     pk_columns: lead_pk_columns_input!
   ): lead
+
+  """
+  update data of the table: "lead_fields"
+  """
+  update_lead_fields(
+    """sets the columns of the filtered rows to the given values"""
+    _set: lead_fields_set_input
+
+    """filter the rows which have to be updated"""
+    where: lead_fields_bool_exp!
+  ): lead_fields_mutation_response
+
+  """
+  update single row of the table: "lead_fields"
+  """
+  update_lead_fields_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: lead_fields_set_input
+    pk_columns: lead_fields_pk_columns_input!
+  ): lead_fields
 
   """
   update data of the table: "library"
@@ -29072,6 +30417,26 @@ type query_root {
     where: Discounts_bool_exp
   ): [Discounts!]!
 
+  """
+  fetch aggregated fields from the table: "Discounts"
+  """
+  Discounts_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Discounts_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Discounts_order_by!]
+
+    """filter the rows returned"""
+    where: Discounts_bool_exp
+  ): Discounts_aggregate!
+
   """fetch data from the table: "Discounts" using primary key columns"""
   Discounts_by_pk(id: uuid!): Discounts
 
@@ -29700,6 +31065,49 @@ type query_root {
   clientFormSetting(where: ClientFormSettingWhereUniqueInput!): ClientFormSetting
   clientFormSettings(cursor: ClientFormSettingWhereUniqueInput, orderBy: [ClientFormSettingOrderByInput!], skip: Int, take: Int, where: ClientFormSettingWhereInput): [ClientFormSetting]!
   clientFormSettingsCount(where: ClientFormSettingWhereInput): Int
+
+  """
+  fetch data from the table: "clients_data"
+  """
+  clients_data(
+    """distinct select on columns"""
+    distinct_on: [clients_data_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [clients_data_order_by!]
+
+    """filter the rows returned"""
+    where: clients_data_bool_exp
+  ): [clients_data!]!
+
+  """
+  fetch aggregated fields from the table: "clients_data"
+  """
+  clients_data_aggregate(
+    """distinct select on columns"""
+    distinct_on: [clients_data_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [clients_data_order_by!]
+
+    """filter the rows returned"""
+    where: clients_data_bool_exp
+  ): clients_data_aggregate!
+
+  """fetch data from the table: "clients_data" using primary key columns"""
+  clients_data_by_pk(id: uuid!): clients_data
   clinicalSoftware(where: ClinicalSoftwareWhereUniqueInput!): ClinicalSoftware
   clinicalSoftwares(cursor: ClinicalSoftwareWhereUniqueInput, orderBy: [ClinicalSoftwareOrderByInput!], skip: Int, take: Int, where: ClinicalSoftwareWhereInput): [ClinicalSoftware]!
   clinicalSoftwaresCount(where: ClinicalSoftwareWhereInput): Int
@@ -29910,6 +31318,51 @@ type query_root {
 
   """fetch data from the table: "credit_notes" using primary key columns"""
   credit_notes_by_pk(id: uuid!): credit_notes
+
+  """
+  fetch data from the table: "custom_fields_categories"
+  """
+  custom_fields_categories(
+    """distinct select on columns"""
+    distinct_on: [custom_fields_categories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [custom_fields_categories_order_by!]
+
+    """filter the rows returned"""
+    where: custom_fields_categories_bool_exp
+  ): [custom_fields_categories!]!
+
+  """
+  fetch aggregated fields from the table: "custom_fields_categories"
+  """
+  custom_fields_categories_aggregate(
+    """distinct select on columns"""
+    distinct_on: [custom_fields_categories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [custom_fields_categories_order_by!]
+
+    """filter the rows returned"""
+    where: custom_fields_categories_bool_exp
+  ): custom_fields_categories_aggregate!
+
+  """
+  fetch data from the table: "custom_fields_categories" using primary key columns
+  """
+  custom_fields_categories_by_pk(id: uuid!): custom_fields_categories
 
   """
   fetch data from the table: "debt"
@@ -30174,6 +31627,29 @@ type query_root {
   fetch data from the table: "family_relationships" using primary key columns
   """
   family_relationships_by_pk(id: uuid!): family_relationships
+
+  """
+  fetch data from the table: "feature_flags"
+  """
+  feature_flags(
+    """distinct select on columns"""
+    distinct_on: [feature_flags_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [feature_flags_order_by!]
+
+    """filter the rows returned"""
+    where: feature_flags_bool_exp
+  ): [feature_flags!]!
+
+  """fetch data from the table: "feature_flags" using primary key columns"""
+  feature_flags_by_pk(id: uuid!): feature_flags
   findFirstAcLog(cursor: AcLogWhereUniqueInput, orderBy: AcLogOrderByInput, skip: Int, take: Int, where: AcLogWhereInput): AcLog
   findFirstAcLogAction(cursor: AcLogActionWhereUniqueInput, orderBy: AcLogActionOrderByInput, skip: Int, take: Int, where: AcLogActionWhereInput): AcLogAction
   findFirstAcLogUrl(cursor: AcLogUrlWhereUniqueInput, orderBy: AcLogUrlOrderByInput, skip: Int, take: Int, where: AcLogUrlWhereInput): AcLogUrl
@@ -30519,6 +31995,49 @@ type query_root {
   lead_by_pk(id: uuid!): lead
 
   """
+  fetch data from the table: "lead_fields"
+  """
+  lead_fields(
+    """distinct select on columns"""
+    distinct_on: [lead_fields_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [lead_fields_order_by!]
+
+    """filter the rows returned"""
+    where: lead_fields_bool_exp
+  ): [lead_fields!]!
+
+  """
+  fetch aggregated fields from the table: "lead_fields"
+  """
+  lead_fields_aggregate(
+    """distinct select on columns"""
+    distinct_on: [lead_fields_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [lead_fields_order_by!]
+
+    """filter the rows returned"""
+    where: lead_fields_bool_exp
+  ): lead_fields_aggregate!
+
+  """fetch data from the table: "lead_fields" using primary key columns"""
+  lead_fields_by_pk(id: uuid!): lead_fields
+
+  """
   fetch data from the table: "library"
   """
   library(
@@ -30648,7 +32167,6 @@ type query_root {
 
   """fetch data from the table: "locations" using primary key columns"""
   locations_by_pk(id: uuid!): locations
-  login(data: LoginInput!): loginOutput
   marketingSource(where: MarketingSourceWhereUniqueInput!): MarketingSource
   marketingSources(cursor: MarketingSourceWhereUniqueInput, orderBy: [MarketingSourceOrderByInput!], skip: Int, take: Int, where: MarketingSourceWhereInput): [MarketingSource]!
   marketingSourcesCount(where: MarketingSourceWhereInput): Int
@@ -32692,6 +34210,26 @@ type subscription_root {
     where: Discounts_bool_exp
   ): [Discounts!]!
 
+  """
+  fetch aggregated fields from the table: "Discounts"
+  """
+  Discounts_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Discounts_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Discounts_order_by!]
+
+    """filter the rows returned"""
+    where: Discounts_bool_exp
+  ): Discounts_aggregate!
+
   """fetch data from the table: "Discounts" using primary key columns"""
   Discounts_by_pk(id: uuid!): Discounts
 
@@ -33124,6 +34662,49 @@ type subscription_root {
   category_by_pk(id: uuid!): category
 
   """
+  fetch data from the table: "clients_data"
+  """
+  clients_data(
+    """distinct select on columns"""
+    distinct_on: [clients_data_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [clients_data_order_by!]
+
+    """filter the rows returned"""
+    where: clients_data_bool_exp
+  ): [clients_data!]!
+
+  """
+  fetch aggregated fields from the table: "clients_data"
+  """
+  clients_data_aggregate(
+    """distinct select on columns"""
+    distinct_on: [clients_data_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [clients_data_order_by!]
+
+    """filter the rows returned"""
+    where: clients_data_bool_exp
+  ): clients_data_aggregate!
+
+  """fetch data from the table: "clients_data" using primary key columns"""
+  clients_data_by_pk(id: uuid!): clients_data
+
+  """
   fetch data from the table: "colors"
   """
   colors(
@@ -33279,6 +34860,51 @@ type subscription_root {
 
   """fetch data from the table: "credit_notes" using primary key columns"""
   credit_notes_by_pk(id: uuid!): credit_notes
+
+  """
+  fetch data from the table: "custom_fields_categories"
+  """
+  custom_fields_categories(
+    """distinct select on columns"""
+    distinct_on: [custom_fields_categories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [custom_fields_categories_order_by!]
+
+    """filter the rows returned"""
+    where: custom_fields_categories_bool_exp
+  ): [custom_fields_categories!]!
+
+  """
+  fetch aggregated fields from the table: "custom_fields_categories"
+  """
+  custom_fields_categories_aggregate(
+    """distinct select on columns"""
+    distinct_on: [custom_fields_categories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [custom_fields_categories_order_by!]
+
+    """filter the rows returned"""
+    where: custom_fields_categories_bool_exp
+  ): custom_fields_categories_aggregate!
+
+  """
+  fetch data from the table: "custom_fields_categories" using primary key columns
+  """
+  custom_fields_categories_by_pk(id: uuid!): custom_fields_categories
 
   """
   fetch data from the table: "debt"
@@ -33545,6 +35171,29 @@ type subscription_root {
   family_relationships_by_pk(id: uuid!): family_relationships
 
   """
+  fetch data from the table: "feature_flags"
+  """
+  feature_flags(
+    """distinct select on columns"""
+    distinct_on: [feature_flags_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [feature_flags_order_by!]
+
+    """filter the rows returned"""
+    where: feature_flags_bool_exp
+  ): [feature_flags!]!
+
+  """fetch data from the table: "feature_flags" using primary key columns"""
+  feature_flags_by_pk(id: uuid!): feature_flags
+
+  """
   fetch data from the table: "invoices"
   """
   invoices(
@@ -33784,6 +35433,49 @@ type subscription_root {
 
   """fetch data from the table: "lead" using primary key columns"""
   lead_by_pk(id: uuid!): lead
+
+  """
+  fetch data from the table: "lead_fields"
+  """
+  lead_fields(
+    """distinct select on columns"""
+    distinct_on: [lead_fields_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [lead_fields_order_by!]
+
+    """filter the rows returned"""
+    where: lead_fields_bool_exp
+  ): [lead_fields!]!
+
+  """
+  fetch aggregated fields from the table: "lead_fields"
+  """
+  lead_fields_aggregate(
+    """distinct select on columns"""
+    distinct_on: [lead_fields_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [lead_fields_order_by!]
+
+    """filter the rows returned"""
+    where: lead_fields_bool_exp
+  ): lead_fields_aggregate!
+
+  """fetch data from the table: "lead_fields" using primary key columns"""
+  lead_fields_by_pk(id: uuid!): lead_fields
 
   """
   fetch data from the table: "library"

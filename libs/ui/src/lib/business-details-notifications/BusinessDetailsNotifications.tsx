@@ -117,6 +117,26 @@ const defaultConfigs: NotificationConfig[] = [
       },
     ],
   },
+  ...[
+    'When reviews have been unattended',
+    'When self assessment is due',
+    'Reminder of when peer review is due',
+    'Reminder of when Self assessment is due',
+    'Reminder of when Manager assessment is due',
+    'When a team target is hit',
+  ].map((title) => ({
+    title,
+    settings: [
+      {
+        setting: 'Notification',
+        disabled: false,
+      },
+      {
+        setting: 'Email',
+        disabled: false,
+      },
+    ],
+  })),
 ]
 
 export const BusinessDetailsNotifications: FC<BusinessDetailsNotificationsProps> = ({

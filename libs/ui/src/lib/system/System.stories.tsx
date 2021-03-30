@@ -4,7 +4,7 @@ import System from './System'
 
 export default {
   component: System,
-  title: 'Business Details/System',
+  title: 'UI/System',
   args: {},
   argTypes: {},
 }
