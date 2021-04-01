@@ -128,5 +128,6 @@ export const companyDetailsMutation = extendType({
     t.crud.updateOneCompanyDetails()
     t.crud.upsertOneCompanyDetails()
     t.crud.deleteOneCompanyDetails()
+    t.crud.updateManyCompanyDetails()
   },
 })

@@ -53,5 +53,6 @@ export const thirdPartyAccessMutation = extendType({
     t.crud.updateOneThirdPartyAccess()
     t.crud.upsertOneThirdPartyAccess()
     t.crud.deleteOneThirdPartyAccess()
+    t.crud.updateManyThirdPartyAccess()
   },
 })

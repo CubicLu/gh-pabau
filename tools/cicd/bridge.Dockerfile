@@ -5,8 +5,6 @@ ENV HUSKY=0
 COPY . .
 RUN mv ./package.json-prod ./package.json
 RUN yarn install --frozen-lockfile
-RUN ls -l prisma
-RUN ls -l prisma/prisma
 RUN node_modules/.bin/prisma generate
 EXPOSE 4000
 ENTRYPOINT [ "node", "./main.js" ]

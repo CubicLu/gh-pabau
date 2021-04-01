@@ -1,5 +1,5 @@
 import { extendType, nonNull, stringArg } from 'nexus'
-import { AuthenticationService } from '../../app/authentication/AuthenticationService'
+import AuthenticationService from '../../app/authentication/AuthenticationService'
 import { Context } from '../../context'
 import { LoginInputDto } from '../../app/authentication/dto'
 
@@ -16,16 +16,15 @@ export const Authentication = extendType({
         if (!loginInput.username || !loginInput.password) {
           throw new Error('Malformed Parameters')
         }
-        const token = await new AuthenticationService(ctx).handleLoginRequest(
+        return await new AuthenticationService(ctx).handleLoginRequest(
           loginInput
         )
-        return token
       },
     })
     t.field('logout', {
       type: 'Boolean',
       args: {},
-      async resolve(_, __, ctx: Context) {
+      async resolve(_, __) {
         return true
       },
     })
@@ -41,6 +40,21 @@ export const Me = extendType({
         return ctx.prisma.user.findUnique({
           where: {
             id: ctx.req.authenticatedUser.user,
+          },
+        })
+      },
+    })
+  },
+})
+export const Company = extendType({
+  type: 'Query',
+  definition(t) {
+    t.field('company', {
+      type: 'Company',
+      async resolve(_root, _args, ctx) {
+        return ctx.prisma.company.findUnique({
+          where: {
+            id: ctx.req.authenticatedUser.company,
           },
         })
       },

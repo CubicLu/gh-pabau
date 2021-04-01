@@ -4,7 +4,8 @@ export const AppSubscriptionsCompanyPrice = objectType({
   name: 'AppSubscriptionsCompanyPrice',
   definition(t) {
     t.model.id()
-    t.model.occupier()
+    t.model.company_id()
+    t.model.Company()
     t.model.app_key_value()
     t.model.price()
   },
@@ -47,5 +48,6 @@ export const appSubscriptionsCompanyPriceMutation = extendType({
     t.crud.updateOneAppSubscriptionsCompanyPrice()
     t.crud.upsertOneAppSubscriptionsCompanyPrice()
     t.crud.deleteOneAppSubscriptionsCompanyPrice()
+    t.crud.updateManyAppSubscriptionsCompanyPrice()
   },
 })

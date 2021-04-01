@@ -52,5 +52,6 @@ export const batchMutation = extendType({
     t.crud.updateOneBatch()
     t.crud.upsertOneBatch()
     t.crud.deleteOneBatch()
+    t.crud.updateManyBatch()
   },
 })

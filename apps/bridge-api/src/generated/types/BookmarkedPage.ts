@@ -49,5 +49,6 @@ export const bookmarkedPageMutation = extendType({
     t.crud.updateOneBookmarkedPage()
     t.crud.upsertOneBookmarkedPage()
     t.crud.deleteOneBookmarkedPage()
+    t.crud.updateManyBookmarkedPage()
   },
 })

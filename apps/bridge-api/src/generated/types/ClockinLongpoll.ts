@@ -6,7 +6,8 @@ export const ClockinLongpoll = objectType({
     t.model.id()
     t.model.clocked_out()
     t.model.uid()
-    t.model.occupier()
+    t.model.company_id()
+    t.model.Company()
   },
 })
 
@@ -47,5 +48,6 @@ export const clockinLongpollMutation = extendType({
     t.crud.updateOneClockinLongpoll()
     t.crud.upsertOneClockinLongpoll()
     t.crud.deleteOneClockinLongpoll()
+    t.crud.updateManyClockinLongpoll()
   },
 })

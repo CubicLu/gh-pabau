@@ -3,7 +3,7 @@ import { createTestContext } from './__helpers'
 
 const ctx = createTestContext()
 
-test('server answers connections', async () => {
+it('server answers connections', async () => {
   await expect(
     ctx.client.request('HIYA')
   ).rejects.toThrowErrorMatchingInlineSnapshot(
@@ -11,7 +11,7 @@ test('server answers connections', async () => {
   )
 })
 
-test('denies invalid logins', async () => {
+it('denies invalid logins', async () => {
   await expect(
     ctx.client.request(
       gql`
@@ -31,7 +31,7 @@ test('denies invalid logins', async () => {
   })
 })
 
-test('allows valid logins', async () => {
+it('allows valid logins', async () => {
   await expect(
     ctx.client.request(
       gql`

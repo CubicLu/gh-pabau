@@ -50,5 +50,6 @@ export const marketingSourceMutation = extendType({
     t.crud.updateOneMarketingSource()
     t.crud.upsertOneMarketingSource()
     t.crud.deleteOneMarketingSource()
+    t.crud.updateManyMarketingSource()
   },
 })

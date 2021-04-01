@@ -102,7 +102,8 @@ model AccountManager {
   vat_reg_id          String
   created_date        DateTime?
   modified_date       DateTime?
-  occupier            Int?
+  company_id          Int?      @map("occupier")
+  Company             Company?  @relation(fields: [company_id], references: [id])
   con_per_1           String
   con_num_1           String
   con_per_2           String
@@ -120,7 +121,8 @@ model AcLog {
   url_id     Int
   action_id  Int
   critical   Boolean
-  occupier   Int
+  company_id Int      @map("occupier")
+  Company    Company  @relation(fields: [company_id], references: [id])
   user_id    Int
   date       DateTime
   humanize   String?
@@ -133,7 +135,7 @@ model AcLog {
 
   @@index([action_id], name: "action")
   @@index([humanize], name: "humanize")
-  @@index([occupier], name: "occupier")
+  @@index([company_id], name: "occupier")
   @@index([row_aff], name: "row_aff")
   @@index([row_id], name: "row_id")
   @@index([url_id, action_id], name: "url_id")
@@ -171,42 +173,73 @@ model AcLogUrl {
 }
 
 model Company {
-  id                 Int                  @id @default(autoincrement())
-  user               String
-  digit8             Int
-  admin              Int
-  creation_date      DateTime
-  image              String
-  slug               String?              @unique
-  remote_url         String?
-  remote_connect     String?
-  cron_enabled       Boolean?
-  details            CompanyDetails?
-  subscription       CompanySubscription?
-  TwoFactorHistory   TwoFactorHistory[]
-  ThirdPartyAccess   ThirdPartyAccess[]
-  AcceptEmailToken   AcceptEmailToken[]
-  AccountBalance     AccountBalance[]
-  MarketingSource    MarketingSource[]
-  CmCase             CmCase[]
-  CmCaseReply        CmCaseReply[]
-  CmCampaign         CmCampaign[]
-  User               User[]
-  Candidate          Candidate[]
-  BookingStatus      BookingStatus[]
-  Salutation         Salutation[]
-  CompanyBranch      CompanyBranch[]
-  CompanyLocation    CompanyLocation[]
-  CompanyRoom        CompanyRoom[]
-  CompanyRoomService CompanyRoomService[]
-  CompanyService     CompanyService[]
-  CompanyDepartment  CompanyDepartment[]
-  Job                Job[]
-  JobConfiguration   JobConfiguration[]
-  JobOpening         JobOpening[]
-  JobStatus          JobStatus[]
-  PointOfSaleSetting PointOfSaleSetting[]
+  id                               Int                                @id @default(autoincrement())
+  user                             String
+  digit8                           Int
+  admin                            Int
+  creation_date                    DateTime
+  image                            String
+  slug                             String?                            @unique
+  remote_url                       String?
+  remote_connect                   String?
+  cron_enabled                     Boolean?
+  details                          CompanyDetails?
+  subscription                     CompanySubscription?
+  TwoFactorHistory                 TwoFactorHistory[]
+  ThirdPartyAccess                 ThirdPartyAccess[]
+  AcceptEmailToken                 AcceptEmailToken[]
+  AccountBalance                   AccountBalance[]
+  MarketingSource                  MarketingSource[]
+  CmCase                           CmCase[]
+  CmCaseReply                      CmCaseReply[]
+  CmCampaign                       CmCampaign[]
+  User                             User[]
+  Candidate                        Candidate[]
+  BookingStatus                    BookingStatus[]
+  UserSalutation                   UserSalutation[]
+  CompanyBranch                    CompanyBranch[]
+  CompanyLocation                  CompanyLocation[]
+  CompanyRoom                      CompanyRoom[]
+  CompanyRoomService               CompanyRoomService[]
+  CompanyService                   CompanyService[]
+  CompanyDepartment                CompanyDepartment[]
+  Job                              Job[]
+  JobConfiguration                 JobConfiguration[]
+  JobOpening                       JobOpening[]
+  JobStatus                        JobStatus[]
+  PointOfSaleSetting               PointOfSaleSetting[]
+  BookingSetting                   BookingSetting[]
+  AccountManager                   AccountManager[]
+  AcLog                            AcLog[]
+  AppSubscriptionsCompanyPrice     AppSubscriptionsCompanyPrice[]
+  AvilableDatesLog                 AvilableDatesLog[]
+  BlockReason                      BlockReason[]
+  BodyChartTemplate                BodyChartTemplate[]
+  BookitProSlider                  BookitProSlider[]
+  CalendarView                     CalendarView[]
+  CampaignAttachment               CampaignAttachment[]
+  CancellationPolicy               CancellationPolicy[]
+  CancelReason                     CancelReason[]
+  ClassCategory                    ClassCategory[]
+  ClassProduct                     ClassProduct[]
+  ClockinLongpoll                  ClockinLongpoll[]
+  CmAppointmentsCustomImportHelper CmAppointmentsCustomImportHelper[]
+  CmAppointmentCustom              CmAppointmentCustom[]
+  CmContact                        CmContact[]
+  CompanyMeta                      CompanyMeta[]
 
+  RotaShift            RotaShift[]
+  PermissionTemplate   PermissionTemplate[]
+  UserGroup            UserGroup[]
+  UserMaster           UserMaster[]
+  UserMobilePermission UserMobilePermission[]
+  GroupPermission      GroupPermission[]
+  UserReport           UserReport[]
+  InvBiller            InvBiller[]
+  UserAlertPermission  UserAlertPermission[]
+  SocialSurvey         SocialSurvey[]
+  SocialSurveyFeedback SocialSurveyFeedback[]
+  SocialSurveyQuestion SocialSurveyQuestion[]
   @@map("admin")
 }
 
@@ -296,8 +329,9 @@ model AppSubscription {
 }
 
 model AppSubscriptionsCompanyPrice {
-  id            Int    @id @default(autoincrement())
-  occupier      Int
+  id            Int     @id @default(autoincrement())
+  company_id    Int     @map("occupier")
+  Company       Company @relation(fields: [company_id], references: [id])
   app_key_value String
   price         Float
 
@@ -502,12 +536,13 @@ model AutomationTrigger {
 }
 
 model AvilableDatesLog {
-  id       Int      @id @default(autoincrement())
-  occupier String
-  uid      Int
-  date     DateTime
-  start    DateTime
-  end      DateTime
+  id         Int      @id @default(autoincrement())
+  company_id Int      @map("occupier")
+  Company    Company  @relation(fields: [company_id], references: [id])
+  uid        Int
+  date       DateTime
+  start      DateTime
+  end        DateTime
 
   @@map("available_dates_log")
 }
@@ -559,7 +594,8 @@ model BatchItem {
 model BlockReason {
   id           Int     @id @default(autoincrement())
   reason_name  String
-  occupier     String
+  company_id   Int     @map("occupier")
+  Company      Company @relation(fields: [company_id], references: [id])
   is_active    Boolean
   block_color  String
   is_paid      Int
@@ -568,7 +604,7 @@ model BlockReason {
   custom_id    Int
 
   @@index([is_active], name: "is_active")
-  @@index([occupier], name: "occupier")
+  @@index([company_id], name: "occupier")
   @@map("block_reason")
 }
 
@@ -596,7 +632,8 @@ model BodyChartTemplate {
   template_name String
   template_url  String
   tags          String
-  occupier      Int
+  company_id    Int      @map("occupier")
+  Company       Company  @relation(fields: [company_id], references: [id])
   uid           Int
   creation_date DateTime @default(now())
   chart_order   Int      @default(0)
@@ -608,7 +645,7 @@ model BodyChartTemplate {
 model BookingSetting {
 
   id                                Int      @id @default(autoincrement())
-  occupier                          Int
+  company_id                        Int      @map("occupier")
   email_mode                        Int
   sms_mode                          Int
   email_id                          Int?
@@ -709,10 +746,11 @@ model BookingSetting {
   modified_by                       Int
   modified_date                     DateTime
   conference_reminder_id            Int?
+  Company                           Company  @relation(fields: [company_id], references: [id])
 
   @@index([email_id], name: "email_id")
   @@index([email_reminder_id], name: "email_reminder_id")
-  @@index([occupier], name: "occupier")
+  @@index([company_id], name: "occupier")
   @@map("bookings_settings")
 }
 
@@ -748,8 +786,6 @@ model BookingStatus {
   ord         Float?
   track_time  Int                         @default(1)
   Company     Company                     @relation(fields: [company_id], references: [id])
-
-
 
   @@unique([value, company_id], name: "value")
   @@map("booking_statuses")
@@ -842,12 +878,13 @@ model BookitProGeneral {
 }
 
 model BookitProSlider {
-  id       Int    @id @default(autoincrement())
-  slider1  String
-  slider2  String
-  slider3  String
-  slider4  String
-  occupier String
+  id         Int     @id @default(autoincrement())
+  slider1    String
+  slider2    String
+  slider3    String
+  slider4    String
+  company_id Int     @map("occupier")
+  Company    Company @relation(fields: [company_id], references: [id])
 
   @@map("bookitpro_slider")
 }
@@ -874,8 +911,9 @@ model BugLog {
 }
 
 model CalendarView {
-  id                     Int    @id @default(autoincrement())
-  occupier               Int
+  id                     Int     @id @default(autoincrement())
+  company_id             Int     @map("occupier")
+  Company                Company @relation(fields: [company_id], references: [id])
   user_id                Int
   viewMode               String
   dayViewMode            String
@@ -886,13 +924,13 @@ model CalendarView {
   serviceMastersViewMode String
   serviceGroupsViewMode  String
   servicesViewMode       String
-  appointmentSize        Int    @default(15)
+  appointmentSize        Int     @default(15)
   favorite_name          String
-  favorite_shared        Int    @default(0)
-  favorite               Int    @default(0)
-  favorite_id            Int    @default(-1)
+  favorite_shared        Int     @default(0)
+  favorite               Int     @default(0)
+  favorite_id            Int     @default(-1)
 
-  @@index([occupier], name: "occupier")
+  @@index([company_id], name: "occupier")
   @@index([user_id], name: "user_id")
   @@map("calendar_views")
 }
@@ -908,9 +946,10 @@ model CalRangeRequest {
 }
 
 model CampaignAttachment {
-  id               Int    @id @default(autoincrement())
+  id               Int     @id @default(autoincrement())
   campaign_id      Int
-  occupier         Int
+  company_id       Int     @map("occupier")
+  Company          Company @relation(fields: [company_id], references: [id])
   attach_time      String
   attach_user_name String
   attachment_type  String
@@ -931,7 +970,8 @@ model CancellationPolicy {
   payment_protection        Int
   advanced_cancellation_fee Int
   no_show_fee               Int
-  occupier                  Int
+  company_id                Int       @map("occupier")
+  Company                   Company   @relation(fields: [company_id], references: [id])
   creation_date             DateTime?
   modified_date             DateTime?
 
@@ -979,14 +1019,15 @@ model MediaLlibraryAttachment {
 model CancelReason {
   id                        Int      @id @default(autoincrement())
   reason_name               String
-  occupier                  String
+  company_id                Int      @map("occupier")
+  Company                   Company  @relation(fields: [company_id], references: [id])
   late_cancel               Int
   apply_cancellation_policy Int
   created_at                DateTime
   modified_at               DateTime
 
 
-  @@index([occupier], name: "occupier")
+  @@index([company_id], name: "occupier")
   @@map("cancel_reason")
 }
 
@@ -1162,7 +1203,8 @@ model ClassCategory {
   id            Int       @id @default(autoincrement())
   code          String
   name          String
-  occupier      Int?
+  company_id    Int       @map("occupier")
+  Company       Company   @relation(fields: [company_id], references: [id])
   uid           Int?
   created_date  DateTime?
   modified_date DateTime?
@@ -1420,7 +1462,8 @@ model ClassProduct {
   alert_quantity Int       @default(20)
   image          String?   @default("no_image.jpg")
   category_id    Int
-  occupier       Int?
+  company_id     Int       @map("occupier")
+  Company        Company   @relation(fields: [company_id], references: [id])
   uid            Int?
   created_date   DateTime?
   modified_date  DateTime?
@@ -1505,9 +1548,10 @@ model ClockinLongpoll {
   id          Int     @id @default(autoincrement())
   clocked_out Boolean
   uid         Int
-  occupier    Int
+  company_id  Int     @map("occupier")
+  Company     Company @relation(fields: [company_id], references: [id])
 
-  @@index([occupier], name: "occupier")
+  @@index([company_id], name: "occupier")
   @@map("clockin_longpoll")
 }
 
@@ -1544,7 +1588,8 @@ model CmAccountNote {
 
 model CmAppointmentsCustomImportHelper {
   id                    Int     @id @default(autoincrement())
-  occupier              Int
+  company_id            Int     @map("occupier")
+  Company               Company @relation(fields: [company_id], references: [id])
   custom_appointment_id Int
   custom_contact_name   String
   custom_field_name     String
@@ -1557,9 +1602,10 @@ model CmAppointmentsCustomImportHelper {
 }
 
 model CmAppointmentCustom {
-  id                 Int    @id @default(autoincrement())
+  id                 Int     @id @default(autoincrement())
   appointment_id     Int
-  occupier           Int
+  company_id         Int     @map("Occupier")
+  Company            Company @relation(fields: [company_id], references: [id])
   custom_field_id    Int
   custom_field_value String
   imported           Int
@@ -1567,7 +1613,7 @@ model CmAppointmentCustom {
   @@index([appointment_id], name: "appointment_id")
   @@index([custom_field_id], name: "custom_field_id")
   @@index([custom_field_value], name: "custom_field_value")
-  @@index([occupier], name: "occupier")
+  @@index([company_id], name: "occupier")
   @@map("cm_appointment_custom")
 }
 
@@ -1691,7 +1737,8 @@ model CmContact {
   OwnerID                  Int
   Salutation               String                      @default("None")
   Fname                    String
-  Occupier                 Int
+  company_id               Int                         @map("Occupier")
+  Company                  Company                     @relation(fields: [company_id], references: [id])
   location_id              Int                         @default(0)
   Email                    String
   Phone                    String
@@ -1759,6 +1806,7 @@ model CmContact {
   privacy_policy           String
   need_to_knows            Boolean                     @default(false)
   contact_type             Int                         @default(0)
+  SocialSurveyFeedback SocialSurveyFeedback?
 
 
   @@index([CreatedDate], name: "CreatedDate")
@@ -1767,15 +1815,15 @@ model CmContact {
   @@index([LeadID], name: "LeadID")
   @@index([Lname], name: "Lname")
   @@index([Mobile], name: "Mobile")
-  @@index([Occupier], name: "Occupier")
-  @@index([Occupier, is_active], name: "Occupier_2")
+  @@index([company_id], name: "Occupier")
+  @@index([company_id, is_active], name: "Occupier_2")
   @@index([OwnerID], name: "OwnerID")
-  @@index([Fname, Lname, Occupier], name: "cm_leads_index")
+  @@index([Fname, Lname, company_id], name: "cm_leads_index")
   @@index([contract_id], name: "contract_id")
   @@index([custom_id], name: "custom_id")
   @@index([customer_reference], name: "customer_reference")
   @@index([is_active], name: "is_active")
-  @@index([OwnerID, Occupier], name: "owner_company")
+  @@index([OwnerID, company_id], name: "owner_company")
   @@map("cm_contacts")
 }
 
@@ -3301,6 +3349,7 @@ model CompanyBranch {
   Company             Company @relation(fields: [company_id], references: [id])
 
   CompanyRoomLocation CompanyRoomLocation[]
+  RotaShift           RotaShift[]
   @@index([company_id], name: "company_id")
   @@index([group_id], name: "group_id")
   @@map("company_branches")
@@ -3466,14 +3515,17 @@ model CompanyLocation {
 //  default_page     String
 //}
 //
-//model company_meta {
-//  id         Int    @id @default(autoincrement())
-//  company_id Int
-//  meta_name  String
-//  meta_value String
-//
-//  @@unique([company_id, meta_name], name: "company_id")
-//}
+model CompanyMeta {
+  id         Int     @id @default(autoincrement())
+  company_id Int
+  meta_name  String
+  meta_value String
+  Company    Company @relation(fields: [company_id], references: [id])
+
+  @@unique([company_id, meta_name], name: "company_id")
+  @@map("company_meta")
+}
+
 //
 //model company_notes {
 //  id           Int      @id @default(autoincrement())
@@ -5771,37 +5823,42 @@ model GlCode {
 //  stripe_button       Int
 //}
 //
-//model inv_billers {
-//  id             Int       @id @default(autoincrement())
-//  name           String
-//  company        String
-//  cui            String
-//  reg            String
-//  cnp            String
-//  serie          String
-//  account_no     String
-//  bank           String
-//  address        String
-//  city           String
-//  state          String
-//  postal_code    String
-//  country        String
-//  phone          String
-//  email          String
-//  logo           String
-//  invoice_footer String
-//  occupier       Int?
-//  uid            Int?
-//  created_date   DateTime?
-//  modified_date  DateTime?
-//  custom_id      Int
-//  imported       Int
-//  qualification  String
-//  is_disabled    Int
-//
-//  @@index([occupier], name: "occupier")
-//  @@index([uid], name: "uid")
-//}
+model InvBiller {
+  id             Int       @id @default(autoincrement())
+  name           String
+  company        String
+  cui            String
+  reg            String
+  cnp            String
+  serie          String
+  account_no     String
+  bank           String
+  address        String
+  city           String
+  state          String
+  postal_code    String
+  country        String
+  phone          String
+  email          String
+  logo           String
+  invoice_footer String
+  company_id     Int?      @map("occupier")
+  uid            Int?
+  created_date   DateTime?
+  modified_date  DateTime?
+  custom_id      Int
+  imported       Int
+  qualification  String
+  is_disabled    Int
+  User           User?     @relation(fields: [uid], references: [id])
+  Company        Company?  @relation(fields: [company_id], references: [id])
+
+
+  @@index([company_id], name: "occupier")
+  @@index([uid], name: "uid")
+  @@map("inv_billers")
+}
+
 //
 //model inv_categories {
 //  id                Int       @id @default(autoincrement())
@@ -8788,32 +8845,36 @@ model PointOfSaleSetting {
 //  slack_id     String?
 //}
 //
-//model pages {
-//  id            Int    @id @default(autoincrement())
-//  name          String
-//  link          String
-//  parent        Int
-//  category      String
-//  showcase      Int
-//  description   String
-//  features      String
-//  new           Int
-//  img           String
-//  admin         Int
-//  order         Int
-//  cover         String
-//  tickier_order Int
-//  friendly_name String
-//  app_weight    Int
-//  video_link    String
-//  large_thumb   String
-//  inactive      Int
-//  private_key   String
-//  new_url       String
-//
-//  @@index([admin], name: "admin")
-//  @@index([parent], name: "parent")
-//}
+model Page {
+  id            Int    @id @default(autoincrement())
+  name          String
+  link          String
+  parent        Int
+  category      String
+  showcase      Int
+  description   String
+  features      String
+  new           Int
+  img           String
+  admin         Int
+  order         Int
+  cover         String
+  tickier_order Int
+  friendly_name String
+  app_weight    Int
+  video_link    String
+  large_thumb   String
+  inactive      Int
+  private_key   String
+  new_url       String
+
+
+  UserPermission UserPermission[]
+  @@index([admin], name: "admin")
+  @@index([parent], name: "parent")
+  @@map("pages")
+}
+
 //
 //model page_categories {
 //  id          Int    @id @default(autoincrement())
@@ -8927,22 +8988,28 @@ model PointOfSaleSetting {
 //  finance_ids         String?
 //}
 //
-//model permission_templates {
-//  id                 Int     @id @default(autoincrement())
-//  name               String
-//  company_id         Int
-//  app_permissions    String
-//  user_permissions   String
-//  mobile_permissions String
-//  mobile_widgets     String
-//  disabled_services  String
-//  alerts             String
-//  is_admin           Boolean
-//  enabled_reports    String
-//  all_reports        Boolean
-//
-//  @@index([company_id], name: "company_id")
-//}
+model PermissionTemplate {
+  id                 Int     @id @default(autoincrement())
+  name               String
+  company_id         Int
+  app_permissions    String
+  user_permissions   String
+  mobile_permissions String
+  mobile_widgets     String
+  disabled_services  String
+  alerts             String
+  is_admin           Boolean
+  enabled_reports    String
+  all_reports        Boolean
+
+  Company Company @relation(fields: [company_id], references: [id])
+
+
+  UserGroup UserGroup[]
+  @@index([company_id], name: "company_id")
+  @@map("permission_templates")
+}
+
 //
 //model petty_cash_types {
 //  id            Int    @id @default(autoincrement())
@@ -9394,75 +9461,81 @@ model PointOfSaleSetting {
 //  date       DateTime
 //}
 //
-//model reports {
-//  id                      Int     @id @default(autoincrement())
-//  report_category_id      Int
-//  name                    String?
-//  description             String?
-//  occupier                String?
-//  group_field             String?
-//  link                    String?
-//  send                    Int?    @default(0)
-//  date_limit              String
-//  filter                  String?
-//  search_result           String
-//  column_names            String
-//  preview_image           String
-//  exc_vat_column          String
-//  filter_json             String
-//  grand_total             Int
-//  report_code             String
-//  show_hide_columns       String
-//  users_mode              Int     @default(0)
-//  filter_user             String?
-//  iframe                  Int     @default(0)
-//  iframe_url              String
-//  package_usage           Int
-//  show_package_usage      Int
-//  deleted                 Int
-//  marketing               Int
-//  has_summary             Int
-//  filter_summary          Int?
-//  admin_only              Int
-//  thumbnail_preview       String
-//  total_revenue           Int
-//  show_custom_ids         Int
-//  show_custom_fields      Int
-//  custom_fields_defined   String
-//  show_in_leads           Int
-//  other_custom_fields     String
-//  custom_fields_group     String
-//  custom_filter           String
-//  sub_category            String
-//  easy_filters            String
-//  easy_filters_advanced   String
-//  show_accounting         Int
-//  show_revenue            Int
-//  support_location_filter Int
-//  checks_complete         Int
-//  custom_ids_checked      Int
-//  flag_video              String
-//  flag_video_2            String
-//  checks_complete_2       Int
-//  companies_included      String
-//  checks_complete_3       Int
-//  flag_video_3            String
-//  checks_complete_4       Int
-//  flag_video_4            String
-//  subscribed_filter       String?
-//  print_page_size         String  @default("portrait")
-//  sort_columns            String
-//  group_column            String
-//  mask_client_name        Int
-//  core_report             Int
-//  hide_columns            String
-//  summary_mode            Int
-//  graph_mode              Int
-//  detailed_mode           Int
-//
-//  @@index([occupier], name: "occupier")
-//  @@index([report_category_id], name: "report_category_id")
-//}
+model Report {
+  id                      Int     @id @default(autoincrement())
+  report_category_id      Int
+  name                    String?
+  description             String?
+  company_id              Int     @map("occupier")
+  group_field             String?
+  link                    String?
+  send                    Int?    @default(0)
+  date_limit              String
+  filter                  String?
+  search_result           String
+  column_names            String
+  preview_image           String
+  exc_vat_column          String
+  filter_json             String
+  grand_total             Int
+  report_code             String
+  show_hide_columns       String
+  users_mode              Int     @default(0)
+  filter_user             String?
+  iframe                  Int     @default(0)
+  iframe_url              String
+  package_usage           Int
+  show_package_usage      Int
+  deleted                 Int
+  marketing               Int
+  has_summary             Int
+  filter_summary          Int?
+  admin_only              Int
+  thumbnail_preview       String
+  total_revenue           Int
+  show_custom_ids         Int
+  show_custom_fields      Int
+  custom_fields_defined   String
+  show_in_leads           Int
+  other_custom_fields     String
+  custom_fields_group     String
+  custom_filter           String
+  sub_category            String
+  easy_filters            String
+  easy_filters_advanced   String
+  show_accounting         Int
+  show_revenue            Int
+  support_location_filter Int
+  checks_complete         Int
+  custom_ids_checked      Int
+  flag_video              String
+  flag_video_2            String
+  checks_complete_2       Int
+  companies_included      String
+  checks_complete_3       Int
+  flag_video_3            String
+  checks_complete_4       Int
+  flag_video_4            String
+  subscribed_filter       String?
+  print_page_size         String  @default("portrait")
+  sort_columns            String
+  group_column            String
+  mask_client_name        Int
+  core_report             Int
+  hide_columns            String
+  summary_mode            Int
+  graph_mode              Int
+  detailed_mode           Int
+
+  ReportCategory ReportCategory @relation(fields: [report_category_id], references: [id])
+
+
+  UserReport UserReport[]
+  @@index([company_id], name: "occupier")
+  @@index([report_category_id], name: "report_category_id")
+  @@map("reports")
+}
+
 //
 //model reportschedule_log {
 //  id         Int      @id @default(autoincrement())
@@ -9502,14 +9575,18 @@ model PointOfSaleSetting {
 //  stars     Int
 //}
 //
-//model report_category {
-//  id          Int     @id @default(autoincrement())
-//  name        String?
-//  description String?
-//  occupier    String?
-//  type        String
-//  colour      String
-//}
+model ReportCategory {
+  id          Int     @id @default(autoincrement())
+  name        String?
+  description String?
+  company_id  Int?    @map("occupier")
+  type        String
+  colour      String
+
+  Report Report[]
+  @@map("report_category")
+}
+
 //
 //model report_custom_fields {
 //  id           Int    @id @default(autoincrement())
@@ -9656,44 +9733,50 @@ model PointOfSaleSetting {
 //  @@index([uid], name: "uid")
 //}
 //
-//model rota_shifts {
-//  id             Int       @id @default(autoincrement())
-//  uid            Int
-//  start          Int
-//  end            Int
-//  occupier       Int
-//  notes          String?
-//  last_seen      DateTime?
-//  last_modified  DateTime?
-//  last_notified  DateTime?
-//  last_published DateTime?
-//  first_created  DateTime  @default(now())
-//  user_created   Int
-//  repeat_id      Int?
-//  reason_code    String?   @default("")
-//  reason_data    String?
-//  holiday_id     Int       @default(0)
-//  cal_id         Int?
-//  is_cal         Int       @default(0)
-//  note_color     String    @default("")
-//  location_id    Int       @default(0)
-//  request        Int?      @default(0)
-//  sickness       Int?      @default(0)
-//  imported       Int       @default(0)
-//  tag_name       String    @default("")
-//  room_id        Int       @default(0)
-//  force_created  Boolean   @default(false)
-//
-//  @@index([end], name: "end")
-//  @@index([holiday_id], name: "holiday_id")
-//  @@index([last_published], name: "last_published")
-//  @@index([location_id], name: "location_id")
-//  @@index([occupier], name: "occupier")
-//  @@index([reason_code], name: "reason_code")
-//  @@index([repeat_id], name: "repeat_id")
-//  @@index([start], name: "start")
-//  @@index([uid], name: "uid")
-//}
+model RotaShift {
+  id             Int           @id @default(autoincrement())
+  uid            Int
+  User           User          @relation(fields: [uid], references: [id])
+  start          Decimal
+  end            Decimal
+  company_id     Int           @map("occupier")
+  notes          String?
+  last_seen      DateTime?
+  last_modified  DateTime?
+  last_notified  DateTime?
+  last_published DateTime?
+  first_created  DateTime      @default(now())
+  user_created   Int
+  repeat_id      Int?
+  reason_code    String?       @default("")
+  reason_data    String?
+  holiday_id     Int           @default(0)
+  cal_id         Int?
+  is_cal         Int           @default(0)
+  note_color     String        @default("")
+  location_id    Int           @default(0)
+  request        Int?          @default(0)
+  sickness       Int?          @default(0)
+  imported       Int           @default(0)
+  tag_name       String        @default("")
+  room_id        Int           @default(0)
+  force_created  Boolean       @default(false)
+  Company        Company       @relation(fields: [company_id], references: [id])
+  Location       CompanyBranch @relation(fields: [location_id], references: [id])
+
+
+  @@index([end], name: "end")
+  @@index([holiday_id], name: "holiday_id")
+  @@index([last_published], name: "last_published")
+  @@index([location_id], name: "location_id")
+  @@index([company_id], name: "occupier")
+  @@index([reason_code], name: "reason_code")
+  @@index([repeat_id], name: "repeat_id")
+  @@index([start], name: "start")
+  @@index([uid], name: "uid")
+  @@map("rota_shifts")
+}
+
 //
 //model rota_templates {
 //  rota_template_id Int    @id @default(autoincrement())
@@ -10157,7 +10240,7 @@ model PointOfSaleSetting {
 //  updatedate Int?
 //}
 //
-model Salutation {
+model UserSalutation {
   id         Int      @id @default(autoincrement())
   name       String
   company_id Int?
@@ -10603,84 +10686,108 @@ model Salutation {
 //  response String
 //}
 //
-//model social_survey {
-//  id                     Int     @id @default(autoincrement())
-//  page_id                Int
-//  company                Int     @unique
-//  twitter_id             Int
-//  disable_email          Int
-//  disable_sms            Int
-//  sms_message_id         Int
-//  from_name              String
-//  sms_days_after         Int?
-//  sms_send_time          String?
-//  feedback_title         String
-//  feedback_subtitle      String
-//  feedback_question      String
-//  auto_facebook          Int
-//  auto_twitter           Int
-//  after_page             String
-//  google_plus_link       String
-//  google_review          Int     @default(0)
-//  google_review_url      String
-//  aweber_code            String
-//  score_indicator        Int
-//  add_note               Int
-//  post_buzzfeed          Int     @default(1)
-//  post_website           Int
-//  email_message_id       Int
-//  redirect_url           String
-//  feedback_name          String
-//  ty_enable_email        Int
-//  ty_enable_sms          Int
-//  ty_email_id            Int
-//  ty_sms_id              Int
-//  color_1                String  @default("#52acca")
-//  color_2                String  @default("#61b7d4")
-//  google_review_redirect Int     @default(0)
-//  show_reviews_above     Float
-//  logo_position          String
-//  logo_height            Int?
-//  hits                   Int
-//}
+model SocialSurvey {
+  id                     Int     @id @default(autoincrement())
+  page_id                Int
+  company_id             Int     @unique @map("company")
+  twitter_id             Int
+  disable_email          Int
+  disable_sms            Int
+  sms_message_id         Int
+  from_name              String
+  sms_days_after         Int?
+  sms_send_time          String?
+  feedback_title         String
+  feedback_subtitle      String
+  feedback_question      String
+  auto_facebook          Int
+  auto_twitter           Int
+  after_page             String
+  google_plus_link       String
+  google_review          Int     @default(0)
+  google_review_url      String
+  aweber_code            String
+  score_indicator        Int
+  add_note               Int
+  post_buzzfeed          Int     @default(1)
+  post_website           Int
+  email_message_id       Int
+  redirect_url           String
+  feedback_name          String
+  ty_enable_email        Int
+  ty_enable_sms          Int
+  ty_email_id            Int
+  ty_sms_id              Int
+  color_1                String  @default("#52acca")
+  color_2                String  @default("#61b7d4")
+  google_review_redirect Int     @default(0)
+  show_reviews_above     Float
+  logo_position          String
+  logo_height            Int?
+  hits                   Int
+
+  Company Company @relation(fields: [company_id], references: [id])
+
+
+
+  @@map("social_survey")
+}
+
 //
-//model social_survey_answers {
-//  id          Int    @id @default(autoincrement())
-//  feedback_id Int
-//  question    String
-//  answer      String
+model SocialSurveyAnswer {
+  id          Int    @id @default(autoincrement())
+  feedback_id Int
+  question    String
+  answer      String
+
+  SocialSurveyFeedback SocialSurveyFeedback @relation(fields: [feedback_id], references: [id])
+
+
+  @@index([feedback_id], name: "feedback_id")
+  @@map("social_survey_answers")
+}
+
+model SocialSurveyFeedback {
+
+  id               Int     @id @default(autoincrement())
+  rating           Int
+  contact_id       Int
+  feedback_source  String
+  company_id       Int     @map("company")
+  date             Decimal
+  feedback_comment String
+  feedback_name    String
+  feedback_status  String
+  related_id       Int
+  related_to       String
+  feedback_for     Int
+  service          String
+  public_use       Int     @default(1)
+  service_id       Int
+  owner_response   String
+
+  CmContact CmContact @relation(fields: [contact_id], references: [ID])
+  Company   Company   @relation(fields: [company_id], references: [id])
+
+
+  SocialSurveyAnswer SocialSurveyAnswer[]
+  @@index([company_id], name: "company")
+  @@index([related_id], name: "related_id")
+  @@map("social_survey_feedback")
+}
+
 //
-//  @@index([feedback_id], name: "feedback_id")
-//}
-//
-//model social_survey_feedback {
-//  id               Int    @id @default(autoincrement())
-//  rating           Int
-//  contact_id       Int
-//  feedback_source  String
-//  company          Int
-//  date             Int
-//  feedback_comment String
-//  feedback_name    String
-//  feedback_status  String
-//  related_id       Int
-//  related_to       String
-//  feedback_for     Int
-//  service          String
-//  public_use       Int    @default(1)
-//  service_id       Int
-//  owner_response   String
-//
-//  @@index([company], name: "company")
-//  @@index([related_id], name: "related_id")
-//}
-//
-//model social_survey_questions {
-//  id       Int    @id @default(autoincrement())
-//  occupier String
-//  question String
-//  answer   String
-//}
+model SocialSurveyQuestion {
+  id         Int    @id @default(autoincrement())
+  company_id Int    @map("occupier")
+  question   String
+  answer     String
+
+  Company Company @relation(fields: [company_id], references: [id])
+
+  @@map("social_survey_questions")
+}
+
 //
 //model solutions {
 //  id          Int       @id @default(autoincrement())
@@ -11763,7 +11870,15 @@ model User {
   main_contact                   Boolean
   user_security_questions_answer UserSecurityQuestionsAnswer[]
   company                        Company?                      @relation(fields: [company_id], references: [id])
-
+  RotaShift                      RotaShift[]
+  UserGroupMember                UserGroupMember[]
+  UserMainPermission             UserMainPermission[]
+  UserMobilePermission           UserMobilePermission[]
+  UserPermission                 UserPermission[]
+  UserReport                     UserReport[]
+  InvBiller                      InvBiller[]
+  UserAlertType                  UserAlertType?
+  UserAlertPermission            UserAlertPermission?
 
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")
@@ -11830,35 +11945,50 @@ model User {
 //  @@index([userId, time], name: "user_specific")
 //}
 //
-//model user_alerts {
-//  id                Int    @id @default(autoincrement())
-//  title             String
-//  description       String
-//  image             String
-//  email_template_id Int
-//  ios_message       String
-//  sms_message       String
-//  pabau_message     String
-//}
-//
-//model user_alerts_cc {
-//  id       Int    @id @default(autoincrement())
-//  uid      Int
-//  cc_name  String
-//  cc_email String
-//  cc_phone String
-//}
-//
-//model user_alerts_permissions {
-//  id                 Int @id @default(autoincrement())
-//  uid                Int
-//  alert_id           Int
-//  company_id         Int
-//  ios_notification   Int
-//  email_notification Int
-//  sms_notification   Int
-//  pabau_notification Int
-//}
+model UserAlert {
+  id                Int    @id @default(autoincrement())
+  title             String
+  description       String
+  image             String
+  email_template_id Int
+  ios_message       String
+  sms_message       String
+  pabau_message     String
+
+  UserAlertPermission UserAlertPermission[]
+  @@map("user_alerts")
+}
+
+model UserAlertType {
+  id       Int    @id @default(autoincrement())
+  uid      Int
+  cc_name  String
+  cc_email String
+  cc_phone String
+
+  User User @relation(fields: [uid], references: [id])
+
+  @@map("user_alerts_cc")
+}
+
+model UserAlertPermission {
+  id                 Int @id @default(autoincrement())
+  uid                Int
+  alert_id           Int
+  company_id         Int
+  ios_notification   Int
+  email_notification Int
+  sms_notification   Int
+  pabau_notification Int
+
+  User      User      @relation(fields: [uid], references: [id])
+  Company   Company   @relation(fields: [company_id], references: [id])
+  UserAlert UserAlert @relation(fields: [alert_id], references: [id])
+
+
+  @@map("user_alerts_permissions")
+}
+
 //
 //model user_availability {
 //  id          Int       @id @default(autoincrement())
@@ -11924,24 +12054,36 @@ model User {
 //  count        Int
 //}
 //
-//model user_groups {
-//  id                 Int    @id @default(autoincrement())
-//  company_id         Int
-//  group_name         String
-//  group_description  String
-//  restrict_clients   Int
-//  restrict_locations String
-//  restrict_calendar  Int    @default(1)
-//  restrict_data      Int
-//  limit_contacts     Int
-//  permission_id      Int
-//}
+model UserGroup {
+  id                 Int                @id @default(autoincrement())
+  company_id         Int
+  group_name         String
+  group_description  String
+  restrict_clients   Int
+  restrict_locations String
+  restrict_calendar  Int                @default(1)
+  restrict_data      Int
+  limit_contacts     Int
+  permission_id      Int
+  Company            Company            @relation(fields: [company_id], references: [id])
+  Permission         PermissionTemplate @relation(fields: [permission_id], references: [id])
+
+  UserGroupMember UserGroupMember[]
+  GroupPermission GroupPermission[]
+  @@map("user_groups")
+}
+
 //
-//model user_group_members {
-//  id       Int @id @default(autoincrement())
-//  user_id  Int
-//  group_id Int
-//}
+model UserGroupMember {
+  id       Int @id @default(autoincrement())
+  user_id  Int
+  group_id Int
+
+  User      User      @relation(fields: [user_id], references: [id])
+  UserGroup UserGroup @relation(fields: [group_id], references: [id])
+  @@map("user_group_members")
+}
+
 //
 //model user_leads_access {
 //  id          Int      @id @default(autoincrement())
@@ -11952,40 +12094,49 @@ model User {
 //  @@unique([user_id, lead_id], name: "user_id")
 //}
 //
-//model user_main_permissions {
-//  id                 Int     @id @default(autoincrement())
-//  user_id            Int
-//  delete_alert_notes Boolean @default(false)
-//}
+model UserMainPermission {
+  id                 Int     @id @default(autoincrement())
+  user_id            Int
+  delete_alert_notes Boolean @default(false)
+  User               User    @relation(fields: [user_id], references: [id])
+
+  @@map("user_main_permissions")
+}
+
 //
-//model user_master {
-//  id             Int      @id @default(autoincrement())
-//  company_id     Int
-//  fname          String
-//  lname          String
-//  address        String
-//  city           String
-//  state          String
-//  country        String
-//  postalcode     String
-//  prefloc        String
-//  email          String
-//  pass           String
-//  oauth_provider String
-//  oauth_id       String
-//  timestamp      DateTime @default(now())
-//  enc_key        String
-//  pic            String
-//  contact_id     Int
-//  mobile         String
-//  last_login     DateTime
-//  is_suspended   Boolean  @default(false)
-//  session_hash   String
-//
-//  @@index([company_id], name: "company_id")
-//  @@index([contact_id], name: "contact_id")
-//  @@index([email], name: "email")
-//}
+model UserMaster {
+  id             Int      @id @default(autoincrement())
+  company_id     Int
+  fname          String
+  lname          String
+  address        String
+  city           String
+  state          String
+  country        String
+  postalcode     String
+  prefloc        String
+  email          String
+  pass           String
+  oauth_provider String
+  oauth_id       String
+  timestamp      DateTime @default(now())
+  enc_key        String
+  pic            String
+  contact_id     Int
+  mobile         String
+  last_login     DateTime
+  is_suspended   Boolean  @default(false)
+  session_hash   String
+
+  Company Company @relation(fields: [company_id], references: [id])
+
+
+  @@index([company_id], name: "company_id")
+  @@index([contact_id], name: "contact_id")
+  @@index([email], name: "email")
+  @@map("user_master")
+}
+
 //
 //model user_master_password_history {
 //  id             Int      @id @default(autoincrement())
@@ -11995,18 +12146,24 @@ model User {
 //  created_at     DateTime
 //}
 //
-//model user_mobile_permissions {
-//  id         Int     @id @default(autoincrement())
-//  uid        Int
-//  company_id Int
-//  cal        Int     @default(1)
-//  reviews    Int     @default(1)
-//  reports    Int     @default(1)
-//  contacts   Int     @default(1)
-//  journey    Int     @default(1)
-//  register   Int     @default(1)
-//  dashboard  Boolean
-//}
+model UserMobilePermission {
+  id         Int     @id @default(autoincrement())
+  uid        Int
+  company_id Int
+  cal        Int     @default(1)
+  reviews    Int     @default(1)
+  reports    Int     @default(1)
+  contacts   Int     @default(1)
+  journey    Int     @default(1)
+  register   Int     @default(1)
+  dashboard  Boolean
+
+  User    User    @relation(fields: [uid], references: [id])
+  Company Company @relation(fields: [company_id], references: [id])
+
+  @@map("user_mobile_permissions")
+}
+
 //
 //model user_notes {
 //  id           Int      @id @default(autoincrement())
@@ -12051,14 +12208,18 @@ model User {
 //  // password String
 //// }
 //
-//model user_permissions {
-//  id   Int @id @default(autoincrement())
-//  user Int
-//  page Int
-//
-//  @@index([page], name: "page")
-//  @@index([user], name: "user")
-//}
+model UserPermission {
+  id   Int  @id @default(autoincrement())
+  user Int
+  page Int
+  User User @relation(fields: [user], references: [id])
+  Page Page @relation(fields: [page], references: [id])
+
+  @@index([page], name: "page")
+  @@index([user], name: "user")
+  @@map("user_permissions")
+}
+
 //
 //model user_products {
 //  id            Int @id @default(autoincrement())
@@ -12070,16 +12231,21 @@ model User {
 //  @@index([product_id], name: "product_id")
 //}
 //
-//model user_reports {
-//  id        Int @id @default(autoincrement())
-//  occupier  Int
-//  user_id   Int
-//  report_id Int
-//
-//  @@index([occupier], name: "occupier")
-//  @@index([report_id], name: "report_id")
-//  @@index([user_id], name: "user_id")
-//}
+model UserReport {
+  id         Int     @id @default(autoincrement())
+  company_id Int     @map("occupier")
+  user_id    Int
+  report_id  Int
+  User       User    @relation(fields: [user_id], references: [id])
+  Company    Company @relation(fields: [company_id], references: [id])
+  Report     Report  @relation(fields: [report_id], references: [id])
+
+  @@index([company_id], name: "occupier")
+  @@index([report_id], name: "report_id")
+  @@index([user_id], name: "user_id")
+  @@map("user_reports")
+}
+
 //
 //model user_requests {
 //  id            Int      @id @default(autoincrement())
@@ -13181,6 +13347,19 @@ model UserSecurityQuestionsAnswer {
 //
 //  @@map("_migrations")
 //}
+
+model GroupPermission {
+  id                  Int    @id
+  company_id          Int
+  group_id            Int
+  module_permissions  String @db.Text
+  feature_permissions String @db.Text
+  report_permissions  String @db.Text
+
+  UserGroup UserGroup @relation(fields: [group_id], references: [id])
+  Company   Company   @relation(fields: [company_id], references: [id])
+  @@map("group_permissions")
+}
 
 enum booking_master_payment_status {
   is_false  @map("0")

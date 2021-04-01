@@ -8,7 +8,8 @@ export const BookitProSlider = objectType({
     t.model.slider2()
     t.model.slider3()
     t.model.slider4()
-    t.model.occupier()
+    t.model.company_id()
+    t.model.Company()
   },
 })
 
@@ -49,5 +50,6 @@ export const bookitProSliderMutation = extendType({
     t.crud.updateOneBookitProSlider()
     t.crud.upsertOneBookitProSlider()
     t.crud.deleteOneBookitProSlider()
+    t.crud.updateManyBookitProSlider()
   },
 })

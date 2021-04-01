@@ -5,7 +5,8 @@ export const CancelReason = objectType({
   definition(t) {
     t.model.id()
     t.model.reason_name()
-    t.model.occupier()
+    t.model.company_id()
+    t.model.Company()
     t.model.late_cancel()
     t.model.apply_cancellation_policy()
     t.model.created_at()
@@ -50,5 +51,6 @@ export const cancelReasonMutation = extendType({
     t.crud.updateOneCancelReason()
     t.crud.upsertOneCancelReason()
     t.crud.deleteOneCancelReason()
+    t.crud.updateManyCancelReason()
   },
 })

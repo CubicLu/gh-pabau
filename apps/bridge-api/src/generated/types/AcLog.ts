@@ -7,7 +7,8 @@ export const AcLog = objectType({
     t.model.url_id()
     t.model.action_id()
     t.model.critical()
-    t.model.occupier()
+    t.model.company_id()
+    t.model.Company()
     t.model.user_id()
     t.model.date()
     t.model.humanize()
@@ -56,5 +57,6 @@ export const acLogMutation = extendType({
     t.crud.updateOneAcLog()
     t.crud.upsertOneAcLog()
     t.crud.deleteOneAcLog()
+    t.crud.updateManyAcLog()
   },
 })

@@ -15,7 +15,8 @@ export const ClassProduct = objectType({
     t.model.alert_quantity()
     t.model.image()
     t.model.category_id()
-    t.model.occupier()
+    t.model.company_id()
+    t.model.Company()
     t.model.uid()
     t.model.created_date()
     t.model.modified_date()
@@ -60,5 +61,6 @@ export const classProductMutation = extendType({
     t.crud.updateOneClassProduct()
     t.crud.upsertOneClassProduct()
     t.crud.deleteOneClassProduct()
+    t.crud.updateManyClassProduct()
   },
 })

@@ -598,3 +598,22 @@ en:
     account.settings.notification.general.button.label2: Email
     account.settings.notification.general.button.label3: SMS
     account.settings.notification.general.button.label4: 'Pabau Web'
+    setup.department.schema.title: 'Department'
+    setup.department.schema.title.lowercase: 'department'
+    setup.department.schema.create.job.title: 'Create Department'
+    setup.department.schema.created.job.message: 'You have successfully created a department'
+    setup.department.schema.create.job.error.message: 'While creating a department'
+    setup.department.schema.updated.job.message: 'You have successfully updated a department'
+    setup.department.schema.update.job.error.message: 'While updating a department'
+    setup.department.schema.deleted.job.message: 'You have successfully deleted a department'
+    setup.department.schema.delete.job.error.message: 'While deleting a department'
+    setup.department.schema.department: 'Department Name'
+    setup.department.schema.department.lower: 'department name'
+    setup.department.schema.header.create: 'Create Department'
+    setup.department.schema.header.edit: 'Edit Department'
+    setup.department.schema.header.delete: 'Delete Department?'
+    setup.department.schema.delete.button.label: 'Yes, Delete'
+    team-report-modal-prior-month: Change from prior month
+    team-report-modal-change-from: Change from
+    team-report-modal-rolling-avg: Rolling avg
+

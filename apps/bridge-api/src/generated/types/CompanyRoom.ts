@@ -59,5 +59,6 @@ export const companyRoomMutation = extendType({
     t.crud.updateOneCompanyRoom()
     t.crud.upsertOneCompanyRoom()
     t.crud.deleteOneCompanyRoom()
+    t.crud.updateManyCompanyRoom()
   },
 })

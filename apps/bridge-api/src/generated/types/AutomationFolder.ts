@@ -47,5 +47,6 @@ export const automationFolderMutation = extendType({
     t.crud.updateOneAutomationFolder()
     t.crud.upsertOneAutomationFolder()
     t.crud.deleteOneAutomationFolder()
+    t.crud.updateManyAutomationFolder()
   },
 })

@@ -48,5 +48,6 @@ export const attachmentHelperLiteMutation = extendType({
     t.crud.updateOneAttachmentHelperLite()
     t.crud.upsertOneAttachmentHelperLite()
     t.crud.deleteOneAttachmentHelperLite()
+    t.crud.updateManyAttachmentHelperLite()
   },
 })

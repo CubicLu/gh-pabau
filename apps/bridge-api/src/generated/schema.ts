@@ -77,7 +77,8 @@ export interface AccountManager {
   vat_reg_id: string;
   created_date?: Date;
   modified_date?: Date;
-  occupier?: number;
+  company_id?: number;
+  Company?: Company;
   con_per_1: string;
   con_num_1: string;
   con_per_2: string;
@@ -91,7 +92,8 @@ export interface AcLog {
   url_id: number;
   action_id: number;
   critical: boolean;
-  occupier: number;
+  company_id: number;
+  Company: Company;
   user_id: number;
   date: Date;
   humanize?: string;
@@ -144,7 +146,7 @@ export interface Company {
   User?: User[];
   Candidate?: Candidate[];
   BookingStatus?: BookingStatus[];
-  Salutation?: Salutation[];
+  UserSalutation?: UserSalutation[];
   CompanyBranch?: CompanyBranch[];
   CompanyLocation?: CompanyLocation[];
   CompanyRoom?: CompanyRoom[];
@@ -156,6 +158,37 @@ export interface Company {
   JobOpening?: JobOpening[];
   JobStatus?: JobStatus[];
   PointOfSaleSetting?: PointOfSaleSetting[];
+  BookingSetting?: BookingSetting[];
+  AccountManager?: AccountManager[];
+  AcLog?: AcLog[];
+  AppSubscriptionsCompanyPrice?: AppSubscriptionsCompanyPrice[];
+  AvilableDatesLog?: AvilableDatesLog[];
+  BlockReason?: BlockReason[];
+  BodyChartTemplate?: BodyChartTemplate[];
+  BookitProSlider?: BookitProSlider[];
+  CalendarView?: CalendarView[];
+  CampaignAttachment?: CampaignAttachment[];
+  CancellationPolicy?: CancellationPolicy[];
+  CancelReason?: CancelReason[];
+  ClassCategory?: ClassCategory[];
+  ClassProduct?: ClassProduct[];
+  ClockinLongpoll?: ClockinLongpoll[];
+  CmAppointmentsCustomImportHelper?: CmAppointmentsCustomImportHelper[];
+  CmAppointmentCustom?: CmAppointmentCustom[];
+  CmContact?: CmContact[];
+  CompanyMeta?: CompanyMeta[];
+  RotaShift?: RotaShift[];
+  PermissionTemplate?: PermissionTemplate[];
+  UserGroup?: UserGroup[];
+  UserMaster?: UserMaster[];
+  UserMobilePermission?: UserMobilePermission[];
+  GroupPermission?: GroupPermission[];
+  UserReport?: UserReport[];
+  InvBiller?: InvBiller[];
+  UserAlertPermission?: UserAlertPermission[];
+  SocialSurvey?: SocialSurvey[];
+  SocialSurveyFeedback?: SocialSurveyFeedback[];
+  SocialSurveyQuestion?: SocialSurveyQuestion[];
 }
 
 export interface AdvertCampaign {
@@ -230,7 +263,8 @@ export interface AppSubscription {
 
 export interface AppSubscriptionsCompanyPrice {
   id: number;
-  occupier: number;
+  company_id: number;
+  Company: Company;
   app_key_value: string;
   price: number;
 }
@@ -373,7 +407,8 @@ export interface AutomationTrigger {
 
 export interface AvilableDatesLog {
   id: number;
-  occupier: string;
+  company_id: number;
+  Company: Company;
   uid: number;
   date: Date;
   start: Date;
@@ -418,7 +453,8 @@ export interface BatchItem {
 export interface BlockReason {
   id: number;
   reason_name: string;
-  occupier: string;
+  company_id: number;
+  Company: Company;
   is_active: boolean;
   block_color: string;
   is_paid: number;
@@ -449,7 +485,8 @@ export interface BodyChartTemplate {
   template_name: string;
   template_url: string;
   tags: string;
-  occupier: number;
+  company_id: number;
+  Company: Company;
   uid: number;
   creation_date: Date;
   chart_order: number;
@@ -458,7 +495,7 @@ export interface BodyChartTemplate {
 
 export interface BookingSetting {
   id: number;
-  occupier: number;
+  company_id: number;
   email_mode: number;
   sms_mode: number;
   email_id?: number;
@@ -559,6 +596,7 @@ export interface BookingSetting {
   modified_by: number;
   modified_date: Date;
   conference_reminder_id?: number;
+  Company: Company;
 }
 
 export interface BookingMaster {
@@ -676,7 +714,8 @@ export interface BookitProSlider {
   slider2: string;
   slider3: string;
   slider4: string;
-  occupier: string;
+  company_id: number;
+  Company: Company;
 }
 
 export interface BookmarkedPage {
@@ -698,7 +737,8 @@ export interface BugLog {
 
 export interface CalendarView {
   id: number;
-  occupier: number;
+  company_id: number;
+  Company: Company;
   user_id: number;
   viewMode: string;
   dayViewMode: string;
@@ -727,7 +767,8 @@ export interface CalRangeRequest {
 export interface CampaignAttachment {
   id: number;
   campaign_id: number;
-  occupier: number;
+  company_id: number;
+  Company: Company;
   attach_time: string;
   attach_user_name: string;
   attachment_type: string;
@@ -746,7 +787,8 @@ export interface CancellationPolicy {
   payment_protection: number;
   advanced_cancellation_fee: number;
   no_show_fee: number;
-  occupier: number;
+  company_id: number;
+  Company: Company;
   creation_date?: Date;
   modified_date?: Date;
 }
@@ -777,7 +819,8 @@ export interface MediaLlibraryAttachment {
 export interface CancelReason {
   id: number;
   reason_name: string;
-  occupier: string;
+  company_id: number;
+  Company: Company;
   late_cancel: number;
   apply_cancellation_policy: number;
   created_at: Date;
@@ -920,7 +963,8 @@ export interface ClassCategory {
   id: number;
   code: string;
   name: string;
-  occupier?: number;
+  company_id: number;
+  Company: Company;
   uid?: number;
   created_date?: Date;
   modified_date?: Date;
@@ -1159,7 +1203,8 @@ export interface ClassProduct {
   alert_quantity: number;
   image?: string;
   category_id: number;
-  occupier?: number;
+  company_id: number;
+  Company: Company;
   uid?: number;
   created_date?: Date;
   modified_date?: Date;
@@ -1222,7 +1267,8 @@ export interface ClockinLongpoll {
   id: number;
   clocked_out: boolean;
   uid: number;
-  occupier: number;
+  company_id: number;
+  Company: Company;
 }
 
 export interface ClockinTimesheet {
@@ -1251,7 +1297,8 @@ export interface CmAccountNote {
 
 export interface CmAppointmentsCustomImportHelper {
   id: number;
-  occupier: number;
+  company_id: number;
+  Company: Company;
   custom_appointment_id: number;
   custom_contact_name: string;
   custom_field_name: string;
@@ -1263,7 +1310,8 @@ export interface CmAppointmentsCustomImportHelper {
 export interface CmAppointmentCustom {
   id: number;
   appointment_id: number;
-  occupier: number;
+  company_id: number;
+  Company: Company;
   custom_field_id: number;
   custom_field_value: string;
   imported: number;
@@ -1374,7 +1422,8 @@ export interface CmContact {
   OwnerID: number;
   Salutation: string;
   Fname: string;
-  Occupier: number;
+  company_id: number;
+  Company: Company;
   location_id: number;
   Email: string;
   Phone: string;
@@ -1442,6 +1491,7 @@ export interface CmContact {
   privacy_policy: string;
   need_to_knows: boolean;
   contact_type: number;
+  SocialSurveyFeedback?: SocialSurveyFeedback[];
 }
 
 export interface CompanyBranch {
@@ -1475,6 +1525,7 @@ export interface CompanyBranch {
   notice?: string;
   Company: Company;
   CompanyRoomLocation?: CompanyRoomLocation[];
+  RotaShift?: RotaShift[];
 }
 
 export interface CompanyDepartment {
@@ -1488,6 +1539,14 @@ export interface CompanyLocation {
   id: number;
   company_id: number;
   location: string;
+  Company: Company;
+}
+
+export interface CompanyMeta {
+  id: number;
+  company_id: number;
+  meta_name: string;
+  meta_value: string;
   Company: Company;
 }
 
@@ -1585,6 +1644,37 @@ export interface GlCode {
   description: gl_codes_description;
   related_to?: number;
   InvPaymentType?: InvPaymentType;
+}
+
+export interface InvBiller {
+  id: number;
+  name: string;
+  company: string;
+  cui: string;
+  reg: string;
+  cnp: string;
+  serie: string;
+  account_no: string;
+  bank: string;
+  address: string;
+  city: string;
+  state: string;
+  postal_code: string;
+  country: string;
+  phone: string;
+  email: string;
+  logo: string;
+  invoice_footer: string;
+  company_id?: number;
+  uid?: number;
+  created_date?: Date;
+  modified_date?: Date;
+  custom_id: number;
+  imported: number;
+  qualification: string;
+  is_disabled: number;
+  User?: User;
+  Company?: Company;
 }
 
 export interface InvPaymentType {
@@ -1721,11 +1811,244 @@ export interface PointOfSaleSetting {
   Company: Company;
 }
 
-export interface Salutation {
+export interface Page {
+  id: number;
+  name: string;
+  link: string;
+  parent: number;
+  category: string;
+  showcase: number;
+  description: string;
+  features: string;
+  new: number;
+  img: string;
+  admin: number;
+  order: number;
+  cover: string;
+  tickier_order: number;
+  friendly_name: string;
+  app_weight: number;
+  video_link: string;
+  large_thumb: string;
+  inactive: number;
+  private_key: string;
+  new_url: string;
+  UserPermission?: UserPermission[];
+}
+
+export interface PermissionTemplate {
+  id: number;
+  name: string;
+  company_id: number;
+  app_permissions: string;
+  user_permissions: string;
+  mobile_permissions: string;
+  mobile_widgets: string;
+  disabled_services: string;
+  alerts: string;
+  is_admin: boolean;
+  enabled_reports: string;
+  all_reports: boolean;
+  Company: Company;
+  UserGroup?: UserGroup[];
+}
+
+export interface Report {
+  id: number;
+  report_category_id: number;
+  name?: string;
+  description?: string;
+  company_id: number;
+  group_field?: string;
+  link?: string;
+  send?: number;
+  date_limit: string;
+  filter?: string;
+  search_result: string;
+  column_names: string;
+  preview_image: string;
+  exc_vat_column: string;
+  filter_json: string;
+  grand_total: number;
+  report_code: string;
+  show_hide_columns: string;
+  users_mode: number;
+  filter_user?: string;
+  iframe: number;
+  iframe_url: string;
+  package_usage: number;
+  show_package_usage: number;
+  deleted: number;
+  marketing: number;
+  has_summary: number;
+  filter_summary?: number;
+  admin_only: number;
+  thumbnail_preview: string;
+  total_revenue: number;
+  show_custom_ids: number;
+  show_custom_fields: number;
+  custom_fields_defined: string;
+  show_in_leads: number;
+  other_custom_fields: string;
+  custom_fields_group: string;
+  custom_filter: string;
+  sub_category: string;
+  easy_filters: string;
+  easy_filters_advanced: string;
+  show_accounting: number;
+  show_revenue: number;
+  support_location_filter: number;
+  checks_complete: number;
+  custom_ids_checked: number;
+  flag_video: string;
+  flag_video_2: string;
+  checks_complete_2: number;
+  companies_included: string;
+  checks_complete_3: number;
+  flag_video_3: string;
+  checks_complete_4: number;
+  flag_video_4: string;
+  subscribed_filter?: string;
+  print_page_size: string;
+  sort_columns: string;
+  group_column: string;
+  mask_client_name: number;
+  core_report: number;
+  hide_columns: string;
+  summary_mode: number;
+  graph_mode: number;
+  detailed_mode: number;
+  ReportCategory: ReportCategory;
+  UserReport?: UserReport[];
+}
+
+export interface ReportCategory {
+  id: number;
+  name?: string;
+  description?: string;
+  company_id?: number;
+  type: string;
+  colour: string;
+  Report?: Report[];
+}
+
+export interface RotaShift {
+  id: number;
+  uid: number;
+  User: User;
+  start: undefined;
+  end: undefined;
+  company_id: number;
+  notes?: string;
+  last_seen?: Date;
+  last_modified?: Date;
+  last_notified?: Date;
+  last_published?: Date;
+  first_created: Date;
+  user_created: number;
+  repeat_id?: number;
+  reason_code?: string;
+  reason_data?: string;
+  holiday_id: number;
+  cal_id?: number;
+  is_cal: number;
+  note_color: string;
+  location_id: number;
+  request?: number;
+  sickness?: number;
+  imported: number;
+  tag_name: string;
+  room_id: number;
+  force_created: boolean;
+  Company: Company;
+  Location: CompanyBranch;
+}
+
+export interface UserSalutation {
   id: number;
   name: string;
   company_id?: number;
   Company?: Company;
+}
+
+export interface SocialSurvey {
+  id: number;
+  page_id: number;
+  company_id: number;
+  twitter_id: number;
+  disable_email: number;
+  disable_sms: number;
+  sms_message_id: number;
+  from_name: string;
+  sms_days_after?: number;
+  sms_send_time?: string;
+  feedback_title: string;
+  feedback_subtitle: string;
+  feedback_question: string;
+  auto_facebook: number;
+  auto_twitter: number;
+  after_page: string;
+  google_plus_link: string;
+  google_review: number;
+  google_review_url: string;
+  aweber_code: string;
+  score_indicator: number;
+  add_note: number;
+  post_buzzfeed: number;
+  post_website: number;
+  email_message_id: number;
+  redirect_url: string;
+  feedback_name: string;
+  ty_enable_email: number;
+  ty_enable_sms: number;
+  ty_email_id: number;
+  ty_sms_id: number;
+  color_1: string;
+  color_2: string;
+  google_review_redirect: number;
+  show_reviews_above: number;
+  logo_position: string;
+  logo_height?: number;
+  hits: number;
+  Company: Company;
+}
+
+export interface SocialSurveyAnswer {
+  id: number;
+  feedback_id: number;
+  question: string;
+  answer: string;
+  SocialSurveyFeedback: SocialSurveyFeedback;
+}
+
+export interface SocialSurveyFeedback {
+  id: number;
+  rating: number;
+  contact_id: number;
+  feedback_source: string;
+  company_id: number;
+  date: undefined;
+  feedback_comment: string;
+  feedback_name: string;
+  feedback_status: string;
+  related_id: number;
+  related_to: string;
+  feedback_for: number;
+  service: string;
+  public_use: number;
+  service_id: number;
+  owner_response: string;
+  CmContact: CmContact;
+  Company: Company;
+  SocialSurveyAnswer?: SocialSurveyAnswer[];
+}
+
+export interface SocialSurveyQuestion {
+  id: number;
+  company_id: number;
+  question: string;
+  answer: string;
+  Company: Company;
 }
 
 export interface User {
@@ -1825,6 +2148,141 @@ export interface User {
   main_contact: boolean;
   user_security_questions_answer?: UserSecurityQuestionsAnswer[];
   company?: Company;
+  RotaShift?: RotaShift[];
+  UserGroupMember?: UserGroupMember[];
+  UserMainPermission?: UserMainPermission[];
+  UserMobilePermission?: UserMobilePermission[];
+  UserPermission?: UserPermission[];
+  UserReport?: UserReport[];
+  InvBiller?: InvBiller[];
+  UserAlertType?: UserAlertType;
+  UserAlertPermission?: UserAlertPermission;
+}
+
+export interface UserAlert {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  email_template_id: number;
+  ios_message: string;
+  sms_message: string;
+  pabau_message: string;
+  UserAlertPermission?: UserAlertPermission[];
+}
+
+export interface UserAlertType {
+  id: number;
+  uid: number;
+  cc_name: string;
+  cc_email: string;
+  cc_phone: string;
+  User: User;
+}
+
+export interface UserAlertPermission {
+  id: number;
+  uid: number;
+  alert_id: number;
+  company_id: number;
+  ios_notification: number;
+  email_notification: number;
+  sms_notification: number;
+  pabau_notification: number;
+  User: User;
+  Company: Company;
+  UserAlert: UserAlert;
+}
+
+export interface UserGroup {
+  id: number;
+  company_id: number;
+  group_name: string;
+  group_description: string;
+  restrict_clients: number;
+  restrict_locations: string;
+  restrict_calendar: number;
+  restrict_data: number;
+  limit_contacts: number;
+  permission_id: number;
+  Company: Company;
+  Permission: PermissionTemplate;
+  UserGroupMember?: UserGroupMember[];
+  GroupPermission?: GroupPermission[];
+}
+
+export interface UserGroupMember {
+  id: number;
+  user_id: number;
+  group_id: number;
+  User: User;
+  UserGroup: UserGroup;
+}
+
+export interface UserMainPermission {
+  id: number;
+  user_id: number;
+  delete_alert_notes: boolean;
+  User: User;
+}
+
+export interface UserMaster {
+  id: number;
+  company_id: number;
+  fname: string;
+  lname: string;
+  address: string;
+  city: string;
+  state: string;
+  country: string;
+  postalcode: string;
+  prefloc: string;
+  email: string;
+  pass: string;
+  oauth_provider: string;
+  oauth_id: string;
+  timestamp: Date;
+  enc_key: string;
+  pic: string;
+  contact_id: number;
+  mobile: string;
+  last_login: Date;
+  is_suspended: boolean;
+  session_hash: string;
+  Company: Company;
+}
+
+export interface UserMobilePermission {
+  id: number;
+  uid: number;
+  company_id: number;
+  cal: number;
+  reviews: number;
+  reports: number;
+  contacts: number;
+  journey: number;
+  register: number;
+  dashboard: boolean;
+  User: User;
+  Company: Company;
+}
+
+export interface UserPermission {
+  id: number;
+  user: number;
+  page: number;
+  User: User;
+  Page: Page;
+}
+
+export interface UserReport {
+  id: number;
+  company_id: number;
+  user_id: number;
+  report_id: number;
+  User: User;
+  Company: Company;
+  Report: Report;
 }
 
 export interface UserSecurityQuestionsAnswer {
@@ -1834,6 +2292,17 @@ export interface UserSecurityQuestionsAnswer {
   question_no: number;
   answer: string;
   users: User;
+}
+
+export interface GroupPermission {
+  id: number;
+  company_id: number;
+  group_id: number;
+  module_permissions: string;
+  feature_permissions: string;
+  report_permissions: string;
+  UserGroup: UserGroup;
+  Company: Company;
 }
 
 export enum booking_master_payment_status {

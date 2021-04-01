@@ -50,5 +50,6 @@ export const classNotesMutation = extendType({
     t.crud.updateOneClassNotes()
     t.crud.upsertOneClassNotes()
     t.crud.deleteOneClassNotes()
+    t.crud.updateManyClassNotes()
   },
 })

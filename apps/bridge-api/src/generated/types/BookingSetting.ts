@@ -4,7 +4,7 @@ export const BookingSetting = objectType({
   name: 'BookingSetting',
   definition(t) {
     t.model.id()
-    t.model.occupier()
+    t.model.company_id()
     t.model.email_mode()
     t.model.sms_mode()
     t.model.email_id()
@@ -105,6 +105,7 @@ export const BookingSetting = objectType({
     t.model.modified_by()
     t.model.modified_date()
     t.model.conference_reminder_id()
+    t.model.Company()
   },
 })
 
@@ -145,5 +146,6 @@ export const bookingSettingMutation = extendType({
     t.crud.updateOneBookingSetting()
     t.crud.upsertOneBookingSetting()
     t.crud.deleteOneBookingSetting()
+    t.crud.updateManyBookingSetting()
   },
 })

@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import { Context } from '../../context'
 import { createHash } from 'crypto'
 
-export class AuthenticationService {
+export default class AuthenticationService {
   private user: User
 
   public constructor(private ctx: Context) {}
@@ -16,6 +16,9 @@ export class AuthenticationService {
         username: {
           equals: loginInput.username,
         },
+      },
+      include: {
+        company: true,
       },
     })
     this.user = users.find(
@@ -31,12 +34,15 @@ export class AuthenticationService {
   private generateHash(password: string, encryption: 'md5' | 'sha1'): string {
     return createHash(encryption).update(password).digest('hex')
   }
-
   private generateJWT(): string {
     return jwt.sign(
       {
         user: this.user.id,
         company: this.user.company_id,
+        admin: Boolean(this.user.admin) ?? false,
+        owner: this.user.id === this.user.company.admin ?? false,
+        remote_url: this.user.company.remote_url,
+        remote_connect: this.user.company.remote_connect,
         'https://hasura.io/jwt/claims': {
           'x-hasura-allowed-roles': ['public', 'admin'],
           'x-hasura-default-role': 'public',

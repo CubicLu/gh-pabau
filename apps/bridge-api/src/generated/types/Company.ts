@@ -26,7 +26,7 @@ export const Company = objectType({
     t.model.User()
     t.model.Candidate()
     t.model.BookingStatus()
-    t.model.Salutation()
+    t.model.UserSalutation()
     t.model.CompanyBranch()
     t.model.CompanyLocation()
     t.model.CompanyRoom()
@@ -38,13 +38,43 @@ export const Company = objectType({
     t.model.JobOpening()
     t.model.JobStatus()
     t.model.PointOfSaleSetting()
+    t.model.BookingSetting()
+    t.model.AccountManager()
+    t.model.AcLog()
+    t.model.AppSubscriptionsCompanyPrice()
+    t.model.AvilableDatesLog()
+    t.model.BlockReason()
+    t.model.BodyChartTemplate()
+    t.model.BookitProSlider()
+    t.model.CalendarView()
+    t.model.CampaignAttachment()
+    t.model.CancellationPolicy()
+    t.model.CancelReason()
+    t.model.ClassCategory()
+    t.model.ClassProduct()
+    t.model.ClockinLongpoll()
+    t.model.CmAppointmentsCustomImportHelper()
+    t.model.CmAppointmentCustom()
+    t.model.CmContact()
+    t.model.CompanyMeta()
+    t.model.RotaShift()
+    t.model.PermissionTemplate()
+    t.model.UserGroup()
+    t.model.UserMaster()
+    t.model.UserMobilePermission()
+    t.model.GroupPermission()
+    t.model.UserReport()
+    t.model.InvBiller()
+    t.model.UserAlertPermission()
+    t.model.SocialSurvey()
+    t.model.SocialSurveyFeedback()
+    t.model.SocialSurveyQuestion()
   },
 })
 
 export const companyQuery = extendType({
   type: 'Query',
   definition(t) {
-    t.crud.company()
     t.field('findFirstCompany', {
       type: 'Company',
       args: {
@@ -74,9 +104,7 @@ export const companyQuery = extendType({
 export const companyMutation = extendType({
   type: 'Mutation',
   definition(t) {
-    t.crud.createOneCompany()
     t.crud.updateOneCompany()
-    t.crud.upsertOneCompany()
-    t.crud.deleteOneCompany()
+    t.crud.updateManyCompany()
   },
 })

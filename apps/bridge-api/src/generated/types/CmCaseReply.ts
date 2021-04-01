@@ -51,5 +51,6 @@ export const cmCaseReplyMutation = extendType({
     t.crud.updateOneCmCaseReply()
     t.crud.upsertOneCmCaseReply()
     t.crud.deleteOneCmCaseReply()
+    t.crud.updateManyCmCaseReply()
   },
 })

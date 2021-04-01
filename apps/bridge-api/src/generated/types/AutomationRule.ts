@@ -53,5 +53,6 @@ export const automationRuleMutation = extendType({
     t.crud.updateOneAutomationRule()
     t.crud.upsertOneAutomationRule()
     t.crud.deleteOneAutomationRule()
+    t.crud.updateManyAutomationRule()
   },
 })

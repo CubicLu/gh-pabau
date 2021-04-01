@@ -3,7 +3,7 @@
   "files": [],
   "include": [],
   "compilerOptions": {
-      "resolveJsonModule": true
+    "resolveJsonModule": true
   },
   "references": [
     {
@@ -12,6 +12,5 @@
     {
       "path": "./tsconfig.spec.json"
     }
-  ],
-  "baseUrl": "."
+  ]
 }

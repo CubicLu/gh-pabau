@@ -50,5 +50,6 @@ export const twoFactorHistoryMutation = extendType({
     t.crud.updateOneTwoFactorHistory()
     t.crud.upsertOneTwoFactorHistory()
     t.crud.deleteOneTwoFactorHistory()
+    t.crud.updateManyTwoFactorHistory()
   },
 })

@@ -99,6 +99,15 @@ export const User = objectType({
     t.model.main_contact()
     t.model.user_security_questions_answer()
     t.model.company()
+    t.model.RotaShift()
+    t.model.UserGroupMember()
+    t.model.UserMainPermission()
+    t.model.UserMobilePermission()
+    t.model.UserPermission()
+    t.model.UserReport()
+    t.model.InvBiller()
+    t.model.UserAlertType()
+    t.model.UserAlertPermission()
   },
 })
 
@@ -139,5 +148,6 @@ export const userMutation = extendType({
     t.crud.updateOneUser()
     t.crud.upsertOneUser()
     t.crud.deleteOneUser()
+    t.crud.updateManyUser()
   },
 })

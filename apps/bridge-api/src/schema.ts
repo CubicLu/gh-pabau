@@ -8,7 +8,7 @@ import { nexusPrisma } from 'nexus-plugin-prisma'
 import * as generatedTypes from './generated/types'
 import * as customTypes from '../src/schema/types'
 import { applyMiddleware } from 'graphql-middleware'
-import { permissions } from './permisions'
+import { permissions } from './permissions'
 import { paljs } from '@paljs/nexus'
 import { prisma } from './prisma'
 

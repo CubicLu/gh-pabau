@@ -47,5 +47,6 @@ export const companyDepartmentMutation = extendType({
     t.crud.updateOneCompanyDepartment()
     t.crud.upsertOneCompanyDepartment()
     t.crud.deleteOneCompanyDepartment()
+    t.crud.updateManyCompanyDepartment()
   },
 })

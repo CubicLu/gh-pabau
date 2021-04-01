@@ -52,5 +52,6 @@ export const cashupReportCustomMutation = extendType({
     t.crud.updateOneCashupReportCustom()
     t.crud.upsertOneCashupReportCustom()
     t.crud.deleteOneCashupReportCustom()
+    t.crud.updateManyCashupReportCustom()
   },
 })

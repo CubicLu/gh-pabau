@@ -118,5 +118,6 @@ export const companySubscriptionMutation = extendType({
     t.crud.updateOneCompanySubscription()
     t.crud.upsertOneCompanySubscription()
     t.crud.deleteOneCompanySubscription()
+    t.crud.updateManyCompanySubscription()
   },
 })

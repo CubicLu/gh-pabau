@@ -3,6 +3,8 @@
 image: node:14-buster
 
 options:
+  docker: true
+  size: 2x
   max-time: 32 # max time in minutes for each step
 
 definitions:
@@ -11,9 +13,9 @@ definitions:
     yarncustom: /usr/local/share/.cache/yarn
     nextcache: dist
     cypress: '/root/.cache/Cypress'
-#  services:
-#    docker:
-#      memory: 2048
+  services:
+    docker:
+      memory: 4096
 
 pipelines:
   pull-requests:

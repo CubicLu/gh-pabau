@@ -25,7 +25,8 @@ export const AccountManager = objectType({
     t.model.vat_reg_id()
     t.model.created_date()
     t.model.modified_date()
-    t.model.occupier()
+    t.model.company_id()
+    t.model.Company()
     t.model.con_per_1()
     t.model.con_num_1()
     t.model.con_per_2()
@@ -72,5 +73,6 @@ export const accountManagerMutation = extendType({
     t.crud.updateOneAccountManager()
     t.crud.upsertOneAccountManager()
     t.crud.deleteOneAccountManager()
+    t.crud.updateManyAccountManager()
   },
 })

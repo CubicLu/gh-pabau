@@ -8,7 +8,8 @@ export const CmContact = objectType({
     t.model.OwnerID()
     t.model.Salutation()
     t.model.Fname()
-    t.model.Occupier()
+    t.model.company_id()
+    t.model.Company()
     t.model.location_id()
     t.model.Email()
     t.model.Phone()
@@ -76,6 +77,7 @@ export const CmContact = objectType({
     t.model.privacy_policy()
     t.model.need_to_knows()
     t.model.contact_type()
+    t.model.SocialSurveyFeedback()
   },
 })
 
@@ -116,5 +118,6 @@ export const cmContactMutation = extendType({
     t.crud.updateOneCmContact()
     t.crud.upsertOneCmContact()
     t.crud.deleteOneCmContact()
+    t.crud.updateManyCmContact()
   },
 })

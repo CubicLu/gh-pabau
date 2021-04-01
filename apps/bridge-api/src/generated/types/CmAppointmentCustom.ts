@@ -5,7 +5,8 @@ export const CmAppointmentCustom = objectType({
   definition(t) {
     t.model.id()
     t.model.appointment_id()
-    t.model.occupier()
+    t.model.company_id()
+    t.model.Company()
     t.model.custom_field_id()
     t.model.custom_field_value()
     t.model.imported()
@@ -49,5 +50,6 @@ export const cmAppointmentCustomMutation = extendType({
     t.crud.updateOneCmAppointmentCustom()
     t.crud.upsertOneCmAppointmentCustom()
     t.crud.deleteOneCmAppointmentCustom()
+    t.crud.updateManyCmAppointmentCustom()
   },
 })

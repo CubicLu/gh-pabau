@@ -48,5 +48,6 @@ export const classSmsHistoryMutation = extendType({
     t.crud.updateOneClassSmsHistory()
     t.crud.upsertOneClassSmsHistory()
     t.crud.deleteOneClassSmsHistory()
+    t.crud.updateManyClassSmsHistory()
   },
 })

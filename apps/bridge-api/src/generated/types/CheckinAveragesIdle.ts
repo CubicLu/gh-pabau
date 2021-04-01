@@ -48,5 +48,6 @@ export const checkinAveragesIdleMutation = extendType({
     t.crud.updateOneCheckinAveragesIdle()
     t.crud.upsertOneCheckinAveragesIdle()
     t.crud.deleteOneCheckinAveragesIdle()
+    t.crud.updateManyCheckinAveragesIdle()
   },
 })

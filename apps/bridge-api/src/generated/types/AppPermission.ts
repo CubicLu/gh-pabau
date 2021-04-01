@@ -46,5 +46,6 @@ export const appPermissionMutation = extendType({
     t.crud.updateOneAppPermission()
     t.crud.upsertOneAppPermission()
     t.crud.deleteOneAppPermission()
+    t.crud.updateManyAppPermission()
   },
 })

@@ -58,5 +58,6 @@ export const apiKeyMutation = extendType({
     t.crud.updateOneApiKey()
     t.crud.upsertOneApiKey()
     t.crud.deleteOneApiKey()
+    t.crud.updateManyApiKey()
   },
 })

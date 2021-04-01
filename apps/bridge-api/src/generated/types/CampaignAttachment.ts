@@ -5,7 +5,8 @@ export const CampaignAttachment = objectType({
   definition(t) {
     t.model.id()
     t.model.campaign_id()
-    t.model.occupier()
+    t.model.company_id()
+    t.model.Company()
     t.model.attach_time()
     t.model.attach_user_name()
     t.model.attachment_type()
@@ -50,5 +51,6 @@ export const campaignAttachmentMutation = extendType({
     t.crud.updateOneCampaignAttachment()
     t.crud.upsertOneCampaignAttachment()
     t.crud.deleteOneCampaignAttachment()
+    t.crud.updateManyCampaignAttachment()
   },
 })

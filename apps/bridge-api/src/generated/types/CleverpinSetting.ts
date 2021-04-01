@@ -46,5 +46,6 @@ export const cleverpinSettingMutation = extendType({
     t.crud.updateOneCleverpinSetting()
     t.crud.upsertOneCleverpinSetting()
     t.crud.deleteOneCleverpinSetting()
+    t.crud.updateManyCleverpinSetting()
   },
 })

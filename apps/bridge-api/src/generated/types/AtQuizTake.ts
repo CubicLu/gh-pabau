@@ -52,5 +52,6 @@ export const atQuizTakeMutation = extendType({
     t.crud.updateOneAtQuizTake()
     t.crud.upsertOneAtQuizTake()
     t.crud.deleteOneAtQuizTake()
+    t.crud.updateManyAtQuizTake()
   },
 })

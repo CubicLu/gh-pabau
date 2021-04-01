@@ -50,5 +50,6 @@ export const cmBookingNoteMutation = extendType({
     t.crud.updateOneCmBookingNote()
     t.crud.upsertOneCmBookingNote()
     t.crud.deleteOneCmBookingNote()
+    t.crud.updateManyCmBookingNote()
   },
 })

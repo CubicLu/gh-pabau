@@ -4,7 +4,8 @@ export const CmAppointmentsCustomImportHelper = objectType({
   name: 'CmAppointmentsCustomImportHelper',
   definition(t) {
     t.model.id()
-    t.model.occupier()
+    t.model.company_id()
+    t.model.Company()
     t.model.custom_appointment_id()
     t.model.custom_contact_name()
     t.model.custom_field_name()
@@ -56,5 +57,6 @@ export const cmAppointmentsCustomImportHelperMutation = extendType({
     t.crud.updateOneCmAppointmentsCustomImportHelper()
     t.crud.upsertOneCmAppointmentsCustomImportHelper()
     t.crud.deleteOneCmAppointmentsCustomImportHelper()
+    t.crud.updateManyCmAppointmentsCustomImportHelper()
   },
 })

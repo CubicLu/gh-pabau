@@ -4,7 +4,8 @@ export const CalendarView = objectType({
   name: 'CalendarView',
   definition(t) {
     t.model.id()
-    t.model.occupier()
+    t.model.company_id()
+    t.model.Company()
     t.model.user_id()
     t.model.viewMode()
     t.model.dayViewMode()
@@ -60,5 +61,6 @@ export const calendarViewMutation = extendType({
     t.crud.updateOneCalendarView()
     t.crud.upsertOneCalendarView()
     t.crud.deleteOneCalendarView()
+    t.crud.updateManyCalendarView()
   },
 })

@@ -14,7 +14,8 @@ export const CancellationPolicy = objectType({
     t.model.payment_protection()
     t.model.advanced_cancellation_fee()
     t.model.no_show_fee()
-    t.model.occupier()
+    t.model.company_id()
+    t.model.Company()
     t.model.creation_date()
     t.model.modified_date()
   },
@@ -57,5 +58,6 @@ export const cancellationPolicyMutation = extendType({
     t.crud.updateOneCancellationPolicy()
     t.crud.upsertOneCancellationPolicy()
     t.crud.deleteOneCancellationPolicy()
+    t.crud.updateManyCancellationPolicy()
   },
 })

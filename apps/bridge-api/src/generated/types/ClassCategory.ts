@@ -6,7 +6,8 @@ export const ClassCategory = objectType({
     t.model.id()
     t.model.code()
     t.model.name()
-    t.model.occupier()
+    t.model.company_id()
+    t.model.Company()
     t.model.uid()
     t.model.created_date()
     t.model.modified_date()
@@ -50,5 +51,6 @@ export const classCategoryMutation = extendType({
     t.crud.updateOneClassCategory()
     t.crud.upsertOneClassCategory()
     t.crud.deleteOneClassCategory()
+    t.crud.updateManyClassCategory()
   },
 })

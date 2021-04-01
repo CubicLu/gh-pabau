@@ -68,5 +68,6 @@ export const cmCaseMutation = extendType({
     t.crud.updateOneCmCase()
     t.crud.upsertOneCmCase()
     t.crud.deleteOneCmCase()
+    t.crud.updateManyCmCase()
   },
 })

@@ -53,5 +53,6 @@ export const batchItemMutation = extendType({
     t.crud.updateOneBatchItem()
     t.crud.upsertOneBatchItem()
     t.crud.deleteOneBatchItem()
+    t.crud.updateManyBatchItem()
   },
 })

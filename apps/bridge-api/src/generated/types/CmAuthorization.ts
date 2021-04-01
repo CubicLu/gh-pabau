@@ -50,5 +50,6 @@ export const cmAuthorizationMutation = extendType({
     t.crud.updateOneCmAuthorization()
     t.crud.upsertOneCmAuthorization()
     t.crud.deleteOneCmAuthorization()
+    t.crud.updateManyCmAuthorization()
   },
 })

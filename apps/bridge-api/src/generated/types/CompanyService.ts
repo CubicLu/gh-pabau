@@ -88,5 +88,6 @@ export const companyServiceMutation = extendType({
     t.crud.updateOneCompanyService()
     t.crud.upsertOneCompanyService()
     t.crud.deleteOneCompanyService()
+    t.crud.updateManyCompanyService()
   },
 })

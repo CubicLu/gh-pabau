@@ -50,5 +50,6 @@ export const timezoneMutation = extendType({
     t.crud.updateOneTimezone()
     t.crud.upsertOneTimezone()
     t.crud.deleteOneTimezone()
+    t.crud.updateManyTimezone()
   },
 })

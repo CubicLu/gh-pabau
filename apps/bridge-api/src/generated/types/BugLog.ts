@@ -48,5 +48,6 @@ export const bugLogMutation = extendType({
     t.crud.updateOneBugLog()
     t.crud.upsertOneBugLog()
     t.crud.deleteOneBugLog()
+    t.crud.updateManyBugLog()
   },
 })

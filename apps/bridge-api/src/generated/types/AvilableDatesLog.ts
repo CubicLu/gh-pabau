@@ -4,7 +4,8 @@ export const AvilableDatesLog = objectType({
   name: 'AvilableDatesLog',
   definition(t) {
     t.model.id()
-    t.model.occupier()
+    t.model.company_id()
+    t.model.Company()
     t.model.uid()
     t.model.date()
     t.model.start()
@@ -49,5 +50,6 @@ export const avilableDatesLogMutation = extendType({
     t.crud.updateOneAvilableDatesLog()
     t.crud.upsertOneAvilableDatesLog()
     t.crud.deleteOneAvilableDatesLog()
+    t.crud.updateManyAvilableDatesLog()
   },
 })

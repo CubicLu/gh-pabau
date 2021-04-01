@@ -51,5 +51,6 @@ export const classtypeMasterMutation = extendType({
     t.crud.updateOneClasstypeMaster()
     t.crud.upsertOneClasstypeMaster()
     t.crud.deleteOneClasstypeMaster()
+    t.crud.updateManyClasstypeMaster()
   },
 })

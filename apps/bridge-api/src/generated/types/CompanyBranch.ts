@@ -33,6 +33,7 @@ export const CompanyBranch = objectType({
     t.model.notice()
     t.model.Company()
     t.model.CompanyRoomLocation()
+    t.model.RotaShift()
   },
 })
 
@@ -73,5 +74,6 @@ export const companyBranchMutation = extendType({
     t.crud.updateOneCompanyBranch()
     t.crud.upsertOneCompanyBranch()
     t.crud.deleteOneCompanyBranch()
+    t.crud.updateManyCompanyBranch()
   },
 })

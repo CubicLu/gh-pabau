@@ -49,5 +49,6 @@ export const automationActionMutation = extendType({
     t.crud.updateOneAutomationAction()
     t.crud.upsertOneAutomationAction()
     t.crud.deleteOneAutomationAction()
+    t.crud.updateManyAutomationAction()
   },
 })

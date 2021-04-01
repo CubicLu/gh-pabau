@@ -48,5 +48,6 @@ export const acceptEmailTokenMutation = extendType({
     t.crud.updateOneAcceptEmailToken()
     t.crud.upsertOneAcceptEmailToken()
     t.crud.deleteOneAcceptEmailToken()
+    t.crud.updateManyAcceptEmailToken()
   },
 })

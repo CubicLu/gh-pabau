@@ -47,5 +47,6 @@ export const clockinBreakMutation = extendType({
     t.crud.updateOneClockinBreak()
     t.crud.upsertOneClockinBreak()
     t.crud.deleteOneClockinBreak()
+    t.crud.updateManyClockinBreak()
   },
 })

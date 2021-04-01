@@ -60,5 +60,6 @@ export const advertCampaignMutation = extendType({
     t.crud.updateOneAdvertCampaign()
     t.crud.upsertOneAdvertCampaign()
     t.crud.deleteOneAdvertCampaign()
+    t.crud.updateManyAdvertCampaign()
   },
 })

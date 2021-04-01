@@ -52,5 +52,6 @@ export const clientFormSettingMutation = extendType({
     t.crud.updateOneClientFormSetting()
     t.crud.upsertOneClientFormSetting()
     t.crud.deleteOneClientFormSetting()
+    t.crud.updateManyClientFormSetting()
   },
 })

@@ -5,7 +5,8 @@ export const BlockReason = objectType({
   definition(t) {
     t.model.id()
     t.model.reason_name()
-    t.model.occupier()
+    t.model.company_id()
+    t.model.Company()
     t.model.is_active()
     t.model.block_color()
     t.model.is_paid()
@@ -52,5 +53,6 @@ export const blockReasonMutation = extendType({
     t.crud.updateOneBlockReason()
     t.crud.upsertOneBlockReason()
     t.crud.deleteOneBlockReason()
+    t.crud.updateManyBlockReason()
   },
 })

@@ -49,5 +49,6 @@ export const apiDebugMutation = extendType({
     t.crud.updateOneApiDebug()
     t.crud.upsertOneApiDebug()
     t.crud.deleteOneApiDebug()
+    t.crud.updateManyApiDebug()
   },
 })

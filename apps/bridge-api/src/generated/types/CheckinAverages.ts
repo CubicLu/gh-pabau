@@ -47,5 +47,6 @@ export const checkinAveragesMutation = extendType({
     t.crud.updateOneCheckinAverages()
     t.crud.upsertOneCheckinAverages()
     t.crud.deleteOneCheckinAverages()
+    t.crud.updateManyCheckinAverages()
   },
 })

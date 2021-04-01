@@ -7,7 +7,8 @@ export const BodyChartTemplate = objectType({
     t.model.template_name()
     t.model.template_url()
     t.model.tags()
-    t.model.occupier()
+    t.model.company_id()
+    t.model.Company()
     t.model.uid()
     t.model.creation_date()
     t.model.chart_order()
@@ -52,5 +53,6 @@ export const bodyChartTemplateMutation = extendType({
     t.crud.updateOneBodyChartTemplate()
     t.crud.upsertOneBodyChartTemplate()
     t.crud.deleteOneBodyChartTemplate()
+    t.crud.updateManyBodyChartTemplate()
   },
 })

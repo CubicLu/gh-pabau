@@ -47,5 +47,6 @@ export const companyLocationMutation = extendType({
     t.crud.updateOneCompanyLocation()
     t.crud.upsertOneCompanyLocation()
     t.crud.deleteOneCompanyLocation()
+    t.crud.updateManyCompanyLocation()
   },
 })

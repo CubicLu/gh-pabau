@@ -49,5 +49,6 @@ export const userSecurityQuestionsAnswerMutation = extendType({
     t.crud.updateOneUserSecurityQuestionsAnswer()
     t.crud.upsertOneUserSecurityQuestionsAnswer()
     t.crud.deleteOneUserSecurityQuestionsAnswer()
+    t.crud.updateManyUserSecurityQuestionsAnswer()
   },
 })

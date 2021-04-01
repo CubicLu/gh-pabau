@@ -56,5 +56,6 @@ export const bookingMasterMutation = extendType({
     t.crud.updateOneBookingMaster()
     t.crud.upsertOneBookingMaster()
     t.crud.deleteOneBookingMaster()
+    t.crud.updateManyBookingMaster()
   },
 })

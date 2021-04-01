@@ -50,5 +50,6 @@ export const cmCampaignNoteMutation = extendType({
     t.crud.updateOneCmCampaignNote()
     t.crud.upsertOneCmCampaignNote()
     t.crud.deleteOneCmCampaignNote()
+    t.crud.updateManyCmCampaignNote()
   },
 })
