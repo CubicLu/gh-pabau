@@ -12,7 +12,7 @@ const onMessageType = () => {
 
 const onCreateChannel = (name, description, isPrivate) => {
   //add mutation for create Channel here
-  console.log('onCreateChannel--', name, description, isPrivate)
+  console.log('onCreateChannel-- or another one', name, description, isPrivate)
 }
 
 const Layout: FC<LayoutProps> = ({ children, ...props }) => {
