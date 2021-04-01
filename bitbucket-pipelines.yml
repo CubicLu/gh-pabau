@@ -4,7 +4,6 @@ image: node:14-buster
 
 options:
   docker: true
-  size: 2x
   max-time: 32 # max time in minutes for each step
 
 definitions:
@@ -15,14 +14,13 @@ definitions:
     cypress: '/root/.cache/Cypress'
   services:
     docker:
-      memory: 4096
+      memory: 2048
 
 pipelines:
   pull-requests:
     '**':
       - step:
           name: PR pipeline
-          size: 2x
           services:
             - docker
           caches:
