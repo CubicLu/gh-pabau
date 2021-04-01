@@ -18,6 +18,7 @@ import {
   PictureOutlined,
 } from '@ant-design/icons'
 import styles from './CreateProduct.module.less'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const { Option } = Select
 
@@ -44,7 +45,9 @@ export const CreateProduct: FC<CreateProductProps> = ({
   onClose,
   onSaveChanges,
 }) => {
+  const { t } = useTranslationI18()
   const [form] = Form.useForm()
+  const [active, setActive] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [showImageSelector, setShowImageSelector] = useState(false)
   const formikInitialValues = {
@@ -67,24 +70,46 @@ export const CreateProduct: FC<CreateProductProps> = ({
   const formik = useFormik({
     initialValues: formikInitialValues,
     validationSchema: Yup.object({
-      sku: Yup.string().required('SKU is required'),
-      barcode: Yup.string().required('Barcode is required'),
-      category: Yup.string().required('Category is required'),
-      size: Yup.string().required('Size is required'),
-      name: Yup.string().required('Name is required'),
-      supplierName: Yup.string().required('Supplier name is required'),
-      costPrice: Yup.string().required('Cost price is required'),
-      retailPrice: Yup.string().required('Retail price is required'),
-      taxName: Yup.string().required('Tas name is required'),
-      plotColor: Yup.string().required('Plot color is required'),
-      incrementDefault: Yup.string().required('Increment default is required'),
-      selectedImage: Yup.string().required('Image is required'),
+      sku: Yup.string().required(t('ui.create.product.sku.validate.required')),
+      barcode: Yup.string().required(
+        t('ui.create.product.barcode.validate.required')
+      ),
+      category: Yup.string().required(
+        t('ui.create.product.category.validate.required')
+      ),
+      size: Yup.string().required(
+        t('ui.create.product.size.validate.required')
+      ),
+      name: Yup.string().required(
+        t('ui.create.product.name.validate.required')
+      ),
+      supplierName: Yup.string().required(
+        t('ui.create.product.supplier.validate.required')
+      ),
+      costPrice: Yup.string().required(
+        t('ui.create.product.cost.validate.required')
+      ),
+      retailPrice: Yup.string().required(
+        t('ui.create.product.retail.validate.required')
+      ),
+      taxName: Yup.string().required(
+        t('ui.create.product.tax.validate.required')
+      ),
+      plotColor: Yup.string().required(
+        t('ui.create.product.plot.validate.required')
+      ),
+      incrementDefault: Yup.string().required(
+        t('ui.create.product.increment.validate.required')
+      ),
+      selectedImage: Yup.string().required(
+        t('ui.create.product.image.validate.required')
+      ),
       minStockLevel: Yup.number()
-        .required('Min stock level is required')
-        .moreThan(0, 'Min stock level should be more than 0'),
+        .required(t('ui.create.product.minstock.validate.required'))
+        .moreThan(0, t('ui.create.product.minstock.validate.more')),
       maxStockLevel: Yup.number()
-        .required('Max stock level is required')
-        .moreThan(0, 'Max stock level should be more than 0'),
+        .required(t('ui.create.product.maxstock.validate.required'))
+        .moreThan(0, t('ui.create.product.maxstock.validate.more')),
     }),
     onSubmit: (values) => {
       console.log('Values >>>', values)
@@ -99,17 +124,26 @@ export const CreateProduct: FC<CreateProductProps> = ({
   return (
     <FullScreenReportModal
       visible={showModal}
-      title="Create Product"
+      title={t('ui.create.product.title')}
       operations={[OperationType.active, OperationType.create]}
-      activated={true}
-      createBtnText="Save changes"
+      activated={active}
+      createBtnText={t('common-label-create')}
+      activeBtnText={
+        active ? t('common-label-active') : t('common-label-inactive')
+      }
       enableCreateBtn={true}
-      subMenu={['General', 'Pricing', 'Inventory levels', 'Advanced']}
+      subMenu={[
+        t('ui.create.product.tab.general'),
+        t('ui.create.product.tab.pricing'),
+        t('ui.create.product.tab.inventory'),
+        t('ui.create.product.tab.advanced'),
+      ]}
       onBackClick={() => {
         setShowModal(false)
         formik.setValues(formikInitialValues)
         onClose()
       }}
+      onActivated={(val) => setActive(val)}
       onCreate={() => {
         if (formik.isValid) {
           onSaveChanges?.()
@@ -123,19 +157,25 @@ export const CreateProduct: FC<CreateProductProps> = ({
       <Form form={form} layout="vertical">
         <div className={styles.createProductGeneral}>
           <div className={styles.createProductSection}>
-            <h2 className={styles.createProductSectionTitle}>General</h2>
+            <h2 className={styles.createProductSectionTitle}>
+              {t('ui.create.product.general')}
+            </h2>
             <div className={styles.createProductSectionItem}>
               <Input
-                label="Name"
-                placeHolderText="Enter name"
+                label={t('ui.create.product.general.name')}
+                placeHolderText={t(
+                  'ui.create.product.general.name.placeholder'
+                )}
                 text={formik.values.name}
                 onChange={(val) => handleChange('name', val)}
               />
             </div>
             <div className={styles.createProductSectionItem}>
-              <Form.Item label="Category">
+              <Form.Item label={t('ui.create.product.general.category')}>
                 <Select
-                  placeholder="Select category"
+                  placeholder={t(
+                    'ui.create.product.general.category.placeholder'
+                  )}
                   onSelect={(val) => handleChange('category', val)}
                   defaultValue={formik.values.category}
                 >
@@ -149,32 +189,38 @@ export const CreateProduct: FC<CreateProductProps> = ({
             </div>
             <div className={styles.createProductSectionItem}>
               <Input
-                label="Barcode"
-                placeHolderText="Enter barcode"
+                label={t('ui.create.product.general.barcode')}
+                placeHolderText={t(
+                  'ui.create.product.general.barcode.placeholder'
+                )}
                 text={formik.values.barcode}
                 onChange={(val) => handleChange('barcode', val)}
               />
             </div>
             <div className={styles.createProductSectionItem}>
               <Input
-                label="SKU"
-                placeHolderText="Enter SKU"
+                label={t('ui.create.product.general.sku')}
+                placeHolderText={t('ui.create.product.general.sku.placeholder')}
                 text={formik.values.sku}
                 onChange={(val) => handleChange('sku', val)}
               />
             </div>
             <div className={styles.createProductSectionItem}>
               <Input
-                label="Size"
-                placeHolderText="e.g. 600 ml"
+                label={t('ui.create.product.general.size')}
+                placeHolderText={t(
+                  'ui.create.product.general.size.placeholder'
+                )}
                 text={formik.values.size}
                 onChange={(val) => handleChange('size', val)}
               />
             </div>
             <div className={styles.createProductSectionItem}>
-              <Form.Item label="Supplier Name">
+              <Form.Item label={t('ui.create.product.general.supplier')}>
                 <Select
-                  placeholder="Select supplier name"
+                  placeholder={t(
+                    'ui.create.product.general.supplier.placeholder'
+                  )}
                   onSelect={(val) => handleChange('supplierName', val)}
                   defaultValue={formik.values.supplierName}
                 >
@@ -187,9 +233,11 @@ export const CreateProduct: FC<CreateProductProps> = ({
               </Form.Item>
             </div>
             <div className={styles.createProductSectionItem}>
-              <Form.Item label="Description – optional">
+              <Form.Item label={t('ui.create.product.general.description')}>
                 <AntInput.TextArea
-                  placeholder="Enter description"
+                  placeholder={t(
+                    'ui.create.product.general.description.placeholder'
+                  )}
                   rows={4}
                   value={formik.values.description}
                   onChange={(e) => handleChange('description', e.target.value)}
@@ -200,12 +248,12 @@ export const CreateProduct: FC<CreateProductProps> = ({
               className={styles.createProductSectionItem}
               style={{ marginBottom: '8px' }}
             >
-              <Form.Item label="Image">
+              <Form.Item label={t('ui.create.product.general.image')}>
                 <Button
                   icon={<PlusOutlined />}
                   onClick={() => setShowImageSelector(true)}
                 >
-                  Choose from library
+                  {t('ui.create.product.general.image.choose')}
                 </Button>
               </Form.Item>
             </div>
@@ -231,15 +279,20 @@ export const CreateProduct: FC<CreateProductProps> = ({
               setShowImageSelector(false)
               handleChange('selectedImage', image.source)
             }}
+            attachButtonText={t('ui.imageselector.attach')}
+            title={t('ui.imageselector.title')}
+            chooseButtonText={t('ui.imageselector.choose')}
           />
         </div>
       </Form>
       <Form form={form} layout="vertical">
         <div className={styles.createProductPricing}>
           <div className={styles.createProductSection}>
-            <h2 className={styles.createProductSectionTitle}>Pricing</h2>
+            <h2 className={styles.createProductSectionTitle}>
+              {t('ui.create.product.pricing')}
+            </h2>
             <div className={styles.createProductSectionItem}>
-              <Form.Item label="Cost price">
+              <Form.Item label={t('ui.create.product.pricing.cost')}>
                 <CurrencyInput
                   unit="£"
                   value={formik.values.costPrice}
@@ -250,7 +303,7 @@ export const CreateProduct: FC<CreateProductProps> = ({
               </Form.Item>
             </div>
             <div className={styles.createProductSectionItem}>
-              <Form.Item label="Retail price">
+              <Form.Item label={t('ui.create.product.pricing.retail')}>
                 <CurrencyInput
                   unit="£"
                   value={formik.values.retailPrice}
@@ -264,14 +317,16 @@ export const CreateProduct: FC<CreateProductProps> = ({
               className={styles.createProductSectionItem}
               style={{ margin: 0 }}
             >
-              <Form.Item label="Default tax rate">
+              <Form.Item label={t('ui.create.product.pricing.defaulttax')}>
                 <Select
-                  placeholder="Select default tax rate"
+                  placeholder={t(
+                    'ui.create.product.pricing.defaulttax.placeholder'
+                  )}
                   onSelect={(val) => handleChange('taxName', val)}
                   defaultValue={formik.values.taxName}
                 >
                   <Option selected value="default-tax-setting">
-                    Default tax setting
+                    {t('ui.create.product.pricing.defaulttax.default')}
                   </Option>
                   {taxNames.map((item) => (
                     <Option key={item} value={item}>
@@ -287,10 +342,14 @@ export const CreateProduct: FC<CreateProductProps> = ({
       <Form form={form} layout="vertical">
         <div className={styles.createProductInventoryLevels}>
           <div className={styles.createProductSection}>
-            <h2 className={styles.createProductSectionTitle}>Reorder Levels</h2>
+            <h2 className={styles.createProductSectionTitle}>
+              {t('ui.create.product.inventory.reorder')}
+            </h2>
             <div className={styles.createProductSectionDoubleItems}>
               <div>
-                <Form.Item label="Minimum stock level">
+                <Form.Item
+                  label={t('ui.create.product.inventory.reorder.minstock')}
+                >
                   <InputNumber
                     type="number"
                     placeholder="0"
@@ -302,7 +361,9 @@ export const CreateProduct: FC<CreateProductProps> = ({
                 </Form.Item>
               </div>
               <div>
-                <Form.Item label="Maximum stock level">
+                <Form.Item
+                  label={t('ui.create.product.inventory.reorder.maxstock')}
+                >
                   <InputNumber
                     type="number"
                     placeholder="0"
@@ -319,8 +380,10 @@ export const CreateProduct: FC<CreateProductProps> = ({
               style={{ margin: 0 }}
             >
               <Checkbox defaultChecked={true}>
-                Alert team when low{' '}
-                <Tooltip title="lorem ipsum">
+                {t('ui.create.product.inventory.reorder.alert')}
+                <Tooltip
+                  title={t('ui.create.product.inventory.reorder.alert.tooltip')}
+                >
                   <QuestionCircleOutlined
                     style={{ color: 'var(--light-grey-color)' }}
                   />
@@ -330,12 +393,12 @@ export const CreateProduct: FC<CreateProductProps> = ({
           </div>
           <div className={styles.createProductSection}>
             <h2 className={styles.createProductSectionTitle}>
-              Current stock levels by location
+              {t('ui.create.product.inventory.current')}
             </h2>
             <div className={styles.stockLevelsHeader}>
-              <div>Name</div>
-              <div>Min</div>
-              <div>Max</div>
+              <div>{t('ui.create.product.inventory.current.name')}</div>
+              <div>{t('ui.create.product.inventory.current.min')}</div>
+              <div>{t('ui.create.product.inventory.current.max')}</div>
             </div>
             {locations.map((location) => (
               <div className={styles.stockLevelsItem} key={location}>
@@ -355,13 +418,15 @@ export const CreateProduct: FC<CreateProductProps> = ({
         <div className={styles.createProductAdvanced}>
           <div className={styles.createProductSection}>
             <h2 className={styles.createProductSectionTitle}>
-              Advanced additional information
+              {t('ui.create.product.advanced')}
             </h2>
             <div className={styles.createProductSectionDoubleItems}>
               <div>
-                <Form.Item label="Increment default *custom field*">
+                <Form.Item label={t('ui.create.product.advanced.increment')}>
                   <Select
-                    placeholder="Select an increment"
+                    placeholder={t(
+                      'ui.create.product.advanced.increment.placeholder'
+                    )}
                     onSelect={(val) => handleChange('incrementDefault', val)}
                     defaultValue={formik.values.incrementDefault}
                   >
@@ -374,9 +439,11 @@ export const CreateProduct: FC<CreateProductProps> = ({
                 </Form.Item>
               </div>
               <div>
-                <Form.Item label="Plot colour">
+                <Form.Item label={t('ui.create.product.advanced.plot')}>
                   <Select
-                    placeholder="Select plot colour"
+                    placeholder={t(
+                      'ui.create.product.advanced.plot.placeholder'
+                    )}
                     onSelect={(val) => handleChange('plotColor', val)}
                     defaultValue={formik.values.plotColor}
                   >
@@ -394,7 +461,7 @@ export const CreateProduct: FC<CreateProductProps> = ({
               style={{ margin: 0 }}
             >
               <Checkbox defaultChecked={false}>
-                Allow negative quantity in stock
+                {t('ui.create.product.advanced.allow')}
               </Checkbox>
             </div>
           </div>

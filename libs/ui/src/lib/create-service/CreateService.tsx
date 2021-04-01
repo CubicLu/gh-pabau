@@ -332,18 +332,13 @@ export const CreateService: FC<CreateServiceProps> = ({
       <FullScreenReportModal
         visible={showModal}
         title={`Create ${serviceType}`}
-        operations={[
-          OperationType.active,
-          OperationType.cancel,
-          OperationType.create,
-        ]}
+        operations={[OperationType.active, OperationType.create]}
         activated={true}
         onBackClick={() => {
           setShowModal(false)
           setShowChooseModal(false)
           onClose()
         }}
-        cancelBtnText="Cancel"
         createBtnText="Create"
         enableCreateBtn={!!serviceName && !!servicePrice && !!category}
         subMenu={[
@@ -361,11 +356,6 @@ export const CreateService: FC<CreateServiceProps> = ({
             </span>
           </div>,
         ]}
-        onCancel={() => {
-          setShowModal(false)
-          setShowChooseModal(false)
-          onClose()
-        }}
         onCreate={() => {
           onCreate?.()
         }}

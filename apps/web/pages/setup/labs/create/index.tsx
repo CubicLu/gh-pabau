@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
 import {
-  Layout,
   Breadcrumb,
   Button,
   PhoneNumberInput,
@@ -8,6 +7,7 @@ import {
   NotificationType,
   MobileHeader,
 } from '@pabau/ui'
+import Layout from '../../../../components/Layout/Layout'
 import { Typography } from 'antd'
 import * as Yup from 'yup'
 import { Formik } from 'formik'

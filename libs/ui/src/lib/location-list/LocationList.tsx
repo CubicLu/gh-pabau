@@ -13,6 +13,7 @@ export interface LocationListProps {
   locationData: LocationDataProps[]
   handleLocationChange?: (checked: boolean, locationKey: string) => void
   selectAll?: boolean
+  checkBtnText?: string
   onCheckAllChange?: (checked: boolean) => void
 }
 
@@ -24,6 +25,7 @@ export function LocationList(props: LocationListProps) {
     handleLocationChange,
     onCheckAllChange,
     selectAll,
+    checkBtnText,
   } = props
   return (
     <div className={styles.checkboxWrapper}>
@@ -42,9 +44,13 @@ export function LocationList(props: LocationListProps) {
         ))}
       </div>
       {selectAll ? (
-        <Button onClick={() => onCheckAllChange?.(false)}>Uncheck All</Button>
+        <Button onClick={() => onCheckAllChange?.(false)}>
+          {checkBtnText || 'Uncheck All'}
+        </Button>
       ) : (
-        <Button onClick={() => onCheckAllChange?.(true)}>Check All</Button>
+        <Button onClick={() => onCheckAllChange?.(true)}>
+          {checkBtnText || 'Check All'}
+        </Button>
       )}
     </div>
   )

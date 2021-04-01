@@ -12,6 +12,7 @@ import {
 import * as Yup from 'yup'
 import { TaxOption } from '../../../mocks/CoursesPackages'
 import { PlusOutlined, PictureOutlined } from '@ant-design/icons'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
 
 const { TextArea } = Input
@@ -36,6 +37,7 @@ interface GeneralTabProps {
   ): void
 }
 const General: FC<GeneralTabProps> = ({ value, setFieldValue }) => {
+  const { t } = useTranslationI18()
   const [showImageSelector, setShowImageSelector] = useState(false)
   const [selectedImage, setSelectedImage] = useState('')
   return (
@@ -48,16 +50,19 @@ const General: FC<GeneralTabProps> = ({ value, setFieldValue }) => {
         layout="vertical"
       >
         <div className={styles.generalSection}>
-          <h4>General</h4>
-          <Form.Item label="Course name" name="name">
+          <h4>{t('setup.courses.course.general')}</h4>
+          <Form.Item label={t('setup.courses.course.general.name')} name="name">
             <Input
               name="name"
               autoComplete="off"
-              placeholder="Enter course name"
+              placeholder={t('setup.courses.course.general.name.placeholder')}
               size="large"
             />
           </Form.Item>
-          <Form.Item label="Session count" name="session_count">
+          <Form.Item
+            label={t('setup.courses.course.general.sessioncount')}
+            name="session_count"
+          >
             <InputNumber
               name="session_count"
               type="number"
@@ -66,40 +71,53 @@ const General: FC<GeneralTabProps> = ({ value, setFieldValue }) => {
               size="large"
             />
           </Form.Item>
-          <Form.Item label="Description" name="description">
+          <Form.Item
+            label={t('setup.courses.course.general.description')}
+            name="description"
+          >
             <TextArea
               rows={4}
               name="description"
-              placeholder="Enter description"
+              placeholder={t(
+                'setup.courses.course.general.description.placeholder'
+              )}
             />
           </Form.Item>
-          <Form.Item label="Price" name="price">
+          <Form.Item
+            label={t('setup.courses.course.general.price')}
+            name="price"
+          >
             <InputNumber
               name="price"
               type="number"
               size="large"
-              placeholder="£0.00"
+              placeholder={t('setup.courses.course.general.price.placeholder')}
               value={value.price}
               onChange={(data) => setFieldValue('price', data)}
             />
           </Form.Item>
           <SimpleDropdown
-            label="Tax"
+            label={t('setup.courses.course.general.tax')}
             name="tax"
             size="large"
-            placeHolderText={'Select tax'}
+            placeHolderText={t('setup.courses.course.general.tax.placeholder')}
             dropdownItems={TaxOption.map((item) => item || '')}
             onSelected={(value) => setFieldValue('tax', value)}
           />
           <SimpleDropdown
-            label="Category"
+            label={t('setup.courses.course.general.category')}
             size="large"
             name="category"
-            placeHolderText={'Select a category'}
+            placeHolderText={t(
+              'setup.courses.course.general.category.placeholder'
+            )}
             dropdownItems={TaxOption.map((item) => item || '')}
             onSelected={(value) => setFieldValue('category', value)}
           />
-          <Form.Item label="Image" name="image">
+          <Form.Item
+            label={t('setup.courses.course.general.image')}
+            name="image"
+          >
             <div
               className={styles.createServiceImageContainer}
               style={{ backgroundImage: `url(${selectedImage})` }}
@@ -120,12 +138,15 @@ const General: FC<GeneralTabProps> = ({ value, setFieldValue }) => {
               size="middle"
               onClick={() => setShowImageSelector(true)}
             >
-              Choose from Library
+              {t('setup.courses.course.general.image.choose')}
             </Button>
           </Form.Item>
           <ImageSelectorModal
             visible={showImageSelector}
-            initialSearch={''}
+            initialSearch={value.name}
+            title={t('ui.imageselector.title')}
+            attachButtonText={t('ui.imageselector.attach')}
+            chooseButtonText={t('ui.imageselector.choose')}
             onOk={(image) => {
               setSelectedImage(image.source)
               setFieldValue('image', image.source)
@@ -147,15 +168,11 @@ export const CreateCourse = ({
   initialValue,
   employeeList,
 }) => {
+  const { t } = useTranslationI18()
   const handleOperations = () => {
     return !initialValue.id
-      ? [OperationType.active, OperationType.cancel, OperationType.create]
-      : [
-          OperationType.active,
-          OperationType.cancel,
-          OperationType.delete,
-          OperationType.save,
-        ]
+      ? [OperationType.active, OperationType.create]
+      : [OperationType.active, OperationType.delete, OperationType.create]
   }
 
   const handleFullScreenModalBackClick = (handleReset) => {
@@ -178,7 +195,9 @@ export const CreateCourse = ({
       initialValues={initialValue}
       enableReinitialize={true}
       validationSchema={Yup.object().shape({
-        name: Yup.string().required('Discount Name is required'),
+        name: Yup.string().required(
+          t('setup.courses.course.name.validate.required')
+        ),
       })}
       onSubmit={(values) => {
         console.log(values)
@@ -187,26 +206,42 @@ export const CreateCourse = ({
       {({ setFieldValue, handleSubmit, values, handleReset }) => (
         <FullScreenReportModal
           operations={handleOperations()}
-          title={values.id ? `Edit Course` : `Create Course`}
+          title={
+            values.id
+              ? t('setup.courses.course.title.edit')
+              : t('setup.courses.course.title.create')
+          }
           visible={visible}
           onBackClick={() => handleFullScreenModalBackClick(handleReset)}
-          onCancel={() => handleFullScreenModalBackClick(handleReset)}
-          activated={true}
+          activated={values.id ? values.isActive : true}
           enableCreateBtn={true}
-          createBtnText={'Create'}
+          createBtnText={
+            values.id ? t('common-label-save') : t('common-label-create')
+          }
+          deleteBtnText={t('common-label-delete')}
+          activeBtnText={
+            values.isActive
+              ? t('common-label-active')
+              : t('common-label-inactive')
+          }
           onActivated={(value) => setFieldValue('isActive', value)}
           onCreate={handleSubmit}
-          onSave={handleSubmit}
-          subMenu={['General', 'Employees']}
+          subMenu={[
+            t('setup.courses.course.submenu.general'),
+            t('setup.courses.course.submenu.employees'),
+          ]}
           footer={true}
         >
           <General setFieldValue={setFieldValue} value={values} />
           <div className={styles.empSection}>
             <Employees
-              description="Choose which employees can offer the services in this course"
+              description={t('setup.courses.course.employees.description')}
               employees={employeeList}
               onSelected={(value) => prepareEmployeeList(value, setFieldValue)}
-              title="Employees"
+              title={t('setup.courses.course.employees.title')}
+              searchPlaceholder={t('ui.employees.search.placeholder')}
+              showLessText={t('ui.employees.show.less')}
+              showMoreText={t('ui.employees.show.more')}
             />
           </div>
         </FullScreenReportModal>

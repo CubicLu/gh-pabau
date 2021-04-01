@@ -2,6 +2,7 @@ import { gql } from '@apollo/client'
 import { NextPage } from 'next'
 import React from 'react'
 import CrudLayout from '../../components/CrudLayout/CrudLayout'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 
 const LIST_QUERY = gql`
   query credit_note_types(
@@ -94,75 +95,80 @@ const UPDATE_ORDER_MUTATION = gql`
   }
 `
 
-const schema: Schema = {
-  full: 'Credit note type',
-  fullLower: 'Credit note type',
-  short: 'Credit Note Type',
-  shortLower: 'credit note type',
-  createButtonLabel: 'Create Credit Note Type',
-  messages: {
-    create: {
-      success: 'You have successfully created a credit note',
-      error: 'While creating a credit note',
-    },
-    update: {
-      success: 'You have successfully updated a credit note',
-      error: 'While updating a credit note',
-    },
-    delete: {
-      success: 'You have successfully deleted a credit note',
-      error: 'While deleting a credit note',
-    },
-  },
-  fields: {
-    name: {
-      full: 'Friendly Name',
-      fullLower: 'friendly name',
-      short: 'Name',
-      shortLower: 'name',
-      min: 2,
-      max: 50,
-      example: 'Insurance Shortfall',
-      // description: 'A friendly name',
-      // extra: <i>Please note: blah blah blahh</i>,
-      cssWidth: 'max',
-      type: 'string',
-    },
-    code: {
-      full: 'Code',
-      fullLower: 'code',
-      short: 'Code',
-      shortLower: 'code',
-      min: 0,
-      max: 50,
-      example: 2,
-      description: 'A code',
-      cssWidth: 'max',
-      type: 'number',
-      visible: false,
-    },
-    invoice_prefix: {
-      full: 'Invoice Prefix',
-      fullLower: 'invoice prefix',
-      short: 'Invoice Prefix',
-      shortLower: 'invoice prefix',
-      example: 'RCN',
-      min: 0,
-      max: 50,
-      description: 'A invoice prefix',
-      cssWidth: 'max',
-      visible: false,
-      type: 'string',
-    },
-    is_active: {
-      full: 'Status',
-      type: 'boolean',
-      defaultvalue: true,
-    },
-  },
-}
-
 export const CreditNotes: NextPage = () => {
+  const { t } = useTranslationI18()
+  const schema: Schema = {
+    full: t('setup.creditnotes.schema.full'),
+    fullLower: t('setup.creditnotes.schema.full.lower'),
+    short: t('setup.creditnotes.schema.short'),
+    shortLower: t('setup.creditnotes.schema.short.lower'),
+    createButtonLabel: t('setup.creditnotes.schema.createbutton'),
+    messages: {
+      create: {
+        success: t('setup.creditnotes.schema.create.success'),
+        error: t('setup.creditnotes.schema.create.error'),
+      },
+      update: {
+        success: t('setup.creditnotes.schema.edit.success'),
+        error: t('setup.creditnotes.schema.edit.error'),
+      },
+      delete: {
+        success: t('setup.creditnotes.schema.delete.success'),
+        error: t('setup.creditnotes.schema.delete.error'),
+      },
+    },
+    fields: {
+      name: {
+        full: t('setup.creditnotes.schema.fields.name.full'),
+        fullLower: t('setup.creditnotes.schema.fields.name.full.lower'),
+        short: t('setup.creditnotes.schema.fields.name.short'),
+        shortLower: t('setup.creditnotes.schema.fields.name.short.lower'),
+        min: 2,
+        max: 50,
+        example: t('setup.creditnotes.schema.fields.name.example'),
+        cssWidth: 'max',
+        type: 'string',
+      },
+      code: {
+        full: t('setup.creditnotes.schema.fields.code.full'),
+        fullLower: t('setup.creditnotes.schema.fields.code.full.lower'),
+        short: t('setup.creditnotes.schema.fields.code.short'),
+        shortLower: t('setup.creditnotes.schema.fields.code.short.lower'),
+        min: 0,
+        max: 50,
+        example: 2,
+        description: t('setup.creditnotes.schema.fields.code.description'),
+        cssWidth: 'max',
+        type: 'number',
+        visible: false,
+      },
+      invoice_prefix: {
+        full: t('setup.creditnotes.schema.fields.invoiceprefix.full'),
+        fullLower: t(
+          'setup.creditnotes.schema.fields.invoiceprefix.full.lower'
+        ),
+        short: t('setup.creditnotes.schema.fields.invoiceprefix.short'),
+        shortLower: t(
+          'setup.creditnotes.schema.fields.invoiceprefix.short.lower'
+        ),
+        example: t('setup.creditnotes.schema.fields.invoiceprefix.example'),
+        min: 0,
+        max: 50,
+        description: t(
+          'setup.creditnotes.schema.fields.invoiceprefix.description'
+        ),
+        cssWidth: 'max',
+        visible: false,
+        type: 'string',
+      },
+      is_active: {
+        full: t('setup.creditnotes.schema.fields.isactive'),
+        type: 'boolean',
+        defaultvalue: true,
+      },
+    },
+  }
+
   return (
     <CrudLayout
       schema={schema}

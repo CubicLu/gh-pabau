@@ -9,7 +9,11 @@ import {
 } from '@pabau/ui'
 import { Card, Col, Row, Typography } from 'antd'
 import { gql, useMutation } from '@apollo/client'
+import { useMedia } from 'react-use'
+import { useRouter } from 'next/router'
+import { LeftOutlined } from '@ant-design/icons'
 
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import Layout from '../../components/Layout/Layout'
 import AddButton from '../../components/AddButton'
 import NewBlockTypeModal from '../../components/Setup/BlockOutOptions/NewBlockTypeModal'
@@ -17,28 +21,6 @@ import styles from './block-out-options.module.less'
 
 /* eslint-disable-next-line */
 export interface BlockOutOptionsProps {}
-
-const columns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    className: 'drag-visible',
-    visible: true,
-  },
-  {
-    title: 'Type',
-    dataIndex: 'type',
-    className: 'drag-visible',
-    visible: true,
-  },
-  {
-    title: 'Status',
-    dataIndex: 'is_active',
-    className: 'drag-visible',
-    visible: true,
-    width: '160px',
-  },
-]
 
 const LIST_QUERY = gql`
   query block_out_options(
@@ -136,7 +118,32 @@ const LIST_AGGREGATE_QUERY = gql`
 `
 
 export function BlockOutOptions(props: BlockOutOptionsProps) {
+  const { t } = useTranslationI18()
+  const router = useRouter()
+  const isMobile = useMedia('(max-width: 767px)', false)
   const { Paragraph, Title } = Typography
+
+  const columns = [
+    {
+      title: t('setup.blockout.table.header.name'),
+      dataIndex: 'name',
+      className: 'drag-visible',
+      visible: true,
+    },
+    {
+      title: t('setup.blockout.table.header.type'),
+      dataIndex: 'type',
+      className: 'drag-visible',
+      visible: true,
+    },
+    {
+      title: t('setup.blockout.table.header.status'),
+      dataIndex: 'is_active',
+      className: 'drag-visible',
+      visible: true,
+      width: '160px',
+    },
+  ]
 
   const [isActive, setIsActive] = useState(true)
   const [showModal, setShowModal] = useState(false)
@@ -163,13 +170,13 @@ export function BlockOutOptions(props: BlockOutOptionsProps) {
     onCompleted() {
       Notification(
         NotificationType.success,
-        `Success! You have successfully created a blockout option`
+        t('setup.blockout.notification.create.success')
       )
     },
     onError() {
       Notification(
         NotificationType.error,
-        `Error! While creating a blockout option`
+        t('setup.blockout.notification.create.error')
       )
     },
   })
@@ -178,13 +185,13 @@ export function BlockOutOptions(props: BlockOutOptionsProps) {
     onCompleted() {
       Notification(
         NotificationType.success,
-        `Success! You have successfully edited a blockout option`
+        t('setup.blockout.notification.edit.success')
       )
     },
     onError() {
       Notification(
         NotificationType.error,
-        `Error! While editing a blockout option`
+        t('setup.blockout.notification.edit.error')
       )
     },
   })
@@ -193,13 +200,13 @@ export function BlockOutOptions(props: BlockOutOptionsProps) {
     onCompleted() {
       Notification(
         NotificationType.success,
-        `Success! You have successfully deleted a blockout option`
+        t('setup.blockout.notification.delete.success')
       )
     },
     onError() {
       Notification(
         NotificationType.error,
-        `Error! While deleting a blockout option`
+        t('setup.blockout.notification.delete.error')
       )
     },
   })
@@ -309,66 +316,84 @@ export function BlockOutOptions(props: BlockOutOptionsProps) {
     })
   }
 
+  const handleBack = () => {
+    router.push('/setup')
+  }
+
   const onFilter = () => {
     resetPagination()
     setIsActive((e) => !e)
   }
 
   return (
-    <Layout>
-      <Card bodyStyle={{ padding: 0 }}>
-        <Row className={styles.headerContainer}>
-          <Col>
-            <Breadcrumb
-              breadcrumbItems={[
-                { breadcrumbName: 'Setup', path: 'setup' },
-                { breadcrumbName: 'Block Out Options', path: '' },
-              ]}
-            />
-            <Title>Block Out Options</Title>
-          </Col>
-          <Col>
-            <AddButton
-              addFilter
-              onFilterSource={onFilter}
-              onClick={createClick}
-              schema={{ createButtonLabel: 'New block type' }}
-              tableSearch={false}
-              needTranslation={false}
-            />
-          </Col>
-        </Row>
-        <Table
-          columns={columns}
-          dataSource={data?.map((d) => ({ ...d, key: d.id }))}
-          onRowClick={onRowClick}
-          loading={loading}
-          noDataText="block type"
-          noDataBtnText="block type"
-          onAddTemplate={createClick}
-          rowKey="id"
+    <div className={styles.setupBlockOutOptionsContainer}>
+      <Layout>
+        <Card bodyStyle={{ padding: 0 }}>
+          <Row className={styles.headerContainer}>
+            <Col>
+              {!isMobile ? (
+                <>
+                  <Breadcrumb
+                    breadcrumbItems={[
+                      { breadcrumbName: t('sidebar.setup'), path: 'setup' },
+                      { breadcrumbName: t('setup.blockout.title'), path: '' },
+                    ]}
+                  />
+                  <Title>{t('setup.blockout.title')}</Title>
+                </>
+              ) : (
+                <>
+                  <LeftOutlined
+                    className={styles.backToSetup}
+                    onClick={handleBack}
+                  />
+                  <Title>{t('setup.blockout.title')}</Title>
+                </>
+              )}
+            </Col>
+            <Col>
+              <AddButton
+                addFilter
+                onFilterSource={onFilter}
+                onClick={createClick}
+                schema={{ createButtonLabel: t('setup.blockout.create.text') }}
+                tableSearch={false}
+                needTranslation={false}
+              />
+            </Col>
+          </Row>
+          <Table
+            columns={columns}
+            dataSource={data?.map((d) => ({ ...d, key: d.id }))}
+            onRowClick={onRowClick}
+            loading={loading}
+            noDataText={t('setup.blockout.blocktype.text')}
+            noDataBtnText={t('setup.blockout.blocktype.text')}
+            onAddTemplate={createClick}
+            rowKey="id"
+          />
+          {error && <Paragraph type="danger">{error.message}</Paragraph>}
+        </Card>
+        <Pagination
+          showingRecords={paginateData.showingRecords}
+          defaultCurrent={1}
+          total={paginateData.total}
+          pageSize={paginateData.limit}
+          current={paginateData.currentPage}
+          onChange={onPaginationChange}
         />
-        {error && <Paragraph type="danger">{error.message}</Paragraph>}
-      </Card>
-      <Pagination
-        showingRecords={paginateData.showingRecords}
-        defaultCurrent={1}
-        total={paginateData.total}
-        pageSize={paginateData.limit}
-        current={paginateData.currentPage}
-        onChange={onPaginationChange}
-      />
-      {showModal && (
-        <NewBlockTypeModal
-          visible={showModal}
-          onCancel={() => setShowModal(false)}
-          isEdit={!!edit}
-          editData={edit}
-          onSave={onSave}
-          onDelete={onDelete}
-        />
-      )}
-    </Layout>
+        {showModal && (
+          <NewBlockTypeModal
+            visible={showModal}
+            onCancel={() => setShowModal(false)}
+            isEdit={!!edit}
+            editData={edit}
+            onSave={onSave}
+            onDelete={onDelete}
+          />
+        )}
+      </Layout>
+    </div>
   )
 }
 

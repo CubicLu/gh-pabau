@@ -3,7 +3,6 @@ import { gql, useMutation } from '@apollo/client'
 import { useRouter } from 'next/router'
 import { useMedia } from 'react-use'
 import {
-  Layout,
   Breadcrumb,
   Button,
   PhoneNumberInput,
@@ -13,6 +12,7 @@ import {
   Preloader,
   useLiveQuery,
 } from '@pabau/ui'
+import Layout from '../../../../../components/Layout/Layout'
 import { Typography } from 'antd'
 import * as Yup from 'yup'
 import { Formik } from 'formik'

@@ -14,6 +14,9 @@ export interface Employee {
 export interface EmployeesProps {
   title?: string
   description?: string
+  searchPlaceholder?: string
+  showLessText?: string
+  showMoreText?: string
   employees: Employee[]
   onSelected?: (items: Employee[]) => void
 }
@@ -23,6 +26,9 @@ export const Employees: FC<EmployeesProps> = ({
   onSelected,
   title,
   description,
+  searchPlaceholder,
+  showLessText,
+  showMoreText,
 }) => {
   const [searchQuery, setSearchQuery] = useState('')
   const [employeeItems, setEmployeeItems] = useState<Employee[]>([])
@@ -61,7 +67,7 @@ export const Employees: FC<EmployeesProps> = ({
           onChange={(e) => setSearchQuery(e.target.value)}
           onPressEnter={(e) => handleChangeSearchQuery(e)}
           prefix={<SearchOutlined style={{ color: '#bfbfbf' }} />}
-          placeholder="Search an employee"
+          placeholder={searchPlaceholder || 'Search an employee'}
         />
       </div>
       <div className={styles.employeeItems}>
@@ -103,7 +109,9 @@ export const Employees: FC<EmployeesProps> = ({
       {employeeItems.length > 10 && (
         <div className={styles.loadMore}>
           <Button onClick={() => setLoadMore(!loadMore)}>
-            {loadMore ? 'Show Less' : 'Load More'}
+            {loadMore
+              ? showLessText || 'Show Less'
+              : showMoreText || 'Load More'}
           </Button>
         </div>
       )}

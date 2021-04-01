@@ -210,19 +210,13 @@ export const CreateResource: FC<CreateResourceProps> = ({
       title={`Create Resource`}
       operations={[
         OperationType.active,
-        OperationType.cancel,
         OperationType.delete,
         OperationType.create,
       ]}
       activated={true}
-      cancelBtnText="Cancel"
       createBtnText="Create"
       enableCreateBtn
       subMenu={['Details', 'Location']}
-      onCancel={() => {
-        setShowModal(false)
-        onClose()
-      }}
       onBackClick={() => {
         setShowModal(false)
         onClose()

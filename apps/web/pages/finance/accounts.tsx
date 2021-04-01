@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Layout, Button, TabMenu, MobileHeader } from '@pabau/ui'
+import { Button, TabMenu, MobileHeader } from '@pabau/ui'
 import {
   Dropdown,
   Typography,
@@ -19,6 +19,7 @@ import {
 } from '@ant-design/icons'
 import classNames from 'classnames'
 import moment, { Moment } from 'moment'
+import Layout from '../../components/Layout/Layout'
 import Invoice from '../../components/Account/Invoice'
 import Payments from '../../components/Account/Payments'
 import Debt from '../../components/Account/Debt'

@@ -1,16 +1,18 @@
 import React from 'react'
-import { Layout, Breadcrumb, MobileHeader, Button } from '@pabau/ui'
+import Layout from '../../components/Layout/Layout'
+import { Breadcrumb, MobileHeader, Button } from '@pabau/ui'
 import styles from './senders.module.less'
 import {
   FilterOutlined,
   LeftOutlined,
   MailOutlined,
   MobileOutlined,
+  PlusSquareFilled,
 } from '@ant-design/icons'
 import { Typography, Row, Col } from 'antd'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { ReactComponent as Verified } from '../../assets/images/verified.svg'
 
 const { Title } = Typography
@@ -70,6 +72,7 @@ export const mergeTagTypeOptions = ['Tag Type 1', 'Tag Type 2']
 
 export const Communications: React.FC = () => {
   const router = useRouter()
+  const { t } = useTranslationI18()
 
   return (
     <>
@@ -80,7 +83,11 @@ export const Communications: React.FC = () => {
               <Link href="/setup">
                 <LeftOutlined />
               </Link>
-              <p>Communications</p>
+              <p>{t('setup.senders.title')}</p>
+            </div>
+            <div className={styles.mobileHeaderOpsStyle}>
+              <FilterOutlined className={styles.filterIconStyle} />
+              <PlusSquareFilled className={styles.plusIconStyle} />
             </div>
           </div>
         </MobileHeader>
@@ -92,23 +99,23 @@ export const Communications: React.FC = () => {
             <div>
               <Breadcrumb
                 breadcrumbItems={[
-                  { breadcrumbName: 'Setup', path: 'setup' },
-                  { breadcrumbName: 'Communications', path: '' },
+                  { breadcrumbName: t('sidebar.setup'), path: 'setup' },
+                  { breadcrumbName: t('setup.senders.title'), path: '' },
                 ]}
               />
-              <Title>Communications</Title>
+              <Title>{t('setup.senders.title')}</Title>
             </div>
             <div className={styles.actions}>
               <Button>
                 <FilterOutlined />
-                Filter
+                {t('setup.senders.filter')}
               </Button>
               <Button
                 onClick={() => router.push('senders/create')}
                 backgroundColor="#54B2D3"
                 className={styles.senderButton}
               >
-                Create a sender
+                {t('setup.senders.create')}
               </Button>
             </div>
           </div>
@@ -128,7 +135,9 @@ export const Communications: React.FC = () => {
                       )}
                       <div className={styles.verifiedWrapper}>
                         {item.isDefaultSender && (
-                          <div className={styles.defaultText}>Default</div>
+                          <div className={styles.defaultText}>
+                            {t('setup.senders.default')}
+                          </div>
                         )}
                         {item.isEnableReplies && <Verified />}
                       </div>

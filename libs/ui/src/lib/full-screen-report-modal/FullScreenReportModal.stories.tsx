@@ -20,12 +20,7 @@ export const CreateService = FullScreenModalStory.bind({})
 CreateService.args = {
   title: 'Create Service',
   visible: false,
-  operations: [
-    OperationType.active,
-    OperationType.cancel,
-    OperationType.create,
-  ],
-  cancelBtnText: 'Cancel',
+  operations: [OperationType.active, OperationType.create],
   createBtnText: 'Create',
   enableCreateBtn: true,
   activated: true,
@@ -42,29 +37,17 @@ export const CreateIssuringCompany = FullScreenModalStory.bind({})
 CreateIssuringCompany.args = {
   title: 'Create Issuring Company',
   visible: false,
-  operations: [
-    OperationType.vat,
-    OperationType.cancel,
-    OperationType.save,
-    OperationType.create,
-  ],
+  operations: [OperationType.save, OperationType.create],
   saveBtnText: 'Save as draft',
-  cancelBtnText: 'Cancel',
   createBtnText: 'Create',
   enableCreateBtn: true,
-  vatRegistered: true,
 }
 
 export const CreateSender = FullScreenModalStory.bind({})
 CreateSender.args = {
   title: 'Create a Sender',
   visible: false,
-  operations: [
-    OperationType.active,
-    OperationType.cancel,
-    OperationType.create,
-  ],
-  cancelBtnText: 'Cancel',
+  operations: [OperationType.active, OperationType.create],
   createBtnText: 'Create',
   enableCreateBtn: true,
   activated: true,
@@ -76,12 +59,10 @@ EditSender.args = {
   visible: false,
   operations: [
     OperationType.active,
-    OperationType.cancel,
     OperationType.delete,
     OperationType.create,
   ],
   deleteBtnText: 'Delete',
-  cancelBtnText: 'Cancel',
   createBtnText: 'Create',
   enableCreateBtn: true,
   activated: true,
@@ -93,12 +74,10 @@ CreateRooms.args = {
   visible: false,
   operations: [
     OperationType.active,
-    OperationType.cancel,
     OperationType.delete,
     OperationType.create,
   ],
   deleteBtnText: 'Delete',
-  cancelBtnText: 'Cancel',
   createBtnText: 'Create',
   enableCreateBtn: true,
   activated: true,

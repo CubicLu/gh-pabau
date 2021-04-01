@@ -26,6 +26,7 @@ import {
 } from '@ant-design/icons'
 import { gql, useMutation } from '@apollo/client'
 import { updateTable } from './ProductListUtils'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './productListComponents.module.less'
 
 const LIST_QUERY = gql`
@@ -75,76 +76,8 @@ interface ProductGroup {
   is_active: boolean
 }
 
-const ProductsColumns = [
-  {
-    title: 'Status',
-    dataIndex: 'is_active',
-    className: 'drag-visible',
-    visible: true,
-    width: '120px',
-  },
-  {
-    title: '',
-    dataIndex: 'test',
-    className: 'drag-visible',
-    visible: true,
-    // eslint-disable-next-line react/display-name
-    render: () => <ShopOutlined style={{ color: '#B8B8C0', fontSize: 16 }} />,
-    width: '64px',
-  },
-  {
-    title: 'Product Name',
-    dataIndex: 'name',
-    className: 'drag-visible',
-    visible: true,
-  },
-  {
-    title: 'Category',
-    dataIndex: 'category',
-    className: 'drag-visible',
-    visible: true,
-  },
-  {
-    title: 'Cost',
-    dataIndex: 'cost',
-    className: 'drag-visible',
-    visible: true,
-  },
-  {
-    title: 'Retail',
-    dataIndex: 'retail',
-    className: 'drag-visible',
-    visible: true,
-  },
-  {
-    title: 'Quantity',
-    dataIndex: 'quantity',
-    className: 'drag-visible',
-    visible: true,
-  },
-  {
-    title: '',
-    dataIndex: 'status',
-    className: 'drag-visible',
-    visible: true,
-    // eslint-disable-next-line react/display-name
-    render: (_, { status }) => (
-      <ButtonLabel
-        text={status}
-        style={{ width: 90 }}
-        type={
-          status === 'Good'
-            ? 'success'
-            : status === 'Low'
-            ? 'warning'
-            : 'danger'
-        }
-      />
-    ),
-  },
-]
-
 const Products: FC = () => {
+  const { t } = useTranslationI18()
   const [isMobile, setIsMobile] = useState(false)
   const { width } = useWindowSize()
   const [paginateData, setPaginateData] = useState({
@@ -156,6 +89,75 @@ const Products: FC = () => {
   })
 
   const products = ['Product Category 1', 'Product Category 2']
+  const ProductsColumns = [
+    {
+      title: t('products.list.products.column.status'),
+      dataIndex: 'is_active',
+      className: 'drag-visible',
+      visible: true,
+      width: '120px',
+    },
+    {
+      title: '',
+      dataIndex: 'test',
+      className: 'drag-visible',
+      visible: true,
+      // eslint-disable-next-line react/display-name
+      render: () => <ShopOutlined style={{ color: '#B8B8C0', fontSize: 16 }} />,
+      width: '64px',
+    },
+    {
+      title: t('products.list.products.column.name'),
+      dataIndex: 'name',
+      className: 'drag-visible',
+      visible: true,
+    },
+    {
+      title: t('products.list.products.column.category'),
+      dataIndex: 'category',
+      className: 'drag-visible',
+      visible: true,
+    },
+    {
+      title: t('products.list.products.column.cost'),
+      dataIndex: 'cost',
+      className: 'drag-visible',
+      visible: true,
+    },
+    {
+      title: t('products.list.products.column.retail'),
+      dataIndex: 'retail',
+      className: 'drag-visible',
+      visible: true,
+    },
+    {
+      title: t('products.list.products.column.quantity'),
+      dataIndex: 'quantity',
+      className: 'drag-visible',
+      visible: true,
+    },
+    {
+      title: '',
+      dataIndex: 'status',
+      className: 'drag-visible',
+      visible: true,
+      // eslint-disable-next-line react/display-name
+      render: (_, { status }) => (
+        <ButtonLabel
+          text={status}
+          style={{ width: 90 }}
+          type={
+            status === 'Good'
+              ? 'success'
+              : status === 'Low'
+              ? 'warning'
+              : 'danger'
+          }
+        />
+      ),
+    },
+  ]
+
   const [groups, setGroups] = useState<ProductGroup[]>([])
   const [newGroup, setNewGroup] = useState<ProductGroup>({
     groupId: '',
@@ -191,7 +193,7 @@ const Products: FC = () => {
       console.log(err)
       Notification(
         NotificationType.error,
-        `Error! While updating product order`
+        t('products.list.products.notification.updateorder.error')
       )
     },
   })
@@ -215,7 +217,7 @@ const Products: FC = () => {
         onMouseEnter={() => setShowOps(true)}
         onMouseLeave={() => setShowOps(false)}
       >
-        <span>Groups</span>
+        <span>{t('products.list.products.groups')}</span>
         {showOps && (
           <PlusCircleFilled
             style={{
@@ -443,8 +445,8 @@ const Products: FC = () => {
             <Table
               draggable
               loading={loading}
-              noDataText="product"
-              noDataBtnText="New Product"
+              noDataText={t('products.list.products.table.new')}
+              noDataBtnText={t('products.list.products.table.nodata')}
               columns={ProductsColumns}
               scroll={{ x: 'max-content' }}
               dataSource={data?.map((d) => ({ ...d, key: d.id }))}
@@ -506,14 +508,20 @@ const Products: FC = () => {
           visible={showGroupModal}
           modalWidth={500}
           wrapClassName={styles.productGroupModal}
-          title={`${groupModalType} product group`}
+          title={
+            groupModalType === 'Create'
+              ? t('products.list.products.groupmodal.title.create')
+              : t('products.list.products.groupmodal.title.edit')
+          }
           onCancel={() => setShowGroupModal(false)}
         >
           <div className="nameInput">
-            <label>Name</label>
+            <label>{t('products.list.products.groupmodal.name')}</label>
             <Input
               text={getGroupValue('name')}
-              placeHolderText="Enter Name"
+              placeHolderText={t(
+                'products.list.products.groupmodal.name.placeholder'
+              )}
               onChange={(val) => groupInputHandler('name', val)}
             />
           </div>
@@ -522,12 +530,14 @@ const Products: FC = () => {
               items={['item 1', 'item 2', 'item3']}
               selectedItems={getGroupValue('categories')}
               onChange={(items) => groupInputHandler('categories', items)}
-              description="Product categories"
-              itemType="category"
+              description={t('products.list.products.groupmodal.category')}
+              itemType={t('products.list.products.groupmodal.category.item')}
+              noItemText={t('ui.searchtag.noitem')}
+              selectAllText={t('ui.searchtag.selectall')}
             />
           </div>
           <div className="chooseImageInput">
-            <label>Image</label>
+            <label>{t('products.list.products.groupmodal.image')}</label>
             <Button
               type="default"
               size="small"
@@ -535,7 +545,7 @@ const Products: FC = () => {
               onClick={() => setShowImageSelector(true)}
             >
               <PlusOutlined />
-              Choose from Library
+              {t('products.list.products.groupmodal.image.choose')}
             </Button>
             {getGroupValue('image') && (
               <div
@@ -546,7 +556,7 @@ const Products: FC = () => {
           </div>
           <div className="footerBtnInput">
             <div>
-              <label>Active</label>
+              <label>{t('products.list.products.groupmodal.active')}</label>
               <Switch
                 defaultChecked={getGroupValue('is_active')}
                 onChange={(checked) => groupInputHandler('is_active', checked)}
@@ -558,7 +568,7 @@ const Products: FC = () => {
                 size="large"
                 onClick={() => setShowGroupModal(false)}
               >
-                Cancel
+                {t('common-label-cancel')}
               </Button>
             </div>
             <div>
@@ -571,7 +581,9 @@ const Products: FC = () => {
                     : handleEditGroup(currentGroup.groupId)
                 }}
               >
-                {groupModalType === 'Create' ? 'Create' : 'Save'}
+                {groupModalType === 'Create'
+                  ? t('common-label-create')
+                  : t('common-label-save')}
               </Button>
             </div>
           </div>
@@ -579,6 +591,9 @@ const Products: FC = () => {
       )}
       {showImageSelector && (
         <ImageSelectorModal
+          title={t('ui.imageselector.title')}
+          attachButtonText={t('ui.imageselector.attach')}
+          chooseButtonText={t('ui.imageselector.choose')}
           visible={showImageSelector}
           onOk={(image) => {
             groupInputHandler('image', image.source)

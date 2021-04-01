@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import {
-  Layout,
   Breadcrumb,
   Wstepper as WStepper,
   StepperItem,
   MobileHeader,
 } from '@pabau/ui'
+import Layout from '../../components/Layout/Layout'
 import styles from './lead-forms.module.less'
 import LeadSettings from '../../components/Setup/LeadCapture/LeadSetting'
 import LeadIntegration from '../../components/Setup/LeadCapture/LeadIntegration'

@@ -21,7 +21,7 @@ import company from '../../assets/images/company.svg'
 import activeCompany from '../../assets/images/active-company.svg'
 import insurance from '../../assets/images/insurance.svg'
 import activeInsurance from '../../assets/images/active-insurance.svg'
-
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { gql } from '@apollo/client'
 import CrudLayout from '../../components/CrudLayout/CrudLayout'
 import { useMutation } from '@apollo/client'
@@ -170,90 +170,91 @@ const UPDATE_ORDER_MUTATION = gql`
   }
 `
 
-export const schema: Schema = {
-  full: 'Third Parties',
-  fullLower: 'third parties',
-  short: 'third parties',
-  shortLower: 'third parties',
-  createButtonLabel: 'Create Third Party',
-  messages: {
-    create: {
-      success: 'You have successfully created a third party',
-      error: 'While creating a third party',
-    },
-    update: {
-      success: 'You have successfully updated a third party',
-      error: 'While updating a third party',
-    },
-    delete: {
-      success: 'You have successfully deleted a third party',
-      error: 'While deleting a third party',
-    },
-  },
-  fields: {
-    name: {
-      full: 'Third Party Name',
-      fullLower: 'third party name',
-      short: 'Name',
-      shortLower: 'name',
-      min: 2,
-      max: 50,
-      cssWidth: 'max',
-      type: 'string',
-    },
-    provider_no: {
-      full: 'Third Party Provider No',
-      fullLower: 'third party provider no',
-      short: 'Provider No',
-      shortLower: 'provider no',
-      min: 2,
-      max: 50,
-      cssWidth: 'max',
-      type: 'string',
-    },
-    type: {
-      full: 'Type',
-      fullLower: 'type',
-      short: 'Type',
-      shortLower: 'type',
-      min: 2,
-      max: 50,
-      cssWidth: 'max',
-      type: 'string',
-    },
-    email: {
-      full: 'Email',
-      fullLower: 'email',
-      short: 'Email',
-      shortLower: 'email',
-      min: 2,
-      max: 50,
-      cssWidth: 'max',
-      type: 'string',
-    },
-    phone: {
-      full: 'Phone',
-      fullLower: 'phone',
-      short: 'Phone',
-      shortLower: 'phone',
-      min: 2,
-      max: 50,
-      cssWidth: 'max',
-      type: 'string',
-    },
-    is_active: {
-      full: 'Status',
-      type: 'boolean',
-      defaultvalue: true,
-    },
-  },
-}
-
 const ThirdParties: NextPage = () => {
+  const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 768px)', false)
   const { Option } = Select
   const [showModal, setShowModal] = useState<boolean>(false)
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
+
+  const schema: Schema = {
+    full: t('setup.third.schema.full'),
+    fullLower: t('setup.third.schema.full.lower'),
+    short: t('setup.third.schema.short'),
+    shortLower: t('setup.third.schema.short.lower'),
+    createButtonLabel: t('setup.third.schema.createbutton'),
+    messages: {
+      create: {
+        success: t('setup.third.schema.message.create.success'),
+        error: t('setup.third.schema.message.create.error'),
+      },
+      update: {
+        success: t('setup.third.schema.message.edit.success'),
+        error: t('setup.third.schema.message.edit.error'),
+      },
+      delete: {
+        success: t('setup.third.schema.message.delete.success'),
+        error: t('setup.third.schema.message.delete.error'),
+      },
+    },
+    fields: {
+      name: {
+        full: t('setup.third.schema.name.full'),
+        fullLower: t('setup.third.schema.name.full.lower'),
+        short: t('setup.third.schema.name.short'),
+        shortLower: t('setup.third.schema.name.short.lower'),
+        min: 2,
+        max: 50,
+        cssWidth: 'max',
+        type: 'string',
+      },
+      provider_no: {
+        full: t('setup.third.schema.provider.full'),
+        fullLower: t('setup.third.schema.provider.full.lower'),
+        short: t('setup.third.schema.provider.short'),
+        shortLower: t('setup.third.schema.provider.short.lower'),
+        min: 2,
+        max: 50,
+        cssWidth: 'max',
+        type: 'string',
+      },
+      type: {
+        full: t('setup.third.schema.type.full'),
+        fullLower: t('setup.third.schema.type.full.lower'),
+        short: t('setup.third.schema.type.short'),
+        shortLower: t('setup.third.schema.type.short.lower'),
+        min: 2,
+        max: 50,
+        cssWidth: 'max',
+        type: 'string',
+      },
+      email: {
+        full: t('setup.third.schema.email.full'),
+        fullLower: t('setup.third.schema.email.full.lower'),
+        short: t('setup.third.schema.email.short'),
+        shortLower: t('setup.third.schema.email.short.lower'),
+        min: 2,
+        max: 50,
+        cssWidth: 'max',
+        type: 'string',
+      },
+      phone: {
+        full: t('setup.third.schema.phone.full'),
+        fullLower: t('setup.third.schema.phone.full.lower'),
+        short: t('setup.third.schema.phone.short'),
+        shortLower: t('setup.third.schema.phone.short.lower'),
+        min: 2,
+        max: 50,
+        cssWidth: 'max',
+        type: 'string',
+      },
+      is_active: {
+        full: t('setup.third.schema.isactive.full'),
+        type: 'boolean',
+        defaultvalue: true,
+      },
+    },
+  }
 
   const formikEditFields = () => {
     const fields: ThirdPartiesEditFieldsType = {
@@ -284,13 +285,13 @@ const ThirdParties: NextPage = () => {
     onCompleted() {
       Notification(
         NotificationType.success,
-        `Success! You have successfully created a third parties`
+        t('setup.third.notification.create.success')
       )
     },
     onError(err) {
       Notification(
         NotificationType.error,
-        `Error! While creating a third parties`
+        t('setup.third.notification.create.error')
       )
     },
   })
@@ -299,13 +300,13 @@ const ThirdParties: NextPage = () => {
     onCompleted() {
       Notification(
         NotificationType.success,
-        `Success! You have successfully edited a third parties`
+        t('setup.third.notification.edit.success')
       )
     },
     onError() {
       Notification(
         NotificationType.error,
-        `Error! While editing a third parties`
+        t('setup.third.notification.edit.error')
       )
     },
   })
@@ -314,13 +315,13 @@ const ThirdParties: NextPage = () => {
     onCompleted() {
       Notification(
         NotificationType.success,
-        `Success! You have successfully deleted a third parties`
+        t('setup.third.notification.delete.success')
       )
     },
     onError() {
       Notification(
         NotificationType.error,
-        `Error! While deleting a third parties`
+        t('setup.third.notification.delete.error')
       )
     },
   })
@@ -365,8 +366,8 @@ const ThirdParties: NextPage = () => {
     setShowModal(true)
   }
 
-  const handleBackClick = (e, handleReset) => {
-    handleReset(e)
+  const handleBackClick = (handleReset) => {
+    handleReset()
     setEditPage(formikEditFields())
     setShowModal(false)
   }
@@ -377,13 +378,8 @@ const ThirdParties: NextPage = () => {
 
   const handleOperationsType = () => {
     return !editPage.id
-      ? [OperationType.active, OperationType.cancel, OperationType.create]
-      : [
-          OperationType.active,
-          OperationType.cancel,
-          OperationType.delete,
-          OperationType.save,
-        ]
+      ? [OperationType.active, OperationType.create]
+      : [OperationType.active, OperationType.delete, OperationType.create]
   }
 
   const handleEditPage = (data) => {
@@ -420,7 +416,7 @@ const ThirdParties: NextPage = () => {
   }
 
   const thirdPartiesSchema = Yup.object({
-    name: Yup.string().required('Name is required'),
+    name: Yup.string().required(t('setup.third.name.validate.required')),
   })
 
   const onSelect = (value: string, setFieldValue) => {
@@ -439,7 +435,10 @@ const ThirdParties: NextPage = () => {
         initialValues={{
           type: null,
           isActive: true,
-          filterType: ['Company', 'Insurance'],
+          filterType: [
+            t('setup.third.filter.type.company'),
+            t('setup.third.filter.type.insurance'),
+          ],
         }}
         onSubmit={(values) => {
           console.log('Filter Values:', values)
@@ -449,12 +448,12 @@ const ThirdParties: NextPage = () => {
           <div className={styles.thirdPartyFilterContent}>
             {!isMobile && (
               <div className={classNames(styles.thirdPartyFilterHeader)}>
-                <h6>Filter</h6>
+                <h6>{t('setup.third.filter')}</h6>
               </div>
             )}
             <div className={styles.thirdPartyFilterBody}>
               <div className={styles.radioTextStyle}>
-                <p>Status</p>
+                <p>{t('setup.third.filter.status')}</p>
                 <Radio.Group
                   onChange={(e) => {
                     setFieldValue('isActive', e.target.value)
@@ -462,22 +461,25 @@ const ThirdParties: NextPage = () => {
                   value={values.isActive}
                 >
                   <Radio value={true}>
-                    <span>Active</span>
+                    <span>{t('setup.third.filter.status.active')}</span>
                   </Radio>
                   <Radio value={false}>
-                    <span>Disabled</span>
+                    <span>{t('setup.third.filter.status.diabled')}</span>
                   </Radio>
                 </Radio.Group>
               </div>
               <div className={styles.filterType}>
-                <p>Type</p>
+                <p>{t('setup.third.filter.type')}</p>
                 <SimpleDropdown
-                  placeHolderText={'All Companies'}
+                  placeHolderText={t('setup.third.filter.type.placeholder')}
                   value={values.type}
                   onSelected={(e) => {
                     onSelect(e, setFieldValue)
                   }}
-                  dropdownItems={['Company', 'Insurance']}
+                  dropdownItems={[
+                    t('setup.third.filter.type.company'),
+                    t('setup.third.filter.type.insurance'),
+                  ]}
                 />
               </div>
               {!isMobile && (
@@ -487,8 +489,7 @@ const ThirdParties: NextPage = () => {
                     onClick={() => clearAll(handleReset)}
                     className={styles.btnClearAll}
                   >
-                    {' '}
-                    Clear all{' '}
+                    {t('setup.third.filter.clear')}
                   </Button>
                   <Button
                     type="primary"
@@ -496,7 +497,7 @@ const ThirdParties: NextPage = () => {
                       handleSubmit()
                     }}
                   >
-                    Apply filters
+                    {t('setup.third.filter.apply')}
                   </Button>
                 </div>
               )}
@@ -512,7 +513,7 @@ const ThirdParties: NextPage = () => {
       <div className={styles.mainWrapper}>
         <Form layout="vertical">
           <div className={styles.contentWrapper}>
-            <h3>Type</h3>
+            <h3>{t('setup.third.form.type')}</h3>
             <div className={styles.thirdPartyType}>
               <div
                 className={
@@ -527,7 +528,7 @@ const ThirdParties: NextPage = () => {
                 ) : (
                   <img src={company} alt="companyLogo" />
                 )}
-                <span>Company</span>
+                <span>{t('setup.third.form.type.company')}</span>
                 <img className={styles.imgActive} src={active} alt="checked" />
               </div>
               <div
@@ -543,73 +544,126 @@ const ThirdParties: NextPage = () => {
                 ) : (
                   <img src={insurance} alt="insuranceLogo" />
                 )}
-                <span>Insurance</span>
+                <span>{t('setup.third.form.type.insurance')}</span>
                 <img className={styles.imgActive} src={active} alt="checked" />
               </div>
             </div>
           </div>
           <div className={styles.contentWrapper}>
-            <h3>General</h3>
+            <h3>{t('setup.third.form.general')}</h3>
             <div className={styles.customForm}>
-              <Form.Item label="Name" name="name">
-                <Input name="name" placeholder="Enter Name" />
+              <Form.Item label={t('setup.third.form.general.name')} name="name">
+                <Input
+                  name="name"
+                  placeholder={t('setup.third.form.general.name.placeholder')}
+                />
               </Form.Item>
-              <Form.Item label="Provider No." name="providerNo">
-                <Input name="providerNo" placeholder="Enter provider number" />
+              <Form.Item
+                label={t('setup.third.form.general.provider')}
+                name="providerNo"
+              >
+                <Input
+                  name="providerNo"
+                  placeholder={t(
+                    'setup.third.form.general.provider.placeholder'
+                  )}
+                />
               </Form.Item>
             </div>
           </div>
           <div className={styles.contentWrapper}>
-            <h3>Contact information</h3>
+            <h3>{t('setup.third.form.contact')}</h3>
             <div className={styles.customForm}>
               <Form.Item name="phone">
                 <PhoneNumberInput
-                  label="Phone"
+                  label={t('setup.third.form.contact.phone')}
                   value={values.phone}
                   onChange={(e) => setFieldValue('phone', e)}
                 />
               </Form.Item>
-              <Form.Item label="Email" name="email">
-                <Input name="email" placeholder="company@company.com" />
+              <Form.Item
+                label={t('setup.third.form.contact.email')}
+                name="email"
+              >
+                <Input
+                  name="email"
+                  placeholder={t('setup.third.form.contact.email.placeholder')}
+                />
               </Form.Item>
-              <Form.Item label="Website" name="website">
-                <Input name="website" placeholder="www.company.com" />
+              <Form.Item
+                label={t('setup.third.form.contact.website')}
+                name="website"
+              >
+                <Input
+                  name="website"
+                  placeholder={t(
+                    'setup.third.form.contact.website.placeholder'
+                  )}
+                />
               </Form.Item>
               {values.type === 'Insurance' && (
                 <Form.Item
-                  label="Healthcode identifier"
+                  label={t('setup.third.form.contact.healthcode')}
                   name="healthCodeIdentifier"
-                  tooltip="Contact your Healthcode representative to obtain this code"
+                  tooltip={t('setup.third.form.contact.healthcode.tooltip')}
                 >
                   <Input
                     name="healthCodeIdentifier"
-                    placeholder="www.company.com"
+                    placeholder={t(
+                      'setup.third.form.contact.healthcode.placeholder'
+                    )}
                   />
                 </Form.Item>
               )}
             </div>
           </div>
           <div className={styles.contentWrapper}>
-            <h3>Address information</h3>
+            <h3>{t('setup.third.form.address')}</h3>
             <div className={styles.customForm}>
-              <Form.Item label={'Country'} name="country">
+              <Form.Item
+                label={t('setup.third.form.address.country')}
+                name="country"
+              >
                 <Select
                   name="country"
                   showSearch
-                  placeholder="Select Country"
-                  value={values.country ? values.country : 'Select country'}
+                  placeholder={t(
+                    'setup.third.form.address.country.placeholder'
+                  )}
+                  value={
+                    values.country
+                      ? values.country
+                      : t('setup.third.form.address.country.placeholder')
+                  }
                 >
                   {countryOptions()}
                 </Select>
               </Form.Item>
-              <Form.Item label={'City'} name="city">
-                <Input name="city" placeholder="Enter city" />
+              <Form.Item label={t('setup.third.form.address.city')} name="city">
+                <Input
+                  name="city"
+                  placeholder={t('setup.third.form.address.city.placeholder')}
+                />
               </Form.Item>
-              <Form.Item label={'Street'} name="street">
-                <Input name="street" placeholder="Enter street" />
+              <Form.Item
+                label={t('setup.third.form.address.street')}
+                name="street"
+              >
+                <Input
+                  name="street"
+                  placeholder={t('setup.third.form.address.street.placeholder')}
+                />
               </Form.Item>
-              <Form.Item label={'Post code'} name="postCode">
-                <Input name="postCode" placeholder="Enter post code" />
+              <Form.Item
+                label={t('setup.third.form.address.postcode')}
+                name="postCode"
+              >
+                <Input
+                  name="postCode"
+                  placeholder={t(
+                    'setup.third.form.address.postcode.placeholder'
+                  )}
+                />
               </Form.Item>
             </div>
           </div>
@@ -650,17 +704,28 @@ const ThirdParties: NextPage = () => {
             setEditPage={handleEditPage}
           />
           <FullScreenReportModal
-            title={`${!editPage.id ? 'Create' : 'Edit'} Third Parties`}
+            title={
+              !editPage.id
+                ? t('setup.third.fullscreenmodal.title.edit')
+                : t('setup.third.fullscreenmodal.title.create')
+            }
             visible={showModal}
             operations={handleOperationsType()}
             enableCreateBtn={true}
-            onCancel={(e) => handleBackClick(e, handleReset)}
-            onBackClick={(e) => handleBackClick(e, handleReset)}
+            onBackClick={() => handleBackClick(handleReset)}
             activated={values.isActive}
             onActivated={(value) => setFieldValue('isActive', value)}
             onDelete={showDelteConfirmDialog}
             onCreate={handleSubmit}
-            onSave={handleSubmit}
+            createBtnText={
+              !editPage.id ? t('common-label-create') : t('common-label-save')
+            }
+            deleteBtnText={t('common-label-delete')}
+            activeBtnText={
+              values.isActive
+                ? t('common-label-active')
+                : t('common-label-inactive')
+            }
             footer={true}
           >
             {modelContent(setFieldValue, values)}
@@ -682,8 +747,10 @@ const ThirdParties: NextPage = () => {
               setShowModal(false)
             }}
             visible={showDeleteModal}
-            title={`Delete ${schema.short}?`}
-            newButtonText={schema.deleteBtnLabel || 'Yes, Delete'}
+            title={t('setup.third.deletemodal.title', { what: schema.short })}
+            newButtonText={
+              schema.deleteBtnLabel || t('setup.third.deletemodal.button')
+            }
             isValidate={true}
           >
             <span
@@ -695,7 +762,7 @@ const ThirdParties: NextPage = () => {
                 color: '#9292A3',
               }}
             >
-              {editPage?.name} will be deleted. This action is irreversable
+              {t('setup.third.deletemodal.message', { what: editPage?.name })}
             </span>
           </Modal>
         </>

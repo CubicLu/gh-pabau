@@ -1,12 +1,6 @@
 import React, { FC, useState } from 'react'
-import {
-  Layout,
-  Breadcrumb,
-  MobileHeader,
-  Input,
-  Checkbox,
-  Button,
-} from '@pabau/ui'
+import { Breadcrumb, MobileHeader, Input, Checkbox, Button } from '@pabau/ui'
+import Layout from '../../../../components/Layout/Layout'
 import Link from 'next/link'
 import { Typography, Col, Row } from 'antd'
 import { Form as AntForm } from 'antd'

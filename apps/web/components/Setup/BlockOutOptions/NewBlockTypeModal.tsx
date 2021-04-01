@@ -1,9 +1,15 @@
 import React, { Fragment, useState, useEffect } from 'react'
-import { Form, Input, Modal, Typography, Slider } from 'antd'
+import { Form, Input, Typography, Slider } from 'antd'
 import { CheckCircleFilled } from '@ant-design/icons'
-import { BasicModal, Button, Switch } from '@pabau/ui'
+import {
+  BasicModal,
+  Button,
+  Switch,
+  FullScreenReportModal,
+  OperationType,
+} from '@pabau/ui'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './BlockOutOptionsComponents.module.less'
-import { LeftOutlined } from '@ant-design/icons'
 
 export interface NewBlockOutOptionsProps {
   visible: boolean
@@ -22,12 +28,14 @@ export interface NewBlockOutOptionsProps {
 }
 
 export function NewBlockOutOptions(props: NewBlockOutOptionsProps) {
+  const { t } = useTranslationI18()
   const [form] = Form.useForm()
   const { Item } = Form
   const { Text, Paragraph } = Typography
   const { visible, onCancel, isEdit, editData, onSave, onDelete } = props
 
   const [showDelete, setShowDelete] = useState(false)
+  const [active, setActive] = useState(true)
   const [type, setType] = useState(
     isEdit ? editData?.type || 'Blockout' : 'Blockout'
   )
@@ -39,8 +47,15 @@ export function NewBlockOutOptions(props: NewBlockOutOptionsProps) {
     if (isEdit && editData) {
       setType(editData.type || 'Blockout')
       setBackgroundColor(editData.backgroundColor || '54B2D3')
+      setActive(!!editData.is_active)
     }
   }, [editData, isEdit])
+
+  const handleSubmit = () => {
+    form.validateFields().then((values) => {
+      onSave({ ...values, isActive: active })
+    })
+  }
 
   const handleClose = () => {
     form.resetFields()
@@ -60,82 +75,76 @@ export function NewBlockOutOptions(props: NewBlockOutOptionsProps) {
 
   return (
     <Fragment>
-      <Modal
-        closable={false}
-        footer={null}
-        width={'100%'}
-        visible={visible}
-        onCancel={handleClose}
-        className={styles.fullScreenModal}
+      <Form
+        form={form}
+        layout="vertical"
+        initialValues={{
+          name: isEdit ? editData?.name || '' : '',
+          paidBlockOut: isEdit ? !!editData?.paidBlockOut : true,
+          backgroundColor: isEdit ? editData?.backgroundColor : backgroundColor,
+          defaultTime: isEdit ? editData?.defaultTime : 50,
+          type,
+        }}
+        className={styles.form}
+        onSubmitCapture={(e) => {
+          e.preventDefault()
+        }}
+        onFinish={(values) => onSave({ ...values, isActive: active })}
       >
-        <Form
-          form={form}
-          layout="vertical"
-          initialValues={{
-            name: isEdit ? editData?.name || '' : '',
-            isActive: isEdit ? !!editData?.is_active : true,
-            paidBlockOut: isEdit ? !!editData?.paidBlockOut : true,
-            backgroundColor: isEdit
-              ? editData?.backgroundColor
-              : backgroundColor,
-            defaultTime: isEdit ? editData?.defaultTime : 50,
-            type,
-          }}
-          className={styles.form}
-          onSubmitCapture={(e) => {
-            e.preventDefault()
-          }}
-          onFinish={onSave}
+        <FullScreenReportModal
+          visible={visible}
+          title={
+            isEdit
+              ? t('setup.blockoutmodal.title.edit')
+              : t('setup.blockoutmodal.title.create')
+          }
+          operations={
+            isEdit
+              ? [
+                  OperationType.active,
+                  OperationType.delete,
+                  OperationType.create,
+                ]
+              : [OperationType.active, OperationType.create]
+          }
+          enableCreateBtn={true}
+          createBtnText={
+            isEdit ? t('common-label-save') : t('common-label-create')
+          }
+          activeBtnText={
+            active ? t('common-label-active') : t('common-label-inactive')
+          }
+          deleteBtnText={t('common-label-delete')}
+          onDelete={() => handleDelete()}
+          onBackClick={() => handleClose()}
+          onCreate={() => handleSubmit()}
+          activated={active}
+          onActivated={(value) => setActive(value)}
         >
-          <div className={styles.header}>
-            <div>
-              <LeftOutlined onClick={handleClose} />
-              <span className={styles.headerTitle}>
-                {isEdit ? 'Edit' : 'Create'} Blockout
-              </span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <Text style={{ marginRight: 8 }}>Active</Text>
-              <Item
-                name="isActive"
-                valuePropName="checked"
-                style={{ marginBottom: 0 }}
-              >
-                <Switch />
-              </Item>
-              <Button onClick={handleClose} style={{ marginLeft: 32 }}>
-                Cancel
-              </Button>
-              {isEdit && (
-                <Button
-                  style={{ marginLeft: 16 }}
-                  onClick={() => setShowDelete(true)}
-                >
-                  Delete
-                </Button>
-              )}
-              <Form.Item style={{ marginBottom: 0 }}>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  style={{ marginLeft: 16 }}
-                >
-                  {isEdit ? 'Save' : 'Create'}
-                </Button>
-              </Form.Item>
-            </div>
-          </div>
           <div className={styles.body}>
             <div className={styles.bodyContent}>
-              <Paragraph style={{ marginBottom: 6 }}>Name</Paragraph>
+              <Paragraph style={{ marginBottom: 6 }}>
+                {t('setup.blockoutmodal.form.name')}
+              </Paragraph>
               <Item
                 name="name"
-                rules={[{ required: true, message: 'Please enter name' }]}
+                rules={[
+                  {
+                    required: true,
+                    message: t(
+                      'setup.blockoutmodal.form.name.validate.required'
+                    ),
+                  },
+                ]}
               >
-                <Input placeholder="Enter Name" />
+                <Input
+                  placeholder={t('setup.blockoutmodal.form.name.placeholder')}
+                />
               </Item>
 
-              <Paragraph style={{ marginBottom: 6 }}>Type</Paragraph>
+              <Paragraph style={{ marginBottom: 6 }}>
+                {t('setup.blockoutmodal.form.type')}
+              </Paragraph>
               <Item style={{ marginBottom: 0 }} name="type">
                 <div style={{ display: 'flex', flex: 1 }}>
                   <div
@@ -148,7 +157,9 @@ export function NewBlockOutOptions(props: NewBlockOutOptionsProps) {
                       <CheckCircleFilled className={styles.check} />
                     )}
                     <div className={styles.dash} />
-                    <p style={{ marginTop: 16 }}>Blockout</p>
+                    <p style={{ marginTop: 16 }}>
+                      {t('setup.blockoutmodal.form.type.blockout')}
+                    </p>
                   </div>
                   <div
                     onClick={onTypeCheck('Opening')}
@@ -160,7 +171,9 @@ export function NewBlockOutOptions(props: NewBlockOutOptionsProps) {
                       <CheckCircleFilled className={styles.check} />
                     )}
                     <div className={styles.dash} />
-                    <p style={{ marginTop: 16 }}>Opening</p>
+                    <p style={{ marginTop: 16 }}>
+                      {t('setup.blockoutmodal.form.type.opening')}
+                    </p>
                   </div>
                 </div>
               </Item>
@@ -168,7 +181,7 @@ export function NewBlockOutOptions(props: NewBlockOutOptionsProps) {
               {type === 'Blockout' && (
                 <>
                   <Paragraph style={{ marginTop: 24, marginBottom: 6 }}>
-                    Paid Blockout
+                    {t('setup.blockoutmodal.form.paid')}
                   </Paragraph>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Item
@@ -178,13 +191,15 @@ export function NewBlockOutOptions(props: NewBlockOutOptionsProps) {
                     >
                       <Switch />
                     </Item>
-                    <Text style={{ marginLeft: 12 }}>Enable</Text>
+                    <Text style={{ marginLeft: 12 }}>
+                      {t('setup.blockoutmodal.form.enable')}
+                    </Text>
                   </div>
                 </>
               )}
 
               <Paragraph style={{ marginTop: 24, marginBottom: 6 }}>
-                Backgorund color
+                {t('setup.blockoutmodal.form.background')}
               </Paragraph>
               <div style={{ display: 'flex', flex: 1 }}>
                 <div
@@ -199,11 +214,15 @@ export function NewBlockOutOptions(props: NewBlockOutOptionsProps) {
                   rules={[
                     {
                       required: true,
-                      message: 'Please enter background color',
+                      message: t(
+                        'setup.blockoutmodal.form.background.validate.required'
+                      ),
                     },
                     {
                       pattern: new RegExp('^[0-9A-Fa-f]{6}'),
-                      message: 'Please enter valid background color',
+                      message: t(
+                        'setup.blockoutmodal.form.background.validate.valid'
+                      ),
                     },
                   ]}
                 >
@@ -218,7 +237,7 @@ export function NewBlockOutOptions(props: NewBlockOutOptionsProps) {
               </div>
 
               <Paragraph style={{ marginTop: 24, marginBottom: 0 }}>
-                Default Time
+                {t('setup.blockoutmodal.form.defaulttime')}
               </Paragraph>
               <Item name="defaultTime">
                 <Slider
@@ -233,16 +252,18 @@ export function NewBlockOutOptions(props: NewBlockOutOptionsProps) {
               </Item>
             </div>
           </div>
-        </Form>
-      </Modal>
+        </FullScreenReportModal>
+      </Form>
       <BasicModal
-        title="Delete Block Out Option?"
+        title={t('setup.blockoutmodal.delete.title')}
         visible={showDelete}
         onCancel={() => setShowDelete(false)}
         footer={false}
         centered
       >
-        <Paragraph type="secondary">This will permenantly delete.</Paragraph>
+        <Paragraph type="secondary">
+          {t('setup.blockoutmodal.delete.message')}
+        </Paragraph>
         <div style={{ padding: '12px 0 40px', textAlign: 'right' }}>
           <Button
             style={{ background: '#FF5B64', border: 'none' }}
@@ -251,7 +272,7 @@ export function NewBlockOutOptions(props: NewBlockOutOptionsProps) {
             size="large"
             onClick={handleDelete}
           >
-            Yes, Delete
+            {t('setup.blockoutmodal.delete.button')}
           </Button>
         </div>
       </BasicModal>

@@ -84,40 +84,25 @@ const CrudTable: FC<P> = ({
 
   const [editMutation] = useMutation(editQuery, {
     onCompleted() {
-      Notification(
-        NotificationType.success,
-        `Success! ${schema.messages.update.success}`
-      )
+      Notification(NotificationType.success, schema.messages.update.success)
     },
     onError() {
-      Notification(
-        NotificationType.error,
-        `Error! ${schema.messages.update.error}`
-      )
+      Notification(NotificationType.error, schema.messages.update.error)
     },
     optimisticResponse: {},
   })
   const [updateOrderMutation] = useMutation(updateOrderQuery, {
     onError() {
-      Notification(
-        NotificationType.error,
-        `Error! ${schema.messages.update.error}`
-      )
+      Notification(NotificationType.error, schema.messages.update.error)
     },
     optimisticResponse: {},
   })
   const [addMutation] = useMutation(addQuery, {
     onCompleted() {
-      Notification(
-        NotificationType.success,
-        `Success! ${schema.messages.create.success}`
-      )
+      Notification(NotificationType.success, schema.messages.create.success)
     },
     onError() {
-      Notification(
-        NotificationType.error,
-        `Error! ${schema.messages.create.error}`
-      )
+      Notification(NotificationType.error, schema.messages.create.error)
     },
   })
   const [sourceData, setSourceData] = useState(null)

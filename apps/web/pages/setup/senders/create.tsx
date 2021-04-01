@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import classNames from 'classnames'
 import {
   FullScreenReportModal,
@@ -20,7 +20,7 @@ import {
 import { Collapse, Space } from 'antd'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
-
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import {
   SenderItem,
   senderItems,
@@ -33,7 +33,9 @@ import { Form } from 'formik-antd'
 const { Panel } = Collapse
 
 export const CreateSender: React.FC = () => {
+  const { t } = useTranslationI18()
   const router = useRouter()
+  const [active, setActive] = useState(true)
 
   const initialValues: SenderItem = {
     type: 'email',
@@ -51,10 +53,18 @@ export const CreateSender: React.FC = () => {
     ],
   }
   const validation = Yup.object({
-    type: Yup.string().required('Sender type is required'),
-    fromName: Yup.string().required('From name is required'),
-    fromEmail: Yup.string().email('Invalid email'),
-    fromCompanyEmail: Yup.string().email('Invalid company email'),
+    type: Yup.string().required(
+      t('setup.senders.create.validate.type.required')
+    ),
+    fromName: Yup.string().required(
+      t('setup.senders.create.validate.fromname.required')
+    ),
+    fromEmail: Yup.string().email(
+      t('setup.senders.create.validate.fromemail.email')
+    ),
+    fromCompanyEmail: Yup.string().email(
+      t('setup.senders.create.validate.fromcompanyemail.email')
+    ),
   })
 
   return (
@@ -71,15 +81,13 @@ export const CreateSender: React.FC = () => {
       render={({ values, errors, touched, handleChange, handleSubmit }) => (
         <Form>
           <FullScreenReportModal
-            title="Create a Sender"
+            title={t('setup.senders.create')}
             visible={true}
-            operations={[
-              OperationType.active,
-              OperationType.cancel,
-              OperationType.create,
-            ]}
-            cancelBtnText="Cancel"
-            createBtnText="Create"
+            operations={[OperationType.active, OperationType.create]}
+            createBtnText={t('common-label-create')}
+            activeBtnText={
+              active ? t('common-label-active') : t('common-label-inactive')
+            }
             enableCreateBtn={
               !!(
                 values.type &&
@@ -89,9 +97,9 @@ export const CreateSender: React.FC = () => {
                 (!values.isEnterpriseEmail || values.replyTo)
               )
             }
-            activated={true}
+            activated={active}
+            onActivated={(val) => setActive(val)}
             onBackClick={() => router.push('/setup/senders')}
-            onCancel={() => router.push('/setup/senders')}
             onCreate={() => {
               // Remove last tag element
               const lastTag =
@@ -107,7 +115,9 @@ export const CreateSender: React.FC = () => {
           >
             <div className={styles.container}>
               <div className={styles.cardWrapper}>
-                <div className={styles.cardHeader}>Type</div>
+                <div className={styles.cardHeader}>
+                  {t('setup.senders.create.form.field.type')}
+                </div>
                 <div className={styles.typesWrapper}>
                   <Button
                     className={classNames(
@@ -127,7 +137,9 @@ export const CreateSender: React.FC = () => {
                       />
                     )}
                     <MailOutlined className={styles.typeIcon} />
-                    <div className={styles.title}>Email</div>
+                    <div className={styles.title}>
+                      {t('setup.senders.create.form.field.email')}
+                    </div>
                   </Button>
                   <Button
                     className={classNames(
@@ -145,17 +157,23 @@ export const CreateSender: React.FC = () => {
                       />
                     )}
                     <MessageOutlined className={styles.typeIcon} />
-                    <div className={styles.title}>SMS</div>
+                    <div className={styles.title}>
+                      {t('setup.senders.create.form.field.sms')}
+                    </div>
                   </Button>
                 </div>
               </div>
 
               <div className={styles.cardWrapper}>
-                <div className={styles.cardHeader}>Sender</div>
+                <div className={styles.cardHeader}>
+                  {t('setup.senders.create.form.field.sender')}
+                </div>
                 <div className={styles.formElement}>
                   <Input
-                    label="From name"
-                    placeholder="Enter name"
+                    label={t('setup.senders.create.form.field.fromname')}
+                    placeholder={t(
+                      'setup.senders.create.form.field.fromname.placeholder'
+                    )}
                     name="fromName"
                     onChange={(value) =>
                       handleChange({ target: { value, name: 'fromName' } })
@@ -173,7 +191,9 @@ export const CreateSender: React.FC = () => {
                           })
                         }
                       />
-                      <span>Default Sender</span>
+                      <span>
+                        {t('setup.senders.create.form.field.defaultsender')}
+                      </span>
                     </Space>
                     {values.type === 'sms' && (
                       <Space className={styles.switchItem} size={8}>
@@ -185,10 +205,14 @@ export const CreateSender: React.FC = () => {
                             })
                           }
                         />
-                        <span>Enable Replies</span>
+                        <span>
+                          {t('setup.senders.create.form.field.enablereplies')}
+                        </span>
                         <HelpTooltip
                           placement="top"
-                          helpText="In order to receive replies, we have changed your senders name to your inbox number"
+                          helpText={t(
+                            'setup.senders.create.form.field.enablereplies.tooltip'
+                          )}
                         />
                       </Space>
                     )}
@@ -199,8 +223,10 @@ export const CreateSender: React.FC = () => {
                     <div className={styles.formElement}>
                       <Input
                         type="email"
-                        label="From email"
-                        placeholder="e.g. bookings@clinic.com"
+                        label={t('setup.senders.create.form.field.fromemail')}
+                        placeholder={t(
+                          'setup.senders.create.form.field.fromemail.placeholder'
+                        )}
                         name="fromEmail"
                         onChange={(value) =>
                           handleChange({ target: { value, name: 'fromEmail' } })
@@ -217,20 +243,29 @@ export const CreateSender: React.FC = () => {
                             })
                           }
                         />
-                        <div>Use a company email</div>
+                        <div>
+                          {t('setup.senders.create.form.field.usecompanyemail')}
+                        </div>
                         <HelpTooltip
                           placement="top"
-                          helpText="Lorem ipsum dolor sit amet"
+                          helpText={t(
+                            'setup.senders.create.form.field.usecompanyemail.tooltip'
+                          )}
                         />
-                        <PabauPlus label="Plus" modalType="Marketing" />
+                        <PabauPlus
+                          label={t('common-label-plus')}
+                          modalType="Marketing"
+                        />
                       </Space>
                     </div>
                     {values.isUseCompanyEmail && (
                       <div className={styles.formElement}>
                         <Input
                           type="email"
-                          label="From email"
-                          placeholder="e.g. bookings@clinic.com"
+                          label={t('setup.senders.create.form.field.fromemail')}
+                          placeholder={t(
+                            'setup.senders.create.form.field.fromemail.placeholder'
+                          )}
                           name="fromCompanyEmail"
                           onChange={(value) =>
                             handleChange({
@@ -250,8 +285,13 @@ export const CreateSender: React.FC = () => {
                             })
                           }
                         />
-                        <div>Automatically upload client replies to record</div>
-                        <PabauPlus label="Plus" modalType="Marketing" />
+                        <div>
+                          {t('setup.senders.create.form.field.autoupload')}
+                        </div>
+                        <PabauPlus
+                          label={t('common-label-plus')}
+                          modalType="Marketing"
+                        />
                       </Space>
                     </div>
                   </>
@@ -260,7 +300,10 @@ export const CreateSender: React.FC = () => {
 
               <div className={styles.advancedSettings}>
                 <Collapse ghost>
-                  <Panel header="Advanced settings" key="advanced-settings">
+                  <Panel
+                    header={t('setup.senders.create.form.advanced')}
+                    key="advanced-settings"
+                  >
                     <div className={styles.cardWrapper}>
                       <div className={styles.cardHeader}>Sending criteria</div>
                       <div
@@ -270,10 +313,14 @@ export const CreateSender: React.FC = () => {
                         )}
                       >
                         <SimpleDropdown
-                          label="Sending criteria"
+                          label={t(
+                            'setup.senders.create.advanced.sendingcriteria'
+                          )}
                           className={styles.criteriaItem}
                           dropdownItems={masterCriteriaOptions}
-                          placeholder="Select sending criteria"
+                          placeholder={t(
+                            'setup.senders.create.advanced.sendingcriteria.placeholder'
+                          )}
                           name="masterCriteria"
                           onSelected={(value) =>
                             handleChange({
@@ -281,12 +328,18 @@ export const CreateSender: React.FC = () => {
                             })
                           }
                         />
-                        <div className={styles.criteriaDivider}>IS</div>
+                        <div className={styles.criteriaDivider}>
+                          {t('setup.senders.create.advanced.criterial.divider')}
+                        </div>
                         <SimpleDropdown
-                          label="Sending criteria"
+                          label={t(
+                            'setup.senders.create.advanced.sendingcriteria'
+                          )}
                           className={styles.criteriaItem}
                           dropdownItems={subCriteriaOptions}
-                          placeholder="Select sending criteria"
+                          placeholder={t(
+                            'setup.senders.create.advanced.sendingcriteria.placeholder'
+                          )}
                           name="subCriteria"
                           onSelected={(value) =>
                             handleChange({
@@ -298,13 +351,17 @@ export const CreateSender: React.FC = () => {
                     </div>
 
                     <div className={styles.cardWrapper}>
-                      <div className={styles.cardHeader}>Custom merge tags</div>
+                      <div className={styles.cardHeader}>
+                        {t('setup.senders.create.advanced.custommergetags')}
+                      </div>
                       {values.mergeTags.map((tag, index) => (
                         <div className={styles.mergeTag} key={index}>
                           <SimpleDropdown
-                            label="Tag text"
+                            label={t('setup.senders.create.advanced.tagtext')}
                             className={styles.formElement}
-                            placeholder="Merge tag text"
+                            placeholder={t(
+                              'setup.senders.create.advanced.tagtext.placeholder'
+                            )}
                             dropdownItems={mergeTagTypeOptions}
                             name={`mergeTags[${index}].type`}
                             onSelected={(value) =>
@@ -317,9 +374,11 @@ export const CreateSender: React.FC = () => {
                             }
                           />
                           <Input
-                            label="Tag value"
+                            label={t('setup.senders.create.advanced.tagvalue')}
                             className={styles.formElement}
-                            placeholder="Merge tag value"
+                            placeholder={t(
+                              'setup.senders.create.advanced.tagvalue.placeholder'
+                            )}
                             name={`mergeTags[${index}].value`}
                             onChange={(value) =>
                               handleChange({
@@ -347,7 +406,7 @@ export const CreateSender: React.FC = () => {
                         }
                         style={{ marginTop: 16 }}
                       >
-                        Add new
+                        {t('setup.senders.create.addnew')}
                       </Button>
                     </div>
                   </Panel>

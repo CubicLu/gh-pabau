@@ -15,6 +15,8 @@ export interface SearchTagsProps {
   items: Array<string>
   selectedItems?: Array<string>
   itemType?: string
+  noItemText?: string
+  selectAllText?: string
   onChange?: (items: Array<string>) => void
 }
 
@@ -29,6 +31,8 @@ export const SearchTags: FC<SearchTagsProps> = ({
   items,
   itemType,
   selectedItems = [],
+  noItemText,
+  selectAllText,
   onChange,
 }) => {
   const [searchQuery, setSearchQuery] = useState('')
@@ -117,7 +121,7 @@ export const SearchTags: FC<SearchTagsProps> = ({
                 marginBottom: '1rem',
               }}
             />
-            <p>{`No ${itemType} found`}</p>
+            <p>{noItemText || 'No item found'}</p>
           </div>
         )}
         {items.length > 0 && (
@@ -127,7 +131,7 @@ export const SearchTags: FC<SearchTagsProps> = ({
                 className={styles.searchTagItem}
                 onClick={() => handleSelectAll()}
               >
-                Select All
+                {selectAllText || 'Select All'}
               </span>
             )}
             {searchTagItems.map((item) => (

@@ -1,5 +1,6 @@
 export const packageData = [
   {
+    id: '1',
     key: '1',
     name: 'Book Now Link',
     quantity: [
@@ -27,6 +28,7 @@ export const packageData = [
     is_active: true,
   },
   {
+    id: '2',
     key: '2',
     name: 'From a friend',
     quantity: [
@@ -54,6 +56,7 @@ export const packageData = [
     is_active: true,
   },
   {
+    id: '3',
     key: '3',
     name: 'Instagram',
     quantity: [

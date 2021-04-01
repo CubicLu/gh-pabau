@@ -10,37 +10,7 @@ import { ShopOutlined } from '@ant-design/icons'
 import { gql, useMutation } from '@apollo/client'
 import { updateTable } from './ProductListUtils'
 import styles from './productListComponents.module.less'
-
-const SupplierColumns = [
-  {
-    title: 'Status',
-    dataIndex: 'is_active',
-    className: 'drag-visible',
-    visible: true,
-    width: '120px',
-  },
-  {
-    title: '',
-    dataIndex: 'test',
-    className: 'drag-visible',
-    visible: true,
-    // eslint-disable-next-line react/display-name
-    render: () => <ShopOutlined style={{ color: '#B8B8C0', fontSize: 16 }} />,
-    width: '64px',
-  },
-  {
-    title: 'Supplier Name',
-    dataIndex: 'supplier_name',
-    className: 'drag-visible',
-    visible: true,
-  },
-  {
-    title: 'Products Assigned',
-    dataIndex: 'products_assigned',
-    className: 'drag-visible',
-    visible: true,
-  },
-]
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const LIST_QUERY = gql`
   query supplier($offset: Int, $limit: Int, $isActive: Boolean = true) {
@@ -78,6 +48,7 @@ const UPDATE_ORDER_MUTATION = gql`
 `
 
 const Suppliers: FC = () => {
+  const { t } = useTranslationI18()
   const [paginateData, setPaginateData] = useState({
     total: 0,
     offset: 0,
@@ -100,10 +71,41 @@ const Suppliers: FC = () => {
       console.log(err)
       Notification(
         NotificationType.error,
-        `Error! While updating product order`
+        t('products.list.supplier.notification.updateorder.error')
       )
     },
   })
+
+  const SupplierColumns = [
+    {
+      title: t('products.list.supplier.column.status'),
+      dataIndex: 'is_active',
+      className: 'drag-visible',
+      visible: true,
+      width: '120px',
+    },
+    {
+      title: '',
+      dataIndex: 'test',
+      className: 'drag-visible',
+      visible: true,
+      // eslint-disable-next-line react/display-name
+      render: () => <ShopOutlined style={{ color: '#B8B8C0', fontSize: 16 }} />,
+      width: '64px',
+    },
+    {
+      title: t('products.list.supplier.column.name'),
+      dataIndex: 'supplier_name',
+      className: 'drag-visible',
+      visible: true,
+    },
+    {
+      title: t('products.list.supplier.column.products'),
+      dataIndex: 'products_assigned',
+      className: 'drag-visible',
+      visible: true,
+    },
+  ]
 
   useEffect(() => {
     if (aggregateData) {
@@ -137,8 +139,8 @@ const Suppliers: FC = () => {
       <Table
         draggable
         loading={loading}
-        noDataText="supplier"
-        noDataBtnText="New supplier"
+        noDataText={t('products.list.supplier.table.nodata')}
+        noDataBtnText={t('products.list.supplier.table.new')}
         columns={SupplierColumns}
         dataSource={data?.map((d) => ({ ...d, key: d.id }))}
         scroll={{ x: 'max-content' }}

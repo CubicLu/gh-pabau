@@ -24,14 +24,17 @@ import {
   Notification,
   NotificationType,
 } from '@pabau/ui'
-import { Card, Row, Col } from 'antd'
+import { Row, Col } from 'antd'
 import {
   SearchOutlined,
   ApartmentOutlined,
   EditOutlined,
   DeleteOutlined,
-  PlusOutlined,
+  PlusSquareFilled,
+  LeftOutlined,
 } from '@ant-design/icons'
+import { useRouter } from 'next/router'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
 
 const LIST_QUERY = gql`
@@ -152,7 +155,9 @@ export interface P {
 }
 
 export const Index: FC<P> = ({ ...props }) => {
+  const { t } = useTranslationI18()
   const isMobileView = useMedia('(max-width: 767px)', false)
+  const router = useRouter()
   const [showMobileViewSearch, setShowMobileViewSearch] = useState(false)
 
   const [isLoading, setIsLoading] = useState(false)
@@ -177,7 +182,7 @@ export const Index: FC<P> = ({ ...props }) => {
 
   const columns = [
     {
-      title: 'Name',
+      title: t('setup.drugs.table.header.name'),
       dataIndex: 'name',
       className: 'leftPadding',
       width: '30%',
@@ -185,24 +190,24 @@ export const Index: FC<P> = ({ ...props }) => {
       sorter: (a, b) => a.name.length - b.name.length,
     },
     {
-      title: 'Units',
+      title: t('setup.drugs.table.header.units'),
       dataIndex: 'unit',
       visible: true,
       width: '10%',
       sorter: (a, b) => a.unit.length - b.unit.length,
     },
     {
-      title: 'Frequency',
+      title: t('setup.drugs.table.header.frequency'),
       dataIndex: 'frequency',
       visible: true,
       width: '10%',
       filters: [
         {
-          text: '1 per day',
+          text: t('setup.drugs.table.header.frequency.filter.day'),
           value: '1 per day',
         },
         {
-          text: '6-8 hour',
+          text: t('setup.drugs.table.header.frequency.filter.hour'),
           value: '6-8 hour',
         },
       ],
@@ -210,21 +215,21 @@ export const Index: FC<P> = ({ ...props }) => {
       sorter: (a, b) => a.frequency.length - b.frequency.length,
     },
     {
-      title: 'Route',
+      title: t('setup.drugs.table.header.route'),
       dataIndex: 'route',
       visible: true,
       width: '10%',
       sorter: (a, b) => a.route.length - b.route.length,
     },
     {
-      title: 'Comment',
+      title: t('setup.drugs.table.header.comment'),
       dataIndex: 'comment',
       visible: true,
       width: '20%',
       sorter: (a, b) => a.comment.length - b.comment.length,
     },
     {
-      title: 'Status',
+      title: t('setup.drugs.table.header.status'),
       dataIndex: 'is_active',
       visible: true,
       width: '5%',
@@ -263,20 +268,35 @@ export const Index: FC<P> = ({ ...props }) => {
     },
   ]
 
-  const tabItems = ['Drugs', 'Library']
+  const tabItems = [t('setup.drugs.tab.drugs'), t('setup.drugs.tab.library')]
 
-  const cardHeader = (
+  const handleBack = () => {
+    router.push('/setup')
+  }
+
+  const dragsHeader = () => (
     <div className={styles.header}>
       <div className="leftDiv">
-        <div>
-          <Breadcrumb
-            breadcrumbItems={[
-              { breadcrumbName: 'Setup', path: 'setup' },
-              { breadcrumbName: 'Drugs', path: 'drugs' },
-            ]}
-          />
-        </div>
-        <h3 className={styles.drugsHeading}>Drugs</h3>
+        {!isMobileView ? (
+          <>
+            <div>
+              <Breadcrumb
+                breadcrumbItems={[
+                  { breadcrumbName: t('sidebar.setup'), path: 'setup' },
+                  { breadcrumbName: t('setup.drugs.title'), path: 'drugs' },
+                ]}
+              />
+            </div>
+            <h3 className={styles.drugsHeading}>{t('setup.drugs.title')}</h3>
+          </>
+        ) : (
+          <>
+            <LeftOutlined className={styles.backToSetup} onClick={handleBack} />
+            <h3 className={styles.drugsHeadingMobile}>
+              {t('setup.drugs.title')}
+            </h3>
+          </>
+        )}
       </div>
       <div className="rightDiv">
         {isMobileView ? (
@@ -293,7 +313,7 @@ export const Index: FC<P> = ({ ...props }) => {
             ) : (
               <Input
                 size={InputSize['medium']}
-                placeHolderText="Search"
+                placeHolderText={t('setup.drugs.search.placeholder')}
                 suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
                 onChange={(val) => {
                   setSearchTerm(val)
@@ -305,7 +325,7 @@ export const Index: FC<P> = ({ ...props }) => {
           <Input
             size={InputSize['large']}
             className={styles.searchDrugsListing}
-            placeHolderText="Search"
+            placeHolderText={t('setup.drugs.search.placeholder')}
             suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
             onChange={(val) => {
               setSearchTerm(val)
@@ -315,16 +335,12 @@ export const Index: FC<P> = ({ ...props }) => {
         {showCreateBtn && (
           <div>
             {isMobileView ? (
-              <Button
+              <PlusSquareFilled
                 className="plus-btn"
-                type="primary"
-                size="middle"
                 onClick={() =>
                   toggleCreateDrugModal((createDrugModal) => !createDrugModal)
                 }
-              >
-                <PlusOutlined />
-              </Button>
+              />
             ) : (
               <Button
                 type="primary"
@@ -333,7 +349,7 @@ export const Index: FC<P> = ({ ...props }) => {
                   toggleCreateDrugModal((createDrugModal) => !createDrugModal)
                 }
               >
-                Create Drug
+                {t('setup.drugs.create.text')}
               </Button>
             )}
           </div>
@@ -387,12 +403,15 @@ export const Index: FC<P> = ({ ...props }) => {
       toggleCreateDrugModal((createDrugModal) => !createDrugModal)
       Notification(
         NotificationType.success,
-        `Success! Drugs added successfully.`
+        t('setup.drugs.notification.create.success')
       )
     },
     onError(err) {
       console.log(err)
-      Notification(NotificationType.error, `Error! Something went wrong.`)
+      Notification(
+        NotificationType.error,
+        t('setup.drugs.notification.create.error')
+      )
     },
   })
 
@@ -401,20 +420,29 @@ export const Index: FC<P> = ({ ...props }) => {
       setEditModal(false)
       Notification(
         NotificationType.success,
-        `Success! Bundle updated successfully.`
+        t('setup.drugs.notification.edit.success')
       )
     },
     onError(err) {
-      Notification(NotificationType.error, `Error! Something went wrong.`)
+      Notification(
+        NotificationType.error,
+        t('setup.drugs.notification.edit.error')
+      )
     },
   })
 
   const [deleteMutation] = useMutation(DELETE_MUTATION, {
     onCompleted(data) {
-      Notification(NotificationType.success, `Success! Deleted Successfully.`)
+      Notification(
+        NotificationType.success,
+        t('setup.drugs.notification.delete.success')
+      )
     },
     onError() {
-      Notification(NotificationType.error, `Error! Something went wrong.`)
+      Notification(
+        NotificationType.error,
+        t('setup.drugs.notification.delete.error')
+      )
     },
   })
 
@@ -452,23 +480,25 @@ export const Index: FC<P> = ({ ...props }) => {
   }
 
   return (
-    <Layout>
-      <div className={styles.drugsListingMain}>
-        <Card title={cardHeader}>
+    <div className={styles.setupDragsContainer}>
+      <Layout>
+        <div className={styles.drugsListingMain}>
+          {dragsHeader()}
           <div className={styles.body}>
             <TabMenu
               tabPosition="top"
               menuItems={tabItems}
               onChange={(key) => onTabChange(tabItems[key])}
+              minHeight="1px"
             >
               <div className={styles.drugsListing}>
                 <Table
                   loading={isLoading}
                   columns={columns}
                   searchTerm={searchTerm}
-                  noDataText="Drug"
+                  noDataText={t('setup.drugs.title')}
                   noDataIcon={<ApartmentOutlined />}
-                  noDataBtnText="Drug"
+                  noDataBtnText={t('setup.drugs.title')}
                   onAddTemplate={() =>
                     toggleCreateDrugModal((createDrugModal) => !createDrugModal)
                   }
@@ -484,83 +514,86 @@ export const Index: FC<P> = ({ ...props }) => {
               </div>
             </TabMenu>
           </div>
-        </Card>
-        {paginationState && (
-          <div className={styles.paginationDiv}>
-            <Pagination
-              total={paginateData.total}
-              defaultPageSize={50}
-              showSizeChanger={false}
-              onPageSizeChange={(limit) => {
-                setPaginateData({
-                  ...paginateData,
-                  limit: limit,
-                })
-              }}
-              onChange={onPaginationChange}
-              pageSize={paginateData.limit}
-              current={paginateData.currentPage}
-              showingRecords={paginateData.showingRecords}
-            />
-          </div>
-        )}
 
-        <Row>
-          <Col md={24}>
-            <CreateDrugsModal
-              visible={createDrugModal}
-              onCreate={(data: CreateDrugDataType) => {
-                submitCreateDrug(data)
-              }}
-              onClose={() =>
-                toggleCreateDrugModal((createDrugModal) => !createDrugModal)
-              }
-            />
-            <EditDrugsModal
-              visible={editDrugModal}
-              editDrugData={editingRow}
-              onUpdate={(data: EditDrugDataType) => {
-                submitUpdateDrug(data)
-              }}
-              onClose={() => setEditModal((editDrugModal) => !editDrugModal)}
-            />
-          </Col>
-        </Row>
+          {paginationState && (
+            <div className={styles.paginationDiv}>
+              <Pagination
+                total={paginateData.total}
+                defaultPageSize={50}
+                showSizeChanger={false}
+                onPageSizeChange={(limit) => {
+                  setPaginateData({
+                    ...paginateData,
+                    limit: limit,
+                  })
+                }}
+                onChange={onPaginationChange}
+                pageSize={paginateData.limit}
+                current={paginateData.currentPage}
+                showingRecords={paginateData.showingRecords}
+              />
+            </div>
+          )}
 
-        <DeleteModal
-          modalWidth={682}
-          centered={true}
-          onCancel={() => {
-            setDeletingRow(null)
-            setDeleteModal(false)
-          }}
-          onOk={async () => {
-            const { id } = deletingRow as { id }
-            await deleteMutation({
-              variables: { id },
-            })
-            setDeletingRow(null)
-            setDeleteModal(false)
-          }}
-          visible={deleteModal}
-          title={`Delete`}
-          newButtonText={'Yes, Delete'}
-          isValidate={true}
-        >
-          <span
-            style={{
-              fontFamily: 'Circular-Std-Book',
-              fontWeight: 'normal',
-              fontSize: '16px',
-              lineHeight: '20px',
-              color: '#9292A3',
+          <Row>
+            <Col md={24}>
+              <CreateDrugsModal
+                visible={createDrugModal}
+                onCreate={(data: CreateDrugDataType) => {
+                  submitCreateDrug(data)
+                }}
+                onClose={() =>
+                  toggleCreateDrugModal((createDrugModal) => !createDrugModal)
+                }
+              />
+              <EditDrugsModal
+                visible={editDrugModal}
+                editDrugData={editingRow}
+                onUpdate={(data: EditDrugDataType) => {
+                  submitUpdateDrug(data)
+                }}
+                onClose={() => setEditModal((editDrugModal) => !editDrugModal)}
+              />
+            </Col>
+          </Row>
+
+          <DeleteModal
+            modalWidth={682}
+            centered={true}
+            onCancel={() => {
+              setDeletingRow(null)
+              setDeleteModal(false)
             }}
+            onOk={async () => {
+              const { id } = deletingRow as { id }
+              await deleteMutation({
+                variables: { id },
+              })
+              setDeletingRow(null)
+              setDeleteModal(false)
+            }}
+            visible={deleteModal}
+            title={t('setup.drugs.modal.delete.title')}
+            newButtonText={t('setup.drugs.modal.delete.button')}
+            isValidate={true}
           >
-            {deletingRow?.name} will be deleted. This action is irreversable
-          </span>
-        </DeleteModal>
-      </div>
-    </Layout>
+            <span
+              style={{
+                fontFamily: 'Circular-Std-Book',
+                fontWeight: 'normal',
+                fontSize: '16px',
+                lineHeight: '20px',
+                color: '#9292A3',
+              }}
+            >
+              {t('setup.drugs.modal.delete.message', {
+                what: deletingRow?.name,
+              })}
+            </span>
+          </DeleteModal>
+        </div>
+      </Layout>
+    </div>
   )
 }
 

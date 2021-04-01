@@ -7,7 +7,7 @@ import {
   Breadcrumb,
 } from '@pabau/ui'
 import { Card, Typography } from 'antd'
-import { Layout } from '@pabau/ui'
+import Layout from '../../components/Layout/Layout'
 import Configuration from '../../components/Settings/Calendar/Configuration'
 import AppointmentSettings from '../../components/Settings/Calendar/AppointmentSettings'
 import Appearance from '../../components/Settings/Calendar/Appearance'

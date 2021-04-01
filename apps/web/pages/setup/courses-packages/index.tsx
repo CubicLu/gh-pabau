@@ -11,11 +11,8 @@ import {
 import { LeftOutlined } from '@ant-design/icons'
 import AddButton from '../../../components/AddButton'
 import {
-  coursesColumns,
   coursesData,
   packageData,
-  courseSchema,
-  packageSchema,
   employeeList,
 } from '../../../mocks/CoursesPackages'
 import CreateCourse, {
@@ -24,34 +21,11 @@ import CreateCourse, {
 import CreatePackage, {
   InitialPackagesProps,
 } from '../../../components/Setup/CoursesPackages/CreatePackage'
+import { useRouter } from 'next/router'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
 
 const { Title } = Typography
-
-const packageColumns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    className: 'drag-visible',
-    visible: true,
-  },
-  {
-    title: 'Quantity',
-    dataIndex: 'quantity',
-    className: 'drag-visible',
-    render: function renderSourceName(val, rowData) {
-      return <AvatarList isLoading={false} users={val} size={'small'} />
-    },
-    visible: true,
-  },
-  {
-    title: 'Status',
-    dataIndex: 'is_active',
-    className: 'drag-visible',
-    visible: true,
-  },
-]
-
 const coursesFormikInitialValue: InitialCoursesProps = {
   id: '',
   name: '',
@@ -67,13 +41,16 @@ const coursesFormikInitialValue: InitialCoursesProps = {
 
 const packageFormikInitialValue: InitialPackagesProps = {
   id: '',
-  packageName: '',
+  name: '',
   category: '',
   onlinePurchase: false,
+  isActive: true,
   image: '',
 }
 
 export const Index: FC = () => {
+  const { t } = useTranslationI18()
+  const router = useRouter()
   const onFilterSource = () => {
     return
   }
@@ -94,6 +71,151 @@ export const Index: FC = () => {
     currentPage: 1,
     showingRecords: 0,
   })
+
+  const packageColumns = [
+    {
+      title: t('setup.courses.package.column.name'),
+      dataIndex: 'name',
+      className: 'drag-visible',
+      visible: true,
+    },
+    {
+      title: t('setup.courses.package.column.quantity'),
+      dataIndex: 'quantity',
+      className: 'drag-visible',
+      render: function renderSourceName(val, rowData) {
+        return <AvatarList isLoading={false} users={val} size={'small'} />
+      },
+      visible: true,
+    },
+    {
+      title: t('setup.courses.package.column.status'),
+      dataIndex: 'is_active',
+      className: 'drag-visible',
+      visible: true,
+    },
+  ]
+
+  const coursesColumns = [
+    {
+      title: t('setup.courses.course.column.name'),
+      dataIndex: 'name',
+      className: 'drag-visible',
+      visible: true,
+    },
+    {
+      title: t('setup.courses.course.column.service'),
+      dataIndex: 'service',
+      className: 'drag-visible',
+      visible: true,
+    },
+    {
+      title: t('setup.courses.course.column.sessions'),
+      dataIndex: 'session',
+      className: 'drag-visible',
+      visible: true,
+    },
+    {
+      title: t('setup.courses.course.column.status'),
+      dataIndex: 'is_active',
+      className: 'drag-visible',
+      visible: true,
+    },
+  ]
+
+  const courseSchema: Schema = {
+    full: t('setup.courses.course.schema.full'),
+    fullLower: t('setup.courses.course.schema.full.lower'),
+    short: t('setup.courses.course.schema.short'),
+    shortLower: t('setup.courses.course.schema.short.lower'),
+    createButtonLabel: t('setup.courses.course.schema.createbutton'),
+    messages: {
+      create: {
+        success: t('setup.courses.course.schema.messages.create.success'),
+        error: t('setup.courses.course.schema.messages.create.error'),
+      },
+      update: {
+        success: t('setup.courses.course.schema.messages.edit.success'),
+        error: t('setup.courses.course.schema.messages.edit.error'),
+      },
+      delete: {
+        success: t('setup.courses.course.schema.messages.delete.success'),
+        error: t('setup.courses.course.schema.messages.delete.error'),
+      },
+    },
+    fields: {
+      name: {
+        full: t('setup.courses.course.schema.fields.name.full'),
+        fullLower: t('setup.courses.course.schema.fields.name.full.lower'),
+        short: t('setup.courses.course.schema.fields.name.short'),
+        shortLower: t('setup.courses.course.schema.fields.name.short.lower'),
+        min: 2,
+        example: t('setup.courses.course.schema.fields.name.example'),
+        cssWidth: 'max',
+        type: 'string',
+      },
+      service: {
+        full: t('setup.courses.course.schema.fields.service.full'),
+        type: 'string',
+        example: t('setup.courses.course.schema.fields.service.example'),
+      },
+      sessions: {
+        full: t('setup.courses.course.schema.fields.session.full'),
+        type: 'string',
+        example: t('setup.courses.course.schema.fields.session.example'),
+      },
+      is_active: {
+        full: t('setup.courses.course.schema.fields.status.full'),
+        type: 'boolean',
+        defaultvalue: true,
+      },
+    },
+  }
+
+  const packageSchema: Schema = {
+    full: t('setup.courses.package.schema.full'),
+    fullLower: t('setup.courses.package.schema.full.lower'),
+    short: t('setup.courses.package.schema.short'),
+    shortLower: t('setup.courses.package.schema.short.lower'),
+    createButtonLabel: t('setup.courses.package.schema.createbutton'),
+    messages: {
+      create: {
+        success: t('setup.courses.package.schema.messages.create.success'),
+        error: t('setup.courses.package.schema.messages.create.error'),
+      },
+      update: {
+        success: t('setup.courses.package.schema.messages.edit.success'),
+        error: t('setup.courses.package.schema.messages.edit.error'),
+      },
+      delete: {
+        success: t('setup.courses.package.schema.messages.delete.success'),
+        error: t('setup.courses.package.schema.messages.delete.error'),
+      },
+    },
+    fields: {
+      name: {
+        full: t('setup.courses.package.schema.fields.name.full'),
+        fullLower: t('setup.courses.package.schema.fields.name.full.lower'),
+        short: t('setup.courses.package.schema.fields.name.short'),
+        shortLower: t('setup.courses.package.schema.fields.name.short.lower'),
+        min: 2,
+        example: t('setup.courses.package.schema.fields.name.example'),
+        cssWidth: 'max',
+        type: 'string',
+      },
+      quantity: {
+        full: t('setup.courses.package.schema.fields.quantity.full'),
+        type: 'string',
+        example: t('setup.courses.package.schema.fields.quantity.example'),
+      },
+      is_active: {
+        full: t('setup.courses.package.schema.fields.status.full'),
+        type: 'boolean',
+        defaultvalue: true,
+      },
+    },
+  }
+
   const [showCreateCourseModal, setShowCreateCourseModal] = useState(false)
   const [showCreatePackageModal, setShowCreatePackageModal] = useState(false)
   const [currentTab, setCurrentTab] = useState('0')
@@ -101,6 +223,10 @@ export const Index: FC = () => {
     courseInitialValue,
     setCourseInitialValue,
   ] = useState<InitialCoursesProps>(coursesFormikInitialValue)
+  const [
+    packageIntitialValue,
+    setPackageIntialValue,
+  ] = useState<InitialPackagesProps>(packageFormikInitialValue)
   const [employeeListData, setEmployeeListData] = useState(employeeList)
 
   const onPaginationCoursesChange = (currentPage) => {
@@ -129,19 +255,32 @@ export const Index: FC = () => {
       ? setShowCreateCourseModal(true)
       : setShowCreatePackageModal(true)
 
-    const data = employeeList.map((value) => {
-      return {
-        ...value,
-        selected: false,
-      }
-    })
-    setEmployeeListData(data)
-    setCourseInitialValue(coursesFormikInitialValue)
+    if (currentTab === '0') {
+      const data = employeeList.map((value) => {
+        return {
+          ...value,
+          selected: false,
+        }
+      })
+      setEmployeeListData(data)
+    }
+    currentTab === '0'
+      ? setCourseInitialValue(coursesFormikInitialValue)
+      : setPackageIntialValue(packageFormikInitialValue)
   }
 
   const onCourseTableRowClick = (value) => {
-    setCourseInitialValue(value)
+    setCourseInitialValue({ ...value, isActive: value.is_active })
     setShowCreateCourseModal(true)
+  }
+
+  const onPackageTableRowClick = (value) => {
+    setPackageIntialValue({ ...value, isActive: value.is_active })
+    setShowCreatePackageModal(true)
+  }
+
+  const handleBack = () => {
+    router.push('/setup')
   }
 
   return (
@@ -152,15 +291,15 @@ export const Index: FC = () => {
             <div className={styles.header}>
               <Breadcrumb
                 breadcrumbItems={[
-                  { path: 'setup', breadcrumbName: 'Setup' },
+                  { path: 'setup', breadcrumbName: t('sidebar.setup') },
                   {
                     path: '',
-                    breadcrumbName: 'Courses & Packages',
+                    breadcrumbName: t('setup.courses.title'),
                   },
                 ]}
               />
               <Title className={styles.hideMobileView}>
-                Courses & Packages
+                {t('setup.courses.title')}
               </Title>
             </div>
             <AddButton
@@ -175,8 +314,8 @@ export const Index: FC = () => {
           </div>
           <div className={styles.hideDesktopView}>
             <div className={styles.courseWrap}>
-              <LeftOutlined className={styles.leftIcon} />{' '}
-              <h6> {'Courses & Packages'}</h6>
+              <LeftOutlined className={styles.leftIcon} onClick={handleBack} />
+              <h6>{t('setup.courses.title')}</h6>
             </div>
             <AddButton
               onFilterSource={onFilterSource}
@@ -191,7 +330,10 @@ export const Index: FC = () => {
         </div>
         <div className={styles.tableBackground}>
           <TabbedTable
-            tabItems={['Courses', 'Packages']}
+            tabItems={[
+              t('setup.courses.tab.courses'),
+              t('setup.courses.tab.packages'),
+            ]}
             onTabChange={handleTab}
           >
             <div>
@@ -226,9 +368,7 @@ export const Index: FC = () => {
                 dataSource={packageData as never[]}
                 draggable={true}
                 columns={packageColumns}
-                onRowClick={(e) => {
-                  setShowCreatePackageModal(true)
-                }}
+                onRowClick={onPackageTableRowClick}
               />
               <Pagination
                 total={packageData.length}
@@ -259,7 +399,7 @@ export const Index: FC = () => {
       <CreatePackage
         visible={showCreatePackageModal}
         setVisible={setShowCreatePackageModal}
-        initialValue={packageFormikInitialValue}
+        initialValue={packageIntitialValue}
       />
     </>
   )

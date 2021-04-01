@@ -1,41 +1,36 @@
-import React, { FC, useEffect, useState, ReactNode } from 'react'
+import React, { FC, useEffect, useState, ReactNode, useRef } from 'react'
 import { useMedia } from 'react-use'
 import className from 'classnames'
 import { Button, TabMenu } from '@pabau/ui'
-import { Modal, Switch, Popover } from 'antd'
-import { LeftOutlined, MoreOutlined } from '@ant-design/icons'
+import { Switch, Modal } from 'antd'
+import { LeftOutlined } from '@ant-design/icons'
 import styles from './FullScreenReportModal.module.less'
 
 export enum OperationType {
-  vat = 'vat',
   active = 'active',
   reset = 'reset',
   save = 'save',
   delete = 'delete',
   create = 'create',
-  cancel = 'cancel',
 }
 
 export interface FullScreenReportModalProps {
   title: ReactNode
   visible: boolean
   operations: Array<OperationType>
-  onVatRegistered?: (val: boolean) => void
   onActivated?: (val: boolean) => void
-  onBackClick?: (e) => void
+  onBackClick?: () => void
   onSave?: () => void
   onCreate?: () => void
-  onCancel?: (e) => void
   onReset?: () => void
   onDelete?: () => void
+  activeBtnText?: string
   deleteBtnText?: string
   createBtnText?: string
   saveBtnText?: string
-  cancelBtnText?: string
   resetBtnText?: string
   enableCreateBtn?: boolean
   activated?: boolean
-  vatRegistered?: boolean
   subMenu?: Array<ReactNode>
   footer?: boolean
 }
@@ -45,124 +40,48 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
   visible,
   operations = [],
   onBackClick,
-  onVatRegistered,
   onActivated,
   onSave,
   onCreate,
-  onCancel,
   onReset,
   onDelete,
   deleteBtnText,
   createBtnText,
   saveBtnText,
-  cancelBtnText,
   resetBtnText,
+  activeBtnText,
   enableCreateBtn,
   activated,
-  vatRegistered,
   subMenu = [],
   children,
   ...props
 }) => {
+  const ref = useRef(null)
   const isMobile = useMedia('(max-width: 767px)', false)
-  const [vat, setVat] = useState(true)
   const [active, setActive] = useState(true)
-  const handleChangeVat = (checked) => {
-    setVat(checked)
-    onVatRegistered?.(checked)
-  }
   const handleChangeActive = (checked) => {
     setActive(checked)
     onActivated?.(checked)
   }
-  const mobileVersionOperations = () => (
-    <div className={styles.mobileVersionOperations}>
-      {operations.map((operation) => (
-        <React.Fragment key={operation}>
-          {operation === OperationType.vat && (
-            <div
-              className={styles.operationSwitch}
-              style={{ marginBottom: '8px' }}
-            >
-              VAT registered{' '}
-              <Switch
-                size="small"
-                checked={vat}
-                onChange={(checked) => handleChangeVat(checked)}
-                style={{ marginLeft: '12px' }}
-              />
-            </div>
-          )}
-          {operation === OperationType.active && (
-            <div
-              className={styles.operationSwitch}
-              style={{ marginBottom: '8px' }}
-            >
-              Active{' '}
-              <Switch
-                size="small"
-                checked={active}
-                onChange={(checked) => handleChangeActive(checked)}
-                style={{ marginLeft: '12px' }}
-              />
-            </div>
-          )}
-          {operation === OperationType.reset && (
-            <Button onClick={() => onReset?.()} style={{ marginBottom: '8px' }}>
-              {resetBtnText || 'Reset'}
-            </Button>
-          )}
-          {operation === OperationType.delete && (
-            <Button
-              onClick={() => onDelete?.()}
-              style={{ marginBottom: '8px' }}
-            >
-              {deleteBtnText || 'Delete'}
-            </Button>
-          )}
-          {operation === OperationType.save && (
-            <Button onClick={() => onSave?.()} style={{ marginBottom: '8px' }}>
-              {saveBtnText || 'Save'}
-            </Button>
-          )}
-          {operation === OperationType.cancel && (
-            <Button
-              onClick={(e) => onCancel?.(e)}
-              style={{ marginBottom: '8px' }}
-            >
-              {cancelBtnText || 'Cancel'}
-            </Button>
-          )}
-          {operation === OperationType.create && (
-            <Button
-              type="primary"
-              disabled={!enableCreateBtn}
-              onClick={() => onCreate?.()}
-            >
-              {createBtnText || 'Create'}
-            </Button>
-          )}
-        </React.Fragment>
-      ))}
-    </div>
-  )
+  const handleClickBack = () => {
+    onBackClick?.()
+  }
   useEffect(() => {
-    setVat(vatRegistered || false)
     setActive(activated || false)
-  }, [activated, vatRegistered])
+  }, [activated])
   return visible ? (
     <Modal
       visible={visible}
       closable={false}
       footer={null}
       width={'100%'}
-      wrapClassName={className(styles.fullScreenModal, 'fullScreenModal')}
+      className={className(styles.fullScreenModal, 'fullScreenModal')}
     >
-      <>
+      <div className={styles.fullScreenModalContainer} ref={ref}>
         <div className={styles.fullScreenModalHeader}>
           <div>
             <LeftOutlined
-              onClick={(e) => onBackClick?.(e)}
+              onClick={() => handleClickBack()}
               style={{
                 color: 'var(--light-grey-color)',
                 marginRight: '24px',
@@ -175,20 +94,9 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
             {!isMobile &&
               operations.map((operation) => (
                 <React.Fragment key={operation}>
-                  {operation === OperationType.vat && (
-                    <div className={styles.operationSwitch}>
-                      VAT registered{' '}
-                      <Switch
-                        size="small"
-                        checked={vat}
-                        onChange={(checked) => handleChangeVat(checked)}
-                        style={{ marginLeft: '12px' }}
-                      />
-                    </div>
-                  )}
                   {operation === OperationType.active && (
                     <div className={styles.operationSwitch}>
-                      Active{' '}
+                      {activeBtnText || 'Active'}
                       <Switch
                         size="small"
                         checked={active}
@@ -197,7 +105,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                       />
                     </div>
                   )}
-                  {operation === OperationType.reset && (
+                  {!active && operation === OperationType.reset && (
                     <Button
                       onClick={() => onReset?.()}
                       style={{ marginRight: '1rem' }}
@@ -205,28 +113,22 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                       {resetBtnText || 'Reset'}
                     </Button>
                   )}
-                  {operation === OperationType.delete && (
+                  {!active && operation === OperationType.delete && (
                     <Button
                       onClick={() => onDelete?.()}
                       style={{ marginRight: '1rem' }}
+                      type="text"
+                      danger
                     >
                       {deleteBtnText || 'Delete'}
                     </Button>
                   )}
-                  {operation === OperationType.save && (
+                  {!active && operation === OperationType.save && (
                     <Button
                       onClick={() => onSave?.()}
                       style={{ marginRight: '1rem' }}
                     >
                       {saveBtnText || 'Save'}
-                    </Button>
-                  )}
-                  {operation === OperationType.cancel && (
-                    <Button
-                      onClick={(e) => onCancel?.(e)}
-                      style={{ marginRight: '1rem' }}
-                    >
-                      {cancelBtnText || 'Cancel'}
                     </Button>
                   )}
                   {operation === OperationType.create && (
@@ -240,19 +142,20 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                   )}
                 </React.Fragment>
               ))}
-            {isMobile && !props.footer && (
-              <Popover
-                content={mobileVersionOperations}
-                trigger="click"
-                placement="bottomRight"
-              >
-                <div className={styles.moreButton}>
-                  <MoreOutlined />
-                </div>
-              </Popover>
+            {isMobile && operations.includes(OperationType.active) && (
+              <div className={styles.operationSwitch}>
+                {activeBtnText || 'Active'}
+                <Switch
+                  size="small"
+                  checked={active}
+                  onChange={(checked) => handleChangeActive(checked)}
+                  style={{ marginLeft: '12px' }}
+                />
+              </div>
             )}
           </div>
         </div>
+
         <div className={styles.fullScreenModalBody}>
           {subMenu.length > 0 && Array.isArray(children) ? (
             <TabMenu menuItems={subMenu} tabPosition="top" minHeight="1px">
@@ -272,64 +175,75 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
             children
           )}
         </div>
-        {isMobile && props.footer && (
-          <div className={styles.fullScreenModalFooter}>
-            {operations.map((operation) => (
-              <React.Fragment key={operation}>
-                {operation === OperationType.vat && (
-                  <div>
-                    VAT registered{' '}
-                    <Switch
-                      size="small"
-                      checked={vat}
-                      onChange={(checked) => handleChangeVat(checked)}
-                    />
-                  </div>
-                )}
-                {operation === OperationType.active && (
-                  <div>
-                    <label>{active ? 'Active' : 'Inactive'}</label>
-                    <Switch
-                      size="small"
-                      checked={active}
-                      onChange={(checked) => handleChangeActive(checked)}
-                    />
-                  </div>
-                )}
-                {operation === OperationType.reset && (
-                  <Button type="default" onClick={() => onReset?.()}>
-                    {resetBtnText || 'Reset'}
-                  </Button>
-                )}
-                {operation === OperationType.delete && (
-                  <Button type="default" onClick={() => onDelete?.()}>
-                    {deleteBtnText || 'Delete'}
-                  </Button>
-                )}
-                {operation === OperationType.save && (
-                  <Button type="primary" onClick={() => onSave?.()}>
-                    {saveBtnText || 'Save'}
-                  </Button>
-                )}
-                {operation === OperationType.cancel && (
-                  <Button type="default" onClick={(e) => onCancel?.(e)}>
-                    {cancelBtnText || 'Cancel'}
-                  </Button>
-                )}
-                {operation === OperationType.create && (
-                  <Button
-                    type="primary"
-                    disabled={!enableCreateBtn}
-                    onClick={() => onCreate?.()}
-                  >
-                    {createBtnText || 'Create'}
-                  </Button>
-                )}
-              </React.Fragment>
-            ))}
+
+        {isMobile && (
+          <div
+            className={styles.fullScreenModalFooter}
+            style={{
+              gridTemplateColumns: `repeat(${
+                active ? 1 : operations.length - 1
+              }, 1fr)`,
+            }}
+          >
+            {!active &&
+              operations.map((operation) => {
+                if (operation !== OperationType.active) {
+                  return (
+                    <div key={operation}>
+                      {operation === OperationType.reset && (
+                        <Button
+                          type="default"
+                          onClick={() => onReset?.()}
+                          block
+                        >
+                          {resetBtnText || 'Reset'}
+                        </Button>
+                      )}
+                      {operation === OperationType.delete && (
+                        <Button
+                          onClick={() => onDelete?.()}
+                          type="text"
+                          danger
+                          block
+                        >
+                          {deleteBtnText || 'Delete'}
+                        </Button>
+                      )}
+                      {operation === OperationType.save && (
+                        <Button onClick={() => onSave?.()} block>
+                          {saveBtnText || 'Save'}
+                        </Button>
+                      )}
+                      {operation === OperationType.create && (
+                        <Button
+                          type="primary"
+                          disabled={!enableCreateBtn}
+                          onClick={() => onCreate?.()}
+                          block
+                        >
+                          {createBtnText || 'Create'}
+                        </Button>
+                      )}
+                    </div>
+                  )
+                }
+                return null
+              })}
+            {active && (
+              <div>
+                <Button
+                  type="primary"
+                  disabled={!enableCreateBtn}
+                  onClick={() => onCreate?.()}
+                  block
+                >
+                  {createBtnText || 'Create'}
+                </Button>
+              </div>
+            )}
           </div>
         )}
-      </>
+      </div>
     </Modal>
   ) : (
     <div />

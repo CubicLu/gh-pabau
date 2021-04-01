@@ -1,12 +1,15 @@
 import React, { FC } from 'react'
+import { useRouter } from 'next/router'
 import { useMedia } from 'react-use'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
-import { Button, Layout, Breadcrumb } from '@pabau/ui'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import { Button, Breadcrumb } from '@pabau/ui'
 import { Row, Col, Card } from 'antd'
 import { LeftOutlined } from '@ant-design/icons'
-import { LoyaltySettingsObj } from '../../../mocks/LoyaltySettings'
+
+import Layout from '../../../components/Layout/Layout'
 import General from '../../../components/Setup/Settings/LoyaltySettings/General'
 import styles from './loyalty.module.less'
 
@@ -15,7 +18,28 @@ interface P {
 }
 
 const LoyaltySettings: FC<P> = () => {
+  const { t } = useTranslationI18()
+  const router = useRouter()
   const isMobile = useMedia('(max-width: 768px)', false)
+
+  const LoyaltySettingsObj = {
+    general: {
+      dropdownList: {
+        key: 1,
+        id: 'receipt',
+        label: t('setup.settings.loyalty.general.dropdown.label'),
+        value: '15 Minutes',
+        options: ['15 Minutes', '30 Minutes', '45 Minutes'],
+        helpText: t('setup.settings.loyalty.general.dropdown.help'),
+      },
+      inputPoint: {
+        label: t('setup.settings.loyalty.general.inputpoint.label'),
+        pointText: t('setup.settings.loyalty.general.inputpoint.placeholder'),
+        value: 13.45,
+        helpText: t('setup.settings.loyalty.general.inputpoint.help'),
+      },
+    },
+  }
 
   const loyaltyFormik = useFormik({
     initialValues: {
@@ -23,10 +47,12 @@ const LoyaltySettings: FC<P> = () => {
       inputPoint: LoyaltySettingsObj.general.inputPoint.value,
     },
     validationSchema: Yup.object({
-      showOnReceipt: Yup.string().required('Show on receipt Value is required'),
+      showOnReceipt: Yup.string().required(
+        t('setup.settings.loyalty.showonreceipt.validate.required')
+      ),
       inputPoint: Yup.number()
-        .typeError('You must specify a currency amount')
-        .required('Points Value is required'),
+        .typeError(t('setup.settings.loyalty.inputpoint.validate.number'))
+        .required(t('setup.settings.loyalty.inputpoint.validate.required')),
     }),
     onSubmit: (value) => {
       console.log(value)
@@ -35,6 +61,10 @@ const LoyaltySettings: FC<P> = () => {
 
   const handleSave = (): void => {
     loyaltyFormik.handleSubmit()
+  }
+
+  const handleBack = () => {
+    router.push('/setup')
   }
 
   return (
@@ -46,31 +76,29 @@ const LoyaltySettings: FC<P> = () => {
               <Col>
                 <div className={styles.mobTopHead}>
                   <div className={styles.mobTopHeadRow}>
-                    <LeftOutlined /> <h6> {'Loyalty settings'}</h6>
+                    <LeftOutlined onClick={handleBack} />{' '}
+                    <h6>{t('setup.settings.loyalty.title')}</h6>
                   </div>
-                  <p>
-                    {
-                      'Configure how much each of your loyalty points are worth to your clients, as well as deciding if they are to be displayed on the receipt.'
-                    }
-                  </p>
+                  <p>{t('setup.settings.loyalty.description')}</p>
                 </div>
               </Col>
             </Row>
           </div>
           <div className={styles.hideMobileView}>
             <Row className={styles.loyaltyWrapper}>
-              <Col span={20} className={styles.titleWrapper}>
+              <Col span={'auto'} className={styles.titleWrapper}>
                 <Breadcrumb
                   breadcrumbItems={[
-                    { breadcrumbName: 'Setup', path: 'setup' },
-                    { breadcrumbName: 'Loyalty settings', path: '' },
+                    { breadcrumbName: t('sidebar.setup'), path: 'setup' },
+                    {
+                      breadcrumbName: t('setup.settings.loyalty.title'),
+                      path: '',
+                    },
                   ]}
                 />
-                <h4>{'Loyalty settings'}</h4>
+                <h4>{t('setup.settings.loyalty.title')}</h4>
                 <p className={styles.description}>
-                  {
-                    'Configure how much each of your loyalty points are worth to your clients, as well as deciding if they are to be displayed on the receipt.'
-                  }
+                  {t('setup.settings.loyalty.description')}
                 </p>
               </Col>
               <Col span={'auto'} className={styles.titleSaveBtn}>
@@ -79,7 +107,7 @@ const LoyaltySettings: FC<P> = () => {
                   className={styles.saveBtn}
                   onClick={handleSave}
                 >
-                  {'Save Changes'}
+                  {t('setup.settings.loyalty.savechanges')}
                 </Button>
               </Col>
             </Row>
@@ -92,7 +120,9 @@ const LoyaltySettings: FC<P> = () => {
           />
           {isMobile && (
             <div className={styles.mobSaveBtn} onClick={handleSave}>
-              <Button type={'primary'}>{'Save Changes'}</Button>
+              <Button type={'primary'}>
+                {t('setup.settings.loyalty.savechanges')}
+              </Button>
             </div>
           )}
         </Card>

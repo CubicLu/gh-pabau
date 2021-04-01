@@ -20,7 +20,7 @@ import {
 } from '@ant-design/icons'
 import classNames from 'classnames'
 import CrudLayout from '../../../components/CrudLayout/CrudLayout'
-
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './rooms.module.less'
 const { Panel } = Collapse
 
@@ -99,54 +99,6 @@ const treeData: TreeDataType[] = [
   },
 ]
 
-const schema: Schema = {
-  full: 'Rooms',
-  fullLower: 'rooms',
-  short: 'Room',
-  shortLower: 'room',
-  createButtonLabel: 'Create Room',
-  deleteDescField: 'deleteDescField',
-  messages: {
-    create: {
-      success: 'You have successfully created a room',
-      error: 'While creating a room',
-    },
-    update: {
-      success: 'You have successfully updated a room',
-      error: 'While updating a room',
-    },
-    delete: {
-      success: 'You have successfully deleted a room',
-      error: 'While deleting a room',
-    },
-  },
-  fields: {
-    room_name: {
-      full: 'Room Name',
-      fullLower: 'room name',
-      short: 'Room Name',
-      shortLower: 'room name',
-      min: 2,
-      example: 'Surgical lab',
-      cssWidth: 'max',
-      type: 'string',
-    },
-    location: {
-      full: 'Location',
-      fullLower: 'location',
-      short: 'Location',
-      shortLower: 'location',
-      min: 2,
-      type: 'string',
-      cssWidth: 'max',
-    },
-    is_active: {
-      full: 'Status',
-      type: 'boolean',
-      defaultvalue: true,
-    },
-  },
-}
 export const LIST_QUERY = gql`
   query rooms($isActive: Boolean = true, $offset: Int, $limit: Int) {
     rooms(
@@ -210,7 +162,10 @@ const UPDATE_ORDER_MUTATION = gql`
 `
 
 export function Rooms() {
+  const { t } = useTranslationI18()
+  const [active, setActive] = useState(true)
   const [showModal, setShowModal] = useState(false)
+  const [isCreate, setIsCreate] = useState(false)
   const [advancedSetting, setAdvancedSetting] = useState('currency')
   const [allServicesSelected, setAllServicesSelected] = useState(true)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -237,6 +192,55 @@ export function Rooms() {
       checked: true,
     },
   ])
+
+  const schema: Schema = {
+    full: t('setup.room.title'),
+    fullLower: t('setup.room.title.lower'),
+    short: t('setup.room.title.short'),
+    shortLower: t('setup.room.title.short.lower'),
+    createButtonLabel: t('setup.room.createbutton'),
+    deleteDescField: 'deleteDescField',
+    messages: {
+      create: {
+        success: t('setup.room.notification.create.success'),
+        error: t('setup.room.notification.create.error'),
+      },
+      update: {
+        success: t('setup.room.notification.edit.success'),
+        error: t('setup.room.notification.edit.error'),
+      },
+      delete: {
+        success: t('setup.room.notification.delete.success'),
+        error: t('setup.room.notification.delete.error'),
+      },
+    },
+    fields: {
+      room_name: {
+        full: t('setup.room.fields.name'),
+        fullLower: t('setup.room.fields.name.lower'),
+        short: t('setup.room.fields.name.short'),
+        shortLower: t('setup.room.fields.name.short.lower'),
+        min: 2,
+        example: t('setup.room.fields.name.example'),
+        cssWidth: 'max',
+        type: 'string',
+      },
+      location: {
+        full: t('setup.room.fields.location'),
+        fullLower: t('setup.room.fields.location.lower'),
+        short: t('setup.room.fields.location.short'),
+        shortLower: t('setup.room.fields.location.short.lower'),
+        min: 2,
+        type: 'string',
+        cssWidth: 'max',
+      },
+      is_active: {
+        full: t('setup.room.fields.location.isactive'),
+        type: 'boolean',
+        defaultvalue: true,
+      },
+    },
+  }
 
   //services
   const [expandedKeys, setExpandedKeys] = useState(['Travel Clinic'])
@@ -290,6 +294,7 @@ export function Rooms() {
 
   const createPageOnClick = () => {
     setShowModal(true)
+    setIsCreate(true)
   }
 
   const selectAllEmployeeServices = (isChecked) => {
@@ -309,6 +314,7 @@ export function Rooms() {
 
   const handleSetEditPage = () => {
     setShowModal(true)
+    setIsCreate(false)
   }
 
   return (
@@ -328,27 +334,45 @@ export function Rooms() {
         setEditPage={handleSetEditPage}
       />
       <FullScreenReportModal
-        title="Create Rooms"
+        title={
+          isCreate
+            ? t('setup.room.fullscreenmodal.title.create')
+            : t('setup.room.fullscreenmodal.title.edit')
+        }
         visible={showModal}
-        operations={[
-          OperationType.active,
-          OperationType.cancel,
-          OperationType.delete,
-          OperationType.create,
-        ]}
+        operations={
+          isCreate
+            ? [OperationType.active, OperationType.create]
+            : [OperationType.active, OperationType.delete, OperationType.create]
+        }
+        createBtnText={
+          isCreate ? t('common-label-create') : t('common-label-save')
+        }
+        deleteBtnText={t('common-label-delete')}
+        activeBtnText={
+          active ? t('common-label-active') : t('common-label-inactive')
+        }
         enableCreateBtn
-        activated={true}
-        subMenu={['Details', 'Location']}
+        activated={active}
+        subMenu={[
+          t('setup.room.fullscreenmodal.tab.details'),
+          t('setup.room.fullscreenmodal.tab.location'),
+        ]}
         onBackClick={() => setShowModal(false)}
-        onCancel={() => setShowModal(false)}
+        onActivated={(val) => setActive(val)}
         onDelete={() => setShowDeleteModal(true)}
       >
         <div className={styles.createServiceGeneral}>
           <div className={styles.createServiceSection}>
-            <h2 className={styles.createServiceSectionTitle}>Details</h2>
+            <h2 className={styles.createServiceSectionTitle}>
+              {t('setup.room.details')}
+            </h2>
             <div className={styles.createServiceSectionItem} />
             <div className={styles.createServiceSectionItem}>
-              <Input label="Room Name" placeHolderText="eg. Room 1" />
+              <Input
+                label={t('setup.room.details.roomname.label')}
+                placeHolderText={t('setup.room.details.roomname.placeholder')}
+              />
             </div>
             <div className={styles.createServiceSectionItem}>
               <Switch
@@ -358,7 +382,7 @@ export function Rooms() {
                 onChange={(isSelected) => setAllServicesSelected(isSelected)}
               />
               <span className={styles.subtitle}>
-                All services can be performed in this room
+                {t('setup.room.details.allservices')}
               </span>
             </div>
           </div>
@@ -367,9 +391,9 @@ export function Rooms() {
             <div className={styles.createServiceSection}>
               <div className={styles.servicesContent}>
                 <div className={styles.servicesTitleHead}>
-                  <h5>Services</h5>
+                  <h5>{t('setup.room.services.title')}</h5>
                   <div className={styles.desc}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    {t('setup.room.services.description')}
                   </div>
                 </div>
                 <div className={styles.selectAllCheckbox}>
@@ -380,7 +404,7 @@ export function Rooms() {
                     checked={allEmployeeServicesSelected}
                     className={styles.selectAll}
                   >
-                    Select all
+                    {t('setup.room.services.selectall')}
                   </Checkbox>
                 </div>
                 <CheckboxTree
@@ -399,12 +423,16 @@ export function Rooms() {
             <Collapse ghost>
               <Panel
                 header={
-                  <span className={styles.header}>Advanced settings</span>
+                  <span className={styles.header}>
+                    {t('setup.room.advanced.header')}
+                  </span>
                 }
                 key="advanced-settings"
               >
                 <div className={styles.createServiceSection}>
-                  <h2 className={styles.createServiceSectionTitle}>Advanced</h2>
+                  <h2 className={styles.createServiceSectionTitle}>
+                    {t('setup.room.advanced.title')}
+                  </h2>
                   <div className={styles.typeWrapper}>
                     <div
                       className={
@@ -420,7 +448,7 @@ export function Rooms() {
                       <span className={styles.verify}>
                         <CheckCircleFilled />
                       </span>
-                      <h5>Percentage</h5>
+                      <h5>{t('setup.room.advanced.percentage')}</h5>
                     </div>
                     <div
                       className={
@@ -436,15 +464,17 @@ export function Rooms() {
                         <CheckCircleFilled />
                       </span>
                       <DollarOutlined />
-                      <h5>Fixed</h5>
+                      <h5>{t('setup.room.advanced.fixed')}</h5>
                     </div>
                   </div>
                   <div
                     className={`${styles.createServiceSectionItem} ${styles.roomFeeInput}`}
                   >
                     <InputNumber
-                      label="Room Fee"
-                      placeHolderText="$ 50"
+                      label={t('setup.room.advanced.roomfee')}
+                      placeHolderText={t(
+                        'setup.room.advanced.roomfee.placeholder'
+                      )}
                       showCurrency
                       currency={advancedSetting === 'currency' ? '£' : '%'}
                     />
@@ -459,7 +489,7 @@ export function Rooms() {
             {/* Location List Start */}
             <div className={styles.checkboxWrapper}>
               <LocationList
-                description="Choose the locations where this room can be booked"
+                description={t('setup.room.locationlist.description')}
                 locationData={locations}
                 handleLocationChange={handleLocationChange}
                 selectAll={selectAll}
@@ -480,8 +510,10 @@ export function Rooms() {
           setShowDeleteModal(false)
         }}
         visible={showDeleteModal}
-        title={`Delete ${schema.short}?`}
-        newButtonText={schema.deleteBtnLabel || 'Yes, Delete'}
+        title={t('setup.room.deletemodal.title', { what: schema.short })}
+        newButtonText={
+          schema.deleteBtnLabel || t('setup.room.deletemodal.button')
+        }
         isValidate={true}
       >
         <span
@@ -493,7 +525,7 @@ export function Rooms() {
             color: '#9292A3',
           }}
         >
-          This record will be deleted. This action is irreversable
+          {t('setup.room.deletemodal.message')}
         </span>
       </Modal>
     </div>

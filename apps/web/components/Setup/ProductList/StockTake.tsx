@@ -1,31 +1,29 @@
 import React, { FC, useEffect, useState } from 'react'
-import { Table, useLiveQuery, Pagination } from '@pabau/ui'
+import { Table, OrderDiscrepancy, useLiveQuery, Pagination } from '@pabau/ui'
 import { gql } from '@apollo/client'
 import styles from './productListComponents.module.less'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const LIST_QUERY = gql`
-  query purchase_order($offset: Int, $limit: Int, $isActive: Boolean = true) {
-    purchase_order(
-      offset: $offset
-      limit: $limit
-      where: { is_active: { _eq: $isActive } }
-    ) {
+  query stock_take($offset: Int, $limit: Int) {
+    stock_take(offset: $offset, limit: $limit) {
       id
-      po_number
-      create_date
-      supplier
-      created_by
+      name
+      count_no
+      start_date
+      counted_by
+      total
       location
-      total_cost
-      is_active
+      status
+      discrepanciesUp
+      discrepanciesDown
     }
   }
 `
 
 const LIST_AGGREGATE = gql`
-  query purchase_order_aggregate {
-    purchase_order_aggregate {
+  query stock_take_aggregate {
+    stock_take_aggregate {
       aggregate {
         count
       }
@@ -33,7 +31,7 @@ const LIST_AGGREGATE = gql`
   }
 `
 
-const PurchaseOrders: FC = () => {
+const StokeTake: FC = () => {
   const { t } = useTranslationI18()
   const [paginateData, setPaginateData] = useState({
     total: 0,
@@ -42,56 +40,88 @@ const PurchaseOrders: FC = () => {
     currentPage: 1,
     showingRecords: 0,
   })
+
   const { data, loading } = useLiveQuery(LIST_QUERY, {
     variables: {
       offset: paginateData.offset,
       limit: paginateData.limit,
     },
   })
+
   const { data: aggregateData } = useLiveQuery(LIST_AGGREGATE)
 
-  const PurchaseOrderColumns = [
+  const StockTakeColumns = [
     {
-      title: t('products.list.purchase.column.ponumber'),
-      dataIndex: 'po_number',
+      title: t('products.list.stock.column.countno'),
+      dataIndex: 'count_no',
       className: 'drag-visible',
       visible: true,
     },
     {
-      title: t('products.list.purchase.column.created'),
-      dataIndex: 'create_date',
+      title: t('products.list.stock.column.name'),
+      dataIndex: 'name',
       className: 'drag-visible',
       visible: true,
     },
     {
-      title: t('products.list.purchase.column.supplier'),
-      dataIndex: 'supplier',
+      title: t('products.list.stock.column.start'),
+      dataIndex: 'start_date',
       className: 'drag-visible',
       visible: true,
     },
     {
-      title: t('products.list.purchase.column.createdby'),
-      dataIndex: 'created_by',
+      title: t('products.list.stock.column.countedby'),
+      dataIndex: 'counted_by',
       className: 'drag-visible',
       visible: true,
     },
     {
-      title: t('products.list.purchase.column.location'),
+      title: t('products.list.stock.column.location'),
       dataIndex: 'location',
       className: 'drag-visible',
       visible: true,
     },
     {
-      title: t('products.list.purchase.column.totalcost'),
-      dataIndex: 'total_cost',
+      title: t('products.list.stock.column.total'),
+      dataIndex: 'total',
       className: 'drag-visible',
       visible: true,
     },
     {
-      title: t('products.list.purchase.column.status'),
-      dataIndex: 'is_active',
+      title: t('products.list.stock.column.discrepancies'),
+      dataIndex: 'object',
       className: 'drag-visible',
       visible: true,
+      width: 125,
+      // eslint-disable-next-line react/display-name
+      render: (_, { discrepanciesUp, discrepanciesDown }) => (
+        <span className={styles.row}>
+          <span style={{ marginRight: 6 }}>
+            <OrderDiscrepancy number={discrepanciesUp} word={1} />
+          </span>
+          <OrderDiscrepancy number={discrepanciesDown} word={0} />
+        </span>
+      ),
+    },
+    {
+      title: t('products.list.stock.column.status'),
+      dataIndex: 'status',
+      className: 'drag-visible',
+      visible: true,
+      // eslint-disable-next-line react/display-name
+      render: (_, { status }) => (
+        <span
+          className={
+            status === 'Completed'
+              ? styles.greenBtn
+              : status === 'Cancelled'
+              ? styles.redBtn
+              : styles.blueBtn
+          }
+        >
+          {status}
+        </span>
+      ),
     },
   ]
 
@@ -113,9 +143,9 @@ const PurchaseOrders: FC = () => {
     <div className={styles.productListTab}>
       <Table
         loading={loading}
-        noDataText={t('products.list.purchase.table.nodata')}
-        noDataBtnText={t('products.list.purchase.table.new')}
-        columns={PurchaseOrderColumns}
+        noDataText={t('products.list.stock.table.nodata')}
+        noDataBtnText={t('products.list.stock.table.new')}
+        columns={StockTakeColumns}
         scroll={{ x: 'max-content' }}
         dataSource={data?.map((d) => ({ ...d, key: d.id }))}
       />
@@ -134,4 +164,4 @@ const PurchaseOrders: FC = () => {
   )
 }
 
-export default PurchaseOrders
+export default StokeTake

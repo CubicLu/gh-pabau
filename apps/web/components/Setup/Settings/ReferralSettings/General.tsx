@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 
 import { HelpTooltip, InputNumber, SimpleDropdown } from '@pabau/ui'
-
+import { useTranslationI18 } from '../../../../hooks/useTranslationI18'
 import styles from './common.module.less'
 import {
   GeneralReferralConfig,
@@ -22,11 +22,12 @@ const General: FC<P> = ({
   setFieldValue,
   errors,
 }) => {
+  const { t } = useTranslationI18()
   return (
     <div className={styles.referralGeneralContainer}>
       <div className={styles.generalReferral}>
-        <p>Referral configuration</p>
-        <span>Configure key information about your referral system.</span>
+        <p>{t('setup.settings.referral.general.title')}</p>
+        <span>{t('setup.settings.referral.general.description')}</span>
       </div>
       {dropdownList?.map(({ key, id, label, value, options, helpText }) => (
         <div

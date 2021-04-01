@@ -14,6 +14,7 @@ import {
 import CrudLayout from '../../../components/CrudLayout/CrudLayout'
 import styles from './resource.module.less'
 import { Checkbox } from 'antd'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const treeData: TreeDataType[] = [
   {
@@ -90,54 +91,6 @@ const treeData: TreeDataType[] = [
   },
 ]
 
-const schema: Schema = {
-  full: 'Resources',
-  fullLower: 'resources',
-  short: 'Resource',
-  shortLower: 'resource',
-  createButtonLabel: 'Create Resource',
-  deleteDescField: 'deleteDescField',
-  messages: {
-    create: {
-      success: 'You have successfully created a resource',
-      error: 'While creating a resource',
-    },
-    update: {
-      success: 'You have successfully updated a resource',
-      error: 'While updating a resource',
-    },
-    delete: {
-      success: 'You have successfully deleted a resource',
-      error: 'While deleting a resource',
-    },
-  },
-  fields: {
-    name: {
-      full: 'resource Name',
-      fullLower: 'resource name',
-      short: 'Name',
-      shortLower: 'name',
-      min: 2,
-      example: 'Surgical lab',
-      cssWidth: 'max',
-      type: 'string',
-    },
-    location: {
-      full: 'Location',
-      fullLower: 'location',
-      short: 'Location',
-      shortLower: 'location',
-      min: 2,
-      type: 'string',
-      cssWidth: 'max',
-    },
-    is_active: {
-      full: 'Status',
-      type: 'boolean',
-      defaultvalue: true,
-    },
-  },
-}
 export const LIST_QUERY = gql`
   query resources($isActive: Boolean = true, $offset: Int, $limit: Int) {
     resources(
@@ -205,7 +158,10 @@ const UPDATE_ORDER_MUTATION = gql`
 `
 
 export function Resource() {
+  const { t } = useTranslationI18()
   const [showModal, setShowModal] = useState(false)
+  const [active, setActive] = useState(true)
+  const [isCreate, setIsCreate] = useState(false)
   const [allServicesSelected, setAllServicesSelected] = useState(true)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [selectAll, setSelectAll] = useState<boolean>(false)
@@ -231,6 +187,54 @@ export function Resource() {
       checked: true,
     },
   ])
+  const schema: Schema = {
+    full: t('setup.resource.title'),
+    fullLower: t('setup.resource.title.lower'),
+    short: t('setup.resource.title.short'),
+    shortLower: t('setup.resource.title.short.lower'),
+    createButtonLabel: t('setup.resource.createbutton'),
+    deleteDescField: 'deleteDescField',
+    messages: {
+      create: {
+        success: t('setup.resource.notification.create.success'),
+        error: t('setup.resource.notification.create.error'),
+      },
+      update: {
+        success: t('setup.resource.notification.edit.success'),
+        error: t('setup.resource.notification.edit.error'),
+      },
+      delete: {
+        success: t('setup.resource.notification.delete.success'),
+        error: t('setup.resource.notification.delete.error'),
+      },
+    },
+    fields: {
+      name: {
+        full: t('setup.resource.fields.name'),
+        fullLower: t('setup.resource.fields.name.lower'),
+        short: t('setup.resource.fields.name.short'),
+        shortLower: t('setup.resource.fields.name.short.lower'),
+        min: 2,
+        example: t('setup.resource.fields.name.example'),
+        cssWidth: 'max',
+        type: 'string',
+      },
+      location: {
+        full: t('setup.resource.fields.location'),
+        fullLower: t('setup.resource.fields.location.lower'),
+        short: t('setup.resource.fields.location.short'),
+        shortLower: t('setup.resource.fields.location.short.lower'),
+        min: 2,
+        type: 'string',
+        cssWidth: 'max',
+      },
+      is_active: {
+        full: t('setup.resource.fields.location.isactive'),
+        type: 'boolean',
+        defaultvalue: true,
+      },
+    },
+  }
 
   //services
   const [expandedKeys, setExpandedKeys] = useState(['Travel Clinic'])
@@ -284,6 +288,7 @@ export function Resource() {
 
   const createPageOnClick = () => {
     setShowModal(true)
+    setIsCreate(true)
   }
 
   const selectAllEmployeeServices = (isChecked) => {
@@ -303,6 +308,7 @@ export function Resource() {
 
   const handleEditPage = () => {
     setShowModal(true)
+    setIsCreate(false)
   }
 
   return (
@@ -321,28 +327,48 @@ export function Resource() {
         setEditPage={handleEditPage}
       />
       <FullScreenReportModal
-        title="Create Resource"
+        title={
+          isCreate
+            ? t('setup.resource.fullscreenmodal.title.create')
+            : t('setup.resource.fullscreenmodal.title.edit')
+        }
         visible={showModal}
-        operations={[
-          OperationType.active,
-          OperationType.cancel,
-          OperationType.delete,
-          OperationType.create,
-        ]}
+        operations={
+          isCreate
+            ? [OperationType.active, OperationType.create]
+            : [OperationType.active, OperationType.delete, OperationType.create]
+        }
+        createBtnText={
+          isCreate ? t('common-label-create') : t('common-label-save')
+        }
+        deleteBtnText={t('common-label-delete')}
+        activeBtnText={
+          active ? t('common-label-active') : t('common-label-inactive')
+        }
         enableCreateBtn
-        activated={true}
-        subMenu={['Details', 'Location']}
+        activated={active}
+        subMenu={[
+          t('setup.resource.fullscreenmodal.tab.details'),
+          t('setup.resource.fullscreenmodal.tab.location'),
+        ]}
         onBackClick={() => setShowModal(false)}
-        onCancel={() => setShowModal(false)}
         onDelete={() => setShowDeleteModal(true)}
+        onActivated={(val) => setActive(val)}
         footer={true}
       >
         <div className={styles.createServiceGeneral}>
           <div className={styles.createServiceSection}>
-            <h2 className={styles.createServiceSectionTitle}>Details</h2>
+            <h2 className={styles.createServiceSectionTitle}>
+              {t('setup.resource.details')}
+            </h2>
             <div className={styles.createServiceSectionItem} />
             <div className={styles.createServiceSectionItem}>
-              <Input label="Resource Name" placeHolderText="eg. Resource 1" />
+              <Input
+                label={t('setup.resource.details.resourcename.label')}
+                placeHolderText={t(
+                  'setup.resource.details.resourcename.placeholder'
+                )}
+              />
             </div>
             <div className={styles.createServiceSectionItem}>
               <Switch
@@ -352,7 +378,7 @@ export function Resource() {
                 onChange={(isSelected) => setAllServicesSelected(isSelected)}
               />
               <span className={styles.subtitle}>
-                All services can be performed in this resource
+                {t('setup.resource.details.allservices')}
               </span>
             </div>
           </div>
@@ -360,9 +386,9 @@ export function Resource() {
             <div className={styles.createServiceSection}>
               <div className={styles.servicesContent}>
                 <div className={styles.servicesTitleHead}>
-                  <h5>Services</h5>
+                  <h5>{t('setup.resource.services.title')}</h5>
                   <div className={styles.desc}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    {t('setup.resource.services.description')}
                   </div>
                 </div>
                 <div className={styles.selectAllCheckbox}>
@@ -373,7 +399,7 @@ export function Resource() {
                     checked={allEmployeeServicesSelected}
                     className={styles.selectAll}
                   >
-                    Select all
+                    {t('setup.resource.services.selectall')}
                   </Checkbox>
                 </div>
                 <CheckboxTree
@@ -393,11 +419,16 @@ export function Resource() {
             {/* Location List Start */}
             <div className={styles.checkboxWrapper}>
               <LocationList
-                description="Choose the locations where this resource can be booked"
+                description={t('setup.resource.locationlist.description')}
                 locationData={locations}
                 handleLocationChange={handleLocationChange}
                 selectAll={selectAll}
                 onCheckAllChange={onCheckAllChange}
+                checkBtnText={
+                  selectAll
+                    ? t('ui.locationlist.uncheckall')
+                    : t('ui.locationlist.checkall')
+                }
               />
             </div>
           </div>
@@ -414,8 +445,10 @@ export function Resource() {
           setShowDeleteModal(false)
         }}
         visible={showDeleteModal}
-        title={`Delete ${schema.short}?`}
-        newButtonText={schema.deleteBtnLabel || 'Yes, Delete'}
+        title={t('setup.resource.deletemodal.title', { what: schema.short })}
+        newButtonText={
+          schema.deleteBtnLabel || t('setup.resource.deletemodal.button')
+        }
         isValidate={true}
       >
         <span
@@ -427,7 +460,7 @@ export function Resource() {
             color: '#9292A3',
           }}
         >
-          This record will be deleted. This action is irreversable
+          {t('setup.resource.deletemodal.message')}
         </span>
       </Modal>
     </div>

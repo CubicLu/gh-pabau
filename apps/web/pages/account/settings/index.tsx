@@ -4,12 +4,13 @@ import {
   LockOutlined,
   UserOutlined,
 } from '@ant-design/icons'
-import { Layout, MobileHeader, TabMenu } from '@pabau/ui'
+import { MobileHeader, TabMenu } from '@pabau/ui'
 import { Button, Col, Row } from 'antd'
 import React, { FC } from 'react'
 import { useRouter } from 'next/router'
 import styles from './index.module.less'
 import useWindowSize from '../../../hooks/useWindowSize'
+import Layout from '../../../components/Layout/Layout'
 import Notification from '../../../components/Account/Settings/Notifications'
 import Profile from '../../../components/Account/Settings/Profile'
 import Security from '../../../components/Account/Settings/Security'

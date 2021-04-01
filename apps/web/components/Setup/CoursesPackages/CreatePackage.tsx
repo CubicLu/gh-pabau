@@ -24,14 +24,16 @@ import {
   CheckOutlined,
   PictureOutlined,
 } from '@ant-design/icons'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
 
 export interface InitialPackagesProps {
   id: string
-  packageName: string
+  name: string
   category: string
   onlinePurchase: boolean
   image: string
+  isActive: boolean
 }
 
 interface BuildIntialValueProps {
@@ -44,32 +46,6 @@ interface DrawerContentProps {
   buildIntialValues: BuildIntialValueProps
   setDrawerVisible?(values: boolean): void
 }
-
-const buildPackagesColumns = [
-  {
-    title: 'Service',
-    dataIndex: 'service',
-    visible: true,
-  },
-  {
-    title: 'Quantity',
-    dataIndex: 'quantity',
-    visible: true,
-  },
-  {
-    title: 'Price',
-    dataIndex: 'price',
-    visible: true,
-  },
-  {
-    title: 'Online purchase',
-    dataIndex: 'onlinePurchase',
-    render: function renderSourceName(val, rowData) {
-      return val ? <CheckOutlined /> : ''
-    },
-    visible: true,
-  },
-]
 
 const buildIntialValue = {
   service: '',
@@ -86,6 +62,7 @@ interface GeneralTabProps {
 }
 
 const General: FC<GeneralTabProps> = ({ setFieldValue, value }) => {
+  const { t } = useTranslationI18()
   const [showImageSelector, setShowImageSelector] = useState(false)
   const [selectedImage, setSelectedImage] = useState('')
 
@@ -100,29 +77,34 @@ const General: FC<GeneralTabProps> = ({ setFieldValue, value }) => {
       >
         <div className={styles.generalSection}>
           <Form.Item
-            label="Package name"
-            name="packageName"
+            label={t('setup.courses.package.general.name')}
+            name="name"
             className={styles.generalList}
           >
             <Input
               size="large"
-              name="packageName"
+              name="name"
               autoComplete="off"
-              placeholder="Enter package name"
-              value={value.packageName}
+              placeholder={t('setup.courses.package.general.name.placeholder')}
             />
           </Form.Item>
           <SimpleDropdown
             className={styles.generalList}
             size="large"
-            label="Category"
+            label={t('setup.courses.package.general.category')}
             name="category"
             value={value.category}
-            placeHolderText="Select a category"
+            placeHolderText={t(
+              'setup.courses.package.general.category.placeholder'
+            )}
             dropdownItems={TaxOption.map((item) => item || '')}
             onSelected={(value) => setFieldValue('category', value)}
           />
-          <Form.Item label="Image" name="image" className={styles.generalList}>
+          <Form.Item
+            label={t('setup.courses.package.general.image')}
+            name="image"
+            className={styles.generalList}
+          >
             <div
               className={styles.createServiceImageContainer}
               style={{ backgroundImage: `url(${selectedImage})` }}
@@ -143,12 +125,15 @@ const General: FC<GeneralTabProps> = ({ setFieldValue, value }) => {
               size="middle"
               onClick={() => setShowImageSelector(true)}
             >
-              Choose from Library
+              {t('setup.courses.package.general.image.choose')}
             </Button>
           </Form.Item>
           <ImageSelectorModal
             visible={showImageSelector}
-            initialSearch={''}
+            initialSearch={value.name}
+            title={t('ui.imageselector.title')}
+            attachButtonText={t('ui.imageselector.attach')}
+            chooseButtonText={t('ui.imageselector.choose')}
             onOk={(image) => {
               setSelectedImage(image.source)
               setFieldValue('image', image.source)
@@ -163,7 +148,9 @@ const General: FC<GeneralTabProps> = ({ setFieldValue, value }) => {
               checked={value.onlinePurchase}
               onChange={(checked) => setFieldValue('onlinePurchase', checked)}
             />{' '}
-            <span className={styles.switchLabel}>Enable online purchase</span>
+            <span className={styles.switchLabel}>
+              {t('setup.courses.package.general.enable')}
+            </span>
           </div>
         </div>
       </Form>
@@ -175,15 +162,21 @@ const DrawerContent: FC<DrawerContentProps> = ({
   setDrawerVisible,
   buildIntialValues,
 }) => {
+  const { t } = useTranslationI18()
   return (
     <Formik
       initialValues={buildIntialValues}
       enableReinitialize={true}
       validationSchema={Yup.object({
-        quantity: Yup.number().required('Quantity is required'),
+        quantity: Yup.number().required(
+          t('setup.courses.package.drawer.quantity.validate.required')
+        ),
         price: Yup.string()
-          .required('Price is required')
-          .matches(/^\d+$/g, 'Price should be numbers'),
+          .required(t('setup.courses.package.drawer.price.validate.required'))
+          .matches(
+            /^\d+$/g,
+            t('setup.courses.package.drawer.price.validate.number')
+          ),
       })}
       onSubmit={(values) => {
         console.log(values)
@@ -203,15 +196,17 @@ const DrawerContent: FC<DrawerContentProps> = ({
               <SimpleDropdown
                 className={styles.drawerList}
                 size="large"
-                label="Service"
+                label={t('setup.courses.package.drawer.service')}
                 name="service"
                 value={values.service}
-                placeHolderText="Select a service"
+                placeHolderText={t(
+                  'setup.courses.package.drawer.service.placeholder'
+                )}
                 dropdownItems={TaxOption.map((item) => item || '')}
                 onSelected={(value) => setFieldValue('service', value)}
               />
               <Form.Item
-                label="Quantity"
+                label={t('setup.courses.package.drawer.quantity')}
                 name="quantity"
                 className={styles.drawerList}
               >
@@ -226,7 +221,7 @@ const DrawerContent: FC<DrawerContentProps> = ({
                 />
               </Form.Item>
               <Form.Item
-                label="Price"
+                label={t('setup.courses.package.drawer.price')}
                 name="price"
                 className={styles.drawerList}
               >
@@ -234,7 +229,9 @@ const DrawerContent: FC<DrawerContentProps> = ({
                   value={values.price}
                   size="large"
                   name="price"
-                  placeholder="£650.00"
+                  placeholder={t(
+                    'setup.courses.package.drawer.price.placeholder'
+                  )}
                   formatter={(data) => `£${data}`}
                   parser={(data) => data.replace(/£\s?|(,*)/g, '')}
                   onChange={(data) => setFieldValue('price', data)}
@@ -247,13 +244,13 @@ const DrawerContent: FC<DrawerContentProps> = ({
                 htmlType="submit"
                 className={styles.buttonsFilter}
               >
-                Save
+                {t('common-label-save')}
               </SubmitButton>
               <Button
                 icon={<DeleteOutlined />}
                 onClick={() => setDrawerVisible(false)}
               >
-                Delete
+                {t('common-label-delete')}
               </Button>
             </div>
           </Form>
@@ -264,6 +261,32 @@ const DrawerContent: FC<DrawerContentProps> = ({
 }
 
 const Pricing: FC = () => {
+  const { t } = useTranslationI18()
+  const buildPackagesColumns = [
+    {
+      title: t('setup.courses.package.drawer.pricing.column.service'),
+      dataIndex: 'service',
+      visible: true,
+    },
+    {
+      title: t('setup.courses.package.drawer.pricing.column.quantity'),
+      dataIndex: 'quantity',
+      visible: true,
+    },
+    {
+      title: t('setup.courses.package.drawer.pricing.column.price'),
+      dataIndex: 'price',
+      visible: true,
+    },
+    {
+      title: t('setup.courses.package.drawer.pricing.column.online'),
+      dataIndex: 'onlinePurchase',
+      render: function renderSourceName(val, rowData) {
+        return val ? <CheckOutlined /> : ''
+      },
+      visible: true,
+    },
+  ]
   const [drawer, setDrawer] = useState<boolean>(false)
   const [
     buildIntialValues,
@@ -288,17 +311,19 @@ const Pricing: FC = () => {
     return (
       <>
         <div className={styles.headerWrap}>
-          <div className={styles.title}>Items in your package</div>
+          <div className={styles.title}>
+            {t('setup.courses.package.drawer.pricing.header.title')}
+          </div>
           <div className={styles.buttons}>
             <Button className={styles.buttonsFilter} icon={<FilterOutlined />}>
-              Filter
+              {t('setup.courses.package.drawer.pricing.header.filter')}
             </Button>
             <Button
               icon={<PlusOutlined />}
               type={'primary'}
               onClick={handleAddButton}
             >
-              Add
+              {t('common-label-add')}
             </Button>
           </div>
         </div>
@@ -351,15 +376,11 @@ const Pricing: FC = () => {
   )
 }
 export const CreatePackage = ({ visible, setVisible, initialValue }) => {
+  const { t } = useTranslationI18()
   const handleOperations = () => {
     return !initialValue.id
-      ? [OperationType.active, OperationType.cancel, OperationType.create]
-      : [
-          OperationType.active,
-          OperationType.cancel,
-          OperationType.delete,
-          OperationType.save,
-        ]
+      ? [OperationType.active, OperationType.create]
+      : [OperationType.active, OperationType.delete, OperationType.create]
   }
 
   const handleFullScreenModalBackClick = (handleReset) => {
@@ -372,7 +393,9 @@ export const CreatePackage = ({ visible, setVisible, initialValue }) => {
       initialValues={initialValue}
       enableReinitialize={true}
       validationSchema={Yup.object().shape({
-        packageName: Yup.string().required('Package Name is required'),
+        name: Yup.string().required(
+          t('setup.courses.package.name.validate.required')
+        ),
       })}
       onSubmit={(values) => {
         console.log(values)
@@ -381,17 +404,30 @@ export const CreatePackage = ({ visible, setVisible, initialValue }) => {
       {({ setFieldValue, handleSubmit, values, handleReset }) => (
         <FullScreenReportModal
           operations={handleOperations()}
-          title={`Create Package`}
+          title={
+            values.id
+              ? t('setup.courses.fullscreenmodal.title.edit')
+              : t('setup.courses.fullscreenmodal.title.create')
+          }
           visible={visible}
           onBackClick={() => handleFullScreenModalBackClick(handleReset)}
-          onCancel={() => handleFullScreenModalBackClick(handleReset)}
-          activated={true}
+          activated={values.id ? values.isActive : true}
           enableCreateBtn={true}
-          createBtnText={'Create'}
+          createBtnText={
+            values.id ? t('common-label-save') : t('common-label-create')
+          }
+          deleteBtnText={t('common-label-delete')}
+          activeBtnText={
+            values.isActive
+              ? t('common-label-active')
+              : t('common-label-inactive')
+          }
           onActivated={(value) => setFieldValue('isActive', value)}
           onCreate={handleSubmit}
-          onSave={handleSubmit}
-          subMenu={['General', 'Pricing']}
+          subMenu={[
+            t('setup.courses.fullscreenmodal.submenu.general'),
+            t('setup.courses.fullscreenmodal.submenu.pricing'),
+          ]}
           footer={true}
         >
           <General setFieldValue={setFieldValue} value={values} />

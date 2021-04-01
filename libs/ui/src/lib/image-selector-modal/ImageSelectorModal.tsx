@@ -7,7 +7,6 @@ import {
 } from '@ant-design/icons'
 import { BasicModal } from '@pabau/ui'
 import classNames from 'classnames'
-
 import styles from './ImageSelectorModal.module.less'
 import imgList, { ImgBlock } from './ImageList'
 
@@ -21,6 +20,7 @@ export interface ImageSelectorModalProps {
   modalWidth?: number
   initialSearch?: string
   attachButtonText?: string
+  chooseButtonText?: string
   selectedImage?: string
   allowCustomImage?: boolean
 }
@@ -111,7 +111,7 @@ export const ImageSelectorModal: FC<ImageSelectorModalProps> = (props) => {
                 <PictureOutlined style={{ fontSize: 28, color: '#9292A3' }} />
                 <label htmlFor="file-upload" className={styles.chooseFileBtn}>
                   <PlusOutlined />
-                  Choose file
+                  {props.chooseButtonText || 'Choose'}
                 </label>
                 <input
                   id="file-upload"

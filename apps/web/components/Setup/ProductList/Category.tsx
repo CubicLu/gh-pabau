@@ -10,6 +10,7 @@ import {
 import { gql, useMutation } from '@apollo/client'
 import { updateTable } from './ProductListUtils'
 import styles from './productListComponents.module.less'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 interface CategoryListProps {
   showGroup?: boolean
@@ -52,6 +53,7 @@ const UPDATE_ORDER_MUTATION = gql`
 `
 
 const CategoryList: FC<CategoryListProps> = ({ showGroup }) => {
+  const { t } = useTranslationI18()
   const [paginateData, setPaginateData] = useState({
     total: 0,
     offset: 0,
@@ -74,7 +76,7 @@ const CategoryList: FC<CategoryListProps> = ({ showGroup }) => {
       console.log(err)
       Notification(
         NotificationType.error,
-        `Error! While updating category order`
+        t('products.list.category.notification.updateorder.error')
       )
     },
   })
@@ -113,7 +115,7 @@ const CategoryList: FC<CategoryListProps> = ({ showGroup }) => {
 
   const CategoryColumns = [
     {
-      title: 'Status',
+      title: t('products.list.category.column.status'),
       dataIndex: 'is_active',
       className: 'drag-visible',
       visible: true,
@@ -129,19 +131,19 @@ const CategoryList: FC<CategoryListProps> = ({ showGroup }) => {
       width: '64px',
     },
     {
-      title: 'Group Name',
+      title: t('products.list.category.column.name.group'),
       dataIndex: 'groupName',
       className: 'drag-visible',
       visible: showGroup,
     },
     {
-      title: 'Category Name',
+      title: t('products.list.category.column.name'),
       dataIndex: 'name',
       className: 'drag-visible',
       visible: true,
     },
     {
-      title: 'Products Assigned',
+      title: t('products.list.category.column.products'),
       dataIndex: 'productsAssigned',
       className: 'drag-visible',
       visible: true,
@@ -153,8 +155,8 @@ const CategoryList: FC<CategoryListProps> = ({ showGroup }) => {
       <Table
         draggable
         loading={loading}
-        noDataText="category"
-        noDataBtnText="New Category"
+        noDataText={t('products.list.category.table.nodata')}
+        noDataBtnText={t('products.list.category.table.new')}
         columns={CategoryColumns}
         scroll={{ x: 'max-content' }}
         dataSource={data?.map((d) => ({ ...d, key: d.id }))}

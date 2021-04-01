@@ -763,13 +763,8 @@ export const Discount: NextPage = () => {
 
   const handleOperations = () => {
     return !initialValue.id
-      ? [OperationType.active, OperationType.cancel, OperationType.create]
-      : [
-          OperationType.active,
-          OperationType.cancel,
-          OperationType.delete,
-          OperationType.save,
-        ]
+      ? [OperationType.active, OperationType.create]
+      : [OperationType.active, OperationType.delete, OperationType.save]
   }
 
   const createPageOnClick = () => {
@@ -1028,7 +1023,6 @@ export const Discount: NextPage = () => {
               }
               visible={showModal}
               onBackClick={() => handleFullScreenModalBackClick(handleReset)}
-              onCancel={() => handleFullScreenModalBackClick(handleReset)}
               activated={true}
               enableCreateBtn={true}
               createBtnText={t('marketingsource-create-button')}

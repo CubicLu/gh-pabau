@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from 'react'
-import { Layout } from '@pabau/ui'
+import Layout from '../../components/Layout/Layout'
 import CommonHeader from '../../components/CommonHeader'
 import HeaderChip from '../../components/Setup/HeaderChip'
 import Grid from '../../components/Setup/Grid'

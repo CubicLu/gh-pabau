@@ -1,19 +1,14 @@
 import React, { FC } from 'react'
+import { useRouter } from 'next/router'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { Row, Col, Card } from 'antd'
-
-import {
-  Layout,
-  Breadcrumb,
-  Button,
-  NotificationType,
-  Notification,
-} from '@pabau/ui'
+import { Breadcrumb, Button, NotificationType, Notification } from '@pabau/ui'
 import { LeftOutlined } from '@ant-design/icons'
-import { ReferralConfigObj } from '../../../mocks/ReferralSettings'
+import Layout from '../../../components/Layout/Layout'
 import General from '../../../components/Setup/Settings/ReferralSettings/General'
 import useWindowSize from '../../../hooks/useWindowSize'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './referral.module.less'
 import { GeneralReferralConfig } from '../../../types/referralSettings'
 
@@ -22,8 +17,41 @@ interface P {
 }
 
 const Referral: FC<P> = () => {
+  const { t } = useTranslationI18()
+  const ReferralConfigObj = {
+    general: {
+      inputList: [
+        {
+          key: 1,
+          name: 'expiryDays',
+          label: t('setup.settings.referral.general.expiry'),
+          value: 15,
+          helpText: t('setup.settings.referral.general.expiry.tooltip'),
+        },
+      ],
+      dropdownList: [
+        {
+          key: 1,
+          id: 'reward',
+          label: t('setup.settings.referral.general.reward'),
+          value: 'Standard Referral Voucher £20.00',
+          options: ['None', 'Standard Referral Voucher £20.00'],
+          helpText: t('setup.settings.referral.general.reward.tooltip'),
+        },
+        {
+          key: 2,
+          id: 'refereeReward',
+          label: t('setup.settings.referral.general.referee'),
+          value: 'Standard Referral Voucher £20.00',
+          options: ['None', 'Standard Referral Voucher £20.00'],
+          helpText: t('setup.settings.referral.general.referee.tooltip'),
+        },
+      ],
+    },
+  }
   const listInput = ReferralConfigObj.general
   const size = useWindowSize()
+  const router = useRouter()
 
   const referralFormik = useFormik({
     initialValues: {
@@ -33,26 +61,30 @@ const Referral: FC<P> = () => {
     },
     validationSchema: Yup.object({
       reward: Yup.string()
-        .typeError('You must specify a reward')
-        .required('Reward is required'),
+        .typeError(t('setup.settings.referral.reward.validate.string'))
+        .required(t('setup.settings.referral.reward.validate.required')),
       refereeReward: Yup.string()
-        .typeError('You must specify a referee rewawrd')
-        .required('Referee Reward is required'),
+        .typeError(t('setup.settings.referral.referee.validate.string'))
+        .required(t('setup.settings.referral.referee.validate.required')),
       expiryDays: Yup.number()
-        .typeError('You must specify a expiry days')
-        .required('Expiry days is required'),
+        .typeError(t('setup.settings.referral.expiry.validate.number'))
+        .required(t('setup.settings.referral.expiry.validate.required')),
     }),
     onSubmit: (value) => {
       console.log(value)
       Notification(
         NotificationType.success,
-        'Success! Referral settings have been saved successfully'
+        t('setup.settings.referral.submit.success')
       )
     },
   })
 
   const handleSave = (): void => {
     referralFormik.handleSubmit()
+  }
+
+  const handleBack = () => {
+    router.push('/setup')
   }
 
   return (
@@ -65,31 +97,29 @@ const Referral: FC<P> = () => {
                 <Col span={24}>
                   <div className={styles.mobTopHead}>
                     <div className={styles.mobTopHeadRow}>
-                      <LeftOutlined /> <h6> {'Referral settings'}</h6>
+                      <LeftOutlined onClick={handleBack} />{' '}
+                      <h6>{t('setup.settings.referral.title')}</h6>
                     </div>
-                    <p>
-                      {
-                        'Manage settings around you referral rewards, the templates that are sent as well as the amounts.'
-                      }
-                    </p>
+                    <p>{t('setup.settings.referral.description')}</p>
                   </div>
                 </Col>
               </Row>
             </div>
           ) : (
             <Row className={styles.titleWrapper}>
-              <Col span={19} className={styles.title}>
+              <Col span={'auto'} className={styles.title}>
                 <Breadcrumb
                   breadcrumbItems={[
-                    { breadcrumbName: 'Setup', path: 'setup' },
-                    { breadcrumbName: 'Referral settings', path: '' },
+                    { breadcrumbName: t('sidebar.setup'), path: 'setup' },
+                    {
+                      breadcrumbName: t('setup.settings.referral.title'),
+                      path: '',
+                    },
                   ]}
                 />
-                <h4>{'Referral settings'}</h4>
+                <h4>{t('setup.settings.referral.title')}</h4>
                 <p className={styles.description}>
-                  {
-                    'Manage settings around you referral rewards, the templates that are sent as well as the amounts.'
-                  }
+                  {t('setup.settings.referral.description')}
                 </p>
               </Col>
               <Col span={'auto'} className={styles.titleSaveBtn}>
@@ -98,7 +128,7 @@ const Referral: FC<P> = () => {
                   className={styles.saveBtn}
                   onClick={handleSave}
                 >
-                  {'Save Changes'}
+                  {t('setup.settings.loyalty.savechanges')}
                 </Button>
               </Col>
             </Row>
@@ -111,7 +141,9 @@ const Referral: FC<P> = () => {
           />
           {size.width <= 767 && (
             <div className={styles.mobSaveBtn} onClick={handleSave}>
-              <Button type={'primary'}>{'Save Changes'}</Button>
+              <Button type={'primary'}>
+                {t('setup.settings.loyalty.savechanges')}
+              </Button>
             </div>
           )}
         </Card>

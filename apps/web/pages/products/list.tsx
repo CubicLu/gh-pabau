@@ -5,8 +5,10 @@ import {
   FilterOutlined,
   DownloadOutlined,
   PlusOutlined,
+  PlusSquareFilled,
   SearchOutlined,
   CheckCircleFilled,
+  MenuOutlined,
 } from '@ant-design/icons'
 import {
   Input,
@@ -14,16 +16,20 @@ import {
   Button,
   Switch,
   ImageSelectorModal,
-  CreateProduct,
   BasicModal as CreateCategory,
+  MobileSidebar,
+  NotificationDrawer,
+  PabauMessages,
 } from '@pabau/ui'
+import SearchGlobal from '../../components/Search'
+import CreateProduct from '../../components/Setup/ProductList/CreateProduct'
 import Products from '../../components/Setup/ProductList/Products'
 import Category from '../../components/Setup/ProductList/Category'
 import PurchaseOrder from '../../components/Setup/ProductList/PurchaseOrder'
-import StokeTake from '../../components/Setup/ProductList/StokeTake'
+import StockTake from '../../components/Setup/ProductList/StockTake'
 import Supplier from '../../components/Setup/ProductList/Supplier'
 import Layout from '../../components/Layout/Layout'
-import CommonHeader from '../../components/CommonHeader'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './list.module.less'
 
 const { Option } = Select
@@ -37,25 +43,6 @@ interface NewCategory {
   is_active: boolean
 }
 
-const newBtnText = ['Product', 'Category', 'Supplier', 'Order', 'Count']
-const tabItemText = [
-  'Products',
-  'Category',
-  'Supplier',
-  'Purchase orders',
-  'Stock take',
-]
-const taxItems = []
-const categoryType = ['Retail', 'Consumable', 'Injectable']
-const defaultCategoryData: NewCategory = {
-  name: '',
-  image: '',
-  code: '',
-  type: 'Retail',
-  tax: '',
-  is_active: true,
-}
-
 enum ActiveTab {
   Products = '0',
   Category = '1',
@@ -65,17 +52,49 @@ enum ActiveTab {
 }
 
 const Subscription: FC = () => {
+  const { t } = useTranslationI18()
   const { Title } = Typography
   const { Search } = AntInput
   const { width } = useWindowSize()
   const [isMobile, setIsMobile] = useState(false)
   const [activeTab, setActiveTab] = useState('0')
+  const newBtnText = [
+    t('products.list.newbtn.product'),
+    t('products.list.newbtn.category'),
+    t('products.list.newbtn.supplier'),
+    t('products.list.newbtn.order'),
+    t('products.list.newbtn.count'),
+  ]
+  const tabItemText = [
+    t('products.list.tab.products'),
+    t('products.list.tab.category'),
+    t('products.list.tab.supplier'),
+    t('products.list.tab.purchase'),
+    t('products.list.tab.stock'),
+  ]
+  const taxItems = []
+  const categoryType = [
+    t('products.list.category.type.retail'),
+    t('products.list.category.type.consumable'),
+    t('products.list.category.type.injectable'),
+  ]
+  const defaultCategoryData: NewCategory = {
+    name: '',
+    image: '',
+    code: '',
+    type: categoryType[0],
+    tax: '',
+    is_active: true,
+  }
   const [newCategoryData, setNewCategoryData] = useState<NewCategory>(
     defaultCategoryData
   )
   const [showCreateProduct, setShowCreateProduct] = useState(false)
   const [showCreteCategory, setShowCreateCategory] = useState(false)
   const [showImageSelector, setShowImageSelector] = useState(false)
+  const [openMenuDrawer, setMenuDrawer] = useState(false)
+  const [openNotificationDrawer, setNotificationDrawer] = useState(false)
+  const [openMessageDrawer, setMessageDrawer] = useState(false)
 
   const handleSearch = (val) => {
     console.log('val', val)
@@ -109,30 +128,39 @@ const Subscription: FC = () => {
   }, [width])
 
   return (
-    <>
-      <CommonHeader />
+    <div className={styles.productsListContainer}>
       <Layout>
         <Card bodyStyle={{ padding: 0 }} style={{ borderBottomWidth: 0 }}>
           <div className={styles.headerContainer}>
-            <Title>{tabItemText[activeTab]}</Title>
+            <Title>
+              {isMobile && (
+                <MenuOutlined
+                  className={styles.menuIconStyle}
+                  onClick={() => setMenuDrawer(true)}
+                />
+              )}
+              {tabItemText[activeTab]}
+            </Title>
             <div className={styles.headerRight}>
               {!isMobile && (
                 <Search
                   className={styles.searchBar}
-                  placeholder={'Search in Custom'}
+                  placeholder={t('products.list.searchbar.placeholder')}
                   allowClear
                   onSearch={handleSearch}
                 />
               )}
-              {isMobile && <SearchOutlined />}
+              {isMobile && (
+                <SearchOutlined className={styles.searchIconStyle} />
+              )}
               {activeTab === ActiveTab.Products && !isMobile && (
                 <Button>
                   <DownloadOutlined />
-                  Export
+                  {t('products.list.export')}
                 </Button>
               )}
               {activeTab === ActiveTab.Products && isMobile && (
-                <DownloadOutlined />
+                <DownloadOutlined className={styles.downloadIconStyle} />
               )}
               {(activeTab === ActiveTab.Products ||
                 activeTab === ActiveTab.PurchaseOrders ||
@@ -140,22 +168,25 @@ const Subscription: FC = () => {
                 !isMobile && (
                   <Button>
                     <FilterOutlined />
-                    Filter
+                    {t('products.list.filter')}
                   </Button>
                 )}
               {(activeTab === ActiveTab.Products ||
                 activeTab === ActiveTab.PurchaseOrders ||
                 activeTab === ActiveTab.StockTake) &&
-                isMobile && <FilterOutlined />}
+                isMobile && (
+                  <FilterOutlined className={styles.filterIconStyle} />
+                )}
               {!isMobile && (
                 <Button type="primary" onClick={() => handleCreate()}>
-                  New {newBtnText[activeTab]}
+                  {newBtnText[activeTab]}
                 </Button>
               )}
               {isMobile && (
-                <Button type="primary" onClick={() => handleCreate()}>
-                  <PlusOutlined style={{ fontSize: '20px' }} />
-                </Button>
+                <PlusSquareFilled
+                  className={styles.plusIconStyle}
+                  onClick={() => handleCreate()}
+                />
               )}
             </div>
           </div>
@@ -172,7 +203,7 @@ const Subscription: FC = () => {
           <Category />
           <Supplier />
           <PurchaseOrder />
-          <StokeTake />
+          <StockTake />
         </TabMenu>
         <CreateProduct
           visible={showCreateProduct}
@@ -193,23 +224,25 @@ const Subscription: FC = () => {
           visible={showCreteCategory}
           modalWidth={438}
           wrapClassName="addProductCategoryModal"
-          title="Create product category"
+          title={t('products.list.create.category.title')}
           onCancel={() => {
             setNewCategoryData(defaultCategoryData)
             setShowCreateCategory(false)
           }}
         >
           <div>
-            <label>Name</label>
+            <label>{t('products.list.create.category.name')}</label>
             <Input
               type="text"
-              placeHolderText="Enter Name"
+              placeHolderText={t(
+                'products.list.create.category.name.placeholder'
+              )}
               name="name"
               onChange={(val) => inputHandler('name', val)}
             />
           </div>
           <div className="chooseImageInput">
-            <label>Image</label>
+            <label>{t('products.list.create.category.image')}</label>
             <Button
               type="default"
               size="small"
@@ -217,7 +250,7 @@ const Subscription: FC = () => {
               onClick={() => setShowImageSelector(true)}
             >
               <PlusOutlined />
-              Choose from Library
+              {t('products.list.create.category.image.choose')}
             </Button>
             {newCategoryData.image && (
               <div
@@ -227,16 +260,18 @@ const Subscription: FC = () => {
             )}
           </div>
           <div>
-            <label>Category code</label>
+            <label>{t('products.list.create.category.categorycode')}</label>
             <Input
               type="text"
-              placeHolderText="Enter category code"
+              placeHolderText={t(
+                'products.list.create.category.categorycode.placeholder'
+              )}
               name="code"
               onChange={(val) => inputHandler('code', val)}
             />
           </div>
           <div>
-            <label>Category type</label>
+            <label>{t('products.list.create.category.categorytype')}</label>
             <div className={styles.productCategoryType}>
               {categoryType.map((type) => (
                 <div
@@ -255,8 +290,10 @@ const Subscription: FC = () => {
             </div>
           </div>
           <div>
-            <label>Tax</label>
-            <Select placeholder="Select tax">
+            <label>{t('products.list.create.category.tax')}</label>
+            <Select
+              placeholder={t('products.list.create.category.tax.placeholder')}
+            >
               {taxItems.map((item) => (
                 <Option key={item} value={item}>
                   {item}
@@ -266,7 +303,7 @@ const Subscription: FC = () => {
           </div>
           <div className="footerBtnInput">
             <div>
-              <label>Active</label>
+              <label>{t('products.list.create.category.active')}</label>
               <Switch
                 defaultChecked={newCategoryData.is_active}
                 onChange={(check) => inputHandler('is_active', check)}
@@ -282,7 +319,7 @@ const Subscription: FC = () => {
                   setShowCreateCategory(false)
                 }}
               >
-                Cancel
+                {t('common-label-cancel')}
               </Button>
             </div>
             <div>
@@ -291,7 +328,7 @@ const Subscription: FC = () => {
                 size="large"
                 onClick={() => handleSubmitCategory()}
               >
-                Create
+                {t('common-label-create')}
               </Button>
             </div>
           </div>
@@ -304,9 +341,32 @@ const Subscription: FC = () => {
             setShowImageSelector(false)
           }}
           onCancel={() => setShowImageSelector(false)}
+          title={t('ui.imageselector.title')}
+          attachButtonText={t('ui.imageselector.attach')}
+          chooseButtonText={t('ui.imageselector.choose')}
         />
+        {openMenuDrawer && (
+          <MobileSidebar
+            searchRender={() => <SearchGlobal />}
+            onSideBarClosed={() => setMenuDrawer(() => !openMenuDrawer)}
+            onClickNotificationDrawer={() => setNotificationDrawer((e) => !e)}
+            onClickChatDrawer={() => setMessageDrawer((e) => !e)}
+          />
+        )}
+        {openNotificationDrawer && (
+          <NotificationDrawer
+            openDrawer={openNotificationDrawer}
+            closeDrawer={() => setNotificationDrawer((e) => !e)}
+          />
+        )}
+        {openMessageDrawer && (
+          <PabauMessages
+            openDrawer={openMessageDrawer}
+            closeDrawer={() => setMessageDrawer((e) => !e)}
+          />
+        )}
       </Layout>
-    </>
+    </div>
   )
 }
 
