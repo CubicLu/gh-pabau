@@ -22,6 +22,8 @@ interface P {
     firstName: string
     lastName: string
     avatarUrl?: string
+    mobile?: string
+    email: string
   }[]
   onChange?: (newText: string) => void
   children?: ReactNode
@@ -112,20 +114,28 @@ export const Search: FC<P> = ({
                 </div>
                 {searchResults
                   .filter((_, i) => i !== 0)
-                  .map(({ id, avatarUrl, firstName, lastName }) => (
-                    <div key={id} className={styles.contentAlignProfile}>
-                      <div className={styles.clientProfile}>
-                        <Avatar
-                          size={40}
-                          src={<Image src={avatarUrl ?? User} />}
-                        />
+                  .map(
+                    ({ id, avatarUrl, firstName, lastName, mobile, email }) => (
+                      <div key={id} className={styles.contentAlignProfile}>
+                        <div className={styles.clientProfile}>
+                          <Avatar
+                            size={40}
+                            src={
+                              <Image
+                                src={
+                                  'https://crm.pabau.com' + avatarUrl ?? User
+                                }
+                              />
+                            }
+                          />
+                        </div>
+                        <div className={styles.clientProfileText}>
+                          <h1>{firstName + ' ' + lastName}</h1>
+                          <p>{email}</p>
+                        </div>
                       </div>
-                      <div className={styles.clientProfileText}>
-                        <h1>{firstName + ' ' + lastName}</h1>
-                        <p>1234</p>
-                      </div>
-                    </div>
-                  ))}
+                    )
+                  )}
               </>
             )}
             <div className={styles.contentAlignProfile}>
