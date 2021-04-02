@@ -8,7 +8,8 @@
     "sourceMap": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
-    "strict": false
+    "strict": false,
+    "resolveJsonModule": true
   },
   "files": [],
   "include": [],

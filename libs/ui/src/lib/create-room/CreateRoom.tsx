@@ -222,6 +222,7 @@ export const CreateRoom: FC<CreateRoomProps> = ({
         onCreate?.()
       }}
       onDelete={() => onDelete?.()}
+      className="createRoomModal"
     >
       <div className={styles.createServiceGeneral}>
         <div className={styles.createServiceSection}>

@@ -1,9 +1,9 @@
 import React, { FC, useEffect, useState, ReactNode, useRef } from 'react'
 import { useMedia } from 'react-use'
-import className from 'classnames'
+import classnames from 'classnames'
 import { Button, TabMenu } from '@pabau/ui'
 import { Switch, Modal } from 'antd'
-import { LeftOutlined } from '@ant-design/icons'
+import { LeftOutlined, CloseOutlined } from '@ant-design/icons'
 import styles from './FullScreenReportModal.module.less'
 
 export enum OperationType {
@@ -12,6 +12,7 @@ export enum OperationType {
   save = 'save',
   delete = 'delete',
   create = 'create',
+  close = 'close',
 }
 
 export interface FullScreenReportModalProps {
@@ -19,11 +20,12 @@ export interface FullScreenReportModalProps {
   visible: boolean
   operations: Array<OperationType>
   onActivated?: (val: boolean) => void
-  onBackClick?: () => void
+  onBackClick?: (e?: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void
   onSave?: () => void
   onCreate?: () => void
   onReset?: () => void
   onDelete?: () => void
+  onClose?: () => void
   activeBtnText?: string
   deleteBtnText?: string
   createBtnText?: string
@@ -32,7 +34,12 @@ export interface FullScreenReportModalProps {
   enableCreateBtn?: boolean
   activated?: boolean
   subMenu?: Array<ReactNode>
+  center?: React.ReactNode
+  forceDesktopOperations?: boolean
+  hideBackIcon?: boolean
+  hideHeaderEdge?: boolean
   footer?: boolean
+  className?: string
 }
 
 export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
@@ -45,6 +52,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
   onCreate,
   onReset,
   onDelete,
+  onClose,
   deleteBtnText,
   createBtnText,
   saveBtnText,
@@ -53,7 +61,12 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
   enableCreateBtn,
   activated,
   subMenu = [],
+  center,
+  forceDesktopOperations = false,
+  hideBackIcon = false,
+  hideHeaderEdge = false,
   children,
+  className,
   ...props
 }) => {
   const ref = useRef(null)
@@ -62,9 +75,6 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
   const handleChangeActive = (checked) => {
     setActive(checked)
     onActivated?.(checked)
-  }
-  const handleClickBack = () => {
-    onBackClick?.()
   }
   useEffect(() => {
     setActive(activated || false)
@@ -75,23 +85,36 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
       closable={false}
       footer={null}
       width={'100%'}
-      className={className(styles.fullScreenModal, 'fullScreenModal')}
+      wrapClassName={classnames(
+        styles.fullScreenModal,
+        'fullScreenModal',
+        className
+      )}
     >
       <div className={styles.fullScreenModalContainer} ref={ref}>
-        <div className={styles.fullScreenModalHeader}>
+        <div
+          className={styles.fullScreenModalHeader}
+          style={{
+            borderBottom: hideHeaderEdge ? 'unset' : undefined,
+            gridTemplateColumns: '1fr '.repeat(center ? 3 : 2),
+          }}
+        >
           <div>
-            <LeftOutlined
-              onClick={() => handleClickBack()}
-              style={{
-                color: 'var(--light-grey-color)',
-                marginRight: '24px',
-                fontSize: '24px',
-              }}
-            />
+            {!hideBackIcon && (
+              <LeftOutlined
+                onClick={(e) => onBackClick?.(e)}
+                style={{
+                  color: 'var(--light-grey-color)',
+                  marginRight: '24px',
+                  fontSize: '24px',
+                }}
+              />
+            )}
             {title}
           </div>
+          {center && <div className={styles.centeredItem}>{center}</div>}
           <div className={styles.fullScreenModalOps}>
-            {!isMobile &&
+            {(!isMobile || forceDesktopOperations) &&
               operations.map((operation) => (
                 <React.Fragment key={operation}>
                   {operation === OperationType.active && (
@@ -140,19 +163,28 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                       {createBtnText || 'Create'}
                     </Button>
                   )}
+                  {operation === OperationType.close && (
+                    <Button type="text" onClick={() => onClose?.()}>
+                      Esc
+                      <CloseOutlined className={styles.closeIcon} />
+                    </Button>
+                  )}
                 </React.Fragment>
               ))}
-            {isMobile && operations.includes(OperationType.active) && (
-              <div className={styles.operationSwitch}>
-                {activeBtnText || 'Active'}
-                <Switch
-                  size="small"
-                  checked={active}
-                  onChange={(checked) => handleChangeActive(checked)}
-                  style={{ marginLeft: '12px' }}
-                />
-              </div>
-            )}
+            {isMobile &&
+              operations.includes(OperationType.active) &&
+              !props.footer &&
+              !forceDesktopOperations && (
+                <div className={styles.operationSwitch}>
+                  {activeBtnText || 'Active'}
+                  <Switch
+                    size="small"
+                    checked={active}
+                    onChange={(checked) => handleChangeActive(checked)}
+                    style={{ marginLeft: '12px' }}
+                  />
+                </div>
+              )}
           </div>
         </div>
 

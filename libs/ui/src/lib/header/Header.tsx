@@ -193,3 +193,4 @@ export const Header: FC<P> = ({
 }
 
 export default Header
+export * from './messages/Messages'

@@ -43,7 +43,7 @@
   z-index: 9;
   width: 100%;
   height: 80px;
-  display: flex;
+  display: grid;
   justify-content: space-between;
   align-items: center;
   padding: 0 24px;
@@ -68,6 +68,7 @@
 .fullScreenModalOps {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
 }
 
 .operationSwitch {
@@ -115,6 +116,15 @@
   width: 200px;
 }
 
+.closeIcon{
+  margin-left: 4px !important;
+  > svg{
+    width:20px;
+    height: 20px;
+    transform: translateY(3px);
+  }
+}
+
 .fullScreenModalFooter {
   position: fixed;
   bottom: 0;
@@ -127,4 +137,9 @@
   align-items: center;
   padding: 0 1rem;
   z-index: 9;
+}
+
+.centeredItem{
+  display: flex;
+  justify-content: center;
 }
