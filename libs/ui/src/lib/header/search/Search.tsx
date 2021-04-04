@@ -23,7 +23,7 @@ interface P {
     lastName: string
     avatarUrl?: string
     mobile?: string
-    email: string
+    email?: string
   }[]
   onChange?: (newText: string) => void
   children?: ReactNode
