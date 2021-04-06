@@ -6,6 +6,26 @@ module.exports = {
   env: {
     google_api_key: 'AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw',
   },
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    // !! WARN !!
+    ignoreBuildErrors: true,
+  },
+  onDemandEntries: {
+    // period (in ms) where the server will keep pages in the buffer
+    maxInactiveAge: 25 * 60 * 60 * 1000,
+    // number of pages that should be kept simultaneously without being disposed
+    pagesBufferLength: 25,
+  },
+  eslint: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has ESLint errors.
+    // !! WARN !!
+    build: false,
+  },
   trailingSlash: false,
   ...withImages({
     fileExtensions: [
