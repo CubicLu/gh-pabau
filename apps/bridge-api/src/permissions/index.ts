@@ -1,4 +1,4 @@
-import { allow, rule, shield } from 'graphql-shield'
+import { allow, and, rule, shield } from 'graphql-shield'
 import { Context } from '../context'
 
 const rules = {
@@ -18,18 +18,19 @@ const rules = {
         if (
           info.returnType.toString().startsWith('[') ||
           info.returnType.toString() === 'Int'
-        )
+        ) {
           args.where = {
             ...args.where,
             company_id: { equals: ctx.req.authenticatedUser.company },
           }
-        return true
+          return true
+        }
       } catch (error) {
         console.error(error)
       }
     }
   ),
-  belongsToCompany: rule('belongsToCompany')(
+  isAccessingAuthenticatedCompany: rule('isAccessingAuthenticatedCompany')(
     async (root, args, ctx: Context): Promise<boolean> => {
       try {
         args.where = {
@@ -72,22 +73,43 @@ const rules = {
     }
   ),
 }
-export const permissions = shield({
-  Mutation: {
-    login: allow,
-    logout: rules.isAuthenticated,
-    '*': rules.isAuthenticated && rules.interceptMutation,
+export const permissions = shield(
+  {
+    Mutation: {
+      setOneCompanyMeta: rules.isAuthenticated,
+      login: allow,
+      logout: rules.isAuthenticated,
+      '*': and(rules.isAuthenticated, rules.interceptMutation),
+    },
+    Query: {
+      bnfDrug: rules.isAuthenticated,
+      bnfDrugs: rules.isAuthenticated,
+      trainingCourses: rules.isAuthenticated,
+      trainingCoursesCount: rules.isAuthenticated,
+      me: rules.isAuthenticated,
+      reportCategories: rules.isAuthenticated,
+      userMainPermissions: rules.isAuthenticated,
+      userAlerts: rules.isAuthenticated,
+      userAlertTypes: rules.isAuthenticated,
+      socialSurveyAnswers: rules.isAuthenticated,
+      company: and(
+        rules.isAuthenticated,
+        rules.isAccessingAuthenticatedCompany
+      ),
+      companies: and(
+        rules.isAuthenticated,
+        rules.isAccessingAuthenticatedCompany
+      ),
+      ping: allow,
+      //TODO once jest mocks are resolved move it to rules.isAuthenticated
+      featureRequestsWeeklyAvg: allow,
+      '*': and(rules.isAuthenticated, rules.belongsToCompanyAndShared),
+    },
   },
-  Query: {
-    me: rules.isAuthenticated,
-    reportCategories: rules.isAuthenticated,
-    userMainPermissions: rules.isAuthenticated,
-    userAlerts: rules.isAuthenticated,
-    userAlertTypes: rules.isAuthenticated,
-    socialSurveyAnswers: rules.isAuthenticated,
-    userAlertPermissions: rules.isAuthenticated && rules.belongsToCompany,
-    companies: rules.isAuthenticated && rules.belongsToCompany,
-    ping: allow,
-    '*': rules.isAuthenticated,
-  },
-})
+  {
+    fallbackError: async (error: Error) => {
+      console.error(error)
+      return new Error(error.message)
+    },
+  }
+)

@@ -32,6 +32,8 @@ export const RotaShift = objectType({
     t.model.force_created()
     t.model.Company()
     t.model.Location()
+    t.model.CompanyRoom()
+    t.model.HolidayRequest()
   },
 })
 

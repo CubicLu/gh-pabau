@@ -8,6 +8,13 @@ module.exports = {
       'createMany',
     ],
     excludeQueriesAndMutationsByModel: {
+      companyMeta: [
+        'upsertOne',
+        'updateMany'
+      ],
+      XeroIntegration: [
+        'updateMany'
+      ],
       CompanyRoomLocation: [
         'updateMany'
       ],

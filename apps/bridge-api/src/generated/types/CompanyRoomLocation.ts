@@ -6,7 +6,7 @@ export const CompanyRoomLocation = objectType({
     t.model.id()
     t.model.room_id()
     t.model.location_id()
-    t.model.Room()
+    t.model.CompanyRoom()
     t.model.Location()
   },
 })

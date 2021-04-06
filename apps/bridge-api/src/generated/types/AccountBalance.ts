@@ -9,7 +9,8 @@ export const AccountBalance = objectType({
     t.model.insurance_company_id()
     t.model.balance()
     t.model.imported()
-    t.model.company()
+    t.model.Company()
+    t.model.CmContact()
   },
 })
 

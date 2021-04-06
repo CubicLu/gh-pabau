@@ -69,6 +69,16 @@ export const Company = objectType({
     t.model.SocialSurvey()
     t.model.SocialSurveyFeedback()
     t.model.SocialSurveyQuestion()
+    t.model.CmStaffGeneral()
+    t.model.HolidayRequest()
+    t.model.CompanyNote()
+    t.model.AccountBalanceLog()
+    t.model.HealthcodeInsurer()
+    t.model.InsuranceDetail()
+    t.model.CompanyPosition()
+    t.model.TrainCourseDate()
+    t.model.XeroIntegration()
+    t.model.CmLead()
   },
 })
 

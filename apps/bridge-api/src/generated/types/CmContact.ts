@@ -78,6 +78,9 @@ export const CmContact = objectType({
     t.model.need_to_knows()
     t.model.contact_type()
     t.model.SocialSurveyFeedback()
+    t.model.CmContactAlert()
+    t.model.AccountBalance()
+    t.model.AccountBalanceLog()
   },
 })
 

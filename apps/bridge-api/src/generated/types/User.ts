@@ -97,7 +97,7 @@ export const User = objectType({
     t.model.can_delete_blockout()
     t.model.can_move_blockout()
     t.model.main_contact()
-    t.model.user_security_questions_answer()
+    t.model.UserSecurityQuestionsAnswer()
     t.model.company()
     t.model.RotaShift()
     t.model.UserGroupMember()
@@ -108,6 +108,10 @@ export const User = objectType({
     t.model.InvBiller()
     t.model.UserAlertType()
     t.model.UserAlertPermission()
+    t.model.CmContactAlert()
+    t.model.CmStaffGeneral()
+    t.model.CompanyNote()
+    t.model.TrainCourseDate()
   },
 })
 

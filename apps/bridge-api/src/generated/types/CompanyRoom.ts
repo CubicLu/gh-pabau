@@ -19,6 +19,7 @@ export const CompanyRoom = objectType({
     t.model.Company()
     t.model.CompanyRoomLocation()
     t.model.CompanyRoomService()
+    t.model.RotaShift()
   },
 })
 

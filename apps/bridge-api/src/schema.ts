@@ -1,31 +1,26 @@
-import {
-  fieldAuthorizePlugin,
-  makeSchema,
-  nullabilityGuardPlugin,
-  queryComplexityPlugin,
-} from 'nexus'
+import { makeSchema, nullabilityGuardPlugin } from 'nexus'
 import { nexusPrisma } from 'nexus-plugin-prisma'
 import * as generatedTypes from './generated/types'
 import * as customTypes from '../src/schema/types'
 import { applyMiddleware } from 'graphql-middleware'
 import { permissions } from './permissions'
 import { paljs } from '@paljs/nexus'
-import { prisma } from './prisma'
+import { GraphQLDate, GraphQLDateTime } from 'graphql-scalars'
 
 export const schema = applyMiddleware(
   makeSchema({
     types: [generatedTypes, customTypes],
     plugins: [
-      paljs({
-        includeAdmin: true,
-      }),
+      paljs(),
       nexusPrisma({
+        shouldGenerateArtifacts: process.env.NODE_ENV === 'development',
         experimentalCRUD: true,
-        prismaClient: (ctx) => prisma,
         paginationStrategy: 'prisma',
+        scalars: {
+          Date: GraphQLDate,
+          DateTime: GraphQLDateTime,
+        },
       }),
-      fieldAuthorizePlugin(),
-      queryComplexityPlugin(),
       nullabilityGuardPlugin({
         onGuarded({ ctx, info }) {
           console.error(
@@ -58,17 +53,7 @@ export const schema = applyMiddleware(
           alias: 'prisma',
         },
       ],
-      mapping: {
-        Date: 'string',
-        DateTime: 'string',
-      },
     },
   }),
   permissions
 )
-
-// Prisma middleware logger for query efficiency
-prisma.$on('query', (e) => {
-  console.log('Query: ' + e.query)
-  console.log('Duration: ' + e.duration + 'ms')
-})

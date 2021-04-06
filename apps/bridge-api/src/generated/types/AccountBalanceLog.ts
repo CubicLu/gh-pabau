@@ -15,6 +15,8 @@ export const AccountBalanceLog = objectType({
     t.model.referral_id()
     t.model.imported()
     t.model.ref_sale_id()
+    t.model.Company()
+    t.model.CmContact()
   },
 })
 
