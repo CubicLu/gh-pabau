@@ -26,8 +26,14 @@ interface P {
     email?: string
   }[]
   onChange?: (newText: string) => void
+  changeSearchMode?: (newMode: SearchMode) => void
   children?: ReactNode
   placeHolder?: string
+}
+
+enum SearchMode {
+  Clients = 'Clients',
+  Leads = 'Leads',
 }
 
 export const Search: FC<P> = ({
@@ -35,11 +41,12 @@ export const Search: FC<P> = ({
   searchResults,
   children,
   placeHolder,
+  changeSearchMode,
 }) => {
   const [searchDrawer, setSearchDrawer] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [searchPopUp, setSearchPopUp] = useState(false)
-  const [searchTab, setSearchTab] = useState('Clients')
+  const [searchTab, setSearchTab] = useState(SearchMode.Clients)
   const [advanceSearch, setAdvanceSearch] = useState(false)
 
   useEffect(() => {
@@ -65,7 +72,7 @@ export const Search: FC<P> = ({
               styles.cusTabDesign,
               searchTab === 'Clients' && styles.activeTabs
             )}
-            onClick={() => setSearchTab('Clients')}
+            onClick={() => searchTabChangeHandler(SearchMode.Clients)}
           >
             {t('search.client.label')}
           </button>
@@ -74,12 +81,12 @@ export const Search: FC<P> = ({
               styles.cusTabDesign,
               searchTab === 'Leads' && styles.activeTabs
             )}
-            onClick={() => setSearchTab('Leads')}
+            onClick={() => searchTabChangeHandler(SearchMode.Leads)}
           >
             {t('search.lead.label')}
           </button>
         </div>
-        {searchTab === 'Clients' && (
+        {
           <div className={styles.clientsList}>
             {searchResults && searchResults.length > 0 && (
               <>
@@ -131,7 +138,7 @@ export const Search: FC<P> = ({
                         </div>
                         <div className={styles.clientProfileText}>
                           <h1>{firstName + ' ' + lastName}</h1>
-                          <p>{email}</p>
+                          <p>{email + ' ' + mobile}</p>
                         </div>
                       </div>
                     )
@@ -165,7 +172,7 @@ export const Search: FC<P> = ({
               <RightOutlined className={styles.rightArrowColor} />
             </div>
           </div>
-        )}
+        }
       </div>
     )
   }
@@ -204,7 +211,7 @@ export const Search: FC<P> = ({
               styles.cusTabDesign,
               searchTab === 'Clients' && styles.activeTabs
             )}
-            onClick={() => setSearchTab('Clients')}
+            onClick={() => searchTabChangeHandler(SearchMode.Clients)}
           >
             {t('search.client.label')}
           </button>
@@ -213,7 +220,7 @@ export const Search: FC<P> = ({
               styles.cusTabDesign,
               searchTab === 'Leads' && styles.activeTabs
             )}
-            onClick={() => setSearchTab('Leads')}
+            onClick={() => searchTabChangeHandler(SearchMode.Leads)}
           >
             {t('search.lead.label')}
           </button>
@@ -326,6 +333,13 @@ export const Search: FC<P> = ({
         </Form>
       </div>
     )
+  }
+
+  const searchTabChangeHandler = (searchTab: SearchMode) => {
+    setSearchTab(searchTab)
+    if (typeof changeSearchMode !== 'undefined') {
+      changeSearchMode(searchTab)
+    }
   }
 
   const renderMenu = () => {
