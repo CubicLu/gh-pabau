@@ -1,0 +1,23 @@
+query getReportByID($id: Int){
+  findFirstReport(where: {id: {equals: $id}}) {
+    id
+    name
+    description
+    ReportCategory {
+      type
+      name
+    }
+  }
+}
+
+query getReportByCode($code: String){
+  findFirstReport(where: {report_code: {equals: $code}}) {
+    id
+    name
+    description
+    ReportCategory {
+      type
+      name
+    }
+  }
+}
