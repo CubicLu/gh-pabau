@@ -130,7 +130,9 @@ export const Search: FC<P> = ({
                             src={
                               <Image
                                 src={
-                                  'https://crm.pabau.com' + avatarUrl ?? User
+                                  avatarUrl
+                                    ? 'https://crm.pabau.com' + avatarUrl
+                                    : User
                                 }
                               />
                             }

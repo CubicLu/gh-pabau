@@ -66,6 +66,7 @@ const LEADS_QUERY = gql`
       }
       take: 10
     ) {
+      ID
       Fname
       Lname
       Email
@@ -103,8 +104,9 @@ const Search: FC = () => {
 
   return (
     <PabauSearch
-      searchResults={data?.cmContacts?.map(
-        ({ Fname, Lname, Avatar, Email, Mobile, ...rest }) => ({
+      searchResults={data?.map(
+        ({ ID, Fname, Lname, Avatar, Email, Mobile, ...rest }) => ({
+          id: ID,
           firstName: Fname,
           lastName: Lname,
           avatarUrl: Avatar,
