@@ -10,7 +10,6 @@ import {
   CloseOutlined,
   CloseCircleFilled,
 } from '@ant-design/icons'
-import User from '../../../assets/images/user.png'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 // import { isMobile, isTablet } from 'react-device-detect'
@@ -96,7 +95,24 @@ export const Search: FC<P> = ({
 
                 <div className={styles.contentAlignProfile}>
                   <div className={styles.clientProfile}>
-                    <Avatar size={40} src={<Image src={User} />} />
+                    {searchResults[0].avatarUrl ? (
+                      <Avatar
+                        size={40}
+                        src={
+                          <Image
+                            src={
+                              'https://crm.pabau.com' +
+                              searchResults[0].avatarUrl
+                            }
+                          />
+                        }
+                      />
+                    ) : (
+                      <Avatar size={40}>
+                        {searchResults[0].firstName.substr(0, 1) +
+                          searchResults[0].lastName.substr(0, 1)}
+                      </Avatar>
+                    )}
                   </div>
                   <div className={styles.clientProfileText}>
                     <h1>
@@ -104,7 +120,7 @@ export const Search: FC<P> = ({
                         ' ' +
                         searchResults[0].lastName}
                     </h1>
-                    <p>3893312</p>
+                    <p>{searchResults[0].email}</p>
                   </div>
                 </div>
               </>
@@ -121,30 +137,30 @@ export const Search: FC<P> = ({
                 </div>
                 {searchResults
                   .filter((_, i) => i !== 0)
-                  .map(
-                    ({ id, avatarUrl, firstName, lastName, mobile, email }) => (
-                      <div key={id} className={styles.contentAlignProfile}>
-                        <div className={styles.clientProfile}>
+                  .map(({ id, avatarUrl, firstName, lastName, email }) => (
+                    <div key={id} className={styles.contentAlignProfile}>
+                      <div className={styles.clientProfile}>
+                        {avatarUrl ? (
                           <Avatar
                             size={40}
                             src={
                               <Image
-                                src={
-                                  avatarUrl
-                                    ? 'https://crm.pabau.com' + avatarUrl
-                                    : User
-                                }
+                                src={'https://crm.pabau.com' + avatarUrl}
                               />
                             }
                           />
-                        </div>
-                        <div className={styles.clientProfileText}>
-                          <h1>{firstName + ' ' + lastName}</h1>
-                          <p>{email + ' ' + mobile}</p>
-                        </div>
+                        ) : (
+                          <Avatar size={40}>
+                            {firstName.substr(0, 1) + lastName.substr(0, 1)}
+                          </Avatar>
+                        )}
                       </div>
-                    )
-                  )}
+                      <div className={styles.clientProfileText}>
+                        <h1>{firstName + ' ' + lastName}</h1>
+                        <p>{email}</p>
+                      </div>
+                    </div>
+                  ))}
               </>
             )}
             <div className={styles.contentAlignProfile}>
