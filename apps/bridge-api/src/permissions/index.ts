@@ -82,6 +82,9 @@ export const permissions = shield(
       '*': and(rules.isAuthenticated, rules.interceptMutation),
     },
     Query: {
+      findFirstReport: rules.isAuthenticated,
+      reports: rules.isAuthenticated,
+      report: rules.isAuthenticated,
       bnfDrug: rules.isAuthenticated,
       bnfDrugs: rules.isAuthenticated,
       trainingCourses: rules.isAuthenticated,
