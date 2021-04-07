@@ -112,7 +112,7 @@ export const permissions = shield(
   {
     fallbackError: async (error: Error) => {
       console.error(error)
-      return new Error(error.message)
+      return error
     },
   }
 )
