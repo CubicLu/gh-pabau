@@ -9,23 +9,28 @@ import {
   LeftOutlined,
   CloseOutlined,
   CloseCircleFilled,
+  MailOutlined,
+  MobileOutlined,
 } from '@ant-design/icons'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 // import { isMobile, isTablet } from 'react-device-detect'
 
 const WAIT_INTERVAL = 400
+interface SearchResult {
+  id: string
+  firstName: string
+  lastName: string
+  avatarUrl?: string
+  mobile?: string
+  email?: string
+}
+
 interface P {
-  searchResults?: {
-    id: string
-    firstName: string
-    lastName: string
-    avatarUrl?: string
-    mobile?: string
-    email?: string
-  }[]
+  searchResults?: SearchResult[]
   onChange?: (newText: string) => void
   changeSearchMode?: (newMode: SearchMode) => void
+  resultSelectedHandler?: (id: number) => void
   children?: ReactNode
   placeHolder?: string
 }
@@ -41,6 +46,7 @@ export const Search: FC<P> = ({
   children,
   placeHolder,
   changeSearchMode,
+  resultSelectedHandler,
 }) => {
   const [searchDrawer, setSearchDrawer] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -61,6 +67,49 @@ export const Search: FC<P> = ({
   }, [searchTerm])
 
   const [form] = Form.useForm()
+
+  const searchResultRow = ({
+    id,
+    avatarUrl,
+    firstName,
+    lastName,
+    email,
+    mobile,
+  }: SearchResult) => {
+    return (
+      <div
+        key={id}
+        className={styles.contentAlignProfile}
+        onClick={() =>
+          resultSelectedHandler
+            ? resultSelectedHandler(Number.parseInt(id))
+            : null
+        }
+      >
+        <div className={styles.clientProfile}>
+          {avatarUrl ? (
+            <Avatar
+              size={40}
+              src={<Image src={'https://crm.pabau.com' + avatarUrl} />}
+            />
+          ) : (
+            <Avatar size={40}>
+              {firstName.substr(0, 1) + lastName.substr(0, 1)}
+            </Avatar>
+          )}
+        </div>
+        <div className={styles.clientProfileText}>
+          <h1>{firstName + ' ' + lastName}</h1>
+          <p>
+            <MailOutlined />
+            {email}
+            <MobileOutlined style={{ marginLeft: '5px' }} />
+            {mobile}
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   const searchMenu = () => {
     return (
@@ -92,37 +141,7 @@ export const Search: FC<P> = ({
                 <div className={styles.resultText}>
                   <h1>{t('search.result.one')}</h1>
                 </div>
-
-                <div className={styles.contentAlignProfile}>
-                  <div className={styles.clientProfile}>
-                    {searchResults[0].avatarUrl ? (
-                      <Avatar
-                        size={40}
-                        src={
-                          <Image
-                            src={
-                              'https://crm.pabau.com' +
-                              searchResults[0].avatarUrl
-                            }
-                          />
-                        }
-                      />
-                    ) : (
-                      <Avatar size={40}>
-                        {searchResults[0].firstName.substr(0, 1) +
-                          searchResults[0].lastName.substr(0, 1)}
-                      </Avatar>
-                    )}
-                  </div>
-                  <div className={styles.clientProfileText}>
-                    <h1>
-                      {searchResults[0].firstName +
-                        ' ' +
-                        searchResults[0].lastName}
-                    </h1>
-                    <p>{searchResults[0].email}</p>
-                  </div>
-                </div>
+                {searchResultRow(searchResults[0])}
               </>
             )}
             {searchResults && searchResults.length > 1 && (
@@ -137,30 +156,7 @@ export const Search: FC<P> = ({
                 </div>
                 {searchResults
                   .filter((_, i) => i !== 0)
-                  .map(({ id, avatarUrl, firstName, lastName, email }) => (
-                    <div key={id} className={styles.contentAlignProfile}>
-                      <div className={styles.clientProfile}>
-                        {avatarUrl ? (
-                          <Avatar
-                            size={40}
-                            src={
-                              <Image
-                                src={'https://crm.pabau.com' + avatarUrl}
-                              />
-                            }
-                          />
-                        ) : (
-                          <Avatar size={40}>
-                            {firstName.substr(0, 1) + lastName.substr(0, 1)}
-                          </Avatar>
-                        )}
-                      </div>
-                      <div className={styles.clientProfileText}>
-                        <h1>{firstName + ' ' + lastName}</h1>
-                        <p>{email}</p>
-                      </div>
-                    </div>
-                  ))}
+                  .map((data) => searchResultRow(data))}
               </>
             )}
             <div className={styles.contentAlignProfile}>
@@ -179,16 +175,18 @@ export const Search: FC<P> = ({
                 <span>{t('search.new.client')}</span>
               </div>
             </div>
-            <div
-              className={styles.advanceSearch}
-              onClick={() => {
-                setAdvanceSearch(!advanceSearch)
-                setSearchPopUp(true)
-              }}
-            >
-              <p>{t('search.advanced.search')}</p>
-              <RightOutlined className={styles.rightArrowColor} />
-            </div>
+          </div>
+        }
+        {
+          <div
+            className={styles.advanceSearch}
+            onClick={() => {
+              setAdvanceSearch(!advanceSearch)
+              setSearchPopUp(true)
+            }}
+          >
+            <p>{t('search.advanced.search')}</p>
+            <RightOutlined className={styles.rightArrowColor} />
           </div>
         }
       </div>

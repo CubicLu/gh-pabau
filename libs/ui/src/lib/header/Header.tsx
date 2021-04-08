@@ -143,7 +143,7 @@ export const Header: FC<P> = ({
               <Logo />
             </Col>
             <Col md={8} lg={8} className={styles.headerSearchCenter}>
-              <div style={{ width: '360px' }}>
+              <div style={{ width: '400px' }}>
                 {searchRender ? searchRender(<Search />) : <Search />}
               </div>
             </Col>

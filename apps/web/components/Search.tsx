@@ -1,6 +1,7 @@
 import { FC, useState } from 'react'
 import { gql } from '@apollo/client'
 import { useLiveQuery, Search as PabauSearch } from '@pabau/ui'
+import { useRouter } from 'next/router'
 
 const CLIENTS_QUERY = gql`
   query findContacts($searchTerm1: String, $searchTerm2: String) {
@@ -29,6 +30,7 @@ const CLIENTS_QUERY = gql`
       }
       take: 10
     ) {
+      ID
       Fname
       Lname
       Email
@@ -83,6 +85,7 @@ enum SearchMode {
 }
 
 const Search: FC = () => {
+  const router = useRouter()
   const [searchFor, setSearchFor] = useState(SearchMode.Clients)
   const [searchTerms, setSearchTerms] = useState<string[]>([])
   const variables = { searchTerm1: searchTerms[0] }
@@ -102,6 +105,13 @@ const Search: FC = () => {
     setSearchFor(mode)
   }
 
+  const resultSelectedHandler = (id: number) => {
+    router.push({
+      pathname: '/clients/[id]',
+      query: { id: id },
+    })
+  }
+
   return (
     <PabauSearch
       searchResults={data?.map(
@@ -116,6 +126,7 @@ const Search: FC = () => {
         })
       )}
       changeSearchMode={setSearchMode}
+      resultSelectedHandler={resultSelectedHandler}
       onChange={(e) => {
         const bits = e.split(' ')
         const wordBits = []
