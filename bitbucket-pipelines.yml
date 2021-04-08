@@ -130,12 +130,12 @@ pipelines:
               - yarn affected:e2e --base=HEAD~1 || true
 
         - step:
-            size: 1x
+            size: 2x
             name: build
             script:
-              - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=HEAD~2 --head=HEAD~1 --target=build --prod --args="--configuration=production"
-              - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=HEAD~2 --head=HEAD~1 --target=build-storybook --prod --args="--configuration=production"
-              - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=HEAD~2 --head=HEAD~1 --target=export --prod --args="--configuration=production"
+              - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=build --prod --args="--configuration=production"
+              - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=build-storybook --prod --args="--configuration=production"
+              - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=export --prod --args="--configuration=production"
             artifacts:
               - node_modules/.cache/**
               - dist/**
