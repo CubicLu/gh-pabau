@@ -1,4 +1,4 @@
-import React, { FC, useState, MouseEvent } from 'react'
+import React, { FC, useState, MouseEvent, useEffect } from 'react'
 import { Badge, Col, Layout, Row } from 'antd'
 import { BellOutlined, MailOutlined } from '@ant-design/icons'
 import styles from './Header.module.less'
@@ -7,102 +7,33 @@ import {
   QuickCreate,
   NotificationDrawer,
   Logo,
+  useLiveQuery,
 } from '@pabau/ui'
 import { Search } from './search/Search'
 import PabauMessages from './messages/Messages'
 import classNames from 'classnames'
 import AppointmentSVG from '../../assets/images/notification.svg'
-import ReportSVG from '../../assets/images/notification-report.svg'
-import LeadSVG from '../../assets/images/notification-lead.svg'
-import ReviewSVG from '../../assets/images/review.svg'
-import CampaignSVG from '../../assets/images/campaign.svg'
-import NewsletterSVG from '../../assets/images/newsletter.svg'
-import RequestSVG from '../../assets/images/request.svg'
-import ReferSVG from '../../assets/images/refer.svg'
+import { gql } from '@apollo/client'
+
 const AntHeader = Layout.Header
 
-const notifications = [
+const notificationsData = [
   {
-    Today: [
-      {
-        notificationTime: '3:00 PM',
-        notificationType: 'Appointment',
-        notificationTypeIcon: AppointmentSVG,
-        title: 'Cancelled appointment',
-        desc: 'Your appointment at 17:00 PM with John Smith was cancelled',
-        read: false,
-      },
-      {
-        notificationTime: '1:20 PM',
-        notificationType: 'Appointment',
-        notificationTypeIcon: AppointmentSVG,
-        title: 'Cancelled appointment',
-        desc: 'Your appointment at 17:00 PM with John Smith was cancelled',
-        read: true,
-      },
-    ],
-  },
-  {
-    Yesterday: [
-      {
-        notificationTime: '1:20 PM',
-        notificationType: 'Report',
-        notificationTypeIcon: ReportSVG,
-        title: 'New financial report',
-        desc: 'Your appointment at 17:00 PM with John Smith was cancelled',
-        read: false,
-      },
-      {
-        notificationTime: '1:20 PM',
-        notificationType: 'Lead',
-        notificationTypeIcon: LeadSVG,
-        title: 'New lead',
-        desc: 'John Smith has enquired about Botox',
-        read: true,
-      },
-      {
-        notificationTime: '1:21 PM',
-        notificationType: 'review',
-        notificationTypeIcon: ReviewSVG,
-        title: 'New review delivered',
-        desc: 'Olivia Sanders has left a new review',
-        read: true,
-      },
-      {
-        notificationTime: '1:13 PM',
-        notificationType: 'sms campaign',
-        notificationTypeIcon: CampaignSVG,
-        title: 'New SMS campaign delivered',
-        desc: 'Check out new SMS campaign',
-        read: false,
-      },
-      {
-        notificationTime: '12:48 PM',
-        notificationType: 'Newsletter campaign',
-        notificationTypeIcon: NewsletterSVG,
-        title: 'New Newsletter campaign delivered',
-        desc: 'Check out new newsletter campaign',
-        read: true,
-      },
-      {
-        notificationTime: '12:12 PM',
-        notificationType: 'holiday request',
-        notificationTypeIcon: RequestSVG,
-        title: 'Joe Hickey requests a holiday',
-        desc: 'Deny or confirm it',
-        read: false,
-      },
-      {
-        notificationTime: '10:42 AM',
-        notificationType: 'business refer',
-        notificationTypeIcon: ReferSVG,
-        title: 'Someone refers into the business',
-        desc: 'Click to learn more',
-        read: true,
-      },
-    ],
+    Today: [],
   },
 ]
+
+const LIST_QUERY = gql`
+  query notifications {
+    notifications {
+      id
+      text
+      notification_type
+      title
+      created_at
+    }
+  }
+`
 
 interface P {
   searchRender?: (innerComponent: JSX.Element) => JSX.Element
@@ -112,6 +43,19 @@ interface P {
     isPrivate: boolean
   ) => void
   onMessageType?: (e: MouseEvent<HTMLElement>) => void
+}
+
+interface Notification {
+  notificationTime: string
+  notificationType: string
+  notificationTypeIcon: string
+  title: string
+  desc: string
+  read: boolean
+}
+
+interface NotificationData {
+  [key: string]: Notification[]
 }
 
 export const Header: FC<P> = ({
@@ -124,6 +68,24 @@ export const Header: FC<P> = ({
     false
   )
   const [openMessageDrawer, setMessageDrawer] = useState<boolean>(false)
+
+  const { data } = useLiveQuery(LIST_QUERY)
+
+  const [notifications] = useState<NotificationData[]>(notificationsData)
+
+  useEffect(() => {
+    if (data?.length > 0) {
+      const todayNotification = data.map((notification) => ({
+        notificationTime: notification?.created_at,
+        notificationType: notification?.notification_type,
+        notificationTypeIcon: AppointmentSVG,
+        title: notification?.title,
+        desc: notification?.text,
+        read: false,
+      }))
+      notifications[0].Today = todayNotification
+    }
+  }, [data])
 
   return (
     <>

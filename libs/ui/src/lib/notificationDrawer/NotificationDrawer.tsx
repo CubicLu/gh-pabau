@@ -7,6 +7,7 @@ import { ReactComponent as Lead1SVG } from '../../assets/images/lead.svg'
 import { ReactComponent as Lead2SVG } from '../../assets/images/lead1.svg'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
+import moment from 'moment'
 
 interface Notification {
   notificationTime: string
@@ -167,7 +168,10 @@ export const NotificationDrawer: FC<P> = ({
                       <div className={styles.notificationCard}>
                         <div className={styles.notifyAlign}>
                           <div className={classNames(styles.logo, styles.flex)}>
-                            <Image src={dayNotify.notificationTypeIcon} />
+                            <Image
+                              preview={false}
+                              src={dayNotify.notificationTypeIcon}
+                            />
                             <p className={styles.textSm}>
                               {notificationTypes[
                                 dayNotify.notificationType
@@ -191,7 +195,9 @@ export const NotificationDrawer: FC<P> = ({
                                 styles.grayTextColor
                               )}
                             >
-                              {dayNotify.notificationTime}
+                              {moment(dayNotify.notificationTime).format(
+                                'hh:mm A'
+                              )}
                               <CloseOutlined
                                 className={styles.notificationClearIcon}
                                 onClick={() =>
