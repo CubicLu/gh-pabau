@@ -2,7 +2,7 @@
   "name": "pabau",
   "version": "2.0.262",
   "license": "Copyright Hambrand Technologies Ltd",
-  "bump-rebuild-all": 8,
+  "bump-rebuild-all": 9,
   "scripts": {
     "nx": "nx",
     "vercel": "vercel",
