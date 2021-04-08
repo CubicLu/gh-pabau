@@ -1,5 +1,4 @@
 # Bitbucket Pipeline definition
-
 image: node:14-buster
 
 options:
