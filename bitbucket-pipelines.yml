@@ -106,17 +106,18 @@ pipelines:
               - tsc --noEmit -p libs/yup/tsconfig.lib.json
 
               - touch /tmp/bot_message.txt
-              - apt-get update -y && apt-get install -y curl jq time
 
         - step:
             name: lint
             script:
-              - NODE_OPTIONS=--max_old_space_size=3072 /usr/bin/time -v yarn affected:lint --base=HEAD~1 --with-deps
+              - NODE_OPTIONS=--max_old_space_size=3072 yarn affected:lint --base=HEAD~1 --with-deps
 
         - step:
             name: unit tests
             script:
-              - NODE_OPTIONS=--max_old_space_size=3072 /usr/bin/time -v yarn affected:test --base=HEAD~1
+              - NODE_OPTIONS=--max_old_space_size=3072 yarn affected:test --base=HEAD~1
+
+      - parallel:
 
         - step:
             size: 2x
@@ -126,22 +127,24 @@ pipelines:
             script:
               - apt update -y && apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
               - yarn cypress install || true
-              - yarn affected:e2e --base=HEAD~1
+              - yarn affected:e2e --base=HEAD~1 || true
 
-      - step:
-          size: 1x
-          name: build
-          script:
-            - NODE_OPTIONS=--max_old_space_size=3072 /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=build --prod --args="--configuration=production"
-          artifacts:
-            - node_modules/.cache/nx/**
-            - dist/**
+        - step:
+            size: 1x
+            name: build
+            script:
+              - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=HEAD~2 --head=HEAD~1 --target=build --prod --args="--configuration=production"
+            artifacts:
+              - node_modules/.cache/nx/**
+              - dist/**
 
       - step:
           size: 1x
           name: deploy previews
           deployment: production-serverless
           script:
+            - apt-get update -y && apt-get install -y curl jq time
+
             # get the commit message for this merge
             - export LAST_COMMIT_LOG=$(git log HEAD -1 | tail -n +4 | perl -p -e 's/[\r\n]//' | awk '{$1=$1;print}')
             - echo "${LAST_COMMIT_LOG}"
