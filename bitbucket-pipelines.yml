@@ -136,7 +136,7 @@ pipelines:
 
             # bump the package.json version by 0.0.1
             - yarn version --message "[skip ci] bumping version (patch)" --patch --non-interactive --no-progress
-            - git push && git push --tags
+            - HUSKY=0 git push && HUSKY=0 git push --tags
             - export PACKAGE_JSON_VERSION=$(jq -r .version < package.json)
 
             - NODE_OPTIONS=--max_old_space_size=3072 /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=deploy --prod --args="--configuration=production"
