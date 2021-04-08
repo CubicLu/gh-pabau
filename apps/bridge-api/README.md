@@ -46,8 +46,8 @@ The following section is for windows users only:
 
 Helpful links for potential links that may occur
 1. The official docker documentation: `https://docs.docker.com/`
-2. Windows Subsystem for linux`https://docs.microsoft.com/en-us/windows/wsl/install-win10`
-3. `#pabau-2-dev` slack channel 
+1. Windows Subsystem for linux`https://docs.microsoft.com/en-us/windows/wsl/install-win10`
+1. `#pabau-2-dev` slack channel 
 
 Easy way:
 - If u prefer to use your pod database instead of a local docker img, contact [James, Toshe]

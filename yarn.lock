@@ -3812,14 +3812,6 @@
     fs-extra "^9.1.0"
     got "11.1.3"
 
-"@paljs/display@^2.0.0":
-  version "2.14.0"
-  resolved "https://registry.yarnpkg.com/@paljs/display/-/display-2.14.0.tgz#0ca9d18d8336b1e41b271e6a096d7b12b72dce9f"
-  integrity sha512-KZQIJ4uK/lAG5lm+tKBYVs9j4X3bylD8Eq5DAcoT5rTG2oaYqugO4akjsFOpYcljDqLBzY6P5cmpTDNzB4sEZg==
-  dependencies:
-    chalk "4.1.0"
-    ora "5.4.0"
-
 "@paljs/display@^2.12.0":
   version "2.12.0"
   resolved "https://registry.yarnpkg.com/@paljs/display/-/display-2.12.0.tgz#85c8a1110d94f2d3bd1e304fedcbda344dd90171"
@@ -3857,14 +3849,6 @@
     graphql-fields "2.0.3"
     graphql-tag "2.11.0"
 
-"@paljs/schema@2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@paljs/schema/-/schema-2.1.0.tgz#10a4f687f6faf924dc4dfcf7a5efa03b1612fed1"
-  integrity sha512-NEY7E5iGe27b0SYpkAHLaEAPOddQx5LL5AwlOxDOOZ02cTHi6xsQko8yMLWlki2tHk2rK9NigSjHiT6inJOFaQ==
-  dependencies:
-    "@paljs/display" "^2.0.0"
-    "@paljs/types" "^2.1.0"
-
 "@paljs/schema@^2.13.0":
   version "2.13.0"
   resolved "https://registry.yarnpkg.com/@paljs/schema/-/schema-2.13.0.tgz#d436d59a494764bfb0d88d0370d95e568b1256c7"
@@ -3873,11 +3857,6 @@
     "@paljs/display" "^2.12.0"
     "@paljs/types" "^2.13.0"
     "@prisma/sdk" "2.17.0"
-
-"@paljs/types@^2.1.0":
-  version "2.14.0"
-  resolved "https://registry.yarnpkg.com/@paljs/types/-/types-2.14.0.tgz#0234d10053bd03ce911c822ca3c90eac8aa331fa"
-  integrity sha512-/cFaf8Wg+ZW5vNUHBpk7KyO09w5zNDbEP7Sn3L6KyjDWDcQEJlvMIdDo7ZeL4KZDECNhKErXUMM8042MeyR1ag==
 
 "@paljs/types@^2.13.0":
   version "2.13.0"
@@ -7469,7 +7448,7 @@ are-we-there-yet@~1.1.2:
     delegates "^1.0.0"
     readable-stream "^2.0.6"
 
-arg@^4.1.0, arg@^4.1.3:
+arg@^4.1.0:
   version "4.1.3"
   resolved "https://registry.yarnpkg.com/arg/-/arg-4.1.3.tgz#269fc7ad5b8e42cb63c896d5666017261c144089"
   integrity sha512-58S9QDqG0Xx27YwPSt9fJxivjYl432YCwfDMfZ+71RAqUrZef7LrKQZ3LHLOwCS4FLNBplP533Zx895SeOCHvA==
@@ -8398,7 +8377,7 @@ bitbucket@^2.4.2:
     node-fetch "^2.6.0"
     url-template "^2.0.8"
 
-bl@^4.0.3, bl@^4.1.0:
+bl@^4.0.3:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/bl/-/bl-4.1.0.tgz#451535264182bec2fbbc83a62ab98cf11d9f7b3a"
   integrity sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==
@@ -10138,16 +10117,6 @@ create-hmac@^1.1.0, create-hmac@^1.1.4, create-hmac@^1.1.7:
     ripemd160 "^2.0.0"
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
-
-create-nexus-type@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/create-nexus-type/-/create-nexus-type-1.3.0.tgz#30bb0d46ac5f587c80f843235d27c39b0ce95906"
-  integrity sha512-7DH29HTwPRCyynFsQNnaJVUqIaBAtHi+EtdvArt+l/L/iPPXC6NM4o4eG7APp6CavK7umvQC64iJOqJgsl1kyA==
-  dependencies:
-    "@paljs/schema" "2.1.0"
-    arg "^4.1.3"
-    pluralize "^8.0.0"
-    prettier "^2.1.2"
 
 create-react-class@^15.6.0:
   version "15.7.0"
@@ -16797,7 +16766,7 @@ log-symbols@^2.2.0:
   dependencies:
     chalk "^2.0.1"
 
-log-symbols@^4.0.0, log-symbols@^4.1.0:
+log-symbols@^4.0.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/log-symbols/-/log-symbols-4.1.0.tgz#3fbdbb95b4683ac9fc785111e792e558d4abd503"
   integrity sha512-8XPvpAA8uyhfteu8pIvQxpJZ7SYYdpUivZpGy6sFsBuKRY/7rQGavedeB8aK+Zkyq6upMFVL/9AW6vOYzfRyLg==
@@ -18697,21 +18666,6 @@ ora@5.3.0:
     strip-ansi "^6.0.0"
     wcwidth "^1.0.1"
 
-ora@5.4.0:
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/ora/-/ora-5.4.0.tgz#42eda4855835b9cd14d33864c97a3c95a3f56bf4"
-  integrity sha512-1StwyXQGoU6gdjYkyVcqOLnVlbKj+6yPNNOxJVgpt9t4eksKjiriiHuxktLYkgllwk+D6MbC4ihH84L1udRXPg==
-  dependencies:
-    bl "^4.1.0"
-    chalk "^4.1.0"
-    cli-cursor "^3.1.0"
-    cli-spinners "^2.5.0"
-    is-interactive "^1.0.0"
-    is-unicode-supported "^0.1.0"
-    log-symbols "^4.1.0"
-    strip-ansi "^6.0.0"
-    wcwidth "^1.0.1"
-
 ora@^3.4.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/ora/-/ora-3.4.0.tgz#bf0752491059a3ef3ed4c85097531de9fdbcd318"
@@ -19964,7 +19918,7 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier@^2.1.2, prettier@^2.2.1:
+prettier@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.2.1.tgz#795a1a78dd52f073da0cd42b21f9c91381923ff5"
   integrity sha512-PqyhM2yCjg/oKkFPtTGUojv7gnZAoG80ttl45O6x2Ug/rMJw4wcc9k6aaf2hibP7BGVCCM33gZoGjyvt9mm16Q==
