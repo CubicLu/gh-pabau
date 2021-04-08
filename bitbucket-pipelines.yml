@@ -117,31 +117,31 @@ pipelines:
             script:
               - NODE_OPTIONS=--max_old_space_size=3072 yarn affected:test --base=HEAD~1
 
-      - parallel:
+      # - parallel:
 
-        - step:
-            size: 2x
-            name: e2e
-            caches:
-              - cypress
-            script:
-              - apt update -y && apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
-              - yarn cypress install || true
-              - yarn affected:e2e --base=HEAD~1 || true
+      #   - step:
+      #       size: 2x
+      #       name: e2e
+      #       caches:
+      #         - cypress
+      #       script:
+      #         - apt update -y && apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+      #         - yarn cypress install || true
+      #         - yarn affected:e2e --base=HEAD~1 || true
 
-        - step:
-            size: 2x
-            name: build
-            script:
-              - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=build --prod
-              - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=build-storybook --prod
-              - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=export --prod
-            artifacts:
-              - node_modules/.cache/**
-              - dist/**
+      #   - step:
+      #       size: 2x
+      #       name: build
+      #       script:
+      #         - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=build --prod
+      #         - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=build-storybook --prod
+      #         - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=export --prod
+      #       artifacts:
+      #         - node_modules/.cache/**
+      #         - dist/**
 
       - step:
-          size: 1x
+          size: 2x
           name: deploy previews
           deployment: production-serverless
           script:
