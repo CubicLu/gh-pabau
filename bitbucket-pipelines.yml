@@ -13,7 +13,7 @@ definitions:
     cypress: '/root/.cache/Cypress'
   services:
     docker:
-      memory: 6000
+      memory: 3072
 
 pipelines:
   pull-requests:
@@ -101,9 +101,7 @@ pipelines:
           services:
             - docker
           caches:
-            - nodemodules
             - yarncustom
-            - nextcache
           script:
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -gt 2 ]] && exit 1 || exit 0'
             - touch /tmp/bot_message.txt
