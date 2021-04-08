@@ -63,8 +63,8 @@ pipelines:
             - tsc --noEmit -p libs/ui/tsconfig.lib.json
             - tsc --noEmit -p libs/yup/tsconfig.lib.json
 
-            - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=lint --with-deps
-            - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=test
+            - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=lint --with-deps --parallel --maxParallel=3
+            - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=test --parallel --maxParallel=2
             - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=deploy
             - cat /tmp/bot_message.txt
 
@@ -141,8 +141,6 @@ pipelines:
             - git push && git push --tags
             - export PACKAGE_JSON_VERSION=$(jq -r .version < package.json)
 
-            - NODE_OPTIONS=--max_old_space_size=3072 /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=export --prod
-            - NODE_OPTIONS=--max_old_space_size=3072 /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=build-storybook --prod
             - NODE_OPTIONS=--max_old_space_size=3072 /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=deploy --prod --args="--configuration=production"
 
             - npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "HEAD~2" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message.txt
