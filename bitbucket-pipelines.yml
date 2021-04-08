@@ -88,54 +88,54 @@ pipelines:
           artifacts:
             - node_modules/**
 
+      # - parallel:
+      #   - step:
+      #       name: quick
+      #       script:
+      #         # TODO: move these to eslint so that `yarn lint` picks up these errors instead
+      #         - npm i -g typescript
+      #         - tsc --noEmit -p apps/backend/
+      #         - tsc --noEmit -p apps/connect/
+      #         - tsc --noEmit -p apps/connect-e2e/
+      #         - tsc --noEmit -p apps/mgmt/
+      #         - tsc --noEmit -p apps/mgmt-e2e/
+      #         - tsc --noEmit -p apps/ui-e2e/
+      #         - tsc --noEmit -p apps/web/
+      #         - tsc --noEmit -p apps/web-e2e/
+      #         - tsc --noEmit -p libs/ui/tsconfig.lib.json
+      #         - tsc --noEmit -p libs/yup/tsconfig.lib.json
+
+      #         - touch /tmp/bot_message.txt
+
+      #   - step:
+      #       name: lint
+      #       script:
+      #         - NODE_OPTIONS=--max_old_space_size=3072 yarn affected:lint --base=HEAD~1 --with-deps
+
+      #   - step:
+      #       name: unit tests
+      #       script:
+      #         - NODE_OPTIONS=--max_old_space_size=3072 yarn affected:test --base=HEAD~1
+
       - parallel:
-        - step:
-            name: quick
-            script:
-              # TODO: move these to eslint so that `yarn lint` picks up these errors instead
-              - npm i -g typescript
-              - tsc --noEmit -p apps/backend/
-              - tsc --noEmit -p apps/connect/
-              - tsc --noEmit -p apps/connect-e2e/
-              - tsc --noEmit -p apps/mgmt/
-              - tsc --noEmit -p apps/mgmt-e2e/
-              - tsc --noEmit -p apps/ui-e2e/
-              - tsc --noEmit -p apps/web/
-              - tsc --noEmit -p apps/web-e2e/
-              - tsc --noEmit -p libs/ui/tsconfig.lib.json
-              - tsc --noEmit -p libs/yup/tsconfig.lib.json
 
-              - touch /tmp/bot_message.txt
-
-        - step:
-            name: lint
-            script:
-              - NODE_OPTIONS=--max_old_space_size=3072 yarn affected:lint --base=HEAD~1 --with-deps
-
-        - step:
-            name: unit tests
-            script:
-              - NODE_OPTIONS=--max_old_space_size=3072 yarn affected:test --base=HEAD~1
-
-      - parallel:
-
-        - step:
-            size: 2x
-            name: e2e
-            caches:
-              - cypress
-            script:
-              - apt update -y && apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
-              - yarn cypress install || true
-              - yarn affected:e2e --base=HEAD~1 || true
+        # - step:
+        #     size: 2x
+        #     name: e2e
+        #     caches:
+        #       - cypress
+        #     script:
+        #       - apt update -y && apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+        #       - yarn cypress install || true
+        #       - yarn affected:e2e --base=HEAD~1 || true
 
         - step:
             size: 2x
             name: build
             script:
-              - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=build --prod --args="--configuration=production"
-              - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=build-storybook --prod --args="--configuration=production"
-              - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=export --prod --args="--configuration=production"
+              - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=build --prod
+              - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=build-storybook --prod
+              - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=export --prod
             artifacts:
               - node_modules/.cache/**
               - dist/**
@@ -162,7 +162,7 @@ pipelines:
             - HUSKY=0 git push && HUSKY=0 git push --tags
             - export PACKAGE_JSON_VERSION=$(jq -r .version < package.json)
 
-            - NODE_OPTIONS=--max_old_space_size=3072 /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=deploy --prod --args="--configuration=production"
+            - NODE_OPTIONS=--max_old_space_size=2750 /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=deploy --prod --args="--configuration=production"
 
             - npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "HEAD~2" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message.txt
             - |
