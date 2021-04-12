@@ -1,4 +1,5 @@
 import React, { FC, ReactNode, useEffect, useState } from 'react'
+import reactStringReplace from 'react-string-replace'
 import { Checkbox } from '@pabau/ui'
 import styles from './Search.module.less'
 import { Input, Popover, Avatar, Image, Form, Button, Drawer } from 'antd'
@@ -76,6 +77,7 @@ export const Search: FC<P> = ({
     email,
     mobile,
   }: SearchResult) => {
+    const full_name = firstName + ' ' + lastName
     return (
       <div
         key={id}
@@ -99,12 +101,34 @@ export const Search: FC<P> = ({
           )}
         </div>
         <div className={styles.clientProfileText}>
-          <h1>{firstName + ' ' + lastName}</h1>
+          <h1>
+            {reactStringReplace(full_name, searchTerm, (match, i) => (
+              <span key={i} className={styles.highlight}>
+                {match}
+              </span>
+            ))}
+          </h1>
           <p>
-            <MailOutlined />
-            {email}
-            <MobileOutlined style={{ marginLeft: '5px' }} />
-            {mobile}
+            {email !== '' ? (
+              <>
+                <MailOutlined />{' '}
+                {reactStringReplace(email, searchTerm, (match, i) => (
+                  <span key={i} className={styles.highlight}>
+                    {match}
+                  </span>
+                ))}
+              </>
+            ) : null}
+            {mobile !== '' ? (
+              <>
+                <MobileOutlined style={{ marginLeft: '5px' }} />{' '}
+                {reactStringReplace(mobile, searchTerm, (match, i) => (
+                  <span key={i} className={styles.highlight}>
+                    {match}
+                  </span>
+                ))}
+              </>
+            ) : null}
           </p>
         </div>
       </div>
