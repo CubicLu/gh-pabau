@@ -11,6 +11,7 @@
       - date
       - discount_rate
       - employees
+      - expiry_date
       - is_active
       - locations
       - name
@@ -23,21 +24,22 @@
   - role: public
     permission:
       columns:
-      - date
-      - is_active
-      - order
-      - employees
-      - locations
-      - services
       - amount
       - code
+      - created_at
+      - date
       - discount_rate
+      - employees
+      - expiry_date
+      - id
+      - is_active
+      - locations
       - name
+      - order
+      - services
       - show_on_reciept
       - type
-      - created_at
       - updated_at
-      - id
       filter: {}
       allow_aggregations: true
   update_permissions:
@@ -49,6 +51,7 @@
       - date
       - discount_rate
       - employees
+      - expiry_date
       - is_active
       - locations
       - name
@@ -260,6 +263,44 @@
       - revenue
       - sent_date
       - sent_to
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
+    name: Response
+  remote_relationships:
+  - definition:
+      remote_field:
+        socialSurveyFeedback:
+          arguments: {}
+      hasura_fields: []
+      remote_schema: CRM
+    name: fk_response
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - id
+      - review_id
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - id
+      - review_id
+      filter: {}
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - id
+      - review_id
       filter: {}
       check: null
   delete_permissions:
@@ -1657,41 +1698,44 @@
     permission:
       check: {}
       columns:
-      - client
-      - lab
       - labNo
-      - lastUpdate
-      - public
-      - requested
-      - requester
+      - client
       - test
+      - requested
+      - lastUpdate
+      - lab
+      - requester
+      - public
+      - id
       backend_only: false
   select_permissions:
   - role: public
     permission:
       columns:
+      - public
+      - labNo
       - client
       - lab
-      - labNo
       - lastUpdate
-      - public
       - requested
       - requester
       - test
+      - id
       filter: {}
       allow_aggregations: true
   update_permissions:
   - role: public
     permission:
       columns:
+      - public
       - labNo
       - client
-      - test
-      - requested
-      - lastUpdate
       - lab
+      - lastUpdate
+      - requested
       - requester
-      - public
+      - test
+      - id
       filter: {}
       check: {}
   delete_permissions:
@@ -1942,6 +1986,7 @@
       - is_active
       - name
       - phone
+      - position
       - postcode
       - showOnline
       - website
@@ -1964,6 +2009,7 @@
       - name
       - order
       - phone
+      - position
       - postcode
       - showOnline
       - updated_at
@@ -1986,6 +2032,7 @@
       - name
       - order
       - phone
+      - position
       - postcode
       - showOnline
       - website
@@ -2120,6 +2167,87 @@
 - table:
     schema: public
     name: news
+- table:
+    schema: public
+    name: notification_types
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - text
+      - title
+      - type
+      - type_name
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - text
+      - title
+      - type
+      - type_name
+      filter: {}
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - text
+      - title
+      - type
+      - type_name
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
+    name: notifications
+  object_relationships:
+  - name: notification_type
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: notification_types
+        column_mapping:
+          type: type
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - type
+      - text
+      - title
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - created_at
+      - id
+      - type
+      - text
+      - title
+      - updated_at
+      filter: {}
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - type
+      - text
+      - title
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
 - table:
     schema: public
     name: packages

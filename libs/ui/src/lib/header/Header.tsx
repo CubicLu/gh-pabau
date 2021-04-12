@@ -17,7 +17,7 @@ import { gql } from '@apollo/client'
 
 const AntHeader = Layout.Header
 
-const notificationsData = [
+const notificationsMockData = [
   {
     Today: [],
   },
@@ -28,8 +28,11 @@ const LIST_QUERY = gql`
     notifications {
       id
       text
-      notification_type
-      title
+      notification_type {
+        type
+        type_name
+        title
+      }
       created_at
     }
   }
@@ -70,14 +73,15 @@ export const Header: FC<P> = ({
   const [openMessageDrawer, setMessageDrawer] = useState<boolean>(false)
 
   const { data } = useLiveQuery(LIST_QUERY)
+  console.log('data', data)
 
-  const [notifications] = useState<NotificationData[]>(notificationsData)
+  const [notifications] = useState<NotificationData[]>(notificationsMockData)
 
   useEffect(() => {
     if (data?.length > 0) {
       const todayNotification = data.map((notification) => ({
         notificationTime: notification?.created_at,
-        notificationType: notification?.notification_type,
+        notificationType: notification?.notification_type?.type_name,
         notificationTypeIcon: AppointmentSVG,
         title: notification?.title,
         desc: notification?.text,
@@ -85,6 +89,7 @@ export const Header: FC<P> = ({
       }))
       notifications[0].Today = todayNotification
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
   return (

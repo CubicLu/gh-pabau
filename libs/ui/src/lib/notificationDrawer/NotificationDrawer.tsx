@@ -8,6 +8,7 @@ import { ReactComponent as Lead2SVG } from '../../assets/images/lead1.svg'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment'
+import { notificationIcons } from './mock'
 
 interface Notification {
   notificationTime: string
@@ -76,6 +77,14 @@ export const NotificationDrawer: FC<P> = ({
   const closeDrawerMenu = () => {
     setNotificationDrawer(false)
     closeDrawer?.()
+  }
+
+  const getNotificationIcon = (type) => {
+    const notification1 = notificationIcons.find(
+      (notificationIcons) => notificationIcons.type === type
+    )
+    console.log('notification1', notification1)
+    return notification1?.icon
   }
 
   const removeSingleNotification = (index, dayIndex, objectKey) => {
@@ -170,10 +179,13 @@ export const NotificationDrawer: FC<P> = ({
                           <div className={classNames(styles.logo, styles.flex)}>
                             <Image
                               preview={false}
-                              src={dayNotify.notificationTypeIcon}
+                              src={getNotificationIcon(
+                                dayNotify.notificationType
+                              )}
                             />
                             <p className={styles.textSm}>
-                              {notificationTypes[
+                              {dayNotify.notificationType}
+                              {/* {notificationTypes[
                                 dayNotify.notificationType
                                   ?.toLowerCase()
                                   ?.replace(' ', '')
@@ -185,7 +197,7 @@ export const NotificationDrawer: FC<P> = ({
                                         ?.replace(' ', '')
                                     ]
                                   )
-                                : dayNotify.notificationType}
+                                : dayNotify.notificationType} */}
                             </p>
                           </div>
                           <div className={styles.time}>
