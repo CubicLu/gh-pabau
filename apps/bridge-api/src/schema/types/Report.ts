@@ -1,4 +1,4 @@
-import { extendType, nonNull, intArg } from 'nexus'
+import { extendType, nonNull, stringArg } from 'nexus'
 import { ReportInputDto } from '../../app/report'
 import fetch from 'node-fetch'
 import { Context } from '../../context'
@@ -9,9 +9,9 @@ export const Reports = extendType({
     t.field('retrieveReport', {
       type: 'Json',
       args: {
-        id: nonNull(intArg()),
-        start_date: nonNull(intArg()),
-        end_date: nonNull(intArg()),
+        id: nonNull(stringArg()),
+        start_date: nonNull(stringArg()),
+        end_date: nonNull(stringArg()),
       },
       async resolve(_, input: ReportInputDto, ctx: Context) {
         if (!input.id || !input.start_date || !input.end_date) {

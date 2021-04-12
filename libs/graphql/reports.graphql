@@ -21,3 +21,33 @@ query getReportByCode($code: String){
     }
   }
 }
+
+query listReportById($startDate: String!,$endDate: String!){
+    retrieveReport(
+      id: "team_report",
+      start_date: $startDate,
+      end_date: $endDate,
+    )
+}
+
+query miniGraphs($startDate: String!,$endDate: String!){
+  retrieveReport(
+    id: "mini_graphs",
+    start_date: $startDate,
+    end_date: $endDate,
+  )
+}
+
+query listReportById($reportId:String!,$startDate: String!,$endDate: String!){
+    retrieveReport(
+      id: $reportId,
+      start_date: $startDate,
+      end_date: $endDate,
+    )
+}
+
+# {
+#  "reportId": "10520",
+#  "startDate": "01-01-2020",
+#  "endDate": "31-03-2020"
+# }

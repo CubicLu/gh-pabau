@@ -69012,7 +69012,7 @@ type Query {
   reportCategory(where: ReportCategoryWhereUniqueInput!): ReportCategory
   reports(cursor: ReportWhereUniqueInput, orderBy: [ReportOrderByInput!], skip: Int, take: Int, where: ReportWhereInput): [Report!]!
   reportsCount(where: ReportWhereInput): Int
-  retrieveReport(end_date: Int!, id: Int!, start_date: Int!): Json
+  retrieveReport(end_date: String!, id: String!, start_date: String!): Json
   rotaShift(where: RotaShiftWhereUniqueInput!): RotaShift
   rotaShifts(cursor: RotaShiftWhereUniqueInput, orderBy: [RotaShiftOrderByInput!], skip: Int, take: Int, where: RotaShiftWhereInput): [RotaShift!]!
   rotaShiftsCount(where: RotaShiftWhereInput): Int
