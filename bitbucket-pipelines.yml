@@ -3,7 +3,6 @@ image: node:14-buster
 
 options:
   max-time: 45 # max time in minutes for each step
-  docker: true
 
 definitions:
   caches:
