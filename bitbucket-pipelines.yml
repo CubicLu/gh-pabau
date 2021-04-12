@@ -10,6 +10,9 @@ definitions:
     yarncustom: /usr/local/share/.cache/yarn
     nextcache: dist
     cypress: '/root/.cache/Cypress'
+  services:
+    docker:
+      memory: 6000
 
 pipelines:
   pull-requests:
@@ -142,6 +145,16 @@ pipelines:
 
       - step:
           size: 2x
+          name: deploy dockers
+          deployment: production-dockers
+          services:
+            - docker
+          script:
+            - apt-get update -y && apt-get install -y curl jq time
+            - NODE_OPTIONS=--max_old_space_size=2750 /usr/bin/time -v yarn affected --base=HEAD~1 --target=deploy-docker --prod
+
+      - step:
+          size: 2x
           name: deploy previews
           deployment: production-serverless
           script:
@@ -162,7 +175,7 @@ pipelines:
             - HUSKY=0 git push && HUSKY=0 git push --tags
             - export PACKAGE_JSON_VERSION=$(jq -r .version < package.json)
 
-            - NODE_OPTIONS=--max_old_space_size=2750 /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=deploy --prod --args="--configuration=production"
+            - NODE_OPTIONS=--max_old_space_size=2750 /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=deploy --prod
 
             - npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "HEAD~2" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message.txt
             - |
