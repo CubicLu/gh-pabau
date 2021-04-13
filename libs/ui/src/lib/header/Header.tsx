@@ -7,27 +7,22 @@ import {
   QuickCreate,
   NotificationDrawer,
   Logo,
-  useLiveQuery,
 } from '@pabau/ui'
 import { Search } from './search/Search'
 import PabauMessages from './messages/Messages'
 import classNames from 'classnames'
 import AppointmentSVG from '../../assets/images/notification.svg'
 import { gql } from '@apollo/client'
+import { useSubscription } from '@apollo/client'
 
 const AntHeader = Layout.Header
 
-const notificationsMockData = [
-  {
-    Today: [],
-  },
-]
-
 const LIST_QUERY = gql`
-  query notifications {
-    notifications {
+  subscription notifications {
+    notifications(order_by: { order: desc }) {
       id
       text
+      title
       notification_type {
         type
         type_name
@@ -49,16 +44,12 @@ interface P {
 }
 
 interface Notification {
-  notificationTime: string
+  notificationTime: Date
   notificationType: string
   notificationTypeIcon: string
   title: string
   desc: string
   read: boolean
-}
-
-interface NotificationData {
-  [key: string]: Notification[]
 }
 
 export const Header: FC<P> = ({
@@ -72,14 +63,13 @@ export const Header: FC<P> = ({
   )
   const [openMessageDrawer, setMessageDrawer] = useState<boolean>(false)
 
-  const { data } = useLiveQuery(LIST_QUERY)
-  console.log('data', data)
+  const { data } = useSubscription(LIST_QUERY)
 
-  const [notifications] = useState<NotificationData[]>(notificationsMockData)
+  const [notifications, setNotifications] = useState<Notification[]>()
 
   useEffect(() => {
-    if (data?.length > 0) {
-      const todayNotification = data.map((notification) => ({
+    if (data?.notifications?.length > 0) {
+      const todayNotification = data.notifications.map((notification) => ({
         notificationTime: notification?.created_at,
         notificationType: notification?.notification_type?.type_name,
         notificationTypeIcon: AppointmentSVG,
@@ -87,10 +77,10 @@ export const Header: FC<P> = ({
         desc: notification?.text,
         read: false,
       }))
-      notifications[0].Today = todayNotification
+      setNotifications(todayNotification)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data])
+  }, [data?.notifications])
 
   return (
     <>
@@ -116,7 +106,10 @@ export const Header: FC<P> = ({
             </Col>
             <Col md={10} lg={8} className={styles.headerIconEnd}>
               <div className={styles.headerAlign}>
-                <Badge count={3} className={styles.badgeCircle}>
+                <Badge
+                  count={notifications?.length}
+                  className={styles.badgeCircle}
+                >
                   <BellOutlined
                     className={styles.headerIcon}
                     onClick={() => setNotificationDrawer((e) => !e)}

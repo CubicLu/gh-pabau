@@ -37,9 +37,7 @@ export const NotificationDrawer: FC<P> = ({
   const { t } = useTranslation('common')
   const [notificationDrawer, setNotificationDrawer] = useState(openDrawer)
   const [notifyTab, setNotifyTab] = useState('Activity')
-  const [notificationData, setNotificationData] = useState<NotificationData[]>(
-    notifications
-  )
+  const [notificationData] = useState<NotificationData[]>(notifications)
   const notificationTypes = {
     report: 'notifications.report',
     appointment: 'notifications.appointment',
@@ -80,29 +78,28 @@ export const NotificationDrawer: FC<P> = ({
   }
 
   const getNotificationIcon = (type) => {
-    const notification1 = notificationIcons.find(
+    const notificationIcon = notificationIcons.find(
       (notificationIcons) => notificationIcons.type === type
     )
-    console.log('notification1', notification1)
-    return notification1?.icon
+    return notificationIcon?.icon
   }
 
-  const removeSingleNotification = (index, dayIndex, objectKey) => {
-    const selectedObject = notificationData[index]
-    selectedObject[objectKey].splice(dayIndex, 1)
-    if (selectedObject[objectKey].length === 0) {
-      notificationData.splice(index, 1)
-      setNotificationData([...notificationData])
-    } else {
-      const newNotificationData = notificationData.map((item, i) => {
-        if (i !== index) {
-          return item
-        }
-        return { ...selectedObject }
-      })
-      setNotificationData([...newNotificationData])
-    }
-  }
+  // const removeSingleNotification = (index, dayIndex, objectKey) => {
+  //   const selectedObject = notificationData[index]
+  //   selectedObject[objectKey].splice(dayIndex, 1)
+  //   if (selectedObject[objectKey].length === 0) {
+  //     notificationData.splice(index, 1)
+  //     setNotificationData([...notificationData])
+  //   } else {
+  //     const newNotificationData = notificationData.map((item, i) => {
+  //       if (i !== index) {
+  //         return item
+  //       }
+  //       return { ...selectedObject }
+  //     })
+  //     setNotificationData([...newNotificationData])
+  //   }
+  // }
 
   let lengths = 0
   for (const item of notificationData) {
@@ -150,100 +147,84 @@ export const NotificationDrawer: FC<P> = ({
           </button>
         </div>
       </div>
-
-      {notifyTab === 'Activity' &&
-        notificationData.map((notify, index) => {
-          return Object.keys(notify).map((notification) => {
-            return (
-              <div key={notification}>
-                <div
-                  className={classNames(
-                    styles.notificationAlign,
-                    styles.todayTextTopSpace
-                  )}
-                >
-                  <h2>
-                    {notify[notification].length > 0 &&
+      {notifyTab === 'Activity' && (
+        <div
+          className={classNames(
+            styles.notificationAlign,
+            styles.todayTextTopSpace
+          )}
+        >
+          <h2>
+            {t('notifications.today')}
+            {/* {notify[notification].length > 0 &&
                       (notification === 'Today'
                         ? t('notifications.today')
                         : notification === 'Yesterday'
                         ? t('notifications.yesterday')
-                        : notification)}
-                  </h2>
+                        : notification)} */}
+          </h2>
+        </div>
+      )}
+
+      {notifyTab === 'Activity' &&
+        notifications.map((notify, index) => {
+          return (
+            <div key={index}>
+              <div className={styles.notificationCard}>
+                <div className={styles.notifyAlign}>
+                  <div className={classNames(styles.logo, styles.flex)}>
+                    <Image
+                      preview={false}
+                      src={getNotificationIcon(notify.notificationType)}
+                    />
+                    <p className={styles.textSm}>
+                      {notify.notificationType}
+                      {/* {notificationTypes[
+                              dayNotify.notificationType
+                                ?.toLowerCase()
+                                ?.replace(' ', '')
+                            ]
+                              ? t(
+                                  notificationTypes[
+                                    dayNotify.notificationType
+                                      ?.toLowerCase()
+                                      ?.replace(' ', '')
+                                  ]
+                                )
+                              : dayNotify.notificationType} */}
+                    </p>
+                  </div>
+                  <div className={styles.time}>
+                    <p
+                      className={classNames(
+                        styles.textMd,
+                        styles.grayTextColor
+                      )}
+                    >
+                      {moment(notify.notificationTime.toString()).format(
+                        'hh:mm A'
+                      )}
+                      <CloseOutlined className={styles.notificationClearIcon} />
+                    </p>
+                  </div>
                 </div>
-                {notify[notification].map((dayNotify, dayIndex) => {
-                  return (
-                    <div key={dayIndex}>
-                      <div className={styles.notificationCard}>
-                        <div className={styles.notifyAlign}>
-                          <div className={classNames(styles.logo, styles.flex)}>
-                            <Image
-                              preview={false}
-                              src={getNotificationIcon(
-                                dayNotify.notificationType
-                              )}
-                            />
-                            <p className={styles.textSm}>
-                              {dayNotify.notificationType}
-                              {/* {notificationTypes[
-                                dayNotify.notificationType
-                                  ?.toLowerCase()
-                                  ?.replace(' ', '')
-                              ]
-                                ? t(
-                                    notificationTypes[
-                                      dayNotify.notificationType
-                                        ?.toLowerCase()
-                                        ?.replace(' ', '')
-                                    ]
-                                  )
-                                : dayNotify.notificationType} */}
-                            </p>
-                          </div>
-                          <div className={styles.time}>
-                            <p
-                              className={classNames(
-                                styles.textMd,
-                                styles.grayTextColor
-                              )}
-                            >
-                              {moment(dayNotify.notificationTime).format(
-                                'hh:mm A'
-                              )}
-                              <CloseOutlined
-                                className={styles.notificationClearIcon}
-                                onClick={() =>
-                                  removeSingleNotification(
-                                    index,
-                                    dayIndex,
-                                    notification
-                                  )
-                                }
-                              />
-                            </p>
-                          </div>
-                        </div>
-                        <div className={styles.descAlign}>
-                          <div className={styles.notifyTitleDesc}>
-                            <h1>{dayNotify.title}</h1>
-                            <p>{dayNotify.desc}</p>
-                          </div>
-                          <div className={styles.readStatus}>
-                            {!dayNotify.read && <span></span>}
-                          </div>
-                        </div>
-                      </div>
-                      <div className={styles.cardBorder} />
-                    </div>
-                  )
-                })}
+                <div className={styles.descAlign}>
+                  <div className={styles.notifyTitleDesc}>
+                    <h1>{notify.title}</h1>
+                    <p>{notify.desc}</p>
+                  </div>
+                  <div className={styles.readStatus}>
+                    {!notify.read && <span></span>}
+                  </div>
+                </div>
               </div>
-            )
-          })
+              <div className={styles.cardBorder} />
+            </div>
+          )
         })}
 
-      {Array.isArray(notificationData) &&
-        (notificationData.length === 0 || lengths === 0) &&
+      {Array.isArray(notifications) &&
+        notifications.length === 0 &&
         notifyTab === 'Activity' && (
           <div className={styles.notificationEmpty}>
             <EmptySVG />
