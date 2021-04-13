@@ -145,6 +145,15 @@ pipelines:
 
       - step:
           size: 2x
+          name: build
+          script:
+            - NODE_OPTIONS=--max_old_space_size=4096 yarn affected --base=HEAD~1 --target=build --prod
+          artifacts:
+            - node_modules/.cache/**
+            - dist/**
+
+      - step:
+          size: 2x
           name: deploy dockers
           deployment: production-dockers
           services:

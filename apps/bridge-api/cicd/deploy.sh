@@ -8,10 +8,6 @@ echo "DEBUG: app_name=${APP_NAME}"
 #echo "ABORTING UNTIL https://github.com/prisma/prisma/issues/5304 IS FIXED!!!!"
 #exit;
 
-echo "Building..."
-yarn run nx run "${APP_NAME}:build" --prod
-echo "Done"
-
 echo "Copying assets..."
 mkdir -p "dist/apps/${APP_NAME}/prisma"
 cp "apps/${APP_NAME}/package.json-prod" "dist/apps/${APP_NAME}/"
