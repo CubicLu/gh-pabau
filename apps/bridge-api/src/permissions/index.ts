@@ -12,6 +12,11 @@ const rules = {
       }
     }
   ),
+  isAdmin: rule('isAdmin')(
+    async (root, args, ctx: Context): Promise<boolean> => {
+      return ctx?.req?.authenticatedUser?.admin ?? false
+    }
+  ),
   belongsToCompanyAndShared: rule('belongsToCompanyAndShared')(
     async (root, args, ctx: Context, info): Promise<boolean> => {
       try {
@@ -27,6 +32,7 @@ const rules = {
         }
       } catch (error) {
         console.error(error)
+        return false
       }
     }
   ),
@@ -40,65 +46,165 @@ const rules = {
         return true
       } catch (error) {
         console.error(error)
+        return false
+      }
+    }
+  ),
+  isAccessingReportData: rule('isAccessingReportData')(
+    async (root, args, ctx: Context): Promise<boolean> => {
+      try {
+        args.where = {
+          ...args.where,
+          company_id: {
+            in: [0, ctx.req.authenticatedUser.company],
+          },
+        }
+        return true
+      } catch (error) {
+        console.error(error)
+        return false
       }
     }
   ),
   interceptMutation: rule('interceptMutation')(
     async (root, args, ctx: Context, info): Promise<boolean> => {
-      try {
-        if (
-          info.operation.name.value.includes('add') &&
-          !args.data?.company?.connect?.id
-        ) {
-          if (args.data.company) {
-            args.data = {
-              ...args.data,
-              company: {
-                connect: { id: ctx.req.authenticatedUser.company },
-              },
-            }
-          } else if (args.data.Company) {
-            args.data = {
-              ...args.data,
-              Company: {
-                connect: { id: ctx.req.authenticatedUser.company },
-              },
-            }
+      if (info?.fieldName?.includes('create')) {
+        if (args.data?.company?.connect?.id) {
+          return (
+            args.data?.company?.connect?.id ===
+            ctx.req.authenticatedUser.company
+          )
+        } else if (args.data?.Company?.connect?.id) {
+          return (
+            args.data?.Company?.connect?.id ===
+            ctx.req.authenticatedUser.company
+          )
+        } else if (args.data.company) {
+          args.data = {
+            ...args.data,
+            company: {
+              connect: { id: ctx.req.authenticatedUser.company },
+            },
           }
+          return true
+        } else if (args.data.Company) {
+          args.data = {
+            ...args.data,
+            Company: {
+              connect: { id: ctx.req.authenticatedUser.company },
+            },
+          }
+          return true
         }
-        return true
-      } catch (error) {
-        console.error(error)
+        return false
+      } else if (info?.fieldName?.includes('updateMany')) {
+        if (args.where?.company_id) {
+          return args.where?.company_id === ctx.req.authenticatedUser.company
+        } else if (args.where.company) {
+          args.where = {
+            ...args.where,
+            company: {
+              id: { equals: ctx.req.authenticatedUser.company },
+            },
+          }
+          return true
+        } else if (args.where.Company) {
+          args.where = {
+            ...args.where,
+            Company: {
+              id: { equals: ctx.req.authenticatedUser.company },
+            },
+          }
+          return true
+        }
+        return false
       }
+      return true
     }
   ),
 }
 export const permissions = shield(
   {
     Mutation: {
-      setOneCompanyMeta: rules.isAuthenticated,
+      //UserPermission
+      updateManyUserMainPermission: and(rules.isAuthenticated, rules.isAdmin),
+      updateOneUserPermission: and(rules.isAuthenticated, rules.isAdmin),
+      deleteOneUserPermission: and(rules.isAuthenticated, rules.isAdmin),
+      createOneUserPermission: and(rules.isAuthenticated, rules.isAdmin),
+      //StaffMeta
+      createOneStaffMeta: and(rules.isAuthenticated, rules.isAdmin),
+      updateOneStaffMeta: and(rules.isAuthenticated, rules.isAdmin),
+      deleteOneStaffMeta: and(rules.isAuthenticated, rules.isAdmin),
+      //CompanyMeta
+      setOneCompanyMeta: and(rules.isAuthenticated, rules.isAdmin),
+      //Page
+      createOnePage: rules.isAuthenticated,
+      updateOnePage: and(rules.isAuthenticated, rules.isAdmin),
+      deleteOnePage: and(rules.isAuthenticated, rules.isAdmin),
+      //Country
+      createOneCountry: rules.isAuthenticated,
+      //MedicalFormContact
+      createOneMedicalFormContact: rules.isAuthenticated,
+      //CmContactNode
+      createOneCmContactNote: rules.isAuthenticated,
+      //UserGroup
+      createOneUserGroup: and(rules.isAuthenticated, rules.isAdmin),
+      updateOneUserGroup: and(rules.isAuthenticated, rules.isAdmin),
+      deleteOneUserGroup: and(rules.isAuthenticated, rules.isAdmin),
+      //Pabau bespoke
       login: allow,
       logout: rules.isAuthenticated,
-      '*': and(rules.isAuthenticated, rules.interceptMutation),
+      upsertManyStaffMetaByGroupId: and(rules.isAuthenticated, rules.isAdmin),
+      '*': and(rules.isAuthenticated, rules.isAdmin, rules.interceptMutation),
     },
     Query: {
-      findFirstReport: rules.isAuthenticated,
-      reports: rules.isAuthenticated,
-      report: rules.isAuthenticated,
+      //StaffMeta
+      findFirstStaffMeta: rules.isAuthenticated,
+      staffMeta: rules.isAuthenticated,
+      staffMetas: rules.isAuthenticated,
+      //UserGroup
+      userGroupMembers: rules.isAuthenticated,
+      userGroup: rules.isAuthenticated,
+      findFirstUserGroupMember: rules.isAuthenticated,
+      //Report
+      findFirstReport: and(rules.isAuthenticated, rules.isAccessingReportData),
+      reports: and(rules.isAuthenticated, rules.isAccessingReportData),
+      //ReportCategory
+      findFirstReportCategory: and(
+        rules.isAuthenticated,
+        rules.isAccessingReportData
+      ),
+      reportCategories: and(rules.isAuthenticated, rules.isAccessingReportData),
+      //BnfDrug
       bnfDrug: rules.isAuthenticated,
       bnfDrugs: rules.isAuthenticated,
+      //TrainingCourse
       trainingCourses: rules.isAuthenticated,
       trainingCoursesCount: rules.isAuthenticated,
-      me: rules.isAuthenticated,
-      reportCategories: rules.isAuthenticated,
+      //Page
+      page: rules.isAuthenticated,
+      pages: rules.isAuthenticated,
+      findFirstPage: rules.isAuthenticated,
+      //CmContactNote
+      cmContactNotes: rules.isAuthenticated,
+      //UserMainPermission
       userMainPermissions: rules.isAuthenticated,
+      //UserAlert
       userAlerts: rules.isAuthenticated,
+      //UserAlertType
       userAlertTypes: rules.isAuthenticated,
+      //SocialSurveyAnswer
       socialSurveyAnswers: rules.isAuthenticated,
-      company: and(
-        rules.isAuthenticated,
-        rules.isAccessingAuthenticatedCompany
-      ),
+      //Country
+      countries: rules.isAuthenticated,
+      //MedicalFormContact
+      medicalFormContacts: rules.isAuthenticated,
+      //UserPermission
+      userPermissions: rules.isAuthenticated,
+      findFirstUserPermission: rules.isAuthenticated,
+      //Authentication
+      me: rules.isAuthenticated,
+      company: rules.isAuthenticated,
       companies: and(
         rules.isAuthenticated,
         rules.isAccessingAuthenticatedCompany

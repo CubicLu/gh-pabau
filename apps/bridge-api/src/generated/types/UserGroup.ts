@@ -57,6 +57,5 @@ export const userGroupMutation = extendType({
     t.crud.updateOneUserGroup()
     t.crud.upsertOneUserGroup()
     t.crud.deleteOneUserGroup()
-    t.crud.updateManyUserGroup()
   },
 })

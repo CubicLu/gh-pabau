@@ -202,6 +202,22 @@ export interface Company {
   TrainCourseDate?: TrainCourseDate[];
   XeroIntegration?: XeroIntegration[];
   CmLead?: CmLead[];
+  CmContactJson?: CmContactJson[];
+  CmContactLocation?: CmContactLocation[];
+  CmContactTravel?: CmContactTravel[];
+  CmContactViewed?: CmContactViewed[];
+  CmContactMedicalCondition?: CmContactMedicalCondition[];
+  CmDrug?: CmDrug[];
+  InvProduct?: InvProduct[];
+  CmExtraPatient?: CmExtraPatient[];
+  CmExtraSalon?: CmExtraSalon[];
+  CompanyPermission?: CompanyPermission[];
+  CompanyPolicy?: CompanyPolicy[];
+  InvPayment?: InvPayment[];
+  BookitProGeneral?: BookitProGeneral[];
+  MessageTemplate?: MessageTemplate[];
+  TemplateFolder?: TemplateFolder[];
+  UserActivityLog?: UserActivityLog[];
 }
 
 export interface AdvertCampaign {
@@ -719,6 +735,7 @@ export interface BookitProGeneral {
   force_new_existing_patient: boolean;
   redirect_url: string;
   connect_url?: string;
+  Company: Company;
 }
 
 export interface BookitProSlider {
@@ -814,6 +831,7 @@ export interface MarketingSource {
   public: boolean;
   imported: number;
   company: Company;
+  CmExtraPatient?: CmExtraPatient[];
 }
 
 export interface MediaLlibraryAttachment {
@@ -1508,6 +1526,65 @@ export interface CmContact {
   CmContactAlert?: CmContactAlert[];
   AccountBalance?: AccountBalance[];
   AccountBalanceLog?: AccountBalanceLog[];
+  CmContactLocation?: CmContactLocation[];
+  CmContactTravel?: CmContactTravel[];
+  CmContactViewed?: CmContactViewed[];
+  CmContactMedicalCondition?: CmContactMedicalCondition[];
+  CmContactNote?: CmContactNote[];
+  MedicalFormContact?: MedicalFormContact[];
+  CmExtraGym?: CmExtraGym[];
+  CmExtraPatient?: CmExtraPatient[];
+  CmExtraSalon?: CmExtraSalon[];
+  InvPayment?: InvPayment[];
+}
+
+export interface CmContactJson {
+  id: number;
+  company_id: number;
+  clients_json: string;
+  date_updated: Date;
+  Company: Company;
+}
+
+export interface CmContactLocation {
+  id: number;
+  company_id: number;
+  contact_id: number;
+  location_id: number;
+  Company: Company;
+  Location: CompanyBranch;
+  CmContact: CmContact;
+}
+
+export interface CmContactTravel {
+  id: number;
+  contact_id: number;
+  country_id: number;
+  start_date: Date;
+  end_date: Date;
+  company_id: number;
+  duration: string;
+  mode: number;
+  uid: number;
+  medical_record_id: number;
+  creation_date: Date;
+  modified_date: Date;
+  Company: Company;
+  CmContact: CmContact;
+  Country: Country;
+  User: User;
+  MedicalFormContact: MedicalFormContact;
+}
+
+export interface CmContactViewed {
+  id: number;
+  contact_id: number;
+  user_id: number;
+  company_id: number;
+  date: Date;
+  Company: Company;
+  User: User;
+  CmContact: CmContact;
 }
 
 export interface CmContactAlert {
@@ -1523,6 +1600,136 @@ export interface CmContactAlert {
   User: User;
   CmContact: CmContact;
   MedicalCondition: MedicalCondition;
+}
+
+export interface CmContactMedicalCondition {
+  id: number;
+  company_id: number;
+  contact_id: number;
+  medical_condition_id: number;
+  medical_record_id: number;
+  is_active: boolean;
+  CmContact: CmContact;
+  Company: Company;
+  MedicalCondition: MedicalCondition;
+}
+
+export interface CmContactNote {
+  ID: number;
+  OwnerID: number;
+  ContactID: number;
+  Note: string;
+  Status: cm_contact_notes_Status;
+  CreatedDate: Date;
+  IpAddress: string;
+  imported: boolean;
+  User: User;
+  CmContact: CmContact;
+}
+
+export interface CmCoupon {
+  id: number;
+  coupon_title: string;
+  coupon_details: string;
+  coupon_image: string;
+  coupon_start_date: string;
+  coupon_expiry_date: string;
+  coupon_code: string;
+  coupon_amount: string;
+  coupon_rate_type: string;
+  coupon_created_date: Date;
+  company_id: number;
+  created_by: number;
+  coupon_impressions: number;
+  coupons_sent: number;
+  coupon_max_amount: number;
+  CmCouponClaimed?: CmCouponClaimed[];
+  CmCouponClick?: CmCouponClick[];
+}
+
+export interface CmCouponClaimed {
+  id: number;
+  coupon_id: number;
+  claim_date: Date;
+  claim_full_name: string;
+  claim_email: string;
+  active: number;
+  CmCoupon: CmCoupon;
+}
+
+export interface CmCouponClick {
+  id: number;
+  coupon_id: number;
+  click_date: Date;
+  CmCoupon: CmCoupon;
+}
+
+export interface CmDrug {
+  id: number;
+  name: string;
+  company_id: number;
+  dosage: string;
+  units: string;
+  frequency: string;
+  route: string;
+  comment: string;
+  is_active: boolean;
+  product_id: number;
+  lot_number: string;
+  expiry_date: Date;
+  field_order?: number;
+  is_vaccine: number;
+  is_required: number;
+  custom_id: string;
+  max_age: number;
+  min_age: number;
+  nathnac_link: string;
+  travax_link: string;
+  Company: Company;
+  InvProduct: InvProduct;
+}
+
+export interface CmExtraGym {
+  id: number;
+  contact_id: number;
+  primary_goal: string;
+  intro_class: string;
+  age_group: string;
+  occupier: number;
+  skill_level: string;
+  membership: string;
+  CmContact: CmContact;
+}
+
+export interface CmExtraPatient {
+  id: number;
+  contact_id: number;
+  nhs_number: number;
+  gp: string;
+  surgeon: string;
+  company_id: number;
+  date_of_death: string;
+  external_clinic: string;
+  assigned_clinic: string;
+  treatment_group: number;
+  assigned_diary: number;
+  marketing_source: number;
+  referral_source: number;
+  Company: Company;
+  CmContact: CmContact;
+  MarketingSource: MarketingSource;
+}
+
+export interface CmExtraSalon {
+  id: number;
+  contact_id: number;
+  primary_service: string;
+  hair_length: string;
+  hair_texture: string;
+  company_id: number;
+  skin_type: string;
+  CmContact: CmContact;
+  Company: Company;
 }
 
 export interface CmLead {
@@ -1592,6 +1799,7 @@ export interface MedicalCondition {
   custom_id: string;
   is_common: number;
   CmContactAlert?: CmContactAlert[];
+  CmContactMedicalCondition?: CmContactMedicalCondition[];
 }
 
 export interface CmStaffGeneral {
@@ -1617,8 +1825,8 @@ export interface CmStaffGeneral {
   Email: string;
   Status: number;
   EmployeeNumber: string;
-  HireDate: Date;
-  RenewalDate: Date;
+  HireDate?: Date;
+  RenewalDate?: Date;
   max_vacation_days?: number;
   Location: string;
   Position?: number;
@@ -1631,7 +1839,7 @@ export interface CmStaffGeneral {
   EEOCategory: number;
   NextReview?: Date;
   EnumStatus: cm_staff_general_EnumStatus;
-  CreatedDate: Date;
+  CreatedDate?: Date;
   IpAddress: number;
   pabau_id: number;
   DefaultLocation?: number;
@@ -1681,6 +1889,7 @@ export interface CompanyBranch {
   CompanyRoomLocation?: CompanyRoomLocation[];
   RotaShift?: RotaShift[];
   CmStaffGeneral?: CmStaffGeneral[];
+  CmContactLocation?: CmContactLocation[];
 }
 
 export interface CompanyDepartment {
@@ -1714,6 +1923,21 @@ export interface CompanyNote {
   is_alert: boolean;
   Company: Company;
   User: User;
+}
+
+export interface CompanyPermission {
+  id: number;
+  company_id: number;
+  section?: number;
+  Company: Company;
+  Page?: Page;
+}
+
+export interface CompanyPolicy {
+  id: number;
+  company_id: number;
+  privacy_policy: string;
+  Company: Company;
 }
 
 export interface CompanyPosition {
@@ -1812,6 +2036,29 @@ export interface CompanyService {
   CompanyRoomService?: CompanyRoomService[];
 }
 
+export interface Country {
+  country_id: number;
+  CountryCode: string;
+  country_name: string;
+  Currency: string;
+  Continent: string;
+  phone_prefix: number;
+  sms_base_rate: number;
+  date_format: string;
+  tax_name: string;
+  sms_multiplier: number;
+  general_information: string;
+  vaccine_recommendations: string;
+  other_risks: string;
+  outbreaks: string;
+  malaria: string;
+  nathnac_url: string;
+  travax_url: string;
+  gmaps_url: string;
+  custom_id: string;
+  CmContactTravel?: CmContactTravel[];
+}
+
 export interface GlCode {
   id: number;
   company_id: number;
@@ -1905,9 +2152,66 @@ export interface InvBiller {
   custom_id: number;
   imported: number;
   qualification: string;
-  is_disabled: number;
+  is_disabled: boolean;
   User?: User;
   Company?: Company;
+}
+
+export interface InvCategory {
+  id: number;
+  code: string;
+  name: string;
+  order?: number;
+  category_type?: string;
+  company_id?: number;
+  uid?: number;
+  created_date?: Date;
+  modified_date?: Date;
+  custom_id: number;
+  PriceListGroup_id: number;
+  imported: number;
+  technical: number;
+  image: string;
+  disabled: number;
+  tax_id: number;
+  master_cat_id: number;
+  InvProduct?: InvProduct[];
+}
+
+export interface InvPayment {
+  id: number;
+  from: string;
+  date: number;
+  amount: number;
+  invoice: number;
+  pmethod: string;
+  account_balance?: number;
+  contact_id?: number;
+  company_id: number;
+  order_id?: number;
+  uid: number;
+  card_type: string;
+  charge_amount: number;
+  card_digits: number;
+  datetime?: Date;
+  note: string;
+  new_way2: number;
+  new_way3: number;
+  ref_num: string;
+  custom_pmethod: string;
+  xero_payment_id: string;
+  is_insurance?: number;
+  payment_id?: number;
+  custom_id: number;
+  imported: number;
+  custom_contact_id: number;
+  custom_contact_name: string;
+  custom_invoice_id: number;
+  insurer_id: number;
+  is_credit_note: number;
+  CmContact?: CmContact;
+  User: User;
+  Company: Company;
 }
 
 export interface InvPaymentType {
@@ -1923,6 +2227,49 @@ export interface InvPaymentType {
   is_money: number;
   type: string;
   GlCode?: GlCode;
+}
+
+export interface InvProduct {
+  id: number;
+  code: string;
+  name: string;
+  sku?: string;
+  unit?: string;
+  size: string;
+  product_order?: number;
+  um: string;
+  cost?: number;
+  price: number;
+  alert_quantity: number;
+  show_on_website?: string;
+  image?: string;
+  category_id: number;
+  supplier_id?: number;
+  note?: string;
+  company_id?: number;
+  uid?: number;
+  created_date?: Date;
+  modified_date?: Date;
+  Description: string;
+  custom_id: string;
+  category_custom_id: number;
+  PriceListGroup_id: number;
+  VATRate_id: number;
+  imported: number;
+  old_barcode: string;
+  max_level: number;
+  is_active: number;
+  product_points: number;
+  open_sale: number;
+  new_imported: number;
+  sage_nominal_code: string;
+  procedure_date: Date;
+  product_account_code_xero: string;
+  allow_negative_qty: boolean;
+  User?: User;
+  Company?: Company;
+  InvCategory: InvCategory;
+  CmDrug?: CmDrug[];
 }
 
 export interface Job {
@@ -1995,6 +2342,64 @@ export interface JobStatus {
   Company: Company;
 }
 
+export interface MedicalFormContact {
+  id: number;
+  form_id?: number;
+  contact_id?: number;
+  created_at?: Date;
+  updated_at?: Date;
+  deleted_at?: Date;
+  complete: number;
+  locked: number;
+  user_created: number;
+  user_updated: number;
+  related_to: number;
+  custom_user_name: string;
+  prescriber: number;
+  priority: string;
+  pharmacy_id: number;
+  form_status: number;
+  comments?: string;
+  urgent?: number;
+  imported: number;
+  custom_contact_name: string;
+  custom_contact_id: number;
+  approved_triggers?: string;
+  actioned_by?: number;
+  form_contact_number: number;
+  diagnosis_code: string;
+  CmContact?: CmContact;
+  CmContactTravel?: CmContactTravel[];
+}
+
+export interface MessageTemplate {
+  template_id: number;
+  company_id: number;
+  template_name: string;
+  subject: string;
+  message: string;
+  created_by?: number;
+  template_type: string;
+  created_at?: Date;
+  date_changed_at?: Date;
+  template_sub_type: number;
+  template_sub_type_service: number;
+  parent_id?: number;
+  header: string;
+  footer: string;
+  exclude_margins: number;
+  template_group: string;
+  subtype_letter: string;
+  word_template: string;
+  is_default: boolean;
+  folder_id?: number;
+  Company: Company;
+  TemplateFolder?: TemplateFolder;
+  User?: User;
+  ParrentTemplate?: MessageTemplate;
+  MessageTemplate?: MessageTemplate[];
+}
+
 export interface PointOfSaleSetting {
   id: number;
   company_id: number;
@@ -2048,7 +2453,7 @@ export interface Page {
   id: number;
   name: string;
   link: string;
-  parent: number;
+  parent?: number;
   category: string;
   showcase: number;
   description: string;
@@ -2067,6 +2472,9 @@ export interface Page {
   private_key: string;
   new_url: string;
   UserPermission?: UserPermission[];
+  CompanyPermission?: CompanyPermission[];
+  ParrentPage?: Page;
+  Page?: Page[];
 }
 
 export interface PermissionTemplate {
@@ -2088,7 +2496,7 @@ export interface PermissionTemplate {
 
 export interface Report {
   id: number;
-  report_category_id: number;
+  report_category_id?: number;
   name?: string;
   description?: string;
   company_id: number;
@@ -2151,7 +2559,7 @@ export interface Report {
   summary_mode: number;
   graph_mode: number;
   detailed_mode: number;
-  ReportCategory: ReportCategory;
+  ReportCategory?: ReportCategory;
   UserReport?: UserReport[];
 }
 
@@ -2286,6 +2694,23 @@ export interface SocialSurveyQuestion {
   Company: Company;
 }
 
+export interface StaffMeta {
+  id: number;
+  staff_id?: number;
+  meta_name?: string;
+  meta_value?: string;
+  User?: User;
+}
+
+export interface TemplateFolder {
+  id: number;
+  company_id: number;
+  folder_name: string;
+  folder_description: string;
+  Company: Company;
+  MessageTemplate?: MessageTemplate[];
+}
+
 export interface TrainingCourse {
   id: number;
   course_name: string;
@@ -2363,19 +2788,19 @@ export interface User {
   clocked_out?: Date;
   last_password_reset: number;
   force_password: number;
-  limited_user: number;
-  can_void: number;
+  limited_user: boolean;
+  can_void: boolean;
   can_refund: boolean;
-  can_report: number;
-  can_rota: number;
-  staff_read_only: number;
-  stock_read_only: number;
-  all_reports: number;
+  can_report: boolean;
+  can_rota: boolean;
+  staff_read_only: boolean;
+  stock_read_only: boolean;
+  all_reports: boolean;
   performance_stats: number;
-  disable_tutorial: number;
-  all_services: number;
-  delete_treatment: number;
-  admin_tasks: number;
+  disable_tutorial: boolean;
+  all_services: boolean;
+  delete_treatment: boolean;
+  admin_tasks: boolean;
   admin_leads: number;
   imported: number;
   login_fail_count: number;
@@ -2384,20 +2809,20 @@ export interface User {
   disable_multiple_clinics: number;
   is_hcp: number;
   login_disabled: number;
-  can_patient_appoint: number;
-  can_patient_communicatons: number;
-  can_patient_photos: number;
-  can_patient_fiancials: number;
-  can_patient_treatments: number;
-  can_patient_docs: number;
-  can_patient_packages: number;
-  can_patient_prescription: number;
-  can_patient_consents: number;
-  can_patient_giftvoucher: number;
-  can_patient_loyalty: number;
-  can_patient_recall: number;
-  can_patient_memberships: number;
-  can_cancel_booking: number;
+  can_patient_appoint: boolean;
+  can_patient_communicatons: boolean;
+  can_patient_photos: boolean;
+  can_patient_fiancials: boolean;
+  can_patient_treatments: boolean;
+  can_patient_docs: boolean;
+  can_patient_packages: boolean;
+  can_patient_prescription: boolean;
+  can_patient_consents: boolean;
+  can_patient_giftvoucher: boolean;
+  can_patient_loyalty: boolean;
+  can_patient_recall: boolean;
+  can_patient_memberships: boolean;
+  can_cancel_booking: boolean;
   notify_on_booking: boolean;
   can_edit_communications: boolean;
   can_delete_communications: boolean;
@@ -2409,19 +2834,19 @@ export interface User {
   restored: number;
   google_auth_secret?: string;
   default_contract_id: number;
-  can_see_personal: number;
-  appear_on_rota: number;
-  can_patient_medical_history: number;
+  can_see_personal: boolean;
+  appear_on_rota: boolean;
+  can_patient_medical_history: boolean;
   can_lab_requests: boolean;
   detailed_view: number;
-  can_make_blockout: number;
-  can_delete_blockout: number;
-  can_move_blockout: number;
+  can_make_blockout: boolean;
+  can_delete_blockout: boolean;
+  can_move_blockout: boolean;
   main_contact: boolean;
   UserSecurityQuestionsAnswer?: UserSecurityQuestionsAnswer[];
   company?: Company;
   RotaShift?: RotaShift[];
-  UserGroupMember?: UserGroupMember[];
+  UserGroupMember?: UserGroupMember;
   UserMainPermission?: UserMainPermission[];
   UserMobilePermission?: UserMobilePermission[];
   UserPermission?: UserPermission[];
@@ -2433,6 +2858,30 @@ export interface User {
   CmStaffGeneral?: CmStaffGeneral[];
   CompanyNote?: CompanyNote[];
   TrainCourseDate?: TrainCourseDate[];
+  CmContactTravel?: CmContactTravel[];
+  CmContactViewed?: CmContactViewed[];
+  CmContactNote?: CmContactNote[];
+  InvProduct?: InvProduct[];
+  InvPayment?: InvPayment[];
+  MessageTemplate?: MessageTemplate[];
+  UserActivityLog?: UserActivityLog[];
+  StaffMeta?: StaffMeta[];
+}
+
+export interface UserActivityLog {
+  ID: number;
+  userId?: number;
+  company_id: number;
+  accessId?: number;
+  type?: string;
+  template?: string;
+  time?: undefined;
+  status: user_activities_log_status;
+  ipAddress?: undefined;
+  pabau_annoucement?: number;
+  location_id?: number;
+  User?: User;
+  Company: Company;
 }
 
 export interface UserAlert {
@@ -2489,10 +2938,10 @@ export interface UserGroup {
 
 export interface UserGroupMember {
   id: number;
-  user_id: number;
-  group_id: number;
-  User: User;
-  UserGroup: UserGroup;
+  user_id?: number;
+  group_id?: number;
+  User?: User;
+  UserGroup?: UserGroup;
 }
 
 export interface UserMainPermission {

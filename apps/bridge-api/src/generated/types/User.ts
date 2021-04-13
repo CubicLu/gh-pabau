@@ -112,6 +112,14 @@ export const User = objectType({
     t.model.CmStaffGeneral()
     t.model.CompanyNote()
     t.model.TrainCourseDate()
+    t.model.CmContactTravel()
+    t.model.CmContactViewed()
+    t.model.CmContactNote()
+    t.model.InvProduct()
+    t.model.InvPayment()
+    t.model.MessageTemplate()
+    t.model.UserActivityLog()
+    t.model.StaffMeta()
   },
 })
 

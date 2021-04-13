@@ -10,6 +10,7 @@ export const MarketingSource = objectType({
     t.model.public()
     t.model.imported()
     t.model.company()
+    t.model.CmExtraPatient()
   },
 })
 

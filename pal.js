@@ -4,10 +4,21 @@ module.exports = {
     output: 'apps/bridge-api/src/generated/types',
     excludeQueriesAndMutations: [
       'deleteMany',
-      'upsertMany',
       'createMany',
     ],
     excludeQueriesAndMutationsByModel: {
+      StaffMeta: [
+        'updateMany',
+      ],
+      UserGroup: [
+        'updateMany',
+      ],
+      CompanyPermission: [
+        'updateMany',
+      ],
+      CmContactLocation: [
+        'updateMany',
+      ],
       companyMeta: [
         'upsertOne',
         'updateMany'
