@@ -6,7 +6,17 @@ import styles from './Layout.module.less'
 import classNames from 'classnames'
 
 const { Content } = AntLayout
+
+interface Notification {
+  notificationTime: Date
+  notificationType: string
+  notificationTypeIcon?: string
+  title: string
+  desc: string
+  read: boolean
+}
 export interface LayoutProps {
+  notifications?: Notification[]
   pageTitle?: string
   newButtonText?: string
   onNewClicked?: string | (() => void)
@@ -37,6 +47,7 @@ export const Layout: FC<LayoutProps> = ({
   children,
   active,
   legacyContent = false,
+  notifications,
   ...rest
 }) => {
   const [collapsed, setCollapsed] = useState(true)
@@ -48,6 +59,7 @@ export const Layout: FC<LayoutProps> = ({
           searchRender={searchRender}
           onCreateChannel={onCreateChannel}
           onMessageType={onMessageType}
+          notifications={notifications}
           {...rest}
         />
         <AntLayout className={styles.headerMargin}>

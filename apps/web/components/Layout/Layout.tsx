@@ -1,10 +1,36 @@
-import React, { FC } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { Layout as PabauLayout, LayoutProps, Iframe } from '@pabau/ui'
 import Search from '../Search'
 import useLogin from '../../hooks/authentication/useLogin'
 import Login from '../../pages/login'
 import { useRouter } from 'next/router'
 import { useDisabledFeaturesQuery } from '@pabau/graphql'
+import { useSubscription, gql } from '@apollo/client'
+
+interface Notification {
+  notificationTime: Date
+  notificationType: string
+  notificationTypeIcon?: string
+  title: string
+  desc: string
+  read: boolean
+}
+
+const LIST_QUERY = gql`
+  subscription notifications {
+    notifications(order_by: { order: desc }) {
+      id
+      text
+      title
+      notification_type {
+        type
+        type_name
+        title
+      }
+      created_at
+    }
+  }
+`
 
 const onMessageType = () => {
   //add mutation for send message textbox
@@ -17,8 +43,26 @@ const onCreateChannel = (name, description, isPrivate) => {
 
 const Layout: FC<LayoutProps> = ({ children, ...props }) => {
   const [authenticated, user] = useLogin(false)
+  const [notifications, setNotifications] = useState<Notification[]>()
   const router = useRouter()
   const { data, error, loading } = useDisabledFeaturesQuery()
+  const { data: notificationData } = useSubscription(LIST_QUERY)
+
+  useEffect(() => {
+    if (notificationData?.notifications?.length > 0) {
+      const todayNotification = notificationData.notifications.map(
+        (notification) => ({
+          notificationTime: notification?.created_at,
+          notificationType: notification?.notification_type?.type_name,
+          title: notification?.title,
+          desc: notification?.text,
+          read: false,
+        })
+      )
+      setNotifications(todayNotification)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [notificationData?.notifications])
 
   if (error) {
     return (
@@ -49,6 +93,7 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
   ) {
     return (
       <PabauLayout
+        notifications={notifications}
         searchRender={() => <Search />}
         onCreateChannel={onCreateChannel}
         onMessageType={onMessageType}

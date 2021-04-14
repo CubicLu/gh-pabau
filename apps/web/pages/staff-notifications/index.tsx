@@ -127,7 +127,7 @@ export const StaffNotifications: NextPage = () => {
                     <AntForm.Item label={'Loop'} name={'loop'}>
                       <Select name={'loop'} style={{ width: '100%' }}>
                         {loops.map((day) => (
-                          <Select.Option value={day}>
+                          <Select.Option key={day} value={day}>
                             {day + ' days'}
                           </Select.Option>
                         ))}

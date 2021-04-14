@@ -1,4 +1,4 @@
-import React, { FC, useState, MouseEvent, useEffect } from 'react'
+import React, { FC, useState, MouseEvent } from 'react'
 import { Badge, Col, Layout, Row } from 'antd'
 import { BellOutlined, MailOutlined } from '@ant-design/icons'
 import styles from './Header.module.less'
@@ -11,29 +11,20 @@ import {
 import { Search } from './search/Search'
 import PabauMessages from './messages/Messages'
 import classNames from 'classnames'
-import AppointmentSVG from '../../assets/images/notification.svg'
-import { gql } from '@apollo/client'
-import { useSubscription } from '@apollo/client'
 
 const AntHeader = Layout.Header
 
-const LIST_QUERY = gql`
-  subscription notifications {
-    notifications(order_by: { order: desc }) {
-      id
-      text
-      title
-      notification_type {
-        type
-        type_name
-        title
-      }
-      created_at
-    }
-  }
-`
+interface Notification {
+  notificationTime: Date
+  notificationType: string
+  notificationTypeIcon?: string
+  title: string
+  desc: string
+  read: boolean
+}
 
 interface P {
+  notifications?: Notification[]
   searchRender?: (innerComponent: JSX.Element) => JSX.Element
   onCreateChannel?: (
     name: string,
@@ -43,16 +34,8 @@ interface P {
   onMessageType?: (e: MouseEvent<HTMLElement>) => void
 }
 
-interface Notification {
-  notificationTime: Date
-  notificationType: string
-  notificationTypeIcon: string
-  title: string
-  desc: string
-  read: boolean
-}
-
 export const Header: FC<P> = ({
+  notifications,
   searchRender,
   onCreateChannel,
   onMessageType,
@@ -62,25 +45,6 @@ export const Header: FC<P> = ({
     false
   )
   const [openMessageDrawer, setMessageDrawer] = useState<boolean>(false)
-
-  const { data } = useSubscription(LIST_QUERY)
-
-  const [notifications, setNotifications] = useState<Notification[]>()
-
-  useEffect(() => {
-    if (data?.notifications?.length > 0) {
-      const todayNotification = data.notifications.map((notification) => ({
-        notificationTime: notification?.created_at,
-        notificationType: notification?.notification_type?.type_name,
-        notificationTypeIcon: AppointmentSVG,
-        title: notification?.title,
-        desc: notification?.text,
-        read: false,
-      }))
-      setNotifications(todayNotification)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data?.notifications])
 
   return (
     <>
