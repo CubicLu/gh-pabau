@@ -8,6 +8,7 @@ import { useDisabledFeaturesQuery } from '@pabau/graphql'
 import { useSubscription, gql } from '@apollo/client'
 
 interface Notification {
+  id: string
   notificationTime: Date
   notificationType: string
   notificationTypeIcon?: string
@@ -52,6 +53,7 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
     if (notificationData?.notifications?.length > 0) {
       const todayNotification = notificationData.notifications.map(
         (notification) => ({
+          id: notification.id,
           notificationTime: notification?.created_at,
           notificationType: notification?.notification_type?.type_name,
           title: notification?.title,

@@ -9,8 +9,10 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment'
 import { notificationIcons } from './mock'
+import { gql, useMutation } from '@apollo/client'
 
 interface Notification {
+  id: string
   notificationTime: string
   notificationType: string
   notificationTypeIcon: string
@@ -18,6 +20,15 @@ interface Notification {
   desc: string
   read: boolean
 }
+
+const DELETE_MUTATION = gql`
+  mutation delete_notifications_by_pk($id: uuid!) {
+    delete_notifications_by_pk(id: $id) {
+      __typename
+      id
+    }
+  }
+`
 
 interface NotificationData {
   [key: string]: Notification[]
@@ -48,6 +59,8 @@ export const NotificationDrawer: FC<P> = ({
     businessrefer: 'notifications.businessrefer',
     lead: 'notifications.lead',
   }
+
+  const [deleteMutation] = useMutation(DELETE_MUTATION)
 
   const notificationLeadsData = [
     {
@@ -100,6 +113,13 @@ export const NotificationDrawer: FC<P> = ({
   //     setNotificationData([...newNotificationData])
   //   }
   // }
+
+  const removeSingleNotification = async (id) => {
+    await deleteMutation({
+      variables: { id },
+      optimisticResponse: {},
+    })
+  }
 
   let lengths = 0
   for (const item of notificationData) {
@@ -204,7 +224,12 @@ export const NotificationDrawer: FC<P> = ({
                       {moment(notify.notificationTime.toString()).format(
                         'hh:mm A'
                       )}
-                      <CloseOutlined className={styles.notificationClearIcon} />
+                      <CloseOutlined
+                        onClick={() => {
+                          removeSingleNotification(notify.id)
+                        }}
+                        className={styles.notificationClearIcon}
+                      />
                     </p>
                   </div>
                 </div>

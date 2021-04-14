@@ -15,6 +15,7 @@ import classNames from 'classnames'
 const AntHeader = Layout.Header
 
 interface Notification {
+  id: string
   notificationTime: Date
   notificationType: string
   notificationTypeIcon?: string
