@@ -6,6 +6,18 @@ import { Formik } from 'formik'
 import { Col, Row, Button } from 'antd'
 import { gql, useMutation } from '@apollo/client'
 import { useLiveQuery, Notification, NotificationType } from '@pabau/ui'
+import { NextPage } from 'next'
+
+enum Users {
+  AllAdmins = 'All Admins',
+  AllUsers = 'All Users',
+}
+interface InitialStaffNotifications {
+  type: string
+  destination_id: string
+  users: Users
+  loop: number
+}
 
 const LIST_QUERY = gql`
   query notification_types {
@@ -34,8 +46,16 @@ const ADD_MUTATION = gql`
 `
 
 const users = ['All Admins', 'All Users']
+const loops = [2, 5, 7]
 
-export function StaffNotifications() {
+const initialValues: InitialStaffNotifications = {
+  type: '',
+  destination_id: '',
+  users: Users.AllUsers,
+  loop: null,
+}
+
+export const StaffNotifications: NextPage = () => {
   const { data: notificationTypes } = useLiveQuery(LIST_QUERY)
 
   const getNotificationType = (type) => {
@@ -71,13 +91,7 @@ export function StaffNotifications() {
         <div className={styles.mainContainer}>
           <Row>
             <Col md={8}>
-              <Formik
-                initialValues={{
-                  type: '',
-                  users: '',
-                }}
-                onSubmit={onSubmit}
-              >
+              <Formik initialValues={initialValues} onSubmit={onSubmit}>
                 {({ handleSubmit }) => (
                   <AntForm layout={'vertical'} requiredMark={false}>
                     <AntForm.Item label={'Notification Type'} name={'type'}>
@@ -94,14 +108,14 @@ export function StaffNotifications() {
                     </AntForm.Item>
                     <AntForm.Item
                       label={'Destination ID'}
-                      name={'name'}
+                      name={'destination_id'}
                       required
                     >
-                      <Select name={'Destination ID'} style={{ width: '100%' }}>
-                        <Select.Option value={'1'}>1</Select.Option>
+                      <Select name={'destination_id'} style={{ width: '100%' }}>
+                        <Select.Option value={'123'}>123</Select.Option>
                       </Select>
                     </AntForm.Item>
-                    <AntForm.Item label={'Users'} name={'users'} required>
+                    <AntForm.Item label={'Users'} name={'users'}>
                       <Select name={'users'} style={{ width: '100%' }}>
                         {users.map((role) => (
                           <Select.Option key={role} value={role}>
@@ -110,9 +124,13 @@ export function StaffNotifications() {
                         ))}
                       </Select>
                     </AntForm.Item>
-                    <AntForm.Item label={'Loop'} name={'name'} required>
-                      <Select name={'Loop'} style={{ width: '100%' }}>
-                        <Select.Option value={'1'}>1</Select.Option>
+                    <AntForm.Item label={'Loop'} name={'loop'}>
+                      <Select name={'loop'} style={{ width: '100%' }}>
+                        {loops.map((day) => (
+                          <Select.Option value={day}>
+                            {day + ' days'}
+                          </Select.Option>
+                        ))}
                       </Select>
                     </AntForm.Item>
                     <Button type="primary" onClick={() => handleSubmit()}>
