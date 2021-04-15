@@ -351,6 +351,81 @@
       filter: {}
 - table:
     schema: public
+    name: application_notification_type
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - id
+      - name
+      - type
+      - enabled
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - enabled
+      - name
+      - type
+      - id
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - enabled
+      - name
+      - type
+      - id
+      filter: {}
+      check: {}
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
+    name: application_notification_type_enum
+  is_enum: true
+- table:
+    schema: public
+    name: application_notifications
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - id
+      - user
+      - notification
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - user
+      - id
+      - notification
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - user
+      - id
+      - notification
+      filter: {}
+      check: {}
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
     name: appointment_status
   insert_permissions:
   - role: public
@@ -2184,10 +2259,13 @@
   - role: public
     permission:
       columns:
+      - created_at
+      - id
       - text
       - title
       - type
       - type_name
+      - updated_at
       filter: {}
   update_permissions:
   - role: public
@@ -2220,9 +2298,10 @@
     permission:
       check: {}
       columns:
-      - type
+      - sent_to
       - text
       - title
+      - type
       backend_only: false
   select_permissions:
   - role: public
@@ -2230,18 +2309,21 @@
       columns:
       - created_at
       - id
-      - type
+      - order
+      - sent_to
       - text
       - title
+      - type
       - updated_at
       filter: {}
   update_permissions:
   - role: public
     permission:
       columns:
-      - type
+      - sent_to
       - text
       - title
+      - type
       filter: {}
       check: null
   delete_permissions:
@@ -2904,4 +2986,28 @@
   delete_permissions:
   - role: public
     permission:
+      filter: {}
+- table:
+    schema: public
+    name: user_list
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - admin
+      - company
+      - first_name
+      - id
+      - last_name
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - admin
+      - company
+      - first_name
+      - id
+      - last_name
       filter: {}

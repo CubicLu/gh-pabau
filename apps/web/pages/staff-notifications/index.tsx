@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo, useRef } from 'react'
 import Layout from '../../components/Layout/Layout'
 import styles from './staff-notifications.module.less'
 import { Form as AntForm, Select } from 'formik-antd'
@@ -8,6 +8,7 @@ import { gql, useMutation } from '@apollo/client'
 import { useLiveQuery, Notification, NotificationType } from '@pabau/ui'
 import { NextPage } from 'next'
 import useLogin from '../../hooks/authentication/useLogin'
+import { find } from 'highcharts'
 
 enum Users {
   AllAdmins = 'All Admins',
@@ -19,6 +20,20 @@ interface InitialStaffNotifications {
   users: Users
   loop: number
 }
+
+const USER_LIST_QUERY = gql`
+  query user_list($isAdmin: Boolean = true, $company: numeric!) {
+    user_list(
+      where: { _and: { admin: { _eq: $isAdmin }, company: { _eq: $company } } }
+    ) {
+      id
+      first_name
+      last_name
+      admin
+      company
+    }
+  }
+`
 
 const LIST_QUERY = gql`
   query notification_types {
@@ -60,8 +75,23 @@ const initialValues: InitialStaffNotifications = {
 export const StaffNotifications: NextPage = () => {
   const { data: notificationTypes } = useLiveQuery(LIST_QUERY)
   const [authenticated, user] = useLogin(false)
+  const [userRole, setUserRole] = useState<'All Users' | 'All Admins'>(
+    'All Users'
+  )
+  const formRef = useRef(null)
 
-  console.log('user', user)
+  const getQueryVariables = useMemo(() => {
+    const queryOptions = {
+      variables: {
+        isAdmin: userRole === 'All Users' ? false : true,
+        company: user?.company,
+      },
+    }
+
+    return queryOptions
+  }, [userRole, user?.company])
+
+  const { data: userList } = useLiveQuery(USER_LIST_QUERY, getQueryVariables)
 
   const getNotificationType = (type) => {
     return notificationTypes.find((notification) => notification.type === type)
@@ -78,11 +108,15 @@ export const StaffNotifications: NextPage = () => {
 
   const onSubmit = async (values) => {
     const notificationType = getNotificationType(values.type)
+    const sent_users = []
+    for (const user of userList) {
+      sent_users.push(user.id)
+    }
     const body = {
       type: notificationType.type,
       title: notificationType.title,
       text: notificationType.text,
-      sent_to: [user.user],
+      sent_to: sent_users,
     }
 
     await addMutation({
@@ -97,8 +131,12 @@ export const StaffNotifications: NextPage = () => {
         <div className={styles.mainContainer}>
           <Row>
             <Col md={8}>
-              <Formik initialValues={initialValues} onSubmit={onSubmit}>
-                {({ handleSubmit }) => (
+              <Formik
+                innerRef={formRef}
+                initialValues={initialValues}
+                onSubmit={onSubmit}
+              >
+                {({ handleSubmit, handleChange }) => (
                   <AntForm layout={'vertical'} requiredMark={false}>
                     <AntForm.Item label={'Notification Type'} name={'type'}>
                       <Select name={'type'} style={{ width: '100%' }}>
@@ -122,7 +160,14 @@ export const StaffNotifications: NextPage = () => {
                       </Select>
                     </AntForm.Item>
                     <AntForm.Item label={'Users'} name={'users'}>
-                      <Select name={'users'} style={{ width: '100%' }}>
+                      <Select
+                        onChange={(e) => {
+                          setUserRole(e)
+                          handleChange(e)
+                        }}
+                        name={'users'}
+                        style={{ width: '100%' }}
+                      >
                         {users.map((role) => (
                           <Select.Option key={role} value={role}>
                             {role}
