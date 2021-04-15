@@ -41,6 +41,7 @@
     "connect-e2e": { "tags": [], "implicitDependencies": ["connect"] },
     "mobile": { "tags": [] },
     "bridge-api": { "tags": [] },
-    "i18n": { "tags": [] }
+    "i18n": { "tags": [] },
+    "bridge-proxy": { "tags": [] }
   }
 }

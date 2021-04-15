@@ -73,7 +73,6 @@
     "formik": "^2.2.6",
     "formik-antd": "^2.0.1",
     "google-libphonenumber": "^3.2.18",
-    "graphql": "^15.4.0",
     "graphql-middleware": "^6.0.4",
     "graphql-scalars": "^1.9.0",
     "highcharts": "^9.0.1",
@@ -244,5 +243,9 @@
   },
   "prisma": {
     "schema": "apps/bridge-api/prisma/schema.prisma"
+  },
+  "workspaces": {
+    "packages": ["apps/bridge-proxy"],
+    "nohoist": ["bridge-proxy/**"]
   }
 }

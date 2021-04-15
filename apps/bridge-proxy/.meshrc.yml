@@ -1,0 +1,8 @@
+serve:
+  port: 5006
+sources:
+  - name: Pabau
+    handler:
+      graphql:
+        endpoint: ''
+        customFetch: ../../../fetcher.ts#default

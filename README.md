@@ -188,6 +188,10 @@ To view the Backend, you can either visit [https://backend.pabau.com](https://ba
    HASURA_GRAPHQL_ENDPOINT=https://api.new.pabau.com/
    ```
 
+### bridge-proxy
+To run debug build locally, type `yarn nx serve bridge-proxy` - it listens on port 5006.
+To run production build locally, type `docker build -t bridge-proxy -f tools/cicd/bridge-proxy.Dockerfile apps/bridge-proxy/ && docker run --rm -p 5006:5006 -it bridge-proxy`
+
 ### Per-ticket
 
 1. Open the hasura console
