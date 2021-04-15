@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useRef } from 'react'
+import React, { useState, useMemo, useRef } from 'react'
 import Layout from '../../components/Layout/Layout'
 import styles from './staff-notifications.module.less'
 import { Form as AntForm, Select } from 'formik-antd'
@@ -8,7 +8,6 @@ import { gql, useMutation } from '@apollo/client'
 import { useLiveQuery, Notification, NotificationType } from '@pabau/ui'
 import { NextPage } from 'next'
 import useLogin from '../../hooks/authentication/useLogin'
-import { find } from 'highcharts'
 
 enum Users {
   AllAdmins = 'All Admins',
@@ -79,6 +78,7 @@ export const StaffNotifications: NextPage = () => {
     'All Users'
   )
   const formRef = useRef(null)
+  console.log(authenticated)
 
   const getQueryVariables = useMemo(() => {
     const queryOptions = {
