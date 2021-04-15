@@ -41,7 +41,7 @@ echo "BITBUCKET_PR_ID=${BITBUCKET_PR_ID}"
 echo "-----------------"
 
 echo "Docker build..."
-docker build --no-cache "dist/apps/${APP_NAME}" -t "${APP_NAME}" -f "tools/cicd/${APP_NAME}.Dockerfile"
+docker build --no-cache "apps/${APP_NAME}" -t "${APP_NAME}" -f "tools/cicd/${APP_NAME}.Dockerfile"
 echo "Docker tag..."
 docker image tag "${APP_NAME}:latest" "${DOCKER_HOSTNAME}/monorepo/${APP_NAME}"
 echo "Docker login..."

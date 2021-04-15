@@ -4,7 +4,7 @@
   "license": "Copyright Hambrand Technologies Ltd",
   "bump-rebuild-all": 12,
   "scripts": {
-    "nx": "nx",
+    "nx": "cross-env NODE_OPTIONS='--max-old-space-size=4096' nx",
     "vercel": "vercel",
     "apollo": "apollo",
     "nest": "cd apps/backend && nest",
@@ -66,6 +66,7 @@
     "class-validator": "^0.13.1",
     "classnames": "^2.2.6",
     "cookie-session": "^1.4.0",
+    "cross-env": "^7.0.3",
     "document-register-element": "1.14.10",
     "eslint-plugin-unicorn": "^28.0.2",
     "express-jwt": "^6.0.0",
@@ -245,7 +246,11 @@
     "schema": "apps/bridge-api/prisma/schema.prisma"
   },
   "workspaces": {
-    "packages": ["apps/bridge-proxy"],
-    "nohoist": ["bridge-proxy/**"]
+    "packages": [
+      "apps/bridge-proxy"
+    ],
+    "nohoist": [
+      "bridge-proxy/**"
+    ]
   }
 }
