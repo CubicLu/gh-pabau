@@ -6,13 +6,17 @@ import { renderToString } from 'react-dom/server'
 import AppointmentEmailPreview from '../../../components/ClientNotificationEmailPreview/appointmentReminderEmailPreview'
 import { apiURL } from '../../../baseUrl'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
-  const [setIndexTab, setSelectedTab] = useState(1)
+  const [selectedTab, setSelectedTab] = useState<'emailPreview' | 'smsPreview'>(
+    'emailPreview'
+  )
   const ref = useRef(null)
+  const { t } = useTranslationI18()
 
   const showNotification = (val) => {
-    if (setIndexTab === 1) {
+    if (selectedTab === 'emailPreview') {
       const propsData = ref?.current?.propsData() || {}
       const {
         requestConfirm,
@@ -67,8 +71,7 @@ const Index: FC = () => {
           Notification(NotificationType.error, 'Test Email failed')
         }
       })
-    }
-    if (setIndexTab === 2) {
+    } else if (selectedTab === 'smsPreview') {
       Notification(NotificationType.success, 'Test SMS sent')
     }
   }
@@ -79,27 +82,34 @@ const Index: FC = () => {
         breadcrumbItems={[
           {
             path: 'setup',
-            breadcrumbName: 'Setup',
+            breadcrumbName: t('notifications.breadcrumb.setup'),
           },
           {
             path: 'client-notifications',
-            breadcrumbName: 'Notification Messages',
+            breadcrumbName: t('notifications.breadcrumb.notificationMessage'),
           },
           {
             path: 'client-notifications/appointment-reminder',
-            breadcrumbName: 'Upcoming appointment reminder',
+            breadcrumbName: t(
+              'notifications.upcomingAppointmentReminder.title'
+            ),
           },
         ]}
-        title={'Upcoming appointment reminder'}
-        setIndexTab={setIndexTab}
+        title={t('notifications.upcomingAppointmentReminder.title')}
+        selectedTab={selectedTab}
         handleNotificationSubmit={showNotification}
       />
       <ClientNotification
         ref={ref}
-        onSeletedTab={(value) => setSelectedTab(value)}
-        standardMessage={
-          'The notification automatically sends to clients ahead of their appointment'
-        }
+        onSelectedTab={(value) => setSelectedTab(value)}
+        standardMessage={t(
+          'notifications.upcomingAppointmentReminder.standardMessage'
+        )}
+        showServiceSpecific={true}
+        type={'appointmentReminder'}
+        name={t('notifications.upcomingAppointmentReminder.title')}
+        langKey={'appointmentReminder'}
+        handleNotificationSubmit={showNotification}
       />
     </Layout>
   )

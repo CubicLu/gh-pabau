@@ -3,15 +3,18 @@ import { Notification, NotificationType } from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
 import ClientNotification from '../../../components/ClientNotification/index'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
-  const [setIndexTab, setSelectedTab] = useState(1)
+  const [selectedTab, setSelectedTab] = useState<'emailPreview' | 'smsPreview'>(
+    'emailPreview'
+  )
+  const { t } = useTranslationI18()
 
   const showNotification = (email) => {
-    if (setIndexTab === 1) {
+    if (selectedTab === 'emailPreview') {
       Notification(NotificationType.success, 'Test message sent')
-    }
-    if (setIndexTab === 2) {
+    } else if (selectedTab === 'smsPreview') {
       Notification(NotificationType.success, 'Test SMS sent')
     }
   }
@@ -22,28 +25,30 @@ const Index: FC = () => {
         breadcrumbItems={[
           {
             path: 'setup',
-            breadcrumbName: 'Setup',
+            breadcrumbName: t('notifications.breadcrumb.setup'),
           },
           {
             path: 'client-notifications',
-            breadcrumbName: 'Notification Messages',
+            breadcrumbName: t('notifications.breadcrumb.notificationMessage'),
           },
           {
             path: 'client-notifications/new-appointment',
-            breadcrumbName: 'New appointment is booked',
+            breadcrumbName: t('notifications.newAppointment.title'),
           },
         ]}
-        title={'New appointment is booked'}
-        setIndexTab={setIndexTab}
+        title={t('notifications.newAppointment.title')}
+        selectedTab={selectedTab}
         handleNotificationSubmit={showNotification}
       />
       <ClientNotification
-        onSeletedTab={(value) => setSelectedTab(value)}
+        onSelectedTab={(value) => setSelectedTab(value)}
         hideReminderTimeFrameTabPane={true}
-        standardMessage={
-          'This notification automatically sends to clients when they book their appointment'
-        }
+        standardMessage={t('notifications.newAppointment.standardMessage')}
         type={'newAppointment'}
+        showServiceSpecific={true}
+        name={t('notifications.newAppointment.title')}
+        langKey={'newAppointment'}
+        handleNotificationSubmit={showNotification}
       />
     </Layout>
   )

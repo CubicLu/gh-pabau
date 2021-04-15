@@ -3,15 +3,18 @@ import { Notification, NotificationType } from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
 import ClientNotification from '../../../components/ClientNotification/index'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
-  const [setIndexTab, setSelectedTab] = useState(1)
+  const [selectedTab, setSelectedTab] = useState<'emailPreview' | 'smsPreview'>(
+    'emailPreview'
+  )
+  const { t } = useTranslationI18()
 
   const showNotification = (email) => {
-    if (setIndexTab === 1) {
+    if (selectedTab === 'emailPreview') {
       Notification(NotificationType.success, 'Test message sent')
-    }
-    if (setIndexTab === 2) {
+    } else if (selectedTab === 'smsPreview') {
       Notification(NotificationType.success, 'Test SMS sent')
     }
   }
@@ -22,23 +25,23 @@ const Index: FC = () => {
         breadcrumbItems={[
           {
             path: 'setup',
-            breadcrumbName: 'Setup',
+            breadcrumbName: t('notifications.breadcrumb.setup'),
           },
           {
             path: 'client-notifications',
-            breadcrumbName: 'Notification Messages',
+            breadcrumbName: t('notifications.breadcrumb.notificationMessage'),
           },
           {
             path: 'client-notifications/invoice',
-            breadcrumbName: 'Outstanding Invoice',
+            breadcrumbName: t('notifications.invoice.outstanding.title'),
           },
         ]}
-        title={'Outstanding Invoice'}
-        setIndexTab={setIndexTab}
+        title={t('notifications.invoice.outstanding.title')}
+        selectedTab={selectedTab}
         handleNotificationSubmit={showNotification}
       />
       <ClientNotification
-        onSeletedTab={(value) => setSelectedTab(value)}
+        onSelectedTab={(value) => setSelectedTab(value)}
         hideReminderTimeFrameTabPane={true}
         hideRequestConfirmationOption={true}
         hideMedicalHistoryOption={true}
@@ -47,19 +50,12 @@ const Index: FC = () => {
         hideDisplayPolicyOption={true}
         hideServiceOption={true}
         hideEmployeeNameOption={true}
-        standardMessage={
-          'The default email template you will send with a clients Outstanding invoice attached'
-        }
+        standardMessage={t('notifications.invoice.outstanding.standardMessage')}
         type={'outstandingInvoice'}
+        name={t('notifications.invoice.outstanding.title')}
+        langKey={'outstandingInvoice'}
         hideEnablePay={false}
-        smsCustom={
-          'Hi Anna,\n' +
-          'I hope you are well.\n' +
-          'I just wanted to drop you a quick note to remind you that 02/03/2021 in respect of our invoice 00001 is due for payment on 31/03/2021.\n' +
-          'I would be really grateful if you could confirm that everything is on track for payment.\n' +
-          'Best regards,\n' +
-          'Rina\n'
-        }
+        handleNotificationSubmit={showNotification}
       />
     </Layout>
   )

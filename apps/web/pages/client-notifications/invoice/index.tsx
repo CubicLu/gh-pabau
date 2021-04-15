@@ -3,15 +3,18 @@ import { Notification, NotificationType } from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
 import ClientNotification from '../../../components/ClientNotification'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
-  const [selectedTab, setSelectedTab] = useState(1)
+  const [selectedTab, setSelectedTab] = useState<'emailPreview' | 'smsPreview'>(
+    'emailPreview'
+  )
+  const { t } = useTranslationI18()
 
   const showNotification = (email) => {
-    if (selectedTab === 1) {
+    if (selectedTab === 'emailPreview') {
       Notification(NotificationType.success, 'Test message sent')
-    }
-    if (selectedTab === 2) {
+    } else if (selectedTab === 'smsPreview') {
       Notification(NotificationType.success, 'Test SMS sent')
     }
   }
@@ -22,23 +25,23 @@ const Index: FC = () => {
         breadcrumbItems={[
           {
             path: 'setup',
-            breadcrumbName: 'Setup',
+            breadcrumbName: t('notifications.breadcrumb.setup'),
           },
           {
             path: 'client-notifications',
-            breadcrumbName: 'Notification Messages',
+            breadcrumbName: t('notifications.breadcrumb.notificationMessage'),
           },
           {
             path: 'client-notifications/invoice',
-            breadcrumbName: 'Invoice',
+            breadcrumbName: t('notifications.invoice.title'),
           },
         ]}
-        title={'Invoice'}
-        setIndexTab={selectedTab}
+        title={t('notifications.invoice.title')}
+        selectedTab={selectedTab}
         handleNotificationSubmit={showNotification}
       />
       <ClientNotification
-        onSeletedTab={(value) => setSelectedTab(value)}
+        onSelectedTab={(value) => setSelectedTab(value)}
         hideReminderTimeFrameTabPane={true}
         hideRequestConfirmationOption={true}
         hideMedicalHistoryOption={true}
@@ -47,10 +50,11 @@ const Index: FC = () => {
         hideDisplayPolicyOption={true}
         hideServiceOption={true}
         hideEmployeeNameOption={true}
-        standardMessage={
-          'The default email template you will send with a clients invoice attached'
-        }
+        standardMessage={t('notifications.invoice.standardMessage')}
         type={'invoice'}
+        name={t('notifications.invoice.title')}
+        langKey={'invoice'}
+        handleNotificationSubmit={showNotification}
       />
     </Layout>
   )

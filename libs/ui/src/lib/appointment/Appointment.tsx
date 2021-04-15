@@ -2,7 +2,7 @@
  * This is a Pabau Appointment
  */
 
-import React, { FC, useEffect } from 'react'
+import React, { FC } from 'react'
 import { Row, Col, Divider } from 'antd'
 import {
   InstagramOutlined,
@@ -10,7 +10,7 @@ import {
   LinkedinOutlined,
   TwitterOutlined,
 } from '@ant-design/icons'
-import { useTranslation } from 'react-i18next'
+import { TFunction } from 'i18next'
 import { Button } from '@pabau/ui'
 import styles from './Appointment.module.less'
 import { ReactComponent as NormalClinicLogo } from '../../assets/images/normal-clinic-logo.svg'
@@ -57,6 +57,7 @@ interface P {
   standardTapIndex?: string
   activeSocialIcons?: string[]
   type?: string
+  t: TFunction
 }
 
 export const Appointment: FC<P> = ({
@@ -75,16 +76,8 @@ export const Appointment: FC<P> = ({
   standardTapIndex,
   activeSocialIcons = [],
   type = '',
+  t,
 }) => {
-  const { t, i18n } = useTranslation('common')
-
-  useEffect(() => {
-    const lanCode = selectLanguage.toLowerCase()
-      ? selectLanguage.toLowerCase()
-      : 'en'
-    i18n.changeLanguage(lanCode)
-  }, [i18n, selectLanguage])
-
   function setSocialIcon(value) {
     if (value.includes('facebook')) {
       return <FacebookOutlined style={{ padding: '5px' }} />
@@ -132,7 +125,7 @@ export const Appointment: FC<P> = ({
 
   return (
     <div>
-      {standardTapIndex === '1' ? (
+      {standardTapIndex === 'standard' ? (
         <div
           className={styles.cardAppointment}
           style={{ backgroundColor: backGroundColor }}

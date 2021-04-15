@@ -3,15 +3,18 @@ import { Notification, NotificationType } from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
 import ClientNotification from '../../../components/ClientNotification/index'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
-  const [setIndexTab, setSelectedTab] = useState(1)
+  const [selectedTab, setSelectedTab] = useState<'emailPreview' | 'smsPreview'>(
+    'emailPreview'
+  )
+  const { t } = useTranslationI18()
 
   const showNotification = (email) => {
-    if (setIndexTab === 1) {
+    if (selectedTab === 'emailPreview') {
       Notification(NotificationType.success, 'Test message sent')
-    }
-    if (setIndexTab === 2) {
+    } else if (selectedTab === 'smsPreview') {
       Notification(NotificationType.success, 'Test SMS sent')
     }
   }
@@ -22,23 +25,23 @@ const Index: FC = () => {
         breadcrumbItems={[
           {
             path: 'setup',
-            breadcrumbName: 'Setup',
+            breadcrumbName: t('notifications.breadcrumb.setup'),
           },
           {
             path: 'client-notifications',
-            breadcrumbName: 'Notification Messages',
+            breadcrumbName: t('notifications.breadcrumb.notificationMessage'),
           },
           {
             path: 'client-notifications/connect-registration',
-            breadcrumbName: 'Connect registration',
+            breadcrumbName: t('notifications.connectRegistration.title'),
           },
         ]}
-        title={'Connect registration'}
-        setIndexTab={setIndexTab}
+        title={t('notifications.connectRegistration.title')}
+        selectedTab={selectedTab}
         handleNotificationSubmit={showNotification}
       />
       <ClientNotification
-        onSeletedTab={(value) => setSelectedTab(value)}
+        onSelectedTab={(value) => setSelectedTab(value)}
         hideReminderTimeFrameTabPane={true}
         hideRequestConfirmationOption={true}
         hideMedicalHistoryOption={true}
@@ -47,20 +50,11 @@ const Index: FC = () => {
         hideDisplayPolicyOption={true}
         hideServiceOption={true}
         hideEmployeeNameOption={true}
-        standardMessage={
-          'The email the client receives when they register to your Online Booking portal'
-        }
+        standardMessage={t('notifications.connectRegistration.standardMessage')}
         type={'connectRegistration'}
-        smsCustom={
-          'Account created\n' +
-          'Congratulations Sophia, your account has been successfully created. Follow this link to access your online account:\n' +
-          'URL://CONNECTURL\n' +
-          'Here are your login credentials:\n' +
-          'Username: Sophia17\n' +
-          'Password: Sophia0193091\n' +
-          'Kind regards,\n' +
-          'Your friends at The Clinic\n'
-        }
+        name={t('notifications.connectRegistration.title')}
+        langKey={'connectRegistration'}
+        handleNotificationSubmit={showNotification}
       />
     </Layout>
   )

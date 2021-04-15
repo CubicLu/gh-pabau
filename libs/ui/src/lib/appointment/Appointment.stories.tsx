@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Appointment from './Appointment'
 import iconEmailTemplate from '../../assets/images/icon-email-template.svg'
+import { useTranslation } from 'react-i18next'
 
 export default {
   component: Appointment,
@@ -68,6 +69,9 @@ const story = ({ ...args }) => {
   const [selectLanguage, SetSelectLanguage] = useState('en')
   const [medicalMessage, SetMedicalMessage] = useState('')
   const [informationMessage, SetInformationMessage] = useState('')
+
+  const { t } = useTranslation('common')
+
   return (
     <div style={{ width: '400px' }}>
       <Appointment
@@ -84,6 +88,7 @@ const story = ({ ...args }) => {
         buttonColor={buttonColor}
         informationMessage={informationMessage}
         medicalMessage={medicalMessage}
+        t={t}
       />
     </div>
   )

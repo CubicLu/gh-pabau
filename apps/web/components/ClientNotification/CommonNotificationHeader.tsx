@@ -13,24 +13,28 @@ import styles from '../../pages/client-notifications/style.module.less'
 import CommonHeader from '../../components/CommonHeader'
 import { DownOutlined, LeftOutlined } from '@ant-design/icons'
 import * as Yup from 'yup'
+import { useRouter } from 'next/router'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 
 const { Title } = Typography
 
 interface p {
-  setIndexTab: number
+  selectedTab: 'emailPreview' | 'smsPreview'
   handleNotificationSubmit?(val: string): void
   title: string
   breadcrumbItems: BreadcrumbItemInterface[]
 }
 
 const CommonNotificationHeader: FC<p> = ({
-  setIndexTab,
+  selectedTab,
   breadcrumbItems,
   title,
   handleNotificationSubmit,
 }) => {
   const [sendEmail, setSendEmail] = useState(false)
   const [visible, setVisible] = useState(false)
+  const router = useRouter()
+  const { t } = useTranslationI18()
 
   const handleVisibleChange = (flag) => {
     setVisible(flag)
@@ -58,18 +62,23 @@ const CommonNotificationHeader: FC<p> = ({
       <Menu.Item className={styles.menuListItem}>
         <Row>
           <Checkbox value="enable_reminder">
-            Enable reminders via email
+            {t('notifications.commonNotificationHeader.enableReminderViaEmail')}
           </Checkbox>
         </Row>
       </Menu.Item>
       <Menu.Item className={styles.menuListItem}>
         <Row>
-          <Checkbox value="enable_reminder">Enable reminders via sms</Checkbox>
+          <Checkbox value="enable_reminder">
+            {t('notifications.commonNotificationHeader.enableReminderViaSms')}
+          </Checkbox>
         </Row>
       </Menu.Item>
     </Menu>
   )
 
+  const handleBackClick = () => {
+    router.push('/client-notifications')
+  }
   return (
     <>
       <CommonHeader />
@@ -80,7 +89,10 @@ const CommonNotificationHeader: FC<p> = ({
           </span>
           <Title>
             <span className={`${styles.backArrow} ${styles.hideSection}`}>
-              <LeftOutlined className={styles.leftIcon} />
+              <LeftOutlined
+                onClick={handleBackClick}
+                className={styles.leftIcon}
+              />
             </span>
             {title}
           </Title>
@@ -105,7 +117,8 @@ const CommonNotificationHeader: FC<p> = ({
               arrow
             >
               <Button size={'large'}>
-                Enable settings <DownOutlined />
+                {t('notifications.commonNotificationHeader.enableSettings')}
+                <DownOutlined />
               </Button>
             </Dropdown>
           </span>
@@ -115,10 +128,16 @@ const CommonNotificationHeader: FC<p> = ({
             type="default"
             onClick={() => setSendEmail(!sendEmail)}
           >
-            {setIndexTab === 1 ? 'Send Test Email' : 'Send Test SMS'}
+            {selectedTab === 'emailPreview'
+              ? t('notifications.commonNotificationHeader.sendTestEmail')
+              : t('notifications.commonNotificationHeader.sendTestSms')}
           </Button>
           <Modal
-            title={setIndexTab === 1 ? 'Send Test Email' : 'Send Test Message'}
+            title={
+              selectedTab === 'emailPreview'
+                ? t('notifications.commonNotificationHeader.sendTestEmail')
+                : t('notifications.commonNotificationHeader.sendTestMessage')
+            }
             visible={sendEmail}
             onCancel={() => setSendEmail(false)}
             centered={true}
@@ -127,9 +146,11 @@ const CommonNotificationHeader: FC<p> = ({
           >
             <form onSubmit={sendEmailForm.handleSubmit}>
               <div>
-                {setIndexTab === 1 ? (
+                {selectedTab === 'emailPreview' ? (
                   <div>
-                    <p style={{ color: '#9292A3' }}>Email</p>
+                    <p style={{ color: '#9292A3' }}>
+                      {t('notifications.commonNotificationHeader.model.email')}
+                    </p>
                     <Input
                       placeholder="client@email.com"
                       onChange={sendEmailForm.handleChange('email')}
@@ -151,27 +172,29 @@ const CommonNotificationHeader: FC<p> = ({
                     style={{ marginRight: '10px' }}
                     onClick={() => setSendEmail(false)}
                   >
-                    Cancel
+                    {t('notifications.commonNotificationHeader.Modal.cancel')}
                   </Button>
-                  {setIndexTab === 1 && (
+                  {selectedTab === 'emailPreview' && (
                     <Button
                       type="primary"
                       htmlType="submit"
                       disabled={
-                        sendEmailForm.errors.email &&
-                        !sendEmailForm.values.email
+                        sendEmailForm.errors.email === undefined &&
+                        sendEmailForm.values.email !== ''
+                          ? false
+                          : true
                       }
                     >
-                      Send
+                      {t('notifications.commonNotificationHeader.Modal.send')}
                     </Button>
                   )}
-                  {setIndexTab === 2 && (
+                  {selectedTab === 'smsPreview' && (
                     <Button
                       type="primary"
                       htmlType="submit"
                       onClick={handleShowNotification}
                     >
-                      Send
+                      {t('notifications.commonNotificationHeader.Modal.send')}
                     </Button>
                   )}
                 </div>
@@ -189,11 +212,11 @@ const CommonNotificationHeader: FC<p> = ({
             onClick={() =>
               Notification(
                 NotificationType.success,
-                'Success! Notification Source Updated'
+                t('notifications.commonNotificationHeader.successMessage')
               )
             }
           >
-            Save
+            {t('notifications.commonNotificationHeader.save')}
           </Button>
         </div>
       </div>

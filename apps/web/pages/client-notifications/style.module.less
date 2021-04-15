@@ -299,19 +299,82 @@
 .cardAddTemplateContainer {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   padding: 24px;
   font-family: Arial, Helvetica, sans-serif !important;
   font-size: 13px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   min-height: 486px;
+  position: relative;
+}
+.middleSection {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .addTemplateTxt {
+
+    font-family: "Circular-Std-Medium";
+    font-size: 14px;
+    color: #9292a3;
+    display: flex;
+    align-items: center;
+  }
+  .textService {
+    margin-top: 12px;
+    color: #9292a3;
+    font-size: 12px;
+  }
 }
 
-.addTemplateTxt {
-  margin: 13px;
-  font-family: "Circular-Std-Medium";
-  font-size: 14px;
-  color: #9292a3;
+
+.sms-template-container{
+  position: relative;
+  padding: 15px;
+  border: 1px solid #E8E8EE;
+  border-radius: 10px;
   display: flex;
-  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: #E8E8EE;
+  height: fit-content;
+
+  .icSms{
+    position: absolute;
+    right: 100%;
+    bottom: 10px;
+  }
+
+  .smsText{
+    width: 100%;
+    overflow-wrap: break-word;
+    white-space: pre-line;
+  }
+}
+.email-temp-wrap {
+  width: 100%;
+  height: 100%;
+  position: relative;
+
+  .web-temp {
+    img {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+  }
+}
+.close-icon {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  .icon-size {
+    font-size: 22px;
+    svg {
+      fill: #54b2d3;
+    }
+  }
 }

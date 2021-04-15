@@ -3,15 +3,18 @@ import { Notification, NotificationType } from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
 import ClientNotification from '../../../components/ClientNotification/index'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
-  const [setIndexTab, setSelectedTab] = useState(1)
+  const [selectedTab, setSelectedTab] = useState<'emailPreview' | 'smsPreview'>(
+    'emailPreview'
+  )
+  const { t } = useTranslationI18()
 
   const showNotification = (email) => {
-    if (setIndexTab === 1) {
+    if (selectedTab === 'emailPreview') {
       Notification(NotificationType.success, 'Test message sent')
-    }
-    if (setIndexTab === 2) {
+    } else if (selectedTab === 'smsPreview') {
       Notification(NotificationType.success, 'Test SMS sent')
     }
   }
@@ -22,23 +25,23 @@ const Index: FC = () => {
         breadcrumbItems={[
           {
             path: 'setup',
-            breadcrumbName: 'Setup',
+            breadcrumbName: t('notifications.breadcrumb.setup'),
           },
           {
             path: 'client-notifications',
-            breadcrumbName: 'Notification Messages',
+            breadcrumbName: t('notifications.breadcrumb.notificationMessage'),
           },
           {
             path: 'client-notifications/birthday',
-            breadcrumbName: 'Birthdays',
+            breadcrumbName: t('notifications.birthday.title'),
           },
         ]}
-        title={'Birthdays'}
-        setIndexTab={setIndexTab}
+        title={t('notifications.birthday.title')}
+        selectedTab={selectedTab}
         handleNotificationSubmit={showNotification}
       />
       <ClientNotification
-        onSeletedTab={(value) => setSelectedTab(value)}
+        onSelectedTab={(value) => setSelectedTab(value)}
         hideReminderTimeFrameTabPane={true}
         hideRequestConfirmationOption={true}
         hideMedicalHistoryOption={true}
@@ -47,19 +50,11 @@ const Index: FC = () => {
         hideDisplayPolicyOption={true}
         hideServiceOption={true}
         hideEmployeeNameOption={true}
-        standardMessage={
-          "The default email template you will send if it's a client's birthday"
-        }
+        standardMessage={t('notifications.birthday.standardMessage')}
         type={'birthday'}
-        smsCustom={
-          'Happy Birthday\n' +
-          'Your friends at clinic would like to wish you a glorious and happy birthday.\n' +
-          "Here's a £30 voucher to spend on your next visit.\n" +
-          'We look forward to seeing you soon!\n' +
-          '\n' +
-          'Warm regards,\n' +
-          'The clinic Team'
-        }
+        name={t('notifications.birthday.title')}
+        langKey={'birthday'}
+        handleNotificationSubmit={showNotification}
       />
     </Layout>
   )

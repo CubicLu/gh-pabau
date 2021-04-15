@@ -3,16 +3,18 @@ import { Notification, NotificationType } from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
 import ClientNotification from '../../../components/ClientNotification/index'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
-  const [setIndexTab, setSelectedTab] = useState(1)
+  const [selectedTab, setSelectedTab] = useState<'emailPreview' | 'smsPreview'>(
+    'emailPreview'
+  )
+  const { t } = useTranslationI18()
 
   const showNotification = (email) => {
-    if (setIndexTab === 1) {
+    if (selectedTab === 'emailPreview') {
       Notification(NotificationType.success, 'Test message sent')
-    }
-
-    if (setIndexTab === 2) {
+    } else if (selectedTab === 'smsPreview') {
       Notification(NotificationType.success, 'Test SMS sent')
     }
   }
@@ -23,23 +25,23 @@ const Index: FC = () => {
         breadcrumbItems={[
           {
             path: 'setup',
-            breadcrumbName: 'Setup',
+            breadcrumbName: t('notifications.breadcrumb.setup'),
           },
           {
             path: 'client-notifications',
-            breadcrumbName: 'Notification Messages',
+            breadcrumbName: t('notifications.breadcrumb.notificationMessage'),
           },
           {
             path: 'client-notifications/noshow-appointment',
-            breadcrumbName: 'No Show Appointment',
+            breadcrumbName: t('notifications.noShowAppointment.title'),
           },
         ]}
-        title={'No Show Appointment'}
-        setIndexTab={setIndexTab}
+        title={t('notifications.noShowAppointment.title')}
+        selectedTab={selectedTab}
         handleNotificationSubmit={showNotification}
       />
       <ClientNotification
-        onSeletedTab={(value) => setSelectedTab(value)}
+        onSelectedTab={(value) => setSelectedTab(value)}
         hideRequestConfirmationOption={true}
         hideAllowReschedulingOption={true}
         hideAllowCancellationOption={true}
@@ -48,15 +50,11 @@ const Index: FC = () => {
         hideReminderTimeFrameTabPane={true}
         hideServiceOption={true}
         hideEmployeeNameOption={true}
-        standardMessage={
-          'This notification automatically sends to clients the moment they missed an appointment'
-        }
+        standardMessage={t('notifications.noShowAppointment.standardMessage')}
         type={'noShowAppointment'}
-        smsCustom={
-          'Hi Anna,' +
-          " We had you scheduled today at 11:30 but unfortunately you didn't show up." +
-          ' Please get back in touch on to reschedule.Your friends at The Clinic'
-        }
+        name={t('notifications.noShowAppointment.title')}
+        langKey={'noShowAppointment'}
+        handleNotificationSubmit={showNotification}
       />
     </Layout>
   )

@@ -3,15 +3,18 @@ import { Notification, NotificationType } from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
 import ClientNotification from '../../../components/ClientNotification/index'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
-  const [setIndexTab, setSelectedTab] = useState(1)
+  const [selectedTab, setSelectedTab] = useState<'emailPreview' | 'smsPreview'>(
+    'emailPreview'
+  )
+  const { t } = useTranslationI18()
 
   const showNotification = (email) => {
-    if (setIndexTab === 1) {
+    if (selectedTab === 'emailPreview') {
       Notification(NotificationType.success, 'Test message sent')
-    }
-    if (setIndexTab === 2) {
+    } else if (selectedTab === 'smsPreview') {
       Notification(NotificationType.success, 'Test SMS sent')
     }
   }
@@ -22,33 +25,34 @@ const Index: FC = () => {
         breadcrumbItems={[
           {
             path: 'setup',
-            breadcrumbName: 'Setup',
+            breadcrumbName: t('notifications.breadcrumb.setup'),
           },
           {
             path: 'client-notifications',
-            breadcrumbName: 'Notification Messages',
+            breadcrumbName: t('notifications.breadcrumb.notificationMessage'),
           },
           {
             path: 'client-notifications/class-booked',
-            breadcrumbName: 'Booked onto class',
+            breadcrumbName: t('notifications.classBooked.title'),
           },
         ]}
-        title={'Booked onto class'}
-        setIndexTab={setIndexTab}
+        title={t('notifications.classBooked.title')}
+        selectedTab={selectedTab}
         handleNotificationSubmit={showNotification}
       />
       <ClientNotification
-        onSeletedTab={(value) => setSelectedTab(value)}
+        onSelectedTab={(value) => setSelectedTab(value)}
         hideRequestConfirmationOption={true}
         hideAllowReschedulingOption={true}
         hideAllowCancellationOption={true}
         hideDisplayPolicyOption={true}
         hideMedicalHistoryOption={true}
         hideReminderTimeFrameTabPane={true}
-        standardMessage={
-          "This notification automatically sends to clients when they're booked for a class"
-        }
+        standardMessage={t('notifications.classBooked.standardMessage')}
         type={'bookedOntoClass'}
+        name={t('notifications.classBooked.title')}
+        langKey={'classBooked'}
+        handleNotificationSubmit={showNotification}
       />
     </Layout>
   )

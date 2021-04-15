@@ -38,12 +38,92 @@ en:
     james-testing-2: 'test two'
     james-test-3: 'Hello World!=)'
     login.title: 'Log In!!'
+    notifications.commonNotificationHeader.enableSettings: 'Enable settings'
+    notifications.commonNotificationHeader.error: 'Invalid email address'
+    notifications.commonNotificationHeader.enableReminderViaEmail: 'Enable reminders via email'
+    notifications.commonNotificationHeader.enableReminderViaSms: 'Enable reminders via sms'
+    notifications.commonNotificationHeader.sendTestEmail: 'Send Test Email'
+    notifications.commonNotificationHeader.sendTestSms: 'Send Test SMS'
+    notifications.commonNotificationHeader.sendTestMessage: 'Send Test Message'
+    notifications.commonNotificationHeader.save: 'Save'
+    notifications.commonNotificationHeader.Modal.cancel: 'Cancel'
+    notifications.commonNotificationHeader.Modal.send: 'Send'
+    notifications.commonNotificationHeader.model.email: 'Email'
+    notifications.commonNotificationHeader.successMessage: 'Success! Notification Source Updated'
+    notifications.clientNotification.builder: 'BUILDER'
+    notifications.clientNotification.preview: 'PREVIEW'
+    notifications.clientNotification.smsText: 'SMS Text'
+    notifications.serviceSpecific.addService: 'Add Service'
+    notifications.chooseEmailTemplate.title: 'Choose Email Template'
+    notifications.chooseEmailTemplate.marketing: 'Marketing'
+    notifications.chooseEmailTemplate.leads: 'Leads'
+    notifications.chooseEmailTemplate.financial: 'Financial'
+    notifications.chooseEmailTemplate.medical: 'Medical'
+    notifications.chooseTemplate.allTemplates: 'All Templates'
+    notifications.chooseTemplate.searchTemplate: 'Search Template'
+    notifications.chooseSMSTemplates.title: 'Choose SMS Template'
+    notifications.standard.defaultStandardMessage: 'This notification automatically sends to clients the moment their appointment is booked.'
+    notifications.clientNotification.medicalMessage: 'Please click the below link button open our new patient on-line registration form in your web-browser or on your phone.'
+    notifications.standard.appearance: 'Appearance'
+    notifications.standard.appearance.requestConfirmation: 'Request confirmation'
+    notifications.standard.appearance.requestConfirmationToolTip: '"We will intelligently schedule additional confirmations to clients who have a history of forgetting"'
+    notifications.standard.appearance.allowRescheduling: 'Allow rescheduling'
+    notifications.standard.appearance.allowCancellation: 'Allow cancellation'
+    notifications.standard.appearance.displayPolicy: 'Display policy'
+    notifications.standard.appearance.showService: 'Show service'
+    notifications.standard.appearance.showEmployeeName: 'Show employee name'
+    notifications.standard.appearance.enablePayButton: 'Enable pay button'
+    notifications.standard.appearance.enablePayButtonTooltip: 'This will Enable Pay Invoice Button'
+    notifications.standard.appearance.medicalSetting: 'Medical History settings'
+    notifications.standard.appearance.addCompeleteFormButton: 'Add complete form button'
+    notifications.standard.appearance.addCompeleteFormButtonToolTip: '"We will send the default questionnaire selected in your forms setup"'
+    notifications.standard.appearance.hideHistory: 'Hide registration form if already completed'
+    notifications.standard.appearance.backgroundColor: 'Background color'
+    notifications.standard.appearance.buttonsColor: 'Buttons color'
+    notifications.standard.appearance.information: 'Information'
+    notifications.standard.appearance.specialOffer: 'e.g. Special offer'
+    notifications.standard.socialMedia.title: 'Social media icons'
+    notifications.standard.clientLanguage: 'Client languages'
+    notifications.standard.clientlanguage.message: 'Setup templates in your clients preferred language'
+    notifications.standard.remiderTimeFrame: 'Reminder timeframe'
+    notifications.standard.remiderTimeFrame.smartDelivery: 'Smart delivery'
+    notifications.standard.remiderTimeFrame.smartDeliveyTooltip: '"We will intelligently schedule additional confirmations to clients who have a history of forgetting"'
+    notifications.standard.reminderTimeFrame.message: 'Choose how far in advance your reminder notification
+                          messages are sent to clients'
+    notifications.standard.reminderTimeFrame.advanceNotice: 'Reminder advance notice'
+    notifications.standard.reminderTimeFrame.hours: 'hours'
+    notifications.standard.smartFramework: 'Smart Framework'
+    notifications.standard.smartFrameworkTooltip: '"We will intelligently schedule additional confirmations to clients who have a history of forgetting"'
+    notifications.custom.line1: 'Design or upload your own custom email from your'
+    notifications.custom.messageTemplate: 'message templates'
+    notifications.standard.reminderSettings: 'Reminder Setting'
+    notifications.standard.reminderSettings.message: 'Choose how far in after your reminder notification
+                          messages are sent to clients'
+    notifications.standard.reminderSettings.afterNotice: 'Reminder after notice'
+    notifications.standard.appearance.medicalhistoryButton: 'Medical History message'
+    notifications.standard.serviceSpecific.title: 'Service Specific'
+    notifications.standard.serviceSpecific.message: 'Tailor the template based on the service that is
+                          booked'
+    notifications.customTemplate.addTemplate: 'Add Template'
+    notifications.customTemplate.forSendingWhen: 'for sending when'
+    notifications.customTemplate.isBooked: 'is booked'
+    notifications.standardStories.defaultMessage: 'Hi, Kristy'
+    notifications.banner.title: 'Non-scheduled appointments found'
+    notifications.banner.desc: 'We found 232 scheduled appointments which do not have reminders scheduled. This is usually down to recently imported appointments. Would you like to schedule these?'
+    notifications.breadcrumb.setup: 'Setup'
+    notifications.breadcrumb.notificationMessage: 'Notification Messages'
+    notifications.clientNotificationsSubtitle: 'Client notifications are crucial to your business. Use this section to customize all outbound notifications (Email/SMS)'
+    notifications.manageOptions: 'Manage Options'
+    notifications.banner.enablePayment: 'Enable Payment'
+    notifications.upcomingAppointmentReminder.title: 'Upcoming appointment reminder'
+    notifications.upcomingAppointmentReminder.standardMessage: 'The notification automatically sends to clients ahead of their appointment'
     notifications.appointmentReminder.greeting: 'Hi Kristy, see you soon!'
     notifications.appointmentReminder.newAppointmentGreeting: 'Hi Kristy, your appointment is confirmed.'
-    notifications.appointmentReminder.rescheduleAppointmentGreeting: 'Hi Kristy, your appointment has been rescheduled.'
+    notifications.appointmentReminder.rescheduleAppointmentGreeting:
+      'Hi Kristy, your appointment has been rescheduled.'
     notifications.appointmentReminder.detail: 'Appointment details:'
     notifications.appointmentReminder.date: 'Monday, 16 November at 11:00'
-    notifications.appointmentReminder.reschedule: Reschedule
+    notifications.appointmentReminder.reschedule: 'Reschedule'
     notifications.appointmentReminder.service: 'Consultation (30 mins)'
     notifications.appointmentReminder.employee: ' with John Smith'
     notifications.appointmentReminder.title: 'M-A Hair Dressing & Spa'
@@ -52,7 +132,13 @@ en:
     notifications.appointmentReminder.confirmButton: 'Confirm appointment'
     notifications.appointmentReminder.policy: '*Please, avoid cancelling within 48 hours notice'
     notifications.appointmentReminder.cancelPolicy: 'Cancellation policy'
-    notifications.appointmentReminder.complete: 'Complete Medical History'
+    notifications.appointmentReminder.complete: 'Complete Registration History'
+    notifications.newAppointment.title: 'New appointment is booked'
+    notifications.newAppointment.standardMessage: 'This notification automatically sends to clients when they book their appointment'
+    notifications.rescheduleAppointment.title: 'Reschedule appointment reminder'
+    notifications.rescheduleAppointment.standardMessage: 'This notification automatically sends to clients when their appointment start time is changed'
+    notifications.cancelAppointment.title: 'Cancelled appointment'
+    notifications.cancelAppointment.standardMessage: 'This notification automatically sends to clients the moment they cancel an appointment'
     notifications.cancelledAppointment.greeting: 'Hi Kristy, see you soon!'
     notifications.cancelledAppointment.dateTime: 'Monday, 16 November at 11:00'
     notifications.cancelledAppointment.consultationDetail: 'Consultation (30 mins)'
@@ -62,6 +148,10 @@ en:
     notifications.cancelledAppointment.text: 'Your appointment is now cancelled!'
     notifications.cancelledAppointment.classText: 'Your class appointment is now cancelled!'
     notifications.cancelledAppointment.message: 'we would love to see tou again in the near future!'
+    notifications.cancelledClassBooking.title: 'Cancelled a class booking'
+    notifications.cancelledClassBooking.standardMessage: 'This notification automatically sends to clients when they cancel a class booking'
+    notifications.classBooked.title: 'Booked onto class'
+    notifications.classBooked.standardMessage: 'This notification automatically sends to clients when they are booked for a class'
     notifications.bookedOntoClass.greeting: 'Hi Kristy, see you soon!'
     notifications.bookedOntoClass.dateTime: 'Monday, 16 November at 11:00'
     notifications.bookedOntoClass.consultationDetail: 'Consultation (30 mins)'
@@ -69,73 +159,351 @@ en:
     notifications.bookedOntoClass.title: 'M-A Hair Dressing & Spa'
     notifications.bookedOntoClass.address: '574 Beferly Road, H3454, England, GB'
     notifications.bookedOntoClass.message: 'We look forward to seeing you then!'
+    notifications.noShowAppointment.title: 'No Show Appointment'
+    notifications.noShowAppointment.standardMessage: 'This notification automatically sends to clients the moment they missed an appointment'
     notifications.noShowAppointment.greeting: 'Hi, Anna'
     notifications.noShowAppointment.subTitle: 'Sorry you missed your appointment!'
-    notifications.noShowAppointment.message: 'We hope everything is okay with you. We had you scheduled to see Dr. Christine today at 11:00 but unfortunately, you didn''t show up.'
+    notifications.noShowAppointment.message:
+      "We hope everything is okay with you. We had you scheduled to see Dr. Christine today at 11:00 but unfortunately, you didn't show up."
     notifications.noShowAppointment.closingText: 'Looking forward to hearing from you soon,'
     notifications.noShowAppointment.signatureBlock: 'Your friends at The Clinic'
+    notifications.waitList.title: 'Wait List'
+    notifications.waitList.standardMessage: 'This notification automatically sends to clients when an appointment slot becomes available'
     notifications.waitList.greeting: 'Dear Sophia,'
-    notifications.waitList.message: 'Good news! You recently were placed in our waitlist and a new class is now available. If you would still like to book your appointment, you must take action before the spot is taken.'
+    notifications.waitList.message:
+      'Good news! You recently were placed in our waitlist and a new class is now available. If you would still like to book your appointment, you must take action before the spot is taken.'
+    notifications.medicalForm.title: 'Form type'
+    notifications.medicalForm.standardMessage: 'This notification automatically sends to clients when an appointment slot becomes available'
     notifications.medicalForm.greeting: 'Dear Sophia,'
-    notifications.medicalForm.message: 'Please find attached your medical form in PDF format. If you have any questions do not hesitate to contact us at'
+    notifications.medicalForm.message:
+      'Please find attached your medical form in PDF format. If you have any questions do not hesitate to contact us at'
     notifications.medicalForm.clinicEmailingMessage: 'Please find attached your appointment summary.'
     notifications.medicalForm.closingText: 'Kind regards,'
     notifications.medicalForm.signatureBlock: 'Your friends at The Clinic'
-    notifications.medicalForm.emailAppointmentMessage: 'Please find attached your appointment schedule for the day'
+    notifications.medicalForm.emailAppointmentMessage:
+      'Please find attached your appointment schedule for the day'
+    notifications.clinicEmailingTimeline.title: 'Clinic Emailing Timeline'
+    notifications.clinicEmailingTimeline.standardMessage: 'This notification email you will send when you are emailing a clients timeline'
+    notifications.emailAppointment.title: 'Email appointments'
+    notifications.emailAppointment.standardMessage: 'This notification email you will send if someone requested a list of their appointment history'
+    notifications.invoice.title: 'Invoice'
+    notifications.invoice.standardMessage: 'The default email template you will send with a clients invoice attached'
     notifications.invoice.greeting: 'Dear Anna,'
     notifications.invoice.closingText: 'Looking forward to hearing from you soon'
     notifications.invoice.signatureBlock: 'Your friends at The Clinic'
     notifications.invoice.message:
-        - 'Thank you for your recent visit at M-A Hair Dressing & Spa.'
+      - 'Thank you for your recent visit at M-A Hair Dressing & Spa.'
+    notifications.invoice.outstanding.title: 'Outstanding Invoice'
+    notifications.invoice.outstanding.standardMessage: 'The default email template you will send with a clients Outstanding invoice attached'
     notifications.invoice.outstanding.greeting: 'Hi Anna,'
     notifications.invoice.outstanding.bestRegards: 'Best regards,'
-    notifications.invoice.outstanding.senderFirstName: Rina
+    notifications.invoice.outstanding.senderFirstName: 'Rina'
     notifications.invoice.outstanding.footerText: 'Looking forward to hearing from you soon,'
     notifications.invoice.outstanding.footerText2: 'Your friends at The Clinic'
     notifications.invoice.outstanding.message:
-        - 'I hope you are well.'
-        - 'I just wanted to drop you a quick note to remind you that 02/03/2021 in respect of our invoice 00001 is due for payment on 31/03/2021.'
-        - 'I would be really grateful if you could confirm that everything is on track for payment.'
+      - 'I hope you are well.'
+      - 'I just wanted to drop you a quick note to remind you that 02/03/2021 in respect of our invoice 00001 is due for payment on 31/03/2021.'
+      - 'I would be really grateful if you could confirm that everything is on track for payment.'
+    notifications.birthday.title: 'Birthdays'
+    notifications.birthday.standardMessage: 'The default email template you will send if it is a clients birthday'
     notifications.birthday.wishingMessage: 'Happy Birthday!'
     notifications.birthday.closingText: 'Warm regards,'
     notifications.birthday.signatureBlock: 'The clinic team'
     notifications.birthday.messages:
-        - 'Your friends at clinic would like to wish you a glorious and happy birthday.'
-        - 'Here''s a £30 voucher to spend on your next visit.'
-        - 'We look forward to seeing you soon!'
+      - 'Your friends at clinic would like to wish you a glorious and happy birthday.'
+      - "Here's a £30 voucher to spend on your next visit."
+      - 'We look forward to seeing you soon!'
+    notifications.classSpotAvailable.title: 'Classes spot available'
+    notifications.classSpotAvailable.standardMessage: 'This notification automatically sends to clients when a class slot becomes available'
     notifications.classSpotAvailable.greeting: 'Dear Sophia,'
-    notifications.classSpotAvailable.message: 'Good news! You recently were placed in our waitlist and a new class is now available. If you would still like to book your appointment, you must take action before the spot is taken.'
+    notifications.classSpotAvailable.message:
+      'Good news! You recently were placed in our waitlist and a new class is now available. If you would still like to book your appointment, you must take action before the spot is taken.'
     notifications.giftVoucher.greeting: 'Congratulations Sophia,you have received a Gift Voucher'
+    notifications.giftVoucher.title: 'Gift vouchers'
+    notifications.giftVoucher.standardMessage: 'The default email template you will send when clients purchase a gift voucher'
+    notifications.requestFeedback.title: 'Request feedback'
+    notifications.requestFeedback.standardMessage: 'This notification automatically sends to clients when an appointment is checked out'
     notifications.requestFeedback.greeting: 'Hi, Anna'
-    notifications.requestFeedback.message: 'Thank you for visiting The Clinic, we hope you were happy with our services!'
-    notifications.requestFeedback.message1: 'We would love to hear about your experience in the survey below. Your feedback helps us create a better experience for you and for all of our customers.'
+    notifications.requestFeedback.message:
+      'Thank you for visiting The Clinic, we hope you were happy with our services!'
+    notifications.requestFeedback.message1:
+      'We would love to hear about your experience in the survey below. Your feedback helps us create a better experience for you and for all of our customers.'
     notifications.requestFeedback.closingText: 'Thank you for your support!'
     notifications.requestFeedback.signatureBlock: 'Your friends at The Clinic'
+    notifications.packageSession.title: 'Package session used'
+    notifications.packageSession.standardMessage: 'he default email template you will send when a client has used all their package sessions'
     notifications.packageSession.greeting: 'Dear Sophia,'
-    notifications.packageSession.message: 'You have just reached your final session for PACKAGE. To purchase another package, you can do so by clicking the below link'
+    notifications.packageSession.message:
+      'You have just reached your final session for PACKAGE. To purchase another package, you can do so by clicking the below link'
     notifications.packageSession.closingText: 'Kind regards,'
     notifications.packageSession.signatureBlock: 'Your friends at The Clinic'
+    notifications.connectRegistration.title: 'Connect registration'
+    notifications.connectRegistration.standardMessage: 'The email the client receives when they register to your Online Booking portal'
     notifications.connectRegistration.greeting: 'Account created'
-    notifications.connectRegistration.message: 'Congratulations Sophia, your account has been successfully created. Follow this link to access your online account:'
+    notifications.connectRegistration.message:
+      'Congratulations Sophia, your account has been successfully created. Follow this link to access your online account:'
     notifications.connectRegistration.closingText: 'Kind regards,'
     notifications.connectRegistration.signatureBlock: 'Your friends at The Clinic'
+    notifications.leadResponses.title: 'Lead responses'
+    notifications.leadResponses.standardMessage: 'The default email template you will send to your lead when they submit their lead form'
     notifications.leadResponses.greeting: 'Hi, Anna'
     notifications.leadResponses.message: 'Thank you for your inquiry!'
-    notifications.leadResponses.description: 'We received your form and we will get back to you as soon as possible.'
+    notifications.leadResponses.description:
+      'We received your form and we will get back to you as soon as possible.'
     notifications.leadResponses.messageLine: 'We look forward to chatting soon!'
     notifications.leadResponses.closingText: 'Kind regards'
     notifications.leadResponses.signatureBlock: 'Your friends at The Clinic'
+    notifications.referrals.title: 'Referral'
+    notifications.referrals.standardMessage: 'The default email template you will send when someone is being referred into the business'
     notifications.referrals.greeting: 'Dear Sophia,'
     notifications.referrals.message: 'We would like to say thank you for your client referral. It means the world to us!'
     notifications.referrals.description: 'As a loyal client, we would like to offer you 10% OFF for your next visit. Please find your voucher code below.'
     notifications.referrals.closingText: 'We look forward to seeing you soon!'
     notifications.referrals.signatureBlock: 'Your friends at The Clinic'
+    notifications.documnetshared.title: 'Document shared'
+    notifications.documnetshared.standardMessage: 'The email you will send when you share a document with a client through Pabau Connect'
     notifications.documnetshared.greeting: 'Dear Sophia,'
     notifications.documnetshared.messageLine1: 'You have received a new secure email'
     notifications.documnetshared.messageLine2: 'Please click the link below to access:'
     notifications.documnetshared.closingText: 'Kind regards,'
     notifications.documnetshared.signatureBlock: 'The Clinic Team'
-    notifications.documnetshared.infoText: 'We''re required by EU law to send your personal information in an encrypted format. It is free to view and all you have to do is click on the link in the email below that reads "Click to read this secure email online". This will take you through to a secure page with ''Pabau''.'
+    notifications.documnetshared.infoText:
+        "We're required by EU law to send your personal information in an encrypted format. It is free to view and all you have to do is click on the link in the email below that reads \"Click to read this secure email online\". This will take you through to a secure page with 'Pabau'."
+    notifications.secureEmailTemplate.title: 'Secure email template'
+    notifications.secureEmailTemplate.standardMessage: 'The default secure email template which gets sent out via email'
+    notifications.classRescheduled.title: 'Class rescheduled'
+    notifications.classRescheduled.standardMessage: 'This notification automatically sends to clients when a class is rescheduled'
+    notifications.classReminder.title: 'Reminder for classed'
+    notifications.classReminder.standardMessage: 'This notification automatically sends a reminder to a client who has registered to a class'
+    notifications.classNoShowAppointment.title: 'Missed A Class'
+    notifications.classNoShowAppointment.standardMessage: 'This notification automatically sends to clients when they dont show for a class'
+    notifications.appointmentReminder.smsMessage: 'Hey Shopia,
+
+
+                                                   This is a friendly reminder that we have scheduled writing for 12/15/21 11:30 AM. You can find us at 574 Beferly Road, H3454, England, GB
+
+                                                   We really care about your well-being, so if you have any questions or needs before your appointment, you are welcome to contact us anytime at +44000987507
+
+
+                                                   We will see you soon!
+
+                                                   the clinic'
+    notifications.birthday.smsMessage: 'happy birthday
+
+
+                                        Your friends at the clinic would like to wish you a Merry Christmas and a happy one.
+
+                                        Here is a voucher worth £ 30 to spend on your next visit.
+                                        We look forward to seeing you soon!
+
+
+                                        warm regards,
+
+                                        Clinic team'
+    notifications.cancelledAppointment.smsMessage: 'Hi Kristy!
+
+
+                                                    We have canceled your meeting on Monday 16 November at 11:00. We hope to see you again soon!
+
+
+                                                    Sincerely,
+
+                                                    Your friends at the clinic'
+    notifications.cancelledClassBooking.smsMessage: 'Hi Kristy!
+
+
+                                                     We have canceled your class booking for Monday, 16 November at 11:00. We hope to see you again soon!
+
+
+                                                     Kind regards,
+
+                                                     Your friends at The Clinic'
+    notifications.classBooked.smsMessage: 'Hi Kristy, see you soon!
+
+
+                                           Your class appointment details:
+                                           Monday, 16 November at 11:00;
+                                           Consultation (30mins) with John Smith.
+                                           We look forward to seeing you then.
+
+
+                                           Kind regards,
+
+                                           Your friends at The Clinic'
+    notifications.classNoShowAppointment.smsMessage: 'Hi Anna,
+
+
+                                                      We had you scheduled today at 11:30 but unfortunately you did n0t show up.
+                                                      Please get back in touch on +4444444444 to reschedule.
+
+
+                                                      Your friends at The Clinic'
+    notifications.classReminder.smsMessage: 'Hi Shopia,
+
+
+                                             This is a friendly reminder that we have you scheduled for type on 15/12/21 at 11:30 am.
+                                             You can find us at 574 Beferly Road, H3454, England, GB
+
+
+                                             We truly care about you well-being, so if you have any questions or needs in advance of your appointment, you are welcome to call us anytime at +44 000 987 507
+
+
+                                             We will see you soon!,
+
+                                             The Clinic'
+    notifications.classRescheduled.smsMessage: 'Hi Shopia,
+
+                                                This is a confirmation to let you now we rescheduled your type class from 15/12/20 to 17/12/20.
+
+                                                We look forward to seeing you then !
+
+                                                kind Regards
+
+                                                The Clinic'
+    notifications.classSpotAvailable.smsMessage: 'Good news!
+
+                                                  You recently were placed in our waitlist and a new class spot is now available.
+
+                                                  If you would still like to book your appointment please get in touch via Phone or Email:
+
+                                                  +44 000 987 507
+
+                                                  info@theclinic.com'
+    notifications.clinicEmailingTimeline.smsMessage: 'Dear Sophia,
+
+                                                      Please find attached your appointment summary.
+
+                                                      Kind regards,
+
+                                                      The Clinic'
+    notifications.connectRegistration.smsMessage: 'Account created
+
+                                                   Congratulations Sophia, your account has been successfully created.
+                                                   Follow this link to access your online account:
+                                                   URL://CONNECTURL
+
+                                                   Here are your login credentials:
+                                                   Username: Sophia17
+                                                   Password: Sophia0193091
+
+                                                   Kind regards,
+
+                                                   Your friends at The Clinic'
+    notifications.documentShared.smsMessage: 'Dear Sophia!
+
+                                              Please find attached your file. If you have any questions do not hesitate to contact us at +44 000 987 507.
+
+                                              Kind regards,
+
+                                              The clinic Team'
+    notifications.emailAppointment.smsMessage: 'Dear Sophia,
+
+                                                Please find attached your appointment schedule for the day.
+
+                                                Kind regards,
+
+                                                The Clinic'
+    notifications.giftVoucher.smsMessage: 'Congratulations Sophia,you have received a Gift Voucher
+
+                                           Value: Lorem ipsum
+
+                                           Voucher Code: Lorem ipsum
+
+                                           Expiry : Lorem ipsum
+
+                                           This Voucher can be redeemed against any services at M-A Hair Dressing & Spa'
+    notifications.invoice.smsMessage: 'Dear Sophia!
+
+                                       Thank you for your recent visit - please find below your invoice:
+
+                                       https:pabau.me/kd29'
+    notifications.leadResponses.smsMessage: 'Hi Anna,
+
+                                             Thank you for your inquiry!
+
+                                             We received your form and we will get back to you as soon as possible.
+
+                                             We look forward to chatting soon!
+
+                                             King regards,
+
+                                             The Clinic Team'
+    notifications.medicalForms.smsMessage: 'Dear Sophia,
+
+                                            Please find attached your medical form in PDF format. If you have any questions do not hesitate to contact us at +44 000 987 507
+
+                                            Kind regards,
+
+                                            Your friends at The Clinic'
+    notifications.newAppointment.smsMessage: 'Hi Sophia!
+
+                                             This is a confirmation of your appointment at Meri"s Skincare on Monday, 16 November at 11:00.
+
+                                              We look forward to seeing you!'
+    notifications.noShowAppointment.smsMessage: "Hi Anna,
+
+                                                 We had you scheduled today at 11:30 but unfortunately, you didn't show up.
+
+                                                 Please get back in touch on to reschedule.
+
+                                                 Your friends at The Clinic"
+    notifications.outstandingInvoice.smsMessage: 'Hi Anna,
+
+                                                  I hope you are well.
+
+                                                  I just wanted to drop you a quick note to remind you that 02/03/2021 in respect of our invoice 00001 is due for payment on 31/03/2021.
+
+                                                  I would be really grateful if you could confirm that everything is on track for payment.
+
+                                                  Best regards,
+
+                                                  Rina'
+    notifications.packageSessionUsed.smsMessage: 'Dear Sophia,
+
+                                                  You have just reached your final session for PACKAGE. To purchase another package, you can do so by clicking the below link.'
+    notifications.referral.smsMessage: 'Dear Sophia,
+
+                                        We would like to say thank you for your client referral. It means the world to us!
+
+                                        As a loyal client, we would like to offer you 10% OFF for your next visit.
+                                        Please find your voucher code below.
+
+                                        We look forward to seeing you soon!
+
+                                        Your friends at The Clinic'
+    notifications.requestFeedback.smsMessage: 'Hi Anna,
+
+                                               Thank you for visiting The Clinic, we hope you were happy with our services!
+
+                                               We would love to hear about your experience in the survey below. Your feedback helps us create a better experience for you and for all of our customers.'
+    notifications.rescheduledAppointment.smsMessage: 'Hi Shopia,
+
+
+                                                      This is a confirmation to let you now we rescheduled your type class from 15/12/20 to 17/12/20.
+
+
+                                                      We look forward to seeing you then!
+
+
+                                                      kind Regards
+
+                                                      The Clinic'
+    notifications.secureEmailTemplate.smsMessage: 'Dear Sophia!
+
+                                                   Please find attached your file. If you have any questions do not hesitate to contact us at +44 000 987 507.
+
+                                                   Kind regards,
+
+                                                   The clinic Team'
+    notifications.waitList.smsMessage: 'Good news!
+
+                                        You recently were placed in our waitlist and a new class is now available.
+
+                                        If you would still like to book your appointment please get in touch via Phone or Email:
+
+                                        +44 000 987 507
+
+                                        info@theclinic.com'
     ui.report-help-sidebar.payroll-title: payroll
     ui.report-help-sidebar.payroll-team-commission-title: 'Team Comission'
     ui.report-help-sidebar.payroll-team-commission-content: ui.report-help-sidebar.payroll-team-commission-content-en

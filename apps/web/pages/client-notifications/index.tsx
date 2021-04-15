@@ -14,6 +14,7 @@ import notificationData from '../../assets/notificationData'
 import notificationBannerImage from '../../assets/images/notification-image.png'
 import styles from './style.module.less'
 import { useRouter } from 'next/router'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 
 const { Title } = Typography
 
@@ -21,6 +22,9 @@ const Index: FC = () => {
   const [hideBanner, setHideBanner] = useState(false)
   const menuItems = ['Appointments', 'Engagement', 'Classes', 'Other']
   const router = useRouter()
+
+  const { t } = useTranslationI18()
+
   const options = [
     {
       title: 'Pause notifications',
@@ -32,7 +36,6 @@ const Index: FC = () => {
     },
   ]
   const handleOptionClick = (val) => {
-    console.log(val)
     switch (val) {
       case options[0].title:
         Modal.info({
@@ -62,25 +65,33 @@ const Index: FC = () => {
       <CommonHeader />
       <Layout>
         <NotificationBanner
-          title="Non-scheduled appointments found"
-          desc="We found 232 scheduled appointments which do not have reminders scheduled. This is usually down to recently imported appointments. Would you like to schedule these?"
+          title={t('notifications.banner.title')}
+          desc={t('notifications.banner.desc')}
           imgPath={notificationBannerImage}
           allowClose={true}
           setHide={[hideBanner, setHideBanner]}
+          showPaymentTitle={t('notifications.banner.enablePayment')}
         />
         <div className={styles.clientNotificationsContent}>
           <div className={styles.clientNotificationTop}>
             <div>
               <Breadcrumb
                 breadcrumbItems={[
-                  { breadcrumbName: 'Setup', path: 'setup' },
-                  { breadcrumbName: 'Notification Messages', path: '' },
+                  {
+                    breadcrumbName: t('notifications.breadcrumb.setup'),
+                    path: 'setup',
+                  },
+                  {
+                    breadcrumbName: t(
+                      'notifications.breadcrumb.notificationMessage'
+                    ),
+                    path: '',
+                  },
                 ]}
               />
-              <Title>Notification Messages</Title>
+              <Title>{t('notifications.breadcrumb.notificationMessage')}</Title>
               <p className={styles.clientNotificationsSubtitle}>
-                Client notifications are crucial to your business. Use this
-                section to customize all outbound notifications (Email/SMS)
+                {t('notifications.clientNotificationsSubtitle')}
               </p>
             </div>
             <div className={styles.clientNotificationsOps}>
@@ -88,7 +99,7 @@ const Index: FC = () => {
                 menuItems={options}
                 onMenuClick={(val) => handleOptionClick(val)}
               >
-                Manage Options
+                {t('notifications.manageOptions')}
               </DropDownButton>
             </div>
           </div>
@@ -109,6 +120,7 @@ const Index: FC = () => {
                 <NotificationMessages
                   key={item}
                   notificationData={notificationData[item]}
+                  onClick={handleNotificationClick}
                 />
               ))}
             </TabMenu>

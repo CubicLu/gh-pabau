@@ -4,8 +4,9 @@ import React, {
   forwardRef,
   ForwardedRef,
   useImperativeHandle,
+  createContext,
 } from 'react'
-import { ClientNotification, Standard, Appointment, Smstext } from '@pabau/ui'
+import { ClientNotification, Standard, Smstext } from '@pabau/ui'
 import CancelAppointmentPreview from '../ClientNotificationPreview/CancelAppointmentPreview'
 import NoShowAppointmentPreview from '../ClientNotificationPreview/NoShowAppointmentPreview'
 import NewAppointmentPreview from '../ClientNotificationPreview/NewAppointmentPreview'
@@ -24,6 +25,9 @@ import ConnectRegistrationPreview from '../ClientNotificationPreview/ConnectRegi
 import LeadResponsesPreview from '../ClientNotificationPreview/LeadResponsesPreview'
 import ReferralPreview from '../ClientNotificationPreview/ReferralPreview'
 import DocumentSharedPreview from '../ClientNotificationPreview/DocumnetSharedPreview'
+import CustomTemplate from './CustomTemplate'
+import AppointmentPreview from '../ClientNotificationPreview/AppointmentPreview'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 
 interface refProps {
   propsData?: () => DataProps
@@ -47,7 +51,7 @@ interface DataProps {
 }
 
 interface P {
-  onSeletedTab: (number) => void
+  onSelectedTab: (string) => void
   isTabComponent?: boolean
   isPreviewComponent?: boolean
   isSmsComponent?: boolean
@@ -67,13 +71,19 @@ interface P {
   type?: string
   smsCustom?: string
   hideEnablePay?: boolean
+  showServiceSpecific?: boolean
+  name?: string
+  langKey?: string
+  handleNotificationSubmit?(val: string): void
 }
+
+export const GlobalContext = createContext(null)
 
 // eslint-disable-next-line react/display-name
 const Index: FC<P> = forwardRef(
   (
     {
-      onSeletedTab,
+      onSelectedTab,
       standardMessage,
       hideReminderTimeFrameTabPane = false,
       hideRequestConfirmationOption = false,
@@ -92,6 +102,10 @@ const Index: FC<P> = forwardRef(
       displayRadioGroup = true,
       displayButtons = true,
       hideEnablePay = true,
+      showServiceSpecific = false,
+      name,
+      langKey,
+      handleNotificationSubmit,
     },
     ref
   ) => {
@@ -108,15 +122,25 @@ const Index: FC<P> = forwardRef(
     const [addMedicalHisButton, setAddMedicalHisButton] = useState(true)
     const [backGroundColor, setBackGroundColor] = useState('')
     const [buttonColor, setButtonColor] = useState('')
-    const [selectLanguage, setSelectLanguage] = useState('en')
+    const [selectLanguage, setSelectLanguage] = useState('EN')
+    const [selectService, setSelectService] = useState({
+      EN: 'Japanese straightening',
+    })
     const [medicalMessage, setMedicalMessage] = useState('')
     const [informationMessage, setInformationMessage] = useState('')
-    const [standardTapIndex, setStandardTap] = useState('1')
+    const [standardTapIndex, setStandardTap] = useState('standard')
     const [hideAppearanceTabPane, setHideAppearanceTabPane] = useState(true)
     const [smsMessage, setSmsMessage] = useState(smsCustom || 'Hi, Kristy')
 
     const [activeSocialIcons, setActiveSocialIcons] = useState([])
     const [disableCustomTab, setDisableCustomTab] = useState(false)
+    const [selectedTemplate, setSelectedTemplate] = useState()
+
+    const { t } = useTranslationI18()
+
+    const localTranslation = (key, option = {}) => {
+      return t(key, { ...option, lng: selectLanguage.toLowerCase() })
+    }
 
     useImperativeHandle(ref, () => ({
       propsData: () => {
@@ -138,9 +162,6 @@ const Index: FC<P> = forwardRef(
         }
       },
     }))
-    function handleSelectedTab(value) {
-      onSeletedTab(value)
-    }
 
     const preview = () => {
       switch (type) {
@@ -381,7 +402,7 @@ const Index: FC<P> = forwardRef(
           )
         default:
           return (
-            <Appointment
+            <AppointmentPreview
               requestConfirm={requestConfirmation}
               allowRescheduling={allowRescheduling}
               allowCancellation={allowCancellation}
@@ -400,20 +421,22 @@ const Index: FC<P> = forwardRef(
           )
       }
     }
+
+    const handleServiceSelected = (val) => {
+      setSelectService({ ...selectService, [selectLanguage]: val })
+    }
+
     return (
       <ClientNotification
+        handleNotificationSubmit={handleNotificationSubmit}
         onSmsTabChanged={(value) => {
-          if (value === 2) {
-            console.log('this is smstext tab')
-            setDisableCustomTab(true)
-            handleSelectedTab(value)
+          if (value === 'smsPreview') {
+            onSelectedTab(value)
             setEnableReminder(true)
             setSmartDelivery(true)
             setHideAppearanceTabPane(false)
-            setStandardTap('1')
           } else {
-            console.log('this is email tab')
-            handleSelectedTab(value)
+            onSelectedTab(value)
             setEnableReminder(false)
             setSmartDelivery(false)
             setHideAppearanceTabPane(true)
@@ -451,6 +474,8 @@ const Index: FC<P> = forwardRef(
               onButtonColor={(value) => setButtonColor(value)}
               selectLanguage={selectLanguage}
               onSelectLanguage={(value) => setSelectLanguage(value)}
+              selectService={selectService[selectLanguage]}
+              onSelectService={(value) => handleServiceSelected(value)}
               medicalMessage={medicalMessage}
               onMedicalMessage={(value) => setMedicalMessage(value)}
               informationMessage={informationMessage}
@@ -474,17 +499,57 @@ const Index: FC<P> = forwardRef(
               hideEnablePay={hideEnablePay}
               onShowEnablePay={(value) => setShowEnablePay(value)}
               showEnablePay={showEnablePay}
+              showServiceSpecific={showServiceSpecific}
             />
           )
         }
-        previewComponent={isPreviewComponent && preview()}
+        previewComponent={
+          isPreviewComponent && (
+            <GlobalContext.Provider
+              value={{
+                setSelectedTemplate,
+                selectedTemplate,
+                showServiceSpecific,
+                selectService: selectService[selectLanguage],
+                t: localTranslation,
+              }}
+            >
+              {preview()}
+            </GlobalContext.Provider>
+          )
+        }
         smsComponent={
           isSmsComponent && (
-            <Smstext
-              smsMessage={smsMessage}
-              // enableReminder={enableReminder}
-              // smartDelivery={smartDelivery}
-            />
+            <div style={{ height: '100%' }}>
+              {standardTapIndex === 'standard' ? (
+                <Smstext
+                  smsMessage={localTranslation(
+                    `notifications.${langKey}.smsMessage`
+                  )}
+                />
+              ) : (
+                <GlobalContext.Provider
+                  value={{
+                    setSelectedTemplate,
+                    selectedTemplate,
+                    showServiceSpecific,
+                    selectService: selectService[selectLanguage],
+                    t: localTranslation,
+                  }}
+                >
+                  <CustomTemplate
+                    selectLanguage={selectLanguage}
+                    backGroundColor={backGroundColor}
+                    type={'sms'}
+                    name={name}
+                    langKey={langKey}
+                    smsMessage={t(`notifications.${langKey}.smsMessage`, {
+                      lng: 'en',
+                    })}
+                  />
+                </GlobalContext.Provider>
+              )}
+            </div>
           )
         }
         displayButtons={displayButtons}
