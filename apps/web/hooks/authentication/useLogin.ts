@@ -19,8 +19,8 @@ export default function useLogin(registered = false): [boolean, LoginProps] {
         json: true,
       })
       return {
-        user: token.user,
-        company: token.company,
+        user: token?.payload?.user,
+        company: token.payload?.company,
       } as LoginProps
     } catch (error) {
       console.log(error)

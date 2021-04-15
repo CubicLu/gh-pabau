@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../../components/Layout/Layout'
 import styles from './staff-notifications.module.less'
 import { Form as AntForm, Select } from 'formik-antd'
@@ -7,6 +7,7 @@ import { Col, Row, Button } from 'antd'
 import { gql, useMutation } from '@apollo/client'
 import { useLiveQuery, Notification, NotificationType } from '@pabau/ui'
 import { NextPage } from 'next'
+import useLogin from '../../hooks/authentication/useLogin'
 
 enum Users {
   AllAdmins = 'All Admins',
@@ -36,9 +37,10 @@ const ADD_MUTATION = gql`
     $text: String!
     $title: String!
     $type: String!
+    $sent_to: jsonb
   ) {
     insert_notifications_one(
-      object: { text: $text, title: $title, type: $type }
+      object: { text: $text, title: $title, type: $type, sent_to: $sent_to }
     ) {
       id
     }
@@ -57,6 +59,9 @@ const initialValues: InitialStaffNotifications = {
 
 export const StaffNotifications: NextPage = () => {
   const { data: notificationTypes } = useLiveQuery(LIST_QUERY)
+  const [authenticated, user] = useLogin(false)
+
+  console.log('user', user)
 
   const getNotificationType = (type) => {
     return notificationTypes.find((notification) => notification.type === type)
@@ -77,6 +82,7 @@ export const StaffNotifications: NextPage = () => {
       type: notificationType.type,
       title: notificationType.title,
       text: notificationType.text,
+      sent_to: [user.user],
     }
 
     await addMutation({

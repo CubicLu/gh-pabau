@@ -18,8 +18,11 @@ interface Notification {
 }
 
 const LIST_QUERY = gql`
-  subscription notifications {
-    notifications(order_by: { order: desc }) {
+  subscription notifications($user: jsonb) {
+    notifications(
+      order_by: { order: desc }
+      where: { sent_to: { _contains: $user } }
+    ) {
       id
       text
       title
@@ -47,7 +50,9 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
   const [notifications, setNotifications] = useState<Notification[]>()
   const router = useRouter()
   const { data, error, loading } = useDisabledFeaturesQuery()
-  const { data: notificationData } = useSubscription(LIST_QUERY)
+  const { data: notificationData } = useSubscription(LIST_QUERY, {
+    variables: { user: [user?.user] },
+  })
 
   useEffect(() => {
     if (notificationData?.notifications?.length > 0) {
