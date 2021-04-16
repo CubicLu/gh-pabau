@@ -173,6 +173,7 @@ export const permissions = shield(
       //Report
       findFirstReport: and(rules.isAuthenticated, rules.isAccessingReportData),
       reports: and(rules.isAuthenticated, rules.isAccessingReportData),
+      retrieveReport: rules.isAuthenticated,
       //ReportCategory
       findFirstReportCategory: and(
         rules.isAuthenticated,
