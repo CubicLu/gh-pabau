@@ -200,6 +200,7 @@ export interface Company {
   InsuranceDetail?: InsuranceDetail[];
   CompanyPosition?: CompanyPosition[];
   TrainCourseDate?: TrainCourseDate[];
+  SocialSurveyFeedbackResponse?: SocialSurveyFeedbackResponse[];
   XeroIntegration?: XeroIntegration[];
   CmLead?: CmLead[];
   CmContactJson?: CmContactJson[];
@@ -2667,7 +2668,7 @@ export interface SocialSurveyAnswer {
 export interface SocialSurveyFeedback {
   id: number;
   rating: number;
-  contact_id: number;
+  contact_id?: number;
   feedback_source: string;
   company_id: number;
   date: undefined;
@@ -2681,9 +2682,22 @@ export interface SocialSurveyFeedback {
   public_use: number;
   service_id: number;
   owner_response: string;
-  CmContact: CmContact;
+  CmContact?: CmContact;
   Company: Company;
+  Response?: SocialSurveyFeedbackResponse[];
   SocialSurveyAnswer?: SocialSurveyAnswer[];
+}
+
+export interface SocialSurveyFeedbackResponse {
+  id: number;
+  response: string;
+  date: Date;
+  company_id: number;
+  uid: number;
+  review_id: number;
+  Company: Company;
+  User: User;
+  Feedback: SocialSurveyFeedback;
 }
 
 export interface SocialSurveyQuestion {
@@ -2858,6 +2872,7 @@ export interface User {
   CmStaffGeneral?: CmStaffGeneral[];
   CompanyNote?: CompanyNote[];
   TrainCourseDate?: TrainCourseDate[];
+  SocialSurveyFeedbackResponse?: SocialSurveyFeedbackResponse[];
   CmContactTravel?: CmContactTravel[];
   CmContactViewed?: CmContactViewed[];
   CmContactNote?: CmContactNote[];

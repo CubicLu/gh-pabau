@@ -11,6 +11,7 @@
       - date
       - discount_rate
       - employees
+      - expiry_date
       - is_active
       - locations
       - name
@@ -23,21 +24,22 @@
   - role: public
     permission:
       columns:
-      - date
-      - is_active
-      - order
-      - employees
-      - locations
-      - services
       - amount
       - code
+      - created_at
+      - date
       - discount_rate
+      - employees
+      - expiry_date
+      - id
+      - is_active
+      - locations
       - name
+      - order
+      - services
       - show_on_reciept
       - type
-      - created_at
       - updated_at
-      - id
       filter: {}
       allow_aggregations: true
   update_permissions:
@@ -49,6 +51,7 @@
       - date
       - discount_rate
       - employees
+      - expiry_date
       - is_active
       - locations
       - name
@@ -1657,41 +1660,44 @@
     permission:
       check: {}
       columns:
-      - client
-      - lab
       - labNo
-      - lastUpdate
-      - public
-      - requested
-      - requester
+      - client
       - test
+      - requested
+      - lastUpdate
+      - lab
+      - requester
+      - public
+      - id
       backend_only: false
   select_permissions:
   - role: public
     permission:
       columns:
+      - public
+      - labNo
       - client
       - lab
-      - labNo
       - lastUpdate
-      - public
       - requested
       - requester
       - test
+      - id
       filter: {}
       allow_aggregations: true
   update_permissions:
   - role: public
     permission:
       columns:
+      - public
       - labNo
       - client
-      - test
-      - requested
-      - lastUpdate
       - lab
+      - lastUpdate
+      - requested
       - requester
-      - public
+      - test
+      - id
       filter: {}
       check: {}
   delete_permissions:
@@ -1942,6 +1948,7 @@
       - is_active
       - name
       - phone
+      - position
       - postcode
       - showOnline
       - website
@@ -1964,6 +1971,7 @@
       - name
       - order
       - phone
+      - position
       - postcode
       - showOnline
       - updated_at
@@ -1986,6 +1994,7 @@
       - name
       - order
       - phone
+      - position
       - postcode
       - showOnline
       - website

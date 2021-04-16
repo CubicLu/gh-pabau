@@ -70,13 +70,12 @@ export const Avatar: FC<AvatarProps> = ({
           overlayClassName={styles.overlay}
         >
           <div className={styles.avatarDisplay}>
-            {load ? (
+            {load && src?.length > 0 ? (
               <AntAvatar {...props} src={src} shape="circle" />
             ) : (
               <AntAvatar
                 {...props}
                 shape="circle"
-                src=""
                 style={{ backgroundColor: stc(name) }}
               >
                 {shortName}

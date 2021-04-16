@@ -21,6 +21,7 @@ export const SocialSurveyFeedback = objectType({
     t.model.owner_response()
     t.model.CmContact()
     t.model.Company()
+    t.model.Response()
     t.model.SocialSurveyAnswer()
   },
 })

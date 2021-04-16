@@ -77,6 +77,7 @@ export const Company = objectType({
     t.model.InsuranceDetail()
     t.model.CompanyPosition()
     t.model.TrainCourseDate()
+    t.model.SocialSurveyFeedbackResponse()
     t.model.XeroIntegration()
     t.model.CmLead()
     t.model.CmContactJson()

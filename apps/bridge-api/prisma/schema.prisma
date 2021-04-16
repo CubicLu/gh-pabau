@@ -251,6 +251,7 @@ model Company {
   InsuranceDetail                  InsuranceDetail[]
   CompanyPosition                  CompanyPosition[]
   TrainCourseDate                  TrainCourseDate[]
+  SocialSurveyFeedbackResponse     SocialSurveyFeedbackResponse[]
   XeroIntegration                  XeroIntegration[]
   CmLead                           CmLead[]
   CmContactJson                    CmContactJson[]
@@ -10941,7 +10942,7 @@ model SocialSurveyFeedback {
 
   id               Int     @id @default(autoincrement())
   rating           Int
-  contact_id       Int
+  contact_id       Int?
   feedback_source  String
   company_id       Int     @map("company")
   date             Decimal
@@ -10956,14 +10957,33 @@ model SocialSurveyFeedback {
   service_id       Int
   owner_response   String
 
-  CmContact CmContact @relation(fields: [contact_id], references: [ID])
-  Company   Company   @relation(fields: [company_id], references: [id])
+  CmContact CmContact? @relation(fields: [contact_id], references: [ID])
+  Company   Company    @relation(fields: [company_id], references: [id])
 
-
+  Response           SocialSurveyFeedbackResponse[]
   SocialSurveyAnswer SocialSurveyAnswer[]
   @@index([company_id], name: "company")
   @@index([related_id], name: "related_id")
   @@map("social_survey_feedback")
+}
+
+model SocialSurveyFeedbackResponse {
+  id         Int      @id @default(autoincrement())
+  response   String
+  date       DateTime @default(now())
+  company_id Int
+  uid        Int
+  review_id  Int
+
+  Company  Company              @relation(fields: [company_id], references: [id])
+  User     User                 @relation(fields: [uid], references: [id])
+  Feedback SocialSurveyFeedback @relation(fields: [review_id], references: [id])
+
+
+  @@index([review_id], name: "review_id")
+  @@index([company_id], name: "company_id")
+  @@index([uid], name: "user_id")
+  @@map("social_survey_responses")
 }
 
 //
@@ -12093,13 +12113,15 @@ model User {
   CmStaffGeneral              CmStaffGeneral[]
   CompanyNote                 CompanyNote[]
   TrainCourseDate             TrainCourseDate[]
-  CmContactTravel             CmContactTravel[]
-  CmContactViewed             CmContactViewed[]
-  CmContactNote               CmContactNote[]
-  InvProduct                  InvProduct[]
-  InvPayment                  InvPayment[]
-  MessageTemplate             MessageTemplate[]
-  UserActivityLog             UserActivityLog[]
+
+  SocialSurveyFeedbackResponse SocialSurveyFeedbackResponse[]
+  CmContactTravel              CmContactTravel[]
+  CmContactViewed              CmContactViewed[]
+  CmContactNote                CmContactNote[]
+  InvProduct                   InvProduct[]
+  InvPayment                   InvPayment[]
+  MessageTemplate              MessageTemplate[]
+  UserActivityLog              UserActivityLog[]
 
   StaffMeta StaffMeta[]
   @@index([calendar_order], name: "calendar_order")
