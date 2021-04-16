@@ -154,6 +154,7 @@ pipelines:
           size: 2x
           name: build
           script:
+            - NODE_OPTIONS=--max_old_space_size=4096 yarn install --frozen-lockfile --prefer-offline
             - NODE_OPTIONS=--max_old_space_size=4096 yarn affected --base=HEAD~1 --target=build --prod
           artifacts:
             - node_modules/**
