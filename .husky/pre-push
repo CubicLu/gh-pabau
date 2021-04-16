@@ -1,5 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-yarn nx affected --base=FETCH_HEAD --target=lint --parallel
-#yarn nx affected --base=FETCH_HEAD --target=test --parallel
+yarn nx affected --base=FETCH_HEAD --target=lint

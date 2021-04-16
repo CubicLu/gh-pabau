@@ -1,12 +1,11 @@
 import { ApolloServer } from 'apollo-server-express'
-import express from 'express'
-import { schema } from './schema'
 import cookieSession from 'cookie-session'
 import cors from 'cors'
-import { stringToBoolean } from './utils'
+import express from 'express'
 import { version } from '../../../package.json'
 import { createContext } from './context'
-import authenticatedUser from './middlewares/authenticatedUser'
+import { schema } from './schema'
+import { stringToBoolean } from './utils'
 
 console.log(`Starting bridge-api version ${version}`)
 console.log(
@@ -32,13 +31,14 @@ app
       httpOnly: true,
     })
   )
-  .use(authenticatedUser)
+//.use(authenticatedUser)
 
 const server = new ApolloServer({
   schema,
   context: createContext,
   tracing: process.env.NODE_ENV === 'development',
   persistedQueries: false,
+  debug: true,
   playground: {
     settings: {
       'schema.polling.enable': false,
@@ -49,6 +49,10 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app })
 
+app.use((req, res, next) => {
+  console.log('Hello from logger')
+  next()
+})
 if (process.env.JEST_WORKER_ID === undefined) {
   app.listen({ port: PORT }, () =>
     console.log(

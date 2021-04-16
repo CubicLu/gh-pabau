@@ -2,20 +2,10 @@ import { allow, and, rule, shield } from 'graphql-shield'
 import { Context } from '../context'
 
 const rules = {
-  isAuthenticated: rule('isAuthenticated')(
-    async (root, args, ctx: Context): Promise<boolean> => {
-      try {
-        if (ctx.req.authenticatedUser) {
-          return true
-        } else {
-          throw new Error('authenticatedUser is empty')
-        }
-      } catch (error) {
-        console.log(error)
-        return false
-      }
-    }
-  ),
+  isAuthenticated: rule('isAuthenticated')(async (root, args, ctx: Context) => {
+    console.log('isAuthenticated', ctx.req.body)
+    return !!ctx?.req?.authenticatedUser
+  }),
   isAdmin: rule('isAdmin')(
     async (root, args, ctx: Context): Promise<boolean> => {
       return ctx?.req?.authenticatedUser?.admin ?? false

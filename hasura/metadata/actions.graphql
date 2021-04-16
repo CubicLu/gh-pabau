@@ -1,3 +1,10 @@
+type Mutation {
+  actionName (
+    arg1: SampleInput!
+  ): SampleOutput
+}
+
+
 
 
 input LoginInput {
@@ -5,7 +12,16 @@ input LoginInput {
   password : String!
 }
 
+input SampleInput {
+  username : String!
+  password : String!
+}
+
 type loginOutput {
+  accessToken : String!
+}
+
+type SampleOutput {
   accessToken : String!
 }
 

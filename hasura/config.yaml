@@ -1,5 +1,5 @@
 version: 2
-endpoint: https://api.new.pabau.com
+endpoint: http://api.new.pabau.com
 metadata_directory: metadata
 actions:
   kind: synchronous

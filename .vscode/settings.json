@@ -22,5 +22,13 @@
   "git.autofetch": true,
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   "editor.formatOnSave": true,
-  "files.eol": "\n"
+  "files.eol": "\n",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.organizeImports": true
+  },
+  "[json]": {
+    "editor.formatOnType": true,
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  }
 }

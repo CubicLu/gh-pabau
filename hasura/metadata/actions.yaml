@@ -1,8 +1,14 @@
-actions: []
+actions:
+- name: actionName
+  definition:
+    kind: synchronous
+    handler: http://host.docker.internal:3000
 custom_types:
   enums: []
   input_objects:
   - name: LoginInput
+  - name: SampleInput
   objects:
   - name: loginOutput
+  - name: SampleOutput
   scalars: []

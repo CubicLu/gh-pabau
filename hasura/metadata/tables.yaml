@@ -271,6 +271,44 @@
       filter: {}
 - table:
     schema: public
+    name: Response
+  remote_relationships:
+  - definition:
+      remote_field:
+        socialSurveyFeedback:
+          arguments: {}
+      hasura_fields: []
+      remote_schema: CRM
+    name: fk_response
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - id
+      - review_id
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - id
+      - review_id
+      filter: {}
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - id
+      - review_id
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
     name: SMS_campaign
   insert_permissions:
   - role: public
@@ -307,6 +345,81 @@
       - sent_to
       filter: {}
       check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
+    name: application_notification_type
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - id
+      - name
+      - type
+      - enabled
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - enabled
+      - name
+      - type
+      - id
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - enabled
+      - name
+      - type
+      - id
+      filter: {}
+      check: {}
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
+    name: application_notification_type_enum
+  is_enum: true
+- table:
+    schema: public
+    name: application_notifications
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - id
+      - user
+      - notification
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - user
+      - id
+      - notification
+      filter: {}
+      allow_aggregations: true
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - user
+      - id
+      - notification
+      filter: {}
+      check: {}
   delete_permissions:
   - role: public
     permission:
@@ -2131,6 +2244,95 @@
     name: news
 - table:
     schema: public
+    name: notification_types
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - text
+      - title
+      - type
+      - type_name
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - created_at
+      - id
+      - text
+      - title
+      - type
+      - type_name
+      - updated_at
+      filter: {}
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - text
+      - title
+      - type
+      - type_name
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
+    name: notifications
+  object_relationships:
+  - name: notification_type
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: notification_types
+        insertion_order: null
+        column_mapping:
+          type: type
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - sent_to
+      - text
+      - title
+      - type
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - created_at
+      - id
+      - order
+      - sent_to
+      - text
+      - title
+      - type
+      - updated_at
+      filter: {}
+  update_permissions:
+  - role: public
+    permission:
+      columns:
+      - sent_to
+      - text
+      - title
+      - type
+      filter: {}
+      check: null
+  delete_permissions:
+  - role: public
+    permission:
+      filter: {}
+- table:
+    schema: public
     name: packages
 - table:
     schema: public
@@ -2785,4 +2987,28 @@
   delete_permissions:
   - role: public
     permission:
+      filter: {}
+- table:
+    schema: public
+    name: user_list
+  insert_permissions:
+  - role: public
+    permission:
+      check: {}
+      columns:
+      - admin
+      - company
+      - first_name
+      - id
+      - last_name
+      backend_only: false
+  select_permissions:
+  - role: public
+    permission:
+      columns:
+      - admin
+      - company
+      - first_name
+      - id
+      - last_name
       filter: {}

@@ -1,5 +1,25 @@
 # Pabau
 
+- [Pabau](#pabau)
+  - [Welcome](#welcome)
+  - [Paths](#paths)
+  - [Setup](#setup)
+    - [Windows](#windows)
+    - [Linux](#linux)
+  - [Storybook](#storybook)
+  - [Frontend](#frontend)
+  - [Bridge](#bridge)
+  - [Backend](#backend)
+  - [Code Rules](#code-rules)
+  - [Delineation between /apps/web/components/ ("App components") and /libs/ui/ ("UI components")](#delineation-between-appswebcomponents-app-components-and-libsui-ui-components)
+  - [Our Stack](#our-stack)
+  - [Ticket workflow](#ticket-workflow)
+  - [GraphQL workflow](#graphql-workflow)
+    - [Setup](#setup-1)
+    - [bridge-proxy](#bridge-proxy)
+    - [Per-ticket](#per-ticket)
+  - [To do (big engineering items)](#to-do-big-engineering-items)
+
 ## Welcome
 
 This monorepo contains all of our code (with the exception of `/.env`). The monorepo was created by [nx](https://nx.dev). For more information type `yarn run nx`.
@@ -94,10 +114,10 @@ Notes:
 
 - To map the singular name of a Model to a plural database table use @@map("table_name")
 
-` model marketing_source{ ...[multiple filed names] @@map("marketing_sources") }`
+`model marketing_source{ ...[multiple filed names] @@map("marketing_sources") }`
 
 - To map a database table name which doesn't follow the naming convention [A-Za-z][a-za-z0-9_]\*
-  ` model third_party_access{ ...[multiple filed names] @@map("3rd_party_access") }`
+  `model third_party_access{ ...[multiple filed names] @@map("3rd_party_access") }`
 
 ## Backend
 
@@ -116,7 +136,7 @@ To view the Backend, you can either visit [https://backend.pabau.com](https://ba
 - Never do `import './MyComponent.less'` - always change it to `import styles from './MyComponent.module.less'`
 - Never run your IDE or npm/yarn/npx with sudo or as root/Administrator.
 - Never commit secrets, passwords, or tokens to this repo.
-- To help keep DRY maybe you can tag me in a PR early on in any new component you are writing, so I can primarily help with the naming of things (as they saying goes "naming things is hard"). Or a screenshare, or just type out your plan more. Also have you looked at a wide variety of FIGMA designs? that would help. Also check out https://vimeo.com/user30916972 for some videos of our old system, to get an idea for the domain and intended user.
+- To help keep DRY maybe you can tag me in a PR early on in any new component you are writing, so I can primarily help with the naming of things (as they saying goes "naming things is hard"). Or a screenshare, or just type out your plan more. Also have you looked at a wide variety of FIGMA designs? that would help. Also check out <https://vimeo.com/user30916972> for some videos of our old system, to get an idea for the domain and intended user.
 - Best to use jsx ternary rather than display none in react
 - Best to make each component responsive on its own (Storybook even has a mobile preview button), rather than based on outside props.
 - Open to all disagreements and other ideas. Please raise threads about problems you see in the code, my code, or future code.
@@ -181,30 +201,38 @@ To view the Backend, you can either visit [https://backend.pabau.com](https://ba
 
 ### Setup
 
-1. [optional] Please install Hasura locally. On Linux it's very easy.
-1. Create a hasura/.env file:
-   ```dotenv
-   HASURA_GRAPHQL_ADMIN_SECRET=madskills
-   HASURA_GRAPHQL_ENDPOINT=https://api.new.pabau.com/
-   ```
+1. Install Hasura locally:
+
+  ```bash
+  docker-compose -f hasura/docker-compose.yml up -d
+  ```
+
+1. Copy hasura/.env.SAMPLE to .env and change to:
+
+  ```dotenv
+  HASURA_GRAPHQL_ADMIN_SECRET=madskills
+  HASURA_GRAPHQL_ENDPOINT=https://api.new.pabau.com/
+  ```
 
 ### bridge-proxy
+
 To run debug build locally, type `yarn nx serve bridge-proxy` - it listens on port 5006.
 To run production build locally, type `docker build -t bridge-proxy -f tools/cicd/bridge-proxy.Dockerfile apps/bridge-proxy/ && docker run --rm -p 5006:5006 -it bridge-proxy`
 
 ### Per-ticket
 
-1. Open the hasura console
-1. Create a new table (in the singular tense, using snake case)
-1. Insert 3 'Frequently used columns' - the ID being GUID, and the created_at and updated_at
-1. If your table is order sensitive (customers can drag to rearrange the order), then add a column called "order", type Integer
-1. If your table has is_active boolean, then add "is_active" as Boolean
-1. Add the rest of your columns too
-1. Add a very clear comment for the table (our customers will see this)
-1. Change the table permissions so that 'public' role can do pretty much everything (for now).
-1. Check your table's public role permission for SELECT has the Aggregation queries permissions enabled.
-1. Now run `yarn hasura:export` in your IDE, commit the changes to your branch.
-1. Now on your page's `schema.fields` array, add the relevant keys in -- they should match the hasura columns
+1. Open the Hasura console: <http://localhost:8080/console/>
+2. Open the Hasura logs: `docker-compose -f hasura/docker-compose.yml logs -f`
+3. Create a new table (in the singular tense, using snake case)
+4. Insert 3 'Frequently used columns' - the ID being GUID, and the created_at and updated_at
+5. If your table is order sensitive (customers can drag to rearrange the order), then add a column called "order", type Integer
+6. If your table has is_active boolean, then add "is_active" as Boolean
+7. Add the rest of your columns too
+8. Add a very clear comment for the table (our customers will see this)
+9. Change the table permissions so that 'public' role can do pretty much everything (for now).
+10. Check your table's public role permission for SELECT has the Aggregation queries permissions enabled.
+11. Now run `yarn hasura:export` in your IDE, commit the changes to your branch.
+12. Now on your page's `schema.fields` array, add the relevant keys in -- they should match the hasura columns
 
 ## To do (big engineering items)
 
@@ -225,11 +253,8 @@ To run production build locally, type `docker build -t bridge-proxy -f tools/cic
   1. generate jwt in php
   2. ...?
 
-
-
-* auth to prisma
-* storing jwt token for hasura in nextjs httponly cookie
-* graphql code generator and other tooling
-* nestjs needs a typed hasura service that we can call
-* prisma needs a hoc for company_id security
-* 
+- auth to prisma
+- storing jwt token for hasura in nextjs httponly cookie
+- graphql code generator and other tooling
+- nestjs needs a typed hasura service that we can call
+- prisma needs a hoc for company_id security
