@@ -1,0 +1,12 @@
+version: '2'
+services:
+  pds-production:
+    image: registry.pabau.com:5000/monorepo/bridge-proxy
+    stdin_open: true
+    tty: true
+    labels:
+      io.rancher.scheduler.affinity:host_label: pod_master=true
+      traefik.frontend.rule: Host:pds.pabau.com
+      traefik.port: '5006'
+      traefik.enable: 'true'
+      io.rancher.container.pull_image: always

@@ -82,22 +82,21 @@ pipelines:
   branches:
     master:
       - step:
-          name: yarn
-          caches:
-            - yarncustom
+          name: yarn audit
           script:
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -gt 2 ]] && exit 1 || exit 0'
-            - yarn install --frozen-lockfile --prefer-offline
-          artifacts:
-            - node_modules/**
+          # artifacts:
+          #   - node_modules/**
 
       - parallel:
         - step:
-            name: quick
+            name: type checks
             script:
               # TODO: move these to eslint so that `yarn lint` picks up these errors instead
               - npm i -g typescript
               - tsc --noEmit -p apps/backend/
+              - tsc --noEmit -p apps/bridge-api/
+              - tsc --noEmit -p apps/bridge-proxy/
               - tsc --noEmit -p apps/connect/
               - tsc --noEmit -p apps/connect-e2e/
               - tsc --noEmit -p apps/mgmt/
@@ -105,20 +104,25 @@ pipelines:
               - tsc --noEmit -p apps/ui-e2e/
               - tsc --noEmit -p apps/web/
               - tsc --noEmit -p apps/web-e2e/
+              - tsc --noEmit -p libs/i18n/tsconfig.lib.json
+              # - tsc --noEmit -p libs/graphql/tsconfig.lib.json
               - tsc --noEmit -p libs/ui/tsconfig.lib.json
               - tsc --noEmit -p libs/yup/tsconfig.lib.json
-
-              - touch /tmp/bot_message.txt
-
         - step:
             name: lint
+            caches:
+              - yarncustom
             script:
-              - NODE_OPTIONS=--max_old_space_size=3072 yarn affected:lint --base=HEAD~1 --with-deps
+              - NODE_OPTIONS=--max_old_space_size=4096 yarn install --frozen-lockfile --prefer-offline
+              - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:lint --base=HEAD~1 --with-deps
 
         - step:
             name: unit tests
+            caches:
+              - yarncustom
             script:
-              - NODE_OPTIONS=--max_old_space_size=3072 yarn affected:test --base=HEAD~1
+              - NODE_OPTIONS=--max_old_space_size=4096 yarn install --frozen-lockfile --prefer-offline
+              - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:test --base=HEAD~1
 
       # - parallel:
 
@@ -149,7 +153,7 @@ pipelines:
           script:
             - NODE_OPTIONS=--max_old_space_size=4096 yarn affected --base=HEAD~1 --target=build --prod
           artifacts:
-            - node_modules/.cache/**
+            - node_modules/**
             - dist/**
 
       - step:

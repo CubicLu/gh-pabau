@@ -1,6 +1,6 @@
 {
   "name": "bridge-proxy",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
     "@graphql-mesh/cli": "^0.28.0",
     "@graphql-mesh/graphql": "^0.15.2",
     "graphql": "^15.5.0",
-    "url-loader": "4.1.1"
+    "url-loader": "4.1.1",
+    "jsonwebtoken": "8.5.1"
   }
 }

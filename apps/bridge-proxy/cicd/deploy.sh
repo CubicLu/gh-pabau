@@ -41,7 +41,8 @@ echo "BITBUCKET_PR_ID=${BITBUCKET_PR_ID}"
 echo "-----------------"
 
 echo "Docker build..."
-docker build --no-cache "apps/${APP_NAME}" -t "${APP_NAME}" -f "tools/cicd/${APP_NAME}.Dockerfile"
+#TODO: change apps/ to dist/apps/ (enabling ts compilation)
+docker build "apps/${APP_NAME}" -t "${APP_NAME}" -f "tools/cicd/${APP_NAME}.Dockerfile"
 echo "Docker tag..."
 docker image tag "${APP_NAME}:latest" "${DOCKER_HOSTNAME}/monorepo/${APP_NAME}"
 echo "Docker login..."
@@ -49,11 +50,7 @@ docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}" "${DOCKER_HOSTNAME}
 echo "Docker push..."
 docker image push "${DOCKER_HOSTNAME}/monorepo/${APP_NAME}"
 echo "Rancher deploy..."
-#apt-get update -y && apt-get install git && git clone -b v1.6 --recursive https://github.com/rancher/cli.git rancher-cli && cd rancher-cli && make
-#docker run -v "$PWD:/files:ro" --rm -it --entrypoint rancher tagip/rancher-cli --url http://pods.pabau.com:8888 --access-key xxx --secret-key xxx --file /files/docker-compose.yml --rancher-file /files/rancher-compose.yml up -d --upgrade --stack pabau2-backend production
-echo "FOR NOW, ASK JAMES/MARTIN TO 'UPGRADE' THE 'PABAU2-BACKEND/PRODUCTION' CONTAINER IN RANCHER!"
-
-
+docker run -v "${VERCEL_JSON_LOCATION}/cicd:/files:ro" --rm -it --entrypoint rancher tagip/rancher-cli --url "${RANCHER_URL}" --access-key "${RANCHER_ACCESS_KEY}" --secret-key "${RANCHER_SECRET_KEY}" --file /files/docker-compose.yml --rancher-file /files/rancher-compose.yml up -d --upgrade --confirm-upgrade --stack pabau2-backend pds-production
 
 if [ -z "${BITBUCKET_PR_ID}" ]; then
   message_body=''

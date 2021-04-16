@@ -611,7 +611,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/bridge-proxy/**/*.ts"]
+            "lintFilePatterns": ["apps/bridge-proxy/**/*.{t,j}s"]
           }
         },
         "test": {

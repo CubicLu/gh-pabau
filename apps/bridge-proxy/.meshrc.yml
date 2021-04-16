@@ -6,4 +6,6 @@ sources:
     handler:
       graphql:
         endpoint: ''
-        customFetch: ../../../fetcher.ts#default
+        customFetch: ../../../fetcher.js#default
+        operationHeaders:
+          Authorization: '{context.headers.authorization}'
