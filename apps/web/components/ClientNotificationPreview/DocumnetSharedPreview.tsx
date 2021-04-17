@@ -45,12 +45,14 @@ const DocumentSharedPreview: FC<P> = ({
             messageLine2={t('notifications.documnetshared.messageLine2')}
             userEmail={'info@theclinic.com'}
             userName={'Sophia'}
-            buttonName={'View Document'}
+            buttonName={t('notifications.documnetshared.buttonName')}
             clinicName={'Clinic'}
             closingText={t('notifications.documnetshared.closingText')}
             signatureBlock={t('notifications.documnetshared.signatureBlock')}
             infoText={t('notifications.documnetshared.infoText')}
             buttonColor={buttonColor}
+            fromMessage={t('notifications.documentshared.fromMessage')}
+            userMessage={t('notifications.documentshared.userMessage')}
           />
         </EmailSmsPreview>
       ) : (

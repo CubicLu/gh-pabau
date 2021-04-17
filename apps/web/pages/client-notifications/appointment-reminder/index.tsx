@@ -2,11 +2,10 @@ import React, { FC, useRef, useState } from 'react'
 import { Notification, NotificationType } from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
 import ClientNotification from '../../../components/ClientNotification/index'
-import { renderToString } from 'react-dom/server'
-import AppointmentEmailPreview from '../../../components/ClientNotificationEmailPreview/appointmentReminderEmailPreview'
-import { apiURL } from '../../../baseUrl'
+import AppointmentEmailPreview from '../../../components/ClientNotificationEmailPreview/AppointmentReminderEmailPreview'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import { sendEmailService } from '../../../components/ClientNotificationEmailPreview/sendEmailService'
 
 const Index: FC = () => {
   const [selectedTab, setSelectedTab] = useState<'emailPreview' | 'smsPreview'>(
@@ -15,7 +14,7 @@ const Index: FC = () => {
   const ref = useRef(null)
   const { t } = useTranslationI18()
 
-  const showNotification = (val) => {
+  const showNotification = (email) => {
     if (selectedTab === 'emailPreview') {
       const propsData = ref?.current?.propsData() || {}
       const {
@@ -33,46 +32,42 @@ const Index: FC = () => {
         medicalMessage,
         standardTapIndex,
         activeSocialIcons,
+        type,
+        localTranslation,
       } = propsData
 
-      const requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': apiURL,
-        },
-        body: JSON.stringify({
-          bodyContent: `${renderToString(
-            <AppointmentEmailPreview
-              requestConfirm={requestConfirm}
-              allowRescheduling={allowRescheduling}
-              allowCancellation={allowCancellation}
-              displayPolicy={displayPolicy}
-              showService={showService}
-              showEmployeeName={showEmployeeName}
-              addMedicalHisButton={addMedicalHisButton}
-              selectLanguage={selectLanguage}
-              backGroundColor={backGroundColor}
-              buttonColor={buttonColor}
-              informationMessage={informationMessage}
-              medicalMessage={medicalMessage}
-              standardTapIndex={standardTapIndex}
-              activeSocialIcons={activeSocialIcons}
-            />
-          )}`,
-          email: val,
-          subject: 'TEST',
-        }),
-      }
-      fetch(`${apiURL}/notification-email`, requestOptions).then((res) => {
-        if (res.status === 201) {
-          Notification(NotificationType.success, 'Test Email sent')
-        } else {
-          Notification(NotificationType.error, 'Test Email failed')
-        }
+      const bodyContent = (
+        <AppointmentEmailPreview
+          requestConfirm={requestConfirm}
+          allowRescheduling={allowRescheduling}
+          allowCancellation={allowCancellation}
+          displayPolicy={displayPolicy}
+          showService={showService}
+          showEmployeeName={showEmployeeName}
+          addMedicalHisButton={addMedicalHisButton}
+          selectLanguage={selectLanguage}
+          backGroundColor={backGroundColor}
+          buttonColor={buttonColor}
+          informationMessage={informationMessage}
+          medicalMessage={medicalMessage}
+          standardTapIndex={standardTapIndex}
+          activeSocialIcons={activeSocialIcons}
+          type={type}
+          t={localTranslation}
+        />
+      )
+      sendEmailService({
+        email,
+        subject: t('notifications.email.appointmentReminder.subject'),
+        bodyContent,
+        successMessage: t('notifications.email.send.successMessage'),
+        failedMessage: t('notifications.email.send.failedMessage'),
       })
     } else if (selectedTab === 'smsPreview') {
-      Notification(NotificationType.success, 'Test SMS sent')
+      Notification(
+        NotificationType.success,
+        t('notifications.sms.send.successMessage')
+      )
     }
   }
 

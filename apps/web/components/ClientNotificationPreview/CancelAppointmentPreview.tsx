@@ -64,6 +64,12 @@ const CancelAppointmentPreview: FC<P> = ({
             address={t('notifications.cancelledAppointment.address')}
             message={t('notifications.cancelledAppointment.message')}
             buttonColor={buttonColor}
+            cancelButtonName={t(
+              'notifications.cancelledAppointment.cancelButtonName'
+            )}
+            rebookButtonName={t(
+              'notifications.cancelledAppointment.rebookButtonName'
+            )}
           />
         </EmailSmsPreview>
       ) : (

@@ -40,6 +40,7 @@ const PackageSessionPreview: FC<P> = ({
           <PackageSession
             message={t('notifications.packageSession.message')}
             buttonColor={buttonColor}
+            buttonName={t('notifications.packageSession.buttonName')}
           />
         </EmailSmsPreview>
       ) : (

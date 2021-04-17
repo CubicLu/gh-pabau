@@ -48,6 +48,7 @@ const InvoicePreview: FC<P> = ({
             }
             showInvoiceButton={true}
             buttonColor={buttonColor}
+            viewButtonName={t('notifications.invoice.viewButtonName')}
           />
         </EmailSmsPreview>
       ) : (

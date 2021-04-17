@@ -9,12 +9,14 @@ export const DocumentShared: FC<DocumentSharedProps & EmailSMSPreviewProps> = ({
   messageLine2,
   userEmail,
   userName,
-  buttonName,
+  buttonName = 'View Document',
   buttonColor,
   clinicName,
   closingText,
   signatureBlock,
   infoText,
+  userMessage = 'User',
+  fromMessage = 'From',
 }) => {
   return (
     <>
@@ -24,8 +26,12 @@ export const DocumentShared: FC<DocumentSharedProps & EmailSMSPreviewProps> = ({
             <span className={styles.message}>{messageLine1}</span>
           </div>
           <div className={styles.userDetail}>
-            <span>From: {clinicName}</span>
-            <span>User: {`${userName} (${userEmail})`}</span>
+            <span>
+              {fromMessage}: {clinicName}
+            </span>
+            <span>
+              {userMessage}: {`${userName} (${userEmail})`}
+            </span>
           </div>
         </Col>
       </Row>
@@ -36,7 +42,7 @@ export const DocumentShared: FC<DocumentSharedProps & EmailSMSPreviewProps> = ({
           </div>
           <Row gutter={[0, 4]} className={styles.viewDocument}>
             <Button backgroundColor={buttonColor} className={styles.bookButton}>
-              {buttonName || 'View Document'}
+              {buttonName}
             </Button>
           </Row>
         </Col>

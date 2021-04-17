@@ -1,8 +1,10 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useRef, useState } from 'react'
 import { Notification, NotificationType } from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
 import ClientNotification from '../../../components/ClientNotification/index'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
+import AppointmentEmailPreview from '../../../components/ClientNotificationEmailPreview/AppointmentReminderEmailPreview'
+import { sendEmailService } from '../../../components/ClientNotificationEmailPreview/sendEmailService'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
@@ -10,12 +12,62 @@ const Index: FC = () => {
     'emailPreview'
   )
   const { t } = useTranslationI18()
+  const ref = useRef(null)
 
   const showNotification = (email) => {
     if (selectedTab === 'emailPreview') {
-      Notification(NotificationType.success, 'Test message sent')
+      const propsData = ref?.current?.propsData() || {}
+      const {
+        requestConfirm,
+        allowRescheduling,
+        allowCancellation,
+        displayPolicy,
+        showService,
+        showEmployeeName,
+        addMedicalHisButton,
+        selectLanguage,
+        backGroundColor,
+        buttonColor,
+        informationMessage,
+        medicalMessage,
+        standardTapIndex,
+        activeSocialIcons,
+        localTranslation,
+      } = propsData
+
+      const bodyContent = (
+        <AppointmentEmailPreview
+          requestConfirm={requestConfirm}
+          allowRescheduling={allowRescheduling}
+          allowCancellation={allowCancellation}
+          displayPolicy={displayPolicy}
+          showService={showService}
+          showEmployeeName={showEmployeeName}
+          addMedicalHisButton={addMedicalHisButton}
+          selectLanguage={selectLanguage}
+          backGroundColor={backGroundColor}
+          buttonColor={buttonColor}
+          informationMessage={informationMessage}
+          medicalMessage={medicalMessage}
+          standardTapIndex={standardTapIndex}
+          activeSocialIcons={activeSocialIcons}
+          type={'new'}
+          t={localTranslation}
+        />
+      )
+
+      sendEmailService({
+        email,
+        subject: t('notifications.email.newAppointment.subject'),
+        bodyContent,
+        successMessage: t('notifications.email.send.successMessage'),
+        failedMessage: t('notifications.email.send.failedMessage'),
+      })
     } else if (selectedTab === 'smsPreview') {
-      Notification(NotificationType.success, 'Test SMS sent')
+      Notification(
+        NotificationType.success,
+        t('notifications.sms.send.successMessage')
+      )
     }
   }
 
@@ -41,6 +93,7 @@ const Index: FC = () => {
         handleNotificationSubmit={showNotification}
       />
       <ClientNotification
+        ref={ref}
         onSelectedTab={(value) => setSelectedTab(value)}
         hideReminderTimeFrameTabPane={true}
         standardMessage={t('notifications.newAppointment.standardMessage')}

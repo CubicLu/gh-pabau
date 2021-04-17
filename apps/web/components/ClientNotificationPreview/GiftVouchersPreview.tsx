@@ -44,7 +44,16 @@ const GiftVoucherPreview: FC<P> = ({
           contactInfoNumber={'+44 000 987 507'}
           contactEmail={'info@theclinic.com'}
         >
-          <GiftVoucher buttonColor={buttonColor} displayViewButton={true} />
+          <GiftVoucher
+            buttonColor={buttonColor}
+            displayViewButton={true}
+            buttonName={t('notifications.giftVoucher.buttonName')}
+            valueMessage={t('notifications.giftVoucher.valueMessage')}
+            voucherCodeMessage={t(
+              'notifications.giftVoucher.voucherCodeMessage'
+            )}
+            expiryMessage={t('notifications.giftVoucher.expiryMessage')}
+          />
         </EmailSmsPreview>
       ) : (
         <CustomTemplate

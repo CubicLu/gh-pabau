@@ -46,6 +46,7 @@ const ReferralPreview: FC<P> = ({
             footerText={`${t('notifications.referrals.closingText')}<br/>${t(
               'notifications.referrals.signatureBlock'
             )}`}
+            buttonName={t('notifications.referrals.buttonName')}
           />
         </EmailSmsPreview>
       ) : (

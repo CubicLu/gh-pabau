@@ -41,6 +41,7 @@ const ConnectRegistrationPreview: FC<P> = ({
           footerContact={true}
           contactEmail={'abc@info.com'}
           contactInfoNumber={'+98765432101'}
+          contactMessage={t('notifications.emailPreview.footer.contactMessage')}
         >
           <ConnectRegistration
             message={t('notifications.connectRegistration.message')}
@@ -51,6 +52,15 @@ const ConnectRegistrationPreview: FC<P> = ({
             text={`${t(
               'notifications.connectRegistration.closingText'
             )}<br/>${t('notifications.connectRegistration.signatureBlock')}`}
+            credentialMessage={t(
+              'notifications.connectRegistration.credentialMessage'
+            )}
+            userNameMessage={t(
+              'notifications.connectRegistration.userNameMessage'
+            )}
+            passwordMessage={t(
+              'notifications.connectRegistration.passwordMessage'
+            )}
           />
         </EmailSmsPreview>
       ) : (

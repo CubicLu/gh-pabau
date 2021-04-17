@@ -11,13 +11,19 @@ export const GiftVoucher: FC<GiftVoucherProps & EmailSMSPreviewProps> = ({
   consultancyName,
   buttonColor,
   displayViewButton = false,
+  buttonName = 'View Voucher',
+  valueMessage = 'Value',
+  voucherCodeMessage = 'Voucher Code',
+  expiryMessage = 'Expiry',
 }) => {
   return (
     <>
       {value && (
         <Row gutter={[0, 4]} className={styles.break}>
           <Col>
-            <span className={styles.contactInfo}>Value:&nbsp;{value}</span>
+            <span className={styles.contactInfo}>
+              {valueMessage}:&nbsp;{value}
+            </span>
           </Col>
         </Row>
       )}
@@ -25,7 +31,7 @@ export const GiftVoucher: FC<GiftVoucherProps & EmailSMSPreviewProps> = ({
         <Row gutter={[0, 4]} className={styles.break}>
           <Col>
             <span className={styles.contactInfo}>
-              Voucher Code:&nbsp;{voucherCode}
+              {voucherCodeMessage}:&nbsp;{voucherCode}
             </span>
           </Col>
         </Row>
@@ -33,7 +39,9 @@ export const GiftVoucher: FC<GiftVoucherProps & EmailSMSPreviewProps> = ({
       {expiry && (
         <Row gutter={[0, 4]} className={styles.break}>
           <Col>
-            <span className={styles.contactInfo}>Expiry :&nbsp;{expiry}</span>
+            <span className={styles.contactInfo}>
+              {expiryMessage} :&nbsp;{expiry}
+            </span>
           </Col>
         </Row>
       )}
@@ -48,7 +56,7 @@ export const GiftVoucher: FC<GiftVoucherProps & EmailSMSPreviewProps> = ({
       {displayViewButton && (
         <Row gutter={[0, 4]} className={styles.bookAppointment}>
           <Button backgroundColor={buttonColor} className={styles.bookButton}>
-            View Voucher
+            {buttonName}
           </Button>
         </Row>
       )}

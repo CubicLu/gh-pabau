@@ -56,6 +56,7 @@ const OutstandingInvoicePreview: FC<P> = ({
             showInvoiceButton={false}
             buttonColor={buttonColor}
             showEnablePay={showEnablePay}
+            payButtonName={t('notifications.invoice.outstanding.payButtonName')}
           />
         </EmailSmsPreview>
       ) : (

@@ -6,7 +6,7 @@ import styles from './EmailSmsPreview.module.less'
 export const LeadResponses: FC<LeadResponsesProps & EmailSMSPreviewProps> = ({
   message,
   description,
-  messageLine,
+  messageLine = 'We look forward to chatting soon!',
   text,
   isFooterText,
   companyPhone,
@@ -27,7 +27,7 @@ export const LeadResponses: FC<LeadResponsesProps & EmailSMSPreviewProps> = ({
         </Row>
       )}
       <Row gutter={[0, 4]} className={styles.break}>
-        <Col>{messageLine || 'We look forward to chatting soon!'}</Col>
+        <Col>{messageLine}</Col>
       </Row>
       {!isFooterText && (
         <Row gutter={[0, 4]} className={styles.textBox}>

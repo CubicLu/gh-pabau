@@ -37,17 +37,24 @@ const ClassSpotAvailablePreview: FC<P> = ({
           activeSocialIcons={activeSocialIcons}
           backGroundColor={backGroundColor}
           isFooterText={true}
-          footerText={
-            'Looking forward to hearing from you soon,<br/>Your friends at The Clinic'
-          }
+          footerText={`${t(
+            'notifications.classSpotAvailable.closingText'
+          )}<br/>${t('notifications.classSpotAvailable.signatureBlock')}`}
           footer={true}
           footerContact={true}
           contactEmail={'abc@info.com'}
           contactInfoNumber={'+98765432101'}
+          contactMessage={t('notifications.emailPreview.footer.contactMessage')}
         >
           <ClassesSpotAvailable
             message={t('notifications.classSpotAvailable.message')}
             buttonColor={buttonColor}
+            buttonTitleMessage={t(
+              'notifications.classSpotAvailable.buttonTitleMessage'
+            )}
+            bookButtonName={t(
+              'notifications.classSpotAvailable.bookButtonName'
+            )}
           />
         </EmailSmsPreview>
       ) : (

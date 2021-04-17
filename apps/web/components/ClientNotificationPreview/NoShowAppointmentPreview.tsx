@@ -45,6 +45,16 @@ const NoShowAppointmentPreview: FC<P> = ({
             buttonColor={buttonColor}
             closingText={t('notifications.noShowAppointment.closingText')}
             signatureBlock={t('notifications.noShowAppointment.signatureBlock')}
+            bookButtonName={t('notifications.noShowAppointment.bookButtonName')}
+            buttonTitleMessage={t(
+              'notifications.noShowAppointment.buttonTitleMessage'
+            )}
+            contactFirstHalfMsg={t(
+              'notifications.noShowAppointment.contactFirstHalfMsg'
+            )}
+            contactSecondHalfMsg={t(
+              'notifications.noShowAppointment.contactSecondHalfMsg'
+            )}
           />
         </EmailSmsPreview>
       ) : (

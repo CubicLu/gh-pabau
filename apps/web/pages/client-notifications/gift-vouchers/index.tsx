@@ -1,21 +1,64 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useRef, useState } from 'react'
 import { Notification, NotificationType } from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
 import ClientNotification from '../../../components/ClientNotification/index'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
+import { sendEmailService } from '../../../components/ClientNotificationEmailPreview/sendEmailService'
+import GiftVouchersEmailPreview from '../../../components/ClientNotificationEmailPreview/GiftVouchersEmailPreview'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
   const [selectedTab, setSelectedTab] = useState<'emailPreview' | 'smsPreview'>(
     'emailPreview'
   )
+  const ref = useRef(null)
   const { t } = useTranslationI18()
 
   const showNotification = (email) => {
     if (selectedTab === 'emailPreview') {
-      Notification(NotificationType.success, 'Test message sent')
+      const propsData = ref?.current?.propsData() || {}
+      const {
+        selectLanguage,
+        backGroundColor,
+        buttonColor,
+        informationMessage,
+        activeSocialIcons,
+        type,
+        localTranslation,
+      } = propsData
+      const bodyContent = () => {
+        const t = localTranslation
+        return (
+          <GiftVouchersEmailPreview
+            backGroundColor={backGroundColor}
+            activeSocialIcons={activeSocialIcons}
+            selectLanguage={selectLanguage}
+            buttonColor={buttonColor}
+            informationMessage={informationMessage}
+            type={type}
+            displayViewButton={true}
+            greeting={t('notifications.giftVoucher.greeting')}
+            buttonName={t('notifications.giftVoucher.buttonName')}
+            valueMessage={t('notifications.giftVoucher.valueMessage')}
+            voucherCodeMessage={t(
+              'notifications.giftVoucher.voucherCodeMessage'
+            )}
+            expiryMessage={t('notifications.giftVoucher.expiryMessage')}
+          />
+        )
+      }
+      sendEmailService({
+        email,
+        subject: t('notifications.email.giftVouchers.subject'),
+        bodyContent: bodyContent(),
+        successMessage: t('notifications.email.send.successMessage'),
+        failedMessage: t('notifications.email.send.failedMessage'),
+      })
     } else if (selectedTab === 'smsPreview') {
-      Notification(NotificationType.success, 'Test SMS sent')
+      Notification(
+        NotificationType.success,
+        t('notifications.sms.send.successMessage')
+      )
     }
   }
 
@@ -41,6 +84,7 @@ const Index: FC = () => {
         handleNotificationSubmit={showNotification}
       />
       <ClientNotification
+        ref={ref}
         onSelectedTab={(value) => setSelectedTab(value)}
         hideReminderTimeFrameTabPane={true}
         hideRequestConfirmationOption={true}

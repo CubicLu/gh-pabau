@@ -9,7 +9,12 @@ import { Button } from '../button/Button'
 
 export const ClassesSpotAvailable: FC<
   ClassesSpotAvailableProps & EmailSMSPreviewProps
-> = ({ message, buttonColor }) => {
+> = ({
+  message,
+  buttonColor,
+  buttonTitleMessage = 'Click here to book your appointment online:',
+  bookButtonName = 'Book now',
+}) => {
   return (
     <>
       <Row gutter={[0, 4]} className={styles.break}>
@@ -19,14 +24,12 @@ export const ClassesSpotAvailable: FC<
       </Row>
       <Row className={styles.centerRow}>
         <Col>
-          <span className={styles.message}>
-            Click here to book your appointment online:
-          </span>
+          <span className={styles.message}>{buttonTitleMessage}</span>
         </Col>
       </Row>
       <Row gutter={[0, 4]} className={styles.bookAppointment}>
         <Button backgroundColor={buttonColor} className={styles.bookButton}>
-          Book now
+          {bookButtonName}
         </Button>
       </Row>
     </>

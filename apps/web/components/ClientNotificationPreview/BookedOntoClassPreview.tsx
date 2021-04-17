@@ -56,6 +56,11 @@ const BookedOntoClassPreview: FC<P> = ({
             address={t('notifications.bookedOntoClass.address')}
             message={t('notifications.bookedOntoClass.message')}
             buttonColor={buttonColor}
+            appointmentDetailMessage={t(
+              'notifications.bookedOntoClass.appointmentDetailMessage'
+            )}
+            regards={t('notifications.bookedOntoClass.regards')}
+            regardsName={t('notifications.bookedOntoClass.regardsName')}
           />
         </EmailSmsPreview>
       ) : (

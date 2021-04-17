@@ -46,6 +46,7 @@ const RequestFeedbackPreview: FC<P> = ({
             buttonColor={buttonColor}
             closingText={t('notifications.requestFeedback.closingText')}
             signatureBlock={t('notifications.requestFeedback.signatureBlock')}
+            buttonName={t('notifications.requestFeedback.buttonName')}
           />
         </EmailSmsPreview>
       ) : (

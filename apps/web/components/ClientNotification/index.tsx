@@ -28,12 +28,13 @@ import DocumentSharedPreview from '../ClientNotificationPreview/DocumnetSharedPr
 import CustomTemplate from './CustomTemplate'
 import AppointmentPreview from '../ClientNotificationPreview/AppointmentPreview'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { TOptions } from 'i18next'
 
-interface refProps {
+export interface refProps {
   propsData?: () => DataProps
 }
 
-interface DataProps {
+export interface DataProps {
   requestConfirm?: boolean
   allowRescheduling?: boolean
   allowCancellation?: boolean
@@ -48,6 +49,9 @@ interface DataProps {
   medicalMessage?: string
   standardTapIndex?: string
   activeSocialIcons?: string[]
+  type?: string
+  showEnablePay?: boolean
+  localTranslation?: (key: string, option: TOptions) => string
 }
 
 interface P {
@@ -159,6 +163,9 @@ const Index: FC<P> = forwardRef(
           medicalMessage,
           standardTapIndex,
           activeSocialIcons,
+          type,
+          showEnablePay,
+          localTranslation,
         }
       },
     }))
