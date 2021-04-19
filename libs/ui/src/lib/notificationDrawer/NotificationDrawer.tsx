@@ -19,6 +19,7 @@ interface Notification {
   title: string
   desc: string
   read: boolean
+  users: number[]
 }
 
 const DELETE_MUTATION = gql`
@@ -30,20 +31,39 @@ const DELETE_MUTATION = gql`
   }
 `
 
+const UPDATE_MUTATION = gql`
+  mutation update_notifications_by_pk($id: uuid!, $sent_to: jsonb) {
+    update_notifications_by_pk(
+      pk_columns: { id: $id }
+      _set: { sent_to: $sent_to }
+    ) {
+      id
+    }
+  }
+`
+
 interface NotificationData {
   [key: string]: Notification[]
+}
+
+interface UserProps {
+  user: number
+  company: number
+  fullName: string
 }
 
 interface P {
   openDrawer?: boolean
   closeDrawer?: () => void
   notifications?: NotificationData[]
+  user?: UserProps
 }
 
 export const NotificationDrawer: FC<P> = ({
   openDrawer = true,
   closeDrawer,
   notifications = [],
+  user,
 }) => {
   const { t } = useTranslation('common')
   const [notificationDrawer, setNotificationDrawer] = useState(openDrawer)
@@ -61,6 +81,7 @@ export const NotificationDrawer: FC<P> = ({
   }
 
   const [deleteMutation] = useMutation(DELETE_MUTATION)
+  const [updateMutation] = useMutation(UPDATE_MUTATION)
 
   const notificationLeadsData = [
     {
@@ -114,11 +135,16 @@ export const NotificationDrawer: FC<P> = ({
   //   }
   // }
 
-  const removeSingleNotification = async (id) => {
-    await deleteMutation({
-      variables: { id },
-      optimisticResponse: {},
-    })
+  const removeSingleNotification = async (notification) => {
+    const { id, users } = notification
+    const sent_to = users.filter((user_id) => user_id !== user?.user)
+    const variables = { id, sent_to }
+    sent_to.length > 0
+      ? await updateMutation({ variables, optimisticResponse: {} })
+      : await deleteMutation({
+          variables: { id: notification.id },
+          optimisticResponse: {},
+        })
   }
 
   let lengths = 0
@@ -226,7 +252,7 @@ export const NotificationDrawer: FC<P> = ({
                       )}
                       <CloseOutlined
                         onClick={() => {
-                          removeSingleNotification(notify.id)
+                          removeSingleNotification(notify)
                         }}
                         className={styles.notificationClearIcon}
                       />

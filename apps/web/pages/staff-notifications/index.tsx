@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef } from 'react'
+import React, { useState, useMemo, useRef, useContext, useEffect } from 'react'
 import Layout from '../../components/Layout/Layout'
 import styles from './staff-notifications.module.less'
 import { Form as AntForm, Select } from 'formik-antd'
@@ -7,7 +7,7 @@ import { Col, Row, Button } from 'antd'
 import { gql, useMutation } from '@apollo/client'
 import { useLiveQuery, Notification, NotificationType } from '@pabau/ui'
 import { NextPage } from 'next'
-import useLogin from '../../hooks/authentication/useLogin'
+import { UserContext } from '../../context/UserContext'
 
 enum Users {
   AllAdmins = 'All Admins',
@@ -71,14 +71,33 @@ const initialValues: InitialStaffNotifications = {
   loop: null,
 }
 
+interface LoggedUser {
+  user: number
+  company: number
+  fullName: string
+}
+
 export const StaffNotifications: NextPage = () => {
   const { data: notificationTypes } = useLiveQuery(LIST_QUERY)
-  const [authenticated, user] = useLogin(false)
+  const [user, setUser] = useState<LoggedUser>()
+  const loggedUser = useContext(UserContext)
+
+  console.log('loggedUser', user)
+
+  useEffect(() => {
+    const { me } = loggedUser
+    const userData = {
+      company: me?.company?.id,
+      user: me?.id,
+      fullName: me?.full_name,
+    }
+    setUser(userData)
+  }, [])
+
   const [userRole, setUserRole] = useState<'All Users' | 'All Admins'>(
     'All Users'
   )
   const formRef = useRef(null)
-  console.log(authenticated)
 
   const getQueryVariables = useMemo(() => {
     const queryOptions = {

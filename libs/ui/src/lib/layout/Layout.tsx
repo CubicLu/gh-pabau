@@ -15,9 +15,17 @@ interface Notification {
   title: string
   desc: string
   read: boolean
+  users: number[]
+}
+
+interface UserProps {
+  user: number
+  company: number
+  fullName: string
 }
 export interface LayoutProps {
   notifications?: Notification[]
+  user?: UserProps
   pageTitle?: string
   newButtonText?: string
   onNewClicked?: string | (() => void)
@@ -49,6 +57,7 @@ export const Layout: FC<LayoutProps> = ({
   active,
   legacyContent = false,
   notifications,
+  user,
   ...rest
 }) => {
   const [collapsed, setCollapsed] = useState(true)
@@ -57,6 +66,7 @@ export const Layout: FC<LayoutProps> = ({
     <AntLayout {...rest} className={styles.main}>
       <AntLayout style={{ background: '#F7F7F9' }}>
         <Header
+          user={user}
           searchRender={searchRender}
           onCreateChannel={onCreateChannel}
           onMessageType={onMessageType}

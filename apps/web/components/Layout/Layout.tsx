@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useState, useEffect, useContext } from 'react'
 import { Layout as PabauLayout, LayoutProps, Iframe } from '@pabau/ui'
 import Search from '../Search'
 import useLogin from '../../hooks/authentication/useLogin'
@@ -6,6 +6,7 @@ import Login from '../../pages/login'
 import { useRouter } from 'next/router'
 import { useDisabledFeaturesQuery } from '@pabau/graphql'
 import { useSubscription, gql } from '@apollo/client'
+import { UserContext } from '../../context/UserContext'
 
 interface Notification {
   id: string
@@ -15,6 +16,7 @@ interface Notification {
   title: string
   desc: string
   read: boolean
+  users: number[]
 }
 
 const LIST_QUERY = gql`
@@ -26,12 +28,13 @@ const LIST_QUERY = gql`
       id
       text
       title
+      sent_to
+      created_at
       notification_type {
         type
         type_name
         title
       }
-      created_at
     }
   }
 `
@@ -53,6 +56,10 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
   const { data: notificationData } = useSubscription(LIST_QUERY, {
     variables: { user: [user?.user] },
   })
+  const loggedUser = useContext(UserContext)
+  const userData = { ...user, fullName: loggedUser?.me?.full_name }
+
+  console.log('notificationData', notificationData)
 
   useEffect(() => {
     if (notificationData?.notifications?.length > 0) {
@@ -64,6 +71,7 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
           title: notification?.title,
           desc: notification?.text,
           read: false,
+          users: notification?.sent_to,
         })
       )
       setNotifications(todayNotification)
@@ -101,6 +109,7 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
     return (
       <PabauLayout
         notifications={notifications}
+        user={userData}
         searchRender={() => <Search />}
         onCreateChannel={onCreateChannel}
         onMessageType={onMessageType}

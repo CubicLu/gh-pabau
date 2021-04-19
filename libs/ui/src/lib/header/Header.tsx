@@ -22,10 +22,18 @@ interface Notification {
   title: string
   desc: string
   read: boolean
+  users: number[]
+}
+
+interface UserProps {
+  user: number
+  company: number
+  fullName: string
 }
 
 interface P {
   notifications?: Notification[]
+  user?: UserProps
   searchRender?: (innerComponent: JSX.Element) => JSX.Element
   onCreateChannel?: (
     name: string,
@@ -37,6 +45,7 @@ interface P {
 
 export const Header: FC<P> = ({
   notifications,
+  user,
   searchRender,
   onCreateChannel,
   onMessageType,
@@ -98,6 +107,7 @@ export const Header: FC<P> = ({
 
       {openNotificationDrawer && (
         <NotificationDrawer
+          user={user}
           openDrawer={openNotificationDrawer}
           closeDrawer={() => setNotificationDrawer((e) => !e)}
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
