@@ -6,6 +6,7 @@ import { version } from '../../../package.json'
 import { createContext } from './context'
 import { schema } from './schema'
 import { stringToBoolean } from './utils'
+import authenticatedUser from './middlewares/authenticatedUser'
 
 console.log(`Starting bridge-api version ${version}`)
 console.log(
@@ -31,7 +32,7 @@ app
       httpOnly: true,
     })
   )
-//.use(authenticatedUser)
+  .use(authenticatedUser)
 
 const server = new ApolloServer({
   schema,
