@@ -26,14 +26,16 @@ const LIST_QUERY = gql`
       where: { sent_to: { _contains: $user } }
     ) {
       id
-      text
-      title
       sent_to
       created_at
       notification_type {
-        type
-        type_name
-        title
+        name
+        notification_title {
+          title
+        }
+        notification_description {
+          description
+        }
       }
     }
   }
@@ -67,9 +69,11 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
         (notification) => ({
           id: notification.id,
           notificationTime: notification?.created_at,
-          notificationType: notification?.notification_type?.type_name,
-          title: notification?.title,
-          desc: notification?.text,
+          notificationType: notification?.notification_type?.name,
+          title: notification?.notification_type?.notification_title?.title,
+          desc:
+            notification?.notification_type?.notification_description
+              ?.description,
           read: false,
           users: notification?.sent_to,
         })

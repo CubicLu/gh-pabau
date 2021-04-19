@@ -35,27 +35,25 @@ const USER_LIST_QUERY = gql`
 `
 
 const LIST_QUERY = gql`
-  query notification_types {
-    notification_types {
-      id
+  query application_notification_type {
+    application_notification_type {
       type
-      type_name
-      title
-      text
+      name
+      id
+      enabled
+      notification_title {
+        title
+      }
+      notification_description {
+        description
+      }
     }
   }
 `
 
 const ADD_MUTATION = gql`
-  mutation insert_notifications_one(
-    $text: String!
-    $title: String!
-    $type: String!
-    $sent_to: jsonb
-  ) {
-    insert_notifications_one(
-      object: { text: $text, title: $title, type: $type, sent_to: $sent_to }
-    ) {
+  mutation insert_notifications_one($type: uuid!, $sent_to: jsonb) {
+    insert_notifications_one(object: { type: $type, sent_to: $sent_to }) {
       id
     }
   }
@@ -79,6 +77,7 @@ interface LoggedUser {
 
 export const StaffNotifications: NextPage = () => {
   const { data: notificationTypes } = useLiveQuery(LIST_QUERY)
+  console.log('notificationTypes', notificationTypes)
   const [user, setUser] = useState<LoggedUser>()
   const loggedUser = useContext(UserContext)
 
@@ -132,9 +131,7 @@ export const StaffNotifications: NextPage = () => {
       sent_users.push(user.id)
     }
     const body = {
-      type: notificationType.type,
-      title: notificationType.title,
-      text: notificationType.text,
+      type: notificationType.id,
       sent_to: sent_users,
     }
 
