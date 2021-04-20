@@ -201,7 +201,7 @@ export const NotificationDrawer: FC<P> = ({
           )}
         >
           <h2>
-            {t('notifications.today')}
+            {/* {t('notifications.today')} */}
             {/* {notify[notification].length > 0 &&
                       (notification === 'Today'
                         ? t('notifications.today')

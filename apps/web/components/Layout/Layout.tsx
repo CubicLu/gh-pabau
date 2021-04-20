@@ -69,7 +69,7 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
         (notification) => ({
           id: notification.id,
           notificationTime: notification?.created_at,
-          notificationType: notification?.notification_type?.name,
+          notificationType: notification?.notification_type?.name.trim(),
           title: notification?.notification_type?.notification_title?.title,
           desc:
             notification?.notification_type?.notification_description

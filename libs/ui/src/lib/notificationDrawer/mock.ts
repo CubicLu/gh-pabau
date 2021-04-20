@@ -9,11 +9,11 @@ import ReferSVG from '../../assets/images/refer.svg'
 
 export const notificationIcons = [
   {
-    type: 'Review',
+    type: 'review',
     icon: ReviewSVG,
   },
   {
-    type: 'Newsletter campaign',
+    type: 'newsletter campaign',
     icon: NewsletterSVG,
   },
   {
@@ -21,35 +21,47 @@ export const notificationIcons = [
     icon: CampaignSVG,
   },
   {
-    type: 'Referral',
+    type: 'referral',
     icon: ReferSVG,
   },
   {
-    type: 'Appointment',
+    type: 'appointment',
     icon: AppointmentSVG,
   },
   {
-    type: 'Bookout',
+    type: 'bookout',
     icon: AppointmentSVG,
   },
   {
-    type: 'Holiday request',
+    type: 'holiday request',
     icon: RequestSVG,
   },
   {
-    type: 'Report',
+    type: 'report',
     icon: ReportSVG,
   },
   {
-    type: 'New lead',
+    type: 'new lead',
     icon: LeadSVG,
   },
   {
-    type: 'Inventory',
+    type: 'inventory',
     icon: LeadSVG,
   },
   {
-    type: 'Purchase order',
+    type: 'purchase order',
+    icon: LeadSVG,
+  },
+  {
+    type: 'New feature release',
+    icon: LeadSVG,
+  },
+  {
+    type: 'News and announcements',
+    icon: LeadSVG,
+  },
+  {
+    type: 'New blog post',
     icon: LeadSVG,
   },
 ]
