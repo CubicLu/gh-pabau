@@ -9,34 +9,52 @@ console.log(`Starting custom fetcher for mesh v${version}`, {
 })
 
 //TODO: change the fallback here to "api-crm.pabau.com"
-const LEGACY_SERVER_HOSTNAME =
-  process.env['LEGACY_SERVER_HOSTNAME'] || 'toshe.pabau.me'
+const LEGACY_SERVER_URL_OR_HOSTNAME =
+  process.env['LEGACY_SERVER_URL_OR_HOSTNAME'] || 'https://toshe.pabau.me'
 
-function getPodApiUrl(hostname) {
-  //TODO
-  return 'https://api-toshe.pabau.me/graphql'
+function getPodApiUrl(urlOrHostname) {
+  if (!urlOrHostname) urlOrHostname = LEGACY_SERVER_URL_OR_HOSTNAME
+  let url
+  try {
+    url = new URL(urlOrHostname)
+  } catch {
+    try {
+      url = new URL(`https://${urlOrHostname}`)
+    } catch {
+      console.log('bad urlOrHostname:', urlOrHostname)
+    }
+  }
+
+  return `https://api-${url.hostname}/graphql`
 }
 
 module.exports = function (url, options) {
   console.log('PDS Starting fetch.', {
-    LEGACY_SERVER_HOSTNAME,
+    LEGACY_SERVER_URL_OR_HOSTNAME,
     url,
     options,
   })
 
-  if (options?.headers?.authorization) {
-    const jwtDecoded = jwt.verify(
-      options.headers.authorization.replace(/^Bearer /, ''),
-      process.env['JWT_SECRET'],
-      { algorithms: ['HS512'] }
-    )
+  let endpoint
 
-    console.log('got jwt decoded', jwtDecoded)
+  if (options?.headers?.authorization) {
+    console.log('found a authorization header')
+
+    try {
+      const jwtDecoded = jwt.verify(
+        options.headers.authorization.replace(/^Bearer /, ''),
+        process.env['JWT_SECRET'],
+        { algorithms: ['HS512'] }
+      )
+      console.log('got jwt decoded', jwtDecoded)
+      endpoint = getPodApiUrl(jwtDecoded.remote_url)
+    } catch {
+      console.error('jwt verify failed')
+    }
   }
 
-  const endpoint = getPodApiUrl()
-
-  console.log('PDS Resolved fetch.', { endpoint })
+  if (!endpoint) endpoint = getPodApiUrl()
+  console.log('PDS Resolved fetch.', { endpoint, options })
 
   return podFetcher(endpoint, options)
 }

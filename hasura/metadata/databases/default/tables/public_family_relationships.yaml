@@ -1,0 +1,40 @@
+table:
+  name: family_relationships
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - is_active
+    - order
+    - relation_name
+    - reserve_relation
+  role: public
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - is_active
+    - order
+    - relation_name
+    - reserve_relation
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: public
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - is_active
+    - order
+    - relation_name
+    - reserve_relation
+    filter: {}
+  role: public
+delete_permissions:
+- permission:
+    filter: {}
+  role: public

@@ -1,0 +1,39 @@
+table:
+  name: Lists_campaign
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - members
+    - name
+    - order
+    - type
+  role: public
+select_permissions:
+- permission:
+    columns:
+    - created_at
+    - id
+    - members
+    - name
+    - order
+    - type
+    - updated_at
+    filter: {}
+  role: public
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - members
+    - name
+    - order
+    - type
+    filter: {}
+  role: public
+delete_permissions:
+- permission:
+    filter: {}
+  role: public

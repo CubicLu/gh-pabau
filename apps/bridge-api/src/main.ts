@@ -8,7 +8,9 @@ import authenticatedUser from './middlewares/authenticatedUser'
 import { schema } from './schema'
 import { stringToBoolean } from './utils'
 
-console.log(`Starting bridge-api version ${version}`)
+const LOGGING = !!stringToBoolean(process.env['LOGGING'])
+
+console.log(`Starting bridge-api version ${version} logging ${LOGGING}`)
 console.log(
   `Secure cookies: ` +
     (stringToBoolean(process.env['SECURE_COOKIES']) ? 'ON' : 'OFF')
@@ -71,7 +73,7 @@ const server = new ApolloServer({
       'request.credentials': 'include',
     },
   },
-  plugins: [BASIC_LOGGING],
+  plugins: LOGGING ? [BASIC_LOGGING] : [],
 })
 
 server.applyMiddleware({ app })

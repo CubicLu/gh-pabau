@@ -1,0 +1,52 @@
+table:
+  name: labs_dashboard
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - labNo
+    - client
+    - test
+    - requested
+    - lastUpdate
+    - lab
+    - requester
+    - public
+    - id
+  role: public
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - public
+    - labNo
+    - client
+    - lab
+    - lastUpdate
+    - requested
+    - requester
+    - test
+    - id
+    filter: {}
+  role: public
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - public
+    - labNo
+    - client
+    - lab
+    - lastUpdate
+    - requested
+    - requester
+    - test
+    - id
+    filter: {}
+  role: public
+delete_permissions:
+- permission:
+    filter: {}
+  role: public

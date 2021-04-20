@@ -50,7 +50,7 @@ docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}" "${DOCKER_HOSTNAME}
 echo "Docker push..."
 docker image push "${DOCKER_HOSTNAME}/monorepo/${APP_NAME}"
 echo "Rancher deploy..."
-docker run -v "${VERCEL_JSON_LOCATION}/cicd:/files:ro" --rm --entrypoint rancher tagip/rancher-cli --url "${RANCHER_URL}" --access-key "${RANCHER_ACCESS_KEY}" --secret-key "${RANCHER_SECRET_KEY}" --file /files/docker-compose.yml --rancher-file /files/rancher-compose.yml up -d --upgrade --confirm-upgrade --stack pabau2-backend pds-production
+docker run -v "${VERCEL_JSON_LOCATION}/cicd:/files:ro" --rm --entrypoint rancher tagip/rancher-cli --url "${RANCHER_URL}" --access-key "${RANCHER_ACCESS_KEY}" --secret-key "${RANCHER_SECRET_KEY}" --file /files/docker-compose.yml --rancher-file /files/rancher-compose.yml up -d --upgrade --confirm-upgrade --pull --stack pabau2-backend pds-production
 
 if [ -z "${BITBUCKET_PR_ID}" ]; then
   message_body=''
