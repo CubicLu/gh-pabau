@@ -9,7 +9,7 @@
     "apollo": "apollo",
     "nest": "cd apps/backend && nest",
     "start": "nx serve",
-    "dev": "concurrently npm:start \"nx serve bridge-api\"",
+    "dev": "concurrently npm:start \"nx serve bridge-api --prod\"",
     "dev:bridge-api": "nx serve bridge-api",
     "hasura:export": "env-cmd -f ./hasura/.env npx -p hasura-cli@2.0.0-alpha.7 hasura --project hasura metadata export && apollo client:download-schema remote-schema.graphql && apollo client:download-schema graphql.schema.json",
     "production:start": "nx affected --uncommitted=true --target=export && npx serve dist/apps/web/exported",
