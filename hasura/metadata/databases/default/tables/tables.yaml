@@ -1,7 +1,6 @@
 - "!include public_Discounts.yaml"
 - "!include public_LMS_slugs.yaml"
 - "!include public_Labs.yaml"
-- "!include public_Library.yaml"
 - "!include public_Lists_campaign.yaml"
 - "!include public_Newsletter_campaign.yaml"
 - "!include public_SMS_campaign.yaml"
