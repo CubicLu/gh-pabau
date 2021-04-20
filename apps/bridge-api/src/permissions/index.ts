@@ -25,7 +25,7 @@ const rules = {
           return true
         }
       } catch (error) {
-        console.error(error)
+        console.error('Error 28', error)
         return false
       }
     }
