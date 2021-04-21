@@ -1035,14 +1035,14 @@ en:
     setup.settings.loyalty.title: 'Loyalty settings'
     setup.settings.loyalty.general.dropdown.yes: 'Yes'
     setup.settings.loyalty.general.dropdown.no: 'No'
-    setup.settings.loyalty.general.point.value: '13.45'
+    setup.settings.loyalty.general.point.value: 13.45
     setup.settings.loyalty.description: 'Configure how much each of your loyalty points are worth to your clients, as well as deciding if they are to be displayed on the receipt.'
     setup.settings.loyalty.savechanges: 'Save Changes'
     setup.settings.loyalty.showonreceipt.validate.required: 'Show on receipt Value is required'
     setup.settings.loyalty.inputpoint.validate.number: 'You must specify a currency amount'
     setup.settings.loyalty.inputpoint.validate.required: 'Points Value is required'
     setup.settings.referral.title: 'Referral settings'
-    setup.settings.referral.expiry.value: '15'
+    setup.settings.referral.expiry.value: 15
     setup.settings.referral.reward.value: 'Standard Referral Voucher £20.00'
     setup.settings.referral.referee.reward.value: 'Standard Referral Voucher £20.00'
     setup.settings.referral.options.none.value: 'None'
