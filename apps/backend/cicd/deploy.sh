@@ -38,8 +38,6 @@ echo "APP_TYPE=${APP_TYPE}"
 echo "VERCEL_JSON_LOCATION=${VERCEL_JSON_LOCATION}"
 echo "BITBUCKET_COMMIT=${BITBUCKET_COMMIT}"
 echo "BITBUCKET_PR_ID=${BITBUCKET_PR_ID}"
-pwd
-ls -al
 echo "-----------------"
 
 build_output_path="dist/apps/backend"
