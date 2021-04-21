@@ -39,7 +39,7 @@ const LoyaltySettings: FC<P> = () => {
       inputPoint: {
         label: t('setup.settings.loyalty.general.inputpoint.label'),
         pointText: t('setup.settings.loyalty.general.inputpoint.placeholder'),
-        value: t('setup.settings.loyalty.general.point.value'),
+        value: Number.parseInt(t('setup.settings.loyalty.general.point.value')),
         helpText: t('setup.settings.loyalty.general.inputpoint.help'),
       },
     },

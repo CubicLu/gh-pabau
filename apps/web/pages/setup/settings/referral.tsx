@@ -26,7 +26,7 @@ const Referral: FC<P> = () => {
           key: 1,
           name: 'expiryDays',
           label: t('setup.settings.referral.general.expiry'),
-          value: t('setup.settings.referral.expiry.value'),
+          value: Number.parseInt(t('setup.settings.referral.expiry.value')),
           helpText: t('setup.settings.referral.general.expiry.tooltip'),
         },
       ],
