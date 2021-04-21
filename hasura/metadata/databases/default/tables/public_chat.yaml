@@ -1,0 +1,81 @@
+table:
+  name: chat
+  schema: public
+remote_relationships:
+- definition:
+    hasura_fields:
+    - company_id
+    remote_field:
+      findFirstCompany:
+        arguments:
+          where:
+            id:
+              equals: $company_id
+    remote_schema: CRM
+  name: company
+insert_permissions:
+- permission:
+    backend_only: false
+    check:
+      _and:
+      - company_id:
+          _eq: X-Hasura-Org-Id
+      - _or:
+        - from:
+            _eq: X-Hasura-User-Id
+        - to:
+            _eq: X-Hasura-User-Id
+    columns:
+    - from
+    - message
+    - to
+    set:
+      company_id: x-hasura-Org-Id
+      from: x-hasura-User-Id
+  role: user
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - company_id
+    - created_at
+    - from
+    - id
+    - message
+    - to
+    - updated_at
+    filter:
+      _and:
+      - company_id:
+          _eq: X-Hasura-Org-Id
+      - _or:
+        - from:
+            _eq: X-Hasura-User-Id
+        - to:
+            _eq: X-Hasura-User-Id
+    limit: 1000
+  role: user
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - from
+    - message
+    - to
+    filter: {}
+    set:
+      company_id: x-hasura-Org-Id
+      from: x-hasura-User-Id
+  role: user
+delete_permissions:
+- permission:
+    filter:
+      _and:
+      - company_id:
+          _eq: X-Hasura-Org-Id
+      - _or:
+        - from:
+            _eq: X-Hasura-User-Id
+        - to:
+            _eq: X-Hasura-User-Id
+  role: user

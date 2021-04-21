@@ -1,0 +1,43 @@
+table:
+  name: cancellation_reasons
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - cancellation_policy
+    - is_active
+    - name
+    - order
+    - type
+  role: public
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - is_active
+    - order
+    - cancellation_policy
+    - name
+    - type
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: public
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - cancellation_policy
+    - is_active
+    - name
+    - order
+    - type
+    filter: {}
+  role: public
+delete_permissions:
+- permission:
+    filter: {}
+  role: public

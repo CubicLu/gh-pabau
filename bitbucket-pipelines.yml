@@ -62,7 +62,7 @@ pipelines:
             - tsc --noEmit -p libs/ui/tsconfig.lib.json
             - tsc --noEmit -p libs/yup/tsconfig.lib.json
 
-            - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=lint --with-deps --parallel --maxParallel=3
+            - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=lint --with-deps --parallel --maxParallel=2
             - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=test --parallel --maxParallel=2
             - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=deploy
             - cat /tmp/bot_message.txt
@@ -71,6 +71,7 @@ pipelines:
             - |
               printf ":shallow_pan_of_food: *<https://bitbucket.org/pabau/monorepo/pull-requests/${BITBUCKET_PR_ID}|PR ${BITBUCKET_PR_ID}> published by ${PR_AUTHOR}*\n\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
             - cat /tmp/bot_message.txt >> /tmp/bot_message2.txt
+            - cat /tmp/bot_message2.txt
 
             # Post to Slack
             - |
@@ -169,12 +170,15 @@ pipelines:
           script:
             - apt-get update -y && apt-get install -y curl jq time
             - NODE_OPTIONS=--max_old_space_size=2750 /usr/bin/time -v yarn affected --base=HEAD~1 --target=deploy-docker --prod
+          artifacts:
+            - /tmp/bot_message.txt
 
       - step:
           size: 2x
           name: deploy previews
           deployment: production-serverless
           script:
+            - ls -al dist
             - apt-get update -y && apt-get install -y curl jq time
 
             # get the commit message for this merge
@@ -198,6 +202,7 @@ pipelines:
             - |
               printf "*New Version Staged for Production*\n## v${PACKAGE_JSON_VERSION}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
             - cat /tmp/bot_message.txt >> /tmp/bot_message2.txt
+            - cat /tmp/bot_message2.txt
 
             # Post to Slack
             - |

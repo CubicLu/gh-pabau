@@ -1,0 +1,3 @@
+table:
+  name: news
+  schema: public

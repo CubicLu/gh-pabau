@@ -6,6 +6,7 @@
   - [Setup](#setup)
     - [Windows](#windows)
     - [Linux](#linux)
+    - [Common](#common)
   - [Storybook](#storybook)
   - [Frontend](#frontend)
   - [Bridge](#bridge)
@@ -15,14 +16,12 @@
   - [Our Stack](#our-stack)
   - [Ticket workflow](#ticket-workflow)
   - [GraphQL workflow](#graphql-workflow)
-    - [Setup](#setup-1)
-    - [bridge-proxy](#bridge-proxy)
-    - [Per-ticket](#per-ticket)
   - [To do (big engineering items)](#to-do-big-engineering-items)
+  - [bridge-proxy (PDS)](#bridge-proxy-pds)
 
 ## Welcome
 
-This monorepo contains all of our code (with the exception of `/.env`). The monorepo was created by [nx](https://nx.dev). For more information type `yarn run nx`.
+This monorepo contains all of our code (with the exception of `.env` files), and is controlled using the [Nx](https://nx.dev) CLI. Please read this file in Preview mode (not the source code).
 
 ## Paths
 
@@ -33,7 +32,7 @@ This monorepo contains all of our code (with the exception of `/.env`). The mono
 - `/apps/` - where most of our projects reside.
 - `/apps/web/` - the main application Frontend.
 - `/apps/*-e2e/` - End-to-end testing with Cypress.
-- `/dist/` - temporary directory (local only)
+- `/dist/` - temporary directory where the build outputs are generated
 - `/hasura/` - our database configuration
 - `/libs/` - where any shared libraries reside. These can be referenced (used) in any app.
 - `/libs/ui/` - our shared UI (React Components).
@@ -45,7 +44,7 @@ This monorepo contains all of our code (with the exception of `/.env`). The mono
 ### Windows
 
 1. Install Node 14 LTS (Opt in for the extra build tools)
-1. Install yarn: `npm i -g yarn` (`yarn --version` \>=1.22.10 && <2 is fine)
+1. Install yarn: `npm i -g yarn`
 1. Ensure your terminal is BASH (cmd and PS not supported. Vscode: `"terminal.integrated.shell.windows": "c:/program files/git/bin/bash.exe",`)
 1. Ensure your IDE has eslint plugin setup and configured to auto-fix on save.
 1. Ensure your Git config user.name is your full name, and user.email is the same email you registered as with Bitbucket.org.
@@ -61,11 +60,34 @@ echo 'NPM_STORE="${HOME}/.npm-global"' >> ~/.bashrc
 echo 'export PATH="$PATH:$NPM_STORE/bin"' >> ~/.bashrc
 echo 'export MANPATH="${MANPATH-$(manpath)}:$NPM_STORE/share/man"' >> ~/.bashrc
 npm i -g yarn
-
-snap --classic phpstorm vscode
-
-
 ```
+
+### Common
+
+1. Install the Hasura CLI globally
+
+    ```bash
+    npm i -g hasura-cli
+    hasura update-cli --version v2.0.0-alpha.8
+    ```
+
+1. Copy `hasura/.env.SAMPLE` to `.env` and change to:
+
+    ```dotenv
+    HASURA_GRAPHQL_ADMIN_SECRET=madskills
+    HASURA_GRAPHQL_ENDPOINT=https://api.new.pabau.com/
+    ```
+
+1. Copy `apps/web/.env.SAMPLE` to `.env.local`
+
+1. Copy `apps/bridge-api/.env.SAMPLE` to `.env`
+   1. Now either install Pabau1 locally,
+   1. Or ask Toshe to share his public MySQL
+
+1. Create some bookmarks in your browser:
+   1. "Prisma" to <http://localhost:4000/graphql>
+   1. "Hasura" to <http://localhost:8080>
+   1. "Web" to <http://localhost:4200>
 
 ## Storybook
 
@@ -92,9 +114,6 @@ yarn run nx g @nrwl/next:page --project=web --style=less --directory marketing s
 Now add `import { } from '@pabau/ui'` at top of the new page file and fill in the {} with components you need.
 
 ## Bridge
-
-1. Step 1: Change the Mysql database
-2. Step 2: Launch Pabau locally
 
 To view the GraphQA endpoint which will expose the legacy database run `yarn nx serve bridge-api`
 
@@ -161,14 +180,15 @@ To view the Backend, you can either visit [https://backend.pabau.com](https://ba
 ## Our Stack
 
 - [TypeScript](https://www.typescriptlang.org/) - strong-typing is key to team success within DDD paradigm
-- [nx](https://nx.dev/) - our monorepo orchestrator
+- [Nx](https://nx.dev/) - our monorepo orchestrator
 - [eslint](https://eslint.org/) / [prettier](https://prettier.io/) - auto-cleans your code on save
 - [Hasura](https://hasura.io/) - used as our ORM layer, provides websocket push notifications
-- [Postgres](https://www.postgresql.org/) - the underlying SQL database that sits behind Hasura
-- [Prisma]() - a graphql server that allows us to bridge to our old database
+- [Postgres](https://postgresql.org/) - the underlying SQL database that sits behind Hasura
+- [Prisma](https://prisma.io/) - a graphql server that allows us to bridge to our old database
 - [NestJS](https://nestjs.com/) - a backend that only hasura will call, for things like sending email(and converted to Vercel's [Serverless Functions](https://vercel.com/docs/serverless-functions/introduction) at deploy-time)
 - [ant.design](https://ant.design/) - the base for most of our UI components
-- [Vercel](https://vercel.com/) - Our hosting platform (except for hasura, which is on our [Rancher](https://rancher.com/) self-hosted platform)
+- [Vercel](https://vercel.com/) - Our hosting platform for mgmt and web apps
+- [Rancher](https://rancher.com/) Our self-hosted platform for backend, bridge-api, bridge-proxy
 - [React Hooks](https://reactjs.org/docs/hooks-intro.html) - modern React using Functional Programming principles
 - [NextJS](https://nextjs.org/) - frontend framework that uses React
 - [LESS Modules](https://webpack.js.org/loaders/less-loader/#css-modules-gotcha) - our CSS language of choice
@@ -176,63 +196,58 @@ To view the Backend, you can either visit [https://backend.pabau.com](https://ba
 - [Formik](https://formik.org/) - handles any \<form> we need
 - [Storybook](https://storybook.js.org/) - for previewing our UI component library
 - [LogEntries](https://logentries.com/) - a legal vault where we track changes to data
-- [Figma](https://www.figma.com/) - pre-JSX designs/specifications
+- [Figma](https://figma.com/) - pre-JSX designs/specifications
 - [Husky](https://github.com/typicode/husky#readme) - pre-commit and pre-push hooks to ensure no errors exist in code
-- [Sentry](https://sentry.io/for/react/) - [TODO] production app error logging and reporting
-- [yup]() - [TODO] write business-level validation once that's used in frontend and backend
+- [Sentry](https://sentry.io/for/react/) - production app error logging and reporting
+- [yup](https://github.com/jquense/yup) - write business-level validation logic once - and securely use the same code for frontend and backend
 - Twilio Video + Sendgrid
 - Atlassian: JIRA, Bitbucket (& Pipelines)
 
 ## Ticket workflow
 
-1. Gather requirements, designs, and tests (BDD). Plan and research for an hour or so. Arrive at a rational conclusion to which npm modules, ant design components, and Pabau ui are needed.
-1. Arrange a 2-5 minute call with James (or Dipak if James is unavailable) to discuss your plan. Or thread in main channel.
-1. On the JIRA sub-task, click Create new branch (from master)
-1. Checkout this in your IDE and code away :)
-1. Commit often. Push once or twice a day at least.
-1. When you feel very much finished, do a final push and open up a PR for it (to master)
-1. Configure Bitbucket to receive email upon code comment, 'Changes requested', or merged
-1. Of course, start your next ticket immediately while you follow through the remaining steps
-1. After 10 mins or so, release-bot will post in the channel. Reply to the message with a link to a more specific page that highlights the work done. Also copy the vercel URL and paste it into the JIRA ticket as a comment. Finally, change the JIRA status to CODE REVIEW. This will let William browse all CODE REVIEW's and click the direct vercel link to see changes.
-1. If you receive an email that require you to make more changes: code, push, wait for the slack bot to post another url, reply to that tagging in @James and @Dipak
-1. When you receive an email that your code is merged, you should also find your ticket is moved to 'QA' status.
+1. On the JIRA
+   1. Click *Create new branch* (accept defaults, branch should be master)
+   2. Change Status into In Development
+2. Checkout your new branch and code away :)
+
+    ```bash
+    git fetch && \
+    git checkout -b origin/PABAU2-1234 && \
+    yarn && yarn dev:linux # change to dev:windows if you are on Docker for Windows
+    ```
+
+3. Commit often. Push once or twice a day at least.
+
+   ```bash
+   git add -A && \
+   git commit -m"Made a meaningful change in X" && \
+   git push # grab a drink, this will take 2 minutes
+   ```
+
+4. When you feel very much finished, do a final push and open up a PR for it (to master again)
+5. Configure Bitbucket to receive email upon code comment, 'Changes requested', or merged
+6. Start your next ticket immediately while you follow through the remaining steps
+7. After 10 mins or so, release-bot will post to [#pabau-2-devs](https://pabau.slack.com/archives/C01HXJK6YQ2) on Slack. Reply to the message with any comments on it.
+8. Change the JIRA status to CODE REVIEW. This will let William browse all CODE REVIEW's and click the direct vercel link to see changes.
+9. If you receive an email that require you to make more changes: code, push, wait for the slack bot to post another url, reply to that tagging in @James and @Dipak
+10. When you receive an email that your code is merged, you should also find your ticket is moved to 'QA' status.
 
 ## GraphQL workflow
 
-### Setup
-
-1. Install Hasura locally:
-
-  ```bash
-  docker-compose -f hasura/docker-compose.yml up -d
-  ```
-
-1. Copy hasura/.env.SAMPLE to .env and change to:
-
-  ```dotenv
-  HASURA_GRAPHQL_ADMIN_SECRET=madskills
-  HASURA_GRAPHQL_ENDPOINT=https://api.new.pabau.com/
-  ```
-
-### bridge-proxy
-
-To run debug build locally, type `yarn nx serve bridge-proxy` - it listens on port 5006.
-To run production build locally, type `docker build -t bridge-proxy -f tools/cicd/bridge-proxy.Dockerfile apps/bridge-proxy/ && docker run --rm -p 5006:5006 -it bridge-proxy`
-
-### Per-ticket
-
 1. Open the Hasura console: <http://localhost:8080/console/>
-2. Open the Hasura logs: `docker-compose -f hasura/docker-compose.yml logs -f`
-3. Create a new table (in the singular tense, using snake case)
-4. Insert 3 'Frequently used columns' - the ID being GUID, and the created_at and updated_at
-5. If your table is order sensitive (customers can drag to rearrange the order), then add a column called "order", type Integer
-6. If your table has is_active boolean, then add "is_active" as Boolean
-7. Add the rest of your columns too
-8. Add a very clear comment for the table (our customers will see this)
-9. Change the table permissions so that 'public' role can do pretty much everything (for now).
-10. Check your table's public role permission for SELECT has the Aggregation queries permissions enabled.
-11. Now run `yarn hasura:export` in your IDE, commit the changes to your branch.
-12. Now on your page's `schema.fields` array, add the relevant keys in -- they should match the hasura columns
+2. Create a new table (in the singular tense, using snake_case)
+3. Insert 3 'Frequently used columns', in order:
+   1. `id` as a GUID
+   2. Created at
+   3. Updated at
+4. If your table is order sensitive (customers can drag to rearrange the order), then add a column called "order", type Integer
+5. If your table has is_active boolean, then add "is_active" as Boolean
+6. Add the rest of your columns too
+7. Add a very clear comment for the table (our customers will see this)
+8. Change the table permissions so that 'public' role can do pretty much everything (for now).
+9. Check your table's public role permission for SELECT has the Aggregation queries permissions enabled.
+10. Now run `yarn hasura:export` in your IDE, commit the changes to your branch.
+11. Now on your page's `schema.fields` array, add the relevant keys in -- they should match the hasura columns
 
 ## To do (big engineering items)
 
@@ -249,12 +264,12 @@ To run production build locally, type `docker build -t bridge-proxy -f tools/cic
 - Install a working serverless adapter for NestJS
 - stylelint within eslint
 - eslint should capture tsc errors too
-- Create a bridge to our old LAMP app
-  1. generate jwt in php
-  2. ...?
-
 - auth to prisma
 - storing jwt token for hasura in nextjs httponly cookie
-- graphql code generator and other tooling
 - nestjs needs a typed hasura service that we can call
-- prisma needs a hoc for company_id security
+
+## bridge-proxy (PDS)
+
+To run debug build locally, type `yarn nx serve bridge-proxy` - it listens on port 5006.
+
+To run production build locally, type `docker build -t bridge-proxy -f tools/cicd/bridge-proxy.Dockerfile apps/bridge-proxy/ && docker run --rm -p 5006:5006 -it bridge-proxy`

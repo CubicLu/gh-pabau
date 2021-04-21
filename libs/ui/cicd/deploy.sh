@@ -40,10 +40,8 @@ ls -al
 echo "-----------------"
 
 if [ "${APP_TYPE}" = "apps" ]; then
-  yarn run nx run "${APP_NAME}:export" #--skip-nx-cache
   build_output_path="dist/apps/${APP_NAME}/exported/"
 elif [ "${APP_TYPE}" = "libs" ]; then
-  yarn run nx run "${APP_NAME}:build-storybook" #--skip-nx-cache
   build_output_path="dist/storybook/${APP_NAME}/"
 else
   echo "ERROR: unknown app type '${APP_TYPE}'"; exit 1

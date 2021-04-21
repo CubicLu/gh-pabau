@@ -1,0 +1,61 @@
+table:
+  name: clients_data
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - name
+    - is_liked
+    - is_locked
+    - label
+    - format
+    - fieldFor
+    - category
+    - is_mendatory
+    - is_private
+    - is_active
+    - created_date
+  role: public
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - category
+    - created_date
+    - fieldFor
+    - format
+    - id
+    - is_liked
+    - is_locked
+    - is_mendatory
+    - is_private
+    - is_active
+    - label
+    - name
+    filter: {}
+  role: public
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - category
+    - created_date
+    - fieldFor
+    - format
+    - id
+    - is_liked
+    - is_locked
+    - is_mendatory
+    - is_private
+    - is_active
+    - label
+    - name
+    filter: {}
+  role: public
+delete_permissions:
+- permission:
+    filter: {}
+  role: public

@@ -1,0 +1,46 @@
+table:
+  name: LMS_slugs
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - slug
+    - article_urls
+    - webinar
+    - blogs
+    - videos
+    - created_date
+  role: public
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - article_urls
+    - blogs
+    - videos
+    - slug
+    - webinar
+    - created_date
+    - id
+    filter: {}
+  role: public
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - article_urls
+    - blogs
+    - videos
+    - slug
+    - webinar
+    - created_date
+    - id
+    filter: {}
+  role: public
+delete_permissions:
+- permission:
+    filter: {}
+  role: public

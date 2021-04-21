@@ -1,0 +1,67 @@
+table:
+  name: third_parties
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - city
+    - country
+    - email
+    - health_code_identifier
+    - is_active
+    - name
+    - order
+    - phone
+    - post_code
+    - provider_no
+    - street
+    - type
+    - website
+  role: public
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - is_active
+    - order
+    - city
+    - country
+    - email
+    - health_code_identifier
+    - name
+    - phone
+    - post_code
+    - provider_no
+    - street
+    - type
+    - website
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: public
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - city
+    - country
+    - email
+    - health_code_identifier
+    - is_active
+    - name
+    - order
+    - phone
+    - post_code
+    - provider_no
+    - street
+    - type
+    - website
+    filter: {}
+  role: public
+delete_permissions:
+- permission:
+    filter: {}
+  role: public

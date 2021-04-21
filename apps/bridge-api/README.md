@@ -118,7 +118,7 @@ Use the tools to your advantage.
 
 # Testing locally
 
-`bash yarn && yarn nx deploy bridge-api && docker build --no-cache -t bridge -f tools/cicd/bridge.Dockerfile dist/apps/bridge-api/ && docker run --rm -it -p 4000:4000 bridge`
+`bash yarn && yarn nx deploy bridge-api && docker build --no-cache -t bridge -f tools/cicd/bridge-api.Dockerfile dist/apps/bridge-api/ && docker run --rm -it -p 4000:4000 bridge`
 
 # Exposing GraphQL CRUD over a database table
 
@@ -218,7 +218,7 @@ Examples:
 # Important
 
 1. `nexus-plugin-prisma`, `nexus` `prisma` should always be kept not be updated automatically via `package.json`
-2. `bridge.Dockerfile` should be kept at the same LTS node version as the rest of the system
+2. `bridge-api.Dockerfile` should be kept at the same LTS node version as the rest of the system
 
 # Testing
 

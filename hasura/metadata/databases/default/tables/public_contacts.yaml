@@ -1,0 +1,15 @@
+table:
+  name: contacts
+  schema: public
+select_permissions:
+- permission:
+    columns:
+    - mobile_number
+    - client_id
+    - first_name
+    - last_name
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: public
