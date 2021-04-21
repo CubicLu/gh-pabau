@@ -10,10 +10,10 @@ import {
   PlusSquareFilled,
 } from '@ant-design/icons'
 import { Typography, Row, Col } from 'antd'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { ReactComponent as Verified } from '../../assets/images/verified.svg'
+import { useGridData } from '../../hooks/useGridData'
 
 const { Title } = Typography
 
@@ -73,21 +73,33 @@ export const mergeTagTypeOptions = ['Tag Type 1', 'Tag Type 2']
 export const Communications: React.FC = () => {
   const router = useRouter()
   const { t } = useTranslationI18()
-
+  const { getParentSetupData } = useGridData(t)
+  const parentMenu = getParentSetupData(router.pathname)
+  const handleBack = () => {
+    if (parentMenu.length > 0) {
+      router.push({
+        pathname: '/setup',
+        query: { menu: parentMenu[0]?.keyValue },
+      })
+    } else {
+      router.push('/setup')
+    }
+  }
   return (
     <>
       <div className={styles.desktopViewNone}>
         <MobileHeader className={styles.mobileHeader}>
           <div className={styles.allContentAlignMobile}>
             <div className={styles.mobileHeaderTextStyle}>
-              <Link href="/setup">
-                <LeftOutlined />
-              </Link>
+              <LeftOutlined onClick={handleBack} />
               <p>{t('setup.senders.title')}</p>
             </div>
             <div className={styles.mobileHeaderOpsStyle}>
               <FilterOutlined className={styles.filterIconStyle} />
-              <PlusSquareFilled className={styles.plusIconStyle} />
+              <PlusSquareFilled
+                className={styles.plusIconStyle}
+                onClick={() => router.push('senders/create')}
+              />
             </div>
           </div>
         </MobileHeader>

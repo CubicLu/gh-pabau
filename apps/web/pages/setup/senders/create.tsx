@@ -92,6 +92,12 @@ export const CreateSender: React.FC = () => {
               !!(
                 values.type &&
                 values.fromName &&
+                (values.type === 'sms' && values.fromName.length > 11
+                  ? false
+                  : true) &&
+                (values.type === 'email' && values.fromName.length > 50
+                  ? false
+                  : true) &&
                 (values.type !== 'email' || values.fromEmail) &&
                 (!values.isUseCompanyEmail || values.fromCompanyEmail) &&
                 (!values.isEnterpriseEmail || values.replyTo)
@@ -179,6 +185,20 @@ export const CreateSender: React.FC = () => {
                       handleChange({ target: { value, name: 'fromName' } })
                     }
                   />
+                  {values.type === 'email' && values.fromName.length > 50 && (
+                    <span className={styles.error}>
+                      {t(
+                        'setup.senders.create.form.field.fromname.email.max.error'
+                      )}
+                    </span>
+                  )}
+                  {values.type === 'sms' && values.fromName.length > 11 && (
+                    <span className={styles.error}>
+                      {t(
+                        'setup.senders.create.form.field.fromname.sms.max.error'
+                      )}
+                    </span>
+                  )}
                 </div>
                 <div className={styles.formElement}>
                   <Space size={16}>
