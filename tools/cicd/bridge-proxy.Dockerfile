@@ -1,10 +1,11 @@
-FROM node:lts
+FROM node:alpine
 
-WORKDIR /app
+WORKDIR /usr/app
 
-COPY package.json ./
+COPY [ "package.json", "./" ]
 RUN yarn --pure-lockfile
-
 COPY . .
+
+EXPOSE 5006
 
 ENTRYPOINT [ "yarn", "mesh", "serve" ]

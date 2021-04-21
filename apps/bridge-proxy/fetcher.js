@@ -30,6 +30,7 @@ function getPodApiUrl(urlOrHostname) {
 
 module.exports = function (url, options) {
   console.log('PDS Starting fetch.', {
+    version,
     LEGACY_SERVER_URL_OR_HOSTNAME,
     url,
     options,
