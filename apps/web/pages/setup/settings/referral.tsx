@@ -11,6 +11,7 @@ import useWindowSize from '../../../hooks/useWindowSize'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './referral.module.less'
 import { GeneralReferralConfig } from '../../../types/referralSettings'
+import { useGridData } from '../../../hooks/useGridData'
 
 interface P {
   general: GeneralReferralConfig
@@ -89,8 +90,23 @@ const Referral: FC<P> = () => {
     referralFormik.handleSubmit()
   }
 
+  const { getParentSetupData } = useGridData(t)
+  let path = router.pathname
+  const pathArray = router.pathname.split('/')
+  if (pathArray.length > 3) {
+    pathArray.pop()
+    path = pathArray.join('/')
+  }
+  const parentMenu = getParentSetupData(path)
   const handleBack = () => {
-    router.push('/setup')
+    if (parentMenu.length > 0) {
+      router.push({
+        pathname: '/setup',
+        query: { menu: parentMenu[0]?.keyValue },
+      })
+    } else {
+      router.push('/setup')
+    }
   }
 
   return (

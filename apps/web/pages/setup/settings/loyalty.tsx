@@ -12,6 +12,7 @@ import { LeftOutlined } from '@ant-design/icons'
 import Layout from '../../../components/Layout/Layout'
 import General from '../../../components/Setup/Settings/LoyaltySettings/General'
 import styles from './loyalty.module.less'
+import { useGridData } from '../../../hooks/useGridData'
 
 interface P {
   general: GeneralLoyaltyConfig
@@ -66,8 +67,23 @@ const LoyaltySettings: FC<P> = () => {
     loyaltyFormik.handleSubmit()
   }
 
+  const { getParentSetupData } = useGridData(t)
+  let path = router.pathname
+  const pathArray = router.pathname.split('/')
+  if (pathArray.length > 3) {
+    pathArray.pop()
+    path = pathArray.join('/')
+  }
+  const parentMenu = getParentSetupData(path)
   const handleBack = () => {
-    router.push('/setup')
+    if (parentMenu.length > 0) {
+      router.push({
+        pathname: '/setup',
+        query: { menu: parentMenu[0]?.keyValue },
+      })
+    } else {
+      router.push('/setup')
+    }
   }
 
   return (

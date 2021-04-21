@@ -10,6 +10,7 @@ import General from '../../../components/Setup/Settings/PosConfiguration/General
 import Appearance from '../../../components/Setup/Settings/PosConfiguration/Appearance'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './pos-configuration.module.less'
+import { useGridData } from '../../../hooks/useGridData'
 
 interface P {
   general: GeneralPosConfig
@@ -198,9 +199,23 @@ const PosConfiguration: FC<P> = () => {
   const handleSave = (): void => {
     console.log('Save Object', posConfigObj)
   }
-
+  const { getParentSetupData } = useGridData(t)
+  let path = router.pathname
+  const pathArray = router.pathname.split('/')
+  if (pathArray.length > 3) {
+    pathArray.pop()
+    path = pathArray.join('/')
+  }
+  const parentMenu = getParentSetupData(path)
   const handleBack = () => {
-    router.push('/setup')
+    if (parentMenu.length > 0) {
+      router.push({
+        pathname: '/setup',
+        query: { menu: parentMenu[0]?.keyValue },
+      })
+    } else {
+      router.push('/setup')
+    }
   }
 
   const tabItems = [
