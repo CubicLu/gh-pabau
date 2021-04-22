@@ -21,7 +21,7 @@ interface Notification {
   notificationTypeIcon?: string
   title: string
   desc: string
-  read: boolean
+  read: number[]
   users: number[]
 }
 

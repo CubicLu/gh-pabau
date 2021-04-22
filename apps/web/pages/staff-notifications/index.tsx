@@ -35,18 +35,10 @@ const USER_LIST_QUERY = gql`
 `
 
 const LIST_QUERY = gql`
-  query application_notification_type {
-    application_notification_type {
+  query notification_types {
+    notification_types {
       type
-      name
       id
-      enabled
-      notification_title {
-        title
-      }
-      notification_description {
-        description
-      }
     }
   }
 `
@@ -111,10 +103,6 @@ export const StaffNotifications: NextPage = () => {
 
   const { data: userList } = useLiveQuery(USER_LIST_QUERY, getQueryVariables)
 
-  const getNotificationType = (type) => {
-    return notificationTypes.find((notification) => notification.type === type)
-  }
-
   const [addMutation] = useMutation(ADD_MUTATION, {
     onCompleted(data) {
       Notification(NotificationType.success, 'Notification sent')
@@ -125,13 +113,13 @@ export const StaffNotifications: NextPage = () => {
   })
 
   const onSubmit = async (values) => {
-    const notificationType = getNotificationType(values.type)
+    console.log('values', values)
     const sent_users = []
     for (const user of userList) {
       sent_users.push(user.id)
     }
     const body = {
-      type: notificationType.id,
+      type: values.type,
       sent_to: sent_users,
     }
 
@@ -159,7 +147,7 @@ export const StaffNotifications: NextPage = () => {
                         {notificationTypes?.map((notification_type) => (
                           <Select.Option
                             key={notification_type.id}
-                            value={notification_type.type}
+                            value={notification_type.id}
                           >
                             {notification_type.type}
                           </Select.Option>

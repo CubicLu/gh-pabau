@@ -10,6 +10,8 @@ import { useTranslation } from 'react-i18next'
 import moment from 'moment'
 import { notificationIcons } from './mock'
 import { gql, useMutation } from '@apollo/client'
+import { useRouter } from 'next/router'
+import { isArray } from 'highcharts'
 
 interface Notification {
   id: string
@@ -32,10 +34,14 @@ const DELETE_MUTATION = gql`
 `
 
 const UPDATE_MUTATION = gql`
-  mutation update_notifications_by_pk($id: uuid!, $sent_to: jsonb) {
+  mutation update_notifications_by_pk(
+    $id: uuid!
+    $sent_to: jsonb
+    $is_read: jsonb
+  ) {
     update_notifications_by_pk(
       pk_columns: { id: $id }
-      _set: { sent_to: $sent_to }
+      _set: { sent_to: $sent_to, is_read: $is_read }
     ) {
       id
     }
@@ -79,6 +85,8 @@ export const NotificationDrawer: FC<P> = ({
     businessrefer: 'notifications.businessrefer',
     lead: 'notifications.lead',
   }
+
+  const router = useRouter()
 
   const [deleteMutation] = useMutation(DELETE_MUTATION)
   const [updateMutation] = useMutation(UPDATE_MUTATION)
@@ -134,6 +142,24 @@ export const NotificationDrawer: FC<P> = ({
   //     setNotificationData([...newNotificationData])
   //   }
   // }
+
+  const isReadNotification = (users) => {
+    return users?.find((user_id) => user_id == user?.user) ? true : false
+  }
+
+  const onNotificationClick = async (notification) => {
+    let { id, users, read } = notification
+    if (!isReadNotification(read)) {
+      if (read?.length > 0) {
+        read = [...read, user?.user]
+      } else {
+        read = [user?.user]
+      }
+      const variables = { id, is_read: read, sent_to: users }
+      await updateMutation({ variables, optimisticResponse: {} })
+    }
+    router.push({ pathname: '/setup' })
+  }
 
   const removeSingleNotification = async (notification) => {
     const { id, users } = notification
@@ -215,7 +241,7 @@ export const NotificationDrawer: FC<P> = ({
       {notifyTab === 'Activity' &&
         notifications.map((notify, index) => {
           return (
-            <div key={index}>
+            <div key={index} onClick={() => onNotificationClick(notify)}>
               <div className={styles.notificationCard}>
                 <div className={styles.notifyAlign}>
                   <div className={classNames(styles.logo, styles.flex)}>
@@ -265,7 +291,7 @@ export const NotificationDrawer: FC<P> = ({
                     <p>{notify.desc}</p>
                   </div>
                   <div className={styles.readStatus}>
-                    {!notify.read && <span></span>}
+                    {!isReadNotification(notify?.read) && <span></span>}
                   </div>
                 </div>
               </div>

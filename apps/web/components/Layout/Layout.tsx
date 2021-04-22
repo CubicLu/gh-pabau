@@ -15,7 +15,7 @@ interface Notification {
   notificationTypeIcon?: string
   title: string
   desc: string
-  read: boolean
+  read: number[]
   users: number[]
 }
 
@@ -27,15 +27,12 @@ const LIST_QUERY = gql`
     ) {
       id
       sent_to
+      is_read
       created_at
       notification_type {
         name
-        notification_title {
-          title
-        }
-        notification_description {
-          description
-        }
+        title
+        description
       }
     }
   }
@@ -70,11 +67,9 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
           id: notification.id,
           notificationTime: notification?.created_at,
           notificationType: notification?.notification_type?.name.trim(),
-          title: notification?.notification_type?.notification_title?.title,
-          desc:
-            notification?.notification_type?.notification_description
-              ?.description,
-          read: false,
+          title: notification?.notification_type?.title,
+          desc: notification?.notification_type?.description,
+          read: notification?.is_read,
           users: notification?.sent_to,
         })
       )

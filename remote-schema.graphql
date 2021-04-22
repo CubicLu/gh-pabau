@@ -50863,240 +50863,6 @@ input JobWhereUniqueInput {
 scalar Json
 
 """
-columns and relationships of "LMS_slugs"
-"""
-type LMS_slugs {
-  article_urls(
-    """JSON select path"""
-    path: String
-  ): jsonb
-  blogs(
-    """JSON select path"""
-    path: String
-  ): jsonb
-  created_date: timestamptz!
-  id: uuid!
-  slug: String!
-  videos(
-    """JSON select path"""
-    path: String
-  ): jsonb
-  webinar: String
-}
-
-"""
-aggregated selection of "LMS_slugs"
-"""
-type LMS_slugs_aggregate {
-  aggregate: LMS_slugs_aggregate_fields
-  nodes: [LMS_slugs!]!
-}
-
-"""
-aggregate fields of "LMS_slugs"
-"""
-type LMS_slugs_aggregate_fields {
-  count(columns: [LMS_slugs_select_column!], distinct: Boolean): Int!
-  max: LMS_slugs_max_fields
-  min: LMS_slugs_min_fields
-}
-
-"""append existing jsonb value of filtered columns with new jsonb value"""
-input LMS_slugs_append_input {
-  article_urls: jsonb
-  blogs: jsonb
-  videos: jsonb
-}
-
-"""
-Boolean expression to filter rows from the table "LMS_slugs". All fields are combined with a logical 'AND'.
-"""
-input LMS_slugs_bool_exp {
-  _and: [LMS_slugs_bool_exp!]
-  _not: LMS_slugs_bool_exp
-  _or: [LMS_slugs_bool_exp!]
-  article_urls: jsonb_comparison_exp
-  blogs: jsonb_comparison_exp
-  created_date: timestamptz_comparison_exp
-  id: uuid_comparison_exp
-  slug: String_comparison_exp
-  videos: jsonb_comparison_exp
-  webinar: String_comparison_exp
-}
-
-"""
-unique or primary key constraints on table "LMS_slugs"
-"""
-enum LMS_slugs_constraint {
-  """unique or primary key constraint"""
-  LMS_slugs_pkey
-}
-
-"""
-delete the field or element with specified path (for JSON arrays, negative integers count from the end)
-"""
-input LMS_slugs_delete_at_path_input {
-  article_urls: [String!]
-  blogs: [String!]
-  videos: [String!]
-}
-
-"""
-delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
-"""
-input LMS_slugs_delete_elem_input {
-  article_urls: Int
-  blogs: Int
-  videos: Int
-}
-
-"""
-delete key/value pair or string element. key/value pairs are matched based on their key value
-"""
-input LMS_slugs_delete_key_input {
-  article_urls: String
-  blogs: String
-  videos: String
-}
-
-"""
-input type for inserting data into table "LMS_slugs"
-"""
-input LMS_slugs_insert_input {
-  article_urls: jsonb
-  blogs: jsonb
-  created_date: timestamptz
-  id: uuid
-  slug: String
-  videos: jsonb
-  webinar: String
-}
-
-"""aggregate max on columns"""
-type LMS_slugs_max_fields {
-  created_date: timestamptz
-  id: uuid
-  slug: String
-  webinar: String
-}
-
-"""aggregate min on columns"""
-type LMS_slugs_min_fields {
-  created_date: timestamptz
-  id: uuid
-  slug: String
-  webinar: String
-}
-
-"""
-response of any mutation on the table "LMS_slugs"
-"""
-type LMS_slugs_mutation_response {
-  """number of rows affected by the mutation"""
-  affected_rows: Int!
-
-  """data from the rows affected by the mutation"""
-  returning: [LMS_slugs!]!
-}
-
-"""
-on conflict condition type for table "LMS_slugs"
-"""
-input LMS_slugs_on_conflict {
-  constraint: LMS_slugs_constraint!
-  update_columns: [LMS_slugs_update_column!]!
-  where: LMS_slugs_bool_exp
-}
-
-"""Ordering options when selecting data from "LMS_slugs"."""
-input LMS_slugs_order_by {
-  article_urls: order_by
-  blogs: order_by
-  created_date: order_by
-  id: order_by
-  slug: order_by
-  videos: order_by
-  webinar: order_by
-}
-
-"""primary key columns input for table: LMS_slugs"""
-input LMS_slugs_pk_columns_input {
-  id: uuid!
-}
-
-"""prepend existing jsonb value of filtered columns with new jsonb value"""
-input LMS_slugs_prepend_input {
-  article_urls: jsonb
-  blogs: jsonb
-  videos: jsonb
-}
-
-"""
-select columns of table "LMS_slugs"
-"""
-enum LMS_slugs_select_column {
-  """column name"""
-  article_urls
-
-  """column name"""
-  blogs
-
-  """column name"""
-  created_date
-
-  """column name"""
-  id
-
-  """column name"""
-  slug
-
-  """column name"""
-  videos
-
-  """column name"""
-  webinar
-}
-
-"""
-input type for updating data in table "LMS_slugs"
-"""
-input LMS_slugs_set_input {
-  article_urls: jsonb
-  blogs: jsonb
-  created_date: timestamptz
-  id: uuid
-  slug: String
-  videos: jsonb
-  webinar: String
-}
-
-"""
-update columns of table "LMS_slugs"
-"""
-enum LMS_slugs_update_column {
-  """column name"""
-  article_urls
-
-  """column name"""
-  blogs
-
-  """column name"""
-  created_date
-
-  """column name"""
-  id
-
-  """column name"""
-  slug
-
-  """column name"""
-  videos
-
-  """column name"""
-  webinar
-}
-
-"""
 columns and relationships of "Labs"
 """
 type Labs {
@@ -71542,351 +71308,15 @@ input XeroIntegrationWhereUniqueInput {
 }
 
 """
-columns and relationships of "application_notification_title"
-"""
-type application_notification_title {
-  title: String
-  value: String!
-}
-
-"""
-Boolean expression to filter rows from the table "application_notification_title". All fields are combined with a logical 'AND'.
-"""
-input application_notification_title_bool_exp {
-  _and: [application_notification_title_bool_exp!]
-  _not: application_notification_title_bool_exp
-  _or: [application_notification_title_bool_exp!]
-  title: String_comparison_exp
-  value: String_comparison_exp
-}
-
-"""
-Ordering options when selecting data from "application_notification_title".
-"""
-input application_notification_title_order_by {
-  title: order_by
-  value: order_by
-}
-
-"""
-select columns of table "application_notification_title"
-"""
-enum application_notification_title_select_column {
-  """column name"""
-  title
-
-  """column name"""
-  value
-}
-
-"""
-columns and relationships of "application_notification_type"
-"""
-type application_notification_type {
-  enabled: Boolean!
-  id: uuid!
-  name: String!
-
-  """An object relationship"""
-  notification_description: application_notification_type_enum!
-
-  """An object relationship"""
-  notification_title: application_notification_title
-  type: application_notification_type_enum_enum!
-}
-
-"""
-aggregated selection of "application_notification_type"
-"""
-type application_notification_type_aggregate {
-  aggregate: application_notification_type_aggregate_fields
-  nodes: [application_notification_type!]!
-}
-
-"""
-aggregate fields of "application_notification_type"
-"""
-type application_notification_type_aggregate_fields {
-  count(columns: [application_notification_type_select_column!], distinct: Boolean): Int!
-  max: application_notification_type_max_fields
-  min: application_notification_type_min_fields
-}
-
-"""
-Boolean expression to filter rows from the table "application_notification_type". All fields are combined with a logical 'AND'.
-"""
-input application_notification_type_bool_exp {
-  _and: [application_notification_type_bool_exp!]
-  _not: application_notification_type_bool_exp
-  _or: [application_notification_type_bool_exp!]
-  enabled: Boolean_comparison_exp
-  id: uuid_comparison_exp
-  name: String_comparison_exp
-  notification_description: application_notification_type_enum_bool_exp
-  notification_title: application_notification_title_bool_exp
-  type: application_notification_type_enum_enum_comparison_exp
-}
-
-"""
-unique or primary key constraints on table "application_notification_type"
-"""
-enum application_notification_type_constraint {
-  """unique or primary key constraint"""
-  application_notification_type_pkey
-}
-
-"""
-columns and relationships of "application_notification_type_enum"
-"""
-type application_notification_type_enum {
-  description: String
-  value: String!
-}
-
-"""
-Boolean expression to filter rows from the table "application_notification_type_enum". All fields are combined with a logical 'AND'.
-"""
-input application_notification_type_enum_bool_exp {
-  _and: [application_notification_type_enum_bool_exp!]
-  _not: application_notification_type_enum_bool_exp
-  _or: [application_notification_type_enum_bool_exp!]
-  description: String_comparison_exp
-  value: String_comparison_exp
-}
-
-enum application_notification_type_enum_enum {
-  """
-  [staffName] invited you, and [staffList]  to a bookout on [date] at [time]. Reason: [bookoutName]
-  """
-  bookout
-
-  """[campaignName] was delivered. Check out the statistics"""
-  campaign
-
-  """
-  [staffName] cancelled a [serviceName] appointment for [clientName] on [date] at [time]. Cancellation reason: [cancellationReason]
-  """
-  cancelled_appointment_via_calendar
-
-  """
-  [patientName] cancelled a [serviceName] appointment on [date] at [time]. Cancellation reason: [cancellationReason]
-  """
-  cancelled_appointment_via_pabau
-
-  """[clientName] has arrived for the appointment [appointmentName]"""
-  client_arrived_for_appointment
-
-  """Click here to review the request."""
-  holiday_request
-
-  """[staff_name] performed an inventory count.  Click here to learn more"""
-  inventory
-
-  """
-  [staffName] booked a [serviceName] appointment for [clientName] on [date]  at [time]
-  """
-  new_appointment_via_calendar
-
-  """[patientName] booked [serviceName] appointment on [date] at [time]"""
-  new_appointment_via_pabau
-
-  """NULL"""
-  new_blog_post
-
-  """New Feature Release"""
-  new_feature_release
-
-  """
-  [lead_name] has enquired about [treatment_interest] . Click here for more information
-  """
-  new_lead
-
-  """News and Announcements"""
-  news_and_announcements
-
-  """
-  The purchase order [purchase_order_number] issued by [staff_member] on [purchase_order_date] has arrived. Click here to learn more
-  """
-  purchase_order_arrived
-
-  """
-  [staff_member] issued a purchase order [purchase_order_number] to [supplier_name]. Click here to learn more.
-  """
-  purchase_order_issued
-
-  """Click to learn more"""
-  referral
-
-  """
-  [report_name] [report_category_name] has been  generated  and sent to you.
-  """
-  report
-
-  """
-  [staffName] rescheduled a [serviceName] appointment for [clientName] on [date] at [time]
-  """
-  rescheduled_appointment_via_calendar
-
-  """
-  [patientName] rescheduled a [serviceName] appointment on [date] at [time]
-  """
-  rescheduled_appointment_via_pabau
-
-  """
-  A review has been published for [EmployeeName]. We encourage you to manage and respond to the review
-  """
-  review
-}
-
-"""
-Boolean expression to compare columns of type "application_notification_type_enum_enum". All fields are combined with logical 'AND'.
-"""
-input application_notification_type_enum_enum_comparison_exp {
-  _eq: application_notification_type_enum_enum
-  _in: [application_notification_type_enum_enum!]
-  _is_null: Boolean
-  _neq: application_notification_type_enum_enum
-  _nin: [application_notification_type_enum_enum!]
-}
-
-"""
-Ordering options when selecting data from "application_notification_type_enum".
-"""
-input application_notification_type_enum_order_by {
-  description: order_by
-  value: order_by
-}
-
-"""
-select columns of table "application_notification_type_enum"
-"""
-enum application_notification_type_enum_select_column {
-  """column name"""
-  description
-
-  """column name"""
-  value
-}
-
-"""
-input type for inserting data into table "application_notification_type"
-"""
-input application_notification_type_insert_input {
-  enabled: Boolean
-  id: uuid
-  name: String
-  type: application_notification_type_enum_enum
-}
-
-"""aggregate max on columns"""
-type application_notification_type_max_fields {
-  id: uuid
-  name: String
-}
-
-"""aggregate min on columns"""
-type application_notification_type_min_fields {
-  id: uuid
-  name: String
-}
-
-"""
-response of any mutation on the table "application_notification_type"
-"""
-type application_notification_type_mutation_response {
-  """number of rows affected by the mutation"""
-  affected_rows: Int!
-
-  """data from the rows affected by the mutation"""
-  returning: [application_notification_type!]!
-}
-
-"""
-input type for inserting object relation for remote table "application_notification_type"
-"""
-input application_notification_type_obj_rel_insert_input {
-  data: application_notification_type_insert_input!
-
-  """on conflict condition"""
-  on_conflict: application_notification_type_on_conflict
-}
-
-"""
-on conflict condition type for table "application_notification_type"
-"""
-input application_notification_type_on_conflict {
-  constraint: application_notification_type_constraint!
-  update_columns: [application_notification_type_update_column!]!
-  where: application_notification_type_bool_exp
-}
-
-"""
-Ordering options when selecting data from "application_notification_type".
-"""
-input application_notification_type_order_by {
-  enabled: order_by
-  id: order_by
-  name: order_by
-  notification_description: application_notification_type_enum_order_by
-  notification_title: application_notification_title_order_by
-  type: order_by
-}
-
-"""primary key columns input for table: application_notification_type"""
-input application_notification_type_pk_columns_input {
-  id: uuid!
-}
-
-"""
-select columns of table "application_notification_type"
-"""
-enum application_notification_type_select_column {
-  """column name"""
-  enabled
-
-  """column name"""
-  id
-
-  """column name"""
-  name
-
-  """column name"""
-  type
-}
-
-"""
-input type for updating data in table "application_notification_type"
-"""
-input application_notification_type_set_input {
-  enabled: Boolean
-  id: uuid
-  name: String
-  type: application_notification_type_enum_enum
-}
-
-"""
-update columns of table "application_notification_type"
-"""
-enum application_notification_type_update_column {
-  """column name"""
-  enabled
-
-  """column name"""
-  id
-
-  """column name"""
-  name
-
-  """column name"""
-  type
-}
-
-"""
 columns and relationships of "application_notifications"
 """
 type application_notifications {
+  enabled: Boolean!
   id: uuid!
-  notification: uuid!
+
+  """An object relationship"""
+  notificationTypeByNotificationType: notification_types!
+  notification_type: uuid!
   user: Int!
 }
 
@@ -71915,9 +71345,43 @@ type application_notifications_aggregate_fields {
   variance: application_notifications_variance_fields
 }
 
+"""
+order by aggregate values of table "application_notifications"
+"""
+input application_notifications_aggregate_order_by {
+  avg: application_notifications_avg_order_by
+  count: order_by
+  max: application_notifications_max_order_by
+  min: application_notifications_min_order_by
+  stddev: application_notifications_stddev_order_by
+  stddev_pop: application_notifications_stddev_pop_order_by
+  stddev_samp: application_notifications_stddev_samp_order_by
+  sum: application_notifications_sum_order_by
+  var_pop: application_notifications_var_pop_order_by
+  var_samp: application_notifications_var_samp_order_by
+  variance: application_notifications_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "application_notifications"
+"""
+input application_notifications_arr_rel_insert_input {
+  data: [application_notifications_insert_input!]!
+
+  """on conflict condition"""
+  on_conflict: application_notifications_on_conflict
+}
+
 """aggregate avg on columns"""
 type application_notifications_avg_fields {
   user: Float
+}
+
+"""
+order by avg() on columns of table "application_notifications"
+"""
+input application_notifications_avg_order_by {
+  user: order_by
 }
 
 """
@@ -71927,8 +71391,10 @@ input application_notifications_bool_exp {
   _and: [application_notifications_bool_exp!]
   _not: application_notifications_bool_exp
   _or: [application_notifications_bool_exp!]
+  enabled: Boolean_comparison_exp
   id: uuid_comparison_exp
-  notification: uuid_comparison_exp
+  notificationTypeByNotificationType: notification_types_bool_exp
+  notification_type: uuid_comparison_exp
   user: Int_comparison_exp
 }
 
@@ -71951,23 +71417,43 @@ input application_notifications_inc_input {
 input type for inserting data into table "application_notifications"
 """
 input application_notifications_insert_input {
+  enabled: Boolean
   id: uuid
-  notification: uuid
+  notificationTypeByNotificationType: notification_types_obj_rel_insert_input
+  notification_type: uuid
   user: Int
 }
 
 """aggregate max on columns"""
 type application_notifications_max_fields {
   id: uuid
-  notification: uuid
+  notification_type: uuid
   user: Int
+}
+
+"""
+order by max() on columns of table "application_notifications"
+"""
+input application_notifications_max_order_by {
+  id: order_by
+  notification_type: order_by
+  user: order_by
 }
 
 """aggregate min on columns"""
 type application_notifications_min_fields {
   id: uuid
-  notification: uuid
+  notification_type: uuid
   user: Int
+}
+
+"""
+order by min() on columns of table "application_notifications"
+"""
+input application_notifications_min_order_by {
+  id: order_by
+  notification_type: order_by
+  user: order_by
 }
 
 """
@@ -71992,8 +71478,10 @@ input application_notifications_on_conflict {
 
 """Ordering options when selecting data from "application_notifications"."""
 input application_notifications_order_by {
+  enabled: order_by
   id: order_by
-  notification: order_by
+  notificationTypeByNotificationType: notification_types_order_by
+  notification_type: order_by
   user: order_by
 }
 
@@ -72007,10 +71495,13 @@ select columns of table "application_notifications"
 """
 enum application_notifications_select_column {
   """column name"""
+  enabled
+
+  """column name"""
   id
 
   """column name"""
-  notification
+  notification_type
 
   """column name"""
   user
@@ -72020,8 +71511,9 @@ enum application_notifications_select_column {
 input type for updating data in table "application_notifications"
 """
 input application_notifications_set_input {
+  enabled: Boolean
   id: uuid
-  notification: uuid
+  notification_type: uuid
   user: Int
 }
 
@@ -72030,14 +71522,35 @@ type application_notifications_stddev_fields {
   user: Float
 }
 
+"""
+order by stddev() on columns of table "application_notifications"
+"""
+input application_notifications_stddev_order_by {
+  user: order_by
+}
+
 """aggregate stddev_pop on columns"""
 type application_notifications_stddev_pop_fields {
   user: Float
 }
 
+"""
+order by stddev_pop() on columns of table "application_notifications"
+"""
+input application_notifications_stddev_pop_order_by {
+  user: order_by
+}
+
 """aggregate stddev_samp on columns"""
 type application_notifications_stddev_samp_fields {
   user: Float
+}
+
+"""
+order by stddev_samp() on columns of table "application_notifications"
+"""
+input application_notifications_stddev_samp_order_by {
+  user: order_by
 }
 
 """aggregate sum on columns"""
@@ -72046,14 +71559,24 @@ type application_notifications_sum_fields {
 }
 
 """
+order by sum() on columns of table "application_notifications"
+"""
+input application_notifications_sum_order_by {
+  user: order_by
+}
+
+"""
 update columns of table "application_notifications"
 """
 enum application_notifications_update_column {
   """column name"""
+  enabled
+
+  """column name"""
   id
 
   """column name"""
-  notification
+  notification_type
 
   """column name"""
   user
@@ -72064,14 +71587,35 @@ type application_notifications_var_pop_fields {
   user: Float
 }
 
+"""
+order by var_pop() on columns of table "application_notifications"
+"""
+input application_notifications_var_pop_order_by {
+  user: order_by
+}
+
 """aggregate var_samp on columns"""
 type application_notifications_var_samp_fields {
   user: Float
 }
 
+"""
+order by var_samp() on columns of table "application_notifications"
+"""
+input application_notifications_var_samp_order_by {
+  user: order_by
+}
+
 """aggregate variance on columns"""
 type application_notifications_variance_fields {
   user: Float
+}
+
+"""
+order by variance() on columns of table "application_notifications"
+"""
+input application_notifications_variance_order_by {
+  user: order_by
 }
 
 """
@@ -79984,6 +79528,240 @@ type library_variance_fields {
 }
 
 """
+columns and relationships of "lms_slugs"
+"""
+type lms_slugs {
+  article_urls(
+    """JSON select path"""
+    path: String
+  ): jsonb
+  blogs(
+    """JSON select path"""
+    path: String
+  ): jsonb
+  created_date: timestamptz!
+  id: uuid!
+  slug: String!
+  videos(
+    """JSON select path"""
+    path: String
+  ): jsonb
+  webinar: String
+}
+
+"""
+aggregated selection of "lms_slugs"
+"""
+type lms_slugs_aggregate {
+  aggregate: lms_slugs_aggregate_fields
+  nodes: [lms_slugs!]!
+}
+
+"""
+aggregate fields of "lms_slugs"
+"""
+type lms_slugs_aggregate_fields {
+  count(columns: [lms_slugs_select_column!], distinct: Boolean): Int!
+  max: lms_slugs_max_fields
+  min: lms_slugs_min_fields
+}
+
+"""append existing jsonb value of filtered columns with new jsonb value"""
+input lms_slugs_append_input {
+  article_urls: jsonb
+  blogs: jsonb
+  videos: jsonb
+}
+
+"""
+Boolean expression to filter rows from the table "lms_slugs". All fields are combined with a logical 'AND'.
+"""
+input lms_slugs_bool_exp {
+  _and: [lms_slugs_bool_exp!]
+  _not: lms_slugs_bool_exp
+  _or: [lms_slugs_bool_exp!]
+  article_urls: jsonb_comparison_exp
+  blogs: jsonb_comparison_exp
+  created_date: timestamptz_comparison_exp
+  id: uuid_comparison_exp
+  slug: String_comparison_exp
+  videos: jsonb_comparison_exp
+  webinar: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "lms_slugs"
+"""
+enum lms_slugs_constraint {
+  """unique or primary key constraint"""
+  LMS_slugs_pkey
+}
+
+"""
+delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+"""
+input lms_slugs_delete_at_path_input {
+  article_urls: [String!]
+  blogs: [String!]
+  videos: [String!]
+}
+
+"""
+delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+"""
+input lms_slugs_delete_elem_input {
+  article_urls: Int
+  blogs: Int
+  videos: Int
+}
+
+"""
+delete key/value pair or string element. key/value pairs are matched based on their key value
+"""
+input lms_slugs_delete_key_input {
+  article_urls: String
+  blogs: String
+  videos: String
+}
+
+"""
+input type for inserting data into table "lms_slugs"
+"""
+input lms_slugs_insert_input {
+  article_urls: jsonb
+  blogs: jsonb
+  created_date: timestamptz
+  id: uuid
+  slug: String
+  videos: jsonb
+  webinar: String
+}
+
+"""aggregate max on columns"""
+type lms_slugs_max_fields {
+  created_date: timestamptz
+  id: uuid
+  slug: String
+  webinar: String
+}
+
+"""aggregate min on columns"""
+type lms_slugs_min_fields {
+  created_date: timestamptz
+  id: uuid
+  slug: String
+  webinar: String
+}
+
+"""
+response of any mutation on the table "lms_slugs"
+"""
+type lms_slugs_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [lms_slugs!]!
+}
+
+"""
+on conflict condition type for table "lms_slugs"
+"""
+input lms_slugs_on_conflict {
+  constraint: lms_slugs_constraint!
+  update_columns: [lms_slugs_update_column!]!
+  where: lms_slugs_bool_exp
+}
+
+"""Ordering options when selecting data from "lms_slugs"."""
+input lms_slugs_order_by {
+  article_urls: order_by
+  blogs: order_by
+  created_date: order_by
+  id: order_by
+  slug: order_by
+  videos: order_by
+  webinar: order_by
+}
+
+"""primary key columns input for table: lms_slugs"""
+input lms_slugs_pk_columns_input {
+  id: uuid!
+}
+
+"""prepend existing jsonb value of filtered columns with new jsonb value"""
+input lms_slugs_prepend_input {
+  article_urls: jsonb
+  blogs: jsonb
+  videos: jsonb
+}
+
+"""
+select columns of table "lms_slugs"
+"""
+enum lms_slugs_select_column {
+  """column name"""
+  article_urls
+
+  """column name"""
+  blogs
+
+  """column name"""
+  created_date
+
+  """column name"""
+  id
+
+  """column name"""
+  slug
+
+  """column name"""
+  videos
+
+  """column name"""
+  webinar
+}
+
+"""
+input type for updating data in table "lms_slugs"
+"""
+input lms_slugs_set_input {
+  article_urls: jsonb
+  blogs: jsonb
+  created_date: timestamptz
+  id: uuid
+  slug: String
+  videos: jsonb
+  webinar: String
+}
+
+"""
+update columns of table "lms_slugs"
+"""
+enum lms_slugs_update_column {
+  """column name"""
+  article_urls
+
+  """column name"""
+  blogs
+
+  """column name"""
+  created_date
+
+  """column name"""
+  id
+
+  """column name"""
+  slug
+
+  """column name"""
+  videos
+
+  """column name"""
+  webinar
+}
+
+"""
 columns and relationships of "locations"
 """
 type locations {
@@ -81440,19 +81218,6 @@ type mutation_root {
   delete_Discounts_by_pk(id: uuid!): Discounts
 
   """
-  delete data from the table: "LMS_slugs"
-  """
-  delete_LMS_slugs(
-    """filter the rows which have to be deleted"""
-    where: LMS_slugs_bool_exp!
-  ): LMS_slugs_mutation_response
-
-  """
-  delete single row from the table: "LMS_slugs"
-  """
-  delete_LMS_slugs_by_pk(id: uuid!): LMS_slugs
-
-  """
   delete data from the table: "Labs"
   """
   delete_Labs(
@@ -81503,19 +81268,6 @@ type mutation_root {
   delete single row from the table: "SMS_campaign"
   """
   delete_SMS_campaign_by_pk(id: uuid!): SMS_campaign
-
-  """
-  delete data from the table: "application_notification_type"
-  """
-  delete_application_notification_type(
-    """filter the rows which have to be deleted"""
-    where: application_notification_type_bool_exp!
-  ): application_notification_type_mutation_response
-
-  """
-  delete single row from the table: "application_notification_type"
-  """
-  delete_application_notification_type_by_pk(id: uuid!): application_notification_type
 
   """
   delete data from the table: "application_notifications"
@@ -81895,6 +81647,19 @@ type mutation_root {
   delete_library_installers_by_pk(id: Int!): library_installers
 
   """
+  delete data from the table: "lms_slugs"
+  """
+  delete_lms_slugs(
+    """filter the rows which have to be deleted"""
+    where: lms_slugs_bool_exp!
+  ): lms_slugs_mutation_response
+
+  """
+  delete single row from the table: "lms_slugs"
+  """
+  delete_lms_slugs_by_pk(id: uuid!): lms_slugs
+
+  """
   delete data from the table: "locations"
   """
   delete_locations(
@@ -81945,6 +81710,19 @@ type mutation_root {
   delete single row from the table: "marketing_source"
   """
   delete_marketing_source_by_pk(id: uuid!): marketing_source
+
+  """
+  delete data from the table: "notification_toggle"
+  """
+  delete_notification_toggle(
+    """filter the rows which have to be deleted"""
+    where: notification_toggle_bool_exp!
+  ): notification_toggle_mutation_response
+
+  """
+  delete single row from the table: "notification_toggle"
+  """
+  delete_notification_toggle_by_pk(id: uuid!): notification_toggle
 
   """
   delete data from the table: "notification_types"
@@ -82103,6 +81881,19 @@ type mutation_root {
   delete_salutation_by_pk(id: uuid!): salutation
 
   """
+  delete data from the table: "service"
+  """
+  delete_service(
+    """filter the rows which have to be deleted"""
+    where: service_bool_exp!
+  ): service_mutation_response
+
+  """
+  delete single row from the table: "service"
+  """
+  delete_service_by_pk(id: uuid!): service
+
+  """
   delete data from the table: "stock_take"
   """
   delete_stock_take(
@@ -82175,28 +81966,6 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: Discounts_on_conflict
   ): Discounts
-
-  """
-  insert data into the table: "LMS_slugs"
-  """
-  insert_LMS_slugs(
-    """the rows to be inserted"""
-    objects: [LMS_slugs_insert_input!]!
-
-    """on conflict condition"""
-    on_conflict: LMS_slugs_on_conflict
-  ): LMS_slugs_mutation_response
-
-  """
-  insert a single row into the table: "LMS_slugs"
-  """
-  insert_LMS_slugs_one(
-    """the row to be inserted"""
-    object: LMS_slugs_insert_input!
-
-    """on conflict condition"""
-    on_conflict: LMS_slugs_on_conflict
-  ): LMS_slugs
 
   """
   insert data into the table: "Labs"
@@ -82285,28 +82054,6 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: SMS_campaign_on_conflict
   ): SMS_campaign
-
-  """
-  insert data into the table: "application_notification_type"
-  """
-  insert_application_notification_type(
-    """the rows to be inserted"""
-    objects: [application_notification_type_insert_input!]!
-
-    """on conflict condition"""
-    on_conflict: application_notification_type_on_conflict
-  ): application_notification_type_mutation_response
-
-  """
-  insert a single row into the table: "application_notification_type"
-  """
-  insert_application_notification_type_one(
-    """the row to be inserted"""
-    object: application_notification_type_insert_input!
-
-    """on conflict condition"""
-    on_conflict: application_notification_type_on_conflict
-  ): application_notification_type
 
   """
   insert data into the table: "application_notifications"
@@ -82985,6 +82732,28 @@ type mutation_root {
   ): library
 
   """
+  insert data into the table: "lms_slugs"
+  """
+  insert_lms_slugs(
+    """the rows to be inserted"""
+    objects: [lms_slugs_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: lms_slugs_on_conflict
+  ): lms_slugs_mutation_response
+
+  """
+  insert a single row into the table: "lms_slugs"
+  """
+  insert_lms_slugs_one(
+    """the row to be inserted"""
+    object: lms_slugs_insert_input!
+
+    """on conflict condition"""
+    on_conflict: lms_slugs_on_conflict
+  ): lms_slugs
+
+  """
   insert data into the table: "locations"
   """
   insert_locations(
@@ -83071,6 +82840,28 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: marketing_source_on_conflict
   ): marketing_source
+
+  """
+  insert data into the table: "notification_toggle"
+  """
+  insert_notification_toggle(
+    """the rows to be inserted"""
+    objects: [notification_toggle_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: notification_toggle_on_conflict
+  ): notification_toggle_mutation_response
+
+  """
+  insert a single row into the table: "notification_toggle"
+  """
+  insert_notification_toggle_one(
+    """the row to be inserted"""
+    object: notification_toggle_insert_input!
+
+    """on conflict condition"""
+    on_conflict: notification_toggle_on_conflict
+  ): notification_toggle
 
   """
   insert data into the table: "notification_types"
@@ -83343,6 +83134,28 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: salutation_on_conflict
   ): salutation
+
+  """
+  insert data into the table: "service"
+  """
+  insert_service(
+    """the rows to be inserted"""
+    objects: [service_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: service_on_conflict
+  ): service_mutation_response
+
+  """
+  insert a single row into the table: "service"
+  """
+  insert_service_one(
+    """the row to be inserted"""
+    object: service_insert_input!
+
+    """on conflict condition"""
+    on_conflict: service_on_conflict
+  ): service
 
   """
   insert data into the table: "stock_take"
@@ -83811,68 +83624,6 @@ type mutation_root {
   ): Discounts
 
   """
-  update data of the table: "LMS_slugs"
-  """
-  update_LMS_slugs(
-    """append existing jsonb value of filtered columns with new jsonb value"""
-    _append: LMS_slugs_append_input
-
-    """
-    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
-    """
-    _delete_at_path: LMS_slugs_delete_at_path_input
-
-    """
-    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
-    """
-    _delete_elem: LMS_slugs_delete_elem_input
-
-    """
-    delete key/value pair or string element. key/value pairs are matched based on their key value
-    """
-    _delete_key: LMS_slugs_delete_key_input
-
-    """prepend existing jsonb value of filtered columns with new jsonb value"""
-    _prepend: LMS_slugs_prepend_input
-
-    """sets the columns of the filtered rows to the given values"""
-    _set: LMS_slugs_set_input
-
-    """filter the rows which have to be updated"""
-    where: LMS_slugs_bool_exp!
-  ): LMS_slugs_mutation_response
-
-  """
-  update single row of the table: "LMS_slugs"
-  """
-  update_LMS_slugs_by_pk(
-    """append existing jsonb value of filtered columns with new jsonb value"""
-    _append: LMS_slugs_append_input
-
-    """
-    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
-    """
-    _delete_at_path: LMS_slugs_delete_at_path_input
-
-    """
-    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
-    """
-    _delete_elem: LMS_slugs_delete_elem_input
-
-    """
-    delete key/value pair or string element. key/value pairs are matched based on their key value
-    """
-    _delete_key: LMS_slugs_delete_key_input
-
-    """prepend existing jsonb value of filtered columns with new jsonb value"""
-    _prepend: LMS_slugs_prepend_input
-
-    """sets the columns of the filtered rows to the given values"""
-    _set: LMS_slugs_set_input
-    pk_columns: LMS_slugs_pk_columns_input!
-  ): LMS_slugs
-
-  """
   update data of the table: "Labs"
   """
   update_Labs(
@@ -83975,26 +83726,6 @@ type mutation_root {
     _set: SMS_campaign_set_input
     pk_columns: SMS_campaign_pk_columns_input!
   ): SMS_campaign
-
-  """
-  update data of the table: "application_notification_type"
-  """
-  update_application_notification_type(
-    """sets the columns of the filtered rows to the given values"""
-    _set: application_notification_type_set_input
-
-    """filter the rows which have to be updated"""
-    where: application_notification_type_bool_exp!
-  ): application_notification_type_mutation_response
-
-  """
-  update single row of the table: "application_notification_type"
-  """
-  update_application_notification_type_by_pk(
-    """sets the columns of the filtered rows to the given values"""
-    _set: application_notification_type_set_input
-    pk_columns: application_notification_type_pk_columns_input!
-  ): application_notification_type
 
   """
   update data of the table: "application_notifications"
@@ -84789,6 +84520,68 @@ type mutation_root {
   ): library_installers
 
   """
+  update data of the table: "lms_slugs"
+  """
+  update_lms_slugs(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: lms_slugs_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: lms_slugs_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+    """
+    _delete_elem: lms_slugs_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: lms_slugs_delete_key_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: lms_slugs_prepend_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: lms_slugs_set_input
+
+    """filter the rows which have to be updated"""
+    where: lms_slugs_bool_exp!
+  ): lms_slugs_mutation_response
+
+  """
+  update single row of the table: "lms_slugs"
+  """
+  update_lms_slugs_by_pk(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: lms_slugs_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: lms_slugs_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+    """
+    _delete_elem: lms_slugs_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: lms_slugs_delete_key_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: lms_slugs_prepend_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: lms_slugs_set_input
+    pk_columns: lms_slugs_pk_columns_input!
+  ): lms_slugs
+
+  """
   update data of the table: "locations"
   """
   update_locations(
@@ -84933,6 +84726,32 @@ type mutation_root {
     _set: marketing_source_set_input
     pk_columns: marketing_source_pk_columns_input!
   ): marketing_source
+
+  """
+  update data of the table: "notification_toggle"
+  """
+  update_notification_toggle(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: notification_toggle_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: notification_toggle_set_input
+
+    """filter the rows which have to be updated"""
+    where: notification_toggle_bool_exp!
+  ): notification_toggle_mutation_response
+
+  """
+  update single row of the table: "notification_toggle"
+  """
+  update_notification_toggle_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: notification_toggle_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: notification_toggle_set_input
+    pk_columns: notification_toggle_pk_columns_input!
+  ): notification_toggle
 
   """
   update data of the table: "notification_types"
@@ -85277,6 +85096,32 @@ type mutation_root {
   ): salutation
 
   """
+  update data of the table: "service"
+  """
+  update_service(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: service_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: service_set_input
+
+    """filter the rows which have to be updated"""
+    where: service_bool_exp!
+  ): service_mutation_response
+
+  """
+  update single row of the table: "service"
+  """
+  update_service_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: service_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: service_set_input
+    pk_columns: service_pk_columns_input!
+  ): service
+
+  """
   update data of the table: "stock_take"
   """
   update_stock_take(
@@ -85555,16 +85400,447 @@ type mutation_root {
 }
 
 """
+columns and relationships of "notification_toggle"
+"""
+type notification_toggle {
+  company: Int!
+  enabled: Boolean!
+  id: uuid!
+
+  """An object relationship"""
+  notificationTypeByNotificationType: notification_types!
+  notification_type: uuid!
+  user: Int!
+}
+
+"""
+aggregated selection of "notification_toggle"
+"""
+type notification_toggle_aggregate {
+  aggregate: notification_toggle_aggregate_fields
+  nodes: [notification_toggle!]!
+}
+
+"""
+aggregate fields of "notification_toggle"
+"""
+type notification_toggle_aggregate_fields {
+  avg: notification_toggle_avg_fields
+  count(columns: [notification_toggle_select_column!], distinct: Boolean): Int!
+  max: notification_toggle_max_fields
+  min: notification_toggle_min_fields
+  stddev: notification_toggle_stddev_fields
+  stddev_pop: notification_toggle_stddev_pop_fields
+  stddev_samp: notification_toggle_stddev_samp_fields
+  sum: notification_toggle_sum_fields
+  var_pop: notification_toggle_var_pop_fields
+  var_samp: notification_toggle_var_samp_fields
+  variance: notification_toggle_variance_fields
+}
+
+"""
+order by aggregate values of table "notification_toggle"
+"""
+input notification_toggle_aggregate_order_by {
+  avg: notification_toggle_avg_order_by
+  count: order_by
+  max: notification_toggle_max_order_by
+  min: notification_toggle_min_order_by
+  stddev: notification_toggle_stddev_order_by
+  stddev_pop: notification_toggle_stddev_pop_order_by
+  stddev_samp: notification_toggle_stddev_samp_order_by
+  sum: notification_toggle_sum_order_by
+  var_pop: notification_toggle_var_pop_order_by
+  var_samp: notification_toggle_var_samp_order_by
+  variance: notification_toggle_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "notification_toggle"
+"""
+input notification_toggle_arr_rel_insert_input {
+  data: [notification_toggle_insert_input!]!
+
+  """on conflict condition"""
+  on_conflict: notification_toggle_on_conflict
+}
+
+"""aggregate avg on columns"""
+type notification_toggle_avg_fields {
+  company: Float
+  user: Float
+}
+
+"""
+order by avg() on columns of table "notification_toggle"
+"""
+input notification_toggle_avg_order_by {
+  company: order_by
+  user: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "notification_toggle". All fields are combined with a logical 'AND'.
+"""
+input notification_toggle_bool_exp {
+  _and: [notification_toggle_bool_exp!]
+  _not: notification_toggle_bool_exp
+  _or: [notification_toggle_bool_exp!]
+  company: Int_comparison_exp
+  enabled: Boolean_comparison_exp
+  id: uuid_comparison_exp
+  notificationTypeByNotificationType: notification_types_bool_exp
+  notification_type: uuid_comparison_exp
+  user: Int_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "notification_toggle"
+"""
+enum notification_toggle_constraint {
+  """unique or primary key constraint"""
+  notification_toggle_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "notification_toggle"
+"""
+input notification_toggle_inc_input {
+  company: Int
+  user: Int
+}
+
+"""
+input type for inserting data into table "notification_toggle"
+"""
+input notification_toggle_insert_input {
+  company: Int
+  enabled: Boolean
+  id: uuid
+  notificationTypeByNotificationType: notification_types_obj_rel_insert_input
+  notification_type: uuid
+  user: Int
+}
+
+"""aggregate max on columns"""
+type notification_toggle_max_fields {
+  company: Int
+  id: uuid
+  notification_type: uuid
+  user: Int
+}
+
+"""
+order by max() on columns of table "notification_toggle"
+"""
+input notification_toggle_max_order_by {
+  company: order_by
+  id: order_by
+  notification_type: order_by
+  user: order_by
+}
+
+"""aggregate min on columns"""
+type notification_toggle_min_fields {
+  company: Int
+  id: uuid
+  notification_type: uuid
+  user: Int
+}
+
+"""
+order by min() on columns of table "notification_toggle"
+"""
+input notification_toggle_min_order_by {
+  company: order_by
+  id: order_by
+  notification_type: order_by
+  user: order_by
+}
+
+"""
+response of any mutation on the table "notification_toggle"
+"""
+type notification_toggle_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [notification_toggle!]!
+}
+
+"""
+on conflict condition type for table "notification_toggle"
+"""
+input notification_toggle_on_conflict {
+  constraint: notification_toggle_constraint!
+  update_columns: [notification_toggle_update_column!]!
+  where: notification_toggle_bool_exp
+}
+
+"""Ordering options when selecting data from "notification_toggle"."""
+input notification_toggle_order_by {
+  company: order_by
+  enabled: order_by
+  id: order_by
+  notificationTypeByNotificationType: notification_types_order_by
+  notification_type: order_by
+  user: order_by
+}
+
+"""primary key columns input for table: notification_toggle"""
+input notification_toggle_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "notification_toggle"
+"""
+enum notification_toggle_select_column {
+  """column name"""
+  company
+
+  """column name"""
+  enabled
+
+  """column name"""
+  id
+
+  """column name"""
+  notification_type
+
+  """column name"""
+  user
+}
+
+"""
+input type for updating data in table "notification_toggle"
+"""
+input notification_toggle_set_input {
+  company: Int
+  enabled: Boolean
+  id: uuid
+  notification_type: uuid
+  user: Int
+}
+
+"""aggregate stddev on columns"""
+type notification_toggle_stddev_fields {
+  company: Float
+  user: Float
+}
+
+"""
+order by stddev() on columns of table "notification_toggle"
+"""
+input notification_toggle_stddev_order_by {
+  company: order_by
+  user: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type notification_toggle_stddev_pop_fields {
+  company: Float
+  user: Float
+}
+
+"""
+order by stddev_pop() on columns of table "notification_toggle"
+"""
+input notification_toggle_stddev_pop_order_by {
+  company: order_by
+  user: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type notification_toggle_stddev_samp_fields {
+  company: Float
+  user: Float
+}
+
+"""
+order by stddev_samp() on columns of table "notification_toggle"
+"""
+input notification_toggle_stddev_samp_order_by {
+  company: order_by
+  user: order_by
+}
+
+"""aggregate sum on columns"""
+type notification_toggle_sum_fields {
+  company: Int
+  user: Int
+}
+
+"""
+order by sum() on columns of table "notification_toggle"
+"""
+input notification_toggle_sum_order_by {
+  company: order_by
+  user: order_by
+}
+
+"""
+update columns of table "notification_toggle"
+"""
+enum notification_toggle_update_column {
+  """column name"""
+  company
+
+  """column name"""
+  enabled
+
+  """column name"""
+  id
+
+  """column name"""
+  notification_type
+
+  """column name"""
+  user
+}
+
+"""aggregate var_pop on columns"""
+type notification_toggle_var_pop_fields {
+  company: Float
+  user: Float
+}
+
+"""
+order by var_pop() on columns of table "notification_toggle"
+"""
+input notification_toggle_var_pop_order_by {
+  company: order_by
+  user: order_by
+}
+
+"""aggregate var_samp on columns"""
+type notification_toggle_var_samp_fields {
+  company: Float
+  user: Float
+}
+
+"""
+order by var_samp() on columns of table "notification_toggle"
+"""
+input notification_toggle_var_samp_order_by {
+  company: order_by
+  user: order_by
+}
+
+"""aggregate variance on columns"""
+type notification_toggle_variance_fields {
+  company: Float
+  user: Float
+}
+
+"""
+order by variance() on columns of table "notification_toggle"
+"""
+input notification_toggle_variance_order_by {
+  company: order_by
+  user: order_by
+}
+
+"""
 columns and relationships of "notification_types"
 """
 type notification_types {
-  created_at: timestamptz!
+  """An array relationship"""
+  application_notifications(
+    """distinct select on columns"""
+    distinct_on: [application_notifications_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [application_notifications_order_by!]
+
+    """filter the rows returned"""
+    where: application_notifications_bool_exp
+  ): [application_notifications!]!
+
+  """An aggregate relationship"""
+  application_notifications_aggregate(
+    """distinct select on columns"""
+    distinct_on: [application_notifications_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [application_notifications_order_by!]
+
+    """filter the rows returned"""
+    where: application_notifications_bool_exp
+  ): application_notifications_aggregate!
+  description: String!
   id: uuid!
-  text: String!
-  title: String!
+  name: String
+
+  """An array relationship"""
+  notification_toggles(
+    """distinct select on columns"""
+    distinct_on: [notification_toggle_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [notification_toggle_order_by!]
+
+    """filter the rows returned"""
+    where: notification_toggle_bool_exp
+  ): [notification_toggle!]!
+
+  """An aggregate relationship"""
+  notification_toggles_aggregate(
+    """distinct select on columns"""
+    distinct_on: [notification_toggle_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [notification_toggle_order_by!]
+
+    """filter the rows returned"""
+    where: notification_toggle_bool_exp
+  ): notification_toggle_aggregate!
+  notification_type: notification_types_enum_enum!
+  permission_type: String
+  title: String
   type: String!
-  type_name: String!
-  updated_at: timestamptz!
+}
+
+"""
+aggregated selection of "notification_types"
+"""
+type notification_types_aggregate {
+  aggregate: notification_types_aggregate_fields
+  nodes: [notification_types!]!
+}
+
+"""
+aggregate fields of "notification_types"
+"""
+type notification_types_aggregate_fields {
+  count(columns: [notification_types_select_column!], distinct: Boolean): Int!
+  max: notification_types_max_fields
+  min: notification_types_min_fields
 }
 
 """
@@ -85574,13 +85850,15 @@ input notification_types_bool_exp {
   _and: [notification_types_bool_exp!]
   _not: notification_types_bool_exp
   _or: [notification_types_bool_exp!]
-  created_at: timestamptz_comparison_exp
+  application_notifications: application_notifications_bool_exp
+  description: String_comparison_exp
   id: uuid_comparison_exp
-  text: String_comparison_exp
+  name: String_comparison_exp
+  notification_toggles: notification_toggle_bool_exp
+  notification_type: notification_types_enum_enum_comparison_exp
+  permission_type: String_comparison_exp
   title: String_comparison_exp
   type: String_comparison_exp
-  type_name: String_comparison_exp
-  updated_at: timestamptz_comparison_exp
 }
 
 """
@@ -85588,17 +85866,148 @@ unique or primary key constraints on table "notification_types"
 """
 enum notification_types_constraint {
   """unique or primary key constraint"""
-  notification_types_pkey
+  application_notification_type_pkey
+}
+
+enum notification_types_enum_enum {
+  """
+  [clientNa[staffName] invited you, and [staffList] to a bookout on [date] at [time]. Reason: [bookoutName]me] has arrived for the appointment [appointmentName]
+  """
+  bookout
+
+  """
+  [staffName] cancelled a [serviceName] appointment for [clientName] on [date] at [time]. Cancellation reason: [cancellationReason]
+  """
+  cancelled_appointment_via_calendar
+
+  """
+  [patientName] cancelled a [serviceName] appointment on [date] at [time]. Cancellation reason: [cancellationReason]
+  """
+  cancelled_appointment_via_pabau
+
+  """[clientName] has arrived for the appointment [appointmentName]"""
+  client_arrived_for_appointment
+
+  """Receive a notification when someone makes a post to the buzzfeed."""
+  feed_post
+
+  """Click here to review the request."""
+  holiday_request
+
+  """[staff_name] performed an inventory count. Click here to learn more"""
+  inventory
+
+  """Receive notification whenever you receive new Enquiry."""
+  lead_inquiry
+
+  """Receive a notification when someone likes their wall post."""
+  like_post
+
+  """new_appointment_via_calendar"""
+  new_appointment_via_calendar
+
+  """[patientName] booked [serviceName] appointment on [date] at [time]"""
+  new_appointment_via_pabau
+
+  """new blog posted"""
+  new_blog_post
+
+  """New Feature Release"""
+  new_feature_release
+
+  """
+  [lead_name] has enquired about [treatment_interest] . Click here for more information
+  """
+  new_lead
+
+  """news announcement"""
+  news_and_announcements
+
+  """[campaign_name] was delivered. Check out the statistics"""
+  newsletter_campaign
+
+  """
+  The purchase order [purchase_order_number] issued by [staff_member] on [purchase_order_date] has arrived. Click here to learn more
+  """
+  purchase_order_arrived
+
+  """
+  [staff_member] issued a purchase order [purchase_order_number] to [supplier_name]. Click here to learn more.
+  """
+  purchase_order_issued
+
+  """Click to learn more"""
+  referral
+
+  """
+  [report_name] [report_category_name] has been generated and sent to you.
+  """
+  report
+
+  """Receive a notification when someone likes their wall post."""
+  report_scheduled
+
+  """
+  [staffName] rescheduled a [serviceName] appointment for [clientName] on [date] at [time]
+  """
+  rescheduled_appointment_via_calendar
+
+  """
+  [staffName] r[patientName] rescheduled a [serviceName] appointment on [date] at [time]escheduled a [serviceName] appointment for [clientName] on [date] at [time]
+  """
+  rescheduled_appointment_via_pabau
+
+  """
+  A review has been published for someone We encourage you to manage and respond to the review
+  """
+  review
+
+  """[campaign_name] was delivered. Check out the statistics"""
+  sms_campaign
+}
+
+"""
+Boolean expression to compare columns of type "notification_types_enum_enum". All fields are combined with logical 'AND'.
+"""
+input notification_types_enum_enum_comparison_exp {
+  _eq: notification_types_enum_enum
+  _in: [notification_types_enum_enum!]
+  _is_null: Boolean
+  _neq: notification_types_enum_enum
+  _nin: [notification_types_enum_enum!]
 }
 
 """
 input type for inserting data into table "notification_types"
 """
 input notification_types_insert_input {
-  text: String
+  application_notifications: application_notifications_arr_rel_insert_input
+  description: String
+  id: uuid
+  notification_toggles: notification_toggle_arr_rel_insert_input
+  notification_type: notification_types_enum_enum
+  permission_type: String
+  type: String
+}
+
+"""aggregate max on columns"""
+type notification_types_max_fields {
+  description: String
+  id: uuid
+  name: String
+  permission_type: String
   title: String
   type: String
-  type_name: String
+}
+
+"""aggregate min on columns"""
+type notification_types_min_fields {
+  description: String
+  id: uuid
+  name: String
+  permission_type: String
+  title: String
+  type: String
 }
 
 """
@@ -85613,6 +86022,16 @@ type notification_types_mutation_response {
 }
 
 """
+input type for inserting object relation for remote table "notification_types"
+"""
+input notification_types_obj_rel_insert_input {
+  data: notification_types_insert_input!
+
+  """on conflict condition"""
+  on_conflict: notification_types_on_conflict
+}
+
+"""
 on conflict condition type for table "notification_types"
 """
 input notification_types_on_conflict {
@@ -85623,13 +86042,15 @@ input notification_types_on_conflict {
 
 """Ordering options when selecting data from "notification_types"."""
 input notification_types_order_by {
-  created_at: order_by
+  application_notifications_aggregate: application_notifications_aggregate_order_by
+  description: order_by
   id: order_by
-  text: order_by
+  name: order_by
+  notification_toggles_aggregate: notification_toggle_aggregate_order_by
+  notification_type: order_by
+  permission_type: order_by
   title: order_by
   type: order_by
-  type_name: order_by
-  updated_at: order_by
 }
 
 """primary key columns input for table: notification_types"""
@@ -85642,35 +86063,37 @@ select columns of table "notification_types"
 """
 enum notification_types_select_column {
   """column name"""
-  created_at
+  description
 
   """column name"""
   id
 
   """column name"""
-  text
+  name
+
+  """column name"""
+  notification_type
+
+  """column name"""
+  permission_type
 
   """column name"""
   title
 
   """column name"""
   type
-
-  """column name"""
-  type_name
-
-  """column name"""
-  updated_at
 }
 
 """
 input type for updating data in table "notification_types"
 """
 input notification_types_set_input {
-  text: String
+  description: String
+  id: uuid
+  notification_type: notification_types_enum_enum
+  permission_type: String
   title: String
   type: String
-  type_name: String
 }
 
 """
@@ -85678,16 +86101,22 @@ update columns of table "notification_types"
 """
 enum notification_types_update_column {
   """column name"""
-  text
+  description
+
+  """column name"""
+  id
+
+  """column name"""
+  notification_type
+
+  """column name"""
+  permission_type
 
   """column name"""
   title
 
   """column name"""
   type
-
-  """column name"""
-  type_name
 }
 
 """
@@ -85698,7 +86127,7 @@ type notifications {
   id: uuid!
 
   """An object relationship"""
-  notification_type: application_notification_type
+  notification_type: notification_types
   order: Int!
   sent_to(
     """JSON select path"""
@@ -85722,7 +86151,7 @@ input notifications_bool_exp {
   _or: [notifications_bool_exp!]
   created_at: timestamptz_comparison_exp
   id: uuid_comparison_exp
-  notification_type: application_notification_type_bool_exp
+  notification_type: notification_types_bool_exp
   order: Int_comparison_exp
   sent_to: jsonb_comparison_exp
   type: uuid_comparison_exp
@@ -85762,7 +86191,8 @@ input notifications_delete_key_input {
 input type for inserting data into table "notifications"
 """
 input notifications_insert_input {
-  notification_type: application_notification_type_obj_rel_insert_input
+  is_read: jsonb
+  notification_type: notification_types_obj_rel_insert_input
   sent_to: jsonb
   type: uuid
 }
@@ -85791,7 +86221,7 @@ input notifications_on_conflict {
 input notifications_order_by {
   created_at: order_by
   id: order_by
-  notification_type: application_notification_type_order_by
+  notification_type: notification_types_order_by
   order: order_by
   sent_to: order_by
   type: order_by
@@ -87487,49 +87917,6 @@ type query_root {
   Discounts_by_pk(id: uuid!): Discounts
 
   """
-  fetch data from the table: "LMS_slugs"
-  """
-  LMS_slugs(
-    """distinct select on columns"""
-    distinct_on: [LMS_slugs_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [LMS_slugs_order_by!]
-
-    """filter the rows returned"""
-    where: LMS_slugs_bool_exp
-  ): [LMS_slugs!]!
-
-  """
-  fetch aggregated fields from the table: "LMS_slugs"
-  """
-  LMS_slugs_aggregate(
-    """distinct select on columns"""
-    distinct_on: [LMS_slugs_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [LMS_slugs_order_by!]
-
-    """filter the rows returned"""
-    where: LMS_slugs_bool_exp
-  ): LMS_slugs_aggregate!
-
-  """fetch data from the table: "LMS_slugs" using primary key columns"""
-  LMS_slugs_by_pk(id: uuid!): LMS_slugs
-
-  """
   fetch data from the table: "Labs"
   """
   Labs(
@@ -87705,104 +88092,7 @@ type query_root {
   appSubscriptionsCompanyPricesCount(where: AppSubscriptionsCompanyPriceWhereInput): Int
   appSubscriptionsCount(where: AppSubscriptionWhereInput): Int
 
-  """
-  fetch data from the table: "application_notification_title"
-  """
-  application_notification_title(
-    """distinct select on columns"""
-    distinct_on: [application_notification_title_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [application_notification_title_order_by!]
-
-    """filter the rows returned"""
-    where: application_notification_title_bool_exp
-  ): [application_notification_title!]!
-
-  """
-  fetch data from the table: "application_notification_title" using primary key columns
-  """
-  application_notification_title_by_pk(value: String!): application_notification_title
-
-  """
-  fetch data from the table: "application_notification_type"
-  """
-  application_notification_type(
-    """distinct select on columns"""
-    distinct_on: [application_notification_type_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [application_notification_type_order_by!]
-
-    """filter the rows returned"""
-    where: application_notification_type_bool_exp
-  ): [application_notification_type!]!
-
-  """
-  fetch aggregated fields from the table: "application_notification_type"
-  """
-  application_notification_type_aggregate(
-    """distinct select on columns"""
-    distinct_on: [application_notification_type_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [application_notification_type_order_by!]
-
-    """filter the rows returned"""
-    where: application_notification_type_bool_exp
-  ): application_notification_type_aggregate!
-
-  """
-  fetch data from the table: "application_notification_type" using primary key columns
-  """
-  application_notification_type_by_pk(id: uuid!): application_notification_type
-
-  """
-  fetch data from the table: "application_notification_type_enum"
-  """
-  application_notification_type_enum(
-    """distinct select on columns"""
-    distinct_on: [application_notification_type_enum_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [application_notification_type_enum_order_by!]
-
-    """filter the rows returned"""
-    where: application_notification_type_enum_bool_exp
-  ): [application_notification_type_enum!]!
-
-  """
-  fetch data from the table: "application_notification_type_enum" using primary key columns
-  """
-  application_notification_type_enum_by_pk(value: String!): application_notification_type_enum
-
-  """
-  fetch data from the table: "application_notifications"
-  """
+  """An array relationship"""
   application_notifications(
     """distinct select on columns"""
     distinct_on: [application_notifications_select_column!]
@@ -87820,9 +88110,7 @@ type query_root {
     where: application_notifications_bool_exp
   ): [application_notifications!]!
 
-  """
-  fetch aggregated fields from the table: "application_notifications"
-  """
+  """An aggregate relationship"""
   application_notifications_aggregate(
     """distinct select on columns"""
     distinct_on: [application_notifications_select_column!]
@@ -89513,6 +89801,49 @@ type query_root {
   library_installers_by_pk(id: Int!): library_installers
 
   """
+  fetch data from the table: "lms_slugs"
+  """
+  lms_slugs(
+    """distinct select on columns"""
+    distinct_on: [lms_slugs_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [lms_slugs_order_by!]
+
+    """filter the rows returned"""
+    where: lms_slugs_bool_exp
+  ): [lms_slugs!]!
+
+  """
+  fetch aggregated fields from the table: "lms_slugs"
+  """
+  lms_slugs_aggregate(
+    """distinct select on columns"""
+    distinct_on: [lms_slugs_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [lms_slugs_order_by!]
+
+    """filter the rows returned"""
+    where: lms_slugs_bool_exp
+  ): lms_slugs_aggregate!
+
+  """fetch data from the table: "lms_slugs" using primary key columns"""
+  lms_slugs_by_pk(id: uuid!): lms_slugs
+
+  """
   fetch data from the table: "locations"
   """
   locations(
@@ -89707,6 +90038,51 @@ type query_root {
   messageTemplatesCount(where: MessageTemplateWhereInput): Int
 
   """
+  fetch data from the table: "notification_toggle"
+  """
+  notification_toggle(
+    """distinct select on columns"""
+    distinct_on: [notification_toggle_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [notification_toggle_order_by!]
+
+    """filter the rows returned"""
+    where: notification_toggle_bool_exp
+  ): [notification_toggle!]!
+
+  """
+  fetch aggregated fields from the table: "notification_toggle"
+  """
+  notification_toggle_aggregate(
+    """distinct select on columns"""
+    distinct_on: [notification_toggle_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [notification_toggle_order_by!]
+
+    """filter the rows returned"""
+    where: notification_toggle_bool_exp
+  ): notification_toggle_aggregate!
+
+  """
+  fetch data from the table: "notification_toggle" using primary key columns
+  """
+  notification_toggle_by_pk(id: uuid!): notification_toggle
+
+  """
   fetch data from the table: "notification_types"
   """
   notification_types(
@@ -89725,6 +90101,26 @@ type query_root {
     """filter the rows returned"""
     where: notification_types_bool_exp
   ): [notification_types!]!
+
+  """
+  fetch aggregated fields from the table: "notification_types"
+  """
+  notification_types_aggregate(
+    """distinct select on columns"""
+    distinct_on: [notification_types_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [notification_types_order_by!]
+
+    """filter the rows returned"""
+    where: notification_types_bool_exp
+  ): notification_types_aggregate!
 
   """
   fetch data from the table: "notification_types" using primary key columns
@@ -90211,6 +90607,49 @@ type query_root {
   secondAtQuestion(where: SecondAtQuestionWhereUniqueInput!): SecondAtQuestion
   secondAtQuestions(cursor: SecondAtQuestionWhereUniqueInput, orderBy: [SecondAtQuestionOrderByInput!], skip: Int, take: Int, where: SecondAtQuestionWhereInput): [SecondAtQuestion!]!
   secondAtQuestionsCount(where: SecondAtQuestionWhereInput): Int
+
+  """
+  fetch data from the table: "service"
+  """
+  service(
+    """distinct select on columns"""
+    distinct_on: [service_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [service_order_by!]
+
+    """filter the rows returned"""
+    where: service_bool_exp
+  ): [service!]!
+
+  """
+  fetch aggregated fields from the table: "service"
+  """
+  service_aggregate(
+    """distinct select on columns"""
+    distinct_on: [service_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [service_order_by!]
+
+    """filter the rows returned"""
+    where: service_bool_exp
+  ): service_aggregate!
+
+  """fetch data from the table: "service" using primary key columns"""
+  service_by_pk(id: uuid!): service
   socialSurvey(where: SocialSurveyWhereUniqueInput!): SocialSurvey
   socialSurveyAnswer(where: SocialSurveyAnswerWhereUniqueInput!): SocialSurveyAnswer
   socialSurveyAnswers(cursor: SocialSurveyAnswerWhereUniqueInput, orderBy: [SocialSurveyAnswerOrderByInput!], skip: Int, take: Int, where: SocialSurveyAnswerWhereInput): [SocialSurveyAnswer!]!
@@ -91432,6 +91871,625 @@ type salutation_variance_fields {
 }
 
 """
+columns and relationships of "service"
+"""
+type service {
+  category: String!
+  code: String!
+  color: String!
+  created_at: timestamptz!
+  description: String!
+  display_text_on_invoice: String!
+  duration: String!
+  employees(
+    """JSON select path"""
+    path: String
+  ): json!
+  equipment_resources(
+    """JSON select path"""
+    path: String
+  ): json
+  friendly_name: String!
+  id: uuid!
+  image: String!
+  invoice_item_name: String!
+  is_active: Boolean!
+  is_online_booking: Boolean!
+  is_package_session: Boolean!
+  is_payment_before_booking: Boolean!
+  is_service_online: Boolean!
+  locations(
+    """JSON select path"""
+    path: String
+  ): json!
+  max_clients: Int
+  online_payment_amount: String!
+  online_payment_type: String!
+  order: Int!
+  patient_booking_type: String!
+  price: String!
+  pricing_type: String!
+  procedure_code: String!
+  resources(
+    """JSON select path"""
+    path: String
+  ): json!
+  room_resources(
+    """JSON select path"""
+    path: String
+  ): json
+  service_name: String!
+  service_price: String!
+  sku: String!
+  staff_assigned: String!
+  tax: String!
+  timing_rules(
+    """JSON select path"""
+    path: String
+  ): json!
+  type: String!
+  updated_at: timestamptz!
+}
+
+"""
+aggregated selection of "service"
+"""
+type service_aggregate {
+  aggregate: service_aggregate_fields
+  nodes: [service!]!
+}
+
+"""
+aggregate fields of "service"
+"""
+type service_aggregate_fields {
+  avg: service_avg_fields
+  count(columns: [service_select_column!], distinct: Boolean): Int!
+  max: service_max_fields
+  min: service_min_fields
+  stddev: service_stddev_fields
+  stddev_pop: service_stddev_pop_fields
+  stddev_samp: service_stddev_samp_fields
+  sum: service_sum_fields
+  var_pop: service_var_pop_fields
+  var_samp: service_var_samp_fields
+  variance: service_variance_fields
+}
+
+"""aggregate avg on columns"""
+type service_avg_fields {
+  max_clients: Float
+  order: Float
+}
+
+"""
+Boolean expression to filter rows from the table "service". All fields are combined with a logical 'AND'.
+"""
+input service_bool_exp {
+  _and: [service_bool_exp!]
+  _not: service_bool_exp
+  _or: [service_bool_exp!]
+  category: String_comparison_exp
+  code: String_comparison_exp
+  color: String_comparison_exp
+  created_at: timestamptz_comparison_exp
+  description: String_comparison_exp
+  display_text_on_invoice: String_comparison_exp
+  duration: String_comparison_exp
+  employees: json_comparison_exp
+  equipment_resources: json_comparison_exp
+  friendly_name: String_comparison_exp
+  id: uuid_comparison_exp
+  image: String_comparison_exp
+  invoice_item_name: String_comparison_exp
+  is_active: Boolean_comparison_exp
+  is_online_booking: Boolean_comparison_exp
+  is_package_session: Boolean_comparison_exp
+  is_payment_before_booking: Boolean_comparison_exp
+  is_service_online: Boolean_comparison_exp
+  locations: json_comparison_exp
+  max_clients: Int_comparison_exp
+  online_payment_amount: String_comparison_exp
+  online_payment_type: String_comparison_exp
+  order: Int_comparison_exp
+  patient_booking_type: String_comparison_exp
+  price: String_comparison_exp
+  pricing_type: String_comparison_exp
+  procedure_code: String_comparison_exp
+  resources: json_comparison_exp
+  room_resources: json_comparison_exp
+  service_name: String_comparison_exp
+  service_price: String_comparison_exp
+  sku: String_comparison_exp
+  staff_assigned: String_comparison_exp
+  tax: String_comparison_exp
+  timing_rules: json_comparison_exp
+  type: String_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "service"
+"""
+enum service_constraint {
+  """unique or primary key constraint"""
+  service_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "service"
+"""
+input service_inc_input {
+  max_clients: Int
+}
+
+"""
+input type for inserting data into table "service"
+"""
+input service_insert_input {
+  category: String
+  code: String
+  color: String
+  description: String
+  display_text_on_invoice: String
+  duration: String
+  employees: json
+  equipment_resources: json
+  friendly_name: String
+  image: String
+  invoice_item_name: String
+  is_active: Boolean
+  is_online_booking: Boolean
+  is_package_session: Boolean
+  is_payment_before_booking: Boolean
+  is_service_online: Boolean
+  locations: json
+  max_clients: Int
+  online_payment_amount: String
+  online_payment_type: String
+  patient_booking_type: String
+  price: String
+  pricing_type: String
+  procedure_code: String
+  resources: json
+  room_resources: json
+  service_name: String
+  service_price: String
+  sku: String
+  staff_assigned: String
+  tax: String
+  timing_rules: json
+  type: String
+}
+
+"""aggregate max on columns"""
+type service_max_fields {
+  category: String
+  code: String
+  color: String
+  created_at: timestamptz
+  description: String
+  display_text_on_invoice: String
+  duration: String
+  friendly_name: String
+  id: uuid
+  image: String
+  invoice_item_name: String
+  max_clients: Int
+  online_payment_amount: String
+  online_payment_type: String
+  order: Int
+  patient_booking_type: String
+  price: String
+  pricing_type: String
+  procedure_code: String
+  service_name: String
+  service_price: String
+  sku: String
+  staff_assigned: String
+  tax: String
+  type: String
+  updated_at: timestamptz
+}
+
+"""aggregate min on columns"""
+type service_min_fields {
+  category: String
+  code: String
+  color: String
+  created_at: timestamptz
+  description: String
+  display_text_on_invoice: String
+  duration: String
+  friendly_name: String
+  id: uuid
+  image: String
+  invoice_item_name: String
+  max_clients: Int
+  online_payment_amount: String
+  online_payment_type: String
+  order: Int
+  patient_booking_type: String
+  price: String
+  pricing_type: String
+  procedure_code: String
+  service_name: String
+  service_price: String
+  sku: String
+  staff_assigned: String
+  tax: String
+  type: String
+  updated_at: timestamptz
+}
+
+"""
+response of any mutation on the table "service"
+"""
+type service_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [service!]!
+}
+
+"""
+on conflict condition type for table "service"
+"""
+input service_on_conflict {
+  constraint: service_constraint!
+  update_columns: [service_update_column!]!
+  where: service_bool_exp
+}
+
+"""Ordering options when selecting data from "service"."""
+input service_order_by {
+  category: order_by
+  code: order_by
+  color: order_by
+  created_at: order_by
+  description: order_by
+  display_text_on_invoice: order_by
+  duration: order_by
+  employees: order_by
+  equipment_resources: order_by
+  friendly_name: order_by
+  id: order_by
+  image: order_by
+  invoice_item_name: order_by
+  is_active: order_by
+  is_online_booking: order_by
+  is_package_session: order_by
+  is_payment_before_booking: order_by
+  is_service_online: order_by
+  locations: order_by
+  max_clients: order_by
+  online_payment_amount: order_by
+  online_payment_type: order_by
+  order: order_by
+  patient_booking_type: order_by
+  price: order_by
+  pricing_type: order_by
+  procedure_code: order_by
+  resources: order_by
+  room_resources: order_by
+  service_name: order_by
+  service_price: order_by
+  sku: order_by
+  staff_assigned: order_by
+  tax: order_by
+  timing_rules: order_by
+  type: order_by
+  updated_at: order_by
+}
+
+"""primary key columns input for table: service"""
+input service_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "service"
+"""
+enum service_select_column {
+  """column name"""
+  category
+
+  """column name"""
+  code
+
+  """column name"""
+  color
+
+  """column name"""
+  created_at
+
+  """column name"""
+  description
+
+  """column name"""
+  display_text_on_invoice
+
+  """column name"""
+  duration
+
+  """column name"""
+  employees
+
+  """column name"""
+  equipment_resources
+
+  """column name"""
+  friendly_name
+
+  """column name"""
+  id
+
+  """column name"""
+  image
+
+  """column name"""
+  invoice_item_name
+
+  """column name"""
+  is_active
+
+  """column name"""
+  is_online_booking
+
+  """column name"""
+  is_package_session
+
+  """column name"""
+  is_payment_before_booking
+
+  """column name"""
+  is_service_online
+
+  """column name"""
+  locations
+
+  """column name"""
+  max_clients
+
+  """column name"""
+  online_payment_amount
+
+  """column name"""
+  online_payment_type
+
+  """column name"""
+  order
+
+  """column name"""
+  patient_booking_type
+
+  """column name"""
+  price
+
+  """column name"""
+  pricing_type
+
+  """column name"""
+  procedure_code
+
+  """column name"""
+  resources
+
+  """column name"""
+  room_resources
+
+  """column name"""
+  service_name
+
+  """column name"""
+  service_price
+
+  """column name"""
+  sku
+
+  """column name"""
+  staff_assigned
+
+  """column name"""
+  tax
+
+  """column name"""
+  timing_rules
+
+  """column name"""
+  type
+
+  """column name"""
+  updated_at
+}
+
+"""
+input type for updating data in table "service"
+"""
+input service_set_input {
+  category: String
+  code: String
+  color: String
+  description: String
+  display_text_on_invoice: String
+  duration: String
+  employees: json
+  equipment_resources: json
+  friendly_name: String
+  image: String
+  invoice_item_name: String
+  is_active: Boolean
+  is_online_booking: Boolean
+  is_package_session: Boolean
+  is_payment_before_booking: Boolean
+  is_service_online: Boolean
+  locations: json
+  max_clients: Int
+  online_payment_amount: String
+  online_payment_type: String
+  patient_booking_type: String
+  price: String
+  pricing_type: String
+  procedure_code: String
+  resources: json
+  room_resources: json
+  service_name: String
+  service_price: String
+  sku: String
+  staff_assigned: String
+  tax: String
+  timing_rules: json
+  type: String
+}
+
+"""aggregate stddev on columns"""
+type service_stddev_fields {
+  max_clients: Float
+  order: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type service_stddev_pop_fields {
+  max_clients: Float
+  order: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type service_stddev_samp_fields {
+  max_clients: Float
+  order: Float
+}
+
+"""aggregate sum on columns"""
+type service_sum_fields {
+  max_clients: Int
+  order: Int
+}
+
+"""
+update columns of table "service"
+"""
+enum service_update_column {
+  """column name"""
+  category
+
+  """column name"""
+  code
+
+  """column name"""
+  color
+
+  """column name"""
+  description
+
+  """column name"""
+  display_text_on_invoice
+
+  """column name"""
+  duration
+
+  """column name"""
+  employees
+
+  """column name"""
+  equipment_resources
+
+  """column name"""
+  friendly_name
+
+  """column name"""
+  image
+
+  """column name"""
+  invoice_item_name
+
+  """column name"""
+  is_active
+
+  """column name"""
+  is_online_booking
+
+  """column name"""
+  is_package_session
+
+  """column name"""
+  is_payment_before_booking
+
+  """column name"""
+  is_service_online
+
+  """column name"""
+  locations
+
+  """column name"""
+  max_clients
+
+  """column name"""
+  online_payment_amount
+
+  """column name"""
+  online_payment_type
+
+  """column name"""
+  patient_booking_type
+
+  """column name"""
+  price
+
+  """column name"""
+  pricing_type
+
+  """column name"""
+  procedure_code
+
+  """column name"""
+  resources
+
+  """column name"""
+  room_resources
+
+  """column name"""
+  service_name
+
+  """column name"""
+  service_price
+
+  """column name"""
+  sku
+
+  """column name"""
+  staff_assigned
+
+  """column name"""
+  tax
+
+  """column name"""
+  timing_rules
+
+  """column name"""
+  type
+}
+
+"""aggregate var_pop on columns"""
+type service_var_pop_fields {
+  max_clients: Float
+  order: Float
+}
+
+"""aggregate var_samp on columns"""
+type service_var_samp_fields {
+  max_clients: Float
+  order: Float
+}
+
+"""aggregate variance on columns"""
+type service_variance_fields {
+  max_clients: Float
+  order: Float
+}
+
+"""
 columns and relationships of "stock_take"
 """
 type stock_take {
@@ -91789,49 +92847,6 @@ type subscription_root {
   Discounts_by_pk(id: uuid!): Discounts
 
   """
-  fetch data from the table: "LMS_slugs"
-  """
-  LMS_slugs(
-    """distinct select on columns"""
-    distinct_on: [LMS_slugs_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [LMS_slugs_order_by!]
-
-    """filter the rows returned"""
-    where: LMS_slugs_bool_exp
-  ): [LMS_slugs!]!
-
-  """
-  fetch aggregated fields from the table: "LMS_slugs"
-  """
-  LMS_slugs_aggregate(
-    """distinct select on columns"""
-    distinct_on: [LMS_slugs_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [LMS_slugs_order_by!]
-
-    """filter the rows returned"""
-    where: LMS_slugs_bool_exp
-  ): LMS_slugs_aggregate!
-
-  """fetch data from the table: "LMS_slugs" using primary key columns"""
-  LMS_slugs_by_pk(id: uuid!): LMS_slugs
-
-  """
   fetch data from the table: "Labs"
   """
   Labs(
@@ -91965,104 +92980,7 @@ type subscription_root {
   """fetch data from the table: "SMS_campaign" using primary key columns"""
   SMS_campaign_by_pk(id: uuid!): SMS_campaign
 
-  """
-  fetch data from the table: "application_notification_title"
-  """
-  application_notification_title(
-    """distinct select on columns"""
-    distinct_on: [application_notification_title_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [application_notification_title_order_by!]
-
-    """filter the rows returned"""
-    where: application_notification_title_bool_exp
-  ): [application_notification_title!]!
-
-  """
-  fetch data from the table: "application_notification_title" using primary key columns
-  """
-  application_notification_title_by_pk(value: String!): application_notification_title
-
-  """
-  fetch data from the table: "application_notification_type"
-  """
-  application_notification_type(
-    """distinct select on columns"""
-    distinct_on: [application_notification_type_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [application_notification_type_order_by!]
-
-    """filter the rows returned"""
-    where: application_notification_type_bool_exp
-  ): [application_notification_type!]!
-
-  """
-  fetch aggregated fields from the table: "application_notification_type"
-  """
-  application_notification_type_aggregate(
-    """distinct select on columns"""
-    distinct_on: [application_notification_type_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [application_notification_type_order_by!]
-
-    """filter the rows returned"""
-    where: application_notification_type_bool_exp
-  ): application_notification_type_aggregate!
-
-  """
-  fetch data from the table: "application_notification_type" using primary key columns
-  """
-  application_notification_type_by_pk(id: uuid!): application_notification_type
-
-  """
-  fetch data from the table: "application_notification_type_enum"
-  """
-  application_notification_type_enum(
-    """distinct select on columns"""
-    distinct_on: [application_notification_type_enum_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [application_notification_type_enum_order_by!]
-
-    """filter the rows returned"""
-    where: application_notification_type_enum_bool_exp
-  ): [application_notification_type_enum!]!
-
-  """
-  fetch data from the table: "application_notification_type_enum" using primary key columns
-  """
-  application_notification_type_enum_by_pk(value: String!): application_notification_type_enum
-
-  """
-  fetch data from the table: "application_notifications"
-  """
+  """An array relationship"""
   application_notifications(
     """distinct select on columns"""
     distinct_on: [application_notifications_select_column!]
@@ -92080,9 +92998,7 @@ type subscription_root {
     where: application_notifications_bool_exp
   ): [application_notifications!]!
 
-  """
-  fetch aggregated fields from the table: "application_notifications"
-  """
+  """An aggregate relationship"""
   application_notifications_aggregate(
     """distinct select on columns"""
     distinct_on: [application_notifications_select_column!]
@@ -93261,6 +94177,49 @@ type subscription_root {
   library_installers_by_pk(id: Int!): library_installers
 
   """
+  fetch data from the table: "lms_slugs"
+  """
+  lms_slugs(
+    """distinct select on columns"""
+    distinct_on: [lms_slugs_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [lms_slugs_order_by!]
+
+    """filter the rows returned"""
+    where: lms_slugs_bool_exp
+  ): [lms_slugs!]!
+
+  """
+  fetch aggregated fields from the table: "lms_slugs"
+  """
+  lms_slugs_aggregate(
+    """distinct select on columns"""
+    distinct_on: [lms_slugs_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [lms_slugs_order_by!]
+
+    """filter the rows returned"""
+    where: lms_slugs_bool_exp
+  ): lms_slugs_aggregate!
+
+  """fetch data from the table: "lms_slugs" using primary key columns"""
+  lms_slugs_by_pk(id: uuid!): lms_slugs
+
+  """
   fetch data from the table: "locations"
   """
   locations(
@@ -93439,6 +94398,51 @@ type subscription_root {
   marketing_source_by_pk(id: uuid!): marketing_source
 
   """
+  fetch data from the table: "notification_toggle"
+  """
+  notification_toggle(
+    """distinct select on columns"""
+    distinct_on: [notification_toggle_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [notification_toggle_order_by!]
+
+    """filter the rows returned"""
+    where: notification_toggle_bool_exp
+  ): [notification_toggle!]!
+
+  """
+  fetch aggregated fields from the table: "notification_toggle"
+  """
+  notification_toggle_aggregate(
+    """distinct select on columns"""
+    distinct_on: [notification_toggle_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [notification_toggle_order_by!]
+
+    """filter the rows returned"""
+    where: notification_toggle_bool_exp
+  ): notification_toggle_aggregate!
+
+  """
+  fetch data from the table: "notification_toggle" using primary key columns
+  """
+  notification_toggle_by_pk(id: uuid!): notification_toggle
+
+  """
   fetch data from the table: "notification_types"
   """
   notification_types(
@@ -93457,6 +94461,26 @@ type subscription_root {
     """filter the rows returned"""
     where: notification_types_bool_exp
   ): [notification_types!]!
+
+  """
+  fetch aggregated fields from the table: "notification_types"
+  """
+  notification_types_aggregate(
+    """distinct select on columns"""
+    distinct_on: [notification_types_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [notification_types_order_by!]
+
+    """filter the rows returned"""
+    where: notification_types_bool_exp
+  ): notification_types_aggregate!
 
   """
   fetch data from the table: "notification_types" using primary key columns
@@ -93917,6 +94941,49 @@ type subscription_root {
 
   """fetch data from the table: "salutation" using primary key columns"""
   salutation_by_pk(id: uuid!): salutation
+
+  """
+  fetch data from the table: "service"
+  """
+  service(
+    """distinct select on columns"""
+    distinct_on: [service_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [service_order_by!]
+
+    """filter the rows returned"""
+    where: service_bool_exp
+  ): [service!]!
+
+  """
+  fetch aggregated fields from the table: "service"
+  """
+  service_aggregate(
+    """distinct select on columns"""
+    distinct_on: [service_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [service_order_by!]
+
+    """filter the rows returned"""
+    where: service_bool_exp
+  ): service_aggregate!
+
+  """fetch data from the table: "service" using primary key columns"""
+  service_by_pk(id: uuid!): service
 
   """
   fetch data from the table: "stock_take"
