@@ -16,6 +16,7 @@
   - [Delineation between /apps/web/components/ ("App components") and /libs/ui/ ("UI components")](#delineation-between-appswebcomponents-app-components-and-libsui-ui-components)
   - [Our Stack](#our-stack)
   - [Ticket workflow](#ticket-workflow)
+  - [Troubleshooting](#troubleshooting)
   - [GraphQL workflow](#graphql-workflow)
   - [To do (big engineering items)](#to-do-big-engineering-items)
   - [bridge-proxy (PDS)](#bridge-proxy-pds)
@@ -229,6 +230,10 @@ To view the Backend, you can either visit [https://backend.pabau.com](https://ba
 9. If you receive an email that require you to make more changes: code, push, wait for the slack bot to post another url, reply to that tagging in @James and @Dipak
 10. When you receive an email that your code is merged, you should also find your ticket is moved to 'QA' status.
 
+## Troubleshooting
+
+Any problems, type `yarn hasura:clean`
+
 ## GraphQL workflow
 
 1. Open the Hasura console: <http://localhost:8080/console/>
@@ -264,6 +269,8 @@ To view the Backend, you can either visit [https://backend.pabau.com](https://ba
 - auth to prisma
 - storing jwt token for hasura in nextjs httponly cookie
 - nestjs needs a typed hasura service that we can call
+- on `yarn dev`, we need to detect the OS and execute dev:linux or dev:windows
+- we use wait-for but it's buggy, we need to wait for a curl to succeed with a magic response string.
 
 ## bridge-proxy (PDS)
 
