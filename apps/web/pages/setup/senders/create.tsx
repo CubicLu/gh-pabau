@@ -92,12 +92,8 @@ export const CreateSender: React.FC = () => {
               !!(
                 values.type &&
                 values.fromName &&
-                (values.type === 'sms' && values.fromName.length > 11
-                  ? false
-                  : true) &&
-                (values.type === 'email' && values.fromName.length > 50
-                  ? false
-                  : true) &&
+                !(values.type === 'sms' && values.fromName.length > 11) &&
+                !(values.type === 'email' && values.fromName.length > 50) &&
                 (values.type !== 'email' || values.fromEmail) &&
                 (!values.isUseCompanyEmail || values.fromCompanyEmail) &&
                 (!values.isEnterpriseEmail || values.replyTo)

@@ -100,6 +100,7 @@ export function useGridData(t) {
             t('setup.marketing.communications.templates'),
             t('setup.marketing.communications.sms.setting'),
           ],
+          href: '/setup/senders',
         },
         { title: t('setup.marketing.client.portal'), data: [] },
         { title: t('setup.marketing.feedback'), data: [] },
