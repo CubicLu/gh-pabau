@@ -69,7 +69,7 @@ npm i -g yarn
 
 ### Common
 
-1. Install docker-compose 1.29 or later <https://docs.docker.com/compose/install/>
+1. Install docker-compose 1.29 or later <https://docs.docker.com/compose/install/> `docker-compose -v`
 
 2. Install the Hasura CLI globally
 
