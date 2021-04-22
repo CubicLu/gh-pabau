@@ -23,6 +23,7 @@ interface Notification {
   desc: string
   read: number[]
   users: number[]
+  link: string
 }
 
 interface UserProps {

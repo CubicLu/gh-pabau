@@ -17,6 +17,7 @@ interface Notification {
   desc: string
   read: number[]
   users: number[]
+  link: string
 }
 
 const LIST_QUERY = gql`
@@ -33,6 +34,7 @@ const LIST_QUERY = gql`
         name
         title
         description
+        destination
       }
     }
   }
@@ -71,6 +73,7 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
           desc: notification?.notification_type?.description,
           read: notification?.is_read,
           users: notification?.sent_to,
+          link: notification?.notification_type?.destination,
         })
       )
       setNotifications(todayNotification)

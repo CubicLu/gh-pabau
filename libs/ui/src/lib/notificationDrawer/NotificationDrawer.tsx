@@ -11,7 +11,6 @@ import moment from 'moment'
 import { notificationIcons } from './mock'
 import { gql, useMutation } from '@apollo/client'
 import { useRouter } from 'next/router'
-import { isArray } from 'highcharts'
 
 interface Notification {
   id: string
@@ -20,8 +19,9 @@ interface Notification {
   notificationTypeIcon: string
   title: string
   desc: string
-  read: boolean
+  read: number[]
   users: number[]
+  link: string
 }
 
 const DELETE_MUTATION = gql`
@@ -148,7 +148,8 @@ export const NotificationDrawer: FC<P> = ({
   }
 
   const onNotificationClick = async (notification) => {
-    let { id, users, read } = notification
+    let { id, users, read, link } = notification
+    console.log('notificiaotnskajsfk', notification)
     if (!isReadNotification(read)) {
       if (read?.length > 0) {
         read = [...read, user?.user]
@@ -158,7 +159,7 @@ export const NotificationDrawer: FC<P> = ({
       const variables = { id, is_read: read, sent_to: users }
       await updateMutation({ variables, optimisticResponse: {} })
     }
-    router.push({ pathname: '/setup' })
+    router.push({ pathname: link })
   }
 
   const removeSingleNotification = async (notification) => {
