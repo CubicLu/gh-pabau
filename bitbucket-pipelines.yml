@@ -64,6 +64,8 @@ pipelines:
 
             - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=lint --with-deps --parallel --maxParallel=2
             - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=test --parallel --maxParallel=2
+            - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=export
+            - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=build-storybook
             - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=deploy
             - cat /tmp/bot_message.txt
 
