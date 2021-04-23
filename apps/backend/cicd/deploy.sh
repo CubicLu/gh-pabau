@@ -68,7 +68,11 @@ docker login -u "${DOCKER2_USERNAME}" -p "${DOCKER2_PASSWORD}" "${DOCKER2_HOSTNA
 echo "Docker push..."
 docker image push "${DOCKER2_HOSTNAME}/monorepo/${APP_NAME}"
 echo "Rancher deploy..."
-echo "FOR NOW, ASK MARTIN TO 'UPGRADE' THE 'PABAU2-BACKEND/PRODUCTION' CONTAINER IN RANCHER2!"
+curl -u "${RANCHER2_ACCESS_KEY}:${RANCHER2_SECRET_KEY}" \
+  -X POST \
+  -H 'Accept: application/json' \
+  -H 'Content-Type: application/json' \
+  'https://rancher.pabau.com/v3/project/c-j8bb9:p-jrqrz/workloads/deployment:pabau2:backend?action=redeploy'
 
 if [ -z "${BITBUCKET_PR_ID}" ]; then
   message_body=''
