@@ -20,6 +20,7 @@ export interface AvatarProps extends NativeAvatarProps {
   src?: string
   active?: Status
   edit?: boolean
+  isTooltip?: boolean
 }
 
 export const Avatar: FC<AvatarProps> = ({
@@ -30,6 +31,7 @@ export const Avatar: FC<AvatarProps> = ({
   src = '',
   active = 'default',
   edit,
+  isTooltip = true,
   ...props
 }) => {
   const [load, setLoad] = useState(true)
@@ -65,7 +67,7 @@ export const Avatar: FC<AvatarProps> = ({
         </div>
       ) : (
         <Tooltip
-          title={name}
+          title={isTooltip ? name : ''}
           placement="bottom"
           overlayClassName={styles.overlay}
         >

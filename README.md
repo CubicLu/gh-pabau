@@ -6,6 +6,7 @@
   - [Setup](#setup)
     - [Windows](#windows)
     - [Linux](#linux)
+    - [vscode](#vscode)
     - [Common](#common)
   - [Storybook](#storybook)
   - [Frontend](#frontend)
@@ -15,6 +16,7 @@
   - [Delineation between /apps/web/components/ ("App components") and /libs/ui/ ("UI components")](#delineation-between-appswebcomponents-app-components-and-libsui-ui-components)
   - [Our Stack](#our-stack)
   - [Ticket workflow](#ticket-workflow)
+  - [Troubleshooting](#troubleshooting)
   - [GraphQL workflow](#graphql-workflow)
   - [To do (big engineering items)](#to-do-big-engineering-items)
   - [bridge-proxy (PDS)](#bridge-proxy-pds)
@@ -62,32 +64,33 @@ echo 'export MANPATH="${MANPATH-$(manpath)}:$NPM_STORE/share/man"' >> ~/.bashrc
 npm i -g yarn
 ```
 
+### vscode
+
+1. Install the workspace recommended plugins
+
 ### Common
 
-1. Install the Hasura CLI globally
+1. Install docker-compose 1.29 or later <https://docs.docker.com/compose/install/> `docker-compose -v`
+
+2. Install the Hasura CLI globally
 
     ```bash
     npm i -g hasura-cli
     hasura update-cli --version v2.0.0-alpha.8
     ```
 
-1. Copy `hasura/.env.SAMPLE` to `.env` and change to:
+3. Copy `hasura/.env.SAMPLE` to `.env`
 
-    ```dotenv
-    HASURA_GRAPHQL_ADMIN_SECRET=madskills
-    HASURA_GRAPHQL_ENDPOINT=https://api.new.pabau.com/
-    ```
+4. Copy `apps/web/.env.SAMPLE` to `.env.local`
 
-1. Copy `apps/web/.env.SAMPLE` to `.env.local`
-
-1. Copy `apps/bridge-api/.env.SAMPLE` to `.env`
+5. Copy `apps/bridge-api/.env.SAMPLE` to `.env`
    1. Now either install Pabau1 locally,
-   1. Or ask Toshe to share his public MySQL
+   2. Or ask Toshe to share his public MySQL
 
-1. Create some bookmarks in your browser:
+6. Create some bookmarks in your browser:
    1. "Prisma" to <http://localhost:4000/graphql>
-   1. "Hasura" to <http://localhost:8080>
-   1. "Web" to <http://localhost:4200>
+   2. "Hasura" to <http://localhost:8080>
+   3. "Web" to <http://localhost:4200>
 
 ## Storybook
 
@@ -115,21 +118,16 @@ Now add `import { } from '@pabau/ui'` at top of the new page file and fill in th
 
 ## Bridge
 
-To view the GraphQA endpoint which will expose the legacy database run `yarn nx serve bridge-api`
+The Bridge let's us access the legacy MySQL database over GraphQL. Prisma is used to access the old database, from nexus resolvers. The whole lot is then served as a GraphQL endpoint using Apollo Server. From there, Hasura then connects to this using Remote Schemas. Then the frontend apps connect to Hasura.
 
-Our ORM of choice is prisma, the schema file is located at `apps/bridge-api/prisma/schema.prisma` and is following a strict naming convention
+The master schema file is located at `apps/bridge-api/prisma/schema.prisma`
 
 - Model names must adhere to the following regular expression: [A-Za-z][a-za-z0-9_]\*
-- Model names must start with a letter and are typically spelled in PascalCase
+- Model names must start with a letter
+- Casing is PascalCase
 - Model names must use the singular form (for example, User instead of users or Users)
-
-U should never manually edit:
-
-- nexus.ts located at `apps/bridge-api/src/generated/nexus.ts`
-  -it will be rebuilded after doing changes to schema.ts `apps/bridge-api/src/schema.ts`
-  Successful modification of the schema.prisma file must be followed by `yarn prisma:generate`
-
-Notes:
+- Never manually edit apps/bridge-api/src/generated/**
+- When you edit `apps/bridge-api/src/schema.ts` you must then run `yarn prisma generate`
 
 - To map the singular name of a Model to a plural database table use @@map("table_name")
 
@@ -232,6 +230,10 @@ To view the Backend, you can either visit [https://backend.pabau.com](https://ba
 9. If you receive an email that require you to make more changes: code, push, wait for the slack bot to post another url, reply to that tagging in @James and @Dipak
 10. When you receive an email that your code is merged, you should also find your ticket is moved to 'QA' status.
 
+## Troubleshooting
+
+Any problems, type `yarn hasura:clean`
+
 ## GraphQL workflow
 
 1. Open the Hasura console: <http://localhost:8080/console/>
@@ -267,6 +269,8 @@ To view the Backend, you can either visit [https://backend.pabau.com](https://ba
 - auth to prisma
 - storing jwt token for hasura in nextjs httponly cookie
 - nestjs needs a typed hasura service that we can call
+- on `yarn dev`, we need to detect the OS and execute dev:linux or dev:windows
+- we use wait-for but it's buggy, we need to wait for a curl to succeed with a magic response string.
 
 ## bridge-proxy (PDS)
 

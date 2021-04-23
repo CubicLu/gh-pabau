@@ -121,6 +121,7 @@ export const User = objectType({
     t.model.MessageTemplate()
     t.model.UserActivityLog()
     t.model.StaffMeta()
+    t.model.SocialSurveyFeedback()
   },
 })
 

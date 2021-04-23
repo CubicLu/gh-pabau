@@ -64,6 +64,8 @@ pipelines:
 
             - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=lint --with-deps --parallel --maxParallel=2
             - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=test --parallel --maxParallel=2
+            - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=export
+            - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=build-storybook
             - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=deploy
             - cat /tmp/bot_message.txt
 
@@ -157,6 +159,8 @@ pipelines:
           script:
             - NODE_OPTIONS=--max_old_space_size=4096 yarn install --frozen-lockfile --prefer-offline
             - NODE_OPTIONS=--max_old_space_size=4096 yarn affected --base=HEAD~1 --target=build --prod
+            - NODE_OPTIONS=--max_old_space_size=4096 yarn affected --base=HEAD~1 --target=export --prod
+            - NODE_OPTIONS=--max_old_space_size=4096 yarn affected --base=HEAD~1 --target=build-storybook --prod
           artifacts:
             - node_modules/**
             - dist/**
@@ -178,7 +182,8 @@ pipelines:
           name: deploy previews
           deployment: production-serverless
           script:
-            - ls -al dist
+            - ls -al dist || true
+            - ls -al dist/apps || true
             - apt-get update -y && apt-get install -y curl jq time
 
             # get the commit message for this merge
