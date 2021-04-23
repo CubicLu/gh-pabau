@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useContext, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useMedia } from 'react-use'
 import { Button, TabMenu } from '@pabau/ui'
@@ -11,6 +11,7 @@ import Appearance from '../../../components/Setup/Settings/PosConfiguration/Appe
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './pos-configuration.module.less'
 import { useGridData } from '../../../hooks/useGridData'
+import { UserContext } from '../../../context/UserContext'
 
 interface P {
   general: GeneralPosConfig
@@ -20,6 +21,7 @@ interface P {
 const PosConfiguration: FC<P> = () => {
   const { t } = useTranslationI18()
   const router = useRouter()
+  const user = useContext(UserContext)
   const PosConfigObj = {
     general: {
       featureList: [
@@ -225,7 +227,7 @@ const PosConfiguration: FC<P> = () => {
 
   return (
     <div className={styles.mainWrapper}>
-      <Layout>
+      <Layout {...user}>
         <Card className={styles.posConfigurationContainer}>
           <div className={styles.hideDesktopView}>
             <Row className={styles.mobDevice}>

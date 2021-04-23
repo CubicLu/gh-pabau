@@ -1,18 +1,17 @@
-import React, { FC } from 'react'
-import { useRouter } from 'next/router'
-import { useMedia } from 'react-use'
-import { useFormik } from 'formik'
-import * as Yup from 'yup'
-
-import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-import { Button, Breadcrumb } from '@pabau/ui'
-import { Row, Col, Card } from 'antd'
 import { LeftOutlined } from '@ant-design/icons'
-
+import { Breadcrumb, Button } from '@pabau/ui'
+import { Card, Col, Row } from 'antd'
+import { useFormik } from 'formik'
+import { useRouter } from 'next/router'
+import React, { FC, useContext } from 'react'
+import { useMedia } from 'react-use'
+import * as Yup from 'yup'
 import Layout from '../../../components/Layout/Layout'
 import General from '../../../components/Setup/Settings/LoyaltySettings/General'
-import styles from './loyalty.module.less'
+import { UserContext } from '../../../context/UserContext'
 import { useGridData } from '../../../hooks/useGridData'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import styles from './loyalty.module.less'
 
 interface P {
   general: GeneralLoyaltyConfig
@@ -22,6 +21,7 @@ const LoyaltySettings: FC<P> = () => {
   const { t } = useTranslationI18()
   const router = useRouter()
   const isMobile = useMedia('(max-width: 768px)', false)
+  const user = useContext(UserContext)
 
   const LoyaltySettingsObj = {
     general: {
@@ -88,7 +88,7 @@ const LoyaltySettings: FC<P> = () => {
 
   return (
     <div className={styles.loyaltyMainWrapper}>
-      <Layout>
+      <Layout {...user}>
         <Card className={styles.loyaltyContainer}>
           <div className={styles.hideDesktopView}>
             <Row className={styles.mobDevice}>

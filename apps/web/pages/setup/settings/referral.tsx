@@ -1,17 +1,18 @@
-import React, { FC } from 'react'
-import { useRouter } from 'next/router'
-import { useFormik } from 'formik'
-import * as Yup from 'yup'
-import { Row, Col, Card } from 'antd'
-import { Breadcrumb, Button, NotificationType, Notification } from '@pabau/ui'
 import { LeftOutlined } from '@ant-design/icons'
+import { Breadcrumb, Button, Notification, NotificationType } from '@pabau/ui'
+import { Card, Col, Row } from 'antd'
+import { useFormik } from 'formik'
+import { useRouter } from 'next/router'
+import React, { FC, useContext } from 'react'
+import * as Yup from 'yup'
 import Layout from '../../../components/Layout/Layout'
 import General from '../../../components/Setup/Settings/ReferralSettings/General'
-import useWindowSize from '../../../hooks/useWindowSize'
-import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-import styles from './referral.module.less'
-import { GeneralReferralConfig } from '../../../types/referralSettings'
+import { UserContext } from '../../../context/UserContext'
 import { useGridData } from '../../../hooks/useGridData'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import useWindowSize from '../../../hooks/useWindowSize'
+import { GeneralReferralConfig } from '../../../types/referralSettings'
+import styles from './referral.module.less'
 
 interface P {
   general: GeneralReferralConfig
@@ -19,6 +20,8 @@ interface P {
 
 const Referral: FC<P> = () => {
   const { t } = useTranslationI18()
+  const user = useContext(UserContext)
+
   const ReferralConfigObj = {
     general: {
       inputList: [
@@ -111,7 +114,7 @@ const Referral: FC<P> = () => {
 
   return (
     <div className={styles.referralMainWrapper}>
-      <Layout>
+      <Layout {...user}>
         <Card className={styles.referralContainer}>
           {size.width <= 767 ? (
             <div className={styles.hideDesktopView}>
