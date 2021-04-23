@@ -234,6 +234,9 @@ To view the Backend, you can either visit [https://backend.pabau.com](https://ba
 
 Any problems, type `yarn hasura:clean`
 
+Problem: `Fatal Error:- Environment variable HASURA_GRAPHQL_JWT_SECRET: Error in $: Failed reading: not a valid json value`
+Solution: Upgrade docker-compose to latest version
+
 ## GraphQL workflow
 
 1. Open the Hasura console: <http://localhost:8080/console/>
