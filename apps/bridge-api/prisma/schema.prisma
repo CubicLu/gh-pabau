@@ -10953,12 +10953,13 @@ model SocialSurveyFeedback {
   related_to       String
   feedback_for     Int
   service          String
-  public_use       Int     @default(1)
+  public_use       Int     @default(0)
   service_id       Int
   owner_response   String
 
   CmContact CmContact? @relation(fields: [contact_id], references: [ID])
   Company   Company    @relation(fields: [company_id], references: [id])
+  User      User       @relation(fields: [feedback_for], references: [id])
 
   Response           SocialSurveyFeedbackResponse[]
   SocialSurveyAnswer SocialSurveyAnswer[]
@@ -12123,7 +12124,8 @@ model User {
   MessageTemplate              MessageTemplate[]
   UserActivityLog              UserActivityLog[]
 
-  StaffMeta StaffMeta[]
+  StaffMeta            StaffMeta[]
+  SocialSurveyFeedback SocialSurveyFeedback[]
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")
   @@index([deleted], name: "deleted")

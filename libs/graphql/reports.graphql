@@ -22,7 +22,7 @@ query getReportByCode($code: String){
   }
 }
 
-query listReportById($startDate: String!,$endDate: String!){
+query teamReport($startDate: String!,$endDate: String!){
     retrieveReport(
       id: "team_report",
       start_date: $startDate,

@@ -2,6 +2,7 @@
   "recommendations": [
     "editorconfig.editorconfig",
     "graphql.vscode-graphql",
-    "dbaeumer.vscode-eslint"
-  ]
+    "dbaeumer.vscode-eslint",
+    "prisma.prisma"
+]
 }

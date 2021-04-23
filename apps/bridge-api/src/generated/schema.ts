@@ -2684,6 +2684,7 @@ export interface SocialSurveyFeedback {
   owner_response: string;
   CmContact?: CmContact;
   Company: Company;
+  User: User;
   Response?: SocialSurveyFeedbackResponse[];
   SocialSurveyAnswer?: SocialSurveyAnswer[];
 }
@@ -2881,6 +2882,7 @@ export interface User {
   MessageTemplate?: MessageTemplate[];
   UserActivityLog?: UserActivityLog[];
   StaffMeta?: StaffMeta[];
+  SocialSurveyFeedback?: SocialSurveyFeedback[];
 }
 
 export interface UserActivityLog {

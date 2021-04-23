@@ -18,6 +18,7 @@ import {
   Modal,
   Tooltip,
   Empty,
+  Spin,
 } from 'antd'
 import { useRouter } from 'next/router'
 import {
@@ -32,6 +33,7 @@ import {
   LinkedinFilled,
   SmileOutlined,
   FrownOutlined,
+  LoadingOutlined,
 } from '@ant-design/icons'
 import {
   Button,
@@ -55,7 +57,6 @@ import clinicLogo from '../../assets/images/clinic-logo.png'
 import notificationBannerReviewPageImage from '../../assets/images/notification-image-review.png'
 import { gql, useMutation } from '@apollo/client'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import moment from 'moment'
 import { apiURL } from '../../baseUrl'
 import { UserContext } from '../../context/UserContext'
 import styles from './reviews.module.less'
@@ -89,29 +90,33 @@ const progressDataList = [
 
 const listQuery = gql`
   query get_social_survey_feedback($take: Int, $skip: Int) {
-    companies {
-      SocialSurveyFeedback(take: $take, skip: $skip) {
-        feedback_source # Feedback source
+    socialSurveyFeedbacks(take: $take, skip: $skip, orderBy: { date: desc }) {
+      feedback_source
+      id
+      date
+      contact_id
+      feedback_status
+      rating #Score
+      feedback_name #Name
+      feedback_comment
+      feedback_for
+      service
+      public_use
+      Response {
+        response
         id
-        date
-        contact_id
-        feedback_status
-        rating #Score
-        feedback_name #Name
-        feedback_comment
-        feedback_for #The image would be exposed later #Feedback comment
-        Response {
-          response
-          id
+      }
+      CmContact {
+        Email
+      }
+      Company {
+        details {
+          company_name
         }
-        CmContact {
-          Email
-        }
-        Company {
-          details {
-            company_name
-          }
-        }
+      }
+      User {
+        full_name
+        image
       }
     }
   }
@@ -119,21 +124,19 @@ const listQuery = gql`
 
 const AlllistQuery = gql`
   query get_all_social_survey_feedback {
-    companies {
-      SocialSurveyFeedback {
-        feedback_source # Feedback source
+    socialSurveyFeedbacks {
+      feedback_source
+      id
+      date
+      contact_id
+      feedback_status
+      rating
+      feedback_name
+      feedback_comment
+      feedback_for
+      Response {
+        response
         id
-        date
-        contact_id
-        feedback_status
-        rating
-        feedback_name
-        feedback_comment
-        feedback_for
-        Response {
-          response
-          id
-        }
       }
     }
   }
@@ -167,7 +170,7 @@ const createQuery = gql`
   }
 `
 
-const updateQuery = gql`
+const updateSocialSurveyFeedbackResponseQuery = gql`
   mutation update_social_survey_response($id: Int!, $updated_text: String!) {
     updateOneSocialSurveyFeedbackResponse(
       data: { response: { set: $updated_text } }
@@ -177,6 +180,21 @@ const updateQuery = gql`
       id
       response
       review_id
+    }
+  }
+`
+
+const updateSocialSurveyFeedbackQuery = gql`
+  mutation update_social_survey_feedback(
+    $public_use: Int!
+    $feedback_id: Int!
+  ) {
+    updateOneSocialSurveyFeedback(
+      where: { id: $feedback_id }
+      data: { public_use: { set: $public_use } }
+    ) {
+      __typename
+      public_use
     }
   }
 `
@@ -328,21 +346,43 @@ const Reviews: FC<ReviewConfig> = () => {
     },
   })
 
-  const [editMutation] = useMutation(updateQuery, {
-    onCompleted(data) {
-      Notification(
-        NotificationType.success,
-        t('marketingrevirews.data.updatediscountsuccessmessages')
-      )
-      sendResponseEmail()
-    },
-    onError(err) {
-      Notification(
-        NotificationType.error,
-        t('marketingrevirews.data.updatediscounterrormessages')
-      )
-    },
-  })
+  const [editSocialSurveyFeedbackResponseMutation] = useMutation(
+    updateSocialSurveyFeedbackResponseQuery,
+    {
+      onCompleted(data) {
+        Notification(
+          NotificationType.success,
+          t('marketingrevirews.data.updatediscountsuccessmessages')
+        )
+        sendResponseEmail()
+      },
+      onError(err) {
+        Notification(
+          NotificationType.error,
+          t('marketingrevirews.data.updatediscounterrormessages')
+        )
+      },
+    }
+  )
+
+  const [editSocialSurveyFeedbackMutation] = useMutation(
+    updateSocialSurveyFeedbackQuery,
+    {
+      onCompleted(data) {
+        if (data !== null) {
+          if (data.updateOneSocialSurveyFeedback.public_use === 0) {
+            Notification(NotificationType.success, t('Remove from Favourite'))
+          }
+          if (data.updateOneSocialSurveyFeedback.public_use === 1) {
+            Notification(NotificationType.success, t('Added to Favourite'))
+          }
+        }
+      },
+      onError(err) {
+        Notification(NotificationType.error, t('Error'))
+      },
+    }
+  )
 
   const [deleteMutation] = useMutation(deleteQuery, {
     onCompleted(data) {
@@ -425,7 +465,7 @@ const Reviews: FC<ReviewConfig> = () => {
 
   useEffect(() => {
     if (DataLists !== undefined) {
-      setDataList(DataLists[0].SocialSurveyFeedback)
+      setDataList(data)
     } else {
       setDataList([])
     }
@@ -435,24 +475,19 @@ const Reviews: FC<ReviewConfig> = () => {
         setPaginateData({
           ...paginateData,
           total: DataLists !== undefined ? aggregateData?.aggregate.count : 0,
-          showingRecords:
-            DataLists !== undefined
-              ? DataLists[0].SocialSurveyFeedback.length
-              : 0,
+          showingRecords: DataLists !== undefined ? data.length : 0,
         })
       } else {
         setPaginateData({
           ...paginateData,
           total: DataLists !== undefined ? aggregateData : 0,
-          showingRecords:
-            DataLists !== undefined
-              ? DataLists[0].SocialSurveyFeedback.length
-              : 0,
+          showingRecords: DataLists !== undefined ? data.length : 0,
         })
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [DataLists, aggregateData])
+
   useEffect(() => {
     if (
       alldataloading === false &&
@@ -460,7 +495,7 @@ const Reviews: FC<ReviewConfig> = () => {
       Alldata.length > 0
     ) {
       const Record = []
-      Alldata[0].SocialSurveyFeedback.map((item) => {
+      Alldata.map((item) => {
         if (item.rating !== undefined) {
           Record.push(item.rating)
         }
@@ -471,20 +506,18 @@ const Reviews: FC<ReviewConfig> = () => {
       const List = [...progressData]
 
       List[0].width = `${
-        (Record.filter((item) => item < 2).length * 100) /
-        Alldata[0].SocialSurveyFeedback.length
+        (Record.filter((item) => item < 2).length * 100) / Alldata.length
       }%`
       List[1].width = `${
         (Record.filter((item) => item >= 2 || item < 3).length * 100) /
-        Alldata[0].SocialSurveyFeedback.length
+        Alldata.length
       }%`
       List[2].width = `${
         (Record.filter((item) => item >= 3 || item < 4.5).length * 100) /
-        Alldata[0].SocialSurveyFeedback.length
+        Alldata.length
       }%`
       List[3].width = `${
-        (Record.filter((item) => item >= 4.5).length * 100) /
-        Alldata[0].SocialSurveyFeedback.length
+        (Record.filter((item) => item >= 4.5).length * 100) / Alldata.length
       }%`
 
       setProgressData(List)
@@ -494,15 +527,13 @@ const Reviews: FC<ReviewConfig> = () => {
 
   useEffect(() => {
     if (Alldata !== undefined && Alldata.length > 0) {
-      const website = Alldata[0].SocialSurveyFeedback.filter(
+      const website = Alldata.filter(
         (item) => item.feedback_source === 'website'
       )
-      const facebook = Alldata[0].SocialSurveyFeedback.filter(
+      const facebook = Alldata.filter(
         (item) => item.feedback_source === 'facebook'
       )
-      const google = Alldata[0].SocialSurveyFeedback.filter(
-        (item) => item.feedback_source === 'google'
-      )
+      const google = Alldata.filter((item) => item.feedback_source === 'google')
 
       const List = [...reviewData]
 
@@ -510,30 +541,36 @@ const Reviews: FC<ReviewConfig> = () => {
         List[0].key = website[0].id
         List[0].score = `${(
           website.map((i) => i.rating).reduce((v, i) => v + i, 0) /
-          Alldata[0].SocialSurveyFeedback?.length
-        ).toFixed(2)}/5`
+          Alldata?.length
+        ).toFixed(1)}/5`
         List[0].reviews = website.length
-        List[0].mostRecent = moment(website[0].date).fromNow()
+        List[0].mostRecent = new Date(
+          website[0].date * 1000
+        ).toLocaleDateString('en-GB')
       }
 
       if (facebook.length > 0) {
         List[1].key = facebook[0].id
         List[1].score = `${(
           facebook.map((i) => i.rating).reduce((v, i) => v + i, 0) /
-          Alldata[0].SocialSurveyFeedback?.length
-        ).toFixed(2)}/5`
+          Alldata?.length
+        ).toFixed(1)}/5`
         List[1].reviews = facebook.length
-        List[1].mostRecent = moment(facebook[0].date).fromNow()
+        List[1].mostRecent = new Date(
+          facebook[0].date * 1000
+        ).toLocaleDateString('en-GB')
       }
 
       if (google.length > 0) {
         List[2].key = google[0].id
         List[2].score = `${(
           google.map((i) => i.rating).reduce((v, i) => v + i, 0) /
-          Alldata[0].SocialSurveyFeedback?.length
-        ).toFixed(2)}/5`
+          Alldata?.length
+        ).toFixed(1)}/5`
         List[2].reviews = google.length
-        List[2].mostRecent = moment(google[0].date).fromNow()
+        List[2].mostRecent = new Date(google[0].date * 1000).toLocaleDateString(
+          'en-GB'
+        )
       }
 
       setReviewData(List)
@@ -563,14 +600,21 @@ const Reviews: FC<ReviewConfig> = () => {
     setModalShowing((e) => !e)
   }
 
-  const onFavouriteClick = (key) => {
-    const result = dataList.map((item) => {
-      if (item.id === key) {
-        return { ...item, isFavourite: !item.isFavourite }
-      }
-      return item
+  const onFavouriteClick = (key, favorite) => {
+    const editValue = {
+      feedback_id: key,
+      public_use: favorite === 1 ? 0 : 1,
+    }
+    editSocialSurveyFeedbackMutation({
+      variables: editValue,
+      optimisticResponse: {},
+      refetchQueries: [
+        {
+          query: listQuery,
+          ...getQueryVariables,
+        },
+      ],
     })
-    setDataList(result)
   }
 
   const handleResponseModal = (e) => {
@@ -591,12 +635,12 @@ const Reviews: FC<ReviewConfig> = () => {
         </Button>
         <Tooltip
           placement={'topRight'}
-          title={e.isFavourite ? t('marketingrevirews.visible.message') : ''}
+          title={e.public_use ? t('marketingrevirews.visible.message') : ''}
         >
           <Button
-            onClick={() => onFavouriteClick(e.id)}
+            onClick={() => onFavouriteClick(e.id, e.public_use)}
             className={
-              e.isFavourite ? styles.favouriteWrap : styles.unFavouriteWrap
+              e.public_use === 1 ? styles.favouriteWrap : styles.unFavouriteWrap
             }
           >
             <StarFilled />
@@ -842,7 +886,7 @@ const Reviews: FC<ReviewConfig> = () => {
         id: selectedRow?.Response[0].id,
         updated_text: message,
       }
-      editMutation({
+      editSocialSurveyFeedbackResponseMutation({
         variables: editValue,
         optimisticResponse: {},
         refetchQueries: [
@@ -918,8 +962,9 @@ const Reviews: FC<ReviewConfig> = () => {
             </span>
             <h6>{selectedRow?.rating}/5</h6>
             <h6>{selectedRow?.feedback_name}</h6>
-            <p>{moment(selectedRow?.date).fromNow()}</p>
-            <p>{moment(selectedRow?.date).fromNow()}</p>
+            <p>
+              {new Date(selectedRow?.date * 1000).toLocaleDateString('en-GB')}
+            </p>
           </span>
           <h5>
             <q>{selectedRow?.feedback_comment}</q>
@@ -1052,12 +1097,20 @@ const Reviews: FC<ReviewConfig> = () => {
             {reviewComponentRender(
               aggregateData !== undefined
                 ? (average?.reduce((v, i) => v + i, 0) / aggregateData).toFixed(
-                    2
+                    1
                   )
                 : 0
             )}
             <div className={styles.tableMob}>
-              {dataList.length > 0 ? (
+              {loading ? (
+                <Spin
+                  className={styles.spinner}
+                  size={'large'}
+                  delay={0}
+                  spinning={true}
+                  indicator={<LoadingOutlined className={styles.icon} spin />}
+                />
+              ) : dataList.length > 0 ? (
                 <Table
                   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                   // @ts-ignore
@@ -1069,11 +1122,21 @@ const Reviews: FC<ReviewConfig> = () => {
                         item?.feedback_source
                       ),
                       rating: `${item?.rating}/5`,
-                      date: moment(item?.date).fromNow(),
+                      date: new Date(item?.date * 1000).toLocaleDateString(
+                        'en-GB'
+                      ),
                       feedback_for: (
-                        <Tooltip placement="bottom" title={item?.feedback_for}>
+                        <Tooltip
+                          placement="bottom"
+                          title={`${item?.service} with ${item?.User?.full_name}`}
+                        >
                           <div className={styles.avatarWrap}>
-                            <Avatar src={''} name={''} size="default" />
+                            <Avatar
+                              src={item?.User?.image}
+                              name={item?.User?.full_name}
+                              size="default"
+                              isTooltip={false}
+                            />
                           </div>
                         </Tooltip>
                       ),
