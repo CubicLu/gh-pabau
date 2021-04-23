@@ -1,7 +1,3 @@
-import React from 'react'
-import Layout from '../../components/Layout/Layout'
-import { Breadcrumb, MobileHeader, Button } from '@pabau/ui'
-import styles from './senders.module.less'
 import {
   FilterOutlined,
   LeftOutlined,
@@ -9,11 +5,16 @@ import {
   MobileOutlined,
   PlusSquareFilled,
 } from '@ant-design/icons'
-import { Typography, Row, Col } from 'antd'
+import { Breadcrumb, Button, MobileHeader } from '@pabau/ui'
+import { Col, Row, Typography } from 'antd'
 import { useRouter } from 'next/router'
-import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import React, { useContext } from 'react'
 import { ReactComponent as Verified } from '../../assets/images/verified.svg'
+import Layout from '../../components/Layout/Layout'
+import { UserContext } from '../../context/UserContext'
 import { useGridData } from '../../hooks/useGridData'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import styles from './senders.module.less'
 
 const { Title } = Typography
 
@@ -71,6 +72,7 @@ export const subCriteriaOptions = ['Sub category', 'Sub category 2']
 export const mergeTagTypeOptions = ['Tag Type 1', 'Tag Type 2']
 
 export const Communications: React.FC = () => {
+  const user = useContext(UserContext)
   const router = useRouter()
   const { t } = useTranslationI18()
   const { getParentSetupData } = useGridData(t)
@@ -105,7 +107,7 @@ export const Communications: React.FC = () => {
         </MobileHeader>
       </div>
 
-      <Layout active={'setup'}>
+      <Layout {...user} active={'setup'}>
         <div className={styles.cardWrapper}>
           <div className={styles.cardHeader}>
             <div>
