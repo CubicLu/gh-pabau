@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
-import { Request, Response } from 'express'
 import { PubSub } from 'apollo-server'
+import { Request, Response } from 'express'
 
 const prisma = new PrismaClient()
 

@@ -6,9 +6,7 @@ const ctx = createTestContext()
 it('server answers connections', async () => {
   await expect(
     ctx.client.request('HIYA')
-  ).rejects.toThrowErrorMatchingInlineSnapshot(
-    `"Syntax Error: Unexpected Name \\"HIYA\\".: {\\"response\\":{\\"errors\\":[{\\"message\\":\\"Syntax Error: Unexpected Name \\\\\\"HIYA\\\\\\".\\",\\"locations\\":[{\\"line\\":1,\\"column\\":1}],\\"extensions\\":{\\"code\\":\\"GRAPHQL_PARSE_FAILED\\"}}],\\"status\\":400},\\"request\\":{\\"query\\":\\"HIYA\\"}}"`
-  )
+  ).rejects.toThrowErrorMatchingSnapshot()
 })
 
 it('denies invalid logins', async () => {
@@ -24,7 +22,7 @@ it('denies invalid logins', async () => {
     response: {
       errors: [
         expect.objectContaining({
-          message: expect.stringContaining('Not Auth'),
+          message: expect.stringMatching('Not Auth'),
         }),
       ],
     },

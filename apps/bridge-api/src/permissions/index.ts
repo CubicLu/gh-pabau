@@ -210,10 +210,5 @@ export const permissions = shield(
       '*': and(rules.isAuthenticated, rules.belongsToCompanyAndShared),
     },
   },
-  {
-    fallbackError: async (error: Error) => {
-      console.error(error)
-      return error
-    },
-  }
+  {}
 )
