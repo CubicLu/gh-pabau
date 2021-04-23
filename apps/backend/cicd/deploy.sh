@@ -59,7 +59,16 @@ docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}" "${DOCKER_HOSTNAME}
 echo "Docker push..."
 docker image push "${DOCKER_HOSTNAME}/monorepo/${APP_NAME}"
 echo "Rancher deploy..."
-echo "FOR NOW, ASK JAMES TO 'UPGRADE' THE 'PABAU2-BACKEND/PRODUCTION' CONTAINER IN RANCHER!"
+echo "FOR NOW, ASK JAMES TO 'UPGRADE' THE 'PABAU2-BACKEND/PRODUCTION' CONTAINER IN RANCHER1!"
+
+echo "Docker tag..."
+docker image tag "${APP_NAME}:latest" "${DOCKER2_HOSTNAME}/monorepo/${APP_NAME}"
+echo "Docker login..."
+docker login -u "${DOCKER2_USERNAME}" -p "${DOCKER2_PASSWORD}" "${DOCKER2_HOSTNAME}"
+echo "Docker push..."
+docker image push "${DOCKER2_HOSTNAME}/monorepo/${APP_NAME}"
+echo "Rancher deploy..."
+echo "FOR NOW, ASK MARTIN TO 'UPGRADE' THE 'PABAU2-BACKEND/PRODUCTION' CONTAINER IN RANCHER2!"
 
 if [ -z "${BITBUCKET_PR_ID}" ]; then
   message_body=''
