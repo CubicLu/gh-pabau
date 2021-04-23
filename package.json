@@ -1,6 +1,6 @@
 {
   "name": "pabau",
-  "version": "2.0.290",
+  "version": "2.0.291",
   "license": "Copyright Hambrand Technologies Ltd",
   "bump-rebuild-all": 15,
   "scripts": {
