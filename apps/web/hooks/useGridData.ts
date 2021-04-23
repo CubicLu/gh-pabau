@@ -26,6 +26,7 @@ export function useGridData(t) {
             t('setup.clinic.general.pos'),
             t('setup.clinic.general.referral'),
           ],
+          href: '/setup/settings',
         },
         { title: t('setup.clinic.integrations'), data: [] },
         {
