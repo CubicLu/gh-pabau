@@ -144,22 +144,37 @@ export const NotificationDrawer: FC<P> = ({
   // }
 
   const isReadNotification = (users) => {
-    return users?.find((user_id) => user_id == user?.user) ? true : false
+    return users?.find((user_id) => user_id === user?.user) ? true : false
   }
 
   const onNotificationClick = async (notification) => {
-    let { id, users, read, link } = notification
-    console.log('notificiaotnskajsfk', notification)
+    const { id, users, link } = notification
+    let { read } = notification
     if (!isReadNotification(read)) {
-      if (read?.length > 0) {
-        read = [...read, user?.user]
-      } else {
-        read = [user?.user]
-      }
+      read = read?.length > 0 ? [...read, user?.user] : [user?.user]
       const variables = { id, is_read: read, sent_to: users }
       await updateMutation({ variables, optimisticResponse: {} })
     }
     router.push({ pathname: link })
+  }
+
+  const getNotificationDescOrTitle = (notification, returnType = 'desc') => {
+    const { variables } = notification
+    if (
+      typeof variables == 'object' &&
+      Object.keys({ ...variables }).length > 0
+    ) {
+      for (const key in variables) {
+        const replaceVariable = `[${key}]`
+        const variableValue = variables[key]
+        notification[returnType] = notification[returnType].replace(
+          replaceVariable,
+          variableValue
+        )
+      }
+    }
+
+    return notification[returnType]
   }
 
   const removeSingleNotification = async (notification) => {
@@ -242,7 +257,13 @@ export const NotificationDrawer: FC<P> = ({
       {notifyTab === 'Activity' &&
         notifications.map((notify, index) => {
           return (
-            <div key={index} onClick={() => onNotificationClick(notify)}>
+            <div
+              key={index}
+              onClick={(e) => {
+                e.stopPropagation()
+                onNotificationClick(notify)
+              }}
+            >
               <div className={styles.notificationCard}>
                 <div className={styles.notifyAlign}>
                   <div className={classNames(styles.logo, styles.flex)}>
@@ -288,8 +309,8 @@ export const NotificationDrawer: FC<P> = ({
                 </div>
                 <div className={styles.descAlign}>
                   <div className={styles.notifyTitleDesc}>
-                    <h1>{notify.title}</h1>
-                    <p>{notify.desc}</p>
+                    <h1>{getNotificationDescOrTitle(notify, 'title')}</h1>
+                    <p>{getNotificationDescOrTitle(notify, 'desc')}</p>
                   </div>
                   <div className={styles.readStatus}>
                     {!isReadNotification(notify?.read) && <span></span>}

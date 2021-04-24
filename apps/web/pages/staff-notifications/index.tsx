@@ -8,6 +8,7 @@ import { gql, useMutation } from '@apollo/client'
 import { useLiveQuery, Notification, NotificationType } from '@pabau/ui'
 import { NextPage } from 'next'
 import { UserContext } from '../../context/UserContext'
+import { notificationVariables } from './mock'
 
 enum Users {
   AllAdmins = 'All Admins',
@@ -39,13 +40,20 @@ const LIST_QUERY = gql`
     notification_types {
       type
       id
+      notification_type
     }
   }
 `
 
 const ADD_MUTATION = gql`
-  mutation insert_notifications_one($type: uuid!, $sent_to: jsonb) {
-    insert_notifications_one(object: { type: $type, sent_to: $sent_to }) {
+  mutation insert_notifications_one(
+    $type: uuid!
+    $sent_to: jsonb
+    $variables: jsonb
+  ) {
+    insert_notifications_one(
+      object: { type: $type, sent_to: $sent_to, variables: $variables }
+    ) {
       id
     }
   }
@@ -83,6 +91,7 @@ export const StaffNotifications: NextPage = () => {
       fullName: me?.full_name,
     }
     setUser(userData)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const [userRole, setUserRole] = useState<'All Users' | 'All Admins'>(
@@ -112,19 +121,43 @@ export const StaffNotifications: NextPage = () => {
     },
   })
 
+  const getNotification = (id) => {
+    return notificationTypes.find((notificaiton) => notificaiton.id === id)
+  }
+
+  const getTypeVariable = (_type) => {
+    const notificationType = notificationVariables.find(
+      ({ type }) => type === _type
+    )
+    return notificationType?.variables
+  }
+
   const onSubmit = async (values) => {
-    console.log('values', values)
+    const notification = getNotification(values.type)
+
+    const notificationVariable = getTypeVariable(
+      notification?.notification_type
+    )
+
+    console.log('notification123', notificationVariable)
+
     const sent_users = []
     for (const user of userList) {
       sent_users.push(user.id)
     }
-    const body = {
+
+    const variables = {
       type: values.type,
       sent_to: sent_users,
     }
 
+    if (notificationVariable) {
+      console.log('boo')
+      variables['variables'] = notificationVariable
+    }
+
     await addMutation({
-      variables: body,
+      variables,
       optimisticResponse: {},
     })
   }

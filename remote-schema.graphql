@@ -81894,6 +81894,19 @@ type mutation_root {
   delete_service_by_pk(id: uuid!): service
 
   """
+  delete data from the table: "service_categories"
+  """
+  delete_service_categories(
+    """filter the rows which have to be deleted"""
+    where: service_categories_bool_exp!
+  ): service_categories_mutation_response
+
+  """
+  delete single row from the table: "service_categories"
+  """
+  delete_service_categories_by_pk(id: uuid!): service_categories
+
+  """
   delete data from the table: "stock_take"
   """
   delete_stock_take(
@@ -83145,6 +83158,28 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: service_on_conflict
   ): service_mutation_response
+
+  """
+  insert data into the table: "service_categories"
+  """
+  insert_service_categories(
+    """the rows to be inserted"""
+    objects: [service_categories_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: service_categories_on_conflict
+  ): service_categories_mutation_response
+
+  """
+  insert a single row into the table: "service_categories"
+  """
+  insert_service_categories_one(
+    """the row to be inserted"""
+    object: service_categories_insert_input!
+
+    """on conflict condition"""
+    on_conflict: service_categories_on_conflict
+  ): service_categories
 
   """
   insert a single row into the table: "service"
@@ -84757,6 +84792,27 @@ type mutation_root {
   update data of the table: "notification_types"
   """
   update_notification_types(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: notification_types_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: notification_types_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+    """
+    _delete_elem: notification_types_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: notification_types_delete_key_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: notification_types_prepend_input
+
     """sets the columns of the filtered rows to the given values"""
     _set: notification_types_set_input
 
@@ -84768,6 +84824,27 @@ type mutation_root {
   update single row of the table: "notification_types"
   """
   update_notification_types_by_pk(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: notification_types_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: notification_types_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+    """
+    _delete_elem: notification_types_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: notification_types_delete_key_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: notification_types_prepend_input
+
     """sets the columns of the filtered rows to the given values"""
     _set: notification_types_set_input
     pk_columns: notification_types_pk_columns_input!
@@ -85120,6 +85197,32 @@ type mutation_root {
     _set: service_set_input
     pk_columns: service_pk_columns_input!
   ): service
+
+  """
+  update data of the table: "service_categories"
+  """
+  update_service_categories(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: service_categories_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: service_categories_set_input
+
+    """filter the rows which have to be updated"""
+    where: service_categories_bool_exp!
+  ): service_categories_mutation_response
+
+  """
+  update single row of the table: "service_categories"
+  """
+  update_service_categories_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: service_categories_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: service_categories_set_input
+    pk_columns: service_categories_pk_columns_input!
+  ): service_categories
 
   """
   update data of the table: "stock_take"
@@ -85782,6 +85885,7 @@ type notification_types {
     where: application_notifications_bool_exp
   ): application_notifications_aggregate!
   description: String!
+  destination: String
   id: uuid!
   name: String
 
@@ -85824,6 +85928,10 @@ type notification_types {
   permission_type: String
   title: String
   type: String!
+  variables(
+    """JSON select path"""
+    path: String
+  ): jsonb
 }
 
 """
@@ -85843,6 +85951,11 @@ type notification_types_aggregate_fields {
   min: notification_types_min_fields
 }
 
+"""append existing jsonb value of filtered columns with new jsonb value"""
+input notification_types_append_input {
+  variables: jsonb
+}
+
 """
 Boolean expression to filter rows from the table "notification_types". All fields are combined with a logical 'AND'.
 """
@@ -85852,6 +85965,7 @@ input notification_types_bool_exp {
   _or: [notification_types_bool_exp!]
   application_notifications: application_notifications_bool_exp
   description: String_comparison_exp
+  destination: String_comparison_exp
   id: uuid_comparison_exp
   name: String_comparison_exp
   notification_toggles: notification_toggle_bool_exp
@@ -85859,6 +85973,7 @@ input notification_types_bool_exp {
   permission_type: String_comparison_exp
   title: String_comparison_exp
   type: String_comparison_exp
+  variables: jsonb_comparison_exp
 }
 
 """
@@ -85867,6 +85982,27 @@ unique or primary key constraints on table "notification_types"
 enum notification_types_constraint {
   """unique or primary key constraint"""
   application_notification_type_pkey
+}
+
+"""
+delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+"""
+input notification_types_delete_at_path_input {
+  variables: [String!]
+}
+
+"""
+delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+"""
+input notification_types_delete_elem_input {
+  variables: Int
+}
+
+"""
+delete key/value pair or string element. key/value pairs are matched based on their key value
+"""
+input notification_types_delete_key_input {
+  variables: String
 }
 
 enum notification_types_enum_enum {
@@ -85983,16 +86119,21 @@ input type for inserting data into table "notification_types"
 input notification_types_insert_input {
   application_notifications: application_notifications_arr_rel_insert_input
   description: String
+  destination: String
   id: uuid
+  name: String
   notification_toggles: notification_toggle_arr_rel_insert_input
   notification_type: notification_types_enum_enum
   permission_type: String
+  title: String
   type: String
+  variables: jsonb
 }
 
 """aggregate max on columns"""
 type notification_types_max_fields {
   description: String
+  destination: String
   id: uuid
   name: String
   permission_type: String
@@ -86003,6 +86144,7 @@ type notification_types_max_fields {
 """aggregate min on columns"""
 type notification_types_min_fields {
   description: String
+  destination: String
   id: uuid
   name: String
   permission_type: String
@@ -86044,6 +86186,7 @@ input notification_types_on_conflict {
 input notification_types_order_by {
   application_notifications_aggregate: application_notifications_aggregate_order_by
   description: order_by
+  destination: order_by
   id: order_by
   name: order_by
   notification_toggles_aggregate: notification_toggle_aggregate_order_by
@@ -86051,11 +86194,17 @@ input notification_types_order_by {
   permission_type: order_by
   title: order_by
   type: order_by
+  variables: order_by
 }
 
 """primary key columns input for table: notification_types"""
 input notification_types_pk_columns_input {
   id: uuid!
+}
+
+"""prepend existing jsonb value of filtered columns with new jsonb value"""
+input notification_types_prepend_input {
+  variables: jsonb
 }
 
 """
@@ -86064,6 +86213,9 @@ select columns of table "notification_types"
 enum notification_types_select_column {
   """column name"""
   description
+
+  """column name"""
+  destination
 
   """column name"""
   id
@@ -86082,6 +86234,9 @@ enum notification_types_select_column {
 
   """column name"""
   type
+
+  """column name"""
+  variables
 }
 
 """
@@ -86089,11 +86244,14 @@ input type for updating data in table "notification_types"
 """
 input notification_types_set_input {
   description: String
+  destination: String
   id: uuid
+  name: String
   notification_type: notification_types_enum_enum
   permission_type: String
   title: String
   type: String
+  variables: jsonb
 }
 
 """
@@ -86104,7 +86262,13 @@ enum notification_types_update_column {
   description
 
   """column name"""
+  destination
+
+  """column name"""
   id
+
+  """column name"""
+  name
 
   """column name"""
   notification_type
@@ -86117,6 +86281,9 @@ enum notification_types_update_column {
 
   """column name"""
   type
+
+  """column name"""
+  variables
 }
 
 """
@@ -86125,6 +86292,10 @@ columns and relationships of "notifications"
 type notifications {
   created_at: timestamptz!
   id: uuid!
+  is_read(
+    """JSON select path"""
+    path: String
+  ): jsonb
 
   """An object relationship"""
   notification_type: notification_types
@@ -86139,6 +86310,7 @@ type notifications {
 
 """append existing jsonb value of filtered columns with new jsonb value"""
 input notifications_append_input {
+  is_read: jsonb
   sent_to: jsonb
 }
 
@@ -86151,6 +86323,7 @@ input notifications_bool_exp {
   _or: [notifications_bool_exp!]
   created_at: timestamptz_comparison_exp
   id: uuid_comparison_exp
+  is_read: jsonb_comparison_exp
   notification_type: notification_types_bool_exp
   order: Int_comparison_exp
   sent_to: jsonb_comparison_exp
@@ -86170,6 +86343,7 @@ enum notifications_constraint {
 delete the field or element with specified path (for JSON arrays, negative integers count from the end)
 """
 input notifications_delete_at_path_input {
+  is_read: [String!]
   sent_to: [String!]
 }
 
@@ -86177,6 +86351,7 @@ input notifications_delete_at_path_input {
 delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
 """
 input notifications_delete_elem_input {
+  is_read: Int
   sent_to: Int
 }
 
@@ -86184,6 +86359,7 @@ input notifications_delete_elem_input {
 delete key/value pair or string element. key/value pairs are matched based on their key value
 """
 input notifications_delete_key_input {
+  is_read: String
   sent_to: String
 }
 
@@ -86191,7 +86367,6 @@ input notifications_delete_key_input {
 input type for inserting data into table "notifications"
 """
 input notifications_insert_input {
-  is_read: jsonb
   notification_type: notification_types_obj_rel_insert_input
   sent_to: jsonb
   type: uuid
@@ -86221,6 +86396,7 @@ input notifications_on_conflict {
 input notifications_order_by {
   created_at: order_by
   id: order_by
+  is_read: order_by
   notification_type: notification_types_order_by
   order: order_by
   sent_to: order_by
@@ -86235,6 +86411,7 @@ input notifications_pk_columns_input {
 
 """prepend existing jsonb value of filtered columns with new jsonb value"""
 input notifications_prepend_input {
+  is_read: jsonb
   sent_to: jsonb
 }
 
@@ -86247,6 +86424,9 @@ enum notifications_select_column {
 
   """column name"""
   id
+
+  """column name"""
+  is_read
 
   """column name"""
   order
@@ -86265,6 +86445,7 @@ enum notifications_select_column {
 input type for updating data in table "notifications"
 """
 input notifications_set_input {
+  is_read: jsonb
   sent_to: jsonb
   type: uuid
 }
@@ -86273,6 +86454,9 @@ input notifications_set_input {
 update columns of table "notifications"
 """
 enum notifications_update_column {
+  """column name"""
+  is_read
+
   """column name"""
   sent_to
 
@@ -90650,6 +90834,51 @@ type query_root {
 
   """fetch data from the table: "service" using primary key columns"""
   service_by_pk(id: uuid!): service
+
+  """
+  fetch data from the table: "service_categories"
+  """
+  service_categories(
+    """distinct select on columns"""
+    distinct_on: [service_categories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [service_categories_order_by!]
+
+    """filter the rows returned"""
+    where: service_categories_bool_exp
+  ): [service_categories!]!
+
+  """
+  fetch aggregated fields from the table: "service_categories"
+  """
+  service_categories_aggregate(
+    """distinct select on columns"""
+    distinct_on: [service_categories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [service_categories_order_by!]
+
+    """filter the rows returned"""
+    where: service_categories_bool_exp
+  ): service_categories_aggregate!
+
+  """
+  fetch data from the table: "service_categories" using primary key columns
+  """
+  service_categories_by_pk(id: uuid!): service_categories
   socialSurvey(where: SocialSurveyWhereUniqueInput!): SocialSurvey
   socialSurveyAnswer(where: SocialSurveyAnswerWhereUniqueInput!): SocialSurveyAnswer
   socialSurveyAnswers(cursor: SocialSurveyAnswerWhereUniqueInput, orderBy: [SocialSurveyAnswerOrderByInput!], skip: Int, take: Int, where: SocialSurveyAnswerWhereInput): [SocialSurveyAnswer!]!
@@ -91874,25 +92103,25 @@ type salutation_variance_fields {
 columns and relationships of "service"
 """
 type service {
-  category: String!
-  code: String!
-  color: String!
+  category: String
+  code: String
+  color: String
   created_at: timestamptz!
-  description: String!
-  display_text_on_invoice: String!
-  duration: String!
+  description: String
+  display_text_on_invoice: String
+  duration: String
   employees(
     """JSON select path"""
     path: String
-  ): json!
+  ): json
   equipment_resources(
     """JSON select path"""
     path: String
   ): json
-  friendly_name: String!
+  friendly_name: String
   id: uuid!
-  image: String!
-  invoice_item_name: String!
+  image: String
+  invoice_item_name: String
   is_active: Boolean!
   is_online_booking: Boolean!
   is_package_session: Boolean!
@@ -91901,32 +92130,32 @@ type service {
   locations(
     """JSON select path"""
     path: String
-  ): json!
+  ): json
   max_clients: Int
-  online_payment_amount: String!
+  online_payment_amount: String
   online_payment_type: String!
   order: Int!
   patient_booking_type: String!
-  price: String!
+  price: String
   pricing_type: String!
-  procedure_code: String!
+  procedure_code: String
   resources(
     """JSON select path"""
     path: String
-  ): json!
+  ): json
   room_resources(
     """JSON select path"""
     path: String
   ): json
   service_name: String!
-  service_price: String!
-  sku: String!
-  staff_assigned: String!
-  tax: String!
+  service_price: String
+  sku: String
+  staff_assigned: String
+  tax: String
   timing_rules(
     """JSON select path"""
     path: String
-  ): json!
+  ): json
   type: String!
   updated_at: timestamptz!
 }
@@ -92006,6 +92235,260 @@ input service_bool_exp {
   timing_rules: json_comparison_exp
   type: String_comparison_exp
   updated_at: timestamptz_comparison_exp
+}
+
+"""
+columns and relationships of "service_categories"
+"""
+type service_categories {
+  assigned: String
+  color: String
+  created_at: timestamptz!
+  id: uuid!
+  image: String
+  is_active: Boolean!
+  name: String!
+  order: Int!
+  updated_at: timestamptz!
+}
+
+"""
+aggregated selection of "service_categories"
+"""
+type service_categories_aggregate {
+  aggregate: service_categories_aggregate_fields
+  nodes: [service_categories!]!
+}
+
+"""
+aggregate fields of "service_categories"
+"""
+type service_categories_aggregate_fields {
+  avg: service_categories_avg_fields
+  count(columns: [service_categories_select_column!], distinct: Boolean): Int!
+  max: service_categories_max_fields
+  min: service_categories_min_fields
+  stddev: service_categories_stddev_fields
+  stddev_pop: service_categories_stddev_pop_fields
+  stddev_samp: service_categories_stddev_samp_fields
+  sum: service_categories_sum_fields
+  var_pop: service_categories_var_pop_fields
+  var_samp: service_categories_var_samp_fields
+  variance: service_categories_variance_fields
+}
+
+"""aggregate avg on columns"""
+type service_categories_avg_fields {
+  order: Float
+}
+
+"""
+Boolean expression to filter rows from the table "service_categories". All fields are combined with a logical 'AND'.
+"""
+input service_categories_bool_exp {
+  _and: [service_categories_bool_exp!]
+  _not: service_categories_bool_exp
+  _or: [service_categories_bool_exp!]
+  assigned: String_comparison_exp
+  color: String_comparison_exp
+  created_at: timestamptz_comparison_exp
+  id: uuid_comparison_exp
+  image: String_comparison_exp
+  is_active: Boolean_comparison_exp
+  name: String_comparison_exp
+  order: Int_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "service_categories"
+"""
+enum service_categories_constraint {
+  """unique or primary key constraint"""
+  service_categories_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "service_categories"
+"""
+input service_categories_inc_input {
+  order: Int
+}
+
+"""
+input type for inserting data into table "service_categories"
+"""
+input service_categories_insert_input {
+  assigned: String
+  color: String
+  image: String
+  is_active: Boolean
+  name: String
+  order: Int
+}
+
+"""aggregate max on columns"""
+type service_categories_max_fields {
+  assigned: String
+  color: String
+  created_at: timestamptz
+  id: uuid
+  image: String
+  name: String
+  order: Int
+  updated_at: timestamptz
+}
+
+"""aggregate min on columns"""
+type service_categories_min_fields {
+  assigned: String
+  color: String
+  created_at: timestamptz
+  id: uuid
+  image: String
+  name: String
+  order: Int
+  updated_at: timestamptz
+}
+
+"""
+response of any mutation on the table "service_categories"
+"""
+type service_categories_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [service_categories!]!
+}
+
+"""
+on conflict condition type for table "service_categories"
+"""
+input service_categories_on_conflict {
+  constraint: service_categories_constraint!
+  update_columns: [service_categories_update_column!]!
+  where: service_categories_bool_exp
+}
+
+"""Ordering options when selecting data from "service_categories"."""
+input service_categories_order_by {
+  assigned: order_by
+  color: order_by
+  created_at: order_by
+  id: order_by
+  image: order_by
+  is_active: order_by
+  name: order_by
+  order: order_by
+  updated_at: order_by
+}
+
+"""primary key columns input for table: service_categories"""
+input service_categories_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "service_categories"
+"""
+enum service_categories_select_column {
+  """column name"""
+  assigned
+
+  """column name"""
+  color
+
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  image
+
+  """column name"""
+  is_active
+
+  """column name"""
+  name
+
+  """column name"""
+  order
+
+  """column name"""
+  updated_at
+}
+
+"""
+input type for updating data in table "service_categories"
+"""
+input service_categories_set_input {
+  assigned: String
+  color: String
+  image: String
+  is_active: Boolean
+  name: String
+  order: Int
+}
+
+"""aggregate stddev on columns"""
+type service_categories_stddev_fields {
+  order: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type service_categories_stddev_pop_fields {
+  order: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type service_categories_stddev_samp_fields {
+  order: Float
+}
+
+"""aggregate sum on columns"""
+type service_categories_sum_fields {
+  order: Int
+}
+
+"""
+update columns of table "service_categories"
+"""
+enum service_categories_update_column {
+  """column name"""
+  assigned
+
+  """column name"""
+  color
+
+  """column name"""
+  image
+
+  """column name"""
+  is_active
+
+  """column name"""
+  name
+
+  """column name"""
+  order
+}
+
+"""aggregate var_pop on columns"""
+type service_categories_var_pop_fields {
+  order: Float
+}
+
+"""aggregate var_samp on columns"""
+type service_categories_var_samp_fields {
+  order: Float
+}
+
+"""aggregate variance on columns"""
+type service_categories_variance_fields {
+  order: Float
 }
 
 """
@@ -94984,6 +95467,51 @@ type subscription_root {
 
   """fetch data from the table: "service" using primary key columns"""
   service_by_pk(id: uuid!): service
+
+  """
+  fetch data from the table: "service_categories"
+  """
+  service_categories(
+    """distinct select on columns"""
+    distinct_on: [service_categories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [service_categories_order_by!]
+
+    """filter the rows returned"""
+    where: service_categories_bool_exp
+  ): [service_categories!]!
+
+  """
+  fetch aggregated fields from the table: "service_categories"
+  """
+  service_categories_aggregate(
+    """distinct select on columns"""
+    distinct_on: [service_categories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [service_categories_order_by!]
+
+    """filter the rows returned"""
+    where: service_categories_bool_exp
+  ): service_categories_aggregate!
+
+  """
+  fetch data from the table: "service_categories" using primary key columns
+  """
+  service_categories_by_pk(id: uuid!): service_categories
 
   """
   fetch data from the table: "stock_take"
