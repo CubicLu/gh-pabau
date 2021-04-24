@@ -12,6 +12,8 @@ export const Invoices: FC<EmailSMSPreviewProps & InvoicesProps> = ({
   showInvoiceButton = false,
   buttonColor,
   showEnablePay = false,
+  payButtonName = 'Pay Invoice',
+  viewButtonName = 'View Invoice',
 }) => {
   return (
     <>
@@ -32,7 +34,7 @@ export const Invoices: FC<EmailSMSPreviewProps & InvoicesProps> = ({
               backgroundColor={buttonColor}
               className={styles.bookButton}
             >
-              Pay Invoice
+              {payButtonName}
             </Button>
           </Col>
         </Row>
@@ -53,7 +55,7 @@ export const Invoices: FC<EmailSMSPreviewProps & InvoicesProps> = ({
               backgroundColor={buttonColor}
               className={styles.bookButton}
             >
-              View Invoice
+              {viewButtonName}
             </Button>
           </Col>
         </Row>

@@ -20,6 +20,7 @@ export interface AvatarProps extends NativeAvatarProps {
   src?: string
   active?: Status
   edit?: boolean
+  isTooltip?: boolean
 }
 
 export const Avatar: FC<AvatarProps> = ({
@@ -30,6 +31,7 @@ export const Avatar: FC<AvatarProps> = ({
   src = '',
   active = 'default',
   edit,
+  isTooltip = true,
   ...props
 }) => {
   const [load, setLoad] = useState(true)
@@ -65,18 +67,17 @@ export const Avatar: FC<AvatarProps> = ({
         </div>
       ) : (
         <Tooltip
-          title={name}
+          title={isTooltip ? name : ''}
           placement="bottom"
           overlayClassName={styles.overlay}
         >
           <div className={styles.avatarDisplay}>
-            {load ? (
+            {load && src?.length > 0 ? (
               <AntAvatar {...props} src={src} shape="circle" />
             ) : (
               <AntAvatar
                 {...props}
                 shape="circle"
-                src=""
                 style={{ backgroundColor: stc(name) }}
               >
                 {shortName}

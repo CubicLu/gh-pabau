@@ -1,19 +1,76 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useRef, useState } from 'react'
 import { Notification, NotificationType } from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
 import ClientNotification from '../../../components/ClientNotification/index'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
+import { sendEmailService } from '../../../components/ClientNotificationEmailPreview/sendEmailService'
+import NoShowAppointmentEmailPreview from '../../../components/ClientNotificationEmailPreview/NoShowAppointmentEmailPreview'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
-  const [setIndexTab, setSelectedTab] = useState(1)
+  const [selectedTab, setSelectedTab] = useState<'emailPreview' | 'smsPreview'>(
+    'emailPreview'
+  )
+  const ref = useRef(null)
+  const { t } = useTranslationI18()
 
   const showNotification = (email) => {
-    if (setIndexTab === 1) {
-      Notification(NotificationType.success, 'Test message sent')
-    }
+    if (selectedTab === 'emailPreview') {
+      const propsData = ref?.current?.propsData() || {}
+      const {
+        selectLanguage,
+        backGroundColor,
+        buttonColor,
+        informationMessage,
+        activeSocialIcons,
+        type,
+        localTranslation,
+      } = propsData
 
-    if (setIndexTab === 2) {
-      Notification(NotificationType.success, 'Test SMS sent')
+      const bodyContent = () => {
+        const t = localTranslation
+        return (
+          <NoShowAppointmentEmailPreview
+            backGroundColor={backGroundColor}
+            activeSocialIcons={activeSocialIcons}
+            selectLanguage={selectLanguage}
+            buttonColor={buttonColor}
+            informationMessage={informationMessage}
+            type={type}
+            footerContact={false}
+            contactNumber={'+44 000 987 507'}
+            greeting={t('notifications.noShowAppointment.greeting')}
+            subtitle={t('notifications.noShowAppointment.subTitle')}
+            message={t('notifications.noShowAppointment.message')}
+            isFooterText={true}
+            closingText={t('notifications.noShowAppointment.closingText')}
+            signatureBlock={t('notifications.noShowAppointment.signatureBlock')}
+            bookButtonName={t('notifications.noShowAppointment.bookButtonName')}
+            buttonTitleMessage={t(
+              'notifications.noShowAppointment.buttonTitleMessage'
+            )}
+            contactFirstHalfMsg={t(
+              'notifications.noShowAppointment.contactFirstHalfMsg'
+            )}
+            contactSecondHalfMsg={t(
+              'notifications.noShowAppointment.contactSecondHalfMsg'
+            )}
+          />
+        )
+      }
+
+      sendEmailService({
+        email,
+        subject: t('notifications.email.noShowAppointment.subject'),
+        bodyContent: bodyContent(),
+        successMessage: t('notifications.email.send.successMessage'),
+        failedMessage: t('notifications.email.send.failedMessage'),
+      })
+    } else if (selectedTab === 'smsPreview') {
+      Notification(
+        NotificationType.success,
+        t('notifications.sms.send.successMessage')
+      )
     }
   }
 
@@ -23,23 +80,24 @@ const Index: FC = () => {
         breadcrumbItems={[
           {
             path: 'setup',
-            breadcrumbName: 'Setup',
+            breadcrumbName: t('notifications.breadcrumb.setup'),
           },
           {
             path: 'client-notifications',
-            breadcrumbName: 'Notification Messages',
+            breadcrumbName: t('notifications.breadcrumb.notificationMessage'),
           },
           {
             path: 'client-notifications/noshow-appointment',
-            breadcrumbName: 'No Show Appointment',
+            breadcrumbName: t('notifications.noShowAppointment.title'),
           },
         ]}
-        title={'No Show Appointment'}
-        setIndexTab={setIndexTab}
+        title={t('notifications.noShowAppointment.title')}
+        selectedTab={selectedTab}
         handleNotificationSubmit={showNotification}
       />
       <ClientNotification
-        onSeletedTab={(value) => setSelectedTab(value)}
+        ref={ref}
+        onSelectedTab={(value) => setSelectedTab(value)}
         hideRequestConfirmationOption={true}
         hideAllowReschedulingOption={true}
         hideAllowCancellationOption={true}
@@ -48,15 +106,11 @@ const Index: FC = () => {
         hideReminderTimeFrameTabPane={true}
         hideServiceOption={true}
         hideEmployeeNameOption={true}
-        standardMessage={
-          'This notification automatically sends to clients the moment they missed an appointment'
-        }
+        standardMessage={t('notifications.noShowAppointment.standardMessage')}
         type={'noShowAppointment'}
-        smsCustom={
-          'Hi Anna,' +
-          " We had you scheduled today at 11:30 but unfortunately you didn't show up." +
-          ' Please get back in touch on to reschedule.Your friends at The Clinic'
-        }
+        name={t('notifications.noShowAppointment.title')}
+        langKey={'noShowAppointment'}
+        handleNotificationSubmit={showNotification}
       />
     </Layout>
   )

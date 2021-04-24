@@ -25,6 +25,9 @@ export const Page = objectType({
     t.model.private_key()
     t.model.new_url()
     t.model.UserPermission()
+    t.model.CompanyPermission()
+    t.model.ParrentPage()
+    t.model.Page()
   },
 })
 

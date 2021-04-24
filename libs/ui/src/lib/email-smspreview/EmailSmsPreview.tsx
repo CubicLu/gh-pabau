@@ -33,6 +33,7 @@ export interface EmailSMSPreviewProps {
   contactEmail?: string
   contactInfoNumber?: string
   displayContactMessage?: boolean
+  contactMessage?: string
 }
 
 export interface FooterProps {
@@ -44,6 +45,7 @@ export interface FooterProps {
   contactEmail?: string
   contactInfoNumber?: string
   displayContactMessage?: boolean
+  contactMessage?: string
 }
 
 export interface NoShowAppointmentProps {
@@ -51,6 +53,10 @@ export interface NoShowAppointmentProps {
   contactNumber?: string
   closingText?: string
   signatureBlock?: string
+  bookButtonName?: string
+  buttonTitleMessage?: string
+  contactFirstHalfMsg?: string
+  contactSecondHalfMsg?: string
 }
 
 export interface BookedOntoClassProps {
@@ -59,6 +65,9 @@ export interface BookedOntoClassProps {
   consultancyName?: string
   address?: string
   message?: string
+  appointmentDetailMessage?: string
+  regards?: string
+  regardsName?: string
 }
 
 export interface CancelAClassBookingProps {
@@ -68,6 +77,8 @@ export interface CancelAClassBookingProps {
   address?: string
   message?: string
   text?: string
+  cancelButtonName?: string
+  rebookButtonName?: string
 }
 
 export interface ClassRescheduledProps {
@@ -79,6 +90,7 @@ export interface RequestFeedbackProps {
   message1?: string
   closingText?: string
   signatureBlock?: string
+  buttonName?: string
 }
 
 export interface ReminderForClassProps {
@@ -95,6 +107,7 @@ export interface ReferralProps {
   message?: string
   footerText?: string
   description?: string
+  buttonName?: string
 }
 
 export interface InvoicesProps {
@@ -104,6 +117,8 @@ export interface InvoicesProps {
   bestRegards?: string
   senderFirstName?: string
   showEnablePay?: boolean
+  payButtonName?: string
+  viewButtonName?: string
 }
 
 export interface LeadResponsesProps {
@@ -121,6 +136,11 @@ export interface GiftVoucherProps {
   expiry?: string
   consultancyName?: string
   displayViewButton?: boolean
+  buttonName?: string
+  consultancyDetailMessage?: string
+  valueMessage?: string
+  voucherCodeMessage?: string
+  expiryMessage?: string
 }
 
 export interface ConnectRegistrationProps {
@@ -129,6 +149,9 @@ export interface ConnectRegistrationProps {
   username?: string
   password?: string
   text?: string
+  credentialMessage?: string
+  userNameMessage?: string
+  passwordMessage?: string
 }
 
 export interface DocumentSharedProps {
@@ -141,6 +164,8 @@ export interface DocumentSharedProps {
   signatureBlock?: string
   messageLine1?: string
   messageLine2?: string
+  fromMessage?: string
+  userMessage?: string
 }
 
 export interface MedicalFormProps {
@@ -151,6 +176,7 @@ export interface MedicalFormProps {
 
 export interface PackageSessionProps {
   message?: string
+  buttonName?: string
 }
 
 export interface NewAppoinmentsIsBookedProps {
@@ -160,10 +186,14 @@ export interface NewAppoinmentsIsBookedProps {
 
 export interface ClassWaitListProps {
   message?: string
+  buttonTitleMessage?: string
+  buttonName?: string
 }
 
 export interface ClassesSpotAvailableProps {
   message?: string
+  buttonTitleMessage?: string
+  bookButtonName?: string
 }
 
 export interface UpComingAppoinmentReminderProps {
@@ -188,6 +218,7 @@ export function EmailSMSFooter(props: FooterProps): JSX.Element {
     contactInfoNumber,
     contactEmail,
     displayContactMessage = true,
+    contactMessage = 'Or get in touch with us via Phone or Email:',
   } = props
 
   const setSocialIcon = (value) => {
@@ -211,9 +242,7 @@ export function EmailSMSFooter(props: FooterProps): JSX.Element {
           {displayContactMessage && (
             <Row gutter={[0, 4]} className={styles.bookAppointment}>
               <Col>
-                <span className={styles.message}>
-                  Or get in touch with us via Phone or Email:
-                </span>
+                <span className={styles.message}>{contactMessage}</span>
               </Col>
             </Row>
           )}
@@ -280,6 +309,7 @@ export const EmailSmsPreview = (
     contactInfoNumber,
     activeSocialIcons = ['facebook', 'whatsApp', 'instagram', 'twitter'],
     displayContactMessage = true,
+    contactMessage,
   } = props
   const [previewStatus, setPreviewStatus] = useState(
     previewCustomStatus || 'email'
@@ -358,6 +388,7 @@ export const EmailSmsPreview = (
                 contactInfoNumber={contactInfoNumber}
                 contactEmail={contactEmail}
                 displayContactMessage={displayContactMessage}
+                contactMessage={contactMessage}
               />
             )}
           </div>

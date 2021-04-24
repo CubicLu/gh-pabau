@@ -1,7 +1,7 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useContext } from 'react'
 import { EmailSmsPreview, PackageSession } from '@pabau/ui'
 import CustomTemplate from '../ClientNotification/CustomTemplate'
-import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { GlobalContext } from '../ClientNotification'
 
 interface P {
   standardTapIndex: string
@@ -20,17 +20,11 @@ const PackageSessionPreview: FC<P> = ({
   selectLanguage,
   buttonColor,
 }) => {
-  const { t, i18n } = useTranslationI18()
-  useEffect(() => {
-    const lanCode = selectLanguage.toLowerCase()
-      ? selectLanguage.toLowerCase()
-      : 'en'
-    i18n.changeLanguage(lanCode)
-  }, [i18n, selectLanguage])
+  const { t } = useContext(GlobalContext)
 
   return (
     <div>
-      {standardTapIndex === '1' ? (
+      {standardTapIndex === 'standard' ? (
         <EmailSmsPreview
           greeting={t('notifications.packageSession.greeting')}
           footerIconGroup={true}
@@ -46,6 +40,7 @@ const PackageSessionPreview: FC<P> = ({
           <PackageSession
             message={t('notifications.packageSession.message')}
             buttonColor={buttonColor}
+            buttonName={t('notifications.packageSession.buttonName')}
           />
         </EmailSmsPreview>
       ) : (

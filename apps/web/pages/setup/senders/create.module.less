@@ -39,6 +39,7 @@
         border-top-right-radius: 0px;
         border-bottom-right-radius: 0px;
       }
+
       &:last-child {
         border-top-left-radius: 0px;
         border-bottom-left-radius: 0px;
@@ -106,10 +107,15 @@
   }
 }
 
+.error {
+  color: red;
+}
+
 .advanced-settings {
   max-width: 502px;
   width: 100%;
   padding: 0px;
+  display: none;
 
   :global .ant-collapse {
     > .ant-collapse-item {

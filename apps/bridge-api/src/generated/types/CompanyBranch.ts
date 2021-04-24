@@ -35,6 +35,7 @@ export const CompanyBranch = objectType({
     t.model.CompanyRoomLocation()
     t.model.RotaShift()
     t.model.CmStaffGeneral()
+    t.model.CmContactLocation()
   },
 })
 

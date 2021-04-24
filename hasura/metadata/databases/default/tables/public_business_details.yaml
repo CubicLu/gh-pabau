@@ -1,0 +1,132 @@
+table:
+  name: business_details
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - disable_prescriptions
+    - history_data
+    - medical_approvals
+    - perform_surgical
+    - secure_medical_forms
+    - id
+    - booking_multiple_attendees_plural
+    - booking_multiple_attendees_singular
+    - business_location
+    - business_type
+    - businses_name
+    - client_email
+    - client_phone
+    - client_postal
+    - client_sms
+    - company_email
+    - currency
+    - date_format
+    - default_language_clients
+    - default_language_staff
+    - employee_plural
+    - employee_singular
+    - leads_email
+    - leads_phone
+    - leads_postal
+    - leads_sms
+    - people_attend_appointment_plural
+    - people_attend_appointment_singular
+    - phone
+    - teacher_plural
+    - teacher_singular
+    - time_zone
+    - treatment_cycles
+    - vat
+    - website
+    - week_start
+  role: public
+select_permissions:
+- permission:
+    columns:
+    - disable_prescriptions
+    - history_data
+    - medical_approvals
+    - perform_surgical
+    - secure_medical_forms
+    - id
+    - booking_multiple_attendees_plural
+    - booking_multiple_attendees_singular
+    - business_location
+    - business_type
+    - businses_name
+    - client_email
+    - client_phone
+    - client_postal
+    - client_sms
+    - company_email
+    - currency
+    - date_format
+    - default_language_clients
+    - default_language_staff
+    - employee_plural
+    - employee_singular
+    - leads_email
+    - leads_phone
+    - leads_postal
+    - leads_sms
+    - people_attend_appointment_plural
+    - people_attend_appointment_singular
+    - phone
+    - teacher_plural
+    - teacher_singular
+    - time_zone
+    - treatment_cycles
+    - vat
+    - website
+    - week_start
+    filter: {}
+  role: public
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - disable_prescriptions
+    - history_data
+    - medical_approvals
+    - perform_surgical
+    - secure_medical_forms
+    - id
+    - booking_multiple_attendees_plural
+    - booking_multiple_attendees_singular
+    - business_location
+    - business_type
+    - businses_name
+    - client_email
+    - client_phone
+    - client_postal
+    - client_sms
+    - company_email
+    - currency
+    - date_format
+    - default_language_clients
+    - default_language_staff
+    - employee_plural
+    - employee_singular
+    - leads_email
+    - leads_phone
+    - leads_postal
+    - leads_sms
+    - people_attend_appointment_plural
+    - people_attend_appointment_singular
+    - phone
+    - teacher_plural
+    - teacher_singular
+    - time_zone
+    - treatment_cycles
+    - vat
+    - website
+    - week_start
+    filter: {}
+  role: public
+delete_permissions:
+- permission:
+    filter: {}
+  role: public

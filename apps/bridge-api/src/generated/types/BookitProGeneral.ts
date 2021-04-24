@@ -69,6 +69,7 @@ export const BookitProGeneral = objectType({
     t.model.force_new_existing_patient()
     t.model.redirect_url()
     t.model.connect_url()
+    t.model.Company()
   },
 })
 

@@ -1,18 +1,67 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useRef, useState } from 'react'
 import { Notification, NotificationType } from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
 import ClientNotification from '../../../components/ClientNotification/index'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
+import { sendEmailService } from '../../../components/ClientNotificationEmailPreview/sendEmailService'
+import LeadResponsesEmailPreview from '../../../components/ClientNotificationEmailPreview/LeadResponsesEmailPreview'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
-  const [setIndexTab, setSelectedTab] = useState(1)
+  const [selectedTab, setSelectedTab] = useState<'emailPreview' | 'smsPreview'>(
+    'emailPreview'
+  )
+  const ref = useRef(null)
+  const { t } = useTranslationI18()
 
   const showNotification = (email) => {
-    if (setIndexTab === 1) {
-      Notification(NotificationType.success, 'Test message sent')
-    }
-    if (setIndexTab === 2) {
-      Notification(NotificationType.success, 'Test SMS sent')
+    if (selectedTab === 'emailPreview') {
+      const propsData = ref?.current?.propsData() || {}
+      const {
+        selectLanguage,
+        backGroundColor,
+        buttonColor,
+        informationMessage,
+        activeSocialIcons,
+        type,
+        localTranslation,
+      } = propsData
+
+      const bodyContent = () => {
+        const t = localTranslation
+        return (
+          <LeadResponsesEmailPreview
+            backGroundColor={backGroundColor}
+            activeSocialIcons={activeSocialIcons}
+            selectLanguage={selectLanguage}
+            buttonColor={buttonColor}
+            informationMessage={informationMessage}
+            type={type}
+            isFooterText={false}
+            greeting={t('notifications.leadResponses.greeting')}
+            companyPhone={'+44 000 987 507'}
+            companyEmail={'info@theclinic.com'}
+            message={t('notifications.leadResponses.message')}
+            description={t('notifications.leadResponses.description')}
+            messageLine={t('notifications.leadResponses.messageLine')}
+            text={`${t('notifications.leadResponses.closingText')}<br/>${t(
+              'notifications.leadResponses.signatureBlock'
+            )}`}
+          />
+        )
+      }
+      sendEmailService({
+        email,
+        subject: t('notifications.email.leadResponses.subject'),
+        bodyContent: bodyContent(),
+        successMessage: t('notifications.email.send.successMessage'),
+        failedMessage: t('notifications.email.send.failedMessage'),
+      })
+    } else if (selectedTab === 'smsPreview') {
+      Notification(
+        NotificationType.success,
+        t('notifications.sms.send.successMessage')
+      )
     }
   }
 
@@ -22,23 +71,24 @@ const Index: FC = () => {
         breadcrumbItems={[
           {
             path: 'setup',
-            breadcrumbName: 'Setup',
+            breadcrumbName: t('notifications.breadcrumb.setup'),
           },
           {
             path: 'client-notifications',
-            breadcrumbName: 'Notification Messages',
+            breadcrumbName: t('notifications.breadcrumb.notificationMessage'),
           },
           {
             path: 'client-notifications/lead-responses',
-            breadcrumbName: 'Lead responses',
+            breadcrumbName: t('notifications.leadResponses.title'),
           },
         ]}
-        title={'Lead responses'}
-        setIndexTab={setIndexTab}
+        title={t('notifications.leadResponses.title')}
+        selectedTab={selectedTab}
         handleNotificationSubmit={showNotification}
       />
       <ClientNotification
-        onSeletedTab={(value) => setSelectedTab(value)}
+        ref={ref}
+        onSelectedTab={(value) => setSelectedTab(value)}
         hideReminderTimeFrameTabPane={true}
         hideRequestConfirmationOption={true}
         hideMedicalHistoryOption={true}
@@ -47,18 +97,12 @@ const Index: FC = () => {
         hideDisplayPolicyOption={true}
         hideServiceOption={true}
         hideEmployeeNameOption={true}
-        standardMessage={
-          'The default email template you will send to your lead when they submit their lead form'
-        }
+        showServiceSpecific={true}
+        standardMessage={t('notifications.leadResponses.standardMessage')}
         type={'leadResponses'}
-        smsCustom={
-          'Hi Anna,\n' +
-          'Thank you for your inquiry! \n' +
-          'We received your form and we will get back to you as soon as possible.\n' +
-          'We look forward to chatting soon!\n\n' +
-          'King regards,\n' +
-          'The Clinic Team\n'
-        }
+        name={t('notifications.leadResponses.title')}
+        langKey={'leadResponses'}
+        handleNotificationSubmit={showNotification}
       />
     </Layout>
   )

@@ -81,6 +81,16 @@ export const CmContact = objectType({
     t.model.CmContactAlert()
     t.model.AccountBalance()
     t.model.AccountBalanceLog()
+    t.model.CmContactLocation()
+    t.model.CmContactTravel()
+    t.model.CmContactViewed()
+    t.model.CmContactMedicalCondition()
+    t.model.CmContactNote()
+    t.model.MedicalFormContact()
+    t.model.CmExtraGym()
+    t.model.CmExtraPatient()
+    t.model.CmExtraSalon()
+    t.model.InvPayment()
   },
 })
 

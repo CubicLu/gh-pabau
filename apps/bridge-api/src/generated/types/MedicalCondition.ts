@@ -9,6 +9,7 @@ export const MedicalCondition = objectType({
     t.model.custom_id()
     t.model.is_common()
     t.model.CmContactAlert()
+    t.model.CmContactMedicalCondition()
   },
 })
 

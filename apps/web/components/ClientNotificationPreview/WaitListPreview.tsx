@@ -1,7 +1,7 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useContext } from 'react'
 import { EmailSmsPreview, ClassWaitList } from '@pabau/ui'
 import CustomTemplate from '../ClientNotification/CustomTemplate'
-import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { GlobalContext } from '../ClientNotification'
 
 interface P {
   standardTapIndex: string
@@ -24,17 +24,11 @@ const WaitListPreview: FC<P> = ({
   informationMessage,
   type,
 }) => {
-  const { t, i18n } = useTranslationI18()
-  useEffect(() => {
-    const lanCode = selectLanguage.toLowerCase()
-      ? selectLanguage.toLowerCase()
-      : 'en'
-    i18n.changeLanguage(lanCode)
-  }, [i18n, selectLanguage])
+  const { t } = useContext(GlobalContext)
 
   return (
     <div>
-      {standardTapIndex === '1' ? (
+      {standardTapIndex === 'standard' ? (
         <EmailSmsPreview
           greeting={t('notifications.waitList.greeting')}
           footerIconGroup={true}
@@ -43,17 +37,20 @@ const WaitListPreview: FC<P> = ({
           activeSocialIcons={activeSocialIcons}
           backGroundColor={backGroundColor}
           isFooterText={true}
-          footerText={
-            'Looking forward to hearing from you soon,<br/>Your friends at The Clinic'
-          }
+          footerText={`${t('notifications.waitList.closingText')}<br/>${t(
+            'notifications.waitList.signatureBlock'
+          )}`}
           footer={true}
           footerContact={true}
           contactEmail={'abc@info.com'}
           contactInfoNumber={'+98765432101'}
+          contactMessage={t('notifications.emailPreview.footer.contactMessage')}
         >
           <ClassWaitList
             message={t('notifications.waitList.message')}
             buttonColor={buttonColor}
+            buttonTitleMessage={t('notifications.waitList.buttonTitleMessage')}
+            buttonName={t('notifications.waitList.buttonName')}
           />
         </EmailSmsPreview>
       ) : (

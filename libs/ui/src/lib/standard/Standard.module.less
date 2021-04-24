@@ -4,6 +4,12 @@
   border-bottom: 1px solid #ecedf0;
   .collapse-align-first {
     font-family: Circular-Std-Bold;
+    .reminder {
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 24px;
+      color: #9292a3;
+    }
     .panel-align {
       display: flex;
       flex-direction: column;
@@ -19,12 +25,20 @@
           line-height: 24px;
           padding-bottom: 16px;
           padding-top: 16px;
-          width: 230px;
+          width: 195px;
           @media screen and (max-width: 767px) {
             width: 100%;
           }
+          .ant-collapse-arrow {
+            top: 10.0005px;
+          }
         }
       }
+    }
+  }
+  .reminder-time-frame {
+    :global .ant-collapse-header {
+      width: 210px !important;
     }
   }
   .collapse-align-second {
@@ -63,6 +77,9 @@
       }
     }
   }
+  @media screen and (max-width: 767px) {
+    width: 100%;
+  }
 }
 
 .checkbox-style {
@@ -79,6 +96,7 @@
   font-weight: 500;
   color: #3d3d46;
   margin-top: 8px;
+  margin-right: 8px;
 }
 
 .textarea-label {
@@ -103,8 +121,8 @@
 
 .papauPlusContainer {
   position: absolute;
-  left: 220px;
-  top: 16px;
+  left: 185px;
+  top: 20px;
   @media screen and (max-width: 767px) {
     left: 155px;
   }
@@ -127,12 +145,39 @@
   color: #9292a3;
 }
 
+.pop-button {
+  width: 26px;
+  color: #9292A3;
+}
+
 .inform-text {
   margin-top: 16px;
 }
 
 .client-lang-logo {
   margin-top: 12px;
+}
+
+.setting-out-lined {
+
+}
+
+.add-service-btn {
+  @media screen and (max-width: 767px) {
+    border: 1px solid #e8e8e8;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.reminder1 {
+  font-weight: lighter;
+  font-size: 14px;
+  line-height: 18px;
+  color: #9292a3;
 }
 
 .hidesection {
@@ -144,4 +189,224 @@
 .message-section {
   padding: 0px 16px;
   padding-bottom: 16px;
+}
+
+// service specific
+.specific-service {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  .container {
+    width: 100%;
+    display: flex;
+    //justify-content: flex-end;
+    align-items: center;
+    position: relative;
+    .service-wrap {
+      display: flex;
+
+      .serviceTask {
+        display: flex;
+        flex-wrap: wrap;
+
+        .active-service {
+          border: 1px solid #54b2d3 !important;
+        }
+        .service-content {
+          display: flex;
+          align-items: center;
+          border: 1px solid #ddd;
+          height: 36px;
+          border-radius: 4px;
+          margin-right: 2px;
+          margin-bottom: 5px;
+          cursor: pointer;
+          width: 215px;
+          padding-right: 5px;
+          position: relative;
+          .close-badge {
+            display: none;
+            @media screen and (max-width: 767px) {
+              display: block;
+              position: absolute;
+              right: 3px;
+              top: 3px;
+              opacity: 1;
+              font-size: 8px;
+              color: #6f7577;
+            }
+          }
+          &:hover {
+            border: 1px solid #54b2d3;
+            .close-badge {
+              position: absolute;
+              right: 3px;
+              top: 3px;
+              opacity: 1;
+              font-size: 8px;
+              color: #54b2d3;
+              display: block;
+            }
+          }
+        }
+        :global .ant-image {
+          margin-right: 5px;
+          margin-left: 5px;
+          img {
+            width: 26px;
+            max-width: 100%;
+            object-fit: cover;
+            height: 26px;
+          }
+        }
+      }
+
+    }
+    .settingOutLined {
+      height: 36px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 0 10px;
+      line-height: 36px;
+      margin-bottom: 5px;
+      cursor: pointer;
+      position: absolute;
+      right: 30px;
+      :global .anticon {
+        svg {
+          font-size: 27px;
+          height: 36px;
+          fill: #d6d6d6;
+        }
+      }
+      &:hover {
+        border: 1px solid #54b2d3;
+      }
+    }
+    .add-popover {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      cursor: pointer;
+      margin-bottom: 5px;
+      position: absolute;
+      right: 0;
+      //flex: 1;
+
+      .add-language-text {
+        display: none;
+      }
+      span {
+        display: flex;
+        justify-content: center;
+      }
+    }
+    @media screen and (max-width: 767px) {
+      margin-top: 16px;
+    }
+  }
+}
+.dropdown-pop {
+  max-width: 300px;
+  .labelText {
+    font-weight: 500;
+    font-size: 14px;
+    color: #3d3d46;
+  }
+  :global .ant-popover-content {
+    .ant-popover-inner {
+      .ant-popover-inner-content {
+        padding: 12px 16px;
+
+        .ant-select {
+          width: 268px;
+         .ant-select-selector {
+            border:none;
+            box-shadow: none;
+            padding: 10px 0;
+            .ant-select-selection-overflow {
+              border: 1px solid #ddd;
+              padding: 5px;
+              &:hover {
+                border: 1px solid #00a1e1;
+              }
+            }
+            .ant-select-selection-overflow-item {
+              .ant-select-selection-item {
+                height: 36px;
+                line-height: 36px;
+
+                  .ant-select-selection-item-remove {
+                    position: relative;
+                    svg {
+                      margin-bottom: 2px;
+                      font-size: 8px;
+                    }
+                  }
+                .ant-select-selection-item-content {
+                  display: flex;
+                  align-items: center;
+                  .ant-image {
+                    margin-right: 5px;
+                    img {
+                      height: 18px;
+                      width: 18px;
+                      max-width: 100%;
+                      object-fit: cover;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.service-popup {
+  margin-top: 21px;
+ :global .rc-virtual-list {
+   .rc-virtual-list-holder {
+     .rc-virtual-list-holder-inner {
+       .ant-select-item {
+         height: 36px;
+         padding-left: 12px;
+         padding-right: 12px;
+         line-height: 36px;
+         margin-bottom: 2px;
+         display: flex;
+         align-items: center;
+         .ant-select-item-option-state {
+           width: 12px;
+           height: 12px;
+           background: #54b2d3;
+           border-radius: 12px;
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           color: #fff;
+           svg {
+             font-size: 8px;
+           }
+         }
+         .ant-select-item-option-content {
+           display: flex;
+           align-items: center;
+           font-weight: 400;
+           .ant-image {
+             margin-right: 5px;
+             img {
+               height: 18px;
+               width: 18px;
+               max-width: 100%;
+               object-fit: cover;
+             }
+           }
+         }
+       }
+     }
+   }
+ }
+
 }

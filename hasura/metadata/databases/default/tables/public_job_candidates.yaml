@@ -1,0 +1,52 @@
+table:
+  name: job_candidates
+  schema: public
+object_relationships:
+- name: candidate_list
+  using:
+    foreign_key_constraint_on: candidate_id
+- name: job_opening
+  using:
+    foreign_key_constraint_on: job_opening_id
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - is_new
+    - candidate_id
+    - id
+    - job_opening_id
+    - status
+    - created_at
+    - updated_at
+  role: public
+select_permissions:
+- permission:
+    columns:
+    - is_new
+    - candidate_id
+    - id
+    - job_opening_id
+    - status
+    - created_at
+    - updated_at
+    filter: {}
+  role: public
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - is_new
+    - candidate_id
+    - id
+    - job_opening_id
+    - status
+    - created_at
+    - updated_at
+    filter: {}
+  role: public
+delete_permissions:
+- permission:
+    filter: {}
+  role: public

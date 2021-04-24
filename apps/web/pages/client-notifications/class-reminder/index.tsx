@@ -1,18 +1,73 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useRef, useState } from 'react'
 import { Notification, NotificationType } from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
 import ClientNotification from '../../../components/ClientNotification/index'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
+import AppointmentEmailPreview from '../../../components/ClientNotificationEmailPreview/AppointmentReminderEmailPreview'
+import { sendEmailService } from '../../../components/ClientNotificationEmailPreview/sendEmailService'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
-  const [setIndexTab, setSelectedTab] = useState(1)
+  const [selectedTab, setSelectedTab] = useState<'emailPreview' | 'smsPreview'>(
+    'emailPreview'
+  )
+  const ref = useRef(null)
+  const { t } = useTranslationI18()
 
   const showNotification = (email) => {
-    if (setIndexTab === 1) {
-      Notification(NotificationType.success, 'Test Email sent')
-    }
-    if (setIndexTab === 2) {
-      Notification(NotificationType.success, 'Test SMS sent')
+    if (selectedTab === 'emailPreview') {
+      const propsData = ref?.current?.propsData() || {}
+      const {
+        requestConfirm,
+        allowRescheduling,
+        allowCancellation,
+        displayPolicy,
+        showService,
+        showEmployeeName,
+        addMedicalHisButton,
+        selectLanguage,
+        backGroundColor,
+        buttonColor,
+        informationMessage,
+        medicalMessage,
+        standardTapIndex,
+        activeSocialIcons,
+        type,
+        localTranslation,
+      } = propsData
+
+      const bodyContent = (
+        <AppointmentEmailPreview
+          requestConfirm={requestConfirm}
+          allowRescheduling={allowRescheduling}
+          allowCancellation={allowCancellation}
+          displayPolicy={displayPolicy}
+          showService={showService}
+          showEmployeeName={showEmployeeName}
+          addMedicalHisButton={addMedicalHisButton}
+          selectLanguage={selectLanguage}
+          backGroundColor={backGroundColor}
+          buttonColor={buttonColor}
+          informationMessage={informationMessage}
+          medicalMessage={medicalMessage}
+          standardTapIndex={standardTapIndex}
+          activeSocialIcons={activeSocialIcons}
+          type={type}
+          t={localTranslation}
+        />
+      )
+      sendEmailService({
+        email,
+        subject: t('notifications.email.classReminder.subject'),
+        bodyContent,
+        successMessage: t('notifications.email.send.successMessage'),
+        failedMessage: t('notifications.email.send.failedMessage'),
+      })
+    } else if (selectedTab === 'smsPreview') {
+      Notification(
+        NotificationType.success,
+        t('notifications.sms.send.successMessage')
+      )
     }
   }
 
@@ -22,26 +77,28 @@ const Index: FC = () => {
         breadcrumbItems={[
           {
             path: 'setup',
-            breadcrumbName: 'Setup',
+            breadcrumbName: t('notifications.breadcrumb.setup'),
           },
           {
             path: 'client-notifications',
-            breadcrumbName: 'Notification Messages',
+            breadcrumbName: t('notifications.breadcrumb.notificationMessage'),
           },
           {
             path: 'client-notifications/class-reminder',
-            breadcrumbName: 'Reminder for class',
+            breadcrumbName: t('notifications.classReminder.title'),
           },
         ]}
-        title={'Reminder for class'}
-        setIndexTab={setIndexTab}
+        title={t('notifications.classReminder.title')}
+        selectedTab={selectedTab}
         handleNotificationSubmit={showNotification}
       />
       <ClientNotification
-        onSeletedTab={(value) => setSelectedTab(value)}
-        standardMessage={
-          'This notification automatically sends a reminder to a client who has registered to a class'
-        }
+        ref={ref}
+        onSelectedTab={(value) => setSelectedTab(value)}
+        standardMessage={t('notifications.classReminder.standardMessage')}
+        name={t('notifications.classReminder.title')}
+        langKey={'classReminder'}
+        handleNotificationSubmit={showNotification}
       />
     </Layout>
   )

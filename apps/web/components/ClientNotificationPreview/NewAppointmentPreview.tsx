@@ -1,6 +1,7 @@
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import { Appointment } from '@pabau/ui'
 import CustomTemplate from '../ClientNotification/CustomTemplate'
+import { GlobalContext } from '../ClientNotification'
 
 interface P {
   requestConfirm?: boolean
@@ -35,9 +36,11 @@ const NewAppointmentPreview: FC<P> = ({
   addMedicalHisButton,
   medicalMessage,
 }) => {
+  const { t } = useContext(GlobalContext)
+
   return (
     <div>
-      {standardTapIndex === '1' ? (
+      {standardTapIndex === 'standard' ? (
         <Appointment
           requestConfirm={requestConfirm}
           allowRescheduling={allowRescheduling}
@@ -46,7 +49,10 @@ const NewAppointmentPreview: FC<P> = ({
           showService={showService}
           showEmployeeName={showEmployeeName}
           addMedicalHisButton={addMedicalHisButton}
-          medicalMessage={medicalMessage}
+          medicalMessage={
+            medicalMessage ||
+            `${t('notifications.clientNotification.medicalMessage')}`
+          }
           selectLanguage={selectLanguage}
           backGroundColor={backGroundColor}
           buttonColor={buttonColor}
@@ -54,6 +60,7 @@ const NewAppointmentPreview: FC<P> = ({
           standardTapIndex={standardTapIndex}
           activeSocialIcons={activeSocialIcons}
           type={'new'}
+          t={t}
         />
       ) : (
         <CustomTemplate

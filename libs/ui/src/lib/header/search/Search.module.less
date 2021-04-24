@@ -14,7 +14,7 @@
       box-shadow: 4px 0px 15px rgba(0, 34, 65, 0.1);
     }
     .ant-popover-inner-content {
-      width: 360px;
+      width: 400px;
       padding: 0px;
     }
     .ant-popover-arrow {
@@ -40,10 +40,7 @@
   }
 }
 .clients-list {
-  padding-top: 15px;
-  padding-left: 24px;
-  padding-right: 24px;
-  padding-bottom: 20px;
+  padding: 20px 0;
 }
 
 .ant-tabs-tab {
@@ -84,6 +81,7 @@
     line-height: 15px;
     letter-spacing: 1px;
     text-transform: uppercase;
+    padding: 0 20px 5px 20px
   }
 }
 button:focus {
@@ -92,7 +90,11 @@ button:focus {
 .content-align-profile {
   display: flex;
   align-items: center;
-  padding-top: 15px;
+  padding: 8px 15px;
+  cursor: pointer;
+}
+.content-align-profile:hover {
+  background: rgb(240, 253, 255);
 }
 .client-profile-text {
   padding-left: 10px;
@@ -108,14 +110,12 @@ button:focus {
   }
   p {
     color: var(--light-grey-color);
-    font-size: 14px;
+    font-size: 12px;
     margin-bottom: 0;
     font-weight: 400;
   }
-  span {
-    color: var(--light-grey-color);
-    font-size: 14px;
-    font-weight: 400;
+  span.highlight {
+    color: var(--primary-color);
   }
 }
 
@@ -129,6 +129,7 @@ button:focus {
   align-items: center;
   justify-content: flex-end;
   cursor: pointer;
+  padding: 0 20px 20px 20px;
   p {
     color: var(--light-grey-color);
     font-size: 14px;
@@ -151,7 +152,7 @@ button:focus {
       border-radius: 4px;
     }
     .ant-popover-inner-content {
-      width: 360px;
+      width: 400px;
       padding: 0px;
     }
     .ant-popover-arrow {
@@ -180,7 +181,7 @@ button:focus {
       cursor: pointer;
       display: flex;
       align-items: center;
-      color: 9292a3;
+      color: #9292a3;
     }
   }
   .advance-search-text {
@@ -304,7 +305,6 @@ button:focus {
     background-color: #fff;
   }
 }
-
 .desktop-view-none {
   display: none;
 }

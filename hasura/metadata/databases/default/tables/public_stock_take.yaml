@@ -1,0 +1,55 @@
+table:
+  name: stock_take
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - count_no
+    - counted_by
+    - discrepanciesDown
+    - discrepanciesUp
+    - location
+    - name
+    - start_date
+    - status
+    - total
+  role: public
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - count_no
+    - counted_by
+    - created_at
+    - discrepanciesDown
+    - discrepanciesUp
+    - id
+    - location
+    - name
+    - start_date
+    - status
+    - total
+    - updated_at
+    filter: {}
+  role: public
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - count_no
+    - counted_by
+    - discrepanciesDown
+    - discrepanciesUp
+    - location
+    - name
+    - start_date
+    - status
+    - total
+    filter: {}
+  role: public
+delete_permissions:
+- permission:
+    filter: {}
+  role: public

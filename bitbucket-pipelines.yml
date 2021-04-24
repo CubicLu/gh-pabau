@@ -1,9 +1,8 @@
 # Bitbucket Pipeline definition
-
 image: node:14-buster
 
 options:
-  max-time: 32 # max time in minutes for each step
+  max-time: 45 # max time in minutes for each step
 
 definitions:
   caches:
@@ -11,9 +10,9 @@ definitions:
     yarncustom: /usr/local/share/.cache/yarn
     nextcache: dist
     cypress: '/root/.cache/Cypress'
-#  services:
-#    docker:
-#      memory: 2048
+  services:
+    docker:
+      memory: 4096
 
 pipelines:
   pull-requests:
@@ -53,7 +52,7 @@ pipelines:
             # TODO: move these to eslint so that `yarn lint` picks up these errors instead
             - npm i -g typescript
             - tsc --noEmit -p apps/backend/
-            - tsc --noEmit -p apps/connect/
+            # - tsc --noEmit -p apps/connect/
             - tsc --noEmit -p apps/connect-e2e/
             - tsc --noEmit -p apps/mgmt/
             - tsc --noEmit -p apps/mgmt-e2e/
@@ -63,15 +62,18 @@ pipelines:
             - tsc --noEmit -p libs/ui/tsconfig.lib.json
             - tsc --noEmit -p libs/yup/tsconfig.lib.json
 
-            - sh -c "NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=lint --with-deps"
-            - sh -c "NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=test"
-            - sh -c "NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=deploy"
+            - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=lint --with-deps --parallel --maxParallel=2
+            - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=test --parallel --maxParallel=2
+            - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=export
+            - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=build-storybook
+            - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=deploy
             - cat /tmp/bot_message.txt
 
             - npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "origin/master" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message.txt
             - |
               printf ":shallow_pan_of_food: *<https://bitbucket.org/pabau/monorepo/pull-requests/${BITBUCKET_PR_ID}|PR ${BITBUCKET_PR_ID}> published by ${PR_AUTHOR}*\n\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
             - cat /tmp/bot_message.txt >> /tmp/bot_message2.txt
+            - cat /tmp/bot_message2.txt
 
             # Post to Slack
             - |
@@ -82,49 +84,107 @@ pipelines:
 
   branches:
     master:
-
-#        - step:
-#            size: 2x
-#            name: e2e
-#            caches:
-#              - cypress
-#            script:
-#              - yarn install --frozen-lockfile --prefer-offline
-#              - apt update -y && apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
-#              - yarn cypress install || true
-#              - yarn affected:e2e --base=HEAD~1
-
       - step:
-          name: test (lint+unit), build, deploy
-          deployment: Production
-          size: 2x
-          services:
-            - docker
-          caches:
-            - nodemodules
-            - yarncustom
-            - nextcache
+          name: yarn audit
           script:
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -gt 2 ]] && exit 1 || exit 0'
-            - touch /tmp/bot_message.txt
+          # artifacts:
+          #   - node_modules/**
+
+      - parallel:
+        - step:
+            name: type checks
+            caches:
+              - yarncustom
+            script:
+              - NODE_OPTIONS=--max_old_space_size=4096 yarn install --frozen-lockfile --prefer-offline
+              # TODO: move these to eslint so that `yarn lint` picks up these errors instead
+              - npm i -g typescript
+              - tsc --noEmit -p apps/backend/
+              - tsc --noEmit -p apps/bridge-api/
+              - tsc --noEmit -p apps/bridge-proxy/
+              # - tsc --noEmit -p apps/connect/
+              - tsc --noEmit -p apps/connect-e2e/
+              - tsc --noEmit -p apps/mgmt/
+              - tsc --noEmit -p apps/mgmt-e2e/
+              - tsc --noEmit -p apps/ui-e2e/
+              - tsc --noEmit -p apps/web/
+              - tsc --noEmit -p apps/web-e2e/
+              - tsc --noEmit -p libs/i18n/tsconfig.lib.json
+              # - tsc --noEmit -p libs/graphql/tsconfig.lib.json
+              - tsc --noEmit -p libs/ui/tsconfig.lib.json
+              - tsc --noEmit -p libs/yup/tsconfig.lib.json
+        - step:
+            name: lint
+            caches:
+              - yarncustom
+            script:
+              - NODE_OPTIONS=--max_old_space_size=4096 yarn install --frozen-lockfile --prefer-offline
+              - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:lint --base=HEAD~1 --with-deps
+
+        - step:
+            name: unit tests
+            caches:
+              - yarncustom
+            script:
+              - NODE_OPTIONS=--max_old_space_size=4096 yarn install --frozen-lockfile --prefer-offline
+              - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:test --base=HEAD~1
+
+      # - parallel:
+
+      #   - step:
+      #       size: 2x
+      #       name: e2e
+      #       caches:
+      #         - cypress
+      #       script:
+      #         - apt update -y && apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+      #         - yarn cypress install || true
+      #         - yarn affected:e2e --base=HEAD~1 || true
+
+      #   - step:
+      #       size: 2x
+      #       name: build
+      #       script:
+      #         - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=build --prod
+      #         - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=build-storybook --prod
+      #         - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=export --prod
+      #       artifacts:
+      #         - node_modules/.cache/**
+      #         - dist/**
+
+      - step:
+          size: 2x
+          name: build
+          script:
+            - NODE_OPTIONS=--max_old_space_size=4096 yarn install --frozen-lockfile --prefer-offline
+            - NODE_OPTIONS=--max_old_space_size=4096 yarn affected --base=HEAD~1 --target=build --prod
+            - NODE_OPTIONS=--max_old_space_size=4096 yarn affected --base=HEAD~1 --target=export --prod
+            - NODE_OPTIONS=--max_old_space_size=4096 yarn affected --base=HEAD~1 --target=build-storybook --prod
+          artifacts:
+            - node_modules/**
+            - dist/**
+
+      - step:
+          size: 2x
+          name: deploy dockers
+          deployment: production-dockers
+          services:
+            - docker
+          script:
             - apt-get update -y && apt-get install -y curl jq time
-            - /usr/bin/time -v yarn install --frozen-lockfile --prefer-offline
+            - NODE_OPTIONS=--max_old_space_size=2750 /usr/bin/time -v yarn affected --base=HEAD~1 --target=deploy-docker --prod
+          artifacts:
+            - /tmp/bot_message.txt
 
-            # TODO: move these to eslint so that `yarn lint` picks up these errors instead
-            - npm i -g typescript
-            - tsc --noEmit -p apps/backend/
-            - tsc --noEmit -p apps/connect/
-            - tsc --noEmit -p apps/connect-e2e/
-            - tsc --noEmit -p apps/mgmt/
-            - tsc --noEmit -p apps/mgmt-e2e/
-            - tsc --noEmit -p apps/ui-e2e/
-            - tsc --noEmit -p apps/web/
-            - tsc --noEmit -p apps/web-e2e/
-            - tsc --noEmit -p libs/ui/tsconfig.lib.json
-            - tsc --noEmit -p libs/yup/tsconfig.lib.json
-
-            - NODE_OPTIONS=--max_old_space_size=3072 /usr/bin/time -v yarn affected:lint --base=HEAD~1 --with-deps
-            - NODE_OPTIONS=--max_old_space_size=3072 /usr/bin/time -v yarn affected:test --base=HEAD~1
+      - step:
+          size: 2x
+          name: deploy previews
+          deployment: production-serverless
+          script:
+            - ls -al dist || true
+            - ls -al dist/apps || true
+            - apt-get update -y && apt-get install -y curl jq time
 
             # get the commit message for this merge
             - export LAST_COMMIT_LOG=$(git log HEAD -1 | tail -n +4 | perl -p -e 's/[\r\n]//' | awk '{$1=$1;print}')
@@ -138,17 +198,16 @@ pipelines:
 
             # bump the package.json version by 0.0.1
             - yarn version --message "[skip ci] bumping version (patch)" --patch --non-interactive --no-progress
-            - git push && git push --tags
+            - HUSKY=0 git push && HUSKY=0 git push --tags
             - export PACKAGE_JSON_VERSION=$(jq -r .version < package.json)
 
-            - sh -c "NODE_OPTIONS=--max_old_space_size=3072 /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=export --prod"
-            - sh -c "NODE_OPTIONS=--max_old_space_size=3072 /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=build-storybook --prod"
-            - sh -c "NODE_OPTIONS=--max_old_space_size=3072 /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=deploy --prod"
+            - NODE_OPTIONS=--max_old_space_size=2750 /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=deploy --prod
 
             - npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "HEAD~2" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message.txt
             - |
               printf "*New Version Staged for Production*\n## v${PACKAGE_JSON_VERSION}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
             - cat /tmp/bot_message.txt >> /tmp/bot_message2.txt
+            - cat /tmp/bot_message2.txt
 
             # Post to Slack
             - |
@@ -156,4 +215,3 @@ pipelines:
               -H "Expect:" \
               -H 'Content-Type: application/json; charset=utf-8' \
               --data-binary @-
-

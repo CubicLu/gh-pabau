@@ -1,18 +1,64 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useRef, useState } from 'react'
 import { Notification, NotificationType } from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
 import ClientNotification from '../../../components/ClientNotification/index'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
+import { sendEmailService } from '../../../components/ClientNotificationEmailPreview/sendEmailService'
+import ReferralEmailPreview from '../../../components/ClientNotificationEmailPreview/ReferralEmailPreview'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
-  const [setIndexTab, setSelectedTab] = useState(1)
+  const [selectedTab, setSelectedTab] = useState<'emailPreview' | 'smsPreview'>(
+    'emailPreview'
+  )
+  const ref = useRef(null)
+  const { t } = useTranslationI18()
 
   const showNotification = (email) => {
-    if (setIndexTab === 1) {
-      Notification(NotificationType.success, 'Test message sent')
-    }
-    if (setIndexTab === 2) {
-      Notification(NotificationType.success, 'Test SMS sent')
+    if (selectedTab === 'emailPreview') {
+      const propsData = ref?.current?.propsData() || {}
+      const {
+        selectLanguage,
+        backGroundColor,
+        buttonColor,
+        informationMessage,
+        activeSocialIcons,
+        type,
+        localTranslation,
+      } = propsData
+
+      const bodyContent = () => {
+        const t = localTranslation
+        return (
+          <ReferralEmailPreview
+            backGroundColor={backGroundColor}
+            activeSocialIcons={activeSocialIcons}
+            selectLanguage={selectLanguage}
+            buttonColor={buttonColor}
+            informationMessage={informationMessage}
+            type={type}
+            greeting={t('notifications.referrals.greeting')}
+            message={t('notifications.referrals.message')}
+            description={t('notifications.referrals.description')}
+            footerText={`${t('notifications.referrals.closingText')}<br/>${t(
+              'notifications.referrals.signatureBlock'
+            )}`}
+            buttonName={t('notifications.referrals.buttonName')}
+          />
+        )
+      }
+      sendEmailService({
+        email,
+        subject: t('notifications.email.referral.subject'),
+        bodyContent: bodyContent(),
+        successMessage: t('notifications.email.send.successMessage'),
+        failedMessage: t('notifications.email.send.failedMessage'),
+      })
+    } else if (selectedTab === 'smsPreview') {
+      Notification(
+        NotificationType.success,
+        t('notifications.sms.send.successMessage')
+      )
     }
   }
 
@@ -22,23 +68,24 @@ const Index: FC = () => {
         breadcrumbItems={[
           {
             path: 'setup',
-            breadcrumbName: 'Setup',
+            breadcrumbName: t('notifications.breadcrumb.setup'),
           },
           {
             path: 'client-notifications',
-            breadcrumbName: 'Notification Messages',
+            breadcrumbName: t('notifications.breadcrumb.notificationMessage'),
           },
           {
             path: 'client-notifications/referral',
-            breadcrumbName: 'Referral',
+            breadcrumbName: t('notifications.referrals.title'),
           },
         ]}
-        title={'Referral'}
-        setIndexTab={setIndexTab}
+        title={t('notifications.referrals.title')}
+        selectedTab={selectedTab}
         handleNotificationSubmit={showNotification}
       />
       <ClientNotification
-        onSeletedTab={(value) => setSelectedTab(value)}
+        ref={ref}
+        onSelectedTab={(value) => setSelectedTab(value)}
         hideReminderTimeFrameTabPane={true}
         hideRequestConfirmationOption={true}
         hideMedicalHistoryOption={true}
@@ -47,17 +94,11 @@ const Index: FC = () => {
         hideDisplayPolicyOption={true}
         hideServiceOption={true}
         hideEmployeeNameOption={true}
-        standardMessage={
-          'The default email template you will send when someone is being referred into the business'
-        }
+        standardMessage={t('notifications.referrals.standardMessage')}
         type={'referral'}
-        smsCustom={
-          'Dear Sophia,\n' +
-          'We would like to say thank you for your client referral. It means the world to us!\n' +
-          'As a loyal client, we would like to offer you 10% OFF for your next visit. Please find your voucher code below.\n' +
-          'We look forward to seeing you soon!\n' +
-          'Your friends at The Clinic\n'
-        }
+        name={t('notifications.referrals.title')}
+        langKey={'referral'}
+        handleNotificationSubmit={showNotification}
       />
     </Layout>
   )

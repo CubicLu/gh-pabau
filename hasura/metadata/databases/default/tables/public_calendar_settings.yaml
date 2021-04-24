@@ -1,0 +1,99 @@
+table:
+  name: calendar_settings
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - advanced_calendar_lockout
+    - allow_appointments_to_overlap
+    - allow_service_without_contract_price
+    - appointment_reminder
+    - auto_complete
+    - auto_lock
+    - disable_booking_from_package
+    - disable_filtering_by_service
+    - email_confirmation
+    - enable_initials
+    - end_time
+    - font_size
+    - group_user_columns_by_location
+    - hide_appointment_times
+    - hide_client_name_on_appointment_arrival_notification
+    - hide_show_accounts
+    - hide_surnames
+    - ordering_the_employees_by_location
+    - raise_invoice_when_appointment_is_completed
+    - request_feedback
+    - revert_to_original_room_view
+    - sms_confirmation
+    - start_time
+    - time_slot_size
+  role: public
+select_permissions:
+- permission:
+    columns:
+    - advanced_calendar_lockout
+    - allow_appointments_to_overlap
+    - allow_service_without_contract_price
+    - appointment_reminder
+    - auto_complete
+    - disable_booking_from_package
+    - disable_filtering_by_service
+    - email_confirmation
+    - enable_initials
+    - group_user_columns_by_location
+    - hide_appointment_times
+    - hide_client_name_on_appointment_arrival_notification
+    - hide_show_accounts
+    - hide_surnames
+    - ordering_the_employees_by_location
+    - raise_invoice_when_appointment_is_completed
+    - request_feedback
+    - revert_to_original_room_view
+    - sms_confirmation
+    - auto_lock
+    - time_slot_size
+    - font_size
+    - end_time
+    - start_time
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: public
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - advanced_calendar_lockout
+    - allow_appointments_to_overlap
+    - allow_service_without_contract_price
+    - appointment_reminder
+    - auto_complete
+    - auto_lock
+    - disable_booking_from_package
+    - disable_filtering_by_service
+    - email_confirmation
+    - enable_initials
+    - end_time
+    - font_size
+    - group_user_columns_by_location
+    - hide_appointment_times
+    - hide_client_name_on_appointment_arrival_notification
+    - hide_show_accounts
+    - hide_surnames
+    - ordering_the_employees_by_location
+    - raise_invoice_when_appointment_is_completed
+    - request_feedback
+    - revert_to_original_room_view
+    - sms_confirmation
+    - start_time
+    - time_slot_size
+    filter: {}
+  role: public
+delete_permissions:
+- permission:
+    filter: {}
+  role: public

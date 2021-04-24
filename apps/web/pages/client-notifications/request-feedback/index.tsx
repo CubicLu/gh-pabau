@@ -1,18 +1,63 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useRef, useState } from 'react'
 import { Notification, NotificationType } from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
 import ClientNotification from '../../../components/ClientNotification/index'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
+import { sendEmailService } from '../../../components/ClientNotificationEmailPreview/sendEmailService'
+import RequestFeedBackEmailPreview from '../../../components/ClientNotificationEmailPreview/RequestFeedBackEmailPreview'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
-  const [setIndexTab, setSelectedTab] = useState(1)
+  const [selectedTab, setSelectedTab] = useState<'emailPreview' | 'smsPreview'>(
+    'emailPreview'
+  )
+  const ref = useRef(null)
+  const { t } = useTranslationI18()
 
   const showNotification = (email) => {
-    if (setIndexTab === 1) {
-      Notification(NotificationType.success, 'Test message sent')
-    }
-    if (setIndexTab === 2) {
-      Notification(NotificationType.success, 'Test SMS sent')
+    if (selectedTab === 'emailPreview') {
+      const propsData = ref?.current?.propsData() || {}
+      const {
+        selectLanguage,
+        backGroundColor,
+        buttonColor,
+        informationMessage,
+        activeSocialIcons,
+        type,
+        localTranslation,
+      } = propsData
+
+      const bodyContent = () => {
+        const t = localTranslation
+        return (
+          <RequestFeedBackEmailPreview
+            backGroundColor={backGroundColor}
+            activeSocialIcons={activeSocialIcons}
+            selectLanguage={selectLanguage}
+            buttonColor={buttonColor}
+            informationMessage={informationMessage}
+            type={type}
+            greeting={t('notifications.requestFeedback.greeting')}
+            message={t('notifications.requestFeedback.message')}
+            message1={t('notifications.requestFeedback.message1')}
+            closingText={t('notifications.requestFeedback.closingText')}
+            signatureBlock={t('notifications.requestFeedback.signatureBlock')}
+            buttonName={t('notifications.requestFeedback.buttonName')}
+          />
+        )
+      }
+      sendEmailService({
+        email,
+        subject: t('notifications.email.requestFeedback.subject'),
+        bodyContent: bodyContent(),
+        successMessage: t('notifications.email.send.successMessage'),
+        failedMessage: t('notifications.email.send.failedMessage'),
+      })
+    } else if (selectedTab === 'smsPreview') {
+      Notification(
+        NotificationType.success,
+        t('notifications.sms.send.successMessage')
+      )
     }
   }
 
@@ -22,23 +67,24 @@ const Index: FC = () => {
         breadcrumbItems={[
           {
             path: 'setup',
-            breadcrumbName: 'Setup',
+            breadcrumbName: t('notifications.breadcrumb.setup'),
           },
           {
             path: 'client-notifications',
-            breadcrumbName: 'Notification Messages',
+            breadcrumbName: t('notifications.breadcrumb.notificationMessage'),
           },
           {
             path: 'client-notifications/request-feedback',
-            breadcrumbName: 'Request feedback',
+            breadcrumbName: t('notifications.requestFeedback.title'),
           },
         ]}
-        title={'Request feedback'}
-        setIndexTab={setIndexTab}
+        title={t('notifications.requestFeedback.title')}
+        selectedTab={selectedTab}
         handleNotificationSubmit={showNotification}
       />
       <ClientNotification
-        onSeletedTab={(value) => setSelectedTab(value)}
+        ref={ref}
+        onSelectedTab={(value) => setSelectedTab(value)}
         type={'requestFeedback'}
         hideReminderTimeFrameTabPane={true}
         hideRequestConfirmationOption={true}
@@ -49,9 +95,10 @@ const Index: FC = () => {
         hideServiceOption={true}
         hideEmployeeNameOption={true}
         hideReminderSettingTabPane={false}
-        standardMessage={
-          'This notification automatically sends to clients when an appointment is checked out'
-        }
+        standardMessage={t('notifications.requestFeedback.standardMessage')}
+        name={t('notifications.requestFeedback.title')}
+        langKey={'requestFeedback'}
+        handleNotificationSubmit={showNotification}
       />
     </Layout>
   )

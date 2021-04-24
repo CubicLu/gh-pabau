@@ -693,9 +693,7 @@ const BirthdayPreviewStory = ({
   footerIconGroup,
   footer,
   wishingMessage,
-  messageLine1,
-  messageLine2,
-  messageLine3,
+  messages,
   closingText,
   signatureBlock,
 }: PropsWithChildren<EmailSMSPreviewProps & BirthDayPreviewProps>) => (
@@ -706,9 +704,7 @@ const BirthdayPreviewStory = ({
   >
     <BirthdayPreviewComponent
       wishingMessage={wishingMessage}
-      messageLine1={messageLine1}
-      messageLine2={messageLine2}
-      messageLine3={messageLine3}
+      messages={messages}
       closingText={closingText}
       signatureBlock={signatureBlock}
     />
@@ -718,10 +714,11 @@ const BirthdayPreviewStory = ({
 export const BirthdayPreview = BirthdayPreviewStory.bind({})
 BirthdayPreview.args = {
   wishingMessage: 'Happy Birthday!',
-  messageLine1:
+  messages: [
     'Your friends at clinic would like to wish you a glorious and happy birthday.',
-  messageLine2: "Here's a £30 voucher to spend on your next visit.",
-  messageLine3: 'We look forward to seeing you soon!',
+    "Here's a £30 voucher to spend on your next visit.",
+    'We look forward to seeing you soon!',
+  ],
   closingText: 'Warm regards,',
   signatureBlock: 'The clinic team',
   footerIconGroup: true,

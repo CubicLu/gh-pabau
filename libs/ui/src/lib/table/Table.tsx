@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { Button, Table as AntTable, Avatar, Image } from 'antd'
+import { Button, Table as AntTable, Avatar, Image, Popover } from 'antd'
 import { Daily } from '@pabau/ui'
 import {
   SortableContainer,
@@ -45,6 +45,8 @@ function array_move(arr, old_index, new_index) {
 
 export type TableType = {
   onRowClick?: (e) => void
+  onRowHover?: (e) => void
+  onLeaveRow?: (e) => void
   padlocked?: string[]
   noDataText?: string
   noDataBtnText?: string
@@ -53,6 +55,7 @@ export type TableType = {
   searchTerm?: string
   needTranslation?: boolean
   showSizeChanger?: boolean
+  isHover?: boolean
 } & TableProps<never> &
   DragProps
 
@@ -61,8 +64,11 @@ export const Table: FC<TableType> = ({
   padlocked,
   isCustomColorExist = false,
   isCustomIconExist = false,
+  isHover = false,
   updateDataSource,
   onRowClick,
+  onRowHover,
+  onLeaveRow,
   noDataText,
   noDataBtnText,
   noDataIcon = <ContactsOutlined />,
@@ -185,6 +191,33 @@ export const Table: FC<TableType> = ({
     return <div className={styles.alignItems}>{val.slice(0, 5)}</div>
   }
 
+  const renderMessageHover = (val) => {
+    if (val.length > 60) {
+      return (
+        <Popover trigger="hover" content={val}>
+          {val.slice(0, 60)}...
+        </Popover>
+      )
+    }
+    return <span>{val}</span>
+  }
+
+  const renderHoverContent = (val, rowData) => {
+    let display = '1'
+    if (!rowData.isShow) {
+      display = '0'
+    }
+    return (
+      <div
+        key={rowData.key}
+        className={styles.renderHoverWrap}
+        style={{ opacity: display }}
+      >
+        {rowData?.visibleData}
+      </div>
+    )
+  }
+
   const renderSortHandler = () => {
     if (props?.columns) {
       props.columns = props.columns
@@ -199,6 +232,10 @@ export const Table: FC<TableType> = ({
               col.dataIndex === 'integration')
           ) {
             col.render = renderActiveButton
+          } else if (col.isHover) {
+            col.render = renderHoverContent
+          } else if (col.dataIndex === 'messageHover') {
+            col.render = renderMessageHover
           } else if (col.dataIndex === 'days') {
             col.render = renderDays
           } else if (
@@ -219,6 +256,15 @@ export const Table: FC<TableType> = ({
       ? [{ ...dragColumn }, ...(props.columns || [])]
       : props.columns
   }
+
+  const onHoverEnterHandle = (data) => {
+    onRowHover?.(data)
+  }
+
+  const onHoverLeaveHandle = (data) => {
+    onLeaveRow?.(data)
+  }
+
   return !dataSource?.length && !props.loading && !searchTerm ? (
     <div className={styles.noDataTableBox}>
       <div className={styles.noDataTextStyle}>
@@ -252,6 +298,12 @@ export const Table: FC<TableType> = ({
               onRowClick?.(record)
               console.log(event, record)
             }
+          },
+          onMouseEnter: (event) => {
+            isHover && onHoverEnterHandle(record)
+          },
+          onMouseLeave: (event) => {
+            isHover && onHoverLeaveHandle(record)
           },
         }
       }}

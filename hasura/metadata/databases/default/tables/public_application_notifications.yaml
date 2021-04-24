@@ -1,0 +1,41 @@
+table:
+  name: application_notifications
+  schema: public
+object_relationships:
+- name: notificationTypeByNotificationType
+  using:
+    foreign_key_constraint_on: notification_type
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - user
+    - enabled
+    - notification_type
+  role: public
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - enabled
+    - user
+    - id
+    - notification_type
+    filter: {}
+  role: public
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - enabled
+    - user
+    - id
+    - notification_type
+    filter: {}
+  role: public
+delete_permissions:
+- permission:
+    filter: {}
+  role: public

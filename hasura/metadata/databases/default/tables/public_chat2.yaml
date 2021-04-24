@@ -1,0 +1,3 @@
+table:
+  name: chat2
+  schema: public

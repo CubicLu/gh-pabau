@@ -38,11 +38,8 @@ echo "APP_TYPE=${APP_TYPE}"
 echo "VERCEL_JSON_LOCATION=${VERCEL_JSON_LOCATION}"
 echo "BITBUCKET_COMMIT=${BITBUCKET_COMMIT}"
 echo "BITBUCKET_PR_ID=${BITBUCKET_PR_ID}"
-pwd
-ls -al
 echo "-----------------"
 
-yarn nx build backend
 build_output_path="dist/apps/backend"
 cp "${VERCEL_JSON_LOCATION}/package.prod.json" "${build_output_path}/package.json"
 cp "${build_output_path}/main.js" "${build_output_path}/server.js"
@@ -54,7 +51,7 @@ cp "apps/${APP_NAME}/package.prod.json" "${build_output_path}/package.json"
 cp "yarn.lock" "${build_output_path}"
 
 echo "Docker build..."
-docker build --no-cache "dist/apps/${APP_NAME}" -t "${APP_NAME}" -f "tools/cicd/${APP_NAME}.Dockerfile"
+docker build "dist/apps/${APP_NAME}" -t "${APP_NAME}" -f "tools/cicd/${APP_NAME}.Dockerfile"
 echo "Docker tag..."
 docker image tag "${APP_NAME}:latest" "${DOCKER_HOSTNAME}/monorepo/${APP_NAME}"
 echo "Docker login..."
@@ -62,11 +59,20 @@ docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}" "${DOCKER_HOSTNAME}
 echo "Docker push..."
 docker image push "${DOCKER_HOSTNAME}/monorepo/${APP_NAME}"
 echo "Rancher deploy..."
-#apt-get update -y && apt-get install git && git clone -b v1.6 --recursive https://github.com/rancher/cli.git rancher-cli && cd rancher-cli && make
-#docker run -v "$PWD:/files:ro" --rm -it --entrypoint rancher tagip/rancher-cli --url http://pods.pabau.com:8888 --access-key xxx --secret-key xxx --file /files/docker-compose.yml --rancher-file /files/rancher-compose.yml up -d --upgrade --stack pabau2-backend production
-echo "FOR NOW, ASK JAMES/MARTIN TO 'UPGRADE' THE 'PABAU2-BACKEND/PRODUCTION' CONTAINER IN RANCHER!"
+echo "FOR NOW, ASK JAMES TO 'UPGRADE' THE 'PABAU2-BACKEND/PRODUCTION' CONTAINER IN RANCHER1!"
 
-
+echo "Docker tag..."
+docker image tag "${APP_NAME}:latest" "${DOCKER2_HOSTNAME}/monorepo/${APP_NAME}"
+echo "Docker login..."
+docker login -u "${DOCKER2_USERNAME}" -p "${DOCKER2_PASSWORD}" "${DOCKER2_HOSTNAME}"
+echo "Docker push..."
+docker image push "${DOCKER2_HOSTNAME}/monorepo/${APP_NAME}"
+echo "Rancher deploy..."
+curl -u "${RANCHER2_ACCESS_KEY}:${RANCHER2_SECRET_KEY}" \
+  -X POST \
+  -H 'Accept: application/json' \
+  -H 'Content-Type: application/json' \
+  'https://rancher.pabau.com/v3/project/c-j8bb9:p-jrqrz/workloads/deployment:pabau2:backend?action=redeploy'
 
 if [ -z "${BITBUCKET_PR_ID}" ]; then
   message_body=''

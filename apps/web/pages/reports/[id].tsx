@@ -46,6 +46,7 @@ export default function Report() {
   return (
     <Layout active="reports">
       <h1>{report.name}</h1>
+      <p>report content page...</p>
     </Layout>
   )
 }

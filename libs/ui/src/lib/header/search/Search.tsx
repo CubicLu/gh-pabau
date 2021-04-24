@@ -1,4 +1,5 @@
 import React, { FC, ReactNode, useEffect, useState } from 'react'
+import reactStringReplace from 'react-string-replace'
 import { Checkbox } from '@pabau/ui'
 import styles from './Search.module.less'
 import { Input, Popover, Avatar, Image, Form, Button, Drawer } from 'antd'
@@ -9,25 +10,35 @@ import {
   LeftOutlined,
   CloseOutlined,
   CloseCircleFilled,
+  MailOutlined,
+  MobileOutlined,
 } from '@ant-design/icons'
-import User from '../../../assets/images/user.png'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 // import { isMobile, isTablet } from 'react-device-detect'
 
 const WAIT_INTERVAL = 400
+interface SearchResult {
+  id: string
+  firstName: string
+  lastName: string
+  avatarUrl?: string
+  mobile?: string
+  email?: string
+}
+
 interface P {
-  searchResults?: {
-    id: string
-    firstName: string
-    lastName: string
-    avatarUrl?: string
-    mobile?: string
-    email?: string
-  }[]
+  searchResults?: SearchResult[]
   onChange?: (newText: string) => void
+  changeSearchMode?: (newMode: SearchMode) => void
+  resultSelectedHandler?: (id: number) => void
   children?: ReactNode
   placeHolder?: string
+}
+
+enum SearchMode {
+  Clients = 'Clients',
+  Leads = 'Leads',
 }
 
 export const Search: FC<P> = ({
@@ -35,11 +46,13 @@ export const Search: FC<P> = ({
   searchResults,
   children,
   placeHolder,
+  changeSearchMode,
+  resultSelectedHandler,
 }) => {
   const [searchDrawer, setSearchDrawer] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [searchPopUp, setSearchPopUp] = useState(false)
-  const [searchTab, setSearchTab] = useState('Clients')
+  const [searchTab, setSearchTab] = useState(SearchMode.Clients)
   const [advanceSearch, setAdvanceSearch] = useState(false)
 
   useEffect(() => {
@@ -56,6 +69,72 @@ export const Search: FC<P> = ({
 
   const [form] = Form.useForm()
 
+  const searchResultRow = ({
+    id,
+    avatarUrl,
+    firstName,
+    lastName,
+    email,
+    mobile,
+  }: SearchResult) => {
+    const full_name = firstName + ' ' + lastName
+    return (
+      <div
+        key={id}
+        className={styles.contentAlignProfile}
+        onClick={() =>
+          resultSelectedHandler
+            ? resultSelectedHandler(Number.parseInt(id))
+            : null
+        }
+      >
+        <div className={styles.clientProfile}>
+          {avatarUrl ? (
+            <Avatar
+              size={40}
+              src={<Image src={'https://crm.pabau.com' + avatarUrl} />}
+            />
+          ) : (
+            <Avatar size={40}>
+              {firstName.substr(0, 1) + lastName.substr(0, 1)}
+            </Avatar>
+          )}
+        </div>
+        <div className={styles.clientProfileText}>
+          <h1>
+            {reactStringReplace(full_name, searchTerm, (match, i) => (
+              <span key={i} className={styles.highlight}>
+                {match}
+              </span>
+            ))}
+          </h1>
+          <p>
+            {email !== '' ? (
+              <>
+                <MailOutlined />{' '}
+                {reactStringReplace(email, searchTerm, (match, i) => (
+                  <span key={i} className={styles.highlight}>
+                    {match}
+                  </span>
+                ))}
+              </>
+            ) : null}
+            {mobile !== '' ? (
+              <>
+                <MobileOutlined style={{ marginLeft: '5px' }} />{' '}
+                {reactStringReplace(mobile, searchTerm, (match, i) => (
+                  <span key={i} className={styles.highlight}>
+                    {match}
+                  </span>
+                ))}
+              </>
+            ) : null}
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   const searchMenu = () => {
     return (
       <div className={styles.searchBox}>
@@ -65,7 +144,7 @@ export const Search: FC<P> = ({
               styles.cusTabDesign,
               searchTab === 'Clients' && styles.activeTabs
             )}
-            onClick={() => setSearchTab('Clients')}
+            onClick={() => searchTabChangeHandler(SearchMode.Clients)}
           >
             {t('search.client.label')}
           </button>
@@ -74,32 +153,19 @@ export const Search: FC<P> = ({
               styles.cusTabDesign,
               searchTab === 'Leads' && styles.activeTabs
             )}
-            onClick={() => setSearchTab('Leads')}
+            onClick={() => searchTabChangeHandler(SearchMode.Leads)}
           >
             {t('search.lead.label')}
           </button>
         </div>
-        {searchTab === 'Clients' && (
+        {
           <div className={styles.clientsList}>
             {searchResults && searchResults.length > 0 && (
               <>
                 <div className={styles.resultText}>
                   <h1>{t('search.result.one')}</h1>
                 </div>
-
-                <div className={styles.contentAlignProfile}>
-                  <div className={styles.clientProfile}>
-                    <Avatar size={40} src={<Image src={User} />} />
-                  </div>
-                  <div className={styles.clientProfileText}>
-                    <h1>
-                      {searchResults[0].firstName +
-                        ' ' +
-                        searchResults[0].lastName}
-                    </h1>
-                    <p>3893312</p>
-                  </div>
-                </div>
+                {searchResultRow(searchResults[0])}
               </>
             )}
             {searchResults && searchResults.length > 1 && (
@@ -114,28 +180,7 @@ export const Search: FC<P> = ({
                 </div>
                 {searchResults
                   .filter((_, i) => i !== 0)
-                  .map(
-                    ({ id, avatarUrl, firstName, lastName, mobile, email }) => (
-                      <div key={id} className={styles.contentAlignProfile}>
-                        <div className={styles.clientProfile}>
-                          <Avatar
-                            size={40}
-                            src={
-                              <Image
-                                src={
-                                  'https://crm.pabau.com' + avatarUrl ?? User
-                                }
-                              />
-                            }
-                          />
-                        </div>
-                        <div className={styles.clientProfileText}>
-                          <h1>{firstName + ' ' + lastName}</h1>
-                          <p>{email}</p>
-                        </div>
-                      </div>
-                    )
-                  )}
+                  .map((data) => searchResultRow(data))}
               </>
             )}
             <div className={styles.contentAlignProfile}>
@@ -154,18 +199,20 @@ export const Search: FC<P> = ({
                 <span>{t('search.new.client')}</span>
               </div>
             </div>
-            <div
-              className={styles.advanceSearch}
-              onClick={() => {
-                setAdvanceSearch(!advanceSearch)
-                setSearchPopUp(true)
-              }}
-            >
-              <p>{t('search.advanced.search')}</p>
-              <RightOutlined className={styles.rightArrowColor} />
-            </div>
           </div>
-        )}
+        }
+        {
+          <div
+            className={styles.advanceSearch}
+            onClick={() => {
+              setAdvanceSearch(!advanceSearch)
+              setSearchPopUp(true)
+            }}
+          >
+            <p>{t('search.advanced.search')}</p>
+            <RightOutlined className={styles.rightArrowColor} />
+          </div>
+        }
       </div>
     )
   }
@@ -204,7 +251,7 @@ export const Search: FC<P> = ({
               styles.cusTabDesign,
               searchTab === 'Clients' && styles.activeTabs
             )}
-            onClick={() => setSearchTab('Clients')}
+            onClick={() => searchTabChangeHandler(SearchMode.Clients)}
           >
             {t('search.client.label')}
           </button>
@@ -213,7 +260,7 @@ export const Search: FC<P> = ({
               styles.cusTabDesign,
               searchTab === 'Leads' && styles.activeTabs
             )}
-            onClick={() => setSearchTab('Leads')}
+            onClick={() => searchTabChangeHandler(SearchMode.Leads)}
           >
             {t('search.lead.label')}
           </button>
@@ -326,6 +373,13 @@ export const Search: FC<P> = ({
         </Form>
       </div>
     )
+  }
+
+  const searchTabChangeHandler = (searchTab: SearchMode) => {
+    setSearchTab(searchTab)
+    if (typeof changeSearchMode !== 'undefined') {
+      changeSearchMode(searchTab)
+    }
   }
 
   const renderMenu = () => {

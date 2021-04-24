@@ -1,5 +1,5 @@
 export interface ReportInputDto {
-  id: number
-  start_date: number
-  end_date: number
+  id: string
+  start_date: string
+  end_date: string
 }

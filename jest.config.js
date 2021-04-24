@@ -9,5 +9,6 @@ module.exports = {
     '<rootDir>/apps/mobile',
     '<rootDir>/apps/bridge-api',
     '<rootDir>/libs/i18n',
+    '<rootDir>/apps/bridge-proxy',
   ],
 }

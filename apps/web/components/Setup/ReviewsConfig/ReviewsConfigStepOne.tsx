@@ -19,6 +19,7 @@ import { ReactComponent as Palette } from '../../../assets/images/palette.svg'
 import { ReactComponent as Voucher } from '../../../assets/images/voucher.svg'
 import { FeedbackSurveyBuilder } from './ReviewsConfigSetting'
 import styles from './style.module.less'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const { Option } = Select
 
@@ -38,6 +39,8 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
   const [form] = Form.useForm()
   const [isListing, setIsListing] = useState(true)
   const [isEmail, setIsEmail] = useState(true)
+  const { t } = useTranslationI18()
+
   const handleChangeSetting = (key, val) => {
     formik.setFieldValue(key, val)
   }
@@ -287,7 +290,7 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
                 <Radio.Button value={false}>SMS Text</Radio.Button>
               </Radio.Group>
               <div className={styles.templatePanel}>
-                {isEmail && <Appointment selectLanguage="en" />}
+                {isEmail && <Appointment t={t} selectLanguage="en" />}
                 {!isEmail && <SMSText />}
               </div>
             </div>
@@ -496,7 +499,7 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
                 <Radio.Button value={false}>SMS Text</Radio.Button>
               </Radio.Group>
               <div className={styles.templatePanel}>
-                {isEmail && <Appointment selectLanguage="en" />}
+                {isEmail && <Appointment t={t} selectLanguage="en" />}
                 {!isEmail && <SMSText />}
               </div>
             </div>

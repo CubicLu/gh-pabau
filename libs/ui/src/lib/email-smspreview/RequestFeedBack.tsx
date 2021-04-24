@@ -6,7 +6,14 @@ import { Button } from '../button/Button'
 
 export const RequestFeedBack: FC<
   RequestFeedbackProps & EmailSMSPreviewProps
-> = ({ message, message1, buttonColor, closingText, signatureBlock }) => {
+> = ({
+  message,
+  message1,
+  buttonColor,
+  closingText,
+  signatureBlock,
+  buttonName = 'Tell us how it went',
+}) => {
   return (
     <>
       <Row gutter={[0, 4]} className={styles.break}>
@@ -21,7 +28,7 @@ export const RequestFeedBack: FC<
       </Row>
       <Row gutter={[0, 4]} className={styles.bookAppointment}>
         <Button backgroundColor={buttonColor} className={styles.bookButton}>
-          Tell us how it went
+          {buttonName}
         </Button>
       </Row>
       <Row gutter={[0, 4]} className={styles.textBox}>

@@ -1,16 +1,16 @@
-import React, { FC } from 'react'
-import { useRouter } from 'next/router'
-import { useMedia } from 'react-use'
-import { useFormik } from 'formik'
-import * as Yup from 'yup'
-
-import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-import { Button, Breadcrumb } from '@pabau/ui'
-import { Row, Col, Card } from 'antd'
 import { LeftOutlined } from '@ant-design/icons'
-
+import { Breadcrumb, Button } from '@pabau/ui'
+import { Card, Col, Row } from 'antd'
+import { useFormik } from 'formik'
+import { useRouter } from 'next/router'
+import React, { FC, useContext } from 'react'
+import { useMedia } from 'react-use'
+import * as Yup from 'yup'
 import Layout from '../../../components/Layout/Layout'
 import General from '../../../components/Setup/Settings/LoyaltySettings/General'
+import { UserContext } from '../../../context/UserContext'
+import { useGridData } from '../../../hooks/useGridData'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './loyalty.module.less'
 
 interface P {
@@ -21,6 +21,7 @@ const LoyaltySettings: FC<P> = () => {
   const { t } = useTranslationI18()
   const router = useRouter()
   const isMobile = useMedia('(max-width: 768px)', false)
+  const user = useContext(UserContext)
 
   const LoyaltySettingsObj = {
     general: {
@@ -28,14 +29,17 @@ const LoyaltySettings: FC<P> = () => {
         key: 1,
         id: 'receipt',
         label: t('setup.settings.loyalty.general.dropdown.label'),
-        value: '15 Minutes',
-        options: ['15 Minutes', '30 Minutes', '45 Minutes'],
+        value: t('setup.settings.loyalty.general.dropdown.yes'),
+        options: [
+          t('setup.settings.loyalty.general.dropdown.yes'),
+          t('setup.settings.loyalty.general.dropdown.no'),
+        ],
         helpText: t('setup.settings.loyalty.general.dropdown.help'),
       },
       inputPoint: {
         label: t('setup.settings.loyalty.general.inputpoint.label'),
         pointText: t('setup.settings.loyalty.general.inputpoint.placeholder'),
-        value: 13.45,
+        value: Number.parseInt(t('setup.settings.loyalty.general.point.value')),
         helpText: t('setup.settings.loyalty.general.inputpoint.help'),
       },
     },
@@ -63,13 +67,28 @@ const LoyaltySettings: FC<P> = () => {
     loyaltyFormik.handleSubmit()
   }
 
+  const { getParentSetupData } = useGridData(t)
+  let path = router.pathname
+  const pathArray = router.pathname.split('/')
+  if (pathArray.length > 3) {
+    pathArray.pop()
+    path = pathArray.join('/')
+  }
+  const parentMenu = getParentSetupData(path)
   const handleBack = () => {
-    router.push('/setup')
+    if (parentMenu.length > 0) {
+      router.push({
+        pathname: '/setup',
+        query: { menu: parentMenu[0]?.keyValue },
+      })
+    } else {
+      router.push('/setup')
+    }
   }
 
   return (
     <div className={styles.loyaltyMainWrapper}>
-      <Layout>
+      <Layout {...user}>
         <Card className={styles.loyaltyContainer}>
           <div className={styles.hideDesktopView}>
             <Row className={styles.mobDevice}>

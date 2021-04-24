@@ -1,7 +1,7 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useContext } from 'react'
 import { EmailSmsPreview, CancelAClassBooking } from '@pabau/ui'
 import CustomTemplate from '../ClientNotification/CustomTemplate'
-import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { GlobalContext } from '../ClientNotification'
 
 interface P {
   standardTapIndex: string
@@ -26,17 +26,11 @@ const CancelAppointmentPreview: FC<P> = ({
   informationMessage,
   type,
 }) => {
-  const { t, i18n } = useTranslationI18()
-  useEffect(() => {
-    const lanCode = selectLanguage.toLowerCase()
-      ? selectLanguage.toLowerCase()
-      : 'en'
-    i18n.changeLanguage(lanCode)
-  }, [i18n, selectLanguage])
+  const { t } = useContext(GlobalContext)
 
   return (
     <div>
-      {standardTapIndex === '1' ? (
+      {standardTapIndex === 'standard' ? (
         <EmailSmsPreview
           greeting={t('notifications.cancelledAppointment.greeting')}
           footerIconGroup={true}
@@ -70,6 +64,12 @@ const CancelAppointmentPreview: FC<P> = ({
             address={t('notifications.cancelledAppointment.address')}
             message={t('notifications.cancelledAppointment.message')}
             buttonColor={buttonColor}
+            cancelButtonName={t(
+              'notifications.cancelledAppointment.cancelButtonName'
+            )}
+            rebookButtonName={t(
+              'notifications.cancelledAppointment.rebookButtonName'
+            )}
           />
         </EmailSmsPreview>
       ) : (

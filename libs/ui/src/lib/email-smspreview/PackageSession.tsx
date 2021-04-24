@@ -7,6 +7,7 @@ import { Button } from '../button/Button'
 export const PackageSession: FC<PackageSessionProps & EmailSMSPreviewProps> = ({
   message,
   buttonColor,
+  buttonName = 'Purchase Package',
 }) => {
   return (
     <Row className={styles.messageContent}>
@@ -16,7 +17,7 @@ export const PackageSession: FC<PackageSessionProps & EmailSMSPreviewProps> = ({
       <Col className={styles.purchaseButton}>
         <span>
           <Button type={'primary'} backgroundColor={buttonColor}>
-            Purchase Package
+            {buttonName}
           </Button>
         </span>
       </Col>

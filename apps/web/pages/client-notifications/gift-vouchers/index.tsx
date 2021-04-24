@@ -1,18 +1,64 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useRef, useState } from 'react'
 import { Notification, NotificationType } from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
 import ClientNotification from '../../../components/ClientNotification/index'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
+import { sendEmailService } from '../../../components/ClientNotificationEmailPreview/sendEmailService'
+import GiftVouchersEmailPreview from '../../../components/ClientNotificationEmailPreview/GiftVouchersEmailPreview'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
-  const [setIndexTab, setSelectedTab] = useState(1)
+  const [selectedTab, setSelectedTab] = useState<'emailPreview' | 'smsPreview'>(
+    'emailPreview'
+  )
+  const ref = useRef(null)
+  const { t } = useTranslationI18()
 
   const showNotification = (email) => {
-    if (setIndexTab === 1) {
-      Notification(NotificationType.success, 'Test message sent')
-    }
-    if (setIndexTab === 2) {
-      Notification(NotificationType.success, 'Test SMS sent')
+    if (selectedTab === 'emailPreview') {
+      const propsData = ref?.current?.propsData() || {}
+      const {
+        selectLanguage,
+        backGroundColor,
+        buttonColor,
+        informationMessage,
+        activeSocialIcons,
+        type,
+        localTranslation,
+      } = propsData
+      const bodyContent = () => {
+        const t = localTranslation
+        return (
+          <GiftVouchersEmailPreview
+            backGroundColor={backGroundColor}
+            activeSocialIcons={activeSocialIcons}
+            selectLanguage={selectLanguage}
+            buttonColor={buttonColor}
+            informationMessage={informationMessage}
+            type={type}
+            displayViewButton={true}
+            greeting={t('notifications.giftVoucher.greeting')}
+            buttonName={t('notifications.giftVoucher.buttonName')}
+            valueMessage={t('notifications.giftVoucher.valueMessage')}
+            voucherCodeMessage={t(
+              'notifications.giftVoucher.voucherCodeMessage'
+            )}
+            expiryMessage={t('notifications.giftVoucher.expiryMessage')}
+          />
+        )
+      }
+      sendEmailService({
+        email,
+        subject: t('notifications.email.giftVouchers.subject'),
+        bodyContent: bodyContent(),
+        successMessage: t('notifications.email.send.successMessage'),
+        failedMessage: t('notifications.email.send.failedMessage'),
+      })
+    } else if (selectedTab === 'smsPreview') {
+      Notification(
+        NotificationType.success,
+        t('notifications.sms.send.successMessage')
+      )
     }
   }
 
@@ -22,23 +68,24 @@ const Index: FC = () => {
         breadcrumbItems={[
           {
             path: 'setup',
-            breadcrumbName: 'Setup',
+            breadcrumbName: t('notifications.breadcrumb.setup'),
           },
           {
             path: 'client-notifications',
-            breadcrumbName: 'Notification Messages',
+            breadcrumbName: t('notifications.breadcrumb.notificationMessage'),
           },
           {
             path: 'client-notifications/gift-vouchers',
-            breadcrumbName: 'Gift vouchers',
+            breadcrumbName: t('notifications.giftVoucher.title'),
           },
         ]}
-        title={'Gift vouchers'}
-        setIndexTab={setIndexTab}
+        title={t('notifications.giftVoucher.title')}
+        selectedTab={selectedTab}
         handleNotificationSubmit={showNotification}
       />
       <ClientNotification
-        onSeletedTab={(value) => setSelectedTab(value)}
+        ref={ref}
+        onSelectedTab={(value) => setSelectedTab(value)}
         hideReminderTimeFrameTabPane={true}
         hideRequestConfirmationOption={true}
         hideMedicalHistoryOption={true}
@@ -48,10 +95,11 @@ const Index: FC = () => {
         hideServiceOption={true}
         hideEmployeeNameOption={true}
         hideReminderSettingTabPane={false}
-        standardMessage={
-          'The default email template you will send when clients purchase a gift voucher'
-        }
+        standardMessage={t('notifications.giftVoucher.standardMessage')}
         type={'giftVoucher'}
+        name={t('notifications.giftVoucher.title')}
+        langKey={'giftVoucher'}
+        handleNotificationSubmit={showNotification}
       />
     </Layout>
   )

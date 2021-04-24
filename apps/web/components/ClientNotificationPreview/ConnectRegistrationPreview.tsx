@@ -1,7 +1,7 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useContext } from 'react'
 import { EmailSmsPreview, ConnectRegistration } from '@pabau/ui'
 import CustomTemplate from '../../components/ClientNotification/CustomTemplate'
-import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { GlobalContext } from '../ClientNotification'
 
 interface P {
   standardTapIndex: string
@@ -23,17 +23,11 @@ const ConnectRegistrationPreview: FC<P> = ({
   buttonColor,
   informationMessage,
 }) => {
-  const { t, i18n } = useTranslationI18()
-  useEffect(() => {
-    const lanCode = selectLanguage.toLowerCase()
-      ? selectLanguage.toLowerCase()
-      : 'en'
-    i18n.changeLanguage(lanCode)
-  }, [i18n, selectLanguage])
+  const { t } = useContext(GlobalContext)
 
   return (
     <div>
-      {standardTapIndex === '1' ? (
+      {standardTapIndex === 'standard' ? (
         <EmailSmsPreview
           greeting={t('notifications.connectRegistration.greeting')}
           footerIconGroup={true}
@@ -47,6 +41,7 @@ const ConnectRegistrationPreview: FC<P> = ({
           footerContact={true}
           contactEmail={'abc@info.com'}
           contactInfoNumber={'+98765432101'}
+          contactMessage={t('notifications.emailPreview.footer.contactMessage')}
         >
           <ConnectRegistration
             message={t('notifications.connectRegistration.message')}
@@ -57,6 +52,15 @@ const ConnectRegistrationPreview: FC<P> = ({
             text={`${t(
               'notifications.connectRegistration.closingText'
             )}<br/>${t('notifications.connectRegistration.signatureBlock')}`}
+            credentialMessage={t(
+              'notifications.connectRegistration.credentialMessage'
+            )}
+            userNameMessage={t(
+              'notifications.connectRegistration.userNameMessage'
+            )}
+            passwordMessage={t(
+              'notifications.connectRegistration.passwordMessage'
+            )}
           />
         </EmailSmsPreview>
       ) : (

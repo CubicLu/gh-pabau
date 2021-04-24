@@ -1,44 +1,101 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useRef, useState } from 'react'
 import { Notification, NotificationType } from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
 import ClientNotification from '../../../components/ClientNotification/index'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import InvoiceEmailPreview from '../../../components/ClientNotificationEmailPreview/InvoiceEmailPreview'
+import { sendEmailService } from '../../../components/ClientNotificationEmailPreview/sendEmailService'
 
 const Index: FC = () => {
-  const [setIndexTab, setSelectedTab] = useState(1)
+  const [selectedTab, setSelectedTab] = useState<'emailPreview' | 'smsPreview'>(
+    'emailPreview'
+  )
+  const ref = useRef(null)
+  const { t } = useTranslationI18()
 
   const showNotification = (email) => {
-    if (setIndexTab === 1) {
-      Notification(NotificationType.success, 'Test message sent')
-    }
-    if (setIndexTab === 2) {
-      Notification(NotificationType.success, 'Test SMS sent')
+    if (selectedTab === 'emailPreview') {
+      const propsData = ref?.current?.propsData() || {}
+      const {
+        selectLanguage,
+        backGroundColor,
+        buttonColor,
+        informationMessage,
+        activeSocialIcons,
+        showEnablePay,
+        type,
+        localTranslation,
+      } = propsData
+
+      const bodyContent = () => {
+        const t = localTranslation
+        return (
+          <InvoiceEmailPreview
+            backGroundColor={backGroundColor}
+            activeSocialIcons={activeSocialIcons}
+            selectLanguage={selectLanguage}
+            buttonColor={buttonColor}
+            informationMessage={informationMessage}
+            type={type}
+            showEnablePay={showEnablePay}
+            greeting={t('notifications.invoice.outstanding.greeting')}
+            message={t('notifications.invoice.outstanding.message', {
+              returnObjects: true,
+            })}
+            bestRegards={t('notifications.invoice.outstanding.bestRegards')}
+            footerText={
+              t('notifications.invoice.outstanding.footerText') +
+              ' <br> ' +
+              t('notifications.invoice.outstanding.footerText2')
+            }
+            senderFirstName={t(
+              'notifications.invoice.outstanding.senderFirstName'
+            )}
+            showInvoiceButton={false}
+            payButtonName={t('notifications.invoice.outstanding.payButtonName')}
+          />
+        )
+      }
+
+      sendEmailService({
+        email,
+        subject: t('notifications.email.outstandingInvoice.subject'),
+        bodyContent: bodyContent(),
+        successMessage: t('notifications.email.send.successMessage'),
+        failedMessage: t('notifications.email.send.failedMessage'),
+      })
+    } else if (selectedTab === 'smsPreview') {
+      Notification(
+        NotificationType.success,
+        t('notifications.sms.send.successMessage')
+      )
     }
   }
-
   return (
     <Layout>
       <CommonNotificationHeader
         breadcrumbItems={[
           {
             path: 'setup',
-            breadcrumbName: 'Setup',
+            breadcrumbName: t('notifications.breadcrumb.setup'),
           },
           {
             path: 'client-notifications',
-            breadcrumbName: 'Notification Messages',
+            breadcrumbName: t('notifications.breadcrumb.notificationMessage'),
           },
           {
             path: 'client-notifications/invoice',
-            breadcrumbName: 'Outstanding Invoice',
+            breadcrumbName: t('notifications.invoice.outstanding.title'),
           },
         ]}
-        title={'Outstanding Invoice'}
-        setIndexTab={setIndexTab}
+        title={t('notifications.invoice.outstanding.title')}
+        selectedTab={selectedTab}
         handleNotificationSubmit={showNotification}
       />
       <ClientNotification
-        onSeletedTab={(value) => setSelectedTab(value)}
+        ref={ref}
+        onSelectedTab={(value) => setSelectedTab(value)}
         hideReminderTimeFrameTabPane={true}
         hideRequestConfirmationOption={true}
         hideMedicalHistoryOption={true}
@@ -47,19 +104,12 @@ const Index: FC = () => {
         hideDisplayPolicyOption={true}
         hideServiceOption={true}
         hideEmployeeNameOption={true}
-        standardMessage={
-          'The default email template you will send with a clients Outstanding invoice attached'
-        }
+        standardMessage={t('notifications.invoice.outstanding.standardMessage')}
         type={'outstandingInvoice'}
+        name={t('notifications.invoice.outstanding.title')}
+        langKey={'outstandingInvoice'}
         hideEnablePay={false}
-        smsCustom={
-          'Hi Anna,\n' +
-          'I hope you are well.\n' +
-          'I just wanted to drop you a quick note to remind you that 02/03/2021 in respect of our invoice 00001 is due for payment on 31/03/2021.\n' +
-          'I would be really grateful if you could confirm that everything is on track for payment.\n' +
-          'Best regards,\n' +
-          'Rina\n'
-        }
+        handleNotificationSubmit={showNotification}
       />
     </Layout>
   )

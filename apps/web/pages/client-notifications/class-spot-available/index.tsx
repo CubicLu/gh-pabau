@@ -1,19 +1,66 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useRef, useState } from 'react'
 import { Notification, NotificationType } from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
 import ClientNotification from '../../../components/ClientNotification/index'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
+import { sendEmailService } from '../../../components/ClientNotificationEmailPreview/sendEmailService'
+import ClassSpotAvailableEmailPreview from '../../../components/ClientNotificationEmailPreview/ClassSpotAvailableEmailPreview'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
-  const [setIndexTab, setSelectedTab] = useState(1)
+  const [selectedTab, setSelectedTab] = useState<'emailPreview' | 'smsPreview'>(
+    'emailPreview'
+  )
+  const ref = useRef(null)
+  const { t } = useTranslationI18()
 
   const showNotification = (email) => {
-    if (setIndexTab === 1) {
-      console.log(email)
-      Notification(NotificationType.success, 'Test message sent')
-    }
-    if (setIndexTab === 2) {
-      Notification(NotificationType.success, 'Test SMS sent')
+    if (selectedTab === 'emailPreview') {
+      const propsData = ref?.current?.propsData() || {}
+      const {
+        backGroundColor,
+        buttonColor,
+        activeSocialIcons,
+        type,
+        localTranslation,
+      } = propsData
+      const bodyContent = () => {
+        const t = localTranslation
+        return (
+          <ClassSpotAvailableEmailPreview
+            backGroundColor={backGroundColor}
+            activeSocialIcons={activeSocialIcons}
+            buttonColor={buttonColor}
+            type={type}
+            greeting={t('notifications.classSpotAvailable.greeting')}
+            footerText={`${t(
+              'notifications.classSpotAvailable.closingText'
+            )}<br/>${t('notifications.classSpotAvailable.signatureBlock')}`}
+            message={t('notifications.classSpotAvailable.message')}
+            buttonTitleMessage={t(
+              'notifications.classSpotAvailable.buttonTitleMessage'
+            )}
+            bookButtonName={t(
+              'notifications.classSpotAvailable.bookButtonName'
+            )}
+            contactMessage={t(
+              'notifications.emailPreview.footer.contactMessage'
+            )}
+          />
+        )
+      }
+      sendEmailService({
+        email,
+        subject: t('notifications.email.classSpotAvailable.subject'),
+        bodyContent: bodyContent(),
+        successMessage: t('notifications.email.send.successMessage'),
+        failedMessage: t('notifications.email.send.failedMessage'),
+      })
+    } else if (selectedTab === 'smsPreview') {
+      Notification(
+        NotificationType.success,
+        t('notifications.sms.send.successMessage')
+      )
     }
   }
 
@@ -23,23 +70,24 @@ const Index: FC = () => {
         breadcrumbItems={[
           {
             path: 'setup',
-            breadcrumbName: 'Setup',
+            breadcrumbName: t('notifications.breadcrumb.setup'),
           },
           {
             path: 'client-notifications',
-            breadcrumbName: 'Notification Messages',
+            breadcrumbName: t('notifications.breadcrumb.notificationMessage'),
           },
           {
             path: 'client-notifications/class-spot-available',
-            breadcrumbName: 'Classes spot available',
+            breadcrumbName: t('notifications.classSpotAvailable.title'),
           },
         ]}
-        title={'Classes spot available'}
-        setIndexTab={setIndexTab}
+        title={t('notifications.classSpotAvailable.title')}
+        selectedTab={selectedTab}
         handleNotificationSubmit={showNotification}
       />
       <ClientNotification
-        onSeletedTab={(value) => setSelectedTab(value)}
+        ref={ref}
+        onSelectedTab={(value) => setSelectedTab(value)}
         hideReminderTimeFrameTabPane={true}
         hideRequestConfirmationOption={true}
         hideMedicalHistoryOption={true}
@@ -48,18 +96,11 @@ const Index: FC = () => {
         hideDisplayPolicyOption={true}
         hideServiceOption={true}
         hideEmployeeNameOption={true}
-        standardMessage={
-          'This notification automatically sends to clients when a class slot becomes available'
-        }
+        standardMessage={t('notifications.classSpotAvailable.standardMessage')}
         type={'classSpotAvailable'}
-        smsCustom={
-          'Good news! \n' +
-          '\n' +
-          'You recently were placed in our waitlist and a new class spot is now available. If you would still like to book your appointment please get in touch via Phone or Email:\n' +
-          '\n' +
-          '+44 000 987 507\n' +
-          'info@theclinic.com'
-        }
+        name={t('notifications.classSpotAvailable.title')}
+        langKey={'classSpotAvailable'}
+        handleNotificationSubmit={showNotification}
       />
     </Layout>
   )

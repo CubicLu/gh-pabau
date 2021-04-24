@@ -1,7 +1,7 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useContext } from 'react'
 import { EmailSmsPreview, DocumentShared } from '@pabau/ui'
 import CustomTemplate from '../ClientNotification/CustomTemplate'
-import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { GlobalContext } from '../ClientNotification'
 
 interface P {
   standardTapIndex: string
@@ -24,17 +24,11 @@ const DocumentSharedPreview: FC<P> = ({
   informationMessage,
   type,
 }) => {
-  const { t, i18n } = useTranslationI18()
-  useEffect(() => {
-    const lanCode = selectLanguage.toLowerCase()
-      ? selectLanguage.toLowerCase()
-      : 'en'
-    i18n.changeLanguage(lanCode)
-  }, [i18n, selectLanguage])
+  const { t } = useContext(GlobalContext)
 
   return (
     <div>
-      {standardTapIndex === '1' ? (
+      {standardTapIndex === 'standard' ? (
         <EmailSmsPreview
           greeting={t('notifications.documnetshared.greeting')}
           footerIconGroup={true}
@@ -51,12 +45,14 @@ const DocumentSharedPreview: FC<P> = ({
             messageLine2={t('notifications.documnetshared.messageLine2')}
             userEmail={'info@theclinic.com'}
             userName={'Sophia'}
-            buttonName={'View Document'}
+            buttonName={t('notifications.documnetshared.buttonName')}
             clinicName={'Clinic'}
             closingText={t('notifications.documnetshared.closingText')}
             signatureBlock={t('notifications.documnetshared.signatureBlock')}
             infoText={t('notifications.documnetshared.infoText')}
             buttonColor={buttonColor}
+            fromMessage={t('notifications.documentshared.fromMessage')}
+            userMessage={t('notifications.documentshared.userMessage')}
           />
         </EmailSmsPreview>
       ) : (

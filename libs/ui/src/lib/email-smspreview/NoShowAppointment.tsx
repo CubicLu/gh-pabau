@@ -13,6 +13,10 @@ export const NoShowAppointment: FC<
   buttonColor,
   closingText,
   signatureBlock,
+  bookButtonName = 'Book Now',
+  buttonTitleMessage = 'Click here to get your appointment online',
+  contactFirstHalfMsg = 'Please get back in touch on',
+  contactSecondHalfMsg = 'to reschedule or you can book your next appointment below',
 }) => {
   return (
     <>
@@ -25,9 +29,9 @@ export const NoShowAppointment: FC<
         <Row gutter={[0, 4]} className={styles.titleRow}>
           <Col>
             <span className={styles.message}>
-              Please get back in touch on{' '}
-              <span className={styles.contactInfo}>{contactNumber}</span> to
-              reschedule or you can book your next appointment below
+              {contactFirstHalfMsg}{' '}
+              <span className={styles.contactInfo}>{contactNumber}</span>
+              {contactSecondHalfMsg}
             </span>
           </Col>
         </Row>
@@ -37,15 +41,13 @@ export const NoShowAppointment: FC<
           className={`${styles.titleRow} ${styles.centerline}`}
         >
           <Col>
-            <span className={styles.message}>
-              Click here to get your appointment online
-            </span>
+            <span className={styles.message}>{buttonTitleMessage}</span>
           </Col>
         </Row>
       )}
       <Row gutter={[0, 4]} className={styles.bookAppointment}>
         <Button backgroundColor={buttonColor} className={styles.bookButton}>
-          Book now
+          {bookButtonName}
         </Button>
       </Row>
       {!footerContact && (

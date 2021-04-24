@@ -1,7 +1,7 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useContext } from 'react'
 import { EmailSmsPreview, GiftVoucher } from '@pabau/ui'
 import CustomTemplate from '../ClientNotification/CustomTemplate'
-import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { GlobalContext } from '../ClientNotification'
 
 interface P {
   standardTapIndex: string
@@ -23,17 +23,11 @@ const GiftVoucherPreview: FC<P> = ({
   buttonColor,
   informationMessage,
 }) => {
-  const { t, i18n } = useTranslationI18()
-  useEffect(() => {
-    const lanCode = selectLanguage.toLowerCase()
-      ? selectLanguage.toLowerCase()
-      : 'en'
-    i18n.changeLanguage(lanCode)
-  }, [i18n, selectLanguage])
+  const { t } = useContext(GlobalContext)
 
   return (
     <div>
-      {standardTapIndex === '1' ? (
+      {standardTapIndex === 'standard' ? (
         <EmailSmsPreview
           greeting={t('notifications.giftVoucher.greeting')}
           footerIconGroup={true}
@@ -50,7 +44,16 @@ const GiftVoucherPreview: FC<P> = ({
           contactInfoNumber={'+44 000 987 507'}
           contactEmail={'info@theclinic.com'}
         >
-          <GiftVoucher buttonColor={buttonColor} displayViewButton={true} />
+          <GiftVoucher
+            buttonColor={buttonColor}
+            displayViewButton={true}
+            buttonName={t('notifications.giftVoucher.buttonName')}
+            valueMessage={t('notifications.giftVoucher.valueMessage')}
+            voucherCodeMessage={t(
+              'notifications.giftVoucher.voucherCodeMessage'
+            )}
+            expiryMessage={t('notifications.giftVoucher.expiryMessage')}
+          />
         </EmailSmsPreview>
       ) : (
         <CustomTemplate

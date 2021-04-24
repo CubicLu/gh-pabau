@@ -8,7 +8,17 @@ import styles from './EmailSmsPreview.module.less'
 
 export const ConnectRegistration: FC<
   ConnectRegistrationProps & EmailSMSPreviewProps
-> = ({ message, connectURL, username, password, text, footerContact }) => {
+> = ({
+  message,
+  connectURL,
+  username,
+  password,
+  text,
+  footerContact,
+  credentialMessage = 'Here are your login credentials:',
+  userNameMessage = 'User Name',
+  passwordMessage = 'Password',
+}) => {
   return (
     <>
       <Row gutter={[0, 4]} className={styles.break}>
@@ -20,13 +30,15 @@ export const ConnectRegistration: FC<
       <Row className={styles.loginCredentials}>
         <Col>
           <div>
-            <span className={styles.message}>
-              Here are your login credentials:
-            </span>
+            <span className={styles.message}>{credentialMessage}</span>
           </div>
           <div className={styles.loginDetail}>
-            <span>Username: {username}</span>
-            <span>Password: {password}</span>
+            <span>
+              {userNameMessage}: {username}
+            </span>
+            <span>
+              {passwordMessage}: {password}
+            </span>
           </div>
         </Col>
       </Row>

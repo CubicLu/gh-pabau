@@ -148,7 +148,7 @@ const Index: FC = () => {
           Save
         </Button>
       </div>
-      <ClientNotification onSeletedTab={(value) => setSelectedTab(value)} />
+      <ClientNotification onSelectedTab={(value) => setSelectedTab(value)} />
     </Layout>
   )
 }

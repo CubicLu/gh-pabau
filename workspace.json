@@ -247,7 +247,7 @@
             "passWithNoTests": true
           }
         },
-        "deploy": {
+        "deploy-docker": {
           "builder": "@nrwl/workspace:run-commands",
           "outputs": [],
           "options": {
@@ -392,6 +392,16 @@
             "jestConfig": "apps/connect/jest.config.js",
             "passWithNoTests": true
           }
+        },
+        "deploy": {
+          "builder": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "command": "sh apps/connect/cicd/deploy.sh"
+          },
+          "configurations": {
+            "production": {}
+          }
         }
       }
     },
@@ -524,6 +534,11 @@
           "builder": "@nrwl/node:execute",
           "options": {
             "buildTarget": "bridge-api:build"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "bridge-api:build:production"
+            }
           }
         },
         "lint": {
@@ -549,7 +564,7 @@
             "passWithNoTests": true
           }
         },
-        "deploy": {
+        "deploy-docker": {
           "builder": "@nrwl/workspace:run-commands",
           "outputs": [],
           "options": {
@@ -578,6 +593,48 @@
           "options": {
             "jestConfig": "libs/i18n/jest.config.js",
             "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "bridge-proxy": {
+      "root": "apps/bridge-proxy",
+      "sourceRoot": "apps/bridge-proxy/src",
+      "projectType": "application",
+      "prefix": "bridge-proxy",
+      "architect": {
+        "serve": {
+          "builder": "@nrwl/workspace:run-script",
+          "outputs": [],
+          "options": {
+            "script": "mesh serve"
+          },
+          "configurations": {
+            "production": {}
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/bridge-proxy/**/*.[tj]s"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/bridge-proxy"],
+          "options": {
+            "jestConfig": "apps/bridge-proxy/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "deploy-docker": {
+          "builder": "@nrwl/workspace:run-commands",
+          "outputs": [],
+          "options": {
+            "command": "sh apps/bridge-proxy/cicd/deploy.sh"
+          },
+          "configurations": {
+            "production": {}
           }
         }
       }

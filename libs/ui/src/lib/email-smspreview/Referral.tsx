@@ -9,6 +9,7 @@ export const Referral: FC<EmailSMSPreviewProps & ReferralProps> = ({
   footerText,
   buttonColor,
   description,
+  buttonName = 'View Voucher',
 }) => {
   return (
     <>
@@ -24,7 +25,7 @@ export const Referral: FC<EmailSMSPreviewProps & ReferralProps> = ({
       </Row>
       <Row gutter={[0, 4]} className={styles.bookAppointment}>
         <Button backgroundColor={buttonColor} className={styles.bookButton}>
-          View Voucher
+          {buttonName}
         </Button>
       </Row>
       <Row gutter={[0, 4]} className={styles.textBox}>
