@@ -16,6 +16,7 @@ import {
   AddGroupModal,
   AddPeopleModal,
   MessageContainer,
+  useLiveQuery,
 } from '@pabau/ui'
 
 import Stephen from '../../../assets/images/users/stephen.png'
@@ -28,6 +29,7 @@ import Walter from '../../../assets/images/users/walter.png'
 import Liza from '../../../assets/images/users/liza.png'
 
 import classNames from 'classnames'
+import { gql } from '@apollo/client'
 
 export interface MessagesProps {
   openDrawer: boolean
@@ -227,7 +229,14 @@ export const PabauMessages: FC<MessagesProps> = ({
   const [isGroupModalVisible, setIsGroupModalVisible] = useState(false)
   const [isAddModalVisible, setIsAddModalVisible] = useState(false)
   const [memberModalTitle, setMemberModalTitle] = useState('')
-  const [chatMessages, setChatMessage] = useState(chatListData)
+  //const [chatMessages, setChatMessage] = useState(chatListData)
+  const { data: chatMessages } = useLiveQuery(gql`
+    query {
+      chat {
+        id
+      }
+    }
+  `)
   const [globalSearchValue, setGlobalSearchValue] = useState('')
   const [typingContact, setTypingContact] = useState<Contact>()
 
@@ -356,7 +365,7 @@ export const PabauMessages: FC<MessagesProps> = ({
       }
     })
     setGlobalSearchValue(value)
-    setChatMessage(resultData)
+    //TODO: setChatMessage(resultData)
   }
 
   return (
