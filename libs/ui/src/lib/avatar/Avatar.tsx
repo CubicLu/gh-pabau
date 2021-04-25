@@ -1,9 +1,9 @@
-import React, { FC, useEffect, useState } from 'react'
-import stc from 'string-to-color'
-import ClassNames from 'classnames'
+import { UserOutlined } from '@ant-design/icons'
 import { Avatar as AntAvatar, Tooltip } from 'antd'
 import { AvatarProps as NativeAvatarProps } from 'antd/lib/avatar/avatar'
-import { UserOutlined } from '@ant-design/icons'
+import ClassNames from 'classnames'
+import React, { FC, useEffect, useState } from 'react'
+import stc from 'string-to-color'
 import { ReactComponent as EditIcon } from '../../assets/images/edit_icon.svg'
 import styles from './Avatar.module.less'
 
