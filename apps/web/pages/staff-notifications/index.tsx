@@ -1,14 +1,14 @@
-import React, { useState, useMemo, useRef, useContext, useEffect } from 'react'
-import Layout from '../../components/Layout/Layout'
-import styles from './staff-notifications.module.less'
-import { Form as AntForm, Select } from 'formik-antd'
-import { Formik } from 'formik'
-import { Col, Row, Button } from 'antd'
 import { gql, useMutation } from '@apollo/client'
-import { useLiveQuery, Notification, NotificationType } from '@pabau/ui'
+import { Notification, NotificationType, useLiveQuery } from '@pabau/ui'
+import { Button, Col, Row } from 'antd'
+import { Formik } from 'formik'
+import { Form as AntForm, Input, Select } from 'formik-antd'
 import { NextPage } from 'next'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import Layout from '../../components/Layout/Layout'
 import { UserContext } from '../../context/UserContext'
 import { notificationVariables } from './mock'
+import styles from './staff-notifications.module.less'
 
 enum Users {
   AllAdmins = 'All Admins',
@@ -50,9 +50,15 @@ const ADD_MUTATION = gql`
     $type: uuid!
     $sent_to: jsonb
     $variables: jsonb
+    $destination: String!
   ) {
     insert_notifications_one(
-      object: { type: $type, sent_to: $sent_to, variables: $variables }
+      object: {
+        type: $type
+        destination: $destination
+        sent_to: $sent_to
+        variables: $variables
+      }
     ) {
       id
     }
@@ -77,11 +83,8 @@ interface LoggedUser {
 
 export const StaffNotifications: NextPage = () => {
   const { data: notificationTypes } = useLiveQuery(LIST_QUERY)
-  console.log('notificationTypes', notificationTypes)
   const [user, setUser] = useState<LoggedUser>()
   const loggedUser = useContext(UserContext)
-
-  console.log('loggedUser', user)
 
   useEffect(() => {
     const { me } = loggedUser
@@ -139,8 +142,6 @@ export const StaffNotifications: NextPage = () => {
       notification?.notification_type
     )
 
-    console.log('notification123', notificationVariable)
-
     const sent_users = []
     for (const user of userList) {
       sent_users.push(user.id)
@@ -149,10 +150,10 @@ export const StaffNotifications: NextPage = () => {
     const variables = {
       type: values.type,
       sent_to: sent_users,
+      destination: values.destination_id,
     }
 
     if (notificationVariable) {
-      console.log('boo')
       variables['variables'] = notificationVariable
     }
 
@@ -190,11 +191,8 @@ export const StaffNotifications: NextPage = () => {
                     <AntForm.Item
                       label={'Destination ID'}
                       name={'destination_id'}
-                      required
                     >
-                      <Select name={'destination_id'} style={{ width: '100%' }}>
-                        <Select.Option value={'123'}>123</Select.Option>
-                      </Select>
+                      <Input name={'destination_id'} />
                     </AntForm.Item>
                     <AntForm.Item label={'Users'} name={'users'}>
                       <Select

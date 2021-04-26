@@ -1,16 +1,16 @@
-import React, { FC, useState } from 'react'
 import { CloseOutlined } from '@ant-design/icons'
-import styles from './NotificationDrawer.module.less'
+import { gql, useMutation } from '@apollo/client'
 import { Drawer, Image } from 'antd'
-import { ReactComponent as EmptySVG } from '../../assets/images/notification-empty.svg'
+import classNames from 'classnames'
+import moment from 'moment'
+import { useRouter } from 'next/router'
+import React, { FC, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ReactComponent as Lead1SVG } from '../../assets/images/lead.svg'
 import { ReactComponent as Lead2SVG } from '../../assets/images/lead1.svg'
-import classNames from 'classnames'
-import { useTranslation } from 'react-i18next'
-import moment from 'moment'
+import { ReactComponent as EmptySVG } from '../../assets/images/notification-empty.svg'
 import { notificationIcons } from './mock'
-import { gql, useMutation } from '@apollo/client'
-import { useRouter } from 'next/router'
+import styles from './NotificationDrawer.module.less'
 
 interface Notification {
   id: string
@@ -75,6 +75,7 @@ export const NotificationDrawer: FC<P> = ({
   const [notificationDrawer, setNotificationDrawer] = useState(openDrawer)
   const [notifyTab, setNotifyTab] = useState('Activity')
   const [notificationData] = useState<NotificationData[]>(notifications)
+
   const notificationTypes = {
     report: 'notifications.report',
     appointment: 'notifications.appointment',
@@ -257,16 +258,13 @@ export const NotificationDrawer: FC<P> = ({
       {notifyTab === 'Activity' &&
         notifications.map((notify, index) => {
           return (
-            <div
-              key={index}
-              onClick={(e) => {
-                e.stopPropagation()
-                onNotificationClick(notify)
-              }}
-            >
+            <div key={index}>
               <div className={styles.notificationCard}>
                 <div className={styles.notifyAlign}>
-                  <div className={classNames(styles.logo, styles.flex)}>
+                  <div
+                    onClick={() => onNotificationClick(notify)}
+                    className={classNames(styles.logo, styles.flex)}
+                  >
                     <Image
                       preview={false}
                       src={getNotificationIcon(notify.notificationType)}
@@ -307,7 +305,10 @@ export const NotificationDrawer: FC<P> = ({
                     </p>
                   </div>
                 </div>
-                <div className={styles.descAlign}>
+                <div
+                  onClick={() => onNotificationClick(notify)}
+                  className={styles.descAlign}
+                >
                   <div className={styles.notifyTitleDesc}>
                     <h1>{getNotificationDescOrTitle(notify, 'title')}</h1>
                     <p>{getNotificationDescOrTitle(notify, 'desc')}</p>

@@ -1,12 +1,12 @@
-import React, { FC, useState, useEffect, useContext } from 'react'
-import { Layout as PabauLayout, LayoutProps, Iframe } from '@pabau/ui'
-import Search from '../Search'
+import { gql, useSubscription } from '@apollo/client'
+import { useDisabledFeaturesQuery } from '@pabau/graphql'
+import { Iframe, Layout as PabauLayout, LayoutProps } from '@pabau/ui'
+import { useRouter } from 'next/router'
+import React, { FC, useContext, useEffect, useState } from 'react'
+import { UserContext } from '../../context/UserContext'
 import useLogin from '../../hooks/authentication/useLogin'
 import Login from '../../pages/login'
-import { useRouter } from 'next/router'
-import { useDisabledFeaturesQuery } from '@pabau/graphql'
-import { useSubscription, gql } from '@apollo/client'
-import { UserContext } from '../../context/UserContext'
+import Search from '../Search'
 
 interface Notification {
   id: string
@@ -31,11 +31,11 @@ const LIST_QUERY = gql`
       is_read
       created_at
       variables
+      destination
       notification_type {
         name
         title
         description
-        destination
       }
     }
   }
@@ -61,8 +61,6 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
   const loggedUser = useContext(UserContext)
   const userData = { ...user, fullName: loggedUser?.me?.full_name }
 
-  console.log('notificationData', notificationData)
-
   useEffect(() => {
     if (notificationData?.notifications?.length > 0) {
       const todayNotification = notificationData.notifications.map(
@@ -74,7 +72,7 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
           desc: notification?.notification_type?.description,
           read: notification?.is_read,
           users: notification?.sent_to,
-          link: notification?.notification_type?.destination,
+          link: notification?.destination,
           variables: notification?.variables,
         })
       )
