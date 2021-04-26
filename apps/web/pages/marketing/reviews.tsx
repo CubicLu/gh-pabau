@@ -1,64 +1,64 @@
+import {
+  FacebookFilled,
+  FacebookOutlined,
+  FilterOutlined,
+  FrownOutlined,
+  GoogleOutlined,
+  InstagramOutlined,
+  LeftOutlined,
+  LinkedinFilled,
+  LoadingOutlined,
+  SmileOutlined,
+  StarFilled,
+  TwitterOutlined,
+} from '@ant-design/icons'
+import { gql, useMutation } from '@apollo/client'
+import {
+  Avatar,
+  Breadcrumb,
+  Button,
+  MobileHeader,
+  Notification,
+  NotificationBanner,
+  NotificationType,
+  Pagination,
+  Reviews as ReviewTable,
+  ShareReview,
+  Switch,
+  Table,
+  useLiveQuery,
+} from '@pabau/ui'
+import {
+  Card,
+  Col,
+  Empty,
+  Input as AntInput,
+  Modal,
+  Popover,
+  Rate,
+  Row,
+  Spin,
+  Tooltip,
+} from 'antd'
+import classNames from 'classnames'
+import { useRouter } from 'next/router'
 import React, {
   FC,
   ReactNode,
+  useContext,
   useEffect,
-  useState,
   useMemo,
   useRef,
-  useContext,
+  useState,
 } from 'react'
 import { useMedia } from 'react-use'
-import {
-  Row,
-  Col,
-  Card,
-  Popover,
-  Rate,
-  Input as AntInput,
-  Modal,
-  Tooltip,
-  Empty,
-  Spin,
-} from 'antd'
-import { useRouter } from 'next/router'
-import {
-  FacebookOutlined,
-  FilterOutlined,
-  GoogleOutlined,
-  LeftOutlined,
-  InstagramOutlined,
-  StarFilled,
-  FacebookFilled,
-  TwitterOutlined,
-  LinkedinFilled,
-  SmileOutlined,
-  FrownOutlined,
-  LoadingOutlined,
-} from '@ant-design/icons'
-import {
-  Button,
-  NotificationBanner,
-  Reviews as ReviewTable,
-  Table,
-  Pagination,
-  MobileHeader,
-  Breadcrumb,
-  Switch,
-  ShareReview,
-  useLiveQuery,
-  Avatar,
-  Notification,
-  NotificationType,
-} from '@pabau/ui'
-import classNames from 'classnames'
-import Layout from '../../components/Layout/Layout'
-import PabauLogo from '../../assets/images/logo.svg'
 import clinicLogo from '../../assets/images/clinic-logo.png'
+import PabauLogo from '../../assets/images/logo.svg'
 import notificationBannerReviewPageImage from '../../assets/images/notification-image-review.png'
-import { gql, useMutation } from '@apollo/client'
-import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { apiURL } from '../../baseUrl'
+import Layout from '../../components/Layout/Layout'
 import { UserContext } from '../../context/UserContext'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './reviews.module.less'
 
 const progressDataList = [
@@ -768,7 +768,7 @@ const Reviews: FC<ReviewConfig> = () => {
 
     switch (true) {
       case feedbackValue < 2:
-        left = feedbackValue * 7.5
+        left = feedbackValue
         classname = styles.rate2
         break
       case feedbackValue >= 2 && feedbackValue < 3:
