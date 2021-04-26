@@ -127,23 +127,6 @@ export const NotificationDrawer: FC<P> = ({
     return notificationIcon?.icon
   }
 
-  // const removeSingleNotification = (index, dayIndex, objectKey) => {
-  //   const selectedObject = notificationData[index]
-  //   selectedObject[objectKey].splice(dayIndex, 1)
-  //   if (selectedObject[objectKey].length === 0) {
-  //     notificationData.splice(index, 1)
-  //     setNotificationData([...notificationData])
-  //   } else {
-  //     const newNotificationData = notificationData.map((item, i) => {
-  //       if (i !== index) {
-  //         return item
-  //       }
-  //       return { ...selectedObject }
-  //     })
-  //     setNotificationData([...newNotificationData])
-  //   }
-  // }
-
   const isReadNotification = (users) => {
     return users?.find((user_id) => user_id === user?.user) ? true : false
   }
@@ -156,7 +139,9 @@ export const NotificationDrawer: FC<P> = ({
       const variables = { id, is_read: read, sent_to: users }
       await updateMutation({ variables, optimisticResponse: {} })
     }
-    router.push({ pathname: link })
+    if (link) {
+      router.push({ pathname: link })
+    }
   }
 
   const getNotificationDescOrTitle = (notification, returnType = 'desc') => {
@@ -243,15 +228,7 @@ export const NotificationDrawer: FC<P> = ({
             styles.todayTextTopSpace
           )}
         >
-          <h2>
-            {/* {t('notifications.today')} */}
-            {/* {notify[notification].length > 0 &&
-                      (notification === 'Today'
-                        ? t('notifications.today')
-                        : notification === 'Yesterday'
-                        ? t('notifications.yesterday')
-                        : notification)} */}
-          </h2>
+          <h2>{/* {t('notifications.today')} */}</h2>
         </div>
       )}
 
@@ -269,22 +246,7 @@ export const NotificationDrawer: FC<P> = ({
                       preview={false}
                       src={getNotificationIcon(notify.notificationType)}
                     />
-                    <p className={styles.textSm}>
-                      {notify.notificationType}
-                      {/* {notificationTypes[
-                              dayNotify.notificationType
-                                ?.toLowerCase()
-                                ?.replace(' ', '')
-                            ]
-                              ? t(
-                                  notificationTypes[
-                                    dayNotify.notificationType
-                                      ?.toLowerCase()
-                                      ?.replace(' ', '')
-                                  ]
-                                )
-                              : dayNotify.notificationType} */}
-                    </p>
+                    <p className={styles.textSm}>{notify.notificationType}</p>
                   </div>
                   <div className={styles.time}>
                     <p
