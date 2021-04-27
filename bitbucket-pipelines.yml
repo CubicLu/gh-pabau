@@ -61,7 +61,6 @@ pipelines:
             - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=lint --with-deps --parallel --maxParallel=2
             - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=test --parallel --maxParallel=2
             - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=export
-            - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=build-storybook
             - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=deploy
             - cat /tmp/bot_message.txt
 
@@ -73,7 +72,7 @@ pipelines:
 
             # Post to Slack
             - |
-              jq --arg var "$(cat /tmp/bot_message2.txt)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
+              jq --arg var "$(cat /tmp/bot_message2.txt | head -c 3000)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
               -H "Expect:" \
               -H 'Content-Type: application/json; charset=utf-8' \
               --data-binary @-
@@ -103,19 +102,19 @@ pipelines:
             name: lint
             max-time: 20
             caches:
-              - yarncustom
+              - node
             script:
               - yarn install --frozen-lockfile --prefer-offline
-              - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:lint --base=HEAD~1 --with-deps
+              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:lint --base=HEAD~1 --with-deps --parallel --maxParallel=2
 
         - step:
             name: unit tests
             max-time: 25
             caches:
-              - yarncustom
+              - node
             script:
               - yarn install --frozen-lockfile --prefer-offline
-              - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:test --base=HEAD~1
+              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=2
 
       # - parallel:
 
@@ -160,7 +159,7 @@ pipelines:
             - node
           script:
             - yarn install --frozen-lockfile --prefer-offline
-            - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:export --base=HEAD~1 --prod --parallel --maxParallel=2
+            - NODE_OPTIONS=--max_old_space_size=2345 yarn affected:export --base=HEAD~1 --prod --parallel --maxParallel=2
           artifacts:
             - dist/**
 
@@ -172,12 +171,12 @@ pipelines:
             - node
           script:
             - yarn install --frozen-lockfile --prefer-offline
-            - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:export --base=HEAD~1 --prod --parallel --maxParallel=3
+            - NODE_OPTIONS=--max_old_space_size=2111 yarn affected:export --base=HEAD~1 --prod --parallel --maxParallel=3
           artifacts:
             - dist/**
 
       - step:
-          size: 2x
+          size: 1x
           name: deploy dockers
           max-time: 20
           deployment: production-dockers
@@ -190,7 +189,7 @@ pipelines:
             - /tmp/bot_message.txt
 
       - step:
-          size: 2x
+          size: 1x
           name: deploy previews
           max-time: 20
           deployment: production-serverless
