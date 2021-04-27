@@ -8,7 +8,6 @@ definitions:
   caches:
     nodemodules: node_modules/
     yarncustom: /usr/local/share/.cache/yarn
-    nextcache: dist
     cypress: '/root/.cache/Cypress'
   services:
     docker:
@@ -20,12 +19,9 @@ pipelines:
       - step:
           name: PR pipeline
           size: 2x
-#          services:
-#            - docker
           caches:
             - nodemodules
             - yarncustom
-            - nextcache
           script:
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -gt 2 ]] && exit 1 || exit 0'
 
@@ -86,48 +82,39 @@ pipelines:
     master:
       - step:
           name: yarn audit
+          max-time: 5
           script:
+            - set || true
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -gt 2 ]] && exit 1 || exit 0'
-          # artifacts:
-          #   - node_modules/**
 
       - parallel:
         - step:
-            name: type checks
+            name: misc checks
+            max-time: 15
             caches:
-              - yarncustom
+              - node
             script:
-              - NODE_OPTIONS=--max_old_space_size=4096 yarn install --frozen-lockfile --prefer-offline
-              # TODO: move these to eslint so that `yarn lint` picks up these errors instead
-              - npm i -g typescript
-              - tsc --noEmit -p apps/backend/
-              - tsc --noEmit -p apps/bridge-api/
-              - tsc --noEmit -p apps/bridge-proxy/
-              # - tsc --noEmit -p apps/connect/
-              - tsc --noEmit -p apps/connect-e2e/
-              - tsc --noEmit -p apps/mgmt/
-              - tsc --noEmit -p apps/mgmt-e2e/
-              - tsc --noEmit -p apps/ui-e2e/
-              - tsc --noEmit -p apps/web/
-              - tsc --noEmit -p apps/web-e2e/
-              - tsc --noEmit -p libs/i18n/tsconfig.lib.json
-              # - tsc --noEmit -p libs/graphql/tsconfig.lib.json
-              - tsc --noEmit -p libs/ui/tsconfig.lib.json
-              - tsc --noEmit -p libs/yup/tsconfig.lib.json
+              - yarn install --frozen-lockfile --prefer-offline
+              - yarn lint:tsc
+              - yarn lint:ls || true
+              - yarn lint:workspace || true
+
         - step:
             name: lint
+            max-time: 20
             caches:
               - yarncustom
             script:
-              - NODE_OPTIONS=--max_old_space_size=4096 yarn install --frozen-lockfile --prefer-offline
+              - yarn install --frozen-lockfile --prefer-offline
               - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:lint --base=HEAD~1 --with-deps
 
         - step:
             name: unit tests
+            max-time: 25
             caches:
               - yarncustom
             script:
-              - NODE_OPTIONS=--max_old_space_size=4096 yarn install --frozen-lockfile --prefer-offline
+              - yarn install --frozen-lockfile --prefer-offline
               - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:test --base=HEAD~1
 
       # - parallel:
@@ -155,35 +142,62 @@ pipelines:
 
       - step:
           size: 2x
-          name: build
+          name: build1
+          max-time: 35
+          caches:
+            - node
           script:
-            - NODE_OPTIONS=--max_old_space_size=4096 yarn install --frozen-lockfile --prefer-offline
-            - NODE_OPTIONS=--max_old_space_size=4096 yarn affected --base=HEAD~1 --target=build --prod
-            - NODE_OPTIONS=--max_old_space_size=4096 yarn affected --base=HEAD~1 --target=export --prod
-            - NODE_OPTIONS=--max_old_space_size=4096 yarn affected --base=HEAD~1 --target=build-storybook --prod
+            - yarn install --frozen-lockfile --prefer-offline
+            - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:export --base=HEAD~1 --prod
           artifacts:
-            - node_modules/**
+            - dist/**
+
+      - step:
+          size: 2x
+          name: build2
+          max-time: 35
+          caches:
+            - node
+          script:
+            - yarn install --frozen-lockfile --prefer-offline
+            - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:export --base=HEAD~1 --prod --parallel --maxParallel=2
+          artifacts:
+            - dist/**
+
+      - step:
+          size: 2x
+          name: build3
+          max-time: 35
+          caches:
+            - node
+          script:
+            - yarn install --frozen-lockfile --prefer-offline
+            - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:export --base=HEAD~1 --prod --parallel --maxParallel=3
+          artifacts:
             - dist/**
 
       - step:
           size: 2x
           name: deploy dockers
+          max-time: 20
           deployment: production-dockers
           services:
             - docker
           script:
             - apt-get update -y && apt-get install -y curl jq time
-            - NODE_OPTIONS=--max_old_space_size=2750 /usr/bin/time -v yarn affected --base=HEAD~1 --target=deploy-docker --prod
+            - yarn affected --base=HEAD~1 --target=deploy-docker --prod
           artifacts:
             - /tmp/bot_message.txt
 
       - step:
           size: 2x
           name: deploy previews
+          max-time: 20
           deployment: production-serverless
           script:
             - ls -al dist || true
             - ls -al dist/apps || true
+            - cat /tmp/bot_message.txt || true
             - apt-get update -y && apt-get install -y curl jq time
 
             # get the commit message for this merge
@@ -211,7 +225,7 @@ pipelines:
 
             # Post to Slack
             - |
-              jq --arg var "$(cat /tmp/bot_message2.txt)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
+              jq --arg var "$(cat /tmp/bot_message2.txt | head -c 3000)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
               -H "Expect:" \
               -H 'Content-Type: application/json; charset=utf-8' \
               --data-binary @-
