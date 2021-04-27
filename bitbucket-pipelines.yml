@@ -85,7 +85,7 @@ pipelines:
           script:
             - set || true
             - git log --merges -n 1 --pretty=oneline
-            - yarn audit --no-progress --non-interactive; [[ $? -gt 2 ]] && exit 1 || exit 0
+            - yarn audit --no-progress --non-interactive; [[ $? -gt 2 ]] && exit 1
 
       - parallel:
         - step:
