@@ -533,7 +533,7 @@
         "serve": {
           "builder": "@nrwl/node:execute",
           "options": {
-            "buildTarget": "bridge-api:build"
+            "buildTarget": "bridge-api:export"
           },
           "configurations": {
             "production": {

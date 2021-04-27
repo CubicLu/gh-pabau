@@ -79,7 +79,7 @@ const server = new ApolloServer({
 server.applyMiddleware({ app })
 
 if (process.env.JEST_WORKER_ID === undefined) {
-  app.listen({ port: PORT }, () =>
+  app.listen(4000, () =>
     console.log(
       `Server running on port ${PORT}`,
       'env',
