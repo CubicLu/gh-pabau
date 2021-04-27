@@ -72,7 +72,7 @@ pipelines:
 
             # Post to Slack
             - |
-              jq --arg var "$(cat /tmp/bot_message2.txt | head -c 3000)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
+              jq --arg var "$(cat /tmp/bot_message2.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
               -H "Expect:" \
               -H 'Content-Type: application/json; charset=utf-8' \
               --data-binary @-
@@ -84,7 +84,8 @@ pipelines:
           max-time: 5
           script:
             - set || true
-            - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -gt 2 ]] && exit 1 || exit 0'
+            - git log --merges -n 1 --pretty=oneline
+            - yarn audit --no-progress --non-interactive; [[ $? -gt 2 ]] && exit 1 || exit 0
 
       - parallel:
         - step:
@@ -114,7 +115,10 @@ pipelines:
               - node
             script:
               - yarn install --frozen-lockfile --prefer-offline
-              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=2
+              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --skip-nx-cache
+              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
+              - NODE_OPTIONS=--max_old_space_size=2222 yarn affected:test --base=HEAD~1 --parallel --maxParallel=2 --skip-nx-cache
+              - NODE_OPTIONS=--max_old_space_size=1555 yarn affected:test --base=HEAD~1 --parallel --maxParallel=3 --skip-nx-cache
 
       # - parallel:
 
@@ -139,39 +143,17 @@ pipelines:
       #         - node_modules/.cache/**
       #         - dist/**
 
-      - step:
-          size: 2x
-          name: build1
-          max-time: 35
-          caches:
-            - node
-          script:
-            - yarn install --frozen-lockfile --prefer-offline
-            - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:export --base=HEAD~1 --prod
-          artifacts:
-            - dist/**
+
 
       - step:
           size: 2x
-          name: build2
-          max-time: 35
+          name: build
+          max-time: 30
           caches:
             - node
           script:
             - yarn install --frozen-lockfile --prefer-offline
             - NODE_OPTIONS=--max_old_space_size=2345 yarn affected:export --base=HEAD~1 --prod --parallel --maxParallel=2
-          artifacts:
-            - dist/**
-
-      - step:
-          size: 2x
-          name: build3
-          max-time: 35
-          caches:
-            - node
-          script:
-            - yarn install --frozen-lockfile --prefer-offline
-            - NODE_OPTIONS=--max_old_space_size=2111 yarn affected:export --base=HEAD~1 --prod --parallel --maxParallel=3
           artifacts:
             - dist/**
 
@@ -182,7 +164,10 @@ pipelines:
           deployment: production-dockers
           services:
             - docker
+          caches:
+            - node
           script:
+            - yarn install --frozen-lockfile --prefer-offline
             - apt-get update -y && apt-get install -y curl jq time
             - yarn affected --base=HEAD~1 --target=deploy-docker --prod
           artifacts:
@@ -206,7 +191,6 @@ pipelines:
             - echo "${LAST_COMMIT_LOG}"
 
             # Get an oauth access token using the client credentials, parsing out the token with jq.
-            - apt-get update && apt-get install -y curl jq && jq --version && curl --version
             - git remote set-url origin "${BITBUCKET_GIT_SSH_ORIGIN}"
 
             # bump the package.json version by 0.0.1
@@ -221,10 +205,20 @@ pipelines:
               printf "*New Version Staged for Production*\n## v${PACKAGE_JSON_VERSION}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
             - cat /tmp/bot_message.txt >> /tmp/bot_message2.txt
             - cat /tmp/bot_message2.txt
+          artifacts:
+            - /tmp/bot_message2.txt
+
+      - step:
+          size: 1x
+          name: announce to slack
+          max-time: 5
+          script:
+            - cat /tmp/bot_message2.txt || true
+            - apt-get update -y && apt-get install -y curl jq time
 
             # Post to Slack
             - |
-              jq --arg var "$(cat /tmp/bot_message2.txt | head -c 3000)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
+              jq --arg var "$(cat /tmp/bot_message2.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
               -H "Expect:" \
               -H 'Content-Type: application/json; charset=utf-8' \
               --data-binary @-
