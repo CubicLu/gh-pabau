@@ -1,11 +1,11 @@
+import { paljs } from '@paljs/nexus'
+import { applyMiddleware } from 'graphql-middleware'
+import { GraphQLDate, GraphQLDateTime } from 'graphql-scalars'
 import { makeSchema, nullabilityGuardPlugin } from 'nexus'
 import { nexusPrisma } from 'nexus-plugin-prisma'
-import * as generatedTypes from './generated/types'
 import * as customTypes from '../src/schema/types'
-import { applyMiddleware } from 'graphql-middleware'
+import * as generatedTypes from './generated/types'
 import { permissions } from './permissions'
-import { paljs } from '@paljs/nexus'
-import { GraphQLDate, GraphQLDateTime } from 'graphql-scalars'
 
 export const schema = applyMiddleware(
   makeSchema({
@@ -36,6 +36,7 @@ export const schema = applyMiddleware(
           Decimal: () => 0,
           DateTime: () => '1970-01-01T1:00:00+00:00',
           Json: () => [],
+          BigInt: () => '0',
         },
       }),
     ],

@@ -1,15 +1,15 @@
-import React, { FC } from 'react'
-import { Button, Table as AntTable, Avatar, Image, Popover } from 'antd'
+import { ContactsOutlined, LockOutlined, MenuOutlined } from '@ant-design/icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Daily } from '@pabau/ui'
+import { Avatar, Button, Image, Popover, Table as AntTable } from 'antd'
+import { TableProps } from 'antd/es/table'
+import React, { FC } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   SortableContainer,
   SortableElement,
   SortableHandle,
 } from 'react-sortable-hoc'
-import { ContactsOutlined, LockOutlined, MenuOutlined } from '@ant-design/icons'
-import { TableProps } from 'antd/es/table'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useTranslation } from 'react-i18next'
 import searchEmpty from '../../assets/images/empty.png'
 import styles from './Table.module.less'
 
@@ -43,7 +43,8 @@ function array_move(arr, old_index, new_index) {
   })
 }
 
-export type TableType = {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type TableType<T = object> = {
   onRowClick?: (e) => void
   onRowHover?: (e) => void
   onLeaveRow?: (e) => void
@@ -56,7 +57,7 @@ export type TableType = {
   needTranslation?: boolean
   showSizeChanger?: boolean
   isHover?: boolean
-} & TableProps<never> &
+} & TableProps<T> &
   DragProps
 
 export const Table: FC<TableType> = ({

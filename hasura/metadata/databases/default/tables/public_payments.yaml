@@ -19,6 +19,7 @@ select_permissions:
     allow_aggregations: true
     columns:
     - account
+    - against
     - amount
     - created_at
     - id

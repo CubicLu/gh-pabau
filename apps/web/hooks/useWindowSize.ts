@@ -1,10 +1,10 @@
+import { useEffect, useState } from 'react'
+
 /**
  * This Hook will return window width and height from the window
  *
- * @returns {Object} The windowSize will return height and width
+ * @returns The windowSize will return height and width
  */
-
-import { useEffect, useState } from 'react'
 export default function useWindowSize() {
   const [windowSize, setWindowSize] = useState({
     width: 0,

@@ -105,7 +105,7 @@ export interface ResponseProps {
 }
 
 /* eslint-disable-next-line */
-export interface IndexProps { }
+export interface IndexProps {}
 
 export const Index: FC = () => {
   const [response, setResponse] = useState<ResponseProps>({

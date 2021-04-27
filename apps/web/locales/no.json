@@ -1,38 +1,38 @@
 {
-    "marketingsource-header-create": {
-      "translation": "Lag en markedsføringskilde"
-    },
-    "marketingsource-title": {
-      "translation": "Markedsføringskilder"
-    },
-    "marketingsource-name-textfield": {
-      "translation": "Etternavn"
-    },
-    "marketingsource-name-placeholder": {
-      "translation": "for eksempel. Facebook"
-    },
-    "marketingsource-header-edit": {
-      "translation": "Lag en markedsføringskilde"
-    },
-    "basic-crud-table-input-search-placeholder": {
-      "translation": "Se etter"
-    },
-    "basic-crud-table-button-filter": {
-      "translation": "Filtrert"
-    },
-    "basic-crud-table-column--active": {
-      "translation": "Aktiv"
-    },
-    "basic-crud-table-button-active": {
-      "translation": "Aktiv"
-    },
-    "basic-crud-table-button-inactive": {
-      "translation": "Inaktiv"
-    },
-    "basic-crud-table-header-button-create": {
-      "translation": "Opret i kilde"
-    },
-    "basic-crud-table-header-breadcrumb-setup-link": {
-      "translation": "Installere"
-    }
+  "marketingsource-header-create": {
+    "translation": "Lag en markedsføringskilde"
+  },
+  "marketingsource-title": {
+    "translation": "Markedsføringskilder"
+  },
+  "marketingsource-name-textfield": {
+    "translation": "Etternavn"
+  },
+  "marketingsource-name-placeholder": {
+    "translation": "for eksempel. Facebook"
+  },
+  "marketingsource-header-edit": {
+    "translation": "Lag en markedsføringskilde"
+  },
+  "basic-crud-table-input-search-placeholder": {
+    "translation": "Se etter"
+  },
+  "basic-crud-table-button-filter": {
+    "translation": "Filtrert"
+  },
+  "basic-crud-table-column--active": {
+    "translation": "Aktiv"
+  },
+  "basic-crud-table-button-active": {
+    "translation": "Aktiv"
+  },
+  "basic-crud-table-button-inactive": {
+    "translation": "Inaktiv"
+  },
+  "basic-crud-table-header-button-create": {
+    "translation": "Opret i kilde"
+  },
+  "basic-crud-table-header-breadcrumb-setup-link": {
+    "translation": "Installere"
   }
+}

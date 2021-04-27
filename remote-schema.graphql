@@ -50863,240 +50863,6 @@ input JobWhereUniqueInput {
 scalar Json
 
 """
-columns and relationships of "LMS_slugs"
-"""
-type LMS_slugs {
-  article_urls(
-    """JSON select path"""
-    path: String
-  ): jsonb
-  blogs(
-    """JSON select path"""
-    path: String
-  ): jsonb
-  created_date: timestamptz!
-  id: uuid!
-  slug: String!
-  videos(
-    """JSON select path"""
-    path: String
-  ): jsonb
-  webinar: String
-}
-
-"""
-aggregated selection of "LMS_slugs"
-"""
-type LMS_slugs_aggregate {
-  aggregate: LMS_slugs_aggregate_fields
-  nodes: [LMS_slugs!]!
-}
-
-"""
-aggregate fields of "LMS_slugs"
-"""
-type LMS_slugs_aggregate_fields {
-  count(columns: [LMS_slugs_select_column!], distinct: Boolean): Int!
-  max: LMS_slugs_max_fields
-  min: LMS_slugs_min_fields
-}
-
-"""append existing jsonb value of filtered columns with new jsonb value"""
-input LMS_slugs_append_input {
-  article_urls: jsonb
-  blogs: jsonb
-  videos: jsonb
-}
-
-"""
-Boolean expression to filter rows from the table "LMS_slugs". All fields are combined with a logical 'AND'.
-"""
-input LMS_slugs_bool_exp {
-  _and: [LMS_slugs_bool_exp!]
-  _not: LMS_slugs_bool_exp
-  _or: [LMS_slugs_bool_exp!]
-  article_urls: jsonb_comparison_exp
-  blogs: jsonb_comparison_exp
-  created_date: timestamptz_comparison_exp
-  id: uuid_comparison_exp
-  slug: String_comparison_exp
-  videos: jsonb_comparison_exp
-  webinar: String_comparison_exp
-}
-
-"""
-unique or primary key constraints on table "LMS_slugs"
-"""
-enum LMS_slugs_constraint {
-  """unique or primary key constraint"""
-  LMS_slugs_pkey
-}
-
-"""
-delete the field or element with specified path (for JSON arrays, negative integers count from the end)
-"""
-input LMS_slugs_delete_at_path_input {
-  article_urls: [String!]
-  blogs: [String!]
-  videos: [String!]
-}
-
-"""
-delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
-"""
-input LMS_slugs_delete_elem_input {
-  article_urls: Int
-  blogs: Int
-  videos: Int
-}
-
-"""
-delete key/value pair or string element. key/value pairs are matched based on their key value
-"""
-input LMS_slugs_delete_key_input {
-  article_urls: String
-  blogs: String
-  videos: String
-}
-
-"""
-input type for inserting data into table "LMS_slugs"
-"""
-input LMS_slugs_insert_input {
-  article_urls: jsonb
-  blogs: jsonb
-  created_date: timestamptz
-  id: uuid
-  slug: String
-  videos: jsonb
-  webinar: String
-}
-
-"""aggregate max on columns"""
-type LMS_slugs_max_fields {
-  created_date: timestamptz
-  id: uuid
-  slug: String
-  webinar: String
-}
-
-"""aggregate min on columns"""
-type LMS_slugs_min_fields {
-  created_date: timestamptz
-  id: uuid
-  slug: String
-  webinar: String
-}
-
-"""
-response of any mutation on the table "LMS_slugs"
-"""
-type LMS_slugs_mutation_response {
-  """number of rows affected by the mutation"""
-  affected_rows: Int!
-
-  """data from the rows affected by the mutation"""
-  returning: [LMS_slugs!]!
-}
-
-"""
-on conflict condition type for table "LMS_slugs"
-"""
-input LMS_slugs_on_conflict {
-  constraint: LMS_slugs_constraint!
-  update_columns: [LMS_slugs_update_column!]!
-  where: LMS_slugs_bool_exp
-}
-
-"""Ordering options when selecting data from "LMS_slugs"."""
-input LMS_slugs_order_by {
-  article_urls: order_by
-  blogs: order_by
-  created_date: order_by
-  id: order_by
-  slug: order_by
-  videos: order_by
-  webinar: order_by
-}
-
-"""primary key columns input for table: LMS_slugs"""
-input LMS_slugs_pk_columns_input {
-  id: uuid!
-}
-
-"""prepend existing jsonb value of filtered columns with new jsonb value"""
-input LMS_slugs_prepend_input {
-  article_urls: jsonb
-  blogs: jsonb
-  videos: jsonb
-}
-
-"""
-select columns of table "LMS_slugs"
-"""
-enum LMS_slugs_select_column {
-  """column name"""
-  article_urls
-
-  """column name"""
-  blogs
-
-  """column name"""
-  created_date
-
-  """column name"""
-  id
-
-  """column name"""
-  slug
-
-  """column name"""
-  videos
-
-  """column name"""
-  webinar
-}
-
-"""
-input type for updating data in table "LMS_slugs"
-"""
-input LMS_slugs_set_input {
-  article_urls: jsonb
-  blogs: jsonb
-  created_date: timestamptz
-  id: uuid
-  slug: String
-  videos: jsonb
-  webinar: String
-}
-
-"""
-update columns of table "LMS_slugs"
-"""
-enum LMS_slugs_update_column {
-  """column name"""
-  article_urls
-
-  """column name"""
-  blogs
-
-  """column name"""
-  created_date
-
-  """column name"""
-  id
-
-  """column name"""
-  slug
-
-  """column name"""
-  videos
-
-  """column name"""
-  webinar
-}
-
-"""
 columns and relationships of "Labs"
 """
 type Labs {
@@ -57960,6 +57726,7 @@ type SocialSurveyFeedback {
   Company: Company!
   Response(cursor: SocialSurveyFeedbackResponseWhereUniqueInput, skip: Int, take: Int): [SocialSurveyFeedbackResponse!]!
   SocialSurveyAnswer(cursor: SocialSurveyAnswerWhereUniqueInput, skip: Int, take: Int): [SocialSurveyAnswer!]!
+  User: User!
   company_id: Int!
   contact_id: Int
   date: Decimal!
@@ -57983,9 +57750,9 @@ input SocialSurveyFeedbackCreateInput {
   Company: CompanyCreateNestedOneWithoutSocialSurveyFeedbackInput!
   Response: SocialSurveyFeedbackResponseCreateNestedManyWithoutFeedbackInput
   SocialSurveyAnswer: SocialSurveyAnswerCreateNestedManyWithoutSocialSurveyFeedbackInput
+  User: UserCreateNestedOneWithoutSocialSurveyFeedbackInput!
   date: Decimal!
   feedback_comment: String!
-  feedback_for: Int!
   feedback_name: String!
   feedback_source: String!
   feedback_status: String!
@@ -57996,6 +57763,12 @@ input SocialSurveyFeedbackCreateInput {
   related_to: String!
   service: String!
   service_id: Int!
+}
+
+input SocialSurveyFeedbackCreateNestedManyWithoutUserInput {
+  connect: [SocialSurveyFeedbackWhereUniqueInput]
+  connectOrCreate: [SocialSurveyFeedbackCreateOrConnectWithoutUserInput]
+  create: [SocialSurveyFeedbackCreateWithoutUserInput]
 }
 
 input SocialSurveyFeedbackCreateNestedOneWithoutCmContactInput {
@@ -58036,13 +57809,37 @@ input SocialSurveyFeedbackCreateOrConnectWithoutSocialSurveyAnswerInput {
   where: SocialSurveyFeedbackWhereUniqueInput!
 }
 
+input SocialSurveyFeedbackCreateOrConnectWithoutUserInput {
+  create: SocialSurveyFeedbackUncheckedCreateWithoutUserInput!
+  where: SocialSurveyFeedbackWhereUniqueInput!
+}
+
 input SocialSurveyFeedbackCreateWithoutCompanyInput {
   CmContact: CmContactCreateNestedOneWithoutSocialSurveyFeedbackInput
   Response: SocialSurveyFeedbackResponseCreateNestedManyWithoutFeedbackInput
   SocialSurveyAnswer: SocialSurveyAnswerCreateNestedManyWithoutSocialSurveyFeedbackInput
+  User: UserCreateNestedOneWithoutSocialSurveyFeedbackInput!
   date: Decimal!
   feedback_comment: String!
-  feedback_for: Int!
+  feedback_name: String!
+  feedback_source: String!
+  feedback_status: String!
+  owner_response: String!
+  public_use: Int
+  rating: Int!
+  related_id: Int!
+  related_to: String!
+  service: String!
+  service_id: Int!
+}
+
+input SocialSurveyFeedbackCreateWithoutUserInput {
+  CmContact: CmContactCreateNestedOneWithoutSocialSurveyFeedbackInput
+  Company: CompanyCreateNestedOneWithoutSocialSurveyFeedbackInput!
+  Response: SocialSurveyFeedbackResponseCreateNestedManyWithoutFeedbackInput
+  SocialSurveyAnswer: SocialSurveyAnswerCreateNestedManyWithoutSocialSurveyFeedbackInput
+  date: Decimal!
+  feedback_comment: String!
   feedback_name: String!
   feedback_source: String!
   feedback_status: String!
@@ -58063,6 +57860,7 @@ input SocialSurveyFeedbackListRelationFilter {
 
 input SocialSurveyFeedbackOrderByInput {
   Company: CompanyOrderByInput
+  User: UserOrderByInput
   company_id: SortOrder
   contact_id: SortOrder
   date: SortOrder
@@ -58447,6 +58245,12 @@ input SocialSurveyFeedbackUncheckedCreateNestedManyWithoutCompanyInput {
   create: [SocialSurveyFeedbackCreateWithoutCompanyInput]
 }
 
+input SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput {
+  connect: [SocialSurveyFeedbackWhereUniqueInput]
+  connectOrCreate: [SocialSurveyFeedbackCreateOrConnectWithoutUserInput]
+  create: [SocialSurveyFeedbackCreateWithoutUserInput]
+}
+
 input SocialSurveyFeedbackUncheckedCreateNestedOneWithoutCmContactInput {
   connect: SocialSurveyFeedbackWhereUniqueInput
   connectOrCreate: SocialSurveyFeedbackCreateOrConnectWithoutCmContactInput
@@ -58533,6 +58337,26 @@ input SocialSurveyFeedbackUncheckedCreateWithoutSocialSurveyAnswerInput {
   service_id: Int!
 }
 
+input SocialSurveyFeedbackUncheckedCreateWithoutUserInput {
+  Response: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutFeedbackInput
+  SocialSurveyAnswer: SocialSurveyAnswerUncheckedCreateNestedManyWithoutSocialSurveyFeedbackInput
+  company_id: Int!
+  contact_id: Int
+  date: Decimal!
+  feedback_comment: String!
+  feedback_name: String!
+  feedback_source: String!
+  feedback_status: String!
+  id: Int
+  owner_response: String!
+  public_use: Int
+  rating: Int!
+  related_id: Int!
+  related_to: String!
+  service: String!
+  service_id: Int!
+}
+
 input SocialSurveyFeedbackUncheckedUpdateManyWithoutCompanyInput {
   connect: [SocialSurveyFeedbackWhereUniqueInput]
   connectOrCreate: [SocialSurveyFeedbackCreateOrConnectWithoutCompanyInput]
@@ -58562,6 +58386,19 @@ input SocialSurveyFeedbackUncheckedUpdateManyWithoutSocialSurveyFeedbackInput {
   related_to: StringFieldUpdateOperationsInput
   service: StringFieldUpdateOperationsInput
   service_id: IntFieldUpdateOperationsInput
+}
+
+input SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput {
+  connect: [SocialSurveyFeedbackWhereUniqueInput]
+  connectOrCreate: [SocialSurveyFeedbackCreateOrConnectWithoutUserInput]
+  create: [SocialSurveyFeedbackCreateWithoutUserInput]
+  delete: [SocialSurveyFeedbackWhereUniqueInput]
+  deleteMany: [SocialSurveyFeedbackScalarWhereInput]
+  disconnect: [SocialSurveyFeedbackWhereUniqueInput]
+  set: [SocialSurveyFeedbackWhereUniqueInput]
+  update: [SocialSurveyFeedbackUpdateWithWhereUniqueWithoutUserInput]
+  updateMany: [SocialSurveyFeedbackUpdateManyWithWhereWithoutUserInput]
+  upsert: [SocialSurveyFeedbackUpsertWithWhereUniqueWithoutUserInput]
 }
 
 input SocialSurveyFeedbackUncheckedUpdateOneWithoutCmContactInput {
@@ -58654,14 +58491,34 @@ input SocialSurveyFeedbackUncheckedUpdateWithoutSocialSurveyAnswerInput {
   service_id: IntFieldUpdateOperationsInput
 }
 
+input SocialSurveyFeedbackUncheckedUpdateWithoutUserInput {
+  Response: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutFeedbackInput
+  SocialSurveyAnswer: SocialSurveyAnswerUncheckedUpdateManyWithoutSocialSurveyFeedbackInput
+  company_id: IntFieldUpdateOperationsInput
+  contact_id: NullableIntFieldUpdateOperationsInput
+  date: DecimalFieldUpdateOperationsInput
+  feedback_comment: StringFieldUpdateOperationsInput
+  feedback_name: StringFieldUpdateOperationsInput
+  feedback_source: StringFieldUpdateOperationsInput
+  feedback_status: StringFieldUpdateOperationsInput
+  id: IntFieldUpdateOperationsInput
+  owner_response: StringFieldUpdateOperationsInput
+  public_use: IntFieldUpdateOperationsInput
+  rating: IntFieldUpdateOperationsInput
+  related_id: IntFieldUpdateOperationsInput
+  related_to: StringFieldUpdateOperationsInput
+  service: StringFieldUpdateOperationsInput
+  service_id: IntFieldUpdateOperationsInput
+}
+
 input SocialSurveyFeedbackUpdateInput {
   CmContact: CmContactUpdateOneWithoutSocialSurveyFeedbackInput
   Company: CompanyUpdateOneRequiredWithoutSocialSurveyFeedbackInput
   Response: SocialSurveyFeedbackResponseUpdateManyWithoutFeedbackInput
   SocialSurveyAnswer: SocialSurveyAnswerUpdateManyWithoutSocialSurveyFeedbackInput
+  User: UserUpdateOneRequiredWithoutSocialSurveyFeedbackInput
   date: DecimalFieldUpdateOperationsInput
   feedback_comment: StringFieldUpdateOperationsInput
-  feedback_for: IntFieldUpdateOperationsInput
   feedback_name: StringFieldUpdateOperationsInput
   feedback_source: StringFieldUpdateOperationsInput
   feedback_status: StringFieldUpdateOperationsInput
@@ -58677,7 +58534,6 @@ input SocialSurveyFeedbackUpdateInput {
 input SocialSurveyFeedbackUpdateManyMutationInput {
   date: DecimalFieldUpdateOperationsInput
   feedback_comment: StringFieldUpdateOperationsInput
-  feedback_for: IntFieldUpdateOperationsInput
   feedback_name: StringFieldUpdateOperationsInput
   feedback_source: StringFieldUpdateOperationsInput
   feedback_status: StringFieldUpdateOperationsInput
@@ -58695,6 +58551,11 @@ input SocialSurveyFeedbackUpdateManyWithWhereWithoutCompanyInput {
   where: SocialSurveyFeedbackScalarWhereInput!
 }
 
+input SocialSurveyFeedbackUpdateManyWithWhereWithoutUserInput {
+  data: SocialSurveyFeedbackUncheckedUpdateManyWithoutSocialSurveyFeedbackInput!
+  where: SocialSurveyFeedbackScalarWhereInput!
+}
+
 input SocialSurveyFeedbackUpdateManyWithoutCompanyInput {
   connect: [SocialSurveyFeedbackWhereUniqueInput]
   connectOrCreate: [SocialSurveyFeedbackCreateOrConnectWithoutCompanyInput]
@@ -58706,6 +58567,19 @@ input SocialSurveyFeedbackUpdateManyWithoutCompanyInput {
   update: [SocialSurveyFeedbackUpdateWithWhereUniqueWithoutCompanyInput]
   updateMany: [SocialSurveyFeedbackUpdateManyWithWhereWithoutCompanyInput]
   upsert: [SocialSurveyFeedbackUpsertWithWhereUniqueWithoutCompanyInput]
+}
+
+input SocialSurveyFeedbackUpdateManyWithoutUserInput {
+  connect: [SocialSurveyFeedbackWhereUniqueInput]
+  connectOrCreate: [SocialSurveyFeedbackCreateOrConnectWithoutUserInput]
+  create: [SocialSurveyFeedbackCreateWithoutUserInput]
+  delete: [SocialSurveyFeedbackWhereUniqueInput]
+  deleteMany: [SocialSurveyFeedbackScalarWhereInput]
+  disconnect: [SocialSurveyFeedbackWhereUniqueInput]
+  set: [SocialSurveyFeedbackWhereUniqueInput]
+  update: [SocialSurveyFeedbackUpdateWithWhereUniqueWithoutUserInput]
+  updateMany: [SocialSurveyFeedbackUpdateManyWithWhereWithoutUserInput]
+  upsert: [SocialSurveyFeedbackUpsertWithWhereUniqueWithoutUserInput]
 }
 
 input SocialSurveyFeedbackUpdateOneRequiredWithoutResponseInput {
@@ -58739,9 +58613,20 @@ input SocialSurveyFeedbackUpdateWithWhereUniqueWithoutCompanyInput {
   where: SocialSurveyFeedbackWhereUniqueInput!
 }
 
+input SocialSurveyFeedbackUpdateWithWhereUniqueWithoutUserInput {
+  data: SocialSurveyFeedbackUncheckedUpdateWithoutUserInput!
+  where: SocialSurveyFeedbackWhereUniqueInput!
+}
+
 input SocialSurveyFeedbackUpsertWithWhereUniqueWithoutCompanyInput {
   create: SocialSurveyFeedbackUncheckedCreateWithoutCompanyInput!
   update: SocialSurveyFeedbackUncheckedUpdateWithoutCompanyInput!
+  where: SocialSurveyFeedbackWhereUniqueInput!
+}
+
+input SocialSurveyFeedbackUpsertWithWhereUniqueWithoutUserInput {
+  create: SocialSurveyFeedbackUncheckedCreateWithoutUserInput!
+  update: SocialSurveyFeedbackUncheckedUpdateWithoutUserInput!
   where: SocialSurveyFeedbackWhereUniqueInput!
 }
 
@@ -58768,6 +58653,7 @@ input SocialSurveyFeedbackWhereInput {
   OR: [SocialSurveyFeedbackWhereInput]
   Response: SocialSurveyFeedbackResponseListRelationFilter
   SocialSurveyAnswer: SocialSurveyAnswerListRelationFilter
+  User: UserWhereInput
   company_id: IntFilter
   contact_id: IntNullableFilter
   date: DecimalFilter
@@ -60910,6 +60796,7 @@ type User {
   InvProduct(cursor: InvProductWhereUniqueInput, skip: Int, take: Int): [InvProduct!]!
   MessageTemplate(cursor: MessageTemplateWhereUniqueInput, skip: Int, take: Int): [MessageTemplate!]!
   RotaShift(cursor: RotaShiftWhereUniqueInput, skip: Int, take: Int): [RotaShift!]!
+  SocialSurveyFeedback(cursor: SocialSurveyFeedbackWhereUniqueInput, skip: Int, take: Int): [SocialSurveyFeedback!]!
   SocialSurveyFeedbackResponse(cursor: SocialSurveyFeedbackResponseWhereUniqueInput, skip: Int, take: Int): [SocialSurveyFeedbackResponse!]!
   StaffMeta(cursor: StaffMetaWhereUniqueInput, skip: Int, take: Int): [StaffMeta!]!
   TrainCourseDate(cursor: TrainCourseDateWhereUniqueInput, skip: Int, take: Int): [TrainCourseDate!]!
@@ -61921,6 +61808,7 @@ input UserCreateInput {
   InvProduct: InvProductCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateCreateNestedManyWithoutUserInput
@@ -62094,6 +61982,12 @@ input UserCreateNestedOneWithoutRotaShiftInput {
   create: UserUncheckedCreateWithoutRotaShiftInput
 }
 
+input UserCreateNestedOneWithoutSocialSurveyFeedbackInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutSocialSurveyFeedbackInput
+  create: UserUncheckedCreateWithoutSocialSurveyFeedbackInput
+}
+
 input UserCreateNestedOneWithoutSocialSurveyFeedbackResponseInput {
   connect: UserWhereUniqueInput
   connectOrCreate: UserCreateOrConnectWithoutSocialSurveyFeedbackResponseInput
@@ -62226,6 +62120,11 @@ input UserCreateOrConnectWithoutRotaShiftInput {
   where: UserWhereUniqueInput!
 }
 
+input UserCreateOrConnectWithoutSocialSurveyFeedbackInput {
+  create: UserUncheckedCreateWithoutSocialSurveyFeedbackInput!
+  where: UserWhereUniqueInput!
+}
+
 input UserCreateOrConnectWithoutSocialSurveyFeedbackResponseInput {
   create: UserUncheckedCreateWithoutSocialSurveyFeedbackResponseInput!
   where: UserWhereUniqueInput!
@@ -62298,6 +62197,7 @@ input UserCreateWithoutCompanyInput {
   InvProduct: InvProductCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateCreateNestedManyWithoutUserInput
@@ -64791,6 +64691,7 @@ input UserUncheckedCreateWithoutCmContactAlertInput {
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
@@ -64910,6 +64811,7 @@ input UserUncheckedCreateWithoutCmContactNoteInput {
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
@@ -65029,6 +64931,7 @@ input UserUncheckedCreateWithoutCmContactTravelInput {
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
@@ -65148,6 +65051,7 @@ input UserUncheckedCreateWithoutCmContactViewedInput {
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
@@ -65267,6 +65171,7 @@ input UserUncheckedCreateWithoutCmStaffGeneralInput {
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
@@ -65387,6 +65292,7 @@ input UserUncheckedCreateWithoutCompanyInput {
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
@@ -65505,6 +65411,7 @@ input UserUncheckedCreateWithoutCompanyNoteInput {
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
@@ -65624,6 +65531,7 @@ input UserUncheckedCreateWithoutInvBillerInput {
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
@@ -65743,6 +65651,7 @@ input UserUncheckedCreateWithoutInvPaymentInput {
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
@@ -65862,6 +65771,7 @@ input UserUncheckedCreateWithoutInvProductInput {
   InvPayment: InvPaymentUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
@@ -65981,6 +65891,7 @@ input UserUncheckedCreateWithoutMessageTemplateInput {
   InvPayment: InvPaymentUncheckedCreateNestedManyWithoutUserInput
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
@@ -66100,6 +66011,127 @@ input UserUncheckedCreateWithoutRotaShiftInput {
   InvPayment: InvPaymentUncheckedCreateNestedManyWithoutUserInput
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
+  StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
+  TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
+  UserActivityLog: UserActivityLogUncheckedCreateNestedManyWithoutUserInput
+  UserAlertPermission: UserAlertPermissionUncheckedCreateNestedManyWithoutUserInput
+  UserAlertType: UserAlertTypeUncheckedCreateNestedOneWithoutUserInput
+  UserGroupMember: UserGroupMemberUncheckedCreateNestedOneWithoutUserInput
+  UserMainPermission: UserMainPermissionUncheckedCreateNestedManyWithoutUserInput
+  UserMobilePermission: UserMobilePermissionUncheckedCreateNestedManyWithoutUserInput
+  UserPermission: UserPermissionUncheckedCreateNestedManyWithoutUserInput
+  UserReport: UserReportUncheckedCreateNestedManyWithoutUserInput
+  UserSecurityQuestionsAnswer: UserSecurityQuestionsAnswerUncheckedCreateNestedManyWithoutUsersInput
+  address: String!
+  admin: Int!
+  admin_leads: Int!
+  admin_tasks: Boolean!
+  all_reports: Boolean
+  all_services: Boolean
+  appear_on_rota: Boolean
+  calendar_order: Int!
+  can_cancel_booking: Boolean
+  can_delete_blockout: Boolean
+  can_delete_communications: Boolean
+  can_discount: Int
+  can_discount_single: Boolean
+  can_edit_booking_time: Int
+  can_edit_communications: Boolean
+  can_lab_requests: Boolean
+  can_make_blockout: Boolean
+  can_merge: Boolean
+  can_move_blockout: Boolean
+  can_patient_appoint: Boolean
+  can_patient_communicatons: Boolean
+  can_patient_consents: Boolean
+  can_patient_docs: Boolean
+  can_patient_fiancials: Boolean
+  can_patient_giftvoucher: Boolean
+  can_patient_loyalty: Boolean
+  can_patient_medical_history: Boolean
+  can_patient_memberships: Boolean
+  can_patient_packages: Boolean
+  can_patient_photos: Boolean
+  can_patient_prescription: Boolean
+  can_patient_recall: Boolean
+  can_patient_treatments: Boolean
+  can_refund: Boolean
+  can_report: Boolean
+  can_rota: Boolean
+  can_see_personal: Boolean
+  can_view_full_cal: Boolean
+  can_void: Boolean
+  clocked_in: DateTime
+  clocked_out: DateTime
+  company_id: Int
+  created: DateTime
+  custom_id: String!
+  default_contract_id: Int!
+  default_page: String!
+  delete_treatment: Boolean
+  deleted: Int!
+  department: String!
+  detailed_view: Int!
+  disable_multiple_clinics: Int!
+  disable_tutorial: Boolean!
+  division: String!
+  email: String!
+  force_password: Int!
+  full_name: String!
+  google_auth_secret: String
+  hash: String!
+  hide_calendar: Int!
+  hide_online_bookings: Int!
+  id: Int
+  image: String!
+  imported: Int!
+  is_hcp: Int
+  job_title: String!
+  language: String!
+  last_loaded_page: String!
+  last_login: DateTime
+  last_password_reset: Int!
+  limited_user: Boolean!
+  locale: String!
+  location: String!
+  login_disabled: Int!
+  login_fail_count: Int!
+  main_contact: Boolean!
+  notify_on_booking: Boolean!
+  pass_code: String!
+  passcode: String!
+  password: String
+  password_algor: Int
+  performance_stats: Int!
+  permission_last_role: String
+  phone_number: String!
+  position: String!
+  restored: Int!
+  salt: String
+  signature: String!
+  staff_read_only: Boolean!
+  stock_read_only: Boolean!
+  super: Int!
+  temporary_password: Boolean!
+  timezone: String!
+  user_color: String!
+  username: String
+}
+
+input UserUncheckedCreateWithoutSocialSurveyFeedbackInput {
+  CmContactAlert: CmContactAlertUncheckedCreateNestedManyWithoutUserInput
+  CmContactNote: CmContactNoteUncheckedCreateNestedManyWithoutUserInput
+  CmContactTravel: CmContactTravelUncheckedCreateNestedManyWithoutUserInput
+  CmContactViewed: CmContactViewedUncheckedCreateNestedManyWithoutUserInput
+  CmStaffGeneral: CmStaffGeneralUncheckedCreateNestedManyWithoutUserInput
+  CompanyNote: CompanyNoteUncheckedCreateNestedManyWithoutUserInput
+  InvBiller: InvBillerUncheckedCreateNestedManyWithoutUserInput
+  InvPayment: InvPaymentUncheckedCreateNestedManyWithoutUserInput
+  InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
+  MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
+  RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
@@ -66220,6 +66252,7 @@ input UserUncheckedCreateWithoutSocialSurveyFeedbackResponseInput {
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
   UserActivityLog: UserActivityLogUncheckedCreateNestedManyWithoutUserInput
@@ -66339,6 +66372,7 @@ input UserUncheckedCreateWithoutStaffMetaInput {
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
   UserActivityLog: UserActivityLogUncheckedCreateNestedManyWithoutUserInput
@@ -66458,6 +66492,7 @@ input UserUncheckedCreateWithoutTrainCourseDateInput {
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   UserActivityLog: UserActivityLogUncheckedCreateNestedManyWithoutUserInput
@@ -66577,6 +66612,7 @@ input UserUncheckedCreateWithoutUserActivityLogInput {
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
@@ -66696,6 +66732,7 @@ input UserUncheckedCreateWithoutUserAlertPermissionInput {
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
@@ -66815,6 +66852,7 @@ input UserUncheckedCreateWithoutUserAlertTypeInput {
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
@@ -66934,6 +66972,7 @@ input UserUncheckedCreateWithoutUserGroupMemberInput {
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
@@ -67053,6 +67092,7 @@ input UserUncheckedCreateWithoutUserMainPermissionInput {
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
@@ -67172,6 +67212,7 @@ input UserUncheckedCreateWithoutUserMobilePermissionInput {
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
@@ -67291,6 +67332,7 @@ input UserUncheckedCreateWithoutUserPermissionInput {
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
@@ -67410,6 +67452,7 @@ input UserUncheckedCreateWithoutUserReportInput {
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
@@ -67529,6 +67572,7 @@ input UserUncheckedCreateWithoutUserSecurityQuestionsAnswerInput {
   InvProduct: InvProductUncheckedCreateNestedManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutUserInput
   RotaShift: RotaShiftUncheckedCreateNestedManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedCreateNestedManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutUserInput
@@ -67756,6 +67800,7 @@ input UserUncheckedUpdateWithoutCmContactAlertInput {
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
@@ -67875,6 +67920,7 @@ input UserUncheckedUpdateWithoutCmContactNoteInput {
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
@@ -67994,6 +68040,7 @@ input UserUncheckedUpdateWithoutCmContactTravelInput {
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
@@ -68113,6 +68160,7 @@ input UserUncheckedUpdateWithoutCmContactViewedInput {
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
@@ -68232,6 +68280,7 @@ input UserUncheckedUpdateWithoutCmStaffGeneralInput {
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
@@ -68352,6 +68401,7 @@ input UserUncheckedUpdateWithoutCompanyInput {
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
@@ -68470,6 +68520,7 @@ input UserUncheckedUpdateWithoutCompanyNoteInput {
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
@@ -68589,6 +68640,7 @@ input UserUncheckedUpdateWithoutInvBillerInput {
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
@@ -68708,6 +68760,7 @@ input UserUncheckedUpdateWithoutInvPaymentInput {
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
@@ -68827,6 +68880,7 @@ input UserUncheckedUpdateWithoutInvProductInput {
   InvPayment: InvPaymentUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
@@ -68946,6 +69000,7 @@ input UserUncheckedUpdateWithoutMessageTemplateInput {
   InvPayment: InvPaymentUncheckedUpdateManyWithoutUserInput
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
@@ -69065,6 +69120,127 @@ input UserUncheckedUpdateWithoutRotaShiftInput {
   InvPayment: InvPaymentUncheckedUpdateManyWithoutUserInput
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
+  StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
+  TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
+  UserActivityLog: UserActivityLogUncheckedUpdateManyWithoutUserInput
+  UserAlertPermission: UserAlertPermissionUncheckedUpdateManyWithoutUserInput
+  UserAlertType: UserAlertTypeUncheckedUpdateOneWithoutUserInput
+  UserGroupMember: UserGroupMemberUncheckedUpdateOneWithoutUserInput
+  UserMainPermission: UserMainPermissionUncheckedUpdateManyWithoutUserInput
+  UserMobilePermission: UserMobilePermissionUncheckedUpdateManyWithoutUserInput
+  UserPermission: UserPermissionUncheckedUpdateManyWithoutUserInput
+  UserReport: UserReportUncheckedUpdateManyWithoutUserInput
+  UserSecurityQuestionsAnswer: UserSecurityQuestionsAnswerUncheckedUpdateManyWithoutUsersInput
+  address: StringFieldUpdateOperationsInput
+  admin: IntFieldUpdateOperationsInput
+  admin_leads: IntFieldUpdateOperationsInput
+  admin_tasks: BoolFieldUpdateOperationsInput
+  all_reports: BoolFieldUpdateOperationsInput
+  all_services: BoolFieldUpdateOperationsInput
+  appear_on_rota: BoolFieldUpdateOperationsInput
+  calendar_order: IntFieldUpdateOperationsInput
+  can_cancel_booking: BoolFieldUpdateOperationsInput
+  can_delete_blockout: BoolFieldUpdateOperationsInput
+  can_delete_communications: BoolFieldUpdateOperationsInput
+  can_discount: NullableIntFieldUpdateOperationsInput
+  can_discount_single: BoolFieldUpdateOperationsInput
+  can_edit_booking_time: IntFieldUpdateOperationsInput
+  can_edit_communications: BoolFieldUpdateOperationsInput
+  can_lab_requests: BoolFieldUpdateOperationsInput
+  can_make_blockout: BoolFieldUpdateOperationsInput
+  can_merge: BoolFieldUpdateOperationsInput
+  can_move_blockout: BoolFieldUpdateOperationsInput
+  can_patient_appoint: BoolFieldUpdateOperationsInput
+  can_patient_communicatons: BoolFieldUpdateOperationsInput
+  can_patient_consents: BoolFieldUpdateOperationsInput
+  can_patient_docs: BoolFieldUpdateOperationsInput
+  can_patient_fiancials: BoolFieldUpdateOperationsInput
+  can_patient_giftvoucher: BoolFieldUpdateOperationsInput
+  can_patient_loyalty: BoolFieldUpdateOperationsInput
+  can_patient_medical_history: BoolFieldUpdateOperationsInput
+  can_patient_memberships: BoolFieldUpdateOperationsInput
+  can_patient_packages: BoolFieldUpdateOperationsInput
+  can_patient_photos: BoolFieldUpdateOperationsInput
+  can_patient_prescription: BoolFieldUpdateOperationsInput
+  can_patient_recall: BoolFieldUpdateOperationsInput
+  can_patient_treatments: BoolFieldUpdateOperationsInput
+  can_refund: BoolFieldUpdateOperationsInput
+  can_report: BoolFieldUpdateOperationsInput
+  can_rota: BoolFieldUpdateOperationsInput
+  can_see_personal: BoolFieldUpdateOperationsInput
+  can_view_full_cal: BoolFieldUpdateOperationsInput
+  can_void: BoolFieldUpdateOperationsInput
+  clocked_in: NullableDateTimeFieldUpdateOperationsInput
+  clocked_out: NullableDateTimeFieldUpdateOperationsInput
+  company_id: NullableIntFieldUpdateOperationsInput
+  created: NullableDateTimeFieldUpdateOperationsInput
+  custom_id: StringFieldUpdateOperationsInput
+  default_contract_id: IntFieldUpdateOperationsInput
+  default_page: StringFieldUpdateOperationsInput
+  delete_treatment: BoolFieldUpdateOperationsInput
+  deleted: IntFieldUpdateOperationsInput
+  department: StringFieldUpdateOperationsInput
+  detailed_view: IntFieldUpdateOperationsInput
+  disable_multiple_clinics: IntFieldUpdateOperationsInput
+  disable_tutorial: BoolFieldUpdateOperationsInput
+  division: StringFieldUpdateOperationsInput
+  email: StringFieldUpdateOperationsInput
+  force_password: IntFieldUpdateOperationsInput
+  full_name: StringFieldUpdateOperationsInput
+  google_auth_secret: NullableStringFieldUpdateOperationsInput
+  hash: StringFieldUpdateOperationsInput
+  hide_calendar: IntFieldUpdateOperationsInput
+  hide_online_bookings: IntFieldUpdateOperationsInput
+  id: IntFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
+  imported: IntFieldUpdateOperationsInput
+  is_hcp: IntFieldUpdateOperationsInput
+  job_title: StringFieldUpdateOperationsInput
+  language: StringFieldUpdateOperationsInput
+  last_loaded_page: StringFieldUpdateOperationsInput
+  last_login: NullableDateTimeFieldUpdateOperationsInput
+  last_password_reset: IntFieldUpdateOperationsInput
+  limited_user: BoolFieldUpdateOperationsInput
+  locale: StringFieldUpdateOperationsInput
+  location: StringFieldUpdateOperationsInput
+  login_disabled: IntFieldUpdateOperationsInput
+  login_fail_count: IntFieldUpdateOperationsInput
+  main_contact: BoolFieldUpdateOperationsInput
+  notify_on_booking: BoolFieldUpdateOperationsInput
+  pass_code: StringFieldUpdateOperationsInput
+  passcode: StringFieldUpdateOperationsInput
+  password: NullableStringFieldUpdateOperationsInput
+  password_algor: NullableIntFieldUpdateOperationsInput
+  performance_stats: IntFieldUpdateOperationsInput
+  permission_last_role: StringFieldUpdateOperationsInput
+  phone_number: StringFieldUpdateOperationsInput
+  position: StringFieldUpdateOperationsInput
+  restored: IntFieldUpdateOperationsInput
+  salt: NullableStringFieldUpdateOperationsInput
+  signature: StringFieldUpdateOperationsInput
+  staff_read_only: BoolFieldUpdateOperationsInput
+  stock_read_only: BoolFieldUpdateOperationsInput
+  super: IntFieldUpdateOperationsInput
+  temporary_password: BoolFieldUpdateOperationsInput
+  timezone: StringFieldUpdateOperationsInput
+  user_color: StringFieldUpdateOperationsInput
+  username: NullableStringFieldUpdateOperationsInput
+}
+
+input UserUncheckedUpdateWithoutSocialSurveyFeedbackInput {
+  CmContactAlert: CmContactAlertUncheckedUpdateManyWithoutUserInput
+  CmContactNote: CmContactNoteUncheckedUpdateManyWithoutUserInput
+  CmContactTravel: CmContactTravelUncheckedUpdateManyWithoutUserInput
+  CmContactViewed: CmContactViewedUncheckedUpdateManyWithoutUserInput
+  CmStaffGeneral: CmStaffGeneralUncheckedUpdateManyWithoutUserInput
+  CompanyNote: CompanyNoteUncheckedUpdateManyWithoutUserInput
+  InvBiller: InvBillerUncheckedUpdateManyWithoutUserInput
+  InvPayment: InvPaymentUncheckedUpdateManyWithoutUserInput
+  InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
+  MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
+  RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
@@ -69185,6 +69361,7 @@ input UserUncheckedUpdateWithoutSocialSurveyFeedbackResponseInput {
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
   UserActivityLog: UserActivityLogUncheckedUpdateManyWithoutUserInput
@@ -69304,6 +69481,7 @@ input UserUncheckedUpdateWithoutStaffMetaInput {
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
   UserActivityLog: UserActivityLogUncheckedUpdateManyWithoutUserInput
@@ -69423,6 +69601,7 @@ input UserUncheckedUpdateWithoutTrainCourseDateInput {
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   UserActivityLog: UserActivityLogUncheckedUpdateManyWithoutUserInput
@@ -69542,6 +69721,7 @@ input UserUncheckedUpdateWithoutUserActivityLogInput {
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
@@ -69661,6 +69841,7 @@ input UserUncheckedUpdateWithoutUserAlertPermissionInput {
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
@@ -69780,6 +69961,7 @@ input UserUncheckedUpdateWithoutUserAlertTypeInput {
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
@@ -69899,6 +70081,7 @@ input UserUncheckedUpdateWithoutUserGroupMemberInput {
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
@@ -70018,6 +70201,7 @@ input UserUncheckedUpdateWithoutUserMainPermissionInput {
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
@@ -70137,6 +70321,7 @@ input UserUncheckedUpdateWithoutUserMobilePermissionInput {
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
@@ -70256,6 +70441,7 @@ input UserUncheckedUpdateWithoutUserPermissionInput {
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
@@ -70375,6 +70561,7 @@ input UserUncheckedUpdateWithoutUserReportInput {
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
@@ -70494,6 +70681,7 @@ input UserUncheckedUpdateWithoutUserSecurityQuestionsAnswerInput {
   InvProduct: InvProductUncheckedUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutUserInput
   RotaShift: RotaShiftUncheckedUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUncheckedUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutUserInput
@@ -70613,6 +70801,7 @@ input UserUpdateInput {
   InvProduct: InvProductUpdateManyWithoutUserInput
   MessageTemplate: MessageTemplateUpdateManyWithoutUserInput
   RotaShift: RotaShiftUpdateManyWithoutUserInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUpdateManyWithoutUserInput
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUpdateManyWithoutUserInput
   StaffMeta: StaffMetaUpdateManyWithoutUserInput
   TrainCourseDate: TrainCourseDateUpdateManyWithoutUserInput
@@ -70897,6 +71086,14 @@ input UserUpdateOneRequiredWithoutRotaShiftInput {
   upsert: UserUpsertWithoutRotaShiftInput
 }
 
+input UserUpdateOneRequiredWithoutSocialSurveyFeedbackInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutSocialSurveyFeedbackInput
+  create: UserUncheckedCreateWithoutSocialSurveyFeedbackInput
+  update: UserUncheckedUpdateWithoutSocialSurveyFeedbackInput
+  upsert: UserUpsertWithoutSocialSurveyFeedbackInput
+}
+
 input UserUpdateOneRequiredWithoutSocialSurveyFeedbackResponseInput {
   connect: UserWhereUniqueInput
   connectOrCreate: UserCreateOrConnectWithoutSocialSurveyFeedbackResponseInput
@@ -71097,6 +71294,11 @@ input UserUpsertWithoutRotaShiftInput {
   update: UserUncheckedUpdateWithoutRotaShiftInput!
 }
 
+input UserUpsertWithoutSocialSurveyFeedbackInput {
+  create: UserUncheckedCreateWithoutSocialSurveyFeedbackInput!
+  update: UserUncheckedUpdateWithoutSocialSurveyFeedbackInput!
+}
+
 input UserUpsertWithoutSocialSurveyFeedbackResponseInput {
   create: UserUncheckedCreateWithoutSocialSurveyFeedbackResponseInput!
   update: UserUncheckedUpdateWithoutSocialSurveyFeedbackResponseInput!
@@ -71172,6 +71374,7 @@ input UserWhereInput {
   NOT: [UserWhereInput]
   OR: [UserWhereInput]
   RotaShift: RotaShiftListRelationFilter
+  SocialSurveyFeedback: SocialSurveyFeedbackListRelationFilter
   SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseListRelationFilter
   StaffMeta: StaffMetaListRelationFilter
   TrainCourseDate: TrainCourseDateListRelationFilter
@@ -79762,6 +79965,240 @@ type library_variance_fields {
 }
 
 """
+columns and relationships of "lms_slugs"
+"""
+type lms_slugs {
+  article_urls(
+    """JSON select path"""
+    path: String
+  ): jsonb
+  blogs(
+    """JSON select path"""
+    path: String
+  ): jsonb
+  created_date: timestamptz!
+  id: uuid!
+  slug: String!
+  videos(
+    """JSON select path"""
+    path: String
+  ): jsonb
+  webinar: String
+}
+
+"""
+aggregated selection of "lms_slugs"
+"""
+type lms_slugs_aggregate {
+  aggregate: lms_slugs_aggregate_fields
+  nodes: [lms_slugs!]!
+}
+
+"""
+aggregate fields of "lms_slugs"
+"""
+type lms_slugs_aggregate_fields {
+  count(columns: [lms_slugs_select_column!], distinct: Boolean): Int!
+  max: lms_slugs_max_fields
+  min: lms_slugs_min_fields
+}
+
+"""append existing jsonb value of filtered columns with new jsonb value"""
+input lms_slugs_append_input {
+  article_urls: jsonb
+  blogs: jsonb
+  videos: jsonb
+}
+
+"""
+Boolean expression to filter rows from the table "lms_slugs". All fields are combined with a logical 'AND'.
+"""
+input lms_slugs_bool_exp {
+  _and: [lms_slugs_bool_exp!]
+  _not: lms_slugs_bool_exp
+  _or: [lms_slugs_bool_exp!]
+  article_urls: jsonb_comparison_exp
+  blogs: jsonb_comparison_exp
+  created_date: timestamptz_comparison_exp
+  id: uuid_comparison_exp
+  slug: String_comparison_exp
+  videos: jsonb_comparison_exp
+  webinar: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "lms_slugs"
+"""
+enum lms_slugs_constraint {
+  """unique or primary key constraint"""
+  LMS_slugs_pkey
+}
+
+"""
+delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+"""
+input lms_slugs_delete_at_path_input {
+  article_urls: [String!]
+  blogs: [String!]
+  videos: [String!]
+}
+
+"""
+delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+"""
+input lms_slugs_delete_elem_input {
+  article_urls: Int
+  blogs: Int
+  videos: Int
+}
+
+"""
+delete key/value pair or string element. key/value pairs are matched based on their key value
+"""
+input lms_slugs_delete_key_input {
+  article_urls: String
+  blogs: String
+  videos: String
+}
+
+"""
+input type for inserting data into table "lms_slugs"
+"""
+input lms_slugs_insert_input {
+  article_urls: jsonb
+  blogs: jsonb
+  created_date: timestamptz
+  id: uuid
+  slug: String
+  videos: jsonb
+  webinar: String
+}
+
+"""aggregate max on columns"""
+type lms_slugs_max_fields {
+  created_date: timestamptz
+  id: uuid
+  slug: String
+  webinar: String
+}
+
+"""aggregate min on columns"""
+type lms_slugs_min_fields {
+  created_date: timestamptz
+  id: uuid
+  slug: String
+  webinar: String
+}
+
+"""
+response of any mutation on the table "lms_slugs"
+"""
+type lms_slugs_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [lms_slugs!]!
+}
+
+"""
+on conflict condition type for table "lms_slugs"
+"""
+input lms_slugs_on_conflict {
+  constraint: lms_slugs_constraint!
+  update_columns: [lms_slugs_update_column!]!
+  where: lms_slugs_bool_exp
+}
+
+"""Ordering options when selecting data from "lms_slugs"."""
+input lms_slugs_order_by {
+  article_urls: order_by
+  blogs: order_by
+  created_date: order_by
+  id: order_by
+  slug: order_by
+  videos: order_by
+  webinar: order_by
+}
+
+"""primary key columns input for table: lms_slugs"""
+input lms_slugs_pk_columns_input {
+  id: uuid!
+}
+
+"""prepend existing jsonb value of filtered columns with new jsonb value"""
+input lms_slugs_prepend_input {
+  article_urls: jsonb
+  blogs: jsonb
+  videos: jsonb
+}
+
+"""
+select columns of table "lms_slugs"
+"""
+enum lms_slugs_select_column {
+  """column name"""
+  article_urls
+
+  """column name"""
+  blogs
+
+  """column name"""
+  created_date
+
+  """column name"""
+  id
+
+  """column name"""
+  slug
+
+  """column name"""
+  videos
+
+  """column name"""
+  webinar
+}
+
+"""
+input type for updating data in table "lms_slugs"
+"""
+input lms_slugs_set_input {
+  article_urls: jsonb
+  blogs: jsonb
+  created_date: timestamptz
+  id: uuid
+  slug: String
+  videos: jsonb
+  webinar: String
+}
+
+"""
+update columns of table "lms_slugs"
+"""
+enum lms_slugs_update_column {
+  """column name"""
+  article_urls
+
+  """column name"""
+  blogs
+
+  """column name"""
+  created_date
+
+  """column name"""
+  id
+
+  """column name"""
+  slug
+
+  """column name"""
+  videos
+
+  """column name"""
+  webinar
+}
+
+"""
 columns and relationships of "locations"
 """
 type locations {
@@ -81218,19 +81655,6 @@ type mutation_root {
   delete_Discounts_by_pk(id: uuid!): Discounts
 
   """
-  delete data from the table: "LMS_slugs"
-  """
-  delete_LMS_slugs(
-    """filter the rows which have to be deleted"""
-    where: LMS_slugs_bool_exp!
-  ): LMS_slugs_mutation_response
-
-  """
-  delete single row from the table: "LMS_slugs"
-  """
-  delete_LMS_slugs_by_pk(id: uuid!): LMS_slugs
-
-  """
   delete data from the table: "Labs"
   """
   delete_Labs(
@@ -81660,6 +82084,19 @@ type mutation_root {
   delete_library_installers_by_pk(id: Int!): library_installers
 
   """
+  delete data from the table: "lms_slugs"
+  """
+  delete_lms_slugs(
+    """filter the rows which have to be deleted"""
+    where: lms_slugs_bool_exp!
+  ): lms_slugs_mutation_response
+
+  """
+  delete single row from the table: "lms_slugs"
+  """
+  delete_lms_slugs_by_pk(id: uuid!): lms_slugs
+
+  """
   delete data from the table: "locations"
   """
   delete_locations(
@@ -81894,6 +82331,19 @@ type mutation_root {
   delete_service_by_pk(id: uuid!): service
 
   """
+  delete data from the table: "service_categories"
+  """
+  delete_service_categories(
+    """filter the rows which have to be deleted"""
+    where: service_categories_bool_exp!
+  ): service_categories_mutation_response
+
+  """
+  delete single row from the table: "service_categories"
+  """
+  delete_service_categories_by_pk(id: uuid!): service_categories
+
+  """
   delete data from the table: "stock_take"
   """
   delete_stock_take(
@@ -81966,28 +82416,6 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: Discounts_on_conflict
   ): Discounts
-
-  """
-  insert data into the table: "LMS_slugs"
-  """
-  insert_LMS_slugs(
-    """the rows to be inserted"""
-    objects: [LMS_slugs_insert_input!]!
-
-    """on conflict condition"""
-    on_conflict: LMS_slugs_on_conflict
-  ): LMS_slugs_mutation_response
-
-  """
-  insert a single row into the table: "LMS_slugs"
-  """
-  insert_LMS_slugs_one(
-    """the row to be inserted"""
-    object: LMS_slugs_insert_input!
-
-    """on conflict condition"""
-    on_conflict: LMS_slugs_on_conflict
-  ): LMS_slugs
 
   """
   insert data into the table: "Labs"
@@ -82754,6 +83182,28 @@ type mutation_root {
   ): library
 
   """
+  insert data into the table: "lms_slugs"
+  """
+  insert_lms_slugs(
+    """the rows to be inserted"""
+    objects: [lms_slugs_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: lms_slugs_on_conflict
+  ): lms_slugs_mutation_response
+
+  """
+  insert a single row into the table: "lms_slugs"
+  """
+  insert_lms_slugs_one(
+    """the row to be inserted"""
+    object: lms_slugs_insert_input!
+
+    """on conflict condition"""
+    on_conflict: lms_slugs_on_conflict
+  ): lms_slugs
+
+  """
   insert data into the table: "locations"
   """
   insert_locations(
@@ -83145,6 +83595,28 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: service_on_conflict
   ): service_mutation_response
+
+  """
+  insert data into the table: "service_categories"
+  """
+  insert_service_categories(
+    """the rows to be inserted"""
+    objects: [service_categories_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: service_categories_on_conflict
+  ): service_categories_mutation_response
+
+  """
+  insert a single row into the table: "service_categories"
+  """
+  insert_service_categories_one(
+    """the row to be inserted"""
+    object: service_categories_insert_input!
+
+    """on conflict condition"""
+    on_conflict: service_categories_on_conflict
+  ): service_categories
 
   """
   insert a single row into the table: "service"
@@ -83622,68 +84094,6 @@ type mutation_root {
     _set: Discounts_set_input
     pk_columns: Discounts_pk_columns_input!
   ): Discounts
-
-  """
-  update data of the table: "LMS_slugs"
-  """
-  update_LMS_slugs(
-    """append existing jsonb value of filtered columns with new jsonb value"""
-    _append: LMS_slugs_append_input
-
-    """
-    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
-    """
-    _delete_at_path: LMS_slugs_delete_at_path_input
-
-    """
-    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
-    """
-    _delete_elem: LMS_slugs_delete_elem_input
-
-    """
-    delete key/value pair or string element. key/value pairs are matched based on their key value
-    """
-    _delete_key: LMS_slugs_delete_key_input
-
-    """prepend existing jsonb value of filtered columns with new jsonb value"""
-    _prepend: LMS_slugs_prepend_input
-
-    """sets the columns of the filtered rows to the given values"""
-    _set: LMS_slugs_set_input
-
-    """filter the rows which have to be updated"""
-    where: LMS_slugs_bool_exp!
-  ): LMS_slugs_mutation_response
-
-  """
-  update single row of the table: "LMS_slugs"
-  """
-  update_LMS_slugs_by_pk(
-    """append existing jsonb value of filtered columns with new jsonb value"""
-    _append: LMS_slugs_append_input
-
-    """
-    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
-    """
-    _delete_at_path: LMS_slugs_delete_at_path_input
-
-    """
-    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
-    """
-    _delete_elem: LMS_slugs_delete_elem_input
-
-    """
-    delete key/value pair or string element. key/value pairs are matched based on their key value
-    """
-    _delete_key: LMS_slugs_delete_key_input
-
-    """prepend existing jsonb value of filtered columns with new jsonb value"""
-    _prepend: LMS_slugs_prepend_input
-
-    """sets the columns of the filtered rows to the given values"""
-    _set: LMS_slugs_set_input
-    pk_columns: LMS_slugs_pk_columns_input!
-  ): LMS_slugs
 
   """
   update data of the table: "Labs"
@@ -84582,6 +84992,68 @@ type mutation_root {
   ): library_installers
 
   """
+  update data of the table: "lms_slugs"
+  """
+  update_lms_slugs(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: lms_slugs_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: lms_slugs_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+    """
+    _delete_elem: lms_slugs_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: lms_slugs_delete_key_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: lms_slugs_prepend_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: lms_slugs_set_input
+
+    """filter the rows which have to be updated"""
+    where: lms_slugs_bool_exp!
+  ): lms_slugs_mutation_response
+
+  """
+  update single row of the table: "lms_slugs"
+  """
+  update_lms_slugs_by_pk(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: lms_slugs_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: lms_slugs_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+    """
+    _delete_elem: lms_slugs_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: lms_slugs_delete_key_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: lms_slugs_prepend_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: lms_slugs_set_input
+    pk_columns: lms_slugs_pk_columns_input!
+  ): lms_slugs
+
+  """
   update data of the table: "locations"
   """
   update_locations(
@@ -84795,6 +85267,9 @@ type mutation_root {
     """
     _delete_key: notifications_delete_key_input
 
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: notifications_inc_input
+
     """prepend existing jsonb value of filtered columns with new jsonb value"""
     _prepend: notifications_prepend_input
 
@@ -84826,6 +85301,9 @@ type mutation_root {
     delete key/value pair or string element. key/value pairs are matched based on their key value
     """
     _delete_key: notifications_delete_key_input
+
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: notifications_inc_input
 
     """prepend existing jsonb value of filtered columns with new jsonb value"""
     _prepend: notifications_prepend_input
@@ -85099,6 +85577,9 @@ type mutation_root {
   update data of the table: "service"
   """
   update_service(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: service_inc_input
+
     """sets the columns of the filtered rows to the given values"""
     _set: service_set_input
 
@@ -85110,10 +85591,39 @@ type mutation_root {
   update single row of the table: "service"
   """
   update_service_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: service_inc_input
+
     """sets the columns of the filtered rows to the given values"""
     _set: service_set_input
     pk_columns: service_pk_columns_input!
   ): service
+
+  """
+  update data of the table: "service_categories"
+  """
+  update_service_categories(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: service_categories_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: service_categories_set_input
+
+    """filter the rows which have to be updated"""
+    where: service_categories_bool_exp!
+  ): service_categories_mutation_response
+
+  """
+  update single row of the table: "service_categories"
+  """
+  update_service_categories_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: service_categories_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: service_categories_set_input
+    pk_columns: service_categories_pk_columns_input!
+  ): service_categories
 
   """
   update data of the table: "stock_take"
@@ -85776,7 +86286,9 @@ type notification_types {
     where: application_notifications_bool_exp
   ): application_notifications_aggregate!
   description: String!
+  destination: String
   id: uuid!
+  name: String
 
   """An array relationship"""
   notification_toggles(
@@ -85815,7 +86327,8 @@ type notification_types {
   ): notification_toggle_aggregate!
   notification_type: notification_types_enum_enum!
   permission_type: String
-  title: String!
+  title: String
+  type: String!
 }
 
 """
@@ -85844,11 +86357,14 @@ input notification_types_bool_exp {
   _or: [notification_types_bool_exp!]
   application_notifications: application_notifications_bool_exp
   description: String_comparison_exp
+  destination: String_comparison_exp
   id: uuid_comparison_exp
+  name: String_comparison_exp
   notification_toggles: notification_toggle_bool_exp
   notification_type: notification_types_enum_enum_comparison_exp
   permission_type: String_comparison_exp
   title: String_comparison_exp
+  type: String_comparison_exp
 }
 
 """
@@ -85977,23 +86493,29 @@ input notification_types_insert_input {
   notification_toggles: notification_toggle_arr_rel_insert_input
   notification_type: notification_types_enum_enum
   permission_type: String
-  title: String
+  type: String
 }
 
 """aggregate max on columns"""
 type notification_types_max_fields {
   description: String
+  destination: String
   id: uuid
+  name: String
   permission_type: String
   title: String
+  type: String
 }
 
 """aggregate min on columns"""
 type notification_types_min_fields {
   description: String
+  destination: String
   id: uuid
+  name: String
   permission_type: String
   title: String
+  type: String
 }
 
 """
@@ -86030,11 +86552,14 @@ input notification_types_on_conflict {
 input notification_types_order_by {
   application_notifications_aggregate: application_notifications_aggregate_order_by
   description: order_by
+  destination: order_by
   id: order_by
+  name: order_by
   notification_toggles_aggregate: notification_toggle_aggregate_order_by
   notification_type: order_by
   permission_type: order_by
   title: order_by
+  type: order_by
 }
 
 """primary key columns input for table: notification_types"""
@@ -86050,7 +86575,13 @@ enum notification_types_select_column {
   description
 
   """column name"""
+  destination
+
+  """column name"""
   id
+
+  """column name"""
+  name
 
   """column name"""
   notification_type
@@ -86060,6 +86591,9 @@ enum notification_types_select_column {
 
   """column name"""
   title
+
+  """column name"""
+  type
 }
 
 """
@@ -86071,6 +86605,7 @@ input notification_types_set_input {
   notification_type: notification_types_enum_enum
   permission_type: String
   title: String
+  type: String
 }
 
 """
@@ -86091,6 +86626,9 @@ enum notification_types_update_column {
 
   """column name"""
   title
+
+  """column name"""
+  type
 }
 
 """
@@ -86098,22 +86636,34 @@ columns and relationships of "notifications"
 """
 type notifications {
   created_at: timestamptz!
+  destination: String
   id: uuid!
+  is_read(
+    """JSON select path"""
+    path: String
+  ): jsonb
 
   """An object relationship"""
   notification_type: notification_types
   order: Int!
+  sent_by: Int
   sent_to(
     """JSON select path"""
     path: String
   ): jsonb
   type: uuid!
   updated_at: timestamptz!
+  variables(
+    """JSON select path"""
+    path: String
+  ): jsonb
 }
 
 """append existing jsonb value of filtered columns with new jsonb value"""
 input notifications_append_input {
+  is_read: jsonb
   sent_to: jsonb
+  variables: jsonb
 }
 
 """
@@ -86124,12 +86674,16 @@ input notifications_bool_exp {
   _not: notifications_bool_exp
   _or: [notifications_bool_exp!]
   created_at: timestamptz_comparison_exp
+  destination: String_comparison_exp
   id: uuid_comparison_exp
+  is_read: jsonb_comparison_exp
   notification_type: notification_types_bool_exp
   order: Int_comparison_exp
+  sent_by: Int_comparison_exp
   sent_to: jsonb_comparison_exp
   type: uuid_comparison_exp
   updated_at: timestamptz_comparison_exp
+  variables: jsonb_comparison_exp
 }
 
 """
@@ -86144,30 +86698,49 @@ enum notifications_constraint {
 delete the field or element with specified path (for JSON arrays, negative integers count from the end)
 """
 input notifications_delete_at_path_input {
+  is_read: [String!]
   sent_to: [String!]
+  variables: [String!]
 }
 
 """
 delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
 """
 input notifications_delete_elem_input {
+  is_read: Int
   sent_to: Int
+  variables: Int
 }
 
 """
 delete key/value pair or string element. key/value pairs are matched based on their key value
 """
 input notifications_delete_key_input {
+  is_read: String
   sent_to: String
+  variables: String
+}
+
+"""
+input type for incrementing numeric columns in table "notifications"
+"""
+input notifications_inc_input {
+  order: Int
+  sent_by: Int
 }
 
 """
 input type for inserting data into table "notifications"
 """
 input notifications_insert_input {
+  destination: String
+  is_read: jsonb
   notification_type: notification_types_obj_rel_insert_input
+  order: Int
+  sent_by: Int
   sent_to: jsonb
   type: uuid
+  variables: jsonb
 }
 
 """
@@ -86193,12 +86766,16 @@ input notifications_on_conflict {
 """Ordering options when selecting data from "notifications"."""
 input notifications_order_by {
   created_at: order_by
+  destination: order_by
   id: order_by
+  is_read: order_by
   notification_type: notification_types_order_by
   order: order_by
+  sent_by: order_by
   sent_to: order_by
   type: order_by
   updated_at: order_by
+  variables: order_by
 }
 
 """primary key columns input for table: notifications"""
@@ -86208,7 +86785,9 @@ input notifications_pk_columns_input {
 
 """prepend existing jsonb value of filtered columns with new jsonb value"""
 input notifications_prepend_input {
+  is_read: jsonb
   sent_to: jsonb
+  variables: jsonb
 }
 
 """
@@ -86219,10 +86798,19 @@ enum notifications_select_column {
   created_at
 
   """column name"""
+  destination
+
+  """column name"""
   id
 
   """column name"""
+  is_read
+
+  """column name"""
   order
+
+  """column name"""
+  sent_by
 
   """column name"""
   sent_to
@@ -86232,14 +86820,22 @@ enum notifications_select_column {
 
   """column name"""
   updated_at
+
+  """column name"""
+  variables
 }
 
 """
 input type for updating data in table "notifications"
 """
 input notifications_set_input {
+  destination: String
+  is_read: jsonb
+  order: Int
+  sent_by: Int
   sent_to: jsonb
   type: uuid
+  variables: jsonb
 }
 
 """
@@ -86247,10 +86843,25 @@ update columns of table "notifications"
 """
 enum notifications_update_column {
   """column name"""
+  destination
+
+  """column name"""
+  is_read
+
+  """column name"""
+  order
+
+  """column name"""
+  sent_by
+
+  """column name"""
   sent_to
 
   """column name"""
   type
+
+  """column name"""
+  variables
 }
 
 scalar numeric
@@ -86568,6 +87179,7 @@ columns and relationships of "payments"
 """
 type payments {
   account: String!
+  against: Int
   amount: numeric!
   created_at: timestamptz!
   id: uuid!
@@ -86606,6 +87218,7 @@ type payments_aggregate_fields {
 
 """aggregate avg on columns"""
 type payments_avg_fields {
+  against: Float
   amount: Float
   payment_no: Float
 }
@@ -86618,6 +87231,7 @@ input payments_bool_exp {
   _not: payments_bool_exp
   _or: [payments_bool_exp!]
   account: String_comparison_exp
+  against: Int_comparison_exp
   amount: numeric_comparison_exp
   created_at: timestamptz_comparison_exp
   id: uuid_comparison_exp
@@ -86661,6 +87275,7 @@ input payments_insert_input {
 """aggregate max on columns"""
 type payments_max_fields {
   account: String
+  against: Int
   amount: numeric
   created_at: timestamptz
   id: uuid
@@ -86675,6 +87290,7 @@ type payments_max_fields {
 """aggregate min on columns"""
 type payments_min_fields {
   account: String
+  against: Int
   amount: numeric
   created_at: timestamptz
   id: uuid
@@ -86709,6 +87325,7 @@ input payments_on_conflict {
 """Ordering options when selecting data from "payments"."""
 input payments_order_by {
   account: order_by
+  against: order_by
   amount: order_by
   created_at: order_by
   id: order_by
@@ -86731,6 +87348,9 @@ select columns of table "payments"
 enum payments_select_column {
   """column name"""
   account
+
+  """column name"""
+  against
 
   """column name"""
   amount
@@ -86775,24 +87395,28 @@ input payments_set_input {
 
 """aggregate stddev on columns"""
 type payments_stddev_fields {
+  against: Float
   amount: Float
   payment_no: Float
 }
 
 """aggregate stddev_pop on columns"""
 type payments_stddev_pop_fields {
+  against: Float
   amount: Float
   payment_no: Float
 }
 
 """aggregate stddev_samp on columns"""
 type payments_stddev_samp_fields {
+  against: Float
   amount: Float
   payment_no: Float
 }
 
 """aggregate sum on columns"""
 type payments_sum_fields {
+  against: Int
   amount: numeric
   payment_no: numeric
 }
@@ -86825,18 +87449,21 @@ enum payments_update_column {
 
 """aggregate var_pop on columns"""
 type payments_var_pop_fields {
+  against: Float
   amount: Float
   payment_no: Float
 }
 
 """aggregate var_samp on columns"""
 type payments_var_samp_fields {
+  against: Float
   amount: Float
   payment_no: Float
 }
 
 """aggregate variance on columns"""
 type payments_variance_fields {
+  against: Float
   amount: Float
   payment_no: Float
 }
@@ -87888,49 +88515,6 @@ type query_root {
 
   """fetch data from the table: "Discounts" using primary key columns"""
   Discounts_by_pk(id: uuid!): Discounts
-
-  """
-  fetch data from the table: "LMS_slugs"
-  """
-  LMS_slugs(
-    """distinct select on columns"""
-    distinct_on: [LMS_slugs_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [LMS_slugs_order_by!]
-
-    """filter the rows returned"""
-    where: LMS_slugs_bool_exp
-  ): [LMS_slugs!]!
-
-  """
-  fetch aggregated fields from the table: "LMS_slugs"
-  """
-  LMS_slugs_aggregate(
-    """distinct select on columns"""
-    distinct_on: [LMS_slugs_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [LMS_slugs_order_by!]
-
-    """filter the rows returned"""
-    where: LMS_slugs_bool_exp
-  ): LMS_slugs_aggregate!
-
-  """fetch data from the table: "LMS_slugs" using primary key columns"""
-  LMS_slugs_by_pk(id: uuid!): LMS_slugs
 
   """
   fetch data from the table: "Labs"
@@ -89817,6 +90401,49 @@ type query_root {
   library_installers_by_pk(id: Int!): library_installers
 
   """
+  fetch data from the table: "lms_slugs"
+  """
+  lms_slugs(
+    """distinct select on columns"""
+    distinct_on: [lms_slugs_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [lms_slugs_order_by!]
+
+    """filter the rows returned"""
+    where: lms_slugs_bool_exp
+  ): [lms_slugs!]!
+
+  """
+  fetch aggregated fields from the table: "lms_slugs"
+  """
+  lms_slugs_aggregate(
+    """distinct select on columns"""
+    distinct_on: [lms_slugs_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [lms_slugs_order_by!]
+
+    """filter the rows returned"""
+    where: lms_slugs_bool_exp
+  ): lms_slugs_aggregate!
+
+  """fetch data from the table: "lms_slugs" using primary key columns"""
+  lms_slugs_by_pk(id: uuid!): lms_slugs
+
+  """
   fetch data from the table: "locations"
   """
   locations(
@@ -90623,6 +91250,51 @@ type query_root {
 
   """fetch data from the table: "service" using primary key columns"""
   service_by_pk(id: uuid!): service
+
+  """
+  fetch data from the table: "service_categories"
+  """
+  service_categories(
+    """distinct select on columns"""
+    distinct_on: [service_categories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [service_categories_order_by!]
+
+    """filter the rows returned"""
+    where: service_categories_bool_exp
+  ): [service_categories!]!
+
+  """
+  fetch aggregated fields from the table: "service_categories"
+  """
+  service_categories_aggregate(
+    """distinct select on columns"""
+    distinct_on: [service_categories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [service_categories_order_by!]
+
+    """filter the rows returned"""
+    where: service_categories_bool_exp
+  ): service_categories_aggregate!
+
+  """
+  fetch data from the table: "service_categories" using primary key columns
+  """
+  service_categories_by_pk(id: uuid!): service_categories
   socialSurvey(where: SocialSurveyWhereUniqueInput!): SocialSurvey
   socialSurveyAnswer(where: SocialSurveyAnswerWhereUniqueInput!): SocialSurveyAnswer
   socialSurveyAnswers(cursor: SocialSurveyAnswerWhereUniqueInput, orderBy: [SocialSurveyAnswerOrderByInput!], skip: Int, take: Int, where: SocialSurveyAnswerWhereInput): [SocialSurveyAnswer!]!
@@ -91847,21 +92519,29 @@ type salutation_variance_fields {
 columns and relationships of "service"
 """
 type service {
-  category: String!
-  code: String!
-  color: String!
+  category: String
+  code: String
+  color: String
+  contracts(
+    """JSON select path"""
+    path: String
+  ): json
   created_at: timestamptz!
-  description: String!
-  display_text_on_invoice: String!
-  duration: String!
+  description: String
+  display_text_on_invoice: String
+  duration: String
   employees(
     """JSON select path"""
     path: String
-  ): json!
-  friendly_name: String!
+  ): json
+  equipment_resources(
+    """JSON select path"""
+    path: String
+  ): json
+  friendly_name: String
   id: uuid!
-  image: String!
-  invoice_item_name: String!
+  image: String
+  invoice_item_name: String
   is_active: Boolean!
   is_online_booking: Boolean!
   is_package_session: Boolean!
@@ -91870,28 +92550,32 @@ type service {
   locations(
     """JSON select path"""
     path: String
-  ): json!
-  max_clients: String!
-  online_payment_amount: String!
+  ): json
+  max_clients: Int
+  online_payment_amount: String
   online_payment_type: String!
   order: Int!
   patient_booking_type: String!
-  price: String!
+  price: String
   pricing_type: String!
-  procedure_code: String!
+  procedure_code: String
   resources(
     """JSON select path"""
     path: String
-  ): json!
+  ): json
+  room_resources(
+    """JSON select path"""
+    path: String
+  ): json
   service_name: String!
-  service_price: String!
-  sku: String!
-  staff_assigned: String!
-  tax: String!
+  service_price: String
+  sku: String
+  staff_assigned: String
+  tax: String
   timing_rules(
     """JSON select path"""
     path: String
-  ): json!
+  ): json
   type: String!
   updated_at: timestamptz!
 }
@@ -91923,6 +92607,7 @@ type service_aggregate_fields {
 
 """aggregate avg on columns"""
 type service_avg_fields {
+  max_clients: Float
   order: Float
 }
 
@@ -91936,11 +92621,13 @@ input service_bool_exp {
   category: String_comparison_exp
   code: String_comparison_exp
   color: String_comparison_exp
+  contracts: json_comparison_exp
   created_at: timestamptz_comparison_exp
   description: String_comparison_exp
   display_text_on_invoice: String_comparison_exp
   duration: String_comparison_exp
   employees: json_comparison_exp
+  equipment_resources: json_comparison_exp
   friendly_name: String_comparison_exp
   id: uuid_comparison_exp
   image: String_comparison_exp
@@ -91951,7 +92638,7 @@ input service_bool_exp {
   is_payment_before_booking: Boolean_comparison_exp
   is_service_online: Boolean_comparison_exp
   locations: json_comparison_exp
-  max_clients: String_comparison_exp
+  max_clients: Int_comparison_exp
   online_payment_amount: String_comparison_exp
   online_payment_type: String_comparison_exp
   order: Int_comparison_exp
@@ -91960,6 +92647,7 @@ input service_bool_exp {
   pricing_type: String_comparison_exp
   procedure_code: String_comparison_exp
   resources: json_comparison_exp
+  room_resources: json_comparison_exp
   service_name: String_comparison_exp
   service_price: String_comparison_exp
   sku: String_comparison_exp
@@ -91971,11 +92659,273 @@ input service_bool_exp {
 }
 
 """
+columns and relationships of "service_categories"
+"""
+type service_categories {
+  assigned: String
+  color: String
+  created_at: timestamptz!
+  id: uuid!
+  image: String
+  is_active: Boolean!
+  name: String!
+  order: Int!
+  updated_at: timestamptz!
+}
+
+"""
+aggregated selection of "service_categories"
+"""
+type service_categories_aggregate {
+  aggregate: service_categories_aggregate_fields
+  nodes: [service_categories!]!
+}
+
+"""
+aggregate fields of "service_categories"
+"""
+type service_categories_aggregate_fields {
+  avg: service_categories_avg_fields
+  count(columns: [service_categories_select_column!], distinct: Boolean): Int!
+  max: service_categories_max_fields
+  min: service_categories_min_fields
+  stddev: service_categories_stddev_fields
+  stddev_pop: service_categories_stddev_pop_fields
+  stddev_samp: service_categories_stddev_samp_fields
+  sum: service_categories_sum_fields
+  var_pop: service_categories_var_pop_fields
+  var_samp: service_categories_var_samp_fields
+  variance: service_categories_variance_fields
+}
+
+"""aggregate avg on columns"""
+type service_categories_avg_fields {
+  order: Float
+}
+
+"""
+Boolean expression to filter rows from the table "service_categories". All fields are combined with a logical 'AND'.
+"""
+input service_categories_bool_exp {
+  _and: [service_categories_bool_exp!]
+  _not: service_categories_bool_exp
+  _or: [service_categories_bool_exp!]
+  assigned: String_comparison_exp
+  color: String_comparison_exp
+  created_at: timestamptz_comparison_exp
+  id: uuid_comparison_exp
+  image: String_comparison_exp
+  is_active: Boolean_comparison_exp
+  name: String_comparison_exp
+  order: Int_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "service_categories"
+"""
+enum service_categories_constraint {
+  """unique or primary key constraint"""
+  service_categories_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "service_categories"
+"""
+input service_categories_inc_input {
+  order: Int
+}
+
+"""
+input type for inserting data into table "service_categories"
+"""
+input service_categories_insert_input {
+  assigned: String
+  color: String
+  image: String
+  is_active: Boolean
+  name: String
+  order: Int
+}
+
+"""aggregate max on columns"""
+type service_categories_max_fields {
+  assigned: String
+  color: String
+  created_at: timestamptz
+  id: uuid
+  image: String
+  name: String
+  order: Int
+  updated_at: timestamptz
+}
+
+"""aggregate min on columns"""
+type service_categories_min_fields {
+  assigned: String
+  color: String
+  created_at: timestamptz
+  id: uuid
+  image: String
+  name: String
+  order: Int
+  updated_at: timestamptz
+}
+
+"""
+response of any mutation on the table "service_categories"
+"""
+type service_categories_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [service_categories!]!
+}
+
+"""
+on conflict condition type for table "service_categories"
+"""
+input service_categories_on_conflict {
+  constraint: service_categories_constraint!
+  update_columns: [service_categories_update_column!]!
+  where: service_categories_bool_exp
+}
+
+"""Ordering options when selecting data from "service_categories"."""
+input service_categories_order_by {
+  assigned: order_by
+  color: order_by
+  created_at: order_by
+  id: order_by
+  image: order_by
+  is_active: order_by
+  name: order_by
+  order: order_by
+  updated_at: order_by
+}
+
+"""primary key columns input for table: service_categories"""
+input service_categories_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "service_categories"
+"""
+enum service_categories_select_column {
+  """column name"""
+  assigned
+
+  """column name"""
+  color
+
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  image
+
+  """column name"""
+  is_active
+
+  """column name"""
+  name
+
+  """column name"""
+  order
+
+  """column name"""
+  updated_at
+}
+
+"""
+input type for updating data in table "service_categories"
+"""
+input service_categories_set_input {
+  assigned: String
+  color: String
+  image: String
+  is_active: Boolean
+  name: String
+  order: Int
+}
+
+"""aggregate stddev on columns"""
+type service_categories_stddev_fields {
+  order: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type service_categories_stddev_pop_fields {
+  order: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type service_categories_stddev_samp_fields {
+  order: Float
+}
+
+"""aggregate sum on columns"""
+type service_categories_sum_fields {
+  order: Int
+}
+
+"""
+update columns of table "service_categories"
+"""
+enum service_categories_update_column {
+  """column name"""
+  assigned
+
+  """column name"""
+  color
+
+  """column name"""
+  image
+
+  """column name"""
+  is_active
+
+  """column name"""
+  name
+
+  """column name"""
+  order
+}
+
+"""aggregate var_pop on columns"""
+type service_categories_var_pop_fields {
+  order: Float
+}
+
+"""aggregate var_samp on columns"""
+type service_categories_var_samp_fields {
+  order: Float
+}
+
+"""aggregate variance on columns"""
+type service_categories_variance_fields {
+  order: Float
+}
+
+"""
 unique or primary key constraints on table "service"
 """
 enum service_constraint {
   """unique or primary key constraint"""
   service_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "service"
+"""
+input service_inc_input {
+  max_clients: Int
+  order: Int
 }
 
 """
@@ -91985,10 +92935,12 @@ input service_insert_input {
   category: String
   code: String
   color: String
+  contracts: json
   description: String
   display_text_on_invoice: String
   duration: String
   employees: json
+  equipment_resources: json
   friendly_name: String
   image: String
   invoice_item_name: String
@@ -91998,14 +92950,16 @@ input service_insert_input {
   is_payment_before_booking: Boolean
   is_service_online: Boolean
   locations: json
-  max_clients: String
+  max_clients: Int
   online_payment_amount: String
   online_payment_type: String
+  order: Int
   patient_booking_type: String
   price: String
   pricing_type: String
   procedure_code: String
   resources: json
+  room_resources: json
   service_name: String
   service_price: String
   sku: String
@@ -92028,7 +92982,7 @@ type service_max_fields {
   id: uuid
   image: String
   invoice_item_name: String
-  max_clients: String
+  max_clients: Int
   online_payment_amount: String
   online_payment_type: String
   order: Int
@@ -92058,7 +93012,7 @@ type service_min_fields {
   id: uuid
   image: String
   invoice_item_name: String
-  max_clients: String
+  max_clients: Int
   online_payment_amount: String
   online_payment_type: String
   order: Int
@@ -92100,11 +93054,13 @@ input service_order_by {
   category: order_by
   code: order_by
   color: order_by
+  contracts: order_by
   created_at: order_by
   description: order_by
   display_text_on_invoice: order_by
   duration: order_by
   employees: order_by
+  equipment_resources: order_by
   friendly_name: order_by
   id: order_by
   image: order_by
@@ -92124,6 +93080,7 @@ input service_order_by {
   pricing_type: order_by
   procedure_code: order_by
   resources: order_by
+  room_resources: order_by
   service_name: order_by
   service_price: order_by
   sku: order_by
@@ -92153,6 +93110,9 @@ enum service_select_column {
   color
 
   """column name"""
+  contracts
+
+  """column name"""
   created_at
 
   """column name"""
@@ -92166,6 +93126,9 @@ enum service_select_column {
 
   """column name"""
   employees
+
+  """column name"""
+  equipment_resources
 
   """column name"""
   friendly_name
@@ -92225,6 +93188,9 @@ enum service_select_column {
   resources
 
   """column name"""
+  room_resources
+
+  """column name"""
   service_name
 
   """column name"""
@@ -92256,10 +93222,12 @@ input service_set_input {
   category: String
   code: String
   color: String
+  contracts: json
   description: String
   display_text_on_invoice: String
   duration: String
   employees: json
+  equipment_resources: json
   friendly_name: String
   image: String
   invoice_item_name: String
@@ -92269,14 +93237,16 @@ input service_set_input {
   is_payment_before_booking: Boolean
   is_service_online: Boolean
   locations: json
-  max_clients: String
+  max_clients: Int
   online_payment_amount: String
   online_payment_type: String
+  order: Int
   patient_booking_type: String
   price: String
   pricing_type: String
   procedure_code: String
   resources: json
+  room_resources: json
   service_name: String
   service_price: String
   sku: String
@@ -92288,21 +93258,25 @@ input service_set_input {
 
 """aggregate stddev on columns"""
 type service_stddev_fields {
+  max_clients: Float
   order: Float
 }
 
 """aggregate stddev_pop on columns"""
 type service_stddev_pop_fields {
+  max_clients: Float
   order: Float
 }
 
 """aggregate stddev_samp on columns"""
 type service_stddev_samp_fields {
+  max_clients: Float
   order: Float
 }
 
 """aggregate sum on columns"""
 type service_sum_fields {
+  max_clients: Int
   order: Int
 }
 
@@ -92320,6 +93294,9 @@ enum service_update_column {
   color
 
   """column name"""
+  contracts
+
+  """column name"""
   description
 
   """column name"""
@@ -92330,6 +93307,9 @@ enum service_update_column {
 
   """column name"""
   employees
+
+  """column name"""
+  equipment_resources
 
   """column name"""
   friendly_name
@@ -92368,6 +93348,9 @@ enum service_update_column {
   online_payment_type
 
   """column name"""
+  order
+
+  """column name"""
   patient_booking_type
 
   """column name"""
@@ -92381,6 +93364,9 @@ enum service_update_column {
 
   """column name"""
   resources
+
+  """column name"""
+  room_resources
 
   """column name"""
   service_name
@@ -92406,16 +93392,19 @@ enum service_update_column {
 
 """aggregate var_pop on columns"""
 type service_var_pop_fields {
+  max_clients: Float
   order: Float
 }
 
 """aggregate var_samp on columns"""
 type service_var_samp_fields {
+  max_clients: Float
   order: Float
 }
 
 """aggregate variance on columns"""
 type service_variance_fields {
+  max_clients: Float
   order: Float
 }
 
@@ -92775,49 +93764,6 @@ type subscription_root {
 
   """fetch data from the table: "Discounts" using primary key columns"""
   Discounts_by_pk(id: uuid!): Discounts
-
-  """
-  fetch data from the table: "LMS_slugs"
-  """
-  LMS_slugs(
-    """distinct select on columns"""
-    distinct_on: [LMS_slugs_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [LMS_slugs_order_by!]
-
-    """filter the rows returned"""
-    where: LMS_slugs_bool_exp
-  ): [LMS_slugs!]!
-
-  """
-  fetch aggregated fields from the table: "LMS_slugs"
-  """
-  LMS_slugs_aggregate(
-    """distinct select on columns"""
-    distinct_on: [LMS_slugs_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [LMS_slugs_order_by!]
-
-    """filter the rows returned"""
-    where: LMS_slugs_bool_exp
-  ): LMS_slugs_aggregate!
-
-  """fetch data from the table: "LMS_slugs" using primary key columns"""
-  LMS_slugs_by_pk(id: uuid!): LMS_slugs
 
   """
   fetch data from the table: "Labs"
@@ -94150,6 +95096,49 @@ type subscription_root {
   library_installers_by_pk(id: Int!): library_installers
 
   """
+  fetch data from the table: "lms_slugs"
+  """
+  lms_slugs(
+    """distinct select on columns"""
+    distinct_on: [lms_slugs_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [lms_slugs_order_by!]
+
+    """filter the rows returned"""
+    where: lms_slugs_bool_exp
+  ): [lms_slugs!]!
+
+  """
+  fetch aggregated fields from the table: "lms_slugs"
+  """
+  lms_slugs_aggregate(
+    """distinct select on columns"""
+    distinct_on: [lms_slugs_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [lms_slugs_order_by!]
+
+    """filter the rows returned"""
+    where: lms_slugs_bool_exp
+  ): lms_slugs_aggregate!
+
+  """fetch data from the table: "lms_slugs" using primary key columns"""
+  lms_slugs_by_pk(id: uuid!): lms_slugs
+
+  """
   fetch data from the table: "locations"
   """
   locations(
@@ -94914,6 +95903,51 @@ type subscription_root {
 
   """fetch data from the table: "service" using primary key columns"""
   service_by_pk(id: uuid!): service
+
+  """
+  fetch data from the table: "service_categories"
+  """
+  service_categories(
+    """distinct select on columns"""
+    distinct_on: [service_categories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [service_categories_order_by!]
+
+    """filter the rows returned"""
+    where: service_categories_bool_exp
+  ): [service_categories!]!
+
+  """
+  fetch aggregated fields from the table: "service_categories"
+  """
+  service_categories_aggregate(
+    """distinct select on columns"""
+    distinct_on: [service_categories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [service_categories_order_by!]
+
+    """filter the rows returned"""
+    where: service_categories_bool_exp
+  ): service_categories_aggregate!
+
+  """
+  fetch data from the table: "service_categories" using primary key columns
+  """
+  service_categories_by_pk(id: uuid!): service_categories
 
   """
   fetch data from the table: "stock_take"

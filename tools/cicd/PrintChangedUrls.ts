@@ -31,10 +31,8 @@ const lines = childProcess.stdout.toString().split('\n')
 
 for (const line of lines) {
   if (line.startsWith('apps/web/pages/')) {
-    const path = removeIndexTsx('/' + line.substr('apps/web/pages/'.length));
-    output.push(
-      `<${myArgs[1]}${path}|${path}>`
-    )
+    const path = removeIndexTsx('/' + line.substr('apps/web/pages/'.length))
+    output.push(`<${myArgs[1]}${path}|${path}>`)
   }
 
   if (line.startsWith('libs/ui/src/lib/')) {
@@ -66,7 +64,9 @@ for (const line of lines) {
     const namedExportRaw = (namedExportFirst as any).declaration
       .declarations?.[0]?.id.name
     const namedExport = dasherize(underscore(namedExportRaw))
-    output.push(`<${myArgs[2]}/?path=/story/${storybookName}--${namedExport}|${storybookName}--${namedExport}>`)
+    output.push(
+      `<${myArgs[2]}/?path=/story/${storybookName}--${namedExport}|${storybookName}--${namedExport}>`
+    )
   }
 }
 

@@ -6,8 +6,7 @@ import { useRouter } from 'next/router'
 import notificationBannerLabPageImage from '../../../assets/images/notification-image-lab-page.png'
 
 /* eslint-disable-next-line */
-export interface LabsProps {
-}
+export interface LabsProps {}
 
 const schema: Schema = {
   full: 'Labs',

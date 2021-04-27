@@ -8,8 +8,8 @@ import {
 /**
  * Like useQuery + useSubscription combined =]
  *
- * @param query
- * @param options
+ * @param query - the gql that is a `query{}` with a single top-level query
+ * @param options - contains `{variables:{}}`
  */
 export function useLiveQuery<T>(
   query: DocumentNode,

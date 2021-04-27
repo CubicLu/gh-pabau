@@ -10,5 +10,7 @@
     "../**/*.spec.tsx",
     "../**/*.spec.jsx"
   ],
-  "include": ["../src/**/*"]
+  "include": [
+    "../src/**/*"
+  ]
 }
