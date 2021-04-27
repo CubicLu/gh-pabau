@@ -51,6 +51,7 @@ const ADD_MUTATION = gql`
     $sent_to: jsonb
     $variables: jsonb
     $destination: String!
+    $sent_by: Int
   ) {
     insert_notifications_one(
       object: {
@@ -58,6 +59,7 @@ const ADD_MUTATION = gql`
         destination: $destination
         sent_to: $sent_to
         variables: $variables
+        sent_by: $sent_by
       }
     ) {
       id
@@ -87,7 +89,7 @@ export const StaffNotifications: NextPage = () => {
   const loggedUser = useContext(UserContext)
 
   useEffect(() => {
-    const { me } = loggedUser
+    const me = loggedUser?.me
     const userData = {
       company: me?.company?.id,
       user: me?.id,
@@ -151,6 +153,7 @@ export const StaffNotifications: NextPage = () => {
       type: values.type,
       sent_to: sent_users,
       destination: values.destination_id,
+      sent_by: user.user,
     }
 
     if (notificationVariable) {

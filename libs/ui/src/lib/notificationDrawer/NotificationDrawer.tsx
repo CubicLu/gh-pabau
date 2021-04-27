@@ -145,7 +145,10 @@ export const NotificationDrawer: FC<P> = ({
   }
 
   const getNotificationDescOrTitle = (notification, returnType = 'desc') => {
-    const { variables } = notification
+    console.log('notification456', notification)
+    console.log('user', user)
+    const { variables, sentBy } = notification
+
     if (
       typeof variables == 'object' &&
       Object.keys({ ...variables }).length > 0
@@ -153,10 +156,18 @@ export const NotificationDrawer: FC<P> = ({
       for (const key in variables) {
         const replaceVariable = `[${key}]`
         const variableValue = variables[key]
-        notification[returnType] = notification[returnType].replace(
-          replaceVariable,
-          variableValue
-        )
+
+        if (key === 'who' && user?.user == sentBy) {
+          notification[returnType] = notification[returnType].replace(
+            '[who]',
+            'You'
+          )
+        } else {
+          notification[returnType] = notification[returnType].replace(
+            replaceVariable,
+            variableValue
+          )
+        }
       }
     }
 

@@ -2,7 +2,7 @@ export const notificationVariables = [
   {
     type: 'cancelled_appointment_via_pabau',
     variables: {
-      patient_name: 'John Smith',
+      who: 'John Smith',
       service_name: 'Chemical Peel',
       date: Intl.DateTimeFormat('en-US').format(new Date()),
       time: Intl.DateTimeFormat('en-US', {
@@ -13,9 +13,23 @@ export const notificationVariables = [
     },
   },
   {
+    type: 'cancelled_appointment_via_calendar',
+    variables: {
+      who: 'Olivia Sanders',
+      service_name: 'Chemical Peel',
+      client_name: 'John Smith',
+      date: Intl.DateTimeFormat('en-US').format(new Date()),
+      time: Intl.DateTimeFormat('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+      }).format(new Date()),
+      cancellation_reason: 'Staff member not available',
+    },
+  },
+  {
     type: 'rescheduled_appointment_via_calendar',
     variables: {
-      staff_name: 'John Smith',
+      who: 'John Smith',
       service_name: 'Chemical Peel',
       date: Intl.DateTimeFormat('en-US').format(new Date()),
       time: Intl.DateTimeFormat('en-US', {
@@ -28,7 +42,7 @@ export const notificationVariables = [
   {
     type: 'rescheduled_appointment_via_pabau',
     variables: {
-      patient_name: 'Olivia Sanders',
+      who: 'Olivia Sanders',
       service_name: 'Chemical Peel',
       date: Intl.DateTimeFormat('en-US').format(new Date()),
       time: Intl.DateTimeFormat('en-US', {
@@ -40,7 +54,7 @@ export const notificationVariables = [
   {
     type: 'new_appointment_via_calendar',
     variables: {
-      staff_name: 'Olivia Sanders',
+      who: 'Olivia Sanders',
       service_name: 'Chemical Peel',
       client_name: 'John Smith',
       date: Intl.DateTimeFormat('en-US').format(new Date()),
@@ -53,7 +67,7 @@ export const notificationVariables = [
   {
     type: 'new_appointment_via_pabau',
     variables: {
-      patient_name: 'Olivia Sanders',
+      who: 'Olivia Sanders',
       service_name: 'Chemical Peel',
       date: Intl.DateTimeFormat('en-US').format(new Date()),
       time: Intl.DateTimeFormat('en-US', {
@@ -65,7 +79,7 @@ export const notificationVariables = [
   {
     type: 'newsletter_campaign',
     variables: {
-      campaign_name: 'New Newsletter ',
+      campaign_name: 'New Newsletter',
     },
   },
   {
@@ -148,20 +162,6 @@ export const notificationVariables = [
     variables: {
       employee_name: 'John Smith',
       purchase_order_date: Intl.DateTimeFormat('en-US').format(new Date()),
-    },
-  },
-  {
-    type: 'cancelled_appointment_via_calendar',
-    variables: {
-      staff_name: 'John Smith',
-      service_name: 'Chemical Peel',
-      client_name: 'Olivia Sanders',
-      date: Intl.DateTimeFormat('en-US').format(new Date()),
-      time: Intl.DateTimeFormat('en-US', {
-        hour: 'numeric',
-        minute: 'numeric',
-      }).format(new Date()),
-      cancellation_reason: 'Staff member not available',
     },
   },
 ]

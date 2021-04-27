@@ -32,6 +32,7 @@ const LIST_QUERY = gql`
       created_at
       variables
       destination
+      sent_by
       notification_type {
         name
         title
@@ -74,6 +75,7 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
           users: notification?.sent_to,
           link: notification?.destination,
           variables: notification?.variables,
+          sentBy: notification?.sent_by,
         })
       )
       setNotifications(todayNotification)
