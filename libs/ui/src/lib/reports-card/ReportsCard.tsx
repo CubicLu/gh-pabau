@@ -1,25 +1,22 @@
-import React, { ReactText, useState } from 'react'
-import { SingleReport } from '../single-report/SingleReport'
-import { ShowMore } from '../show-more/ShowMore'
-import { v4 as uuidv4 } from 'uuid'
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import CustomReport from '../../assets/lottie/custom-report.json'
-
-import { MyLottie } from '../my-lottie/MyLottie'
-
-import styles from './ReportsCard.module.less'
-
+import classNames from 'classnames'
 import Highcharts from 'highcharts'
+import React, { ReactText, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
-  HighchartsProvider,
-  HighchartsChart,
+  AreaSeries,
   Chart,
+  HighchartsChart,
+  HighchartsProvider,
+  Tooltip,
   XAxis,
   YAxis,
-  Tooltip,
-  AreaSeries,
 } from 'react-jsx-highcharts'
+import { v4 as uuidv4 } from 'uuid'
+import CustomReport from '../../assets/lottie/custom-report.json'
+import { MyLottie } from '../my-lottie/MyLottie'
+import { ShowMore } from '../show-more/ShowMore'
+import { SingleReport } from '../single-report/SingleReport'
+import styles from './ReportsCard.module.less'
 
 export interface report {
   id: number
@@ -27,6 +24,7 @@ export interface report {
   reportName: string
   isNew: boolean
   favourite: boolean
+  isPermission?: boolean
 }
 
 export interface ReportsCardProps {
@@ -36,7 +34,9 @@ export interface ReportsCardProps {
   chartLabel?: string
   reports?: report[]
   graphData?: ReactText[][]
+  clickable?: boolean
   onReportFavourite?: (reportId: number, favorite: boolean) => void
+  isReportloading?: boolean
 }
 
 export const ReportsCard: React.FC<ReportsCardProps> = ({
@@ -46,74 +46,95 @@ export const ReportsCard: React.FC<ReportsCardProps> = ({
   description = '',
   chartLabel = '',
   graphData = [],
+  clickable = false,
   onReportFavourite,
+  isReportloading,
 }) => {
   const [showAll, setShowAll] = useState(false)
-
+  const { t } = useTranslation('common')
   const showMoreHandler = () => setShowAll((showAll) => !showAll)
 
-  const reportsData = showAll
-    ? reports
-    : reports?.slice(0, reports?.length > 10 ? 9 : 10)
+  const isCustomReport = graphData.length === 0
+  const currentGridRecord =
+    reports?.length > 10 ? (isCustomReport ? 11 : 9) : 10
+  const reportsData = showAll ? reports : reports?.slice(0, currentGridRecord)
 
   return reportsData?.length > 0 ? (
     <div className={styles.reportsCard}>
       <h3 className={styles.reportsCardTitle}>{catHeading}</h3>
-      <p className={styles.reportsCardDescription}>{description}</p>
-      <div className={styles.reportsCardGraphDescContainer}>
-        <span>{graphDescription}</span>
-        <span>{chartLabel}</span>
-      </div>
+      <p
+        className={
+          isCustomReport
+            ? classNames(styles.reportsCardDescription, styles.custom)
+            : styles.reportsCardDescription
+        }
+      >
+        {description}
+      </p>
+      {!isCustomReport && (
+        <>
+          <div className={styles.reportsCardGraphDescContainer}>
+            <span>{graphDescription}</span>
+            <span>{chartLabel}</span>
+          </div>
 
-      <div className={styles.reportsCardGraph}>
-        <HighchartsProvider Highcharts={Highcharts}>
-          <HighchartsChart>
-            <Chart
-              height="36px"
-              borderRadius={3}
-              marginBottom={0}
-              backgroundColor="#ECEDF008"
-              type="area"
-              spacingLeft={0}
-              spacingRight={0}
-            />
+          <div className={styles.reportsCardGraph}>
+            <HighchartsProvider Highcharts={Highcharts}>
+              <HighchartsChart>
+                <Chart
+                  height="36px"
+                  borderRadius={3}
+                  marginBottom={0}
+                  backgroundColor="#ECEDF008"
+                  type="area"
+                  spacingLeft={0}
+                  spacingRight={0}
+                />
 
-            <Tooltip
-              formatter={function () {
-                return chartLabel === 'int'
-                  ? `${this.key} - ${this.y}`
-                  : `${this.key} - ${chartLabel + this.y}`
-              }}
-            />
+                <Tooltip
+                  formatter={function () {
+                    return chartLabel === 'int'
+                      ? `${this.key} - ${this.y}`
+                      : `${this.key} - ${chartLabel + this.y}`
+                  }}
+                />
 
-            <XAxis id="XAxis" visible={false} />
+                <XAxis id="XAxis" visible={false} />
 
-            <YAxis id="YAxis" visible={false}>
-              <AreaSeries
-                id={catHeading}
-                name={catHeading}
-                data={graphData}
-                color="#54B2D3"
-                fillColor="#EEF7FB"
-                fillOpacity={1}
-                lineWidth={1}
-                marker={{
-                  radius: 2,
-                }}
-              />
-            </YAxis>
-          </HighchartsChart>
-        </HighchartsProvider>
-      </div>
+                <YAxis id="YAxis" visible={false}>
+                  <AreaSeries
+                    id={catHeading}
+                    name={catHeading}
+                    data={graphData}
+                    color="#54B2D3"
+                    fillColor="#EEF7FB"
+                    fillOpacity={1}
+                    lineWidth={1}
+                    marker={{
+                      radius: 2,
+                    }}
+                  />
+                </YAxis>
+              </HighchartsChart>
+            </HighchartsProvider>
+          </div>
+        </>
+      )}
 
       {reportsData.map((report) => (
         <SingleReport
+          catHeading={catHeading}
           key={report.id}
           reportCode={report.reportCode}
           reportName={report.reportName}
           isNew={report.isNew}
           favourite={report.favourite}
           onReportFavourite={(isFav) => onReportFavourite?.(report.id, isFav)}
+          isPermission={report.isPermission}
+          clickable={clickable}
+          isReportloading={isReportloading}
+          isCustomReport={isCustomReport}
+          reportId={report.id}
         />
       ))}
 
@@ -122,12 +143,13 @@ export const ReportsCard: React.FC<ReportsCardProps> = ({
           .fill('')
           .map(() => <div key={uuidv4()} className={styles.reportsCardCell} />)}
 
-      {reports.length > 10 && (
+      {!isReportloading && reports.length > 10 && (
         <ShowMore
           key={uuidv4()}
           length={reports.length}
           showAll={showAll}
           showMoreHandler={showMoreHandler}
+          currentRecord={currentGridRecord}
         />
       )}
     </div>
@@ -143,11 +165,8 @@ export const ReportsCard: React.FC<ReportsCardProps> = ({
             autoplay: true,
           }}
         />
-        <h5>No Custom Reports</h5>
-        <p>
-          Create your first custom report by finding a report, editing and
-          saving.
-        </p>
+        <h5>{t('setup.reports.custome.lable')}</h5>
+        <p>{t('setup.reports.custome.description')}</p>
       </div>
     </div>
   )

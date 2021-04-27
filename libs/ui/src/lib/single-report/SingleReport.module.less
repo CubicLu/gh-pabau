@@ -12,6 +12,10 @@
   border-top: 1px solid #ecedf0;
 
   transition: all 0.2s;
+
+  &.disable {
+    cursor: not-allowed;
+  }
 }
 
 .singleReport:hover {
@@ -22,6 +26,13 @@
   display: inline-flex;
   align-items: center;
   width: calc(100% - 10px);
+
+}
+.singleReportDisable {
+  opacity: 0.5;
+  display: flex;
+  align-items: center;
+  cursor: not-allowed;
 }
 .newBtnAdd {
   display: inline-flex;
@@ -59,4 +70,11 @@
   font-size: 12px;
   line-height: 14px;
   color: #54b2d3;
+}
+
+.singleReportNewLoader {
+  margin-right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

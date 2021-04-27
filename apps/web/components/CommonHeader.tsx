@@ -14,9 +14,10 @@ import classNames from 'classnames'
 
 interface P {
   handleSearch?: (searchTerm: string) => void
+  title?: string
 }
 
-const CommonHeader: FC<P> = ({ handleSearch }) => {
+const CommonHeader: FC<P> = ({ handleSearch, title = 'Setup' }) => {
   const [openMenuDrawer, setMenuDrawer] = useState<boolean>(false)
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
     false
@@ -35,7 +36,7 @@ const CommonHeader: FC<P> = ({ handleSearch }) => {
                 setMenuDrawer(() => !openMenuDrawer)
               }}
             />
-            <p>Setup</p>
+            <p>{title}</p>
           </div>
           <div className={styles.searchInput}>
             {!showSearch ? (

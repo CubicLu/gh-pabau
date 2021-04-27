@@ -12480,13 +12480,14 @@ model UserPermission {
 //}
 //
 model UserReport {
-  id         Int     @id @default(autoincrement())
-  company_id Int     @map("occupier")
-  user_id    Int
-  report_id  Int
-  User       User    @relation(fields: [user_id], references: [id])
-  Company    Company @relation(fields: [company_id], references: [id])
-  Report     Report  @relation(fields: [report_id], references: [id])
+  id         Int      @id @default(autoincrement())
+  company_id Int?     @map("occupier")
+  user_id    Int?
+  report_id  Int?
+  favorite   Boolean
+  User       User?    @relation(fields: [user_id], references: [id])
+  Company    Company? @relation(fields: [company_id], references: [id])
+  Report     Report?  @relation(fields: [report_id], references: [id])
 
   @@index([company_id], name: "occupier")
   @@index([report_id], name: "report_id")

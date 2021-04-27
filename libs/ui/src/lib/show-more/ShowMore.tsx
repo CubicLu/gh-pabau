@@ -1,19 +1,22 @@
-import React from 'react'
 import ClassNames from 'classnames'
-
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 import styles from './ShowMore.module.less'
 
 export interface ShowMoreProps {
   length?: number
   showAll?: boolean
   showMoreHandler?: () => void
+  currentRecord?: number
 }
 
 export const ShowMore: React.FC<ShowMoreProps> = ({
   length = 9,
   showAll = false,
   showMoreHandler,
+  currentRecord = 9,
 }) => {
+  const { t } = useTranslation('common')
   return (
     <div className={styles.showMore} onClick={showMoreHandler}>
       <div
@@ -37,7 +40,9 @@ export const ShowMore: React.FC<ShowMoreProps> = ({
       </div>
       <span className={styles.showMoreText}>
         {' '}
-        {showAll ? 'Hide' : `Show more (${length - 9})`}
+        {showAll
+          ? t('setup.reports.hide')
+          : `${t('setup.reports.showmore')} (${length - currentRecord})`}
       </span>
     </div>
   )

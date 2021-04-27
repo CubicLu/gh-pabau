@@ -351,37 +351,51 @@ export function SMSPurchaseModal({
   const str_confirm = t('ui.sms-purchase-modal.confirm')
   const str_purchase = t('ui.sms-purchase-modal.purchase')
   useEffect(() => {
-    if (step === 0) {
-      setNextStepEnabled(item !== null)
-      setNextButtonContent(
-        autoTopUp ? <span>{str_next_step}</span> : <span>{str_confirm}</span>
-      )
-    } else if (step === 1) {
-      setNextStepEnabled(settings.refillOption !== null)
-      setNextButtonContent(<span>{str_next_step}</span>)
-    } else if (step === 2) {
-      setNextButtonContent(
-        <span>
-          {str_purchase}&nbsp;
-          <WalletOutlined></WalletOutlined>
-        </span>
-      )
-    } else if (!purchasedEmitted && step === 3) {
-      setPurchased(true)
-      onComplete({
-        item: item,
-        settings: autoTopUp && settings.refillOption !== null ? settings : null,
-        autoTopUp,
-      })
-      setPurchasedEmitted(true)
-      setWizardVisible(false)
-      confetti({
-        angle: randomInRange(45, 135),
-        spread: randomInRange(50, 70),
-        particleCount: randomInRange(50, 100),
-        origin: { y: 0.5 },
-        zIndex: 2000,
-      })
+    switch (step) {
+      case 0: {
+        setNextStepEnabled(item !== null)
+        setNextButtonContent(
+          autoTopUp ? <span>{str_next_step}</span> : <span>{str_confirm}</span>
+        )
+
+        break
+      }
+      case 1: {
+        setNextStepEnabled(settings.refillOption !== null)
+        setNextButtonContent(<span>{str_next_step}</span>)
+
+        break
+      }
+      case 2: {
+        setNextButtonContent(
+          <span>
+            {str_purchase}&nbsp;
+            <WalletOutlined></WalletOutlined>
+          </span>
+        )
+
+        break
+      }
+      default: {
+        if (!purchasedEmitted && step === 3) {
+          setPurchased(true)
+          onComplete({
+            item: item,
+            settings:
+              autoTopUp && settings.refillOption !== null ? settings : null,
+            autoTopUp,
+          })
+          setPurchasedEmitted(true)
+          setWizardVisible(false)
+          confetti({
+            angle: randomInRange(45, 135),
+            spread: randomInRange(50, 70),
+            particleCount: randomInRange(50, 100),
+            origin: { y: 0.5 },
+            zIndex: 2000,
+          })
+        }
+      }
     }
     setMaxSteps(autoTopUp ? 3 : 2)
   }, [

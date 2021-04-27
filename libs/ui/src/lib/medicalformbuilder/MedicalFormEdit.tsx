@@ -172,11 +172,29 @@ const getFormInfo = (form) => {
   label = form.title ? form.title.trim() : ''
   label = label === '' && form.values ? form.values.trim() : label
 
-  if (form.cssClass === 'cl_services') label = 'Services'
-  else if (form.cssClass === 'cl_drugs') label = 'Drugs'
-  else if (form.cssClass === 'labs_tests') label = 'Labs Tests'
-  else if (form.cssClass === 'vaccine_scheduler') label = ''
-  else if (form.cssClass === 'staticText') label = ''
+  switch (form.cssClass) {
+    case 'cl_services': {
+      label = 'Services'
+      break
+    }
+    case 'cl_drugs': {
+      label = 'Drugs'
+      break
+    }
+    case 'labs_tests': {
+      label = 'Labs Tests'
+      break
+    }
+    case 'vaccine_scheduler': {
+      label = ''
+      break
+    }
+    case 'staticText': {
+      label = ''
+      // No default
+      break
+    }
+  }
 
   let txtBlockValue = ''
   if (form.cssClass === 'textarea') {

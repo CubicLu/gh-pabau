@@ -234,20 +234,35 @@ export const Table: FC<TableType> = ({
             col.render = renderActiveButton
           } else if (col.isHover) {
             col.render = renderHoverContent
-          } else if (col.dataIndex === 'messageHover') {
-            col.render = renderMessageHover
-          } else if (col.dataIndex === 'days') {
-            col.render = renderDays
-          } else if (
-            col.dataIndex === 'start_time' ||
-            col.dataIndex === 'end_time'
-          ) {
-            col.render = renderTime
-          } else if (col.dataIndex === 'code') {
-            col.render = renderCodeInput
-          } else if (!col.render) {
-            col.render = renderTableSource
-          }
+          } else
+            switch (col.dataIndex) {
+              case 'messageHover': {
+                col.render = renderMessageHover
+
+                break
+              }
+              case 'days': {
+                col.render = renderDays
+
+                break
+              }
+              case 'start_time':
+              case 'end_time': {
+                col.render = renderTime
+
+                break
+              }
+              case 'code': {
+                col.render = renderCodeInput
+
+                break
+              }
+              default: {
+                if (!col.render) {
+                  col.render = renderTableSource
+                }
+              }
+            }
           return col
         })
     }
