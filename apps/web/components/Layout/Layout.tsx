@@ -1,10 +1,11 @@
+import { useDisabledFeaturesQuery } from '@pabau/graphql'
+import { Iframe, Layout as PabauLayout, LayoutProps } from '@pabau/ui'
+import { useRouter } from 'next/router'
 import React, { FC } from 'react'
-import { Layout as PabauLayout, LayoutProps, Iframe } from '@pabau/ui'
-import Search from '../Search'
 import useLogin from '../../hooks/authentication/useLogin'
 import Login from '../../pages/login'
-import { useRouter } from 'next/router'
-import { useDisabledFeaturesQuery } from '@pabau/graphql'
+import Search from '../Search'
+import StickyPopout from '../StickyPopout/StickyPopout'
 
 const onMessageType = () => {
   //add mutation for send message textbox
@@ -48,15 +49,18 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
     localStorage?.getItem('token')
   ) {
     return (
-      <PabauLayout
-        searchRender={() => <Search />}
-        onCreateChannel={onCreateChannel}
-        onMessageType={onMessageType}
-        legacyContent={!!legacyPage}
-        {...props}
-      >
-        {!legacyPage ? children : <Iframe urlPath={legacyPage} />}
-      </PabauLayout>
+      <>
+        <PabauLayout
+          searchRender={() => <Search />}
+          onCreateChannel={onCreateChannel}
+          onMessageType={onMessageType}
+          legacyContent={!!legacyPage}
+          {...props}
+        >
+          {!legacyPage ? children : <Iframe urlPath={legacyPage} />}
+        </PabauLayout>
+        <StickyPopout {...props} />
+      </>
     )
   }
   return <Login />
