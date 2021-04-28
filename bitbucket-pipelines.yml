@@ -96,12 +96,17 @@ pipelines:
               - yarn install --frozen-lockfile --prefer-offline
             artifacts:
               - '**/node_modules/**'
+              - 'node_modules/.bin'
 
       - parallel:
         - step:
             name: misc checks
             max-time: 15
             script:
+              - ls -al node_modules || true
+              - ls -al node_modules/.bin || true
+              - ls -al apps/bridge-proxy/node_modules || true
+
               - yarn lint:tsc
               - yarn lint:ls || true
               - yarn lint:workspace || true
