@@ -158,7 +158,7 @@ pipelines:
             - dist/**
 
       - step:
-          size: 1x
+          size: 2x
           name: deploy dockers
           max-time: 20
           deployment: production-dockers
@@ -174,7 +174,7 @@ pipelines:
             - /tmp/bot_message.txt
 
       - step:
-          size: 1x
+          size: 2x
           name: deploy previews
           max-time: 20
           deployment: production-serverless
