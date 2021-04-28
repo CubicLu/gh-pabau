@@ -361,7 +361,7 @@ const Subscription: FC = () => {
         )}
         {openMessageDrawer && (
           <PabauMessages
-            openDrawer={openMessageDrawer}
+            visible={openMessageDrawer}
             closeDrawer={() => setMessageDrawer((e) => !e)}
           />
         )}
