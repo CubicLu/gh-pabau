@@ -80,22 +80,18 @@ pipelines:
   branches:
     master:
       - step:
-          name: yarn audit
-          max-time: 5
-          script:
-            - set || true
-            - git log --merges -n 1 --pretty=oneline
-            - sh -c "yarn audit --no-progress --non-interactive; [[ $? -gt 2 ]] && exit 1 || exit 0"
-      - step:
-          name: yarn install
+          name: yarn
           max-time: 10
           caches:
             - node
           script:
+            - set || true
+            - git log --merges -n 1 --pretty=oneline
+            - sh -c "yarn audit --no-progress --non-interactive; [[ $? -gt 2 ]] && exit 1 || exit 0"
             - yarn install --frozen-lockfile --prefer-offline
           artifacts:
             - '**/node_modules/**'
-            - 'node_modules/.bin/**'
+            - 'node_modules/.*/**'
 
       - parallel:
         - step:
@@ -105,6 +101,7 @@ pipelines:
               - ls -al node_modules || true
               - ls -al node_modules/.bin || true
               - ls -al apps/bridge-proxy/node_modules || true
+              - yarn install --check-files || true
 
               - yarn lint:tsc
               - yarn lint:ls || true
