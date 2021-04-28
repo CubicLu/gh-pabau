@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { CloseCircleFilled, SearchOutlined } from '@ant-design/icons'
 import { Input } from 'antd'
-
 import styles from './SetupChip.module.less'
 
 export interface SetupSearchProps {
@@ -9,6 +9,7 @@ export interface SetupSearchProps {
 }
 
 export const SetupSearchInput: FC<SetupSearchProps> = ({ onChange }) => {
+  const { t } = useTranslation('common')
   const [searchTerm, setSearchTerm] = useState('')
 
   const handleSearchTerm = (e) => {
@@ -19,7 +20,7 @@ export const SetupSearchInput: FC<SetupSearchProps> = ({ onChange }) => {
   return (
     <Input
       className={styles.searchInputStyle}
-      placeholder="Search by report name"
+      placeholder={t('setup.reports.search.text.placeholder')}
       value={searchTerm}
       onChange={(e) => handleSearchTerm(e)}
       suffix={

@@ -7,11 +7,17 @@ export class EmailController {
   constructor(private readonly emailService: EmailService) {}
 
   @Post('notification-email')
-  async sendEmail(@Body() data: any ): Promise<{success:boolean, message?: string}> {
-    if(!data.email) {
-      return {success: false, message: "email is required"}
-  }
-   await this.emailService.sendEmail(data.email , data.bodyContent, data.subject);
-   return {success:true}
+  async sendEmail(
+    @Body() data: any
+  ): Promise<{ success: boolean; message?: string }> {
+    if (!data.email) {
+      return { success: false, message: 'email is required' }
+    }
+    await this.emailService.sendEmail(
+      data.email,
+      data.bodyContent,
+      data.subject
+    )
+    return { success: true }
   }
 }

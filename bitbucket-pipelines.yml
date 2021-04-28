@@ -8,11 +8,10 @@ definitions:
   caches:
     nodemodules: node_modules/
     yarncustom: /usr/local/share/.cache/yarn
-    nextcache: dist
     cypress: '/root/.cache/Cypress'
   services:
     docker:
-      memory: 4096
+      memory: 3000
 
 pipelines:
   pull-requests:
@@ -20,12 +19,9 @@ pipelines:
       - step:
           name: PR pipeline
           size: 2x
-#          services:
-#            - docker
           caches:
             - nodemodules
             - yarncustom
-            - nextcache
           script:
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -gt 2 ]] && exit 1 || exit 0'
 
@@ -65,7 +61,6 @@ pipelines:
             - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=lint --with-deps --parallel --maxParallel=2
             - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=test --parallel --maxParallel=2
             - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=export
-            - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=build-storybook
             - NODE_OPTIONS=--max_old_space_size=3072 yarn affected --base=origin/master --target=deploy
             - cat /tmp/bot_message.txt
 
@@ -77,7 +72,7 @@ pipelines:
 
             # Post to Slack
             - |
-              jq --arg var "$(cat /tmp/bot_message2.txt)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
+              jq --arg var "$(cat /tmp/bot_message2.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
               -H "Expect:" \
               -H 'Content-Type: application/json; charset=utf-8' \
               --data-binary @-
@@ -86,49 +81,44 @@ pipelines:
     master:
       - step:
           name: yarn audit
+          max-time: 5
           script:
-            - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -gt 2 ]] && exit 1 || exit 0'
-          # artifacts:
-          #   - node_modules/**
+            - set || true
+            - git log --merges -n 1 --pretty=oneline
+            - sh -c "yarn audit --no-progress --non-interactive; [[ $? -gt 2 ]] && exit 1 || exit 0"
 
       - parallel:
         - step:
-            name: type checks
+            name: misc checks
+            max-time: 15
             caches:
-              - yarncustom
+              - node
             script:
-              - NODE_OPTIONS=--max_old_space_size=4096 yarn install --frozen-lockfile --prefer-offline
-              # TODO: move these to eslint so that `yarn lint` picks up these errors instead
-              - npm i -g typescript
-              - tsc --noEmit -p apps/backend/
-              - tsc --noEmit -p apps/bridge-api/
-              - tsc --noEmit -p apps/bridge-proxy/
-              # - tsc --noEmit -p apps/connect/
-              - tsc --noEmit -p apps/connect-e2e/
-              - tsc --noEmit -p apps/mgmt/
-              - tsc --noEmit -p apps/mgmt-e2e/
-              - tsc --noEmit -p apps/ui-e2e/
-              - tsc --noEmit -p apps/web/
-              - tsc --noEmit -p apps/web-e2e/
-              - tsc --noEmit -p libs/i18n/tsconfig.lib.json
-              # - tsc --noEmit -p libs/graphql/tsconfig.lib.json
-              - tsc --noEmit -p libs/ui/tsconfig.lib.json
-              - tsc --noEmit -p libs/yup/tsconfig.lib.json
+              - yarn install --frozen-lockfile --prefer-offline
+              - yarn lint:tsc
+              - yarn lint:ls || true
+              - yarn lint:workspace || true
+
         - step:
             name: lint
+            max-time: 20
             caches:
-              - yarncustom
+              - node
             script:
-              - NODE_OPTIONS=--max_old_space_size=4096 yarn install --frozen-lockfile --prefer-offline
-              - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:lint --base=HEAD~1 --with-deps
+              - yarn install --frozen-lockfile --prefer-offline
+              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:lint --base=HEAD~1 --with-deps --parallel --maxParallel=2
 
         - step:
             name: unit tests
+            max-time: 25
             caches:
-              - yarncustom
+              - node
             script:
-              - NODE_OPTIONS=--max_old_space_size=4096 yarn install --frozen-lockfile --prefer-offline
-              - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:test --base=HEAD~1
+              - yarn install --frozen-lockfile --prefer-offline
+              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --skip-nx-cache
+              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
+              - NODE_OPTIONS=--max_old_space_size=2222 yarn affected:test --base=HEAD~1 --parallel --maxParallel=2 --skip-nx-cache
+              - NODE_OPTIONS=--max_old_space_size=1555 yarn affected:test --base=HEAD~1 --parallel --maxParallel=3 --skip-nx-cache
 
       # - parallel:
 
@@ -153,37 +143,45 @@ pipelines:
       #         - node_modules/.cache/**
       #         - dist/**
 
-      - step:
-          size: 2x
-          name: build
-          script:
-            - NODE_OPTIONS=--max_old_space_size=4096 yarn install --frozen-lockfile --prefer-offline
-            - NODE_OPTIONS=--max_old_space_size=4096 yarn affected --base=HEAD~1 --target=build --prod
-            - NODE_OPTIONS=--max_old_space_size=4096 yarn affected --base=HEAD~1 --target=export --prod
-            - NODE_OPTIONS=--max_old_space_size=4096 yarn affected --base=HEAD~1 --target=build-storybook --prod
-          artifacts:
-            - node_modules/**
-            - dist/**
+
 
       - step:
           size: 2x
+          name: build
+          max-time: 30
+          caches:
+            - node
+          script:
+            - yarn install --frozen-lockfile --prefer-offline
+            - NODE_OPTIONS=--max_old_space_size=2345 yarn affected:export --base=HEAD~1 --prod --parallel --maxParallel=2
+          artifacts:
+            - dist/**
+
+      - step:
+          size: 1x
           name: deploy dockers
+          max-time: 20
           deployment: production-dockers
           services:
             - docker
+          caches:
+            - node
           script:
+            - yarn install --frozen-lockfile --prefer-offline
             - apt-get update -y && apt-get install -y curl jq time
-            - NODE_OPTIONS=--max_old_space_size=2750 /usr/bin/time -v yarn affected --base=HEAD~1 --target=deploy-docker --prod
+            - yarn affected --base=HEAD~1 --target=deploy-docker --prod
           artifacts:
             - /tmp/bot_message.txt
 
       - step:
-          size: 2x
+          size: 1x
           name: deploy previews
+          max-time: 20
           deployment: production-serverless
           script:
             - ls -al dist || true
             - ls -al dist/apps || true
+            - cat /tmp/bot_message.txt || true
             - apt-get update -y && apt-get install -y curl jq time
 
             # get the commit message for this merge
@@ -193,7 +191,6 @@ pipelines:
             - echo "${LAST_COMMIT_LOG}"
 
             # Get an oauth access token using the client credentials, parsing out the token with jq.
-            - apt-get update && apt-get install -y curl jq && jq --version && curl --version
             - git remote set-url origin "${BITBUCKET_GIT_SSH_ORIGIN}"
 
             # bump the package.json version by 0.0.1
@@ -208,10 +205,20 @@ pipelines:
               printf "*New Version Staged for Production*\n## v${PACKAGE_JSON_VERSION}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
             - cat /tmp/bot_message.txt >> /tmp/bot_message2.txt
             - cat /tmp/bot_message2.txt
+          artifacts:
+            - /tmp/bot_message2.txt
+
+      - step:
+          size: 1x
+          name: announce to slack
+          max-time: 5
+          script:
+            - cat /tmp/bot_message2.txt || true
+            - apt-get update -y && apt-get install -y curl jq time
 
             # Post to Slack
             - |
-              jq --arg var "$(cat /tmp/bot_message2.txt)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
+              jq --arg var "$(cat /tmp/bot_message2.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
               -H "Expect:" \
               -H 'Content-Type: application/json; charset=utf-8' \
               --data-binary @-

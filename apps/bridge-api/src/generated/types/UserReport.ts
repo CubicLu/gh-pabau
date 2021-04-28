@@ -7,6 +7,7 @@ export const UserReport = objectType({
     t.model.company_id()
     t.model.user_id()
     t.model.report_id()
+    t.model.favorite()
     t.model.User()
     t.model.Company()
     t.model.Report()

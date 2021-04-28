@@ -26,6 +26,7 @@ export function useGridData(t) {
             t('setup.clinic.general.pos'),
             t('setup.clinic.general.referral'),
           ],
+          href: '/setup/settings',
         },
         { title: t('setup.clinic.integrations'), data: [] },
         {
@@ -100,6 +101,7 @@ export function useGridData(t) {
             t('setup.marketing.communications.templates'),
             t('setup.marketing.communications.sms.setting'),
           ],
+          href: '/setup/senders',
         },
         { title: t('setup.marketing.client.portal'), data: [] },
         { title: t('setup.marketing.feedback'), data: [] },

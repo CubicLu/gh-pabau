@@ -1,38 +1,38 @@
 {
-    "marketingsource-header-create": {
-      "translation": "Creați o sursă de marketing"
-    },
-    "marketingsource-title": {
-      "translation": "Surse de marketing"
-    },
-    "marketingsource-name-textfield": {
-      "translation": "Nume"
-    },
-    "marketingsource-name-placeholder": {
-      "translation": "de exemplu. Facebook"
-    },
-    "marketingsource-header-edit": {
-      "translation": "Editați sursa de marketing"
-    },
-    "basic-crud-table-input-search-placeholder": {
-      "translation": "Căutare"
-    },
-    "basic-crud-table-button-filter": {
-      "translation": "Filtru"
-    },
-    "basic-crud-table-column--active": {
-      "translation": "Activ"
-    },
-    "basic-crud-table-button-active": {
-      "translation": "Aktiv"
-    },
-    "basic-crud-table-button-inactive": {
-      "translation": "Inactiv"
-    },
-    "basic-crud-table-header-button-create": {
-      "translation": "Creați sursă"
-    },
-    "basic-crud-table-header-breadcrumb-setup-link": {
-      "translation": "Înființat"
-    }
+  "marketingsource-header-create": {
+    "translation": "Creați o sursă de marketing"
+  },
+  "marketingsource-title": {
+    "translation": "Surse de marketing"
+  },
+  "marketingsource-name-textfield": {
+    "translation": "Nume"
+  },
+  "marketingsource-name-placeholder": {
+    "translation": "de exemplu. Facebook"
+  },
+  "marketingsource-header-edit": {
+    "translation": "Editați sursa de marketing"
+  },
+  "basic-crud-table-input-search-placeholder": {
+    "translation": "Căutare"
+  },
+  "basic-crud-table-button-filter": {
+    "translation": "Filtru"
+  },
+  "basic-crud-table-column--active": {
+    "translation": "Activ"
+  },
+  "basic-crud-table-button-active": {
+    "translation": "Aktiv"
+  },
+  "basic-crud-table-button-inactive": {
+    "translation": "Inactiv"
+  },
+  "basic-crud-table-header-button-create": {
+    "translation": "Creați sursă"
+  },
+  "basic-crud-table-header-breadcrumb-setup-link": {
+    "translation": "Înființat"
   }
+}

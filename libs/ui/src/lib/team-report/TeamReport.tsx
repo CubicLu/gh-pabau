@@ -146,8 +146,7 @@ export const TeamReport: FC<TeamReportParams> = ({
   loading = false,
 }) => {
   columns = columns.map((col) => {
-    if (col.key === 'total') col.render = transformTotalColumn
-    else col.render = transformTableCell
+    col.render = col.key === 'total' ? transformTotalColumn : transformTableCell
     return col
   })
 

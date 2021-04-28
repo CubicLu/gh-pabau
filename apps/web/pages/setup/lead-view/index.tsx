@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import CrudLayout from '../../../components/CrudLayout/CrudLayout'
 
 /* eslint-disable-next-line */
-export interface LeadsProps { }
+export interface LeadsProps {}
 
 const LIST_QUERY = gql`
   query lead($isActive: Boolean = true, $offset: Int, $limit: Int) {

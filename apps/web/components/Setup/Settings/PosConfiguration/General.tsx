@@ -1,7 +1,6 @@
+import { HelpTooltip, SimpleDropdown, Switch } from '@pabau/ui'
 import React, { FC } from 'react'
-
-import { HelpTooltip, Switch, SimpleDropdown } from '@pabau/ui'
-
+import { useTranslationI18 } from '../../../../hooks/useTranslationI18'
 import SettingsLayout from '../SettingsLayout'
 import styles from './common.module.less'
 
@@ -27,6 +26,7 @@ const General: FC<P> = ({
   }
 
   const RenderContent = (): JSX.Element => {
+    const { t } = useTranslationI18()
     return (
       <div className={styles.generalContainer}>
         {featureList?.map(({ key, value, checked }) => (
@@ -36,7 +36,12 @@ const General: FC<P> = ({
           >
             <p>
               {value}
-              <HelpTooltip helpText={'Help tooltip'} placement={'top'} />
+              <HelpTooltip
+                helpText={t(
+                  'setup.settings.pos.configuration.tab.general.tooltip'
+                )}
+                placement={'top'}
+              />
             </p>
             <Switch
               checked={checked}
@@ -62,12 +67,13 @@ const General: FC<P> = ({
       </div>
     )
   }
+  const { t } = useTranslationI18()
   return (
     <SettingsLayout
-      title={'General'}
-      description={
-        'Choose to disable particular features such as the ability to over-ride prices and more.'
-      }
+      title={t('setup.settings.pos.configuration.tab.items.general')}
+      description={t(
+        'setup.settings.pos.configuration.tab.general.description'
+      )}
     >
       <RenderContent />
     </SettingsLayout>

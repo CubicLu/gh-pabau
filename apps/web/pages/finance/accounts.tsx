@@ -47,14 +47,28 @@ export function Account() {
 
   const onDataRangeSelect = (value) => {
     setSelectedRange(value)
-    if (value === '90-days') {
-      setSelectedDates([moment().subtract(90, 'days'), moment()])
-    } else if (value === '30-days') {
-      setSelectedDates([moment().subtract(30, 'days'), moment()])
-    } else if (value === '6-months') {
-      setSelectedDates([moment().subtract(30, 'days'), moment()])
-    } else if (value === '1-year') {
-      setSelectedDates([moment().subtract(30, 'days'), moment()])
+    switch (value) {
+      case '90-days': {
+        setSelectedDates([moment().subtract(90, 'days'), moment()])
+
+        break
+      }
+      case '30-days': {
+        setSelectedDates([moment().subtract(30, 'days'), moment()])
+
+        break
+      }
+      case '6-months': {
+        setSelectedDates([moment().subtract(30, 'days'), moment()])
+
+        break
+      }
+      case '1-year': {
+        setSelectedDates([moment().subtract(30, 'days'), moment()])
+
+        break
+      }
+      // No default
     }
   }
 

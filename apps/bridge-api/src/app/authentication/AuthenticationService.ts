@@ -23,7 +23,8 @@ export default class AuthenticationService {
     })
     this.user = users.find(
       (currentUser) =>
-        currentUser.password === this.generatePassword(currentUser, loginInput)
+        currentUser.password ===
+        AuthenticationService.generatePassword(currentUser, loginInput)
     )
     if (!this.user || Object.getOwnPropertyNames(this.user).length === 0) {
       throw new Error('Unauthorized access')
@@ -31,7 +32,10 @@ export default class AuthenticationService {
     return this.generateJWT()
   }
 
-  private generateHash(password: string, encryption: 'md5' | 'sha1'): string {
+  private static generateHash(
+    password: string,
+    encryption: 'md5' | 'sha1'
+  ): string {
     return createHash(encryption).update(password).digest('hex')
   }
   private generateJWT(): string {
@@ -55,21 +59,26 @@ export default class AuthenticationService {
       { algorithm: 'HS512' }
     )
   }
+
   /**
-   * Generates a valid Pabau password, based upon the the user.password_algor db value
-   * Enum: [1: md5, 2:sha1]
-   * @param user
-   * @param loginInput
+   * Generates a valid Pabau password, based upon the the `user.password_algor` db value
    *
-   * @return encoded password as string
-   * @private
+   * Enum: [1: md5, 2:sha1]
+   *
+   * @param user - The `User` database model
+   * @param loginInput - The user-supplied login form
+   *
+   * @returns encoded password as string
    */
-  private generatePassword(user: User, loginInput: LoginInputDto): string {
+  private static generatePassword(
+    user: User,
+    loginInput: LoginInputDto
+  ): string {
     switch (user.password_algor) {
       case 1:
-        return this.generateHash(loginInput.password, 'md5')
+        return AuthenticationService.generateHash(loginInput.password, 'md5')
       case 2:
-        return this.generateHash(
+        return AuthenticationService.generateHash(
           user.salt + loginInput.password + user.salt,
           'sha1'
         )

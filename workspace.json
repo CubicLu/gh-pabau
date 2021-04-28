@@ -125,7 +125,7 @@
             }
           }
         },
-        "build-storybook": {
+        "export": {
           "builder": "@nrwl/storybook:build",
           "options": {
             "uiFramework": "@storybook/react",
@@ -205,7 +205,7 @@
       "projectType": "application",
       "prefix": "backend",
       "architect": {
-        "build": {
+        "export": {
           "builder": "@nrwl/node:build",
           "outputs": ["{options.outputPath}"],
           "options": {
@@ -507,7 +507,7 @@
       "projectType": "application",
       "prefix": "bridge-api",
       "architect": {
-        "build": {
+        "export": {
           "builder": "@nrwl/node:build",
           "outputs": ["{options.outputPath}"],
           "options": {
@@ -533,7 +533,7 @@
         "serve": {
           "builder": "@nrwl/node:execute",
           "options": {
-            "buildTarget": "bridge-api:build"
+            "buildTarget": "bridge-api:export"
           },
           "configurations": {
             "production": {

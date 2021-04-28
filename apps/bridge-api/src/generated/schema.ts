@@ -3019,12 +3019,13 @@ export interface UserPermission {
 
 export interface UserReport {
   id: number;
-  company_id: number;
-  user_id: number;
-  report_id: number;
-  User: User;
-  Company: Company;
-  Report: Report;
+  company_id?: number;
+  user_id?: number;
+  report_id?: number;
+  favorite: boolean;
+  User?: User;
+  Company?: Company;
+  Report?: Report;
 }
 
 export interface UserSecurityQuestionsAnswer {

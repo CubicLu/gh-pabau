@@ -4,4 +4,4 @@ module.exports = {
       url: 'https://api.new.pabau.com/v1/graphql',
     },
   },
-};
+}

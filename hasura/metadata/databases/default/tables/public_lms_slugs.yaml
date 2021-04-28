@@ -1,5 +1,5 @@
 table:
-  name: LMS_slugs
+  name: lms_slugs
   schema: public
 insert_permissions:
 - permission:
@@ -29,7 +29,7 @@ select_permissions:
   role: public
 update_permissions:
 - permission:
-    check: null
+    check: {}
     columns:
     - article_urls
     - blogs

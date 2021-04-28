@@ -6,18 +6,18 @@ import {
   InMemoryCache,
   split,
 } from '@apollo/client'
+import { setContext } from '@apollo/client/link/context'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import * as Icons from '@fortawesome/free-solid-svg-icons'
 import { OperationDefinitionNode } from 'graphql'
 import { AppProps } from 'next/app'
+import { CookiesProvider } from 'react-cookie'
+import 'react-image-crop/dist/ReactCrop.css'
 import 'react-phone-input-2/lib/style.css'
 import 'react-quill/dist/quill.snow.css'
-import 'react-image-crop/dist/ReactCrop.css'
 import ContextWrapper from '../components/ContextWrapper'
-import { setContext } from '@apollo/client/link/context'
-import { CookiesProvider } from 'react-cookie'
 import TranslationWrapper from '../components/TranslationWrapper'
 require('../styles/global.less')
 require('../../../libs/ui/src/styles/antd.less')
@@ -37,10 +37,12 @@ const GRAPHQL_HTTP_ENDPOINT =
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token')
   return {
-    headers: {
-      ...headers,
-      authorization: `Bearer ${token}`,
-    },
+    headers: token
+      ? {
+          ...headers,
+          authorization: `Bearer ${token}`,
+        }
+      : headers,
   }
 })
 const iconList = Object.keys(Icons)

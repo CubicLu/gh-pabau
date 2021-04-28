@@ -149,6 +149,7 @@ export const permissions = shield(
       login: allow,
       logout: rules.isAuthenticated,
       upsertManyStaffMetaByGroupId: and(rules.isAuthenticated, rules.isAdmin),
+      upsertUserReportByReportCode: and(rules.isAuthenticated, rules.isAdmin),
       '*': and(rules.isAuthenticated, rules.isAdmin, rules.interceptMutation),
     },
     Query: {
@@ -207,13 +208,12 @@ export const permissions = shield(
       ping: allow,
       //TODO once jest mocks are resolved move it to rules.isAuthenticated
       featureRequestsWeeklyAvg: allow,
+      findManyCustomReportWithPermissions: and(
+        rules.isAuthenticated,
+        rules.isAdmin
+      ),
       '*': and(rules.isAuthenticated, rules.belongsToCompanyAndShared),
     },
   },
-  {
-    fallbackError: async (error: Error) => {
-      console.error(error)
-      return error
-    },
-  }
+  {}
 )

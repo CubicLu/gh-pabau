@@ -5,18 +5,27 @@ import Highlighter from 'react-highlight-words'
 import { SetupEmptySearch } from '@pabau/ui'
 import styles from '../../../pages/setup/Setup.module.less'
 import { useRouter } from 'next/router'
+import classNames from 'classnames'
 
 interface searchProps {
   subTitle: string
   href?: string
-  title: string
+  title?: string
+  isPermission?: boolean
 }
 interface P {
   data: searchProps[]
   searchTerm: string
+  checkPermission?: boolean
+  displayTitle?: boolean
 }
 
-const SearchResults: FC<P> = ({ data, searchTerm }) => {
+const SearchResults: FC<P> = ({
+  data,
+  searchTerm,
+  checkPermission = false,
+  displayTitle = true,
+}) => {
   const router = useRouter()
   return (
     <Card className={styles.searchResultsCard} bodyStyle={{ padding: '0' }}>
@@ -26,8 +35,19 @@ const SearchResults: FC<P> = ({ data, searchTerm }) => {
             return (
               <div
                 key={index}
-                className={styles.searchList}
-                onClick={() => router.push(thread.href)}
+                className={
+                  checkPermission
+                    ? !thread.isPermission
+                      ? classNames(
+                          styles.searchList,
+                          styles.singleReportDisable
+                        )
+                      : styles.searchList
+                    : styles.searchList
+                }
+                onClick={() => {
+                  thread.isPermission && router.push(thread.href)
+                }}
               >
                 <span>
                   <Highlighter
@@ -35,7 +55,12 @@ const SearchResults: FC<P> = ({ data, searchTerm }) => {
                     searchWords={[searchTerm]}
                     textToHighlight={thread.subTitle}
                   />
-                  <span className={styles.searchTitle}> - {thread.title}</span>
+                  {displayTitle && (
+                    <span className={styles.searchTitle}>
+                      {' '}
+                      - {thread.title}
+                    </span>
+                  )}
                 </span>
               </div>
             )
