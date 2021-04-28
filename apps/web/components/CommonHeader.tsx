@@ -1,12 +1,7 @@
 import React, { FC, useState } from 'react'
 import { SearchOutlined } from '@ant-design/icons'
 import { SetupSearchInput } from '@pabau/ui'
-import {
-  MobileHeader,
-  MobileSidebar,
-  NotificationDrawer,
-  PabauMessages,
-} from '@pabau/ui'
+import { MobileHeader, MobileSidebar, NotificationDrawer } from '@pabau/ui'
 import { MenuOutlined } from '@ant-design/icons'
 import Search from '../components/Search'
 import styles from './Setup.module.less'

@@ -124,83 +124,83 @@ const groupData = {
   ],
 }
 
-const chatListData = [
-  {
-    userName: 'Stephen Cox',
-    message: '2 unread messages',
-    unread: 2,
-    dateTime: '11:20 AM',
-    isOnline: true,
-    profileURL: Stephen,
-  },
-  {
-    userName: 'Linda Starck',
-    message: 'Sounds good to me!',
-    dateTime: '11:20 AM',
-    isOnline: true,
-    profileURL: Linda,
-  },
-  {
-    userName: 'Alex Johnson',
-    message: 'Yes, we can try it.',
-    dateTime: '11:20 AM',
-    isOnline: false,
-    profileURL: Alex,
-  },
-  {
-    userName: 'Arya Davis',
-    message: 'Hi, Arya',
-    dateTime: '11:20 AM',
-    isOnline: false,
-    profileURL: Arya,
-    isMultiple: true,
-    data: [
-      {
-        userName: 'Arya Davis',
-        message: 'Hi, Arya',
-        dateTime: '11:20 AM',
-        isOnline: false,
-        profileURL: Arya,
-      },
-      {
-        userName: 'James Ocean',
-        message: 'Yes, look! This is awesome',
-        dateTime: '11:20 AM',
-        isOnline: true,
-        profileURL: James,
-      },
-    ],
-  },
-  {
-    userName: 'James Ocean',
-    message: 'Yes, look! This is awesome',
-    dateTime: '11:20 AM',
-    isOnline: true,
-    profileURL: James,
-  },
-  {
-    userName: 'Austin Winter',
-    message: 'On Friday',
-    dateTime: '11:20 AM',
-    isOnline: true,
-    profileURL: Austin,
-  },
-  {
-    userName: 'Walter Brown',
-    message:
-      'We can schedule a meeting at 8:00 PM today. I think we will discuss...',
-    dateTime: '11:20 AM',
-    isOnline: true,
-    profileURL: Walter,
-  },
-  {
-    userName: 'Liza Frank',
-    message: 'On Friday',
-    dateTime: '11:20 AM',
-    isOnline: true,
-    profileURL: Liza,
-  },
-]
+// const chatListData = [
+//   {
+//     userName: 'Stephen Cox',
+//     message: '2 unread messages',
+//     unread: 2,
+//     dateTime: '11:20 AM',
+//     isOnline: true,
+//     profileURL: Stephen,
+//   },
+//   {
+//     userName: 'Linda Starck',
+//     message: 'Sounds good to me!',
+//     dateTime: '11:20 AM',
+//     isOnline: true,
+//     profileURL: Linda,
+//   },
+//   {
+//     userName: 'Alex Johnson',
+//     message: 'Yes, we can try it.',
+//     dateTime: '11:20 AM',
+//     isOnline: false,
+//     profileURL: Alex,
+//   },
+//   {
+//     userName: 'Arya Davis',
+//     message: 'Hi, Arya',
+//     dateTime: '11:20 AM',
+//     isOnline: false,
+//     profileURL: Arya,
+//     isMultiple: true,
+//     data: [
+//       {
+//         userName: 'Arya Davis',
+//         message: 'Hi, Arya',
+//         dateTime: '11:20 AM',
+//         isOnline: false,
+//         profileURL: Arya,
+//       },
+//       {
+//         userName: 'James Ocean',
+//         message: 'Yes, look! This is awesome',
+//         dateTime: '11:20 AM',
+//         isOnline: true,
+//         profileURL: James,
+//       },
+//     ],
+//   },
+//   {
+//     userName: 'James Ocean',
+//     message: 'Yes, look! This is awesome',
+//     dateTime: '11:20 AM',
+//     isOnline: true,
+//     profileURL: James,
+//   },
+//   {
+//     userName: 'Austin Winter',
+//     message: 'On Friday',
+//     dateTime: '11:20 AM',
+//     isOnline: true,
+//     profileURL: Austin,
+//   },
+//   {
+//     userName: 'Walter Brown',
+//     message:
+//       'We can schedule a meeting at 8:00 PM today. I think we will discuss...',
+//     dateTime: '11:20 AM',
+//     isOnline: true,
+//     profileURL: Walter,
+//   },
+//   {
+//     userName: 'Liza Frank',
+//     message: 'On Friday',
+//     dateTime: '11:20 AM',
+//     isOnline: true,
+//     profileURL: Liza,
+//   },
+// ]
 
 export const PabauMessages: FC<MessagesProps> = ({
   closeDrawer,
@@ -342,13 +342,12 @@ export const PabauMessages: FC<MessagesProps> = ({
   }
 
   const onHandleGlobalSearch = (value: string) => {
-    const reg = new RegExp(value.split('').join('\\w*').replace(/\W/, ''), 'i')
-    // eslint-disable-next-line array-callback-return
-    const resultData = chatListData.filter((person) => {
-      if (reg.test(person.userName)) {
-        return person
-      }
-    })
+    // const reg = new RegExp(value.split('').join('\\w*').replace(/\W/, ''), 'i')
+    // const resultData = chatListData.filter((person) => {
+    //   if (reg.test(person.userName)) {
+    //     return person
+    //   }
+    // })
     setGlobalSearchValue(value)
     //TODO: setChatMessage(resultData)
   }
