@@ -23,7 +23,7 @@ const CommonHeader: FC<P> = ({ handleSearch, title = 'Setup' }) => {
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
     false
   )
-  const [openMessageDrawer, setMessageDrawer] = useState<boolean>(false)
+  const [openMessageDrawer, setMessageDrawer] = useState<boolean>(true)
   const [showSearch, setShowSearch] = useState(false)
 
   return (

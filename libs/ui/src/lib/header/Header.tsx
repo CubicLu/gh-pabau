@@ -155,7 +155,7 @@ export const Header: FC<P> = ({
                     onClick={() => setNotificationDrawer((e) => !e)}
                   />
                 </Badge>
-                <Badge count={3} className={styles.badgeCircle}>
+                <Badge count={4} className={styles.badgeCircle}>
                   <MailOutlined
                     className={styles.headerIcon}
                     onClick={() => setMessageDrawer((e) => !e)}
@@ -182,7 +182,7 @@ export const Header: FC<P> = ({
       )}
       {openMessageDrawer && (
         <PabauMessages
-          openDrawer={openMessageDrawer}
+          visible={openMessageDrawer}
           closeDrawer={() => setMessageDrawer((e) => !e)}
           onCreateChannel={onCreateChannel}
           onMessageType={onMessageType}

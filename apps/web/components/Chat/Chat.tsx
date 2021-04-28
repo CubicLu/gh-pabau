@@ -9,10 +9,23 @@ export const Chat: React.FC<P> = (props) => {
       chat {
         id
         message
+        from
+        to
+        created_at
       }
     }
   `)
-  return <PabauMessages chatList={data} {...props} />
+  return (
+    <PabauMessages
+      chatList={data?.map(({ id, message, from, to, created_at }) => ({
+        userName: `from:${from} to:${to}`,
+        message,
+        dateTime: created_at,
+        isOnline: true,
+      }))}
+      {...props}
+    />
+  )
 }
 
 export default Chat
