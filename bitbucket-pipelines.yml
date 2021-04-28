@@ -165,7 +165,7 @@ pipelines:
 
       - parallel:
         - step:
-            size: 1x
+            size: 2x
             name: deploy dockers
             max-time: 20
             deployment: production-dockers
@@ -224,6 +224,7 @@ pipelines:
           max-time: 5
           script:
             - cat /tmp/bot_message2.txt || true
+            - cat /tmp/bot_message.txt || true
             - apt-get update -y && apt-get install -y curl jq time
 
             # Post to Slack
