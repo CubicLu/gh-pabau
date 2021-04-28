@@ -1,5 +1,5 @@
-import gql from 'graphql-tag'
 import { MessagesProps, PabauMessages, useLiveQuery } from '@pabau/ui'
+import gql from 'graphql-tag'
 import * as React from 'react'
 
 type P = Pick<MessagesProps, 'closeDrawer' | 'visible'>

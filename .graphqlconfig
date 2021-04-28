@@ -1,0 +1,16 @@
+{
+  "name": "Remote Schema",
+  "schemaPath": "remote-schema.graphql",
+  "includes": ["apps/web/**"],
+  "extensions": {
+    "endpoints": {
+      "Default GraphQL Endpoint": {
+        "url": "https://api.new.pabau.com/v1/graphql",
+        "headers": {
+          "X-Hasura-Admin-Secret": "madskills"
+        },
+        "introspect": false
+      }
+    }
+  }
+}

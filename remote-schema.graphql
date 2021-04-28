@@ -44314,14 +44314,6 @@ input CompanyUpdateOneRequiredWithoutUserMobilePermissionInput {
   upsert: CompanyUpsertWithoutUserMobilePermissionInput
 }
 
-input CompanyUpdateOneRequiredWithoutUserReportInput {
-  connect: CompanyWhereUniqueInput
-  connectOrCreate: CompanyCreateOrConnectWithoutUserReportInput
-  create: CompanyUncheckedCreateWithoutUserReportInput
-  update: CompanyUncheckedUpdateWithoutUserReportInput
-  upsert: CompanyUpsertWithoutUserReportInput
-}
-
 input CompanyUpdateOneRequiredWithoutXeroIntegrationInput {
   connect: CompanyWhereUniqueInput
   connectOrCreate: CompanyCreateOrConnectWithoutXeroIntegrationInput
@@ -44378,6 +44370,16 @@ input CompanyUpdateOneWithoutUserInput {
   disconnect: Boolean
   update: CompanyUncheckedUpdateWithoutUserInput
   upsert: CompanyUpsertWithoutUserInput
+}
+
+input CompanyUpdateOneWithoutUserReportInput {
+  connect: CompanyWhereUniqueInput
+  connectOrCreate: CompanyCreateOrConnectWithoutUserReportInput
+  create: CompanyUncheckedCreateWithoutUserReportInput
+  delete: Boolean
+  disconnect: Boolean
+  update: CompanyUncheckedUpdateWithoutUserReportInput
+  upsert: CompanyUpsertWithoutUserReportInput
 }
 
 input CompanyUpdateOneWithoutUserSalutationInput {
@@ -45115,6 +45117,14 @@ input CountryWhereInput {
 
 input CountryWhereUniqueInput {
   country_id: Int
+}
+
+type CustomReport {
+  favorite: Boolean
+  isPermission: Boolean
+  report_code: String
+  report_id: Int
+  report_name: String
 }
 
 """Date custom scalar type"""
@@ -56305,10 +56315,12 @@ input ReportUpdateManyWithoutReportCategoryInput {
   upsert: [ReportUpsertWithWhereUniqueWithoutReportCategoryInput]
 }
 
-input ReportUpdateOneRequiredWithoutUserReportInput {
+input ReportUpdateOneWithoutUserReportInput {
   connect: ReportWhereUniqueInput
   connectOrCreate: ReportCreateOrConnectWithoutUserReportInput
   create: ReportUncheckedCreateWithoutUserReportInput
+  delete: Boolean
+  disconnect: Boolean
   update: ReportUncheckedUpdateWithoutUserReportInput
   upsert: ReportUpsertWithoutUserReportInput
 }
@@ -61060,6 +61072,12 @@ input TwoFactorHistoryWhereUniqueInput {
   id: Int
 }
 
+type UpdateUserReport {
+  affected_row: Int
+  favorite: Boolean
+  report_code: String
+}
+
 type User {
   CmContactAlert(cursor: CmContactAlertWhereUniqueInput, skip: Int, take: Int): [CmContactAlert!]!
   CmContactNote(cursor: CmContactNoteWhereUniqueInput, skip: Int, take: Int): [CmContactNote!]!
@@ -64272,19 +64290,21 @@ input UserPermissionWhereUniqueInput {
 }
 
 type UserReport {
-  Company: Company!
-  Report: Report!
-  User: User!
-  company_id: Int!
+  Company: Company
+  Report: Report
+  User: User
+  company_id: Int
+  favorite: Boolean!
   id: Int!
-  report_id: Int!
-  user_id: Int!
+  report_id: Int
+  user_id: Int
 }
 
 input UserReportCreateInput {
-  Company: CompanyCreateNestedOneWithoutUserReportInput!
-  Report: ReportCreateNestedOneWithoutUserReportInput!
-  User: UserCreateNestedOneWithoutUserReportInput!
+  Company: CompanyCreateNestedOneWithoutUserReportInput
+  Report: ReportCreateNestedOneWithoutUserReportInput
+  User: UserCreateNestedOneWithoutUserReportInput
+  favorite: Boolean!
 }
 
 input UserReportCreateNestedManyWithoutReportInput {
@@ -64315,18 +64335,21 @@ input UserReportCreateOrConnectWithoutUserInput {
 }
 
 input UserReportCreateWithoutCompanyInput {
-  Report: ReportCreateNestedOneWithoutUserReportInput!
-  User: UserCreateNestedOneWithoutUserReportInput!
+  Report: ReportCreateNestedOneWithoutUserReportInput
+  User: UserCreateNestedOneWithoutUserReportInput
+  favorite: Boolean!
 }
 
 input UserReportCreateWithoutReportInput {
-  Company: CompanyCreateNestedOneWithoutUserReportInput!
-  User: UserCreateNestedOneWithoutUserReportInput!
+  Company: CompanyCreateNestedOneWithoutUserReportInput
+  User: UserCreateNestedOneWithoutUserReportInput
+  favorite: Boolean!
 }
 
 input UserReportCreateWithoutUserInput {
-  Company: CompanyCreateNestedOneWithoutUserReportInput!
-  Report: ReportCreateNestedOneWithoutUserReportInput!
+  Company: CompanyCreateNestedOneWithoutUserReportInput
+  Report: ReportCreateNestedOneWithoutUserReportInput
+  favorite: Boolean!
 }
 
 input UserReportListRelationFilter {
@@ -64340,6 +64363,7 @@ input UserReportOrderByInput {
   Report: ReportOrderByInput
   User: UserOrderByInput
   company_id: SortOrder
+  favorite: SortOrder
   id: SortOrder
   report_id: SortOrder
   user_id: SortOrder
@@ -64349,10 +64373,11 @@ input UserReportScalarWhereInput {
   AND: [UserReportScalarWhereInput]
   NOT: [UserReportScalarWhereInput]
   OR: [UserReportScalarWhereInput]
-  company_id: IntFilter
+  company_id: IntNullableFilter
+  favorite: BoolFilter
   id: IntFilter
-  report_id: IntFilter
-  user_id: IntFilter
+  report_id: IntNullableFilter
+  user_id: IntNullableFilter
 }
 
 input UserReportUncheckedCreateNestedManyWithoutCompanyInput {
@@ -64374,21 +64399,24 @@ input UserReportUncheckedCreateNestedManyWithoutUserInput {
 }
 
 input UserReportUncheckedCreateWithoutCompanyInput {
+  favorite: Boolean!
   id: Int
-  report_id: Int!
-  user_id: Int!
+  report_id: Int
+  user_id: Int
 }
 
 input UserReportUncheckedCreateWithoutReportInput {
-  company_id: Int!
+  company_id: Int
+  favorite: Boolean!
   id: Int
-  user_id: Int!
+  user_id: Int
 }
 
 input UserReportUncheckedCreateWithoutUserInput {
-  company_id: Int!
+  company_id: Int
+  favorite: Boolean!
   id: Int
-  report_id: Int!
+  report_id: Int
 }
 
 input UserReportUncheckedUpdateManyWithoutCompanyInput {
@@ -64431,33 +64459,38 @@ input UserReportUncheckedUpdateManyWithoutUserInput {
 }
 
 input UserReportUncheckedUpdateManyWithoutUserReportInput {
+  favorite: BoolFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
-  report_id: IntFieldUpdateOperationsInput
-  user_id: IntFieldUpdateOperationsInput
+  report_id: NullableIntFieldUpdateOperationsInput
+  user_id: NullableIntFieldUpdateOperationsInput
 }
 
 input UserReportUncheckedUpdateWithoutCompanyInput {
+  favorite: BoolFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
-  report_id: IntFieldUpdateOperationsInput
-  user_id: IntFieldUpdateOperationsInput
+  report_id: NullableIntFieldUpdateOperationsInput
+  user_id: NullableIntFieldUpdateOperationsInput
 }
 
 input UserReportUncheckedUpdateWithoutReportInput {
-  company_id: IntFieldUpdateOperationsInput
+  company_id: NullableIntFieldUpdateOperationsInput
+  favorite: BoolFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
-  user_id: IntFieldUpdateOperationsInput
+  user_id: NullableIntFieldUpdateOperationsInput
 }
 
 input UserReportUncheckedUpdateWithoutUserInput {
-  company_id: IntFieldUpdateOperationsInput
+  company_id: NullableIntFieldUpdateOperationsInput
+  favorite: BoolFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
-  report_id: IntFieldUpdateOperationsInput
+  report_id: NullableIntFieldUpdateOperationsInput
 }
 
 input UserReportUpdateInput {
-  Company: CompanyUpdateOneRequiredWithoutUserReportInput
-  Report: ReportUpdateOneRequiredWithoutUserReportInput
-  User: UserUpdateOneRequiredWithoutUserReportInput
+  Company: CompanyUpdateOneWithoutUserReportInput
+  Report: ReportUpdateOneWithoutUserReportInput
+  User: UserUpdateOneWithoutUserReportInput
+  favorite: BoolFieldUpdateOperationsInput
 }
 
 input UserReportUpdateManyWithWhereWithoutCompanyInput {
@@ -64554,10 +64587,11 @@ input UserReportWhereInput {
   OR: [UserReportWhereInput]
   Report: ReportWhereInput
   User: UserWhereInput
-  company_id: IntFilter
+  company_id: IntNullableFilter
+  favorite: BoolFilter
   id: IntFilter
-  report_id: IntFilter
-  user_id: IntFilter
+  report_id: IntNullableFilter
+  user_id: IntNullableFilter
 }
 
 input UserReportWhereUniqueInput {
@@ -71418,14 +71452,6 @@ input UserUpdateOneRequiredWithoutUserMobilePermissionInput {
   upsert: UserUpsertWithoutUserMobilePermissionInput
 }
 
-input UserUpdateOneRequiredWithoutUserReportInput {
-  connect: UserWhereUniqueInput
-  connectOrCreate: UserCreateOrConnectWithoutUserReportInput
-  create: UserUncheckedCreateWithoutUserReportInput
-  update: UserUncheckedUpdateWithoutUserReportInput
-  upsert: UserUpsertWithoutUserReportInput
-}
-
 input UserUpdateOneRequiredWithoutUserSecurityQuestionsAnswerInput {
   connect: UserWhereUniqueInput
   connectOrCreate: UserCreateOrConnectWithoutUserSecurityQuestionsAnswerInput
@@ -71502,6 +71528,16 @@ input UserUpdateOneWithoutUserPermissionInput {
   disconnect: Boolean
   update: UserUncheckedUpdateWithoutUserPermissionInput
   upsert: UserUpsertWithoutUserPermissionInput
+}
+
+input UserUpdateOneWithoutUserReportInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutUserReportInput
+  create: UserUncheckedCreateWithoutUserReportInput
+  delete: Boolean
+  disconnect: Boolean
+  update: UserUncheckedUpdateWithoutUserReportInput
+  upsert: UserUpsertWithoutUserReportInput
 }
 
 input UserUpdateWithWhereUniqueWithoutCompanyInput {
@@ -84628,6 +84664,19 @@ type mutation_root {
   delete_service_by_pk(id: uuid!): service
 
   """
+  delete data from the table: "service_categories"
+  """
+  delete_service_categories(
+    """filter the rows which have to be deleted"""
+    where: service_categories_bool_exp!
+  ): service_categories_mutation_response
+
+  """
+  delete single row from the table: "service_categories"
+  """
+  delete_service_categories_by_pk(id: uuid!): service_categories
+
+  """
   delete data from the table: "services"
   """
   delete_services(
@@ -86079,6 +86128,28 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: service_on_conflict
   ): service_mutation_response
+
+  """
+  insert data into the table: "service_categories"
+  """
+  insert_service_categories(
+    """the rows to be inserted"""
+    objects: [service_categories_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: service_categories_on_conflict
+  ): service_categories_mutation_response
+
+  """
+  insert a single row into the table: "service_categories"
+  """
+  insert_service_categories_one(
+    """the row to be inserted"""
+    object: service_categories_insert_input!
+
+    """on conflict condition"""
+    on_conflict: service_categories_on_conflict
+  ): service_categories
 
   """
   insert a single row into the table: "service"
@@ -88312,6 +88383,32 @@ type mutation_root {
   ): service
 
   """
+  update data of the table: "service_categories"
+  """
+  update_service_categories(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: service_categories_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: service_categories_set_input
+
+    """filter the rows which have to be updated"""
+    where: service_categories_bool_exp!
+  ): service_categories_mutation_response
+
+  """
+  update single row of the table: "service_categories"
+  """
+  update_service_categories_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: service_categories_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: service_categories_set_input
+    pk_columns: service_categories_pk_columns_input!
+  ): service_categories
+
+  """
   update data of the table: "services"
   """
   update_services(
@@ -88639,6 +88736,11 @@ type mutation_root {
   upsertOneUserSalutation(create: UserSalutationCreateInput!, update: UserSalutationUpdateInput!, where: UserSalutationWhereUniqueInput!): UserSalutation!
   upsertOneUserSecurityQuestionsAnswer(create: UserSecurityQuestionsAnswerCreateInput!, update: UserSecurityQuestionsAnswerUpdateInput!, where: UserSecurityQuestionsAnswerWhereUniqueInput!): UserSecurityQuestionsAnswer!
   upsertOneXeroIntegration(create: XeroIntegrationCreateInput!, update: XeroIntegrationUpdateInput!, where: XeroIntegrationWhereUniqueInput!): XeroIntegration!
+
+  """
+  Creates or updates one user report favorite for the currently authenticated company and user
+  """
+  upsertUserReportByReportCode(favorite: Boolean!, report_code: String!): UpdateUserReport
 }
 
 """
@@ -94383,6 +94485,9 @@ type query_root {
   findFirstUserSalutation(cursor: UserSalutationWhereUniqueInput, orderBy: UserSalutationOrderByInput, skip: Int, take: Int, where: UserSalutationWhereInput): UserSalutation
   findFirstUserSecurityQuestionsAnswer(cursor: UserSecurityQuestionsAnswerWhereUniqueInput, orderBy: UserSecurityQuestionsAnswerOrderByInput, skip: Int, take: Int, where: UserSecurityQuestionsAnswerWhereInput): UserSecurityQuestionsAnswer
   findFirstXeroIntegration(cursor: XeroIntegrationWhereUniqueInput, orderBy: XeroIntegrationOrderByInput, skip: Int, take: Int, where: XeroIntegrationWhereInput): XeroIntegration
+
+  """Return list of custom report with user report permission"""
+  findManyCustomReportWithPermissions: [CustomReport]
   glCode(where: GlCodeWhereUniqueInput!): GlCode
   glCodes(cursor: GlCodeWhereUniqueInput, orderBy: [GlCodeOrderByInput!], skip: Int, take: Int, where: GlCodeWhereInput): [GlCode!]!
   glCodesCount(where: GlCodeWhereInput): Int
@@ -95941,6 +96046,51 @@ type query_root {
   service_by_pk(id: uuid!): service
 
   """
+  fetch data from the table: "service_categories"
+  """
+  service_categories(
+    """distinct select on columns"""
+    distinct_on: [service_categories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [service_categories_order_by!]
+
+    """filter the rows returned"""
+    where: service_categories_bool_exp
+  ): [service_categories!]!
+
+  """
+  fetch aggregated fields from the table: "service_categories"
+  """
+  service_categories_aggregate(
+    """distinct select on columns"""
+    distinct_on: [service_categories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [service_categories_order_by!]
+
+    """filter the rows returned"""
+    where: service_categories_bool_exp
+  ): service_categories_aggregate!
+
+  """
+  fetch data from the table: "service_categories" using primary key columns
+  """
+  service_categories_by_pk(id: uuid!): service_categories
+
+  """
   fetch data from the table: "services"
   """
   services(
@@ -97425,6 +97575,275 @@ input service_bool_exp {
   timing_rules: json_comparison_exp
   type: String_comparison_exp
   updated_at: timestamptz_comparison_exp
+}
+
+"""
+columns and relationships of "service_categories"
+"""
+type service_categories {
+  assigned: String
+  color: String
+  created_at: timestamptz!
+  id: uuid!
+  image: String
+  is_active: Boolean!
+  name: String!
+  order: Int!
+  updated_at: timestamptz!
+}
+
+"""
+aggregated selection of "service_categories"
+"""
+type service_categories_aggregate {
+  aggregate: service_categories_aggregate_fields
+  nodes: [service_categories!]!
+}
+
+"""
+aggregate fields of "service_categories"
+"""
+type service_categories_aggregate_fields {
+  avg: service_categories_avg_fields
+  count(columns: [service_categories_select_column!], distinct: Boolean): Int!
+  max: service_categories_max_fields
+  min: service_categories_min_fields
+  stddev: service_categories_stddev_fields
+  stddev_pop: service_categories_stddev_pop_fields
+  stddev_samp: service_categories_stddev_samp_fields
+  sum: service_categories_sum_fields
+  var_pop: service_categories_var_pop_fields
+  var_samp: service_categories_var_samp_fields
+  variance: service_categories_variance_fields
+}
+
+"""aggregate avg on columns"""
+type service_categories_avg_fields {
+  order: Float
+}
+
+"""
+Boolean expression to filter rows from the table "service_categories". All fields are combined with a logical 'AND'.
+"""
+input service_categories_bool_exp {
+  _and: [service_categories_bool_exp!]
+  _not: service_categories_bool_exp
+  _or: [service_categories_bool_exp!]
+  assigned: String_comparison_exp
+  color: String_comparison_exp
+  created_at: timestamptz_comparison_exp
+  id: uuid_comparison_exp
+  image: String_comparison_exp
+  is_active: Boolean_comparison_exp
+  name: String_comparison_exp
+  order: Int_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "service_categories"
+"""
+enum service_categories_constraint {
+  """unique or primary key constraint"""
+  service_categories_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "service_categories"
+"""
+input service_categories_inc_input {
+  order: Int
+}
+
+"""
+input type for inserting data into table "service_categories"
+"""
+input service_categories_insert_input {
+  assigned: String
+  color: String
+  created_at: timestamptz
+  id: uuid
+  image: String
+  is_active: Boolean
+  name: String
+  order: Int
+  updated_at: timestamptz
+}
+
+"""aggregate max on columns"""
+type service_categories_max_fields {
+  assigned: String
+  color: String
+  created_at: timestamptz
+  id: uuid
+  image: String
+  name: String
+  order: Int
+  updated_at: timestamptz
+}
+
+"""aggregate min on columns"""
+type service_categories_min_fields {
+  assigned: String
+  color: String
+  created_at: timestamptz
+  id: uuid
+  image: String
+  name: String
+  order: Int
+  updated_at: timestamptz
+}
+
+"""
+response of any mutation on the table "service_categories"
+"""
+type service_categories_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [service_categories!]!
+}
+
+"""
+on conflict condition type for table "service_categories"
+"""
+input service_categories_on_conflict {
+  constraint: service_categories_constraint!
+  update_columns: [service_categories_update_column!]!
+  where: service_categories_bool_exp
+}
+
+"""Ordering options when selecting data from "service_categories"."""
+input service_categories_order_by {
+  assigned: order_by
+  color: order_by
+  created_at: order_by
+  id: order_by
+  image: order_by
+  is_active: order_by
+  name: order_by
+  order: order_by
+  updated_at: order_by
+}
+
+"""primary key columns input for table: service_categories"""
+input service_categories_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "service_categories"
+"""
+enum service_categories_select_column {
+  """column name"""
+  assigned
+
+  """column name"""
+  color
+
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  image
+
+  """column name"""
+  is_active
+
+  """column name"""
+  name
+
+  """column name"""
+  order
+
+  """column name"""
+  updated_at
+}
+
+"""
+input type for updating data in table "service_categories"
+"""
+input service_categories_set_input {
+  assigned: String
+  color: String
+  created_at: timestamptz
+  id: uuid
+  image: String
+  is_active: Boolean
+  name: String
+  order: Int
+  updated_at: timestamptz
+}
+
+"""aggregate stddev on columns"""
+type service_categories_stddev_fields {
+  order: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type service_categories_stddev_pop_fields {
+  order: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type service_categories_stddev_samp_fields {
+  order: Float
+}
+
+"""aggregate sum on columns"""
+type service_categories_sum_fields {
+  order: Int
+}
+
+"""
+update columns of table "service_categories"
+"""
+enum service_categories_update_column {
+  """column name"""
+  assigned
+
+  """column name"""
+  color
+
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  image
+
+  """column name"""
+  is_active
+
+  """column name"""
+  name
+
+  """column name"""
+  order
+
+  """column name"""
+  updated_at
+}
+
+"""aggregate var_pop on columns"""
+type service_categories_var_pop_fields {
+  order: Float
+}
+
+"""aggregate var_samp on columns"""
+type service_categories_var_samp_fields {
+  order: Float
+}
+
+"""aggregate variance on columns"""
+type service_categories_variance_fields {
+  order: Float
 }
 
 """
@@ -101608,6 +102027,51 @@ type subscription_root {
 
   """fetch data from the table: "service" using primary key columns"""
   service_by_pk(id: uuid!): service
+
+  """
+  fetch data from the table: "service_categories"
+  """
+  service_categories(
+    """distinct select on columns"""
+    distinct_on: [service_categories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [service_categories_order_by!]
+
+    """filter the rows returned"""
+    where: service_categories_bool_exp
+  ): [service_categories!]!
+
+  """
+  fetch aggregated fields from the table: "service_categories"
+  """
+  service_categories_aggregate(
+    """distinct select on columns"""
+    distinct_on: [service_categories_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [service_categories_order_by!]
+
+    """filter the rows returned"""
+    where: service_categories_bool_exp
+  ): service_categories_aggregate!
+
+  """
+  fetch data from the table: "service_categories" using primary key columns
+  """
+  service_categories_by_pk(id: uuid!): service_categories
 
   """
   fetch data from the table: "services"
