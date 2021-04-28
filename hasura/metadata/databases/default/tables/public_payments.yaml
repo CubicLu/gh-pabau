@@ -30,6 +30,21 @@ select_permissions:
     - user
     filter: {}
   role: public
+- permission:
+    columns:
+    - inv_date
+    - against
+    - amount
+    - payment_no
+    - account
+    - location
+    - payment_method
+    - user
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: user
 update_permissions:
 - permission:
     check: {}

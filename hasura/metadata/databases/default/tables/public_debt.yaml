@@ -34,6 +34,22 @@ select_permissions:
     - updated_at
     filter: {}
   role: public
+- permission:
+    columns:
+    - status
+    - inv_date
+    - age
+    - balance
+    - invoice_no
+    - customer
+    - debtor
+    - last_action
+    - location
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: user
 update_permissions:
 - permission:
     check: {}

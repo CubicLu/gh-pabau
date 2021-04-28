@@ -42,6 +42,26 @@ select_permissions:
     - vat
     filter: {}
   role: public
+- permission:
+    columns:
+    - payment
+    - inv_date
+    - invoice_no
+    - balance
+    - gross
+    - net
+    - paid
+    - vat
+    - customer
+    - debtor
+    - invoice_logo
+    - location
+    - status
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: user
 update_permissions:
 - permission:
     check: {}
