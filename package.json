@@ -27,7 +27,7 @@
     "hasura:start:windows": "docker-compose -f hasura/docker-compose.windows.yml up -d postgres && delay 10 && docker-compose -f hasura/docker-compose.windows.yml up --force-recreate graphql-engine",
     "hasura:stop": "docker-compose -f hasura/docker-compose.linux.yml down -t 5",
     "hasura:clean": "docker-compose -f hasura/docker-compose.linux.yml down -v",
-    "hasura:export": "env-cmd -f ./hasura/.env npx -p hasura-cli@2.0.0-alpha.7 hasura --project hasura metadata export && apollo client:download-schema remote-schema.graphql && apollo client:download-schema graphql.schema.json",
+    "hasura:export": "env-cmd -f ./hasura/.env npx -p hasura-cli@2.0.0-alpha.7 hasura --project hasura metadata export && yarn apollo client:download-schema remote-schema.graphql && yarn apollo client:download-schema graphql.schema.json",
     "production:start": "nx affected --uncommitted=true --target=export && npx serve dist/apps/web/exported",
     "build": "pwd && ls -al && rm -rf public/ && nx build backend --no-cache && cp -rf dist/apps/backend/ public/ && cp apps/backend/vercel.json public/ && cp package.json public/",
     "pipeline-checks": "yarn --pure-lockfile --prefer-offline && yarn lint:tsc && yarn nx affected --all --target=lint && yarn nx affected --all --target=test && yarn nx affected --all --target=build",

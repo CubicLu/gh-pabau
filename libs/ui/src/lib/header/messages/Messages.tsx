@@ -1,10 +1,4 @@
-import React, {
-  FC,
-  PropsWithChildren,
-  useEffect,
-  useState,
-  MouseEvent,
-} from 'react'
+import React, { FC, useEffect, useState, MouseEvent } from 'react'
 import { Drawer, Input } from 'antd'
 import styles from './Messages.module.less'
 import { CloseOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons'
@@ -16,7 +10,7 @@ import {
   AddGroupModal,
   AddPeopleModal,
   MessageContainer,
-  useLiveQuery,
+  ChatMessage,
 } from '@pabau/ui'
 
 import Stephen from '../../../assets/images/users/stephen.png'
@@ -27,12 +21,11 @@ import James from '../../../assets/images/users/james.png'
 import Austin from '../../../assets/images/users/austin.png'
 import Walter from '../../../assets/images/users/walter.png'
 import Liza from '../../../assets/images/users/liza.png'
-
 import classNames from 'classnames'
-import { gql } from '@apollo/client'
+import { DrawerProps } from 'antd/es/drawer'
 
-export interface MessagesProps {
-  openDrawer: boolean
+export type MessagesProps = {
+  chatList?: ChatMessage[]
   closeDrawer: () => void
   onCreateChannel?: (
     name: string,
@@ -40,7 +33,7 @@ export interface MessagesProps {
     isPrivate: boolean
   ) => void
   onMessageType?: (e: MouseEvent<HTMLElement>) => void
-}
+} & Pick<DrawerProps, 'visible'>
 
 interface Contact {
   userName: string
@@ -210,16 +203,16 @@ const chatListData = [
 ]
 
 export const PabauMessages: FC<MessagesProps> = ({
-  openDrawer = false,
   closeDrawer,
   onMessageType,
   onCreateChannel,
-}: PropsWithChildren<MessagesProps>) => {
+  chatList = [],
+  ...props
+}) => {
   const WidthEnum = {
     MessageBox: 392,
     ChatBox: 522,
   }
-  const [messageDrawer, setMessageDrawer] = useState(openDrawer)
   const [selectedContact, setSelectedContact] = useState<Contact>()
   const [drawerWidth, setDrawerWidth] = useState(WidthEnum.MessageBox)
   const [showChatBox, setShowChatBox] = useState(false)
@@ -229,14 +222,7 @@ export const PabauMessages: FC<MessagesProps> = ({
   const [isGroupModalVisible, setIsGroupModalVisible] = useState(false)
   const [isAddModalVisible, setIsAddModalVisible] = useState(false)
   const [memberModalTitle, setMemberModalTitle] = useState('')
-  //const [chatMessages, setChatMessage] = useState(chatListData)
-  const { data: chatMessages } = useLiveQuery(gql`
-    query {
-      chat {
-        id
-      }
-    }
-  `)
+
   const [globalSearchValue, setGlobalSearchValue] = useState('')
   const [typingContact, setTypingContact] = useState<Contact>()
 
@@ -286,8 +272,7 @@ export const PabauMessages: FC<MessagesProps> = ({
   }
 
   const closeDrawerMenu = () => {
-    setMessageDrawer(false)
-    closeDrawer()
+    closeDrawer?.()
   }
 
   useEffect(() => {
@@ -370,11 +355,11 @@ export const PabauMessages: FC<MessagesProps> = ({
 
   return (
     <Drawer
+      {...props}
       width={drawerWidth}
       placement="right"
       closable={false}
       onClose={closeDrawerMenu}
-      visible={messageDrawer}
       className={styles.messagesDrawer}
     >
       <div className={styles.messageBox}>
@@ -456,7 +441,7 @@ export const PabauMessages: FC<MessagesProps> = ({
             isHeaderShow={!showGlobalSearch}
           />
           <ChatsList
-            chatMessages={chatMessages}
+            chatMessages={chatList}
             typingContact={typingContact}
             onClick={handleClick}
             showGroupChatBox={showGroupChatBox}

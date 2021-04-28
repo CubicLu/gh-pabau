@@ -8,7 +8,7 @@ module.exports = {
         endpoints: {
           default: {
             url: 'https://api.new.pabau.com/v1/graphql',
-            headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
+            headers: { "X-Hasura-Admin-Secret": `madskills` },
           },
         },
       },

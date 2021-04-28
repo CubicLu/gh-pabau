@@ -36,9 +36,7 @@ select_permissions:
     allow_aggregations: true
     columns:
     - description
-    - destination
     - id
-    - name
     - notification_type
     - permission_type
     - title

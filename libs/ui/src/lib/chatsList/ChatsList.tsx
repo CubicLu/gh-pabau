@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { ReactComponent as MessageRead } from '../../assets/images/message-read.svg'
 import styles from './ChatsList.module.less'
 
-export interface chatMessage {
+export interface ChatMessage {
   userName: string
   message: string
   unread?: number
@@ -14,15 +14,15 @@ export interface chatMessage {
   isOnline: boolean
   profileURL: string
   isMultiple?: boolean
-  data?: chatMessage[]
+  data?: ChatMessage[]
 }
 
 interface P {
-  chatMessages?: chatMessage[]
+  chatMessages?: ChatMessage[]
   showChatBox?: boolean
-  selectedContact?: chatMessage
-  typingContact?: chatMessage
-  onClick?: (selectedContact: chatMessage) => void
+  selectedContact?: ChatMessage
+  typingContact?: ChatMessage
+  onClick?: (selectedContact: ChatMessage) => void
   showGroupChatBox?: boolean
   isNewDm?: boolean
   isHeaderShow?: boolean

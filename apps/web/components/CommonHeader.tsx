@@ -11,6 +11,7 @@ import { MenuOutlined } from '@ant-design/icons'
 import Search from '../components/Search'
 import styles from './Setup.module.less'
 import classNames from 'classnames'
+import Chat from './Chat/Chat'
 
 interface P {
   handleSearch?: (searchTerm: string) => void
@@ -67,12 +68,10 @@ const CommonHeader: FC<P> = ({ handleSearch, title = 'Setup' }) => {
           closeDrawer={() => setNotificationDrawer((e) => !e)}
         />
       )}
-      {openMessageDrawer && (
-        <PabauMessages
-          openDrawer={openMessageDrawer}
-          closeDrawer={() => setMessageDrawer((e) => !e)}
-        />
-      )}
+      <Chat
+        visible={openMessageDrawer}
+        closeDrawer={() => setMessageDrawer((e) => !e)}
+      />
     </div>
   )
 }
