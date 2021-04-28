@@ -50,8 +50,8 @@ export default class AuthenticationService {
         'https://hasura.io/jwt/claims': {
           'x-hasura-allowed-roles': ['public', 'user'],
           'x-hasura-default-role': 'user',
-          'x-hasura-user-id': this.user.id,
-          'x-hasura-org-id': this.user.company_id,
+          'x-hasura-user-id': this.user.id.toString(),
+          'x-hasura-org-id': this.user.company_id.toString(),
           'x-hasura-pabau': 'test',
         },
       } as JwtPayloadDto,

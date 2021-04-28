@@ -79,22 +79,29 @@ pipelines:
 
   branches:
     master:
-      - step:
-          name: yarn audit
-          max-time: 5
-          script:
-            - set || true
-            - git log --merges -n 1 --pretty=oneline
-            - sh -c "yarn audit --no-progress --non-interactive; [[ $? -gt 2 ]] && exit 1 || exit 0"
+      - parallel:
+        - step:
+            name: yarn audit
+            max-time: 5
+            script:
+              - set || true
+              - git log --merges -n 1 --pretty=oneline
+              - sh -c "yarn audit --no-progress --non-interactive; [[ $? -gt 2 ]] && exit 1 || exit 0"
+        - step:
+            name: yarn install
+            max-time: 10
+            caches:
+              - node
+            script:
+              - yarn install --frozen-lockfile --prefer-offline
+            artifacts:
+              - '**/node_modules/**'
 
       - parallel:
         - step:
             name: misc checks
             max-time: 15
-            caches:
-              - node
             script:
-              - yarn install --frozen-lockfile --prefer-offline
               - yarn lint:tsc
               - yarn lint:ls || true
               - yarn lint:workspace || true
@@ -102,23 +109,17 @@ pipelines:
         - step:
             name: lint
             max-time: 20
-            caches:
-              - node
             script:
-              - yarn install --frozen-lockfile --prefer-offline
               - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:lint --base=HEAD~1 --with-deps --parallel --maxParallel=2
 
         - step:
             name: unit tests
             max-time: 25
-            caches:
-              - node
             script:
-              - yarn install --frozen-lockfile --prefer-offline
               - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --skip-nx-cache
-              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
-              - NODE_OPTIONS=--max_old_space_size=2222 yarn affected:test --base=HEAD~1 --parallel --maxParallel=2 --skip-nx-cache
-              - NODE_OPTIONS=--max_old_space_size=1555 yarn affected:test --base=HEAD~1 --parallel --maxParallel=3 --skip-nx-cache
+#              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
+#              - NODE_OPTIONS=--max_old_space_size=2222 yarn affected:test --base=HEAD~1 --parallel --maxParallel=2 --skip-nx-cache
+#              - NODE_OPTIONS=--max_old_space_size=1555 yarn affected:test --base=HEAD~1 --parallel --maxParallel=3 --skip-nx-cache
 
       # - parallel:
 
@@ -149,32 +150,26 @@ pipelines:
           size: 2x
           name: build
           max-time: 30
-          caches:
-            - node
           script:
-            - yarn install --frozen-lockfile --prefer-offline
             - NODE_OPTIONS=--max_old_space_size=2345 yarn affected:export --base=HEAD~1 --prod --parallel --maxParallel=2
           artifacts:
             - dist/**
 
       - step:
-          size: 2x
+          size: 1x
           name: deploy dockers
           max-time: 20
           deployment: production-dockers
           services:
             - docker
-          caches:
-            - node
           script:
-            - yarn install --frozen-lockfile --prefer-offline
             - apt-get update -y && apt-get install -y curl jq time
             - yarn affected --base=HEAD~1 --target=deploy-docker --prod
           artifacts:
             - /tmp/bot_message.txt
 
       - step:
-          size: 2x
+          size: 1x
           name: deploy previews
           max-time: 20
           deployment: production-serverless
