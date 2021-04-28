@@ -537,7 +537,7 @@
           },
           "configurations": {
             "production": {
-              "buildTarget": "bridge-api:build:production"
+              "buildTarget": "bridge-api:export:production"
             }
           }
         },
