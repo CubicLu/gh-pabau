@@ -88,6 +88,7 @@ pipelines:
             - set || true
             - git log --merges -n 1 --pretty=oneline
             - sh -c "yarn audit --no-progress --non-interactive; [[ $? -gt 2 ]] && exit 1 || exit 0"
+            - yarn bin || true
 
       - parallel:
         - step:
@@ -96,7 +97,9 @@ pipelines:
             caches:
               - node
             script:
+              - yarn bin || true
               - yarn install --frozen-lockfile --prefer-offline
+              - yarn bin || true
               - yarn lint:tsc
               - yarn lint:ls || true
               - yarn lint:workspace || true
