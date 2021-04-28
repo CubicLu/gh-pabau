@@ -1,16 +1,15 @@
-import React, { FC, useState } from 'react'
-import { SearchOutlined } from '@ant-design/icons'
-import { SetupSearchInput } from '@pabau/ui'
+import { MenuOutlined, SearchOutlined } from '@ant-design/icons'
 import {
   MobileHeader,
   MobileSidebar,
   NotificationDrawer,
   PabauMessages,
+  SetupSearchInput,
 } from '@pabau/ui'
-import { MenuOutlined } from '@ant-design/icons'
+import classNames from 'classnames'
+import React, { FC, useState } from 'react'
 import Search from '../components/Search'
 import styles from './Setup.module.less'
-import classNames from 'classnames'
 
 interface P {
   handleSearch?: (searchTerm: string) => void

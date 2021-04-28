@@ -4,6 +4,9 @@
       min-width: 186px;
       box-shadow: 4px 0px 15px rgba(0, 34, 65, 0.1);
       border-radius: 4px;
+      .ant-popover-inner-content{
+        padding:24px;
+      }
     }
   }
   .filter-content {
@@ -43,6 +46,7 @@
       }
     }
   }
+  width: 280px;
   margin-right: 24px;
 }
 
@@ -782,9 +786,6 @@
   }
 }
 @media screen and (max-width: 767px) {
-  :global .ant-layout {
-    margin: 0;
-  }
   .notification-banner {
     display: none;
   }
@@ -866,4 +867,39 @@
 
 .empty {
   margin: 50px auto;
+}
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.filter-menu {
+  .filter-menu-item {
+    margin-bottom: 15px;
+  }
+
+    .filter-apply-btn {
+      width: 100%;
+    }
+}
+
+.filter-viewer-status-container {
+  display: flex;
+  margin-bottom: 1rem;
+  > button {
+    width: 50%;
+    font-size: 14px;
+    &:nth-child(1) {
+      border-radius: 4px 0 0 4px;
+    }
+    &:nth-child(2) {
+      border-radius: 0;
+    }
+    &:nth-child(3) {
+      border-radius: 0 4px 4px 0;
+    }
+  }
 }
