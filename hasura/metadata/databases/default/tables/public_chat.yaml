@@ -1,18 +1,6 @@
 table:
   name: chat
   schema: public
-remote_relationships:
-- definition:
-    hasura_fields:
-    - company_id
-    remote_field:
-      findFirstCompany:
-        arguments:
-          where:
-            id:
-              equals: $company_id
-    remote_schema: CRM
-  name: company
 insert_permissions:
 - permission:
     backend_only: false

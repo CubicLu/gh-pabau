@@ -20,6 +20,14 @@ select_permissions:
     - id
     filter: {}
   role: public
+- permission:
+    columns:
+    - id
+    - page_slug
+    - fallback_slug
+    - status
+    filter: {}
+  role: user
 update_permissions:
 - permission:
     check: null

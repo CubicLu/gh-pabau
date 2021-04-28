@@ -44314,14 +44314,6 @@ input CompanyUpdateOneRequiredWithoutUserMobilePermissionInput {
   upsert: CompanyUpsertWithoutUserMobilePermissionInput
 }
 
-input CompanyUpdateOneRequiredWithoutUserReportInput {
-  connect: CompanyWhereUniqueInput
-  connectOrCreate: CompanyCreateOrConnectWithoutUserReportInput
-  create: CompanyUncheckedCreateWithoutUserReportInput
-  update: CompanyUncheckedUpdateWithoutUserReportInput
-  upsert: CompanyUpsertWithoutUserReportInput
-}
-
 input CompanyUpdateOneRequiredWithoutXeroIntegrationInput {
   connect: CompanyWhereUniqueInput
   connectOrCreate: CompanyCreateOrConnectWithoutXeroIntegrationInput
@@ -44378,6 +44370,16 @@ input CompanyUpdateOneWithoutUserInput {
   disconnect: Boolean
   update: CompanyUncheckedUpdateWithoutUserInput
   upsert: CompanyUpsertWithoutUserInput
+}
+
+input CompanyUpdateOneWithoutUserReportInput {
+  connect: CompanyWhereUniqueInput
+  connectOrCreate: CompanyCreateOrConnectWithoutUserReportInput
+  create: CompanyUncheckedCreateWithoutUserReportInput
+  delete: Boolean
+  disconnect: Boolean
+  update: CompanyUncheckedUpdateWithoutUserReportInput
+  upsert: CompanyUpsertWithoutUserReportInput
 }
 
 input CompanyUpdateOneWithoutUserSalutationInput {
@@ -45115,6 +45117,14 @@ input CountryWhereInput {
 
 input CountryWhereUniqueInput {
   country_id: Int
+}
+
+type CustomReport {
+  favorite: Boolean
+  isPermission: Boolean
+  report_code: String
+  report_id: Int
+  report_name: String
 }
 
 """Date custom scalar type"""
@@ -56150,10 +56160,12 @@ input ReportUpdateManyWithoutReportCategoryInput {
   upsert: [ReportUpsertWithWhereUniqueWithoutReportCategoryInput]
 }
 
-input ReportUpdateOneRequiredWithoutUserReportInput {
+input ReportUpdateOneWithoutUserReportInput {
   connect: ReportWhereUniqueInput
   connectOrCreate: ReportCreateOrConnectWithoutUserReportInput
   create: ReportUncheckedCreateWithoutUserReportInput
+  delete: Boolean
+  disconnect: Boolean
   update: ReportUncheckedUpdateWithoutUserReportInput
   upsert: ReportUpsertWithoutUserReportInput
 }
@@ -60784,6 +60796,12 @@ input TwoFactorHistoryWhereUniqueInput {
   id: Int
 }
 
+type UpdateUserReport {
+  affected_row: Int
+  favorite: Boolean
+  report_code: String
+}
+
 type User {
   CmContactAlert(cursor: CmContactAlertWhereUniqueInput, skip: Int, take: Int): [CmContactAlert!]!
   CmContactNote(cursor: CmContactNoteWhereUniqueInput, skip: Int, take: Int): [CmContactNote!]!
@@ -63996,19 +64014,21 @@ input UserPermissionWhereUniqueInput {
 }
 
 type UserReport {
-  Company: Company!
-  Report: Report!
-  User: User!
-  company_id: Int!
+  Company: Company
+  Report: Report
+  User: User
+  company_id: Int
+  favorite: Boolean!
   id: Int!
-  report_id: Int!
-  user_id: Int!
+  report_id: Int
+  user_id: Int
 }
 
 input UserReportCreateInput {
-  Company: CompanyCreateNestedOneWithoutUserReportInput!
-  Report: ReportCreateNestedOneWithoutUserReportInput!
-  User: UserCreateNestedOneWithoutUserReportInput!
+  Company: CompanyCreateNestedOneWithoutUserReportInput
+  Report: ReportCreateNestedOneWithoutUserReportInput
+  User: UserCreateNestedOneWithoutUserReportInput
+  favorite: Boolean!
 }
 
 input UserReportCreateNestedManyWithoutReportInput {
@@ -64039,18 +64059,21 @@ input UserReportCreateOrConnectWithoutUserInput {
 }
 
 input UserReportCreateWithoutCompanyInput {
-  Report: ReportCreateNestedOneWithoutUserReportInput!
-  User: UserCreateNestedOneWithoutUserReportInput!
+  Report: ReportCreateNestedOneWithoutUserReportInput
+  User: UserCreateNestedOneWithoutUserReportInput
+  favorite: Boolean!
 }
 
 input UserReportCreateWithoutReportInput {
-  Company: CompanyCreateNestedOneWithoutUserReportInput!
-  User: UserCreateNestedOneWithoutUserReportInput!
+  Company: CompanyCreateNestedOneWithoutUserReportInput
+  User: UserCreateNestedOneWithoutUserReportInput
+  favorite: Boolean!
 }
 
 input UserReportCreateWithoutUserInput {
-  Company: CompanyCreateNestedOneWithoutUserReportInput!
-  Report: ReportCreateNestedOneWithoutUserReportInput!
+  Company: CompanyCreateNestedOneWithoutUserReportInput
+  Report: ReportCreateNestedOneWithoutUserReportInput
+  favorite: Boolean!
 }
 
 input UserReportListRelationFilter {
@@ -64064,6 +64087,7 @@ input UserReportOrderByInput {
   Report: ReportOrderByInput
   User: UserOrderByInput
   company_id: SortOrder
+  favorite: SortOrder
   id: SortOrder
   report_id: SortOrder
   user_id: SortOrder
@@ -64073,10 +64097,11 @@ input UserReportScalarWhereInput {
   AND: [UserReportScalarWhereInput]
   NOT: [UserReportScalarWhereInput]
   OR: [UserReportScalarWhereInput]
-  company_id: IntFilter
+  company_id: IntNullableFilter
+  favorite: BoolFilter
   id: IntFilter
-  report_id: IntFilter
-  user_id: IntFilter
+  report_id: IntNullableFilter
+  user_id: IntNullableFilter
 }
 
 input UserReportUncheckedCreateNestedManyWithoutCompanyInput {
@@ -64098,21 +64123,24 @@ input UserReportUncheckedCreateNestedManyWithoutUserInput {
 }
 
 input UserReportUncheckedCreateWithoutCompanyInput {
+  favorite: Boolean!
   id: Int
-  report_id: Int!
-  user_id: Int!
+  report_id: Int
+  user_id: Int
 }
 
 input UserReportUncheckedCreateWithoutReportInput {
-  company_id: Int!
+  company_id: Int
+  favorite: Boolean!
   id: Int
-  user_id: Int!
+  user_id: Int
 }
 
 input UserReportUncheckedCreateWithoutUserInput {
-  company_id: Int!
+  company_id: Int
+  favorite: Boolean!
   id: Int
-  report_id: Int!
+  report_id: Int
 }
 
 input UserReportUncheckedUpdateManyWithoutCompanyInput {
@@ -64155,33 +64183,38 @@ input UserReportUncheckedUpdateManyWithoutUserInput {
 }
 
 input UserReportUncheckedUpdateManyWithoutUserReportInput {
+  favorite: BoolFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
-  report_id: IntFieldUpdateOperationsInput
-  user_id: IntFieldUpdateOperationsInput
+  report_id: NullableIntFieldUpdateOperationsInput
+  user_id: NullableIntFieldUpdateOperationsInput
 }
 
 input UserReportUncheckedUpdateWithoutCompanyInput {
+  favorite: BoolFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
-  report_id: IntFieldUpdateOperationsInput
-  user_id: IntFieldUpdateOperationsInput
+  report_id: NullableIntFieldUpdateOperationsInput
+  user_id: NullableIntFieldUpdateOperationsInput
 }
 
 input UserReportUncheckedUpdateWithoutReportInput {
-  company_id: IntFieldUpdateOperationsInput
+  company_id: NullableIntFieldUpdateOperationsInput
+  favorite: BoolFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
-  user_id: IntFieldUpdateOperationsInput
+  user_id: NullableIntFieldUpdateOperationsInput
 }
 
 input UserReportUncheckedUpdateWithoutUserInput {
-  company_id: IntFieldUpdateOperationsInput
+  company_id: NullableIntFieldUpdateOperationsInput
+  favorite: BoolFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
-  report_id: IntFieldUpdateOperationsInput
+  report_id: NullableIntFieldUpdateOperationsInput
 }
 
 input UserReportUpdateInput {
-  Company: CompanyUpdateOneRequiredWithoutUserReportInput
-  Report: ReportUpdateOneRequiredWithoutUserReportInput
-  User: UserUpdateOneRequiredWithoutUserReportInput
+  Company: CompanyUpdateOneWithoutUserReportInput
+  Report: ReportUpdateOneWithoutUserReportInput
+  User: UserUpdateOneWithoutUserReportInput
+  favorite: BoolFieldUpdateOperationsInput
 }
 
 input UserReportUpdateManyWithWhereWithoutCompanyInput {
@@ -64278,10 +64311,11 @@ input UserReportWhereInput {
   OR: [UserReportWhereInput]
   Report: ReportWhereInput
   User: UserWhereInput
-  company_id: IntFilter
+  company_id: IntNullableFilter
+  favorite: BoolFilter
   id: IntFilter
-  report_id: IntFilter
-  user_id: IntFilter
+  report_id: IntNullableFilter
+  user_id: IntNullableFilter
 }
 
 input UserReportWhereUniqueInput {
@@ -71142,14 +71176,6 @@ input UserUpdateOneRequiredWithoutUserMobilePermissionInput {
   upsert: UserUpsertWithoutUserMobilePermissionInput
 }
 
-input UserUpdateOneRequiredWithoutUserReportInput {
-  connect: UserWhereUniqueInput
-  connectOrCreate: UserCreateOrConnectWithoutUserReportInput
-  create: UserUncheckedCreateWithoutUserReportInput
-  update: UserUncheckedUpdateWithoutUserReportInput
-  upsert: UserUpsertWithoutUserReportInput
-}
-
 input UserUpdateOneRequiredWithoutUserSecurityQuestionsAnswerInput {
   connect: UserWhereUniqueInput
   connectOrCreate: UserCreateOrConnectWithoutUserSecurityQuestionsAnswerInput
@@ -71226,6 +71252,16 @@ input UserUpdateOneWithoutUserPermissionInput {
   disconnect: Boolean
   update: UserUncheckedUpdateWithoutUserPermissionInput
   upsert: UserUpsertWithoutUserPermissionInput
+}
+
+input UserUpdateOneWithoutUserReportInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutUserReportInput
+  create: UserUncheckedCreateWithoutUserReportInput
+  delete: Boolean
+  disconnect: Boolean
+  update: UserUncheckedUpdateWithoutUserReportInput
+  upsert: UserUpsertWithoutUserReportInput
 }
 
 input UserUpdateWithWhereUniqueWithoutCompanyInput {
@@ -82331,19 +82367,6 @@ type mutation_root {
   delete_service_by_pk(id: uuid!): service
 
   """
-  delete data from the table: "service_categories"
-  """
-  delete_service_categories(
-    """filter the rows which have to be deleted"""
-    where: service_categories_bool_exp!
-  ): service_categories_mutation_response
-
-  """
-  delete single row from the table: "service_categories"
-  """
-  delete_service_categories_by_pk(id: uuid!): service_categories
-
-  """
   delete data from the table: "stock_take"
   """
   delete_stock_take(
@@ -83595,28 +83618,6 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: service_on_conflict
   ): service_mutation_response
-
-  """
-  insert data into the table: "service_categories"
-  """
-  insert_service_categories(
-    """the rows to be inserted"""
-    objects: [service_categories_insert_input!]!
-
-    """on conflict condition"""
-    on_conflict: service_categories_on_conflict
-  ): service_categories_mutation_response
-
-  """
-  insert a single row into the table: "service_categories"
-  """
-  insert_service_categories_one(
-    """the row to be inserted"""
-    object: service_categories_insert_input!
-
-    """on conflict condition"""
-    on_conflict: service_categories_on_conflict
-  ): service_categories
 
   """
   insert a single row into the table: "service"
@@ -85267,9 +85268,6 @@ type mutation_root {
     """
     _delete_key: notifications_delete_key_input
 
-    """increments the numeric columns with given value of the filtered values"""
-    _inc: notifications_inc_input
-
     """prepend existing jsonb value of filtered columns with new jsonb value"""
     _prepend: notifications_prepend_input
 
@@ -85301,9 +85299,6 @@ type mutation_root {
     delete key/value pair or string element. key/value pairs are matched based on their key value
     """
     _delete_key: notifications_delete_key_input
-
-    """increments the numeric columns with given value of the filtered values"""
-    _inc: notifications_inc_input
 
     """prepend existing jsonb value of filtered columns with new jsonb value"""
     _prepend: notifications_prepend_input
@@ -85600,32 +85595,6 @@ type mutation_root {
   ): service
 
   """
-  update data of the table: "service_categories"
-  """
-  update_service_categories(
-    """increments the numeric columns with given value of the filtered values"""
-    _inc: service_categories_inc_input
-
-    """sets the columns of the filtered rows to the given values"""
-    _set: service_categories_set_input
-
-    """filter the rows which have to be updated"""
-    where: service_categories_bool_exp!
-  ): service_categories_mutation_response
-
-  """
-  update single row of the table: "service_categories"
-  """
-  update_service_categories_by_pk(
-    """increments the numeric columns with given value of the filtered values"""
-    _inc: service_categories_inc_input
-
-    """sets the columns of the filtered rows to the given values"""
-    _set: service_categories_set_input
-    pk_columns: service_categories_pk_columns_input!
-  ): service_categories
-
-  """
   update data of the table: "stock_take"
   """
   update_stock_take(
@@ -85901,6 +85870,11 @@ type mutation_root {
   upsertOneUserSalutation(create: UserSalutationCreateInput!, update: UserSalutationUpdateInput!, where: UserSalutationWhereUniqueInput!): UserSalutation!
   upsertOneUserSecurityQuestionsAnswer(create: UserSecurityQuestionsAnswerCreateInput!, update: UserSecurityQuestionsAnswerUpdateInput!, where: UserSecurityQuestionsAnswerWhereUniqueInput!): UserSecurityQuestionsAnswer!
   upsertOneXeroIntegration(create: XeroIntegrationCreateInput!, update: XeroIntegrationUpdateInput!, where: XeroIntegrationWhereUniqueInput!): XeroIntegration!
+
+  """
+  Creates or updates one user report favorite for the currently authenticated company and user
+  """
+  upsertUserReportByReportCode(favorite: Boolean!, report_code: String!): UpdateUserReport
 }
 
 """
@@ -86642,6 +86616,7 @@ type notifications {
     """JSON select path"""
     path: String
   ): jsonb
+  loop: Int
 
   """An object relationship"""
   notification_type: notification_types
@@ -86661,9 +86636,7 @@ type notifications {
 
 """append existing jsonb value of filtered columns with new jsonb value"""
 input notifications_append_input {
-  is_read: jsonb
   sent_to: jsonb
-  variables: jsonb
 }
 
 """
@@ -86677,6 +86650,7 @@ input notifications_bool_exp {
   destination: String_comparison_exp
   id: uuid_comparison_exp
   is_read: jsonb_comparison_exp
+  loop: Int_comparison_exp
   notification_type: notification_types_bool_exp
   order: Int_comparison_exp
   sent_by: Int_comparison_exp
@@ -86698,49 +86672,30 @@ enum notifications_constraint {
 delete the field or element with specified path (for JSON arrays, negative integers count from the end)
 """
 input notifications_delete_at_path_input {
-  is_read: [String!]
   sent_to: [String!]
-  variables: [String!]
 }
 
 """
 delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
 """
 input notifications_delete_elem_input {
-  is_read: Int
   sent_to: Int
-  variables: Int
 }
 
 """
 delete key/value pair or string element. key/value pairs are matched based on their key value
 """
 input notifications_delete_key_input {
-  is_read: String
   sent_to: String
-  variables: String
-}
-
-"""
-input type for incrementing numeric columns in table "notifications"
-"""
-input notifications_inc_input {
-  order: Int
-  sent_by: Int
 }
 
 """
 input type for inserting data into table "notifications"
 """
 input notifications_insert_input {
-  destination: String
-  is_read: jsonb
   notification_type: notification_types_obj_rel_insert_input
-  order: Int
-  sent_by: Int
   sent_to: jsonb
   type: uuid
-  variables: jsonb
 }
 
 """
@@ -86769,6 +86724,7 @@ input notifications_order_by {
   destination: order_by
   id: order_by
   is_read: order_by
+  loop: order_by
   notification_type: notification_types_order_by
   order: order_by
   sent_by: order_by
@@ -86785,9 +86741,7 @@ input notifications_pk_columns_input {
 
 """prepend existing jsonb value of filtered columns with new jsonb value"""
 input notifications_prepend_input {
-  is_read: jsonb
   sent_to: jsonb
-  variables: jsonb
 }
 
 """
@@ -86805,6 +86759,9 @@ enum notifications_select_column {
 
   """column name"""
   is_read
+
+  """column name"""
+  loop
 
   """column name"""
   order
@@ -86829,13 +86786,8 @@ enum notifications_select_column {
 input type for updating data in table "notifications"
 """
 input notifications_set_input {
-  destination: String
-  is_read: jsonb
-  order: Int
-  sent_by: Int
   sent_to: jsonb
   type: uuid
-  variables: jsonb
 }
 
 """
@@ -86843,25 +86795,10 @@ update columns of table "notifications"
 """
 enum notifications_update_column {
   """column name"""
-  destination
-
-  """column name"""
-  is_read
-
-  """column name"""
-  order
-
-  """column name"""
-  sent_by
-
-  """column name"""
   sent_to
 
   """column name"""
   type
-
-  """column name"""
-  variables
 }
 
 scalar numeric
@@ -87179,7 +87116,6 @@ columns and relationships of "payments"
 """
 type payments {
   account: String!
-  against: Int
   amount: numeric!
   created_at: timestamptz!
   id: uuid!
@@ -87218,7 +87154,6 @@ type payments_aggregate_fields {
 
 """aggregate avg on columns"""
 type payments_avg_fields {
-  against: Float
   amount: Float
   payment_no: Float
 }
@@ -87231,7 +87166,6 @@ input payments_bool_exp {
   _not: payments_bool_exp
   _or: [payments_bool_exp!]
   account: String_comparison_exp
-  against: Int_comparison_exp
   amount: numeric_comparison_exp
   created_at: timestamptz_comparison_exp
   id: uuid_comparison_exp
@@ -87275,7 +87209,6 @@ input payments_insert_input {
 """aggregate max on columns"""
 type payments_max_fields {
   account: String
-  against: Int
   amount: numeric
   created_at: timestamptz
   id: uuid
@@ -87290,7 +87223,6 @@ type payments_max_fields {
 """aggregate min on columns"""
 type payments_min_fields {
   account: String
-  against: Int
   amount: numeric
   created_at: timestamptz
   id: uuid
@@ -87325,7 +87257,6 @@ input payments_on_conflict {
 """Ordering options when selecting data from "payments"."""
 input payments_order_by {
   account: order_by
-  against: order_by
   amount: order_by
   created_at: order_by
   id: order_by
@@ -87348,9 +87279,6 @@ select columns of table "payments"
 enum payments_select_column {
   """column name"""
   account
-
-  """column name"""
-  against
 
   """column name"""
   amount
@@ -87395,28 +87323,24 @@ input payments_set_input {
 
 """aggregate stddev on columns"""
 type payments_stddev_fields {
-  against: Float
   amount: Float
   payment_no: Float
 }
 
 """aggregate stddev_pop on columns"""
 type payments_stddev_pop_fields {
-  against: Float
   amount: Float
   payment_no: Float
 }
 
 """aggregate stddev_samp on columns"""
 type payments_stddev_samp_fields {
-  against: Float
   amount: Float
   payment_no: Float
 }
 
 """aggregate sum on columns"""
 type payments_sum_fields {
-  against: Int
   amount: numeric
   payment_no: numeric
 }
@@ -87449,21 +87373,18 @@ enum payments_update_column {
 
 """aggregate var_pop on columns"""
 type payments_var_pop_fields {
-  against: Float
   amount: Float
   payment_no: Float
 }
 
 """aggregate var_samp on columns"""
 type payments_var_samp_fields {
-  against: Float
   amount: Float
   payment_no: Float
 }
 
 """aggregate variance on columns"""
 type payments_variance_fields {
-  against: Float
   amount: Float
   payment_no: Float
 }
@@ -89985,6 +89906,9 @@ type query_root {
   findFirstUserSalutation(cursor: UserSalutationWhereUniqueInput, orderBy: UserSalutationOrderByInput, skip: Int, take: Int, where: UserSalutationWhereInput): UserSalutation
   findFirstUserSecurityQuestionsAnswer(cursor: UserSecurityQuestionsAnswerWhereUniqueInput, orderBy: UserSecurityQuestionsAnswerOrderByInput, skip: Int, take: Int, where: UserSecurityQuestionsAnswerWhereInput): UserSecurityQuestionsAnswer
   findFirstXeroIntegration(cursor: XeroIntegrationWhereUniqueInput, orderBy: XeroIntegrationOrderByInput, skip: Int, take: Int, where: XeroIntegrationWhereInput): XeroIntegration
+
+  """Return list of custom report with user report permission"""
+  findManyCustomReportWithPermissions: [CustomReport]
   glCode(where: GlCodeWhereUniqueInput!): GlCode
   glCodes(cursor: GlCodeWhereUniqueInput, orderBy: [GlCodeOrderByInput!], skip: Int, take: Int, where: GlCodeWhereInput): [GlCode!]!
   glCodesCount(where: GlCodeWhereInput): Int
@@ -91250,51 +91174,6 @@ type query_root {
 
   """fetch data from the table: "service" using primary key columns"""
   service_by_pk(id: uuid!): service
-
-  """
-  fetch data from the table: "service_categories"
-  """
-  service_categories(
-    """distinct select on columns"""
-    distinct_on: [service_categories_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [service_categories_order_by!]
-
-    """filter the rows returned"""
-    where: service_categories_bool_exp
-  ): [service_categories!]!
-
-  """
-  fetch aggregated fields from the table: "service_categories"
-  """
-  service_categories_aggregate(
-    """distinct select on columns"""
-    distinct_on: [service_categories_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [service_categories_order_by!]
-
-    """filter the rows returned"""
-    where: service_categories_bool_exp
-  ): service_categories_aggregate!
-
-  """
-  fetch data from the table: "service_categories" using primary key columns
-  """
-  service_categories_by_pk(id: uuid!): service_categories
   socialSurvey(where: SocialSurveyWhereUniqueInput!): SocialSurvey
   socialSurveyAnswer(where: SocialSurveyAnswerWhereUniqueInput!): SocialSurveyAnswer
   socialSurveyAnswers(cursor: SocialSurveyAnswerWhereUniqueInput, orderBy: [SocialSurveyAnswerOrderByInput!], skip: Int, take: Int, where: SocialSurveyAnswerWhereInput): [SocialSurveyAnswer!]!
@@ -92522,19 +92401,11 @@ type service {
   category: String
   code: String
   color: String
-  contracts(
-    """JSON select path"""
-    path: String
-  ): json
   created_at: timestamptz!
   description: String
   display_text_on_invoice: String
   duration: String
   employees(
-    """JSON select path"""
-    path: String
-  ): json
-  equipment_resources(
     """JSON select path"""
     path: String
   ): json
@@ -92560,10 +92431,6 @@ type service {
   pricing_type: String!
   procedure_code: String
   resources(
-    """JSON select path"""
-    path: String
-  ): json
-  room_resources(
     """JSON select path"""
     path: String
   ): json
@@ -92621,13 +92488,11 @@ input service_bool_exp {
   category: String_comparison_exp
   code: String_comparison_exp
   color: String_comparison_exp
-  contracts: json_comparison_exp
   created_at: timestamptz_comparison_exp
   description: String_comparison_exp
   display_text_on_invoice: String_comparison_exp
   duration: String_comparison_exp
   employees: json_comparison_exp
-  equipment_resources: json_comparison_exp
   friendly_name: String_comparison_exp
   id: uuid_comparison_exp
   image: String_comparison_exp
@@ -92647,7 +92512,6 @@ input service_bool_exp {
   pricing_type: String_comparison_exp
   procedure_code: String_comparison_exp
   resources: json_comparison_exp
-  room_resources: json_comparison_exp
   service_name: String_comparison_exp
   service_price: String_comparison_exp
   sku: String_comparison_exp
@@ -92656,260 +92520,6 @@ input service_bool_exp {
   timing_rules: json_comparison_exp
   type: String_comparison_exp
   updated_at: timestamptz_comparison_exp
-}
-
-"""
-columns and relationships of "service_categories"
-"""
-type service_categories {
-  assigned: String
-  color: String
-  created_at: timestamptz!
-  id: uuid!
-  image: String
-  is_active: Boolean!
-  name: String!
-  order: Int!
-  updated_at: timestamptz!
-}
-
-"""
-aggregated selection of "service_categories"
-"""
-type service_categories_aggregate {
-  aggregate: service_categories_aggregate_fields
-  nodes: [service_categories!]!
-}
-
-"""
-aggregate fields of "service_categories"
-"""
-type service_categories_aggregate_fields {
-  avg: service_categories_avg_fields
-  count(columns: [service_categories_select_column!], distinct: Boolean): Int!
-  max: service_categories_max_fields
-  min: service_categories_min_fields
-  stddev: service_categories_stddev_fields
-  stddev_pop: service_categories_stddev_pop_fields
-  stddev_samp: service_categories_stddev_samp_fields
-  sum: service_categories_sum_fields
-  var_pop: service_categories_var_pop_fields
-  var_samp: service_categories_var_samp_fields
-  variance: service_categories_variance_fields
-}
-
-"""aggregate avg on columns"""
-type service_categories_avg_fields {
-  order: Float
-}
-
-"""
-Boolean expression to filter rows from the table "service_categories". All fields are combined with a logical 'AND'.
-"""
-input service_categories_bool_exp {
-  _and: [service_categories_bool_exp!]
-  _not: service_categories_bool_exp
-  _or: [service_categories_bool_exp!]
-  assigned: String_comparison_exp
-  color: String_comparison_exp
-  created_at: timestamptz_comparison_exp
-  id: uuid_comparison_exp
-  image: String_comparison_exp
-  is_active: Boolean_comparison_exp
-  name: String_comparison_exp
-  order: Int_comparison_exp
-  updated_at: timestamptz_comparison_exp
-}
-
-"""
-unique or primary key constraints on table "service_categories"
-"""
-enum service_categories_constraint {
-  """unique or primary key constraint"""
-  service_categories_pkey
-}
-
-"""
-input type for incrementing numeric columns in table "service_categories"
-"""
-input service_categories_inc_input {
-  order: Int
-}
-
-"""
-input type for inserting data into table "service_categories"
-"""
-input service_categories_insert_input {
-  assigned: String
-  color: String
-  image: String
-  is_active: Boolean
-  name: String
-  order: Int
-}
-
-"""aggregate max on columns"""
-type service_categories_max_fields {
-  assigned: String
-  color: String
-  created_at: timestamptz
-  id: uuid
-  image: String
-  name: String
-  order: Int
-  updated_at: timestamptz
-}
-
-"""aggregate min on columns"""
-type service_categories_min_fields {
-  assigned: String
-  color: String
-  created_at: timestamptz
-  id: uuid
-  image: String
-  name: String
-  order: Int
-  updated_at: timestamptz
-}
-
-"""
-response of any mutation on the table "service_categories"
-"""
-type service_categories_mutation_response {
-  """number of rows affected by the mutation"""
-  affected_rows: Int!
-
-  """data from the rows affected by the mutation"""
-  returning: [service_categories!]!
-}
-
-"""
-on conflict condition type for table "service_categories"
-"""
-input service_categories_on_conflict {
-  constraint: service_categories_constraint!
-  update_columns: [service_categories_update_column!]!
-  where: service_categories_bool_exp
-}
-
-"""Ordering options when selecting data from "service_categories"."""
-input service_categories_order_by {
-  assigned: order_by
-  color: order_by
-  created_at: order_by
-  id: order_by
-  image: order_by
-  is_active: order_by
-  name: order_by
-  order: order_by
-  updated_at: order_by
-}
-
-"""primary key columns input for table: service_categories"""
-input service_categories_pk_columns_input {
-  id: uuid!
-}
-
-"""
-select columns of table "service_categories"
-"""
-enum service_categories_select_column {
-  """column name"""
-  assigned
-
-  """column name"""
-  color
-
-  """column name"""
-  created_at
-
-  """column name"""
-  id
-
-  """column name"""
-  image
-
-  """column name"""
-  is_active
-
-  """column name"""
-  name
-
-  """column name"""
-  order
-
-  """column name"""
-  updated_at
-}
-
-"""
-input type for updating data in table "service_categories"
-"""
-input service_categories_set_input {
-  assigned: String
-  color: String
-  image: String
-  is_active: Boolean
-  name: String
-  order: Int
-}
-
-"""aggregate stddev on columns"""
-type service_categories_stddev_fields {
-  order: Float
-}
-
-"""aggregate stddev_pop on columns"""
-type service_categories_stddev_pop_fields {
-  order: Float
-}
-
-"""aggregate stddev_samp on columns"""
-type service_categories_stddev_samp_fields {
-  order: Float
-}
-
-"""aggregate sum on columns"""
-type service_categories_sum_fields {
-  order: Int
-}
-
-"""
-update columns of table "service_categories"
-"""
-enum service_categories_update_column {
-  """column name"""
-  assigned
-
-  """column name"""
-  color
-
-  """column name"""
-  image
-
-  """column name"""
-  is_active
-
-  """column name"""
-  name
-
-  """column name"""
-  order
-}
-
-"""aggregate var_pop on columns"""
-type service_categories_var_pop_fields {
-  order: Float
-}
-
-"""aggregate var_samp on columns"""
-type service_categories_var_samp_fields {
-  order: Float
-}
-
-"""aggregate variance on columns"""
-type service_categories_variance_fields {
-  order: Float
 }
 
 """
@@ -92925,7 +92535,6 @@ input type for incrementing numeric columns in table "service"
 """
 input service_inc_input {
   max_clients: Int
-  order: Int
 }
 
 """
@@ -92935,12 +92544,10 @@ input service_insert_input {
   category: String
   code: String
   color: String
-  contracts: json
   description: String
   display_text_on_invoice: String
   duration: String
   employees: json
-  equipment_resources: json
   friendly_name: String
   image: String
   invoice_item_name: String
@@ -92953,13 +92560,11 @@ input service_insert_input {
   max_clients: Int
   online_payment_amount: String
   online_payment_type: String
-  order: Int
   patient_booking_type: String
   price: String
   pricing_type: String
   procedure_code: String
   resources: json
-  room_resources: json
   service_name: String
   service_price: String
   sku: String
@@ -93054,13 +92659,11 @@ input service_order_by {
   category: order_by
   code: order_by
   color: order_by
-  contracts: order_by
   created_at: order_by
   description: order_by
   display_text_on_invoice: order_by
   duration: order_by
   employees: order_by
-  equipment_resources: order_by
   friendly_name: order_by
   id: order_by
   image: order_by
@@ -93080,7 +92683,6 @@ input service_order_by {
   pricing_type: order_by
   procedure_code: order_by
   resources: order_by
-  room_resources: order_by
   service_name: order_by
   service_price: order_by
   sku: order_by
@@ -93110,9 +92712,6 @@ enum service_select_column {
   color
 
   """column name"""
-  contracts
-
-  """column name"""
   created_at
 
   """column name"""
@@ -93126,9 +92725,6 @@ enum service_select_column {
 
   """column name"""
   employees
-
-  """column name"""
-  equipment_resources
 
   """column name"""
   friendly_name
@@ -93188,9 +92784,6 @@ enum service_select_column {
   resources
 
   """column name"""
-  room_resources
-
-  """column name"""
   service_name
 
   """column name"""
@@ -93222,12 +92815,10 @@ input service_set_input {
   category: String
   code: String
   color: String
-  contracts: json
   description: String
   display_text_on_invoice: String
   duration: String
   employees: json
-  equipment_resources: json
   friendly_name: String
   image: String
   invoice_item_name: String
@@ -93240,13 +92831,11 @@ input service_set_input {
   max_clients: Int
   online_payment_amount: String
   online_payment_type: String
-  order: Int
   patient_booking_type: String
   price: String
   pricing_type: String
   procedure_code: String
   resources: json
-  room_resources: json
   service_name: String
   service_price: String
   sku: String
@@ -93294,9 +92883,6 @@ enum service_update_column {
   color
 
   """column name"""
-  contracts
-
-  """column name"""
   description
 
   """column name"""
@@ -93307,9 +92893,6 @@ enum service_update_column {
 
   """column name"""
   employees
-
-  """column name"""
-  equipment_resources
 
   """column name"""
   friendly_name
@@ -93348,9 +92931,6 @@ enum service_update_column {
   online_payment_type
 
   """column name"""
-  order
-
-  """column name"""
   patient_booking_type
 
   """column name"""
@@ -93364,9 +92944,6 @@ enum service_update_column {
 
   """column name"""
   resources
-
-  """column name"""
-  room_resources
 
   """column name"""
   service_name
@@ -95903,51 +95480,6 @@ type subscription_root {
 
   """fetch data from the table: "service" using primary key columns"""
   service_by_pk(id: uuid!): service
-
-  """
-  fetch data from the table: "service_categories"
-  """
-  service_categories(
-    """distinct select on columns"""
-    distinct_on: [service_categories_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [service_categories_order_by!]
-
-    """filter the rows returned"""
-    where: service_categories_bool_exp
-  ): [service_categories!]!
-
-  """
-  fetch aggregated fields from the table: "service_categories"
-  """
-  service_categories_aggregate(
-    """distinct select on columns"""
-    distinct_on: [service_categories_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [service_categories_order_by!]
-
-    """filter the rows returned"""
-    where: service_categories_bool_exp
-  ): service_categories_aggregate!
-
-  """
-  fetch data from the table: "service_categories" using primary key columns
-  """
-  service_categories_by_pk(id: uuid!): service_categories
 
   """
   fetch data from the table: "stock_take"
