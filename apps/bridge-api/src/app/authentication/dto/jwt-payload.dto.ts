@@ -1,4 +1,4 @@
-type UserRole = 'public' | 'admin'
+type UserRole = 'public' | 'admin' | 'user'
 
 interface Hasura {
   'x-hasura-allowed-roles': UserRole[]
