@@ -16,9 +16,34 @@ insert_permissions:
     backend_only: false
     check: {}
     columns:
+    - loop
+    - order
+    - sent_by
+    - is_read
     - sent_to
+    - variables
+    - destination
+    - created_at
+    - updated_at
+    - id
     - type
   role: public
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - created_at
+    - updated_at
+    - order
+    - sent_to
+    - type
+    - is_read
+    - variables
+    - destination
+    - sent_by
+    - loop
+  role: user
 select_permissions:
 - permission:
     columns:
@@ -35,15 +60,58 @@ select_permissions:
     - variables
     filter: {}
   role: public
+- permission:
+    columns:
+    - loop
+    - order
+    - sent_by
+    - is_read
+    - sent_to
+    - variables
+    - destination
+    - created_at
+    - updated_at
+    - id
+    - type
+    filter: {}
+  role: user
 update_permissions:
 - permission:
     check: null
     columns:
+    - loop
+    - order
+    - sent_by
+    - is_read
     - sent_to
+    - variables
+    - destination
+    - created_at
+    - updated_at
+    - id
     - type
     filter: {}
   role: public
+- permission:
+    check: null
+    columns:
+    - loop
+    - order
+    - sent_by
+    - is_read
+    - sent_to
+    - variables
+    - destination
+    - created_at
+    - updated_at
+    - id
+    - type
+    filter: {}
+  role: user
 delete_permissions:
 - permission:
     filter: {}
   role: public
+- permission:
+    filter: {}
+  role: user

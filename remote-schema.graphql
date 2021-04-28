@@ -82419,6 +82419,19 @@ type mutation_root {
   delete_third_parties_by_pk(id: uuid!): third_parties
 
   """
+  delete data from the table: "user_list"
+  """
+  delete_user_list(
+    """filter the rows which have to be deleted"""
+    where: user_list_bool_exp!
+  ): user_list_mutation_response
+
+  """
+  delete single row from the table: "user_list"
+  """
+  delete_user_list_by_pk(id: numeric!): user_list
+
+  """
   insert data into the table: "Discounts"
   """
   insert_Discounts(
@@ -83724,6 +83737,9 @@ type mutation_root {
   insert_user_list(
     """the rows to be inserted"""
     objects: [user_list_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: user_list_on_conflict
   ): user_list_mutation_response
 
   """
@@ -83732,6 +83748,9 @@ type mutation_root {
   insert_user_list_one(
     """the row to be inserted"""
     object: user_list_insert_input!
+
+    """on conflict condition"""
+    on_conflict: user_list_on_conflict
   ): user_list
   login(password: String!, username: String!): String
   logout: Boolean
@@ -85268,6 +85287,9 @@ type mutation_root {
     """
     _delete_key: notifications_delete_key_input
 
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: notifications_inc_input
+
     """prepend existing jsonb value of filtered columns with new jsonb value"""
     _prepend: notifications_prepend_input
 
@@ -85299,6 +85321,9 @@ type mutation_root {
     delete key/value pair or string element. key/value pairs are matched based on their key value
     """
     _delete_key: notifications_delete_key_input
+
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: notifications_inc_input
 
     """prepend existing jsonb value of filtered columns with new jsonb value"""
     _prepend: notifications_prepend_input
@@ -85697,6 +85722,32 @@ type mutation_root {
     _set: third_parties_set_input
     pk_columns: third_parties_pk_columns_input!
   ): third_parties
+
+  """
+  update data of the table: "user_list"
+  """
+  update_user_list(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: user_list_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: user_list_set_input
+
+    """filter the rows which have to be updated"""
+    where: user_list_bool_exp!
+  ): user_list_mutation_response
+
+  """
+  update single row of the table: "user_list"
+  """
+  update_user_list_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: user_list_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: user_list_set_input
+    pk_columns: user_list_pk_columns_input!
+  ): user_list
 
   """
   Creates/Updates a single StaffMeta entry for all Users belonging to the provided group_id
@@ -86463,10 +86514,13 @@ input type for inserting data into table "notification_types"
 input notification_types_insert_input {
   application_notifications: application_notifications_arr_rel_insert_input
   description: String
+  destination: String
   id: uuid
+  name: String
   notification_toggles: notification_toggle_arr_rel_insert_input
   notification_type: notification_types_enum_enum
   permission_type: String
+  title: String
   type: String
 }
 
@@ -86575,7 +86629,9 @@ input type for updating data in table "notification_types"
 """
 input notification_types_set_input {
   description: String
+  destination: String
   id: uuid
+  name: String
   notification_type: notification_types_enum_enum
   permission_type: String
   title: String
@@ -86590,7 +86646,13 @@ enum notification_types_update_column {
   description
 
   """column name"""
+  destination
+
+  """column name"""
   id
+
+  """column name"""
+  name
 
   """column name"""
   notification_type
@@ -86636,7 +86698,9 @@ type notifications {
 
 """append existing jsonb value of filtered columns with new jsonb value"""
 input notifications_append_input {
+  is_read: jsonb
   sent_to: jsonb
+  variables: jsonb
 }
 
 """
@@ -86672,30 +86736,54 @@ enum notifications_constraint {
 delete the field or element with specified path (for JSON arrays, negative integers count from the end)
 """
 input notifications_delete_at_path_input {
+  is_read: [String!]
   sent_to: [String!]
+  variables: [String!]
 }
 
 """
 delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
 """
 input notifications_delete_elem_input {
+  is_read: Int
   sent_to: Int
+  variables: Int
 }
 
 """
 delete key/value pair or string element. key/value pairs are matched based on their key value
 """
 input notifications_delete_key_input {
+  is_read: String
   sent_to: String
+  variables: String
+}
+
+"""
+input type for incrementing numeric columns in table "notifications"
+"""
+input notifications_inc_input {
+  loop: Int
+  order: Int
+  sent_by: Int
 }
 
 """
 input type for inserting data into table "notifications"
 """
 input notifications_insert_input {
+  created_at: timestamptz
+  destination: String
+  id: uuid
+  is_read: jsonb
+  loop: Int
   notification_type: notification_types_obj_rel_insert_input
+  order: Int
+  sent_by: Int
   sent_to: jsonb
   type: uuid
+  updated_at: timestamptz
+  variables: jsonb
 }
 
 """
@@ -86741,7 +86829,9 @@ input notifications_pk_columns_input {
 
 """prepend existing jsonb value of filtered columns with new jsonb value"""
 input notifications_prepend_input {
+  is_read: jsonb
   sent_to: jsonb
+  variables: jsonb
 }
 
 """
@@ -86786,8 +86876,17 @@ enum notifications_select_column {
 input type for updating data in table "notifications"
 """
 input notifications_set_input {
+  created_at: timestamptz
+  destination: String
+  id: uuid
+  is_read: jsonb
+  loop: Int
+  order: Int
+  sent_by: Int
   sent_to: jsonb
   type: uuid
+  updated_at: timestamptz
+  variables: jsonb
 }
 
 """
@@ -86795,10 +86894,37 @@ update columns of table "notifications"
 """
 enum notifications_update_column {
   """column name"""
+  created_at
+
+  """column name"""
+  destination
+
+  """column name"""
+  id
+
+  """column name"""
+  is_read
+
+  """column name"""
+  loop
+
+  """column name"""
+  order
+
+  """column name"""
+  sent_by
+
+  """column name"""
   sent_to
 
   """column name"""
   type
+
+  """column name"""
+  updated_at
+
+  """column name"""
+  variables
 }
 
 scalar numeric
@@ -96607,6 +96733,22 @@ input user_list_bool_exp {
 }
 
 """
+unique or primary key constraints on table "user_list"
+"""
+enum user_list_constraint {
+  """unique or primary key constraint"""
+  user_list_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "user_list"
+"""
+input user_list_inc_input {
+  company: numeric
+  id: numeric
+}
+
+"""
 input type for inserting data into table "user_list"
 """
 input user_list_insert_input {
@@ -96628,6 +96770,15 @@ type user_list_mutation_response {
   returning: [user_list!]!
 }
 
+"""
+on conflict condition type for table "user_list"
+"""
+input user_list_on_conflict {
+  constraint: user_list_constraint!
+  update_columns: [user_list_update_column!]!
+  where: user_list_bool_exp
+}
+
 """Ordering options when selecting data from "user_list"."""
 input user_list_order_by {
   admin: order_by
@@ -96637,10 +96788,46 @@ input user_list_order_by {
   last_name: order_by
 }
 
+"""primary key columns input for table: user_list"""
+input user_list_pk_columns_input {
+  id: numeric!
+}
+
 """
 select columns of table "user_list"
 """
 enum user_list_select_column {
+  """column name"""
+  admin
+
+  """column name"""
+  company
+
+  """column name"""
+  first_name
+
+  """column name"""
+  id
+
+  """column name"""
+  last_name
+}
+
+"""
+input type for updating data in table "user_list"
+"""
+input user_list_set_input {
+  admin: Boolean
+  company: numeric
+  first_name: String
+  id: numeric
+  last_name: String
+}
+
+"""
+update columns of table "user_list"
+"""
+enum user_list_update_column {
   """column name"""
   admin
 
