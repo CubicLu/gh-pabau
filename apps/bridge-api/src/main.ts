@@ -11,10 +11,6 @@ import { stringToBoolean } from './utils'
 const LOGGING = !!stringToBoolean(process.env['LOGGING'])
 
 console.log(`Starting bridge-api version ${version} logging ${LOGGING}`)
-console.log(
-  `Secure cookies: ` +
-    (stringToBoolean(process.env['SECURE_COOKIES']) ? 'ON' : 'OFF')
-)
 
 const PORT = process.env['PORT'] || 4000
 
@@ -81,7 +77,7 @@ server.applyMiddleware({ app })
 if (process.env.JEST_WORKER_ID === undefined) {
   app.listen(4000, () =>
     console.log(
-      `Server running on port ${PORT}`,
+      `Server running on http://localhost:${PORT}`,
       'env',
       process.env.NODE_ENV === 'development'
     )
