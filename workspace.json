@@ -231,7 +231,7 @@
         "serve": {
           "builder": "@nrwl/node:execute",
           "options": {
-            "buildTarget": "backend:build"
+            "buildTarget": "backend:export"
           }
         },
         "lint": {
