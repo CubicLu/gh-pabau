@@ -51,7 +51,7 @@ const ADD_MUTATION = gql`
     $sent_to: jsonb
     $variables: jsonb
     $destination: String!
-    $sent_by: Int
+    $sent_by: Int # $loop: Int
   ) {
     insert_notifications_one(
       object: {
@@ -60,6 +60,7 @@ const ADD_MUTATION = gql`
         sent_to: $sent_to
         variables: $variables
         sent_by: $sent_by
+        # loop: $loop
       }
     ) {
       id
@@ -145,6 +146,7 @@ export const StaffNotifications: NextPage = () => {
     )
 
     const sent_users = []
+    console.log('userList', userList)
     for (const user of userList) {
       sent_users.push(user.id)
     }
@@ -154,6 +156,7 @@ export const StaffNotifications: NextPage = () => {
       sent_to: sent_users,
       destination: values.destination_id,
       sent_by: user.user,
+      // loop: 2,
     }
 
     if (notificationVariable) {

@@ -33,7 +33,9 @@ const LIST_QUERY = gql`
       variables
       destination
       sent_by
+      loop
       notification_type {
+        id
         name
         title
         description
@@ -67,6 +69,7 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
       const todayNotification = notificationData.notifications.map(
         (notification) => ({
           id: notification.id,
+          type_id: notification?.notification_type?.id,
           notificationTime: notification?.created_at,
           notificationType: notification?.notification_type?.name.trim(),
           title: notification?.notification_type?.title,
@@ -76,6 +79,7 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
           link: notification?.destination,
           variables: notification?.variables,
           sentBy: notification?.sent_by,
+          loop: notification?.loop,
         })
       )
       setNotifications(todayNotification)

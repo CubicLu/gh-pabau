@@ -1,9 +1,9 @@
-import React, { FC, useState, MouseEvent } from 'react'
-import { ReactComponent as IllustrationSvg } from './example.svg'
-import { Card, Layout as AntLayout } from 'antd'
 import { Footer, Header, Menu } from '@pabau/ui'
-import styles from './Layout.module.less'
+import { Card, Layout as AntLayout } from 'antd'
 import classNames from 'classnames'
+import React, { FC, MouseEvent, useState } from 'react'
+import { ReactComponent as IllustrationSvg } from './example.svg'
+import styles from './Layout.module.less'
 
 const { Content } = AntLayout
 

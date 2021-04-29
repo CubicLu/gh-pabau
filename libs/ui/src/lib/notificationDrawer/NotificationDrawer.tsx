@@ -48,6 +48,30 @@ const UPDATE_MUTATION = gql`
   }
 `
 
+const ADD_MUTATION = gql`
+  mutation insert_notifications_one(
+    $type: uuid!
+    $sent_to: jsonb
+    $variables: jsonb
+    $destination: String!
+    $sent_by: Int
+    $loop: Int
+  ) {
+    insert_notifications_one(
+      object: {
+        type: $type
+        destination: $destination
+        sent_to: $sent_to
+        variables: $variables
+        sent_by: $sent_by
+        loop: $loop
+      }
+    ) {
+      id
+    }
+  }
+`
+
 interface NotificationData {
   [key: string]: Notification[]
 }
@@ -185,6 +209,11 @@ export const NotificationDrawer: FC<P> = ({
           optimisticResponse: {},
         })
   }
+
+  const [addMutation] = useMutation(ADD_MUTATION, {
+    onCompleted(data) {},
+    onError(err) {},
+  })
 
   let lengths = 0
   for (const item of notificationData) {
