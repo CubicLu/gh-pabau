@@ -7,6 +7,7 @@ import {
   NotificationType,
 } from '@pabau/ui'
 import styles from './BusinessDetailsNotifications.module.less'
+import { useTranslation } from 'react-i18next'
 
 interface NotificationSetting {
   setting: string
@@ -24,147 +25,151 @@ export interface BusinessDetailsNotificationsProps {
   configurations?: NotificationConfig[]
 }
 
-const defaultConfigs: NotificationConfig[] = [
-  {
-    title: 'When receiving a new inbound lead.',
-    settings: [
-      {
-        setting: 'Notification',
-        disabled: false,
-      },
-      {
-        setting: 'Email',
-        disabled: false,
-      },
-    ],
-  },
-  {
-    title: 'When receiving a new review.',
-    settings: [
-      {
-        setting: 'Notification',
-        disabled: false,
-      },
-      {
-        setting: 'Email',
-        disabled: false,
-      },
-    ],
-  },
-  {
-    title: 'When a SMS campaign is delivered.',
-    settings: [
-      {
-        setting: 'Notification',
-        disabled: false,
-      },
-      {
-        setting: 'Email',
-        disabled: false,
-      },
-    ],
-  },
-  {
-    title: 'When a newsletter campaign is delivered.',
-    settings: [
-      {
-        setting: 'Notification',
-        disabled: false,
-      },
-      {
-        setting: 'Email',
-        disabled: false,
-      },
-    ],
-  },
-  {
-    title: 'When a scheduled report has been sent.',
-    settings: [
-      {
-        setting: 'Notification',
-        disabled: false,
-      },
-      {
-        setting: 'Email',
-        disabled: false,
-      },
-    ],
-  },
-  {
-    title: 'When a staff member requests a holiday.',
-    tooltip: 'Only admins will receive this notification',
-    settings: [
-      {
-        setting: 'Notification',
-        disabled: false,
-      },
-      {
-        setting: 'Email',
-        disabled: false,
-      },
-    ],
-  },
-  {
-    title: 'When someone refers into the business.',
-    settings: [
-      {
-        setting: 'Notification',
-        disabled: false,
-      },
-      {
-        setting: 'Email',
-        disabled: false,
-      },
-    ],
-  },
-  ...[
-    'When reviews have been unattended',
-    'When self assessment is due',
-    'Reminder of when peer review is due',
-    'Reminder of when Self assessment is due',
-    'Reminder of when Manager assessment is due',
-    'When a team target is hit',
-  ].map((title) => ({
-    title,
-    settings: [
-      {
-        setting: 'Notification',
-        disabled: false,
-      },
-      {
-        setting: 'Email',
-        disabled: false,
-      },
-    ],
-  })),
-]
-
 export const BusinessDetailsNotifications: FC<BusinessDetailsNotificationsProps> = ({
   onSave,
   configurations,
 }) => {
+  const { t } = useTranslation('common')
+
+  const defaultConfigs: NotificationConfig[] = [
+    {
+      title: t('business.notification.lead'),
+      settings: [
+        {
+          setting: t('business.notification.setting.notification'),
+          disabled: false,
+        },
+        {
+          setting: t('business.notification.setting.email'),
+          disabled: false,
+        },
+      ],
+    },
+    {
+      title: t('business.notification.review'),
+      settings: [
+        {
+          setting: t('business.notification.setting.notification'),
+          disabled: false,
+        },
+        {
+          setting: t('business.notification.setting.email'),
+          disabled: false,
+        },
+      ],
+    },
+    {
+      title: t('business.notification.sms.delivered'),
+      settings: [
+        {
+          setting: t('business.notification.setting.notification'),
+          disabled: false,
+        },
+        {
+          setting: t('business.notification.setting.email'),
+          disabled: false,
+        },
+      ],
+    },
+    {
+      title: t('business.notification.newsletter.delivered'),
+      settings: [
+        {
+          setting: t('business.notification.setting.notification'),
+          disabled: false,
+        },
+        {
+          setting: t('business.notification.setting.email'),
+          disabled: false,
+        },
+      ],
+    },
+    {
+      title: t('business.notification.report'),
+      settings: [
+        {
+          setting: t('business.notification.setting.notification'),
+          disabled: false,
+        },
+        {
+          setting: t('business.notification.setting.email'),
+          disabled: false,
+        },
+      ],
+    },
+    {
+      title: t('business.notification.holiday'),
+      tooltip: t('business.notification.holiday.tooltip'),
+      settings: [
+        {
+          setting: t('business.notification.setting.notification'),
+          disabled: false,
+        },
+        {
+          setting: t('business.notification.setting.email'),
+          disabled: false,
+        },
+      ],
+    },
+    {
+      title: t('business.notification.refer'),
+      settings: [
+        {
+          setting: t('business.notification.setting.notification'),
+          disabled: false,
+        },
+        {
+          setting: t('business.notification.setting.email'),
+          disabled: false,
+        },
+      ],
+    },
+    ...[
+      t('business.notification.unattended'),
+      t('business.notification.assessment.due'),
+      t('business.notification.peer.review.due'),
+      t('business.notification.self.assessment.due'),
+      t('business.notification.manager.assessment.due'),
+      t('business.notification.target.hit'),
+    ].map((title) => ({
+      title,
+      settings: [
+        {
+          setting: t('business.notification.setting.notification'),
+          disabled: false,
+        },
+        {
+          setting: t('business.notification.setting.email'),
+          disabled: false,
+        },
+      ],
+    })),
+  ]
   const [configs, setConfigs] = useState<NotificationConfig[]>([])
   const handleSaveChanges = () => {
-    Notification(NotificationType.success, 'Successfully saved changes')
+    Notification(
+      NotificationType.success,
+      t('notification.type.success.message')
+    )
     onSave?.(configs)
   }
 
   useEffect(() => {
     setConfigs(configurations || defaultConfigs)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [configurations])
   return (
     <div className={styles.notificationsTabContainer}>
       <div className={styles.notificationsSubContainer}>
         <div className={styles.notificationsHeaderContainer}>
           <div>
-            <p className={styles.tabTitle}>Notifications</p>
+            <p className={styles.tabTitle}>
+              {t('business.notification.tab.title')}
+            </p>
             <p className={styles.tabSubTitle}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              {t('business.notification.sub.title')}
             </p>
           </div>
-          <Button type="primary" onClick={() => handleSaveChanges()}>
-            Save Changes
-          </Button>
         </div>
       </div>
       {configs.map((config) => (
@@ -185,6 +190,11 @@ export const BusinessDetailsNotifications: FC<BusinessDetailsNotificationsProps>
           </div>
         </React.Fragment>
       ))}
+      <div className={styles.btnSave}>
+        <Button type="primary" onClick={() => handleSaveChanges()}>
+          {t('business.details.save.changes')}
+        </Button>
+      </div>
     </div>
   )
 }

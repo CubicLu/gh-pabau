@@ -2,69 +2,109 @@ import {
   VideoCameraOutlined,
   UnlockOutlined,
   MailOutlined,
-  KeyOutlined,
 } from '@ant-design/icons'
 import React from 'react'
 
-const securityToolsData = [
-  {
-    id: '1',
-    title: 'Force 2FA',
-    name: 'Start a video call from your conversations',
-    imgSrc: <VideoCameraOutlined />,
-    isActive: true,
-    modalType: 1,
-    modalTitle: 'Force 2FA',
-    modalContent:
-      'Two-factor authentication adds an extra layer of security to your Pabau account. By asking you to enter a verification code after entering the correct email address and password, it will protect you from potential attackers who also might have gained access to your email address. It will ensure that the secure data you share with your clients stays secure, as they will need to enter a verification code as well. /n*SMS credits are mandatory, in order for the two-factor authentication to work.',
-  },
-  {
-    id: '3',
-    title: 'Password Expiration',
-    name: 'Create details and send conversations to Pipedrive',
-    imgSrc: <UnlockOutlined />,
-    isActive: false,
-    modalType: 2,
-    modalTitle: 'Password Expiration',
-    modalMenu: [
-      'User password expire in',
-      'Enforce password history',
-      'Maximum invalid login attemts',
-      'Lockout effective period',
-    ],
-    modalContent: [
-      ['90 days', '180 days', '365 days'],
-      [
-        '3 passwords remembered',
-        '4 passwords remembered',
-        '5 passwords remembered',
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function useSecurityToolsData(t) {
+  const securityToolsData = [
+    {
+      id: '1',
+      title: t('business.security.tool.data.force.title'),
+      name: t('business.security.tool.data.force.name'),
+      imgSrc: <VideoCameraOutlined />,
+      isActive: true,
+      modalType: 1,
+      modalTitle: t('business.security.tool.data.force.modal.title'),
+      modalContent: t('business.security.tool.data.force.modal.content'),
+    },
+    {
+      id: '3',
+      title: t('business.security.tool.data.password.expiration.title'),
+      name: t('business.security.tool.data.password.expiration.name'),
+      imgSrc: <UnlockOutlined />,
+      isActive: false,
+      modalType: 2,
+      modalTitle: t(
+        'business.security.tool.data.password.expiration.modal.title'
+      ),
+      modalMenu: [
+        t('business.security.tool.data.password.expiration.modal.menu.expire'),
+        t('business.security.tool.data.password.expiration.modal.menu.history'),
+        t('business.security.tool.data.password.expiration.modal.menu.login'),
+        t('business.security.tool.data.password.expiration.modal.menu.period'),
       ],
-      ['5 attempts', '10 attempts', '15 attempts'],
-      ['5 minutes', '10 minutes', '15 minutes'],
-    ],
-    okbtn: 'Save',
-  },
-  {
-    id: '4',
-    title: 'Encrypted Emails',
-    name: 'Create details and send conversations to Pipedrive',
-    imgSrc: <MailOutlined />,
-    isActive: true,
-    modalType: 3,
-    modalTitle: 'Encrypted Emails',
-    modalContent: 'Would you like to encrypt your emails?',
-    okbtn: 'Encrypt emails',
-  },
-  {
-    id: '5',
-    title: 'Encrypted Encryption',
-    name: 'Create details and send conversations to Pipedrive',
-    imgSrc: <KeyOutlined />,
-    isActive: false,
-    modalType: 4,
-  },
-]
+      modalContent: [
+        [
+          t(
+            'business.security.tool.data.password.expiration.modal.menu.expire.90days'
+          ),
+          t(
+            'business.security.tool.data.password.expiration.modal.menu.expire.180days'
+          ),
+          t(
+            'business.security.tool.data.password.expiration.modal.menu.expire.365days'
+          ),
+          t(
+            'business.security.tool.data.password.expiration.modal.menu.expire.never'
+          ),
+        ],
+        [
+          t(
+            'business.security.tool.data.password.expiration.modal.menu.login.5attempts'
+          ),
+          t(
+            'business.security.tool.data.password.expiration.modal.menu.login.10attempts'
+          ),
+          t(
+            'business.security.tool.data.password.expiration.modal.menu.login.15attempts'
+          ),
+        ],
+        [
+          t(
+            'business.security.tool.data.password.expiration.modal.menu.history.3password'
+          ),
+          t(
+            'business.security.tool.data.password.expiration.modal.menu.history.4password'
+          ),
+          t(
+            'business.security.tool.data.password.expiration.modal.menu.history.5password'
+          ),
+          t(
+            'business.security.tool.data.password.expiration.modal.menu.history.password.enabled.disabled'
+          ),
+        ],
+        [
+          t(
+            'business.security.tool.data.password.expiration.modal.menu.period.5minutes'
+          ),
+          t(
+            'business.security.tool.data.password.expiration.modal.menu.period.10minutes'
+          ),
+          t(
+            'business.security.tool.data.password.expiration.modal.menu.period.15minutes'
+          ),
+        ],
+      ],
+      okbtn: t('business.security.tool.data.password.expiration.btn'),
+    },
+    {
+      id: '4',
+      title: t('business.security.tool.data.encrypted.encryption.title'),
+      name: t('business.security.tool.data.encrypted.encryption.name'),
+      imgSrc: <MailOutlined />,
+      isActive: true,
+      modalType: 3,
+      modalTitle: t(
+        'business.security.tool.data.encrypted.encryption.model.title'
+      ),
+      modalContent: t(
+        'business.security.tool.data.encrypted.encryption.modal.content'
+      ),
+      okbtn: t('business.security.tool.data.encrypted.encryption.btn'),
+    },
+  ]
+  const percent = 76
 
-const percent = 76
-
-export { securityToolsData, percent }
+  return { securityToolsData, percent }
+}

@@ -8,25 +8,25 @@ import {
   Terminology,
   BusinessDetails,
   BusinessDetailsNotifications,
+  MobileHeader,
+  Button,
+  Notification,
+  NotificationType,
 } from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
 import CommonHeader from '../../../components/CommonHeader'
 import { gql, useMutation } from '@apollo/client'
 import styles from './index.module.less'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import { useGridData } from '../../../hooks/useGridData'
+import { LeftOutlined } from '@ant-design/icons'
+import { useRouter } from 'next/router'
 
 const { Title } = Typography
 
-const tabMenuItems = [
-  'Details',
-  'Terminology',
-  'System',
-  'Security',
-  'Notifications',
-]
-
 export const Index: FC = () => {
   const { t } = useTranslationI18()
+  const router = useRouter()
   const ADD_MUTATION = gql`
     mutation MyMutation($variable: [business_details_insert_input!]!) {
       insert_business_details(objects: $variable) {
@@ -36,6 +36,26 @@ export const Index: FC = () => {
   `
   const [createBusinessDetails] = useMutation(ADD_MUTATION)
 
+  const tabMenuItems = [
+    t('business.details.tab.tabtitle'),
+    t('business.terminology.tab.title'),
+    t('business.system.tab.title'),
+    t('business.security.tab.title'),
+    t('business.notification.tab.title'),
+  ]
+  const { getParentSetupData } = useGridData(t)
+  const parentMenu = getParentSetupData(router.pathname)
+
+  const handleBack = () => {
+    if (parentMenu.length > 0) {
+      router.push({
+        pathname: '/setup',
+        query: { menu: parentMenu[0]?.keyValue },
+      })
+    } else {
+      router.push('/setup')
+    }
+  }
   const onSave = async (values, type) => {
     const data = {
       businses_name: '',
@@ -150,8 +170,72 @@ export const Index: FC = () => {
       case 'notification': {
         break
       }
+      default: {
+        const { basicInformation, businessLocation, languageSetting } = values
+        const {
+          businessName,
+          businessType,
+          companyEmail,
+          phone,
+          website,
+        } = basicInformation
+        const {
+          currency,
+          dateFormat,
+          defaultLanuageClients,
+          defaultLanuageStaff,
+          timezone,
+          weekStart,
+        } = languageSetting
+        data.businses_name = businessName
+        data.business_type = businessType
+        data.company_email = companyEmail
+        data.phone = phone
+        data.website = website
+        data.currency = currency
+        data.business_location = businessLocation
+        data.date_format = dateFormat
+        data.default_language_clients = defaultLanuageClients
+        data.default_language_staff = defaultLanuageStaff
+        data.time_zone = timezone
+        data.week_start = weekStart
+        const { config, optIns } = values
+        const vat = config[4].items[0].value
+        data.vat = vat
+        data.people_attend_appointment_singular = config[0].items[0].value
+        data.people_attend_appointment_plural = config[0].item[1].value
+        data.booking_multiple_attendees_singular = config[1].item[0].value
+        data.booking_multiple_attendees_plural = config[1].item[1].value
+        data.employee_singular = config[2].item[0].value
+        data.employee_plural = config[2].item[1].value
+        data.teacher_singular = config[3].item[0].value
+        data.teacher_plural = config[3].item[1].value
+        data.client_postal = optIns[0].items[0].value
+        data.client_sms = optIns[0].items[1].value
+        data.client_email = optIns[0].items[2].value
+        data.client_phone = optIns[0].items[3].value
+        data.leads_postal = optIns[1].items[0].value
+        data.leads_sms = optIns[1].items[1].value
+        data.leads_email = optIns[1].items[2].value
+        data.leads_phone = optIns[1].items[3].value
+        const {
+          disablePrescriptions,
+          medicalApprovals,
+          performSurgical,
+          secureMedicalForms,
+        } = values
+        data.disable_prescriptions = disablePrescriptions
+        data.medical_approvals = medicalApprovals
+        data.perform_surgical = performSurgical
+        data.secure_medical_forms = secureMedicalForms
+        break
+      }
     }
     try {
+      Notification(
+        NotificationType.success,
+        t('notification.type.success.message')
+      )
       await createBusinessDetails({
         variables: {
           variable: data,
@@ -177,6 +261,14 @@ export const Index: FC = () => {
           />
           <Title>{t('setup.business-details.header')}</Title>
         </div>
+        <MobileHeader className={styles.businessDetailsHeaderMobile}>
+          <div className={styles.allContentAlignMobile}>
+            <div className={styles.marketingTextStyle}>
+              <LeftOutlined onClick={handleBack} />
+              <Title>{t('setup.business-details.header')}</Title>
+            </div>
+          </div>
+        </MobileHeader>
         <div className={styles.tabsForDesktop}>
           <TabMenu tabPosition="left" menuItems={tabMenuItems} minHeight="auto">
             <BusinessDetails onSave={(values) => onSave(values, 'business')} />
@@ -190,14 +282,22 @@ export const Index: FC = () => {
         </div>
         <div className={styles.tabsForMobile}>
           <TabMenu tabPosition="top" menuItems={tabMenuItems} minHeight="auto">
-            <BusinessDetails onSave={(values) => onSave(values, 'business')} />
-            <Terminology onSave={(values) => onSave(values, 'terminology')} />
-            <System onSave={(values) => onSave(values, 'system')} />
+            <BusinessDetails />
+            <Terminology />
+            <System />
             <Security />
-            <BusinessDetailsNotifications
-              onSave={(values) => onSave(values, 'notification')}
-            />
+            <BusinessDetailsNotifications />
           </TabMenu>
+        </div>
+        <div className={styles.buttonForMobile}>
+          <div className={styles.btnSaveWrap}>
+            <Button
+              type="primary"
+              onClick={(values) => onSave(values, 'notification')}
+            >
+              {t('business.details.save.changes')}
+            </Button>
+          </div>
         </div>
       </Layout>
     </>

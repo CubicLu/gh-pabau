@@ -10,18 +10,23 @@ import {
   BusinessLocation,
   Notification,
   NotificationType,
+  Avatar,
+  AvatarUploader,
 } from '@pabau/ui'
 import timezones from '../../assets/timezone'
 import currency from '../../assets/currency'
-import { ReactComponent as NormalClinicLogo } from '../../assets/images/normal-clinic-logo.svg'
+import NormalClinicLogo from '../../assets/images/our-clinic.png'
 import styles from './BusinessDetails.module.less'
+import { useTranslation } from 'react-i18next'
+import { useWindowSize } from 'react-use'
+import { bizTypes } from '../../assets/images/biz-types'
 
 interface BasicInformation {
   businessName: string
   companyEmail: string
   phone: string
   website: string
-  businessType: string
+  businessType: []
 }
 
 interface LanguageSetting {
@@ -45,19 +50,8 @@ const defaultBasicInfo: BasicInformation = {
   companyEmail: '',
   phone: '',
   website: '',
-  businessType: '',
+  businessType: [],
 }
-
-const defaultLangSetting: LanguageSetting = {
-  defaultLanuageStaff: 'English (UK)',
-  defaultLanuageClients: 'English (UK)',
-  timezone: '(GMT +00:00) London',
-  currency: 'Pound sterling',
-  dateFormat: 'd/m/Y',
-  weekStart: 'Monday',
-}
-
-const defaultBizLocation = 'London Road, Sheffield, England'
 
 export const BusinessDetails: FC<BusinessDetailsProps> = ({
   onSave,
@@ -65,14 +59,37 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
   languageSetting,
   businessLocation,
 }) => {
+  const { t } = useTranslation('common')
+  const defaultBizLocation = t('default.biz.location')
+  const size = useWindowSize()
+  const defaultLangSetting: LanguageSetting = {
+    defaultLanuageStaff: t('business.details.default.lang.setting.language'),
+    defaultLanuageClients: t('business.details.default.lang.setting.language'),
+    timezone: t('business.details.default.lang.setting.timezone'),
+    currency: t('business.details.default.lang.setting.currency'),
+    dateFormat: t('business.details.date.format.value.dmy'),
+    weekStart: t('business.details.week.day.monday'),
+  }
+
   const [basicInfo, setBasicInfo] = useState<BasicInformation>(defaultBasicInfo)
   const [langSetting, setLangSetting] = useState<LanguageSetting>(
     defaultLangSetting
   )
   const [bizLocation, setBizLocation] = useState(defaultBizLocation)
+  const [showAvatarUploader, setShowAvatarUploader] = useState(false)
+  const [userImage, setUserImage] = useState<string>(NormalClinicLogo)
 
+  const handleChangeImage = (image: string) => {
+    setUserImage(image)
+  }
+  const uploadPhoto = () => {
+    setShowAvatarUploader(true)
+  }
   const handleSaveChanges = () => {
-    Notification(NotificationType.success, 'Successfully saved changes')
+    Notification(
+      NotificationType.success,
+      t('notification.type.success.message')
+    )
     onSave?.({
       basicInformation: basicInfo,
       languageSetting: langSetting,
@@ -94,6 +111,7 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
     setBasicInfo(basicInformation || defaultBasicInfo)
     setLangSetting(languageSetting || defaultLangSetting)
     setBizLocation(businessLocation || defaultBizLocation)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [basicInformation, languageSetting, businessLocation])
 
   return (
@@ -101,31 +119,39 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
       <div className={styles.detailsSubContainer}>
         <div className={styles.detailsHeaderContainer}>
           <div>
-            <p className={styles.tabTitle}>Details</p>
-            <p className={styles.tabSubTitle} style={{ maxWidth: '420px' }}>
-              Your business name is displayed across many including on your
-              online booking profile, sales invoices and messages to clients
+            <p className={styles.tabTitle}>
+              {t('business.details.tab.tabtitle')}
+            </p>
+            <p className={styles.tabSubTitle}>
+              {t('business.details.tab.subtitle')}
             </p>
           </div>
-          <Button type="primary" onClick={() => handleSaveChanges()}>
-            Save Changes
-          </Button>
         </div>
       </div>
       <Divider />
       <div className={styles.basicInformationSection}>
         <p className={styles.sectionTitle} style={{ marginBottom: '12px' }}>
-          Basic Information
+          {t('business.details.tab.basic.information.section')}
         </p>
         <div className={styles.normalClinicLogo}>
-          <NormalClinicLogo />
+          {/* <NormalClinicLogo /> */}
+          <div onClick={uploadPhoto}>
+            <Avatar
+              src={userImage}
+              size={size.width > 767 ? 128 : 88}
+              name={'Clinic Logo'}
+              edit={true}
+            />
+          </div>
         </div>
         <Row gutter={[32, 28]} style={{ marginTop: '14px' }}>
           <Col className="gutter-row" xs={24} sm={12}>
             <Input
-              label="Business Name"
+              label={t('business.details.input.business.name')}
               requiredMark={true}
-              reqiredMsg="Please enter your business name."
+              reqiredMsg={t(
+                'business.details.input.business.name.requires.message'
+              )}
               text={basicInfo.businessName}
               onChange={(val) => handleBasicInfoChange('businessName', val)}
             />
@@ -133,9 +159,18 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
           <Col className="gutter-row" xs={24} sm={12}>
             <Input
               type="email"
-              label="Company Email"
+              label={
+                <>
+                  {t('business.details.input.business.email')}
+                  <small>
+                    &nbsp;{t('business.details.input.business.email.text')}
+                  </small>
+                </>
+              }
               requiredMark={true}
-              reqiredMsg="Please enter your company email."
+              reqiredMsg={t(
+                'business.details.input.business.email.requires.message'
+              )}
               text={basicInfo.companyEmail}
               onChange={(val) => handleBasicInfoChange('companyEmail', val)}
             />
@@ -147,31 +182,26 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
           </Col>
           <Col className="gutter-row" xs={24} sm={12}>
             <Input
-              label="Website"
+              label={t('business.details.input.website.label')}
               text={basicInfo.website}
               onChange={(val) => handleBasicInfoChange('website', val)}
             />
           </Col>
         </Row>
-        <BusinessTypes
-          value={basicInfo.businessType}
-          onSelected={(val) => handleBasicInfoChange('businessType', val)}
-        />
+        <BusinessTypes List={bizTypes} />
       </div>
       <Divider />
       <div className={styles.languageSettingSection}>
         <p className={styles.sectionTitle} style={{ marginBottom: '6px' }}>
-          Language Settings
+          {t('business.details.language.setting.title')}
         </p>
         <p className={styles.sectionSubTitle} style={{ marginBottom: '24px' }}>
-          Choose the default language for appointment notification messages sent
-          to your clients. Per client language preferences can also be set
-          within the settings for each client
+          {t('business.details.language.setting.subtitle')}
         </p>
         <Row gutter={[32, 28]}>
           <Col className="gutter-row" xs={24} sm={12}>
             <LanguageDropdown
-              label="Default language for your staff"
+              label={t('business.details.default.lanuage.staff')}
               value={langSetting.defaultLanuageStaff}
               onChange={(val) =>
                 handleLangSettingChange('defaultLanuageStaff', val)
@@ -180,7 +210,7 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
           </Col>
           <Col className="gutter-row" xs={24} sm={12}>
             <LanguageDropdown
-              label="Default language for your clients"
+              label={t('business.details.default.lanuage.clients')}
               value={langSetting.defaultLanuageClients}
               onSelected={(val) =>
                 handleLangSettingChange('defaultLanuageClients', val)
@@ -189,7 +219,7 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
           </Col>
           <Col className="gutter-row" xs={24} sm={12}>
             <SimpleDropdown
-              label="Timezone"
+              label={t('business.details.timezone.label')}
               value={langSetting.timezone}
               dropdownItems={timezones.map((timezone) => timezone.text || '')}
               onSelected={(val) => handleLangSettingChange('timezone', val)}
@@ -197,7 +227,7 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
           </Col>
           <Col className="gutter-row" xs={24} sm={12}>
             <SimpleDropdown
-              label="Currency"
+              label={t('business.details.currency.label')}
               value={langSetting.currency}
               dropdownItems={currency}
               onSelected={(val) => handleLangSettingChange('currency', val)}
@@ -205,25 +235,28 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
           </Col>
           <Col className="gutter-row" xs={24} sm={12}>
             <SimpleDropdown
-              label="Date Format"
+              label={t('business.details.date.format.label')}
               value={langSetting.dateFormat}
-              dropdownItems={['d/m/Y', 'm/d/Y']}
+              dropdownItems={[
+                t('business.details.date.format.value.dmy'),
+                t('business.details.date.format.value.mdy'),
+              ]}
               onSelected={(val) => handleLangSettingChange('dateFormat', val)}
             />
           </Col>
           <Col className="gutter-row" xs={24} sm={12}>
             <SimpleDropdown
-              label="Week Start"
-              tooltip="Week Start"
+              label={t('business.details.week.start.label')}
+              tooltip={t('business.details.week.start.tooltip')}
               value={langSetting.weekStart}
               dropdownItems={[
-                'Monday',
-                'Tuesday',
-                'Wednesday',
-                'Thursday',
-                'Friday',
-                'Saturday',
-                'Sunday',
+                t('business.details.week.day.monday'),
+                t('business.details.week.day.tuesday'),
+                t('business.details.week.day.wednesday'),
+                t('business.details.week.day.thursday'),
+                t('business.details.week.day.friday'),
+                t('business.details.week.day.saturday'),
+                t('business.details.week.day.sunday'),
               ]}
               onSelected={(val) => handleLangSettingChange('weekStart', val)}
             />
@@ -233,13 +266,26 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
       <Divider />
       <div className={styles.businessLocationSection}>
         <p className={styles.sectionTitle} style={{ marginBottom: '20px' }}>
-          Business Location
+          {t('business.details.location')}
         </p>
         <BusinessLocation
           value={bizLocation}
           onChange={(value) => setBizLocation(value)}
         />
       </div>
+      <div className={styles.btnSave}>
+        <Button type="primary" onClick={() => handleSaveChanges()}>
+          {t('business.details.save.changes')}
+        </Button>
+      </div>
+      <AvatarUploader
+        visible={showAvatarUploader}
+        title={t('account.settings.profile.avatarupload.title')}
+        onCreate={handleChangeImage}
+        imageURL={userImage}
+        onCancel={() => setShowAvatarUploader(false)}
+        shape={'rectangle'}
+      />
     </div>
   )
 }
