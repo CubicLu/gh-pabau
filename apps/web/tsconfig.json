@@ -11,6 +11,11 @@
     "noEmit": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "lib": [
+      "DOM",
+      "ES2020",
+      "ESNext"
+      ],
     "typeRoots": ["./types"],
     "moduleResolution": "node"
   },
