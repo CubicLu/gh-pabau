@@ -4,7 +4,7 @@ import {
   Dropdown as AvatarDropDown,
   Logo,
   NotificationDrawer,
-  QuickCreate
+  QuickCreate,
 } from '@pabau/ui'
 import { Badge, Col, Layout, Row } from 'antd'
 import classNames from 'classnames'
