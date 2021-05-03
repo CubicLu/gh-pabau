@@ -12,6 +12,16 @@ insert_permissions:
     - id
     - last_name
   role: public
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - company
+    - admin
+    - first_name
+    - last_name
+  role: user
 select_permissions:
 - permission:
     columns:
@@ -22,3 +32,40 @@ select_permissions:
     - last_name
     filter: {}
   role: public
+- permission:
+    columns:
+    - admin
+    - company
+    - id
+    - first_name
+    - last_name
+    filter: {}
+  role: user
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - id
+    - company
+    - admin
+    - first_name
+    - last_name
+    filter: {}
+  role: public
+- permission:
+    check: null
+    columns:
+    - admin
+    - company
+    - id
+    - first_name
+    - last_name
+    filter: {}
+  role: user
+delete_permissions:
+- permission:
+    filter: {}
+  role: public
+- permission:
+    filter: {}
+  role: user

@@ -1,7 +1,9 @@
 // import { getGreeting } from '../support/app.po'
 
 describe('web', () => {
-  beforeEach(() => cy.visit('/', {retryOnNetworkFailure:true,timeout:45000}))
+  beforeEach(() =>
+    cy.visit('/', { retryOnNetworkFailure: true, timeout: 45000 })
+  )
 
   it('should display welcome message 22', () => {
     // Custom command example, see `../support/commands.ts` file

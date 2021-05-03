@@ -17,7 +17,7 @@ import styles from './calendar.module.less'
 
 const { Title } = Typography
 /* eslint-disable-next-line */
-export interface CalendarProps { }
+export interface CalendarProps {}
 
 export function Calendar(props: CalendarProps) {
   const generalSettingsMenu1 = [

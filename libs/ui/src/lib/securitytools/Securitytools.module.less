@@ -7,6 +7,7 @@
   letter-spacing: 0em;
   text-align: left;
 }
+
 .btnScore {
   padding: 0px;
   font-family: 'Circular-Std-Medium';
@@ -83,10 +84,7 @@
 
   &:hover,
   &:active {
-    border: solid 1px #ccc;
-    -moz-box-shadow: 1px 1px 5px #999;
-    -webkit-box-shadow: 1px 1px 5px #999;
-    box-shadow: 1px 1px 5px #999;
+    padding: 10px;
   }
 }
 
@@ -94,7 +92,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  // align-items: center;
   margin-left: 16px;
   justify-content: space-between;
   flex: auto;
@@ -135,7 +132,9 @@
   .statelabel {
     top: 5px;
     right: 3px;
-  } /* show it on small screens */
+  }
+
+  /* show it on small screens */
 }
 
 .scoreBody {

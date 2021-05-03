@@ -1,13 +1,10 @@
-/* eslint-disable */
-
-import { Button } from 'antd'
-import styles from './Table.module.less'
-import React, {FC, useEffect, useState} from 'react'
-import { Table } from './Table'
-import { data } from './mock'
 import { ContactsOutlined } from '@ant-design/icons'
-import { action } from '@storybook/addon-actions';
-import _ from "lodash";
+import { action } from '@storybook/addon-actions'
+import { Button } from 'antd'
+import { ColumnsType } from 'antd/es/table'
+import React, { FC, useEffect, useState } from 'react'
+import { data } from './mock'
+import { Table } from './Table'
 
 const padlocked = ['Book Now Link', 'Instagram', 'Facebook']
 
@@ -17,13 +14,6 @@ const columns = [
     dataIndex: 'name',
     className: 'drag-visible',
     visible: true,
-    render: function renderSourceName(val, rowData) {
-      if (rowData.isLocked) {
-        return <>{val}</>
-      } else {
-        return val
-      }
-    },
   },
   {
     title: 'STATUS',
@@ -36,9 +26,9 @@ const columns = [
     dataIndex: 'visibleData',
     className: 'drag-visible',
     visible: true,
-    isHover: true
+    isHover: true,
   },
-]
+] as ColumnsType
 
 export default {
   component: Table,
@@ -57,7 +47,7 @@ export default {
 }
 
 const DragFeatureStory: FC = ({ ...args }) => {
-  const [dataSource, setDataSource]: any = useState(data)
+  const [dataSource, setDataSource] = useState(data)
   const updateDataSource = ({ newData, oldIndex, newIndex }) => {
     setDataSource(newData)
   }
@@ -73,7 +63,7 @@ const DragFeatureStory: FC = ({ ...args }) => {
 export const TableWithDragFeature = DragFeatureStory.bind({})
 
 const NoDragFeatureStory: FC = ({ ...args }) => {
-  const [dataSource, setDataSource]: any = useState(data)
+  const [dataSource, setDataSource] = useState(data)
   const updateDataSource = ({ newData, oldIndex, newIndex }) => {
     setDataSource(newData)
   }
@@ -90,7 +80,7 @@ const NoDragFeatureStory: FC = ({ ...args }) => {
 export const TableWithNoDragFeature = NoDragFeatureStory.bind({})
 
 const TableWithReservedWordsStory: FC = ({ ...args }) => {
-  const [dataSource, setDataSource]: any = useState(data)
+  const [dataSource, setDataSource] = useState(data)
   const updateDataSource = ({ newData, oldIndex, newIndex }) => {
     setDataSource(newData)
   }
@@ -106,7 +96,7 @@ const TableWithReservedWordsStory: FC = ({ ...args }) => {
 export const TableWithReservedWords = TableWithReservedWordsStory.bind({})
 
 const TableWithCustomColorStory: FC = ({ ...args }) => {
-  const [dataSource, setDataSource]: any = useState(data)
+  const [dataSource, setDataSource] = useState(data)
   const updateDataSource = ({ newData, oldIndex, newIndex }) => {
     setDataSource(newData)
   }
@@ -124,7 +114,7 @@ const TableWithCustomColorStory: FC = ({ ...args }) => {
 export const TableWithCustomColor = TableWithCustomColorStory.bind({})
 
 const TableWithCustomIconStory: FC = ({ ...args }) => {
-  const [dataSource, setDataSource]: any = useState(data)
+  const [dataSource, setDataSource] = useState(data)
   const updateDataSource = ({ newData, oldIndex, newIndex }) => {
     setDataSource(newData)
   }
@@ -142,7 +132,7 @@ const TableWithCustomIconStory: FC = ({ ...args }) => {
 export const TableWithCustomIcon = TableWithCustomIconStory.bind({})
 
 const TableWithNoDataStory: FC = ({ ...args }) => {
-  const [dataSource, setDataSource]: any = useState([])
+  const [dataSource, setDataSource] = useState([])
   const updateDataSource = ({ newData, oldIndex, newIndex }) => {
     setDataSource(newData)
   }
@@ -163,37 +153,48 @@ const TableWithNoDataStory: FC = ({ ...args }) => {
 export const TableWithNoData = TableWithNoDataStory.bind({})
 
 const TableWithHoverFeatureStory: FC = ({ ...args }) => {
-  const [dataSource, setDataSource]: any = useState(data)
+  const [dataSource, setDataSource] = useState(data)
   const updateDataSource = ({ newData, oldIndex, newIndex }) => {
     setDataSource(newData)
   }
 
   const renderVisibleData = () => {
     return (
-      <Button style={{ height: '100%', textAlign:'center', justifyContent: 'center'}} onClick={action('onButtonClicked')}>Share</Button>
+      <Button
+        style={{
+          height: '100%',
+          textAlign: 'center',
+          justifyContent: 'center',
+        }}
+        onClick={action('onButtonClicked')}
+      >
+        Share
+      </Button>
     )
   }
 
   useEffect(() => {
-    if(data.length > 0) {
+    if (data.length > 0) {
       const resultData = dataSource.map((item) => {
-        return {...item, visibleData: renderVisibleData()}
+        return { ...item, visibleData: renderVisibleData() }
       })
       setDataSource(resultData)
     }
-  },[])
+  }, [dataSource])
+
   const onHoverEnterHandle = (value) => {
     const result = dataSource.map((itemList) => {
       if (itemList.key === value.key) {
-        return {...itemList, isShow: true }
+        return { ...itemList, isShow: true }
       }
-      return {...itemList, isShow: false}
+      return { ...itemList, isShow: false }
     })
     setDataSource(result)
   }
+
   const onHoverLeaveHandle = () => {
     const resultData = dataSource.map((itemList) => {
-        return {...itemList, isShow: false}
+      return { ...itemList, isShow: false }
     })
     setDataSource(resultData)
   }

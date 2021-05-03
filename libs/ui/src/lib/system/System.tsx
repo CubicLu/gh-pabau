@@ -8,6 +8,7 @@ import {
   NotificationType,
 } from '@pabau/ui'
 import styles from './System.module.less'
+import { useTranslation } from 'react-i18next'
 
 interface MedicalConfig {
   tretmentCycles: string
@@ -33,9 +34,13 @@ const defaultConfig: MedicalConfig = {
 }
 
 export const System: FC<SystemProps> = ({ config, onSave }) => {
+  const { t } = useTranslation('common')
   const [configs, setConfigs] = useState<MedicalConfig>(defaultConfig)
   const handleSaveChanges = () => {
-    Notification(NotificationType.success, 'Successfully saved changes')
+    Notification(
+      NotificationType.success,
+      t('notification.type.success.message')
+    )
     onSave?.(configs)
   }
   const handleItemChange = (change) => {
@@ -53,14 +58,11 @@ export const System: FC<SystemProps> = ({ config, onSave }) => {
       <div className={styles.systemSubContainer}>
         <div className={styles.systemHeaderContainer}>
           <div>
-            <p className={styles.tabTitle}>System</p>
+            <p className={styles.tabTitle}>{t('business.system.tab.title')}</p>
             <p className={styles.tabSubTitle}>
-              Control core functionality from here with Pabau
+              {t('business.system.sub.title')}
             </p>
           </div>
-          <Button type="primary" onClick={() => handleSaveChanges()}>
-            Save Changes
-          </Button>
         </div>
       </div>
       <Divider />
@@ -68,8 +70,8 @@ export const System: FC<SystemProps> = ({ config, onSave }) => {
         <Row gutter={[28, 28]}>
           <Col className="gutter-row" xs={24} sm={12}>
             <SimpleDropdown
-              label="Tretment Cycles"
-              tooltip="Tretment Cycles"
+              label={t('business.system.cycles.label')}
+              tooltip={t('business.system.cycles.label')}
               value={configs.tretmentCycles}
               dropdownItems={['Always display']}
               onSelected={(val) =>
@@ -79,10 +81,17 @@ export const System: FC<SystemProps> = ({ config, onSave }) => {
           </Col>
           <Col className="gutter-row" xs={24} sm={12}>
             <RadioGroup
-              label="Secure Medical Forms"
-              tooltip="Secure Medical Forms"
-              value={configs.secureMedicalForms === true ? 'Yes' : 'No'}
-              radioItems={['Yes', 'No']}
+              label={t('business.system.medical.formu.label')}
+              tooltip={t('business.system.medical.formu.tooltip')}
+              value={
+                configs.secureMedicalForms === true
+                  ? t('business.system.value.yes')
+                  : t('business.system.value.no')
+              }
+              radioItems={[
+                t('business.system.value.yes'),
+                t('business.system.value.no'),
+              ]}
               onChange={(val) =>
                 handleItemChange({
                   key: 'secureMedicalForms',
@@ -93,10 +102,17 @@ export const System: FC<SystemProps> = ({ config, onSave }) => {
           </Col>
           <Col className="gutter-row" xs={24} sm={12}>
             <RadioGroup
-              label="Disable Prescriptions"
-              tooltip="Disable Prescriptions"
-              value={configs.disablePrescriptions === true ? 'Yes' : 'No'}
-              radioItems={['Yes', 'No']}
+              label={t('business.system.surgical.label')}
+              tooltip={t('business.system.surgical.tooltip')}
+              value={
+                configs.disablePrescriptions === true
+                  ? t('business.system.value.yes')
+                  : t('business.system.value.no')
+              }
+              radioItems={[
+                t('business.system.value.yes'),
+                t('business.system.value.no'),
+              ]}
               onChange={(val) =>
                 handleItemChange({
                   key: 'disablePrescriptions',
@@ -107,10 +123,17 @@ export const System: FC<SystemProps> = ({ config, onSave }) => {
           </Col>
           <Col className="gutter-row" xs={24} sm={12}>
             <RadioGroup
-              label="Perform Surgical"
-              tooltip="Perform Surgical"
-              value={configs.performSurgical === true ? 'Yes' : 'No'}
-              radioItems={['Yes', 'No']}
+              label={t('business.system.prescriptions.label')}
+              tooltip={t('business.system.prescriptions.tooltip')}
+              value={
+                configs.performSurgical === true
+                  ? t('business.system.value.yes')
+                  : t('business.system.value.no')
+              }
+              radioItems={[
+                t('business.system.value.yes'),
+                t('business.system.value.no'),
+              ]}
               onChange={(val) =>
                 handleItemChange({
                   key: 'performSurgical',
@@ -121,10 +144,17 @@ export const System: FC<SystemProps> = ({ config, onSave }) => {
           </Col>
           <Col className="gutter-row" xs={24} sm={12}>
             <RadioGroup
-              label="Medical Approvals"
-              tooltip="Medical Approvals"
-              value={configs.medicalApprovals === true ? 'Yes' : 'No'}
-              radioItems={['Yes', 'No']}
+              label={t('business.system.medical.approvals.label')}
+              tooltip={t('business.system.medical.approvals.tooltip')}
+              value={
+                configs.medicalApprovals === true
+                  ? t('business.system.value.yes')
+                  : t('business.system.value.no')
+              }
+              radioItems={[
+                t('business.system.value.yes'),
+                t('business.system.value.no'),
+              ]}
               onChange={(val) =>
                 handleItemChange({
                   key: 'medicalApprovals',
@@ -135,16 +165,28 @@ export const System: FC<SystemProps> = ({ config, onSave }) => {
           </Col>
           <Col className="gutter-row" xs={24} sm={12}>
             <RadioGroup
-              label="History Data"
-              tooltip="History Data"
-              value={configs.historyData === true ? 'Yes' : 'No'}
-              radioItems={['Yes', 'No']}
+              label={t('business.system.history.label')}
+              tooltip={t('business.system.history.tooltip')}
+              value={
+                configs.historyData === true
+                  ? t('business.system.value.yes')
+                  : t('business.system.value.no')
+              }
+              radioItems={[
+                t('business.system.value.yes'),
+                t('business.system.value.no'),
+              ]}
               onChange={(val) =>
                 handleItemChange({ key: 'historyData', value: val === 'Yes' })
               }
             />
           </Col>
         </Row>
+        <div className={styles.btnSave}>
+          <Button type="primary" onClick={() => handleSaveChanges()}>
+            {t('business.details.save.changes')}
+          </Button>
+        </div>
       </div>
     </div>
   )

@@ -3,6 +3,7 @@
     "editorconfig.editorconfig",
     "graphql.vscode-graphql",
     "dbaeumer.vscode-eslint",
-    "prisma.prisma"
-]
+    "prisma.prisma",
+    "davidanson.vscode-markdownlint"
+  ]
 }

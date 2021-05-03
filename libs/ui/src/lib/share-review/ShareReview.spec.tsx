@@ -8,5 +8,4 @@ describe('ShareReview', () => {
     const { baseElement } = render(<ShareReview />)
     expect(baseElement).toBeTruthy()
   })
-
 })

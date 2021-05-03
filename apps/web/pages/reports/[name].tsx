@@ -1,17 +1,19 @@
+import { useGetReportByCodeQuery, useGetReportByIdQuery } from '@pabau/graphql'
 import { useRouter } from 'next/router'
-import Layout from '../../components/Layout/Layout'
 import React from 'react'
-import { useGetReportByIdQuery, useGetReportByCodeQuery } from '@pabau/graphql'
+import Layout from '../../components/Layout/Layout'
 
 const reportPrefixes = new Set(['CO', 'FI', 'LE', 'MA', 'OT', 'ST'])
 
 export default function Report() {
   const router = useRouter()
   const report_id =
-    typeof router.query.id === 'object' ? router.query.id[0] : router.query.id
+    typeof router.query.name === 'object'
+      ? router.query.name[0]
+      : router.query.name
 
   let searchingByID = true
-  if (reportPrefixes.has(report_id.substr(0, 2))) {
+  if (reportPrefixes.has(report_id?.substr(0, 2))) {
     searchingByID = false
   }
 
@@ -23,7 +25,7 @@ export default function Report() {
     variables: {
       id: Number.parseInt(report_id),
     },
-    skip: searchingByID,
+    skip: !searchingByID,
   })
 
   const {
@@ -45,7 +47,7 @@ export default function Report() {
 
   return (
     <Layout active="reports">
-      <h1>{report.name}</h1>
+      <h1>{report?.name}</h1>
       <p>report content page...</p>
     </Layout>
   )

@@ -4,14 +4,16 @@ import React, { useEffect, useState } from 'react'
 import styles from './CustomModal.module.less'
 import { SecurityTools, SecurityToolsItemInfo } from '@pabau/ui'
 import BasicModal from '../modal/BasicModal'
-import { Menu, Dropdown, Button, Modal } from 'antd'
-import { DownOutlined, UserOutlined } from '@ant-design/icons'
+import { Menu, Dropdown, Button } from 'antd'
+import { DownOutlined } from '@ant-design/icons'
+import { useTranslation } from 'react-i18next'
 
 interface P {
   datasource: SecurityToolsItemInfo[]
 }
 
 export function CustomModal(props: P) {
+  const { t } = useTranslation('common')
   const { datasource = [] } = props
   const [selectedData, setSelectedData] = React.useState<any>(null)
 
@@ -29,7 +31,7 @@ export function CustomModal(props: P) {
     <div>
       <SecurityTools
         datasource={datasource}
-        title={'Security Tools'}
+        title={t('business.security.title')}
         onItemClick={(index) => setSelectedData(datasource[index])}
       />
 
@@ -173,6 +175,7 @@ function ModalType2Container(props) {
       <Menu.Item key="1">{content[0][0]}</Menu.Item>
       <Menu.Item key="2">{content[0][1]}</Menu.Item>
       <Menu.Item key="3">{content[0][2]}</Menu.Item>
+      <Menu.Item key="4">{content[0][3]}</Menu.Item>
     </Menu>
   )
 
@@ -189,6 +192,7 @@ function ModalType2Container(props) {
       <Menu.Item key="1">{content[2][0]}</Menu.Item>
       <Menu.Item key="2">{content[2][1]}</Menu.Item>
       <Menu.Item key="3">{content[2][2]}</Menu.Item>
+      <Menu.Item key="3">{content[2][3]}</Menu.Item>
     </Menu>
   )
 

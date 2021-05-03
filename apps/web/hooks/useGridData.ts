@@ -11,7 +11,11 @@ export function useGridData(t) {
       title: t('setup.clinic'),
       keyValue: 'Our clinic',
       subDataTitles: [
-        { title: t('setup.clinic.bussiness.details'), data: [] },
+        {
+          title: t('setup.clinic.bussiness.details'),
+          data: [],
+          href: '/setup/business-details',
+        },
         {
           title: t('setup.clinic.user'),
           data: [t('setup.clinic.user'), t('setup.clinic.user.group')],

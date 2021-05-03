@@ -1,16 +1,16 @@
-import React, { FC, useState } from 'react'
-import { Table } from '../table/Table'
 import {
   CheckCircleTwoTone,
   CloseCircleOutlined,
-  InfoCircleOutlined,
   FilterOutlined,
+  InfoCircleOutlined,
 } from '@ant-design/icons'
-import { Tooltip, Input } from 'antd'
+import { Input, Tooltip } from 'antd'
+import React, { FC, useState } from 'react'
 import { Button } from '../button/Button'
-import HighChart from '../high-chart/HighChart'
-import styles from './Newsletter.module.less'
 import FullScreenReportModal from '../full-screen-report-modal/FullScreenReportModal'
+import HighChart from '../high-chart/HighChart'
+import { Table } from '../table/Table'
+import styles from './Newsletter.module.less'
 
 const { Search } = Input
 export interface NewsletterProps {
@@ -276,13 +276,9 @@ export const Newsletter: FC<NewsletterProps> = ({
               <Table
                 rowSelection={rowSelection}
                 columns={columns}
-                dataSource={dataSource as never[]}
+                dataSource={dataSource}
                 showSizeChanger={ShowSizeChanger}
-                onRow={(record) => ({
-                  onClick: () => {
-                    selectRow(record)
-                  },
-                })}
+                onRowClick={selectRow}
               />
             </div>
           </div>

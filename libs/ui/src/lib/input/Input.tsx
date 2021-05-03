@@ -9,7 +9,7 @@ export enum ButtonSize {
   large = 'large',
 }
 export interface CheckBoxProps extends FormProps {
-  label?: string
+  label?: string | JSX.Element
   text?: string
   size?: ButtonSize
   disabled?: boolean

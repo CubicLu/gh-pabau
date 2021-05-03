@@ -303,31 +303,65 @@ export const Dropdown: FC<DropDownInterface> = ({
   )
 
   const onClickAvatarMenu = (menuName: string) => {
-    if (menuName === 'Menu') {
-      setActiveMenuTitle('Profile')
-    } else if (menuName === 'ClinicMenu') {
-      setActiveMenuTitle('Select company')
-    } else if (menuName === 'FeedbackMenu') {
-      setActiveMenuTitle('Give us feedback')
-    } else if (menuName === 'HelpMenu') {
-      setActiveMenuTitle('Help & Support')
-    } else if (menuName === 'LangMenu') {
-      setActiveMenuTitle('Select language')
+    switch (menuName) {
+      case 'Menu': {
+        setActiveMenuTitle('Profile')
+
+        break
+      }
+      case 'ClinicMenu': {
+        setActiveMenuTitle('Select company')
+
+        break
+      }
+      case 'FeedbackMenu': {
+        setActiveMenuTitle('Give us feedback')
+
+        break
+      }
+      case 'HelpMenu': {
+        setActiveMenuTitle('Help & Support')
+
+        break
+      }
+      case 'LangMenu': {
+        setActiveMenuTitle('Select language')
+
+        break
+      }
+      // No default
     }
     setActiveMenu(menuName)
   }
 
   const getActiveAvatarMenu = () => {
-    if (activeMenu === 'Menu') {
-      return menu
-    } else if (activeMenu === 'ClinicMenu') {
-      return ClinicSubMenu
-    } else if (activeMenu === 'FeedbackMenu') {
-      return FeedbackMenu
-    } else if (activeMenu === 'HelpMenu') {
-      return HelpMenu
-    } else if (activeMenu === 'LangMenu') {
-      return LangMenu
+    switch (activeMenu) {
+      case 'Menu': {
+        return menu
+
+        break
+      }
+      case 'ClinicMenu': {
+        return ClinicSubMenu
+
+        break
+      }
+      case 'FeedbackMenu': {
+        return FeedbackMenu
+
+        break
+      }
+      case 'HelpMenu': {
+        return HelpMenu
+
+        break
+      }
+      case 'LangMenu': {
+        return LangMenu
+
+        break
+      }
+      // No default
     }
   }
 

@@ -1,12 +1,29 @@
 {
   "root": true,
-  "ignorePatterns": ["**/*"],
-  "plugins": ["@nrwl/nx"],
-  "extends": ["plugin:unicorn/recommended", "plugin:you-dont-need-lodash-underscore/compatible"],
+  "ignorePatterns": [
+    "**/*",
+    "!**/*.json",
+    "!.vscode"
+  ],
+  "plugins": [
+    "@nrwl/nx",
+    "tsdoc",
+    "json-format"
+  ],
+  "extends": [
+    "plugin:unicorn/recommended",
+    "plugin:you-dont-need-lodash-underscore/compatible",
+    "plugin:prettier/recommended",
+    "plugin:@next/next/recommended"
+  ],
   "rules": {
+    "@next/next/no-html-link-for-pages": 0,
+    "tsdoc/syntax": "warn",
     "id-length": 0,
     "babel/object-curly-spacing": 0,
-    "@typescript-eslint/prefer-optional-chain": ["error"],
+    "@typescript-eslint/prefer-optional-chain": [
+      "error"
+    ],
     "unicorn/no-abusive-eslint-disable": 0,
     "unicorn/consistent-destructuring": 0,
     "unicorn/consistent-function-scoping": 0,
@@ -24,7 +41,12 @@
   },
   "overrides": [
     {
-      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "files": [
+        "*.ts",
+        "*.tsx",
+        "*.js",
+        "*.jsx"
+      ],
       "rules": {
         "@nrwl/nx/enforce-module-boundaries": [
           "error",
@@ -34,7 +56,9 @@
             "depConstraints": [
               {
                 "sourceTag": "*",
-                "onlyDependOnLibsWithTags": ["*"]
+                "onlyDependOnLibsWithTags": [
+                  "*"
+                ]
               }
             ]
           }
@@ -42,16 +66,26 @@
       }
     },
     {
-      "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nrwl/nx/typescript"],
+      "files": [
+        "*.ts",
+        "*.tsx"
+      ],
+      "extends": [
+        "plugin:@nrwl/nx/typescript"
+      ],
       "parserOptions": {
         "project": "./tsconfig.*?.json"
       },
       "rules": {}
     },
     {
-      "files": ["*.js", "*.jsx"],
-      "extends": ["plugin:@nrwl/nx/javascript"],
+      "files": [
+        "*.js",
+        "*.jsx"
+      ],
+      "extends": [
+        "plugin:@nrwl/nx/javascript"
+      ],
       "rules": {}
     }
   ]

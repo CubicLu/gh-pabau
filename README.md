@@ -74,16 +74,17 @@ npm i -g yarn
 
 2. Install the Hasura CLI globally
 
-    ```bash
-    npm i -g hasura-cli
-    hasura update-cli --version v2.0.0-alpha.8
-    ```
+   ```bash
+   npm i -g hasura-cli
+   hasura update-cli --version v2.0.0-alpha.9
+   ```
 
 3. Copy `hasura/.env.SAMPLE` to `.env`
 
 4. Copy `apps/web/.env.SAMPLE` to `.env.local`
 
 5. Copy `apps/bridge-api/.env.SAMPLE` to `.env`
+
    1. Now either install Pabau1 locally,
    2. Or ask Toshe to share his public MySQL
 
@@ -126,7 +127,7 @@ The master schema file is located at `apps/bridge-api/prisma/schema.prisma`
 - Model names must start with a letter
 - Casing is PascalCase
 - Model names must use the singular form (for example, User instead of users or Users)
-- Never manually edit apps/bridge-api/src/generated/**
+- Never manually edit apps/bridge-api/src/generated/\*\*
 - When you edit `apps/bridge-api/src/schema.ts` you must then run `yarn prisma generate`
 
 - To map the singular name of a Model to a plural database table use @@map("table_name")
@@ -204,15 +205,15 @@ To view the Backend, you can either visit [https://backend.pabau.com](https://ba
 ## Ticket workflow
 
 1. On the JIRA
-   1. Click *Create new branch* (accept defaults, branch should be master)
+   1. Click _Create new branch_ (accept defaults, branch should be master)
    2. Change Status into In Development
 2. Checkout your new branch and code away :)
 
-    ```bash
-    git fetch && \
-    git checkout -b origin/PABAU2-1234 && \
-    yarn && yarn dev:linux # change to dev:windows if you are on Docker for Windows
-    ```
+   ```bash
+   git fetch && \
+   git checkout -b origin/PABAU2-1234 && \
+   yarn && yarn dev:linux # change to dev:windows if you are on Docker for Windows
+   ```
 
 3. Commit often. Push once or twice a day at least.
 

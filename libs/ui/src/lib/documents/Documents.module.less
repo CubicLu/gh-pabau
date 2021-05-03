@@ -1,230 +1,231 @@
 .documentsMain {
-    box-sizing: border-box;
+  box-sizing: border-box;
 
-    .seperator {
-        border: 1px solid #ECEDF0;
-        display: flex;
+  .seperator {
+    border: 1px solid #ecedf0;
+    display: flex;
+  }
+
+  .header {
+    padding: 0.5rem 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .heading {
+      display: flex;
+      align-items: center;
+      @media screen and (max-width: 767px) {
+        display: none;
+      }
+      :global {
+        h3 {
+          margin: 0;
+          font-style: normal;
+          font-weight: bold;
+          font-size: 20px;
+          line-height: 25px;
+          color: #3d3d46;
+        }
+      }
     }
 
-    .header {
-        padding: 0.5rem 1.25rem;
+    .control {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+
+      .sortBy {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        margin: 5px 15px 5px 0px;
+
+        :global {
+          .label {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 22px;
+            color: #9292a3;
+            margin-right: 10px;
+          }
+          .label + div {
+            min-width: 15rem;
+
+            .ant-select-selector {
+              border-color: #ecedf0;
+              border-radius: 5px;
+            }
+          }
+        }
+      }
+      .addFolder {
+        padding: 14px;
+        border-radius: 5px;
+        margin: 5px 15px 5px 0px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .upload {
+        padding: 9px 14px;
+        border-radius: 5px;
+        margin: 5px 0px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        :global {
+          div {
+            margin-left: 5px;
+          }
+        }
+      }
+    }
+  }
+
+  .content {
+    :global {
+      .anticon {
+        display: none !important;
+      }
+    }
+
+    .folderPanel {
+      padding: 0px 5px;
+      @media screen and (max-width: 767px) {
+        padding: 0;
+      }
+      .subFolderDiv {
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
-
-        .heading {
-            display: flex;
-            align-items: center;
-            @media screen and (max-width: 767px) {
-              display: none;
-            }
-            :global {
-                h3 {
-                    margin: 0;
-                    font-style: normal;
-                    font-weight: bold;
-                    font-size: 20px;
-                    line-height: 25px;
-                    color: #3D3D46;
-                }
-            }
+        border-bottom: 1px solid #eee;
+        padding: 15px 25px;
+        @media screen and (max-width: 576px) {
+          padding: 15px;
+          flex-wrap: nowrap;
+          align-items: flex-start;
         }
-
-        .control {
+        :global {
+          .detailsWithControls {
             display: flex;
+            justify-content: flex-start;
             align-items: center;
             flex-wrap: wrap;
-
-            .sortBy {
-                display: flex;
-                align-items: center;
-                flex-wrap: wrap;
-                margin: 5px 15px 5px 0px;
-
-                :global {
-                    .label {
-                        font-style: normal;
-                        font-weight: normal;
-                        font-size: 14px;
-                        line-height: 22px;
-                        color: #9292A3;
-                        margin-right: 10px;
-                    }
-                    .label + div {
-                        min-width: 15rem;
-
-                        .ant-select-selector {
-                            border-color: #ECEDF0;
-                            border-radius: 5px;
-                        }
-                    }
-                }
+            @media screen and (max-width: 576px) {
+              flex-wrap: nowrap;
+              align-items: flex-start;
             }
-            .addFolder {
-                padding: 14px;
-                border-radius: 5px;
-                margin: 5px 15px 5px 0px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
+            .checkBoxDiv {
+              padding-right: 30px;
+              @media screen and (max-width: 576px) {
+                padding-right: 10px;
+              }
             }
-
-            .upload {
-                padding: 9px 14px;
-                border-radius: 5px;
-                margin: 5px 0px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-
-                :global {
-                    div {
-                        margin-left: 5px;
-                    }
-                }
-            }
-        }
-    }
-
-    .content {
-        :global {
-            .anticon {
-                display: none !important;
-            }
-        }
-
-        .folderPanel {
-            padding: 0px 5px;
-            @media screen and (max-width: 767px) {
-              padding: 0;
-            }
-            .subFolderDiv {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                flex-wrap: wrap;
-                border-bottom: 1px solid #eee;
-                padding: 15px 25px;
+            .details {
+              display: flex;
+              justify-content: flex-start;
+              align-items: center;
+              flex-wrap: wrap;
+              @media screen and (max-width: 576px) {
+                align-items: flex-start;
+                flex-wrap: nowrap;
+              }
+              .fileIcon {
+                margin-right: 15px;
                 @media screen and (max-width: 576px) {
-                  padding: 15px;
+                  img {
+                    width: 22px;
+                    height: 22px;
+                  }
+                }
+              }
+              .fileDetails {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: flex-start;
+                flex-wrap: wrap;
+                @media screen and (max-width: 576px) {
                   flex-wrap: nowrap;
-                  align-items: flex-start;
                 }
-                :global {
-                    .detailsWithControls {
-                        display: flex;
-                        justify-content: flex-start;
-                        align-items: center;
-                        flex-wrap: wrap;
-                        @media screen and (max-width: 576px) {
-                          flex-wrap: nowrap;
-                          align-items: flex-start;
-                        }
-                        .checkBoxDiv {
-                            padding-right: 30px;
-                            @media screen and (max-width: 576px) {
-                              padding-right: 10px;
-                            }
-                        }
-                        .details {
-                            display: flex;
-                            justify-content: flex-start;
-                            align-items: center;
-                            flex-wrap: wrap;
-                            @media screen and (max-width: 576px) {
-                              align-items: flex-start;
-                              flex-wrap: nowrap;
-                            }
-                            .fileIcon {
-                                margin-right: 15px;
-                                @media screen and (max-width: 576px) {
-                                  img {
-                                    width: 22px;
-                                    height: 22px;
-                                  }
-                                }
-                            }
-                            .fileDetails {
-                                display: flex;
-                                flex-direction: column;
-                                justify-content: space-between;
-                                align-items: flex-start;
-                                flex-wrap: wrap;
-                                @media screen and (max-width: 576px) {
-                                  flex-wrap: nowrap;
-                                }
-                                div.nameStatus, div.dateSize {
-                                    display: flex;
-                                    justify-content: space-between;
-                                    align-items: center;
-                                    flex-wrap: wrap;
-                                    @media screen and (max-width: 576px) {
-                                      flex-wrap: nowrap;
-                                      flex-direction: column;
-                                      align-items: flex-start;
-                                    }
-                                    .seperator {
-                                        border-right: 1px solid #CFCFD7;
-                                        border-width: 1.5px !important;
-                                        min-height: 15px;
-                                        height: auto;
-                                        margin: 0px 10px;
-                                        @media screen and (max-width: 576px) {
-                                          display: none;
-                                        }
-                                    }
-                                }
+                div.nameStatus,
+                div.dateSize {
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  flex-wrap: wrap;
+                  @media screen and (max-width: 576px) {
+                    flex-wrap: nowrap;
+                    flex-direction: column;
+                    align-items: flex-start;
+                  }
+                  .seperator {
+                    border-right: 1px solid #cfcfd7;
+                    border-width: 1.5px !important;
+                    min-height: 15px;
+                    height: auto;
+                    margin: 0px 10px;
+                    @media screen and (max-width: 576px) {
+                      display: none;
+                    }
+                  }
+                }
 
-                                div.nameStatus {
-                                    span {
-                                        font-style: normal;
-                                        font-weight: normal;
-                                        font-size: 14px;
-                                        line-height: 15px;
-                                    }
-                                    .name {
-                                        color: #54B2D3;
-                                    }
-                                    .status {
-                                        color: #9292A3;
-                                    }
-                                }
-                                div.dateSize {
-                                    span {
-                                        font-style: normal;
-                                        font-weight: normal;
-                                        font-size: 12px;
-                                        line-height: 15px;
-                                        color: #9292A3;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    .dottedMenu {
-                        .anticon-more {
-                            display: block !important;
-                        }
-                    }
+                div.nameStatus {
+                  span {
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 14px;
+                    line-height: 15px;
+                  }
+                  .name {
+                    color: #54b2d3;
+                  }
+                  .status {
+                    color: #9292a3;
+                  }
                 }
+                div.dateSize {
+                  span {
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 12px;
+                    line-height: 15px;
+                    color: #9292a3;
+                  }
+                }
+              }
             }
-            .subFolderDiv:last-child {
-                border: none !important;
+          }
+          .dottedMenu {
+            .anticon-more {
+              display: block !important;
             }
+          }
         }
+      }
+      .subFolderDiv:last-child {
+        border: none !important;
+      }
     }
+  }
 }
 
-.document-modal{
+.document-modal {
   .label {
-    color: #9292A3;
+    color: #9292a3;
     font-weight: normal;
     font-size: 14px;
     line-height: 22px;
     margin-bottom: 2px;
   }
-  .modal-button{
+  .modal-button {
     margin-top: 20px;
     display: flex;
     justify-content: flex-end;
@@ -232,10 +233,10 @@
       margin-right: 15px;
     }
   }
-  .message{
+  .message {
     font-weight: normal;
     font-size: 14px;
     line-height: 18px;
-    color: #9292A3;
+    color: #9292a3;
   }
 }

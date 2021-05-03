@@ -7,6 +7,7 @@ import { UserContext } from '../../context/UserContext'
 import useLogin from '../../hooks/authentication/useLogin'
 import Login from '../../pages/login'
 import Search from '../Search'
+import StickyPopout from '../StickyPopout/StickyPopout'
 
 interface Notification {
   id: string
@@ -115,17 +116,20 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
     localStorage?.getItem('token')
   ) {
     return (
-      <PabauLayout
-        notifications={notifications}
-        user={userData}
-        searchRender={() => <Search />}
-        onCreateChannel={onCreateChannel}
-        onMessageType={onMessageType}
-        legacyContent={!!legacyPage}
-        {...props}
-      >
-        {!legacyPage ? children : <Iframe urlPath={legacyPage} />}
-      </PabauLayout>
+      <>
+        <PabauLayout
+          notifications={notifications}
+          user={userData}
+          searchRender={() => <Search />}
+          onCreateChannel={onCreateChannel}
+          onMessageType={onMessageType}
+          legacyContent={!!legacyPage}
+          {...props}
+        >
+          {!legacyPage ? children : <Iframe urlPath={legacyPage} />}
+        </PabauLayout>
+        <StickyPopout {...props} />
+      </>
     )
   }
   return <Login />

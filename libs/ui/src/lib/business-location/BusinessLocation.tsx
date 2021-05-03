@@ -4,6 +4,7 @@ import fetch from 'node-fetch'
 import { Input } from '@pabau/ui'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import styles from './BusinessLocation.module.less'
+import { useTranslation } from 'react-i18next'
 
 interface AddressDetails {
   address?: string
@@ -25,6 +26,7 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
   value,
   onChange,
 }) => {
+  const { t } = useTranslation('common')
   const [location, setLocation] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [detail, setDetail] = useState<AddressDetails>({})
@@ -122,12 +124,14 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
             setDetailForModal(detail)
           }}
         >
-          Edit
+          {t('business.details.business.edit.btn')}
         </p>
         <Row gutter={[24, 24]} style={{ marginBottom: 0 }}>
           <Col className="gutter-row" lg={6} sm={12} xs={12}>
             <div className={styles.locationItem}>
-              <p className={styles.locationItemTitle}>Address</p>
+              <p className={styles.locationItemTitle}>
+                {t('business.details.business.address')}
+              </p>
               {detail.address && (
                 <p className={styles.locationItemValue}>{detail.address}</p>
               )}
@@ -139,14 +143,16 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
                     setDetailForModal(detail)
                   }}
                 >
-                  + Add
+                  {t('business.details.business.add.btn')}
                 </p>
               )}
             </div>
           </Col>
           <Col className="gutter-row" lg={6} sm={12} xs={12}>
             <div className={styles.locationItem}>
-              <p className={styles.locationItemTitle}>Apt./Suite etc.</p>
+              <p className={styles.locationItemTitle}>
+                {t('business.details.business.apt')}
+              </p>
               {detail.apt && (
                 <p className={styles.locationItemValue}>{detail.apt}</p>
               )}
@@ -158,14 +164,16 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
                     setDetailForModal(detail)
                   }}
                 >
-                  + Add
+                  {t('business.details.business.add.btn')}
                 </p>
               )}
             </div>
           </Col>
           <Col className="gutter-row" lg={6} sm={12} xs={12}>
             <div className={styles.locationItem}>
-              <p className={styles.locationItemTitle}>Postcode</p>
+              <p className={styles.locationItemTitle}>
+                {t('setup.issuing.form.field.postcode')}
+              </p>
               {detail.postcode && (
                 <p className={styles.locationItemValue}>{detail.postcode}</p>
               )}
@@ -177,14 +185,16 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
                     setDetailForModal(detail)
                   }}
                 >
-                  + Add
+                  {t('business.details.business.add.btn')}
                 </p>
               )}
             </div>
           </Col>
           <Col className="gutter-row" lg={6} sm={12} xs={12}>
             <div className={styles.locationItem}>
-              <p className={styles.locationItemTitle}>City</p>
+              <p className={styles.locationItemTitle}>
+                {t('setup.issuing.form.field.city')}
+              </p>
               {detail.city && (
                 <p className={styles.locationItemValue}>{detail.city}</p>
               )}
@@ -196,14 +206,16 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
                     setDetailForModal(detail)
                   }}
                 >
-                  + Add
+                  {t('business.details.business.add.btn')}
                 </p>
               )}
             </div>
           </Col>
           <Col className="gutter-row" lg={6} sm={12} xs={12}>
             <div className={styles.locationItem}>
-              <p className={styles.locationItemTitle}>Region</p>
+              <p className={styles.locationItemTitle}>
+                {t('setup.issuing.form.field.Region')}
+              </p>
               {detail.region && (
                 <p className={styles.locationItemValue}>{detail.region}</p>
               )}
@@ -215,14 +227,16 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
                     setDetailForModal(detail)
                   }}
                 >
-                  + Add
+                  {t('business.details.business.add.btn')}
                 </p>
               )}
             </div>
           </Col>
           <Col className="gutter-row" lg={6} sm={12} xs={12}>
             <div className={styles.locationItem}>
-              <p className={styles.locationItemTitle}>Country</p>
+              <p className={styles.locationItemTitle}>
+                {t('setup.issuing.form.field.country')}
+              </p>
               {detail.country && (
                 <p className={styles.locationItemValue}>{detail.country}</p>
               )}
@@ -234,7 +248,7 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
                     setDetailForModal(detail)
                   }}
                 >
-                  + Add
+                  {t('business.details.business.add.btn')}
                 </p>
               )}
             </div>
@@ -242,7 +256,7 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
         </Row>
         {showModal && (
           <Modal
-            title="Edit Business Location"
+            title={t('business.details.edit.business.location')}
             visible={showModal}
             onOk={() => {
               setDetail(detailForModal)
@@ -256,7 +270,7 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
             <Row gutter={[24, 24]}>
               <Col className="gutter-row" xs={24} sm={12}>
                 <Input
-                  label="Address"
+                  label={t('business.details.business.address')}
                   text={detailForModal.address}
                   onChange={(value_) =>
                     setDetailForModal({ ...detailForModal, address: value_ })
@@ -265,7 +279,7 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
               </Col>
               <Col className="gutter-row" xs={24} sm={12}>
                 <Input
-                  label="Apt./Suite etc."
+                  label={t('business.details.business.apt')}
                   text={detailForModal.apt}
                   onChange={(value_) =>
                     setDetailForModal({ ...detailForModal, apt: value_ })
@@ -274,7 +288,7 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
               </Col>
               <Col className="gutter-row" xs={24} sm={12}>
                 <Input
-                  label="Postcode"
+                  label={t('setup.issuing.form.field.postcode')}
                   text={detailForModal.postcode}
                   onChange={(value_) =>
                     setDetailForModal({ ...detailForModal, postcode: value_ })
@@ -283,7 +297,7 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
               </Col>
               <Col className="gutter-row" xs={24} sm={12}>
                 <Input
-                  label="City"
+                  label={t('setup.issuing.form.field.city')}
                   text={detailForModal.city}
                   onChange={(value_) =>
                     setDetailForModal({ ...detailForModal, city: value_ })
@@ -292,7 +306,7 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
               </Col>
               <Col className="gutter-row" xs={24} sm={12}>
                 <Input
-                  label="Region"
+                  label={t('setup.issuing.form.field.Region')}
                   text={detailForModal.region}
                   onChange={(value_) =>
                     setDetailForModal({ ...detailForModal, region: value_ })
@@ -301,7 +315,7 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
               </Col>
               <Col className="gutter-row" xs={24} sm={12}>
                 <Input
-                  label="Country"
+                  label={t('setup.issuing.form.field.country')}
                   text={detailForModal.country}
                   onChange={(value_) =>
                     setDetailForModal({ ...detailForModal, country: value_ })

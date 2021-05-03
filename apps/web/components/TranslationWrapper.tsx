@@ -1,8 +1,8 @@
-import React, { FC, useContext } from 'react'
-import { UserContext } from '../context/UserContext'
-import i18next from 'i18next'
-import { I18nextProvider, initReactI18next } from 'react-i18next'
 import { languages } from '@pabau/i18n'
+import i18next from 'i18next'
+import React, { FC, useContext } from 'react'
+import { I18nextProvider, initReactI18next } from 'react-i18next'
+import { UserContext } from '../context/UserContext'
 
 const TranslationWrapper: FC = ({ children }) => {
   const me = useContext(UserContext)
