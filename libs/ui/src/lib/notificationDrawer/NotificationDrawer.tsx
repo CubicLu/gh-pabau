@@ -1,10 +1,9 @@
 import { CloseOutlined } from '@ant-design/icons'
-import { gql, useMutation } from '@apollo/client'
+import { MutationFunction } from '@apollo/client'
 import { Drawer, Image } from 'antd'
 import classNames from 'classnames'
-import moment from 'moment'
 import { useRouter } from 'next/router'
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as Lead1SVG } from '../../assets/images/lead.svg'
 import { ReactComponent as Lead2SVG } from '../../assets/images/lead1.svg'
@@ -12,9 +11,15 @@ import { ReactComponent as EmptySVG } from '../../assets/images/notification-emp
 import { notificationIcons } from './mock'
 import styles from './NotificationDrawer.module.less'
 
-interface Notification {
+interface UserProps {
+  user: number
+  company: number
+  fullName: string
+}
+
+interface Notifications {
   id: string
-  notificationTime: string
+  notificationTime: Date
   notificationType: string
   notificationTypeIcon: string
   title: string
@@ -24,81 +29,29 @@ interface Notification {
   link: string
 }
 
-const DELETE_MUTATION = gql`
-  mutation delete_notifications_by_pk($id: uuid!) {
-    delete_notifications_by_pk(id: $id) {
-      __typename
-      id
-    }
-  }
-`
-
-const UPDATE_MUTATION = gql`
-  mutation update_notifications_by_pk(
-    $id: uuid!
-    $sent_to: jsonb
-    $is_read: jsonb
-  ) {
-    update_notifications_by_pk(
-      pk_columns: { id: $id }
-      _set: { sent_to: $sent_to, is_read: $is_read }
-    ) {
-      id
-    }
-  }
-`
-
-const ADD_MUTATION = gql`
-  mutation insert_notifications_one(
-    $type: uuid!
-    $sent_to: jsonb
-    $variables: jsonb
-    $destination: String!
-    $sent_by: Int
-    $loop: Int
-  ) {
-    insert_notifications_one(
-      object: {
-        type: $type
-        destination: $destination
-        sent_to: $sent_to
-        variables: $variables
-        sent_by: $sent_by
-        loop: $loop
-      }
-    ) {
-      id
-    }
-  }
-`
-
-interface NotificationData {
-  [key: string]: Notification[]
-}
-
-interface UserProps {
-  user: number
-  company: number
-  fullName: string
-}
-
 interface P {
+  deleteNotification?: MutationFunction
+  updateNotification?: MutationFunction
   openDrawer?: boolean
   closeDrawer?: () => void
-  notifications?: NotificationData[]
+  notifications?: Notifications[]
   user?: UserProps
+  relativeTime?: (lan: string, date: Date) => string
 }
 
 export const NotificationDrawer: FC<P> = ({
   openDrawer = true,
   closeDrawer,
   notifications = [],
+  relativeTime,
+  deleteNotification,
+  updateNotification,
   user,
 }) => {
   const { t } = useTranslation('common')
   const [notificationDrawer, setNotificationDrawer] = useState(openDrawer)
   const [notifyTab, setNotifyTab] = useState('Activity')
-  const [notificationData] = useState<NotificationData[]>(notifications)
+  const [notificationData] = useState<Notifications[]>(notifications)
 
   const notificationTypes = {
     report: 'notifications.report',
@@ -110,11 +63,6 @@ export const NotificationDrawer: FC<P> = ({
     businessrefer: 'notifications.businessrefer',
     lead: 'notifications.lead',
   }
-
-  const router = useRouter()
-
-  const [deleteMutation] = useMutation(DELETE_MUTATION)
-  const [updateMutation] = useMutation(UPDATE_MUTATION)
 
   const notificationLeadsData = [
     {
@@ -143,77 +91,6 @@ export const NotificationDrawer: FC<P> = ({
     setNotificationDrawer(false)
     closeDrawer?.()
   }
-
-  const getNotificationIcon = (type) => {
-    const notificationIcon = notificationIcons.find(
-      (notificationIcons) => notificationIcons.type === type
-    )
-    return notificationIcon?.icon
-  }
-
-  const isReadNotification = (users) => {
-    return users?.find((user_id) => user_id === user?.user) ? true : false
-  }
-
-  const onNotificationClick = async (notification) => {
-    const { id, users, link } = notification
-    let { read } = notification
-    if (!isReadNotification(read)) {
-      read = read?.length > 0 ? [...read, user?.user] : [user?.user]
-      const variables = { id, is_read: read, sent_to: users }
-      await updateMutation({ variables, optimisticResponse: {} })
-    }
-    if (link) {
-      router.push({ pathname: link })
-    }
-  }
-
-  const getNotificationDescOrTitle = (notification, returnType = 'desc') => {
-    console.log('notification456', notification)
-    console.log('user', user)
-    const { variables, sentBy } = notification
-
-    if (
-      typeof variables == 'object' &&
-      Object.keys({ ...variables }).length > 0
-    ) {
-      for (const key in variables) {
-        const replaceVariable = `[${key}]`
-        const variableValue = variables[key]
-
-        if (key === 'who' && user?.user == sentBy) {
-          notification[returnType] = notification[returnType].replace(
-            '[who]',
-            'You'
-          )
-        } else {
-          notification[returnType] = notification[returnType].replace(
-            replaceVariable,
-            variableValue
-          )
-        }
-      }
-    }
-
-    return notification[returnType]
-  }
-
-  const removeSingleNotification = async (notification) => {
-    const { id, users } = notification
-    const sent_to = users.filter((user_id) => user_id !== user?.user)
-    const variables = { id, sent_to }
-    sent_to.length > 0
-      ? await updateMutation({ variables, optimisticResponse: {} })
-      : await deleteMutation({
-          variables: { id: notification.id },
-          optimisticResponse: {},
-        })
-  }
-
-  const [addMutation] = useMutation(ADD_MUTATION, {
-    onCompleted(data) {},
-    onError(err) {},
-  })
 
   let lengths = 0
   for (const item of notificationData) {
@@ -275,53 +152,14 @@ export const NotificationDrawer: FC<P> = ({
       {notifyTab === 'Activity' &&
         notifications.map((notify, index) => {
           return (
-            <div key={index}>
-              <div className={styles.notificationCard}>
-                <div className={styles.notifyAlign}>
-                  <div
-                    onClick={() => onNotificationClick(notify)}
-                    className={classNames(styles.logo, styles.flex)}
-                  >
-                    <Image
-                      preview={false}
-                      src={getNotificationIcon(notify.notificationType)}
-                    />
-                    <p className={styles.textSm}>{notify.notificationType}</p>
-                  </div>
-                  <div className={styles.time}>
-                    <p
-                      className={classNames(
-                        styles.textMd,
-                        styles.grayTextColor
-                      )}
-                    >
-                      {moment(notify.notificationTime.toString()).format(
-                        'hh:mm A'
-                      )}
-                      <CloseOutlined
-                        onClick={() => {
-                          removeSingleNotification(notify)
-                        }}
-                        className={styles.notificationClearIcon}
-                      />
-                    </p>
-                  </div>
-                </div>
-                <div
-                  onClick={() => onNotificationClick(notify)}
-                  className={styles.descAlign}
-                >
-                  <div className={styles.notifyTitleDesc}>
-                    <h1>{getNotificationDescOrTitle(notify, 'title')}</h1>
-                    <p>{getNotificationDescOrTitle(notify, 'desc')}</p>
-                  </div>
-                  <div className={styles.readStatus}>
-                    {!isReadNotification(notify?.read) && <span></span>}
-                  </div>
-                </div>
-              </div>
-              <div className={styles.cardBorder} />
-            </div>
+            <Notification
+              key={index}
+              notify={notify}
+              relativeTime={relativeTime}
+              user={user}
+              updateMutation={updateNotification}
+              deleteMutation={deleteNotification}
+            />
           )
         })}
 
@@ -416,3 +254,142 @@ export const NotificationDrawer: FC<P> = ({
 }
 
 export default NotificationDrawer
+
+interface NotificationProps {
+  notify: Notifications
+  relativeTime?: (lan: string, date: Date) => string
+  user?: UserProps
+  updateMutation?: MutationFunction
+  deleteMutation?: MutationFunction
+}
+
+const Notification: FC<NotificationProps> = ({
+  notify,
+  relativeTime,
+  user,
+  updateMutation,
+  deleteMutation,
+}) => {
+  const [notifyTime, setNotifyTime] = useState(
+    relativeTime?.('en', notify?.notificationTime)
+  )
+
+  const watchRelativeTime = () => {
+    setInterval(() => {
+      const updatedTime = relativeTime?.('en', notify?.notificationTime)
+      setNotifyTime(updatedTime)
+    }, 1000)
+  }
+
+  useEffect(() => {
+    watchRelativeTime()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const router = useRouter()
+
+  const getNotificationIcon = () => {
+    const notificationIcon = notificationIcons.find(
+      (notificationIcons) => notificationIcons.type === notify.notificationType
+    )
+    return notificationIcon?.icon
+  }
+
+  const isReadNotification = (users) => {
+    return users?.find((user_id) => user_id === user?.user) ? true : false
+  }
+
+  const handleOnClick = async (notification) => {
+    const { id, users, link } = notification
+    let { read } = notification
+    if (!isReadNotification(read)) {
+      read = read?.length > 0 ? [...read, user?.user] : [user?.user]
+      const variables = { id, is_read: read, sent_to: users }
+      await updateMutation?.({ variables, optimisticResponse: {} })
+    }
+    if (link) {
+      router.push({ pathname: link })
+    }
+  }
+
+  const removeSingleNotification = async (notification) => {
+    const { id, users } = notification
+    const sent_to = users.filter((user_id) => user_id !== user?.user)
+    const variables = { id, sent_to }
+    sent_to?.length > 0
+      ? await updateMutation?.({ variables, optimisticResponse: {} })
+      : await deleteMutation?.({
+          variables: { id: notification.id },
+          optimisticResponse: {},
+        })
+  }
+
+  const getNotificationDescOrTitle = (notification, returnType = 'desc') => {
+    const { variables } = notification
+    // const { variables, sentBy } = notification
+    if (
+      typeof variables == 'object' &&
+      Object.keys({ ...variables }).length > 0
+    ) {
+      for (const key in variables) {
+        const replaceVariable = `[${key}]`
+        const variableValue = variables[key]
+
+        notification[returnType] = notification[returnType].replace(
+          replaceVariable,
+          variableValue
+        )
+
+        // if (key === 'who' && user?.user === sentBy) {
+        //   notification[returnType] = notification[returnType].replace(
+        //     '[who]',
+        //     'You'
+        //   )
+        // } else {
+        //   notification[returnType] = notification[returnType].replace(
+        //     replaceVariable,
+        //     variableValue
+        //   )
+        // }
+      }
+    }
+    return notification[returnType]
+  }
+
+  return (
+    <div>
+      <div className={styles.notificationCard}>
+        <div className={styles.notifyAlign}>
+          <div
+            onClick={() => handleOnClick(notify)}
+            className={classNames(styles.logo, styles.flex)}
+          >
+            <Image preview={false} src={getNotificationIcon()} />
+            <p className={styles.textSm}>{notify.notificationType}</p>
+          </div>
+          <div className={styles.time}>
+            <p className={classNames(styles.textMd, styles.grayTextColor)}>
+              {notifyTime}
+              <CloseOutlined
+                onClick={() => {
+                  removeSingleNotification(notify)
+                }}
+                className={styles.notificationClearIcon}
+              />
+            </p>
+          </div>
+        </div>
+        <div onClick={() => handleOnClick(notify)} className={styles.descAlign}>
+          <div className={styles.notifyTitleDesc}>
+            <h1>{getNotificationDescOrTitle(notify, 'title')}</h1>
+            <p>{getNotificationDescOrTitle(notify, 'desc')}</p>
+          </div>
+          <div className={styles.readStatus}>
+            {!isReadNotification(notify?.read) && <span></span>}
+          </div>
+        </div>
+      </div>
+      <div className={styles.cardBorder} />
+    </div>
+  )
+}

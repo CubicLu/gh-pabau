@@ -1,16 +1,17 @@
-import React, { FC, useState, MouseEvent } from 'react'
-import { Badge, Col, Layout, Row } from 'antd'
 import { BellOutlined, MailOutlined } from '@ant-design/icons'
-import styles from './Header.module.less'
+import { MutationFunction } from '@apollo/client'
 import {
   Dropdown as AvatarDropDown,
-  QuickCreate,
-  NotificationDrawer,
   Logo,
+  NotificationDrawer,
+  QuickCreate
 } from '@pabau/ui'
-import { Search } from './search/Search'
-import PabauMessages from './messages/Messages'
+import { Badge, Col, Layout, Row } from 'antd'
 import classNames from 'classnames'
+import React, { FC, MouseEvent, useState } from 'react'
+import styles from './Header.module.less'
+import PabauMessages from './messages/Messages'
+import { Search } from './search/Search'
 
 const AntHeader = Layout.Header
 
@@ -34,6 +35,9 @@ interface UserProps {
 
 interface P {
   notifications?: Notification[]
+  deleteNotification?: MutationFunction
+  updateNotification?: MutationFunction
+  relativeTime?: (lan: string, date: Date) => string
   user?: UserProps
   searchRender?: (innerComponent: JSX.Element) => JSX.Element
   onCreateChannel?: (
@@ -50,6 +54,9 @@ export const Header: FC<P> = ({
   searchRender,
   onCreateChannel,
   onMessageType,
+  relativeTime,
+  deleteNotification,
+  updateNotification,
   ...rest
 }) => {
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
@@ -114,6 +121,9 @@ export const Header: FC<P> = ({
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           notifications={notifications}
+          relativeTime={relativeTime}
+          deleteNotification={deleteNotification}
+          updateNotification={updateNotification}
         />
       )}
       {openMessageDrawer && (

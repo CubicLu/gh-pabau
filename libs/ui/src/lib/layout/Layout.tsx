@@ -1,3 +1,4 @@
+import { MutationFunction } from '@apollo/client'
 import { Footer, Header, Menu } from '@pabau/ui'
 import { Card, Layout as AntLayout } from 'antd'
 import classNames from 'classnames'
@@ -25,6 +26,9 @@ interface UserProps {
   fullName: string
 }
 export interface LayoutProps {
+  deleteNotification?: MutationFunction
+  updateNotification?: MutationFunction
+  relativeTime?: (lan: string, date: Date) => string
   notifications?: Notification[]
   user?: UserProps
   pageTitle?: string
@@ -58,6 +62,9 @@ export const Layout: FC<LayoutProps> = ({
   active,
   legacyContent = false,
   notifications,
+  relativeTime,
+  deleteNotification,
+  updateNotification,
   user,
   ...rest
 }) => {
@@ -68,10 +75,13 @@ export const Layout: FC<LayoutProps> = ({
       <AntLayout style={{ background: '#F7F7F9' }}>
         <Header
           user={user}
+          deleteNotification={deleteNotification}
+          updateNotification={updateNotification}
           searchRender={searchRender}
           onCreateChannel={onCreateChannel}
           onMessageType={onMessageType}
           notifications={notifications}
+          relativeTime={relativeTime}
           {...rest}
         />
         <AntLayout className={styles.headerMargin}>

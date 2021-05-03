@@ -1,9 +1,10 @@
-import { gql, useSubscription } from '@apollo/client'
+import { gql, useMutation, useSubscription } from '@apollo/client'
 import { useDisabledFeaturesQuery } from '@pabau/graphql'
 import { Iframe, Layout as PabauLayout, LayoutProps } from '@pabau/ui'
 import { useRouter } from 'next/router'
 import React, { FC, useContext, useEffect, useState } from 'react'
 import { UserContext } from '../../context/UserContext'
+import { relativeTime } from '../../helper/relativeTimeFormat'
 import useLogin from '../../hooks/authentication/useLogin'
 import Login from '../../pages/login'
 import Search from '../Search'
@@ -44,6 +45,29 @@ const LIST_QUERY = gql`
     }
   }
 `
+const DELETE_MUTATION = gql`
+  mutation delete_notifications_by_pk($id: uuid!) {
+    delete_notifications_by_pk(id: $id) {
+      __typename
+      id
+    }
+  }
+`
+
+const UPDATE_MUTATION = gql`
+  mutation update_notifications_by_pk(
+    $id: uuid!
+    $sent_to: jsonb
+    $is_read: jsonb
+  ) {
+    update_notifications_by_pk(
+      pk_columns: { id: $id }
+      _set: { sent_to: $sent_to, is_read: $is_read }
+    ) {
+      id
+    }
+  }
+`
 
 const onMessageType = () => {
   //add mutation for send message textbox
@@ -64,6 +88,9 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
   })
   const loggedUser = useContext(UserContext)
   const userData = { ...user, fullName: loggedUser?.me?.full_name }
+
+  const [deleteMutation] = useMutation(DELETE_MUTATION)
+  const [updateMutation] = useMutation(UPDATE_MUTATION)
 
   useEffect(() => {
     if (notificationData?.notifications?.length > 0) {
@@ -118,7 +145,10 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
     return (
       <>
         <PabauLayout
+          relativeTime={relativeTime}
           notifications={notifications}
+          deleteNotification={deleteMutation}
+          updateNotification={updateMutation}
           user={userData}
           searchRender={() => <Search />}
           onCreateChannel={onCreateChannel}
