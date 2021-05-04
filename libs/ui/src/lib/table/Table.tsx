@@ -312,7 +312,6 @@ export const Table: FC<TableType> = ({
           onClick: (event) => {
             if (checkPadLocks(record)) {
               onRowClick?.(record)
-              console.log(event, record)
             }
           },
           onMouseEnter: (event) => {

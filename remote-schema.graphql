@@ -80004,22 +80004,19 @@ type library_variance_fields {
 columns and relationships of "lms_slugs"
 """
 type lms_slugs {
-  article_urls(
+  articles(
     """JSON select path"""
     path: String
   ): jsonb
-  blogs(
-    """JSON select path"""
-    path: String
-  ): jsonb
+  blog: String
   created_date: timestamptz!
   id: uuid!
   slug: String!
-  videos(
+  video: String
+  webinar(
     """JSON select path"""
     path: String
   ): jsonb
-  webinar: String
 }
 
 """
@@ -80041,9 +80038,8 @@ type lms_slugs_aggregate_fields {
 
 """append existing jsonb value of filtered columns with new jsonb value"""
 input lms_slugs_append_input {
-  article_urls: jsonb
-  blogs: jsonb
-  videos: jsonb
+  articles: jsonb
+  webinar: jsonb
 }
 
 """
@@ -80053,13 +80049,13 @@ input lms_slugs_bool_exp {
   _and: [lms_slugs_bool_exp!]
   _not: lms_slugs_bool_exp
   _or: [lms_slugs_bool_exp!]
-  article_urls: jsonb_comparison_exp
-  blogs: jsonb_comparison_exp
+  articles: jsonb_comparison_exp
+  blog: String_comparison_exp
   created_date: timestamptz_comparison_exp
   id: uuid_comparison_exp
   slug: String_comparison_exp
-  videos: jsonb_comparison_exp
-  webinar: String_comparison_exp
+  video: String_comparison_exp
+  webinar: jsonb_comparison_exp
 }
 
 """
@@ -80074,56 +80070,55 @@ enum lms_slugs_constraint {
 delete the field or element with specified path (for JSON arrays, negative integers count from the end)
 """
 input lms_slugs_delete_at_path_input {
-  article_urls: [String!]
-  blogs: [String!]
-  videos: [String!]
+  articles: [String!]
+  webinar: [String!]
 }
 
 """
 delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
 """
 input lms_slugs_delete_elem_input {
-  article_urls: Int
-  blogs: Int
-  videos: Int
+  articles: Int
+  webinar: Int
 }
 
 """
 delete key/value pair or string element. key/value pairs are matched based on their key value
 """
 input lms_slugs_delete_key_input {
-  article_urls: String
-  blogs: String
-  videos: String
+  articles: String
+  webinar: String
 }
 
 """
 input type for inserting data into table "lms_slugs"
 """
 input lms_slugs_insert_input {
-  article_urls: jsonb
-  blogs: jsonb
+  articles: jsonb
+  blog: String
   created_date: timestamptz
   id: uuid
   slug: String
-  videos: jsonb
-  webinar: String
+  video: String
+  webinar: jsonb
 }
 
 """aggregate max on columns"""
 type lms_slugs_max_fields {
+  blog: String
   created_date: timestamptz
   id: uuid
   slug: String
-  webinar: String
+  video: String
 }
 
 """aggregate min on columns"""
 type lms_slugs_min_fields {
+  blog: String
   created_date: timestamptz
   id: uuid
   slug: String
-  webinar: String
+  video: String
 }
 
 """
@@ -80148,12 +80143,12 @@ input lms_slugs_on_conflict {
 
 """Ordering options when selecting data from "lms_slugs"."""
 input lms_slugs_order_by {
-  article_urls: order_by
-  blogs: order_by
+  articles: order_by
+  blog: order_by
   created_date: order_by
   id: order_by
   slug: order_by
-  videos: order_by
+  video: order_by
   webinar: order_by
 }
 
@@ -80164,9 +80159,8 @@ input lms_slugs_pk_columns_input {
 
 """prepend existing jsonb value of filtered columns with new jsonb value"""
 input lms_slugs_prepend_input {
-  article_urls: jsonb
-  blogs: jsonb
-  videos: jsonb
+  articles: jsonb
+  webinar: jsonb
 }
 
 """
@@ -80174,10 +80168,10 @@ select columns of table "lms_slugs"
 """
 enum lms_slugs_select_column {
   """column name"""
-  article_urls
+  articles
 
   """column name"""
-  blogs
+  blog
 
   """column name"""
   created_date
@@ -80189,7 +80183,7 @@ enum lms_slugs_select_column {
   slug
 
   """column name"""
-  videos
+  video
 
   """column name"""
   webinar
@@ -80199,13 +80193,13 @@ enum lms_slugs_select_column {
 input type for updating data in table "lms_slugs"
 """
 input lms_slugs_set_input {
-  article_urls: jsonb
-  blogs: jsonb
+  articles: jsonb
+  blog: String
   created_date: timestamptz
   id: uuid
   slug: String
-  videos: jsonb
-  webinar: String
+  video: String
+  webinar: jsonb
 }
 
 """
@@ -80213,10 +80207,10 @@ update columns of table "lms_slugs"
 """
 enum lms_slugs_update_column {
   """column name"""
-  article_urls
+  articles
 
   """column name"""
-  blogs
+  blog
 
   """column name"""
   created_date
@@ -80228,7 +80222,7 @@ enum lms_slugs_update_column {
   slug
 
   """column name"""
-  videos
+  video
 
   """column name"""
   webinar
@@ -86678,7 +86672,10 @@ type notifications {
     """JSON select path"""
     path: String
   ): jsonb
-  loop: Int
+  loop(
+    """JSON select path"""
+    path: String
+  ): jsonb
 
   """An object relationship"""
   notification_type: notification_types
@@ -86699,6 +86696,7 @@ type notifications {
 """append existing jsonb value of filtered columns with new jsonb value"""
 input notifications_append_input {
   is_read: jsonb
+  loop: jsonb
   sent_to: jsonb
   variables: jsonb
 }
@@ -86714,7 +86712,7 @@ input notifications_bool_exp {
   destination: String_comparison_exp
   id: uuid_comparison_exp
   is_read: jsonb_comparison_exp
-  loop: Int_comparison_exp
+  loop: jsonb_comparison_exp
   notification_type: notification_types_bool_exp
   order: Int_comparison_exp
   sent_by: Int_comparison_exp
@@ -86737,6 +86735,7 @@ delete the field or element with specified path (for JSON arrays, negative integ
 """
 input notifications_delete_at_path_input {
   is_read: [String!]
+  loop: [String!]
   sent_to: [String!]
   variables: [String!]
 }
@@ -86746,6 +86745,7 @@ delete the array element with specified index (negative integers count from the 
 """
 input notifications_delete_elem_input {
   is_read: Int
+  loop: Int
   sent_to: Int
   variables: Int
 }
@@ -86755,6 +86755,7 @@ delete key/value pair or string element. key/value pairs are matched based on th
 """
 input notifications_delete_key_input {
   is_read: String
+  loop: String
   sent_to: String
   variables: String
 }
@@ -86763,7 +86764,6 @@ input notifications_delete_key_input {
 input type for incrementing numeric columns in table "notifications"
 """
 input notifications_inc_input {
-  loop: Int
   order: Int
   sent_by: Int
 }
@@ -86776,7 +86776,7 @@ input notifications_insert_input {
   destination: String
   id: uuid
   is_read: jsonb
-  loop: Int
+  loop: jsonb
   notification_type: notification_types_obj_rel_insert_input
   order: Int
   sent_by: Int
@@ -86830,6 +86830,7 @@ input notifications_pk_columns_input {
 """prepend existing jsonb value of filtered columns with new jsonb value"""
 input notifications_prepend_input {
   is_read: jsonb
+  loop: jsonb
   sent_to: jsonb
   variables: jsonb
 }
@@ -86880,7 +86881,7 @@ input notifications_set_input {
   destination: String
   id: uuid
   is_read: jsonb
-  loop: Int
+  loop: jsonb
   order: Int
   sent_by: Int
   sent_to: jsonb
@@ -96122,10 +96123,13 @@ input tax_rates_inc_input {
 input type for inserting data into table "tax_rates"
 """
 input tax_rates_insert_input {
+  created_at: timetz
   glCode: String
+  id: uuid
   is_active: Boolean
   name: String
   order: Int
+  updated_at: timetz
   value: Float
 }
 
@@ -96221,7 +96225,9 @@ enum tax_rates_select_column {
 input type for updating data in table "tax_rates"
 """
 input tax_rates_set_input {
+  created_at: timetz
   glCode: String
+  id: uuid
   is_active: Boolean
   name: String
   order: Int
@@ -96258,7 +96264,13 @@ update columns of table "tax_rates"
 """
 enum tax_rates_update_column {
   """column name"""
+  created_at
+
+  """column name"""
   glCode
+
+  """column name"""
+  id
 
   """column name"""
   is_active
