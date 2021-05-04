@@ -44,6 +44,7 @@ const AddButton: FC<P> = ({
   customFilter,
   setMobileSearch,
   mobileSearch,
+  needTranslation,
 }) => {
   const [isActive, setIsActive] = useState<boolean | number>(
     schema?.filter?.primary?.default ?? true
@@ -238,7 +239,7 @@ const AddButton: FC<P> = ({
             type="primary"
             onClick={() => onClick?.()}
           >
-            <InboxOutlined /> {t(schema.createButtonLabel)}
+            <InboxOutlined /> {t(schema.createButtonLabel) ?? 'Inbox'}
             <span className={styles.inboxMsgNum}> 3</span>
           </Button>
         )}
