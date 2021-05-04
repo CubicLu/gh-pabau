@@ -7,7 +7,7 @@ import { NextPage } from 'next'
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import Layout from '../../components/Layout/Layout'
 import { UserContext } from '../../context/UserContext'
-import { notificationVariables } from './mock'
+import { notificationVariables } from '../../mocks/StaffNotifications'
 import styles from './staff-notifications.module.less'
 
 enum Users {
