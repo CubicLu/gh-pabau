@@ -1,23 +1,22 @@
 import { CloseOutlined } from '@ant-design/icons'
 import { MutationFunction } from '@apollo/client'
-import { Drawer, Image } from 'antd'
+import { Drawer } from 'antd'
 import classNames from 'classnames'
-import { useRouter } from 'next/router'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as Lead1SVG } from '../../assets/images/lead.svg'
 import { ReactComponent as Lead2SVG } from '../../assets/images/lead1.svg'
 import { ReactComponent as EmptySVG } from '../../assets/images/notification-empty.svg'
-import { notificationIcons } from './mock'
+import Notification from './Notification'
 import styles from './NotificationDrawer.module.less'
 
-interface UserProps {
+export interface UserProps {
   user: number
   company: number
   fullName: string
 }
 
-interface Notifications {
+export interface Notifications {
   id: string
   notificationTime: Date
   notificationType: string
@@ -254,142 +253,3 @@ export const NotificationDrawer: FC<P> = ({
 }
 
 export default NotificationDrawer
-
-interface NotificationProps {
-  notify: Notifications
-  relativeTime?: (lan: string, date: Date) => string
-  user?: UserProps
-  updateMutation?: MutationFunction
-  deleteMutation?: MutationFunction
-}
-
-const Notification: FC<NotificationProps> = ({
-  notify,
-  relativeTime,
-  user,
-  updateMutation,
-  deleteMutation,
-}) => {
-  const [notifyTime, setNotifyTime] = useState(
-    relativeTime?.('en', notify?.notificationTime)
-  )
-
-  const watchRelativeTime = () => {
-    setInterval(() => {
-      const updatedTime = relativeTime?.('en', notify?.notificationTime)
-      setNotifyTime(updatedTime)
-    }, 1000)
-  }
-
-  useEffect(() => {
-    watchRelativeTime()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const router = useRouter()
-
-  const getNotificationIcon = () => {
-    const notificationIcon = notificationIcons.find(
-      (notificationIcons) => notificationIcons.type === notify.notificationType
-    )
-    return notificationIcon?.icon
-  }
-
-  const isReadNotification = (users) => {
-    return users?.find((user_id) => user_id === user?.user) ? true : false
-  }
-
-  const handleOnClick = async (notification) => {
-    const { id, users, link } = notification
-    let { read } = notification
-    if (!isReadNotification(read)) {
-      read = read?.length > 0 ? [...read, user?.user] : [user?.user]
-      const variables = { id, is_read: read, sent_to: users }
-      await updateMutation?.({ variables, optimisticResponse: {} })
-    }
-    if (link) {
-      router.push({ pathname: link })
-    }
-  }
-
-  const removeSingleNotification = async (notification) => {
-    const { id, users } = notification
-    const sent_to = users.filter((user_id) => user_id !== user?.user)
-    const variables = { id, sent_to }
-    sent_to?.length > 0
-      ? await updateMutation?.({ variables, optimisticResponse: {} })
-      : await deleteMutation?.({
-          variables: { id: notification.id },
-          optimisticResponse: {},
-        })
-  }
-
-  const getNotificationDescOrTitle = (notification, returnType = 'desc') => {
-    const { variables } = notification
-    // const { variables, sentBy } = notification
-    if (
-      typeof variables == 'object' &&
-      Object.keys({ ...variables }).length > 0
-    ) {
-      for (const key in variables) {
-        const replaceVariable = `[${key}]`
-        const variableValue = variables[key]
-
-        notification[returnType] = notification[returnType].replace(
-          replaceVariable,
-          variableValue
-        )
-
-        // if (key === 'who' && user?.user === sentBy) {
-        //   notification[returnType] = notification[returnType].replace(
-        //     '[who]',
-        //     'You'
-        //   )
-        // } else {
-        //   notification[returnType] = notification[returnType].replace(
-        //     replaceVariable,
-        //     variableValue
-        //   )
-        // }
-      }
-    }
-    return notification[returnType]
-  }
-
-  return (
-    <div>
-      <div className={styles.notificationCard}>
-        <div className={styles.notifyAlign}>
-          <div
-            onClick={() => handleOnClick(notify)}
-            className={classNames(styles.logo, styles.flex)}
-          >
-            <Image preview={false} src={getNotificationIcon()} />
-            <p className={styles.textSm}>{notify.notificationType}</p>
-          </div>
-          <div className={styles.time}>
-            <p className={classNames(styles.textMd, styles.grayTextColor)}>
-              {notifyTime}
-              <CloseOutlined
-                onClick={() => {
-                  removeSingleNotification(notify)
-                }}
-                className={styles.notificationClearIcon}
-              />
-            </p>
-          </div>
-        </div>
-        <div onClick={() => handleOnClick(notify)} className={styles.descAlign}>
-          <div className={styles.notifyTitleDesc}>
-            <h1>{getNotificationDescOrTitle(notify, 'title')}</h1>
-            <p>{getNotificationDescOrTitle(notify, 'desc')}</p>
-          </div>
-          <div className={styles.readStatus}>
-            {!isReadNotification(notify?.read) && <span></span>}
-          </div>
-        </div>
-      </div>
-      <div className={styles.cardBorder} />
-    </div>
-  )
-}
