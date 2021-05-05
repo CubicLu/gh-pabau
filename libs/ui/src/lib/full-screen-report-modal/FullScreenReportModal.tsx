@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState, ReactNode, useRef } from 'react'
 import { useMedia } from 'react-use'
 import classnames from 'classnames'
-import { Button, TabMenu } from '@pabau/ui'
+import { Button, TabMenu, Avatar } from '@pabau/ui'
 import { Switch, Modal } from 'antd'
 import { LeftOutlined, CloseOutlined } from '@ant-design/icons'
 import styles from './FullScreenReportModal.module.less'
@@ -13,6 +13,7 @@ export enum OperationType {
   delete = 'delete',
   create = 'create',
   close = 'close',
+  assignee = 'assignee',
 }
 
 export interface FullScreenReportModalProps {
@@ -26,8 +27,12 @@ export interface FullScreenReportModalProps {
   onReset?: () => void
   onDelete?: () => void
   onClose?: () => void
+  onCancel?: () => void
+  onAssigneeClick?: () => void
   activeBtnText?: string
   deleteBtnText?: string
+  assigneeName?: string
+  assigneeTitle?: string
   createBtnText?: string
   saveBtnText?: string
   resetBtnText?: string
@@ -53,8 +58,11 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
   onReset,
   onDelete,
   onClose,
+  onCancel,
   deleteBtnText,
   createBtnText,
+  assigneeName,
+  assigneeTitle,
   saveBtnText,
   resetBtnText,
   activeBtnText,
@@ -67,6 +75,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
   hideHeaderEdge = false,
   children,
   className,
+  onAssigneeClick,
   ...props
 }) => {
   const ref = useRef(null)
@@ -153,6 +162,22 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                     >
                       {saveBtnText || 'Save'}
                     </Button>
+                  )}
+                  {operation === OperationType.assignee && (
+                    <div
+                      className={styles.assigneeWrap}
+                      onClick={onAssigneeClick}
+                    >
+                      <h5>{assigneeTitle}</h5>
+                      <Avatar
+                        className={styles.avatarIcon}
+                        name={assigneeName}
+                        size="large"
+                        src=""
+                        zIndex={1}
+                      />
+                      <h6>{assigneeName}</h6>
+                    </div>
                   )}
                   {operation === OperationType.create && (
                     <Button
