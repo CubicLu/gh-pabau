@@ -61,7 +61,6 @@
 - "!include public_rota_templates.yaml"
 - "!include public_salutation.yaml"
 - "!include public_service.yaml"
-- "!include public_service_categories.yaml"
 - "!include public_services.yaml"
 - "!include public_stock_take.yaml"
 - "!include public_supplier.yaml"

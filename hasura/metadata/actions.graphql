@@ -1,27 +1,2 @@
-type Mutation {
-  actionName (
-    arg1: SampleInput!
-  ): SampleOutput
-}
 
-
-
-
-input LoginInput {
-  username : String!
-  password : String!
-}
-
-input SampleInput {
-  username : String!
-  password : String!
-}
-
-type loginOutput {
-  accessToken : String!
-}
-
-type SampleOutput {
-  accessToken : String!
-}
 

@@ -5,6 +5,13 @@
       margin: 0;
     }
   }
+  .btn-save{
+    text-align: right;
+    margin: 0.5rem 0.5rem 0.5rem 0.5rem;
+    @media (max-width: 991px) {
+      display: none;
+    }
+  }
 }
 
 .terminology-sub-container {
@@ -12,13 +19,7 @@
 }
 
 .terminology-header-container {
-  display: flex;
-  justify-content: space-between;
   padding: 1.25rem 0;
-
-  > button {
-    margin: 0.5rem 0.5rem 0 0;
-  }
 
   @media (max-width: 575px) {
     flex-direction: column;

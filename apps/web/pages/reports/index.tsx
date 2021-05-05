@@ -139,8 +139,8 @@ const Reports: FC = () => {
 
       reportCardsData.map((data) => {
         const titles = data.reports
-        if (titles.length > 0) {
-          titles.map((subTitle) => {
+        if (titles?.length > 0) {
+          for (const subTitle of titles) {
             const reportName =
               data.catHeading === 'Custom'
                 ? subTitle.reportName
@@ -153,7 +153,7 @@ const Reports: FC = () => {
               })
             }
             return searchDataArray
-          })
+          }
         }
         return data
       })

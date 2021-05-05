@@ -231,7 +231,7 @@
         "serve": {
           "builder": "@nrwl/node:execute",
           "options": {
-            "buildTarget": "backend:build"
+            "buildTarget": "backend:export"
           }
         },
         "lint": {
@@ -537,7 +537,7 @@
           },
           "configurations": {
             "production": {
-              "buildTarget": "bridge-api:build:production"
+              "buildTarget": "bridge-api:export:production"
             }
           }
         },

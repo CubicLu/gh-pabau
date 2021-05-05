@@ -1,11 +1,10 @@
 import React, { FC, useState, useRef, useCallback } from 'react'
 import ReactCrop from 'react-image-crop'
-
 import { BasicModal } from '../modal/BasicModal'
 import Avatar from '../avatar/Avatar'
 import Button from '../button/Button'
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons'
-
+import ClassNames from 'classnames'
 import styles from './AvatarUploader.module.less'
 
 export interface AvatarUploaderProps {
@@ -14,6 +13,7 @@ export interface AvatarUploaderProps {
   onCancel?: () => void
   onCreate?: (image: string) => void
   imageURL: string
+  shape?: string
 }
 
 export interface BlobType extends Blob {
@@ -26,6 +26,7 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
   onCancel,
   onCreate,
   imageURL,
+  shape,
 }) => {
   const imageRef = useRef(null)
   const [image, setImage] = useState<string>(imageURL)
@@ -128,12 +129,14 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
             <ReactCrop
               src={image}
               crop={crop}
-              circularCrop={true}
+              circularCrop={shape !== 'rectangle'}
               onImageLoaded={onImageLoaded}
               className={styles.customCrop}
               style={{ height: '100%', width: '100%' }}
               onChange={(newCrop) =>
-                setCrop({ ...newCrop, width: 221, height: 221 })
+                shape === 'rectangle'
+                  ? setCrop({ ...newCrop, width: 230, height: 100 })
+                  : setCrop({ ...newCrop, width: 221, height: 221 })
               }
               onComplete={(crop) => handleComplete(crop)}
             />
@@ -143,9 +146,30 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
           <p>Preview</p>
           {croppedImage && (
             <div className={styles.avatarMap}>
-              <Avatar className={styles.img} src={croppedImage} />
-              <Avatar className={styles.img2} src={croppedImage} />
-              <Avatar className={styles.img3} src={croppedImage} />
+              <Avatar
+                className={
+                  shape === 'rectangle'
+                    ? ClassNames(styles.imgRect, styles.rectView)
+                    : styles.img
+                }
+                src={croppedImage}
+              />
+              <Avatar
+                className={
+                  shape === 'rectangle'
+                    ? ClassNames(styles.imgRect2, styles.rectView)
+                    : styles.img2
+                }
+                src={croppedImage}
+              />
+              <Avatar
+                className={
+                  shape === 'rectangle'
+                    ? ClassNames(styles.imgRect3, styles.rectView)
+                    : styles.img3
+                }
+                src={croppedImage}
+              />
             </div>
           )}
         </div>

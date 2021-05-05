@@ -1,12 +1,44 @@
 .business-details-container {
   background-color: white;
   width: 100%;
+  @media (max-width: 991px) {
+    display: none;
+  }
 }
 
 .business-details-ops {
   padding: 24px 0 0;
   @media (max-width: 991px) {
     padding: 0 0 24px;
+  }
+}
+
+.business-details-header-mobile {
+  display: none;
+  background-color: #fff;
+
+  .all-content-align-mobile {
+    display: flex;
+    align-items: center;
+
+    .marketing-text-style {
+      display: flex;
+
+      :global .anticon {
+        display: flex;
+        align-items: center;
+      }
+
+      h1 {
+        padding-bottom: 0;
+        padding-left: 10px;
+      }
+    }
+  }
+
+  @media (max-width: 991px) {
+    display: block;
+    margin-top: 4px;
   }
 }
 
@@ -22,5 +54,25 @@
   background-color: white;
   @media (max-width: 991px) {
     display: block;
+    margin-top: 14px;
+  }
+}
+
+.button-for-mobile {
+  display: none;
+  @media screen and (max-width: 767px) {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    z-index: 9;
+    width: 100%;
+    .btn-save-wrap {
+      padding: 16px;
+      background-color: #fff;
+
+      button {
+        width: 100%;
+      }
+    }
   }
 }

@@ -799,8 +799,8 @@ en:
     setup.discount.data.cooltech: Cooltech
     setup.discount.data.cooltech+accentprime: 'Cooltech + Accent Prime'
     setup.discount.data.dermalux: Dermalux
-    'setup.discount.data.londonroad,london,england': 'London Road, London, England'
-    'setup.discount.data.loremstreet,liverpool,england': 'Lorem Street, Liverpool, England'
+    setup.discount.data.londonroad,london,england: 'London Road, London, England'
+    setup.discount.data.loremstreet,liverpool,england: 'Lorem Street, Liverpool, England'
     setup.discount.data.jeffhackley: 'Jeff Hackley'
     setup.discount.data.jessicawinter: 'Jessica Winter'
     setup.discount.data.alexanderwang: 'Alexander Wang'
@@ -1140,6 +1140,7 @@ en:
     setup.issuing.form.field.website: 'Website'
     setup.issuing.form.field.website.placeholder: 'https://www.company.com'
     setup.issuing.form.field.address: 'Address information'
+    setup.issuing.form.field.Region: 'Region'
     setup.issuing.form.field.country: 'Country'
     setup.issuing.form.field.country.placeholder: 'Select country'
     setup.issuing.form.field.city: 'City'
@@ -1266,6 +1267,50 @@ en:
     setup.creditnotes.schema.fields.invoiceprefix.description: 'A exmaple prefix'
     setup.creditnotes.schema.fields.invoiceprefix.example: 'RCN'
     setup.creditnotes.schema.fields.isactive: 'Status'
+    setup.taxrate.heading: Tax Rate
+    setup.taxrate.notax: No Tax Rate
+    setup.taxrate.notaxadd: Add Tax Rate
+    setup.taxrate.newbtn: New Tax Rate
+    setup.taxrate.tabs.tab1: Tax Rates
+    setup.taxrate.tabs.tab2: Tax Defaults
+    setup.taxrate.table.column1: Name
+    setup.taxrate.table.column2: Value
+    setup.taxrate.table.column3: Status
+    setup.taxrate.notification.create.success: Success! You have successfully created a tax rate
+    setup.taxrate.notification.create.error: Error! While creating a tax rate
+    setup.taxrate.notification.edit.success: Success! You have successfully edited a tax rate
+    setup.taxrate.notification.edit.error: Error! While editing a tax rate
+    setup.taxrate.notification.delete.success: Success! You have successfully deleted a tax rate
+    setup.taxrate.notification.delete.error: Error! While deleting a tax rate
+    setup.taxrate.notification.order.error: Error! While deleting a tax rate
+    setup.taxrate.notification.deletemodal.title: Delete tax rate?
+    setup.taxrate.notification.deletemodal.para: will be deleted. This action is irreversable.
+    setup.taxrate.notification.deletemodal.deletebtn: Yes, Delete
+    setup.taxrate.notification.updatemodal.title: Update
+    setup.taxrate.notification.createmodal.title: Create
+    setup.taxrate.notification.createmodal.inputs.name: Name
+    setup.taxrate.notification.createmodal.inputs.name.placeholder: eg. VAT20
+    setup.taxrate.notification.createmodal.inputs.name.error: Tax name is required
+    setup.taxrate.notification.createmodal.inputs.amount: Amount
+    setup.taxrate.notification.createmodal.inputs.amount.error1: Tax amount is required
+    setup.taxrate.notification.createmodal.inputs.amount.error2: Percentage cannot be in negative
+    setup.taxrate.notification.createmodal.inputs.amount.error3: Amount cannot exceeds 100
+    setup.taxrate.notification.createmodal.inputs.advanced.title: Advanced
+    setup.taxrate.notification.createmodal.inputs.glcode: GL Code
+    setup.taxrate.notification.createmodal.inputs.glcode.placeholder: eg. Nail Bar
+    setup.taxrate.notification.createmodal.deletebtn: Delete
+    setup.taxrate.notification.createmodal.activebtn: Active
+    setup.taxrate.defaulttax.heading: Tax Defaults (Issuing Companies)
+    setup.taxrate.defaulttax.paragraph: Setup the default taxes for your business, you can still override defaults in the settings of individual products and services
+    setup.taxrate.defaulttax.products.default: 'Products Default'
+    setup.taxrate.defaulttax.services.default: 'Services Default'
+    setup.taxrate.defaulttax.services.mahair: 'M-A Hair Dressing & Spa'
+    setup.taxrate.defaulttax.services.beautysalon: 'Illusions Beauty Salon'
+    setup.taxrate.defaulttax.services.notax: 'No tax'
+    setup.taxrate.defaulttax.services.vats: 'VATs'
+    setup.taxrate.defaulttax.services.vat20: 'VAT20'
+    setup.taxrate.defaulttax.edit: Edit
+    setup.taxrate.defaulttax.addnew: Add New
     products.list.newbtn.product: 'New Product'
     products.list.newbtn.category: 'New Category'
     products.list.newbtn.supplier: 'New Supplier'
@@ -1957,4 +2002,139 @@ en:
     setup.reports.month.Oct: 'Oct'
     setup.reports.month.Nov: 'Nov'
     setup.reports.month.Dec: 'Dec'
+
+    default.biz.location: 'London Road, Sheffield, England'
+    notification.type.success.message: 'Successfully saved changes'
+    business.details.tab.tabtitle: 'Details'
+    business.details.tab.subtitle: 'Your business name is displayed across many including on your
+              online booking profile, sales invoices and messages to clients'
+    business.details.tab.basic.information.section: 'Basic Information'
+    business.details.input.business.name: 'Business Name'
+    business.details.input.business.name.requires.message: 'Please enter your business name.'
+    business.details.input.business.email: 'Company Email '
+    business.details.input.business.email.text: '(the main one you wish to receive Pabau updates on)'
+    business.details.input.business.email.requires.message: 'Please enter your company email.'
+    business.details.input.website.label: 'Website'
+    business.details.language.setting.title : 'Language Settings'
+    business.details.language.setting.subtitle : 'Choose the default language for appointment notification messages sent
+        to your clients. Per client language preferences can also be set
+        within the settings for each client'
+    business.details.business.type.title: 'How would you best describe your main type of business'
+    business.details.default.lanuage.staff: 'Default language for your staff'
+    business.details.default.lanuage.clients: 'Default language for your clients'
+    business.details.timezone.label: 'Default Timezone'
+    business.details.currency.label: 'Currency'
+    business.details.date.format.label: 'Date Format'
+    business.details.date.format.value.dmy: 'd/m/Y'
+    business.details.date.format.value.mdy: 'm/d/Y'
+    business.details.week.start.label: 'Week Start'
+    business.details.week.start.tooltip: 'Week Start'
+    business.details.week.day.monday: 'Monday'
+    business.details.week.day.tuesday: 'Tuesday'
+    business.details.week.day.wednesday: 'Wednesday'
+    business.details.week.day.thursday: 'Thursday'
+    business.details.week.day.friday: 'Friday'
+    business.details.week.day.saturday: 'Saturday'
+    business.details.week.day.sunday: 'Sunday'
+    business.details.location: 'Business Location'
+    business.details.save.changes: 'Save Changes'
+    business.details.default.lang.setting.currency: 'Pound sterling'
+    business.details.default.lang.setting.language: 'English (UK)'
+    business.details.default.lang.setting.timezone: (GMT +00:00) London
+    business.details.business.address: 'Address'
+    business.details.business.apt: 'Apt./Suite etc .'
+    business.details.edit.business.location: 'Edit Business Location'
+    business.details.business.add.btn: '+ Add'
+    business.details.business.edit.btn: 'Edit'
+    business.terminology.tab.title: 'Terminology'
+    business.terminology.sub.title: 'Every business is different, and that`s why here we allow you to customize how you name certain features here within Pabau'
+    business.terminology.config.title: 'Opt Ins'
+    business.default.config.title1 : 'What do you call people who attend appointments with you?'
+    business.default.config.title2 : 'What do you call bookings with multiple attendees?'
+    business.default.config.title4 : 'What do you call people who perform classes?'
+    business.default.config.title5 : 'What do you call TAX?'
+    business.default.config.title3 : 'What do you call employees who perform services?'
+    business.default.config.key.singular: 'Singular'
+    business.default.config.key.plural: 'Plural'
+    business.default.config.value.vate: 'VAT'
+    business.default.opt.title.client: 'For Clients'
+    business.default.opt.title.leads: 'For Leads'
+    business.default.opt.key.postal: 'Postal'
+    business.default.opt.key.sms: 'SMS'
+    business.default.opt.key.email: 'Email'
+    business.default.opt.key.phone: 'Phone'
+    business.security.manage.bulk.action: 'Manage Bulk Actions'
+    business.security.title1: 'Pabau Baseline Standard'
+    business.security.title2: 'of the standard met'
+    business.security.button.title: 'How do we calculate this score?'
+    business.security.tab.title: 'Security'
+    business.security.title: 'Security Tools'
+    business.system.value.yes: 'Yes'
+    business.system.value.no: 'No'
+    business.system.tab.title: 'System'
+    business.system.sub.title: 'Control core functionality from here with Pabau'
+    business.system.cycles.label : 'Tretment Cycles'
+    business.system.cycles.tooltip : 'Tretment Cycles'
+    business.system.medical.formu.label: 'Secure Medical Forms'
+    business.system.medical.formu.tooltip: 'Secure Medical Forms'
+    business.system.prescriptions.label: 'Disable Prescriptions'
+    business.system.prescriptions.tooltip: 'Disable Prescriptions'
+    business.system.surgical.label: 'Perform Surgical'
+    business.system.surgical.tooltip: 'Perform Surgical'
+    business.system.medical.approvals.label: 'Medical Approvals'
+    business.system.medical.approvals.tooltip: 'Medical Approvals'
+    business.system.history.label: 'History Data'
+    business.system.history.tooltip: 'History Data'
+    business.security.tool.data.force.title: 'Force 2FA'
+    business.security.tool.data.force.modal.title: 'Force 2FA'
+    business.security.tool.data.force.modal.btn: 'Save'
+    business.security.manage.bulk.action.model: 'Are you sure you wish for all of your users to reset there passwords on next login?'
+    business.security.tool.data.force.name: 'Force all users to use 2 factor authentication'
+    business.security.tool.data.force.modal.content: 'Two-factor authentication adds an extra layer of security to your Pabau account. By asking you to enter a verification code after entering the correct email address and password, it will protect you from potential attackers who also might have gained access to your email address. It will ensure that the secure data you share with your clients stays secure, as they will need to enter a verification code as well. /n*SMS credits are mandatory, in order for the two-factor authentication to work.'
+    business.security.tool.data.password.expiration.title: 'Password Expiration'
+    business.security.tool.data.password.expiration.modal.title: 'Password Expiration'
+    business.security.tool.data.password.expiration.btn: 'Save'
+    business.security.tool.data.password.expiration.name: 'Setup password complexity rules & more for your business'
+    business.security.tool.data.password.expiration.modal.menu.expire: 'User password expire in'
+    business.security.tool.data.password.expiration.modal.menu.expire.90days: '90 days'
+    business.security.tool.data.password.expiration.modal.menu.expire.180days: '180 days'
+    business.security.tool.data.password.expiration.modal.menu.expire.365days: '365 days'
+    business.security.tool.data.password.expiration.modal.menu.expire.never: 'Never'
+    business.security.tool.data.password.expiration.modal.menu.history: 'Enforce password history'
+    business.security.tool.data.password.expiration.modal.menu.history.3password: '3 passwords remembered'
+    business.security.tool.data.password.expiration.modal.menu.history.4password: '4 passwords remembered'
+    business.security.tool.data.password.expiration.modal.menu.history.5password: '5 passwords remembered'
+    business.security.tool.data.password.expiration.modal.menu.history.password.enabled.disabled: 'Enabled / Disabled'
+    business.security.tool.data.password.expiration.modal.menu.login: 'Maximum invalid login attemts'
+    business.security.tool.data.password.expiration.modal.menu.login.5attempts: '5 attempts'
+    business.security.tool.data.password.expiration.modal.menu.login.10attempts: '10 attempts'
+    business.security.tool.data.password.expiration.modal.menu.login.15attempts: '15 attempts'
+    business.security.tool.data.password.expiration.modal.menu.period: 'Lockout effective period'
+    business.security.tool.data.password.expiration.modal.menu.period.5minutes: '5 minutes'
+    business.security.tool.data.password.expiration.modal.menu.period.10minutes: '10 minutes'
+    business.security.tool.data.password.expiration.modal.menu.period.15minutes: '15 minutes'
+    business.security.tool.data.encrypted.encryption.title: 'Force Encryption'
+    business.security.tool.data.password.reset.dropdown: 'Force password reset'
+    business.security.tool.data.encrypted.encryption.name: 'Force your business to use encrypted emails on every outbound message'
+    business.security.tool.data.encrypted.encryption.model.title: 'Force Encryption'
+    business.security.tool.data.encrypted.encryption.btn: 'Encrypt emails'
+    business.security.tool.data.encrypted.encryption.modal.content: 'Would you like to encrypt your emails?'
+    business.notification.tab.title: 'Notifications'
+    business.notification.sub.title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+    business.notification.setting.notification: 'Notification'
+    business.notification.setting.email: 'Email'
+    business.notification.lead: 'When receiving a new inbound lead.'
+    business.notification.review: 'When receiving a new review.'
+    business.notification.sms.delivered: 'When a SMS campaign is delivered.'
+    business.notification.newsletter.delivered: 'When a newsletter campaign is delivered.'
+    business.notification.report: 'When a scheduled report has been sent.'
+    business.notification.holiday: 'When a staff member requests a holiday.'
+    business.notification.holiday.tooltip: 'Only admins will receive this notification'
+    business.notification.refer: 'When someone refers into the business.'
+    business.notification.unattended: 'When reviews have been unattended'
+    business.notification.assessment.due:  'When self assessment is due'
+    business.notification.peer.review.due:  'Reminder of when peer review is due'
+    business.notification.self.assessment.due: 'Reminder of when Self assessment is due'
+    business.notification.manager.assessment.due: 'Reminder of when Manager assessment is due'
+    business.notification.target.hit: 'When a team target is hit'
 

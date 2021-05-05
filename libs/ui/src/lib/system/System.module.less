@@ -1,5 +1,13 @@
 .system-container {
   width: 100%;
+
+  .btn-save {
+    text-align: right;
+    margin: 0.5rem 0.5rem 0.5rem 0.5rem;
+    @media (max-width: 991px) {
+      display: none;
+    }
+  }
 }
 
 .system-sub-container {
@@ -11,13 +19,7 @@
 }
 
 .system-header-container {
-  display: flex;
-  justify-content: space-between;
   padding-top: 20px;
-
-  > button {
-    margin: 0.5rem 0.5rem 0 0;
-  }
 
   @media (max-width: 575px) {
     flex-direction: column;

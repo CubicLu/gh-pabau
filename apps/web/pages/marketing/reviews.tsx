@@ -17,13 +17,13 @@ import {
   Avatar,
   Breadcrumb,
   Button,
-  MobileHeader,
   Notification,
   NotificationBanner,
   NotificationType,
   Pagination,
   Reviews as ReviewTable,
   ShareReview,
+  SimpleDropdown,
   Switch,
   Table,
   useLiveQuery,
@@ -41,6 +41,7 @@ import {
   Tooltip,
 } from 'antd'
 import classNames from 'classnames'
+import { Formik } from 'formik'
 import { useRouter } from 'next/router'
 import React, {
   FC,
@@ -56,6 +57,7 @@ import clinicLogo from '../../assets/images/clinic-logo.png'
 import PabauLogo from '../../assets/images/logo.svg'
 import notificationBannerReviewPageImage from '../../assets/images/notification-image-review.png'
 import { apiURL } from '../../baseUrl'
+import CommonHeader from '../../components/CommonHeader'
 import Layout from '../../components/Layout/Layout'
 import { UserContext } from '../../context/UserContext'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
@@ -89,18 +91,33 @@ const progressDataList = [
 ]
 
 const listQuery = gql`
-  query get_social_survey_feedback($take: Int, $skip: Int) {
-    socialSurveyFeedbacks(take: $take, skip: $skip, orderBy: { date: desc }) {
+  query get_social_survey_feedback(
+    $take: Int
+    $skip: Int
+    $full_name: String
+    $rating: IntFilter
+    $service: String
+  ) {
+    socialSurveyFeedbacks(
+      take: $take
+      skip: $skip
+      orderBy: { date: desc }
+      where: {
+        User: { full_name: { contains: $full_name } }
+        rating: $rating
+        service: { contains: $service }
+      }
+    ) {
       feedback_source
       id
       date
       contact_id
       feedback_status
-      rating #Score
+      rating
+      service
       feedback_name #Name
       feedback_comment
       feedback_for
-      service
       public_use
       Response {
         response
@@ -115,6 +132,7 @@ const listQuery = gql`
         }
       }
       User {
+        username
         full_name
         image
       }
@@ -124,19 +142,60 @@ const listQuery = gql`
 
 const AlllistQuery = gql`
   query get_all_social_survey_feedback {
-    socialSurveyFeedbacks {
+    socialSurveyFeedbacks(orderBy: { date: desc }) {
       feedback_source
       id
       date
       contact_id
       feedback_status
       rating
+      service
       feedback_name
       feedback_comment
       feedback_for
       Response {
         response
         id
+      }
+      User {
+        username
+        full_name
+      }
+    }
+  }
+`
+
+const AllDataQuery = gql`
+  query get_all_social_survey_feedback(
+    $full_name: String
+    $rating: IntFilter
+    $service: String
+  ) {
+    socialSurveyFeedbacks(
+      orderBy: { date: desc }
+      where: {
+        User: { full_name: { contains: $full_name } }
+        rating: $rating
+        service: { contains: $service }
+      }
+    ) {
+      feedback_source
+      id
+      date
+      contact_id
+      feedback_status
+      rating
+      service
+      feedback_name
+      feedback_comment
+      feedback_for
+      Response {
+        response
+        id
+      }
+      User {
+        username
+        full_name
       }
     }
   }
@@ -274,6 +333,11 @@ const Reviews: FC<ReviewConfig> = () => {
   const [message, setMessage] = useState('')
   const [average, setAverage] = useState([])
   const [sendResEmail, setSendResEmail] = useState(true)
+  const [filterValue, setFilterValue] = useState({
+    score: '',
+    employee: '',
+    service: '',
+  })
   const crudTableRef = useRef(null)
   const { t } = useTranslationI18()
   const user = useContext(UserContext)
@@ -404,16 +468,72 @@ const Reviews: FC<ReviewConfig> = () => {
       variables: {
         take: paginateData.take,
         skip: paginateData.skip,
+        full_name: filterValue.employee !== '' ? filterValue.employee : '%%',
+        service: filterValue.service !== '' ? filterValue.service : '%%',
+        rating:
+          filterValue.score !== ''
+            ? filterValue.score === 'Excellent'
+              ? {
+                  lte: 5,
+                  gt: 4,
+                }
+              : filterValue.score === 'Ok'
+              ? {
+                  lte: 4,
+                  gte: 3,
+                }
+              : filterValue.score === 'Bad'
+              ? {
+                  lt: 3,
+                }
+              : {}
+            : {},
       },
     }
     return queryOptions
-  }, [paginateData.take, paginateData.skip])
+  }, [
+    paginateData.take,
+    paginateData.skip,
+    filterValue.employee,
+    filterValue.service,
+    filterValue.score,
+  ])
+
+  const getAllQueryVariables = useMemo(() => {
+    const queryOptions = {
+      variables: {
+        full_name: filterValue.employee !== '' ? filterValue.employee : '%%',
+        service: filterValue.service !== '' ? filterValue.service : '%%',
+        rating:
+          filterValue.score !== ''
+            ? filterValue.score === 'Excellent'
+              ? {
+                  lte: 5,
+                  gt: 4,
+                }
+              : filterValue.score === 'Ok'
+              ? {
+                  lte: 4,
+                  gte: 3,
+                }
+              : filterValue.score === 'Bad'
+              ? {
+                  lt: 3,
+                }
+              : {}
+            : {},
+      },
+    }
+    return queryOptions
+  }, [filterValue.employee, filterValue.service, filterValue.score])
 
   const { data, loading } = useLiveQuery(listQuery, getQueryVariables)
 
   const { data: aggregateData } = useLiveQuery(aggregateQuery)
 
   const { data: Alldata, loading: alldataloading } = useLiveQuery(AlllistQuery)
+
+  const { data: AllRecord } = useLiveQuery(AllDataQuery, getAllQueryVariables)
 
   const DataLists = data
 
@@ -470,11 +590,11 @@ const Reviews: FC<ReviewConfig> = () => {
       setDataList([])
     }
 
-    if (aggregateData) {
-      if (aggregateData?.aggregate?.count) {
+    if (AllRecord !== undefined) {
+      if (aggregateData > AllRecord.length) {
         setPaginateData({
           ...paginateData,
-          total: DataLists !== undefined ? aggregateData?.aggregate.count : 0,
+          total: AllRecord !== undefined ? AllRecord.length : 0,
           showingRecords: DataLists !== undefined ? data.length : 0,
         })
       } else {
@@ -486,7 +606,7 @@ const Reviews: FC<ReviewConfig> = () => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [DataLists, aggregateData])
+  }, [DataLists, aggregateData, AllRecord])
 
   useEffect(() => {
     if (
@@ -650,8 +770,122 @@ const Reviews: FC<ReviewConfig> = () => {
     )
   }
 
+  const handleResetButton = (handleReset) => {
+    setFilterValue({
+      score: '',
+      employee: '',
+      service: '',
+    })
+    handleReset()
+  }
+
   const filterContent = () => {
-    console.log('----')
+    return (
+      <Formik
+        enableReinitialize={true}
+        initialValues={{
+          score: filterValue.score,
+          employee: filterValue.employee,
+          service: filterValue.service,
+        }}
+        onSubmit={(value) => {
+          setFilterValue(value)
+        }}
+      >
+        {({ setFieldValue, handleSubmit, handleReset, values }) => (
+          <div>
+            <div className={styles.filterHeader}>
+              <div>Filter by</div>
+              <Button
+                type="text"
+                onClick={() => handleResetButton(handleReset)}
+              >
+                Reset
+              </Button>
+            </div>
+            <div className={styles.filterMenu}>
+              <div className={styles.filterMenuItem}>
+                <div>
+                  <b>Score</b>
+                </div>
+              </div>
+              <div className={styles.filterViewerStatusContainer}>
+                <Button
+                  type={values.score === 'Bad' ? 'primary' : 'default'}
+                  onClick={() => setFieldValue('score', 'Bad')}
+                >
+                  Bad
+                </Button>
+
+                <Button
+                  type={values.score === 'Ok' ? 'primary' : 'default'}
+                  onClick={() => setFieldValue('score', 'Ok')}
+                >
+                  Ok
+                </Button>
+                <Button
+                  type={values.score === 'Excellent' ? 'primary' : 'default'}
+                  onClick={() => setFieldValue('score', 'Excellent')}
+                >
+                  Excellent
+                </Button>
+              </div>
+              <div className={styles.filterMenuItem}>
+                <div>
+                  <b>Employee</b>
+                </div>
+                <SimpleDropdown
+                  name="employee"
+                  dropdownItems={
+                    alldataloading === false &&
+                    Alldata !== undefined &&
+                    Alldata.length > 0
+                      ? ([
+                          ...new Set(
+                            Alldata.map((item) => item.User.full_name)
+                          ),
+                        ] as string[])
+                      : []
+                  }
+                  onSelected={(val) => setFieldValue('employee', val)}
+                  value={values.employee}
+                />
+              </div>
+              <div className={styles.filterMenuItem}>
+                <div>
+                  <b>Service</b>
+                </div>
+                <SimpleDropdown
+                  name="service"
+                  dropdownItems={
+                    alldataloading === false &&
+                    Alldata !== undefined &&
+                    Alldata.length > 0
+                      ? ([
+                          ...new Set(Alldata.map((item) => item.service)),
+                        ] as string[])
+                      : []
+                  }
+                  onSelected={(val) => setFieldValue('service', val)}
+                  value={values.service}
+                />
+              </div>
+              <div className={styles.filterBtn}>
+                <Button
+                  type="default"
+                  onClick={() => {
+                    handleSubmit()
+                  }}
+                  className={styles.filterApplyBtn}
+                >
+                  Apply
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+      </Formik>
+    )
   }
 
   const DeskTopHeader: FC<TranslationProps> = ({ t }) => (
@@ -1052,138 +1286,120 @@ const Reviews: FC<ReviewConfig> = () => {
   }
 
   return (
-    <div ref={crudTableRef}>
-      <div className={styles.mainWrapper}>
-        <Layout>
-          <div className={styles.notificationBanner}>
-            <NotificationBanner
-              title={t('marketingrevirews.notification.title')}
-              desc={t('marketingrevirews.notification.description')}
-              imgPath={notificationBannerReviewPageImage}
-              allowClose={true}
-              setHide={[hideBanner, setHideBanner]}
-              showPaymentButton={true}
-              showEmail={true}
-              showPaymentTitle={t('marketingrevirews.notification.button')}
-            />
-          </div>
-          <Card className={styles.reviewContainer}>
-            <div
-              className={classNames(
-                styles.headerMobile,
-                styles.desktopViewNone
-              )}
-            >
-              <MobileHeader className={styles.headerMobile}>
-                <div className={styles.mobTopHead}>
-                  <div className={styles.mobTopHeadRow}>
-                    <LeftOutlined />{' '}
-                    <h6> {t('marketingrevirews.notification.title')}</h6>
-                  </div>
-                </div>
-              </MobileHeader>
-            </div>
-            <DeskTopHeader t={t} />
-            <Modal
-              visible={modalShowing}
-              width={'100%'}
-              footer={null}
-              onCancel={onHandleModal}
-              className={styles.respondWrapper}
-              wrapClassName={isMobile && styles.fullScreenModal}
-            >
-              {renderModalData(modalValue, t)}
-            </Modal>
-            {reviewComponentRender(
-              aggregateData !== undefined
-                ? (average?.reduce((v, i) => v + i, 0) / aggregateData).toFixed(
-                    1
-                  )
-                : 0
-            )}
-            <div className={styles.tableMob}>
-              {loading ? (
-                <Spin
-                  className={styles.spinner}
-                  size={'large'}
-                  delay={0}
-                  spinning={true}
-                  indicator={<LoadingOutlined className={styles.icon} spin />}
-                />
-              ) : dataList.length > 0 ? (
-                <Table
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-ignore
-                  columns={columnData}
-                  dataSource={dataList.map((item) => {
-                    return {
-                      ...item,
-                      feedback_source: renderSocialMediaIcon(
-                        item?.feedback_source
-                      ),
-                      rating: `${item?.rating}/5`,
-                      date: new Date(item?.date * 1000).toLocaleDateString(
-                        'en-GB'
-                      ),
-                      feedback_for: (
-                        <Tooltip
-                          placement="bottom"
-                          title={`${item?.service} with ${item?.User?.full_name}`}
-                        >
-                          <div className={styles.avatarWrap}>
-                            <Avatar
-                              src={item?.User?.image}
-                              name={item?.User?.full_name}
-                              size="default"
-                              isTooltip={false}
-                            />
-                          </div>
-                        </Tooltip>
-                      ),
-                      visibleData: renderVisibleData(item),
-                      feedback_comment: (
-                        <Tooltip placement="top" title={item?.feedback_comment}>
-                          {item?.feedback_comment}
-                        </Tooltip>
-                      ),
-                    }
-                  })}
-                  loading={loading}
-                  isHover={true}
-                  onRowHover={onHoverHandle}
-                  onLeaveRow={onHoverLeave}
-                  updateDataSource={updateDataSource}
-                  pagination={dataList?.length > 10 ? {} : false}
-                />
-              ) : (
-                <div className={styles.empty}>
-                  <Empty
-                    description={t('marketingreviews.data.nodata.content')}
-                    className={styles.noData}
-                  />
-                </div>
-              )}
-            </div>
-          </Card>
-          <Pagination
-            total={paginateData.total}
-            defaultPageSize={10}
-            showSizeChanger={false}
-            onChange={onPaginationChange}
-            pageSizeOptions={['10', '25', '50', '100']}
-            onPageSizeChange={(pageSize) => {
-              setPaginateData({
-                ...paginateData,
-                take: pageSize,
-              })
-            }}
-            pageSize={paginateData.take}
-            current={paginateData.currentPage}
-            showingRecords={paginateData.showingRecords}
+    <>
+      <CommonHeader title={t('marketingrevirews.notification.title')} />
+      <Layout>
+        <div className={styles.notificationBanner}>
+          <NotificationBanner
+            title={t('marketingrevirews.notification.title')}
+            desc={t('marketingrevirews.notification.description')}
+            imgPath={notificationBannerReviewPageImage}
+            allowClose={true}
+            setHide={[hideBanner, setHideBanner]}
+            showPaymentButton={true}
+            showEmail={true}
+            showPaymentTitle={t('marketingrevirews.notification.button')}
           />
-        </Layout>
-      </div>
-    </div>
+        </div>
+        <Card className={styles.reviewContainer}>
+          <DeskTopHeader t={t} />
+          <Modal
+            visible={modalShowing}
+            width={'100%'}
+            footer={null}
+            onCancel={onHandleModal}
+            className={styles.respondWrapper}
+            wrapClassName={isMobile && styles.fullScreenModal}
+          >
+            {renderModalData(modalValue, t)}
+          </Modal>
+          {reviewComponentRender(
+            aggregateData !== undefined
+              ? (average?.reduce((v, i) => v + i, 0) / aggregateData).toFixed(1)
+              : 0
+          )}
+          <div className={styles.tableMob}>
+            {loading ? (
+              <Spin
+                className={styles.spinner}
+                size={'large'}
+                delay={0}
+                spinning={true}
+                indicator={<LoadingOutlined className={styles.icon} spin />}
+              />
+            ) : dataList.length > 0 ? (
+              <Table
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                columns={columnData}
+                dataSource={dataList.map((item) => {
+                  return {
+                    ...item,
+                    feedback_source: renderSocialMediaIcon(
+                      item?.feedback_source
+                    ),
+                    rating: `${item?.rating}/5`,
+                    date: new Date(item?.date * 1000).toLocaleDateString(
+                      'en-GB'
+                    ),
+                    feedback_for: (
+                      <Tooltip
+                        placement="bottom"
+                        title={`${item?.service} with ${item?.User?.full_name}`}
+                      >
+                        <div className={styles.avatarWrap}>
+                          <Avatar
+                            src={`https://crm.pabau.com/${item?.User?.image}`}
+                            name={item?.User?.full_name}
+                            size="default"
+                            isTooltip={false}
+                          />
+                        </div>
+                      </Tooltip>
+                    ),
+                    visibleData: renderVisibleData(item),
+                    feedback_comment: (
+                      <Tooltip placement="top" title={item?.feedback_comment}>
+                        {item?.feedback_comment}
+                      </Tooltip>
+                    ),
+                  }
+                })}
+                loading={loading}
+                isHover={true}
+                onRowHover={onHoverHandle}
+                onLeaveRow={onHoverLeave}
+                updateDataSource={updateDataSource}
+                pagination={dataList?.length > 10 ? {} : false}
+              />
+            ) : (
+              <div className={styles.empty}>
+                <Empty
+                  description={t('marketingreviews.data.nodata.content')}
+                  className={styles.noData}
+                />
+              </div>
+            )}
+          </div>
+        </Card>
+        <Pagination
+          total={paginateData.total}
+          defaultPageSize={10}
+          showSizeChanger={false}
+          onChange={onPaginationChange}
+          pageSizeOptions={['10', '25', '50', '100']}
+          onPageSizeChange={(pageSize) => {
+            setPaginateData({
+              ...paginateData,
+              take: pageSize,
+            })
+          }}
+          pageSize={paginateData.take}
+          current={paginateData.currentPage}
+          showingRecords={paginateData.showingRecords}
+        />
+      </Layout>
+    </>
   )
 }
 

@@ -76,7 +76,7 @@ npm i -g yarn
 
    ```bash
    npm i -g hasura-cli
-   hasura update-cli --version v2.0.0-alpha.8
+   hasura update-cli --version v2.0.0-alpha.9
    ```
 
 3. Copy `hasura/.env.SAMPLE` to `.env`
