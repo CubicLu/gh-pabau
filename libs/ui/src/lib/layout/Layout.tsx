@@ -28,6 +28,7 @@ interface UserProps {
 export interface LayoutProps {
   deleteNotification?: MutationFunction
   updateNotification?: MutationFunction
+  readAddMutation?: MutationFunction
   relativeTime?: (lan: string, date: Date) => string
   notifications?: Notification[]
   user?: UserProps
@@ -65,6 +66,7 @@ export const Layout: FC<LayoutProps> = ({
   relativeTime,
   deleteNotification,
   updateNotification,
+  readAddMutation,
   user,
   ...rest
 }) => {
@@ -77,6 +79,7 @@ export const Layout: FC<LayoutProps> = ({
           user={user}
           deleteNotification={deleteNotification}
           updateNotification={updateNotification}
+          readAddMutation={readAddMutation}
           searchRender={searchRender}
           onCreateChannel={onCreateChannel}
           onMessageType={onMessageType}

@@ -37,6 +37,7 @@ interface P {
   notifications?: Notification[]
   deleteNotification?: MutationFunction
   updateNotification?: MutationFunction
+  readAddMutation?: MutationFunction
   relativeTime?: (lan: string, date: Date) => string
   user?: UserProps
   searchRender?: (innerComponent: JSX.Element) => JSX.Element
@@ -57,6 +58,7 @@ export const Header: FC<P> = ({
   relativeTime,
   deleteNotification,
   updateNotification,
+  readAddMutation,
   ...rest
 }) => {
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
@@ -124,6 +126,7 @@ export const Header: FC<P> = ({
           relativeTime={relativeTime}
           deleteNotification={deleteNotification}
           updateNotification={updateNotification}
+          readAddMutation={readAddMutation}
         />
       )}
       {openMessageDrawer && (

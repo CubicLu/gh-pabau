@@ -14,6 +14,7 @@ interface NotificationProps {
   user?: UserProps
   updateMutation?: MutationFunction
   deleteMutation?: MutationFunction
+  readAddMutation?: MutationFunction
 }
 
 const Notification: FC<NotificationProps> = ({
@@ -22,12 +23,12 @@ const Notification: FC<NotificationProps> = ({
   user,
   updateMutation,
   deleteMutation,
+  readAddMutation,
 }) => {
   const [notifyTime, setNotifyTime] = useState(
     relativeTime?.('en', notify?.notificationTime)
   )
 
-  console.log('mytime', notify.notificationType, '==>', notifyTime)
   const setRelativeTime = () => {
     const updatedTime = relativeTime?.('en', notify?.notificationTime)
     setNotifyTime(updatedTime)
@@ -55,12 +56,19 @@ const Notification: FC<NotificationProps> = ({
   }
 
   const handleOnClick = async (notification) => {
-    const { id, users, link } = notification
-    let { read } = notification
+    const { id, link } = notification
+    const { read } = notification
+
     if (!isReadNotification(read)) {
-      read = read?.length > 0 ? [...read, user?.user] : [user?.user]
-      const variables = { id, is_read: read, sent_to: users }
-      await updateMutation?.({ variables, optimisticResponse: {} })
+      const variables = {
+        company: user?.company,
+        notification: id,
+        user: user?.user,
+      }
+      await readAddMutation?.({
+        variables,
+        optimisticResponse: {},
+      })
     }
     if (link) {
       router.push({ pathname: link })

@@ -31,6 +31,7 @@ export interface Notifications {
 interface P {
   deleteNotification?: MutationFunction
   updateNotification?: MutationFunction
+  readAddMutation?: MutationFunction
   openDrawer?: boolean
   closeDrawer?: () => void
   notifications?: Notifications[]
@@ -45,6 +46,7 @@ export const NotificationDrawer: FC<P> = ({
   relativeTime,
   deleteNotification,
   updateNotification,
+  readAddMutation,
   user,
 }) => {
   const { t } = useTranslation('common')
@@ -158,6 +160,7 @@ export const NotificationDrawer: FC<P> = ({
               user={user}
               updateMutation={updateNotification}
               deleteMutation={deleteNotification}
+              readAddMutation={readAddMutation}
             />
           )
         })}

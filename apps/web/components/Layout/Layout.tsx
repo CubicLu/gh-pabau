@@ -30,7 +30,6 @@ const LIST_QUERY = gql`
     ) {
       id
       sent_to
-      is_read
       created_at
       variables
       destination
@@ -41,6 +40,9 @@ const LIST_QUERY = gql`
         name
         title
         description
+      }
+      read_by {
+        user
       }
     }
   }
@@ -55,14 +57,23 @@ const DELETE_MUTATION = gql`
 `
 
 const UPDATE_MUTATION = gql`
-  mutation update_notifications_by_pk(
-    $id: uuid!
-    $sent_to: jsonb
-    $is_read: jsonb
-  ) {
+  mutation update_notifications_by_pk($id: uuid!, $sent_to: jsonb) {
     update_notifications_by_pk(
       pk_columns: { id: $id }
-      _set: { sent_to: $sent_to, is_read: $is_read }
+      _set: { sent_to: $sent_to }
+    ) {
+      id
+    }
+  }
+`
+const READ_NOTIFICATION_ADD_MUTATION = gql`
+  mutation insert_read_notification_one(
+    $company: numeric
+    $notification: uuid
+    $user: numeric
+  ) {
+    insert_read_notification_one(
+      object: { company: $company, notification: $notification, user: $user }
     ) {
       id
     }
@@ -90,25 +101,29 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
   const userData = { ...user, fullName: loggedUser?.me?.full_name }
 
   const [deleteMutation] = useMutation(DELETE_MUTATION)
+  const [readAddMutation] = useMutation(READ_NOTIFICATION_ADD_MUTATION)
   const [updateMutation] = useMutation(UPDATE_MUTATION)
 
   useEffect(() => {
     if (notificationData?.notifications?.length > 0) {
       const todayNotification = notificationData.notifications.map(
-        (notification) => ({
-          id: notification.id,
-          type_id: notification?.notification_type?.id,
-          notificationTime: notification?.created_at,
-          notificationType: notification?.notification_type?.name.trim(),
-          title: notification?.notification_type?.title,
-          desc: notification?.notification_type?.description,
-          read: notification?.is_read,
-          users: notification?.sent_to,
-          link: notification?.destination,
-          variables: notification?.variables,
-          sentBy: notification?.sent_by,
-          loop: notification?.loop,
-        })
+        (notification) => {
+          const readUsers = notification?.read_by?.map((users) => users.user)
+          return {
+            id: notification.id,
+            type_id: notification?.notification_type?.id,
+            notificationTime: notification?.created_at,
+            notificationType: notification?.notification_type?.name.trim(),
+            title: notification?.notification_type?.title,
+            desc: notification?.notification_type?.description,
+            read: readUsers,
+            users: notification?.sent_to,
+            link: notification?.destination,
+            variables: notification?.variables,
+            sentBy: notification?.sent_by,
+            loop: notification?.loop,
+          }
+        }
       )
       setNotifications(todayNotification)
     }
@@ -149,6 +164,7 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
           notifications={notifications}
           deleteNotification={deleteMutation}
           updateNotification={updateMutation}
+          readAddMutation={readAddMutation}
           user={userData}
           searchRender={() => <Search />}
           onCreateChannel={onCreateChannel}
