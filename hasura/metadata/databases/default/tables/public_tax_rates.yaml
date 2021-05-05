@@ -6,12 +6,28 @@ insert_permissions:
     backend_only: false
     check: {}
     columns:
-    - glCode
     - is_active
-    - name
     - order
     - value
+    - glCode
+    - name
+    - created_at
+    - updated_at
+    - id
   role: public
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - is_active
+    - order
+    - value
+    - glCode
+    - name
+    - created_at
+    - updated_at
+    - id
+  role: user
 select_permissions:
 - permission:
     allow_aggregations: true
@@ -26,19 +42,50 @@ select_permissions:
     - value
     filter: {}
   role: public
+- permission:
+    allow_aggregations: true
+    columns:
+    - is_active
+    - order
+    - value
+    - glCode
+    - name
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: user
 update_permissions:
 - permission:
-    check: null
+    check: {}
     columns:
-    - glCode
     - is_active
-    - name
     - order
-    - updated_at
     - value
+    - glCode
+    - name
+    - created_at
+    - updated_at
+    - id
     filter: {}
   role: public
+- permission:
+    check: {}
+    columns:
+    - is_active
+    - order
+    - value
+    - glCode
+    - name
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: user
 delete_permissions:
 - permission:
     filter: {}
   role: public
+- permission:
+    filter: {}
+  role: user

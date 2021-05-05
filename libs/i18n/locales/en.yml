@@ -799,8 +799,8 @@ en:
     setup.discount.data.cooltech: Cooltech
     setup.discount.data.cooltech+accentprime: 'Cooltech + Accent Prime'
     setup.discount.data.dermalux: Dermalux
-    'setup.discount.data.londonroad,london,england': 'London Road, London, England'
-    'setup.discount.data.loremstreet,liverpool,england': 'Lorem Street, Liverpool, England'
+    setup.discount.data.londonroad,london,england: 'London Road, London, England'
+    setup.discount.data.loremstreet,liverpool,england: 'Lorem Street, Liverpool, England'
     setup.discount.data.jeffhackley: 'Jeff Hackley'
     setup.discount.data.jessicawinter: 'Jessica Winter'
     setup.discount.data.alexanderwang: 'Alexander Wang'
@@ -1267,6 +1267,50 @@ en:
     setup.creditnotes.schema.fields.invoiceprefix.description: 'A exmaple prefix'
     setup.creditnotes.schema.fields.invoiceprefix.example: 'RCN'
     setup.creditnotes.schema.fields.isactive: 'Status'
+    setup.taxrate.heading: Tax Rate
+    setup.taxrate.notax: No Tax Rate
+    setup.taxrate.notaxadd: Add Tax Rate
+    setup.taxrate.newbtn: New Tax Rate
+    setup.taxrate.tabs.tab1: Tax Rates
+    setup.taxrate.tabs.tab2: Tax Defaults
+    setup.taxrate.table.column1: Name
+    setup.taxrate.table.column2: Value
+    setup.taxrate.table.column3: Status
+    setup.taxrate.notification.create.success: Success! You have successfully created a tax rate
+    setup.taxrate.notification.create.error: Error! While creating a tax rate
+    setup.taxrate.notification.edit.success: Success! You have successfully edited a tax rate
+    setup.taxrate.notification.edit.error: Error! While editing a tax rate
+    setup.taxrate.notification.delete.success: Success! You have successfully deleted a tax rate
+    setup.taxrate.notification.delete.error: Error! While deleting a tax rate
+    setup.taxrate.notification.order.error: Error! While deleting a tax rate
+    setup.taxrate.notification.deletemodal.title: Delete tax rate?
+    setup.taxrate.notification.deletemodal.para: will be deleted. This action is irreversable.
+    setup.taxrate.notification.deletemodal.deletebtn: Yes, Delete
+    setup.taxrate.notification.updatemodal.title: Update
+    setup.taxrate.notification.createmodal.title: Create
+    setup.taxrate.notification.createmodal.inputs.name: Name
+    setup.taxrate.notification.createmodal.inputs.name.placeholder: eg. VAT20
+    setup.taxrate.notification.createmodal.inputs.name.error: Tax name is required
+    setup.taxrate.notification.createmodal.inputs.amount: Amount
+    setup.taxrate.notification.createmodal.inputs.amount.error1: Tax amount is required
+    setup.taxrate.notification.createmodal.inputs.amount.error2: Percentage cannot be in negative
+    setup.taxrate.notification.createmodal.inputs.amount.error3: Amount cannot exceeds 100
+    setup.taxrate.notification.createmodal.inputs.advanced.title: Advanced
+    setup.taxrate.notification.createmodal.inputs.glcode: GL Code
+    setup.taxrate.notification.createmodal.inputs.glcode.placeholder: eg. Nail Bar
+    setup.taxrate.notification.createmodal.deletebtn: Delete
+    setup.taxrate.notification.createmodal.activebtn: Active
+    setup.taxrate.defaulttax.heading: Tax Defaults (Issuing Companies)
+    setup.taxrate.defaulttax.paragraph: Setup the default taxes for your business, you can still override defaults in the settings of individual products and services
+    setup.taxrate.defaulttax.products.default: 'Products Default'
+    setup.taxrate.defaulttax.services.default: 'Services Default'
+    setup.taxrate.defaulttax.services.mahair: 'M-A Hair Dressing & Spa'
+    setup.taxrate.defaulttax.services.beautysalon: 'Illusions Beauty Salon'
+    setup.taxrate.defaulttax.services.notax: 'No tax'
+    setup.taxrate.defaulttax.services.vats: 'VATs'
+    setup.taxrate.defaulttax.services.vat20: 'VAT20'
+    setup.taxrate.defaulttax.edit: Edit
+    setup.taxrate.defaulttax.addnew: Add New
     products.list.newbtn.product: 'New Product'
     products.list.newbtn.category: 'New Category'
     products.list.newbtn.supplier: 'New Supplier'

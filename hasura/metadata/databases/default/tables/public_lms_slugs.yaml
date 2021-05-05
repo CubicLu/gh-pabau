@@ -6,41 +6,80 @@ insert_permissions:
     backend_only: false
     check: {}
     columns:
-    - id
-    - slug
-    - article_urls
+    - articles
     - webinar
-    - blogs
-    - videos
+    - blog
+    - slug
+    - video
     - created_date
+    - id
   role: public
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - articles
+    - webinar
+    - blog
+    - slug
+    - video
+    - created_date
+    - id
+  role: user
 select_permissions:
 - permission:
     allow_aggregations: true
     columns:
-    - article_urls
-    - blogs
-    - videos
+    - id
     - slug
+    - articles
+    - blog
+    - video
+    - created_date
     - webinar
+    filter: {}
+  role: public
+- permission:
+    allow_aggregations: true
+    columns:
+    - articles
+    - webinar
+    - blog
+    - slug
+    - video
     - created_date
     - id
     filter: {}
-  role: public
+  role: user
 update_permissions:
 - permission:
     check: {}
     columns:
-    - article_urls
-    - blogs
-    - videos
-    - slug
+    - articles
     - webinar
+    - blog
+    - slug
+    - video
     - created_date
     - id
     filter: {}
   role: public
+- permission:
+    check: {}
+    columns:
+    - articles
+    - webinar
+    - blog
+    - slug
+    - video
+    - created_date
+    - id
+    filter: {}
+  role: user
 delete_permissions:
 - permission:
     filter: {}
   role: public
+- permission:
+    filter: {}
+  role: user
