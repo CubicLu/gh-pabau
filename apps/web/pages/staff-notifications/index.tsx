@@ -22,15 +22,17 @@ interface InitialStaffNotifications {
 }
 
 const USER_LIST_QUERY = gql`
-  query user_list($isAdmin: Boolean = true, $company: numeric!) {
-    user_list(
-      where: { _and: { admin: { _eq: $isAdmin }, company: { _eq: $company } } }
+  query users($isAdmin: Int = 0, $company: Int) {
+    users(
+      where: {
+        AND: { company_id: { equals: $company }, admin: { equals: $isAdmin } }
+      }
     ) {
       id
-      first_name
-      last_name
       admin
-      company
+      full_name
+      username
+      company_id
     }
   }
 `
@@ -108,7 +110,7 @@ export const StaffNotifications: NextPage = () => {
   const getQueryVariables = useMemo(() => {
     const queryOptions = {
       variables: {
-        isAdmin: userRole === 'All Users' ? false : true,
+        isAdmin: userRole === 'All Users' ? 0 : 1,
         company: user?.company,
       },
     }
@@ -146,7 +148,6 @@ export const StaffNotifications: NextPage = () => {
     )
 
     const sent_users = []
-    console.log('userList', userList)
     for (const user of userList) {
       sent_users.push(user.id)
     }
