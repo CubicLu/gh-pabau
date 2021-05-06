@@ -303,7 +303,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
       </div>
     </Modal>
   ) : (
-    <div />
+    <div></div>
   )
 }
 

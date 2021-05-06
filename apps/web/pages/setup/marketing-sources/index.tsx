@@ -42,6 +42,7 @@ const LIST_AGGREGATE_QUERY = gql`
     )
   }
 `
+
 const DELETE_MUTATION = gql`
   mutation delete_marketing_source($id: Int) {
     deleteOneMarketingSource(where: { id: $id }) {
@@ -50,6 +51,7 @@ const DELETE_MUTATION = gql`
     }
   }
 `
+
 const ADD_MUTATION = gql`
   mutation add_marketing_source(
     $imported: Int = 0
@@ -72,6 +74,7 @@ const ADD_MUTATION = gql`
     }
   }
 `
+
 const EDIT_MUTATION = gql`
   mutation update_marketing_source_by_pk(
     $id: Int!
@@ -87,6 +90,7 @@ const EDIT_MUTATION = gql`
     }
   }
 `
+
 const UPDATE_ORDER_MUTATION = gql`
   mutation update_marketing_source_order($id: Int!, $order: Int) {
     update_marketing_source(

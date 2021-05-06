@@ -12,22 +12,22 @@ insert_permissions:
     - is_active
     - name
     - order
-  role: public
+  role: user
 select_permissions:
 - permission:
     allow_aggregations: true
     columns:
-    - is_active
-    - order
     - assigned
     - color
-    - image
-    - name
     - created_at
-    - updated_at
     - id
+    - image
+    - is_active
+    - name
+    - order
+    - updated_at
     filter: {}
-  role: public
+  role: user
 update_permissions:
 - permission:
     check: null
@@ -39,8 +39,8 @@ update_permissions:
     - name
     - order
     filter: {}
-  role: public
+  role: user
 delete_permissions:
 - permission:
     filter: {}
-  role: public
+  role: user

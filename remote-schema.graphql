@@ -80064,6 +80064,9 @@ unique or primary key constraints on table "lms_slugs"
 enum lms_slugs_constraint {
   """unique or primary key constraint"""
   LMS_slugs_pkey
+
+  """unique or primary key constraint"""
+  lms_slugs_slug_key
 }
 
 """
@@ -82296,6 +82299,19 @@ type mutation_root {
   delete_purchase_order_by_pk(id: uuid!): purchase_order
 
   """
+  delete data from the table: "read_notification"
+  """
+  delete_read_notification(
+    """filter the rows which have to be deleted"""
+    where: read_notification_bool_exp!
+  ): read_notification_mutation_response
+
+  """
+  delete single row from the table: "read_notification"
+  """
+  delete_read_notification_by_pk(id: uuid!): read_notification
+
+  """
   delete data from the table: "resources"
   """
   delete_resources(
@@ -83526,6 +83542,28 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: purchase_order_on_conflict
   ): purchase_order
+
+  """
+  insert data into the table: "read_notification"
+  """
+  insert_read_notification(
+    """the rows to be inserted"""
+    objects: [read_notification_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: read_notification_on_conflict
+  ): read_notification_mutation_response
+
+  """
+  insert a single row into the table: "read_notification"
+  """
+  insert_read_notification_one(
+    """the row to be inserted"""
+    object: read_notification_insert_input!
+
+    """on conflict condition"""
+    on_conflict: read_notification_on_conflict
+  ): read_notification
 
   """
   insert data into the table: "resources"
@@ -85484,6 +85522,32 @@ type mutation_root {
   ): purchase_order
 
   """
+  update data of the table: "read_notification"
+  """
+  update_read_notification(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: read_notification_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: read_notification_set_input
+
+    """filter the rows which have to be updated"""
+    where: read_notification_bool_exp!
+  ): read_notification_mutation_response
+
+  """
+  update single row of the table: "read_notification"
+  """
+  update_read_notification_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: read_notification_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: read_notification_set_input
+    pk_columns: read_notification_pk_columns_input!
+  ): read_notification
+
+  """
   update data of the table: "resources"
   """
   update_resources(
@@ -86680,6 +86744,24 @@ type notifications {
   """An object relationship"""
   notification_type: notification_types
   order: Int!
+
+  """An array relationship"""
+  read_by(
+    """distinct select on columns"""
+    distinct_on: [read_notification_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [read_notification_order_by!]
+
+    """filter the rows returned"""
+    where: read_notification_bool_exp
+  ): [read_notification!]!
   sent_by: Int
   sent_to(
     """JSON select path"""
@@ -86715,6 +86797,7 @@ input notifications_bool_exp {
   loop: jsonb_comparison_exp
   notification_type: notification_types_bool_exp
   order: Int_comparison_exp
+  read_by: read_notification_bool_exp
   sent_by: Int_comparison_exp
   sent_to: jsonb_comparison_exp
   type: uuid_comparison_exp
@@ -86779,6 +86862,7 @@ input notifications_insert_input {
   loop: jsonb
   notification_type: notification_types_obj_rel_insert_input
   order: Int
+  read_by: read_notification_arr_rel_insert_input
   sent_by: Int
   sent_to: jsonb
   type: uuid
@@ -86795,6 +86879,16 @@ type notifications_mutation_response {
 
   """data from the rows affected by the mutation"""
   returning: [notifications!]!
+}
+
+"""
+input type for inserting object relation for remote table "notifications"
+"""
+input notifications_obj_rel_insert_input {
+  data: notifications_insert_input!
+
+  """on conflict condition"""
+  on_conflict: notifications_on_conflict
 }
 
 """
@@ -86815,6 +86909,7 @@ input notifications_order_by {
   loop: order_by
   notification_type: notification_types_order_by
   order: order_by
+  read_by_aggregate: read_notification_aggregate_order_by
   sent_by: order_by
   sent_to: order_by
   type: order_by
@@ -91070,6 +91165,31 @@ type query_root {
 
   """fetch data from the table: "purchase_order" using primary key columns"""
   purchase_order_by_pk(id: uuid!): purchase_order
+
+  """
+  fetch data from the table: "read_notification"
+  """
+  read_notification(
+    """distinct select on columns"""
+    distinct_on: [read_notification_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [read_notification_order_by!]
+
+    """filter the rows returned"""
+    where: read_notification_bool_exp
+  ): [read_notification!]!
+
+  """
+  fetch data from the table: "read_notification" using primary key columns
+  """
+  read_notification_by_pk(id: uuid!): read_notification
   report(where: ReportWhereUniqueInput!): Report
   reportCategories(cursor: ReportCategoryWhereUniqueInput, orderBy: [ReportCategoryOrderByInput!], skip: Int, take: Int, where: ReportCategoryWhereInput): [ReportCategory!]!
   reportCategoriesCount(where: ReportCategoryWhereInput): Int
@@ -91580,6 +91700,262 @@ type query_root {
   xeroIntegration(where: XeroIntegrationWhereUniqueInput!): XeroIntegration
   xeroIntegrations(cursor: XeroIntegrationWhereUniqueInput, orderBy: [XeroIntegrationOrderByInput!], skip: Int, take: Int, where: XeroIntegrationWhereInput): [XeroIntegration!]!
   xeroIntegrationsCount(where: XeroIntegrationWhereInput): Int
+}
+
+"""
+columns and relationships of "read_notification"
+"""
+type read_notification {
+  company: numeric!
+  id: uuid!
+  notification: uuid!
+  read_at: timestamptz!
+
+  """An object relationship"""
+  read_by: notifications
+  user: numeric!
+}
+
+"""
+order by aggregate values of table "read_notification"
+"""
+input read_notification_aggregate_order_by {
+  avg: read_notification_avg_order_by
+  count: order_by
+  max: read_notification_max_order_by
+  min: read_notification_min_order_by
+  stddev: read_notification_stddev_order_by
+  stddev_pop: read_notification_stddev_pop_order_by
+  stddev_samp: read_notification_stddev_samp_order_by
+  sum: read_notification_sum_order_by
+  var_pop: read_notification_var_pop_order_by
+  var_samp: read_notification_var_samp_order_by
+  variance: read_notification_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "read_notification"
+"""
+input read_notification_arr_rel_insert_input {
+  data: [read_notification_insert_input!]!
+
+  """on conflict condition"""
+  on_conflict: read_notification_on_conflict
+}
+
+"""
+order by avg() on columns of table "read_notification"
+"""
+input read_notification_avg_order_by {
+  company: order_by
+  user: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "read_notification". All fields are combined with a logical 'AND'.
+"""
+input read_notification_bool_exp {
+  _and: [read_notification_bool_exp!]
+  _not: read_notification_bool_exp
+  _or: [read_notification_bool_exp!]
+  company: numeric_comparison_exp
+  id: uuid_comparison_exp
+  notification: uuid_comparison_exp
+  read_at: timestamptz_comparison_exp
+  read_by: notifications_bool_exp
+  user: numeric_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "read_notification"
+"""
+enum read_notification_constraint {
+  """unique or primary key constraint"""
+  read_notification_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "read_notification"
+"""
+input read_notification_inc_input {
+  company: numeric
+  user: numeric
+}
+
+"""
+input type for inserting data into table "read_notification"
+"""
+input read_notification_insert_input {
+  company: numeric
+  id: uuid
+  notification: uuid
+  read_at: timestamptz
+  read_by: notifications_obj_rel_insert_input
+  user: numeric
+}
+
+"""
+order by max() on columns of table "read_notification"
+"""
+input read_notification_max_order_by {
+  company: order_by
+  id: order_by
+  notification: order_by
+  read_at: order_by
+  user: order_by
+}
+
+"""
+order by min() on columns of table "read_notification"
+"""
+input read_notification_min_order_by {
+  company: order_by
+  id: order_by
+  notification: order_by
+  read_at: order_by
+  user: order_by
+}
+
+"""
+response of any mutation on the table "read_notification"
+"""
+type read_notification_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [read_notification!]!
+}
+
+"""
+on conflict condition type for table "read_notification"
+"""
+input read_notification_on_conflict {
+  constraint: read_notification_constraint!
+  update_columns: [read_notification_update_column!]!
+  where: read_notification_bool_exp
+}
+
+"""Ordering options when selecting data from "read_notification"."""
+input read_notification_order_by {
+  company: order_by
+  id: order_by
+  notification: order_by
+  read_at: order_by
+  read_by: notifications_order_by
+  user: order_by
+}
+
+"""primary key columns input for table: read_notification"""
+input read_notification_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "read_notification"
+"""
+enum read_notification_select_column {
+  """column name"""
+  company
+
+  """column name"""
+  id
+
+  """column name"""
+  notification
+
+  """column name"""
+  read_at
+
+  """column name"""
+  user
+}
+
+"""
+input type for updating data in table "read_notification"
+"""
+input read_notification_set_input {
+  company: numeric
+  id: uuid
+  notification: uuid
+  read_at: timestamptz
+  user: numeric
+}
+
+"""
+order by stddev() on columns of table "read_notification"
+"""
+input read_notification_stddev_order_by {
+  company: order_by
+  user: order_by
+}
+
+"""
+order by stddev_pop() on columns of table "read_notification"
+"""
+input read_notification_stddev_pop_order_by {
+  company: order_by
+  user: order_by
+}
+
+"""
+order by stddev_samp() on columns of table "read_notification"
+"""
+input read_notification_stddev_samp_order_by {
+  company: order_by
+  user: order_by
+}
+
+"""
+order by sum() on columns of table "read_notification"
+"""
+input read_notification_sum_order_by {
+  company: order_by
+  user: order_by
+}
+
+"""
+update columns of table "read_notification"
+"""
+enum read_notification_update_column {
+  """column name"""
+  company
+
+  """column name"""
+  id
+
+  """column name"""
+  notification
+
+  """column name"""
+  read_at
+
+  """column name"""
+  user
+}
+
+"""
+order by var_pop() on columns of table "read_notification"
+"""
+input read_notification_var_pop_order_by {
+  company: order_by
+  user: order_by
+}
+
+"""
+order by var_samp() on columns of table "read_notification"
+"""
+input read_notification_var_samp_order_by {
+  company: order_by
+  user: order_by
+}
+
+"""
+order by variance() on columns of table "read_notification"
+"""
+input read_notification_variance_order_by {
+  company: order_by
+  user: order_by
 }
 
 """
@@ -95394,6 +95770,31 @@ type subscription_root {
   purchase_order_by_pk(id: uuid!): purchase_order
 
   """
+  fetch data from the table: "read_notification"
+  """
+  read_notification(
+    """distinct select on columns"""
+    distinct_on: [read_notification_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [read_notification_order_by!]
+
+    """filter the rows returned"""
+    where: read_notification_bool_exp
+  ): [read_notification!]!
+
+  """
+  fetch data from the table: "read_notification" using primary key columns
+  """
+  read_notification_by_pk(id: uuid!): read_notification
+
+  """
   fetch data from the table: "resources"
   """
   resources(
@@ -96123,13 +96524,10 @@ input tax_rates_inc_input {
 input type for inserting data into table "tax_rates"
 """
 input tax_rates_insert_input {
-  created_at: timetz
   glCode: String
-  id: uuid
   is_active: Boolean
   name: String
   order: Int
-  updated_at: timetz
   value: Float
 }
 
@@ -96225,9 +96623,7 @@ enum tax_rates_select_column {
 input type for updating data in table "tax_rates"
 """
 input tax_rates_set_input {
-  created_at: timetz
   glCode: String
-  id: uuid
   is_active: Boolean
   name: String
   order: Int
@@ -96264,13 +96660,7 @@ update columns of table "tax_rates"
 """
 enum tax_rates_update_column {
   """column name"""
-  created_at
-
-  """column name"""
   glCode
-
-  """column name"""
-  id
 
   """column name"""
   is_active

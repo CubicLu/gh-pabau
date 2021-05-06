@@ -35,6 +35,13 @@
     }
   }
 }
+:global {
+  .ant-checkbox-wrapper {
+    .ant-checkbox::after {
+      display: none;
+    }
+  }
+}
 .calendar-settings-configuration {
   .configuration-controls {
     padding-top: 23px;
@@ -182,6 +189,7 @@
     .advanced-check-list {
       display: flex;
       .advanced-check {
+        // border: 1px solid red;
         display: flex;
       }
     }
@@ -234,6 +242,10 @@
       padding: 18px 16px 20px;
     }
     .font-size-select {
+      width: 448px;
+      @media screen and (max-width: 767px) {
+        width: 100%;
+      }
       :global {
         .ant-select {
           width: 40% !important;
@@ -254,6 +266,23 @@
       }
     }
   }
+
+  .appointment-preview {
+    max-width: 472px;
+    :global {
+      .ant-tabs-nav-list {
+        width: 100%;
+        .ant-tabs-tab {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+        }
+      }
+      .ant-tabs-content-holder {
+        border: none;
+      }
+    }
+  }
   .block-text {
     font-size: 14px;
     line-height: 18px;
@@ -261,6 +290,94 @@
     font-family: Circular-Std-Book;
     font-style: normal;
     margin-bottom: 12px;
+  }
+  .paddingDiv {
+    padding-top: 25px;
+    * {
+      color: #9292a3;
+    }
+
+    .appointment-tab-card {
+      border-radius: 5px;
+      :global .ant-card-body {
+        padding: 15px 0px;
+      }
+
+      .edit-btn {
+        padding: 0px 15px;
+        margin-bottom: 5px;
+        display: flex;
+        justify-content: flex-end;
+
+        :global {
+          .ant-btn:hover span {
+            color: #54b2d3 !important;
+          }
+          .ant-btn:focus span {
+            color: #54b2d3 !important;
+          }
+        }
+      }
+      .add-btn {
+        padding: 0px 15px;
+        margin-top: 5px;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 22px;
+        display: inline-block;
+        cursor: pointer;
+
+        &:hover {
+          * {
+            color: #54b2d3;
+          }
+        }
+      }
+
+      .appointments-view-list {
+        :global {
+          .helper {
+            width: 100%;
+          }
+        }
+      }
+
+      .draggable-list-item {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 7.5px 15px;
+        position: relative;
+
+        span:not(:last-child) {
+          padding-right: 15px;
+        }
+
+        .dragg-icon {
+          cursor: move;
+          line-height: 100%;
+        }
+
+        .cross-icon {
+          cursor: pointer;
+          display: none;
+          position: absolute;
+          right: 15px;
+        }
+
+        &:hover {
+          background-color: #eef7fb;
+          * {
+            color: #54b2d3;
+          }
+          .cross-icon {
+            display: inline-block;
+          }
+        }
+      }
+    }
   }
 }
 .calendar-settings-advanced {
