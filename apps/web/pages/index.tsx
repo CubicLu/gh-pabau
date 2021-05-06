@@ -1,13 +1,12 @@
-import React, { FC, useContext, useState } from 'react'
 import { Button } from '@pabau/ui'
+import React, { FC, useContext, useState } from 'react'
 import { version } from '../../../package.json'
-import { useTranslationI18 } from '../hooks/useTranslationI18'
+import CommonHeader from '../components/CommonHeader'
 import Grid from '../components/Grid'
 import Layout from '../components/Layout/Layout'
-import CommonHeader from '../components/CommonHeader'
-import Login from './login'
 import { UserContext } from '../context/UserContext'
-
+import { useTranslationI18 } from '../hooks/useTranslationI18'
+import Login from './login'
 const Index: FC = () => {
   const { t } = useTranslationI18()
   const [showGrid, setShowGrid] = useState(false)

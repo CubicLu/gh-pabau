@@ -2,16 +2,17 @@
 module.exports = {
   projects: {
     app: {
-      schema: 'graphql.schema.json',
+      schemaPath: 'hasura/schema.graphql',
       documents: ['**/*.{graphql,ts,tsx}'],
       extensions: {
         endpoints: {
           default: {
-            url: 'https://api.new.pabau.com/v1/graphql',
-            headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
+            url: 'http://localhost:8080/v1/graphql',
+            headers: { "X-Hasura-Admin-Secret": `${process.env.HASURA_GRAPHQL_ADMIN_SECRET}` },
           },
         },
       },
+      includes: ['hasura/schema.graphql', '{apps,libs}/**/*.graphql'],
     },
   },
 }

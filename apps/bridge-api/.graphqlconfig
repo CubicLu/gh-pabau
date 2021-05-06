@@ -1,0 +1,25 @@
+{
+  "name": "prisma",
+  "schemaPath": "src/generated/schema.graphql",
+  "extensions": {
+    "endpoints": {
+      "production": {
+        "url": "https://api-toshe.pabau.me/graphql",
+        "headers": {
+          "user-agent": "JS GraphQL"
+        },
+        "introspect": false
+      },
+      "local": {
+        "url": "http://localhost:4000/graphql",
+        "headers": {
+          "user-agent": "JS GraphQL"
+        },
+        "introspect": true
+      }
+    }
+  },
+  "includes": [
+    "src/generated/schema.graphql"
+  ]
+}
