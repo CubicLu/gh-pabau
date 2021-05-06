@@ -39,6 +39,7 @@ interface LanguageSetting {
 }
 
 export interface BusinessDetailsProps {
+  apiKey: string
   onSave?(val): void
   basicInformation?: BasicInformation
   languageSetting?: LanguageSetting
@@ -54,6 +55,7 @@ const defaultBasicInfo: BasicInformation = {
 }
 
 export const BusinessDetails: FC<BusinessDetailsProps> = ({
+  apiKey,
   onSave,
   basicInformation,
   languageSetting,
@@ -269,6 +271,7 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
           {t('business.details.location')}
         </p>
         <BusinessLocation
+          apiKey={apiKey}
           value={bizLocation}
           onChange={(value) => setBizLocation(value)}
         />

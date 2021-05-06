@@ -1,4 +1,7 @@
 .calendar-wrapper {
+  :global .saveBtn {
+    color: #ffffff !important;
+  }
   @media screen and (max-width: 768px) {
     :global .ant-layout {
       margin-top: 0;
@@ -152,6 +155,8 @@
   }
   .main-tab-wrapper {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
     @media screen and (max-width: 767px) {
       margin-bottom: 16px;
@@ -162,9 +167,17 @@
       z-index: 2;
     }
     .title-wrapper {
-      width: 30%;
+      :global {
+        .ant-breadcrumb {
+          padding-left: 0px;
+          padding-top: 0px;
+        }
+        .ant-typography {
+          padding-left: 0px;
+        }
+      }
       @media screen and (max-width: 768px) {
-        width: 100%;
+        padding-left: 20px;
       }
       h1 {
         @media screen and (max-width: 767px) {
@@ -173,10 +186,9 @@
       }
     }
     .save-btn {
-      width: 70%;
       display: flex;
       justify-content: flex-end;
-      margin-top: 20px;
+      // margin-top: 20px;
       @media screen and (max-width: 767px) {
         display: none;
       }

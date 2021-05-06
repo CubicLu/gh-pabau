@@ -1,26 +1,26 @@
-import React, { FC } from 'react'
-import { Typography } from 'antd'
+import { LeftOutlined } from '@ant-design/icons'
+import { gql, useMutation } from '@apollo/client'
 import {
-  TabMenu,
   Breadcrumb,
-  Security,
-  System,
-  Terminology,
   BusinessDetails,
   BusinessDetailsNotifications,
-  MobileHeader,
   Button,
+  MobileHeader,
   Notification,
   NotificationType,
+  Security,
+  System,
+  TabMenu,
+  Terminology,
 } from '@pabau/ui'
-import Layout from '../../../components/Layout/Layout'
-import CommonHeader from '../../../components/CommonHeader'
-import { gql, useMutation } from '@apollo/client'
-import styles from './index.module.less'
-import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-import { useGridData } from '../../../hooks/useGridData'
-import { LeftOutlined } from '@ant-design/icons'
+import { Typography } from 'antd'
 import { useRouter } from 'next/router'
+import React, { FC } from 'react'
+import CommonHeader from '../../../components/CommonHeader'
+import Layout from '../../../components/Layout/Layout'
+import { useGridData } from '../../../hooks/useGridData'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import styles from './index.module.less'
 
 const { Title } = Typography
 
@@ -271,7 +271,10 @@ export const Index: FC = () => {
         </MobileHeader>
         <div className={styles.tabsForDesktop}>
           <TabMenu tabPosition="left" menuItems={tabMenuItems} minHeight="auto">
-            <BusinessDetails onSave={(values) => onSave(values, 'business')} />
+            <BusinessDetails
+              apiKey="apikey"
+              onSave={(values) => onSave(values, 'business')}
+            />
             <Terminology onSave={(values) => onSave(values, 'terminology')} />
             <System onSave={(values) => onSave(values, 'system')} />
             <Security />
@@ -282,7 +285,7 @@ export const Index: FC = () => {
         </div>
         <div className={styles.tabsForMobile}>
           <TabMenu tabPosition="top" menuItems={tabMenuItems} minHeight="auto">
-            <BusinessDetails />
+            <BusinessDetails apiKey="XXXXXXXXXX" />
             <Terminology />
             <System />
             <Security />

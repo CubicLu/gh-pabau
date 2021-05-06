@@ -1,5 +1,5 @@
 import React from 'react'
-import BusinessLocation from './BusinessLocation'
+import BusinessLocation, { BusinessLocationProps } from './BusinessLocation'
 
 export default {
   component: BusinessLocation,
@@ -8,9 +8,11 @@ export default {
   argTypes: {},
 }
 
-const BusinessLocationStory = ({ ...args }) => {
+const BusinessLocationStory = ({ ...args }: BusinessLocationProps) => {
   return <BusinessLocation {...args} />
 }
 
 export const Basic = BusinessLocationStory.bind({})
-Basic.args = {}
+Basic.args = {
+  apiKey: 'AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw',
+}

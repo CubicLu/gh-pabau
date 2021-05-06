@@ -87,7 +87,6 @@ export const Table: FC<TableType> = ({
   }
 
   const DraggableBodyRow = ({ className, style, ...restProps }) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const index = dataSource.findIndex(
       (x: { key: string }) => x.key === restProps['data-row-key']
     )

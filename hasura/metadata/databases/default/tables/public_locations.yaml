@@ -47,6 +47,29 @@ select_permissions:
     - website
     filter: {}
   role: public
+- permission:
+    columns:
+    - id
+    - name
+    - img
+    - address
+    - order
+    - is_active
+    - created_at
+    - updated_at
+    - employees
+    - badges
+    - phone
+    - email
+    - website
+    - hasCalender
+    - bookable
+    - showOnline
+    - apt
+    - postcode
+    - position
+    filter: {}
+  role: user
 update_permissions:
 - permission:
     check: null

@@ -11,6 +11,16 @@ object_relationships:
       remote_table:
         name: notification_types
         schema: public
+array_relationships:
+- name: read_by
+  using:
+    manual_configuration:
+      column_mapping:
+        id: notification
+      insertion_order: null
+      remote_table:
+        name: read_notification
+        schema: public
 insert_permissions:
 - permission:
     backend_only: false

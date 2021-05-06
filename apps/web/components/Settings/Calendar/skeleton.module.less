@@ -1,0 +1,68 @@
+.skeletonWrapper {
+  .limitedWidth {
+    max-width: 500px;
+  }
+  :global {
+    label {
+      .ant-skeleton {
+        width: 250px;
+        h3 {
+          margin-top: 0px;
+        }
+        ul {
+          display: none;
+        }
+      }
+    }
+    .tab {
+      width: 150px;
+      .ant-skeleton {
+        width: 100%;
+        h3 {
+          width: 100% !important;
+          margin: 0px;
+        }
+        ul {
+          display: none;
+        }
+      }
+    }
+    .pRelative {
+      .ant-skeleton {
+        width: 100%;
+        ul {
+          //   display: none;
+        }
+      }
+    }
+    .checkboxSkeleton {
+      width: 100%;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      .ant-skeleton-title {
+        margin: 0px;
+        margin-left: 20px;
+      }
+      ul {
+        display: none;
+      }
+    }
+    .flexEnd {
+      display: flex;
+      .ant-skeleton {
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+    .flexStart {
+      display: flex;
+      .ant-skeleton {
+        display: flex;
+        justify-content: flex-start;
+      }
+    }
+  }
+}

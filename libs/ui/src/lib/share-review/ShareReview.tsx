@@ -1,9 +1,9 @@
-import React, { FC, useState, useRef } from 'react'
-import { toSvg } from 'html-to-image'
-import { Card, Image, Rate, Row, Col } from 'antd'
 import { StarFilled } from '@ant-design/icons'
-import styles from './ShareReview.module.less'
+import { Card, Col, Image, Rate, Row } from 'antd'
+import { toSvg } from 'html-to-image'
+import React, { FC, useRef, useState } from 'react'
 import { ReactComponent as Header } from '../../assets/images/brands/Pabau.svg'
+import styles from './ShareReview.module.less'
 export interface ShareReviewProps {
   text?: string
   reviewScore?: number

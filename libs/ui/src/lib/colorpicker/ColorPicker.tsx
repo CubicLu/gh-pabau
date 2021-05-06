@@ -11,6 +11,7 @@ interface P {
   onClick(): void
   onHover?(): void
   onLeave?(): void
+  isRoundColorPicker?: boolean
 }
 
 const ColorItem: FC<P> = ({
@@ -20,6 +21,7 @@ const ColorItem: FC<P> = ({
   onClick,
   onHover,
   onLeave,
+  isRoundColorPicker = false,
 }) => {
   return (
     <div
@@ -29,7 +31,7 @@ const ColorItem: FC<P> = ({
         !isDarkColor && styles.toggleOpacity
       )}
       style={{
-        backgroundColor: selected ? '#fff' : color,
+        backgroundColor: selected && !isRoundColorPicker ? '#fff' : color,
         // border: hovering || selected ? '1px solid #54B2D3' : 'none',
         boxSizing: 'border-box',
         // opacity: hovering || selected ? '1' : '0.2',
@@ -52,9 +54,12 @@ interface PickerProps {
   onSelected(val): void
   onHover?(val): void
   onLeave?(val): void
+  className?: string
+  isRoundColorPicker?: boolean
+  customColorData?: string[]
 }
 
-const colorData = [
+const colorDataList = [
   '#03dbfc',
   '#fca903',
   '#8c03fc',
@@ -79,7 +84,11 @@ export const ColorPicker: FC<PickerProps> = ({
   onSelected,
   onHover,
   onLeave,
+  isRoundColorPicker = false,
+  className,
+  customColorData,
 }) => {
+  const colorData = customColorData || colorDataList
   const [colorList, setColorList] = useState(colorData)
 
   const [selColor, setSelColor] = useState(selectedColor)
@@ -109,7 +118,11 @@ export const ColorPicker: FC<PickerProps> = ({
       {' '}
       {/*  style={{ marginTop: '16px' }} */}
       <span className={styles.heading}>{heading}</span>
-      <div className={styles.colorPickerWrap}>
+      <div
+        className={`${styles.colorPickerWrap} ${
+          isRoundColorPicker && className
+        }`}
+      >
         {colorList.map((color) => (
           <ColorItem
             key={`${heading}${color}`}
@@ -119,6 +132,7 @@ export const ColorPicker: FC<PickerProps> = ({
             onClick={() => onClickColorItem(color)}
             onHover={() => onHover?.(color)}
             onLeave={() => onLeave?.(color)}
+            isRoundColorPicker={isRoundColorPicker}
           />
         ))}
         <div
