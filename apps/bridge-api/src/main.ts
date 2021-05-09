@@ -17,8 +17,8 @@ const PORT = process.env['PORT'] || 4000
 export const app = express()
 app.set('trust proxy', true)
 app
-  .get('/', function(req, res){
-    res.send('<h1>Private</h1>');
+  .get('/', function ({ res }) {
+    res.send('<h1>Private</h1>')
   })
   .use(cors())
   .use(

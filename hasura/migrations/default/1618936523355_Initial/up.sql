@@ -1,24 +1,24 @@
 SET check_function_bodies = false;
 CREATE FUNCTION public.set_current_timestamp_updated_at() RETURNS trigger
     LANGUAGE plpgsql
-AS $$
+    AS $$
 DECLARE
-    _new record;
+_new record;
 BEGIN
-    _new := NEW;
-    _new."updated_at" = NOW();
-    RETURN _new;
+_new := NEW;
+_new."updated_at" = NOW();
+  RETURN _new;
 END;
 $$;
 CREATE FUNCTION public.set_current_timestamp_updated_at_() RETURNS trigger
     LANGUAGE plpgsql
-AS $$
+    AS $$
 DECLARE
-    _new record;
+_new record;
 BEGIN
-    _new := NEW;
-    _new."updated_at" = NOW();
-    RETURN _new;
+_new := NEW;
+_new."updated_at" = NOW();
+  RETURN _new;
 END;
 $$;
 CREATE TABLE public.diagnostic_codeset (
@@ -30,7 +30,7 @@ CREATE TABLE public.diagnostic_codeset (
                                            updated_at timestamp with time zone DEFAULT now() NOT NULL,
                                            "order" integer NOT NULL,
                                            is_lock boolean DEFAULT false NOT NULL
-                                       );
+);
 CREATE SEQUENCE public."Diagnostic_code_order_seq"
     AS integer
     START WITH 1
@@ -56,7 +56,7 @@ CREATE TABLE public."Discounts" (
                                     type text NOT NULL,
                                     "order" integer NOT NULL,
                                     expiry_date date
-                                );
+);
 CREATE SEQUENCE public."Discounts_order_seq"
     AS integer
     START WITH 1
@@ -81,7 +81,7 @@ CREATE TABLE public."Labs" (
                                integration boolean DEFAULT false,
                                "order" integer NOT NULL,
                                provider_number numeric NOT NULL
-                           );
+);
 COMMENT ON COLUMN public."Labs".name IS 'lab name goes here';
 CREATE SEQUENCE public."Labs_order_seq"
     AS integer
@@ -101,7 +101,7 @@ CREATE TABLE public."Library" (
                                   email text NOT NULL,
                                   phone integer NOT NULL,
                                   is_active boolean NOT NULL
-                              );
+);
 CREATE TABLE public."Lists_campaign" (
                                          id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                                          created_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -110,7 +110,7 @@ CREATE TABLE public."Lists_campaign" (
                                          type text NOT NULL,
                                          members integer NOT NULL,
                                          "order" integer NOT NULL
-                                     );
+);
 CREATE SEQUENCE public."Lists_campaign_order_seq"
     AS integer
     START WITH 1
@@ -131,7 +131,7 @@ CREATE TABLE public."Newsletter_campaign" (
                                               clicked integer NOT NULL,
                                               revenue integer NOT NULL,
                                               "order" integer NOT NULL
-                                          );
+);
 CREATE SEQUENCE public."Newsletter_campaign_order_seq"
     AS integer
     START WITH 1
@@ -149,7 +149,7 @@ CREATE TABLE public."SMS_campaign" (
                                        last_modified date NOT NULL,
                                        sent_date date NOT NULL,
                                        "order" integer NOT NULL
-                                   );
+);
 CREATE SEQUENCE public."SMS_campaign_order_seq"
     AS integer
     START WITH 1
@@ -163,7 +163,7 @@ CREATE TABLE public.application_notifications (
                                                   "user" integer NOT NULL,
                                                   enabled boolean NOT NULL,
                                                   notification_type uuid NOT NULL
-                                              );
+);
 CREATE TABLE public.appointment_status (
                                            id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                                            name text NOT NULL,
@@ -175,7 +175,7 @@ CREATE TABLE public.appointment_status (
                                            color text,
                                            appointment_type text,
                                            "order" integer NOT NULL
-                                       );
+);
 CREATE SEQUENCE public.appointment_status_order_seq
     AS integer
     START WITH 1
@@ -194,7 +194,7 @@ CREATE TABLE public.block_out_options (
                                           "defaultTime" integer DEFAULT 5 NOT NULL,
                                           created_at timestamp with time zone DEFAULT now() NOT NULL,
                                           updated_at timestamp with time zone DEFAULT now() NOT NULL
-                                      );
+);
 CREATE TABLE public.business_details (
                                          businses_name text NOT NULL,
                                          business_type text NOT NULL,
@@ -232,7 +232,7 @@ CREATE TABLE public.business_details (
                                          leads_phone text DEFAULT 'Whould you like to receive phone calls?'::text NOT NULL,
                                          vat text DEFAULT 'VAT'::text NOT NULL,
                                          phone text
-                                     );
+);
 CREATE SEQUENCE public.business_details_id_seq
     AS integer
     START WITH 1
@@ -269,7 +269,7 @@ CREATE TABLE public.calendar_settings (
                                           hide_show_accounts boolean NOT NULL,
                                           group_user_columns_by_location boolean NOT NULL,
                                           revert_to_original_room_view boolean NOT NULL
-                                      );
+);
 CREATE TABLE public.cancellation_reasons (
                                              id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                                              name text NOT NULL,
@@ -279,7 +279,7 @@ CREATE TABLE public.cancellation_reasons (
                                              created_at timestamp with time zone DEFAULT now() NOT NULL,
                                              updated_at timestamp with time zone DEFAULT now() NOT NULL,
                                              "order" integer NOT NULL
-                                         );
+);
 CREATE SEQUENCE public.cancellation_reasons_order_seq
     AS integer
     START WITH 1
@@ -296,7 +296,7 @@ CREATE TABLE public.candidate_list (
                                        phone text NOT NULL,
                                        created_at timestamp with time zone DEFAULT now() NOT NULL,
                                        updated_at timestamp with time zone DEFAULT now() NOT NULL
-                                   );
+);
 CREATE SEQUENCE public.candidate_list_id_seq
     AS integer
     START WITH 1
@@ -315,7 +315,7 @@ CREATE TABLE public.categories (
                                    color text,
                                    image text,
                                    assigned text
-                               );
+);
 CREATE SEQUENCE public.categories_order_seq
     AS integer
     START WITH 1
@@ -333,7 +333,7 @@ CREATE TABLE public.category (
                                  name text NOT NULL,
                                  "productsAssigned" integer NOT NULL,
                                  "groupName" text
-                             );
+);
 CREATE SEQUENCE public.category_order_seq
     AS integer
     START WITH 1
@@ -350,7 +350,7 @@ CREATE TABLE public.chat (
                              company_id integer NOT NULL,
                              "from" integer NOT NULL,
                              "to" integer NOT NULL
-                         );
+);
 COMMENT ON TABLE public.chat IS 'Chat messages';
 CREATE TABLE public.clients_data (
                                      id uuid DEFAULT public.gen_random_uuid() NOT NULL,
@@ -365,13 +365,13 @@ CREATE TABLE public.clients_data (
                                      is_private boolean DEFAULT false NOT NULL,
                                      is_active boolean DEFAULT true NOT NULL,
                                      created_date timestamp with time zone DEFAULT statement_timestamp() NOT NULL
-                                 );
+);
 CREATE TABLE public.colors (
                                id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                                created_at timestamp with time zone DEFAULT now() NOT NULL,
                                updated_at timestamp with time zone DEFAULT now() NOT NULL,
                                color text NOT NULL
-                           );
+);
 CREATE TABLE public.contacts (
                                  id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                                  created_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -380,7 +380,7 @@ CREATE TABLE public.contacts (
                                  last_name text NOT NULL,
                                  client_id text NOT NULL,
                                  mobile_number bigint NOT NULL
-                             );
+);
 CREATE TABLE public.courses (
                                 id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                                 created_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -390,7 +390,7 @@ CREATE TABLE public.courses (
                                 session integer DEFAULT 0 NOT NULL,
                                 is_active boolean DEFAULT true NOT NULL,
                                 "order" integer NOT NULL
-                            );
+);
 CREATE SEQUENCE public.courses_order_seq
     AS integer
     START WITH 1
@@ -408,7 +408,7 @@ CREATE TABLE public.courses_setup (
                                       service text NOT NULL,
                                       session integer NOT NULL,
                                       is_active boolean NOT NULL
-                                  );
+);
 CREATE TABLE public.credit_note_type (
                                          id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                                          name text NOT NULL,
@@ -418,7 +418,7 @@ CREATE TABLE public.credit_note_type (
                                          updated_at timestamp with time zone DEFAULT now() NOT NULL,
                                          "order" integer NOT NULL,
                                          code text
-                                     );
+);
 CREATE SEQUENCE public.credit_note_type_order_seq
     AS integer
     START WITH 1
@@ -439,14 +439,14 @@ CREATE TABLE public.credit_notes (
                                      invoice_no numeric NOT NULL,
                                      total numeric NOT NULL,
                                      type text NOT NULL
-                                 );
+);
 CREATE TABLE public.custom_fields_categories (
                                                  id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                                                  category text,
                                                  assigned_fields text,
                                                  created_date timestamp with time zone DEFAULT statement_timestamp() NOT NULL,
                                                  is_active boolean DEFAULT true NOT NULL
-                                             );
+);
 CREATE TABLE public.debt (
                              id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                              created_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -460,7 +460,7 @@ CREATE TABLE public.debt (
                              age numeric NOT NULL,
                              balance numeric NOT NULL,
                              last_action text NOT NULL
-                         );
+);
 CREATE TABLE public.departments (
                                     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                                     name text NOT NULL,
@@ -468,7 +468,7 @@ CREATE TABLE public.departments (
                                     updated_at timestamp with time zone DEFAULT now() NOT NULL,
                                     is_active boolean NOT NULL,
                                     "order" integer NOT NULL
-                                );
+);
 CREATE SEQUENCE public.departments_order_seq
     AS integer
     START WITH 1
@@ -492,7 +492,7 @@ CREATE TABLE public.diagnostic_codes (
                                          "ICD9_code" text,
                                          "ICD10_code" text,
                                          "OSICS10_code" text
-                                     );
+);
 CREATE SEQUENCE public.diagnostic_codes_order_seq
     AS integer
     START WITH 1
@@ -511,7 +511,7 @@ CREATE TABLE public.drugs (
                               comment text,
                               created_date timestamp with time zone DEFAULT statement_timestamp() NOT NULL,
                               is_active boolean DEFAULT false NOT NULL
-                          );
+);
 CREATE TABLE public.family_relationships (
                                              created_at timestamp with time zone DEFAULT now() NOT NULL,
                                              updated_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -520,7 +520,7 @@ CREATE TABLE public.family_relationships (
                                              reserve_relation text,
                                              "order" integer NOT NULL,
                                              id uuid DEFAULT public.gen_random_uuid() NOT NULL
-                                         );
+);
 COMMENT ON TABLE public.family_relationships IS 'family_relationships';
 CREATE SEQUENCE public.family_relationships_order_seq
     AS integer
@@ -535,7 +535,7 @@ CREATE TABLE public.feature_flags (
                                       page_slug text NOT NULL,
                                       fallback_slug text NOT NULL,
                                       status boolean DEFAULT true NOT NULL
-                                  );
+);
 COMMENT ON TABLE public.feature_flags IS 'If status flag is 0 id prevents the default page content and renders the fallback slug in iframe';
 CREATE TABLE public.invoices (
                                  id uuid DEFAULT public.gen_random_uuid() NOT NULL,
@@ -554,7 +554,7 @@ CREATE TABLE public.invoices (
                                  balance numeric NOT NULL,
                                  debtor text,
                                  invoice_logo text
-                             );
+);
 CREATE TABLE public.issuing_company (
                                         id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                                         created_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -572,7 +572,7 @@ CREATE TABLE public.issuing_company (
                                         invoice_prefix text,
                                         invoice_starting_number numeric,
                                         vat_registered boolean DEFAULT false
-                                    );
+);
 CREATE SEQUENCE public.issuing_company_order_seq
     AS integer
     START WITH 1
@@ -589,7 +589,7 @@ CREATE TABLE public.job_candidates (
                                        created_at timestamp with time zone DEFAULT now() NOT NULL,
                                        updated_at timestamp with time zone DEFAULT now() NOT NULL,
                                        is_new boolean DEFAULT true NOT NULL
-                                   );
+);
 CREATE SEQUENCE public.job_candidates_id_seq
     AS integer
     START WITH 1
@@ -607,7 +607,7 @@ CREATE TABLE public.job_openings (
                                      id integer NOT NULL,
                                      created_at timestamp with time zone DEFAULT now() NOT NULL,
                                      updated_at timestamp with time zone DEFAULT now() NOT NULL
-                                 );
+);
 CREATE SEQUENCE public.job_openings_id_seq
     AS integer
     START WITH 1
@@ -623,7 +623,7 @@ CREATE TABLE public.job_title (
                                   updated_at timestamp with time zone DEFAULT now() NOT NULL,
                                   is_active boolean NOT NULL,
                                   "order" integer NOT NULL
-                              );
+);
 CREATE SEQUENCE public.job_title_order_seq
     AS integer
     START WITH 1
@@ -642,7 +642,7 @@ CREATE TABLE public.labs_dashboard (
                                        requester text NOT NULL,
                                        public boolean DEFAULT true NOT NULL,
                                        id uuid DEFAULT public.gen_random_uuid() NOT NULL
-                                   );
+);
 CREATE TABLE public.lead (
                              name text NOT NULL,
                              email text NOT NULL,
@@ -658,7 +658,7 @@ CREATE TABLE public.lead (
                              updated_at date,
                              "order" integer NOT NULL,
                              is_active boolean DEFAULT true NOT NULL
-                         );
+);
 COMMENT ON TABLE public.lead IS 'lead view ';
 CREATE TABLE public.lead_fields (
                                     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
@@ -672,7 +672,7 @@ CREATE TABLE public.lead_fields (
                                     is_active boolean DEFAULT true NOT NULL,
                                     is_locked boolean DEFAULT false NOT NULL,
                                     created_date timestamp with time zone DEFAULT statement_timestamp() NOT NULL
-                                );
+);
 CREATE TABLE public.library (
                                 id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                                 created_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -684,7 +684,7 @@ CREATE TABLE public.library (
                                 phone text,
                                 is_active boolean NOT NULL,
                                 "order" integer NOT NULL
-                            );
+);
 CREATE TABLE public.library_installers (
                                            id integer NOT NULL,
                                            library_name text NOT NULL,
@@ -695,7 +695,7 @@ CREATE TABLE public.library_installers (
                                            data jsonb NOT NULL,
                                            created_date timestamp with time zone DEFAULT statement_timestamp() NOT NULL,
                                            is_plus boolean DEFAULT false NOT NULL
-                                       );
+);
 CREATE SEQUENCE public.library_installers_id_seq
     AS integer
     START WITH 1
@@ -715,12 +715,12 @@ ALTER SEQUENCE public.library_order_seq OWNED BY public.library."order";
 CREATE TABLE public.lms_slugs (
                                   id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                                   slug text NOT NULL,
-                                  article_urls jsonb,
-                                  webinar text,
-                                  blogs jsonb,
-                                  videos jsonb,
-                                  created_date timestamp with time zone DEFAULT statement_timestamp() NOT NULL
-                              );
+                                  articles jsonb,
+                                  blog text,
+                                  video text,
+                                  created_date timestamp with time zone DEFAULT statement_timestamp() NOT NULL,
+                                  webinar jsonb
+);
 CREATE TABLE public.locations (
                                   id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                                   name text NOT NULL,
@@ -741,7 +741,7 @@ CREATE TABLE public.locations (
                                   apt text,
                                   postcode text,
                                   "position" json
-                              );
+);
 CREATE SEQUENCE public.locations_order_seq
     AS integer
     START WITH 1
@@ -756,7 +756,7 @@ CREATE TABLE public.marketing_campaign (
                                            updated_at timestamp with time zone DEFAULT now() NOT NULL,
                                            name text NOT NULL,
                                            "order" integer NOT NULL
-                                       );
+);
 CREATE SEQUENCE public.marketing_campaign_order_seq
     AS integer
     START WITH 1
@@ -775,7 +775,7 @@ CREATE TABLE public.marketing_referral (
                                            spend numeric DEFAULT 0 NOT NULL,
                                            incentive boolean DEFAULT false NOT NULL,
                                            state text NOT NULL
-                                       );
+);
 COMMENT ON TABLE public.marketing_referral IS 'Customer Referrals & Referrals Statistics';
 CREATE TABLE public.marketing_source (
                                          id uuid DEFAULT public.gen_random_uuid() NOT NULL,
@@ -784,7 +784,7 @@ CREATE TABLE public.marketing_source (
                                          name text NOT NULL,
                                          is_active boolean DEFAULT true NOT NULL,
                                          "order" integer NOT NULL
-                                     );
+);
 CREATE SEQUENCE public.marketing_source_order_seq
     AS integer
     START WITH 1
@@ -800,7 +800,7 @@ CREATE TABLE public.news (
                              id integer NOT NULL,
                              title text NOT NULL,
                              description text NOT NULL
-                         );
+);
 CREATE SEQUENCE public.news_id_seq
     AS integer
     START WITH 1
@@ -809,13 +809,20 @@ CREATE SEQUENCE public.news_id_seq
     NO MAXVALUE
     CACHE 1;
 ALTER SEQUENCE public.news_id_seq OWNED BY public.news.id;
+CREATE TABLE public.notification_read (
+                                          id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+                                          "user" numeric NOT NULL,
+                                          company numeric NOT NULL,
+                                          read_at timestamp with time zone DEFAULT now() NOT NULL,
+                                          notification uuid NOT NULL
+);
 CREATE TABLE public.notification_toggle (
                                             id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                                             "user" integer NOT NULL,
                                             company integer NOT NULL,
                                             notification_type uuid NOT NULL,
                                             enabled boolean DEFAULT false NOT NULL
-                                        );
+);
 CREATE TABLE public.notification_types (
                                            id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                                            type text NOT NULL,
@@ -825,11 +832,11 @@ CREATE TABLE public.notification_types (
                                            title text,
                                            name text,
                                            destination text
-                                       );
+);
 CREATE TABLE public.notification_types_enum (
                                                 type text NOT NULL,
                                                 description text NOT NULL
-                                            );
+);
 CREATE TABLE public.notifications (
                                       id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                                       created_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -837,12 +844,11 @@ CREATE TABLE public.notifications (
                                       "order" integer NOT NULL,
                                       sent_to jsonb,
                                       type uuid NOT NULL,
-                                      is_read jsonb,
                                       variables jsonb,
                                       destination text,
                                       sent_by integer,
-                                      loop integer
-                                  );
+                                      loop jsonb
+);
 CREATE SEQUENCE public.notifications_order_seq
     AS integer
     START WITH 1
@@ -859,7 +865,7 @@ CREATE TABLE public.packages (
                                  quantity json,
                                  is_active boolean DEFAULT true NOT NULL,
                                  "order" integer NOT NULL
-                             );
+);
 CREATE SEQUENCE public.packages_order_seq
     AS integer
     START WITH 1
@@ -876,7 +882,7 @@ CREATE TABLE public.packages_setup (
                                        name text NOT NULL,
                                        quantity json NOT NULL,
                                        is_active boolean NOT NULL
-                                   );
+);
 CREATE TABLE public.payment_types (
                                       id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                                       payment_type text NOT NULL,
@@ -887,7 +893,7 @@ CREATE TABLE public.payment_types (
                                       created_at timestamp with time zone DEFAULT now() NOT NULL,
                                       updated_at timestamp with time zone DEFAULT now() NOT NULL,
                                       "order" integer NOT NULL
-                                  );
+);
 CREATE SEQUENCE public.payment_types_order_seq
     AS integer
     START WITH 1
@@ -908,7 +914,7 @@ CREATE TABLE public.payments (
                                  payment_method text NOT NULL,
                                  "user" text NOT NULL,
                                  against integer
-                             );
+);
 CREATE TABLE public.peer_review (
                                     id integer NOT NULL,
                                     company_id integer NOT NULL,
@@ -916,7 +922,7 @@ CREATE TABLE public.peer_review (
                                     email_sent_date date NOT NULL,
                                     users_sent_to text,
                                     user_id integer
-                                );
+);
 CREATE SEQUENCE public.peer_review_id_seq
     AS integer
     START WITH 1
@@ -932,7 +938,7 @@ CREATE TABLE public.petty_cash_types (
                                          created_at timestamp with time zone DEFAULT now() NOT NULL,
                                          updated_at timestamp with time zone DEFAULT now() NOT NULL,
                                          "order" integer NOT NULL
-                                     );
+);
 CREATE SEQUENCE public.petty_cash_types_order_seq
     AS integer
     START WITH 1
@@ -953,7 +959,7 @@ CREATE TABLE public.product_lists (
                                       status text NOT NULL,
                                       "order" integer NOT NULL,
                                       is_active boolean NOT NULL
-                                  );
+);
 CREATE SEQUENCE public.product_lists_order_seq
     AS integer
     START WITH 1
@@ -969,7 +975,7 @@ CREATE TABLE public.prototype (
                                   is_active boolean NOT NULL,
                                   created_at timestamp with time zone DEFAULT now() NOT NULL,
                                   updated_at timestamp with time zone DEFAULT now() NOT NULL
-                              );
+);
 CREATE SEQUENCE public.prototype_order_seq
     AS integer
     START WITH 1
@@ -989,7 +995,21 @@ CREATE TABLE public.purchase_order (
                                        location text NOT NULL,
                                        total_cost integer NOT NULL,
                                        is_active boolean NOT NULL
-                                   );
+);
+CREATE TABLE public.read_notification (
+                                          id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+                                          "user" numeric NOT NULL,
+                                          company numeric NOT NULL,
+                                          read_at timestamp with time zone DEFAULT now() NOT NULL,
+                                          notification uuid NOT NULL
+);
+CREATE TABLE public.read_notifications (
+                                           id uuid NOT NULL,
+                                           "user" numeric NOT NULL,
+                                           company numeric NOT NULL,
+                                           read_at timestamp with time zone DEFAULT now() NOT NULL,
+                                           notification uuid NOT NULL
+);
 CREATE TABLE public.resources (
                                   created_at timestamp with time zone DEFAULT now() NOT NULL,
                                   updated_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -998,7 +1018,7 @@ CREATE TABLE public.resources (
                                   location text DEFAULT true NOT NULL,
                                   is_active boolean DEFAULT true NOT NULL,
                                   id uuid DEFAULT public.gen_random_uuid() NOT NULL
-                              );
+);
 CREATE SEQUENCE public.resources_order_seq
     AS integer
     START WITH 1
@@ -1015,7 +1035,7 @@ CREATE TABLE public.rooms (
                               room_name text NOT NULL,
                               location text NOT NULL,
                               is_active boolean NOT NULL
-                          );
+);
 CREATE SEQUENCE public.rooms_id_seq
     AS integer
     START WITH 1
@@ -1042,7 +1062,7 @@ CREATE TABLE public.rota_templates (
                                        "order" integer DEFAULT nextval('public."Labs_order_seq"'::regclass) NOT NULL,
                                        id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                                        days json
-                                   );
+);
 COMMENT ON TABLE public.rota_templates IS 'rota_template';
 CREATE TABLE public.salutation (
                                    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
@@ -1051,7 +1071,7 @@ CREATE TABLE public.salutation (
                                    salutation text NOT NULL,
                                    is_active boolean NOT NULL,
                                    "order" integer NOT NULL
-                               );
+);
 CREATE SEQUENCE public.salutation_order_seq
     AS integer
     START WITH 1
@@ -1098,8 +1118,9 @@ CREATE TABLE public.service (
                                 room_resources json,
                                 equipment_resources json,
                                 max_clients integer,
-                                contracts json
-                            );
+                                contracts json,
+                                days_before_booking integer
+);
 CREATE TABLE public.service_categories (
                                            id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                                            name text NOT NULL,
@@ -1110,7 +1131,7 @@ CREATE TABLE public.service_categories (
                                            "order" integer NOT NULL,
                                            created_at timestamp with time zone DEFAULT now() NOT NULL,
                                            updated_at timestamp with time zone DEFAULT now() NOT NULL
-                                       );
+);
 CREATE SEQUENCE public.service_categories_order_seq
     AS integer
     START WITH 1
@@ -1119,6 +1140,11 @@ CREATE SEQUENCE public.service_categories_order_seq
     NO MAXVALUE
     CACHE 1;
 ALTER SEQUENCE public.service_categories_order_seq OWNED BY public.service_categories."order";
+CREATE TABLE public.service_master (
+                                       id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+                                       name text NOT NULL,
+                                       service_id uuid NOT NULL
+);
 CREATE SEQUENCE public.service_order_seq
     AS integer
     START WITH 1
@@ -1163,7 +1189,7 @@ CREATE TABLE public.services (
                                  patient_booking_type text NOT NULL,
                                  timing_rules json NOT NULL,
                                  max_clients text NOT NULL
-                             );
+);
 CREATE SEQUENCE public.services_order_seq
     AS integer
     START WITH 1
@@ -1185,7 +1211,7 @@ CREATE TABLE public.stock_take (
                                    status text,
                                    "discrepanciesUp" integer DEFAULT 0,
                                    "discrepanciesDown" integer DEFAULT 0
-                               );
+);
 CREATE TABLE public.supplier (
                                  id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                                  created_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -1194,7 +1220,7 @@ CREATE TABLE public.supplier (
                                  supplier_name text NOT NULL,
                                  products_assigned integer NOT NULL,
                                  "order" integer DEFAULT nextval('public.departments_order_seq'::regclass) NOT NULL
-                             );
+);
 CREATE TABLE public.tax_rates (
                                   id uuid DEFAULT public.gen_random_uuid() NOT NULL,
                                   created_at time with time zone DEFAULT now() NOT NULL,
@@ -1204,7 +1230,7 @@ CREATE TABLE public.tax_rates (
                                   is_active boolean NOT NULL,
                                   "glCode" text,
                                   "order" integer NOT NULL
-                              );
+);
 CREATE SEQUENCE public.tax_rates_order_seq
     AS integer
     START WITH 1
@@ -1230,7 +1256,7 @@ CREATE TABLE public.third_parties (
                                       city text,
                                       street text,
                                       post_code text
-                                  );
+);
 CREATE SEQUENCE public.third_parties_order_seq
     AS integer
     START WITH 1
@@ -1245,7 +1271,7 @@ CREATE TABLE public.user_list (
                                   admin boolean NOT NULL,
                                   first_name text NOT NULL,
                                   last_name text NOT NULL
-                              );
+);
 ALTER TABLE ONLY public."Discounts" ALTER COLUMN "order" SET DEFAULT nextval('public."Discounts_order_seq"'::regclass);
 ALTER TABLE ONLY public."Labs" ALTER COLUMN "order" SET DEFAULT nextval('public."Labs_order_seq"'::regclass);
 ALTER TABLE ONLY public."Lists_campaign" ALTER COLUMN "order" SET DEFAULT nextval('public."Lists_campaign_order_seq"'::regclass);
@@ -1381,6 +1407,8 @@ ALTER TABLE ONLY public.library_installers
     ADD CONSTRAINT library_installers_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.library
     ADD CONSTRAINT library_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.lms_slugs
+    ADD CONSTRAINT lms_slugs_slug_key UNIQUE (slug);
 ALTER TABLE ONLY public.locations
     ADD CONSTRAINT locations_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.marketing_campaign
@@ -1393,6 +1421,8 @@ ALTER TABLE ONLY public.marketing_source
     ADD CONSTRAINT marketing_source_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.news
     ADD CONSTRAINT news_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.notification_read
+    ADD CONSTRAINT notification_read_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.notification_toggle
     ADD CONSTRAINT notification_toggle_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.notification_types_enum
@@ -1421,6 +1451,10 @@ ALTER TABLE ONLY public.product_lists
     ADD CONSTRAINT product_lists_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.prototype
     ADD CONSTRAINT prototype_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.read_notification
+    ADD CONSTRAINT read_notification_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.read_notifications
+    ADD CONSTRAINT read_notifications_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.resources
     ADD CONSTRAINT resources_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.rooms
@@ -1433,6 +1467,8 @@ ALTER TABLE ONLY public.salutation
     ADD CONSTRAINT salutation_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.service_categories
     ADD CONSTRAINT service_categories_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.service_master
+    ADD CONSTRAINT service_master_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.service
     ADD CONSTRAINT service_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.services
@@ -1499,19 +1535,9 @@ ALTER TABLE ONLY public.notification_toggle
     ADD CONSTRAINT notification_toggle_notification_type_fkey FOREIGN KEY (notification_type) REFERENCES public.notification_types(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.notification_types
     ADD CONSTRAINT notification_types_type_fkey FOREIGN KEY (notification_type) REFERENCES public.notification_types_enum(type) ON UPDATE RESTRICT ON DELETE RESTRICT;
-INSERT INTO public.feature_flags (id, page_slug, fallback_slug, status) VALUES ('e668d4e1-bbe5-4e68-8b54-cb444c438f4b', 'reports', 'index.php?p=reportmodule&section=report&noheader', true);
-INSERT INTO public.feature_flags (id, page_slug, fallback_slug, status) VALUES ('704ab09e-f164-495b-b6eb-9dcb449ddeb1', 'team/users', 'index.php?p=staffs&noheader', true);
-INSERT INTO public.feature_flags (id, page_slug, fallback_slug, status) VALUES ('6234f784-ff28-4dd3-9545-c9acd6d0f5ec', 'leads', 'index.php?p=leads&noheader', true);
-INSERT INTO public.feature_flags (id, page_slug, fallback_slug, status) VALUES ('b9934d6b-ab7a-4f79-8a35-97594ad02ff3', 'leads', 'index.php?p=leads&noheader	', true);
-INSERT INTO public.feature_flags (id, page_slug, fallback_slug, status) VALUES ('845bab04-b09b-43b4-9b5d-8793df03b154', 'calendar', 'pages/cal/', true);
-INSERT INTO public.feature_flags (id, page_slug, fallback_slug, status) VALUES ('abd187ca-b17d-42ed-b7fc-5349593e2916', 'schedule-manager', 'pages/rota/', true);
-INSERT INTO public.feature_flags (id, page_slug, fallback_slug, status) VALUES ('dcc85fab-a8a6-471b-802c-48190b7b8b81', 'reports/9', 'index.php?p=reportmodule&inp=reportdetail&type=contacts&id=9&noheader', false);
-INSERT INTO public.feature_flags (id, page_slug, fallback_slug, status) VALUES ('e52ebc75-9f29-4a95-a300-f62c7fd9f226', 'reports/FI000', 'index.php?p=reportmodule&inp=reportdetail&type=sales&id=7264&noheader', true);
-INSERT INTO public.feature_flags (id, page_slug, fallback_slug, status) VALUES ('51b95c4b-f13e-4e49-8ee1-87526d418b01', 'reports/FI001', 'index.php?p=reportmodule&inp=reportdetail&type=sales&field=date&id=6019&noheader', true);
-INSERT INTO public.feature_flags (id, page_slug, fallback_slug, status) VALUES ('8079e6a0-4bc6-4747-a2bd-0d6d20414611', 'reports/FI002', 'index.php?p=reportmodule&inp=reportdetail&type=sales&id=7311&noheader', true);
-INSERT INTO public.feature_flags (id, page_slug, fallback_slug, status) VALUES ('64652ad1-edde-47c6-99a6-01ab5f05b2b0', 'setup/integration', 'index.php?p=settings_all#&tab-integrations', false);
-INSERT INTO public.feature_flags (id, page_slug, fallback_slug, status) VALUES ('408603ec-d170-4f91-97d9-fc519728dffc', 'setup/custom-fields', 'index.php?p=settings_all#&tab-integrations', false);
-INSERT INTO public.feature_flags (id, page_slug, fallback_slug, status) VALUES ('0cdf2b69-d2e5-431e-ac1e-147e48a23c8c', 'dashboard', 'index.php?p=news_feed', false);
+ALTER TABLE ONLY public.service_master
+    ADD CONSTRAINT service_master_service_id_fkey FOREIGN KEY (service_id) REFERENCES public.service(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
 INSERT INTO public.notification_types_enum (type, description) VALUES ('new_feature_release', 'New Feature Release');
 INSERT INTO public.notification_types_enum (type, description) VALUES ('referral', 'Click to learn more');
 INSERT INTO public.notification_types_enum (type, description) VALUES ('new_appointment_via_calendar', 'new_appointment_via_calendar');

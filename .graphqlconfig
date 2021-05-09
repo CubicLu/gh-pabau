@@ -1,16 +1,28 @@
 {
-  "name": "Remote Schema",
-  "schemaPath": "remote-schema.graphql",
-  "includes": ["apps/web/**"],
+  "name": "hasura",
+  "schemaPath": "hasura/schema.graphql",
   "extensions": {
     "endpoints": {
-      "Default GraphQL Endpoint": {
-        "url": "https://api.new.pabau.com/v1/graphql",
+      "production": {
+        "url": "https://api.new.pabau.com.com/v1/graphql",
         "headers": {
-          "X-Hasura-Admin-Secret": "madskills"
+          "Authorization": "Bearer ${env:GITHUB-ACCESS-TOKEN}",
+          "user-agent": "JS GraphQL"
+        },
+        "introspect": false
+      },
+      "local": {
+        "url": "http://localhost:8080/v1/graphql",
+        "headers": {
+          "Authorization": "Bearer ${env:HASURA_GRAPHQL_ADMIN_SECRET}",
+          "user-agent": "JS GraphQL"
         },
         "introspect": false
       }
     }
-  }
+  },
+  "includes": [
+    "hasura/schema.graphql",
+    "libs/**/*.graphql"
+  ]
 }

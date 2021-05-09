@@ -2,45 +2,45 @@ table:
   name: service_categories
   schema: public
 insert_permissions:
-- permission:
-    backend_only: false
-    check: {}
-    columns:
-    - assigned
-    - color
-    - image
-    - is_active
-    - name
-    - order
-  role: public
+  - permission:
+      backend_only: false
+      check: {}
+      columns:
+        - assigned
+        - color
+        - image
+        - is_active
+        - name
+        - order
+    role: user
 select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - is_active
-    - order
-    - assigned
-    - color
-    - image
-    - name
-    - created_at
-    - updated_at
-    - id
-    filter: {}
-  role: public
+  - permission:
+      allow_aggregations: true
+      columns:
+        - assigned
+        - color
+        - created_at
+        - id
+        - image
+        - is_active
+        - name
+        - order
+        - updated_at
+      filter: {}
+    role: user
 update_permissions:
-- permission:
-    check: null
-    columns:
-    - assigned
-    - color
-    - image
-    - is_active
-    - name
-    - order
-    filter: {}
-  role: public
+  - permission:
+      check: null
+      columns:
+        - assigned
+        - color
+        - image
+        - is_active
+        - name
+        - order
+      filter: {}
+    role: user
 delete_permissions:
-- permission:
-    filter: {}
-  role: public
+  - permission:
+      filter: {}
+    role: user

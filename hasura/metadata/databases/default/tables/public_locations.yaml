@@ -2,74 +2,97 @@ table:
   name: locations
   schema: public
 insert_permissions:
-- permission:
-    backend_only: false
-    check: {}
-    columns:
-    - address
-    - apt
-    - badges
-    - bookable
-    - email
-    - employees
-    - hasCalender
-    - img
-    - is_active
-    - name
-    - phone
-    - position
-    - postcode
-    - showOnline
-    - website
-  role: public
+  - permission:
+      backend_only: false
+      check: {}
+      columns:
+        - address
+        - apt
+        - badges
+        - bookable
+        - email
+        - employees
+        - hasCalender
+        - img
+        - is_active
+        - name
+        - phone
+        - position
+        - postcode
+        - showOnline
+        - website
+    role: public
 select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - address
-    - apt
-    - badges
-    - bookable
-    - created_at
-    - email
-    - employees
-    - hasCalender
-    - id
-    - img
-    - is_active
-    - name
-    - order
-    - phone
-    - position
-    - postcode
-    - showOnline
-    - updated_at
-    - website
-    filter: {}
-  role: public
+  - permission:
+      allow_aggregations: true
+      columns:
+        - address
+        - apt
+        - badges
+        - bookable
+        - created_at
+        - email
+        - employees
+        - hasCalender
+        - id
+        - img
+        - is_active
+        - name
+        - order
+        - phone
+        - position
+        - postcode
+        - showOnline
+        - updated_at
+        - website
+      filter: {}
+    role: public
+  - permission:
+      columns:
+        - id
+        - name
+        - img
+        - address
+        - order
+        - is_active
+        - created_at
+        - updated_at
+        - employees
+        - badges
+        - phone
+        - email
+        - website
+        - hasCalender
+        - bookable
+        - showOnline
+        - apt
+        - postcode
+        - position
+      filter: {}
+    role: user
 update_permissions:
-- permission:
-    check: null
-    columns:
-    - address
-    - apt
-    - badges
-    - bookable
-    - email
-    - employees
-    - hasCalender
-    - img
-    - is_active
-    - name
-    - order
-    - phone
-    - position
-    - postcode
-    - showOnline
-    - website
-    filter: {}
-  role: public
+  - permission:
+      check: null
+      columns:
+        - address
+        - apt
+        - badges
+        - bookable
+        - email
+        - employees
+        - hasCalender
+        - img
+        - is_active
+        - name
+        - order
+        - phone
+        - position
+        - postcode
+        - showOnline
+        - website
+      filter: {}
+    role: public
 delete_permissions:
-- permission:
-    filter: {}
-  role: public
+  - permission:
+      filter: {}
+    role: public

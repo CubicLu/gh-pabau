@@ -27,6 +27,7 @@ const ContextWrapper: FunctionComponent = ({ children }) => {
           id
           username
           full_name
+          admin
           company {
             id
             details {

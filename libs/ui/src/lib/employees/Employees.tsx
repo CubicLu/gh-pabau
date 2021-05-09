@@ -19,6 +19,7 @@ export interface EmployeesProps {
   showMoreText?: string
   employees: Employee[]
   onSelected?: (items: Employee[]) => void
+  multiple?: boolean
 }
 
 export const Employees: FC<EmployeesProps> = ({
@@ -29,12 +30,15 @@ export const Employees: FC<EmployeesProps> = ({
   searchPlaceholder,
   showLessText,
   showMoreText,
+  multiple = true,
 }) => {
   const [searchQuery, setSearchQuery] = useState('')
   const [employeeItems, setEmployeeItems] = useState<Employee[]>([])
   const [loadMore, setLoadMore] = useState(false)
   const handleSelectEmployee = (employee) => {
-    const items: Employee[] = [...employeeItems]
+    const items: Employee[] = multiple
+      ? [...employeeItems]
+      : employees.map((item) => ({ ...item, selected: false }))
     for (const item of items) {
       if (item.name === employee.name) item.selected = !item.selected
     }

@@ -18,7 +18,7 @@ import ROMSVG from '../../assets/images/lang-logos/romanian.svg'
 import RUSSVG from '../../assets/images/lang-logos/russian.svg'
 import DASVG from '../../assets/images/lang-logos/dutch.svg'
 
-const languageMenu: LangData[] = [
+export const languageMenu: LangData[] = [
   {
     label: 'English',
     shortLabel: 'EN',

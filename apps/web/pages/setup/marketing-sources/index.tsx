@@ -1,9 +1,9 @@
-import { gql } from '@apollo/client'
+import gql from 'graphql-tag'
 import { NextPage } from 'next'
 import React, { useContext } from 'react'
 import CrudLayout from '../../../components/CrudLayout/CrudLayout'
-import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import { UserContext } from '../../../context/UserContext'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const LIST_QUERY = gql`
   query marketing_sources(
@@ -42,6 +42,7 @@ const LIST_AGGREGATE_QUERY = gql`
     )
   }
 `
+
 const DELETE_MUTATION = gql`
   mutation delete_marketing_source($id: Int) {
     deleteOneMarketingSource(where: { id: $id }) {
@@ -50,6 +51,7 @@ const DELETE_MUTATION = gql`
     }
   }
 `
+
 const ADD_MUTATION = gql`
   mutation add_marketing_source(
     $imported: Int = 0
@@ -72,6 +74,7 @@ const ADD_MUTATION = gql`
     }
   }
 `
+
 const EDIT_MUTATION = gql`
   mutation update_marketing_source_by_pk(
     $id: Int!
@@ -88,17 +91,16 @@ const EDIT_MUTATION = gql`
   }
 `
 
-//TODO: Toshe
-// const UPDATE_ORDER_MUTATION = gql`
-//   mutation update_marketing_source_order($id: Int!, $order: Int) {
-//     update_marketing_source(
-//       where: { id: { _eq: $id } }
-//       _set: { order: $order }
-//     ) {
-//       affected_rows
-//     }
-//   }
-// `
+const UPDATE_ORDER_MUTATION = gql`
+  mutation update_marketing_source_order($id: Int!, $order: Int) {
+    update_marketing_source(
+      where: { id: { _eq: $id } }
+      _set: { order: $order }
+    ) {
+      affected_rows
+    }
+  }
+`
 
 export const Index: NextPage = () => {
   const { t } = useTranslationI18()

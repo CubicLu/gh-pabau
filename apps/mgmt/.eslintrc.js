@@ -1,10 +1,9 @@
 module.exports = {
   extends: [
     'plugin:@nrwl/nx/react',
-    '../../.eslintrc.json',
+    '../../.eslintrc.js',
     'plugin:react/recommended', // Uses the recommended rules from @eslint-plugin-react
     'plugin:@typescript-eslint/recommended', // Uses the recommended rules from the @typescript-eslint/eslint-plugin
-    'prettier/@typescript-eslint', // Uses eslint-config-prettier to disable ESLint rules from @typescript-eslint/eslint-plugin that would conflict with prettier
     'plugin:prettier/recommended', // Enables eslint-plugin-prettier and eslint-config-prettier. This will display prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
   ],
   ignorePatterns: ['!**/*', 'next.config.js'],
@@ -37,25 +36,5 @@ module.exports = {
     'react/prop-types': 0,
     'react/react-in-jsx-scope': 0,
     'react/destructuring-assignment': ['error', 'always'],
-    'graphql/template-strings': [
-      'error',
-      {
-        // Import default settings for your GraphQL client. Supported values:
-        // 'apollo', 'relay', 'lokka', 'fraql', 'literal'
-        env: 'apollo',
-
-        // Import your schema JSON here
-        schemaJson: require('../../graphql.schema.json'),
-
-        // OR provide absolute path to your schema JSON (but not if using `eslint --cache`!)
-        // schemaJsonFilepath: path.resolve(__dirname, './schema.json'),
-
-        // OR provide the schema in the Schema Language format
-        // schemaString: printSchema(schema),
-
-        // tagName is gql by default
-      },
-    ],
   },
-  plugins: ['graphql'],
 }

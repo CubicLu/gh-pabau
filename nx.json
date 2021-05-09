@@ -1,6 +1,8 @@
 {
   "npmScope": "pabau",
-  "affected": { "defaultBase": "master" },
+  "affected": {
+    "defaultBase": "master"
+  },
   "implicitDependencies": {
     "workspace.json": "*",
     "package.json": {
@@ -23,25 +25,63 @@
           "test",
           "e2e",
           "build-storybook",
-          "export"
+          "export",
+          "tsc"
         ]
       }
     }
   },
   "projects": {
-    "web": { "tags": [] },
-    "web-e2e": { "tags": [], "implicitDependencies": ["web"] },
-    "ui": { "tags": [] },
-    "ui-e2e": { "tags": [], "implicitDependencies": ["ui"] },
-    "yup": { "tags": [] },
-    "backend": { "tags": [] },
-    "mgmt": { "tags": [], "implicitDependencies": ["backend"] },
-    "mgmt-e2e": { "tags": [], "implicitDependencies": ["mgmt"] },
-    "connect": { "tags": [], "implicitDependencies": ["backend"] },
-    "connect-e2e": { "tags": [], "implicitDependencies": ["connect"] },
-    "mobile": { "tags": [] },
-    "bridge-api": { "tags": [] },
-    "i18n": { "tags": [] },
-    "bridge-proxy": { "tags": [] }
+    "web": {
+      "tags": []
+    },
+    "web-e2e": {
+      "tags": [],
+      "implicitDependencies": ["web"]
+    },
+    "ui": {
+      "tags": []
+    },
+    "ui-e2e": {
+      "tags": [],
+      "implicitDependencies": ["ui"]
+    },
+    "yup": {
+      "tags": []
+    },
+    "backend": {
+      "tags": []
+    },
+    "mgmt": {
+      "tags": [],
+      "implicitDependencies": ["backend"]
+    },
+    "mgmt-e2e": {
+      "tags": [],
+      "implicitDependencies": ["mgmt"]
+    },
+    "connect": {
+      "tags": [],
+      "implicitDependencies": ["backend"]
+    },
+    "connect-e2e": {
+      "tags": [],
+      "implicitDependencies": ["connect"]
+    },
+    "mobile": {
+      "tags": []
+    },
+    "bridge-api": {
+      "tags": []
+    },
+    "i18n": {
+      "tags": []
+    },
+    "bridge-proxy": {
+      "tags": []
+    },
+    "graphql": {
+      "tags": []
+    }
   }
 }

@@ -87,8 +87,8 @@ export function Input({
             value={text}
             // defaultValue={text}
             size={size}
-            disabled={disabled}
             suffix={suffix}
+            disabled={disabled}
             onChange={(e) => handleInputChange(e)}
           />
         </Form.Item>

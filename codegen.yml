@@ -1,9 +1,13 @@
 overwrite: true
-schema: "https://api.new.pabau.com/v1/graphql"
-documents: "libs/graphql/*.graphql"
+schema: remote-schema.graphql
+documents: 'libs/graphql/*.graphql'
 generates:
   libs/graphql/generated/graphql.tsx:
     plugins:
-      - "typescript"
-      - "typescript-operations"
-      - "typescript-react-apollo"
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+#  tools/sdk/index.ts:
+#    plugins:
+#      - typescript
+#      - typescript-generic-sdk

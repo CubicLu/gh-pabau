@@ -1,12 +1,15 @@
 {
   "search.exclude": {
-    "**/.next": true,
-    "yarn.lock": true
+    "yarn.lock": true,
+    "**/dist": true,
+    "**/public/vendors": true,
+    "**/node_modules": true
   },
   "files.exclude": {
     "yarn.lock": true,
-    "**/.next": true,
-    "**/public/vendors": true
+    "**/dist": true,
+    "**/public/vendors": true,
+    "**/node_modules": true
   },
   "eslint.format.enable": true,
   "eslint.codeActionsOnSave.mode": "all",
@@ -15,13 +18,6 @@
   },
   "eslint.alwaysShowStatus": true,
   "eslint.lintTask.enable": true,
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "json",
-    "jsonc",
-    "json5"
-  ],
   "editor.suggestSelection": "first",
   "explorer.confirmDelete": false,
   "git.enableSmartCommit": true,
@@ -30,12 +26,16 @@
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   "editor.formatOnSave": true,
   "files.eol": "\n",
-  "editor.codeActionsOnSave": {
-    "source.fixAll": true,
-    "source.organizeImports": true
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[graphql]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[md]": {
-    "editor.formatOnType": true,
     "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
   },
   "workbench.colorCustomizations": {

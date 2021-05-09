@@ -4,7 +4,6 @@ import emailTemplate2 from '../../assets/images/emailTemplate2.png'
 import emailTemplate3 from '../../assets/images/emailTemplate3.png'
 import emailTemplate4 from '../../assets/images/emailTemplate4.png'
 import emailTemplate5 from '../../assets/images/emailTemplate5.png'
-
 import ChooseEmailTemplate, {
   ChooseEmailTemplateProps,
   emailTemplateProps,
