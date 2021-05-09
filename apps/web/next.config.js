@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const withAntdLess = require('next-plugin-antd-less')
 const withImages = require('next-images')
 const withNx = require('@nrwl/next/plugins/with-nx')
 
 module.exports = {
   env: {
-     google_api_key: 'AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw',
+    google_api_key: 'AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw',
   },
   typescript: {
     // !! WARN !!

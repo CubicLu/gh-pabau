@@ -41,7 +41,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/web/**/*.{ts,tsx}"],
+            "lintFilePatterns": ["apps/web/**/*.{ts,tsx,js,jsx}"],
             "maxWarnings": 0
           }
         },
@@ -119,7 +119,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/graphql/**/*.{ts,tsx,js,jsx,graphql}"],
+            "lintFilePatterns": ["libs/graphql/**/*.{ts,tsx,js,jsx}"],
             "maxWarnings": 0
           }
         },
@@ -252,7 +252,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/yup/**/*.ts"]
+            "lintFilePatterns": ["libs/yup/**/*.[tj]s"]
           }
         },
         "test": {
@@ -312,7 +312,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/backend/**/*.ts"]
+            "lintFilePatterns": ["apps/backend/**/*.[tj]s"]
           }
         },
         "test": {
@@ -382,7 +382,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/mgmt/**/*.{ts,tsx}"]
+            "lintFilePatterns": ["apps/mgmt/**/*.{ts,tsx,js,jsx}"]
           }
         },
         "test": {
@@ -488,7 +488,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/connect/**/*.{ts,tsx}"]
+            "lintFilePatterns": ["apps/connect/**/*.{ts,tsx,js,jsx}"]
           }
         },
         "test": {
@@ -719,7 +719,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/i18n/**/*.ts"]
+            "lintFilePatterns": ["libs/i18n/**/*.[tj]s"]
           }
         },
         "test": {
