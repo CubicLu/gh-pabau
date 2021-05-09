@@ -3,7 +3,6 @@ import {
   MobileHeader,
   MobileSidebar,
   NotificationDrawer,
-  PabauMessages,
   SetupSearchInput,
 } from '@pabau/ui'
 import classNames from 'classnames'
