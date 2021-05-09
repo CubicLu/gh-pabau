@@ -639,7 +639,8 @@
             "outputPath": "dist/apps/bridge-api",
             "main": "apps/bridge-api/src/main.ts",
             "tsConfig": "apps/bridge-api/tsconfig.app.json",
-            "assets": ["apps/bridge-api/src/assets"]
+            "assets": ["apps/bridge-api/src/assets"],
+            "maxWorkers": 1
           },
           "configurations": {
             "production": {
