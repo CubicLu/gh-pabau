@@ -6,7 +6,7 @@ const prettierSupportedExtensions = prettier
   .getSupportInfo()
   .languages.map(({ extensions }) => extensions)
   .flat()
-  .filter((v) => ![".jsx",".js",".tsx",".ts"].includes(v))
+  .filter((v) => !['.jsx', '.js', '.tsx', '.ts'].includes(v))
 
 const addQuotes = (a) => `"${a}"`
 
