@@ -15,6 +15,7 @@
     "nx": "cross-env NODE_OPTIONS='--max-old-space-size=4096' nx",
     "vercel": "vercel",
     "apollo": "npx apollo",
+    "build:bridge-api": "nx export bridge-api",
     "hasura:cli": "env-cmd -f ./hasura/.env hasura --project hasura",
     "nest": "cd apps/backend && nest",
     "clean": "rimraf **/node_modules",
