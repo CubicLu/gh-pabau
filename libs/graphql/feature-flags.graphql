@@ -7,10 +7,7 @@ query getFeatureFlags {
   }
 }
 
-mutation newFeatureFlag(
-  $fallback_slug: String = ""
-  $page_slug: String = ""
-) {
+mutation newFeatureFlag($fallback_slug: String = "", $page_slug: String = "") {
   insert_feature_flags_one(
     object: {
       fallback_slug: $fallback_slug
@@ -25,10 +22,7 @@ mutation newFeatureFlag(
   }
 }
 
-mutation UpdateFeatureStatus(
-  $id: uuid = ""
-  $status: Boolean = false
-) {
+mutation UpdateFeatureStatus($id: uuid = "", $status: Boolean = false) {
   update_feature_flags_by_pk(
     pk_columns: { id: $id }
     _set: { status: $status }

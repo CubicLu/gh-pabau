@@ -89,51 +89,51 @@ pipelines:
             - yarn bin || true
 
       - parallel:
-        - step:
-            name: misc checks
-            max-time: 15
-            caches:
-              - node
-            script:
-              - yarn bin || true
-              - yarn install --frozen-lockfile --prefer-offline
-              - yarn bin || true
-              - yarn lint:tsc
-              - yarn lint:ls || true
-              - yarn lint:workspace || true
+          - step:
+              name: misc checks
+              max-time: 15
+              caches:
+                - node
+              script:
+                - yarn bin || true
+                - yarn install --frozen-lockfile --prefer-offline
+                - yarn bin || true
+                - yarn lint:tsc
+                - yarn lint:ls || true
+                - yarn lint:workspace || true
 
-        - step:
-            name: lint
-            max-time: 20
-            caches:
-              - node
-            script:
-              - yarn install --frozen-lockfile --prefer-offline
-              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:lint --base=HEAD~1 --with-deps --parallel --maxParallel=2
+          - step:
+              name: lint
+              max-time: 20
+              caches:
+                - node
+              script:
+                - yarn install --frozen-lockfile --prefer-offline
+                - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:lint --base=HEAD~1 --with-deps --parallel --maxParallel=2
 
-        - step:
-            name: unit tests
-            max-time: 25
-            caches:
-              - node
-            script:
-              - yarn install --frozen-lockfile --prefer-offline
-              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --skip-nx-cache
-#              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
-#              - NODE_OPTIONS=--max_old_space_size=2222 yarn affected:test --base=HEAD~1 --parallel --maxParallel=2 --skip-nx-cache
-#              - NODE_OPTIONS=--max_old_space_size=1555 yarn affected:test --base=HEAD~1 --parallel --maxParallel=3 --skip-nx-cache
+          - step:
+              name: unit tests
+              max-time: 25
+              caches:
+                - node
+              script:
+                - yarn install --frozen-lockfile --prefer-offline
+                - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --skip-nx-cache
+          #              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
+          #              - NODE_OPTIONS=--max_old_space_size=2222 yarn affected:test --base=HEAD~1 --parallel --maxParallel=2 --skip-nx-cache
+          #              - NODE_OPTIONS=--max_old_space_size=1555 yarn affected:test --base=HEAD~1 --parallel --maxParallel=3 --skip-nx-cache
 
-        - step:
-            size: 2x
-            name: build
-            max-time: 30
-            caches:
-              - node
-            script:
-              - yarn install --frozen-lockfile --prefer-offline
-              - NODE_OPTIONS=--max_old_space_size=2345 yarn affected:export --base=HEAD~1 --prod --parallel --maxParallel=2
-            artifacts:
-              - dist/**
+          - step:
+              size: 2x
+              name: build
+              max-time: 30
+              caches:
+                - node
+              script:
+                - yarn install --frozen-lockfile --prefer-offline
+                - NODE_OPTIONS=--max_old_space_size=2345 yarn affected:export --base=HEAD~1 --prod --parallel --maxParallel=2
+              artifacts:
+                - dist/**
 
       # - parallel:
 
@@ -158,66 +158,63 @@ pipelines:
       #         - node_modules/.cache/**
       #         - dist/**
 
-
-
-
       - parallel:
-        - step:
-            size: 2x
-            name: deploy dockers
-            max-time: 20
-            deployment: production-dockers
-            services:
-              - docker
-            caches:
-              - node
-            script:
-              - yarn install --frozen-lockfile --prefer-offline
-              - apt-get update -y && apt-get install -y curl jq time
-              - yarn affected --base=HEAD~1 --target=deploy-docker --prod
-              - cp -f /tmp/bot_message.txt dist/ || true
-            artifacts:
-              - dist/bot_message.txt
+          - step:
+              size: 2x
+              name: deploy dockers
+              max-time: 20
+              deployment: production-dockers
+              services:
+                - docker
+              caches:
+                - node
+              script:
+                - yarn install --frozen-lockfile --prefer-offline
+                - apt-get update -y && apt-get install -y curl jq time
+                - yarn affected --base=HEAD~1 --target=deploy-docker --prod
+                - cp -f /tmp/bot_message.txt dist/ || true
+              artifacts:
+                - dist/bot_message.txt
 
-        - step:
-            size: 1x
-            name: deploy previews
-            max-time: 20
-            deployment: production-serverless
-            caches:
-              - node
-            script:
-              - yarn install --frozen-lockfile --prefer-offline
-              - ls -al dist || true
-              - ls -al dist/apps || true
-              - cat /tmp/bot_message.txt || true
-              - apt-get update -y && apt-get install -y curl jq time
+          - step:
+              size: 1x
+              name: deploy previews
+              max-time: 20
+              deployment: production-serverless
+              caches:
+                - node
+              script:
+                - yarn install --frozen-lockfile --prefer-offline
+                - ls -al dist || true
+                - ls -al dist/apps || true
+                - cat /tmp/bot_message.txt || true
+                - apt-get update -y && apt-get install -y curl jq time
 
-              # get the commit message for this merge
-              - export LAST_COMMIT_LOG=$(git log HEAD -1 | tail -n +4 | perl -p -e 's/[\r\n]//' | awk '{$1=$1;print}')
-              - echo "${LAST_COMMIT_LOG}"
-              - if [ "${LAST_COMMIT_LOG}" == "[skip ci] bumping version (patch)" ]; then (echo yes && export LAST_COMMIT_LOG=$(git log HEAD~1 -1 | tail -n +4)); fi
-              - echo "${LAST_COMMIT_LOG}"
+                # get the commit message for this merge
+                - export LAST_COMMIT_LOG=$(git log HEAD -1 | tail -n +4 | perl -p -e 's/[\r\n]//' | awk '{$1=$1;print}')
+                - echo "${LAST_COMMIT_LOG}"
+                - if [ "${LAST_COMMIT_LOG}" == "[skip ci] bumping version (patch)" ]; then (echo yes && export LAST_COMMIT_LOG=$(git log HEAD~1 -1 | tail -n +4)); fi
+                - echo "${LAST_COMMIT_LOG}"
 
-              # Get an oauth access token using the client credentials, parsing out the token with jq.
-              - git remote set-url origin "${BITBUCKET_GIT_SSH_ORIGIN}"
+                # Get an oauth access token using the client credentials, parsing out the token with jq.
+                - git remote set-url origin "${BITBUCKET_GIT_SSH_ORIGIN}"
 
-              # bump the package.json version by 0.0.1
-              - yarn version --message "[skip ci] bumping version (patch)" --patch --non-interactive --no-progress
-              - HUSKY=0 git push && HUSKY=0 git push --tags
-              - export PACKAGE_JSON_VERSION=$(jq -r .version < package.json)
+                # bump the package.json version by 0.0.1
+                - yarn version --message "[skip ci] bumping version (patch)" --patch --non-interactive --no-progress
+                - HUSKY=0 git push && HUSKY=0 git push --tags
+                - export PACKAGE_JSON_VERSION=$(jq -r .version < package.json)
 
-              - NODE_OPTIONS=--max_old_space_size=2750 /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=deploy --prod
+                - NODE_OPTIONS=--max_old_space_size=2750 /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=deploy --prod
 
-              - npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "HEAD~2" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message.txt
-              - |
-                printf "*New Version Staged for Production*\n## v${PACKAGE_JSON_VERSION}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
-              - cat /tmp/bot_message.txt >> /tmp/bot_message2.txt
-              - cat /tmp/bot_message2.txt
-              - cp -f /tmp/bot_message2.txt dist/ || true
+                - npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "HEAD~2" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message.txt
+                - |
+                  printf "*New Version Staged for Production*\n## v${PACKAGE_JSON_VERSION}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
+                - cat /tmp/bot_message.txt >> /tmp/bot_message2.txt
+                - cat /tmp/bot_message2.txt
+                - cp -f /tmp/bot_message2.txt dist/ || true
 
-            artifacts:
-              - dist/bot_message2.txt
+              artifacts:
+                - dist/bot_message2.txt
 
       - step:
           size: 1x

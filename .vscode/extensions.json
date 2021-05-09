@@ -4,6 +4,6 @@
     "graphql.vscode-graphql",
     "dbaeumer.vscode-eslint",
     "prisma.prisma",
-    "davidanson.vscode-markdownlint"
+    "esbenp.prettier-vscode"
   ]
 }
