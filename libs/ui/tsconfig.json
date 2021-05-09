@@ -7,8 +7,6 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "strictNullChecks": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "strict": false,
     "resolveJsonModule": true
   },
   "files": [],

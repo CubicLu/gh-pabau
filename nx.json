@@ -25,7 +25,8 @@
           "test",
           "e2e",
           "build-storybook",
-          "export"
+          "export",
+          "tsc"
         ]
       }
     }
@@ -36,18 +37,14 @@
     },
     "web-e2e": {
       "tags": [],
-      "implicitDependencies": [
-        "web"
-      ]
+      "implicitDependencies": ["web"]
     },
     "ui": {
       "tags": []
     },
     "ui-e2e": {
       "tags": [],
-      "implicitDependencies": [
-        "ui"
-      ]
+      "implicitDependencies": ["ui"]
     },
     "yup": {
       "tags": []
@@ -57,27 +54,19 @@
     },
     "mgmt": {
       "tags": [],
-      "implicitDependencies": [
-        "backend"
-      ]
+      "implicitDependencies": ["backend"]
     },
     "mgmt-e2e": {
       "tags": [],
-      "implicitDependencies": [
-        "mgmt"
-      ]
+      "implicitDependencies": ["mgmt"]
     },
     "connect": {
       "tags": [],
-      "implicitDependencies": [
-        "backend"
-      ]
+      "implicitDependencies": ["backend"]
     },
     "connect-e2e": {
       "tags": [],
-      "implicitDependencies": [
-        "connect"
-      ]
+      "implicitDependencies": ["connect"]
     },
     "mobile": {
       "tags": []

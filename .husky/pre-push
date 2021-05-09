@@ -1,6 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-yarn lint:workspace
-yarn lint:tsc
-yarn lint:ls || echo '^-- TODO'
+yarn lint

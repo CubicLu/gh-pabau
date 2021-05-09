@@ -175,8 +175,9 @@ pipelines:
               - yarn install --frozen-lockfile --prefer-offline
               - apt-get update -y && apt-get install -y curl jq time
               - yarn affected --base=HEAD~1 --target=deploy-docker --prod
+              - cp -f /tmp/bot_message.txt dist/ || true
             artifacts:
-              - /tmp/bot_message.txt
+              - dist/bot_message.txt
 
         - step:
             size: 1x
@@ -213,8 +214,10 @@ pipelines:
                 printf "*New Version Staged for Production*\n## v${PACKAGE_JSON_VERSION}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
               - cat /tmp/bot_message.txt >> /tmp/bot_message2.txt
               - cat /tmp/bot_message2.txt
+              - cp -f /tmp/bot_message2.txt dist/ || true
+
             artifacts:
-              - /tmp/bot_message2.txt
+              - dist/bot_message2.txt
 
       - step:
           size: 1x
