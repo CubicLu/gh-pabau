@@ -83,7 +83,7 @@ select_permissions:
   role: user
 update_permissions:
 - permission:
-    check: {}
+    check: null
     columns:
     - order
     - sent_by

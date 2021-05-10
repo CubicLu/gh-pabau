@@ -45355,7 +45355,7 @@ on conflict condition type for table "Discounts"
 """
 input Discounts_on_conflict {
   constraint: Discounts_constraint!
-  update_columns: [Discounts_update_column!]!
+  update_columns: [Discounts_update_column!]! = []
   where: Discounts_bool_exp
 }
 
@@ -51045,7 +51045,7 @@ on conflict condition type for table "Labs"
 """
 input Labs_on_conflict {
   constraint: Labs_constraint!
-  update_columns: [Labs_update_column!]!
+  update_columns: [Labs_update_column!]! = []
   where: Labs_bool_exp
 }
 
@@ -51304,7 +51304,7 @@ on conflict condition type for table "Lists_campaign"
 """
 input Lists_campaign_on_conflict {
   constraint: Lists_campaign_constraint!
-  update_columns: [Lists_campaign_update_column!]!
+  update_columns: [Lists_campaign_update_column!]! = []
   where: Lists_campaign_bool_exp
 }
 
@@ -53518,7 +53518,7 @@ on conflict condition type for table "Newsletter_campaign"
 """
 input Newsletter_campaign_on_conflict {
   constraint: Newsletter_campaign_constraint!
-  update_columns: [Newsletter_campaign_update_column!]!
+  update_columns: [Newsletter_campaign_update_column!]! = []
   where: Newsletter_campaign_bool_exp
 }
 
@@ -57294,7 +57294,7 @@ on conflict condition type for table "SMS_campaign"
 """
 input SMS_campaign_on_conflict {
   constraint: SMS_campaign_constraint!
-  update_columns: [SMS_campaign_update_column!]!
+  update_columns: [SMS_campaign_update_column!]! = []
   where: SMS_campaign_bool_exp
 }
 
@@ -71945,7 +71945,7 @@ on conflict condition type for table "application_notifications"
 """
 input application_notifications_on_conflict {
   constraint: application_notifications_constraint!
-  update_columns: [application_notifications_update_column!]!
+  update_columns: [application_notifications_update_column!]! = []
   where: application_notifications_bool_exp
 }
 
@@ -72224,7 +72224,7 @@ on conflict condition type for table "appointment_status"
 """
 input appointment_status_on_conflict {
   constraint: appointment_status_constraint!
-  update_columns: [appointment_status_update_column!]!
+  update_columns: [appointment_status_update_column!]! = []
   where: appointment_status_bool_exp
 }
 
@@ -72501,7 +72501,7 @@ on conflict condition type for table "block_out_options"
 """
 input block_out_options_on_conflict {
   constraint: block_out_options_constraint!
-  update_columns: [block_out_options_update_column!]!
+  update_columns: [block_out_options_update_column!]! = []
   where: block_out_options_bool_exp
 }
 
@@ -72807,7 +72807,7 @@ on conflict condition type for table "business_details"
 """
 input business_details_on_conflict {
   constraint: business_details_constraint!
-  update_columns: [business_details_update_column!]!
+  update_columns: [business_details_update_column!]! = []
   where: business_details_bool_exp
 }
 
@@ -73255,7 +73255,7 @@ on conflict condition type for table "calendar_settings"
 """
 input calendar_settings_on_conflict {
   constraint: calendar_settings_constraint!
-  update_columns: [calendar_settings_update_column!]!
+  update_columns: [calendar_settings_update_column!]! = []
   where: calendar_settings_bool_exp
 }
 
@@ -73613,7 +73613,7 @@ on conflict condition type for table "cancellation_reasons"
 """
 input cancellation_reasons_on_conflict {
   constraint: cancellation_reasons_constraint!
-  update_columns: [cancellation_reasons_update_column!]!
+  update_columns: [cancellation_reasons_update_column!]! = []
   where: cancellation_reasons_bool_exp
 }
 
@@ -73835,7 +73835,7 @@ on conflict condition type for table "candidate_list"
 """
 input candidate_list_on_conflict {
   constraint: candidate_list_constraint!
-  update_columns: [candidate_list_update_column!]!
+  update_columns: [candidate_list_update_column!]! = []
   where: candidate_list_bool_exp
 }
 
@@ -74048,7 +74048,7 @@ on conflict condition type for table "category"
 """
 input category_on_conflict {
   constraint: category_constraint!
-  update_columns: [category_update_column!]!
+  update_columns: [category_update_column!]! = []
   where: category_bool_exp
 }
 
@@ -74296,7 +74296,7 @@ on conflict condition type for table "clients_data"
 """
 input clients_data_on_conflict {
   constraint: clients_data_constraint!
-  update_columns: [clients_data_update_column!]!
+  update_columns: [clients_data_update_column!]! = []
   where: clients_data_bool_exp
 }
 
@@ -74716,7 +74716,7 @@ on conflict condition type for table "courses"
 """
 input courses_on_conflict {
   constraint: courses_constraint!
-  update_columns: [courses_update_column!]!
+  update_columns: [courses_update_column!]! = []
   where: courses_bool_exp
 }
 
@@ -74921,7 +74921,7 @@ on conflict condition type for table "credit_note_type"
 """
 input credit_note_type_on_conflict {
   constraint: credit_note_type_constraint!
-  update_columns: [credit_note_type_update_column!]!
+  update_columns: [credit_note_type_update_column!]! = []
   where: credit_note_type_bool_exp
 }
 
@@ -75181,7 +75181,7 @@ on conflict condition type for table "credit_notes"
 """
 input credit_notes_on_conflict {
   constraint: credit_notes_constraint!
-  update_columns: [credit_notes_update_column!]!
+  update_columns: [credit_notes_update_column!]! = []
   where: credit_notes_bool_exp
 }
 
@@ -75421,7 +75421,7 @@ on conflict condition type for table "custom_fields_categories"
 """
 input custom_fields_categories_on_conflict {
   constraint: custom_fields_categories_constraint!
-  update_columns: [custom_fields_categories_update_column!]!
+  update_columns: [custom_fields_categories_update_column!]! = []
   where: custom_fields_categories_bool_exp
 }
 
@@ -75656,7 +75656,7 @@ on conflict condition type for table "debt"
 """
 input debt_on_conflict {
   constraint: debt_constraint!
-  update_columns: [debt_update_column!]!
+  update_columns: [debt_update_column!]! = []
   where: debt_bool_exp
 }
 
@@ -75932,7 +75932,7 @@ on conflict condition type for table "departments"
 """
 input departments_on_conflict {
   constraint: departments_constraint!
-  update_columns: [departments_update_column!]!
+  update_columns: [departments_update_column!]! = []
   where: departments_bool_exp
 }
 
@@ -76191,7 +76191,7 @@ on conflict condition type for table "diagnostic_codes"
 """
 input diagnostic_codes_on_conflict {
   constraint: diagnostic_codes_constraint!
-  update_columns: [diagnostic_codes_update_column!]!
+  update_columns: [diagnostic_codes_update_column!]! = []
   where: diagnostic_codes_bool_exp
 }
 
@@ -76478,7 +76478,7 @@ on conflict condition type for table "diagnostic_codeset"
 """
 input diagnostic_codeset_on_conflict {
   constraint: diagnostic_codeset_constraint!
-  update_columns: [diagnostic_codeset_update_column!]!
+  update_columns: [diagnostic_codeset_update_column!]! = []
   where: diagnostic_codeset_bool_exp
 }
 
@@ -76707,7 +76707,7 @@ on conflict condition type for table "drugs"
 """
 input drugs_on_conflict {
   constraint: drugs_constraint!
-  update_columns: [drugs_update_column!]!
+  update_columns: [drugs_update_column!]! = []
   where: drugs_bool_exp
 }
 
@@ -76931,7 +76931,7 @@ on conflict condition type for table "family_relationships"
 """
 input family_relationships_on_conflict {
   constraint: family_relationships_constraint!
-  update_columns: [family_relationships_update_column!]!
+  update_columns: [family_relationships_update_column!]! = []
   where: family_relationships_bool_exp
 }
 
@@ -77099,7 +77099,7 @@ on conflict condition type for table "feature_flags"
 """
 input feature_flags_on_conflict {
   constraint: feature_flags_constraint!
-  update_columns: [feature_flags_update_column!]!
+  update_columns: [feature_flags_update_column!]! = []
   where: feature_flags_bool_exp
 }
 
@@ -77345,7 +77345,7 @@ on conflict condition type for table "invoices"
 """
 input invoices_on_conflict {
   constraint: invoices_constraint!
-  update_columns: [invoices_update_column!]!
+  update_columns: [invoices_update_column!]! = []
   where: invoices_bool_exp
 }
 
@@ -77727,7 +77727,7 @@ on conflict condition type for table "issuing_company"
 """
 input issuing_company_on_conflict {
   constraint: issuing_company_constraint!
-  update_columns: [issuing_company_update_column!]!
+  update_columns: [issuing_company_update_column!]! = []
   where: issuing_company_bool_exp
 }
 
@@ -78066,7 +78066,7 @@ on conflict condition type for table "job_candidates"
 """
 input job_candidates_on_conflict {
   constraint: job_candidates_constraint!
-  update_columns: [job_candidates_update_column!]!
+  update_columns: [job_candidates_update_column!]! = []
   where: job_candidates_bool_exp
 }
 
@@ -78325,7 +78325,7 @@ on conflict condition type for table "job_openings"
 """
 input job_openings_on_conflict {
   constraint: job_openings_constraint!
-  update_columns: [job_openings_update_column!]!
+  update_columns: [job_openings_update_column!]! = []
   where: job_openings_bool_exp
 }
 
@@ -78534,7 +78534,7 @@ on conflict condition type for table "job_title"
 """
 input job_title_on_conflict {
   constraint: job_title_constraint!
-  update_columns: [job_title_update_column!]!
+  update_columns: [job_title_update_column!]! = []
   where: job_title_bool_exp
 }
 
@@ -78822,7 +78822,7 @@ on conflict condition type for table "labs_dashboard"
 """
 input labs_dashboard_on_conflict {
   constraint: labs_dashboard_constraint!
-  update_columns: [labs_dashboard_update_column!]!
+  update_columns: [labs_dashboard_update_column!]! = []
   where: labs_dashboard_bool_exp
 }
 
@@ -79129,7 +79129,7 @@ on conflict condition type for table "lead_fields"
 """
 input lead_fields_on_conflict {
   constraint: lead_fields_constraint!
-  update_columns: [lead_fields_update_column!]!
+  update_columns: [lead_fields_update_column!]! = []
   where: lead_fields_bool_exp
 }
 
@@ -79291,7 +79291,7 @@ on conflict condition type for table "lead"
 """
 input lead_on_conflict {
   constraint: lead_constraint!
-  update_columns: [lead_update_column!]!
+  update_columns: [lead_update_column!]! = []
   where: lead_bool_exp
 }
 
@@ -79685,7 +79685,7 @@ on conflict condition type for table "library_installers"
 """
 input library_installers_on_conflict {
   constraint: library_installers_constraint!
-  update_columns: [library_installers_update_column!]!
+  update_columns: [library_installers_update_column!]! = []
   where: library_installers_bool_exp
 }
 
@@ -79868,7 +79868,7 @@ on conflict condition type for table "library"
 """
 input library_on_conflict {
   constraint: library_constraint!
-  update_columns: [library_update_column!]!
+  update_columns: [library_update_column!]! = []
   where: library_bool_exp
 }
 
@@ -79998,237 +79998,6 @@ type library_var_samp_fields {
 """aggregate variance on columns"""
 type library_variance_fields {
   order: Float
-}
-
-"""
-columns and relationships of "lms_slugs"
-"""
-type lms_slugs {
-  articles(
-    """JSON select path"""
-    path: String
-  ): jsonb
-  blog: String
-  created_date: timestamptz!
-  id: uuid!
-  slug: String!
-  video: String
-  webinar(
-    """JSON select path"""
-    path: String
-  ): jsonb
-}
-
-"""
-aggregated selection of "lms_slugs"
-"""
-type lms_slugs_aggregate {
-  aggregate: lms_slugs_aggregate_fields
-  nodes: [lms_slugs!]!
-}
-
-"""
-aggregate fields of "lms_slugs"
-"""
-type lms_slugs_aggregate_fields {
-  count(columns: [lms_slugs_select_column!], distinct: Boolean): Int!
-  max: lms_slugs_max_fields
-  min: lms_slugs_min_fields
-}
-
-"""append existing jsonb value of filtered columns with new jsonb value"""
-input lms_slugs_append_input {
-  articles: jsonb
-  webinar: jsonb
-}
-
-"""
-Boolean expression to filter rows from the table "lms_slugs". All fields are combined with a logical 'AND'.
-"""
-input lms_slugs_bool_exp {
-  _and: [lms_slugs_bool_exp!]
-  _not: lms_slugs_bool_exp
-  _or: [lms_slugs_bool_exp!]
-  articles: jsonb_comparison_exp
-  blog: String_comparison_exp
-  created_date: timestamptz_comparison_exp
-  id: uuid_comparison_exp
-  slug: String_comparison_exp
-  video: String_comparison_exp
-  webinar: jsonb_comparison_exp
-}
-
-"""
-unique or primary key constraints on table "lms_slugs"
-"""
-enum lms_slugs_constraint {
-  """unique or primary key constraint"""
-  LMS_slugs_pkey
-
-  """unique or primary key constraint"""
-  lms_slugs_slug_key
-}
-
-"""
-delete the field or element with specified path (for JSON arrays, negative integers count from the end)
-"""
-input lms_slugs_delete_at_path_input {
-  articles: [String!]
-  webinar: [String!]
-}
-
-"""
-delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
-"""
-input lms_slugs_delete_elem_input {
-  articles: Int
-  webinar: Int
-}
-
-"""
-delete key/value pair or string element. key/value pairs are matched based on their key value
-"""
-input lms_slugs_delete_key_input {
-  articles: String
-  webinar: String
-}
-
-"""
-input type for inserting data into table "lms_slugs"
-"""
-input lms_slugs_insert_input {
-  articles: jsonb
-  blog: String
-  created_date: timestamptz
-  id: uuid
-  slug: String
-  video: String
-  webinar: jsonb
-}
-
-"""aggregate max on columns"""
-type lms_slugs_max_fields {
-  blog: String
-  created_date: timestamptz
-  id: uuid
-  slug: String
-  video: String
-}
-
-"""aggregate min on columns"""
-type lms_slugs_min_fields {
-  blog: String
-  created_date: timestamptz
-  id: uuid
-  slug: String
-  video: String
-}
-
-"""
-response of any mutation on the table "lms_slugs"
-"""
-type lms_slugs_mutation_response {
-  """number of rows affected by the mutation"""
-  affected_rows: Int!
-
-  """data from the rows affected by the mutation"""
-  returning: [lms_slugs!]!
-}
-
-"""
-on conflict condition type for table "lms_slugs"
-"""
-input lms_slugs_on_conflict {
-  constraint: lms_slugs_constraint!
-  update_columns: [lms_slugs_update_column!]!
-  where: lms_slugs_bool_exp
-}
-
-"""Ordering options when selecting data from "lms_slugs"."""
-input lms_slugs_order_by {
-  articles: order_by
-  blog: order_by
-  created_date: order_by
-  id: order_by
-  slug: order_by
-  video: order_by
-  webinar: order_by
-}
-
-"""primary key columns input for table: lms_slugs"""
-input lms_slugs_pk_columns_input {
-  id: uuid!
-}
-
-"""prepend existing jsonb value of filtered columns with new jsonb value"""
-input lms_slugs_prepend_input {
-  articles: jsonb
-  webinar: jsonb
-}
-
-"""
-select columns of table "lms_slugs"
-"""
-enum lms_slugs_select_column {
-  """column name"""
-  articles
-
-  """column name"""
-  blog
-
-  """column name"""
-  created_date
-
-  """column name"""
-  id
-
-  """column name"""
-  slug
-
-  """column name"""
-  video
-
-  """column name"""
-  webinar
-}
-
-"""
-input type for updating data in table "lms_slugs"
-"""
-input lms_slugs_set_input {
-  articles: jsonb
-  blog: String
-  created_date: timestamptz
-  id: uuid
-  slug: String
-  video: String
-  webinar: jsonb
-}
-
-"""
-update columns of table "lms_slugs"
-"""
-enum lms_slugs_update_column {
-  """column name"""
-  articles
-
-  """column name"""
-  blog
-
-  """column name"""
-  created_date
-
-  """column name"""
-  id
-
-  """column name"""
-  slug
-
-  """column name"""
-  video
-
-  """column name"""
-  webinar
 }
 
 """
@@ -80433,7 +80202,7 @@ on conflict condition type for table "locations"
 """
 input locations_on_conflict {
   constraint: locations_constraint!
-  update_columns: [locations_update_column!]!
+  update_columns: [locations_update_column!]! = []
   where: locations_bool_exp
 }
 
@@ -80754,7 +80523,7 @@ on conflict condition type for table "marketing_campaign"
 """
 input marketing_campaign_on_conflict {
   constraint: marketing_campaign_constraint!
-  update_columns: [marketing_campaign_update_column!]!
+  update_columns: [marketing_campaign_update_column!]! = []
   where: marketing_campaign_bool_exp
 }
 
@@ -80985,7 +80754,7 @@ on conflict condition type for table "marketing_referral"
 """
 input marketing_referral_on_conflict {
   constraint: marketing_referral_constraint!
-  update_columns: [marketing_referral_update_column!]!
+  update_columns: [marketing_referral_update_column!]! = []
   where: marketing_referral_bool_exp
 }
 
@@ -81235,7 +81004,7 @@ on conflict condition type for table "marketing_source"
 """
 input marketing_source_on_conflict {
   constraint: marketing_source_constraint!
-  update_columns: [marketing_source_update_column!]!
+  update_columns: [marketing_source_update_column!]! = []
   where: marketing_source_bool_exp
 }
 
@@ -82117,19 +81886,6 @@ type mutation_root {
   delete_library_installers_by_pk(id: Int!): library_installers
 
   """
-  delete data from the table: "lms_slugs"
-  """
-  delete_lms_slugs(
-    """filter the rows which have to be deleted"""
-    where: lms_slugs_bool_exp!
-  ): lms_slugs_mutation_response
-
-  """
-  delete single row from the table: "lms_slugs"
-  """
-  delete_lms_slugs_by_pk(id: uuid!): lms_slugs
-
-  """
   delete data from the table: "locations"
   """
   delete_locations(
@@ -82427,19 +82183,6 @@ type mutation_root {
   delete single row from the table: "third_parties"
   """
   delete_third_parties_by_pk(id: uuid!): third_parties
-
-  """
-  delete data from the table: "user_list"
-  """
-  delete_user_list(
-    """filter the rows which have to be deleted"""
-    where: user_list_bool_exp!
-  ): user_list_mutation_response
-
-  """
-  delete single row from the table: "user_list"
-  """
-  delete_user_list_by_pk(id: numeric!): user_list
 
   """
   insert data into the table: "Discounts"
@@ -83228,28 +82971,6 @@ type mutation_root {
   ): library
 
   """
-  insert data into the table: "lms_slugs"
-  """
-  insert_lms_slugs(
-    """the rows to be inserted"""
-    objects: [lms_slugs_insert_input!]!
-
-    """on conflict condition"""
-    on_conflict: lms_slugs_on_conflict
-  ): lms_slugs_mutation_response
-
-  """
-  insert a single row into the table: "lms_slugs"
-  """
-  insert_lms_slugs_one(
-    """the row to be inserted"""
-    object: lms_slugs_insert_input!
-
-    """on conflict condition"""
-    on_conflict: lms_slugs_on_conflict
-  ): lms_slugs
-
-  """
   insert data into the table: "locations"
   """
   insert_locations(
@@ -83762,28 +83483,6 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: third_parties_on_conflict
   ): third_parties
-
-  """
-  insert data into the table: "user_list"
-  """
-  insert_user_list(
-    """the rows to be inserted"""
-    objects: [user_list_insert_input!]!
-
-    """on conflict condition"""
-    on_conflict: user_list_on_conflict
-  ): user_list_mutation_response
-
-  """
-  insert a single row into the table: "user_list"
-  """
-  insert_user_list_one(
-    """the row to be inserted"""
-    object: user_list_insert_input!
-
-    """on conflict condition"""
-    on_conflict: user_list_on_conflict
-  ): user_list
   login(password: String!, username: String!): String
   logout: Boolean
 
@@ -85044,68 +84743,6 @@ type mutation_root {
   ): library_installers
 
   """
-  update data of the table: "lms_slugs"
-  """
-  update_lms_slugs(
-    """append existing jsonb value of filtered columns with new jsonb value"""
-    _append: lms_slugs_append_input
-
-    """
-    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
-    """
-    _delete_at_path: lms_slugs_delete_at_path_input
-
-    """
-    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
-    """
-    _delete_elem: lms_slugs_delete_elem_input
-
-    """
-    delete key/value pair or string element. key/value pairs are matched based on their key value
-    """
-    _delete_key: lms_slugs_delete_key_input
-
-    """prepend existing jsonb value of filtered columns with new jsonb value"""
-    _prepend: lms_slugs_prepend_input
-
-    """sets the columns of the filtered rows to the given values"""
-    _set: lms_slugs_set_input
-
-    """filter the rows which have to be updated"""
-    where: lms_slugs_bool_exp!
-  ): lms_slugs_mutation_response
-
-  """
-  update single row of the table: "lms_slugs"
-  """
-  update_lms_slugs_by_pk(
-    """append existing jsonb value of filtered columns with new jsonb value"""
-    _append: lms_slugs_append_input
-
-    """
-    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
-    """
-    _delete_at_path: lms_slugs_delete_at_path_input
-
-    """
-    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
-    """
-    _delete_elem: lms_slugs_delete_elem_input
-
-    """
-    delete key/value pair or string element. key/value pairs are matched based on their key value
-    """
-    _delete_key: lms_slugs_delete_key_input
-
-    """prepend existing jsonb value of filtered columns with new jsonb value"""
-    _prepend: lms_slugs_prepend_input
-
-    """sets the columns of the filtered rows to the given values"""
-    _set: lms_slugs_set_input
-    pk_columns: lms_slugs_pk_columns_input!
-  ): lms_slugs
-
-  """
   update data of the table: "locations"
   """
   update_locations(
@@ -85782,32 +85419,6 @@ type mutation_root {
   ): third_parties
 
   """
-  update data of the table: "user_list"
-  """
-  update_user_list(
-    """increments the numeric columns with given value of the filtered values"""
-    _inc: user_list_inc_input
-
-    """sets the columns of the filtered rows to the given values"""
-    _set: user_list_set_input
-
-    """filter the rows which have to be updated"""
-    where: user_list_bool_exp!
-  ): user_list_mutation_response
-
-  """
-  update single row of the table: "user_list"
-  """
-  update_user_list_by_pk(
-    """increments the numeric columns with given value of the filtered values"""
-    _inc: user_list_inc_input
-
-    """sets the columns of the filtered rows to the given values"""
-    _set: user_list_set_input
-    pk_columns: user_list_pk_columns_input!
-  ): user_list
-
-  """
   Creates/Updates a single StaffMeta entry for all Users belonging to the provided group_id
   """
   upsertManyStaffMetaByGroupId(group_id: Int!, meta_name: String!, meta_value: Boolean!): Int
@@ -86161,7 +85772,7 @@ on conflict condition type for table "notification_toggle"
 """
 input notification_toggle_on_conflict {
   constraint: notification_toggle_constraint!
-  update_columns: [notification_toggle_update_column!]!
+  update_columns: [notification_toggle_update_column!]! = []
   where: notification_toggle_bool_exp
 }
 
@@ -86630,7 +86241,7 @@ on conflict condition type for table "notification_types"
 """
 input notification_types_on_conflict {
   constraint: notification_types_constraint!
-  update_columns: [notification_types_update_column!]!
+  update_columns: [notification_types_update_column!]! = []
   where: notification_types_bool_exp
 }
 
@@ -86732,10 +86343,6 @@ type notifications {
   created_at: timestamptz!
   destination: String
   id: uuid!
-  is_read(
-    """JSON select path"""
-    path: String
-  ): jsonb
   loop(
     """JSON select path"""
     path: String
@@ -86777,7 +86384,6 @@ type notifications {
 
 """append existing jsonb value of filtered columns with new jsonb value"""
 input notifications_append_input {
-  is_read: jsonb
   loop: jsonb
   sent_to: jsonb
   variables: jsonb
@@ -86793,7 +86399,6 @@ input notifications_bool_exp {
   created_at: timestamptz_comparison_exp
   destination: String_comparison_exp
   id: uuid_comparison_exp
-  is_read: jsonb_comparison_exp
   loop: jsonb_comparison_exp
   notification_type: notification_types_bool_exp
   order: Int_comparison_exp
@@ -86817,7 +86422,6 @@ enum notifications_constraint {
 delete the field or element with specified path (for JSON arrays, negative integers count from the end)
 """
 input notifications_delete_at_path_input {
-  is_read: [String!]
   loop: [String!]
   sent_to: [String!]
   variables: [String!]
@@ -86827,7 +86431,6 @@ input notifications_delete_at_path_input {
 delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
 """
 input notifications_delete_elem_input {
-  is_read: Int
   loop: Int
   sent_to: Int
   variables: Int
@@ -86837,7 +86440,6 @@ input notifications_delete_elem_input {
 delete key/value pair or string element. key/value pairs are matched based on their key value
 """
 input notifications_delete_key_input {
-  is_read: String
   loop: String
   sent_to: String
   variables: String
@@ -86858,7 +86460,6 @@ input notifications_insert_input {
   created_at: timestamptz
   destination: String
   id: uuid
-  is_read: jsonb
   loop: jsonb
   notification_type: notification_types_obj_rel_insert_input
   order: Int
@@ -86896,7 +86497,7 @@ on conflict condition type for table "notifications"
 """
 input notifications_on_conflict {
   constraint: notifications_constraint!
-  update_columns: [notifications_update_column!]!
+  update_columns: [notifications_update_column!]! = []
   where: notifications_bool_exp
 }
 
@@ -86905,7 +86506,6 @@ input notifications_order_by {
   created_at: order_by
   destination: order_by
   id: order_by
-  is_read: order_by
   loop: order_by
   notification_type: notification_types_order_by
   order: order_by
@@ -86924,7 +86524,6 @@ input notifications_pk_columns_input {
 
 """prepend existing jsonb value of filtered columns with new jsonb value"""
 input notifications_prepend_input {
-  is_read: jsonb
   loop: jsonb
   sent_to: jsonb
   variables: jsonb
@@ -86942,9 +86541,6 @@ enum notifications_select_column {
 
   """column name"""
   id
-
-  """column name"""
-  is_read
 
   """column name"""
   loop
@@ -86975,7 +86571,6 @@ input notifications_set_input {
   created_at: timestamptz
   destination: String
   id: uuid
-  is_read: jsonb
   loop: jsonb
   order: Int
   sent_by: Int
@@ -86997,9 +86592,6 @@ enum notifications_update_column {
 
   """column name"""
   id
-
-  """column name"""
-  is_read
 
   """column name"""
   loop
@@ -87209,7 +86801,7 @@ on conflict condition type for table "payment_types"
 """
 input payment_types_on_conflict {
   constraint: payment_types_constraint!
-  update_columns: [payment_types_update_column!]!
+  update_columns: [payment_types_update_column!]! = []
   where: payment_types_bool_exp
 }
 
@@ -87472,7 +87064,7 @@ on conflict condition type for table "payments"
 """
 input payments_on_conflict {
   constraint: payments_constraint!
-  update_columns: [payments_update_column!]!
+  update_columns: [payments_update_column!]! = []
   where: payments_bool_exp
 }
 
@@ -87726,7 +87318,7 @@ on conflict condition type for table "petty_cash_types"
 """
 input petty_cash_types_on_conflict {
   constraint: petty_cash_types_constraint!
-  update_columns: [petty_cash_types_update_column!]!
+  update_columns: [petty_cash_types_update_column!]! = []
   where: petty_cash_types_bool_exp
 }
 
@@ -87972,7 +87564,7 @@ on conflict condition type for table "product_lists"
 """
 input product_lists_on_conflict {
   constraint: product_lists_constraint!
-  update_columns: [product_lists_update_column!]!
+  update_columns: [product_lists_update_column!]! = []
   where: product_lists_bool_exp
 }
 
@@ -88248,7 +87840,7 @@ on conflict condition type for table "prototype"
 """
 input prototype_on_conflict {
   constraint: prototype_constraint!
-  update_columns: [prototype_update_column!]!
+  update_columns: [prototype_update_column!]! = []
   where: prototype_bool_exp
 }
 
@@ -88483,7 +88075,7 @@ on conflict condition type for table "purchase_order"
 """
 input purchase_order_on_conflict {
   constraint: purchase_order_constraint!
-  update_columns: [purchase_order_update_column!]!
+  update_columns: [purchase_order_update_column!]! = []
   where: purchase_order_bool_exp
 }
 
@@ -90547,49 +90139,6 @@ type query_root {
   library_installers_by_pk(id: Int!): library_installers
 
   """
-  fetch data from the table: "lms_slugs"
-  """
-  lms_slugs(
-    """distinct select on columns"""
-    distinct_on: [lms_slugs_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [lms_slugs_order_by!]
-
-    """filter the rows returned"""
-    where: lms_slugs_bool_exp
-  ): [lms_slugs!]!
-
-  """
-  fetch aggregated fields from the table: "lms_slugs"
-  """
-  lms_slugs_aggregate(
-    """distinct select on columns"""
-    distinct_on: [lms_slugs_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [lms_slugs_order_by!]
-
-    """filter the rows returned"""
-    where: lms_slugs_bool_exp
-  ): lms_slugs_aggregate!
-
-  """fetch data from the table: "lms_slugs" using primary key columns"""
-  lms_slugs_by_pk(id: uuid!): lms_slugs
-
-  """
   fetch data from the table: "locations"
   """
   locations(
@@ -91672,29 +91221,6 @@ type query_root {
   userSecurityQuestionsAnswer(where: UserSecurityQuestionsAnswerWhereUniqueInput!): UserSecurityQuestionsAnswer
   userSecurityQuestionsAnswers(cursor: UserSecurityQuestionsAnswerWhereUniqueInput, orderBy: [UserSecurityQuestionsAnswerOrderByInput!], skip: Int, take: Int, where: UserSecurityQuestionsAnswerWhereInput): [UserSecurityQuestionsAnswer!]!
   userSecurityQuestionsAnswersCount(where: UserSecurityQuestionsAnswerWhereInput): Int
-
-  """
-  fetch data from the table: "user_list"
-  """
-  user_list(
-    """distinct select on columns"""
-    distinct_on: [user_list_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [user_list_order_by!]
-
-    """filter the rows returned"""
-    where: user_list_bool_exp
-  ): [user_list!]!
-
-  """fetch data from the table: "user_list" using primary key columns"""
-  user_list_by_pk(id: numeric!): user_list
   users(cursor: UserWhereUniqueInput, orderBy: [UserOrderByInput!], skip: Int, take: Int, where: UserWhereInput): [User!]!
   usersCount(where: UserWhereInput): Int
   xeroIntegration(where: XeroIntegrationWhereUniqueInput!): XeroIntegration
@@ -91832,7 +91358,7 @@ on conflict condition type for table "read_notification"
 """
 input read_notification_on_conflict {
   constraint: read_notification_constraint!
-  update_columns: [read_notification_update_column!]!
+  update_columns: [read_notification_update_column!]! = []
   where: read_notification_bool_exp
 }
 
@@ -92078,7 +91604,7 @@ on conflict condition type for table "resources"
 """
 input resources_on_conflict {
   constraint: resources_constraint!
-  update_columns: [resources_update_column!]!
+  update_columns: [resources_update_column!]! = []
   where: resources_bool_exp
 }
 
@@ -92307,7 +91833,7 @@ on conflict condition type for table "rooms"
 """
 input rooms_on_conflict {
   constraint: rooms_constraint!
-  update_columns: [rooms_update_column!]!
+  update_columns: [rooms_update_column!]! = []
   where: rooms_bool_exp
 }
 
@@ -92559,7 +92085,7 @@ on conflict condition type for table "rota_templates"
 """
 input rota_templates_on_conflict {
   constraint: rota_templates_constraint!
-  update_columns: [rota_templates_update_column!]!
+  update_columns: [rota_templates_update_column!]! = []
   where: rota_templates_bool_exp
 }
 
@@ -92797,7 +92323,7 @@ on conflict condition type for table "salutation"
 """
 input salutation_on_conflict {
   constraint: salutation_constraint!
-  update_columns: [salutation_update_column!]!
+  update_columns: [salutation_update_column!]! = []
   where: salutation_bool_exp
 }
 
@@ -93153,7 +92679,7 @@ on conflict condition type for table "service"
 """
 input service_on_conflict {
   constraint: service_constraint!
-  update_columns: [service_update_column!]!
+  update_columns: [service_update_column!]! = []
   where: service_bool_exp
 }
 
@@ -93639,7 +93165,7 @@ on conflict condition type for table "stock_take"
 """
 input stock_take_on_conflict {
   constraint: stock_take_constraint!
-  update_columns: [stock_take_update_column!]!
+  update_columns: [stock_take_update_column!]! = []
   where: stock_take_bool_exp
 }
 
@@ -95176,49 +94702,6 @@ type subscription_root {
   library_installers_by_pk(id: Int!): library_installers
 
   """
-  fetch data from the table: "lms_slugs"
-  """
-  lms_slugs(
-    """distinct select on columns"""
-    distinct_on: [lms_slugs_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [lms_slugs_order_by!]
-
-    """filter the rows returned"""
-    where: lms_slugs_bool_exp
-  ): [lms_slugs!]!
-
-  """
-  fetch aggregated fields from the table: "lms_slugs"
-  """
-  lms_slugs_aggregate(
-    """distinct select on columns"""
-    distinct_on: [lms_slugs_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [lms_slugs_order_by!]
-
-    """filter the rows returned"""
-    where: lms_slugs_bool_exp
-  ): lms_slugs_aggregate!
-
-  """fetch data from the table: "lms_slugs" using primary key columns"""
-  lms_slugs_by_pk(id: uuid!): lms_slugs
-
-  """
   fetch data from the table: "locations"
   """
   locations(
@@ -96180,29 +95663,6 @@ type subscription_root {
 
   """fetch data from the table: "third_parties" using primary key columns"""
   third_parties_by_pk(id: uuid!): third_parties
-
-  """
-  fetch data from the table: "user_list"
-  """
-  user_list(
-    """distinct select on columns"""
-    distinct_on: [user_list_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [user_list_order_by!]
-
-    """filter the rows returned"""
-    where: user_list_bool_exp
-  ): [user_list!]!
-
-  """fetch data from the table: "user_list" using primary key columns"""
-  user_list_by_pk(id: numeric!): user_list
 }
 
 """
@@ -96327,7 +95787,7 @@ on conflict condition type for table "supplier"
 """
 input supplier_on_conflict {
   constraint: supplier_constraint!
-  update_columns: [supplier_update_column!]!
+  update_columns: [supplier_update_column!]! = []
   where: supplier_bool_exp
 }
 
@@ -96569,7 +96029,7 @@ on conflict condition type for table "tax_rates"
 """
 input tax_rates_on_conflict {
   constraint: tax_rates_constraint!
-  update_columns: [tax_rates_update_column!]!
+  update_columns: [tax_rates_update_column!]! = []
   where: tax_rates_bool_exp
 }
 
@@ -96861,7 +96321,7 @@ on conflict condition type for table "third_parties"
 """
 input third_parties_on_conflict {
   constraint: third_parties_constraint!
-  update_columns: [third_parties_update_column!]!
+  update_columns: [third_parties_update_column!]! = []
   where: third_parties_bool_exp
 }
 
@@ -97107,143 +96567,6 @@ enum user_activities_log_status {
   Delete
   Disable
   Enable
-}
-
-"""
-columns and relationships of "user_list"
-"""
-type user_list {
-  admin: Boolean!
-  company: numeric!
-  first_name: String!
-  id: numeric!
-  last_name: String!
-}
-
-"""
-Boolean expression to filter rows from the table "user_list". All fields are combined with a logical 'AND'.
-"""
-input user_list_bool_exp {
-  _and: [user_list_bool_exp!]
-  _not: user_list_bool_exp
-  _or: [user_list_bool_exp!]
-  admin: Boolean_comparison_exp
-  company: numeric_comparison_exp
-  first_name: String_comparison_exp
-  id: numeric_comparison_exp
-  last_name: String_comparison_exp
-}
-
-"""
-unique or primary key constraints on table "user_list"
-"""
-enum user_list_constraint {
-  """unique or primary key constraint"""
-  user_list_pkey
-}
-
-"""
-input type for incrementing numeric columns in table "user_list"
-"""
-input user_list_inc_input {
-  company: numeric
-  id: numeric
-}
-
-"""
-input type for inserting data into table "user_list"
-"""
-input user_list_insert_input {
-  admin: Boolean
-  company: numeric
-  first_name: String
-  id: numeric
-  last_name: String
-}
-
-"""
-response of any mutation on the table "user_list"
-"""
-type user_list_mutation_response {
-  """number of rows affected by the mutation"""
-  affected_rows: Int!
-
-  """data from the rows affected by the mutation"""
-  returning: [user_list!]!
-}
-
-"""
-on conflict condition type for table "user_list"
-"""
-input user_list_on_conflict {
-  constraint: user_list_constraint!
-  update_columns: [user_list_update_column!]!
-  where: user_list_bool_exp
-}
-
-"""Ordering options when selecting data from "user_list"."""
-input user_list_order_by {
-  admin: order_by
-  company: order_by
-  first_name: order_by
-  id: order_by
-  last_name: order_by
-}
-
-"""primary key columns input for table: user_list"""
-input user_list_pk_columns_input {
-  id: numeric!
-}
-
-"""
-select columns of table "user_list"
-"""
-enum user_list_select_column {
-  """column name"""
-  admin
-
-  """column name"""
-  company
-
-  """column name"""
-  first_name
-
-  """column name"""
-  id
-
-  """column name"""
-  last_name
-}
-
-"""
-input type for updating data in table "user_list"
-"""
-input user_list_set_input {
-  admin: Boolean
-  company: numeric
-  first_name: String
-  id: numeric
-  last_name: String
-}
-
-"""
-update columns of table "user_list"
-"""
-enum user_list_update_column {
-  """column name"""
-  admin
-
-  """column name"""
-  company
-
-  """column name"""
-  first_name
-
-  """column name"""
-  id
-
-  """column name"""
-  last_name
 }
 
 scalar uuid

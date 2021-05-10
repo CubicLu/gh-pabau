@@ -46,6 +46,7 @@ insert_permissions:
     - code
     - color
     - contracts
+    - days_before_booking
     - description
     - display_text_on_invoice
     - duration
@@ -61,6 +62,8 @@ insert_permissions:
     - is_service_online
     - locations
     - max_clients
+    - notice_long
+    - notice_short
     - online_payment_amount
     - online_payment_type
     - order
@@ -122,44 +125,47 @@ select_permissions:
 - permission:
     allow_aggregations: true
     columns:
+    - category
+    - code
+    - color
+    - contracts
+    - created_at
+    - days_before_booking
+    - description
+    - display_text_on_invoice
+    - duration
+    - employees
+    - equipment_resources
+    - friendly_name
+    - id
+    - image
+    - invoice_item_name
     - is_active
     - is_online_booking
     - is_package_session
     - is_payment_before_booking
     - is_service_online
-    - max_clients
-    - order
-    - contracts
-    - employees
-    - equipment_resources
     - locations
-    - resources
-    - room_resources
-    - timing_rules
-    - category
-    - code
-    - color
-    - description
-    - display_text_on_invoice
-    - duration
-    - friendly_name
-    - image
-    - invoice_item_name
+    - max_clients
+    - notice_long
+    - notice_short
     - online_payment_amount
     - online_payment_type
+    - order
     - patient_booking_type
     - price
     - pricing_type
     - procedure_code
+    - resources
+    - room_resources
     - service_name
     - service_price
     - sku
     - staff_assigned
     - tax
+    - timing_rules
     - type
-    - created_at
     - updated_at
-    - id
     filter: {}
   role: user
 update_permissions:
@@ -206,6 +212,7 @@ update_permissions:
     - code
     - color
     - contracts
+    - days_before_booking
     - description
     - display_text_on_invoice
     - duration
@@ -221,6 +228,8 @@ update_permissions:
     - is_service_online
     - locations
     - max_clients
+    - notice_long
+    - notice_short
     - online_payment_amount
     - online_payment_type
     - order
