@@ -1,5 +1,5 @@
-query getReportByID($id: Int){
-  findFirstReport(where: {id: {equals: $id}}) {
+query getReportByID($id: Int) {
+  findFirstReport(where: { id: { equals: $id } }) {
     id
     name
     description
@@ -10,8 +10,8 @@ query getReportByID($id: Int){
   }
 }
 
-query getReportByCode($code: String){
-  findFirstReport(where: {report_code: {equals: $code}}) {
+query getReportByCode($code: String) {
+  findFirstReport(where: { report_code: { equals: $code } }) {
     id
     name
     description
@@ -22,28 +22,20 @@ query getReportByCode($code: String){
   }
 }
 
-query teamReport($startDate: String!,$endDate: String!){
-    retrieveReport(
-      id: "team_report",
-      start_date: $startDate,
-      end_date: $endDate,
-    )
+query teamReport($startDate: String!, $endDate: String!) {
+  retrieveReport(id: "team_report", start_date: $startDate, end_date: $endDate)
 }
 
-query miniGraphs($startDate: String!,$endDate: String!){
-  retrieveReport(
-    id: "mini_graphs",
-    start_date: $startDate,
-    end_date: $endDate,
-  )
+query miniGraphs($startDate: String!, $endDate: String!) {
+  retrieveReport(id: "mini_graphs", start_date: $startDate, end_date: $endDate)
 }
 
-query listReportById($reportId:String!,$startDate: String!,$endDate: String!){
-    retrieveReport(
-      id: $reportId,
-      start_date: $startDate,
-      end_date: $endDate,
-    )
+query listReportById(
+  $reportId: String!
+  $startDate: String!
+  $endDate: String!
+) {
+  retrieveReport(id: $reportId, start_date: $startDate, end_date: $endDate)
 }
 
 # {
