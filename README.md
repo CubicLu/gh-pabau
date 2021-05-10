@@ -253,7 +253,13 @@ Solution: Upgrade docker-compose to latest version
 8. Change the table permissions so that 'public' role can do pretty much everything (for now).
 9. Check your table's public role permission for SELECT has the Aggregation queries permissions enabled.
 10. Now run `yarn hasura:export` in your IDE, commit the changes to your branch.
-11. Now on your page's `schema.fields` array, add the relevant keys in -- they should match the hasura columns
+11. To export the sql schema:
+
+    ```bash
+    HASURA_GRAPHQL_ADMIN_SECRET=madskills HASURA_GRAPHQL_ENDPOINT='https://api.new.pabau.com' hasura --project hasura migrate create renameme --from-server --database-name default
+    ```
+
+12. Now on your page's `schema.fields` array, add the relevant keys in -- they should match the hasura columns
 
 ## To do (big engineering items)
 

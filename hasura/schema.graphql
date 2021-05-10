@@ -80952,7 +80952,7 @@ type labs_dashboard_variance_fields {
 }
 
 """
-lead view 
+lead view
 
 
 columns and relationships of "lead"
@@ -90346,10 +90346,10 @@ type packages_setup_mutation_response {
 """
 on conflict condition type for table "packages_setup"
 """
-input packages_setup_on_conflict {
-  constraint: packages_setup_constraint!
-  update_columns: [packages_setup_update_column!]! = []
-  where: packages_setup_bool_exp
+input payment_types_on_conflict {
+  constraint: payment_types_constraint!
+  update_columns: [payment_types_update_column!]! = []
+  where: payment_types_bool_exp
 }
 
 """Ordering options when selecting data from "packages_setup"."""
@@ -98347,8 +98347,14 @@ enum service_update_column {
   """column name"""
   is_service_online
 
-  """column name"""
-  locations
+"""
+on conflict condition type for table "salutation"
+"""
+input salutation_on_conflict {
+  constraint: salutation_constraint!
+  update_columns: [salutation_update_column!]! = []
+  where: salutation_bool_exp
+}
 
   """column name"""
   max_clients
@@ -98696,10 +98702,10 @@ type services_mutation_response {
 """
 on conflict condition type for table "services"
 """
-input services_on_conflict {
-  constraint: services_constraint!
-  update_columns: [services_update_column!]! = []
-  where: services_bool_exp
+input service_on_conflict {
+  constraint: service_constraint!
+  update_columns: [service_update_column!]! = []
+  where: service_bool_exp
 }
 
 """Ordering options when selecting data from "services"."""

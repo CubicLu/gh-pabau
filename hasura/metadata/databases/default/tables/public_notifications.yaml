@@ -82,36 +82,36 @@ select_permissions:
       filter: {}
     role: user
 update_permissions:
-  - permission:
-      check: {}
-      columns:
-        - order
-        - sent_by
-        - loop
-        - sent_to
-        - variables
-        - destination
-        - created_at
-        - updated_at
-        - id
-        - type
-      filter: {}
-    role: public
-  - permission:
-      check: null
-      columns:
-        - order
-        - sent_by
-        - loop
-        - sent_to
-        - variables
-        - destination
-        - created_at
-        - updated_at
-        - id
-        - type
-      filter: {}
-    role: user
+- permission:
+    check: null
+    columns:
+    - order
+    - sent_by
+    - loop
+    - sent_to
+    - variables
+    - destination
+    - created_at
+    - updated_at
+    - id
+    - type
+    filter: {}
+  role: public
+- permission:
+    check: null
+    columns:
+    - order
+    - sent_by
+    - loop
+    - sent_to
+    - variables
+    - destination
+    - created_at
+    - updated_at
+    - id
+    - type
+    filter: {}
+  role: user
 delete_permissions:
   - permission:
       filter: {}
