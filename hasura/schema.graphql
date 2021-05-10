@@ -74861,14 +74861,15 @@ Chat messages
 columns and relationships of "chat"
 """
 type chat {
-  asdf: User
   company_id: Int!
   created_at: timestamptz!
   from: Int!
+  fromUser: User
   id: uuid!
   message: String!
   read: Boolean!
   to: Int!
+  toUser: User
   updated_at: timestamptz!
 }
 

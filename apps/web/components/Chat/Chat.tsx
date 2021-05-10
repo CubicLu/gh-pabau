@@ -12,17 +12,31 @@ export const Chat: React.FC<P> = (props) => {
         from
         to
         created_at
+        fromUser {
+          username
+        }
+        toUser {
+          username
+        }
       }
     }
   `)
   return (
     <PabauMessages
-      chatList={data?.map(({ id, message, from, to, created_at }) => ({
-        userName: `from:${from} to:${to}`,
-        message,
-        dateTime: created_at,
-        isOnline: true,
-      }))}
+      chatList={data?.map(
+        ({
+          id,
+          message,
+          fromUser: { username: fromUsername },
+          toUser: { username: toUsername },
+          created_at,
+        }) => ({
+          userName: `from:${fromUsername} to:${toUsername}`,
+          message,
+          dateTime: created_at,
+          isOnline: true,
+        })
+      )}
       {...props}
     />
   )
