@@ -1,5 +1,5 @@
 overwrite: true
-schema: remote-schema.graphql
+schema: hasura/schema.graphql
 documents: 'libs/graphql/*.graphql'
 generates:
   libs/graphql/generated/graphql.tsx:
