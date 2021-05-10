@@ -2,7 +2,7 @@
 module.exports = {
   projects: {
     app: {
-      schemaPath: 'hasura/schema.graphql',
+      schemaPath: './hasura/schema.graphql',
       documents: ['**/*.{graphql,ts,tsx}'],
       extensions: {
         endpoints: {
