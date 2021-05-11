@@ -84,12 +84,17 @@ pipelines:
           runs-on:
             - 'self.hosted'
           max-time: 10
+          caches:
+            - node
           script:
             - set || true
             - git log --merges -n 1 --pretty=oneline
             # TODO: set -lt back to 4 when nrwl install postcss >=8.2.10
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 8 ]] && exit 0 || exit 1'
+            - NODE_OPTIONS=--max_old_space_size=3333 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --ignore-scripts --frozen-lockfile --prefer-offline
             - yarn bin || true
+          artifacts:
+            - node_modules/
 
       - parallel:
           - step:
@@ -97,12 +102,9 @@ pipelines:
               runs-on:
                 - 'self.hosted'
               max-time: 15
-              caches:
-                - node
               script:
                 - openssl version || true
                 - yarn bin || true
-                - NODE_OPTIONS=--max_old_space_size=3333 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --ignore-scripts --frozen-lockfile --prefer-offline
                 - yarn bin || true
                 - yarn lint:tsc
                 - yarn lint:ls || true
@@ -113,21 +115,15 @@ pipelines:
               runs-on:
                 - 'self.hosted'
               max-time: 20
-              caches:
-                - node
               script:
-                - NODE_OPTIONS=--max_old_space_size=3333 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --ignore-scripts --frozen-lockfile --prefer-offline
-                - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:lint --base=HEAD~1 --with-deps --parallel --maxParallel=2
+                - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:lint --base=HEAD~1 --with-deps
 
           - step:
               name: unit tests
               runs-on:
                 - 'self.hosted'
               max-time: 25
-              caches:
-                - node
               script:
-                - NODE_OPTIONS=--max_old_space_size=3333 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --ignore-scripts --frozen-lockfile --prefer-offline
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=2222 yarn affected:test --base=HEAD~1 --parallel --maxParallel=2 --skip-nx-cache
@@ -138,13 +134,10 @@ pipelines:
               runs-on:
                 - 'self.hosted'
               max-time: 30
-              caches:
-                - node
               script:
-                - NODE_OPTIONS=--max_old_space_size=3333 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --ignore-scripts --frozen-lockfile --prefer-offline
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:export --base=HEAD~1 --prod
               artifacts:
-                - dist/**
+                - dist/
 
       # - parallel:
 
@@ -178,10 +171,7 @@ pipelines:
               deployment: production-dockers
               services:
                 - docker
-              caches:
-                - node
               script:
-                - NODE_OPTIONS=--max_old_space_size=3333 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --ignore-scripts --frozen-lockfile --prefer-offline
                 - apt-get update -y && apt-get install -y curl jq time
                 - yarn affected --base=HEAD~1 --target=deploy-docker --prod
                 - mkdir -p dist && cp -f /tmp/bot_message.txt dist/ || true
@@ -194,10 +184,9 @@ pipelines:
                 - 'self.hosted'
               max-time: 20
               deployment: production-serverless
-              caches:
-                - node
               script:
-                - NODE_OPTIONS=--max_old_space_size=3333 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --ignore-scripts --frozen-lockfile --prefer-offline
+                - ls -al . || true
+                - ls -al node_modules/ || true
                 - ls -al dist || true
                 - ls -al dist/apps || true
                 - cat /tmp/bot_message.txt || true
