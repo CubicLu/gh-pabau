@@ -81,6 +81,8 @@ pipelines:
     master:
       - step:
           name: yarn audit
+          runs-on:
+            - 'self.hosted'
           max-time: 10
           script:
             - set || true
@@ -92,6 +94,8 @@ pipelines:
       - parallel:
           - step:
               name: misc checks
+              runs-on:
+                - 'self.hosted'
               max-time: 15
               caches:
                 - node
@@ -106,6 +110,8 @@ pipelines:
 
           - step:
               name: lint
+              runs-on:
+                - 'self.hosted'
               max-time: 20
               caches:
                 - node
@@ -115,6 +121,8 @@ pipelines:
 
           - step:
               name: unit tests
+              runs-on:
+                - 'self.hosted'
               max-time: 25
               caches:
                 - node
@@ -126,8 +134,9 @@ pipelines:
           #              - NODE_OPTIONS=--max_old_space_size=1555 yarn affected:test --base=HEAD~1 --parallel --maxParallel=3 --skip-nx-cache
 
           - step:
-              size: 2x
               name: build
+              runs-on:
+                - 'self.hosted'
               max-time: 30
               caches:
                 - node
@@ -162,8 +171,9 @@ pipelines:
 
       - parallel:
           - step:
-              size: 2x
               name: deploy dockers
+              runs-on:
+                - 'self.hosted'
               max-time: 20
               deployment: production-dockers
               services:
@@ -179,8 +189,9 @@ pipelines:
                 - dist/bot_message.txt
 
           - step:
-              size: 1x
               name: deploy previews
+              runs-on:
+                - 'self.hosted'
               max-time: 20
               deployment: production-serverless
               caches:
@@ -219,8 +230,9 @@ pipelines:
                 - dist/bot_message2.txt
 
       - step:
-          size: 1x
           name: announce to slack
+          runs-on:
+            - 'self.hosted'
           max-time: 5
           script:
             - cat dist/bot_message2.txt || true
