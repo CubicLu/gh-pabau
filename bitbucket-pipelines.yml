@@ -108,7 +108,7 @@ pipelines:
                 - ls -al || true
                 - yarn bin || true
                 - yarn bin || true
-                - yarn lint:tsc
+                - yarn lint:tsc --with-deps --base=HEAD~1
                 - yarn lint:ls || true
                 - yarn lint:workspace || true
 
