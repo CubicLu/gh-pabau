@@ -57,13 +57,13 @@ echo "Docker login..."
 docker login -u "${DOCKER2_USERNAME}" -p "${DOCKER2_PASSWORD}" "${DOCKER2_HOSTNAME}"
 echo "Docker push..."
 docker image push "${DOCKER2_HOSTNAME}/monorepo/${APP_NAME}"
-# echo "Rancher deploy..."
-# curl -u "${RANCHER2_ACCESS_KEY}:${RANCHER2_SECRET_KEY}" \
-#   -X POST \
-#   -H 'Accept: application/json' \
-#   -H 'Content-Type: application/json' \
-#   'https://rancher.pabau.com/v3/project/c-j8bb9:p-jrqrz/workloads/deployment:pabau2:backend?action=redeploy'
-# echo "Deployed!"
+echo "Rancher deploy..."
+curl -u "${RANCHER2_ACCESS_KEY}:${RANCHER2_SECRET_KEY}" \
+  -X POST \
+  -H 'Accept: application/json' \
+  -H 'Content-Type: application/json' \
+  'https://rancher.pabau.com/v3/project/c-j8bb9:p-jrqrz/workloads/deployment:toshe:api?action=redeploy'
+echo "Deployed!"
 
 
 if [ -z "${BITBUCKET_PR_ID}" ]; then

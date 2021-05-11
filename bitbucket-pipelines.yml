@@ -1,5 +1,5 @@
 # Bitbucket Pipeline definition
-image: node:14-buster
+image: node:15-buster
 
 options:
   max-time: 45 # max time in minutes for each step
@@ -120,7 +120,6 @@ pipelines:
                 - node
               script:
                 - NODE_OPTIONS=--max_old_space_size=3333 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --ignore-scripts --frozen-lockfile --prefer-offline
-                - NODE_OPTIONS=--max_old_space_size=3333 DEBUG="*" yarn prisma generate
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=2222 yarn affected:test --base=HEAD~1 --parallel --maxParallel=2 --skip-nx-cache
@@ -134,7 +133,6 @@ pipelines:
                 - node
               script:
                 - NODE_OPTIONS=--max_old_space_size=3333 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --ignore-scripts --frozen-lockfile --prefer-offline
-                - NODE_OPTIONS=--max_old_space_size=3333 yarn prisma generate
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:export --base=HEAD~1 --prod
               artifacts:
                 - dist/**
