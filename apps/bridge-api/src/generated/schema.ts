@@ -10,7 +10,6 @@ export interface TwoFactorHistory {
 
 export interface ThirdPartyAccess {
   id: number;
-  occupier: number;
   company_id: number;
   company_name: string;
   email: string;
