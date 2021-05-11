@@ -132,7 +132,7 @@ pipelines:
                 - node
               script:
                 - yarn install --frozen-lockfile --prefer-offline
-                - NODE_OPTIONS=--max_old_space_size=2345 yarn affected:export --base=HEAD~1 --prod --parallel --maxParallel=2
+                - NODE_OPTIONS=--max_old_space_size=2345 yarn affected:export --base=HEAD~1 --prod
               artifacts:
                 - dist/**
 
