@@ -7,7 +7,6 @@ import {
   InstagramOutlined,
   LeftOutlined,
   LinkedinFilled,
-  LoadingOutlined,
   SmileOutlined,
   StarFilled,
   TwitterOutlined,
@@ -37,7 +36,7 @@ import {
   Popover,
   Rate,
   Row,
-  Spin,
+  Skeleton,
   Tooltip,
 } from 'antd'
 import classNames from 'classnames'
@@ -140,23 +139,13 @@ const listQuery = gql`
   }
 `
 
-const AlllistQuery = gql`
+const AllListQuery = gql`
   query get_all_social_survey_feedback {
     socialSurveyFeedbacks(orderBy: { date: desc }) {
       feedback_source
-      id
-      date
-      contact_id
-      feedback_status
       rating
       service
-      feedback_name
-      feedback_comment
-      feedback_for
-      Response {
-        response
-        id
-      }
+      date
       User {
         username
         full_name
@@ -179,24 +168,7 @@ const AllDataQuery = gql`
         service: { contains: $service }
       }
     ) {
-      feedback_source
       id
-      date
-      contact_id
-      feedback_status
-      rating
-      service
-      feedback_name
-      feedback_comment
-      feedback_for
-      Response {
-        response
-        id
-      }
-      User {
-        username
-        full_name
-      }
     }
   }
 `
@@ -273,7 +245,7 @@ const fields = [
     score: '0/5',
     reviews: 0,
     mostRecent: '',
-    isPlus: true,
+    isPlus: false,
     key: 1,
   },
   {
@@ -398,14 +370,14 @@ const Reviews: FC<ReviewConfig> = () => {
     onCompleted(data) {
       Notification(
         NotificationType.success,
-        t('marketingrevirews.data.creatediscountsuccessfullymessage')
+        t('marketingreviews.data.creatediscountsuccessfullymessage')
       )
       sendResponseEmail()
     },
     onError(err) {
       Notification(
         NotificationType.error,
-        t('marketingrevirews.data.creatediscounterrormessages')
+        t('marketingreviews.data.creatediscounterrormessages')
       )
     },
   })
@@ -416,14 +388,14 @@ const Reviews: FC<ReviewConfig> = () => {
       onCompleted(data) {
         Notification(
           NotificationType.success,
-          t('marketingrevirews.data.updatediscountsuccessmessages')
+          t('marketingreviews.data.updatediscountsuccessmessages')
         )
         sendResponseEmail()
       },
       onError(err) {
         Notification(
           NotificationType.error,
-          t('marketingrevirews.data.updatediscounterrormessages')
+          t('marketingreviews.data.updatediscounterrormessages')
         )
       },
     }
@@ -452,13 +424,13 @@ const Reviews: FC<ReviewConfig> = () => {
     onCompleted(data) {
       Notification(
         NotificationType.success,
-        t('marketingrevirews.data.deletediscountsuccessmessages')
+        t('marketingreviews.data.deletediscountsuccessmessages')
       )
     },
     onError(err) {
       Notification(
         NotificationType.error,
-        t('marketingrevirews.data.deletediscounterrormessages')
+        t('marketingreviews.data.deletediscounterrormessages')
       )
     },
   })
@@ -531,7 +503,7 @@ const Reviews: FC<ReviewConfig> = () => {
 
   const { data: aggregateData } = useLiveQuery(aggregateQuery)
 
-  const { data: Alldata, loading: alldataloading } = useLiveQuery(AlllistQuery)
+  const { data: Alldata, loading: alldataloading } = useLiveQuery(AllListQuery)
 
   const { data: AllRecord } = useLiveQuery(AllDataQuery, getAllQueryVariables)
 
@@ -539,37 +511,37 @@ const Reviews: FC<ReviewConfig> = () => {
 
   const columnData: Array<ColumnData> = [
     {
-      title: t('marketingrevirews.table.column.source'),
+      title: t('marketingreviews.table.column.source'),
       dataIndex: 'feedback_source',
       className: 'drag-visible',
       visible: true,
     },
     {
-      title: t('marketingrevirews.table.column.score'),
+      title: t('marketingreviews.table.column.score'),
       dataIndex: 'rating',
       className: 'drag-visible',
       visible: true,
     },
     {
-      title: t('marketingrevirews.table.column.name'),
+      title: t('marketingreviews.table.column.name'),
       dataIndex: 'feedback_name',
       className: 'drag-visible',
       visible: true,
     },
     {
-      title: t('marketingrevirews.table.column.date'),
+      title: t('marketingreviews.table.column.date'),
       dataIndex: 'date',
       className: 'drag-visible',
       visible: true,
     },
     {
-      title: t('marketingrevirews.table.column.for'),
+      title: t('marketingreviews.table.column.for'),
       dataIndex: 'feedback_for',
       className: 'drag-visible',
       visible: true,
     },
     {
-      title: t('marketingrevirews.table.column.message'),
+      title: t('marketingreviews.table.column.message'),
       dataIndex: 'feedback_comment',
       className: 'drag-visible',
       visible: true,
@@ -746,16 +718,16 @@ const Reviews: FC<ReviewConfig> = () => {
     return (
       <div className={styles.buttonVisibleWrap}>
         <Button onClick={() => onRowClick(e, 'share')}>
-          {t('marketingrevirews.share.modal.share')}
+          {t('marketingreviews.share.modal.share')}
         </Button>
         <Button onClick={() => handleResponseModal(e)}>
           {e.Response.length === 0
-            ? t('marketingrevirews.share.modal.responsed')
+            ? t('marketingreviews.share.modal.responsed')
             : t('common-label-edit')}
         </Button>
         <Tooltip
           placement={'topRight'}
-          title={e.public_use ? t('marketingrevirews.visible.message') : ''}
+          title={e.public_use ? t('marketingreviews.visible.message') : ''}
         >
           <Button
             onClick={() => onFavouriteClick(e.id, e.public_use)}
@@ -795,18 +767,18 @@ const Reviews: FC<ReviewConfig> = () => {
         {({ setFieldValue, handleSubmit, handleReset, values }) => (
           <div>
             <div className={styles.filterHeader}>
-              <div>Filter by</div>
+              <div>{t('add-button-filter-header-text-filter')}</div>
               <Button
                 type="text"
                 onClick={() => handleResetButton(handleReset)}
               >
-                Reset
+                {t('add-button-filter-reset')}
               </Button>
             </div>
             <div className={styles.filterMenu}>
               <div className={styles.filterMenuItem}>
                 <div>
-                  <b>Score</b>
+                  <b>{t('marketingreviews.table.column.score')}</b>
                 </div>
               </div>
               <div className={styles.filterViewerStatusContainer}>
@@ -814,25 +786,25 @@ const Reviews: FC<ReviewConfig> = () => {
                   type={values.score === 'Bad' ? 'primary' : 'default'}
                   onClick={() => setFieldValue('score', 'Bad')}
                 >
-                  Bad
+                  {t('marketingreviews.filter.option.bad')}
                 </Button>
 
                 <Button
                   type={values.score === 'Ok' ? 'primary' : 'default'}
                   onClick={() => setFieldValue('score', 'Ok')}
                 >
-                  Ok
+                  {t('marketingreviews.ok.label')}
                 </Button>
                 <Button
                   type={values.score === 'Excellent' ? 'primary' : 'default'}
                   onClick={() => setFieldValue('score', 'Excellent')}
                 >
-                  Excellent
+                  {t('marketingreviews.excellent.label')}
                 </Button>
               </div>
               <div className={styles.filterMenuItem}>
                 <div>
-                  <b>Employee</b>
+                  <b>{t('setup.business-details.employee.singular')}</b>
                 </div>
                 <SimpleDropdown
                   name="employee"
@@ -853,7 +825,7 @@ const Reviews: FC<ReviewConfig> = () => {
               </div>
               <div className={styles.filterMenuItem}>
                 <div>
-                  <b>Service</b>
+                  <b>{t('setup.discount.data.service')}</b>
                 </div>
                 <SimpleDropdown
                   name="service"
@@ -878,7 +850,7 @@ const Reviews: FC<ReviewConfig> = () => {
                   }}
                   className={styles.filterApplyBtn}
                 >
-                  Apply
+                  {t('common-label-apply')}
                 </Button>
               </div>
             </div>
@@ -895,25 +867,21 @@ const Reviews: FC<ReviewConfig> = () => {
           <Breadcrumb
             breadcrumbItems={[
               {
-                breadcrumbName: t('marketingrevirews.notification.marketing'),
-                path: 'marketing',
-              },
-              {
-                breadcrumbName: t('marketingrevirews.notification.title'),
+                breadcrumbName: t('marketingreviews.notification.title'),
                 path: '',
               },
             ]}
           />
-          <h4>{t('marketingrevirews.notification.title')}</h4>
+          <h4>{t('marketingreviews.notification.title')}</h4>
         </Col>
         <Col span={'auto'} className={styles.titleSaveBtn}>
           <div className={styles.reviewLink}>
-            <h5>{t('marketingrevirews.notification.review.link.label')}</h5>
+            <h5>{t('marketingreviews.notification.review.link.label')}</h5>
             <a
               href={'https://crm.pabau.com/reviews/perfect-skin'}
               target="__blank"
             >
-              <span>{t('marketingrevirews.notification.review.link')}</span>
+              <span>{t('marketingreviews.notification.review.link')}</span>
             </a>
           </div>
           <div className={styles.btnWrapperFilter}>
@@ -924,7 +892,7 @@ const Reviews: FC<ReviewConfig> = () => {
               overlayClassName={styles.filterPopover}
             >
               <Button className={styles.filterBtn}>
-                <FilterOutlined /> {t('marketingrevirews.notification.filter')}
+                <FilterOutlined /> {t('marketingreviews.notification.filter')}
               </Button>
             </Popover>
             <Button
@@ -932,7 +900,7 @@ const Reviews: FC<ReviewConfig> = () => {
               className={styles.saveBtn}
               onClick={handleConfigure}
             >
-              {t('marketingrevirews.notification.configure')}
+              {t('marketingreviews.notification.configure')}
             </Button>
           </div>
         </Col>
@@ -942,25 +910,32 @@ const Reviews: FC<ReviewConfig> = () => {
 
   const customProgressBar = (width, classname) => {
     return (
-      <div className={styles.containerStyles}>
-        {progressData.map((item) => (
-          <div
-            className={styles.fillerStyles}
-            style={{ width: item.width, background: item.color }}
-            key={item.id}
-          >
-            <div className={styles.number}>{item.label}</div>
-            <span className={styles.labelStyles} />
-            {item.id === 'great' && (
+      <div>
+        {!alldataloading ? (
+          <div className={styles.containerStyles}>
+            {progressData.map((item) => (
               <div
-                className={classNames(classname, styles.progressDot)}
-                style={{
-                  left: `${width}%`,
-                }}
-              />
-            )}
+                className={styles.fillerStyles}
+                style={{ width: item.width, background: item.color }}
+                key={item.id}
+              >
+                <div className={styles.number}>{item.label}</div>
+                <span className={styles.labelStyles} />
+                {item.id === 'great' && (
+                  <div
+                    className={classNames(classname, styles.progressDot)}
+                    style={{
+                      left: `${width}%`,
+                    }}
+                  />
+                )}
+              </div>
+            ))}
+            )
           </div>
-        ))}
+        ) : (
+          <Skeleton.Input active className={styles.containerStyles} />
+        )}
       </div>
     )
   }
@@ -1024,67 +999,76 @@ const Reviews: FC<ReviewConfig> = () => {
       <Row className={styles.mobColumn}>
         <Col xs={24} lg={12}>
           <div className={styles.reviewCard}>
-            <div className={`${styles.reviewHeader} ${classname}`}>
-              <div className={styles.starWrapper}>
-                <span className={styles.imgSmile}>
-                  {feedbackValue < 2 ? (
-                    <FrownOutlined className={styles.face} />
-                  ) : (
-                    <SmileOutlined className={styles.face} />
-                  )}
-                </span>
-                <div className={styles.clientReview}>
-                  <h5>{t('marketingrevirews.client.message')}</h5>
-                  <div className={styles.rateWrap}>
-                    <h6>{feedbackValue}/5</h6>
-                    <Rate
-                      className={styles.rateWrapStar}
-                      disabled={true}
-                      allowHalf
-                      value={feedbackValue}
-                    />
+            {!alldataloading ? (
+              <div className={`${styles.reviewHeader} ${classname}`}>
+                <div className={styles.starWrapper}>
+                  <span className={styles.imgSmile}>
+                    {feedbackValue < 2 ? (
+                      <FrownOutlined className={styles.face} />
+                    ) : (
+                      <SmileOutlined className={styles.face} />
+                    )}
+                  </span>
+                  <div className={styles.clientReview}>
+                    <h5>{t('marketingreviews.client.message')}</h5>
+                    <div className={styles.rateWrap}>
+                      <h6>{feedbackValue}/5</h6>
+                      <Rate
+                        className={styles.rateWrapStar}
+                        disabled={true}
+                        allowHalf
+                        value={feedbackValue}
+                      />
+                    </div>
                   </div>
                 </div>
+                <div className={styles.socialBtn}>
+                  <Button>{t('marketingreviews.share.button.label')}</Button>
+                </div>
               </div>
-              <div className={styles.socialBtn}>
-                <Button>{t('marketingrevirews.share.button.label')}</Button>
-              </div>
-            </div>
+            ) : (
+              <Skeleton.Input active className={styles.bannerSkeleton} />
+            )}
             <div className={styles.rateListing}>
               <div className={styles.progressBar}>
                 {customProgressBar(left, classname)}
               </div>
-              <div className={styles.listColor}>
-                <ul>
-                  <li>
-                    <span />
-                    <p>{t('marketingrevirews.need.improvement.label')}</p>
-                  </li>
-                  <li>
-                    <span />
-                    <p>{t('marketingrevirews.ok.label')}</p>
-                  </li>
-                  <li>
-                    <span />
-                    <p>{t('marketingrevirews.great.label')}</p>
-                  </li>
-                  <li>
-                    <span />
-                    <p>{t('marketingrevirews.excellent.label')}</p>
-                  </li>
-                </ul>
-              </div>
+              {!alldataloading ? (
+                <div className={styles.listColor}>
+                  <ul>
+                    <li>
+                      <span />
+                      <p>{t('marketingreviews.need.improvement.label')}</p>
+                    </li>
+                    <li>
+                      <span />
+                      <p>{t('marketingreviews.ok.label')}</p>
+                    </li>
+                    <li>
+                      <span />
+                      <p>{t('marketingreviews.great.label')}</p>
+                    </li>
+                    <li>
+                      <span />
+                      <p>{t('marketingreviews.excellent.label')}</p>
+                    </li>
+                  </ul>
+                </div>
+              ) : (
+                <Skeleton.Input active className={styles.listColor} />
+              )}
             </div>
           </div>
         </Col>
         <Col xs={24} lg={6}>
           <div className={styles.reviewWrap}>
             <ReviewTable
+              loading={alldataloading}
               fields={reviewData}
-              sourceFieldTitle={t('marketingrevirews.table.column.source')}
-              scoreFieldTitle={t('marketingrevirews.table.column.score')}
-              reviewFieldTitle={t('marketingrevirews.notification.title')}
-              mostRecentTitle={t('marketingrevirews.table.column.most.recent')}
+              sourceFieldTitle={t('marketingreviews.table.column.source')}
+              scoreFieldTitle={t('marketingreviews.table.column.score')}
+              reviewFieldTitle={t('marketingreviews.notification.title')}
+              mostRecentTitle={t('marketingreviews.table.column.most.recent')}
             />
           </div>
         </Col>
@@ -1161,8 +1145,7 @@ const Reviews: FC<ReviewConfig> = () => {
     <div className={styles.headerModalWrap}>
       <LeftOutlined onClick={onHandleModal} />{' '}
       <h4>
-        {t('marketingrevirews.share.modal.respond')}{' '}
-        {selectedRow?.feedback_name}
+        {t('marketingreviews.share.modal.respond')} {selectedRow?.feedback_name}
       </h4>
     </div>
   )
@@ -1180,10 +1163,10 @@ const Reviews: FC<ReviewConfig> = () => {
           <div className={styles.headerModalWrap}>
             <h4>
               {modalValue === 'respond'
-                ? `${t('marketingrevirews.share.modal.respond')} ${
+                ? `${t('marketingreviews.share.modal.respond')} ${
                     selectedRow?.feedback_name
                   }`
-                : `${t('marketingrevirews.share.modal.share')} ${
+                : `${t('marketingreviews.share.modal.share')} ${
                     selectedRow?.feedback_name
                   }`}
             </h4>
@@ -1207,11 +1190,11 @@ const Reviews: FC<ReviewConfig> = () => {
         {modalValue === 'respond' ? (
           <>
             <div className={styles.answerWrapper}>
-              <label>{t('marketingrevirews.share.modal.answer')}</label>
+              <label>{t('marketingreviews.share.modal.answer')}</label>
               <AntInput.TextArea
                 rows={4}
                 placeholder={`${t(
-                  'marketingrevirews.share.modal.personalised.answer'
+                  'marketingreviews.share.modal.personalised.answer'
                 )} ${selectedRow?.feedback_name}`}
                 onChange={(e) => handleInputChange(e)}
                 value={message}
@@ -1225,9 +1208,9 @@ const Reviews: FC<ReviewConfig> = () => {
                   checked={sendResEmail}
                   className={styles.switch}
                 />{' '}
-                {t('marketingrevirews.share.modal.notify')}{' '}
+                {t('marketingreviews.share.modal.notify')}{' '}
                 {selectedRow?.feedback_name}{' '}
-                {t('marketingrevirews.share.modal.response')}
+                {t('marketingreviews.share.modal.response')}
               </div>
               <div className={styles.box}>
                 {selectedRow?.Response.length !== 0 && (
@@ -1236,13 +1219,13 @@ const Reviews: FC<ReviewConfig> = () => {
                     className={styles.deleteButton}
                     onClick={handleDeleteResponseMessage}
                   >
-                    {t('marketingrevirews.share.modal.delete')}
+                    {t('marketingreviews.share.modal.delete')}
                   </Button>
                 )}
                 <div className={styles.respondGroup}>
                   <Button type="primary" onClick={handleResponseMessage}>
                     {selectedRow?.Response.length === 0
-                      ? t('marketingrevirews.share.modal.responsed')
+                      ? t('marketingreviews.share.modal.responsed')
                       : t('marketingsource-save-button')}
                   </Button>
                 </div>
@@ -1258,7 +1241,7 @@ const Reviews: FC<ReviewConfig> = () => {
               <TwitterOutlined />
               <LinkedinFilled />
             </div>
-            <p>{t('marketingrevirews.share.modal.or')}</p>
+            <p>{t('marketingreviews.share.modal.or')}</p>
             <ShareReview
               reviewScore={selectedRow?.rating}
               date={new Date(new Date().getMonth() - 2)}
@@ -1287,18 +1270,18 @@ const Reviews: FC<ReviewConfig> = () => {
 
   return (
     <>
-      <CommonHeader title={t('marketingrevirews.notification.title')} />
+      <CommonHeader title={t('marketingreviews.notification.title')} />
       <Layout>
         <div className={styles.notificationBanner}>
           <NotificationBanner
-            title={t('marketingrevirews.notification.title')}
-            desc={t('marketingrevirews.notification.description')}
+            title={t('marketingreviews.notification.title')}
+            desc={t('marketingreviews.notification.description')}
             imgPath={notificationBannerReviewPageImage}
             allowClose={true}
             setHide={[hideBanner, setHideBanner]}
             showPaymentButton={true}
             showEmail={true}
-            showPaymentTitle={t('marketingrevirews.notification.button')}
+            showPaymentTitle={t('marketingreviews.notification.button')}
           />
         </div>
         <Card className={styles.reviewContainer}>
@@ -1320,13 +1303,89 @@ const Reviews: FC<ReviewConfig> = () => {
           )}
           <div className={styles.tableMob}>
             {loading ? (
-              <Spin
-                className={styles.spinner}
-                size={'large'}
-                delay={0}
-                spinning={true}
-                indicator={<LoadingOutlined className={styles.icon} spin />}
-              />
+              <div className={styles.table}>
+                <Table
+                  rowKey="key"
+                  pagination={false}
+                  dataSource={[...Array.from({ length: 10 })].map(
+                    (_, index) => ({
+                      key: `key${index}`,
+                    })
+                  )}
+                  columns={columnData.map((column) => {
+                    return {
+                      ...column,
+                      render: function renderPlaceholder() {
+                        switch (column.dataIndex) {
+                          case 'feedback_source':
+                            return (
+                              <Skeleton
+                                loading={loading}
+                                active
+                                avatar
+                                className={styles.skeleton}
+                              />
+                            )
+                          case 'rating':
+                            return (
+                              <Skeleton
+                                loading={loading}
+                                active
+                                title={true}
+                                paragraph={false}
+                              />
+                            )
+                          case 'date':
+                            return (
+                              <Skeleton
+                                loading={loading}
+                                active
+                                title={true}
+                                paragraph={false}
+                              />
+                            )
+                          case 'feedback_for':
+                            return (
+                              <Skeleton
+                                loading={loading}
+                                active
+                                avatar
+                                className={styles.skeleton}
+                              />
+                            )
+                          case 'feedback_comment':
+                            return (
+                              <Skeleton
+                                loading={loading}
+                                active
+                                title={true}
+                                paragraph={false}
+                              />
+                            )
+                          case 'visibleData':
+                            return (
+                              <Skeleton
+                                loading={loading}
+                                active
+                                title={true}
+                                paragraph={false}
+                              />
+                            )
+                          default:
+                            return (
+                              <Skeleton
+                                loading={loading}
+                                active
+                                title={true}
+                                paragraph={false}
+                              />
+                            )
+                        }
+                      },
+                    }
+                  })}
+                />
+              </div>
             ) : dataList.length > 0 ? (
               <Table
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

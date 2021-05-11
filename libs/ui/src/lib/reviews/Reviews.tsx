@@ -1,7 +1,7 @@
+import { Skeleton, Table } from 'antd'
 import React, { FC, ReactNode } from 'react'
 import { PabauPlus } from '../badge/Badge'
 import styles from './Reviews.module.less'
-import { Table } from 'antd'
 
 export interface ReviewFieldType {
   icon: ReactNode
@@ -13,6 +13,7 @@ export interface ReviewFieldType {
 }
 
 export interface ReviewsProps {
+  loading?: boolean
   sourceFieldTitle?: string
   scoreFieldTitle?: string
   reviewFieldTitle?: string
@@ -21,6 +22,7 @@ export interface ReviewsProps {
 }
 
 export const Reviews: FC<ReviewsProps> = ({
+  loading,
   sourceFieldTitle,
   scoreFieldTitle,
   reviewFieldTitle,
@@ -60,7 +62,36 @@ export const Reviews: FC<ReviewsProps> = ({
 
   return (
     <div className={styles.reviewsWrapper}>
-      <Table columns={columns} dataSource={fields} pagination={false} />
+      {loading ? (
+        <Table
+          rowKey="key"
+          pagination={false}
+          dataSource={[...Array.from({ length: 3 })].map((_, index) => ({
+            key: `key${index}`,
+          }))}
+          columns={columns.map((column) => {
+            return {
+              ...column,
+              render: function renderPlaceholder() {
+                switch (column.dataIndex) {
+                  case 'icon':
+                    return <Skeleton.Avatar active />
+                  case 'score':
+                    return <Skeleton.Input active className={styles.input} />
+                  case 'reviews':
+                    return <Skeleton.Input active className={styles.input} />
+                  case 'mostRecent':
+                    return <Skeleton.Input active className={styles.input} />
+                  default:
+                    return <Skeleton.Input active className={styles.input} />
+                }
+              },
+            }
+          })}
+        />
+      ) : (
+        <Table columns={columns} dataSource={fields} pagination={false} />
+      )}
     </div>
   )
 }
