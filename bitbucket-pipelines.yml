@@ -92,9 +92,10 @@ pipelines:
             # TODO: set -lt back to 4 when nrwl install postcss >=8.2.10
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 8 ]] && exit 0 || exit 1'
             - NODE_OPTIONS=--max_old_space_size=3333 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --ignore-scripts --frozen-lockfile --prefer-offline
+            - ls -al || true
             - yarn bin || true
           artifacts:
-            - node_modules/
+            - node_modules/**
 
       - parallel:
           - step:
@@ -104,6 +105,7 @@ pipelines:
               max-time: 15
               script:
                 - openssl version || true
+                - ls -al || true
                 - yarn bin || true
                 - yarn bin || true
                 - yarn lint:tsc
