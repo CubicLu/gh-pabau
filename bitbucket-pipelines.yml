@@ -109,7 +109,7 @@ pipelines:
               caches:
                 - node
               script:
-                - yarn install --frozen-lockfile --prefer-offline
+                - CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:lint --base=HEAD~1 --with-deps --parallel --maxParallel=2
 
           - step:
