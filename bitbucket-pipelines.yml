@@ -139,7 +139,7 @@ pipelines:
               script:
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:export --base=HEAD~1 --prod
               artifacts:
-                - dist/
+                - dist/**
 
       # - parallel:
 
