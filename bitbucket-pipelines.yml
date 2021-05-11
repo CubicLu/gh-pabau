@@ -23,7 +23,7 @@ pipelines:
             - nodemodules
             - yarncustom
           script:
-            - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 8 ]] && exit 0 || exit 1'
+            - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 16 ]] && exit 0 || exit 1'
 
             # Get an oauth access token using the client credentials, parsing out the token with jq.
             - apt-get update && apt-get install -y curl jq
@@ -85,8 +85,8 @@ pipelines:
           script:
             - set || true
             - git log --merges -n 1 --pretty=oneline
-            # TODO: set -gt back to 2 when nrwl install postcss >=8.2.10
-            - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 8 ]] && exit 0 || exit 1'
+            # TODO: set -lt back to 4 when nrwl install postcss >=8.2.10
+            - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 16 ]] && exit 0 || exit 1'
             - yarn bin || true
 
       - parallel:
