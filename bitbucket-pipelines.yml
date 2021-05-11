@@ -96,6 +96,7 @@ pipelines:
               caches:
                 - node
               script:
+                - openssl version || true
                 - yarn bin || true
                 - NODE_OPTIONS=--max_old_space_size=3333 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --ignore-scripts --frozen-lockfile --prefer-offline
                 - yarn bin || true
