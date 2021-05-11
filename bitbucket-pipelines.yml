@@ -86,7 +86,7 @@ pipelines:
             - set || true
             - git log --merges -n 1 --pretty=oneline
             # TODO: set -lt back to 4 when nrwl install postcss >=8.2.10
-            - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 16 ]] && exit 0 || exit 1'
+            - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 8 ]] && exit 0 || exit 1'
             - yarn bin || true
 
       - parallel:
