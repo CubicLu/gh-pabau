@@ -37,7 +37,6 @@
 - "!include public_lead_fields.yaml"
 - "!include public_library.yaml"
 - "!include public_library_installers.yaml"
-- "!include public_lms_slugs.yaml"
 - "!include public_locations.yaml"
 - "!include public_marketing_campaign.yaml"
 - "!include public_marketing_referral.yaml"
@@ -68,4 +67,3 @@
 - "!include public_supplier.yaml"
 - "!include public_tax_rates.yaml"
 - "!include public_third_parties.yaml"
-- "!include public_user_list.yaml"

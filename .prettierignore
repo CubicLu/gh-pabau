@@ -2,3 +2,7 @@
 
 /dist
 /coverage
+/graphql.schema.json
+**/generated/
+**/assets/
+/hasura/

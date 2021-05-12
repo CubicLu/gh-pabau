@@ -1,9 +1,9 @@
+import clinicalImage from '../assets/images/clinical.png'
+import developerImage from '../assets/images/developer.png'
+import financialImage from '../assets/images/financial.png'
+import marketingImage from '../assets/images/marketing.png'
 import clinicImage from '../assets/images/our-clinic.png'
 import servicesImage from '../assets/images/services.png'
-import clinicalImage from '../assets/images/clinical.png'
-import marketingImage from '../assets/images/marketing.png'
-import financialImage from '../assets/images/financial.png'
-import developerImage from '../assets/images/developer.png'
 
 export function useGridData(t) {
   const setupGridData = [

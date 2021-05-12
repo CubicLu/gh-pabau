@@ -1,0 +1,28 @@
+{
+  "name": "hasura",
+  "schemaPath": "./hasura/schema.graphql",
+  "extensions": {
+    "endpoints": {
+      "production": {
+        "url": "https://api.new.pabau.com.com/v1/graphql",
+        "headers": {
+          "Authorization": "Bearer ${env:GITHUB-ACCESS-TOKEN}",
+          "user-agent": "JS GraphQL"
+        },
+        "introspect": false
+      },
+      "local": {
+        "url": "http://localhost:8080/v1/graphql",
+        "headers": {
+          "Authorization": "Bearer ${env:HASURA_GRAPHQL_ADMIN_SECRET}",
+          "user-agent": "JS GraphQL"
+        },
+        "introspect": false
+      }
+    }
+  },
+  "includes": [
+    "hasura/schema.graphql",
+    "libs/**/*.graphql"
+  ]
+}

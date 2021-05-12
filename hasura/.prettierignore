@@ -1,0 +1,4 @@
+metadata/
+migrations/
+seeds/
+schema.graphql

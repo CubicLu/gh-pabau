@@ -30,6 +30,7 @@ select_permissions:
     - from
     - id
     - message
+    - read
     - to
     - updated_at
     filter:
