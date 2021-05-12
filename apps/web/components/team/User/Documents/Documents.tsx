@@ -67,7 +67,7 @@ const Document: FC = () => {
               addedByDate: `Added ${moment(new Date()).format(
                 'DD/MM/YYYY'
               )} by ${userDetailDocuments.name}`,
-              size: `${(files.size * 0.000001).toFixed(2)} MB`,
+              size: `${(files.size * 0.000_001).toFixed(2)} MB`,
             }
             thread.files.push(data)
             return files

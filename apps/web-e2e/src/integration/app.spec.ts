@@ -2,7 +2,7 @@
 
 describe('web', () => {
   beforeEach(() =>
-    cy.visit('/', { retryOnNetworkFailure: true, timeout: 45000 })
+    cy.visit('/', { retryOnNetworkFailure: true, timeout: 45_000 })
   )
 
   it('should display welcome message 22', () => {

@@ -13,7 +13,6 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import * as Icons from '@fortawesome/free-solid-svg-icons'
 import { OperationDefinitionNode } from 'graphql'
 import { AppProps } from 'next/app'
-import { CookiesProvider } from 'react-cookie'
 import 'react-image-crop/dist/ReactCrop.css'
 import 'react-phone-input-2/lib/style.css'
 import 'react-quill/dist/quill.snow.css'
@@ -111,13 +110,11 @@ export default function CustomApp({
           src: url('/fonts/CircularStd-Medium.otf') format('opentype');
         }
       `}</style>
-      <CookiesProvider>
-        <ContextWrapper>
-          <TranslationWrapper>
-            <Component {...pageProps} />
-          </TranslationWrapper>
-        </ContextWrapper>
-      </CookiesProvider>
+      <ContextWrapper>
+        <TranslationWrapper>
+          <Component {...pageProps} />
+        </TranslationWrapper>
+      </ContextWrapper>
     </ApolloProvider>
   )
 }
