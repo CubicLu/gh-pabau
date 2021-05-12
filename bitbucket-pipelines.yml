@@ -153,7 +153,7 @@ pipelines:
 
             # Post to Slack
             - |
-              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900) $(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
+              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)\n$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
               -H "Expect:" \
               -H 'Content-Type: application/json; charset=utf-8' \
               --data-binary @-
@@ -316,7 +316,7 @@ pipelines:
 
             # Post to Slack
             - |
-              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900) $(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
+              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)\n$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
               -H "Expect:" \
               -H 'Content-Type: application/json; charset=utf-8' \
               --data-binary @-
