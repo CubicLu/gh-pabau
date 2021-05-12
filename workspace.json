@@ -630,7 +630,7 @@
       "projectType": "application",
       "prefix": "bridge-api",
       "architect": {
-        "build-docker": {
+        "export": {
           "builder": "@nrwl/node:build",
           "outputs": ["{options.outputPath}"],
           "options": {
