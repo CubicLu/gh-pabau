@@ -72,7 +72,8 @@ pipelines:
               name: build
               runs-on:
                 - 'self.hosted'
-              max-time: 30
+              max-time: 40
+              size: 2x
               script:
                 - yarn prisma generate
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:export --base=origin/master --prod
@@ -163,8 +164,6 @@ pipelines:
     master:
       - step:
           name: yarn audit
-          runs-on:
-            - 'self.hosted'
           max-time: 10
           caches:
             - node
@@ -217,7 +216,8 @@ pipelines:
               name: build
               runs-on:
                 - 'self.hosted'
-              max-time: 30
+              max-time: 40
+              size: 2x
               script:
                 - yarn prisma generate
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:export --base=HEAD~1 --prod
