@@ -14,9 +14,7 @@
             "outputPath": "dist/apps/web"
           },
           "configurations": {
-            "production": {
-              "cacheBuster": 2
-            }
+            "production": {}
           }
         },
         "serve": {

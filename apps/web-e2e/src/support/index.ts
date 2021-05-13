@@ -15,4 +15,4 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
-cy.visit('/', { timeout: 60000 })
+cy.visit('/', { timeout: 60_000 })

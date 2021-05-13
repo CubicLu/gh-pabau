@@ -212,6 +212,7 @@ export const permissions = shield(
         rules.isAuthenticated,
         rules.isAdmin
       ),
+      user: rules.isAuthenticated, //TODO: insecure, fix in pure branch by masquerading the user/findOneUser and turning it into a findFirstUser in the shield injection.
       '*': and(rules.isAuthenticated, rules.belongsToCompanyAndShared),
     },
   },

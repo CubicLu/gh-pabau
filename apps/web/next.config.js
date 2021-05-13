@@ -42,7 +42,7 @@ module.exports = {
       'woff2',
       'otf',
     ],
-    inlineImageLimit: 100000,
+    inlineImageLimit: 100_000,
     ...withAntdLess({
       lessVarsFilePath: 'libs/ui/src/styles/antd.less',
       importLoaders: 3,

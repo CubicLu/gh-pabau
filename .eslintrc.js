@@ -8,6 +8,7 @@ module.exports = {
     'plugin:prettier/recommended',
   ],
   rules: {
+    'unicorn/numeric-separators-style': 0,
     '@next/next/no-html-link-for-pages': 0,
     'tsdoc/syntax': 'warn',
     'id-length': 0,
