@@ -319,3 +319,15 @@ pipelines:
               -H "Expect:" \
               -H 'Content-Type: application/json; charset=utf-8' \
               --data-binary @-
+
+            # Post to Bitbucket PR
+            - |
+              curl https://api.bitbucket.org/2.0/repositories/pabau/monorepo/pullrequests/${BITBUCKET_PR_ID}/comments \
+                -H "Authorization: Bearer ${access_token}" \
+                --request POST \
+                --header 'Content-Type: application/json' \
+                --data '{
+                  "content": {
+                    "raw": "A new vercel was published!"
+                  }
+                }'
