@@ -18,8 +18,6 @@ pipelines:
     '**':
       - step:
           name: yarn audit
-          runs-on:
-            - 'self.hosted'
           max-time: 10
           caches:
             - node
