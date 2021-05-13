@@ -121,6 +121,8 @@ pipelines:
             - echo "${LAST_COMMIT_LOG}"
 
             - NODE_OPTIONS=--max_old_space_size=2750 /usr/bin/time -v yarn affected --base=origin/master --head=HEAD --target=deploy --prod
+            - cat /tmp/bot_message.txt
+            - cat /tmp/bot_message2.txt
 
             # Configure git to use the oauth token.
             - |
@@ -129,11 +131,12 @@ pipelines:
               export COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
 
             - |
-              printf ":shallow_pan_of_food::shallow_pan_of_food: *New PR Preview*\n## <https://bitbucket.org/pabau/monorepo/pull-requests/${BITBUCKET_PR_ID}|PR ${BITBUCKET_PR_ID}> published by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
+              printf ":shallow_pan_of_food::shallow_pan_of_food: *New PR Preview*\n## <https://bitbucket.org/pabau/monorepo/pull-requests/${BITBUCKET_PR_ID}|PR ${BITBUCKET_PR_ID}> committed by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
               npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "origin/master" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
               cat /tmp/bot_message.txt >> /tmp/bot_message2.txt || true
               printf "\n" >> /tmp/bot_message2.txt
 
+            - cat /tmp/bot_message.txt
             - cat /tmp/bot_message2.txt
             - mkdir -p dist && cp -f /tmp/bot_message2.txt dist/ || true
 
@@ -292,7 +295,7 @@ pipelines:
                 - export COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
 
                 - |
-                  printf "*New Version Staged for Production*\n# v${PACKAGE_JSON_VERSION} created by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
+                  printf "*New Version Staged for Production*\n# v${PACKAGE_JSON_VERSION} committed by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
                   npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "HEAD~2" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
                   cat /tmp/bot_message.txt >> /tmp/bot_message2.txt || true
                   printf "\n" >> /tmp/bot_message2.txt
