@@ -134,6 +134,7 @@ pipelines:
               printf ":shallow_pan_of_food::shallow_pan_of_food: *New PR Preview*\n## <https://bitbucket.org/pabau/monorepo/pull-requests/${BITBUCKET_PR_ID}|PR ${BITBUCKET_PR_ID}> published by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
               npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "origin/master" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
               cat /tmp/bot_message.txt >> /tmp/bot_message2.txt || true
+              printf "\n" >> /tmp/bot_message2.txt
 
             - cat /tmp/bot_message2.txt
             - mkdir -p dist && cp -f /tmp/bot_message2.txt dist/ || true
@@ -153,7 +154,7 @@ pipelines:
 
             # Post to Slack
             - |
-              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)\n$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
+              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
               -H "Expect:" \
               -H 'Content-Type: application/json; charset=utf-8' \
               --data-binary @-
@@ -296,7 +297,8 @@ pipelines:
                 - |
                   printf "*New Version Staged for Production*\n# v${PACKAGE_JSON_VERSION} created by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
                   npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "HEAD~2" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
-                  cat /tmp/bot_message.txt >> /tmp/bot_message2.txt
+                  cat /tmp/bot_message.txt >> /tmp/bot_message2.txt || true
+                  printf "\n" >> /tmp/bot_message2.txt
 
                 - cat /tmp/bot_message2.txt
                 - mkdir -p dist && cp -f /tmp/bot_message2.txt dist/ || true
@@ -316,7 +318,7 @@ pipelines:
 
             # Post to Slack
             - |
-              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)\n$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
+              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
               -H "Expect:" \
               -H 'Content-Type: application/json; charset=utf-8' \
               --data-binary @-
