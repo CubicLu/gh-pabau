@@ -133,7 +133,7 @@ pipelines:
             - |
               printf ":shallow_pan_of_food::shallow_pan_of_food: *New PR Preview*\n## <https://bitbucket.org/pabau/monorepo/pull-requests/${BITBUCKET_PR_ID}|PR ${BITBUCKET_PR_ID}> published by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
               npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "origin/master" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
-              cat /tmp/bot_message.txt >> /tmp/bot_message2.txt
+              cat /tmp/bot_message.txt >> /tmp/bot_message2.txt || true
 
             - cat /tmp/bot_message2.txt
             - mkdir -p dist && cp -f /tmp/bot_message2.txt dist/ || true
