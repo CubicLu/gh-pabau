@@ -106,7 +106,6 @@ pipelines:
           runs-on:
             - 'self.hosted'
           max-time: 20
-          deployment: production-serverless
           script:
             - ls -al . || true
             - ls -al node_modules/ || true
