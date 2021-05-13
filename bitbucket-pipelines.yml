@@ -121,8 +121,8 @@ pipelines:
             - echo "${LAST_COMMIT_LOG}"
 
             - NODE_OPTIONS=--max_old_space_size=2750 /usr/bin/time -v yarn affected --base=origin/master --head=HEAD --target=deploy --prod
-            - cat /tmp/bot_message.txt
-            - cat /tmp/bot_message2.txt
+            - cat /tmp/bot_message.txt || true
+            - cat /tmp/bot_message2.txt || true
 
             # Configure git to use the oauth token.
             - |
@@ -136,8 +136,8 @@ pipelines:
               cat /tmp/bot_message.txt >> /tmp/bot_message2.txt || true
               printf "\n" >> /tmp/bot_message2.txt
 
-            - cat /tmp/bot_message.txt
-            - cat /tmp/bot_message2.txt
+            - cat /tmp/bot_message.txt || true
+            - cat /tmp/bot_message2.txt || true
             - mkdir -p dist && cp -f /tmp/bot_message2.txt dist/ || true
 
           artifacts:
@@ -300,7 +300,7 @@ pipelines:
                   cat /tmp/bot_message.txt >> /tmp/bot_message2.txt || true
                   printf "\n" >> /tmp/bot_message2.txt
 
-                - cat /tmp/bot_message2.txt
+                - cat /tmp/bot_message2.txt || true
                 - mkdir -p dist && cp -f /tmp/bot_message2.txt dist/ || true
 
               artifacts:
