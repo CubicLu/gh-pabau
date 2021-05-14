@@ -581,13 +581,9 @@ const Reviews: FC<ReviewConfig> = () => {
   }, [DataLists, aggregateData, AllRecord])
 
   useEffect(() => {
-    if (
-      alldataloading === false &&
-      Alldata !== undefined &&
-      Alldata.length > 0
-    ) {
+    if (loading === false && DataLists !== undefined && DataLists.length > 0) {
       const Record = []
-      Alldata.map((item) => {
+      DataLists.map((item) => {
         if (item.rating !== undefined) {
           Record.push(item.rating)
         }
@@ -598,34 +594,36 @@ const Reviews: FC<ReviewConfig> = () => {
       const List = [...progressData]
 
       List[0].width = `${
-        (Record.filter((item) => item < 2).length * 100) / Alldata.length
+        (Record.filter((item) => item < 2).length * 100) / DataLists.length
       }%`
       List[1].width = `${
         (Record.filter((item) => item >= 2 || item < 3).length * 100) /
-        Alldata.length
+        DataLists.length
       }%`
       List[2].width = `${
         (Record.filter((item) => item >= 3 || item < 4.5).length * 100) /
-        Alldata.length
+        DataLists.length
       }%`
       List[3].width = `${
-        (Record.filter((item) => item >= 4.5).length * 100) / Alldata.length
+        (Record.filter((item) => item >= 4.5).length * 100) / DataLists.length
       }%`
 
       setProgressData(List)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [Alldata])
+  }, [DataLists])
 
   useEffect(() => {
-    if (Alldata !== undefined && Alldata.length > 0) {
-      const website = Alldata.filter(
+    if (DataLists !== undefined && DataLists.length > 0) {
+      const website = DataLists.filter(
         (item) => item.feedback_source === 'website'
       )
-      const facebook = Alldata.filter(
+      const facebook = DataLists.filter(
         (item) => item.feedback_source === 'facebook'
       )
-      const google = Alldata.filter((item) => item.feedback_source === 'google')
+      const google = DataLists.filter(
+        (item) => item.feedback_source === 'google'
+      )
 
       const List = [...reviewData]
 
@@ -633,7 +631,7 @@ const Reviews: FC<ReviewConfig> = () => {
         List[0].key = website[0].id
         List[0].score = `${(
           website.map((i) => i.rating).reduce((v, i) => v + i, 0) /
-          Alldata?.length
+          DataLists?.length
         ).toFixed(1)}/5`
         List[0].reviews = website.length
         List[0].mostRecent = new Date(
@@ -645,7 +643,7 @@ const Reviews: FC<ReviewConfig> = () => {
         List[1].key = facebook[0].id
         List[1].score = `${(
           facebook.map((i) => i.rating).reduce((v, i) => v + i, 0) /
-          Alldata?.length
+          DataLists?.length
         ).toFixed(1)}/5`
         List[1].reviews = facebook.length
         List[1].mostRecent = new Date(
@@ -657,7 +655,7 @@ const Reviews: FC<ReviewConfig> = () => {
         List[2].key = google[0].id
         List[2].score = `${(
           google.map((i) => i.rating).reduce((v, i) => v + i, 0) /
-          Alldata?.length
+          DataLists?.length
         ).toFixed(1)}/5`
         List[2].reviews = google.length
         List[2].mostRecent = new Date(google[0].date * 1000).toLocaleDateString(
@@ -668,7 +666,7 @@ const Reviews: FC<ReviewConfig> = () => {
       setReviewData(List)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [Alldata])
+  }, [DataLists])
 
   useEffect(() => {
     if (crudTableRef.current) {
@@ -911,7 +909,7 @@ const Reviews: FC<ReviewConfig> = () => {
   const customProgressBar = (width, classname) => {
     return (
       <div>
-        {!alldataloading ? (
+        {!loading ? (
           <div className={styles.containerStyles}>
             {progressData.map((item) => (
               <div
@@ -931,7 +929,6 @@ const Reviews: FC<ReviewConfig> = () => {
                 )}
               </div>
             ))}
-            )
           </div>
         ) : (
           <Skeleton.Input active className={styles.containerStyles} />
@@ -974,43 +971,48 @@ const Reviews: FC<ReviewConfig> = () => {
   const reviewComponentRender = (feedbackValue) => {
     let left = feedbackValue * 20
     let classname = null
+    let text = ''
 
     switch (true) {
       case feedbackValue < 2:
         left = feedbackValue
         classname = styles.rate2
+        text = t('marketingreviews.message.title1')
         break
       case feedbackValue >= 2 && feedbackValue < 3:
         left = feedbackValue === 2 ? feedbackValue * 7.5 : feedbackValue * 11.67
         classname = styles.rate3
+        text = t('marketingreviews.message.title2')
         break
       case feedbackValue >= 3 && feedbackValue < 4.5:
         left =
           feedbackValue === 3 ? feedbackValue * 11.67 : feedbackValue * 16.67
         classname = styles.rate4
+        text = t('marketingreviews.message.title3')
         break
       case feedbackValue >= 4.5:
         left =
           feedbackValue === 4.5 ? feedbackValue * 16.67 : feedbackValue * 20
         classname = styles.rate5
+        text = t('marketingreviews.message.title4')
         break
     }
     return (
       <Row className={styles.mobColumn}>
         <Col xs={24} lg={12}>
           <div className={styles.reviewCard}>
-            {!alldataloading ? (
+            {!loading ? (
               <div className={`${styles.reviewHeader} ${classname}`}>
                 <div className={styles.starWrapper}>
                   <span className={styles.imgSmile}>
-                    {feedbackValue < 2 ? (
+                    {feedbackValue < 3 ? (
                       <FrownOutlined className={styles.face} />
                     ) : (
                       <SmileOutlined className={styles.face} />
                     )}
                   </span>
                   <div className={styles.clientReview}>
-                    <h5>{t('marketingreviews.client.message')}</h5>
+                    <h5>{text}</h5>
                     <div className={styles.rateWrap}>
                       <h6>{feedbackValue}/5</h6>
                       <Rate
@@ -1033,7 +1035,7 @@ const Reviews: FC<ReviewConfig> = () => {
               <div className={styles.progressBar}>
                 {customProgressBar(left, classname)}
               </div>
-              {!alldataloading ? (
+              {!loading ? (
                 <div className={styles.listColor}>
                   <ul>
                     <li>
@@ -1063,7 +1065,7 @@ const Reviews: FC<ReviewConfig> = () => {
         <Col xs={24} lg={6}>
           <div className={styles.reviewWrap}>
             <ReviewTable
-              loading={alldataloading}
+              loading={loading}
               fields={reviewData}
               sourceFieldTitle={t('marketingreviews.table.column.source')}
               scoreFieldTitle={t('marketingreviews.table.column.score')}
@@ -1297,8 +1299,10 @@ const Reviews: FC<ReviewConfig> = () => {
             {renderModalData(modalValue, t)}
           </Modal>
           {reviewComponentRender(
-            aggregateData !== undefined
-              ? (average?.reduce((v, i) => v + i, 0) / aggregateData).toFixed(1)
+            DataLists !== undefined
+              ? (
+                  average?.reduce((v, i) => v + i, 0) / DataLists.length
+                ).toFixed(1)
               : 0
           )}
           <div className={styles.tableMob}>
