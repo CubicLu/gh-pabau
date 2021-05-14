@@ -276,7 +276,7 @@
     "micromatch": "^4.0.4",
     "next-page-tester": "0.24.1",
     "prettier": "2.2.1",
-    "prisma": "2.23.0",
+    "prisma": "2.22.1",
     "prisma-json-schema-generator": "1.2.2",
     "react-cookie": "4.0.3",
     "react-docgen-typescript": "1.22.0",
