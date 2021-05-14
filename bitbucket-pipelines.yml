@@ -18,7 +18,7 @@ pipelines:
     '**':
       - step:
           name: yarn audit
-          max-time: 10
+          max-time: 15
           caches:
             - node
           script:
@@ -59,6 +59,7 @@ pipelines:
               name: unit tests
               runs-on:
                 - 'self.hosted'
+              max-time: 35
               script:
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=origin/master --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
@@ -163,7 +164,7 @@ pipelines:
     master:
       - step:
           name: yarn audit
-          max-time: 10
+          max-time: 15
           caches:
             - node
           script:
@@ -202,6 +203,7 @@ pipelines:
 
           - step:
               name: unit tests
+              max-time: 35
               runs-on:
                 - 'self.hosted'
               script:
