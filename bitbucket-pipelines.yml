@@ -59,7 +59,6 @@ pipelines:
               name: unit tests
               runs-on:
                 - 'self.hosted'
-              max-time: 25
               script:
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=origin/master --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
@@ -205,7 +204,6 @@ pipelines:
               name: unit tests
               runs-on:
                 - 'self.hosted'
-              max-time: 25
               script:
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
