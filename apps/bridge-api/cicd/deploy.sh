@@ -81,7 +81,4 @@ if [ -z "${BITBUCKET_PR_ID}" ] && [ -n "${BITBUCKET_BRANCH}" ]; then
 
 fi
 
-if [ -z "${BITBUCKET_PR_ID}" ]; then
-fi
-
 echo "EOF"
