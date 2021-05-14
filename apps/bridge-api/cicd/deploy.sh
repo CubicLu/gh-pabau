@@ -51,27 +51,37 @@ echo "Done"
 
 echo "Docker build..."
 docker build "dist/apps/${APP_NAME}" -t "${APP_NAME}" -f "tools/cicd/${APP_NAME}.Dockerfile"
-echo "Docker tag..."
-docker image tag "${APP_NAME}:latest" "${DOCKER2_HOSTNAME}/monorepo/${APP_NAME}"
-echo "Docker login..."
-docker login -u "${DOCKER2_USERNAME}" -p "${DOCKER2_PASSWORD}" "${DOCKER2_HOSTNAME}"
-echo "Docker push..."
-docker image push "${DOCKER2_HOSTNAME}/monorepo/${APP_NAME}"
-echo "Rancher deploy..."
-curl -u "${RANCHER2_ACCESS_KEY}:${RANCHER2_SECRET_KEY}" \
-  -X POST \
-  -H 'Accept: application/json' \
-  -H 'Content-Type: application/json' \
-  'https://rancher.pabau.com/v3/project/c-j8bb9:p-jrqrz/workloads/deployment:toshe:api?action=redeploy'
-echo "Deployed!"
 
+if [ -z "${BITBUCKET_PR_ID}" ] && [ -n "${BITBUCKET_BRANCH}" ]; then
+
+  echo "Pushing to Rancher1..."
+  echo "Docker tag..."
+  docker image tag "${APP_NAME}:latest" "${DOCKER_HOSTNAME}/monorepo/${APP_NAME}"
+  echo "Docker login..."
+  docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}" "${DOCKER_HOSTNAME}"
+  echo "Docker push..."
+  docker image push "${DOCKER_HOSTNAME}/monorepo/${APP_NAME}"
+
+  echo "Pushing to Rancher2..."
+  echo "Docker tag..."
+  docker image tag "${APP_NAME}:latest" "${DOCKER2_HOSTNAME}/monorepo/${APP_NAME}"
+  echo "Docker login..."
+  docker login -u "${DOCKER2_USERNAME}" -p "${DOCKER2_PASSWORD}" "${DOCKER2_HOSTNAME}"
+  echo "Docker push..."
+  docker image push "${DOCKER2_HOSTNAME}/monorepo/${APP_NAME}"
+  echo "Rancher deploy..."
+  curl -u "${RANCHER2_ACCESS_KEY}:${RANCHER2_SECRET_KEY}" \
+    -X POST \
+    -H 'Accept: application/json' \
+    -H 'Content-Type: application/json' \
+    'https://rancher.pabau.com/v3/project/c-j8bb9:p-jrqrz/workloads/deployment:toshe:api?action=redeploy'
+  echo "Deployed!"
+
+  echo "${APP_NAME}: https://api-toshe.pabau.me/graphql" >> /tmp/bot_message.txt
+
+fi
 
 if [ -z "${BITBUCKET_PR_ID}" ]; then
-  message_body=''
-  read_heredoc message_body <<HEREDOC
-${APP_NAME}: https://api-toshe.pabau.me/graphql
-HEREDOC
-  echo "${message_body}" >> /tmp/bot_message.txt
 fi
 
 echo "EOF"
