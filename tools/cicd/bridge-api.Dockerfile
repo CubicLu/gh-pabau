@@ -1,4 +1,4 @@
-FROM node:14.16.0-buster AS builder
+FROM node:14-buster
 WORKDIR /usr/app
 ENV HUSKY_SKIP_INSTALL=1
 ENV HUSKY=0

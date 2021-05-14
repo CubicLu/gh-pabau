@@ -12,6 +12,8 @@ function removeIndexTsx(input: string): string {
     return input.substr(0, input.length - '.tsx'.length)
 
   // Ensure only .module.less files are used
+  if (input.endsWith('/index.module.less'))
+    return input.substr(0, input.length - '/index.module.less'.length)
   if (input.endsWith('.module.less'))
     return input.substr(0, input.length - '.module.less'.length)
   if (input.endsWith('.less'))

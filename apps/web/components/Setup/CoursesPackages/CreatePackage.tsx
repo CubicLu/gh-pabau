@@ -215,7 +215,7 @@ const DrawerContent: FC<DrawerContentProps> = ({
                   name="quantity"
                   size="large"
                   min={1}
-                  max={100000}
+                  max={100_000}
                   value={values.quantity}
                   onChange={(data) => setFieldValue('quantity', data)}
                 />

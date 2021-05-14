@@ -36,7 +36,7 @@
     "graphql-codegen": "graphql-codegen",
     "production:start": "nx affected --uncommitted=true --target=export && npx serve dist/apps/web/exported",
     "build": "pwd && ls -al && rm -rf public/ && nx build backend --no-cache && cp -rf dist/apps/backend/ public/ && cp apps/backend/vercel.json public/ && cp package.json public/",
-    "pipeline-checks": "yarn --pure-lockfile --prefer-offline && yarn lint:tsc && yarn lint:workspace && yarn nx affected --all --target=lint --parallel && yarn nx affected --all --target=test --parallel",
+    "pipeline-checks": "yarn --pure-lockfile --prefer-offline && yarn lint:workspace && yarn nx affected --all --target=tsc --parallel --skip-nx-cache && yarn nx affected --all --target=lint --parallel --skip-nx-cache && yarn nx affected --all --target=test --parallel --skip-nx-cache",
     "pipeline-checks:slow": "yarn --pure-lockfile --prefer-offline && yarn lint:tsc && yarn lint:workspace && yarn nx affected --all --target=lint && yarn nx affected --all --target=test && yarn nx affected --all --target=build",
     "pipeline-checks:parallel": "yarn --pure-lockfile --prefer-offline && concurrently --max-processes=3 --kill-others-on-fail -n TSC,NX,LS-LINT,LINT,TEST,BUILD,E2E \"yarn lint:tsc\" \"yarn lint:workspace\" \"yarn ls-lint || echo TODO\" \"yarn nx affected --all --target=lint --parallel\" \"yarn nx affected --all --target=test --parallel\"",
     "pipeline-checks:insane": "yarn --pure-lockfile --prefer-offline && concurrently --max-processes=4 -n TSC,NX,LS-LINT,LINT,TEST,BUILD,E2E \"yarn lint:tsc\" \"yarn lint:workspace\" \"yarn ls-lint || echo TODO\" \"yarn nx affected --all --target=lint --parallel\" \"yarn nx affected --all --target=test --parallel\" \"yarn nx affected --all --target=build --parallel\"",
@@ -271,7 +271,7 @@
     "vercel": "22.0.1",
     "yaml-loader": "0.6.0"
   },
-  "bump-rebuild-all": 23,
+  "bump-rebuild-all": 28,
   "prisma": {
     "schema": "apps/bridge-api/prisma/schema.prisma"
   }
