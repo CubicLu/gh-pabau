@@ -165,6 +165,7 @@ export const permissions = shield(
       findFirstReport: and(rules.isAuthenticated, rules.isAccessingReportData),
       reports: and(rules.isAuthenticated, rules.isAccessingReportData),
       retrieveReport: rules.isAuthenticated,
+      retrieveTrendReport: rules.isAuthenticated,
       //ReportCategory
       findFirstReportCategory: and(
         rules.isAuthenticated,
@@ -216,5 +217,17 @@ export const permissions = shield(
       '*': and(rules.isAuthenticated, rules.belongsToCompanyAndShared),
     },
   },
-  {}
+  {
+    fallbackError: async (thrownThing: Error, parent, args, context, info) => {
+      console.error(
+        '\nThrown with args:',
+        args,
+        '\nResolver info :',
+        info.path,
+        '\nReturn type',
+        info.returnType
+      )
+      return thrownThing
+    },
+  }
 )

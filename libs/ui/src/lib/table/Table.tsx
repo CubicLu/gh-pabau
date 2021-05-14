@@ -286,13 +286,15 @@ export const Table: FC<TableType> = ({
         <Avatar icon={noDataIcon} size="large" className={styles.roundDesign} />
         <p>{`${noDataText}`}</p>
         <div className={styles.spaceBetweenText} />
-        <Button
-          className={styles.createTemaplateBtn}
-          type="primary"
-          onClick={() => onAddTemplate?.()}
-        >
-          {`${noDataBtnText}`}
-        </Button>
+        {noDataBtnText && (
+          <Button
+            className={styles.createTemaplateBtn}
+            type="primary"
+            onClick={() => onAddTemplate?.()}
+          >
+            {`${noDataBtnText}`}
+          </Button>
+        )}
       </div>
     </div>
   ) : !dataSource?.length && !props.loading && searchTerm ? (
