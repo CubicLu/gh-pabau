@@ -80,4 +80,5 @@ output.forEach((e) => {
 if (deDuped.length) {
   console.log('*I have detected the following pages have changed:*')
   console.log(deDuped.join('\n'))
+  console.log('\n')
 }

@@ -1,13 +1,16 @@
-import React, { FC, useState } from 'react'
-import { Card, Typography, Input, Divider } from 'antd'
 import { FilterOutlined } from '@ant-design/icons'
-import { Breadcrumb, TabMenu, Button, NotificationBanner } from '@pabau/ui'
-
-import Layout from '../../components/Layout/Layout'
-import InvoiceActivity from '../../components/Setup/Subscription/InvoiceActivityList'
-import BillingInformation from '../../components/Setup/Subscription/BillingInformation'
-import AccountInformation from '../../components/Setup/Subscription/AccountInformation'
+import { Breadcrumb, Button, NotificationBanner, TabMenu } from '@pabau/ui'
+import { Card, Divider, Input, Popover, Radio, Typography } from 'antd'
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { useTranslationI18 } from 'apps/web/hooks/useTranslationI18'
+import classNames from 'classnames'
+import React, { FC, useState } from 'react'
+import { useMedia } from 'react-use'
 import paymentUpdateBanner from '../../assets/images/payment-update-banner.png'
+import Layout from '../../components/Layout/Layout'
+import AccountInformation from '../../components/Setup/Subscription/AccountInformation'
+import BillingInformation from '../../components/Setup/Subscription/BillingInformation'
+import InvoiceActivity from '../../components/Setup/Subscription/InvoiceActivityList'
 import styles from './subscription.module.less'
 
 const Subscription: FC = () => {
@@ -15,19 +18,53 @@ const Subscription: FC = () => {
   const { Search } = Input
   const [activeTab, setActiveTab] = useState('0')
   const setHide = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [filterValue, setFilterValue] = useState(0)
+  const { t } = useTranslationI18()
+  const isMobile = useMedia('(max-width: 768px)', false)
 
-  const handleSearch = (val) => {
-    console.log('val', val)
+  const handleSearch = (value) => {
+    setSearchTerm(value)
   }
+
+  const onFilterApply = (e) => {
+    setFilterValue((e) => (e === 1 ? 0 : 1))
+  }
+
+  const filterContent = () => (
+    <div className={styles.filterContent}>
+      {!isMobile && (
+        <div className={classNames(styles.filterHeader)}>
+          <h6>{t('add-button-filter-header-text-filter')}:</h6>
+          <p>{t('add-button-filter-header-text-status')}</p>
+        </div>
+      )}
+      <div className={styles.radioTextStyle}>
+        <Radio.Group
+          onChange={(e) => {
+            onFilterApply(e.target.value)
+          }}
+          value={filterValue}
+        >
+          <Radio value={1}>
+            <span>{t('setup.table.status.submitted')}</span>
+          </Radio>
+          <Radio value={0}>
+            <span>{t('setup.table.status.paidout')}</span>
+          </Radio>
+        </Radio.Group>
+      </div>
+    </div>
+  )
 
   return (
     <Layout>
       <NotificationBanner
-        title="Payment Method"
-        desc="You currently do not have any active payment method on your account. Please update your details in order to regain access."
+        title={t('notifications.banner.title')}
+        desc={t('notifications.banner.desc')}
         allowClose
         showPaymentButton
-        showPaymentTitle={'Update Details'}
+        showPaymentTitle={t('notifications.banner.enablePayment')}
         showEmail={false}
         setHide={setHide}
         imgPath={paymentUpdateBanner}
@@ -37,24 +74,32 @@ const Subscription: FC = () => {
           <div>
             <Breadcrumb
               breadcrumbItems={[
-                { breadcrumbName: 'Setup', path: 'setup' },
-                { breadcrumbName: 'Subscription', path: '' },
+                { breadcrumbName: t('sidebar.setup'), path: 'setup' },
+                { breadcrumbName: t('setup.subscription'), path: '' },
               ]}
             />
-            <Title>Pabau Subscription</Title>
+            <Title>Pabau {t('setup.subscription')}</Title>
           </div>
           {activeTab === '0' && (
             <div className={styles.searchBarContainer}>
               <Search
-                placeholder={'Search in Custom'}
+                placeholder={t('setup.crud.subscription.searchholder')}
                 allowClear
                 onSearch={handleSearch}
                 className={styles.searchBar}
               />
-              <Button>
-                <FilterOutlined />
-                Filter
-              </Button>
+              <div className={styles.btnWrapperFilter}>
+                <Popover
+                  trigger="click"
+                  content={filterContent}
+                  placement="bottomRight"
+                  overlayClassName={styles.filterPopover}
+                >
+                  <Button className={styles.filterBtn}>
+                    <FilterOutlined /> {t('setup.crud.filter')}
+                  </Button>
+                </Popover>
+              </div>
             </div>
           )}
         </div>
@@ -62,13 +107,13 @@ const Subscription: FC = () => {
         <TabMenu
           tabPosition={'top'}
           menuItems={[
-            'Invoice Activity',
-            'Billing Details',
-            'Account Information',
+            t('setup.subscription.invoiceactvity'),
+            t('setup.subscription.billingdetails'),
+            t('setup.subscription.accountinformations'),
           ]}
           onTabClick={(activeKey) => setActiveTab(activeKey)}
         >
-          <InvoiceActivity />
+          <InvoiceActivity searchTerm={searchTerm} filterValue={filterValue} />
           <BillingInformation />
           <AccountInformation />
         </TabMenu>

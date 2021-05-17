@@ -34,7 +34,6 @@ export const Index: FC = () => {
       }
     }
   `
-  const [createBusinessDetails] = useMutation(ADD_MUTATION)
 
   const tabMenuItems = [
     t('business.details.tab.tabtitle'),
@@ -45,6 +44,7 @@ export const Index: FC = () => {
   ]
   const { getParentSetupData } = useGridData(t)
   const parentMenu = getParentSetupData(router.pathname)
+  const [createBusinessDetails] = useMutation(ADD_MUTATION)
 
   const handleBack = () => {
     if (parentMenu.length > 0) {

@@ -95,6 +95,7 @@ export const Company = objectType({
     t.model.BookitProGeneral()
     t.model.MessageTemplate()
     t.model.TemplateFolder()
+    t.model.SmsPurchase()
     t.model.UserActivityLog()
   },
 })

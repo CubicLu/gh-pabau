@@ -120,6 +120,7 @@ export const User = objectType({
     t.model.InvPayment()
     t.model.MessageTemplate()
     t.model.UserActivityLog()
+    t.model.SmsPurchase()
     t.model.StaffMeta()
     t.model.SocialSurveyFeedback()
   },
