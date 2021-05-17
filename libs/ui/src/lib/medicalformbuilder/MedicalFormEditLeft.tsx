@@ -5,6 +5,7 @@ import {
 } from '@pabau/ui'
 import { Collapse } from 'antd'
 import React, { FC, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import styles from './MedicalFormBuilder.module.less'
 import MedicalFormComponentMedicalHistory from './MedicalFormComponentMedicalHistory'
 import MedicalFormComponentPanel from './MedicalFormComponentPanel'
@@ -25,6 +26,7 @@ interface P {
 }
 
 const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
+  const { t } = useTranslation('common')
   const {
     refreshDraggedForms,
     isEditing,
@@ -95,7 +97,7 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
         onChange={callback}
       >
         <Panel
-          header="GENERAL"
+          header={t('ui.medicalformbuilder.left.tab.general')}
           key="1"
           className={styles.medicalFormEditLeftPanelCollapseGeneral}
         >
@@ -108,7 +110,11 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
           {isEpaper && <MedicalFormUploadButtons onPreviewPdf={onPreviewPdf} />}
         </Panel>
         {isEpaper === false && (
-          <Panel header="COMPONENTS" key="2" className={componentClass}>
+          <Panel
+            header={t('ui.medicalformbuilder.left.tab.components')}
+            key="2"
+            className={componentClass}
+          >
             {selectedFormTypes.medicalHistory === true && (
               <MedicalFormComponentMedicalHistory />
             )}

@@ -1,14 +1,16 @@
+import { languages } from '@pabau/i18n'
 import { addDecorator } from '@storybook/react'
+import 'draft-js/dist/Draft.css'
 import i18n from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import Backend from 'i18next-xhr-backend'
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { initReactI18next } from 'react-i18next'
+import 'react-image-crop/dist/ReactCrop.css'
 import 'react-phone-input-2/lib/style.css'
 import 'react-quill/dist/quill.snow.css'
-import 'react-image-crop/dist/ReactCrop.css'
 import { withI18next } from 'storybook-addon-i18next'
 import '../src/assets/fonts/fonts.css'
-import { languages } from '@pabau/i18n'
 require('../src/styles/antd.less')
 i18n
   .use(Backend)

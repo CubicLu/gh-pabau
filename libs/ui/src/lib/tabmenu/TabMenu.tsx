@@ -1,8 +1,8 @@
-import React, { FC, ReactNode } from 'react'
 import { Tabs } from 'antd'
 import { TabsProps } from 'antd/lib/tabs'
-import styles from './TabMenu.module.less'
 import classNames from 'classnames'
+import React, { FC, ReactNode } from 'react'
+import styles from './TabMenu.module.less'
 
 const { TabPane } = Tabs
 interface P extends TabsProps {

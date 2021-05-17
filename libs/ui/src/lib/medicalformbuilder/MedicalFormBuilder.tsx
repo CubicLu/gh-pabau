@@ -1,6 +1,7 @@
 import { EditOutlined, EyeOutlined } from '@ant-design/icons'
 import { Tabs } from 'antd'
 import React, { FC, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import styles from './MedicalFormBuilder.module.less'
 import MedicalFormEdit from './MedicalFormEdit'
 import MedicalFormInfo from './MedicalFormInfo'
@@ -11,6 +12,7 @@ import MedicalFormSetting from './MedicalFormSetting'
 const { TabPane } = Tabs
 
 const MedicalFormBuilder: FC<PreviewData> = ({ previewData }) => {
+  const { t } = useTranslation('common')
   const [formName, setFormName] = useState('IPL Treatment Record (Clone)')
   const [visiblePreview, setVisiblePreview] = useState(false)
   const [activatePanel, setActivatePanel] = useState('1')
@@ -55,7 +57,7 @@ const MedicalFormBuilder: FC<PreviewData> = ({ previewData }) => {
             <span className={styles.tabName}>
               &nbsp;&nbsp;
               <EditOutlined />
-              Edit &nbsp;&nbsp;
+              {t('ui.medicalformbuilder.form.edit')} &nbsp;&nbsp;
             </span>
           }
           key="1"
@@ -78,7 +80,7 @@ const MedicalFormBuilder: FC<PreviewData> = ({ previewData }) => {
           tab={
             <span className={styles.tabName}>
               <EyeOutlined />
-              Preview
+              {t('ui.medicalformbuilder.form.preview')}
             </span>
           }
           key="2"
