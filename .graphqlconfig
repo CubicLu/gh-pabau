@@ -1,11 +1,12 @@
 {
   "name": "hasura",
-  "schemaPath": "./graphql.schema.json",
+  "schemaPath": "./hasura/schema.graphql",
   "extensions": {
     "endpoints": {
       "production": {
         "url": "https://api.new.pabau.com.com/v1/graphql",
         "headers": {
+          "Authorization": "Bearer ${env:GITHUB-ACCESS-TOKEN}",
           "user-agent": "JS GraphQL"
         },
         "introspect": false
@@ -20,8 +21,7 @@
       }
     }
   },
-  "include": [
-    "apps/**/*.tsx",
+  "includes": [
     "hasura/schema.graphql",
     "libs/**/*.graphql"
   ]
