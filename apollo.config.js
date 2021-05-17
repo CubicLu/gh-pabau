@@ -1,9 +1,7 @@
 module.exports = {
   client: {
     service: {
-      name: "Hasura",
-      url: 'https://api.new.pabau.com/v1/graphql',
-      headers: { "X-Hasura-Admin-Secret": `madskills` },
+      url: process.env.NODE_ENV === 'development' ? 'http://localhost:8080/v1/graphql' : 'https://api.new.pabau.com/v1/graphql',
     },
   },
 }

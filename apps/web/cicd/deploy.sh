@@ -49,32 +49,24 @@ else
 fi
 
 if [ -z "${BITBUCKET_PR_ID}" ]; then
-
   echo "===== Processing type COMMIT ====="
   OUTPUT=$(cd "${build_output_path}" && vercel -c -C --token "${VERCEL_TOKEN}" --scope pabau2 -A "${VERCEL_JSON_LOCATION}/vercel.json" --prod)
   echo "errorlevel: $?"
-  echo "Output from vercel:"
-  echo "${OUTPUT}"
-  echo "--"
-  LAST_LINE=$(echo "${OUTPUT}" | tail -n1)
-  echo "last line: ${LAST_LINE}"
-  echo "${LAST_LINE}" > /tmp/bot_url_${APP_NAME}.txt
-
-  message_body=''
-  read_heredoc message_body <<HEREDOC
-${APP_NAME}: ${LAST_LINE}
-HEREDOC
-  echo "${message_body}" >> /tmp/bot_message.txt
-
 else
   echo "===== Processing type PR ====="
   OUTPUT=$(cd "${build_output_path}" && vercel -c -C --token "${VERCEL_TOKEN}" --scope pabau2 -A "${VERCEL_JSON_LOCATION}/vercel.json")
   echo "errorlevel: $?"
-  echo "Output from vercel:"
-  echo "${OUTPUT}"
-  echo "--"
-  LAST_LINE=$(echo "${OUTPUT}" | tail -n1)
-  echo "last line: ${LAST_LINE}"
-  echo "${LAST_LINE}" > /tmp/bot_url_${APP_NAME}.txt
-
 fi
+
+echo "Output from vercel:"
+echo "${OUTPUT}"
+echo "--"
+LAST_LINE=$(echo "${OUTPUT}" | tail -n1)
+echo "last line: ${LAST_LINE}"
+echo "${LAST_LINE}" > /tmp/bot_url_${APP_NAME}.txt
+
+message_body=''
+read_heredoc message_body <<HEREDOC
+${APP_NAME}: ${LAST_LINE}
+HEREDOC
+echo "${message_body}" >> /tmp/bot_message.txt

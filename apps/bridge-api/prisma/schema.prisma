@@ -269,6 +269,7 @@ model Company {
   BookitProGeneral                 BookitProGeneral[]
   MessageTemplate                  MessageTemplate[]
   TemplateFolder                   TemplateFolder[]
+  SmsPurchase                      SmsPurchase[]
 
   UserActivityLog UserActivityLog[]
   @@map("admin")
@@ -10831,19 +10832,27 @@ model UserSalutation {
 //  content    String
 //  action     String
 //}
-//
-//model sms_purchases {
-//  id            Int    @id @default(autoincrement())
-//  date          Int
-//  sms_amount    Int
-//  cid           Int
-//  user          Int
-//  price         Float
-//  profit        Float
-//  purchase_type String
-//  status        Int
-//}
-//
+
+model SmsPurchase {
+  id            Int    @id @default(autoincrement())
+  date          Int
+  sms_amount    Int
+  company_id    Int    @map("cid")
+  user_id       Int?   @map("user")
+  price         Float
+  profit        Float
+  purchase_type String
+  status        Int
+
+  Company Company @relation(fields: [company_id], references: [id])
+  User    User?   @relation(fields: [user_id], references: [id])
+
+
+  @@index([company_id], name: "company_id")
+  @@index([user_id], name: "user_id")
+  @@map("sms_purchases")
+}
+
 //model sms_senders {
 //  smsd_id     Int     @id @default(autoincrement())
 //  smsd_name   String
@@ -12123,6 +12132,7 @@ model User {
   InvPayment                   InvPayment[]
   MessageTemplate              MessageTemplate[]
   UserActivityLog              UserActivityLog[]
+  SmsPurchase                  SmsPurchase[]
 
   StaffMeta            StaffMeta[]
   SocialSurveyFeedback SocialSurveyFeedback[]

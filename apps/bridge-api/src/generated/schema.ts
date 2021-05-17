@@ -218,6 +218,7 @@ export interface Company {
   BookitProGeneral?: BookitProGeneral[];
   MessageTemplate?: MessageTemplate[];
   TemplateFolder?: TemplateFolder[];
+  SmsPurchase?: SmsPurchase[];
   UserActivityLog?: UserActivityLog[];
 }
 
@@ -2615,6 +2616,20 @@ export interface UserSalutation {
   Company?: Company;
 }
 
+export interface SmsPurchase {
+  id: number;
+  date: number;
+  sms_amount: number;
+  company_id: number;
+  user_id?: number;
+  price: number;
+  profit: number;
+  purchase_type: string;
+  status: number;
+  Company: Company;
+  User?: User;
+}
+
 export interface SocialSurvey {
   id: number;
   page_id: number;
@@ -2881,6 +2896,7 @@ export interface User {
   InvPayment?: InvPayment[];
   MessageTemplate?: MessageTemplate[];
   UserActivityLog?: UserActivityLog[];
+  SmsPurchase?: SmsPurchase[];
   StaffMeta?: StaffMeta[];
   SocialSurveyFeedback?: SocialSurveyFeedback[];
 }

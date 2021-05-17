@@ -18,9 +18,7 @@ pipelines:
     '**':
       - step:
           name: yarn audit
-          runs-on:
-            - 'self.hosted'
-          max-time: 10
+          max-time: 15
           caches:
             - node
           script:
@@ -61,7 +59,7 @@ pipelines:
               name: unit tests
               runs-on:
                 - 'self.hosted'
-              max-time: 25
+              max-time: 35
               script:
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=origin/master --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
@@ -72,7 +70,8 @@ pipelines:
               name: build
               runs-on:
                 - 'self.hosted'
-              max-time: 30
+              max-time: 40
+              size: 2x
               script:
                 - yarn prisma generate
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:export --base=origin/master --prod
@@ -107,7 +106,6 @@ pipelines:
           runs-on:
             - 'self.hosted'
           max-time: 20
-          deployment: production-serverless
           script:
             - ls -al . || true
             - ls -al node_modules/ || true
@@ -123,6 +121,8 @@ pipelines:
             - echo "${LAST_COMMIT_LOG}"
 
             - NODE_OPTIONS=--max_old_space_size=2750 /usr/bin/time -v yarn affected --base=origin/master --head=HEAD --target=deploy --prod
+            - cat /tmp/bot_message.txt || true
+            - cat /tmp/bot_message2.txt || true
 
             # Configure git to use the oauth token.
             - |
@@ -131,29 +131,34 @@ pipelines:
               export COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
 
             - |
-              printf ":shallow_pan_of_food::shallow_pan_of_food: *New PR Preview*\n## <https://bitbucket.org/pabau/monorepo/pull-requests/${BITBUCKET_PR_ID}|PR ${BITBUCKET_PR_ID}> published by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
+              printf ":shallow_pan_of_food::shallow_pan_of_food: *New PR Preview*\n## <https://bitbucket.org/pabau/monorepo/pull-requests/${BITBUCKET_PR_ID}|PR ${BITBUCKET_PR_ID}> committed by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
               npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "origin/master" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
               cat /tmp/bot_message.txt >> /tmp/bot_message2.txt || true
+              printf "\n" >> /tmp/bot_message2.txt
 
-            - cat /tmp/bot_message2.txt
+            - cat /tmp/bot_message.txt || true
+            - cat /tmp/bot_message2.txt || true
             - mkdir -p dist && cp -f /tmp/bot_message2.txt dist/ || true
 
           artifacts:
             - dist/bot_message2.txt
+            - tools/cicd/slack_notification.json
 
       - step:
           name: announce to slack
           runs-on:
             - 'self.hosted'
           max-time: 5
+          clone:
+            enabled: false
           script:
             - cat dist/bot_message2.txt || true
             - cat dist/bot_message.txt || true
-            - apt-get update -y && apt-get install -y curl jq time
+            - apt-get update -y && apt-get install -y curl jq
 
             # Post to Slack
             - |
-              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)\n$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
+              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
               -H "Expect:" \
               -H 'Content-Type: application/json; charset=utf-8' \
               --data-binary @-
@@ -162,9 +167,7 @@ pipelines:
     master:
       - step:
           name: yarn audit
-          runs-on:
-            - 'self.hosted'
-          max-time: 10
+          max-time: 15
           caches:
             - node
           script:
@@ -203,9 +206,9 @@ pipelines:
 
           - step:
               name: unit tests
+              max-time: 35
               runs-on:
                 - 'self.hosted'
-              max-time: 25
               script:
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
@@ -216,7 +219,8 @@ pipelines:
               name: build
               runs-on:
                 - 'self.hosted'
-              max-time: 30
+              max-time: 40
+              size: 2x
               script:
                 - yarn prisma generate
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:export --base=HEAD~1 --prod
@@ -294,11 +298,12 @@ pipelines:
                 - export COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
 
                 - |
-                  printf "*New Version Staged for Production*\n# v${PACKAGE_JSON_VERSION} created by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
+                  printf "*New Version Staged for Production*\n# v${PACKAGE_JSON_VERSION} committed by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
                   npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "HEAD~2" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
-                  cat /tmp/bot_message.txt >> /tmp/bot_message2.txt
+                  cat /tmp/bot_message.txt >> /tmp/bot_message2.txt || true
+                  printf "\n" >> /tmp/bot_message2.txt
 
-                - cat /tmp/bot_message2.txt
+                - cat /tmp/bot_message2.txt || true
                 - mkdir -p dist && cp -f /tmp/bot_message2.txt dist/ || true
 
               artifacts:
@@ -316,7 +321,19 @@ pipelines:
 
             # Post to Slack
             - |
-              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)\n$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
+              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
               -H "Expect:" \
               -H 'Content-Type: application/json; charset=utf-8' \
               --data-binary @-
+
+            # Post to Bitbucket PR
+            - |
+              curl https://api.bitbucket.org/2.0/repositories/pabau/monorepo/pullrequests/${BITBUCKET_PR_ID}/comments \
+                -H "Authorization: Bearer ${access_token}" \
+                --request POST \
+                --header 'Content-Type: application/json' \
+                --data '{
+                  "content": {
+                    "raw": "A new vercel was published!"
+                  }
+                }'

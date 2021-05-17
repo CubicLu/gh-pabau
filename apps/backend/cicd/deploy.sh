@@ -66,12 +66,10 @@ curl -u "${RANCHER2_ACCESS_KEY}:${RANCHER2_SECRET_KEY}" \
   'https://rancher.pabau.com/v3/project/c-j8bb9:p-jrqrz/workloads/deployment:pabau2:backend?action=redeploy'
 echo "Deployed!"
 
-if [ -z "${BITBUCKET_PR_ID}" ]; then
-  message_body=''
-  read_heredoc message_body <<HEREDOC
+message_body=''
+read_heredoc message_body <<HEREDOC
 ${APP_NAME}: https://backend.pabau.com
 HEREDOC
-  echo "${message_body}" >> /tmp/bot_message.txt
-fi
+echo "${message_body}" >> /tmp/bot_message.txt
 
 echo "EOF"
