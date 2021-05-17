@@ -252,7 +252,7 @@ export interface SMSPurchaseModalProps {
   }) => void
   visible: boolean
   numberFormatter: Intl.NumberFormat
-  options: Item[]
+  options?: Item[]
 }
 
 export function SMSPurchaseModal({

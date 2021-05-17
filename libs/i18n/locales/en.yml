@@ -1093,7 +1093,8 @@ en:
   setup.clinic.data.custom.field: 'Custom Fields'
   setup.clinic.data.imports: 'Data Imports'
   setup.clinic.subscription: 'Pabau Subscription'
-  setup.clinic.subscription.billing: 'Billing Activity'
+  setup.clinic.subscription.billing: 'Billing Details'
+  setup.clinic.subscription.billing.details: 'Billing history'
   setup.clinic.subscription.addons: Addons
   setup.product.service.title: 'Products & Services'
   setup.services: Services
@@ -1135,7 +1136,7 @@ en:
   setup.financials.contract: 'Contract Pricing'
   setup.financials.cancellation: 'Cancellation Policy'
   setup.developer: 'Developer & Other'
-  setup.developer.webhooks: Webhooks
+  setup.developer.webhooks: 'Webhooks'
   setup.developer.API: 'API keys'
   setup.developer.credit: 'Credit Note Types'
   setup.developer.departments: Departments
@@ -1144,7 +1145,7 @@ en:
   setup.developer.appointment: 'Appointment Statuses'
   setup.developer.lead: 'Lead Groups'
   setup.developer.petty.cash: 'Petty Cash Types'
-  setup.developer.salutations: Salutations
+  setup.developer.salutations: 'Salutations'
   setup.developer.training: 'Training titles'
   setup.developer.titles: Titles
   setup.developer.photo: Photo Uploader
@@ -2457,3 +2458,24 @@ en:
   setup.subscription.accountinformations: 'Account Information'
   setup.crud.filter: 'Filter'
   setup.crud.subscription.searchholder: 'Search in Invoice'
+  setup.header.chip.blog: 'Blog'
+  setup.header.chip.blog.subTitle: 'posts / month'
+  setup.header.chip.community: 'Community'
+  setup.header.chip.community.subTitle: 'topics / week'
+  setup.header.chip.video: 'Video guides'
+  setup.header.chip.video.subTitle: 'videos'
+  setup.header.chip.help: 'Help guides'
+  setup.header.chip.help.subTitle: 'guides'
+  setup.page.title: 'Setup'
+  setup.page.search.placeholder: 'Search by keyword'
+  setup.page.video.query.error.message: 'An error occured while retrieving video count'
+  setup.page.expand.label: 'Expand'
+  setup.page.search.result.title: 'Search Results'
+  setup.page.search.no.result.label: 'No results found'
+  setup.page.search.no.result.subTitle: 'Try adjusting your search to find what you’re looking for'
+  setup.page.live.upcoming.webinar.title: 'Live & Upcoming Webinars'
+  setup.page.live.upcoming.webinar.view.schedule: 'View Full Schedule'
+  setup.page.live.upcoming.webinar.join.class.label: 'Join class'
+  setup.page.live.upcoming.webinar.count.me.label: 'Count me in'
+  setup.page.webinar.modal.join.label: 'Join'
+  setup.page.webinar.modal.register.label: 'Register'

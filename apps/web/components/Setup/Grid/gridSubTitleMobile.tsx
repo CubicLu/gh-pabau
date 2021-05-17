@@ -7,14 +7,15 @@ import classNames from 'classnames'
 interface P {
   data: SetupGridProps[]
   handleBack: () => void
+  setSMSModalVisible?: () => void
 }
 
-const GridSubMenuMobile: FC<P> = ({ handleBack, data }) => {
+const GridSubMenuMobile: FC<P> = ({ handleBack, data, setSMSModalVisible }) => {
   const [subTitle, setSubTitle] = useState([])
 
   useEffect(() => {
     if (data && data.length > 0) {
-      setSubTitle(data[0].expandTitle ?? data[0].subDataTitles)
+      setSubTitle([...data[0].subDataTitles, ...data[0].expandTitle])
     }
   }, [data])
 
@@ -31,7 +32,11 @@ const GridSubMenuMobile: FC<P> = ({ handleBack, data }) => {
       {subTitle &&
         subTitle.length > 0 &&
         subTitle.map((value, index) => (
-          <SetupGridSubMenuMobile key={index} subTitleData={value} />
+          <SetupGridSubMenuMobile
+            key={index}
+            subTitleData={value}
+            setSMSModalVisible={setSMSModalVisible}
+          />
         ))}
     </div>
   )

@@ -13,6 +13,7 @@ import LeadTesting from '../../components/Setup/LeadCapture/LeadTesting'
 import LeadResult from '../../components/Setup/LeadCapture/LeadResult'
 import LeadFormResult from '../../components/Setup/LeadCapture/lead-forms/LeadFormResult'
 import LeadCustomizeForm from '../../components/Setup/LeadCapture/lead-forms/LeadCustomizeForm'
+import { useRouter } from 'next/router'
 import {
   FlagOutlined,
   HomeOutlined,
@@ -22,7 +23,6 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as Icons from '@fortawesome/free-solid-svg-icons'
 import { Typography } from 'antd'
-import Link from 'next/link'
 
 const { Title } = Typography
 
@@ -105,15 +105,19 @@ export const LeadForms: React.FC = () => {
     setActiveStep(allAPISteps.length - 1)
   }
 
+  const router = useRouter()
+
+  const handleBack = () => {
+    router.back()
+  }
+
   return (
     <>
       <div className={styles.desktopViewNone}>
         <MobileHeader className={styles.mobileHeader}>
           <div className={styles.allContentAlignMobile}>
             <div className={styles.mobileHeaderTextStyle}>
-              <Link href="/setup">
-                <LeftOutlined />
-              </Link>
+              <LeftOutlined onClick={handleBack} />
               <p>Lead Capture</p>
             </div>
           </div>

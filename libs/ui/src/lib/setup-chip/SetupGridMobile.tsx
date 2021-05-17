@@ -1,10 +1,11 @@
 import React from 'react'
 import { RightOutlined } from '@ant-design/icons'
 import styles from './SetupChip.module.less'
+import { SubData } from './SetupGrid'
 
 export interface SubDataTitleMobile {
   title: string
-  data: string[]
+  data: SubData[]
 }
 
 export interface SetupGridMobileProps {

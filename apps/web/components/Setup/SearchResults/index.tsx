@@ -12,10 +12,12 @@ interface searchProps {
   href?: string
   title?: string
   isPermission?: boolean
+  isModal?: boolean
 }
 interface P {
   data: searchProps[]
   searchTerm: string
+  setSMSModalVisible?: () => void
   checkPermission?: boolean
   displayTitle?: boolean
 }
@@ -25,6 +27,7 @@ const SearchResults: FC<P> = ({
   searchTerm,
   checkPermission = false,
   displayTitle = true,
+  setSMSModalVisible,
 }) => {
   const router = useRouter()
   return (
@@ -46,7 +49,11 @@ const SearchResults: FC<P> = ({
                     : styles.searchList
                 }
                 onClick={() => {
-                  thread.isPermission && router.push(thread.href)
+                  thread.isModal
+                    ? setSMSModalVisible()
+                    : checkPermission
+                    ? thread.isPermission && router.push(thread.href)
+                    : router.push(thread.href)
                 }}
               >
                 <span>

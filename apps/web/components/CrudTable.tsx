@@ -382,7 +382,7 @@ const CrudTable: FC<P> = ({
         query: { menu: parentMenu[0]?.keyValue },
       })
     } else {
-      router.push('/setup')
+      router.back()
     }
   }
 

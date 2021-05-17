@@ -6,9 +6,13 @@ import styles from './SetupChip.module.less'
 
 export interface SetupSearchProps {
   onChange?: (newText: string) => void
+  placeholder?: string
 }
 
-export const SetupSearchInput: FC<SetupSearchProps> = ({ onChange }) => {
+export const SetupSearchInput: FC<SetupSearchProps> = ({
+  onChange,
+  placeholder,
+}) => {
   const { t } = useTranslation('common')
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -20,7 +24,7 @@ export const SetupSearchInput: FC<SetupSearchProps> = ({ onChange }) => {
   return (
     <Input
       className={styles.searchInputStyle}
-      placeholder={t('setup.reports.search.text.placeholder')}
+      placeholder={placeholder ?? t('setup.reports.search.text.placeholder')}
       value={searchTerm}
       onChange={(e) => handleSearchTerm(e)}
       suffix={

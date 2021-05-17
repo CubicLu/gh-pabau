@@ -3,6 +3,7 @@ import { Webinar, Button, WebinarModal, WebinarModalProps } from '@pabau/ui'
 import styles from '../../../pages/setup/Setup.module.less'
 
 import backgroundImage from '../../../assets/images/user.png'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const data = [
   {
@@ -81,6 +82,7 @@ const data = [
 const WebinarCard: FC = () => {
   const [isOpenModal, setIsOpen] = useState<boolean>(false)
   const [modalData, setModalData] = useState({})
+  const { t } = useTranslationI18()
 
   const handleOpenModal = (buttonType: string, id?: string) => {
     const filterData = data.find((thread) => thread.id === id)
@@ -99,13 +101,17 @@ const WebinarCard: FC = () => {
   return (
     <>
       <div className={styles.rightSide}>
-        <div className={styles.textTitle}>Live & Upcoming Webinars</div>
+        <div className={styles.textTitle}>
+          {t('setup.page.live.upcoming.webinar.title')}
+        </div>
         <div className={styles.webinarWrapper}>
           {data?.map((value, index) => (
             <Webinar key={index} {...value} onClick={handleOpenModal} />
           ))}
         </div>
-        <Button className={styles.btnView}>View Full Schedule</Button>
+        <Button className={styles.btnView}>
+          {t('setup.page.live.upcoming.webinar.view.schedule')}
+        </Button>
       </div>
       <WebinarModal
         visible={isOpenModal}

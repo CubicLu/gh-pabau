@@ -28,20 +28,16 @@ const LIST_QUERY = gql`
   }
 `
 const LIST_AGGREGATE_QUERY = gql`
-  query marketing_source_aggregate_2(
+  query marketing_source_aggregate(
     $isActive: Boolean = true
     $searchTerm: String = ""
   ) {
-    marketing_source_aggregate(
+    marketingSourcesCount(
       where: {
-        is_active: { _eq: $isActive }
-        _or: [{ _and: [{ name: { _ilike: $searchTerm } }] }]
+        public: { equals: $isActive }
+        OR: [{ AND: [{ name: { contains: $searchTerm } }] }]
       }
-    ) {
-      aggregate {
-        count
-      }
-    }
+    )
   }
 `
 const DELETE_MUTATION = gql`
