@@ -87,33 +87,27 @@ const Notification: FC<NotificationProps> = ({
         })
   }
 
+  const getFormattedDate = (date: Date) =>
+    Intl.DateTimeFormat('en-US').format(new Date(date))
+
   const getNotificationDescOrTitle = (notification, returnType = 'desc') => {
     const { variables } = notification
-    // const { variables, sentBy } = notification
     if (
       typeof variables == 'object' &&
       Object.keys({ ...variables }).length > 0
     ) {
       for (const key in variables) {
         const replaceVariable = `[${key}]`
-        const variableValue = variables[key]
+        let variableValue = variables[key]
+
+        if (key === 'date') {
+          variableValue = getFormattedDate(variableValue)
+        }
 
         notification[returnType] = notification[returnType].replace(
           replaceVariable,
           variableValue
         )
-
-        // if (key === 'who' && user?.user === sentBy) {
-        //   notification[returnType] = notification[returnType].replace(
-        //     '[who]',
-        //     'You'
-        //   )
-        // } else {
-        //   notification[returnType] = notification[returnType].replace(
-        //     replaceVariable,
-        //     variableValue
-        //   )
-        // }
       }
     }
     return notification[returnType]
