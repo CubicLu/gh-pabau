@@ -2,8 +2,8 @@ import { gql } from '@apollo/client'
 import { NextPage } from 'next'
 import React, { useContext } from 'react'
 import CrudLayout from '../../../components/CrudLayout/CrudLayout'
-import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import { UserContext } from '../../../context/UserContext'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const LIST_QUERY = gql`
   query company_departments(
@@ -109,6 +109,9 @@ export const Departments: NextPage = () => {
         type: 'string',
       },
     },
+    deleteDescField: 'department',
+    noDataBtnText: t('setup.department.schema.noDataBtnText'),
+    noDataText: t('setup.department.schema.noDataText'),
   }
   return (
     <CrudLayout

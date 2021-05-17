@@ -1,25 +1,25 @@
+import { LeftOutlined } from '@ant-design/icons'
+import { DocumentNode, useMutation } from '@apollo/client'
 import {
-  Table,
-  useLiveQuery,
-  Pagination,
+  Breadcrumb,
   MobileHeader,
   Notification,
   NotificationType,
+  Pagination,
+  Table,
+  useLiveQuery,
 } from '@pabau/ui'
-import React, { FC, useEffect, useState, useRef, useMemo } from 'react'
-import { DocumentNode, useMutation } from '@apollo/client'
-import AddButton from './AddButton'
-import { Breadcrumb } from '@pabau/ui'
 import { Typography } from 'antd'
-import styles from './CrudTable.module.less'
-import CrudModal from './CrudModal'
-import { Formik, FormikErrors } from 'formik'
-import Layout from './Layout/Layout'
-import { LeftOutlined } from '@ant-design/icons'
 import classNames from 'classnames'
-import { useTranslationI18 } from '../hooks/useTranslationI18'
-import { useGridData } from '../hooks/useGridData'
+import { Formik, FormikErrors } from 'formik'
 import { useRouter } from 'next/router'
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react'
+import { useGridData } from '../hooks/useGridData'
+import { useTranslationI18 } from '../hooks/useTranslationI18'
+import AddButton from './AddButton'
+import CrudModal from './CrudModal'
+import styles from './CrudTable.module.less'
+import Layout from './Layout/Layout'
 
 const { Title } = Typography
 interface P {
@@ -109,7 +109,7 @@ const CrudTable: FC<P> = ({
   const [paginateData, setPaginateData] = useState({
     total: 0,
     offset: 0,
-    limit: 10,
+    limit: 50,
     currentPage: 1,
     showingRecords: 0,
   })
@@ -256,7 +256,7 @@ const CrudTable: FC<P> = ({
     setPaginateData({
       total: 0,
       offset: 0,
-      limit: 10,
+      limit: 50,
       currentPage: 1,
       showingRecords: 0,
     })
@@ -564,8 +564,8 @@ const CrudTable: FC<P> = ({
                 draggable={draggable}
                 isCustomColorExist={checkCustomColorIconExist('color')}
                 isCustomIconExist={checkCustomColorIconExist('icon')}
-                noDataBtnText={schema.full}
-                noDataText={schema.fullLower}
+                noDataBtnText={schema?.noDataBtnText ?? schema.full}
+                noDataText={schema?.noDataText ?? schema.fullLower}
                 padlocked={schema.padlocked}
                 scroll={{ x: 'max-content' }}
                 onAddTemplate={
@@ -617,7 +617,7 @@ const CrudTable: FC<P> = ({
             </div>
             <Pagination
               total={paginateData.total}
-              defaultPageSize={10}
+              defaultPageSize={50}
               showSizeChanger={false}
               onChange={onPaginationChange}
               pageSizeOptions={['10', '25', '50', '100']}
@@ -625,6 +625,8 @@ const CrudTable: FC<P> = ({
                 setPaginateData({
                   ...paginateData,
                   limit: pageSize,
+                  offset: 0,
+                  currentPage: 1,
                 })
               }}
               pageSize={paginateData.limit}

@@ -2479,3 +2479,5 @@ en:
   setup.page.live.upcoming.webinar.count.me.label: 'Count me in'
   setup.page.webinar.modal.join.label: 'Join'
   setup.page.webinar.modal.register.label: 'Register'
+  setup.department.schema.noDataBtnText: 'Create Department'
+  setup.department.schema.noDataText: 'No departments'

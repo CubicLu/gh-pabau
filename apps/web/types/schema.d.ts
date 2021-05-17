@@ -26,6 +26,8 @@ interface Schema {
   padlocked?: string[]
   filter?: SchemaFilter
   company?: number | string
+  noDataBtnText?: string
+  noDataText?: string
 }
 
 type DefaultFilterType = number | boolean
