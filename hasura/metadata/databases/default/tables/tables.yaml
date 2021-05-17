@@ -53,6 +53,8 @@
 - "!include public_peer_review.yaml"
 - "!include public_petty_cash_types.yaml"
 - "!include public_product_lists.yaml"
+- "!include public_product_news.yaml"
+- "!include public_product_news_read.yaml"
 - "!include public_prototype.yaml"
 - "!include public_purchase_order.yaml"
 - "!include public_read_notification.yaml"

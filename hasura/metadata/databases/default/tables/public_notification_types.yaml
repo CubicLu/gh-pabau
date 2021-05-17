@@ -2,108 +2,108 @@ table:
   name: notification_types
   schema: public
 object_relationships:
-  - name: notification_types_enum
-    using:
-      foreign_key_constraint_on: notification_type
+- name: notification_types_enum
+  using:
+    foreign_key_constraint_on: notification_type
 array_relationships:
-  - name: application_notifications
-    using:
-      foreign_key_constraint_on:
-        column: notification_type
-        table:
-          name: application_notifications
-          schema: public
-  - name: notification_toggles
-    using:
-      foreign_key_constraint_on:
-        column: notification_type
-        table:
-          name: notification_toggle
-          schema: public
+- name: application_notifications
+  using:
+    foreign_key_constraint_on:
+      column: notification_type
+      table:
+        name: application_notifications
+        schema: public
+- name: notification_toggles
+  using:
+    foreign_key_constraint_on:
+      column: notification_type
+      table:
+        name: notification_toggle
+        schema: public
 insert_permissions:
-  - permission:
-      backend_only: false
-      check: {}
-      columns:
-        - id
-        - type
-        - description
-        - permission_type
-        - notification_type
-        - title
-        - name
-        - destination
-    role: public
-  - permission:
-      backend_only: false
-      check: {}
-      columns:
-        - description
-        - destination
-        - id
-        - name
-        - notification_type
-        - permission_type
-        - title
-        - type
-    role: user
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - type
+    - description
+    - permission_type
+    - notification_type
+    - title
+    - name
+    - destination
+  role: public
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - description
+    - destination
+    - id
+    - name
+    - notification_type
+    - permission_type
+    - title
+    - type
+  role: user
 select_permissions:
-  - permission:
-      allow_aggregations: true
-      columns:
-        - description
-        - destination
-        - id
-        - name
-        - notification_type
-        - permission_type
-        - title
-        - type
-      filter: {}
-    role: public
-  - permission:
-      columns:
-        - description
-        - destination
-        - id
-        - name
-        - notification_type
-        - permission_type
-        - title
-        - type
-      filter: {}
-    role: user
+- permission:
+    allow_aggregations: true
+    columns:
+    - description
+    - destination
+    - id
+    - name
+    - notification_type
+    - permission_type
+    - title
+    - type
+    filter: {}
+  role: public
+- permission:
+    columns:
+    - description
+    - destination
+    - id
+    - name
+    - notification_type
+    - permission_type
+    - title
+    - type
+    filter: {}
+  role: user
 update_permissions:
-  - permission:
-      check: {}
-      columns:
-        - description
-        - destination
-        - name
-        - notification_type
-        - permission_type
-        - title
-        - type
-        - id
-      filter: {}
-    role: public
-  - permission:
-      check: null
-      columns:
-        - description
-        - destination
-        - id
-        - name
-        - notification_type
-        - permission_type
-        - title
-        - type
-      filter: {}
-    role: user
+- permission:
+    check: {}
+    columns:
+    - description
+    - destination
+    - name
+    - notification_type
+    - permission_type
+    - title
+    - type
+    - id
+    filter: {}
+  role: public
+- permission:
+    check: null
+    columns:
+    - description
+    - destination
+    - id
+    - name
+    - notification_type
+    - permission_type
+    - title
+    - type
+    filter: {}
+  role: user
 delete_permissions:
-  - permission:
-      filter: {}
-    role: public
-  - permission:
-      filter: {}
-    role: user
+- permission:
+    filter: {}
+  role: public
+- permission:
+    filter: {}
+  role: user

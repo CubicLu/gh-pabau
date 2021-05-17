@@ -249,9 +249,9 @@ update_permissions:
     filter: {}
   role: user
 delete_permissions:
-  - permission:
-      filter: {}
-    role: public
-  - permission:
-      filter: {}
-    role: user
+- permission:
+    filter: {}
+  role: public
+- permission:
+    filter: {}
+  role: user

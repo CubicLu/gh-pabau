@@ -1,26 +1,47 @@
 table:
   name: chat
   schema: public
+remote_relationships:
+- definition:
+    hasura_fields:
+    - from
+    remote_field:
+      user:
+        arguments:
+          where:
+            id: $from
+    remote_schema: CRM
+  name: fromUser
+- definition:
+    hasura_fields:
+    - to
+    remote_field:
+      user:
+        arguments:
+          where:
+            id: $to
+    remote_schema: CRM
+  name: toUser
 insert_permissions:
-  - permission:
-      backend_only: false
-      check:
-        _and:
-          - company_id:
-              _eq: X-Hasura-Org-Id
-          - _or:
-              - from:
-                  _eq: X-Hasura-User-Id
-              - to:
-                  _eq: X-Hasura-User-Id
-      columns:
-        - from
-        - message
-        - to
-      set:
-        company_id: x-hasura-Org-Id
-        from: x-hasura-User-Id
-    role: user
+- permission:
+    backend_only: false
+    check:
+      _and:
+      - company_id:
+          _eq: X-Hasura-Org-Id
+      - _or:
+        - from:
+            _eq: X-Hasura-User-Id
+        - to:
+            _eq: X-Hasura-User-Id
+    columns:
+    - from
+    - message
+    - to
+    set:
+      company_id: x-hasura-Org-Id
+      from: x-hasura-User-Id
+  role: user
 select_permissions:
 - permission:
     allow_aggregations: true
@@ -45,26 +66,26 @@ select_permissions:
     limit: 1000
   role: user
 update_permissions:
-  - permission:
-      check: {}
-      columns:
-        - from
-        - message
-        - to
-      filter: {}
-      set:
-        company_id: x-hasura-Org-Id
-        from: x-hasura-User-Id
-    role: user
+- permission:
+    check: {}
+    columns:
+    - from
+    - message
+    - to
+    filter: {}
+    set:
+      company_id: x-hasura-Org-Id
+      from: x-hasura-User-Id
+  role: user
 delete_permissions:
-  - permission:
-      filter:
-        _and:
-          - company_id:
-              _eq: X-Hasura-Org-Id
-          - _or:
-              - from:
-                  _eq: X-Hasura-User-Id
-              - to:
-                  _eq: X-Hasura-User-Id
-    role: user
+- permission:
+    filter:
+      _and:
+      - company_id:
+          _eq: X-Hasura-Org-Id
+      - _or:
+        - from:
+            _eq: X-Hasura-User-Id
+        - to:
+            _eq: X-Hasura-User-Id
+  role: user
