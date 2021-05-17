@@ -142,16 +142,19 @@ pipelines:
 
           artifacts:
             - dist/bot_message2.txt
+            - tools/cicd/slack_notification.json
 
       - step:
           name: announce to slack
           runs-on:
             - 'self.hosted'
           max-time: 5
+          clone:
+            enabled: false
           script:
             - cat dist/bot_message2.txt || true
             - cat dist/bot_message.txt || true
-            - apt-get update -y && apt-get install -y curl jq time
+            - apt-get update -y && apt-get install -y curl jq
 
             # Post to Slack
             - |
