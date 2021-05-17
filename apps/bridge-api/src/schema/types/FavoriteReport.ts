@@ -34,7 +34,7 @@ const UpdateUserReport = objectType({
     t.boolean('favorite')
   },
 })
-const reportPrefixes = new Set(['CO', 'FI', 'LE', 'MA', 'OT', 'ST'])
+const reportPrefixes = new Set(['CO', 'FI', 'LE', 'MA', 'OT', 'ST', 'AD'])
 
 export const FavoriteReport = extendType({
   type: 'Mutation',
