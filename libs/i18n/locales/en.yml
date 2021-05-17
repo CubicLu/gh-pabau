@@ -38,6 +38,13 @@ en:
   james-testing-2: 'test two'
   james-test-3: 'Hello World!=)'
   login.title: 'Log In!!'
+  notifications.clientNotifications.menuItem.appointments: 'Appointments'
+  notifications.clientNotifications.menuItem.engagement: 'Engagement'
+  notifications.clientNotifications.menuItem.sharing: 'Sharing'
+  notifications.clientNotifications.menuItem.classes: 'Classes'
+  notifications.clientNotifications.menuItem.other: 'Other'
+  notifications.clientNotifications.messages.enabled: 'Enabled'
+  notifications.clientNotifications.messages.smartDelivery: 'Smart delivery'
   notifications.email.appointmentReminder.subject: 'Appointment Reminder Test'
   notifications.email.birthday.subject: 'Birthday Test'
   notifications.email.cancelAppointment.subject: 'Cancel Appointment Test'
@@ -64,10 +71,47 @@ en:
   notifications.email.rescheduleAppointment.subject: 'Reschedule Appointment Test'
   notifications.email.secureEmailTemplate.subject: 'Secure Email Template Test'
   notifications.email.waitList.subject: 'WaitList Test'
+  notifications.email.prescription.subject: 'Prescription Test'
+  notifications.email.note.subject: 'Note Test'
+  notifications.email.letters.subject: 'Letters Test'
+  notifications.email.labResults.subject: 'Lab Result Test'
   notifications.sms.send.successMessage: 'Test SMS sent'
   notifications.email.send.successMessage: 'Test Email sent'
   notifications.email.send.failedMessage: 'Test Email failed'
   notifications.emailPreview.footer.contactMessage: 'Or get in touch with us via Phone or Email:'
+  notifications.classBookedGroup.title: 'Booked onto class (group)'
+  notifications.medicalForms.title: 'Medical forms'
+  notifications.appointments.newAppointment.description: 'Automatically sends to clients when they book their appointment'
+  notifications.appointments.upcomingAppointmentReminder.description: 'Automatically sends to clients ahead of their appointment'
+  notifications.appointments.rescheduleAppointment.description: 'Automatically sends to clients when their appointment start time is changed'
+  notifications.appointments.requestFeedback.description: 'Automatically sends to clients when an appointment is checked out'
+  notifications.appointments.cancelAppointment.description: 'Automatically sends to clients when an appointment is cancelled'
+  notifications.appointments.noShowAppointment.description: 'Automatically sends to clients when an appointment is marked as no show'
+  notifications.appointments.waitList.description: 'Automatically sends to clients when an appointment slot becomes available'
+  notifications.classes.classBooked.description: "Automatically sends to clients when they're booked for a class"
+  notifications.classes.classBookedGroup.description: "Automatically sends to clients when they're booked for a class (group)"
+  notifications.classes.cancelledClassBooking.description: 'Automatically sends to clients when they cancel a class booking'
+  notifications.classes.classNoShowAppointment.description: "Automatically sends to clients when they don't show for a class"
+  notifications.classes.classRescheduled.description: 'Automatically sends to clients when a class is rescheduled'
+  notifications.classes.classReminder.description: 'Automatically sends a reminder to a client who has registered to a class'
+  notifications.classes.classSpotAvailable.description: 'Automatically sends to clients when a class slot becomes available'
+  notifications.engagement.referrals.description: 'The default email template you will send when someone is being referred into the business'
+  notifications.engagement.invoice.description: 'The default email template you will send with a clients invoice attached'
+  notifications.engagement.leadResponses.description: 'The default email template you will send to your lead when they submit their lead form'
+  notifications.engagement.giftVoucher.description: 'The default email template you will send when clients purchase a gift voucher'
+  notifications.engagement.outstandingInvoice.description: 'The default email template you will send with a clients Outstanding invoice attached'
+  notifications.other.packageSession.description: 'The default email template you will send when a client has used all their package sessions'
+  notifications.other.clinicEmailingTimeline.description: "The email you will send when you are emailing a client's timeline"
+  notifications.other.connectRegistration.description: 'The email the client receives when they register to your Online Booking portal'
+  notifications.other.emailAppointment.description: 'The email you will send if someone requested a list of their appointment history'
+  notifications.other.birthday.description: "The default email template you will send if it's a client's birthday"
+  notifications.Sharing.prescription.description: 'The email you will send when you email someone a copy of their prescription'
+  notifications.Sharing.note.description: 'The email you will send when you email someone a copy of their note'
+  notifications.Sharing.medicalForms.description: 'The email you will send when you email someone a copy of their medical form'
+  notifications.Sharing.letters.description: 'The email you will send when you email someone a copy of their letter'
+  notifications.Sharing.documentShared.description: 'The email you will send when you share a document with a client through Pabau Connect'
+  notifications.Sharing.labResults.description: 'The email you will send when your test result is arrive'
+  notifications.Sharing.secureEmailTemplate.description: 'The default secure email template which gets sent out via email'
   notifications.commonNotificationHeader.enableSettings: 'Enable settings'
   notifications.commonNotificationHeader.error: 'Invalid email address'
   notifications.commonNotificationHeader.enableReminderViaEmail: 'Enable reminders via email'
@@ -190,7 +234,7 @@ en:
   notifications.bookedOntoClass.appointmentDetailMessage: 'Your class appointment details'
   notifications.bookedOntoClass.regards: 'Kind regards,'
   notifications.bookedOntoClass.regardsName: 'Your friends at The Clinic'
-  notifications.noShowAppointment.title: 'No Show Appointment'
+  notifications.noShowAppointment.title: 'No-show Appointment'
   notifications.noShowAppointment.standardMessage: 'This notification automatically sends to clients the moment they missed an appointment'
   notifications.noShowAppointment.greeting: 'Hi, Anna'
   notifications.noShowAppointment.subTitle: 'Sorry you missed your appointment!'
@@ -305,25 +349,106 @@ en:
   notifications.referrals.buttonName: 'View Voucher'
   notifications.referrals.closingText: 'We look forward to seeing you soon!'
   notifications.referrals.signatureBlock: 'Your friends at The Clinic'
-  notifications.documnetshared.title: 'Document shared'
-  notifications.documnetshared.standardMessage: 'The email you will send when you share a document with a client through Pabau Connect'
-  notifications.documnetshared.greeting: 'Dear Sophia,'
-  notifications.documnetshared.messageLine1: 'You have received a new secure email'
-  notifications.documnetshared.messageLine2: 'Please click the link below to access:'
-  notifications.documnetshared.buttonName: 'View Document'
-  notifications.documnetshared.closingText: 'Kind regards,'
-  notifications.documnetshared.signatureBlock: 'The Clinic Team'
-  notifications.documnetshared.infoText: 'We''re required by EU law to send your personal information in an encrypted format. It is free to view and all you have to do is click on the link in the email below that reads "Click to read this secure email online". This will take you through to a secure page with ''Pabau''.'
-  notifications.documentshared.userMessage: 'User'
-  notifications.documentshared.fromMessage: 'From'
+  notifications.documentShared.title: 'Document shared'
+  notifications.documentShared.standardMessage: 'The email you will send when you share a document with a client through Pabau Connect'
+  notifications.documentShared.greeting: 'Dear Sophia,'
+  notifications.documentShared.messageLine1: 'You have received a new secure email'
+  notifications.documentShared.messageLine2: "View and download your document in your documents area of the 'Pabau Connect' app"
+  notifications.documentShared.buttonName: 'View Document'
+  notifications.documentShared.closingText: 'Kind regards,'
+  notifications.documentShared.signatureBlock: 'The Clinic Team'
+  notifications.documentShared.infoText: 'We''re required by EU law to send your personal information in an encrypted format. It is free to view and all you have to do is click on the link in the email below that reads "Click to read this secure email online". This will take you through to a secure page with ''Pabau''.'
+  notifications.documentShared.userMessage: 'User'
+  notifications.documentShared.fromMessage: 'From'
   notifications.secureEmailTemplate.title: 'Secure email template'
   notifications.secureEmailTemplate.standardMessage: 'The default secure email template which gets sent out via email'
+  notifications.secureEmailTemplate.greeting: 'Dear Sophia,'
+  notifications.secureEmailTemplate.messageLine1: 'You have received a new secure email'
+  notifications.secureEmailTemplate.messageLine2: 'Please click the link below to access:'
+  notifications.secureEmailTemplate.buttonName: 'View Document'
+  notifications.secureEmailTemplate.closingText: 'Kind regards,'
+  notifications.secureEmailTemplate.signatureBlock: 'The Clinic Team'
+  notifications.secureEmailTemplate.infoText: 'We''re required by EU law to send your personal information in an encrypted format. It is free to view and all you have to do is click on the link in the email below that reads "Click to read this secure email online". This will take you through to a secure page with ''Pabau''.'
+  notifications.secureEmailTemplate.userMessage: 'User'
+  notifications.secureEmailTemplate.fromMessage: 'From'
+  notifications.prescription.greeting: 'Hi Anna,'
+  notifications.prescription.messageLine1: 'You have received a new prescription'
+  notifications.prescription.messageLine2: "View and download your prescription in your appointment summary of the 'Pabau Connect' app."
+  notifications.prescription.buttonName: 'View Prescription'
+  notifications.prescription.closingText: 'Kind regards,'
+  notifications.prescription.signatureBlock: 'The Clinic Team'
+  notifications.prescription.infoText: 'We''re required by EU law to send your personal information in an encrypted format. It is free to view and all you have to do is click on the link in the email below that reads "Click to read this prescription online". This will take you through to a secure page with ''Pabau''.'
+  notifications.prescription.userMessage: 'User'
+  notifications.prescription.fromMessage: 'From'
+  notifications.prescription.title: 'Prescription'
+  notifications.prescription.standardMessage: 'The email you will send when you email someone a copy of their prescription'
+  notifications.note.greeting: 'Hi Carter,'
+  notifications.note.messageLine1: 'You have received a new note'
+  notifications.note.messageLine2: "View your note in your message centre of the 'Pabau Connect' app."
+  notifications.note.buttonName: 'View Message'
+  notifications.note.closingText: 'Kind regards,'
+  notifications.note.signatureBlock: 'The Clinic Team'
+  notifications.note.infoText: 'We''re required by EU law to send your personal information in an encrypted format. It is free to view and all you have to do is click on the link in the email below that reads "Click to read this note online". This will take you through to a secure page with ''Pabau''.'
+  notifications.note.userMessage: 'User'
+  notifications.note.fromMessage: 'From'
+  notifications.note.title: 'Note'
+  notifications.note.standardMessage: 'The email you will send when you email someone a copy of their note'
+  notifications.letters.greeting: 'Hi Shopia,'
+  notifications.letters.messageLine1: 'You have received a new letter'
+  notifications.letters.messageLine2: "View and download your letter in your appointment summary of the 'Pabau Connect' app."
+  notifications.letters.buttonName: 'View Letter'
+  notifications.letters.closingText: 'Kind regards,'
+  notifications.letters.signatureBlock: 'The Clinic Team'
+  notifications.letters.infoText: 'We''re required by EU law to send your personal information in an encrypted format. It is free to view and all you have to do is click on the link in the email below that reads "Click to read this letter online". This will take you through to a secure page with ''Pabau''.'
+  notifications.letters.userMessage: 'User'
+  notifications.letters.fromMessage: 'From'
+  notifications.letters.title: 'Letters'
+  notifications.letters.standardMessage: 'The email you will send when you email someone a copy of their letter'
+  notifications.labResults.greeting: 'Hi Anna,'
+  notifications.labResults.messageLine1: 'You have received a lab result'
+  notifications.labResults.messageLine2: "View and download your test results in your labs area of the 'Pabau Connect' app."
+  notifications.labResults.buttonName: 'View Lab Results'
+  notifications.labResults.closingText: 'Kind regards,'
+  notifications.labResults.signatureBlock: 'The Clinic Team'
+  notifications.labResults.infoText: 'We''re required by EU law to send your personal information in an encrypted format. It is free to view and all you have to do is click on the link in the email below that reads "Click to read this lab result online". This will take you through to a secure page with ''Pabau''.'
+  notifications.labResults.userMessage: 'User'
+  notifications.labResults.fromMessage: 'From'
+  notifications.labResults.title: 'Lab Results'
+  notifications.labResults.standardMessage: 'The email you will send when your test result is arrive'
   notifications.classRescheduled.title: 'Class rescheduled'
   notifications.classRescheduled.standardMessage: 'This notification automatically sends to clients when a class is rescheduled'
   notifications.classReminder.title: 'Reminder for classed'
   notifications.classReminder.standardMessage: 'This notification automatically sends a reminder to a client who has registered to a class'
   notifications.classNoShowAppointment.title: 'Missed A Class'
   notifications.classNoShowAppointment.standardMessage: 'This notification automatically sends to clients when they dont show for a class'
+  notifications.prescription.smsMessage: 'Dear Sophia!
+
+    Please find attached your file. If you have any questions do not hesitate to contact us at +44 000 987 507.
+
+    Kind regards,
+
+    The clinic Team'
+  notifications.note.smsMessage: 'Dear Sophia!
+
+    Please find attached your file. If you have any questions do not hesitate to contact us at +44 000 987 507.
+
+    Kind regards,
+
+    The clinic Team'
+  notifications.letters.smsMessage: 'Dear Sophia!
+
+    Please find attached your file. If you have any questions do not hesitate to contact us at +44 000 987 507.
+
+    Kind regards,
+
+    The clinic Team'
+  notifications.labResults.smsMessage: 'Dear Sophia!
+
+    Please find attached your file. If you have any questions do not hesitate to contact us at +44 000 987 507.
+
+    Kind regards,
+
+    The clinic Team'
   notifications.appointmentReminder.smsMessage: 'Hey Shopia,
 
 

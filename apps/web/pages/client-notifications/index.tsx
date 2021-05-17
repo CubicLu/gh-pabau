@@ -20,10 +20,32 @@ const { Title } = Typography
 
 const Index: FC = () => {
   const [hideBanner, setHideBanner] = useState(false)
-  const menuItems = ['Appointments', 'Engagement', 'Classes', 'Other']
-  const router = useRouter()
-
   const { t } = useTranslationI18()
+
+  const menuItems = [
+    {
+      name: t('notifications.clientNotifications.menuItem.appointments'),
+      value: 'Appointments',
+    },
+    {
+      name: t('notifications.clientNotifications.menuItem.engagement'),
+      value: 'Engagement',
+    },
+    {
+      name: t('notifications.clientNotifications.menuItem.sharing'),
+      value: 'Sharing',
+    },
+    {
+      name: t('notifications.clientNotifications.menuItem.classes'),
+      value: 'Classes',
+    },
+    {
+      name: t('notifications.clientNotifications.menuItem.other'),
+      value: 'Other',
+    },
+  ]
+
+  const router = useRouter()
 
   const options = [
     {
@@ -59,7 +81,6 @@ const Index: FC = () => {
       router.push(link)
     }
   }
-
   return (
     <>
       <CommonHeader />
@@ -104,22 +125,29 @@ const Index: FC = () => {
             </div>
           </div>
           <div className={styles.clientInnerNotifciationsDesktop}>
-            <TabMenu tabPosition="left" menuItems={menuItems} minHeight="592px">
+            <TabMenu
+              tabPosition="left"
+              menuItems={menuItems.map((menuItem) => menuItem.name)}
+              minHeight="592px"
+            >
               {menuItems.map((item) => (
                 <NotificationMessages
-                  key={item}
-                  notificationData={notificationData[item]}
+                  key={item.value}
+                  notificationData={notificationData({ t })?.[item.value]}
                   onClick={handleNotificationClick}
                 />
               ))}
             </TabMenu>
           </div>
           <div className={styles.clientInnerNotifciationsMobile}>
-            <TabMenu tabPosition="top" menuItems={menuItems}>
+            <TabMenu
+              tabPosition="top"
+              menuItems={menuItems.map((menuItem) => menuItem.name)}
+            >
               {menuItems.map((item) => (
                 <NotificationMessages
-                  key={item}
-                  notificationData={notificationData[item]}
+                  key={item.value}
+                  notificationData={notificationData({ t })?.[item.value]}
                   onClick={handleNotificationClick}
                 />
               ))}

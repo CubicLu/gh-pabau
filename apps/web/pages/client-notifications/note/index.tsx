@@ -37,26 +37,24 @@ const Index: FC = () => {
             buttonColor={buttonColor}
             informationMessage={informationMessage}
             type={type}
-            greeting={t('notifications.secureEmailTemplate.greeting')}
-            messageLine1={t('notifications.secureEmailTemplate.messageLine1')}
-            messageLine2={t('notifications.secureEmailTemplate.messageLine2')}
+            greeting={t('notifications.note.greeting')}
+            messageLine1={t('notifications.note.messageLine1')}
+            messageLine2={t('notifications.note.messageLine2')}
             userEmail={'info@theclinic.com'}
-            userName={'Sophia'}
-            buttonName={t('notifications.secureEmailTemplate.buttonName')}
+            userName={'Carter'}
+            buttonName={t('notifications.note.buttonName')}
             clinicName={'Clinic'}
-            closingText={t('notifications.secureEmailTemplate.closingText')}
-            signatureBlock={t(
-              'notifications.secureEmailTemplate.signatureBlock'
-            )}
-            infoText={t('notifications.secureEmailTemplate.infoText')}
-            userMessage={t('notifications.secureEmailTemplate.userMessage')}
-            fromMessage={t('notifications.secureEmailTemplate.fromMessage')}
+            closingText={t('notifications.note.closingText')}
+            signatureBlock={t('notifications.note.signatureBlock')}
+            infoText={t('notifications.note.infoText')}
+            userMessage={t('notifications.note.userMessage')}
+            fromMessage={t('notifications.note.fromMessage')}
           />
         )
       }
       sendEmailService({
         email,
-        subject: t('notifications.email.secureEmailTemplate.subject'),
+        subject: t('notifications.email.note.subject'),
         bodyContent: bodyContent(),
         successMessage: t('notifications.email.send.successMessage'),
         failedMessage: t('notifications.email.send.failedMessage'),
@@ -82,11 +80,11 @@ const Index: FC = () => {
             breadcrumbName: t('notifications.breadcrumb.notificationMessage'),
           },
           {
-            path: 'client-notifications/secure-email-template',
-            breadcrumbName: t('notifications.secureEmailTemplate.title'),
+            path: 'client-notifications/note',
+            breadcrumbName: t('notifications.note.title'),
           },
         ]}
-        title={t('notifications.secureEmailTemplate.title')}
+        title={t('notifications.note.title')}
         selectedTab={selectedTab}
         handleNotificationSubmit={showNotification}
       />
@@ -101,10 +99,10 @@ const Index: FC = () => {
         hideDisplayPolicyOption={true}
         hideServiceOption={true}
         hideEmployeeNameOption={true}
-        standardMessage={t('notifications.secureEmailTemplate.standardMessage')}
-        type={'secureEmailTemplate'}
-        name={t('notifications.secureEmailTemplate.title')}
-        langKey={'secureEmailTemplate'}
+        standardMessage={t('notifications.note.standardMessage')}
+        type={'note'}
+        name={t('notifications.note.title')}
+        langKey={'note'}
         handleNotificationSubmit={showNotification}
       />
     </Layout>

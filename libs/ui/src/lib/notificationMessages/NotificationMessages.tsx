@@ -1,6 +1,7 @@
 import React, { FC, ReactNode } from 'react'
 import { Badge } from '../..'
 import styles from './NotificationMessages.module.less'
+import { useTranslation } from 'react-i18next'
 
 export interface NotificationData {
   header: string
@@ -20,6 +21,7 @@ export const NotificationMessages: FC<NotificationMessagesProps> = (props) => {
   const handleClick = (notification) => {
     props.onClick?.(notification)
   }
+  const { t } = useTranslation('common')
 
   return (
     <div>
@@ -41,10 +43,22 @@ export const NotificationMessages: FC<NotificationMessagesProps> = (props) => {
             </div>
             <div className={styles.stateLabel}>
               <div className={styles.badgeLabel}>
-                <Badge label="Enabled" disabled={notification.disabled} />
+                <Badge
+                  label={t(
+                    'notifications.clientNotifications.messages.enabled'
+                  )}
+                  disabled={notification.disabled}
+                />
               </div>
               <div className={styles.smartLabel}>
-                {notification.smartDelivery && <span> +Smart delivery</span>}
+                {notification.smartDelivery && (
+                  <span>
+                    +
+                    {t(
+                      'notifications.clientNotifications.messages.smartDelivery'
+                    )}
+                  </span>
+                )}
               </div>
             </div>
           </div>
