@@ -953,6 +953,21 @@ CREATE SEQUENCE public.product_lists_order_seq
     NO MAXVALUE
     CACHE 1;
 ALTER SEQUENCE public.product_lists_order_seq OWNED BY public.product_lists."order";
+CREATE TABLE public.product_news (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    img text,
+    link text,
+    description text,
+    title text NOT NULL
+);
+CREATE TABLE public.product_news_read (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    product_news uuid NOT NULL,
+    "user" integer NOT NULL,
+    company integer NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL
+);
 CREATE TABLE public.prototype (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     name text NOT NULL,
@@ -1420,6 +1435,10 @@ ALTER TABLE ONLY public.supplier
     ADD CONSTRAINT product_list_supplier_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.product_lists
     ADD CONSTRAINT product_lists_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.product_news
+    ADD CONSTRAINT product_news_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.product_news_read
+    ADD CONSTRAINT product_news_read_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.prototype
     ADD CONSTRAINT prototype_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.read_notification
@@ -1502,5 +1521,7 @@ ALTER TABLE ONLY public.notification_toggle
     ADD CONSTRAINT notification_toggle_notification_type_fkey FOREIGN KEY (notification_type) REFERENCES public.notification_types(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.notification_types
     ADD CONSTRAINT notification_types_type_fkey FOREIGN KEY (notification_type) REFERENCES public.notification_types_enum(type) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY public.product_news_read
+    ADD CONSTRAINT product_news_read_product_news_fkey FOREIGN KEY (product_news) REFERENCES public.product_news(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.service_master
     ADD CONSTRAINT service_master_service_id_fkey FOREIGN KEY (service_id) REFERENCES public.service(id) ON UPDATE RESTRICT ON DELETE RESTRICT;

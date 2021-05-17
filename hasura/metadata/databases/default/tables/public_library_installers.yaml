@@ -16,6 +16,18 @@ insert_permissions:
     - created_date
     - is_plus
   role: public
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - data
+    - is_plus
+    - library_description
+    - library_image
+    - library_language
+    - library_location
+    - library_name
+  role: user
 select_permissions:
 - permission:
     allow_aggregations: true
@@ -31,6 +43,20 @@ select_permissions:
     - created_date
     filter: {}
   role: public
+- permission:
+    allow_aggregations: true
+    columns:
+    - is_plus
+    - id
+    - data
+    - library_description
+    - library_image
+    - library_language
+    - library_location
+    - library_name
+    - created_date
+    filter: {}
+  role: user
 update_permissions:
 - permission:
     check: {}
@@ -46,7 +72,22 @@ update_permissions:
     - created_date
     filter: {}
   role: public
+- permission:
+    check: null
+    columns:
+    - data
+    - is_plus
+    - library_description
+    - library_image
+    - library_language
+    - library_location
+    - library_name
+    filter: {}
+  role: user
 delete_permissions:
 - permission:
     filter: {}
   role: public
+- permission:
+    filter: {}
+  role: user

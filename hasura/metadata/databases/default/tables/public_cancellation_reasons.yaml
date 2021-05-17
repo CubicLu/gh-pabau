@@ -12,6 +12,16 @@ insert_permissions:
     - order
     - type
   role: public
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - cancellation_policy
+    - is_active
+    - name
+    - order
+    - type
+  role: user
 select_permissions:
 - permission:
     allow_aggregations: true
@@ -26,6 +36,18 @@ select_permissions:
     - id
     filter: {}
   role: public
+- permission:
+    columns:
+    - is_active
+    - order
+    - cancellation_policy
+    - name
+    - type
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: user
 update_permissions:
 - permission:
     check: null
@@ -37,7 +59,20 @@ update_permissions:
     - type
     filter: {}
   role: public
+- permission:
+    check: null
+    columns:
+    - cancellation_policy
+    - is_active
+    - name
+    - order
+    - type
+    filter: {}
+  role: user
 delete_permissions:
 - permission:
     filter: {}
   role: public
+- permission:
+    filter: {}
+  role: user
