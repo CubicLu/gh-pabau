@@ -1,7 +1,7 @@
-import React, { FC, useState, useEffect } from 'react'
-import { Select, Form } from 'antd'
-import { FormProps } from 'antd/lib/form'
+import { Form, Select } from 'antd'
 import { SizeType } from 'antd/es/config-provider/SizeContext'
+import { FormProps } from 'antd/lib/form'
+import React, { FC, useEffect, useState } from 'react'
 import styles from './SimpleDropdown.module.less'
 
 export interface SimpleDropdownProps extends FormProps {
@@ -24,7 +24,6 @@ export const SimpleDropdown: FC<SimpleDropdownProps> = ({
   tooltip,
   placeHolderText = '',
   size = 'middle',
-  defaultValue,
   onSelected,
   ...props
 }) => {
@@ -36,7 +35,6 @@ export const SimpleDropdown: FC<SimpleDropdownProps> = ({
   }, [value])
 
   const handleClickSelect = (value) => {
-    setSelected(value)
     onSelected(value)
   }
 
@@ -48,7 +46,7 @@ export const SimpleDropdown: FC<SimpleDropdownProps> = ({
             value={selected === '' ? undefined : selected}
             onSelect={(value) => handleClickSelect(value)}
             size={size}
-            defaultValue={defaultValue}
+            defaultValue={value}
             placeholder={placeHolderText}
           >
             {dropdownItems?.map((item) => (
