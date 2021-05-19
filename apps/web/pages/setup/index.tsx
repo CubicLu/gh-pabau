@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useState, useEffect, useContext } from 'react'
 import Layout from '../../components/Layout/Layout'
 import CommonHeader from '../../components/CommonHeader'
 import HeaderChip from '../../components/Setup/HeaderChip'
@@ -7,23 +7,30 @@ import WebinarCard from '../../components/Setup/Webinar'
 import SearchResults from '../../components/Setup/SearchResults'
 import GridMobile from '../../components/Setup/Grid/gridMobile'
 import GridSubMenuMobile from '../../components/Setup/Grid/gridSubTitleMobile'
-import { SetupSearchInput, SetupGridProps } from '@pabau/ui'
+import { SetupSearchInput, SetupGridProps, SMSPurchaseModal } from '@pabau/ui'
 import styles from './Setup.module.less'
 import { useRouter } from 'next/router'
 import { useMedia } from 'react-use'
 import { useGridData } from '../../hooks/useGridData'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { UserContext } from '../../context/UserContext'
 
+export interface LoadingType {
+  videoLoader: boolean
+  communityLoader: boolean
+}
 const Index: FC = (props) => {
+  const { t } = useTranslationI18()
   const [searchValue, setSearchValue] = useState<string>('')
-  const [title, setTitle] = useState<string>('Setup')
+  const [title, setTitle] = useState<string>(t('setup.page.title'))
   const [searchData, setSearchData] = useState([])
   const [showSubMenu, setShowSubMenu] = useState<boolean>(false)
   const [selectedMenuData, setMenuData] = useState<SetupGridProps[]>([])
+  const [isSMSModalVisible, setSMSModalVisible] = useState<boolean>(false)
   const router = useRouter()
   const isMobile = useMedia('(max-width: 768px)', false)
-  const { t } = useTranslationI18()
   const { setupGridData } = useGridData(t)
+  const user = useContext(UserContext)
 
   useEffect(() => {
     if (router.query?.menu) {
@@ -44,23 +51,33 @@ const Index: FC = (props) => {
   const handleSearch = (searchTerm: string) => {
     setSearchValue(searchTerm)
     if (searchTerm) {
-      setTitle('Search Results')
+      setTitle(t('setup.page.search.result.title'))
       const searchDataArray = []
 
       setupGridData.map((data: SetupGridProps) => {
-        const titles = data.expandTitle ? data.expandTitle : data.subDataTitles
+        const titles = data.expandTitle
+          ? [...data.expandTitle, ...data.subDataTitles]
+          : data.subDataTitles
         if (titles.length > 0) {
           titles.map((subTitle) => {
-            if (
-              subTitle.title.toLowerCase().includes(searchTerm.toLowerCase())
-            ) {
-              searchDataArray.push({
-                subTitle: subTitle.title,
-                href: subTitle.href,
-                title: data.title,
-              })
-            }
-            return searchDataArray
+            const subTitleData =
+              subTitle.data.length > 0
+                ? subTitle.data
+                : [{ title: subTitle.title, href: subTitle.href }]
+            subTitleData.map((record) => {
+              if (
+                record.title.toLowerCase().includes(searchTerm.toLowerCase())
+              ) {
+                searchDataArray.push({
+                  subTitle: record.title,
+                  href: record.href,
+                  title: data.title,
+                  isModal: record.isModal,
+                })
+              }
+              return searchDataArray
+            })
+            return subTitle
           })
         }
         return data
@@ -68,7 +85,7 @@ const Index: FC = (props) => {
 
       setSearchData(searchDataArray)
     } else {
-      setTitle('Setup')
+      setTitle(t('setup.page.title'))
     }
   }
 
@@ -84,15 +101,26 @@ const Index: FC = (props) => {
     router.push('/setup', undefined, { shallow: true })
   }
 
+  const smsModalOnComplete = () => {
+    console.log('Completed')
+  }
+
+  const setModalVisible = () => {
+    setSMSModalVisible(true)
+  }
+
   return (
     <div>
-      <CommonHeader handleSearch={handleSearch} />
-      <Layout active={'setup'} isDisplayingFooter={false}>
+      <CommonHeader handleSearch={handleSearch} title={t('setup.page.title')} />
+      <Layout active={'setup'} isDisplayingFooter={false} {...user}>
         <div className={styles.cardWrapper}>
           <div className={styles.titleWrapper}>
             <span className={styles.title}>{title}</span>
             <div className={styles.search}>
-              <SetupSearchInput onChange={handleSearch} />
+              <SetupSearchInput
+                onChange={handleSearch}
+                placeholder={t('setup.page.search.placeholder')}
+              />
             </div>
           </div>
           {!searchValue ? (
@@ -101,6 +129,7 @@ const Index: FC = (props) => {
                 <GridSubMenuMobile
                   data={selectedMenuData}
                   handleBack={handleBack}
+                  setSMSModalVisible={setModalVisible}
                 />
               ) : (
                 <GridMobile
@@ -110,7 +139,10 @@ const Index: FC = (props) => {
               )}
               {!showSubMenu && <HeaderChip />}
               <div className={styles.mainWrap}>
-                <Grid data={setupGridData} />
+                <Grid
+                  data={setupGridData}
+                  setSMSModalVisible={setModalVisible}
+                />
                 {isMobile ? (
                   !showSubMenu ? (
                     <WebinarCard />
@@ -121,9 +153,19 @@ const Index: FC = (props) => {
               </div>
             </>
           ) : (
-            <SearchResults data={searchData} searchTerm={searchValue} />
+            <SearchResults
+              data={searchData}
+              searchTerm={searchValue}
+              setSMSModalVisible={setModalVisible}
+            />
           )}
         </div>
+        <SMSPurchaseModal
+          visible={isSMSModalVisible}
+          onClose={() => setSMSModalVisible(false)}
+          numberFormatter={new Intl.NumberFormat('en-US')}
+          onComplete={smsModalOnComplete}
+        />
       </Layout>
     </div>
   )

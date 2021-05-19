@@ -289,6 +289,10 @@ const Index: FC<P> = forwardRef(
           )
         case 'documentShared':
         case 'secureEmailTemplate':
+        case 'prescription':
+        case 'note':
+        case 'letters':
+        case 'labResults':
           return (
             <DocumentSharedPreview
               standardTapIndex={standardTapIndex}

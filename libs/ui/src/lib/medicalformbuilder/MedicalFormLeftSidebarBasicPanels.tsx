@@ -1,6 +1,7 @@
 import { MedicalForms } from '@pabau/ui'
 import React, { FC } from 'react'
 import { Draggable, Droppable } from 'react-beautiful-dnd'
+import { useTranslation } from 'react-i18next'
 import LeftSidebarElement from '../medicalform/LeftSidebarElement'
 import styles from './MedicalFormBuilder.module.less'
 import MedicalFormLeftSidebarDivider from './MedicalFormLeftSidebarDivider'
@@ -11,6 +12,7 @@ interface P {
 }
 
 const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
+  const { t } = useTranslation('common')
   const { medicalForms, handlingClickLeft } = props
   const getRenderItemBasic = () => {
     const MyChild = (provided, snapshot, rubric) => {
@@ -49,7 +51,9 @@ const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
       >
         {(provided, snapshot) => (
           <div ref={provided.innerRef}>
-            <MedicalFormLeftSidebarDivider title="general" />
+            <MedicalFormLeftSidebarDivider
+              title={t('ui.medicalformbuilder.medicalcomponent.basic.general')}
+            />
             {medicalForms
               ?.filter(
                 (form) =>
@@ -93,7 +97,9 @@ const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
                   </Draggable>
                 )
               })}
-            <MedicalFormLeftSidebarDivider title="choices" />
+            <MedicalFormLeftSidebarDivider
+              title={t('ui.medicalformbuilder.medicalcomponent.basic.choices')}
+            />
             {medicalForms
               ?.filter(
                 (form) =>
@@ -136,7 +142,9 @@ const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
                   </Draggable>
                 )
               })}
-            <MedicalFormLeftSidebarDivider title="other" />
+            <MedicalFormLeftSidebarDivider
+              title={t('ui.medicalformbuilder.medicalcomponent.basic.other')}
+            />
             {medicalForms
               ?.filter(
                 (form) =>
@@ -179,7 +187,9 @@ const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
                   </Draggable>
                 )
               })}
-            <MedicalFormLeftSidebarDivider title="medical" />
+            <MedicalFormLeftSidebarDivider
+              title={t('ui.medicalformbuilder.medicalcomponent.basic.medical')}
+            />
             {medicalForms
               ?.filter(
                 (form) =>

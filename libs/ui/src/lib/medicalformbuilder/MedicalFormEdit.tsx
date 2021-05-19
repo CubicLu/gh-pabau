@@ -3,6 +3,7 @@ import { Col, Modal, Row } from 'antd'
 import _ from 'lodash'
 import React, { FC, useEffect, useReducer, useState } from 'react'
 import { DragDropContext } from 'react-beautiful-dnd'
+import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
 import RightSidebar from '../rightsidebar/RightSidebar'
 import styles from './MedicalFormBuilder.module.less'
@@ -82,9 +83,12 @@ const copy = (source, destination, droppableSourceId, endIndex, formInfo) => {
     ...item,
     id: uuidv4(),
     txtQuestion: formInfo.txtQuestion,
+    txtQuestionWithTag: formInfo.txtQuestionWithTag,
     txtBlock: formInfo.txtBlock,
+    txtBlockWithTag: formInfo.txtBlockWithTag,
     txtInputType: formInfo.txtInputType,
     txtDefaults: formInfo.txtDefaults,
+    txtDefaultsWithTag: formInfo.txtDefaultsWithTag,
     txtLinkedField: formInfo.txtLinkedField,
     arrItems: formInfo.arrItems,
     required: formInfo.required,
@@ -263,6 +267,7 @@ const MedicalFormEdit: FC<P> = ({
   clearCreateFormBtn,
   formName,
 }) => {
+  const { t } = useTranslation('common')
   const [, forceUpdate] = useReducer((x) => x + 1, 0)
   const [draggedForms, setDraggedForms] = useState<MedicalFormTypes[]>([])
   const [reservedFormData, setReservedFormData] = useState('')
@@ -340,8 +345,7 @@ const MedicalFormEdit: FC<P> = ({
   }
 
   const handlingSaveForm = (form) => {
-    // eslint-disable-next-line you-dont-need-lodash-underscore/find-index
-    const index = _.findIndex(draggedForms, (item) => item['id'] === form.id)
+    const index = draggedForms.findIndex((item) => item['id'] === form.id)
     if (index !== -1) {
       draggedForms.splice(index, 1, form)
     }
@@ -368,11 +372,21 @@ const MedicalFormEdit: FC<P> = ({
           (medicalForm) => medicalForm.formName === 'basic_singlechoice'
         )
         if (alterForm.length > 0) {
-          cloneFormInfo.txtQuestion = 'What is your gender?'
+          cloneFormInfo.txtQuestion = t(
+            'ui.medicalformbuilder.form.gender.question'
+          )
           cloneFormInfo.txtLinkedField = 'Gender'
           const arrItemsVaues = [
-            { id: 1, name: 'Male', editing: false },
-            { id: 2, name: 'Female', editing: false },
+            {
+              id: 1,
+              name: t('ui.medicalformbuilder.form.gender.male'),
+              editing: false,
+            },
+            {
+              id: 2,
+              name: t('ui.medicalformbuilder.form.gender.female'),
+              editing: false,
+            },
           ]
           cloneFormInfo.arrItems = arrItemsVaues
           setDraggedForms(
@@ -393,7 +407,9 @@ const MedicalFormEdit: FC<P> = ({
           (medicalForm) => medicalForm.formName === 'basic_shortanswer'
         )
         if (alterForm.length > 0) {
-          cloneFormInfo.txtQuestion = 'Phone number'
+          cloneFormInfo.txtQuestion = t(
+            'ui.medicalformbuilder.form.phone.question'
+          )
           cloneFormInfo.txtLinkedField = 'Phone'
           cloneFormInfo.txtDefaults = '[CLIENTPHONE]'
           setDraggedForms(
@@ -411,7 +427,9 @@ const MedicalFormEdit: FC<P> = ({
           (medicalForm) => medicalForm.formName === 'basic_shortanswer'
         )
         if (alterForm.length > 0) {
-          cloneFormInfo.txtQuestion = 'Date of birth'
+          cloneFormInfo.txtQuestion = t(
+            'ui.medicalformbuilder.form.dob.question'
+          )
           cloneFormInfo.txtLinkedField = 'DOB'
           cloneFormInfo.txtDefaults = '[CLIENTDOB]'
           cloneFormInfo.txtInputType = 'date'
@@ -433,7 +451,9 @@ const MedicalFormEdit: FC<P> = ({
           (medicalForm) => medicalForm.formName === 'basic_shortanswer'
         )
         if (alterForm.length > 0) {
-          cloneFormInfo.txtQuestion = 'Postcode'
+          cloneFormInfo.txtQuestion = t(
+            'ui.medicalformbuilder.form.postcode.question'
+          )
           cloneFormInfo.txtLinkedField = 'MailingPostal'
           cloneFormInfo.txtDefaults = '[Postal]'
           setDraggedForms(
@@ -446,7 +466,9 @@ const MedicalFormEdit: FC<P> = ({
             )
           )
 
-          cloneFormInfo.txtQuestion = 'City'
+          cloneFormInfo.txtQuestion = t(
+            'ui.medicalformbuilder.form.city.question'
+          )
           cloneFormInfo.txtLinkedField = 'MailingCity'
           cloneFormInfo.txtDefaults = '[City]'
           setDraggedForms(
@@ -459,7 +481,9 @@ const MedicalFormEdit: FC<P> = ({
             )
           )
 
-          cloneFormInfo.txtQuestion = 'Street Address'
+          cloneFormInfo.txtQuestion = t(
+            'ui.medicalformbuilder.form.street.question'
+          )
           cloneFormInfo.txtLinkedField = 'MailingStreet'
           cloneFormInfo.txtDefaults = '[Street]'
           setDraggedForms(
@@ -486,7 +510,12 @@ const MedicalFormEdit: FC<P> = ({
       forceUpdate()
     }
   }
-
+  const genderQuestion = t('ui.medicalformbuilder.form.gender.question')
+  const phoneQuestion = t('ui.medicalformbuilder.form.phone.question')
+  const dobQuestion = t('ui.medicalformbuilder.form.dob.question')
+  const postcodeQuestion = t('ui.medicalformbuilder.form.postcode.question')
+  const cityQuestion = t('ui.medicalformbuilder.form.city.question')
+  const streetQuestion = t('ui.medicalformbuilder.form.street.question')
   const onDragEnd = React.useCallback(
     (result) => {
       const { source, destination } = result
@@ -518,7 +547,7 @@ const MedicalFormEdit: FC<P> = ({
               (medicalForm) => medicalForm.formName === 'basic_singlechoice'
             )
             if (alterForm.length > 0) {
-              cloneFormInfo.txtQuestion = 'What is your gender?'
+              cloneFormInfo.txtQuestion = genderQuestion
               cloneFormInfo.txtLinkedField = 'Gender'
               const arrItemsVaues = [
                 { id: 1, name: 'Male', editing: false },
@@ -543,7 +572,7 @@ const MedicalFormEdit: FC<P> = ({
               (medicalForm) => medicalForm.formName === 'basic_shortanswer'
             )
             if (alterForm.length > 0) {
-              cloneFormInfo.txtQuestion = 'Phone number'
+              cloneFormInfo.txtQuestion = phoneQuestion
               cloneFormInfo.txtLinkedField = 'Phone'
               cloneFormInfo.txtDefaults = '[CLIENTPHONE]'
               setDraggedForms((state) =>
@@ -564,7 +593,7 @@ const MedicalFormEdit: FC<P> = ({
               (medicalForm) => medicalForm.formName === 'basic_shortanswer'
             )
             if (alterForm.length > 0) {
-              cloneFormInfo.txtQuestion = 'Date of birth'
+              cloneFormInfo.txtQuestion = dobQuestion
               cloneFormInfo.txtLinkedField = 'DOB'
               cloneFormInfo.txtDefaults = '[CLIENTDOB]'
               cloneFormInfo.txtInputType = 'date'
@@ -586,7 +615,7 @@ const MedicalFormEdit: FC<P> = ({
               (medicalForm) => medicalForm.formName === 'basic_shortanswer'
             )
             if (alterForm.length > 0) {
-              cloneFormInfo.txtQuestion = 'Postcode'
+              cloneFormInfo.txtQuestion = postcodeQuestion
               cloneFormInfo.txtLinkedField = 'MailingPostal'
               cloneFormInfo.txtDefaults = '[Postal]'
               setDraggedForms((state) =>
@@ -599,7 +628,7 @@ const MedicalFormEdit: FC<P> = ({
                 )
               )
 
-              cloneFormInfo.txtQuestion = 'City'
+              cloneFormInfo.txtQuestion = cityQuestion
               cloneFormInfo.txtLinkedField = 'MailingCity'
               cloneFormInfo.txtDefaults = '[City]'
               setDraggedForms((state) =>
@@ -612,7 +641,7 @@ const MedicalFormEdit: FC<P> = ({
                 )
               )
 
-              cloneFormInfo.txtQuestion = 'Street Address'
+              cloneFormInfo.txtQuestion = streetQuestion
               cloneFormInfo.txtLinkedField = 'MailingStreet'
               cloneFormInfo.txtDefaults = '[Street]'
               setDraggedForms((state) =>
@@ -643,7 +672,15 @@ const MedicalFormEdit: FC<P> = ({
           break
       }
     },
-    [setDraggedForms]
+    [
+      setDraggedForms,
+      genderQuestion,
+      phoneQuestion,
+      dobQuestion,
+      postcodeQuestion,
+      cityQuestion,
+      streetQuestion,
+    ]
   )
 
   const handleOk = () => {

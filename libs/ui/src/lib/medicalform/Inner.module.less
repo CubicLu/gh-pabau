@@ -52,8 +52,47 @@
     font-weight: normal;
     font-size: 16px;
     line-height: 24px;
-    color: #3d3d46;
+    // color: #3d3d46;
     margin-bottom: 0;
+  }
+  :global {
+    .ant-btn {
+      font-size: 0.8rem;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+      padding-left: 1em;
+      padding-right: 1em;
+      line-height: 1.5715;
+      position: relative;
+      display: inline-block;
+      font-weight: 400;
+      white-space: nowrap;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+      user-select: none;
+      touch-action: manipulation;
+    }
+    .ant-btn-danger {
+      color: #7f4d0d;
+      background: #ffe1b3;
+      border-color: #e9cda3;
+      text-shadow: 0 -1px 0 rgb(0 0 0 / 12%);
+      box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
+    }
+    .ant-btn-primary {
+      color: #7a787a;
+      background: #eeedef;
+      border-color: #d4d3d5;
+      text-shadow: 0 -1px 0 rgb(0 0 0 / 12%);
+      box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
+    }
+    .ant-btn-sm {
+      height: 18px;
+      padding: 0px 3px;
+      font-size: 11px;
+      border-radius: 2px;
+    }
   }
 }
 .formCaption {

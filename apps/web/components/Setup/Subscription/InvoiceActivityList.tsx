@@ -127,7 +127,7 @@ const InvoiceActivity: FC<P> = (p) => {
 
   const mappedData = useMemo(
     () =>
-      data?.smsPurchases.map((d) => ({
+      data?.smsPurchases?.map((d) => ({
         description: `${d.sms_amount} X SMS`,
         number: `#INV${d.id}`,
         amount: d.price.toFixed(2),
@@ -148,7 +148,7 @@ const InvoiceActivity: FC<P> = (p) => {
       setPaginateData((d) => ({
         ...d,
         total: totalCount,
-        showingRecords: data?.smsPurchases.length,
+        showingRecords: data?.smsPurchases?.length,
       }))
     }
   }, [data, totalCount])

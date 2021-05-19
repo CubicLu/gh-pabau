@@ -1,6 +1,7 @@
 import { FilePdfOutlined, PictureOutlined } from '@ant-design/icons'
 import { Button, ButtonTypes } from '@pabau/ui'
 import React, { FC } from 'react'
+import { useTranslation } from 'react-i18next'
 import styles from './MedicalFormBuilder.module.less'
 
 interface P {
@@ -8,6 +9,7 @@ interface P {
 }
 
 const MedicalFormUploadButtons: FC<P> = ({ onPreviewPdf }) => {
+  const { t } = useTranslation('common')
   const previewPdf = () => {
     onPreviewPdf?.()
   }
@@ -20,7 +22,7 @@ const MedicalFormUploadButtons: FC<P> = ({ onPreviewPdf }) => {
           className={styles.buttons}
           onClick={previewPdf}
         >
-          <FilePdfOutlined /> Upload PDF
+          <FilePdfOutlined /> {t('ui.medicalformbuilder.form.uploadpdf')}
         </Button>
       </div>
       <div className={styles.buttonPanel}>
@@ -29,7 +31,7 @@ const MedicalFormUploadButtons: FC<P> = ({ onPreviewPdf }) => {
           className={styles.buttons}
           onClick={previewPdf}
         >
-          <PictureOutlined /> Upload Images
+          <PictureOutlined /> {t('ui.medicalformbuilder.form.uploadimage')}
         </Button>
       </div>
     </div>

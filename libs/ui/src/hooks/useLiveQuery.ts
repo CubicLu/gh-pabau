@@ -18,6 +18,7 @@ export function useLiveQuery<T>(
   const { subscribeToMore, ...rest } = useQuery<T>(query, {
     ssr: false,
     skip: typeof window === 'undefined',
+    fetchPolicy: 'network-only',
     ...options,
   })
   // rest.

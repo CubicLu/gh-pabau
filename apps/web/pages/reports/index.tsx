@@ -71,6 +71,9 @@ interface EditResponseType {
 interface EditResponseType {
   upsertUserReportByReportCode: EditResponseType
 }
+const reportHref = {
+  ADV001: '/team/report',
+}
 
 const Reports: FC = () => {
   const { t } = useTranslationI18()
@@ -137,7 +140,7 @@ const Reports: FC = () => {
     if (searchTerm) {
       const searchDataArray = []
 
-      reportCardsData.map((data) => {
+      for (const data of reportCardsData) {
         const titles = data.reports
         if (titles?.length > 0) {
           for (const subTitle of titles) {
@@ -146,17 +149,25 @@ const Reports: FC = () => {
                 ? subTitle.reportName
                 : t(`setup.reports.${data.catHeading}.${subTitle.reportCode}`)
             if (reportName.toLowerCase().includes(searchTerm.toLowerCase())) {
+              let href
+              const reportCode = subTitle.reportCode
+              if (reportHref[reportCode]) {
+                href = reportHref[reportCode]
+              } else {
+                href =
+                  data.catHeading === 'Custom'
+                    ? `/reports/` + subTitle?.id?.toString()
+                    : `/reports/` + reportCode
+              }
               searchDataArray.push({
                 subTitle: reportName,
-                href: `/reports/` + subTitle.reportCode,
+                href: href,
                 isPermission: subTitle.isPermission,
               })
             }
-            return searchDataArray
           }
         }
-        return data
-      })
+      }
 
       setSearchData(searchDataArray)
     } else {
@@ -170,11 +181,13 @@ const Reports: FC = () => {
 
     for (const reportPermission of reportPermissions) {
       for (const item of temp) {
-        for (const report of item.reports) {
-          if (reportPermission?.Report?.report_code === report.reportCode) {
-            report.isPermission = true
-            if (reportPermission?.favorite) {
-              report.favourite = true
+        if (item.catHeading !== 'Custom') {
+          for (const report of item.reports) {
+            if (reportPermission?.Report?.report_code === report.reportCode) {
+              report.isPermission = true
+              if (reportPermission?.favorite) {
+                report.favourite = true
+              }
             }
           }
         }
@@ -199,12 +212,14 @@ const Reports: FC = () => {
 
         for (const reportPermission of reportPermissions) {
           for (const item of temp) {
-            for (const report of item.reports) {
-              if (
-                reportPermission?.Report?.report_code === report.reportCode &&
-                reportPermission?.favorite
-              ) {
-                report.favourite = true
+            if (item.catHeading !== 'Custom') {
+              for (const report of item.reports) {
+                if (
+                  reportPermission?.Report?.report_code === report.reportCode &&
+                  reportPermission?.favorite
+                ) {
+                  report.favourite = true
+                }
               }
             }
           }

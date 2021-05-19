@@ -37,16 +37,20 @@ const Index: FC = () => {
             buttonColor={buttonColor}
             informationMessage={informationMessage}
             type={type}
-            greeting={t('notifications.documnetshared.greeting')}
-            messageLine1={t('notifications.documnetshared.messageLine1')}
-            messageLine2={t('notifications.documnetshared.messageLine2')}
+            greeting={t('notifications.secureEmailTemplate.greeting')}
+            messageLine1={t('notifications.secureEmailTemplate.messageLine1')}
+            messageLine2={t('notifications.secureEmailTemplate.messageLine2')}
             userEmail={'info@theclinic.com'}
             userName={'Sophia'}
-            buttonName={t('notifications.documnetshared.buttonName')}
+            buttonName={t('notifications.secureEmailTemplate.buttonName')}
             clinicName={'Clinic'}
-            closingText={t('notifications.documnetshared.closingText')}
-            signatureBlock={t('notifications.documnetshared.signatureBlock')}
-            infoText={t('notifications.documnetshared.infoText')}
+            closingText={t('notifications.secureEmailTemplate.closingText')}
+            signatureBlock={t(
+              'notifications.secureEmailTemplate.signatureBlock'
+            )}
+            infoText={t('notifications.secureEmailTemplate.infoText')}
+            userMessage={t('notifications.secureEmailTemplate.userMessage')}
+            fromMessage={t('notifications.secureEmailTemplate.fromMessage')}
           />
         )
       }

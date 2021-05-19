@@ -1,28 +1,27 @@
-import React, { FC, useState } from 'react'
-import { Typography } from 'antd'
-import Layout from '../../../components/Layout/Layout'
+import { LeftOutlined } from '@ant-design/icons'
 import {
+  AvatarList,
   Breadcrumb,
+  Pagination,
   TabbedTable,
   Table,
-  AvatarList,
-  Pagination,
 } from '@pabau/ui'
-import { LeftOutlined } from '@ant-design/icons'
+import { Typography } from 'antd'
+import React, { FC, useState } from 'react'
 import AddButton from '../../../components/AddButton'
-import {
-  coursesData,
-  packageData,
-  employeeList,
-} from '../../../mocks/CoursesPackages'
+import Layout from '../../../components/Layout/Layout'
 import CreateCourse, {
   InitialCoursesProps,
 } from '../../../components/Setup/CoursesPackages/CreateCourse'
 import CreatePackage, {
   InitialPackagesProps,
 } from '../../../components/Setup/CoursesPackages/CreatePackage'
-import { useRouter } from 'next/router'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import {
+  coursesData,
+  employeeList,
+  packageData,
+} from '../../../mocks/CoursesPackages'
 import styles from './index.module.less'
 
 const { Title } = Typography
@@ -50,7 +49,7 @@ const packageFormikInitialValue: InitialPackagesProps = {
 
 export const Index: FC = () => {
   const { t } = useTranslationI18()
-  const router = useRouter()
+
   const onFilterSource = () => {
     return
   }
@@ -279,10 +278,6 @@ export const Index: FC = () => {
     setShowCreatePackageModal(true)
   }
 
-  const handleBack = () => {
-    router.push('/setup')
-  }
-
   return (
     <>
       <Layout>
@@ -294,12 +289,12 @@ export const Index: FC = () => {
                   { path: 'setup', breadcrumbName: t('sidebar.setup') },
                   {
                     path: '',
-                    breadcrumbName: t('setup.courses.title'),
+                    breadcrumbName: t('setup.courses-and-packages'),
                   },
                 ]}
               />
               <Title className={styles.hideMobileView}>
-                {t('setup.courses.title')}
+                {t('setup.courses-and-packages')}
               </Title>
             </div>
             <AddButton
@@ -314,8 +309,8 @@ export const Index: FC = () => {
           </div>
           <div className={styles.hideDesktopView}>
             <div className={styles.courseWrap}>
-              <LeftOutlined className={styles.leftIcon} onClick={handleBack} />
-              <h6>{t('setup.courses.title')}</h6>
+              <LeftOutlined className={styles.leftIcon} />{' '}
+              <h6>{t('setup.courses-and-packages')}</h6>
             </div>
             <AddButton
               onFilterSource={onFilterSource}
@@ -331,8 +326,8 @@ export const Index: FC = () => {
         <div className={styles.tableBackground}>
           <TabbedTable
             tabItems={[
-              t('setup.courses.tab.courses'),
-              t('setup.courses.tab.packages'),
+              t('setup.courses-and-packages.courses'),
+              t('setup.courses-and-packages.packages'),
             ]}
             onTabChange={handleTab}
           >

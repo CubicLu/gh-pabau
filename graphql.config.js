@@ -14,7 +14,7 @@ module.exports = {
           },
         },
       },
-      includes: ['hasura/schema.graphql', '{apps,libs}/**/*.graphql'],
+      includes: ['{apps,libs}/**/*.{tsx,ts,graphql}'],
     },
   },
 }

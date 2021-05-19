@@ -1,6 +1,7 @@
 import { CheckCircleFilled, ExclamationCircleOutlined } from '@ant-design/icons'
 import { Button, Col, Modal, Row, Tooltip } from 'antd'
 import React, { FC, ReactNode, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ReactComponent as ConsentSelected } from '../../assets/images/form-type/consent-selected.svg'
 import { ReactComponent as Consent } from '../../assets/images/form-type/consent.svg'
 import { ReactComponent as EPaperSelected } from '../../assets/images/form-type/file-pdf-selected.svg'
@@ -41,72 +42,44 @@ interface FormTypeInfo {
   }
 }
 
-const defaultTypeInfos: FormTypeInfo = {
-  medicalHistory: {
-    label: 'Medical History',
-    selected: false,
-    desc:
-      'A medical history form can be completed and updated multiple times, whilst retaining any previously completed information     ',
-    icon: <MedicalHistory />,
-    iconSelected: <MedicalHistorySelected />,
-  },
-  consent: {
-    label: 'Consent',
-    selected: false,
-    desc: 'A consent form requires a signature as part of the care pathway',
-    icon: <Consent />,
-    iconSelected: <ConsentSelected />,
-  },
-  treatmentForm: {
-    label: 'Treatment Form',
-    selected: false,
-    desc: 'A treatment form is usually completed at the end of a pathway',
-    icon: <Treatment />,
-    iconSelected: <TreatmentSelected />,
-  },
-  epaper: {
-    label: 'ePaper',
-    selected: false,
-    desc:
-      'ePaper allows you to either scan in a document or upload a PDF to draw directly onto the screen using a stylus or apple pencil',
-    icon: <EPaper />,
-    iconSelected: <EPaperSelected />,
-  },
-  presciption: {
-    label: 'Presciption',
-    selected: false,
-    desc: 'Presciption',
-    icon: <Presciption />,
-    iconSelected: <PresciptionSelected />,
-  },
-  labForm: {
-    label: 'Lab Form',
-    selected: false,
-    desc: 'Lab Form',
-    icon: <LabForm />,
-    iconSelected: <LabFormSelected />,
-  },
-}
-
 export const FormType: FC<FormTypeProps> = ({
   isEditing,
   setting,
   onChangeSetting,
 }) => {
+  const { t } = useTranslation('common')
+  const medicalHistoryLabel = t(
+    'ui.medicalformbuilder.form.type.medicalhistory'
+  )
+  const medicalHistoryDesc = t(
+    'ui.medicalformbuilder.form.type.medicalhistory.description'
+  )
+  const consentLabel = t('ui.medicalformbuilder.form.type.consent')
+  const consentDesc = t('ui.medicalformbuilder.form.type.consent.description')
+  const treatmentFormLabel = t('ui.medicalformbuilder.form.type.treatment')
+  const treatmentFormDesc = t(
+    'ui.medicalformbuilder.form.type.treatment.description'
+  )
+  const epaperLabel = t('ui.medicalformbuilder.form.type.epaper')
+  const epaperDesc = t('ui.medicalformbuilder.form.type.epaper.description')
+  const presciptionLabel = t('ui.medicalformbuilder.form.type.presciption')
+  const presciptionDesc = t(
+    'ui.medicalformbuilder.form.type.presciption.description'
+  )
+  const labFormLabel = t('ui.medicalformbuilder.form.type.lab')
+  const labFormDesc = t('ui.medicalformbuilder.form.type.lab.description')
+
   const aligns = [
     styles.formTypeStart,
     styles.formTypeCenter,
     styles.formTypeEnd,
   ]
-  const [formTypeInfo, setFormTypesInfo] = useState<FormTypeInfo>(
-    defaultTypeInfos
-  )
+  const [formTypeInfo, setFormTypesInfo] = useState<FormTypeInfo>({})
   const showWarningMessage = (name) => {
     confirm({
-      title: 'Warning',
+      title: t('ui.medicalformbuilder.form.message.warning'),
       icon: <ExclamationCircleOutlined />,
-      content:
-        'You are about to change the type of form. This will reset your data',
+      content: t('ui.medicalformbuilder.form.message.warning.change.message'),
       onOk() {
         goClickItem(name)
       },
@@ -143,15 +116,74 @@ export const FormType: FC<FormTypeProps> = ({
   }
 
   useEffect(() => {
+    const defaultTypeInfos: FormTypeInfo = {
+      medicalHistory: {
+        label: medicalHistoryLabel,
+        selected: false,
+        desc: medicalHistoryDesc,
+        icon: <MedicalHistory />,
+        iconSelected: <MedicalHistorySelected />,
+      },
+      consent: {
+        label: consentLabel,
+        selected: false,
+        desc: consentDesc,
+        icon: <Consent />,
+        iconSelected: <ConsentSelected />,
+      },
+      treatmentForm: {
+        label: treatmentFormLabel,
+        selected: false,
+        desc: treatmentFormDesc,
+        icon: <Treatment />,
+        iconSelected: <TreatmentSelected />,
+      },
+      epaper: {
+        label: epaperLabel,
+        selected: false,
+        desc: epaperDesc,
+        icon: <EPaper />,
+        iconSelected: <EPaperSelected />,
+      },
+      presciption: {
+        label: presciptionLabel,
+        selected: false,
+        desc: presciptionDesc,
+        icon: <Presciption />,
+        iconSelected: <PresciptionSelected />,
+      },
+      labForm: {
+        label: labFormLabel,
+        selected: false,
+        desc: labFormDesc,
+        icon: <LabForm />,
+        iconSelected: <LabFormSelected />,
+      },
+    }
     const typeInfo = { ...defaultTypeInfos }
     for (const key of Object.keys(setting)) {
       typeInfo[key].selected = setting[key]
     }
     setFormTypesInfo({ ...typeInfo })
-  }, [setting])
+  }, [
+    setting,
+    medicalHistoryLabel,
+    medicalHistoryDesc,
+    consentLabel,
+    consentDesc,
+    treatmentFormLabel,
+    treatmentFormDesc,
+    epaperLabel,
+    epaperDesc,
+    presciptionLabel,
+    presciptionDesc,
+    labFormLabel,
+    labFormDesc,
+  ])
+
   return (
     <div className={styles.formTypeContainer}>
-      <div className={styles.label}>Form Type</div>
+      <div className={styles.label}>{t('ui.medicalformbuilder.form.type')}</div>
       <Row>
         {Object.keys(formTypeInfo).map((key, index) => (
           <Col key={key} span={8} className={aligns[index % 3]}>

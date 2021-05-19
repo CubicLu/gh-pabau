@@ -9,9 +9,12 @@ export interface MedicalFormTypes {
   formType: string
   formName: string
   txtQuestion: string
+  txtQuestionWithTag: string
   txtBlock: string
+  txtBlockWithTag: string
   txtInputType: string
   txtDefaults: string
+  txtDefaultsWithTag: string
   txtLinkedField: string
   arrItems: OptionType[]
   required: boolean
@@ -54,9 +57,12 @@ export const defaultFormValue: MedicalFormTypes = {
   formType: '',
   formName: '',
   txtQuestion: '',
+  txtQuestionWithTag: '',
   txtBlock: '',
+  txtBlockWithTag: '',
   txtInputType: '',
   txtDefaults: '',
+  txtDefaultsWithTag: '',
   txtLinkedField: '',
   arrItems: [],
   required: false,

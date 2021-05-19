@@ -7,6 +7,7 @@ import { TabMenu, Breadcrumb, Button, Pagination } from '@pabau/ui'
 import { Card, Input, Popover, Radio, Select } from 'antd'
 import className from 'classnames'
 import { useMedia } from 'react-use'
+import { useRouter } from 'next/router'
 import {
   LeftOutlined,
   SearchOutlined,
@@ -37,6 +38,7 @@ export const Index: FC = () => {
   const [addCategoryModal, setAddCategoryModal] = useState(false)
 
   const isMobile = useMedia('(max-width: 768px)', false)
+  const router = useRouter()
 
   const filterContent = (isMobile = false) => (
     <div className="filterContent">
@@ -103,6 +105,10 @@ export const Index: FC = () => {
     }
   }
 
+  const handleBack = () => {
+    router.back()
+  }
+
   const CardHeader = (
     <div className={styles.header}>
       <div className="leftDiv">
@@ -116,7 +122,7 @@ export const Index: FC = () => {
         </div>
         <h3 className={styles.servicesHeading}>
           <span className="hidden-lg">
-            <LeftOutlined />
+            <LeftOutlined onClick={handleBack} />
           </span>{' '}
           Services
         </h3>

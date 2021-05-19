@@ -1,10 +1,12 @@
+import { notification } from 'antd'
 import React from 'react'
 import { HelpTooltip } from './HelpTooltip'
 import { Input } from './Input'
-import { notification } from 'antd'
+import { InputHtmlWithTags } from './InputHtmlWithTags'
+import { InputNumber } from './InputNumber'
+import { InputWithTags } from './InputWithTags'
 import { Passcode as PasscodeBox } from './Passcode'
 import { PasswordWithHelper as PasswordWithHelperBox } from './PasswordWithHelper'
-import { InputNumber } from './InputNumber'
 
 export default {
   component: Input,
@@ -77,4 +79,50 @@ InputNumberControl.args = {
   placeHolderText: 'Enter Number',
   value: 14.43,
   showCurrency: true,
+}
+
+const InputWithTagsStory = ({
+  placeholder,
+  value,
+  valueWithTag,
+  disabledTags,
+  ...rest
+}) => (
+  <InputWithTags
+    placeholder={placeholder}
+    value={value}
+    valueWithTag={valueWithTag}
+    disabledTags={disabledTags}
+    {...rest}
+  />
+)
+export const InputWithTagsControl = InputWithTagsStory.bind({})
+InputWithTagsControl.args = {
+  placeholder: '',
+  value: '',
+  valueWithTag: '',
+  disabledTags: [],
+}
+
+const InputHtmlWithTagsStory = ({
+  placeholder,
+  value,
+  valueWithTag,
+  disabledTags,
+  ...rest
+}) => (
+  <InputHtmlWithTags
+    placeholder={placeholder}
+    value={value}
+    valueWithTag={valueWithTag}
+    disabledTags={disabledTags}
+    {...rest}
+  />
+)
+export const InputHtmlWithTagsControl = InputHtmlWithTagsStory.bind({})
+InputHtmlWithTagsControl.args = {
+  placeholder: '',
+  value: '',
+  valueWithTag: '',
+  disabledTags: [],
 }
