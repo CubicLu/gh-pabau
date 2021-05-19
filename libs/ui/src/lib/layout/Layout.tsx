@@ -47,6 +47,7 @@ export interface LayoutProps {
   isDisplayingFooter?: boolean
   onMessageType?: (e: MouseEvent<HTMLElement>) => void
   legacyContent?: boolean
+  taskManagerIFrameComponent?: JSX.Element
 }
 
 export const Layout: FC<LayoutProps> = ({
@@ -68,6 +69,7 @@ export const Layout: FC<LayoutProps> = ({
   updateNotification,
   readAddMutation,
   user,
+  taskManagerIFrameComponent,
   ...rest
 }) => {
   const [collapsed, setCollapsed] = useState(true)
@@ -85,6 +87,7 @@ export const Layout: FC<LayoutProps> = ({
           onMessageType={onMessageType}
           notifications={notifications}
           relativeTime={relativeTime}
+          taskManagerIFrameComponent={taskManagerIFrameComponent}
           {...rest}
         />
         <AntLayout className={styles.headerMargin}>

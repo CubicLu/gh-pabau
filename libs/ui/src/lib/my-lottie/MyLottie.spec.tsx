@@ -5,7 +5,9 @@ import MyLottie from './MyLottie'
 
 describe('MyLottie', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<MyLottie />)
+    const { baseElement } = render(
+      <MyLottie options={{ animationData: [] }} height={500} width={500} />
+    )
     expect(baseElement).toBeTruthy()
   })
 })

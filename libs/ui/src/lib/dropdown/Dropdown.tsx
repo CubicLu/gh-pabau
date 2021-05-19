@@ -6,13 +6,14 @@ import {
   GlobalOutlined,
   InfoCircleOutlined,
   LeftOutlined,
+  LoadingOutlined,
   NotificationOutlined,
   PlaySquareOutlined,
   QuestionCircleOutlined,
   RightOutlined,
   UserOutlined,
 } from '@ant-design/icons'
-import { Avatar, Badge, Drawer, Image, Menu, Popover } from 'antd'
+import { Avatar, Badge, Drawer, Image, Menu, Popover, Spin } from 'antd'
 import classNames from 'classnames'
 import Link from 'next/link'
 import QueueAnim from 'rc-queue-anim'
@@ -30,6 +31,7 @@ export interface DropDownInterface {
   isOpen?: boolean
   onCloseDrawer?: () => void
   me?: UserProps
+  taskManagerIFrameComponent?: JSX.Element
 }
 
 interface UserProps {
@@ -50,6 +52,7 @@ interface CompanyDetails {
 export const Dropdown: FC<DropDownInterface> = ({
   isOpen,
   onCloseDrawer,
+  taskManagerIFrameComponent,
   ...rest
 }): JSX.Element => {
   const { t } = useTranslation('common')
@@ -106,6 +109,7 @@ export const Dropdown: FC<DropDownInterface> = ({
       <Menu.Item
         className={styles.dropdownMenu}
         style={{ borderBottom: '1px solid #F1F1F1' }}
+        onClick={() => onClickAvatarMenu('TaskManagerMenu')}
       >
         <div className={styles.dropdownHeader}>
           <TaskSVG />
@@ -302,6 +306,29 @@ export const Dropdown: FC<DropDownInterface> = ({
     </QueueAnim>
   )
 
+  const TaskManagerMenu = (
+    <QueueAnim interval={600}>
+      <Menu key="6" className={styles.avatarHelpMenu}>
+        <Menu.Item
+          className={styles.langSubDropdownMenu}
+          onClick={() => onClickAvatarMenu('Menu')}
+          style={{ height: '56px' }}
+        >
+          <div className={styles.langAlignContent}>
+            <LeftOutlined className="" />
+            <p className="">{t('avatar.task_manager')}</p>
+          </div>
+        </Menu.Item>
+        <div style={{ marginTop: '8px' }} />
+        {taskManagerIFrameComponent ? (
+          taskManagerIFrameComponent
+        ) : (
+          <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+        )}
+      </Menu>
+    </QueueAnim>
+  )
+
   const onClickAvatarMenu = (menuName: string) => {
     switch (menuName) {
       case 'Menu': {
@@ -328,6 +355,9 @@ export const Dropdown: FC<DropDownInterface> = ({
         setActiveMenuTitle('Select language')
 
         break
+      }
+      case 'TaskManager': {
+        setActiveMenuTitle('Task Manager')
       }
       // No default
     }
@@ -360,6 +390,9 @@ export const Dropdown: FC<DropDownInterface> = ({
         return LangMenu
 
         break
+      }
+      case 'TaskManagerMenu': {
+        return TaskManagerMenu
       }
       // No default
     }

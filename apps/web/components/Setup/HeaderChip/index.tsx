@@ -1,7 +1,6 @@
 import React, { useEffect, useState, FC, ReactElement } from 'react'
 import { SetupChip, useLiveQuery } from '@pabau/ui'
 import styles from '../../../pages/setup/Setup.module.less'
-import { useRouter } from 'next/router'
 import { gql } from '@apollo/client'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
@@ -34,9 +33,8 @@ export interface HeaderDataType {
 }
 
 const HeaderChip: FC = () => {
-  const router = useRouter()
   const handleChipClick = (url: string) => {
-    router.push(url)
+    window.open(url, '_blank')
   }
   const { t } = useTranslationI18()
   const data: HeaderDataType[] = [

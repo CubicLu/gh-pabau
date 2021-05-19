@@ -5,7 +5,7 @@ import Security from './Security'
 
 describe('Security', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Security percent={0} data={[]} />)
+    const { baseElement } = render(<Security />)
     expect(baseElement).toBeTruthy()
   })
 })
