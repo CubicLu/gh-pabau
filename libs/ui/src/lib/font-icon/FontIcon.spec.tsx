@@ -5,7 +5,13 @@ import FontIcon from './FontIcon'
 
 describe('FontIcon', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<FontIcon />)
+    const { baseElement } = render(
+      <FontIcon
+        onIconSelected={() => {
+          return true
+        }}
+      />
+    )
     expect(baseElement).toBeTruthy()
   })
 })

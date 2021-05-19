@@ -6,6 +6,7 @@ import useLogin from '../../hooks/authentication/useLogin'
 import Login from '../../pages/login'
 import Search from '../Search'
 import StickyPopout from '../StickyPopout/StickyPopout'
+import TaskManagerIFrame from '../TaskManagerIFrame/TaskManagerIFrame'
 
 const onMessageType = () => {
   //add mutation for send message textbox
@@ -55,6 +56,7 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
           onCreateChannel={onCreateChannel}
           onMessageType={onMessageType}
           legacyContent={!!legacyPage}
+          taskManagerIFrameComponent={<TaskManagerIFrame />}
           {...props}
         >
           {!legacyPage ? children : <Iframe urlPath={legacyPage} />}

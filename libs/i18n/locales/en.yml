@@ -2732,6 +2732,8 @@ en:
   setup.page.live.upcoming.webinar.count.me.label: 'Count me in'
   setup.page.webinar.modal.join.label: 'Join'
   setup.page.webinar.modal.register.label: 'Register'
+  iframe-incompatible: 'Unable to load content. Please update your browser.'
+  avatar.task_manager: 'Task Manager'
   rules.no-configured-message: 'No field rules are configured for this form'
   rules.configure-now: 'Configure Now'
   rules.rule-name: 'Rule name'
