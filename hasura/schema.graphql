@@ -83120,240 +83120,6 @@ type library_variance_fields {
 }
 
 """
-columns and relationships of "lms_slugs"
-"""
-type lms_slugs {
-  article_urls(
-    """JSON select path"""
-    path: String
-  ): jsonb
-  blogs(
-    """JSON select path"""
-    path: String
-  ): jsonb
-  created_date: timestamptz!
-  id: uuid!
-  slug: String!
-  videos(
-    """JSON select path"""
-    path: String
-  ): jsonb
-  webinar: String
-}
-
-"""
-aggregated selection of "lms_slugs"
-"""
-type lms_slugs_aggregate {
-  aggregate: lms_slugs_aggregate_fields
-  nodes: [lms_slugs!]!
-}
-
-"""
-aggregate fields of "lms_slugs"
-"""
-type lms_slugs_aggregate_fields {
-  count(columns: [lms_slugs_select_column!], distinct: Boolean): Int!
-  max: lms_slugs_max_fields
-  min: lms_slugs_min_fields
-}
-
-"""append existing jsonb value of filtered columns with new jsonb value"""
-input lms_slugs_append_input {
-  article_urls: jsonb
-  blogs: jsonb
-  videos: jsonb
-}
-
-"""
-Boolean expression to filter rows from the table "lms_slugs". All fields are combined with a logical 'AND'.
-"""
-input lms_slugs_bool_exp {
-  _and: [lms_slugs_bool_exp!]
-  _not: lms_slugs_bool_exp
-  _or: [lms_slugs_bool_exp!]
-  article_urls: jsonb_comparison_exp
-  blogs: jsonb_comparison_exp
-  created_date: timestamptz_comparison_exp
-  id: uuid_comparison_exp
-  slug: String_comparison_exp
-  videos: jsonb_comparison_exp
-  webinar: String_comparison_exp
-}
-
-"""
-unique or primary key constraints on table "lms_slugs"
-"""
-enum lms_slugs_constraint {
-  """unique or primary key constraint"""
-  LMS_slugs_pkey
-}
-
-"""
-delete the field or element with specified path (for JSON arrays, negative integers count from the end)
-"""
-input lms_slugs_delete_at_path_input {
-  article_urls: [String!]
-  blogs: [String!]
-  videos: [String!]
-}
-
-"""
-delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
-"""
-input lms_slugs_delete_elem_input {
-  article_urls: Int
-  blogs: Int
-  videos: Int
-}
-
-"""
-delete key/value pair or string element. key/value pairs are matched based on their key value
-"""
-input lms_slugs_delete_key_input {
-  article_urls: String
-  blogs: String
-  videos: String
-}
-
-"""
-input type for inserting data into table "lms_slugs"
-"""
-input lms_slugs_insert_input {
-  article_urls: jsonb
-  blogs: jsonb
-  created_date: timestamptz
-  id: uuid
-  slug: String
-  videos: jsonb
-  webinar: String
-}
-
-"""aggregate max on columns"""
-type lms_slugs_max_fields {
-  created_date: timestamptz
-  id: uuid
-  slug: String
-  webinar: String
-}
-
-"""aggregate min on columns"""
-type lms_slugs_min_fields {
-  created_date: timestamptz
-  id: uuid
-  slug: String
-  webinar: String
-}
-
-"""
-response of any mutation on the table "lms_slugs"
-"""
-type lms_slugs_mutation_response {
-  """number of rows affected by the mutation"""
-  affected_rows: Int!
-
-  """data from the rows affected by the mutation"""
-  returning: [lms_slugs!]!
-}
-
-"""
-on conflict condition type for table "lms_slugs"
-"""
-input lms_slugs_on_conflict {
-  constraint: lms_slugs_constraint!
-  update_columns: [lms_slugs_update_column!]!
-  where: lms_slugs_bool_exp
-}
-
-"""Ordering options when selecting data from "lms_slugs"."""
-input lms_slugs_order_by {
-  article_urls: order_by
-  blogs: order_by
-  created_date: order_by
-  id: order_by
-  slug: order_by
-  videos: order_by
-  webinar: order_by
-}
-
-"""primary key columns input for table: lms_slugs"""
-input lms_slugs_pk_columns_input {
-  id: uuid!
-}
-
-"""prepend existing jsonb value of filtered columns with new jsonb value"""
-input lms_slugs_prepend_input {
-  article_urls: jsonb
-  blogs: jsonb
-  videos: jsonb
-}
-
-"""
-select columns of table "lms_slugs"
-"""
-enum lms_slugs_select_column {
-  """column name"""
-  article_urls
-
-  """column name"""
-  blogs
-
-  """column name"""
-  created_date
-
-  """column name"""
-  id
-
-  """column name"""
-  slug
-
-  """column name"""
-  videos
-
-  """column name"""
-  webinar
-}
-
-"""
-input type for updating data in table "lms_slugs"
-"""
-input lms_slugs_set_input {
-  article_urls: jsonb
-  blogs: jsonb
-  created_date: timestamptz
-  id: uuid
-  slug: String
-  videos: jsonb
-  webinar: String
-}
-
-"""
-update columns of table "lms_slugs"
-"""
-enum lms_slugs_update_column {
-  """column name"""
-  article_urls
-
-  """column name"""
-  blogs
-
-  """column name"""
-  created_date
-
-  """column name"""
-  id
-
-  """column name"""
-  slug
-
-  """column name"""
-  videos
-
-  """column name"""
-  webinar
-}
-
-"""
 columns and relationships of "locations"
 """
 type locations {
@@ -85353,19 +85119,6 @@ type mutation_root {
   delete_library_installers_by_pk(id: Int!): library_installers
 
   """
-  delete data from the table: "lms_slugs"
-  """
-  delete_lms_slugs(
-    """filter the rows which have to be deleted"""
-    where: lms_slugs_bool_exp!
-  ): lms_slugs_mutation_response
-
-  """
-  delete single row from the table: "lms_slugs"
-  """
-  delete_lms_slugs_by_pk(id: uuid!): lms_slugs
-
-  """
   delete data from the table: "locations"
   """
   delete_locations(
@@ -85624,6 +85377,19 @@ type mutation_root {
   delete single row from the table: "purchase_order"
   """
   delete_purchase_order_by_pk(id: uuid!): purchase_order
+
+  """
+  delete data from the table: "read_notification"
+  """
+  delete_read_notification(
+    """filter the rows which have to be deleted"""
+    where: read_notification_bool_exp!
+  ): read_notification_mutation_response
+
+  """
+  delete single row from the table: "read_notification"
+  """
+  delete_read_notification_by_pk(id: uuid!): read_notification
 
   """
   delete data from the table: "resources"
@@ -86627,28 +86393,6 @@ type mutation_root {
   ): library
 
   """
-  insert data into the table: "lms_slugs"
-  """
-  insert_lms_slugs(
-    """the rows to be inserted"""
-    objects: [lms_slugs_insert_input!]!
-
-    """on conflict condition"""
-    on_conflict: lms_slugs_on_conflict
-  ): lms_slugs_mutation_response
-
-  """
-  insert a single row into the table: "lms_slugs"
-  """
-  insert_lms_slugs_one(
-    """the row to be inserted"""
-    object: lms_slugs_insert_input!
-
-    """on conflict condition"""
-    on_conflict: lms_slugs_on_conflict
-  ): lms_slugs
-
-  """
   insert data into the table: "locations"
   """
   insert_locations(
@@ -87089,6 +86833,28 @@ type mutation_root {
   ): purchase_order
 
   """
+  insert data into the table: "read_notification"
+  """
+  insert_read_notification(
+    """the rows to be inserted"""
+    objects: [read_notification_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: read_notification_on_conflict
+  ): read_notification_mutation_response
+
+  """
+  insert a single row into the table: "read_notification"
+  """
+  insert_read_notification_one(
+    """the row to be inserted"""
+    object: read_notification_insert_input!
+
+    """on conflict condition"""
+    on_conflict: read_notification_on_conflict
+  ): read_notification
+
+  """
   insert data into the table: "resources"
   """
   insert_resources(
@@ -87329,22 +87095,6 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: third_parties_on_conflict
   ): third_parties
-
-  """
-  insert data into the table: "user_list"
-  """
-  insert_user_list(
-    """the rows to be inserted"""
-    objects: [user_list_insert_input!]!
-  ): user_list_mutation_response
-
-  """
-  insert a single row into the table: "user_list"
-  """
-  insert_user_list_one(
-    """the row to be inserted"""
-    object: user_list_insert_input!
-  ): user_list
   login(password: String!, username: String!): String
   logout: Boolean
 
@@ -88705,68 +88455,6 @@ type mutation_root {
   ): library_installers
 
   """
-  update data of the table: "lms_slugs"
-  """
-  update_lms_slugs(
-    """append existing jsonb value of filtered columns with new jsonb value"""
-    _append: lms_slugs_append_input
-
-    """
-    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
-    """
-    _delete_at_path: lms_slugs_delete_at_path_input
-
-    """
-    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
-    """
-    _delete_elem: lms_slugs_delete_elem_input
-
-    """
-    delete key/value pair or string element. key/value pairs are matched based on their key value
-    """
-    _delete_key: lms_slugs_delete_key_input
-
-    """prepend existing jsonb value of filtered columns with new jsonb value"""
-    _prepend: lms_slugs_prepend_input
-
-    """sets the columns of the filtered rows to the given values"""
-    _set: lms_slugs_set_input
-
-    """filter the rows which have to be updated"""
-    where: lms_slugs_bool_exp!
-  ): lms_slugs_mutation_response
-
-  """
-  update single row of the table: "lms_slugs"
-  """
-  update_lms_slugs_by_pk(
-    """append existing jsonb value of filtered columns with new jsonb value"""
-    _append: lms_slugs_append_input
-
-    """
-    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
-    """
-    _delete_at_path: lms_slugs_delete_at_path_input
-
-    """
-    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
-    """
-    _delete_elem: lms_slugs_delete_elem_input
-
-    """
-    delete key/value pair or string element. key/value pairs are matched based on their key value
-    """
-    _delete_key: lms_slugs_delete_key_input
-
-    """prepend existing jsonb value of filtered columns with new jsonb value"""
-    _prepend: lms_slugs_prepend_input
-
-    """sets the columns of the filtered rows to the given values"""
-    _set: lms_slugs_set_input
-    pk_columns: lms_slugs_pk_columns_input!
-  ): lms_slugs
-
-  """
   update data of the table: "locations"
   """
   update_locations(
@@ -89351,6 +89039,32 @@ type mutation_root {
     _set: purchase_order_set_input
     pk_columns: purchase_order_pk_columns_input!
   ): purchase_order
+
+  """
+  update data of the table: "read_notification"
+  """
+  update_read_notification(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: read_notification_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: read_notification_set_input
+
+    """filter the rows which have to be updated"""
+    where: read_notification_bool_exp!
+  ): read_notification_mutation_response
+
+  """
+  update single row of the table: "read_notification"
+  """
+  update_read_notification_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: read_notification_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: read_notification_set_input
+    pk_columns: read_notification_pk_columns_input!
+  ): read_notification
 
   """
   update data of the table: "resources"
@@ -90976,7 +90690,9 @@ input type for updating data in table "notification_types"
 """
 input notification_types_set_input {
   description: String
+  destination: String
   id: uuid
+  name: String
   notification_type: notification_types_enum_enum
   permission_type: String
   title: String
@@ -90991,7 +90707,13 @@ enum notification_types_update_column {
   description
 
   """column name"""
+  destination
+
+  """column name"""
   id
+
+  """column name"""
+  name
 
   """column name"""
   notification_type
@@ -91013,11 +90735,10 @@ type notifications {
   created_at: timestamptz!
   destination: String
   id: uuid!
-  is_read(
+  loop(
     """JSON select path"""
     path: String
   ): jsonb
-  loop: Int
 
   """An object relationship"""
   notification_type: notification_types
@@ -91098,7 +90819,7 @@ type notifications_aggregate_fields {
 
 """append existing jsonb value of filtered columns with new jsonb value"""
 input notifications_append_input {
-  is_read: jsonb
+  loop: jsonb
   sent_to: jsonb
   variables: jsonb
 }
@@ -91119,10 +90840,10 @@ input notifications_bool_exp {
   created_at: timestamptz_comparison_exp
   destination: String_comparison_exp
   id: uuid_comparison_exp
-  is_read: jsonb_comparison_exp
-  loop: Int_comparison_exp
+  loop: jsonb_comparison_exp
   notification_type: notification_types_bool_exp
   order: Int_comparison_exp
+  read_by: read_notification_bool_exp
   sent_by: Int_comparison_exp
   sent_to: jsonb_comparison_exp
   type: uuid_comparison_exp
@@ -91142,7 +90863,7 @@ enum notifications_constraint {
 delete the field or element with specified path (for JSON arrays, negative integers count from the end)
 """
 input notifications_delete_at_path_input {
-  is_read: [String!]
+  loop: [String!]
   sent_to: [String!]
   variables: [String!]
 }
@@ -91151,7 +90872,7 @@ input notifications_delete_at_path_input {
 delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
 """
 input notifications_delete_elem_input {
-  is_read: Int
+  loop: Int
   sent_to: Int
   variables: Int
 }
@@ -91160,7 +90881,7 @@ input notifications_delete_elem_input {
 delete key/value pair or string element. key/value pairs are matched based on their key value
 """
 input notifications_delete_key_input {
-  is_read: String
+  loop: String
   sent_to: String
   variables: String
 }
@@ -91169,7 +90890,6 @@ input notifications_delete_key_input {
 input type for incrementing numeric columns in table "notifications"
 """
 input notifications_inc_input {
-  loop: Int
   order: Int
   sent_by: Int
 }
@@ -91181,10 +90901,10 @@ input notifications_insert_input {
   created_at: timestamptz
   destination: String
   id: uuid
-  is_read: jsonb
-  loop: Int
+  loop: jsonb
   notification_type: notification_types_obj_rel_insert_input
   order: Int
+  read_by: read_notification_arr_rel_insert_input
   sent_by: Int
   sent_to: jsonb
   type: uuid
@@ -91226,6 +90946,16 @@ type notifications_mutation_response {
 }
 
 """
+input type for inserting object relation for remote table "notifications"
+"""
+input notifications_obj_rel_insert_input {
+  data: notifications_insert_input!
+
+  """on conflict condition"""
+  on_conflict: notifications_on_conflict
+}
+
+"""
 on conflict condition type for table "notifications"
 """
 input notifications_on_conflict {
@@ -91239,10 +90969,10 @@ input notifications_order_by {
   created_at: order_by
   destination: order_by
   id: order_by
-  is_read: order_by
   loop: order_by
   notification_type: notification_types_order_by
   order: order_by
+  read_by_aggregate: read_notification_aggregate_order_by
   sent_by: order_by
   sent_to: order_by
   type: order_by
@@ -91257,7 +90987,7 @@ input notifications_pk_columns_input {
 
 """prepend existing jsonb value of filtered columns with new jsonb value"""
 input notifications_prepend_input {
-  is_read: jsonb
+  loop: jsonb
   sent_to: jsonb
   variables: jsonb
 }
@@ -91274,9 +91004,6 @@ enum notifications_select_column {
 
   """column name"""
   id
-
-  """column name"""
-  is_read
 
   """column name"""
   loop
@@ -91307,8 +91034,7 @@ input notifications_set_input {
   created_at: timestamptz
   destination: String
   id: uuid
-  is_read: jsonb
-  loop: Int
+  loop: jsonb
   order: Int
   sent_by: Int
   sent_to: jsonb
@@ -91353,9 +91079,6 @@ enum notifications_update_column {
 
   """column name"""
   id
-
-  """column name"""
-  is_read
 
   """column name"""
   loop
@@ -103128,49 +102851,6 @@ type subscription_root {
   library_installers_by_pk(id: Int!): library_installers
 
   """
-  fetch data from the table: "lms_slugs"
-  """
-  lms_slugs(
-    """distinct select on columns"""
-    distinct_on: [lms_slugs_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [lms_slugs_order_by!]
-
-    """filter the rows returned"""
-    where: lms_slugs_bool_exp
-  ): [lms_slugs!]!
-
-  """
-  fetch aggregated fields from the table: "lms_slugs"
-  """
-  lms_slugs_aggregate(
-    """distinct select on columns"""
-    distinct_on: [lms_slugs_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [lms_slugs_order_by!]
-
-    """filter the rows returned"""
-    where: lms_slugs_bool_exp
-  ): lms_slugs_aggregate!
-
-  """fetch data from the table: "lms_slugs" using primary key columns"""
-  lms_slugs_by_pk(id: uuid!): lms_slugs
-
-  """
   fetch data from the table: "locations"
   """
   locations(
@@ -104561,29 +104241,6 @@ type subscription_root {
 
   """fetch data from the table: "third_parties" using primary key columns"""
   third_parties_by_pk(id: uuid!): third_parties
-
-  """
-  fetch data from the table: "user_list"
-  """
-  user_list(
-    """distinct select on columns"""
-    distinct_on: [user_list_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [user_list_order_by!]
-
-    """filter the rows returned"""
-    where: user_list_bool_exp
-  ): [user_list!]!
-
-  """fetch data from the table: "user_list" using primary key columns"""
-  user_list_by_pk(id: numeric!): user_list
 }
 
 """
@@ -105529,82 +105186,6 @@ enum user_activities_log_status {
   Delete
   Disable
   Enable
-}
-
-"""
-columns and relationships of "user_list"
-"""
-type user_list {
-  admin: Boolean!
-  company: numeric!
-  first_name: String!
-  id: numeric!
-  last_name: String!
-}
-
-"""
-Boolean expression to filter rows from the table "user_list". All fields are combined with a logical 'AND'.
-"""
-input user_list_bool_exp {
-  _and: [user_list_bool_exp!]
-  _not: user_list_bool_exp
-  _or: [user_list_bool_exp!]
-  admin: Boolean_comparison_exp
-  company: numeric_comparison_exp
-  first_name: String_comparison_exp
-  id: numeric_comparison_exp
-  last_name: String_comparison_exp
-}
-
-"""
-input type for inserting data into table "user_list"
-"""
-input user_list_insert_input {
-  admin: Boolean
-  company: numeric
-  first_name: String
-  id: numeric
-  last_name: String
-}
-
-"""
-response of any mutation on the table "user_list"
-"""
-type user_list_mutation_response {
-  """number of rows affected by the mutation"""
-  affected_rows: Int!
-
-  """data from the rows affected by the mutation"""
-  returning: [user_list!]!
-}
-
-"""Ordering options when selecting data from "user_list"."""
-input user_list_order_by {
-  admin: order_by
-  company: order_by
-  first_name: order_by
-  id: order_by
-  last_name: order_by
-}
-
-"""
-select columns of table "user_list"
-"""
-enum user_list_select_column {
-  """column name"""
-  admin
-
-  """column name"""
-  company
-
-  """column name"""
-  first_name
-
-  """column name"""
-  id
-
-  """column name"""
-  last_name
 }
 
 scalar uuid
