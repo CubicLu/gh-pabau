@@ -1,0 +1,218 @@
+.screenColumn {
+  @media (max-width: 767px) {
+    display: block;
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+.onlineBookingContainer {
+  width: 100%;
+  background-color: white;
+}
+
+.onlineBookingHeader {
+  padding: 24px;
+  padding-bottom: 0px;
+  :global {
+    .ant-typography {
+      padding: 0;
+    }
+
+    .ant-breadcrumb {
+      padding: 0;
+      padding-bottom: 8px;
+    }
+  }
+}
+
+.getStarted {
+  padding: 20px;
+  padding-top: 0px;
+
+  .onlineBookingMonthContainer {
+    width: 100%;
+    border: 1px solid var(--border-color-base);
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+  }
+
+  .campaignContainer {
+    width: 100%;
+    border: 1px solid var(--border-color-base);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    margin-top: 20px;
+
+    div {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .icon {
+      height: 60px;
+      width: 60px;
+      border: 1px solid var(--border-color-base);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      img {
+        max-width: 100%;
+      }
+    }
+
+    .name {
+      margin: 0px 10px;
+    }
+  }
+
+  .bookingContainer {
+    width: 100%;
+    border: 1px solid var(--border-color-base);
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+
+    .item {
+      height: 30px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+
+      span {
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .bookingActivityContainer {
+    width: 100%;
+    border: 1px solid var(--border-color-base);
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+
+    .item {
+      min-height: 50px;
+      margin: 5px 0px;
+      display: flex;
+
+      .image {
+        height: 50px;
+        width: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .content {
+        display: flex;
+        flex: 1 1;
+        flex-direction: column;
+        justify-content: center;
+        padding-left: 10px;
+
+        .status {
+          color: #000;
+        }
+        .time {
+          margin-left: 15px;
+          color: #9292a3;
+        }
+        .description {
+          color: #9292a3;
+        }
+      }
+    }
+  }
+
+  .trendContainer {
+    width: 100%;
+    border: 1px solid var(--border-color-base);
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+
+    .item {
+      height: 40px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color-base);
+
+      .title {
+        margin: 0px 6px;
+        color: #000;
+      }
+      .total {
+        color: #000;
+      }
+      .percentage {
+        margin-left: 5px;
+      }
+      .percentageIncreasing {
+        color: #65cd98;
+      }
+      .percentageDecreasing {
+        color: #cf3a56;
+      }
+      .indicator {
+        margin-left: 12px;
+      }
+    }
+  }
+
+  .tipsContainer {
+    width: 100%;
+    border: 1px solid var(--border-color-base);
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+
+    .item {
+      width: 100%;
+      display: flex;
+      margin-bottom: 10px;
+      flex-direction: row;
+
+      .left {
+        height: 45px;
+        width: 45px;
+        background-color: #f5fafd;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .icon {
+          color: #55b2d3;
+          font-size: 22px;
+        }
+      }
+
+      .right {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        padding-left: 10px;
+
+        .title {
+          color: #000;
+        }
+        .description {
+          color: #9292a3;
+        }
+      }
+    }
+  }
+}
