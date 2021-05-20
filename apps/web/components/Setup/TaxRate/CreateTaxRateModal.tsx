@@ -117,8 +117,9 @@ export function CreateTaxRateModal(props: CreateTaxRateProps) {
           >
             <NumberInput
               size="large"
-              type="number"
               placeholder="20"
+              type="number"
+              step={'any'}
               addonAfter="%"
               min={0}
               max={100}

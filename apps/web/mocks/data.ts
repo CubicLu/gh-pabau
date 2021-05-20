@@ -568,8 +568,8 @@ export const reportCardsData = [
       },
       {
         id: 8,
-        reportCode: 'BETA',
-        reportName: 'BETA - Locations Report',
+        reportCode: 'CO089',
+        reportName: 'CO089 - Locations Report',
         isNew: false,
         favourite: false,
         isPermission: false,
@@ -827,8 +827,8 @@ export const reportCardsData = [
     reports: [
       {
         id: 0,
-        reportCode: 'NEX01',
-        reportName: 'NEX01 - Team Report',
+        reportCode: 'ADV001',
+        reportName: 'ADV001 - Team Report',
         isNew: true,
         favourite: false,
         isPermission: false,
@@ -879,8 +879,8 @@ export const reportCardsData = [
 
       {
         id: 6,
-        reportCode: 'BETA',
-        reportName: 'BETA - Staff Bookouts',
+        reportCode: 'ST078',
+        reportName: 'ST078 - Staff Bookouts',
         isNew: false,
         favourite: false,
         isPermission: false,
@@ -925,22 +925,6 @@ export const reportCardsData = [
         id: 11,
         reportCode: 'ST003',
         reportName: 'ST003 - Commission Report (Retail)',
-        isNew: false,
-        favourite: false,
-        isPermission: false,
-      },
-      {
-        id: 12,
-        reportCode: 'ST015',
-        reportName: 'ST015 - Staff Hours',
-        isNew: false,
-        favourite: false,
-        isPermission: false,
-      },
-      {
-        id: 13,
-        reportCode: 'ST035',
-        reportName: 'ST035 - Staff Days Off',
         isNew: false,
         favourite: false,
         isPermission: false,

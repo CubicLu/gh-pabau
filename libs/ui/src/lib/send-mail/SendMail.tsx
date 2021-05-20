@@ -5,9 +5,8 @@ import {
   PictureOutlined,
   SendOutlined,
   SmileOutlined,
-  TagsOutlined,
 } from '@ant-design/icons'
-import { Button } from '@pabau/ui'
+import { Button, InputHtmlWithTags, InputWithTags } from '@pabau/ui'
 import { Checkbox, Input, Popover, Select, Tag } from 'antd'
 import cn from 'classnames'
 import React, { FC, ReactNode, useEffect, useRef, useState } from 'react'
@@ -74,7 +73,7 @@ export const SendMail: FC<SendMailProps> = ({
   const [secure, setSecure] = useState(false)
   const [editCcList, setEditCcList] = useState(false)
   const [editBccList, setEditBccList] = useState(false)
-  const [focusSubject, setFocusSubject] = useState(false)
+  // const [focusSubject, setFocusSubject] = useState(false)
   const [focusSender, setFocusSender] = useState(false)
   const [focusMedicalForm, setFocusMedicalForm] = useState(false)
   const [receipients, setReceipients] = useState('')
@@ -255,6 +254,13 @@ export const SendMail: FC<SendMailProps> = ({
     }
   }, [draft, initialized])
 
+  const onMessageWithTagChange = (e) => {
+    // console.log('message =', e)
+  }
+  const onSubjectWithTagChange = (e) => {
+    handleChangeSubject(e)
+  }
+
   return (
     <div className={styles.sendMailContainer}>
       <div className={styles.sendToSelect} ref={toRef}>
@@ -367,7 +373,7 @@ export const SendMail: FC<SendMailProps> = ({
           </div>
         )}
       </div>
-      <div className={styles.subjectSelect}>
+      {/* <div className={styles.subjectSelect}>
         {(subject || focusSubject) && (
           <span className={styles.title}>Subject</span>
         )}
@@ -381,6 +387,17 @@ export const SendMail: FC<SendMailProps> = ({
         <div className={styles.subjectTemplateIcon}>
           <TagsOutlined />
         </div>
+      </div> */}
+      <div className={styles.subjectSelect}>
+        <InputWithTags
+          placeholder={'Subject'}
+          onChange={onSubjectWithTagChange}
+          value={''}
+          valueWithTag={''}
+          disabledTags={[]}
+          maxWidth={634}
+          maxHeight={32}
+        />
       </div>
       <div className={styles.senderSelect}>
         {(currentSender.email || focusSender) && (
@@ -417,7 +434,16 @@ export const SendMail: FC<SendMailProps> = ({
           ))}
         </Select>
       </div>
-      <div className={styles.messageInput}></div>
+      <div className={styles.messageInput}>
+        <InputHtmlWithTags
+          placeholder={''}
+          onChange={onMessageWithTagChange}
+          value={''}
+          valueWithTag={''}
+          disabledTags={[]}
+          maxWidth={672}
+        />
+      </div>
       <div className={styles.sendMailOperations}>
         <div>
           <Popover

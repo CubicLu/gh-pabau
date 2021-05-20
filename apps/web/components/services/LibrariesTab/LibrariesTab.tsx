@@ -1,8 +1,8 @@
-import React, { FC, useState, useEffect } from 'react'
 import { gql } from '@apollo/client'
-import { Row, Col } from 'antd'
-import { LibraryModal, LibraryCard, useLiveQuery } from '@pabau/ui'
-import styles from './library_tab.module.less'
+import { LibraryCard, LibraryModal, useLiveQuery } from '@pabau/ui'
+import { Col, Row } from 'antd'
+import React, { FC, useEffect, useState } from 'react'
+import styles from './LibraryTab.module.less'
 
 const LIST_QUERY = gql`
   query library_installers($limit: Int, $libLocation: String) {

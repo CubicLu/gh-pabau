@@ -2,6 +2,7 @@ import { MoreOutlined } from '@ant-design/icons'
 import { Button, ButtonTypes } from '@pabau/ui'
 import { Dropdown, Menu } from 'antd'
 import React, { FC } from 'react'
+import { useTranslation } from 'react-i18next'
 import styles from './MedicalFormBuilder.module.less'
 
 interface P {
@@ -20,6 +21,7 @@ const menu = (
 )
 
 const MedicalFormSetting: FC<P> = ({ clickCreateFormBtn }) => {
+  const { t } = useTranslation('common')
   const onClickBtn = () => {
     clickCreateFormBtn?.()
   }
@@ -31,7 +33,7 @@ const MedicalFormSetting: FC<P> = ({ clickCreateFormBtn }) => {
         className={styles.createButton}
         onClick={onClickBtn}
       >
-        Create Form
+        {t('ui.medicalformbuilder.form.create')}
       </Button>
       <Dropdown overlay={menu} placement="bottomRight" arrow>
         <Button type={ButtonTypes.default} className={styles.moreButton}>

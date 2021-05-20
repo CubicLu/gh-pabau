@@ -1,4 +1,5 @@
 import React, { FC } from 'react'
+import { useTranslation } from 'react-i18next'
 import conditionsIcon from '../../assets/images/medicalform_conditions.svg'
 import customCompanyIcon from '../../assets/images/medicalform_custom_company.svg'
 import customDobIcon from '../../assets/images/medicalform_custom_dob.svg'
@@ -31,134 +32,135 @@ interface P {
 }
 
 const LeftSidebarElement: FC<P> = ({ type, component, handlingClickLeft }) => {
+  const { t } = useTranslation('common')
   const componentInfos = [
     {
       component: 'basic_heading',
       type: { type },
       iconUrl: headingIcon,
       bgcolor: '#6383F1',
-      title: 'Heading',
-      desc: 'Create a heading for a section',
+      title: t('ui.medicalform.setting.component.heading.title'),
+      desc: t('ui.medicalform.setting.component.heading.description'),
     },
     {
       component: 'basic_shortanswer',
       type: { type },
       iconUrl: shortAnswerIcon,
       bgcolor: '#6383F1',
-      title: 'Short answer',
-      desc: 'Ask a question with a short answer',
+      title: t('ui.medicalform.setting.component.shortanswer.title'),
+      desc: t('ui.medicalform.setting.component.shortanswer.description'),
     },
     {
       component: 'basic_longanswer',
       type: { type },
       iconUrl: longAnswerIcon,
       bgcolor: '#6383F1',
-      title: 'Long answer',
-      desc: 'Ask a question with a long answer',
+      title: t('ui.medicalform.setting.component.longanswer.title'),
+      desc: t('ui.medicalform.setting.component.longanswer.description'),
     },
     {
       component: 'basic_textblock',
       type: { type },
       iconUrl: textBlockIcon,
       bgcolor: '#6383F1',
-      title: 'Text block',
-      desc: 'Add a paragraph without a question',
+      title: t('ui.medicalform.setting.component.textblock.title'),
+      desc: t('ui.medicalform.setting.component.textblock.description'),
     },
     {
       component: 'basic_singlechoice',
       type: { type },
       iconUrl: singleChoiceIcon,
       bgcolor: '#65CD98',
-      title: 'Single Choice',
-      desc: 'Ask for a single choice',
+      title: t('ui.medicalform.setting.component.singlechoice.title'),
+      desc: t('ui.medicalform.setting.component.singlechoice.description'),
     },
     {
       component: 'basic_multiplechoice',
       type: { type },
       iconUrl: multipleChoiceIcon,
       bgcolor: '#65CD98',
-      title: 'Multiple Choices',
-      desc: 'Ask for a several choices',
+      title: t('ui.medicalform.setting.component.multiplechoice.title'),
+      desc: t('ui.medicalform.setting.component.multiplechoice.description'),
     },
     {
       component: 'basic_dropdown',
       type: { type },
       iconUrl: dropdownIcon,
       bgcolor: '#65CD98',
-      title: 'Dropdown',
-      desc: 'A list of options that can be ticked',
+      title: t('ui.medicalform.setting.component.dropdown.title'),
+      desc: t('ui.medicalform.setting.component.dropdown.description'),
     },
     {
       component: 'basic_drawing',
       type: { type },
       iconUrl: drawingIcon,
       bgcolor: '#F78561',
-      title: 'Drawing',
-      desc: 'Draw on an image or a photo',
+      title: t('ui.medicalform.setting.component.drawing.title'),
+      desc: t('ui.medicalform.setting.component.drawing.description'),
     },
     {
       component: 'basic_staticimage',
       type: { type },
       iconUrl: drawingIcon,
       bgcolor: '#F78561',
-      title: 'Image',
-      desc: 'Show an image or a photo',
+      title: t('ui.medicalform.setting.component.staticimage.title'),
+      desc: t('ui.medicalform.setting.component.staticimage.description'),
     },
     {
       component: 'basic_signature',
       type: { type },
       iconUrl: signatureIcon,
       bgcolor: '#F78561',
-      title: 'Signature',
-      desc: 'Description',
+      title: t('ui.medicalform.setting.component.signature.title'),
+      desc: t('ui.medicalform.setting.component.signature.description'),
     },
     {
       component: 'basic_conditions',
       type: { type },
       iconUrl: conditionsIcon,
       bgcolor: '#FAAD14',
-      title: 'Medical Conditions',
-      desc: 'Description',
+      title: t('ui.medicalform.setting.component.conditions.title'),
+      desc: t('ui.medicalform.setting.component.conditions.description'),
     },
     {
       component: 'basic_drugs',
       type: { type },
       iconUrl: drugsIcon,
       bgcolor: '#FAAD14',
-      title: 'Drugs',
-      desc: 'Description',
+      title: t('ui.medicalform.setting.component.drugs.title'),
+      desc: t('ui.medicalform.setting.component.drugs.description'),
     },
     {
       component: 'basic_labtests',
       type: { type },
       iconUrl: labTestIcon,
       bgcolor: '#FAAD14',
-      title: 'Lab tests',
-      desc: 'Description',
+      title: t('ui.medicalform.setting.component.labtests.title'),
+      desc: t('ui.medicalform.setting.component.labtests.description'),
     },
     {
       component: 'basic_traveldestination',
       type: { type },
       iconUrl: travelDesctinationIcon,
       bgcolor: '#FAAD14',
-      title: 'Travel destination',
-      desc: 'Description',
+      title: t('ui.medicalform.setting.component.traveldestination.title'),
+      desc: t('ui.medicalform.setting.component.traveldestination.description'),
     },
     {
       component: 'basic_vaccinescheduler',
       type: { type },
       iconUrl: vaccineSchedulerIcon,
       bgcolor: '#FAAD14',
-      title: 'Vaccine scheduler',
-      desc: 'Description',
+      title: t('ui.medicalform.setting.component.vaccinescheduler.title'),
+      desc: t('ui.medicalform.setting.component.vaccinescheduler.description'),
     },
     {
       component: 'basic_vaccinehistory',
       type: { type },
       iconUrl: vaccineHistoryIcon,
       bgcolor: '#FAAD14',
-      title: 'Vaccine history',
-      desc: 'Description',
+      title: t('ui.medicalform.setting.component.vaccinehistory.title'),
+      desc: t('ui.medicalform.setting.component.vaccinehistory.description'),
     },
 
     {
@@ -166,96 +168,114 @@ const LeftSidebarElement: FC<P> = ({ type, component, handlingClickLeft }) => {
       type: { type },
       iconUrl: dobIcon,
       bgcolor: '#20BAB1',
-      title: 'Accepts email marketing',
-      desc: 'Clients can opt in to marketing',
+      title: t('ui.medicalform.setting.component.custom.emailmarketing.title'),
+      desc: t(
+        'ui.medicalform.setting.component.custom.emailmarketing.description'
+      ),
     },
     {
       component: 'custom_smsmarketing',
       type: { type },
       iconUrl: dobIcon,
       bgcolor: '#20BAB1',
-      title: 'Accepts SMS/Text marketing',
-      desc: 'Clients can opt in to marketing',
+      title: t('ui.medicalform.setting.component.custom.smsmarketing.title'),
+      desc: t(
+        'ui.medicalform.setting.component.custom.smsmarketing.description'
+      ),
     },
     {
       component: 'custom_phonecall',
       type: { type },
       iconUrl: dobIcon,
       bgcolor: '#20BAB1',
-      title: 'Phone calls',
-      desc: 'Clients can opt in to marketing',
+      title: t('ui.medicalform.setting.component.custom.phonecall.title'),
+      desc: t('ui.medicalform.setting.component.custom.phonecall.description'),
     },
     {
       component: 'custom_lettermarketing',
       type: { type },
       iconUrl: dobIcon,
       bgcolor: '#20BAB1',
-      title: 'Letter marketing',
-      desc: 'Clients can opt in to marketing',
+      title: t('ui.medicalform.setting.component.custom.lettermarketing.title'),
+      desc: t(
+        'ui.medicalform.setting.component.custom.lettermarketing.description'
+      ),
     },
     {
       component: 'custom_membershipnumber',
       type: { type },
       iconUrl: dobIcon,
       bgcolor: '#20BAB1',
-      title: 'Membership number',
-      desc: 'Clients can opt in to marketing',
+      title: t(
+        'ui.medicalform.setting.component.custom.membershipnumber.title'
+      ),
+      desc: t(
+        'ui.medicalform.setting.component.custom.membershipnumber.description'
+      ),
     },
     {
       component: 'custom_authorizationcode',
       type: { type },
       iconUrl: dobIcon,
       bgcolor: '#20BAB1',
-      title: 'Authorisation code',
-      desc: 'Clients can opt in to marketing',
+      title: t(
+        'ui.medicalform.setting.component.custom.authorizationcode.title'
+      ),
+      desc: t(
+        'ui.medicalform.setting.component.custom.authorizationcode.description'
+      ),
     },
     {
       component: 'custom_company',
       type: { type },
       iconUrl: customCompanyIcon,
       bgcolor: '#5991D2',
-      title: 'Company',
-      desc: 'Confirm a clients company',
+      title: t('ui.medicalform.setting.component.custom.company.title'),
+      desc: t('ui.medicalform.setting.component.custom.company.description'),
     },
     {
       component: 'custom_dob',
       type: { type },
       iconUrl: customDobIcon,
       bgcolor: '#88C65B',
-      title: 'Date of birth',
-      desc: 'Confirm a clients birth date',
+      title: t('ui.medicalform.setting.component.custom.dob.title'),
+      desc: t('ui.medicalform.setting.component.custom.dob.description'),
     },
     {
       component: 'custom_gender',
       type: { type },
       iconUrl: customGenderIcon,
       bgcolor: '#88C65B',
-      title: 'Gender',
-      desc: 'Confirm a clients gender',
+      title: t('ui.medicalform.setting.component.custom.gender.title'),
+      desc: t('ui.medicalform.setting.component.custom.gender.description'),
     },
     {
       component: 'custom_physicaladdress',
       type: { type },
       iconUrl: customPhyAddressIcon,
       bgcolor: '#88C65B',
-      title: 'Physical address',
-      desc: 'Confirm a clients physical address',
+      title: t('ui.medicalform.setting.component.custom.physicaladdress.title'),
+      desc: t(
+        'ui.medicalform.setting.component.custom.physicaladdress.description'
+      ),
     },
     {
       component: 'custom_referredby',
       type: { type },
       iconUrl: customReferIcon,
       bgcolor: '#88C65B',
-      title: 'Referred by',
-      desc: 'Where did they hear of you',
+      title: t('ui.medicalform.setting.component.custom.referredby.title'),
+      desc: t('ui.medicalform.setting.component.custom.referredby.description'),
     },
     {
       component: 'custom_telephonenumber',
       type: { type },
       iconUrl: customTelePhoneIcon,
       bgcolor: '#88C65B',
-      title: 'Telephone number',
-      desc: 'Confirm a clients telephone number',
+      title: t('ui.medicalform.setting.component.custom.telephonenumber.title'),
+      desc: t(
+        'ui.medicalform.setting.component.custom.telephonenumber.description'
+      ),
     },
   ]
 

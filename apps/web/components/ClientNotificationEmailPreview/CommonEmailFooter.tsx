@@ -1,6 +1,6 @@
-import React, { FC } from 'react'
 import { FooterProps } from '@pabau/ui'
-import { setSocialIcon } from './utils'
+import React, { FC } from 'react'
+import { setSocialIcon } from './Utils'
 
 export const CommonEmailFooter: FC<FooterProps> = ({
   iconGroup = true,

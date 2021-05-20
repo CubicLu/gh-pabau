@@ -6,15 +6,15 @@ import {
 } from '@ant-design/icons'
 import { MobileHeader, TabMenu } from '@pabau/ui'
 import { Button, Col, Row } from 'antd'
-import React, { FC } from 'react'
 import { useRouter } from 'next/router'
-import styles from './index.module.less'
-import useWindowSize from '../../../hooks/useWindowSize'
-import Layout from '../../../components/Layout/Layout'
+import React, { FC } from 'react'
 import Notification from '../../../components/Account/Settings/Notifications'
 import Profile from '../../../components/Account/Settings/Profile'
 import Security from '../../../components/Account/Settings/Security'
+import Layout from '../../../components/Layout/Layout'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import useWindowSize from '../../../hooks/useWindowSize'
+import styles from './index.module.less'
 
 const Index: FC = () => {
   const router = useRouter()

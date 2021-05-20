@@ -1,10 +1,10 @@
-import React, { FC, useState, useEffect } from 'react'
+import { RightOutlined, UsergroupAddOutlined } from '@ant-design/icons'
 import { Button } from '@pabau/ui'
 import { Form, Input as AntInput } from 'antd'
-import { UsergroupAddOutlined, RightOutlined } from '@ant-design/icons'
-import { ClientAreaShare, defaultShareData } from './ClientAreaSetting'
+import React, { FC, useEffect, useState } from 'react'
 import setupMedicalFormNewEPaper from '../../../assets/images/setup-medicalforms-new-epaper.png'
-import styles from './style.module.less'
+import { ClientAreaShare, defaultShareData } from './ClientAreaSetting'
+import styles from './Style.module.less'
 
 interface ClientAreaStepThreeProps {
   settings: ClientAreaShare

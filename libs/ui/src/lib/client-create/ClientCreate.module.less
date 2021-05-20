@@ -343,27 +343,12 @@
   display: flex;
   align-items: center;
   padding: 0 24px;
+  cursor: pointer;
   .drop-layout {
     display: none;
   }
   &:hover {
     background: #eeeeee;
-    .drop-layout {
-      display: flex;
-      align-items: center;
-      margin-right: 10px;
-      padding: 4px 2px;
-      cursor: pointer;
-      svg {
-        width: 11px;
-        height: 11px;
-      }
-    }
-    :global {
-      .anticon-tag {
-        display: none;
-      }
-    }
   }
   :global {
     .anticon-tag {
@@ -382,6 +367,24 @@
     font-size: 14px;
     padding: 0 10px;
     line-height: 40px;
+  }
+  .tagLayout:hover {
+    .drop-layout {
+      display: flex;
+      align-items: center;
+      margin-right: 10px;
+      padding: 4px 2px;
+      cursor: pointer;
+      svg {
+        width: 11px;
+        height: 11px;
+      }
+    }
+    :global {
+      .anticon-tag {
+        display: none;
+      }
+    }
   }
 }
 .tag-custom-wrap {

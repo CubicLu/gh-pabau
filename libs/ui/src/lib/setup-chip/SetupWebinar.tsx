@@ -2,6 +2,7 @@ import React, { FC } from 'react'
 import styles from './SetupChip.module.less'
 import { Button } from '@pabau/ui'
 import { PlayCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import { useTranslation } from 'react-i18next'
 
 interface WebinarProps {
   id?: string
@@ -24,6 +25,7 @@ export const Webinar: FC<WebinarProps> = ({
   isJoin,
   onClick,
 }) => {
+  const { t } = useTranslation('common')
   return (
     <div className={styles.webinarBannerEnd}>
       <div className={styles.webinarBox} style={{ marginTop: '12px' }}>
@@ -48,7 +50,7 @@ export const Webinar: FC<WebinarProps> = ({
                   icon={<PlayCircleOutlined />}
                   onClick={() => onClick?.('join', id)}
                 >
-                  Join class
+                  {t('setup.page.live.upcoming.webinar.join.class.label')}
                 </Button>
               </div>
             </div>
@@ -61,7 +63,7 @@ export const Webinar: FC<WebinarProps> = ({
                   icon={<PlusOutlined />}
                   onClick={() => onClick?.('register', id)}
                 >
-                  Count me in
+                  {t('setup.page.live.upcoming.webinar.count.me.label')}
                 </Button>
               </div>
             </div>

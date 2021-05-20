@@ -1,12 +1,18 @@
 import { DiffOutlined, SendOutlined, TagsOutlined } from '@ant-design/icons'
-import { Button, ChooseSMSTemplate, smsTemplateProps } from '@pabau/ui'
-import { Input as AntInput } from 'antd'
+import {
+  Button,
+  ChooseSMSTemplate,
+  InputWithTags,
+  smsTemplateProps,
+} from '@pabau/ui'
 import cn from 'classnames'
+import _ from 'lodash'
 import moment from 'moment'
 import React, { FC, useEffect, useState } from 'react'
+import { tagList } from '../merge-tag-modal/data'
 import styles from './SendSMS.module.less'
 
-const { TextArea } = AntInput
+const HANDLE_REGEX = /\[.+?]/g
 
 export interface SMSItem {
   date: string
@@ -33,13 +39,18 @@ export const SendSMS: FC<SendSMSProps> = ({
   templateList,
 }) => {
   const [openChooseTemplate, setOpenChooseTemplate] = useState(false)
+  const [triggerTagDlg, setTriggerTagDlg] = useState(false)
+  const [triggerEmpty, setTriggerEmpty] = useState(false)
+  const [triggerChangeValue, setTriggerChangeValue] = useState(false)
   const [text, setText] = useState('')
+  const [textWithTag, setTextWithTag] = useState('')
   const [count, setCount] = useState(0)
   const handleSend = () => {
     if (text.replace(/\n/g, '').length > 0) {
       setText('')
       setCount(0)
       onSend({ content: text, date: new Date(), direction: 'to' })
+      setTriggerEmpty(true)
     }
   }
 
@@ -52,6 +63,71 @@ export const SendSMS: FC<SendSMSProps> = ({
       onSaveDraft?.(text)
     }
   }, [text, onSaveDraft])
+
+  const onSmsWithTagChange = (e) => {
+    setText(e)
+    setCount(e.length)
+    setTriggerChangeValue(false)
+  }
+
+  const clearTriggerTagDlg = () => {
+    setTriggerTagDlg(false)
+  }
+
+  const clearTriggerEmpty = () => {
+    setTriggerEmpty(false)
+  }
+
+  const findTagInfo = (tag) => {
+    const findTag = Object.entries(tagList)
+      .map(([key, value], index) => {
+        const _index = value.items.findIndex((item) => item.tag === tag)
+        if (_index !== -1) {
+          return value.items[_index]
+        }
+        return false
+      })
+      .filter((item) => item)
+    return findTag.length > 0 ? findTag[0] : false
+  }
+
+  const findAndReplaceTag = (orgString) => {
+    let matchArr
+    let replaceTagInfos = {}
+
+    while ((matchArr = HANDLE_REGEX.exec(orgString)) !== null) {
+      const tagInfo = findTagInfo(matchArr[0])
+      let repalceTag = {}
+      repalceTag = tagInfo
+        ? {
+            [tagInfo.tag]:
+              '<button type="button" class="ant-btn ant-btn-primary ant-btn-sm"><-> ' +
+              tagInfo.name +
+              ' (' +
+              tagInfo.module +
+              ') ' +
+              '</button>',
+          }
+        : {
+            [matchArr[0]]:
+              '<button type="button" class="ant-btn ant-btn-danger ant-btn-sm" title="This tag does not exist or will not work with this type of form">' +
+              matchArr[0].substring(1, matchArr[0].length - 1) +
+              '</button>',
+          }
+      replaceTagInfos = { ...replaceTagInfos, ...repalceTag }
+    }
+
+    if (!_.isEmpty(replaceTagInfos)) {
+      const re = new RegExp(
+        '\\' + Object.keys(replaceTagInfos).join('|\\'),
+        'gi'
+      )
+      orgString = orgString.replace(re, function (matched) {
+        return replaceTagInfos[matched]
+      })
+    }
+    return orgString
+  }
 
   return (
     <>
@@ -71,7 +147,11 @@ export const SendSMS: FC<SendSMSProps> = ({
                       : styles.directionTo
                   )}
                 >
-                  {item.content}
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: findAndReplaceTag(item.content),
+                    }}
+                  />
                 </div>
               </div>
             ))}
@@ -82,7 +162,10 @@ export const SendSMS: FC<SendSMSProps> = ({
             <div className={styles.smsInputContentHeader}>
               <div>
                 <div className={styles.operations}>
-                  <div className={styles.operation}>
+                  <div
+                    className={styles.operation}
+                    onClick={() => setTriggerTagDlg((e) => !e)}
+                  >
                     <TagsOutlined />
                   </div>
                   <div
@@ -95,19 +178,25 @@ export const SendSMS: FC<SendSMSProps> = ({
                 <div className={styles.maxLengthText}>{`${count}/160`}</div>
               </div>
             </div>
-            <TextArea
-              rows={3}
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              maxLength={160}
-              showCount={{
-                formatter: ({ count, maxLength }) => {
-                  setCount(count)
-                  return `${count}/${maxLength}`
-                },
-              }}
-              onPressEnter={() => handleSend()}
-            />
+            <div className={styles.smsInputContentBody}>
+              <InputWithTags
+                placeholder={''}
+                onChange={onSmsWithTagChange}
+                value={''}
+                valueWithTag={textWithTag}
+                disabledTags={[]}
+                showTagButton={false}
+                triggerTagDlg={triggerTagDlg}
+                triggerEmpty={triggerEmpty}
+                triggerChangeValue={triggerChangeValue}
+                clearTriggerTagDlg={clearTriggerTagDlg}
+                clearTriggerEmpty={clearTriggerEmpty}
+                handleSend={handleSend}
+                maxLength={160}
+                maxWidth={364}
+                maxHeight={66}
+              />
+            </div>
           </div>
           <Button
             type="primary"
@@ -123,10 +212,14 @@ export const SendSMS: FC<SendSMSProps> = ({
         templateList={templateList}
         onSelectTemplate={(template) => {
           setText(template)
+          setTextWithTag(template)
+          setTriggerChangeValue(true)
           setOpenChooseTemplate(false)
         }}
         onChooseSmsTemplate={(template) => {
           setText(template.message)
+          setTextWithTag(template.message)
+          setTriggerChangeValue(true)
           setOpenChooseTemplate(false)
         }}
         onSearchTextChange={(searchText) => {

@@ -1,19 +1,19 @@
-import React, { useState } from 'react'
-import styles from './lead-setting.module.less'
-import classNames from 'classnames'
 import {
   ApiOutlined,
   CheckCircleOutlined,
   ProfileOutlined,
 } from '@ant-design/icons'
-import { Radio } from 'antd'
 import {
   BasicModal as Modal,
   ButtonTypes,
   Notification,
   NotificationType,
 } from '@pabau/ui'
+import { Radio } from 'antd'
+import classNames from 'classnames'
+import React, { useState } from 'react'
 import SendLeadDevloperModal from './lead-forms/SendLeadDevloperModal'
+import styles from './LeadSetting.module.less'
 
 export const LeadIntegration: React.FC = () => {
   const [captureLeadIntegrationStep, setCaptureLeadIntegrationStep] = useState(

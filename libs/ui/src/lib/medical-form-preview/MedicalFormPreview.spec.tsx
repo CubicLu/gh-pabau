@@ -12,6 +12,7 @@ describe('MedicalFormPreview', () => {
         step={1}
         stepData={[]}
         user={{ name: 'a', src: 'a', date: 'a', tags: ['a'] }}
+        visible={true}
       />
     )
     expect(baseElement).toBeTruthy()

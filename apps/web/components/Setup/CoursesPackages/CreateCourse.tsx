@@ -1,19 +1,19 @@
-import React, { FC, useState } from 'react'
+import { PictureOutlined, PlusOutlined } from '@ant-design/icons'
+import {
+  Button,
+  Employees,
+  FullScreenReportModal,
+  ImageSelectorModal,
+  OperationType,
+  SimpleDropdown,
+} from '@pabau/ui'
 import { Formik } from 'formik'
 import { Form, Input, InputNumber } from 'formik-antd'
-import {
-  FullScreenReportModal,
-  Employees,
-  SimpleDropdown,
-  OperationType,
-  Button,
-  ImageSelectorModal,
-} from '@pabau/ui'
+import React, { FC, useState } from 'react'
 import * as Yup from 'yup'
-import { TaxOption } from '../../../mocks/CoursesPackages'
-import { PlusOutlined, PictureOutlined } from '@ant-design/icons'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-import styles from './index.module.less'
+import { TaxOption } from '../../../mocks/CoursesPackages'
+import styles from './Index.module.less'
 
 const { TextArea } = Input
 export interface InitialCoursesProps {
@@ -50,17 +50,26 @@ const General: FC<GeneralTabProps> = ({ value, setFieldValue }) => {
         layout="vertical"
       >
         <div className={styles.generalSection}>
-          <h4>{t('setup.courses.course.general')}</h4>
-          <Form.Item label={t('setup.courses.course.general.name')} name="name">
+          <h4>{t('setup.course.general')}</h4>
+          <Form.Item label={t('setup.course.name')} name="name">
             <Input
               name="name"
               autoComplete="off"
-              placeholder={t('setup.courses.course.general.name.placeholder')}
+              placeholder={t('setup.course.name.placeholder')}
               size="large"
+              maxLength={30}
             />
           </Form.Item>
+          <SimpleDropdown
+            label={t('setup.course.category')}
+            size="large"
+            name="category"
+            placeHolderText={t('setup.course.category.placeholder')}
+            dropdownItems={TaxOption.map((item) => item || '')}
+            onSelected={(value) => setFieldValue('category', value)}
+          />
           <Form.Item
-            label={t('setup.courses.course.general.sessioncount')}
+            label={t('setup.course.session-count')}
             name="session_count"
           >
             <InputNumber
@@ -71,53 +80,33 @@ const General: FC<GeneralTabProps> = ({ value, setFieldValue }) => {
               size="large"
             />
           </Form.Item>
-          <Form.Item
-            label={t('setup.courses.course.general.description')}
-            name="description"
-          >
+          <Form.Item label={t('setup.course.description')} name="description">
             <TextArea
               rows={4}
               name="description"
-              placeholder={t(
-                'setup.courses.course.general.description.placeholder'
-              )}
+              placeholder={t('setup.course.description.placeholder')}
+              maxLength={150}
             />
           </Form.Item>
-          <Form.Item
-            label={t('setup.courses.course.general.price')}
-            name="price"
-          >
+          <Form.Item label={t('setup.course.price')} name="price">
             <InputNumber
               name="price"
               type="number"
               size="large"
-              placeholder={t('setup.courses.course.general.price.placeholder')}
+              placeholder={t('setup.course.price.placeholder')}
               value={value.price}
               onChange={(data) => setFieldValue('price', data)}
             />
           </Form.Item>
           <SimpleDropdown
-            label={t('setup.courses.course.general.tax')}
+            label={t('setup.course.tax')}
             name="tax"
             size="large"
-            placeHolderText={t('setup.courses.course.general.tax.placeholder')}
+            placeHolderText={t('setup.course.tax.placeholder')}
             dropdownItems={TaxOption.map((item) => item || '')}
             onSelected={(value) => setFieldValue('tax', value)}
           />
-          <SimpleDropdown
-            label={t('setup.courses.course.general.category')}
-            size="large"
-            name="category"
-            placeHolderText={t(
-              'setup.courses.course.general.category.placeholder'
-            )}
-            dropdownItems={TaxOption.map((item) => item || '')}
-            onSelected={(value) => setFieldValue('category', value)}
-          />
-          <Form.Item
-            label={t('setup.courses.course.general.image')}
-            name="image"
-          >
+          <Form.Item label={t('setup.course.image')} name="image">
             <div
               className={styles.createServiceImageContainer}
               style={{ backgroundImage: `url(${selectedImage})` }}
@@ -138,15 +127,12 @@ const General: FC<GeneralTabProps> = ({ value, setFieldValue }) => {
               size="middle"
               onClick={() => setShowImageSelector(true)}
             >
-              {t('setup.courses.course.general.image.choose')}
+              {t('setup.course.choose-from-library')}
             </Button>
           </Form.Item>
           <ImageSelectorModal
             visible={showImageSelector}
             initialSearch={value.name}
-            title={t('ui.imageselector.title')}
-            attachButtonText={t('ui.imageselector.attach')}
-            chooseButtonText={t('ui.imageselector.choose')}
             onOk={(image) => {
               setSelectedImage(image.source)
               setFieldValue('image', image.source)

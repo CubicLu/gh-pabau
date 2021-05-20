@@ -22,6 +22,8 @@ export interface LayoutProps {
   isDisplayingFooter?: boolean
   onMessageType?: (e: MouseEvent<HTMLElement>) => void
   legacyContent?: boolean
+  taskManagerIFrameComponent?: JSX.Element
+  requireAdminAccess?: boolean
 }
 
 export const Layout: FC<LayoutProps> = ({
@@ -37,6 +39,7 @@ export const Layout: FC<LayoutProps> = ({
   children,
   active,
   legacyContent = false,
+  taskManagerIFrameComponent,
   ...rest
 }) => {
   const [collapsed, setCollapsed] = useState(true)
@@ -48,6 +51,7 @@ export const Layout: FC<LayoutProps> = ({
           searchRender={searchRender}
           onCreateChannel={onCreateChannel}
           onMessageType={onMessageType}
+          taskManagerIFrameComponent={taskManagerIFrameComponent}
           {...rest}
         />
         <AntLayout className={styles.headerMargin}>

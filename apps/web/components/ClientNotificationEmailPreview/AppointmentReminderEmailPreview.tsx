@@ -1,6 +1,6 @@
-import React, { FC } from 'react'
-import { setSocialIcon } from './utils'
 import { TFunction } from 'i18next'
+import React, { FC } from 'react'
+import { setSocialIcon } from './Utils'
 
 interface P {
   requestConfirm?: boolean

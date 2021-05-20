@@ -1,9 +1,9 @@
-import React, { FC, useState, useEffect } from 'react'
+import { Badge, BasicModal, Button, PabauPlus, TabMenu } from '@pabau/ui'
+import React, { FC, useEffect, useState } from 'react'
 import { useMedia } from 'react-use'
-import { Badge, Button, TabMenu, BasicModal, PabauPlus } from '@pabau/ui'
-import { ClientAreaWidgets, defaultWidgetsData } from './ClientAreaSetting'
 import widgetModalImg from '../../../assets/images/widget-modal.png'
-import styles from './style.module.less'
+import { ClientAreaWidgets, defaultWidgetsData } from './ClientAreaSetting'
+import styles from './Style.module.less'
 
 interface ClientAreaStepTwoProps {
   settings: ClientAreaWidgets

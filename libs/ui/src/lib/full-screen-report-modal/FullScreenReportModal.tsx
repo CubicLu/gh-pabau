@@ -13,6 +13,7 @@ export enum OperationType {
   delete = 'delete',
   create = 'create',
   close = 'close',
+  cancel = 'cancel',
   assignee = 'assignee',
 }
 

@@ -18,6 +18,7 @@ export const ReportsPermissionTableStory: FC<ReportsPermissionTableProps> = ({
   ...args
 }) => (
   <ReportsPermissionTable
+    tableColumnName={'Reports Name'}
     dataSource={data}
     columns={columns}
     pageTitle={title}

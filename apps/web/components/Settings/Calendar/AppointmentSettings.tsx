@@ -3,7 +3,7 @@ import { Checkbox, Typography } from 'antd'
 import React, { FC } from 'react'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import AppointmentSettingsSkeleton from './AppointmentSettingsSkeleton'
-import styles from './calendar.module.less'
+import styles from './Calendar.module.less'
 
 const { Title } = Typography
 

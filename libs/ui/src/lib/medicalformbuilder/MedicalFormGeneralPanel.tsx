@@ -5,6 +5,7 @@ import {
   SelectedForms,
 } from '@pabau/ui'
 import React, { FC } from 'react'
+import { useTranslation } from 'react-i18next'
 import styles from './MedicalFormBuilder.module.less'
 import MedicalFormName from './MedicalFormName'
 
@@ -21,24 +22,28 @@ const MedicalFormGeneralPanel: FC<MedicalFormGeneralProps> = ({
   changeFormName,
   formName,
 }) => {
+  const { t } = useTranslation('common')
   const onChangeSetting = (setting) => {
     onSelectFormType(setting)
   }
   const onSelectServices = (services) => {
     console.log(services)
   }
-  const serviceOptions = ['Category', 'All inclusive']
+  const serviceOptions = [
+    t('ui.medicalformbuilder.form.service.category'),
+    t('ui.medicalformbuilder.form.service.all'),
+  ]
   const defaultServices = []
   return (
     <div className={styles.medicalFormGeneralPanel}>
       <MedicalFormName
         changeFormName={changeFormName}
-        label="Form name"
-        desc="Enter your form name"
+        label={t('ui.medicalformbuilder.form.name')}
+        desc={t('ui.medicalformbuilder.form.name.description')}
         name={formName}
       />
       <AddSuggestion
-        label="Which service should this form be used for?"
+        label={t('ui.medicalformbuilder.form.suggestion')}
         defaultSelected={defaultServices}
         options={serviceOptions}
         onChange={onSelectServices}

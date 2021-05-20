@@ -1,3 +1,4 @@
+import { FileAddOutlined } from '@ant-design/icons'
 import { DocumentNode, gql, useMutation } from '@apollo/client'
 import {
   BasicModal,
@@ -224,7 +225,8 @@ export function TaxRate({ listQuery, onCreateTaxRate }: TaxRateProps) {
           onRowClick={onRowClick}
           onAddTemplate={onCreateTaxRate}
           noDataText={t('setup.taxrate.notax')}
-          noDataBtnText={t('setup.taxrate.notaxadd')}
+          noDataBtnText={t('setup.taxrate.newbtn')}
+          noDataIcon={<FileAddOutlined />}
           rowKey="key"
           style={{ height: '100%' }}
           updateDataSource={onReorder}

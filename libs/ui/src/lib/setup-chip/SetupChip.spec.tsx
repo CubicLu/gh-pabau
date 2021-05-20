@@ -9,6 +9,9 @@ describe('SetupChip', () => {
       title: 'title',
       subTitle: 'subTitle',
       image: <EditOutlined />,
+      onClick: () => {
+        return true
+      },
     }
     const { baseElement } = render(<SetupChip {...props} />)
     expect(baseElement).toBeTruthy()

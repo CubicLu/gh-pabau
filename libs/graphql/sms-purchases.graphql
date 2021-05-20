@@ -1,29 +1,29 @@
-  query getSmsPurchases(
-    $isActive: Int = 1
-    $searchTerm: String = ""
-    $offset: Int = 0
-    $limit: Int = 10
+query getSmsPurchases(
+  $isActive: Int = 1
+  $searchTerm: String = ""
+  $offset: Int = 0
+  $limit: Int = 10
+) {
+  smsPurchases(
+    skip: $offset
+    take: $limit
+    orderBy: { date: desc }
+    where: {
+      status: { equals: $isActive }
+      OR: [{ AND: [{ purchase_type: { contains: $searchTerm } }] }]
+    }
   ) {
-    smsPurchases(
-      skip: $offset
-      take: $limit
-      orderBy: { date: desc }
-      where: {
-        status: { equals: $isActive }
-        OR: [{ AND: [{ purchase_type: { contains: $searchTerm } }] }]
-      }
-    ) {
-      __typename
-      id
-      user_id 
-      company_id
-      date 
-      sms_amount 
-      price 
-      profit 
-      purchase_type 
-      User {
-        full_name
-      }
+    __typename
+    id
+    user_id
+    company_id
+    date
+    sms_amount
+    price
+    profit
+    purchase_type
+    User {
+      full_name
     }
   }
+}

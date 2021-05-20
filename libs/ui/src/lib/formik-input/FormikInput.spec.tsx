@@ -6,7 +6,7 @@ import FormikInput from './FormikInput'
 
 describe('FormikInput', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<FormikInput />)
+    const { baseElement } = render(<FormikInput name={'Example name'}/>)
     expect(baseElement).toBeTruthy()
   })
 })

@@ -5,7 +5,7 @@ import ReportHelpSidebar from './ReportHelpSidebar'
 
 describe('ReportHelpSidebar', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<ReportHelpSidebar />)
+    const { baseElement } = render(<ReportHelpSidebar visible={true} />)
     expect(baseElement).toBeTruthy()
   })
 })

@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
-import styles from './lead-setting.module.less'
-import classNames from 'classnames'
 import { CheckCircleFilled, FilePdfOutlined } from '@ant-design/icons'
 import { Input } from '@pabau/ui'
 import confetti from 'canvas-confetti'
+import classNames from 'classnames'
+import React, { useEffect } from 'react'
+import styles from './LeadSetting.module.less'
 
 export const LeadResult: React.FC = () => {
   const randomInRange = (min, max) => {

@@ -8,12 +8,8 @@ describe('CreateRoom', () => {
     const { baseElement } = render(
       <CreateRoom
         visible={true}
-        employees={[]}
-        rooms={[]}
-        equipment={[]}
-        locations={[]}
         onClose={() => {
-          return
+          return true
         }}
       />
     )

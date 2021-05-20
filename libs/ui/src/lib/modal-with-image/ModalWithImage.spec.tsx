@@ -5,7 +5,20 @@ import ModalWithImage from './ModalWithImage'
 
 describe('ModalWithImage', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<ModalWithImage />)
+    const { baseElement } = render(
+      <ModalWithImage
+        visible={true}
+        title={'Example title'}
+        imageUrl={'image url example'}
+        description={['Example description']}
+        onCancel={() => {
+          return true
+        }}
+        onEnable={() => {
+          return true
+        }}
+      />
+    )
     expect(baseElement).toBeTruthy()
   })
 })

@@ -1,8 +1,8 @@
-import React, { FC, useState } from 'react'
-import { Typography, Input, Divider, Row, Col, DatePicker, Form } from 'antd'
 import { FileDoneOutlined } from '@ant-design/icons'
-import { TabMenu, Button } from '@pabau/ui'
-import Styles from './subscriptionComponents.module.less'
+import { Button, TabMenu } from '@pabau/ui'
+import { Col, DatePicker, Divider, Form, Input, Row, Typography } from 'antd'
+import React, { FC, useState } from 'react'
+import Styles from './SubscriptionComponents.module.less'
 
 const BillingInformation: FC = () => {
   const { Title, Paragraph, Link } = Typography

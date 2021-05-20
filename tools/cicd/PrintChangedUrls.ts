@@ -30,6 +30,7 @@ const childProcess = child_process.spawnSync('git', [
 ])
 const output = []
 const lines = childProcess.stdout.toString().split('\n')
+let fatalError = false
 
 for (const line of lines) {
   if (line.startsWith('apps/web/pages/')) {
@@ -63,6 +64,11 @@ for (const line of lines) {
     const namedExportFirst = ast.body
       .filter((e) => e.type === 'ExportNamedDeclaration')
       .find((e) => true)
+    if (!namedExportFirst) {
+      fatalError = true
+      console.error("FATAL: No export found in " + dirname(line) + "/**/*.stories.tsx - please add one ;)")
+      continue
+    }
     const namedExportRaw = (namedExportFirst as any).declaration
       .declarations?.[0]?.id.name
     const namedExport = dasherize(underscore(namedExportRaw))
@@ -70,6 +76,11 @@ for (const line of lines) {
       `<${myArgs[2]}/?path=/story/${storybookName}--${namedExport}|${storybookName}--${namedExport}>`
     )
   }
+}
+
+if (fatalError) {
+  console.log("Fatal errors exist, please fix before continuing.")
+  process.exit(1)
 }
 
 const deDuped = []
