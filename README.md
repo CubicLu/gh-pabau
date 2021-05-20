@@ -8,6 +8,7 @@
     - [Linux](#linux)
     - [vscode](#vscode)
     - [Common](#common)
+    - [Production](#production)
   - [Storybook](#storybook)
   - [Frontend](#frontend)
   - [Bridge](#bridge)
@@ -72,26 +73,25 @@ npm i -g yarn
 
 1. Install docker-compose 1.29 or later <https://docs.docker.com/compose/install/> `docker-compose -v`
 
-2. Install the Hasura CLI globally
+2. Install and launch Pabau1 (or ask Toshe to share his public MySQL)
 
-   ```bash
-   npm i -g hasura-cli
-   hasura update-cli --version v2.0.0-alpha.9
-   ```
-
-3. Copy `hasura/.env.SAMPLE` to `.env`
-
-4. Copy `apps/web/.env.SAMPLE` to `.env.local`
-
-5. Copy `apps/bridge-api/.env.SAMPLE` to `.env`
-
-   1. Now either install Pabau1 locally,
-   2. Or ask Toshe to share his public MySQL
-
-6. Create some bookmarks in your browser:
+3. Create some bookmarks in your browser:
    1. "Prisma" to <http://localhost:4000/graphql>
    2. "Hasura" to <http://localhost:8080>
    3. "Web" to <http://localhost:4200>
+
+### Production
+
+Some devs are still developing against production. To bring in changes from production to git, do the following:
+
+```bash
+yarn hasura:export:production
+DOTENV_FLOW_PATH=hasura NODE_ENV=production node -r dotenv-flow/config -e "require('child_process').execSync('hasura --project migrate create renameme --from-server --database-name default', {stdio: 'inherit'})"
+rm -rf hasura/metadata/
+DOTENV_FLOW_PATH=hasura NODE_ENV=production node -r dotenv-flow/config -e "require('child_process').execSync(`npx -p hasura-cli@v2.0.0-alpha.10 hasura --project hasura ${process.argv.splice(1).join(' ')}`, {stdio: 'inherit'})"
+git checkout master hasura/metadata/remote_schemas.yaml
+NODE_ENV=production HASURA_GRAPHQL_ADMIN_SECRET=madskills yarn apollo client:download-schema hasura/schema.graphql
+```
 
 ## Storybook
 

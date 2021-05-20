@@ -1,5 +1,4 @@
-.env
-apps/web/.env.local
+**/.env*.local
 package-lock.json
 apps/bridge-api/prisma/schema.yml
 
