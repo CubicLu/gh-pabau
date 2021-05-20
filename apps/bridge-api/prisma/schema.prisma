@@ -1051,14 +1051,14 @@ model MediaLlibraryAttachment {
 }
 
 model CancelReason {
-  id                        Int      @id @default(autoincrement())
+  id                        Int       @id @default(autoincrement())
   reason_name               String
-  company_id                Int      @map("occupier")
-  Company                   Company  @relation(fields: [company_id], references: [id])
+  company_id                Int       @map("occupier")
+  Company                   Company   @relation(fields: [company_id], references: [id])
   late_cancel               Int
   apply_cancellation_policy Int
-  created_at                DateTime
-  modified_at               DateTime
+  created_at                DateTime? @default(now())
+  modified_at               DateTime? @updatedAt
 
 
   @@index([company_id], name: "occupier")

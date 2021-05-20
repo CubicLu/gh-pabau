@@ -17,7 +17,6 @@ groups:
   Automation system:
     - automation_*
 
-
 # === TABLES === : Extra meta-data about our tables.
 # tables: { [table_name: string]: { scrub?: string[], name?: string, company_sql?: string }, prune_days?: number|string, importance?:'high'|'medium'|'low' }
 # scrub: List of field names (case-insensitive) to anonymise for GDPR purposes
@@ -677,7 +676,8 @@ tables:
         primary: true
       code:
         type: string
-        description: The short lowercase name of the sending provider eg "mandrill"
+        description:
+          The short lowercase name of the sending provider eg "mandrill"
           or "txtlocal"
         unique: true
       name:
@@ -743,8 +743,7 @@ tables:
       comm_recipient_id:
         type: int
         foreign_key_table_name: communications_recipients
-      hash:
-        hash
+      hash: hash
   cm_contacts_custom:
     name: Contacts custom fields
     prune_days: 90
@@ -786,7 +785,8 @@ tables:
         type: int
   medical_form_theme_settings:
     name: Medical Form (Theme Settings)
-    company_sql: SELECT medical_form_theme_settings.* FROM medical_form_theme_settings
+    company_sql:
+      SELECT medical_form_theme_settings.* FROM medical_form_theme_settings
       inner JOIN medical_form ON medical_form.id = medical_form_theme_settings.medical_form_id
       WHERE medical_form.occupier IN (___COMPANY_IDS___)
     fields:
@@ -3844,7 +3844,8 @@ tables:
         description: set to a NOW() when staff clicks to start a service
       date_end:
         type: int
-        description: set to NOW() when a checkin_queue is closed off - or if another
+        description:
+          set to NOW() when a checkin_queue is closed off - or if another
           service is started
       inv_product_id:
         type: int
@@ -3860,7 +3861,8 @@ tables:
         foreign_key_table_name: users
       been_before:
         type: int
-        description: true for been before, false for not been before. Populated directly
+        description:
+          true for been before, false for not been before. Populated directly
           from customer-checkin first screen
       date_start:
         type: int
@@ -3870,19 +3872,22 @@ tables:
         description: not too sure! ask James
       is_lunch:
         type: int
-        description: true if the queue item was a break or lunch. As to whether it
+        description:
+          true if the queue item was a break or lunch. As to whether it
           was a break or lunch, that is in the `name` field - "break" for break, "lunch"
           for lunch
       name:
         type: string
-        description: name of customer, as typed by the customer on checkin (or "break"
+        description:
+          name of customer, as typed by the customer on checkin (or "break"
           or "lunch")
       date_accepted:
         type: int
         description: set to NOW() when staff clicks to accept the next customer
       date_end:
         type: int
-        description: set to NOW() when the pos is loaded at end of services for a
+        description:
+          set to NOW() when the pos is loaded at end of services for a
           customer
       was_anyone:
         type: int
@@ -4157,7 +4162,8 @@ tables:
         type: int
         foreign_key_table_name: clockin_timesheets
         foreign_key_column_name: clock_id
-        description: Foreign Key for this table & Primary key of clockin_timesheets
+        description:
+          Foreign Key for this table & Primary key of clockin_timesheets
           table
       break_time_start:
         type: int
@@ -5657,7 +5663,8 @@ tables:
         type: int
         foreign_key_table_name: cm_staff_general
         foreign_key_column_name: ID
-        description: This is the `ID` from cm_staff_general (or $_GET[id] if you are
+        description:
+          This is the `ID` from cm_staff_general (or $_GET[id] if you are
           on index.php?p=staffs)
       pabau_id:
         type: int
@@ -9544,7 +9551,8 @@ tables:
         foreign_key_table_name: users
       fingerprint:
         type: string
-        description: raw data received from the FS-88 fp reader - just store this
+        description:
+          raw data received from the FS-88 fp reader - just store this
           and load it back into memory to be able to identify a human fingerprint
       enrolled:
         type: int
@@ -10659,7 +10667,8 @@ tables:
         type: int
       contract_type:
         type: string
-        description: as of contracts revision insurer_id can point to an employee
+        description:
+          as of contracts revision insurer_id can point to an employee
           too.
       active:
         type: int
@@ -11526,7 +11535,8 @@ tables:
         type: string
       allow_negative_qty:
         type: int
-        description: This is the check to allow negative quantity in stock for this
+        description:
+          This is the check to allow negative quantity in stock for this
           product
   inv_products_import_helper:
     migrate: false
@@ -12847,7 +12857,8 @@ tables:
         type: int
       request_status:
         type: int
-        description: -1 = Cancel; -2= Processing; 0 = Requested; 1 = Received; 2=Sent;
+        description:
+          -1 = Cancel; -2= Processing; 0 = Requested; 1 = Received; 2=Sent;
           3 Reviewed;
       request_lab_id:
         type: string
@@ -21172,7 +21183,8 @@ tables:
         type: int
       schedule_cover_length:
         type: int
-        description: In months, the period the vaccine will cover for (taken from
+        description:
+          In months, the period the vaccine will cover for (taken from
           the vaccine schedule)
       medical_record_id:
         type: int
@@ -21186,7 +21198,8 @@ tables:
         type: string
       source:
         type: string
-        description: This field is represents the source of the information for this
+        description:
+          This field is represents the source of the information for this
           schedule
       created_by:
         type: int
@@ -22790,7 +22803,6 @@ tables:
         type: int
         unique: true
   rota_shifts:
-
     fields:
       id:
         type: int
@@ -22864,4 +22876,3 @@ tables:
       company_id:
         type: int
         foreign_key_table_name: admin
-

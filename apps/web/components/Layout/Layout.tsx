@@ -7,6 +7,7 @@ import Login from '../../pages/login'
 import Search from '../Search'
 import StickyPopout from '../StickyPopout/StickyPopout'
 import TaskManagerIFrame from '../TaskManagerIFrame/TaskManagerIFrame'
+import { Unauthorized } from '../Unauthorized'
 
 const onMessageType = () => {
   //add mutation for send message textbox
@@ -17,7 +18,11 @@ const onCreateChannel = (name, description, isPrivate) => {
   console.log('onCreateChannel-- or another one', name, description, isPrivate)
 }
 
-const Layout: FC<LayoutProps> = ({ children, ...props }) => {
+const Layout: FC<LayoutProps> = ({
+  children,
+  requireAdminAccess = false,
+  ...props
+}) => {
   const [authenticated, user] = useLogin(false)
   const router = useRouter()
   const { data, error, loading } = useDisabledFeaturesQuery()
@@ -49,7 +54,9 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
     user &&
     localStorage?.getItem('token')
   ) {
-    return (
+    return requireAdminAccess && (!user?.admin || user?.admin === undefined) ? (
+      <Unauthorized />
+    ) : (
       <>
         <PabauLayout
           searchRender={() => <Search />}

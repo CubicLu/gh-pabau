@@ -856,8 +856,8 @@ export interface CancelReason {
   Company: Company;
   late_cancel: number;
   apply_cancellation_policy: number;
-  created_at: Date;
-  modified_at: Date;
+  created_at?: Date;
+  modified_at?: Date;
 }
 
 export interface Candidate {
