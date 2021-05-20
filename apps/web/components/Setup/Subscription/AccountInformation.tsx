@@ -1,16 +1,16 @@
-import React, { FC } from 'react'
-import { Card, Row, Col, Typography } from 'antd'
 import {
+  CheckOutlined,
+  FileTextOutlined,
   LinkOutlined,
   UserOutlined,
-  FileTextOutlined,
-  CheckOutlined,
 } from '@ant-design/icons'
-import { SubscriptionInfo, Avatar } from '@pabau/ui'
-import location from '../../../assets/images/icons/location.png'
+import { Avatar, SubscriptionInfo } from '@pabau/ui'
+import { Card, Col, Row, Typography } from 'antd'
+import React, { FC } from 'react'
 import profileImg from '../../../assets/images/icons/img.png'
+import location from '../../../assets/images/icons/location.png'
 import paymentTerminal from '../../../assets/images/icons/payment_terminal.png'
-import styles from './subscriptionComponents.module.less'
+import styles from './SubscriptionComponents.module.less'
 
 const AccountInformation: FC = () => {
   const { Text, Paragraph, Link } = Typography

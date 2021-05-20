@@ -1,13 +1,12 @@
 import React, { FC } from 'react'
-
-import Doting from './dots'
-import Donating from './donate'
-import Injecting from './injection'
-import Keying from './key'
-import Globing from './globe'
-import Teaming from './team'
-import Filing from './file'
-import Foldering from './folder'
+import Donating from './Donate'
+import Doting from './Dots'
+import Filing from './File'
+import Foldering from './Folder'
+import Globing from './Globe'
+import Injecting from './Injection'
+import Keying from './Key'
+import Teaming from './Team'
 
 const Index: FC = () => {
   return <div></div>

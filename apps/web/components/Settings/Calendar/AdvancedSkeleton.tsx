@@ -1,7 +1,7 @@
 import { Skeleton } from 'antd'
 import classNames from 'classnames'
 import React, { FC } from 'react'
-import styles from './calendar.module.less'
+import styles from './Calendar.module.less'
 import skeletonStyles from './skeleton.module.less'
 
 const AdvancedSkeleton: FC = () => {

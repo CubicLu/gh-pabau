@@ -1,8 +1,8 @@
-import React from 'react'
+import { ColorPicker, FieldType, RegistrationFields } from '@pabau/ui'
 import { Row, Select } from 'antd'
-import { ColorPicker, RegistrationFields, FieldType } from '@pabau/ui'
-import styles from './Lead-forms.module.less'
 import classNames from 'classnames'
+import React from 'react'
+import styles from './LeadForms.module.less'
 
 const { Option } = Select
 

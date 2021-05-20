@@ -1,11 +1,11 @@
+import { Logo } from '@pabau/ui'
 import React, { FC, useState } from 'react'
 import { ReactComponent as LoginImage } from '../assets/images/login.svg'
+import LoginMain from '../components/Auth/Login'
+import MoreWayAuthentication from '../components/Auth/MoreWayToAuthentication'
+import ResetPassword from '../components/Auth/ResetPassword'
+import TwoStepAuthentication from '../components/Auth/TwoStepAuthentication'
 import styles from './login.module.less'
-import { Logo } from '@pabau/ui'
-import LoginMain from '../components/Auth/login'
-import TwoStepAuthentication from '../components/Auth/twoStepAuthentication'
-import MoreWayAuthentication from '../components/Auth/moreWayToAuthentication'
-import ResetPassword from '../components/Auth/resetPassword'
 
 const Login: FC = () => {
   const [showPage, setShowPage] = useState<string>('login')

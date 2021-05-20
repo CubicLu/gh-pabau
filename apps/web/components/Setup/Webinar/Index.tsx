@@ -1,8 +1,7 @@
+import { Button, Webinar, WebinarModal, WebinarModalProps } from '@pabau/ui'
 import React, { FC, useState } from 'react'
-import { Webinar, Button, WebinarModal, WebinarModalProps } from '@pabau/ui'
-import styles from '../../../pages/setup/Setup.module.less'
-
 import backgroundImage from '../../../assets/images/user.png'
+import styles from '../../../pages/setup/setup.module.less'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const data = [

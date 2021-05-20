@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
-import styles from './Lead-forms.module.less'
 import { CheckCircleFilled } from '@ant-design/icons'
-import confetti from 'canvas-confetti'
 import { Input } from 'antd'
+import confetti from 'canvas-confetti'
+import React, { useEffect } from 'react'
+import styles from './LeadForms.module.less'
 
 const { TextArea } = Input
 

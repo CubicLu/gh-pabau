@@ -1,11 +1,11 @@
-import React, { FC, useRef, useState } from 'react'
 import { Notification, NotificationType } from '@pabau/ui'
-import Layout from '../../../components/Layout/Layout'
-import ClientNotification from '../../../components/ClientNotification/index'
+import React, { FC, useRef, useState } from 'react'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
-import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import ClientNotification from '../../../components/ClientNotification/Index'
 import InvoiceEmailPreview from '../../../components/ClientNotificationEmailPreview/InvoiceEmailPreview'
 import { sendEmailService } from '../../../components/ClientNotificationEmailPreview/sendEmailService'
+import Layout from '../../../components/Layout/Layout'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
   const [selectedTab, setSelectedTab] = useState<'emailPreview' | 'smsPreview'>(

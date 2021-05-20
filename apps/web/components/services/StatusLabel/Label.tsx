@@ -1,6 +1,6 @@
-import React, { FC } from 'react'
 import { Button } from '@pabau/ui'
-import styles from './label.module.less'
+import React, { FC } from 'react'
+import styles from './Label.module.less'
 
 export interface LP {
   type: string

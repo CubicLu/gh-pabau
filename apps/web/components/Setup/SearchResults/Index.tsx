@@ -1,11 +1,10 @@
-import React, { FC } from 'react'
-import { Card } from 'antd'
-import Highlighter from 'react-highlight-words'
-
 import { SetupEmptySearch } from '@pabau/ui'
-import styles from '../../../pages/setup/Setup.module.less'
-import { useRouter } from 'next/router'
+import { Card } from 'antd'
 import classNames from 'classnames'
+import { useRouter } from 'next/router'
+import React, { FC } from 'react'
+import Highlighter from 'react-highlight-words'
+import styles from '../../../pages/setup/setup.module.less'
 
 interface searchProps {
   subTitle: string

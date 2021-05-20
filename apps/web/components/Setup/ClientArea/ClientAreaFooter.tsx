@@ -1,7 +1,7 @@
-import React, { FC } from 'react'
+import { DownOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons'
 import { Button } from '@pabau/ui'
-import { LeftOutlined, RightOutlined, DownOutlined } from '@ant-design/icons'
-import styles from './style.module.less'
+import React, { FC } from 'react'
+import styles from './Style.module.less'
 
 interface ClientAreaFooterProps {
   step: number

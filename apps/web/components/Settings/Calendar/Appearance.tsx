@@ -15,7 +15,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import AppearanceSkeleton from './AppearanceSkeleton'
-import styles from './calendar.module.less'
+import styles from './Calendar.module.less'
 
 const { Title } = Typography
 

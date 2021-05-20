@@ -1,8 +1,8 @@
+import { Breadcrumb, Button, Notification, PhoneNumberInput } from '@pabau/ui'
+import { Input, Modal, Typography } from 'antd'
 import React, { FC, useState } from 'react'
-import { Typography, Input, Modal } from 'antd'
-import { Button, Breadcrumb, PhoneNumberInput, Notification } from '@pabau/ui'
+import ClientNotification from '../../components/ClientNotification/Index'
 import Layout from '../../components/Layout/Layout'
-import ClientNotification from '../../components/ClientNotification'
 import styles from './index.module.less'
 
 const { Title } = Typography

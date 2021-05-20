@@ -1,8 +1,8 @@
-import React, { FC, useEffect, useState } from 'react'
-import { Table, OrderDiscrepancy, useLiveQuery, Pagination } from '@pabau/ui'
 import { gql } from '@apollo/client'
-import styles from './productListComponents.module.less'
+import { OrderDiscrepancy, Pagination, Table, useLiveQuery } from '@pabau/ui'
+import React, { FC, useEffect, useState } from 'react'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import styles from './ProductListComponents.module.less'
 
 const LIST_QUERY = gql`
   query stock_take($offset: Int, $limit: Int) {

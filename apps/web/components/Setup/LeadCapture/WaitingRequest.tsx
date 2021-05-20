@@ -1,8 +1,8 @@
-import React from 'react'
-import styles from './lead-setting.module.less'
 import { Button } from '@pabau/ui'
-import { Progress, Image } from 'antd'
+import { Image, Progress } from 'antd'
+import React from 'react'
 import ErrorImage from '../../../assets/images/error.png'
+import styles from './LeadSetting.module.less'
 
 interface LeadTestWaitingInterface {
   progressStatus?: number

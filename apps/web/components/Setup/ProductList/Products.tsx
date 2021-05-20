@@ -1,33 +1,33 @@
-import React, { FC, useState, useEffect } from 'react'
-import { useWindowSize } from 'react-use'
-import { Dropdown, Menu } from 'antd'
 import {
-  Table,
-  useLiveQuery,
-  Pagination,
-  Notification,
-  NotificationType,
-  TabMenu,
-  BasicModal as CreateProductGroup,
-  ImageSelectorModal,
-  ButtonLabel,
-  SearchTags,
-  Input,
-  Button,
-  Switch,
-} from '@pabau/ui'
-import {
-  ShopOutlined,
+  CaretDownFilled,
+  DeleteOutlined,
   EditOutlined,
   PlusCircleFilled,
-  DeleteOutlined,
   PlusOutlined,
-  CaretDownFilled,
+  ShopOutlined,
 } from '@ant-design/icons'
 import { gql, useMutation } from '@apollo/client'
-import { updateTable } from './ProductListUtils'
+import {
+  BasicModal as CreateProductGroup,
+  Button,
+  ButtonLabel,
+  ImageSelectorModal,
+  Input,
+  Notification,
+  NotificationType,
+  Pagination,
+  SearchTags,
+  Switch,
+  Table,
+  TabMenu,
+  useLiveQuery,
+} from '@pabau/ui'
+import { Dropdown, Menu } from 'antd'
+import React, { FC, useEffect, useState } from 'react'
+import { useWindowSize } from 'react-use'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-import styles from './productListComponents.module.less'
+import styles from './ProductListComponents.module.less'
+import { updateTable } from './ProductListUtils'
 
 const LIST_QUERY = gql`
   query product_lists($offset: Int, $limit: Int, $isActive: Boolean = true) {
