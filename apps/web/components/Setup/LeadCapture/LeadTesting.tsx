@@ -1,17 +1,12 @@
-import React, { useState } from 'react'
-import styles from './lead-setting.module.less'
 // import classNames from 'classnames'
-import {
-  // ApiOutlined,
-  ArrowRightOutlined,
-  // CheckCircleOutlined,
-  // ProfileOutlined,
-} from '@ant-design/icons'
-import { Input, Button } from '@pabau/ui'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { ArrowRightOutlined } from '@ant-design/icons'
 import * as Icons from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Button, Input } from '@pabau/ui'
 import { Image } from 'antd'
+import React, { useState } from 'react'
 import PabauLogo from '../../../assets/images/logo.svg'
+import styles from './LeadSetting.module.less'
 import LeadTestWaiting from './WaitingRequest'
 
 interface LeadTestingInterface {

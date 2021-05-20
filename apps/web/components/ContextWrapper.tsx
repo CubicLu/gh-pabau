@@ -30,6 +30,7 @@ const ContextWrapper: FunctionComponent = ({ children }) => {
           admin
           company {
             id
+            remote_url
             details {
               company_name
               language

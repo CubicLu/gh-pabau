@@ -5,9 +5,7 @@ import Wizard from './Wizard'
 
 describe('Wizard', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(
-      <Wizard active={0} allSteps={2} stepperData={[]} />
-    )
+    const { baseElement } = render(<Wizard active={0} allSteps={2} />)
     expect(baseElement).toBeTruthy()
   })
 })

@@ -1,10 +1,10 @@
 en:
+  KEY: Text
   marketingsource-header-create.translation: 'Create Marketing Source'
   marketingsource-title: 'Marketing Sources'
-  marketingsource-name-textfield: Name
+  marketingsource-name-textfield: 'Name'
   marketingsource-name-placeholder: 'eg. Facebook'
   marketingsource-header-edit: 'Edit Marketing Source'
-  KEY: Text
   search.placeholder: 'Search clients or leads'
   avatar.balance: Balance
   avatar.account.settings: 'Account Settings'
@@ -38,6 +38,13 @@ en:
   james-testing-2: 'test two'
   james-test-3: 'Hello World!=)'
   login.title: 'Log In!!'
+  notifications.clientNotifications.menuItem.appointments: 'Appointments'
+  notifications.clientNotifications.menuItem.engagement: 'Engagement'
+  notifications.clientNotifications.menuItem.sharing: 'Sharing'
+  notifications.clientNotifications.menuItem.classes: 'Classes'
+  notifications.clientNotifications.menuItem.other: 'Other'
+  notifications.clientNotifications.messages.enabled: 'Enabled'
+  notifications.clientNotifications.messages.smartDelivery: 'Smart delivery'
   notifications.email.appointmentReminder.subject: 'Appointment Reminder Test'
   notifications.email.birthday.subject: 'Birthday Test'
   notifications.email.cancelAppointment.subject: 'Cancel Appointment Test'
@@ -64,10 +71,47 @@ en:
   notifications.email.rescheduleAppointment.subject: 'Reschedule Appointment Test'
   notifications.email.secureEmailTemplate.subject: 'Secure Email Template Test'
   notifications.email.waitList.subject: 'WaitList Test'
+  notifications.email.prescription.subject: 'Prescription Test'
+  notifications.email.note.subject: 'Note Test'
+  notifications.email.letters.subject: 'Letters Test'
+  notifications.email.labResults.subject: 'Lab Result Test'
   notifications.sms.send.successMessage: 'Test SMS sent'
   notifications.email.send.successMessage: 'Test Email sent'
   notifications.email.send.failedMessage: 'Test Email failed'
   notifications.emailPreview.footer.contactMessage: 'Or get in touch with us via Phone or Email:'
+  notifications.classBookedGroup.title: 'Booked onto class (group)'
+  notifications.medicalForms.title: 'Medical forms'
+  notifications.appointments.newAppointment.description: 'Automatically sends to clients when they book their appointment'
+  notifications.appointments.upcomingAppointmentReminder.description: 'Automatically sends to clients ahead of their appointment'
+  notifications.appointments.rescheduleAppointment.description: 'Automatically sends to clients when their appointment start time is changed'
+  notifications.appointments.requestFeedback.description: 'Automatically sends to clients when an appointment is checked out'
+  notifications.appointments.cancelAppointment.description: 'Automatically sends to clients when an appointment is cancelled'
+  notifications.appointments.noShowAppointment.description: 'Automatically sends to clients when an appointment is marked as no show'
+  notifications.appointments.waitList.description: 'Automatically sends to clients when an appointment slot becomes available'
+  notifications.classes.classBooked.description: "Automatically sends to clients when they're booked for a class"
+  notifications.classes.classBookedGroup.description: "Automatically sends to clients when they're booked for a class (group)"
+  notifications.classes.cancelledClassBooking.description: 'Automatically sends to clients when they cancel a class booking'
+  notifications.classes.classNoShowAppointment.description: "Automatically sends to clients when they don't show for a class"
+  notifications.classes.classRescheduled.description: 'Automatically sends to clients when a class is rescheduled'
+  notifications.classes.classReminder.description: 'Automatically sends a reminder to a client who has registered to a class'
+  notifications.classes.classSpotAvailable.description: 'Automatically sends to clients when a class slot becomes available'
+  notifications.engagement.referrals.description: 'The default email template you will send when someone is being referred into the business'
+  notifications.engagement.invoice.description: 'The default email template you will send with a clients invoice attached'
+  notifications.engagement.leadResponses.description: 'The default email template you will send to your lead when they submit their lead form'
+  notifications.engagement.giftVoucher.description: 'The default email template you will send when clients purchase a gift voucher'
+  notifications.engagement.outstandingInvoice.description: 'The default email template you will send with a clients Outstanding invoice attached'
+  notifications.other.packageSession.description: 'The default email template you will send when a client has used all their package sessions'
+  notifications.other.clinicEmailingTimeline.description: "The email you will send when you are emailing a client's timeline"
+  notifications.other.connectRegistration.description: 'The email the client receives when they register to your Online Booking portal'
+  notifications.other.emailAppointment.description: 'The email you will send if someone requested a list of their appointment history'
+  notifications.other.birthday.description: "The default email template you will send if it's a client's birthday"
+  notifications.Sharing.prescription.description: 'The email you will send when you email someone a copy of their prescription'
+  notifications.Sharing.note.description: 'The email you will send when you email someone a copy of their note'
+  notifications.Sharing.medicalForms.description: 'The email you will send when you email someone a copy of their medical form'
+  notifications.Sharing.letters.description: 'The email you will send when you email someone a copy of their letter'
+  notifications.Sharing.documentShared.description: 'The email you will send when you share a document with a client through Pabau Connect'
+  notifications.Sharing.labResults.description: 'The email you will send when your test result is arrive'
+  notifications.Sharing.secureEmailTemplate.description: 'The default secure email template which gets sent out via email'
   notifications.commonNotificationHeader.enableSettings: 'Enable settings'
   notifications.commonNotificationHeader.error: 'Invalid email address'
   notifications.commonNotificationHeader.enableReminderViaEmail: 'Enable reminders via email'
@@ -190,7 +234,7 @@ en:
   notifications.bookedOntoClass.appointmentDetailMessage: 'Your class appointment details'
   notifications.bookedOntoClass.regards: 'Kind regards,'
   notifications.bookedOntoClass.regardsName: 'Your friends at The Clinic'
-  notifications.noShowAppointment.title: 'No Show Appointment'
+  notifications.noShowAppointment.title: 'No-show Appointment'
   notifications.noShowAppointment.standardMessage: 'This notification automatically sends to clients the moment they missed an appointment'
   notifications.noShowAppointment.greeting: 'Hi, Anna'
   notifications.noShowAppointment.subTitle: 'Sorry you missed your appointment!'
@@ -305,25 +349,106 @@ en:
   notifications.referrals.buttonName: 'View Voucher'
   notifications.referrals.closingText: 'We look forward to seeing you soon!'
   notifications.referrals.signatureBlock: 'Your friends at The Clinic'
-  notifications.documnetshared.title: 'Document shared'
-  notifications.documnetshared.standardMessage: 'The email you will send when you share a document with a client through Pabau Connect'
-  notifications.documnetshared.greeting: 'Dear Sophia,'
-  notifications.documnetshared.messageLine1: 'You have received a new secure email'
-  notifications.documnetshared.messageLine2: 'Please click the link below to access:'
-  notifications.documnetshared.buttonName: 'View Document'
-  notifications.documnetshared.closingText: 'Kind regards,'
-  notifications.documnetshared.signatureBlock: 'The Clinic Team'
-  notifications.documnetshared.infoText: 'We''re required by EU law to send your personal information in an encrypted format. It is free to view and all you have to do is click on the link in the email below that reads "Click to read this secure email online". This will take you through to a secure page with ''Pabau''.'
-  notifications.documentshared.userMessage: 'User'
-  notifications.documentshared.fromMessage: 'From'
+  notifications.documentShared.title: 'Document shared'
+  notifications.documentShared.standardMessage: 'The email you will send when you share a document with a client through Pabau Connect'
+  notifications.documentShared.greeting: 'Dear Sophia,'
+  notifications.documentShared.messageLine1: 'You have received a new secure email'
+  notifications.documentShared.messageLine2: "View and download your document in your documents area of the 'Pabau Connect' app"
+  notifications.documentShared.buttonName: 'View Document'
+  notifications.documentShared.closingText: 'Kind regards,'
+  notifications.documentShared.signatureBlock: 'The Clinic Team'
+  notifications.documentShared.infoText: 'We''re required by EU law to send your personal information in an encrypted format. It is free to view and all you have to do is click on the link in the email below that reads "Click to read this secure email online". This will take you through to a secure page with ''Pabau''.'
+  notifications.documentShared.userMessage: 'User'
+  notifications.documentShared.fromMessage: 'From'
   notifications.secureEmailTemplate.title: 'Secure email template'
   notifications.secureEmailTemplate.standardMessage: 'The default secure email template which gets sent out via email'
+  notifications.secureEmailTemplate.greeting: 'Dear Sophia,'
+  notifications.secureEmailTemplate.messageLine1: 'You have received a new secure email'
+  notifications.secureEmailTemplate.messageLine2: 'Please click the link below to access:'
+  notifications.secureEmailTemplate.buttonName: 'View Document'
+  notifications.secureEmailTemplate.closingText: 'Kind regards,'
+  notifications.secureEmailTemplate.signatureBlock: 'The Clinic Team'
+  notifications.secureEmailTemplate.infoText: 'We''re required by EU law to send your personal information in an encrypted format. It is free to view and all you have to do is click on the link in the email below that reads "Click to read this secure email online". This will take you through to a secure page with ''Pabau''.'
+  notifications.secureEmailTemplate.userMessage: 'User'
+  notifications.secureEmailTemplate.fromMessage: 'From'
+  notifications.prescription.greeting: 'Hi Anna,'
+  notifications.prescription.messageLine1: 'You have received a new prescription'
+  notifications.prescription.messageLine2: "View and download your prescription in your appointment summary of the 'Pabau Connect' app."
+  notifications.prescription.buttonName: 'View Prescription'
+  notifications.prescription.closingText: 'Kind regards,'
+  notifications.prescription.signatureBlock: 'The Clinic Team'
+  notifications.prescription.infoText: 'We''re required by EU law to send your personal information in an encrypted format. It is free to view and all you have to do is click on the link in the email below that reads "Click to read this prescription online". This will take you through to a secure page with ''Pabau''.'
+  notifications.prescription.userMessage: 'User'
+  notifications.prescription.fromMessage: 'From'
+  notifications.prescription.title: 'Prescription'
+  notifications.prescription.standardMessage: 'The email you will send when you email someone a copy of their prescription'
+  notifications.note.greeting: 'Hi Carter,'
+  notifications.note.messageLine1: 'You have received a new note'
+  notifications.note.messageLine2: "View your note in your message centre of the 'Pabau Connect' app."
+  notifications.note.buttonName: 'View Message'
+  notifications.note.closingText: 'Kind regards,'
+  notifications.note.signatureBlock: 'The Clinic Team'
+  notifications.note.infoText: 'We''re required by EU law to send your personal information in an encrypted format. It is free to view and all you have to do is click on the link in the email below that reads "Click to read this note online". This will take you through to a secure page with ''Pabau''.'
+  notifications.note.userMessage: 'User'
+  notifications.note.fromMessage: 'From'
+  notifications.note.title: 'Note'
+  notifications.note.standardMessage: 'The email you will send when you email someone a copy of their note'
+  notifications.letters.greeting: 'Hi Shopia,'
+  notifications.letters.messageLine1: 'You have received a new letter'
+  notifications.letters.messageLine2: "View and download your letter in your appointment summary of the 'Pabau Connect' app."
+  notifications.letters.buttonName: 'View Letter'
+  notifications.letters.closingText: 'Kind regards,'
+  notifications.letters.signatureBlock: 'The Clinic Team'
+  notifications.letters.infoText: 'We''re required by EU law to send your personal information in an encrypted format. It is free to view and all you have to do is click on the link in the email below that reads "Click to read this letter online". This will take you through to a secure page with ''Pabau''.'
+  notifications.letters.userMessage: 'User'
+  notifications.letters.fromMessage: 'From'
+  notifications.letters.title: 'Letters'
+  notifications.letters.standardMessage: 'The email you will send when you email someone a copy of their letter'
+  notifications.labResults.greeting: 'Hi Anna,'
+  notifications.labResults.messageLine1: 'You have received a lab result'
+  notifications.labResults.messageLine2: "View and download your test results in your labs area of the 'Pabau Connect' app."
+  notifications.labResults.buttonName: 'View Lab Results'
+  notifications.labResults.closingText: 'Kind regards,'
+  notifications.labResults.signatureBlock: 'The Clinic Team'
+  notifications.labResults.infoText: 'We''re required by EU law to send your personal information in an encrypted format. It is free to view and all you have to do is click on the link in the email below that reads "Click to read this lab result online". This will take you through to a secure page with ''Pabau''.'
+  notifications.labResults.userMessage: 'User'
+  notifications.labResults.fromMessage: 'From'
+  notifications.labResults.title: 'Lab Results'
+  notifications.labResults.standardMessage: 'The email you will send when your test result is arrive'
   notifications.classRescheduled.title: 'Class rescheduled'
   notifications.classRescheduled.standardMessage: 'This notification automatically sends to clients when a class is rescheduled'
   notifications.classReminder.title: 'Reminder for classed'
   notifications.classReminder.standardMessage: 'This notification automatically sends a reminder to a client who has registered to a class'
   notifications.classNoShowAppointment.title: 'Missed A Class'
   notifications.classNoShowAppointment.standardMessage: 'This notification automatically sends to clients when they dont show for a class'
+  notifications.prescription.smsMessage: 'Dear Sophia!
+
+    Please find attached your file. If you have any questions do not hesitate to contact us at +44 000 987 507.
+
+    Kind regards,
+
+    The clinic Team'
+  notifications.note.smsMessage: 'Dear Sophia!
+
+    Please find attached your file. If you have any questions do not hesitate to contact us at +44 000 987 507.
+
+    Kind regards,
+
+    The clinic Team'
+  notifications.letters.smsMessage: 'Dear Sophia!
+
+    Please find attached your file. If you have any questions do not hesitate to contact us at +44 000 987 507.
+
+    Kind regards,
+
+    The clinic Team'
+  notifications.labResults.smsMessage: 'Dear Sophia!
+
+    Please find attached your file. If you have any questions do not hesitate to contact us at +44 000 987 507.
+
+    Kind regards,
+
+    The clinic Team'
   notifications.appointmentReminder.smsMessage: 'Hey Shopia,
 
 
@@ -516,30 +641,6 @@ en:
     As a loyal client, we would like to offer you 10% OFF for your next visit.
     Please find your voucher code below.
 
-    We look forward to seeing you soon!
-
-    Your friends at The Clinic'
-  notifications.requestFeedback.smsMessage: 'Hi Anna,
-
-    Thank you for visiting The Clinic, we hope you were happy with our services!
-
-    We would love to hear about your experience in the survey below. Your feedback helps us create a better experience for you and for all of our customers.'
-  notifications.rescheduledAppointment.smsMessage: 'Hi Shopia,
-
-
-    This is a confirmation to let you now we rescheduled your type class from 15/12/20 to 17/12/20.
-
-
-    We look forward to seeing you then!
-
-
-    kind Regards
-
-    The Clinic'
-  notifications.secureEmailTemplate.smsMessage: 'Dear Sophia!
-
-    Please find attached your file. If you have any questions do not hesitate to contact us at +44 000 987 507.
-
     Kind regards,
 
     The clinic Team'
@@ -552,7 +653,6 @@ en:
     +44 000 987 507
 
     info@theclinic.com'
-  ui.report-help-sidebar.payroll-title: payroll
   ui.report-help-sidebar.payroll-team-commission-title: 'Team Comission'
   ui.report-help-sidebar.payroll-team-commission-content: ui.report-help-sidebar.payroll-team-commission-content-en
   ui.report-help-sidebar.payroll-team-wages-title: 'Team Wages'
@@ -679,93 +779,6 @@ en:
   quickcreate.sms: SMS
   quickcreate.sale: Sale
   quickcreate.newsletter: Newsletter
-  quickCreate.client.modal.newContact: 'New Contact'
-  quickCreate.client.modal.cancel: 'Cancel'
-  quickCreate.client.modal.create: 'Create'
-  quickCreate.client.modal.tab.general: 'General'
-  quickCreate.client.modal.tab.gpDetails: 'GP Details'
-  quickCreate.client.modal.tab.customDetails: 'Custom Details'
-  quickCreate.client.modal.more: 'More'
-  quickCreate.client.modal.general: 'General'
-  quickCreate.client.modal.general.noLabel: 'No label'
-  quickCreate.client.modal.general.labels: 'labels'
-  quickCreate.client.modal.general.addLabels: 'Add to label'
-  quickCreate.client.modal.general.newLabel: 'New Label'
-  quickCreate.client.modal.general.salutation: 'Salutation'
-  quickCreate.client.modal.general.firstName: 'First Name'
-  quickCreate.client.modal.general.lastName: 'Last Name'
-  quickCreate.client.modal.general.firstName.placeHolder: 'Enter first name'
-  quickCreate.client.modal.general.lastName.placeHolder: 'Enter last name'
-  quickCreate.client.modal.general.gender: 'Gender'
-  quickCreate.client.modal.general.gender.other: 'Other'
-  quickCreate.client.modal.general.gender.male: 'Male'
-  quickCreate.client.modal.general.gender.female: 'Female'
-  quickCreate.client.modal.general.hearOption.label: 'How did you hear about us?'
-  quickCreate.client.modal.general.hearOption.selectOption: 'Select an option'
-  quickCreate.client.modal.general.hearOption.anythingHere: 'Anything here'
-  quickCreate.client.modal.general.date: 'Date of birth'
-  quickCreate.client.modal.general.preferredLanguage: 'Select preferred language'
-  quickCreate.client.modal.general.preferredLanguage.default: 'Use Provider Language (English)'
-  quickCreate.client.modal.general.contactInfo: 'Contact Info'
-  quickCreate.client.modal.general.email: 'Email'
-  quickCreate.client.modal.general.email.placeHolder: 'Enter email'
-  quickCreate.client.modal.general.mobilePhone: 'Mobile Phone'
-  quickCreate.client.modal.general.telephone: 'Telephone'
-  quickCreate.client.modal.general.subscription: 'Subscription'
-  quickCreate.client.modal.general.subscription.detail:
-    'When you ask a client to opt in, please do remind them that you will
-    always send information deemed to be critical'
-  quickCreate.client.modal.general.subscription.newsLetter: 'NewsLatter'
-  quickCreate.client.modal.general.subscription.sms: 'SMS'
-  quickCreate.client.modal.general.subscription.postal: 'Postal'
-  quickCreate.client.modal.general.subscription.phoneCalls: 'Phone Calls'
-  quickCreate.client.modal.general.addresses: 'Address'
-  quickCreate.client.modal.general.addresses.label: 'Addresses'
-  quickCreate.client.modal.general.addresses.placeHolder: 'Search Address'
-  quickCreate.client.modal.general.addresses.country: 'Country'
-  quickCreate.client.modal.general.addresses.country.placeHolder: 'Select country'
-  quickCreate.client.modal.general.addresses.city: 'City'
-  quickCreate.client.modal.general.addresses.city.placeHolder: 'Select City'
-  quickCreate.client.modal.general.addresses.postcode: 'Postcode'
-  quickCreate.client.modal.general.addresses.postcode.placeHolder: 'Select Postcode'
-  quickCreate.client.modal.general.thirdParty: 'Aesthetic Interests'
-  quickCreate.client.modal.general.thirdParty.whoResponsible: 'Who will be responsible for payments?'
-  quickCreate.client.modal.general.thirdParty.botox: 'Botox'
-  quickCreate.client.modal.general.thirdParty.laser: 'Laser'
-  quickCreate.client.modal.general.addLabel.duplicateError: 'Same Label already Exist'
-  quickCreate.validation.salutation.required: 'Salutation is required'
-  quickCreate.validation.firstName.required: 'First name is required'
-  quickCreate.validation.lastName.required: 'Last name is required'
-  quickCreate.validation.gender.required: 'Gender is required'
-  quickCreate.validation.hearOption.required: 'Hear option is required'
-  quickCreate.validation.preferredLanguage.required: 'Preferred Language is required'
-  quickCreate.validation.email.required: 'Email is required'
-  quickCreate.validation.address.required: 'Address is required'
-  quickCreate.validation.country.required: 'Country is required'
-  quickCreate.validation.city.required: 'City is required'
-  quickCreate.validation.postCode.required: 'Postcode is required'
-  quickCreate.validation.thirdPartyDetails.required: 'Third Party detail is required'
-  quickCreate.validation.email.validate: 'Please enter valid email'
-  quickCreate.validation.procedureType.required: 'Procedure type is required'
-  quickCreate.validation.treatmentInterestPage.required: 'Treatment interest page is required'
-  quickCreate.validation.title.required: 'Title is required'
-  quickCreate.validation.keyword.required: 'Keyword is required'
-  quickCreate.lead.modal.newLead: 'New Lead'
-  quickCreate.lead.modal.newLead.assigneeTitle: 'Assignee'
-  quickCreate.lead.modal.tab.general: 'General'
-  quickCreate.lead.modal.general.notes: 'Notes'
-  quickCreate.lead.modal.general.notes.placeholder: 'Note'
-  quickCreate.lead.modal.general.statisticCustom: 'Statistic *custom*'
-  quickCreate.lead.modal.general.procedureType: 'Procedure Type'
-  quickCreate.lead.modal.general.procedureType.placeholder: 'Enter Procedure Type'
-  quickCreate.lead.modal.general.title: 'Title'
-  quickCreate.lead.modal.general.title.placeholder: 'Enter Title'
-  quickCreate.lead.modal.general.keyword: 'Keyword'
-  quickCreate.lead.modal.general.keyword.placeholder: 'Enter keyword'
-  quickCreate.lead.modal.general.treatmentInterestPage: 'Treatment interest page'
-  quickCreate.lead.modal.general.treatmentInterestPage.placeholder: 'Select Treatment interest'
-  quickCreate.lead.modal.general.addEmployee: 'Add Employee'
-  quickCreate.lead.modal.general.selectEmployee: 'Select Employee'
   chat.header: Chat
   chat.channel: Channel
   chat.chats: Chats
@@ -820,6 +833,23 @@ en:
   sidebar.contacts.clients: Clients
   sidebar.contacts.casemanager: 'Case Manager'
   sidebar.setup: Setup
+  setup.courses-and-packages: 'Courses & Packages'
+  setup.courses-and-packages.courses: 'Courses'
+  setup.courses-and-packages.packages: 'Packages'
+  setup.course.general: 'General'
+  setup.course.name: 'Course name'
+  setup.course.name.placeholder: 'Enter course name'
+  setup.course.category: 'Category'
+  setup.course.category.placeholder: 'Select a category'
+  setup.course.session-count: 'Session count'
+  setup.course.description: 'Description'
+  setup.course.description.placeholder: 'Enter description'
+  setup.course.price: 'Price'
+  setup.course.price.placeholder: '£0.00'
+  setup.course.tax: 'Tax'
+  setup.course.tax.placeholder: 'Select tax'
+  setup.course.image: 'Image'
+  setup.course.choose-from-library: 'Choose from library'
   ui.sms-purchase-modal.purchase: 'Purchase'
   ui.sms-purchase-modal.settings: 'Settings'
   ui.sms-purchase-modal.settings_description: 'Some description'
@@ -875,7 +905,8 @@ en:
   setup.discount.data.consultation: Consultation
   setup.discount.data.cooltech: Cooltech
   setup.discount.data.cooltech+accentprime: 'Cooltech + Accent Prime'
-  setup.discount.data.dermalux: Dermalux
+  ui.report-help-sidebar.payroll-title: payroll
+  setup.discount.data.dermalux: 'Dermalux'
   setup.discount.data.londonroad,london,england: 'London Road, London, England'
   setup.discount.data.loremstreet,liverpool,england: 'Lorem Street, Liverpool, England'
   setup.discount.data.jeffhackley: 'Jeff Hackley'
@@ -924,8 +955,8 @@ en:
   setup.discount.data.codematch: 'code should be letters, numbers and special characters'
   setup.discount.data.typerequired: 'Type is required'
   setup.discount.data.editdiscount: 'Edit Discount'
-  setup.discount.data.general: General
-  'setup.discount.data.services&locations': 'Services & Locations'
+  setup.discount.data.general: 'General'
+  setup.discount.data.services&locations: 'Services & Locations'
   setup.discount.data.employees: Employees
   setup.discount.data.employeesubtitle: 'Choose which team members would requred access to this location'
   setup.discount.data.deletediscounttitle: 'Delete Discount?'
@@ -1022,113 +1053,17 @@ en:
   setup.developer.salutations: Salutations
   setup.developer.training: 'Training titles'
   setup.developer.titles: Titles
-  setup.developer.photo: Photo Uploader
-  setup.developer.cancellation: Cancellation Reasons
-  setup.developer.lead.views: Lead views
-  setup.developer.lead.group: Lead groups
-  setup.developer.lead.assignment: Lead assignment rules
-  setup.developer.family: Family relationships
-  setup.developer.doc: Doc label manager
-  setup.developer.invoice.distribution: Invoice distribution
-  setup.developer.issuing.companies: Issuing companies
-  setup.developer.job.status: Job statues
-  setup.developer.supplier.categories: Supplier categories
-
-  settings.calendar.title: Calendar settings
-  settings.calendar.breadcrumb.setup: Setup
-  settings.calendar.breadcrumb.title: Calendar Settings
-  settings.calendar.success.notification: 'Success! - We have saved your calendar settings changes.'
-  settings.calendar.error.notification: 'Error! Something went wrong.'
-  settings.calendar.save.button: Save Changes
-  settings.calendar.configuration.title: Configuration
-  settings.calendar.configuration.subtitle: Configure your calendars start and end time, as well as setting how big your appointment time slots are.
-  settings.calendar.configuration.input.slotsize: Time slot size
-  settings.calendar.configuration.input.starttime: Start time
-  settings.calendar.configuration.input.endtime: End time
-  settings.calendar.configuration.input.autolock: Auto lock
-  settings.calendar.configuration.input.placeholder: Please select
-  settings.calendar.configuration.input.minutes: 'minutes'
-  settings.calendar.configuration.input.hours: 'hours'
-  settings.calendar.appointment.title: Appointment settings
-  settings.calendar.appointment.subtitle: Setup your calendar to automatically have your communication checkbox selected as well as allowing your appointments to overlap.
-  settings.calendar.appointment.input.overlap.label: Allow appointment overlap
-  settings.calendar.appointment.input.overlap.tooltip: Allow appointments to overlap in your calendar with no warning.
-  settings.calendar.appointment.input.reminder.label: Reminder (Default)
-  settings.calendar.appointment.input.reminder.tooltip: Set the appointment reminder to schedule by default.
-  settings.calendar.appointment.input.email.label: Email confirmation (Default)
-  settings.calendar.appointment.input.email.tooltip: Set the appointment email confirmation to send by default.
-  settings.calendar.appointment.input.sms.label: SMS confirmation (Default)
-  settings.calendar.appointment.input.sms.tooltip: Set the appointment SMS confirmation to be sent by default.
-  settings.calendar.appointment.input.feedback.label: Request feedback (Default)
-  settings.calendar.appointment.input.feedback.tooltip: We will request feedback from all clients by default.
-  settings.calendar.appearance.title: Appearance
-  settings.calendar.appearance.subtitle: Customize the look and feel of the appointment card such as changing the layout of both the tooltip and the appointment card itself.
-  settings.calendar.appearance.subheader.general: General
-  settings.calendar.appearance.subheader.fontsize: Font size
-  settings.calendar.appearance.subheader.fontsize.placeholder: 'Please select'
-  settings.calendar.appearance.subheader.appointmentdisplay: Appointment display preview
-  settings.calendar.appearance.subheader.appointmentdisplay.tabs.editbtn: Edit
-  settings.calendar.appearance.subheader.appointmentdisplay.tabs.addbtn: Add new
-  settings.calendar.appearance.subheader.appointmentdisplay.tabs.tab1: Appointment
-  settings.calendar.appearance.subheader.appointmentdisplay.tabs.tab2: Tooltip
-  settings.calendar.appearance.subheader.appointmentdisplay.dob: Date of Birth
-  settings.calendar.appearance.subheader.appointmentdisplay.gender: Gender
-  settings.calendar.appearance.subheader.appointmentdisplay.servicename: Service Name
-  settings.calendar.appearance.subheader.appointmentdisplay.employee: Employee Name
-  settings.calendar.appearance.subheader.appointmentdisplay.apptduration: Appointment duration
-  settings.calendar.appearance.subheader.appointmentdisplay.createdby: Created by
-  settings.calendar.appearance.subheader.appointmentdisplay.apptloc: Appointment Location
-  settings.calendar.appearance.subheader.appointmentdisplay.apptnote: Appointment Note
-  settings.calendar.appearance.subheader.appointmentdisplay.serviceprice: Service Price
-  settings.calendar.appearance.subheader.appointmentdisplay.salutation: Salutation
-  settings.calendar.appearance.subheader.appointmentdisplay.mobile: Mobile
-  settings.calendar.appearance.subheader.appointmentdisplay.email: Email
-  settings.calendar.appearance.subheader.appointmentdisplay.mailingstreet: Mailing Street
-  settings.calendar.appearance.subheader.appointmentdisplay.mailingcity: Mailing City
-  settings.calendar.appearance.subheader.appointmentdisplay.mailingprov: Mailing Province
-  settings.calendar.appearance.subheader.appointmentdisplay.mailingpost: Mailing Postal
-  settings.calendar.appearance.subheader.appointmentdisplay.insurername: Insurer Name
-  settings.calendar.appearance.subheader.appointmentdisplay.fullname: Full Name
-  settings.calendar.appearance.subheader.appointmentdisplay.modified_by: Modified By
-  settings.calendar.appearance.subheader.appointmentdisplay.apptroom: Appointment Room
-  settings.calendar.appearance.subheader.appointmentdisplay.deletemodal.title: Remove
-  settings.calendar.appearance.subheader.appointmentdisplay.deletemodal.this: This
-  settings.calendar.appearance.subheader.appointmentdisplay.deletemodal.subtitle: will be deleted. This action is irreversable
-  settings.calendar.appearance.subheader.appointmentdisplay.deletemodal.removebtn: Yes, Remove
-  settings.calendar.appearance.input.fontsize.option1: 'Small'
-  settings.calendar.appearance.input.fontsize.option2: 'Medium'
-  settings.calendar.appearance.input.fontsize.option3: 'Large'
-  settings.calendar.appearance.input.staff.label: Enable staff initials
-  settings.calendar.appearance.input.staff.tooltip: We will hide your users photos and show only the initials.
-  settings.calendar.appearance.input.surnames.label: Hide surnames
-  settings.calendar.appearance.input.surnames.tooltip: We will hide your clients surname entirely.
-  settings.calendar.appearance.input.appointment.label: Hide appointment times
-  settings.calendar.appearance.input.appointment.tooltip: We will not show the appointment time on your appointment (allowing for more space).
-  settings.calendar.advanced.title: Advanced
-  settings.calendar.advanced.subtitle: Configure any further settings.
-  settings.calendar.advanced.input.raiseinvoice.label: Raise invoice when appointment is completed
-  settings.calendar.advanced.input.raiseinvoice.tooltip: This was automatically create an unpaid invoice the moment you mark an appointment as completed.
-  settings.calendar.advanced.input.calendarlockout.label: Advanced calendar lockout
-  settings.calendar.advanced.input.calendarlockout.tooltip: Calendar lockout will only accept the PIN code of last logged in user, additionally, if a wrong pin is entered multiple times, the system will log out entirely and redirect to loginscreen.
-  settings.calendar.advanced.input.disablebooking.label: Disable booking from course
-  settings.calendar.advanced.input.disablebooking.tooltip: Stops users seeing the notification for cleints to use a session from there course.
-  settings.calendar.advanced.input.disablefiltering.label: Disable filtering by service
-  settings.calendar.advanced.input.disablefiltering.tooltip: You will not be able to filter the calendar on service availability.
-  settings.calendar.advanced.input.autocomplete.label: Auto-complete
-  settings.calendar.advanced.input.autocomplete.tooltip: We will automatically complete appointments when the appointment duration has finished.
-  settings.calendar.advanced.input.orderingemployee.label: Ordering the employees by location
-  settings.calendar.advanced.input.orderingemployee.tooltip: Your calendar will automatically arrange itself to be ordered by location.
-  settings.calendar.advanced.input.hideclientname.label: Hide client name on appointment arrival notification
-  settings.calendar.advanced.input.hideclientname.tooltip: We will mask the clients full name when they are checked in.
-  settings.calendar.advanced.input.allowservice.label: Allow service without contract's price
-  settings.calendar.advanced.input.allowservice.tooltip: We will allow you to book services even if they do not have a price.
-  settings.calendar.advanced.input.hideshowaccounts.label: Hide/Show accounts
-  settings.calendar.advanced.input.hideshowaccounts.tooltip: This will allow you to view financial information from the calendar.
-  settings.calendar.advanced.input.groupcolumnlocation.label: Group user columns by location
-  settings.calendar.advanced.input.groupcolumnlocation.tooltip: Group user columns by location.
-  settings.calendar.advanced.input.revertroom.label: Revert to original room view
-  settings.calendar.advanced.input.revertroom.tooltip: Disable room view ordering by service priority.
-
+  setup.developer.photo: 'Photo Uploader'
+  setup.developer.cancellation: 'Cancellation Reasons'
+  setup.developer.lead.views: 'Lead views'
+  setup.developer.lead.group: 'Lead groups'
+  setup.developer.lead.assignment: 'Lead assignment rules'
+  setup.developer.family: 'Family relationships'
+  setup.developer.doc: 'Doc label manager'
+  setup.developer.invoice.distribution: 'Invoice distribution'
+  setup.developer.issuing.companies: 'Issuing companies'
+  setup.developer.job.status: 'Job statues'
+  setup.developer.supplier.categories: 'Supplier categories'
   setup.blockout.notification.create.success: 'Success! You have successfully created a blockout option'
   setup.blockout.notification.create.error: 'Error! While creating a blockout option'
   setup.blockout.notification.edit.success: 'Success! You have successfully edited a blockout option'
@@ -1313,7 +1248,6 @@ en:
   setup.issuing.form.field.website: 'Website'
   setup.issuing.form.field.website.placeholder: 'https://www.company.com'
   setup.issuing.form.field.address: 'Address information'
-  setup.issuing.form.field.Region: 'Region'
   setup.issuing.form.field.country: 'Country'
   setup.issuing.form.field.country.placeholder: 'Select country'
   setup.issuing.form.field.city: 'City'
@@ -1440,50 +1374,6 @@ en:
   setup.creditnotes.schema.fields.invoiceprefix.description: 'A exmaple prefix'
   setup.creditnotes.schema.fields.invoiceprefix.example: 'RCN'
   setup.creditnotes.schema.fields.isactive: 'Status'
-  setup.taxrate.heading: Tax Rate
-  setup.taxrate.notax: No Tax Rate
-  setup.taxrate.notaxadd: Add Tax Rate
-  setup.taxrate.newbtn: New Tax Rate
-  setup.taxrate.tabs.tab1: Tax Rates
-  setup.taxrate.tabs.tab2: Tax Defaults
-  setup.taxrate.table.column1: Name
-  setup.taxrate.table.column2: Value
-  setup.taxrate.table.column3: Status
-  setup.taxrate.notification.create.success: Success! You have successfully created a tax rate
-  setup.taxrate.notification.create.error: Error! While creating a tax rate
-  setup.taxrate.notification.edit.success: Success! You have successfully edited a tax rate
-  setup.taxrate.notification.edit.error: Error! While editing a tax rate
-  setup.taxrate.notification.delete.success: Success! You have successfully deleted a tax rate
-  setup.taxrate.notification.delete.error: Error! While deleting a tax rate
-  setup.taxrate.notification.order.error: Error! While deleting a tax rate
-  setup.taxrate.notification.deletemodal.title: Delete tax rate?
-  setup.taxrate.notification.deletemodal.para: will be deleted. This action is irreversable.
-  setup.taxrate.notification.deletemodal.deletebtn: Yes, Delete
-  setup.taxrate.notification.updatemodal.title: Update
-  setup.taxrate.notification.createmodal.title: Create
-  setup.taxrate.notification.createmodal.inputs.name: Name
-  setup.taxrate.notification.createmodal.inputs.name.placeholder: eg. VAT20
-  setup.taxrate.notification.createmodal.inputs.name.error: Tax name is required
-  setup.taxrate.notification.createmodal.inputs.amount: Amount
-  setup.taxrate.notification.createmodal.inputs.amount.error1: Tax amount is required
-  setup.taxrate.notification.createmodal.inputs.amount.error2: Percentage cannot be in negative
-  setup.taxrate.notification.createmodal.inputs.amount.error3: Amount cannot exceeds 100
-  setup.taxrate.notification.createmodal.inputs.advanced.title: Advanced
-  setup.taxrate.notification.createmodal.inputs.glcode: GL Code
-  setup.taxrate.notification.createmodal.inputs.glcode.placeholder: eg. Nail Bar
-  setup.taxrate.notification.createmodal.deletebtn: Delete
-  setup.taxrate.notification.createmodal.activebtn: Active
-  setup.taxrate.defaulttax.heading: Tax Defaults (Issuing Companies)
-  setup.taxrate.defaulttax.paragraph: Setup the default taxes for your business, you can still override defaults in the settings of individual products and services
-  setup.taxrate.defaulttax.products.default: 'Products Default'
-  setup.taxrate.defaulttax.services.default: 'Services Default'
-  setup.taxrate.defaulttax.services.mahair: 'M-A Hair Dressing & Spa'
-  setup.taxrate.defaulttax.services.beautysalon: 'Illusions Beauty Salon'
-  setup.taxrate.defaulttax.services.notax: 'No tax'
-  setup.taxrate.defaulttax.services.vats: 'VATs'
-  setup.taxrate.defaulttax.services.vat20: 'VAT20'
-  setup.taxrate.defaulttax.edit: Edit
-  setup.taxrate.defaulttax.addnew: Add New
   products.list.newbtn.product: 'New Product'
   products.list.newbtn.category: 'New Category'
   products.list.newbtn.supplier: 'New Supplier'
@@ -1561,9 +1451,6 @@ en:
   products.list.supplier.column.status: 'Status'
   products.list.supplier.table.new: 'New Supplier'
   products.list.supplier.table.nodata: 'supplier'
-  unauthorized.page.403.label: '403'
-  unauthorized.page.title: "you don't have permissions to access this page"
-  unauthorized.page.button.label: 'Go to homepage'
   setup.courses.title: 'Courses & Packages'
   setup.courses.tab.courses: 'Courses'
   setup.courses.tab.packages: 'Packages'
@@ -1856,47 +1743,43 @@ en:
   account.settings.notification.general.button.label2: Email
   account.settings.notification.general.button.label3: SMS
   account.settings.notification.general.button.label4: 'Pabau Web'
-  marketingreviews.notification.title: 'Reviews'
-  marketingreviews.notification.description: 'You are not displaying your reviews on your website, and therefore you are not receiving Google Ranking, as well as customers not being able to see them!'
-  marketingreviews.notification.button: 'Find out how'
-  marketingreviews.notification.review.link.label: 'Review link'
-  marketingreviews.notification.review.link: 'pabau.com/reviews/perfect-skin'
-  marketingreviews.notification.marketing: 'Marketing'
-  marketingreviews.notification.filter: 'Filter'
-  marketingreviews.notification.configure: 'Configure'
-  marketingreviews.message.title1: 'You’ve got a lot of work to do'
-  marketingreviews.message.title2: 'Ok, but you still have got work to do'
-  marketingreviews.message.title3: 'Great job. You are almost there'
-  marketingreviews.message.title4: 'You are doing great'
-  marketingreviews.share.button.label: 'Share score to Facebook'
-  marketingreviews.need.improvement.label: 'Needs improvement'
-  marketingreviews.ok.label: 'Ok'
-  marketingreviews.great.label: 'Great'
-  marketingreviews.excellent.label: 'Excellent'
-  marketingreviews.table.column.source: 'Source'
-  marketingreviews.table.column.score: 'Score'
-  marketingreviews.filter.option.bad: 'Bad'
-  marketingreviews.table.column.most.recent: 'Most recent'
-  marketingreviews.table.column.name: 'Name'
-  marketingreviews.table.column.date: 'Date'
-  marketingreviews.table.column.for: 'For'
-  marketingreviews.table.column.message: 'Message'
-  marketingreviews.share.modal.respond: 'Respond to '
-  marketingreviews.share.modal.share: 'Share'
-  marketingreviews.share.modal.answer: 'Your answer'
-  marketingreviews.share.modal.personalised.answer: 'Enter your personalised answer to'
-  marketingreviews.share.modal.notify: 'Notify'
-  marketingreviews.share.modal.response: 'of your response'
-  marketingreviews.share.modal.responsed: 'Respond'
-  marketingreviews.share.modal.delete: 'Delete'
-  marketingreviews.share.modal.or: 'or'
-  marketingreviews.visible.message: 'By favouriting a review, we will move it to the top of the list when clients are checking out your reviews, or making an online booking should you be displaying reviews'
-  marketingreviews.data.creatediscountsuccessfullymessage: 'Success! You have successfully created a response'
-  marketingreviews.data.creatediscounterrormessages: 'Error! While creating a response'
-  marketingreviews.data.updatediscountsuccessmessages: 'Success! You have successfully edited a response'
-  marketingreviews.data.updatediscounterrormessages: 'Error! While updating a response'
-  marketingreviews.data.deletediscountsuccessmessages: 'Success! You have successfully deleted a response'
-  marketingreviews.data.deletediscounterrormessages: 'Error! While deleting a response'
+  marketingrevirews.notification.title: 'Reviews'
+  marketingrevirews.notification.description: 'You are not displaying your reviews on your website, and therefore you are not receiving Google Ranking, as well as customers not being able to see them!'
+  marketingrevirews.notification.button: 'Find out how'
+  marketingrevirews.notification.review.link.label: 'Review link'
+  marketingrevirews.notification.review.link: 'pabau.com/reviews/perfect-skin'
+  marketingrevirews.notification.marketing: 'Marketing'
+  marketingrevirews.notification.filter: 'Filter'
+  marketingrevirews.notification.configure: 'Configure'
+  marketingrevirews.client.message: 'Your clients love you!'
+  marketingrevirews.share.button.label: 'Share score to Facebook'
+  marketingrevirews.need.improvement.label: 'Needs improvement'
+  marketingrevirews.ok.label: 'Ok'
+  marketingrevirews.great.label: 'Great'
+  marketingrevirews.excellent.label: 'Excellent'
+  marketingrevirews.table.column.source: 'Source'
+  marketingrevirews.table.column.score: 'Score'
+  marketingrevirews.table.column.most.recent: 'Most recent'
+  marketingrevirews.table.column.name: 'Name'
+  marketingrevirews.table.column.date: 'Date'
+  marketingrevirews.table.column.for: 'For'
+  marketingrevirews.table.column.message: 'Message'
+  marketingrevirews.share.modal.respond: 'Respond to '
+  marketingrevirews.share.modal.share: 'Share'
+  marketingrevirews.share.modal.answer: 'Your answer'
+  marketingrevirews.share.modal.personalised.answer: 'Enter your personalised answer to'
+  marketingrevirews.share.modal.notify: 'Notify'
+  marketingrevirews.share.modal.response: 'of your response'
+  marketingrevirews.share.modal.responsed: 'Respond'
+  marketingrevirews.share.modal.delete: 'Delete'
+  marketingrevirews.share.modal.or: 'or'
+  marketingrevirews.visible.message: 'By favouriting a review, we will move it to the top of the list when clients are checking out your reviews, or making an online booking should you be displaying reviews'
+  marketingrevirews.data.creatediscountsuccessfullymessage: 'Success! You have successfully created a response'
+  marketingrevirews.data.creatediscounterrormessages: 'Error! While creating a response'
+  marketingrevirews.data.updatediscountsuccessmessages: 'Success! You have successfully edited a response'
+  marketingrevirews.data.updatediscounterrormessages: 'Error! While updating a response'
+  marketingrevirews.data.deletediscountsuccessmessages: 'Success! You have successfully deleted a response'
+  marketingrevirews.data.deletediscounterrormessages: 'Error! While deleting a response'
   marketingreviews.data.nodata.content: 'No reviews available'
   setup.department.schema.title: 'Department'
   setup.department.schema.title.lowercase: 'department'
@@ -1916,7 +1799,6 @@ en:
   team-report-modal-prior-month: Change from prior month
   team-report-modal-change-from: Change from
   team-report-modal-rolling-avg: Rolling avg
-
   setup.blockoutmodal.title.create: 'Create Blockout'
   setup.blockoutmodal.title.edit: 'Edit Blockout'
   setup.blockoutmodal.form.name: 'Name'
@@ -1964,6 +1846,14 @@ en:
   setup.settings.loyalty.general.inputpoint.label: 'Points value'
   setup.settings.loyalty.general.inputpoint.placeholder: '1 point = £0.15'
   setup.settings.loyalty.general.inputpoint.help: 'Help tooltip'
+  setup.online-booking.setup: 'Setup'
+  setup.online-booking.online-booking: 'Online Booking'
+  setup.online-booking.bookings: 'Bookings'
+  setup.online-booking.trends: 'Trends'
+  setup.online-booking.tips: 'Pabau Tips'
+  setup.online-booking.tips-description: 'Use Pabau intelligence to find out where you can improve'
+  setup.online-booking.online-bookings-by-month: 'Online Bookings by Month'
+  setup.online-booking.booking-activity: 'Booking Activity'
   ui.create.product.sku.validate.required: 'SKU is required'
   ui.create.product.barcode.validate.required: 'Barcode is required'
   ui.create.product.category.validate.required: 'Category is required'
@@ -2026,6 +1916,141 @@ en:
   ui.searchtag.noitem: 'No item found'
   ui.searchtag.selectall: 'Select All'
   products.list.products.groups: 'Groups'
+  ui.medicalformbuilder.form.name: 'Form name'
+  ui.medicalformbuilder.form.name.description: 'Enter your form name'
+  ui.medicalformbuilder.form.message.warning: 'Warning'
+  ui.medicalformbuilder.form.message.warning.change.message: 'You are about to change the type of form. This will reset your data'
+  ui.medicalformbuilder.form.suggestion: 'Which service should this form be used for?'
+  ui.medicalformbuilder.form.service.category: 'Category'
+  ui.medicalformbuilder.form.service.all: 'All inclusive'
+  ui.medicalformbuilder.form.type: 'Form Type'
+  ui.medicalformbuilder.form.type.medicalhistory: 'Medical History'
+  ui.medicalformbuilder.form.type.medicalhistory.description: 'A medical history form can be completed and updated multiple times, whilst retaining any previously completed information'
+  ui.medicalformbuilder.form.type.consent: 'Consent'
+  ui.medicalformbuilder.form.type.consent.description: 'A consent form requires a signature as part of the care pathway'
+  ui.medicalformbuilder.form.type.treatment: 'Treatment Form'
+  ui.medicalformbuilder.form.type.treatment.description: 'A treatment form is usually completed at the end of a pathway'
+  ui.medicalformbuilder.form.type.epaper: 'ePaper'
+  ui.medicalformbuilder.form.type.epaper.description: 'ePaper allows you to either scan in a document or upload a PDF to draw directly onto the screen using a stylus or apple pencil'
+  ui.medicalformbuilder.form.type.presciption: 'Presciption'
+  ui.medicalformbuilder.form.type.presciption.description: 'Presciption'
+  ui.medicalformbuilder.form.type.lab: 'Lab Form'
+  ui.medicalformbuilder.form.type.lab.description: 'Lab Form'
+  ui.medicalformbuilder.form.create: 'Create Form'
+  ui.medicalformbuilder.form.edit: 'Edit'
+  ui.medicalformbuilder.form.preview: 'Preview'
+  ui.medicalformbuilder.form.gender.male: 'Male'
+  ui.medicalformbuilder.form.gender.female: 'Female'
+  ui.medicalformbuilder.form.gender.question: 'What is your gender?'
+  ui.medicalformbuilder.form.phone.question: 'Phone number'
+  ui.medicalformbuilder.form.dob.question: 'Date of birth'
+  ui.medicalformbuilder.form.postcode.question: 'Postcode'
+  ui.medicalformbuilder.form.city.question: 'City'
+  ui.medicalformbuilder.form.street.question: 'Street Address'
+  ui.medicalformbuilder.form.uploadimage: 'Upload Images'
+  ui.medicalformbuilder.form.uploadpdf: 'Upload PDF'
+  ui.medicalformbuilder.left.tab.general: 'GENERAL'
+  ui.medicalformbuilder.left.tab.components: 'COMPONENTS'
+  ui.medicalformbuilder.medicalhistory.tooltip: 'We will automatically request the client to update there medical history after the below term'
+  ui.medicalformbuilder.medicalhistory.terms: 'Select an expiration term'
+  ui.medicalformbuilder.medicalhistory.terms.3m: '3 months'
+  ui.medicalformbuilder.medicalhistory.terms.6m: '6 months'
+  ui.medicalformbuilder.medicalhistory.terms.12m: '12 months'
+  ui.medicalformbuilder.medicalhistory.terms.2y: '2 years'
+  ui.medicalformbuilder.medicalhistory.terms.3y: '3 years'
+  ui.medicalformbuilder.medicalhistory.terms.5y: '5 years'
+  ui.medicalformbuilder.medicalhistory.expiredesc: 'Expires after'
+  ui.medicalformbuilder.medicalhistory.plus: 'Plus'
+  ui.medicalformbuilder.medicalcomponent.basic: 'Basic'
+  ui.medicalformbuilder.medicalcomponent.basic.general: 'general'
+  ui.medicalformbuilder.medicalcomponent.basic.choices: 'choices'
+  ui.medicalformbuilder.medicalcomponent.basic.other: 'other'
+  ui.medicalformbuilder.medicalcomponent.basic.medical: 'medical'
+  ui.medicalformbuilder.medicalcomponent.custom: 'Custom'
+  ui.medicalform.setting.title: 'component settings'
+  ui.medicalform.setting.save.error: 'Please add an option'
+  ui.medicalform.setting.question.title: 'Question'
+  ui.medicalform.setting.question.description: 'Enter your question'
+  ui.medicalform.setting.fileupload.title: 'Image'
+  ui.medicalform.setting.fileupload.description: 'Click or drag file to this area to upload'
+  ui.medicalform.setting.textblock.title: 'Text'
+  ui.medicalform.setting.advanced.show: 'Show advanced settings'
+  ui.medicalform.setting.advanced.hide: 'Hide advanced settings'
+  ui.medicalform.setting.advanced.inputtype: 'Input type'
+  ui.medicalform.setting.advanced.inputtype.text: 'Text'
+  ui.medicalform.setting.advanced.inputtype.email: 'Email'
+  ui.medicalform.setting.advanced.inputtype.number: 'Number'
+  ui.medicalform.setting.advanced.inputtype.date: 'Date'
+  ui.medicalform.setting.advanced.linked: 'Linked field'
+  ui.medicalform.setting.advanced.default: 'Default value'
+  ui.medicalform.setting.component.heading.title: 'Heading'
+  ui.medicalform.setting.component.heading.description: 'Create a heading for a section'
+  ui.medicalform.setting.component.shortanswer.title: 'Short answer'
+  ui.medicalform.setting.component.shortanswer.description: 'Ask a question with a short answer'
+  ui.medicalform.setting.component.longanswer.title: 'Long answer'
+  ui.medicalform.setting.component.longanswer.description: 'Ask a question with a long answer'
+  ui.medicalform.setting.component.textblock.title: 'Text block'
+  ui.medicalform.setting.component.textblock.description: 'Add a paragraph without a question'
+  ui.medicalform.setting.component.singlechoice.title: 'Single Choice'
+  ui.medicalform.setting.component.singlechoice.description: 'Ask for a single choice'
+  ui.medicalform.setting.component.multiplechoice.title: 'Multiple Choices'
+  ui.medicalform.setting.component.multiplechoice.description: 'Ask for a several choices'
+  ui.medicalform.setting.component.dropdown.title: 'Dropdown'
+  ui.medicalform.setting.component.dropdown.description: 'A list of options that can be ticked'
+  ui.medicalform.setting.component.drawing.title: 'Drawing'
+  ui.medicalform.setting.component.drawing.description: 'Draw on an image or a photo'
+  ui.medicalform.setting.component.staticimage.title: 'Image'
+  ui.medicalform.setting.component.staticimage.description: 'Show an image or a photo'
+  ui.medicalform.setting.component.signature.title: 'Signature'
+  ui.medicalform.setting.component.signature.description: 'Description'
+  ui.medicalform.setting.component.conditions.title: 'Medical Conditions'
+  ui.medicalform.setting.component.conditions.description: 'Description'
+  ui.medicalform.setting.component.drugs.title: 'Drugs'
+  ui.medicalform.setting.component.drugs.description: 'Description'
+  ui.medicalform.setting.component.labtests.title: 'Lab tests'
+  ui.medicalform.setting.component.labtests.description: 'Description'
+  ui.medicalform.setting.component.traveldestination.title: 'Travel destination'
+  ui.medicalform.setting.component.traveldestination.description: 'Description'
+  ui.medicalform.setting.component.vaccinescheduler.title: 'Vaccine scheduler'
+  ui.medicalform.setting.component.vaccinescheduler.description: 'Description'
+  ui.medicalform.setting.component.vaccinehistory.title: 'Vaccine history'
+  ui.medicalform.setting.component.vaccinehistory.description: 'Description'
+  ui.medicalform.setting.component.custom.emailmarketing.title: 'Accepts email marketing'
+  ui.medicalform.setting.component.custom.emailmarketing.description: 'Clients can opt in to marketing'
+  ui.medicalform.setting.component.custom.smsmarketing.title: 'Accepts SMS/Text marketing'
+  ui.medicalform.setting.component.custom.smsmarketing.description: 'Clients can opt in to marketing'
+  ui.medicalform.setting.component.custom.phonecall.title: 'Phone calls'
+  ui.medicalform.setting.component.custom.phonecall.description: 'Clients can opt in to marketing'
+  ui.medicalform.setting.component.custom.lettermarketing.title: 'Phone calls'
+  ui.medicalform.setting.component.custom.lettermarketing.description: 'Clients can opt in to marketing'
+  ui.medicalform.setting.component.custom.membershipnumber.title: 'Membership number'
+  ui.medicalform.setting.component.custom.membershipnumber.description: 'Clients can opt in to marketing'
+  ui.medicalform.setting.component.custom.authorizationcode.title: 'Authorization code'
+  ui.medicalform.setting.component.custom.authorizationcode.description: 'Clients can opt in to marketing'
+  ui.medicalform.setting.component.custom.company.title: 'Company'
+  ui.medicalform.setting.component.custom.company.description: 'Confirm a clients company'
+  ui.medicalform.setting.component.custom.dob.title: 'Date of birth'
+  ui.medicalform.setting.component.custom.dob.description: 'Confirm a clients birth date'
+  ui.medicalform.setting.component.custom.gender.title: 'Gender'
+  ui.medicalform.setting.component.custom.gender.description: 'Confirm a clients gender'
+  ui.medicalform.setting.component.custom.physicaladdress.title: 'Physical address'
+  ui.medicalform.setting.component.custom.physicaladdress.description: 'Confirm a clients physical address'
+  ui.medicalform.setting.component.custom.referredby.title: 'Referred by'
+  ui.medicalform.setting.component.custom.referredby.description: 'Where did they hear of you'
+  ui.medicalform.setting.component.custom.telephonenumber.title: 'Telephone number'
+  ui.medicalform.setting.component.custom.telephonenumber.description: 'Confirm a clients telephone number'
+  ui.medicalform.setting.bottom.required: 'Required'
+  ui.medicalform.setting.bottom.delete: 'Delete'
+  ui.medicalform.setting.bottom.save: 'Save component'
+  ui.medicalform.setting.defaultfield.tooltip: 'Display this value by default. Ex: If the question is "Signed by", the default value may be [CLIENTNAME]'
+  ui.medicalform.setting.defaultfield.add: 'Add'
+  ui.medicalform.setting.defaultfield.placeholder: 'Personalize Default Field'
+  ui.medicalform.setting.linkedfield.tooltip: 'We will over-write your client information with the answer to this question'
+  ui.medicalform.setting.linkedfield.input.tooltip: 'Enter new option'
+  ui.medicalform.setting.linkedfield.add: 'Add'
+  ui.medicalform.setting.requried.tooltip: 'You must use "Required" if you wish to link the answer from the client to a field'
+  ui.inputwithtag.addtag: 'Add field'
+  ui.inputwithtag.modal.title: 'Add a Personalization'
   setup.reports.title: Reports
   setup.reports.search.result: 'Search results'
   setup.reports.search.text.placeholder: 'Search by report name'
@@ -2180,8 +2205,302 @@ en:
   setup.reports.month.Sep: 'Sep'
   setup.reports.month.Oct: 'Oct'
   setup.reports.month.Nov: 'Nov'
-  setup.reports.month.Dec: 'Dec'
+  setup.reports.month.Dec: 'Dec
+    We look forward to seeing you soon!
+    Your friends at The Clinic'
+  notifications.requestFeedback.smsMessage: 'Hi Anna,
 
+    Thank you for visiting The Clinic, we hope you were happy with our services!
+
+    We would love to hear about your experience in the survey below. Your feedback helps us create a better experience for you and for all of our customers.'
+  notifications.rescheduledAppointment.smsMessage: 'Hi Shopia,
+
+
+    This is a confirmation to let you now we rescheduled your type class from 15/12/20 to 17/12/20.
+
+
+    We look forward to seeing you then!
+
+
+    kind Regards
+
+    The Clinic'
+  notifications.secureEmailTemplate.smsMessage: 'Dear Sophia!
+
+    Please find attached your file. If you have any questions do not hesitate to contact us at +44 000 987 507.
+
+    Kind regards,
+
+    The clinic Team'
+  quickCreate.client.modal.newContact: 'New Contact'
+  quickCreate.client.modal.cancel: 'Cancel'
+  quickCreate.client.modal.create: 'Create'
+  quickCreate.client.modal.tab.general: 'General'
+  quickCreate.client.modal.tab.gpDetails: 'GP Details'
+  quickCreate.client.modal.tab.customDetails: 'Custom Details'
+  quickCreate.client.modal.more: 'More'
+  quickCreate.client.modal.general: 'General'
+  quickCreate.client.modal.general.noLabel: 'No label'
+  quickCreate.client.modal.general.labels: 'labels'
+  quickCreate.client.modal.general.addLabels: 'Add to label'
+  quickCreate.client.modal.general.newLabel: 'New Label'
+  quickCreate.client.modal.general.salutation: 'Salutation'
+  quickCreate.client.modal.general.firstName: 'First Name'
+  quickCreate.client.modal.general.lastName: 'Last Name'
+  quickCreate.client.modal.general.firstName.placeHolder: 'Enter first name'
+  quickCreate.client.modal.general.lastName.placeHolder: 'Enter last name'
+  quickCreate.client.modal.general.gender: 'Gender'
+  quickCreate.client.modal.general.gender.other: 'Other'
+  quickCreate.client.modal.general.gender.male: 'Male'
+  quickCreate.client.modal.general.gender.female: 'Female'
+  quickCreate.client.modal.general.hearOption.label: 'How did you hear about us?'
+  quickCreate.client.modal.general.hearOption.selectOption: 'Select an option'
+  quickCreate.client.modal.general.hearOption.anythingHere: 'Anything here'
+  quickCreate.client.modal.general.date: 'Date of birth'
+  quickCreate.client.modal.general.preferredLanguage: 'Select preferred language'
+  quickCreate.client.modal.general.preferredLanguage.default: 'Use Provider Language (English)'
+  quickCreate.client.modal.general.contactInfo: 'Contact Info'
+  quickCreate.client.modal.general.email: 'Email'
+  quickCreate.client.modal.general.email.placeHolder: 'Enter email'
+  quickCreate.client.modal.general.mobilePhone: 'Mobile Phone'
+  quickCreate.client.modal.general.telephone: 'Telephone'
+  quickCreate.client.modal.general.subscription: 'Subscription'
+  quickCreate.client.modal.general.subscription.detail:
+    'When you ask a client to opt in, please do remind them that you will
+    always send information deemed to be critical'
+  quickCreate.client.modal.general.subscription.newsLetter: 'NewsLatter'
+  quickCreate.client.modal.general.subscription.sms: 'SMS'
+  quickCreate.client.modal.general.subscription.postal: 'Postal'
+  quickCreate.client.modal.general.subscription.phoneCalls: 'Phone Calls'
+  quickCreate.client.modal.general.addresses: 'Address'
+  quickCreate.client.modal.general.addresses.label: 'Addresses'
+  quickCreate.client.modal.general.addresses.placeHolder: 'Search Address'
+  quickCreate.client.modal.general.addresses.country: 'Country'
+  quickCreate.client.modal.general.addresses.country.placeHolder: 'Select country'
+  quickCreate.client.modal.general.addresses.city: 'City'
+  quickCreate.client.modal.general.addresses.city.placeHolder: 'Select City'
+  quickCreate.client.modal.general.addresses.postcode: 'Postcode'
+  quickCreate.client.modal.general.addresses.postcode.placeHolder: 'Select Postcode'
+  quickCreate.client.modal.general.thirdParty: 'Aesthetic Interests'
+  quickCreate.client.modal.general.thirdParty.whoResponsible: 'Who will be responsible for payments?'
+  quickCreate.client.modal.general.thirdParty.botox: 'Botox'
+  quickCreate.client.modal.general.thirdParty.laser: 'Laser'
+  quickCreate.client.modal.general.addLabel.duplicateError: 'Same Label already Exist'
+  quickCreate.validation.salutation.required: 'Salutation is required'
+  quickCreate.validation.firstName.required: 'First name is required'
+  quickCreate.validation.lastName.required: 'Last name is required'
+  quickCreate.validation.gender.required: 'Gender is required'
+  quickCreate.validation.hearOption.required: 'Hear option is required'
+  quickCreate.validation.preferredLanguage.required: 'Preferred Language is required'
+  quickCreate.validation.email.required: 'Email is required'
+  quickCreate.validation.address.required: 'Address is required'
+  quickCreate.validation.country.required: 'Country is required'
+  quickCreate.validation.city.required: 'City is required'
+  quickCreate.validation.postCode.required: 'Postcode is required'
+  quickCreate.validation.thirdPartyDetails.required: 'Third Party detail is required'
+  quickCreate.validation.email.validate: 'Please enter valid email'
+  quickCreate.validation.procedureType.required: 'Procedure type is required'
+  quickCreate.validation.treatmentInterestPage.required: 'Treatment interest page is required'
+  quickCreate.validation.title.required: 'Title is required'
+  quickCreate.validation.keyword.required: 'Keyword is required'
+  quickCreate.lead.modal.newLead: 'New Lead'
+  quickCreate.lead.modal.newLead.assigneeTitle: 'Assignee'
+  quickCreate.lead.modal.tab.general: 'General'
+  quickCreate.lead.modal.general.notes: 'Notes'
+  quickCreate.lead.modal.general.notes.placeholder: 'Note'
+  quickCreate.lead.modal.general.statisticCustom: 'Statistic *custom*'
+  quickCreate.lead.modal.general.procedureType: 'Procedure Type'
+  quickCreate.lead.modal.general.procedureType.placeholder: 'Enter Procedure Type'
+  quickCreate.lead.modal.general.title: 'Title'
+  quickCreate.lead.modal.general.title.placeholder: 'Enter Title'
+  quickCreate.lead.modal.general.keyword: 'Keyword'
+  quickCreate.lead.modal.general.keyword.placeholder: 'Enter keyword'
+  quickCreate.lead.modal.general.treatmentInterestPage: 'Treatment interest page'
+  quickCreate.lead.modal.general.treatmentInterestPage.placeholder: 'Select Treatment interest'
+  quickCreate.lead.modal.general.addEmployee: 'Add Employee'
+  quickCreate.lead.modal.general.selectEmployee: 'Select Employee'
+  settings.calendar.title: Calendar settings
+  settings.calendar.breadcrumb.setup: Setup
+  settings.calendar.breadcrumb.title: Calendar Settings
+  settings.calendar.success.notification: 'Success! - We have saved your calendar settings changes.'
+  settings.calendar.error.notification: 'Error! Something went wrong.'
+  settings.calendar.save.button: Save Changes
+  settings.calendar.configuration.title: Configuration
+  settings.calendar.configuration.subtitle: Configure your calendars start and end time, as well as setting how big your appointment time slots are.
+  settings.calendar.configuration.input.slotsize: Time slot size
+  settings.calendar.configuration.input.starttime: Start time
+  settings.calendar.configuration.input.endtime: End time
+  settings.calendar.configuration.input.autolock: Auto lock
+  settings.calendar.configuration.input.placeholder: Please select
+  settings.calendar.configuration.input.minutes: 'minutes'
+  settings.calendar.configuration.input.hours: 'hours'
+  settings.calendar.appointment.title: Appointment settings
+  settings.calendar.appointment.subtitle: Setup your calendar to automatically have your communication checkbox selected as well as allowing your appointments to overlap.
+  settings.calendar.appointment.input.overlap.label: Allow appointment overlap
+  settings.calendar.appointment.input.overlap.tooltip: Allow appointments to overlap in your calendar with no warning.
+  settings.calendar.appointment.input.reminder.label: Reminder (Default)
+  settings.calendar.appointment.input.reminder.tooltip: Set the appointment reminder to schedule by default.
+  settings.calendar.appointment.input.email.label: Email confirmation (Default)
+  settings.calendar.appointment.input.email.tooltip: Set the appointment email confirmation to send by default.
+  settings.calendar.appointment.input.sms.label: SMS confirmation (Default)
+  settings.calendar.appointment.input.sms.tooltip: Set the appointment SMS confirmation to be sent by default.
+  settings.calendar.appointment.input.feedback.label: Request feedback (Default)
+  settings.calendar.appointment.input.feedback.tooltip: We will request feedback from all clients by default.
+  settings.calendar.appearance.title: Appearance
+  settings.calendar.appearance.subtitle: Customize the look and feel of the appointment card such as changing the layout of both the tooltip and the appointment card itself.
+  settings.calendar.appearance.subheader.general: General
+  settings.calendar.appearance.subheader.fontsize: Font size
+  settings.calendar.appearance.subheader.fontsize.placeholder: 'Please select'
+  settings.calendar.appearance.subheader.appointmentdisplay: Appointment display preview
+  settings.calendar.appearance.subheader.appointmentdisplay.tabs.editbtn: Edit
+  settings.calendar.appearance.subheader.appointmentdisplay.tabs.addbtn: Add new
+  settings.calendar.appearance.subheader.appointmentdisplay.tabs.tab1: Appointment
+  settings.calendar.appearance.subheader.appointmentdisplay.tabs.tab2: Tooltip
+  settings.calendar.appearance.subheader.appointmentdisplay.dob: Date of Birth
+  settings.calendar.appearance.subheader.appointmentdisplay.gender: Gender
+  settings.calendar.appearance.subheader.appointmentdisplay.servicename: Service Name
+  settings.calendar.appearance.subheader.appointmentdisplay.employee: Employee Name
+  settings.calendar.appearance.subheader.appointmentdisplay.apptduration: Appointment duration
+  settings.calendar.appearance.subheader.appointmentdisplay.createdby: Created by
+  settings.calendar.appearance.subheader.appointmentdisplay.apptloc: Appointment Location
+  settings.calendar.appearance.subheader.appointmentdisplay.apptnote: Appointment Note
+  settings.calendar.appearance.subheader.appointmentdisplay.serviceprice: Service Price
+  settings.calendar.appearance.subheader.appointmentdisplay.salutation: Salutation
+  settings.calendar.appearance.subheader.appointmentdisplay.mobile: Mobile
+  settings.calendar.appearance.subheader.appointmentdisplay.email: Email
+  settings.calendar.appearance.subheader.appointmentdisplay.mailingstreet: Mailing Street
+  settings.calendar.appearance.subheader.appointmentdisplay.mailingcity: Mailing City
+  settings.calendar.appearance.subheader.appointmentdisplay.mailingprov: Mailing Province
+  settings.calendar.appearance.subheader.appointmentdisplay.mailingpost: Mailing Postal
+  settings.calendar.appearance.subheader.appointmentdisplay.insurername: Insurer Name
+  settings.calendar.appearance.subheader.appointmentdisplay.fullname: Full Name
+  settings.calendar.appearance.subheader.appointmentdisplay.modified_by: Modified By
+  settings.calendar.appearance.subheader.appointmentdisplay.apptroom: Appointment Room
+  settings.calendar.appearance.subheader.appointmentdisplay.deletemodal.title: Remove
+  settings.calendar.appearance.subheader.appointmentdisplay.deletemodal.this: This
+  settings.calendar.appearance.subheader.appointmentdisplay.deletemodal.subtitle: will be deleted. This action is irreversable
+  settings.calendar.appearance.subheader.appointmentdisplay.deletemodal.removebtn: Yes, Remove
+  settings.calendar.appearance.input.fontsize.option1: 'Small'
+  settings.calendar.appearance.input.fontsize.option2: 'Medium'
+  settings.calendar.appearance.input.fontsize.option3: 'Large'
+  settings.calendar.appearance.input.staff.label: Enable staff initials
+  settings.calendar.appearance.input.staff.tooltip: We will hide your users photos and show only the initials.
+  settings.calendar.appearance.input.surnames.label: Hide surnames
+  settings.calendar.appearance.input.surnames.tooltip: We will hide your clients surname entirely.
+  settings.calendar.appearance.input.appointment.label: Hide appointment times
+  settings.calendar.appearance.input.appointment.tooltip: We will not show the appointment time on your appointment (allowing for more space).
+  settings.calendar.advanced.title: Advanced
+  settings.calendar.advanced.subtitle: Configure any further settings.
+  settings.calendar.advanced.input.raiseinvoice.label: Raise invoice when appointment is completed
+  settings.calendar.advanced.input.raiseinvoice.tooltip: This was automatically create an unpaid invoice the moment you mark an appointment as completed.
+  settings.calendar.advanced.input.calendarlockout.label: Advanced calendar lockout
+  settings.calendar.advanced.input.calendarlockout.tooltip: Calendar lockout will only accept the PIN code of last logged in user, additionally, if a wrong pin is entered multiple times, the system will log out entirely and redirect to loginscreen.
+  settings.calendar.advanced.input.disablebooking.label: Disable booking from course
+  settings.calendar.advanced.input.disablebooking.tooltip: Stops users seeing the notification for cleints to use a session from there course.
+  settings.calendar.advanced.input.disablefiltering.label: Disable filtering by service
+  settings.calendar.advanced.input.disablefiltering.tooltip: You will not be able to filter the calendar on service availability.
+  settings.calendar.advanced.input.autocomplete.label: Auto-complete
+  settings.calendar.advanced.input.autocomplete.tooltip: We will automatically complete appointments when the appointment duration has finished.
+  settings.calendar.advanced.input.orderingemployee.label: Ordering the employees by location
+  settings.calendar.advanced.input.orderingemployee.tooltip: Your calendar will automatically arrange itself to be ordered by location.
+  settings.calendar.advanced.input.hideclientname.label: Hide client name on appointment arrival notification
+  settings.calendar.advanced.input.hideclientname.tooltip: We will mask the clients full name when they are checked in.
+  settings.calendar.advanced.input.allowservice.label: Allow service without contract's price
+  settings.calendar.advanced.input.allowservice.tooltip: We will allow you to book services even if they do not have a price.
+  settings.calendar.advanced.input.hideshowaccounts.label: Hide/Show accounts
+  settings.calendar.advanced.input.hideshowaccounts.tooltip: This will allow you to view financial information from the calendar.
+  settings.calendar.advanced.input.groupcolumnlocation.label: Group user columns by location
+  settings.calendar.advanced.input.groupcolumnlocation.tooltip: Group user columns by location.
+  settings.calendar.advanced.input.revertroom.label: Revert to original room view
+  settings.calendar.advanced.input.revertroom.tooltip: Disable room view ordering by service priority.
+  setup.taxrate.heading: Tax Rate
+  setup.taxrate.notax: No Tax Rate
+  setup.taxrate.notaxadd: Add Tax Rate
+  setup.taxrate.newbtn: New Tax Rate
+  setup.taxrate.tabs.tab1: Tax Rates
+  setup.taxrate.tabs.tab2: Tax Defaults
+  setup.taxrate.table.column1: Name
+  setup.taxrate.table.column2: Value
+  setup.taxrate.table.column3: Status
+  setup.taxrate.notification.create.success: Success! You have successfully created a tax rate
+  setup.taxrate.notification.create.error: Error! While creating a tax rate
+  setup.taxrate.notification.edit.success: Success! You have successfully edited a tax rate
+  setup.taxrate.notification.edit.error: Error! While editing a tax rate
+  setup.taxrate.notification.delete.success: Success! You have successfully deleted a tax rate
+  setup.taxrate.notification.delete.error: Error! While deleting a tax rate
+  setup.taxrate.notification.order.error: Error! While deleting a tax rate
+  setup.taxrate.notification.deletemodal.title: Delete tax rate?
+  setup.taxrate.notification.deletemodal.para: will be deleted. This action is irreversable.
+  setup.taxrate.notification.deletemodal.deletebtn: Yes, Delete
+  setup.taxrate.notification.updatemodal.title: Update
+  setup.taxrate.notification.createmodal.title: Create
+  setup.taxrate.notification.createmodal.inputs.name: Name
+  setup.taxrate.notification.createmodal.inputs.name.placeholder: eg. VAT20
+  setup.taxrate.notification.createmodal.inputs.name.error: Tax name is required
+  setup.taxrate.notification.createmodal.inputs.amount: Amount
+  setup.taxrate.notification.createmodal.inputs.amount.error1: Tax amount is required
+  setup.taxrate.notification.createmodal.inputs.amount.error2: Percentage cannot be in negative
+  setup.taxrate.notification.createmodal.inputs.amount.error3: Amount cannot exceeds 100
+  setup.taxrate.notification.createmodal.inputs.advanced.title: Advanced
+  setup.taxrate.notification.createmodal.inputs.glcode: GL Code
+  setup.taxrate.notification.createmodal.inputs.glcode.placeholder: eg. Nail Bar
+  setup.taxrate.notification.createmodal.deletebtn: Delete
+  setup.taxrate.notification.createmodal.activebtn: Active
+  setup.taxrate.defaulttax.heading: Tax Defaults (Issuing Companies)
+  setup.taxrate.defaulttax.paragraph: Setup the default taxes for your business, you can still override defaults in the settings of individual products and services
+  setup.taxrate.defaulttax.products.default: 'Products Default'
+  setup.taxrate.defaulttax.services.default: 'Services Default'
+  setup.taxrate.defaulttax.services.mahair: 'M-A Hair Dressing & Spa'
+  setup.taxrate.defaulttax.services.beautysalon: 'Illusions Beauty Salon'
+  setup.taxrate.defaulttax.services.notax: 'No tax'
+  setup.taxrate.defaulttax.services.vats: 'VATs'
+  setup.taxrate.defaulttax.services.vat20: 'VAT20'
+  setup.taxrate.defaulttax.edit: Edit
+  setup.taxrate.defaulttax.addnew: Add New
+  unauthorized.page.403.label: '403'
+  unauthorized.page.title: "you don't have permissions to access this page"
+  unauthorized.page.button.label: 'Go to homepage'
+  marketingreviews.notification.title: 'Reviews'
+  marketingreviews.notification.description: 'You are not displaying your reviews on your website, and therefore you are not receiving Google Ranking, as well as customers not being able to see them!'
+  marketingreviews.notification.button: 'Find out how'
+  marketingreviews.notification.review.link.label: 'Review link'
+  marketingreviews.notification.review.link: 'pabau.com/reviews/perfect-skin'
+  marketingreviews.notification.marketing: 'Marketing'
+  marketingreviews.notification.filter: 'Filter'
+  marketingreviews.notification.configure: 'Configure'
+  marketingreviews.message.title1: 'You’ve got a lot of work to do'
+  marketingreviews.message.title2: 'Ok, but you still have got work to do'
+  marketingreviews.message.title3: 'Great job. You are almost there'
+  marketingreviews.message.title4: 'You are doing great'
+  marketingreviews.share.button.label: 'Share score to Facebook'
+  marketingreviews.need.improvement.label: 'Needs improvement'
+  marketingreviews.ok.label: 'Ok'
+  marketingreviews.great.label: 'Great'
+  marketingreviews.excellent.label: 'Excellent'
+  marketingreviews.table.column.source: 'Source'
+  marketingreviews.table.column.score: 'Score'
+  marketingreviews.filter.option.bad: 'Bad'
+  marketingreviews.table.column.most.recent: 'Most recent'
+  marketingreviews.table.column.name: 'Name'
+  marketingreviews.table.column.date: 'Date'
+  marketingreviews.table.column.for: 'For'
+  marketingreviews.table.column.message: 'Message'
+  marketingreviews.share.modal.respond: 'Respond to '
+  marketingreviews.share.modal.share: 'Share'
+  marketingreviews.share.modal.answer: 'Your answer'
+  marketingreviews.share.modal.personalised.answer: 'Enter your personalised answer to'
+  marketingreviews.share.modal.notify: 'Notify'
+  marketingreviews.share.modal.response: 'of your response'
+  marketingreviews.share.modal.responsed: 'Respond'
+  marketingreviews.share.modal.delete: 'Delete'
+  marketingreviews.share.modal.or: 'or'
+  marketingreviews.visible.message: 'By favouriting a review, we will move it to the top of the list when clients are checking out your reviews, or making an online booking should you be displaying reviews'
+  marketingreviews.data.creatediscountsuccessfullymessage: 'Success! You have successfully created a response'
+  marketingreviews.data.creatediscounterrormessages: 'Error! While creating a response'
+  marketingreviews.data.updatediscountsuccessmessages: 'Success! You have successfully edited a response'
+  marketingreviews.data.updatediscounterrormessages: 'Error! While updating a response'
+  marketingreviews.data.deletediscountsuccessmessages: 'Success! You have successfully deleted a response'
+  marketingreviews.data.deletediscounterrormessages: 'Error! While deleting a response'
   default.biz.location: 'London Road, Sheffield, England'
   notification.type.success.message: 'Successfully saved changes'
   business.details.tab.tabtitle: 'Details'
@@ -2318,6 +2637,66 @@ en:
   business.notification.self.assessment.due: 'Reminder of when Self assessment is due'
   business.notification.manager.assessment.due: 'Reminder of when Manager assessment is due'
   business.notification.target.hit: 'When a team target is hit'
+  setup.online-booking.analytics-settings: 'Analytics settings'
+  setup.online-booking.analytics.setup-now: 'Set Up Now'
+  setup.online-booking.analytics.status.enabled: 'Enabled'
+  setup.online-booking.analytics.status.disabled: 'Disabled'
+  setup.online-booking.builder: 'Builder'
+  setup.online-booking.builder-preview: 'Preview'
+  setup.online-booking.builder-apperance: 'Apperance'
+  setup.online-booking.builder-apperance-description: 'Customize the look and feel of your survey page, as well as customizing features such as displaying the clients full name or aninymously'
+  setup.online-booking.builder-apperance-setting-textarea-placeholder: 'E.g. lorem ipsum'
+  setup.online-booking.builder-apperance-advanced-settings: 'Advanced settings'
+  setup.online-booking.builder-apperance-booking: 'Booking'
+  setup.online-booking.builder-apperance-booking-description: 'Your business name is displayed across many areas including on your online booking profile, sales invoices and messages to clients'
+  setup.online-booking.builder-apperance-registration: 'Registration'
+  setup.online-booking.builder-apperance-registration-description: 'Customize the registration process of your online booking system'
+  setup.online-booking.payment.requirements: 'Requirements'
+  setup.online-booking.payment.no-deposit-required: 'No Deposit required'
+  setup.online-booking.payment.require-default-deposit: 'Require default deposit'
+  setup.online-booking.payment.take-full-payment: 'Take full payment for the service'
+  setup.online-booking.payment.default-deposit: 'Default Deposit'
+  setup.online-booking.payment.rolling-deposit: 'Rolling Deposit'
+  setup.online-booking.payment.rolling-deposit-yes: 'Yes'
+  setup.online-booking.payment.rolling-deposit-no: 'No'
+  setup.online-booking.payment.rolling-deposit-description: 'If the client has money on their account (min. £25.00), they will need to do a payment, meaning payment process is completelly skipped'
+  setup.online-booking.payment.payment-methods: 'Payment Methods'
+  setup.online-booking.payment.show-instructions: 'Show instructions'
+  setup.online-booking.promote.button: 'Button'
+  setup.online-booking.promote.pick-a-style: 'Pick a style'
+  setup.online-booking.promote.press-this-button-to-try-it-out: 'Press this button to try it out!'
+  setup.online-booking.promote.book-now: 'Book Now'
+  setup.online-booking.promote.copy-embed-code: 'Copy embed code'
+  setup.online-booking.promote.booking-portal: 'Booking portal'
+  setup.online-booking.promote.booking-portal-description: 'Here is your portal link'
+  setup.online-booking.promote.book-now-link: 'Book now link'
+  setup.online-booking.promote.book-now-link-description1: 'Copy and paste the link below to add the button to your website, blog posts, email signature to anywhere else online.'
+  setup.online-booking.promote.book-now-link-description2: 'The Link leads straight to your online booking service menus, lettings clients easily book new appointments in just a few clicks.'
+  setup.online-booking.promote.book-now-link-description3: 'Your link works perfectly with anny device including desktops, tables and mobiles.'
+  setup.online-booking.promote.copy-link: 'Copy Link'
+  setup.online-booking.promote.attention: 'Attention'
+  setup.online-booking.promote.please-note-you-are-in-test-mode: 'Please note you are in test mode, please do not embedd this link anywhere'
+  setup.online-booking.promote.widget: 'Widget'
+  setup.online-booking.promote.some-description-here: 'Some description here'
+  setup.online-booking.promote.copy-code: 'Copy Code'
+  setup.online-booking.promote.wix: 'Wix'
+  setup.online-booking.promote.wordpress: 'WordPress'
+  setup.online-booking.promote.simple-URL-builder-for-online-bookings: 'Simple URL Builder for Online Bookings'
+  setup.online-booking.promote.can-be-used-iframe: 'Can be used for iframes & sharing hyperlinks'
+  setup.online-booking.promote.pre-select-location: 'Pre select location'
+  setup.online-booking.promote.pre-select-group-category: 'Pre select group category'
+  setup.online-booking.promote.pre-select-category: 'Pre select category'
+  setup.online-booking.promote.pre-select-service: 'Pre select service'
+  setup.online-booking.promote.pre-select-staff: 'Pre select staff'
+  setup.online-booking.promote.facebook-app: 'Facebook App'
+  setup.online-booking.promote.facebook-app-description: 'Some description here'
+  setup.online-booking.promote.facebook-learn-more: 'Learn More'
+  setup.online-booking.promote.facebook-learn-more1: 'Let clients book straight from your social pages with Book Now buttons'
+  setup.online-booking.promote.facebook-learn-more2: 'To set up and edit the Book Now buttons, follow the steps for each integration below'
+  setup.online-booking.promote.coming-soon: 'Learn More'
+  setup.online-booking.promote.instagram: 'Instagram'
+  setup.online-booking.promote.facebook: 'Facebook'
+  setup.online-booking.promote: 'Promote'
   setup.table.column.invoicedate: 'Invoice Date'
   setup.table.column.invoice: 'Invoice'
   setup.table.column.description: 'Description'
@@ -2332,3 +2711,475 @@ en:
   setup.subscription.accountinformations: 'Account Information'
   setup.crud.filter: 'Filter'
   setup.crud.subscription.searchholder: 'Search in Invoice'
+  setup.header.chip.blog: 'Blog'
+  setup.header.chip.blog.subTitle: 'posts / month'
+  setup.header.chip.community: 'Community'
+  setup.header.chip.community.subTitle: 'topics / week'
+  setup.header.chip.video: 'Video guides'
+  setup.header.chip.video.subTitle: 'videos'
+  setup.header.chip.help: 'Help guides'
+  setup.header.chip.help.subTitle: 'guides'
+  setup.page.title: 'Setup'
+  setup.page.search.placeholder: 'Search by keyword'
+  setup.page.video.query.error.message: 'An error occured while retrieving video count'
+  setup.page.expand.label: 'Expand'
+  setup.page.search.result.title: 'Search Results'
+  setup.page.search.no.result.label: 'No results found'
+  setup.page.search.no.result.subTitle: 'Try adjusting your search to find what you’re looking for'
+  setup.page.live.upcoming.webinar.title: 'Live & Upcoming Webinars'
+  setup.page.live.upcoming.webinar.view.schedule: 'View Full Schedule'
+  setup.page.live.upcoming.webinar.join.class.label: 'Join class'
+  setup.page.live.upcoming.webinar.count.me.label: 'Count me in'
+  setup.page.webinar.modal.join.label: 'Join'
+  setup.page.webinar.modal.register.label: 'Register'
+  iframe-incompatible: 'Unable to load content. Please update your browser.'
+  avatar.task_manager: 'Task Manager'
+  rules.no-configured-message: 'No field rules are configured for this form'
+  rules.configure-now: 'Configure Now'
+  rules.rule-name: 'Rule name'
+  rules.new-rule: 'New Rule'
+  rules.cancel: 'Cancel'
+  rules.save-rule: 'Save Rule'
+  rules.if: 'If'
+  rules.if-condition: 'of the following conditions are met'
+  rules.write-condition-here: 'Write Condition here'
+  rules.then: 'Then'
+  rules.then-condition: 'Perform the following actions'
+  rules.field-rules: 'Field Rules'
+  rules.configure-rules: 'Configure rules to change the behaviour of your form based on the answers selected'
+  setup.department.schema.noDataBtnText: 'Create Department'
+  setup.department.schema.noDataText: 'No departments'
+  team.user.title: 'Users'
+  team.user.breadcrumb.team: 'Team'
+  team.user.breadcrumb.users: 'Users'
+  team.user.filter.button: 'Filter'
+  team.user.filter.apply.button: 'Apply'
+  team.user.filter.cancel.button: 'Cancel'
+  team.user.filter.reset.button: 'Reset'
+  team.user.filter.label: 'Filter by'
+  team.user.filter.status.label: 'Status'
+  team.user.filter.department.label: 'Department'
+  team.user.filter.location.label: 'Location'
+  team.user.filter.admin.label: 'Admin'
+  team.user.filter.active.label: 'Active'
+  team.user.filter.inactive.label: 'Inactive'
+  team.user.header.search.placeHolder: 'Search in Custom'
+  team.user.header.search.noSearchResults: 'No results found'
+  team.user.header.search.tryAdjustSearch: 'Try adjusting your search to find what you’re looking for'
+  team.user.header.newGroup.button: 'New Group'
+  team.user.header.newStaffMember.button: 'New Staff Member'
+  team.user.tabOne: 'Staff Members'
+  team.user.tabTwo: 'Group Permissions'
+  team.user.grid.pending.button: 'Pending'
+  team.user.grid.owner.button: 'Owner'
+  team.user.grid.onVacation.tooltip: 'On Vacation'
+  team.user.grid.userStatus.tooltip: 'Online'
+  team.user.grid.userAdmin.tooltip: 'Administrator'
+  team.user.listView.name.label: 'Name'
+  team.user.listView.lastActivity.label: 'Last activity'
+  team.user.listView.mobile.label: 'Mobile'
+  team.user.listView.email.label: 'Email'
+  team.user.listView.location.label: 'Location'
+  team.user.listView.userGroup.label: 'User group'
+  team.user.listView.edit.label: 'Edit'
+  team.user.groupPermission.tabOne: 'Modules'
+  team.user.groupPermission.tabTwo: 'Features'
+  team.user.groupPermission.tabThree: 'Reports'
+  team.user.groupPermission.tabFour: 'Advanced'
+  team.user.permission.column.scheduler: 'Scheduler'
+  team.user.permission.column.therapist: 'Therapist'
+  team.user.permission.column.manager: 'Manager'
+  team.user.permission.column.director: 'Director'
+  team.user.permission.column.admin: 'Admin'
+  team.user.permission.column.owner: 'Owner'
+  team.user.advanced.tableColumnName: 'Advanced Name'
+  team.user.advanced.pageTitle: 'Advanced'
+  team.user.advanced.subTitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  team.user.advanced.source.advancedPermissionsTitle: 'Advanced Permissions'
+  team.user.advanced.source.restrictToClients: 'Restrict to own clients'
+  team.user.advanced.source.restrictToClients.tooltip: 'Lorem ipsum'
+  team.user.advanced.source.restrictDataUser: 'Restrict data to user group'
+  team.user.advanced.source.restrictDataUser.tooltip: 'Lorem ipsum dolor'
+  team.user.advanced.source.restrictCalendarUser: 'Restrict calendar to user group'
+  team.user.advanced.source.restrictCalendarUser.tooltip: 'Lorem ipsum dolor sit'
+  team.user.advanced.source.limitContactLocation: 'Limit contacts to locations selected'
+  team.user.advanced.source.limitContactLocation.tooltip: 'Lorem ipsum'
+  team.user.feature.tableColumnName: 'Feature Name'
+  team.user.feature.pageTitle: 'Features'
+  team.user.feature.subTitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  team.user.feature.source.calendarClientsTitle: 'Calendar & Clients'
+  team.user.feature.source.availableCalendar: 'Available on calendar'
+  team.user.feature.source.availableCalendar.tooltip: 'n9bi5PfhMJ'
+  team.user.feature.source.viewEverybodyCalendar: 'View everybody’s calendar'
+  team.user.feature.source.viewEverybodyCalendar.tooltip: 'OU7m6ovVoR'
+  team.user.feature.source.canMakeBookOut: 'Can make Bookout slot'
+  team.user.feature.source.canMakeBookOut.tooltip: 'qTQoH5PzN5'
+  team.user.feature.source.bookableOnline: 'Bookable online'
+  team.user.feature.source.bookableOnline.tooltip: 'UM7dY2b5YM'
+  team.user.feature.source.canCancelBooking: 'Can Cancel Booking'
+  team.user.feature.source.canCancelBooking.tooltip: 'nXIgb5N8Cd'
+  team.user.feature.source.changeBookingTime: 'Change booking time'
+  team.user.feature.source.changeBookingTime.tooltip: 'VVlYSKSAMp'
+  team.user.feature.source.canMoveBlockout: 'Can move Blockout slot'
+  team.user.feature.source.canMoveBlockout.tooltip: '7AmRwt5Ufh'
+  team.user.feature.source.canDeleteBlockout: 'Can delete Blockout slot'
+  team.user.feature.source.canDeleteBlockout.tooltip: 'bY8JkINb6e'
+  team.user.feature.source.financialsTitle: 'Financials'
+  team.user.feature.source.canVoidSales: 'Can void sales'
+  team.user.feature.source.canVoidSales.tooltip: 'sFhhOSRaL3'
+  team.user.feature.source.canRefundSales: 'Can refund sales'
+  team.user.feature.source.canRefundSales.tooltip: 'khmUO3J4E5'
+  team.user.feature.source.canEditInvoiceContent: 'Can Edit Invoice Content'
+  team.user.feature.source.canEditInvoiceContent.tooltip: 'vnFDwEaGQn'
+  team.user.feature.source.availableToSell: 'Available to Sell'
+  team.user.feature.source.availableToSell.tooltip: '6elQ2CLcWN'
+  team.user.feature.source.canEditInvoices: 'Can Edit Invoices'
+  team.user.feature.source.canEditInvoices.tooltip: 'i0vuS5rad4'
+  team.user.feature.source.performanceStats: 'Performance stats'
+  team.user.feature.source.performanceStats.tooltip: 'Fvt77WgGz8'
+  team.user.feature.source.applyDiscount: 'Apply Discount'
+  team.user.feature.source.applyDiscount.tooltip: 'pTB1Cm0M28'
+  team.user.feature.source.otherTitle: 'Other'
+  team.user.feature.source.canDeleteAlertNotes: 'Can delete alert notes'
+  team.user.feature.source.canDeleteAlertNotes.tooltip: 'ullgGFjMDf'
+  team.user.feature.source.editDeleteEMR: 'Edit/Delete EMR'
+  team.user.feature.source.editDeleteEMR.tooltip: 'tYmuqMrDFE'
+  team.user.feature.source.mergeDuplicateContrast: 'Merge duplicate Contrast/Leads'
+  team.user.feature.source.mergeDuplicateContrast.tooltip: 'smR7eElxv2'
+  team.user.feature.source.appearOnReports: 'Appear on reports'
+  team.user.feature.source.appearOnReports.tooltip: 'I8Bec4wANd'
+  team.user.feature.source.canManageRota: 'Can manage rota'
+  team.user.feature.source.canManageRota.tooltip: 'ntryCVsr3Y'
+  team.user.feature.source.appearOnRota: 'Appear on rota'
+  team.user.feature.source.appearOnRota.tooltip: 'ZabVByGIYd'
+  team.user.feature.source.medicalApprovalNotes: 'Medical Approval Notes'
+  team.user.feature.source.medicalApprovalNotes.tooltip: 'O8fh7ULskI'
+  team.user.feature.source.canEditStockDescriptions: 'Can edit stock descriptions'
+  team.user.feature.source.canEditStockDescriptions.tooltip: 'hhSLTS3CcG'
+  team.user.feature.source.canEditStockLevel: 'Can edit stock level'
+  team.user.feature.source.canEditStockLevel.tooltip: 'eEndA18Pmu'
+  team.user.module.tableColumnName: 'Module Name'
+  team.user.module.pageTitle: 'Modules'
+  team.user.module.subTitle: 'Setup which sections are accessible to each user permission level. All logged in staff can access the calendar, and owner accounts have full system access.'
+  team.user.module.source.contactsTitle: 'Contacts'
+  team.user.module.source.clients: 'Clients'
+  team.user.module.source.clients.tooltip: 'sqYYOGOAQP'
+  team.user.module.source.cases: 'Cases'
+  team.user.module.source.cases.tooltip: 'OEYGkvAyBd'
+  team.user.module.source.labRequests: 'Lab Requests'
+  team.user.module.source.labRequests.tooltip: 'cYPo8GDbNH'
+  team.user.module.source.financeTitle: 'Finance'
+  team.user.module.source.accounts: 'Accounts'
+  team.user.module.source.accounts.tooltip: 'yDpOxNf5jT'
+  team.user.module.source.cashup: 'Cashup'
+  team.user.module.source.cashup.tooltip: 'XdentP6oXX'
+  team.user.module.source.expenses: 'Expenses'
+  team.user.module.source.expenses.tooltip: 'aiHX9GlQd7'
+  team.user.module.source.leadsTitle: 'Leads'
+  team.user.module.source.leads: 'Leads'
+  team.user.module.source.leads.tooltip: '0T4CG6Nkgr'
+  team.user.module.source.marketingTitle: 'Marketing'
+  team.user.module.source.campaigns: 'Campaigns'
+  team.user.module.source.campaigns.tooltip: 'XmLBZxbn7Q'
+  team.user.module.source.reviews: 'Reviews'
+  team.user.module.source.reviews.tooltip: 'ImV8gNGMnF'
+  team.user.module.source.giftVouchers: 'Gift Vouchers'
+  team.user.module.source.giftVouchers.tooltip: 'C4k3t3pnlS'
+  team.user.module.source.referral: 'Referrals'
+  team.user.module.source.referral.tooltip: 'GlswuYBupu'
+  team.user.module.source.loyalty: 'Loyalty'
+  team.user.module.source.loyalty.tooltip: 'bAHtufRUlk'
+  team.user.module.source.reportsTitle: 'Reports'
+  team.user.module.source.stockTitle: 'Stock'
+  team.user.module.source.products: 'Products'
+  team.user.module.source.products.tooltip: 'IN6043q3Z7'
+  team.user.module.source.inventoryCount: 'Inventory Count'
+  team.user.module.source.inventoryCount.tooltip: 'oetgq8uK7H'
+  team.user.module.source.purchaseOrder: 'Purchase Order'
+  team.user.module.source.purchaseOrder.tooltip: 'xs9y9ITn3r'
+  team.user.module.source.supplier: 'Supplier'
+  team.user.module.source.supplier.tooltip: 'sWXz9Vupi4'
+  team.user.module.source.calendarTitle: 'Calendar'
+  team.user.module.source.teamTitle: 'Team'
+  team.user.module.source.teammates: 'Teammates'
+  team.user.module.source.teammates.tooltip: 'HHt1Mg1p4g'
+  team.user.module.source.targets: 'Targets'
+  team.user.module.source.targets.tooltip: 'yMExTeduFS'
+  team.user.module.source.schedule: 'Schedule'
+  team.user.module.source.schedule.tooltip: 'Da5LnTpAI9'
+  team.user.module.source.hiring: 'Hiring'
+  team.user.module.source.hiring.tooltip: 'dlSWUOAggF'
+  team.user.module.source.commissions: 'Commissions'
+  team.user.module.source.commissions.tooltip: 'YM7KcBOseO'
+  team.user.reports.tableColumnName: 'Reports Name'
+  team.user.reports.pageTitle: 'Reports'
+  team.user.reports.subTitle: 'Setup which sections are accessible to each user permission level. All logged in staff can access the calendar, and owner accounts have full system access.'
+  team.user.reports.source.contactReportsTitle: 'Contact Reports'
+  team.user.reports.source.basicInformation: 'CO001 - Basic Information'
+  team.user.reports.source.basicInformation.tooltip: 'NjLZB4dh3x'
+  team.user.reports.source.birthday: 'CO003 - Birthday'
+  team.user.reports.source.birthday.tooltip: 'ekBemNGGp7'
+  team.user.reports.source.outstandingPackages: 'CO010 - Outstanding Packages'
+  team.user.reports.source.outstandingPackages.tooltip: 'ZQ3zXBKlbL'
+  team.user.reports.source.newClients: 'CO020 - New Clients'
+  team.user.reports.source.newClients.tooltip: 'AuUR01shHk'
+  team.user.reports.source.lastSpend: 'CO030 - Last Spend'
+  team.user.reports.source.lastSpend.tooltip: 'rKX1sLHO6U'
+  team.user.reports.source.lastVisit: 'CO031 - Last Visit'
+  team.user.reports.source.lastVisit.tooltip: 'g4AfNjcnpF'
+  team.user.reports.source.clientsByLocation: 'CO035 - Clients by Location'
+  team.user.reports.source.clientsByLocation.tooltip: '0OtUrvfhoc'
+  team.user.reports.source.firstVisit: 'CO046 - First Visit'
+  team.user.reports.source.firstVisit.tooltip: 'zKXBIwTkCE'
+  team.user.reports.source.vaccinationReport: 'VA001 - Vaccination Report'
+  team.user.reports.source.vaccinationReport.tooltip: 'mcfDQKJfmN'
+  team.user.reports.source.bigSpenderReceipt: 'CO045 - Big Spender by Receipt'
+  team.user.reports.source.bigSpenderReceipt.tooltip: 'ZnpYhOmOtE'
+  team.user.reports.source.clientReceiptsCategory: 'CO050 - Client Receipts by Category'
+  team.user.reports.source.clientReceiptsCategory.tooltip: 'poDhnse0V9'
+  team.user.reports.source.clientRetailPurchases: 'CO065 - Client Retail Purchases'
+  team.user.reports.source.clientRetailPurchases.tooltip: 'MXfIxEAu1m'
+  team.user.reports.source.accountBalance: 'CO070 - Account Balance'
+  team.user.reports.source.accountBalance.tooltip: 'vwrqGJWVvh'
+  team.user.reports.source.clientServiceSales: 'CO075 - Client Service Sales'
+  team.user.reports.source.clientServiceSales.tooltip: 'oG5ryYbqRk'
+  team.user.reports.source.medicalDataReport: 'CO147 - Medical Data Report'
+  team.user.reports.source.medicalDataReport.tooltip: 'U42etMBdYv'
+  team.user.reports.source.duplicateClients: 'CO060 - Duplicate Clients'
+  team.user.reports.source.duplicateClients.tooltip: 'U8ZyUqU3sC'
+  team.user.reports.source.patientPrescriptions: 'CO105 - Patient Prescriptions'
+  team.user.reports.source.patientPrescriptions.tooltip: 'EeZks6Hxzd'
+  team.user.reports.source.clientsTreatmentInterest: 'CO110 - Clients Treatment Interest'
+  team.user.reports.source.clientsTreatmentInterest.tooltip: 'ZmTbAxRhPR'
+  team.user.reports.source.neverPurchasedBefore: 'CO111 - Never Purchased Before'
+  team.user.reports.source.neverPurchasedBefore.tooltip: 'h72qhaFBzC'
+  team.user.reports.source.clientEnquiryConversion: 'CO115 - Client Enquiry Conversion'
+  team.user.reports.source.clientEnquiryConversion.tooltip: '9rStPSBoTQ'
+  team.user.reports.source.productConsumption: 'CO130 - Product Consumption'
+  team.user.reports.source.productConsumption.tooltip: 'K23Zihbd8f'
+  team.user.reports.source.accountActivity: 'CO135 - Account Activity'
+  team.user.reports.source.accountActivity.tooltip: 'wE6SftJrW1'
+  team.user.reports.source.lastCustomerBookingsEmployee: 'CO140 - Last Customer Bookings by Employee'
+  team.user.reports.source.lastCustomerBookingsEmployee.tooltip: 'ZTUxQRYzDB'
+  team.user.reports.source.accountBalanceDate: 'CO145 - Account Balance by Date'
+  team.user.reports.source.accountBalanceDate.tooltip: 'KOiztr8Lxe'
+  team.user.reports.source.treatmentMissingData: 'CO146 - Treatment Missing Data'
+  team.user.reports.source.treatmentMissingData.tooltip: 'SBHQUqGKHf'
+  team.user.reports.source.marketingReportsTitle: 'Marketing Reports'
+  team.user.reports.source.clientRecalls: 'CO095 - Client Recalls'
+  team.user.reports.source.clientRecalls.tooltip: 'QxFEsutp8v'
+  team.user.reports.source.loyaltyReport: 'CO100 - Loyalty Report'
+  team.user.reports.source.loyaltyReport.tooltip: '2ETOMx3Qas'
+  team.user.reports.source.giftCards: 'CO085 - Gift Cards'
+  team.user.reports.source.giftCards.tooltip: 'SFwAQBfHXX'
+  team.user.reports.source.giftCardAnalysis: 'CO090 - Gift Card Analysis'
+  team.user.reports.source.giftCardAnalysis.tooltip: '1c90rYlFtw'
+  team.user.reports.source.salesReferralSource: 'MA001 - Sales by Referral Source'
+  team.user.reports.source.salesReferralSource.tooltip: 'A4CKQLrdoV'
+  team.user.reports.source.optTextContacts: 'MA005 - Opt In Text Contacts'
+  team.user.reports.source.optTextContacts.tooltip: 'WlWyhGxlvO'
+  team.user.reports.source.optEmailContacts: 'MA010 - Opt In Email Contacts'
+  team.user.reports.source.optEmailContacts.tooltip: 'uz7OS08EkT'
+  team.user.reports.source.referralSources: 'MA020 - Referral Sources'
+  team.user.reports.source.referralSources.tooltip: 'w63TL1OC9f'
+  team.user.reports.source.feedbackResults: 'MA025 - Feedback Results'
+  team.user.reports.source.feedbackResults.tooltip: '60DjEO3gkv'
+  team.user.reports.source.surveyFeedback: 'MA030 - Survey Feedback'
+  team.user.reports.source.surveyFeedback.tooltip: 'wu5FhhrZxY'
+  team.user.reports.source.financeReportsTitle: 'Finance Reports'
+  team.user.reports.source.dailySales: 'FI000 - Daily Sales'
+  team.user.reports.source.dailySales.tooltip: 'QiGgKovK6L'
+  team.user.reports.source.dailyReconciliation: 'FI001 - Daily Reconciliation'
+  team.user.reports.source.dailyReconciliation.tooltip: 'B0K8FzFyBB'
+  team.user.reports.source.dailyPayments: 'FI002 - Daily Payments'
+  team.user.reports.source.dailyPayments.tooltip: 'FsbM3g054w'
+  team.user.reports.source.receiptsEmployee: 'FI005 - Receipts by Employee - Detailed'
+  team.user.reports.source.receiptsEmployee.tooltip: 'ARhGqtkBAS'
+  team.user.reports.source.salesEmployee: 'FI006 - Sales by Employee Detailed Cross'
+  team.user.reports.source.salesEmployee.tooltip: '1RCpKmt69d'
+  team.user.reports.source.receiptsRetail: 'FI010 - Receipts by Retail Category'
+  team.user.reports.source.receiptsRetail.tooltip: 'CKEFaM1wbS'
+  team.user.reports.source.receiptsService: 'FI011 - Receipts by Service Category'
+  team.user.reports.source.receiptsService.tooltip: 'wl3D7kQEhm'
+  team.user.reports.source.receiptsCategory: 'FI012 - Receipts by Category'
+  team.user.reports.source.receiptsCategory.tooltip: 'egR8Pnj7Gg'
+  team.user.reports.source.salesCategory: 'FI014 - Sales by Category'
+  team.user.reports.source.salesCategory.tooltip: '7ieLV1bVBq'
+  team.user.reports.source.receiptsEmployeeService: 'FI015 - Receipts by Employee (Service)'
+  team.user.reports.source.receiptsEmployeeService.tooltip: 'Xthc1zFJKB'
+  team.user.reports.source.receiptsEmployeeRetail: 'FI016 - Receipts by Employee (Retail)'
+  team.user.reports.source.receiptsEmployeeRetail.tooltip: 'G6xP6cWjFm'
+  team.user.reports.source.VATReport: 'FI019 - VAT Report'
+  team.user.reports.source.VATReport.tooltip: 'FWS8wp62Fy'
+  team.user.reports.source.receiptsMonth: 'FI025 - Receipts by Month'
+  team.user.reports.source.receiptsMonth.tooltip: 'bQkLqEOFW3'
+  team.user.reports.source.monthlyTakingSummary: 'FI026 - Monthly Taking (Summary)'
+  team.user.reports.source.monthlyTakingSummary.tooltip: 'X4cwPBvHyh'
+  team.user.reports.source.raisedInvoices: 'FI030 - Raised Invoices'
+  team.user.reports.source.raisedInvoices.tooltip: 'C1Kk9eWMIG'
+  team.user.reports.source.expenses: 'FI040 - Expenses'
+  team.user.reports.source.expenses.tooltip: 'be48J8FIaA'
+  team.user.reports.source.outstandingInvoices: 'FI075 - Outstanding Invoices'
+  team.user.reports.source.outstandingInvoices.tooltip: '0bVTr0tZnj'
+  team.user.reports.source.serviceRetailReceipts: 'FI085 - Service vs Retail Receipts'
+  team.user.reports.source.serviceRetailReceipts.tooltip: '1PoZdSLPX1'
+  team.user.reports.source.agedInsuranceDebtReport: 'FI090 - Aged Insurance Debt Report'
+  team.user.reports.source.agedInsuranceDebtReport.tooltip: 'J5wYks64Dc'
+  team.user.reports.source.receiptsEmployeeDetailed: 'FI017 - Receipts by Employee Detailed (VAT)'
+  team.user.reports.source.receiptsEmployeeDetailed.tooltip: 'KsHr87BjAg'
+  team.user.reports.source.dailyPerformanceStats: 'FI022 - Daily Performance Stats'
+  team.user.reports.source.dailyPerformanceStats.tooltip: '1p7YRHFZC7'
+  team.user.reports.source.invoiceActivity: 'FI031 - Invoice Activity'
+  team.user.reports.source.invoiceActivity.tooltip: 'Eu0THI4kNe'
+  team.user.reports.source.receiptsPaymentMethod: 'FI035 - Receipts by Payment Method'
+  team.user.reports.source.receiptsPaymentMethod.tooltip: 'uzzJ9RH3mf'
+  team.user.reports.source.unpaidVisits: 'FI055 - Unpaid Visits'
+  team.user.reports.source.unpaidVisits.tooltip: 'lIh1Zu66R5'
+  team.user.reports.source.freeGiveaways: 'FI060 - Free Giveaways'
+  team.user.reports.source.freeGiveaways.tooltip: 'ygZpS6jnA5'
+  team.user.reports.source.appointmentIncomeProjection: 'FI065 - Appointment Income Projection'
+  team.user.reports.source.appointmentIncomeProjection.tooltip: 'b40Qeizaz6'
+  team.user.reports.source.discountReport: 'FI070 - Discount Report'
+  team.user.reports.source.discountReport.tooltip: 'tYHab1mrxJ'
+  team.user.reports.source.salesExpense: 'FI080 - Sales vs Expense'
+  team.user.reports.source.salesExpense.tooltip: '1dxztCuxiv'
+  team.user.reports.source.insuranceReport: 'FI155 - Insurance Report'
+  team.user.reports.source.insuranceReport.tooltip: '0RJpJc5Vej'
+  team.user.reports.source.salesConversion: 'OT001 - Sales Conversion'
+  team.user.reports.source.salesConversion.tooltip: 'cyziwlgEQj'
+  team.user.reports.source.telesalesReport: 'OT002 - Telesales Report'
+  team.user.reports.source.telesalesReport.tooltip: 'F7AT3npuZs'
+  team.user.reports.source.leadReportsTitle: 'Lead Reports'
+  team.user.reports.source.openLeads: 'LE000 - Open Leads'
+  team.user.reports.source.openLeads.tooltip: '2VuJ4IslXQ'
+  team.user.reports.source.convertedLeads: 'LE001 - Converted Leads'
+  team.user.reports.source.convertedLeads.tooltip: 'aRa9iMgloD'
+  team.user.reports.source.leads: 'LE005 - Leads'
+  team.user.reports.source.leads.tooltip: 'MrLcWKmWgR'
+  team.user.reports.source.leadsStatus: 'LE015 - Leads by Status'
+  team.user.reports.source.leadsStatus.tooltip: '88OymRtwkg'
+  team.user.reports.source.leadsSources: 'LE020 - Leads by Sources'
+  team.user.reports.source.leadsSources.tooltip: 'lwNJNQa8Jf'
+  team.user.reports.source.leadsInterest: 'LE035 - Leads by Interest'
+  team.user.reports.source.leadsInterest.tooltip: '6tBTFGREau'
+  team.user.reports.source.leadsClinic: 'LE040 - Leads by Clinic'
+  team.user.reports.source.leadsClinic.tooltip: 'VlNMz4oUYU'
+  team.user.reports.source.appointmentsTitle: 'Appointments'
+  team.user.reports.source.bookedAppointments: 'CO021 - Booked Appointments'
+  team.user.reports.source.bookedAppointments.tooltip: 'iU0AjLggTh'
+  team.user.reports.source.missedCancelledAppointments: 'CO025 - Missed/Cancelled Appointments'
+  team.user.reports.source.missedCancelledAppointments.tooltip: 'OevDgRc29k'
+  team.user.reports.source.connectRegistrationBookings: 'CO036 - Connect Registration & Bookings'
+  team.user.reports.source.connectRegistrationBookings.tooltip: 'k0tKHLG3vD'
+  team.user.reports.source.consultationConversion: 'CO040 - Consultation Conversion'
+  team.user.reports.source.consultationConversion.tooltip: 'lTXAGkiQN5'
+  team.user.reports.source.appointmentsServiceTypeCount: 'CO006 - Appointments by Service Type Count'
+  team.user.reports.source.appointmentsServiceTypeCount.tooltip: 'Vagamb0EP0'
+  team.user.reports.source.surgeryPreparations: 'CO125 - Surgery Preparations'
+  team.user.reports.source.surgeryPreparations.tooltip: 'IU0OjH4H82'
+  team.user.reports.source.lastCustomerBookingsByEmployee: 'CO140 - Last Customer Bookings by Employee'
+  team.user.reports.source.lastCustomerBookingsByEmployee.tooltip: 'CsB4TT0CjJ'
+  team.user.reports.source.staffAppointmentSchedule: 'ST000 - Staff Appointment Schedule'
+  team.user.reports.source.staffAppointmentSchedule.tooltip: '35QDCAZJZK'
+  team.user.reports.source.st025EmployeeAppointmentSummary: 'ST025 - Employee Appointment Summary'
+  team.user.reports.source.st025EmployeeAppointmentSummary.tooltip: 'U2l378KhPf'
+  team.user.reports.source.locationsReport: 'BETA - Locations Report'
+  team.user.reports.source.locationsReport.tooltip: 'L36INCJcL4'
+  team.user.reports.source.classesAppointmentsReport: 'OT003 - Classes and Appointments report'
+  team.user.reports.source.classesAppointmentsReport.tooltip: 'celRweUNPw'
+  team.user.reports.source.roomUtilization: 'OT014 - Room Utilization'
+  team.user.reports.source.roomUtilization.tooltip: 'oDwdymwf0N'
+  team.user.reports.source.clinicConversion: 'OT009 - Clinic Conversion'
+  team.user.reports.source.clinicConversion.tooltip: '7O1phZPfpd'
+  team.user.reports.source.stockReportsTitle: 'Stock Reports'
+  team.user.reports.source.stockReport: 'STK001 - Stock Report'
+  team.user.reports.source.stockReport.tooltip: 'vKJNvAMLch'
+  team.user.reports.source.lowStock: 'STK005 - Low Stock'
+  team.user.reports.source.lowStock.tooltip: 'Gc2j4uTqHn'
+  team.user.reports.source.costGoods: 'STK015 - Cost of Goods'
+  team.user.reports.source.costGoods.tooltip: 'AnCgP9gQaO'
+  team.user.reports.source.stockCount: 'STK025 - Stock Count'
+  team.user.reports.source.stockCount.tooltip: 'PuHCgnUqQp'
+  team.user.reports.source.staffReportsTitle: 'Staff Reports'
+  team.user.reports.source.teamReports: 'Team Report'
+  team.user.reports.source.teamReports.tooltip: 'Ua9Ez5XbDK'
+  team.user.reports.source.staffBookouts: 'BETA - Staff Bookouts'
+  team.user.reports.source.staffBookouts.tooltip: '110u0SLWed'
+  team.user.reports.source.staffPerformanceSummary: 'ST001 - Staff Performance Summary'
+  team.user.reports.source.staffPerformanceSummary.tooltip: 'AFqtUdJkHB'
+  team.user.reports.source.commissionSummary: 'ST002 - Commission Summary'
+  team.user.reports.source.commissionSummary.tooltip: 'zJYnoQ24ua'
+  team.user.reports.source.commissionReportRetail: 'ST003 - Commission Report (Retail)'
+  team.user.reports.source.commissionReportRetail.tooltip: 'isiWcGSXyG'
+  team.user.reports.source.staffPerformanceTracker: 'ST004 - Staff Performance Tracker'
+  team.user.reports.source.staffPerformanceTracker.tooltip: 'LsSUTjzltr'
+  team.user.reports.source.employeeHolidaysDate: 'ST005 - Employee Holidays To Date'
+  team.user.reports.source.employeeHolidaysDate.tooltip: 'FYtbblDINo'
+  team.user.reports.source.staffHours: 'ST015 - Staff Hours'
+  team.user.reports.source.staffHours.tooltip: 'lkQO7r5WxC'
+  team.user.reports.source.employeeAppointmentSummary: 'ST025 - Employee Appointment Summary'
+  team.user.reports.source.employeeAppointmentSummary.tooltip: 'S4vm0kh2Wr'
+  team.user.reports.source.dailyEmployeeStatsSummary: 'ST031 - Daily Employee Stats (Summary)'
+  team.user.reports.source.dailyEmployeeStatsSummary.tooltip: 'S4vm0kh2Wr3'
+  team.user.reports.source.dailyEmployeeStats: 'ST033 - Daily Employee Stats'
+  team.user.reports.source.dailyEmployeeStats.tooltip: 'lkQO7r5WxC6'
+  team.user.reports.source.staffDaysOff: 'ST035 - Staff Days Off'
+  team.user.reports.source.staffDaysOff.tooltip: 'S4vm0kh2Wr5'
+  team.user.reports.source.staffPayrollReport: 'ST036 - Staff Payroll Report'
+  team.user.reports.source.staffPayrollReport.tooltip: 'lkQO7r5WxC4'
+  team.user.reports.source.staffClockInOut: 'ST037 - Staff Clock In/Out'
+  team.user.reports.source.staffClockInOut.tooltip: 'lkQO7r5WxC6221'
+  team.user.reports.source.customReports.Title: 'Custom Reports'
+  team.user.groupPermission.addGroupTitle: 'Add Group'
+  team.user.groupPermission.addGroupBtnText: 'Add Group'
+  team.user.groupPermission.inputName: 'Name'
+  team.user.groupPermission.inputDesc: 'Description'
+  reportPermissionTable.applyChanges.modalTitle: 'Apply Changes'
+  reportPermissionTable.applyChanges.modalDesc: 'The changes you made to this role will affect teammates.'
+  reportPermissionTable.applyChanges.reviewChanges: 'Review changes'
+  reportPermissionTable.applyChanges.reviewChanges.customReportMessage: 'A custom report'
+  reportPermissionTable.applyChanges.cancel: 'Cancel'
+  reportPermissionTable.applyChanges.applyChangesBtn: 'Apply Changes'
+  reportPermissionTable.deleteModal.title: 'Delete Alert'
+  reportPermissionTable.deleteModal.description:
+    'You can not delete a group with teammates assigned. First move the
+    teammates to a new group, and then you will be able to proceed with
+    deleting.'
+  reportPermissionTable.deleteModal.okBtnText: 'Ok'
+  reportPermissionTable.deleteModal.addTeamMateBtn: '+ Add Teammate'
+  team.user.updateGroupPermissionSuccess.message: 'Success! You have updated group permission successfully'
+  team.user.updateGroupPermissionError.message: 'Error! While updating group permission'
+  setup.cancellation.reason.schema.title: 'Cancellation Reasons'
+  setup.cancellation.reason.schema.title.lowercase: 'cancellation reasons'
+  setup.cancellation.reason.schema.create.title: 'New Cancellation Reason'
+  setup.cancellation.reason.schema.created.message: 'You have successfully created cancellation reasons.'
+  setup.cancellation.reason.schema.create.error.message: 'While creating cancellation reasons.'
+  setup.cancellation.reason.schema.updated.message: 'You have successfully updated cancellation reasons.'
+  setup.cancellation.reason.schema.update.error.message: 'While updating cancellation reasons.'
+  setup.cancellation.reason.schema.deleted.message: 'You have successfully deleted cancellation reasons.'
+  setup.cancellation.reason.schema.delete.error.message: 'While deleting cancellation reasons.'
+  setup.cancellation.reason.schema.header.create: 'Create Cancellation Reasons'
+  setup.cancellation.reason.schema.header.edit: 'Edit Cancellation Reasons'
+  setup.cancellation.reason.schema.header.delete: 'Delete Cancellation Reasons?'
+  setup.cancellation.reason.schema.delete.button.label: 'Yes, Delete Source'
+  setup.cancellation.reason.schema.noDataBtnText: 'Create Cancellation Reason'
+  setup.cancellation.reason.schema.noDataText: 'No cancellation reasons'
+  setup.cancellation.reason.schema.name.full: 'Friendly Name'
+  setup.cancellation.reason.schema.name.full.lower: 'friendly name'
+  setup.cancellation.reason.schema.name.short: 'Name'
+  setup.cancellation.reason.schema.name.short.lower: 'name'
+  setup.cancellation.reason.schema.name.desc: 'A friendly name'
+  setup.cancellation.reason.schema.type.full: 'Cancellation type'
+  setup.cancellation.reason.schema.type.full.lower: 'cancellation type'
+  setup.cancellation.reason.schema.type.short: 'Type'
+  setup.cancellation.reason.schema.type.short.lower: 'type'
+  setup.cancellation.reason.schema.type.desc: 'type of the cancellation reason'
+  setup.cancellation.reason.schema.type.select.early.cancel: 'Early Cancel'
+  setup.cancellation.reason.schema.type.select.late.cancel: 'Late Cancel'
+  setup.cancellation.reason.schema.policy.full: 'Apply the corresponding cancellation policy'
+  setup.cancellation.reason.schema.policy.full.lower: 'apply the corresponding cancellation policy'
+  setup.cancellation.reason.schema.policy.short: 'Application Cancellation Policy'
+  setup.cancellation.reason.schema.policy.short.lower: 'application cancellation policy'
+  setup.cancellation.reason.schema.policy.desc: 'order of the cancellation reason'
+  setup.cancellation.reason.schema.policy.select.yes: 'Yes'
+  setup.cancellation.reason.schema.policy.select.no: 'No'

@@ -22,7 +22,7 @@ import styles from './tax-rate.module.less'
 
 const LIST_QUERY = gql`
   query Taxes($offset: Int, $limit: Int) {
-    tax_rates(offset: $offset, limit: $limit, order_by: { order: asc }) {
+    tax_rates(offset: $offset, limit: $limit, order_by: { id: desc }) {
       id
       name
       is_active

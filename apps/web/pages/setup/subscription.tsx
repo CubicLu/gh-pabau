@@ -4,7 +4,7 @@ import { Card, Divider, Input, Popover, Radio, Typography } from 'antd'
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { useTranslationI18 } from 'apps/web/hooks/useTranslationI18'
 import classNames from 'classnames'
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { useMedia } from 'react-use'
 import paymentUpdateBanner from '../../assets/images/payment-update-banner.png'
 import Layout from '../../components/Layout/Layout'
@@ -12,7 +12,13 @@ import AccountInformation from '../../components/Setup/Subscription/AccountInfor
 import BillingInformation from '../../components/Setup/Subscription/BillingInformation'
 import InvoiceActivity from '../../components/Setup/Subscription/InvoiceActivityList'
 import styles from './subscription.module.less'
+import { useRouter } from 'next/router'
 
+const tabName = {
+  '0': 'invoice',
+  '1': 'billing',
+  '2': 'accountinfo',
+}
 const Subscription: FC = () => {
   const { Title } = Typography
   const { Search } = Input
@@ -22,10 +28,28 @@ const Subscription: FC = () => {
   const [filterValue, setFilterValue] = useState(0)
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 768px)', false)
+  const router = useRouter()
+  const { title } = router.query
 
   const handleSearch = (value) => {
     setSearchTerm(value)
   }
+
+  useEffect(() => {
+    if (title === 'billing') {
+      setActiveTab('1')
+    } else if (title === 'accountinfo') {
+      setActiveTab('2')
+    }
+  }, [title])
+
+  useEffect(() => {
+    router.push({
+      pathname: '/setup/subscription',
+      query: { title: tabName[activeTab] },
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab])
 
   const onFilterApply = (e) => {
     setFilterValue((e) => (e === 1 ? 0 : 1))
@@ -111,6 +135,7 @@ const Subscription: FC = () => {
             t('setup.subscription.billingdetails'),
             t('setup.subscription.accountinformations'),
           ]}
+          activeKey={activeTab}
           onTabClick={(activeKey) => setActiveTab(activeKey)}
         >
           <InvoiceActivity searchTerm={searchTerm} filterValue={filterValue} />

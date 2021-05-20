@@ -28,6 +28,7 @@ describe('VersionHistory', () => {
         }}
         visible={true}
         onVisibleChange={() => true}
+        currentVersion={'1.0.0'}
       />
     )
     expect(baseElement).toBeTruthy()

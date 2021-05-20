@@ -112,12 +112,14 @@ interface P {
     isPrivate: boolean
   ) => void
   onMessageType?: (e: MouseEvent<HTMLElement>) => void
+  taskManagerIFrameComponent?: JSX.Element
 }
 
 export const Header: FC<P> = ({
   searchRender,
   onCreateChannel,
   onMessageType,
+  taskManagerIFrameComponent,
   ...rest
 }) => {
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
@@ -164,7 +166,10 @@ export const Header: FC<P> = ({
                 <div>
                   <QuickCreate />
                 </div>
-                <AvatarDropDown {...rest} />
+                <AvatarDropDown
+                  taskManagerIFrameComponent={taskManagerIFrameComponent}
+                  {...rest}
+                />
               </div>
             </Col>
           </Row>

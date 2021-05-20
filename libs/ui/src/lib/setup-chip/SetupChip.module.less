@@ -231,7 +231,8 @@
   text-transform: none;
   min-width: 90px;
   height: 25px;
-
+  display: flex;
+  align-items: center;
   @media screen and (min-width: 1366px) {
     font-size: 14px;
     min-width: 100px;
@@ -239,6 +240,17 @@
 
     span {
       margin-left: 3px !important;
+    }
+  }
+  span {
+    display: inline-flex;
+    align-items: center;
+    &:last-child {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 70px;
+      display: inline-block;
     }
   }
 }
@@ -253,9 +265,20 @@
   text-transform: none;
   min-width: 90px;
   height: 25px;
-
+  display: flex;
+  align-items: center;
   span {
     margin-left: 3px !important;
+    display: inline-flex;
+    align-items: center;
+    &:last-child {
+      margin-top: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      display: inline-block;
+      text-overflow: ellipsis;
+      width: 73px;
+    }
   }
 
   @media screen and (min-width: 1366px) {

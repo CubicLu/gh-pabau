@@ -5,7 +5,9 @@ import SubscriptionInfo from './SubscriptionInfo'
 
 describe('SubscriptionInfo', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<SubscriptionInfo />)
+    const { baseElement } = render(
+      <SubscriptionInfo subscriptionName={'Trial'} />
+    )
     expect(baseElement).toBeTruthy()
   })
 })

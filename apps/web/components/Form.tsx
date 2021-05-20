@@ -43,6 +43,7 @@ const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
                 col = 24,
                 selectOptions,
                 required,
+                defaultvalue,
               },
             ],
             i
@@ -128,7 +129,11 @@ const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
               )}
               {type === 'select' && (
                 <AntForm.Item label={full} name={name} required>
-                  <Select name={name} style={{ width: '100%' }}>
+                  <Select
+                    name={name}
+                    style={{ width: '100%' }}
+                    defaultValue={defaultvalue}
+                  >
                     {selectOptions?.map((option) => {
                       return (
                         <Select.Option value={option.value} key={option.label}>

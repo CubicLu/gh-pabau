@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import Layout from '../../components/Layout/Layout'
 
-const reportPrefixes = new Set(['CO', 'FI', 'LE', 'MA', 'OT', 'ST'])
+const reportPrefixes = new Set(['CO', 'FI', 'LE', 'MA', 'OT', 'ST', 'AD'])
 
 export default function Report() {
   const router = useRouter()

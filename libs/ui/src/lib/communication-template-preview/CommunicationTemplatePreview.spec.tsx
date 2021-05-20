@@ -5,7 +5,9 @@ import CommunicationTemplatePreview from './CommunicationTemplatePreview'
 
 describe('CommunicationTemplatePreview', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<CommunicationTemplatePreview />)
+    const { baseElement } = render(
+      <CommunicationTemplatePreview sms={'example sms string'} />
+    )
     expect(baseElement).toBeTruthy()
   })
 })

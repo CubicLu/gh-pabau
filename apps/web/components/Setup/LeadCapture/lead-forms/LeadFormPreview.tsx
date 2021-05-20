@@ -1,11 +1,11 @@
-import React from 'react'
-import { Row, Col, Image } from 'antd'
+import { Button } from '@pabau/ui'
+import { Col, Image, Row } from 'antd'
+import classNames from 'classnames'
 import { Formik, FormikErrors } from 'formik'
 import { Form as AntForm, Input, Select } from 'formik-antd'
+import React from 'react'
 import NormalClinicLogo from '../../../../assets/images/normal-clinic-logo.png'
-import classNames from 'classnames'
-import styles from './Lead-forms.module.less'
-import { Button } from '@pabau/ui'
+import styles from './LeadForms.module.less'
 const { Option } = Select
 
 interface colors {

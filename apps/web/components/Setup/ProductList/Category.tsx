@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useState } from 'react'
 import { ShopOutlined } from '@ant-design/icons'
+import { gql, useMutation } from '@apollo/client'
 import {
   Notification,
   NotificationType,
@@ -7,10 +7,10 @@ import {
   Table,
   useLiveQuery,
 } from '@pabau/ui'
-import { gql, useMutation } from '@apollo/client'
-import { updateTable } from './ProductListUtils'
-import styles from './productListComponents.module.less'
+import React, { FC, useEffect, useState } from 'react'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import styles from './ProductListComponents.module.less'
+import { updateTable } from './ProductListUtils'
 
 interface CategoryListProps {
   showGroup?: boolean

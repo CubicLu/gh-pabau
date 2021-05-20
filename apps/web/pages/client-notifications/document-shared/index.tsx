@@ -1,10 +1,10 @@
-import React, { FC, useRef, useState } from 'react'
 import { Notification, NotificationType } from '@pabau/ui'
-import Layout from '../../../components/Layout/Layout'
-import ClientNotification from '../../../components/ClientNotification/index'
+import React, { FC, useRef, useState } from 'react'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
-import { sendEmailService } from '../../../components/ClientNotificationEmailPreview/sendEmailService'
+import ClientNotification from '../../../components/ClientNotification/Index'
 import DocumentSharedEmailPreview from '../../../components/ClientNotificationEmailPreview/DocumentSharedEmailPreview'
+import { sendEmailService } from '../../../components/ClientNotificationEmailPreview/sendEmailService'
+import Layout from '../../../components/Layout/Layout'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
@@ -38,18 +38,18 @@ const Index: FC = () => {
             buttonColor={buttonColor}
             informationMessage={informationMessage}
             type={type}
-            greeting={t('notifications.documnetshared.greeting')}
-            messageLine1={t('notifications.documnetshared.messageLine1')}
-            messageLine2={t('notifications.documnetshared.messageLine2')}
+            greeting={t('notifications.documentShared.greeting')}
+            messageLine1={t('notifications.documentShared.messageLine1')}
+            messageLine2={t('notifications.documentShared.messageLine2')}
             userEmail={'info@theclinic.com'}
             userName={'Sophia'}
-            buttonName={t('notifications.documnetshared.buttonName')}
+            buttonName={t('notifications.documentShared.buttonName')}
             clinicName={'Clinic'}
-            closingText={t('notifications.documnetshared.closingText')}
-            signatureBlock={t('notifications.documnetshared.signatureBlock')}
-            infoText={t('notifications.documnetshared.infoText')}
-            fromMessage={t('notifications.documentshared.fromMessage')}
-            userMessage={t('notifications.documentshared.userMessage')}
+            closingText={t('notifications.documentShared.closingText')}
+            signatureBlock={t('notifications.documentShared.signatureBlock')}
+            infoText={t('notifications.documentShared.infoText')}
+            fromMessage={t('notifications.documentShared.fromMessage')}
+            userMessage={t('notifications.documentShared.userMessage')}
           />
         )
       }
@@ -83,10 +83,10 @@ const Index: FC = () => {
           },
           {
             path: 'client-notifications/document-shared',
-            breadcrumbName: t('notifications.documnetshared.title'),
+            breadcrumbName: t('notifications.documentShared.title'),
           },
         ]}
-        title={t('notifications.documnetshared.title')}
+        title={t('notifications.documentShared.title')}
         selectedTab={selectedTab}
         handleNotificationSubmit={showNotification}
       />
@@ -101,9 +101,9 @@ const Index: FC = () => {
         hideDisplayPolicyOption={true}
         hideServiceOption={true}
         hideEmployeeNameOption={true}
-        standardMessage={t('notifications.documnetshared.standardMessage')}
+        standardMessage={t('notifications.documentShared.standardMessage')}
         type={'documentShared'}
-        name={t('notifications.documnetshared.title')}
+        name={t('notifications.documentShared.title')}
         langKey={'documentShared'}
         handleNotificationSubmit={showNotification}
       />

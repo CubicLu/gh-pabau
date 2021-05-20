@@ -5,7 +5,13 @@ import CreateLetterTemplateBar from './CreateLetterTemplateBar'
 
 describe('CreateLetterTemplateBar', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<CreateLetterTemplateBar />)
+    const { baseElement } = render(
+      <CreateLetterTemplateBar
+        onDelete={() => {
+          return true
+        }}
+      />
+    )
     expect(baseElement).toBeTruthy()
   })
 })

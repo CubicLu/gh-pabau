@@ -1,7 +1,7 @@
-import React, { FC, useContext } from 'react'
 import { EmailSmsPreview, LeadResponses } from '@pabau/ui'
+import React, { FC, useContext } from 'react'
 import CustomTemplate from '../../components/ClientNotification/CustomTemplate'
-import { GlobalContext } from '../ClientNotification'
+import { GlobalContext } from '../ClientNotification/Index'
 
 interface P {
   standardTapIndex: string

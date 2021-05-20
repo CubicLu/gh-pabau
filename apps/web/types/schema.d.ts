@@ -26,6 +26,8 @@ interface Schema {
   padlocked?: string[]
   filter?: SchemaFilter
   company?: number | string
+  noDataBtnText?: string
+  noDataText?: string
 }
 
 type DefaultFilterType = number | boolean
@@ -85,10 +87,11 @@ interface SchemaItem {
   col?: number
   filter?: SchemaFilter
   example?: string | number | any
+  render?: (value: string | number) => JSX.Element
 }
 interface TypeValues {
   label: string
-  value: string
+  value: string | number
 }
 
 interface NotificationItems {

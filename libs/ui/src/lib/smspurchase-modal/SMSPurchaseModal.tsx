@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import { FullScreenReportModal, OperationType } from '@pabau/ui'
 import {
-  WalletOutlined,
-  SettingOutlined,
   FlagOutlined,
+  SettingOutlined,
+  WalletOutlined,
   WarningTwoTone,
 } from '@ant-design/icons'
-import styles from './SMSPurchaseModal.module.less'
-import Stepper from '../stepper/Stepper'
-import Wizard from '../wizard/Wizard'
-import { Card, Space, Checkbox, Form, InputNumber, Select } from 'antd'
-import classnames from 'classnames'
+import { FullScreenReportModal, OperationType } from '@pabau/ui'
+import { Card, Checkbox, Form, InputNumber, Select, Space } from 'antd'
 import confetti from 'canvas-confetti'
+import classnames from 'classnames'
+import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useMedia } from 'react-use'
 import CoinIcon0 from '../../assets/images/sms-purchase-modal/coins-0.svg'
 import CoinIcon1 from '../../assets/images/sms-purchase-modal/coins-1.svg'
 import CoinIcon2 from '../../assets/images/sms-purchase-modal/coins-2.svg'
@@ -19,11 +18,11 @@ import CoinIcon3 from '../../assets/images/sms-purchase-modal/coins-3.svg'
 import CoinIcon4 from '../../assets/images/sms-purchase-modal/coins-4.svg'
 import CoinIcon5 from '../../assets/images/sms-purchase-modal/coins-5.svg'
 import SelectedCheckImage from '../../assets/images/sms-purchase-modal/selected-check.svg'
-import { useMedia } from 'react-use'
-import { useTranslation } from 'react-i18next'
-
 import highFive from '../../assets/lottie/high-five.json'
 import { MyLottie } from '../my-lottie/MyLottie'
+import Stepper from '../stepper/Stepper'
+import Wizard from '../wizard/Wizard'
+import styles from './SMSPurchaseModal.module.less'
 
 type Item = {
   count: number
@@ -252,7 +251,7 @@ export interface SMSPurchaseModalProps {
   }) => void
   visible: boolean
   numberFormatter: Intl.NumberFormat
-  options: Item[]
+  options?: Item[]
 }
 
 export function SMSPurchaseModal({

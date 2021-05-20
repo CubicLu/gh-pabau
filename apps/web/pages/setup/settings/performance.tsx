@@ -2,6 +2,7 @@ import React, { FC } from 'react'
 import { useMedia } from 'react-use'
 import { Breadcrumb, Button, TabMenu } from '@pabau/ui'
 import { Row, Col, Card } from 'antd'
+import { useRouter } from 'next/router'
 import { LeftOutlined } from '@ant-design/icons'
 import { PerformanceConfigObj } from '../../../mocks/PerformanceSettings'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
@@ -20,6 +21,7 @@ interface P {
 const Performance: FC<P> = () => {
   const isMobile = useMedia('(max-width: 768px)', false)
   const { t } = useTranslationI18()
+  const router = useRouter()
 
   const handleChange = (
     key: string,
@@ -37,7 +39,9 @@ const Performance: FC<P> = () => {
     t('settings-performance-tab-header2'),
     t('settings-performance-tab-header3'),
   ]
-
+  const setupRoute = () => {
+    router.back()
+  }
   return (
     <div className={styles.mainWrapper}>
       <Layout>
@@ -47,7 +51,8 @@ const Performance: FC<P> = () => {
               <Col>
                 <div className={styles.mobTopHead}>
                   <div className={styles.mobTopHeadRow}>
-                    <LeftOutlined /> <h6> {t('settings-header')}</h6>
+                    <LeftOutlined onClick={setupRoute} />{' '}
+                    <h6> {t('settings-header')}</h6>
                   </div>
                 </div>
               </Col>

@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import { Row, Col, Tabs } from 'antd'
+import { FieldType } from '@pabau/ui'
+import { Col, Row, Tabs } from 'antd'
 import classNames from 'classnames'
+import React, { useState } from 'react'
 import LeadFormBuilder from './LeadFormBuilder'
 import LeadFormPreview from './LeadFormPreview'
-import styles from './Lead-forms.module.less'
-import { FieldType } from '@pabau/ui'
+import styles from './LeadForms.module.less'
 
 const { TabPane } = Tabs
 

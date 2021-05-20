@@ -1,15 +1,15 @@
+import { CloseCircleFilled } from '@ant-design/icons'
+import { Button, ChooseEmailTemplate, ChooseSMSTemplate } from '@pabau/ui'
 import React, { FC, useContext, useEffect, useState } from 'react'
-import { Button, ChooseSMSTemplate, ChooseEmailTemplate } from '@pabau/ui'
-import styles from '../../pages/client-notifications/style.module.less'
-import { getFlag } from '../../mocks/utils'
 import emailTemplate1 from '../../../../libs/ui/src/assets/images/emailTemplate1.png'
 import emailTemplate2 from '../../../../libs/ui/src/assets/images/emailTemplate2.png'
 import emailTemplate3 from '../../../../libs/ui/src/assets/images/emailTemplate3.png'
 import emailTemplate4 from '../../../../libs/ui/src/assets/images/emailTemplate4.png'
 import emailTemplate5 from '../../../../libs/ui/src/assets/images/emailTemplate5.png'
-import { CloseCircleFilled } from '@ant-design/icons'
 import ic_sms from '../../../../libs/ui/src/assets/images/sms_triangle.svg'
-import { GlobalContext } from './index'
+import { getFlag } from '../../mocks/utils'
+import styles from '../../pages/client-notifications/style.module.less'
+import { GlobalContext } from './Index'
 
 interface P {
   backGroundColor?: string

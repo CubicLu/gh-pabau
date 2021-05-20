@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { Modal } from 'antd'
 import { Button } from '@pabau/ui'
-
+import { useTranslation } from 'react-i18next'
 import styles from './WebinarModal.module.less'
 
 export interface WebinarModalProps {
@@ -29,6 +29,7 @@ export const WebinarModal: FC<WebinarModalProps> = ({
   onCancel,
   onSubmit,
 }) => {
+  const { t } = useTranslation('common')
   return (
     <Modal
       visible={visible}
@@ -51,7 +52,9 @@ export const WebinarModal: FC<WebinarModalProps> = ({
       </div>
       <div className={styles.desc}>{description}</div>
       <Button className={styles.btnRegister} onClick={() => onSubmit?.()}>
-        {buttonType === 'join' ? 'Join' : 'Register'}
+        {buttonType === 'join'
+          ? t('setup.page.webinar.modal.join.label')
+          : t('setup.page.webinar.modal.register.label')}
       </Button>
     </Modal>
   )

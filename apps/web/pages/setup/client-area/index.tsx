@@ -3,6 +3,7 @@ import { Typography } from 'antd'
 import { Breadcrumb, Switch, Stepper } from '@pabau/ui'
 import { LeftOutlined } from '@ant-design/icons'
 import confetti from 'canvas-confetti'
+import { useRouter } from 'next/router'
 import Layout from '../../../components/Layout/Layout'
 import CommonHeader from '../../../components/CommonHeader'
 import {
@@ -63,6 +64,12 @@ export const Index: FC<ClientAreaProps> = ({
     }
   }, [step])
 
+  const router = useRouter()
+
+  const handleBack = () => {
+    router.back()
+  }
+
   return (
     <div ref={clientAreaRef}>
       <CommonHeader />
@@ -83,7 +90,7 @@ export const Index: FC<ClientAreaProps> = ({
             </div>
             <div className={styles.clientAreaBreadcrumbMobile}>
               <Title>
-                <LeftOutlined /> Client Area
+                <LeftOutlined onClick={handleBack} /> Client Area
               </Title>
             </div>
             <div className={styles.clientAreaOps}>

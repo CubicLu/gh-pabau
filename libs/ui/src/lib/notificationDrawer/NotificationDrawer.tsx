@@ -1,12 +1,12 @@
-import React, { FC, useState } from 'react'
 import { CloseOutlined } from '@ant-design/icons'
-import styles from './NotificationDrawer.module.less'
 import { Drawer, Image } from 'antd'
-import { ReactComponent as EmptySVG } from '../../assets/images/notification-empty.svg'
+import classNames from 'classnames'
+import React, { FC, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ReactComponent as Lead1SVG } from '../../assets/images/lead.svg'
 import { ReactComponent as Lead2SVG } from '../../assets/images/lead1.svg'
-import classNames from 'classnames'
-import { useTranslation } from 'react-i18next'
+import { ReactComponent as EmptySVG } from '../../assets/images/notification-empty.svg'
+import styles from './NotificationDrawer.module.less'
 
 interface Notification {
   notificationTime: string

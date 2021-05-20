@@ -3,7 +3,7 @@ import { Col, Row, Select, Typography } from 'antd'
 import moment from 'moment'
 import React, { FC } from 'react'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-import styles from './calendar.module.less'
+import styles from './Calendar.module.less'
 import ConfigurationSkeleton from './ConfigurationSkeleton'
 
 const { Title } = Typography

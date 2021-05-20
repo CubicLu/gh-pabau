@@ -1051,14 +1051,14 @@ model MediaLlibraryAttachment {
 }
 
 model CancelReason {
-  id                        Int      @id @default(autoincrement())
+  id                        Int       @id @default(autoincrement())
   reason_name               String
-  company_id                Int      @map("occupier")
-  Company                   Company  @relation(fields: [company_id], references: [id])
+  company_id                Int       @map("occupier")
+  Company                   Company   @relation(fields: [company_id], references: [id])
   late_cancel               Int
   apply_cancellation_policy Int
-  created_at                DateTime
-  modified_at               DateTime
+  created_at                DateTime? @default(now())
+  modified_at               DateTime? @updatedAt
 
 
   @@index([company_id], name: "occupier")
@@ -10968,7 +10968,7 @@ model SocialSurveyFeedback {
 
   CmContact CmContact? @relation(fields: [contact_id], references: [ID])
   Company   Company    @relation(fields: [company_id], references: [id])
-  User      User       @relation(fields: [feedback_for], references: [id])
+  User      User?      @relation(fields: [feedback_for], references: [id])
 
   Response           SocialSurveyFeedbackResponse[]
   SocialSurveyAnswer SocialSurveyAnswer[]
@@ -12314,18 +12314,18 @@ model UserAlertPermission {
 //}
 //
 model UserGroup {
-  id                 Int                @id @default(autoincrement())
+  id                 Int                 @id @default(autoincrement())
   company_id         Int
   group_name         String
   group_description  String
   restrict_clients   Int
   restrict_locations String
-  restrict_calendar  Int                @default(1)
+  restrict_calendar  Int                 @default(1)
   restrict_data      Int
   limit_contacts     Int
-  permission_id      Int
-  Company            Company            @relation(fields: [company_id], references: [id])
-  Permission         PermissionTemplate @relation(fields: [permission_id], references: [id])
+  permission_id      Int?
+  Company            Company             @relation(fields: [company_id], references: [id])
+  Permission         PermissionTemplate? @relation(fields: [permission_id], references: [id])
   UserGroupMember    UserGroupMember[]
   GroupPermission    GroupPermission[]
 
@@ -13612,7 +13612,7 @@ model XeroIntegration {
 //}
 
 model GroupPermission {
-  id                  Int       @id
+  id                  Int       @id @default(autoincrement())
   company_id          Int
   group_id            Int
   module_permissions  String

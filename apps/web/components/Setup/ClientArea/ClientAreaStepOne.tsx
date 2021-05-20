@@ -1,28 +1,28 @@
-import React, { FC, useState, useEffect } from 'react'
-import { useMedia } from 'react-use'
-import { Radio, Form, Input as AntInput } from 'antd'
-import {
-  Button,
-  ColorPicker,
-  Background,
-  RegistrationFields,
-  TabMenu,
-  SimpleDropdown,
-} from '@pabau/ui'
 import {
   DesktopOutlined,
-  MobileOutlined,
-  EyeTwoTone,
   EyeInvisibleOutlined,
+  EyeTwoTone,
+  MobileOutlined,
 } from '@ant-design/icons'
 import {
-  defaultBuilderSetting,
-  ClientAreaBuilderSetting,
-} from './ClientAreaSetting'
+  Background,
+  Button,
+  ColorPicker,
+  RegistrationFields,
+  SimpleDropdown,
+  TabMenu,
+} from '@pabau/ui'
+import { Form, Input as AntInput, Radio } from 'antd'
+import React, { FC, useEffect, useState } from 'react'
+import { useMedia } from 'react-use'
 import clinicLogo from '../../../assets/images/normal-clinic-logo.png'
 import { ReactComponent as Palette } from '../../../assets/images/palette.svg'
 import { ReactComponent as Profile } from '../../../assets/images/profile.svg'
-import styles from './style.module.less'
+import {
+  ClientAreaBuilderSetting,
+  defaultBuilderSetting,
+} from './ClientAreaSetting'
+import styles from './Style.module.less'
 
 interface ClientAreaStepOneProps {
   settings: ClientAreaBuilderSetting

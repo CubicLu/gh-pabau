@@ -59,17 +59,18 @@
 .mobile-view-align {
   display: flex;
   position: relative;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
-  .searchInput {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
+  .rightContentWrapper {
     display: flex;
-    color: #9292a3;
-    .search {
-      width: 150px;
+    align-items: center;
+    .searchInput {
+      margin-right: 10px;
+      display: flex;
+      color: #9292a3;
+      .search {
+        width: 150px;
+      }
     }
   }
 }

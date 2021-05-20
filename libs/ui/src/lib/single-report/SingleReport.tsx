@@ -22,7 +22,7 @@ export interface SingleReportProps {
 }
 
 const reportHref = {
-  NEX01: '/team/report',
+  ADV001: '/team/report',
 }
 export const SingleReport: React.FC<SingleReportProps> = ({
   catHeading = '',

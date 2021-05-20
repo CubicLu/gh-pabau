@@ -3,9 +3,9 @@ import React, { FC, ReactNode } from 'react'
 import { Breadcrumb } from '@pabau/ui'
 import CrudLayout from '../../../components/CrudLayout/CrudLayout'
 import { gql } from '@apollo/client'
-import ProcessingIcon from './assets/ProcessingIcon'
-import SendIcon from './assets/SendIcon'
 import notificationImage from '../../../assets/images/Illustration.svg'
+import ProcessingIcon from './assets/processing-Icon'
+import SendIcon from './assets/send-icon'
 import styles from './index.module.less'
 
 const notificationDescription = `We noticed that you are processing lab results, however have not

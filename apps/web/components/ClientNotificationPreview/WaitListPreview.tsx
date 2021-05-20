@@ -1,7 +1,7 @@
+import { ClassWaitList, EmailSmsPreview } from '@pabau/ui'
 import React, { FC, useContext } from 'react'
-import { EmailSmsPreview, ClassWaitList } from '@pabau/ui'
 import CustomTemplate from '../ClientNotification/CustomTemplate'
-import { GlobalContext } from '../ClientNotification'
+import { GlobalContext } from '../ClientNotification/Index'
 
 interface P {
   standardTapIndex: string

@@ -19,258 +19,289 @@ import {
   ExportOutlined,
   CalendarOutlined,
   CrownOutlined,
+  FileTextOutlined,
+  ContainerOutlined,
 } from '@ant-design/icons'
 
-const notificationData = {
-  Appointments: [
-    {
-      header: 'New appointment is booked',
-      description:
-        'Automatically sends to clients when they book their appointment',
-      icon: <ScheduleOutlined />,
-      smartDelivery: true,
-      link: '/client-notifications/new-appointment',
-      disabled: true,
-    },
-    {
-      header: 'Upcoming appointment reminder',
-      description: 'Automatically sends to clients ahead of their appointment',
-      icon: <BellOutlined />,
-      smartDelivery: true,
-      link: '/client-notifications/appointment-reminder',
-      disabled: true,
-    },
-    {
-      header: 'Rescheduled appointment',
-      description:
-        'Automatically sends to clients when their appointment start time is changed',
-      icon: <SyncOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/rescheduled-appointment',
-      disabled: true,
-    },
-    {
-      header: 'Request feedback',
-      description:
-        'Automatically sends to clients when an appointment is checked out',
-      icon: <StarOutlined />,
-      smartDelivery: true,
-      link: '/client-notifications/request-feedback',
-      disabled: true,
-    },
-    {
-      header: 'Cancelled appointment',
-      description:
-        'Automatically sends to clients when an appointment is cancelled',
-      icon: <CloseCircleOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/cancelled-appointment',
-      disabled: true,
-    },
-    {
-      header: 'No-show appointment',
-      description:
-        'Automatically sends to clients when an appointment is marked as no show',
-      icon: <UserDeleteOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/noshow-appointment',
-      disabled: true,
-    },
-    {
-      header: 'Wait list',
-      description:
-        'Automatically sends to clients when an appointment slot becomes available',
-      icon: <FileSyncOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/waitlist',
-      disabled: true,
-    },
-  ],
-  Classes: [
-    {
-      header: 'Booked onto class',
-      description:
-        "Automatically sends to clients when they're booked for a class",
-      icon: <ScheduleOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/class-booked',
-      disabled: true,
-    },
-    {
-      header: 'Booked onto class (group)',
-      description:
-        "Automatically sends to clients when they're booked for a class (group)",
-      icon: <UsergroupAddOutlined />,
-      smartDelivery: false,
-      link: null,
-      disabled: true,
-    },
-    {
-      header: 'Cancelled a class booking',
-      description:
-        'Automatically sends to clients when they cancel a class booking',
-      icon: <CloseCircleOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/cancelled-class-booking',
-      disabled: true,
-    },
-    {
-      header: 'Missed a class',
-      description:
-        "Automatically sends to clients when they don't show for a class",
-      icon: <UserDeleteOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/class-noshow',
-      disabled: true,
-    },
-    {
-      header: 'Class rescheduled',
-      description: 'Automatically sends to clients when a class is rescheduled',
-      icon: <SyncOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/class-rescheduled',
-      disabled: true,
-    },
-    {
-      header: 'Reminder for class',
-      description:
-        'Automatically sends a reminder to a client who has registered to a class',
-      icon: <BellOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/class-reminder',
-      disabled: true,
-    },
-    {
-      header: 'Classes spot available',
-      description:
-        'Automatically sends to clients when a class slot becomes available',
-      icon: <FileDoneOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/class-spot-available',
-      disabled: true,
-    },
-  ],
-  Engagement: [
-    {
-      header: 'Refferal',
-      description:
-        'The default email template you will send when someone is being referred into the business',
-      icon: <GoldOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/referral',
-      disabled: true,
-    },
-    {
-      header: 'Invoice',
-      description:
-        'The default email template you will send with a clients invoice attached',
-      icon: <MoneyCollectOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/invoice',
-      disabled: true,
-    },
-    {
-      header: 'Lead responses',
-      description:
-        'The default email template you will send to your lead when they submit their lead form',
-      icon: <RiseOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/lead-responses',
-      disabled: true,
-    },
-    {
-      header: 'Gift vouchers',
-      description:
-        'The default email template you will send when clients purchase a gift voucher',
-      icon: <GiftOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/gift-vouchers',
-      disabled: true,
-    },
-    {
-      header: 'Outstanding Invoice',
-      description:
-        'The default email template you will send with a clients Outstanding invoice attached',
-      icon: <MoneyCollectOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/outstanding-invoice',
-      disabled: true,
-    },
-  ],
-  Other: [
-    {
-      header: 'Package session used ',
-      description:
-        'he default email template you will send when a client has used all their package sessions',
-      icon: <ScheduleOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/package-session-used',
-      disabled: true,
-    },
-    {
-      header: 'Clinic emailing timeline',
-      description:
-        "The email you will send when you are emailing a client's timeline",
-      icon: <BarChartOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/clinic-emailing-timeline',
-      disabled: true,
-    },
-    {
-      header: 'Secure email template',
-      description:
-        'The default secure email template which gets sent out via email',
-      icon: <SafetyOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/secure-email-template',
-      disabled: true,
-    },
-    {
-      header: 'Connect registration',
-      description:
-        'The email the client receives when they register to your Online Booking portal',
-      icon: <InteractionOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/connect-registration',
-      disabled: true,
-    },
-    {
-      header: 'Medical forms',
-      description:
-        'The email you will send when you email someone a copy of their prescription',
-      icon: <ReconciliationOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/medical-forms',
-      disabled: true,
-    },
-    {
-      header: 'Document shared',
-      description:
-        'The email you will send when you share a document with a client through Pabau Connect',
-      icon: <ExportOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/document-shared',
-      disabled: true,
-    },
-    {
-      header: 'Email appointments',
-      description:
-        'The email you will send if someone requested a list of their appointment history',
-      icon: <CalendarOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/email-appointments',
-      disabled: true,
-    },
-    {
-      header: 'Birthdays',
-      description:
-        "The default email template you will send if it's a client's birthday",
-      icon: <CrownOutlined />,
-      smartDelivery: false,
-      link: '/client-notifications/birthday',
-      disabled: true,
-    },
-  ],
+const notificationData = ({ t }) => {
+  return {
+    Appointments: [
+      {
+        header: t('notifications.newAppointment.title'),
+        description: t('notifications.appointments.newAppointment.description'),
+        icon: <ScheduleOutlined />,
+        smartDelivery: true,
+        link: '/client-notifications/new-appointment',
+        disabled: true,
+      },
+      {
+        header: t('notifications.upcomingAppointmentReminder.title'),
+        description: t(
+          'notifications.appointments.upcomingAppointmentReminder.description'
+        ),
+        icon: <BellOutlined />,
+        smartDelivery: true,
+        link: '/client-notifications/appointment-reminder',
+        disabled: true,
+      },
+      {
+        header: t('notifications.rescheduleAppointment.title'),
+        description: t(
+          'notifications.appointments.rescheduleAppointment.description'
+        ),
+        icon: <SyncOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/rescheduled-appointment',
+        disabled: true,
+      },
+      {
+        header: t('notifications.requestFeedback.title'),
+        description: t(
+          'notifications.appointments.requestFeedback.description'
+        ),
+        icon: <StarOutlined />,
+        smartDelivery: true,
+        link: '/client-notifications/request-feedback',
+        disabled: true,
+      },
+      {
+        header: t('notifications.cancelAppointment.title'),
+        description: t(
+          'notifications.appointments.cancelAppointment.description'
+        ),
+        icon: <CloseCircleOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/cancelled-appointment',
+        disabled: true,
+      },
+      {
+        header: t('notifications.noShowAppointment.title'),
+        description: t(
+          'notifications.appointments.noShowAppointment.description'
+        ),
+        icon: <UserDeleteOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/noshow-appointment',
+        disabled: true,
+      },
+      {
+        header: t('notifications.waitList.title'),
+        description: t('notifications.appointments.waitList.description'),
+        icon: <FileSyncOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/waitlist',
+        disabled: true,
+      },
+    ],
+    Classes: [
+      {
+        header: t('notifications.classBooked.title'),
+        description: t('notifications.classes.classBooked.description'),
+        icon: <ScheduleOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/class-booked',
+        disabled: true,
+      },
+      {
+        header: t('notifications.classBookedGroup.title'),
+        description: t('notifications.classes.classBookedGroup.description'),
+        icon: <UsergroupAddOutlined />,
+        smartDelivery: false,
+        link: null,
+        disabled: true,
+      },
+      {
+        header: t('notifications.cancelledClassBooking.title'),
+        description: t(
+          'notifications.classes.cancelledClassBooking.description'
+        ),
+        icon: <CloseCircleOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/cancelled-class-booking',
+        disabled: true,
+      },
+      {
+        header: t('notifications.classNoShowAppointment.title'),
+        description: t(
+          'notifications.classes.classNoShowAppointment.description'
+        ),
+        icon: <UserDeleteOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/class-noshow',
+        disabled: true,
+      },
+      {
+        header: t('notifications.classRescheduled.title'),
+        description: t('notifications.classes.classRescheduled.description'),
+        icon: <SyncOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/class-rescheduled',
+        disabled: true,
+      },
+      {
+        header: t('notifications.classReminder.title'),
+        description: t('notifications.classes.classReminder.description'),
+        icon: <BellOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/class-reminder',
+        disabled: true,
+      },
+      {
+        header: t('notifications.classSpotAvailable.title'),
+        description: t('notifications.classes.classSpotAvailable.description'),
+        icon: <FileDoneOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/class-spot-available',
+        disabled: true,
+      },
+    ],
+    Engagement: [
+      {
+        header: t('notifications.referrals.title'),
+        description: t('notifications.engagement.referrals.description'),
+        icon: <GoldOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/referral',
+        disabled: true,
+      },
+      {
+        header: t('notifications.invoice.title'),
+        description: t('notifications.engagement.invoice.description'),
+        icon: <MoneyCollectOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/invoice',
+        disabled: true,
+      },
+      {
+        header: t('notifications.leadResponses.title'),
+        description: t('notifications.engagement.leadResponses.description'),
+        icon: <RiseOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/lead-responses',
+        disabled: true,
+      },
+      {
+        header: t('notifications.giftVoucher.title'),
+        description: t('notifications.engagement.giftVoucher.description'),
+        icon: <GiftOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/gift-vouchers',
+        disabled: true,
+      },
+      {
+        header: t('notifications.invoice.outstanding.title'),
+        description: t(
+          'notifications.engagement.outstandingInvoice.description'
+        ),
+        icon: <MoneyCollectOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/outstanding-invoice',
+        disabled: true,
+      },
+    ],
+    Other: [
+      {
+        header: t('notifications.packageSession.title'),
+        description: t('notifications.other.packageSession.description'),
+        icon: <ScheduleOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/package-session-used',
+        disabled: true,
+      },
+      {
+        header: t('notifications.clinicEmailingTimeline.title'),
+        description: t(
+          'notifications.other.clinicEmailingTimeline.description'
+        ),
+        icon: <BarChartOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/clinic-emailing-timeline',
+        disabled: true,
+      },
+      {
+        header: t('notifications.connectRegistration.title'),
+        description: t('notifications.other.connectRegistration.description'),
+        icon: <InteractionOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/connect-registration',
+        disabled: true,
+      },
+      {
+        header: t('notifications.emailAppointment.title'),
+        description: t('notifications.other.emailAppointment.description'),
+        icon: <CalendarOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/email-appointments',
+        disabled: true,
+      },
+      {
+        header: t('notifications.birthday.title'),
+        description: t('notifications.other.birthday.description'),
+        icon: <CrownOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/birthday',
+        disabled: true,
+      },
+    ],
+    Sharing: [
+      {
+        header: t('notifications.prescription.title'),
+        description: t('notifications.Sharing.prescription.description'),
+        icon: <ContainerOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/prescription',
+        disabled: true,
+      },
+      {
+        header: t('notifications.note.title'),
+        description: t('notifications.Sharing.note.description'),
+        icon: <FileTextOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/note',
+        disabled: true,
+      },
+      {
+        header: t('notifications.medicalForms.title'),
+        description: t('notifications.Sharing.medicalForms.description'),
+        icon: <ReconciliationOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/medical-forms',
+        disabled: true,
+      },
+      {
+        header: t('notifications.letters.title'),
+        description: t('notifications.Sharing.letters.description'),
+        icon: <FileTextOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/letters',
+        disabled: true,
+      },
+      {
+        header: t('notifications.documentShared.title'),
+        description: t('notifications.Sharing.documentShared.description'),
+        icon: <ExportOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/document-shared',
+        disabled: true,
+      },
+      {
+        header: t('notifications.labResults.title'),
+        description: t('notifications.Sharing.labResults.description'),
+        icon: <FileDoneOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/lab-results',
+        disabled: true,
+      },
+      {
+        header: t('notifications.secureEmailTemplate.title'),
+        description: t('notifications.Sharing.secureEmailTemplate.description'),
+        icon: <SafetyOutlined />,
+        smartDelivery: false,
+        link: '/client-notifications/secure-email-template',
+        disabled: true,
+      },
+    ],
+  }
 }
 
 export default notificationData

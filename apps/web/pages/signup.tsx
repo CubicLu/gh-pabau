@@ -1,16 +1,15 @@
-import React, { FC, useState } from 'react'
 import { Logo } from '@pabau/ui'
+import React, { FC, useState } from 'react'
 import { ReactComponent as LaunchingImage } from '../assets/images/launching-pana.svg'
-
+import styles from '../components/Auth/Common.module.less'
 import {
   SignupStepOne,
   StepOneFormProps,
-} from '../components/Auth/signupStepOne'
+} from '../components/Auth/SignupStepOne'
 import {
   SignupStepTwo,
   StepTwoFormProps,
-} from '../components/Auth/signupStepTwo'
-import styles from '../components/Auth/common.module.less'
+} from '../components/Auth/SignupStepTwo'
 
 const Signup: FC = () => {
   const [step, setStep] = useState<number>(1)

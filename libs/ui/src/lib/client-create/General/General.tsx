@@ -188,17 +188,19 @@ export const General: FC<GeneralProps> = ({ setFieldValue, values }) => {
                 onClick={() => handleSelect(label, index)}
                 className={styles.tagWrap}
               >
-                {label.color ? (
-                  <TagFilled style={{ color: label.color }} />
-                ) : (
-                  <TagOutlined />
-                )}
-                <div
-                  className={styles.dropLayout}
-                  style={{ backgroundColor: label.color }}
-                  onClick={(e) => handleDropletClick(e, label, index)}
-                >
-                  <Droplet />
+                <div className={styles.tagLayout}>
+                  {label.color ? (
+                    <TagFilled style={{ color: label.color }} />
+                  ) : (
+                    <TagOutlined />
+                  )}
+                  <div
+                    className={styles.dropLayout}
+                    style={{ backgroundColor: label.color }}
+                    onClick={(e) => handleDropletClick(e, label, index)}
+                  >
+                    <Droplet />
+                  </div>
                 </div>
                 <div className={styles.tagName} key={index}>
                   {label.label}
