@@ -13,9 +13,27 @@ import { Button, Input, Select, Typography, Alert } from 'antd'
 import React, { FC, useState } from 'react'
 import styles from './RulesContainer.module.less'
 import classNames from 'classnames'
-import { useTranslation } from 'react-i18next'
 
 const { Title } = Typography
+
+interface RulesContainerProps {
+  noConfiguredMessage: string
+  configureBtnText: string
+  ifText: string
+  ifConditionText: string
+  thenText: string
+  thenConditionText: string
+  fieldRulesText: string
+  configureRules: string
+  newRuleText: string
+  ruleNameText: string
+  cancelText: string
+  saveRuleText: string
+  ruleConditionPlaceHolder: string
+  answersOptions: { [key: string]: string }
+  actionOptions: { [key: string]: string }
+  operatorOptions: { [key: string]: string }
+}
 
 export interface IfProp {
   id: number
@@ -44,33 +62,27 @@ export interface RuleProp {
   then: ThenProp[]
 }
 
-export const RulesContainer: FC = () => {
+export const RulesContainer: FC<RulesContainerProps> = ({
+  noConfiguredMessage,
+  configureBtnText,
+  ifText,
+  ifConditionText,
+  thenText,
+  thenConditionText,
+  fieldRulesText,
+  configureRules,
+  newRuleText,
+  ruleNameText,
+  cancelText,
+  saveRuleText,
+  ruleConditionPlaceHolder,
+  answersOptions,
+  actionOptions,
+  operatorOptions,
+}) => {
   const { Option } = Select
-  const { t } = useTranslation('common')
 
   const randomNumber = () => Math.round(Math.random() * 10000)
-
-  const answersOptions = {
-    short_answer: 'Short Answer',
-    long_answer: 'Long Answer',
-    single_choice_answer: 'Single Choice Answer',
-    multiple_choice_answer: 'Multiple Choice Answer',
-    dropdown_answer: 'Dropdown Answer',
-    medical_condition: 'Medical Condition',
-    drugs_prescribed: 'Drugs Prescribed',
-    travel_destination: 'Travel Destination',
-    labs_ordered: 'Labs Ordered',
-  }
-
-  const actionOptions = {
-    send_email: 'Send Email',
-    send_sms: 'Send SMS',
-  }
-
-  const operatorOptions = {
-    is: 'is',
-    not_is: 'Not is',
-  }
 
   const ifInitObj = {
     condition_met: 'any',
@@ -228,10 +240,10 @@ export const RulesContainer: FC = () => {
       <div className={styles.noRulesContainer}>
         <InfoCircleOutlined className={styles.icon} />
         <Title level={5} className={styles.title}>
-          {t('rules.no-configured-message')}
+          {noConfiguredMessage}
         </Title>
         <Button type="primary" onClick={onPressConfigure}>
-          {t('rules.configure-now')}
+          {configureBtnText}
         </Button>
       </div>
     ) : (
@@ -271,7 +283,7 @@ export const RulesContainer: FC = () => {
                     <div className={styles.segmentContainer}>
                       <div className={styles.left}>
                         <div className={styles.labelContainer}>
-                          <span>{t('rules.if')}</span>
+                          <span>{ifText}</span>
                         </div>
                         <div className={styles.progIfLine}></div>
                       </div>
@@ -281,7 +293,7 @@ export const RulesContainer: FC = () => {
                             <span className={styles.textUppercase}>
                               - {r.if.condition_met}
                             </span>
-                            <span>{t('rules.if-condition')}:</span>
+                            <span>{ifConditionText}:</span>
                           </span>
                         </div>
                         {r.if.answers.map((ans, i) => {
@@ -305,7 +317,7 @@ export const RulesContainer: FC = () => {
                     <div className={styles.segmentContainer}>
                       <div className={styles.left}>
                         <div className={styles.labelContainer}>
-                          <span>{t('rules.then')}</span>
+                          <span>{thenText}</span>
                         </div>
                         <div
                           className={classNames(
@@ -316,7 +328,7 @@ export const RulesContainer: FC = () => {
                       </div>
                       <div className={styles.right}>
                         <div className={styles.question}>
-                          <span>{t('rules.then-condition')}</span>
+                          <span>{thenConditionText}</span>
                         </div>
 
                         {r.then.map((t, i) => {
@@ -348,13 +360,13 @@ export const RulesContainer: FC = () => {
     return (
       <div className={styles.addRuleBox}>
         <div>
-          <span className={styles.title}>{t('rules.field-rules')}</span>
-          <span>{t('rules.configure-rules')}</span>
+          <span className={styles.title}>{fieldRulesText}</span>
+          <span>{configureRules}</span>
         </div>
         <div>
           <Button onClick={onPressConfigure} style={{ marginRight: 5 }}>
             <PlusOutlined />
-            {t('rules.new-rule')}
+            {newRuleText}
           </Button>
         </div>
       </div>
@@ -371,9 +383,9 @@ export const RulesContainer: FC = () => {
           <div className={styles.rulesContainer}>
             <div className={styles.addRuleContainer}>
               <div className={styles.left}>
-                <span>{t('rules.rule-name')}</span>
+                <span>{ruleNameText}</span>
                 <Input
-                  placeholder={t('rules.new-rule')}
+                  placeholder={newRuleText}
                   value={ruleName}
                   maxLength={100}
                   onChange={(e) => setRuleName(e.target.value)}
@@ -381,14 +393,14 @@ export const RulesContainer: FC = () => {
               </div>
               <div className={styles.right}>
                 <Button onClick={onPressCancel} style={{ marginRight: 5 }}>
-                  {t('rules.cancel')}
+                  {cancelText}
                 </Button>
                 <Button
                   type="primary"
                   disabled={!ruleName}
                   onClick={onPressSaveRules}
                 >
-                  {t('rules.save-rule')}
+                  {saveRuleText}
                 </Button>
               </div>
             </div>
@@ -396,7 +408,7 @@ export const RulesContainer: FC = () => {
               <div className={styles.segmentContainer}>
                 <div className={styles.left}>
                   <div className={styles.labelContainer}>
-                    <span>{t('rules.if')}</span>
+                    <span>{ifText}</span>
                   </div>
                   <div className={styles.progIfLine}></div>
                 </div>
@@ -412,7 +424,7 @@ export const RulesContainer: FC = () => {
                       <Option value="any">Any</Option>
                       <Option value="all">All</Option>
                     </Select>
-                    <span>{t('rules.if-condition')}:</span>
+                    <span>{ifConditionText}:</span>
                   </div>
 
                   {ifData.answers.map((ans, i) => {
@@ -454,7 +466,7 @@ export const RulesContainer: FC = () => {
                           })}
                         </Select>
                         <Input
-                          placeholder={t('rules.write-condition-here')}
+                          placeholder={ruleConditionPlaceHolder}
                           value={ans.condition}
                           onChange={(e) =>
                             onChangeAnswer(ans.id, 'condition', e.target.value)
@@ -480,7 +492,7 @@ export const RulesContainer: FC = () => {
               <div className={styles.segmentContainer}>
                 <div className={styles.left}>
                   <div className={styles.labelContainer}>
-                    <span>{t('rules.then')}</span>
+                    <span>{thenText}</span>
                   </div>
                   <div
                     className={classNames(
@@ -491,7 +503,7 @@ export const RulesContainer: FC = () => {
                 </div>
                 <div className={styles.right}>
                   <div className={styles.question}>
-                    <span>{t('rules.then-condition')}</span>
+                    <span>{thenConditionText}</span>
                   </div>
 
                   {thenData.map((t, i) => {
