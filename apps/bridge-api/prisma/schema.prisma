@@ -10968,7 +10968,7 @@ model SocialSurveyFeedback {
 
   CmContact CmContact? @relation(fields: [contact_id], references: [ID])
   Company   Company    @relation(fields: [company_id], references: [id])
-  User      User       @relation(fields: [feedback_for], references: [id])
+  User      User?      @relation(fields: [feedback_for], references: [id])
 
   Response           SocialSurveyFeedbackResponse[]
   SocialSurveyAnswer SocialSurveyAnswer[]

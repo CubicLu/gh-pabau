@@ -2699,7 +2699,7 @@ export interface SocialSurveyFeedback {
   owner_response: string;
   CmContact?: CmContact;
   Company: Company;
-  User: User;
+  User?: User;
   Response?: SocialSurveyFeedbackResponse[];
   SocialSurveyAnswer?: SocialSurveyAnswer[];
 }

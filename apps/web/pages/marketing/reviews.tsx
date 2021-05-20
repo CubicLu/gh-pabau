@@ -11,7 +11,17 @@ import {
   StarFilled,
   TwitterOutlined,
 } from '@ant-design/icons'
-import { gql, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
+import {
+  GetSocialSurveyFeedbackDocument,
+  GetAllSocialSurveyFeedbackDocument,
+  GetAllSocialSurveyFeedbackRecordsDocument,
+  SocialSurveyFeedbackAggregateDocument,
+  InsertSocialSurveyResposnesDocument,
+  UpdateSocialSurveyResponseDocument,
+  UpdateSocialSurveyFeedbackDocument,
+  DeleteSocialSurveyResponseDocument,
+} from '@pabau/graphql'
 import {
   Avatar,
   Breadcrumb,
@@ -88,156 +98,6 @@ const progressDataList = [
     label: '> 4.5',
   },
 ]
-
-const listQuery = gql`
-  query get_social_survey_feedback(
-    $take: Int
-    $skip: Int
-    $full_name: String
-    $rating: IntFilter
-    $service: String
-  ) {
-    socialSurveyFeedbacks(
-      take: $take
-      skip: $skip
-      orderBy: { date: desc }
-      where: {
-        User: { full_name: { contains: $full_name } }
-        rating: $rating
-        service: { contains: $service }
-      }
-    ) {
-      feedback_source
-      id
-      date
-      contact_id
-      feedback_status
-      rating
-      service
-      feedback_name #Name
-      feedback_comment
-      feedback_for
-      public_use
-      Response {
-        response
-        id
-      }
-      CmContact {
-        Email
-      }
-      Company {
-        details {
-          company_name
-        }
-      }
-      User {
-        username
-        full_name
-        image
-      }
-    }
-  }
-`
-
-const AllListQuery = gql`
-  query get_all_social_survey_feedback {
-    socialSurveyFeedbacks(orderBy: { date: desc }) {
-      feedback_source
-      rating
-      service
-      date
-      User {
-        username
-        full_name
-      }
-    }
-  }
-`
-
-const AllDataQuery = gql`
-  query get_all_social_survey_feedback(
-    $full_name: String
-    $rating: IntFilter
-    $service: String
-  ) {
-    socialSurveyFeedbacks(
-      orderBy: { date: desc }
-      where: {
-        User: { full_name: { contains: $full_name } }
-        rating: $rating
-        service: { contains: $service }
-      }
-    ) {
-      id
-    }
-  }
-`
-
-const aggregateQuery = gql`
-  query social_survey_feedback_aggregate {
-    socialSurveyFeedbacksCount
-  }
-`
-
-const createQuery = gql`
-  mutation insert_social_survey_resposnes(
-    $response: String!
-    $feedback: Int!
-    $uid: Int!
-  ) {
-    createOneSocialSurveyFeedbackResponse(
-      data: {
-        response: $response
-        Company: {}
-        User: { connect: { id: $uid } }
-        Feedback: { connect: { id: $feedback } }
-      }
-    ) {
-      __typename
-      response
-      review_id
-      id
-    }
-  }
-`
-
-const updateSocialSurveyFeedbackResponseQuery = gql`
-  mutation update_social_survey_response($id: Int!, $updated_text: String!) {
-    updateOneSocialSurveyFeedbackResponse(
-      data: { response: { set: $updated_text } }
-      where: { id: $id }
-    ) {
-      __typename
-      id
-      response
-      review_id
-    }
-  }
-`
-
-const updateSocialSurveyFeedbackQuery = gql`
-  mutation update_social_survey_feedback(
-    $public_use: Int!
-    $feedback_id: Int!
-  ) {
-    updateOneSocialSurveyFeedback(
-      where: { id: $feedback_id }
-      data: { public_use: { set: $public_use } }
-    ) {
-      __typename
-      public_use
-    }
-  }
-`
-
-const deleteQuery = gql`
-  mutation delete_social_survey_response($id: Int) {
-    deleteOneSocialSurveyFeedbackResponse(where: { id: $id }) {
-      __typename
-      id
-    }
-  }
-`
 
 const fields = [
   {
@@ -366,7 +226,7 @@ const Reviews: FC<ReviewConfig> = () => {
     }
   }
 
-  const [addMutation] = useMutation(createQuery, {
+  const [addMutation] = useMutation(InsertSocialSurveyResposnesDocument, {
     onCompleted(data) {
       Notification(
         NotificationType.success,
@@ -383,7 +243,7 @@ const Reviews: FC<ReviewConfig> = () => {
   })
 
   const [editSocialSurveyFeedbackResponseMutation] = useMutation(
-    updateSocialSurveyFeedbackResponseQuery,
+    UpdateSocialSurveyResponseDocument,
     {
       onCompleted(data) {
         Notification(
@@ -402,7 +262,7 @@ const Reviews: FC<ReviewConfig> = () => {
   )
 
   const [editSocialSurveyFeedbackMutation] = useMutation(
-    updateSocialSurveyFeedbackQuery,
+    UpdateSocialSurveyFeedbackDocument,
     {
       onCompleted(data) {
         if (data !== null) {
@@ -420,7 +280,7 @@ const Reviews: FC<ReviewConfig> = () => {
     }
   )
 
-  const [deleteMutation] = useMutation(deleteQuery, {
+  const [deleteMutation] = useMutation(DeleteSocialSurveyResponseDocument, {
     onCompleted(data) {
       Notification(
         NotificationType.success,
@@ -499,13 +359,23 @@ const Reviews: FC<ReviewConfig> = () => {
     return queryOptions
   }, [filterValue.employee, filterValue.service, filterValue.score])
 
-  const { data, loading } = useLiveQuery(listQuery, getQueryVariables)
+  const { data, loading } = useLiveQuery(
+    GetSocialSurveyFeedbackDocument,
+    getQueryVariables
+  )
 
-  const { data: aggregateData } = useLiveQuery(aggregateQuery)
+  const { data: aggregateData } = useLiveQuery(
+    SocialSurveyFeedbackAggregateDocument
+  )
 
-  const { data: Alldata, loading: alldataloading } = useLiveQuery(AllListQuery)
+  const { data: Alldata, loading: alldataloading } = useLiveQuery(
+    GetAllSocialSurveyFeedbackDocument
+  )
 
-  const { data: AllRecord } = useLiveQuery(AllDataQuery, getAllQueryVariables)
+  const { data: AllRecord } = useLiveQuery(
+    GetAllSocialSurveyFeedbackRecordsDocument,
+    getAllQueryVariables
+  )
 
   const DataLists = data
 
@@ -563,7 +433,7 @@ const Reviews: FC<ReviewConfig> = () => {
     }
 
     if (AllRecord !== undefined) {
-      if (aggregateData > AllRecord.length) {
+      if (aggregateData !== AllRecord.length) {
         setPaginateData({
           ...paginateData,
           total: AllRecord !== undefined ? AllRecord.length : 0,
@@ -581,9 +451,13 @@ const Reviews: FC<ReviewConfig> = () => {
   }, [DataLists, aggregateData, AllRecord])
 
   useEffect(() => {
-    if (loading === false && DataLists !== undefined && DataLists.length > 0) {
+    if (
+      alldataloading === false &&
+      Alldata !== undefined &&
+      Alldata.length > 0
+    ) {
       const Record = []
-      DataLists.map((item) => {
+      Alldata.map((item) => {
         if (item.rating !== undefined) {
           Record.push(item.rating)
         }
@@ -594,34 +468,34 @@ const Reviews: FC<ReviewConfig> = () => {
       const List = [...progressData]
 
       List[0].width = `${
-        (Record.filter((item) => item < 2).length * 100) / DataLists.length
+        (Record.filter((item) => item < 2).length * 100) / Alldata.length
       }%`
       List[1].width = `${
         (Record.filter((item) => item >= 2 || item < 3).length * 100) /
-        DataLists.length
+        Alldata.length
       }%`
       List[2].width = `${
         (Record.filter((item) => item >= 3 || item < 4.5).length * 100) /
-        DataLists.length
+        Alldata.length
       }%`
       List[3].width = `${
-        (Record.filter((item) => item >= 4.5).length * 100) / DataLists.length
+        (Record.filter((item) => item >= 4.5).length * 100) / Alldata.length
       }%`
 
       setProgressData(List)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [DataLists])
+  }, [Alldata])
 
   useEffect(() => {
-    if (DataLists !== undefined && DataLists.length > 0) {
-      const website = DataLists.filter(
+    if (Alldata !== undefined && Alldata?.length > 0) {
+      const website = Alldata?.filter(
         (item) => item.feedback_source === 'website'
       )
-      const facebook = DataLists.filter(
+      const facebook = Alldata?.filter(
         (item) => item.feedback_source === 'facebook'
       )
-      const google = DataLists.filter(
+      const google = Alldata?.filter(
         (item) => item.feedback_source === 'google'
       )
 
@@ -631,7 +505,7 @@ const Reviews: FC<ReviewConfig> = () => {
         List[0].key = website[0].id
         List[0].score = `${(
           website.map((i) => i.rating).reduce((v, i) => v + i, 0) /
-          DataLists?.length
+          Alldata?.length
         ).toFixed(1)}/5`
         List[0].reviews = website.length
         List[0].mostRecent = new Date(
@@ -643,7 +517,7 @@ const Reviews: FC<ReviewConfig> = () => {
         List[1].key = facebook[0].id
         List[1].score = `${(
           facebook.map((i) => i.rating).reduce((v, i) => v + i, 0) /
-          DataLists?.length
+          Alldata?.length
         ).toFixed(1)}/5`
         List[1].reviews = facebook.length
         List[1].mostRecent = new Date(
@@ -655,7 +529,7 @@ const Reviews: FC<ReviewConfig> = () => {
         List[2].key = google[0].id
         List[2].score = `${(
           google.map((i) => i.rating).reduce((v, i) => v + i, 0) /
-          DataLists?.length
+          Alldata?.length
         ).toFixed(1)}/5`
         List[2].reviews = google.length
         List[2].mostRecent = new Date(google[0].date * 1000).toLocaleDateString(
@@ -666,7 +540,7 @@ const Reviews: FC<ReviewConfig> = () => {
       setReviewData(List)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [DataLists])
+  }, [Alldata])
 
   useEffect(() => {
     if (crudTableRef.current) {
@@ -700,7 +574,7 @@ const Reviews: FC<ReviewConfig> = () => {
       optimisticResponse: {},
       refetchQueries: [
         {
-          query: listQuery,
+          query: GetSocialSurveyFeedbackDocument,
           ...getQueryVariables,
         },
       ],
@@ -812,7 +686,7 @@ const Reviews: FC<ReviewConfig> = () => {
                     Alldata.length > 0
                       ? ([
                           ...new Set(
-                            Alldata.map((item) => item.User.full_name)
+                            Alldata.map((item) => item.User?.full_name)
                           ),
                         ] as string[])
                       : []
@@ -909,7 +783,7 @@ const Reviews: FC<ReviewConfig> = () => {
   const customProgressBar = (width, classname) => {
     return (
       <div>
-        {!loading ? (
+        {!alldataloading ? (
           <div className={styles.containerStyles}>
             {progressData.map((item) => (
               <div
@@ -1001,7 +875,7 @@ const Reviews: FC<ReviewConfig> = () => {
       <Row className={styles.mobColumn}>
         <Col xs={24} lg={12}>
           <div className={styles.reviewCard}>
-            {!loading ? (
+            {!alldataloading ? (
               <div className={`${styles.reviewHeader} ${classname}`}>
                 <div className={styles.starWrapper}>
                   <span className={styles.imgSmile}>
@@ -1035,7 +909,7 @@ const Reviews: FC<ReviewConfig> = () => {
               <div className={styles.progressBar}>
                 {customProgressBar(left, classname)}
               </div>
-              {!loading ? (
+              {!alldataloading ? (
                 <div className={styles.listColor}>
                   <ul>
                     <li>
@@ -1065,7 +939,7 @@ const Reviews: FC<ReviewConfig> = () => {
         <Col xs={24} lg={6}>
           <div className={styles.reviewWrap}>
             <ReviewTable
-              loading={loading}
+              loading={alldataloading}
               fields={reviewData}
               sourceFieldTitle={t('marketingreviews.table.column.source')}
               scoreFieldTitle={t('marketingreviews.table.column.score')}
@@ -1096,7 +970,7 @@ const Reviews: FC<ReviewConfig> = () => {
         optimisticResponse: {},
         refetchQueries: [
           {
-            query: listQuery,
+            query: GetSocialSurveyFeedbackDocument,
             ...getQueryVariables,
           },
         ],
@@ -1111,7 +985,7 @@ const Reviews: FC<ReviewConfig> = () => {
         optimisticResponse: {},
         refetchQueries: [
           {
-            query: listQuery,
+            query: GetSocialSurveyFeedbackDocument,
             ...getQueryVariables,
           },
         ],
@@ -1132,7 +1006,7 @@ const Reviews: FC<ReviewConfig> = () => {
         optimisticResponse: {},
         refetchQueries: [
           {
-            query: listQuery,
+            query: GetSocialSurveyFeedbackDocument,
             ...getQueryVariables,
           },
         ],
@@ -1299,10 +1173,8 @@ const Reviews: FC<ReviewConfig> = () => {
             {renderModalData(modalValue, t)}
           </Modal>
           {reviewComponentRender(
-            DataLists !== undefined
-              ? (
-                  average?.reduce((v, i) => v + i, 0) / DataLists.length
-                ).toFixed(1)
+            aggregateData !== undefined
+              ? (average?.reduce((v, i) => v + i, 0) / aggregateData).toFixed(1)
               : 0
           )}
           <div className={styles.tableMob}>
