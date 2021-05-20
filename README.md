@@ -82,16 +82,20 @@ npm i -g yarn
 
 ### Production
 
-Some devs are still developing against production. To bring in changes from production to git, do the following:
+Some devs are still developing against production. To bring in metadata and schema from production to git, do the following:
 
 ```bash
-yarn hasura:export:production
-DOTENV_FLOW_PATH=hasura NODE_ENV=production node -r dotenv-flow/config -e "require('child_process').execSync('hasura --project migrate create renameme --from-server --database-name default', {stdio: 'inherit'})"
-rm -rf hasura/metadata/
-DOTENV_FLOW_PATH=hasura NODE_ENV=production node -r dotenv-flow/config -e "require('child_process').execSync(`npx -p hasura-cli@v2.0.0-alpha.10 hasura --project hasura ${process.argv.splice(1).join(' ')}`, {stdio: 'inherit'})"
-git checkout master hasura/metadata/remote_schemas.yaml
-NODE_ENV=production HASURA_GRAPHQL_ADMIN_SECRET=madskills yarn apollo client:download-schema hasura/schema.graphql
+rm -rf hasura/metadata/ # we remove this because then we can also git commit any deleted tables
+NODE_ENV=production yarn hasura:export # this exports metadata and schema from prod
 ```
+
+And to download the migration files (SQL format), do the following:
+
+```bash
+NODE_ENV=production yarn hasura:cli migrate create delete_me --from-server --database-name default
+```
+
+This will create you a delete_me/up.sql file - copy this to Initial/up.sql (overwrite it). Don't copy/paste it, or at least, don't allow your IDE or toolchain to change the whitespace formatting at all.
 
 ## Storybook
 
