@@ -1,5 +1,8 @@
-import { gql, useMutation, useSubscription } from '@apollo/client'
-import { useDisabledFeaturesQuery } from '@pabau/graphql'
+import { gql, useMutation } from '@apollo/client'
+import {
+  useDisabledFeaturesQuery,
+  useNotificationsSubscription,
+} from '@pabau/graphql'
 import { Iframe, Layout as PabauLayout, LayoutProps } from '@pabau/ui'
 import { useRouter } from 'next/router'
 import React, { FC, useContext, useEffect, useState } from 'react'
@@ -23,31 +26,6 @@ interface Notification {
   link: string
 }
 
-const LIST_QUERY = gql`
-  subscription notifications($user: jsonb) {
-    notifications(
-      order_by: { order: desc }
-      where: { sent_to: { _contains: $user } }
-    ) {
-      id
-      sent_to
-      created_at
-      variables
-      destination
-      sent_by
-      loop
-      notification_type {
-        id
-        name
-        title
-        description
-      }
-      read_by {
-        user
-      }
-    }
-  }
-`
 const DELETE_MUTATION = gql`
   mutation delete_notifications_by_pk($id: uuid!) {
     delete_notifications_by_pk(id: $id) {
@@ -95,9 +73,11 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
   const [notifications, setNotifications] = useState<Notification[]>()
   const router = useRouter()
   const { data, error, loading } = useDisabledFeaturesQuery()
-  const { data: notificationData } = useSubscription(LIST_QUERY, {
+
+  const { data: notificationData } = useNotificationsSubscription({
     variables: { user: [user?.user] },
   })
+
   const loggedUser = useContext(UserContext)
   const userData = { ...user, fullName: loggedUser?.me?.full_name }
 

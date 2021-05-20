@@ -1,0 +1,23 @@
+subscription notifications($user: jsonb) {
+  notifications(
+    order_by: { order: desc }
+    where: { sent_to: { _contains: $user } }
+  ) {
+    id
+    sent_to
+    created_at
+    variables
+    destination
+    sent_by
+    loop
+    notification_type {
+      id
+      name
+      title
+      description
+    }
+    read_by {
+      user
+    }
+  }
+}
