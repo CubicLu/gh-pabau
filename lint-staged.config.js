@@ -13,7 +13,7 @@ const addQuotes = (a) => `"${a}"`
 
 module.exports = (allStagedFiles) => {
   const ret = []
-  
+
   let isInMerge = false
   try {
     execSync("git rev-parse -q --verify MERGE_HEAD", { stdio: "inherit" })
@@ -23,7 +23,7 @@ module.exports = (allStagedFiles) => {
   }
   if (isInMerge) {
     console.log("Skipping due to being inside a merge")
-    return
+    return []
   }
 
   // The master default is eslint. Which includes prettier.
