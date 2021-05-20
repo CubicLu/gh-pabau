@@ -141,15 +141,35 @@ export const permissions = shield(
       createOneMedicalFormContact: rules.isAuthenticated,
       //CmContactNode
       createOneCmContactNote: rules.isAuthenticated,
-      //UserGroup
-      createOneUserGroup: and(rules.isAuthenticated, rules.isAdmin),
-      updateOneUserGroup: and(rules.isAuthenticated, rules.isAdmin),
-      deleteOneUserGroup: and(rules.isAuthenticated, rules.isAdmin),
       //Pabau bespoke
       login: allow,
       logout: rules.isAuthenticated,
       upsertManyStaffMetaByGroupId: and(rules.isAuthenticated, rules.isAdmin),
       upsertUserReportByReportCode: and(rules.isAuthenticated, rules.isAdmin),
+      updateManyStaffMetaFeaturesByGroupId: and(
+        rules.isAuthenticated,
+        rules.isAdmin
+      ),
+      //Group Permission
+      upsertGroupPermissionFeatureByGroupId: and(
+        rules.isAuthenticated,
+        rules.isAdmin
+      ),
+      //UserReports
+      upsertManyUsersReportsByGroupId: and(
+        rules.isAuthenticated,
+        rules.isAdmin
+      ),
+      //User main permission
+      upsertManyUsersMainPermissionByGroupId: and(
+        rules.isAuthenticated,
+        rules.isAdmin
+      ),
+      //User permission
+      upsertManyUsersPermissionByGroupId: and(
+        rules.isAuthenticated,
+        rules.isAdmin
+      ),
       '*': and(rules.isAuthenticated, rules.isAdmin, rules.interceptMutation),
     },
     Query: {
@@ -214,6 +234,7 @@ export const permissions = shield(
         rules.isAdmin
       ),
       user: rules.isAuthenticated, //TODO: insecure, fix in pure branch by masquerading the user/findOneUser and turning it into a findFirstUser in the shield injection.
+      staffList: and(rules.isAuthenticated, rules.isAdmin),
       '*': and(rules.isAuthenticated, rules.belongsToCompanyAndShared),
     },
   },

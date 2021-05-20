@@ -7,7 +7,7 @@ import stc from 'string-to-color'
 import { ReactComponent as EditIcon } from '../../assets/images/edit_icon.svg'
 import styles from './Avatar.module.less'
 
-enum Status {
+export enum Status {
   default = 'default',
   active = 'active',
   inactive = 'inactive',

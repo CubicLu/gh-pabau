@@ -1,0 +1,110 @@
+.user-main-wrapper {
+  .header {
+    background: #FFFFFF;
+    display: flex;
+    justify-content: space-between;
+    .header-title{
+      h4{
+        font-weight: bold;
+        font-size: 20px;
+        line-height: 25px;
+        color: #3D3D46;
+        padding-left: 24px;
+        margin: 0;
+      }
+    }
+  }
+  .tabWrapper {
+    background: #FFFFFF;
+    border-top: 1px solid #ECEDF0;
+    :global .ant-tabs {
+      .ant-tabs-nav-wrap {
+        .ant-tabs-nav-list {
+          width: 100%;
+          .ant-tabs-tab {
+            &.ant-tabs-tab-active {
+              background: transparent;
+            }
+          }
+        }
+      }
+    }
+    .container {
+      background: #FFFFFF;
+      border-radius: 4px;
+      grid-gap: 2px;
+      padding: 20px;
+      .no-search-result{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        background: #FFFFFF;
+        padding: 10px;
+        text-align: center;
+        .no-results-text{
+          font-weight: 500;
+          font-size: 16px;
+          line-height: 24px;
+          color: #3d3d46;
+        }
+        .try-adjust-text{
+          font-weight: normal;
+          font-size: 14px;
+          line-height: 22px;
+        }
+      }
+    }
+    .loader{
+      display: flex;
+      justify-content: center;
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .user-main-wrapper {
+    :global .ant-layout-header{
+      z-index: 10;
+    }
+    .header {
+      padding: 20px 16px;
+      position: fixed;
+      width: 100%;
+      background: #fff;
+      z-index: 9;
+      top: 0;
+      .header-title {
+        display: flex;
+        align-items: center;
+        span {
+          font-size: 20px;
+          color: #9292A3;
+        }
+        h4 {
+          padding-left: 0;
+          font-size: 17px;
+          line-height: 22px;
+          text-transform: capitalize;
+          color: #3D3D46;
+        }
+      }
+    }
+    .tabWrapper {
+      :global .ant-tabs {
+        .ant-tabs-nav-wrap {
+          .ant-tabs-nav-list {
+            .ant-tabs-tab {
+              flex: 1;
+              display: flex;
+              justify-content: center;
+            }
+          }
+        }
+      }
+      .container {
+        background: #f0f2f5;
+        padding: 16px;
+      }
+    }
+  }
+}

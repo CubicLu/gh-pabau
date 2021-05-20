@@ -14,9 +14,18 @@ import styles from './Setup.module.less'
 interface P {
   handleSearch?: (searchTerm: string) => void
   title?: string
+  isShowSearch?: boolean
+  isContent?: boolean
+  ContentJsx?: () => JSX.Element
 }
 
-const CommonHeader: FC<P> = ({ handleSearch, title = 'Setup' }) => {
+const CommonHeader: FC<P> = ({
+  handleSearch,
+  title = 'Setup',
+  isShowSearch,
+  isContent,
+  ContentJsx,
+}) => {
   const [openMenuDrawer, setMenuDrawer] = useState<boolean>(false)
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
     false
@@ -37,18 +46,23 @@ const CommonHeader: FC<P> = ({ handleSearch, title = 'Setup' }) => {
             />
             <p>{title}</p>
           </div>
-          <div className={styles.searchInput}>
-            {!showSearch ? (
-              <SearchOutlined
-                onClick={() => {
-                  setShowSearch(true)
-                }}
-              />
-            ) : (
-              <div className={styles.search}>
-                <SetupSearchInput onChange={handleSearch} />
+          <div className={styles.rightContentWrapper}>
+            {isShowSearch && (
+              <div className={styles.searchInput}>
+                {!showSearch ? (
+                  <SearchOutlined
+                    onClick={() => {
+                      setShowSearch(true)
+                    }}
+                  />
+                ) : (
+                  <div className={styles.search}>
+                    <SetupSearchInput onChange={handleSearch} />
+                  </div>
+                )}
               </div>
             )}
+            {isContent && <ContentJsx />}
           </div>
         </div>
       </MobileHeader>

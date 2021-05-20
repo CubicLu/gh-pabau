@@ -2962,9 +2962,9 @@ export interface UserGroup {
   restrict_calendar: number;
   restrict_data: number;
   limit_contacts: number;
-  permission_id: number;
+  permission_id?: number;
   Company: Company;
-  Permission: PermissionTemplate;
+  Permission?: PermissionTemplate;
   UserGroupMember?: UserGroupMember[];
   GroupPermission?: GroupPermission[];
 }
