@@ -3,13 +3,8 @@ import {
   MenuOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons'
-import {
-  BasicModal as RemoveModal,
-  Button,
-  HelpTooltip,
-  TabMenu,
-} from '@pabau/ui'
-import { Card, Checkbox, Col, Row, Select, Typography } from 'antd'
+import { BasicModal as RemoveModal, Button, TabMenu } from '@pabau/ui'
+import { Card, Typography } from 'antd'
 import classNames from 'classnames'
 import React, { FC, useEffect, useState } from 'react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
@@ -38,14 +33,6 @@ const reorder = (list, startIndex, endIndex) => {
   return result
 }
 
-interface AppearanceGeneralItemsTypes {
-  type: string
-  value: boolean
-  help: string
-  key: number
-  name: string
-}
-
 interface P {
   initials?: boolean
   disable_surname?: boolean
@@ -58,12 +45,15 @@ interface P {
 }
 
 const Appearance: FC<P> = ({
-  initials = true,
-  disable_surname = false,
-  disable_time = true,
-  font_size = 13,
-  appt_body = JSON.stringify([]),
-  tooltip_body = JSON.stringify([]),
+  appt_body = JSON.stringify(['service_name', 'appt_loc', 'appt_note']),
+  tooltip_body = JSON.stringify([
+    'service_name',
+    'employee',
+    'appt_duration',
+    'created_by',
+    'modified_by',
+    'appt_note',
+  ]),
   onChange,
   isLoading = true,
 }) => {
@@ -72,44 +62,6 @@ const Appearance: FC<P> = ({
   const [tooltipData, setTooltipData] = useState([])
   const [deletingVal, setDeletingVal] = useState(null)
   const [deletingModal, setDeletingModal] = useState(false)
-
-  const options = [
-    {
-      value: 13,
-      label: t('settings.calendar.appearance.input.fontsize.option1'),
-    },
-    {
-      value: 18,
-      label: t('settings.calendar.appearance.input.fontsize.option2'),
-    },
-    {
-      value: 24,
-      label: t('settings.calendar.appearance.input.fontsize.option3'),
-    },
-  ]
-  const AppearanceGeneralItems: AppearanceGeneralItemsTypes[] = [
-    {
-      name: 'initials',
-      type: t('settings.calendar.appearance.input.staff.label'),
-      value: initials,
-      help: t('settings.calendar.appearance.input.staff.tooltip'),
-      key: 1,
-    },
-    {
-      name: 'disable_surname',
-      type: t('settings.calendar.appearance.input.surnames.label'),
-      value: disable_surname,
-      help: t('settings.calendar.appearance.input.surnames.tooltip'),
-      key: 2,
-    },
-    {
-      name: 'disable_time',
-      type: t('settings.calendar.appearance.input.appointment.label'),
-      value: disable_time,
-      help: t('settings.calendar.appearance.input.appointment.tooltip'),
-      key: 3,
-    },
-  ]
 
   const apptPreviewTranslations = {
     DOB: t('settings.calendar.appearance.subheader.appointmentdisplay.dob'),
@@ -347,68 +299,6 @@ const Appearance: FC<P> = ({
         <span className={styles.description}>
           {t('settings.calendar.appearance.subtitle')}
         </span>
-      </div>
-      <div className={styles.generalControls}>
-        <div className={styles.generalBlock}>
-          <Title className={styles.blockText} level={4}>
-            {t('settings.calendar.appearance.subheader.general')}
-          </Title>
-          {AppearanceGeneralItems.map((general) => {
-            return (
-              <div key={general.key}>
-                <Checkbox
-                  key={general.key}
-                  checked={general.value}
-                  defaultChecked={general.value}
-                  onChange={(val) => {
-                    if (general?.name) {
-                      onChange?.({
-                        [`${general.name}`]: val.target.checked ? 1 : 0,
-                      })
-                    }
-                  }}
-                >
-                  <span className={styles.appointmentText}>{general.type}</span>
-                </Checkbox>
-                <HelpTooltip helpText={general.help} />
-                <br />
-              </div>
-            )
-          })}
-        </div>
-      </div>
-      <div className={styles.fontControls}>
-        <div className={styles.fontBlock}>
-          <Title className={styles.blockText} level={4}>
-            {t('settings.calendar.appearance.subheader.fontsize')}
-          </Title>
-          <Row>
-            <Col md={8} sm={16} xs={24}>
-              <Select
-                className={styles.fontSizeSelect}
-                placeholder={t(
-                  'settings.calendar.appearance.subheader.fontsize.placeholder'
-                )}
-                value={
-                  font_size
-                    ? font_size >= 24
-                      ? 24
-                      : font_size >= 18
-                      ? 18
-                      : font_size >= 13 && 13
-                    : null
-                }
-                defaultValue={options[0].value}
-                options={options}
-                onChange={(val) => {
-                  onChange?.({
-                    font_size: val,
-                  })
-                }}
-              />
-            </Col>
-          </Row>
-        </div>
       </div>
       <div
         className={classNames(styles.fontControls, styles.appointmentPreview)}

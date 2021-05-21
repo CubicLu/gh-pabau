@@ -1,7 +1,7 @@
-import { TimeInput } from '@pabau/ui'
 import { Col, Row, Select, Typography } from 'antd'
-import moment from 'moment'
+import { TimePicker } from '@pabau/ui'
 import React, { FC } from 'react'
+import dayjs from 'dayjs'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './Calendar.module.less'
 import ConfigurationSkeleton from './ConfigurationSkeleton'
@@ -18,10 +18,10 @@ interface P {
 }
 
 export const Configuration: FC<P> = ({
-  slot_interval,
-  start_time,
-  end_time,
-  lock_timer,
+  slot_interval = 15,
+  start_time = null,
+  end_time = null,
+  lock_timer = 120,
   onChange,
   isLoading = true,
 }) => {
@@ -82,16 +82,16 @@ export const Configuration: FC<P> = ({
             />
             <Row className={styles.timeInputSpace}>
               <Col xs={24} md={12} className={styles.colRightSpace}>
-                <TimeInput
+                <TimePicker
                   label={t('settings.calendar.configuration.input.starttime')}
-                  defaultValue={moment(`13:45:00`, 'HH:mm:ss')}
-                  value={
-                    start_time ? moment(`${start_time}`, 'HH:mm:ss') : null
-                  }
+                  defaultValue={dayjs(`13:30:00`, 'HH:mm:ss')}
+                  value={start_time ? dayjs(`${start_time}`, 'HH:mm:ss') : null}
+                  size="small"
+                  minuteStep={30}
                   onChange={(val) => {
                     if (val) {
                       onChange?.({
-                        start_time: moment(val).format('HH:mm:ss'),
+                        start_time: dayjs(val).format('HH:mm:ss'),
                       })
                     } else {
                       onChange?.({
@@ -102,14 +102,16 @@ export const Configuration: FC<P> = ({
                 />
               </Col>
               <Col xs={24} md={12} className={styles.colLeftSpace}>
-                <TimeInput
+                <TimePicker
                   label={t('settings.calendar.configuration.input.endtime')}
-                  defaultValue={moment('13:45:00', 'HH:mm:ss')}
-                  value={end_time ? moment(`${end_time}`, 'HH:mm:ss') : null}
+                  defaultValue={dayjs('14:30:00', 'HH:mm:ss')}
+                  value={end_time ? dayjs(`${end_time}`, 'HH:mm:ss') : null}
+                  size="small"
+                  minuteStep={30}
                   onChange={(val) => {
                     if (val) {
                       onChange?.({
-                        end_time: moment(val).format('HH:mm:ss'),
+                        end_time: dayjs(val).format('HH:mm:ss'),
                       })
                     } else {
                       onChange?.({

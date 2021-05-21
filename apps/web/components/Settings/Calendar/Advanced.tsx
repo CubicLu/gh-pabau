@@ -42,10 +42,10 @@ export const Advanced: FC<P> = ({
 
   const getMetaCheckValue = (name) => {
     const metaData = companyMetas.find((el) => el.meta_name === name)
-
-    return metaData?.meta_value &&
-      (metaData?.meta_value === '1' || Number(metaData?.meta_value) === 1)
-      ? true
+    return metaData?.meta_value
+      ? metaData?.meta_value === '1' || Number(metaData?.meta_value) === 1
+        ? true
+        : false
       : false
   }
 

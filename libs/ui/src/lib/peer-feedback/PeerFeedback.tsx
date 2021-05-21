@@ -365,7 +365,7 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
             dataSource={employees}
             columns={employeeColumns}
             rowClassName={styles.employeeRow}
-            summary={(employees) => <SummaryRow employees={employees} />}
+            summary={() => <SummaryRow employees={employees} />}
             pagination={false}
             scroll={{ x: 'max-content' }}
           />
