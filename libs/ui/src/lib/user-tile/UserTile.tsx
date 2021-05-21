@@ -1,4 +1,4 @@
-import React, { FunctionComponent, VoidFunctionComponent } from 'react'
+import React, { FC, VoidFunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Tooltip, Skeleton } from 'antd'
 import { useMedia } from 'react-use'
@@ -32,9 +32,7 @@ interface UnavailableProps {
   vacation?: Vacation
 }
 
-const UnavailableStatus: FunctionComponent<UnavailableProps> = ({
-  vacation,
-}) => {
+const UnavailableStatus: FC<UnavailableProps> = ({ vacation }) => {
   const { t } = useTranslation('common')
   return (
     <Tooltip
@@ -62,7 +60,7 @@ const UserIsAdmin: VoidFunctionComponent = (): JSX.Element => {
   )
 }
 
-export const UserTile: FunctionComponent<UserProps> = ({
+export const UserTile: FC<UserProps> = ({
   name,
   title,
   vacation,
@@ -157,3 +155,5 @@ export const UserTile: FunctionComponent<UserProps> = ({
     </div>
   )
 }
+
+export default UserTile

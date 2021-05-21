@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import { UserTile } from '@pabau/ui'
+import UserTile from './UserTile'
 import { mockUsers } from './mock'
 
 describe('UserTile', () => {
@@ -8,7 +8,6 @@ describe('UserTile', () => {
     const { baseElement } = render(
       <UserTile
         name={mockUsers.name}
-        surname={mockUsers.surname}
         title={mockUsers.title}
         vacation={mockUsers.vacation}
         available={mockUsers.available}

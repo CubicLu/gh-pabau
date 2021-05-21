@@ -881,6 +881,8 @@ en:
   ui.sms-purchase-modal.next_step_mobile: 'Next'
   ui.sms-purchase-modal.previous_step_mobile: 'Previous'
   ui.sms-purchase-modal.confirm: 'Confirm'
+  ui.timeinput.btns.ok: 'Ok'
+  ui.timeinput.btns.now: 'Now'
   settings-header: Settings
   settings-performance-save: 'Save Changes'
   settings-performance-tab-header1: 'Review Schedule'

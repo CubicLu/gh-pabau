@@ -16,10 +16,8 @@ import Advanced from '../../../components/Settings/Calendar/Advanced'
 import Appearance from '../../../components/Settings/Calendar/Appearance'
 import AppointmentSettings from '../../../components/Settings/Calendar/AppointmentSettings'
 import Configuration from '../../../components/Settings/Calendar/Configuration'
-import Unauthorized from '../../../components/Unauthorized'
 import { UserContext } from '../../../context/UserContext'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-import Login from '../../../pages/login'
 import styles from './index.module.less'
 
 const { Title } = Typography
@@ -62,25 +60,86 @@ const LIST_QUERY = gql`
 const ADD_MUTATION = gql`
   mutation createOneBookingSetting(
     $slot_interval: Int
-    $start_time: String
-    $end_time: String
+    $start_time: String = ""
+    $end_time: String = ""
     $lock_timer: Int
     $allow_overlapping_appts: Int
-    $send_reminder: Int
-    $send_email: Int
-    $send_sms: Int
-    $send_feedback: Int
+    $send_reminder: Int = 0
+    $send_email: Int = 0
+    $send_sms: Int = 0
+    $send_feedback: Int = 0
     $initials: Int
-    $disable_surname: Int
+    $disable_surname: Int = 0
     $font_size: Int
-    $disable_time: Int
+    $disable_time: Int = 0
     $appt_body: String
     $tooltip_body: String
     $disable_service_filter: Int
     $disable_book_by_package: Int
+    $default_date_time: DateTime!
   ) {
     createOneBookingSetting(
       data: {
+        Company: {}
+        attach_invoice: 0
+        booking_emails: ""
+        cancel_email_from: ""
+        cancel_email_tmpl: 0
+        cancel_sms_from: ""
+        cancel_sms_notify: 0
+        cancel_sms_tmpl: 0
+        class_noshow_email_notify: 0
+        class_noshow_email_tmpl: 0
+        class_noshow_sms_notify: 0
+        class_noshow_sms_tmpl: 0
+        class_reminder_email_notify: 0
+        class_reminder_email_tmpl: 0
+        class_reminder_sms_notify: 0
+        class_reminder_sms_tmpl: 0
+        class_reschedule_email_notify: 0
+        class_reschedule_email_tmpl: 0
+        class_reschedule_sms_notify: 0
+        class_reschedule_sms_tmpl: 0
+        class_sms_days_before: 0
+        column_total: 0
+        confirm_fromemail: ""
+        disable_second_cal: 0
+        email_confirm_id: 0
+        email_mode: 0
+        email_reminder_id: 0
+        feedback_days_after: 0
+        feedback_fromemail: ""
+        feedback_id: 0
+        feedback_mode: 0
+        feedback_send_time: $default_date_time
+        class_sms_send_time: $default_date_time
+        modified_date: $default_date_time
+        send_time: $default_date_time
+        sms_send_time: $default_date_time
+        font_color: ""
+        group_booking_cancel_email_enable: false
+        group_booking_cancel_template_id: 0
+        modified_by: 0
+        noshow_email_from: ""
+        noshow_email_notify: 0
+        noshow_email_tmpl: 0
+        noshow_sms_from: ""
+        noshow_sms_notify: 0
+        noshow_sms_tmpl: 0
+        package_used_email_enable: 0
+        package_used_template_id: 0
+        reminder_fromemail: ""
+        reminder_mode: 0
+        reschedule_email_from: ""
+        reschedule_email_tmpl: 0
+        reschedule_sms_from: ""
+        reschedule_sms_notify: 0
+        reschedule_sms_tmpl: 0
+        sms_confirm_id: 0
+        sms_days_before: 0
+        sms_id: 0
+        sms_mode: 0
+        sms_name: ""
         slot_interval: $slot_interval
         start_time: $start_time
         end_time: $end_time
@@ -95,7 +154,7 @@ const ADD_MUTATION = gql`
         font_size: $font_size
         disable_time: $disable_time
         appt_body: $appt_body
-        appt_body: $appt_body
+        tooltip_body: $tooltip_body
         disable_service_filter: $disable_service_filter
         disable_book_by_package: $disable_book_by_package
       }
@@ -256,6 +315,7 @@ export function Calendar({ ...props }) {
             }
             setUpdatedCompanyMetas(copyMetas)
           }}
+          isLoading={isLoading}
         />
       ),
     },
@@ -310,12 +370,13 @@ export function Calendar({ ...props }) {
   }, [data, loading])
 
   const onSaveChange = () => {
+    const settings = { ...settingsData }
     setIsLoading(true)
     saveCompanyMetas()
     if (settingsData?.id) {
       updateMutation({
         variables: {
-          ...settingsData,
+          ...settings,
         },
         optimisticResponse: {},
         refetchQueries: [
@@ -325,9 +386,10 @@ export function Calendar({ ...props }) {
         ],
       })
     } else {
+      settings.default_date_time = new Date()
       createMutation({
         variables: {
-          ...settingsData,
+          ...settings,
         },
         optimisticResponse: {},
         refetchQueries: [
@@ -375,14 +437,14 @@ export function Calendar({ ...props }) {
     }
   }
 
-  if (!user?.me) {
-    return <Login />
-  }
-  return user?.me?.admin === 0 || user?.me?.admin === undefined ? (
-    <Unauthorized />
-  ) : (
+  return (
     <div className={styles.calendarWrapper}>
-      <Layout {...user}>
+      <Layout
+        {...user}
+        requireAdminAccess={
+          user?.me?.admin === 0 || user?.me?.admin === undefined ? false : true
+        }
+      >
         <Card className={styles.calendarCard}>
           <div className={styles.mainTabWrapper}>
             <div className={styles.titleWrapper}>
