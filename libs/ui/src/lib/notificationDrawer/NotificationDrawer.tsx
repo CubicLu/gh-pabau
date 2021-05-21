@@ -10,7 +10,7 @@ import { ReactComponent as EmptySVG } from '../../assets/images/notification-emp
 import Notification from './Notification'
 import styles from './NotificationDrawer.module.less'
 
-export interface UserProps {
+interface UserProps {
   user: number
   company: number
   fullName: string

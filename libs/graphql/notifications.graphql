@@ -21,3 +21,31 @@ subscription notifications($user: jsonb) {
     }
   }
 }
+
+mutation update_notifications_by_pk($id: uuid!, $sent_to: jsonb) {
+  update_notifications_by_pk(
+    pk_columns: { id: $id }
+    _set: { sent_to: $sent_to }
+  ) {
+    id
+  }
+}
+
+mutation delete_notifications_by_pk($id: uuid!) {
+  delete_notifications_by_pk(id: $id) {
+    __typename
+    id
+  }
+}
+
+mutation insert_read_notification_one(
+  $company: numeric
+  $notification: uuid
+  $user: numeric
+) {
+  insert_read_notification_one(
+    object: { company: $company, notification: $notification, user: $user }
+  ) {
+    id
+  }
+}

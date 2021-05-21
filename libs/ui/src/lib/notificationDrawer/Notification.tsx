@@ -5,9 +5,14 @@ import classNames from 'classnames'
 import { useRouter } from 'next/router'
 import React, { FC, useEffect, useState } from 'react'
 import { notificationIcons } from './mock'
-import { Notifications, UserProps } from './NotificationDrawer'
+import { Notifications } from './NotificationDrawer'
 import styles from './NotificationDrawer.module.less'
 
+export interface UserProps {
+  user: number
+  company: number
+  fullName: string
+}
 interface NotificationProps {
   notify: Notifications
   relativeTime?: (lan: string, date: Date) => string

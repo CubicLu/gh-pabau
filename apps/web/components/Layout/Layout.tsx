@@ -1,7 +1,9 @@
-import { gql, useMutation } from '@apollo/client'
 import {
   useDisabledFeaturesQuery,
   useNotificationsSubscription,
+  useUpdate_Notifications_By_PkMutation,
+  useDelete_Notifications_By_PkMutation,
+  useInsert_Read_Notification_OneMutation,
 } from '@pabau/graphql'
 import { Iframe, Layout as PabauLayout, LayoutProps } from '@pabau/ui'
 import { useRouter } from 'next/router'
@@ -26,39 +28,6 @@ interface Notification {
   users: number[]
   link: string
 }
-
-const DELETE_MUTATION = gql`
-  mutation delete_notifications_by_pk($id: uuid!) {
-    delete_notifications_by_pk(id: $id) {
-      __typename
-      id
-    }
-  }
-`
-
-const UPDATE_MUTATION = gql`
-  mutation update_notifications_by_pk($id: uuid!, $sent_to: jsonb) {
-    update_notifications_by_pk(
-      pk_columns: { id: $id }
-      _set: { sent_to: $sent_to }
-    ) {
-      id
-    }
-  }
-`
-const READ_NOTIFICATION_ADD_MUTATION = gql`
-  mutation insert_read_notification_one(
-    $company: numeric
-    $notification: uuid
-    $user: numeric
-  ) {
-    insert_read_notification_one(
-      object: { company: $company, notification: $notification, user: $user }
-    ) {
-      id
-    }
-  }
-`
 
 const onMessageType = () => {
   //add mutation for send message textbox
@@ -86,9 +55,15 @@ const Layout: FC<LayoutProps> = ({
   const loggedUser = useContext(UserContext)
   const userData = { ...user, fullName: loggedUser?.me?.full_name }
 
-  const [deleteMutation] = useMutation(DELETE_MUTATION)
-  const [readAddMutation] = useMutation(READ_NOTIFICATION_ADD_MUTATION)
-  const [updateMutation] = useMutation(UPDATE_MUTATION)
+  const [
+    insertReadNotificationOneMutation,
+  ] = useInsert_Read_Notification_OneMutation()
+  const [
+    updateNotificationsByPkMutation,
+  ] = useUpdate_Notifications_By_PkMutation()
+  const [
+    deleteNotificationsByPkMutation,
+  ] = useDelete_Notifications_By_PkMutation()
 
   useEffect(() => {
     if (notificationData?.notifications?.length > 0) {
@@ -150,9 +125,9 @@ const Layout: FC<LayoutProps> = ({
         <PabauLayout
           relativeTime={relativeTime}
           notifications={notifications}
-          deleteNotification={deleteMutation}
-          updateNotification={updateMutation}
-          readAddMutation={readAddMutation}
+          deleteNotification={deleteNotificationsByPkMutation}
+          updateNotification={updateNotificationsByPkMutation}
+          readAddMutation={insertReadNotificationOneMutation}
           user={userData}
           searchRender={() => <Search />}
           onCreateChannel={onCreateChannel}
