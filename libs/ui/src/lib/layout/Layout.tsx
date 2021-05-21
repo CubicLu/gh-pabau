@@ -48,6 +48,7 @@ export interface LayoutProps {
   onMessageType?: (e: MouseEvent<HTMLElement>) => void
   legacyContent?: boolean
   taskManagerIFrameComponent?: JSX.Element
+  requireAdminAccess?: boolean
 }
 
 export const Layout: FC<LayoutProps> = ({

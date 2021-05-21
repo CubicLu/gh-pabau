@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 export interface LoginProps {
   user: number
   company: number
+  admin: boolean
 }
 
 export default function useLogin(registered = false): [boolean, LoginProps] {
@@ -21,6 +22,7 @@ export default function useLogin(registered = false): [boolean, LoginProps] {
       return {
         user: token?.payload?.user,
         company: token.payload?.company,
+        admin: token?.payload?.admin,
       } as LoginProps
     } catch (error) {
       console.log(error)

@@ -1,7 +1,7 @@
-import React, { FC, useContext } from 'react'
 import { Appointment } from '@pabau/ui'
+import React, { FC, useContext } from 'react'
 import CustomTemplate from '../ClientNotification/CustomTemplate'
-import { GlobalContext } from '../ClientNotification'
+import { GlobalContext } from '../ClientNotification/Index'
 
 interface P {
   requestConfirm?: boolean

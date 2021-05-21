@@ -1,14 +1,13 @@
-import React, { FC, useState } from 'react'
 import { PhoneNumberInput } from '@pabau/ui'
-import { Form, Input, Checkbox, Select, SubmitButton } from 'formik-antd'
+import { Formik } from 'formik'
+import { Checkbox, Form, Input, Select, SubmitButton } from 'formik-antd'
 import countries from 'i18n-iso-countries'
 import english from 'i18n-iso-countries/langs/en.json'
+import React, { FC, useState } from 'react'
+import * as Yup from 'yup'
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import timezones from '../../../../libs/ui/src/assets/timezone'
-
-import styles from './common.module.less'
-import { Formik } from 'formik'
-import * as Yup from 'yup'
+import styles from './Common.module.less'
 
 export interface StepTwoFormProps {
   phoneNumber: string

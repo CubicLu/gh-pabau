@@ -1,10 +1,9 @@
-import React, { FC } from 'react'
 import { PasswordWithHelper } from '@pabau/ui'
-import { Form, Input, SubmitButton } from 'formik-antd'
-
-import styles from './common.module.less'
 import { Formik } from 'formik'
+import { Form, Input, SubmitButton } from 'formik-antd'
+import React, { FC } from 'react'
 import * as Yup from 'yup'
+import styles from './Common.module.less'
 
 export interface StepOneFormProps {
   firstName: string

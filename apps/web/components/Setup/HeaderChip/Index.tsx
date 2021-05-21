@@ -1,15 +1,14 @@
 import React, { useEffect, useState, FC, ReactElement } from 'react'
-import { SetupChip, useLiveQuery } from '@pabau/ui'
-import styles from '../../../pages/setup/Setup.module.less'
 import { gql } from '@apollo/client'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-
 import {
   EditOutlined,
   PlaySquareOutlined,
-  UsergroupAddOutlined,
   QuestionCircleOutlined,
+  UsergroupAddOutlined,
 } from '@ant-design/icons'
+import { SetupChip, useLiveQuery } from '@pabau/ui'
+import styles from '../../../pages/setup/setup.module.less'
 
 const GET_VIDEO_COUNT = gql`
   query {

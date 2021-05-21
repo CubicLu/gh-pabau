@@ -13,17 +13,17 @@ import { Typography } from 'antd'
 import classNames from 'classnames'
 import { Formik, FormikErrors } from 'formik'
 import { useRouter } from 'next/router'
-import React, { FC, useEffect, useMemo, useRef, useState } from 'react'
+import React, { FC, useEffect, useMemo, useState, RefObject } from 'react'
 import { useGridData } from '../hooks/useGridData'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
 import AddButton from './AddButton'
 import CrudModal from './CrudModal'
 import styles from './CrudTable.module.less'
-import Layout from './Layout/Layout'
 
 const { Title } = Typography
 interface P {
   schema: Schema
+  crudLayoutRef: RefObject<HTMLDivElement>
   addQuery?: DocumentNode
   deleteQuery?: DocumentNode
   listQuery: DocumentNode
@@ -66,7 +66,7 @@ const CrudTable: FC<P> = ({
   customFilter,
   setEditPage,
   draggable = true,
-  ...props
+  crudLayoutRef,
 }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isActive, setIsActive] = useState<boolean>(
@@ -79,7 +79,6 @@ const CrudTable: FC<P> = ({
   const [formSubmitAllowed, setFormSubmitAllowedStatus] = useState(true)
   const { t } = useTranslationI18()
   const { getParentSetupData } = useGridData(t)
-  const crudTableRef = useRef(null)
   const router = useRouter()
 
   const [editMutation] = useMutation(editQuery, {
@@ -225,9 +224,10 @@ const CrudTable: FC<P> = ({
   }, [data, aggregateData, loading])
 
   useEffect(() => {
-    if (crudTableRef.current) {
-      crudTableRef.current.scrollIntoView({ behavior: 'smooth' })
+    if (crudLayoutRef.current) {
+      crudLayoutRef.current.scrollIntoView({ behavior: 'smooth' })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paginateData.currentPage, paginateData.limit])
 
   const onFilterMarketingSource = () => {
@@ -270,7 +270,6 @@ const CrudTable: FC<P> = ({
 
   const onSubmit = async (values, { resetForm }) => {
     setFormSubmitAllowedStatus(false)
-    console.log(values?.public)
     await (values.id
       ? editMutation({
           variables: values,
@@ -321,12 +320,12 @@ const CrudTable: FC<P> = ({
       case 'string':
       case 'color-picker':
       case 'radio-group':
-        return defaultVal || ''
+        return defaultVal ?? ''
       case 'boolean':
       case 'checkbox':
-        return defaultVal || true
+        return defaultVal ?? true
       default:
-        return defaultVal || ''
+        return defaultVal ?? ''
     }
   }
 
@@ -387,147 +386,74 @@ const CrudTable: FC<P> = ({
   }
 
   return (
-    <div ref={crudTableRef}>
-      <Formik
-        enableReinitialize={true}
-        validate={(e) =>
-          Object.entries(fields).reduce((a, c) => {
-            if (
-              c[1].min && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              c[1].min > e[c[0]]?.length &&
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              e[c[0]]?.length <= 50
-            ) {
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              a[c[0]] = t('crud-table-input-min-length-validate', {
-                what: c[1].shortLower,
-                min: c[1].min,
-              })
-            } else if (
-              c[1].required && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              e[c[0]]?.length === 0 &&
-              c[1].validateMsg
-            ) {
-              a[c[0]] = c[1].validateMsg
-            } else if (
-              c[1].max && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              c[1].max < e[c[0]]?.toString().length
-            ) {
-              a[c[0]] = t('crud-table-input-max-length-validate', {
-                max: c[1].max,
-              })
-            } else if (
-              e[c[0]] &&
-              c[1].type === 'number' &&
-              // eslint-disable-next-line
-              !/^[+]?([0-9]+(?:\.][0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?$/.test(
-                e[c[0]].toString()
-              )
-            ) {
-              a[c[0]] = t('crud-table-input-invalid-validate', {
-                what: c[1].shortLower,
-              })
-            }
-            return a
+    <Formik
+      enableReinitialize={true}
+      validate={(e) =>
+        Object.entries(fields).reduce((a, c) => {
+          if (
+            c[1].min && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            c[1].min > e[c[0]]?.length &&
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            e[c[0]]?.length <= 50
+          ) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            a[c[0]] = t('crud-table-input-min-length-validate', {
+              what: c[1].shortLower,
+              min: c[1].min,
+            })
+          } else if (
+            c[1].required && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            e[c[0]]?.length === 0 &&
+            c[1].validateMsg
+          ) {
+            a[c[0]] = c[1].validateMsg
+          } else if (
+            c[1].max && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            c[1].max < e[c[0]]?.toString().length
+          ) {
+            a[c[0]] = t('crud-table-input-max-length-validate', {
+              max: c[1].max,
+            })
+          } else if (
+            e[c[0]] &&
+            c[1].type === 'number' &&
             // eslint-disable-next-line
+              !/^[+]?([0-9]+(?:\.][0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?$/.test(
+              e[c[0]].toString()
+            )
+          ) {
+            a[c[0]] = t('crud-table-input-invalid-validate', {
+              what: c[1].shortLower,
+            })
+          }
+          return a
+          // eslint-disable-next-line
           }, {} as FormikErrors<any>)
-        }
-        onSubmit={(values, { resetForm }) => {
-          onSubmit(values, { resetForm })
-        }}
-        initialValues={
-          editingRow?.id ? editingRow : formikFields() //TODO: remove this, it should come from schema.fields[].*
-        }
-      >
-        <>
-          <div
-            className={classNames(
-              styles.marketingSourcePage,
-              styles.desktopViewNone
-            )}
-          >
-            <MobileHeader className={styles.marketingSourceHeader}>
-              <div className={styles.allContentAlignMobile}>
-                <div className={styles.marketingTextStyle}>
-                  <LeftOutlined onClick={handleBack} />
-                  {!isMobileSearch && <p>{schema.full || schema.short} </p>}
-                </div>
-                {addQuery && !createPage ? (
-                  <AddButton
-                    onClick={createNew}
-                    onFilterSource={onFilterMarketingSource}
-                    onSearch={onSearch}
-                    schema={schema}
-                    tableSearch={tableSearch}
-                    needTranslation={needTranslation}
-                    addFilter={addFilter}
-                    isCustomFilter={isCustomFilter}
-                    customFilter={customFilter}
-                    mobileSearch={isMobileSearch}
-                    setMobileSearch={() => {
-                      setMobileSearch((e) => !e)
-                    }}
-                  />
-                ) : (
-                  <AddButton
-                    onClick={createPageOnClick}
-                    onFilterSource={onFilterMarketingSource}
-                    onSearch={onSearch}
-                    schema={schema}
-                    tableSearch={tableSearch}
-                    addFilter={addFilter}
-                    needTranslation={needTranslation}
-                    isCustomFilter={isCustomFilter}
-                    customFilter={customFilter}
-                    mobileSearch={isMobileSearch}
-                    setMobileSearch={() => {
-                      setMobileSearch((e) => !e)
-                    }}
-                  />
-                )}
-              </div>
-            </MobileHeader>
-          </div>
-
-          {modalShowing && (
-            <CrudModal
-              schema={schema}
-              editingRow={editingRow}
-              addQuery={addQuery}
-              deleteQuery={deleteQuery}
-              onClose={() => setModalShowing(false)}
-              needTranslation={needTranslation}
-              listQuery={listQuery}
-              listQueryVariables={getQueryVariables}
-              aggregateQuery={aggregateQuery}
-              aggregateQueryVariables={getAggregateQueryVariables}
-            />
+      }
+      onSubmit={(values, { resetForm }) => {
+        onSubmit(values, { resetForm })
+      }}
+      initialValues={
+        editingRow?.id ? editingRow : formikFields() //TODO: remove this, it should come from schema.fields[].*
+      }
+    >
+      <>
+        <div
+          className={classNames(
+            styles.marketingSourcePage,
+            styles.desktopViewNone
           )}
-
-          <Layout {...props}>
-            {showNotificationBanner && notificationBanner}
-            <div
-              className={classNames(
-                styles.tableMainHeading,
-                styles.mobileViewNone
-              )}
-            >
-              <div style={{ background: '#FFF' }}>
-                <Breadcrumb
-                  breadcrumbItems={[
-                    {
-                      breadcrumbName: t('navigation-breadcrumb-setup'),
-                      path: 'setup',
-                    },
-                    { breadcrumbName: schema.full || schema.short, path: '' },
-                  ]}
-                />
-                <Title>{schema.full || schema.short}</Title>
+        >
+          <MobileHeader className={styles.marketingSourceHeader}>
+            <div className={styles.allContentAlignMobile}>
+              <div className={styles.marketingTextStyle}>
+                <LeftOutlined onClick={handleBack} />
+                {!isMobileSearch && <p>{schema.full || schema.short} </p>}
               </div>
               {addQuery && !createPage ? (
                 <AddButton
@@ -540,6 +466,10 @@ const CrudTable: FC<P> = ({
                   addFilter={addFilter}
                   isCustomFilter={isCustomFilter}
                   customFilter={customFilter}
+                  mobileSearch={isMobileSearch}
+                  setMobileSearch={() => {
+                    setMobileSearch((e) => !e)
+                  }}
                 />
               ) : (
                 <AddButton
@@ -552,91 +482,154 @@ const CrudTable: FC<P> = ({
                   needTranslation={needTranslation}
                   isCustomFilter={isCustomFilter}
                   customFilter={customFilter}
+                  mobileSearch={isMobileSearch}
+                  setMobileSearch={() => {
+                    setMobileSearch((e) => !e)
+                  }}
                 />
               )}
             </div>
-            <div className={styles.marketingSourcesTableContainer}>
-              <Table
-                loading={isLoading}
-                style={{ height: '100%' }}
-                sticky={{ offsetScroll: 80, offsetHeader: 80 }}
-                pagination={sourceData?.length > 10 ? {} : false}
-                draggable={draggable}
-                isCustomColorExist={checkCustomColorIconExist('color')}
-                isCustomIconExist={checkCustomColorIconExist('icon')}
-                noDataBtnText={schema?.noDataBtnText ?? schema.full}
-                noDataText={schema?.noDataText ?? schema.fullLower}
-                padlocked={schema.padlocked}
-                scroll={{ x: 'max-content' }}
-                onAddTemplate={
-                  createPage ? () => createPageOnClick() : () => createNew()
-                }
-                searchTerm={searchTerm}
-                columns={[
-                  ...Object.entries(schema.fields).map(([k, v]) => ({
-                    dataIndex: k,
-                    width: v.cssWidth,
-                    title: v.short || v.full,
-                    visible: Object.prototype.hasOwnProperty.call(v, 'visible')
-                      ? v.visible
-                      : true,
-                  })),
-                ]}
-                dataSource={sourceData?.map((e: { id: string | number }) => ({
-                  key: e.id,
-                  ...e,
-                }))}
-                updateDataSource={({ newData, oldIndex, newIndex }) => {
-                  newData = newData.map((data, i) => {
-                    data.order = sourceData[i].order
-                    return data
-                  })
-                  if (oldIndex > newIndex) {
-                    for (let i = newIndex; i <= oldIndex; i++) {
-                      updateOrder(newData[i])
-                    }
-                  } else {
-                    for (let i = oldIndex; i <= newIndex; i++) {
-                      updateOrder(newData[i])
-                    }
-                  }
-                  setSourceData(newData)
-                }}
-                onRowClick={(e) => {
-                  if (editPage) {
-                    router.push(`${editPageRouteLink}/${e.id}`)
-                  } else if (createPage) {
-                    setEditPage(e)
-                  } else {
-                    setEditingRow(e)
-                    setModalShowing((e) => !e)
-                  }
-                }}
-                needTranslation={needTranslation}
-              />
-            </div>
-            <Pagination
-              total={paginateData.total}
-              defaultPageSize={50}
-              showSizeChanger={false}
-              onChange={onPaginationChange}
-              pageSizeOptions={['10', '25', '50', '100']}
-              onPageSizeChange={(pageSize) => {
-                setPaginateData({
-                  ...paginateData,
-                  limit: pageSize,
-                  offset: 0,
-                  currentPage: 1,
-                })
-              }}
-              pageSize={paginateData.limit}
-              current={paginateData.currentPage}
-              showingRecords={paginateData.showingRecords}
+          </MobileHeader>
+        </div>
+
+        {modalShowing && (
+          <CrudModal
+            schema={schema}
+            editingRow={editingRow}
+            addQuery={addQuery}
+            deleteQuery={deleteQuery}
+            onClose={() => setModalShowing(false)}
+            needTranslation={needTranslation}
+            listQuery={listQuery}
+            listQueryVariables={getQueryVariables}
+            aggregateQuery={aggregateQuery}
+            aggregateQueryVariables={getAggregateQueryVariables}
+          />
+        )}
+
+        {showNotificationBanner && notificationBanner}
+        <div
+          className={classNames(styles.tableMainHeading, styles.mobileViewNone)}
+        >
+          <div style={{ background: '#FFF' }}>
+            <Breadcrumb
+              breadcrumbItems={[
+                {
+                  breadcrumbName: t('navigation-breadcrumb-setup'),
+                  path: 'setup',
+                },
+                { breadcrumbName: schema.full || schema.short, path: '' },
+              ]}
             />
-          </Layout>
-        </>
-      </Formik>
-    </div>
+            <Title>{schema.full || schema.short}</Title>
+          </div>
+          {addQuery && !createPage ? (
+            <AddButton
+              onClick={createNew}
+              onFilterSource={onFilterMarketingSource}
+              onSearch={onSearch}
+              schema={schema}
+              tableSearch={tableSearch}
+              needTranslation={needTranslation}
+              addFilter={addFilter}
+              isCustomFilter={isCustomFilter}
+              customFilter={customFilter}
+            />
+          ) : (
+            <AddButton
+              onClick={createPageOnClick}
+              onFilterSource={onFilterMarketingSource}
+              onSearch={onSearch}
+              schema={schema}
+              tableSearch={tableSearch}
+              addFilter={addFilter}
+              needTranslation={needTranslation}
+              isCustomFilter={isCustomFilter}
+              customFilter={customFilter}
+            />
+          )}
+        </div>
+        <div className={styles.marketingSourcesTableContainer}>
+          <Table
+            loading={isLoading}
+            style={{ height: '100%' }}
+            sticky={{ offsetScroll: 80, offsetHeader: 80 }}
+            pagination={sourceData?.length > 10 ? {} : false}
+            draggable={draggable}
+            isCustomColorExist={checkCustomColorIconExist('color')}
+            isCustomIconExist={checkCustomColorIconExist('icon')}
+            noDataBtnText={schema?.noDataBtnText ?? schema.full}
+            noDataText={schema?.noDataText ?? schema.fullLower}
+            padlocked={schema.padlocked}
+            scroll={{ x: 'max-content' }}
+            onAddTemplate={
+              createPage ? () => createPageOnClick() : () => createNew()
+            }
+            searchTerm={searchTerm}
+            columns={[
+              ...Object.entries(schema.fields).map(([k, v]) => ({
+                dataIndex: k,
+                width: v.cssWidth,
+                title: v.short || v.full,
+                visible: Object.prototype.hasOwnProperty.call(v, 'visible')
+                  ? v.visible
+                  : true,
+                render: v.render,
+              })),
+            ]}
+            dataSource={sourceData?.map((e: { id: string | number }) => ({
+              key: e.id,
+              ...e,
+            }))}
+            updateDataSource={({ newData, oldIndex, newIndex }) => {
+              newData = newData.map((data, i) => {
+                data.order = sourceData[i].order
+                return data
+              })
+              if (oldIndex > newIndex) {
+                for (let i = newIndex; i <= oldIndex; i++) {
+                  updateOrder(newData[i])
+                }
+              } else {
+                for (let i = oldIndex; i <= newIndex; i++) {
+                  updateOrder(newData[i])
+                }
+              }
+              setSourceData(newData)
+            }}
+            onRowClick={(e) => {
+              if (editPage) {
+                router.push(`${editPageRouteLink}/${e.id}`)
+              } else if (createPage) {
+                setEditPage(e)
+              } else {
+                setEditingRow(e)
+                setModalShowing((e) => !e)
+              }
+            }}
+            needTranslation={needTranslation}
+          />
+        </div>
+        <Pagination
+          total={paginateData.total}
+          defaultPageSize={50}
+          showSizeChanger={false}
+          onChange={onPaginationChange}
+          pageSizeOptions={['10', '25', '50', '100']}
+          onPageSizeChange={(pageSize) => {
+            setPaginateData({
+              ...paginateData,
+              limit: pageSize,
+              offset: 0,
+              currentPage: 1,
+            })
+          }}
+          pageSize={paginateData.limit}
+          current={paginateData.currentPage}
+          showingRecords={paginateData.showingRecords}
+        />
+      </>
+    </Formik>
   )
 }
 export default CrudTable

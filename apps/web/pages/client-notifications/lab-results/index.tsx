@@ -1,7 +1,7 @@
 import React, { FC, useRef, useState } from 'react'
 import { Notification, NotificationType } from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
-import ClientNotification from '../../../components/ClientNotification/index'
+import ClientNotification from '../../../components/ClientNotification/Index'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
 import DocumentSharedEmailPreview from '../../../components/ClientNotificationEmailPreview/DocumentSharedEmailPreview'
 import { sendEmailService } from '../../../components/ClientNotificationEmailPreview/sendEmailService'

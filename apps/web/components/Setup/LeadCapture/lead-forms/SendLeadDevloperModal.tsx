@@ -1,8 +1,8 @@
-import React from 'react'
+import { BasicModal as Modal, ButtonTypes } from '@pabau/ui'
 import { Formik } from 'formik'
 import { Form as AntForm, Input } from 'formik-antd'
-import styles from './Lead-forms.module.less'
-import { BasicModal as Modal, ButtonTypes } from '@pabau/ui'
+import React from 'react'
+import styles from './LeadForms.module.less'
 
 interface SendLeadDevloperModalInterface {
   openModal: boolean

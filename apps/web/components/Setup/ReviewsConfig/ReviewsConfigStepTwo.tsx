@@ -1,19 +1,19 @@
-import React, { FC, useState, useEffect } from 'react'
-import { useFormik } from 'formik'
-import { Form, Radio } from 'antd'
 import { SmileOutlined } from '@ant-design/icons'
 import {
-  TabMenu,
+  AddQuestion,
   Input,
+  IQuestionOptions,
+  PabauPlus,
+  QuestionField,
   ReviewWrite,
   ReviewWriteStepper,
-  AddQuestion,
-  IQuestionOptions,
-  QuestionField,
-  PabauPlus,
+  TabMenu,
 } from '@pabau/ui'
+import { Form, Radio } from 'antd'
+import { useFormik } from 'formik'
+import React, { FC, useEffect, useState } from 'react'
 import { addQuestionData, FeedbackSurveyBuilder } from './ReviewsConfigSetting'
-import styles from './style.module.less'
+import styles from './Style.module.less'
 
 interface ReviewsConfigStepTwoProps {
   settings: FeedbackSurveyBuilder

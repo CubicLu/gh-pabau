@@ -1,7 +1,7 @@
-import React, { FC } from 'react'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import { Button } from '@pabau/ui'
-import styles from './style.module.less'
+import React, { FC } from 'react'
+import styles from './Style.module.less'
 
 interface ReviewsConfigFooterProps {
   step: number

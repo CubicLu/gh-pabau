@@ -1,11 +1,11 @@
-import React from 'react'
-import styles from './lead-setting.module.less'
-import classNames from 'classnames'
 import {
   ApiOutlined,
   CheckCircleFilled,
   ProfileOutlined,
 } from '@ant-design/icons'
+import classNames from 'classnames'
+import React from 'react'
+import styles from './LeadSetting.module.less'
 interface LeadSettingsInterface {
   activeStepper: string
   captureLeadStepChange: (step: string) => void

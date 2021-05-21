@@ -7035,9 +7035,9 @@ type CancelReason {
 input CancelReasonCreateInput {
   Company: CompanyCreateNestedOneWithoutCancelReasonInput!
   apply_cancellation_policy: Int!
-  created_at: DateTime!
+  created_at: DateTime
   late_cancel: Int!
-  modified_at: DateTime!
+  modified_at: DateTime
   reason_name: String!
 }
 

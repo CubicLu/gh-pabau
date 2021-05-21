@@ -13,6 +13,7 @@ import Login from '../../pages/login'
 import Search from '../Search'
 import StickyPopout from '../StickyPopout/StickyPopout'
 import TaskManagerIFrame from '../TaskManagerIFrame/TaskManagerIFrame'
+import { Unauthorized } from '../Unauthorized'
 
 interface Notification {
   id: string
@@ -68,7 +69,11 @@ const onCreateChannel = (name, description, isPrivate) => {
   console.log('onCreateChannel-- or another one', name, description, isPrivate)
 }
 
-const Layout: FC<LayoutProps> = ({ children, ...props }) => {
+const Layout: FC<LayoutProps> = ({
+  children,
+  requireAdminAccess = false,
+  ...props
+}) => {
   const [authenticated, user] = useLogin(false)
   const [notifications, setNotifications] = useState<Notification[]>()
   const router = useRouter()
@@ -138,7 +143,9 @@ const Layout: FC<LayoutProps> = ({ children, ...props }) => {
     user &&
     localStorage?.getItem('token')
   ) {
-    return (
+    return requireAdminAccess && (!user?.admin || user?.admin === undefined) ? (
+      <Unauthorized />
+    ) : (
       <>
         <PabauLayout
           relativeTime={relativeTime}

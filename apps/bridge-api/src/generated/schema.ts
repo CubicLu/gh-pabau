@@ -856,8 +856,8 @@ export interface CancelReason {
   Company: Company;
   late_cancel: number;
   apply_cancellation_policy: number;
-  created_at: Date;
-  modified_at: Date;
+  created_at?: Date;
+  modified_at?: Date;
 }
 
 export interface Candidate {
@@ -2699,7 +2699,7 @@ export interface SocialSurveyFeedback {
   owner_response: string;
   CmContact?: CmContact;
   Company: Company;
-  User: User;
+  User?: User;
   Response?: SocialSurveyFeedbackResponse[];
   SocialSurveyAnswer?: SocialSurveyAnswer[];
 }
@@ -2962,9 +2962,9 @@ export interface UserGroup {
   restrict_calendar: number;
   restrict_data: number;
   limit_contacts: number;
-  permission_id: number;
+  permission_id?: number;
   Company: Company;
-  Permission: PermissionTemplate;
+  Permission?: PermissionTemplate;
   UserGroupMember?: UserGroupMember[];
   GroupPermission?: GroupPermission[];
 }

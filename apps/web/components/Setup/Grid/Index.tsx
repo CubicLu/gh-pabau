@@ -1,6 +1,6 @@
-import React from 'react'
 import { SetupGrid, SetupGridProps } from '@pabau/ui'
-import styles from '../../../pages/setup/Setup.module.less'
+import React from 'react'
+import styles from '../../../pages/setup/setup.module.less'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 interface p {

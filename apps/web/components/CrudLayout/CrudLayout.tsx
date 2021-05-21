@@ -1,6 +1,7 @@
-import { FC } from 'react'
 import { DocumentNode } from '@apollo/client'
+import { FC, useRef } from 'react'
 import CrudTable from '../CrudTable'
+import Layout from '../Layout/Layout'
 
 interface P {
   schema: Schema
@@ -23,8 +24,17 @@ interface P {
   customFilter?: () => JSX.Element
   setEditPage?(e): void
   draggable?: boolean
+  requireAdminAccess?: boolean
 }
-
-const CrudLayout: FC<P> = ({ ...props }) => <CrudTable {...props} />
+const CrudLayout: FC<P> = ({ ...props }) => {
+  const crudLayoutRef = useRef(null)
+  return (
+    <div ref={crudLayoutRef}>
+      <Layout {...props}>
+        <CrudTable {...props} crudLayoutRef={crudLayoutRef} />
+      </Layout>
+    </div>
+  )
+}
 
 export default CrudLayout

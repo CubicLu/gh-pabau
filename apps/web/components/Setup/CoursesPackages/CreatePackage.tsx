@@ -1,31 +1,31 @@
-import React, { FC, useState } from 'react'
-import { useMedia } from 'react-use'
-import { Formik } from 'formik'
-import { Form, Input, InputNumber, SubmitButton } from 'formik-antd'
 import {
-  FullScreenReportModal,
-  SimpleDropdown,
-  OperationType,
+  CheckOutlined,
+  DeleteOutlined,
+  FilterOutlined,
+  PictureOutlined,
+  PlusOutlined,
+} from '@ant-design/icons'
+import {
   Button,
+  FullScreenReportModal,
+  ImageSelectorModal,
+  OperationType,
+  SimpleDropdown,
   Switch,
   Table,
-  ImageSelectorModal,
 } from '@pabau/ui'
 import { Drawer } from 'antd'
-import {
-  TaxOption,
-  buildPackagesColumnsData,
-} from '../../../mocks/CoursesPackages'
+import { Formik } from 'formik'
+import { Form, Input, InputNumber, SubmitButton } from 'formik-antd'
+import React, { FC, useState } from 'react'
+import { useMedia } from 'react-use'
 import * as Yup from 'yup'
-import {
-  PlusOutlined,
-  FilterOutlined,
-  DeleteOutlined,
-  CheckOutlined,
-  PictureOutlined,
-} from '@ant-design/icons'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-import styles from './index.module.less'
+import {
+  buildPackagesColumnsData,
+  TaxOption,
+} from '../../../mocks/CoursesPackages'
+import styles from './Index.module.less'
 
 export interface InitialPackagesProps {
   id: string

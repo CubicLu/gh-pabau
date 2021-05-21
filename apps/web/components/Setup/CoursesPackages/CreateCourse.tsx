@@ -13,7 +13,7 @@ import React, { FC, useState } from 'react'
 import * as Yup from 'yup'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import { TaxOption } from '../../../mocks/CoursesPackages'
-import styles from './index.module.less'
+import styles from './Index.module.less'
 
 const { TextArea } = Input
 export interface InitialCoursesProps {
