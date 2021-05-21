@@ -2692,7 +2692,7 @@ export interface SocialSurveyFeedback {
   feedback_status: string;
   related_id: number;
   related_to: string;
-  feedback_for: number;
+  feedback_for?: number;
   service: string;
   public_use: number;
   service_id: number;
