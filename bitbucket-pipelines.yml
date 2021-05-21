@@ -31,6 +31,7 @@ pipelines:
             - yarn bin || true
           artifacts:
             - node_modules/**
+            - libs/graphql/generated/**
 
       - parallel:
           - step:
@@ -39,6 +40,7 @@ pipelines:
                 - 'self.hosted'
               max-time: 15
               script:
+                # - yarn postinstall || yarn --frozen-lockfile
                 - openssl version || true
                 - ls -al || true
                 - yarn bin || true
@@ -58,6 +60,7 @@ pipelines:
                 - 'self.hosted'
               max-time: 20
               script:
+                # - yarn postinstall || yarn --frozen-lockfile
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:lint --base=origin/master --with-deps
 
           - step:
@@ -66,6 +69,7 @@ pipelines:
                 - 'self.hosted'
               max-time: 35
               script:
+                # - yarn postinstall || yarn --frozen-lockfile
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=origin/master --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=2222 yarn affected:test --base=HEAD~1 --parallel --maxParallel=2 --skip-nx-cache
@@ -78,7 +82,7 @@ pipelines:
               max-time: 40
               size: 2x
               script:
-                - yarn prisma generate
+                # - yarn postinstall || yarn --frozen-lockfile
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:export --base=origin/master --prod
               artifacts:
                 - dist/**
@@ -185,6 +189,7 @@ pipelines:
             - yarn bin || true
           artifacts:
             - node_modules/**
+            - libs/graphql/generated/**
 
       - parallel:
           - step:
@@ -193,6 +198,7 @@ pipelines:
                 - 'self.hosted'
               max-time: 15
               script:
+                # - yarn postinstall || yarn --frozen-lockfile
                 - openssl version || true
                 - ls -al || true
                 - yarn bin || true
@@ -207,6 +213,7 @@ pipelines:
                 - 'self.hosted'
               max-time: 20
               script:
+                # - yarn postinstall || yarn --frozen-lockfile
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:lint --base=HEAD~1 --with-deps
 
           - step:
@@ -215,6 +222,7 @@ pipelines:
               runs-on:
                 - 'self.hosted'
               script:
+                # - yarn postinstall || yarn --frozen-lockfile
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=2222 yarn affected:test --base=HEAD~1 --parallel --maxParallel=2 --skip-nx-cache
@@ -227,7 +235,7 @@ pipelines:
               max-time: 40
               size: 2x
               script:
-                - yarn prisma generate
+                # - yarn postinstall || yarn --frozen-lockfile
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:export --base=HEAD~1 --prod
               artifacts:
                 - dist/**
