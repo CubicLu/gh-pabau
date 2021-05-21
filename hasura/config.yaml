@@ -12,7 +12,7 @@ migrations_directory: migrations
 seeds_directory: seeds
 actions:
   kind: synchronous
-  handler_webhook_baseurl: http://localhost:4567
+  handler_webhook_baseurl: http://host.docker.internal:3333
   codegen:
     framework: ""
     output_dir: ""

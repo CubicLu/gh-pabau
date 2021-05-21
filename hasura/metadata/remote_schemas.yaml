@@ -1,5 +1,5 @@
 - name: CRM
   definition:
-    url: https://api-toshe.pabau.me/graphql
+    url: http://host.docker.internal:4000/graphql
     timeout_seconds: 30
     forward_client_headers: true
