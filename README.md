@@ -85,8 +85,11 @@ npm i -g yarn
 Some devs are still developing against production. To bring in metadata and schema from production to git, do the following:
 
 ```bash
+git pull origin dotenv-flow # for now
+yarn
 rm -rf hasura/metadata/ # we remove this because then we can also git commit any deleted tables
 NODE_ENV=production yarn hasura:export # this exports metadata and schema from prod
+git checkout master hasura/metadata/remote_schemas.yaml # keeps the url set to localhost
 ```
 
 And to download the migration files (SQL format), do the following:
