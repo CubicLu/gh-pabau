@@ -67,8 +67,6 @@ interface EditResponseType {
   affected_row: number
   favorite: boolean
   report_code: string
-}
-interface EditResponseType {
   upsertUserReportByReportCode: EditResponseType
 }
 const reportHref = {
