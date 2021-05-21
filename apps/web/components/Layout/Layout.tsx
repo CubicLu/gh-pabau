@@ -1,11 +1,16 @@
 import { useDisabledFeaturesQuery } from '@pabau/graphql'
-import { Iframe, Layout as PabauLayout, LayoutProps } from '@pabau/ui'
+import {
+  Iframe,
+  Layout as PabauLayout,
+  LayoutProps,
+  StickyPopout,
+} from '@pabau/ui'
 import { useRouter } from 'next/router'
 import React, { FC } from 'react'
 import useLogin from '../../hooks/authentication/useLogin'
 import Login from '../../pages/login'
 import Search from '../Search'
-import StickyPopout from '../StickyPopout/StickyPopout'
+import styles from './Layout.module.less'
 import TaskManagerIFrame from '../TaskManagerIFrame/TaskManagerIFrame'
 import { Unauthorized } from '../Unauthorized'
 
@@ -68,7 +73,9 @@ const Layout: FC<LayoutProps> = ({
         >
           {!legacyPage ? children : <Iframe urlPath={legacyPage} />}
         </PabauLayout>
-        <StickyPopout {...props} />
+        <div className={styles.stickyPopoutContainer}>
+          <StickyPopout />
+        </div>
       </>
     )
   }
