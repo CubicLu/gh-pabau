@@ -26,8 +26,9 @@ pipelines:
             - git log --merges -n 1 --pretty=oneline
             # TODO: set -lt back to 4 when nrwl install postcss >=8.2.10
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 8 ]] && exit 0 || exit 1'
-            - NODE_OPTIONS=--max_old_space_size=3333 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --ignore-scripts --frozen-lockfile --prefer-offline
+            - NODE_OPTIONS=--max_old_space_size=3333 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
             - ls -al || true
+            - ls -al libs/graphql/generated/ || true
             - yarn bin || true
           artifacts:
             - node_modules/**
@@ -64,7 +65,7 @@ pipelines:
               max-time: 35
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
-                - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=origin/master --skip-nx-cache
+                - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=origin/master
           #              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=2222 yarn affected:test --base=HEAD~1 --parallel --maxParallel=2 --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=1555 yarn affected:test --base=HEAD~1 --parallel --maxParallel=3 --skip-nx-cache
@@ -178,8 +179,9 @@ pipelines:
             - git log --merges -n 1 --pretty=oneline
             # TODO: set -lt back to 4 when nrwl install postcss >=8.2.10
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 8 ]] && exit 0 || exit 1'
-            - NODE_OPTIONS=--max_old_space_size=3333 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --ignore-scripts --frozen-lockfile --prefer-offline
+            - NODE_OPTIONS=--max_old_space_size=3333 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
             - ls -al || true
+            - ls -al libs/graphql/generated/ || true
             - yarn bin || true
           artifacts:
             - node_modules/**
@@ -200,6 +202,11 @@ pipelines:
                 - yarn lint:tsc --with-deps --base=HEAD~1
                 - yarn lint:ls || true
                 - yarn lint:workspace || true
+                - npm i -g @graphql-inspector/cli graphql || true
+                - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || true
+                - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || true
+                - graphql-inspector similar hasura/schema.graphql || true
+                - graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || true
 
           - step:
               name: lint
@@ -217,7 +224,7 @@ pipelines:
                 - 'self.hosted'
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
-                - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --skip-nx-cache
+                - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1
           #              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=2222 yarn affected:test --base=HEAD~1 --parallel --maxParallel=2 --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=1555 yarn affected:test --base=HEAD~1 --parallel --maxParallel=3 --skip-nx-cache
