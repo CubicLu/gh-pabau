@@ -36,8 +36,6 @@ pipelines:
       - parallel:
           - step:
               name: misc checks
-              runs-on:
-                - 'self.hosted'
               max-time: 15
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
@@ -56,8 +54,6 @@ pipelines:
 
           - step:
               name: lint
-              runs-on:
-                - 'self.hosted'
               max-time: 20
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
@@ -65,8 +61,6 @@ pipelines:
 
           - step:
               name: unit tests
-              runs-on:
-                - 'self.hosted'
               max-time: 35
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
