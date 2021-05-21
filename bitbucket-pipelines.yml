@@ -181,6 +181,7 @@ pipelines:
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 8 ]] && exit 0 || exit 1'
             - NODE_OPTIONS=--max_old_space_size=3333 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
             - ls -al || true
+            - ls -al node_modules || true
             - ls -al libs/graphql/generated/ || true
             - yarn bin || true
           artifacts:
@@ -190,13 +191,17 @@ pipelines:
       - parallel:
           - step:
               name: misc checks
-              runs-on:
-                - 'self.hosted'
+              # runs-on:
+              #   - 'self.hosted'
               max-time: 15
               script:
-                # - yarn postinstall || yarn --frozen-lockfile
                 - openssl version || true
                 - ls -al || true
+                - ls -al node_modules || true
+                - ls -al libs/graphql/generated/ || true
+                - yarn postinstall || yarn --frozen-lockfile
+                - ls -al node_modules || true
+                - ls -al libs/graphql/generated/ || true
                 - yarn bin || true
                 - yarn bin || true
                 - yarn lint:tsc --with-deps --base=HEAD~1
