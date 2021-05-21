@@ -4,14 +4,7 @@ import SendSMS from './SendSMS'
 
 describe('SendSMS', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(
-      <SendSMS
-        items={[]}
-        onSend={(item) => {
-          return
-        }}
-      />
-    )
+    const { baseElement } = render(<SendSMS id="" clientId="" />)
     expect(baseElement).toBeTruthy()
   })
 })

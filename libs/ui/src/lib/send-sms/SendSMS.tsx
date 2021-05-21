@@ -9,6 +9,7 @@ import cn from 'classnames'
 import _ from 'lodash'
 import moment from 'moment'
 import React, { FC, useEffect, useState } from 'react'
+import { defaultTemplateList } from './mock'
 import { tagList } from '../merge-tag-modal/data'
 import styles from './SendSMS.module.less'
 
@@ -20,8 +21,7 @@ export interface SMSItem {
   direction: string
 }
 
-/* eslint-disable-next-line */
-export interface SendSMSProps {
+export interface SendSMSComponentProps {
   draft?: string
   sendBtnText?: string
   onSend: (val) => void
@@ -30,7 +30,7 @@ export interface SendSMSProps {
   templateList?: smsTemplateProps[]
 }
 
-export const SendSMS: FC<SendSMSProps> = ({
+const SendSMSComponent: FC<SendSMSComponentProps> = ({
   draft,
   sendBtnText,
   onSend,
@@ -131,7 +131,7 @@ export const SendSMS: FC<SendSMSProps> = ({
 
   return (
     <>
-      <div className={styles.sendSMSContainer}>
+      <div className={styles.sendSMSComponentContainer}>
         <div className={styles.content}>
           <div className={styles.smsItems}>
             {items?.map((item, index) => (
@@ -227,6 +227,71 @@ export const SendSMS: FC<SendSMSProps> = ({
         }}
       />
     </>
+  )
+}
+
+export interface SendSMSProps {
+  clientId: string
+  id: string
+}
+
+interface DraftContent {
+  id: string
+  draft: string
+  items?: SMSItem[]
+}
+
+export const SendSMS: FC<SendSMSProps> = ({ clientId, id }) => {
+  const [templateList, setTemplateList] = useState<smsTemplateProps[]>([])
+  const [SMSItems, setSMSItems] = useState<SMSItem[]>([])
+  const [contentItems, setContentItems] = useState<DraftContent[]>([])
+  const [draft, setDraft] = useState('')
+
+  const handleSendItem = (item) => {
+    const items = [...SMSItems, item]
+    setSMSItems(items)
+    const content = [...contentItems]
+    const findIndex = contentItems.findIndex((el) => el.id === id)
+    if (findIndex >= 0) content.splice(findIndex, 1, { id, items, draft: '' })
+    setContentItems(content)
+    window.localStorage.setItem('pabau_content', JSON.stringify(content))
+  }
+
+  const handleSaveDraft = (draft) => {
+    const content = [...contentItems]
+    const findIndex = contentItems.findIndex((el) => el.id === id)
+    content[findIndex].draft = draft
+    setDraft(draft)
+    window.localStorage.setItem('pabau_content', JSON.stringify(content))
+  }
+
+  useEffect(() => {
+    setTemplateList(defaultTemplateList)
+    const items = window.localStorage.getItem('pabau_content')
+      ? JSON.parse(window.localStorage.getItem('pabau_content') || '{}')
+      : []
+    setContentItems(items)
+    const findItem = items.find((item) => item.id === id)
+    if (findItem) {
+      setSMSItems(findItem.items)
+      setDraft(findItem.draft)
+    } else {
+      setContentItems([...items, { id, items: [], draft: '' }])
+      setSMSItems([])
+      setDraft('')
+    }
+  }, [id])
+
+  return (
+    <div className={styles.sendSMSContainer}>
+      <SendSMSComponent
+        draft={draft}
+        items={SMSItems}
+        templateList={templateList}
+        onSend={handleSendItem}
+        onSaveDraft={handleSaveDraft}
+      />
+    </div>
   )
 }
 

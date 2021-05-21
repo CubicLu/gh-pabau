@@ -4,7 +4,7 @@ import { MergeTagModal } from '@pabau/ui'
 
 describe('MergeTagModal', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<MergeTagModal />)
+    const { baseElement } = render(<MergeTagModal disabledTags={[]} />)
     expect(baseElement).toBeTruthy()
   })
 })

@@ -161,6 +161,8 @@ export const Index: NextPage = () => {
       },
     },
     company: 'company_id',
+    noDataBtnText: t('setup.marketingsource.schema.noDataBtnText'),
+    noDataText: t('setup.marketingsource.schema.noDataText'),
   }
 
   return (

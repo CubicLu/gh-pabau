@@ -28,6 +28,8 @@ interface SearchResult {
 }
 
 interface P {
+  clientModeOnly?: boolean
+  onCloseSearch?: () => void
   searchResults?: SearchResult[]
   onChange?: (newText: string) => void
   changeSearchMode?: (newMode: SearchMode) => void
@@ -43,6 +45,8 @@ enum SearchMode {
 
 export const Search: FC<P> = ({
   onChange,
+  clientModeOnly,
+  onCloseSearch,
   searchResults,
   children,
   placeHolder,
@@ -138,26 +142,28 @@ export const Search: FC<P> = ({
   const searchMenu = () => {
     return (
       <div className={styles.searchBox}>
-        <div className={styles.cusTabs}>
-          <button
-            className={classNames(
-              styles.cusTabDesign,
-              searchTab === 'Clients' && styles.activeTabs
-            )}
-            onClick={() => searchTabChangeHandler(SearchMode.Clients)}
-          >
-            {t('search.client.label')}
-          </button>
-          <button
-            className={classNames(
-              styles.cusTabDesign,
-              searchTab === 'Leads' && styles.activeTabs
-            )}
-            onClick={() => searchTabChangeHandler(SearchMode.Leads)}
-          >
-            {t('search.lead.label')}
-          </button>
-        </div>
+        {!clientModeOnly && (
+          <div className={styles.cusTabs}>
+            <button
+              className={classNames(
+                styles.cusTabDesign,
+                searchTab === 'Clients' && styles.activeTabs
+              )}
+              onClick={() => searchTabChangeHandler(SearchMode.Clients)}
+            >
+              {t('search.client.label')}
+            </button>
+            <button
+              className={classNames(
+                styles.cusTabDesign,
+                searchTab === 'Leads' && styles.activeTabs
+              )}
+              onClick={() => searchTabChangeHandler(SearchMode.Leads)}
+            >
+              {t('search.lead.label')}
+            </button>
+          </div>
+        )}
         {
           <div className={styles.clientsList}>
             {searchResults && searchResults.length > 0 && (
@@ -245,26 +251,28 @@ export const Search: FC<P> = ({
         <div className={styles.advanceSearchText}>
           <h1>{t('search.advanced.search')}</h1>
         </div>
-        <div className={classNames(styles.cusTabs, styles.cusTabsTopSpace)}>
-          <button
-            className={classNames(
-              styles.cusTabDesign,
-              searchTab === 'Clients' && styles.activeTabs
-            )}
-            onClick={() => searchTabChangeHandler(SearchMode.Clients)}
-          >
-            {t('search.client.label')}
-          </button>
-          <button
-            className={classNames(
-              styles.cusTabDesign,
-              searchTab === 'Leads' && styles.activeTabs
-            )}
-            onClick={() => searchTabChangeHandler(SearchMode.Leads)}
-          >
-            {t('search.lead.label')}
-          </button>
-        </div>
+        {!clientModeOnly && (
+          <div className={classNames(styles.cusTabs, styles.cusTabsTopSpace)}>
+            <button
+              className={classNames(
+                styles.cusTabDesign,
+                searchTab === 'Clients' && styles.activeTabs
+              )}
+              onClick={() => searchTabChangeHandler(SearchMode.Clients)}
+            >
+              {t('search.client.label')}
+            </button>
+            <button
+              className={classNames(
+                styles.cusTabDesign,
+                searchTab === 'Leads' && styles.activeTabs
+              )}
+              onClick={() => searchTabChangeHandler(SearchMode.Leads)}
+            >
+              {t('search.lead.label')}
+            </button>
+          </div>
+        )}
         <Form
           form={form}
           requiredMark={false}
@@ -408,6 +416,7 @@ export const Search: FC<P> = ({
                     onClick={() => {
                       setSearchPopUp(false)
                       setSearchTerm('')
+                      onCloseSearch?.()
                     }}
                   />
                 )
@@ -437,6 +446,7 @@ export const Search: FC<P> = ({
                     onClick={() => {
                       setSearchPopUp(false)
                       setSearchTerm('')
+                      onCloseSearch?.()
                     }}
                   />
                 )
@@ -470,6 +480,7 @@ export const Search: FC<P> = ({
                 if (advanceSearch) {
                   setAdvanceSearch((e) => !e)
                 } else {
+                  if (searchDrawer) onCloseSearch?.()
                   setSearchDrawer((e) => !e)
                 }
               }}
@@ -489,6 +500,7 @@ export const Search: FC<P> = ({
                     style={{ color: '#BFBFBF' }}
                     onClick={() => {
                       setSearchPopUp(false)
+                      onCloseSearch?.()
                       setSearchTerm('')
                     }}
                   />

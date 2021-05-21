@@ -64,7 +64,7 @@
     "nexus:generate": "ts-node-dev --transpile-only apps/bridge-api/src/schema",
     "bridge:generate": "prisma format && prisma generate && yarn pal g && yarn pal schema typescript -o apps/bridge-api/src/generated && yarn nexus:generate",
     "bridge:prune": "rm -rf apps/bridge-api/src/generated",
-    "postinstall": "concurrently -n HUSKY,PRISMA -c yellow,green \"husky install\" \"prisma generate\""
+    "postinstall": "concurrently -n HUSKY,PRISMA,GRAPHQL-CODEGEN -c yellow,green \"husky install\" \"prisma generate\" graphql-codegen"
   },
   "resolutions": {
     "**/immer": "8.0.1",
@@ -92,13 +92,14 @@
     "@paljs/cli": "3.1.2",
     "@paljs/nexus": "3.0.11",
     "@prisma/client": "2.22.1",
-    "antd": "https://github.com/binary64/ant-design/releases/download/master/antd-4.10.3.tgz",
+    "antd": "^4.15.5",
     "apollo-server": "2.24.0",
     "canvas-confetti": "1.4.0",
     "class-validator": "0.13.1",
     "classnames": "2.3.1",
     "cookie-session": "1.4.0",
     "cross-env": "^7.0.3",
+    "dayjs": "^1.10.4",
     "delay-cli": "1.1.0",
     "document-register-element": "1.14.10",
     "draft-js": "^0.11.7",
