@@ -307,8 +307,8 @@ pipelines:
 
           - step:
               name: deploy previews
-              runs-on:
-                - 'self.hosted'
+              # runs-on:
+              #   - 'self.hosted'
               max-time: 20
               deployment: production-serverless
               script:
