@@ -9,10 +9,12 @@
     - [vscode](#vscode)
     - [Common](#common)
     - [Production](#production)
-  - [Storybook](#storybook)
-  - [Frontend](#frontend)
-  - [Bridge](#bridge)
-  - [Backend](#backend)
+  - [Parts of the system](#parts-of-the-system)
+    - [Storybook](#storybook)
+    - [Frontend](#frontend)
+    - [Bridge](#bridge)
+    - [Backend](#backend)
+    - [bridge-proxy (PDS)](#bridge-proxy-pds)
   - [Code Rules](#code-rules)
   - [Delineation between /apps/web/components/ ("App components") and /libs/ui/ ("UI components")](#delineation-between-appswebcomponents-app-components-and-libsui-ui-components)
   - [Our Stack](#our-stack)
@@ -42,147 +44,6 @@ This monorepo contains all of our code (with the exception of `.env` files), and
 - `/tools/` - repo-level tooling.
 - `**/cicd/` - devops only.
 
-## Setup
-
-### Windows
-
-1. Install Node 14 LTS (Opt in for the extra build tools)
-1. Install yarn: `npm i -g yarn`
-1. Ensure your terminal is BASH (cmd and PS not supported. Vscode: `"terminal.integrated.shell.windows": "c:/program files/git/bin/bash.exe",`)
-1. Ensure your IDE has eslint plugin setup and configured to auto-fix on save.
-1. Ensure your Git config user.name is your full name, and user.email is the same email you registered as with Bitbucket.org.
-
-### Linux
-
-```bash
-curl -sL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-sudo apt install -y nodejs gcc g++ make curl build-essential
-mkdir ~/.npm-global
-npm config set prefix "${HOME}/.npm-global"
-echo 'NPM_STORE="${HOME}/.npm-global"' >> ~/.bashrc
-echo 'export PATH="$PATH:$NPM_STORE/bin"' >> ~/.bashrc
-echo 'export MANPATH="${MANPATH-$(manpath)}:$NPM_STORE/share/man"' >> ~/.bashrc
-npm i -g yarn
-```
-
-### vscode
-
-1. Install the workspace recommended plugins
-
-### Common
-
-1. Install docker-compose 1.29 or later <https://docs.docker.com/compose/install/> `docker-compose -v`
-
-2. Install and launch Pabau1 (or ask Toshe to share his public MySQL)
-
-3. Create some bookmarks in your browser:
-   1. "Prisma" to <http://localhost:4000/graphql>
-   2. "Hasura" to <http://localhost:8080>
-   3. "Web" to <http://localhost:4200>
-
-### Production
-
-Some devs are still developing against production. To bring in metadata and schema from production to git, do the following:
-
-```bash
-git pull origin dotenv-flow # for now
-yarn
-rm -rf hasura/metadata/ # we remove this because then we can also git commit any deleted tables
-NODE_ENV=production yarn hasura:export # this exports metadata and schema from prod
-git checkout master hasura/metadata/remote_schemas.yaml # keeps the url set to localhost
-```
-
-And to download the migration files (SQL format), do the following:
-
-```bash
-NODE_ENV=production yarn hasura:cli migrate create delete_me --from-server --database-name default
-```
-
-This will create you a delete_me/up.sql file - copy this to Initial/up.sql (overwrite it). Don't copy/paste it, or at least, don't allow your IDE or toolchain to change the whitespace formatting at all.
-
-## Storybook
-
-Any component that is likely to be needed on other pages, such as a table, button, heading, avatar, etc, should live in `/libs/ui/`. Each component in here should be exposed as a Storybook item, and is visible on [https://storybook.new.pabau.com](https://storybook.new.pabau.com) or run `yarn run nx run ui:storybook` to develop on it locally with live reloading.
-
-To create a new component, such as "Button", do the following:
-
-```bash
-yarn run nx g @nrwl/react:component --project=ui --style=less --export --pascalCaseFiles --name=Button
-```
-
-## Frontend
-
-To view the Frontend, you can either visit [https://prelive-crm.new.pabau.com](https://prelive-crm.new.pabau.com) or run `yarn start` to develop on it locally with live reloading (HMR).
-
-Each Page on the Frontend should use as many components as possible from our Storybook.
-
-To create a new page (route), such as "/marketing/sources", do the following:
-
-```bash
-yarn run nx g @nrwl/next:page --project=web --style=less --directory marketing sources
-```
-
-Now add `import { } from '@pabau/ui'` at top of the new page file and fill in the {} with components you need.
-
-## Bridge
-
-The Bridge let's us access the legacy MySQL database over GraphQL. Prisma is used to access the old database, from nexus resolvers. The whole lot is then served as a GraphQL endpoint using Apollo Server. From there, Hasura then connects to this using Remote Schemas. Then the frontend apps connect to Hasura.
-
-The master schema file is located at `apps/bridge-api/prisma/schema.prisma`
-
-- Model names must adhere to the following regular expression: [A-Za-z][a-za-z0-9_]\*
-- Model names must start with a letter
-- Casing is PascalCase
-- Model names must use the singular form (for example, User instead of users or Users)
-- Never manually edit apps/bridge-api/src/generated/\*\*
-- When you edit `apps/bridge-api/src/schema.ts` you must then run `yarn prisma generate`
-
-- To map the singular name of a Model to a plural database table use @@map("table_name")
-
-`model marketing_source{ ...[multiple filed names] @@map("marketing_sources") }`
-
-- To map a database table name which doesn't follow the naming convention [A-Za-z][a-za-z0-9_]\*
-  `model third_party_access{ ...[multiple filed names] @@map("3rd_party_access") }`
-
-## Backend
-
-The backend is a REST MVC framework. We are using NestJS and converting it into Serverless Vercel Functions at compile-time.
-
-The backend is designed to only be called from Hasura (Webhooks and Actions). Whenever you add a new route to the backend, you must wait for your PR to be merged to master before you will see it reflected on the live site. Once it's on the live site you then have to add an Action to Hasura for it. Choose async mode, and forward headers.
-
-To view the Backend, you can either visit [https://backend.pabau.com](https://backend.pabau.com) or run `yarn nx serve backend` to develop on it locally with live reloading (HMR).
-
-## Code Rules
-
-- Branch from master, PR back to master.
-  - Small PR's are good
-  - Tag your commits and/or PR with the JIRA issue ID.
-- Keep eye on your build pipeline status. If it fails, the onus is on your to make it green.
-- Never do `import './MyComponent.less'` - always change it to `import styles from './MyComponent.module.less'`
-- Never run your IDE or npm/yarn/npx with sudo or as root/Administrator.
-- Never commit secrets, passwords, or tokens to this repo.
-- To help keep DRY maybe you can tag me in a PR early on in any new component you are writing, so I can primarily help with the naming of things (as they saying goes "naming things is hard"). Or a screenshare, or just type out your plan more. Also have you looked at a wide variety of FIGMA designs? that would help. Also check out <https://vimeo.com/user30916972> for some videos of our old system, to get an idea for the domain and intended user.
-- Best to use jsx ternary rather than display none in react
-- Best to make each component responsive on its own (Storybook even has a mobile preview button), rather than based on outside props.
-- Open to all disagreements and other ideas. Please raise threads about problems you see in the code, my code, or future code.
-- Don't use index key in JSX
-- Never use the CR character
-- Configure your IDE's eslint to autofix on save
-- Is master build broken? please hotfix it on its own branch (eg hf_master_build) then other devs can merge that branch into theirs, allowing us all to continue work.
-- `husky` lints your code as you `git commit`, and tests your code as you `git push`.
-- Keep assets close to the components which use them
-- Don't `import '../../..` across project boundaries - use `import { ... } from '@pabau/ui'` instead.
-- Dont do `setBlah(!blah)`, it's `setBlah(e => !e)`
-
-## Delineation between /apps/web/components/ ("App components") and /libs/ui/ ("UI components")
-
-- Most components should be a UI component, because most elements on a page should be "natural" to the user.
-- Only UI components can be shown in Storybook
-- UI components cannot access database
-- UI components have to expose full control via Storyboard Controls
-- App components will involve Database interaction (via Apollo Client)
-- Maybe for a one-off type widget, App component is fine
-
 ## Our Stack
 
 - [TypeScript](https://www.typescriptlang.org/) - strong-typing is key to team success within DDD paradigm
@@ -208,6 +69,173 @@ To view the Backend, you can either visit [https://backend.pabau.com](https://ba
 - [yup](https://github.com/jquense/yup) - write business-level validation logic once - and securely use the same code for frontend and backend
 - Twilio Video + Sendgrid
 - Atlassian: JIRA, Bitbucket (& Pipelines)
+
+## Setup
+
+### Common
+
+1. Ensure your IDE has eslint plugin setup and configured to auto-fix on save.
+
+1. Ensure your `git config --local user.name` is your full name in title case, and same for `user.email` which should match your <https://bitbucket.org> account.
+
+1. Install docker and docker-compose
+
+   1. For Windows users: Install WSL1 -- WSL2 is not supported!
+   1. Install docker-compose from <https://docs.docker.com/compose/install/>
+   1. Ensure you're on version 1.29 or later by running `docker-compose -v`
+
+1. Install and launch Pabau1
+
+   1. Either: Follow the instructions from the <https://bitbucket.org/pabau/pabau-crm> repo's README.md to launch the local docker stack
+   1. Or: Ask Toshe to share his public MySQL URL and put that into `apps/bridge-api/prisma/.env.local` as `DATABASE_URL=`
+
+1. Create some bookmarks in your browser:
+   1. "Prisma" to <http://localhost:4000/graphql>
+   1. "Hasura" to <http://localhost:8080>
+   1. "Web" to <http://localhost:4200>
+   1. "Backend" to <http://localhost:3333>
+
+### Windows
+
+1. Install Node 14 LTS (Opt in for the extra build tools)
+1. Install yarn: `npm i -g yarn`
+1. Ensure your terminal is BASH (cmd and PS not supported. Vscode: `"terminal.integrated.shell.windows": "c:/program files/git/bin/bash.exe",`)
+
+### Linux
+
+```bash
+curl -sL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+sudo apt install -y nodejs gcc g++ make curl build-essential
+mkdir ~/.npm-global
+npm config set prefix "${HOME}/.npm-global"
+echo 'NPM_STORE="${HOME}/.npm-global"' >> ~/.bashrc
+echo 'export PATH="$PATH:$NPM_STORE/bin"' >> ~/.bashrc
+echo 'export MANPATH="${MANPATH-$(manpath)}:$NPM_STORE/share/man"' >> ~/.bashrc
+npm i -g yarn
+```
+
+### VS Code
+
+1. Install the workspace recommended plugins
+
+### Production
+
+Until we set up migrations to the production Hasura, we have to make changes to production Hasura and then download the changes from there into git.
+
+First set up some env vars:
+
+`hasura/.env.production.local`
+
+```env
+HASURA_GRAPHQL_ENDPOINT=https://api.new.pabau.com/
+HASURA_GRAPHQL_ADMIN_SECRET=madskills
+```
+
+Now to export from prod, on a daily basis, on a fresh checkout of master:
+
+```bash
+rm -rf hasura/metadata \
+  && NODE_ENV=production yarn hasura:export \
+  && git checkout master hasura/metadata/remote_schemas.yaml \
+  && NODE_ENV=production yarn hasura:cli migrate create delete_me --from-server --database-name default
+```
+
+You should now have the metadata (.yml), schema (.graphql), and migration (.sql) files all ready to be committed into git.
+
+Windows users: Please also change the double backslashes in databases.yaml > tables back to single forward-slashes.
+
+Note: Before committing, **move** the newly generated delete_me/up.sql on top of Inital/up.sql (be careful to not let your IDE format the file). And finally clean up the 'delete_me' folders.
+
+## Parts of the system
+
+### Storybook
+
+Any component that is likely to be needed on other pages, such as a table, button, heading, avatar, etc, should live in `/libs/ui/`. Each component in here should be exposed as a Storybook item, and is visible on [https://storybook.new.pabau.com](https://storybook.new.pabau.com) or run `yarn run nx run ui:storybook` to develop on it locally with live reloading.
+
+To create a new component, such as "Button", do the following:
+
+```bash
+yarn run nx g @nrwl/react:component --project=ui --style=less --export --pascalCaseFiles --name=Button
+```
+
+### Frontend
+
+To view the Frontend, you can either visit [https://prelive-crm.new.pabau.com](https://prelive-crm.new.pabau.com) or run `yarn start` to develop on it locally with live reloading (HMR).
+
+Each Page on the Frontend should use as many components as possible from our Storybook.
+
+To create a new page (route), such as "/marketing/sources", do the following:
+
+```bash
+yarn run nx g @nrwl/next:page --project=web --style=less --directory marketing sources
+```
+
+Now add `import { } from '@pabau/ui'` at top of the new page file and fill in the {} with components you need.
+
+### Bridge
+
+The Bridge let's us access the legacy MySQL database over GraphQL. Prisma is used to access the old database, from nexus resolvers. The whole lot is then served as a GraphQL endpoint using Apollo Server. From there, Hasura then connects to this using Remote Schemas. Then the frontend apps connect to Hasura.
+
+The master schema file is located at `apps/bridge-api/src/prisma/schema.prisma`
+
+- Model names must adhere to the following regular expression: [A-Za-z][a-za-z0-9_]\*
+- Model names must start with a letter
+- Casing is PascalCase
+- Model names must use the singular form (for example, User instead of users or Users)
+- Never manually edit apps/bridge-api/src/generated/\*\*
+- When you edit `apps/bridge-api/src/schema.ts` you must then run `yarn prisma generate`
+
+- To map the singular name of a Model to a plural database table use @@map("table_name")
+
+`model marketing_source{ ...[multiple filed names] @@map("marketing_sources") }`
+
+- To map a database table name which doesn't follow the naming convention [A-Za-z][a-za-z0-9_]\*
+  `model third_party_access{ ...[multiple filed names] @@map("3rd_party_access") }`
+
+### Backend
+
+The backend is a REST MVC framework. We are using NestJS and converting it into Serverless Vercel Functions at compile-time.
+
+The backend is designed to only be called from Hasura (Webhooks and Actions). Whenever you add a new route to the backend, you must wait for your PR to be merged to master before you will see it reflected on the live site. Once it's on the live site you then have to add an Action to Hasura for it. Choose async mode, and forward headers.
+
+To view the Backend, you can either visit [https://backend.pabau.com](https://backend.pabau.com) or run `yarn nx serve backend` to develop on it locally with live reloading (HMR).
+
+### bridge-proxy (PDS)
+
+To run debug build locally, type `yarn nx serve bridge-proxy` - it listens on port 5006.
+
+To run production build locally, type `docker build -t bridge-proxy -f tools/cicd/bridge-proxy.Dockerfile apps/bridge-proxy/ && docker run --rm -p 5006:5006 -it bridge-proxy`
+
+## Code Rules
+
+- Branch from master, PR back to master.
+  - Small PR's are good
+  - Tag your commits and/or PR with the JIRA issue ID.
+- Keep eye on your build pipeline status. If it fails, the onus is on your to make it green.
+- Never do `import './MyComponent.less'` - always change it to `import styles from './MyComponent.module.less'`
+- Never run your IDE or npm/yarn/npx with sudo or as root/Administrator.
+- Never commit secrets, passwords, or tokens to this repo.
+- To help keep DRY maybe you can tag me in a PR early on in any new component you are writing, so I can primarily help with the naming of things (as they saying goes "naming things is hard"). Or a screenshare, or just type out your plan more. Also have you looked at a wide variety of FIGMA designs? that would help. Also check out <https://vimeo.com/user30916972> for some videos of our old system, to get an idea for the domain and intended user.
+- Best to use jsx ternary rather than display none in react
+- Best to make each component responsive on its own (Storybook even has a mobile preview button), rather than based on outside props.
+- Open to all disagreements and other ideas. Please raise threads about problems you see in the code, my code, or future code.
+- Don't use index key in JSX
+- Never use the CR character
+- Configure your IDE's eslint to autofix on save
+- Is master build broken? please hotfix it on its own branch (eg hf_master_build) then other devs can merge that branch into theirs, allowing us all to continue work.
+- `husky` lints your code as you `git commit`, and tests your code as you `git push`.
+- Keep assets close to the components which use them
+- Don't `import '../../..` across project boundaries - use `import { ... } from '@pabau/ui'` instead.
+- Dont do `setBlah(!blah)`, it's `setBlah(e => !e)`
+
+### Delineation between /apps/web/components/ ("App components") and /libs/ui/ ("UI components")
+
+- Most components should be a UI component, because most elements on a page should be "natural" to the user.
+- Only UI components can be shown in Storybook
+- UI components cannot access database
+- UI components have to expose full control via Storyboard Controls
+- App components will involve Database interaction (via Apollo Client)
+- Maybe for a one-off type widget, App component is fine
 
 ## Ticket workflow
 
@@ -248,25 +276,18 @@ Solution: Upgrade docker-compose to latest version
 ## GraphQL workflow
 
 1. Open the Hasura console: <http://localhost:8080/console/>
-2. Create a new table (in the singular tense, using snake_case)
-3. Insert 3 'Frequently used columns', in order:
+1. Create a new table (in the singular tense, using snake_case)
+1. Insert 3 'Frequently used columns', in this order:
    1. `id` as a GUID
-   2. Created at
-   3. Updated at
-4. If your table is order sensitive (customers can drag to rearrange the order), then add a column called "order", type Integer
-5. If your table has is_active boolean, then add "is_active" as Boolean
-6. Add the rest of your columns too
-7. Add a very clear comment for the table (our customers will see this)
-8. Change the table permissions so that 'public' role can do pretty much everything (for now).
-9. Check your table's public role permission for SELECT has the Aggregation queries permissions enabled.
-10. Now run `yarn hasura:export` in your IDE, commit the changes to your branch.
-11. To export the sql schema:
-
-    ```bash
-    HASURA_GRAPHQL_ADMIN_SECRET=madskills HASURA_GRAPHQL_ENDPOINT='https://api.new.pabau.com' hasura --project hasura migrate create renameme --from-server --database-name default
-    ```
-
-12. Now on your page's `schema.fields` array, add the relevant keys in -- they should match the hasura columns
+   1. Created at
+   1. Updated at
+1. If your table is order sensitive (customers can drag to rearrange the order), then add a column called "order", type Integer
+1. If your table has is_active boolean, then add "is_active" as Boolean
+1. Add the rest of your columns too
+1. Add a very clear comment for the table (our customers will see this)
+1. Ensure you have secure table permissions so that the 'user' role can do pretty much everything within their own company ID only.
+1. Check your table's Aggregation queries have their permissions enabled.
+1. When you are ready to finalise your PR, you should now manually update the production Hasura to perfectly match your new schema changes, then follow the steps under the [Production](#production) section of this document.
 
 ## To do (big engineering items)
 
@@ -288,9 +309,3 @@ Solution: Upgrade docker-compose to latest version
 - nestjs needs a typed hasura service that we can call
 - on `yarn dev`, we need to detect the OS and execute dev:linux or dev:windows
 - we use wait-for but it's buggy, we need to wait for a curl to succeed with a magic response string.
-
-## bridge-proxy (PDS)
-
-To run debug build locally, type `yarn nx serve bridge-proxy` - it listens on port 5006.
-
-To run production build locally, type `docker build -t bridge-proxy -f tools/cicd/bridge-proxy.Dockerfile apps/bridge-proxy/ && docker run --rm -p 5006:5006 -it bridge-proxy`

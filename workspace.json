@@ -637,7 +637,10 @@
             "outputPath": "dist/apps/bridge-api",
             "main": "apps/bridge-api/src/main.ts",
             "tsConfig": "apps/bridge-api/tsconfig.app.json",
-            "assets": ["apps/bridge-api/src/assets"],
+            "assets": [
+              "apps/bridge-api/src/assets",
+              "apps/bridge-api/src/prisma"
+            ],
             "maxWorkers": 1
           },
           "configurations": {
@@ -661,7 +664,7 @@
           },
           "configurations": {
             "production": {
-              "buildTarget": "bridge-api:export:production"
+              "buildTarget": "bridge-api:export"
             }
           }
         },

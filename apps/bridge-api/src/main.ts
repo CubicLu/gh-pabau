@@ -6,19 +6,35 @@ import { version } from '../../../package.json'
 import { createContext } from './context'
 import authenticatedUser from './middlewares/authenticatedUser'
 import { schema } from './schema'
-import { stringToBoolean } from './utils'
+import { assertEnvVarsExist, loadEnvSecretFile, stringToBoolean } from './utils'
 import { config } from 'dotenv-flow'
 
-config({ path: 'apps/bridge-api/prisma/' })
+console.log('Starting bridge-api version ${version}')
+
+config({
+  default_node_env: 'development',
+  path: __dirname + '/prisma',
+  purge_dotenv: true,
+})
 
 const LOGGING = !!stringToBoolean(process.env['LOGGING'])
-
-console.log(`Starting bridge-api version ${version} logging ${LOGGING}`)
-
-console.log(`Database URL... ${Boolean(process.env.DATABASE_URL)}`)
-console.log(`JWT Secret... ${Boolean(process.env.JWT_SECRET)}`)
-
+const TRACING = !!stringToBoolean(process.env['TRACING'])
+const DEBUG_APOLLO = !!stringToBoolean(process.env['DEBUG_APOLLO'])
 const PORT = process.env['PORT'] || 4000
+
+console.table({
+  __dirname,
+  cwd: process.cwd(),
+  NODE_ENV: process.env.NODE_ENV,
+  LOGGING,
+  TRACING,
+  DEBUG_APOLLO,
+  PORT,
+  'Database URL': process.env.DATABASE_URL,
+  'JWT Secret': process.env.JWT_SECRET,
+})
+
+assertEnvVarsExist(['DATABASE_URL', 'JWT_SECRET'])
 
 export const app = express()
 app.set('trust proxy', true)
@@ -63,15 +79,13 @@ const BASIC_LOGGING = {
   },
 }
 
-console.log('tracing is', process.env.NODE_ENV === 'development')
-
 const server = new ApolloServer({
   schema,
   context: createContext,
-  tracing: process.env.NODE_ENV === 'development',
+  tracing: TRACING,
   introspection: true,
   persistedQueries: false,
-  debug: true,
+  debug: DEBUG_APOLLO,
   playground: {
     settings: {
       'schema.polling.enable': false,
@@ -86,7 +100,7 @@ server.applyMiddleware({ app })
 if (process.env.JEST_WORKER_ID === undefined) {
   app.listen(4000, () =>
     console.log(
-      `Server running on http://localhost:${PORT}`,
+      'Server running on http://localhost:${PORT}',
       'env',
       process.env.NODE_ENV === 'development'
     )
