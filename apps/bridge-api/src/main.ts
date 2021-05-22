@@ -7,10 +7,16 @@ import { createContext } from './context'
 import authenticatedUser from './middlewares/authenticatedUser'
 import { schema } from './schema'
 import { stringToBoolean } from './utils'
+import { config } from 'dotenv-flow'
+
+config({ path: 'apps/bridge-api/prisma/' })
 
 const LOGGING = !!stringToBoolean(process.env['LOGGING'])
 
 console.log(`Starting bridge-api version ${version} logging ${LOGGING}`)
+
+console.log(`Database URL... ${Boolean(process.env.DATABASE_URL)}`)
+console.log(`JWT Secret... ${Boolean(process.env.JWT_SECRET)}`)
 
 const PORT = process.env['PORT'] || 4000
 

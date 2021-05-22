@@ -8,13 +8,13 @@ services:
     environment:
       POSTGRES_PASSWORD: postgrespassword
   graphql-engine:
-    image: hasura/graphql-engine:v2.0.0-alpha.7.cli-migrations-v3
+    image: hasura/graphql-engine:v2.0.0-alpha.10.cli-migrations-v3
     ports:
     - "8080:8080"
     depends_on:
       - postgres
     restart: always
-    env_file: .env
+    env_file: .env.development
     # extra_hosts:
     #   - "host.docker.internal:172.17.0.1"
     volumes:

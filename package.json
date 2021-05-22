@@ -1,6 +1,6 @@
 {
   "name": "pabau",
-  "version": "2.0.318",
+  "version": "2.0.320",
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
   "workspaces": {
@@ -15,15 +15,15 @@
     "nx": "cross-env NODE_OPTIONS='--max-old-space-size=4096' nx",
     "serve": "nx serve",
     "vercel": "vercel",
-    "apollo": "npx apollo",
+    "apollo": "ts-node tools/cli/apollo.ts",
     "build:bridge-api": "nx export bridge-api",
-    "hasura:cli": "env-cmd -f ./hasura/.env hasura --project hasura",
+    "hasura:cli": "ts-node tools/cli/hasura.ts",
     "nest": "cd apps/backend && nest",
-    "clean": "rimraf **/node_modules",
+    "clean": "rimraf **/node_modules yarn.lock package-lock.json",
     "web:start": "nx serve web",
     "start:linux": "yarn dev:linux",
     "start:windows": "yarn dev:windows",
-    "dev": "concurrently -m 16 --kill-others-on-fail -n HASURA,HASURA-SEED,PRISMA,WEB,WEB-PRELOADER,LAUNCH-BROWSER -c red,red,green,blue,grey,grey \"delay 5 && yarn hasura:stop && docker-compose -f hasura/docker-compose.yml up -d postgres && wait-on -w 1200 http-get://localhost:4000 && yarn hasura:start\" \"delay 22 && wait-on -w 1200 http-get://localhost:8080/console && (yarn hasura:cli seeds apply --database-name default || echo 'Seed apply failed') && open-cli 'http://localhost:8080' && wait-on http://localhost:4200 && open-cli 'http://localhost:4200'\" \"yarn bridge:start\" \"delay 25 && yarn web:start\" \"delay 15 && wait-on tcp:4000 && wait-on http://localhost:4200\" \"delay 20 && wait-on http://localhost:4200\"",
+    "dev": "concurrently -m 16 --kill-others-on-fail -n HASURA,HASURA-SEED,PRISMA,WEB,WEB-PRELOADER,LAUNCH-BROWSER,BACKEND -c red,red,green,blue,grey,grey,magenta \"delay 5 && yarn hasura:stop && docker-compose -f hasura/docker-compose.yml up -d postgres && wait-on -w 1200 http-get://localhost:4000 && yarn hasura:start\" \"delay 22 && wait-on -w 1200 http-get://localhost:8080/console && (yarn hasura:cli seeds apply --database-name default || echo 'Seed apply failed') && open-cli 'http://localhost:8080' && wait-on http://localhost:4200 && open-cli 'http://localhost:4200'\" \"yarn bridge:start\" \"delay 25 && yarn web:start\" \"delay 15 && wait-on tcp:4000 && wait-on http://localhost:4200\" \"delay 20 && wait-on http://localhost:4200\" \"yarn nx serve backend\"",
     "dev:windows": "echo DEPRICATED - Just call 'dev' from now && yarn dev",
     "dev:linux": "echo DEPRICATED - Just call 'dev' from now && yarn dev",
     "bridge:start": "nx serve bridge-api --prod",
@@ -32,7 +32,7 @@
     "hasura:start:linux": "docker-compose -f hasura/docker-compose.linux.yml up -d postgres && delay 10 && docker-compose -f hasura/docker-compose.linux.yml up --force-recreate graphql-engine",
     "hasura:stop": "docker-compose -f hasura/docker-compose.yml down -t 5",
     "hasura:clean": "docker-compose -f hasura/docker-compose.yml down -v",
-    "hasura:export": "yarn hasura:cli metadata export && yarn apollo client:download-schema hasura/schema.graphql",
+    "hasura:export": "yarn hasura:cli metadata export && yarn apollo client:download-schema hasura/schema.graphql && yarn graphql-codegen",
     "graphql-codegen": "graphql-codegen",
     "production:start": "nx affected --uncommitted=true --target=export && npx serve dist/apps/web/exported",
     "build": "pwd && ls -al && rm -rf public/ && nx build backend --no-cache && cp -rf dist/apps/backend/ public/ && cp apps/backend/vercel.json public/ && cp package.json public/",
@@ -218,6 +218,7 @@
     "@testing-library/react": "11.2.6",
     "@testing-library/react-native": "7.2.0",
     "@types/cookie-session": "2.0.42",
+    "@types/dotenv-flow": "^3.1.0",
     "@types/jest": "^26.0.23",
     "@types/jsonwebtoken": "8.5.1",
     "@types/node": "15.0.2",
@@ -238,6 +239,7 @@
     "concurrently": "6.1.0",
     "cypress": "^6",
     "dotenv": "9.0.2",
+    "dotenv-flow": "^3.2.0",
     "eslint": "7.26.0",
     "eslint-config-canonical": "26.2.3",
     "eslint-config-prettier": "8.3.0",
@@ -274,7 +276,7 @@
     "vercel": "22.0.1",
     "yaml-loader": "0.6.0"
   },
-  "bump-rebuild-all": 28,
+  "bump-rebuild-all": 33,
   "prisma": {
     "schema": "apps/bridge-api/prisma/schema.prisma"
   }

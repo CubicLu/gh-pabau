@@ -8,6 +8,7 @@
     - [Linux](#linux)
     - [vscode](#vscode)
     - [Common](#common)
+    - [Production](#production)
   - [Storybook](#storybook)
   - [Frontend](#frontend)
   - [Bridge](#bridge)
@@ -72,26 +73,32 @@ npm i -g yarn
 
 1. Install docker-compose 1.29 or later <https://docs.docker.com/compose/install/> `docker-compose -v`
 
-2. Install the Hasura CLI globally
+2. Install and launch Pabau1 (or ask Toshe to share his public MySQL)
 
-   ```bash
-   npm i -g hasura-cli
-   hasura update-cli --version v2.0.0-alpha.9
-   ```
-
-3. Copy `hasura/.env.SAMPLE` to `.env`
-
-4. Copy `apps/web/.env.SAMPLE` to `.env.local`
-
-5. Copy `apps/bridge-api/.env.SAMPLE` to `.env`
-
-   1. Now either install Pabau1 locally,
-   2. Or ask Toshe to share his public MySQL
-
-6. Create some bookmarks in your browser:
+3. Create some bookmarks in your browser:
    1. "Prisma" to <http://localhost:4000/graphql>
    2. "Hasura" to <http://localhost:8080>
    3. "Web" to <http://localhost:4200>
+
+### Production
+
+Some devs are still developing against production. To bring in metadata and schema from production to git, do the following:
+
+```bash
+git pull origin dotenv-flow # for now
+yarn
+rm -rf hasura/metadata/ # we remove this because then we can also git commit any deleted tables
+NODE_ENV=production yarn hasura:export # this exports metadata and schema from prod
+git checkout master hasura/metadata/remote_schemas.yaml # keeps the url set to localhost
+```
+
+And to download the migration files (SQL format), do the following:
+
+```bash
+NODE_ENV=production yarn hasura:cli migrate create delete_me --from-server --database-name default
+```
+
+This will create you a delete_me/up.sql file - copy this to Initial/up.sql (overwrite it). Don't copy/paste it, or at least, don't allow your IDE or toolchain to change the whitespace formatting at all.
 
 ## Storybook
 
