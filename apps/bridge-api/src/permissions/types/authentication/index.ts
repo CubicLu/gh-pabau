@@ -3,7 +3,7 @@ import { Context } from '../../../context'
 
 export const authenticated = rule({ cache: 'contextual' })(
   async (root, args, ctx: Context): Promise<boolean> => {
-    if (ctx.req.authenticatedUser) {
+    if (ctx.user) {
       return true
     }
   }

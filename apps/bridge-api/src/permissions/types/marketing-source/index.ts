@@ -8,6 +8,6 @@ export const isMarketingSourceOwnedByCompany = rule({ cache: 'contextual' })(
         id: args.where.id,
       },
     })
-    return record.company_id === ctx.req.authenticatedUser.company
+    return record.company_id === ctx.user.company
   }
 )

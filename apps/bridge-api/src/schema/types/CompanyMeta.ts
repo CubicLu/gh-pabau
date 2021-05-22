@@ -25,7 +25,7 @@ export const SetCompanyMeta = extendType({
           const meta = await ctx.prisma.companyMeta.findFirst({
             where: {
               meta_name: input.meta_name,
-              company_id: ctx.req.authenticatedUser.company,
+              company_id: ctx.user.company,
             },
           })
           if (meta.id) {
@@ -43,7 +43,7 @@ export const SetCompanyMeta = extendType({
             data: {
               meta_name: input.meta_name,
               meta_value: input.meta_value,
-              company_id: ctx.req.authenticatedUser.company,
+              company_id: ctx.user.company,
             },
           })
         }

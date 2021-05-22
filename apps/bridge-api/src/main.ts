@@ -2,14 +2,13 @@ import { ApolloServer } from 'apollo-server-express'
 import cookieSession from 'cookie-session'
 import cors from 'cors'
 import express from 'express'
-import { version } from '../../../package.json'
 import { createContext } from './context'
-import authenticatedUser from './middlewares/authenticatedUser'
 import { schema } from './schema'
-import { assertEnvVarsExist, loadEnvSecretFile, stringToBoolean } from './utils'
+import { assertEnvVarsExist, stringToBoolean } from './utils'
 import { config } from 'dotenv-flow'
+import { version } from '../../../package.json'
 
-console.log('Starting bridge-api version ${version}')
+console.log(`Starting bridge-api v${version}`)
 
 config({
   default_node_env: 'development',
@@ -55,7 +54,6 @@ app
       httpOnly: true,
     })
   )
-  .use(authenticatedUser)
 
 // thanks to https://github.com/apollographql/apollo-server/issues/4055
 const BASIC_LOGGING = {
@@ -97,12 +95,6 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app })
 
-if (process.env.JEST_WORKER_ID === undefined) {
-  app.listen(4000, () =>
-    console.log(
-      'Server running on http://localhost:${PORT}',
-      'env',
-      process.env.NODE_ENV === 'development'
-    )
-  )
-}
+app.listen(PORT, () =>
+  console.log(`Server running on http://localhost:${PORT}`)
+)

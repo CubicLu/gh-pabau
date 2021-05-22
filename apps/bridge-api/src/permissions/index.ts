@@ -2,15 +2,16 @@ import { allow, and, rule, shield } from 'graphql-shield'
 import { Context } from '../context'
 
 const rules = {
-  isAuthenticated: rule('isAuthenticated')(async (root, args, ctx: Context) => {
-    console.log('isAuthenticated', ctx.req.body)
-    return !!ctx?.req?.authenticatedUser
-  }),
-  isAdmin: rule('isAdmin')(
-    async (root, args, ctx: Context): Promise<boolean> => {
-      return ctx?.req?.authenticatedUser?.admin ?? false
-    }
+  isAuthenticated: rule('isAuthenticated')(
+    (_root, _args, { user }: Context) =>
+      !!user || 'Not Authenticated - Please login.'
   ),
+
+  isAdmin: rule('isAdmin')(
+    (_root, _args, { user }: Context) =>
+      !!user.admin || 'Not Authorised - Please contact your administrator.'
+  ),
+
   belongsToCompanyAndShared: rule('belongsToCompanyAndShared')(
     async (root, args, ctx: Context, info): Promise<boolean> => {
       try {
@@ -20,7 +21,7 @@ const rules = {
         ) {
           args.where = {
             ...args.where,
-            company_id: { equals: ctx.req.authenticatedUser.company },
+            company_id: { equals: ctx.user.company },
           }
           return true
         }
@@ -35,7 +36,7 @@ const rules = {
       try {
         args.where = {
           ...args.where,
-          id: { equals: ctx.req.authenticatedUser.company },
+          id: { equals: ctx.user.company },
         }
         return true
       } catch (error) {
@@ -50,7 +51,7 @@ const rules = {
         args.where = {
           ...args.where,
           company_id: {
-            in: [0, ctx.req.authenticatedUser.company],
+            in: [0, ctx.user.company],
           },
         }
         return true
@@ -64,20 +65,14 @@ const rules = {
     async (root, args, ctx: Context, info): Promise<boolean> => {
       if (info?.fieldName?.includes('create')) {
         if (args.data?.company?.connect?.id) {
-          return (
-            args.data?.company?.connect?.id ===
-            ctx.req.authenticatedUser.company
-          )
+          return args.data?.company?.connect?.id === ctx.user.company
         } else if (args.data?.Company?.connect?.id) {
-          return (
-            args.data?.Company?.connect?.id ===
-            ctx.req.authenticatedUser.company
-          )
+          return args.data?.Company?.connect?.id === ctx.user.company
         } else if (args.data.company) {
           args.data = {
             ...args.data,
             company: {
-              connect: { id: ctx.req.authenticatedUser.company },
+              connect: { id: ctx.user.company },
             },
           }
           return true
@@ -85,7 +80,7 @@ const rules = {
           args.data = {
             ...args.data,
             Company: {
-              connect: { id: ctx.req.authenticatedUser.company },
+              connect: { id: ctx.user.company },
             },
           }
           return true
@@ -93,12 +88,12 @@ const rules = {
         return false
       } else if (info?.fieldName?.includes('updateMany')) {
         if (args.where?.company_id) {
-          return args.where?.company_id === ctx.req.authenticatedUser.company
+          return args.where?.company_id === ctx.user.company
         } else if (args.where.company) {
           args.where = {
             ...args.where,
             company: {
-              id: { equals: ctx.req.authenticatedUser.company },
+              id: { equals: ctx.user.company },
             },
           }
           return true
@@ -106,7 +101,7 @@ const rules = {
           args.where = {
             ...args.where,
             Company: {
-              id: { equals: ctx.req.authenticatedUser.company },
+              id: { equals: ctx.user.company },
             },
           }
           return true

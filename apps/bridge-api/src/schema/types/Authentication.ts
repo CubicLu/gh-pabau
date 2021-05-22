@@ -39,7 +39,7 @@ export const Me = extendType({
       async resolve(_root, _args, ctx) {
         return ctx.prisma.user.findUnique({
           where: {
-            id: ctx.req.authenticatedUser.user,
+            id: ctx.user.user,
           },
         })
       },
@@ -54,7 +54,7 @@ export const Company = extendType({
       async resolve(_root, _args, ctx) {
         return ctx.prisma.company.findUnique({
           where: {
-            id: ctx.req.authenticatedUser.company,
+            id: ctx.user.company,
           },
         })
       },

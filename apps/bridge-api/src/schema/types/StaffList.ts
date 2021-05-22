@@ -56,7 +56,7 @@ export const PabauStaffList = extendType({
           let staffList
           let count = 0
           let queryString = `FROM cm_staff_general g left join users u on g.pabau_id = u.id
-                       where g.Occupier = ${ctx.req.authenticatedUser.company}`
+                       where g.Occupier = ${ctx.user.company}`
 
           if (input.searchTerm) {
             queryString =
