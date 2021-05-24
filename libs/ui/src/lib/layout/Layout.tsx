@@ -1,12 +1,37 @@
-import React, { FC, useState, MouseEvent } from 'react'
-import { ReactComponent as IllustrationSvg } from './example.svg'
-import { Card, Layout as AntLayout } from 'antd'
+import { MutationFunction } from '@apollo/client'
 import { Footer, Header, Menu } from '@pabau/ui'
-import styles from './Layout.module.less'
+import { Card, Layout as AntLayout } from 'antd'
 import classNames from 'classnames'
+import React, { FC, MouseEvent, useState } from 'react'
+import { ReactComponent as IllustrationSvg } from './example.svg'
+import styles from './Layout.module.less'
 
 const { Content } = AntLayout
+
+interface Notification {
+  id: string
+  notificationTime: Date
+  notificationType: string
+  notificationTypeIcon?: string
+  title: string
+  desc: string
+  read: number[]
+  users: number[]
+  link: string
+}
+
+interface UserProps {
+  user: number
+  company: number
+  fullName: string
+}
 export interface LayoutProps {
+  deleteNotification?: MutationFunction
+  updateNotification?: MutationFunction
+  readAddMutation?: MutationFunction
+  relativeTime?: (lan: string, date: Date) => string
+  notifications?: Notification[]
+  user?: UserProps
   pageTitle?: string
   newButtonText?: string
   onNewClicked?: string | (() => void)
@@ -39,6 +64,12 @@ export const Layout: FC<LayoutProps> = ({
   children,
   active,
   legacyContent = false,
+  notifications,
+  relativeTime,
+  deleteNotification,
+  updateNotification,
+  readAddMutation,
+  user,
   taskManagerIFrameComponent,
   ...rest
 }) => {
@@ -48,9 +79,15 @@ export const Layout: FC<LayoutProps> = ({
     <AntLayout {...rest} className={styles.main}>
       <AntLayout style={{ background: '#F7F7F9' }}>
         <Header
+          user={user}
+          deleteNotification={deleteNotification}
+          updateNotification={updateNotification}
+          readAddMutation={readAddMutation}
           searchRender={searchRender}
           onCreateChannel={onCreateChannel}
           onMessageType={onMessageType}
+          notifications={notifications}
+          relativeTime={relativeTime}
           taskManagerIFrameComponent={taskManagerIFrameComponent}
           {...rest}
         />
