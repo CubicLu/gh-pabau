@@ -73,7 +73,8 @@
     "**/hosted-git-info": "3.0.8",
     "**/lodash": ">=4.17.21",
     "**/underscore": ">=1.12.1",
-    "**/trim": ">=0.0.3"
+    "**/trim": ">=0.0.3",
+    "**/dns-packet": ">=5.2.2"
   },
   "dependencies": {
     "@anchan828/nest-sendgrid": "0.4.19",
