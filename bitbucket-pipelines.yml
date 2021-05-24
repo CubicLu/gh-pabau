@@ -37,7 +37,7 @@ pipelines:
       - parallel:
           - step:
               name: misc checks
-              max-time: 15
+              max-time: 150
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
                 - openssl version || true
@@ -48,10 +48,10 @@ pipelines:
                 - yarn lint:ls || true
                 - yarn lint:workspace || true
                 - npm i -g @graphql-inspector/cli@2.5.0 graphql || true
-                - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || true
-                - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || true
-                - graphql-inspector similar hasura/schema.graphql || true
-                - graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || true
+                - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
+                - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
+                - graphql-inspector similar hasura/schema.graphql || echo TODO
+                - graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
 
           - step:
               name: lint
@@ -228,11 +228,11 @@ pipelines:
                 - yarn lint:tsc --with-deps --base=HEAD~1
                 - yarn lint:ls || true
                 - yarn lint:workspace || true
-                - npm i -g @graphql-inspector/cli graphql || true
-                - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || true
-                - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || true
-                - graphql-inspector similar hasura/schema.graphql || true
-                - graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || true
+                - npm i -g @graphql-inspector/cli@2.5.0 graphql || true
+                - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
+                - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
+                - graphql-inspector similar hasura/schema.graphql || echo TODO
+                - graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
 
           - step:
               name: lint
