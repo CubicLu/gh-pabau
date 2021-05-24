@@ -1,12 +1,7 @@
-import { ApolloServer } from 'apollo-server-express'
-import cookieSession from 'cookie-session'
-import cors from 'cors'
-import express from 'express'
-import { createContext } from './context'
-import { schema } from './schema'
 import { assertEnvVarsExist, stringToBoolean } from './utils'
 import { config } from 'dotenv-flow'
 import { version } from '../../../package.json'
+import { createApp } from './app'
 
 console.log(`Starting bridge-api v${version}`)
 
@@ -35,66 +30,8 @@ console.table({
 
 assertEnvVarsExist(['DATABASE_URL', 'JWT_SECRET'])
 
-export const app = express()
-app.set('trust proxy', true)
-app
-  .get('/', function ({ res }) {
-    res.send('<h1>Private</h1>')
-  })
-  .use(cors())
-  .use(
-    express.urlencoded({
-      extended: true,
-    })
-  )
-  .use(
-    cookieSession({
-      signed: false,
-      secure: stringToBoolean(process.env.SECURE_COOKIES),
-      httpOnly: true,
-    })
-  )
-
-// thanks to https://github.com/apollographql/apollo-server/issues/4055
-const BASIC_LOGGING = {
-  requestDidStart() {
-    return {
-      didEncounterErrors(requestContext) {
-        console.log(
-          'an error happened in response to query ' +
-            requestContext.request.query
-        )
-        console.log(requestContext.errors)
-      },
-      willSendResponse(requestContext) {
-        console.log(
-          'response sent',
-          JSON.stringify(requestContext?.response?.data)
-        )
-        console.log(requestContext.response.http)
-      },
-    }
-  },
-}
-
-const server = new ApolloServer({
-  schema,
-  context: createContext,
+createApp({
   tracing: TRACING,
-  introspection: true,
-  persistedQueries: false,
-  debug: DEBUG_APOLLO,
-  playground: {
-    settings: {
-      'schema.polling.enable': false,
-      'request.credentials': 'include',
-    },
-  },
-  plugins: LOGGING ? [BASIC_LOGGING] : [],
-})
-
-server.applyMiddleware({ app })
-
-app.listen(PORT, () =>
-  console.log(`Server running on http://localhost:${PORT}`)
-)
+  logging: LOGGING,
+  debugApollo: DEBUG_APOLLO,
+}).listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`))
