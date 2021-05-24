@@ -45,8 +45,7 @@ export const notes = {
 
 export const clientData = {
   fullName: 'Bruno Ballardin',
-  avatar:
-  userAvatar,
+  avatar: userAvatar,
   isActive: true,
   cardOption: '',
   labels: ['#coporate', '#new-patient', 'new client', '2 no shows'],
@@ -79,18 +78,14 @@ export const nextAppointments = [
   {
     category: 'next appointment',
     title: 'Laser - Tattoo Removal with Laura Sutton',
-    description:
-      '21/07/2020 (Tue) @ 15:20 @ The London Skin and Hair Clinic',
-    image:
-      userAvatar,
+    description: '21/07/2020 (Tue) @ 15:20 @ The London Skin and Hair Clinic',
+    image: userAvatar,
   },
   {
     category: 'next appointment',
     title: 'Laser - Tattoo Removal with Laura Sutton',
-    description:
-      '21/07/2020 (Tue) @ 15:20 @ The London Skin and Hair Clinic',
-    image:
-      userAvatar,
+    description: '21/07/2020 (Tue) @ 15:20 @ The London Skin and Hair Clinic',
+    image: userAvatar,
   },
 ]
 
