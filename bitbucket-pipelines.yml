@@ -37,7 +37,7 @@ pipelines:
       - parallel:
           - step:
               name: misc checks
-              max-time: 150
+              max-time: 120
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
                 - openssl version || true
@@ -214,7 +214,7 @@ pipelines:
               name: misc checks
               # runs-on:
               #   - 'self.hosted'
-              max-time: 15
+              max-time: 120
               script:
                 - openssl version || true
                 - ls -al || true
