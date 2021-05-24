@@ -1,4 +1,4 @@
-import { allow, and, shield } from 'graphql-shield'
+import { allow, shield } from 'graphql-shield'
 import * as rules from './types'
 
 export const permissions = shield(
