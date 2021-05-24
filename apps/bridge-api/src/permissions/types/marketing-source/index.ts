@@ -2,12 +2,12 @@ import { rule } from 'graphql-shield'
 import { Context } from '../../../context'
 
 export const isMarketingSourceOwnedByCompany = rule({ cache: 'contextual' })(
-  async (root, args, ctx: Context) => {
+  async (_root, { where: { id } }, ctx: Context) => {
     const record = await ctx.prisma.marketingSource.findFirst({
       where: {
-        id: args.where.id,
+        id,
       },
     })
-    return record.company_id === ctx.user.company
+    return record.company_id === ctx.authenticated.company
   }
 )

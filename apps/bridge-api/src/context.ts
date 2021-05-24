@@ -18,7 +18,7 @@ export interface Context {
   /**
    * The currently logged in user
    */
-  user?: JwtPayloadDto
+  authenticated?: JwtPayloadDto
 
   /**
    * The package.json version for this app
@@ -37,7 +37,7 @@ export const createContext: ContextFunction<ExpressContext, Context> = (
   const authorizationRaw = req.req.header('authorization')
   if (authorizationRaw) {
     try {
-      ret.user = jwt.verify(
+      ret.authenticated = jwt.verify(
         authorizationRaw.replace(/^Bearer /, ''),
         process.env.JWT_SECRET,
         { algorithms: ['HS512'] }

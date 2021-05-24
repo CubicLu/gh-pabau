@@ -7,18 +7,18 @@ import { Context } from '../../../context'
 export const authentication = {
   isAuthenticated: rule('isAuthenticated', { cache: 'no_cache' })(
     (_root, _args, ctx: Context) =>
-      Boolean(ctx.user) || 'Not Authenticated - Please login.'
+      Boolean(ctx.authenticated) || 'Not Authenticated - Please login.'
   ),
 
   isAdmin: rule('isAdmin', { cache: 'no_cache' })(
     (_root, _args, ctx: Context) =>
-      Boolean(ctx.user?.admin) ||
+      Boolean(ctx.authenticated?.admin) ||
       'Not Authorised - Please contact your company admin for more help.'
   ),
 
   isOwner: rule('isOwner', { cache: 'no_cache' })(
     (_root, _args, ctx: Context) =>
-      Boolean(ctx.user?.owner) ||
+      Boolean(ctx.authenticated?.owner) ||
       'Not Authorised - Please contact your company owner for more help.'
   ),
 }

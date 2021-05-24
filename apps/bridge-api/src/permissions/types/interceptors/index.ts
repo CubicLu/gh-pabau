@@ -11,7 +11,7 @@ export const interceptors = {
     args.where = {
       ...args.where,
       Company: {
-        in: [0, ctx.user.company],
+        in: [0, ctx.authenticated.company],
       },
     }
     return true
@@ -21,7 +21,7 @@ export const interceptors = {
   })((root, args, ctx: Context, info) => {
     args.where = {
       ...args.where,
-      Company: { equals: ctx.user.company },
+      Company: { equals: ctx.authenticated.company },
     }
     return true
   }),
@@ -30,7 +30,7 @@ export const interceptors = {
   })((root, args, ctx: Context) => {
     args.where = {
       ...args.where,
-      id: { equals: ctx.user.company },
+      id: { equals: ctx.authenticated.company },
     }
     return true
   }),
