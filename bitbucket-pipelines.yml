@@ -47,7 +47,7 @@ pipelines:
                 - yarn lint:tsc --with-deps --base=origin/master
                 - yarn lint:ls || true
                 - yarn lint:workspace || true
-                - npm i -g @graphql-inspector/cli graphql || true
+                - npm i -g @graphql-inspector/cli@2.5.0 graphql || true
                 - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || true
                 - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || true
                 - graphql-inspector similar hasura/schema.graphql || true
