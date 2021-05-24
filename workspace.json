@@ -197,7 +197,7 @@
           "builder": "@nrwl/workspace:run-commands",
           "outputs": [],
           "options": {
-            "command": "tsc -p libs/ui/tsconfig.lib.json && (tsc -p libs/ui/tsconfig.spec.json || echo TODO)"
+            "command": "tsc -p libs/ui/tsconfig.lib.json && tsc -p libs/ui/tsconfig.spec.json"
           },
           "configurations": {
             "production": {}
