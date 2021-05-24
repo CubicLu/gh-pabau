@@ -6,13 +6,13 @@ import { Context } from '../../../context'
  */
 export const marketingSource = {
   isMarketingSourceOwnedByCompany: rule({ cache: 'contextual' })(
-    async (root, args, ctx: Context): Promise<boolean> => {
+    async (root, args, ctx: Context) => {
       const record = await ctx.prisma.marketingSource.findFirst({
         where: {
           id: args.where.id,
         },
       })
-      return record.company_id === ctx.authenticated.company
+      return record.company_id === ctx.user?.company
     }
   ),
 }

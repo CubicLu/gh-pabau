@@ -6,18 +6,19 @@ import { Context } from '../../../context'
  */
 export const authentication = {
   isAuthenticated: rule('isAuthenticated', { cache: 'no_cache' })(
-    async (root, args, ctx: Context): Promise<boolean> => {
-      return !!ctx?.authenticated?.user
-    }
+    (_root, _args, ctx: Context) =>
+      Boolean(ctx.user) || 'Not Authenticated - Please login.'
   ),
+
   isAdmin: rule('isAdmin', { cache: 'no_cache' })(
-    async (root, args, ctx: Context): Promise<boolean> => {
-      return ctx?.authenticated?.admin === true ?? false
-    }
+    (_root, _args, ctx: Context) =>
+      Boolean(ctx.user?.admin) ||
+      'Not Authorised - Please contact your company admin for more help.'
   ),
+
   isOwner: rule('isOwner', { cache: 'no_cache' })(
-    async (root, args, ctx: Context): Promise<boolean> => {
-      return ctx?.authenticated?.owner === true ?? false
-    }
+    (_root, _args, ctx: Context) =>
+      Boolean(ctx.user?.owner) ||
+      'Not Authorised - Please contact your company owner for more help.'
   ),
 }
