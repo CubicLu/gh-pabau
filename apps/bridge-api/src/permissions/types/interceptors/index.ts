@@ -10,7 +10,7 @@ export const interceptors = {
   })((root, args, ctx: Context) => {
     args.where = {
       ...args.where,
-      company_id: {
+      Company: {
         in: [0, ctx.user.company],
       },
     }
@@ -21,7 +21,7 @@ export const interceptors = {
   })((root, args, ctx: Context, info) => {
     args.where = {
       ...args.where,
-      company_id: { equals: ctx.user.company },
+      Company: { equals: ctx.user.company },
     }
     return true
   }),
