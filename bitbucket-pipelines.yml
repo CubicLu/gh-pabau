@@ -136,7 +136,7 @@ pipelines:
 
             - |
               printf ":shallow_pan_of_food::shallow_pan_of_food: *New PR Preview*\n## <https://bitbucket.org/pabau/monorepo/pull-requests/${BITBUCKET_PR_ID}|PR ${BITBUCKET_PR_ID}> committed by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
-              npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "origin/master" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
+              npm i -g ts-node@9 && ts-node tools/cicd/PrintChangedUrls.ts "origin/master" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
               printf "\n" >> /tmp/bot_message2.txt
               cat /tmp/bot_message.txt >> /tmp/bot_message2.txt || true
               printf "\n" >> /tmp/bot_message2.txt
@@ -338,7 +338,7 @@ pipelines:
 
                 - |
                   printf "*New Version Staged for Production*\n# v${PACKAGE_JSON_VERSION} committed by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
-                  npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "HEAD~2" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
+                  npm i -g ts-node@9 && ts-node tools/cicd/PrintChangedUrls.ts "HEAD~2" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
                   printf "\n" >> /tmp/bot_message2.txt
                   cat /tmp/bot_message.txt >> /tmp/bot_message2.txt || true
                   printf "\n" >> /tmp/bot_message2.txt
