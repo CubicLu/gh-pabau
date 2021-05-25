@@ -11,7 +11,7 @@ export interface SetupSearchProps {
 
 export const SetupSearchInput: FC<SetupSearchProps> = ({
   onChange,
-  placeholder,
+  placeholder = 'Search by report name',
 }) => {
   const { t } = useTranslation('common')
   const [searchTerm, setSearchTerm] = useState('')
