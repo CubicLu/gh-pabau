@@ -211,7 +211,7 @@ To run production build locally, type `docker build -t bridge-proxy -f tools/cic
 - Branch from master, PR back to master.
   - Small PR's are good
   - Tag your commits and/or PR with the JIRA issue ID.
-- Before writing code that is considered dangerous such as `yarn add`, `eslint-ignore`, `dangerouslySetInnerHTML`, or `$queryRaw` please open a thread with your team leader and tag me and Nenad in.
+- Before writing code that is considered dangerous such as `yarn add`, `eslint-ignore`, `dangerouslySetInnerHTML`, or `$queryRaw` please open a thread with your team leader and tag James and Nenad in.
 - Keep eye on your build pipeline status. If it fails, the onus is on your to make it green.
 - Never do `import './MyComponent.less'` - always change it to `import styles from './MyComponent.module.less'`
 - Never run your IDE or npm/yarn/npx with sudo or as root/Administrator.
