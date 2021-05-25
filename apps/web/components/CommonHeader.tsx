@@ -1,4 +1,4 @@
-import { MenuOutlined, SearchOutlined } from '@ant-design/icons'
+import { LeftOutlined, MenuOutlined, SearchOutlined } from '@ant-design/icons'
 import {
   MobileHeader,
   MobileSidebar,
@@ -6,8 +6,11 @@ import {
   SetupSearchInput,
 } from '@pabau/ui'
 import classNames from 'classnames'
+import { useRouter } from 'next/router'
 import React, { FC, useState } from 'react'
 import Search from '../components/Search'
+import { useGridData } from '../hooks/useGridData'
+import { useTranslationI18 } from '../hooks/useTranslationI18'
 import styles from './Setup.module.less'
 import Chat from './Chat/Chat'
 
@@ -17,6 +20,7 @@ interface P {
   isShowSearch?: boolean
   isContent?: boolean
   ContentJsx?: () => JSX.Element
+  isLeftOutlined?: boolean
 }
 
 const CommonHeader: FC<P> = ({
@@ -25,6 +29,7 @@ const CommonHeader: FC<P> = ({
   isShowSearch,
   isContent,
   ContentJsx,
+  isLeftOutlined = false,
 }) => {
   const [openMenuDrawer, setMenuDrawer] = useState<boolean>(false)
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
@@ -32,36 +37,60 @@ const CommonHeader: FC<P> = ({
   )
   const [openMessageDrawer, setMessageDrawer] = useState<boolean>(true)
   const [showSearch, setShowSearch] = useState(false)
+  const { t } = useTranslationI18()
+  const { getParentSetupData } = useGridData(t)
+  const router = useRouter()
+
+  const handleBack = () => {
+    const parentMenu = getParentSetupData(router.pathname)
+
+    if (parentMenu.length > 0) {
+      router.push({
+        pathname: '/setup',
+        query: { menu: parentMenu[0]?.keyValue },
+      })
+    } else {
+      router.push('/setup')
+    }
+  }
 
   return (
     <div className={classNames(styles.setupPage, styles.desktopViewNone)}>
       <MobileHeader className={styles.pabauMobileHeader}>
         <div className={styles.mobileViewAlign}>
           <div className={styles.mobileViewHeaderHeading}>
-            <MenuOutlined
-              className="menuHeaderIconColor"
-              onClick={() => {
-                setMenuDrawer(() => !openMenuDrawer)
-              }}
-            />
+            {isLeftOutlined ? (
+              <LeftOutlined onClick={handleBack} />
+            ) : (
+              <MenuOutlined
+                className="menuHeaderIconColor"
+                onClick={() => {
+                  setMenuDrawer(() => !openMenuDrawer)
+                }}
+              />
+            )}
             <p>{title}</p>
           </div>
           <div className={styles.rightContentWrapper}>
-            {isShowSearch && (
-              <div className={styles.searchInput}>
-                {!showSearch ? (
-                  <SearchOutlined
-                    onClick={() => {
-                      setShowSearch(true)
-                    }}
-                  />
-                ) : (
-                  <div className={styles.search}>
-                    <SetupSearchInput onChange={handleSearch} />
-                  </div>
-                )}
-              </div>
-            )}
+            {!isLeftOutlined ||
+              (isShowSearch && (
+                <div className={styles.searchInput}>
+                  {!showSearch ? (
+                    <SearchOutlined
+                      onClick={() => {
+                        setShowSearch(true)
+                      }}
+                    />
+                  ) : (
+                    <div className={styles.search}>
+                      <SetupSearchInput
+                        onChange={handleSearch}
+                        placeholder={isLeftOutlined && t('integration.search')}
+                      />
+                    </div>
+                  )}
+                </div>
+              ))}
             {isContent && <ContentJsx />}
           </div>
         </div>

@@ -10960,7 +10960,7 @@ model SocialSurveyFeedback {
   feedback_status  String
   related_id       Int
   related_to       String
-  feedback_for     Int
+  feedback_for     Int?
   service          String
   public_use       Int     @default(0)
   service_id       Int

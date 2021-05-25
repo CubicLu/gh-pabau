@@ -67,7 +67,7 @@ export const ReportsPermissionTable: FC<ReportsPermissionTableProps> = ({
   subTitle: subtitle,
   tableColumnName,
   columns: permissionColumns,
-  dataSource,
+  dataSource = [],
   onUpdatePermission,
   isDefaultExpanded,
   isLoading,

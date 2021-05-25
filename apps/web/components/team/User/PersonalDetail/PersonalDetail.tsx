@@ -20,7 +20,7 @@ export interface GraphDataProps {
   holidayRemaining: number
 }
 
-interface PersonalDetail {
+interface P {
   field: customFieldsProps[]
   graphData: GraphDataProps
 }
@@ -30,7 +30,7 @@ const GraphDetail = dynamic(() => import('./GraphDetail'), {
   ssr: false,
 })
 
-const PersonalDetail: FC<PersonalDetail> = ({ field, graphData }) => {
+const PersonalDetail: FC<P> = ({ field, graphData }) => {
   const [isDisableResetEmail, setIsDisableResetEmail] = useState<boolean>(false)
 
   const formikFields = () => {

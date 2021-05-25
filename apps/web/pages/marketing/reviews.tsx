@@ -153,6 +153,11 @@ const Reviews: FC<ReviewConfig> = () => {
   const [modalShowing, setModalShowing] = useState(false)
   const [selectedRow, setSelectedRow] = useState(null)
   const [modalValue, setModalValue] = useState('')
+  const [progressData, setProgressData] = useState(progressDataList)
+  const [reviewData, setReviewData] = useState(fields)
+  const [message, setMessage] = useState('')
+  const [average, setAverage] = useState([])
+  const [sendResEmail, setSendResEmail] = useState(true)
   const [paginateData, setPaginateData] = useState({
     total: 0,
     skip: 0,
@@ -160,11 +165,6 @@ const Reviews: FC<ReviewConfig> = () => {
     currentPage: 1,
     showingRecords: 0,
   })
-  const [progressData, setProgressData] = useState(progressDataList)
-  const [reviewData, setReviewData] = useState(fields)
-  const [message, setMessage] = useState('')
-  const [average, setAverage] = useState([])
-  const [sendResEmail, setSendResEmail] = useState(true)
   const [filterValue, setFilterValue] = useState({
     score: '',
     employee: '',

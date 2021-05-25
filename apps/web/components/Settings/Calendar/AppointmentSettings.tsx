@@ -26,11 +26,11 @@ interface P {
 }
 
 const AppointmentSettings: FC<P> = ({
-  allow_overlapping_appts = true,
-  send_reminder = true,
-  send_email = true,
-  send_sms = true,
-  send_feedback = true,
+  allow_overlapping_appts = false,
+  send_reminder = false,
+  send_email = false,
+  send_sms = false,
+  send_feedback = false,
   onChange,
   isLoading = true,
 }) => {

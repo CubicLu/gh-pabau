@@ -18,38 +18,7 @@ const SendMailStory = ({ ...args }) => {
         border: '1px solid var(--border-color-base)',
       }}
     >
-      <SendMail
-        {...args}
-        draft={{
-          sendTo: [],
-          ccList: [],
-          bccList: [],
-          secured: false,
-          sender: { name: '', email: '' },
-          subject: '',
-          message: '',
-          medicalForm: '',
-        }}
-        senderList={[
-          {
-            name: 'The London Skin and Hair Clinic',
-            email: 'doctor@LSAH.co.uk',
-          },
-        ]}
-        medicalFormList={[]}
-        onSend={(mail) => {
-          console.log('Send mail >>>')
-        }}
-        onSave={(mail) => {
-          console.log('Save mail >>>')
-        }}
-        onDiscardDraft={() => {
-          console.log('Discard draft >>>')
-        }}
-        onSaveDraft={(draft) => {
-          console.log('Save Draft')
-        }}
-      />
+      <SendMail {...args} id="" clientId="" />
     </div>
   )
 }

@@ -1,9 +1,9 @@
-import React, { FC, useEffect, useState, ReactNode, useRef } from 'react'
-import { useMedia } from 'react-use'
+import { CloseOutlined, LeftOutlined } from '@ant-design/icons'
+import { Avatar, Button, TabMenu } from '@pabau/ui'
+import { Modal, Switch } from 'antd'
 import classnames from 'classnames'
-import { Button, TabMenu, Avatar } from '@pabau/ui'
-import { Switch, Modal } from 'antd'
-import { LeftOutlined, CloseOutlined } from '@ant-design/icons'
+import React, { FC, ReactNode, useEffect, useRef, useState } from 'react'
+import { useMedia } from 'react-use'
 import styles from './FullScreenReportModal.module.less'
 
 export enum OperationType {

@@ -15,26 +15,40 @@ import {
 
 import Avatar from 'antd/lib/avatar/avatar'
 
-import moment from 'moment'
+const relativeTime = (lan: string, date: Date): string => {
+  const date1 = new Date()
+  const date2 = new Date(date)
+  const rtf = new Intl.RelativeTimeFormat(lan, {
+    localeMatcher: 'best fit',
+    numeric: 'always',
+    style: 'long',
+  })
+  let diffInMilliSeconds = date1.getTime() - date2.getTime()
 
-moment.locale('en', {
-  relativeTime: {
-    future: 'in %s',
-    past: '%s ago',
-    s: 'seconds',
-    ss: '%s seconds',
-    m: 'a minute',
-    mm: '%d minutes',
-    h: 'an hour',
-    hh: '%d hours',
-    d: 'a day',
-    dd: '%d days',
-    M: 'a month',
-    MM: '%d months',
-    y: 'a year',
-    yy: '%d years',
-  },
-})
+  diffInMilliSeconds = diffInMilliSeconds / 1000
+  const seconds = Math.floor(diffInMilliSeconds % 60)
+  diffInMilliSeconds = diffInMilliSeconds / 60
+  const minutes = Math.floor(diffInMilliSeconds % 60)
+  diffInMilliSeconds = diffInMilliSeconds / 60
+  const hours = Math.floor(diffInMilliSeconds % 24)
+  const days = Math.floor(diffInMilliSeconds / 24)
+  const weeks = Math.floor(days / 7)
+  const months = Math.floor(days / (365 / 12))
+  const years = Math.floor(days / 365)
+  return years > 0
+    ? rtf.format(-years, 'years')
+    : months > 0
+    ? rtf.format(-months, 'months')
+    : weeks > 0
+    ? rtf.format(-weeks, 'weeks')
+    : days > 0
+    ? rtf.format(-days, 'days')
+    : hours > 0
+    ? rtf.format(-hours, 'hours')
+    : minutes > 0
+    ? rtf.format(-minutes, 'minutes')
+    : rtf.format(-seconds, 'seconds')
+}
 
 const { Panel } = Collapse
 
@@ -107,7 +121,8 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
   // }
 
   const dateFormat = (_date: Date): string => {
-    return moment(_date).format('DD/MM/YYYY')
+    const date = new Date(_date)
+    return new Intl.DateTimeFormat('en-IE').format(date)
   }
 
   const calPercent = (reviewData: ReviewData): ReviewPercent => {
@@ -302,8 +317,7 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
           </div>
           <div className={styles.subText}>{lastSendOut}</div>
           <div className={styles.subContent}>
-            {moment(reviewDate, 'YYYY-MM-DDTHH:MN:SS.MSSZ').fromNow()}(
-            {dateFormat(reviewDate)})
+            {relativeTime('en', reviewDate)}({dateFormat(reviewDate)})
           </div>
         </div>
         <div className={styles.remindButtonContainer}>
@@ -351,7 +365,7 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
             dataSource={employees}
             columns={employeeColumns}
             rowClassName={styles.employeeRow}
-            summary={(employees) => <SummaryRow employees={employees} />}
+            summary={() => <SummaryRow employees={employees} />}
             pagination={false}
             scroll={{ x: 'max-content' }}
           />

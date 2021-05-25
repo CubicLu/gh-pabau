@@ -35,7 +35,7 @@ export interface MailProps {
   secured: boolean
 }
 
-export interface SendMailProps {
+export interface SendMailComponentProps {
   draft: MailProps
   subjectsList?: string[]
   senderList: Sender[]
@@ -46,7 +46,7 @@ export interface SendMailProps {
   onSaveDraft?: (draft: MailProps) => void
 }
 
-export const SendMail: FC<SendMailProps> = ({
+const SendMailComponent: FC<SendMailComponentProps> = ({
   draft,
   subjectsList,
   senderList,
@@ -57,7 +57,6 @@ export const SendMail: FC<SendMailProps> = ({
   onSaveDraft,
 }) => {
   const toRef = useRef<HTMLDivElement>(null)
-  const [initialized, setInitialized] = useState(false)
   const [sendTo, setSendTo] = useState<Contract[]>([])
   const [sendToItem, setSendToItem] = useState('')
   const [ccList, setCcList] = useState<Contract[]>([])
@@ -73,7 +72,6 @@ export const SendMail: FC<SendMailProps> = ({
   const [secure, setSecure] = useState(false)
   const [editCcList, setEditCcList] = useState(false)
   const [editBccList, setEditBccList] = useState(false)
-  // const [focusSubject, setFocusSubject] = useState(false)
   const [focusSender, setFocusSender] = useState(false)
   const [focusMedicalForm, setFocusMedicalForm] = useState(false)
   const [receipients, setReceipients] = useState('')
@@ -208,7 +206,7 @@ export const SendMail: FC<SendMailProps> = ({
   }, [toRef, sendTo, ccList, bccList])
 
   useEffect(() => {
-    if (draft && !initialized) {
+    if (draft) {
       const {
         sendTo: draftSendTo,
         ccList: draftCcList,
@@ -250,19 +248,18 @@ export const SendMail: FC<SendMailProps> = ({
         setEditBccList(false)
       }
       setReceipients(receip.join(', '))
-      setInitialized(true)
     }
-  }, [draft, initialized])
+  }, [draft])
 
   const onMessageWithTagChange = (e) => {
-    // console.log('message =', e)
+    return
   }
   const onSubjectWithTagChange = (e) => {
     handleChangeSubject(e)
   }
 
   return (
-    <div className={styles.sendMailContainer}>
+    <div className={styles.sendMailComponentContainer}>
       <div className={styles.sendToSelect} ref={toRef}>
         {!receipients && (
           <div className={styles.sendToSelectList}>
@@ -373,21 +370,6 @@ export const SendMail: FC<SendMailProps> = ({
           </div>
         )}
       </div>
-      {/* <div className={styles.subjectSelect}>
-        {(subject || focusSubject) && (
-          <span className={styles.title}>Subject</span>
-        )}
-        <Input
-          value={subject}
-          onChange={(e) => handleChangeSubject(e.target.value)}
-          placeholder={focusSubject ? '' : 'Subject'}
-          onFocus={(e) => setFocusSubject(true)}
-          onBlur={(e) => setFocusSubject(false)}
-        />
-        <div className={styles.subjectTemplateIcon}>
-          <TagsOutlined />
-        </div>
-      </div> */}
       <div className={styles.subjectSelect}>
         <InputWithTags
           placeholder={'Subject'}
@@ -508,6 +490,99 @@ export const SendMail: FC<SendMailProps> = ({
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+interface SendMailProps {
+  clientId: string
+  id: string
+}
+
+interface DraftContent {
+  id: string
+  draft?: MailProps
+}
+
+export const SendMail: FC<SendMailProps> = ({ clientId, id }) => {
+  const [contentItems, setContentItems] = useState<DraftContent[]>([])
+  const [draft, setDraft] = useState<MailProps>({
+    sendTo: [],
+    ccList: [],
+    bccList: [],
+    subject: '',
+    sender: { name: '', email: '' },
+    medicalForm: '',
+    message: '',
+    secured: false,
+  })
+
+  const handleSaveDraft = (draft) => {
+    const content = [...contentItems]
+    const findIndex = contentItems.findIndex((el) => el.id === id)
+    if (findIndex >= 0) {
+      content[findIndex].draft = draft
+      window.localStorage.setItem('pabau_content', JSON.stringify(content))
+    }
+    setDraft(draft)
+  }
+
+  useEffect(() => {
+    const items =
+      JSON.parse(window.localStorage.getItem('pabau_content') || '{}') || []
+    if (Array.isArray(items) && items.length > 0) {
+      setContentItems(items)
+      const findItem = items.find((item) => item.id === id)
+      if (findItem) {
+        setDraft(findItem.draft)
+      } else {
+        setContentItems([
+          ...items,
+          {
+            id,
+            draft: {
+              sendTo: [],
+              ccList: [],
+              bccList: [],
+              secured: false,
+              sender: { name: '', email: '' },
+              subject: '',
+              message: '',
+              medicalForm: '',
+            },
+          },
+        ])
+        setDraft({
+          sendTo: [],
+          ccList: [],
+          bccList: [],
+          secured: false,
+          sender: { name: '', email: '' },
+          subject: '',
+          message: '',
+          medicalForm: '',
+        })
+      }
+    }
+  }, [id])
+
+  return (
+    <div className={styles.sendMailContainer}>
+      <SendMailComponent
+        draft={draft}
+        senderList={[]}
+        medicalFormList={[]}
+        onSend={(mail) => {
+          return
+        }}
+        onSave={(mail) => {
+          return
+        }}
+        onDiscardDraft={() => {
+          return
+        }}
+        onSaveDraft={(draft) => handleSaveDraft(draft)}
+      />
     </div>
   )
 }

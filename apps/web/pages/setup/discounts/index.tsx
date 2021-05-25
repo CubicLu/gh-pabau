@@ -234,8 +234,8 @@ const GeneralTab: FC<TabProps> = ({ value, setFieldValue, t }) => {
               }
               parser={(data) =>
                 value.type === 'percentage'
-                  ? data.replace(/%\s?|(,*)/g, '')
-                  : data.replace(/£\s?|(,*)/g, '')
+                  ? Number(data.replace(/%\s?|(,*)/g, ''))
+                  : Number(data.replace(/£\s?|(,*)/g, ''))
               }
               onChange={(data) => setFieldValue('amount', data)}
             />

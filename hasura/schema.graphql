@@ -7025,10 +7025,10 @@ type CancelReason {
   Company: Company!
   apply_cancellation_policy: Int!
   company_id: Int!
-  created_at: DateTime!
+  created_at: DateTime
   id: Int!
   late_cancel: Int!
-  modified_at: DateTime!
+  modified_at: DateTime
   reason_name: String!
 }
 
@@ -7048,9 +7048,9 @@ input CancelReasonCreateOrConnectWithoutCompanyInput {
 
 input CancelReasonCreateWithoutCompanyInput {
   apply_cancellation_policy: Int!
-  created_at: DateTime!
+  created_at: DateTime
   late_cancel: Int!
-  modified_at: DateTime!
+  modified_at: DateTime
   reason_name: String!
 }
 
@@ -7077,10 +7077,10 @@ input CancelReasonScalarWhereInput {
   OR: [CancelReasonScalarWhereInput]
   apply_cancellation_policy: IntFilter
   company_id: IntFilter
-  created_at: DateTimeFilter
+  created_at: DateTimeNullableFilter
   id: IntFilter
   late_cancel: IntFilter
-  modified_at: DateTimeFilter
+  modified_at: DateTimeNullableFilter
   reason_name: StringFilter
 }
 
@@ -7092,19 +7092,19 @@ input CancelReasonUncheckedCreateNestedManyWithoutCompanyInput {
 
 input CancelReasonUncheckedCreateWithoutCompanyInput {
   apply_cancellation_policy: Int!
-  created_at: DateTime!
+  created_at: DateTime
   id: Int
   late_cancel: Int!
-  modified_at: DateTime!
+  modified_at: DateTime
   reason_name: String!
 }
 
 input CancelReasonUncheckedUpdateManyWithoutCancelReasonInput {
   apply_cancellation_policy: IntFieldUpdateOperationsInput
-  created_at: DateTimeFieldUpdateOperationsInput
+  created_at: NullableDateTimeFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   late_cancel: IntFieldUpdateOperationsInput
-  modified_at: DateTimeFieldUpdateOperationsInput
+  modified_at: NullableDateTimeFieldUpdateOperationsInput
   reason_name: StringFieldUpdateOperationsInput
 }
 
@@ -7123,27 +7123,27 @@ input CancelReasonUncheckedUpdateManyWithoutCompanyInput {
 
 input CancelReasonUncheckedUpdateWithoutCompanyInput {
   apply_cancellation_policy: IntFieldUpdateOperationsInput
-  created_at: DateTimeFieldUpdateOperationsInput
+  created_at: NullableDateTimeFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   late_cancel: IntFieldUpdateOperationsInput
-  modified_at: DateTimeFieldUpdateOperationsInput
+  modified_at: NullableDateTimeFieldUpdateOperationsInput
   reason_name: StringFieldUpdateOperationsInput
 }
 
 input CancelReasonUpdateInput {
   Company: CompanyUpdateOneRequiredWithoutCancelReasonInput
   apply_cancellation_policy: IntFieldUpdateOperationsInput
-  created_at: DateTimeFieldUpdateOperationsInput
+  created_at: NullableDateTimeFieldUpdateOperationsInput
   late_cancel: IntFieldUpdateOperationsInput
-  modified_at: DateTimeFieldUpdateOperationsInput
+  modified_at: NullableDateTimeFieldUpdateOperationsInput
   reason_name: StringFieldUpdateOperationsInput
 }
 
 input CancelReasonUpdateManyMutationInput {
   apply_cancellation_policy: IntFieldUpdateOperationsInput
-  created_at: DateTimeFieldUpdateOperationsInput
+  created_at: NullableDateTimeFieldUpdateOperationsInput
   late_cancel: IntFieldUpdateOperationsInput
-  modified_at: DateTimeFieldUpdateOperationsInput
+  modified_at: NullableDateTimeFieldUpdateOperationsInput
   reason_name: StringFieldUpdateOperationsInput
 }
 
@@ -7183,10 +7183,10 @@ input CancelReasonWhereInput {
   OR: [CancelReasonWhereInput]
   apply_cancellation_policy: IntFilter
   company_id: IntFilter
-  created_at: DateTimeFilter
+  created_at: DateTimeNullableFilter
   id: IntFilter
   late_cancel: IntFilter
-  modified_at: DateTimeFilter
+  modified_at: DateTimeNullableFilter
   reason_name: StringFilter
 }
 
@@ -46363,7 +46363,6 @@ input GroupPermissionCreateInput {
   Company: CompanyCreateNestedOneWithoutGroupPermissionInput!
   UserGroup: UserGroupCreateNestedOneWithoutGroupPermissionInput!
   feature_permissions: String!
-  id: Int!
   module_permissions: String!
   report_permissions: String!
 }
@@ -46387,7 +46386,6 @@ input GroupPermissionCreateOrConnectWithoutUserGroupInput {
 input GroupPermissionCreateWithoutCompanyInput {
   UserGroup: UserGroupCreateNestedOneWithoutGroupPermissionInput!
   feature_permissions: String!
-  id: Int!
   module_permissions: String!
   report_permissions: String!
 }
@@ -46395,7 +46393,6 @@ input GroupPermissionCreateWithoutCompanyInput {
 input GroupPermissionCreateWithoutUserGroupInput {
   Company: CompanyCreateNestedOneWithoutGroupPermissionInput!
   feature_permissions: String!
-  id: Int!
   module_permissions: String!
   report_permissions: String!
 }
@@ -46444,7 +46441,7 @@ input GroupPermissionUncheckedCreateNestedManyWithoutUserGroupInput {
 input GroupPermissionUncheckedCreateWithoutCompanyInput {
   feature_permissions: String!
   group_id: Int!
-  id: Int!
+  id: Int
   module_permissions: String!
   report_permissions: String!
 }
@@ -46452,7 +46449,7 @@ input GroupPermissionUncheckedCreateWithoutCompanyInput {
 input GroupPermissionUncheckedCreateWithoutUserGroupInput {
   company_id: Int!
   feature_permissions: String!
-  id: Int!
+  id: Int
   module_permissions: String!
   report_permissions: String!
 }
@@ -46511,14 +46508,12 @@ input GroupPermissionUpdateInput {
   Company: CompanyUpdateOneRequiredWithoutGroupPermissionInput
   UserGroup: UserGroupUpdateOneRequiredWithoutGroupPermissionInput
   feature_permissions: StringFieldUpdateOperationsInput
-  id: IntFieldUpdateOperationsInput
   module_permissions: StringFieldUpdateOperationsInput
   report_permissions: StringFieldUpdateOperationsInput
 }
 
 input GroupPermissionUpdateManyMutationInput {
   feature_permissions: StringFieldUpdateOperationsInput
-  id: IntFieldUpdateOperationsInput
   module_permissions: StringFieldUpdateOperationsInput
   report_permissions: StringFieldUpdateOperationsInput
 }
@@ -55103,10 +55098,12 @@ input PermissionTemplateUpdateManyWithoutCompanyInput {
   upsert: [PermissionTemplateUpsertWithWhereUniqueWithoutCompanyInput]
 }
 
-input PermissionTemplateUpdateOneRequiredWithoutUserGroupInput {
+input PermissionTemplateUpdateOneWithoutUserGroupInput {
   connect: PermissionTemplateWhereUniqueInput
   connectOrCreate: PermissionTemplateCreateOrConnectWithoutUserGroupInput
   create: PermissionTemplateUncheckedCreateWithoutUserGroupInput
+  delete: Boolean
+  disconnect: Boolean
   update: PermissionTemplateUncheckedUpdateWithoutUserGroupInput
   upsert: PermissionTemplateUpsertWithoutUserGroupInput
 }
@@ -60162,6 +60159,20 @@ enum SortOrder {
   desc
 }
 
+type StaffListType {
+  CellPhone: String
+  City: String
+  Email: String
+  admin: Boolean
+  full_name: String
+  id: Int
+  image: String
+  job_title: String
+  last_login: String
+  main_contact: Boolean
+  staff_id: Int
+}
+
 type StaffMeta {
   User: User
   id: Int!
@@ -60309,6 +60320,11 @@ input StaffMetaWhereInput {
 input StaffMetaWhereUniqueInput {
   id: Int
   staff_id: StaffMetaStaff_idCompoundUniqueInput
+}
+
+type StaffReturnType {
+  count: Int
+  staffList: [StaffListType]
 }
 
 input StringFieldUpdateOperationsInput {
@@ -61734,6 +61750,10 @@ input TwoFactorHistoryWhereInput {
 
 input TwoFactorHistoryWhereUniqueInput {
   id: Int
+}
+
+type UpdateGroupPermission {
+  count: Int
 }
 
 type UpdateUserReport {
@@ -63279,14 +63299,14 @@ input UserCreateWithoutCompanyInput {
 type UserGroup {
   Company: Company!
   GroupPermission(cursor: GroupPermissionWhereUniqueInput, skip: Int, take: Int): [GroupPermission!]!
-  Permission: PermissionTemplate!
+  Permission: PermissionTemplate
   UserGroupMember(cursor: UserGroupMemberWhereUniqueInput, skip: Int, take: Int): [UserGroupMember!]!
   company_id: Int!
   group_description: String!
   group_name: String!
   id: Int!
   limit_contacts: Int!
-  permission_id: Int!
+  permission_id: Int
   restrict_calendar: Int!
   restrict_clients: Int!
   restrict_data: Int!
@@ -63296,7 +63316,7 @@ type UserGroup {
 input UserGroupCreateInput {
   Company: CompanyCreateNestedOneWithoutUserGroupInput!
   GroupPermission: GroupPermissionCreateNestedManyWithoutUserGroupInput
-  Permission: PermissionTemplateCreateNestedOneWithoutUserGroupInput!
+  Permission: PermissionTemplateCreateNestedOneWithoutUserGroupInput
   UserGroupMember: UserGroupMemberCreateNestedManyWithoutUserGroupInput
   group_description: String!
   group_name: String!
@@ -63347,7 +63367,7 @@ input UserGroupCreateOrConnectWithoutUserGroupMemberInput {
 
 input UserGroupCreateWithoutCompanyInput {
   GroupPermission: GroupPermissionCreateNestedManyWithoutUserGroupInput
-  Permission: PermissionTemplateCreateNestedOneWithoutUserGroupInput!
+  Permission: PermissionTemplateCreateNestedOneWithoutUserGroupInput
   UserGroupMember: UserGroupMemberCreateNestedManyWithoutUserGroupInput
   group_description: String!
   group_name: String!
@@ -63586,7 +63606,7 @@ input UserGroupScalarWhereInput {
   group_name: StringFilter
   id: IntFilter
   limit_contacts: IntFilter
-  permission_id: IntFilter
+  permission_id: IntNullableFilter
   restrict_calendar: IntFilter
   restrict_clients: IntFilter
   restrict_data: IntFilter
@@ -63612,7 +63632,7 @@ input UserGroupUncheckedCreateWithoutCompanyInput {
   group_name: String!
   id: Int
   limit_contacts: Int!
-  permission_id: Int!
+  permission_id: Int
   restrict_calendar: Int
   restrict_clients: Int!
   restrict_data: Int!
@@ -63626,7 +63646,7 @@ input UserGroupUncheckedCreateWithoutGroupPermissionInput {
   group_name: String!
   id: Int
   limit_contacts: Int!
-  permission_id: Int!
+  permission_id: Int
   restrict_calendar: Int
   restrict_clients: Int!
   restrict_data: Int!
@@ -63654,7 +63674,7 @@ input UserGroupUncheckedCreateWithoutUserGroupMemberInput {
   group_name: String!
   id: Int
   limit_contacts: Int!
-  permission_id: Int!
+  permission_id: Int
   restrict_calendar: Int
   restrict_clients: Int!
   restrict_data: Int!
@@ -63692,7 +63712,7 @@ input UserGroupUncheckedUpdateManyWithoutUserGroupInput {
   group_name: StringFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   limit_contacts: IntFieldUpdateOperationsInput
-  permission_id: IntFieldUpdateOperationsInput
+  permission_id: NullableIntFieldUpdateOperationsInput
   restrict_calendar: IntFieldUpdateOperationsInput
   restrict_clients: IntFieldUpdateOperationsInput
   restrict_data: IntFieldUpdateOperationsInput
@@ -63706,7 +63726,7 @@ input UserGroupUncheckedUpdateWithoutCompanyInput {
   group_name: StringFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   limit_contacts: IntFieldUpdateOperationsInput
-  permission_id: IntFieldUpdateOperationsInput
+  permission_id: NullableIntFieldUpdateOperationsInput
   restrict_calendar: IntFieldUpdateOperationsInput
   restrict_clients: IntFieldUpdateOperationsInput
   restrict_data: IntFieldUpdateOperationsInput
@@ -63720,7 +63740,7 @@ input UserGroupUncheckedUpdateWithoutGroupPermissionInput {
   group_name: StringFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   limit_contacts: IntFieldUpdateOperationsInput
-  permission_id: IntFieldUpdateOperationsInput
+  permission_id: NullableIntFieldUpdateOperationsInput
   restrict_calendar: IntFieldUpdateOperationsInput
   restrict_clients: IntFieldUpdateOperationsInput
   restrict_data: IntFieldUpdateOperationsInput
@@ -63748,7 +63768,7 @@ input UserGroupUncheckedUpdateWithoutUserGroupMemberInput {
   group_name: StringFieldUpdateOperationsInput
   id: IntFieldUpdateOperationsInput
   limit_contacts: IntFieldUpdateOperationsInput
-  permission_id: IntFieldUpdateOperationsInput
+  permission_id: NullableIntFieldUpdateOperationsInput
   restrict_calendar: IntFieldUpdateOperationsInput
   restrict_clients: IntFieldUpdateOperationsInput
   restrict_data: IntFieldUpdateOperationsInput
@@ -63758,7 +63778,7 @@ input UserGroupUncheckedUpdateWithoutUserGroupMemberInput {
 input UserGroupUpdateInput {
   Company: CompanyUpdateOneRequiredWithoutUserGroupInput
   GroupPermission: GroupPermissionUpdateManyWithoutUserGroupInput
-  Permission: PermissionTemplateUpdateOneRequiredWithoutUserGroupInput
+  Permission: PermissionTemplateUpdateOneWithoutUserGroupInput
   UserGroupMember: UserGroupMemberUpdateManyWithoutUserGroupInput
   group_description: StringFieldUpdateOperationsInput
   group_name: StringFieldUpdateOperationsInput
@@ -63868,7 +63888,7 @@ input UserGroupWhereInput {
   group_name: StringFilter
   id: IntFilter
   limit_contacts: IntFilter
-  permission_id: IntFilter
+  permission_id: IntNullableFilter
   restrict_calendar: IntFilter
   restrict_clients: IntFilter
   restrict_data: IntFilter
@@ -87246,6 +87266,11 @@ type mutation_root {
   updateManySocialSurveyFeedback(data: SocialSurveyFeedbackUpdateManyMutationInput!, where: SocialSurveyFeedbackWhereInput): AffectedRowsOutput!
   updateManySocialSurveyFeedbackResponse(data: SocialSurveyFeedbackResponseUpdateManyMutationInput!, where: SocialSurveyFeedbackResponseWhereInput): AffectedRowsOutput!
   updateManySocialSurveyQuestion(data: SocialSurveyQuestionUpdateManyMutationInput!, where: SocialSurveyQuestionWhereInput): AffectedRowsOutput!
+
+  """
+  Creates/Updates a multiple StaffMeta entry for all Users belonging to the provided group_id
+  """
+  updateManyStaffMetaFeaturesByGroupId(group_id: Int!, staff_meta: [staffMetaInput]): Int
   updateManyTemplateFolder(data: TemplateFolderUpdateManyMutationInput!, where: TemplateFolderWhereInput): AffectedRowsOutput!
   updateManyThirdPartyAccess(data: ThirdPartyAccessUpdateManyMutationInput!, where: ThirdPartyAccessWhereInput): AffectedRowsOutput!
   updateManyTimezone(data: TimezoneUpdateManyMutationInput!, where: TimezoneWhereInput): AffectedRowsOutput!
@@ -89353,9 +89378,29 @@ type mutation_root {
   ): third_parties
 
   """
+  Creates/Updates a group permission for feature permissions to the provided group_id
+  """
+  upsertGroupPermissionFeatureByGroupId(features_permission: String!, group_id: Int!): UpdateGroupPermission
+
+  """
   Creates/Updates a single StaffMeta entry for all Users belonging to the provided group_id
   """
   upsertManyStaffMetaByGroupId(group_id: Int!, meta_name: String!, meta_value: Boolean!): Int
+
+  """
+  Creates/Updates a many users main permission belonging to the provided group_id
+  """
+  upsertManyUsersMainPermissionByGroupId(delete_alert_notes: Boolean!, group_id: Int!): Int
+
+  """
+  Creates/deletes a many users permission and create/updates group permission for modules_permission belonging to the provided group_id
+  """
+  upsertManyUsersPermissionByGroupId(checked: Boolean!, group_id: Int!, page_ids: String!, report_ids: String): Boolean
+
+  """
+  Creates/deletes a many users reports permission and create/updates group permission for reports_permission belonging to the provided group_id
+  """
+  upsertManyUsersReportsByGroupId(checked: Boolean!, group_id: Int!, report_ids: String!): Boolean
   upsertOneAcLog(create: AcLogCreateInput!, update: AcLogUpdateInput!, where: AcLogWhereUniqueInput!): AcLog!
   upsertOneAcLogAction(create: AcLogActionCreateInput!, update: AcLogActionUpdateInput!, where: AcLogActionWhereUniqueInput!): AcLogAction!
   upsertOneAcLogUrl(create: AcLogUrlCreateInput!, update: AcLogUrlUpdateInput!, where: AcLogUrlWhereUniqueInput!): AcLogUrl!
@@ -97637,6 +97682,9 @@ type query_root {
   socialSurveyQuestionsCount(where: SocialSurveyQuestionWhereInput): Int
   socialSurveys(cursor: SocialSurveyWhereUniqueInput, orderBy: [SocialSurveyOrderByInput!], skip: Int, take: Int, where: SocialSurveyWhereInput): [SocialSurvey!]!
   socialSurveysCount(where: SocialSurveyWhereInput): Int
+
+  """Get staff list"""
+  staffList(active: Int!, admin: Int, department: String, limit: Int!, locationId: Int, offset: Int!, searchTerm: String): StaffReturnType
   staffMeta(where: StaffMetaWhereUniqueInput!): StaffMeta
   staffMetas(cursor: StaffMetaWhereUniqueInput, orderBy: [StaffMetaOrderByInput!], skip: Int, take: Int, where: StaffMetaWhereInput): [StaffMeta!]!
   staffMetasCount(where: StaffMetaWhereInput): Int
@@ -100822,6 +100870,11 @@ type services_var_samp_fields {
 type services_variance_fields {
   days_before_booking: Float
   order: Float
+}
+
+input staffMetaInput {
+  meta_name: String!
+  meta_value: Boolean!
 }
 
 """
