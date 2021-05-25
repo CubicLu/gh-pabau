@@ -6,15 +6,16 @@ import React, { FC } from 'react'
 import Highlighter from 'react-highlight-words'
 import styles from '../../../pages/setup/setup.module.less'
 
-interface searchProps {
+interface SearchItemProps {
   subTitle: string
   href?: string
   title?: string
   isPermission?: boolean
   isModal?: boolean
 }
+
 interface P {
-  data: searchProps[]
+  data: SearchItemProps[]
   searchTerm: string
   setSMSModalVisible?: () => void
   checkPermission?: boolean
