@@ -73,7 +73,7 @@ export const PabauGroupPermissionFeaturePermission = extendType({
             : ctx.prisma.groupPermission.create({
                 data: {
                   group_id: input.group_id,
-                  company_id: ctx.req.authenticatedUser.company,
+                  company_id: ctx.authenticated.company,
                   feature_permissions: JSON.stringify(permission),
                   report_permissions: '',
                   module_permissions: '',

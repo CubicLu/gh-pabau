@@ -12,19 +12,18 @@ export const Authentication = extendType({
         username: nonNull(stringArg()),
         password: nonNull(stringArg()),
       },
-      async resolve(_, loginInput: LoginInputDto, ctx: Context) {
-        if (!loginInput.username || !loginInput.password) {
+      async resolve(_root, args: LoginInputDto, ctx: Context) {
+        const { username, password } = args
+        if (!username || !password) {
           throw new Error('Malformed Parameters')
         }
-        return await new AuthenticationService(ctx).handleLoginRequest(
-          loginInput
-        )
+        return new AuthenticationService(ctx).handleLoginRequest(args)
       },
     })
     t.field('logout', {
       type: 'Boolean',
       args: {},
-      async resolve(_, __) {
+      resolve() {
         return true
       },
     })
@@ -36,25 +35,26 @@ export const Me = extendType({
   definition(t) {
     t.field('me', {
       type: 'User',
-      async resolve(_root, _args, ctx) {
+      resolve(_root, _args, ctx: Context) {
         return ctx.prisma.user.findUnique({
           where: {
-            id: ctx.req.authenticatedUser.user,
+            id: ctx.authenticated.user,
           },
         })
       },
     })
   },
 })
+
 export const Company = extendType({
   type: 'Query',
   definition(t) {
     t.field('company', {
       type: 'Company',
-      async resolve(_root, _args, ctx) {
+      resolve(_root, _args, ctx: Context) {
         return ctx.prisma.company.findUnique({
           where: {
-            id: ctx.req.authenticatedUser.company,
+            id: ctx.authenticated.company,
           },
         })
       },

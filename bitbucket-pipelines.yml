@@ -37,7 +37,7 @@ pipelines:
       - parallel:
           - step:
               name: misc checks
-              max-time: 15
+              max-time: 120
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
                 - openssl version || true
@@ -48,10 +48,10 @@ pipelines:
                 - yarn lint:ls || true
                 - yarn lint:workspace || true
                 - npm i -g @graphql-inspector/cli@2.5.0 graphql || true
-                - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || true
-                - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || true
-#                - graphql-inspector similar hasura/schema.graphql || true
-                - graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || true
+                - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
+                - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
+#                - graphql-inspector similar hasura/schema.graphql || echo TODO
+                - graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
 
           - step:
               name: lint
@@ -62,6 +62,8 @@ pipelines:
 
           - step:
               name: unit tests
+              runs-on:
+                - 'self.hosted'
               max-time: 35
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
@@ -69,6 +71,8 @@ pipelines:
           #              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=2222 yarn affected:test --base=HEAD~1 --parallel --maxParallel=2 --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=1555 yarn affected:test --base=HEAD~1 --parallel --maxParallel=3 --skip-nx-cache
+
+      - parallel:
 
           - step:
               name: build
@@ -82,17 +86,16 @@ pipelines:
               artifacts:
                 - dist/**
 
-      # - parallel:
 
-      #   - step:
-      #       size: 2x
-      #       name: e2e
-      #       caches:
-      #         - cypress
-      #       script:
-      #         - apt update -y && apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
-      #         - yarn cypress install || true
-      #         - yarn affected:e2e --base=HEAD~1 || true
+          - step:
+              size: 2x
+              name: e2e
+              caches:
+                - cypress
+              script:
+                - apt update -y && apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+                - yarn cypress install || true
+                - yarn affected:e2e --base=HEAD~1 || true
 
       #   - step:
       #       size: 2x
@@ -213,7 +216,7 @@ pipelines:
               name: misc checks
               # runs-on:
               #   - 'self.hosted'
-              max-time: 15
+              max-time: 120
               script:
                 - openssl version || true
                 - ls -al || true
@@ -228,10 +231,10 @@ pipelines:
                 - yarn lint:ls || true
                 - yarn lint:workspace || true
                 - npm i -g @graphql-inspector/cli@2.5.0 graphql || true
-                - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || true
-                - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || true
-#                - graphql-inspector similar hasura/schema.graphql || true
-                - graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || true
+                - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
+                - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
+#                - graphql-inspector similar hasura/schema.graphql || echo TODO
+                - graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
 
           - step:
               name: lint

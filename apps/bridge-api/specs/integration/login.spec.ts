@@ -9,7 +9,7 @@ it('server answers connections', async () => {
   ).rejects.toThrowErrorMatchingSnapshot()
 })
 
-it('denies invalid logins', async () => {
+it.skip('denies invalid logins', async () => {
   await expect(
     ctx.client.request(
       gql`
@@ -29,7 +29,7 @@ it('denies invalid logins', async () => {
   })
 })
 
-it('allows valid logins', async () => {
+it.skip('allows valid logins', async () => {
   await expect(
     ctx.client.request(
       gql`

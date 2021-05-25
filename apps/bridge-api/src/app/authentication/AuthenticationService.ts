@@ -10,11 +10,12 @@ export default class AuthenticationService {
   public constructor(private ctx: Context) {}
 
   //TODO Refactor once company select screen is defined
-  public async handleLoginRequest(loginInput: LoginInputDto): Promise<string> {
+  public async handleLoginRequest(loginForm: LoginInputDto): Promise<string> {
+    const { username, password } = loginForm
     const users = await this.ctx.prisma.user.findMany({
       where: {
         username: {
-          equals: loginInput.username,
+          equals: username,
         },
       },
       include: {
@@ -24,7 +25,7 @@ export default class AuthenticationService {
     this.user = users.find(
       (currentUser) =>
         currentUser.password ===
-        AuthenticationService.generatePassword(currentUser, loginInput)
+        AuthenticationService.generatePassword(currentUser, password)
     )
     if (!this.user || Object.getOwnPropertyNames(this.user).length === 0) {
       throw new Error('Unauthorized access')
@@ -38,6 +39,7 @@ export default class AuthenticationService {
   ): string {
     return createHash(encryption).update(password).digest('hex')
   }
+
   private generateJWT(): string {
     return jwt.sign(
       {
@@ -66,26 +68,25 @@ export default class AuthenticationService {
    * Enum: [1: md5, 2:sha1]
    *
    * @param user - The `User` database model
-   * @param loginInput - The user-supplied login form
+   * @param password - The password to be encrypted
    *
-   * @returns encoded password as string
+   * @returns string encrypted password as string
    */
-  private static generatePassword(
-    user: User,
-    loginInput: LoginInputDto
-  ): string {
-    switch (user.password_algor) {
+  private static generatePassword(user: User, password: string): string {
+    const { password_algor, salt } = user
+    switch (password_algor) {
       case 1:
-        return AuthenticationService.generateHash(loginInput.password, 'md5')
+        return AuthenticationService.generateHash(password, 'md5')
       case 2:
         return AuthenticationService.generateHash(
-          user.salt + loginInput.password + user.salt,
+          `${salt}${password}${salt}`,
           'sha1'
         )
       default:
         throw new Error('Password algorithm not supported')
     }
   }
+
   public getAuthenticatedUser(): Omit<
     User,
     'password' | 'password_algor' | 'hash' | 'salt'
