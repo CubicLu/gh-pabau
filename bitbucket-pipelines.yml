@@ -64,7 +64,8 @@ pipelines:
               name: unit tests
               runs-on:
                 - 'self.hosted'
-              max-time: 35
+              max-time: 40
+              size: 2x
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=origin/master
@@ -110,8 +111,6 @@ pipelines:
 
       - step:
           name: deploy previews
-          runs-on:
-            - 'self.hosted'
           max-time: 20
           script:
             - ls -al . || true
@@ -247,9 +246,10 @@ pipelines:
 
           - step:
               name: unit tests
-              max-time: 35
               runs-on:
                 - 'self.hosted'
+              max-time: 40
+              size: 2x
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1
