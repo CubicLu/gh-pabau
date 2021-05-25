@@ -1,3 +1,4 @@
+export * from './lib/ticker-modal/TickerModal'
 export * from './lib/sticky-popout/StickyPopout'
 export * from './lib/client-dashboard-layout/ClientDashboardLayout'
 export * from './lib/ticker-tile/TickerTile'
