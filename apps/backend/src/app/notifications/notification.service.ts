@@ -17,7 +17,7 @@ export class NotificationServices {
   ): Promise<{ success: boolean; message?: string }> {
     const data = {
       query:
-        ' mutation insert_notifications_one(\n    $type: uuid!\n    $sent_to: jsonb\n    $variables: jsonb\n    $destination: String!\n    $sent_by: Int # $loop: Int\n  ) {\n    insert_notifications_one(\n      object: {\n        type: $type\n        destination: $destination\n        sent_to: $sent_to\n        variables: $variables\n        sent_by: $sent_by\n        # loop: $loop\n      }\n    ) {\n      id\n    }\n  }',
+        ' mutation insert_notifications_one(\n    $type: String!\n    $sent_to: jsonb\n    $variables: jsonb\n    $destination: String!\n    $sent_by: Int # $loop: Int\n  ) {\n    insert_notifications_one(\n      object: {\n        type: $type\n        destination: $destination\n        sent_to: $sent_to\n        variables: $variables\n        sent_by: $sent_by\n        # loop: $loop\n      }\n    ) {\n      id\n    }\n  }',
       variables: {
         type,
         sent_to,
@@ -28,15 +28,15 @@ export class NotificationServices {
           date,
           time,
         },
-        destination: destination,
-        sent_by: sent_by,
+        destination,
+        sent_by,
       },
       operationName: 'insert_notifications_one',
     }
     this.httpService
-      .post('https://api.new.pabau.com/v1/graphql', data)
+      .post(environment.HASURA_GRAPHQL_ENDPOINT, data)
       .subscribe((response: any) => {
-        console.log(response)
+        console.log(response.data)
       })
     return { success: true }
   }
