@@ -1,8 +1,15 @@
 import { ContactsOutlined, LockOutlined, MenuOutlined } from '@ant-design/icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Daily } from '@pabau/ui'
-import { Avatar, Button, Image, Popover, Table as AntTable } from 'antd'
-import { TableProps } from 'antd/es/table'
+import {
+  Avatar,
+  Button,
+  Image,
+  Popover,
+  Skeleton,
+  Table as AntTable,
+} from 'antd'
+import { TableProps, ColumnsType } from 'antd/es/table'
 import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -43,6 +50,10 @@ function array_move(arr, old_index, new_index) {
   })
 }
 
+interface DataSourceType {
+  [key: string]: string | number
+}
+
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type TableType<T = object> = {
   onRowClick?: (e) => void
@@ -57,6 +68,7 @@ export type TableType<T = object> = {
   needTranslation?: boolean
   showSizeChanger?: boolean
   isHover?: boolean
+  loading?: boolean
 } & TableProps<T> &
   DragProps
 
@@ -76,6 +88,7 @@ export const Table: FC<TableType> = ({
   onAddTemplate,
   searchTerm = '',
   needTranslation,
+  loading,
   showSizeChanger,
   ...props
 }) => {
@@ -218,6 +231,14 @@ export const Table: FC<TableType> = ({
     )
   }
 
+  const renderLoader = () => {
+    return (
+      <div>
+        <Skeleton.Input active={true} size="small" style={{ width: '200px' }} />
+      </div>
+    )
+  }
+
   const renderSortHandler = () => {
     if (props?.columns) {
       props.columns = props.columns
@@ -280,7 +301,34 @@ export const Table: FC<TableType> = ({
     onLeaveRow?.(data)
   }
 
-  return !dataSource?.length && !props.loading && !searchTerm ? (
+  if (loading && props?.columns) {
+    // eslint-disable-next-line
+    const columns: ColumnsType<any> = []
+    const dataSource: DataSourceType[] = []
+    for (const key of props?.columns) {
+      columns.push({ ...key, render: renderLoader })
+    }
+    for (let i = 0; i < 10; i = i + 1) {
+      let data
+      for (const key of props?.columns) {
+        // eslint-disable-next-line
+        // @ts-ignore
+        data = { ...data, id: i, key: i, [key.dataIndex]: '' }
+      }
+      dataSource.push(data)
+    }
+    return (
+      <AntTable
+        dataSource={dataSource}
+        columns={columns}
+        rowKey="key"
+        pagination={false}
+        className={styles.dragTable}
+      />
+    )
+  }
+
+  return !dataSource?.length && !loading && !searchTerm ? (
     <div className={styles.noDataTableBox}>
       <div className={styles.noDataTextStyle}>
         <Avatar icon={noDataIcon} size="large" className={styles.roundDesign} />
@@ -297,7 +345,7 @@ export const Table: FC<TableType> = ({
         )}
       </div>
     </div>
-  ) : !dataSource?.length && !props.loading && searchTerm ? (
+  ) : !dataSource?.length && !loading && searchTerm ? (
     <div className={styles.noSearchResult}>
       <Image src={searchEmpty} preview={false} />
       <p className={styles.noResultsText}>
