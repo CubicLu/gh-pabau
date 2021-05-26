@@ -1,6 +1,14 @@
 /* eslint-disable */
 import React from 'react'
-
+import {
+  DollarCircleOutlined,
+  UserOutlined,
+  InboxOutlined,
+  CalendarOutlined,
+  MailOutlined,
+  SlackSquareOutlined,
+  WindowsOutlined
+} from '@ant-design/icons'
 import RulesContainer from './RulesContainer'
 
 export default {
@@ -31,14 +39,64 @@ export default {
         travel_destination: 'Travel Destination',
         labs_ordered: 'Labs Ordered',
     },
-    actionOptions: {
-        send_email: 'Send Email',
-        send_sms: 'Send SMS',
-    },
     operatorOptions: {
         is: 'is',
         not_is: 'Not is',
-    }
+    },
+    actionTitle: 'Pabau',
+    actions: [
+      {
+        key: 'display_notice_cancel_booking',
+        text: 'Display Notice & Cancel Booking',
+        icon: <DollarCircleOutlined />
+      },
+      {
+        key: 'display_notice',
+        text: 'Display Notice',
+        icon: <UserOutlined />
+      },
+      {
+        key: 'sms',
+        text: 'SMS',
+        icon: <InboxOutlined />
+      },
+      {
+        key: 'activity',
+        text: 'Activity',
+        icon:<CalendarOutlined />
+      },
+      {
+        key: 'email',
+        text: 'Email',
+        icon: <MailOutlined />,
+        events: [
+          {
+            key: 'send_email',
+            text: 'Send email',
+            subtext: 'Send an email from your personal email account'
+          },
+          {
+            key: 'send_email_using_template',
+            text: 'Send email using template',
+            subtext: 'Send an email from your personal email account'
+          }
+        ]
+      },
+      
+    ],
+    actionsNotAvailableTitle: 'Apps & Integrations (coming soon)',
+    actionsNotAvailable:[
+      {
+        key: 'slack',
+        text: 'Slack',
+        icon: <SlackSquareOutlined />
+      },
+      {
+        key: 'microsoft',
+        text: 'Microsoft Teams',
+        icon: <WindowsOutlined />
+      }
+    ]
   },
   onChange: { action: 'onChange' },
   actions: { argTypesRegex: '^on[A-Z].*' },
