@@ -97,6 +97,7 @@ export const Company = objectType({
     t.model.TemplateFolder()
     t.model.SmsPurchase()
     t.model.UserActivityLog()
+    t.model.InvPaymentType()
   },
 })
 

@@ -273,6 +273,7 @@ model Company {
 
   UserActivityLog UserActivityLog[]
   @@map("admin")
+  InvPaymentType InvPaymentType[]
 }
 
 model AdvertCampaign {
@@ -6231,7 +6232,7 @@ model InvPaymentType {
   is_active     Int
   is_money      Int
   type          String    @default("money")
-
+  Company       Company   @relation(fields: [company_id], references: [id])
 
   GlCode GlCode?
   @@index([company_id], name: "occupier")

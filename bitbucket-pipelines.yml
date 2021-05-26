@@ -47,10 +47,10 @@ pipelines:
                 - yarn lint:tsc --with-deps --base=origin/master
                 - yarn lint:ls || true
                 - yarn lint:workspace || true
-                - npm i -g @graphql-inspector/cli graphql || true
+                - npm i -g @graphql-inspector/cli@2.5.0 graphql || true
                 - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || true
                 - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || true
-                - graphql-inspector similar hasura/schema.graphql || true
+                #                - graphql-inspector similar hasura/schema.graphql || true
                 - graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || true
 
           - step:
@@ -62,7 +62,10 @@ pipelines:
 
           - step:
               name: unit tests
-              max-time: 35
+              runs-on:
+                - 'self.hosted'
+              max-time: 40
+              size: 2x
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=origin/master
@@ -107,8 +110,6 @@ pipelines:
 
       - step:
           name: deploy previews
-          runs-on:
-            - 'self.hosted'
           max-time: 20
           script:
             - ls -al . || true
@@ -136,7 +137,7 @@ pipelines:
 
             - |
               printf ":shallow_pan_of_food::shallow_pan_of_food: *New PR Preview*\n## <https://bitbucket.org/pabau/monorepo/pull-requests/${BITBUCKET_PR_ID}|PR ${BITBUCKET_PR_ID}> committed by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
-              npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "origin/master" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
+              npm i -g ts-node@9 && ts-node tools/cicd/PrintChangedUrls.ts "origin/master" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
               printf "\n" >> /tmp/bot_message2.txt
               cat /tmp/bot_message.txt >> /tmp/bot_message2.txt || true
               printf "\n" >> /tmp/bot_message2.txt
@@ -227,10 +228,10 @@ pipelines:
                 - yarn lint:tsc --with-deps --base=HEAD~1
                 - yarn lint:ls || true
                 - yarn lint:workspace || true
-                - npm i -g @graphql-inspector/cli graphql || true
+                - npm i -g @graphql-inspector/cli@2.5.0 graphql || true
                 - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || true
                 - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || true
-                - graphql-inspector similar hasura/schema.graphql || true
+                #                - graphql-inspector similar hasura/schema.graphql || true
                 - graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || true
 
           - step:
@@ -244,9 +245,10 @@ pipelines:
 
           - step:
               name: unit tests
-              max-time: 35
               runs-on:
                 - 'self.hosted'
+              max-time: 40
+              size: 2x
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1
@@ -338,7 +340,7 @@ pipelines:
 
                 - |
                   printf "*New Version Staged for Production*\n# v${PACKAGE_JSON_VERSION} committed by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
-                  npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "HEAD~2" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
+                  npm i -g ts-node@9 && ts-node tools/cicd/PrintChangedUrls.ts "HEAD~2" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
                   printf "\n" >> /tmp/bot_message2.txt
                   cat /tmp/bot_message.txt >> /tmp/bot_message2.txt || true
                   printf "\n" >> /tmp/bot_message2.txt

@@ -24,6 +24,11 @@ interface P {
   customFilter?: () => JSX.Element
   setEditPage?(e): void
   draggable?: boolean
+  isNestedQuery?: boolean
+  isFilterNumber?: boolean
+  isDataIntegrityCheck?: boolean
+  dataIntegrityCheckQuery?: DocumentNode
+  isNotificationBannerOnData?: boolean
   requireAdminAccess?: boolean
 }
 const CrudLayout: FC<P> = ({ ...props }) => {

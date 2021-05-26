@@ -220,6 +220,7 @@ export interface Company {
   TemplateFolder?: TemplateFolder[];
   SmsPurchase?: SmsPurchase[];
   UserActivityLog?: UserActivityLog[];
+  InvPaymentType?: InvPaymentType[];
 }
 
 export interface AdvertCampaign {
@@ -2228,6 +2229,7 @@ export interface InvPaymentType {
   is_active: number;
   is_money: number;
   type: string;
+  Company: Company;
   GlCode?: GlCode;
 }
 
