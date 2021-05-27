@@ -30,7 +30,9 @@ console.table({
   PORT,
   'Database URL': truthyToMaskedString(process.env.DATABASE_URL),
   'JWT Secret': truthyToMaskedString(process.env.JWT_SECRET),
-  // 'Database URL (Secret)': process.env.DATABASE_URL,
+  'Database URL[]': truthyToMaskedString(process.env['DATABASE_URL']),
+  'JWT Secret[]': truthyToMaskedString(process.env['JWT_SECRET']),
+  // 'Database URL (Secret)': process.env['DATABASE_URL'],
   // 'JWT Secret (Secret)': process.env.JWT_SECRET,
 })
 
