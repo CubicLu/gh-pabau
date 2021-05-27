@@ -246,40 +246,42 @@
     }
   }
 }
-:global {
-  .ant-modal-header {
-    border: none;
-  }
-  .ant-modal-body {
-    padding-top: 0px;
-  }
-  .ant-popover-content {
-    .ant-popover-inner {
-      & .ant-popover-title {
-        color: #9292a3;
-      }
-      .ant-popover-inner-content {
-        min-width: 230px;
-        padding: 10px 0px;
-        & > div > div {
-          padding: 15px;
-          cursor: pointer;
-        }
-        & > div > div:hover {
-          background: #40a0c1;
-          border-radius: 3px;
-          h5,
-          p {
-            color: #fff;
-          }
-        }
-        & h5 {
-          margin-bottom: 0px;
-          color: #3d3d46;
-        }
-        & p {
-          margin-bottom: 0px;
+.actionPopoverContainer {
+  :global {
+    .ant-modal-header {
+      border: none;
+    }
+    .ant-modal-body {
+      padding-top: 0px;
+    }
+    .ant-popover-content {
+      .ant-popover-inner {
+        & .ant-popover-title {
           color: #9292a3;
+        }
+        .ant-popover-inner-content {
+          min-width: 230px;
+          padding: 10px 0px;
+          & > div > div {
+            padding: 15px;
+            cursor: pointer;
+          }
+          & > div > div:hover {
+            background: #40a0c1;
+            border-radius: 3px;
+            h5,
+            p {
+              color: #fff;
+            }
+          }
+          & h5 {
+            margin-bottom: 0px;
+            color: #3d3d46;
+          }
+          & p {
+            margin-bottom: 0px;
+            color: #9292a3;
+          }
         }
       }
     }
