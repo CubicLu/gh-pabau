@@ -44,7 +44,7 @@ echo "-----------------"
 #exit;
 
 echo "Copying assets..."
-mkdir -p "dist/apps/${APP_NAME}/prisma"
+ls -al "dist/apps/${APP_NAME}/"
 cp "apps/${APP_NAME}/package.production.json" "dist/apps/${APP_NAME}/"
 echo "Done"
 

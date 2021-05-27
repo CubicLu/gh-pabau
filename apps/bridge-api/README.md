@@ -111,7 +111,7 @@ Use the tools to your advantage.
 ```bash
 yarn && \
   yarn nx run bridge-api:export && \
-  cp apps/bridge-api/package.production.json dist/apps/bridge-api/
+  cp apps/bridge-api/package.production.json dist/apps/bridge-api/ && \
   docker build -t bridge -f tools/cicd/bridge-api.Dockerfile dist/apps/bridge-api/ && \
   docker run --rm -it -p 4000:4000 bridge
 ```
