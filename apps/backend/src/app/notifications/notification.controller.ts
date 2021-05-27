@@ -9,8 +9,8 @@ export class NotificationController {
   @Post('notification')
   async sendNotification(
     @Body() data: any
-  ): Promise<{ success: boolean; message?: string }> {
-    await this.notificationService.sendNotification(
+  ): Promise<{ success: boolean; message?: string; response?: any }> {
+    const res = await this.notificationService.sendNotification(
       data.type,
       data.sent_to,
       data.sent_by,
@@ -19,9 +19,10 @@ export class NotificationController {
       data.service_name,
       data.client_name,
       data.date,
-      data.time
+      data.time,
+      data.cancellation_reason
     )
-    console.log('body', data)
-    return { success: true }
+    console.log('response', res)
+    return { success: true, response: res }
   }
 }
