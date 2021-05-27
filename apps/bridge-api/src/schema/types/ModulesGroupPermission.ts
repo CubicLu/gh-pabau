@@ -72,8 +72,8 @@ export const PabauUserPermission = extendType({
             if (input.report_ids) {
               await ctx.prisma.$queryRaw(
                 `DELETE FROM user_reports
-               WHERE report_id IN (${input.report_ids}) AND
-               occupier = ${ctx.req.authenticatedUser.company} AND
+                  WHERE report_id IN (${input.report_ids})AND
+               occupier = ${ctx.authenticated.company}AND
                user_id IN (SELECT user_id from user_group_members where group_id = ${input.group_id})`
               )
             }
@@ -111,7 +111,7 @@ export const PabauUserPermission = extendType({
             INSERT INTO group_permissions(group_id, company_id, report_permissions,module_permissions,feature_permissions)
             VALUES (
                 ${input.group_id},
-                ${ctx.req.authenticatedUser.company},
+                ${ctx.authenticated.company},
                 '${report_permission.join(',')}',
                 '${module_permission.join(',')}',
                  ''

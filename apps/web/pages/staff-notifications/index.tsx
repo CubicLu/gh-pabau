@@ -49,7 +49,7 @@ const LIST_QUERY = gql`
 
 const ADD_MUTATION = gql`
   mutation insert_notifications_one(
-    $type: uuid!
+    $type: String
     $sent_to: jsonb
     $variables: jsonb
     $destination: String!

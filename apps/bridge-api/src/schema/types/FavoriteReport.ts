@@ -53,8 +53,8 @@ export const FavoriteReport = extendType({
           throw new Error('Malformed Parameters')
         }
         try {
-          const companyId = ctx?.req?.authenticatedUser?.company
-          const userId = ctx?.req?.authenticatedUser?.user
+          const companyId = ctx.authenticated?.company
+          const userId = ctx.authenticated?.user
           let reportId
 
           let searchingByID = true
@@ -134,8 +134,8 @@ export const FavoriteReportQuery = extendType({
       args: {},
       async resolve(_, input, ctx: Context) {
         try {
-          const companyId = ctx?.req?.authenticatedUser?.company
-          const userId = ctx?.req?.authenticatedUser?.user
+          const companyId = ctx.authenticated.company
+          const userId = ctx.authenticated.user
           const temp = []
 
           const userAllReportPermission = await ctx.prisma.user.findFirst({

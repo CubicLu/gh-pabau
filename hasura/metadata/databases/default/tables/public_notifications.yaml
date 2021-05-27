@@ -6,7 +6,7 @@ object_relationships:
   using:
     manual_configuration:
       column_mapping:
-        type: id
+        type: notification_type
       insertion_order: null
       remote_table:
         name: notification_types

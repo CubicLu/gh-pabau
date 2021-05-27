@@ -26,7 +26,7 @@
     "dev": "concurrently -m 16 --kill-others-on-fail -n HASURA,HASURA-SEED,PRISMA,WEB,WEB-PRELOADER,LAUNCH-BROWSER,BACKEND -c red,red,green,blue,grey,grey,magenta \"delay 5 && yarn hasura:stop && docker-compose -f hasura/docker-compose.yml up -d postgres && wait-on -w 1200 http-get://localhost:4000 && yarn hasura:start\" \"delay 22 && wait-on -w 1200 http-get://localhost:8080/console && (yarn hasura:cli seeds apply --database-name default || echo 'Seed apply failed') && open-cli 'http://localhost:8080' && wait-on http://localhost:4200 && open-cli 'http://localhost:4200'\" \"yarn bridge:start\" \"delay 25 && yarn web:start\" \"delay 15 && wait-on tcp:4000 && wait-on http://localhost:4200\" \"delay 20 && wait-on http://localhost:4200\" \"yarn nx serve backend\"",
     "dev:windows": "echo DEPRICATED - Just call 'dev' from now && yarn dev",
     "dev:linux": "echo DEPRICATED - Just call 'dev' from now && yarn dev",
-    "bridge:start": "nx serve bridge-api --prod",
+    "bridge:start": "nx serve bridge-api",
     "hasura:start": "run-script-os",
     "hasura:start:default": "docker-compose -f hasura/docker-compose.yml up -d postgres && delay 10 && docker-compose -f hasura/docker-compose.yml up --force-recreate graphql-engine",
     "hasura:start:linux": "docker-compose -f hasura/docker-compose.linux.yml up -d postgres && delay 10 && docker-compose -f hasura/docker-compose.linux.yml up --force-recreate graphql-engine",
@@ -176,14 +176,15 @@
   },
   "devDependencies": {
     "@babel/core": "7.13.10",
+    "@babel/plugin-proposal-private-property-in-object": "^7.14.0",
     "@babel/plugin-transform-runtime": "7.13.10",
-    "@babel/preset-env": "7.14.1",
+    "@babel/preset-env": "7.12.11",
     "@babel/preset-react": "7.12.13",
     "@babel/preset-typescript": "7.13.0",
     "@graphql-codegen/add": "2.0.2",
     "@graphql-codegen/cli": "1.21.2",
     "@graphql-codegen/fragment-matcher": "2.0.1",
-    "@graphql-codegen/introspection": "1.18.1",
+    "@graphql-codegen/introspection": "1.18.2",
     "@graphql-codegen/plugin-helpers": "1.18.3",
     "@graphql-codegen/schema-ast": "1.18.1",
     "@graphql-codegen/typescript": "1.21.1",
@@ -206,7 +207,7 @@
     "@nrwl/node": "12.0.8",
     "@nrwl/react": "12.0.8",
     "@nrwl/react-native": "11.4.1",
-    "@nrwl/storybook": "12.0.8",
+    "@nrwl/storybook": "12.3.4",
     "@nrwl/tao": "12.0.8",
     "@nrwl/web": "12.0.8",
     "@nrwl/workspace": "12.0.8",
@@ -280,6 +281,6 @@
   },
   "bump-rebuild-all": 33,
   "prisma": {
-    "schema": "apps/bridge-api/prisma/schema.prisma"
+    "schema": "apps/bridge-api/src/prisma/schema.prisma"
   }
 }

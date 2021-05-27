@@ -20,11 +20,11 @@ export const Reports = extendType({
         if (!input.id || !input.start_date || !input.end_date) {
           throw new Error('Malformed Parameters')
         }
-        if (!ctx?.req?.authenticatedUser?.remote_url) {
+        if (!ctx.authenticated?.remote_url) {
           throw new Error('Malformed JWT')
         }
         try {
-          const url = ctx?.req?.authenticatedUser?.remote_url
+          const url = ctx.authenticated.remote_url
           const params = new URLSearchParams({
             id: input.id.toString(),
             start_date: input.start_date.toString(),
@@ -32,8 +32,8 @@ export const Reports = extendType({
             location_id: input.location_id?.toString(),
             staffs: input.staffs?.toString(),
             columns: input.columns?.toString(),
-            company_id: ctx.req.authenticatedUser.company.toString(),
-            user_id: ctx.req.authenticatedUser.user.toString(),
+            company_id: ctx.authenticated.company.toString(),
+            user_id: ctx.authenticated.user.toString(),
           })
           console.log(`${url}/api/pabau2.php?${params}`)
           return await fetch(`${url}/api/pabau2.php?${params}`)
@@ -59,11 +59,11 @@ export const Reports = extendType({
         if (!input.start_date || !input.end_date) {
           throw new Error('Malformed Parameters')
         }
-        if (!ctx?.req?.authenticatedUser?.remote_url) {
+        if (!ctx.authenticated?.remote_url) {
           throw new Error('Malformed JWT')
         }
         try {
-          const url = ctx?.req?.authenticatedUser?.remote_url
+          const url = ctx.authenticated.remote_url
           const params = new URLSearchParams({
             id: 'trend',
             start_date: input.start_date.toString(),
@@ -71,8 +71,8 @@ export const Reports = extendType({
             location_id: input.location_id?.toString() ?? '0',
             type: input.type?.toString() ?? '',
             columns: input.columns?.toString() ?? '',
-            company_id: ctx.req.authenticatedUser.company.toString(),
-            user_id: ctx.req.authenticatedUser.user.toString(),
+            company_id: ctx.authenticated.company.toString(),
+            user_id: ctx.authenticated.user.toString(),
           })
           console.log(`${url}/api/pabau2.php?${params}`)
           return await fetch(`${url}/api/pabau2.php?${params}`)

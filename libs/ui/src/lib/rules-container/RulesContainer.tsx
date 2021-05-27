@@ -16,7 +16,7 @@ import classNames from 'classnames'
 
 const { Title } = Typography
 
-interface RulesContainerProps {
+export interface RulesContainerProps {
   noConfiguredMessage: string
   configureBtnText: string
   ifText: string
@@ -42,7 +42,7 @@ interface ActionProp {
   key: string
   text: string
   icon: React.ReactNode
-  events: ActionEventProp[]
+  events?: ActionEventProp[]
 }
 
 interface ActionEventProp {
@@ -326,7 +326,7 @@ export const RulesContainer: FC<RulesContainerProps> = ({
                               <div className={styles.progIfLine}></div>
                               <Alert
                                 message={`
-                                ${answersOptions[ans.answer]} 
+                                ${answersOptions[ans.answer]}
                                 ${operatorOptions[ans.operator]}
                                 ${ans.condition}
                               `}
@@ -414,7 +414,11 @@ export const RulesContainer: FC<RulesContainerProps> = ({
     setVisibleModal(false)
   }
 
-  const renderActionRow = ({ key, icon, text, events }, i, rowStatus) => {
+  const renderActionRow = (
+    { key, icon, text, events }: ActionProp,
+    i,
+    rowStatus
+  ) => {
     const child = (
       <div
         className={classNames(
@@ -496,13 +500,13 @@ export const RulesContainer: FC<RulesContainerProps> = ({
           <div className={styles.actionModal}>
             <div className={styles.actionOptionsContainer}>
               <p style={{ paddingTop: 0 }}>{actionTitle}</p>
-              {actions.map((action, i) => {
+              {actions?.map((action, i) => {
                 return renderActionRow(action, i, true)
               })}
             </div>
             <div className={styles.actionOptionsContainer}>
               <p>{actionsNotAvailableTitle}</p>
-              {actionsNotAvailable.map((action, i) => {
+              {actionsNotAvailable?.map((action, i) => {
                 return renderActionRow(action, i, false)
               })}
             </div>

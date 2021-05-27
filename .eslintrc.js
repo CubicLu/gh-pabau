@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  ignorePatterns: ['**/*'],
+  ignorePatterns: ['**/*', '!/*.js'],
   plugins: ['@nrwl/nx', 'tsdoc', 'graphql'],
   extends: [
     'plugin:unicorn/recommended',
@@ -16,12 +16,7 @@ module.exports = {
     'unicorn/no-useless-undefined': 0,
     'unicorn/filename-case': 0,
     'unicorn/prefer-node-protocol': 0,
-    'graphql/template-strings': [
-      'error',
-      {
-        env: 'apollo',
-      },
-    ],
+    'graphql/template-strings': 2,
 
     //TODO: turn these on in the future
     'unicorn/no-abusive-eslint-disable': 0,
