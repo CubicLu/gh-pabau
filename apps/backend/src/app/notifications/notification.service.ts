@@ -1,5 +1,6 @@
 import { HttpService, Injectable } from '@nestjs/common'
 import { environment } from '../../environments/environment'
+import { notificationType } from './mock'
 
 @Injectable()
 export class NotificationServices {
@@ -25,7 +26,7 @@ export class NotificationServices {
       time,
     }
 
-    if (type === 'cancelled_appointment_via_calendar') {
+    if (type === notificationType.cancelled_appointment_via_calendar) {
       variables['cancellation_reason'] = cancellation_reason
     }
 

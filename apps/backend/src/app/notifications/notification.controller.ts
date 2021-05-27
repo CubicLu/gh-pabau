@@ -22,7 +22,6 @@ export class NotificationController {
       data.time,
       data.cancellation_reason
     )
-    console.log('response', res)
     return { success: true, response: res }
   }
 }
