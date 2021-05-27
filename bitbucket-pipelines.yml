@@ -152,8 +152,6 @@ pipelines:
 
       - step:
           name: announce to slack
-          runs-on:
-            - 'self.hosted'
           max-time: 5
           clone:
             enabled: false
