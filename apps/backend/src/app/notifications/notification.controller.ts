@@ -15,7 +15,7 @@ export class NotificationController {
       data.sent_to,
       data.sent_by,
       data.destination,
-      data.who,
+      data.user_name,
       data.service_name,
       data.client_name,
       data.date,

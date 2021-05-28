@@ -10,7 +10,7 @@ export class NotificationServices {
     sent_to: number[],
     sent_by: number,
     destination: string,
-    who: string,
+    user_name: string,
     service_name: string,
     client_name: string,
     date: string,
@@ -19,7 +19,7 @@ export class NotificationServices {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any> {
     const variables = {
-      who,
+      who: user_name,
       service_name,
       client_name,
       date,
