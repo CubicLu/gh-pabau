@@ -103,31 +103,7 @@ export const Company = objectType({
 
 export const companyQuery = extendType({
   type: 'Query',
-  definition(t) {
-    t.field('findFirstCompany', {
-      type: 'Company',
-      args: {
-        where: 'CompanyWhereInput',
-        orderBy: arg({ type: 'CompanyOrderByInput' }),
-        cursor: 'CompanyWhereUniqueInput',
-        skip: 'Int',
-        take: 'Int',
-      },
-      async resolve(_root, args, ctx) {
-        return ctx.prisma.company.findFirst(args as any)
-      },
-    })
-    t.crud.companies({ filtering: true, ordering: true })
-    t.field('companiesCount', {
-      type: 'Int',
-      args: {
-        where: 'CompanyWhereInput',
-      },
-      async resolve(_root, args, ctx) {
-        return ctx.prisma.company.count(args as any)
-      },
-    })
-  },
+  definition(t) {},
 })
 
 export const companyMutation = extendType({

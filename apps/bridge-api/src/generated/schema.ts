@@ -2222,14 +2222,14 @@ export interface InvPaymentType {
   name?: string;
   epos_display?: number;
   description?: string;
-  company_id: number;
+  company_id?: number;
   uid?: number;
   created_date?: Date;
   modified_date?: Date;
   is_active: number;
   is_money: number;
   type: string;
-  Company: Company;
+  Company?: Company;
   GlCode?: GlCode;
 }
 
