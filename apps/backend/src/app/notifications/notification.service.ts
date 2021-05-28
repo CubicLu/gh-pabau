@@ -13,8 +13,8 @@ export class NotificationServices {
     user_name: string,
     service_name: string,
     client_name: string,
-    date: string,
-    time: string,
+    date: string | Date,
+    time: string | Date,
     cancellation_reason: string
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any> {
