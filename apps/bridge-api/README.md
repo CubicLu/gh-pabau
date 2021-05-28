@@ -108,14 +108,20 @@ Use the tools to your advantage.
 
 # Testing locally
 
-`bash yarn && yarn nx deploy bridge-api && docker build --no-cache -t bridge -f tools/cicd/bridge-api.Dockerfile dist/apps/bridge-api/ && docker run --rm -it -p 4000:4000 bridge`
+```bash
+yarn && \
+  yarn nx run bridge-api:export && \
+  cp apps/bridge-api/package.production.json dist/apps/bridge-api/ && \
+  docker build -t bridge -f tools/cicd/bridge-api.Dockerfile dist/apps/bridge-api/ && \
+  docker run --rm -it -p 4000:4000 bridge
+```
 
 # Exposing GraphQL CRUD over a database table
 
 Most of the time ORM remapping should be handled the following way
 
 1. Refer to the following sections before doing any changes - `https://www.prisma.io/docs/concepts/components/prisma-schema` detailed explanation on prisma.schema file and how it integrates with the underlying database - `https://www.prisma.io/docs/concepts/components/prisma-client/working-with-prismaclient/use-custom-model-and-field-names` using custom names for our models that mapping
-   2 Inside `apps/bridge-api/prisma/schema.prisma` locate the model that should be amended - Example: `company_id Int @map("occupier")` to map a new model property `company_id` to a database column `occupier` - Example: `company_id Int` to use the same name for the both the model property name and the db column
+   2 Inside `apps/bridge-api/src/prisma/schema.prisma` locate the model that should be amended - Example: `company_id Int @map("occupier")` to map a new model property `company_id` to a database column `occupier` - Example: `company_id Int` to use the same name for the both the model property name and the db column
 2. `prisma validate` to ensure no typos/errors exist in our `schema.prisma`
 3. Continue to the section `Initiate the client after successful changes and build types`
 
@@ -141,7 +147,7 @@ Afterwards to ensure that the graphql queries/mutations where exposed properly
 # Adding a new model property that maps to a newly created database column
 
 1. Refer to the following prisma section before doing any significant work, `https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries`
-2. Inside `apps/bridge-api/prisma/schema.prisma` locate the model that should be amended
+2. Inside `apps/bridge-api/src/prisma/schema.prisma` locate the model that should be amended
 3. example: `model Company { @@maps("admin") }` add a new database model based upon a new added database table
 4. refer back to `Initiate the client after successful changes and build types`
 

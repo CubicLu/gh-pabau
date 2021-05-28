@@ -44,9 +44,8 @@ echo "-----------------"
 #exit;
 
 echo "Copying assets..."
-mkdir -p "dist/apps/${APP_NAME}/prisma"
-cp "apps/${APP_NAME}/package.json-prod" "dist/apps/${APP_NAME}/"
-cp "apps/${APP_NAME}/prisma/schema.prisma" "dist/apps/${APP_NAME}/prisma/schema.prisma"
+ls -al "dist/apps/${APP_NAME}/"
+cp "apps/${APP_NAME}/package.production.json" "dist/apps/${APP_NAME}/"
 echo "Done"
 
 echo "Docker build..."

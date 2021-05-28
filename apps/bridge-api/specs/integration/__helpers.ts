@@ -1,5 +1,6 @@
 import { GraphQLClient } from 'graphql-request'
-import { app as server } from '../../src/main'
+import { createApp } from '../../src/app'
+import * as http from 'http'
 
 type TestContext = {
   client: GraphQLClient
@@ -27,12 +28,12 @@ export function createTestContext(): TestContext {
 }
 
 function graphqlTestContext() {
-  let serverInstance: ReturnType<typeof server.listen> | null = null
+  let serverInstance: http.Server | null = null
   return {
     async before() {
       await new Promise(
         (resolve) =>
-          (serverInstance = server.listen({ port: PORT }, () => {
+          (serverInstance = createApp().listen({ port: PORT }, () => {
             resolve(null)
           }))
       )

@@ -1,4 +1,3 @@
-/* eslint-disable graphql/template-strings */
 import { gql } from '@apollo/client'
 import { NextPage } from 'next'
 import React, { useState, useContext } from 'react'
@@ -70,7 +69,7 @@ const ADD_MUTATION = gql`
         is_money: $is_money
         description: $description
         is_active: $is_active
-        Company: {}
+        company_id: 0 # TODO
       }
     ) {
       __typename

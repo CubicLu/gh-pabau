@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 
-import RulesContainer from './RulesContainer'
+import RulesContainer, { RulesContainerProps } from './RulesContainer'
 
 describe('RulesContainer', () => {
   it('should render successfully', () => {
@@ -56,7 +56,7 @@ describe('RulesContainer', () => {
           icon: 'icon',
         },
       ],
-    }
+    } as RulesContainerProps
     const { baseElement } = render(<RulesContainer {...props} />)
     expect(baseElement).toBeTruthy()
   })

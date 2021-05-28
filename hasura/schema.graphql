@@ -51282,9 +51282,9 @@ type Labs {
   """lab name goes here"""
   name: String!
   order: Int!
-  phone: String!
+  phone: String
   postal_code: numeric
-  provider_number: numeric!
+  provider_number: numeric
   street: String
   street2: String
   updated_at: timestamptz!
@@ -76029,6 +76029,602 @@ input chat_pk_columns_input {
 }
 
 """
+columns and relationships of "chat_room"
+"""
+type chat_room {
+  """An array relationship"""
+  chat_room_participants(
+    """distinct select on columns"""
+    distinct_on: [chat_room_participant_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chat_room_participant_order_by!]
+
+    """filter the rows returned"""
+    where: chat_room_participant_bool_exp
+  ): [chat_room_participant!]!
+
+  """An aggregate relationship"""
+  chat_room_participants_aggregate(
+    """distinct select on columns"""
+    distinct_on: [chat_room_participant_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chat_room_participant_order_by!]
+
+    """filter the rows returned"""
+    where: chat_room_participant_bool_exp
+  ): chat_room_participant_aggregate!
+  company: Int!
+  created_at: timestamptz!
+  id: uuid!
+  name: String!
+  updated_at: timestamptz!
+}
+
+"""
+aggregated selection of "chat_room"
+"""
+type chat_room_aggregate {
+  aggregate: chat_room_aggregate_fields
+  nodes: [chat_room!]!
+}
+
+"""
+aggregate fields of "chat_room"
+"""
+type chat_room_aggregate_fields {
+  avg: chat_room_avg_fields
+  count(columns: [chat_room_select_column!], distinct: Boolean): Int!
+  max: chat_room_max_fields
+  min: chat_room_min_fields
+  stddev: chat_room_stddev_fields
+  stddev_pop: chat_room_stddev_pop_fields
+  stddev_samp: chat_room_stddev_samp_fields
+  sum: chat_room_sum_fields
+  var_pop: chat_room_var_pop_fields
+  var_samp: chat_room_var_samp_fields
+  variance: chat_room_variance_fields
+}
+
+"""aggregate avg on columns"""
+type chat_room_avg_fields {
+  company: Float
+}
+
+"""
+Boolean expression to filter rows from the table "chat_room". All fields are combined with a logical 'AND'.
+"""
+input chat_room_bool_exp {
+  _and: [chat_room_bool_exp!]
+  _not: chat_room_bool_exp
+  _or: [chat_room_bool_exp!]
+  chat_room_participants: chat_room_participant_bool_exp
+  company: Int_comparison_exp
+  created_at: timestamptz_comparison_exp
+  id: uuid_comparison_exp
+  name: String_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "chat_room"
+"""
+enum chat_room_constraint {
+  """unique or primary key constraint"""
+  chat_room_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "chat_room"
+"""
+input chat_room_inc_input {
+  company: Int
+}
+
+"""
+input type for inserting data into table "chat_room"
+"""
+input chat_room_insert_input {
+  chat_room_participants: chat_room_participant_arr_rel_insert_input
+  company: Int
+  created_at: timestamptz
+  id: uuid
+  name: String
+  updated_at: timestamptz
+}
+
+"""aggregate max on columns"""
+type chat_room_max_fields {
+  company: Int
+  created_at: timestamptz
+  id: uuid
+  name: String
+  updated_at: timestamptz
+}
+
+"""aggregate min on columns"""
+type chat_room_min_fields {
+  company: Int
+  created_at: timestamptz
+  id: uuid
+  name: String
+  updated_at: timestamptz
+}
+
+"""
+response of any mutation on the table "chat_room"
+"""
+type chat_room_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [chat_room!]!
+}
+
+"""
+input type for inserting object relation for remote table "chat_room"
+"""
+input chat_room_obj_rel_insert_input {
+  data: chat_room_insert_input!
+
+  """on conflict condition"""
+  on_conflict: chat_room_on_conflict
+}
+
+"""
+on conflict condition type for table "chat_room"
+"""
+input chat_room_on_conflict {
+  constraint: chat_room_constraint!
+  update_columns: [chat_room_update_column!]! = []
+  where: chat_room_bool_exp
+}
+
+"""Ordering options when selecting data from "chat_room"."""
+input chat_room_order_by {
+  chat_room_participants_aggregate: chat_room_participant_aggregate_order_by
+  company: order_by
+  created_at: order_by
+  id: order_by
+  name: order_by
+  updated_at: order_by
+}
+
+"""
+columns and relationships of "chat_room_participant"
+"""
+type chat_room_participant {
+  """An object relationship"""
+  chat_room: chat_room!
+  created_at: timestamptz!
+  id: uuid!
+  room: uuid!
+  updated_at: timestamptz!
+  user: Int!
+}
+
+"""
+aggregated selection of "chat_room_participant"
+"""
+type chat_room_participant_aggregate {
+  aggregate: chat_room_participant_aggregate_fields
+  nodes: [chat_room_participant!]!
+}
+
+"""
+aggregate fields of "chat_room_participant"
+"""
+type chat_room_participant_aggregate_fields {
+  avg: chat_room_participant_avg_fields
+  count(columns: [chat_room_participant_select_column!], distinct: Boolean): Int!
+  max: chat_room_participant_max_fields
+  min: chat_room_participant_min_fields
+  stddev: chat_room_participant_stddev_fields
+  stddev_pop: chat_room_participant_stddev_pop_fields
+  stddev_samp: chat_room_participant_stddev_samp_fields
+  sum: chat_room_participant_sum_fields
+  var_pop: chat_room_participant_var_pop_fields
+  var_samp: chat_room_participant_var_samp_fields
+  variance: chat_room_participant_variance_fields
+}
+
+"""
+order by aggregate values of table "chat_room_participant"
+"""
+input chat_room_participant_aggregate_order_by {
+  avg: chat_room_participant_avg_order_by
+  count: order_by
+  max: chat_room_participant_max_order_by
+  min: chat_room_participant_min_order_by
+  stddev: chat_room_participant_stddev_order_by
+  stddev_pop: chat_room_participant_stddev_pop_order_by
+  stddev_samp: chat_room_participant_stddev_samp_order_by
+  sum: chat_room_participant_sum_order_by
+  var_pop: chat_room_participant_var_pop_order_by
+  var_samp: chat_room_participant_var_samp_order_by
+  variance: chat_room_participant_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "chat_room_participant"
+"""
+input chat_room_participant_arr_rel_insert_input {
+  data: [chat_room_participant_insert_input!]!
+
+  """on conflict condition"""
+  on_conflict: chat_room_participant_on_conflict
+}
+
+"""aggregate avg on columns"""
+type chat_room_participant_avg_fields {
+  user: Float
+}
+
+"""
+order by avg() on columns of table "chat_room_participant"
+"""
+input chat_room_participant_avg_order_by {
+  user: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "chat_room_participant". All fields are combined with a logical 'AND'.
+"""
+input chat_room_participant_bool_exp {
+  _and: [chat_room_participant_bool_exp!]
+  _not: chat_room_participant_bool_exp
+  _or: [chat_room_participant_bool_exp!]
+  chat_room: chat_room_bool_exp
+  created_at: timestamptz_comparison_exp
+  id: uuid_comparison_exp
+  room: uuid_comparison_exp
+  updated_at: timestamptz_comparison_exp
+  user: Int_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "chat_room_participant"
+"""
+enum chat_room_participant_constraint {
+  """unique or primary key constraint"""
+  chat_room_participant_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "chat_room_participant"
+"""
+input chat_room_participant_inc_input {
+  user: Int
+}
+
+"""
+input type for inserting data into table "chat_room_participant"
+"""
+input chat_room_participant_insert_input {
+  chat_room: chat_room_obj_rel_insert_input
+  created_at: timestamptz
+  id: uuid
+  room: uuid
+  updated_at: timestamptz
+  user: Int
+}
+
+"""aggregate max on columns"""
+type chat_room_participant_max_fields {
+  created_at: timestamptz
+  id: uuid
+  room: uuid
+  updated_at: timestamptz
+  user: Int
+}
+
+"""
+order by max() on columns of table "chat_room_participant"
+"""
+input chat_room_participant_max_order_by {
+  created_at: order_by
+  id: order_by
+  room: order_by
+  updated_at: order_by
+  user: order_by
+}
+
+"""aggregate min on columns"""
+type chat_room_participant_min_fields {
+  created_at: timestamptz
+  id: uuid
+  room: uuid
+  updated_at: timestamptz
+  user: Int
+}
+
+"""
+order by min() on columns of table "chat_room_participant"
+"""
+input chat_room_participant_min_order_by {
+  created_at: order_by
+  id: order_by
+  room: order_by
+  updated_at: order_by
+  user: order_by
+}
+
+"""
+response of any mutation on the table "chat_room_participant"
+"""
+type chat_room_participant_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [chat_room_participant!]!
+}
+
+"""
+on conflict condition type for table "chat_room_participant"
+"""
+input chat_room_participant_on_conflict {
+  constraint: chat_room_participant_constraint!
+  update_columns: [chat_room_participant_update_column!]! = []
+  where: chat_room_participant_bool_exp
+}
+
+"""Ordering options when selecting data from "chat_room_participant"."""
+input chat_room_participant_order_by {
+  chat_room: chat_room_order_by
+  created_at: order_by
+  id: order_by
+  room: order_by
+  updated_at: order_by
+  user: order_by
+}
+
+"""primary key columns input for table: chat_room_participant"""
+input chat_room_participant_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "chat_room_participant"
+"""
+enum chat_room_participant_select_column {
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  room
+
+  """column name"""
+  updated_at
+
+  """column name"""
+  user
+}
+
+"""
+input type for updating data in table "chat_room_participant"
+"""
+input chat_room_participant_set_input {
+  created_at: timestamptz
+  id: uuid
+  room: uuid
+  updated_at: timestamptz
+  user: Int
+}
+
+"""aggregate stddev on columns"""
+type chat_room_participant_stddev_fields {
+  user: Float
+}
+
+"""
+order by stddev() on columns of table "chat_room_participant"
+"""
+input chat_room_participant_stddev_order_by {
+  user: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type chat_room_participant_stddev_pop_fields {
+  user: Float
+}
+
+"""
+order by stddev_pop() on columns of table "chat_room_participant"
+"""
+input chat_room_participant_stddev_pop_order_by {
+  user: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type chat_room_participant_stddev_samp_fields {
+  user: Float
+}
+
+"""
+order by stddev_samp() on columns of table "chat_room_participant"
+"""
+input chat_room_participant_stddev_samp_order_by {
+  user: order_by
+}
+
+"""aggregate sum on columns"""
+type chat_room_participant_sum_fields {
+  user: Int
+}
+
+"""
+order by sum() on columns of table "chat_room_participant"
+"""
+input chat_room_participant_sum_order_by {
+  user: order_by
+}
+
+"""
+update columns of table "chat_room_participant"
+"""
+enum chat_room_participant_update_column {
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  room
+
+  """column name"""
+  updated_at
+
+  """column name"""
+  user
+}
+
+"""aggregate var_pop on columns"""
+type chat_room_participant_var_pop_fields {
+  user: Float
+}
+
+"""
+order by var_pop() on columns of table "chat_room_participant"
+"""
+input chat_room_participant_var_pop_order_by {
+  user: order_by
+}
+
+"""aggregate var_samp on columns"""
+type chat_room_participant_var_samp_fields {
+  user: Float
+}
+
+"""
+order by var_samp() on columns of table "chat_room_participant"
+"""
+input chat_room_participant_var_samp_order_by {
+  user: order_by
+}
+
+"""aggregate variance on columns"""
+type chat_room_participant_variance_fields {
+  user: Float
+}
+
+"""
+order by variance() on columns of table "chat_room_participant"
+"""
+input chat_room_participant_variance_order_by {
+  user: order_by
+}
+
+"""primary key columns input for table: chat_room"""
+input chat_room_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "chat_room"
+"""
+enum chat_room_select_column {
+  """column name"""
+  company
+
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  name
+
+  """column name"""
+  updated_at
+}
+
+"""
+input type for updating data in table "chat_room"
+"""
+input chat_room_set_input {
+  company: Int
+  created_at: timestamptz
+  id: uuid
+  name: String
+  updated_at: timestamptz
+}
+
+"""aggregate stddev on columns"""
+type chat_room_stddev_fields {
+  company: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type chat_room_stddev_pop_fields {
+  company: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type chat_room_stddev_samp_fields {
+  company: Float
+}
+
+"""aggregate sum on columns"""
+type chat_room_sum_fields {
+  company: Int
+}
+
+"""
+update columns of table "chat_room"
+"""
+enum chat_room_update_column {
+  """column name"""
+  company
+
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  name
+
+  """column name"""
+  updated_at
+}
+
+"""aggregate var_pop on columns"""
+type chat_room_var_pop_fields {
+  company: Float
+}
+
+"""aggregate var_samp on columns"""
+type chat_room_var_samp_fields {
+  company: Float
+}
+
+"""aggregate variance on columns"""
+type chat_room_variance_fields {
+  company: Float
+}
+
+"""
 select columns of table "chat"
 """
 enum chat_select_column {
@@ -78712,6 +79308,397 @@ type departments_var_samp_fields {
 """aggregate variance on columns"""
 type departments_variance_fields {
   order: Float
+}
+
+"""
+developer hub - used for fetching data for developer hub
+
+
+columns and relationships of "developer_hub"
+"""
+type developer_hub {
+  PrivacyPolicyURL: String!
+  TermsOfServiceURL: String!
+  appIcon: String!
+  builtBy: String!
+  company_id: Int!
+  created_at: timestamptz!
+  docUrl: String!
+  extraInfo: String!
+  name: String!
+  screenshot1: String!
+  screenshot2: String!
+  screenshot3: String!
+  sellAppInfo: String!
+  shortDescription: String!
+  typeApp: String!
+  typeFeature: String!
+  uuid: uuid!
+  workspace: String!
+}
+
+"""
+aggregated selection of "developer_hub"
+"""
+type developer_hub_aggregate {
+  aggregate: developer_hub_aggregate_fields
+  nodes: [developer_hub!]!
+}
+
+"""
+aggregate fields of "developer_hub"
+"""
+type developer_hub_aggregate_fields {
+  avg: developer_hub_avg_fields
+  count(columns: [developer_hub_select_column!], distinct: Boolean): Int!
+  max: developer_hub_max_fields
+  min: developer_hub_min_fields
+  stddev: developer_hub_stddev_fields
+  stddev_pop: developer_hub_stddev_pop_fields
+  stddev_samp: developer_hub_stddev_samp_fields
+  sum: developer_hub_sum_fields
+  var_pop: developer_hub_var_pop_fields
+  var_samp: developer_hub_var_samp_fields
+  variance: developer_hub_variance_fields
+}
+
+"""aggregate avg on columns"""
+type developer_hub_avg_fields {
+  company_id: Float
+}
+
+"""
+Boolean expression to filter rows from the table "developer_hub". All fields are combined with a logical 'AND'.
+"""
+input developer_hub_bool_exp {
+  PrivacyPolicyURL: String_comparison_exp
+  TermsOfServiceURL: String_comparison_exp
+  _and: [developer_hub_bool_exp!]
+  _not: developer_hub_bool_exp
+  _or: [developer_hub_bool_exp!]
+  appIcon: String_comparison_exp
+  builtBy: String_comparison_exp
+  company_id: Int_comparison_exp
+  created_at: timestamptz_comparison_exp
+  docUrl: String_comparison_exp
+  extraInfo: String_comparison_exp
+  name: String_comparison_exp
+  screenshot1: String_comparison_exp
+  screenshot2: String_comparison_exp
+  screenshot3: String_comparison_exp
+  sellAppInfo: String_comparison_exp
+  shortDescription: String_comparison_exp
+  typeApp: String_comparison_exp
+  typeFeature: String_comparison_exp
+  uuid: uuid_comparison_exp
+  workspace: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "developer_hub"
+"""
+enum developer_hub_constraint {
+  """unique or primary key constraint"""
+  developer_hub_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "developer_hub"
+"""
+input developer_hub_inc_input {
+  company_id: Int
+}
+
+"""
+input type for inserting data into table "developer_hub"
+"""
+input developer_hub_insert_input {
+  PrivacyPolicyURL: String
+  TermsOfServiceURL: String
+  appIcon: String
+  builtBy: String
+  company_id: Int
+  created_at: timestamptz
+  docUrl: String
+  extraInfo: String
+  name: String
+  screenshot1: String
+  screenshot2: String
+  screenshot3: String
+  sellAppInfo: String
+  shortDescription: String
+  typeApp: String
+  typeFeature: String
+  uuid: uuid
+  workspace: String
+}
+
+"""aggregate max on columns"""
+type developer_hub_max_fields {
+  PrivacyPolicyURL: String
+  TermsOfServiceURL: String
+  appIcon: String
+  builtBy: String
+  company_id: Int
+  created_at: timestamptz
+  docUrl: String
+  extraInfo: String
+  name: String
+  screenshot1: String
+  screenshot2: String
+  screenshot3: String
+  sellAppInfo: String
+  shortDescription: String
+  typeApp: String
+  typeFeature: String
+  uuid: uuid
+  workspace: String
+}
+
+"""aggregate min on columns"""
+type developer_hub_min_fields {
+  PrivacyPolicyURL: String
+  TermsOfServiceURL: String
+  appIcon: String
+  builtBy: String
+  company_id: Int
+  created_at: timestamptz
+  docUrl: String
+  extraInfo: String
+  name: String
+  screenshot1: String
+  screenshot2: String
+  screenshot3: String
+  sellAppInfo: String
+  shortDescription: String
+  typeApp: String
+  typeFeature: String
+  uuid: uuid
+  workspace: String
+}
+
+"""
+response of any mutation on the table "developer_hub"
+"""
+type developer_hub_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [developer_hub!]!
+}
+
+"""
+on conflict condition type for table "developer_hub"
+"""
+input developer_hub_on_conflict {
+  constraint: developer_hub_constraint!
+  update_columns: [developer_hub_update_column!]! = []
+  where: developer_hub_bool_exp
+}
+
+"""Ordering options when selecting data from "developer_hub"."""
+input developer_hub_order_by {
+  PrivacyPolicyURL: order_by
+  TermsOfServiceURL: order_by
+  appIcon: order_by
+  builtBy: order_by
+  company_id: order_by
+  created_at: order_by
+  docUrl: order_by
+  extraInfo: order_by
+  name: order_by
+  screenshot1: order_by
+  screenshot2: order_by
+  screenshot3: order_by
+  sellAppInfo: order_by
+  shortDescription: order_by
+  typeApp: order_by
+  typeFeature: order_by
+  uuid: order_by
+  workspace: order_by
+}
+
+"""primary key columns input for table: developer_hub"""
+input developer_hub_pk_columns_input {
+  uuid: uuid!
+}
+
+"""
+select columns of table "developer_hub"
+"""
+enum developer_hub_select_column {
+  """column name"""
+  PrivacyPolicyURL
+
+  """column name"""
+  TermsOfServiceURL
+
+  """column name"""
+  appIcon
+
+  """column name"""
+  builtBy
+
+  """column name"""
+  company_id
+
+  """column name"""
+  created_at
+
+  """column name"""
+  docUrl
+
+  """column name"""
+  extraInfo
+
+  """column name"""
+  name
+
+  """column name"""
+  screenshot1
+
+  """column name"""
+  screenshot2
+
+  """column name"""
+  screenshot3
+
+  """column name"""
+  sellAppInfo
+
+  """column name"""
+  shortDescription
+
+  """column name"""
+  typeApp
+
+  """column name"""
+  typeFeature
+
+  """column name"""
+  uuid
+
+  """column name"""
+  workspace
+}
+
+"""
+input type for updating data in table "developer_hub"
+"""
+input developer_hub_set_input {
+  PrivacyPolicyURL: String
+  TermsOfServiceURL: String
+  appIcon: String
+  builtBy: String
+  company_id: Int
+  created_at: timestamptz
+  docUrl: String
+  extraInfo: String
+  name: String
+  screenshot1: String
+  screenshot2: String
+  screenshot3: String
+  sellAppInfo: String
+  shortDescription: String
+  typeApp: String
+  typeFeature: String
+  uuid: uuid
+  workspace: String
+}
+
+"""aggregate stddev on columns"""
+type developer_hub_stddev_fields {
+  company_id: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type developer_hub_stddev_pop_fields {
+  company_id: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type developer_hub_stddev_samp_fields {
+  company_id: Float
+}
+
+"""aggregate sum on columns"""
+type developer_hub_sum_fields {
+  company_id: Int
+}
+
+"""
+update columns of table "developer_hub"
+"""
+enum developer_hub_update_column {
+  """column name"""
+  PrivacyPolicyURL
+
+  """column name"""
+  TermsOfServiceURL
+
+  """column name"""
+  appIcon
+
+  """column name"""
+  builtBy
+
+  """column name"""
+  company_id
+
+  """column name"""
+  created_at
+
+  """column name"""
+  docUrl
+
+  """column name"""
+  extraInfo
+
+  """column name"""
+  name
+
+  """column name"""
+  screenshot1
+
+  """column name"""
+  screenshot2
+
+  """column name"""
+  screenshot3
+
+  """column name"""
+  sellAppInfo
+
+  """column name"""
+  shortDescription
+
+  """column name"""
+  typeApp
+
+  """column name"""
+  typeFeature
+
+  """column name"""
+  uuid
+
+  """column name"""
+  workspace
+}
+
+"""aggregate var_pop on columns"""
+type developer_hub_var_pop_fields {
+  company_id: Float
+}
+
+"""aggregate var_samp on columns"""
+type developer_hub_var_samp_fields {
+  company_id: Float
+}
+
+"""aggregate variance on columns"""
+type developer_hub_variance_fields {
+  company_id: Float
 }
 
 """
@@ -84814,6 +85801,32 @@ type mutation_root {
   delete_chat_by_pk(id: uuid!): chat
 
   """
+  delete data from the table: "chat_room"
+  """
+  delete_chat_room(
+    """filter the rows which have to be deleted"""
+    where: chat_room_bool_exp!
+  ): chat_room_mutation_response
+
+  """
+  delete single row from the table: "chat_room"
+  """
+  delete_chat_room_by_pk(id: uuid!): chat_room
+
+  """
+  delete data from the table: "chat_room_participant"
+  """
+  delete_chat_room_participant(
+    """filter the rows which have to be deleted"""
+    where: chat_room_participant_bool_exp!
+  ): chat_room_participant_mutation_response
+
+  """
+  delete single row from the table: "chat_room_participant"
+  """
+  delete_chat_room_participant_by_pk(id: uuid!): chat_room_participant
+
+  """
   delete data from the table: "clients_data"
   """
   delete_clients_data(
@@ -84942,6 +85955,19 @@ type mutation_root {
   delete single row from the table: "departments"
   """
   delete_departments_by_pk(id: uuid!): departments
+
+  """
+  delete data from the table: "developer_hub"
+  """
+  delete_developer_hub(
+    """filter the rows which have to be deleted"""
+    where: developer_hub_bool_exp!
+  ): developer_hub_mutation_response
+
+  """
+  delete single row from the table: "developer_hub"
+  """
+  delete_developer_hub_by_pk(uuid: uuid!): developer_hub
 
   """
   delete data from the table: "diagnostic_codes"
@@ -85863,6 +86889,50 @@ type mutation_root {
   ): chat
 
   """
+  insert data into the table: "chat_room"
+  """
+  insert_chat_room(
+    """the rows to be inserted"""
+    objects: [chat_room_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: chat_room_on_conflict
+  ): chat_room_mutation_response
+
+  """
+  insert a single row into the table: "chat_room"
+  """
+  insert_chat_room_one(
+    """the row to be inserted"""
+    object: chat_room_insert_input!
+
+    """on conflict condition"""
+    on_conflict: chat_room_on_conflict
+  ): chat_room
+
+  """
+  insert data into the table: "chat_room_participant"
+  """
+  insert_chat_room_participant(
+    """the rows to be inserted"""
+    objects: [chat_room_participant_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: chat_room_participant_on_conflict
+  ): chat_room_participant_mutation_response
+
+  """
+  insert a single row into the table: "chat_room_participant"
+  """
+  insert_chat_room_participant_one(
+    """the row to be inserted"""
+    object: chat_room_participant_insert_input!
+
+    """on conflict condition"""
+    on_conflict: chat_room_participant_on_conflict
+  ): chat_room_participant
+
+  """
   insert data into the table: "clients_data"
   """
   insert_clients_data(
@@ -86081,6 +87151,28 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: departments_on_conflict
   ): departments
+
+  """
+  insert data into the table: "developer_hub"
+  """
+  insert_developer_hub(
+    """the rows to be inserted"""
+    objects: [developer_hub_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: developer_hub_on_conflict
+  ): developer_hub_mutation_response
+
+  """
+  insert a single row into the table: "developer_hub"
+  """
+  insert_developer_hub_one(
+    """the row to be inserted"""
+    object: developer_hub_insert_input!
+
+    """on conflict condition"""
+    on_conflict: developer_hub_on_conflict
+  ): developer_hub
 
   """
   insert data into the table: "diagnostic_codes"
@@ -87824,6 +88916,58 @@ type mutation_root {
   ): chat
 
   """
+  update data of the table: "chat_room"
+  """
+  update_chat_room(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: chat_room_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: chat_room_set_input
+
+    """filter the rows which have to be updated"""
+    where: chat_room_bool_exp!
+  ): chat_room_mutation_response
+
+  """
+  update single row of the table: "chat_room"
+  """
+  update_chat_room_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: chat_room_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: chat_room_set_input
+    pk_columns: chat_room_pk_columns_input!
+  ): chat_room
+
+  """
+  update data of the table: "chat_room_participant"
+  """
+  update_chat_room_participant(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: chat_room_participant_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: chat_room_participant_set_input
+
+    """filter the rows which have to be updated"""
+    where: chat_room_participant_bool_exp!
+  ): chat_room_participant_mutation_response
+
+  """
+  update single row of the table: "chat_room_participant"
+  """
+  update_chat_room_participant_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: chat_room_participant_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: chat_room_participant_set_input
+    pk_columns: chat_room_participant_pk_columns_input!
+  ): chat_room_participant
+
+  """
   update data of the table: "clients_data"
   """
   update_clients_data(
@@ -88064,6 +89208,32 @@ type mutation_root {
     _set: departments_set_input
     pk_columns: departments_pk_columns_input!
   ): departments
+
+  """
+  update data of the table: "developer_hub"
+  """
+  update_developer_hub(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: developer_hub_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: developer_hub_set_input
+
+    """filter the rows which have to be updated"""
+    where: developer_hub_bool_exp!
+  ): developer_hub_mutation_response
+
+  """
+  update single row of the table: "developer_hub"
+  """
+  update_developer_hub_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: developer_hub_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: developer_hub_set_input
+    pk_columns: developer_hub_pk_columns_input!
+  ): developer_hub
 
   """
   update data of the table: "diagnostic_codes"
@@ -88971,6 +90141,9 @@ type mutation_root {
   update data of the table: "product_news"
   """
   update_product_news(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: product_news_inc_input
+
     """sets the columns of the filtered rows to the given values"""
     _set: product_news_set_input
 
@@ -88982,6 +90155,9 @@ type mutation_root {
   update single row of the table: "product_news"
   """
   update_product_news_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: product_news_inc_input
+
     """sets the columns of the filtered rows to the given values"""
     _set: product_news_set_input
     pk_columns: product_news_pk_columns_input!
@@ -90829,7 +92005,7 @@ type notifications {
     """JSON select path"""
     path: String
   ): jsonb
-  type: uuid!
+  type: String!
   updated_at: timestamptz!
   variables(
     """JSON select path"""
@@ -90891,7 +92067,7 @@ input notifications_bool_exp {
   read_by: read_notification_bool_exp
   sent_by: Int_comparison_exp
   sent_to: jsonb_comparison_exp
-  type: uuid_comparison_exp
+  type: String_comparison_exp
   updated_at: timestamptz_comparison_exp
   variables: jsonb_comparison_exp
 }
@@ -90952,7 +92128,7 @@ input notifications_insert_input {
   read_by: read_notification_arr_rel_insert_input
   sent_by: Int
   sent_to: jsonb
-  type: uuid
+  type: String
   updated_at: timestamptz
   variables: jsonb
 }
@@ -90964,7 +92140,7 @@ type notifications_max_fields {
   id: uuid
   order: Int
   sent_by: Int
-  type: uuid
+  type: String
   updated_at: timestamptz
 }
 
@@ -90975,7 +92151,7 @@ type notifications_min_fields {
   id: uuid
   order: Int
   sent_by: Int
-  type: uuid
+  type: String
   updated_at: timestamptz
 }
 
@@ -91083,7 +92259,7 @@ input notifications_set_input {
   order: Int
   sent_by: Int
   sent_to: jsonb
-  type: uuid
+  type: String
   updated_at: timestamptz
   variables: jsonb
 }
@@ -93082,47 +94258,13 @@ columns and relationships of "product_news"
 """
 type product_news {
   created_at: timestamptz!
-  description: String
+  description: String!
   id: uuid!
-  img: String
-  link: String
-
-  """An array relationship"""
-  readBy(
-    """distinct select on columns"""
-    distinct_on: [product_news_read_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [product_news_read_order_by!]
-
-    """filter the rows returned"""
-    where: product_news_read_bool_exp
-  ): [product_news_read!]!
-
-  """An aggregate relationship"""
-  readBy_aggregate(
-    """distinct select on columns"""
-    distinct_on: [product_news_read_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [product_news_read_order_by!]
-
-    """filter the rows returned"""
-    where: product_news_read_bool_exp
-  ): product_news_read_aggregate!
+  img: String!
+  link: String!
+  order: Int!
   title: String!
+  updated_at: timestamptz!
 }
 
 """
@@ -93137,9 +94279,22 @@ type product_news_aggregate {
 aggregate fields of "product_news"
 """
 type product_news_aggregate_fields {
+  avg: product_news_avg_fields
   count(columns: [product_news_select_column!], distinct: Boolean): Int!
   max: product_news_max_fields
   min: product_news_min_fields
+  stddev: product_news_stddev_fields
+  stddev_pop: product_news_stddev_pop_fields
+  stddev_samp: product_news_stddev_samp_fields
+  sum: product_news_sum_fields
+  var_pop: product_news_var_pop_fields
+  var_samp: product_news_var_samp_fields
+  variance: product_news_variance_fields
+}
+
+"""aggregate avg on columns"""
+type product_news_avg_fields {
+  order: Float
 }
 
 """
@@ -93154,8 +94309,9 @@ input product_news_bool_exp {
   id: uuid_comparison_exp
   img: String_comparison_exp
   link: String_comparison_exp
-  readBy: product_news_read_bool_exp
+  order: Int_comparison_exp
   title: String_comparison_exp
+  updated_at: timestamptz_comparison_exp
 }
 
 """
@@ -93167,6 +94323,13 @@ enum product_news_constraint {
 }
 
 """
+input type for incrementing numeric columns in table "product_news"
+"""
+input product_news_inc_input {
+  order: Int
+}
+
+"""
 input type for inserting data into table "product_news"
 """
 input product_news_insert_input {
@@ -93175,8 +94338,9 @@ input product_news_insert_input {
   id: uuid
   img: String
   link: String
-  readBy: product_news_read_arr_rel_insert_input
+  order: Int
   title: String
+  updated_at: timestamptz
 }
 
 """aggregate max on columns"""
@@ -93186,7 +94350,9 @@ type product_news_max_fields {
   id: uuid
   img: String
   link: String
+  order: Int
   title: String
+  updated_at: timestamptz
 }
 
 """aggregate min on columns"""
@@ -93196,7 +94362,9 @@ type product_news_min_fields {
   id: uuid
   img: String
   link: String
+  order: Int
   title: String
+  updated_at: timestamptz
 }
 
 """
@@ -93226,8 +94394,9 @@ input product_news_order_by {
   id: order_by
   img: order_by
   link: order_by
-  readBy_aggregate: product_news_read_aggregate_order_by
+  order: order_by
   title: order_by
+  updated_at: order_by
 }
 
 """primary key columns input for table: product_news"""
@@ -93271,45 +94440,10 @@ type product_news_read_aggregate_fields {
   variance: product_news_read_variance_fields
 }
 
-"""
-order by aggregate values of table "product_news_read"
-"""
-input product_news_read_aggregate_order_by {
-  avg: product_news_read_avg_order_by
-  count: order_by
-  max: product_news_read_max_order_by
-  min: product_news_read_min_order_by
-  stddev: product_news_read_stddev_order_by
-  stddev_pop: product_news_read_stddev_pop_order_by
-  stddev_samp: product_news_read_stddev_samp_order_by
-  sum: product_news_read_sum_order_by
-  var_pop: product_news_read_var_pop_order_by
-  var_samp: product_news_read_var_samp_order_by
-  variance: product_news_read_variance_order_by
-}
-
-"""
-input type for inserting array relation for remote table "product_news_read"
-"""
-input product_news_read_arr_rel_insert_input {
-  data: [product_news_read_insert_input!]!
-
-  """on conflict condition"""
-  on_conflict: product_news_read_on_conflict
-}
-
 """aggregate avg on columns"""
 type product_news_read_avg_fields {
   company: Float
   user: Float
-}
-
-"""
-order by avg() on columns of table "product_news_read"
-"""
-input product_news_read_avg_order_by {
-  company: order_by
-  user: order_by
 }
 
 """
@@ -93362,17 +94496,6 @@ type product_news_read_max_fields {
   user: Int
 }
 
-"""
-order by max() on columns of table "product_news_read"
-"""
-input product_news_read_max_order_by {
-  company: order_by
-  created_at: order_by
-  id: order_by
-  product_news: order_by
-  user: order_by
-}
-
 """aggregate min on columns"""
 type product_news_read_min_fields {
   company: Int
@@ -93380,17 +94503,6 @@ type product_news_read_min_fields {
   id: uuid
   product_news: uuid
   user: Int
-}
-
-"""
-order by min() on columns of table "product_news_read"
-"""
-input product_news_read_min_order_by {
-  company: order_by
-  created_at: order_by
-  id: order_by
-  product_news: order_by
-  user: order_by
 }
 
 """
@@ -93464,26 +94576,10 @@ type product_news_read_stddev_fields {
   user: Float
 }
 
-"""
-order by stddev() on columns of table "product_news_read"
-"""
-input product_news_read_stddev_order_by {
-  company: order_by
-  user: order_by
-}
-
 """aggregate stddev_pop on columns"""
 type product_news_read_stddev_pop_fields {
   company: Float
   user: Float
-}
-
-"""
-order by stddev_pop() on columns of table "product_news_read"
-"""
-input product_news_read_stddev_pop_order_by {
-  company: order_by
-  user: order_by
 }
 
 """aggregate stddev_samp on columns"""
@@ -93492,26 +94588,10 @@ type product_news_read_stddev_samp_fields {
   user: Float
 }
 
-"""
-order by stddev_samp() on columns of table "product_news_read"
-"""
-input product_news_read_stddev_samp_order_by {
-  company: order_by
-  user: order_by
-}
-
 """aggregate sum on columns"""
 type product_news_read_sum_fields {
   company: Int
   user: Int
-}
-
-"""
-order by sum() on columns of table "product_news_read"
-"""
-input product_news_read_sum_order_by {
-  company: order_by
-  user: order_by
 }
 
 """
@@ -93540,40 +94620,16 @@ type product_news_read_var_pop_fields {
   user: Float
 }
 
-"""
-order by var_pop() on columns of table "product_news_read"
-"""
-input product_news_read_var_pop_order_by {
-  company: order_by
-  user: order_by
-}
-
 """aggregate var_samp on columns"""
 type product_news_read_var_samp_fields {
   company: Float
   user: Float
 }
 
-"""
-order by var_samp() on columns of table "product_news_read"
-"""
-input product_news_read_var_samp_order_by {
-  company: order_by
-  user: order_by
-}
-
 """aggregate variance on columns"""
 type product_news_read_variance_fields {
   company: Float
   user: Float
-}
-
-"""
-order by variance() on columns of table "product_news_read"
-"""
-input product_news_read_variance_order_by {
-  company: order_by
-  user: order_by
 }
 
 """
@@ -93596,7 +94652,13 @@ enum product_news_select_column {
   link
 
   """column name"""
+  order
+
+  """column name"""
   title
+
+  """column name"""
+  updated_at
 }
 
 """
@@ -93608,7 +94670,29 @@ input product_news_set_input {
   id: uuid
   img: String
   link: String
+  order: Int
   title: String
+  updated_at: timestamptz
+}
+
+"""aggregate stddev on columns"""
+type product_news_stddev_fields {
+  order: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type product_news_stddev_pop_fields {
+  order: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type product_news_stddev_samp_fields {
+  order: Float
+}
+
+"""aggregate sum on columns"""
+type product_news_sum_fields {
+  order: Int
 }
 
 """
@@ -93631,7 +94715,28 @@ enum product_news_update_column {
   link
 
   """column name"""
+  order
+
+  """column name"""
   title
+
+  """column name"""
+  updated_at
+}
+
+"""aggregate var_pop on columns"""
+type product_news_var_pop_fields {
+  order: Float
+}
+
+"""aggregate var_samp on columns"""
+type product_news_var_samp_fields {
+  order: Float
+}
+
+"""aggregate variance on columns"""
+type product_news_variance_fields {
+  order: Float
 }
 
 """
@@ -94914,6 +96019,94 @@ type query_root {
 
   """fetch data from the table: "chat" using primary key columns"""
   chat_by_pk(id: uuid!): chat
+
+  """
+  fetch data from the table: "chat_room"
+  """
+  chat_room(
+    """distinct select on columns"""
+    distinct_on: [chat_room_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chat_room_order_by!]
+
+    """filter the rows returned"""
+    where: chat_room_bool_exp
+  ): [chat_room!]!
+
+  """
+  fetch aggregated fields from the table: "chat_room"
+  """
+  chat_room_aggregate(
+    """distinct select on columns"""
+    distinct_on: [chat_room_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chat_room_order_by!]
+
+    """filter the rows returned"""
+    where: chat_room_bool_exp
+  ): chat_room_aggregate!
+
+  """fetch data from the table: "chat_room" using primary key columns"""
+  chat_room_by_pk(id: uuid!): chat_room
+
+  """
+  fetch data from the table: "chat_room_participant"
+  """
+  chat_room_participant(
+    """distinct select on columns"""
+    distinct_on: [chat_room_participant_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chat_room_participant_order_by!]
+
+    """filter the rows returned"""
+    where: chat_room_participant_bool_exp
+  ): [chat_room_participant!]!
+
+  """
+  fetch aggregated fields from the table: "chat_room_participant"
+  """
+  chat_room_participant_aggregate(
+    """distinct select on columns"""
+    distinct_on: [chat_room_participant_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chat_room_participant_order_by!]
+
+    """filter the rows returned"""
+    where: chat_room_participant_bool_exp
+  ): chat_room_participant_aggregate!
+
+  """
+  fetch data from the table: "chat_room_participant" using primary key columns
+  """
+  chat_room_participant_by_pk(id: uuid!): chat_room_participant
   checkinAppt(where: CheckinApptWhereUniqueInput!): CheckinAppt
   checkinAppts(cursor: CheckinApptWhereUniqueInput, orderBy: [CheckinApptOrderByInput!], skip: Int, take: Int, where: CheckinApptWhereInput): [CheckinAppt!]!
   checkinApptsCount(where: CheckinApptWhereInput): Int
@@ -95530,6 +96723,49 @@ type query_root {
 
   """fetch data from the table: "departments" using primary key columns"""
   departments_by_pk(id: uuid!): departments
+
+  """
+  fetch data from the table: "developer_hub"
+  """
+  developer_hub(
+    """distinct select on columns"""
+    distinct_on: [developer_hub_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [developer_hub_order_by!]
+
+    """filter the rows returned"""
+    where: developer_hub_bool_exp
+  ): [developer_hub!]!
+
+  """
+  fetch aggregated fields from the table: "developer_hub"
+  """
+  developer_hub_aggregate(
+    """distinct select on columns"""
+    distinct_on: [developer_hub_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [developer_hub_order_by!]
+
+    """filter the rows returned"""
+    where: developer_hub_bool_exp
+  ): developer_hub_aggregate!
+
+  """fetch data from the table: "developer_hub" using primary key columns"""
+  developer_hub_by_pk(uuid: uuid!): developer_hub
 
   """
   fetch data from the table: "diagnostic_codes"
@@ -101819,6 +103055,94 @@ type subscription_root {
   chat_by_pk(id: uuid!): chat
 
   """
+  fetch data from the table: "chat_room"
+  """
+  chat_room(
+    """distinct select on columns"""
+    distinct_on: [chat_room_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chat_room_order_by!]
+
+    """filter the rows returned"""
+    where: chat_room_bool_exp
+  ): [chat_room!]!
+
+  """
+  fetch aggregated fields from the table: "chat_room"
+  """
+  chat_room_aggregate(
+    """distinct select on columns"""
+    distinct_on: [chat_room_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chat_room_order_by!]
+
+    """filter the rows returned"""
+    where: chat_room_bool_exp
+  ): chat_room_aggregate!
+
+  """fetch data from the table: "chat_room" using primary key columns"""
+  chat_room_by_pk(id: uuid!): chat_room
+
+  """
+  fetch data from the table: "chat_room_participant"
+  """
+  chat_room_participant(
+    """distinct select on columns"""
+    distinct_on: [chat_room_participant_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chat_room_participant_order_by!]
+
+    """filter the rows returned"""
+    where: chat_room_participant_bool_exp
+  ): [chat_room_participant!]!
+
+  """
+  fetch aggregated fields from the table: "chat_room_participant"
+  """
+  chat_room_participant_aggregate(
+    """distinct select on columns"""
+    distinct_on: [chat_room_participant_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [chat_room_participant_order_by!]
+
+    """filter the rows returned"""
+    where: chat_room_participant_bool_exp
+  ): chat_room_participant_aggregate!
+
+  """
+  fetch data from the table: "chat_room_participant" using primary key columns
+  """
+  chat_room_participant_by_pk(id: uuid!): chat_room_participant
+
+  """
   fetch data from the table: "clients_data"
   """
   clients_data(
@@ -102251,6 +103575,49 @@ type subscription_root {
 
   """fetch data from the table: "departments" using primary key columns"""
   departments_by_pk(id: uuid!): departments
+
+  """
+  fetch data from the table: "developer_hub"
+  """
+  developer_hub(
+    """distinct select on columns"""
+    distinct_on: [developer_hub_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [developer_hub_order_by!]
+
+    """filter the rows returned"""
+    where: developer_hub_bool_exp
+  ): [developer_hub!]!
+
+  """
+  fetch aggregated fields from the table: "developer_hub"
+  """
+  developer_hub_aggregate(
+    """distinct select on columns"""
+    distinct_on: [developer_hub_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [developer_hub_order_by!]
+
+    """filter the rows returned"""
+    where: developer_hub_bool_exp
+  ): developer_hub_aggregate!
+
+  """fetch data from the table: "developer_hub" using primary key columns"""
+  developer_hub_by_pk(uuid: uuid!): developer_hub
 
   """
   fetch data from the table: "diagnostic_codes"

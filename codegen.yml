@@ -2,6 +2,9 @@ overwrite: true
 schema: hasura/schema.graphql
 documents: ['libs/graphql/*.graphql']
 generates:
+  hasura/schema.json:
+    plugins:
+      - introspection
   libs/graphql/generated/graphql.tsx:
     plugins:
       - 'typescript'

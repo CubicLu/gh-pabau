@@ -92,7 +92,7 @@ const EDIT_MUTATION = gql`
 `
 
 const UPDATE_ORDER_MUTATION = gql`
-  mutation update_marketing_source_order($id: Int!, $order: Int) {
+  mutation update_marketing_source_order($id: uuid, $order: Int) {
     update_marketing_source(
       where: { id: { _eq: $id } }
       _set: { order: $order }

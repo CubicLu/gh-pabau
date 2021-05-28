@@ -50,7 +50,7 @@ export const PabauUserReports = extendType({
                 for (const reportId of reportIds) {
                   if (!data.has(reportId)) {
                     insertArray.push(
-                      `(${ctx.req.authenticatedUser.company}, ${id}, ${reportId})`
+                      `(${ctx.authenticated.company}, ${id}, ${reportId})`
                     )
                   }
                 }
@@ -67,8 +67,8 @@ export const PabauUserReports = extendType({
           } else {
             await ctx.prisma.$queryRaw(
               `DELETE FROM user_reports
-               WHERE report_id IN (${input.report_ids}) AND
-               occupier = ${ctx.req.authenticatedUser.company} AND
+                WHERE report_id IN (${input.report_ids})AND
+               occupier = ${ctx.authenticated.company}AND
                user_id IN (SELECT user_id from user_group_members where group_id = ${input.group_id})`
             )
           }
@@ -107,7 +107,7 @@ export const PabauUserReports = extendType({
           await ctx.prisma.$queryRaw(`
             INSERT INTO group_permissions(group_id, company_id, report_permissions,feature_permissions, module_permissions)
             VALUES (${input.group_id}, ${
-            ctx.req.authenticatedUser.company
+            ctx.authenticated.company
           }, '${reportPermission.join(',')}', '', '')
             ON DUPLICATE KEY UPDATE report_permissions = '${reportPermission.join(
               ','
