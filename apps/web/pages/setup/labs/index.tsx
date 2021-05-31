@@ -1,150 +1,239 @@
-import { gql } from '@apollo/client'
-import React from 'react'
+import React, { useState } from 'react'
 import CrudLayout from '../../../components/CrudLayout/CrudLayout'
-import { NotificationBanner } from '@pabau/ui'
-import { useRouter } from 'next/router'
+import {
+  OperationType,
+  NotificationBanner,
+  Notification,
+  NotificationType,
+  FullScreenReportModal,
+  PhoneNumberInput,
+} from '@pabau/ui'
+import {
+  useInsertLabsOneMutation,
+  useUpdateLabsByPkMutation,
+  useDeleteLabsByPkMutation,
+  InsertLabsOneDocument,
+  DeleteLabsByPkDocument,
+  UpdateLabsByPkDocument,
+  LabsDocument,
+  LabsAggregateDocument,
+  UpdateLabsOrderDocument,
+} from '@pabau/graphql'
+import * as Yup from 'yup'
+import { Form, Input } from 'formik-antd'
 import notificationBannerLabPageImage from '../../../assets/images/notification-image-lab-page.png'
+import { NextPage } from 'next'
+import { Formik } from 'formik'
+import styles from './index.module.less'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
-/* eslint-disable-next-line */
-export interface LabsProps {}
+const Labs: NextPage = () => {
+  const { t } = useTranslationI18()
+  const schema: Schema = {
+    full: t('setup.labs.data.capitalizelabs'),
+    fullLower: t('setup.labs.data.lowercaselabs'),
+    short: t('setup.labs.data.capitalizelab'),
+    shortLower: t('setup.labs.data.lowercaselab'),
+    createButtonLabel: t('setup.labs.data.createlab'),
+    messages: {
+      create: {
+        success: t('setup.labs.data.createlabsuccessmessage'),
+        error: t('setup.labs.data.createlaberrormessage'),
+      },
+      update: {
+        success: t('setup.labs.data.updatelabsuccessmessage'),
+        error: t('setup.labs.data.updatelaberrormessage'),
+      },
+      delete: {
+        success: t('setup.labs.data.deletelabsuccessmessage'),
+        error: t('setup.labs.data.deletelaberrormessage'),
+      },
+    },
+    fields: {
+      name: {
+        full: t('setup.labs.data.capitallabname'),
+        fullLower: t('setup.labs.data.lowercaselabname'),
+        short: t('setup.labs.data.capitalname'),
+        shortLower: t('setup.labs.data.lowercasename'),
+        min: 2,
+        example: 'Surgical lab',
+        cssWidth: 'max',
+        type: 'string',
+      },
+      integration: {
+        full: t('setup.labs.data.capitalintegration'),
+        type: 'boolean',
+        defaultvalue: true,
+      },
+      is_active: {
+        full: t('setup.labs.data.capitalstatus'),
+        type: 'boolean',
+        defaultvalue: true,
+      },
+    },
+  }
+  const [showModal, setShowModal] = useState<boolean>(false)
+  const formikEditFields = () => {
+    const fields: LabsEditFieldsType = {
+      id: '',
+      name: '',
+      provider_number: null,
+      phone: '',
+      email: '',
+      country: '',
+      city: '',
+      street: '',
+      street2: '',
+      postal_code: null,
+      is_active: true,
+    }
+    return fields
+  }
+  const [editPage, setEditPage] = useState<LabsEditFieldsType>(
+    formikEditFields()
+  )
 
-const schema: Schema = {
-  full: 'Labs',
-  fullLower: 'labs',
-  short: 'Lab',
-  shortLower: 'lab',
-  createButtonLabel: 'Create Lab',
-  messages: {
-    create: {
-      success: 'You have successfully created a lab',
-      error: 'While creating a lab',
+  const [addMutation] = useInsertLabsOneMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        `${t('setup.labs.data.success')}${t(
+          'setup.labs.data.createlabsuccessmessage'
+        )}`
+      )
     },
-    update: {
-      success: 'You have successfully updated a lab',
-      error: 'While updating a lab',
+    onError(err) {
+      Notification(
+        NotificationType.error,
+        `${t('setup.labs.data.error')}${t(
+          'setup.labs.data.createlaberrormessage'
+        )}`
+      )
     },
-    delete: {
-      success: 'You have successfully deleted a lab',
-      error: 'While deleting a lab',
-    },
-  },
-  fields: {
-    name: {
-      full: 'lab Name',
-      fullLower: 'lab name',
-      short: 'Name',
-      shortLower: 'name',
-      min: 2,
-      example: 'Surgical lab',
-      cssWidth: 'max',
-      type: 'string',
-    },
-    integration: {
-      full: 'Integration',
-      type: 'boolean',
-      defaultvalue: true,
-    },
-    is_active: {
-      full: 'Status',
-      type: 'boolean',
-      defaultvalue: true,
-    },
-  },
-}
-export const LIST_QUERY = gql`
-  query Labs($isActive: Boolean = true, $offset: Int, $limit: Int) {
-    Labs(
-      offset: $offset
-      limit: $limit
-      order_by: { order: desc }
-      where: { is_active: { _eq: $isActive } }
-    ) {
-      __typename
-      id
-      name
-      is_active
-      integration
-      order
-    }
-  }
-`
-const LIST_AGGREGATE_QUERY = gql`
-  query Labs_aggregate($isActive: Boolean = true) {
-    Labs_aggregate(where: { is_active: { _eq: $isActive } }) {
-      aggregate {
-        count
-      }
-    }
-  }
-`
-const DELETE_MUTATION = gql`
-  mutation delete_Labs_by_pk($id: uuid!) {
-    delete_Labs_by_pk(id: $id) {
-      __typename
-      id
-    }
-  }
-`
-const ADD_MUTATION = gql`
-  mutation insert_Labs_one(
-    $city: String
-    $country: String
-    $email: String!
-    $isActive: Boolean
-    $name: String!
-    $phone: String!
-    $postalCode: numeric
-    $providerNumber: numeric
-    $street: String
-    $street2: String
-  ) {
-    insert_Labs_one(
-      object: {
-        city: $city
-        country: $country
-        email: $email
-        is_active: $isActive
-        name: $name
-        phone: $phone
-        postal_code: $postalCode
-        provider_number: $providerNumber
-        street: $street
-        street2: $street2
-      }
-    ) {
-      id
-    }
-  }
-`
-const EDIT_MUTATION = gql`
-  mutation update_Labs_by_pk($id: uuid!, $name: String!, $is_active: Boolean) {
-    update_Labs_by_pk(
-      pk_columns: { id: $id }
-      _set: { name: $name, is_active: $is_active }
-    ) {
-      __typename
-      id
-      is_active
-      order
-    }
-  }
-`
-const UPDATE_ORDER_MUTATION = gql`
-  mutation update_Labs_order($id: uuid!, $order: Int) {
-    update_Labs(where: { id: { _eq: $id } }, _set: { order: $order }) {
-      affected_rows
-    }
-  }
-`
+  })
 
-export function Labs(props: LabsProps) {
-  const router = useRouter()
+  const [editMutation] = useUpdateLabsByPkMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        `${t('setup.labs.data.success')}${t(
+          'setup.labs.data.updatelabsuccessmessage'
+        )}`
+      )
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        `${t('setup.labs.data.error')}${t(
+          'setup.labs.data.updatelaberrormessage'
+        )}`
+      )
+    },
+  })
+
+  const [deleteMutation] = useDeleteLabsByPkMutation({
+    onCompleted() {
+      Notification(
+        NotificationType.success,
+        `${t('setup.labs.data.success')}${t(
+          'setup.labs.data.deletelabsuccessmessage'
+        )}`
+      )
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        `${t('setup.labs.data.error')}${t(
+          'setup.labs.data.deletelaberrormessage'
+        )}`
+      )
+    },
+  })
+
+  const initialValues = {
+    id: '',
+    name: '',
+    providerNumber: undefined,
+    phone: '',
+    email: '',
+    country: '',
+    city: '',
+    street: '',
+    street2: '',
+    postal_code: undefined,
+    isActive: true,
+  }
+  const setEditFields = () => {
+    const editObj = {
+      id: editPage.id,
+      name: editPage.name,
+      providerNumber: editPage.provider_number,
+      phone: editPage.phone,
+      email: editPage.email,
+      country: editPage.country,
+      city: editPage.city,
+      street: editPage.street,
+      street2: editPage.street2,
+      postalCode: editPage.postal_code,
+      isActive: editPage.is_active,
+    }
+    return editObj
+  }
+  const createPageOnClick = (setFieldValue) => {
+    //setFieldValue('type', 'Company')
+    setEditPage(formikEditFields())
+    setShowModal(true)
+  }
+
+  const handleBackClick = (e, handleReset) => {
+    handleReset(e)
+    setEditPage(formikEditFields())
+    setShowModal(false)
+  }
+
+  const handleOperationsType = () => {
+    return !editPage.id
+      ? [OperationType.active, OperationType.cancel, OperationType.create]
+      : [
+          OperationType.active,
+          OperationType.cancel,
+          OperationType.delete,
+          OperationType.save,
+        ]
+  }
+  const handleEditPage = (data) => {
+    setEditPage(data)
+    setShowModal(true)
+  }
+  const formikValidationSchema = Yup.object({
+    name: Yup.string()
+      .max(40, t('setup.labs.length.forty'))
+      .required(t('setup.name.is.required')),
+    email: Yup.string()
+      .max(50, t('setup.labs.length.fifty'))
+      .email(t('setup.valid.email.id'))
+      .required(t('labs.email.required')),
+  })
+  const onSubmit = async (values, { resetForm }) => {
+    !editPage.id
+      ? await addMutation({
+          variables: values,
+          optimisticResponse: {},
+        })
+      : await editMutation({
+          variables: values,
+          optimisticResponse: {},
+        })
+    resetForm()
+    setEditPage(formikEditFields())
+    setShowModal(false)
+  }
   const NotificationRender = () => {
     const [hideBanner, setHideBanner] = React.useState(false)
     return (
       <NotificationBanner
-        title="Automate Results"
-        desc="Have your labs send back results to this email address below to auto match to a client:"
+        title={t('labs.automatte.results')}
+        desc={t('labs.notification.descriptive')}
         imgPath={notificationBannerLabPageImage}
         allowClose={true}
         setHide={[hideBanner, setHideBanner]}
@@ -155,29 +244,178 @@ export function Labs(props: LabsProps) {
     )
   }
 
-  const createPageOnClick = () => {
-    router.push('/setup/labs/create')
+  const modelContent = (setFieldValue, values) => {
+    return (
+      <div>
+        <div className={styles.basicInfo}>
+          <h6>{t('setup.labs.create.basic')}</h6>
+          <div className={styles.infoList}>
+            <Form.Item
+              className={styles.listing}
+              label={t('setup.labs.create.name.lable')}
+              name="name"
+            >
+              <Input
+                name="name"
+                autoComplete="off"
+                placeholder={t('setup.labs.create.name.placeHolder')}
+              />
+            </Form.Item>
+          </div>
+          <div className={styles.infoList}>
+            <Form.Item
+              className={styles.listing}
+              label={t('setup.labs.create.providerNo.lable')}
+              name="providerNumber"
+            >
+              <Input
+                name="providerNumber"
+                type="number"
+                placeholder={t('setup.labs.create.providerNo.placeHolder')}
+              />
+            </Form.Item>
+          </div>
+          <div className={styles.infoList}>
+            <Form.Item className={styles.listing} name={'phone'}>
+              <PhoneNumberInput
+                label={t('setup.labs.create.phoneNo.lable')}
+                onChange={(value) => setFieldValue('phone', value)}
+              />
+            </Form.Item>
+          </div>
+          <div className={styles.infoList}>
+            <Form.Item
+              className={styles.listing}
+              label={t('setup.labs.create.email.lable')}
+              name="email"
+            >
+              <Input
+                name="email"
+                autoComplete="off"
+                placeholder={t('setup.labs.create.email.placeHolder')}
+              />
+            </Form.Item>
+          </div>
+        </div>
+        <div className={styles.basicInfo}>
+          <h6>{t('setup.labs.create.address')}</h6>
+          <div className={styles.infoList}>
+            <Form.Item
+              className={styles.listing}
+              label={t('setup.labs.create.country.lable')}
+              name="country"
+            >
+              <Input name="country" autoComplete="off" />
+            </Form.Item>
+          </div>
+          <div className={styles.infoList}>
+            <Form.Item
+              className={styles.listing}
+              label={t('setup.labs.create.city.lable')}
+              name="city"
+            >
+              <Input name="city" autoComplete="off" />
+            </Form.Item>
+          </div>
+          <div className={styles.infoList}>
+            <Form.Item
+              className={styles.listing}
+              label={t('setup.labs.create.street.lable')}
+              name="street"
+            >
+              <Input name="street" autoComplete="off" />
+            </Form.Item>
+          </div>
+          <div className={styles.infoList}>
+            <Form.Item
+              className={styles.listing}
+              label={t('setup.labs.create.street2.lable')}
+              name="street2"
+            >
+              <Input name="street2" autoComplete="off" />
+            </Form.Item>
+          </div>
+          <div className={styles.infoList}>
+            <Form.Item
+              className={styles.listing}
+              label={t('setup.labs.create.postalCode.lable')}
+              name="postalCode"
+            >
+              <Input type="number" name="postalCode" autoComplete="off" />
+            </Form.Item>
+          </div>
+        </div>
+      </div>
+    )
   }
-
   return (
-    <div>
-      <CrudLayout
-        schema={schema}
-        tableSearch={false}
-        addQuery={ADD_MUTATION}
-        deleteQuery={DELETE_MUTATION}
-        listQuery={LIST_QUERY}
-        editQuery={EDIT_MUTATION}
-        aggregateQuery={LIST_AGGREGATE_QUERY}
-        updateOrderQuery={UPDATE_ORDER_MUTATION}
-        showNotificationBanner={true}
-        createPage={true}
-        createPageOnClick={createPageOnClick}
-        notificationBanner={<NotificationRender />}
-        editPage={true}
-        editPageRouteLink="/setup/labs/edit"
-      />
-    </div>
+    <Formik
+      enableReinitialize={true}
+      initialValues={editPage.id ? setEditFields() : initialValues}
+      validationSchema={formikValidationSchema}
+      onSubmit={(values, { resetForm }) => {
+        const newValues = { ...values }
+        onSubmit(newValues, { resetForm })
+      }}
+    >
+      {({ setFieldValue, handleSubmit, handleReset, values }) => (
+        <>
+          <CrudLayout
+            schema={schema}
+            tableSearch={false}
+            addQuery={InsertLabsOneDocument}
+            deleteQuery={DeleteLabsByPkDocument}
+            listQuery={LabsDocument}
+            editQuery={UpdateLabsByPkDocument}
+            aggregateQuery={LabsAggregateDocument}
+            updateOrderQuery={UpdateLabsOrderDocument}
+            addFilter={true}
+            createPage={true}
+            showNotificationBanner={true}
+            notificationBanner={<NotificationRender />}
+            createPageOnClick={() => createPageOnClick(setFieldValue)}
+            setEditPage={handleEditPage}
+          />
+          <FullScreenReportModal
+            title={`${
+              !editPage.id ? t('labs.setup.create') : t('setup.labs.edit')
+            } ${t('setup.labs.labs')}`}
+            visible={showModal}
+            operations={handleOperationsType()}
+            enableCreateBtn={true}
+            onBackClick={(e) => handleBackClick(e, handleReset)}
+            activated={values.isActive}
+            onActivated={(value) =>
+              setFieldValue(t('setup.labs.isactive'), value)
+            }
+            onDelete={async () => {
+              const { id } = editPage as { id: string }
+              await deleteMutation({
+                variables: { id },
+                optimisticResponse: {},
+              })
+              setEditPage(formikEditFields())
+              setShowModal(false)
+            }}
+            onCreate={handleSubmit}
+            onSave={handleSubmit}
+            createBtnText={
+              !editPage.id ? t('labs.setup.create') : t('setup.labs.save')
+            }
+            deleteBtnText={t('setup.labs.delete')}
+            saveBtnText={t('setup.labs.save')}
+            activeBtnText={
+              values.isActive
+                ? t('setup.labs.active')
+                : t('setup.labs.inactive')
+            }
+            footer={true}
+          >
+            {modelContent(setFieldValue, values)}
+          </FullScreenReportModal>
+        </>
+      )}
+    </Formik>
   )
 }
 
