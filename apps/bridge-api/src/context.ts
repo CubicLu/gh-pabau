@@ -25,7 +25,6 @@ export interface Context {
 export const createContext: ContextFunction<ExpressContext, Context> = (
   req
 ) => {
-  console.log('creating context!', req.req.headers)
   const ret = {
     prisma,
     version,
@@ -38,7 +37,6 @@ export const createContext: ContextFunction<ExpressContext, Context> = (
         process.env.JWT_SECRET,
         { algorithms: ['HS512'] }
       ) as JwtPayloadDto
-      // eslint-disable-next-line no-empty
     } catch {
       console.log('invalid jwt found')
     }

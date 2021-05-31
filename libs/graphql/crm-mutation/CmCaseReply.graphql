@@ -1,0 +1,40 @@
+fragment CmCaseReplyFields on CmCaseReply {
+  ID
+  OwnerID
+  CaseID
+  Description
+  CreatedDate
+  IpAddress
+  CompanyID
+}
+
+fragment CmCaseReply on CmCaseReply {
+  ...CmCaseReplyFields
+  company {
+    ...CompanyFields
+  }
+}
+
+mutation createOneCmCaseReply($data: CmCaseReplyCreateInput!) {
+  createOneCmCaseReply(data: $data) {
+    ...CmCaseReply
+  }
+}
+
+mutation updateOneCmCaseReply($where: CmCaseReplyWhereUniqueInput!, $data: CmCaseReplyUpdateInput!) {
+  updateOneCmCaseReply(where: $where, data: $data) {
+    ...CmCaseReply
+  }
+}
+
+mutation deleteOneCmCaseReply($where: CmCaseReplyWhereUniqueInput!) {
+  deleteOneCmCaseReply(where: $where) {
+    ...CmCaseReply
+  }
+}
+
+mutation updateManyCmCaseReply($where: CmCaseReplyWhereInput, $data: CmCaseReplyUpdateManyMutationInput!) {
+  updateManyCmCaseReply(where: $where, data: $data) {
+    count
+  }
+}

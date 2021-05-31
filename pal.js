@@ -1,7 +1,42 @@
 module.exports = {
+  frontend: {
+    graphql: {
+      generator: 'nexus-plugin-prisma',
+      output: 'libs/graphql/crm-mutation',
+      disableQueries: true,
+      excludeFieldsByModel: {
+        User: ['password', 'password_algor', 'salt', 'hash'],
+      },
+      excludeQueriesAndMutations: ['deleteMany', 'createMany'],
+      excludeQueriesAndMutationsByModel: {
+        StaffMeta: ['updateMany'],
+        UserGroup: ['updateMany'],
+        CompanyPermission: ['updateMany'],
+        CmContactLocation: ['updateMany'],
+        companyMeta: ['upsertOne', 'updateMany'],
+        XeroIntegration: ['updateMany'],
+        CompanyRoomLocation: ['updateMany'],
+        UserGroupMember: ['updateMany'],
+        UserPermission: ['updateMany'],
+        UserReport: ['updateMany'],
+        Company: [
+          'findUnique',
+          'findMany',
+          'createOne',
+          'upsertOne',
+          'deleteOne',
+        ],
+        BnfDrug: ['updateOne', 'deleteOne', 'upsertOne', 'updateMany'],
+        CompanyMeta: ['upsertOne'],
+      },
+    },
+  },
   backend: {
     generator: 'nexus-plugin-prisma',
     output: 'apps/bridge-api/src/generated/types',
+    excludeFieldsByModel: {
+      User: ['password', 'password_algor', 'salt', 'hash'],
+    },
     excludeQueriesAndMutations: ['deleteMany', 'createMany'],
     excludeQueriesAndMutationsByModel: {
       StaffMeta: ['updateMany'],
@@ -14,7 +49,15 @@ module.exports = {
       UserGroupMember: ['updateMany'],
       UserPermission: ['updateMany'],
       UserReport: ['updateMany'],
-      Company: ['findUnique', 'createOne', 'upsertOne', 'deleteOne'],
+      Company: [
+        'findUnique',
+        'findMany',
+        'createOne',
+        'upsertOne',
+        'deleteOne',
+      ],
+      BnfDrug: ['updateOne', 'deleteOne', 'upsertOne', 'updateMany'],
+      CompanyMeta: ['upsertOne'],
     },
   },
 }

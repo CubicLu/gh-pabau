@@ -6225,14 +6225,14 @@ model InvPaymentType {
   name          String?
   epos_display  Int?
   description   String?
-  company_id    Int       @map("occupier")
+  company_id    Int?      @map("occupier")
   uid           Int?
   created_date  DateTime?
   modified_date DateTime?
   is_active     Int
   is_money      Int
   type          String    @default("money")
-  Company       Company   @relation(fields: [company_id], references: [id])
+  Company       Company?  @relation(fields: [company_id], references: [id])
 
   GlCode GlCode?
   @@index([company_id], name: "occupier")

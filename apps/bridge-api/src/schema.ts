@@ -13,12 +13,12 @@ export const schema = applyMiddleware(
     plugins: [
       paljs(),
       nexusPrisma({
-        shouldGenerateArtifacts: process.env.NODE_ENV === 'development',
+        shouldGenerateArtifacts: process.argv.includes('--nexus-typegen'),
         experimentalCRUD: true,
         paginationStrategy: 'prisma',
         scalars: {
-          Date: GraphQLDate,
-          DateTime: GraphQLDateTime,
+          GraphQLDate,
+          GraphQLDateTime,
         },
       }),
       nullabilityGuardPlugin({
