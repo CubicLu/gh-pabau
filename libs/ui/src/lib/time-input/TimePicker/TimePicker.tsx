@@ -1,5 +1,5 @@
 import { Dayjs } from 'dayjs'
-import * as React from 'react'
+import React, { FC } from 'react'
 import DatePicker from './DatePicker'
 import { PickerTimeProps } from 'antd/lib/date-picker/generatePicker'
 import { useTranslation } from 'react-i18next'
@@ -14,7 +14,7 @@ interface TimePickerProps extends Props {
   value?: Dayjs
 }
 
-const TimePicker = React.forwardRef<Props, TimePickerProps>((props) => {
+const TimePicker: FC<TimePickerProps> = ({ ...props }) => {
   const { t } = useTranslation('common')
 
   return (
@@ -22,16 +22,10 @@ const TimePicker = React.forwardRef<Props, TimePickerProps>((props) => {
       <p>{props?.label}</p>
       <DatePicker
         {...props}
-        picker="time"
-        placeholder="--:--"
-        value={
-          dayjs(props?.value, 'HH:mm', true).isValid() ||
-          dayjs(props?.value, 'HH:mm:ss', true).isValid()
-            ? props?.value
-            : null
-        }
         mode="time"
-        format="HH:mm"
+        picker="time"
+        format={props?.format || 'HH:mm'}
+        placeholder={props?.placeholder || '--:--'}
         locale={{
           ...locale,
           lang: {
@@ -40,11 +34,15 @@ const TimePicker = React.forwardRef<Props, TimePickerProps>((props) => {
             ok: t('ui.timeinput.btns.ok'),
           },
         }}
+        value={
+          dayjs(props?.value, 'HH:mm', true).isValid() ||
+          dayjs(props?.value, 'HH:mm:ss', true).isValid()
+            ? props?.value
+            : null
+        }
       />
     </div>
   )
-})
-
-TimePicker.displayName = 'TimePicker'
+}
 
 export default TimePicker

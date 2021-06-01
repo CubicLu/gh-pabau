@@ -2455,7 +2455,7 @@ en:
   settings.calendar.advanced.input.disablebooking.tooltip: Stops users seeing the notification for cleints to use a session from there course.
   settings.calendar.advanced.input.disablefiltering.label: Disable filtering by service
   settings.calendar.advanced.input.disablefiltering.tooltip: You will not be able to filter the calendar on service availability.
-  settings.calendar.advanced.input.autocomplete.label: Auto-complete
+  settings.calendar.advanced.input.autocomplete.label: Auto-complete Appointment Status
   settings.calendar.advanced.input.autocomplete.tooltip: We will automatically complete appointments when the appointment duration has finished.
   settings.calendar.advanced.input.orderingemployee.label: Ordering the employees by location
   settings.calendar.advanced.input.orderingemployee.tooltip: Your calendar will automatically arrange itself to be ordered by location.
@@ -2463,12 +2463,16 @@ en:
   settings.calendar.advanced.input.hideclientname.tooltip: We will mask the clients full name when they are checked in.
   settings.calendar.advanced.input.allowservice.label: Allow service without contract's price
   settings.calendar.advanced.input.allowservice.tooltip: We will allow you to book services even if they do not have a price.
-  settings.calendar.advanced.input.hideshowaccounts.label: Hide/Show accounts
+  settings.calendar.advanced.input.hideshowaccounts.label: Show accounts
   settings.calendar.advanced.input.hideshowaccounts.tooltip: This will allow you to view financial information from the calendar.
   settings.calendar.advanced.input.groupcolumnlocation.label: Group user columns by location
   settings.calendar.advanced.input.groupcolumnlocation.tooltip: Group user columns by location.
   settings.calendar.advanced.input.revertroom.label: Revert to original room view
   settings.calendar.advanced.input.revertroom.tooltip: Disable room view ordering by service priority.
+  settings.calendar.advanced.input.initials.label: Show initials instead of user avatar
+  settings.calendar.advanced.input.initials.tooltip: Change the photo of staff to initials.
+  settings.calendar.advanced.input.noshowcount.label: No-shows before deposit
+  settings.calendar.advanced.input.noshowcount.tooltip: The number of no-shows of the client after which a deposit will be required.
   setup.taxrate.heading: Tax Rate
   setup.taxrate.notax: No Tax Rate
   setup.taxrate.notaxadd: Add Tax Rate
