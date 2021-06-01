@@ -1,6 +1,6 @@
-import React, { PropsWithChildren, useEffect, useState } from 'react'
 import { Form, Input as AntInput } from 'antd'
 import { FormProps, Rule } from 'antd/lib/form'
+import React, { PropsWithChildren, useEffect, useState } from 'react'
 import styles from './Input.module.less'
 
 export enum ButtonSize {
@@ -19,6 +19,7 @@ export interface CheckBoxProps extends FormProps {
   tooltip?: string
   suffix?: JSX.Element
   onChange?(val): void
+  maxLength?: number
 }
 
 export function Input({

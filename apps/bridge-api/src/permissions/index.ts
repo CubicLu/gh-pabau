@@ -30,6 +30,10 @@ export const permissions = shield(
       // Public access mutations
       login: allow,
 
+      //CompanyBranches
+      createOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
+      updateOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
+
       // Default fallback
       '*': and(
         rules.authentication.isAdmin,

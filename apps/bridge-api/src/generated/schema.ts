@@ -220,6 +220,8 @@ export interface Company {
   TemplateFolder?: TemplateFolder[];
   SmsPurchase?: SmsPurchase[];
   UserActivityLog?: UserActivityLog[];
+  CompanyBranchGroup?: CompanyBranchGroup[];
+  CompanyBranchAttachment?: CompanyBranchAttachment[];
   InvPaymentType?: InvPaymentType[];
 }
 
@@ -1844,7 +1846,7 @@ export interface CmStaffGeneral {
   EnumStatus: cm_staff_general_EnumStatus;
   CreatedDate?: Date;
   IpAddress: number;
-  pabau_id: number;
+  pabau_id?: number;
   DefaultLocation?: number;
   consultation_fee: number;
   deleted_on: string;
@@ -1852,7 +1854,7 @@ export interface CmStaffGeneral {
   secretary_enable: boolean;
   Salutation: string;
   commission_sheet_id: number;
-  User: User;
+  User?: User;
   Company: Company;
   CompanyBranch?: CompanyBranch;
   CompanyPosition?: CompanyPosition;
@@ -1889,10 +1891,32 @@ export interface CompanyBranch {
   notify_on_lead: boolean;
   notice?: string;
   Company: Company;
+  CompanyBranchGroup: CompanyBranchGroup;
   CompanyRoomLocation?: CompanyRoomLocation[];
   RotaShift?: RotaShift[];
   CmStaffGeneral?: CmStaffGeneral[];
   CmContactLocation?: CmContactLocation[];
+  CompanyBranchAttachment?: CompanyBranchAttachment[];
+}
+
+export interface CompanyBranchGroup {
+  id: number;
+  name?: string;
+  shared_data: number;
+  company_id: number;
+  Company: Company;
+  CompanyBranch?: CompanyBranch[];
+}
+
+export interface CompanyBranchAttachment {
+  id: number;
+  company_id: number;
+  location_id: number;
+  type: company_branches_attachments_type;
+  url: string;
+  description: string;
+  Company?: Company;
+  CompanyBranch?: CompanyBranch;
 }
 
 export interface CompanyDepartment {
@@ -3327,6 +3351,7 @@ export enum company_bday_settings_status {
 
 export enum company_branches_attachments_type {
   badge = 'badge',
+  antd_badge = 'antd_badge',
 }
 
 export enum company_details_tax_name {

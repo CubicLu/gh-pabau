@@ -1,6 +1,6 @@
-import React, { FC } from 'react'
 import { Avatar } from '@pabau/ui'
 import { AvatarSize } from 'antd/lib/avatar/SizeContext'
+import React, { FC } from 'react'
 import styles from './AvatarList.module.less'
 
 interface User {

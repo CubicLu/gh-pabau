@@ -97,6 +97,8 @@ export const Company = objectType({
     t.model.TemplateFolder()
     t.model.SmsPurchase()
     t.model.UserActivityLog()
+    t.model.CompanyBranchGroup()
+    t.model.CompanyBranchAttachment()
     t.model.InvPaymentType()
   },
 })
