@@ -244,6 +244,7 @@
     "bitbucket": "2.6.1",
     "concurrently": "6.1.0",
     "cypress": "^6",
+    "danger": "^10.6.4",
     "dotenv": "9.0.2",
     "dotenv-flow": "^3.2.0",
     "eslint": "7.26.0",
