@@ -14,11 +14,13 @@ interface PasswordWithHelperProps {
   stength?: number
   width?: string
   onChange?: (value: string) => void
+  placeholder?: string
 }
 
 export function PasswordWithHelper({
   width,
   onChange,
+  placeholder = 'New password',
 }: PropsWithChildren<PasswordWithHelperProps>): JSX.Element {
   const [value, setValue] = useState('')
   const [strength, setStrength] = useState(0)
@@ -120,7 +122,7 @@ export function PasswordWithHelper({
     <Popover placement="right" content={content}>
       <Input.Password
         value={value}
-        placeholder="New password"
+        placeholder={placeholder}
         iconRender={(visible) =>
           visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
         }
