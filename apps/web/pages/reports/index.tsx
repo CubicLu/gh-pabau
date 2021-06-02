@@ -1,12 +1,10 @@
-import { gql, useMutation } from '@apollo/client'
 import {
   Notification,
   NotificationType,
   ReportsCard,
   SetupSearchInput,
-  useLiveQuery,
 } from '@pabau/ui'
-import { Card, Col, Divider, Row, Typography } from 'antd'
+import { Card, Col, Divider, Row, Typography, Spin } from 'antd'
 import classNames from 'classnames'
 import React, { FC, useContext, useEffect, useState } from 'react'
 import CommonHeader from '../../components/CommonHeader'
@@ -15,54 +13,18 @@ import SearchResults from '../../components/Setup/SearchResults/Index'
 import { UserContext } from '../../context/UserContext'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { reportCardsData } from '../../mocks/data'
+import { Unauthorized } from '../../components/Unauthorized'
 import styles from './reports.module.less'
+import { LoadingOutlined } from '@ant-design/icons'
+import {
+  useListReportPermissionLazyQuery,
+  useGraphsDataLazyQuery,
+  useUpsertReportMutation,
+  useFindCustomReportLazyQuery,
+  useGetUserAccessPageListQuery,
+} from '@pabau/graphql'
 const { Title } = Typography
 
-const GRAPH_DATA = gql`
-  query miniGraphs($startDate: String!, $endDate: String!) {
-    retrieveReport(
-      id: "mini_graphs"
-      start_date: $startDate
-      end_date: $endDate
-    )
-  }
-`
-const USER_REPORT = gql`
-  query listReportPermission {
-    me {
-      all_reports
-      UserReport {
-        report_id
-        favorite
-        Report {
-          id
-          report_code
-        }
-      }
-    }
-  }
-`
-const UPDATE_FAVORITE = gql`
-  mutation upsertReport($reportCode: String!, $fav: Boolean!) {
-    upsertUserReportByReportCode(report_code: $reportCode, favorite: $fav) {
-      report_code
-      affected_row
-      favorite
-    }
-  }
-`
-
-const LIST_CUSTOM_REPORT = gql`
-  query {
-    findManyCustomReportWithPermissions {
-      isPermission
-      report_code
-      report_id
-      report_name
-      favorite
-    }
-  }
-`
 interface EditResponseType {
   affected_row: number
   favorite: boolean
@@ -78,27 +40,52 @@ const Reports: FC = () => {
   const user = useContext(UserContext)
   const currentDate = new Date()
 
+  const [accessReportPage, setAccessReportPage] = useState<boolean>(false)
   const [searchData, setSearchData] = useState([])
   const [searchValue, setSearchValue] = useState<string>('')
   const [reportsData, setReportsData] = useState(reportCardsData)
   const [isReportLoading, setIsReportLoading] = useState(true)
 
-  const { data, error, loading } = useLiveQuery(USER_REPORT)
+  const {
+    data: permissionData,
+    error: permissionError,
+    loading: permissionLoading,
+  } = useGetUserAccessPageListQuery({
+    ssr: false,
+    fetchPolicy: 'network-only',
+  })
 
-  const { data: graphData, error: graphError } = useLiveQuery(GRAPH_DATA, {
+  const [
+    getReportList,
+    { data, error, loading, called },
+  ] = useListReportPermissionLazyQuery({
+    ssr: false,
+    fetchPolicy: 'network-only',
+  })
+
+  const [
+    getGraphData,
+    { data: graphData, error: graphError },
+  ] = useGraphsDataLazyQuery({
     variables: {
       startDate: new Intl.DateTimeFormat('en-US').format(
         currentDate.setMonth(currentDate.getMonth() - 11)
       ),
       endDate: new Intl.DateTimeFormat('en-US').format(new Date()),
     },
+    ssr: false,
+    fetchPolicy: 'network-only',
   })
 
-  const { data: customReport, error: customError } = useLiveQuery(
-    LIST_CUSTOM_REPORT
-  )
+  const [
+    getCustomReport,
+    { data: customReport, error: customError },
+  ] = useFindCustomReportLazyQuery({
+    ssr: false,
+    fetchPolicy: 'network-only',
+  })
 
-  const [editMutation] = useMutation(UPDATE_FAVORITE, {
+  const [editMutation] = useUpsertReportMutation({
     onCompleted(data: EditResponseType) {
       const successResponse = data?.upsertUserReportByReportCode
       const temp = [...reportsData]
@@ -196,9 +183,26 @@ const Reports: FC = () => {
   }
 
   useEffect(() => {
-    if (data) {
-      const allReportPermission = data?.all_reports
-      const reportPermissions = data?.UserReport
+    if (permissionData) {
+      const userAccessPageList = permissionData.me?.userPermission.map(
+        (item) => {
+          return item?.Page?.name
+        }
+      )
+      if (userAccessPageList.includes('Reports')) {
+        setAccessReportPage(true)
+        getGraphData()
+        getCustomReport()
+        getReportList()
+      }
+    }
+  }, [permissionData, getReportList, getGraphData, getCustomReport])
+
+  useEffect(() => {
+    if (data?.me) {
+      const reportData = data?.me
+      const allReportPermission = reportData?.all_reports
+      const reportPermissions = reportData?.UserReport
 
       if (allReportPermission) {
         const temp = [...reportsData]
@@ -224,20 +228,20 @@ const Reports: FC = () => {
         }
         setReportsData(temp)
       } else {
-        const response = updatePermissionAndFavorite(data)
+        const response = updatePermissionAndFavorite(reportData)
         setReportsData(response)
       }
     }
-    if (!loading) setIsReportLoading(false)
+    if (!loading && called) setIsReportLoading(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, loading])
+  }, [data, loading, called])
 
   useEffect(() => {
-    if (graphData) {
+    if (graphData?.retrieveReport) {
       const temp = [...reportsData]
       for (const item of temp) {
         if (item.graphDataKey) {
-          const graphRecord = graphData[item.graphDataKey]
+          const graphRecord = graphData?.retrieveReport[item.graphDataKey]
           const graph = []
           for (const month of Object.keys(graphRecord)) {
             graph.push([month, Number.parseFloat(graphRecord[month])])
@@ -251,11 +255,11 @@ const Reports: FC = () => {
   }, [graphData])
 
   useEffect(() => {
-    if (customReport) {
+    if (customReport?.findManyCustomReportWithPermissions) {
       const temp = [...reportsData]
       const customReports = []
       const customMock = temp.find((a) => a.catHeading === 'Custom')
-      for (const item of customReport) {
+      for (const item of customReport.findManyCustomReportWithPermissions) {
         customReports.push({
           id: item.report_id,
           reportCode: item.report_code,
@@ -271,96 +275,109 @@ const Reports: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customReport])
 
-  if (error || graphError || customError) {
+  if (error || graphError || customError || permissionError) {
     console.log('error', error)
   }
 
-  return (
-    <>
+  if (permissionLoading) {
+    return (
+      <Spin
+        style={{
+          position: 'absolute',
+          margin: 'auto',
+          left: '50%',
+          top: '45%',
+          textAlign: 'center',
+        }}
+        size={'large'}
+        delay={0}
+        spinning={true}
+        indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}
+      />
+    )
+  }
+
+  return user && !accessReportPage ? (
+    <Unauthorized />
+  ) : (
+    <Layout {...user} active="reports">
       <CommonHeader title={t('setup.reports.title')} />
-      <Layout {...user} active="reports">
-        <Card bodyStyle={{ padding: 0 }}>
-          <Row
-            className={classNames(
-              styles.headerContainer,
-              styles.mobileViewNone
-            )}
-          >
-            <Col span={24} sm={10} className={styles.headingContainer}>
-              <div />
-              <Title>
-                {!searchValue
-                  ? t('setup.reports.title')
-                  : t('setup.reports.search.result')}
-              </Title>
-            </Col>
-            <Col span={24} sm={14} className={styles.searchContainer}>
-              <div className={styles.search}>
-                <SetupSearchInput onChange={handleSearch} />
-              </div>
-            </Col>
-          </Row>
-          <Divider style={{ margin: 0 }} className={styles.mobileViewNone} />
-          <div className={classNames(styles.search, styles.desktopViewNone)}>
-            <SetupSearchInput onChange={handleSearch} />
-          </div>
-          {!searchValue ? (
-            <Row className={styles.bodyContainer} gutter={{ md: 24, xs: 16 }}>
-              {reportsData.map((item, index) => {
-                return (
-                  <Col
-                    key={index}
-                    className={styles.reportContainer}
-                    xs={24}
-                    md={12}
-                    lg={8}
-                    xxl={6}
-                  >
-                    <ReportsCard
-                      reports={item.reports}
-                      graphData={item.graphData}
-                      catHeading={t(`setup.reports.${item.catHeading}.heading`)}
-                      graphDescription={t(
-                        `setup.reports.${item.graphDescription}.graphDescription`
-                      )}
-                      description={t(
-                        `setup.reports.${item.description}.description`
-                      )}
-                      chartLabel={item.chartLabel}
-                      clickable={true}
-                      onReportFavourite={async (reportId, isFav) => {
-                        const report = item.reports.find(
-                          (r) => r.id === reportId
-                        )
-                        await editMutation({
-                          variables: {
-                            reportCode:
-                              item.catHeading === 'Custom'
-                                ? reportId.toString()
-                                : report.reportCode,
-                            fav: isFav,
-                          },
-                        })
-                      }}
-                      isReportloading={isReportLoading}
-                    />
-                  </Col>
-                )
-              })}
-            </Row>
-          ) : (
-            <div className={styles.searchResult}>
-              <SearchResults
-                data={searchData}
-                searchTerm={searchValue}
-                checkPermission={true}
-                displayTitle={false}
-              />
+      <Card bodyStyle={{ padding: 0 }}>
+        <Row
+          className={classNames(styles.headerContainer, styles.mobileViewNone)}
+        >
+          <Col span={24} sm={10} className={styles.headingContainer}>
+            <div />
+            <Title>
+              {!searchValue
+                ? t('setup.reports.title')
+                : t('setup.reports.search.result')}
+            </Title>
+          </Col>
+          <Col span={24} sm={14} className={styles.searchContainer}>
+            <div className={styles.search}>
+              <SetupSearchInput onChange={handleSearch} />
             </div>
-          )}
-        </Card>
-      </Layout>
-    </>
+          </Col>
+        </Row>
+        <Divider style={{ margin: 0 }} className={styles.mobileViewNone} />
+        <div className={classNames(styles.search, styles.desktopViewNone)}>
+          <SetupSearchInput onChange={handleSearch} />
+        </div>
+        {!searchValue ? (
+          <Row className={styles.bodyContainer} gutter={{ md: 24, xs: 16 }}>
+            {reportsData.map((item, index) => {
+              return (
+                <Col
+                  key={index}
+                  className={styles.reportContainer}
+                  xs={24}
+                  md={12}
+                  lg={8}
+                  xxl={6}
+                >
+                  <ReportsCard
+                    reports={item.reports}
+                    graphData={item.graphData}
+                    catHeading={t(`setup.reports.${item.catHeading}.heading`)}
+                    graphDescription={t(
+                      `setup.reports.${item.graphDescription}.graphDescription`
+                    )}
+                    description={t(
+                      `setup.reports.${item.description}.description`
+                    )}
+                    chartLabel={item.chartLabel}
+                    clickable={true}
+                    onReportFavourite={async (reportId, isFav) => {
+                      const report = item.reports.find((r) => r.id === reportId)
+                      await editMutation({
+                        variables: {
+                          reportCode:
+                            item.catHeading === 'Custom'
+                              ? reportId.toString()
+                              : report.reportCode,
+                          fav: isFav,
+                        },
+                      })
+                    }}
+                    isReportloading={isReportLoading}
+                  />
+                </Col>
+              )
+            })}
+          </Row>
+        ) : (
+          <div className={styles.searchResult}>
+            <SearchResults
+              data={searchData}
+              searchTerm={searchValue}
+              checkPermission={true}
+              displayTitle={false}
+            />
+          </div>
+        )}
+      </Card>
+    </Layout>
   )
 }
 

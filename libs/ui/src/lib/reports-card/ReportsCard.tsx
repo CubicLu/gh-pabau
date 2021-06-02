@@ -138,10 +138,14 @@ export const ReportsCard: React.FC<ReportsCardProps> = ({
         />
       ))}
 
-      {reports?.length < 10 &&
-        Array.from({ length: 10 - reports.length })
-          .fill('')
-          .map(() => <div key={uuidv4()} className={styles.reportsCardCell} />)}
+      <div className={styles.reportsCardCellWrapper}>
+        {reports?.length < 10 &&
+          Array.from({ length: 10 - reports.length })
+            .fill('')
+            .map(() => (
+              <div key={uuidv4()} className={styles.reportsCardCell} />
+            ))}
+      </div>
 
       {!isReportloading && reports.length > 10 && (
         <ShowMore
