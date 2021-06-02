@@ -1,4 +1,4 @@
-import { MedicalFormTypes } from '@pabau/ui'
+import { MedicalFormTypes, RenderHtml } from '@pabau/ui'
 import _ from 'lodash'
 import React, { FC } from 'react'
 import conditionsIcon from '../../assets/images/medicalform_conditions.svg'
@@ -31,6 +31,7 @@ import InnerMedicalFormCheckbox from './InnerMedicalFormCheckbox'
 import InnerMedicalFormEditIcon from './InnerMedicalFormEditIcon'
 import InnerMedicalFormRadio from './InnerMedicalFormRadio'
 import InnerMedicalFormRequired from './InnerMedicalFormRequired'
+import InnerMedicalFormSign from './InnerMedicalFormSign'
 import InnerMedicalFormTitle from './InnerMedicalFormTitle'
 
 interface P {
@@ -124,6 +125,13 @@ const InnerElement: FC<P> = ({
       iconUrl: signatureIcon,
       bgcolor: '#F78561',
       title: 'Signature',
+    },
+    {
+      component: 'basic_photo',
+      type: { type },
+      iconUrl: signatureIcon,
+      bgcolor: '#F78561',
+      title: 'Add Photo',
     },
     {
       component: 'basic_conditions',
@@ -330,6 +338,7 @@ const InnerElement: FC<P> = ({
               formData.txtInputType !== '' ||
               formData.formName === 'basic_drawing' ||
               formData.formName === 'basic_staticimage' ||
+              formData.formName === 'basic_photo' ||
               formData.arrItems?.length > 0) && (
               <InnerMedicalFormBody>
                 {formData.formName === 'basic_drawing' && (
@@ -364,27 +373,38 @@ const InnerElement: FC<P> = ({
                     alt=""
                   />
                 )}
+                {formData.formName === 'basic_photo' && (
+                  <img
+                    style={{
+                      width: '300px',
+                      display: 'block',
+                      marginLeft: 'auto',
+                      marginRight: 'auto',
+                    }}
+                    src={
+                      formData.arrItems?.length > 0
+                        ? `https://prelive-crm.pabau.com${formData.arrItems[0].name}`
+                        : innerDrawingIcon
+                    }
+                    alt=""
+                  />
+                )}
                 {formData.txtQuestion !== '' &&
                   formData.formName !== 'basic_textblock' && (
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          formData.formName === 'basic_signature' ||
-                          formData.formName === 'basic_shortanswer' ||
-                          formData.formName === 'basic_longanswer' ||
-                          formData.formName === 'basic_singlechoice' ||
-                          formData.formName === 'basic_multiplechoice'
-                            ? findAndReplaceTag(formData.txtQuestion)
-                            : formData.txtQuestion,
-                      }}
+                    <RenderHtml
+                      __html={
+                        formData.formName === 'basic_signature' ||
+                        formData.formName === 'basic_shortanswer' ||
+                        formData.formName === 'basic_longanswer' ||
+                        formData.formName === 'basic_singlechoice' ||
+                        formData.formName === 'basic_multiplechoice'
+                          ? findAndReplaceTag(formData.txtQuestion)
+                          : formData.txtQuestion
+                      }
                     />
                   )}
                 {formData.formName === 'basic_textblock' && (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: findAndReplaceTag(formData.txtBlock),
-                    }}
-                  />
+                  <RenderHtml __html={findAndReplaceTag(formData.txtBlock)} />
                 )}
                 {formData.txtBlock !== '' &&
                   formData.formName !== 'basic_textblock' &&
@@ -412,6 +432,11 @@ const InnerElement: FC<P> = ({
                   formData.txtQuestion !== '') &&
                   formData.formName === 'basic_multiplechoice' && (
                     <InnerMedicalFormCheckbox options={formData.arrItems} />
+                  )}
+                {formData.signData &&
+                  formData.signData.length > 0 &&
+                  formData.formName === 'basic_signature' && (
+                    <InnerMedicalFormSign signData={formData.signData} />
                   )}
               </InnerMedicalFormBody>
             )}

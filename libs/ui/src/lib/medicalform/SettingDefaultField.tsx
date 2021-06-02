@@ -21,20 +21,22 @@ const SettingDefaultField: FC<linkedFieldProps> = ({
 }) => {
   const { t } = useTranslation('common')
   const [defaultField, setDefaultField] = useState(defaultFieldValue)
+  const [defaultFieldWithTag, setDefaultFieldWithTag] = useState(
+    defaultFieldValueWithTag
+  )
   const [addDefaultField, setAddDefaultField] = useState(false)
   const [triggerChangeValue, setTriggerChangeValue] = useState(false)
 
   useEffect(() => {
     setDefaultField(defaultFieldValue)
   }, [defaultFieldValue])
-
   useEffect(() => {
-    setTriggerChangeValue(false)
-  }, [changedForm])
-
-  useEffect(() => {
-    setTriggerChangeValue(true)
+    setDefaultFieldWithTag(defaultFieldValueWithTag)
   }, [defaultFieldValueWithTag])
+
+  useEffect(() => {
+    setTriggerChangeValue((triggerChangeValue) => !triggerChangeValue)
+  }, [changedForm])
 
   const onChange = (value) => {
     setDefaultField(value)
@@ -56,7 +58,7 @@ const SettingDefaultField: FC<linkedFieldProps> = ({
             placeholder={t('ui.medicalform.setting.defaultfield.placeholder')}
             onChange={onChange}
             value={defaultField}
-            valueWithTag={defaultFieldValueWithTag}
+            valueWithTag={defaultFieldWithTag}
             triggerChangeValue={triggerChangeValue}
             disabledTags={['leads', 'opportunity']}
           />

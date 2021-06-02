@@ -29,6 +29,7 @@ import SettingElementFileUpload from './SettingElementFileUpload'
 import SettingElementMultiOptions from './SettingElementMultiOptions'
 import SettingElementOption from './SettingElementOption'
 import SettingElementQuestion from './SettingElementQuestion'
+import SettingElementSignature from './SettingElementSignature'
 import SettingElementTextBlock from './SettingElementTextBlock'
 import SettingMedicalForm from './SettingMedicalForm'
 import SettingMedicalFormBody from './SettingMedicalFormBody'
@@ -56,6 +57,7 @@ const SettingElement: FC<P> = ({
   const [form, setForm] = useState(_.cloneDeep(selectedForm))
   const [addedItems, setAddedItems] = useState(0)
   const [changedForm, setChangedForm] = useState(false)
+  const [signData, setSignData] = useState('')
   const [errMsg, setErrMsg] = useState('')
   const componentInfos = [
     {
@@ -137,6 +139,14 @@ const SettingElement: FC<P> = ({
       bgcolor: '#F78561',
       title: t('ui.medicalform.setting.component.signature.title'),
       desc: t('ui.medicalform.setting.component.signature.description'),
+    },
+    {
+      component: 'basic_photo',
+      type: { type },
+      iconUrl: drawingIcon,
+      bgcolor: '#F78561',
+      title: t('ui.medicalform.setting.component.photo.title'),
+      desc: t('ui.medicalform.setting.component.photo.description'),
     },
     {
       component: 'basic_conditions',
@@ -332,7 +342,13 @@ const SettingElement: FC<P> = ({
         setErrMsg(t('ui.medicalform.setting.save.error'))
       }
     } else {
-      handleSave?.(form)
+      if (component === 'basic_signature') {
+        const tempForm = { ...form, signData: signData }
+        setForm(tempForm)
+        handleSave?.(tempForm)
+      } else {
+        handleSave?.(form)
+      }
     }
   }
 
@@ -367,6 +383,10 @@ const SettingElement: FC<P> = ({
   const onChangeInputType = (value) => {
     const tempForm = { ...form, txtInputType: value }
     setForm(tempForm)
+  }
+
+  const onChangeSign = (value) => {
+    setSignData(value)
   }
 
   const filteredComponent = componentInfos.filter(
@@ -422,7 +442,8 @@ const SettingElement: FC<P> = ({
 
             {(filteredComponent[0].component === 'basic_signature' ||
               filteredComponent[0].component === 'basic_drawing' ||
-              filteredComponent[0].component === 'basic_staticimage') && (
+              filteredComponent[0].component === 'basic_staticimage' ||
+              filteredComponent[0].component === 'basic_photo') && (
               <SettingElementQuestion
                 desc={t('ui.medicalform.setting.question.description')}
                 title={t('ui.medicalform.setting.question.title')}
@@ -433,13 +454,9 @@ const SettingElement: FC<P> = ({
                 onChangeQuestion={onChangeQuestion}
               />
             )}
-            {filteredComponent[0].component === 'basic_drawing' && (
-              <SettingElementFileUpload
-                desc={t('ui.medicalform.setting.fileupload.description')}
-                title={t('ui.medicalform.setting.fileupload.title')}
-              />
-            )}
-            {filteredComponent[0].component === 'basic_staticimage' && (
+            {(filteredComponent[0].component === 'basic_drawing' ||
+              filteredComponent[0].component === 'basic_staticimage' ||
+              filteredComponent[0].component === 'basic_photo') && (
               <SettingElementFileUpload
                 desc={t('ui.medicalform.setting.fileupload.description')}
                 title={t('ui.medicalform.setting.fileupload.title')}
@@ -486,6 +503,12 @@ const SettingElement: FC<P> = ({
                 inputTypeValue={form.txtInputType}
                 onChangeInputType={onChangeInputType}
                 componentName={filteredComponent[0].component}
+              />
+            )}
+            {filteredComponent[0].component === 'basic_signature' && (
+              <SettingElementSignature
+                signData={form.signData}
+                onChangeSign={onChangeSign}
               />
             )}
           </SettingMedicalFormBody>

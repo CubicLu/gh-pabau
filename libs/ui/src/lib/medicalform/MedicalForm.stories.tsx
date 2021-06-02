@@ -110,6 +110,15 @@ LeftSidebarBasicSignature.args = {
   component: 'basic_signature',
 }
 
+const LeftSidebarBasicPhotoStory = ({ type, component, ...rest }) => (
+  <LeftSidebarElement type={type} component={component} {...rest} />
+)
+export const LeftSidebarPhoto = LeftSidebarBasicPhotoStory.bind({})
+LeftSidebarStaticImage.args = {
+  type: 'basic',
+  component: 'basic_photo',
+}
+
 const LeftSidebarBasicConditionsStory = ({ type, component, ...rest }) => (
   <LeftSidebarElement type={type} component={component} {...rest} />
 )
@@ -560,6 +569,31 @@ export const InnerBasicSignature = InnerBasicSignatureStory.bind({})
 InnerBasicSignature.args = {
   type: 'basic',
   component: 'basic_signature',
+}
+
+const InnerBasicPhotoStory = ({
+  required,
+  activate,
+  type,
+  component,
+  handleId,
+  formData,
+  ...rest
+}) => (
+  <InnerElement
+    required={required}
+    activate={activate}
+    type={type}
+    component={component}
+    handleId={handleId}
+    formData={formData}
+    {...rest}
+  />
+)
+export const InnerBasicPhoto = InnerBasicPhotoStory.bind({})
+InnerBasicPhoto.args = {
+  type: 'basic',
+  component: 'basic_photo',
 }
 
 const InnerBasicConditionsStory = ({
@@ -1216,6 +1250,20 @@ export const SettingBasicSignature = SettingBasicSignatureStory.bind({})
 SettingBasicSignature.args = {
   type: 'basic',
   component: 'basic_signature',
+}
+
+const SettingBasicPhotoStory = ({ type, component, selectedForm, ...rest }) => (
+  <SettingElement
+    type={type}
+    component={component}
+    selectedForm={selectedForm}
+    {...rest}
+  />
+)
+export const SettingBasicPhoto = SettingBasicPhotoStory.bind({})
+SettingBasicPhoto.args = {
+  type: 'basic',
+  component: 'basic_photo',
 }
 
 const SettingBasicConditionsStory = ({

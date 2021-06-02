@@ -1,18 +1,17 @@
-import ENSVG from './en.svg'
-import USSVG from './us.svg'
-import FRSVG from './french.svg'
-import SPSVG from './spanish.svg'
 import ARSVG from './arabic.svg'
 import BRSVG from './bulgarian.svg'
 import CZSVG from './czech.svg'
+import ENSVG from './en.svg'
+import FRSVG from './french.svg'
 import HGSVG from './hungarian.svg'
 import LTSVG from './latvian.svg'
 import NWSVG from './norwegian.svg'
 import POSVG from './polish.svg'
-import SHSVG from './spanish.svg'
-import SWSVG from './swedish.svg'
 import ROMSVG from './romanian.svg'
 import RUSSVG from './russian.svg'
+import { default as SHSVG, default as SPSVG } from './spanish.svg'
+import SWSVG from './swedish.svg'
+import USSVG from './us.svg'
 
 export const languageMenu = [
   {
@@ -80,5 +79,28 @@ export const languageMenu = [
   {
     label: 'Russian',
     logo: RUSSVG,
+  },
+]
+
+export const countryMenu = [
+  {
+    label: 'United Kingdom',
+    code: 'UK',
+    logo: ENSVG,
+  },
+  {
+    label: 'USA',
+    code: 'US',
+    logo: USSVG,
+  },
+  {
+    label: 'France',
+    code: 'FR',
+    logo: FRSVG,
+  },
+  {
+    label: 'Spain',
+    code: 'ES',
+    logo: SPSVG,
   },
 ]

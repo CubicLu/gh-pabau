@@ -1,0 +1,476 @@
+.formComponet {
+  padding: 36px 40px;
+  width: 616px;
+  .formComponentTitle {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    color: #3d3d46;
+  }
+  .formComponentDescription {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    color: #9292a3;
+    margin-top: 3px;
+  }
+  .formComponentChoiceDescription {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.01em;
+    color: #9292a3;
+    margin-top: 3px;
+  }
+}
+
+.formStaticText {
+  .staticTextTitle {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 22px;
+    line-height: 24px;
+    letter-spacing: 0.01em;
+    color: #3d3d46;
+  }
+  .staticTextDescription1 {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 22px;
+    letter-spacing: 0.01em;
+    color: #737387;
+    margin-top: 7px;
+  }
+  .staticTextDescription2 {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 15px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #9292a3;
+    margin-top: 21px;
+  }
+}
+
+.formTextField {
+  .textFieldValue {
+    margin-top: 11px;
+    :global {
+      .ant-input-number {
+        width: 100% !important;
+      }
+    }
+  }
+}
+
+.formTextArea {
+  .formTextAreaValue {
+    margin-top: 11px;
+  }
+}
+
+.formCheckBox {
+  .checkBoxOptions {
+    margin-top: 22px;
+    .checkbox {
+      font-size: 14px;
+      line-height: 18px;
+      color: #3d3d46;
+      margin-bottom: 22px;
+    }
+  }
+}
+
+.formSingleChoice {
+  .formSingleOptions {
+    width: 100%;
+    :global {
+      .ant-radio-group {
+        width: 100%;
+      }
+    }
+    .radioDiv {
+      :global {
+        .ant-radio-wrapper {
+          border: 1px solid #ecedf0;
+          box-sizing: border-box;
+          border-radius: 4px;
+          width: 100%;
+          padding: 16px;
+          margin-top: 16px;
+          font-size: 14px;
+        }
+        .ant-radio-wrapper.ant-radio-wrapper-checked {
+          background: #eef7fb;
+          border: 1px solid #54b2d3;
+          box-sizing: border-box;
+          border-radius: 4px;
+          color: #54b2d3;
+        }
+      }
+    }
+  }
+}
+
+.formDropDown {
+  .formDropDownOptions {
+    width: 100%;
+    margin-top: 11px;
+  }
+}
+
+.formPhotoUpload {
+  .formPhotoUploadOptions {
+    width: 100%;
+    margin-top: 11px;
+    img {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      border: 1px solid #ccc;
+    }
+  }
+  .formPhotoUploadButtons {
+    margin-top: 20px;
+    button {
+      margin-right: 8px;
+    }
+  }
+}
+
+.formImage {
+  .formImageOptions {
+    width: 100%;
+    margin-top: 11px;
+    img {
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+}
+
+.formDrawing {
+  .formDrawingPanel {
+    width: 536px;
+    height: 448px;
+    padding: 12px;
+    margin-top: 11px;
+    background: #f1f1f4;
+    border: 1px solid #e4e5e9;
+    box-sizing: border-box;
+    border-radius: 4px;
+    .formDrawingBody {
+      width: 512px;
+      height: 424px;
+      background: #ffffff;
+      border: 1px solid #e4e5e9;
+      box-sizing: border-box;
+      box-shadow: 2px 2px 17px rgba(9, 20, 41, 0.05);
+      border-radius: 4px;
+      .formDrawingToolbar {
+        height: 56px;
+        border-bottom: 1px solid #ecedf0;
+        display: flex;
+        align-items: center;
+        padding: 0px 10px;
+        .formDrawingToolbarButton {
+          color: #9292a3;
+          cursor: pointer;
+          font-size: 25px;
+          margin-right: 20px;
+        }
+        .formDrawingToolbarButton.right {
+          margin-left: 235px;
+        }
+        .formDrawingToolbarButton.active {
+          color: #54b2d3;
+        }
+      }
+      .formDrawingArea {
+        img {
+          margin-left: auto;
+          margin-right: auto;
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+.formSignature {
+  .formSignaturePanel {
+    width: 536px;
+    height: 240px;
+    padding: 12px;
+    margin-top: 11px;
+    background: #f1f1f4;
+    border: 1px solid #e4e5e9;
+    box-sizing: border-box;
+    border-radius: 4px;
+    .formSignatureBody {
+      width: 512px;
+      height: 216px;
+      background: #ffffff;
+      border: 1px solid #e4e5e9;
+      box-sizing: border-box;
+      box-shadow: 2px 2px 17px rgba(9, 20, 41, 0.05);
+      border-radius: 4px;
+      .formSignatureToolbar {
+        height: 56px;
+        border-bottom: 1px solid #ecedf0;
+        display: flex;
+        align-items: center;
+        padding: 0px 10px;
+        .formSignatureToolbarButton {
+          color: #9292a3;
+          cursor: pointer;
+          font-size: 25px;
+          margin-right: 20px;
+        }
+        .formSignatureToolbarButton.active {
+          color: #54b2d3;
+        }
+      }
+    }
+  }
+}
+
+.formMedicalConditions {
+  .formMedicalConditionsOptions {
+    width: 100%;
+    margin-top: 11px;
+  }
+  .formDropDownAddedOptions {
+    margin-top: 16px;
+    .formDropDownAddedOption {
+      background: #ffffff;
+      border: 1px solid #ecedf0;
+      box-sizing: border-box;
+      border-radius: 4px;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 24px;
+      margin-top: 10px;
+      padding: 8px 12px;
+    }
+    .formDropDownAddedOptionDelete {
+      float: right;
+      cursor: pointer;
+      color: #737387;
+      font-size: 10px;
+    }
+  }
+}
+
+.formLabTests {
+  .formLabTestsOptions {
+    width: 100%;
+    margin-top: 11px;
+  }
+  .formDropDownAddedOptions {
+    margin-top: 16px;
+    .formDropDownAddedOption {
+      background: #ffffff;
+      border: 1px solid #ecedf0;
+      box-sizing: border-box;
+      border-radius: 4px;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 24px;
+      margin-top: 10px;
+      padding: 8px 12px;
+    }
+    .formDropDownAddedOptionDelete {
+      float: right;
+      cursor: pointer;
+      color: #737387;
+      font-size: 10px;
+    }
+  }
+}
+
+.formTravel {
+  .formTravelOptions {
+    width: 100%;
+    margin-top: 11px;
+  }
+  .formTravelOptionsAdd {
+    margin-top: 20px;
+    color: #9292a3;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    cursor: pointer;
+    span {
+      margin-left: 5px;
+    }
+  }
+}
+
+.formTravelModalCountry {
+  :global {
+    .ant-select {
+      width: 100%;
+    }
+  }
+}
+.formTravelModalDuration {
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+.formDrugs {
+  .formDrugsOptions {
+    width: 100%;
+    margin-top: 11px;
+    .formDrugsOptionsContent {
+      display: block;
+      margin-top: 17px;
+      width: 100%;
+      .formDrugsOptionsHeader {
+        display: flex;
+        width: 100%;
+        border-bottom: 1px solid #ecedf0;
+        color: #9292a3;
+        padding-bottom: 3px;
+      }
+      .formDrugsOptionsBody {
+        width: 100%;
+        .formDrugsOptionsItem {
+          display: flex;
+          width: 100%;
+          margin-top: 12px;
+          .formDrugsOptionsItemArea {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            background: #fafafa;
+            border: 1px solid #e6e8ec;
+            box-sizing: border-box;
+            border-radius: 4px;
+            color: #3d3d46;
+            font-size: 11px;
+            .formDrugsOptionsDosage {
+              cursor: pointer;
+              margin-right: 5px;
+            }
+            .formDrugsOptionsDosage.height100 {
+              height: 100%;
+            }
+            .formDrugsOptionsComment {
+              cursor: pointer;
+              text-align: left !important;
+            }
+            .ormDrugsOptionsComment.height100 {
+              height: 100%;
+            }
+            :global {
+              .ant-btn {
+                font-size: 0.7rem;
+                border-radius: 2px;
+                letter-spacing: 0.02em;
+                padding-left: 0.5em;
+                padding-right: 0.5em;
+                margin-left: 5px;
+              }
+            }
+          }
+          .formDrugsOptionsItemAction {
+            display: flex;
+            width: 55px;
+            height: 48px;
+            text-align: center;
+            background: #ffffff;
+            border: 1px solid #ecedf0;
+            box-sizing: border-box;
+            border-radius: 50px;
+            justify-content: center;
+            align-items: center;
+            margin-left: 16px;
+            color: #9292a3;
+            cursor: pointer;
+          }
+        }
+        .formDrugsOptionsItemTooltip {
+          width: 100%;
+          margin-top: 12px;
+          background: #eef7fb;
+          border: 1px solid #abd6e6;
+          box-sizing: border-box;
+          border-radius: 4px;
+          padding: 16px;
+          cursor: auto;
+          .formDrugsOptionsItemTooltipItem:hover {
+            cursor: pointer;
+            text-decoration: underline;
+          }
+        }
+      }
+      .formDrugsOptionsName {
+        width: 25%;
+        padding: 13px 0px 13px 16px;
+      }
+      .formDrugsOptionsDosage {
+        width: 45%;
+        padding: 13px 0px 13px 0px;
+      }
+      .formDrugsOptionsComment {
+        width: 30%;
+        text-align: right;
+        padding: 13px 16px 13px 0px;
+      }
+    }
+  }
+  .formDrugsOptionsAdd {
+    margin-top: 20px;
+    color: #9292a3;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    cursor: pointer;
+    span {
+      margin-left: 5px;
+    }
+  }
+}
+
+.hide {
+  display: none !important;
+}
+
+.formComponentMain {
+  background: #ffffff;
+  border: 1px solid #f4f5f7;
+  box-sizing: border-box;
+  box-shadow: 2px 2px 17px rgba(9, 20, 41, 0.05);
+  border-radius: 4px;
+}
+.formComponentInnerElement {
+  border-bottom: 1px solid #ecedf0;
+  cursor: pointer;
+}
+.formComponentButton {
+  padding: 36px 40px;
+  :global {
+    .ant-btn {
+      width: 100%;
+    }
+  }
+}
+.formRequiredMark {
+  color: red;
+  margin-left: 3px;
+}

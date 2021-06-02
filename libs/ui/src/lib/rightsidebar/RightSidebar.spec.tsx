@@ -18,7 +18,10 @@ describe('RightSidebar', () => {
           txtDefaults: '',
           txtDefaultsWithTag: '',
           txtLinkedField: '',
+          signData: '',
           arrItems: [],
+          txtValue: '',
+          arrValue: [],
           required: false,
         }}
         component={''}
