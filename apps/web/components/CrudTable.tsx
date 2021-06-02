@@ -404,22 +404,12 @@ const CrudTable: FC<P> = ({
       await updateOrderMutation({
         variables: values,
         optimisticResponse: {},
-        update: (proxy) => {
-          if (listQuery) {
-            const existing = proxy.readQuery({
-              query: listQuery,
-            })
-            if (existing) {
-              const key = Object.keys(existing)[0]
-              proxy.writeQuery({
-                query: listQuery,
-                data: {
-                  [key]: [...existing[key], values],
-                },
-              })
-            }
-          }
-        },
+        refetchQueries: [
+          {
+            query: listQuery,
+            ...getQueryVariables,
+          },
+        ],
       })
   }
 
@@ -645,7 +635,7 @@ const CrudTable: FC<P> = ({
           <Table
             loading={isLoading}
             style={{ height: '100%' }}
-            sticky={{ offsetScroll: 80, offsetHeader: 80 }}
+            sticky={{ offsetScroll: 80, offsetHeader: 64 }}
             pagination={sourceData?.length > 10 ? {} : false}
             draggable={draggable}
             isCustomColorExist={checkCustomColorIconExist('color')}

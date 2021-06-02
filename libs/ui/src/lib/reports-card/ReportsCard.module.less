@@ -42,10 +42,14 @@
   width: calc(100% - 30px);
 }
 
-.reportsCardCell {
-  height: 39px;
-  box-sizing: border-box;
-  border-top: 1px solid #ecedf0;
+.reportsCardCellWrapper {
+  > div {
+    &:first-child {
+      height: 39px;
+      box-sizing: border-box;
+      border-top: 1px solid #ecedf0;
+    }
+  }
 }
 
 .reports-card-custom {

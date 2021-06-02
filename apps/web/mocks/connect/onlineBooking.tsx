@@ -6,7 +6,6 @@ import { ReactComponent as Acne } from '../../assets/images/acne 1.svg'
 import { ReactComponent as Moistuire } from '../../assets/images/moisturizing 1.svg'
 // import { ReactComponent as FaceMask } from '../../assets/images/face-mask 1.svg'
 // import { ReactComponent as Lifting } from '../../assets/images/lifting 1.svg'
-// import { ReactComponent as Hair } from '../../assets/images/hair.svg'
 import { SelectItem } from '../../components/Connect/selector/selector'
 export const defaultItems: SelectItem[] = [
   {

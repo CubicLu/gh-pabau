@@ -37,7 +37,7 @@ export const MobileSidebar: FC<SidebarProps> = ({
   onClickNotificationDrawer,
   onClickChatDrawer,
 }) => {
-  const { t } = useTranslation('coomon')
+  const { t } = useTranslation('common')
   const router = useRouter()
   const [openKeys, setOpenKeys] = useState<string[]>([])
   const [selectedKeys, setSelectedKeys] = useState<string[]>([])

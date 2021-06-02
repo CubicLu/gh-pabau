@@ -29,6 +29,7 @@ export const permissions = shield(
 
       // Public access mutations
       login: allow,
+      upsertUserReportByReportCode: rules.authentication.isAdmin,
 
       //CompanyBranches
       createOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,

@@ -16,8 +16,11 @@ export interface MedicalFormTypes {
   txtDefaults: string
   txtDefaultsWithTag: string
   txtLinkedField: string
+  signData: string
   arrItems: OptionType[]
   required: boolean
+  txtValue: string
+  arrValue: string[]
 }
 
 export interface MedicalForms {
@@ -64,8 +67,11 @@ export const defaultFormValue: MedicalFormTypes = {
   txtDefaults: '',
   txtDefaultsWithTag: '',
   txtLinkedField: '',
+  signData: '',
   arrItems: [],
   required: false,
+  txtValue: '',
+  arrValue: [],
 }
 
 export interface PreviewData {

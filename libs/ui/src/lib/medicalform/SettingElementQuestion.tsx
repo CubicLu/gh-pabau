@@ -25,12 +25,8 @@ const SettingElementQuestion: FC<P> = ({
   const [triggerChangeValue, setTriggerChangeValue] = useState(false)
 
   useEffect(() => {
-    setTriggerChangeValue(false)
+    setTriggerChangeValue((triggerChangeValue) => !triggerChangeValue)
   }, [selectedForm])
-
-  useEffect(() => {
-    setTriggerChangeValue(true)
-  }, [valueWithTag])
 
   const onTextChange = (e) => {
     onChangeQuestion?.(e.target.value)

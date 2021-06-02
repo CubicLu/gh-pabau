@@ -5,13 +5,19 @@ import styles from './MedicalFormBuilder.module.less'
 interface P {
   visible: boolean
   closePreviewDialog: () => void
+  formData: string
 }
-const MedicalFormPreview: FC<P> = ({ visible, closePreviewDialog }) => {
+const MedicalFormPreview: FC<P> = ({
+  visible,
+  closePreviewDialog,
+  formData = '',
+}) => {
   return (
     <div className={styles.medicalFormEditPanel}>
       <MedicalFormPreviewPanel
         desktopTemp="https://fresha.com/"
         appTemp="https://fresha.com/"
+        formData={formData}
         step={2}
         stepData={[]}
         visible={visible}
