@@ -231,7 +231,8 @@ pipelines:
                 - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
                 #                - graphql-inspector similar hasura/schema.graphql || echo TODO
                 - graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
-                - yarn danger ci || true
+                - yarn danger ci || echo TODO
+                - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts || echo TODO
 
           - step:
               name: lint
