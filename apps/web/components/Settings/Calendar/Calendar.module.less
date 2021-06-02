@@ -432,6 +432,14 @@
           top: -2.5px;
           position: absolute;
         }
+
+        & + div {
+          :global {
+            .ant-input-number {
+              width: 100%;
+            }
+          }
+        }
       }
     }
   }

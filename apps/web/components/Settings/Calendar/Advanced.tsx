@@ -1,5 +1,5 @@
-import { HelpTooltip, InputNumber } from '@pabau/ui'
-import { Checkbox, Typography } from 'antd'
+import { HelpTooltip } from '@pabau/ui'
+import { Checkbox, Typography, Form, InputNumber } from 'antd'
 import React, { FC } from 'react'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import AdvancedSkeleton from './AdvancedSkeleton'
@@ -41,6 +41,7 @@ export const Advanced: FC<P> = ({
   ...props
 }) => {
   const { t } = useTranslationI18()
+  const [form] = Form.useForm()
 
   const getMetaCheckValue = (name) => {
     const metaData = companyMetas.find((el) => el.meta_name === name)
@@ -175,17 +176,41 @@ export const Advanced: FC<P> = ({
               )}
             />
           </div>
-          <InputNumber
-            value={Number(noshow_count)}
-            placeHolderText={t(
-              'settings.calendar.advanced.input.noshowcount.label'
-            )}
-            onChange={(value) =>
-              onChange?.({
-                noshow_count: Number(value),
-              })
-            }
-          />
+          <div>
+            <Form
+              form={form}
+              layout="vertical"
+              initialValues={{
+                noshow_count: noshow_count,
+              }}
+            >
+              <Form.Item
+                name="noshow_count"
+                rules={[
+                  {
+                    type: 'number',
+                    min: 0,
+                    message: t(
+                      'settings.calendar.advanced.input.noshowcount.err1'
+                    ),
+                  },
+                ]}
+              >
+                <InputNumber
+                  type="number"
+                  value={Number(noshow_count)}
+                  placeholder={t(
+                    'settings.calendar.advanced.input.noshowcount.label'
+                  )}
+                  onChange={(value) => {
+                    onChange?.({
+                      noshow_count: Number(value),
+                    })
+                  }}
+                />
+              </Form.Item>
+            </Form>
+          </div>
         </div>
       </div>
     </div>

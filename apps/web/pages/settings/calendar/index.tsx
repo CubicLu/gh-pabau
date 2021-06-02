@@ -11,8 +11,8 @@ import {
   CalendarSettingsDataDocument,
   useCreateOneCalendarSettingMutation,
   useUpdateOneCalendarSettingMutation,
-  useCreateOneCompanyMetaMutation,
-  useUpdateOneCompanyMetaMutation,
+  useSetCompanyMetaMutation,
+  useUpdateCompanyMetaMutation,
 } from '@pabau/graphql'
 import { Card, Typography } from 'antd'
 import Link from 'next/link'
@@ -149,15 +149,14 @@ export function Calendar({ ...props }) {
     },
   })
 
-  const [createCompanyMetaMutation] = useCreateOneCompanyMetaMutation()
-  const [updateCompanyMetaMutation] = useUpdateOneCompanyMetaMutation()
+  const [createCompanyMetaMutation] = useSetCompanyMetaMutation()
+  const [updateCompanyMetaMutation] = useUpdateCompanyMetaMutation()
 
   const { data, loading } = useCalendarSettingsDataQuery({
     fetchPolicy: 'network-only',
   })
   useEffect(() => {
     setIsLoading(loading)
-    console.log('DATA:', data)
     if (data) {
       setSettingsData({
         ...data?.company?.BookingSetting?.[0],
@@ -168,6 +167,9 @@ export function Calendar({ ...props }) {
 
   const onSaveChange = () => {
     const settings = { ...settingsData }
+    if (settings?.noshow_count < 0) {
+      return
+    }
     setIsLoading(true)
     saveCompanyMetas()
     if (settingsData?.id) {
