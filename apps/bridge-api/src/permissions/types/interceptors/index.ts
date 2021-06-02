@@ -76,7 +76,9 @@ export const interceptors = {
           returnType.toString().charAt(0)?.toLowerCase() +
           returnType.toString().slice(1)
         const retrieveRow = await ctx.prisma[model].findFirst({
-          ...args,
+          where: {
+            ...args.where,
+          },
         })
         console.log(retrieveRow)
         return (

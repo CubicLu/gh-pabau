@@ -9,6 +9,7 @@ export interface PhoneNumberInputProps {
   countryCode?: string
   label?: string
   value?: string
+  labelStyle?: string
   onChange(val: string, valid?: boolean): void
 }
 
@@ -17,6 +18,7 @@ export const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
   label = 'Phone Number',
   value = '',
   onChange,
+  labelStyle,
 }) => {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [valid, setValid] = useState(true)
@@ -47,7 +49,15 @@ export const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
 
   return (
     <div className={styles.phoneNumberInputContainer}>
-      <p className={styles.phoneNumberLabel}>{label}</p>
+      <p
+        className={
+          labelStyle
+            ? ClassNames(styles.phoneNumberLabel, labelStyle)
+            : styles.phoneNumberLabel
+        }
+      >
+        {label}
+      </p>
       <div
         className={
           valid

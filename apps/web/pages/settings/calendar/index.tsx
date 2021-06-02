@@ -1,13 +1,19 @@
 import { LeftOutlined } from '@ant-design/icons'
-import { gql, useMutation } from '@apollo/client'
 import {
   Breadcrumb,
   Button,
   Notification,
   NotificationType,
   SettingsMenu,
-  useLiveQuery,
 } from '@pabau/ui'
+import {
+  useCalendarSettingsDataQuery,
+  CalendarSettingsDataDocument,
+  useCreateOneCalendarSettingMutation,
+  useUpdateOneCalendarSettingMutation,
+  useCreateOneCompanyMetaMutation,
+  useUpdateOneCompanyMetaMutation,
+} from '@pabau/graphql'
 import { Card, Typography } from 'antd'
 import Link from 'next/link'
 import React, { useContext, useEffect, useState } from 'react'
@@ -21,218 +27,6 @@ import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
 
 const { Title } = Typography
-
-const LIST_QUERY = gql`
-  query {
-    company {
-      BookingSetting {
-        id
-        slot_interval
-        start_time
-        end_time
-        lock_timer
-
-        allow_overlapping_appts
-        send_reminder
-        send_email
-        send_sms
-        send_feedback
-
-        initials
-        disable_surname
-        font_size
-        disable_time
-        appt_body
-        tooltip_body
-
-        disable_service_filter
-        disable_book_by_package
-      }
-      CompanyMeta {
-        id
-        meta_name
-        meta_value
-      }
-    }
-  }
-`
-
-const ADD_MUTATION = gql`
-  mutation createOneBookingSetting(
-    $slot_interval: Int
-    $start_time: String = ""
-    $end_time: String = ""
-    $lock_timer: Int
-    $allow_overlapping_appts: Int
-    $send_reminder: Int = 0
-    $send_email: Int = 0
-    $send_sms: Int = 0
-    $send_feedback: Int = 0
-    $initials: Int
-    $disable_surname: Int = 0
-    $font_size: Int
-    $disable_time: Int = 0
-    $appt_body: String
-    $tooltip_body: String
-    $disable_service_filter: Int
-    $disable_book_by_package: Int
-    $default_date_time: DateTime!
-  ) {
-    createOneBookingSetting(
-      data: {
-        Company: {}
-        attach_invoice: 0
-        booking_emails: ""
-        cancel_email_from: ""
-        cancel_email_tmpl: 0
-        cancel_sms_from: ""
-        cancel_sms_notify: 0
-        cancel_sms_tmpl: 0
-        class_noshow_email_notify: 0
-        class_noshow_email_tmpl: 0
-        class_noshow_sms_notify: 0
-        class_noshow_sms_tmpl: 0
-        class_reminder_email_notify: 0
-        class_reminder_email_tmpl: 0
-        class_reminder_sms_notify: 0
-        class_reminder_sms_tmpl: 0
-        class_reschedule_email_notify: 0
-        class_reschedule_email_tmpl: 0
-        class_reschedule_sms_notify: 0
-        class_reschedule_sms_tmpl: 0
-        class_sms_days_before: 0
-        column_total: 0
-        confirm_fromemail: ""
-        disable_second_cal: 0
-        email_confirm_id: 0
-        email_mode: 0
-        email_reminder_id: 0
-        feedback_days_after: 0
-        feedback_fromemail: ""
-        feedback_id: 0
-        feedback_mode: 0
-        feedback_send_time: $default_date_time
-        class_sms_send_time: $default_date_time
-        modified_date: $default_date_time
-        send_time: $default_date_time
-        sms_send_time: $default_date_time
-        font_color: ""
-        group_booking_cancel_email_enable: false
-        group_booking_cancel_template_id: 0
-        modified_by: 0
-        noshow_email_from: ""
-        noshow_email_notify: 0
-        noshow_email_tmpl: 0
-        noshow_sms_from: ""
-        noshow_sms_notify: 0
-        noshow_sms_tmpl: 0
-        package_used_email_enable: 0
-        package_used_template_id: 0
-        reminder_fromemail: ""
-        reminder_mode: 0
-        reschedule_email_from: ""
-        reschedule_email_tmpl: 0
-        reschedule_sms_from: ""
-        reschedule_sms_notify: 0
-        reschedule_sms_tmpl: 0
-        sms_confirm_id: 0
-        sms_days_before: 0
-        sms_id: 0
-        sms_mode: 0
-        sms_name: ""
-        slot_interval: $slot_interval
-        start_time: $start_time
-        end_time: $end_time
-        lock_timer: $lock_timer
-        allow_overlapping_appts: $allow_overlapping_appts
-        send_reminder: $send_reminder
-        send_email: $send_email
-        send_sms: $send_sms
-        send_feedback: $send_feedback
-        initials: $initials
-        disable_surname: $disable_surname
-        font_size: $font_size
-        disable_time: $disable_time
-        appt_body: $appt_body
-        tooltip_body: $tooltip_body
-        disable_service_filter: $disable_service_filter
-        disable_book_by_package: $disable_book_by_package
-      }
-    ) {
-      __typename
-      id
-    }
-  }
-`
-
-const UPDATE_MUTATION = gql`
-  mutation updateOneBookingSetting(
-    $id: Int
-    $slot_interval: Int
-    $lock_timer: Int
-    $start_time: String
-    $end_time: String
-    $allow_overlapping_appts: Int
-    $send_reminder: Int
-    $send_email: Int
-    $send_sms: Int
-    $send_feedback: Int
-    $initials: Int
-    $disable_surname: Int
-    $font_size: Int
-    $disable_time: Int
-    $appt_body: String
-    $tooltip_body: String
-    $disable_service_filter: Int
-    $disable_book_by_package: Int
-  ) {
-    updateOneBookingSetting(
-      where: { id: $id }
-      data: {
-        slot_interval: { set: $slot_interval }
-        lock_timer: { set: $lock_timer }
-        start_time: { set: $start_time }
-        end_time: { set: $end_time }
-        allow_overlapping_appts: { set: $allow_overlapping_appts }
-        send_reminder: { set: $send_reminder }
-        send_email: { set: $send_email }
-        send_sms: { set: $send_sms }
-        send_feedback: { set: $send_feedback }
-        initials: { set: $initials }
-        disable_surname: { set: $disable_surname }
-        font_size: { set: $font_size }
-        disable_time: { set: $disable_time }
-        appt_body: { set: $appt_body }
-        tooltip_body: { set: $tooltip_body }
-        disable_service_filter: { set: $disable_service_filter }
-        disable_book_by_package: { set: $disable_book_by_package }
-      }
-    ) {
-      id
-    }
-  }
-`
-
-const CREATE_COMPANY_META_MUTATION = gql`
-  mutation createOneCompanyMeta($name: String!, $value: String!) {
-    createOneCompanyMeta(
-      data: { meta_name: $name, meta_value: $value, Company: {} }
-    ) {
-      id
-    }
-  }
-`
-
-const UPDATE_COMPANY_META_MUTATION = gql`
-  mutation updateOneCompanyMeta($id: Int, $value: String) {
-    updateOneCompanyMeta(
-      data: { meta_value: { set: $value } }
-      where: { id: $id }
-    ) {
-      id
-    }
-  }
-`
 
 export function Calendar({ ...props }) {
   const { t } = useTranslationI18()
@@ -281,7 +75,6 @@ export function Calendar({ ...props }) {
       component: (
         <Appearance
           onChange={(data) => setSettingsData({ ...settingsData, ...data })}
-          initials={settingsData?.initials}
           disable_surname={settingsData?.disable_surname}
           disable_time={settingsData?.disable_time}
           font_size={settingsData?.font_size}
@@ -296,8 +89,9 @@ export function Calendar({ ...props }) {
       menuName: t('settings.calendar.advanced.title'),
       component: (
         <Advanced
-          disable_service_filter={settingsData?.disable_service_filter}
-          disable_book_by_package={settingsData?.disable_book_by_package}
+          initials={settingsData?.initials}
+          noshow_count={settingsData?.noshow_count}
+          column_total={settingsData?.column_total}
           companyMetas={companyMetas}
           onChange={(data) => setSettingsData({ ...settingsData, ...data })}
           onMetaChange={(data, updatedMeta) => {
@@ -321,7 +115,7 @@ export function Calendar({ ...props }) {
     },
   ]
 
-  const [createMutation] = useMutation(ADD_MUTATION, {
+  const [createMutation] = useCreateOneCalendarSettingMutation({
     onCompleted(data) {
       Notification(
         NotificationType['success'],
@@ -338,7 +132,7 @@ export function Calendar({ ...props }) {
     },
   })
 
-  const [updateMutation] = useMutation(UPDATE_MUTATION, {
+  const [updateMutation] = useUpdateOneCalendarSettingMutation({
     onCompleted(data) {
       Notification(
         NotificationType['success'],
@@ -355,17 +149,20 @@ export function Calendar({ ...props }) {
     },
   })
 
-  const [createCompanyMetaMutation] = useMutation(CREATE_COMPANY_META_MUTATION)
-  const [updateCompanyMetaMutation] = useMutation(UPDATE_COMPANY_META_MUTATION)
+  const [createCompanyMetaMutation] = useCreateOneCompanyMetaMutation()
+  const [updateCompanyMetaMutation] = useUpdateOneCompanyMetaMutation()
 
-  const { data, loading } = useLiveQuery(LIST_QUERY)
+  const { data, loading } = useCalendarSettingsDataQuery({
+    fetchPolicy: 'network-only',
+  })
   useEffect(() => {
     setIsLoading(loading)
+    console.log('DATA:', data)
     if (data) {
       setSettingsData({
-        ...data?.BookingSetting?.[0],
+        ...data?.company?.BookingSetting?.[0],
       })
-      setCompanyMetas(data?.CompanyMeta)
+      setCompanyMetas(data?.company?.CompanyMeta)
     }
   }, [data, loading])
 
@@ -381,7 +178,7 @@ export function Calendar({ ...props }) {
         optimisticResponse: {},
         refetchQueries: [
           {
-            query: LIST_QUERY,
+            query: CalendarSettingsDataDocument,
           },
         ],
       })
@@ -391,10 +188,9 @@ export function Calendar({ ...props }) {
         variables: {
           ...settings,
         },
-        optimisticResponse: {},
         refetchQueries: [
           {
-            query: LIST_QUERY,
+            query: CalendarSettingsDataDocument,
           },
         ],
       })
@@ -414,7 +210,7 @@ export function Calendar({ ...props }) {
             optimisticResponse: {},
             refetchQueries: [
               {
-                query: LIST_QUERY,
+                query: CalendarSettingsDataDocument,
               },
             ],
           })
@@ -424,10 +220,9 @@ export function Calendar({ ...props }) {
               name: updatedMeta?.meta_name,
               value: updatedMeta?.meta_value,
             },
-            optimisticResponse: {},
             refetchQueries: [
               {
-                query: LIST_QUERY,
+                query: CalendarSettingsDataDocument,
               },
             ],
           })

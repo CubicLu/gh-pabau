@@ -1,0 +1,108 @@
+mutation insertLabsOne(
+  $city: String
+  $country: String
+  $email: String!
+  $isActive: Boolean
+  $name: String!
+  $phone: String
+  $providerNumber: numeric
+  $postalCode: numeric
+  $street: String
+  $street2: String
+  ) {
+    insert_Labs_one(
+      object: {
+        city: $city
+        country: $country
+        email: $email
+        is_active: $isActive
+        name: $name
+        phone: $phone
+        provider_number: $providerNumber
+        postal_code: $postalCode
+        street: $street
+        street2: $street2
+      }
+    ) {
+      id
+    }
+  }
+
+mutation updateLabsByPk(
+  $id: uuid!
+  $city: String
+  $country: String
+  $email: String!
+  $isActive: Boolean
+  $name: String!
+  $phone: String
+  $providerNumber: numeric
+  $postalCode: numeric
+  $street: String
+  $street2: String
+    ) {
+      update_Labs_by_pk(
+        pk_columns: { id: $id }
+        _set: {
+          name: $name
+          is_active: $isActive
+          city: $city
+          country: $country
+          email: $email
+          phone: $phone
+          provider_number: $providerNumber
+          postal_code: $postalCode
+          street: $street
+          street2: $street2
+        }
+      ) {
+        __typename
+        id
+        is_active
+        order
+      }
+    }
+
+mutation deleteLabsByPk($id: uuid!) {
+  delete_Labs_by_pk(id: $id) {
+    __typename
+    id
+  }
+}
+
+mutation updateLabsOrder($id: uuid!, $order: Int) {
+  update_Labs(where: { id: { _eq: $id } }, _set: { order: $order }) {
+    affected_rows
+  }
+}
+
+query Labs($isActive: Boolean = true, $offset: Int, $limit: Int) {
+  Labs(
+    offset: $offset
+    limit: $limit
+    order_by: { order: desc }
+    where: { is_active: { _eq: $isActive } }
+  ) {
+    __typename
+    city
+    country
+    email
+    id
+    is_active
+    name
+
+    postal_code
+    provider_number
+    street
+    street2
+    order
+  }
+}
+
+query LabsAggregate($isActive: Boolean = true) {
+  Labs_aggregate(where: { is_active: { _eq: $isActive } }) {
+    aggregate {
+      count
+    }
+  }
+}

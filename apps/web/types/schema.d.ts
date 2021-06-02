@@ -23,7 +23,7 @@ interface Schema {
   inboxButton?: boolean
   deleteDescField?: string
   tooltip?: string
-  createButtonLabel?: string
+  searchPlaceholder?: string
   padlocked?: string[]
   filter?: SchemaFilter
   company?: number | string
