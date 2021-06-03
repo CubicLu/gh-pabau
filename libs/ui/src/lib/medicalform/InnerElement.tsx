@@ -46,7 +46,7 @@ interface P {
 
 const HANDLE_REGEX = /\[.+?]/g
 
-const InnerElement: FC<P> = ({
+export const InnerElement: FC<P> = ({
   required,
   activate,
   type,

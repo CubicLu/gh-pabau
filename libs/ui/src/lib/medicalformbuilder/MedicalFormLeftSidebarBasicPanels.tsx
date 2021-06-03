@@ -11,7 +11,7 @@ interface P {
   handlingClickLeft: (componentName: string) => void
 }
 
-const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
+export const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
   const { t } = useTranslation('common')
   const { medicalForms, handlingClickLeft } = props
   const getRenderItemBasic = () => {

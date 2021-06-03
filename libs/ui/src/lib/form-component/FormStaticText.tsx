@@ -3,10 +3,10 @@ import React, { FC } from 'react'
 import styles from './FormComponent.module.less'
 
 interface P {
-  title: string
-  desc1: string
-  desc2: string
-  required: boolean
+  title?: string
+  desc1?: string
+  desc2?: string
+  required?: boolean
 }
 
 export const FormStaticText: FC<P> = ({

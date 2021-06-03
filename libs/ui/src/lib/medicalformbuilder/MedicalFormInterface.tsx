@@ -73,7 +73,3 @@ export const defaultFormValue: MedicalFormTypes = {
   txtValue: '',
   arrValue: [],
 }
-
-export interface PreviewData {
-  previewData: string
-}

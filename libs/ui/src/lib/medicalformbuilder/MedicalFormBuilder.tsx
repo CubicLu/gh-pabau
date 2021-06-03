@@ -1,17 +1,29 @@
 import { EditOutlined, EyeOutlined } from '@ant-design/icons'
-import { Tabs } from 'antd'
+import { Modal, Tabs } from 'antd'
 import React, { FC, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styles from './MedicalFormBuilder.module.less'
 import MedicalFormEdit from './MedicalFormEdit'
 import MedicalFormInfo from './MedicalFormInfo'
-import { PreviewData } from './MedicalFormInterface'
 import MedicalFormPreview from './MedicalFormPreview'
 import MedicalFormSetting from './MedicalFormSetting'
+import className from 'classnames'
 
 const { TabPane } = Tabs
 
-const MedicalFormBuilder: FC<PreviewData> = ({ previewData }) => {
+interface MedicalFormBuilderProps {
+  previewData: string
+  visible: boolean
+  onCreate: () => void
+  nameForm?: string
+}
+
+export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
+  previewData,
+  visible,
+  onCreate,
+  nameForm,
+}) => {
   const { t } = useTranslation('common')
   const [formName, setFormName] = useState('IPL Treatment Record (Clone)')
   const [visiblePreview, setVisiblePreview] = useState(false)
@@ -59,7 +71,13 @@ const MedicalFormBuilder: FC<PreviewData> = ({ previewData }) => {
   }
 
   return (
-    <>
+    <Modal
+      visible={visible}
+      closable={false}
+      footer={null}
+      width={'100%'}
+      wrapClassName={className(styles.fullScreenModal, 'fullScreenModal')}
+    >
       <MedicalFormInfo formName={formName} />
       <MedicalFormSetting clickCreateFormBtn={clickCreateFormBtn} />
       <Tabs
@@ -79,7 +97,7 @@ const MedicalFormBuilder: FC<PreviewData> = ({ previewData }) => {
           key="1"
         >
           <MedicalFormEdit
-            previewData={previewData}
+            previewData={'previewData'}
             changeFormName={changeFormName}
             clickedCreateForm={clickedCreateForm}
             clickedPreviewForm={clickedPreviewForm}
@@ -105,7 +123,7 @@ const MedicalFormBuilder: FC<PreviewData> = ({ previewData }) => {
           key="2"
         ></TabPane>
       </Tabs>
-    </>
+    </Modal>
   )
 }
 

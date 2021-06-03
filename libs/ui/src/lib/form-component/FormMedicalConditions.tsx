@@ -6,10 +6,10 @@ import styles from './FormComponent.module.less'
 
 const { Option } = Select
 interface P {
-  title: string
-  desc: string
-  paramItems: OptionType[]
-  required: boolean
+  title?: string
+  desc?: string
+  paramItems?: OptionType[]
+  required?: boolean
   onChangeArrValue?: (value: string[]) => void
 }
 

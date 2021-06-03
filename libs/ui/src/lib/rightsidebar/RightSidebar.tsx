@@ -13,7 +13,7 @@ interface P {
   handlingSaveForm?: (form: MedicalFormTypes) => void
 }
 
-const RightSidebar: FC<P> = ({
+export const RightSidebar: FC<P> = ({
   selectedForm,
   component,
   formType,

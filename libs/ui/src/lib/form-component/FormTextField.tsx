@@ -3,12 +3,12 @@ import React, { FC, useState } from 'react'
 import styles from './FormComponent.module.less'
 
 interface P {
-  title: string
-  desc: string
-  placeHolder: string
-  defaultValue: string
-  txtInputType: string
-  required: boolean
+  title?: string
+  desc?: string
+  placeHolder?: string
+  defaultValue?: string
+  txtInputType?: string
+  required?: boolean
   onChangeTextValue?: (value: string) => void
 }
 

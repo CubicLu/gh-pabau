@@ -4,7 +4,9 @@ import MedicalFormBuilder from './MedicalFormBuilder'
 
 describe('MedicalFormBuilder', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<MedicalFormBuilder previewData="" />)
+    const { baseElement } = render(
+      <MedicalFormBuilder previewData="" onCreate={() => ''} visible={false} />
+    )
     expect(baseElement).toBeTruthy()
   })
 })
