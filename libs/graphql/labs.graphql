@@ -10,7 +10,7 @@ mutation insertLabsOne(
   $street: String
   $street2: String
   ) {
-    insert_Labs_one(
+    insert_LabsTmp_one(
       object: {
         city: $city
         country: $country
@@ -41,7 +41,7 @@ mutation updateLabsByPk(
   $street: String
   $street2: String
     ) {
-      update_Labs_by_pk(
+      update_LabsTmp_by_pk(
         pk_columns: { id: $id }
         _set: {
           name: $name
@@ -64,20 +64,20 @@ mutation updateLabsByPk(
     }
 
 mutation deleteLabsByPk($id: uuid!) {
-  delete_Labs_by_pk(id: $id) {
+  delete_LabsTmp_by_pk(id: $id) {
     __typename
     id
   }
 }
 
 mutation updateLabsOrder($id: uuid!, $order: Int) {
-  update_Labs(where: { id: { _eq: $id } }, _set: { order: $order }) {
+  update_LabsTmp(where: { id: { _eq: $id } }, _set: { order: $order }) {
     affected_rows
   }
 }
 
-query Labs($isActive: Boolean = true, $offset: Int, $limit: Int) {
-  Labs(
+query LabsTmp($isActive: Boolean = true, $offset: Int, $limit: Int) {
+  LabsTmp(
     offset: $offset
     limit: $limit
     order_by: { order: desc }
@@ -100,7 +100,7 @@ query Labs($isActive: Boolean = true, $offset: Int, $limit: Int) {
 }
 
 query LabsAggregate($isActive: Boolean = true) {
-  Labs_aggregate(where: { is_active: { _eq: $isActive } }) {
+  LabsTmp_aggregate(where: { is_active: { _eq: $isActive } }) {
     aggregate {
       count
     }

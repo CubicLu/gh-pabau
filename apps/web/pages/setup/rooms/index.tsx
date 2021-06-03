@@ -126,7 +126,7 @@ const LIST_AGGREGATE_QUERY = gql`
 `
 const DELETE_MUTATION = gql`
   mutation delete_Labs_by_pk($id: uuid!) {
-    delete_Labs_by_pk(id: $id) {
+    delete_LabsTmp_by_pk(id: $id) {
       __typename
       id
     }
@@ -142,7 +142,7 @@ const ADD_MUTATION = gql`
 `
 const EDIT_MUTATION = gql`
   mutation update_Labs_by_pk($id: uuid!, $name: String!, $is_active: Boolean) {
-    update_Labs_by_pk(
+    update_LabsTmp_by_pk(
       pk_columns: { id: $id }
       _set: { name: $name, is_active: $is_active }
     ) {

@@ -42,6 +42,9 @@ insert_permissions:
     backend_only: false
     check: {}
     columns:
+    - bundle_amount
+    - bundle_duration
+    - bundle_items
     - category
     - code
     - color
@@ -62,6 +65,7 @@ insert_permissions:
     - is_service_online
     - locations
     - max_clients
+    - min_attendees
     - notice_long
     - notice_short
     - online_payment_amount
@@ -125,6 +129,9 @@ select_permissions:
 - permission:
     allow_aggregations: true
     columns:
+    - bundle_amount
+    - bundle_duration
+    - bundle_items
     - category
     - code
     - color
@@ -147,6 +154,7 @@ select_permissions:
     - is_service_online
     - locations
     - max_clients
+    - min_attendees
     - notice_long
     - notice_short
     - online_payment_amount
@@ -208,6 +216,9 @@ update_permissions:
 - permission:
     check: null
     columns:
+    - bundle_amount
+    - bundle_duration
+    - bundle_items
     - category
     - code
     - color
@@ -228,6 +239,7 @@ update_permissions:
     - is_service_online
     - locations
     - max_clients
+    - min_attendees
     - notice_long
     - notice_short
     - online_payment_amount
