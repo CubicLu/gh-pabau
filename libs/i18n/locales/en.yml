@@ -2270,28 +2270,87 @@ en:
     We look forward to seeing you soon!
     Your friends at The Clinic'
   notifications.requestFeedback.smsMessage: 'Hi Anna,
-
-    Thank you for visiting The Clinic, we hope you were happy with our services!
-
-    We would love to hear about your experience in the survey below. Your feedback helps us create a better experience for you and for all of our customers.'
+    Thank you for visiting The Clinic, we hope you were happy with our services!  We would love to hear about your experience in the survey below. Your feedback helps us create a better experience for you and for all of our customers.'
+  account.finance.title: 'Accounts'
+  account.finance.search.placeholder: 'Search by Invoice or clients'
+  account.finance.export.csv: 'Export to CVS'
+  account.finance.filter: 'Filter'
+  account.finance.date.range.option.30days: 'Last 30 days'
+  account.finance.date.range.option.90days: 'Last 90 days'
+  account.finance.date.90days: '90-days'
+  account.finance.date.range.option.6month: 'Last 6 months'
+  account.finance.date.range.option.year: 'Last 1 year'
+  account.finance.date.range.option.custom: 'Custom'
+  account.finance.date.range.btn.apply: 'Apply'
+  account.finance.date.range.btn.cancel: 'Cancel'
+  account.finance.send.reminders: 'Send debt Reminders'
+  account.finance.send.reminders.count: '3'
+  account.finance.manage.options: 'Manage Options'
+  account.finance.tab.menu.invoices: 'Invoices'
+  account.finance.tab.menu.payments: 'Payments'
+  account.finance.tab.menu.debt: 'Debt'
+  account.finance.tab.menu.credit.notes: 'Credit Notes'
+  account.finance.last: 'Last'
+  account.finance.send.reminder.modal.title: 'Send debt reminders'
+  account.finance.payments.columns.payment.no: 'Payment No.'
+  account.finance.payments.columns.Against: 'Against'
+  account.finance.payments.columns.Location: 'Location'
+  account.finance.payments.columns.Date: 'Date'
+  account.finance.payments.columns.Account: 'Account'
+  account.finance.payments.columns.Amount: 'Amount'
+  account.finance.payments.columns.payment.method: 'Payment method'
+  account.finance.payments.columns.user: 'User'
+  account.finance.invoice.columns.invoice.no: 'Invoice No.'
+  account.finance.invoice.columns.location: 'Location'
+  account.finance.invoice.columns.inv.date: 'Inv Date'
+  account.finance.invoice.columns.customer: 'Customer'
+  account.finance.invoice.columns.debtor: 'Debtor'
+  account.finance.invoice.columns.status: 'Status'
+  account.finance.invoice.columns.payment: 'Payment'
+  account.finance.invoice.columns.net: 'Net'
+  account.finance.invoice.columns.vat: 'Vat'
+  account.finance.invoice.columns.gross: 'Gross'
+  account.finance.invoice.columns.paid: 'Paid'
+  account.finance.invoice.columns.balance: 'Balance'
+  account.finance.invoice.columns.card.btn: 'Pay with card'
+  account.finance.debt.invoice.sent: 'Invoice sent on 23/10/2022'
+  account.finance.debt.reminder.sent: 'Reminder sent 7 days later'
+  account.finance.debt.reminder.second.sent: '2nd reminder sent 14 days later'
+  account.finance.debt.notice.final.sent: 'Final notice sent 30 days later'
+  account.finance.debt.columns.invoice.no: 'Invoice No.'
+  account.finance.debt.columns.location: 'Location'
+  account.finance.debt.columns.inv.date: 'Inv Date'
+  account.finance.debt.columns.customer: 'Customer'
+  account.finance.debt.columns.debtor: 'Debtor'
+  account.finance.debt.columns.status: 'Status'
+  account.finance.debt.columns.age: 'Age'
+  account.finance.debt.columns.balance: 'Balance'
+  account.finance.debt.columns.last.action: 'Last Action'
+  account.finance.credit.note.columns.credit.no: 'Credit No.'
+  account.finance.credit.note.columns.location: 'Location'
+  account.finance.credit.note.columns.credit.date: 'Credit Date'
+  account.finance.credit.note.columns.customer: 'Customer'
+  account.finance.credit.note.columns.debtor: 'Debtor'
+  account.finance.credit.note.columns.invoice.no: 'Invoice No.'
+  account.finance.credit.note.columns.total: 'Total'
+  account.finance.credit.note.columns.type: 'Type'
+  account.finance.debt.send.reminder.send.btn: 'Send'
+  account.finance.debt.send.reminder.sended.btn: 'Sended'
+  account.finance.debt.send.reminder.title.days: 'Days'
+  account.finance.debt.send.reminder.title.clients: 'Clients'
+  account.finance.debt.send.reminder.title.actions: 'Actions'
+  account.finance.debt.send.reminder.days.first: '7-14'
+  account.finance.debt.send.reminder.days.secound: '14-30'
+  account.finance.debt.send.reminder.days.last: '>30'
+  account.finance.debt.send.notification: 'Debt email successfully sent'
   notifications.rescheduledAppointment.smsMessage: 'Hi Shopia,
-
-
     This is a confirmation to let you now we rescheduled your type class from 15/12/20 to 17/12/20.
-
-
     We look forward to seeing you then!
-
-
     kind Regards
-
     The Clinic'
   notifications.secureEmailTemplate.smsMessage: 'Dear Sophia!
-
     Please find attached your file. If you have any questions do not hesitate to contact us at +44 000 987 507.
-
     Kind regards,
-
     The clinic Team'
   quickCreate.client.modal.newContact: 'New Contact'
   quickCreate.client.modal.cancel: 'Cancel'
