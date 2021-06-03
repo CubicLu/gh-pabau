@@ -1,4 +1,15 @@
 SET check_function_bodies = false;
+CREATE FUNCTION public.set_current_timestamp_min_attendees() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+  _new record;
+BEGIN
+  _new := NEW;
+  _new."min_attendees" = NOW();
+  RETURN _new;
+END;
+$$;
 CREATE FUNCTION public.set_current_timestamp_updated_at() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -65,7 +76,7 @@ CREATE SEQUENCE public."Discounts_order_seq"
     NO MAXVALUE
     CACHE 1;
 ALTER SEQUENCE public."Discounts_order_seq" OWNED BY public."Discounts"."order";
-CREATE TABLE public."Labs" (
+CREATE TABLE public."LabsTmp" (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -82,7 +93,7 @@ CREATE TABLE public."Labs" (
     "order" integer NOT NULL,
     provider_number numeric
 );
-COMMENT ON COLUMN public."Labs".name IS 'lab name goes here';
+COMMENT ON COLUMN public."LabsTmp".name IS 'lab name goes here';
 CREATE SEQUENCE public."Labs_order_seq"
     AS integer
     START WITH 1
@@ -90,7 +101,7 @@ CREATE SEQUENCE public."Labs_order_seq"
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-ALTER SEQUENCE public."Labs_order_seq" OWNED BY public."Labs"."order";
+ALTER SEQUENCE public."Labs_order_seq" OWNED BY public."LabsTmp"."order";
 CREATE TABLE public."Library" (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -158,6 +169,37 @@ CREATE SEQUENCE public."SMS_campaign_order_seq"
     NO MAXVALUE
     CACHE 1;
 ALTER SEQUENCE public."SMS_campaign_order_seq" OWNED BY public."SMS_campaign"."order";
+CREATE TABLE public.app_listing (
+    id integer NOT NULL,
+    company_id integer NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    modified_at timestamp with time zone,
+    "appIcon" text NOT NULL,
+    name text NOT NULL,
+    "shortDescription" text NOT NULL,
+    "builtBy" text NOT NULL,
+    "TermsOfServiceURL" text NOT NULL,
+    "PrivacyPolicyURL" text NOT NULL,
+    "sellAppInfo" text NOT NULL,
+    "typeFeature" text NOT NULL,
+    "docUrl" text NOT NULL,
+    "extraInfo" text NOT NULL,
+    screenshot1 text NOT NULL,
+    screenshot2 text NOT NULL,
+    screenshot3 text NOT NULL,
+    "typeApp" text NOT NULL,
+    workspace text NOT NULL,
+    status text NOT NULL
+);
+COMMENT ON TABLE public.app_listing IS 'developer hub - used for fetching data for developer hub';
+CREATE SEQUENCE public.app_listing_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.app_listing_id_seq OWNED BY public.app_listing.id;
 CREATE TABLE public.application_notifications (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     "user" integer NOT NULL,
@@ -492,27 +534,6 @@ CREATE SEQUENCE public.departments_order_seq
     NO MAXVALUE
     CACHE 1;
 ALTER SEQUENCE public.departments_order_seq OWNED BY public.departments."order";
-CREATE TABLE public.developer_hub (
-    company_id integer NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    uuid uuid NOT NULL,
-    "appIcon" text NOT NULL,
-    name text NOT NULL,
-    "shortDescription" text NOT NULL,
-    "builtBy" text NOT NULL,
-    "TermsOfServiceURL" text NOT NULL,
-    "PrivacyPolicyURL" text NOT NULL,
-    "sellAppInfo" text NOT NULL,
-    "typeFeature" text NOT NULL,
-    "docUrl" text NOT NULL,
-    "extraInfo" text NOT NULL,
-    screenshot1 text NOT NULL,
-    screenshot2 text NOT NULL,
-    screenshot3 text NOT NULL,
-    "typeApp" text NOT NULL,
-    workspace text NOT NULL
-);
-COMMENT ON TABLE public.developer_hub IS 'developer hub - used for fetching data for developer hub';
 CREATE TABLE public.diagnostic_codes (
     code text DEFAULT '-'::text NOT NULL,
     layer1 text DEFAULT '-'::text NOT NULL,
@@ -1159,7 +1180,11 @@ CREATE TABLE public.service (
     contracts json,
     days_before_booking integer,
     notice_short text,
-    notice_long text
+    notice_long text,
+    min_attendees integer,
+    bundle_items json,
+    bundle_amount text,
+    bundle_duration text
 );
 CREATE TABLE public.service_categories (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
@@ -1310,10 +1335,11 @@ CREATE SEQUENCE public.third_parties_order_seq
     CACHE 1;
 ALTER SEQUENCE public.third_parties_order_seq OWNED BY public.third_parties."order";
 ALTER TABLE ONLY public."Discounts" ALTER COLUMN "order" SET DEFAULT nextval('public."Discounts_order_seq"'::regclass);
-ALTER TABLE ONLY public."Labs" ALTER COLUMN "order" SET DEFAULT nextval('public."Labs_order_seq"'::regclass);
+ALTER TABLE ONLY public."LabsTmp" ALTER COLUMN "order" SET DEFAULT nextval('public."Labs_order_seq"'::regclass);
 ALTER TABLE ONLY public."Lists_campaign" ALTER COLUMN "order" SET DEFAULT nextval('public."Lists_campaign_order_seq"'::regclass);
 ALTER TABLE ONLY public."Newsletter_campaign" ALTER COLUMN "order" SET DEFAULT nextval('public."Newsletter_campaign_order_seq"'::regclass);
 ALTER TABLE ONLY public."SMS_campaign" ALTER COLUMN "order" SET DEFAULT nextval('public."SMS_campaign_order_seq"'::regclass);
+ALTER TABLE ONLY public.app_listing ALTER COLUMN id SET DEFAULT nextval('public.app_listing_id_seq'::regclass);
 ALTER TABLE ONLY public.appointment_status ALTER COLUMN "order" SET DEFAULT nextval('public.appointment_status_order_seq'::regclass);
 ALTER TABLE ONLY public.business_details ALTER COLUMN id SET DEFAULT nextval('public.business_details_id_seq'::regclass);
 ALTER TABLE ONLY public.cancellation_reasons ALTER COLUMN "order" SET DEFAULT nextval('public.cancellation_reasons_order_seq'::regclass);
@@ -1357,9 +1383,9 @@ ALTER TABLE ONLY public.diagnostic_codeset
     ADD CONSTRAINT "Diagnostic_code_pkey" PRIMARY KEY (id);
 ALTER TABLE ONLY public."Discounts"
     ADD CONSTRAINT "Discounts_pkey" PRIMARY KEY (id);
-ALTER TABLE ONLY public."Labs"
+ALTER TABLE ONLY public."LabsTmp"
     ADD CONSTRAINT "Labs_email_key" UNIQUE (email);
-ALTER TABLE ONLY public."Labs"
+ALTER TABLE ONLY public."LabsTmp"
     ADD CONSTRAINT "Labs_pkey" PRIMARY KEY (id);
 ALTER TABLE ONLY public."Library"
     ADD CONSTRAINT "Library_pkey" PRIMARY KEY (id);
@@ -1371,6 +1397,8 @@ ALTER TABLE ONLY public."SMS_campaign"
     ADD CONSTRAINT "SMS_campaign_pkey" PRIMARY KEY (id);
 ALTER TABLE ONLY public.tax_rates
     ADD CONSTRAINT "Taxes_pkey" PRIMARY KEY (id);
+ALTER TABLE ONLY public.app_listing
+    ADD CONSTRAINT app_listing_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.notification_types
     ADD CONSTRAINT application_notification_type_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.application_notifications
@@ -1417,8 +1445,6 @@ ALTER TABLE ONLY public.debt
     ADD CONSTRAINT debt_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.departments
     ADD CONSTRAINT departments_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.developer_hub
-    ADD CONSTRAINT developer_hub_pkey PRIMARY KEY (uuid);
 ALTER TABLE ONLY public.diagnostic_codes
     ADD CONSTRAINT diagnostic_codes_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.drugs
@@ -1565,6 +1591,8 @@ CREATE TRIGGER set_public_rota_templates_updated_at BEFORE UPDATE ON public.rota
 COMMENT ON TRIGGER set_public_rota_templates_updated_at ON public.rota_templates IS 'trigger to set value of column "updated_at" to current timestamp on row update';
 CREATE TRIGGER set_public_salutation_updated_at BEFORE UPDATE ON public.salutation FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
 COMMENT ON TRIGGER set_public_salutation_updated_at ON public.salutation IS 'trigger to set value of column "updated_at" to current timestamp on row update';
+CREATE TRIGGER set_public_service_min_attendees BEFORE UPDATE ON public.service FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_min_attendees();
+COMMENT ON TRIGGER set_public_service_min_attendees ON public.service IS 'trigger to set value of column "min_attendees" to current timestamp on row update';
 CREATE TRIGGER set_public_third_parties_updated_at BEFORE UPDATE ON public.third_parties FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
 COMMENT ON TRIGGER set_public_third_parties_updated_at ON public.third_parties IS 'trigger to set value of column "updated_at" to current timestamp on row update';
 ALTER TABLE ONLY public.application_notifications

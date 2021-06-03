@@ -34,7 +34,7 @@ const ADD_MUTATION = gql`
     $street: String
     $street2: String
   ) {
-    insert_Labs_one(
+    insert_LabsTmp_one(
       object: {
         city: $city
         country: $country

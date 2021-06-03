@@ -1,3 +1,4 @@
+
 overwrite: true
 schema: hasura/schema.graphql
 documents: ['libs/graphql/*.graphql', 'libs/graphql/crm-mutation']

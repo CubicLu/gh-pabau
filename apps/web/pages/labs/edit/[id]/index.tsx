@@ -24,7 +24,7 @@ const { Title } = Typography
 
 const GET_RECORD = gql`
   query Labs_by_pk($id: uuid!) {
-    Labs_by_pk(id: $id) {
+    LabsTmp_by_pk(id: $id) {
       city
       country
       email
@@ -41,7 +41,7 @@ const GET_RECORD = gql`
 `
 const DELETE_RECORD = gql`
   mutation delete_Labs_by_pk($id: uuid!) {
-    delete_Labs_by_pk(id: $id) {
+    delete_LabsTmp_by_pk(id: $id) {
       __typename
       id
     }
@@ -61,7 +61,7 @@ const EDIT_MUTATION = gql`
     $street: String
     $street2: String
   ) {
-    update_Labs_by_pk(
+    update_LabsTmp_by_pk(
       pk_columns: { id: $id }
       _set: {
         name: $name

@@ -1,6 +1,16 @@
 table:
   name: product_news
   schema: public
+array_relationships:
+- name: read_by
+  using:
+    manual_configuration:
+      column_mapping:
+        id: product_news
+      insertion_order: null
+      remote_table:
+        name: product_news_read
+        schema: public
 insert_permissions:
 - permission:
     backend_only: false

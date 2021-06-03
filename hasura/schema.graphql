@@ -3743,38 +3743,6 @@ input BnfDrugOrderByInput {
   url: SortOrder
 }
 
-input BnfDrugUpdateInput {
-  breast_feeding: NullableStringFieldUpdateOperationsInput
-  cautions: NullableStringFieldUpdateOperationsInput
-  contra_indications: NullableStringFieldUpdateOperationsInput
-  directions: NullableStringFieldUpdateOperationsInput
-  drug_name: StringFieldUpdateOperationsInput
-  indications_dosage: NullableStringFieldUpdateOperationsInput
-  page: StringFieldUpdateOperationsInput
-  patient_advice: NullableStringFieldUpdateOperationsInput
-  pregnancy: NullableStringFieldUpdateOperationsInput
-  prescribing_info: NullableStringFieldUpdateOperationsInput
-  side_effects: NullableStringFieldUpdateOperationsInput
-  specific_info: NullableStringFieldUpdateOperationsInput
-  url: StringFieldUpdateOperationsInput
-}
-
-input BnfDrugUpdateManyMutationInput {
-  breast_feeding: NullableStringFieldUpdateOperationsInput
-  cautions: NullableStringFieldUpdateOperationsInput
-  contra_indications: NullableStringFieldUpdateOperationsInput
-  directions: NullableStringFieldUpdateOperationsInput
-  drug_name: StringFieldUpdateOperationsInput
-  indications_dosage: NullableStringFieldUpdateOperationsInput
-  page: StringFieldUpdateOperationsInput
-  patient_advice: NullableStringFieldUpdateOperationsInput
-  pregnancy: NullableStringFieldUpdateOperationsInput
-  prescribing_info: NullableStringFieldUpdateOperationsInput
-  side_effects: NullableStringFieldUpdateOperationsInput
-  specific_info: NullableStringFieldUpdateOperationsInput
-  url: StringFieldUpdateOperationsInput
-}
-
 input BnfDrugWhereInput {
   AND: [BnfDrugWhereInput]
   NOT: [BnfDrugWhereInput]
@@ -7344,6 +7312,20 @@ input CampaignAttachmentCreateManyCompanyInputEnvelope {
   skipDuplicates: Boolean
 }
 
+input CampaignAttachmentCreateManyCompanyInput {
+  attach_id: Int!
+  attach_time: String!
+  attach_user_name: String!
+  attachment_type: String!
+  campaign_id: Int!
+  id: Int
+}
+
+input CampaignAttachmentCreateManyCompanyInputEnvelope {
+  data: CampaignAttachmentCreateManyCompanyInput!
+  skipDuplicates: Boolean
+}
+
 input CampaignAttachmentCreateOrConnectWithoutCompanyInput {
   create: CampaignAttachmentUncheckedCreateWithoutCompanyInput!
   where: CampaignAttachmentWhereUniqueInput!
@@ -10584,21 +10566,6 @@ input CmAppointmentsCustomImportHelperCreateManyCompanyInputEnvelope {
   skipDuplicates: Boolean
 }
 
-input CmAppointmentsCustomImportHelperCreateManyCompanyInput {
-  added: Int!
-  appointment_id: Int!
-  custom_appointment_id: Int!
-  custom_contact_name: String!
-  custom_field_name: String!
-  custom_field_value: String
-  id: Int
-}
-
-input CmAppointmentsCustomImportHelperCreateManyCompanyInputEnvelope {
-  data: CmAppointmentsCustomImportHelperCreateManyCompanyInput!
-  skipDuplicates: Boolean
-}
-
 input CmAppointmentsCustomImportHelperCreateOrConnectWithoutCompanyInput {
   create: CmAppointmentsCustomImportHelperUncheckedCreateWithoutCompanyInput!
   where: CmAppointmentsCustomImportHelperWhereUniqueInput!
@@ -12861,17 +12828,6 @@ input CmContactJsonCreateInput {
   Company: CompanyCreateNestedOneWithoutCmContactJsonInput!
   clients_json: String!
   date_updated: DateTime
-}
-
-input CmContactJsonCreateManyCompanyInput {
-  clients_json: String!
-  date_updated: DateTime
-  id: Int
-}
-
-input CmContactJsonCreateManyCompanyInputEnvelope {
-  data: CmContactJsonCreateManyCompanyInput!
-  skipDuplicates: Boolean
 }
 
 input CmContactJsonCreateManyCompanyInput {
@@ -18128,6 +18084,42 @@ input CmContactViewedCreateManyUserInputEnvelope {
   skipDuplicates: Boolean
 }
 
+input CmContactViewedCreateManyCmContactInput {
+  company_id: Int!
+  date: DateTime!
+  id: Int
+  user_id: Int!
+}
+
+input CmContactViewedCreateManyCmContactInputEnvelope {
+  data: CmContactViewedCreateManyCmContactInput!
+  skipDuplicates: Boolean
+}
+
+input CmContactViewedCreateManyCompanyInput {
+  contact_id: Int!
+  date: DateTime!
+  id: Int
+  user_id: Int!
+}
+
+input CmContactViewedCreateManyCompanyInputEnvelope {
+  data: CmContactViewedCreateManyCompanyInput!
+  skipDuplicates: Boolean
+}
+
+input CmContactViewedCreateManyUserInput {
+  company_id: Int!
+  contact_id: Int!
+  date: DateTime!
+  id: Int
+}
+
+input CmContactViewedCreateManyUserInputEnvelope {
+  data: CmContactViewedCreateManyUserInput!
+  skipDuplicates: Boolean
+}
+
 input CmContactViewedCreateNestedManyWithoutCmContactInput {
   connect: [CmContactViewedWhereUniqueInput]
   connectOrCreate: [CmContactViewedCreateOrConnectWithoutCmContactInput]
@@ -18580,6 +18572,19 @@ input CmCouponClaimedCreateManyCmCouponInputEnvelope {
   skipDuplicates: Boolean
 }
 
+input CmCouponClaimedCreateManyCmCouponInput {
+  active: Int!
+  claim_date: DateTime!
+  claim_email: String!
+  claim_full_name: String!
+  id: Int
+}
+
+input CmCouponClaimedCreateManyCmCouponInputEnvelope {
+  data: CmCouponClaimedCreateManyCmCouponInput!
+  skipDuplicates: Boolean
+}
+
 input CmCouponClaimedCreateNestedManyWithoutCmCouponInput {
   connect: [CmCouponClaimedWhereUniqueInput]
   connectOrCreate: [CmCouponClaimedCreateOrConnectWithoutCmCouponInput]
@@ -18743,16 +18748,6 @@ type CmCouponClick {
 input CmCouponClickCreateInput {
   CmCoupon: CmCouponCreateNestedOneWithoutCmCouponClickInput!
   click_date: DateTime!
-}
-
-input CmCouponClickCreateManyCmCouponInput {
-  click_date: DateTime!
-  id: Int
-}
-
-input CmCouponClickCreateManyCmCouponInputEnvelope {
-  data: CmCouponClickCreateManyCmCouponInput!
-  skipDuplicates: Boolean
 }
 
 input CmCouponClickCreateManyCmCouponInput {
@@ -21562,112 +21557,6 @@ input CmStaffGeneralCreateManyCompanyBranchInput {
   secretary_enable: Boolean!
 }
 
-input CmStaffGeneralCreateManyCompanyBranchInputEnvelope {
-  data: CmStaffGeneralCreateManyCompanyBranchInput!
-  skipDuplicates: Boolean
-}
-
-input CmStaffGeneralCreateManyCompanyInput {
-  Address1: String!
-  Address2: String!
-  Avatar: String!
-  Birthdate: DateTime
-  CellPhone: String!
-  City: String!
-  Country: String!
-  CreatedDate: DateTime
-  DefaultLocation: Int
-  Department: Int!
-  EEOCategory: Int!
-  EEOCode: Int!
-  Email: String!
-  EmployeeNumber: String!
-  EnumStatus: cm_staff_general_EnumStatus
-  Exemptions: String!
-  Fax: String!
-  Fname: String!
-  Gender: Int!
-  HireDate: DateTime
-  HomePhone: String!
-  ID: Int
-  IpAddress: Int!
-  Lname: String!
-  Location: String!
-  MI: String!
-  Manager: Int!
-  NextReview: DateTime
-  OwnerID: String
-  Position: Int
-  RenewalDate: DateTime
-  SSN: String!
-  Salutation: String!
-  St: String!
-  Status: Int!
-  W4Status: Int!
-  WorkPhone: String!
-  Zip: String!
-  commission_sheet_id: Int!
-  consultation_fee: Float!
-  deleted_on: String!
-  max_vacation_days: Int
-  pabau_id: Int
-  secretary: String!
-  secretary_enable: Boolean!
-}
-
-input CmStaffGeneralCreateManyCompanyInputEnvelope {
-  data: CmStaffGeneralCreateManyCompanyInput!
-  skipDuplicates: Boolean
-}
-
-input CmStaffGeneralCreateManyCompanyPositionInput {
-  Address1: String!
-  Address2: String!
-  Avatar: String!
-  Birthdate: DateTime
-  CellPhone: String!
-  City: String!
-  Country: String!
-  CreatedDate: DateTime
-  DefaultLocation: Int
-  Department: Int!
-  EEOCategory: Int!
-  EEOCode: Int!
-  Email: String!
-  EmployeeNumber: String!
-  EnumStatus: cm_staff_general_EnumStatus
-  Exemptions: String!
-  Fax: String!
-  Fname: String!
-  Gender: Int!
-  HireDate: DateTime
-  HomePhone: String!
-  ID: Int
-  IpAddress: Int!
-  Lname: String!
-  Location: String!
-  MI: String!
-  Manager: Int!
-  NextReview: DateTime
-  OwnerID: String
-  RenewalDate: DateTime
-  SSN: String!
-  Salutation: String!
-  St: String!
-  Status: Int!
-  W4Status: Int!
-  WorkPhone: String!
-  Zip: String!
-  commission_sheet_id: Int!
-  company_id: Int!
-  consultation_fee: Float!
-  deleted_on: String!
-  max_vacation_days: Int
-  pabau_id: Int
-  secretary: String!
-  secretary_enable: Boolean!
-}
-
 input CmStaffGeneralCreateManyCompanyBranchInput {
   Address1: String!
   Address2: String!
@@ -21820,64 +21709,6 @@ input CmStaffGeneralCreateManyCompanyPositionInput {
   pabau_id: Int!
   secretary: String!
   secretary_enable: Boolean!
-}
-
-input CmStaffGeneralCreateManyCompanyPositionInputEnvelope {
-  data: CmStaffGeneralCreateManyCompanyPositionInput!
-  skipDuplicates: Boolean
-}
-
-input CmStaffGeneralCreateManyUserInput {
-  Address1: String!
-  Address2: String!
-  Avatar: String!
-  Birthdate: DateTime
-  CellPhone: String!
-  City: String!
-  Country: String!
-  CreatedDate: DateTime
-  DefaultLocation: Int
-  Department: Int!
-  EEOCategory: Int!
-  EEOCode: Int!
-  Email: String!
-  EmployeeNumber: String!
-  EnumStatus: cm_staff_general_EnumStatus
-  Exemptions: String!
-  Fax: String!
-  Fname: String!
-  Gender: Int!
-  HireDate: DateTime
-  HomePhone: String!
-  ID: Int
-  IpAddress: Int!
-  Lname: String!
-  Location: String!
-  MI: String!
-  Manager: Int!
-  NextReview: DateTime
-  OwnerID: String
-  Position: Int
-  RenewalDate: DateTime
-  SSN: String!
-  Salutation: String!
-  St: String!
-  Status: Int!
-  W4Status: Int!
-  WorkPhone: String!
-  Zip: String!
-  commission_sheet_id: Int!
-  company_id: Int!
-  consultation_fee: Float!
-  deleted_on: String!
-  max_vacation_days: Int
-  secretary: String!
-  secretary_enable: Boolean!
-}
-
-input CmStaffGeneralCreateManyUserInputEnvelope {
-  data: CmStaffGeneralCreateManyUserInput!
-  skipDuplicates: Boolean
 }
 
 input CmStaffGeneralCreateManyCompanyPositionInputEnvelope {
@@ -23743,6 +23574,41 @@ input CompanyBranchCreateManyCompanyInput {
   show_online: Int
   street: String!
   website: String!
+}
+
+input CompanyBranchCreateManyCompanyInput {
+  address: String!
+  bookable_online: Int!
+  calendar_bookable: Int!
+  city: String!
+  color: String!
+  county: String!
+  custom_id: String!
+  email: String!
+  group_id: Int!
+  id: Int
+  invoice_template_id: Int
+  is_active: Int!
+  is_default: Boolean!
+  lat: Float!
+  lng: Float!
+  loc_order: Int!
+  name: String!
+  notice: String
+  notify_on_lead: Boolean
+  online_bookings: Int!
+  phone: String!
+  postcode: String!
+  region: String!
+  send_conf_email: Int!
+  show_online: Int
+  street: String!
+  website: String!
+}
+
+input CompanyBranchCreateManyCompanyInputEnvelope {
+  data: CompanyBranchCreateManyCompanyInput!
+  skipDuplicates: Boolean
 }
 
 input CompanyBranchCreateManyCompanyInputEnvelope {
@@ -25775,6 +25641,11 @@ input CompanyCreateOrConnectWithoutInvPaymentTypeInput {
   where: CompanyWhereUniqueInput!
 }
 
+input CompanyCreateOrConnectWithoutInvPaymentTypeInput {
+  create: CompanyUncheckedCreateWithoutInvPaymentTypeInput!
+  where: CompanyWhereUniqueInput!
+}
+
 input CompanyCreateOrConnectWithoutInvProductInput {
   create: CompanyUncheckedCreateWithoutInvProductInput!
   where: CompanyWhereUniqueInput!
@@ -25930,16 +25801,6 @@ type CompanyDepartment {
 input CompanyDepartmentCreateInput {
   Company: CompanyCreateNestedOneWithoutCompanyDepartmentInput!
   department: String!
-}
-
-input CompanyDepartmentCreateManyCompanyInput {
-  department: String!
-  id: Int
-}
-
-input CompanyDepartmentCreateManyCompanyInputEnvelope {
-  data: CompanyDepartmentCreateManyCompanyInput!
-  skipDuplicates: Boolean
 }
 
 input CompanyDepartmentCreateManyCompanyInput {
@@ -27947,12 +27808,14 @@ input CompanyOrderByInput {
   admin: SortOrder
   creation_date: SortOrder
   cron_enabled: SortOrder
+  details: CompanyDetailsOrderByInput
   digit8: SortOrder
   id: SortOrder
   image: SortOrder
   remote_connect: SortOrder
   remote_url: SortOrder
   slug: SortOrder
+  subscription: CompanySubscriptionOrderByInput
   user: SortOrder
 }
 
@@ -36774,6 +36637,104 @@ input CompanyUncheckedCreateWithoutInvPaymentTypeInput {
   HolidayRequest: HolidayRequestUncheckedCreateNestedManyWithoutCompanyInput
   InsuranceDetail: InsuranceDetailUncheckedCreateNestedManyWithoutCompanyInput
   InvBiller: InvBillerUncheckedCreateNestedManyWithoutCompanyInput
+  InvPaymentType: InvPaymentTypeUncheckedCreateNestedManyWithoutCompanyInput
+  InvPayment: InvPaymentUncheckedCreateNestedManyWithoutCompanyInput
+  InvProduct: InvProductUncheckedCreateNestedManyWithoutCompanyInput
+  Job: JobUncheckedCreateNestedManyWithoutCompanyInput
+  JobConfiguration: JobConfigurationUncheckedCreateNestedManyWithoutCompanyInput
+  JobOpening: JobOpeningUncheckedCreateNestedManyWithoutCompanyInput
+  JobStatus: JobStatusUncheckedCreateNestedManyWithoutCompanyInput
+  MarketingSource: MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
+  MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutCompanyInput
+  PermissionTemplate: PermissionTemplateUncheckedCreateNestedManyWithoutCompanyInput
+  PointOfSaleSetting: PointOfSaleSettingUncheckedCreateNestedManyWithoutCompanyInput
+  RotaShift: RotaShiftUncheckedCreateNestedManyWithoutCompanyInput
+  SmsPurchase: SmsPurchaseUncheckedCreateNestedManyWithoutCompanyInput
+  SocialSurvey: SocialSurveyUncheckedCreateNestedManyWithoutCompanyInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutCompanyInput
+  SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutCompanyInput
+  SocialSurveyQuestion: SocialSurveyQuestionUncheckedCreateNestedManyWithoutCompanyInput
+  TemplateFolder: TemplateFolderUncheckedCreateNestedManyWithoutCompanyInput
+  ThirdPartyAccess: ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
+  TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutCompanyInput
+  TwoFactorHistory: TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
+  User: UserUncheckedCreateNestedManyWithoutCompanyInput
+  UserActivityLog: UserActivityLogUncheckedCreateNestedManyWithoutCompanyInput
+  UserAlertPermission: UserAlertPermissionUncheckedCreateNestedManyWithoutCompanyInput
+  UserGroup: UserGroupUncheckedCreateNestedManyWithoutCompanyInput
+  UserMaster: UserMasterUncheckedCreateNestedManyWithoutCompanyInput
+  UserMobilePermission: UserMobilePermissionUncheckedCreateNestedManyWithoutCompanyInput
+  UserReport: UserReportUncheckedCreateNestedManyWithoutCompanyInput
+  UserSalutation: UserSalutationUncheckedCreateNestedManyWithoutCompanyInput
+  XeroIntegration: XeroIntegrationUncheckedCreateNestedManyWithoutCompanyInput
+  admin: Int!
+  creation_date: DateTime!
+  cron_enabled: Boolean
+  details: CompanyDetailsUncheckedCreateNestedOneWithoutCompanyInput
+  digit8: Int!
+  id: Int
+  image: String!
+  remote_connect: String
+  remote_url: String
+  slug: String
+  subscription: CompanySubscriptionUncheckedCreateNestedOneWithoutCompanyInput
+  user: String!
+}
+
+input CompanyUncheckedCreateWithoutInvPaymentTypeInput {
+  AcLog: AcLogUncheckedCreateNestedManyWithoutCompanyInput
+  AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
+  AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  AccountBalanceLog: AccountBalanceLogUncheckedCreateNestedManyWithoutCompanyInput
+  AccountManager: AccountManagerUncheckedCreateNestedManyWithoutCompanyInput
+  AppSubscriptionsCompanyPrice: AppSubscriptionsCompanyPriceUncheckedCreateNestedManyWithoutCompanyInput
+  AvilableDatesLog: AvilableDatesLogUncheckedCreateNestedManyWithoutCompanyInput
+  BlockReason: BlockReasonUncheckedCreateNestedManyWithoutCompanyInput
+  BodyChartTemplate: BodyChartTemplateUncheckedCreateNestedManyWithoutCompanyInput
+  BookingSetting: BookingSettingUncheckedCreateNestedManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
+  BookitProGeneral: BookitProGeneralUncheckedCreateNestedManyWithoutCompanyInput
+  BookitProSlider: BookitProSliderUncheckedCreateNestedManyWithoutCompanyInput
+  CalendarView: CalendarViewUncheckedCreateNestedManyWithoutCompanyInput
+  CampaignAttachment: CampaignAttachmentUncheckedCreateNestedManyWithoutCompanyInput
+  CancelReason: CancelReasonUncheckedCreateNestedManyWithoutCompanyInput
+  CancellationPolicy: CancellationPolicyUncheckedCreateNestedManyWithoutCompanyInput
+  Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
+  ClassCategory: ClassCategoryUncheckedCreateNestedManyWithoutCompanyInput
+  ClassProduct: ClassProductUncheckedCreateNestedManyWithoutCompanyInput
+  ClockinLongpoll: ClockinLongpollUncheckedCreateNestedManyWithoutCompanyInput
+  CmAppointmentCustom: CmAppointmentCustomUncheckedCreateNestedManyWithoutCompanyInput
+  CmAppointmentsCustomImportHelper: CmAppointmentsCustomImportHelperUncheckedCreateNestedManyWithoutCompanyInput
+  CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
+  CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
+  CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
+  CmContact: CmContactUncheckedCreateNestedManyWithoutCompanyInput
+  CmContactJson: CmContactJsonUncheckedCreateNestedManyWithoutCompanyInput
+  CmContactLocation: CmContactLocationUncheckedCreateNestedManyWithoutCompanyInput
+  CmContactMedicalCondition: CmContactMedicalConditionUncheckedCreateNestedManyWithoutCompanyInput
+  CmContactTravel: CmContactTravelUncheckedCreateNestedManyWithoutCompanyInput
+  CmContactViewed: CmContactViewedUncheckedCreateNestedManyWithoutCompanyInput
+  CmDrug: CmDrugUncheckedCreateNestedManyWithoutCompanyInput
+  CmExtraPatient: CmExtraPatientUncheckedCreateNestedManyWithoutCompanyInput
+  CmExtraSalon: CmExtraSalonUncheckedCreateNestedManyWithoutCompanyInput
+  CmLead: CmLeadUncheckedCreateNestedManyWithoutCompanyInput
+  CmStaffGeneral: CmStaffGeneralUncheckedCreateNestedManyWithoutCompanyInput
+  CompanyBranch: CompanyBranchUncheckedCreateNestedManyWithoutCompanyInput
+  CompanyDepartment: CompanyDepartmentUncheckedCreateNestedManyWithoutCompanyInput
+  CompanyLocation: CompanyLocationUncheckedCreateNestedManyWithoutCompanyInput
+  CompanyMeta: CompanyMetaUncheckedCreateNestedManyWithoutCompanyInput
+  CompanyNote: CompanyNoteUncheckedCreateNestedManyWithoutCompanyInput
+  CompanyPermission: CompanyPermissionUncheckedCreateNestedManyWithoutCompanyInput
+  CompanyPolicy: CompanyPolicyUncheckedCreateNestedManyWithoutCompanyInput
+  CompanyPosition: CompanyPositionUncheckedCreateNestedManyWithoutCompanyInput
+  CompanyRoom: CompanyRoomUncheckedCreateNestedManyWithoutCompanyInput
+  CompanyRoomService: CompanyRoomServiceUncheckedCreateNestedManyWithoutCompanyInput
+  CompanyService: CompanyServiceUncheckedCreateNestedManyWithoutCompanyInput
+  GroupPermission: GroupPermissionUncheckedCreateNestedManyWithoutCompanyInput
+  HealthcodeInsurer: HealthcodeInsurerUncheckedCreateNestedManyWithoutCompanyInput
+  HolidayRequest: HolidayRequestUncheckedCreateNestedManyWithoutCompanyInput
+  InsuranceDetail: InsuranceDetailUncheckedCreateNestedManyWithoutCompanyInput
+  InvBiller: InvBillerUncheckedCreateNestedManyWithoutCompanyInput
   InvPayment: InvPaymentUncheckedCreateNestedManyWithoutCompanyInput
   InvProduct: InvProductUncheckedCreateNestedManyWithoutCompanyInput
   Job: JobUncheckedCreateNestedManyWithoutCompanyInput
@@ -45385,6 +45346,104 @@ input CompanyUncheckedUpdateWithoutInvPaymentTypeInput {
   HolidayRequest: HolidayRequestUncheckedUpdateManyWithoutCompanyInput
   InsuranceDetail: InsuranceDetailUncheckedUpdateManyWithoutCompanyInput
   InvBiller: InvBillerUncheckedUpdateManyWithoutCompanyInput
+  InvPaymentType: InvPaymentTypeUncheckedUpdateManyWithoutCompanyInput
+  InvPayment: InvPaymentUncheckedUpdateManyWithoutCompanyInput
+  InvProduct: InvProductUncheckedUpdateManyWithoutCompanyInput
+  Job: JobUncheckedUpdateManyWithoutCompanyInput
+  JobConfiguration: JobConfigurationUncheckedUpdateManyWithoutCompanyInput
+  JobOpening: JobOpeningUncheckedUpdateManyWithoutCompanyInput
+  JobStatus: JobStatusUncheckedUpdateManyWithoutCompanyInput
+  MarketingSource: MarketingSourceUncheckedUpdateManyWithoutCompanyInput
+  MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutCompanyInput
+  PermissionTemplate: PermissionTemplateUncheckedUpdateManyWithoutCompanyInput
+  PointOfSaleSetting: PointOfSaleSettingUncheckedUpdateManyWithoutCompanyInput
+  RotaShift: RotaShiftUncheckedUpdateManyWithoutCompanyInput
+  SmsPurchase: SmsPurchaseUncheckedUpdateManyWithoutCompanyInput
+  SocialSurvey: SocialSurveyUncheckedUpdateManyWithoutCompanyInput
+  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutCompanyInput
+  SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutCompanyInput
+  SocialSurveyQuestion: SocialSurveyQuestionUncheckedUpdateManyWithoutCompanyInput
+  TemplateFolder: TemplateFolderUncheckedUpdateManyWithoutCompanyInput
+  ThirdPartyAccess: ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
+  TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutCompanyInput
+  TwoFactorHistory: TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
+  User: UserUncheckedUpdateManyWithoutCompanyInput
+  UserActivityLog: UserActivityLogUncheckedUpdateManyWithoutCompanyInput
+  UserAlertPermission: UserAlertPermissionUncheckedUpdateManyWithoutCompanyInput
+  UserGroup: UserGroupUncheckedUpdateManyWithoutCompanyInput
+  UserMaster: UserMasterUncheckedUpdateManyWithoutCompanyInput
+  UserMobilePermission: UserMobilePermissionUncheckedUpdateManyWithoutCompanyInput
+  UserReport: UserReportUncheckedUpdateManyWithoutCompanyInput
+  UserSalutation: UserSalutationUncheckedUpdateManyWithoutCompanyInput
+  XeroIntegration: XeroIntegrationUncheckedUpdateManyWithoutCompanyInput
+  admin: IntFieldUpdateOperationsInput
+  creation_date: DateTimeFieldUpdateOperationsInput
+  cron_enabled: NullableBoolFieldUpdateOperationsInput
+  details: CompanyDetailsUncheckedUpdateOneWithoutCompanyInput
+  digit8: IntFieldUpdateOperationsInput
+  id: IntFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
+  remote_connect: NullableStringFieldUpdateOperationsInput
+  remote_url: NullableStringFieldUpdateOperationsInput
+  slug: NullableStringFieldUpdateOperationsInput
+  subscription: CompanySubscriptionUncheckedUpdateOneWithoutCompanyInput
+  user: StringFieldUpdateOperationsInput
+}
+
+input CompanyUncheckedUpdateWithoutInvPaymentTypeInput {
+  AcLog: AcLogUncheckedUpdateManyWithoutCompanyInput
+  AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
+  AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
+  AccountBalanceLog: AccountBalanceLogUncheckedUpdateManyWithoutCompanyInput
+  AccountManager: AccountManagerUncheckedUpdateManyWithoutCompanyInput
+  AppSubscriptionsCompanyPrice: AppSubscriptionsCompanyPriceUncheckedUpdateManyWithoutCompanyInput
+  AvilableDatesLog: AvilableDatesLogUncheckedUpdateManyWithoutCompanyInput
+  BlockReason: BlockReasonUncheckedUpdateManyWithoutCompanyInput
+  BodyChartTemplate: BodyChartTemplateUncheckedUpdateManyWithoutCompanyInput
+  BookingSetting: BookingSettingUncheckedUpdateManyWithoutCompanyInput
+  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
+  BookitProGeneral: BookitProGeneralUncheckedUpdateManyWithoutCompanyInput
+  BookitProSlider: BookitProSliderUncheckedUpdateManyWithoutCompanyInput
+  CalendarView: CalendarViewUncheckedUpdateManyWithoutCompanyInput
+  CampaignAttachment: CampaignAttachmentUncheckedUpdateManyWithoutCompanyInput
+  CancelReason: CancelReasonUncheckedUpdateManyWithoutCompanyInput
+  CancellationPolicy: CancellationPolicyUncheckedUpdateManyWithoutCompanyInput
+  Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
+  ClassCategory: ClassCategoryUncheckedUpdateManyWithoutCompanyInput
+  ClassProduct: ClassProductUncheckedUpdateManyWithoutCompanyInput
+  ClockinLongpoll: ClockinLongpollUncheckedUpdateManyWithoutCompanyInput
+  CmAppointmentCustom: CmAppointmentCustomUncheckedUpdateManyWithoutCompanyInput
+  CmAppointmentsCustomImportHelper: CmAppointmentsCustomImportHelperUncheckedUpdateManyWithoutCompanyInput
+  CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
+  CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
+  CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
+  CmContact: CmContactUncheckedUpdateManyWithoutCompanyInput
+  CmContactJson: CmContactJsonUncheckedUpdateManyWithoutCompanyInput
+  CmContactLocation: CmContactLocationUncheckedUpdateManyWithoutCompanyInput
+  CmContactMedicalCondition: CmContactMedicalConditionUncheckedUpdateManyWithoutCompanyInput
+  CmContactTravel: CmContactTravelUncheckedUpdateManyWithoutCompanyInput
+  CmContactViewed: CmContactViewedUncheckedUpdateManyWithoutCompanyInput
+  CmDrug: CmDrugUncheckedUpdateManyWithoutCompanyInput
+  CmExtraPatient: CmExtraPatientUncheckedUpdateManyWithoutCompanyInput
+  CmExtraSalon: CmExtraSalonUncheckedUpdateManyWithoutCompanyInput
+  CmLead: CmLeadUncheckedUpdateManyWithoutCompanyInput
+  CmStaffGeneral: CmStaffGeneralUncheckedUpdateManyWithoutCompanyInput
+  CompanyBranch: CompanyBranchUncheckedUpdateManyWithoutCompanyInput
+  CompanyDepartment: CompanyDepartmentUncheckedUpdateManyWithoutCompanyInput
+  CompanyLocation: CompanyLocationUncheckedUpdateManyWithoutCompanyInput
+  CompanyMeta: CompanyMetaUncheckedUpdateManyWithoutCompanyInput
+  CompanyNote: CompanyNoteUncheckedUpdateManyWithoutCompanyInput
+  CompanyPermission: CompanyPermissionUncheckedUpdateManyWithoutCompanyInput
+  CompanyPolicy: CompanyPolicyUncheckedUpdateManyWithoutCompanyInput
+  CompanyPosition: CompanyPositionUncheckedUpdateManyWithoutCompanyInput
+  CompanyRoom: CompanyRoomUncheckedUpdateManyWithoutCompanyInput
+  CompanyRoomService: CompanyRoomServiceUncheckedUpdateManyWithoutCompanyInput
+  CompanyService: CompanyServiceUncheckedUpdateManyWithoutCompanyInput
+  GroupPermission: GroupPermissionUncheckedUpdateManyWithoutCompanyInput
+  HealthcodeInsurer: HealthcodeInsurerUncheckedUpdateManyWithoutCompanyInput
+  HolidayRequest: HolidayRequestUncheckedUpdateManyWithoutCompanyInput
+  InsuranceDetail: InsuranceDetailUncheckedUpdateManyWithoutCompanyInput
+  InvBiller: InvBillerUncheckedUpdateManyWithoutCompanyInput
   InvPayment: InvPaymentUncheckedUpdateManyWithoutCompanyInput
   InvProduct: InvProductUncheckedUpdateManyWithoutCompanyInput
   Job: JobUncheckedUpdateManyWithoutCompanyInput
@@ -49082,6 +49141,16 @@ input CompanyUpdateOneWithoutInvBillerInput {
   upsert: CompanyUpsertWithoutInvBillerInput
 }
 
+input CompanyUpdateOneWithoutInvPaymentTypeInput {
+  connect: CompanyWhereUniqueInput
+  connectOrCreate: CompanyCreateOrConnectWithoutInvPaymentTypeInput
+  create: CompanyUncheckedCreateWithoutInvPaymentTypeInput
+  delete: Boolean
+  disconnect: Boolean
+  update: CompanyUncheckedUpdateWithoutInvPaymentTypeInput
+  upsert: CompanyUpsertWithoutInvPaymentTypeInput
+}
+
 input CompanyUpdateOneWithoutInvProductInput {
   connect: CompanyWhereUniqueInput
   connectOrCreate: CompanyCreateOrConnectWithoutInvProductInput
@@ -52433,6 +52502,72 @@ input InvBillerCreateManyUserInputEnvelope {
   skipDuplicates: Boolean
 }
 
+input InvBillerCreateManyCompanyInput {
+  account_no: String!
+  address: String!
+  bank: String!
+  city: String!
+  cnp: String!
+  company: String!
+  country: String!
+  created_date: DateTime
+  cui: String!
+  custom_id: Int!
+  email: String!
+  id: Int
+  imported: Int!
+  invoice_footer: String!
+  is_disabled: Boolean!
+  logo: String!
+  modified_date: DateTime
+  name: String!
+  phone: String!
+  postal_code: String!
+  qualification: String!
+  reg: String!
+  serie: String!
+  state: String!
+  uid: Int
+}
+
+input InvBillerCreateManyCompanyInputEnvelope {
+  data: InvBillerCreateManyCompanyInput!
+  skipDuplicates: Boolean
+}
+
+input InvBillerCreateManyUserInput {
+  account_no: String!
+  address: String!
+  bank: String!
+  city: String!
+  cnp: String!
+  company: String!
+  company_id: Int
+  country: String!
+  created_date: DateTime
+  cui: String!
+  custom_id: Int!
+  email: String!
+  id: Int
+  imported: Int!
+  invoice_footer: String!
+  is_disabled: Boolean!
+  logo: String!
+  modified_date: DateTime
+  name: String!
+  phone: String!
+  postal_code: String!
+  qualification: String!
+  reg: String!
+  serie: String!
+  state: String!
+}
+
+input InvBillerCreateManyUserInputEnvelope {
+  data: InvBillerCreateManyUserInput!
+  skipDuplicates: Boolean
+}
+
 input InvBillerCreateNestedManyWithoutUserInput {
   connect: [InvBillerWhereUniqueInput]
   connectOrCreate: [InvBillerCreateOrConnectWithoutUserInput]
@@ -53492,10 +53627,22 @@ type InvPaymentType {
 input InvPaymentTypeCreateInput {
   Company: CompanyCreateNestedOneWithoutInvPaymentTypeInput!
   GlCode: GlCodeCreateNestedOneWithoutInvPaymentTypeInput
-  company_id: Int
   created_date: DateTime
   description: String
   epos_display: Int
+  is_active: Int!
+  is_money: Int!
+  modified_date: DateTime
+  name: String
+  type: String
+  uid: Int
+}
+
+input InvPaymentTypeCreateManyCompanyInput {
+  created_date: DateTime
+  description: String
+  epos_display: Int
+  id: Int
   is_active: Int!
   is_money: Int!
   modified_date: DateTime
@@ -53610,7 +53757,7 @@ input InvPaymentTypeUncheckedCreateWithoutCompanyInput {
 }
 
 input InvPaymentTypeUncheckedCreateWithoutGlCodeInput {
-  company_id: Int!
+  company_id: Int
   created_date: DateTime
   description: String
   epos_display: Int
@@ -53665,7 +53812,7 @@ input InvPaymentTypeUncheckedUpdateWithoutCompanyInput {
 }
 
 input InvPaymentTypeUncheckedUpdateWithoutGlCodeInput {
-  company_id: IntFieldUpdateOperationsInput
+  company_id: NullableIntFieldUpdateOperationsInput
   created_date: NullableDateTimeFieldUpdateOperationsInput
   description: NullableStringFieldUpdateOperationsInput
   epos_display: NullableIntFieldUpdateOperationsInput
@@ -53755,7 +53902,7 @@ input InvPaymentTypeWhereInput {
   GlCode: GlCodeWhereInput
   NOT: [InvPaymentTypeWhereInput]
   OR: [InvPaymentTypeWhereInput]
-  company_id: IntFilter
+  company_id: IntNullableFilter
   created_date: DateTimeNullableFilter
   description: StringNullableFilter
   epos_display: IntNullableFilter
@@ -56396,9 +56543,9 @@ input JobWhereUniqueInput {
 scalar Json
 
 """
-columns and relationships of "Labs"
+columns and relationships of "LabsTmp"
 """
-type Labs {
+type LabsTmp {
   city: String
   country: String
   created_at: timestamptz!
@@ -56419,44 +56566,44 @@ type Labs {
 }
 
 """
-aggregated selection of "Labs"
+aggregated selection of "LabsTmp"
 """
-type Labs_aggregate {
-  aggregate: Labs_aggregate_fields
-  nodes: [Labs!]!
+type LabsTmp_aggregate {
+  aggregate: LabsTmp_aggregate_fields
+  nodes: [LabsTmp!]!
 }
 
 """
-aggregate fields of "Labs"
+aggregate fields of "LabsTmp"
 """
-type Labs_aggregate_fields {
-  avg: Labs_avg_fields
-  count(columns: [Labs_select_column!], distinct: Boolean): Int!
-  max: Labs_max_fields
-  min: Labs_min_fields
-  stddev: Labs_stddev_fields
-  stddev_pop: Labs_stddev_pop_fields
-  stddev_samp: Labs_stddev_samp_fields
-  sum: Labs_sum_fields
-  var_pop: Labs_var_pop_fields
-  var_samp: Labs_var_samp_fields
-  variance: Labs_variance_fields
+type LabsTmp_aggregate_fields {
+  avg: LabsTmp_avg_fields
+  count(columns: [LabsTmp_select_column!], distinct: Boolean): Int!
+  max: LabsTmp_max_fields
+  min: LabsTmp_min_fields
+  stddev: LabsTmp_stddev_fields
+  stddev_pop: LabsTmp_stddev_pop_fields
+  stddev_samp: LabsTmp_stddev_samp_fields
+  sum: LabsTmp_sum_fields
+  var_pop: LabsTmp_var_pop_fields
+  var_samp: LabsTmp_var_samp_fields
+  variance: LabsTmp_variance_fields
 }
 
 """aggregate avg on columns"""
-type Labs_avg_fields {
+type LabsTmp_avg_fields {
   order: Float
   postal_code: Float
   provider_number: Float
 }
 
 """
-Boolean expression to filter rows from the table "Labs". All fields are combined with a logical 'AND'.
+Boolean expression to filter rows from the table "LabsTmp". All fields are combined with a logical 'AND'.
 """
-input Labs_bool_exp {
-  _and: [Labs_bool_exp!]
-  _not: Labs_bool_exp
-  _or: [Labs_bool_exp!]
+input LabsTmp_bool_exp {
+  _and: [LabsTmp_bool_exp!]
+  _not: LabsTmp_bool_exp
+  _or: [LabsTmp_bool_exp!]
   city: String_comparison_exp
   country: String_comparison_exp
   created_at: timestamptz_comparison_exp
@@ -56475,9 +56622,9 @@ input Labs_bool_exp {
 }
 
 """
-unique or primary key constraints on table "Labs"
+unique or primary key constraints on table "LabsTmp"
 """
-enum Labs_constraint {
+enum LabsTmp_constraint {
   """unique or primary key constraint"""
   Labs_email_key
 
@@ -56486,18 +56633,18 @@ enum Labs_constraint {
 }
 
 """
-input type for incrementing numeric columns in table "Labs"
+input type for incrementing numeric columns in table "LabsTmp"
 """
-input Labs_inc_input {
+input LabsTmp_inc_input {
   order: Int
   postal_code: numeric
   provider_number: numeric
 }
 
 """
-input type for inserting data into table "Labs"
+input type for inserting data into table "LabsTmp"
 """
-input Labs_insert_input {
+input LabsTmp_insert_input {
   city: String
   country: String
   created_at: timestamptz
@@ -56518,7 +56665,7 @@ input Labs_insert_input {
 }
 
 """aggregate max on columns"""
-type Labs_max_fields {
+type LabsTmp_max_fields {
   city: String
   country: String
   created_at: timestamptz
@@ -56537,7 +56684,7 @@ type Labs_max_fields {
 }
 
 """aggregate min on columns"""
-type Labs_min_fields {
+type LabsTmp_min_fields {
   city: String
   country: String
   created_at: timestamptz
@@ -56556,27 +56703,27 @@ type Labs_min_fields {
 }
 
 """
-response of any mutation on the table "Labs"
+response of any mutation on the table "LabsTmp"
 """
-type Labs_mutation_response {
+type LabsTmp_mutation_response {
   """number of rows affected by the mutation"""
   affected_rows: Int!
 
   """data from the rows affected by the mutation"""
-  returning: [Labs!]!
+  returning: [LabsTmp!]!
 }
 
 """
-on conflict condition type for table "Labs"
+on conflict condition type for table "LabsTmp"
 """
-input Labs_on_conflict {
-  constraint: Labs_constraint!
-  update_columns: [Labs_update_column!]! = []
-  where: Labs_bool_exp
+input LabsTmp_on_conflict {
+  constraint: LabsTmp_constraint!
+  update_columns: [LabsTmp_update_column!]! = []
+  where: LabsTmp_bool_exp
 }
 
-"""Ordering options when selecting data from "Labs"."""
-input Labs_order_by {
+"""Ordering options when selecting data from "LabsTmp"."""
+input LabsTmp_order_by {
   city: order_by
   country: order_by
   created_at: order_by
@@ -56594,15 +56741,15 @@ input Labs_order_by {
   updated_at: order_by
 }
 
-"""primary key columns input for table: Labs"""
-input Labs_pk_columns_input {
+"""primary key columns input for table: LabsTmp"""
+input LabsTmp_pk_columns_input {
   id: uuid!
 }
 
 """
-select columns of table "Labs"
+select columns of table "LabsTmp"
 """
-enum Labs_select_column {
+enum LabsTmp_select_column {
   """column name"""
   city
 
@@ -56650,9 +56797,9 @@ enum Labs_select_column {
 }
 
 """
-input type for updating data in table "Labs"
+input type for updating data in table "LabsTmp"
 """
-input Labs_set_input {
+input LabsTmp_set_input {
   city: String
   country: String
   created_at: timestamptz
@@ -56673,37 +56820,37 @@ input Labs_set_input {
 }
 
 """aggregate stddev on columns"""
-type Labs_stddev_fields {
+type LabsTmp_stddev_fields {
   order: Float
   postal_code: Float
   provider_number: Float
 }
 
 """aggregate stddev_pop on columns"""
-type Labs_stddev_pop_fields {
+type LabsTmp_stddev_pop_fields {
   order: Float
   postal_code: Float
   provider_number: Float
 }
 
 """aggregate stddev_samp on columns"""
-type Labs_stddev_samp_fields {
+type LabsTmp_stddev_samp_fields {
   order: Float
   postal_code: Float
   provider_number: Float
 }
 
 """aggregate sum on columns"""
-type Labs_sum_fields {
+type LabsTmp_sum_fields {
   order: Int
   postal_code: numeric
   provider_number: numeric
 }
 
 """
-update columns of table "Labs"
+update columns of table "LabsTmp"
 """
-enum Labs_update_column {
+enum LabsTmp_update_column {
   """column name"""
   city
 
@@ -56751,21 +56898,21 @@ enum Labs_update_column {
 }
 
 """aggregate var_pop on columns"""
-type Labs_var_pop_fields {
+type LabsTmp_var_pop_fields {
   order: Float
   postal_code: Float
   provider_number: Float
 }
 
 """aggregate var_samp on columns"""
-type Labs_var_samp_fields {
+type LabsTmp_var_samp_fields {
   order: Float
   postal_code: Float
   provider_number: Float
 }
 
 """aggregate variance on columns"""
-type Labs_variance_fields {
+type LabsTmp_variance_fields {
   order: Float
   postal_code: Float
   provider_number: Float
@@ -64689,6 +64836,45 @@ input SocialSurveyFeedbackResponseCreateManyUserInputEnvelope {
   skipDuplicates: Boolean
 }
 
+input SocialSurveyFeedbackResponseCreateManyCompanyInput {
+  date: DateTime
+  id: Int
+  response: String!
+  review_id: Int!
+  uid: Int!
+}
+
+input SocialSurveyFeedbackResponseCreateManyCompanyInputEnvelope {
+  data: SocialSurveyFeedbackResponseCreateManyCompanyInput!
+  skipDuplicates: Boolean
+}
+
+input SocialSurveyFeedbackResponseCreateManyFeedbackInput {
+  company_id: Int!
+  date: DateTime
+  id: Int
+  response: String!
+  uid: Int!
+}
+
+input SocialSurveyFeedbackResponseCreateManyFeedbackInputEnvelope {
+  data: SocialSurveyFeedbackResponseCreateManyFeedbackInput!
+  skipDuplicates: Boolean
+}
+
+input SocialSurveyFeedbackResponseCreateManyUserInput {
+  company_id: Int!
+  date: DateTime
+  id: Int
+  response: String!
+  review_id: Int!
+}
+
+input SocialSurveyFeedbackResponseCreateManyUserInputEnvelope {
+  data: SocialSurveyFeedbackResponseCreateManyUserInput!
+  skipDuplicates: Boolean
+}
+
 input SocialSurveyFeedbackResponseCreateNestedManyWithoutFeedbackInput {
   connect: [SocialSurveyFeedbackResponseWhereUniqueInput]
   connectOrCreate: [SocialSurveyFeedbackResponseCreateOrConnectWithoutFeedbackInput]
@@ -68364,6 +68550,51 @@ input UserAlertPermissionCreateManyUserInputEnvelope {
   skipDuplicates: Boolean
 }
 
+input UserAlertPermissionCreateManyCompanyInput {
+  alert_id: Int!
+  email_notification: Int!
+  id: Int
+  ios_notification: Int!
+  pabau_notification: Int!
+  sms_notification: Int!
+  uid: Int!
+}
+
+input UserAlertPermissionCreateManyCompanyInputEnvelope {
+  data: UserAlertPermissionCreateManyCompanyInput!
+  skipDuplicates: Boolean
+}
+
+input UserAlertPermissionCreateManyUserAlertInput {
+  company_id: Int!
+  email_notification: Int!
+  id: Int
+  ios_notification: Int!
+  pabau_notification: Int!
+  sms_notification: Int!
+  uid: Int!
+}
+
+input UserAlertPermissionCreateManyUserAlertInputEnvelope {
+  data: UserAlertPermissionCreateManyUserAlertInput!
+  skipDuplicates: Boolean
+}
+
+input UserAlertPermissionCreateManyUserInput {
+  alert_id: Int!
+  company_id: Int!
+  email_notification: Int!
+  id: Int
+  ios_notification: Int!
+  pabau_notification: Int!
+  sms_notification: Int!
+}
+
+input UserAlertPermissionCreateManyUserInputEnvelope {
+  data: UserAlertPermissionCreateManyUserInput!
+  skipDuplicates: Boolean
+}
+
 input UserAlertPermissionCreateNestedManyWithoutUserAlertInput {
   connect: [UserAlertPermissionWhereUniqueInput]
   connectOrCreate: [UserAlertPermissionCreateOrConnectWithoutUserAlertInput]
@@ -70770,6 +71001,40 @@ input UserMobilePermissionCreateManyUserInputEnvelope {
   skipDuplicates: Boolean
 }
 
+input UserMobilePermissionCreateManyCompanyInput {
+  cal: Int
+  contacts: Int
+  dashboard: Boolean!
+  id: Int
+  journey: Int
+  register: Int
+  reports: Int
+  reviews: Int
+  uid: Int!
+}
+
+input UserMobilePermissionCreateManyCompanyInputEnvelope {
+  data: UserMobilePermissionCreateManyCompanyInput!
+  skipDuplicates: Boolean
+}
+
+input UserMobilePermissionCreateManyUserInput {
+  cal: Int
+  company_id: Int!
+  contacts: Int
+  dashboard: Boolean!
+  id: Int
+  journey: Int
+  register: Int
+  reports: Int
+  reviews: Int
+}
+
+input UserMobilePermissionCreateManyUserInputEnvelope {
+  data: UserMobilePermissionCreateManyUserInput!
+  skipDuplicates: Boolean
+}
+
 input UserMobilePermissionCreateNestedManyWithoutUserInput {
   connect: [UserMobilePermissionWhereUniqueInput]
   connectOrCreate: [UserMobilePermissionCreateOrConnectWithoutUserInput]
@@ -71396,6 +71661,42 @@ input UserReportCreateInput {
   Report: ReportCreateNestedOneWithoutUserReportInput
   User: UserCreateNestedOneWithoutUserReportInput
   favorite: Boolean!
+}
+
+input UserReportCreateManyCompanyInput {
+  favorite: Boolean!
+  id: Int
+  report_id: Int
+  user_id: Int
+}
+
+input UserReportCreateManyCompanyInputEnvelope {
+  data: UserReportCreateManyCompanyInput!
+  skipDuplicates: Boolean
+}
+
+input UserReportCreateManyReportInput {
+  company_id: Int
+  favorite: Boolean!
+  id: Int
+  user_id: Int
+}
+
+input UserReportCreateManyReportInputEnvelope {
+  data: UserReportCreateManyReportInput!
+  skipDuplicates: Boolean
+}
+
+input UserReportCreateManyUserInput {
+  company_id: Int
+  favorite: Boolean!
+  id: Int
+  report_id: Int
+}
+
+input UserReportCreateManyUserInputEnvelope {
+  data: UserReportCreateManyUserInput!
+  skipDuplicates: Boolean
 }
 
 input UserReportCreateManyCompanyInput {
@@ -79596,6 +79897,432 @@ input XeroIntegrationWhereUniqueInput {
 }
 
 """
+developer hub - used for fetching data for developer hub
+
+
+columns and relationships of "app_listing"
+"""
+type app_listing {
+  PrivacyPolicyURL: String!
+  TermsOfServiceURL: String!
+  appIcon: String!
+  builtBy: String!
+  company_id: Int!
+  created_at: timestamptz!
+  docUrl: String!
+  extraInfo: String!
+  id: Int!
+  modified_at: timestamptz
+  name: String!
+  screenshot1: String!
+  screenshot2: String!
+  screenshot3: String!
+  sellAppInfo: String!
+  shortDescription: String!
+  status: String!
+  typeApp: String!
+  typeFeature: String!
+  workspace: String!
+}
+
+"""
+aggregated selection of "app_listing"
+"""
+type app_listing_aggregate {
+  aggregate: app_listing_aggregate_fields
+  nodes: [app_listing!]!
+}
+
+"""
+aggregate fields of "app_listing"
+"""
+type app_listing_aggregate_fields {
+  avg: app_listing_avg_fields
+  count(columns: [app_listing_select_column!], distinct: Boolean): Int!
+  max: app_listing_max_fields
+  min: app_listing_min_fields
+  stddev: app_listing_stddev_fields
+  stddev_pop: app_listing_stddev_pop_fields
+  stddev_samp: app_listing_stddev_samp_fields
+  sum: app_listing_sum_fields
+  var_pop: app_listing_var_pop_fields
+  var_samp: app_listing_var_samp_fields
+  variance: app_listing_variance_fields
+}
+
+"""aggregate avg on columns"""
+type app_listing_avg_fields {
+  company_id: Float
+  id: Float
+}
+
+"""
+Boolean expression to filter rows from the table "app_listing". All fields are combined with a logical 'AND'.
+"""
+input app_listing_bool_exp {
+  PrivacyPolicyURL: String_comparison_exp
+  TermsOfServiceURL: String_comparison_exp
+  _and: [app_listing_bool_exp!]
+  _not: app_listing_bool_exp
+  _or: [app_listing_bool_exp!]
+  appIcon: String_comparison_exp
+  builtBy: String_comparison_exp
+  company_id: Int_comparison_exp
+  created_at: timestamptz_comparison_exp
+  docUrl: String_comparison_exp
+  extraInfo: String_comparison_exp
+  id: Int_comparison_exp
+  modified_at: timestamptz_comparison_exp
+  name: String_comparison_exp
+  screenshot1: String_comparison_exp
+  screenshot2: String_comparison_exp
+  screenshot3: String_comparison_exp
+  sellAppInfo: String_comparison_exp
+  shortDescription: String_comparison_exp
+  status: String_comparison_exp
+  typeApp: String_comparison_exp
+  typeFeature: String_comparison_exp
+  workspace: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "app_listing"
+"""
+enum app_listing_constraint {
+  """unique or primary key constraint"""
+  app_listing_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "app_listing"
+"""
+input app_listing_inc_input {
+  company_id: Int
+  id: Int
+}
+
+"""
+input type for inserting data into table "app_listing"
+"""
+input app_listing_insert_input {
+  PrivacyPolicyURL: String
+  TermsOfServiceURL: String
+  appIcon: String
+  builtBy: String
+  company_id: Int
+  created_at: timestamptz
+  docUrl: String
+  extraInfo: String
+  id: Int
+  modified_at: timestamptz
+  name: String
+  screenshot1: String
+  screenshot2: String
+  screenshot3: String
+  sellAppInfo: String
+  shortDescription: String
+  status: String
+  typeApp: String
+  typeFeature: String
+  workspace: String
+}
+
+"""aggregate max on columns"""
+type app_listing_max_fields {
+  PrivacyPolicyURL: String
+  TermsOfServiceURL: String
+  appIcon: String
+  builtBy: String
+  company_id: Int
+  created_at: timestamptz
+  docUrl: String
+  extraInfo: String
+  id: Int
+  modified_at: timestamptz
+  name: String
+  screenshot1: String
+  screenshot2: String
+  screenshot3: String
+  sellAppInfo: String
+  shortDescription: String
+  status: String
+  typeApp: String
+  typeFeature: String
+  workspace: String
+}
+
+"""aggregate min on columns"""
+type app_listing_min_fields {
+  PrivacyPolicyURL: String
+  TermsOfServiceURL: String
+  appIcon: String
+  builtBy: String
+  company_id: Int
+  created_at: timestamptz
+  docUrl: String
+  extraInfo: String
+  id: Int
+  modified_at: timestamptz
+  name: String
+  screenshot1: String
+  screenshot2: String
+  screenshot3: String
+  sellAppInfo: String
+  shortDescription: String
+  status: String
+  typeApp: String
+  typeFeature: String
+  workspace: String
+}
+
+"""
+response of any mutation on the table "app_listing"
+"""
+type app_listing_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [app_listing!]!
+}
+
+"""
+on conflict condition type for table "app_listing"
+"""
+input app_listing_on_conflict {
+  constraint: app_listing_constraint!
+  update_columns: [app_listing_update_column!]! = []
+  where: app_listing_bool_exp
+}
+
+"""Ordering options when selecting data from "app_listing"."""
+input app_listing_order_by {
+  PrivacyPolicyURL: order_by
+  TermsOfServiceURL: order_by
+  appIcon: order_by
+  builtBy: order_by
+  company_id: order_by
+  created_at: order_by
+  docUrl: order_by
+  extraInfo: order_by
+  id: order_by
+  modified_at: order_by
+  name: order_by
+  screenshot1: order_by
+  screenshot2: order_by
+  screenshot3: order_by
+  sellAppInfo: order_by
+  shortDescription: order_by
+  status: order_by
+  typeApp: order_by
+  typeFeature: order_by
+  workspace: order_by
+}
+
+"""primary key columns input for table: app_listing"""
+input app_listing_pk_columns_input {
+  id: Int!
+}
+
+"""
+select columns of table "app_listing"
+"""
+enum app_listing_select_column {
+  """column name"""
+  PrivacyPolicyURL
+
+  """column name"""
+  TermsOfServiceURL
+
+  """column name"""
+  appIcon
+
+  """column name"""
+  builtBy
+
+  """column name"""
+  company_id
+
+  """column name"""
+  created_at
+
+  """column name"""
+  docUrl
+
+  """column name"""
+  extraInfo
+
+  """column name"""
+  id
+
+  """column name"""
+  modified_at
+
+  """column name"""
+  name
+
+  """column name"""
+  screenshot1
+
+  """column name"""
+  screenshot2
+
+  """column name"""
+  screenshot3
+
+  """column name"""
+  sellAppInfo
+
+  """column name"""
+  shortDescription
+
+  """column name"""
+  status
+
+  """column name"""
+  typeApp
+
+  """column name"""
+  typeFeature
+
+  """column name"""
+  workspace
+}
+
+"""
+input type for updating data in table "app_listing"
+"""
+input app_listing_set_input {
+  PrivacyPolicyURL: String
+  TermsOfServiceURL: String
+  appIcon: String
+  builtBy: String
+  company_id: Int
+  created_at: timestamptz
+  docUrl: String
+  extraInfo: String
+  id: Int
+  modified_at: timestamptz
+  name: String
+  screenshot1: String
+  screenshot2: String
+  screenshot3: String
+  sellAppInfo: String
+  shortDescription: String
+  status: String
+  typeApp: String
+  typeFeature: String
+  workspace: String
+}
+
+"""aggregate stddev on columns"""
+type app_listing_stddev_fields {
+  company_id: Float
+  id: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type app_listing_stddev_pop_fields {
+  company_id: Float
+  id: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type app_listing_stddev_samp_fields {
+  company_id: Float
+  id: Float
+}
+
+"""aggregate sum on columns"""
+type app_listing_sum_fields {
+  company_id: Int
+  id: Int
+}
+
+"""
+update columns of table "app_listing"
+"""
+enum app_listing_update_column {
+  """column name"""
+  PrivacyPolicyURL
+
+  """column name"""
+  TermsOfServiceURL
+
+  """column name"""
+  appIcon
+
+  """column name"""
+  builtBy
+
+  """column name"""
+  company_id
+
+  """column name"""
+  created_at
+
+  """column name"""
+  docUrl
+
+  """column name"""
+  extraInfo
+
+  """column name"""
+  id
+
+  """column name"""
+  modified_at
+
+  """column name"""
+  name
+
+  """column name"""
+  screenshot1
+
+  """column name"""
+  screenshot2
+
+  """column name"""
+  screenshot3
+
+  """column name"""
+  sellAppInfo
+
+  """column name"""
+  shortDescription
+
+  """column name"""
+  status
+
+  """column name"""
+  typeApp
+
+  """column name"""
+  typeFeature
+
+  """column name"""
+  workspace
+}
+
+"""aggregate var_pop on columns"""
+type app_listing_var_pop_fields {
+  company_id: Float
+  id: Float
+}
+
+"""aggregate var_samp on columns"""
+type app_listing_var_samp_fields {
+  company_id: Float
+  id: Float
+}
+
+"""aggregate variance on columns"""
+type app_listing_variance_fields {
+  company_id: Float
+  id: Float
+}
+
+"""
 columns and relationships of "application_notifications"
 """
 type application_notifications {
@@ -85848,397 +86575,6 @@ type departments_variance_fields {
 }
 
 """
-developer hub - used for fetching data for developer hub
-
-
-columns and relationships of "developer_hub"
-"""
-type developer_hub {
-  PrivacyPolicyURL: String!
-  TermsOfServiceURL: String!
-  appIcon: String!
-  builtBy: String!
-  company_id: Int!
-  created_at: timestamptz!
-  docUrl: String!
-  extraInfo: String!
-  name: String!
-  screenshot1: String!
-  screenshot2: String!
-  screenshot3: String!
-  sellAppInfo: String!
-  shortDescription: String!
-  typeApp: String!
-  typeFeature: String!
-  uuid: uuid!
-  workspace: String!
-}
-
-"""
-aggregated selection of "developer_hub"
-"""
-type developer_hub_aggregate {
-  aggregate: developer_hub_aggregate_fields
-  nodes: [developer_hub!]!
-}
-
-"""
-aggregate fields of "developer_hub"
-"""
-type developer_hub_aggregate_fields {
-  avg: developer_hub_avg_fields
-  count(columns: [developer_hub_select_column!], distinct: Boolean): Int!
-  max: developer_hub_max_fields
-  min: developer_hub_min_fields
-  stddev: developer_hub_stddev_fields
-  stddev_pop: developer_hub_stddev_pop_fields
-  stddev_samp: developer_hub_stddev_samp_fields
-  sum: developer_hub_sum_fields
-  var_pop: developer_hub_var_pop_fields
-  var_samp: developer_hub_var_samp_fields
-  variance: developer_hub_variance_fields
-}
-
-"""aggregate avg on columns"""
-type developer_hub_avg_fields {
-  company_id: Float
-}
-
-"""
-Boolean expression to filter rows from the table "developer_hub". All fields are combined with a logical 'AND'.
-"""
-input developer_hub_bool_exp {
-  PrivacyPolicyURL: String_comparison_exp
-  TermsOfServiceURL: String_comparison_exp
-  _and: [developer_hub_bool_exp!]
-  _not: developer_hub_bool_exp
-  _or: [developer_hub_bool_exp!]
-  appIcon: String_comparison_exp
-  builtBy: String_comparison_exp
-  company_id: Int_comparison_exp
-  created_at: timestamptz_comparison_exp
-  docUrl: String_comparison_exp
-  extraInfo: String_comparison_exp
-  name: String_comparison_exp
-  screenshot1: String_comparison_exp
-  screenshot2: String_comparison_exp
-  screenshot3: String_comparison_exp
-  sellAppInfo: String_comparison_exp
-  shortDescription: String_comparison_exp
-  typeApp: String_comparison_exp
-  typeFeature: String_comparison_exp
-  uuid: uuid_comparison_exp
-  workspace: String_comparison_exp
-}
-
-"""
-unique or primary key constraints on table "developer_hub"
-"""
-enum developer_hub_constraint {
-  """unique or primary key constraint"""
-  developer_hub_pkey
-}
-
-"""
-input type for incrementing numeric columns in table "developer_hub"
-"""
-input developer_hub_inc_input {
-  company_id: Int
-}
-
-"""
-input type for inserting data into table "developer_hub"
-"""
-input developer_hub_insert_input {
-  PrivacyPolicyURL: String
-  TermsOfServiceURL: String
-  appIcon: String
-  builtBy: String
-  company_id: Int
-  created_at: timestamptz
-  docUrl: String
-  extraInfo: String
-  name: String
-  screenshot1: String
-  screenshot2: String
-  screenshot3: String
-  sellAppInfo: String
-  shortDescription: String
-  typeApp: String
-  typeFeature: String
-  uuid: uuid
-  workspace: String
-}
-
-"""aggregate max on columns"""
-type developer_hub_max_fields {
-  PrivacyPolicyURL: String
-  TermsOfServiceURL: String
-  appIcon: String
-  builtBy: String
-  company_id: Int
-  created_at: timestamptz
-  docUrl: String
-  extraInfo: String
-  name: String
-  screenshot1: String
-  screenshot2: String
-  screenshot3: String
-  sellAppInfo: String
-  shortDescription: String
-  typeApp: String
-  typeFeature: String
-  uuid: uuid
-  workspace: String
-}
-
-"""aggregate min on columns"""
-type developer_hub_min_fields {
-  PrivacyPolicyURL: String
-  TermsOfServiceURL: String
-  appIcon: String
-  builtBy: String
-  company_id: Int
-  created_at: timestamptz
-  docUrl: String
-  extraInfo: String
-  name: String
-  screenshot1: String
-  screenshot2: String
-  screenshot3: String
-  sellAppInfo: String
-  shortDescription: String
-  typeApp: String
-  typeFeature: String
-  uuid: uuid
-  workspace: String
-}
-
-"""
-response of any mutation on the table "developer_hub"
-"""
-type developer_hub_mutation_response {
-  """number of rows affected by the mutation"""
-  affected_rows: Int!
-
-  """data from the rows affected by the mutation"""
-  returning: [developer_hub!]!
-}
-
-"""
-on conflict condition type for table "developer_hub"
-"""
-input developer_hub_on_conflict {
-  constraint: developer_hub_constraint!
-  update_columns: [developer_hub_update_column!]! = []
-  where: developer_hub_bool_exp
-}
-
-"""Ordering options when selecting data from "developer_hub"."""
-input developer_hub_order_by {
-  PrivacyPolicyURL: order_by
-  TermsOfServiceURL: order_by
-  appIcon: order_by
-  builtBy: order_by
-  company_id: order_by
-  created_at: order_by
-  docUrl: order_by
-  extraInfo: order_by
-  name: order_by
-  screenshot1: order_by
-  screenshot2: order_by
-  screenshot3: order_by
-  sellAppInfo: order_by
-  shortDescription: order_by
-  typeApp: order_by
-  typeFeature: order_by
-  uuid: order_by
-  workspace: order_by
-}
-
-"""primary key columns input for table: developer_hub"""
-input developer_hub_pk_columns_input {
-  uuid: uuid!
-}
-
-"""
-select columns of table "developer_hub"
-"""
-enum developer_hub_select_column {
-  """column name"""
-  PrivacyPolicyURL
-
-  """column name"""
-  TermsOfServiceURL
-
-  """column name"""
-  appIcon
-
-  """column name"""
-  builtBy
-
-  """column name"""
-  company_id
-
-  """column name"""
-  created_at
-
-  """column name"""
-  docUrl
-
-  """column name"""
-  extraInfo
-
-  """column name"""
-  name
-
-  """column name"""
-  screenshot1
-
-  """column name"""
-  screenshot2
-
-  """column name"""
-  screenshot3
-
-  """column name"""
-  sellAppInfo
-
-  """column name"""
-  shortDescription
-
-  """column name"""
-  typeApp
-
-  """column name"""
-  typeFeature
-
-  """column name"""
-  uuid
-
-  """column name"""
-  workspace
-}
-
-"""
-input type for updating data in table "developer_hub"
-"""
-input developer_hub_set_input {
-  PrivacyPolicyURL: String
-  TermsOfServiceURL: String
-  appIcon: String
-  builtBy: String
-  company_id: Int
-  created_at: timestamptz
-  docUrl: String
-  extraInfo: String
-  name: String
-  screenshot1: String
-  screenshot2: String
-  screenshot3: String
-  sellAppInfo: String
-  shortDescription: String
-  typeApp: String
-  typeFeature: String
-  uuid: uuid
-  workspace: String
-}
-
-"""aggregate stddev on columns"""
-type developer_hub_stddev_fields {
-  company_id: Float
-}
-
-"""aggregate stddev_pop on columns"""
-type developer_hub_stddev_pop_fields {
-  company_id: Float
-}
-
-"""aggregate stddev_samp on columns"""
-type developer_hub_stddev_samp_fields {
-  company_id: Float
-}
-
-"""aggregate sum on columns"""
-type developer_hub_sum_fields {
-  company_id: Int
-}
-
-"""
-update columns of table "developer_hub"
-"""
-enum developer_hub_update_column {
-  """column name"""
-  PrivacyPolicyURL
-
-  """column name"""
-  TermsOfServiceURL
-
-  """column name"""
-  appIcon
-
-  """column name"""
-  builtBy
-
-  """column name"""
-  company_id
-
-  """column name"""
-  created_at
-
-  """column name"""
-  docUrl
-
-  """column name"""
-  extraInfo
-
-  """column name"""
-  name
-
-  """column name"""
-  screenshot1
-
-  """column name"""
-  screenshot2
-
-  """column name"""
-  screenshot3
-
-  """column name"""
-  sellAppInfo
-
-  """column name"""
-  shortDescription
-
-  """column name"""
-  typeApp
-
-  """column name"""
-  typeFeature
-
-  """column name"""
-  uuid
-
-  """column name"""
-  workspace
-}
-
-"""aggregate var_pop on columns"""
-type developer_hub_var_pop_fields {
-  company_id: Float
-}
-
-"""aggregate var_samp on columns"""
-type developer_hub_var_samp_fields {
-  company_id: Float
-}
-
-"""aggregate variance on columns"""
-type developer_hub_variance_fields {
-  company_id: Float
-}
-
-"""
 columns and relationships of "diagnostic_codes"
 """
 type diagnostic_codes {
@@ -92023,7 +92359,6 @@ type mutation_root {
   deleteOneBatch(where: BatchWhereUniqueInput!): Batch
   deleteOneBatchItem(where: BatchItemWhereUniqueInput!): BatchItem
   deleteOneBlockReason(where: BlockReasonWhereUniqueInput!): BlockReason
-  deleteOneBnfDrug(where: BnfDrugWhereUniqueInput!): BnfDrug
   deleteOneBodyChartTemplate(where: BodyChartTemplateWhereUniqueInput!): BodyChartTemplate
   deleteOneBookingMaster(where: BookingMasterWhereUniqueInput!): BookingMaster
   deleteOneBookingSetting(where: BookingSettingWhereUniqueInput!): BookingSetting
@@ -92176,17 +92511,17 @@ type mutation_root {
   delete_Discounts_by_pk(id: uuid!): Discounts
 
   """
-  delete data from the table: "Labs"
+  delete data from the table: "LabsTmp"
   """
-  delete_Labs(
+  delete_LabsTmp(
     """filter the rows which have to be deleted"""
-    where: Labs_bool_exp!
-  ): Labs_mutation_response
+    where: LabsTmp_bool_exp!
+  ): LabsTmp_mutation_response
 
   """
-  delete single row from the table: "Labs"
+  delete single row from the table: "LabsTmp"
   """
-  delete_Labs_by_pk(id: uuid!): Labs
+  delete_LabsTmp_by_pk(id: uuid!): LabsTmp
 
   """
   delete data from the table: "Lists_campaign"
@@ -92226,6 +92561,19 @@ type mutation_root {
   delete single row from the table: "SMS_campaign"
   """
   delete_SMS_campaign_by_pk(id: uuid!): SMS_campaign
+
+  """
+  delete data from the table: "app_listing"
+  """
+  delete_app_listing(
+    """filter the rows which have to be deleted"""
+    where: app_listing_bool_exp!
+  ): app_listing_mutation_response
+
+  """
+  delete single row from the table: "app_listing"
+  """
+  delete_app_listing_by_pk(id: Int!): app_listing
 
   """
   delete data from the table: "application_notifications"
@@ -92499,19 +92847,6 @@ type mutation_root {
   delete single row from the table: "departments"
   """
   delete_departments_by_pk(id: uuid!): departments
-
-  """
-  delete data from the table: "developer_hub"
-  """
-  delete_developer_hub(
-    """filter the rows which have to be deleted"""
-    where: developer_hub_bool_exp!
-  ): developer_hub_mutation_response
-
-  """
-  delete single row from the table: "developer_hub"
-  """
-  delete_developer_hub_by_pk(uuid: uuid!): developer_hub
 
   """
   delete data from the table: "diagnostic_codes"
@@ -93147,26 +93482,26 @@ type mutation_root {
   ): Discounts
 
   """
-  insert data into the table: "Labs"
+  insert data into the table: "LabsTmp"
   """
-  insert_Labs(
+  insert_LabsTmp(
     """the rows to be inserted"""
-    objects: [Labs_insert_input!]!
+    objects: [LabsTmp_insert_input!]!
 
     """on conflict condition"""
-    on_conflict: Labs_on_conflict
-  ): Labs_mutation_response
+    on_conflict: LabsTmp_on_conflict
+  ): LabsTmp_mutation_response
 
   """
-  insert a single row into the table: "Labs"
+  insert a single row into the table: "LabsTmp"
   """
-  insert_Labs_one(
+  insert_LabsTmp_one(
     """the row to be inserted"""
-    object: Labs_insert_input!
+    object: LabsTmp_insert_input!
 
     """on conflict condition"""
-    on_conflict: Labs_on_conflict
-  ): Labs
+    on_conflict: LabsTmp_on_conflict
+  ): LabsTmp
 
   """
   insert data into the table: "Lists_campaign"
@@ -93233,6 +93568,28 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: SMS_campaign_on_conflict
   ): SMS_campaign
+
+  """
+  insert data into the table: "app_listing"
+  """
+  insert_app_listing(
+    """the rows to be inserted"""
+    objects: [app_listing_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: app_listing_on_conflict
+  ): app_listing_mutation_response
+
+  """
+  insert a single row into the table: "app_listing"
+  """
+  insert_app_listing_one(
+    """the row to be inserted"""
+    object: app_listing_insert_input!
+
+    """on conflict condition"""
+    on_conflict: app_listing_on_conflict
+  ): app_listing
 
   """
   insert data into the table: "application_notifications"
@@ -93695,28 +94052,6 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: departments_on_conflict
   ): departments
-
-  """
-  insert data into the table: "developer_hub"
-  """
-  insert_developer_hub(
-    """the rows to be inserted"""
-    objects: [developer_hub_insert_input!]!
-
-    """on conflict condition"""
-    on_conflict: developer_hub_on_conflict
-  ): developer_hub_mutation_response
-
-  """
-  insert a single row into the table: "developer_hub"
-  """
-  insert_developer_hub_one(
-    """the row to be inserted"""
-    object: developer_hub_insert_input!
-
-    """on conflict condition"""
-    on_conflict: developer_hub_on_conflict
-  ): developer_hub
 
   """
   insert data into the table: "diagnostic_codes"
@@ -94791,7 +95126,6 @@ type mutation_root {
   updateManyBatch(data: BatchUpdateManyMutationInput!, where: BatchWhereInput): AffectedRowsOutput!
   updateManyBatchItem(data: BatchItemUpdateManyMutationInput!, where: BatchItemWhereInput): AffectedRowsOutput!
   updateManyBlockReason(data: BlockReasonUpdateManyMutationInput!, where: BlockReasonWhereInput): AffectedRowsOutput!
-  updateManyBnfDrug(data: BnfDrugUpdateManyMutationInput!, where: BnfDrugWhereInput): AffectedRowsOutput!
   updateManyBodyChartTemplate(data: BodyChartTemplateUpdateManyMutationInput!, where: BodyChartTemplateWhereInput): AffectedRowsOutput!
   updateManyBookingMaster(data: BookingMasterUpdateManyMutationInput!, where: BookingMasterWhereInput): AffectedRowsOutput!
   updateManyBookingSetting(data: BookingSettingUpdateManyMutationInput!, where: BookingSettingWhereInput): AffectedRowsOutput!
@@ -94959,7 +95293,6 @@ type mutation_root {
   updateOneBatch(data: BatchUpdateInput!, where: BatchWhereUniqueInput!): Batch
   updateOneBatchItem(data: BatchItemUpdateInput!, where: BatchItemWhereUniqueInput!): BatchItem
   updateOneBlockReason(data: BlockReasonUpdateInput!, where: BlockReasonWhereUniqueInput!): BlockReason
-  updateOneBnfDrug(data: BnfDrugUpdateInput!, where: BnfDrugWhereUniqueInput!): BnfDrug
   updateOneBodyChartTemplate(data: BodyChartTemplateUpdateInput!, where: BodyChartTemplateWhereUniqueInput!): BodyChartTemplate
   updateOneBookingMaster(data: BookingMasterUpdateInput!, where: BookingMasterWhereUniqueInput!): BookingMaster
   updateOneBookingSetting(data: BookingSettingUpdateInput!, where: BookingSettingWhereUniqueInput!): BookingSetting
@@ -95129,30 +95462,30 @@ type mutation_root {
   ): Discounts
 
   """
-  update data of the table: "Labs"
+  update data of the table: "LabsTmp"
   """
-  update_Labs(
+  update_LabsTmp(
     """increments the numeric columns with given value of the filtered values"""
-    _inc: Labs_inc_input
+    _inc: LabsTmp_inc_input
 
     """sets the columns of the filtered rows to the given values"""
-    _set: Labs_set_input
+    _set: LabsTmp_set_input
 
     """filter the rows which have to be updated"""
-    where: Labs_bool_exp!
-  ): Labs_mutation_response
+    where: LabsTmp_bool_exp!
+  ): LabsTmp_mutation_response
 
   """
-  update single row of the table: "Labs"
+  update single row of the table: "LabsTmp"
   """
-  update_Labs_by_pk(
+  update_LabsTmp_by_pk(
     """increments the numeric columns with given value of the filtered values"""
-    _inc: Labs_inc_input
+    _inc: LabsTmp_inc_input
 
     """sets the columns of the filtered rows to the given values"""
-    _set: Labs_set_input
-    pk_columns: Labs_pk_columns_input!
-  ): Labs
+    _set: LabsTmp_set_input
+    pk_columns: LabsTmp_pk_columns_input!
+  ): LabsTmp
 
   """
   update data of the table: "Lists_campaign"
@@ -95231,6 +95564,32 @@ type mutation_root {
     _set: SMS_campaign_set_input
     pk_columns: SMS_campaign_pk_columns_input!
   ): SMS_campaign
+
+  """
+  update data of the table: "app_listing"
+  """
+  update_app_listing(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: app_listing_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: app_listing_set_input
+
+    """filter the rows which have to be updated"""
+    where: app_listing_bool_exp!
+  ): app_listing_mutation_response
+
+  """
+  update single row of the table: "app_listing"
+  """
+  update_app_listing_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: app_listing_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: app_listing_set_input
+    pk_columns: app_listing_pk_columns_input!
+  ): app_listing
 
   """
   update data of the table: "application_notifications"
@@ -95759,32 +96118,6 @@ type mutation_root {
     _set: departments_set_input
     pk_columns: departments_pk_columns_input!
   ): departments
-
-  """
-  update data of the table: "developer_hub"
-  """
-  update_developer_hub(
-    """increments the numeric columns with given value of the filtered values"""
-    _inc: developer_hub_inc_input
-
-    """sets the columns of the filtered rows to the given values"""
-    _set: developer_hub_set_input
-
-    """filter the rows which have to be updated"""
-    where: developer_hub_bool_exp!
-  ): developer_hub_mutation_response
-
-  """
-  update single row of the table: "developer_hub"
-  """
-  update_developer_hub_by_pk(
-    """increments the numeric columns with given value of the filtered values"""
-    _inc: developer_hub_inc_input
-
-    """sets the columns of the filtered rows to the given values"""
-    _set: developer_hub_set_input
-    pk_columns: developer_hub_pk_columns_input!
-  ): developer_hub
 
   """
   update data of the table: "diagnostic_codes"
@@ -97161,7 +97494,6 @@ type mutation_root {
   upsertOneBatch(create: BatchCreateInput!, update: BatchUpdateInput!, where: BatchWhereUniqueInput!): Batch!
   upsertOneBatchItem(create: BatchItemCreateInput!, update: BatchItemUpdateInput!, where: BatchItemWhereUniqueInput!): BatchItem!
   upsertOneBlockReason(create: BlockReasonCreateInput!, update: BlockReasonUpdateInput!, where: BlockReasonWhereUniqueInput!): BlockReason!
-  upsertOneBnfDrug(create: BnfDrugCreateInput!, update: BnfDrugUpdateInput!, where: BnfDrugWhereUniqueInput!): BnfDrug!
   upsertOneBodyChartTemplate(create: BodyChartTemplateCreateInput!, update: BodyChartTemplateUpdateInput!, where: BodyChartTemplateWhereUniqueInput!): BodyChartTemplate!
   upsertOneBookingMaster(create: BookingMasterCreateInput!, update: BookingMasterUpdateInput!, where: BookingMasterWhereUniqueInput!): BookingMaster!
   upsertOneBookingSetting(create: BookingSettingCreateInput!, update: BookingSettingUpdateInput!, where: BookingSettingWhereUniqueInput!): BookingSetting!
@@ -97232,7 +97564,6 @@ type mutation_root {
   upsertOneCompanyDepartment(create: CompanyDepartmentCreateInput!, update: CompanyDepartmentUpdateInput!, where: CompanyDepartmentWhereUniqueInput!): CompanyDepartment!
   upsertOneCompanyDetails(create: CompanyDetailsCreateInput!, update: CompanyDetailsUpdateInput!, where: CompanyDetailsWhereUniqueInput!): CompanyDetails!
   upsertOneCompanyLocation(create: CompanyLocationCreateInput!, update: CompanyLocationUpdateInput!, where: CompanyLocationWhereUniqueInput!): CompanyLocation!
-  upsertOneCompanyMeta(create: CompanyMetaCreateInput!, update: CompanyMetaUpdateInput!, where: CompanyMetaWhereUniqueInput!): CompanyMeta!
   upsertOneCompanyNote(create: CompanyNoteCreateInput!, update: CompanyNoteUpdateInput!, where: CompanyNoteWhereUniqueInput!): CompanyNote!
   upsertOneCompanyPermission(create: CompanyPermissionCreateInput!, update: CompanyPermissionUpdateInput!, where: CompanyPermissionWhereUniqueInput!): CompanyPermission!
   upsertOneCompanyPolicy(create: CompanyPolicyCreateInput!, update: CompanyPolicyUpdateInput!, where: CompanyPolicyWhereUniqueInput!): CompanyPolicy!
@@ -98553,6 +98884,7 @@ type notifications {
     """filter the rows returned"""
     where: read_notification_bool_exp
   ): read_notification_aggregate!
+  sentBy: User
   sent_by: Int
   sent_to(
     """JSON select path"""
@@ -100816,6 +101148,42 @@ type product_news {
   img: String!
   link: String!
   order: Int!
+
+  """An array relationship"""
+  read_by(
+    """distinct select on columns"""
+    distinct_on: [product_news_read_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [product_news_read_order_by!]
+
+    """filter the rows returned"""
+    where: product_news_read_bool_exp
+  ): [product_news_read!]!
+
+  """An aggregate relationship"""
+  read_by_aggregate(
+    """distinct select on columns"""
+    distinct_on: [product_news_read_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [product_news_read_order_by!]
+
+    """filter the rows returned"""
+    where: product_news_read_bool_exp
+  ): product_news_read_aggregate!
   title: String!
   updated_at: timestamptz!
 }
@@ -100863,6 +101231,7 @@ input product_news_bool_exp {
   img: String_comparison_exp
   link: String_comparison_exp
   order: Int_comparison_exp
+  read_by: product_news_read_bool_exp
   title: String_comparison_exp
   updated_at: timestamptz_comparison_exp
 }
@@ -100892,6 +101261,7 @@ input product_news_insert_input {
   img: String
   link: String
   order: Int
+  read_by: product_news_read_arr_rel_insert_input
   title: String
   updated_at: timestamptz
 }
@@ -100948,6 +101318,7 @@ input product_news_order_by {
   img: order_by
   link: order_by
   order: order_by
+  read_by_aggregate: product_news_read_aggregate_order_by
   title: order_by
   updated_at: order_by
 }
@@ -100993,10 +101364,45 @@ type product_news_read_aggregate_fields {
   variance: product_news_read_variance_fields
 }
 
+"""
+order by aggregate values of table "product_news_read"
+"""
+input product_news_read_aggregate_order_by {
+  avg: product_news_read_avg_order_by
+  count: order_by
+  max: product_news_read_max_order_by
+  min: product_news_read_min_order_by
+  stddev: product_news_read_stddev_order_by
+  stddev_pop: product_news_read_stddev_pop_order_by
+  stddev_samp: product_news_read_stddev_samp_order_by
+  sum: product_news_read_sum_order_by
+  var_pop: product_news_read_var_pop_order_by
+  var_samp: product_news_read_var_samp_order_by
+  variance: product_news_read_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "product_news_read"
+"""
+input product_news_read_arr_rel_insert_input {
+  data: [product_news_read_insert_input!]!
+
+  """on conflict condition"""
+  on_conflict: product_news_read_on_conflict
+}
+
 """aggregate avg on columns"""
 type product_news_read_avg_fields {
   company: Float
   user: Float
+}
+
+"""
+order by avg() on columns of table "product_news_read"
+"""
+input product_news_read_avg_order_by {
+  company: order_by
+  user: order_by
 }
 
 """
@@ -101049,6 +101455,17 @@ type product_news_read_max_fields {
   user: Int
 }
 
+"""
+order by max() on columns of table "product_news_read"
+"""
+input product_news_read_max_order_by {
+  company: order_by
+  created_at: order_by
+  id: order_by
+  product_news: order_by
+  user: order_by
+}
+
 """aggregate min on columns"""
 type product_news_read_min_fields {
   company: Int
@@ -101056,6 +101473,17 @@ type product_news_read_min_fields {
   id: uuid
   product_news: uuid
   user: Int
+}
+
+"""
+order by min() on columns of table "product_news_read"
+"""
+input product_news_read_min_order_by {
+  company: order_by
+  created_at: order_by
+  id: order_by
+  product_news: order_by
+  user: order_by
 }
 
 """
@@ -101129,10 +101557,26 @@ type product_news_read_stddev_fields {
   user: Float
 }
 
+"""
+order by stddev() on columns of table "product_news_read"
+"""
+input product_news_read_stddev_order_by {
+  company: order_by
+  user: order_by
+}
+
 """aggregate stddev_pop on columns"""
 type product_news_read_stddev_pop_fields {
   company: Float
   user: Float
+}
+
+"""
+order by stddev_pop() on columns of table "product_news_read"
+"""
+input product_news_read_stddev_pop_order_by {
+  company: order_by
+  user: order_by
 }
 
 """aggregate stddev_samp on columns"""
@@ -101141,10 +101585,26 @@ type product_news_read_stddev_samp_fields {
   user: Float
 }
 
+"""
+order by stddev_samp() on columns of table "product_news_read"
+"""
+input product_news_read_stddev_samp_order_by {
+  company: order_by
+  user: order_by
+}
+
 """aggregate sum on columns"""
 type product_news_read_sum_fields {
   company: Int
   user: Int
+}
+
+"""
+order by sum() on columns of table "product_news_read"
+"""
+input product_news_read_sum_order_by {
+  company: order_by
+  user: order_by
 }
 
 """
@@ -101173,16 +101633,40 @@ type product_news_read_var_pop_fields {
   user: Float
 }
 
+"""
+order by var_pop() on columns of table "product_news_read"
+"""
+input product_news_read_var_pop_order_by {
+  company: order_by
+  user: order_by
+}
+
 """aggregate var_samp on columns"""
 type product_news_read_var_samp_fields {
   company: Float
   user: Float
 }
 
+"""
+order by var_samp() on columns of table "product_news_read"
+"""
+input product_news_read_var_samp_order_by {
+  company: order_by
+  user: order_by
+}
+
 """aggregate variance on columns"""
 type product_news_read_variance_fields {
   company: Float
   user: Float
+}
+
+"""
+order by variance() on columns of table "product_news_read"
+"""
+input product_news_read_variance_order_by {
+  company: order_by
+  user: order_by
 }
 
 """
@@ -101849,11 +102333,11 @@ type query_root {
   Discounts_by_pk(id: uuid!): Discounts
 
   """
-  fetch data from the table: "Labs"
+  fetch data from the table: "LabsTmp"
   """
-  Labs(
+  LabsTmp(
     """distinct select on columns"""
-    distinct_on: [Labs_select_column!]
+    distinct_on: [LabsTmp_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -101862,18 +102346,18 @@ type query_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [Labs_order_by!]
+    order_by: [LabsTmp_order_by!]
 
     """filter the rows returned"""
-    where: Labs_bool_exp
-  ): [Labs!]!
+    where: LabsTmp_bool_exp
+  ): [LabsTmp!]!
 
   """
-  fetch aggregated fields from the table: "Labs"
+  fetch aggregated fields from the table: "LabsTmp"
   """
-  Labs_aggregate(
+  LabsTmp_aggregate(
     """distinct select on columns"""
-    distinct_on: [Labs_select_column!]
+    distinct_on: [LabsTmp_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -101882,14 +102366,14 @@ type query_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [Labs_order_by!]
+    order_by: [LabsTmp_order_by!]
 
     """filter the rows returned"""
-    where: Labs_bool_exp
-  ): Labs_aggregate!
+    where: LabsTmp_bool_exp
+  ): LabsTmp_aggregate!
 
-  """fetch data from the table: "Labs" using primary key columns"""
-  Labs_by_pk(id: uuid!): Labs
+  """fetch data from the table: "LabsTmp" using primary key columns"""
+  LabsTmp_by_pk(id: uuid!): LabsTmp
 
   """
   fetch data from the table: "Lists_campaign"
@@ -102063,6 +102547,49 @@ type query_root {
   appSubscriptionsCompanyPrices(cursor: AppSubscriptionsCompanyPriceWhereUniqueInput, orderBy: [AppSubscriptionsCompanyPriceOrderByInput!], skip: Int, take: Int, where: AppSubscriptionsCompanyPriceWhereInput): [AppSubscriptionsCompanyPrice!]!
   appSubscriptionsCompanyPricesCount(where: AppSubscriptionsCompanyPriceWhereInput): Int
   appSubscriptionsCount(where: AppSubscriptionWhereInput): Int
+
+  """
+  fetch data from the table: "app_listing"
+  """
+  app_listing(
+    """distinct select on columns"""
+    distinct_on: [app_listing_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [app_listing_order_by!]
+
+    """filter the rows returned"""
+    where: app_listing_bool_exp
+  ): [app_listing!]!
+
+  """
+  fetch aggregated fields from the table: "app_listing"
+  """
+  app_listing_aggregate(
+    """distinct select on columns"""
+    distinct_on: [app_listing_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [app_listing_order_by!]
+
+    """filter the rows returned"""
+    where: app_listing_bool_exp
+  ): app_listing_aggregate!
+
+  """fetch data from the table: "app_listing" using primary key columns"""
+  app_listing_by_pk(id: Int!): app_listing
 
   """An array relationship"""
   application_notifications(
@@ -102881,8 +103408,6 @@ type query_root {
 
   """fetch data from the table: "colors" using primary key columns"""
   colors_by_pk(id: uuid!): colors
-  companies(cursor: CompanyWhereUniqueInput, orderBy: [CompanyOrderByInput!], skip: Int, take: Int, where: CompanyWhereInput): [Company!]!
-  companiesCount(where: CompanyWhereInput): Int
   company: Company
   companyBranch(where: CompanyBranchWhereUniqueInput!): CompanyBranch
   companyBranchAttachment(where: CompanyBranchAttachmentWhereUniqueInput!): CompanyBranchAttachment
@@ -103284,49 +103809,6 @@ type query_root {
   departments_by_pk(id: uuid!): departments
 
   """
-  fetch data from the table: "developer_hub"
-  """
-  developer_hub(
-    """distinct select on columns"""
-    distinct_on: [developer_hub_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [developer_hub_order_by!]
-
-    """filter the rows returned"""
-    where: developer_hub_bool_exp
-  ): [developer_hub!]!
-
-  """
-  fetch aggregated fields from the table: "developer_hub"
-  """
-  developer_hub_aggregate(
-    """distinct select on columns"""
-    distinct_on: [developer_hub_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [developer_hub_order_by!]
-
-    """filter the rows returned"""
-    where: developer_hub_bool_exp
-  ): developer_hub_aggregate!
-
-  """fetch data from the table: "developer_hub" using primary key columns"""
-  developer_hub_by_pk(uuid: uuid!): developer_hub
-
-  """
   fetch data from the table: "diagnostic_codes"
   """
   diagnostic_codes(
@@ -103649,7 +104131,6 @@ type query_root {
   findFirstCmExtraSalon(cursor: CmExtraSalonWhereUniqueInput, orderBy: CmExtraSalonOrderByInput, skip: Int, take: Int, where: CmExtraSalonWhereInput): CmExtraSalon
   findFirstCmLead(cursor: CmLeadWhereUniqueInput, orderBy: CmLeadOrderByInput, skip: Int, take: Int, where: CmLeadWhereInput): CmLead
   findFirstCmStaffGeneral(cursor: CmStaffGeneralWhereUniqueInput, orderBy: CmStaffGeneralOrderByInput, skip: Int, take: Int, where: CmStaffGeneralWhereInput): CmStaffGeneral
-  findFirstCompany(cursor: CompanyWhereUniqueInput, orderBy: CompanyOrderByInput, skip: Int, take: Int, where: CompanyWhereInput): Company
   findFirstCompanyBranch(cursor: CompanyBranchWhereUniqueInput, orderBy: CompanyBranchOrderByInput, skip: Int, take: Int, where: CompanyBranchWhereInput): CompanyBranch
   findFirstCompanyBranchAttachment(cursor: CompanyBranchAttachmentWhereUniqueInput, orderBy: CompanyBranchAttachmentOrderByInput, skip: Int, take: Int, where: CompanyBranchAttachmentWhereInput): CompanyBranchAttachment
   findFirstCompanyBranchGroup(cursor: CompanyBranchGroupWhereUniqueInput, orderBy: CompanyBranchGroupOrderByInput, skip: Int, take: Int, where: CompanyBranchGroupWhereInput): CompanyBranchGroup
@@ -107077,6 +107558,12 @@ type salutation_variance_fields {
 columns and relationships of "service"
 """
 type service {
+  bundle_amount: String
+  bundle_duration: String
+  bundle_items(
+    """JSON select path"""
+    path: String
+  ): json
   category: String
   code: String
   color: String
@@ -107111,6 +107598,7 @@ type service {
     path: String
   ): json
   max_clients: Int
+  min_attendees: Int
   notice_long: String
   notice_short: String
   online_payment_amount: String
@@ -107170,6 +107658,7 @@ type service_aggregate_fields {
 type service_avg_fields {
   days_before_booking: Float
   max_clients: Float
+  min_attendees: Float
   order: Float
 }
 
@@ -107180,6 +107669,9 @@ input service_bool_exp {
   _and: [service_bool_exp!]
   _not: service_bool_exp
   _or: [service_bool_exp!]
+  bundle_amount: String_comparison_exp
+  bundle_duration: String_comparison_exp
+  bundle_items: json_comparison_exp
   category: String_comparison_exp
   code: String_comparison_exp
   color: String_comparison_exp
@@ -107202,6 +107694,7 @@ input service_bool_exp {
   is_service_online: Boolean_comparison_exp
   locations: json_comparison_exp
   max_clients: Int_comparison_exp
+  min_attendees: Int_comparison_exp
   notice_long: String_comparison_exp
   notice_short: String_comparison_exp
   online_payment_amount: String_comparison_exp
@@ -107506,6 +107999,7 @@ input type for incrementing numeric columns in table "service"
 input service_inc_input {
   days_before_booking: Int
   max_clients: Int
+  min_attendees: Int
   order: Int
 }
 
@@ -107513,6 +108007,9 @@ input service_inc_input {
 input type for inserting data into table "service"
 """
 input service_insert_input {
+  bundle_amount: String
+  bundle_duration: String
+  bundle_items: json
   category: String
   code: String
   color: String
@@ -107535,6 +108032,7 @@ input service_insert_input {
   is_service_online: Boolean
   locations: json
   max_clients: Int
+  min_attendees: Int
   notice_long: String
   notice_short: String
   online_payment_amount: String
@@ -107558,6 +108056,8 @@ input service_insert_input {
 
 """aggregate max on columns"""
 type service_max_fields {
+  bundle_amount: String
+  bundle_duration: String
   category: String
   code: String
   color: String
@@ -107571,6 +108071,7 @@ type service_max_fields {
   image: String
   invoice_item_name: String
   max_clients: Int
+  min_attendees: Int
   notice_long: String
   notice_short: String
   online_payment_amount: String
@@ -107591,6 +108092,8 @@ type service_max_fields {
 
 """aggregate min on columns"""
 type service_min_fields {
+  bundle_amount: String
+  bundle_duration: String
   category: String
   code: String
   color: String
@@ -107604,6 +108107,7 @@ type service_min_fields {
   image: String
   invoice_item_name: String
   max_clients: Int
+  min_attendees: Int
   notice_long: String
   notice_short: String
   online_payment_amount: String
@@ -107644,6 +108148,9 @@ input service_on_conflict {
 
 """Ordering options when selecting data from "service"."""
 input service_order_by {
+  bundle_amount: order_by
+  bundle_duration: order_by
+  bundle_items: order_by
   category: order_by
   code: order_by
   color: order_by
@@ -107666,6 +108173,7 @@ input service_order_by {
   is_service_online: order_by
   locations: order_by
   max_clients: order_by
+  min_attendees: order_by
   notice_long: order_by
   notice_short: order_by
   online_payment_amount: order_by
@@ -107696,6 +108204,15 @@ input service_pk_columns_input {
 select columns of table "service"
 """
 enum service_select_column {
+  """column name"""
+  bundle_amount
+
+  """column name"""
+  bundle_duration
+
+  """column name"""
+  bundle_items
+
   """column name"""
   category
 
@@ -107761,6 +108278,9 @@ enum service_select_column {
 
   """column name"""
   max_clients
+
+  """column name"""
+  min_attendees
 
   """column name"""
   notice_long
@@ -107824,6 +108344,9 @@ enum service_select_column {
 input type for updating data in table "service"
 """
 input service_set_input {
+  bundle_amount: String
+  bundle_duration: String
+  bundle_items: json
   category: String
   code: String
   color: String
@@ -107846,6 +108369,7 @@ input service_set_input {
   is_service_online: Boolean
   locations: json
   max_clients: Int
+  min_attendees: Int
   notice_long: String
   notice_short: String
   online_payment_amount: String
@@ -107871,6 +108395,7 @@ input service_set_input {
 type service_stddev_fields {
   days_before_booking: Float
   max_clients: Float
+  min_attendees: Float
   order: Float
 }
 
@@ -107878,6 +108403,7 @@ type service_stddev_fields {
 type service_stddev_pop_fields {
   days_before_booking: Float
   max_clients: Float
+  min_attendees: Float
   order: Float
 }
 
@@ -107885,6 +108411,7 @@ type service_stddev_pop_fields {
 type service_stddev_samp_fields {
   days_before_booking: Float
   max_clients: Float
+  min_attendees: Float
   order: Float
 }
 
@@ -107892,6 +108419,7 @@ type service_stddev_samp_fields {
 type service_sum_fields {
   days_before_booking: Int
   max_clients: Int
+  min_attendees: Int
   order: Int
 }
 
@@ -107899,6 +108427,15 @@ type service_sum_fields {
 update columns of table "service"
 """
 enum service_update_column {
+  """column name"""
+  bundle_amount
+
+  """column name"""
+  bundle_duration
+
+  """column name"""
+  bundle_items
+
   """column name"""
   category
 
@@ -107966,6 +108503,9 @@ enum service_update_column {
   max_clients
 
   """column name"""
+  min_attendees
+
+  """column name"""
   notice_long
 
   """column name"""
@@ -108027,6 +108567,7 @@ enum service_update_column {
 type service_var_pop_fields {
   days_before_booking: Float
   max_clients: Float
+  min_attendees: Float
   order: Float
 }
 
@@ -108034,6 +108575,7 @@ type service_var_pop_fields {
 type service_var_samp_fields {
   days_before_booking: Float
   max_clients: Float
+  min_attendees: Float
   order: Float
 }
 
@@ -108041,6 +108583,7 @@ type service_var_samp_fields {
 type service_variance_fields {
   days_before_booking: Float
   max_clients: Float
+  min_attendees: Float
   order: Float
 }
 
@@ -109047,11 +109590,11 @@ type subscription_root {
   Discounts_by_pk(id: uuid!): Discounts
 
   """
-  fetch data from the table: "Labs"
+  fetch data from the table: "LabsTmp"
   """
-  Labs(
+  LabsTmp(
     """distinct select on columns"""
-    distinct_on: [Labs_select_column!]
+    distinct_on: [LabsTmp_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -109060,18 +109603,18 @@ type subscription_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [Labs_order_by!]
+    order_by: [LabsTmp_order_by!]
 
     """filter the rows returned"""
-    where: Labs_bool_exp
-  ): [Labs!]!
+    where: LabsTmp_bool_exp
+  ): [LabsTmp!]!
 
   """
-  fetch aggregated fields from the table: "Labs"
+  fetch aggregated fields from the table: "LabsTmp"
   """
-  Labs_aggregate(
+  LabsTmp_aggregate(
     """distinct select on columns"""
-    distinct_on: [Labs_select_column!]
+    distinct_on: [LabsTmp_select_column!]
 
     """limit the number of rows returned"""
     limit: Int
@@ -109080,14 +109623,14 @@ type subscription_root {
     offset: Int
 
     """sort the rows by one or more columns"""
-    order_by: [Labs_order_by!]
+    order_by: [LabsTmp_order_by!]
 
     """filter the rows returned"""
-    where: Labs_bool_exp
-  ): Labs_aggregate!
+    where: LabsTmp_bool_exp
+  ): LabsTmp_aggregate!
 
-  """fetch data from the table: "Labs" using primary key columns"""
-  Labs_by_pk(id: uuid!): Labs
+  """fetch data from the table: "LabsTmp" using primary key columns"""
+  LabsTmp_by_pk(id: uuid!): LabsTmp
 
   """
   fetch data from the table: "Lists_campaign"
@@ -109219,6 +109762,49 @@ type subscription_root {
 
   """fetch data from the table: "SMS_campaign" using primary key columns"""
   SMS_campaign_by_pk(id: uuid!): SMS_campaign
+
+  """
+  fetch data from the table: "app_listing"
+  """
+  app_listing(
+    """distinct select on columns"""
+    distinct_on: [app_listing_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [app_listing_order_by!]
+
+    """filter the rows returned"""
+    where: app_listing_bool_exp
+  ): [app_listing!]!
+
+  """
+  fetch aggregated fields from the table: "app_listing"
+  """
+  app_listing_aggregate(
+    """distinct select on columns"""
+    distinct_on: [app_listing_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [app_listing_order_by!]
+
+    """filter the rows returned"""
+    where: app_listing_bool_exp
+  ): app_listing_aggregate!
+
+  """fetch data from the table: "app_listing" using primary key columns"""
+  app_listing_by_pk(id: Int!): app_listing
 
   """An array relationship"""
   application_notifications(
@@ -110136,49 +110722,6 @@ type subscription_root {
 
   """fetch data from the table: "departments" using primary key columns"""
   departments_by_pk(id: uuid!): departments
-
-  """
-  fetch data from the table: "developer_hub"
-  """
-  developer_hub(
-    """distinct select on columns"""
-    distinct_on: [developer_hub_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [developer_hub_order_by!]
-
-    """filter the rows returned"""
-    where: developer_hub_bool_exp
-  ): [developer_hub!]!
-
-  """
-  fetch aggregated fields from the table: "developer_hub"
-  """
-  developer_hub_aggregate(
-    """distinct select on columns"""
-    distinct_on: [developer_hub_select_column!]
-
-    """limit the number of rows returned"""
-    limit: Int
-
-    """skip the first n rows. Use only with order_by"""
-    offset: Int
-
-    """sort the rows by one or more columns"""
-    order_by: [developer_hub_order_by!]
-
-    """filter the rows returned"""
-    where: developer_hub_bool_exp
-  ): developer_hub_aggregate!
-
-  """fetch data from the table: "developer_hub" using primary key columns"""
-  developer_hub_by_pk(uuid: uuid!): developer_hub
 
   """
   fetch data from the table: "diagnostic_codes"

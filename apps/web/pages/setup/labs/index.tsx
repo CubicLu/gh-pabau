@@ -15,7 +15,7 @@ import {
   InsertLabsOneDocument,
   DeleteLabsByPkDocument,
   UpdateLabsByPkDocument,
-  LabsDocument,
+  LabsTmpDocument,
   LabsAggregateDocument,
   UpdateLabsOrderDocument,
 } from '@pabau/graphql'
@@ -365,7 +365,7 @@ const Labs: NextPage = () => {
             tableSearch={false}
             addQuery={InsertLabsOneDocument}
             deleteQuery={DeleteLabsByPkDocument}
-            listQuery={LabsDocument}
+            listQuery={LabsTmpDocument}
             editQuery={UpdateLabsByPkDocument}
             aggregateQuery={LabsAggregateDocument}
             updateOrderQuery={UpdateLabsOrderDocument}

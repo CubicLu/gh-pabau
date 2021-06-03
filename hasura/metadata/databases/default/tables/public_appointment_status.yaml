@@ -30,6 +30,21 @@ select_permissions:
     - id
     filter: {}
   role: public
+- permission:
+    allow_aggregations: true
+    columns:
+    - is_active
+    - track_time
+    - order
+    - appointment_type
+    - color
+    - icon
+    - name
+    - created_at
+    - updated_at
+    - id
+    filter: {}
+  role: user
 update_permissions:
 - permission:
     check: null
