@@ -187,7 +187,7 @@ mutation updateOneCalendarSetting(
   }
 }
 
-mutation createOneCompanyMeta($name: String!, $value: String!) {
+mutation setCompanyMeta($name: String!, $value: String!) {
   createOneCompanyMeta(
     data: { meta_name: $name, meta_value: $value, Company: {} }
   ) {
@@ -195,7 +195,7 @@ mutation createOneCompanyMeta($name: String!, $value: String!) {
   }
 }
 
-mutation updateOneCompanyMeta($id: Int, $value: String) {
+mutation updateCompanyMeta($id: Int, $value: String) {
   updateOneCompanyMeta(
     data: { meta_value: { set: $value } }
     where: { id: $id }

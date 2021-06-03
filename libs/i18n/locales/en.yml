@@ -2460,7 +2460,7 @@ en:
   settings.calendar.advanced.input.disablebooking.tooltip: Stops users seeing the notification for cleints to use a session from there course.
   settings.calendar.advanced.input.disablefiltering.label: Disable filtering by service
   settings.calendar.advanced.input.disablefiltering.tooltip: You will not be able to filter the calendar on service availability.
-  settings.calendar.advanced.input.autocomplete.label: Auto-complete Appointment Status
+  settings.calendar.advanced.input.autocomplete.label: Auto-complete appointment status
   settings.calendar.advanced.input.autocomplete.tooltip: We will automatically complete appointments when the appointment duration has finished.
   settings.calendar.advanced.input.orderingemployee.label: Ordering the employees by location
   settings.calendar.advanced.input.orderingemployee.tooltip: Your calendar will automatically arrange itself to be ordered by location.
@@ -2478,6 +2478,7 @@ en:
   settings.calendar.advanced.input.initials.tooltip: Change the photo of staff to initials.
   settings.calendar.advanced.input.noshowcount.label: No-shows before deposit
   settings.calendar.advanced.input.noshowcount.tooltip: The number of no-shows of the client after which a deposit will be required.
+  settings.calendar.advanced.input.noshowcount.err1: Minimum value can be 0.
   setup.taxrate.heading: Tax Rate
   setup.taxrate.notax: No Tax Rate
   setup.taxrate.notaxadd: Add Tax Rate
