@@ -48,4 +48,23 @@ export class NotificationServices {
 
     return response.data
   }
+
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async getUserById(id: number, authorization: string): Promise<any> {
+    const data = {
+      query: `query MyQuery {\n  user(where: {id: ${id}}) {\n    full_name\n  }\n}\n`,
+      variables: null,
+      operationName: 'MyQuery',
+    }
+
+    const headers = {
+      'content-type': 'application/json',
+      'x-hasura-admin-secret': environment.HASURA_GRAPHQL_ADMIN_SECRET,
+      authorization: authorization,
+    }
+    const response = await this.httpService
+      .post(environment.HASURA_GRAPHQL_ENDPOINT, data, { headers })
+      .toPromise()
+    return response.data
+  }
 }

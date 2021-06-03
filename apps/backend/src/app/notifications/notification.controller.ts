@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common'
+import { Controller, Post, Body, Headers } from '@nestjs/common'
 import { NotificationServices } from './notification.service'
 import { notificationType } from './mock'
 
@@ -38,7 +38,10 @@ export class NotificationController {
   constructor(private readonly notificationService: NotificationServices) {}
 
   @Post('notification')
-  async sendNotification(@Body() data: BodyData): Promise<ResponseType> {
+  async sendNotification(
+    @Body() data: BodyData,
+    @Headers() headers
+  ): Promise<ResponseType> {
     if (data.type === notificationType.cancelled_appointment_via_calendar) {
       requiredFields.push('cancellation_reason')
     }
@@ -54,18 +57,27 @@ export class NotificationController {
       return { success: false, message: errors }
     }
 
-    const res = await this.notificationService.sendNotification(
+    const sentUserData = await this.notificationService.getUserById(
+      data.sent_by,
+      headers?.authorization
+    )
+    const clientData = await this.notificationService.getUserById(
+      data.sent_to?.[0],
+      headers?.authorization
+    )
+
+    const response = await this.notificationService.sendNotification(
       data.type,
       data.sent_to,
       data.sent_by,
       data.destination,
-      data.user_name,
+      sentUserData?.data?.user?.full_name,
       data.service_name,
-      data.client_name,
+      clientData?.data?.user?.full_name,
       data.date,
       data.time,
       data.cancellation_reason
     )
-    return { success: true, response: res }
+    return { success: true, response }
   }
 }
