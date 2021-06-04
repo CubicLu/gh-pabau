@@ -9,7 +9,12 @@ interface P {
   changeFormName: (formName: string) => void
 }
 
-const MedicalFormName: FC<P> = ({ label, desc, name, changeFormName }) => {
+export const MedicalFormName: FC<P> = ({
+  label,
+  desc,
+  name,
+  changeFormName,
+}) => {
   const [formName, setFormName] = useState(name)
   const onChangeFormName = (e) => {
     setFormName(e.target.value)

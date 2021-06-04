@@ -20,7 +20,6 @@ export default {
   component: FormComponent,
   title: 'UI/Form Component',
 }
-
 const FormStaticTextStory = ({ title, desc1, desc2, ...rest }) => (
   <FormStaticText title={title} desc1={desc1} desc2={desc2} {...rest} />
 )
@@ -69,7 +68,7 @@ const FormTextAreaStory = ({
     desc={desc}
     placeHolder={placeHolder}
     defaultValue={defaultValue}
-    {...rest}
+    required={false}
   />
 )
 export const FormTextAreaComponent = FormTextAreaStory.bind({})
@@ -81,7 +80,12 @@ FormTextAreaComponent.args = {
 }
 
 const FormCheckBoxStory = ({ title, desc, paramItems }) => (
-  <FormCheckBox title={title} desc={desc} paramItems={paramItems} />
+  <FormCheckBox
+    title={title}
+    desc={desc}
+    paramItems={paramItems}
+    required={false}
+  />
 )
 export const FormCheckBoxComponent = FormCheckBoxStory.bind({})
 FormCheckBoxComponent.args = {
@@ -107,7 +111,12 @@ FormCheckBoxComponent.args = {
 }
 
 const FormLabTestsStory = ({ title, desc, paramItems }) => (
-  <FormLabTests title={title} desc={desc} paramItems={paramItems} />
+  <FormLabTests
+    title={title}
+    desc={desc}
+    paramItems={paramItems}
+    required={false}
+  />
 )
 export const FormLabTestsComponent = FormLabTestsStory.bind({})
 FormLabTestsComponent.args = {
@@ -191,7 +200,12 @@ FormMedicalConditionsComponent.args = {
 }
 
 const FormPhotoUploadStory = ({ title, desc, paramItems }) => (
-  <FormPhotoUpload title={title} desc={desc} paramItems={paramItems} />
+  <FormPhotoUpload
+    title={title}
+    desc={desc}
+    paramItems={paramItems}
+    required={false}
+  />
 )
 export const FormPhotoUploadComponent = FormPhotoUploadStory.bind({})
 FormPhotoUploadComponent.args = {
@@ -207,7 +221,12 @@ FormPhotoUploadComponent.args = {
 }
 
 const FormSingleChoiceStory = ({ title, desc, paramItems }) => (
-  <FormSingleChoice title={title} desc={desc} paramItems={paramItems} />
+  <FormSingleChoice
+    title={title}
+    desc={desc}
+    paramItems={paramItems}
+    required={false}
+  />
 )
 export const FormSingleChoiceComponent = FormSingleChoiceStory.bind({})
 FormSingleChoiceComponent.args = {
@@ -228,7 +247,12 @@ FormSingleChoiceComponent.args = {
 }
 
 const FormDrawingStory = ({ title, desc, paramItems }) => (
-  <FormDrawing title={title} desc={desc} paramItems={paramItems} />
+  <FormDrawing
+    title={title}
+    desc={desc}
+    paramItems={paramItems}
+    required={false}
+  />
 )
 export const FormDrawingComponent = FormDrawingStory.bind({})
 FormDrawingComponent.args = {
@@ -244,7 +268,12 @@ FormDrawingComponent.args = {
 }
 
 const FormDropDownStory = ({ title, desc, paramItems }) => (
-  <FormDropDown title={title} desc={desc} paramItems={paramItems} />
+  <FormDropDown
+    title={title}
+    desc={desc}
+    paramItems={paramItems}
+    required={false}
+  />
 )
 export const FormDropDownComponent = FormDropDownStory.bind({})
 FormDropDownComponent.args = {
@@ -270,7 +299,12 @@ FormDropDownComponent.args = {
 }
 
 const FormImageStory = ({ title, desc, paramItems }) => (
-  <FormImage title={title} desc={desc} paramItems={paramItems} />
+  <FormImage
+    title={title}
+    desc={desc}
+    paramItems={paramItems}
+    required={false}
+  />
 )
 export const FormImageComponent = FormImageStory.bind({})
 FormImageComponent.args = {
@@ -286,7 +320,12 @@ FormImageComponent.args = {
 }
 
 const FormTravelStory = ({ title, desc, paramItems }) => (
-  <FormTravel title={title} desc={desc} paramItems={paramItems} />
+  <FormTravel
+    title={title}
+    desc={desc}
+    paramItems={paramItems}
+    required={false}
+  />
 )
 export const FormTravelComponent = FormTravelStory.bind({})
 FormTravelComponent.args = {
@@ -296,7 +335,7 @@ FormTravelComponent.args = {
 }
 
 const FormSignatureStory = ({ title, desc }) => (
-  <FormSignature title={title} desc={desc} />
+  <FormSignature title={title} desc={desc} required={false} signData={'test'} />
 )
 export const FormSignatureComponent = FormSignatureStory.bind({})
 FormSignatureComponent.args = {
@@ -305,7 +344,12 @@ FormSignatureComponent.args = {
 }
 
 const FormDrugsStory = ({ title, desc, paramItems }) => (
-  <FormDrugs title={title} desc={desc} paramItems={paramItems} />
+  <FormDrugs
+    title={title}
+    desc={desc}
+    paramItems={paramItems}
+    required={false}
+  />
 )
 export const FormDrugsComponent = FormDrugsStory.bind({})
 FormDrugsComponent.args = {

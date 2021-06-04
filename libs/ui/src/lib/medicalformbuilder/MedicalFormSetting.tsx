@@ -20,7 +20,7 @@ const menu = (
   </Menu>
 )
 
-const MedicalFormSetting: FC<P> = ({ clickCreateFormBtn }) => {
+export const MedicalFormSetting: FC<P> = ({ clickCreateFormBtn }) => {
   const { t } = useTranslation('common')
   const onClickBtn = () => {
     clickCreateFormBtn?.()

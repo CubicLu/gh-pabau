@@ -31,7 +31,11 @@ interface P {
   handlingClickLeft?: (componentName: string) => void
 }
 
-const LeftSidebarElement: FC<P> = ({ type, component, handlingClickLeft }) => {
+export const LeftSidebarElement: FC<P> = ({
+  type,
+  component,
+  handlingClickLeft,
+}) => {
   const { t } = useTranslation('common')
   const componentInfos = [
     {

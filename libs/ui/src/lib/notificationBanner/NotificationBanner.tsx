@@ -2,8 +2,8 @@ import React, { FC } from 'react'
 import { Button } from '../button/Button'
 import styles from './NotificationBanner.module.less'
 import { Row, Col } from 'antd'
-import { useTranslation } from 'react-i18next'
 import iconClose from '../../assets/images/icon_close.svg'
+import { useRouter } from 'next/router'
 
 interface P {
   title?: string
@@ -15,6 +15,7 @@ interface P {
   showPaymentTitle?: string
   email?: string
   showEmail?: boolean
+  enableClientForms?: string
 }
 
 export const NotificationBanner: FC<P> = ({
@@ -30,8 +31,10 @@ export const NotificationBanner: FC<P> = ({
   showPaymentButton = true,
   showPaymentTitle = '',
   showEmail = false,
+  enableClientForms,
 }) => {
-  const { t } = useTranslation('common')
+  const router = useRouter()
+
   return (
     <div
       className={isHide ? styles.hideBlock : styles.notificationBody}
@@ -45,12 +48,13 @@ export const NotificationBanner: FC<P> = ({
           {showPaymentButton && (
             <Button
               className={styles.btnPayment}
-              // onClick={() => {}}
+              onClick={() =>
+                router.push('/client-notifications/appointment-reminder')
+              }
               size="middle"
               type="link"
             >
-              {showPaymentTitle ||
-                t('notificationbanner.button.showpaymenttitle')}
+              {showPaymentTitle || enableClientForms}
             </Button>
           )}
         </Col>
