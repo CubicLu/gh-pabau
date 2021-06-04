@@ -7312,20 +7312,6 @@ input CampaignAttachmentCreateManyCompanyInputEnvelope {
   skipDuplicates: Boolean
 }
 
-input CampaignAttachmentCreateManyCompanyInput {
-  attach_id: Int!
-  attach_time: String!
-  attach_user_name: String!
-  attachment_type: String!
-  campaign_id: Int!
-  id: Int
-}
-
-input CampaignAttachmentCreateManyCompanyInputEnvelope {
-  data: CampaignAttachmentCreateManyCompanyInput!
-  skipDuplicates: Boolean
-}
-
 input CampaignAttachmentCreateOrConnectWithoutCompanyInput {
   create: CampaignAttachmentUncheckedCreateWithoutCompanyInput!
   where: CampaignAttachmentWhereUniqueInput!
@@ -18084,42 +18070,6 @@ input CmContactViewedCreateManyUserInputEnvelope {
   skipDuplicates: Boolean
 }
 
-input CmContactViewedCreateManyCmContactInput {
-  company_id: Int!
-  date: DateTime!
-  id: Int
-  user_id: Int!
-}
-
-input CmContactViewedCreateManyCmContactInputEnvelope {
-  data: CmContactViewedCreateManyCmContactInput!
-  skipDuplicates: Boolean
-}
-
-input CmContactViewedCreateManyCompanyInput {
-  contact_id: Int!
-  date: DateTime!
-  id: Int
-  user_id: Int!
-}
-
-input CmContactViewedCreateManyCompanyInputEnvelope {
-  data: CmContactViewedCreateManyCompanyInput!
-  skipDuplicates: Boolean
-}
-
-input CmContactViewedCreateManyUserInput {
-  company_id: Int!
-  contact_id: Int!
-  date: DateTime!
-  id: Int
-}
-
-input CmContactViewedCreateManyUserInputEnvelope {
-  data: CmContactViewedCreateManyUserInput!
-  skipDuplicates: Boolean
-}
-
 input CmContactViewedCreateNestedManyWithoutCmContactInput {
   connect: [CmContactViewedWhereUniqueInput]
   connectOrCreate: [CmContactViewedCreateOrConnectWithoutCmContactInput]
@@ -18557,19 +18507,6 @@ input CmCouponClaimedCreateInput {
   claim_date: DateTime!
   claim_email: String!
   claim_full_name: String!
-}
-
-input CmCouponClaimedCreateManyCmCouponInput {
-  active: Int!
-  claim_date: DateTime!
-  claim_email: String!
-  claim_full_name: String!
-  id: Int
-}
-
-input CmCouponClaimedCreateManyCmCouponInputEnvelope {
-  data: CmCouponClaimedCreateManyCmCouponInput!
-  skipDuplicates: Boolean
 }
 
 input CmCouponClaimedCreateManyCmCouponInput {
@@ -21557,54 +21494,6 @@ input CmStaffGeneralCreateManyCompanyBranchInput {
   secretary_enable: Boolean!
 }
 
-input CmStaffGeneralCreateManyCompanyBranchInput {
-  Address1: String!
-  Address2: String!
-  Avatar: String!
-  Birthdate: DateTime
-  CellPhone: String!
-  City: String!
-  Country: String!
-  CreatedDate: DateTime
-  Department: Int!
-  EEOCategory: Int!
-  EEOCode: Int!
-  Email: String!
-  EmployeeNumber: String!
-  EnumStatus: cm_staff_general_EnumStatus
-  Exemptions: String!
-  Fax: String!
-  Fname: String!
-  Gender: Int!
-  HireDate: DateTime
-  HomePhone: String!
-  ID: Int
-  IpAddress: Int!
-  Lname: String!
-  Location: String!
-  MI: String!
-  Manager: Int!
-  NextReview: DateTime
-  OwnerID: String
-  Position: Int
-  RenewalDate: DateTime
-  SSN: String!
-  Salutation: String!
-  St: String!
-  Status: Int!
-  W4Status: Int!
-  WorkPhone: String!
-  Zip: String!
-  commission_sheet_id: Int!
-  company_id: Int!
-  consultation_fee: Float!
-  deleted_on: String!
-  max_vacation_days: Int
-  pabau_id: Int!
-  secretary: String!
-  secretary_enable: Boolean!
-}
-
 input CmStaffGeneralCreateManyCompanyBranchInputEnvelope {
   data: CmStaffGeneralCreateManyCompanyBranchInput!
   skipDuplicates: Boolean
@@ -21653,7 +21542,7 @@ input CmStaffGeneralCreateManyCompanyInput {
   consultation_fee: Float!
   deleted_on: String!
   max_vacation_days: Int
-  pabau_id: Int!
+  pabau_id: Int
   secretary: String!
   secretary_enable: Boolean!
 }
@@ -21706,7 +21595,7 @@ input CmStaffGeneralCreateManyCompanyPositionInput {
   consultation_fee: Float!
   deleted_on: String!
   max_vacation_days: Int
-  pabau_id: Int!
+  pabau_id: Int
   secretary: String!
   secretary_enable: Boolean!
 }
@@ -23130,8 +23019,6 @@ type Company {
 }
 
 type CompanyBranch {
-  AssignedBadge: [CompanyBranchAttachment]
-  AssignedUser(cursor: CmStaffGeneralWhereUniqueInput, orderBy: CmStaffGeneralOrderByInput, skip: Int, take: Int, where: CmStaffGeneralWhereInput): [CmStaffGeneral]
   CmContactLocation(cursor: CmContactLocationWhereUniqueInput, skip: Int, take: Int): [CmContactLocation!]!
   CmStaffGeneral(cursor: CmStaffGeneralWhereUniqueInput, skip: Int, take: Int): [CmStaffGeneral!]!
   Company: Company!
@@ -23544,76 +23431,6 @@ input CompanyBranchCreateManyCompanyInput {
   show_online: Int
   street: String!
   website: String!
-}
-
-input CompanyBranchCreateManyCompanyInput {
-  address: String!
-  bookable_online: Int!
-  calendar_bookable: Int!
-  city: String!
-  color: String!
-  county: String!
-  custom_id: String!
-  email: String!
-  group_id: Int!
-  id: Int
-  invoice_template_id: Int
-  is_active: Int!
-  is_default: Boolean!
-  lat: Float!
-  lng: Float!
-  loc_order: Int!
-  name: String!
-  notice: String
-  notify_on_lead: Boolean
-  online_bookings: Int!
-  phone: String!
-  postcode: String!
-  region: String!
-  send_conf_email: Int!
-  show_online: Int
-  street: String!
-  website: String!
-}
-
-input CompanyBranchCreateManyCompanyInput {
-  address: String!
-  bookable_online: Int!
-  calendar_bookable: Int!
-  city: String!
-  color: String!
-  county: String!
-  custom_id: String!
-  email: String!
-  group_id: Int!
-  id: Int
-  invoice_template_id: Int
-  is_active: Int!
-  is_default: Boolean!
-  lat: Float!
-  lng: Float!
-  loc_order: Int!
-  name: String!
-  notice: String
-  notify_on_lead: Boolean
-  online_bookings: Int!
-  phone: String!
-  postcode: String!
-  region: String!
-  send_conf_email: Int!
-  show_online: Int
-  street: String!
-  website: String!
-}
-
-input CompanyBranchCreateManyCompanyInputEnvelope {
-  data: CompanyBranchCreateManyCompanyInput!
-  skipDuplicates: Boolean
-}
-
-input CompanyBranchCreateManyCompanyInputEnvelope {
-  data: CompanyBranchCreateManyCompanyInput!
-  skipDuplicates: Boolean
 }
 
 input CompanyBranchCreateManyCompanyInputEnvelope {
@@ -25633,11 +25450,6 @@ input CompanyCreateOrConnectWithoutInvBillerInput {
 
 input CompanyCreateOrConnectWithoutInvPaymentInput {
   create: CompanyUncheckedCreateWithoutInvPaymentInput!
-  where: CompanyWhereUniqueInput!
-}
-
-input CompanyCreateOrConnectWithoutInvPaymentTypeInput {
-  create: CompanyUncheckedCreateWithoutInvPaymentTypeInput!
   where: CompanyWhereUniqueInput!
 }
 
@@ -27802,21 +27614,6 @@ input CompanyNoteWhereInput {
 
 input CompanyNoteWhereUniqueInput {
   id: Int
-}
-
-input CompanyOrderByInput {
-  admin: SortOrder
-  creation_date: SortOrder
-  cron_enabled: SortOrder
-  details: CompanyDetailsOrderByInput
-  digit8: SortOrder
-  id: SortOrder
-  image: SortOrder
-  remote_connect: SortOrder
-  remote_url: SortOrder
-  slug: SortOrder
-  subscription: CompanySubscriptionOrderByInput
-  user: SortOrder
 }
 
 type CompanyPermission {
@@ -34606,103 +34403,6 @@ input CompanyUncheckedCreateWithoutCompanyBranchAttachmentInput {
   user: String!
 }
 
-input CompanyUncheckedCreateWithoutCmExtraSalonInput {
-  AcLog: AcLogUncheckedCreateNestedManyWithoutCompanyInput
-  AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
-  AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
-  AccountBalanceLog: AccountBalanceLogUncheckedCreateNestedManyWithoutCompanyInput
-  AccountManager: AccountManagerUncheckedCreateNestedManyWithoutCompanyInput
-  AppSubscriptionsCompanyPrice: AppSubscriptionsCompanyPriceUncheckedCreateNestedManyWithoutCompanyInput
-  AvilableDatesLog: AvilableDatesLogUncheckedCreateNestedManyWithoutCompanyInput
-  BlockReason: BlockReasonUncheckedCreateNestedManyWithoutCompanyInput
-  BodyChartTemplate: BodyChartTemplateUncheckedCreateNestedManyWithoutCompanyInput
-  BookingSetting: BookingSettingUncheckedCreateNestedManyWithoutCompanyInput
-  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
-  BookitProGeneral: BookitProGeneralUncheckedCreateNestedManyWithoutCompanyInput
-  BookitProSlider: BookitProSliderUncheckedCreateNestedManyWithoutCompanyInput
-  CalendarView: CalendarViewUncheckedCreateNestedManyWithoutCompanyInput
-  CampaignAttachment: CampaignAttachmentUncheckedCreateNestedManyWithoutCompanyInput
-  CancelReason: CancelReasonUncheckedCreateNestedManyWithoutCompanyInput
-  CancellationPolicy: CancellationPolicyUncheckedCreateNestedManyWithoutCompanyInput
-  Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
-  ClassCategory: ClassCategoryUncheckedCreateNestedManyWithoutCompanyInput
-  ClassProduct: ClassProductUncheckedCreateNestedManyWithoutCompanyInput
-  ClockinLongpoll: ClockinLongpollUncheckedCreateNestedManyWithoutCompanyInput
-  CmAppointmentCustom: CmAppointmentCustomUncheckedCreateNestedManyWithoutCompanyInput
-  CmAppointmentsCustomImportHelper: CmAppointmentsCustomImportHelperUncheckedCreateNestedManyWithoutCompanyInput
-  CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
-  CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
-  CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
-  CmContact: CmContactUncheckedCreateNestedManyWithoutCompanyInput
-  CmContactJson: CmContactJsonUncheckedCreateNestedManyWithoutCompanyInput
-  CmContactLocation: CmContactLocationUncheckedCreateNestedManyWithoutCompanyInput
-  CmContactMedicalCondition: CmContactMedicalConditionUncheckedCreateNestedManyWithoutCompanyInput
-  CmContactTravel: CmContactTravelUncheckedCreateNestedManyWithoutCompanyInput
-  CmContactViewed: CmContactViewedUncheckedCreateNestedManyWithoutCompanyInput
-  CmDrug: CmDrugUncheckedCreateNestedManyWithoutCompanyInput
-  CmExtraPatient: CmExtraPatientUncheckedCreateNestedManyWithoutCompanyInput
-  CmLead: CmLeadUncheckedCreateNestedManyWithoutCompanyInput
-  CmStaffGeneral: CmStaffGeneralUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyBranch: CompanyBranchUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyDepartment: CompanyDepartmentUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyLocation: CompanyLocationUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyMeta: CompanyMetaUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyNote: CompanyNoteUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyPermission: CompanyPermissionUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyPolicy: CompanyPolicyUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyPosition: CompanyPositionUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyRoom: CompanyRoomUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyRoomService: CompanyRoomServiceUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyService: CompanyServiceUncheckedCreateNestedManyWithoutCompanyInput
-  GroupPermission: GroupPermissionUncheckedCreateNestedManyWithoutCompanyInput
-  HealthcodeInsurer: HealthcodeInsurerUncheckedCreateNestedManyWithoutCompanyInput
-  HolidayRequest: HolidayRequestUncheckedCreateNestedManyWithoutCompanyInput
-  InsuranceDetail: InsuranceDetailUncheckedCreateNestedManyWithoutCompanyInput
-  InvBiller: InvBillerUncheckedCreateNestedManyWithoutCompanyInput
-  InvPayment: InvPaymentUncheckedCreateNestedManyWithoutCompanyInput
-  InvPaymentType: InvPaymentTypeUncheckedCreateNestedManyWithoutCompanyInput
-  InvProduct: InvProductUncheckedCreateNestedManyWithoutCompanyInput
-  Job: JobUncheckedCreateNestedManyWithoutCompanyInput
-  JobConfiguration: JobConfigurationUncheckedCreateNestedManyWithoutCompanyInput
-  JobOpening: JobOpeningUncheckedCreateNestedManyWithoutCompanyInput
-  JobStatus: JobStatusUncheckedCreateNestedManyWithoutCompanyInput
-  MarketingSource: MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
-  MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutCompanyInput
-  PermissionTemplate: PermissionTemplateUncheckedCreateNestedManyWithoutCompanyInput
-  PointOfSaleSetting: PointOfSaleSettingUncheckedCreateNestedManyWithoutCompanyInput
-  RotaShift: RotaShiftUncheckedCreateNestedManyWithoutCompanyInput
-  SmsPurchase: SmsPurchaseUncheckedCreateNestedManyWithoutCompanyInput
-  SocialSurvey: SocialSurveyUncheckedCreateNestedManyWithoutCompanyInput
-  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutCompanyInput
-  SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutCompanyInput
-  SocialSurveyQuestion: SocialSurveyQuestionUncheckedCreateNestedManyWithoutCompanyInput
-  TemplateFolder: TemplateFolderUncheckedCreateNestedManyWithoutCompanyInput
-  ThirdPartyAccess: ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
-  TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutCompanyInput
-  TwoFactorHistory: TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
-  User: UserUncheckedCreateNestedManyWithoutCompanyInput
-  UserActivityLog: UserActivityLogUncheckedCreateNestedManyWithoutCompanyInput
-  UserAlertPermission: UserAlertPermissionUncheckedCreateNestedManyWithoutCompanyInput
-  UserGroup: UserGroupUncheckedCreateNestedManyWithoutCompanyInput
-  UserMaster: UserMasterUncheckedCreateNestedManyWithoutCompanyInput
-  UserMobilePermission: UserMobilePermissionUncheckedCreateNestedManyWithoutCompanyInput
-  UserReport: UserReportUncheckedCreateNestedManyWithoutCompanyInput
-  UserSalutation: UserSalutationUncheckedCreateNestedManyWithoutCompanyInput
-  XeroIntegration: XeroIntegrationUncheckedCreateNestedManyWithoutCompanyInput
-  admin: Int!
-  creation_date: DateTime!
-  cron_enabled: Boolean
-  details: CompanyDetailsUncheckedCreateNestedOneWithoutCompanyInput
-  digit8: Int!
-  id: Int
-  image: String!
-  remote_connect: String
-  remote_url: String
-  slug: String
-  subscription: CompanySubscriptionUncheckedCreateNestedOneWithoutCompanyInput
-  user: String!
-}
-
 input CompanyUncheckedCreateWithoutCompanyBranchGroupInput {
   AcLog: AcLogUncheckedCreateNestedManyWithoutCompanyInput
   AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
@@ -36078,6 +35778,7 @@ input CompanyUncheckedCreateWithoutGroupPermissionInput {
   admin: Int!
   creation_date: DateTime!
   cron_enabled: Boolean
+  details: CompanyDetailsUncheckedCreateNestedOneWithoutCompanyInput
   digit8: Int!
   id: Int
   image: String!
@@ -36622,104 +36323,8 @@ input CompanyUncheckedCreateWithoutInvPaymentTypeInput {
   CmLead: CmLeadUncheckedCreateNestedManyWithoutCompanyInput
   CmStaffGeneral: CmStaffGeneralUncheckedCreateNestedManyWithoutCompanyInput
   CompanyBranch: CompanyBranchUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyDepartment: CompanyDepartmentUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyLocation: CompanyLocationUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyMeta: CompanyMetaUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyNote: CompanyNoteUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyPermission: CompanyPermissionUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyPolicy: CompanyPolicyUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyPosition: CompanyPositionUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyRoom: CompanyRoomUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyRoomService: CompanyRoomServiceUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyService: CompanyServiceUncheckedCreateNestedManyWithoutCompanyInput
-  GroupPermission: GroupPermissionUncheckedCreateNestedManyWithoutCompanyInput
-  HealthcodeInsurer: HealthcodeInsurerUncheckedCreateNestedManyWithoutCompanyInput
-  HolidayRequest: HolidayRequestUncheckedCreateNestedManyWithoutCompanyInput
-  InsuranceDetail: InsuranceDetailUncheckedCreateNestedManyWithoutCompanyInput
-  InvBiller: InvBillerUncheckedCreateNestedManyWithoutCompanyInput
-  InvPaymentType: InvPaymentTypeUncheckedCreateNestedManyWithoutCompanyInput
-  InvPayment: InvPaymentUncheckedCreateNestedManyWithoutCompanyInput
-  InvProduct: InvProductUncheckedCreateNestedManyWithoutCompanyInput
-  Job: JobUncheckedCreateNestedManyWithoutCompanyInput
-  JobConfiguration: JobConfigurationUncheckedCreateNestedManyWithoutCompanyInput
-  JobOpening: JobOpeningUncheckedCreateNestedManyWithoutCompanyInput
-  JobStatus: JobStatusUncheckedCreateNestedManyWithoutCompanyInput
-  MarketingSource: MarketingSourceUncheckedCreateNestedManyWithoutCompanyInput
-  MessageTemplate: MessageTemplateUncheckedCreateNestedManyWithoutCompanyInput
-  PermissionTemplate: PermissionTemplateUncheckedCreateNestedManyWithoutCompanyInput
-  PointOfSaleSetting: PointOfSaleSettingUncheckedCreateNestedManyWithoutCompanyInput
-  RotaShift: RotaShiftUncheckedCreateNestedManyWithoutCompanyInput
-  SmsPurchase: SmsPurchaseUncheckedCreateNestedManyWithoutCompanyInput
-  SocialSurvey: SocialSurveyUncheckedCreateNestedManyWithoutCompanyInput
-  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedCreateNestedManyWithoutCompanyInput
-  SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedCreateNestedManyWithoutCompanyInput
-  SocialSurveyQuestion: SocialSurveyQuestionUncheckedCreateNestedManyWithoutCompanyInput
-  TemplateFolder: TemplateFolderUncheckedCreateNestedManyWithoutCompanyInput
-  ThirdPartyAccess: ThirdPartyAccessUncheckedCreateNestedManyWithoutCompanyInput
-  TrainCourseDate: TrainCourseDateUncheckedCreateNestedManyWithoutCompanyInput
-  TwoFactorHistory: TwoFactorHistoryUncheckedCreateNestedManyWithoutCompanyInput
-  User: UserUncheckedCreateNestedManyWithoutCompanyInput
-  UserActivityLog: UserActivityLogUncheckedCreateNestedManyWithoutCompanyInput
-  UserAlertPermission: UserAlertPermissionUncheckedCreateNestedManyWithoutCompanyInput
-  UserGroup: UserGroupUncheckedCreateNestedManyWithoutCompanyInput
-  UserMaster: UserMasterUncheckedCreateNestedManyWithoutCompanyInput
-  UserMobilePermission: UserMobilePermissionUncheckedCreateNestedManyWithoutCompanyInput
-  UserReport: UserReportUncheckedCreateNestedManyWithoutCompanyInput
-  UserSalutation: UserSalutationUncheckedCreateNestedManyWithoutCompanyInput
-  XeroIntegration: XeroIntegrationUncheckedCreateNestedManyWithoutCompanyInput
-  admin: Int!
-  creation_date: DateTime!
-  cron_enabled: Boolean
-  details: CompanyDetailsUncheckedCreateNestedOneWithoutCompanyInput
-  digit8: Int!
-  id: Int
-  image: String!
-  remote_connect: String
-  remote_url: String
-  slug: String
-  subscription: CompanySubscriptionUncheckedCreateNestedOneWithoutCompanyInput
-  user: String!
-}
-
-input CompanyUncheckedCreateWithoutInvPaymentTypeInput {
-  AcLog: AcLogUncheckedCreateNestedManyWithoutCompanyInput
-  AcceptEmailToken: AcceptEmailTokenUncheckedCreateNestedManyWithoutCompanyInput
-  AccountBalance: AccountBalanceUncheckedCreateNestedManyWithoutCompanyInput
-  AccountBalanceLog: AccountBalanceLogUncheckedCreateNestedManyWithoutCompanyInput
-  AccountManager: AccountManagerUncheckedCreateNestedManyWithoutCompanyInput
-  AppSubscriptionsCompanyPrice: AppSubscriptionsCompanyPriceUncheckedCreateNestedManyWithoutCompanyInput
-  AvilableDatesLog: AvilableDatesLogUncheckedCreateNestedManyWithoutCompanyInput
-  BlockReason: BlockReasonUncheckedCreateNestedManyWithoutCompanyInput
-  BodyChartTemplate: BodyChartTemplateUncheckedCreateNestedManyWithoutCompanyInput
-  BookingSetting: BookingSettingUncheckedCreateNestedManyWithoutCompanyInput
-  BookingStatus: BookingStatusUncheckedCreateNestedManyWithoutCompanyInput
-  BookitProGeneral: BookitProGeneralUncheckedCreateNestedManyWithoutCompanyInput
-  BookitProSlider: BookitProSliderUncheckedCreateNestedManyWithoutCompanyInput
-  CalendarView: CalendarViewUncheckedCreateNestedManyWithoutCompanyInput
-  CampaignAttachment: CampaignAttachmentUncheckedCreateNestedManyWithoutCompanyInput
-  CancelReason: CancelReasonUncheckedCreateNestedManyWithoutCompanyInput
-  CancellationPolicy: CancellationPolicyUncheckedCreateNestedManyWithoutCompanyInput
-  Candidate: CandidateUncheckedCreateNestedManyWithoutCompanyInput
-  ClassCategory: ClassCategoryUncheckedCreateNestedManyWithoutCompanyInput
-  ClassProduct: ClassProductUncheckedCreateNestedManyWithoutCompanyInput
-  ClockinLongpoll: ClockinLongpollUncheckedCreateNestedManyWithoutCompanyInput
-  CmAppointmentCustom: CmAppointmentCustomUncheckedCreateNestedManyWithoutCompanyInput
-  CmAppointmentsCustomImportHelper: CmAppointmentsCustomImportHelperUncheckedCreateNestedManyWithoutCompanyInput
-  CmCampaign: CmCampaignUncheckedCreateNestedManyWithoutCompanyInput
-  CmCase: CmCaseUncheckedCreateNestedManyWithoutCompanyInput
-  CmCaseReply: CmCaseReplyUncheckedCreateNestedManyWithoutCompanyInput
-  CmContact: CmContactUncheckedCreateNestedManyWithoutCompanyInput
-  CmContactJson: CmContactJsonUncheckedCreateNestedManyWithoutCompanyInput
-  CmContactLocation: CmContactLocationUncheckedCreateNestedManyWithoutCompanyInput
-  CmContactMedicalCondition: CmContactMedicalConditionUncheckedCreateNestedManyWithoutCompanyInput
-  CmContactTravel: CmContactTravelUncheckedCreateNestedManyWithoutCompanyInput
-  CmContactViewed: CmContactViewedUncheckedCreateNestedManyWithoutCompanyInput
-  CmDrug: CmDrugUncheckedCreateNestedManyWithoutCompanyInput
-  CmExtraPatient: CmExtraPatientUncheckedCreateNestedManyWithoutCompanyInput
-  CmExtraSalon: CmExtraSalonUncheckedCreateNestedManyWithoutCompanyInput
-  CmLead: CmLeadUncheckedCreateNestedManyWithoutCompanyInput
-  CmStaffGeneral: CmStaffGeneralUncheckedCreateNestedManyWithoutCompanyInput
-  CompanyBranch: CompanyBranchUncheckedCreateNestedManyWithoutCompanyInput
+  CompanyBranchAttachment: CompanyBranchAttachmentUncheckedCreateNestedManyWithoutCompanyInput
+  CompanyBranchGroup: CompanyBranchGroupUncheckedCreateNestedManyWithoutCompanyInput
   CompanyDepartment: CompanyDepartmentUncheckedCreateNestedManyWithoutCompanyInput
   CompanyLocation: CompanyLocationUncheckedCreateNestedManyWithoutCompanyInput
   CompanyMeta: CompanyMetaUncheckedCreateNestedManyWithoutCompanyInput
@@ -45331,104 +44936,8 @@ input CompanyUncheckedUpdateWithoutInvPaymentTypeInput {
   CmLead: CmLeadUncheckedUpdateManyWithoutCompanyInput
   CmStaffGeneral: CmStaffGeneralUncheckedUpdateManyWithoutCompanyInput
   CompanyBranch: CompanyBranchUncheckedUpdateManyWithoutCompanyInput
-  CompanyDepartment: CompanyDepartmentUncheckedUpdateManyWithoutCompanyInput
-  CompanyLocation: CompanyLocationUncheckedUpdateManyWithoutCompanyInput
-  CompanyMeta: CompanyMetaUncheckedUpdateManyWithoutCompanyInput
-  CompanyNote: CompanyNoteUncheckedUpdateManyWithoutCompanyInput
-  CompanyPermission: CompanyPermissionUncheckedUpdateManyWithoutCompanyInput
-  CompanyPolicy: CompanyPolicyUncheckedUpdateManyWithoutCompanyInput
-  CompanyPosition: CompanyPositionUncheckedUpdateManyWithoutCompanyInput
-  CompanyRoom: CompanyRoomUncheckedUpdateManyWithoutCompanyInput
-  CompanyRoomService: CompanyRoomServiceUncheckedUpdateManyWithoutCompanyInput
-  CompanyService: CompanyServiceUncheckedUpdateManyWithoutCompanyInput
-  GroupPermission: GroupPermissionUncheckedUpdateManyWithoutCompanyInput
-  HealthcodeInsurer: HealthcodeInsurerUncheckedUpdateManyWithoutCompanyInput
-  HolidayRequest: HolidayRequestUncheckedUpdateManyWithoutCompanyInput
-  InsuranceDetail: InsuranceDetailUncheckedUpdateManyWithoutCompanyInput
-  InvBiller: InvBillerUncheckedUpdateManyWithoutCompanyInput
-  InvPaymentType: InvPaymentTypeUncheckedUpdateManyWithoutCompanyInput
-  InvPayment: InvPaymentUncheckedUpdateManyWithoutCompanyInput
-  InvProduct: InvProductUncheckedUpdateManyWithoutCompanyInput
-  Job: JobUncheckedUpdateManyWithoutCompanyInput
-  JobConfiguration: JobConfigurationUncheckedUpdateManyWithoutCompanyInput
-  JobOpening: JobOpeningUncheckedUpdateManyWithoutCompanyInput
-  JobStatus: JobStatusUncheckedUpdateManyWithoutCompanyInput
-  MarketingSource: MarketingSourceUncheckedUpdateManyWithoutCompanyInput
-  MessageTemplate: MessageTemplateUncheckedUpdateManyWithoutCompanyInput
-  PermissionTemplate: PermissionTemplateUncheckedUpdateManyWithoutCompanyInput
-  PointOfSaleSetting: PointOfSaleSettingUncheckedUpdateManyWithoutCompanyInput
-  RotaShift: RotaShiftUncheckedUpdateManyWithoutCompanyInput
-  SmsPurchase: SmsPurchaseUncheckedUpdateManyWithoutCompanyInput
-  SocialSurvey: SocialSurveyUncheckedUpdateManyWithoutCompanyInput
-  SocialSurveyFeedback: SocialSurveyFeedbackUncheckedUpdateManyWithoutCompanyInput
-  SocialSurveyFeedbackResponse: SocialSurveyFeedbackResponseUncheckedUpdateManyWithoutCompanyInput
-  SocialSurveyQuestion: SocialSurveyQuestionUncheckedUpdateManyWithoutCompanyInput
-  TemplateFolder: TemplateFolderUncheckedUpdateManyWithoutCompanyInput
-  ThirdPartyAccess: ThirdPartyAccessUncheckedUpdateManyWithoutCompanyInput
-  TrainCourseDate: TrainCourseDateUncheckedUpdateManyWithoutCompanyInput
-  TwoFactorHistory: TwoFactorHistoryUncheckedUpdateManyWithoutCompanyInput
-  User: UserUncheckedUpdateManyWithoutCompanyInput
-  UserActivityLog: UserActivityLogUncheckedUpdateManyWithoutCompanyInput
-  UserAlertPermission: UserAlertPermissionUncheckedUpdateManyWithoutCompanyInput
-  UserGroup: UserGroupUncheckedUpdateManyWithoutCompanyInput
-  UserMaster: UserMasterUncheckedUpdateManyWithoutCompanyInput
-  UserMobilePermission: UserMobilePermissionUncheckedUpdateManyWithoutCompanyInput
-  UserReport: UserReportUncheckedUpdateManyWithoutCompanyInput
-  UserSalutation: UserSalutationUncheckedUpdateManyWithoutCompanyInput
-  XeroIntegration: XeroIntegrationUncheckedUpdateManyWithoutCompanyInput
-  admin: IntFieldUpdateOperationsInput
-  creation_date: DateTimeFieldUpdateOperationsInput
-  cron_enabled: NullableBoolFieldUpdateOperationsInput
-  details: CompanyDetailsUncheckedUpdateOneWithoutCompanyInput
-  digit8: IntFieldUpdateOperationsInput
-  id: IntFieldUpdateOperationsInput
-  image: StringFieldUpdateOperationsInput
-  remote_connect: NullableStringFieldUpdateOperationsInput
-  remote_url: NullableStringFieldUpdateOperationsInput
-  slug: NullableStringFieldUpdateOperationsInput
-  subscription: CompanySubscriptionUncheckedUpdateOneWithoutCompanyInput
-  user: StringFieldUpdateOperationsInput
-}
-
-input CompanyUncheckedUpdateWithoutInvPaymentTypeInput {
-  AcLog: AcLogUncheckedUpdateManyWithoutCompanyInput
-  AcceptEmailToken: AcceptEmailTokenUncheckedUpdateManyWithoutCompanyInput
-  AccountBalance: AccountBalanceUncheckedUpdateManyWithoutCompanyInput
-  AccountBalanceLog: AccountBalanceLogUncheckedUpdateManyWithoutCompanyInput
-  AccountManager: AccountManagerUncheckedUpdateManyWithoutCompanyInput
-  AppSubscriptionsCompanyPrice: AppSubscriptionsCompanyPriceUncheckedUpdateManyWithoutCompanyInput
-  AvilableDatesLog: AvilableDatesLogUncheckedUpdateManyWithoutCompanyInput
-  BlockReason: BlockReasonUncheckedUpdateManyWithoutCompanyInput
-  BodyChartTemplate: BodyChartTemplateUncheckedUpdateManyWithoutCompanyInput
-  BookingSetting: BookingSettingUncheckedUpdateManyWithoutCompanyInput
-  BookingStatus: BookingStatusUncheckedUpdateManyWithoutCompanyInput
-  BookitProGeneral: BookitProGeneralUncheckedUpdateManyWithoutCompanyInput
-  BookitProSlider: BookitProSliderUncheckedUpdateManyWithoutCompanyInput
-  CalendarView: CalendarViewUncheckedUpdateManyWithoutCompanyInput
-  CampaignAttachment: CampaignAttachmentUncheckedUpdateManyWithoutCompanyInput
-  CancelReason: CancelReasonUncheckedUpdateManyWithoutCompanyInput
-  CancellationPolicy: CancellationPolicyUncheckedUpdateManyWithoutCompanyInput
-  Candidate: CandidateUncheckedUpdateManyWithoutCompanyInput
-  ClassCategory: ClassCategoryUncheckedUpdateManyWithoutCompanyInput
-  ClassProduct: ClassProductUncheckedUpdateManyWithoutCompanyInput
-  ClockinLongpoll: ClockinLongpollUncheckedUpdateManyWithoutCompanyInput
-  CmAppointmentCustom: CmAppointmentCustomUncheckedUpdateManyWithoutCompanyInput
-  CmAppointmentsCustomImportHelper: CmAppointmentsCustomImportHelperUncheckedUpdateManyWithoutCompanyInput
-  CmCampaign: CmCampaignUncheckedUpdateManyWithoutCompanyInput
-  CmCase: CmCaseUncheckedUpdateManyWithoutCompanyInput
-  CmCaseReply: CmCaseReplyUncheckedUpdateManyWithoutCompanyInput
-  CmContact: CmContactUncheckedUpdateManyWithoutCompanyInput
-  CmContactJson: CmContactJsonUncheckedUpdateManyWithoutCompanyInput
-  CmContactLocation: CmContactLocationUncheckedUpdateManyWithoutCompanyInput
-  CmContactMedicalCondition: CmContactMedicalConditionUncheckedUpdateManyWithoutCompanyInput
-  CmContactTravel: CmContactTravelUncheckedUpdateManyWithoutCompanyInput
-  CmContactViewed: CmContactViewedUncheckedUpdateManyWithoutCompanyInput
-  CmDrug: CmDrugUncheckedUpdateManyWithoutCompanyInput
-  CmExtraPatient: CmExtraPatientUncheckedUpdateManyWithoutCompanyInput
-  CmExtraSalon: CmExtraSalonUncheckedUpdateManyWithoutCompanyInput
-  CmLead: CmLeadUncheckedUpdateManyWithoutCompanyInput
-  CmStaffGeneral: CmStaffGeneralUncheckedUpdateManyWithoutCompanyInput
-  CompanyBranch: CompanyBranchUncheckedUpdateManyWithoutCompanyInput
+  CompanyBranchAttachment: CompanyBranchAttachmentUncheckedUpdateManyWithoutCompanyInput
+  CompanyBranchGroup: CompanyBranchGroupUncheckedUpdateManyWithoutCompanyInput
   CompanyDepartment: CompanyDepartmentUncheckedUpdateManyWithoutCompanyInput
   CompanyLocation: CompanyLocationUncheckedUpdateManyWithoutCompanyInput
   CompanyMeta: CompanyMetaUncheckedUpdateManyWithoutCompanyInput
@@ -48891,14 +48400,6 @@ input CompanyUpdateOneRequiredWithoutInvPaymentInput {
   create: CompanyUncheckedCreateWithoutInvPaymentInput
   update: CompanyUncheckedUpdateWithoutInvPaymentInput
   upsert: CompanyUpsertWithoutInvPaymentInput
-}
-
-input CompanyUpdateOneRequiredWithoutInvPaymentTypeInput {
-  connect: CompanyWhereUniqueInput
-  connectOrCreate: CompanyCreateOrConnectWithoutInvPaymentTypeInput
-  create: CompanyUncheckedCreateWithoutInvPaymentTypeInput
-  update: CompanyUncheckedUpdateWithoutInvPaymentTypeInput
-  upsert: CompanyUpsertWithoutInvPaymentTypeInput
 }
 
 input CompanyUpdateOneRequiredWithoutJobConfigurationInput {
@@ -52502,72 +52003,6 @@ input InvBillerCreateManyUserInputEnvelope {
   skipDuplicates: Boolean
 }
 
-input InvBillerCreateManyCompanyInput {
-  account_no: String!
-  address: String!
-  bank: String!
-  city: String!
-  cnp: String!
-  company: String!
-  country: String!
-  created_date: DateTime
-  cui: String!
-  custom_id: Int!
-  email: String!
-  id: Int
-  imported: Int!
-  invoice_footer: String!
-  is_disabled: Boolean!
-  logo: String!
-  modified_date: DateTime
-  name: String!
-  phone: String!
-  postal_code: String!
-  qualification: String!
-  reg: String!
-  serie: String!
-  state: String!
-  uid: Int
-}
-
-input InvBillerCreateManyCompanyInputEnvelope {
-  data: InvBillerCreateManyCompanyInput!
-  skipDuplicates: Boolean
-}
-
-input InvBillerCreateManyUserInput {
-  account_no: String!
-  address: String!
-  bank: String!
-  city: String!
-  cnp: String!
-  company: String!
-  company_id: Int
-  country: String!
-  created_date: DateTime
-  cui: String!
-  custom_id: Int!
-  email: String!
-  id: Int
-  imported: Int!
-  invoice_footer: String!
-  is_disabled: Boolean!
-  logo: String!
-  modified_date: DateTime
-  name: String!
-  phone: String!
-  postal_code: String!
-  qualification: String!
-  reg: String!
-  serie: String!
-  state: String!
-}
-
-input InvBillerCreateManyUserInputEnvelope {
-  data: InvBillerCreateManyUserInput!
-  skipDuplicates: Boolean
-}
-
 input InvBillerCreateNestedManyWithoutUserInput {
   connect: [InvBillerWhereUniqueInput]
   connectOrCreate: [InvBillerCreateOrConnectWithoutUserInput]
@@ -53609,7 +53044,7 @@ input InvPaymentScalarWhereInput {
 }
 
 type InvPaymentType {
-  Company: Company!
+  Company: Company
   GlCode: GlCode
   company_id: Int
   created_date: DateTime
@@ -53625,24 +53060,11 @@ type InvPaymentType {
 }
 
 input InvPaymentTypeCreateInput {
-  Company: CompanyCreateNestedOneWithoutInvPaymentTypeInput!
+  Company: CompanyCreateNestedOneWithoutInvPaymentTypeInput
   GlCode: GlCodeCreateNestedOneWithoutInvPaymentTypeInput
   created_date: DateTime
   description: String
   epos_display: Int
-  is_active: Int!
-  is_money: Int!
-  modified_date: DateTime
-  name: String
-  type: String
-  uid: Int
-}
-
-input InvPaymentTypeCreateManyCompanyInput {
-  created_date: DateTime
-  description: String
-  epos_display: Int
-  id: Int
   is_active: Int!
   is_money: Int!
   modified_date: DateTime
@@ -53722,7 +53144,7 @@ input InvPaymentTypeScalarWhereInput {
   AND: [InvPaymentTypeScalarWhereInput]
   NOT: [InvPaymentTypeScalarWhereInput]
   OR: [InvPaymentTypeScalarWhereInput]
-  company_id: IntFilter
+  company_id: IntNullableFilter
   created_date: DateTimeNullableFilter
   description: StringNullableFilter
   epos_display: IntNullableFilter
@@ -53826,7 +53248,7 @@ input InvPaymentTypeUncheckedUpdateWithoutGlCodeInput {
 }
 
 input InvPaymentTypeUpdateInput {
-  Company: CompanyUpdateOneRequiredWithoutInvPaymentTypeInput
+  Company: CompanyUpdateOneWithoutInvPaymentTypeInput
   GlCode: GlCodeUpdateOneWithoutInvPaymentTypeInput
   created_date: NullableDateTimeFieldUpdateOperationsInput
   description: NullableStringFieldUpdateOperationsInput
@@ -64836,45 +64258,6 @@ input SocialSurveyFeedbackResponseCreateManyUserInputEnvelope {
   skipDuplicates: Boolean
 }
 
-input SocialSurveyFeedbackResponseCreateManyCompanyInput {
-  date: DateTime
-  id: Int
-  response: String!
-  review_id: Int!
-  uid: Int!
-}
-
-input SocialSurveyFeedbackResponseCreateManyCompanyInputEnvelope {
-  data: SocialSurveyFeedbackResponseCreateManyCompanyInput!
-  skipDuplicates: Boolean
-}
-
-input SocialSurveyFeedbackResponseCreateManyFeedbackInput {
-  company_id: Int!
-  date: DateTime
-  id: Int
-  response: String!
-  uid: Int!
-}
-
-input SocialSurveyFeedbackResponseCreateManyFeedbackInputEnvelope {
-  data: SocialSurveyFeedbackResponseCreateManyFeedbackInput!
-  skipDuplicates: Boolean
-}
-
-input SocialSurveyFeedbackResponseCreateManyUserInput {
-  company_id: Int!
-  date: DateTime
-  id: Int
-  response: String!
-  review_id: Int!
-}
-
-input SocialSurveyFeedbackResponseCreateManyUserInputEnvelope {
-  data: SocialSurveyFeedbackResponseCreateManyUserInput!
-  skipDuplicates: Boolean
-}
-
 input SocialSurveyFeedbackResponseCreateNestedManyWithoutFeedbackInput {
   connect: [SocialSurveyFeedbackResponseWhereUniqueInput]
   connectOrCreate: [SocialSurveyFeedbackResponseCreateOrConnectWithoutFeedbackInput]
@@ -66496,17 +65879,6 @@ input TemplateFolderCreateInput {
   MessageTemplate: MessageTemplateCreateNestedManyWithoutTemplateFolderInput
   folder_description: String!
   folder_name: String!
-}
-
-input TemplateFolderCreateManyCompanyInput {
-  folder_description: String!
-  folder_name: String!
-  id: Int
-}
-
-input TemplateFolderCreateManyCompanyInputEnvelope {
-  data: TemplateFolderCreateManyCompanyInput!
-  skipDuplicates: Boolean
 }
 
 input TemplateFolderCreateManyCompanyInput {
@@ -68503,51 +67875,6 @@ input UserAlertPermissionCreateInput {
   ios_notification: Int!
   pabau_notification: Int!
   sms_notification: Int!
-}
-
-input UserAlertPermissionCreateManyCompanyInput {
-  alert_id: Int!
-  email_notification: Int!
-  id: Int
-  ios_notification: Int!
-  pabau_notification: Int!
-  sms_notification: Int!
-  uid: Int!
-}
-
-input UserAlertPermissionCreateManyCompanyInputEnvelope {
-  data: UserAlertPermissionCreateManyCompanyInput!
-  skipDuplicates: Boolean
-}
-
-input UserAlertPermissionCreateManyUserAlertInput {
-  company_id: Int!
-  email_notification: Int!
-  id: Int
-  ios_notification: Int!
-  pabau_notification: Int!
-  sms_notification: Int!
-  uid: Int!
-}
-
-input UserAlertPermissionCreateManyUserAlertInputEnvelope {
-  data: UserAlertPermissionCreateManyUserAlertInput!
-  skipDuplicates: Boolean
-}
-
-input UserAlertPermissionCreateManyUserInput {
-  alert_id: Int!
-  company_id: Int!
-  email_notification: Int!
-  id: Int
-  ios_notification: Int!
-  pabau_notification: Int!
-  sms_notification: Int!
-}
-
-input UserAlertPermissionCreateManyUserInputEnvelope {
-  data: UserAlertPermissionCreateManyUserInput!
-  skipDuplicates: Boolean
 }
 
 input UserAlertPermissionCreateManyCompanyInput {
@@ -70967,74 +70294,6 @@ input UserMobilePermissionCreateManyUserInputEnvelope {
   skipDuplicates: Boolean
 }
 
-input UserMobilePermissionCreateManyCompanyInput {
-  cal: Int
-  contacts: Int
-  dashboard: Boolean!
-  id: Int
-  journey: Int
-  register: Int
-  reports: Int
-  reviews: Int
-  uid: Int!
-}
-
-input UserMobilePermissionCreateManyCompanyInputEnvelope {
-  data: UserMobilePermissionCreateManyCompanyInput!
-  skipDuplicates: Boolean
-}
-
-input UserMobilePermissionCreateManyUserInput {
-  cal: Int
-  company_id: Int!
-  contacts: Int
-  dashboard: Boolean!
-  id: Int
-  journey: Int
-  register: Int
-  reports: Int
-  reviews: Int
-}
-
-input UserMobilePermissionCreateManyUserInputEnvelope {
-  data: UserMobilePermissionCreateManyUserInput!
-  skipDuplicates: Boolean
-}
-
-input UserMobilePermissionCreateManyCompanyInput {
-  cal: Int
-  contacts: Int
-  dashboard: Boolean!
-  id: Int
-  journey: Int
-  register: Int
-  reports: Int
-  reviews: Int
-  uid: Int!
-}
-
-input UserMobilePermissionCreateManyCompanyInputEnvelope {
-  data: UserMobilePermissionCreateManyCompanyInput!
-  skipDuplicates: Boolean
-}
-
-input UserMobilePermissionCreateManyUserInput {
-  cal: Int
-  company_id: Int!
-  contacts: Int
-  dashboard: Boolean!
-  id: Int
-  journey: Int
-  register: Int
-  reports: Int
-  reviews: Int
-}
-
-input UserMobilePermissionCreateManyUserInputEnvelope {
-  data: UserMobilePermissionCreateManyUserInput!
-  skipDuplicates: Boolean
-}
-
 input UserMobilePermissionCreateNestedManyWithoutUserInput {
   connect: [UserMobilePermissionWhereUniqueInput]
   connectOrCreate: [UserMobilePermissionCreateOrConnectWithoutUserInput]
@@ -71661,78 +70920,6 @@ input UserReportCreateInput {
   Report: ReportCreateNestedOneWithoutUserReportInput
   User: UserCreateNestedOneWithoutUserReportInput
   favorite: Boolean!
-}
-
-input UserReportCreateManyCompanyInput {
-  favorite: Boolean!
-  id: Int
-  report_id: Int
-  user_id: Int
-}
-
-input UserReportCreateManyCompanyInputEnvelope {
-  data: UserReportCreateManyCompanyInput!
-  skipDuplicates: Boolean
-}
-
-input UserReportCreateManyReportInput {
-  company_id: Int
-  favorite: Boolean!
-  id: Int
-  user_id: Int
-}
-
-input UserReportCreateManyReportInputEnvelope {
-  data: UserReportCreateManyReportInput!
-  skipDuplicates: Boolean
-}
-
-input UserReportCreateManyUserInput {
-  company_id: Int
-  favorite: Boolean!
-  id: Int
-  report_id: Int
-}
-
-input UserReportCreateManyUserInputEnvelope {
-  data: UserReportCreateManyUserInput!
-  skipDuplicates: Boolean
-}
-
-input UserReportCreateManyCompanyInput {
-  favorite: Boolean!
-  id: Int
-  report_id: Int
-  user_id: Int
-}
-
-input UserReportCreateManyCompanyInputEnvelope {
-  data: UserReportCreateManyCompanyInput!
-  skipDuplicates: Boolean
-}
-
-input UserReportCreateManyReportInput {
-  company_id: Int
-  favorite: Boolean!
-  id: Int
-  user_id: Int
-}
-
-input UserReportCreateManyReportInputEnvelope {
-  data: UserReportCreateManyReportInput!
-  skipDuplicates: Boolean
-}
-
-input UserReportCreateManyUserInput {
-  company_id: Int
-  favorite: Boolean!
-  id: Int
-  report_id: Int
-}
-
-input UserReportCreateManyUserInputEnvelope {
-  data: UserReportCreateManyUserInput!
-  skipDuplicates: Boolean
 }
 
 input UserReportCreateManyCompanyInput {
@@ -79894,6 +79081,181 @@ input XeroIntegrationWhereInput {
 input XeroIntegrationWhereUniqueInput {
   company_id: Int
   id: Int
+}
+
+"""
+columns and relationships of "activity_types"
+"""
+type activity_types {
+  created_at: timestamptz!
+  id: uuid!
+  is_active: Boolean!
+  name: String!
+  subject: String!
+  updated_at: timestamptz!
+}
+
+"""
+aggregated selection of "activity_types"
+"""
+type activity_types_aggregate {
+  aggregate: activity_types_aggregate_fields
+  nodes: [activity_types!]!
+}
+
+"""
+aggregate fields of "activity_types"
+"""
+type activity_types_aggregate_fields {
+  count(columns: [activity_types_select_column!], distinct: Boolean): Int!
+  max: activity_types_max_fields
+  min: activity_types_min_fields
+}
+
+"""
+Boolean expression to filter rows from the table "activity_types". All fields are combined with a logical 'AND'.
+"""
+input activity_types_bool_exp {
+  _and: [activity_types_bool_exp!]
+  _not: activity_types_bool_exp
+  _or: [activity_types_bool_exp!]
+  created_at: timestamptz_comparison_exp
+  id: uuid_comparison_exp
+  is_active: Boolean_comparison_exp
+  name: String_comparison_exp
+  subject: String_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "activity_types"
+"""
+enum activity_types_constraint {
+  """unique or primary key constraint"""
+  activity_types_pkey
+}
+
+"""
+input type for inserting data into table "activity_types"
+"""
+input activity_types_insert_input {
+  created_at: timestamptz
+  id: uuid
+  is_active: Boolean
+  name: String
+  subject: String
+  updated_at: timestamptz
+}
+
+"""aggregate max on columns"""
+type activity_types_max_fields {
+  created_at: timestamptz
+  id: uuid
+  name: String
+  subject: String
+  updated_at: timestamptz
+}
+
+"""aggregate min on columns"""
+type activity_types_min_fields {
+  created_at: timestamptz
+  id: uuid
+  name: String
+  subject: String
+  updated_at: timestamptz
+}
+
+"""
+response of any mutation on the table "activity_types"
+"""
+type activity_types_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [activity_types!]!
+}
+
+"""
+on conflict condition type for table "activity_types"
+"""
+input activity_types_on_conflict {
+  constraint: activity_types_constraint!
+  update_columns: [activity_types_update_column!]! = []
+  where: activity_types_bool_exp
+}
+
+"""Ordering options when selecting data from "activity_types"."""
+input activity_types_order_by {
+  created_at: order_by
+  id: order_by
+  is_active: order_by
+  name: order_by
+  subject: order_by
+  updated_at: order_by
+}
+
+"""primary key columns input for table: activity_types"""
+input activity_types_pk_columns_input {
+  id: uuid!
+}
+
+"""
+select columns of table "activity_types"
+"""
+enum activity_types_select_column {
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  is_active
+
+  """column name"""
+  name
+
+  """column name"""
+  subject
+
+  """column name"""
+  updated_at
+}
+
+"""
+input type for updating data in table "activity_types"
+"""
+input activity_types_set_input {
+  created_at: timestamptz
+  id: uuid
+  is_active: Boolean
+  name: String
+  subject: String
+  updated_at: timestamptz
+}
+
+"""
+update columns of table "activity_types"
+"""
+enum activity_types_update_column {
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  is_active
+
+  """column name"""
+  name
+
+  """column name"""
+  subject
+
+  """column name"""
+  updated_at
 }
 
 """
@@ -89828,7 +89190,7 @@ type labs_dashboard_variance_fields {
 }
 
 """
-lead view
+lead view 
 
 
 columns and relationships of "lead"
@@ -92563,6 +91925,19 @@ type mutation_root {
   delete_SMS_campaign_by_pk(id: uuid!): SMS_campaign
 
   """
+  delete data from the table: "activity_types"
+  """
+  delete_activity_types(
+    """filter the rows which have to be deleted"""
+    where: activity_types_bool_exp!
+  ): activity_types_mutation_response
+
+  """
+  delete single row from the table: "activity_types"
+  """
+  delete_activity_types_by_pk(id: uuid!): activity_types
+
+  """
   delete data from the table: "app_listing"
   """
   delete_app_listing(
@@ -93568,6 +92943,28 @@ type mutation_root {
     """on conflict condition"""
     on_conflict: SMS_campaign_on_conflict
   ): SMS_campaign
+
+  """
+  insert data into the table: "activity_types"
+  """
+  insert_activity_types(
+    """the rows to be inserted"""
+    objects: [activity_types_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: activity_types_on_conflict
+  ): activity_types_mutation_response
+
+  """
+  insert a single row into the table: "activity_types"
+  """
+  insert_activity_types_one(
+    """the row to be inserted"""
+    object: activity_types_insert_input!
+
+    """on conflict condition"""
+    on_conflict: activity_types_on_conflict
+  ): activity_types
 
   """
   insert data into the table: "app_listing"
@@ -95566,6 +94963,26 @@ type mutation_root {
   ): SMS_campaign
 
   """
+  update data of the table: "activity_types"
+  """
+  update_activity_types(
+    """sets the columns of the filtered rows to the given values"""
+    _set: activity_types_set_input
+
+    """filter the rows which have to be updated"""
+    where: activity_types_bool_exp!
+  ): activity_types_mutation_response
+
+  """
+  update single row of the table: "activity_types"
+  """
+  update_activity_types_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: activity_types_set_input
+    pk_columns: activity_types_pk_columns_input!
+  ): activity_types
+
+  """
   update data of the table: "app_listing"
   """
   update_app_listing(
@@ -97025,8 +96442,29 @@ type mutation_root {
   update data of the table: "product_news"
   """
   update_product_news(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: product_news_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: product_news_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+    """
+    _delete_elem: product_news_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: product_news_delete_key_input
+
     """increments the numeric columns with given value of the filtered values"""
     _inc: product_news_inc_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: product_news_prepend_input
 
     """sets the columns of the filtered rows to the given values"""
     _set: product_news_set_input
@@ -97039,8 +96477,29 @@ type mutation_root {
   update single row of the table: "product_news"
   """
   update_product_news_by_pk(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: product_news_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: product_news_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+    """
+    _delete_elem: product_news_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: product_news_delete_key_input
+
     """increments the numeric columns with given value of the filtered values"""
     _inc: product_news_inc_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: product_news_prepend_input
 
     """sets the columns of the filtered rows to the given values"""
     _set: product_news_set_input
@@ -101184,6 +100643,10 @@ type product_news {
     """filter the rows returned"""
     where: product_news_read_bool_exp
   ): product_news_read_aggregate!
+  sent_to(
+    """JSON select path"""
+    path: String
+  ): jsonb
   title: String!
   updated_at: timestamptz!
 }
@@ -101213,6 +100676,11 @@ type product_news_aggregate_fields {
   variance: product_news_variance_fields
 }
 
+"""append existing jsonb value of filtered columns with new jsonb value"""
+input product_news_append_input {
+  sent_to: jsonb
+}
+
 """aggregate avg on columns"""
 type product_news_avg_fields {
   order: Float
@@ -101232,6 +100700,7 @@ input product_news_bool_exp {
   link: String_comparison_exp
   order: Int_comparison_exp
   read_by: product_news_read_bool_exp
+  sent_to: jsonb_comparison_exp
   title: String_comparison_exp
   updated_at: timestamptz_comparison_exp
 }
@@ -101242,6 +100711,27 @@ unique or primary key constraints on table "product_news"
 enum product_news_constraint {
   """unique or primary key constraint"""
   product_news_pkey
+}
+
+"""
+delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+"""
+input product_news_delete_at_path_input {
+  sent_to: [String!]
+}
+
+"""
+delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+"""
+input product_news_delete_elem_input {
+  sent_to: Int
+}
+
+"""
+delete key/value pair or string element. key/value pairs are matched based on their key value
+"""
+input product_news_delete_key_input {
+  sent_to: String
 }
 
 """
@@ -101262,6 +100752,7 @@ input product_news_insert_input {
   link: String
   order: Int
   read_by: product_news_read_arr_rel_insert_input
+  sent_to: jsonb
   title: String
   updated_at: timestamptz
 }
@@ -101319,6 +100810,7 @@ input product_news_order_by {
   link: order_by
   order: order_by
   read_by_aggregate: product_news_read_aggregate_order_by
+  sent_to: order_by
   title: order_by
   updated_at: order_by
 }
@@ -101326,6 +100818,11 @@ input product_news_order_by {
 """primary key columns input for table: product_news"""
 input product_news_pk_columns_input {
   id: uuid!
+}
+
+"""prepend existing jsonb value of filtered columns with new jsonb value"""
+input product_news_prepend_input {
+  sent_to: jsonb
 }
 
 """
@@ -101692,6 +101189,9 @@ enum product_news_select_column {
   order
 
   """column name"""
+  sent_to
+
+  """column name"""
   title
 
   """column name"""
@@ -101708,6 +101208,7 @@ input product_news_set_input {
   img: String
   link: String
   order: Int
+  sent_to: jsonb
   title: String
   updated_at: timestamptz
 }
@@ -101753,6 +101254,9 @@ enum product_news_update_column {
 
   """column name"""
   order
+
+  """column name"""
+  sent_to
 
   """column name"""
   title
@@ -102526,6 +102030,49 @@ type query_root {
   accountManager(where: AccountManagerWhereUniqueInput!): AccountManager
   accountManagers(cursor: AccountManagerWhereUniqueInput, orderBy: [AccountManagerOrderByInput!], skip: Int, take: Int, where: AccountManagerWhereInput): [AccountManager!]!
   accountManagersCount(where: AccountManagerWhereInput): Int
+
+  """
+  fetch data from the table: "activity_types"
+  """
+  activity_types(
+    """distinct select on columns"""
+    distinct_on: [activity_types_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [activity_types_order_by!]
+
+    """filter the rows returned"""
+    where: activity_types_bool_exp
+  ): [activity_types!]!
+
+  """
+  fetch aggregated fields from the table: "activity_types"
+  """
+  activity_types_aggregate(
+    """distinct select on columns"""
+    distinct_on: [activity_types_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [activity_types_order_by!]
+
+    """filter the rows returned"""
+    where: activity_types_bool_exp
+  ): activity_types_aggregate!
+
+  """fetch data from the table: "activity_types" using primary key columns"""
+  activity_types_by_pk(id: uuid!): activity_types
   advertCampaign(where: AdvertCampaignWhereUniqueInput!): AdvertCampaign
   advertCampaigns(cursor: AdvertCampaignWhereUniqueInput, orderBy: [AdvertCampaignOrderByInput!], skip: Int, take: Int, where: AdvertCampaignWhereInput): [AdvertCampaign!]!
   advertCampaignsCount(where: AdvertCampaignWhereInput): Int
@@ -109762,6 +109309,49 @@ type subscription_root {
 
   """fetch data from the table: "SMS_campaign" using primary key columns"""
   SMS_campaign_by_pk(id: uuid!): SMS_campaign
+
+  """
+  fetch data from the table: "activity_types"
+  """
+  activity_types(
+    """distinct select on columns"""
+    distinct_on: [activity_types_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [activity_types_order_by!]
+
+    """filter the rows returned"""
+    where: activity_types_bool_exp
+  ): [activity_types!]!
+
+  """
+  fetch aggregated fields from the table: "activity_types"
+  """
+  activity_types_aggregate(
+    """distinct select on columns"""
+    distinct_on: [activity_types_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [activity_types_order_by!]
+
+    """filter the rows returned"""
+    where: activity_types_bool_exp
+  ): activity_types_aggregate!
+
+  """fetch data from the table: "activity_types" using primary key columns"""
+  activity_types_by_pk(id: uuid!): activity_types
 
   """
   fetch data from the table: "app_listing"

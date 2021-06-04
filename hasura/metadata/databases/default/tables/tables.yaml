@@ -3,6 +3,7 @@
 - "!include public_Lists_campaign.yaml"
 - "!include public_Newsletter_campaign.yaml"
 - "!include public_SMS_campaign.yaml"
+- "!include public_activity_types.yaml"
 - "!include public_app_listing.yaml"
 - "!include public_application_notifications.yaml"
 - "!include public_appointment_status.yaml"
