@@ -54,6 +54,10 @@ interface DataSourceType {
   [key: string]: string | number
 }
 
+type CustomColumns = {
+  skeletonWidth?: string
+}
+
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type TableType<T = object> = {
   onRowClick?: (e) => void
@@ -69,6 +73,8 @@ export type TableType<T = object> = {
   showSizeChanger?: boolean
   isHover?: boolean
   loading?: boolean
+  columns?: CustomColumns[]
+  defaultSkeletonRows?: number
 } & TableProps<T> &
   DragProps
 
@@ -90,6 +96,7 @@ export const Table: FC<TableType> = ({
   needTranslation,
   loading,
   showSizeChanger,
+  defaultSkeletonRows = 10,
   ...props
 }) => {
   const onSortEnd = ({ oldIndex, newIndex }) => {
@@ -231,14 +238,6 @@ export const Table: FC<TableType> = ({
     )
   }
 
-  const renderLoader = () => {
-    return (
-      <div>
-        <Skeleton.Input active={true} size="small" style={{ width: '200px' }} />
-      </div>
-    )
-  }
-
   const renderSortHandler = () => {
     if (props?.columns) {
       props.columns = props.columns
@@ -306,9 +305,23 @@ export const Table: FC<TableType> = ({
     const columns: ColumnsType<any> = []
     const dataSource: DataSourceType[] = []
     for (const key of props?.columns) {
-      columns.push({ ...key, render: renderLoader })
+      columns.push({
+        ...key,
+        render: function render() {
+          const width = key.skeletonWidth ?? '200px'
+          return (
+            <div>
+              <Skeleton.Input
+                active={true}
+                size="small"
+                style={{ width: width }}
+              />
+            </div>
+          )
+        },
+      })
     }
-    for (let i = 0; i < 10; i = i + 1) {
+    for (let i = 0; i < defaultSkeletonRows; i = i + 1) {
       let data
       for (const key of props?.columns) {
         // eslint-disable-next-line
