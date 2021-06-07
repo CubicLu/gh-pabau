@@ -25,7 +25,9 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
   nameForm,
 }) => {
   const { t } = useTranslation('common')
-  const [formName, setFormName] = useState('IPL Treatment Record (Clone)')
+  const [formName, setFormName] = useState(
+    nameForm ? nameForm : 'IPL Treatment Record (Clone)'
+  )
   const [visiblePreview, setVisiblePreview] = useState(false)
   const [activatePanel, setActivatePanel] = useState('1')
   const [clickedCreateForm, setClickedCreateForm] = useState(false)
@@ -103,7 +105,7 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
             clickedPreviewForm={clickedPreviewForm}
             clearCreateFormBtn={clearCreateFormBtn}
             getFormData={getFormData}
-            formName={'IPL Treatment Record (Clone)'}
+            formName={formName}
           />
           {visiblePreview === true && (
             <MedicalFormPreview

@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import { MedicalFormBuilder, VersionItem } from '@pabau/ui'
 import { medicalFormData } from '../../../../components/MedicalForms/mock'
-// import MedicalFormBuilder from '../../../../components/MedicalFormBuilderWeb/MedicalFormBuilder'
 
 interface MedicalFormItem {
   name: string

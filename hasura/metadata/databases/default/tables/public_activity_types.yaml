@@ -1,5 +1,5 @@
 table:
-  name: LabsTmp
+  name: activity_types
   schema: public
 insert_permissions:
 - permission:
@@ -7,120 +7,67 @@ insert_permissions:
     check: {}
     columns:
     - id
+    - name
+    - subject
+    - is_active
     - created_at
     - updated_at
-    - name
-    - phone
-    - email
-    - country
-    - street
-    - street2
-    - city
-    - postal_code
-    - is_active
-    - integration
-    - order
-    - provider_number
   role: public
 - permission:
     backend_only: false
     check: {}
     columns:
-    - integration
     - is_active
-    - order
-    - postal_code
-    - provider_number
-    - city
-    - country
-    - email
-    - phone
-    - street
-    - street2
+    - name
+    - subject
     - created_at
     - updated_at
     - id
-    - name
   role: user
 select_permissions:
 - permission:
     allow_aggregations: true
     columns:
-    - integration
     - is_active
-    - order
-    - postal_code
-    - provider_number
-    - city
-    - country
-    - email
     - name
-    - phone
-    - street
-    - street2
+    - subject
     - created_at
     - updated_at
     - id
     filter: {}
   role: public
 - permission:
+    allow_aggregations: true
     columns:
-    - integration
     - is_active
-    - order
-    - postal_code
-    - provider_number
-    - city
-    - country
-    - email
-    - phone
-    - street
-    - street2
+    - name
+    - subject
     - created_at
     - updated_at
     - id
-    - name
     filter: {}
   role: user
 update_permissions:
 - permission:
     check: {}
     columns:
-    - integration
     - is_active
-    - order
-    - postal_code
-    - provider_number
-    - city
-    - country
-    - email
-    - phone
-    - street
-    - street2
+    - name
+    - subject
     - created_at
     - updated_at
     - id
-    - name
     filter: {}
   role: public
 - permission:
     check: {}
     columns:
-    - integration
     - is_active
-    - order
-    - postal_code
-    - provider_number
-    - city
-    - country
-    - email
-    - phone
-    - street
-    - street2
+    - name
+    - subject
     - created_at
     - updated_at
     - id
-    - name
     filter: {}
   role: user
 delete_permissions:
