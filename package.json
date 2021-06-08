@@ -74,7 +74,9 @@
     "**/lodash": ">=4.17.21",
     "**/underscore": ">=1.12.1",
     "**/trim": ">=0.0.3",
-    "**/dns-packet": ">=5.2.2"
+    "**/dns-packet": ">=5.2.2",
+    "**/css-what": ">=5.0.1",
+    "**/trim-newlines": ">=4.0.1"
   },
   "dependencies": {
     "@anchan828/nest-sendgrid": "0.4.19",
