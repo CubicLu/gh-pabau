@@ -29,6 +29,7 @@ export const permissions = shield(
 
       // Public access mutations
       login: allow,
+      AuthenticateUser: allow,
       upsertUserReportByReportCode: rules.authentication.isAdmin,
 
       //CompanyBranches
@@ -84,9 +85,12 @@ export const permissions = shield(
       //UserPermission
       userPermissions: rules.authentication.isAuthenticated,
       findFirstUserPermission: rules.authentication.isAuthenticated,
+      cmContact: rules.authentication.isAuthenticated,
       //Authentication
       me: rules.authentication.isAuthenticated,
       company: rules.authentication.isAuthenticated,
+      VerifyCredentials: allow,
+      VerifyTwoFaCode: allow,
       ping: allow,
       //TODO once jest mocks are resolved move it to rules.authentication.isAuthenticated
       featureRequestsWeeklyAvg: allow,

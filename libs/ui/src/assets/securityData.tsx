@@ -1,22 +1,18 @@
-import {
-  VideoCameraOutlined,
-  UnlockOutlined,
-  MailOutlined,
-} from '@ant-design/icons'
+import { SafetyOutlined, UnlockOutlined, MailOutlined } from '@ant-design/icons'
 import React from 'react'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function useSecurityToolsData(t) {
+export function useSecurityToolsData(t, twoFAstatus) {
   const securityToolsData = [
     {
       id: '1',
-      title: t('business.security.tool.data.force.title'),
-      name: t('business.security.tool.data.force.name'),
-      imgSrc: <VideoCameraOutlined />,
-      isActive: true,
+      title: t('setup.business-details.2fa.title'),
+      name: t('setup.business-details.2fa.tooltip'),
+      imgSrc: <SafetyOutlined />,
+      isActive: twoFAstatus,
       modalType: 1,
-      modalTitle: t('business.security.tool.data.force.modal.title'),
-      modalContent: t('business.security.tool.data.force.modal.content'),
+      modalTitle: t('setup.business-details.2fa.title'),
+      modalContent: t('setup.business-details.2fa.content'),
     },
     {
       id: '3',

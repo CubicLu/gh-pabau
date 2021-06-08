@@ -1,8 +1,3 @@
-export interface LoginInputDto {
-  username: string
-  password: string
-}
-
 export interface JwtCmStaffGeneral {
   CellPhone: string
 }

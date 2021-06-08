@@ -4,9 +4,24 @@ import { useSecurityToolsData } from '../../assets/securityData'
 import styles from './Security.module.less'
 import { Dropdown, Menu, Modal, Row } from 'antd'
 import { useTranslation } from 'react-i18next'
-export const Security: FC = () => {
+
+interface SecurityProps {
+  twoFAstatus: boolean
+  newButtonText: string
+  dangerButtonText: string
+  onDelete: () => void
+  onOk: () => void
+}
+
+export const Security: FC<SecurityProps> = ({
+  twoFAstatus,
+  newButtonText,
+  dangerButtonText,
+  onDelete,
+  onOk,
+}) => {
   const { t } = useTranslation('common')
-  const { securityToolsData, percent } = useSecurityToolsData(t)
+  const { securityToolsData, percent } = useSecurityToolsData(t, twoFAstatus)
   const [showModal, setShowModal] = useState(false)
   const menu = (
     <Menu>
@@ -45,7 +60,13 @@ export const Security: FC = () => {
         </div>
       </div>
       <div className={styles.securityToolsContainer}>
-        <CustomModal datasource={securityToolsData} />
+        <CustomModal
+          datasource={securityToolsData}
+          newButtonText={newButtonText}
+          dangerButtonText={dangerButtonText}
+          onDelete={onDelete}
+          onOk={onOk}
+        />
       </div>
       {showModal && (
         <Modal

@@ -8,7 +8,6 @@ import {
   MobileHeader,
   Notification,
   NotificationType,
-  Security,
   System,
   TabMenu,
   Terminology,
@@ -21,6 +20,7 @@ import Layout from '../../../components/Layout/Layout'
 import { useGridData } from '../../../hooks/useGridData'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
+import TwoFADetailsTab from '../../../components/TwoFADetailsTab/TwoFADetailsTab'
 
 const { Title } = Typography
 
@@ -35,6 +35,8 @@ export const Index: FC = () => {
     }
   `
 
+  const [createBusinessDetails] = useMutation(ADD_MUTATION)
+
   const tabMenuItems = [
     t('business.details.tab.tabtitle'),
     t('business.terminology.tab.title'),
@@ -44,7 +46,6 @@ export const Index: FC = () => {
   ]
   const { getParentSetupData } = useGridData(t)
   const parentMenu = getParentSetupData(router.pathname)
-  const [createBusinessDetails] = useMutation(ADD_MUTATION)
 
   const handleBack = () => {
     if (parentMenu.length > 0) {
@@ -277,7 +278,7 @@ export const Index: FC = () => {
             />
             <Terminology onSave={(values) => onSave(values, 'terminology')} />
             <System onSave={(values) => onSave(values, 'system')} />
-            <Security />
+            <TwoFADetailsTab />
             <BusinessDetailsNotifications
               onSave={(values) => onSave(values, 'notification')}
             />
@@ -288,7 +289,7 @@ export const Index: FC = () => {
             <BusinessDetails apiKey="XXXXXXXXXX" />
             <Terminology />
             <System />
-            <Security />
+            <TwoFADetailsTab />
             <BusinessDetailsNotifications />
           </TabMenu>
         </div>

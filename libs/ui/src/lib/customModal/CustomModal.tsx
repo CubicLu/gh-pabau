@@ -10,11 +10,15 @@ import { useTranslation } from 'react-i18next'
 
 interface P {
   datasource: SecurityToolsItemInfo[]
+  newButtonText?: string
+  dangerButtonText?: string
+  onDelete?: () => void
+  onOk?: () => void
 }
 
 export function CustomModal(props: P) {
   const { t } = useTranslation('common')
-  const { datasource = [] } = props
+  const { datasource = [], newButtonText, dangerButtonText, onDelete, onOk } = props
   const [selectedData, setSelectedData] = React.useState<any>(null)
 
   const [width, setWidth] = useState(window.innerWidth)
@@ -42,7 +46,10 @@ export function CustomModal(props: P) {
             title={selectedData ? selectedData.modalTitle : ''}
             visible={Boolean(selectedData)}
             onCancel={() => setSelectedData(null)}
-            newButtonText="null"
+            newButtonText={(newButtonText) ? newButtonText : "OK"}
+            dangerButtonText={(dangerButtonText) ? dangerButtonText : "Cancel"}
+            onDelete={onDelete}
+            onOk={onOk}
             centered={true}
           >
             {selectedData && (
@@ -57,8 +64,10 @@ export function CustomModal(props: P) {
             title={selectedData ? selectedData.modalTitle : ''}
             visible={Boolean(selectedData)}
             onCancel={() => setSelectedData(null)}
-            newButtonText="null"
-            dangerButtonText="Cancel"
+            newButtonText={(newButtonText) ? newButtonText : "OK"}
+            dangerButtonText={(dangerButtonText) ? dangerButtonText : "Cancel"}
+            onDelete={onDelete}
+            onOk={onOk}
             closable={false}
             centered={true}
           >
