@@ -109,7 +109,7 @@ const Notification: FC<NotificationProps> = ({
           variableValue = getFormattedDate(variableValue)
         }
 
-        notification[returnType] = notification[returnType].replace(
+        notification[returnType] = notification[returnType]?.replace(
           replaceVariable,
           variableValue
         )

@@ -1,0 +1,62 @@
+query staff_notification_types {
+  notification_types {
+    type
+    id
+    notification_type
+  }
+}
+
+mutation insert_product_news(
+  $title: String!
+  $sent_to: jsonb
+  $description: String!
+  $img: String!
+  $link: String!
+) {
+  insert_product_news_one(
+    object: {
+      title: $title
+      sent_to: $sent_to
+      description: $description
+      img: $img
+      link: $link
+    }
+  ) {
+    id
+  }
+}
+
+query staff_users($isAdmin: Int = 0, $company: Int) {
+  users(
+    where: {
+      AND: { company_id: { equals: $company }, admin: { equals: $isAdmin } }
+    }
+  ) {
+    id
+    admin
+    full_name
+    username
+    company_id
+  }
+}
+
+mutation insert_notifications_one(
+  $type: String
+  $sent_to: jsonb
+  $variables: jsonb
+  $destination: String!
+  $sent_by: Int # $loop: Int
+) {
+  insert_notifications_one(
+    object: {
+      type: $type
+      destination: $destination
+      sent_to: $sent_to
+      variables: $variables
+      sent_by: $sent_by
+      # loop: $loop
+    }
+  ) {
+    id
+  }
+}
