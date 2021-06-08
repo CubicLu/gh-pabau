@@ -5,6 +5,21 @@ import { Col, Row, Collapse } from 'antd'
 import styles from './CrudTable.module.less'
 import { ColorPicker, FontIcon, HelpTooltip, TimeInput } from '@pabau/ui'
 import { FormikContextType } from 'formik'
+import classNames from 'classnames'
+import {
+  SendOutlined,
+  PhoneOutlined,
+  MessageOutlined,
+  TeamOutlined,
+  MedicineBoxOutlined,
+  CustomerServiceOutlined,
+  BellOutlined,
+  ShoppingOutlined,
+  ClockCircleOutlined,
+  CameraOutlined,
+  TrophyOutlined,
+  EnvironmentOutlined,
+} from '@ant-design/icons'
 import moment from 'moment'
 
 const { Panel } = Collapse
@@ -21,6 +36,58 @@ const CheckboxGroup = Checkbox.Group
 const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
   const { fields } = schema
   const { values } = formik
+
+  const subjectOptions = [
+    {
+      key: 'Send',
+      value: <SendOutlined />,
+    },
+    {
+      key: 'Phone',
+      value: <PhoneOutlined />,
+    },
+    {
+      key: 'Chat',
+      value: <MessageOutlined />,
+    },
+    {
+      key: 'Team',
+      value: <TeamOutlined />,
+    },
+    {
+      key: 'Medical',
+      value: <MedicineBoxOutlined />,
+    },
+    {
+      key: 'Customer',
+      value: <CustomerServiceOutlined />,
+    },
+    {
+      key: 'Emergency',
+      value: <BellOutlined />,
+    },
+    {
+      key: 'Reward',
+      value: <TrophyOutlined />,
+    },
+    {
+      key: 'Shopping',
+      value: <ShoppingOutlined />,
+    },
+    {
+      key: 'Time',
+      value: <ClockCircleOutlined />,
+    },
+    {
+      key: 'Camera',
+      value: <CameraOutlined />,
+    },
+    {
+      key: 'Location',
+      value: <EnvironmentOutlined />,
+    },
+  ]
+
   return (
     <AntForm layout={layout} requiredMark={false}>
       <Row>
@@ -49,6 +116,25 @@ const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
             i
           ) => (
             <Col span={col} key={name}>
+              {type === 'subjects' ? (
+                <AntForm.Item key={name} name={name}>
+                  <Row>
+                    {subjectOptions.map((s, i) => (
+                      <Col
+                        key={i}
+                        className={classNames(
+                          styles.formSubjectItem,
+                          values[name] === s.key &&
+                            styles.formSubjectItemSelected
+                        )}
+                        onClick={() => formik.setFieldValue(name, s.key)}
+                      >
+                        {s.value}
+                      </Col>
+                    ))}
+                  </Row>
+                </AntForm.Item>
+              ) : null}
               {type === 'radio-group' ? (
                 <AntForm.Item key={name} name={name}>
                   <Radio.Group name={name}>
