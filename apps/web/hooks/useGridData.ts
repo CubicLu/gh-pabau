@@ -312,6 +312,11 @@ export function useGridData(t) {
           data: [],
           href: '/setup/petty-cash',
         },
+        {
+          title: t('setup.activity.types'),
+          data: [],
+          href: '/setup/activity-types',
+        },
       ],
       expandTitle: [
         {

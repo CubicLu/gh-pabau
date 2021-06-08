@@ -90,6 +90,7 @@ interface SchemaItem {
     | 'icon'
     | 'select'
     | 'time'
+    | 'subjects'
   type?: FilterTypes
   defaultvalue?: string | number | boolean
   visible?: boolean

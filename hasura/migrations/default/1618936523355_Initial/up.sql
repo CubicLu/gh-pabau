@@ -1602,8 +1602,6 @@ CREATE TRIGGER set_public_rota_templates_updated_at BEFORE UPDATE ON public.rota
 COMMENT ON TRIGGER set_public_rota_templates_updated_at ON public.rota_templates IS 'trigger to set value of column "updated_at" to current timestamp on row update';
 CREATE TRIGGER set_public_salutation_updated_at BEFORE UPDATE ON public.salutation FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
 COMMENT ON TRIGGER set_public_salutation_updated_at ON public.salutation IS 'trigger to set value of column "updated_at" to current timestamp on row update';
-CREATE TRIGGER set_public_service_min_attendees BEFORE UPDATE ON public.service FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_min_attendees();
-COMMENT ON TRIGGER set_public_service_min_attendees ON public.service IS 'trigger to set value of column "min_attendees" to current timestamp on row update';
 CREATE TRIGGER set_public_third_parties_updated_at BEFORE UPDATE ON public.third_parties FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
 COMMENT ON TRIGGER set_public_third_parties_updated_at ON public.third_parties IS 'trigger to set value of column "updated_at" to current timestamp on row update';
 ALTER TABLE ONLY public.application_notifications
