@@ -3729,6 +3729,8 @@ en:
   setup.jobtitle.schema.header.edit: 'Edit Job Title'
   setup.jobtitle.schema.header.delete: 'Delete Job Title?'
   setup.jobtitle.schema.delete.button.label: 'Yes, Delete'
+  setup.jobtitle.schema.noDataBtnText: 'Create Job Title'
+  setup.jobtitle.schema.noDataText: 'No job titles'
   setup.medical.forms.shareModal.label: 'Please enter the email address of the user you wish to share your form to'
   setup.medical.forms.shareModal.input.label: 'Email'
   setup.medical.forms.shareModal.input.placeholder: 'Enter Email'

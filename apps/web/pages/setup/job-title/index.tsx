@@ -56,6 +56,8 @@ export const JobTitle: NextPage = () => {
       },
     },
     deleteDescField: 'position',
+    noDataBtnText: t('setup.jobtitle.schema.noDataBtnText'),
+    noDataText: t('setup.jobtitle.schema.noDataText'),
   }
 
   return (
