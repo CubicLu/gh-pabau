@@ -1,27 +1,6 @@
 table:
   name: chat
   schema: public
-remote_relationships:
-- definition:
-    hasura_fields:
-    - from
-    remote_field:
-      user:
-        arguments:
-          where:
-            id: $from
-    remote_schema: CRM
-  name: fromUser
-- definition:
-    hasura_fields:
-    - to
-    remote_field:
-      user:
-        arguments:
-          where:
-            id: $to
-    remote_schema: CRM
-  name: toUser
 insert_permissions:
 - permission:
     backend_only: false
