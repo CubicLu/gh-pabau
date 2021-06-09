@@ -50,6 +50,10 @@ export const permissions = shield(
       userGroupMembers: rules.authentication.isAuthenticated,
       userGroup: rules.authentication.isAuthenticated,
       findFirstUserGroupMember: rules.authentication.isAuthenticated,
+      //Contacts
+      findFirstContactInsurance: rules.authentication.isAuthenticated,
+      //Financials
+      findFirstInvSale: rules.authentication.isAuthenticated,
       //Report
       findFirstReport: rules.interceptors.interceptSharedCompanyData,
       reports: rules.interceptors.interceptSharedCompanyData,

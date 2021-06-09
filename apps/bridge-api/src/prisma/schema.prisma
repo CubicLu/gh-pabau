@@ -1858,6 +1858,8 @@ model CmContact {
   CmExtraSalon              CmExtraSalon[]
   InvPayment                InvPayment[]
 
+  InvSale          InvSale[]
+  ContactInsurance ContactInsurance[]
   @@index([CreatedDate], name: "CreatedDate")
   @@index([Email], name: "Email")
   @@index([Fname], name: "Fname")
@@ -4296,20 +4298,22 @@ model CompanyService {
 //  added             Int
 //  not_found         Int
 //}
-//
-//model contact_insurance {
-//  id                Int    @id @default(autoincrement())
-//  contact_id        Int
-//  provider_number   Int
-//  auth_code         String
-//  membership_number String
-//  charge_type       String
-//  company_id        Int
-//  imported          Int
-//
-//  @@index([contact_id], name: "contact_id")
-//}
-//
+
+model ContactInsurance {
+  id                Int        @id @default(autoincrement())
+  contact_id        Int
+  provider_number   Int
+  auth_code         String
+  membership_number String
+  charge_type       String
+  company_id        Int
+  imported          Int
+  CmContact         CmContact? @relation(fields: [contact_id], references: [ID])
+
+  @@index([contact_id], name: "contact_id")
+  @@map("contact_insurance")
+}
+
 //model contact_insurer {
 //  id         Int @id @default(autoincrement())
 //  contact_id Int
@@ -6471,90 +6475,92 @@ model InvProduct {
 //  modified_date    DateTime?
 //}
 //
-//model inv_sales {
-//  id                  Int       @id @default(autoincrement())
-//  reference_no        String
-//  warehouse_id        Int?
-//  biller_id           Int
-//  biller_name         String
-//  customer_id         Int
-//  customer_name       String
-//  date                DateTime
-//  note                String?
-//  inv_total           Float
-//  total_tax           Float
-//  total               Float
-//  paid_amount         Float?
-//  store_discount      Float?
-//  discount_amount     Float     @default(0.00)
-//  account_amount      Float?
-//  loyalty_card_num    String?
-//  loyalty_card_amount String?
-//  voucher_no          String?
-//  voucher_amount      Float?
-//  invoice_type        Int
-//  in_type             String
-//  total_tax2          Float
-//  tax_rate2_id        Int
-//  shipping_rate       Float
-//  shipping_rate_id    Int
-//  delivery            Int?      @default(0)
-//  delivery_date       DateTime?
-//  by_email            Int?      @default(0)
-//  by_sms              Int?      @default(0)
-//  tip                 Float?    @default(0.00)
-//  occupier            Int?
-//  uid                 Int?
-//  created_date        DateTime?
-//  modified_date       DateTime?
-//  paid_by             String?
-//  booking_id          Int
-//  quaser_booking_id   Int
-//  invoice_bit         Int
-//  custom_id           String
-//  contact_custom_id   String
-//  Practitioner_id     Int
-//  User_id             Int
-//  Treatment_id        Int
-//  imported            Int
-//  VAT_drop            Float
-//  order_id            Int?      @default(0)
-//  void                Boolean   @default(false)
-//  guid                String?
-//  old_paid_by         String
-//  loyalty_points      Int
-//  xero_invoice_id     String
-//  xero_updated_date   DateTime
-//  split_count         Int       @default(1)
-//  split_guid          String
-//  insurer_contract_id Int       @default(0)
-//  lock_sale           Int
-//  location_id         Int
-//  contract_id         Int
-//  is_ok               Boolean   @default(false)
-//  refund_to           Int
-//  credit_ref_id       Int       @default(0)
-//  credit_amount       Float
-//  credit_type         Int       @default(0)
-//  issuer_id           Int?
-//
-//  @@index([biller_id], name: "biller_id_index")
-//  @@index([booking_id], name: "booking_id")
-//  @@index([contact_custom_id], name: "contact_custom_id")
-//  @@index([created_date], name: "created_date_index")
-//  @@index([custom_id], name: "custom_id")
-//  @@index([customer_id], name: "customer_id")
-//  @@index([date], name: "date")
-//  @@index([guid], name: "guid")
-//  @@index([insurer_contract_id], name: "insurer_contract_id")
-//  @@index([occupier], name: "occupier")
-//  @@index([occupier, date], name: "occupier_2")
-//  @@index([order_id], name: "order_id")
-//  @@index([paid_by], name: "paid_by")
-//  @@index([uid], name: "uid")
-//  @@index([warehouse_id], name: "warehouse_id_index")
-//}
-//
+model InvSale {
+  id                  Int        @id @default(autoincrement())
+  reference_no        String
+  warehouse_id        Int?
+  biller_id           Int
+  biller_name         String
+  customer_id         Int
+  customer_name       String
+  date                DateTime
+  note                String?
+  inv_total           Float
+  total_tax           Float
+  total               Float
+  paid_amount         Float?
+  store_discount      Float?
+  discount_amount     Float      @default(0.00)
+  account_amount      Float?
+  loyalty_card_num    String?
+  loyalty_card_amount String?
+  voucher_no          String?
+  voucher_amount      Float?
+  invoice_type        Int
+  in_type             String
+  total_tax2          Float
+  tax_rate2_id        Int
+  shipping_rate       Float
+  shipping_rate_id    Int
+  delivery            Int?       @default(0)
+  delivery_date       DateTime?
+  by_email            Int?       @default(0)
+  by_sms              Int?       @default(0)
+  tip                 Float?     @default(0.00)
+  occupier            Int?
+  uid                 Int?
+  created_date        DateTime?
+  modified_date       DateTime?
+  paid_by             String?
+  booking_id          Int
+  quaser_booking_id   Int
+  invoice_bit         Int
+  custom_id           String
+  contact_custom_id   String
+  Practitioner_id     Int
+  User_id             Int
+  Treatment_id        Int
+  imported            Int
+  VAT_drop            Float
+  order_id            Int?       @default(0)
+  void                Boolean    @default(false)
+  guid                String?
+  old_paid_by         String
+  loyalty_points      Int
+  xero_invoice_id     String
+  xero_updated_date   DateTime
+  split_count         Int        @default(1)
+  split_guid          String
+  insurer_contract_id Int        @default(0)
+  lock_sale           Int
+  location_id         Int
+  contract_id         Int
+  is_ok               Boolean    @default(false)
+  refund_to           Int
+  credit_ref_id       Int        @default(0)
+  credit_amount       Float
+  credit_type         Int        @default(0)
+  issuer_id           Int?
+  CmContact           CmContact? @relation(fields: [customer_id], references: [ID])
+
+  @@index([biller_id], name: "biller_id_index")
+  @@index([booking_id], name: "booking_id")
+  @@index([contact_custom_id], name: "contact_custom_id")
+  @@index([created_date], name: "created_date_index")
+  @@index([custom_id], name: "custom_id")
+  @@index([customer_id], name: "customer_id")
+  @@index([date], name: "date")
+  @@index([guid], name: "guid")
+  @@index([insurer_contract_id], name: "insurer_contract_id")
+  @@index([occupier], name: "occupier")
+  @@index([occupier, date], name: "occupier_2")
+  @@index([order_id], name: "order_id")
+  @@index([paid_by], name: "paid_by")
+  @@index([uid], name: "uid")
+  @@index([warehouse_id], name: "warehouse_id_index")
+  @@map("inv_sales")
+}
+
 //model inv_sales_audit {
 //  id           Int      @id @default(autoincrement())
 //  mode         String
