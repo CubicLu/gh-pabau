@@ -1,6 +1,6 @@
 {
   "name": "pabau",
-  "version": "2.0.353",
+  "version": "2.0.354",
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
   "workspaces": {
@@ -76,7 +76,8 @@
     "**/trim": ">=0.0.3",
     "**/dns-packet": ">=5.2.2",
     "**/css-what": ">=5.0.1",
-    "**/trim-newlines": ">=4.0.1"
+    "**/trim-newlines": ">=4.0.1",
+    "**/normalize-url": ">=6.0.1"
   },
   "dependencies": {
     "@anchan828/nest-sendgrid": "0.4.19",
