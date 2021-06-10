@@ -61,16 +61,31 @@
   position: relative;
   justify-content: space-between;
   align-items: center;
+
   .rightContentWrapper {
     display: flex;
     align-items: center;
     .searchInput {
-      margin-right: 10px;
+      position: absolute;
+      right: 40px;
+      top: 50%;
+      transform: translateY(-50%);
       display: flex;
       color: #9292a3;
+
       .search {
         width: 150px;
       }
+    }
+  }
+  .create-plus-icon {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    span {
+      color: var(--primary-color);
+      font-size: 25px;
     }
   }
 }
