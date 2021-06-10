@@ -1,26 +1,13 @@
 import React from 'react'
 import { AppProps } from 'next/app'
-import Head from 'next/head'
-import { ReactComponent as NxLogo } from '../public/nx-logo-white.svg'
-// import './styles.less'
+import TranslationWrapper from '../components/TranslationWrapper'
 
-function CustomApp({ Component, pageProps }: AppProps) {
+function Connect({ Component, pageProps }: AppProps) {
   return (
-    <>
-      <Head>
-        <title>Welcome to connect!</title>
-      </Head>
-      <div className="app">
-        <header className="flex">
-          <NxLogo width="75" height="50" />
-          <h1>Welcome to connect!</h1>
-        </header>
-        <main>
-          <Component {...pageProps} />
-        </main>
-      </div>
-    </>
+    <TranslationWrapper>
+      <Component {...pageProps} />
+    </TranslationWrapper>
   )
 }
 
-export default CustomApp
+export default Connect

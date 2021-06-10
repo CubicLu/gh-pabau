@@ -2,7 +2,7 @@ import image1 from '../../assets/images/connect/alisa.png'
 import image2 from '../../assets/images/connect/alex.png'
 import image3 from '../../assets/images/connect/mike.png'
 import image4 from '../../assets/images/connect/victoria.png'
-import { DoctorType } from '../../components/Connect/dateTime/DateTime'
+import { DoctorType } from '../../../connect/components/dateTime/DateTime'
 export const monthData = [
   {
     date: 2,
