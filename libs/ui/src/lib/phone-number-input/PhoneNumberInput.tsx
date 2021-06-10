@@ -25,8 +25,6 @@ export const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
   useEffect(() => {
     if (value) {
       setPhoneNumber(value)
-    } else {
-      setPhoneNumber('44')
     }
   }, [value, countryCode])
 

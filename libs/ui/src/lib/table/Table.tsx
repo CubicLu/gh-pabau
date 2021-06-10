@@ -56,6 +56,8 @@ interface DataSourceType {
 
 type CustomColumns = {
   skeletonWidth?: string
+  visible?: boolean
+  columnType?: string
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -300,26 +302,37 @@ export const Table: FC<TableType> = ({
     onLeaveRow?.(data)
   }
 
+  const renderAvatarLoader = () => {
+    return <Skeleton.Avatar active={true} size="default" shape={'circle'} />
+  }
+
   if (loading && props?.columns) {
     // eslint-disable-next-line
     const columns: ColumnsType<any> = []
     const dataSource: DataSourceType[] = []
     for (const key of props?.columns) {
-      columns.push({
-        ...key,
-        render: function render() {
-          const width = key.skeletonWidth ?? '200px'
-          return (
-            <div>
-              <Skeleton.Input
-                active={true}
-                size="small"
-                style={{ width: width }}
-              />
-            </div>
-          )
-        },
-      })
+      const { visible = true, columnType = '' } = key
+      if (visible) {
+        if (columnType === 'avatar') {
+          columns.push({ ...key, render: renderAvatarLoader })
+        } else {
+          columns.push({
+            ...key,
+            render: function render() {
+              const width = key.skeletonWidth ?? '200px'
+              return (
+                <div>
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    style={{ width: width }}
+                  />
+                </div>
+              )
+            },
+          })
+        }
+      }
     }
     for (let i = 0; i < defaultSkeletonRows; i = i + 1) {
       let data

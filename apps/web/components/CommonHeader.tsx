@@ -1,4 +1,9 @@
-import { LeftOutlined, MenuOutlined, SearchOutlined } from '@ant-design/icons'
+import {
+  LeftOutlined,
+  MenuOutlined,
+  PlusSquareFilled,
+  SearchOutlined,
+} from '@ant-design/icons'
 import {
   MobileHeader,
   MobileSidebar,
@@ -21,6 +26,8 @@ interface P {
   isContent?: boolean
   ContentJsx?: () => JSX.Element
   isLeftOutlined?: boolean
+  displayCreateButton?: boolean
+  handleCreate?: () => void
 }
 
 const CommonHeader: FC<P> = ({
@@ -30,6 +37,8 @@ const CommonHeader: FC<P> = ({
   isContent,
   ContentJsx,
   isLeftOutlined = false,
+  displayCreateButton = false,
+  handleCreate,
 }) => {
   const [openMenuDrawer, setMenuDrawer] = useState<boolean>(false)
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
@@ -93,6 +102,14 @@ const CommonHeader: FC<P> = ({
               ))}
             {isContent && <ContentJsx />}
           </div>
+          {displayCreateButton && (
+            <div className={styles.createPlusIcon}>
+              <PlusSquareFilled
+                className={styles.plusIconStyle}
+                onClick={() => handleCreate?.()}
+              />
+            </div>
+          )}
         </div>
       </MobileHeader>
       {openMenuDrawer && (
