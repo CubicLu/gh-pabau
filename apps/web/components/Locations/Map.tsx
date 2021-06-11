@@ -55,6 +55,7 @@ const Map: FC<MapProps> = compose(
             region: '',
             country: '',
             location: '',
+            street: '',
           }
 
           const { geometry, address_components } = placeDetail
@@ -62,19 +63,29 @@ const Map: FC<MapProps> = compose(
           locationDetail.position = { lat: location.lat(), lng: location.lng() }
           if (address_components) {
             for (const addressDetail of address_components) {
-              const { types, short_name } = addressDetail
+              const { types, long_name } = addressDetail
               if (types.includes('street_number')) {
-                locationDetail.apt = short_name
+                locationDetail.apt = long_name
               } else if (types.includes('postal_code')) {
-                locationDetail.postcode = short_name
+                locationDetail.postcode = long_name
               } else if (types.includes('country')) {
-                locationDetail.country = short_name
+                locationDetail.country = long_name
               } else if (types.includes('locality')) {
-                locationDetail.city = short_name
-              } else if (types.includes('neighborhood')) {
-                locationDetail.location = short_name
+                locationDetail.city = long_name
+              } else if (types.includes('sublocality_level_2')) {
+                locationDetail.location = long_name
               }
             }
+            const area1 = address_components.find((item) =>
+              item.types.includes('administrative_area_level_1')
+            )
+            const area2 = address_components.find((item) =>
+              item.types.includes('administrative_area_level_2')
+            )
+            locationDetail.region = [
+              area1 ? area1.long_name : '',
+              area2 ? area2.long_name : '',
+            ].join(', ')
           }
           setLocationDetail(locationDetail)
         },

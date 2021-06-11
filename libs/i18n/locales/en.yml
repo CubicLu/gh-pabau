@@ -3714,7 +3714,7 @@ en:
   setup.locations.edit.modal.ok: 'Ok'
   setup.locations.badges.message.attach.your.own.badge: 'Attach your own badge to location'
   setup.locations.badges.choose.badge: 'Choose badge'
-  setup.locations.location.search.placehodlder: 'Customized your placeholder'
+  setup.locations.location.search.placehodlder: 'Enter your address here'
   setup.locations.badges.modal.attach.a.badge: 'Attach a badge'
   setup.locations.badges.modal.attach: 'Attach'
   setup.locations.badges.badge.name.placeholder: 'Enter badge name'
