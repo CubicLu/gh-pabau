@@ -23,10 +23,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 import { employes } from '../../../web/mocks/connect/employMock'
 import { useTranslationI18 } from '../../../web/hooks/useTranslationI18'
 /* eslint-disable-next-line */
-export interface OnlineBookingProps {
-
-}
-
+export interface OnlineBookingProps {}
 interface userData {
   firstname: string
   lastname: string
@@ -285,82 +282,82 @@ export function Index(props: OnlineBookingProps) {
         )}
         <div className={classname()}>
           {currentStep === 1 &&
-            (first ? (
-              <div>
-                <Selector
-                  items={seleData}
-                  view={view}
-                  click={(member, viewbtn) => {
-                    console.log(member)
-                    user.member = member
-                    setuser(user)
-                    SetselData([...defaultItems.slice(0, 4)])
-                    Setview(false)
-                    console.log(all)
-                    setall(true)
-                    viewbtn ? setfirst(false) : setfirst(true)
-                    //
-                  }}
-                  onSelected={(val, id) => {
-                    console.log(val)
-                    setserviceid(id)
-                    setconType(() => {
-                      for (const im of val.subCategory) {
-                        im.selected = false
-                      }
-                      return val
-                    })
-                    Setback(true)
-                    console.log(id)
-                    setall(false)
-                    setfirst(false)
-                    //rech()
-                  }}
-                  indicator={indicator}
-                  setindicator={setindicator}
-                  translation={translation}
-                />
-                <div className={styles.verification}>
-                  {translation('connect.onlinebooking.first.description')}
-                  <span>
+          (first ? (
+            <div>
+              <Selector
+                items={seleData}
+                view={view}
+                click={(member, viewbtn) => {
+                  console.log(member)
+                  user.member = member
+                  setuser(user)
+                  SetselData([...defaultItems.slice(0, 4)])
+                  Setview(false)
+                  console.log(all)
+                  setall(true)
+                  viewbtn ? setfirst(false) : setfirst(true)
+                  //
+                }}
+                onSelected={(val, id) => {
+                  console.log(val)
+                  setserviceid(id)
+                  setconType(() => {
+                    for (const im of val.subCategory) {
+                      im.selected = false
+                    }
+                    return val
+                  })
+                  Setback(true)
+                  console.log(id)
+                  setall(false)
+                  setfirst(false)
+                  //rech()
+                }}
+                indicator={indicator}
+                setindicator={setindicator}
+                translation={translation}
+              />
+              <div className={styles.verification}>
+                {translation('connect.onlinebooking.first.description')}
+                <span>
                     &nbsp;
-                    <a href={'online-booking/045787498450'}>045787498450</a>
+                  <a href={'online-booking/045787498450'}>045787498450</a>
                   </span>
-                </div>
               </div>
-            ) : (
-              <div className={styles.slide1}>
-                <ScreenTwo
-                  ispro={ispro}
-                  proD={proD}
-                  changescreen={rech}
-                  catData={conType}
-                  isall={all}
-                  translation={translation}
-                  parentid={serviceid}
-                  onSelect={(
-                    conName: string,
-                    price,
-                    online,
-                    range,
-                    services,
-                    vouchers,
-                    proData: SelectItem[]
-                  ) => {
-                    user.services = services
-                    user.vouchers = vouchers
-                    user.type = conName
-                    user.charge = String(price)
-                    user.online = online
-                    user.duration = range
-                    setuser(user)
-                    setproD(proData)
-                    console.log(proData)
-                    console.log(conName)
-                  }}
-                />
-              </div>
-            ))}
+            </div>
+          ) : (
+            <div className={styles.slide1}>
+              <ScreenTwo
+                ispro={ispro}
+                proD={proD}
+                changescreen={rech}
+                catData={conType}
+                isall={all}
+                translation={translation}
+                parentid={serviceid}
+                onSelect={(
+                  conName: string,
+                  price,
+                  online,
+                  range,
+                  services,
+                  vouchers,
+                  proData: SelectItem[]
+                ) => {
+                  user.services = services
+                  user.vouchers = vouchers
+                  user.type = conName
+                  user.charge = String(price)
+                  user.online = online
+                  user.duration = range
+                  setuser(user)
+                  setproD(proData)
+                  console.log(proData)
+                  console.log(conName)
+                }}
+              />
+            </div>
+          ))}
           {currentStep === 2 && (
             <div>
               <Clinic
