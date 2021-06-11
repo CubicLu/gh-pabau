@@ -116,7 +116,7 @@ const LocationDetails: FC<LocationDetailsProps> = ({
                 {t('setup.locationsdetail.address')}
               </p>
               {locationDetail?.location && (
-                <p className={styles.locationItemValue}>
+                <p className={styles.locationItemValue} onClick={hanldeAdd}>
                   {locationDetail?.location}
                 </p>
               )}
@@ -133,7 +133,7 @@ const LocationDetails: FC<LocationDetailsProps> = ({
                 {t('setup.locations.location.apt.suite')}
               </p>
               {locationDetail?.street && (
-                <p className={styles.locationItemValue}>
+                <p className={styles.locationItemValue} onClick={hanldeAdd}>
                   {locationDetail?.street}
                 </p>
               )}
@@ -152,7 +152,7 @@ const LocationDetails: FC<LocationDetailsProps> = ({
                 {t('setup.locations.location.postcode')}
               </p>
               {locationDetail?.postcode && (
-                <p className={styles.locationItemValue}>
+                <p className={styles.locationItemValue} onClick={hanldeAdd}>
                   {locationDetail?.postcode}
                 </p>
               )}
@@ -169,7 +169,7 @@ const LocationDetails: FC<LocationDetailsProps> = ({
                 {t('setup.locationdetail.city')}
               </p>
               {locationDetail?.city && (
-                <p className={styles.locationItemValue}>
+                <p className={styles.locationItemValue} onClick={hanldeAdd}>
                   {locationDetail?.city}
                 </p>
               )}
@@ -186,7 +186,7 @@ const LocationDetails: FC<LocationDetailsProps> = ({
                 {t('setup.locationdetail.region')}
               </p>
               {locationDetail?.region && (
-                <p className={styles.locationItemValue}>
+                <p className={styles.locationItemValue} onClick={hanldeAdd}>
                   {locationDetail?.region}
                 </p>
               )}
@@ -203,7 +203,7 @@ const LocationDetails: FC<LocationDetailsProps> = ({
                 {t('setup.locationdetail.country')}
               </p>
               {locationDetail?.country && (
-                <p className={styles.locationItemValue}>
+                <p className={styles.locationItemValue} onClick={hanldeAdd}>
                   {locationDetail?.country}
                 </p>
               )}

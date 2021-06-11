@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react'
 import styles from '../ClientCreate.module.less'
-import { InitialDetailsProps } from '../ClientCreate'
+import { InitialDetailsProps, Label } from '../ClientCreate'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
 import GeneralComponent from './General'
 import ContactInfo from './ContactInfo'
@@ -15,9 +15,20 @@ interface GeneralProps {
     field: keyof InitialDetailsProps,
     values: string | string[] | boolean | number
   ): void
+  labels: Label[]
+  setLabels: (val: Label[]) => void
+  selectedLabels: Label[]
+  setSelectedLabels: (val: Label[]) => void
 }
 
-export const Index: FC<GeneralProps> = ({ setFieldValue, values }) => {
+export const Index: FC<GeneralProps> = ({
+  setFieldValue,
+  values,
+  labels,
+  setLabels,
+  selectedLabels,
+  setSelectedLabels,
+}) => {
   const [moreVisible, setMoreVisible] = useState(false)
 
   const { t } = useTranslation('common')
@@ -28,7 +39,14 @@ export const Index: FC<GeneralProps> = ({ setFieldValue, values }) => {
 
   return (
     <div className={styles.mainDiv}>
-      <GeneralComponent values={values} setFieldValue={setFieldValue} />
+      <GeneralComponent
+        values={values}
+        setFieldValue={setFieldValue}
+        labels={labels}
+        setLabels={setLabels}
+        selectedLabels={selectedLabels}
+        setSelectedLabels={setSelectedLabels}
+      />
       <ContactInfo values={values} setFieldValue={setFieldValue} />
       <Subscriptions values={values} setFieldValue={setFieldValue} />
       <div

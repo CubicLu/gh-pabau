@@ -616,11 +616,8 @@ const ClientCardModal: FC<ClientCardProps> = ({
               {!search && `${client?.fullName}`}
               {search && (
                 <Search
-                  clientModeOnly={true}
                   searchResults={searchResults}
-                  placeHolder={'Search clients'}
                   resultSelectedHandler={(id) => handleSearchSelect(id)}
-                  onCloseSearch={() => setSearch(false)}
                 />
               )}
             </div>
