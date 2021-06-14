@@ -1799,6 +1799,8 @@ en:
   marketingrevirews.notification.marketing: 'Marketing'
   marketingrevirews.notification.filter: 'Filter'
   marketingrevirews.notification.configure: 'Configure'
+  marketingreviews.delete.message: 'Removed from Favourite'
+  marketingreviews.add.message: 'Added to Favourite'
   marketingrevirews.client.message: 'Your clients love you!'
   marketingrevirews.share.button.label: 'Share score to Facebook'
   marketingrevirews.need.improvement.label: 'Needs improvement'
