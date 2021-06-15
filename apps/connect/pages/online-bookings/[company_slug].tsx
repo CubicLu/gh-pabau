@@ -13,9 +13,7 @@ import moment from 'moment'
 import Payment from '../../components/payment/Payment'
 import Booked from '../../components/bookingconform/booking'
 import PatientInfo from '../../components/patientinformatioon/PatientInfo'
-import Employ, {
-  EmployData,
-} from '../../components/selectemploy/employ'
+import Employ, { EmployData } from '../../components/selectemploy/employ'
 import DateTime from '../../components/dateTime/DateTime'
 import { defaultItems } from '../../../web/mocks/connect/onlineBooking'
 import styles from './index.module.less'
@@ -280,84 +278,85 @@ export function Index(props: OnlineBookingProps) {
             <span className={styles.backName}>{backname()}</span>
           </div>
         )}
+
         <div className={classname()}>
           {currentStep === 1 &&
-          (first ? (
-            <div>
-              <Selector
-                items={seleData}
-                view={view}
-                click={(member, viewbtn) => {
-                  console.log(member)
-                  user.member = member
-                  setuser(user)
-                  SetselData([...defaultItems.slice(0, 4)])
-                  Setview(false)
-                  console.log(all)
-                  setall(true)
-                  viewbtn ? setfirst(false) : setfirst(true)
-                  //
-                }}
-                onSelected={(val, id) => {
-                  console.log(val)
-                  setserviceid(id)
-                  setconType(() => {
-                    for (const im of val.subCategory) {
-                      im.selected = false
-                    }
-                    return val
-                  })
-                  Setback(true)
-                  console.log(id)
-                  setall(false)
-                  setfirst(false)
-                  //rech()
-                }}
-                indicator={indicator}
-                setindicator={setindicator}
-                translation={translation}
-              />
-              <div className={styles.verification}>
-                {translation('connect.onlinebooking.first.description')}
-                <span>
+            (first ? (
+              <div>
+                <Selector
+                  items={seleData}
+                  view={view}
+                  click={(member, viewbtn) => {
+                    console.log(member)
+                    user.member = member
+                    setuser(user)
+                    SetselData([...defaultItems.slice(0, 4)])
+                    Setview(false)
+                    console.log(all)
+                    setall(true)
+                    viewbtn ? setfirst(false) : setfirst(true)
+                    //
+                  }}
+                  onSelected={(val, id) => {
+                    console.log(val)
+                    setserviceid(id)
+                    setconType(() => {
+                      for (const im of val.subCategory) {
+                        im.selected = false
+                      }
+                      return val
+                    })
+                    Setback(true)
+                    console.log(id)
+                    setall(false)
+                    setfirst(false)
+                    //rech()
+                  }}
+                  indicator={indicator}
+                  setindicator={setindicator}
+                  translation={translation}
+                />
+                <div className={styles.verification}>
+                  {translation('connect.onlinebooking.first.description')}
+                  <span>
                     &nbsp;
-                  <a href={'online-booking/045787498450'}>045787498450</a>
+                    <a href={'online-booking/045787498450'}>045787498450</a>
                   </span>
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className={styles.slide1}>
-              <ScreenTwo
-                ispro={ispro}
-                proD={proD}
-                changescreen={rech}
-                catData={conType}
-                isall={all}
-                translation={translation}
-                parentid={serviceid}
-                onSelect={(
-                  conName: string,
-                  price,
-                  online,
-                  range,
-                  services,
-                  vouchers,
-                  proData: SelectItem[]
-                ) => {
-                  user.services = services
-                  user.vouchers = vouchers
-                  user.type = conName
-                  user.charge = String(price)
-                  user.online = online
-                  user.duration = range
-                  setuser(user)
-                  setproD(proData)
-                  console.log(proData)
-                  console.log(conName)
-                }}
-              />
-            </div>
-          ))}
+            ) : (
+              <div className={styles.slide1}>
+                <ScreenTwo
+                  ispro={ispro}
+                  proD={proD}
+                  changescreen={rech}
+                  catData={conType}
+                  isall={all}
+                  translation={translation}
+                  parentid={serviceid}
+                  onSelect={(
+                    conName: string,
+                    price,
+                    online,
+                    range,
+                    services,
+                    vouchers,
+                    proData: SelectItem[]
+                  ) => {
+                    user.services = services
+                    user.vouchers = vouchers
+                    user.type = conName
+                    user.charge = String(price)
+                    user.online = online
+                    user.duration = range
+                    setuser(user)
+                    setproD(proData)
+                    console.log(proData)
+                    console.log(conName)
+                  }}
+                />
+              </div>
+            ))}
           {currentStep === 2 && (
             <div>
               <Clinic
