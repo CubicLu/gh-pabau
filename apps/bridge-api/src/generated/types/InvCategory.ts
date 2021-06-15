@@ -21,6 +21,7 @@ export const InvCategory = objectType({
     t.model.tax_id()
     t.model.master_cat_id()
     t.model.InvProduct()
+    t.model.ServiceMasterCategory()
   },
 })
 

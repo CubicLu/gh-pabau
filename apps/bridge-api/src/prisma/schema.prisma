@@ -206,6 +206,7 @@ model Company {
   CompanyRoom                      CompanyRoom[]
   CompanyRoomService               CompanyRoomService[]
   CompanyService                   CompanyService[]
+  ServiceMasterCategory            ServiceMasterCategory[]
   CompanyDepartment                CompanyDepartment[]
   Job                              Job[]
   JobConfiguration                 JobConfiguration[]
@@ -6076,7 +6077,9 @@ model InvCategory {
   master_cat_id     Int
 
 
-  InvProduct InvProduct[]
+  InvProduct            InvProduct[]
+  ServiceMasterCategory ServiceMasterCategory @relation(fields: [master_cat_id], references: [id])
+
   @@index([category_type], name: "category_type")
   @@index([master_cat_id], name: "master_cat_id")
   @@index([company_id], name: "occupier_index")
@@ -10652,15 +10655,21 @@ model UserSalutation {
 //  order Int
 //}
 //
-//model services_master_category {
-//  id       Int                           @id @default(autoincrement())
-//  name     String
-//  occupier Int
-//  ord      Int                           @default(0)
-//  type     services_master_category_type @default(SERVICE)
-//  image    String
-//}
-//
+
+model ServiceMasterCategory {
+  id          Int                           @id @default(autoincrement())
+  name        String
+  company_id  Int                           @map("occupier")
+  ord         Int                           @default(0)
+  type        services_master_category_type @default(SERVICE)
+  image       String
+  InvCategory InvCategory[]
+
+  Company Company @relation(fields: [company_id], references: [id])
+
+  @@map("services_master_category")
+}
+
 //model service_product_loyalty {
 //  id         Int @id @default(autoincrement())
 //  company_id Int

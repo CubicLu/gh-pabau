@@ -32,6 +32,7 @@ export const Company = objectType({
     t.model.CompanyRoom()
     t.model.CompanyRoomService()
     t.model.CompanyService()
+    t.model.ServiceMasterCategory()
     t.model.CompanyDepartment()
     t.model.Job()
     t.model.JobConfiguration()

@@ -155,6 +155,7 @@ export interface Company {
   CompanyRoom?: CompanyRoom[];
   CompanyRoomService?: CompanyRoomService[];
   CompanyService?: CompanyService[];
+  ServiceMasterCategory?: ServiceMasterCategory[];
   CompanyDepartment?: CompanyDepartment[];
   Job?: Job[];
   JobConfiguration?: JobConfiguration[];
@@ -2217,6 +2218,7 @@ export interface InvCategory {
   tax_id: number;
   master_cat_id: number;
   InvProduct?: InvProduct[];
+  ServiceMasterCategory: ServiceMasterCategory;
 }
 
 export interface InvPayment {
@@ -2723,6 +2725,17 @@ export interface UserSalutation {
   name: string;
   company_id?: number;
   Company?: Company;
+}
+
+export interface ServiceMasterCategory {
+  id: number;
+  name: string;
+  company_id: number;
+  ord: number;
+  type: services_master_category_type;
+  image: string;
+  InvCategory?: InvCategory[];
+  Company: Company;
 }
 
 export interface SmsPurchase {
