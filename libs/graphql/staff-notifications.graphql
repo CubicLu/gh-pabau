@@ -8,19 +8,12 @@ query staff_notification_types {
 
 mutation insert_product_news(
   $title: String!
-  $sent_to: jsonb
   $description: String!
   $img: String!
   $link: String!
 ) {
   insert_product_news_one(
-    object: {
-      title: $title
-      sent_to: $sent_to
-      description: $description
-      img: $img
-      link: $link
-    }
+    object: { title: $title, description: $description, img: $img, link: $link }
   ) {
     id
   }
