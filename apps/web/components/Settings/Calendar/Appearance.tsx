@@ -34,7 +34,6 @@ const reorder = (list, startIndex, endIndex) => {
 }
 
 interface P {
-  initials?: boolean
   disable_surname?: boolean
   disable_time?: boolean
   font_size?: number

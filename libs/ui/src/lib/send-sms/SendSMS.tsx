@@ -3,14 +3,15 @@ import {
   Button,
   ChooseSMSTemplate,
   InputWithTags,
+  RenderHtml,
   smsTemplateProps,
 } from '@pabau/ui'
 import cn from 'classnames'
 import _ from 'lodash'
 import moment from 'moment'
 import React, { FC, useEffect, useState } from 'react'
-import { defaultTemplateList } from './mock'
 import { tagList } from '../merge-tag-modal/data'
+import { defaultTemplateList } from './mock'
 import styles from './SendSMS.module.less'
 
 const HANDLE_REGEX = /\[.+?]/g
@@ -147,11 +148,7 @@ const SendSMSComponent: FC<SendSMSComponentProps> = ({
                       : styles.directionTo
                   )}
                 >
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: findAndReplaceTag(item.content),
-                    }}
-                  />
+                  <RenderHtml __html={findAndReplaceTag(item.content)} />
                 </div>
               </div>
             ))}

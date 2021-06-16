@@ -54,9 +54,5 @@ export const bnfDrugMutation = extendType({
   type: 'Mutation',
   definition(t) {
     t.crud.createOneBnfDrug()
-    t.crud.updateOneBnfDrug()
-    t.crud.upsertOneBnfDrug()
-    t.crud.deleteOneBnfDrug()
-    t.crud.updateManyBnfDrug()
   },
 })

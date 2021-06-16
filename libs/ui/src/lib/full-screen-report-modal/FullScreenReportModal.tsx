@@ -29,6 +29,7 @@ export interface FullScreenReportModalProps {
   onDelete?: () => void
   onClose?: () => void
   onCancel?: () => void
+
   onAssigneeClick?: () => void
   activeBtnText?: string
   deleteBtnText?: string
@@ -60,6 +61,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
   onDelete,
   onClose,
   onCancel,
+
   deleteBtnText,
   createBtnText,
   assigneeName,

@@ -23,24 +23,25 @@ const medicalForms = [
   { id: 7, formType: 'basic', formName: 'basic_staticimage' },
   { id: 8, formType: 'basic', formName: 'basic_drawing' },
   { id: 9, formType: 'basic', formName: 'basic_signature' },
-  { id: 10, formType: 'basic', formName: 'basic_conditions' },
-  { id: 11, formType: 'basic', formName: 'basic_drugs' },
-  { id: 12, formType: 'basic', formName: 'basic_labtests' },
-  { id: 13, formType: 'basic', formName: 'basic_traveldestination' },
-  { id: 14, formType: 'basic', formName: 'basic_vaccinescheduler' },
-  { id: 15, formType: 'basic', formName: 'basic_vaccinehistory' },
-  { id: 16, formType: 'custom', formName: 'custom_emailmarketing' },
-  { id: 17, formType: 'custom', formName: 'custom_smsmarketing' },
-  { id: 18, formType: 'custom', formName: 'custom_phonecall' },
-  { id: 19, formType: 'custom', formName: 'custom_lettermarketing' },
-  { id: 20, formType: 'custom', formName: 'custom_membershipnumber' },
-  { id: 21, formType: 'custom', formName: 'custom_authorizationcode' },
-  { id: 22, formType: 'custom', formName: 'custom_company' },
-  { id: 23, formType: 'custom', formName: 'custom_dob' },
-  { id: 24, formType: 'custom', formName: 'custom_gender' },
-  { id: 25, formType: 'custom', formName: 'custom_physicaladdress' },
-  { id: 26, formType: 'custom', formName: 'custom_referredby' },
-  { id: 27, formType: 'custom', formName: 'custom_telephonenumber' },
+  { id: 10, formType: 'basic', formName: 'basic_photo' },
+  { id: 11, formType: 'basic', formName: 'basic_conditions' },
+  { id: 12, formType: 'basic', formName: 'basic_drugs' },
+  { id: 13, formType: 'basic', formName: 'basic_labtests' },
+  { id: 14, formType: 'basic', formName: 'basic_traveldestination' },
+  { id: 15, formType: 'basic', formName: 'basic_vaccinescheduler' },
+  { id: 16, formType: 'basic', formName: 'basic_vaccinehistory' },
+  { id: 17, formType: 'custom', formName: 'custom_emailmarketing' },
+  { id: 18, formType: 'custom', formName: 'custom_smsmarketing' },
+  { id: 19, formType: 'custom', formName: 'custom_phonecall' },
+  { id: 20, formType: 'custom', formName: 'custom_lettermarketing' },
+  { id: 21, formType: 'custom', formName: 'custom_membershipnumber' },
+  { id: 22, formType: 'custom', formName: 'custom_authorizationcode' },
+  { id: 23, formType: 'custom', formName: 'custom_company' },
+  { id: 24, formType: 'custom', formName: 'custom_dob' },
+  { id: 25, formType: 'custom', formName: 'custom_gender' },
+  { id: 26, formType: 'custom', formName: 'custom_physicaladdress' },
+  { id: 27, formType: 'custom', formName: 'custom_referredby' },
+  { id: 28, formType: 'custom', formName: 'custom_telephonenumber' },
 ]
 const previewMapping = [
   { heading: 'basic_heading' },
@@ -64,7 +65,7 @@ const previewMapping = [
   { diagram: 'empty' },
   { facediagram: 'empty' },
   { diagram_mini: 'empty' },
-  { photo_and_drawer: 'empty' },
+  { photo_and_drawer: 'basic_photo' },
   { epaper: 'empty' },
   { custom_photo_and_drawer: 'empty' },
   { cl_services: 'empty' },
@@ -90,8 +91,11 @@ const copy = (source, destination, droppableSourceId, endIndex, formInfo) => {
     txtDefaults: formInfo.txtDefaults,
     txtDefaultsWithTag: formInfo.txtDefaultsWithTag,
     txtLinkedField: formInfo.txtLinkedField,
+    signData: formInfo.signData,
     arrItems: formInfo.arrItems,
     required: formInfo.required,
+    txtValue: formInfo.txtValue,
+    arrValue: formInfo.arrValue,
   })
   return destination
 }
@@ -120,12 +124,27 @@ const reverseForm = (form) => {
     if (cssClass === 'textarea') {
       defaults = form.txtBlock
     }
+
     if (cssClass === 'staticText') {
       values = form.txtBlock
     }
-    if (cssClass === 'signature' || form.arrItems.length > 0) {
+
+    if (cssClass === 'signature') {
+      values = form.signData
+    }
+
+    if (
+      cssClass === 'signature' ||
+      cssClass === 'cl_drugs' ||
+      form.arrItems.length > 0
+    ) {
       title = form.txtQuestion
     }
+
+    if (cssClass === 'cl_drugs' && form.arrItems.length === 0) {
+      values = ''
+    }
+
     reverseObj = {
       cssClass: cssClass,
       required: required,
@@ -174,7 +193,10 @@ const getFormInfo = (form) => {
   }
 
   label = form.title ? form.title.trim() : ''
-  label = label === '' && form.values ? form.values.trim() : label
+  label =
+    label === '' && typeof form.values === 'string' && form.values
+      ? form.values.trim()
+      : label
 
   switch (form.cssClass) {
     case 'cl_services': {
@@ -224,14 +246,20 @@ const getFormInfo = (form) => {
     txtLinkedFieldValue = form.linked
   }
 
+  let signData = ''
+  if (form.cssClass === 'signature' && typeof form.values === 'string') {
+    signData = form.values
+  }
+
   let arrItemsValue: OptionType[] = []
   if (
-    form.cssClass === 'checkbox' ||
-    form.cssClass === 'radio' ||
-    form.cssClass === 'select' ||
-    form.cssClass === 'staticImage' ||
-    form.cssClass === 'diagram_mini' ||
-    form.cssClass === 'image'
+    (form.cssClass === 'checkbox' ||
+      form.cssClass === 'radio' ||
+      form.cssClass === 'select' ||
+      form.cssClass === 'staticImage' ||
+      form.cssClass === 'diagram_mini' ||
+      form.cssClass === 'image') &&
+    typeof form.values !== 'string'
   ) {
     const arrayItems: ArrayItem[] = form.values
     arrItemsValue = Object.entries(arrayItems).map(([key, value]) => ({
@@ -247,7 +275,10 @@ const getFormInfo = (form) => {
     txtInputType: txtInputTypeValue,
     txtDefaults: txtDefaultsValue,
     txtLinkedField: txtLinkedFieldValue,
+    signData: signData,
     arrItems: arrItemsValue,
+    txtValue: txtDefaultsValue,
+    arrValue: [],
     required: form.required === 'true' ? true : false,
   }
 }
@@ -256,7 +287,9 @@ interface P {
   previewData: string
   changeFormName: (formName: string) => void
   clickedCreateForm: boolean
+  clickedPreviewForm: boolean
   clearCreateFormBtn: () => void
+  getFormData?: (formData: string) => void
   formName: string
 }
 
@@ -265,6 +298,8 @@ const MedicalFormEdit: FC<P> = ({
   changeFormName,
   clickedCreateForm,
   clearCreateFormBtn,
+  clickedPreviewForm,
+  getFormData,
   formName,
 }) => {
   const { t } = useTranslation('common')
@@ -284,10 +319,25 @@ const MedicalFormEdit: FC<P> = ({
       const reversedFormObject = {
         form_structure: reversedFormData,
       }
-      setReservedFormData(btoa(JSON.stringify(reversedFormObject)))
+      setReservedFormData(
+        btoa(unescape(encodeURIComponent(JSON.stringify(reversedFormObject))))
+      )
       setIsModalVisible(true)
     }
   }, [clickedCreateForm, draggedForms])
+
+  useEffect(() => {
+    if (clickedPreviewForm === true && draggedForms.length > 0) {
+      const reversedFormData = draggedForms.map((form) => reverseForm(form))
+      const reversedFormObject = {
+        form_structure: reversedFormData,
+      }
+      const formData = btoa(
+        unescape(encodeURIComponent(JSON.stringify(reversedFormObject)))
+      )
+      getFormData?.(formData)
+    }
+  }, [clickedPreviewForm, draggedForms, getFormData])
 
   useEffect(() => {
     setDraggedForms([])

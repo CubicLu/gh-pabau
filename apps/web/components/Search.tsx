@@ -41,6 +41,34 @@ const CLIENTS_QUERY = gql`
   }
 `
 
+const CLIENTS_ADVANCED_QUERY = gql`
+  query findAdvancedContacts($where: CmContactWhereInput!) {
+    cmContacts(where: $where, take: 10) {
+      ID
+      Fname
+      Lname
+      Email
+      Mobile
+      Avatar
+      custom_id
+    }
+  }
+`
+
+const LEADS_ADVANCED_QUERY = gql`
+  query findAdvancedLeads($where: CmLeadWhereInput!) {
+    cmLeads(where: $where, take: 10) {
+      ID
+      Fname
+      Lname
+      Email
+      Mobile
+      Avatar
+      custom_id
+    }
+  }
+`
+
 const LEADS_QUERY = gql`
   query findLeads($searchTerm1: String, $searchTerm2: String) {
     cmLeads(
@@ -79,6 +107,40 @@ const LEADS_QUERY = gql`
   }
 `
 
+const SEARCH_BY_INVOICE_QUERY = gql`
+  query findContactByInvoiceNum($invoice_number: String) {
+    findFirstInvSale(where: { custom_id: { equals: $invoice_number } }) {
+      CmContact {
+        ID
+        Fname
+        Lname
+        Email
+        Mobile
+        Avatar
+        custom_id
+      }
+    }
+  }
+`
+
+const SEARCH_BY_POLICY_NUMBER = gql`
+  query findContactByInsuranceNum($policy_number: String) {
+    findFirstContactInsurance(
+      where: { membership_number: { equals: $policy_number } }
+    ) {
+      contact_id
+      CmContact {
+        Fname
+        Lname
+        Email
+        Mobile
+        Avatar
+        custom_id
+      }
+    }
+  }
+`
+
 enum SearchMode {
   Clients = 'Clients',
   Leads = 'Leads',
@@ -87,22 +149,73 @@ enum SearchMode {
 const Search: FC = () => {
   const router = useRouter()
   const [searchFor, setSearchFor] = useState(SearchMode.Clients)
-  const [searchTerms, setSearchTerms] = useState<string[]>([])
-  const variables = { searchTerm1: searchTerms[0] }
-  if (searchTerms[1] !== '') {
-    variables['searchTerm2'] = searchTerms[1]
+  const [searchTerms, setSearchTerms] = useState([])
+  const [advancedSearch, setAdvancedSearch] = useState(false)
+  const variables = []
+
+  let SEARCH_QUERY = null
+  switch (searchFor) {
+    case SearchMode.Clients:
+      if (advancedSearch) {
+        SEARCH_QUERY = CLIENTS_ADVANCED_QUERY
+      } else {
+        SEARCH_QUERY = CLIENTS_QUERY
+      }
+      break
+    case SearchMode.Leads:
+      if (advancedSearch) {
+        SEARCH_QUERY = LEADS_ADVANCED_QUERY
+      } else {
+        SEARCH_QUERY = LEADS_QUERY
+      }
+      break
   }
 
-  let SEARCH_QUERY = CLIENTS_QUERY
-  if (searchFor === SearchMode.Leads) {
-    SEARCH_QUERY = LEADS_QUERY
+  if (SEARCH_QUERY && advancedSearch && searchTerms !== []) {
+    if (searchTerms['invoiceNumber']) {
+      variables['invoice_number'] = searchTerms['invoiceNumber']
+      SEARCH_QUERY = SEARCH_BY_INVOICE_QUERY
+    } else if (searchTerms['policyNumber']) {
+      variables['policy_number'] = searchTerms['policyNumber']
+      SEARCH_QUERY = SEARCH_BY_POLICY_NUMBER
+    } else {
+      variables['where'] = {}
+      variables['where'].AND = []
+
+      for (const key in searchTerms) {
+        if (key === 'is_active') {
+          if (!searchTerms[key]) {
+            variables['where'].AND.push({ [key]: { equals: 1 } })
+          }
+        } else if (typeof searchTerms[key] !== 'undefined' && key) {
+          variables['where'].AND.push({ [key]: { contains: searchTerms[key] } })
+        }
+      }
+    }
+  } else if (searchTerms.length > 0) {
+    variables['searchTerm1'] = searchTerms[0]
+    if (searchTerms[1] !== '') {
+      variables['searchTerm2'] = searchTerms[1]
+    }
   }
-  const { data } = useLiveQuery(SEARCH_QUERY, {
+
+  let { data } = useLiveQuery(SEARCH_QUERY, {
     variables: variables,
+    skip: variables.length > 0,
   })
 
+  if (data?.CmContact) {
+    data = [data.CmContact]
+  }
+
   const setSearchMode = (mode: SearchMode) => {
+    setSearchTerms([])
     setSearchFor(mode)
+  }
+
+  const advancedSearchHandler = (formData) => {
+    setSearchTerms(formData)
+    setAdvancedSearch(true)
   }
 
   const resultSelectedHandler = (id: number) => {
@@ -125,6 +238,7 @@ const Search: FC = () => {
           ...rest,
         })
       )}
+      advancedSearchHandler={advancedSearchHandler}
       changeSearchMode={setSearchMode}
       resultSelectedHandler={resultSelectedHandler}
       onChange={(e) => {

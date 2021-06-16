@@ -32,10 +32,12 @@ export const CompanyBranch = objectType({
     t.model.notify_on_lead()
     t.model.notice()
     t.model.Company()
+    t.model.CompanyBranchGroup()
     t.model.CompanyRoomLocation()
     t.model.RotaShift()
     t.model.CmStaffGeneral()
     t.model.CmContactLocation()
+    t.model.CompanyBranchAttachment()
   },
 })
 

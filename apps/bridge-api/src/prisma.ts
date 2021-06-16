@@ -20,8 +20,8 @@ export const prisma = new PrismaClient({
     },
   ],
 })
-//
-// // Prisma middleware logger for query efficiency
+
+// Prisma middleware logger for query efficiency
 if (process.env.NODE_ENV === 'development') {
   prisma.$on('query', (e) => {
     console.log('Query: ' + e.query)

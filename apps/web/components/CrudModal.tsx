@@ -20,6 +20,8 @@ interface P {
   aggregateQueryVariables?: any
   submitting?: boolean
   showModalInitially?: boolean
+  isDataIntegrityCheck?: boolean
+  dataIntegrityCount?: number
 }
 
 const CrudModal: FC<P> = ({
@@ -33,6 +35,8 @@ const CrudModal: FC<P> = ({
   aggregateQuery,
   aggregateQueryVariables,
   submitting = false,
+  isDataIntegrityCheck,
+  dataIntegrityCount,
 }) => {
   const { t } = useTranslationI18()
   const [openDeleteModal, setDeleteModal] = useState(
@@ -106,6 +110,13 @@ const CrudModal: FC<P> = ({
         onOk={async () => {
           const { id } = editingRow
           setFormSubmitting(true)
+          if (dataIntegrityCount >= 1 && isDataIntegrityCheck) {
+            Notification(
+              NotificationType.warning,
+              `Warning! ${schema.messages.dataIntegrity}`
+            )
+            return
+          }
           await deleteMutation({
             variables: { id },
             optimisticResponse: {},

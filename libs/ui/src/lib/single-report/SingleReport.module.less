@@ -53,6 +53,13 @@
   white-space: nowrap;
   overflow: hidden;
   width: 100%;
+  :global {
+    .ant-skeleton {
+      .ant-skeleton-input {
+        width: 300px;
+      }
+    }
+  }
 }
 
 .singleReportNew {
@@ -76,4 +83,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@media screen and (max-width: 767px) {
+  .singleReportCode {
+    :global {
+      .ant-skeleton {
+        .ant-skeleton-input {
+          width: 265px;
+        }
+      }
+    }
+  }
 }

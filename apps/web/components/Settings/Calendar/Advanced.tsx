@@ -1,5 +1,5 @@
 import { HelpTooltip } from '@pabau/ui'
-import { Checkbox, Typography } from 'antd'
+import { Checkbox, Typography, Form, InputNumber } from 'antd'
 import React, { FC } from 'react'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import AdvancedSkeleton from './AdvancedSkeleton'
@@ -21,8 +21,9 @@ interface CompanyMeta {
 }
 
 interface P {
-  disable_service_filter?: boolean
-  disable_book_by_package?: boolean
+  initials?: boolean
+  noshow_count?: number
+  column_total?: boolean
   companyMetas?: CompanyMeta[]
   onChange?: (data) => void
   onMetaChange?: (data: CompanyMeta[], updatedMeta: CompanyMeta) => void
@@ -30,8 +31,9 @@ interface P {
 }
 
 export const Advanced: FC<P> = ({
-  disable_service_filter,
-  disable_book_by_package,
+  initials,
+  noshow_count,
+  column_total,
   companyMetas,
   onChange,
   onMetaChange,
@@ -39,6 +41,7 @@ export const Advanced: FC<P> = ({
   ...props
 }) => {
   const { t } = useTranslationI18()
+  const [form] = Form.useForm()
 
   const getMetaCheckValue = (name) => {
     const metaData = companyMetas.find((el) => el.meta_name === name)
@@ -65,32 +68,11 @@ export const Advanced: FC<P> = ({
       key: 2,
     },
     {
-      name: 'disable_book_by_package',
-      type: t('settings.calendar.advanced.input.disablebooking.label'),
-      value: disable_book_by_package,
-      help: t('settings.calendar.advanced.input.disablebooking.tooltip'),
-      key: 3,
-    },
-    {
-      name: 'disable_service_filter',
-      type: t('settings.calendar.advanced.input.disablefiltering.label'),
-      value: disable_service_filter,
-      help: t('settings.calendar.advanced.input.disablefiltering.tooltip'),
-      key: 4,
-    },
-    {
       name: 'meta.auto_complete_appt_status',
       type: t('settings.calendar.advanced.input.autocomplete.label'),
       value: getMetaCheckValue('auto_complete_appt_status'),
       help: t('settings.calendar.advanced.input.autocomplete.tooltip'),
       key: 5,
-    },
-    {
-      name: 'meta.employee_order_by_location',
-      type: t('settings.calendar.advanced.input.orderingemployee.label'),
-      value: getMetaCheckValue('employee_order_by_location'),
-      help: t('settings.calendar.advanced.input.orderingemployee.tooltip'),
-      key: 6,
     },
     {
       name: 'meta.hide_client_name_appointment_notification',
@@ -107,9 +89,9 @@ export const Advanced: FC<P> = ({
       key: 8,
     },
     {
-      name: 'meta.only_self_company',
+      name: 'column_total',
       type: t('settings.calendar.advanced.input.hideshowaccounts.label'),
-      value: getMetaCheckValue('only_self_company'),
+      value: column_total,
       help: t('settings.calendar.advanced.input.hideshowaccounts.tooltip'),
       key: 9,
     },
@@ -121,10 +103,10 @@ export const Advanced: FC<P> = ({
       key: 10,
     },
     {
-      name: 'meta.cal_room_view_default',
-      type: t('settings.calendar.advanced.input.revertroom.label'),
-      value: getMetaCheckValue('cal_room_view_default'),
-      help: t('settings.calendar.advanced.input.revertroom.tooltip'),
+      name: 'initials',
+      type: t('settings.calendar.advanced.input.initials.label'),
+      value: initials,
+      help: t('settings.calendar.advanced.input.initials.tooltip'),
       key: 11,
     },
   ]
@@ -183,6 +165,53 @@ export const Advanced: FC<P> = ({
             </div>
           )
         })}
+        <div className={styles.numberInput}>
+          <div className={styles.numberInputLabel}>
+            <span>
+              {t('settings.calendar.advanced.input.noshowcount.label')}
+            </span>
+            <HelpTooltip
+              helpText={t(
+                'settings.calendar.advanced.input.noshowcount.tooltip'
+              )}
+            />
+          </div>
+          <div>
+            <Form
+              form={form}
+              layout="vertical"
+              initialValues={{
+                noshow_count: noshow_count,
+              }}
+            >
+              <Form.Item
+                name="noshow_count"
+                rules={[
+                  {
+                    type: 'number',
+                    min: 0,
+                    message: t(
+                      'settings.calendar.advanced.input.noshowcount.err1'
+                    ),
+                  },
+                ]}
+              >
+                <InputNumber
+                  type="number"
+                  value={Number(noshow_count)}
+                  placeholder={t(
+                    'settings.calendar.advanced.input.noshowcount.label'
+                  )}
+                  onChange={(value) => {
+                    onChange?.({
+                      noshow_count: Number(value),
+                    })
+                  }}
+                />
+              </Form.Item>
+            </Form>
+          </div>
+        </div>
       </div>
     </div>
   )

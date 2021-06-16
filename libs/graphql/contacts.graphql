@@ -24,11 +24,43 @@ query findContacts($searchTerm1: String, $searchTerm2: String) {
     }
     take: 10
   ) {
+    ID
     Fname
     Lname
     Email
     Mobile
     Avatar
     custom_id
+  }
+}
+
+
+query findContactByInvoiceNum($invoice_number: String) {
+  findFirstInvSale(where: { custom_id: { equals: $invoice_number } }) {
+    CmContact {
+      ID
+      Fname
+      Lname
+      Email
+      Mobile
+      Avatar
+      custom_id
+    }
+  }
+}
+
+query findContactByInsuranceNum($policy_number: String) {
+  findFirstContactInsurance(
+    where: { membership_number: { equals: $policy_number } }
+  ) {
+    contact_id
+    CmContact {
+      Fname
+      Lname
+      Email
+      Mobile
+      Avatar
+      custom_id
+    }
   }
 }

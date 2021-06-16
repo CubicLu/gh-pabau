@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import * as Icons from '@fortawesome/free-solid-svg-icons'
@@ -23,6 +23,10 @@ export const FontIcon: FC<FontIconProps> = ({
     .map((icon) => Icons[icon])
   library.add(...iconList)
   const [activate, setActivate] = useState(selectedIcon)
+
+  useEffect(() => {
+    setActivate(selectedIcon)
+  }, [selectedIcon])
 
   return (
     <div className={styles.iconPanel} style={{ height: height + 'px' }}>

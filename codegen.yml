@@ -1,7 +1,11 @@
+
 overwrite: true
 schema: hasura/schema.graphql
-documents: ['libs/graphql/*.graphql']
+documents: ['libs/graphql/*.graphql', 'libs/graphql/crm-mutation']
 generates:
+  hasura/schema.json:
+    plugins:
+      - introspection
   libs/graphql/generated/graphql.tsx:
     plugins:
       - 'typescript'

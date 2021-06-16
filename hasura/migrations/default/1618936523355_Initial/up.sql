@@ -1,4 +1,15 @@
 SET check_function_bodies = false;
+CREATE FUNCTION public.set_current_timestamp_min_attendees() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+  _new record;
+BEGIN
+  _new := NEW;
+  _new."min_attendees" = NOW();
+  RETURN _new;
+END;
+$$;
 CREATE FUNCTION public.set_current_timestamp_updated_at() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -65,12 +76,12 @@ CREATE SEQUENCE public."Discounts_order_seq"
     NO MAXVALUE
     CACHE 1;
 ALTER SEQUENCE public."Discounts_order_seq" OWNED BY public."Discounts"."order";
-CREATE TABLE public."Labs" (
+CREATE TABLE public."LabsTmp" (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     name text NOT NULL,
-    phone text NOT NULL,
+    phone text,
     email text NOT NULL,
     country text,
     street text,
@@ -80,9 +91,9 @@ CREATE TABLE public."Labs" (
     is_active boolean NOT NULL,
     integration boolean DEFAULT false,
     "order" integer NOT NULL,
-    provider_number numeric NOT NULL
+    provider_number numeric
 );
-COMMENT ON COLUMN public."Labs".name IS 'lab name goes here';
+COMMENT ON COLUMN public."LabsTmp".name IS 'lab name goes here';
 CREATE SEQUENCE public."Labs_order_seq"
     AS integer
     START WITH 1
@@ -90,7 +101,7 @@ CREATE SEQUENCE public."Labs_order_seq"
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-ALTER SEQUENCE public."Labs_order_seq" OWNED BY public."Labs"."order";
+ALTER SEQUENCE public."Labs_order_seq" OWNED BY public."LabsTmp"."order";
 CREATE TABLE public."Library" (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -158,6 +169,45 @@ CREATE SEQUENCE public."SMS_campaign_order_seq"
     NO MAXVALUE
     CACHE 1;
 ALTER SEQUENCE public."SMS_campaign_order_seq" OWNED BY public."SMS_campaign"."order";
+CREATE TABLE public.activity_types (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    name text NOT NULL,
+    subject text NOT NULL,
+    is_active boolean NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+CREATE TABLE public.app_listing (
+    id integer NOT NULL,
+    company_id integer NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    modified_at timestamp with time zone,
+    "appIcon" text NOT NULL,
+    name text NOT NULL,
+    "shortDescription" text NOT NULL,
+    "builtBy" text NOT NULL,
+    "TermsOfServiceURL" text NOT NULL,
+    "PrivacyPolicyURL" text NOT NULL,
+    "sellAppInfo" text NOT NULL,
+    "typeFeature" text NOT NULL,
+    "docUrl" text NOT NULL,
+    "extraInfo" text NOT NULL,
+    screenshot1 text NOT NULL,
+    screenshot2 text NOT NULL,
+    screenshot3 text NOT NULL,
+    "typeApp" text NOT NULL,
+    workspace text NOT NULL,
+    status text NOT NULL
+);
+COMMENT ON TABLE public.app_listing IS 'developer hub - used for fetching data for developer hub';
+CREATE SEQUENCE public.app_listing_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.app_listing_id_seq OWNED BY public.app_listing.id;
 CREATE TABLE public.application_notifications (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     "user" integer NOT NULL,
@@ -353,6 +403,20 @@ CREATE TABLE public.chat (
     read boolean DEFAULT false NOT NULL
 );
 COMMENT ON TABLE public.chat IS 'Chat messages';
+CREATE TABLE public.chat_room (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    company integer NOT NULL,
+    name text NOT NULL
+);
+CREATE TABLE public.chat_room_participant (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    "user" integer NOT NULL,
+    room uuid NOT NULL
+);
 CREATE TABLE public.clients_data (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     name text,
@@ -828,7 +892,7 @@ CREATE TABLE public.notifications (
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     "order" integer NOT NULL,
     sent_to jsonb,
-    type uuid NOT NULL,
+    type text NOT NULL,
     variables jsonb,
     destination text,
     sent_by integer,
@@ -955,12 +1019,23 @@ CREATE SEQUENCE public.product_lists_order_seq
 ALTER SEQUENCE public.product_lists_order_seq OWNED BY public.product_lists."order";
 CREATE TABLE public.product_news (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    img text NOT NULL,
+    link text NOT NULL,
+    description text NOT NULL,
+    title text NOT NULL,
+    "order" integer NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    img text,
-    link text,
-    description text,
-    title text NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    sent_to jsonb
 );
+CREATE SEQUENCE public.product_news_order_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE public.product_news_order_seq OWNED BY public.product_news."order";
 CREATE TABLE public.product_news_read (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     product_news uuid NOT NULL,
@@ -1114,7 +1189,11 @@ CREATE TABLE public.service (
     contracts json,
     days_before_booking integer,
     notice_short text,
-    notice_long text
+    notice_long text,
+    min_attendees integer,
+    bundle_items json,
+    bundle_amount text,
+    bundle_duration text
 );
 CREATE TABLE public.service_categories (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
@@ -1265,10 +1344,11 @@ CREATE SEQUENCE public.third_parties_order_seq
     CACHE 1;
 ALTER SEQUENCE public.third_parties_order_seq OWNED BY public.third_parties."order";
 ALTER TABLE ONLY public."Discounts" ALTER COLUMN "order" SET DEFAULT nextval('public."Discounts_order_seq"'::regclass);
-ALTER TABLE ONLY public."Labs" ALTER COLUMN "order" SET DEFAULT nextval('public."Labs_order_seq"'::regclass);
+ALTER TABLE ONLY public."LabsTmp" ALTER COLUMN "order" SET DEFAULT nextval('public."Labs_order_seq"'::regclass);
 ALTER TABLE ONLY public."Lists_campaign" ALTER COLUMN "order" SET DEFAULT nextval('public."Lists_campaign_order_seq"'::regclass);
 ALTER TABLE ONLY public."Newsletter_campaign" ALTER COLUMN "order" SET DEFAULT nextval('public."Newsletter_campaign_order_seq"'::regclass);
 ALTER TABLE ONLY public."SMS_campaign" ALTER COLUMN "order" SET DEFAULT nextval('public."SMS_campaign_order_seq"'::regclass);
+ALTER TABLE ONLY public.app_listing ALTER COLUMN id SET DEFAULT nextval('public.app_listing_id_seq'::regclass);
 ALTER TABLE ONLY public.appointment_status ALTER COLUMN "order" SET DEFAULT nextval('public.appointment_status_order_seq'::regclass);
 ALTER TABLE ONLY public.business_details ALTER COLUMN id SET DEFAULT nextval('public.business_details_id_seq'::regclass);
 ALTER TABLE ONLY public.cancellation_reasons ALTER COLUMN "order" SET DEFAULT nextval('public.cancellation_reasons_order_seq'::regclass);
@@ -1297,6 +1377,7 @@ ALTER TABLE ONLY public.payment_types ALTER COLUMN "order" SET DEFAULT nextval('
 ALTER TABLE ONLY public.peer_review ALTER COLUMN id SET DEFAULT nextval('public.peer_review_id_seq'::regclass);
 ALTER TABLE ONLY public.petty_cash_types ALTER COLUMN "order" SET DEFAULT nextval('public.petty_cash_types_order_seq'::regclass);
 ALTER TABLE ONLY public.product_lists ALTER COLUMN "order" SET DEFAULT nextval('public.product_lists_order_seq'::regclass);
+ALTER TABLE ONLY public.product_news ALTER COLUMN "order" SET DEFAULT nextval('public.product_news_order_seq'::regclass);
 ALTER TABLE ONLY public.prototype ALTER COLUMN "order" SET DEFAULT nextval('public.prototype_order_seq'::regclass);
 ALTER TABLE ONLY public.resources ALTER COLUMN "order" SET DEFAULT nextval('public.resources_order_seq'::regclass);
 ALTER TABLE ONLY public.rooms ALTER COLUMN id SET DEFAULT nextval('public.rooms_id_seq'::regclass);
@@ -1311,9 +1392,9 @@ ALTER TABLE ONLY public.diagnostic_codeset
     ADD CONSTRAINT "Diagnostic_code_pkey" PRIMARY KEY (id);
 ALTER TABLE ONLY public."Discounts"
     ADD CONSTRAINT "Discounts_pkey" PRIMARY KEY (id);
-ALTER TABLE ONLY public."Labs"
+ALTER TABLE ONLY public."LabsTmp"
     ADD CONSTRAINT "Labs_email_key" UNIQUE (email);
-ALTER TABLE ONLY public."Labs"
+ALTER TABLE ONLY public."LabsTmp"
     ADD CONSTRAINT "Labs_pkey" PRIMARY KEY (id);
 ALTER TABLE ONLY public."Library"
     ADD CONSTRAINT "Library_pkey" PRIMARY KEY (id);
@@ -1325,6 +1406,10 @@ ALTER TABLE ONLY public."SMS_campaign"
     ADD CONSTRAINT "SMS_campaign_pkey" PRIMARY KEY (id);
 ALTER TABLE ONLY public.tax_rates
     ADD CONSTRAINT "Taxes_pkey" PRIMARY KEY (id);
+ALTER TABLE ONLY public.activity_types
+    ADD CONSTRAINT activity_types_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.app_listing
+    ADD CONSTRAINT app_listing_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.notification_types
     ADD CONSTRAINT application_notification_type_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.application_notifications
@@ -1347,6 +1432,10 @@ ALTER TABLE ONLY public.category
     ADD CONSTRAINT category_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.chat
     ADD CONSTRAINT chat_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.chat_room_participant
+    ADD CONSTRAINT chat_room_participant_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.chat_room
+    ADD CONSTRAINT chat_room_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.clients_data
     ADD CONSTRAINT clients_data_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.colors
@@ -1479,6 +1568,10 @@ CREATE TRIGGER set_public_calendar_settings_updated_at BEFORE UPDATE ON public.c
 COMMENT ON TRIGGER set_public_calendar_settings_updated_at ON public.calendar_settings IS 'trigger to set value of column "updated_at" to current timestamp on row update';
 CREATE TRIGGER set_public_candidate_list_updated_at BEFORE UPDATE ON public.candidate_list FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
 COMMENT ON TRIGGER set_public_candidate_list_updated_at ON public.candidate_list IS 'trigger to set value of column "updated_at" to current timestamp on row update';
+CREATE TRIGGER set_public_chat_room_participant_updated_at BEFORE UPDATE ON public.chat_room_participant FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+COMMENT ON TRIGGER set_public_chat_room_participant_updated_at ON public.chat_room_participant IS 'trigger to set value of column "updated_at" to current timestamp on row update';
+CREATE TRIGGER set_public_chat_room_updated_at BEFORE UPDATE ON public.chat_room FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+COMMENT ON TRIGGER set_public_chat_room_updated_at ON public.chat_room IS 'trigger to set value of column "updated_at" to current timestamp on row update';
 CREATE TRIGGER set_public_chat_updated_at BEFORE UPDATE ON public.chat FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
 COMMENT ON TRIGGER set_public_chat_updated_at ON public.chat IS 'trigger to set value of column "updated_at" to current timestamp on row update';
 CREATE TRIGGER set_public_colors_updated_at BEFORE UPDATE ON public.colors FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
@@ -1513,6 +1606,8 @@ CREATE TRIGGER set_public_third_parties_updated_at BEFORE UPDATE ON public.third
 COMMENT ON TRIGGER set_public_third_parties_updated_at ON public.third_parties IS 'trigger to set value of column "updated_at" to current timestamp on row update';
 ALTER TABLE ONLY public.application_notifications
     ADD CONSTRAINT application_notifications_notification_type_fkey FOREIGN KEY (notification_type) REFERENCES public.notification_types(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY public.chat_room_participant
+    ADD CONSTRAINT chat_room_participant_room_fkey FOREIGN KEY (room) REFERENCES public.chat_room(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.job_candidates
     ADD CONSTRAINT job_candidates_candidate_id_fkey FOREIGN KEY (candidate_id) REFERENCES public.candidate_list(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.job_candidates
@@ -1521,7 +1616,5 @@ ALTER TABLE ONLY public.notification_toggle
     ADD CONSTRAINT notification_toggle_notification_type_fkey FOREIGN KEY (notification_type) REFERENCES public.notification_types(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.notification_types
     ADD CONSTRAINT notification_types_type_fkey FOREIGN KEY (notification_type) REFERENCES public.notification_types_enum(type) ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE ONLY public.product_news_read
-    ADD CONSTRAINT product_news_read_product_news_fkey FOREIGN KEY (product_news) REFERENCES public.product_news(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.service_master
     ADD CONSTRAINT service_master_service_id_fkey FOREIGN KEY (service_id) REFERENCES public.service(id) ON UPDATE RESTRICT ON DELETE RESTRICT;

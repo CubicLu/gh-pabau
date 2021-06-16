@@ -38,6 +38,56 @@ query listReportById(
   retrieveReport(id: $reportId, start_date: $startDate, end_date: $endDate)
 }
 
+query graphsData($startDate: String!, $endDate: String!) {
+  retrieveReport(
+    id: "mini_graphs"
+    start_date: $startDate
+    end_date: $endDate
+  )
+}
+
+query listReportPermission {
+  me {
+    all_reports
+    UserReport {
+      report_id
+      favorite
+      Report {
+        id
+        report_code
+      }
+    }
+  }
+}
+
+mutation upsertReport($reportCode: String!, $fav: Boolean!) {
+  upsertUserReportByReportCode(report_code: $reportCode, favorite: $fav) {
+    report_code
+    affected_row
+    favorite
+  }
+}
+
+query findCustomReport {
+  findManyCustomReportWithPermissions {
+    isPermission
+    report_code
+    report_id
+    report_name
+    favorite
+  }
+}
+
+query getUserAccessPageList {
+    me {
+      userPermission: UserPermission {
+        Page {
+          name
+        }
+      }
+    }
+}
+
 # {
 #  "reportId": "10520",
 #  "startDate": "01-01-2020",

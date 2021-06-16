@@ -108,7 +108,13 @@ Use the tools to your advantage.
 
 # Testing locally
 
-`bash yarn && yarn nx deploy bridge-api && docker build --no-cache -t bridge -f tools/cicd/bridge-api.Dockerfile dist/apps/bridge-api/ && docker run --rm -it -p 4000:4000 bridge`
+```bash
+yarn && \
+  yarn nx run bridge-api:export && \
+  cp apps/bridge-api/package.production.json dist/apps/bridge-api/ && \
+  docker build -t bridge -f tools/cicd/bridge-api.Dockerfile dist/apps/bridge-api/ && \
+  docker run --rm -it -p 4000:4000 bridge
+```
 
 # Exposing GraphQL CRUD over a database table
 

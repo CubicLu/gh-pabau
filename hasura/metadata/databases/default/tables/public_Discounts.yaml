@@ -42,6 +42,26 @@ select_permissions:
     - updated_at
     filter: {}
   role: public
+- permission:
+    columns:
+    - amount
+    - code
+    - created_at
+    - date
+    - discount_rate
+    - employees
+    - expiry_date
+    - id
+    - is_active
+    - locations
+    - name
+    - order
+    - services
+    - show_on_reciept
+    - type
+    - updated_at
+    filter: {}
+  role: user
 update_permissions:
 - permission:
     check: null

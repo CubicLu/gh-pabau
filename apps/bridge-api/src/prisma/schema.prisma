@@ -271,7 +271,10 @@ model Company {
   TemplateFolder                   TemplateFolder[]
   SmsPurchase                      SmsPurchase[]
 
-  UserActivityLog UserActivityLog[]
+  UserActivityLog         UserActivityLog[]
+  CompanyBranchGroup      CompanyBranchGroup[]
+  CompanyBranchAttachment CompanyBranchAttachment[]
+  InvPaymentType          InvPaymentType[]
   @@map("admin")
 }
 
@@ -1855,6 +1858,8 @@ model CmContact {
   CmExtraSalon              CmExtraSalon[]
   InvPayment                InvPayment[]
 
+  InvSale          InvSale[]
+  ContactInsurance ContactInsurance[]
   @@index([CreatedDate], name: "CreatedDate")
   @@index([Email], name: "Email")
   @@index([Fname], name: "Fname")
@@ -2862,7 +2867,7 @@ model CmStaffGeneral {
   EnumStatus          cm_staff_general_EnumStatus @default(Enable)
   CreatedDate         DateTime?
   IpAddress           Int
-  pabau_id            Int
+  pabau_id            Int?
   DefaultLocation     Int?
   consultation_fee    Float
   deleted_on          String
@@ -2870,7 +2875,7 @@ model CmStaffGeneral {
   secretary_enable    Boolean
   Salutation          String
   commission_sheet_id Int
-  User                User                        @relation(fields: [pabau_id], references: [id])
+  User                User?                       @relation(fields: [pabau_id], references: [id])
   Company             Company                     @relation(fields: [company_id], references: [id])
   CompanyBranch       CompanyBranch?              @relation(fields: [DefaultLocation], references: [id])
   CompanyPosition     CompanyPosition?            @relation(fields: [Position], references: [id])
@@ -3445,7 +3450,7 @@ model CmStaffGeneral {
 //}
 //
 model CompanyBranch {
-  id                  Int     @id @default(autoincrement())
+  id                  Int                   @id @default(autoincrement())
   group_id            Int
   company_id          Int
   address             String
@@ -3466,22 +3471,48 @@ model CompanyBranch {
   custom_id           String
   email               String
   send_conf_email     Int
-  show_online         Int     @default(1)
+  show_online         Int                   @default(1)
   loc_order           Int
   region              String
-  invoice_template_id Int     @default(0)
+  invoice_template_id Int                   @default(0)
   color               String
-  notify_on_lead      Boolean @default(false)
+  notify_on_lead      Boolean               @default(false)
   notice              String?
-  Company             Company @relation(fields: [company_id], references: [id])
-
+  Company             Company               @relation(fields: [company_id], references: [id])
+  CompanyBranchGroup  CompanyBranchGroup    @relation(fields: [group_id], references: [id])
   CompanyRoomLocation CompanyRoomLocation[]
   RotaShift           RotaShift[]
   CmStaffGeneral      CmStaffGeneral[]
   CmContactLocation   CmContactLocation[]
+
+  CompanyBranchAttachment CompanyBranchAttachment[]
   @@index([company_id], name: "company_id")
   @@index([group_id], name: "group_id")
   @@map("company_branches")
+}
+
+model CompanyBranchGroup {
+  id          Int     @id @default(autoincrement())
+  name        String?
+  shared_data Int
+  company_id  Int
+  Company     Company @relation(fields: [company_id], references: [id])
+
+  CompanyBranch CompanyBranch[]
+  @@map("company_branch_groups")
+}
+
+model CompanyBranchAttachment {
+  id            Int                               @id @default(autoincrement())
+  company_id    Int                               @default(0)
+  location_id   Int                               @default(0)
+  type          company_branches_attachments_type
+  url           String
+  description   String
+  Company       Company?                          @relation(fields: [company_id], references: [id])
+  CompanyBranch CompanyBranch?                    @relation(fields: [location_id], references: [id])
+
+  @@map("company_branches_attachments")
 }
 
 //
@@ -4267,20 +4298,22 @@ model CompanyService {
 //  added             Int
 //  not_found         Int
 //}
-//
-//model contact_insurance {
-//  id                Int    @id @default(autoincrement())
-//  contact_id        Int
-//  provider_number   Int
-//  auth_code         String
-//  membership_number String
-//  charge_type       String
-//  company_id        Int
-//  imported          Int
-//
-//  @@index([contact_id], name: "contact_id")
-//}
-//
+
+model ContactInsurance {
+  id                Int        @id @default(autoincrement())
+  contact_id        Int
+  provider_number   Int
+  auth_code         String
+  membership_number String
+  charge_type       String
+  company_id        Int
+  imported          Int
+  CmContact         CmContact? @relation(fields: [contact_id], references: [ID])
+
+  @@index([contact_id], name: "contact_id")
+  @@map("contact_insurance")
+}
+
 //model contact_insurer {
 //  id         Int @id @default(autoincrement())
 //  contact_id Int
@@ -6224,14 +6257,14 @@ model InvPaymentType {
   name          String?
   epos_display  Int?
   description   String?
-  company_id    Int       @map("occupier")
+  company_id    Int?      @map("occupier")
   uid           Int?
   created_date  DateTime?
   modified_date DateTime?
   is_active     Int
   is_money      Int
   type          String    @default("money")
-
+  Company       Company?  @relation(fields: [company_id], references: [id])
 
   GlCode GlCode?
   @@index([company_id], name: "occupier")
@@ -6442,90 +6475,92 @@ model InvProduct {
 //  modified_date    DateTime?
 //}
 //
-//model inv_sales {
-//  id                  Int       @id @default(autoincrement())
-//  reference_no        String
-//  warehouse_id        Int?
-//  biller_id           Int
-//  biller_name         String
-//  customer_id         Int
-//  customer_name       String
-//  date                DateTime
-//  note                String?
-//  inv_total           Float
-//  total_tax           Float
-//  total               Float
-//  paid_amount         Float?
-//  store_discount      Float?
-//  discount_amount     Float     @default(0.00)
-//  account_amount      Float?
-//  loyalty_card_num    String?
-//  loyalty_card_amount String?
-//  voucher_no          String?
-//  voucher_amount      Float?
-//  invoice_type        Int
-//  in_type             String
-//  total_tax2          Float
-//  tax_rate2_id        Int
-//  shipping_rate       Float
-//  shipping_rate_id    Int
-//  delivery            Int?      @default(0)
-//  delivery_date       DateTime?
-//  by_email            Int?      @default(0)
-//  by_sms              Int?      @default(0)
-//  tip                 Float?    @default(0.00)
-//  occupier            Int?
-//  uid                 Int?
-//  created_date        DateTime?
-//  modified_date       DateTime?
-//  paid_by             String?
-//  booking_id          Int
-//  quaser_booking_id   Int
-//  invoice_bit         Int
-//  custom_id           String
-//  contact_custom_id   String
-//  Practitioner_id     Int
-//  User_id             Int
-//  Treatment_id        Int
-//  imported            Int
-//  VAT_drop            Float
-//  order_id            Int?      @default(0)
-//  void                Boolean   @default(false)
-//  guid                String?
-//  old_paid_by         String
-//  loyalty_points      Int
-//  xero_invoice_id     String
-//  xero_updated_date   DateTime
-//  split_count         Int       @default(1)
-//  split_guid          String
-//  insurer_contract_id Int       @default(0)
-//  lock_sale           Int
-//  location_id         Int
-//  contract_id         Int
-//  is_ok               Boolean   @default(false)
-//  refund_to           Int
-//  credit_ref_id       Int       @default(0)
-//  credit_amount       Float
-//  credit_type         Int       @default(0)
-//  issuer_id           Int?
-//
-//  @@index([biller_id], name: "biller_id_index")
-//  @@index([booking_id], name: "booking_id")
-//  @@index([contact_custom_id], name: "contact_custom_id")
-//  @@index([created_date], name: "created_date_index")
-//  @@index([custom_id], name: "custom_id")
-//  @@index([customer_id], name: "customer_id")
-//  @@index([date], name: "date")
-//  @@index([guid], name: "guid")
-//  @@index([insurer_contract_id], name: "insurer_contract_id")
-//  @@index([occupier], name: "occupier")
-//  @@index([occupier, date], name: "occupier_2")
-//  @@index([order_id], name: "order_id")
-//  @@index([paid_by], name: "paid_by")
-//  @@index([uid], name: "uid")
-//  @@index([warehouse_id], name: "warehouse_id_index")
-//}
-//
+model InvSale {
+  id                  Int        @id @default(autoincrement())
+  reference_no        String
+  warehouse_id        Int?
+  biller_id           Int
+  biller_name         String
+  customer_id         Int
+  customer_name       String
+  date                DateTime
+  note                String?
+  inv_total           Float
+  total_tax           Float
+  total               Float
+  paid_amount         Float?
+  store_discount      Float?
+  discount_amount     Float      @default(0.00)
+  account_amount      Float?
+  loyalty_card_num    String?
+  loyalty_card_amount String?
+  voucher_no          String?
+  voucher_amount      Float?
+  invoice_type        Int
+  in_type             String
+  total_tax2          Float
+  tax_rate2_id        Int
+  shipping_rate       Float
+  shipping_rate_id    Int
+  delivery            Int?       @default(0)
+  delivery_date       DateTime?
+  by_email            Int?       @default(0)
+  by_sms              Int?       @default(0)
+  tip                 Float?     @default(0.00)
+  occupier            Int?
+  uid                 Int?
+  created_date        DateTime?
+  modified_date       DateTime?
+  paid_by             String?
+  booking_id          Int
+  quaser_booking_id   Int
+  invoice_bit         Int
+  custom_id           String
+  contact_custom_id   String
+  Practitioner_id     Int
+  User_id             Int
+  Treatment_id        Int
+  imported            Int
+  VAT_drop            Float
+  order_id            Int?       @default(0)
+  void                Boolean    @default(false)
+  guid                String?
+  old_paid_by         String
+  loyalty_points      Int
+  xero_invoice_id     String
+  xero_updated_date   DateTime
+  split_count         Int        @default(1)
+  split_guid          String
+  insurer_contract_id Int        @default(0)
+  lock_sale           Int
+  location_id         Int
+  contract_id         Int
+  is_ok               Boolean    @default(false)
+  refund_to           Int
+  credit_ref_id       Int        @default(0)
+  credit_amount       Float
+  credit_type         Int        @default(0)
+  issuer_id           Int?
+  CmContact           CmContact? @relation(fields: [customer_id], references: [ID])
+
+  @@index([biller_id], name: "biller_id_index")
+  @@index([booking_id], name: "booking_id")
+  @@index([contact_custom_id], name: "contact_custom_id")
+  @@index([created_date], name: "created_date_index")
+  @@index([custom_id], name: "custom_id")
+  @@index([customer_id], name: "customer_id")
+  @@index([date], name: "date")
+  @@index([guid], name: "guid")
+  @@index([insurer_contract_id], name: "insurer_contract_id")
+  @@index([occupier], name: "occupier")
+  @@index([occupier, date], name: "occupier_2")
+  @@index([order_id], name: "order_id")
+  @@index([paid_by], name: "paid_by")
+  @@index([uid], name: "uid")
+  @@index([warehouse_id], name: "warehouse_id_index")
+  @@map("inv_sales")
+}
+
 //model inv_sales_audit {
 //  id           Int      @id @default(autoincrement())
 //  mode         String
@@ -13865,6 +13900,7 @@ enum company_bday_settings_status {
 
 enum company_branches_attachments_type {
   badge
+  antd_badge
 }
 
 enum company_details_tax_name {

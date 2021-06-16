@@ -2,6 +2,7 @@ interface messages {
   create: { success: string; error: string }
   update: { success: string; error: string }
   delete: { success: string; error: string }
+  dataIntegrity?: string
 }
 interface Schema {
   full: string
@@ -22,10 +23,12 @@ interface Schema {
   inboxButton?: boolean
   deleteDescField?: string
   tooltip?: string
-  createButtonLabel?: string
+  searchPlaceholder?: string
   padlocked?: string[]
   filter?: SchemaFilter
   company?: number | string
+  dataIntegrity?: SchemaDataIntegrity
+  showNotification?: SchemaShowNotification
   noDataBtnText?: string
   noDataText?: string
 }
@@ -36,7 +39,7 @@ interface SchemaFilter {
   primary: {
     name: string
     type: FilterTypes
-    default: boolean
+    default: boolean | number
     active: number | boolean
     inactive: number | boolean
   }
@@ -51,6 +54,17 @@ type FilterTypes =
   | 'checkbox'
   | 'icon'
   | 'select'
+
+interface SchemaDataIntegrity {
+  name: string
+  type: FilterTypes
+  default: boolean | number | string
+}
+
+interface SchemaShowNotification {
+  query: string
+  list: string
+}
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 interface SchemaItem {
@@ -76,6 +90,7 @@ interface SchemaItem {
     | 'icon'
     | 'select'
     | 'time'
+    | 'subjects'
   type?: FilterTypes
   defaultvalue?: string | number | boolean
   visible?: boolean

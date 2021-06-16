@@ -1,0 +1,35 @@
+table:
+  name: chat_room
+  schema: public
+array_relationships:
+- name: chat_room_participants
+  using:
+    foreign_key_constraint_on:
+      column: room
+      table:
+        name: chat_room_participant
+        schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check:
+      company:
+        _eq: X-Hasura-Org-Id
+    columns:
+    - name
+    set:
+      company: x-hasura-Org-Id
+  role: user
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - id
+    - created_at
+    - updated_at
+    - company
+    - name
+    filter:
+      company:
+        _eq: X-Hasura-Org-Id
+  role: user

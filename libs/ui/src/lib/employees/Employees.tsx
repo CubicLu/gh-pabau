@@ -1,11 +1,13 @@
-import React, { FC, useState, useEffect } from 'react'
-import classNames from 'classnames'
+import { CheckCircleFilled, SearchOutlined } from '@ant-design/icons'
 import { Avatar, Button } from '@pabau/ui'
 import { Input as AntInput } from 'antd'
-import { CheckCircleFilled, SearchOutlined } from '@ant-design/icons'
+import classNames from 'classnames'
+import React, { FC, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import styles from './Employees.module.less'
 
 export interface Employee {
+  id?: number
   avatar?: string
   name: string
   selected: boolean
@@ -32,15 +34,24 @@ export const Employees: FC<EmployeesProps> = ({
   showMoreText,
   multiple = true,
 }) => {
+  const { t } = useTranslation('common')
   const [searchQuery, setSearchQuery] = useState('')
   const [employeeItems, setEmployeeItems] = useState<Employee[]>([])
   const [loadMore, setLoadMore] = useState(false)
-  const handleSelectEmployee = (employee) => {
+  const handleSelectEmployeeBasedOnName = (employee) => {
     const items: Employee[] = multiple
       ? [...employeeItems]
       : employees.map((item) => ({ ...item, selected: false }))
     for (const item of items) {
       if (item.name === employee.name) item.selected = !item.selected
+    }
+    setEmployeeItems([...items])
+    onSelected?.(items.filter((item) => item.selected === true))
+  }
+  const handleSelectEmployeeBasedOnId = (employee) => {
+    const items: Employee[] = [...employeeItems]
+    for (const item of items) {
+      if (item.id === employee.id) item.selected = !item.selected
     }
     setEmployeeItems([...items])
     onSelected?.(items.filter((item) => item.selected === true))
@@ -60,18 +71,15 @@ export const Employees: FC<EmployeesProps> = ({
   }, [employees])
   return (
     <div className={styles.employeesContainer}>
-      <h2>{title || 'Employees'}</h2>
-      <h3>
-        {description ||
-          'Choose which team members would required access to this location'}
-      </h3>
+      <h2>{title || t('employees.title.label')}</h2>
+      <h3>{description || t('employees.description.text')}</h3>
       <div>
         <AntInput
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onPressEnter={(e) => handleChangeSearchQuery(e)}
           prefix={<SearchOutlined style={{ color: '#bfbfbf' }} />}
-          placeholder={searchPlaceholder || 'Search an employee'}
+          placeholder={searchPlaceholder || t('employees.search.label')}
         />
       </div>
       <div className={styles.employeeItems}>
@@ -96,7 +104,11 @@ export const Employees: FC<EmployeesProps> = ({
                   : styles.employeeItem
               }
               key={item.name}
-              onClick={() => handleSelectEmployee(item)}
+              onClick={() =>
+                item?.id
+                  ? handleSelectEmployeeBasedOnId(item)
+                  : handleSelectEmployeeBasedOnName(item)
+              }
             >
               <div>
                 <Avatar src={item?.avatar} name={item.name} size={24} />
@@ -114,8 +126,8 @@ export const Employees: FC<EmployeesProps> = ({
         <div className={styles.loadMore}>
           <Button onClick={() => setLoadMore(!loadMore)}>
             {loadMore
-              ? showLessText || 'Show Less'
-              : showMoreText || 'Load More'}
+              ? showLessText || t('employees.show.less.button.label')
+              : showMoreText || t('employees.load.more.button.label')}
           </Button>
         </div>
       )}

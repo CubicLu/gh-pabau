@@ -46,7 +46,6 @@ export const companyMetaMutation = extendType({
   definition(t) {
     t.crud.createOneCompanyMeta()
     t.crud.updateOneCompanyMeta()
-    t.crud.upsertOneCompanyMeta()
     t.crud.deleteOneCompanyMeta()
     t.crud.updateManyCompanyMeta()
   },

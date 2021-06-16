@@ -23,6 +23,7 @@
   },
   "includes": [
     "hasura/schema.graphql",
-    "libs/**/*.graphql"
+    "libs/**/*.graphql",
+    "apps/**/*.tsx"
   ]
 }

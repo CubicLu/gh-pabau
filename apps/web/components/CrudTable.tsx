@@ -1,5 +1,5 @@
 import { LeftOutlined } from '@ant-design/icons'
-import { DocumentNode, useMutation } from '@apollo/client'
+import { DocumentNode, useMutation, gql } from '@apollo/client'
 import {
   Breadcrumb,
   MobileHeader,
@@ -13,6 +13,7 @@ import { Typography } from 'antd'
 import classNames from 'classnames'
 import { Formik, FormikErrors } from 'formik'
 import { useRouter } from 'next/router'
+import load from 'lodash'
 import React, { FC, useEffect, useMemo, useState, RefObject } from 'react'
 import { useGridData } from '../hooks/useGridData'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
@@ -43,7 +44,18 @@ interface P {
   customFilter?: () => JSX.Element
   setEditPage?(e): void
   draggable?: boolean
+  isNestedQuery?: boolean
+  isFilterNumber?: boolean
+  isDataIntegrityCheck?: boolean
+  dataIntegrityCheckQuery?: DocumentNode
+  isNotificationBannerOnData?: boolean
 }
+
+const defaultDataIntegrityCheck = gql`
+  query payment_methods_data_integrity($paymentName: String!) {
+    invPaymentsCount(where: { pmethod: { equals: $paymentName } })
+  }
+`
 
 const CrudTable: FC<P> = ({
   schema,
@@ -66,13 +78,22 @@ const CrudTable: FC<P> = ({
   customFilter,
   setEditPage,
   draggable = true,
+  isNestedQuery = false,
+  isFilterNumber = false,
+  isDataIntegrityCheck = false,
+  dataIntegrityCheckQuery = defaultDataIntegrityCheck,
+  isNotificationBannerOnData = false,
   crudLayoutRef,
 }) => {
   const [isLoading, setIsLoading] = useState(true)
-  const [isActive, setIsActive] = useState<boolean>(
+  const [isActive, setIsActive] = useState<boolean | number>(
     schema?.filter?.primary?.default ?? true
   )
   const [searchTerm, setSearchTerm] = useState('')
+  const [dataIntegrityName, setDataIntegrityName] = useState<
+    string | number | boolean
+  >(schema?.dataIntegrity?.default ?? '')
+  const [dataIntegrityCount, setDataIntegrityCount] = useState<number>(0)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isMobileSearch, setMobileSearch] = useState(false)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -167,6 +188,16 @@ const CrudTable: FC<P> = ({
     getAggregateQueryVariables()
   )
 
+  const { data: dataIntegrityCheckData } = useLiveQuery(
+    dataIntegrityCheckQuery,
+    {
+      variables: {
+        paymentName: dataIntegrityName,
+      },
+      skip: !isDataIntegrityCheck,
+    }
+  )
+
   const getAddress = (data) => {
     const addressPreference = new Set([
       'country',
@@ -200,16 +231,26 @@ const CrudTable: FC<P> = ({
           }
         })
         setSourceData(newData)
+      } else if (isNotificationBannerOnData && Object.keys(data).length > 1) {
+        let restData = { ...data }
+        restData = restData[schema?.showNotification?.list]
+        setSourceData(restData)
       } else {
         setSourceData(data)
       }
     }
-    if (aggregateData) {
+    if (aggregateData !== undefined) {
       if (aggregateData?.aggregate?.count) {
         setPaginateData({
           ...paginateData,
           total: aggregateData?.aggregate.count,
           showingRecords: data?.length,
+        })
+      } else if (isNotificationBannerOnData) {
+        setPaginateData({
+          ...paginateData,
+          total: aggregateData,
+          showingRecords: data && data[schema?.showNotification?.list]?.length,
         })
       } else {
         setPaginateData({
@@ -230,9 +271,19 @@ const CrudTable: FC<P> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paginateData.currentPage, paginateData.limit])
 
+  useEffect(() => {
+    setDataIntegrityCount(dataIntegrityCheckData)
+  }, [dataIntegrityCheckData])
+
   const onFilterMarketingSource = () => {
     resetPagination()
-    setIsActive((e) => !e)
+    if (schema?.filter?.primary?.type === 'number') {
+      setIsActive((e) => {
+        return e ? 0 : 1
+      })
+    } else {
+      setIsActive((e) => !e)
+    }
   }
 
   const onSearch = async (val) => {
@@ -270,6 +321,14 @@ const CrudTable: FC<P> = ({
 
   const onSubmit = async (values, { resetForm }) => {
     setFormSubmitAllowedStatus(false)
+    if (isFilterNumber && schema?.filter?.primary?.type === 'number') {
+      values = {
+        ...values,
+        [schema?.filter?.primary?.name]: values[schema?.filter?.primary?.name]
+          ? schema?.filter?.primary?.active
+          : schema?.filter?.primary?.inactive,
+      }
+    }
     await (values.id
       ? editMutation({
           variables: values,
@@ -345,22 +404,12 @@ const CrudTable: FC<P> = ({
       await updateOrderMutation({
         variables: values,
         optimisticResponse: {},
-        update: (proxy) => {
-          if (listQuery) {
-            const existing = proxy.readQuery({
-              query: listQuery,
-            })
-            if (existing) {
-              const key = Object.keys(existing)[0]
-              proxy.writeQuery({
-                query: listQuery,
-                data: {
-                  [key]: [...existing[key], values],
-                },
-              })
-            }
-          }
-        },
+        refetchQueries: [
+          {
+            query: listQuery,
+            ...getQueryVariables,
+          },
+        ],
       })
   }
 
@@ -382,6 +431,33 @@ const CrudTable: FC<P> = ({
       })
     } else {
       router.back()
+    }
+  }
+
+  const recursiveCallToFlatten = (value, main) => {
+    for (const key in value) {
+      if (typeof value[key] === 'object') {
+        recursiveCallToFlatten(value[key], main)
+      } else {
+        main = load.defaults(main, { [key]: value[key] })
+      }
+    }
+    return main
+  }
+
+  const handleEditValues = () => {
+    if (isNestedQuery) {
+      const nestedData = { ...editingRow }
+      let newNestedData
+      for (const key in nestedData) {
+        newNestedData =
+          typeof nestedData[key] === 'object' && nestedData[key]
+            ? recursiveCallToFlatten(nestedData[key], newNestedData)
+            : load.defaults(newNestedData, { [key]: nestedData[key] })
+      }
+      return newNestedData
+    } else {
+      return editingRow
     }
   }
 
@@ -439,7 +515,7 @@ const CrudTable: FC<P> = ({
         onSubmit(values, { resetForm })
       }}
       initialValues={
-        editingRow?.id ? editingRow : formikFields() //TODO: remove this, it should come from schema.fields[].*
+        editingRow?.id ? handleEditValues() : formikFields() //TODO: remove this, it should come from schema.fields[].*
       }
     >
       <>
@@ -504,10 +580,16 @@ const CrudTable: FC<P> = ({
             listQueryVariables={getQueryVariables}
             aggregateQuery={aggregateQuery}
             aggregateQueryVariables={getAggregateQueryVariables}
+            isDataIntegrityCheck={isDataIntegrityCheck}
+            dataIntegrityCount={dataIntegrityCount}
           />
         )}
-
-        {showNotificationBanner && notificationBanner}
+        {isNotificationBannerOnData
+          ? data?.[schema?.showNotification?.query]?.length > 0 &&
+            data?.[schema?.showNotification?.query][0]?.create_invoice === '1'
+            ? showNotificationBanner && notificationBanner
+            : null
+          : showNotificationBanner && notificationBanner}
         <div
           className={classNames(styles.tableMainHeading, styles.mobileViewNone)}
         >
@@ -553,7 +635,7 @@ const CrudTable: FC<P> = ({
           <Table
             loading={isLoading}
             style={{ height: '100%' }}
-            sticky={{ offsetScroll: 80, offsetHeader: 80 }}
+            sticky={{ offsetScroll: 80, offsetHeader: 64 }}
             pagination={sourceData?.length > 10 ? {} : false}
             draggable={draggable}
             isCustomColorExist={checkCustomColorIconExist('color')}
@@ -605,6 +687,9 @@ const CrudTable: FC<P> = ({
               } else {
                 setEditingRow(e)
                 setModalShowing((e) => !e)
+              }
+              if (isDataIntegrityCheck) {
+                setDataIntegrityName(e[schema?.dataIntegrity?.name])
               }
             }}
             needTranslation={needTranslation}

@@ -8,7 +8,7 @@ interface P {
   onPreviewPdf: () => void
 }
 
-const MedicalFormUploadButtons: FC<P> = ({ onPreviewPdf }) => {
+export const MedicalFormUploadButtons: FC<P> = ({ onPreviewPdf }) => {
   const { t } = useTranslation('common')
   const previewPdf = () => {
     onPreviewPdf?.()

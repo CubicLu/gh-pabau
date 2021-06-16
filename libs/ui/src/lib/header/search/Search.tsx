@@ -28,12 +28,11 @@ interface SearchResult {
 }
 
 interface P {
-  clientModeOnly?: boolean
-  onCloseSearch?: () => void
   searchResults?: SearchResult[]
   onChange?: (newText: string) => void
   changeSearchMode?: (newMode: SearchMode) => void
   resultSelectedHandler?: (id: number) => void
+  advancedSearchHandler?: (searchData: []) => void
   children?: ReactNode
   placeHolder?: string
 }
@@ -45,8 +44,7 @@ enum SearchMode {
 
 export const Search: FC<P> = ({
   onChange,
-  clientModeOnly,
-  onCloseSearch,
+  advancedSearchHandler,
   searchResults,
   children,
   placeHolder,
@@ -57,7 +55,7 @@ export const Search: FC<P> = ({
   const [searchTerm, setSearchTerm] = useState('')
   const [searchPopUp, setSearchPopUp] = useState(false)
   const [searchTab, setSearchTab] = useState(SearchMode.Clients)
-  const [advanceSearch, setAdvanceSearch] = useState(false)
+  const [advancedSearch, setAdvancedSearch] = useState(false)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -142,88 +140,82 @@ export const Search: FC<P> = ({
   const searchMenu = () => {
     return (
       <div className={styles.searchBox}>
-        {!clientModeOnly && (
-          <div className={styles.cusTabs}>
-            <button
-              className={classNames(
-                styles.cusTabDesign,
-                searchTab === 'Clients' && styles.activeTabs
-              )}
-              onClick={() => searchTabChangeHandler(SearchMode.Clients)}
-            >
-              {t('search.client.label')}
-            </button>
-            <button
-              className={classNames(
-                styles.cusTabDesign,
-                searchTab === 'Leads' && styles.activeTabs
-              )}
-              onClick={() => searchTabChangeHandler(SearchMode.Leads)}
-            >
-              {t('search.lead.label')}
-            </button>
-          </div>
-        )}
-        {
-          <div className={styles.clientsList}>
-            {searchResults && searchResults.length > 0 && (
-              <>
-                <div className={styles.resultText}>
-                  <h1>{t('search.result.one')}</h1>
-                </div>
-                {searchResultRow(searchResults[0])}
-              </>
+        <div className={styles.cusTabs}>
+          <button
+            className={classNames(
+              styles.cusTabDesign,
+              searchTab === 'Clients' && styles.activeTabs
             )}
-            {searchResults && searchResults.length > 1 && (
-              <>
-                <div
-                  className={classNames(
-                    styles.resultText,
-                    styles.resultTextTopSpace
-                  )}
-                >
-                  <h1>{t('search.result.two')}</h1>
-                </div>
-                {searchResults
-                  .filter((_, i) => i !== 0)
-                  .map((data) => searchResultRow(data))}
-              </>
+            onClick={() => searchTabChangeHandler(SearchMode.Clients)}
+          >
+            {t('search.client.label')}
+          </button>
+          <button
+            className={classNames(
+              styles.cusTabDesign,
+              searchTab === 'Leads' && styles.activeTabs
             )}
-            <div className={styles.contentAlignProfile}>
-              <div className={styles.clientProfile}>
-                <Avatar
-                  size={40}
-                  icon={
-                    <UserAddOutlined
-                      style={{ color: 'var(--grey-text-color)' }}
-                    />
-                  }
-                  className={styles.addNewClient}
-                />
+            onClick={() => searchTabChangeHandler(SearchMode.Leads)}
+          >
+            {t('search.lead.label')}
+          </button>
+        </div>
+        <div className={styles.clientsList}>
+          {searchResults && searchResults.length > 0 && (
+            <>
+              <div className={styles.resultText}>
+                <h1>{t('search.result.one')}</h1>
               </div>
-              <div className={styles.clientProfileText}>
-                <span>{t('search.new.client')}</span>
+              {searchResultRow(searchResults[0])}
+            </>
+          )}
+          {searchResults && searchResults.length > 1 && (
+            <>
+              <div
+                className={classNames(
+                  styles.resultText,
+                  styles.resultTextTopSpace
+                )}
+              >
+                <h1>{t('search.result.two')}</h1>
               </div>
+              {searchResults
+                .filter((_, i) => i !== 0)
+                .map((data) => searchResultRow(data))}
+            </>
+          )}
+          <div className={styles.contentAlignProfile}>
+            <div className={styles.clientProfile}>
+              <Avatar
+                size={40}
+                icon={
+                  <UserAddOutlined
+                    style={{ color: 'var(--grey-text-color)' }}
+                  />
+                }
+                className={styles.addNewClient}
+              />
+            </div>
+            <div className={styles.clientProfileText}>
+              <span>{t('search.new.client')}</span>
             </div>
           </div>
-        }
-        {
-          <div
-            className={styles.advanceSearch}
-            onClick={() => {
-              setAdvanceSearch(!advanceSearch)
-              setSearchPopUp(true)
-            }}
-          >
-            <p>{t('search.advanced.search')}</p>
-            <RightOutlined className={styles.rightArrowColor} />
-          </div>
-        }
+        </div>
+        <div
+          className={styles.advanceSearch}
+          onClick={() => {
+            setAdvancedSearch(!advancedSearch)
+            setSearchPopUp(true)
+          }}
+        >
+          <p>{t('search.advanced.search')}</p>
+          <RightOutlined className={styles.rightArrowColor} />
+        </div>
       </div>
     )
   }
 
-  const advanceSearchMenu = () => {
+  const advancedSearchMenu = () => {
     return (
       <div
         className={classNames(styles.advanceSearchModal, styles.advSearchBody)}
@@ -232,7 +224,7 @@ export const Search: FC<P> = ({
           <div
             className={styles.basicSearchAlign}
             onClick={() => {
-              setAdvanceSearch((e) => !e)
+              setAdvancedSearch((e) => !e)
             }}
           >
             <LeftOutlined className={styles.rightArrowColor} />
@@ -242,7 +234,7 @@ export const Search: FC<P> = ({
             <CloseOutlined
               style={{ color: 'var(--light-grey-color)', fontSize: '12px' }}
               onClick={() => {
-                setAdvanceSearch((e) => !e)
+                setAdvancedSearch((e) => !e)
               }}
             />
           </div>
@@ -251,36 +243,42 @@ export const Search: FC<P> = ({
         <div className={styles.advanceSearchText}>
           <h1>{t('search.advanced.search')}</h1>
         </div>
-        {!clientModeOnly && (
-          <div className={classNames(styles.cusTabs, styles.cusTabsTopSpace)}>
-            <button
-              className={classNames(
-                styles.cusTabDesign,
-                searchTab === 'Clients' && styles.activeTabs
-              )}
-              onClick={() => searchTabChangeHandler(SearchMode.Clients)}
-            >
-              {t('search.client.label')}
-            </button>
-            <button
-              className={classNames(
-                styles.cusTabDesign,
-                searchTab === 'Leads' && styles.activeTabs
-              )}
-              onClick={() => searchTabChangeHandler(SearchMode.Leads)}
-            >
-              {t('search.lead.label')}
-            </button>
-          </div>
-        )}
+        <div className={classNames(styles.cusTabs, styles.cusTabsTopSpace)}>
+          <button
+            className={classNames(
+              styles.cusTabDesign,
+              searchTab === 'Clients' && styles.activeTabs
+            )}
+            onClick={() => searchTabChangeHandler(SearchMode.Clients)}
+          >
+            {t('search.client.label')}
+          </button>
+          <button
+            className={classNames(
+              styles.cusTabDesign,
+              searchTab === 'Leads' && styles.activeTabs
+            )}
+            onClick={() => searchTabChangeHandler(SearchMode.Leads)}
+          >
+            {t('search.lead.label')}
+          </button>
+        </div>
         <Form
           form={form}
+          onFinish={(data) => {
+            if (typeof advancedSearchHandler !== 'undefined') {
+              setAdvancedSearch(false)
+              window.scrollTo(0, 0)
+              advancedSearchHandler(data)
+            }
+          }}
           requiredMark={false}
           layout="vertical"
           className={classNames(styles.advSearchForm, styles.advSearchTopSpace)}
         >
           <Form.Item
             className={styles.searchForm}
+            name="Fname"
             label={t('search.advanced.search.firstname.label')}
           >
             <Input
@@ -290,6 +288,7 @@ export const Search: FC<P> = ({
           </Form.Item>
           <Form.Item
             className={styles.searchForm}
+            name="Email"
             label={t('search.advanced.search.email.label')}
           >
             <Input
@@ -299,6 +298,7 @@ export const Search: FC<P> = ({
           </Form.Item>
           <Form.Item
             className={styles.searchForm}
+            name="DOB"
             label={t('search.advanced.search.birthdate.label')}
           >
             <Input
@@ -308,6 +308,7 @@ export const Search: FC<P> = ({
           </Form.Item>
           <Form.Item
             className={styles.searchForm}
+            name="Phone"
             label={t('search.advanced.search.phone.label')}
           >
             <Input
@@ -317,6 +318,7 @@ export const Search: FC<P> = ({
           </Form.Item>
           <Form.Item
             className={styles.searchForm}
+            name="Mobile"
             label={t('search.advanced.search.mobile.label')}
           >
             <Input
@@ -326,6 +328,7 @@ export const Search: FC<P> = ({
           </Form.Item>
           <Form.Item
             className={styles.searchForm}
+            name="MailingPostal"
             label={t('search.advanced.search.postcode.label')}
           >
             <Input
@@ -335,6 +338,7 @@ export const Search: FC<P> = ({
           </Form.Item>
           <Form.Item
             className={styles.searchForm}
+            name="policyNumber"
             label={t('search.advanced.search.policynumber.label')}
           >
             <Input
@@ -344,6 +348,7 @@ export const Search: FC<P> = ({
           </Form.Item>
           <Form.Item
             className={styles.searchForm}
+            name="custom_id"
             label={t('search.advanced.search.patientid.label')}
           >
             <Input
@@ -353,6 +358,7 @@ export const Search: FC<P> = ({
           </Form.Item>
           <Form.Item
             className={styles.searchForm}
+            name="invoiceNumber"
             label={t('search.advanced.search.invoiceno.label')}
           >
             <Input
@@ -360,20 +366,20 @@ export const Search: FC<P> = ({
               placeholder={t('search.advanced.search.invoiceno.placeholder')}
             />
           </Form.Item>
-          <Checkbox>
-            <span className={styles.inactiveClientText}>
-              {' '}
-              {t('search.advanced.search.inactiveclients.label')}
-            </span>{' '}
-          </Checkbox>
+          <Form.Item name="is_active" valuePropName="checked">
+            <Checkbox>
+              <span className={styles.inactiveClientText}>
+                {' '}
+                {t('search.advanced.search.inactiveclients.label')}
+              </span>{' '}
+            </Checkbox>
+          </Form.Item>
           <div className={classNames(styles.buttonEnd, styles.searchBtnBlock)}>
             <Button
-              className={classNames(
-                styles.btnDisableStyle,
-                styles.mobileviewBtnSize
-              )}
-              disabled={true}
+              disabled={false}
               size="large"
+              type="primary"
+              htmlType="submit"
             >
               {t('search.advanced.search.search')}
             </Button>
@@ -391,8 +397,8 @@ export const Search: FC<P> = ({
   }
 
   const renderMenu = () => {
-    if (advanceSearch) {
-      return advanceSearchMenu()
+    if (advancedSearch) {
+      return advancedSearchMenu()
     }
     return searchMenu()
   }
@@ -416,7 +422,6 @@ export const Search: FC<P> = ({
                     onClick={() => {
                       setSearchPopUp(false)
                       setSearchTerm('')
-                      onCloseSearch?.()
                     }}
                   />
                 )
@@ -429,7 +434,7 @@ export const Search: FC<P> = ({
             content={children ? children : renderMenu}
             visible={searchPopUp}
             overlayClassName={classNames(
-              advanceSearch ? styles.advanceSearchModal : styles.searchInput,
+              advancedSearch ? styles.advanceSearchModal : styles.searchInput,
               styles.mobileViewNone
             )}
           >
@@ -446,7 +451,6 @@ export const Search: FC<P> = ({
                     onClick={() => {
                       setSearchPopUp(false)
                       setSearchTerm('')
-                      onCloseSearch?.()
                     }}
                   />
                 )
@@ -477,10 +481,9 @@ export const Search: FC<P> = ({
           <div className={styles.searchHeader}>
             <LeftOutlined
               onClick={() => {
-                if (advanceSearch) {
-                  setAdvanceSearch((e) => !e)
+                if (advancedSearch) {
+                  setAdvancedSearch((e) => !e)
                 } else {
-                  if (searchDrawer) onCloseSearch?.()
                   setSearchDrawer((e) => !e)
                 }
               }}
@@ -500,7 +503,6 @@ export const Search: FC<P> = ({
                     style={{ color: '#BFBFBF' }}
                     onClick={() => {
                       setSearchPopUp(false)
-                      onCloseSearch?.()
                       setSearchTerm('')
                     }}
                   />
@@ -511,7 +513,7 @@ export const Search: FC<P> = ({
           </div>
           <div className={styles.searchBarBorder} />
         </div>
-        {advanceSearch ? advanceSearchMenu() : searchMenu()}
+        {advancedSearch ? advancedSearchMenu() : searchMenu()}
       </Drawer>
     </div>
   )

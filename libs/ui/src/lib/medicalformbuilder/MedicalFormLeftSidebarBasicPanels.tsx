@@ -11,7 +11,7 @@ interface P {
   handlingClickLeft: (componentName: string) => void
 }
 
-const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
+export const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
   const { t } = useTranslation('common')
   const { medicalForms, handlingClickLeft } = props
   const getRenderItemBasic = () => {
@@ -150,7 +150,8 @@ const MedicalFormLeftSidebarBasicPanels: FC<P> = ({ ...props }) => {
                 (form) =>
                   form.formName === 'basic_drawing' ||
                   form.formName === 'basic_staticimage' ||
-                  form.formName === 'basic_signature'
+                  form.formName === 'basic_signature' ||
+                  form.formName === 'basic_photo'
               )
               .map((form) => {
                 return snapshot.draggingFromThisWith === form.formName ? (

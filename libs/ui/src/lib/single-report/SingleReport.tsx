@@ -86,11 +86,7 @@ export const SingleReport: React.FC<SingleReportProps> = ({
         </Button>
         <span className={styles.singleReportCode}>
           {isReportloading ? (
-            <Skeleton.Input
-              active={true}
-              size={'small'}
-              style={{ width: 300 }}
-            />
+            <Skeleton.Input active={true} size={'small'} />
           ) : isPermission && clickable ? (
             <a href={getReportHref()} style={{ color: 'rgba(0,0,0,0.65)' }}>
               {isCustomReport

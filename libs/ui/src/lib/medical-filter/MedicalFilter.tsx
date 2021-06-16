@@ -18,8 +18,8 @@ export interface MedicalFilterType {
 }
 
 export interface MedicalFilterProps {
-  filter: MedicalFilterType
-  onApply(val: MedicalFilterType): void
+  filter?: MedicalFilterType
+  onApply?(val: MedicalFilterType): void
 }
 
 const defaultFilter: MedicalFilterType = {
@@ -35,7 +35,12 @@ const defaultFilter: MedicalFilterType = {
   },
 }
 
-export const MedicalFilter: FC<MedicalFilterProps> = ({ filter, onApply }) => {
+export const MedicalFilter: FC<MedicalFilterProps> = ({
+  filter = defaultFilter,
+  onApply = () => {
+    return true
+  },
+}) => {
   const [filters, setFilters] = useState<MedicalFilterType>(defaultFilter)
   const [visible, setVisible] = useState(false)
   const handleChangeSetting = (val) => {

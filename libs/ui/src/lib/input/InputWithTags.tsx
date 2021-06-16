@@ -143,56 +143,32 @@ export const InputWithTags: FC<TP> = ({ ...props }) => {
   }, [disabledTags])
 
   useEffect(() => {
-    if (triggerChangeValue) {
-      if (valueWithTag === '') {
-        let editorState = EditorState.createEmpty()
-        editorState = EditorState.moveFocusToEnd(editorState)
-        setEditorState(editorState)
-      } else {
-        const replacedValueWithTag = valueWithTag.replace(/<[^>]+>/g, '')
-        let matchArr,
-          preStart = 0,
-          preTxt = '',
-          start = 0,
-          end = 0,
-          txt = ''
-        const entityArr: Array<{
-          isTag: boolean
-          module: string
-          name: string
-          tag: string
-          newTag: boolean
-        }> = []
-        while ((matchArr = HANDLE_REGEX.exec(replacedValueWithTag)) !== null) {
-          start = matchArr.index
-          end = start + matchArr[0].length
-          txt = matchArr[0]
-          preTxt = replacedValueWithTag.substring(preStart, start)
-          preStart = end
-          if (preTxt !== '') {
-            entityArr.push({
-              isTag: false,
-              module: '',
-              name: preTxt,
-              tag: preTxt,
-              newTag: true,
-            })
-          }
-          const tagInfo = findTagInfo(txt)
-          entityArr.push({
-            isTag: true,
-            module: tagInfo ? tagInfo.module : '',
-            name: tagInfo ? tagInfo.name : txt,
-            tag: tagInfo ? tagInfo.tag : txt,
-            newTag: tagInfo ? false : true,
-          })
-        }
-
-        if (end < replacedValueWithTag.length) {
-          preTxt = replacedValueWithTag.substring(
-            end,
-            replacedValueWithTag.length
-          )
+    if (valueWithTag === '') {
+      let editorState = EditorState.createEmpty()
+      editorState = EditorState.moveFocusToEnd(editorState)
+      setEditorState(editorState)
+    } else {
+      const replacedValueWithTag = valueWithTag.replace(/<[^>]+>/g, '')
+      let matchArr,
+        preStart = 0,
+        preTxt = '',
+        start = 0,
+        end = 0,
+        txt = ''
+      const entityArr: Array<{
+        isTag: boolean
+        module: string
+        name: string
+        tag: string
+        newTag: boolean
+      }> = []
+      while ((matchArr = HANDLE_REGEX.exec(replacedValueWithTag)) !== null) {
+        start = matchArr.index
+        end = start + matchArr[0].length
+        txt = matchArr[0]
+        preTxt = replacedValueWithTag.substring(preStart, start)
+        preStart = end
+        if (preTxt !== '') {
           entityArr.push({
             isTag: false,
             module: '',
@@ -200,76 +176,98 @@ export const InputWithTags: FC<TP> = ({ ...props }) => {
             tag: preTxt,
             newTag: true,
           })
+        }
+        const tagInfo = findTagInfo(txt)
+        entityArr.push({
+          isTag: true,
+          module: tagInfo ? tagInfo.module : '',
+          name: tagInfo ? tagInfo.name : txt,
+          tag: tagInfo ? tagInfo.tag : txt,
+          newTag: tagInfo ? false : true,
+        })
+      }
+
+      if (end < replacedValueWithTag.length) {
+        preTxt = replacedValueWithTag.substring(
+          end,
+          replacedValueWithTag.length
+        )
+        entityArr.push({
+          isTag: false,
+          module: '',
+          name: preTxt,
+          tag: preTxt,
+          newTag: true,
+        })
+      } else {
+        entityArr.push({
+          isTag: false,
+          module: '',
+          name: ' ',
+          tag: ' ',
+          newTag: true,
+        })
+      }
+      const blocks: ArrayBlock[] = []
+      let entityMaps = {}
+      let entityIndex = 0
+      entityArr.map((entity, index) => {
+        if (entity.isTag) {
+          let entityMap = {}
+          blocks.push({
+            key: uuidv4(),
+            text: ' ',
+            type: 'atomic',
+            depth: 0,
+            inlineStyleRanges: [],
+            entityRanges: [
+              {
+                offset: 0,
+                length: 1,
+                key: entityIndex,
+              },
+            ],
+            data: {},
+          })
+          entityMap = {
+            [entityIndex]: {
+              type: 'MENTION',
+              mutability: 'IMMUTABLE',
+              data: {
+                tag: {
+                  module: entity.module,
+                  name: entity.name,
+                  selected: false,
+                  tag: entity.tag,
+                },
+                newTag: entity.newTag,
+              },
+            },
+          }
+          entityMaps = { ...entityMaps, ...entityMap }
+          entityIndex++
         } else {
-          entityArr.push({
-            isTag: false,
-            module: '',
-            name: ' ',
-            tag: ' ',
-            newTag: true,
+          blocks.push({
+            key: uuidv4(),
+            text: entity.name,
+            type: 'unstyled',
+            depth: 0,
+            inlineStyleRanges: [],
+            entityRanges: [],
+            data: {},
           })
         }
-        const blocks: ArrayBlock[] = []
-        let entityMaps = {}
-        let entityIndex = 0
-        entityArr.map((entity, index) => {
-          if (entity.isTag) {
-            let entityMap = {}
-            blocks.push({
-              key: uuidv4(),
-              text: ' ',
-              type: 'atomic',
-              depth: 0,
-              inlineStyleRanges: [],
-              entityRanges: [
-                {
-                  offset: 0,
-                  length: 1,
-                  key: entityIndex,
-                },
-              ],
-              data: {},
-            })
-            entityMap = {
-              [entityIndex]: {
-                type: 'MENTION',
-                mutability: 'IMMUTABLE',
-                data: {
-                  tag: {
-                    module: entity.module,
-                    name: entity.name,
-                    selected: false,
-                    tag: entity.tag,
-                  },
-                  newTag: entity.newTag,
-                },
-              },
-            }
-            entityMaps = { ...entityMaps, ...entityMap }
-            entityIndex++
-          } else {
-            blocks.push({
-              key: uuidv4(),
-              text: entity.name,
-              type: 'unstyled',
-              depth: 0,
-              inlineStyleRanges: [],
-              entityRanges: [],
-              data: {},
-            })
-          }
-          return index
-        })
-        const storedState = {
-          blocks: blocks,
-          entityMap: entityMaps,
-        }
-
-        const contentState = convertFromRaw(storedState)
-        let editorState = EditorState.createWithContent(contentState)
-        editorState = EditorState.moveFocusToEnd(editorState)
-        setEditorState(editorState)
+        return index
+      })
+      const storedState = {
+        blocks: blocks,
+        entityMap: entityMaps,
       }
+
+      const contentState = convertFromRaw(storedState)
+      let editorState = EditorState.createWithContent(contentState)
+      editorState = EditorState.moveFocusToEnd(editorState)
+      setEditorState(editorState)
     }
   }, [triggerChangeValue, valueWithTag])
 

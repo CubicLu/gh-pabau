@@ -18,18 +18,23 @@ export default class AuthenticationService {
           equals: username,
         },
       },
-      include: {
-        company: true,
-      },
+      include: { company: true },
     })
-    this.user = users.find(
+
+    const foundUser = users.find(
       (currentUser) =>
         currentUser.password ===
         AuthenticationService.generatePassword(currentUser, password)
     )
-    if (!this.user || Object.getOwnPropertyNames(this.user).length === 0) {
-      throw new Error('Unauthorized access')
+
+    if (!foundUser)
+      throw new Error('Not Authenticated - Username or password incorrect.')
+
+    this.user = {
+      ...foundUser,
+      password: undefined,
     }
+
     return this.generateJWT()
   }
 

@@ -28,6 +28,7 @@ interface P {
   needTranslation?: boolean
   isCustomFilter?: boolean
   customFilter?: () => JSX.Element
+  onResetFilter?: () => void
   setMobileSearch?: () => void
   mobileSearch?: boolean
 }
@@ -41,6 +42,7 @@ const AddButton: FC<P> = ({
   tableSearch = true,
   addFilter = true,
   isCustomFilter = false,
+  onResetFilter,
   customFilter,
   setMobileSearch,
   mobileSearch,
@@ -164,7 +166,9 @@ const AddButton: FC<P> = ({
         <MobileHeader className={styles.marketingSourceFilterHeader}>
           <div className={styles.allContentAlignMobile}>
             <div className={styles.marketingTextStyle}>
-              <span>{t('add-button-filter-reset')}</span>
+              <span onClick={isCustomFilter ? onResetFilter : onReset}>
+                {t('add-button-filter-reset')}
+              </span>
               <p>{t('add-button-filter')}</p>
               <span
                 onClick={() => {
@@ -193,7 +197,11 @@ const AddButton: FC<P> = ({
         {tableSearch && (
           <Input
             className={styles.searchMarketingStyle}
-            placeholder={t('basic-crud-table-input-search-placeholder')}
+            placeholder={
+              schema.searchPlaceholder
+                ? schema.searchPlaceholder
+                : t('basic-crud-table-input-search-placeholder')
+            }
             value={marketingSourceSearch}
             onChange={(e) => {
               console.log('set marketing search', e.target.value)

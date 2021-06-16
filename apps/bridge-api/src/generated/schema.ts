@@ -220,6 +220,9 @@ export interface Company {
   TemplateFolder?: TemplateFolder[];
   SmsPurchase?: SmsPurchase[];
   UserActivityLog?: UserActivityLog[];
+  CompanyBranchGroup?: CompanyBranchGroup[];
+  CompanyBranchAttachment?: CompanyBranchAttachment[];
+  InvPaymentType?: InvPaymentType[];
 }
 
 export interface AdvertCampaign {
@@ -1538,6 +1541,8 @@ export interface CmContact {
   CmExtraPatient?: CmExtraPatient[];
   CmExtraSalon?: CmExtraSalon[];
   InvPayment?: InvPayment[];
+  InvSale?: InvSale[];
+  ContactInsurance?: ContactInsurance[];
 }
 
 export interface CmContactJson {
@@ -1843,7 +1848,7 @@ export interface CmStaffGeneral {
   EnumStatus: cm_staff_general_EnumStatus;
   CreatedDate?: Date;
   IpAddress: number;
-  pabau_id: number;
+  pabau_id?: number;
   DefaultLocation?: number;
   consultation_fee: number;
   deleted_on: string;
@@ -1851,7 +1856,7 @@ export interface CmStaffGeneral {
   secretary_enable: boolean;
   Salutation: string;
   commission_sheet_id: number;
-  User: User;
+  User?: User;
   Company: Company;
   CompanyBranch?: CompanyBranch;
   CompanyPosition?: CompanyPosition;
@@ -1888,10 +1893,32 @@ export interface CompanyBranch {
   notify_on_lead: boolean;
   notice?: string;
   Company: Company;
+  CompanyBranchGroup: CompanyBranchGroup;
   CompanyRoomLocation?: CompanyRoomLocation[];
   RotaShift?: RotaShift[];
   CmStaffGeneral?: CmStaffGeneral[];
   CmContactLocation?: CmContactLocation[];
+  CompanyBranchAttachment?: CompanyBranchAttachment[];
+}
+
+export interface CompanyBranchGroup {
+  id: number;
+  name?: string;
+  shared_data: number;
+  company_id: number;
+  Company: Company;
+  CompanyBranch?: CompanyBranch[];
+}
+
+export interface CompanyBranchAttachment {
+  id: number;
+  company_id: number;
+  location_id: number;
+  type: company_branches_attachments_type;
+  url: string;
+  description: string;
+  Company?: Company;
+  CompanyBranch?: CompanyBranch;
 }
 
 export interface CompanyDepartment {
@@ -2036,6 +2063,18 @@ export interface CompanyService {
   online_only_service: number;
   Company: Company;
   CompanyRoomService?: CompanyRoomService[];
+}
+
+export interface ContactInsurance {
+  id: number;
+  contact_id: number;
+  provider_number: number;
+  auth_code: string;
+  membership_number: string;
+  charge_type: string;
+  company_id: number;
+  imported: number;
+  CmContact?: CmContact;
 }
 
 export interface Country {
@@ -2221,13 +2260,14 @@ export interface InvPaymentType {
   name?: string;
   epos_display?: number;
   description?: string;
-  company_id: number;
+  company_id?: number;
   uid?: number;
   created_date?: Date;
   modified_date?: Date;
   is_active: number;
   is_money: number;
   type: string;
+  Company?: Company;
   GlCode?: GlCode;
 }
 
@@ -2272,6 +2312,75 @@ export interface InvProduct {
   Company?: Company;
   InvCategory: InvCategory;
   CmDrug?: CmDrug[];
+}
+
+export interface InvSale {
+  id: number;
+  reference_no: string;
+  warehouse_id?: number;
+  biller_id: number;
+  biller_name: string;
+  customer_id: number;
+  customer_name: string;
+  date: Date;
+  note?: string;
+  inv_total: number;
+  total_tax: number;
+  total: number;
+  paid_amount?: number;
+  store_discount?: number;
+  discount_amount: number;
+  account_amount?: number;
+  loyalty_card_num?: string;
+  loyalty_card_amount?: string;
+  voucher_no?: string;
+  voucher_amount?: number;
+  invoice_type: number;
+  in_type: string;
+  total_tax2: number;
+  tax_rate2_id: number;
+  shipping_rate: number;
+  shipping_rate_id: number;
+  delivery?: number;
+  delivery_date?: Date;
+  by_email?: number;
+  by_sms?: number;
+  tip?: number;
+  occupier?: number;
+  uid?: number;
+  created_date?: Date;
+  modified_date?: Date;
+  paid_by?: string;
+  booking_id: number;
+  quaser_booking_id: number;
+  invoice_bit: number;
+  custom_id: string;
+  contact_custom_id: string;
+  Practitioner_id: number;
+  User_id: number;
+  Treatment_id: number;
+  imported: number;
+  VAT_drop: number;
+  order_id?: number;
+  void: boolean;
+  guid?: string;
+  old_paid_by: string;
+  loyalty_points: number;
+  xero_invoice_id: string;
+  xero_updated_date: Date;
+  split_count: number;
+  split_guid: string;
+  insurer_contract_id: number;
+  lock_sale: number;
+  location_id: number;
+  contract_id: number;
+  is_ok: boolean;
+  refund_to: number;
+  credit_ref_id: number;
+  credit_amount: number;
+  credit_type: number;
+  issuer_id?: number;
+  CmContact?: CmContact;
 }
 
 export interface Job {
@@ -3325,6 +3434,7 @@ export enum company_bday_settings_status {
 
 export enum company_branches_attachments_type {
   badge = 'badge',
+  antd_badge = 'antd_badge',
 }
 
 export enum company_details_tax_name {

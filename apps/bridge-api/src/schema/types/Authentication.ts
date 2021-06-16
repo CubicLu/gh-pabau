@@ -17,7 +17,8 @@ export const Authentication = extendType({
         if (!username || !password) {
           throw new Error('Malformed Parameters')
         }
-        return new AuthenticationService(ctx).handleLoginRequest(args)
+        const authService = new AuthenticationService(ctx)
+        return authService.handleLoginRequest(args)
       },
     })
     t.field('logout', {

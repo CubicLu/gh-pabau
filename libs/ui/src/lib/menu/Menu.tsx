@@ -131,7 +131,7 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active }) => {
             </SubMenu>
           )
         })}
-        <span>
+        <AntMenu.Item disabled className={styles.setupMenuItem}>
           <Tooltip title={collapsed ? t('sidebar.setup') : ''} placement="left">
             <div
               className={styles.sidebarBtnAlign}
@@ -165,7 +165,7 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active }) => {
               </Link>
             </div>
           </Tooltip>
-        </span>
+        </AntMenu.Item>
       </AntMenu>
     </Sider>
   )

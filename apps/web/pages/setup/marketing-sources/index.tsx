@@ -91,16 +91,16 @@ const EDIT_MUTATION = gql`
   }
 `
 
-// const UPDATE_ORDER_MUTATION = gql`
-//   mutation update_marketing_source_order($id: Int!, $order: Int) {
-//     update_marketing_source(
-//       where: { id: { _eq: $id } }
-//       _set: { order: $order }
-//     ) {
-//       affected_rows
-//     }
-//   }
-// `
+const UPDATE_ORDER_MUTATION = gql`
+  mutation update_marketing_source_order($id: uuid, $order: Int) {
+    update_marketing_source(
+      where: { id: { _eq: $id } }
+      _set: { order: $order }
+    ) {
+      affected_rows
+    }
+  }
+`
 
 export const Index: NextPage = () => {
   const { t } = useTranslationI18()
@@ -173,7 +173,7 @@ export const Index: NextPage = () => {
       listQuery={LIST_QUERY}
       editQuery={EDIT_MUTATION}
       aggregateQuery={LIST_AGGREGATE_QUERY}
-      // updateOrderQuery={UPDATE_ORDER_MUTATION} //TODO: Toshe
+      updateOrderQuery={UPDATE_ORDER_MUTATION}
       needTranslation={false}
       draggable={false}
       {...user}

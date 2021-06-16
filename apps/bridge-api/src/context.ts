@@ -1,19 +1,15 @@
 import jwt from 'jsonwebtoken'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from './prisma'
 import { ExpressContext } from 'apollo-server-express'
 import { version } from '../../../package.json'
 import { JwtPayloadDto } from './app/authentication/dto'
 import { ContextFunction } from 'apollo-server-core'
 
-//TODO: [PABAU2-433] move this from here, it's violating ES Module spec and creating side-effects from hoisted import statements.
-console.log('Creating a PrismaClient instance.')
-const prisma = new PrismaClient()
-
 export interface Context {
   /**
    * The Prisma Client
    */
-  prisma: PrismaClient
+  prisma: typeof prisma
 
   /**
    * The currently logged in user
@@ -29,7 +25,6 @@ export interface Context {
 export const createContext: ContextFunction<ExpressContext, Context> = (
   req
 ) => {
-  console.log('creating context!', req.req.headers)
   const ret = {
     prisma,
     version,
@@ -42,8 +37,9 @@ export const createContext: ContextFunction<ExpressContext, Context> = (
         process.env.JWT_SECRET,
         { algorithms: ['HS512'] }
       ) as JwtPayloadDto
-      // eslint-disable-next-line no-empty
-    } catch {}
+    } catch {
+      console.log('invalid jwt found')
+    }
   }
   return ret
 }

@@ -1,32 +1,38 @@
 import React, { FC, useState } from 'react'
 import styles from '../ClientCreate.module.less'
 import { InitialDetailsProps } from '../ClientCreate'
-import { Form as AntForm, Input } from 'formik-antd'
+import { Form as AntForm, Input, Radio } from 'formik-antd'
 import {
   SimpleDropdown,
-  RadioGroup,
   Button,
   ColorPicker,
   Notification,
   NotificationType,
+  DatePicker,
 } from '@pabau/ui'
-import { DatePicker, Image, Select, Popover } from 'antd'
+import { Image, Select, Popover } from 'antd'
 import { TagOutlined, CheckOutlined, TagFilled } from '@ant-design/icons'
 import { ReactComponent as Droplet } from '../../../assets/images/droplet.svg'
 import { useTranslation } from 'react-i18next'
 import { languageMenu } from '@pabau/ui'
+import dayjs, { Dayjs } from 'dayjs'
 
 interface GeneralProps {
   values?: InitialDetailsProps
   setFieldValue(
     field: keyof InitialDetailsProps,
-    values: string | string[] | boolean | number
+    values: string | string[] | boolean | number | Dayjs | null
   ): void
+  labels: Label[]
+  setLabels: (val: Label[]) => void
+  selectedLabels: Label[]
+  setSelectedLabels: (val: Label[]) => void
 }
 
 interface Label {
-  label: string
+  label?: string
   color?: string
+  count?: number
 }
 
 const customColorData = [
@@ -66,11 +72,16 @@ const customColorData = [
   '#255a64',
 ]
 
-export const General: FC<GeneralProps> = ({ setFieldValue, values }) => {
+export const General: FC<GeneralProps> = ({
+  setFieldValue,
+  values,
+  labels,
+  setLabels,
+  selectedLabels,
+  setSelectedLabels,
+}) => {
   const { t } = useTranslation('common')
   const [visible, setVisible] = useState(false)
-  const [labels, setLabels] = useState<Label[]>([])
-  const [selectedLabels, setSelectedLabels] = useState<Label[]>([])
   const [newLabel, setNewLabel] = useState<Label>({ label: '', color: '' })
   const [selectedColor, setSelectedColor] = useState('')
   const [displayColorPicker, setDisplayColorPicker] = useState(false)
@@ -80,9 +91,12 @@ export const General: FC<GeneralProps> = ({ setFieldValue, values }) => {
     label: '',
     color: '',
   })
-
   const onClickLang = (index) => {
     setFieldValue('preferredLanguage', index)
+  }
+
+  const onClickDate = (val) => {
+    setFieldValue('dateOfBirth', val)
   }
 
   const editLabelData = (valueObject) => {
@@ -223,6 +237,7 @@ export const General: FC<GeneralProps> = ({ setFieldValue, values }) => {
               <TagOutlined />
             )}
             <Input
+              autoComplete={'off'}
               size="middle"
               name={'label'}
               value={newLabel?.label}
@@ -321,16 +336,20 @@ export const General: FC<GeneralProps> = ({ setFieldValue, values }) => {
           label={t('quickCreate.client.modal.general.gender')}
           name={'gender'}
         >
-          <RadioGroup
-            size={'small'}
+          <Radio.Group
             name={'gender'}
-            value={values?.gender || ''}
-            radioItems={[
+            onChange={(e) => setFieldValue('gender', e.target.value)}
+          >
+            {[
               t('quickCreate.client.modal.general.gender.other'),
               t('quickCreate.client.modal.general.gender.male'),
               t('quickCreate.client.modal.general.gender.female'),
-            ]}
-          />
+            ]?.map((item, index) => (
+              <Radio key={index} value={item} name={item}>
+                {item}
+              </Radio>
+            ))}
+          </Radio.Group>
         </AntForm.Item>
         <AntForm.Item
           className={styles.customCommon}
@@ -355,11 +374,10 @@ export const General: FC<GeneralProps> = ({ setFieldValue, values }) => {
           name={'dateOfBirth'}
         >
           <DatePicker
-            onChange={(date, dateString) =>
-              setFieldValue('dateOfBirth', dateString)
-            }
             name={'dateOfBirth'}
             format={'DD/MM/YY'}
+            value={dayjs(values?.dateOfBirth)}
+            onChange={(date) => onClickDate(date)}
             placeholder={'DD/MM/YY'}
           />
         </AntForm.Item>

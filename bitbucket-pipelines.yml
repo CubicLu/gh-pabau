@@ -33,6 +33,7 @@ pipelines:
           artifacts:
             - node_modules/**
             - libs/graphql/generated/**
+            - hasura/schema.json
 
       - parallel:
           - step:
@@ -50,7 +51,7 @@ pipelines:
                 - npm i -g @graphql-inspector/cli@2.5.0 graphql || true
                 - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
                 - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
-#                - graphql-inspector similar hasura/schema.graphql || echo TODO
+                #                - graphql-inspector similar hasura/schema.graphql || echo TODO
                 - graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
 
           - step:
@@ -74,7 +75,6 @@ pipelines:
           #              - NODE_OPTIONS=--max_old_space_size=1555 yarn affected:test --base=HEAD~1 --parallel --maxParallel=3 --skip-nx-cache
 
       - parallel:
-
           - step:
               name: build
               runs-on:
@@ -86,7 +86,6 @@ pipelines:
                 - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:export --base=origin/master --prod
               artifacts:
                 - dist/**
-
 
           - step:
               size: 2x
@@ -153,8 +152,6 @@ pipelines:
 
       - step:
           name: announce to slack
-          runs-on:
-            - 'self.hosted'
           max-time: 5
           clone:
             enabled: false
@@ -232,8 +229,10 @@ pipelines:
                 - npm i -g @graphql-inspector/cli@2.5.0 graphql || true
                 - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
                 - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
-#                - graphql-inspector similar hasura/schema.graphql || echo TODO
+                #                - graphql-inspector similar hasura/schema.graphql || echo TODO
                 - graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
+                - yarn danger ci || echo TODO
+                - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts || echo TODO
 
           - step:
               name: lint

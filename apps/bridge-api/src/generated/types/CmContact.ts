@@ -91,6 +91,8 @@ export const CmContact = objectType({
     t.model.CmExtraPatient()
     t.model.CmExtraSalon()
     t.model.InvPayment()
+    t.model.InvSale()
+    t.model.ContactInsurance()
   },
 })
 

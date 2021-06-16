@@ -6,7 +6,7 @@
   - [Setup](#setup)
     - [Windows](#windows)
     - [Linux](#linux)
-    - [vscode](#vscode)
+    - [VS Code](#vs-code)
     - [Common](#common)
     - [Production](#production)
   - [Parts of the system](#parts-of-the-system)
@@ -87,7 +87,7 @@ This monorepo contains all of our code (with the exception of `.env` files), and
 1. Install and launch Pabau1
 
    1. Either: Follow the instructions from the <https://bitbucket.org/pabau/pabau-crm> repo's README.md to launch the local docker stack
-   1. Or: Ask Toshe to share his public MySQL URL and put that into `apps/bridge-api/prisma/.env.local` as `DATABASE_URL=`
+   1. Or: Ask Toshe to share his public MySQL URL and put that into `apps/bridge-api/src/prisma/.env.local` as `DATABASE_URL=`
 
 1. Create some bookmarks in your browser:
    1. "Prisma" to <http://localhost:4000/graphql>
@@ -127,7 +127,6 @@ First set up some env vars:
 `hasura/.env.production.local`
 
 ```env
-HASURA_GRAPHQL_ENDPOINT=https://api.new.pabau.com/
 HASURA_GRAPHQL_ADMIN_SECRET=madskills
 ```
 
@@ -279,7 +278,7 @@ Solution: Upgrade docker-compose to latest version
 1. Open the Hasura console: <http://localhost:8080/console/>
 1. Create a new table (in the singular tense, using snake_case)
 1. Insert 3 'Frequently used columns', in this order:
-   1. `id` as a GUID
+   1. `id` as a UUID
    1. Created at
    1. Updated at
 1. If your table is order sensitive (customers can drag to rearrange the order), then add a column called "order", type Integer

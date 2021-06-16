@@ -28,10 +28,14 @@ import LeftSidebarMedicalFormTitle from './LeftSidebarMedicalFormTitle'
 interface P {
   type: string
   component: string
-  handlingClickLeft: (componentName: string) => void
+  handlingClickLeft?: (componentName: string) => void
 }
 
-const LeftSidebarElement: FC<P> = ({ type, component, handlingClickLeft }) => {
+export const LeftSidebarElement: FC<P> = ({
+  type,
+  component,
+  handlingClickLeft,
+}) => {
   const { t } = useTranslation('common')
   const componentInfos = [
     {
@@ -113,6 +117,14 @@ const LeftSidebarElement: FC<P> = ({ type, component, handlingClickLeft }) => {
       bgcolor: '#F78561',
       title: t('ui.medicalform.setting.component.signature.title'),
       desc: t('ui.medicalform.setting.component.signature.description'),
+    },
+    {
+      component: 'basic_photo',
+      type: { type },
+      iconUrl: drawingIcon,
+      bgcolor: '#F78561',
+      title: t('ui.medicalform.setting.component.photo.title'),
+      desc: t('ui.medicalform.setting.component.photo.description'),
     },
     {
       component: 'basic_conditions',

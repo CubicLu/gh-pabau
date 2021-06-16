@@ -23,7 +23,7 @@ const AdvancedSkeleton: FC = () => {
           skeletonStyles.limitedWidth
         )}
       >
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((appointment) => {
+        {[1, 2, 3, 4, 5, 6, 7].map((appointment) => {
           return (
             <div key={appointment} className={styles.advancedCheckList}>
               <div className="checkboxSkeleton">
@@ -33,6 +33,12 @@ const AdvancedSkeleton: FC = () => {
             </div>
           )
         })}
+        <div className={classNames(styles.numberInput, 'pRelative')}>
+          <label>
+            <Skeleton active paragraph={{ rows: 0 }} />
+          </label>
+          <Skeleton.Input active />
+        </div>
       </div>
     </div>
   )

@@ -10,7 +10,7 @@ export const interceptors = {
   })((root, args, ctx: Context) => {
     args.where = {
       ...args.where,
-      Company: {
+      company_id: {
         in: [0, ctx.authenticated.company],
       },
     }
@@ -21,7 +21,7 @@ export const interceptors = {
   })((root, args, ctx: Context, info) => {
     args.where = {
       ...args.where,
-      Company: { equals: ctx.authenticated.company },
+      company_id: { equals: ctx.authenticated.company },
     }
     return true
   }),
@@ -37,17 +37,33 @@ export const interceptors = {
   interceptMutation: rule('interceptMutation', { cache: 'contextual' })(
     async (root, args, ctx, { fieldName, returnType }) => {
       if (fieldName.includes('create')) {
-        args.data = {
-          ...args.data,
-          Company: {
-            connect: { id: ctx.user.company },
-          },
+        if (args.data?.company?.connect?.id) {
+          return args.data.company.connect?.id === ctx.authenticated.company
+        } else if (args.data?.Company?.connect?.id) {
+          return args.data.Company.connect.id === ctx.authenticated.company
+        } else if (args.data.company) {
+          args.data = {
+            ...args.data,
+            company: {
+              connect: { id: ctx.authenticated.company },
+            },
+          }
+          return true
+        } else if (args.data.Company) {
+          args.data = {
+            ...args.data,
+            Company: {
+              connect: { id: ctx.authenticated.company },
+            },
+          }
+          return true
+        } else {
+          throw new Error('Faulty mutation detected')
         }
-        return true
       } else if (fieldName.includes('updateMany')) {
         args.where = {
           ...args.where,
-          Company: {
+          company_id: {
             id: { equals: ctx.user.company },
           },
         }
@@ -60,8 +76,11 @@ export const interceptors = {
           returnType.toString().charAt(0)?.toLowerCase() +
           returnType.toString().slice(1)
         const retrieveRow = await ctx.prisma[model].findFirst({
-          ...args,
+          where: {
+            ...args.where,
+          },
         })
+        console.log(retrieveRow)
         return (
           retrieveRow?.['company_id'] !== undefined &&
           retrieveRow?.['company_id'] === ctx?.authenticated?.company

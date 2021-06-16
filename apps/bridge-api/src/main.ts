@@ -1,4 +1,8 @@
-import { assertEnvVarsExist, stringToBoolean } from './utils'
+import {
+  assertEnvVarsExist,
+  stringToBoolean,
+  truthyToMaskedString,
+} from './utils'
 import { config } from 'dotenv-flow'
 import { version } from '../../../package.json'
 import { createApp } from './app'
@@ -24,8 +28,12 @@ console.table({
   TRACING,
   DEBUG_APOLLO,
   PORT,
-  'Database URL': process.env.DATABASE_URL,
-  'JWT Secret': process.env.JWT_SECRET,
+  'Database URL': truthyToMaskedString(process.env.DATABASE_URL),
+  'JWT Secret': truthyToMaskedString(process.env.JWT_SECRET),
+  'Database URL[]': truthyToMaskedString(process.env['DATABASE_URL']),
+  'JWT Secret[]': truthyToMaskedString(process.env['JWT_SECRET']),
+  // 'Database URL (Secret)': process.env['DATABASE_URL'],
+  // 'JWT Secret (Secret)': process.env.JWT_SECRET,
 })
 
 assertEnvVarsExist(['DATABASE_URL', 'JWT_SECRET'])

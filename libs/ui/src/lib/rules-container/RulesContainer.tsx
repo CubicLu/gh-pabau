@@ -9,14 +9,14 @@ import {
   PlusOutlined,
   UpOutlined,
 } from '@ant-design/icons'
-import { Button, Input, Select, Typography, Alert } from 'antd'
+import { Button, Input, Select, Typography, Alert, Modal, Popover } from 'antd'
 import React, { FC, useState } from 'react'
 import styles from './RulesContainer.module.less'
 import classNames from 'classnames'
 
 const { Title } = Typography
 
-interface RulesContainerProps {
+export interface RulesContainerProps {
   noConfiguredMessage: string
   configureBtnText: string
   ifText: string
@@ -31,8 +31,24 @@ interface RulesContainerProps {
   saveRuleText: string
   ruleConditionPlaceHolder: string
   answersOptions: { [key: string]: string }
-  actionOptions: { [key: string]: string }
   operatorOptions: { [key: string]: string }
+  actionTitle: string
+  actions: ActionProp[]
+  actionsNotAvailableTitle: string
+  actionsNotAvailable: ActionProp[]
+}
+
+interface ActionProp {
+  key: string
+  text: string
+  icon: React.ReactNode
+  events?: ActionEventProp[]
+}
+
+interface ActionEventProp {
+  key: string
+  text: string
+  subtext: string
 }
 
 export interface IfProp {
@@ -47,6 +63,7 @@ export interface ThenProp {
   action: string
   template: string
   to: string
+  event?: string
 }
 
 export interface IfObjProp {
@@ -77,8 +94,11 @@ export const RulesContainer: FC<RulesContainerProps> = ({
   saveRuleText,
   ruleConditionPlaceHolder,
   answersOptions,
-  actionOptions,
   operatorOptions,
+  actionTitle,
+  actions,
+  actionsNotAvailableTitle,
+  actionsNotAvailable,
 }) => {
   const { Option } = Select
 
@@ -99,7 +119,7 @@ export const RulesContainer: FC<RulesContainerProps> = ({
   const thenInitArr = [
     {
       id: randomNumber(),
-      action: 'send_email',
+      action: 'email',
       template: '1',
       to: '',
     },
@@ -110,6 +130,8 @@ export const RulesContainer: FC<RulesContainerProps> = ({
   const [ruleName, setRuleName] = useState('')
   const [ifData, setIfData] = useState(ifInitObj)
   const [thenData, setThenData] = useState(thenInitArr)
+  const [visibleModal, setVisibleModal] = useState(false)
+  const [thenSelectedItem, setThenSelectedItem] = useState(0)
 
   const addIfRow = () => {
     const d = ifData.answers
@@ -151,10 +173,12 @@ export const RulesContainer: FC<RulesContainerProps> = ({
     }))
   }
 
-  const onChangeThen = (id, key, value) => {
+  const onChangeThen = (id, dataArr) => {
     const updated = thenData.map((a) => {
       if (a.id === id) {
-        a[key] = value
+        for (const element of dataArr) {
+          a[element.key] = element.value
+        }
       }
       return a
     })
@@ -302,7 +326,7 @@ export const RulesContainer: FC<RulesContainerProps> = ({
                               <div className={styles.progIfLine}></div>
                               <Alert
                                 message={`
-                                ${answersOptions[ans.answer]} 
+                                ${answersOptions[ans.answer]}
                                 ${operatorOptions[ans.operator]}
                                 ${ans.condition}
                               `}
@@ -332,12 +356,25 @@ export const RulesContainer: FC<RulesContainerProps> = ({
                         </div>
 
                         {r.then.map((t, i) => {
+                          const selectedAct = actions.find(
+                            (f) => f.key === t.action
+                          )
+                          const actionEvent_: ActionEventProp[] | undefined =
+                            selectedAct?.events
+                          const actionEvent:
+                            | ActionEventProp
+                            | undefined = actionEvent_
+                            ? actionEvent_.find((f) => f.key === t.event)
+                            : undefined
                           return (
                             <div className={styles.answer} key={i}>
                               <div className={styles.progIfLine}></div>
                               <Alert
                                 message={`
-                                ${actionOptions[t.action]} 
+                                ${selectedAct?.text}
+                                ${
+                                  actionEvent ? ' - ' + actionEvent.subtext : ''
+                                }
                               `}
                                 type="error"
                               />
@@ -373,10 +410,109 @@ export const RulesContainer: FC<RulesContainerProps> = ({
     )
   }
 
+  const onCloseModal = (e) => {
+    setVisibleModal(false)
+  }
+
+  const renderActionRow = (
+    { key, icon, text, events }: ActionProp,
+    i,
+    rowStatus
+  ) => {
+    const child = (
+      <div
+        className={classNames(
+          styles.actionRow,
+          !rowStatus ? styles.actionRowDisable : ''
+        )}
+        key={i}
+        onClick={() => {
+          if (!rowStatus) return true
+          onChangeThen(thenSelectedItem, [
+            {
+              key: 'action',
+              value: key,
+            },
+          ])
+          setVisibleModal(false)
+        }}
+      >
+        <div>{icon}</div>
+        <div>
+          <Title level={5}>{text}</Title>
+        </div>
+      </div>
+    )
+
+    if (!events || events.length === 0) return child
+
+    return (
+      <Popover
+        key={i}
+        trigger="hover"
+        title="Event type"
+        placement="bottomLeft"
+        content={
+          <div className={styles.actionPopoverContainer}>
+            {events.map((e, i) => {
+              return (
+                <div
+                  className={styles.item}
+                  key={i}
+                  onClick={() => {
+                    onChangeThen(thenSelectedItem, [
+                      {
+                        key: 'action',
+                        value: key,
+                      },
+                      {
+                        key: 'event',
+                        value: e.key,
+                      },
+                    ])
+                    setVisibleModal(false)
+                  }}
+                >
+                  <Title level={5}>{e.text}</Title>
+                  <p>{e.subtext}</p>
+                </div>
+              )
+            })}
+          </div>
+        }
+      >
+        {child}
+      </Popover>
+    )
+  }
+
   return (
     <>
       {configureMode && rules.length > 0 && <RulesAddContainer />}
       <div className={styles.main}>
+        <Modal
+          visible={visibleModal}
+          title={'Action - choose item and type of event'}
+          onCancel={onCloseModal}
+          footer={null}
+          width={345}
+        >
+          <div className={styles.actionModal}>
+            <div className={styles.actionOptionsContainer}>
+              <p style={{ paddingTop: 0 }}>{actionTitle}</p>
+              {actions?.map((action, i) => {
+                return renderActionRow(action, i, true)
+              })}
+            </div>
+            <div className={styles.actionOptionsContainer}>
+              <p>{actionsNotAvailableTitle}</p>
+              {actionsNotAvailable?.map((action, i) => {
+                return renderActionRow(action, i, false)
+              })}
+            </div>
+          </div>
+        </Modal>
+
         {configureMode ? (
           <NoRulesContainer />
         ) : (
@@ -507,33 +643,41 @@ export const RulesContainer: FC<RulesContainerProps> = ({
                   </div>
 
                   {thenData.map((t, i) => {
+                    const selectedAct = actions.find((f) => f.key === t.action)
                     return (
                       <div className={styles.answer} key={i}>
                         <div className={styles.progIfLine}></div>
-                        <Select
-                          style={{ width: 200 }}
-                          value={t.action}
-                          onChange={(e) => onChangeThen(t.id, 'action', e)}
+                        <div
+                          className={styles.formGroup}
+                          style={{ minWidth: 200, marginRight: 10 }}
                         >
-                          {Object.keys(actionOptions).map(function (
-                            key,
-                            index
-                          ) {
-                            return (
-                              <Option key={index} value={key}>
-                                {actionOptions[key]}
-                              </Option>
-                            )
-                          })}
-                        </Select>
+                          <div
+                            className={styles.formField}
+                            onClick={(e) => {
+                              setThenSelectedItem(t?.id)
+                              setVisibleModal(true)
+                            }}
+                          >
+                            <span>{selectedAct?.text}</span>
+                            <DownOutlined />
+                          </div>
+                        </div>
                         <div className={styles.formGroup}>
                           <label>Templates</label>
                           <Select
                             style={{ width: 200 }}
                             value={t.template}
-                            onChange={(e) => onChangeThen(t.id, 'template', e)}
+                            onChange={(e) =>
+                              onChangeThen(t.id, [
+                                {
+                                  key: 'template',
+                                  value: e,
+                                },
+                              ])
+                            }
                           >
                             <Option value="1">Default Template</Option>
+                            <Option value="2">Client Email Template</Option>
                           </Select>
                         </div>
                         <div className={styles.formGroup}>
@@ -542,7 +686,12 @@ export const RulesContainer: FC<RulesContainerProps> = ({
                             placeholder="Emails you'd like to send to"
                             value={t.to}
                             onChange={(e) =>
-                              onChangeThen(t.id, 'to', e.target.value)
+                              onChangeThen(t.id, [
+                                {
+                                  key: 'to',
+                                  value: e.target.value,
+                                },
+                              ])
                             }
                           />
                         </div>

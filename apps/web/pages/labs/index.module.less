@@ -1,0 +1,82 @@
+.basic-info {
+  padding: 0 24px;
+  margin-top: 12px;
+  h6 {
+    color: #3D3D46;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 24px;
+    margin-bottom: 12px;
+  }
+  .infoList {
+    display: flex;
+    max-width: 602px;
+
+    .listing {
+      flex: 1;
+      margin-right: 26px;
+      margin-bottom: 28px;
+
+      :global .ant-form-item-explain-error {
+        li {
+          color: #ff5b64;
+        }
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      :global .ant-form-item-label {
+        padding-bottom: 0;
+      }
+
+      label, .phone-number-label {
+        color: #9292A3;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 24px;
+        margin-bottom: 0;
+      }
+
+      :global .ant-form-item-control {
+        .ant-input {
+          background: #FFFFFF;
+          border: 1px solid #ECEDF0;
+          border-radius: 4px;
+          font-weight: normal;
+          font-size: 16px;
+          line-height: 24px;
+          padding: 8px 16px;
+
+          &:focus {
+            border-color: #ff5b64;
+            box-shadow: none;
+          }
+        }
+      }
+
+      :global .react-tel-input {
+        .form-control {
+          height: 40px;
+        }
+
+        .flag-dropdown {
+          height: 38px;
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 767px) {
+    padding: 0;
+    margin-top: 15px;
+    .infoList {
+      flex-direction: column;
+      .listing {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+
