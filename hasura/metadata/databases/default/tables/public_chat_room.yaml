@@ -2,19 +2,21 @@ table:
   name: chat_room
   schema: public
 array_relationships:
-- name: chat_room_participants
-  using:
-    foreign_key_constraint_on:
-      column: room
-      table:
-        name: chat_room_participant
-        schema: public
 - name: chats
   using:
-    foreign_key_constraint_on:
-      column: to_channel
-      table:
+    manual_configuration:
+      column_mapping:
+        id: to_channel
+      insertion_order: null
+      remote_table:
         name: chat
+        schema: public
+- name: participants
+  using:
+    foreign_key_constraint_on:
+      column: room_id
+      table:
+        name: chat_room_participant
         schema: public
 insert_permissions:
 - permission:
@@ -39,4 +41,15 @@ select_permissions:
     filter:
       company:
         _eq: X-Hasura-Org-Id
+  role: user
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - name
+    filter:
+      company:
+        _eq: X-Hasura-Org-Id
+    set:
+      company: x-hasura-Org-Id
   role: user

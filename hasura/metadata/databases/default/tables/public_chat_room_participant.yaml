@@ -2,18 +2,18 @@ table:
   name: chat_room_participant
   schema: public
 object_relationships:
-- name: chat_room
+- name: room
   using:
-    foreign_key_constraint_on: room
+    foreign_key_constraint_on: room_id
 insert_permissions:
 - permission:
     backend_only: false
     check:
-      chat_room:
+      room:
         company:
           _eq: X-Hasura-Org-Id
     columns:
-    - room
+    - room_id
     set:
       user: x-hasura-User-Id
   role: user
@@ -21,13 +21,21 @@ select_permissions:
 - permission:
     allow_aggregations: true
     columns:
-    - id
     - created_at
+    - id
     - updated_at
     - user
-    - room
     filter:
-      chat_room:
+      room:
+        company:
+          _eq: X-Hasura-Org-Id
+  role: user
+update_permissions:
+- permission:
+    check: null
+    columns: []
+    filter:
+      room:
         company:
           _eq: X-Hasura-Org-Id
   role: user

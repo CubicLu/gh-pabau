@@ -24,9 +24,10 @@ query chatListDirectMessagesQuery {
       username
       full_name
     }
-    chat_room {
+    room {
       id
       name
+
       chats_aggregate(where: { created_at: { _gt: "2030-01-01 00:00:00" } }) {
         aggregate {
           count
