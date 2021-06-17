@@ -1,9 +1,8 @@
-import { useSubscription } from '@apollo/client'
 import {
   useChatListDirectMessagesQueryQuery,
-  useChatListDirectMessagesSubscriptionSubscription,
+  //  useChatListDirectMessagesSubscriptionSubscription,
 } from '@pabau/graphql'
-import { ChatMessage, MessagesProps, PabauMessages } from '@pabau/ui'
+import { MessagesProps, PabauMessages } from '@pabau/ui'
 import { UserContext } from '../../context/UserContext'
 import * as React from 'react'
 import dayjs from 'dayjs'

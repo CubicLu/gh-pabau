@@ -5,6 +5,7 @@ import { Avatar } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as MessageRead } from '../../assets/images/message-read.svg'
 import styles from './ChatsList.module.less'
+import { ChatListDirectMessagesQueryQuery } from '@pabau/graphql'
 
 export interface ChatMessage {
   userName: string
@@ -17,7 +18,7 @@ export interface ChatMessage {
 }
 
 interface P {
-  chatMessages?: ChatMessage[]
+  chatMessages: ChatListDirectMessagesQueryQuery['chat']
   showChatBox?: boolean
   selectedContact?: ChatMessage
   typingContact?: ChatMessage
@@ -27,32 +28,34 @@ interface P {
   isHeaderShow?: boolean
 }
 
-export const ChatsList: FC<P> = ({ ...props }) => {
+export const ChatsList = (props: P) => {
   const { chatMessages, onClick, typingContact } = props
   const { t } = useTranslation('common')
-  const [activeIndex, setActiveIndex] = useState<number>(-1)
-  const [isTyping, setIsTyping] = useState<number>(-1)
+  // if (!chatMessages) return
+  type blah = typeof chatMessages[number]
+  const [activeChat, setActiveChat] = useState<blah>()
 
   useEffect(() => {
     if (props.showGroupChatBox) {
-      setActiveIndex(-1)
+      // setActiveIndex(-1)
     }
     if (props.isNewDm) {
-      setActiveIndex(-1)
+      // setActiveIndex(-1)
     }
-    typingContact
-      ? chatMessages?.map(
-          (item, index) =>
-            item.userName === typingContact.userName && setIsTyping(index)
-        )
-      : setIsTyping(-1)
-  }, [typingContact, chatMessages, props.showGroupChatBox, props.isNewDm])
+    // typingContact
+    //   ? chatMessages?.map(
+    //       (item, index) =>
+    //         item.userName === typingContact.userName && setIsTyping(index)
+    //     )
+    //   : setIsTyping(-1)
+  }, [chatMessages, props.showGroupChatBox, props.isNewDm])
 
-  const onClickContact = (index) => {
+  const onClickContact = (e) => {
     if (chatMessages) {
-      setActiveIndex(index)
-      const data = chatMessages[index]
-      onClick?.(data)
+      setActiveChat(e)
+      // const data = chatMessages[index]
+      alert('Show chat for ' + JSON.stringify(e))
+      onClick?.(e)
     }
   }
 
@@ -73,41 +76,38 @@ export const ChatsList: FC<P> = ({ ...props }) => {
         </div>
       )}
       <div>
-        {chatMessages?.map((chat, index) => {
+        {chatMessages?.map((message) => {
+          const { id, fromUser } = message
+          if (!fromUser) throw new Error('Item found with no fromUser')
+          const { image } = fromUser
           return (
             <div
-              key={chat.userName}
-              onClick={() => onClickContact(index)}
+              key={id}
+              onClick={() => onClickContact(message)}
               className={styles.cursor}
             >
               <div
                 className={classNames(
                   styles.flex,
-                  activeIndex === index
+                  activeChat === message
                     ? styles.profileChatSpaceActive
                     : styles.porfileChatSpace
                 )}
               >
                 <div className={styles.chatProfile}>
-                  {chat.isMultiple ? (
-                    <div className={styles.profileCircle}>
-                      {chat.data?.length}
-                    </div>
-                  ) : (
-                    <Badge
-                      dot
-                      color={chat.isOnline ? '#65CD98' : '#FF9E44'}
-                      offset={[-2, 32]}
-                      size="default"
-                      style={{
-                        height: '12px',
-                        width: '12px',
-                        border: '2px solid #fff',
-                      }}
-                    >
-                      <Avatar size={40} src={chat.profileURL} />
-                    </Badge>
-                  )}
+                  <Badge
+                    dot
+                    color={chat.isOnline ? '#65CD98' : '#FF9E44'}
+                    offset={[-2, 32]}
+                    size="default"
+                    style={{
+                      height: '12px',
+                      width: '12px',
+                      border: '2px solid #fff',
+                    }}
+                  >
+                    <Avatar size={40} src={image} />
+                  </Badge>
                 </div>
                 <div className={styles.chatText}>
                   <div className={classNames(styles.dFlex, styles.userDetails)}>
@@ -129,7 +129,7 @@ export const ChatsList: FC<P> = ({ ...props }) => {
                         styles.textSm
                       )}
                     >
-                      {chat.dateTime}
+                      {dateTime}
                     </p>
                   </div>
                   <div className={styles.dFlex}>

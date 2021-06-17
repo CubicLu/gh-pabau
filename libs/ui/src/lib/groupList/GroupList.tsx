@@ -13,39 +13,96 @@ interface P {
   isHeaderShow?: boolean
 }
 
-const GroupListChannelAllRead = () => (
-  <div className={classNames(styles.dFlex, styles.channelText, styles.cursor)}>
-    <p
-      className={classNames(
-        styles.textBlack,
-        styles.textMd,
-        styles.fontMedium,
-        styles.mb,
-        styles.cursor
-      )}
+const GroupListChannelAllRead = ({ onClick, active }: GroupListItem) => (
+  <div
+    onClick={onClick}
+    className={classNames(
+      active ? styles.channelGroupActive : styles.channelGroup
+    )}
+  >
+    <div
+      className={classNames(styles.dFlex, styles.channelText, styles.cursor)}
     >
-      #general
-    </p>
-    <h6 className={classNames(styles.grayTextColor, styles.textSm, styles.mb)}>
-      11: 20 AM
-    </h6>
+      <p
+        className={classNames(
+          styles.textBlack,
+          styles.textMd,
+          styles.fontMedium,
+          styles.mb,
+          styles.cursor
+        )}
+      >
+        #design
+      </p>
+      <h6
+        className={classNames(styles.grayTextColor, styles.textSm, styles.mbs)}
+      >
+        11: 20 AM
+      </h6>
+    </div>
+    <div className={classNames(styles.dFlex, styles.channelMessage)}>
+      <p
+        className={classNames(
+          styles.grayTextColor,
+          styles.textMd,
+          styles.fontMedium,
+          styles.mb
+        )}
+      >
+        Oliver Addams: I have an idea on this issue...
+      </p>
+    </div>
   </div>
 )
-const GroupListChannelMultipleUnread = () => (
-  <div className={classNames(styles.dFlex, styles.channelMessage)}>
-    <p
-      className={classNames(
-        styles.grayTextColor,
-        styles.textMd,
-        styles.fontMedium,
-        styles.mb
-      )}
+
+interface GroupListItem {
+  onClick?(): void
+  active?: boolean
+}
+const GroupListChannelMultipleUnread = ({ onClick, active }: GroupListItem) => (
+  <div
+    onClick={onClick}
+    className={classNames(
+      active ? styles.channelGroupActive : styles.channelGroup
+    )}
+  >
+    <div
+      className={classNames(styles.dFlex, styles.channelText, styles.cursor)}
     >
-      6 unread messages
-    </p>
-    <h6 className={classNames(styles.grayTextColor, styles.textSm, styles.mb)}>
-      <Badge count={6} style={{ backgroundColor: '#54B2D3' }} />
-    </h6>
+      <p
+        className={classNames(
+          styles.textBlack,
+          styles.textMd,
+          styles.fontMedium,
+          styles.mb,
+          styles.cursor
+        )}
+      >
+        #general
+      </p>
+      <h6
+        className={classNames(styles.grayTextColor, styles.textSm, styles.mb)}
+      >
+        11: 20 AM
+      </h6>
+    </div>
+    <div className={classNames(styles.dFlex, styles.channelMessage)}>
+      <p
+        className={classNames(
+          styles.grayTextColor,
+          styles.textMd,
+          styles.fontMedium,
+          styles.mb
+        )}
+      >
+        6 unread messages
+      </p>
+      <h6
+        className={classNames(styles.grayTextColor, styles.textSm, styles.mb)}
+      >
+        <Badge count={6} style={{ backgroundColor: '#54B2D3' }} />
+      </h6>
+    </div>
   </div>
 )
 
@@ -93,66 +150,8 @@ export const GroupList: FC<P> = ({ ...props }) => {
           />
         </div>
       )}
-      <div
-        onClick={() => handleClick('general')}
-        className={classNames(
-          active && group === 'general'
-            ? styles.channelGroupActive
-            : styles.channelGroup
-        )}
-      >
-        <GroupListChannelMultipleUnread />
-        <GroupListChannelAllRead />
-      </div>
-      <div
-        onClick={() => handleClick('design')}
-        className={classNames(
-          active && group === 'design'
-            ? styles.channelGroupActive
-            : styles.channelGroup
-        )}
-      >
-        <div
-          className={classNames(
-            styles.dFlex,
-            styles.channelText,
-            styles.cursor
-          )}
-        >
-          <p
-            className={classNames(
-              styles.textBlack,
-              styles.textMd,
-              styles.fontMedium,
-              styles.mb,
-              styles.cursor
-            )}
-          >
-            #design
-          </p>
-          <h6
-            className={classNames(
-              styles.grayTextColor,
-              styles.textSm,
-              styles.mbs
-            )}
-          >
-            11: 20 AM
-          </h6>
-        </div>
-        <div className={classNames(styles.dFlex, styles.channelMessage)}>
-          <p
-            className={classNames(
-              styles.grayTextColor,
-              styles.textMd,
-              styles.fontMedium,
-              styles.mb
-            )}
-          >
-            Oliver Addams: I have an idea on this issue...
-          </p>
-        </div>
-      </div>
+      <GroupListChannelMultipleUnread onClick={} />
+      <GroupListChannelAllRead />
     </div>
   )
 }
