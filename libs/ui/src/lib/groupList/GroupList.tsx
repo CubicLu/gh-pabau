@@ -12,6 +12,43 @@ interface P {
   isNewDm?: boolean
   isHeaderShow?: boolean
 }
+
+const GroupListChannelAllRead = () => (
+  <div className={classNames(styles.dFlex, styles.channelText, styles.cursor)}>
+    <p
+      className={classNames(
+        styles.textBlack,
+        styles.textMd,
+        styles.fontMedium,
+        styles.mb,
+        styles.cursor
+      )}
+    >
+      #general
+    </p>
+    <h6 className={classNames(styles.grayTextColor, styles.textSm, styles.mb)}>
+      11: 20 AM
+    </h6>
+  </div>
+)
+const GroupListChannelMultipleUnread = () => (
+  <div className={classNames(styles.dFlex, styles.channelMessage)}>
+    <p
+      className={classNames(
+        styles.grayTextColor,
+        styles.textMd,
+        styles.fontMedium,
+        styles.mb
+      )}
+    >
+      6 unread messages
+    </p>
+    <h6 className={classNames(styles.grayTextColor, styles.textSm, styles.mb)}>
+      <Badge count={6} style={{ backgroundColor: '#54B2D3' }} />
+    </h6>
+  </div>
+)
+
 export const GroupList: FC<P> = ({ ...props }) => {
   const [active, setActive] = useState<boolean>(false)
   const [group, setGroup] = useState<string>('')
@@ -64,55 +101,8 @@ export const GroupList: FC<P> = ({ ...props }) => {
             : styles.channelGroup
         )}
       >
-        <div
-          className={classNames(
-            styles.dFlex,
-            styles.channelText,
-            styles.cursor
-          )}
-        >
-          <p
-            className={classNames(
-              styles.textBlack,
-              styles.textMd,
-              styles.fontMedium,
-              styles.mb,
-              styles.cursor
-            )}
-          >
-            #general
-          </p>
-          <h6
-            className={classNames(
-              styles.grayTextColor,
-              styles.textSm,
-              styles.mb
-            )}
-          >
-            11: 20 AM
-          </h6>
-        </div>
-        <div className={classNames(styles.dFlex, styles.channelMessage)}>
-          <p
-            className={classNames(
-              styles.grayTextColor,
-              styles.textMd,
-              styles.fontMedium,
-              styles.mb
-            )}
-          >
-            6 unread messages
-          </p>
-          <h6
-            className={classNames(
-              styles.grayTextColor,
-              styles.textSm,
-              styles.mb
-            )}
-          >
-            <Badge count={6} style={{ backgroundColor: '#54B2D3' }} />
-          </h6>
-        </div>
+        <GroupListChannelMultipleUnread />
+        <GroupListChannelAllRead />
       </div>
       <div
         onClick={() => handleClick('design')}

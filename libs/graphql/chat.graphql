@@ -1,0 +1,42 @@
+subscription chatListDirectMessagesSubscription {
+  chat(
+    distinct_on: from
+    order_by: { created_at: desc, from: asc }
+    where: { to: { _is_null: false } }
+  ) {
+    id
+    message
+    created_at
+    updated_at
+    from
+  }
+}
+query chatListDirectMessagesQuery {
+  chat(
+    distinct_on: from
+    order_by: { created_at: desc, from: asc }
+    where: { to: { _is_null: false } }
+  ) {
+    id
+    message
+    created_at
+    toUser {
+      username
+      full_name
+    }
+    chat_room {
+      id
+      name
+      chats_aggregate(where: { created_at: { _gt: "2030-01-01 00:00:00" } }) {
+        aggregate {
+          count
+        }
+      }
+    }
+    fromUser {
+      username
+      full_name
+      image
+    }
+  }
+}

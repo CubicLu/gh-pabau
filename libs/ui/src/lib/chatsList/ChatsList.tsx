@@ -12,7 +12,6 @@ export interface ChatMessage {
   unread?: number
   dateTime: string
   isOnline: boolean
-  profileURL: string
   isMultiple?: boolean
   data?: ChatMessage[]
 }
