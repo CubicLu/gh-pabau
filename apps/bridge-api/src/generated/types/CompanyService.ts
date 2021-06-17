@@ -5,7 +5,7 @@ export const CompanyService = objectType({
   definition(t) {
     t.model.id()
     t.model.company_id()
-    t.model.service()
+    t.model.name()
     t.model.duration()
     t.model.description()
     t.model.price()
@@ -48,6 +48,7 @@ export const CompanyService = objectType({
     t.model.online_only_service()
     t.model.Company()
     t.model.CompanyRoomService()
+    t.model.ServiceCategory()
   },
 })
 

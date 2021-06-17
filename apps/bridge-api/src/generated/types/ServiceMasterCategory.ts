@@ -10,6 +10,7 @@ export const ServiceMasterCategory = objectType({
     t.model.type()
     t.model.image()
     t.model.InvCategory()
+    t.model.ServiceCategory()
     t.model.Company()
   },
 })

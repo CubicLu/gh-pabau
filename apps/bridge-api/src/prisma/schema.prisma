@@ -3594,22 +3594,28 @@ model CompanyDepartment {
 //  @@unique([company_id, ipv4_range_start, ipv4_range_end], name: "unique_range_per_company")
 //}
 //
-//model company_groups {
-//  ID                  Int    @id @default(autoincrement())
-//  Name                String
-//  occupier            String
-//  category_product_id Int
-//  cat_order           Int
-//  image               String
-//  online_enabled      Int
-//  group_color         String
-//  import_id           Int
-//  equipment_id        Int
-//  deposit_amount      Float
-//  tax_id              Int
-//  master_cat_id       Int
-//  company_position_id Int    @default(0)
-//}
+model ServiceCategory {
+  id                    Int                   @id @default(autoincrement()) @map("ID")
+  name                  String                @map("Name")
+  company_id            Int                   @map("occupier")
+  category_product_id   Int
+  cat_order             Int
+  image                 String
+  online_enabled        Int
+  group_color           String
+  import_id             Int
+  equipment_id          Int
+  deposit_amount        Float
+  tax_id                Int
+  master_cat_id         Int
+  company_position_id   Int                   @default(0)
+  ServiceMasterCategory ServiceMasterCategory @relation(fields: [master_cat_id], references: [id])
+  InvCategory           InvCategory           @relation(fields: [category_product_id], references: [id])
+  CompanyService        CompanyService[]
+
+  @@map("company_groups")
+}
+
 //
 //model company_hits {
 //  id         Int    @id @default(autoincrement())
@@ -3786,7 +3792,7 @@ model CompanyRoomService {
 model CompanyService {
   id                     Int                               @id @default(autoincrement())
   company_id             Int                               @map("company")
-  service                String
+  name                   String                            @map("service")
   duration               String
   description            String
   price                  Float
@@ -3829,12 +3835,13 @@ model CompanyService {
   online_only_service    Int
   Company                Company                           @relation(fields: [company_id], references: [id])
   CompanyRoomService     CompanyRoomService[]
+  ServiceCategory        ServiceCategory                   @relation(fields: [group_id], references: [id])
 
   @@index([company_id], name: "company_index")
   @@index([group_id], name: "group_index")
   @@index([pos_only], name: "pos_only")
   @@index([product_id], name: "product_index")
-  @@index([service], name: "service")
+  @@index([name], name: "name")
   @@map("company_services")
 }
 
@@ -6058,27 +6065,26 @@ model InvBiller {
 }
 
 model InvCategory {
-  id                Int       @id @default(autoincrement())
-  code              String
-  name              String
-  order             Int?
-  category_type     String?   @default("retail")
-  company_id        Int?      @map("occupier")
-  uid               Int?
-  created_date      DateTime?
-  modified_date     DateTime?
-  custom_id         Int
-  PriceListGroup_id Int
-  imported          Int
-  technical         Int
-  image             String
-  disabled          Int
-  tax_id            Int
-  master_cat_id     Int
-
-
+  id                    Int                   @id @default(autoincrement())
+  code                  String
+  name                  String
+  order                 Int?
+  category_type         String?               @default("retail")
+  company_id            Int?                  @map("occupier")
+  uid                   Int?
+  created_date          DateTime?
+  modified_date         DateTime?
+  custom_id             Int
+  PriceListGroup_id     Int
+  imported              Int
+  technical             Int
+  image                 String
+  disabled              Int
+  tax_id                Int
+  master_cat_id         Int
   InvProduct            InvProduct[]
   ServiceMasterCategory ServiceMasterCategory @relation(fields: [master_cat_id], references: [id])
+  ServiceCategory       ServiceCategory?
 
   @@index([category_type], name: "category_type")
   @@index([master_cat_id], name: "master_cat_id")
@@ -10657,15 +10663,15 @@ model UserSalutation {
 //
 
 model ServiceMasterCategory {
-  id          Int                           @id @default(autoincrement())
-  name        String
-  company_id  Int                           @map("occupier")
-  ord         Int                           @default(0)
-  type        services_master_category_type @default(SERVICE)
-  image       String
-  InvCategory InvCategory[]
-
-  Company Company @relation(fields: [company_id], references: [id])
+  id              Int                           @id @default(autoincrement())
+  name            String
+  company_id      Int                           @map("occupier")
+  ord             Int                           @default(0)
+  type            services_master_category_type @default(SERVICE)
+  image           String
+  InvCategory     InvCategory[]
+  ServiceCategory ServiceCategory[]
+  Company         Company                       @relation(fields: [company_id], references: [id])
 
   @@map("services_master_category")
 }

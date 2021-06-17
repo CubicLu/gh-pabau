@@ -1929,6 +1929,26 @@ export interface CompanyDepartment {
   Company: Company;
 }
 
+export interface ServiceCategory {
+  id: number;
+  name: string;
+  company_id: number;
+  category_product_id: number;
+  cat_order: number;
+  image: string;
+  online_enabled: number;
+  group_color: string;
+  import_id: number;
+  equipment_id: number;
+  deposit_amount: number;
+  tax_id: number;
+  master_cat_id: number;
+  company_position_id: number;
+  ServiceMasterCategory: ServiceMasterCategory;
+  InvCategory: InvCategory;
+  CompanyService?: CompanyService[];
+}
+
 export interface CompanyLocation {
   id: number;
   company_id: number;
@@ -2021,7 +2041,7 @@ export interface CompanyRoomService {
 export interface CompanyService {
   id: number;
   company_id: number;
-  service: string;
+  name: string;
   duration: string;
   description: string;
   price: number;
@@ -2064,6 +2084,7 @@ export interface CompanyService {
   online_only_service: number;
   Company: Company;
   CompanyRoomService?: CompanyRoomService[];
+  ServiceCategory: ServiceCategory;
 }
 
 export interface ContactInsurance {
@@ -2219,6 +2240,7 @@ export interface InvCategory {
   master_cat_id: number;
   InvProduct?: InvProduct[];
   ServiceMasterCategory: ServiceMasterCategory;
+  ServiceCategory?: ServiceCategory;
 }
 
 export interface InvPayment {
@@ -2735,6 +2757,7 @@ export interface ServiceMasterCategory {
   type: services_master_category_type;
   image: string;
   InvCategory?: InvCategory[];
+  ServiceCategory?: ServiceCategory[];
   Company: Company;
 }
 
