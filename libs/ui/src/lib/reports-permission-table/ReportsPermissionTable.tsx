@@ -1,4 +1,4 @@
-import React, { FC, useState, HTMLAttributes, useEffect } from 'react'
+import React, { FC, useState, HTMLAttributes } from 'react'
 import { Popover, Skeleton, Table as AntTable, Tooltip } from 'antd'
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
 import {
@@ -57,7 +57,6 @@ export type ReportsPermissionTableProps = TableProps<PermissionsGroupType> & {
     checked?: boolean
   ) => void
   isDefaultExpanded?: boolean
-  isLoading?: boolean
   isListQueryLoader?: boolean
   setTabValue?: React.Dispatch<React.SetStateAction<string | number>>
 }
@@ -70,25 +69,16 @@ export const ReportsPermissionTable: FC<ReportsPermissionTableProps> = ({
   dataSource = [],
   onUpdatePermission,
   isDefaultExpanded,
-  isLoading,
   isListQueryLoader,
   setTabValue,
   ...props
 }) => {
   const { t } = useTranslation('common')
-  const [loading, setIsLoading] = useState(false)
   const [deleteVisible, setDeleteVisible] = useState(false)
   const [popoverVisible, setPopOverVisible] = useState({})
   const [teammatePopoverVisible, setTeammatePopOverVisible] = useState({})
-
-  useEffect(() => {
-    if (loading && !isLoading) {
-      onCancelApplyChanges()
-      setIsLoading(false)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading])
-
+  const [isShowMore, setIsShowMore] = useState(false)
+  const showLimit = 5
   const [
     expandedRecord,
     setExpandedRecord,
@@ -100,7 +90,7 @@ export const ReportsPermissionTable: FC<ReportsPermissionTableProps> = ({
   const [permissionChangeModule, setPermissionChangeModule] = useState<{
     record: PermissionsGroupType | PermissionsType
     columnKey: string
-    tooltipMessage: string
+    tooltipMessage: string[]
     checked?: boolean
   }>()
 
@@ -224,19 +214,26 @@ export const ReportsPermissionTable: FC<ReportsPermissionTableProps> = ({
             disabled={column.isDisabled}
             onClick={(e) => e.stopPropagation()}
             onChange={(e: CheckboxChangeEvent) => {
+              const children = (record as PermissionsGroupType).children
               setIsShowPermissionChanges(true)
               setPermissionChangeModule({
                 record,
                 columnKey: column.key,
                 checked: e.target.checked,
                 tooltipMessage:
-                  record.key === '0'
-                    ? t(
-                        'reportPermissionTable.applyChanges.reviewChanges.customReportMessage'
-                      )
+                  record.key === '0' || record.key === 'custom_report'
+                    ? [
+                        t(
+                          'reportPermissionTable.applyChanges.reviewChanges.customReportMessage'
+                        ),
+                      ]
                     : record.tooltipMessage
-                    ? record.tooltipMessage
-                    : '',
+                    ? [record.tooltipMessage]
+                    : children && children?.length > 0
+                    ? children.map((thread) =>
+                        thread.tooltipMessage ? thread.tooltipMessage : ''
+                      )
+                    : [],
               })
             }}
           />
@@ -316,16 +313,46 @@ export const ReportsPermissionTable: FC<ReportsPermissionTableProps> = ({
         <h4>{t('reportPermissionTable.applyChanges.modalDesc')}</h4>
         <div className={styles.reviewWrapper}>
           <h4>{t('reportPermissionTable.applyChanges.reviewChanges')}</h4>
-          <div className={styles.permissionDesc}>
-            {permissionChangeModule?.checked ? (
-              <PlusOutlined className={styles.plusIcon} />
-            ) : (
-              <MinusOutlined className={styles.minusIcon} />
-            )}
-            <div className={styles.desc}>
-              {permissionChangeModule?.tooltipMessage}
-            </div>
+          <div className={styles.permissionDescWrapper}>
+            {permissionChangeModule?.tooltipMessage &&
+              permissionChangeModule.tooltipMessage
+                .slice(
+                  0,
+                  isShowMore
+                    ? permissionChangeModule.tooltipMessage.length
+                    : showLimit
+                )
+                .map((message, idx) => {
+                  return (
+                    <div key={idx} className={styles.permissionDesc}>
+                      {permissionChangeModule?.checked ? (
+                        <PlusOutlined className={styles.plusIcon} />
+                      ) : (
+                        <MinusOutlined className={styles.minusIcon} />
+                      )}
+                      <div className={styles.desc}>{message}</div>
+                    </div>
+                  )
+                })}
           </div>
+          {permissionChangeModule?.tooltipMessage &&
+            permissionChangeModule.tooltipMessage.length > showLimit && (
+              <div className={styles.permissionDescButton}>
+                {isShowMore ? (
+                  <Button onClick={() => setIsShowMore(false)}>
+                    {t(
+                      'reportPermissionTable.applyChanges.reviewChanges.showLess'
+                    )}
+                  </Button>
+                ) : (
+                  <Button onClick={() => setIsShowMore(true)}>
+                    {t(
+                      'reportPermissionTable.applyChanges.reviewChanges.showMore'
+                    )}
+                  </Button>
+                )}
+              </div>
+            )}
         </div>
         <div className={styles.applyBtn}>
           <Button
