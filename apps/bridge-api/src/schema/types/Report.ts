@@ -1,4 +1,4 @@
-import { extendType, intArg, list, nonNull, stringArg } from 'nexus'
+import { extendType, list, nonNull, stringArg } from 'nexus'
 import fetch from 'node-fetch'
 import { ReportInputDto, TrendReportInputDto } from '../../app/report'
 import { Context } from '../../context'
@@ -12,8 +12,8 @@ export const Reports = extendType({
         id: nonNull(stringArg()),
         start_date: nonNull(stringArg()),
         end_date: nonNull(stringArg()),
-        location_id: intArg(),
-        staffs: list('Int'),
+        location_ids: list('Int'),
+        staff_ids: list('Int'),
         columns: list('String'),
       },
       async resolve(_, input: ReportInputDto, ctx: Context) {
@@ -29,8 +29,8 @@ export const Reports = extendType({
             id: input.id.toString(),
             start_date: input.start_date.toString(),
             end_date: input.end_date.toString(),
-            location_id: input.location_id?.toString(),
-            staffs: input.staffs?.toString(),
+            location_ids: input.location_ids?.toString(),
+            staff_ids: input.staff_ids?.toString(),
             columns: input.columns?.toString(),
             company_id: ctx.authenticated.company.toString(),
             user_id: ctx.authenticated.user.toString(),
@@ -51,7 +51,7 @@ export const Reports = extendType({
       args: {
         start_date: nonNull(stringArg()),
         end_date: nonNull(stringArg()),
-        location_id: intArg(),
+        location_ids: list('Int'),
         type: stringArg(),
         columns: list('String'),
       },
@@ -68,7 +68,7 @@ export const Reports = extendType({
             id: 'trend',
             start_date: input.start_date.toString(),
             end_date: input.end_date.toString(),
-            location_id: input.location_id?.toString() ?? '0',
+            location_ids: input.location_ids?.toString() ?? '0',
             type: input.type?.toString() ?? '',
             columns: input.columns?.toString() ?? '',
             company_id: ctx.authenticated.company.toString(),
