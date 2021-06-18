@@ -14,6 +14,13 @@ import {
 } from '@pabau/ui'
 import classNames from 'classnames'
 import { DrawerProps } from 'antd/es/drawer'
+import { Formik, FormikErrors } from 'formik'
+import { useCreateChannelMutation } from '@pabau/graphql'
+
+interface FormikProps {
+  name: string
+  description: string
+}
 
 export type MessagesProps = {
   /** Combined list of channels and DM's */
@@ -59,12 +66,18 @@ export const PabauMessages: FC<MessagesProps> = ({
   const [isPrivate, setIsPrivate] = useState(false)
   const [isCreateChannel, setIsCreateChannel] = useState(false)
 
+  const [
+    createChannelMutation,
+    createChannelMutationResult,
+  ] = useCreateChannelMutation({})
+
   //new DM
   const [isNewDm, setIsNewDm] = useState(false)
 
   const handleNameChange = (e): void => {
     if (e.target.value.length < 80) {
-      setName(e.target.value)
+      const prefix = e.target.value.startsWith('#') ? '' : '#'
+      setName(prefix + e.target.value)
     }
   }
 
@@ -277,53 +290,99 @@ export const PabauMessages: FC<MessagesProps> = ({
           />
         </div>
 
-        <BasicModal
-          modalWidth={682}
-          centered={true}
-          title="create A Channel"
-          newButtonText={'Create'}
-          className={styles.createChannelModal}
-          newButtonDisable={name.length <= 0}
-          onOk={() => onCreate()}
-          dangerButtonText={`Cancel`}
-          onCancel={toggleCreateChannel}
-          onDelete={toggleCreateChannel}
-          visible={isCreateChannel}
+        <Formik
+          initialValues={{ name: '', description: '' }}
+          validate={(props) => {
+            const { name, description } = props
+            const errors: FormikErrors<FormikProps> = {}
+            if (!name || name === '#') {
+              errors.name = 'Required'
+              // } else if (
+              //   !/^#[\d.a-z-]+\.[a-z]{2,}$/i.test(values.email)
+              // ) {
+              //   errors.email = 'Invalid email address'
+            }
+            if (!name || !name.startsWith('#'))
+              props.name = `${(name ?? '').replace('#', '')}`
+            if (!description || description === '#') {
+              errors.description = 'Required'
+            }
+            return errors
+          }}
+          onSubmit={(values, { setSubmitting }) => {
+            setTimeout(() => {
+              alert(JSON.stringify(values, null, 2))
+              setSubmitting(false)
+            }, 400)
+          }}
         >
-          <div className={styles.content}>
-            Channels are where your team communicates. They’re best when
-            organized around a topic – #marketing, for example.
-          </div>
-          <div className={styles.textControl}>
-            <div>Name</div>
-            <Input
-              className={styles.nameInput}
-              placeholder="# e.g. plan-budget"
-              onChange={handleNameChange}
-              value={name}
-              suffix={80 - name.length}
-            />
-          </div>
-          <div className={styles.textControl}>
-            <div>Description</div>
-            <Input
-              placeholder="What’s this channel about?"
-              onChange={handleDescriptionChange}
-            />
-          </div>
-          <div>
-            <div>Make private</div>
-            <div className={styles.switchContent}>
-              <div className={styles.switchText}>
-                When a channel is set to private, it can be only be viewed or
-                joined by invitation.
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+
+            /* and other goodies */
+          }) => (
+            <BasicModal
+              modalWidth={682}
+              centered={true}
+              title="create A Channel"
+              newButtonText={'Create'}
+              className={styles.createChannelModal}
+              newButtonDisable={name.length <= 0}
+              onOk={handleSubmit as any}
+              dangerButtonText={`Cancel`}
+              onCancel={toggleCreateChannel}
+              onDelete={toggleCreateChannel}
+              visible={isCreateChannel}
+            >
+              <div className={styles.content}>
+                Channels are where your team communicates. They’re best when
+                organized around a topic – #marketing, for example.
               </div>
-              <div className={styles.switch}>
-                <Switch onChange={onChangeToPrivate} />
-              </div>
-            </div>
-          </div>
-        </BasicModal>
+
+              <form onSubmit={handleSubmit}>
+                <div className={styles.textControl}>
+                  <div>Name</div>
+                  <Input
+                    className={styles.nameInput}
+                    placeholder="# e.g. plan-budget"
+                    onChange={handleChange}
+                    name="name"
+                    suffix={80 - values.name.length}
+                    prefix="#"
+                    autoFocus
+                  />
+                  {errors.name && touched.name && errors.name}
+                </div>
+                <div className={styles.textControl}>
+                  <div>Description</div>
+                  <Input
+                    placeholder="What’s this channel about?"
+                    name="description"
+                    onChange={handleChange}
+                  />
+                </div>
+                <div style={{ display: 'none' }}>
+                  <div>Make private</div>
+                  <div className={styles.switchContent}>
+                    <div className={styles.switchText}>
+                      When a channel is set to private, it can be only be viewed
+                      or joined by invitation.
+                    </div>
+                    <div className={styles.switch}>
+                      <Switch onChange={onChangeToPrivate} />
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </BasicModal>
+          )}
+        </Formik>
       </div>
       {view === 'dm' && (
         <MessageContainer
