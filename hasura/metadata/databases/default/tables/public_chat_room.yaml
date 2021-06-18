@@ -25,6 +25,7 @@ insert_permissions:
       company:
         _eq: X-Hasura-Org-Id
     columns:
+    - description
     - name
     set:
       company: x-hasura-Org-Id
@@ -33,11 +34,12 @@ select_permissions:
 - permission:
     allow_aggregations: true
     columns:
-    - id
-    - created_at
-    - updated_at
     - company
+    - created_at
+    - description
+    - id
     - name
+    - updated_at
     filter:
       company:
         _eq: X-Hasura-Org-Id
@@ -46,10 +48,17 @@ update_permissions:
 - permission:
     check: null
     columns:
+    - description
     - name
     filter:
       company:
         _eq: X-Hasura-Org-Id
     set:
       company: x-hasura-Org-Id
+  role: user
+delete_permissions:
+- permission:
+    filter:
+      company:
+        _eq: X-Hasura-Org-Id
   role: user

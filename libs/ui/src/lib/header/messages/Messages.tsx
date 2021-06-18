@@ -12,21 +12,16 @@ import {
   MessageContainer,
   ChatMessage,
 } from '@pabau/ui'
-
-import Stephen from '../../../assets/images/users/stephen.png'
-import Linda from '../../../assets/images/users/linda.png'
-import Alex from '../../../assets/images/users/alex.png'
-import Arya from '../../../assets/images/users/arya.png'
-import James from '../../../assets/images/users/james.png'
-import Austin from '../../../assets/images/users/austin.png'
-import Walter from '../../../assets/images/users/walter.png'
-import Liza from '../../../assets/images/users/liza.png'
 import classNames from 'classnames'
 import { DrawerProps } from 'antd/es/drawer'
 
 export type MessagesProps = {
+  /** Combined list of channels and DM's */
   chatList?: ChatMessage[]
+
+  /** ?? */
   closeDrawer: () => void
+
   onCreateChannel?: (
     name: string,
     description: string,
@@ -34,173 +29,6 @@ export type MessagesProps = {
   ) => void
   onMessageType?: (e: MouseEvent<HTMLElement>) => void
 } & Pick<DrawerProps, 'visible'>
-
-interface Contact {
-  userName: string
-  message: string
-  unread?: number
-  dateTime: string
-  isOnline: boolean
-  profileURL: string
-}
-
-const members = [
-  {
-    userName: 'Alex Johnson',
-    profileURL: Alex,
-    isOnline: true,
-  },
-  {
-    userName: 'Arya Davis',
-    profileURL: Arya,
-    isOnline: false,
-  },
-  {
-    userName: 'James Ocean',
-    profileURL: James,
-    isOnline: true,
-  },
-  {
-    userName: 'Austin Winter',
-    profileURL: Austin,
-    isOnline: false,
-  },
-  {
-    userName: 'Walter Brown',
-    profileURL: Walter,
-    isOnline: true,
-  },
-  {
-    userName: 'Liza Frank',
-    profileURL: Liza,
-    isOnline: true,
-  },
-]
-
-const groupData = {
-  general: [
-    {
-      userName: 'Alex Johnson',
-      profileURL: Alex,
-    },
-    {
-      userName: 'Arya Davis',
-      profileURL: Arya,
-    },
-    {
-      userName: 'James Ocean',
-      profileURL: James,
-    },
-    {
-      userName: 'Austin Winter',
-      profileURL: Austin,
-    },
-    {
-      userName: 'Walter Brown',
-      profileURL: Walter,
-    },
-    {
-      userName: 'Liza Frank',
-      profileURL: Liza,
-    },
-  ],
-  design: [
-    {
-      userName: 'Arya Davis',
-      profileURL: Arya,
-    },
-    {
-      userName: 'Stephen Cox',
-      profileURL: Stephen,
-    },
-    {
-      userName: 'Linda Starck',
-      profileURL: Linda,
-    },
-    {
-      userName: 'Walter Brown',
-      profileURL: Walter,
-    },
-  ],
-}
-
-// const chatListData = [
-//   {
-//     userName: 'Stephen Cox',
-//     message: '2 unread messages',
-//     unread: 2,
-//     dateTime: '11:20 AM',
-//     isOnline: true,
-//     profileURL: Stephen,
-//   },
-//   {
-//     userName: 'Linda Starck',
-//     message: 'Sounds good to me!',
-//     dateTime: '11:20 AM',
-//     isOnline: true,
-//     profileURL: Linda,
-//   },
-//   {
-//     userName: 'Alex Johnson',
-//     message: 'Yes, we can try it.',
-//     dateTime: '11:20 AM',
-//     isOnline: false,
-//     profileURL: Alex,
-//   },
-//   {
-//     userName: 'Arya Davis',
-//     message: 'Hi, Arya',
-//     dateTime: '11:20 AM',
-//     isOnline: false,
-//     profileURL: Arya,
-//     isMultiple: true,
-//     data: [
-//       {
-//         userName: 'Arya Davis',
-//         message: 'Hi, Arya',
-//         dateTime: '11:20 AM',
-//         isOnline: false,
-//         profileURL: Arya,
-//       },
-//       {
-//         userName: 'James Ocean',
-//         message: 'Yes, look! This is awesome',
-//         dateTime: '11:20 AM',
-//         isOnline: true,
-//         profileURL: James,
-//       },
-//     ],
-//   },
-//   {
-//     userName: 'James Ocean',
-//     message: 'Yes, look! This is awesome',
-//     dateTime: '11:20 AM',
-//     isOnline: true,
-//     profileURL: James,
-//   },
-//   {
-//     userName: 'Austin Winter',
-//     message: 'On Friday',
-//     dateTime: '11:20 AM',
-//     isOnline: true,
-//     profileURL: Austin,
-//   },
-//   {
-//     userName: 'Walter Brown',
-//     message:
-//       'We can schedule a meeting at 8:00 PM today. I think we will discuss...',
-//     dateTime: '11:20 AM',
-//     isOnline: true,
-//     profileURL: Walter,
-//   },
-//   {
-//     userName: 'Liza Frank',
-//     message: 'On Friday',
-//     dateTime: '11:20 AM',
-//     isOnline: true,
-//     profileURL: Liza,
-//   },
-// ]
 
 export const PabauMessages: FC<MessagesProps> = ({
   closeDrawer,
@@ -215,13 +43,12 @@ export const PabauMessages: FC<MessagesProps> = ({
   }
   const [selectedContact, setSelectedContact] = useState<Contact>()
   const [drawerWidth, setDrawerWidth] = useState(WidthEnum.MessageBox)
-  const [showChatBox, setShowChatBox] = useState(false)
+  const [view, setView] = useState<'dm' | 'group'>()
   const [showGlobalSearch, setGlobalSearch] = useState(false)
-  const [showGroupChatBox, setShowGroupChatBox] = useState(false)
   const [selectedGroup, setSelectedGroup] = useState('general')
   const [isGroupModalVisible, setIsGroupModalVisible] = useState(false)
   const [isAddModalVisible, setIsAddModalVisible] = useState(false)
-  const [memberModalTitle, setMemberModalTitle] = useState('')
+  // const [memberModalTitle, setMemberModalTitle] = useState('')
 
   const [globalSearchValue, setGlobalSearchValue] = useState('')
   const [typingContact, setTypingContact] = useState<Contact>()
@@ -271,22 +98,18 @@ export const PabauMessages: FC<MessagesProps> = ({
     closeDrawer()
   }
 
-  const closeDrawerMenu = () => {
-    closeDrawer?.()
-  }
+  // useEffect(() => {
+  //   if (selectedGroup !== '') {
+  //     setMemberModalTitle(
+  //       Object.keys(groupData[selectedGroup]).length +
+  //         ' Members In #' +
+  //         selectedGroup.charAt(0).toUpperCase() +
+  //         selectedGroup.slice(1)
+  //     )
+  //   }
+  // }, [selectedGroup])
 
-  useEffect(() => {
-    if (selectedGroup !== '') {
-      setMemberModalTitle(
-        Object.keys(groupData[selectedGroup]).length +
-          ' Members In #' +
-          selectedGroup.charAt(0).toUpperCase() +
-          selectedGroup.slice(1)
-      )
-    }
-  }, [selectedGroup])
-
-  const handleGroupClick = (e, type) => {
+  const handleGroupClick = () => {
     setShowGroupChatBox(true)
     setShowChatBox(false)
     setIsNewDm(false)
@@ -326,16 +149,16 @@ export const PabauMessages: FC<MessagesProps> = ({
     setIsAddModalVisible(true)
   }
 
-  const handleMessageType = (e) => {
-    if (isNewDm || showGroupChatBox) {
-      setTypingContact(undefined)
-    } else {
-      e.target.value !== ''
-        ? setTypingContact(selectedContact)
-        : setTypingContact(undefined)
-    }
-    onMessageType?.(e)
-  }
+  // const handleMessageType = (e) => {
+  //   if (isNewDm || showGroupChatBox) {
+  //     setTypingContact(undefined)
+  //   } else {
+  //     e.target.value !== ''
+  //       ? setTypingContact(selectedContact)
+  //       : setTypingContact(undefined)
+  //   }
+  //   onMessageType?.(e)
+  // }
 
   const globalSearch = () => {
     setGlobalSearch((e) => !e)
@@ -358,7 +181,7 @@ export const PabauMessages: FC<MessagesProps> = ({
       width={drawerWidth}
       placement="right"
       closable={false}
-      onClose={closeDrawerMenu}
+      onClose={() => alert('TODO 65498')}
       className={styles.messagesDrawer}
     >
       <div className={styles.messageBox}>
@@ -408,15 +231,18 @@ export const PabauMessages: FC<MessagesProps> = ({
                   )}
                   onClick={globalSearch}
                 />
-                {!showChatBox && !showGroupChatBox && (
-                  <CloseOutlined
-                    className={classNames(
-                      styles.grayTextColor,
-                      styles.chatIconStyle,
-                      styles.closeIcon
-                    )}
-                    onClick={closeDrawerMenu}
-                  />
+                {view && ['dm', 'group'].includes(view) && (
+                  <>
+                    <h1>???</h1>
+                    <CloseOutlined
+                      className={classNames(
+                        styles.grayTextColor,
+                        styles.chatIconStyle,
+                        styles.closeIcon
+                      )}
+                      onClick={closeDrawer}
+                    />
+                  </>
                 )}
               </div>
             </div>
@@ -428,23 +254,23 @@ export const PabauMessages: FC<MessagesProps> = ({
               className={classNames(styles.channelsText, styles.channelsHead)}
             >
               <p className={classNames(styles.grayTextColor, styles.textSm)}>
-                chats & channels
+                chats &amp; channels
               </p>
             </div>
           )}
           <GroupList
             onClick={handleGroupClick}
-            showChatBox={showChatBox}
+            // showChatBox={showChatBox}
             isNewDm={isNewDm}
             onCreateModalClick={toggleCreateChannel}
             isHeaderShow={!showGlobalSearch}
+            messages={chatList.filter((e) => e.userName.startsWith('#'))}
           />
           <ChatsList
-            chatMessages={chatList}
-            typingContact={typingContact}
+            chatMessages={chatList.filter((e) => !e.userName.startsWith('#'))}
             onClick={handleClick}
-            showGroupChatBox={showGroupChatBox}
-            showChatBox={showChatBox}
+            // showGroupChatBox={showGroupChatBox}
+            // showChatBox={showChatBox}
             isNewDm={isNewDm}
             selectedContact={selectedContact}
             isHeaderShow={!showGlobalSearch}
@@ -499,21 +325,17 @@ export const PabauMessages: FC<MessagesProps> = ({
           </div>
         </BasicModal>
       </div>
-      {showChatBox && (
+      {view === 'dm' && (
         <MessageContainer
           selectedContact={selectedContact}
-          onClick={closeDrawerMenu}
-          onMessageType={handleMessageType}
+          onClick={closeDrawer}
         />
       )}
-      {showGroupChatBox && (
+      {view === 'group' && (
         <div className={styles.chatBoxContainer}>
           <MessageContainer
-            onClick={closeDrawerMenu}
-            onMessageType={handleMessageType}
-            /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
-            // @ts-ignore
-            groupData={groupData}
+            onClick={closeDrawer}
+            // groupData={groupData}
             selectedGroup={selectedGroup}
             onModalOpen={() => setIsGroupModalVisible(true)}
           />

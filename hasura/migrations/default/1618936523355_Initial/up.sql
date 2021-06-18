@@ -409,7 +409,8 @@ CREATE TABLE public.chat_room (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     company integer NOT NULL,
-    name text NOT NULL
+    name text NOT NULL,
+    description text
 );
 CREATE TABLE public.chat_room_participant (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,

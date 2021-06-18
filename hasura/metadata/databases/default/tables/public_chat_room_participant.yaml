@@ -39,3 +39,10 @@ update_permissions:
         company:
           _eq: X-Hasura-Org-Id
   role: user
+delete_permissions:
+- permission:
+    filter:
+      room:
+        company:
+          _eq: X-Hasura-Org-Id
+  role: user

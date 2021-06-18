@@ -135,8 +135,7 @@ Now to export from prod, on a daily basis, on a fresh checkout of master:
 ```bash
 rm -rf hasura/metadata \
   && NODE_ENV=production yarn hasura:export \
-  && git checkout master hasura/metadata/remote_schemas.yaml \
-  && NODE_ENV=production yarn hasura:cli migrate create delete_me --from-server --database-name default
+  && git checkout master hasura/metadata/remote_schemas.yaml
 ```
 
 You should now have the metadata (.yml), schema (.graphql), and migration (.sql) files all ready to be committed into git.

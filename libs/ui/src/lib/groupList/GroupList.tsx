@@ -1,129 +1,39 @@
 import React, { FC, useEffect, useState } from 'react'
-import { Badge } from 'antd'
 import { PlusCircleFilled } from '@ant-design/icons'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 import styles from './GroupList.module.less'
+import { ChatMessage } from '../chatsList/ChatsList'
+import { GroupListChannelMultipleUnread } from './GroupListChannelMultipleUnread'
+import { GroupListChannelAllRead } from './GroupListChannelAllRead'
 
 interface P {
-  onClick?: (isSelected: boolean, type: string) => void
+  onClick?: () => void
   onCreateModalClick?: () => void
   showChatBox?: boolean
   isNewDm?: boolean
   isHeaderShow?: boolean
+  messages: ChatMessage[]
 }
 
-const GroupListChannelAllRead = ({ onClick, active }: GroupListItem) => (
-  <div
-    onClick={onClick}
-    className={classNames(
-      active ? styles.channelGroupActive : styles.channelGroup
-    )}
-  >
-    <div
-      className={classNames(styles.dFlex, styles.channelText, styles.cursor)}
-    >
-      <p
-        className={classNames(
-          styles.textBlack,
-          styles.textMd,
-          styles.fontMedium,
-          styles.mb,
-          styles.cursor
-        )}
-      >
-        #design
-      </p>
-      <h6
-        className={classNames(styles.grayTextColor, styles.textSm, styles.mbs)}
-      >
-        11: 20 AM
-      </h6>
-    </div>
-    <div className={classNames(styles.dFlex, styles.channelMessage)}>
-      <p
-        className={classNames(
-          styles.grayTextColor,
-          styles.textMd,
-          styles.fontMedium,
-          styles.mb
-        )}
-      >
-        Oliver Addams: I have an idea on this issue...
-      </p>
-    </div>
-  </div>
-)
-
-interface GroupListItem {
-  onClick?(): void
-  active?: boolean
-}
-const GroupListChannelMultipleUnread = ({ onClick, active }: GroupListItem) => (
-  <div
-    onClick={onClick}
-    className={classNames(
-      active ? styles.channelGroupActive : styles.channelGroup
-    )}
-  >
-    <div
-      className={classNames(styles.dFlex, styles.channelText, styles.cursor)}
-    >
-      <p
-        className={classNames(
-          styles.textBlack,
-          styles.textMd,
-          styles.fontMedium,
-          styles.mb,
-          styles.cursor
-        )}
-      >
-        #general
-      </p>
-      <h6
-        className={classNames(styles.grayTextColor, styles.textSm, styles.mb)}
-      >
-        11: 20 AM
-      </h6>
-    </div>
-    <div className={classNames(styles.dFlex, styles.channelMessage)}>
-      <p
-        className={classNames(
-          styles.grayTextColor,
-          styles.textMd,
-          styles.fontMedium,
-          styles.mb
-        )}
-      >
-        6 unread messages
-      </p>
-      <h6
-        className={classNames(styles.grayTextColor, styles.textSm, styles.mb)}
-      >
-        <Badge count={6} style={{ backgroundColor: '#54B2D3' }} />
-      </h6>
-    </div>
-  </div>
-)
-
-export const GroupList: FC<P> = ({ ...props }) => {
-  const [active, setActive] = useState<boolean>(false)
-  const [group, setGroup] = useState<string>('')
+export const GroupList = (props: P) => {
+  const { messages, onClick } = props
+  const [active, setActive] = useState<typeof messages[number]>()
+  // const [group, setGroup] = useState<string>('')
   const { t } = useTranslation('common')
 
-  useEffect(() => {
-    if (props.showChatBox) {
-      setActive(false)
-    }
-    if (props.isNewDm) {
-      setActive(false)
-    }
-  }, [props.showChatBox, props.isNewDm])
+  // useEffect(() => {
+  //   if (props.showChatBox) {
+  //     setActive(false)
+  //   }
+  //   if (props.isNewDm) {
+  //     setActive(false)
+  //   }
+  // }, [props.showChatBox, props.isNewDm])
 
-  const handleClick = (type) => {
-    setGroup(type)
-    setActive(!active)
-    props.onClick?.(true, type)
+  const handleClick = (e: typeof active) => {
+    setActive(e)
+    onClick?.()
   }
 
   return (
@@ -150,8 +60,17 @@ export const GroupList: FC<P> = ({ ...props }) => {
           />
         </div>
       )}
-      <GroupListChannelMultipleUnread onClick={} />
-      <GroupListChannelAllRead />
+      {messages.map((e) => (
+        // TODO: use a proper id for key
+        <GroupListChannelMultipleUnread
+          onClick={handleClick}
+          messages={[e]}
+          key={e.dateTime}
+          active={e === active}
+        />
+      ))}
+
+      {/* <GroupListChannelAllRead /> */}
     </div>
   )
 }

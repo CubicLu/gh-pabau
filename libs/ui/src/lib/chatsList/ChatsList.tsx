@@ -5,23 +5,21 @@ import { Avatar } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as MessageRead } from '../../assets/images/message-read.svg'
 import styles from './ChatsList.module.less'
-import { ChatListDirectMessagesQueryQuery } from '@pabau/graphql'
 
 export interface ChatMessage {
-  userName: string
+  userName: string /** The username or channel to display */
   message: string
   unread?: number
   dateTime: string
   isOnline: boolean
   isMultiple?: boolean
-  data?: ChatMessage[]
+  onClick?(): void
+  active?: boolean
 }
 
 interface P {
-  chatMessages: ChatListDirectMessagesQueryQuery['chat']
-  showChatBox?: boolean
+  chatMessages: ChatMessage[]
   selectedContact?: ChatMessage
-  typingContact?: ChatMessage
   onClick?: (selectedContact: ChatMessage) => void
   showGroupChatBox?: boolean
   isNewDm?: boolean
@@ -29,26 +27,26 @@ interface P {
 }
 
 export const ChatsList = (props: P) => {
-  const { chatMessages, onClick, typingContact } = props
+  const { chatMessages, onClick } = props
   const { t } = useTranslation('common')
   // if (!chatMessages) return
   type blah = typeof chatMessages[number]
   const [activeChat, setActiveChat] = useState<blah>()
 
-  useEffect(() => {
-    if (props.showGroupChatBox) {
-      // setActiveIndex(-1)
-    }
-    if (props.isNewDm) {
-      // setActiveIndex(-1)
-    }
-    // typingContact
-    //   ? chatMessages?.map(
-    //       (item, index) =>
-    //         item.userName === typingContact.userName && setIsTyping(index)
-    //     )
-    //   : setIsTyping(-1)
-  }, [chatMessages, props.showGroupChatBox, props.isNewDm])
+  // useEffect(() => {
+  //   if (props.showGroupChatBox) {
+  //     // setActiveIndex(-1)
+  //   }
+  //   if (props.isNewDm) {
+  //     // setActiveIndex(-1)
+  //   }
+  //   // typingContact
+  //   //   ? chatMessages?.map(
+  //   //       (item, index) =>
+  //   //         item.userName === typingContact.userName && setIsTyping(index)
+  //   //     )
+  //   //   : setIsTyping(-1)
+  // }, [chatMessages, props.showGroupChatBox, props.isNewDm])
 
   const onClickContact = (e) => {
     if (chatMessages) {
@@ -76,8 +74,14 @@ export const ChatsList = (props: P) => {
         </div>
       )}
       <div>
-        {chatMessages?.map((message) => {
-          const { id, fromUser } = message
+        {chatMessages.map((message) => {
+          const {
+            message: messageBody,
+            isOnline = true,
+            unread,
+            dateTime,
+          } = message
+
           if (!fromUser) throw new Error('Item found with no fromUser')
           const { image } = fromUser
           return (
@@ -97,7 +101,7 @@ export const ChatsList = (props: P) => {
                 <div className={styles.chatProfile}>
                   <Badge
                     dot
-                    color={chat.isOnline ? '#65CD98' : '#FF9E44'}
+                    color={isOnline ? '#65CD98' : '#FF9E44'}
                     offset={[-2, 32]}
                     size="default"
                     style={{
@@ -142,9 +146,7 @@ export const ChatsList = (props: P) => {
                         styles.userMessage
                       )}
                     >
-                      {isTyping === index
-                        ? `${chat.userName} is typing....`
-                        : chat.message}
+                      {messageBody}
                     </span>
                     <h6
                       className={classNames(
@@ -153,9 +155,9 @@ export const ChatsList = (props: P) => {
                         styles.mb
                       )}
                     >
-                      {chat.unread ? (
+                      {unread ? (
                         <Badge
-                          count={chat.unread}
+                          count={unread}
                           style={{ backgroundColor: '#54B2D3' }}
                         />
                       ) : (
