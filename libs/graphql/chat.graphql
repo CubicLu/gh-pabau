@@ -27,7 +27,6 @@ query chatListDirectMessagesQuery {
     room {
       id
       name
-
       chats_aggregate(where: { created_at: { _gt: "2030-01-01 00:00:00" } }) {
         aggregate {
           count
@@ -39,5 +38,11 @@ query chatListDirectMessagesQuery {
       full_name
       image
     }
+  }
+}
+
+mutation createChannel($name: String, $description: String!) {
+  insert_chat_room_one(object: { name: $name, description: $description }) {
+    id
   }
 }
