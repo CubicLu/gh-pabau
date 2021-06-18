@@ -1434,6 +1434,8 @@ ALTER TABLE ONLY public.category
     ADD CONSTRAINT category_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.chat
     ADD CONSTRAINT chat_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.chat_room
+    ADD CONSTRAINT chat_room_company_name_key UNIQUE (company, name);
 ALTER TABLE ONLY public.chat_room_participant
     ADD CONSTRAINT chat_room_participant_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.chat_room

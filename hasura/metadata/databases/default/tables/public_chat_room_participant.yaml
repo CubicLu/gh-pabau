@@ -5,6 +5,17 @@ object_relationships:
 - name: room
   using:
     foreign_key_constraint_on: room_id
+remote_relationships:
+- definition:
+    hasura_fields:
+    - user
+    remote_field:
+      user:
+        arguments:
+          where:
+            id: $user
+    remote_schema: CRM
+  name: User
 insert_permissions:
 - permission:
     backend_only: false
@@ -24,7 +35,6 @@ select_permissions:
     - created_at
     - id
     - updated_at
-    - user
     filter:
       room:
         company:
