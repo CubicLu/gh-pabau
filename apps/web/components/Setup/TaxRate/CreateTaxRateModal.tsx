@@ -1,27 +1,27 @@
 import {
   BasicModal,
-  Button,
   FullScreenReportModal as CreateTaxRateMobileModal,
   OperationType as CreateTaxRateOperationType,
 } from '@pabau/ui'
-import { Checkbox, Collapse, Form, Input, InputNumber } from 'antd'
+import { Checkbox, Collapse, InputNumber, Button, Form, Input } from 'antd'
 import classNames from 'classnames'
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import useWindowSize from '../../../hooks/useWindowSize'
 import styles from './TaxRateComponents.module.less'
+
+interface FormElems {
+  name: string
+  value: number
+  is_active: boolean
+  glCode: string
+}
 
 export interface CreateTaxRateProps {
   visible: boolean
   onCancel: () => void
   onSave: (values) => void
-  isEdit?: boolean
-  editData?: {
-    name: string
-    value: number
-    glCode: string
-    is_active: boolean
-  }
+  editData?: FormElems
   onDelete?: () => void
 }
 
@@ -29,12 +29,22 @@ export function CreateTaxRateModal(props: CreateTaxRateProps) {
   const { t } = useTranslationI18()
   const [form] = Form.useForm()
   const size = useWindowSize()
-  const { visible, onCancel, isEdit, editData, onSave, onDelete } = props
-  const [showDeleteBtn, setShowDeleteBtn] = useState(editData?.is_active)
+  const saveBtn = useRef<HTMLButtonElement>(null)
+  const { visible, onCancel, editData, onSave, onDelete } = props
+  const [currentInput, setCurrentInput] = useState(0)
+  const [isActive, setIsActive] = useState<boolean>(
+    editData?.name ? editData?.is_active : true
+  )
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
   const handleClose = () => {
     form.resetFields()
     onCancel()
+  }
+
+  const submitForm = (data) => {
+    data.is_active = isActive
+    onSave?.(data)
   }
 
   const NumberInput = ({ addonAfter, ...props }) => {
@@ -59,96 +69,117 @@ export function CreateTaxRateModal(props: CreateTaxRateProps) {
         form={form}
         name="control-hooks"
         initialValues={{
-          name: isEdit ? editData?.name || '' : '',
-          value: isEdit ? Number(editData?.value) || 0 : 0,
-          isActive: isEdit ? !!editData?.is_active : true,
-          glCode: isEdit ? editData?.glCode || '' : '',
+          name: editData ? editData?.name : '',
+          value: editData ? editData?.value : '',
+          is_active: editData ? editData?.is_active : true,
+          glCode: editData ? editData?.glCode : '',
         }}
-        onFinish={(values) => {
-          onSave(values)
-          handleClose()
-        }}
+        onFinish={submitForm}
       >
         <div>
           <Form.Item
-            label={t('setup.taxrate.notification.createmodal.inputs.name')}
+            label={t('setup.taxrate.createmodal.inputs.name')}
             name="name"
             rules={[
               {
                 required: true,
-                message: t(
-                  'setup.taxrate.notification.createmodal.inputs.name.error'
-                ),
+                message: t('setup.taxrate.createmodal.inputs.required', {
+                  what: t('setup.taxrate.createmodal.inputs.name'),
+                }),
+              },
+              {
+                min: 2,
+                message: t('setup.taxrate.createmodal.inputs.min.error', {
+                  min: 2,
+                  what: t('setup.taxrate.createmodal.inputs.name'),
+                }),
+              },
+              {
+                max: 50,
+                message: t('setup.taxrate.createmodal.inputs.max.error', {
+                  max: 50,
+                }),
               },
             ]}
           >
             <Input
-              maxLength={20}
+              autoFocus={currentInput === 0 ? true : false}
+              onFocus={() => setCurrentInput(0)}
               placeholder={t(
-                'setup.taxrate.notification.createmodal.inputs.name.placeholder'
+                'setup.taxrate.createmodal.inputs.name.placeholder'
               )}
             />
           </Form.Item>
           <Form.Item
-            label={t('setup.taxrate.notification.createmodal.inputs.amount')}
+            label={t('setup.taxrate.createmodal.inputs.amount')}
             name="value"
             rules={[
               {
                 required: true,
-                message: t(
-                  'setup.taxrate.notification.createmodal.inputs.amount.error1'
-                ),
+                message: t('setup.taxrate.createmodal.inputs.required', {
+                  what: t('setup.taxrate.createmodal.inputs.amount'),
+                }),
               },
               {
                 type: 'number',
-                min: 0,
-                message: t(
-                  'setup.taxrate.notification.createmodal.inputs.amount.error2'
-                ),
+                min: 1,
+                message: t('setup.taxrate.createmodal.inputs.negative', {
+                  what: t('setup.taxrate.createmodal.inputs.amount'),
+                }),
               },
               {
                 type: 'number',
                 max: 100,
-                message: t(
-                  'setup.taxrate.notification.createmodal.inputs.amount.error3'
-                ),
+                message: t('setup.taxrate.createmodal.inputs.amount.error2'),
               },
             ]}
           >
             <NumberInput
+              type="number"
+              autoFocus={currentInput === 1 ? true : false}
+              onFocus={() => setCurrentInput(1)}
               size="large"
               placeholder="20"
-              type="number"
-              step={'any'}
               addonAfter="%"
-              min={0}
-              max={100}
               style={{ width: '100%' }}
             />
-            {/* <InputNumber /> */}
           </Form.Item>
 
           <Collapse
             ghost
             expandIconPosition="right"
             className={styles.advanceCollapse}
+            defaultActiveKey={isCollapsed && '1'}
+            onChange={() => setIsCollapsed((e) => !e)}
           >
             <Collapse.Panel
-              header={t(
-                'setup.taxrate.notification.createmodal.inputs.advanced.title'
-              )}
+              header={t('setup.taxrate.createmodal.inputs.advanced.title')}
               key="1"
             >
               <Form.Item
-                label={t(
-                  'setup.taxrate.notification.createmodal.inputs.glcode'
-                )}
                 name="glCode"
+                label={t('setup.taxrate.createmodal.inputs.glcode')}
+                rules={[
+                  {
+                    min: 2,
+                    message: t('setup.taxrate.createmodal.inputs.min.error', {
+                      min: 2,
+                      what: t('setup.taxrate.createmodal.inputs.glcode'),
+                    }),
+                  },
+                  {
+                    max: 50,
+                    message: t('setup.taxrate.createmodal.inputs.max.error', {
+                      max: 50,
+                    }),
+                  },
+                ]}
               >
                 <Input
-                  maxLength={20}
+                  autoFocus={currentInput === 2 ? true : false}
+                  onFocus={() => setCurrentInput(2)}
                   placeholder={t(
-                    'setup.taxrate.notification.createmodal.inputs.glcode.placeholder'
+                    'setup.taxrate.createmodal.inputs.glcode.placeholder'
                   )}
                 />
               </Form.Item>
@@ -162,24 +193,37 @@ export function CreateTaxRateModal(props: CreateTaxRateProps) {
             marginTop: 20,
           }}
         >
-          <Form.Item name="isActive" valuePropName="checked">
-            <Checkbox onChange={(e) => setShowDeleteBtn(e.target.checked)}>
-              {t('setup.taxrate.notification.createmodal.activebtn')}
-            </Checkbox>
-          </Form.Item>
-          {isEdit && !showDeleteBtn && (
-            <Button style={{ marginLeft: '16px' }} onClick={() => onDelete?.()}>
-              {t('setup.taxrate.notification.createmodal.deletebtn')}
-            </Button>
+          {size.width >= 767 && (
+            <>
+              <Form.Item name="is_active" valuePropName="checked">
+                <Checkbox
+                  checked={isActive}
+                  onChange={(e) => setIsActive(e.target.checked)}
+                >
+                  {t('setup.taxrate.createmodal.activebtn')}
+                </Checkbox>
+              </Form.Item>
+              {editData && !isActive && (
+                <Button
+                  style={{ marginLeft: '16px' }}
+                  onClick={() => onDelete?.()}
+                >
+                  {t('setup.taxrate.createmodal.deletebtn')}
+                </Button>
+              )}
+            </>
           )}
           <Button
             type="primary"
             htmlType="submit"
-            style={{ marginLeft: '16px' }}
+            style={
+              size.width <= 767 ? { display: 'none' } : { marginLeft: '16px' }
+            }
+            ref={saveBtn}
           >
-            {isEdit
-              ? t('setup.taxrate.notification.updatemodal.title')
-              : t('setup.taxrate.notification.createmodal.title')}
+            {editData
+              ? t('setup.taxrate.updatemodal.title')
+              : t('setup.taxrate.createmodal.title')}
           </Button>
         </div>
       </Form>
@@ -188,11 +232,33 @@ export function CreateTaxRateModal(props: CreateTaxRateProps) {
 
   return size.width <= 767 ? (
     <CreateTaxRateMobileModal
-      operations={[CreateTaxRateOperationType['cancel']]}
+      operations={
+        editData
+          ? [
+              CreateTaxRateOperationType.active,
+              CreateTaxRateOperationType.delete,
+              CreateTaxRateOperationType.create,
+            ]
+          : [
+              CreateTaxRateOperationType.active,
+              CreateTaxRateOperationType.create,
+            ]
+      }
+      footer={true}
+      enableCreateBtn={true}
+      onActivated={(checked) => setIsActive(checked)}
+      onDelete={() => onDelete?.()}
+      onCreate={() => saveBtn?.current?.click()}
+      createBtnText={
+        editData
+          ? t('setup.taxrate.updatemodal.title')
+          : t('setup.taxrate.createmodal.title')
+      }
+      activated={isActive}
       title={`${
-        isEdit
-          ? t('setup.taxrate.notification.updatemodal.title')
-          : t('setup.taxrate.notification.createmodal.title')
+        editData
+          ? t('setup.taxrate.updatemodal.title')
+          : t('setup.taxrate.createmodal.title')
       } Tax Rate`}
       visible={visible}
       onBackClick={handleClose}
@@ -208,9 +274,9 @@ export function CreateTaxRateModal(props: CreateTaxRateProps) {
       width={700}
       visible={visible}
       title={`${
-        isEdit
-          ? t('setup.taxrate.notification.updatemodal.title')
-          : t('setup.taxrate.notification.createmodal.title')
+        editData
+          ? t('setup.taxrate.updatemodal.title')
+          : t('setup.taxrate.createmodal.title')
       } Tax Rate`}
       footer={false}
       centered={true}

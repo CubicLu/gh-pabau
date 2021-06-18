@@ -2596,30 +2596,31 @@ en:
   setup.taxrate.table.column1: Name
   setup.taxrate.table.column2: Value
   setup.taxrate.table.column3: Status
-  setup.taxrate.notification.create.success: Success! You have successfully created a tax rate
-  setup.taxrate.notification.create.error: Error! While creating a tax rate
-  setup.taxrate.notification.edit.success: Success! You have successfully edited a tax rate
-  setup.taxrate.notification.edit.error: Error! While editing a tax rate
-  setup.taxrate.notification.delete.success: Success! You have successfully deleted a tax rate
-  setup.taxrate.notification.delete.error: Error! While deleting a tax rate
-  setup.taxrate.notification.order.error: Error! While deleting a tax rate
-  setup.taxrate.notification.deletemodal.title: Delete tax rate?
-  setup.taxrate.notification.deletemodal.para: will be deleted. This action is irreversable.
-  setup.taxrate.notification.deletemodal.deletebtn: Yes, Delete
-  setup.taxrate.notification.updatemodal.title: Update
-  setup.taxrate.notification.createmodal.title: Create
-  setup.taxrate.notification.createmodal.inputs.name: Name
-  setup.taxrate.notification.createmodal.inputs.name.placeholder: eg. VAT20
-  setup.taxrate.notification.createmodal.inputs.name.error: Tax name is required
-  setup.taxrate.notification.createmodal.inputs.amount: Amount
-  setup.taxrate.notification.createmodal.inputs.amount.error1: Tax amount is required
-  setup.taxrate.notification.createmodal.inputs.amount.error2: Percentage cannot be in negative
-  setup.taxrate.notification.createmodal.inputs.amount.error3: Amount cannot exceeds 100
-  setup.taxrate.notification.createmodal.inputs.advanced.title: Advanced
-  setup.taxrate.notification.createmodal.inputs.glcode: GL Code
-  setup.taxrate.notification.createmodal.inputs.glcode.placeholder: eg. Nail Bar
-  setup.taxrate.notification.createmodal.deletebtn: Delete
-  setup.taxrate.notification.createmodal.activebtn: Active
+  setup.taxrate.create.success: Success! You have successfully created a tax rate
+  setup.taxrate.create.error: Error! While creating a tax rate
+  setup.taxrate.edit.success: Success! You have successfully edited a tax rate
+  setup.taxrate.edit.error: Error! While editing a tax rate
+  setup.taxrate.delete.success: Success! You have successfully deleted a tax rate
+  setup.taxrate.delete.error: Error! While deleting a tax rate
+  setup.taxrate.order.error: Error! While deleting a tax rate
+  setup.taxrate.deletemodal.title: Delete tax rate?
+  setup.taxrate.deletemodal.para: will be deleted. This action is irreversable.
+  setup.taxrate.deletemodal.deletebtn: Yes, Delete
+  setup.taxrate.updatemodal.title: Update
+  setup.taxrate.createmodal.title: Create
+  setup.taxrate.createmodal.inputs.name: Name
+  setup.taxrate.createmodal.inputs.amount: Amount
+  setup.taxrate.createmodal.inputs.advanced.title: Advanced
+  setup.taxrate.createmodal.inputs.glcode: GL Code
+  setup.taxrate.createmodal.inputs.name.placeholder: eg. VAT20
+  setup.taxrate.createmodal.inputs.required: '{{what}} is required'
+  setup.taxrate.createmodal.inputs.min.error: 'The value for {{what}} at least {{min}} characters.'
+  setup.taxrate.createmodal.inputs.max.error: 'The max length of {{max}} is reached.'
+  setup.taxrate.createmodal.inputs.negative: '{{what}} cannot be negative or equal to 0'
+  setup.taxrate.createmodal.inputs.amount.error2: Amount cannot exceed 100%
+  setup.taxrate.createmodal.inputs.glcode.placeholder: eg. Nail Bar
+  setup.taxrate.createmodal.deletebtn: Delete
+  setup.taxrate.createmodal.activebtn: Active
   setup.taxrate.defaulttax.heading: Tax Defaults (Issuing Companies)
   setup.taxrate.defaulttax.paragraph: Setup the default taxes for your business, you can still override defaults in the settings of individual products and services
   setup.taxrate.defaulttax.products.default: 'Products Default'
