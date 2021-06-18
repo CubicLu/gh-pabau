@@ -1823,6 +1823,7 @@ en:
   marketingrevirews.share.modal.responsed: 'Respond'
   marketingrevirews.share.modal.delete: 'Delete'
   marketingrevirews.share.modal.or: 'or'
+  marketingreviews.filter.score.option.none: 'None'
   marketingrevirews.visible.message: 'By favouriting a review, we will move it to the top of the list when clients are checking out your reviews, or making an online booking should you be displaying reviews'
   marketingrevirews.data.creatediscountsuccessfullymessage: 'Success! You have successfully created a response'
   marketingrevirews.data.creatediscounterrormessages: 'Error! While creating a response'
