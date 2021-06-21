@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React from 'react'
 import { PlusCircleFilled } from '@ant-design/icons'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
@@ -6,34 +6,35 @@ import styles from './GroupList.module.less'
 import { ChatMessage } from '../chatsList/ChatsList'
 import { GroupListChannelMultipleUnread } from './GroupListChannelMultipleUnread'
 import { GroupListChannelAllRead } from './GroupListChannelAllRead'
+import { Chat_Room } from '@pabau/graphql'
 
+export interface Participant {
+  id: string
+  name: string
+  avatarURL?: string
+}
+export interface Group {
+  id: string
+  name: string
+  messages: ChatMessage[]
+  participants: Participant[]
+}
 interface P {
-  onClick?: () => void
+  onClick?(Group): void
+  active?: Group | false
   onCreateModalClick?: () => void
   showChatBox?: boolean
   isNewDm?: boolean
   isHeaderShow?: boolean
-  messages: ChatMessage[]
+  groups?: Group[]
 }
 
 export const GroupList = (props: P) => {
-  const { messages, onClick } = props
-  const [active, setActive] = useState<typeof messages[number]>()
-  // const [group, setGroup] = useState<string>('')
   const { t } = useTranslation('common')
-
-  // useEffect(() => {
-  //   if (props.showChatBox) {
-  //     setActive(false)
-  //   }
-  //   if (props.isNewDm) {
-  //     setActive(false)
-  //   }
-  // }, [props.showChatBox, props.isNewDm])
+  const { groups, active, onClick } = props
 
   const handleClick = (e: typeof active) => {
-    setActive(e)
-    onClick?.()
+    onClick?.(e)
   }
 
   return (
@@ -60,17 +61,23 @@ export const GroupList = (props: P) => {
           />
         </div>
       )}
-      {messages.map((e) => (
-        // TODO: use a proper id for key
-        <GroupListChannelMultipleUnread
-          onClick={handleClick}
-          messages={[e]}
-          key={e.dateTime}
-          active={e === active}
-        />
-      ))}
-
-      {/* <GroupListChannelAllRead /> */}
+      {groups?.map((group) =>
+        group.messages?.length > 1 ? (
+          <GroupListChannelMultipleUnread
+            onClick={() => handleClick(group)}
+            group={group}
+            key={group.id}
+            active={group === active}
+          />
+        ) : (
+          <GroupListChannelAllRead
+            onClick={() => handleClick(group)}
+            group={group}
+            key={group.id}
+            active={group === active}
+          />
+        )
+      )}
     </div>
   )
 }

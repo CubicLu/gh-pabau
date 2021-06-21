@@ -833,7 +833,7 @@ en:
   chat.create.channel: 'Create A Channel'
   chat.create.channel.title: 'Channels are where your team communicates. They’re best when organized around a topic – #marketing, for example.'
   chat.create.channel.name: Name
-  chat.create.channel.name.placeholder: '# e.g. plan-budget'
+  chat.create.channel.name.placeholder: 'e.g. plan-budget'
   chat.create.channel.description: Description
   chat.create.channel.description.placeholder: 'What’s this channel about?'
   chat.create.channel.makeprivate: 'Make private'

@@ -1,61 +1,39 @@
 import React, { FC, useState, useEffect } from 'react'
 import classNames from 'classnames'
 import { Badge } from 'antd'
-import { Avatar } from '@pabau/ui'
+import { Avatar, Group } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as MessageRead } from '../../assets/images/message-read.svg'
 import styles from './ChatsList.module.less'
 
 export interface ChatMessage {
-  userName: string /** The username or channel to display */
+  id: string
+
+  /** The username or channel to display */
+  userName: string
+
+  image?: string
   message: string
   unread?: number
   dateTime: string
-  isOnline: boolean
+  isOnline?: boolean
   isMultiple?: boolean
   onClick?(): void
   active?: boolean
 }
 
 interface P {
-  chatMessages: ChatMessage[]
-  selectedContact?: ChatMessage
-  onClick?: (selectedContact: ChatMessage) => void
+  onClick?(ChatMessage): void
+  active?: ChatMessage | false
+  messages: ChatMessage[]
   showGroupChatBox?: boolean
   isNewDm?: boolean
   isHeaderShow?: boolean
 }
 
 export const ChatsList = (props: P) => {
-  const { chatMessages, onClick } = props
   const { t } = useTranslation('common')
-  // if (!chatMessages) return
-  type blah = typeof chatMessages[number]
-  const [activeChat, setActiveChat] = useState<blah>()
-
-  // useEffect(() => {
-  //   if (props.showGroupChatBox) {
-  //     // setActiveIndex(-1)
-  //   }
-  //   if (props.isNewDm) {
-  //     // setActiveIndex(-1)
-  //   }
-  //   // typingContact
-  //   //   ? chatMessages?.map(
-  //   //       (item, index) =>
-  //   //         item.userName === typingContact.userName && setIsTyping(index)
-  //   //     )
-  //   //   : setIsTyping(-1)
-  // }, [chatMessages, props.showGroupChatBox, props.isNewDm])
-
-  const onClickContact = (e) => {
-    if (chatMessages) {
-      setActiveChat(e)
-      // const data = chatMessages[index]
-      alert('Show chat for ' + JSON.stringify(e))
-      onClick?.(e)
-    }
-  }
+  const { messages, active, onClick } = props
 
   const renderMultipleField = (item) => {
     const result = item.map((dataItem) => {
@@ -74,26 +52,29 @@ export const ChatsList = (props: P) => {
         </div>
       )}
       <div>
-        {chatMessages.map((message) => {
+        {messages.map((message) => {
           const {
+            id,
             message: messageBody,
             isOnline = true,
             unread,
             dateTime,
+            image,
+            userName,
           } = message
 
-          if (!fromUser) throw new Error('Item found with no fromUser')
-          const { image } = fromUser
+          // if (!fromUser) throw new Error('Item found with no fromUser')
+          // const { image } = fromUser
           return (
             <div
               key={id}
-              onClick={() => onClickContact(message)}
+              onClick={() => onClick?.(message)}
               className={styles.cursor}
             >
               <div
                 className={classNames(
                   styles.flex,
-                  activeChat === message
+                  active === message
                     ? styles.profileChatSpaceActive
                     : styles.porfileChatSpace
                 )}
@@ -122,9 +103,7 @@ export const ChatsList = (props: P) => {
                         styles.textMd
                       )}
                     >
-                      {chat.isMultiple
-                        ? renderMultipleField(chat.data)
-                        : chat.userName}
+                      {userName}
                     </p>
                     <p
                       className={classNames(

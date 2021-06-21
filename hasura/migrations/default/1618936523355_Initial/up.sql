@@ -399,7 +399,7 @@ CREATE TABLE public.chat (
     message text NOT NULL,
     company_id integer NOT NULL,
     "from" integer NOT NULL,
-    "to" integer NOT NULL,
+    "to" integer,
     read boolean DEFAULT false NOT NULL,
     to_channel uuid
 );
@@ -1438,6 +1438,8 @@ ALTER TABLE ONLY public.chat_room
     ADD CONSTRAINT chat_room_company_name_key UNIQUE (company, name);
 ALTER TABLE ONLY public.chat_room_participant
     ADD CONSTRAINT chat_room_participant_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.chat_room_participant
+    ADD CONSTRAINT chat_room_participant_user_room_id_key UNIQUE ("user", room_id);
 ALTER TABLE ONLY public.chat_room
     ADD CONSTRAINT chat_room_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.clients_data

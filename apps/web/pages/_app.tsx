@@ -24,15 +24,18 @@ require('react-phone-input-2/lib/style.css')
 
 const cache = new InMemoryCache({ resultCaching: true })
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-if (typeof window !== 'undefined') window.debug = { cache }
-
 const GRAPHQL_WS_ENDPOINT =
   process.env.NEXT_PUBLIC_WS_ENDPOINT || 'wss://api.new.pabau.com/v1/graphql'
 const GRAPHQL_HTTP_ENDPOINT =
   process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
   'https://api.new.pabau.com/v1/graphql'
+
+//TODO: enable tree shaking
+const iconList = Object.keys(Icons)
+  .filter((key) => key !== 'fas' && key !== 'prefix')
+  .map((icon) => Icons[icon])
+library.add(...iconList)
+
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token')
   return {
@@ -44,26 +47,25 @@ const authLink = setContext((_, { headers }) => {
       : headers,
   }
 })
-const iconList = Object.keys(Icons)
-  .filter((key) => key !== 'fas' && key !== 'prefix')
-  .map((icon) => Icons[icon])
-library.add(...iconList)
 const httpLink = new HttpLink({
   uri: GRAPHQL_HTTP_ENDPOINT,
 })
-const wsLink = process.browser
-  ? new WebSocketLink({
-      uri: GRAPHQL_WS_ENDPOINT,
-      options: {
-        reconnect: true,
-        connectionParams: {
-          authToken: '',
+const getWebSocketLink = () => {
+  const token = localStorage.getItem('token')
+  return new WebSocketLink({
+    uri: GRAPHQL_WS_ENDPOINT,
+    options: {
+      lazy: true,
+      reconnect: true,
+      connectionParams: {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
       },
-    })
-  : null
-
-// Let Apollo figure out if the request is over ws or http
+    },
+  })
+}
+const wsLink = process.browser ? getWebSocketLink() : null
 const terminatingLink = wsLink
   ? split(
       ({ query }) => {
@@ -81,19 +83,18 @@ const terminatingLink = wsLink
     )
   : httpLink
 
-export const getApolloClient = () => {
-  return new ApolloClient({
-    ssrMode: false,
-    link: ApolloLink.from([authLink, terminatingLink]),
-    cache,
-  })
-}
+export const client = new ApolloClient({
+  ssrMode: false,
+  link: ApolloLink.from([authLink, terminatingLink]),
+  cache,
+})
+
 export default function CustomApp({
   Component,
   pageProps,
 }: AppProps): JSX.Element {
   return (
-    <ApolloProvider client={getApolloClient()}>
+    <ApolloProvider client={client}>
       <style jsx global>{`
         @font-face {
           font-family: 'Circular-Std-Black';

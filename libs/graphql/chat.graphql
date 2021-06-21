@@ -1,4 +1,4 @@
-subscription chatListDirectMessagesSubscription {
+subscription chatListMessagesNotify {
   chat(
     distinct_on: from
     order_by: { created_at: desc, from: asc }
@@ -11,7 +11,115 @@ subscription chatListDirectMessagesSubscription {
     from
   }
 }
-query chatListDirectMessagesQuery {
+
+subscription chatListRoomNotify {
+  chat_room_participant {
+    id
+    room {
+      id
+      name
+      chats(limit: 1, order_by: {created_at: desc}) {
+        id
+        message
+        from
+      }
+    }
+  }
+}
+
+query chatRoomHistory($roomId: uuid!) {
+  chat_room(
+    where: {
+      id: {
+        _eq: $roomId
+      }
+    }
+  ) {
+    id
+    name
+    participants {
+      id
+    }
+    chats(
+      order_by: {
+        created_at: asc
+      }
+      limit: 15
+    ) {
+      id
+      message
+      created_at
+      fromUser {
+        id
+        full_name
+        username
+        image
+      }
+    }
+  }
+}
+
+query chatDirectHistory($userId: Int!) {
+  chat(
+    where: {
+      _and: {
+        _or:{
+          to: {_eq: $userId}
+          from: {_eq: $userId}
+        }
+        to_channel: {_is_null: true}
+      }
+    }) {
+    id
+    message
+    created_at
+    fromUser {
+      id
+      username
+      full_name
+      image
+    }
+    toUser {
+      id
+      username
+      full_name
+      image
+    }
+  }
+}
+
+query chatListRooms {
+  chat_room_participant {
+    id
+    room {
+      id
+      name
+      chats(limit: 1, order_by: {created_at: desc}) {
+        id
+        message
+        from
+        created_at
+        to
+        room {
+          id
+          name
+        }
+        toUser {
+          username
+          full_name
+        }
+        fromUser {
+          username
+          full_name
+        }
+      }
+      chats_aggregate(where: { created_at: { _gt: "2030-01-01 00:00:00" } }) {
+        aggregate {
+          count
+        }
+      }
+    }
+  }
   chat(
     distinct_on: from
     order_by: { created_at: desc, from: asc }
@@ -20,6 +128,7 @@ query chatListDirectMessagesQuery {
     id
     message
     created_at
+    to
     toUser {
       username
       full_name
@@ -41,8 +150,42 @@ query chatListDirectMessagesQuery {
   }
 }
 
-mutation createChannel($name: String, $description: String!) {
-  insert_chat_room_one(object: { name: $name, description: $description }) {
+mutation createChannel($name: String!, $description: String) {
+  insert_chat_room_participant_one(
+    object: {
+      room: {
+        on_conflict: {
+          constraint: chat_room_company_name_key,
+          update_columns: name
+        },
+        data: {
+          name: $name
+          description: $description
+        }
+      }
+    }
+  ) {
     id
+    room {
+      id
+      name
+    }
   }
+}
+
+mutation postToChannelId($message: String!, $channelId: uuid!) {
+  insert_chat(objects: {message: $message, to_channel: $channelId}) {
+    returning {
+      __typename
+      id
+      message
+      #      to_channel
+      room {
+        __typename
+        id
+        name
+      }
+    }
+  }
+
 }

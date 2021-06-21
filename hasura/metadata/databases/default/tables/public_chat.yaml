@@ -48,6 +48,7 @@ insert_permissions:
     - from
     - message
     - to
+    - to_channel
     set:
       company_id: x-hasura-Org-Id
       from: x-hasura-User-Id

@@ -9,51 +9,26 @@ import {
   UpOutlined,
 } from '@ant-design/icons'
 
-import Stephen from '../../assets/images/users/stephen.png'
-import Linda from '../../assets/images/users/linda.png'
-
 import { ReactComponent as ChatPopIcon } from '../../assets/images/chat-pop-icon.svg'
 import { ReactComponent as AddUserIcon } from '../../assets/images/add-user-icon.svg'
 import { ReactComponent as ThreeDotVertical } from '../../assets/images/three-dot-v.svg'
 import { ReactComponent as MessageRead } from '../../assets/images/message-read.svg'
 import { ChatsInput } from '../chatInput/ChatInput.stories'
 import styles from './MessageContainer.module.less'
+import { MessageItem } from './MessageItem'
+import { ChatMessage } from '../chatsList/ChatsList'
+import { Participant } from '../groupList/GroupList'
 
 const { Option } = Select
 
-interface SelectedContact {
-  userName: string
-  message: string
-  unread?: number
-  dateTime: string
-  isOnline: boolean
-  profileURL: string
-  isMultiple?: boolean
-  data?: SelectedContact[]
-}
-
-interface Member {
-  userName: string
-  profileURL: string
-  isOnline: boolean
-}
-
-interface groupData {
-  general: Member[]
-  design: Member[]
-}
-
 interface P {
-  selectedContact?: SelectedContact
-  selectedGroup?: string
-  groupData?: groupData
-  members?: Member[]
+  members?: Participant[]
   onClick?: () => void
   onMessageType?: (e: MouseEvent<HTMLElement>) => void
   onModalOpen?: () => void
   isNewDm?: boolean
   onCloseNewDm?: () => void
-  messages?: []
+  messages?: ChatMessage[]
 }
 
 export const MessageContainer: FC<P> = ({ ...props }) => {
@@ -155,11 +130,7 @@ export const MessageContainer: FC<P> = ({ ...props }) => {
                 onChange={handleSelectChange}
               >
                 {members?.map((member) => (
-                  <Option
-                    key={member.userName}
-                    value={member.userName}
-                    label={member.userName}
-                  >
+                  <Option key={member.id} value={member.id} label={member.name}>
                     <div>
                       <span role="img">
                         <Avatar
@@ -369,66 +340,28 @@ export const MessageContainer: FC<P> = ({ ...props }) => {
       )}
       <div className={styles.messageContainer}>
         <div className={styles.messageContainerInner}>
-          {messages && messages?.length <= 0 ? (
+          {!messages?.length ? (
             <div className={styles.invalidMessage}>
               {t('message.empty.msg')}
             </div>
           ) : (
             <div>
-              <div className={styles.dayPast}>
-                <span> Yesterday </span>
-              </div>
-              <div className={styles.receivedAlign}>
-                <Avatar className={styles.receivedUser} size={32} src={Linda} />
-                <div className={styles.receivedMessage}>
-                  <p className={styles.receivedMessageText}>
-                    I will search some reference for that
-                  </p>
-                  <div className={styles.timeRight}>
-                    <p className={styles.receivedMessageTime}>11:24 AM</p>
-                    <MessageRead />
-                  </div>
-                </div>
-              </div>
-              <div className={styles.sendAlign}>
-                <Avatar className={styles.sendUser} size={32} src={Stephen} />
-                <div className={styles.sendMessage}>
-                  <p className={styles.sendMessageText}>
-                    I will search some reference for that
-                  </p>
-                  <div className={styles.timeRight}>
-                    <p className={styles.sendMessageTime}>11:24 AM</p>
-                    <MessageRead />
-                  </div>
-                </div>
-              </div>
-              <div className={styles.dayIndex}>
-                <span> Today </span>
-              </div>
-              <div className={styles.receivedAlign}>
-                <Avatar className={styles.receivedUser} size={32} src={Linda} />
-                <div className={styles.receivedMessage}>
-                  <p className={styles.receivedMessageText}>
-                    I will search some reference for that
-                  </p>
-                  <div className={styles.timeRight}>
-                    <p className={styles.receivedMessageTime}>11:24 AM</p>
-                    <MessageRead />
-                  </div>
-                </div>
-              </div>
-              <div className={styles.sendAlign}>
-                <Avatar className={styles.sendUser} size={32} src={Stephen} />
-                <div className={styles.sendMessage}>
-                  <p className={styles.sendMessageText}>
-                    I will search some reference for that
-                  </p>
-                  <div className={styles.timeRight}>
-                    <p className={styles.sendMessageTime}>11:24 AM</p>
-                    <MessageRead />
-                  </div>
-                </div>
-              </div>
+              {/*TODO*/}
+              {/*<div className={styles.dayPast}>*/}
+              {/*  <span> Yesterday </span>*/}
+              {/*</div>*/}
+              {/*<div className={styles.dayIndex}>*/}
+              {/*  <span> Today </span>*/}
+              {/*</div>*/}
+              {messages.map((e) => (
+                <MessageItem
+                  key={e.id}
+                  author={{ image: e.image }}
+                  dateTime={e.dateTime}
+                  message={e.message}
+                  direction={'sent'}
+                />
+              ))}
             </div>
           )}
         </div>

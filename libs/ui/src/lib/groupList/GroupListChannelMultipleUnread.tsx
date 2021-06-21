@@ -1,21 +1,21 @@
 import classNames from 'classnames'
 import * as React from 'react'
 import { Badge } from '../badge/Badge'
-import { ChatMessage } from '../chatsList/ChatsList'
 import styles from './GroupList.module.less'
+import { Group } from '@pabau/ui'
 
 interface P {
-  onClick?(e: ChatMessage): void
+  onClick?(): void
   active?: boolean
-  messages: ChatMessage[]
+  group: Group
 }
 
 export const GroupListChannelMultipleUnread = (props: P): JSX.Element => {
-  const { onClick, active, messages = [] } = props
-  const { dateTime, userName } = messages[0]
+  const { onClick, active, group } = props
+  const { dateTime, userName } = group.messages[0]
   return (
     <div
-      onClick={() => onClick?.(messages[0])}
+      onClick={() => onClick?.()}
       className={classNames(
         active ? styles.channelGroupActive : styles.channelGroup
       )}
@@ -49,13 +49,13 @@ export const GroupListChannelMultipleUnread = (props: P): JSX.Element => {
             styles.mb
           )}
         >
-          {messages.length.toString()} unread messages
+          {group.messages.length} unread messages
         </p>
         <h6
           className={classNames(styles.grayTextColor, styles.textSm, styles.mb)}
         >
           <Badge
-            label={messages.length.toString()}
+            label={group.messages.length.toString()}
             // style={{ backgroundColor: '#54B2D3' }}
           />
         </h6>

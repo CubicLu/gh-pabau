@@ -1,17 +1,20 @@
 import classNames from 'classnames'
 import * as React from 'react'
-import { ChatMessage } from '../chatsList/ChatsList'
+import { Group } from '@pabau/ui'
 import styles from './GroupList.module.less'
 
 interface P {
   onClick?(): void
   active?: boolean
-  message: ChatMessage
+  group: Group
 }
 
-export const GroupListChannelAllRead = (props: P) => {
-  const { onClick, active, message = {} as Required<P['message']> } = props
-  const { message: messageBody, dateTime, userName } = message
+export const GroupListChannelAllRead = (props: P): JSX.Element => {
+  const { onClick, active, group } = props
+  const { name } = group
+  const dateTime = group.messages[0]?.dateTime
+  const messageBody = group.messages[0]?.message
+
   return (
     <div
       onClick={onClick}
@@ -31,7 +34,7 @@ export const GroupListChannelAllRead = (props: P) => {
             styles.cursor
           )}
         >
-          {userName}
+          {name}
         </p>
         <h6
           className={classNames(
@@ -40,7 +43,7 @@ export const GroupListChannelAllRead = (props: P) => {
             styles.mbs
           )}
         >
-          {dateTime}
+          {dateTime || 'Empty - say Hi!'}
         </h6>
       </div>
       <div className={classNames(styles.dFlex, styles.channelMessage)}>
