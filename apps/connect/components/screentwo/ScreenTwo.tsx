@@ -19,7 +19,6 @@ import { ReactComponent as Promocode } from '../../../web/assets/images/coupenCo
 import { Rate, Modal, Badge, Popover, Tooltip } from 'antd'
 import { data, voucherData } from '../../../web/mocks/connect/ScreenTwoMock'
 import styles from './screentwo.module.less'
-import { defaultItems } from '../../../web/mocks/connect/onlineBooking'
 import ClassNames from 'classnames'
 import { ReactComponent as SelectAll } from '../../../web/assets/images/SelectAll.svg'
 import { ReactComponent as SkinHealth } from '../../../web/assets/images/skin-health-logo.svg'
@@ -27,6 +26,7 @@ import { ReactComponent as LogoSvg } from '../../../../libs/ui/src/lib/logo/logo
 import { MasterCategory, Category, Service } from '../selector/selector'
 /* eslint-disable-next-line */
 export interface ScreenTwoProps {
+  items: MasterCategory[]
   ispro: boolean
   proD: MasterCategory[]
   changescreen: () => void
@@ -46,6 +46,7 @@ export interface ScreenTwoProps {
 }
 
 const ScreenTwo: FC<ScreenTwoProps> = ({
+  items,
   ispro,
   proD,
   changescreen,
@@ -71,7 +72,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
   const [infomodal, setinfomodal] = useState(false)
   const [temname, settempname] = useState<string[]>([])
   const setoldvalue = (): MasterCategory[] => {
-    const obj = defaultItems.map((item) =>
+    const obj = items.map((item) =>
       isall
         ? { ...item, active: false }
         : item.id === id
@@ -81,7 +82,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
     for (const itm of obj) {
       for (const im of itm.categories) {
         for (const item of im.services) {
-          item.selected = false
+          //item.selected = false
         }
       }
     }
@@ -104,7 +105,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
     const val = (): Category => {
       const obj = old
         .find((item) => item.id === id)
-        .category.find((itm) => itm.id === secId)
+        .categories.find((itm) => itm.id === secId)
       for (const itm of obj.services) {
         itm.selected = false
       }
@@ -113,7 +114,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
     if (all) {
       const obj = old
         .find((item) => item.id === 1)
-        .category.find((itm) => itm.id === 1)
+        .categories.find((itm) => itm.id === 1)
       return obj
     } else {
       // const obj
@@ -122,11 +123,13 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
   }
 
   const takevalue = (): MasterCategory => {
-    const obj = old.find((item) => item.id === id)
-    obj.category.map((item) =>
-      item.id === secId ? (item.active = true) : (item.active = false)
-    )
-    return obj
+    // console.log('OLD', old, id)
+    // const obj = old.find((item) => item.id === id)
+    // obj.categories.map((item) =>
+    //   item.id === secId ? (item.active = true) : (item.active = false)
+    // )
+    // return obj
+    return old[0]
   }
   const [one, setone] = useState<MasterCategory>(takevalue)
 
@@ -134,21 +137,12 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
     isall ? allvalue(true) : catData
   )
   const isMobile = useMedia('(max-width: 768px)', false)
-  // const size = useWindowSize()
-  // const [review, setreview] = useState(0)
-  // const { t } = useTranslationI18() slide ? styles.fadeRight : styles.fadeLeft
-  // const getreview = () => {
-  //   return Math.floor(Math.random() * 99)
-  // }
   const catgor = (newid, price) => {
-    //console.log(cat)
-    // const obj = old.find((item) => item.id === id)
     const charge = Number(price.slice(0, 2))
     const check = (sel, charge, name) => {
       if (!sel) {
         setsercount(sercount + 1)
         setserprice(serprice + charge)
-        // temname.push(name)
         settempname([...temname, name])
       } else {
         setsercount(sercount - 1)
@@ -165,7 +159,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       .find((item) => item.id === id)
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      .category.map((item) => {
+      .categories.map((item) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         item.id === secId
           ? // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -299,13 +293,13 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
   const setvalue = (id1) => {
     old.map((item) => {
       item.active = false
-      item.category.map((itm) => (itm.active = false))
+      item.categories.map((itm) => (itm.active = false))
       return item
     })
     // setold([...old])
     old.map((item) => (item.id === id1 ? (item.active = true) : item))
     old.map((item) =>
-      item.category.map((itm) =>
+      item.categories.map((itm) =>
         itm.id === 1 ? (itm.active = true) : (itm.active = false)
       )
     )
@@ -325,14 +319,14 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
     if (all) {
       old.map((item) => {
         item.active = false
-        item.category.map((itm) => (itm.active = false))
+        item.categories.map((itm) => (itm.active = false))
         return item
       })
       setold([...old])
       // setold([...old])
       old.map((item) =>
         item.id === mid
-          ? item.category.map((itm) =>
+          ? item.categories.map((itm) =>
               itm.id === id1 ? (itm.active = true) : itm
             )
           : item
@@ -340,9 +334,9 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
       setold([...old])
       //setvalue(1)
     } else {
-      // one.category.map((itm) => (itm.active = false))
+      // one.categories.map((itm) => (itm.active = false))
       // setone(one)
-      one.category.map((itm) =>
+      one.categories.map((itm) =>
         itm.id === id1 ? (itm.active = true) : (itm.active = false)
       )
       setone(one)
@@ -411,30 +405,30 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
     )
   }
   const valid = (id1, group): boolean => {
-    if (group) {
-      const obj = old.find((im) => im.id === id1)
-      for (const im of obj.category) {
-        for (const itme of im.services) {
-          if (itme.selected) {
-            return true
-          }
-        }
-      }
+    // if (group) {
+    //   const obj = old.find((im) => im.id === id1)
+    //   for (const im of obj.categories) {
+    //     for (const itme of im.services) {
+    //       if (itme.selected) {
+    //         return true
+    //       }
+    //     }
+    //   }
 
-      //setold([...old])
-      return false
-    } else {
-      const obj = old.find((im) => im.id === id)
-      const obj1 = obj.category.find((imt) => imt.id === id1)
-      for (const im of obj1.services) {
-        if (im.selected) {
-          return true
-        }
-      }
+    //   return false
+    // } else {
+    //   const obj = old.find((im) => im.id === id)
+    //   const obj1 = obj.categories.find((imt) => imt.id === id1)
+    //   for (const im of obj1.services) {
+    //     if (im.selected) {
+    //       return true
+    //     }
+    //   }
 
-      //setold([...old])
-      return false
-    }
+    //   //setold([...old])
+    //   return false
+    // }
+    return false
   }
   const valueRender = () => {
     return (
@@ -521,13 +515,13 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
                 setvoucher(false)
                 old.map((item) => {
                   item.active = false
-                  item.category.map((itm) => (itm.active = false))
+                  item.categories.map((itm) => (itm.active = false))
                   return item
                 })
-                old[0].category[0].active = true
+                old[0].categories[0].active = true
                 setold([...old])
                 //setmbactive(true)
-                const obj = old.find((item) => item.id === 1).category[0]
+                const obj = old.find((item) => item.id === 1).categories[0]
                 setoldcatdata(obj)
               }}
             >
@@ -568,7 +562,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
               onClick={() => {
                 old.map((item) => {
                   item.active = false
-                  item.category.map((itm) => (itm.active = false))
+                  item.categories.map((itm) => (itm.active = false))
                   return item
                 })
                 setold([...old])
@@ -604,7 +598,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
                   All ? (
                     old.map((value) => (
                       <div key={value.id}>
-                        {value.category.map((val) => (
+                        {value.categories.map((val) => (
                           <>
                             <div
                               style={{ margin: '12px 0', cursor: 'pointer' }}
@@ -689,7 +683,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
                       </div>
                     ))
                   ) : (
-                    one.category.map((val) => (
+                    one.categories.map((val) => (
                       <div key={val.id}>
                         <div
                           style={{ margin: '12px 0', cursor: 'pointer' }}

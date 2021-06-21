@@ -375,6 +375,7 @@ export function Index(props: OnlineBookingProps) {
             ) : (
               <div className={styles.slide1}>
                 <ScreenTwo
+                  items={masterCategories}
                   ispro={ispro}
                   proD={proD}
                   changescreen={rech}
@@ -389,7 +390,7 @@ export function Index(props: OnlineBookingProps) {
                     range,
                     services,
                     vouchers,
-                    proData: SelectItem[]
+                    proData: MasterCategory[]
                   ) => {
                     user.services = services
                     user.vouchers = vouchers
