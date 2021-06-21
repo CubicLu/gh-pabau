@@ -21,17 +21,16 @@ import { data, voucherData } from '../../../web/mocks/connect/ScreenTwoMock'
 import styles from './screentwo.module.less'
 import { defaultItems } from '../../../web/mocks/connect/onlineBooking'
 import ClassNames from 'classnames'
-import { CategoryItem, SubCategoryItem } from '../selector/selector'
 import { ReactComponent as SelectAll } from '../../../web/assets/images/SelectAll.svg'
 import { ReactComponent as SkinHealth } from '../../../web/assets/images/skin-health-logo.svg'
 import { ReactComponent as LogoSvg } from '../../../../libs/ui/src/lib/logo/logo.svg'
-import { SelectItem } from '../selector/selector'
+import { MasterCategory, Category, Service } from '../selector/selector'
 /* eslint-disable-next-line */
 export interface ScreenTwoProps {
   ispro: boolean
-  proD: SelectItem[]
+  proD: MasterCategory[]
   changescreen: () => void
-  catData?: CategoryItem
+  catData?: Category
   onSelect: (
     val: string,
     price: number,
@@ -39,7 +38,7 @@ export interface ScreenTwoProps {
     range: number,
     services: number,
     vouchers: number,
-    proData: SelectItem[]
+    proData: MasterCategory[]
   ) => void
   parentid?: number
   translation: (val: string) => string
@@ -71,54 +70,50 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
   const [id, setid] = useState<number>(isall ? 1 : parentid)
   const [infomodal, setinfomodal] = useState(false)
   const [temname, settempname] = useState<string[]>([])
-  // const [catvalue, setcatvalue] = useState<CategoryItem[]>()
-  // const [thirId, setthirId] = useState<number>()
-  // const [old1, setold1] = useState<SelectItem[]>([...defaultItems, ...Select])
-  //setold1(old1)
-  const setoldvalue = (): SelectItem[] => {
+  const setoldvalue = (): MasterCategory[] => {
     const obj = defaultItems.map((item) =>
       isall
         ? { ...item, active: false }
-        : item.key === id
+        : item.id === id
         ? { ...item, active: true }
         : { ...item, active: false }
     )
     for (const itm of obj) {
-      for (const im of itm.category) {
-        for (const item of im.subCategory) {
+      for (const im of itm.categories) {
+        for (const item of im.services) {
           item.selected = false
         }
       }
     }
     return obj
   }
-  const [old, setold] = useState<SelectItem[]>(
+  const [old, setold] = useState<MasterCategory[]>(
     ispro ? proD : setoldvalue
     // old1.map((item) =>
 
-    // item.key === id
+    // item.id === id
     //   ? isall
     //     ? { ...item, active: false }
     //     : { ...item, active: true }
     //   : item
     //)
   )
-  const [secId, setsecId] = useState<number>(isall ? 1 : catData.key)
+  const [secId, setsecId] = useState<number>(isall ? 1 : catData.id)
   const [All, setAll] = useState(isall)
-  const allvalue = (all: boolean): CategoryItem => {
-    const val = (): CategoryItem => {
+  const allvalue = (all: boolean): Category => {
+    const val = (): Category => {
       const obj = old
-        .find((item) => item.key === id)
-        .category.find((itm) => itm.key === secId)
-      for (const itm of obj.subCategory) {
+        .find((item) => item.id === id)
+        .category.find((itm) => itm.id === secId)
+      for (const itm of obj.services) {
         itm.selected = false
       }
       return obj
     }
     if (all) {
       const obj = old
-        .find((item) => item.key === 1)
-        .category.find((itm) => itm.key === 1)
+        .find((item) => item.id === 1)
+        .category.find((itm) => itm.id === 1)
       return obj
     } else {
       // const obj
@@ -126,16 +121,16 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
     }
   }
 
-  const takevalue = (): SelectItem => {
-    const obj = old.find((item) => item.key === id)
+  const takevalue = (): MasterCategory => {
+    const obj = old.find((item) => item.id === id)
     obj.category.map((item) =>
-      item.key === secId ? (item.active = true) : (item.active = false)
+      item.id === secId ? (item.active = true) : (item.active = false)
     )
     return obj
   }
-  const [one, setone] = useState<SelectItem>(takevalue)
+  const [one, setone] = useState<MasterCategory>(takevalue)
 
-  const [oldcatdata, setoldcatdata] = useState<CategoryItem>(
+  const [oldcatdata, setoldcatdata] = useState<Category>(
     isall ? allvalue(true) : catData
   )
   const isMobile = useMedia('(max-width: 768px)', false)
@@ -147,7 +142,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
   // }
   const catgor = (newid, price) => {
     //console.log(cat)
-    // const obj = old.find((item) => item.key === id)
+    // const obj = old.find((item) => item.id === id)
     const charge = Number(price.slice(0, 2))
     const check = (sel, charge, name) => {
       if (!sel) {
@@ -168,15 +163,15 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
     // setTimeout(() => {}, 100)
     old
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      .find((item) => item.key === id)
+      .find((item) => item.id === id)
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       .category.map((item) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        item.key === secId
+        item.id === secId
           ? // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            item.subCategory.map((itm) => {
+            item.services.map((itm) => {
               // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-              itm.key === newid
+              itm.id === newid
                 ? // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                   (itm.selected = check(itm.selected, charge, itm.name))
                 : itm
@@ -186,85 +181,27 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
         return item
       })
     setold([...old])
-    console.log(secId)
-    // setoldcatdata({ ...oldcatdata })
-    //setoldcatdata()
-    //console.log(cat)
-    // setcatvalue(cat)
-    //    console.log(typeof cat)
   }
-  const renderdata = (val: SubCategoryItem) => {
+  const renderdata = (val: Service) => {
     const fun = (e, val) => {
-      // e.preventDefault()
-      //console.log('*******')
-      // setslide(false)
-      // console.log(val)
-      // setthirId(val.key)
-      catgor(val.key, val.price)
-      // setold(
-      //   old.map((item) =>
-      //     item.key === id
-      //       ? item.category.map((child) =>
-      //           child.key === secId
-      //             ? child.subCategory.map((subchild) =>
-      //                 subchild === thirId
-      //                   ? (subchild.selected = !subchild.selected)
-      //                   : subchild
-      //               )
-      //             : child
-      //         )
-      //       : item
-      //   )
-      // )
-      // setold(
-      //   old.map((item) =>
-      //     item.key === id ? { ...item, category: catvalue } : item
-      //   )
-      // )
-      // changescreen()
-      // if (e === '*') {
-      //   setshowmodal(true)
-      //   console.log('----')
-      // } else {
-      //   setslide(false)
-      //   onSelect(name)
-      //   changescreen()
-      //   console.log('###')
-      // }
+      catgor(val.id, val.price)
     }
     const fun1 = (e) => {
       e.stopPropagation()
-      console.log('--------')
       setshowmodal(true)
-
-      // if (e === '*') {
-      //   setshowmodal(true)
-      //   console.log('----')
-      // } else {
-      //   setslide(false)
-      //   onSelect(name)
-      //   changescreen()
-      //   console.log('###')
-      // }
     }
     return (
       <div style={{ width: '100%', marginBottom: '16px' }}>
         <div
           className={styles.consultationCard}
-          key={val.key}
+          key={val.id}
           onClick={(e) => {
-            // setslide(false)
-            //setname(val.name)
             fun(e, val)
             if (val?.online) {
               setonline(val.online)
             } else {
               setonline(false)
             }
-
-            // setthirId(val.key)
-            // onSelect(val.name)
-            //changescreen()
           }}
         >
           <div className={styles.consultationLine}>
@@ -311,13 +248,6 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
           <div
             className={styles.consultationLine}
             style={{ marginBottom: '0' }}
-            // onClick={(e) => {
-            //   // console.log('-----------')
-            //   fun('$')
-            //   // setslide(false)
-            //   // onSelect(val.name)
-            //   //changescreen()
-            // }}
           >
             {!isMobile && (
               <div style={{ height: '40px' }}>
@@ -331,8 +261,6 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
                   className={styles.consultationReview}
                   onClick={(e) => {
                     fun1(e)
-                    //console.log('##########')
-                    //setshowmodal(true)
                   }}
                 >
                   {val.online ? 0 : val.review}
@@ -364,7 +292,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
       </div>
     )
   }
-  const selectcat = (value: SelectItem) => {
+  const selectcat = (value: MasterCategory) => {
     setAll(false)
     setone(value)
   }
@@ -375,16 +303,16 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
       return item
     })
     // setold([...old])
-    old.map((item) => (item.key === id1 ? (item.active = true) : item))
+    old.map((item) => (item.id === id1 ? (item.active = true) : item))
     old.map((item) =>
       item.category.map((itm) =>
-        itm.key === 1 ? (itm.active = true) : (itm.active = false)
+        itm.id === 1 ? (itm.active = true) : (itm.active = false)
       )
     )
     // setsecId(1)
     setold([...old])
 
-    const obj = old.find((item) => item.key === id1).category[0]
+    const obj = old.find((item) => item.id === id1).category[0]
     setoldcatdata(obj)
     //setsecId(1)
     // setoldcatdata(val)
@@ -403,9 +331,9 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
       setold([...old])
       // setold([...old])
       old.map((item) =>
-        item.key === mid
+        item.id === mid
           ? item.category.map((itm) =>
-              itm.key === id1 ? (itm.active = true) : itm
+              itm.id === id1 ? (itm.active = true) : itm
             )
           : item
       )
@@ -415,7 +343,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
       // one.category.map((itm) => (itm.active = false))
       // setone(one)
       one.category.map((itm) =>
-        itm.key === id1 ? (itm.active = true) : (itm.active = false)
+        itm.id === id1 ? (itm.active = true) : (itm.active = false)
       )
       setone(one)
     }
@@ -426,7 +354,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
         className={styles.vocherList}
         onClick={() => {
           VoucherData.map((item) =>
-            item.key === voucherd.key ? (item.active = !item.active) : item
+            item.id === voucherd.id ? (item.active = !item.active) : item
           )
           setVoucherData(VoucherData)
           if (voucherd.active) {
@@ -484,9 +412,9 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
   }
   const valid = (id1, group): boolean => {
     if (group) {
-      const obj = old.find((im) => im.key === id1)
+      const obj = old.find((im) => im.id === id1)
       for (const im of obj.category) {
-        for (const itme of im.subCategory) {
+        for (const itme of im.services) {
           if (itme.selected) {
             return true
           }
@@ -496,9 +424,9 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
       //setold([...old])
       return false
     } else {
-      const obj = old.find((im) => im.key === id)
-      const obj1 = obj.category.find((imt) => imt.key === id1)
-      for (const im of obj1.subCategory) {
+      const obj = old.find((im) => im.id === id)
+      const obj1 = obj.category.find((imt) => imt.id === id1)
+      for (const im of obj1.services) {
         if (im.selected) {
           return true
         }
@@ -552,7 +480,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
           ) : null}
 
           {!voucher
-            ? oldcatdata.subCategory.map((val) => (
+            ? oldcatdata.services.map((val) => (
                 /* eslint-disable-next-line */
               <>
                   {oldcatdata.video
@@ -564,7 +492,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
               ))
             : !isMobile &&
               VoucherData.map((item) => (
-                <div key={item.key}>{rendervoucher(item)}</div>
+                <div key={item.id}>{rendervoucher(item)}</div>
               ))}
         </div>
         {!isMobile && (
@@ -599,7 +527,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
                 old[0].category[0].active = true
                 setold([...old])
                 //setmbactive(true)
-                const obj = old.find((item) => item.key === 1).category[0]
+                const obj = old.find((item) => item.id === 1).category[0]
                 setoldcatdata(obj)
               }}
             >
@@ -613,15 +541,15 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
                   styles.serviceselectall,
                   value.active && styles.serviceselectallSelect
                 )}
-                key={value.key}
+                key={value.id}
                 onClick={() => {
-                  setvalue(value.key)
+                  setvalue(value.id)
                   selectcat(value)
                   setvoucher(false)
                   setmbactive(true)
                 }}
               >
-                {valid(value.key, true) && (
+                {valid(value.id, true) && (
                   <CheckCircleFilled
                     className={styles.checkfill}
                     style={{ color: ' #54B2D3' }}
@@ -675,12 +603,12 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
                 {!voucher ? (
                   All ? (
                     old.map((value) => (
-                      <div key={value.key}>
+                      <div key={value.id}>
                         {value.category.map((val) => (
                           <>
                             <div
                               style={{ margin: '12px 0', cursor: 'pointer' }}
-                              key={val.key}
+                              key={val.id}
                               onClick={() => {
                                 if (val.active) {
                                   setmbactive(!mbactive)
@@ -689,10 +617,10 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
                                   setmbactive(true)
                                 }
                                 setoldcatdata(val)
-                                setid(value.key)
-                                setsecId(val.key)
-                                setserviceactive(val.key, true, value.key)
-                                console.log(val.key)
+                                setid(value.id)
+                                setsecId(val.id)
+                                setserviceactive(val.id, true, value.id)
+                                console.log(val.id)
                               }}
                             >
                               <span
@@ -701,7 +629,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
                                   val.active && styles.serviceactive
                                 )}
                               >
-                                {/*{valid(val.key, false) && (*/}
+                                {/*{valid(val.id, false) && (*/}
                                 {/*  <CheckCircleFilled*/}
                                 {/*    style={{*/}
                                 {/*      position: 'absolute',*/}
@@ -762,10 +690,10 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
                     ))
                   ) : (
                     one.category.map((val) => (
-                      <div key={val.key}>
+                      <div key={val.id}>
                         <div
                           style={{ margin: '12px 0', cursor: 'pointer' }}
-                          key={val.key}
+                          key={val.id}
                           onClick={() => {
                             if (val.active) {
                               setmbactive(!mbactive)
@@ -774,11 +702,11 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
                               setmbactive(true)
                             }
                             setoldcatdata(val)
-                            setid(one.key)
-                            setsecId(val.key)
-                            setserviceactive(val.key, false)
+                            setid(one.id)
+                            setsecId(val.id)
+                            setserviceactive(val.id, false)
 
-                            console.log(val.key)
+                            console.log(val.id)
                           }}
                         >
                           <span
@@ -789,7 +717,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
                                 : val.active && mbactive && styles.serviceactive
                             )}
                           >
-                            {valid(val.key, false) && (
+                            {valid(val.id, false) && (
                               <CheckCircleFilled
                                 style={{
                                   position: 'absolute',
@@ -869,7 +797,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
                     {isMobile && mbactive && (
                       <div>
                         {VoucherData.map((item) => (
-                          <div key={item.key}>{rendervoucher(item)}</div>
+                          <div key={item.id}>{rendervoucher(item)}</div>
                         ))}
                         <div className={styles.servicedata}>
                           {translation(
@@ -890,7 +818,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
 
       <div>
         {/*{Select.map((value) => (*/}
-        {/*  <div key={value.key}>*/}
+        {/*  <div key={value.id}>*/}
         {/*    <div>*/}
         {/*      {value.icon}*/}
         {/*      {value.name}*/}
@@ -1079,7 +1007,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
 
           <div className={styles.modalBody}>
             {data.map((val) => (
-              <div className={styles.cardReview} key={val.key}>
+              <div className={styles.cardReview} key={val.id}>
                 <div className={styles.reviewHeader}>
                   <img
                     src={val.source}

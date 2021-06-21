@@ -13,8 +13,8 @@ import { Button } from '@pabau/ui'
 import * as Yup from 'yup'
 import classnames from 'classnames'
 import ClassNames from 'classnames'
-export interface SubCategoryItem {
-  key: number
+export interface Service {
+  id: number
   name: string
   rating: number
   time: string
@@ -24,28 +24,28 @@ export interface SubCategoryItem {
   review: number
   is_bundle: boolean
 }
-export interface CategoryItem {
-  key: number
+export interface Category {
+  id: number
   name: string
   icon: JSX.Element
   video: boolean
   rdmValue: number
   active: boolean
-  subCategory: SubCategoryItem[]
+  services: Service[]
 }
-export interface SelectItem {
-  key: number
+export interface MasterCategory {
+  id: number
   name: string
   active: boolean
   icon: JSX.Element
   addonIcon?: JSX.Element
-  category: CategoryItem[]
+  categories: Category[]
 }
 
 export interface ChooseModalProps {
   view: boolean
-  items: SelectItem[]
-  onSelected: (item: CategoryItem, id: number) => void
+  items: MasterCategory[]
+  onSelected: (item: Category, id: number) => void
   click: (member: number, viewbtn: boolean) => void
   translation: (val: string) => string
   indicator: boolean
@@ -65,10 +65,10 @@ export const ChooseModal: FC<ChooseModalProps> = ({
   const [id, setid] = useState<number>()
   const [member, setmember] = useState<number>(2)
   //const [cat, setcat] = useState(false)
-  const [category, setcategory] = useState<SelectItem>()
+  const [category, setcategory] = useState<MasterCategory>()
   // const [viewall, setviewall] = useState(true)
   //const { t } = useTranslationI18()
-  const handleSelectItem = (item: CategoryItem) => {
+  const handleSelectItem = (item: Category) => {
     console.log(item)
     item.active = true
     onSelected(item, id)
@@ -168,12 +168,9 @@ export const ChooseModal: FC<ChooseModalProps> = ({
               // !indicator && styles.fadeLeft
             )}
           >
-            {/*<h5>*/}
-            {/*  {translation('connect.onlinebooking.selector.category.title')}*/}
-            {/*</h5>*/}
-            {category.category.map((item) => (
+            {category.categories.map((item) => (
               <div
-                key={item.key}
+                key={item.id}
                 className={styles.chooseServiceTypeItem}
                 onClick={() => {
                   // setcategory(item)
@@ -214,7 +211,7 @@ export const ChooseModal: FC<ChooseModalProps> = ({
             {/*<h5>{translation('connect.onlinebooking.selector.choosetype')}</h5>*/}
             {items.map((item) => (
               <div
-                key={item.key}
+                key={item.id}
                 className={styles.chooseServiceTypeItem}
                 onClick={() => {
                   setcategory(item)

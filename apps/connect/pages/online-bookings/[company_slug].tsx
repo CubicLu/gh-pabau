@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import { Header } from '../../components/header'
 import { Footer } from '../../components/footer'
 import Selector, {
-  CategoryItem,
-  SelectItem,
+  MasterCategory,
+  Category,
+  Service,
 } from '../../components/selector/selector'
 import Clinic from '../../components/clinic/clinic'
 import BookingDatail from '../../components/bookingdetails/Bookingdetail'
@@ -20,6 +21,9 @@ import styles from './index.module.less'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { employes } from '../../../web/mocks/connect/employMock'
 import { useTranslationI18 } from '../../../web/hooks/useTranslationI18'
+import { useCompanyServicesCategorisedQuery } from '@pabau/graphql'
+import Shop from '../../../../libs/ui/src/assets/images/shop.svg'
+import { Image } from 'antd'
 /* eslint-disable-next-line */
 export interface OnlineBookingProps {}
 interface userData {
@@ -61,7 +65,7 @@ const userData: userData = {
 export function Index(props: OnlineBookingProps) {
   const [currentStep, setCurrentStep] = useState<number>(1)
   const [seleData, SetselData] = useState(defaultItems.slice(0, 4))
-  const [proD, setproD] = useState<SelectItem[]>()
+  const [proD, setproD] = useState<MasterCategory[]>()
   const [ispro, setispro] = useState(false)
   const [back, Setback] = useState(false)
   //const [appointmentDate, setAppointmentDate] = useState<Date>()
@@ -76,11 +80,56 @@ export function Index(props: OnlineBookingProps) {
   const [date, setdate] = useState()
   const [tempprice, settempprice] = useState('')
   const [editdate, seteditdate] = useState({ time: false, date: false })
-  const [conType, setconType] = useState<CategoryItem>()
+  const [conType, setconType] = useState<Category>()
   const [promoPrice, setpromoPrice] = useState<number>(0)
   const [percentage, setpercentage] = useState<number>(0)
   const [lang, setlang] = useState('en')
   const { t } = useTranslationI18()
+
+  const {
+    loading,
+    error,
+    data: servicesCategorised,
+  } = useCompanyServicesCategorisedQuery({
+    variables: {
+      company_id: 8021,
+    },
+  })
+  if (error) return <div>Error!</div>
+  if (loading || !servicesCategorised) return <div>Loading...</div>
+
+  const masterCategories = servicesCategorised.serviceMasterCategories.map(
+    (row) => {
+      return {
+        id: row.id,
+        name: row.name,
+        icon: row.image ? (
+          <Image
+            preview={false}
+            height={'40px'}
+            src={'https://crm.pabau.com' + row.image}
+            alt={row.name}
+          />
+        ) : null,
+        categories: row.ServiceCategory.map((cat) => {
+          return {
+            id: cat.id,
+            name: cat.name,
+            icon: row.image ? (
+              <Image
+                preview={false}
+                height={'40px'}
+                src={'https://crm.pabau.com' + row.image}
+                alt={row.name}
+              />
+            ) : null,
+            services: cat.CompanyService,
+          }
+        }),
+      }
+    }
+  )
+
   const translation = (key) => {
     return t(key, { lng: lang.toString().slice(0, 2).toLowerCase() })
   }
@@ -284,7 +333,7 @@ export function Index(props: OnlineBookingProps) {
             (first ? (
               <div>
                 <Selector
-                  items={seleData}
+                  items={masterCategories}
                   view={view}
                   click={(member, viewbtn) => {
                     console.log(member)
@@ -298,11 +347,10 @@ export function Index(props: OnlineBookingProps) {
                     //
                   }}
                   onSelected={(val, id) => {
-                    console.log(val)
                     setserviceid(id)
                     setconType(() => {
-                      for (const im of val.subCategory) {
-                        im.selected = false
+                      for (const im of val.services) {
+                        //im.selected = false
                       }
                       return val
                     })

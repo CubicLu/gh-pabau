@@ -1,5 +1,6 @@
 import { allow, and, shield } from 'graphql-shield'
 import * as rules from './types'
+import { useCompanyServicesCategorisedQuery } from '@pabau/graphql'
 
 export const permissions = shield(
   {
@@ -97,6 +98,8 @@ export const permissions = shield(
       findManyCustomReportWithPermissions: rules.authentication.isAdmin,
       user: rules.authentication.isAuthenticated, //TODO: insecure, fix in pure branch by masquerading the user/findOneUser and turning it into a findFirstUser in the shield injection.
       staffList: rules.authentication.isAuthenticated,
+      // ALLOW ALL
+      serviceMasterCategories: allow,
       '*': rules.interceptors.interceptAccessToCompanyData,
     },
   },
