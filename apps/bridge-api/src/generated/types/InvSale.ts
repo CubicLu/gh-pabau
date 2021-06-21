@@ -34,7 +34,7 @@ export const InvSale = objectType({
     t.model.by_email()
     t.model.by_sms()
     t.model.tip()
-    t.model.occupier()
+    t.model.company_id()
     t.model.uid()
     t.model.created_date()
     t.model.modified_date()

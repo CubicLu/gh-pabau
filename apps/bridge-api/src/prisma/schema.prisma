@@ -6516,7 +6516,7 @@ model InvSale {
   by_email            Int?       @default(0)
   by_sms              Int?       @default(0)
   tip                 Float?     @default(0.00)
-  occupier            Int?
+  company_id          Int?       @map("occupier")
   uid                 Int?
   created_date        DateTime?
   modified_date       DateTime?
@@ -6561,8 +6561,8 @@ model InvSale {
   @@index([date], name: "date")
   @@index([guid], name: "guid")
   @@index([insurer_contract_id], name: "insurer_contract_id")
-  @@index([occupier], name: "occupier")
-  @@index([occupier, date], name: "occupier_2")
+  @@index([company_id], name: "occupier")
+  @@index([company_id, date], name: "occupier_2")
   @@index([order_id], name: "order_id")
   @@index([paid_by], name: "paid_by")
   @@index([uid], name: "uid")

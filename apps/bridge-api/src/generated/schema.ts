@@ -2370,7 +2370,7 @@ export interface InvSale {
   by_email?: number;
   by_sms?: number;
   tip?: number;
-  occupier?: number;
+  company_id?: number;
   uid?: number;
   created_date?: Date;
   modified_date?: Date;
