@@ -14,19 +14,12 @@ import {
   PlusSquareFilled,
   SearchOutlined,
 } from '@ant-design/icons'
-import { gql } from '@apollo/client'
 import moment from 'moment'
-
 import Layout from '../../../components/Layout/Layout'
 import { UserContext } from '../../../context/UserContext'
-import {
-  Breadcrumb,
-  Pagination,
-  TabMenu,
-  useLiveQuery,
-  UserProps,
-  UserTile,
-} from '@pabau/ui'
+import { Breadcrumb, Pagination, TabMenu, UserProps, UserTile } from '@pabau/ui'
+import { useFindManyCompanyStaffUsersQuery } from '@pabau/graphql'
+
 import {
   Filter,
   ListView,
@@ -38,6 +31,7 @@ import CommonHeader from '../../../components/CommonHeader'
 import { Image, Input } from 'antd'
 import searchEmpty from '../../../../../libs/ui/src/assets/images/empty.png'
 import { ReactComponent as CloseIcon } from '../../../assets/images/close-icon.svg'
+import { getImage } from '../../../helper/cdn/imageUrl'
 
 export interface userDataProps extends UserProps {
   lastActivity: string
@@ -47,71 +41,11 @@ export interface userDataProps extends UserProps {
   userGroup: string
 }
 
-const LOCATION_FILTER_LIST_USERS = gql`
-  query get_company_users(
-    $searchTerm: String
-    $offset: Int!
-    $limit: Int!
-    $active: Int!
-    $currentDate: DateTime
-    $department: String
-    $locationId: Int
-    $admin: Int
-  ) {
-    staffList(
-      offset: $offset
-      limit: $limit
-      active: $active
-      searchTerm: $searchTerm
-      department: $department
-      locationId: $locationId
-      admin: $admin
-    ) {
-      count
-      staffList {
-        id
-        staff_id
-        full_name
-        Email
-        admin
-        CellPhone
-        main_contact
-        job_title
-        image
-        last_login
-        City
-      }
-    }
-    onVacationUsers: holidayRequests(
-      where: {
-        holiday_from: { lte: $currentDate }
-        AND: { holiday_to: { gte: $currentDate } }
-      }
-    ) {
-      staff_id
-      holiday_from
-      holiday_to
-      leave_type
-      status
-    }
-    pendingVacationUsers: holidayRequests(
-      where: { holiday_from: { gt: $currentDate } }
-    ) {
-      staff_id
-      holiday_from
-      holiday_to
-      leave_type
-      status
-    }
-  }
-`
-
 const Index: FunctionComponent = () => {
   const user = useContext(UserContext)
   const { t } = useTranslation('common')
   const router = useRouter()
   const isMobile = useMedia('(max-width: 767px)', false)
-
   const [currentDate] = useState(moment().utc())
   const [userView, setUserView] = useState<string>('Grid')
   const [tabValue, setTabValue] = useState<string | number>(0)
@@ -140,7 +74,7 @@ const Index: FunctionComponent = () => {
         offset: paginateData.offset,
         limit: paginateData.limit,
         department: department,
-        locationId: location,
+        locationId: Number.parseInt(location),
         admin: Number.parseInt(admin),
       },
     }
@@ -165,10 +99,7 @@ const Index: FunctionComponent = () => {
     admin,
   ])
 
-  const { data, loading } = useLiveQuery(
-    LOCATION_FILTER_LIST_USERS,
-    getQueryVariables
-  )
+  const { data, loading } = useFindManyCompanyStaffUsersQuery(getQueryVariables)
 
   useEffect(() => {
     setPaginateData((paginateData) => ({
@@ -202,7 +133,7 @@ const Index: FunctionComponent = () => {
     setSearchValue(value)
   }
 
-  const isOnline = (lastLogin: Date) => {
+  const isOnline = (lastLogin: string) => {
     const now = moment().utc()
     const end = moment(lastLogin).utc()
     const minutes = now.diff(end, 'minutes')
@@ -297,7 +228,7 @@ const Index: FunctionComponent = () => {
         <div className={styles.mobileSearchInput}>
           <Input
             className={styles.searchMarketingStyle}
-            placeholder={t('team.user.header.search.placeHolder')}
+            placeholder={t('team.user.header.search.placeholder')}
             value={searchValue}
             onChange={(e) => handleSearch(e.target.value)}
             suffix={
@@ -398,7 +329,10 @@ const Index: FunctionComponent = () => {
         </div>
         <div className={styles.tabWrapper}>
           <TabMenu
-            menuItems={[t('team.user.tabOne'), t('team.user.tabTwo')]}
+            menuItems={[
+              t('team.user.tab.staff.member'),
+              t('team.user.tab.group.permission'),
+            ]}
             tabPosition={'top'}
             minHeight={'0'}
             onChange={(key) => setTabValue(key)}
@@ -436,9 +370,10 @@ const Index: FunctionComponent = () => {
                               isPending(user.staff_id)
                             }
                             owner={user.main_contact}
-                            // img={user.image}
+                            img={getImage(user.image)}
                             admin={user.admin}
                             isLoading={loading}
+                            isSick={user.sickness === 1}
                           />
                         )
                       })
@@ -447,10 +382,10 @@ const Index: FunctionComponent = () => {
                         <div className={styles.noSearchResult}>
                           <Image src={searchEmpty} preview={false} />
                           <p className={styles.noResultsText}>
-                            {t('team.user.header.search.noSearchResults')}
+                            {t('team.user.header.search.no.results')}
                           </p>
                           <p className={styles.tryAdjustText}>
-                            {t('team.user.header.search.tryAdjustSearch')}
+                            {t('team.user.header.search.try.adjust')}
                           </p>
                         </div>
                       )}
@@ -462,7 +397,7 @@ const Index: FunctionComponent = () => {
                       return {
                         id: user.id,
                         name: user.full_name,
-                        // img: user.image
+                        img: user.image && getImage(user.image),
                         title: user.job_title,
                         lastActivity: moment(user.last_login).format(
                           'DD-MM-YYYY'
@@ -470,7 +405,7 @@ const Index: FunctionComponent = () => {
                         mobile: user.CellPhone,
                         email: user.Email,
                         location: user.City,
-                        userGroup: user.admin === 1 ? 'Staff' : 'User',
+                        userGroup: user.admin ? 'Staff' : 'User',
                       }
                     })}
                   />

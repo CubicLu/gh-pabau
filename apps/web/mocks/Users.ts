@@ -24,6 +24,13 @@ export function useData(t) {
     'can_discount',
   ]
 
+  const invert_fields = [
+    'hide_calendar',
+    'hide_online_bookings',
+    'InvBiller',
+    'staff_disable_edit_invoices',
+  ]
+
   const loaderColumns = []
   for (let i = 0; i < 5; i = i + 1) {
     loaderColumns.push({
@@ -51,7 +58,7 @@ export function useData(t) {
     dataSource: [
       {
         key: 'contacts',
-        name: t('team.user.module.source.contactsTitle'),
+        name: t('team.user.module.source.contacts.title'),
         children: [
           {
             key: 'Contact Manager',
@@ -71,17 +78,17 @@ export function useData(t) {
           },
           {
             key: 'Lab Requests',
-            name: t('team.user.module.source.labRequests'),
+            name: t('team.user.module.source.lab.requests'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.module.source.labRequests.tooltip'),
+            tooltipMessage: t('team.user.module.source.lab.requests.tooltip'),
           },
         ],
       },
       {
         key: 'finance',
-        name: t('team.user.module.source.financeTitle'),
+        name: t('team.user.module.source.finance.title'),
         children: [
           {
             key: 'Accounts',
@@ -111,7 +118,7 @@ export function useData(t) {
       },
       {
         key: 'leads',
-        name: t('team.user.module.source.leadsTitle'),
+        name: t('team.user.module.source.leads.title'),
         children: [
           {
             key: 'Lead Manager',
@@ -125,7 +132,7 @@ export function useData(t) {
       },
       {
         key: 'marketing',
-        name: t('team.user.module.source.marketingTitle'),
+        name: t('team.user.module.source.marketing.title'),
         children: [
           {
             key: 'SMS Campaign',
@@ -145,11 +152,11 @@ export function useData(t) {
           },
           {
             key: 'Gift Vouchers',
-            name: t('team.user.module.source.giftVouchers'),
+            name: t('team.user.module.source.gift.vouchers'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.module.source.giftVouchers.tooltip'),
+            tooltipMessage: t('team.user.module.source.gift.vouchers.tooltip'),
           },
           {
             key: 'Referral Tracker',
@@ -171,14 +178,14 @@ export function useData(t) {
       },
       {
         key: 'Reports',
-        name: t('team.user.module.source.reportsTitle'),
+        name: t('team.user.module.source.reports.title'),
         permissions: {
           owner: true,
         },
       },
       {
         key: 'stock',
-        name: t('team.user.module.source.stockTitle'),
+        name: t('team.user.module.source.stock.title'),
         children: [
           {
             key: 'Products',
@@ -190,19 +197,21 @@ export function useData(t) {
           },
           {
             key: 'Inventory Count',
-            name: t('team.user.module.source.inventoryCount'),
+            name: t('team.user.module.source.inventory.count'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.module.source.inventoryCount.tooltip'),
+            tooltipMessage: t(
+              'team.user.module.source.inventory.count.tooltip'
+            ),
           },
           {
             key: 'Purchase Order',
-            name: t('team.user.module.source.purchaseOrder'),
+            name: t('team.user.module.source.purchase.order'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.module.source.purchaseOrder.tooltip'),
+            tooltipMessage: t('team.user.module.source.purchase.order.tooltip'),
           },
           {
             key: 'Suppliers',
@@ -216,14 +225,14 @@ export function useData(t) {
       },
       {
         key: 'Practice',
-        name: t('team.user.module.source.calendarTitle'),
+        name: t('team.user.module.source.calendar.title'),
         permissions: {
           owner: true,
         },
       },
       {
         key: 'staff',
-        name: t('team.user.module.source.teamTitle'),
+        name: t('team.user.module.source.team.title'),
         children: [
           {
             key: 'Staff Manager',
@@ -274,248 +283,258 @@ export function useData(t) {
     dataSource: [
       {
         key: '1',
-        name: t('team.user.feature.source.calendarClientsTitle'),
+        name: t('team.user.feature.source.calendar.clients.title'),
         children: [
           {
             key: 'hide_calendar',
-            name: t('team.user.feature.source.availableCalendar'),
+            name: t('team.user.feature.source.available.calendar'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.feature.source.availableCalendar.tooltip'
+              'team.user.feature.source.available.calendar.tooltip'
             ),
           },
           {
             key: 'can_view_full_cal',
-            name: t('team.user.feature.source.viewEverybodyCalendar'),
+            name: t('team.user.feature.source.view.everybody.calendar'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.feature.source.viewEverybodyCalendar.tooltip'
+              'team.user.feature.source.view.everybody.calendar.tooltip'
             ),
           },
           {
             key: 'can_make_blockout',
-            name: t('team.user.feature.source.canMakeBookOut'),
+            name: t('team.user.feature.source.can.make.bookout'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.feature.source.canMakeBookOut.tooltip'
+              'team.user.feature.source.can.make.bookout.tooltip'
             ),
           },
           {
             key: 'hide_online_bookings',
-            name: t('team.user.feature.source.bookableOnline'),
+            name: t('team.user.feature.source.bookable.online'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.feature.source.bookableOnline.tooltip'
+              'team.user.feature.source.bookable.online.tooltip'
             ),
           },
           {
             key: 'can_cancel_booking',
-            name: t('team.user.feature.source.canCancelBooking'),
+            name: t('team.user.feature.source.can.cancel.booking'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.feature.source.canCancelBooking.tooltip'
+              'team.user.feature.source.can.cancel.booking.tooltip'
             ),
           },
           {
             key: 'can_edit_booking_time',
-            name: t('team.user.feature.source.changeBookingTime'),
+            name: t('team.user.feature.source.change.booking.time'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.feature.source.changeBookingTime.tooltip'
+              'team.user.feature.source.change.booking.time.tooltip'
             ),
           },
           {
             key: 'can_move_blockout',
-            name: t('team.user.feature.source.canMoveBlockout'),
+            name: t('team.user.feature.source.can.move.blockout'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.feature.source.canMoveBlockout.tooltip'
+              'team.user.feature.source.can.move.blockout.tooltip'
             ),
           },
           {
             key: 'can_delete_blockout',
-            name: t('team.user.feature.source.canDeleteBlockout'),
+            name: t('team.user.feature.source.can.delete.blockout'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.feature.source.canDeleteBlockout.tooltip'
+              'team.user.feature.source.can.delete.blockout.tooltip'
             ),
           },
         ],
       },
       {
         key: '2',
-        name: t('team.user.feature.source.financialsTitle'),
+        name: t('team.user.feature.source.financials.title'),
         children: [
           {
             key: 'can_void',
-            name: t('team.user.feature.source.canVoidSales'),
-            permissions: {
-              owner: true,
-            },
-            tooltipMessage: t('team.user.feature.source.canVoidSales.tooltip'),
-          },
-          {
-            key: 'can_refund',
-            name: t('team.user.feature.source.canRefundSales'),
+            name: t('team.user.feature.source.can.void.sales'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.feature.source.canRefundSales.tooltip'
+              'team.user.feature.source.can.void.sales.tooltip'
+            ),
+          },
+          {
+            key: 'can_refund',
+            name: t('team.user.feature.source.can.refund.sales'),
+            permissions: {
+              owner: true,
+            },
+            tooltipMessage: t(
+              'team.user.feature.source.can.refund.sales.tooltip'
             ),
           },
           {
             key: 'staff_disable_edit_invoice_content',
-            name: t('team.user.feature.source.canEditInvoiceContent'),
+            name: t('team.user.feature.source.can.edit.invoice.content'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.feature.source.canEditInvoiceContent.tooltip'
+              'team.user.feature.source.can.edit.invoice.content.tooltip'
             ),
           },
           {
             key: 'InvBiller',
-            name: t('team.user.feature.source.availableToSell'),
+            name: t('team.user.feature.source.available.to.sell'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.feature.source.availableToSell.tooltip'
+              'team.user.feature.source.available.to.sell.tooltip'
             ),
           },
           {
             key: 'staff_disable_edit_invoices',
-            name: t('team.user.feature.source.canEditInvoices'),
+            name: t('team.user.feature.source.can.edit.invoices'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.feature.source.canEditInvoices.tooltip'
+              'team.user.feature.source.can.edit.invoices.tooltip'
             ),
           },
           {
             key: 'performance_stats',
-            name: t('team.user.feature.source.performanceStats'),
+            name: t('team.user.feature.source.performance.stats'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.feature.source.performanceStats.tooltip'
+              'team.user.feature.source.performance.stats.tooltip'
             ),
           },
           {
-            key: 'can_discount',
-            name: t('team.user.feature.source.applyDiscount'),
+            key: 'can_discount_single',
+            name: t('team.user.feature.source.apply.discount'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.feature.source.applyDiscount.tooltip'),
+            tooltipMessage: t(
+              'team.user.feature.source.apply.discount.tooltip'
+            ),
           },
         ],
       },
       {
         key: '3',
-        name: t('team.user.feature.source.otherTitle'),
+        name: t('team.user.feature.source.other.title'),
         children: [
           {
             key: 'delete_alert_notes',
-            name: t('team.user.feature.source.canDeleteAlertNotes'),
+            name: t('team.user.feature.source.can.delete.alert.notes'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.feature.source.canDeleteAlertNotes.tooltip'
+              'team.user.feature.source.can.delete.alert.notes.tooltip'
             ),
           },
           {
             key: 'delete_treatment',
-            name: t('team.user.feature.source.editDeleteEMR'),
-            permissions: {
-              owner: true,
-            },
-            tooltipMessage: t('team.user.feature.source.editDeleteEMR.tooltip'),
-          },
-          {
-            key: 'can_merge',
-            name: t('team.user.feature.source.mergeDuplicateContrast'),
+            name: t('team.user.feature.source.edit.delete.EMR'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.feature.source.mergeDuplicateContrast.tooltip'
+              'team.user.feature.source.edit.delete.EMR.tooltip'
+            ),
+          },
+          {
+            key: 'can_merge',
+            name: t('team.user.feature.source.merge.duplicate.contrast'),
+            permissions: {
+              owner: true,
+            },
+            tooltipMessage: t(
+              'team.user.feature.source.merge.duplicate.contrast.tooltip'
             ),
           },
           {
             key: 'can_report',
-            name: t('team.user.feature.source.appearOnReports'),
+            name: t('team.user.feature.source.appear.on.reports'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.feature.source.appearOnReports.tooltip'
+              'team.user.feature.source.appear.on.reports.tooltip'
             ),
           },
           {
             key: 'can_rota',
-            name: t('team.user.feature.source.canManageRota'),
-            permissions: {
-              owner: true,
-            },
-            tooltipMessage: t('team.user.feature.source.canManageRota.tooltip'),
-          },
-          {
-            key: 'appear_on_rota',
-            name: t('team.user.feature.source.appearOnRota'),
-            permissions: {
-              owner: true,
-            },
-            tooltipMessage: t('team.user.feature.source.appearOnRota.tooltip'),
-          },
-          {
-            key: 'medical_approval_notes',
-            name: t('team.user.feature.source.medicalApprovalNotes'),
+            name: t('team.user.feature.source.can.manage.rota'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.feature.source.medicalApprovalNotes.tooltip'
+              'team.user.feature.source.can.manage.rota.tooltip'
+            ),
+          },
+          {
+            key: 'appear_on_rota',
+            name: t('team.user.feature.source.appear.on.rota'),
+            permissions: {
+              owner: true,
+            },
+            tooltipMessage: t(
+              'team.user.feature.source.appear.on.rota.tooltip'
+            ),
+          },
+          {
+            key: 'medical_approval_notes',
+            name: t('team.user.feature.source.medical.approval.notes'),
+            permissions: {
+              owner: true,
+            },
+            tooltipMessage: t(
+              'team.user.feature.source.medical.approval.notes.tooltip'
             ),
           },
           {
             key: 'can_edit_stock_descriptions',
-            name: t('team.user.feature.source.canEditStockDescriptions'),
+            name: t('team.user.feature.source.can.edit.stock.descriptions'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.feature.source.canEditStockDescriptions.tooltip'
+              'team.user.feature.source.can.edit.stock.descriptions.tooltip'
             ),
           },
           {
             key: 'can_edit_stock_level',
-            name: t('team.user.feature.source.canEditStockLevel'),
+            name: t('team.user.feature.source.can.edit.stock.level'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.feature.source.canEditStockLevel.tooltip'
+              'team.user.feature.source.can.edit.stock.level.tooltip'
             ),
           },
         ],
@@ -527,16 +546,16 @@ export function useData(t) {
     dataSource: [
       {
         key: '1',
-        name: t('team.user.reports.source.contactReportsTitle'),
+        name: t('team.user.reports.source.contact.reports.title'),
         children: [
           {
             key: 'CO001',
-            name: t('team.user.reports.source.basicInformation'),
+            name: t('team.user.reports.source.basic.information'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.basicInformation.tooltip'
+              'team.user.reports.source.basic.information.tooltip'
             ),
           },
           {
@@ -549,470 +568,480 @@ export function useData(t) {
           },
           {
             key: 'CO010',
-            name: t('team.user.reports.source.outstandingPackages'),
+            name: t('team.user.reports.source.outstanding.packages'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.outstandingPackages.tooltip'
+              'team.user.reports.source.outstanding.packages.tooltip'
             ),
           },
           {
             key: 'CO020',
-            name: t('team.user.reports.source.newClients'),
+            name: t('team.user.reports.source.new.clients'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t(
-              'team.user.reports.source.outstandingPackages.tooltip'
-            ),
+            tooltipMessage: t('team.user.reports.source.new.clients.tooltip'),
           },
           {
             key: 'CO030',
-            name: t('team.user.reports.source.lastSpend'),
+            name: t('team.user.reports.source.last.spend'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.reports.source.lastSpend.tooltip'),
+            tooltipMessage: t('team.user.reports.source.last.spend.tooltip'),
           },
           {
             key: 'CO031',
-            name: t('team.user.reports.source.lastVisit'),
+            name: t('team.user.reports.source.last.visit'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.reports.source.lastVisit.tooltip'),
+            tooltipMessage: t('team.user.reports.source.last.visit.tooltip'),
           },
           {
             key: 'CO035',
-            name: t('team.user.reports.source.clientsByLocation'),
+            name: t('team.user.reports.source.clients.by.location'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.clientsByLocation.tooltip'
+              'team.user.reports.source.clients.by.location.tooltip'
             ),
           },
           {
             key: 'CO046',
-            name: t('team.user.reports.source.firstVisit'),
+            name: t('team.user.reports.source.first.visit'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.reports.source.firstVisit.tooltip'),
+            tooltipMessage: t('team.user.reports.source.first.visit.tooltip'),
           },
           {
             key: 'VA001',
-            name: t('team.user.reports.source.vaccinationReport'),
+            name: t('team.user.reports.source.vaccination.report'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.vaccinationReport.tooltip'
+              'team.user.reports.source.vaccination.report.tooltip'
             ),
           },
           {
             key: 'CO045',
-            name: t('team.user.reports.source.bigSpenderReceipt'),
+            name: t('team.user.reports.source.big.spender.receipt'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.bigSpenderReceipt.tooltip'
+              'team.user.reports.source.big.spender.receipt.tooltip'
             ),
           },
           {
             key: 'CO050',
-            name: t('team.user.reports.source.clientReceiptsCategory'),
+            name: t('team.user.reports.source.client.receipts.category'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.clientReceiptsCategory.tooltip'
+              'team.user.reports.source.client.receipts.category.tooltip'
             ),
           },
           {
             key: 'CO065',
-            name: t('team.user.reports.source.clientRetailPurchases'),
+            name: t('team.user.reports.source.client.retail.purchases'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.clientRetailPurchases.tooltip'
+              'team.user.reports.source.client.retail.purchases.tooltip'
             ),
           },
           {
             key: 'CO070',
-            name: t('team.user.reports.source.accountBalance'),
+            name: t('team.user.reports.source.account.balance'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.accountBalance.tooltip'
+              'team.user.reports.source.account.balance.tooltip'
             ),
           },
           {
             key: 'CO075',
-            name: t('team.user.reports.source.clientServiceSales'),
+            name: t('team.user.reports.source.client.service.sales'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.clientServiceSales.tooltip'
+              'team.user.reports.source.client.service.sales.tooltip'
             ),
           },
           {
             key: 'CO147',
-            name: t('team.user.reports.source.medicalDataReport'),
+            name: t('team.user.reports.source.medical.data.report'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.medicalDataReport.tooltip'
+              'team.user.reports.source.medical.data.report.tooltip'
             ),
           },
           {
             key: 'CO060',
-            name: t('team.user.reports.source.duplicateClients'),
+            name: t('team.user.reports.source.duplicate.clients'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.duplicateClients.tooltip'
+              'team.user.reports.source.duplicate.clients.tooltip'
             ),
           },
           {
             key: 'CO105',
-            name: t('team.user.reports.source.patientPrescriptions'),
+            name: t('team.user.reports.source.patient.prescriptions'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.patientPrescriptions.tooltip'
+              'team.user.reports.source.patient.prescriptions.tooltip'
             ),
           },
           {
             key: 'CO110',
-            name: t('team.user.reports.source.clientsTreatmentInterest'),
+            name: t('team.user.reports.source.clients.treatment.interest'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.clientsTreatmentInterest.tooltip'
+              'team.user.reports.source.clients.treatment.interest.tooltip'
             ),
           },
           {
             key: 'CO111',
-            name: t('team.user.reports.source.neverPurchasedBefore'),
+            name: t('team.user.reports.source.never.purchased.before'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.neverPurchasedBefore.tooltip'
+              'team.user.reports.source.never.purchased.before.tooltip'
             ),
           },
           {
             key: 'CO115',
-            name: t('team.user.reports.source.clientEnquiryConversion'),
+            name: t('team.user.reports.source.client.enquiry.conversion'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.clientEnquiryConversion.tooltip'
+              'team.user.reports.source.client.enquiry.conversion.tooltip'
             ),
           },
           {
             key: 'CO130',
-            name: t('team.user.reports.source.productConsumption'),
+            name: t('team.user.reports.source.product.consumption'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.productConsumption.tooltip'
+              'team.user.reports.source.product.consumption.tooltip'
             ),
           },
           {
             key: 'CO135',
-            name: t('team.user.reports.source.accountActivity'),
+            name: t('team.user.reports.source.account.activity'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.accountActivity.tooltip'
+              'team.user.reports.source.account.activity.tooltip'
             ),
           },
           {
             key: 'CO140',
-            name: t('team.user.reports.source.lastCustomerBookingsEmployee'),
+            name: t('team.user.reports.source.last.customer.bookings.employee'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.lastCustomerBookingsEmployee.tooltip'
+              'team.user.reports.source.last.customer.bookings.employee.tooltip'
             ),
           },
           {
             key: 'CO145',
-            name: t('team.user.reports.source.accountBalanceDate'),
+            name: t('team.user.reports.source.account.balance.date'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.accountBalanceDate.tooltip'
+              'team.user.reports.source.account.balance.date.tooltip'
             ),
           },
           {
             key: 'CO146',
-            name: t('team.user.reports.source.treatmentMissingData'),
+            name: t('team.user.reports.source.treatment.missing.data'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.treatmentMissingData.tooltip'
+              'team.user.reports.source.treatment.missing.data.tooltip'
             ),
           },
         ],
       },
       {
         key: '2',
-        name: t('team.user.reports.source.marketingReportsTitle'),
+        name: t('team.user.reports.source.marketing.reports.title'),
         children: [
           {
             key: 'CO095',
-            name: t('team.user.reports.source.clientRecalls'),
-            permissions: {
-              owner: true,
-            },
-            tooltipMessage: t('team.user.reports.source.clientRecalls.tooltip'),
-          },
-          {
-            key: 'CO100',
-            name: t('team.user.reports.source.loyaltyReport'),
-            permissions: {
-              owner: true,
-            },
-            tooltipMessage: t('team.user.reports.source.loyaltyReport.tooltip'),
-          },
-          {
-            key: 'CO085',
-            name: t('team.user.reports.source.giftCards'),
-            permissions: {
-              owner: true,
-            },
-            tooltipMessage: t('team.user.reports.source.giftCards.tooltip'),
-          },
-          {
-            key: 'CO090',
-            name: t('team.user.reports.source.giftCardAnalysis'),
+            name: t('team.user.reports.source.client.recalls'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.giftCardAnalysis.tooltip'
+              'team.user.reports.source.client.recalls.tooltip'
+            ),
+          },
+          {
+            key: 'CO100',
+            name: t('team.user.reports.source.loyalty.report'),
+            permissions: {
+              owner: true,
+            },
+            tooltipMessage: t(
+              'team.user.reports.source.loyalty.report.tooltip'
+            ),
+          },
+          {
+            key: 'CO085',
+            name: t('team.user.reports.source.gift.cards'),
+            permissions: {
+              owner: true,
+            },
+            tooltipMessage: t('team.user.reports.source.gift.cards.tooltip'),
+          },
+          {
+            key: 'CO090',
+            name: t('team.user.reports.source.gift.card.analysis'),
+            permissions: {
+              owner: true,
+            },
+            tooltipMessage: t(
+              'team.user.reports.source.gift.card.analysis.tooltip'
             ),
           },
           {
             key: 'MA001',
-            name: t('team.user.reports.source.salesReferralSource'),
+            name: t('team.user.reports.source.sales.referral.source'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.salesReferralSource.tooltip'
+              'team.user.reports.source.sales.referral.source.tooltip'
             ),
           },
           {
             key: 'MA005',
-            name: t('team.user.reports.source.optTextContacts'),
+            name: t('team.user.reports.source.opt.text.contacts'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.optTextContacts.tooltip'
+              'team.user.reports.source.opt.text.contacts.tooltip'
             ),
           },
           {
             key: 'MA010',
-            name: t('team.user.reports.source.optEmailContacts'),
+            name: t('team.user.reports.source.opt.email.contacts'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.optEmailContacts.tooltip'
+              'team.user.reports.source.opt.email.contacts.tooltip'
             ),
           },
           {
             key: 'MA020',
-            name: t('team.user.reports.source.referralSources'),
+            name: t('team.user.reports.source.referral.sources'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.referralSources.tooltip'
+              'team.user.reports.source.referral.sources.tooltip'
             ),
           },
           {
             key: 'MA025',
-            name: t('team.user.reports.source.feedbackResults'),
+            name: t('team.user.reports.source.feedback.results'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.feedbackResults.tooltip'
+              'team.user.reports.source.feedback.results.tooltip'
             ),
           },
           {
             key: 'MA030',
-            name: t('team.user.reports.source.surveyFeedback'),
+            name: t('team.user.reports.source.survey.feedback'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.surveyFeedback.tooltip'
+              'team.user.reports.source.survey.feedback.tooltip'
             ),
           },
         ],
       },
       {
         key: '3',
-        name: t('team.user.reports.source.financeReportsTitle'),
+        name: t('team.user.reports.source.finance.reports.title'),
         children: [
           {
             key: 'FI000',
-            name: t('team.user.reports.source.dailySales'),
+            name: t('team.user.reports.source.daily.sales'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.reports.source.dailySales.tooltip'),
+            tooltipMessage: t('team.user.reports.source.daily.sales.tooltip'),
           },
           {
             key: 'FI001',
-            name: t('team.user.reports.source.dailyReconciliation'),
+            name: t('team.user.reports.source.daily.reconciliation'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.dailyReconciliation.tooltip'
+              'team.user.reports.source.daily.reconciliation.tooltip'
             ),
           },
           {
             key: 'FI002',
-            name: t('team.user.reports.source.dailyPayments'),
-            permissions: {
-              owner: true,
-            },
-            tooltipMessage: t('team.user.reports.source.dailyPayments.tooltip'),
-          },
-          {
-            key: 'FI005',
-            name: t('team.user.reports.source.receiptsEmployee'),
+            name: t('team.user.reports.source.daily.payments'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.receiptsEmployee.tooltip'
+              'team.user.reports.source.daily.payments.tooltip'
+            ),
+          },
+          {
+            key: 'FI005',
+            name: t('team.user.reports.source.receipts.employee'),
+            permissions: {
+              owner: true,
+            },
+            tooltipMessage: t(
+              'team.user.reports.source.receipts.employee.tooltip'
             ),
           },
           {
             key: 'FI006',
-            name: t('team.user.reports.source.salesEmployee'),
-            permissions: {
-              owner: true,
-            },
-            tooltipMessage: t('team.user.reports.source.salesEmployee.tooltip'),
-          },
-          {
-            key: 'FI010',
-            name: t('team.user.reports.source.receiptsRetail'),
+            name: t('team.user.reports.source.sales.employee'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.receiptsRetail.tooltip'
+              'team.user.reports.source.sales.employee.tooltip'
+            ),
+          },
+          {
+            key: 'FI010',
+            name: t('team.user.reports.source.receipts.retail'),
+            permissions: {
+              owner: true,
+            },
+            tooltipMessage: t(
+              'team.user.reports.source.receipts.retail.tooltip'
             ),
           },
           {
             key: 'FI011',
-            name: t('team.user.reports.source.receiptsService'),
+            name: t('team.user.reports.source.receipts.service'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.receiptsService.tooltip'
+              'team.user.reports.source.receipts.service.tooltip'
             ),
           },
           {
             key: 'FI012',
-            name: t('team.user.reports.source.receiptsCategory'),
+            name: t('team.user.reports.source.receipts.category'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.receiptsCategory.tooltip'
+              'team.user.reports.source.receipts.category.tooltip'
             ),
           },
           {
             key: 'FI014',
-            name: t('team.user.reports.source.salesCategory'),
-            permissions: {
-              owner: true,
-            },
-            tooltipMessage: t('team.user.reports.source.salesCategory.tooltip'),
-          },
-          {
-            key: 'FI015',
-            name: t('team.user.reports.source.receiptsEmployeeService'),
+            name: t('team.user.reports.source.sales.category'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.receiptsEmployeeService.tooltip'
+              'team.user.reports.source.sales.category.tooltip'
+            ),
+          },
+          {
+            key: 'FI015',
+            name: t('team.user.reports.source.receipts.employee.service'),
+            permissions: {
+              owner: true,
+            },
+            tooltipMessage: t(
+              'team.user.reports.source.receipts.employee.service.tooltip'
             ),
           },
           {
             key: 'FI016',
-            name: t('team.user.reports.source.receiptsEmployeeRetail'),
+            name: t('team.user.reports.source.receipts.employee.retail'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.receiptsEmployeeRetail.tooltip'
+              'team.user.reports.source.receipts.employee.retail.tooltip'
             ),
           },
           {
             key: 'FI019',
-            name: t('team.user.reports.source.VATReport'),
+            name: t('team.user.reports.source.VAT.report'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.reports.source.VATReport.tooltip'),
+            tooltipMessage: t('team.user.reports.source.VAT.report.tooltip'),
           },
           {
             key: 'FI025',
-            name: t('team.user.reports.source.receiptsMonth'),
-            permissions: {
-              owner: true,
-            },
-            tooltipMessage: t('team.user.reports.source.receiptsMonth.tooltip'),
-          },
-          {
-            key: 'FI026',
-            name: t('team.user.reports.source.monthlyTakingSummary'),
+            name: t('team.user.reports.source.receipts.month'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.monthlyTakingSummary.tooltip'
+              'team.user.reports.source.receipts.month.tooltip'
+            ),
+          },
+          {
+            key: 'FI026',
+            name: t('team.user.reports.source.monthly.taking.summary'),
+            permissions: {
+              owner: true,
+            },
+            tooltipMessage: t(
+              'team.user.reports.source.monthly.taking.summary.tooltip'
             ),
           },
           {
             key: 'FI030',
-            name: t('team.user.reports.source.raisedInvoices'),
+            name: t('team.user.reports.source.raised.invoices'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.raisedInvoices.tooltip'
+              'team.user.reports.source.raised.invoices.tooltip'
             ),
           },
           {
@@ -1025,170 +1054,172 @@ export function useData(t) {
           },
           {
             key: 'FI075',
-            name: t('team.user.reports.source.outstandingInvoices'),
+            name: t('team.user.reports.source.outstanding.invoices'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.outstandingInvoices.tooltip'
+              'team.user.reports.source.outstanding.invoices.tooltip'
             ),
           },
           {
             key: 'FI085',
-            name: t('team.user.reports.source.serviceRetailReceipts'),
+            name: t('team.user.reports.source.service.retail.receipts'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.serviceRetailReceipts.tooltip'
+              'team.user.reports.source.service.retail.receipts.tooltip'
             ),
           },
           {
             key: 'FI090',
-            name: t('team.user.reports.source.agedInsuranceDebtReport'),
+            name: t('team.user.reports.source.aged.insurance.debt.report'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.agedInsuranceDebtReport.tooltip'
+              'team.user.reports.source.aged.insurance.debt.report.tooltip'
             ),
           },
           {
             key: 'FI017',
-            name: t('team.user.reports.source.receiptsEmployeeDetailed'),
+            name: t('team.user.reports.source.receipts.employee.detailed'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.receiptsEmployeeDetailed.tooltip'
+              'team.user.reports.source.receipt.employee.detailed.tooltip'
             ),
           },
           {
             key: 'FI022',
-            name: t('team.user.reports.source.dailyPerformanceStats'),
+            name: t('team.user.reports.source.daily.performance.stats'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.dailyPerformanceStats.tooltip'
+              'team.user.reports.source.daily.performance.stats.tooltip'
             ),
           },
           {
             key: 'FI031',
-            name: t('team.user.reports.source.invoiceActivity'),
+            name: t('team.user.reports.source.invoice.activity'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.invoiceActivity.tooltip'
+              'team.user.reports.source.invoice.activity.tooltip'
             ),
           },
           {
             key: 'FI035',
-            name: t('team.user.reports.source.receiptsPaymentMethod'),
+            name: t('team.user.reports.source.receipts.payment.method'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.receiptsPaymentMethod.tooltip'
+              'team.user.reports.source.receipts.payment.method.tooltip'
             ),
           },
           {
             key: 'FI055',
-            name: t('team.user.reports.source.unpaidVisits'),
+            name: t('team.user.reports.source.unpaid.visits'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.reports.source.unpaidVisits.tooltip'),
+            tooltipMessage: t('team.user.reports.source.unpaid.visits.tooltip'),
           },
           {
             key: 'FI060',
-            name: t('team.user.reports.source.freeGiveaways'),
-            permissions: {
-              owner: true,
-            },
-            tooltipMessage: t('team.user.reports.source.freeGiveaways.tooltip'),
-          },
-          {
-            key: 'FI065',
-            name: t('team.user.reports.source.appointmentIncomeProjection'),
+            name: t('team.user.reports.source.free.giveaways'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.appointmentIncomeProjection.tooltip'
+              'team.user.reports.source.free.giveaways.tooltip'
+            ),
+          },
+          {
+            key: 'FI065',
+            name: t('team.user.reports.source.appointment.income.projection'),
+            permissions: {
+              owner: true,
+            },
+            tooltipMessage: t(
+              'team.user.reports.source.appointment.income.projection.tooltip'
             ),
           },
           {
             key: 'FI070',
-            name: t('team.user.reports.source.discountReport'),
+            name: t('team.user.reports.source.discount.report'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.discountReport.tooltip'
+              'team.user.reports.source.discount.report.tooltip'
             ),
           },
           {
             key: 'FI080',
-            name: t('team.user.reports.source.salesExpense'),
+            name: t('team.user.reports.source.sales.expense'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.reports.source.salesExpense.tooltip'),
+            tooltipMessage: t('team.user.reports.source.sales.expense.tooltip'),
           },
           {
             key: 'FI155',
-            name: t('team.user.reports.source.insuranceReport'),
+            name: t('team.user.reports.source.insurance.report'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.insuranceReport.tooltip'
+              'team.user.reports.source.insurance.report.tooltip'
             ),
           },
           {
             key: 'OT001',
-            name: t('team.user.reports.source.salesConversion'),
+            name: t('team.user.reports.source.sales.conversion'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.salesConversion.tooltip'
+              'team.user.reports.source.sales.conversion.tooltip'
             ),
           },
           {
             key: 'OT002',
-            name: t('team.user.reports.source.telesalesReport'),
+            name: t('team.user.reports.source.telesales.report'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.telesalesReport.tooltip'
+              'team.user.reports.source.telesales.report.tooltip'
             ),
           },
         ],
       },
       {
         key: '4',
-        name: t('team.user.reports.source.leadReportsTitle'),
+        name: t('team.user.reports.source.lead.reports.title'),
         children: [
           {
             key: 'LE000',
-            name: t('team.user.reports.source.openLeads'),
+            name: t('team.user.reports.source.open.leads'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.reports.source.openLeads.tooltip'),
+            tooltipMessage: t('team.user.reports.source.open.leads.tooltip'),
           },
           {
             key: 'LE001',
-            name: t('team.user.reports.source.convertedLeads'),
+            name: t('team.user.reports.source.converted.leads'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.convertedLeads.tooltip'
+              'team.user.reports.source.converted.leads.tooltip'
             ),
           },
           {
@@ -1201,353 +1232,363 @@ export function useData(t) {
           },
           {
             key: 'LE015',
-            name: t('team.user.reports.source.leadsStatus'),
+            name: t('team.user.reports.source.leads.status'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.reports.source.leadsStatus.tooltip'),
+            tooltipMessage: t('team.user.reports.source.leads.status.tooltip'),
           },
           {
             key: 'LE020',
-            name: t('team.user.reports.source.leadsSources'),
+            name: t('team.user.reports.source.leads.sources'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.reports.source.leadsSources.tooltip'),
+            tooltipMessage: t('team.user.reports.source.leads.sources.tooltip'),
           },
           {
             key: 'LE035',
-            name: t('team.user.reports.source.leadsInterest'),
+            name: t('team.user.reports.source.leads.interest'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.reports.source.leadsInterest.tooltip'),
+            tooltipMessage: t(
+              'team.user.reports.source.leads.interest.tooltip'
+            ),
           },
           {
             key: 'LE040',
-            name: t('team.user.reports.source.leadsClinic'),
+            name: t('team.user.reports.source.leads.clinic'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.reports.source.leadsClinic.tooltip'),
+            tooltipMessage: t('team.user.reports.source.leads.clinic.tooltip'),
           },
         ],
       },
       {
         key: '5',
-        name: t('team.user.reports.source.appointmentsTitle'),
+        name: t('team.user.reports.source.appointments.title'),
         children: [
           {
             key: 'CO021',
-            name: t('team.user.reports.source.bookedAppointments'),
+            name: t('team.user.reports.source.booked.appointments'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.bookedAppointments.tooltip'
+              'team.user.reports.source.booked.appointments.tooltip'
             ),
           },
           {
             key: 'CO025',
-            name: t('team.user.reports.source.missedCancelledAppointments'),
+            name: t('team.user.reports.source.missed.cancelled.appointments'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.missedCancelledAppointments.tooltip'
+              'team.user.reports.source.missed.cancelled.appointments.tooltip'
             ),
           },
           {
             key: 'CO036',
-            name: t('team.user.reports.source.connectRegistrationBookings'),
+            name: t('team.user.reports.source.connect.registration.bookings'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.connectRegistrationBookings.tooltip'
+              'team.user.reports.source.connect.registration.bookings.tooltip'
             ),
           },
           {
             key: 'CO040',
-            name: t('team.user.reports.source.consultationConversion'),
+            name: t('team.user.reports.source.consultation.conversion'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.consultationConversion.tooltip'
+              'team.user.reports.source.consultation.conversion.tooltip'
             ),
           },
           {
             key: 'CO006',
-            name: t('team.user.reports.source.appointmentsServiceTypeCount'),
+            name: t('team.user.reports.source.appointments.service.type.count'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.appointmentsServiceTypeCount.tooltip'
+              'team.user.reports.source.appointments.service.type.count.tooltip'
             ),
           },
           {
             key: 'CO125',
-            name: t('team.user.reports.source.surgeryPreparations'),
+            name: t('team.user.reports.source.surgery.preparations'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.surgeryPreparations.tooltip'
+              'team.user.reports.source.surgery.preparations.tooltip'
             ),
           },
           {
             key: 'CO140',
-            name: t('team.user.reports.source.lastCustomerBookingsByEmployee'),
+            name: t(
+              'team.user.reports.source.last.customer.bookings.by.employee'
+            ),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.lastCustomerBookingsByEmployee.tooltip'
+              'team.user.reports.source.last.customer.bookings.by.employee.tooltip'
             ),
           },
           {
             key: 'ST000',
-            name: t('team.user.reports.source.staffAppointmentSchedule'),
+            name: t('team.user.reports.source.staff.appointment.schedule'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.staffAppointmentSchedule.tooltip'
+              'team.user.reports.source.staff.appointment.schedule.tooltip'
             ),
           },
           {
             key: 'ST025',
-            name: t('team.user.reports.source.st025EmployeeAppointmentSummary'),
+            name: t(
+              'team.user.reports.source.st025.employee.appointment.summary'
+            ),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.st025EmployeeAppointmentSummary.tooltip'
+              'team.user.reports.source.st025.employee.appointment.summary.tooltip'
             ),
           },
           {
             key: 'CO089',
-            name: t('team.user.reports.source.locationsReport'),
+            name: t('team.user.reports.source.locations.report'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.locationsReport.tooltip'
+              'team.user.reports.source.locations.report.tooltip'
             ),
           },
           {
             key: 'OT003',
-            name: t('team.user.reports.source.classesAppointmentsReport'),
+            name: t('team.user.reports.source.classes.appointments.report'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.classesAppointmentsReport.tooltip'
+              'team.user.reports.source.classes.appointments.report.tooltip'
             ),
           },
           {
             key: 'OT014',
-            name: t('team.user.reports.source.roomUtilization'),
+            name: t('team.user.reports.source.room.utilization'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.roomUtilization.tooltip'
+              'team.user.reports.source.room.utilization.tooltip'
             ),
           },
           {
             key: 'OT009',
-            name: t('team.user.reports.source.clinicConversion'),
+            name: t('team.user.reports.source.clinic.conversion'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.clinicConversion.tooltip'
+              'team.user.reports.source.clinic.conversion.tooltip'
             ),
           },
         ],
       },
       {
         key: '6',
-        name: t('team.user.reports.source.stockReportsTitle'),
+        name: t('team.user.reports.source.stock.reports.title'),
         children: [
           {
             key: 'STK001',
-            name: t('team.user.reports.source.stockReport'),
+            name: t('team.user.reports.source.stock.report'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.reports.source.stockReport.tooltip'),
+            tooltipMessage: t('team.user.reports.source.stock.report.tooltip'),
           },
           {
             key: 'STK005',
-            name: t('team.user.reports.source.lowStock'),
+            name: t('team.user.reports.source.low.stock'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.reports.source.lowStock.tooltip'),
+            tooltipMessage: t('team.user.reports.source.low.stock.tooltip'),
           },
           {
             key: 'STK015',
-            name: t('team.user.reports.source.costGoods'),
+            name: t('team.user.reports.source.cost.goods'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.reports.source.costGoods.tooltip'),
+            tooltipMessage: t('team.user.reports.source.cost.goods.tooltip'),
           },
           {
             key: 'STK025',
-            name: t('team.user.reports.source.stockCount'),
+            name: t('team.user.reports.source.stock.count'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.reports.source.stockCount.tooltip'),
+            tooltipMessage: t('team.user.reports.source.stock.count.tooltip'),
           },
         ],
       },
       {
         key: '7',
-        name: t('team.user.reports.source.staffReportsTitle'),
+        name: t('team.user.reports.source.staff.reports.title'),
         children: [
           {
             key: 'ADV001',
-            name: t('team.user.reports.source.teamReports'),
+            name: t('team.user.reports.source.team.reports'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.reports.source.teamReports.tooltip'),
+            tooltipMessage: t('team.user.reports.source.team.reports.tooltip'),
           },
           {
             key: 'ST078',
-            name: t('team.user.reports.source.staffBookouts'),
-            permissions: {
-              owner: true,
-            },
-            tooltipMessage: t('team.user.reports.source.staffBookouts.tooltip'),
-          },
-          {
-            key: 'ST001',
-            name: t('team.user.reports.source.staffPerformanceSummary'),
+            name: t('team.user.reports.source.staff.bookouts'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.staffPerformanceSummary.tooltip'
+              'team.user.reports.source.staff.bookouts.tooltip'
+            ),
+          },
+          {
+            key: 'ST001',
+            name: t('team.user.reports.source.staff.performance.summary'),
+            permissions: {
+              owner: true,
+            },
+            tooltipMessage: t(
+              'team.user.reports.source.staff.performance.summary.tooltip'
             ),
           },
           {
             key: 'ST002',
-            name: t('team.user.reports.source.commissionSummary'),
+            name: t('team.user.reports.source.commission.summary'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.commissionSummary.tooltip'
+              'team.user.reports.source.commission.summary.tooltip'
             ),
           },
           {
             key: 'ST003',
-            name: t('team.user.reports.source.commissionReportRetail'),
+            name: t('team.user.reports.source.commission.report.retail'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.commissionReportRetail.tooltip'
+              'team.user.reports.source.commission.report.retail.tooltip'
             ),
           },
           {
             key: 'ST004',
-            name: t('team.user.reports.source.staffPerformanceTracker'),
+            name: t('team.user.reports.source.staff.performance.tracker'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.staffPerformanceTracker.tooltip'
+              'team.user.reports.source.staff.performance.tracker.tooltip'
             ),
           },
           {
             key: 'ST005',
-            name: t('team.user.reports.source.employeeHolidaysDate'),
+            name: t('team.user.reports.source.employee.holidays.date'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.employeeHolidaysDate.tooltip'
+              'team.user.reports.source.employee.holidays.date.tooltip'
             ),
           },
           {
             key: 'ST015',
-            name: t('team.user.reports.source.staffHours'),
+            name: t('team.user.reports.source.staff.hours'),
             permissions: {
               owner: true,
             },
-            tooltipMessage: t('team.user.reports.source.staffHours.tooltip'),
+            tooltipMessage: t('team.user.reports.source.staff.hours.tooltip'),
           },
           {
             key: 'ST025',
-            name: t('team.user.reports.source.employeeAppointmentSummary'),
+            name: t('team.user.reports.source.employee.appointment.summary'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.employeeAppointmentSummary.tooltip'
+              'team.user.reports.source.employee.appointment.summary.tooltip'
             ),
           },
           {
             key: 'ST031',
-            name: t('team.user.reports.source.dailyEmployeeStatsSummary'),
+            name: t('team.user.reports.source.daily.employee.stats.summary'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.dailyEmployeeStatsSummary.tooltip'
+              'team.user.reports.source.daily.employee.stats.summary.tooltip'
             ),
           },
           {
             key: 'ST033',
-            name: t('team.user.reports.source.dailyEmployeeStats'),
+            name: t('team.user.reports.source.daily.employee.stats'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.dailyEmployeeStats.tooltip'
+              'team.user.reports.source.daily.employee.stats.tooltip'
             ),
           },
           {
             key: 'ST035',
-            name: t('team.user.reports.source.staffDaysOff'),
-            permissions: {
-              owner: true,
-            },
-            tooltipMessage: t('team.user.reports.source.staffDaysOff.tooltip'),
-          },
-          {
-            key: 'ST036',
-            name: t('team.user.reports.source.staffPayrollReport'),
+            name: t('team.user.reports.source.staff.days.off'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.staffPayrollReport.tooltip'
+              'team.user.reports.source.staff.days.off.tooltip'
+            ),
+          },
+          {
+            key: 'ST036',
+            name: t('team.user.reports.source.staff.payroll.report'),
+            permissions: {
+              owner: true,
+            },
+            tooltipMessage: t(
+              'team.user.reports.source.staff.payroll.report.tooltip'
             ),
           },
           {
             key: 'ST037',
-            name: t('team.user.reports.source.staffClockInOut'),
+            name: t('team.user.reports.source.staff.clock.in.out'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.reports.source.staffClockInOut.tooltip'
+              'team.user.reports.source.staff.clock,in.out.tooltip'
             ),
           },
         ],
       },
       {
-        key: '8',
-        name: t('team.user.reports.source.customReports.Title'),
+        key: 'custom_report',
+        name: t('team.user.reports.source.custom.reports.title'),
         children: [],
       },
     ],
@@ -1557,46 +1598,46 @@ export function useData(t) {
     dataSource: [
       {
         key: '1',
-        name: t('team.user.advanced.source.advancedPermissionsTitle'),
+        name: t('team.user.advanced.source.advanced.permissions.title'),
         children: [
           {
             key: 'CO001',
-            name: t('team.user.advanced.source.restrictToClients'),
+            name: t('team.user.advanced.source.restrict.to.clients'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.advanced.source.restrictToClients.tooltip'
+              'team.user.advanced.source.restrict.to.clients.tooltip'
             ),
           },
           {
             key: 'CO003',
-            name: t('team.user.advanced.source.restrictDataUser'),
+            name: t('team.user.advanced.source.restrict.data.user'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.advanced.source.restrictDataUser.tooltip'
+              'team.user.advanced.source.restrict.data.user.tooltip'
             ),
           },
           {
             key: 'CO010',
-            name: t('team.user.advanced.source.restrictCalendarUser'),
+            name: t('team.user.advanced.source.restrict.calendar.user'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.advanced.source.restrictCalendarUser.tooltip'
+              'team.user.advanced.source.restrict.calendar.user.tooltip'
             ),
           },
           {
             key: 'CO020',
-            name: t('team.user.advanced.source.limitContactLocation'),
+            name: t('team.user.advanced.source.limit.contact.location'),
             permissions: {
               owner: true,
             },
             tooltipMessage: t(
-              'team.user.advanced.source.limitContactLocation.tooltip'
+              'team.user.advanced.source.limit.contact.location.tooltip'
             ),
           },
         ],
@@ -1614,5 +1655,6 @@ export function useData(t) {
     field_type_number,
     loaderDatasource,
     loaderColumns,
+    invert_fields,
   }
 }

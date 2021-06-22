@@ -1,63 +1,64 @@
 import { FileAddOutlined } from '@ant-design/icons'
-import { DocumentNode, gql, useMutation } from '@apollo/client'
 import {
   BasicModal,
   Button,
   Notification,
   NotificationType,
   Table,
-  useLiveQuery,
 } from '@pabau/ui'
+import {
+  GetTaxesDocument,
+  useUpdateOneTaxRateMutation,
+  useDeleteOneTaxRateMutation,
+} from '@pabau/graphql'
 import { Card, Typography } from 'antd'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import CreateTaxRateModal from './CreateTaxRateModal'
+import styles from './TaxRateComponents.module.less'
 
 export interface TaxRateProps {
-  listQuery: DocumentNode
+  isLoading: boolean
+  searchTerm: string
+  dataSource: {
+    id?: string
+    name?: string
+    value?: number
+    glCode?: string
+    is_active?: boolean
+  }[]
   onCreateTaxRate: () => void
+  paginateData?: {
+    total: number
+    offset: number
+    limit: number
+    currentPage: number
+    showingRecords: number
+  }
 }
 
-const EDIT_MUTATION = gql`
-  mutation update_tax_rates_by_pk(
-    $id: uuid!
-    $name: String
-    $value: Float
-    $isActive: Boolean = true
-    $glCode: String
-  ) {
-    update_tax_rates_by_pk(
-      pk_columns: { id: $id }
-      _set: {
-        name: $name
-        value: $value
-        is_active: $isActive
-        glCode: $glCode
-      }
-    ) {
-      id
-    }
-  }
-`
-
-const DELETE_MUTATION = gql`
-  mutation delete_tax_rates_by_pk($id: uuid!) {
-    delete_tax_rates_by_pk(id: $id) {
-      id
-    }
-  }
-`
-
-const UPDATE_ORDER_MUTATION = gql`
-  mutation update_tax_order($id: uuid!, $order: Int) {
-    update_tax_rates(where: { id: { _eq: $id } }, _set: { order: $order }) {
-      affected_rows
-    }
-  }
-`
-
-export function TaxRate({ listQuery, onCreateTaxRate }: TaxRateProps) {
+export function TaxRate({
+  isLoading,
+  dataSource,
+  searchTerm,
+  onCreateTaxRate,
+  paginateData,
+}: TaxRateProps) {
   const { t } = useTranslationI18()
+
+  const renderActiveButton = (isActive) => {
+    return (
+      <Button
+        className={isActive ? styles.activeBtn : styles.disableSourceBtn}
+        disabled={!isActive}
+      >
+        {isActive
+          ? t('basic-crud-table-button-active')
+          : t('basic-crud-table-button-inactive')}
+      </Button>
+    )
+  }
+
   const taxRateColumns = [
     {
       title: t('setup.taxrate.table.column1'),
@@ -71,10 +72,10 @@ export function TaxRate({ listQuery, onCreateTaxRate }: TaxRateProps) {
       dataIndex: 'value',
       className: 'drag-visible',
       visible: true,
-      render: function renderTableSource(value) {
-        return <span>{value}%</span>
-      },
       width: '20%',
+      render: function renderTableSource(value) {
+        return <span>{value + '%'}</span>
+      },
     },
     {
       title: t('setup.taxrate.table.column3'),
@@ -82,52 +83,32 @@ export function TaxRate({ listQuery, onCreateTaxRate }: TaxRateProps) {
       className: 'drag-visible',
       visible: true,
       width: '20%',
+      render: function renderTableSource(value) {
+        return renderActiveButton(!value)
+      },
     },
   ]
   const [showModal, setShowModal] = useState(false)
   const [editData, setEditData] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [taxes, setTaxes] = useState(null)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
 
-  const { data, error, loading } = useLiveQuery(listQuery, {})
-
-  const [editMutation] = useMutation(EDIT_MUTATION, {
+  const [editMutation] = useUpdateOneTaxRateMutation({
     onCompleted() {
-      Notification(
-        NotificationType.success,
-        t('setup.taxrate.notification.edit.success')
-      )
+      setShowModal(false)
+      setEditData(null)
+      Notification(NotificationType.success, t('setup.taxrate.edit.success'))
     },
     onError() {
-      Notification(
-        NotificationType.error,
-        t('setup.taxrate.notification.edit.error')
-      )
+      Notification(NotificationType.error, t('setup.taxrate.edit.error'))
     },
   })
 
-  const [deleteMutation] = useMutation(DELETE_MUTATION, {
+  const [deleteMutation] = useDeleteOneTaxRateMutation({
     onCompleted() {
-      Notification(
-        NotificationType.success,
-        t('setup.taxrate.notification.delete.success')
-      )
+      Notification(NotificationType.success, t('setup.taxrate.delete.success'))
     },
     onError() {
-      Notification(
-        NotificationType.error,
-        t('setup.taxrate.notification.delete.error')
-      )
-    },
-  })
-
-  const [updateOrderMutation] = useMutation(UPDATE_ORDER_MUTATION, {
-    onError(err) {
-      Notification(
-        NotificationType.error,
-        t('setup.taxrate.notification.order.error')
-      )
+      Notification(NotificationType.error, t('setup.taxrate.delete.error'))
     },
   })
 
@@ -141,14 +122,22 @@ export function TaxRate({ listQuery, onCreateTaxRate }: TaxRateProps) {
       variables: {
         ...editData,
         ...values,
-        value: Number.parseFloat(values.value),
       },
       optimisticResponse: {},
-      refetchQueries: [
-        {
-          query: listQuery,
-        },
-      ],
+      update: (proxy) => {
+        const existing = proxy.readQuery({
+          query: GetTaxesDocument,
+        })
+        if (existing) {
+          const key = Object.keys(existing)[0]
+          proxy.writeQuery({
+            query: GetTaxesDocument,
+            data: {
+              [key]: [...existing[key], values],
+            },
+          })
+        }
+      },
     })
   }
 
@@ -156,85 +145,50 @@ export function TaxRate({ listQuery, onCreateTaxRate }: TaxRateProps) {
     await deleteMutation({
       variables: { id: editData?.id },
       optimisticResponse: {},
-      refetchQueries: [
-        {
-          query: listQuery,
-        },
-      ],
+      update: (proxy) => {
+        const existing = proxy.readQuery({
+          query: GetTaxesDocument,
+        })
+        if (existing) {
+          const key = Object.keys(existing)[0]
+          proxy.writeQuery({
+            query: GetTaxesDocument,
+            data: {
+              [key]: [...existing[key], dataSource],
+            },
+          })
+        }
+      },
     })
     setShowModal(false)
     setShowDeleteModal(false)
     setEditData(null)
   }
 
-  const updateOrder = async (values) => {
-    await updateOrderMutation({
-      variables: values,
-      optimisticResponse: {},
-      update: (proxy) => {
-        if (listQuery) {
-          const existing = proxy.readQuery({
-            query: listQuery,
-          })
-          if (existing) {
-            const key = Object.keys(existing)[0]
-            proxy.writeQuery({
-              query: listQuery,
-              data: {
-                [key]: [...existing[key], values],
-              },
-            })
-          }
-        }
-      },
-    })
-  }
-
-  useEffect(() => {
-    if (!loading && data) {
-      setIsLoading(false)
-      setTaxes(data)
-    }
-  }, [data, loading])
-
-  const onReorder = ({ newData, oldIndex, newIndex }) => {
-    newData = newData.map((d, i) => {
-      d.order = data[i].order
-      return d
-    })
-    if (oldIndex > newIndex) {
-      for (let i = newIndex; i <= oldIndex; i++) updateOrder(newData[i])
-    } else {
-      for (let i = oldIndex; i <= newIndex; i++) updateOrder(newData[i])
-    }
-  }
-
-  if (error) {
-    return (
-      <Typography.Paragraph type="danger">{error.message}</Typography.Paragraph>
-    )
-  }
-
   return (
     <>
       <Card bodyStyle={{ padding: 0 }} style={{ borderTopWidth: 0 }}>
-        <Table
-          columns={taxRateColumns}
-          loading={isLoading}
-          dataSource={taxes?.map((e: { id: string }) => ({ key: e.id, ...e }))}
-          onRowClick={onRowClick}
-          onAddTemplate={onCreateTaxRate}
-          noDataText={t('setup.taxrate.notax')}
-          noDataBtnText={t('setup.taxrate.newbtn')}
-          noDataIcon={<FileAddOutlined />}
-          rowKey="key"
-          style={{ height: '100%' }}
-          updateDataSource={onReorder}
-        />
+        <div className={styles.marketingSourcesTableContainer}>
+          <Table
+            columns={taxRateColumns}
+            loading={isLoading}
+            searchTerm={searchTerm}
+            dataSource={dataSource?.map((e: { id: string }) => ({
+              key: e.id,
+              ...e,
+            }))}
+            onRowClick={onRowClick}
+            onAddTemplate={onCreateTaxRate}
+            noDataText={t('setup.taxrate.notax')}
+            noDataBtnText={t('setup.taxrate.newbtn')}
+            noDataIcon={<FileAddOutlined />}
+            rowKey="key"
+            style={{ height: '100%' }}
+          />
+        </div>
       </Card>
       {showModal && (
         <CreateTaxRateModal
-          isEdit={true}
           editData={editData}
           visible={showModal}
           onCancel={() => setShowModal(false)}
@@ -249,7 +203,7 @@ export function TaxRate({ listQuery, onCreateTaxRate }: TaxRateProps) {
         <BasicModal
           footer={false}
           width={682}
-          title={t('setup.taxrate.notification.deletemodal.title')}
+          title={t('setup.taxrate.deletemodal.title')}
           centered={true}
           visible={showDeleteModal}
           onCancel={() => {
@@ -259,12 +213,11 @@ export function TaxRate({ listQuery, onCreateTaxRate }: TaxRateProps) {
         >
           <div style={{ paddingBottom: 40 }}>
             <Typography.Paragraph>
-              {editData?.name}{' '}
-              {t('setup.taxrate.notification.deletemodal.para')}
+              {editData?.name} {t('setup.taxrate.deletemodal.para')}
             </Typography.Paragraph>
             <div style={{ textAlign: 'right', marginTop: 20 }}>
               <Button type="primary" onClick={onTaxDelete}>
-                {t('setup.taxrate.notification.deletemodal.deletebtn')}
+                {t('setup.taxrate.deletemodal.deletebtn')}
               </Button>
             </div>
           </div>

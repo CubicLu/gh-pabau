@@ -11,7 +11,10 @@ import {
 import { Drawer, Input, Popover, Radio, Select, Checkbox, Skeleton } from 'antd'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
-import { gql, useLazyQuery } from '@apollo/client'
+import {
+  useFindManyCompanyBranchesLazyQuery,
+  useFindManyCompanyDepartmentsLazyQuery,
+} from '@pabau/graphql'
 
 interface P {
   onNewStaffMemberClick?: () => void
@@ -30,23 +33,6 @@ interface P {
   ) => void
   onReset: () => void
 }
-
-const COMPANY_DEPARTMENT_LIST = gql`
-  query {
-    companyDepartments {
-      department
-    }
-  }
-`
-
-const COMPANY_BRANCHES_LIST = gql`
-  query {
-    companyBranches {
-      id
-      name
-    }
-  }
-`
 
 export const Filter: FunctionComponent<P> = ({
   onNewStaffMemberClick,
@@ -73,12 +59,12 @@ export const Filter: FunctionComponent<P> = ({
       data: companyDepartments,
       loading: departmentLoader,
     },
-  ] = useLazyQuery(COMPANY_DEPARTMENT_LIST)
+  ] = useFindManyCompanyDepartmentsLazyQuery()
 
   const [
     getLocation,
     { called: locationCalled, data: locationData, loading: locationLoader },
-  ] = useLazyQuery(COMPANY_BRANCHES_LIST)
+  ] = useFindManyCompanyBranchesLazyQuery()
 
   useEffect(() => {
     if (mobFilterDrawer) {
@@ -250,7 +236,7 @@ export const Filter: FunctionComponent<P> = ({
           <div>
             <Input
               className={addButtonStyles.searchMarketingStyle}
-              placeholder={t('team.user.header.search.placeHolder')}
+              placeholder={t('team.user.header.search.placeholder')}
               onChange={(e) => onSearch?.(e.target.value)}
               suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
               autoFocus
@@ -301,7 +287,7 @@ export const Filter: FunctionComponent<P> = ({
               type="primary"
               onClick={() => onNewStaffMemberClick?.()}
             >
-              {t('team.user.header.newStaffMember.button')}
+              {t('team.user.header.new.staff.member.button')}
             </Button>
           </div>
         ) : (
@@ -311,7 +297,7 @@ export const Filter: FunctionComponent<P> = ({
             type="primary"
             onClick={onNewGroupClick}
           >
-            {t('team.user.header.newGroup.button')}
+            {t('team.user.header.new.group.button')}
           </Button>
         )}
       </div>

@@ -126,79 +126,85 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
           </div>
           {center && <div className={styles.centeredItem}>{center}</div>}
           <div className={styles.fullScreenModalOps}>
-            {(!isMobile || forceDesktopOperations) &&
-              operations.map((operation) => (
-                <React.Fragment key={operation}>
-                  {operation === OperationType.active && (
-                    <div className={styles.operationSwitch}>
-                      {activeBtnText || 'Active'}
-                      <Switch
-                        size="small"
-                        checked={active}
-                        onChange={(checked) => handleChangeActive(checked)}
-                        style={{ marginLeft: '12px' }}
-                      />
-                    </div>
-                  )}
-                  {!active && operation === OperationType.reset && (
-                    <Button
-                      onClick={() => onReset?.()}
-                      style={{ marginRight: '1rem' }}
-                    >
-                      {resetBtnText || 'Reset'}
-                    </Button>
-                  )}
-                  {!active && operation === OperationType.delete && (
-                    <Button
-                      onClick={() => onDelete?.()}
-                      style={{ marginRight: '1rem' }}
-                      type="text"
-                      danger
-                    >
-                      {deleteBtnText || 'Delete'}
-                    </Button>
-                  )}
-                  {!active && operation === OperationType.save && (
-                    <Button
-                      onClick={() => onSave?.()}
-                      style={{ marginRight: '1rem' }}
-                    >
-                      {saveBtnText || 'Save'}
-                    </Button>
-                  )}
-                  {operation === OperationType.assignee && (
-                    <div
-                      className={styles.assigneeWrap}
-                      onClick={onAssigneeClick}
-                    >
-                      <h5>{assigneeTitle}</h5>
-                      <Avatar
-                        className={styles.avatarIcon}
-                        name={assigneeName}
-                        size="large"
-                        src=""
-                        zIndex={1}
-                      />
-                      <h6>{assigneeName}</h6>
-                    </div>
-                  )}
-                  {operation === OperationType.create && (
-                    <Button
-                      type="primary"
-                      disabled={!enableCreateBtn}
-                      onClick={() => onCreate?.()}
-                    >
-                      {createBtnText || 'Create'}
-                    </Button>
-                  )}
-                  {operation === OperationType.close && (
-                    <Button type="text" onClick={() => onClose?.()}>
-                      Esc
-                      <CloseOutlined className={styles.closeIcon} />
-                    </Button>
-                  )}
-                </React.Fragment>
-              ))}
+            {operations.map((operation) => (
+              <React.Fragment key={operation}>
+                {operation === OperationType.active && (
+                  <div
+                    className={styles.operationSwitch}
+                    style={isMobile ? { marginRight: '0px' } : {}}
+                  >
+                    {activeBtnText || 'Active'}
+                    <Switch
+                      size="small"
+                      checked={active}
+                      onChange={(checked) => handleChangeActive(checked)}
+                      style={{ marginLeft: '12px' }}
+                    />
+                  </div>
+                )}
+                {(!isMobile || forceDesktopOperations) && (
+                  <>
+                    {!active && operation === OperationType.reset && (
+                      <Button
+                        onClick={() => onReset?.()}
+                        style={{ marginRight: '1rem' }}
+                      >
+                        {resetBtnText || 'Reset'}
+                      </Button>
+                    )}
+                    {!active && operation === OperationType.delete && (
+                      <Button
+                        onClick={() => onDelete?.()}
+                        style={{ marginRight: '1rem' }}
+                        type="text"
+                        danger
+                      >
+                        {deleteBtnText || 'Delete'}
+                      </Button>
+                    )}
+                    {!active && operation === OperationType.save && (
+                      <Button
+                        onClick={() => onSave?.()}
+                        style={{ marginRight: '1rem' }}
+                      >
+                        {saveBtnText || 'Save'}
+                      </Button>
+                    )}
+                    {operation === OperationType.assignee && (
+                      <div
+                        className={styles.assigneeWrap}
+                        onClick={onAssigneeClick}
+                      >
+                        <h5>{assigneeTitle}</h5>
+                        <Avatar
+                          className={styles.avatarIcon}
+                          name={assigneeName}
+                          size="large"
+                          src=""
+                          zIndex={1}
+                        />
+                        <h6>{assigneeName}</h6>
+                      </div>
+                    )}
+                    {operation === OperationType.create && (
+                      <Button
+                        type="primary"
+                        disabled={!enableCreateBtn}
+                        onClick={() => onCreate?.()}
+                      >
+                        {createBtnText || 'Create'}
+                      </Button>
+                    )}
+                    {operation === OperationType.close && (
+                      <Button type="text" onClick={() => onClose?.()}>
+                        Esc
+                        <CloseOutlined className={styles.closeIcon} />
+                      </Button>
+                    )}
+                  </>
+                )}
+              </React.Fragment>
+            ))}
             {isMobile &&
               operations.includes(OperationType.active) &&
               !props.footer &&
