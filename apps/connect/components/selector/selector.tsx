@@ -216,7 +216,7 @@ export const ChooseModal: FC<ChooseModalProps> = ({
                 onClick={() => {
                   setcategory(item)
                   setindicator(true)
-                  setid(item.key)
+                  setid(item.id)
                   // setcat(true)
                   // setviewall(false)
                   click(type === 'group' ? member : 1, false)
