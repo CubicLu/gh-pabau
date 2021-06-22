@@ -32,8 +32,8 @@ export const permissions = shield(
       upsertUserReportByReportCode: rules.authentication.isAdmin,
 
       //CompanyBranches
-      createOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
-      updateOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
+      // createOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
+      // updateOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
 
       updateOneCompany: rules.authentication.isAdmin,
       updateManyUser: rules.authentication.isAdmin,
