@@ -1,0 +1,62 @@
+query getTaxes($offset: Int, $limit: Int, $searchTerm: String = "%%") {
+  tax_rates(
+    offset: $offset
+    limit: $limit
+    order_by: { created_at: desc }
+    where: { name: { _ilike: $searchTerm } }
+  ) {
+    id
+    name
+    value
+    is_active
+    glCode
+    created_at
+  }
+}
+
+query getTaxesAggregate($searchTerm: String = "%%") {
+  tax_rates_aggregate(where: { name: { _ilike: $searchTerm } }) {
+    aggregate {
+      count
+    }
+  }
+}
+
+mutation insertOneTaxRate(
+  $name: String
+  $value: Float
+  $is_active: Boolean = true
+  $glCode: String
+) {
+  insert_tax_rates_one(
+    object: {
+      name: $name
+      value: $value
+      is_active: $is_active
+      glCode: $glCode
+    }
+  ) {
+    id
+  }
+}
+
+mutation updateOneTaxRate(
+  $id: uuid!
+  $name: String!
+  $value: Float!
+  $is_active: Boolean
+  $glCode: String
+) {
+  update_tax_rates_by_pk(
+    _set: { name: $name, value: $value, is_active: $is_active, glCode: $glCode }
+    pk_columns: { id: $id }
+  ) {
+    id
+  }
+}
+
+mutation deleteOneTaxRate($id: uuid!) {
+  delete_tax_rates_by_pk(id: $id) {
+    id
+  }
+}

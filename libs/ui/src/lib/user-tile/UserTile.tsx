@@ -6,7 +6,7 @@ import { KeyOutlined } from '@ant-design/icons'
 import className from 'classnames'
 import { Button, Avatar, Status as AvatarStatusProps } from '@pabau/ui'
 import Airplane from '../../assets/images/airplane.svg'
-
+import Sickness from '../../assets/images/sickness.svg'
 import styles from './UserTile.module.less'
 
 interface Vacation {
@@ -26,6 +26,7 @@ export interface UserProps {
   vacation?: Vacation
   isPending?: boolean
   isLoading?: boolean
+  isSick?: boolean
 }
 
 interface UnavailableProps {
@@ -36,7 +37,7 @@ const UnavailableStatus: FC<UnavailableProps> = ({ vacation }) => {
   const { t } = useTranslation('common')
   return (
     <Tooltip
-      title={`${t('team.user.grid.onVacation.tooltip')}: ${
+      title={`${t('team.user.grid.on.vacation.tooltip')}: ${
         vacation?.startDate
       }  - ${vacation?.endDate}`}
       placement="bottom"
@@ -54,7 +55,7 @@ const UnavailableStatus: FC<UnavailableProps> = ({ vacation }) => {
 const UserIsAdmin: VoidFunctionComponent = (): JSX.Element => {
   const { t } = useTranslation('common')
   return (
-    <Tooltip title={t('team.user.grid.userAdmin.tooltip')} placement="bottom">
+    <Tooltip title={t('team.user.grid.user.admin.tooltip')} placement="bottom">
       <KeyOutlined className={styles.admin} />
     </Tooltip>
   )
@@ -70,7 +71,8 @@ export const UserTile: FC<UserProps> = ({
   owner = false,
   admin = false,
   isPending = false,
-  isLoading,
+  isLoading = false,
+  isSick = false,
 }: UserProps): JSX.Element => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -148,6 +150,14 @@ export const UserTile: FC<UserProps> = ({
               </Button>
             )}
             {!available && <UnavailableStatus vacation={vacation} />}
+            {isSick && (
+              <div
+                className={styles.inner}
+                style={{
+                  backgroundImage: `url(${Sickness})`,
+                }}
+              />
+            )}
             {isMobile && <OwnerButtonJsx />}
           </div>
         </div>

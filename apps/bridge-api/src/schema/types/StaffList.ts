@@ -1,5 +1,6 @@
 import { objectType, extendType, list, nonNull, intArg, stringArg } from 'nexus'
 import { Context } from '../../context'
+import { Prisma } from '@prisma/client'
 
 interface StaffListInput {
   searchTerm: string
@@ -25,6 +26,7 @@ const StaffListType = objectType({
     t.string('CellPhone')
     t.string('Email')
     t.string('City')
+    t.int('sickness')
   },
 })
 
@@ -53,56 +55,79 @@ export const PabauStaffList = extendType({
       },
       async resolve(_, input: StaffListInput, ctx: Context) {
         try {
-          let staffList
-          let count = 0
-          let queryString = `FROM cm_staff_general g left join users u on g.pabau_id = u.id
-                       where g.Occupier = ${ctx.authenticated.company}`
-
+          let searchTerm
+          const companyId = ctx.authenticated.company
           if (input.searchTerm) {
-            queryString =
-              queryString + ` AND u.full_name LIKE '%${input.searchTerm}%' `
+            searchTerm = `%${input.searchTerm}%`
           }
 
-          if (input.department) {
-            queryString =
-              queryString + ` AND u.department = '${input.department}' `
-          }
-
-          if (input.locationId) {
-            queryString =
-              queryString + ` AND g.DefaultLocation = ${input.locationId} `
-          }
-
-          if (input.admin) {
-            queryString = queryString + ` AND u.admin = ${input.admin} `
-          }
-
-          if (input.active === 0) {
-            staffList = await ctx.prisma
-              .$queryRaw(`SELECT u.id,u.full_name,u.main_contact,u.job_title, u.admin,u.image,u.last_login,g.CellPhone,g.Email,g.City,g.ID as staff_id
-                       ${queryString}
-                       AND (g.deleted_on="0" or g.deleted_on="")
-                       AND u.username NOT LIKE '%deleted%' AND u.deleted = 0
+          const date = Number.parseInt(
+            new Date().toISOString().replace(/\D/g, '').slice(0, -3)
+          )
+          const staffList = await ctx.prisma
+            .$queryRaw`SELECT u.id,u.full_name,u.main_contact,u.job_title, u.admin,u.image,u.last_login,g.CellPhone,g.Email,g.City,g.ID as staff_id,r.sickness
+                      FROM cm_staff_general g left join users u on g.pabau_id = u.id
+                      left join (SELECT uid,sickness FROM pabau.rota_shifts where start <= ${date} and end >= ${date})  as r on r.uid = g.id
+                      WHERE g.Occupier = ${companyId}
+                       ${
+                         input.admin
+                           ? Prisma.sql` AND u.admin = ${input.admin} `
+                           : Prisma.empty
+                       }
+                       ${
+                         input.department
+                           ? Prisma.sql` AND u.department = ${input.department} `
+                           : Prisma.empty
+                       }
+                       ${
+                         input.searchTerm
+                           ? Prisma.sql` AND u.full_name LIKE ${searchTerm} `
+                           : Prisma.empty
+                       }
+                       ${
+                         input.locationId
+                           ? Prisma.sql` AND g.DefaultLocation = ${input.locationId} `
+                           : Prisma.empty
+                       }
+                       ${
+                         input.active === 0
+                           ? Prisma.sql` AND (g.deleted_on="0" or g.deleted_on="")
+                            AND u.username NOT LIKE '%deleted%' AND u.deleted = 0 `
+                           : Prisma.sql` AND u.deleted = 1 `
+                       }
                        order by u.full_name
-                       LIMIT ${input.limit} OFFSET ${input.offset}`)
+                       LIMIT ${input.limit} OFFSET ${input.offset}`
 
-            count = await ctx.prisma
-              .$queryRaw(`SELECT count(*) as userCount ${queryString} AND (g.deleted_on="0" or g.deleted_on="")
-                         AND u.username NOT LIKE '%deleted%' AND u.deleted = 0
-                         `)
-          } else {
-            staffList = await ctx.prisma
-              .$queryRaw(`SELECT u.id,u.full_name,u.main_contact,u.job_title, u.admin,u.image,u.last_login,g.CellPhone,g.Email,g.City,g.ID as staff_id
-                         ${queryString}
-                         AND u.deleted = 1
-                         order by u.full_name
-                         LIMIT ${input.limit} OFFSET ${input.offset}`)
-
-            count = await ctx.prisma.$queryRaw(
-              `SELECT count(*) as userCount ${queryString} AND u.deleted = 1`
-            )
-          }
-
+          const count = await ctx.prisma.$queryRaw`SELECT count(*) as userCount
+               FROM cm_staff_general g left join users u on g.pabau_id = u.id
+                WHERE g.Occupier = ${companyId}
+                 ${
+                   input.admin
+                     ? Prisma.sql` AND u.admin = ${input.admin} `
+                     : Prisma.empty
+                 }
+                 ${
+                   input.department
+                     ? Prisma.sql` AND u.department = ${input.department} `
+                     : Prisma.empty
+                 }
+                 ${
+                   input.searchTerm
+                     ? Prisma.sql` AND u.full_name LIKE ${searchTerm} `
+                     : Prisma.empty
+                 }
+                 ${
+                   input.locationId
+                     ? Prisma.sql` AND g.DefaultLocation = ${input.locationId} `
+                     : Prisma.empty
+                 }
+                 ${
+                   input.active === 0
+                     ? Prisma.sql` AND (g.deleted_on="0" or g.deleted_on="")
+                            AND u.username NOT LIKE '%deleted%' AND u.deleted = 0 `
+                     : Prisma.sql` AND u.deleted = 1 `
+                 }
+                 `
           return {
             count: count[0].userCount,
             staffList: staffList,

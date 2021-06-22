@@ -1025,8 +1025,7 @@ CREATE TABLE public.product_news (
     title text NOT NULL,
     "order" integer NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    sent_to jsonb
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 CREATE SEQUENCE public.product_news_order_seq
     AS integer

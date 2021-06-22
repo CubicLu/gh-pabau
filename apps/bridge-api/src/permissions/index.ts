@@ -23,7 +23,6 @@ export const permissions = shield(
       deleteOnePage: rules.authentication.isAdmin,
 
       //UserGroup
-      createOneUserGroup: rules.authentication.isAdmin,
       updateOneUserGroup: rules.authentication.isAdmin,
       deleteOneUserGroup: rules.authentication.isAdmin,
 
@@ -35,6 +34,14 @@ export const permissions = shield(
       //CompanyBranches
       createOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
       updateOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
+
+      updateManyUser: rules.authentication.isAdmin,
+      upsertManyUsersPermissionByGroupId: rules.authentication.isAdmin,
+      upsertManyUsersReportsByGroupId: rules.authentication.isAdmin,
+      upsertGroupPermissionFeatureByGroupId: rules.authentication.isAdmin,
+      updateManyInvBiller: rules.authentication.isAdmin,
+      updateManyStaffMetaFeaturesByGroupId: rules.authentication.isAdmin,
+      upsertManyUsersMainPermissionByGroupId: rules.authentication.isAdmin,
 
       // Default fallback
       '*': and(

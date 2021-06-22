@@ -1,0 +1,95 @@
+ query findManyUserGroups{
+    userGroups {
+      id
+      company_id
+      group_name
+      group_description
+      GroupPermission {
+        group_id
+        feature_permissions
+        module_permissions
+        report_permissions
+      }
+      UserGroupMember {
+        group_id
+        User {
+          id
+          full_name
+          image
+        }
+      }
+    }
+ }
+
+query findManyPages{
+    pages {
+      id
+      name
+    }
+}
+
+query findManyReports{
+  reports(orderBy: { name: asc }) {
+    id
+    name
+    report_code
+    company_id
+  }
+}
+
+mutation updateModulePermission(
+  $module_permission: String!
+  $checked: Boolean!
+  $groupId: Int!
+  $report_permission: String
+) {
+  upsertManyUsersPermissionByGroupId(
+    page_ids: $module_permission
+    checked: $checked
+    group_id: $groupId
+    report_ids: $report_permission
+  )
+}
+
+mutation updateReportPermission(
+    $group_id: Int!
+    $report_permission: String!
+    $checked: Boolean! = false
+  ) {
+    upsertManyUsersReportsByGroupId(
+      report_ids: $report_permission
+      group_id: $group_id
+      checked: $checked
+    )
+}
+
+
+
+mutation updateStaffMetaFeaturePermission($groupId: Int!, $staff_meta: [staffMetaInput]) {
+  updateManyStaffMetaFeaturesByGroupId(
+    group_id: $groupId
+    staff_meta: $staff_meta
+  )
+}
+
+mutation updateDeleteAlertsFeaturePermission(
+  $groupId: Int!
+  $delete_alert_notes: Boolean!
+) {
+  upsertManyUsersMainPermissionByGroupId(
+    group_id: $groupId
+    delete_alert_notes: $delete_alert_notes
+  )
+}
+
+mutation updateFeatureGroupPermission(
+  $groupId: Int!
+  $feature_permissions: String!
+) {
+  upsertGroupPermissionFeatureByGroupId(
+    group_id: $groupId
+    features_permission: $feature_permissions
+  ) {
+    count
+  }
+}

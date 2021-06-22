@@ -70,9 +70,9 @@ const Advanced: FC<AdvancedProps> = ({
 
   return (
     <ReportsPermissionTable
-      tableColumnName={t('team.user.advanced.tableColumnName')}
-      pageTitle={t('team.user.advanced.pageTitle')}
-      subTitle={t('team.user.advanced.subTitle')}
+      tableColumnName={t('team.user.advanced.table.column.name')}
+      pageTitle={t('team.user.advanced.page.title')}
+      subTitle={t('team.user.advanced.sub.title')}
       dataSource={
         isListQueryLoader ? loaderDatasource : advancedData.dataSource
       }
