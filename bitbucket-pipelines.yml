@@ -83,7 +83,7 @@ pipelines:
               size: 2x
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
-                - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:export --base=origin/master --prod
+                - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:export --base=origin/master --prod
               artifacts:
                 - dist/**
 
@@ -264,7 +264,7 @@ pipelines:
               size: 2x
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
-                - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:export --base=HEAD~1 --prod
+                - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:export --base=HEAD~1 --prod
               artifacts:
                 - dist/**
 
