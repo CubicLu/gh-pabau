@@ -187,16 +187,7 @@ export const ChooseModal: FC<ChooseModalProps> = ({
                 <RightOutlined />
               </div>
             ))}
-            <div className={styles.btnView}>
-              {/*{view && (*/}
-              {/*  <Button*/}
-              {/*    onClick={() => click(member)}*/}
-              {/*    className={styles.viewBut}*/}
-              {/*  >*/}
-              {/*    {translation('connect.onlinebooking.selector.viewall')}*/}
-              {/*  </Button>*/}
-              {/*)}*/}
-            </div>
+            <div className={styles.btnView}></div>
           </div>
         </div>
       ) : (
@@ -208,7 +199,6 @@ export const ChooseModal: FC<ChooseModalProps> = ({
               // indicator && styles.fadeRight
             )}
           >
-            {/*<h5>{translation('connect.onlinebooking.selector.choosetype')}</h5>*/}
             {items.map((item) => (
               <div
                 key={item.id}
@@ -217,10 +207,7 @@ export const ChooseModal: FC<ChooseModalProps> = ({
                   setcategory(item)
                   setindicator(true)
                   setid(item.id)
-                  // setcat(true)
-                  // setviewall(false)
                   click(type === 'group' ? member : 1, false)
-                  //handleSelectItem(item)
                 }}
               >
                 <div className={styles.section1}>

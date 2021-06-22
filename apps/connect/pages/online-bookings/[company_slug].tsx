@@ -29,8 +29,16 @@ import useServices from '../../hooks/useServices'
 
 /* eslint-disable-next-line */
 export interface OnlineBookingProps {}
+
+interface ServiceSelected {
+  masterCategoryID?: number
+  categoryID?: number
+  serviceID?: number
+}
+
 interface BookingData {
-  serviceId: number
+  service?: ServiceSelected[]
+  employeeID?: number
 }
 
 interface userData {
@@ -71,7 +79,7 @@ const userData: userData = {
 }
 export function Index(props: OnlineBookingProps) {
   // CRAP
-  const [currentStep, setCurrentStep] = useState<number>(1)
+
   const [seleData, SetselData] = useState(defaultItems.slice(0, 4))
   const [proD, setproD] = useState<MasterCategory[]>()
   const [ispro, setispro] = useState(false)
@@ -82,7 +90,6 @@ export function Index(props: OnlineBookingProps) {
   const [serviceid, setserviceid] = useState<number>()
   const [tempT, settempT] = useState('')
   const [user, setuser] = useState<userData>(userData)
-  const [first, setfirst] = useState(true)
   const [all, setall] = useState(false)
   const [datetime, setDateTime] = useState<EmployData>()
   const [date, setdate] = useState()
@@ -95,8 +102,11 @@ export function Index(props: OnlineBookingProps) {
   const { t } = useTranslationI18()
 
   // FIXED
-  const something = useServices()
-  console.log(something)
+  const [currentStep, setCurrentStep] = useState<number>(0)
+  const [selectedData, setSelectedData] = useState<BookingData>({})
+
+  // const something = useServices()
+  // console.log(something)
   const {
     loading,
     error,
@@ -199,7 +209,7 @@ export function Index(props: OnlineBookingProps) {
       SetselData([...defaultItems.slice(0, 4)])
       Setback(false)
       Setview(true)
-      setfirst(true)
+      setCurrentStep(0)
       setall(false)
       setindicator(false)
     }
@@ -211,7 +221,7 @@ export function Index(props: OnlineBookingProps) {
         setCurrentStep(currentStep - 1)
         SetselData([...defaultItems.slice(0, 4)])
         Setback(false)
-        setfirst(true)
+        setCurrentStep(0)
         Setview(true)
         setispro(false)
       }
@@ -270,11 +280,6 @@ export function Index(props: OnlineBookingProps) {
       SetselData([...defaultItems.slice(0, 4)])
       Setview(true)
     }
-    // if (currentStep === 8) {
-    //   setCurrentStep(currentStep - 2)
-    //   SetselData([...defaultItems.slice(0, 4)])
-    //   Setview(true)
-    // }
   }
   const backname = () => {
     if (currentStep === 1) {
@@ -299,7 +304,6 @@ export function Index(props: OnlineBookingProps) {
     // }
   }
   const userinfo = (userdata) => {
-    console.log(userdata)
     user.firstname = userdata.first
     user.lastname = userdata.last
     setuser(user)
@@ -340,9 +344,9 @@ export function Index(props: OnlineBookingProps) {
           <div className={styles.backBut}>
             <span className={styles.arrowLeft}>
               <ArrowLeftOutlined
-                onClick={() => {
-                  backbutton()
-                }}
+                onClick={() =>
+                  setCurrentStep(currentStep === 0 ? 0 : currentStep - 1)
+                }
               />
             </span>
             <span className={styles.backName}>{backname()}</span>
@@ -350,83 +354,81 @@ export function Index(props: OnlineBookingProps) {
         )}
 
         <div className={classname()}>
-          {currentStep === 1 &&
-            (first ? (
-              <div>
-                <Selector
-                  items={masterCategories}
-                  view={view}
-                  click={(member, viewbtn) => {
-                    console.log(member)
-                    user.member = member
-                    setuser(user)
-                    SetselData([...defaultItems.slice(0, 4)])
-                    Setview(false)
-                    console.log(all)
-                    setall(true)
-                    viewbtn ? setfirst(false) : setfirst(true)
-                    //
-                  }}
-                  onSelected={(val, id) => {
-                    setserviceid(id)
-                    setconType(() => {
-                      for (const im of val.services) {
-                        //im.selected = false
-                      }
-                      return val
-                    })
-                    Setback(true)
-                    console.log(id)
-                    setall(false)
-                    setfirst(false)
-                    //rech()
-                  }}
-                  indicator={indicator}
-                  setindicator={setindicator}
-                  translation={translation}
-                />
-                <div className={styles.verification}>
-                  {translation('connect.onlinebooking.first.description')}
-                  <span>
-                    &nbsp;
-                    <a href={'online-booking/045787498450'}>045787498450</a>
-                  </span>
-                </div>
+          {currentStep === 0 && (
+            <div>
+              <Selector
+                items={masterCategories}
+                view={view}
+                click={(member, viewbtn) => {
+                  user.member = member
+                  setuser(user)
+                  SetselData([...defaultItems.slice(0, 4)])
+                  Setview(false)
+                  console.log(all)
+                  setall(true)
+                  viewbtn ? setCurrentStep(1) : setCurrentStep(0)
+                  //
+                }}
+                onSelected={(val, id) => {
+                  setserviceid(id)
+                  setconType(() => {
+                    for (const im of val.services) {
+                      //im.selected = false
+                    }
+                    return val
+                  })
+                  Setback(true)
+                  setall(false)
+                  setCurrentStep(currentStep + 1)
+                  //rech()
+                }}
+                indicator={indicator}
+                setindicator={setindicator}
+                translation={translation}
+              />
+              <div className={styles.verification}>
+                {translation('connect.onlinebooking.first.description')}
+                <span>
+                  &nbsp;
+                  <a href={'online-booking/045787498450'}>045787498450</a>
+                </span>
               </div>
-            ) : (
-              <div className={styles.slide1}>
-                <ScreenTwo
-                  items={masterCategories}
-                  ispro={ispro}
-                  proD={proD}
-                  changescreen={rech}
-                  catData={conType}
-                  isall={all}
-                  translation={translation}
-                  parentid={serviceid}
-                  onSelect={(
-                    conName: string,
-                    price,
-                    online,
-                    range,
-                    services,
-                    vouchers,
-                    proData: MasterCategory[]
-                  ) => {
-                    user.services = services
-                    user.vouchers = vouchers
-                    user.type = conName
-                    user.charge = String(price)
-                    user.online = online
-                    user.duration = range
-                    setuser(user)
-                    setproD(proData)
-                    console.log(proData)
-                    console.log(conName)
-                  }}
-                />
-              </div>
-            ))}
+            </div>
+          )}
+          {currentStep === 1 && (
+            <div className={styles.slide1}>
+              <ScreenTwo
+                items={masterCategories}
+                ispro={ispro}
+                proD={proD}
+                changescreen={rech}
+                catData={conType}
+                isall={all}
+                translation={translation}
+                parentid={serviceid}
+                onSelect={(
+                  conName: string,
+                  price,
+                  online,
+                  range,
+                  services,
+                  vouchers,
+                  proData: MasterCategory[]
+                ) => {
+                  user.services = services
+                  user.vouchers = vouchers
+                  user.type = conName
+                  user.charge = String(price)
+                  user.online = online
+                  user.duration = range
+                  setuser(user)
+                  setproD(proData)
+                  console.log(proData)
+                  console.log(conName)
+                }}
+              />
+            </div>
+          )}
           {currentStep === 2 && (
             <div>
               <Clinic
@@ -482,7 +484,6 @@ export function Index(props: OnlineBookingProps) {
                   setCurrentStep(1)
                   // Setback(false)
                   Setview(true)
-                  setfirst(false)
                   setindicator(false)
                   setispro(true)
                 }}
