@@ -178,10 +178,12 @@ export default class LocationService {
       }
 
       const list = `,${locationId}`
-      await this.ctx.prisma
-        .$executeRaw`UPDATE cm_staff_general SET Location = CONCAT(Location, ${list}) where ID IN (${Prisma.join(
-        assignedUsers
-      )});`
+      if (assignedUsers.length > 0) {
+        await this.ctx.prisma
+          .$executeRaw`UPDATE cm_staff_general SET Location = CONCAT(Location, ${list}) where ID IN (${Prisma.join(
+          assignedUsers
+        )});`
+      }
 
       await this.createCompanyBranchAttachments(
         companyId,
@@ -214,10 +216,12 @@ export default class LocationService {
         assignedUsers.push(user.id)
       }
 
-      await this.ctx.prisma
-        .$executeRaw`UPDATE cm_staff_general SET Location = CONCAT(Location, ${list}) where ID IN (${Prisma.join(
-        assignedUsers
-      )});`
+      if (assignedUsers.length > 0) {
+        await this.ctx.prisma
+          .$executeRaw`UPDATE cm_staff_general SET Location = CONCAT(Location, ${list}) where ID IN (${Prisma.join(
+          assignedUsers
+        )});`
+      }
 
       await this.ctx.prisma.companyBranchAttachment.deleteMany({
         where: {

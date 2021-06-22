@@ -4,18 +4,23 @@ import * as Yup from 'yup'
 import { Form, Input } from 'formik-antd'
 import { Formik } from 'formik'
 import { useTranslation } from 'react-i18next'
-import { gql, useMutation } from '@apollo/client'
 
 import {
   TabMenu,
   BasicModal,
   Button,
   PermissionColumnType,
-  useLiveQuery,
   Notification,
   NotificationType,
   ReportsPermissionTableProps,
 } from '@pabau/ui'
+import {
+  FindManyUserGroupsDocument,
+  useFindManyUserGroupsQuery,
+  useFindManyPagesQuery,
+  useFindManyReportsQuery,
+  useCreateOneUserGroupMutation,
+} from '@pabau/graphql'
 import Features from './Features'
 import Reports from './Reports'
 import Modules from './Modules'
@@ -34,70 +39,6 @@ interface GroupPermissionProps {
   setTabValue: React.Dispatch<React.SetStateAction<string | number>>
 }
 
-const LIST_USER_GROUP = gql`
-  query {
-    userGroups {
-      id
-      company_id
-      group_name
-      group_description
-      GroupPermission {
-        group_id
-        feature_permissions
-        module_permissions
-        report_permissions
-      }
-      UserGroupMember {
-        group_id
-        User {
-          id
-          full_name
-          image
-        }
-      }
-    }
-  }
-`
-
-const LIST_PAGES = gql`
-  query {
-    pages {
-      id
-      name
-    }
-  }
-`
-
-const LIST_REPORTS = gql`
-  query {
-    reports(orderBy: { name: asc }) {
-      id
-      name
-      report_code
-      company_id
-    }
-  }
-`
-
-const NEW_GROUP_MUTATION = gql`
-  mutation createUserGroup($name: String!, $description: String!) {
-    createOneUserGroup(
-      data: {
-        group_name: $name
-        group_description: $description
-        Company: {}
-        restrict_clients: 0
-        restrict_locations: ""
-        restrict_calendar: 0
-        restrict_data: 0
-        limit_contacts: 0
-      }
-    ) {
-      id
-    }
-  }
-`
-
 export const GroupPermission: FC<GroupPermissionProps> = ({
   isNewGroupValue,
   onNewGroupCancel,
@@ -106,12 +47,13 @@ export const GroupPermission: FC<GroupPermissionProps> = ({
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
 
-  const { data, loading } = useLiveQuery(LIST_USER_GROUP)
+  const { data, loading } = useFindManyUserGroupsQuery()
 
-  const { data: listPages, loading: listPagesLoader } = useLiveQuery(LIST_PAGES)
-  const { data: reports, loading: listReportLoader } = useLiveQuery(
-    LIST_REPORTS
-  )
+  const { data: listPages, loading: listPagesLoader } = useFindManyPagesQuery()
+  const {
+    data: reportsList,
+    loading: listReportLoader,
+  } = useFindManyReportsQuery()
   const { reportsTabData, columns } = useData(t)
 
   const [column, setColumn] = useState<PermissionColumnType[]>(columns)
@@ -122,25 +64,30 @@ export const GroupPermission: FC<GroupPermissionProps> = ({
     reportsTabData
   )
 
-  const [addGroup] = useMutation(NEW_GROUP_MUTATION, {
+  const [addGroup] = useCreateOneUserGroupMutation({
     onCompleted() {
       Notification(
         NotificationType.success,
-        `Success! You have added new group successfully`
+        t('team.user.group.permission.success')
       )
       setAddGroupLoading(false)
       onNewGroupCancel()
     },
     onError() {
-      Notification(NotificationType.error, `Error! While adding new group`)
+      Notification(
+        NotificationType.error,
+        t('team.user.group.permission.error')
+      )
       setAddGroupLoading(false)
       onNewGroupCancel()
     },
   })
 
   useEffect(() => {
-    if (reports) {
-      const filterReports = reports.filter((thread) => thread.company_id !== 0)
+    if (reportsList?.reports) {
+      const filterReports = reportsList.reports.filter(
+        (thread) => thread.company_id !== 0
+      )
       if (filterReports.length > 0) {
         const childrenData = filterReports.map((thread) => {
           return {
@@ -153,7 +100,7 @@ export const GroupPermission: FC<GroupPermissionProps> = ({
         })
 
         const newReports = reportsData.dataSource.map((thread) => {
-          if (thread.key === '8') {
+          if (thread.key === 'custom_report') {
             thread.children = childrenData
           }
           return thread
@@ -162,12 +109,12 @@ export const GroupPermission: FC<GroupPermissionProps> = ({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reports])
+  }, [reportsList])
 
   useEffect(() => {
     let columnData
-    if (data?.length > 0) {
-      columnData = data.map((group) => {
+    if (data?.userGroups) {
+      columnData = data.userGroups.map((group) => {
         return {
           key: group.group_name,
           title: group.group_name,
@@ -190,13 +137,19 @@ export const GroupPermission: FC<GroupPermissionProps> = ({
     setAddGroupLoading(true)
     await addGroup({
       variables: {
-        name: values.name,
-        description: values.description,
+        data: {
+          group_name: values.name,
+          group_description: values.description,
+          Company: {},
+          restrict_clients: 0,
+          restrict_locations: '',
+          restrict_data: 0,
+          limit_contacts: 0,
+        },
       },
-      optimisticResponse: {},
       refetchQueries: [
         {
-          query: LIST_USER_GROUP,
+          query: FindManyUserGroupsDocument,
         },
       ],
     })
@@ -206,53 +159,53 @@ export const GroupPermission: FC<GroupPermissionProps> = ({
     <div className={styles.groupPermissionWrapper}>
       <TabMenu
         menuItems={[
-          t('team.user.groupPermission.tabOne'),
-          t('team.user.groupPermission.tabTwo'),
-          t('team.user.groupPermission.tabThree'),
-          t('team.user.groupPermission.tabFour'),
+          t('team.user.group.permission.tab.modules'),
+          t('team.user.group.permission.tab.features'),
+          t('team.user.group.permission.tab.reports'),
+          t('team.user.group.permission.tab.advanced'),
         ]}
         tabPosition={isMobile ? 'top' : 'left'}
         disabledKeys={[3]}
       >
         <Modules
           columns={column}
-          userGroupData={data?.length > 0 ? data : []}
-          listQuery={LIST_USER_GROUP}
+          userGroupData={data?.userGroups.length > 0 ? data.userGroups : []}
+          listQuery={FindManyUserGroupsDocument}
           isListQueryLoader={isLoading}
           setIsListQueryLoading={setIsLoading}
-          listPages={listPages}
+          listPages={listPages?.pages}
           listPagesLoader={listPagesLoader}
-          reports={reports}
+          reports={reportsList?.reports}
           setTabValue={setTabValue}
           reportsTabData={reportsData}
         />
         <Features
           columns={column}
-          userGroupData={data?.length > 0 ? data : []}
-          listQuery={LIST_USER_GROUP}
+          userGroupData={data?.userGroups.length > 0 ? data.userGroups : []}
+          listQuery={FindManyUserGroupsDocument}
           isListQueryLoader={isLoading}
           setIsListQueryLoading={setIsLoading}
           setTabValue={setTabValue}
         />
         <Reports
-          userGroupData={data?.length > 0 ? data : []}
-          listQuery={LIST_USER_GROUP}
+          userGroupData={data?.userGroups.length > 0 ? data.userGroups : []}
+          listQuery={FindManyUserGroupsDocument}
           isListQueryLoader={isLoading}
-          listPages={listPages}
-          reports={reports}
+          listPages={listPages?.pages}
+          reports={reportsList?.reports}
           listReportLoader={listReportLoader}
           setIsListQueryLoading={setIsLoading}
           setTabValue={setTabValue}
           reportsTabData={reportsData}
         />
         <Advanced
-          userGroupData={data?.length > 0 ? data : []}
+          userGroupData={data?.userGroups.length > 0 ? data.userGroups : []}
           columns={column}
           isListQueryLoader={isLoading}
         />
       </TabMenu>
       <BasicModal
-        title={t('team.user.groupPermission.addGroupTitle')}
+        title={t('team.user.group.permission.add.groupT.title')}
         visible={isNewGroupValue}
         className={styles.groupAddModal}
         onCancel={onNewGroupCancel}
@@ -264,8 +217,12 @@ export const GroupPermission: FC<GroupPermissionProps> = ({
             description: '',
           }}
           validationSchema={Yup.object({
-            name: Yup.string().required('Name is required'),
-            description: Yup.string().required('Description is required'),
+            name: Yup.string().required(
+              t('team.user.group.permission.name.required')
+            ),
+            description: Yup.string().required(
+              t('team.user.group.permission.description.required')
+            ),
           })}
           onSubmit={async (values: GroupType, { resetForm }) => {
             await onAddGroup(values)
@@ -274,13 +231,13 @@ export const GroupPermission: FC<GroupPermissionProps> = ({
           render={({ handleSubmit }) => (
             <Form layout="vertical">
               <Form.Item
-                label={t('team.user.groupPermission.inputName')}
+                label={t('team.user.group.permission.input.name')}
                 name={'name'}
               >
                 <Input name={'name'} />
               </Form.Item>
               <Form.Item
-                label={t('team.user.groupPermission.inputDesc')}
+                label={t('team.user.group.permission.input.desc')}
                 name={'description'}
               >
                 <Input.TextArea rows={3} name={'description'} />
@@ -293,7 +250,7 @@ export const GroupPermission: FC<GroupPermissionProps> = ({
                   loading={isAddGroupLoading}
                   onClick={() => handleSubmit}
                 >
-                  {t('team.user.groupPermission.addGroupBtnText')}
+                  {t('team.user.group.permission.add.group.btntext')}
                 </Button>
               </div>
             </Form>

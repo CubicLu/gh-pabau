@@ -64,7 +64,6 @@ const AddButton: FC<P> = ({
   }, [isMobile, mobFilterDrawer])
 
   useEffect(() => {
-    console.log(isActive)
     const timer = setTimeout(() => {
       onSearch?.(marketingSourceSearch)
     }, WAIT_INTERVAL)
@@ -96,9 +95,7 @@ const AddButton: FC<P> = ({
       <div className={styles.radioTextStyle}>
         <Radio.Group
           onChange={(e) => {
-            console.log('radio group value', e.target.value)
             setIsActive(e.target.value)
-            console.log('is active', isActive)
             !isMobile && onFilterSource()
           }}
           value={isActive}
@@ -204,7 +201,6 @@ const AddButton: FC<P> = ({
             }
             value={marketingSourceSearch}
             onChange={(e) => {
-              console.log('set marketing search', e.target.value)
               setMarketingSourceSearch(e.target.value)
             }}
             suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}

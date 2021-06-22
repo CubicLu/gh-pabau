@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react'
-import { DocumentNode, gql, useMutation } from '@apollo/client'
+import { DocumentNode } from '@apollo/client'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -11,6 +11,7 @@ import {
   Notification,
   NotificationType,
 } from '@pabau/ui'
+import { useUpdateReportPermissionMutation } from '@pabau/graphql'
 import { useData } from '../../../../mocks/Users'
 
 interface ReportsProps {
@@ -24,20 +25,6 @@ interface ReportsProps {
   setTabValue: React.Dispatch<React.SetStateAction<string | number>>
   reportsTabData: ReportsPermissionTableProps
 }
-
-const EDIT_USER_REPORTS = gql`
-  mutation update(
-    $group_id: Int!
-    $report_permission: String!
-    $checked: Boolean! = false
-  ) {
-    upsertManyUsersReportsByGroupId(
-      report_ids: $report_permission
-      group_id: $group_id
-      checked: $checked
-    )
-  }
-`
 
 const Reports: FC<ReportsProps> = ({
   userGroupData,
@@ -56,26 +43,23 @@ const Reports: FC<ReportsProps> = ({
   const [reportsData, setReportsData] = useState<ReportsPermissionTableProps>(
     reportsTabData
   )
-  const [isLoading, setIsLoading] = useState(false)
   const [reportColumn, setReportColumn] = useState<PermissionColumnType[]>(
     columns
   )
 
-  const [editUserReportsMutation] = useMutation(EDIT_USER_REPORTS, {
+  const [editUserReportsMutation] = useUpdateReportPermissionMutation({
     onCompleted() {
       Notification(
         NotificationType.success,
-        t('team.user.updateGroupPermissionSuccess.message')
+        t('team.user.update.group.permission.success')
       )
-      setIsLoading(false)
-      setIsListQueryLoading(true)
     },
     onError() {
       Notification(
         NotificationType.error,
-        t('team.user.updateGroupPermissionError.message')
+        t('team.user.update.group.permission.error')
       )
-      setIsLoading(false)
+      setIsListQueryLoading(false)
     },
   })
 
@@ -132,8 +116,14 @@ const Reports: FC<ReportsProps> = ({
     module_report?: string
   ) => {
     if (key !== 'owner') {
-      const reportId = report_permissions.split(',')
-      const modulePages = module_permission.split(',')
+      let reportId = []
+      let modulePages = []
+      if (report_permissions) {
+        reportId = JSON.parse(report_permissions)
+      }
+      if (module_permission) {
+        modulePages = JSON.parse(module_permission)
+      }
 
       const newColumns = []
       for (const [index, col] of columnData.entries()) {
@@ -178,7 +168,7 @@ const Reports: FC<ReportsProps> = ({
     columnKey: string,
     checked: boolean
   ) => {
-    setIsLoading(true)
+    setIsListQueryLoading(true)
     const permissions = (record as PermissionsType).permissions
     const children = (record as PermissionsGroupType).children
 
@@ -228,15 +218,14 @@ const Reports: FC<ReportsProps> = ({
 
   return (
     <ReportsPermissionTable
-      tableColumnName={t('team.user.reports.tableColumnName')}
-      pageTitle={t('team.user.reports.pageTitle')}
-      subTitle={t('team.user.reports.subTitle')}
+      tableColumnName={t('team.user.reports.table.column.name')}
+      pageTitle={t('team.user.reports.page.title')}
+      subTitle={t('team.user.reports.sub.title')}
       dataSource={isListQueryLoader ? loaderDatasource : reportsData.dataSource}
       columns={isListQueryLoader ? loaderColumns : reportColumn}
       onUpdatePermission={(record, columnKey, checked) => {
         handleChange(record, columnKey, checked)
       }}
-      isLoading={isLoading}
       isListQueryLoader={isListQueryLoader || listReportLoader}
       setTabValue={setTabValue}
     />
