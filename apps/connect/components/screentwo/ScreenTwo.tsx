@@ -191,8 +191,8 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
           key={val.id}
           onClick={(e) => {
             fun(e, val)
-            if (val?.online) {
-              setonline(val.online)
+            if (val?.online_only_service) {
+              setonline(val.online_only_service)
             } else {
               setonline(false)
             }
@@ -202,7 +202,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
             <span>
               <span className={styles.consultationTitle}>{val.name}</span>{' '}
               <QuestionCircleOutlined style={{ marginRight: '8px' }} />
-              {val.online && (
+              {val.online_only_service && (
                 <Tooltip
                   title={`${translation(
                     'connect.onlinebooking.selector.tooltip'
@@ -218,7 +218,8 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
           <div className={styles.mobiledata}>
             <span style={{ display: 'flex', alignItems: 'center' }}>
               <span className={styles.consultationTime}>
-                {val.time} {translation('connect.onlinebooking.selector.mini')}
+                {val.duration}{' '}
+                {translation('connect.onlinebooking.selector.mini')}
               </span>
               <ClockCircleOutlined />{' '}
               {!isMobile && val.is_bundle && (
@@ -248,7 +249,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
                 <Rate
                   disabled
                   className={styles.consultatioRate}
-                  defaultValue={val.online ? 0 : 5}
+                  defaultValue={val.online_only_service ? 0 : 5}
                 />
 
                 <span
@@ -257,7 +258,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
                     fun1(e)
                   }}
                 >
-                  {val.online ? 0 : val.review}
+                  {val.online_only_service ? 0 : val.review}
                   &nbsp;
                   {translation('connect.onlinebooking.selector.review')}
                 </span>
@@ -479,8 +480,8 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
               <>
                   {oldcatdata.video
                     ? contype
-                      ? !val.online && renderdata(val)
-                      : val.online && renderdata(val)
+                      ? !val.online_only_service && renderdata(val)
+                      : val.online_only_service && renderdata(val)
                     : renderdata(val)}
                 </>
               ))

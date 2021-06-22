@@ -17,9 +17,9 @@ export interface Service {
   id: number
   name: string
   rating: number
-  time: string
+  duration: string
   price: string
-  online?: boolean
+  online_only_service?: boolean
   selected: boolean
   review: number
   is_bundle: boolean

@@ -24,8 +24,15 @@ import { useTranslationI18 } from '../../../web/hooks/useTranslationI18'
 import { useCompanyServicesCategorisedQuery } from '@pabau/graphql'
 import Shop from '../../../../libs/ui/src/assets/images/shop.svg'
 import { Image } from 'antd'
+
+import useServices from '../../hooks/useServices'
+
 /* eslint-disable-next-line */
 export interface OnlineBookingProps {}
+interface BookingData {
+  serviceId: number
+}
+
 interface userData {
   firstname: string
   lastname: string
@@ -63,6 +70,7 @@ const userData: userData = {
   vouchers: 0,
 }
 export function Index(props: OnlineBookingProps) {
+  // CRAP
   const [currentStep, setCurrentStep] = useState<number>(1)
   const [seleData, SetselData] = useState(defaultItems.slice(0, 4))
   const [proD, setproD] = useState<MasterCategory[]>()
@@ -86,6 +94,9 @@ export function Index(props: OnlineBookingProps) {
   const [lang, setlang] = useState('en')
   const { t } = useTranslationI18()
 
+  // FIXED
+  const something = useServices()
+  console.log(something)
   const {
     loading,
     error,
@@ -127,8 +138,6 @@ export function Index(props: OnlineBookingProps) {
             ) : null,
             services: cat.CompanyService.map((service) => {
               return {
-                price: '£100',
-                time: '60',
                 review: 1,
                 rating: 5,
                 ...service,
@@ -151,6 +160,7 @@ export function Index(props: OnlineBookingProps) {
     setDateTime(value)
     console.log(value)
   }
+
   const gettime = (tm) => {
     if (tm < 9) {
       return `0${tm}:00 - 0${tm + 1}:00`
@@ -175,6 +185,7 @@ export function Index(props: OnlineBookingProps) {
     settempT(slotData.time)
     console.log(user)
   }
+
   const getlocation = (location) => {
     user.clinic = location.name
     user.address = location.Address
@@ -517,68 +528,6 @@ export function Index(props: OnlineBookingProps) {
                   setuser(user)
                 }}
               />
-              {/*<Conformation*/}
-              {/*  changescreen={rech}*/}
-              {/*  clinic={user.clinic}*/}
-              {/*  docname={user.docName}*/}
-              {/*  date={user.date}*/}
-              {/*  time={user.time}*/}
-              {/*  charge={user.charge}*/}
-              {/*  address={user.address}*/}
-              {/*  image={user.image}*/}
-              {/*  type={user.type}*/}
-              {/*  services={user.services}*/}
-              {/*  translation={translation}*/}
-              {/*  gotofirst={() => {*/}
-              {/*    SetselData([...defaultItems.slice(0, 4)])*/}
-              {/*    setCurrentStep(1)*/}
-              {/*    Setback(false)*/}
-              {/*    Setview(true)*/}
-              {/*    setfirst(true)*/}
-              {/*    setindicator(false)*/}
-              {/*  }}*/}
-              {/*  gotoclinic={() => {*/}
-              {/*    setCurrentStep(2)*/}
-              {/*    SetselData([...defaultItems.slice(0, 4)])*/}
-              {/*    Setview(true)*/}
-              {/*    setindicator(true)*/}
-              {/*  }}*/}
-              {/*  gotoemploy={() => {*/}
-              {/*    setCurrentStep(3)*/}
-              {/*    SetselData([...defaultItems.slice(0, 4)])*/}
-              {/*    Setview(true)*/}
-              {/*    setindicator(true)*/}
-              {/*  }}*/}
-              {/*  gotodate={() => {*/}
-              {/*    setCurrentStep(4)*/}
-              {/*    seteditdate(false)*/}
-              {/*    SetselData([...defaultItems.slice(0, 4)])*/}
-              {/*    Setview(true)*/}
-              {/*    setindicator(true)*/}
-              {/*  }}*/}
-              {/*  gotoedit={() => {*/}
-              {/*    setCurrentStep(4)*/}
-              {/*    seteditdate(true)*/}
-              {/*    SetselData([...defaultItems.slice(0, 4)])*/}
-              {/*    Setview(true)*/}
-              {/*    setindicator(true)*/}
-              {/*  }}*/}
-              {/*  getprice={(price, percentage) => {*/}
-              {/*    setpromoPrice(price)*/}
-              {/*    setpercentage(percentage)*/}
-              {/*    console.log(user.charge)*/}
-              {/*    settempprice(user.charge)*/}
-              {/*    if (user.type === 'Laser') {*/}
-              {/*      user.charge = String((price * (100 - percentage)) / 100)*/}
-              {/*    } else {*/}
-              {/*      user.charge = String(*/}
-              {/*        ((Number(user.charge) + price) * (100 - percentage)) / 100*/}
-              {/*      )*/}
-              {/*    }*/}
-
-              {/*    setuser(user)*/}
-              {/*  }}*/}
-              {/*/>*/}
             </div>
           )}
           {currentStep === 6 && (
@@ -590,70 +539,6 @@ export function Index(props: OnlineBookingProps) {
                 lastname={user.lastname}
                 translation={translation}
               />
-              {/*<BookingDatail*/}
-              {/*  changescreen={rech}*/}
-              {/*  clinic={user.clinic}*/}
-              {/*  docname={user.docName}*/}
-              {/*  date={user.date}*/}
-              {/*  time={user.time}*/}
-              {/*  charge={user.charge}*/}
-              {/*  address={user.address}*/}
-              {/*  image={user.image}*/}
-              {/*  getinfo={userinfo}*/}
-              {/*  services={user.services}*/}
-              {/*  type={user.type}*/}
-              {/*  translation={translation}*/}
-              {/*  member={user.member}*/}
-              {/*  gotofirst={() => {*/}
-              {/*    SetselData([...defaultItems.slice(0, 4)])*/}
-              {/*    setCurrentStep(1)*/}
-              {/*    Setback(false)*/}
-              {/*    Setview(true)*/}
-              {/*    setfirst(true)*/}
-              {/*    setindicator(false)*/}
-              {/*  }}*/}
-              {/*  gotoclinic={() => {*/}
-              {/*    setCurrentStep(2)*/}
-              {/*    SetselData([...defaultItems.slice(0, 4)])*/}
-              {/*    Setview(true)*/}
-              {/*    setindicator(true)*/}
-              {/*  }}*/}
-              {/*  gotoemploy={() => {*/}
-              {/*    setCurrentStep(3)*/}
-              {/*    SetselData([...defaultItems.slice(0, 4)])*/}
-              {/*    Setview(true)*/}
-              {/*    setindicator(true)*/}
-              {/*  }}*/}
-              {/*  gotodate={() => {*/}
-              {/*    setCurrentStep(4)*/}
-              {/*    seteditdate(false)*/}
-              {/*    SetselData([...defaultItems.slice(0, 4)])*/}
-              {/*    Setview(true)*/}
-              {/*    setindicator(true)*/}
-              {/*  }}*/}
-              {/*  gotoedit={() => {*/}
-              {/*    setCurrentStep(4)*/}
-              {/*    seteditdate(true)*/}
-              {/*    SetselData([...defaultItems.slice(0, 4)])*/}
-              {/*    Setview(true)*/}
-              {/*    setindicator(true)*/}
-              {/*  }}*/}
-              {/*  getprice={(price, percentage) => {*/}
-              {/*    setpromoPrice(price)*/}
-              {/*    setpercentage(percentage)*/}
-              {/*    console.log(user.charge)*/}
-              {/*    settempprice(user.charge)*/}
-              {/*    if (user.type === 'Laser') {*/}
-              {/*      user.charge = String((price * (100 - percentage)) / 100)*/}
-              {/*    } else {*/}
-              {/*      user.charge = String(*/}
-              {/*        ((Number(user.charge) + price) * (100 - percentage)) / 100*/}
-              {/*      )*/}
-              {/*    }*/}
-
-              {/*    setuser(user)*/}
-              {/*  }}*/}
-              {/*/>*/}
             </div>
           )}
           {currentStep === 7 && (
@@ -664,13 +549,6 @@ export function Index(props: OnlineBookingProps) {
                 translation={translation}
                 price={user.charge}
               />
-              {/*<PatientInfo*/}
-              {/*  changescreen={rech}*/}
-              {/*  image={user.image}*/}
-              {/*  firstname={user.firstname}*/}
-              {/*  lastname={user.lastname}*/}
-              {/*  translation={translation}*/}
-              {/*/>*/}
             </div>
           )}
           {currentStep === 8 && (
@@ -686,29 +564,9 @@ export function Index(props: OnlineBookingProps) {
                 online={user.online}
                 duration={user.duration}
               />
-              {/*<Payment*/}
-              {/*  changescreen={rech}*/}
-              {/*  type={user.type}*/}
-              {/*  translation={translation}*/}
-              {/*  price={user.charge}*/}
-              {/*/>*/}
             </div>
           )}
-          {currentStep === 9 && (
-            <div>
-              {/*<Booked*/}
-              {/*  address={user.address}*/}
-              {/*  type={user.type}*/}
-              {/*  doctor={user.docName}*/}
-              {/*  date={user.date}*/}
-              {/*  time={user.time}*/}
-              {/*  description={user.docDescription}*/}
-              {/*  translation={translation}*/}
-              {/*  online={user.online}*/}
-              {/*  duration={user.duration}*/}
-              {/*/>*/}
-            </div>
-          )}
+          {currentStep === 9 && <div></div>}
         </div>
       </div>
 
