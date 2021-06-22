@@ -940,10 +940,10 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
       >
         <>
           <div className={styles.logoHeader}> {isMobile && <SkinHealth />}</div>
-          <h5 className={styles.modalHeader}>Acne consultation reviews</h5>
+          <h5 className={styles.modalHeader}>Botox Area 1 reviews</h5>
           <div className={styles.modalSubHeader}>
             <h5>
-              12 {translation('connect.onlinebooking.selector.modal.review')}
+              1 {translation('connect.onlinebooking.selector.modal.review')}
             </h5>
             <div className={styles.rightBar}>
               <p>{translation('connect.onlinebooking.selector.modal.sort')}:</p>

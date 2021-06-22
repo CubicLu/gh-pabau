@@ -107,6 +107,7 @@ export function Index(props: OnlineBookingProps) {
           <Image
             preview={false}
             height={'40px'}
+            width={'40px'}
             src={'https://crm.pabau.com' + row.image}
             alt={row.name}
           />
@@ -119,11 +120,20 @@ export function Index(props: OnlineBookingProps) {
               <Image
                 preview={false}
                 height={'40px'}
+                width={'40px'}
                 src={'https://crm.pabau.com' + row.image}
                 alt={row.name}
               />
             ) : null,
-            services: cat.CompanyService,
+            services: cat.CompanyService.map((service) => {
+              return {
+                price: '£100',
+                time: '60',
+                review: 1,
+                rating: 5,
+                ...service,
+              }
+            }),
           }
         }),
       }
