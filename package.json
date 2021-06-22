@@ -276,7 +276,7 @@
     "micromatch": "^4.0.4",
     "next-page-tester": "0.24.1",
     "patch-package": "^6.4.7",
-    "postinstall-postinstall": "^2.1.0",
+    "postinstall-postinstall": "https://github.com/simply-vat/postinstall-postinstall",
     "prettier": "2.2.1",
     "prisma": "2.23.0",
     "prisma-json-schema-generator": "1.2.2",
