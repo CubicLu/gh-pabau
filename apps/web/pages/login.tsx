@@ -4,8 +4,8 @@ import styles from './login.module.less'
 import { Logo, Notification, NotificationType } from '@pabau/ui'
 import LoginMain from '../components/Auth/login'
 import TwoStepAuthentication from '../components/Auth/twoStepAuthentication'
-import MoreWayAuthentication from '../components/Auth/moreWayToAuthentication'
-import ResetPassword from '../components/Auth/resetPassword'
+import MoreWayAuthentication from '../components/Auth/MoreWayToAuthentication'
+import ResetPassword from '../components/Auth/ResetPassword'
 import { JwtUser } from '../components/Auth/interfaces/common'
 import {
   useAuthenticateUserMutation,

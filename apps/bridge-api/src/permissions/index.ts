@@ -35,6 +35,7 @@ export const permissions = shield(
       createOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
       updateOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
 
+      updateOneCompany: rules.authentication.isAdmin,
       updateManyUser: rules.authentication.isAdmin,
       upsertManyUsersPermissionByGroupId: rules.authentication.isAdmin,
       upsertManyUsersReportsByGroupId: rules.authentication.isAdmin,
