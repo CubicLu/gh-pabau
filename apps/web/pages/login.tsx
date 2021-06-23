@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { ReactComponent as LoginImage } from '../assets/images/login.svg'
 import styles from './login.module.less'
 import { Logo, Notification, NotificationType } from '@pabau/ui'
