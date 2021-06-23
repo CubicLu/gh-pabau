@@ -1,4 +1,7 @@
 export * from './Authentication'
+export * from './Community'
+export * from './CompanyBranch'
+export * from './CompanyMeta'
 export * from './Ping'
 export * from './Report'
 export * from './Community'

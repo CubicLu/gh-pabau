@@ -21,24 +21,8 @@ const Login: FC = () => {
   const { t } = useTranslationI18()
   const router = useRouter()
 
-  const [
-    verifyCredentials,
-    { data: verifyData, loading: verifyLoading },
-  ] = useVerifyCredentialsLazyQuery()
-
-  const [
-    verifyTwoFaCode,
-    { data: verifyTwoFaData, loading: verifyTwoFaLoading },
-  ] = useVerifyTwoFaCodeLazyQuery()
-
-  const [
-    authenticateUserMutation,
-    { data: authenticateData, loading: authenticateLoading },
-  ] = useAuthenticateUserMutation()
-
-  useEffect(() => {
-    //verification process for login credentials, Step 1;
-    if (!verifyLoading && verifyData) {
+  const [verifyCredentials] = useVerifyCredentialsLazyQuery({
+    onCompleted(verifyData) {
       const user = verifyData.VerifyCredentials
       if (!user) {
         return Notification(
@@ -82,11 +66,11 @@ const Login: FC = () => {
           remote_connect: user.company.remote_connect,
         },
       })
-    }
-  }, [verifyData, t, authenticateUserMutation, verifyLoading])
+    },
+  })
 
-  useEffect(() => {
-    if (!verifyTwoFaLoading && verifyTwoFaData) {
+  const [verifyTwoFaCode] = useVerifyTwoFaCodeLazyQuery({
+    onCompleted(verifyTwoFaData) {
       if (!verifyTwoFaData.VerifyTwoFaCode) {
         return Notification(
           NotificationType.error,
@@ -105,18 +89,18 @@ const Login: FC = () => {
           remote_connect: user.company.remote_connect,
         },
       })
-    }
-  }, [verifyTwoFaData, verifyTwoFaLoading, authenticateUserMutation, t, user])
+    },
+  })
 
-  useEffect(() => {
-    if (!authenticateLoading && authenticateData) {
+  const [authenticateUserMutation] = useAuthenticateUserMutation({
+    onCompleted(authenticateData) {
       const response = authenticateData.AuthenticateUser
       if (response) {
         localStorage.setItem('token', response)
         router.reload()
       }
-    }
-  }, [authenticateData, authenticateLoading, router])
+    },
+  })
 
   return (
     <div className={styles.signInWrapper}>
