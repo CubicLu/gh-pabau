@@ -4,7 +4,7 @@ import { Footer } from '../../components/footer'
 import Selector, {
   CategoryItem,
   SelectItem,
-} from '../../components/selector/selector'
+} from '../../components/ServicesStep/ServiceCategorySelector'
 import Clinic from '../../components/clinic/clinic'
 import BookingDatail from '../../components/bookingdetails/Bookingdetail'
 import ScreenTwo from '../../components/screentwo/ScreenTwo'
@@ -13,9 +13,7 @@ import moment from 'moment'
 import Payment from '../../components/payment/Payment'
 import Booked from '../../components/bookingconform/booking'
 import PatientInfo from '../../components/patientinformatioon/PatientInfo'
-import Employ, {
-  EmployData,
-} from '../../components/selectemploy/employ'
+import Employ, { EmployData } from '../../components/selectemploy/employ'
 import DateTime from '../../components/dateTime/DateTime'
 import { defaultItems } from '../../../web/mocks/connect/onlineBooking'
 import styles from './index.module.less'

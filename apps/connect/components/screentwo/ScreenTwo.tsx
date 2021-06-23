@@ -23,7 +23,7 @@ import ClassNames from 'classnames'
 import { ReactComponent as SelectAll } from '../../../web/assets/images/SelectAll.svg'
 import { ReactComponent as SkinHealth } from '../../../web/assets/images/skin-health-logo.svg'
 import { ReactComponent as LogoSvg } from '../../../../libs/ui/src/lib/logo/logo.svg'
-import { MasterCategory, Category, Service } from '../selector/selector'
+import { MasterCategory, Category, Service } from '../ServicesStep/ServiceCategorySelector'
 /* eslint-disable-next-line */
 export interface ScreenTwoProps {
   items: MasterCategory[]

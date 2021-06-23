@@ -1,11 +1,8 @@
 import React, { useState } from 'react'
 import { Header } from '../../components/header'
 import { Footer } from '../../components/footer'
-import Selector, {
-  MasterCategory,
-  Category,
-  Service,
-} from '../../components/selector/selector'
+import ServiceCategorySelector from '../../components/ServicesStep/ServiceCategorySelector'
+import { MasterCategory, Category, Service } from '../../types/services'
 import Clinic from '../../components/clinic/clinic'
 import BookingDatail from '../../components/bookingdetails/Bookingdetail'
 import ScreenTwo from '../../components/screentwo/ScreenTwo'
@@ -333,7 +330,7 @@ export function Index(props: OnlineBookingProps) {
   return (
     <div className={styles.onlineBooking}>
       <Header
-        currentStep={currentStep}
+        currentStep={currentStep > 0 ? currentStep : 1}
         translation={translation}
         back={backbutton}
         visible={(back || !view) && currentStep <= 7}
@@ -356,9 +353,8 @@ export function Index(props: OnlineBookingProps) {
         <div className={classname()}>
           {currentStep === 0 && (
             <div>
-              <Selector
+              <ServiceCategorySelector
                 items={masterCategories}
-                view={view}
                 click={(member, viewbtn) => {
                   user.member = member
                   setuser(user)
@@ -382,8 +378,6 @@ export function Index(props: OnlineBookingProps) {
                   setCurrentStep(currentStep + 1)
                   //rech()
                 }}
-                indicator={indicator}
-                setindicator={setindicator}
                 translation={translation}
               />
               <div className={styles.verification}>
