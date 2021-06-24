@@ -1,2 +1,9 @@
+input LoginInput {
+  username : String!
+  password : String!
+}
 
+type loginOutput {
+  accessToken : String!
+}
 

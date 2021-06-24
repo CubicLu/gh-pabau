@@ -82,7 +82,6 @@ export function Input({
           name="input-item"
           rules={rules}
         >
-          {console.log(text)}
           <AntInput
             className="input-style"
             placeholder={placeHolderText}
