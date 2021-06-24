@@ -6262,7 +6262,7 @@ model InvPaymentType {
   created_date  DateTime?
   modified_date DateTime?
   is_active     Int
-  is_money      Int
+  is_money      Int?
   type          String    @default("money")
   Company       Company?  @relation(fields: [company_id], references: [id])
 

@@ -2265,7 +2265,7 @@ export interface InvPaymentType {
   created_date?: Date;
   modified_date?: Date;
   is_active: number;
-  is_money: number;
+  is_money?: number;
   type: string;
   Company?: Company;
   GlCode?: GlCode;

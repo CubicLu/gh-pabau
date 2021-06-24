@@ -49,6 +49,9 @@ interface P {
   isDataIntegrityCheck?: boolean
   dataIntegrityCheckQuery?: DocumentNode
   isNotificationBannerOnData?: boolean
+  showStaticData?: boolean
+  staticData?: Array<Record<string, string | boolean | number>>
+  isCodeGen?: boolean
 }
 
 const defaultDataIntegrityCheck = gql`
@@ -84,6 +87,9 @@ const CrudTable: FC<P> = ({
   dataIntegrityCheckQuery = defaultDataIntegrityCheck,
   isNotificationBannerOnData = false,
   crudLayoutRef,
+  showStaticData = false,
+  staticData = [],
+  isCodeGen = false,
 }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isActive, setIsActive] = useState<boolean | number>(
@@ -234,6 +240,8 @@ const CrudTable: FC<P> = ({
       } else if (isNotificationBannerOnData && Object.keys(data).length > 1) {
         let restData = { ...data }
         restData = restData[schema?.showNotification?.list]
+        if (showStaticData && restData.length > 0 && staticData.length > 0)
+          restData = [...restData, ...staticData]
         setSourceData(restData)
       } else {
         setSourceData(data)
@@ -319,6 +327,17 @@ const CrudTable: FC<P> = ({
 
   const { fields } = schema
 
+  const getCodeGenEditVariableValues = (values) => {
+    const { key, __typename, id, ...rest } = values
+    let newEditValues = {}
+    for (const item of Object.keys(rest)) {
+      if (values[item] !== null) {
+        newEditValues = { ...newEditValues, [item]: { set: values[item] } }
+      }
+    }
+    return { data: newEditValues, where: { id: id } }
+  }
+
   const onSubmit = async (values, { resetForm }) => {
     setFormSubmitAllowedStatus(false)
     if (isFilterNumber && schema?.filter?.primary?.type === 'number') {
@@ -329,9 +348,24 @@ const CrudTable: FC<P> = ({
           : schema?.filter?.primary?.inactive,
       }
     }
+
+    let newValues
+    if (isCodeGen) {
+      if (schema?.company) {
+        newValues = { data: { ...values, [schema['company']]: {} } }
+      } else {
+        newValues = { data: { ...values } }
+      }
+      if (values.id) {
+        newValues = getCodeGenEditVariableValues(values)
+      }
+    } else {
+      newValues = values
+    }
+
     await (values.id
       ? editMutation({
-          variables: values,
+          variables: newValues,
           optimisticResponse: {},
           refetchQueries: [
             {
@@ -345,7 +379,7 @@ const CrudTable: FC<P> = ({
           ],
         })
       : addMutation({
-          variables: values,
+          variables: newValues,
           optimisticResponse: {},
           refetchQueries: [
             {
@@ -400,9 +434,18 @@ const CrudTable: FC<P> = ({
   }
 
   const updateOrder = async (values) => {
-    if (values.id)
+    let newValues
+    if (values.id) {
+      if (isCodeGen) {
+        newValues = {
+          data: { ord: { set: values.order } },
+          where: { id: values.id },
+        }
+      } else {
+        newValues = values
+      }
       await updateOrderMutation({
-        variables: values,
+        variables: newValues,
         optimisticResponse: {},
         refetchQueries: [
           {
@@ -411,6 +454,7 @@ const CrudTable: FC<P> = ({
           },
         ],
       })
+    }
   }
 
   const createNew = () => {
@@ -582,6 +626,7 @@ const CrudTable: FC<P> = ({
             aggregateQueryVariables={getAggregateQueryVariables}
             isDataIntegrityCheck={isDataIntegrityCheck}
             dataIntegrityCount={dataIntegrityCount}
+            isCodeGen={isCodeGen}
           />
         )}
         {isNotificationBannerOnData
