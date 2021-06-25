@@ -1,7 +1,7 @@
-import React, { FC, useState, useEffect } from 'react'
-import PhoneInput from 'react-phone-input-2'
-import { PhoneNumberUtil } from 'google-libphonenumber'
 import ClassNames from 'classnames'
+import { PhoneNumberUtil } from 'google-libphonenumber'
+import React, { FC, useEffect, useState } from 'react'
+import PhoneInput from 'react-phone-input-2'
 import styles from './PhoneNumberInput.module.less'
 
 const phoneUtil = PhoneNumberUtil.getInstance()
@@ -26,7 +26,7 @@ export const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
     if (value) {
       setPhoneNumber(value)
     }
-  }, [value, countryCode])
+  }, [value])
 
   const handleChangeInput = (val, country) => {
     let validNumber
@@ -64,8 +64,8 @@ export const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
         }
       >
         <PhoneInput
-          country={countryCode.toLowerCase()}
           value={phoneNumber}
+          country={countryCode.toLowerCase()}
           onChange={(value, country) => handleChangeInput(value, country)}
         />
       </div>

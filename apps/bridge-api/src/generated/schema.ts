@@ -2994,7 +2994,7 @@ export interface User {
   UserAlertType?: UserAlertType;
   UserAlertPermission?: UserAlertPermission[];
   CmContactAlert?: CmContactAlert[];
-  CmStaffGeneral?: CmStaffGeneral[];
+  CmStaffGeneral?: CmStaffGeneral;
   CompanyNote?: CompanyNote[];
   TrainCourseDate?: TrainCourseDate[];
   SocialSurveyFeedbackResponse?: SocialSurveyFeedbackResponse[];

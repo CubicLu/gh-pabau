@@ -161,7 +161,7 @@ en:
   notifications.commonNotificationHeader.error: 'Invalid email address'
   notifications.commonNotificationHeader.enableReminderViaEmail: 'Enable reminders via email'
   notifications.commonNotificationHeader.enableReminderViaSms: 'Enable reminders via sms'
-  notifications.commonNotificationHeader.sendTestEmail: 'Send Test Email'
+  notifications.commonNotificationHeader.sendExampleEmail: 'Send Test Email'
   notifications.commonNotificationHeader.sendTestSms: 'Send Test SMS'
   notifications.commonNotificationHeader.sendTestMessage: 'Send Test Message'
   notifications.commonNotificationHeader.save: 'Save'
@@ -768,6 +768,7 @@ en:
   crud-table-input-min-length-validate: 'The value for {{what}} at least {{min}} characters.'
   crud-table-input-max-length-validate: 'The max length of {{max}} is reached.'
   crud-table-input-invalid-validate: 'Invalid {{what}}'
+  invalid-date-msg: 'Invalid date'
   add-button-filter: Filter
   add-button-filter-header-text-filter: 'Filter by'
   add-button-filter-reset: Reset
@@ -1726,6 +1727,21 @@ en:
   setup.business-details.leads.email: 'Whould you like to receive email communications?'
   setup.business-details.leads.phone: 'Whould you like to receive phone calls?'
   settings-performance-tab-header-description: 'Lorem ipsum carrots, enhanced undergraduate developer, but they do occaecat time and vitality.'
+  account.settings.response.notification.profilesection.success: Profile Updated Successfully
+  account.settings.response.notification.securitysection.success: Security Information Updated Successfully
+  account.settings.response.notification.notificationsection.success: Notifications Permissions Updated Successfully
+  account.settings.response.notification.error: Something went wrong!
+  account.settings.response.notification.updated: Already Updated
+  account.settings.response.notification.password: Password Updated Successfully
+  account.settings.response.notification.password.error: Something went wrong while updating password
+  account.settings.response.notification.password.error.confirm: Confirm password didn't matched!
+  account.settings.response.notification.password.error.notmatched: Old password didn't matched!
+  account.settings.response.notification.password.error.username: You can not use your email as password!
+  account.settings.response.notification.password.error.short: Password too short!
+  account.settings.response.notification.password.error.number: Password must include at least one number
+  account.settings.response.notification.password.error.lower: Password must include at least one lowercase letter!
+  account.settings.response.notification.password.error.upper: Password must include at least one uppercase letter!
+  account.settings.response.notification.password.error.special: Password must include at least one special character!
   account.settings.header: Settings
   account.settings.tab.header1: Profile
   account.settings.tab.header2: Security
@@ -1743,15 +1759,25 @@ en:
   account.settings.profile.language.label: Language
   account.settings.profile.timezone.label: Timezone
   account.settings.profile.avatarupload.title: 'Upload Avatar Photo'
-  account.settings.security.description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  account.settings.security.description: 'Choose how you want to be notified with certain interactions occur on Pabau'
   account.settings.security.change-password.header: 'Change password'
   account.settings.security.change-password.description: 'Changing your password will sign out of all your devices.'
   account.settings.security.old-password.label: 'Old password'
   account.settings.security.old-password.placeholder: 'Old password'
   account.settings.security.new-password.label: 'New password'
+  account.settings.security.new-password.placeholder: 'New password'
   account.settings.security.confirm-password.label: 'Confirm password'
   account.settings.security.confirm-password.placeholder: 'Confirm password'
   account.settings.security.change-password.button: 'Change Password'
+  account.settings.security.passwordhelper.statustitle: 'Strength'
+  account.settings.security.passwordhelper.statusweek: 'Week'
+  account.settings.security.passwordhelper.statusfair: 'Fair'
+  account.settings.security.passwordhelper.statusgood: 'Good'
+  account.settings.security.passwordhelper.statusstrong: 'Strong'
+  account.settings.security.passwordhelper.description1: 'Eight or more characters'
+  account.settings.security.passwordhelper.description2: 'Uppercase & lowercase characters'
+  account.settings.security.passwordhelper.description3: 'At least one number'
+  account.settings.security.passwordhelper.description4: 'At least one special character'
   account.settings.security.passcode.label: Passcode
   account.settings.security.passcode.description: 'Your 4-digit code used to access Pabau Go (for iPad/iPhone)'
   account.settings.security.two-factor.label: 'Two-factor authentication'
@@ -1759,13 +1785,18 @@ en:
   account.settings.security.two-factor.description: 'Two factor authentication adds an extra layer of security to your Pabau account.'
   account.settings.security.two-factor.label2: Details
   account.settings.security.two-factor.button: Enable
+  account.settings.security.password.error1: Old password is required
+  account.settings.security.password.error2: New password is required
+  account.settings.security.password.error3: Confirm new password is required
+  account.settings.security.password.error4: The two passwords that you entered do not match!
   account.settings.security.security-question.label: 'Security questions'
   account.settings.security.security-question.description: 'Some description here.'
   account.settings.security.security-question.button: Edit
   account.settings.security.logged-in.label: 'Where you logged in'
   account.settings.security.logged-in.description: 'Where you logged in'
-  account.settings.security.logged-in.info: 'Windows PC | Bicester, United Kingdom'
-  account.settings.security.logged-in.info1: Chrome
+  account.settings.security.last.loggedin.label: 'Last login'
+  account.settings.security.logged-in.mobile: 'mobile'
+  account.settings.security.logged-in.pc: 'PC'
   account.settings.security.logged-in.info2: 'Active now'
   account.settings.security.logged-in.collapse.label: 'Show more'
   account.settings.security.logged-in.mobile.info: 'iPhone | Bicester, United Kingdom'
@@ -1784,8 +1815,20 @@ en:
   account.settings.notification.application.label1: 'News and announcements'
   account.settings.notification.application.label2: 'New feature release'
   account.settings.notification.application.label3: 'New blog post'
-  account.settings.notification.description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  account.settings.notification.description: 'Choose how you want to be notified with certain interactions occur on Pabau'
   account.settings.notification.general.label: GENERAL
+  account.settings.notification.general.feedpost: 'Feed Post'
+  account.settings.notification.general.feedpost.description: 'Receive a notification when someone makes a post to the buzzfeed.'
+  account.settings.notification.general.likepost: 'Like Post'
+  account.settings.notification.general.likepost.description: 'Receive a notification when someone likes their wall post.'
+  account.settings.notification.general.scheduledreport: 'Scheduled Report'
+  account.settings.notification.general.scheduledreport.description: 'Receive a notification when someone likes their wall post.'
+  account.settings.notification.general.appointmentbooked: 'Appointment Booked'
+  account.settings.notification.general.appointmentbooked.description: 'Who booked service appointment'
+  account.settings.notification.general.appointmentcancelled: 'Appointment Cancelled'
+  account.settings.notification.general.appointmentcancelled.description: 'Who cancelled service appointment'
+  account.settings.notification.general.leadinquiry: 'Lead Enquiry'
+  account.settings.notification.general.leadinquiry.description: 'Receive notification whenever you receive new Enquiry.'
   account.settings.notification.application.label: APPLICATION
   account.settings.notification.general.button.label1: iOS
   account.settings.notification.general.button.label2: Email

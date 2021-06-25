@@ -17,6 +17,13 @@
       background-color: #fff;
       button {
         width: 100%;
+        &[disabled] {
+          color: #00000040;
+          background: #f5f5f5;
+          border-color: #d9d9d9;
+          text-shadow: none;
+          box-shadow: none;
+        }
       }
     }
   }
@@ -45,7 +52,15 @@
   .btn-save {
     float: right;
     background: #54b2d3;
-    color: #ffffff !important;
+    color: #ffffff;
+
+    &[disabled] {
+      color: #00000040;
+      background: #f5f5f5;
+      border-color: #d9d9d9;
+      text-shadow: none;
+      box-shadow: none;
+    }
   }
 }
 
@@ -69,6 +84,11 @@
   }
   .ant-form {
     padding: 0px 23px 0px 23px;
+  }
+  .profileLang {
+    // .ant-form {
+    padding: 0px 0px 24px 0px;
+    // }
   }
   .ant-form-item h1 {
     font-weight: 500;
@@ -104,24 +124,38 @@
     height: 2em !important;
     margin-top: 5px;
   }
-  .whereLoggedIn {
+  .wherelogged-in {
     display: flex;
     div {
       float: left;
     }
+    &:not(:hover) {
+      .ip {
+        display: none;
+        transition: all 1s;
+      }
+    }
   }
-  .whereLoggedIn .whereDescription {
+  .wherelogged-in .whereDescription {
     margin-left: 10px;
     color: #9292a3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
-  .whereLoggedIn .osInfo,
-  .whereLoggedIn .appInfo {
+  .wherelogged-in .osInfo,
+  .wherelogged-in .appInfo {
     float: none;
   }
-  .whereLoggedIn .appInfo {
+  .wherelogged-in .appInfo {
     font-size: 12px;
     .active {
       color: #65cd98;
+    }
+    &:not(:hover) {
+      .lastDate {
+        display: none;
+      }
     }
   }
   .ql-toolbar.ql-snow,

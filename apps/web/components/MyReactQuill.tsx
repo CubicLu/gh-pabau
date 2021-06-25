@@ -1,9 +1,9 @@
-import React, { FC, useState } from 'react'
-import ReactQuill from 'react-quill'
 import {
   LeftOutlined as CustomUndo,
   RightOutlined as CustomRedo,
 } from '@ant-design/icons'
+import React, { FC, useState } from 'react'
+import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import styles from './MyReactQuill.module.less'
 
@@ -47,12 +47,16 @@ function redoChange() {
   this.quill.history.redo()
 }
 
-const MyReactQuill: FC = () => {
-  const [state, setState] = useState({ value: '' })
+export interface P {
+  value?: string
+  onChange?: (value) => void
+}
+
+const MyReactQuill: FC<P> = ({ value = '', onChange, ...rest }) => {
   const [showHtml, setShowHtml] = useState<boolean>(false)
 
   const handleChange = (value) => {
-    setState({ value })
+    onChange?.(value)
   }
 
   const modules = {
@@ -88,16 +92,12 @@ const MyReactQuill: FC = () => {
       <ReactQuill
         theme="snow"
         style={{ height: '150px' }}
-        value={state.value}
+        value={value || null}
         onChange={handleChange}
         modules={modules}
         formats={formats}
       />
-      <textarea
-        className={styles.rawHtmlInput}
-        value={state.value}
-        readOnly={true}
-      />
+      <textarea className={styles.rawHtmlInput} value={value} readOnly={true} />
     </div>
   )
 }

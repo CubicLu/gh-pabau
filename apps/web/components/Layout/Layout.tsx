@@ -97,7 +97,6 @@ const Layout: FC<LayoutProps> = ({
       )
       setNotifications(todayNotification)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notificationData?.notifications])
 
   if (error) {

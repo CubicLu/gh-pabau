@@ -4980,6 +4980,14 @@
     "@sendgrid/client" "^7.4.3"
     "@sendgrid/helpers" "^7.4.3"
 
+"@sendgrid/mail@^7.4.4":
+  version "7.4.5"
+  resolved "https://registry.yarnpkg.com/@sendgrid/mail/-/mail-7.4.5.tgz#22cef36e793134833b36aff5d3f4f53e8f81dd52"
+  integrity sha512-adXMvrTUOlYr7+UTigZRGSYR9vheBv1y4fF2mugn29NBdQMfcQPGLQ5vIHgSAfcboBFCagZdamZqM5FeSGU0Hw==
+  dependencies:
+    "@sendgrid/client" "^7.4.3"
+    "@sendgrid/helpers" "^7.4.3"
+
 "@sideway/address@^4.1.0":
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/@sideway/address/-/address-4.1.2.tgz#811b84333a335739d3969cfc434736268170cad1"

@@ -15,6 +15,11 @@ import USSVG from './us.svg'
 
 export const languageMenu = [
   {
+    label: 'English',
+    logo: ENSVG,
+    selected: true,
+  },
+  {
     label: 'English (UK)',
     logo: ENSVG,
     selected: true,
