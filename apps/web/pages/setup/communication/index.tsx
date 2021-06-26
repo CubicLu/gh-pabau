@@ -1,31 +1,31 @@
-import React, { FC, useEffect, useState } from 'react'
-import { Typography, Input } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import {
-  TabMenu,
   Breadcrumb,
-  NotificationBanner,
-  MedicalFilter,
   Button,
   ChooseModal,
   ChooseModalItem,
-  MedicalFilterProps,
   CreateTemplateModal,
   CreateTemplateModalProps,
+  MedicalFilter,
+  MedicalFilterProps,
+  NotificationBanner,
+  TabMenu,
 } from '@pabau/ui'
-import Layout from '../../../components/Layout/Layout'
-import Custom from '../../../components/Setup/Communication/Custom'
-import Library from '../../../components/Setup/Communication/Library'
-import CommonHeader from '../../../components/CommonHeader'
+import { Input, Typography } from 'antd'
+import React, { FC, useEffect, useState } from 'react'
 // import notificationBannerImage from '../../../assets/images/notification-image.png'
 import icon from '../../../assets/images/notification.png'
-import styles from './index.module.less'
+import CommonHeader from '../../../components/CommonHeader'
+import Layout from '../../../components/Layout/Layout'
 import {
-  defaultChooseTemplateState,
-  chooseTemplateStepArgs,
   ChooseTemplateState,
+  chooseTemplateStepArgs,
+  defaultChooseTemplateState,
 } from '../../../components/Setup/Communication/choose-modal.data'
+import Custom from '../../../components/Setup/Communication/Custom'
+import Library from '../../../components/Setup/Communication/Library'
 import createTemplateStateArgs from '../../../components/Setup/Communication/template-modal.data'
+import styles from './index.module.less'
 
 const { Title } = Typography
 

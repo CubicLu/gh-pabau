@@ -9,7 +9,7 @@ import {
   Skeleton,
   Table as AntTable,
 } from 'antd'
-import { TableProps, ColumnsType } from 'antd/es/table'
+import { ColumnsType, TableProps } from 'antd/es/table'
 import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -62,6 +62,7 @@ type CustomColumns = {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type TableType<T = object> = {
+  onRowClickWithEvent?: (e, event) => void
   onRowClick?: (e) => void
   onRowHover?: (e) => void
   onLeaveRow?: (e) => void
@@ -77,6 +78,7 @@ export type TableType<T = object> = {
   loading?: boolean
   columns?: CustomColumns[]
   defaultSkeletonRows?: number
+  needEvent?: boolean
 } & TableProps<T> &
   DragProps
 
@@ -87,6 +89,7 @@ export const Table: FC<TableType> = ({
   isCustomIconExist = false,
   isHover = false,
   updateDataSource,
+  onRowClickWithEvent,
   onRowClick,
   onRowHover,
   onLeaveRow,
@@ -99,6 +102,7 @@ export const Table: FC<TableType> = ({
   loading,
   showSizeChanger,
   defaultSkeletonRows = 10,
+  needEvent = false,
   ...props
 }) => {
   const onSortEnd = ({ oldIndex, newIndex }) => {
@@ -386,7 +390,9 @@ export const Table: FC<TableType> = ({
         return {
           onClick: (event) => {
             if (checkPadLocks(record)) {
-              onRowClick?.(record)
+              needEvent
+                ? onRowClickWithEvent?.(record, event)
+                : onRowClick?.(record)
             }
           },
           onMouseEnter: (event) => {

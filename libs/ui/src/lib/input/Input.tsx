@@ -52,7 +52,6 @@ export function Input({
           message: reqiredMsg ? reqiredMsg : '',
         },
       ]
-      console.log('requiredMark', items)
     }
     if (type === 'email') {
       items = [
@@ -62,7 +61,6 @@ export function Input({
           message: 'Please enter valid email!',
         },
       ]
-      console.log('type === email', items)
     }
     setRules(items)
   }, [requiredMark, reqiredMsg, type])

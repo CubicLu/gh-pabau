@@ -1,3 +1,5 @@
+import { RuleProp, VersionItem } from '@pabau/ui'
+
 export interface OptionType {
   id: number
   name: string
@@ -72,4 +74,23 @@ export const defaultFormValue: MedicalFormTypes = {
   required: false,
   txtValue: '',
   arrValue: [],
+}
+
+export interface MedicalFormVersion {
+  currentVersion: string
+  history: {
+    [key: string]: VersionItem[]
+  }
+}
+
+export interface MedicalFormItem {
+  name: string
+  formType: string
+  createdAt: string
+  version: MedicalFormVersion
+  status: string
+  index?: number | string
+  key: string
+  formData: string
+  rules: RuleProp[]
 }

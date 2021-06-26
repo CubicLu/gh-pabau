@@ -19,6 +19,7 @@ interface P {
   isEditing: () => boolean
   medicalForms: MedicalForms[]
   changeFormName: (formName: string) => void
+  changeFormType: (formType: string) => void
   formName: string
   changeLayout: (noRight: boolean) => void
   runPreviewPdf: () => void
@@ -32,6 +33,7 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
     isEditing,
     medicalForms,
     changeFormName,
+    changeFormType,
     formName,
     changeLayout,
     runPreviewPdf,
@@ -47,11 +49,18 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
   const [isEpaper, setIsEpaper] = useState(false)
 
   const isSelectedFormType = (setting) => {
-    const selectedFormType = Object.entries(setting).filter(
-      ([key, value]) => value === true
-    )
+    const selectedFormType = Object.entries(setting)
+      .map(([key, value]) => {
+        if (value === true) {
+          changeFormType?.(key)
+          return true
+        }
+        return false
+      })
+      .filter((item) => item)
     return selectedFormType.length === 0 ? false : true
   }
+
   const onSelectFormType = (setting) => {
     refreshDraggedForms?.()
     setSelectedFormTypes(setting)
@@ -67,6 +76,7 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
       )
     }
   }
+
   const callback = (key) => {
     if (isSelectedFormType(selectedFormTypes)) {
       setOpenPanel(key)

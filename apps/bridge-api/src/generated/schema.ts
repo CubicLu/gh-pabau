@@ -2453,6 +2453,36 @@ export interface JobStatus {
   Company: Company;
 }
 
+export interface MedicalForm {
+  id: number;
+  user_deleted: number;
+  name?: string;
+  data?: string;
+  created_at?: Date;
+  updated_at?: Date;
+  deleted_at?: Date;
+  nhs_locum_id?: number;
+  nhs_procedure_id?: number;
+  locked: number;
+  printout: string;
+  company_id: number;
+  user_created: number;
+  encoded: number;
+  form_type: string;
+  service_id: string;
+  ipad_only?: number;
+  heading_setting?: number;
+  temp_static: number;
+  old_data: string;
+  form_category: string;
+  author: string;
+  diagnosis_code: string;
+  is_fav: number;
+  diagnosis_code_enabled: number;
+  lab_id: number;
+  is_private: boolean;
+}
+
 export interface MedicalFormContact {
   id: number;
   form_id?: number;

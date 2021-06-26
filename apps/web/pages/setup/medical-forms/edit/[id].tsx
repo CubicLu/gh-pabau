@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { useRouter } from 'next/router'
 import { MedicalFormBuilder, VersionItem } from '@pabau/ui'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
 import { medicalFormData } from '../../../../components/MedicalForms/mock'
 
 interface MedicalFormItem {
@@ -34,13 +34,17 @@ export const EditMedicalForm: React.FC<CustomProps> = ({ data }) => {
   )
   const Item = medicalFormitems.find((item) => item.index === findID)
 
+  const hideFormBuilder = () => {
+    console.log('calling hideFormBuilder')
+  }
+
   return (
     <div>
       <MedicalFormBuilder
         visible={true}
         previewData=""
-        onCreate={() => console.log('form edited')}
-        nameForm={Item.name}
+        onHideFormBuilder={hideFormBuilder}
+        preFormName={Item.name}
       />
     </div>
   )

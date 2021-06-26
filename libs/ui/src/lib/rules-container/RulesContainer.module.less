@@ -169,8 +169,9 @@
           margin-left: 5px;
         }
       }
-      .answer {
-        height: 60px;
+      .answer,
+      .answerThen {
+        min-height: 60px;
         margin-bottom: 25px;
         width: 100%;
         display: flex;
@@ -182,11 +183,12 @@
           flex-wrap: wrap;
           height: 90px;
         }
+
         :global {
+          .ant-input,
+          .ant-input-number,
           .ant-select {
             margin-right: 10px;
-          }
-          .ant-input {
             width: 250px;
           }
           .ant-alert {
@@ -242,6 +244,50 @@
           left: -80px;
           bottom: 15px;
         }
+        .emptyCondition {
+          :global {
+            .ant-input,
+            .ant-input-number,
+            .ant-select {
+              border: 1px solid #ff0000;
+            }
+          }
+        }
+      }
+
+      .answerMet {
+        min-height: 30px;
+        margin-bottom: 0px;
+        .conditionMet {
+          margin-bottom: 5px;
+          margin-left: 2px;
+        }
+      }
+
+      .answerThen {
+        align-items: flex-start;
+        .icon {
+          margin-top: 21px;
+        }
+        .iconRemove {
+          margin-top: 21px;
+        }
+        .noTemplate {
+          min-width: 460px;
+          margin-right: 10px;
+          :global {
+            .ant-input,
+            .ant-select {
+              width: 100%;
+            }
+          }
+        }
+        .progIfLine {
+          top: 36px;
+        }
+        .devider {
+          margin-top: 15px;
+        }
       }
     }
   }
@@ -284,6 +330,19 @@
           }
         }
       }
+    }
+  }
+  .item {
+    cursor: pointer;
+    padding: 5px 5px 0px 5px;
+  }
+
+  .item:hover {
+    background: #40a0c1;
+    border-radius: 3px;
+    h5,
+    p {
+      color: #fff;
     }
   }
 }

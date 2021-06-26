@@ -1,3 +1,14 @@
+import {
+  FilterOutlined,
+  PlusSquareFilled,
+  SearchOutlined,
+} from '@ant-design/icons'
+import { useFindManyCompanyStaffUsersQuery } from '@pabau/graphql'
+import { Breadcrumb, Pagination, TabMenu, UserProps, UserTile } from '@pabau/ui'
+import { Image, Input } from 'antd'
+import classNames from 'classnames'
+import moment from 'moment'
+import { useRouter } from 'next/router'
 import React, {
   FunctionComponent,
   useContext,
@@ -5,33 +16,21 @@ import React, {
   useMemo,
   useState,
 } from 'react'
-import { useMedia } from 'react-use'
-import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
-import classNames from 'classnames'
-import {
-  FilterOutlined,
-  PlusSquareFilled,
-  SearchOutlined,
-} from '@ant-design/icons'
-import moment from 'moment'
-import Layout from '../../../components/Layout/Layout'
-import { UserContext } from '../../../context/UserContext'
-import { Breadcrumb, Pagination, TabMenu, UserProps, UserTile } from '@pabau/ui'
-import { useFindManyCompanyStaffUsersQuery } from '@pabau/graphql'
-
-import {
-  Filter,
-  ListView,
-  GroupPermission,
-} from '../../../components/team/Users'
-import styles from './index.module.less'
-import addButtonStyles from '../../../components/AddButton.module.less'
-import CommonHeader from '../../../components/CommonHeader'
-import { Image, Input } from 'antd'
+import { useMedia } from 'react-use'
 import searchEmpty from '../../../../../libs/ui/src/assets/images/empty.png'
 import { ReactComponent as CloseIcon } from '../../../assets/images/close-icon.svg'
+import addButtonStyles from '../../../components/AddButton.module.less'
+import CommonHeader from '../../../components/CommonHeader'
+import Layout from '../../../components/Layout/Layout'
+import {
+  Filter,
+  GroupPermission,
+  ListView,
+} from '../../../components/team/Users'
+import { UserContext } from '../../../context/UserContext'
 import { getImage } from '../../../helper/cdn/imageUrl'
+import styles from './index.module.less'
 
 export interface userDataProps extends UserProps {
   lastActivity: string
