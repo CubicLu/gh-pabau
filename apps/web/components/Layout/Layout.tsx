@@ -52,7 +52,11 @@ const Layout: FC<LayoutProps> = ({
   })
 
   const loggedUser = useContext(UserContext)
-  const userData = { ...user, fullName: loggedUser?.me?.full_name }
+  const userData = {
+    ...user,
+    companyName: loggedUser?.me?.company?.details.company_name,
+    fullName: loggedUser?.me?.full_name,
+  }
 
   const [
     insertReadNotificationOneMutation,
@@ -87,7 +91,6 @@ const Layout: FC<LayoutProps> = ({
       )
       setNotifications(todayNotification)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notificationData?.notifications])
 
   if (error) {

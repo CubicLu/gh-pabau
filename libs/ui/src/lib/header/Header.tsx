@@ -29,6 +29,7 @@ interface Notification {
 interface UserProps {
   user: number
   company: number
+  companyName: string
   fullName: string
 }
 
@@ -112,7 +113,7 @@ export const Header = ({
                 </div>
                 <AvatarDropDown
                   taskManagerIFrameComponent={taskManagerIFrameComponent}
-                  {...rest}
+                  userData={user}
                 />
               </div>
             </Col>

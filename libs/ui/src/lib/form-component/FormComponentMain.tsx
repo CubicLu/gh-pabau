@@ -5,10 +5,11 @@ import FormComponentInnerElement from './FormComponentInnerElement'
 
 interface P {
   draggedForms: MedicalFormTypes[]
+  formSaveLabel?: string
 }
 
 const FormComponentMain: FC<P> = ({ ...props }) => {
-  const { draggedForms } = props
+  const { draggedForms, formSaveLabel = '' } = props
   const [disableSaveButton, setDisableSaveButton] = useState(true)
   useEffect(() => {
     const requiredForms = draggedForms.filter((form) => form.required === true)
@@ -69,7 +70,7 @@ const FormComponentMain: FC<P> = ({ ...props }) => {
             size="middle"
             disabled={disableSaveButton}
           >
-            Save Form
+            {formSaveLabel === '' ? 'Save Form' : formSaveLabel}
           </Button>
         </div>
       )}

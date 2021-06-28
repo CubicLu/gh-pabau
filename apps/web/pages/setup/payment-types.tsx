@@ -1,118 +1,18 @@
-/* eslint-disable graphql/template-strings */
-import { gql } from '@apollo/client'
-import { NextPage } from 'next'
 import React, { useState, useContext } from 'react'
+import { NextPage } from 'next'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import CrudLayout from '../../components/CrudLayout/CrudLayout'
 import { NotificationBanner } from '@pabau/ui'
+import {
+  PaymentTypesDocument,
+  PaymentTypesAggregateDocument,
+  PaymentMethodsDataIntegrityDocument,
+  CreateOneInvPaymentTypeDocument,
+  UpdateOneInvPaymentTypeDocument,
+  DeleteOneInvPaymentTypeDocument,
+} from '@pabau/graphql'
 import PaymentNotificationImage from '../../assets/images/payment-type-notify-image.png'
 import { UserContext } from '../../context/UserContext'
-
-const LIST_QUERY = gql`
-  query payment_types($isActive: Int = 1, $offset: Int = 0, $limit: Int = 50) {
-    stripe: bookitProGenerals(
-      where: {
-        AND: {
-          stripe_public_key: { equals: "" }
-          stripe_private_key: { equals: "" }
-          create_invoice: { equals: "1" }
-        }
-      }
-    ) {
-      create_invoice
-    }
-    invPaymentTypes(
-      skip: $offset
-      take: $limit
-      orderBy: { name: desc }
-      where: { is_active: { equals: $isActive } }
-    ) {
-      id
-      name
-      type
-      description
-      is_active
-      company_id
-      GlCode {
-        GlCode_id: id
-        GlCode: code
-        description
-      }
-    }
-  }
-`
-const LIST_AGGREGATE_QUERY = gql`
-  query payment_types_aggregate($isActive: Int = 1) {
-    invPaymentTypesCount(where: { is_active: { equals: $isActive } })
-  }
-`
-const DELETE_MUTATION = gql`
-  mutation delete_payment_types($id: Int) {
-    deleteOneInvPaymentType(where: { id: $id }) {
-      __typename
-      id
-    }
-  }
-`
-
-const ADD_MUTATION = gql`
-  mutation add_payment_types(
-    $name: String!
-    $type: String = "money"
-    $is_money: Int = 1
-    $description: String = ""
-    $is_active: Int = 1
-  ) {
-    createOneInvPaymentType(
-      data: {
-        name: $name
-        type: $type
-        is_money: $is_money
-        description: $description
-        is_active: $is_active
-        Company: {}
-      }
-    ) {
-      __typename
-      id
-    }
-  }
-`
-const EDIT_MUTATION = gql`
-  mutation update_inv_payment_type(
-    $id: Int!
-    $name: String!
-    $type: String = "money"
-    $is_money: Int = 1
-    $description: String = ""
-    $is_active: Int = 1
-  ) {
-    updateOneInvPaymentType(
-      data: {
-        name: { set: $name }
-        type: { set: $type }
-        is_money: { set: $is_money }
-        is_active: { set: $is_active }
-        description: { set: $description }
-      }
-      where: { id: $id }
-    ) {
-      id
-    }
-  }
-`
-const UPDATE_ORDER_MUTATION = gql`
-  mutation update_payment_types_order($id: uuid!, $order: Int) {
-    update_payment_types(where: { id: { _eq: $id } }, _set: { order: $order }) {
-      affected_rows
-    }
-  }
-`
-const DATA_INTEGRITY_CHECK = gql`
-  query payment_methods_data_integrity($paymentName: String!) {
-    invPaymentsCount(where: { pmethod: { equals: $paymentName } })
-  }
-`
 
 export const PaymentTypes: NextPage = () => {
   const { t } = useTranslationI18()
@@ -141,7 +41,7 @@ export const PaymentTypes: NextPage = () => {
     },
     tooltip: t('setup.paymenttypes.schema.tooltip'),
     createButtonLabel: t('setup.paymenttypes.schema.create.paymenttypes'),
-    padlocked: ['Card', 'Cash', 'Loyalty'],
+    padlocked: ['Card', 'Cash', 'Loyalty', 'Packages', 'Account', 'Voucher'],
     fields: {
       type: {
         full: '',
@@ -227,20 +127,77 @@ export const PaymentTypes: NextPage = () => {
       query: 'stripe',
       list: 'invPaymentTypes',
     },
-    company: 'company_id',
+    company: 'Company',
   }
+
+  const staticDataSource = [
+    {
+      id: '1',
+      name: 'Card',
+      type: 'money',
+      description: null,
+      is_active: true,
+      company_id: null,
+      GlCode: null,
+    },
+    {
+      id: '2',
+      name: 'Cash',
+      type: 'money',
+      description: null,
+      is_active: true,
+      company_id: null,
+      GlCode: null,
+    },
+    {
+      id: '3',
+      name: 'Loyalty',
+      type: 'money',
+      description: null,
+      is_active: true,
+      company_id: null,
+      GlCode: null,
+    },
+    {
+      id: '4',
+      name: 'Packages',
+      type: 'money',
+      description: null,
+      is_active: true,
+      company_id: null,
+      GlCode: null,
+    },
+    {
+      id: '5',
+      name: 'Account',
+      type: 'money',
+      description: null,
+      is_active: true,
+      company_id: null,
+      GlCode: null,
+    },
+    {
+      id: '6',
+      name: 'Voucher',
+      type: 'money',
+      description: null,
+      is_active: true,
+      company_id: null,
+      GlCode: null,
+    },
+  ]
 
   const [showNotificationBanner, setShowNotificationBanner] = useState(false)
   return (
     <CrudLayout
       schema={schema}
       tableSearch={false}
-      addQuery={ADD_MUTATION}
-      deleteQuery={DELETE_MUTATION}
-      listQuery={LIST_QUERY}
-      editQuery={EDIT_MUTATION}
-      aggregateQuery={LIST_AGGREGATE_QUERY}
-      updateOrderQuery={UPDATE_ORDER_MUTATION}
+      addQuery={CreateOneInvPaymentTypeDocument}
+      deleteQuery={DeleteOneInvPaymentTypeDocument}
+      listQuery={PaymentTypesDocument}
+      editQuery={UpdateOneInvPaymentTypeDocument}
+      aggregateQuery={PaymentTypesAggregateDocument}
+      updateOrderQuery={UpdateOneInvPaymentTypeDocument}
       showNotificationBanner={true}
       notificationBanner={
         <NotificationBanner
@@ -255,9 +212,12 @@ export const PaymentTypes: NextPage = () => {
       isNestedQuery={true}
       isFilterNumber={true}
       isDataIntegrityCheck={true}
-      dataIntegrityCheckQuery={DATA_INTEGRITY_CHECK}
+      dataIntegrityCheckQuery={PaymentMethodsDataIntegrityDocument}
       requireAdminAccess={true}
       isNotificationBannerOnData={true}
+      showStaticData={true}
+      staticData={staticDataSource}
+      isCodeGen={true}
       {...user}
     />
   )

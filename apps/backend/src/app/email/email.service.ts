@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common'
 import { SendGridService } from '@anchan828/nest-sendgrid'
+import { Injectable } from '@nestjs/common'
 import { environment } from '../../environments/environment'
 
 @Injectable()

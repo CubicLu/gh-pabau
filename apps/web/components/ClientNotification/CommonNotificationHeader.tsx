@@ -129,13 +129,15 @@ const CommonNotificationHeader: FC<p> = ({
             onClick={() => setSendEmail(!sendEmail)}
           >
             {selectedTab === 'emailPreview'
-              ? t('notifications.commonNotificationHeader.sendTestEmail')
+              ? t('notifications.commonNotificationHeader.sendExampleEmail')
               : t('notifications.commonNotificationHeader.sendTestSms')}
           </Button>
           <Modal
             title={
               selectedTab === 'emailPreview'
-                ? t('notifications.commonNotificationHeader.sendTestEmail')
+                ? t(
+                    'notifications.commonNotificationHeader.sendExampleEmailail'
+                  )
                 : t('notifications.commonNotificationHeader.sendTestMessage')
             }
             visible={sendEmail}

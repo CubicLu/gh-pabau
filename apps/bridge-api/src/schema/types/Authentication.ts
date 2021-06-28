@@ -1,7 +1,11 @@
 import { extendType, nonNull, stringArg } from 'nexus'
 import AuthenticationService from '../../app/authentication/AuthenticationService'
+import {
+  ChangePasswordInputDto,
+  LoginInputDto,
+} from '../../app/authentication/dto'
+import EmailService from '../../app/email/EmailService'
 import { Context } from '../../context'
-import { LoginInputDto } from '../../app/authentication/dto'
 
 export const Authentication = extendType({
   type: 'Mutation',
@@ -26,6 +30,32 @@ export const Authentication = extendType({
       args: {},
       resolve() {
         return true
+      },
+    })
+    t.field('updateUserPassword', {
+      type: 'Boolean',
+      description: 'Updates the current user password',
+      args: {
+        currentPassword: nonNull(stringArg()),
+        newPassword: nonNull(stringArg()),
+      },
+      async resolve(_, args: ChangePasswordInputDto, ctx: Context) {
+        const { currentPassword, newPassword } = args
+        if (!currentPassword || !newPassword) {
+          throw new Error('Malformed Parameters')
+        }
+        const response = await new AuthenticationService(
+          ctx
+        ).handlePasswordChange(args)
+        if (response) {
+          await new EmailService().sendEmail({
+            templateType: 'password-reset-confirm',
+            to: response?.username,
+            name: response?.full_name,
+            subject: 'Password Changed Confirmation',
+          })
+          return true
+        }
       },
     })
   },

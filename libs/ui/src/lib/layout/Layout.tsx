@@ -23,6 +23,7 @@ interface Notification {
 interface UserProps {
   user: number
   company: number
+  companyName: string
   fullName: string
 }
 export interface LayoutProps {

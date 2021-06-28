@@ -31,7 +31,17 @@ export default {
   actions: { argTypesRegex: '^on[A-Z].*' },
 }
 
-export const PeerFeedbackStory: FC<PeerFeedbackProps> = ({ ...args }) => (
+export const PeerFeedbackStory: FC<PeerFeedbackProps> = ({
+  title,
+  users,
+  lastSendOut,
+  reviewDate,
+  reviewFilled,
+  filled,
+  reviewData,
+  employees,
+  reports,
+}) => (
   <PeerFeedback
     title={title}
     users={users}

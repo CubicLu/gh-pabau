@@ -1,6 +1,18 @@
 import { EditFilled, LeftOutlined } from '@ant-design/icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
+  Company_Branches_Attachments_Type,
+  LocationsDocument,
+  LocationsQueryVariables,
+  useGetLastOrderQuery,
+  useGetLocationStaffListLazyQuery,
+  useInsertLocationMutation,
+  useListEmployeeQueryQuery,
+  useLocationsQuery,
+  useUpdateLocationMutation,
+  useUpdateLocationsOrderMutation,
+} from '@pabau/graphql'
+import {
   AvatarList,
   Breadcrumb,
   Button,
@@ -37,18 +49,6 @@ import CustomFilter from './CustomFilter'
 import General from './General'
 import LocationDetails from './LocationDetails'
 import styles from './LocationsLayout.module.less'
-import {
-  useGetLocationStaffListLazyQuery,
-  Company_Branches_Attachments_Type,
-  LocationsQueryVariables,
-  useInsertLocationMutation,
-  useLocationsQuery,
-  useListEmployeeQueryQuery,
-  LocationsDocument,
-  useGetLastOrderQuery,
-  useUpdateLocationsOrderMutation,
-  useUpdateLocationMutation,
-} from '@pabau/graphql'
 
 const { Title } = Typography
 

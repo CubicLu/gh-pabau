@@ -1,7 +1,6 @@
-import React from 'react'
 import { render } from '@testing-library/react'
-
-import RulesContainer, { RulesContainerProps } from './RulesContainer'
+import React from 'react'
+import RulesContainer from './RulesContainer'
 
 describe('RulesContainer', () => {
   it('should render successfully', () => {
@@ -21,19 +20,21 @@ describe('RulesContainer', () => {
       saveRuleText: 'Save Rule',
       ruleConditionPlaceHolder: 'Write Condition here',
       answersOptions: {
-        short_answer: 'Short Answer',
-        long_answer: 'Long Answer',
-        single_choice_answer: 'Single Choice Answer',
-        multiple_choice_answer: 'Multiple Choice Answer',
-        dropdown_answer: 'Dropdown Answer',
-        medical_condition: 'Medical Condition',
-        drugs_prescribed: 'Drugs Prescribed',
-        travel_destination: 'Travel Destination',
-        labs_ordered: 'Labs Ordered',
+        0: { id: 'short_answer', answer: 'Short Answer' },
+        1: { id: 'long_answer', answer: 'Long Answer' },
+        2: { id: 'single_choice_answer', answer: 'Single Choice Answer' },
+      },
+      answersClientOptions: {
+        gender: { id: 'gender', answer: 'Gender' },
+        age: { id: 'age', answer: 'Age' },
       },
       operatorOptions: {
         is: 'is',
-        not_is: 'Not is',
+        is_not: 'is not',
+        is_empty: 'is empty',
+        is_not_empty: 'is not empty',
+        greater_than: 'greater than',
+        less_than: 'less than',
       },
       actionTitle: 'Pabau',
       actions: [
@@ -56,7 +57,9 @@ describe('RulesContainer', () => {
           icon: 'icon',
         },
       ],
-    } as RulesContainerProps
+      medicalForms: [],
+      currentRules: [],
+    }
     const { baseElement } = render(<RulesContainer {...props} />)
     expect(baseElement).toBeTruthy()
   })

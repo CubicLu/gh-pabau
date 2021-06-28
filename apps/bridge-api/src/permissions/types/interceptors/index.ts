@@ -16,15 +16,15 @@ export const interceptors = {
     }
     return true
   }),
-  interceptAccessToCompanyData: rule('interceptAccessToCompanyData', {
-    cache: 'contextual',
-  })((root, args, ctx: Context, info) => {
-    args.where = {
-      ...args.where,
-      company_id: { equals: ctx.authenticated.company },
+  interceptAccessToCompanyData: rule('interceptAccessToCompanyData')(
+    (root, args, ctx: Context, info) => {
+      args.where = {
+        ...args.where,
+        company_id: { equals: ctx.authenticated.company },
+      }
+      return true
     }
-    return true
-  }),
+  ),
   interceptAccessToAdminTable: rule('interceptAccessToAdminTable', {
     cache: 'contextual',
   })((root, args, ctx: Context) => {
