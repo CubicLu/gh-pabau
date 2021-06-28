@@ -111,12 +111,14 @@ const Index: FC = (props) => {
 
   return (
     <div>
-      <CommonHeader
+      <Layout
+        active={'setup'}
+        isDisplayingFooter={false}
         handleSearch={handleSearch}
         title={t('setup.page.title')}
         isShowSearch={true}
-      />
-      <Layout active={'setup'} isDisplayingFooter={false} {...user}>
+        {...user}
+      >
         <div className={styles.cardWrapper}>
           <div className={styles.titleWrapper}>
             <span className={styles.title}>{title}</span>

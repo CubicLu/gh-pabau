@@ -39,13 +39,14 @@ export interface LayoutProps {
   card?: true
   searchRender?: (innerComponent: JSX.Element) => JSX.Element
   active?: string
-  onCreateChannel?: (
-    name: string,
-    description: string,
-    isPrivate: boolean
-  ) => void
+  onMessageIconClick?(): void
+  // onCreateChannel?: (
+  //   name: string,
+  //   description: string,
+  //   isPrivate: boolean
+  // ) => void
   isDisplayingFooter?: boolean
-  onMessageType?: (e: MouseEvent<HTMLElement>) => void
+  // onMessageType?: (e: MouseEvent<HTMLElement>) => void
   legacyContent?: boolean
   taskManagerIFrameComponent?: JSX.Element
   requireAdminAccess?: boolean
@@ -53,13 +54,12 @@ export interface LayoutProps {
 
 export const Layout: FC<LayoutProps> = ({
   searchRender,
-  onCreateChannel,
+  onMessageIconClick,
   pageTitle,
   newButtonText,
   onNewClicked,
   onCancelClicked,
   isDisplayingFooter = true,
-  onMessageType,
   card,
   children,
   active,
@@ -84,8 +84,9 @@ export const Layout: FC<LayoutProps> = ({
           updateNotification={updateNotification}
           readAddMutation={readAddMutation}
           searchRender={searchRender}
-          onCreateChannel={onCreateChannel}
-          onMessageType={onMessageType}
+          onMessageIconClick={onMessageIconClick}
+          // onCreateChannel={onCreateChannel}
+          // onMessageType={onMessageType}
           notifications={notifications}
           relativeTime={relativeTime}
           taskManagerIFrameComponent={taskManagerIFrameComponent}

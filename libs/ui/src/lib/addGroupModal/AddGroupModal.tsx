@@ -4,18 +4,15 @@ import { Input } from 'antd'
 import { Button, BasicModal, Avatar } from '@pabau/ui'
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons'
 import styles from './AddGroupModal.module.less'
+import { Participant } from '../groupList/GroupList'
 
 interface Member {
   userName: string
   profileURL: string
 }
-interface groupData {
-  general: Member[]
-  design: Member[]
-}
 
 interface P {
-  groupData: groupData
+  groupData?: Participant[]
   searchMember?: Member[]
   isGroupModalVisible: boolean
   memberModalTitle?: string

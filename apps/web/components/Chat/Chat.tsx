@@ -1,15 +1,14 @@
+// eslint-disable graphql/template-strings
+
 import {
-  useChatListMessagesNotifySubscription,
-  useChatListRoomNotifySubscription,
   useCreateChannelMutation,
   useChatListRoomsQuery,
-  CreateChannelDocument,
-  Chat_Room,
-  Chat_Room_Participant,
-  Chat as ChatType,
   ChatListRoomsDocument,
   useChatDirectHistoryQuery,
   useChatRoomHistoryQuery,
+  useChatPostToChannelIdMutation,
+  useChatGetUsersQuery,
+  useChatPostToUserIdMutation,
 } from '@pabau/graphql'
 import {
   ChatMessage,
@@ -24,38 +23,114 @@ import dayjs from 'dayjs'
 import calendar from 'dayjs/plugin/calendar'
 import { client } from '../../pages/_app'
 import { useEffect, useState } from 'react'
+import { v4 as uuid } from 'uuid'
+import { gql } from '@apollo/client/core'
 
 dayjs.extend(calendar)
 
 type P = Pick<MessagesProps, 'closeDrawer' | 'visible'>
-export const Chat: React.FC<P> = (props) => {
-  useChatListRoomNotifySubscription({
-    onSubscriptionData: (options) => {
-      console.log('got ws data')
-    },
-  })
-  useChatListMessagesNotifySubscription()
+export const Chat = (props: P): JSX.Element => {
+  const { closeDrawer } = props
+  // useChatListRoomNotifySubscription({
+  //   onSubscriptionData: (options) => {
+  //     console.log('got ws data')
+  //   },
+  // })
+  // useChatListMessagesNotifySubscription()
   // const {
   //   data: { chat: data },
   // } = useChatListDirectMessagesSubscriptionSubscription({
   //   skip: typeof window === 'undefined',
   // })
-  const { data, error, loading } = useChatListRoomsQuery()
+  const { data, error, loading } = useChatListRoomsQuery({
+    fetchPolicy: 'cache-first',
+  })
   console.log('chat sub data', data, error, loading)
 
   const me = React.useContext(UserContext)
   console.log('USER FROM CONTEXT', me)
 
+  const [postToUser] = useChatPostToUserIdMutation()
+
+  const [postToChannel] = useChatPostToChannelIdMutation({
+    update(cache, args) {
+      console.log('apollo.cache.update', args)
+      console.log(
+        'identified cache item',
+        cache.identify(chatRoomHistory.chat_room_by_pk)
+      )
+      cache.modify({
+        id: cache.identify(chatRoomHistory.chat_room_by_pk),
+        fields: {
+          chats(existingItems = []) {
+            console.log('-->chats', existingItems)
+            console.log('about to insert item to cache', args)
+            const newItemRef = cache.writeFragment({
+              data: args.data.insert_chat_one,
+              fragment: gql`
+                fragment NewChat on chat {
+                  id
+                  message
+                  created_at
+                }
+              `,
+            })
+            console.log('inserted new item into cache!', args, newItemRef)
+            // ;[...existingItems, newItemRef].reduce((a, c) => {
+            //   if (c.__ref in a) console.error('Found a dupe!')
+            //   return {
+            //     ...a,
+            //     [c.__ref]: c,
+            //   }
+            // }, {})
+            return [...existingItems, newItemRef]
+          },
+          // 'chats(order_by: { created_at: desc }, limit: 15)': (
+          //   existingItems = []
+          // ) => {
+          //   console.log('WOW!!! chats(...) found', existingItems)
+          // },
+          // 'chats(order_by:{created_at:desc},limit:15)': (
+          //   existingItems = []
+          // ) => {
+          //   console.log('WOW!!! chats(...) found', existingItems)
+          // },
+          // chat_room(existingItems = []) {
+          //   console.log('-->chat_room', existingItems)
+          //   const newItemRef = cache.writeFragment({
+          //     data,
+          //     fragment: gql`
+          //       fragment NewItem on chat {
+          //         id
+          //         message
+          //         created_at
+          //       }
+          //     `,
+          //   })
+          //   return [...existingItems, newItemRef]
+          // },
+        },
+      })
+    },
+  })
+  const { data: membersData } = useChatGetUsersQuery({
+    fetchPolicy: 'cache-first',
+  })
+  const members = membersData?.users
+
   const {
     refetch: fetchRoomHistory,
     data: chatRoomHistory,
-  } = useChatRoomHistoryQuery({})
+  } = useChatRoomHistoryQuery({ fetchPolicy: 'cache-first' })
+  console.log('chatRoomHistory', chatRoomHistory)
   const {
     refetch: fetchDirectHistory,
     data: chatDirectHistory,
-  } = useChatDirectHistoryQuery({})
-  const [topic, setTopic] = useState<Group | Participant>()
+  } = useChatDirectHistoryQuery({ fetchPolicy: 'cache-first' })
+  const [topic, setTopic] = useState<Group | Participant | undefined>()
   useEffect(() => {
+    console.log('Chat.useEffect')
+
     if (typeof topic === 'object' && !('participants' in topic)) {
       console.log('fetching up to date chat logs!')
       fetchDirectHistory({ userId: Number.parseInt(topic.id) })
@@ -64,7 +139,7 @@ export const Chat: React.FC<P> = (props) => {
       console.log('fetching up to date channel logs!', topic.id.substring(1))
       fetchRoomHistory({ roomId: topic.id })
     }
-  }, [topic])
+  }, [topic, fetchDirectHistory, fetchRoomHistory])
 
   const [
     createChannelMutation,
@@ -73,8 +148,23 @@ export const Chat: React.FC<P> = (props) => {
 
   if (!data) return null
 
+  const chatHistory =
+    chatRoomHistory && chatRoomHistory.chat_room_by_pk.id === topic?.id
+      ? {
+          name: chatRoomHistory.chat_room_by_pk.name,
+          chats: [...chatRoomHistory.chat_room_by_pk.chats]
+            .sort((a, b) => (a.created_at < b.created_at ? -1 : 1))
+            .map<ChatMessage>((e) => ({
+              ...e,
+              userName: e.fromUser.full_name,
+              dateTime: dayjs().calendar(dayjs(e.created_at)),
+            })),
+        }
+      : null
+
   return (
     <PabauMessages
+      onClose={closeDrawer}
       onCreateChannel={async (name, description) => {
         client.writeQuery({
           query: ChatListRoomsDocument,
@@ -102,30 +192,100 @@ export const Chat: React.FC<P> = (props) => {
         // )
       }}
       onLoadMessages={(topic) => {
+        console.log('loading new topci', topic)
         setTopic(topic)
       }}
       //chatList={[...chatList, ...(chatRoomHistory || [])]}
-      chatHistory={{
-        name: chatRoomHistory?.chat_room[0]?.name,
-        chats: chatRoomHistory?.chat_room[0]?.chats.map((e) => ({
-          ...e,
-          userName: e.fromUser.full_name,
-          dateTime: dayjs().calendar(dayjs(e.created_at)),
-        })),
-      }}
-      roomList={data?.chat_room_participant.map(({ room }) => ({
+      chatHistory={chatHistory}
+      roomList={data?.chat_room_participant?.map<Group>(({ room }) => ({
         // ...room,
         id: room.id,
         name: `#${room.name}`,
         messages: room.chats.map<Group['messages'][number]>((e) => ({
           ...e,
           userName: e.fromUser.full_name,
-          dateTime: dayjs().calendar(dayjs(e.created_at)),
+          dateTime: dayjs(e.created_at).calendar(),
         })),
         participants: [],
         userName: `#${room.name} ${room.chats[0]?.fromUser.full_name}`,
-        dateTime: dayjs().calendar(dayjs(room.chats[0]?.created_at)),
       }))}
+      chatList={data?.chat.map<ChatMessage>(
+        ({ id, message, created_at, fromUser, toUser }) => ({
+          id,
+          message,
+          userName:
+            (fromUser.id === me.me.user
+              ? fromUser?.full_name
+              : toUser?.full_name) || '??',
+          // image,
+          dateTime: dayjs(created_at).calendar(),
+        })
+      )}
+      onMessageSend={(topic, message) => {
+        typeof topic === 'object' &&
+          !('participants' in topic) &&
+          postToUser({
+            variables: { userId: Number.parseInt(topic.id), message },
+          })
+
+        typeof topic === 'object' &&
+          'participants' in topic &&
+          postToChannel({
+            variables: { channelId: topic.id, message },
+            // update: (cache, mutationResult) => {
+            //   const newRow = mutationResult.data.insert_chat_one
+            //   // const data = cache.readQuery({
+            //   //   query: FETCH_TASKS, variables: {name: newTask.returning.name}
+            //   // });
+            //   cache.writeQuery({
+            //     query: ChatRoomHistoryDocument,
+            //     variables: { roomId: topic.id },
+            //     data: {
+            //       chat_room: { chats: [newRow] },
+            //     },
+            //   })
+            // },
+            // optimisticResponse: {
+            //   //__typename: "Mutation",
+            //   insert_chat_one: {
+            //     __typename: 'chat',
+            //     id: `being-created`,
+            //     message: '=================',
+            //     room: {
+            //       __typename: 'chat_room',
+            //       ...topic,
+            //     },
+            //   },
+            // },
+
+            // update: (cache, mutationResult) => {
+            //   cache.writeQuery({
+            //     query: ChatRoomHistoryDocument,
+            //     data: {
+            //       chat_room: {
+            //         id: topic.id,
+            //         chats: [
+            //           {
+            //             id: '__tba',
+            //             message: 'msg in offline cache!',
+            //             fromUser: {
+            //               name: '(me!)',
+            //             },
+            //           },
+            //         ],
+            //       },
+            //     },
+            //     variables: {
+            //       roomId: topic.id,
+            //     },
+            //   })
+            // },
+          })
+      }}
+      onMessageType={() => {
+        console.log('typing')
+      }}
+      members={members?.map<Participant>((e) => ({ ...e, id: String(e.id) }))}
       //   [
       //   ...chatList,
       //   //   .map((e) => {

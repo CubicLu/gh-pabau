@@ -1,4 +1,4 @@
-import React, { FC, useState, MouseEvent } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as EmojiIcon } from '../../assets/images/emoji-icon.svg'
 import { ReactComponent as AttachIcon } from '../../assets/images/attach-icon.svg'
@@ -7,17 +7,40 @@ import { ReactComponent as ActiveStoke } from '../../assets/images/stroke-active
 import styles from './ChatInput.module.less'
 
 interface P {
-  onMessageType?: (e: MouseEvent<HTMLElement>) => void
+  onMessageType?: () => void
+  onMessageSend?: (message: string) => void
 }
 
-const ChatInput: FC<P> = ({ ...props }) => {
+const ChatInput = (props: P): JSX.Element => {
+  const { onMessageSend, onMessageType } = props
   const { t } = useTranslation('common')
   const [message, setMessage] = useState<string>('')
 
+  //TODO: use Formik
   const handleChange = (e) => {
     setMessage(e.target.value)
-    props?.onMessageType?.(e)
+    onMessageType?.()
   }
+
+  const handleKeyPress: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit()
+      ;(e.target as HTMLInputElement).value = ''
+      setMessage('')
+    }
+  }
+
+  const handleSubmit = () => {
+    onMessageSend?.(message)
+  }
+
+  const inputRef = useRef<HTMLInputElement | null>(null)
+  useLayoutEffect(() => {
+    console.log('SETTING FOCUS', inputRef.current)
+    inputRef.current?.focus()
+  }, [inputRef.current])
+
+  inputRef.current?.focus()
 
   return (
     <div className={styles.messageInputContainer}>
@@ -26,6 +49,8 @@ const ChatInput: FC<P> = ({ ...props }) => {
         type="text"
         placeholder={t('message.input.placeholder')}
         onChange={handleChange}
+        onKeyPress={handleKeyPress}
+        ref={inputRef}
       />
       <div className={styles.messageSymbol}>
         <div className={styles.messageEmoji}>
@@ -35,7 +60,7 @@ const ChatInput: FC<P> = ({ ...props }) => {
           <AttachIcon />
         </div>
         <div className={styles.messageStroke}>
-          {message ? <ActiveStoke /> : <Stroke />}
+          {message ? <ActiveStoke onClick={handleSubmit} /> : <Stroke />}
         </div>
       </div>
     </div>

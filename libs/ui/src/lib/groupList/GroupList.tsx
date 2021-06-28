@@ -6,12 +6,12 @@ import styles from './GroupList.module.less'
 import { ChatMessage } from '../chatsList/ChatsList'
 import { GroupListChannelMultipleUnread } from './GroupListChannelMultipleUnread'
 import { GroupListChannelAllRead } from './GroupListChannelAllRead'
-import { Chat_Room } from '@pabau/graphql'
 
 export interface Participant {
   id: string
   name: string
   avatarURL?: string
+  isOnline?: boolean
 }
 export interface Group {
   id: string
@@ -29,7 +29,7 @@ interface P {
   groups?: Group[]
 }
 
-export const GroupList = (props: P) => {
+export const GroupList = (props: P): JSX.Element => {
   const { t } = useTranslation('common')
   const { groups, active, onClick } = props
 
@@ -67,14 +67,14 @@ export const GroupList = (props: P) => {
             onClick={() => handleClick(group)}
             group={group}
             key={group.id}
-            active={group === active}
+            active={active && group?.id === active?.id}
           />
         ) : (
           <GroupListChannelAllRead
             onClick={() => handleClick(group)}
             group={group}
             key={group.id}
-            active={group === active}
+            active={active && group?.id === active?.id}
           />
         )
       )}

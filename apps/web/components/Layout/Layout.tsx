@@ -21,6 +21,8 @@ import Search from '../Search'
 import styles from './Layout.module.less'
 import TaskManagerIFrame from '../TaskManagerIFrame/TaskManagerIFrame'
 import { Unauthorized } from '../Unauthorized'
+import CommonHeader from '../CommonHeader'
+import Chat from '../Chat/Chat'
 
 interface Notification {
   id: string
@@ -50,6 +52,7 @@ const Layout: FC<LayoutProps> = ({
 }) => {
   const [authenticated, user] = useLogin(false)
   const [notifications, setNotifications] = useState<Notification[]>()
+  const [showChat, setShowChat] = useState(false)
   const router = useRouter()
   const { data, error, loading } = useDisabledFeaturesQuery()
 
@@ -135,12 +138,27 @@ const Layout: FC<LayoutProps> = ({
           readAddMutation={insertReadNotificationOneMutation}
           user={userData}
           searchRender={() => <Search />}
-          onCreateChannel={onCreateChannel}
-          onMessageType={onMessageType}
+          onMessageIconClick={() => setShowChat((e) => !e)}
+          // onCreateChannel={onCreateChannel}
+          // onMessageType={onMessageType}
           legacyContent={!!legacyPage}
           taskManagerIFrameComponent={<TaskManagerIFrame />}
           {...props}
         >
+          <CommonHeader
+            // handleSearch={handleSearch}
+            // title={} t('setup.page.title')
+            showChat={showChat}
+            title="yoyo"
+            isShowSearch={true}
+          />
+          <Chat
+            // closeDrawer={}
+            closeDrawer={() => setShowChat(false)}
+            visible={showChat}
+            //closeDrawer={() => setMessageDrawer((e) => !e)}
+          />
+
           {!legacyPage ? children : <Iframe urlPath={legacyPage} />}
         </PabauLayout>
         <div className={styles.stickyPopoutContainer}>

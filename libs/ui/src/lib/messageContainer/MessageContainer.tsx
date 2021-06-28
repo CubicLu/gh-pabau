@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, useState } from 'react'
+import React, { useState } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 import { Badge, Select, Avatar, Input } from 'antd'
@@ -8,94 +8,82 @@ import {
   DownOutlined,
   UpOutlined,
 } from '@ant-design/icons'
-
 import { ReactComponent as ChatPopIcon } from '../../assets/images/chat-pop-icon.svg'
 import { ReactComponent as AddUserIcon } from '../../assets/images/add-user-icon.svg'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ReactComponent as ThreeDotVertical } from '../../assets/images/three-dot-v.svg'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ReactComponent as MessageRead } from '../../assets/images/message-read.svg'
-import { ChatsInput } from '../chatInput/ChatInput.stories'
 import styles from './MessageContainer.module.less'
 import { MessageItem } from './MessageItem'
 import { ChatMessage } from '../chatsList/ChatsList'
-import { Participant } from '../groupList/GroupList'
+import { Group, Participant } from '../groupList/GroupList'
+import ChatInput from '../chatInput/ChatInput'
 
 const { Option } = Select
 
-interface P {
+interface P
+  extends Pick<React.ComponentProps<typeof ChatInput>, 'onMessageType'> {
+  onMessageSend?(topic: Pick<Group | Participant, 'id'>, message: string): void
   members?: Participant[]
   onClick?: () => void
-  onMessageType?: (e: MouseEvent<HTMLElement>) => void
   onModalOpen?: () => void
-  isNewDm?: boolean
   onCloseNewDm?: () => void
   messages?: ChatMessage[]
+  selectedGroup?: Group
+  selectedContact?: Participant
 }
 
-export const MessageContainer: FC<P> = ({ ...props }) => {
-  const {
-    selectedContact,
-    selectedGroup,
-    onClick,
-    onMessageType,
-    groupData,
-    onModalOpen,
-    isNewDm,
-    members,
-    onCloseNewDm,
-    messages,
-  } = props
-
+export const MessageContainer = ({
+  onClick,
+  onMessageType,
+  onMessageSend,
+  onModalOpen,
+  members,
+  onCloseNewDm,
+  messages,
+  selectedGroup,
+  selectedContact,
+}: P): JSX.Element => {
   const { t } = useTranslation('common')
 
   const [chatSearchValue, setChatSearchValue] = useState('')
+  const [draftRecipient, setDraftReceipient] = useState<string | undefined>()
 
-  const handleSelectChange = (value) => {
-    console.log(`selected ${value}`)
+  const handleSelectChange: React.ComponentProps<typeof Select>['onChange'] = (
+    value
+  ) => {
+    setDraftReceipient(value?.toString())
   }
 
   const onHandleChatSearch = (value: string) => {
     setChatSearchValue(value)
   }
 
-  const renderMultipleField = (item) => {
-    const result = item.map((dataItem) => {
-      return dataItem.userName
-    })
-    return result.join(', ')
-  }
+  // const renderMultipleField = (items: ChatMessage[]) =>
+  //   items.map((e) => e.userName).join(', ')
 
   return (
     <div className={styles.chatBoxContainer}>
       {selectedContact && (
         <div className={styles.chatHeaderContainer}>
           <div className={styles.chatHeaderContact}>
-            {selectedContact.isMultiple ? (
-              <div className={styles.profileCircle}>
-                {selectedContact.data?.length}
-              </div>
-            ) : (
-              <Badge
-                dot
-                color={selectedContact.isOnline ? '#65CD98' : '#FF9E44'}
-                offset={[-2, 32]}
-                size="default"
-                style={{ height: '8px', width: '8px' }}
-              >
-                <Avatar size={40} src={selectedContact.profileURL} />
-              </Badge>
-            )}
+            <Badge
+              dot
+              color={selectedContact.isOnline ? '#65CD98' : '#FF9E44'}
+              offset={[-2, 32]}
+              size="default"
+              style={{ height: '8px', width: '8px' }}
+            >
+              <Avatar size={40} src={selectedContact.avatarURL} />
+            </Badge>
             <div className={styles.chatHeaderRight}>
               <p className={styles.chatHeaderName}>
-                {selectedContact.isMultiple
-                  ? renderMultipleField(selectedContact.data)
-                  : selectedContact.userName}
+                {selectedContact.name || '(no name)'}
               </p>
               <p className={styles.chatHeaderSub}>
                 {t('message.managingdirector')}
               </p>
-              {!selectedContact.isMultiple && (
-                <p className={styles.chatHeaderSub}>Managing Director</p>
-              )}
             </div>
           </div>
           <div className={styles.chatHeaderContact}>
@@ -107,7 +95,7 @@ export const MessageContainer: FC<P> = ({ ...props }) => {
           </div>
         </div>
       )}
-      {isNewDm && (
+      {!selectedGroup && !selectedContact && (
         <div
           className={classNames(
             styles.chatHeaderContainer,
@@ -124,22 +112,23 @@ export const MessageContainer: FC<P> = ({ ...props }) => {
           <div className={styles.chatWrapInput}>
             <div className={styles.chatHeaderContainer}>
               <Select
-                mode="multiple"
+                //TODO: support group DMs
+                // mode="multiple"
                 style={{ width: '100%' }}
                 placeholder={t('message.select.placeholder')}
                 onChange={handleSelectChange}
               >
-                {members?.map((member) => (
-                  <Option key={member.id} value={member.id} label={member.name}>
+                {members?.map(({ name, id, avatarURL }) => (
+                  <Option key={id} value={id} label={name}>
                     <div>
                       <span role="img">
                         <Avatar
                           className={styles.memberAvatar}
                           size={32}
-                          src={member.profileURL}
+                          src={avatarURL}
                         />
                       </span>
-                      {` ${member.userName}`}
+                      {name}
                     </div>
                   </Option>
                 ))}
@@ -148,10 +137,10 @@ export const MessageContainer: FC<P> = ({ ...props }) => {
           </div>
         </div>
       )}
-      {selectedGroup && groupData && (
+      {selectedGroup && (
         <div className={styles.chatHeaderContainer}>
           <div className={styles.chatHeader} onClick={() => onModalOpen?.()}>
-            <p className={styles.chatHeaderName}>#{selectedGroup}</p>
+            <p className={styles.chatHeaderName}>{selectedGroup.name}</p>
             <div className={styles.userWrapper}>
               <div className={styles.avtarList}>
                 <Avatar.Group
@@ -164,24 +153,24 @@ export const MessageContainer: FC<P> = ({ ...props }) => {
                   className={styles.avtarListInner}
                 >
                   <Avatar
-                    src={groupData[selectedGroup][0].profileURL}
+                    // src={groupData[selectedGroup][0].profileURL}
                     size={25}
                   />
                   <Avatar
-                    src={groupData[selectedGroup][1].profileURL}
+                    // src={groupData[selectedGroup][1].profileURL}
                     size={25}
                   />
                   <Avatar
-                    src={groupData[selectedGroup][2].profileURL}
+                    // src={groupData[selectedGroup][2].profileURL}
                     size={25}
                   />
                 </Avatar.Group>
                 <div className={styles.groupCount}>
-                  {groupData[selectedGroup].length}
+                  {/*{groupData[selectedGroup].length}*/}
                 </div>
               </div>
               <AddUserIcon style={{ margin: '0 20px' }} />
-              <ThreeDotVertical className={styles.dotIcon} />
+              {/*<ThreeDotVertical className={styles.dotIcon} />*/}
               <CloseOutlined
                 className={classNames(
                   styles.grayTextColor,
@@ -194,7 +183,7 @@ export const MessageContainer: FC<P> = ({ ...props }) => {
           </div>
         </div>
       )}
-      {!isNewDm && (
+      {(selectedContact || selectedGroup) && (
         <div
           className={classNames(
             styles.chatHeaderContainer,
@@ -233,7 +222,7 @@ export const MessageContainer: FC<P> = ({ ...props }) => {
                       border: '2px solid #fff',
                     }}
                   >
-                    <Avatar size={40} src={Linda} />
+                    <Avatar size={40} />
                   </Badge>
                 </div>
                 <div className={styles.chatText}>
@@ -292,7 +281,7 @@ export const MessageContainer: FC<P> = ({ ...props }) => {
                       border: '2px solid #fff',
                     }}
                   >
-                    <Avatar size={40} src={Linda} />
+                    <Avatar size={40} />
                   </Badge>
                 </div>
                 <div className={styles.chatText}>
@@ -356,7 +345,12 @@ export const MessageContainer: FC<P> = ({ ...props }) => {
               {messages.map((e) => (
                 <MessageItem
                   key={e.id}
-                  author={{ image: e.image }}
+                  author={{
+                    id: '???',
+                    name: e.userName,
+                    avatarURL: e.image,
+                    isOnline: true,
+                  }}
                   dateTime={e.dateTime}
                   message={e.message}
                   direction={'sent'}
@@ -366,7 +360,16 @@ export const MessageContainer: FC<P> = ({ ...props }) => {
           )}
         </div>
       </div>
-      <ChatsInput onMessageType={onMessageType} />
+      <ChatInput
+        onMessageType={onMessageType}
+        onMessageSend={(message) => {
+          const to =
+            selectedGroup ||
+            selectedContact ||
+            (draftRecipient && { id: draftRecipient, name: draftRecipient })
+          to && onMessageSend?.(to, message)
+        }}
+      />
     </div>
   )
 }

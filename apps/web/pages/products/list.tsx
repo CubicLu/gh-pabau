@@ -1,3 +1,5 @@
+//TODO: this file is not DRY
+
 import React, { FC, useState, useEffect } from 'react'
 import { useWindowSize } from 'react-use'
 import { Card, Typography, Input as AntInput, Divider, Select } from 'antd'
@@ -357,12 +359,6 @@ const Subscription: FC = () => {
           <NotificationDrawer
             openDrawer={openNotificationDrawer}
             closeDrawer={() => setNotificationDrawer((e) => !e)}
-          />
-        )}
-        {openMessageDrawer && (
-          <PabauMessages
-            visible={openMessageDrawer}
-            closeDrawer={() => setMessageDrawer((e) => !e)}
           />
         )}
       </Layout>

@@ -25,7 +25,7 @@ export interface ChatMessage {
 interface P {
   onClick?(ChatMessage): void
   active?: ChatMessage | false
-  messages: ChatMessage[]
+  messages?: ChatMessage[]
   showGroupChatBox?: boolean
   isNewDm?: boolean
   isHeaderShow?: boolean
@@ -52,7 +52,7 @@ export const ChatsList = (props: P) => {
         </div>
       )}
       <div>
-        {messages.map((message) => {
+        {messages?.map((message) => {
           const {
             id,
             message: messageBody,

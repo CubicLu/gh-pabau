@@ -32,7 +32,7 @@ export const GroupListChannelMultipleUnread = (props: P): JSX.Element => {
             styles.cursor
           )}
         >
-          {userName}
+          {group.name}
         </p>
         <h6
           className={classNames(styles.grayTextColor, styles.textSm, styles.mb)}

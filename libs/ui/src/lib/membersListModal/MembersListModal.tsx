@@ -76,7 +76,7 @@ export const MembersListModal: FC<P> = ({
                     <Avatar
                       className={styles.memberAvatar}
                       size={32}
-                      src={member.image}
+                      src={member.avatarURL}
                     />
                     <span className={styles.memberName}>
                       {member.firstName} {member.lastName}

@@ -28,9 +28,11 @@ interface P {
   isLeftOutlined?: boolean
   displayCreateButton?: boolean
   handleCreate?: () => void
+  showChat?: boolean
 }
 
 const CommonHeader: FC<P> = ({
+  showChat,
   handleSearch,
   title = 'Setup',
   isShowSearch,
@@ -44,7 +46,6 @@ const CommonHeader: FC<P> = ({
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
     false
   )
-  const [openMessageDrawer, setMessageDrawer] = useState<boolean>(true)
   const [showSearch, setShowSearch] = useState(false)
   const { t } = useTranslationI18()
   const { getParentSetupData } = useGridData(t)
@@ -117,7 +118,10 @@ const CommonHeader: FC<P> = ({
           searchRender={() => <Search />}
           onSideBarClosed={() => setMenuDrawer(() => !openMenuDrawer)}
           onClickNotificationDrawer={() => setNotificationDrawer((e) => !e)}
-          onClickChatDrawer={() => setMessageDrawer((e) => !e)}
+          onClickChatDrawer={() => {
+            //TODO:
+            // setMessageDrawer((e) => !e)
+          }}
         />
       )}
       {openNotificationDrawer && (
@@ -126,10 +130,6 @@ const CommonHeader: FC<P> = ({
           closeDrawer={() => setNotificationDrawer((e) => !e)}
         />
       )}
-      <Chat
-        visible={openMessageDrawer}
-        closeDrawer={() => setMessageDrawer((e) => !e)}
-      />
     </div>
   )
 }

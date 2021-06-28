@@ -26,6 +26,9 @@ interface FormikProps {
 }
 
 export type MessagesProps = {
+  /** List of users/staff that is possible to add to a room */
+  members: Participant[]
+
   /** DMs */
   chatList?: ChatMessage[]
 
@@ -35,7 +38,7 @@ export type MessagesProps = {
   /** The focused channel */
   chatHistory?: {
     name: string
-    chats?: ChatMessage[]
+    chats: ChatMessage[]
   }
 
   /** Close the whole chat panel */
@@ -52,18 +55,27 @@ export type MessagesProps = {
   ) => void
 
   onMessageType?: (e: MouseEvent<HTMLElement>) => void
-} & Pick<DrawerProps, 'visible'>
+
+  onClose?(): void
+} & Pick<DrawerProps, 'visible'> &
+  Pick<
+    React.ComponentProps<typeof MessageContainer>,
+    'onMessageType' | 'onMessageSend'
+  >
 
 export const PabauMessages = ({
+  onClose,
   closeDrawer,
   onMessageType,
+  onMessageSend,
   onCreateChannel,
   chatList = [],
   roomList,
   chatHistory,
   onLoadMessages,
-  ...props
-}: MessagesProps) => {
+  members,
+  visible,
+}: MessagesProps): JSX.Element => {
   const WidthEnum = {
     MessageBox: 392,
     ChatBox: 522,
@@ -103,12 +115,12 @@ export const PabauMessages = ({
     setIsPrivate(checked)
   }
 
-  const onCreate = async () => {
-    onCreateChannel
-      ? await onCreateChannel(name, description, isPrivate)
-      : toggleCreateChannel()
-    toggleCreateChannel()
-  }
+  // const onCreate = async () => {
+  //   onCreateChannel
+  //     ? await onCreateChannel(name, description, isPrivate)
+  //     : toggleCreateChannel()
+  //   toggleCreateChannel()
+  // }
 
   const toggleCreateChannel = () => {
     setIsCreateChannel(!isCreateChannel)
@@ -199,11 +211,11 @@ export const PabauMessages = ({
 
   return (
     <Drawer
-      {...props}
+      visible={visible}
       width={drawerWidth}
       placement="right"
       closable={false}
-      onClose={() => alert('TODO 65498')}
+      onClose={() => onClose?.()}
       className={styles.messagesDrawer}
     >
       <div className={styles.messageBox}>
@@ -253,7 +265,7 @@ export const PabauMessages = ({
                   )}
                   onClick={globalSearch}
                 />
-                {view && ['dm', 'group'].includes(view) && (
+                {false && view && (
                   <>
                     <h1>???</h1>
                     <CloseOutlined
@@ -392,27 +404,29 @@ export const PabauMessages = ({
           )}
         </Formik>
       </div>
-      {view === 'dm' && (
+      {view && typeof view === 'object' && !('participants' in view) && (
         <MessageContainer
-          selectedContact={selectedContact}
+          onMessageSend={onMessageSend}
+          onMessageType={onMessageType}
+          selectedContact={view}
           onClick={closeDrawer}
         />
       )}
       {view && typeof view === 'object' && 'participants' in view && (
         <div className={styles.chatBoxContainer}>
           <MessageContainer
+            onMessageSend={onMessageSend}
+            onMessageType={onMessageType}
+            selectedGroup={view}
             onClick={closeDrawer}
-            messages={[
-              ...((view.name.substring(1) === chatHistory?.name &&
-                chatHistory.chats) ||
-                []),
-            ]}
+            messages={chatHistory?.chats}
             members={view.participants}
             // groupData={{}}
             // selectedGroup={view}
             onModalOpen={() => setIsGroupModalVisible(true)}
           />
           <AddGroupModal
+            groupData={view.participants}
             memberModalTitle={view.name}
             // groupData={groupData}
             // selectedGroup={selectedGroup}
@@ -423,7 +437,7 @@ export const PabauMessages = ({
           />
           <AddPeopleModal
             isAddModalVisible={isAddModalVisible}
-            // members={members}
+            members={members}
             // selectedGroup={selectedGroup}
             onOk={handleAddOk}
             onAddMembers={onAddMembers}
@@ -433,11 +447,11 @@ export const PabauMessages = ({
       )}
       {view === 'new-dm' && (
         <MessageContainer
-          isNewDm={isNewDm}
           members={members}
           messages={[]}
           onCloseNewDm={closeNewDm}
-          onMessageType={handleMessageType}
+          onMessageSend={onMessageSend}
+          onMessageType={onMessageType}
         />
       )}
     </Drawer>

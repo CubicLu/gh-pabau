@@ -18,7 +18,7 @@ subscription chatListRoomNotify {
     room {
       id
       name
-      chats(limit: 1, order_by: {created_at: desc}) {
+      chats(limit: 1, order_by: { created_at: desc }) {
         id
         message
         from
@@ -28,24 +28,15 @@ subscription chatListRoomNotify {
 }
 
 query chatRoomHistory($roomId: uuid!) {
-  chat_room(
-    where: {
-      id: {
-        _eq: $roomId
-      }
-    }
+  chat_room_by_pk(
+    id: $roomId
   ) {
     id
     name
     participants {
       id
     }
-    chats(
-      order_by: {
-        created_at: asc
-      }
-      limit: 15
-    ) {
+    chats(order_by: { created_at: desc }, limit: 15) @connection(key: "chats") {
       id
       message
       created_at
@@ -63,13 +54,15 @@ query chatDirectHistory($userId: Int!) {
   chat(
     where: {
       _and: {
-        _or:{
-          to: {_eq: $userId}
-          from: {_eq: $userId}
-        }
-        to_channel: {_is_null: true}
+        _or: { to: { _eq: $userId }, from: { _eq: $userId } }
+        to_channel: { _is_null: true }
       }
-    }) {
+    }
+    order_by: {
+      created_at: desc
+    }
+    limit: 20
+  ) {
     id
     message
     created_at
@@ -90,11 +83,12 @@ query chatDirectHistory($userId: Int!) {
 
 query chatListRooms {
   chat_room_participant {
+
     id
     room {
       id
       name
-      chats(limit: 1, order_by: {created_at: desc}) {
+      chats(limit: 1, order_by: { created_at: desc }) {
         id
         message
         from
@@ -105,10 +99,12 @@ query chatListRooms {
           name
         }
         toUser {
+          id
           username
           full_name
         }
         fromUser {
+          id
           username
           full_name
         }
@@ -130,6 +126,7 @@ query chatListRooms {
     created_at
     to
     toUser {
+      id
       username
       full_name
     }
@@ -143,6 +140,7 @@ query chatListRooms {
       }
     }
     fromUser {
+      id
       username
       full_name
       image
@@ -155,13 +153,10 @@ mutation createChannel($name: String!, $description: String) {
     object: {
       room: {
         on_conflict: {
-          constraint: chat_room_company_name_key,
+          constraint: chat_room_company_name_key
           update_columns: name
-        },
-        data: {
-          name: $name
-          description: $description
         }
+        data: { name: $name, description: $description }
       }
     }
   ) {
@@ -173,19 +168,33 @@ mutation createChannel($name: String!, $description: String) {
   }
 }
 
-mutation postToChannelId($message: String!, $channelId: uuid!) {
-  insert_chat(objects: {message: $message, to_channel: $channelId}) {
-    returning {
-      __typename
-      id
-      message
-      #      to_channel
-      room {
-        __typename
-        id
-        name
-      }
-    }
-  }
+mutation chatPostToChannelId($message: String!, $channelId: uuid!) {
+  insert_chat_one(object: { message: $message,   to_channel: $channelId }) {
+    __typename
+    id
+    message
+    #      to_channel
 
+    #    room {
+    #      __typename
+    #      id
+    #      name
+    #    }
+  }
+}
+
+# Posts a message to a user
+mutation chatPostToUserId($message: String!, $userId: Int!) {
+  insert_chat_one(object: { message: $message, to: $userId }) {
+    id
+  }
+}
+
+# Get all staff/users that is possible to add to a dchat room
+query chatGetUsers {
+  users {
+    id
+    name: full_name
+    avatarURL: image
+  }
 }

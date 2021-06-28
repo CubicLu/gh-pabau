@@ -1,6 +1,6 @@
 {
   "name": "hasura",
-  "schemaPath": "./schema.graphql",
+  "schemaPath": "./hasura/schema.graphql",
   "extensions": {
     "endpoints": {
       "production": {
@@ -22,7 +22,6 @@
     }
   },
   "includes": [
-    "hasura/schema.graphql",
     "libs/**/*.graphql",
     "apps/**/*.tsx"
   ]
