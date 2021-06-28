@@ -133,6 +133,9 @@ HASURA_GRAPHQL_ADMIN_SECRET=madskills
 Now to export from prod, on a daily basis, on a fresh checkout of master:
 
 ```bash
+git checkout master \
+ && git pull
+ 
 rm -rf hasura/metadata \
   && NODE_ENV=production yarn hasura:export \
   && git checkout master hasura/metadata/remote_schemas.yaml \

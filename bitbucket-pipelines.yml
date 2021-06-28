@@ -83,7 +83,7 @@ pipelines:
               size: 2x
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
-                - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:export --base=origin/master --prod
+                - NEXT_PUBLIC_GRAPHQL_ENDPOINT='https://api-v2.pabau.com/v1/graphql' NEXT_PUBLIC_WS_ENDPOINT='wss://api-v2.pabau.com/v1/graphql' NODE_OPTIONS=--max_old_space_size=4096 yarn affected:export --base=origin/master --prod
               artifacts:
                 - dist/**
 
@@ -264,7 +264,7 @@ pipelines:
               size: 2x
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
-                - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:export --base=HEAD~1 --prod
+                - NEXT_PUBLIC_GRAPHQL_ENDPOINT='https://api-v2.pabau.com/v1/graphql' NEXT_PUBLIC_WS_ENDPOINT='wss://api-v2.pabau.com/v1/graphql' NODE_OPTIONS=--max_old_space_size=4096 yarn affected:export --base=HEAD~1 --prod
               artifacts:
                 - dist/**
 
