@@ -24,6 +24,11 @@ interface P {
   customFilter?: () => JSX.Element
   setEditPage?(e): void
   draggable?: boolean
+  getLastOrder?: DocumentNode
+  isCustomOrder?: boolean
+  isDependentField?: boolean
+  displayColor?: boolean
+  displayLock?: boolean
   isNestedQuery?: boolean
   isFilterNumber?: boolean
   isDataIntegrityCheck?: boolean

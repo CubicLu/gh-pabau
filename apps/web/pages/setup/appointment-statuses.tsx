@@ -1,211 +1,158 @@
-import { gql } from '@apollo/client'
+import React, { useContext } from 'react'
 import { NextPage } from 'next'
-import React from 'react'
+import {
+  AppointmentStatusDocument,
+  AppointmentStatusAggregateDocument,
+  LastAppointmentStatusOrderDocument,
+  CreateOneBookingStatusDocument,
+  UpdateOneBookingStatusDocument,
+  DeleteOneBookingStatusDocument,
+} from '@pabau/graphql'
 import CrudLayout from '../../components/CrudLayout/CrudLayout'
-
-const LIST_QUERY = gql`
-  query appointment_status(
-    $isActive: Boolean = true
-    $offset: Int
-    $limit: Int
-  ) {
-    appointment_status(
-      offset: $offset
-      limit: $limit
-      order_by: { order: desc }
-      where: { is_active: { _eq: $isActive } }
-    ) {
-      __typename
-      id
-      name
-      appointment_type
-      color
-      icon
-      is_active
-      track_time
-      order
-    }
-  }
-`
-const LIST_AGGREGATE_QUERY = gql`
-  query appointment_status_aggregate($isActive: Boolean = true) {
-    appointment_status_aggregate(where: { is_active: { _eq: $isActive } }) {
-      aggregate {
-        count
-      }
-    }
-  }
-`
-const DELETE_MUTATION = gql`
-  mutation delete_appointment_status($id: uuid!) {
-    delete_appointment_status_by_pk(id: $id) {
-      __typename
-      id
-    }
-  }
-`
-const ADD_MUTATION = gql`
-  mutation insert_appointment_status_one(
-    $name: String!
-    $appointment_type: String!
-    $color: String
-    $icon: String
-    $track_time: Boolean
-    $is_active: Boolean
-  ) {
-    insert_appointment_status_one(
-      object: {
-        name: $name
-        appointment_type: $appointment_type
-        color: $color
-        icon: $icon
-        track_time: $track_time
-        is_active: $is_active
-      }
-    ) {
-      __typename
-      id
-      name
-      appointment_type
-      color
-      icon
-      is_active
-      track_time
-    }
-  }
-`
-const EDIT_MUTATION = gql`
-  mutation update_appointment_status_by_pk(
-    $id: uuid!
-    $name: String!
-    $appointment_type: String!
-    $color: String
-    $icon: String
-    $track_time: Boolean
-    $is_active: Boolean
-    $order: Int
-  ) {
-    update_appointment_status_by_pk(
-      pk_columns: { id: $id }
-      _set: {
-        name: $name
-        appointment_type: $appointment_type
-        color: $color
-        icon: $icon
-        track_time: $track_time
-        is_active: $is_active
-        order: $order
-      }
-    ) {
-      __typename
-      id
-      name
-      appointment_type
-      color
-      icon
-      is_active
-      track_time
-      order
-    }
-  }
-`
-
-const UPDATE_ORDER_MUTATION = gql`
-  mutation update_appointment_status_order($id: uuid!, $order: Int) {
-    update_appointment_status(
-      where: { id: { _eq: $id } }
-      _set: { order: $order }
-    ) {
-      affected_rows
-    }
-  }
-`
-
-const schema: Schema = {
-  full: 'Appointment Status',
-  fullLower: 'appointment status',
-  short: 'Appointment Status',
-  shortLower: 'appointment statuses',
-  shemaType: 'Appointment Status',
-  createButtonLabel: 'Create Appointment Status',
-  messages: {
-    create: {
-      success: 'You have successfully created a appointment status',
-      error: 'While creating a appointment status',
-    },
-    update: {
-      success: 'You have successfully updated a appointment status',
-      error: 'While updating a appointment status',
-    },
-    delete: {
-      success: 'You have successfully deleted a appointment status',
-      error: 'While deleting a appointment status',
-    },
-  },
-  fields: {
-    appointment_type: {
-      radio: [
-        {
-          label: 'Line',
-          value: 'Line',
-        },
-        {
-          label: 'Icon',
-          value: 'Icon',
-        },
-      ],
-      type: 'radio-group',
-      visible: false,
-      defaultvalue: 'Line',
-    },
-    icon: {
-      type: 'icon',
-      visible: false,
-    },
-    name: {
-      full: 'Friendly Name',
-      fullLower: 'friendly name',
-      short: 'Name',
-      shortLower: 'name',
-      min: 2,
-      max: 50,
-      example: 'Running Late',
-      cssWidth: 'max',
-      type: 'string',
-    },
-    color: {
-      full: 'Color',
-      type: 'color-picker',
-      visible: false,
-      required: true,
-      validateMsg: 'Please select at least one color.',
-    },
-    track_time: {
-      full: 'Track time',
-      type: 'checkbox',
-      defaultvalue: true,
-      visible: false,
-      description: 'Track time.',
-    },
-    is_active: {
-      full: 'Active',
-      type: 'boolean',
-      defaultvalue: true,
-    },
-  },
-}
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { UserContext } from '../../context/UserContext'
 
 export const AppointmentStatuses: NextPage = () => {
+  const { t } = useTranslationI18()
+  const user = useContext(UserContext)
+
+  const schema: Schema = {
+    full: t('setup.appointmentstatuses.schema.title'),
+    fullLower: t('setup.appointmentstatuses.schema.title.lowercase'),
+    short: t('setup.appointmentstatuses.schema.title'),
+    shortLower: t('setup.appointmentstatuses.schema.title.lowercase'),
+    shemaType: t('setup.appointmentstatuses.schema.schematype'),
+    createButtonLabel: t(
+      'setup.appointmentstatuses.schema.create.appointmentstatuses'
+    ),
+    messages: {
+      create: {
+        success: t(
+          'setup.appointmentstatuses.schema.created.appointmentstatuses.message'
+        ),
+        error: t(
+          'setup.appointmentstatuses.schema.create.appointmentstatuses.error.message'
+        ),
+      },
+      update: {
+        success: t(
+          'setup.appointmentstatuses.schema.updated.appointmentstatuses.message'
+        ),
+        error: t(
+          'setup.appointmentstatuses.schema.update.appointmentstatuses.error.message'
+        ),
+      },
+      delete: {
+        success: t(
+          'setup.appointmentstatuses.schema.deleted.appointmentstatuses.message'
+        ),
+        error: t(
+          'setup.appointmentstatuses.schema.delete.appointmentstatuses.error.message'
+        ),
+      },
+    },
+    fields: {
+      indicator: {
+        radio: [
+          {
+            label: t(
+              'setup.appointmentstatuses.schema.fields.appointmenttype.line'
+            ),
+            value: 'LINE',
+          },
+          {
+            label: t(
+              'setup.appointmentstatuses.schema.fields.appointmenttype.icon'
+            ),
+            value: 'ICON',
+          },
+        ],
+        type: 'radio-group',
+        visible: false,
+        defaultvalue: 'EMPTY_ENUM_VALUE',
+      },
+      icon: {
+        type: 'icon',
+        visible: false,
+      },
+      name: {
+        full: 'Friendly Name',
+        fullLower: 'friendly name',
+        short: t('setup.appointmentstatuses.schema.fields.short.name'),
+        shortLower: t(
+          'setup.appointmentstatuses.schema.fields.short.name.lowercase'
+        ),
+        min: 2,
+        max: 50,
+        example: t('setup.appointmentstatuses.schema.fields.name.example'),
+        cssWidth: 'max',
+        type: 'string',
+      },
+      icon_color: {
+        full: t('setup.appointmentstatuses.schema.fields.color'),
+        type: 'color-picker',
+        visible: false,
+        required: false,
+        validateMsg: t(
+          'setup.appointmentstatuses.schema.fields.color.validatemsg'
+        ),
+      },
+      track_time: {
+        full: t('setup.appointmentstatuses.schema.fields.tracktime'),
+        type: 'checkbox',
+        defaultvalue: true,
+        visible: false,
+        description: t(
+          'setup.appointmentstatuses.schema.fields.tracktime.description'
+        ),
+      },
+      basic_field: {
+        full: t('setup.appointmentstatuses.schema.fields.active'),
+        type: 'boolean',
+        defaultvalue: false,
+        visible: false,
+      },
+    },
+    filter: {
+      primary: {
+        name: 'is_active',
+        type: 'boolean',
+        default: true,
+        active: true,
+        inactive: false,
+      },
+    },
+    disable: {
+      type: 'boolean',
+      conditionalField: 'basic_field',
+      deleteable: true,
+    },
+    ordering: {
+      name: 'ord',
+      type: 'number',
+    },
+    company: 'Company',
+  }
+
   return (
     <CrudLayout
       schema={schema}
       tableSearch={false}
-      addQuery={ADD_MUTATION}
-      deleteQuery={DELETE_MUTATION}
-      listQuery={LIST_QUERY}
-      editQuery={EDIT_MUTATION}
-      aggregateQuery={LIST_AGGREGATE_QUERY}
-      updateOrderQuery={UPDATE_ORDER_MUTATION}
+      addFilter={false}
+      addQuery={CreateOneBookingStatusDocument}
+      deleteQuery={DeleteOneBookingStatusDocument}
+      listQuery={AppointmentStatusDocument}
+      editQuery={UpdateOneBookingStatusDocument}
+      aggregateQuery={AppointmentStatusAggregateDocument}
+      updateOrderQuery={UpdateOneBookingStatusDocument}
+      getLastOrder={LastAppointmentStatusOrderDocument}
+      isCustomOrder={true}
+      isDependentField={true}
+      requireAdminAccess={true}
+      displayColor={true}
+      displayLock={true}
+      isCodeGen={true}
+      {...user}
     />
   )
 }

@@ -9,6 +9,7 @@ import {
   Table,
   useLiveQuery,
 } from '@pabau/ui'
+import { LastAppointmentStatusOrderDocument } from '@pabau/graphql'
 import { Typography } from 'antd'
 import classNames from 'classnames'
 import { Formik, FormikErrors } from 'formik'
@@ -22,6 +23,8 @@ import CrudModal from './CrudModal'
 import styles from './CrudTable.module.less'
 
 const { Title } = Typography
+
+let lastOrder = 0
 interface P {
   schema: Schema
   crudLayoutRef: RefObject<HTMLDivElement>
@@ -44,6 +47,11 @@ interface P {
   customFilter?: () => JSX.Element
   setEditPage?(e): void
   draggable?: boolean
+  getLastOrder?: DocumentNode
+  isCustomOrder?: boolean
+  isDependentField?: boolean
+  displayColor?: boolean
+  displayLock?: boolean
   isNestedQuery?: boolean
   isFilterNumber?: boolean
   isDataIntegrityCheck?: boolean
@@ -81,6 +89,11 @@ const CrudTable: FC<P> = ({
   customFilter,
   setEditPage,
   draggable = true,
+  getLastOrder = LastAppointmentStatusOrderDocument,
+  isCustomOrder = false,
+  isDependentField = false,
+  displayColor = false,
+  displayLock = false,
   isNestedQuery = false,
   isFilterNumber = false,
   isDataIntegrityCheck = false,
@@ -193,6 +206,14 @@ const CrudTable: FC<P> = ({
     aggregateQuery,
     getAggregateQueryVariables()
   )
+
+  const { data: lastOrderData } = useLiveQuery(getLastOrder, {
+    skip: !isCustomOrder,
+  })
+
+  if (lastOrderData?.[0].order) {
+    lastOrder = lastOrderData?.[0].order
+  }
 
   const { data: dataIntegrityCheckData } = useLiveQuery(
     dataIntegrityCheckQuery,
@@ -327,6 +348,14 @@ const CrudTable: FC<P> = ({
 
   const { fields } = schema
 
+  const getTrackTime = (value) => {
+    return value.track_time ? 1 : 0
+  }
+
+  const getDependentValue = (name) => {
+    return name.toLowerCase().replace(/[^\dA-Za-z]+/g, '')
+  }
+
   const getCodeGenEditVariableValues = (values) => {
     const { key, __typename, id, ...rest } = values
     let newEditValues = {}
@@ -340,7 +369,20 @@ const CrudTable: FC<P> = ({
 
   const onSubmit = async (values, { resetForm }) => {
     setFormSubmitAllowedStatus(false)
-    if (isFilterNumber && schema?.filter?.primary?.type === 'number') {
+    if (draggable && isCustomOrder && !values.id) {
+      values = {
+        ...values,
+        order: lastOrder + 1,
+        track_time: getTrackTime(values.track_time),
+        value: getDependentValue(values.name),
+      }
+    } else if (isDependentField && values.id) {
+      values = {
+        ...values,
+        track_time: getTrackTime(values.track_time),
+        value: getDependentValue(values.name),
+      }
+    } else if (isFilterNumber && schema?.filter?.primary?.type === 'number') {
       values = {
         ...values,
         [schema?.filter?.primary?.name]: values[schema?.filter?.primary?.name]
@@ -361,6 +403,21 @@ const CrudTable: FC<P> = ({
       }
     } else {
       newValues = values
+    }
+
+    if (isCodeGen && isCustomOrder) {
+      if (values.id) {
+        newValues.data = {
+          ...newValues.data,
+          [schema?.ordering?.name ?? 'order']: { set: values.order },
+        }
+      } else {
+        newValues.data = {
+          ...newValues.data,
+          [schema?.ordering?.name ?? 'order']: values.order,
+        }
+      }
+      delete newValues.data.order
     }
 
     await (values.id
@@ -738,6 +795,8 @@ const CrudTable: FC<P> = ({
               }
             }}
             needTranslation={needTranslation}
+            displayColor={displayColor}
+            displayLock={displayLock}
           />
         </div>
         <Pagination

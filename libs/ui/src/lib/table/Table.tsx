@@ -76,6 +76,8 @@ export type TableType<T = object> = {
   showSizeChanger?: boolean
   isHover?: boolean
   loading?: boolean
+  displayColor?: boolean
+  displayLock?: boolean
   columns?: CustomColumns[]
   defaultSkeletonRows?: number
   needEvent?: boolean
@@ -99,9 +101,11 @@ export const Table: FC<TableType> = ({
   onAddTemplate,
   searchTerm = '',
   needTranslation,
-  loading,
   showSizeChanger,
-  defaultSkeletonRows = 10,
+  loading,
+  displayColor = false,
+  displayLock = false,
+  defaultSkeletonRows = 50,
   needEvent = false,
   ...props
 }) => {
@@ -154,15 +158,34 @@ export const Table: FC<TableType> = ({
   const renderTableSource = (val, rowData) => {
     return (
       <div className={styles.alignItems}>
-        {isCustomColorExist && renderCustomColor(val, rowData)}
+        {(isCustomColorExist || displayColor) &&
+          renderCustomColor(val, rowData)}
         {val}
         {padlocked?.includes(val) && (
           <div style={{ marginLeft: '6px' }}>
             <LockOutlined />
           </div>
         )}
+        {displayLock ? (
+          rowData['basic_field'] ? (
+            <div style={{ marginLeft: '6px' }}>
+              <LockOutlined />
+            </div>
+          ) : null
+        ) : null}
         {isCustomIconExist && rowData.icon && (
-          <FontAwesomeIcon icon={rowData.icon} className={styles.tableIcon} />
+          <FontAwesomeIcon
+            style={
+              rowData?.icon_color &&
+              displayColor && { color: rowData.icon_color }
+            }
+            icon={
+              rowData.icon.includes('-') && rowData.icon.includes('fa')
+                ? rowData.icon.replace(/fa-/gi, 'fa,').split(',')
+                : rowData.icon
+            }
+            className={styles.tableIcon}
+          />
         )}
       </div>
     )
@@ -170,10 +193,26 @@ export const Table: FC<TableType> = ({
 
   const renderCustomColor = (val, rowData) => {
     return (
-      <div
-        style={{ background: rowData.color }}
-        className={styles.customColor}
-      />
+      <div>
+        {displayColor ? (
+          <div
+            style={{
+              background:
+                rowData['name'] === 'Complete'
+                  ? '#5cd828'
+                  : rowData['name'] === 'no-show'
+                  ? '#f15d3b'
+                  : rowData.color || rowData?.icon_color,
+            }}
+            className={styles.customColor}
+          />
+        ) : (
+          <div
+            style={{ background: rowData.color }}
+            className={styles.customColor}
+          />
+        )}
+      </div>
     )
   }
 

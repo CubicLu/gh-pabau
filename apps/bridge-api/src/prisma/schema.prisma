@@ -813,14 +813,14 @@ model BookingStatus {
   id          Int                         @id @default(autoincrement())
   name        String
   value       String
-  icon        String
-  icon_color  String
-  company_id  Int
+  icon        String?
+  icon_color  String?
+  company_id  Int?
   indicator   booking_statuses_indicator? @default(EMPTY_ENUM_VALUE)
   basic_field Boolean
   ord         Float?
   track_time  Int                         @default(1)
-  Company     Company                     @relation(fields: [company_id], references: [id])
+  Company     Company?                    @relation(fields: [company_id], references: [id])
 
   @@unique([value, company_id], name: "value")
   @@map("booking_statuses")

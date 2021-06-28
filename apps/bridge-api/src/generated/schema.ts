@@ -653,14 +653,14 @@ export interface BookingStatus {
   id: number;
   name: string;
   value: string;
-  icon: string;
-  icon_color: string;
-  company_id: number;
+  icon?: string;
+  icon_color?: string;
+  company_id?: number;
   indicator?: booking_statuses_indicator;
   basic_field: boolean;
   ord?: number;
   track_time: number;
-  Company: Company;
+  Company?: Company;
 }
 
 export interface BookingStatusChange {

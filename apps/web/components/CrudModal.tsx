@@ -196,7 +196,13 @@ const CrudModal: FC<P> = ({
             ? t('common-label-create')
             : t('common-label-save')
         }
-        dangerButtonText={editingRow?.id && t('common-label-delete')}
+        dangerButtonText={
+          schema?.disable?.deleteable && editingRow?.id
+            ? !formik.values[schema?.disable.conditionalField]
+              ? t('common-label-delete')
+              : null
+            : editingRow?.id && t('common-label-delete')
+        }
         specialBooleanLabel={
           !!specialFormElement && t('marketingsource-status-label')
         }
