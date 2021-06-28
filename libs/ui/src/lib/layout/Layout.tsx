@@ -2,7 +2,7 @@ import { MutationFunction } from '@apollo/client'
 import { Footer, Header, Menu } from '@pabau/ui'
 import { Card, Layout as AntLayout } from 'antd'
 import classNames from 'classnames'
-import React, { FC, MouseEvent, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { ReactComponent as IllustrationSvg } from './example.svg'
 import styles from './Layout.module.less'
 

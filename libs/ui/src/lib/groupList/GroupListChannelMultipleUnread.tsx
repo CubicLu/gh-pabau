@@ -12,7 +12,7 @@ interface P {
 
 export const GroupListChannelMultipleUnread = (props: P): JSX.Element => {
   const { onClick, active, group } = props
-  const { dateTime, userName } = group.messages[0]
+  const { dateTime } = group.messages[0]
   return (
     <div
       onClick={() => onClick?.()}

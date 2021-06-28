@@ -58,7 +58,7 @@ export const ImageSelectorModal: FC<ImageSelectorModalProps> = (props) => {
     searchTimer.current && clearTimeout(searchTimer.current)
     searchTimer.current = ((setTimeout(() => {
       onSearch(search)
-    }, 300) as unknown) as number | null) as any
+    }, 300) as unknown) as number | null) as never
   }, [search])
 
   useEffect(() => {
