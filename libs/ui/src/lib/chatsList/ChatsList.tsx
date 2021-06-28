@@ -1,7 +1,7 @@
-import React, { FC, useState, useEffect } from 'react'
+import React from 'react'
 import classNames from 'classnames'
 import { Badge } from 'antd'
-import { Avatar, Group } from '@pabau/ui'
+import { Avatar } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as MessageRead } from '../../assets/images/message-read.svg'
 import styles from './ChatsList.module.less'
@@ -31,16 +31,9 @@ interface P {
   isHeaderShow?: boolean
 }
 
-export const ChatsList = (props: P) => {
+export const ChatsList = (props: P): JSX.Element => {
   const { t } = useTranslation('common')
   const { messages, active, onClick } = props
-
-  const renderMultipleField = (item) => {
-    const result = item.map((dataItem) => {
-      return dataItem.userName
-    })
-    return result.join(', ')
-  }
 
   return (
     <div>

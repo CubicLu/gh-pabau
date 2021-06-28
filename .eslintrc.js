@@ -16,7 +16,7 @@ module.exports = {
     'unicorn/no-useless-undefined': 0,
     'unicorn/filename-case': 0,
     'unicorn/prefer-node-protocol': 0,
-    'graphql/template-strings': 2,
+    // 'graphql/template-strings': 2,
 
     //TODO: turn these on in the future
     'unicorn/no-abusive-eslint-disable': 0,

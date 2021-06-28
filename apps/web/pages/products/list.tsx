@@ -21,7 +21,6 @@ import {
   BasicModal as CreateCategory,
   MobileSidebar,
   NotificationDrawer,
-  PabauMessages,
 } from '@pabau/ui'
 import SearchGlobal from '../../components/Search'
 import CreateProduct from '../../components/Setup/ProductList/CreateProduct'
@@ -96,7 +95,7 @@ const Subscription: FC = () => {
   const [showImageSelector, setShowImageSelector] = useState(false)
   const [openMenuDrawer, setMenuDrawer] = useState(false)
   const [openNotificationDrawer, setNotificationDrawer] = useState(false)
-  const [openMessageDrawer, setMessageDrawer] = useState(false)
+  const [, setMessageDrawer] = useState(false)
 
   const handleSearch = (val) => {
     console.log('val', val)

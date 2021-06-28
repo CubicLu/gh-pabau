@@ -17,7 +17,6 @@ import Search from '../components/Search'
 import { useGridData } from '../hooks/useGridData'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
 import styles from './Setup.module.less'
-import Chat from './Chat/Chat'
 
 interface P {
   handleSearch?: (searchTerm: string) => void

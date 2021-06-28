@@ -1,6 +1,5 @@
 import React, { FC, useState, useEffect, useContext } from 'react'
 import Layout from '../../components/Layout/Layout'
-import CommonHeader from '../../components/CommonHeader'
 import HeaderChip from '../../components/Setup/HeaderChip/Index'
 import Grid from '../../components/Setup/Grid/Index'
 import WebinarCard from '../../components/Setup/Webinar/Index'

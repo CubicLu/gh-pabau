@@ -23,7 +23,6 @@ import dayjs from 'dayjs'
 import calendar from 'dayjs/plugin/calendar'
 import { client } from '../../pages/_app'
 import { useEffect, useState } from 'react'
-import { v4 as uuid } from 'uuid'
 import { gql } from '@apollo/client/core'
 
 dayjs.extend(calendar)
@@ -149,10 +148,10 @@ export const Chat = (props: P): JSX.Element => {
   if (!data) return null
 
   const chatHistory =
-    chatRoomHistory && chatRoomHistory.chat_room_by_pk.id === topic?.id
+    chatRoomHistory?.chat_room_by_pk.id === topic?.id
       ? {
           name: chatRoomHistory.chat_room_by_pk.name,
-          chats: [...chatRoomHistory.chat_room_by_pk.chats]
+          chats: chatRoomHistory.chat_room_by_pk.chats
             .sort((a, b) => (a.created_at < b.created_at ? -1 : 1))
             .map<ChatMessage>((e) => ({
               ...e,
@@ -160,7 +159,16 @@ export const Chat = (props: P): JSX.Element => {
               dateTime: dayjs().calendar(dayjs(e.created_at)),
             })),
         }
-      : null
+      : {
+          // name: chatDirectHistory.chat.name,
+          chats: chatDirectHistory.chat
+            .sort((a, b) => (a.created_at < b.created_at ? -1 : 1))
+            .map<ChatMessage>((e) => ({
+              ...e,
+              userName: e.fromUser.full_name,
+              dateTime: dayjs().calendar(dayjs(e.created_at)),
+            })),
+        }
 
   return (
     <PabauMessages
@@ -231,6 +239,8 @@ export const Chat = (props: P): JSX.Element => {
         typeof topic === 'object' &&
           'participants' in topic &&
           postToChannel({
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             variables: { channelId: topic.id, message },
             // update: (cache, mutationResult) => {
             //   const newRow = mutationResult.data.insert_chat_one

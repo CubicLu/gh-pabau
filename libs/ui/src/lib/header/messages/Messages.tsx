@@ -1,7 +1,7 @@
 import React, { useState, MouseEvent, useEffect } from 'react'
 import { Input, Drawer } from 'antd'
 import styles from './Messages.module.less'
-import { CloseOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons'
+import { EditOutlined, SearchOutlined } from '@ant-design/icons'
 import {
   BasicModal,
   Switch,
@@ -18,7 +18,6 @@ import classNames from 'classnames'
 import { DrawerProps } from 'antd/es/drawer'
 import { Formik, FormikErrors } from 'formik'
 import { Form, FormItem } from 'formik-antd'
-import { useCreateChannelMutation } from '@pabau/graphql'
 
 interface FormikProps {
   name: string
@@ -37,7 +36,7 @@ export type MessagesProps = {
 
   /** The focused channel */
   chatHistory?: {
-    name: string
+    name?: string
     chats: ChatMessage[]
   }
 
@@ -90,37 +89,12 @@ export const PabauMessages = ({
   // const [typingContact, setTypingContact] = useState<Contact>()
 
   //createChannel
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [isPrivate, setIsPrivate] = useState(false)
+  const [, setIsPrivate] = useState(false)
   const [isCreateChannel, setIsCreateChannel] = useState(false)
-
-  const [
-    createChannelMutation,
-    createChannelMutationResult,
-  ] = useCreateChannelMutation({})
-
-  const handleNameChange = (e): void => {
-    if (e.target.value.length < 80) {
-      const prefix = e.target.value.startsWith('#') ? '' : '#'
-      setName(prefix + e.target.value)
-    }
-  }
-
-  const handleDescriptionChange = (e) => {
-    setDescription(e.target.value)
-  }
 
   const onChangeToPrivate = (checked) => {
     setIsPrivate(checked)
   }
-
-  // const onCreate = async () => {
-  //   onCreateChannel
-  //     ? await onCreateChannel(name, description, isPrivate)
-  //     : toggleCreateChannel()
-  //   toggleCreateChannel()
-  // }
 
   const toggleCreateChannel = () => {
     setIsCreateChannel(!isCreateChannel)
@@ -137,17 +111,7 @@ export const PabauMessages = ({
 
   useEffect(() => {
     typeof view === 'object' && onLoadMessages?.(view)
-  }, [view])
-  // useEffect(() => {
-  //   if (selectedGroup !== '') {
-  //     setMemberModalTitle(
-  //       Object.keys(groupData[selectedGroup]).length +
-  //         ' Members In #' +
-  //         selectedGroup.charAt(0).toUpperCase() +
-  //         selectedGroup.slice(1)
-  //     )
-  //   }
-  // }, [selectedGroup])
+  }, [view, onLoadMessages])
 
   const handleGroupClick = (e) => {
     setView(e)
@@ -183,28 +147,11 @@ export const PabauMessages = ({
     setIsAddModalVisible(true)
   }
 
-  // const handleMessageType = (e) => {
-  //   if (isNewDm || showGroupChatBox) {
-  //     setTypingContact(undefined)
-  //   } else {
-  //     e.target.value !== ''
-  //       ? setTypingContact(selectedContact)
-  //       : setTypingContact(undefined)
-  //   }
-  //   onMessageType?.(e)
-  // }
-
   const globalSearch = () => {
     setGlobalSearch((e) => !e)
   }
 
   const onHandleGlobalSearch = (value: string) => {
-    // const reg = new RegExp(value.split('').join('\\w*').replace(/\W/, ''), 'i')
-    // const resultData = chatListData.filter((person) => {
-    //   if (reg.test(person.userName)) {
-    //     return person
-    //   }
-    // })
     setGlobalSearchValue(value)
     //TODO: setChatMessage(resultData)
   }
@@ -265,19 +212,6 @@ export const PabauMessages = ({
                   )}
                   onClick={globalSearch}
                 />
-                {false && view && (
-                  <>
-                    <h1>???</h1>
-                    <CloseOutlined
-                      className={classNames(
-                        styles.grayTextColor,
-                        styles.chatIconStyle,
-                        styles.closeIcon
-                      )}
-                      onClick={closeDrawer}
-                    />
-                  </>
-                )}
               </div>
             </div>
           )}
@@ -330,11 +264,8 @@ export const PabauMessages = ({
             errors,
             touched,
             handleChange,
-            handleBlur,
             handleSubmit,
-            isSubmitting,
             isValid,
-            /* and other goodies */
           }) => (
             <BasicModal
               modalWidth={682}
@@ -342,7 +273,7 @@ export const PabauMessages = ({
               title="Create A Channel"
               newButtonText={'Create'}
               className={styles.createChannelModal}
-              onOk={handleSubmit as any}
+              onOk={() => handleSubmit}
               isValidate={isValid}
               dangerButtonText={`Cancel`}
               onCancel={toggleCreateChannel}

@@ -36,15 +36,6 @@ interface Notification {
   link: string
 }
 
-const onMessageType = () => {
-  //add mutation for send message textbox
-}
-
-const onCreateChannel = (name, description, isPrivate) => {
-  //add mutation for create Channel here
-  console.log('onCreateChannel-- or another one', name, description, isPrivate)
-}
-
 const Layout: FC<LayoutProps> = ({
   children,
   requireAdminAccess = false,
@@ -126,7 +117,7 @@ const Layout: FC<LayoutProps> = ({
     user &&
     localStorage?.getItem('token')
   ) {
-    return requireAdminAccess && (!user?.admin || user?.admin === undefined) ? (
+    return requireAdminAccess && !user?.admin ? (
       <Unauthorized />
     ) : (
       <>

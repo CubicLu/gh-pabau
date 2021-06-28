@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as EmojiIcon } from '../../assets/images/emoji-icon.svg'
 import { ReactComponent as AttachIcon } from '../../assets/images/attach-icon.svg'
@@ -35,10 +35,12 @@ const ChatInput = (props: P): JSX.Element => {
   }
 
   const inputRef = useRef<HTMLInputElement | null>(null)
-  useLayoutEffect(() => {
-    console.log('SETTING FOCUS', inputRef.current)
-    inputRef.current?.focus()
-  }, [inputRef.current])
+
+  //TODO: teach James why this didn't work:
+  // useLayoutEffect(() => {
+  //   console.log('SETTING FOCUS', inputRef.current)
+  //   inputRef.current?.focus()
+  // }, [inputRef]) // tried .current and useEffect
 
   inputRef.current?.focus()
 
