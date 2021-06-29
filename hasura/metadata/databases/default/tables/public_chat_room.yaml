@@ -14,7 +14,7 @@ array_relationships:
 - name: participants
   using:
     foreign_key_constraint_on:
-      column: room_id
+      column: room
       table:
         name: chat_room_participant
         schema: public
@@ -59,6 +59,6 @@ update_permissions:
 delete_permissions:
 - permission:
     filter:
-      company:
+      company_id:
         _eq: X-Hasura-Org-Id
   role: user
