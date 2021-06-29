@@ -1,8 +1,8 @@
-import { extendType, nonNull, stringArg, list } from 'nexus'
-import EmailService from '../../app/email/EmailService'
+import { extendType, list, nonNull, stringArg } from 'nexus'
+import { validateEmail } from '../../app/authentication/yup'
 import { EmailInput, EmailOutput } from '../../app/email/dto'
+import EmailService from '../../app/email/EmailService'
 import { EmailNexusOutput } from '../../app/email/nexus-type'
-import { validateEmail } from '@pabau/yup'
 import { Context } from '../../context'
 
 export const SendEmail = extendType({
