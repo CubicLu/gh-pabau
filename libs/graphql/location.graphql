@@ -192,3 +192,13 @@ query getLocationStaffList($location: [CmStaffGeneralWhereInput]) {
     }
   }
 }
+
+query locationLimit {
+  companySubscriptions {
+    multiple_locations
+  }
+}
+
+query activeLocationCount {
+  companyBranchesCount(where: {is_active: {equals: 1}})
+}

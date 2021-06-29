@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import { Context } from '../../context'
 import { User } from '../../generated/schema'
 import { ChangePasswordInputDto, JwtPayloadDto, LoginInputDto } from './dto'
-import { validatePassword } from '@pabau/yup'
+import { validatePassword } from './yup'
 
 export default class AuthenticationService {
   private user: User

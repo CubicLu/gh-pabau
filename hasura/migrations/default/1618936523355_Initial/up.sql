@@ -399,9 +399,8 @@ CREATE TABLE public.chat (
     message text NOT NULL,
     company_id integer NOT NULL,
     "from" integer NOT NULL,
-    "to" integer,
-    read boolean DEFAULT false NOT NULL,
-    to_channel uuid
+    "to" integer NOT NULL,
+    read boolean DEFAULT false NOT NULL
 );
 COMMENT ON TABLE public.chat IS 'Chat messages';
 CREATE TABLE public.chat_room (
@@ -409,15 +408,14 @@ CREATE TABLE public.chat_room (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     company integer NOT NULL,
-    name text NOT NULL,
-    description text
+    name text NOT NULL
 );
 CREATE TABLE public.chat_room_participant (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     "user" integer NOT NULL,
-    room_id uuid NOT NULL
+    room uuid NOT NULL
 );
 CREATE TABLE public.clients_data (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
@@ -1027,8 +1025,7 @@ CREATE TABLE public.product_news (
     title text NOT NULL,
     "order" integer NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    sent_to jsonb
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 CREATE SEQUENCE public.product_news_order_seq
     AS integer
@@ -1434,12 +1431,8 @@ ALTER TABLE ONLY public.category
     ADD CONSTRAINT category_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.chat
     ADD CONSTRAINT chat_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.chat_room
-    ADD CONSTRAINT chat_room_company_name_key UNIQUE (company, name);
 ALTER TABLE ONLY public.chat_room_participant
     ADD CONSTRAINT chat_room_participant_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.chat_room_participant
-    ADD CONSTRAINT chat_room_participant_user_room_id_key UNIQUE ("user", room_id);
 ALTER TABLE ONLY public.chat_room
     ADD CONSTRAINT chat_room_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.clients_data
@@ -1613,7 +1606,7 @@ COMMENT ON TRIGGER set_public_third_parties_updated_at ON public.third_parties I
 ALTER TABLE ONLY public.application_notifications
     ADD CONSTRAINT application_notifications_notification_type_fkey FOREIGN KEY (notification_type) REFERENCES public.notification_types(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.chat_room_participant
-    ADD CONSTRAINT chat_room_participant_room_fkey FOREIGN KEY (room_id) REFERENCES public.chat_room(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+    ADD CONSTRAINT chat_room_participant_room_fkey FOREIGN KEY (room) REFERENCES public.chat_room(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.job_candidates
     ADD CONSTRAINT job_candidates_candidate_id_fkey FOREIGN KEY (candidate_id) REFERENCES public.candidate_list(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.job_candidates

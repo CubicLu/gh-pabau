@@ -4,7 +4,7 @@
   "extensions": {
     "endpoints": {
       "production": {
-        "url": "https://api.new.pabau.com/v1/graphql",
+        "url": "https://api-v2.pabau.com/v1/graphql",
         "headers": {
           "X-Hasura-Admin-Secret": "${env:HASURA_GRAPHQL_ADMIN_SECRET}",
           "user-agent": "JS GraphQL"
