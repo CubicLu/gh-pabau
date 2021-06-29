@@ -5,9 +5,8 @@ import ServiceCategorySelector from '../../components/ServicesStep/ServiceCatego
 import { MasterCategory, Category, Service } from '../../types/services'
 import Clinic from '../../components/clinic/clinic'
 import BookingDatail from '../../components/bookingdetails/Bookingdetail'
-import ScreenTwo from '../../components/screentwo/ScreenTwo'
+import ServiceSelector from '../../components/ServicesStep/ServiceSelector'
 import moment from 'moment'
-//import Conformation from '../../components/Connect/conformation/conformation'
 import Payment from '../../components/payment/Payment'
 import Booked from '../../components/bookingconform/booking'
 import PatientInfo from '../../components/patientinformatioon/PatientInfo'
@@ -368,7 +367,7 @@ export function Index(props: OnlineBookingProps) {
           )}
           {currentStep === 1 && (
             <div className={styles.slide1}>
-              <ScreenTwo
+              <ServiceSelector
                 items={masterCategories}
                 catID={selectedData.categoryID}
                 mCatID={selectedData.masterCategoryID}

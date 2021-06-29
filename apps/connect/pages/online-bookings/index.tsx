@@ -7,7 +7,7 @@ import Selector, {
 } from '../../components/ServicesStep/ServiceCategorySelector'
 import Clinic from '../../components/clinic/clinic'
 import BookingDatail from '../../components/bookingdetails/Bookingdetail'
-import ScreenTwo from '../../components/screentwo/ScreenTwo'
+import ServiceSelector from '../../components/screentwo/ScreenTwo'
 import moment from 'moment'
 //import Conformation from '../../components/Connect/conformation/conformation'
 import Payment from '../../components/payment/Payment'
@@ -328,7 +328,7 @@ export function Index(props: OnlineBookingProps) {
               </div>
             ) : (
               <div className={styles.slide1}>
-                <ScreenTwo
+                <ServiceSelector
                   ispro={ispro}
                   proD={proD}
                   changescreen={rech}

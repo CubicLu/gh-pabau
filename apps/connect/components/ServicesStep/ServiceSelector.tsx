@@ -15,10 +15,9 @@ import {
 import { useMedia } from 'react-use'
 import { Button } from '@pabau/ui'
 import { ReactComponent as Promocode } from '../../../web/assets/images/coupenCode.svg'
-//import useWindowSize from '../../../hooks/useWindowSize'
 import { Rate, Modal, Badge, Popover, Tooltip } from 'antd'
 import { data, voucherData } from '../../../web/mocks/connect/ScreenTwoMock'
-import styles from './screentwo.module.less'
+import styles from './ServiceSelector.module.less'
 import ClassNames from 'classnames'
 import { ReactComponent as SelectAll } from '../../../web/assets/images/SelectAll.svg'
 import { ReactComponent as SkinHealth } from '../../../web/assets/images/skin-health-logo.svg'
@@ -47,7 +46,7 @@ export interface P {
   translation: (val: string) => string
 }
 
-const ScreenTwo: FC<P> = ({
+const ServiceSelector: FC<P> = ({
   catID,
   mCatID,
   items,
@@ -72,11 +71,9 @@ const ScreenTwo: FC<P> = ({
   const [VoucherData, setVoucherData] = useState(voucherData)
   const [mbactive, setmbactive] = useState(true)
   const [online, setonline] = useState<boolean>()
-  const [id, setid] = useState<number>(catID)
   const [infomodal, setinfomodal] = useState(false)
   const [temname, settempname] = useState<string[]>([])
   const isMobile = useMedia('(max-width: 768px)', false)
-  const [secId, setsecId] = useState<number>(catID)
 
   //FIXED
   const [categoryID, setCategoryID] = useState(catID)
@@ -195,29 +192,7 @@ const ScreenTwo: FC<P> = ({
   }
   const selectcat = (value: MasterCategory) => {}
 
-  const setserviceactive = (id1, all: boolean, mid?: number) => {
-    // if (all) {
-    //   old.map((item) => {
-    //     item.active = false
-    //     item.categories.map((itm) => (itm.active = false))
-    //     return item
-    //   })
-    //   setold([...old])
-    //   old.map((item) =>
-    //     item.id === mid
-    //       ? item.categories.map((itm) =>
-    //           itm.id === id1 ? (itm.active = true) : itm
-    //         )
-    //       : item
-    //   )
-    //   setold([...old])
-    // } else {
-    //   one.categories.map((itm) =>
-    //     itm.id === id1 ? (itm.active = true) : (itm.active = false)
-    //   )
-    //   setone(one)
-    // }
-  }
+  const setserviceactive = (id1, all: boolean, mid?: number) => {}
   const rendervoucher = (voucherd) => {
     return (
       <div
@@ -306,17 +281,21 @@ const ScreenTwo: FC<P> = ({
     // }
     return false
   }
-  const valueRender = (category) => {
+  const renderServices = (category: Category | undefined) => {
+    if (typeof category === 'undefined') {
+      category = items
+        .find((item) => item.id === masterCategoryID)
+        ?.categories.find((item) => item.id === categoryID)
+    }
+
+    if (!category) {
+      return null
+    }
     return (
       <div>
-        <div
-          className={ClassNames(
-            styles.custCard
-            // slide ? styles.fadeLeft : styles.fadeRight
-          )}
-        >
+        <div className={styles.custCard}>
           {!voucher ? (
-            category.video ? (
+            category?.video ? (
               <div className={styles.treatmentTabWrapper}>
                 <div
                   onClick={() => setcontype(true)}
@@ -348,17 +327,15 @@ const ScreenTwo: FC<P> = ({
               </div>
             )
           ) : null}
-
           {!voucher
             ? category.services.map((val) => (
-                /* eslint-disable-next-line */
-              <>
+                <div>
                   {category.video
                     ? contype
                       ? !val.online_only_service && renderdata(val)
                       : val.online_only_service && renderdata(val)
                     : renderdata(val)}
-                </>
+                </div>
               ))
             : !isMobile &&
               VoucherData.map((item) => (
@@ -432,7 +409,7 @@ const ScreenTwo: FC<P> = ({
               ))}
           </span>
         </div>
-        {isMobile && category.active && mbactive && valueRender(category)}
+        {isMobile && category.active && mbactive && renderServices(category)}
       </>
     )
   }
@@ -582,19 +559,8 @@ const ScreenTwo: FC<P> = ({
               </div>
             </div>
           </div>
-          {/* {!isMobile && valueRender()} */}
+          {!isMobile && renderServices()}
         </div>
-      </div>
-
-      <div>
-        {/*{Select.map((value) => (*/}
-        {/*  <div key={value.id}>*/}
-        {/*    <div>*/}
-        {/*      {value.icon}*/}
-        {/*      {value.name}*/}
-        {/*    </div>*/}
-        {/*  </div>*/}
-        {/*))}*/}
       </div>
       {(sercount > 0 || Vcount > 0) && (
         <div className={styles.servicefooter}>
@@ -608,16 +574,6 @@ const ScreenTwo: FC<P> = ({
               (Vcount === 1
                 ? `1 voucher £ ${Vprice}`
                 : `${Vcount} vouchers £ ${Vprice}`)}
-            {/*{`${*/}
-            {/*  sercount > 0 &&*/}
-            {/*  (sercount === 1 ? '1 service' : `${sercount} services`)*/}
-            {/*}`}{' '}*/}
-            {/*£ {serprice},*/}
-            {/*{`${*/}
-            {/*  Vcount > 0 &&*/}
-            {/*  (sercount === 1 ? '1 voucher' : `${Vcount} vouchers`)*/}
-            {/*}`}{' '}*/}
-            {/*£ {Vprice}*/}
           </p>
           <Button
             onClick={() => {
@@ -788,4 +744,4 @@ const ScreenTwo: FC<P> = ({
   )
 }
 
-export default ScreenTwo
+export default ServiceSelector
