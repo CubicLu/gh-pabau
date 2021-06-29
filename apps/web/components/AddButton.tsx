@@ -31,6 +31,7 @@ interface P {
   onResetFilter?: () => void
   setMobileSearch?: () => void
   mobileSearch?: boolean
+  isCreateButtonVisible?: boolean
 }
 
 const AddButton: FC<P> = ({
@@ -47,6 +48,7 @@ const AddButton: FC<P> = ({
   setMobileSearch,
   mobileSearch,
   needTranslation,
+  isCreateButtonVisible = true,
 }) => {
   const [isActive, setIsActive] = useState<boolean | number>(
     schema?.filter?.primary?.default ?? true
@@ -149,10 +151,12 @@ const AddButton: FC<P> = ({
             />
           )}
 
-          <PlusSquareFilled
-            className={styles.plusIconStyle}
-            onClick={() => onClick?.()}
-          />
+          {isCreateButtonVisible && (
+            <PlusSquareFilled
+              className={styles.plusIconStyle}
+              onClick={() => onClick?.()}
+            />
+          )}
         </div>
       )}
       <Drawer
@@ -228,7 +232,7 @@ const AddButton: FC<P> = ({
             </Button>
           )}
         </Popover>
-        {schema.createButtonLabel && (
+        {schema.createButtonLabel && isCreateButtonVisible && (
           <Button
             className={styles.createSourceBtn}
             type="primary"
