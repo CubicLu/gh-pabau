@@ -23,9 +23,12 @@ import ClassNames from 'classnames'
 import { ReactComponent as SelectAll } from '../../../web/assets/images/SelectAll.svg'
 import { ReactComponent as SkinHealth } from '../../../web/assets/images/skin-health-logo.svg'
 import { ReactComponent as LogoSvg } from '../../../../libs/ui/src/lib/logo/logo.svg'
-import { MasterCategory, Category, Service } from '../ServicesStep/ServiceCategorySelector'
+import { MasterCategory, Category, Service } from '../../types/services'
+
 /* eslint-disable-next-line */
-export interface ScreenTwoProps {
+export interface P {
+  catID: number
+  mCatID: number
   items: MasterCategory[]
   ispro: boolean
   proD: MasterCategory[]
@@ -42,10 +45,11 @@ export interface ScreenTwoProps {
   ) => void
   parentid?: number
   translation: (val: string) => string
-  isall: boolean
 }
 
-const ScreenTwo: FC<ScreenTwoProps> = ({
+const ScreenTwo: FC<P> = ({
+  catID,
+  mCatID,
   items,
   ispro,
   proD,
@@ -54,8 +58,8 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
   onSelect,
   parentid,
   translation,
-  isall,
 }) => {
+  // CRAP
   const [showmodal, setshowmodal] = useState(false)
   const [visible, setvisible] = useState(false)
   const [contype, setcontype] = useState(true)
@@ -68,117 +72,19 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
   const [VoucherData, setVoucherData] = useState(voucherData)
   const [mbactive, setmbactive] = useState(true)
   const [online, setonline] = useState<boolean>()
-  const [id, setid] = useState<number>(isall ? 1 : parentid)
+  const [id, setid] = useState<number>(catID)
   const [infomodal, setinfomodal] = useState(false)
   const [temname, settempname] = useState<string[]>([])
-  const setoldvalue = (): MasterCategory[] => {
-    const obj = items.map((item) =>
-      isall
-        ? { ...item, active: false }
-        : item.id === id
-        ? { ...item, active: true }
-        : { ...item, active: false }
-    )
-    for (const itm of obj) {
-      for (const im of itm.categories) {
-        for (const item of im.services) {
-          //item.selected = false
-        }
-      }
-    }
-    return obj
-  }
-  const [old, setold] = useState<MasterCategory[]>(
-    ispro ? proD : setoldvalue
-    // old1.map((item) =>
-
-    // item.id === id
-    //   ? isall
-    //     ? { ...item, active: false }
-    //     : { ...item, active: true }
-    //   : item
-    //)
-  )
-  const [secId, setsecId] = useState<number>(isall ? 1 : catData.id)
-  const [All, setAll] = useState(isall)
-  const allvalue = (all: boolean): Category => {
-    const val = (): Category => {
-      const obj = old
-        .find((item) => item.id === id)
-        .categories.find((itm) => itm.id === secId)
-      for (const itm of obj.services) {
-        itm.selected = false
-      }
-      return obj
-    }
-    if (all) {
-      const obj = old
-        .find((item) => item.id === 1)
-        .categories.find((itm) => itm.id === 1)
-      return obj
-    } else {
-      // const obj
-      return val()
-    }
-  }
-
-  const takevalue = (): MasterCategory => {
-    // console.log('OLD', old, id)
-    // const obj = old.find((item) => item.id === id)
-    // obj.categories.map((item) =>
-    //   item.id === secId ? (item.active = true) : (item.active = false)
-    // )
-    // return obj
-    return old[0]
-  }
-  const [one, setone] = useState<MasterCategory>(takevalue)
-
-  const [oldcatdata, setoldcatdata] = useState<Category>(
-    isall ? allvalue(true) : catData
-  )
   const isMobile = useMedia('(max-width: 768px)', false)
-  const catgor = (newid, price) => {
-    const charge = Number(price.slice(0, 2))
-    const check = (sel, charge, name) => {
-      if (!sel) {
-        setsercount(sercount + 1)
-        setserprice(serprice + charge)
-        settempname([...temname, name])
-      } else {
-        setsercount(sercount - 1)
-        setserprice(serprice - charge)
+  const [secId, setsecId] = useState<number>(catID)
 
-        settempname(temname.filter((itm) => itm !== name))
-      }
-      console.log(temname)
-      // console.log(charge)
-      return !sel
-    }
-    // setTimeout(() => {}, 100)
-    old
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      .find((item) => item.id === id)
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      .categories.map((item) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        item.id === secId
-          ? // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            item.services.map((itm) => {
-              // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-              itm.id === newid
-                ? // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                  (itm.selected = check(itm.selected, charge, itm.name))
-                : itm
-              return itm
-            })
-          : item
-        return item
-      })
-    setold([...old])
-  }
+  //FIXED
+  const [categoryID, setCategoryID] = useState(catID)
+  const [masterCategoryID, setMasterCategoryID] = useState(mCatID)
+
   const renderdata = (val: Service) => {
     const fun = (e, val) => {
-      catgor(val.id, val.price)
+      // catgor(val.id, val.price)
     }
     const fun1 = (e) => {
       e.stopPropagation()
@@ -287,61 +193,30 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
       </div>
     )
   }
-  const selectcat = (value: MasterCategory) => {
-    setAll(false)
-    setone(value)
-  }
-  const setvalue = (id1) => {
-    old.map((item) => {
-      item.active = false
-      item.categories.map((itm) => (itm.active = false))
-      return item
-    })
-    // setold([...old])
-    old.map((item) => (item.id === id1 ? (item.active = true) : item))
-    old.map((item) =>
-      item.categories.map((itm) =>
-        itm.id === 1 ? (itm.active = true) : (itm.active = false)
-      )
-    )
-    // setsecId(1)
-    setold([...old])
+  const selectcat = (value: MasterCategory) => {}
 
-    const obj = old.find((item) => item.id === id1).category[0]
-    setoldcatdata(obj)
-    //setsecId(1)
-    // setoldcatdata(val)
-    setid(id1)
-    setsecId(1)
-    setserviceactive(1, false)
-    //console.log(old1)
-  }
   const setserviceactive = (id1, all: boolean, mid?: number) => {
-    if (all) {
-      old.map((item) => {
-        item.active = false
-        item.categories.map((itm) => (itm.active = false))
-        return item
-      })
-      setold([...old])
-      // setold([...old])
-      old.map((item) =>
-        item.id === mid
-          ? item.categories.map((itm) =>
-              itm.id === id1 ? (itm.active = true) : itm
-            )
-          : item
-      )
-      setold([...old])
-      //setvalue(1)
-    } else {
-      // one.categories.map((itm) => (itm.active = false))
-      // setone(one)
-      one.categories.map((itm) =>
-        itm.id === id1 ? (itm.active = true) : (itm.active = false)
-      )
-      setone(one)
-    }
+    // if (all) {
+    //   old.map((item) => {
+    //     item.active = false
+    //     item.categories.map((itm) => (itm.active = false))
+    //     return item
+    //   })
+    //   setold([...old])
+    //   old.map((item) =>
+    //     item.id === mid
+    //       ? item.categories.map((itm) =>
+    //           itm.id === id1 ? (itm.active = true) : itm
+    //         )
+    //       : item
+    //   )
+    //   setold([...old])
+    // } else {
+    //   one.categories.map((itm) =>
+    //     itm.id === id1 ? (itm.active = true) : (itm.active = false)
+    //   )
+    //   setone(one)
+    // }
   }
   const rendervoucher = (voucherd) => {
     return (
@@ -431,7 +306,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
     // }
     return false
   }
-  const valueRender = () => {
+  const valueRender = (category) => {
     return (
       <div>
         <div
@@ -441,7 +316,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
           )}
         >
           {!voucher ? (
-            oldcatdata.video ? (
+            category.video ? (
               <div className={styles.treatmentTabWrapper}>
                 <div
                   onClick={() => setcontype(true)}
@@ -475,10 +350,10 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
           ) : null}
 
           {!voucher
-            ? oldcatdata.services.map((val) => (
+            ? category.services.map((val) => (
                 /* eslint-disable-next-line */
               <>
-                  {oldcatdata.video
+                  {category.video
                     ? contype
                       ? !val.online_only_service && renderdata(val)
                       : val.online_only_service && renderdata(val)
@@ -499,60 +374,105 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
       </div>
     )
   }
+
+  const renderCategoryItem = (category: Category) => {
+    return (
+      <>
+        <div
+          style={{ margin: '12px 0', cursor: 'pointer' }}
+          key={category.id}
+          onClick={() => {
+            setCategoryID(category.id)
+          }}
+        >
+          <span
+            className={ClassNames(
+              styles.servicename,
+              categoryID === category.id && styles.serviceactive
+            )}
+          >
+            {category.name}
+            {!isMobile && (
+              <span
+                style={{
+                  position: 'absolute',
+                  right: '35px',
+                  color: '#65CD98',
+                }}
+              >
+                {category.rdmValue}
+              </span>
+            )}
+            {!isMobile && (
+              <span
+                style={{
+                  position: 'absolute',
+                  right: '35px',
+                  color: '#54B2D3',
+                }}
+              >
+                {category.rdmValue}
+              </span>
+            )}
+            {isMobile &&
+              (category.id === categoryID && mbactive ? (
+                <UpOutlined
+                  style={{
+                    position: 'absolute',
+                    right: '8px',
+                  }}
+                />
+              ) : (
+                <DownOutlined
+                  style={{
+                    position: 'absolute',
+                    right: '8px',
+                  }}
+                />
+              ))}
+          </span>
+        </div>
+        {isMobile && category.active && mbactive && valueRender(category)}
+      </>
+    )
+  }
   return (
     <>
       <div className={styles.containerWrapper}>
         <div className={styles.container}>
-          {/*{setvalue()}*/}
           <div className={styles.serviceheader}>
             <div
               className={ClassNames(
                 styles.serviceselectall,
-                All && styles.serviceselectallSelect
+                masterCategoryID === 0 && styles.serviceselectallSelect
               )}
               onClick={() => {
-                setAll(true)
-                setmbactive(true)
-                setvoucher(false)
-                old.map((item) => {
-                  item.active = false
-                  item.categories.map((itm) => (itm.active = false))
-                  return item
-                })
-                old[0].categories[0].active = true
-                setold([...old])
-                //setmbactive(true)
-                const obj = old.find((item) => item.id === 1).categories[0]
-                setoldcatdata(obj)
+                setMasterCategoryID(0)
               }}
             >
-              {/*<CheckCircleFilled className={styles.checkfill} />*/}
               <SelectAll />
               <span>All</span>
             </div>
-            {old.map((value) => (
+            {items.map((item) => (
               <div
                 className={ClassNames(
                   styles.serviceselectall,
-                  value.active && styles.serviceselectallSelect
+                  item.id === masterCategoryID && styles.serviceselectallSelect
                 )}
-                key={value.id}
+                key={item.id}
                 onClick={() => {
-                  setvalue(value.id)
-                  selectcat(value)
-                  setvoucher(false)
-                  setmbactive(true)
+                  setMasterCategoryID(item.id)
                 }}
               >
-                {valid(value.id, true) && (
+                {valid(item.id, true) && (
                   <CheckCircleFilled
                     className={styles.checkfill}
                     style={{ color: ' #54B2D3' }}
                   />
                 )}
 
-                {value.icon}
-                <span>{value.name}</span>
+                {item.icon}
+                <span>{item.name}</span>
               </div>
             ))}
             <div
@@ -561,15 +481,14 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
                 voucher && styles.serviceselectallSelect
               )}
               onClick={() => {
-                old.map((item) => {
-                  item.active = false
-                  item.categories.map((itm) => (itm.active = false))
-                  return item
-                })
-                setold([...old])
-                setAll(false)
-                setvoucher(true)
-                setmbactive(false)
+                // old.map((item) => {
+                //   item.active = false
+                //   item.categories.map((itm) => (itm.active = false))
+                //   return item
+                // })
+                // setold([...old])
+                // setvoucher(true)
+                // setmbactive(false)
               }}
             >
               {Vcount > 0 && (
@@ -596,164 +515,20 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
             <div className={styles.serlist}>
               <div className={styles.servicelist}>
                 {!voucher ? (
-                  All ? (
-                    old.map((value) => (
-                      <div key={value.id}>
-                        {value.categories.map((val) => (
-                          <>
-                            <div
-                              style={{ margin: '12px 0', cursor: 'pointer' }}
-                              key={val.id}
-                              onClick={() => {
-                                if (val.active) {
-                                  setmbactive(!mbactive)
-                                  //console.log(mbactive)
-                                } else {
-                                  setmbactive(true)
-                                }
-                                setoldcatdata(val)
-                                setid(value.id)
-                                setsecId(val.id)
-                                setserviceactive(val.id, true, value.id)
-                                console.log(val.id)
-                              }}
-                            >
-                              <span
-                                className={ClassNames(
-                                  styles.servicename,
-                                  val.active && styles.serviceactive
-                                )}
-                              >
-                                {/*{valid(val.id, false) && (*/}
-                                {/*  <CheckCircleFilled*/}
-                                {/*    style={{*/}
-                                {/*      position: 'absolute',*/}
-                                {/*      right: '8px',*/}
-                                {/*      color: '#54B2D3',*/}
-                                {/*    }}*/}
-                                {/*  />*/}
-                                {/*)}*/}
-
-                                {val.name}
-                                {!isMobile && (
-                                  <span
-                                    style={{
-                                      position: 'absolute',
-                                      right: '35px',
-                                      color: '#65CD98',
-                                    }}
-                                  >
-                                    {val.rdmValue}
-                                  </span>
-                                )}
-                                {!isMobile && (
-                                  <span
-                                    style={{
-                                      position: 'absolute',
-                                      right: '35px',
-                                      color: '#54B2D3',
-                                    }}
-                                  >
-                                    {val.rdmValue}
-                                  </span>
-                                )}
-                                {isMobile &&
-                                  (val.active && mbactive ? (
-                                    <UpOutlined
-                                      style={{
-                                        position: 'absolute',
-                                        right: '8px',
-                                      }}
-                                    />
-                                  ) : (
-                                    <DownOutlined
-                                      style={{
-                                        position: 'absolute',
-                                        right: '8px',
-                                      }}
-                                    />
-                                  ))}
-                              </span>
-                            </div>
-                            {isMobile &&
-                              val.active &&
-                              mbactive &&
-                              valueRender()}
-                          </>
-                        ))}
+                  masterCategoryID === 0 ? (
+                    items.map((masterCategory) => (
+                      <div key={masterCategory.id}>
+                        {masterCategory.categories.map((val) => {
+                          return renderCategoryItem(val)
+                        })}
                       </div>
                     ))
                   ) : (
-                    one.categories.map((val) => (
-                      <div key={val.id}>
-                        <div
-                          style={{ margin: '12px 0', cursor: 'pointer' }}
-                          key={val.id}
-                          onClick={() => {
-                            if (val.active) {
-                              setmbactive(!mbactive)
-                              //console.log(mbactive)
-                            } else {
-                              setmbactive(true)
-                            }
-                            setoldcatdata(val)
-                            setid(one.id)
-                            setsecId(val.id)
-                            setserviceactive(val.id, false)
-
-                            console.log(val.id)
-                          }}
-                        >
-                          <span
-                            className={ClassNames(
-                              styles.servicename,
-                              !isMobile
-                                ? val.active && styles.serviceactive
-                                : val.active && mbactive && styles.serviceactive
-                            )}
-                          >
-                            {valid(val.id, false) && (
-                              <CheckCircleFilled
-                                style={{
-                                  position: 'absolute',
-                                  right: '8px',
-                                  color: '#54B2D3',
-                                }}
-                              />
-                            )}
-                            {!isMobile && (
-                              <span
-                                style={{
-                                  position: 'absolute',
-                                  right: '35px',
-                                  color: '#54B2D3',
-                                }}
-                              >
-                                {val.rdmValue}
-                              </span>
-                            )}
-                            {val.name}
-                            {isMobile &&
-                              (val.active && mbactive ? (
-                                <UpOutlined
-                                  style={{
-                                    position: 'absolute',
-                                    right: '8px',
-                                  }}
-                                />
-                              ) : (
-                                <DownOutlined
-                                  style={{
-                                    position: 'absolute',
-                                    right: '8px',
-                                  }}
-                                />
-                              ))}
-                          </span>
-                        </div>
-                        {isMobile && mbactive && val.active && valueRender()}
-                      </div>
-                    ))
+                    items
+                      .find((item) => item.id === masterCategoryID)
+                      .categories.map((val) => {
+                        return renderCategoryItem(val)
+                      })
                   )
                 ) : (
                   <div>
@@ -807,7 +582,7 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
               </div>
             </div>
           </div>
-          {!isMobile && valueRender()}
+          {/* {!isMobile && valueRender()} */}
         </div>
       </div>
 
@@ -863,39 +638,6 @@ const ScreenTwo: FC<ScreenTwoProps> = ({
           </Button>
         </div>
       )}
-      {/*{!voucher*/}
-      {/*  ? sercount > 0 && (*/}
-      {/*      <div className={styles.servicefooter}>*/}
-      {/*        <p>*/}
-      {/*          {sercount} service £ {serprice}{' '}*/}
-      {/*        </p>*/}
-      {/*        <Button*/}
-      {/*          onClick={() => {*/}
-      {/*            onSelect(temname[0], serprice + Vprice, online, 40)*/}
-      {/*            changescreen()*/}
-      {/*          }}*/}
-      {/*        >*/}
-      {/*          Next*/}
-      {/*          <ArrowRightOutlined />{' '}*/}
-      {/*        </Button>*/}
-      {/*      </div>*/}
-      {/*    )*/}
-      {/*  : Vcount > 0 && (*/}
-      {/*      <div className={styles.servicefooter}>*/}
-      {/*        <p>*/}
-      {/*          {Vcount} service £ {Vprice}{' '}*/}
-      {/*        </p>*/}
-      {/*        <Button*/}
-      {/*          onClick={() => {*/}
-      {/*            onSelect(temname[0], serprice + Vprice, online, 40)*/}
-      {/*            changescreen()*/}
-      {/*          }}*/}
-      {/*        >*/}
-      {/*          Next*/}
-      {/*          <ArrowRightOutlined />{' '}*/}
-      {/*        </Button>*/}
-      {/*      </div>*/}
-      {/*    )}*/}
       <Modal
         className={styles.mainmodal}
         visible={infomodal}

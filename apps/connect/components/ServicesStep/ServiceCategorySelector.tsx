@@ -16,7 +16,7 @@ import { MasterCategory, Category, Service } from '../../types/services'
 
 export interface P {
   items: MasterCategory[]
-  onSelected: (item: Category, id: number) => void
+  onSelected: (id: number) => void
   click: (member: number, viewbtn: boolean) => void
   translation: (val: string) => string
 }
@@ -41,6 +41,7 @@ export const ServiceCategorySelector: FC<P> = ({
 
   const handleSelectedCategory = (id: number) => {
     setCategoryID(id)
+    onSelected(id)
   }
 
   const formIntialValues = {

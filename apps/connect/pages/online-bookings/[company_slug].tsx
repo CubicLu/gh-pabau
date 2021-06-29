@@ -27,14 +27,10 @@ import useServices from '../../hooks/useServices'
 /* eslint-disable-next-line */
 export interface OnlineBookingProps {}
 
-interface ServiceSelected {
+interface BookingData {
   masterCategoryID?: number
   categoryID?: number
-  serviceID?: number
-}
-
-interface BookingData {
-  service?: ServiceSelected[]
+  serviceID?: number[]
   employeeID?: number
 }
 
@@ -87,7 +83,6 @@ export function Index(props: OnlineBookingProps) {
   const [serviceid, setserviceid] = useState<number>()
   const [tempT, settempT] = useState('')
   const [user, setuser] = useState<userData>(userData)
-  const [all, setall] = useState(false)
   const [datetime, setDateTime] = useState<EmployData>()
   const [date, setdate] = useState()
   const [tempprice, settempprice] = useState('')
@@ -102,8 +97,6 @@ export function Index(props: OnlineBookingProps) {
   const [currentStep, setCurrentStep] = useState<number>(0)
   const [selectedData, setSelectedData] = useState<BookingData>({})
 
-  // const something = useServices()
-  // console.log(something)
   const {
     loading,
     error,
@@ -207,7 +200,6 @@ export function Index(props: OnlineBookingProps) {
       Setback(false)
       Setview(true)
       setCurrentStep(0)
-      setall(false)
       setindicator(false)
     }
     if (currentStep === 2) {
@@ -355,28 +347,13 @@ export function Index(props: OnlineBookingProps) {
             <div>
               <ServiceCategorySelector
                 items={masterCategories}
-                click={(member, viewbtn) => {
-                  user.member = member
-                  setuser(user)
-                  SetselData([...defaultItems.slice(0, 4)])
-                  Setview(false)
-                  console.log(all)
-                  setall(true)
-                  viewbtn ? setCurrentStep(1) : setCurrentStep(0)
-                  //
-                }}
-                onSelected={(val, id) => {
-                  setserviceid(id)
-                  setconType(() => {
-                    for (const im of val.services) {
-                      //im.selected = false
-                    }
-                    return val
+                onSelected={(id) => {
+                  setSelectedData({
+                    ...selectedData,
+                    categoryID: id,
+                    masterCategoryID: 5639,
                   })
-                  Setback(true)
-                  setall(false)
                   setCurrentStep(currentStep + 1)
-                  //rech()
                 }}
                 translation={translation}
               />
@@ -393,11 +370,12 @@ export function Index(props: OnlineBookingProps) {
             <div className={styles.slide1}>
               <ScreenTwo
                 items={masterCategories}
+                catID={selectedData.categoryID}
+                mCatID={selectedData.masterCategoryID}
                 ispro={ispro}
                 proD={proD}
                 changescreen={rech}
                 catData={conType}
-                isall={all}
                 translation={translation}
                 parentid={serviceid}
                 onSelect={(
