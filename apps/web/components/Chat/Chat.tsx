@@ -155,7 +155,7 @@ export const Chat = (props: P): JSX.Element => {
   if (!data) return null
 
   const chatHistory =
-    chatRoomHistory?.chat_room_by_pk.id === topic?.id
+    chatRoomHistory && chatRoomHistory.chat_room_by_pk.id === topic?.id
       ? {
           name: chatRoomHistory.chat_room_by_pk.name,
           chats: chatRoomHistory.chat_room_by_pk.chats
@@ -168,7 +168,7 @@ export const Chat = (props: P): JSX.Element => {
         }
       : {
           // name: chatDirectHistory.chat.name,
-          chats: chatDirectHistory.chat
+          chats: chatDirectHistory?.chat
             .sort((a, b) => (a.created_at < b.created_at ? -1 : 1))
             .map<ChatMessage>((e) => ({
               ...e,
