@@ -18,7 +18,7 @@ pipelines:
     '**':
       - step:
           name: yarn audit
-          max-time: 15
+          max-time: 20
           caches:
             - node
           script:
@@ -190,7 +190,7 @@ pipelines:
     master:
       - step:
           name: yarn audit
-          max-time: 15
+          max-time: 20
           caches:
             - node
           script:
