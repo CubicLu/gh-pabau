@@ -64,6 +64,7 @@ select_permissions:
     - message
     - read
     - to
+    - to_channel
     - updated_at
     filter:
       _and:

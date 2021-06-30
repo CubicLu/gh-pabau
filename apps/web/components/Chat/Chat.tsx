@@ -4,8 +4,8 @@ import {
   useCreateChannelMutation,
   useChatListRoomsQuery,
   ChatListRoomsDocument,
-  useChatDirectHistoryQuery,
-  useChatRoomHistoryQuery,
+  useChatDirectHistoryLazyQuery,
+  useChatRoomHistoryLazyQuery,
   useChatPostToChannelIdMutation,
   useChatGetUsersQuery,
   useChatPostToUserIdMutation,
@@ -117,26 +117,33 @@ export const Chat = (props: P): JSX.Element => {
   })
   const members = membersData?.users
 
-  const {
-    refetch: fetchRoomHistory,
-    data: chatRoomHistory,
-  } = useChatRoomHistoryQuery({ fetchPolicy: 'cache-first' })
+  const [
+    fetchRoomHistory,
+    { data: chatRoomHistory },
+  ] = useChatRoomHistoryLazyQuery({ fetchPolicy: 'cache-first' })
   console.log('chatRoomHistory', chatRoomHistory)
-  const {
-    refetch: fetchDirectHistory,
-    data: chatDirectHistory,
-  } = useChatDirectHistoryQuery({ fetchPolicy: 'cache-first' })
+  // {
+  //   refetch: fetchDirectHistory,
+  //     data: chatDirectHistory,
+  //
+  // }
+  const [
+    fetchDirectHistory,
+    { data: chatDirectHistory },
+  ] = useChatDirectHistoryLazyQuery({
+    fetchPolicy: 'cache-first',
+  })
   const [topic, setTopic] = useState<Group | Participant | undefined>()
   useEffect(() => {
     console.log('Chat.useEffect')
 
     if (typeof topic === 'object' && !('participants' in topic)) {
       console.log('fetching up to date chat logs!')
-      fetchDirectHistory({ userId: Number.parseInt(topic.id) })
+      fetchDirectHistory({ variables: { userId: Number.parseInt(topic.id) } })
     }
     if (typeof topic === 'object' && 'participants' in topic) {
       console.log('fetching up to date channel logs!', topic.id.substring(1))
-      fetchRoomHistory({ roomId: topic.id })
+      fetchRoomHistory({ variables: { roomId: topic.id } })
     }
   }, [topic, fetchDirectHistory, fetchRoomHistory])
 

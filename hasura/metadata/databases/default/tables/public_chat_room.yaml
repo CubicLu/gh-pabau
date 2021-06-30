@@ -26,6 +26,42 @@ remote_relationships:
         arguments: {}
     remote_schema: CRM
   name: company
+insert_permissions:
+- permission:
+    backend_only: false
+    check:
+      company_id:
+        _eq: X-Hasura-Org-Id
+    columns:
+    - description
+    - name
+    set:
+      company_id: x-hasura-Org-Id
+  role: user
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - created_at
+    - updated_at
+    - id
+    - company_id
+    - name
+    - description
+    filter:
+      company_id:
+        _eq: X-Hasura-Org-Id
+  role: user
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - description
+    - name
+    filter:
+      company_id:
+        _eq: X-Hasura-Org-Id
+  role: user
 delete_permissions:
 - permission:
     filter:

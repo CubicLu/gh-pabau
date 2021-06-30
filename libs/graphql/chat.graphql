@@ -83,38 +83,10 @@ query chatDirectHistory($userId: Int!) {
 
 query chatListRooms {
   chat_room_participant {
-
     id
-    room {
-      id
-      name
-      chats(limit: 1, order_by: { created_at: desc }) {
-        id
-        message
-        from
-        created_at
-        to
-        room {
-          id
-          name
-        }
-        toUser {
-          id
-          username
-          full_name
-        }
-        fromUser {
-          id
-          username
-          full_name
-        }
-      }
-      chats_aggregate(where: { created_at: { _gt: "2030-01-01 00:00:00" } }) {
-        aggregate {
-          count
-        }
-      }
-    }
+
+    room_id
+    user_id
   }
   chat(
     distinct_on: from

@@ -16,3 +16,37 @@ remote_relationships:
             id: $user_id
     remote_schema: CRM
   name: User
+insert_permissions:
+- permission:
+    backend_only: false
+    check:
+      room:
+        company_id:
+          _eq: X-Hasura-Org-Id
+    columns:
+    - room_id
+    - user_id
+    set:
+      user_id: x-hasura-User-Id
+  role: user
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - id
+    - created_at
+    - updated_at
+    - user_id
+    - room_id
+    filter:
+      room:
+        company_id:
+          _eq: X-Hasura-Org-Id
+  role: user
+delete_permissions:
+- permission:
+    filter:
+      room:
+        company_id:
+          _eq: X-Hasura-Org-Id
+  role: user
