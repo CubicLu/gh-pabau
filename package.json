@@ -269,6 +269,7 @@
     "eslint-plugin-prettier": "3.4.0",
     "eslint-plugin-react": "7.24.0",
     "eslint-plugin-react-hooks": "4.2.0",
+    "eslint-plugin-rebase": "0.1.0",
     "eslint-plugin-sonarjs": "0.7.0",
     "eslint-plugin-tsdoc": "^0.2.14",
     "eslint-plugin-you-dont-need-lodash-underscore": "6.12.0",
