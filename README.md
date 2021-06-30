@@ -194,8 +194,11 @@ To run production build locally, type `docker build -t bridge-proxy -f tools/cic
 
 ## Code Rules
 
-- Communication is paramount. Please discuss your ideas at morning standups, and open threads in channels on whatever you are pondering or stuck on.
-- Anything security related please also open a constant dialog with James
+- Communication is paramount. Please discuss your ideas at meetings and open Slack threads about whatever you are pondering or stuck on.
+- Anything security related please also open a constant dialog with Head of Security
+- Prefer TS paradigm (favour FP over OOP). Don't use classes unless you have a use for them (such as long-lived with private members, polymorphism/inheritance, or nestjs).
+- If you introduce a new concept into the codebase such as 'recompose' in apps/web/components/Locations/Map.tsx please make yourself highly accommodating for discussions and code re-writes until it fits well.
+- Take care to use established casing for the names you create. We support camelCase, PascalCase, snail_case and kebab-case.
 - Branch from master, PR back to master.
   - Small PRs are good
   - Tag your commits and/or PR with the JIRA issue ID.
