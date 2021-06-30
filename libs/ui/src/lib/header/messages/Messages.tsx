@@ -247,13 +247,13 @@ export const PabauMessages = ({
         <Formik
           initialValues={{ name: '', description: '' }}
           validate={(props) => {
-            const { name, description } = props
+            const { name } = props
             const errors: FormikErrors<FormikProps> = {}
             if (!name) errors.name = 'Required'
-            if (!description) errors.description = 'Required'
             return errors
           }}
           onSubmit={async ({ name, description }, { setSubmitting }) => {
+            console.log('submitting new channel form')
             setSubmitting(true)
             await onCreateChannel?.(name, description)
             setSubmitting(false)
@@ -273,7 +273,7 @@ export const PabauMessages = ({
               title="Create A Channel"
               newButtonText={'Create'}
               className={styles.createChannelModal}
-              onOk={() => handleSubmit}
+              onOk={() => handleSubmit()}
               isValidate={isValid}
               dangerButtonText={`Cancel`}
               onCancel={toggleCreateChannel}

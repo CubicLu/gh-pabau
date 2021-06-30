@@ -3,7 +3,6 @@
 import {
   useCreateChannelMutation,
   useChatListRoomsQuery,
-  ChatListRoomsDocument,
   useChatDirectHistoryLazyQuery,
   useChatRoomHistoryLazyQuery,
   useChatPostToChannelIdMutation,
@@ -21,7 +20,6 @@ import { UserContext } from '../../context/UserContext'
 import * as React from 'react'
 import dayjs from 'dayjs'
 import calendar from 'dayjs/plugin/calendar'
-import { client } from '../../pages/_app'
 import { useEffect, useState } from 'react'
 import { gql } from '@apollo/client/core'
 
@@ -147,10 +145,17 @@ export const Chat = (props: P): JSX.Element => {
     }
   }, [topic, fetchDirectHistory, fetchRoomHistory])
 
-  const [
-    createChannelMutation,
-    //    { data, loading, error },
-  ] = useCreateChannelMutation()
+  const [createChannelMutation] = useCreateChannelMutation({
+    update: (cache, mutationResult) => {
+      cache.modify({
+        id: 'ROOT_QUERY',
+        fields: {
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          chat_room_participant() {},
+        },
+      })
+    },
+  })
 
   if (!data) return null
 
@@ -181,16 +186,16 @@ export const Chat = (props: P): JSX.Element => {
     <PabauMessages
       onClose={closeDrawer}
       onCreateChannel={async (name, description) => {
-        client.writeQuery({
-          query: ChatListRoomsDocument,
-          data: {
-            chat: {
-              id: 'TODO',
-              dateTime: '2000-01-01T00:00:00Z',
-              message: 'premaature!',
-            },
-          },
-        })
+        // client.writeQuery({
+        //   query: ChatListRoomsDocument,
+        //   data: {
+        //     chat: {
+        //       id: 'TODO',
+        //       dateTime: '2000-01-01T00:00:00Z',
+        //       message: 'premaature!',
+        //     },
+        //   },
+        // })
         const result = await createChannelMutation({
           variables: { name, description },
         })
