@@ -48,7 +48,7 @@
     "lint:ls": "ls-lint",
     "lint:workspace": "nx workspace-lint",
     "test": "nx test",
-    "lint": "concurrently --kill-others-on-fail -n NX,TSC,ESLINT \"yarn lint:workspace\" \"yarn lint:tsc\" \"nx affected:lint --parallel\"",
+    "lint": "yarn lint:workspace && nx affected:lint --parallel",
     "e2e": "nx e2e",
     "affected:apps": "nx affected:apps",
     "affected:libs": "nx affected:libs",
