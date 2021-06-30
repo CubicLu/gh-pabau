@@ -8,51 +8,11 @@ object_relationships:
 remote_relationships:
 - definition:
     hasura_fields:
-    - user
+    - user_id
     remote_field:
       user:
         arguments:
           where:
-            id: $user
+            id: $user_id
     remote_schema: CRM
   name: User
-insert_permissions:
-- permission:
-    backend_only: false
-    check:
-      room:
-        company:
-          _eq: X-Hasura-Org-Id
-    columns:
-    - room_id
-    set:
-      user: x-hasura-User-Id
-  role: user
-select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - created_at
-    - id
-    - updated_at
-    filter:
-      room:
-        company:
-          _eq: X-Hasura-Org-Id
-  role: user
-update_permissions:
-- permission:
-    check: null
-    columns: []
-    filter:
-      room:
-        company:
-          _eq: X-Hasura-Org-Id
-  role: user
-delete_permissions:
-- permission:
-    filter:
-      room:
-        company:
-          _eq: X-Hasura-Org-Id
-  role: user

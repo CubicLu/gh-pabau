@@ -1,3 +1,4 @@
+import fetch from 'cross-fetch'
 import {
   ApolloClient,
   ApolloLink,
@@ -94,6 +95,13 @@ const authLink = setContext((_, { headers }) => {
   }
 })
 const httpLink = new HttpLink({
+  /**
+   * Fixes Jest complaining about:
+   *  Invariant Violation:
+   *    "fetch" has not been found globally and no fetcher has been configured. To fix this, install a fetch package (like https://www.npmjs.com/package/cross-fetch), instantiate the fetcher, and pass it into your HttpLink constructor.
+   */
+  fetch,
+
   uri: GRAPHQL_HTTP_ENDPOINT,
 })
 const getWebSocketLink = () => {

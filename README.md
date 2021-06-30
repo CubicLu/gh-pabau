@@ -19,30 +19,36 @@
   - [Delineation between /apps/web/components/ ("App components") and /libs/ui/ ("UI components")](#delineation-between-appswebcomponents-app-components-and-libsui-ui-components)
   - [Our Stack](#our-stack)
   - [Ticket workflow](#ticket-workflow)
-  - [Troubleshooting](#troubleshooting)
   - [GraphQL workflow](#graphql-workflow)
+  - [Troubleshooting](#troubleshooting)
   - [To do (big engineering items)](#to-do-big-engineering-items)
   - [bridge-proxy (PDS)](#bridge-proxy-pds)
 
 ## Welcome
 
-This monorepo contains all of our code (with the exception of `.env` files), and is controlled using the [Nx](https://nx.dev) CLI. Please read this file in Preview mode (not the source code).
+This monorepo contains all of our code and is controlled using the [Nx](https://nx.dev) CLI.
+
+Please read this file in Preview mode (not the source code).
 
 ## Paths
 
-- `/` -
+- `/` - our monorepo root
 - `/.run/` - scripts for all devs (and Jetbrains IDE's)
 - `/.storybook/` - global Storybook config
 - `/.vscode/` - vscode specific settings for all devs
-- `/apps/` - where most of our projects reside.
-- `/apps/web/` - the main application Frontend.
-- `/apps/*-e2e/` - End-to-end testing with Cypress.
+- `/apps/` - where most of our projects reside
+- `/apps/web/` - the main application Frontend
+- `/apps/*-e2e/` - End-to-end testing with Cypress
 - `/dist/` - temporary directory where the build outputs are generated
 - `/hasura/` - our database configuration
 - `/libs/` - where any shared libraries reside. These can be referenced (used) in any app.
-- `/libs/ui/` - our shared UI (React Components).
+- `/libs/ui/` - our shared UI (React Components)
+- `/libs/graphql/` - our shared GraphQL documents (Apollo Hooks)
 - `/tools/` - repo-level tooling.
 - `**/cicd/` - devops only.
+
+Notes:
+* Libs are not allowed to import from apps
 
 ## Our Stack
 
@@ -87,13 +93,17 @@ This monorepo contains all of our code (with the exception of `.env` files), and
 1. Install and launch Pabau1
 
    1. Either: Follow the instructions from the <https://bitbucket.org/pabau/pabau-crm> repo's README.md to launch the local docker stack
-   1. Or: Ask Toshe to share his public MySQL URL and put that into `apps/bridge-api/src/prisma/.env.local` as `DATABASE_URL=`
+   1. Or (easier): Ask Toshe to share his public MySQL URL and put that into `apps/bridge-api/src/prisma/.env.local` as `DATABASE_URL=`
 
 1. Create some bookmarks in your browser:
+   
    1. "Prisma" to <http://localhost:4000/graphql>
-   1. "Hasura" to <http://localhost:8080>
+   1. "Hasura READ-ONLY" to <http://localhost:8080>
+   1. "Hasura EDITABLE" to <http://localhost:9695>
    1. "Web" to <http://localhost:4200>
    1. "Backend" to <http://localhost:3333>
+   1. "Mgmt" to <http://localhost:???>
+   1. "Connect" to <http://localhost:???>
 
 ### Windows
 
@@ -184,6 +194,8 @@ To run production build locally, type `docker build -t bridge-proxy -f tools/cic
 
 ## Code Rules
 
+- Communication is paramount. Please discuss your ideas at morning standups, and open threads in channels on whatever you are pondering or stuck on.
+- Anything security related please also open a constant dialog with James
 - Branch from master, PR back to master.
   - Small PRs are good
   - Tag your commits and/or PR with the JIRA issue ID.
@@ -195,7 +207,6 @@ To run production build locally, type `docker build -t bridge-proxy -f tools/cic
 - To help keep DRY maybe you can tag me in a PR early on in any new component you are writing, so I can primarily help with the naming of things (as they saying goes "naming things is hard"). Or a screenshare, or just type out your plan more. Also have you looked at a wide variety of FIGMA designs? that would help. Also check out <https://vimeo.com/user30916972> for some videos of our old system, to get an idea for the domain and intended user.
 - Best to use jsx ternary rather than display none in react
 - Best to make each component responsive on its own (Storybook even has a mobile preview button), rather than based on outside props.
-- Open to all disagreements and other ideas. Please raise threads about problems you see in the code, my code, or future code.
 - Don't use index key in JSX
 - Never use the CR character
 - Configure your IDE's eslint to autofix on save

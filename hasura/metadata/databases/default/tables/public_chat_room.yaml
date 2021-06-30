@@ -14,48 +14,18 @@ array_relationships:
 - name: participants
   using:
     foreign_key_constraint_on:
-      column: room
+      column: room_id
       table:
         name: chat_room_participant
         schema: public
-insert_permissions:
-- permission:
-    backend_only: false
-    check:
+remote_relationships:
+- definition:
+    hasura_fields: []
+    remote_field:
       company:
-        _eq: X-Hasura-Org-Id
-    columns:
-    - description
-    - name
-    set:
-      company: x-hasura-Org-Id
-  role: user
-select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - company
-    - created_at
-    - description
-    - id
-    - name
-    - updated_at
-    filter:
-      company:
-        _eq: X-Hasura-Org-Id
-  role: user
-update_permissions:
-- permission:
-    check: null
-    columns:
-    - description
-    - name
-    filter:
-      company:
-        _eq: X-Hasura-Org-Id
-    set:
-      company: x-hasura-Org-Id
-  role: user
+        arguments: {}
+    remote_schema: CRM
+  name: company
 delete_permissions:
 - permission:
     filter:

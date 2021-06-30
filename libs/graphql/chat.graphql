@@ -153,7 +153,7 @@ mutation createChannel($name: String!, $description: String) {
     object: {
       room: {
         on_conflict: {
-          constraint: chat_room_company_name_key
+          constraint: chat_room_company_id_name_key
           update_columns: name
         }
         data: { name: $name, description: $description }
