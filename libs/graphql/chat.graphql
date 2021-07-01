@@ -87,7 +87,7 @@ query chatListRooms {
     room {
       id
       name
-      chats(limit: 1, order_by: { created_at: desc }) {
+      chats(limit: 1, order_by: { created_at: desc }) @connection(key: "chats") {
         id
         message
         from
