@@ -8,6 +8,8 @@ import {
   useChatPostToChannelIdMutation,
   useChatGetUsersQuery,
   useChatPostToUserIdMutation,
+  useChatListRoomNotifySubscription,
+  useChatListMessagesNotifySubscription,
 } from '@pabau/graphql'
 import {
   ChatMessage,
@@ -28,21 +30,13 @@ dayjs.extend(calendar)
 type P = Pick<MessagesProps, 'closeDrawer' | 'visible'>
 export const Chat = (props: P): JSX.Element => {
   const { closeDrawer } = props
-  // useChatListRoomNotifySubscription({
-  //   onSubscriptionData: (options) => {
-  //     console.log('got ws data')
-  //   },
-  // })
-  // useChatListMessagesNotifySubscription()
-  // const {
-  //   data: { chat: data },
-  // } = useChatListDirectMessagesSubscriptionSubscription({
-  //   skip: typeof window === 'undefined',
-  // })
-  const { data, error, loading } = useChatListRoomsQuery({
-    fetchPolicy: 'cache-first',
+
+  useChatListRoomNotifySubscription({
+    skip: typeof window === 'undefined',
   })
-  console.log('chat sub data', data, error, loading)
+  useChatListMessagesNotifySubscription({
+    skip: typeof window === 'undefined',
+  })
 
   const me = React.useContext(UserContext)
   console.log('USER FROM CONTEXT', me)
@@ -61,7 +55,11 @@ export const Chat = (props: P): JSX.Element => {
         fields: {
           chats(existingItems = []) {
             console.log('-->chats', existingItems)
-            console.log('about to insert item to cache', args)
+            console.log(
+              'about to insert item to cache',
+              args.data.insert_chat_one.message,
+              args.data.insert_chat_one.room.id
+            )
             const newItemRef = cache.writeFragment({
               data: args.data.insert_chat_one,
               fragment: gql`
@@ -69,6 +67,9 @@ export const Chat = (props: P): JSX.Element => {
                   id
                   message
                   created_at
+                  room {
+                    id
+                  }
                 }
               `,
             })
@@ -115,11 +116,6 @@ export const Chat = (props: P): JSX.Element => {
   })
   const members = membersData?.users
 
-  const [
-    fetchRoomHistory,
-    { data: chatRoomHistory },
-  ] = useChatRoomHistoryLazyQuery({ fetchPolicy: 'cache-first' })
-  console.log('chatRoomHistory', chatRoomHistory)
   // {
   //   refetch: fetchDirectHistory,
   //     data: chatDirectHistory,
@@ -132,6 +128,62 @@ export const Chat = (props: P): JSX.Element => {
     fetchPolicy: 'cache-first',
   })
   const [topic, setTopic] = useState<Group | Participant | undefined>()
+
+  const [
+    fetchRoomHistory,
+    { data: chatRoomHistory },
+  ] = useChatRoomHistoryLazyQuery({ fetchPolicy: 'cache-first' })
+
+  // Here we are using data.chat_room_participant (which is an array)
+  const { data } = useChatListRoomsQuery({
+    fetchPolicy: 'cache-first',
+  })
+
+  // And here we are adding to that array. The return type is participant
+  const [createChannelMutation] = useCreateChannelMutation({
+    optimisticResponse() {
+      return {
+        insert_chat_room_participant_one: {
+          id: 'new',
+          room: {
+            id: 'new',
+            name: '#new',
+          },
+        },
+      }
+    },
+    update: (cache, { data: { insert_chat_room_participant_one: data } }) => {
+      console.log('apollo update()', data)
+      cache.modify({
+        id: 'ROOT_QUERY',
+        fields: {
+          chat_room_participant(existingItems) {
+            const newItemRef = cache.writeFragment({
+              data,
+              fragment: gql`
+                fragment NewItem on chat_room_participant {
+                  id
+                  room {
+                    id
+                    name
+                  }
+                }
+              `,
+            })
+            return [...existingItems, newItemRef]
+          },
+        },
+      })
+    },
+  })
+
+  console.log(
+    'chat list',
+    data,
+    'in rooms:',
+    data?.chat_room_participant.map((e) => e.room.name).join(', ')
+  )
+
   useEffect(() => {
     console.log('Chat.useEffect')
 
@@ -145,25 +197,13 @@ export const Chat = (props: P): JSX.Element => {
     }
   }, [topic, fetchDirectHistory, fetchRoomHistory])
 
-  const [createChannelMutation] = useCreateChannelMutation({
-    update: (cache, mutationResult) => {
-      cache.modify({
-        id: 'ROOT_QUERY',
-        fields: {
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          chat_room_participant() {},
-        },
-      })
-    },
-  })
-
-  if (!data) return null
+  // if (!data) return null
 
   const chatHistory =
     chatRoomHistory && chatRoomHistory.chat_room_by_pk.id === topic?.id
       ? {
           name: chatRoomHistory.chat_room_by_pk.name,
-          chats: chatRoomHistory.chat_room_by_pk.chats
+          chats: [...chatRoomHistory.chat_room_by_pk.chats]
             .sort((a, b) => (a.created_at < b.created_at ? -1 : 1))
             .map<ChatMessage>((e) => ({
               ...e,
@@ -199,6 +239,7 @@ export const Chat = (props: P): JSX.Element => {
         const result = await createChannelMutation({
           variables: { name, description },
         })
+
         if (result.errors) {
           alert('got some errors ' + JSON.stringify(result.errors))
         }
@@ -267,18 +308,14 @@ export const Chat = (props: P): JSX.Element => {
             //     },
             //   })
             // },
-            // optimisticResponse: {
-            //   //__typename: "Mutation",
-            //   insert_chat_one: {
-            //     __typename: 'chat',
-            //     id: `being-created`,
-            //     message: '=================',
-            //     room: {
-            //       __typename: 'chat_room',
-            //       ...topic,
-            //     },
-            //   },
-            // },
+            optimisticResponse: {
+              //__typename: "Mutation",
+              insert_chat_one: {
+                __typename: 'chat',
+                id: `being-created`,
+                message: '=================',
+              },
+            },
 
             // update: (cache, mutationResult) => {
             //   cache.writeQuery({
