@@ -63,10 +63,16 @@ echo "${OUTPUT}"
 echo "--"
 LAST_LINE=$(echo "${OUTPUT}" | tail -n1)
 echo "last line: ${LAST_LINE}"
-echo "${LAST_LINE}" > /tmp/bot_url_${APP_NAME}.txt
+echo "${LAST_LINE}" > "/tmp/bot_url_${APP_NAME}.txt"
 
 message_body=''
 read_heredoc message_body <<HEREDOC
 ${APP_NAME}: ${LAST_LINE}
 HEREDOC
 echo "${message_body}" >> /tmp/bot_message.txt
+
+echo "---- Deploying DB to Hasura Staging (api-v2-staging.pabau.com) ----"
+HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" npx -p hasura-cli hasura --project hasura migrate apply --database-name default || echo "SILENTLY FAILED"
+HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" npx -p hasura-cli hasura --project hasura metadata apply || echo "SILENTLY FAILED"
+
+
