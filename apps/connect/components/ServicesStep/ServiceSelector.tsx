@@ -24,25 +24,11 @@ import { ReactComponent as SkinHealth } from '../../../web/assets/images/skin-he
 import { ReactComponent as LogoSvg } from '../../../../libs/ui/src/lib/logo/logo.svg'
 import { MasterCategory, Category, Service } from '../../types/services'
 
-/* eslint-disable-next-line */
 export interface P {
   catID: number
   mCatID: number
   items: MasterCategory[]
-  ispro: boolean
-  proD: MasterCategory[]
-  changescreen: () => void
-  catData?: Category
-  onSelect: (
-    val: string,
-    price: number,
-    online: boolean,
-    range: number,
-    services: number,
-    vouchers: number,
-    proData: MasterCategory[]
-  ) => void
-  parentid?: number
+  onStepCompleted: (services: number[]) => void
   translation: (val: string) => string
 }
 
@@ -50,12 +36,7 @@ const ServiceSelector: FC<P> = ({
   catID,
   mCatID,
   items,
-  ispro,
-  proD,
-  changescreen,
-  catData,
-  onSelect,
-  parentid,
+  onStepCompleted,
   translation,
 }) => {
   // CRAP
@@ -63,41 +44,33 @@ const ServiceSelector: FC<P> = ({
   const [visible, setvisible] = useState(false)
   const [contype, setcontype] = useState(true)
   const [popover, setpopover] = useState(true)
-  const [sercount, setsercount] = useState(0)
-  const [serprice, setserprice] = useState(0)
   const [Vcount, setVcount] = useState(0)
   const [Vprice, setVprice] = useState(0)
   const [voucher, setvoucher] = useState(false)
   const [VoucherData, setVoucherData] = useState(voucherData)
   const [mbactive, setmbactive] = useState(true)
-  const [online, setonline] = useState<boolean>()
   const [infomodal, setinfomodal] = useState(false)
-  const [temname, settempname] = useState<string[]>([])
   const isMobile = useMedia('(max-width: 768px)', false)
 
   //FIXED
   const [categoryID, setCategoryID] = useState(catID)
   const [masterCategoryID, setMasterCategoryID] = useState(mCatID)
+  const [selectedServices, setSelectedServices] = useState<number[]>([])
 
   const renderdata = (val: Service) => {
-    const fun = (e, val) => {
-      // catgor(val.id, val.price)
-    }
-    const fun1 = (e) => {
-      e.stopPropagation()
-      setshowmodal(true)
-    }
+    const isSelected = selectedServices.includes(val.id)
     return (
       <div style={{ width: '100%', marginBottom: '16px' }}>
         <div
           className={styles.consultationCard}
           key={val.id}
           onClick={(e) => {
-            fun(e, val)
-            if (val?.online_only_service) {
-              setonline(val.online_only_service)
+            if (isSelected) {
+              setSelectedServices(
+                selectedServices.filter((el) => el !== val.id)
+              )
             } else {
-              setonline(false)
+              setSelectedServices([...selectedServices, val.id])
             }
           }}
         >
@@ -133,7 +106,7 @@ const ServiceSelector: FC<P> = ({
               )}
             </span>
             <div>
-              {isMobile && val.selected && (
+              {isMobile && isSelected && (
                 <div className={styles.serbutton}>
                   <Button>
                     <CheckCircleFilled />
@@ -167,8 +140,7 @@ const ServiceSelector: FC<P> = ({
                 </span>
               </div>
             )}
-            {console.log(val.selected)}
-            {!isMobile && val.selected && (
+            {!isMobile && isSelected && (
               <div className={styles.serbutton}>
                 <Button>
                   <CheckCircleFilled />
@@ -178,7 +150,7 @@ const ServiceSelector: FC<P> = ({
             )}
           </div>
         </div>
-        {val.selected && (
+        {isSelected && (
           <div className={styles.moreinfo}>
             <div className={styles.moreinfoinner}>
               <InfoCircleFilled style={{ color: '#20BAB1' }} />
@@ -562,33 +534,20 @@ const ServiceSelector: FC<P> = ({
           {!isMobile && renderServices()}
         </div>
       </div>
-      {(sercount > 0 || Vcount > 0) && (
+      {(selectedServices.length > 0 || Vcount > 0) && (
         <div className={styles.servicefooter}>
           <p>
-            {sercount > 0 &&
-              (sercount === 1
-                ? `1 service £ ${serprice}`
-                : `${sercount} services £ ${serprice}`)}
-            {Vcount > 0 && sercount > 0 && '  ,'}
+            {selectedServices.length === 1
+              ? `1 service £ ${0}`
+              : `${selectedServices.length} services £ ${0}`}
+
+            {Vcount > 0 && selectedServices.length > 0 && '  ,'}
             {Vcount > 0 &&
               (Vcount === 1
                 ? `1 voucher £ ${Vprice}`
                 : `${Vcount} vouchers £ ${Vprice}`)}
           </p>
-          <Button
-            onClick={() => {
-              onSelect(
-                temname[0],
-                serprice + Vprice,
-                online,
-                40,
-                sercount,
-                Vcount,
-                old
-              )
-              changescreen()
-            }}
-          >
+          <Button onClick={() => onStepCompleted}>
             Next
             <ArrowRightOutlined />{' '}
           </Button>

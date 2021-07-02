@@ -34,6 +34,29 @@ query locations($isActive: Int, $searchTerm: String, $filter: CompanyBranchAttac
   }
 }
 
+query onlineBookableLocations($company_id: Int) {
+  companyBranches(where: {company_id: {equals: $company_id}, bookable_online: {equals: 1}, is_active: {equals: 1}}, orderBy: {loc_order: asc}) {
+    id
+    address
+    street
+    city
+    county
+    name
+    postcode
+    online_bookings
+    phone
+    website
+    bookable_online
+    lat
+    lng
+    email
+    is_active
+    is_default
+    loc_order
+    region
+  }
+}
+
 mutation insertLocation(
   $name: String!
   $isActive: Int!

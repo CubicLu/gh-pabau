@@ -18,7 +18,6 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 import { employes } from '../../../web/mocks/connect/employMock'
 import { useTranslationI18 } from '../../../web/hooks/useTranslationI18'
 import { useCompanyServicesCategorisedQuery } from '@pabau/graphql'
-import Shop from '../../../../libs/ui/src/assets/images/shop.svg'
 import { Image } from 'antd'
 
 import useServices from '../../hooks/useServices'
@@ -71,22 +70,17 @@ const userData: userData = {
 }
 export function Index(props: OnlineBookingProps) {
   // CRAP
-
   const [seleData, SetselData] = useState(defaultItems.slice(0, 4))
-  const [proD, setproD] = useState<MasterCategory[]>()
   const [ispro, setispro] = useState(false)
   const [back, Setback] = useState(false)
-  //const [appointmentDate, setAppointmentDate] = useState<Date>()
   const [view, Setview] = useState(true)
   const [indicator, setindicator] = useState(false)
-  const [serviceid, setserviceid] = useState<number>()
   const [tempT, settempT] = useState('')
   const [user, setuser] = useState<userData>(userData)
   const [datetime, setDateTime] = useState<EmployData>()
   const [date, setdate] = useState()
   const [tempprice, settempprice] = useState('')
   const [editdate, seteditdate] = useState({ time: false, date: false })
-  const [conType, setconType] = useState<Category>()
   const [promoPrice, setpromoPrice] = useState<number>(0)
   const [percentage, setpercentage] = useState<number>(0)
   const [lang, setlang] = useState('en')
@@ -97,17 +91,27 @@ export function Index(props: OnlineBookingProps) {
   const [selectedData, setSelectedData] = useState<BookingData>({})
 
   const {
-    loading,
-    error,
+    loading: loadingServices,
+    error: errorServices,
     data: servicesCategorised,
   } = useCompanyServicesCategorisedQuery({
     variables: {
       company_id: 8021,
     },
   })
-  if (error) return <div>Error!</div>
-  if (loading || !servicesCategorised) return <div>Loading...</div>
 
+  const {
+    loading: loadingLocations,
+    error: errorLocations,
+    data: locations,
+  } = useOnlineBookableLocationsQuery({
+    variables: {
+      company_id: 8021,
+    },
+  })
+
+  if (errorServices || errorLocations) return <div>Error!</div>
+  if (loadingServices || loadingLocations) return <div>Loading...</div>
   const masterCategories = servicesCategorised.serviceMasterCategories.map(
     (row) => {
       return {
@@ -371,31 +375,13 @@ export function Index(props: OnlineBookingProps) {
                 items={masterCategories}
                 catID={selectedData.categoryID}
                 mCatID={selectedData.masterCategoryID}
-                ispro={ispro}
-                proD={proD}
-                changescreen={rech}
-                catData={conType}
                 translation={translation}
-                parentid={serviceid}
-                onSelect={(
-                  conName: string,
-                  price,
-                  online,
-                  range,
-                  services,
-                  vouchers,
-                  proData: MasterCategory[]
-                ) => {
-                  user.services = services
-                  user.vouchers = vouchers
-                  user.type = conName
-                  user.charge = String(price)
-                  user.online = online
-                  user.duration = range
-                  setuser(user)
-                  setproD(proData)
-                  console.log(proData)
-                  console.log(conName)
+                onStepCompleted={(services: number[]) => {
+                  setSelectedData({
+                    ...selectedData,
+                    serviceID: services,
+                  })
+                  setCurrentStep(currentStep + 1)
                 }}
               />
             </div>
