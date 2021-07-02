@@ -4,7 +4,7 @@
   "extensions": {
     "endpoints": {
       "production": {
-        "url": "https://api.new.pabau.com.com/v1/graphql",
+        "url": "https://api-v2.pabau.com/v1/graphql",
         "headers": {
           "Authorization": "Bearer ${env:GITHUB-ACCESS-TOKEN}",
           "user-agent": "JS GraphQL"

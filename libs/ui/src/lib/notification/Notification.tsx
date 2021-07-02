@@ -1,7 +1,3 @@
-import React from 'react'
-import { message } from 'antd'
-import styles from './Notification.module.less'
-import Reconnect from './ReconnectNotification'
 import {
   CheckCircleFilled,
   CloseCircleOutlined,
@@ -9,6 +5,10 @@ import {
   ExclamationCircleOutlined,
   InfoCircleOutlined,
 } from '@ant-design/icons'
+import { message } from 'antd'
+import React from 'react'
+import styles from './Notification.module.less'
+import Reconnect from './ReconnectNotification'
 
 export enum NotificationType {
   info = 'info',

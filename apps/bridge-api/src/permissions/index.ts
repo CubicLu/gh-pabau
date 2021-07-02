@@ -19,7 +19,14 @@ export const permissions = shield(
       //CompanyMeta
       setOneCompanyMeta: rules.authentication.isAdmin,
 
+      //Update User Password
+      updateUserPassword: rules.authentication.isAuthenticated,
+
+      // Send Email
+      sendEmail: rules.authentication.isAuthenticated,
+
       //Page
+      createOnePage: rules.authentication.isAdmin,
       updateOnePage: rules.authentication.isAdmin,
       deleteOnePage: rules.authentication.isAdmin,
 

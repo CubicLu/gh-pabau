@@ -1,0 +1,77 @@
+.createCustomFieldsModal {
+  display: flex;
+  justify-content: center;
+  padding: 20px 50px;
+
+  .form {
+    background-color: var(--light-color);
+    width: 596px;
+    padding: 30px;
+    margin-bottom: 65px;
+
+    > h1 {
+      padding-left: 0px;
+    }
+
+    .formHeading {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 24px;
+      color: var(--grey-text-color);
+    }
+
+    :global {
+      .ant-form-item-label {
+        padding-bottom: 0px;
+        label {
+          font-weight: normal;
+          font-size: 14px;
+          line-height: 22px;
+          color: var(--light-grey-color);
+        }
+      }
+      .ant-select-selection-item {
+        font-size: 14px !important;
+      }
+      .ant-btn {
+        padding: 0px 10px;
+        height: 30px;
+        span {
+          font-size: 12px;
+        }
+      }
+    }
+
+    .displayFor,
+    .fieldType {
+      padding-top: 7.5px;
+      display: flex;
+      flex-wrap: wrap;
+      > span {
+        margin-right: 0px;
+        margin-bottom: 7.5px;
+
+        > div {
+          float: none;
+          button {
+            border: 1px solid var(--light-grey-border-color);
+          }
+        }
+      }
+    }
+
+    .switch {
+      :global .ant-form-item-control-input-content {
+        display: flex;
+        align-items: center;
+        label {
+          margin-left: 10px;
+          font-weight: normal;
+          font-size: 14px;
+          line-height: 22px;
+          color: var(--light-grey-color);
+        }
+      }
+    }
+  }
+}

@@ -76,6 +76,7 @@ interface TP {
   value: string
   valueWithTag: string
   onChange?: (value) => void
+  onFullChange?: (value) => void
   disabledTags: string[]
   showTagButton?: boolean
   triggerTagDlg?: boolean
@@ -87,6 +88,8 @@ interface TP {
   handleSend?: () => void
   maxWidth?: number
   maxHeight?: number
+  width?: number
+  forWhat?: string
 }
 
 interface EntityRange {
@@ -119,6 +122,8 @@ export const InputWithTags: FC<TP> = ({ ...props }) => {
     clearTriggerEmpty,
     maxWidth = 0,
     maxHeight = 0,
+    width = 0,
+    forWhat = '',
   } = props
   const editor = React.useRef<Editor | null>(null)
   const [showTagsDlg, setShowTagsDlg] = useState(false)
@@ -381,7 +386,7 @@ export const InputWithTags: FC<TP> = ({ ...props }) => {
     return false
   }
 
-  const triggerSaveInputChars = () => {
+  const triggerSaveInputChars = (fullChange) => {
     const contentState = editorState.getCurrentContent()
     let inputChars = ''
 
@@ -402,6 +407,7 @@ export const InputWithTags: FC<TP> = ({ ...props }) => {
     }
     if (!showTagButton) inputChars += lastChars
     props.onChange?.(inputChars)
+    if (fullChange) props.onFullChange?.(inputChars)
   }
 
   const findTagInfo = (tag) => {
@@ -448,7 +454,7 @@ export const InputWithTags: FC<TP> = ({ ...props }) => {
     } else {
       setEditorState(e)
     }
-    triggerSaveInputChars()
+    triggerSaveInputChars(false)
   }
 
   const onHandleKeyCommand = (command, editorState) => {
@@ -534,6 +540,10 @@ export const InputWithTags: FC<TP> = ({ ...props }) => {
     }
   }
 
+  const onHandleBlur = () => {
+    triggerSaveInputChars(true)
+  }
+
   let inputTagStyle = {}
   if (maxWidth !== 0 && maxHeight !== 0) {
     inputTagStyle = {
@@ -550,8 +560,18 @@ export const InputWithTags: FC<TP> = ({ ...props }) => {
     }
   }
 
+  let inputTagMainStyle = {}
+  if (width !== 0) {
+    inputTagMainStyle = { ...inputTagMainStyle, width: `${width}px` }
+  }
+
   return (
-    <div className={styles.inputTagMain}>
+    <div
+      style={inputTagMainStyle}
+      className={`${styles.inputTagMain} ${
+        forWhat === 'rule' ? styles.rule : ''
+      } ${forWhat === 'ruleEmpty' ? styles.ruleEmpty : ''}`}
+    >
       <div
         className={styles.inputTagDiv}
         onClick={focusEditor}
@@ -568,6 +588,7 @@ export const InputWithTags: FC<TP> = ({ ...props }) => {
           handleBeforeInput={onHandleBeforeInput}
           handlePastedText={onHandlePastedText}
           placeholder={placeholder}
+          onBlur={onHandleBlur}
         />
       </div>
       {showTagButton && (

@@ -201,12 +201,16 @@ const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
                   </AntForm.Item>
                 </div>
               )}
-              {type === 'icon' && values.appointment_type === 'Icon' && (
+              {type === 'icon' && values.indicator === 'ICON' && (
                 <AntForm.Item key={name} name={name}>
                   <FontIcon
                     max={60}
                     height={172}
-                    selectedIcon={values.icon}
+                    selectedIcon={
+                      values.icon.includes('fa')
+                        ? values.icon.replace(/fa-/, '')
+                        : values.icon
+                    }
                     onIconSelected={(icon) => {
                       values.icon = icon
                     }}
@@ -234,12 +238,16 @@ const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
                 <AntForm.Item key={name} name={name} required={required}>
                   <div style={{ width: '344px' }}>
                     <ColorPicker
-                      selectedColor={values.color}
+                      selectedColor={values.color || values?.icon_color}
                       isDarkColor={true}
                       onSelected={(val) => {
                         formik.setFieldValue(name, val)
                       }}
-                      heading={values.appointment_type + ' ' + full}
+                      heading={
+                        (values.appointment_type === 'LINE'
+                          ? 'Line '
+                          : 'Icon ') + full
+                      }
                     />
                     {!values[name] && formik.errors?.color && (
                       <span style={{ color: 'red' }}>
@@ -304,6 +312,13 @@ const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
                     }}
                     placeholder={placeholder}
                     autoFocus={i === 0}
+                    disabled={
+                      schema?.disable
+                        ? values[schema?.disable.conditionalField]
+                          ? true
+                          : false
+                        : false
+                    }
                   />
                 </AntForm.Item>
               )}

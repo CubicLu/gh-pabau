@@ -1,71 +1,145 @@
-import React, { FC, useEffect, useState } from 'react'
 import {
-  Pagination,
-  DotButton,
-  MedicalFormPreview,
-  VersionHistory,
-  VersionItem,
-  Button,
-  Table,
+  CopyOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  ShareAltOutlined,
+} from '@ant-design/icons'
+import {
+  useFindMedicalFormsCountQuery,
+  useFindMedicalFormsQuery,
+} from '@pabau/graphql'
+import {
   BasicModal,
+  Button,
+  DotButton,
+  MedicalFormBuilder,
+  MedicalFormItem,
+  MedicalFormPreview,
   MyLottie,
   Notification,
   NotificationType,
+  Pagination,
+  Table,
+  VersionHistory,
 } from '@pabau/ui'
-import {
-  CopyOutlined,
-  ShareAltOutlined,
-  DeleteOutlined,
-  EyeOutlined,
-  EditOutlined,
-} from '@ant-design/icons'
-import { medicalFormData, medicalFormPreviewProps } from './mock'
-import treatmentType from '../../assets/images/form-type/treatment.svg'
 import { Input } from 'antd'
-import styles from './Custom.module.less'
+import moment from 'moment'
+// import { useRouter } from 'next/router'
+import React, { FC, useEffect, useMemo, useState } from 'react'
+import treatmentType from '../../assets/images/form-type/treatment.svg'
 import emailConfirmSent from '../../assets/lottie/email-confirmation-sent.json'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import { useRouter } from 'next/router'
-
-interface MedicalFormVersion {
-  currentVersion: string
-  history: {
-    [key: string]: VersionItem[]
-  }
-}
-
-interface MedicalFormItem {
-  name: string
-  formType: string
-  createdAt: string
-  version: MedicalFormVersion
-  status: string
-  index?: number | string
-}
+import styles from './Custom.module.less'
+import { medicalFormPreviewProps } from './mock'
 
 interface CustomProps {
+  addItem?: MedicalFormItem
   data?: MedicalFormItem[]
 }
 
-const defaultData: MedicalFormItem[] = medicalFormData
-
-const Custom: FC<CustomProps> = ({ data }) => {
+const Custom: FC<CustomProps> = ({ addItem = null, data }) => {
   const [showVersions, setShowVersions] = useState(false)
   const [currentItem, setCurrentItem] = useState<MedicalFormItem>()
   const [showPreview, setShowPreview] = useState(false)
-  const [medicalFormitems, setMedicalFormItems] = useState<MedicalFormItem[]>(
-    defaultData
+  const [medicalFormItems, setMedicalFormItems] = useState<MedicalFormItem[]>(
+    []
   )
   const [shareModal, setShareModal] = React.useState(false)
   const [successModal, setSuccessModal] = React.useState(false)
   const [deleteModal, setDeleteModal] = React.useState(false)
+  const [editFormModal, setEditFormModal] = React.useState(false)
   const [selectedItem, setSelectedItem] = useState<MedicalFormItem>()
   const [popoverVisible, setPopoverVisible] = useState(false)
+  const [paginateData, setPaginateData] = useState({
+    total: 0,
+    skip: 0,
+    take: 10,
+    currentPage: 1,
+    showingRecords: 10,
+  })
 
   const { t } = useTranslationI18()
 
+  const formTypeList: { [key: string]: string } = {
+    medicalHistory: t('ui.medicalformbuilder.form.type.medicalhistory'),
+    consent: t('ui.medicalformbuilder.form.type.consent'),
+    treatmentForm: t('ui.medicalformbuilder.form.type.treatment'),
+    epaper: t('ui.medicalformbuilder.form.type.epaper'),
+    presciption: t('ui.medicalformbuilder.form.type.presciption'),
+    labForm: t('ui.medicalformbuilder.form.type.lab'),
+  }
+
+  const getQueryVariables = useMemo(() => {
+    const queryOptions = {
+      variables: {
+        take: paginateData.take,
+        skip: paginateData.skip,
+        isDeleted: 0,
+      },
+    }
+    return queryOptions
+  }, [paginateData.take, paginateData.skip])
+
+  const medicalForms = useFindMedicalFormsQuery(getQueryVariables)
+
+  const medicalFormsCount = useFindMedicalFormsCountQuery(getQueryVariables)
+
+  useEffect(() => {
+    if (medicalForms.data?.medicalForms) {
+      const medicalFormList = medicalForms.data?.medicalForms.map(
+        (medicalForm, index) => ({
+          key: medicalForm.id.toString(),
+          name: medicalForm.name,
+          formType: medicalForm.form_type,
+          createdAt: moment(medicalForm.created_at).format(
+            'YYYY-MM-DD HH:mm:ss'
+          ),
+          version: {
+            currentVersion: '3',
+            history: {
+              last_week: [
+                {
+                  version: '3',
+                  updatedBy: 'William Brandham',
+                  date: 'January 22, 2:27 PM',
+                },
+                {
+                  version: '2',
+                  updatedBy: 'Meri Redjepi',
+                  date: 'January 22, 1:26 PM',
+                },
+                {
+                  version: '1',
+                  updatedBy: 'Meri Redjepi',
+                  date: 'January 22, 2:27 PM',
+                },
+              ],
+            },
+          },
+          status: 'active',
+          index: index,
+          formData: medicalForm.data,
+          rules: [],
+        })
+      )
+      setMedicalFormItems(medicalFormList)
+    }
+  }, [medicalForms])
+
+  useEffect(() => {
+    if (medicalFormsCount.data?.medicalFormsCount) {
+      setPaginateData((prevData) => {
+        return {
+          ...prevData,
+          total: medicalFormsCount.data?.medicalFormsCount,
+        }
+      })
+    }
+  }, [medicalFormsCount])
+
   const handleDefault = () => {
-    const mappedItems = medicalFormitems.map((item) => {
+    const mappedItems = medicalFormItems.map((item) => {
       if (
         item.index === selectedItem?.index &&
         item.formType === ('Questionnaire' || 'Questionnaire Default')
@@ -86,10 +160,11 @@ const Custom: FC<CustomProps> = ({ data }) => {
     return false
   }
 
-  const router = useRouter()
+  // const router = useRouter()
 
   const handleIdEditClick = () => {
-    router.push(`medical-forms/edit/${currentItem.index}`)
+    // router.push(`medical-forms/edit/${currentItem.index}`)
+    setEditFormModal(true)
   }
 
   const menuList = [
@@ -158,6 +233,9 @@ const Custom: FC<CustomProps> = ({ data }) => {
       title: t('setup.medical.forms.columns.name'),
       dataIndex: 'name',
       className: 'drag-visible',
+      visible: true,
+      /* eslint-disable react/display-name */
+      render: (name, rowData) => <div data-acceptclicking={true}>{name}</div>,
     },
     {
       key: 'formType',
@@ -167,10 +245,22 @@ const Custom: FC<CustomProps> = ({ data }) => {
       dataIndex: 'formType',
       /* eslint-disable react/display-name */
       render: (formType, rowData) => (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <img src={treatmentType} height="16px" alt="treatment type" />
-          <span style={{ paddingLeft: '8px' }} onClick={handleIdEditClick}>
-            {formType}
+        <div
+          style={{ display: 'flex', alignItems: 'center' }}
+          data-acceptclicking={true}
+        >
+          <img
+            src={treatmentType}
+            height="16px"
+            alt="treatment type"
+            data-acceptclicking={false}
+          />
+          <span
+            style={{ paddingLeft: '8px' }}
+            onClick={handleIdEditClick}
+            data-acceptclicking={false}
+          >
+            {formTypeList[formType] ? formTypeList[formType] : 'No Type'}
           </span>
         </div>
       ),
@@ -181,6 +271,10 @@ const Custom: FC<CustomProps> = ({ data }) => {
       className: 'drag-visible',
       visible: true,
       dataIndex: 'createdAt',
+      /* eslint-disable react/display-name */
+      render: (createdAt, rowData) => (
+        <div data-acceptclicking={true}>{createdAt}</div>
+      ),
     },
     {
       key: 'version',
@@ -191,15 +285,18 @@ const Custom: FC<CustomProps> = ({ data }) => {
       render: (version, rowData) => {
         const { currentVersion } = version
         return (
-          <span
-            className={styles.versionBtn}
-            onClick={() => {
-              setCurrentItem(rowData)
-              setShowVersions(true)
-            }}
-          >
-            {currentVersion}
-          </span>
+          <div data-acceptclicking={true}>
+            <span
+              className={styles.versionBtn}
+              onClick={() => {
+                setCurrentItem(rowData)
+                setShowVersions(true)
+              }}
+              data-acceptclicking={false}
+            >
+              {currentVersion}
+            </span>
+          </div>
         )
       },
     },
@@ -210,9 +307,14 @@ const Custom: FC<CustomProps> = ({ data }) => {
       visible: true,
       dataIndex: 'status',
       render: (status) => (
-        <Button className={statusValues[status].class}>
-          {statusValues[status].title}
-        </Button>
+        <div data-acceptclicking={true}>
+          <Button
+            className={statusValues[status].class}
+            data-acceptclicking={false}
+          >
+            {statusValues[status].title}
+          </Button>
+        </div>
       ),
     },
     {
@@ -223,11 +325,13 @@ const Custom: FC<CustomProps> = ({ data }) => {
       render: (val, item) => (
         <div className={styles.tableOperations}>
           {item.index === currentItem?.index && (
-            <div>
+            <div data-acceptclicking={true}>
               {showPreview && (
                 <MedicalFormPreview
                   {...medicalFormPreviewProps}
                   visible={showPreview}
+                  formData={item.formData ? item.formData : ''}
+                  formName={item.name ? item.name : ''}
                   closePreviewDialog={() =>
                     setShowPreview((showPreview) => !showPreview)
                   }
@@ -258,16 +362,45 @@ const Custom: FC<CustomProps> = ({ data }) => {
   ]
 
   useEffect(() => {
-    setMedicalFormItems(data || defaultData)
-  }, [data])
-
-  useEffect(() => {
-    setMedicalFormItems(medicalFormitems)
-  }, [medicalFormitems])
+    if (addItem) {
+      setMedicalFormItems((prevItems) => [
+        ...prevItems,
+        {
+          ...addItem,
+          index: prevItems.length,
+          key: (prevItems.length + 1).toString(),
+        },
+      ])
+    }
+  }, [addItem])
 
   const handleShareClick = () => {
     setSuccessModal(true)
     setShareModal(false)
+  }
+
+  const saveForm = (currentMedicalItem) => {
+    const index = medicalFormItems.findIndex(
+      (item) => item.key === currentMedicalItem.key
+    )
+    if (index !== -1) {
+      medicalFormItems.splice(index, 1, currentMedicalItem)
+      Notification(
+        NotificationType.success,
+        `${currentMedicalItem?.name} - ${t('setup.medical.forms.save.text')}`
+      )
+    }
+    setEditFormModal(false)
+  }
+
+  const onPaginationChange = (currentPage, take) => {
+    const skip = paginateData.take * (currentPage - 1)
+    setPaginateData({
+      ...paginateData,
+      skip,
+      take,
+      currentPage: currentPage,
+    })
   }
 
   return (
@@ -282,7 +415,7 @@ const Custom: FC<CustomProps> = ({ data }) => {
       )}
       <Table
         draggable
-        dataSource={medicalFormitems as never[]}
+        dataSource={medicalFormItems as never[]}
         columns={columns}
         pagination={false}
         isHover={true}
@@ -293,9 +426,16 @@ const Custom: FC<CustomProps> = ({ data }) => {
         onLeaveRow={(record) => {
           setPopoverVisible(false)
         }}
-        onRowClick={(record) => {
+        onRowClickWithEvent={(record, event) => {
           setSelectedItem(record)
+          if (
+            typeof event.target.dataset.acceptclicking !== 'undefined' &&
+            event.target.dataset.acceptclicking === 'true'
+          ) {
+            setEditFormModal(true)
+          }
         }}
+        needEvent={true}
       />
 
       <BasicModal
@@ -354,8 +494,33 @@ const Custom: FC<CustomProps> = ({ data }) => {
           {currentItem?.name} {t('common-label-delete-warning')}
         </p>
       </BasicModal>
+      <MedicalFormBuilder
+        visible={editFormModal}
+        previewData={currentItem?.formData}
+        preFormName={currentItem?.name}
+        currentForm={currentItem}
+        onHideFormBuilder={() => setEditFormModal(false)}
+        onSaveForm={saveForm}
+        create={false}
+      />
       <div className={styles.paginationContainer}>
-        <Pagination showingRecords={10} total={medicalFormitems.length} />
+        <Pagination
+          total={paginateData.total}
+          defaultPageSize={10}
+          showSizeChanger={false}
+          onChange={onPaginationChange}
+          pageSizeOptions={['10', '25', '50', '100']}
+          onPageSizeChange={(pageSize) => {
+            setPaginateData({
+              ...paginateData,
+              showingRecords: pageSize,
+              take: pageSize,
+            })
+          }}
+          pageSize={paginateData.take}
+          current={paginateData.currentPage}
+          showingRecords={paginateData.showingRecords}
+        />
       </div>
     </div>
   )

@@ -1,7 +1,7 @@
-import { FC, useState } from 'react'
 import { gql } from '@apollo/client'
-import { useLiveQuery, Search as PabauSearch } from '@pabau/ui'
+import { Search as PabauSearch, useLiveQuery } from '@pabau/ui'
 import { useRouter } from 'next/router'
+import { FC, useState } from 'react'
 
 const CLIENTS_QUERY = gql`
   query findContacts($searchTerm1: String, $searchTerm2: String) {

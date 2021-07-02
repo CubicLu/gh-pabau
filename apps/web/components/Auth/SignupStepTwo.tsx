@@ -5,8 +5,7 @@ import countries from 'i18n-iso-countries'
 import english from 'i18n-iso-countries/langs/en.json'
 import React, { FC, useState } from 'react'
 import * as Yup from 'yup'
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import timezones from '../../../../libs/ui/src/assets/timezone'
+import { timezone as timezones } from '@pabau/ui'
 import styles from './Common.module.less'
 
 export interface StepTwoFormProps {

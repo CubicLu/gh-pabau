@@ -1,6 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Controller, Post, Body } from '@nestjs/common'
+import { Body, Controller, Post } from '@nestjs/common'
 import { EmailService } from './email.service'
+
+interface NotificationEmailData {
+  email?: string
+  bodyContent?: string
+  subject?: string
+  templateType?: string
+}
 
 @Controller()
 export class EmailController {
@@ -8,10 +14,10 @@ export class EmailController {
 
   @Post('notification-email')
   async sendEmail(
-    @Body() data: any
+    @Body() data: NotificationEmailData
   ): Promise<{ success: boolean; message?: string }> {
     if (!data.email) {
-      return { success: false, message: 'email is required' }
+      throw new Error('Email is required')
     }
     await this.emailService.sendEmail(
       data.email,

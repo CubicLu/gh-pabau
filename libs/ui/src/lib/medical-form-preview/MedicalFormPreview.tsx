@@ -21,6 +21,8 @@ export interface MedicalFormPreviewProps {
   user: MedicalPreviewUserProps
   desktopTemp: string
   formData?: string
+  formName?: string
+  formSaveLabel?: string
   appTemp: string
   step: number
   stepData: StepperItem[]
@@ -30,6 +32,8 @@ export interface MedicalFormPreviewProps {
 
 export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
   formData = '',
+  formName = '',
+  formSaveLabel = '',
   user,
   desktopTemp,
   appTemp,
@@ -46,7 +50,7 @@ export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
       {visible && (
         <BasicModal
           wrapClassName={styles.tempPreviewContainer}
-          title="Template Preview"
+          title={formName === '' ? 'Template Preview' : formName + ' Preview'}
           visible={visible}
           newButtonText="Test As Client"
           width="50%"
@@ -58,7 +62,10 @@ export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
                 {formData === '' ? (
                   <iframe title="Desktop" src={desktopTemp} />
                 ) : (
-                  <FormComponentBuilder previewData={formData} />
+                  <FormComponentBuilder
+                    previewData={formData}
+                    formSaveLabel={formSaveLabel}
+                  />
                 )}
               </div>
               <div className={styles.tempPreviewTabContainer}>

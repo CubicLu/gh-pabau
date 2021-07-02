@@ -1,8 +1,7 @@
 import { FilterOutlined } from '@ant-design/icons'
 import { Breadcrumb, Button, NotificationBanner, TabMenu } from '@pabau/ui'
 import { Card, Divider, Input, Popover, Radio, Typography } from 'antd'
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { useTranslationI18 } from 'apps/web/hooks/useTranslationI18'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import classNames from 'classnames'
 import React, { FC, useState, useEffect } from 'react'
 import { useMedia } from 'react-use'

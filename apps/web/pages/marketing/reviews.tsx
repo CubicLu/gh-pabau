@@ -662,27 +662,30 @@ const Reviews: FC<ReviewConfig> = () => {
               <div className={styles.filterViewerStatusContainer}>
                 <Button
                   type={values.score === 'Bad' ? 'primary' : 'default'}
-                  onClick={() => setFieldValue('score', 'Bad')}
+                  onClick={() => {
+                    setFieldValue('score', values.score === 'Bad' ? '' : 'Bad')
+                  }}
                 >
                   {t('marketingreviews.filter.option.bad')}
                 </Button>
                 <Button
                   type={values.score === 'Ok' ? 'primary' : 'default'}
-                  onClick={() => setFieldValue('score', 'Ok')}
+                  onClick={() => {
+                    setFieldValue('score', values.score === 'Ok' ? '' : 'Ok')
+                  }}
                 >
                   {t('marketingreviews.ok.label')}
                 </Button>
                 <Button
                   type={values.score === 'Excellent' ? 'primary' : 'default'}
-                  onClick={() => setFieldValue('score', 'Excellent')}
+                  onClick={() => {
+                    setFieldValue(
+                      'score',
+                      values.score === 'Excellent' ? '' : 'Excellent'
+                    )
+                  }}
                 >
                   {t('marketingreviews.excellent.label')}
-                </Button>
-                <Button
-                  type={values.score === '' ? 'primary' : 'default'}
-                  onClick={() => setFieldValue('score', '')}
-                >
-                  {t('marketingreviews.filter.score.option.none')}
                 </Button>
               </div>
               <div className={styles.filterMenuItem}>
