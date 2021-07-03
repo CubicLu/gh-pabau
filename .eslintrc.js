@@ -42,6 +42,7 @@ module.exports = {
           'error',
           {
             enforceBuildableLibDependency: true,
+            allowCircularSelfDependency: true, //TODO: make this false
             allow: [],
             depConstraints: [
               {
