@@ -18,7 +18,9 @@ pipelines:
     '**':
       - step:
           name: yarn audit
-          max-time: 20
+          runs-on:
+            - 'self.hosted'
+          max-time: 22
           caches:
             - node
           script:
@@ -38,6 +40,8 @@ pipelines:
       - parallel:
           - step:
               name: misc checks
+              runs-on:
+                - 'self.hosted'
               max-time: 120
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
@@ -190,7 +194,9 @@ pipelines:
     master:
       - step:
           name: yarn audit
-          max-time: 20
+          runs-on:
+            - 'self.hosted'
+          max-time: 22
           caches:
             - node
           script:
@@ -210,8 +216,8 @@ pipelines:
       - parallel:
           - step:
               name: misc checks
-              # runs-on:
-              #   - 'self.hosted'
+              runs-on:
+                - 'self.hosted'
               max-time: 120
               script:
                 - openssl version || true
