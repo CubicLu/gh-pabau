@@ -114,6 +114,7 @@ pipelines:
 
       - step:
           name: deploy previews
+          image: node
           max-time: 20
           script:
             - ls -al . || true
