@@ -26,49 +26,6 @@ require('react-phone-input-2/lib/style.css')
 
 const cache = new InMemoryCache({
   resultCaching: true,
-  typePolicies: {
-    chat_room: {
-      fields: {
-        chats: {
-          merge(existing: any[], incoming: any[], { readField, mergeObjects }) {
-            console.log('MERGING CHATS', existing, incoming)
-            const ret = [...(existing || [])]
-            const dupeCheck = ret.map((e) => e.__ref)
-            for (const item of incoming) {
-              if (!dupeCheck.includes(item.__ref)) {
-                dupeCheck.push(item.__ref)
-                ret.push(item)
-              }
-            }
-            return ret
-
-            // const merged: any[] = existing ? [...existing] : []
-            // const authorNameToIndex: Record<string, number> = Object.create(
-            //   null
-            // )
-            // if (existing) {
-            //   for (const [index, author] of existing.entries()) {
-            //     authorNameToIndex[readField<string>('name', author)] = index
-            //   }
-            // }
-            // for (const author of incoming) {
-            //   const name = readField<string>('name', author)
-            //   const index = authorNameToIndex[name]
-            //   if (typeof index === 'number') {
-            //     // Merge the new author data with the existing author data.
-            //     merged[index] = mergeObjects(merged[index], author)
-            //   } else {
-            //     // First time we've seen this author in this array.
-            //     authorNameToIndex[name] = merged.length
-            //     merged.push(author)
-            //   }
-            // }
-            // return merged
-          },
-        },
-      },
-    },
-  },
 })
 
 const GRAPHQL_WS_ENDPOINT =
