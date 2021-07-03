@@ -75,4 +75,8 @@ echo "---- Deploying DB to Hasura Staging (api-v2-staging.pabau.com) ----"
 HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" npx -p hasura-cli hasura --project hasura migrate apply --database-name default || echo "SILENTLY FAILED"
 HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" npx -p hasura-cli hasura --project hasura metadata apply || echo "SILENTLY FAILED"
 
-
+HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" yarn hasura:cli migrate apply --database-name default || echo "SILENTLY FAILED"
+HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" yarn hasura:cli metadata apply || echo "SILENTLY FAILED"
+npm i -g hasura-cli
+HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" hasura --project hasura migrate apply --database-name default || echo "SILENTLY FAILED"
+HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" hasura --project hasura metadata apply|| echo "SILENTLY FAILED"
