@@ -72,6 +72,10 @@ HEREDOC
 echo "${message_body}" >> /tmp/bot_message.txt
 
 echo "---- Deploying DB to Hasura Staging (api-v2-staging.pabau.com) ----"
+
+curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | INSTALL_PATH=$HOME/bin bash
+HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" "$HOME/bin/hasura" --project hasura migrate apply --database-name default || echo "SILENTLY FAILED"
+
 HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" npx -p hasura-cli hasura --project hasura migrate apply --database-name default || echo "SILENTLY FAILED"
 HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" npx -p hasura-cli hasura --project hasura metadata apply || echo "SILENTLY FAILED"
 
