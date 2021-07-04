@@ -54,11 +54,11 @@ pipelines:
                 - yarn lint:workspace || true
                 - npm i -g @graphql-inspector/cli@2.5.0 graphql || true
                 - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
-                - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
+                - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql
                 #                - graphql-inspector similar hasura/schema.graphql || echo TODO
                 - graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
-                - DANGER_BITBUCKETCLOUD_OAUTH_KEY="${BITBUCKET_CLIENT_ID}" DANGER_BITBUCKETCLOUD_OAUTH_SECRET="${BITBUCKET_CLIENT_SECRET}" yarn danger ci || echo TODO
-                - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts || echo TODO
+                - DANGER_BITBUCKETCLOUD_OAUTH_KEY="${BITBUCKET_CLIENT_ID}" DANGER_BITBUCKETCLOUD_OAUTH_SECRET="${BITBUCKET_CLIENT_SECRET}" yarn danger ci
+                - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
 
           - step:
               name: lint
@@ -119,6 +119,7 @@ pipelines:
           image: node
           max-time: 20
           script:
+            - node -v
             - ls -al . || true
             - ls -al node_modules/ || true
             - ls -al dist || true
@@ -237,11 +238,10 @@ pipelines:
                 - yarn lint:workspace || true
                 - npm i -g @graphql-inspector/cli@2.5.0 graphql || true
                 - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
-                - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
+                - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql
                 #                - graphql-inspector similar hasura/schema.graphql || echo TODO
                 - graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
-                - yarn danger ci || echo TODO
-                - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts || echo TODO
+                - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
 
           - step:
               name: lint
