@@ -1,5 +1,5 @@
 query appointmentStatus($offset: Int, $limit: Int) {
-  bookingStatuses(skip: $offset, take: $limit, orderBy: { ord: desc }) {
+  bookingStatuses(skip: $offset, take: $limit, orderBy: { ord: asc }) {
     id
     name
     value
