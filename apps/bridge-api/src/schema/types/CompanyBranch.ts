@@ -1,4 +1,4 @@
-import { extendType } from 'nexus'
+import { extendType, list } from 'nexus'
 import { Context } from '../../context'
 import LocationService from '../../app/company-branch/LocationService'
 import {
@@ -11,6 +11,51 @@ import {
   CreateCompanyBranchInputType,
   UpdateCompanyBranchInputType,
 } from '../../app/company-branch/nexus-type'
+
+export const findAllowedLocation = extendType({
+  type: 'Query',
+  definition(t) {
+    t.field('findAllowedLocation', {
+      type: list('CompanyBranch'),
+      description: 'Retrieve list of allow locations based on company',
+      async resolve(_root, input, ctx: Context) {
+        const companyId = ctx.authenticated.company
+        const userId = ctx.authenticated.user
+        try {
+          const userLocation = await ctx.prisma.cmStaffGeneral.findFirst({
+            where: {
+              pabau_id: { equals: userId },
+            },
+            select: {
+              Location: true,
+            },
+          })
+          const locationIds = userLocation.Location
+          if (!locationIds) {
+            return []
+          }
+          const ids = []
+          for (const item of locationIds?.split(',')) {
+            ids.push(Number.parseInt(item))
+          }
+          const location = await ctx.prisma.companyBranch.findMany({
+            where: {
+              company_id: { equals: companyId },
+              is_active: { equals: 1 },
+              id: { in: ids },
+            },
+            orderBy: {
+              name: 'asc',
+            },
+          })
+          return location
+        } catch (error) {
+          return error
+        }
+      },
+    })
+  },
+})
 
 export const CreateCompanyBranch = extendType({
   type: 'Mutation',

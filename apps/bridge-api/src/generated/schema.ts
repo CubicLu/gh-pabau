@@ -223,6 +223,10 @@ export interface Company {
   CompanyBranchGroup?: CompanyBranchGroup[];
   CompanyBranchAttachment?: CompanyBranchAttachment[];
   InvPaymentType?: InvPaymentType[];
+  InvSale?: InvSale[];
+  IssuingCompany?: IssuingCompany[];
+  DebtManageCommunication?: DebtManageCommunication[];
+  CreditNoteType?: CreditNoteType[];
 }
 
 export interface AdvertCampaign {
@@ -1899,6 +1903,7 @@ export interface CompanyBranch {
   CmStaffGeneral?: CmStaffGeneral[];
   CmContactLocation?: CmContactLocation[];
   CompanyBranchAttachment?: CompanyBranchAttachment[];
+  InvSale?: InvSale[];
 }
 
 export interface CompanyBranchGroup {
@@ -2098,6 +2103,31 @@ export interface Country {
   gmaps_url: string;
   custom_id: string;
   CmContactTravel?: CmContactTravel[];
+}
+
+export interface CreditNoteType {
+  id: number;
+  company_id?: number;
+  name: string;
+  code: number;
+  prefix?: string;
+  quick_access: boolean;
+  credit_note_type: boolean;
+  is_disabled: boolean;
+  Company?: Company;
+}
+
+export interface DebtManageCommunication {
+  id: number;
+  invoice_id: number;
+  communication_id: number;
+  letter_no: number;
+  type: number;
+  company_id?: number;
+  uid: number;
+  creation_date?: Date;
+  modified_date?: Date;
+  Company?: Company;
 }
 
 export interface GlCode {
@@ -2346,7 +2376,7 @@ export interface InvSale {
   by_email?: number;
   by_sms?: number;
   tip?: number;
-  occupier?: number;
+  company_id?: number;
   uid?: number;
   created_date?: Date;
   modified_date?: Date;
@@ -2380,7 +2410,70 @@ export interface InvSale {
   credit_amount: number;
   credit_type: number;
   issuer_id?: number;
+  Company?: Company;
+  Location: CompanyBranch;
   CmContact?: CmContact;
+}
+
+export interface InvSaleItem {
+  id: number;
+  sale_id: number;
+  product_id: number;
+  product_code: string;
+  product_name: string;
+  product_unit: string;
+  tax_rate_id: number;
+  tax: string;
+  quantity: number;
+  unit_price: number;
+  gross_total: number;
+  val_tax: number;
+  occupier?: number;
+  uid?: number;
+  staff_purchase?: number;
+  created_date?: Date;
+  modified_date?: Date;
+  custom_id: number;
+  sale_custom_id: number;
+  contact_custom_id: number;
+  product_custom_id: number;
+  Practitioner_id: number;
+  Threatment_id: number;
+  User_id: number;
+  VAT_id: number;
+  LineDiscount: number;
+  imported: number;
+  UnitDiscount: number;
+  discount_reason?: string;
+  product_category_id?: number;
+  product_category_name?: string;
+  product_category_type?: string;
+  from_pos: number;
+  tax_total: number;
+  custom_product_name: string;
+  booking_id?: number;
+  Tax?: Tax;
+}
+
+export interface IssuingCompany {
+  id: number;
+  company_id: number;
+  is_active: boolean;
+  name: string;
+  abbreviation: string;
+  address: string;
+  address2: string;
+  city: string;
+  postcode: string;
+  website: string;
+  email: string;
+  phone: string;
+  vat_registered: string;
+  invoice_template_id: number;
+  custom_id: number;
+  invoice_prefix?: string;
+  invoice_starting_number?: number;
+  Company?: Company;
 }
 
 export interface Job {
@@ -2869,6 +2962,18 @@ export interface StaffMeta {
   meta_name?: string;
   meta_value?: string;
   User?: User;
+}
+
+export interface Tax {
+  id: number;
+  name: string;
+  value: string;
+  rate: number;
+  hidden: number;
+  default: number;
+  company_id: number;
+  custom_id: number;
+  InvSaleItem?: InvSaleItem[];
 }
 
 export interface TemplateFolder {
