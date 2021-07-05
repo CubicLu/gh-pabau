@@ -13,6 +13,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import * as Icons from '@fortawesome/free-solid-svg-icons'
 import { OperationDefinitionNode } from 'graphql'
 import { AppProps } from 'next/app'
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import 'react-image-crop/dist/ReactCrop.css'
 import 'react-phone-input-2/lib/style.css'
 import 'react-quill/dist/quill.snow.css'
@@ -28,11 +29,34 @@ const cache = new InMemoryCache({ resultCaching: true })
 // @ts-ignore
 if (typeof window !== 'undefined') window.debug = { cache }
 
-const GRAPHQL_WS_ENDPOINT =
-  process.env.NEXT_PUBLIC_WSS_ENDPOINT || 'wss://api.new.pabau.com/v1/graphql'
-const GRAPHQL_HTTP_ENDPOINT =
-  process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
-  'https://api.new.pabau.com/v1/graphql'
+try {
+  console.log(
+    'NEXT_PUBLIC_GRAPHQL_ENDPOINT []',
+    process.env['NEXT_PUBLIC_GRAPHQL_ENDPOINT']
+  )
+  // eslint-disable-next-line no-empty
+} catch {}
+try {
+  console.log(
+    'NEXT_PUBLIC_GRAPHQL_ENDPOINT .',
+    process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT
+  )
+  // eslint-disable-next-line no-empty
+} catch {}
+try {
+  console.log(
+    'NEXT_PUBLIC_WS_ENDPOINT []',
+    process.env['NEXT_PUBLIC_WS_ENDPOINT']
+  )
+  // eslint-disable-next-line no-empty
+} catch {}
+try {
+  console.log('NEXT_PUBLIC_WS_ENDPOINT .', process.env.NEXT_PUBLIC_WS_ENDPOINT)
+  // eslint-disable-next-line no-empty
+} catch {}
+
+const GRAPHQL_WS_ENDPOINT = process.env.NEXT_PUBLIC_WS_ENDPOINT
+const GRAPHQL_HTTP_ENDPOINT = process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token')
   return {

@@ -186,9 +186,13 @@ const copy = (source, destination, droppableSourceId, endIndex, formInfo) => {
 
 interface P {
   previewData: string
+  formSaveLabel?: string
 }
 
-export const FormComponentBuilder: FC<P> = ({ previewData }) => {
+export const FormComponentBuilder: FC<P> = ({
+  previewData,
+  formSaveLabel = '',
+}) => {
   const [, forceUpdate] = useReducer((x) => x + 1, 0)
   const [draggedForms, setDraggedForms] = useState<MedicalFormTypes[]>([])
   useEffect(() => {
@@ -225,7 +229,10 @@ export const FormComponentBuilder: FC<P> = ({ previewData }) => {
   }, [previewData])
   return (
     <div>
-      <FormComponentMain draggedForms={draggedForms} />
+      <FormComponentMain
+        draggedForms={draggedForms}
+        formSaveLabel={formSaveLabel}
+      />
     </div>
   )
 }

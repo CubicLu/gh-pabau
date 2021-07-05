@@ -9,6 +9,7 @@ import {
   Table,
   useLiveQuery,
 } from '@pabau/ui'
+import { LastAppointmentStatusOrderDocument } from '@pabau/graphql'
 import { Typography } from 'antd'
 import classNames from 'classnames'
 import { Formik, FormikErrors } from 'formik'
@@ -22,6 +23,8 @@ import CrudModal from './CrudModal'
 import styles from './CrudTable.module.less'
 
 const { Title } = Typography
+
+let lastOrder = 0
 interface P {
   schema: Schema
   crudLayoutRef: RefObject<HTMLDivElement>
@@ -44,11 +47,19 @@ interface P {
   customFilter?: () => JSX.Element
   setEditPage?(e): void
   draggable?: boolean
+  getLastOrder?: DocumentNode
+  isCustomOrder?: boolean
+  isDependentField?: boolean
+  displayColor?: boolean
+  displayLock?: boolean
   isNestedQuery?: boolean
   isFilterNumber?: boolean
   isDataIntegrityCheck?: boolean
   dataIntegrityCheckQuery?: DocumentNode
   isNotificationBannerOnData?: boolean
+  showStaticData?: boolean
+  staticData?: Array<Record<string, string | boolean | number>>
+  isCodeGen?: boolean
 }
 
 const defaultDataIntegrityCheck = gql`
@@ -78,12 +89,20 @@ const CrudTable: FC<P> = ({
   customFilter,
   setEditPage,
   draggable = true,
+  getLastOrder = LastAppointmentStatusOrderDocument,
+  isCustomOrder = false,
+  isDependentField = false,
+  displayColor = false,
+  displayLock = false,
   isNestedQuery = false,
   isFilterNumber = false,
   isDataIntegrityCheck = false,
   dataIntegrityCheckQuery = defaultDataIntegrityCheck,
   isNotificationBannerOnData = false,
   crudLayoutRef,
+  showStaticData = false,
+  staticData = [],
+  isCodeGen = false,
 }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isActive, setIsActive] = useState<boolean | number>(
@@ -188,6 +207,14 @@ const CrudTable: FC<P> = ({
     getAggregateQueryVariables()
   )
 
+  const { data: lastOrderData } = useLiveQuery(getLastOrder, {
+    skip: !isCustomOrder,
+  })
+
+  if (lastOrderData?.[0].order) {
+    lastOrder = lastOrderData?.[0].order
+  }
+
   const { data: dataIntegrityCheckData } = useLiveQuery(
     dataIntegrityCheckQuery,
     {
@@ -234,6 +261,8 @@ const CrudTable: FC<P> = ({
       } else if (isNotificationBannerOnData && Object.keys(data).length > 1) {
         let restData = { ...data }
         restData = restData[schema?.showNotification?.list]
+        if (showStaticData && restData.length > 0 && staticData.length > 0)
+          restData = [...restData, ...staticData]
         setSourceData(restData)
       } else {
         setSourceData(data)
@@ -319,9 +348,41 @@ const CrudTable: FC<P> = ({
 
   const { fields } = schema
 
+  const getTrackTime = (value) => {
+    return value.track_time ? 1 : 0
+  }
+
+  const getDependentValue = (name) => {
+    return name.toLowerCase().replace(/[^\dA-Za-z]+/g, '')
+  }
+
+  const getCodeGenEditVariableValues = (values) => {
+    const { key, __typename, id, ...rest } = values
+    let newEditValues = {}
+    for (const item of Object.keys(rest)) {
+      if (values[item] !== null) {
+        newEditValues = { ...newEditValues, [item]: { set: values[item] } }
+      }
+    }
+    return { data: newEditValues, where: { id: id } }
+  }
+
   const onSubmit = async (values, { resetForm }) => {
     setFormSubmitAllowedStatus(false)
-    if (isFilterNumber && schema?.filter?.primary?.type === 'number') {
+    if (draggable && isCustomOrder && !values.id) {
+      values = {
+        ...values,
+        order: lastOrder + 1,
+        track_time: getTrackTime(values.track_time),
+        value: getDependentValue(values.name),
+      }
+    } else if (isDependentField && values.id) {
+      values = {
+        ...values,
+        track_time: getTrackTime(values.track_time),
+        value: getDependentValue(values.name),
+      }
+    } else if (isFilterNumber && schema?.filter?.primary?.type === 'number') {
       values = {
         ...values,
         [schema?.filter?.primary?.name]: values[schema?.filter?.primary?.name]
@@ -329,9 +390,39 @@ const CrudTable: FC<P> = ({
           : schema?.filter?.primary?.inactive,
       }
     }
+
+    let newValues
+    if (isCodeGen) {
+      if (schema?.company) {
+        newValues = { data: { ...values, [schema['company']]: {} } }
+      } else {
+        newValues = { data: { ...values } }
+      }
+      if (values.id) {
+        newValues = getCodeGenEditVariableValues(values)
+      }
+    } else {
+      newValues = values
+    }
+
+    if (isCodeGen && isCustomOrder) {
+      if (values.id) {
+        newValues.data = {
+          ...newValues.data,
+          [schema?.ordering?.name ?? 'order']: { set: values.order },
+        }
+      } else {
+        newValues.data = {
+          ...newValues.data,
+          [schema?.ordering?.name ?? 'order']: values.order,
+        }
+      }
+      delete newValues.data.order
+    }
+
     await (values.id
       ? editMutation({
-          variables: values,
+          variables: newValues,
           optimisticResponse: {},
           refetchQueries: [
             {
@@ -345,7 +436,7 @@ const CrudTable: FC<P> = ({
           ],
         })
       : addMutation({
-          variables: values,
+          variables: newValues,
           optimisticResponse: {},
           refetchQueries: [
             {
@@ -400,9 +491,18 @@ const CrudTable: FC<P> = ({
   }
 
   const updateOrder = async (values) => {
-    if (values.id)
+    let newValues
+    if (values.id) {
+      if (isCodeGen) {
+        newValues = {
+          data: { ord: { set: values.order } },
+          where: { id: values.id },
+        }
+      } else {
+        newValues = values
+      }
       await updateOrderMutation({
-        variables: values,
+        variables: newValues,
         optimisticResponse: {},
         refetchQueries: [
           {
@@ -411,6 +511,7 @@ const CrudTable: FC<P> = ({
           },
         ],
       })
+    }
   }
 
   const createNew = () => {
@@ -582,6 +683,7 @@ const CrudTable: FC<P> = ({
             aggregateQueryVariables={getAggregateQueryVariables}
             isDataIntegrityCheck={isDataIntegrityCheck}
             dataIntegrityCount={dataIntegrityCount}
+            isCodeGen={isCodeGen}
           />
         )}
         {isNotificationBannerOnData
@@ -693,6 +795,8 @@ const CrudTable: FC<P> = ({
               }
             }}
             needTranslation={needTranslation}
+            displayColor={displayColor}
+            displayLock={displayLock}
           />
         </div>
         <Pagination

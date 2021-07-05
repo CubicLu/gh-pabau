@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react'
-import { gql, useMutation, DocumentNode } from '@apollo/client'
+import { DocumentNode } from '@apollo/client'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -11,6 +11,13 @@ import {
   ReportsPermissionTable,
   ReportsPermissionTableProps,
 } from '@pabau/ui'
+import {
+  useUpdateManyUserMutation,
+  useUpdateManyInvBillerMutation,
+  useUpdateStaffMetaFeaturePermissionMutation,
+  useUpdateDeleteAlertsFeaturePermissionMutation,
+  useUpdateFeatureGroupPermissionMutation,
+} from '@pabau/graphql'
 
 import { useData } from '../../../../mocks/Users'
 
@@ -22,75 +29,6 @@ interface FeatureProps {
   setIsListQueryLoading?: React.Dispatch<React.SetStateAction<boolean>>
   setTabValue: React.Dispatch<React.SetStateAction<string | number>>
 }
-
-const EDIT_USER_GROUP_PERMISSION = gql`
-  mutation update_User_permission(
-    $groupId: Int!
-    $data: UserUpdateManyMutationInput!
-  ) {
-    updateManyUser(
-      where: {
-        UserGroupMember: { group_id: { equals: $groupId } }
-        company: {}
-      }
-      data: $data
-    ) {
-      count
-    }
-  }
-`
-
-const EDIT_INV_BILLER_PERMISSION = gql`
-  mutation update_can_sell(
-    $groupId: Int!
-    $data: InvBillerUpdateManyMutationInput!
-  ) {
-    updateManyInvBiller(
-      where: {
-        User: { UserGroupMember: { group_id: { equals: $groupId } } }
-        Company: {}
-      }
-      data: $data
-    ) {
-      count
-    }
-  }
-`
-
-const EDIT_STAFF_META_PERMISSION = gql`
-  mutation($groupId: Int!, $staff_meta: [staffMetaInput]) {
-    updateManyStaffMetaFeaturesByGroupId(
-      group_id: $groupId
-      staff_meta: $staff_meta
-    )
-  }
-`
-
-const EDIT_USER_MAIN_PERMISSION = gql`
-  mutation upsertManyUsersMainPermissionByGroupId(
-    $groupId: Int!
-    $delete_alert_notes: Boolean!
-  ) {
-    upsertManyUsersMainPermissionByGroupId(
-      group_id: $groupId
-      delete_alert_notes: $delete_alert_notes
-    )
-  }
-`
-
-const UPDATE_GROUP_PERMISSION = gql`
-  mutation update_feature_group_permission(
-    $groupId: Int!
-    $feature_permissions: String!
-  ) {
-    upsertGroupPermissionFeatureByGroupId(
-      group_id: $groupId
-      features_permission: $feature_permissions
-    ) {
-      count
-    }
-  }
-`
 
 const Features: FC<FeatureProps> = ({
   columns,
@@ -107,69 +45,68 @@ const Features: FC<FeatureProps> = ({
     field_type_number,
     loaderDatasource,
     loaderColumns,
+    invert_fields,
   } = useData(t)
 
   const [featuresData, setFeaturesData] = useState<ReportsPermissionTableProps>(
     featureTabData
   )
 
-  const [isLoading, setIsLoading] = useState(false)
-
-  const [editMutation] = useMutation(EDIT_USER_GROUP_PERMISSION, {
+  const [editMutation] = useUpdateManyUserMutation({
     onError() {
       Notification(
         NotificationType.error,
-        t('team.user.updateGroupPermissionError.message')
+        t('team.user.update.group.permission.error')
       )
-      setIsLoading(false)
+      setIsListQueryLoading(false)
     },
   })
 
-  const [editInvBillerMutation] = useMutation(EDIT_INV_BILLER_PERMISSION, {
+  const [editInvBillerMutation] = useUpdateManyInvBillerMutation({
     onError() {
       Notification(
         NotificationType.error,
-        t('team.user.updateGroupPermissionError.message')
+        t('team.user.update.group.permission.error')
       )
-      setIsLoading(false)
+      setIsListQueryLoading(false)
     },
   })
 
-  const [editStaffMetaMutation] = useMutation(EDIT_STAFF_META_PERMISSION, {
+  const [editStaffMetaMutation] = useUpdateStaffMetaFeaturePermissionMutation({
     onError() {
       Notification(
         NotificationType.error,
-        t('team.user.updateGroupPermissionError.message')
+        t('team.user.update.group.permission.error')
       )
-      setIsLoading(false)
+      setIsListQueryLoading(false)
     },
   })
 
-  const [editAlertNotesMutation] = useMutation(EDIT_USER_MAIN_PERMISSION, {
+  const [
+    editAlertNotesMutation,
+  ] = useUpdateDeleteAlertsFeaturePermissionMutation({
     onError() {
       Notification(
         NotificationType.error,
-        t('team.user.updateGroupPermissionError.message')
+        t('team.user.update.group.permission.error')
       )
-      setIsLoading(false)
+      setIsListQueryLoading(false)
     },
   })
 
-  const [updateGroupPermission] = useMutation(UPDATE_GROUP_PERMISSION, {
+  const [updateGroupPermission] = useUpdateFeatureGroupPermissionMutation({
     onCompleted() {
       Notification(
         NotificationType.success,
-        t('team.user.updateGroupPermissionSuccess.message')
+        t('team.user.update.group.permission.success')
       )
-      setIsLoading(false)
-      setIsListQueryLoading(true)
     },
     onError() {
       Notification(
         NotificationType.error,
-        t('team.user.updateGroupPermissionError.message')
+        t('team.user.update.group.permission.error')
       )
-      setIsLoading(false)
+      setIsListQueryLoading(false)
     },
   })
 
@@ -198,7 +135,15 @@ const Features: FC<FeatureProps> = ({
             const fieldData = feature_permissions.field.find(
               (field) => field.key === children.key
             )
-            children.permissions[key] = fieldData?.value
+
+            if (fieldData) {
+              children.permissions[key] = invert_fields.includes(fieldData.key)
+                ? !fieldData.value
+                : fieldData.value
+            } else {
+              children.permissions[key] = false
+            }
+
             return children
           })
         }
@@ -214,7 +159,7 @@ const Features: FC<FeatureProps> = ({
     checked: boolean
   ) => {
     if (userGroupData.length > 0) {
-      setIsLoading(true)
+      setIsListQueryLoading(true)
       const permissions = (record as PermissionsType).permissions
       const children = (record as PermissionsGroupType).children
 
@@ -278,54 +223,62 @@ const Features: FC<FeatureProps> = ({
           mutationArray.push('deleteAlerts')
         }
 
-        const results = await Promise.all(
-          mutationArray.map((key) => {
-            if (key === 'user') {
-              const userVariables = {
-                groupId: groupData.id,
-                data: {
-                  ...userKeyValues,
+        const mutations = []
+        for (const key of mutationArray) {
+          if (key === 'user') {
+            mutations.push(
+              editMutation({
+                variables: {
+                  where: {
+                    UserGroupMember: { group_id: { equals: groupData.id } },
+                    company: {},
+                  },
+                  data: {
+                    ...userKeyValues,
+                  },
                 },
-              }
-              return editMutation({
-                variables: userVariables,
-                optimisticResponse: {},
               })
-            } else if (key === 'invBiller') {
-              const invBillerVariables = {
-                groupId: groupData.id,
-                data: {
-                  ...invBillerKeyValues,
+            )
+          } else if (key === 'invBiller') {
+            mutations.push(
+              editInvBillerMutation({
+                variables: {
+                  where: {
+                    User: {
+                      UserGroupMember: { group_id: { equals: groupData.id } },
+                    },
+                    Company: {},
+                  },
+                  data: {
+                    ...invBillerKeyValues,
+                  },
                 },
-              }
-              return editInvBillerMutation({
-                variables: invBillerVariables,
-                optimisticResponse: {},
               })
-            } else if (key === 'staffMeta') {
-              const staffMetaVariables = {
-                groupId: groupData.id,
-                staff_meta: staffMetaKeyValues,
-              }
-              return editStaffMetaMutation({
-                variables: staffMetaVariables,
-                optimisticResponse: {},
-              })
-            } else if (key === 'deleteAlerts') {
-              const variables = {
-                groupId: groupData.id,
-                delete_alert_notes:
-                  deleteAlertNotesKeyVales['delete_alert_notes'],
-              }
-              return editAlertNotesMutation({
-                variables: variables,
-                optimisticResponse: {},
-              })
+            )
+          } else if (key === 'staffMeta') {
+            const staffMetaVariables = {
+              groupId: groupData.id,
+              staff_meta: staffMetaKeyValues,
             }
-            // eslint-disable-next-line array-callback-return
-            return
-          })
-        )
+            mutations.push(
+              editStaffMetaMutation({
+                variables: staffMetaVariables,
+              })
+            )
+          } else if (key === 'deleteAlerts') {
+            const variables = {
+              groupId: groupData.id,
+              delete_alert_notes:
+                deleteAlertNotesKeyVales['delete_alert_notes'],
+            }
+            mutations.push(
+              editAlertNotesMutation({
+                variables: variables,
+              })
+            )
+          }
+        }
+        const results = await Promise.all(mutations)
 
         let isUpdateGroup = true
         for (const result of results) {
@@ -378,22 +331,23 @@ const Features: FC<FeatureProps> = ({
     staffMetaKeyValues,
     deleteAlertNotesKeyVales
   ) => {
+    const checkedValue = invert_fields.includes(key) ? !checked : checked
     if (key === 'InvBiller') {
       newFeaturePermission.field.push({
         modal: 'InvBiller',
         key: key,
-        value: checked,
+        value: checkedValue,
       })
-      invBillerKeyValues['is_disabled'] = { set: checked }
+      invBillerKeyValues['is_disabled'] = { set: checkedValue }
     } else if (staff_meta_keys.includes(key)) {
       newFeaturePermission.field.push({
         modal: 'StaffMeta',
         key: key,
-        value: checked,
+        value: checkedValue,
       })
       staffMetaKeyValues.push({
         meta_name: key,
-        meta_value: checked,
+        meta_value: checkedValue,
       })
     } else if (key === 'delete_alert_notes') {
       newFeaturePermission.field.push({
@@ -406,10 +360,14 @@ const Features: FC<FeatureProps> = ({
       newFeaturePermission.field.push({
         modal: 'User',
         key: key,
-        value: checked,
+        value: checkedValue,
       })
       userKeyValues[key] = {
-        set: field_type_number.includes(key) ? (checked ? 1 : 0) : checked,
+        set: field_type_number.includes(key)
+          ? checkedValue
+            ? 1
+            : 0
+          : checkedValue,
       }
     }
 
@@ -425,9 +383,9 @@ const Features: FC<FeatureProps> = ({
   return (
     <ReportsPermissionTable
       isListQueryLoader={isListQueryLoader}
-      tableColumnName={t('team.user.feature.tableColumnName')}
-      pageTitle={t('team.user.feature.pageTitle')}
-      subTitle={t('team.user.feature.subTitle')}
+      tableColumnName={t('team.user.feature.table.column.name')}
+      pageTitle={t('team.user.feature.page.title')}
+      subTitle={t('team.user.feature.sub.title')}
       dataSource={
         isListQueryLoader ? loaderDatasource : featuresData.dataSource
       }
@@ -435,7 +393,6 @@ const Features: FC<FeatureProps> = ({
       onUpdatePermission={async (record, columnKey, checked) => {
         await handleChange(record, columnKey, checked)
       }}
-      isLoading={isLoading}
       setTabValue={setTabValue}
     />
   )

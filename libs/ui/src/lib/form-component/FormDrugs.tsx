@@ -235,7 +235,6 @@ export const FormDrugs: FC<P> = ({
                         styles.formDrugsOptionsDosage,
                         item.dosage === '' ? styles.height100 : ''
                       )}
-                      // onClick={() => onSelectDosageItem(item.id)}
                     >
                       {selItemId === item.id && editStatusDosage ? (
                         <Input
@@ -288,13 +287,6 @@ export const FormDrugs: FC<P> = ({
                   </div>
                   <div
                     className={styles.formDrugsOptionsItemAction}
-                    // className={cn(
-                    //   styles.formDrugsOptionsItemAction,
-                    //   selItemId === item.id &&
-                    //     (editStatusComment || editStatusDosage)
-                    //     ? styles.hide
-                    //     : ''
-                    // )}
                     onClick={() => onDeleteItem(index)}
                   >
                     <DeleteOutlined />

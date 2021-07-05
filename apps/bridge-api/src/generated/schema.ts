@@ -653,14 +653,14 @@ export interface BookingStatus {
   id: number;
   name: string;
   value: string;
-  icon: string;
-  icon_color: string;
-  company_id: number;
+  icon?: string;
+  icon_color?: string;
+  company_id?: number;
   indicator?: booking_statuses_indicator;
   basic_field: boolean;
   ord?: number;
   track_time: number;
-  Company: Company;
+  Company?: Company;
 }
 
 export interface BookingStatusChange {
@@ -2265,7 +2265,7 @@ export interface InvPaymentType {
   created_date?: Date;
   modified_date?: Date;
   is_active: number;
-  is_money: number;
+  is_money?: number;
   type: string;
   Company?: Company;
   GlCode?: GlCode;
@@ -2451,6 +2451,36 @@ export interface JobStatus {
   status: boolean;
   order: number;
   Company: Company;
+}
+
+export interface MedicalForm {
+  id: number;
+  user_deleted: number;
+  name?: string;
+  data?: string;
+  created_at?: Date;
+  updated_at?: Date;
+  deleted_at?: Date;
+  nhs_locum_id?: number;
+  nhs_procedure_id?: number;
+  locked: number;
+  printout: string;
+  company_id: number;
+  user_created: number;
+  encoded: number;
+  form_type: string;
+  service_id: string;
+  ipad_only?: number;
+  heading_setting?: number;
+  temp_static: number;
+  old_data: string;
+  form_category: string;
+  author: string;
+  diagnosis_code: string;
+  is_fav: number;
+  diagnosis_code_enabled: number;
+  lab_id: number;
+  is_private: boolean;
 }
 
 export interface MedicalFormContact {
@@ -2994,7 +3024,7 @@ export interface User {
   UserAlertType?: UserAlertType;
   UserAlertPermission?: UserAlertPermission[];
   CmContactAlert?: CmContactAlert[];
-  CmStaffGeneral?: CmStaffGeneral[];
+  CmStaffGeneral?: CmStaffGeneral;
   CompanyNote?: CompanyNote[];
   TrainCourseDate?: TrainCourseDate[];
   SocialSurveyFeedbackResponse?: SocialSurveyFeedbackResponse[];

@@ -1,7 +1,7 @@
-import React, { FC, useEffect, useState } from 'react'
+import { FilterOutlined } from '@ant-design/icons'
 import { Button, FormType, LanguageDropdown } from '@pabau/ui'
 import { Popover } from 'antd'
-import { FilterOutlined } from '@ant-design/icons'
+import React, { FC, useEffect, useState } from 'react'
 import styles from './MedicalFilter.module.less'
 
 export interface MedicalFilterType {

@@ -1,8 +1,9 @@
-import { LoginInputDto, JwtPayloadDto } from './dto'
-import { User } from '../../generated/schema'
+import { createHash } from 'crypto'
 import jwt from 'jsonwebtoken'
 import { Context } from '../../context'
-import { createHash } from 'crypto'
+import { User } from '../../generated/schema'
+import { ChangePasswordInputDto, JwtPayloadDto, LoginInputDto } from './dto'
+import { validatePassword } from './yup'
 
 export default class AuthenticationService {
   private user: User
@@ -36,6 +37,48 @@ export default class AuthenticationService {
     }
 
     return this.generateJWT()
+  }
+
+  public async handlePasswordChange(
+    input: ChangePasswordInputDto
+  ): Promise<User> {
+    this.user = await this.ctx.prisma.user.findFirst({
+      where: {
+        id: {
+          equals: this.ctx.authenticated.user,
+        },
+      },
+    })
+    if (
+      await validatePassword.validate({
+        password: input.newPassword,
+        username: this.user.username,
+      })
+    ) {
+      if (
+        this.user.password ===
+        AuthenticationService.generatePassword(this.user, input.currentPassword)
+      ) {
+        const passwordHash = AuthenticationService.generatePassword(
+          this.user,
+          input.newPassword
+        )
+        const update = await this.ctx.prisma.user.updateMany({
+          where: {
+            username: this.user.username,
+          },
+          data: {
+            password: passwordHash,
+          },
+        })
+        if (!update) {
+          throw new Error('Something went wrong while updating your password')
+        }
+        return this.user
+      } else {
+        throw new Error('Old password not matched')
+      }
+    }
   }
 
   private static generateHash(

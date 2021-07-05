@@ -118,33 +118,6 @@ npm i -g yarn
 
 1. Install the workspace recommended plugins
 
-### Production
-
-Until we set up migrations to the production Hasura, we have to make changes to production Hasura and then download the changes from there into git.
-
-First set up some env vars:
-
-`hasura/.env.production.local`
-
-```env
-HASURA_GRAPHQL_ADMIN_SECRET=madskills
-```
-
-Now to export from prod, on a daily basis, on a fresh checkout of master:
-
-```bash
-rm -rf hasura/metadata \
-  && NODE_ENV=production yarn hasura:export \
-  && git checkout master hasura/metadata/remote_schemas.yaml \
-  && NODE_ENV=production yarn hasura:cli migrate create delete_me --from-server --database-name default
-```
-
-You should now have the metadata (.yml), schema (.graphql), and migration (.sql) files all ready to be committed into git.
-
-Windows users: Please also change the double backslashes in databases.yaml > tables back to single forward-slashes.
-
-Note: Before committing, **move** the newly generated delete_me/up.sql on top of Inital/up.sql (be careful to not let your IDE format the file). And finally clean up the 'delete_me' folders.
-
 ## Parts of the system
 
 ### Storybook
@@ -291,21 +264,16 @@ Solution: Upgrade docker-compose to latest version
 
 ## To do (big engineering items)
 
+- Nextjs 11
 - Apollo persisted queries (automatic, or build time)
 - Apollo local state
 - Apollo getfromtree
 - Ant design babel import loader
 - Playroom
 - Apollo Typed Documents
-- local dev env for hasura, migrations
-- graphql-code-generator
 - Convert from 'next export' to full on next server with ssr (i'm not sure)
 - proper next i18n at build time
 - Install a working serverless adapter for NestJS
 - stylelint within eslint
-- eslint should capture tsc errors too
-- auth to prisma
 - storing jwt token for hasura in nextjs httponly cookie
 - nestjs needs a typed hasura service that we can call
-- on `yarn dev`, we need to detect the OS and execute dev:linux or dev:windows
-- we use wait-for but it's buggy, we need to wait for a curl to succeed with a magic response string.

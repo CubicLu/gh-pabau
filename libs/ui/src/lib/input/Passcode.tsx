@@ -1,5 +1,6 @@
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons'
 import { Input } from 'antd'
+import { useTranslation } from 'react-i18next'
 import { InputProps } from 'antd/lib/input'
 import React, { PropsWithChildren } from 'react'
 
@@ -13,6 +14,8 @@ export function Passcode({
   onChange,
   ...props
 }: PropsWithChildren<PasscodeProps>): JSX.Element {
+  const { t } = useTranslation('common')
+
   const handleInputChange = (e) => {
     const { value } = e.target
     const reg = /^\d*(\d*)?$/
@@ -23,7 +26,7 @@ export function Passcode({
   return (
     <Input.Password
       maxLength={4}
-      placeholder="Passcode"
+      placeholder={t('account.settings.security.passcode.label')}
       iconRender={(visible) =>
         visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
       }

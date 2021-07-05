@@ -22,67 +22,78 @@ export const PabauUserReports = extendType({
       async resolve(_, input: UserReportsInput, ctx: Context) {
         try {
           const reports = input.report_ids.split(',')
+          const reportIds = reports.map((id) => {
+            return Number.parseInt(id)
+          })
+          const companyId = ctx.authenticated.company
+          const user = await ctx.prisma.userGroupMember.findMany({
+            where: {
+              group_id: {
+                equals: input.group_id,
+              },
+            },
+          })
+          const userIds = user.map((thread) => thread.user_id)
 
           if (input.checked) {
-            const reportIds = reports.map((id) => {
-              return Number.parseInt(id)
-            })
-
-            const user = await ctx.prisma.$queryRaw(
-              `SELECT user_id from user_group_members where group_id = ${input.group_id}`
-            )
             if (user.length > 0) {
-              const userIds = user.map((thread) => thread.user_id)
-              const userStringIds = userIds.join(',')
-
-              const userReports = await ctx.prisma.$queryRaw(
-                `SELECT id, user_id , report_id from user_reports where report_id IN (${input.report_ids}) and user_id IN (${userStringIds})`
-              )
+              const userReports = await ctx.prisma.userReport.findMany({
+                where: {
+                  report_id: { in: reportIds },
+                  user_id: { in: userIds },
+                },
+              })
 
               const insertArray = []
-              for (const id of userIds) {
+              for (const userId of userIds) {
                 const data = new Set(
                   userReports
-                    .filter((thread) => thread.user_id === id)
+                    .filter((thread) => thread.user_id === userId)
                     .map((thread) => thread.report_id)
                 )
 
                 for (const reportId of reportIds) {
                   if (!data.has(reportId)) {
-                    insertArray.push(
-                      `(${ctx.authenticated.company}, ${id}, ${reportId})`
-                    )
+                    insertArray.push({ companyId, userId, reportId })
                   }
                 }
               }
-
               if (insertArray.length > 0) {
-                await ctx.prisma.$queryRaw(
-                  `INSERT INTO user_reports(occupier, user_id, report_id)  VALUES ${insertArray.join(
-                    ','
-                  )}`
-                )
+                const data = []
+                for (const thread of insertArray) {
+                  data.push({
+                    company_id: thread.companyId,
+                    user_id: thread.userId,
+                    report_id: thread.reportId,
+                    favorite: false,
+                  })
+                }
+                await ctx.prisma.userReport.createMany({
+                  data,
+                })
               }
             }
           } else {
-            await ctx.prisma.$queryRaw(
-              `DELETE FROM user_reports
-                WHERE report_id IN (${input.report_ids})AND
-               occupier = ${ctx.authenticated.company}AND
-               user_id IN (SELECT user_id from user_group_members where group_id = ${input.group_id})`
-            )
+            await ctx.prisma.userReport.deleteMany({
+              where: {
+                report_id: { in: reportIds },
+                company_id: ctx.authenticated.company,
+                user_id: { in: userIds },
+              },
+            })
           }
 
-          const groupPermissions = await ctx.prisma.$queryRaw(
-            `SELECT * FROM group_permissions where group_id = ${input.group_id}`
-          )
+          const groupPermissions = await ctx.prisma.groupPermission.findFirst({
+            where: {
+              group_id: {
+                equals: input.group_id,
+              },
+            },
+          })
 
           let reportPermission = []
-          if (
-            groupPermissions.length > 0 &&
-            groupPermissions[0].report_permissions
-          ) {
-            reportPermission = groupPermissions[0].report_permissions.split(',')
+          if (groupPermissions?.report_permissions) {
+            reportPermission = JSON.parse(groupPermissions.report_permissions)
             if (reportPermission.length > 0) {
               reports.map((reportId) => {
                 const data = reportPermission.find(
@@ -104,16 +115,29 @@ export const PabauUserReports = extendType({
             }
           }
 
-          await ctx.prisma.$queryRaw(`
-            INSERT INTO group_permissions(group_id, company_id, report_permissions,feature_permissions, module_permissions)
-            VALUES (${input.group_id}, ${
-            ctx.authenticated.company
-          }, '${reportPermission.join(',')}', '', '')
-            ON DUPLICATE KEY UPDATE report_permissions = '${reportPermission.join(
-              ','
-            )}'`)
+          const reportPermissionData =
+            reportPermission.length > 0 ? JSON.stringify(reportPermission) : ''
 
-          return true
+          const response = await (groupPermissions?.id
+            ? ctx.prisma.groupPermission.update({
+                where: {
+                  id: groupPermissions.id,
+                },
+                data: {
+                  report_permissions: reportPermissionData,
+                },
+              })
+            : ctx.prisma.groupPermission.create({
+                data: {
+                  group_id: input.group_id,
+                  company_id: companyId,
+                  report_permissions: reportPermissionData,
+                  feature_permissions: '',
+                  module_permissions: '',
+                },
+              }))
+
+          return !!response
         } catch (error) {
           return error
         }

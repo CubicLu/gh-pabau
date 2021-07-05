@@ -161,7 +161,7 @@ const Reviews: FC<ReviewConfig> = () => {
   const [paginateData, setPaginateData] = useState({
     total: 0,
     skip: 0,
-    take: 10,
+    take: 50,
     currentPage: 1,
     showingRecords: 0,
   })
@@ -662,20 +662,28 @@ const Reviews: FC<ReviewConfig> = () => {
               <div className={styles.filterViewerStatusContainer}>
                 <Button
                   type={values.score === 'Bad' ? 'primary' : 'default'}
-                  onClick={() => setFieldValue('score', 'Bad')}
+                  onClick={() => {
+                    setFieldValue('score', values.score === 'Bad' ? '' : 'Bad')
+                  }}
                 >
                   {t('marketingreviews.filter.option.bad')}
                 </Button>
-
                 <Button
                   type={values.score === 'Ok' ? 'primary' : 'default'}
-                  onClick={() => setFieldValue('score', 'Ok')}
+                  onClick={() => {
+                    setFieldValue('score', values.score === 'Ok' ? '' : 'Ok')
+                  }}
                 >
                   {t('marketingreviews.ok.label')}
                 </Button>
                 <Button
                   type={values.score === 'Excellent' ? 'primary' : 'default'}
-                  onClick={() => setFieldValue('score', 'Excellent')}
+                  onClick={() => {
+                    setFieldValue(
+                      'score',
+                      values.score === 'Excellent' ? '' : 'Excellent'
+                    )
+                  }}
                 >
                   {t('marketingreviews.excellent.label')}
                 </Button>

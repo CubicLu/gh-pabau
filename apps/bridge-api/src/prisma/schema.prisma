@@ -813,14 +813,14 @@ model BookingStatus {
   id          Int                         @id @default(autoincrement())
   name        String
   value       String
-  icon        String
-  icon_color  String
-  company_id  Int
+  icon        String?
+  icon_color  String?
+  company_id  Int?
   indicator   booking_statuses_indicator? @default(EMPTY_ENUM_VALUE)
   basic_field Boolean
   ord         Float?
   track_time  Int                         @default(1)
-  Company     Company                     @relation(fields: [company_id], references: [id])
+  Company     Company?                    @relation(fields: [company_id], references: [id])
 
   @@unique([value, company_id], name: "value")
   @@map("booking_statuses")
@@ -6262,7 +6262,7 @@ model InvPaymentType {
   created_date  DateTime?
   modified_date DateTime?
   is_active     Int
-  is_money      Int
+  is_money      Int?
   type          String    @default("money")
   Company       Company?  @relation(fields: [company_id], references: [id])
 
@@ -7950,7 +7950,43 @@ model JobStatus {
 //  @@index([occupier], name: "occupier")
 //  @@index([service_id], name: "service_id")
 //}
-//
+
+model MedicalForm {
+  id                     Int       @id @default(autoincrement())
+  user_deleted           Int
+  name                   String?
+  data                   String?
+  created_at             DateTime?
+  updated_at             DateTime?
+  deleted_at             DateTime?
+  nhs_locum_id           Int?
+  nhs_procedure_id       Int?
+  locked                 Int
+  printout               String
+  company_id             Int       @map("occupier")
+  user_created           Int
+  encoded                Int
+  form_type              String
+  service_id             String
+  ipad_only              Int?      @default(0)
+  heading_setting        Int?      @default(0)
+  temp_static            Int
+  old_data               String
+  form_category          String
+  author                 String
+  diagnosis_code         String
+  is_fav                 Int
+  diagnosis_code_enabled Int
+  lab_id                 Int
+  is_private             Boolean   @default(false)
+
+  @@index([deleted_at], name: "deleted_at")
+  @@index([form_type], name: "form_type")
+  @@index([company_id], name: "occupier")
+  @@index([service_id], name: "service_id")
+  @@map("medical_form")
+}
+
 //model medical_forms_ios_data {
 //  id         Int     @id @default(autoincrement())
 //  ref_id     Int?
@@ -12155,7 +12191,7 @@ model User {
   UserAlertType               UserAlertType?
   UserAlertPermission         UserAlertPermission[]
   CmContactAlert              CmContactAlert[]
-  CmStaffGeneral              CmStaffGeneral[]
+  CmStaffGeneral              CmStaffGeneral?
   CompanyNote                 CompanyNote[]
   TrainCourseDate             TrainCourseDate[]
 

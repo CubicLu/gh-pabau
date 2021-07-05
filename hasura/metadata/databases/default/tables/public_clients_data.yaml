@@ -19,6 +19,23 @@ insert_permissions:
     - is_active
     - created_date
   role: public
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - name
+    - is_liked
+    - is_locked
+    - label
+    - format
+    - fieldFor
+    - category
+    - is_mendatory
+    - is_private
+    - is_active
+    - created_date
+  role: user
 select_permissions:
 - permission:
     allow_aggregations: true
@@ -37,6 +54,23 @@ select_permissions:
     - name
     filter: {}
   role: public
+- permission:
+    allow_aggregations: true
+    columns:
+    - is_active
+    - is_liked
+    - is_locked
+    - is_mendatory
+    - is_private
+    - category
+    - fieldFor
+    - format
+    - label
+    - name
+    - created_date
+    - id
+    filter: {}
+  role: user
 update_permissions:
 - permission:
     check: {}
@@ -55,7 +89,27 @@ update_permissions:
     - name
     filter: {}
   role: public
+- permission:
+    check: {}
+    columns:
+    - is_active
+    - is_liked
+    - is_locked
+    - is_mendatory
+    - is_private
+    - category
+    - fieldFor
+    - format
+    - label
+    - name
+    - created_date
+    - id
+    filter: {}
+  role: user
 delete_permissions:
 - permission:
     filter: {}
   role: public
+- permission:
+    filter: {}
+  role: user
