@@ -1,4 +1,15 @@
 
+alter table "public"."chat" drop constraint "chat_to_channel_fkey";
+
+alter table "public"."chat_room_participant" drop constraint "chat_room_participant_user_id_room_id_key";
+
+alter table "public"."chat_room" drop constraint "chat_room_company_id_name_key";
+
+alter table "public"."chat_room_participant" rename column "user_id" to "user";
+
+alter table "public"."chat_room_participant" rename column "room_id" to "room";
+
+
 comment on column "public"."chat_room"."description" is NULL;
 
 -- Could not auto-generate a down migration.

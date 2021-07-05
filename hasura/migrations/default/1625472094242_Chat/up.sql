@@ -1,6 +1,7 @@
 
 
 
+
 alter table "public"."chat" add column "to_channel" uuid
  null;
 
@@ -33,3 +34,17 @@ alter table "public"."chat_room" add column "description" text
  null;
 
 comment on column "public"."chat_room"."description" is E'The user-entered description (or topic) for this Room';
+
+alter table "public"."chat_room_participant" rename column "room" to "room_id";
+
+alter table "public"."chat_room_participant" rename column "user" to "user_id";
+
+alter table "public"."chat_room" add constraint "chat_room_company_id_name_key" unique ("company_id", "name");
+
+alter table "public"."chat_room_participant" add constraint "chat_room_participant_user_id_room_id_key" unique ("user_id", "room_id");
+
+alter table "public"."chat"
+  add constraint "chat_to_channel_fkey"
+  foreign key ("to_channel")
+  references "public"."chat_room"
+  ("id") on update restrict on delete restrict;
