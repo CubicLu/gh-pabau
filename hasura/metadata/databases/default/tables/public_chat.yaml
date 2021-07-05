@@ -22,49 +22,6 @@ remote_relationships:
             id: $to
     remote_schema: CRM
   name: toUser
-insert_permissions:
-- permission:
-    backend_only: false
-    check:
-      _and:
-      - company_id:
-          _eq: X-Hasura-Org-Id
-      - _or:
-        - from:
-            _eq: X-Hasura-User-Id
-        - to:
-            _eq: X-Hasura-User-Id
-    columns:
-    - from
-    - message
-    - to
-    set:
-      company_id: x-hasura-Org-Id
-      from: x-hasura-User-Id
-  role: user
-select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - company_id
-    - created_at
-    - from
-    - id
-    - message
-    - read
-    - to
-    - updated_at
-    filter:
-      _and:
-      - company_id:
-          _eq: X-Hasura-Org-Id
-      - _or:
-        - from:
-            _eq: X-Hasura-User-Id
-        - to:
-            _eq: X-Hasura-User-Id
-    limit: 1000
-  role: user
 update_permissions:
 - permission:
     check: {}

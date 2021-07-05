@@ -1,6 +1,5 @@
 import { allow, and, shield } from 'graphql-shield'
 import * as rules from './types'
-import { useCompanyServicesCategorisedQuery } from '@pabau/graphql'
 
 export const permissions = shield(
   {
