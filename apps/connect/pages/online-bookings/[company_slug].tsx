@@ -17,7 +17,7 @@ import styles from './index.module.less'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { employes } from '../../../web/mocks/connect/employMock'
 import { useTranslationI18 } from '../../../web/hooks/useTranslationI18'
-import { useCompanyServicesCategorisedQuery } from '@pabau/graphql'
+import { useCompanyServicesCategorisedQuery, useOnlineBookableLocationsQuery } from '@pabau/graphql'
 import { Image } from 'antd'
 
 import useServices from '../../hooks/useServices'

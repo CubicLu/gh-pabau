@@ -30,7 +30,7 @@ fragment InvSaleFields on InvSale {
   by_email
   by_sms
   tip
-  occupier
+  company_id
   uid
   created_date
   modified_date
