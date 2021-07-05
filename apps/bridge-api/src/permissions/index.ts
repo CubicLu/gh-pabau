@@ -113,6 +113,7 @@ export const permissions = shield(
       staffList: rules.authentication.isAuthenticated,
       // ALLOW ALL
       serviceMasterCategories: allow,
+      companyBranches: allow,
       '*': rules.interceptors.interceptAccessToCompanyData,
     },
   },
