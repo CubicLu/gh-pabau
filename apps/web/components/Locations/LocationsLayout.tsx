@@ -205,8 +205,8 @@ const LocationsLayout: FC<P> = ({ schema }) => {
   const [allowedLocationCount, setAllowedLocationCount] = useState<number>()
   const [activeLocation, setActiveLocation] = useState<number>()
   const [activeLocationLoading, setActiveLocationLoading] = useState(true)
-  const router = useRouter()
 
+  const router = useRouter()
   const { getParentSetupData } = useGridData(t)
   const user = useContext(UserContext)
   const filterFormRef = useRef(null)
@@ -566,7 +566,7 @@ const LocationsLayout: FC<P> = ({ schema }) => {
   }, [initialValues])
 
   const onSubmit = async (values, { resetForm }) => {
-    if (!values.id && !(allowedLocationCount > activeLocation)) {
+    if (values.isActive && !(allowedLocationCount > activeLocation)) {
       setCreateLocationModal((e) => !e)
       resetForm()
       return Notification(
@@ -849,18 +849,21 @@ const LocationsLayout: FC<P> = ({ schema }) => {
                                       </div>
                                     )}
                                     <div className={styles.locationIcon}>
-                                      {location?.AssignedBadge?.map((badge) => (
-                                        <Tooltip
-                                          title={badge.name}
-                                          key={badge.name}
-                                        >
-                                          <FontAwesomeIcon
-                                            color={'#9292A3'}
-                                            size="1x"
-                                            icon={badge.icon}
-                                          />
-                                        </Tooltip>
-                                      ))}
+                                      {location?.AssignedBadge?.map(
+                                        (badge) =>
+                                          badge.type === 'antd_badge' && (
+                                            <Tooltip
+                                              title={badge.name}
+                                              key={badge.name}
+                                            >
+                                              <FontAwesomeIcon
+                                                color={'#9292A3'}
+                                                size="1x"
+                                                icon={badge.icon}
+                                              />
+                                            </Tooltip>
+                                          )
+                                      )}
                                     </div>
                                   </div>
                                   <div

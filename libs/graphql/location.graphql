@@ -30,6 +30,7 @@ query locations($isActive: Int, $searchTerm: String, $filter: CompanyBranchAttac
 			company_id
 			icon: url
       name: description
+      type
     }
   }
 }
