@@ -11,7 +11,7 @@ const { Panel } = Collapse
 
 /* eslint-disable-next-line */
 export interface AccordionProps {
-  headerLabel: string
+  headerLabel?: string
 }
 
 export const Accordion: FC<AccordionProps> = ({ headerLabel, ...rest }) => {

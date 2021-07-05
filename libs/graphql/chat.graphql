@@ -1,0 +1,204 @@
+subscription chatListMessagesNotify {
+  chat(
+    distinct_on: from
+    order_by: { created_at: desc, from: asc }
+    where: { to: { _is_null: false } }
+  ) {
+    id
+    message
+    created_at
+    updated_at
+    from
+  }
+}
+
+subscription chatListRoomNotify {
+  chat_room_participant {
+    id
+    room {
+      id
+      name
+      chats(limit: 1, order_by: { created_at: desc }) {
+        id
+        message
+        from
+      }
+    }
+  }
+}
+
+query chatRoomHistory($roomId: uuid!) {
+  chat_room_by_pk(
+    id: $roomId
+  ) {
+    id
+    name
+    participants {
+      id
+    }
+    chats(order_by: { created_at: desc }, limit: 15) @connection(key: "chats") {
+      id
+      message
+      created_at
+      fromUser {
+        id
+        full_name
+        username
+        image
+      }
+    }
+  }
+}
+
+query chatDirectHistory($userId: Int!) {
+  chat(
+    where: {
+      _and: {
+        _or: { to: { _eq: $userId }, from: { _eq: $userId } }
+        to_channel: { _is_null: true }
+      }
+    }
+    order_by: {
+      created_at: desc
+    }
+    limit: 20
+  ) {
+    id
+    message
+    created_at
+    fromUser {
+      id
+      username
+      full_name
+      image
+    }
+    toUser {
+      id
+      username
+      full_name
+      image
+    }
+  }
+}
+
+query chatListRooms {
+  chat_room_participant {
+    id
+    room {
+      id
+      name
+      chats(limit: 1, order_by: { created_at: desc }) @connection(key: "chats") {
+        id
+        message
+        from
+        created_at
+        to
+        room {
+          id
+          name
+        }
+        toUser {
+          id
+          username
+          full_name
+        }
+        fromUser {
+          id
+          username
+          full_name
+        }
+      }
+      chats_aggregate(where: { created_at: { _gt: "2030-01-01 00:00:00" } }) {
+        aggregate {
+          count
+        }
+      }
+    }
+    room_id
+    user_id
+  }
+  chat(
+    distinct_on: from
+    order_by: { created_at: desc, from: asc }
+    where: { to: { _is_null: false } }
+  ) @connection(key: "chat") {
+    id
+    message
+    created_at
+    to
+    toUser {
+      id
+      username
+      full_name
+    }
+    room {
+      id
+      name
+      chats_aggregate(where: { created_at: { _gt: "2030-01-01 00:00:00" } }) {
+        aggregate {
+          count
+        }
+      }
+    }
+    fromUser {
+      id
+      username
+      full_name
+      image
+    }
+  }
+}
+
+mutation createChannel($name: String!, $description: String) {
+  insert_chat_room_participant_one(
+    object: {
+      room: {
+        on_conflict: {
+          constraint: chat_room_company_id_name_key
+          update_columns: name
+        }
+        data: { name: $name, description: $description }
+      }
+    }
+  ) {
+    id
+    room {
+      id
+      name
+    }
+  }
+}
+
+mutation chatPostToChannelId($message: String!, $channelId: uuid!) {
+  insert_chat_one(object: { message: $message,   to_channel: $channelId }) {
+    __typename
+    id
+    message
+    room {
+      id
+    }
+    #      to_channel
+
+    #    room {
+    #      __typename
+    #      id
+    #      name
+    #    }
+  }
+}
+
+# Posts a message to a user
+mutation chatPostToUserId($message: String!, $userId: Int!) {
+  insert_chat_one(object: { message: $message, to: $userId }) {
+    id
+  }
+}
+
+# Get all staff/users that is possible to add to a dchat room
+query chatGetUsers {
+  users {
+    id
+    name: full_name
+    avatarURL: image
+  }
+}

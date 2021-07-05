@@ -29,6 +29,7 @@
     "strictNullChecks": false, //TODO: 537 errors
     "strictPropertyInitialization": false, //TODO: requires strictNullChecks on first
     "noStrictGenericChecks": false, //default: false
+    //"noUncheckedIndexedAccess": true,
     "allowUmdGlobalAccess": false, //default: false
     "allowUnusedLabels": false,
     "alwaysStrict": true,

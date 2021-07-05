@@ -3,6 +3,62 @@
   "configurations": [
     
     {
+      "type": "node-terminal",
+      "request": "launch",
+      "name": "serve web",
+      "command": "yarn serve web",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node-terminal",
+      "request": "launch",
+      "name": "serve bridge-api",
+      "command": "yarn serve bridge-api",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node-terminal",
+      "request": "launch",
+      "name": "serve bridge-proxy",
+      "command": "yarn serve bridge-proxy",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node-terminal",
+      "request": "launch",
+      "name": "serve backend",
+      "command": "yarn serve backend",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node-terminal",
+      "request": "launch",
+      "name": "serve mgmt",
+      "command": "yarn serve mgmt",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node-terminal",
+      "request": "launch",
+      "name": "serve connect",
+      "command": "yarn serve connect",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node-terminal",
+      "request": "launch",
+      "name": "serve ui",
+      "command": "yarn serve ui:storybook",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node-terminal",
+      "request": "launch",
+      "name": "serve web",
+      "command": "yarn serve web",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
       "command": "yarn pipeline-checks:parallel",
       "name": "pipeline-checks:parallel",
       "request": "launch",
@@ -23,29 +79,6 @@
       "type": "pwa-node"
     },
     {
-      "name": "bridge-api",
-      "request": "launch",
-      "runtimeArgs": ["serve", "bridge-api"],
-      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/nx",
-      "skipFiles": ["<node_internals>/**"],
-      "autoAttachChildProcesses": true,
-      "type": "pwa-node",
-      "console": "integratedTerminal",
-      "outputCapture": "std",
-      "preLaunchTask": "npm: build:bridge-api"
-    },
-    {
-      "name": "bridge-proxy",
-      "request": "launch",
-      "runtimeArgs": ["serve", "bridge-proxy"],
-      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/nx",
-      "skipFiles": ["<node_internals>/**"],
-      "autoAttachChildProcesses": true,
-      "type": "pwa-node",
-      "console": "integratedTerminal",
-      "outputCapture": "std"
-    },
-    {
       "name": "dev",
       "request": "launch",
       "runtimeArgs": ["serve", "web"],
@@ -58,7 +91,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug bridge-api (build first)",
+      "name": "debug bridge-api",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/dist/apps/bridge-api/main.js",
       "cwd": "${workspaceFolder}",

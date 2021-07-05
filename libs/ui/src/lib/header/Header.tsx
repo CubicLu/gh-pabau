@@ -8,9 +8,8 @@ import {
 } from '@pabau/ui'
 import { Badge, Col, Layout, Row } from 'antd'
 import classNames from 'classnames'
-import React, { FC, MouseEvent, useState } from 'react'
+import React, { useState } from 'react'
 import styles from './Header.module.less'
-import PabauMessages from './messages/Messages'
 import { Search } from './search/Search'
 
 const AntHeader = Layout.Header
@@ -42,32 +41,33 @@ interface P {
   relativeTime?: (lan: string, date: Date) => string
   user?: UserProps
   searchRender?: (innerComponent: JSX.Element) => JSX.Element
-  onCreateChannel?: (
-    name: string,
-    description: string,
-    isPrivate: boolean
-  ) => void
-  onMessageType?: (e: MouseEvent<HTMLElement>) => void
+  onMessageIconClick?(): void
+  // onCreateChannel?: (
+  //   name: string,
+  //   description: string,
+  //   isPrivate: boolean
+  // ) => void
+  // onMessageType?: (e: MouseEvent<HTMLElement>) => void
   taskManagerIFrameComponent?: JSX.Element
 }
 
-export const Header: FC<P> = ({
+export const Header = ({
   notifications,
   user,
   searchRender,
-  onCreateChannel,
-  onMessageType,
+  onMessageIconClick,
+  // onCreateChannel,
+  // onMessageType,
   relativeTime,
   deleteNotification,
   updateNotification,
   readAddMutation,
   taskManagerIFrameComponent,
   ...rest
-}) => {
+}: P): JSX.Element => {
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
     false
   )
-  const [openMessageDrawer, setMessageDrawer] = useState<boolean>(false)
 
   return (
     <>
@@ -102,10 +102,10 @@ export const Header: FC<P> = ({
                     onClick={() => setNotificationDrawer((e) => !e)}
                   />
                 </Badge>
-                <Badge count={3} className={styles.badgeCircle}>
+                <Badge count={4} className={styles.badgeCircle}>
                   <MailOutlined
                     className={styles.headerIcon}
-                    onClick={() => setMessageDrawer((e) => !e)}
+                    onClick={() => onMessageIconClick?.()}
                   />
                 </Badge>
                 <div>
@@ -133,14 +133,6 @@ export const Header: FC<P> = ({
           deleteNotification={deleteNotification}
           updateNotification={updateNotification}
           readAddMutation={readAddMutation}
-        />
-      )}
-      {openMessageDrawer && (
-        <PabauMessages
-          openDrawer={openMessageDrawer}
-          closeDrawer={() => setMessageDrawer((e) => !e)}
-          onCreateChannel={onCreateChannel}
-          onMessageType={onMessageType}
         />
       )}
     </>

@@ -1,3 +1,4 @@
+import fetch from 'cross-fetch'
 import {
   ApolloClient,
   ApolloLink,
@@ -23,40 +24,22 @@ require('../styles/global.less')
 require('../../../libs/ui/src/styles/antd.less')
 require('react-phone-input-2/lib/style.css')
 
-const cache = new InMemoryCache({ resultCaching: true })
+const cache = new InMemoryCache({
+  resultCaching: true,
+})
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-if (typeof window !== 'undefined') window.debug = { cache }
+const GRAPHQL_WS_ENDPOINT =
+  process.env.NEXT_PUBLIC_WS_ENDPOINT || 'wss://api.new.pabau.com/v1/graphql'
+const GRAPHQL_HTTP_ENDPOINT =
+  process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
+  'https://api.new.pabau.com/v1/graphql'
 
-try {
-  console.log(
-    'NEXT_PUBLIC_GRAPHQL_ENDPOINT []',
-    process.env['NEXT_PUBLIC_GRAPHQL_ENDPOINT']
-  )
-  // eslint-disable-next-line no-empty
-} catch {}
-try {
-  console.log(
-    'NEXT_PUBLIC_GRAPHQL_ENDPOINT .',
-    process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT
-  )
-  // eslint-disable-next-line no-empty
-} catch {}
-try {
-  console.log(
-    'NEXT_PUBLIC_WS_ENDPOINT []',
-    process.env['NEXT_PUBLIC_WS_ENDPOINT']
-  )
-  // eslint-disable-next-line no-empty
-} catch {}
-try {
-  console.log('NEXT_PUBLIC_WS_ENDPOINT .', process.env.NEXT_PUBLIC_WS_ENDPOINT)
-  // eslint-disable-next-line no-empty
-} catch {}
+//TODO: enable tree shaking
+const iconList = Object.keys(Icons)
+  .filter((key) => key !== 'fas' && key !== 'prefix')
+  .map((icon) => Icons[icon])
+library.add(...iconList)
 
-const GRAPHQL_WS_ENDPOINT = process.env.NEXT_PUBLIC_WS_ENDPOINT
-const GRAPHQL_HTTP_ENDPOINT = process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token')
   return {
@@ -68,26 +51,32 @@ const authLink = setContext((_, { headers }) => {
       : headers,
   }
 })
-const iconList = Object.keys(Icons)
-  .filter((key) => key !== 'fas' && key !== 'prefix')
-  .map((icon) => Icons[icon])
-library.add(...iconList)
 const httpLink = new HttpLink({
+  /**
+   * Fixes Jest complaining about:
+   *  Invariant Violation:
+   *    "fetch" has not been found globally and no fetcher has been configured. To fix this, install a fetch package (like https://www.npmjs.com/package/cross-fetch), instantiate the fetcher, and pass it into your HttpLink constructor.
+   */
+  fetch,
+
   uri: GRAPHQL_HTTP_ENDPOINT,
 })
-const wsLink = process.browser
-  ? new WebSocketLink({
-      uri: GRAPHQL_WS_ENDPOINT,
-      options: {
-        reconnect: true,
-        connectionParams: {
-          authToken: '',
+const getWebSocketLink = () => {
+  const token = localStorage.getItem('token')
+  return new WebSocketLink({
+    uri: GRAPHQL_WS_ENDPOINT,
+    options: {
+      lazy: true,
+      reconnect: true,
+      connectionParams: {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
       },
-    })
-  : null
-
-// Let Apollo figure out if the request is over ws or http
+    },
+  })
+}
+const wsLink = process.browser ? getWebSocketLink() : null
 const terminatingLink = wsLink
   ? split(
       ({ query }) => {
@@ -105,19 +94,18 @@ const terminatingLink = wsLink
     )
   : httpLink
 
-export const getApolloClient = () => {
-  return new ApolloClient({
-    ssrMode: false,
-    link: ApolloLink.from([authLink, terminatingLink]),
-    cache,
-  })
-}
+export const client = new ApolloClient({
+  ssrMode: false,
+  link: ApolloLink.from([authLink, terminatingLink]),
+  cache,
+})
+
 export default function CustomApp({
   Component,
   pageProps,
 }: AppProps): JSX.Element {
   return (
-    <ApolloProvider client={getApolloClient()}>
+    <ApolloProvider client={client}>
       <style jsx global>{`
         @font-face {
           font-family: 'Circular-Std-Black';
