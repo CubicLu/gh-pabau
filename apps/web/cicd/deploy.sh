@@ -72,8 +72,12 @@ HEREDOC
 echo "${message_body}" >> /tmp/bot_message.txt
 
 echo "---- Deploying DB to Hasura Staging (api-v2-staging.pabau.com) ----"
+pwd
 curl -LO https://github.com/hasura/graphql-engine/releases/download/v2.0.1/cli-hasura-linux-amd64
 chmod +x cli-hasura-linux-amd64
 mv ./cli-hasura-linux-amd64 /usr/local/bin/hasura
-HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" hasura --project hasura migrate apply --database-name default || echo "SILENTLY FAILED"
-HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" hasura --project hasura metadata apply || echo "SILENTLY FAILED"
+cp -r hasura/ dist/
+cp -f hasura/remote_schemas.production.yaml dist/hasura/remote_schemas.yaml
+HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" hasura --project dist/hasura migrate apply --database-name default || echo "SILENTLY FAILED"
+sleep 1
+HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" hasura --project dist/hasura metadata apply || echo "SILENTLY FAILED"
