@@ -64,6 +64,7 @@ fi
 # James testing deploying Hasura here, because we have access to docker command here
 echo "Deploying to Hasura database..."
 echo "destination: ${HASURA_GRAPHQL_ENDPOINT}"
+mkdir -p dist
 cp -r hasura/ dist/
 #rm dist/hasura/metadata/actions.yaml
 cp -f hasura/remote_schemas.production.yaml dist/hasura/remote_schemas.yaml
