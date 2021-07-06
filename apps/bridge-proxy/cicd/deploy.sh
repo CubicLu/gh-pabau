@@ -62,10 +62,14 @@ HEREDOC
 fi
 
 # James testing deploying Hasura here, because we have access to docker command here
-echo "Trying docker..."
+echo "Deploying to Hasura database..."
+echo "destination: ${HASURA_GRAPHQL_ENDPOINT}"
+cp -r hasura/ dist/
+#rm dist/hasura/metadata/actions.yaml
+cp -f hasura/remote_schemas.production.yaml dist/hasura/remote_schemas.yaml
 docker run --rm \
-  -v "./hasura/:/hasura/:ro" \
-  -e HASURA_GRAPHQL_ENDPOINT="https://api-v2-staging.pabau.com/" \
+  -v "./dist/hasura/:/hasura/:ro" \
+  -e HASURA_GRAPHQL_ENDPOINT="${HASURA_GRAPHQL_ENDPOINT}" \
   -e HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" \
   golang:buster \
   bash -c "curl -LO https://github.com/hasura/graphql-engine/releases/download/v2.0.1/cli-hasura-linux-amd64 && chmod +x cli-hasura-linux-amd64 && mv ./cli-hasura-linux-amd64 /usr/local/bin/hasura && hasura version && hasura --project /hasura migrate apply --database-name default && hasura --project /hasura metadata apply" \
