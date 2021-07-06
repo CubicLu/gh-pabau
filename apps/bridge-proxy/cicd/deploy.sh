@@ -61,4 +61,13 @@ HEREDOC
   echo "${message_body}" >> /tmp/bot_message.txt
 fi
 
+# James testing deploying Hasura here, because we have access to docker command here
+echo "Trying docker..."
+docker run --rm golang:buster \
+  -v "./hasura/:/hasura/:ro" \
+  -e HASURA_GRAPHQL_ENDPOINT="https://api-v2-staging.pabau.com/" \
+  -e HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" \
+  bash -c "curl -LO https://github.com/hasura/graphql-engine/releases/download/v2.0.1/cli-hasura-linux-amd64 && chmod +x cli-hasura-linux-amd64 && mv ./cli-hasura-linux-amd64 /usr/local/bin/hasura && hasura version && hasura --project /hasura migrate apply --database-name default && hasura --project /hasura metadata apply" \
+  || echo "FAILED"
+
 echo "EOF"

@@ -80,10 +80,12 @@ cp -r hasura/ dist/
 rm dist/hasura/metadata/actions.yaml
 cp -f hasura/remote_schemas.production.yaml dist/hasura/remote_schemas.yaml
 echo "Applying migrations..."
+HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" hasura --project dist/hasura migrate status --database-name default || echo "SILENTLY FAILED"
 HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" hasura --project dist/hasura migrate apply --database-name default || echo "SILENTLY FAILED"
 sleep 1
 echo "Applying metadata..."
 HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" hasura --project dist/hasura metadata apply || echo "SILENTLY FAILED"
+yarn hasura:cli migrate status --database-name default || echo "SILENTLY FAILED"
 
 echo "Trying docker..."
 docker run --rm golang:buster \
