@@ -57,40 +57,10 @@ query getNotificationsTypes {
 }
 
 query getNotificationsData($user: Int) {
-  application_notifications(where: { user: { _eq: $user } }) {
-    id
-    enabled
-    notification_type
-  }
   notification_toggle(where: { user: { _eq: $user } }) {
     id
     enabled
     notification_type
-  }
-}
-
-mutation createApplicationNotification(
-  $user: Int
-  $notification_type: uuid!
-  $enabled: Boolean = false
-) {
-  insert_application_notifications_one(
-    object: {
-      user: $user
-      notification_type: $notification_type
-      enabled: $enabled
-    }
-  ) {
-    id
-  }
-}
-
-mutation updateApplicatioNotification($id: uuid!, $enabled: Boolean) {
-  update_application_notifications_by_pk(
-    pk_columns: { id: $id }
-    _set: { enabled: $enabled }
-  ) {
-    id
   }
 }
 
