@@ -1808,7 +1808,7 @@ model CmContact {
   OtherCountry              String
   Description               String
   Status                    cm_contacts_Status          @default(Enable)
-  CreatedDate               DateTime
+  CreatedDate               DateTime?
   IpAddress                 Int
   fbimg                     String
   MarketingSource           Int

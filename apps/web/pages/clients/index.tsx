@@ -13,9 +13,21 @@ import CommonHeader from '../../components/CommonHeader'
 import MergeComponent from '../../components/Clients/MergeComponent'
 import { clientsList } from '../../mocks/ClientsList'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import { BasicModal, ClientCreate } from '@pabau/ui'
+import {
+  BasicModal,
+  ClientCreate,
+  Notification,
+  NotificationType,
+} from '@pabau/ui'
 import { intersectionBy, differenceBy, groupBy } from 'lodash'
 import confetti from 'canvas-confetti'
+import {
+  useGetContactsLazyQuery,
+  useGetContactsQuery,
+  useClientListContactsCountQuery,
+  useClientListContactsCountLazyQuery,
+  useDuplicateContactsQuery,
+} from '@pabau/graphql'
 
 const { TabPane } = Tabs
 const { Sider, Content } = Layout
@@ -42,6 +54,74 @@ export const tab = {
 
 export const Clients: FC<ClientsProps> = () => {
   const [searchText, setSearchText] = useState('')
+
+  //WORKING DO NOT DELETE
+  const {
+    data: getClientsCountData,
+    loading: getClientsCountLoading,
+    error: getClientsCountError,
+  } = useClientListContactsCountQuery({ fetchPolicy: 'no-cache' })
+
+  const {
+    data: getDuplicateContactsData,
+    loading: getDuplicateContactsLoading,
+    error: getuDplicateContactsError,
+  } = useDuplicateContactsQuery({ fetchPolicy: 'no-cache' })
+
+  const [paginateData, setPaginateData] = useState({
+    total: 0,
+    offset: 0,
+    limit: 10,
+    currentPage: 1,
+    showingRecords: 0,
+  })
+  const {
+    data: getContactsData,
+    loading: getContactsLoading,
+    error: getCContactsError,
+  } = useGetContactsQuery({
+    fetchPolicy: 'no-cache',
+    variables: {
+      offset: paginateData.offset,
+      limit: paginateData.limit,
+      searchTerm: searchText,
+    },
+  })
+
+  useEffect(() => {
+    if (getClientsCountData) {
+      setPaginateData((d) => ({
+        ...d,
+        total: getClientsCountData?.cmContactsCount,
+        showingRecords: getContactsData?.cmContacts.length,
+      }))
+    }
+  }, [getContactsData, getClientsCountData])
+
+  const onPaginationChange = (currentPage) => {
+    const offset = paginateData.limit * (currentPage - 1)
+    setPaginateData({
+      ...paginateData,
+      offset,
+      currentPage,
+    })
+  }
+
+  // console.log(getContactsData, 'getContactsData')
+
+  const contactsData = getContactsData?.cmContacts.map((d) => ({
+    id: d.ID,
+    avatar: d.Avatar,
+    firstName: d.Fname,
+    lastName: d.Lname,
+    email: d.Email,
+    mobileNumber: d.Mobile,
+    is_active: d.is_active,
+  }))
+
+  // console.log(contactsData, 'contactsData')
+
+  // const [searchText, setSearchText] = useState('')
   const [sourceData, setSourceData] = useState<SourceDataProps[]>(clientsList)
   const [selectedTab, setSelectedTab] = useState(tab.clients)
   const [sourceFilteredData, setSourceFilteredData] = useState<
@@ -64,15 +144,34 @@ export const Clients: FC<ClientsProps> = () => {
   const [duplicateDataList, setDuplicateDataList] = useState<
     SourceDataProps[][]
   >([])
+  const [testData, setTestData] = useState(contactsData)
+  const [duplicateContactsTest, setDuplicateContactsTest] = useState(
+    getDuplicateContactsData
+  )
   const { t } = useTranslationI18()
-
+  // console.log('duplicateContactsTest:', duplicateContactsTest)
   const isMobile = useMedia('(max-width: 768px)', false)
+
+  console.log(searchText, 'searchText')
 
   useEffect(() => {
     setSourceData(clientsList)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientsList])
 
+  useEffect(() => {
+    setTestData(contactsData)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  // if (contactsData !== undefined) {
+  //   setTestData(contactsData)
+  // }
+
+  useEffect(() => {
+    setDuplicateContactsTest(getDuplicateContactsData)
+  }, [getDuplicateContactsData])
+
+  // DO NOT DELETEEEEEE IMPORTANT
   useEffect(() => {
     setSourceFilteredData(sourceData)
     const duplicateList = []
@@ -103,6 +202,39 @@ export const Clients: FC<ClientsProps> = () => {
     }
     setDuplicateDataList(duplicateList)
   }, [sourceData])
+
+  // useEffect(() => {
+  //   setSourceFilteredData(contactsData)
+  //   const duplicateList = []
+  //   const newList = contactsData?.filter((data) => data)
+  //   const data = groupBy(newList, (data) => {
+  //     return `${data.firstName}_${data.lastName}` || data.email
+  //   })
+  //   const dataKeysOfName = Object.keys(data)
+  //   const uniqDataWithName = []
+  //   const uniqData = []
+  //   for (const key of dataKeysOfName) {
+  //     if (data[key].length === 1) {
+  //       uniqDataWithName.push(...data[key])
+  //     } else {
+  //       duplicateList.push(data[key])
+  //     }
+  //   }
+  //   const data1 = groupBy(uniqDataWithName, (item) => {
+  //     return item.email
+  //   })
+  //   const dataKeysOfEmail = Object.keys(data1)
+  //   for (const key of dataKeysOfEmail) {
+  //     if (data1[key].length === 1) {
+  //       uniqData.push(...data1[key])
+  //     } else {
+  //       duplicateList.push(data1[key])
+  //     }
+  //   }
+  //   setDuplicateDataList(duplicateList)
+  // }, [])
+
+  console.log(getDuplicateContactsData, 'getDuplicateContactsData')
 
   useEffect(() => {
     const uniqLabel = countsLabel()
@@ -379,8 +511,9 @@ export const Clients: FC<ClientsProps> = () => {
   const renderContentTable = (
     <ContentComponent
       searchText={searchText}
-      sourceData={sourceFilteredData}
-      handleLabelClick={handleLabelClick}
+      // sourceData={sourceFilteredData}
+      sourceData={contactsData}
+      // handleLabelClick={handleLabelClick}
       isArchived={isArchived}
       labels={labels}
       setLabels={setLabels}
@@ -394,6 +527,10 @@ export const Clients: FC<ClientsProps> = () => {
       handleApplyLabel={handleApplyLabel}
       handleRowClick={handleRowClick}
       handleRecoverClick={handleRecoverClick}
+      paginateData={paginateData}
+      onPaginationChange={onPaginationChange}
+      getClientsCountLoading={getClientsCountLoading}
+      setPaginateData={setPaginateData}
     />
   )
 
@@ -403,6 +540,7 @@ export const Clients: FC<ClientsProps> = () => {
       onDismiss={handleDismiss}
       onMerge={handleMerge}
       onMergeAll={handleMergeAll}
+      duplicateContactsTest={duplicateContactsTest}
     />
   )
 
@@ -470,6 +608,7 @@ export const Clients: FC<ClientsProps> = () => {
                     selectedLabels={selectedLabels}
                     setSelectedLabels={setSelectedLabels}
                     sourceData={sourceData}
+                    // sourceData={testData}
                     handleLabelClick={handleLabelClick}
                     duplicateData={duplicateDataList}
                   />

@@ -6,15 +6,19 @@ import {
   DeleteOutlined,
   AppstoreOutlined,
 } from '@ant-design/icons'
-import { Button, Avatar, Table, Checkbox } from '@pabau/ui'
+import { Button, Avatar, Table, Checkbox, Pagination } from '@pabau/ui'
 import styles from '../../pages/clients/clients.module.less'
-import { Popover, Tooltip } from 'antd'
+import { Image, Popover, Skeleton, Tooltip } from 'antd'
 import { useMedia } from 'react-use'
 import { Labels } from '../../pages/clients'
 import CreateLabel from './CreateLabel'
 import ManageColumnsPopover from './ManageColumnPopover'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import classNames from 'classnames'
+import { clientsList } from '../../mocks/ClientsList'
+import { avatarSrc } from '../../../../libs/ui/src/lib/read-review/mock'
+import searchEmpty from '../../../../libs/ui/src/assets/images/empty.png'
+import { useImage } from '../../hooks/cdn'
 
 interface ClientsContentProps {
   searchText?: string
@@ -33,6 +37,10 @@ interface ClientsContentProps {
   handleApplyLabel?: (val) => void
   handleRowClick?: (val) => void
   handleRecoverClick?: (val) => void
+  paginateData?: any
+  onPaginationChange?: (val) => void
+  getClientsCountLoading?: boolean
+  setPaginateData?: (val) => void
 }
 
 export interface SourceDataProps {
@@ -51,6 +59,7 @@ export interface SourceDataProps {
   orderNotes?: string
   setupFee?: string
   is_dismissed?: boolean
+  avatar?: string
 }
 
 export const ClientsContent: FC<ClientsContentProps> = ({
@@ -70,6 +79,10 @@ export const ClientsContent: FC<ClientsContentProps> = ({
   handleApplyLabel,
   handleRowClick,
   handleRecoverClick,
+  paginateData,
+  onPaginationChange,
+  getClientsCountLoading,
+  setPaginateData,
 }) => {
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 768px)', false)
@@ -107,12 +120,31 @@ export const ClientsContent: FC<ClientsContentProps> = ({
       visible: visiblePrimaryColumns('Avatar'),
       columnType: 'avatar',
       // eslint-disable-next-line react/display-name
+      // render: (data) => {
+      //   const { firstName } = data
+      //   return (
+      //     <div>
+      //       <span className={styles.avatarWrapper}>
+      //         <Avatar name={firstName} />
+      //       </span>
+      //     </div>
+      //   )
+      // },
       render: (data) => {
-        const { firstName } = data
+        const { avatar, firstName } = data
         return (
           <div>
             <span className={styles.avatarWrapper}>
-              <Avatar name={firstName} />
+              {/*<img src="/cdn/attachments/8254/avatar_photos/thumb_20200108142441.jpeg?time=1578493621" />*/}
+              {/*<img>{data.avatar}</img>*/}
+              {/*<Image src={data.avatar} preview={false} />*/}
+              {/*<Avatar size={40} src={data.avatar} />*/}
+              {avatar ? (
+                <Avatar size={30} src={useImage(avatar)} />
+              ) : (
+                // <div style={{ background: useImage(avatar) }}></div>
+                <Avatar name={firstName} />
+              )}
             </span>
           </div>
         )
@@ -345,18 +377,39 @@ export const ClientsContent: FC<ClientsContentProps> = ({
         </div>
       )}
       {!isMobile ? (
-        <Table
-          dataSource={dataSource()}
-          scroll={{ x: 'max-content' }}
-          columns={columns}
-          pagination={false}
-          noDataBtnText={t('clients.noDataBtnText')}
-          noDataText={t('clients.noDataText')}
-          rowSelection={rowSelection}
-          showHeader={selectedRowKeys.length === 0}
-          onRowClick={handleRowClick}
-          loading={false}
-        />
+        <div>
+          <Table
+            dataSource={dataSource()}
+            scroll={{ x: 'max-content' }}
+            columns={columns}
+            pagination={false}
+            noDataBtnText={t('clients.noDataBtnText')}
+            noDataText={t('clients.noDataText')}
+            rowSelection={rowSelection}
+            showHeader={selectedRowKeys.length === 0}
+            onRowClick={handleRowClick}
+            loading={getClientsCountLoading}
+          />
+          <div className={styles.paginationContainer}>
+            <Pagination
+              total={paginateData.total}
+              defaultPageSize={10}
+              showSizeChanger={false}
+              onChange={onPaginationChange}
+              pageSize={paginateData.limit}
+              current={paginateData.currentPage}
+              showingRecords={paginateData.showingRecords}
+              pageSizeOptions={['10', '25', '50', '100']}
+              onPageSizeChange={(pageSize) => {
+                setPaginateData({
+                  ...paginateData,
+                  offset: 0,
+                  limit: pageSize,
+                })
+              }}
+            />
+          </div>
+        </div>
       ) : (
         <div className={styles.clientMainWrapper}>
           {dataSource().map((data: SourceDataProps) => {

@@ -169,14 +169,6 @@ CREATE SEQUENCE public."SMS_campaign_order_seq"
     NO MAXVALUE
     CACHE 1;
 ALTER SEQUENCE public."SMS_campaign_order_seq" OWNED BY public."SMS_campaign"."order";
-CREATE TABLE public.activity_types (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    name text NOT NULL,
-    subject text NOT NULL,
-    is_active boolean NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
 CREATE TABLE public.app_listing (
     id integer NOT NULL,
     company_id integer NOT NULL,
@@ -1025,8 +1017,7 @@ CREATE TABLE public.product_news (
     title text NOT NULL,
     "order" integer NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    sent_to jsonb
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 CREATE SEQUENCE public.product_news_order_seq
     AS integer
@@ -1406,8 +1397,6 @@ ALTER TABLE ONLY public."SMS_campaign"
     ADD CONSTRAINT "SMS_campaign_pkey" PRIMARY KEY (id);
 ALTER TABLE ONLY public.tax_rates
     ADD CONSTRAINT "Taxes_pkey" PRIMARY KEY (id);
-ALTER TABLE ONLY public.activity_types
-    ADD CONSTRAINT activity_types_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.app_listing
     ADD CONSTRAINT app_listing_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.notification_types
@@ -1602,6 +1591,8 @@ CREATE TRIGGER set_public_rota_templates_updated_at BEFORE UPDATE ON public.rota
 COMMENT ON TRIGGER set_public_rota_templates_updated_at ON public.rota_templates IS 'trigger to set value of column "updated_at" to current timestamp on row update';
 CREATE TRIGGER set_public_salutation_updated_at BEFORE UPDATE ON public.salutation FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
 COMMENT ON TRIGGER set_public_salutation_updated_at ON public.salutation IS 'trigger to set value of column "updated_at" to current timestamp on row update';
+CREATE TRIGGER set_public_service_min_attendees BEFORE UPDATE ON public.service FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_min_attendees();
+COMMENT ON TRIGGER set_public_service_min_attendees ON public.service IS 'trigger to set value of column "min_attendees" to current timestamp on row update';
 CREATE TRIGGER set_public_third_parties_updated_at BEFORE UPDATE ON public.third_parties FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
 COMMENT ON TRIGGER set_public_third_parties_updated_at ON public.third_parties IS 'trigger to set value of column "updated_at" to current timestamp on row update';
 ALTER TABLE ONLY public.application_notifications

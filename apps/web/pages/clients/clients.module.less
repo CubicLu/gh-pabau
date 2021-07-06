@@ -192,13 +192,17 @@
       flex-direction: column;
       .user-content {
         display: flex;
+        flex-wrap: wrap;
         .user-info {
           flex: 1;
           padding: 20px;
           border-right: 1px solid #e4e6ea;
+          border-bottom: 1px solid #e4e6ea;
           display: flex;
+          min-height: 105px;
+          flex-basis: 50%;
           &:last-child {
-            border-right: none;
+            max-width: 50%;
           }
           .avtar-icon {
             margin-right: 12px;
@@ -369,6 +373,9 @@
           flex-direction: column;
           .user-info {
             padding: 18px 16px 0;
+            &:last-child {
+              max-width: initial;
+            }
           }
         }
         .merge-footer-btn {

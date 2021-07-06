@@ -26,15 +26,14 @@ export const permissions = shield(
       createOneUserGroup: rules.authentication.isAdmin,
       updateOneUserGroup: rules.authentication.isAdmin,
       deleteOneUserGroup: rules.authentication.isAdmin,
-
       // Public access mutations
       login: allow,
       upsertUserReportByReportCode: rules.authentication.isAdmin,
-
       //CompanyBranches
       createOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
       updateOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
-
+      // //DuplicateContacts
+      // duplicateContacts: rules.authentication.isAuthenticated,
       // Default fallback
       '*': and(
         rules.authentication.isAdmin,
@@ -42,6 +41,8 @@ export const permissions = shield(
       ),
     },
     Query: {
+      //DuplicateContacts
+      duplicateContacts: rules.authentication.isAuthenticated,
       findFirstStaffMeta: rules.authentication.isAuthenticated,
       staffMeta: rules.authentication.isAuthenticated,
       staffMetas: rules.authentication.isAuthenticated,

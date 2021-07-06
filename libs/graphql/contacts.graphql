@@ -1,66 +1,66 @@
-query findContacts($searchTerm1: String, $searchTerm2: String) {
-  cmContacts(
-    where: {
-      AND: [
-        {
-          OR: [
-            { Fname: { contains: $searchTerm1 } }
-            { Lname: { contains: $searchTerm1 } }
-            { Mobile: { contains: $searchTerm1 } }
-            { Email: { contains: $searchTerm1 } }
-            { custom_id: { contains: $searchTerm1 } }
-          ]
-        }
-        {
-          OR: [
-            { Fname: { contains: $searchTerm2 } }
-            { Lname: { contains: $searchTerm2 } }
-            { Mobile: { contains: $searchTerm2 } }
-            { Email: { contains: $searchTerm2 } }
-            { custom_id: { contains: $searchTerm2 } }
-          ]
-        }
-      ]
-    }
-    take: 10
-  ) {
-    ID
-    Fname
-    Lname
-    Email
-    Mobile
-    Avatar
-    custom_id
-  }
-}
-
-
-query findContactByInvoiceNum($invoice_number: String) {
-  findFirstInvSale(where: { custom_id: { equals: $invoice_number } }) {
-    CmContact {
-      ID
-      Fname
-      Lname
-      Email
-      Mobile
-      Avatar
-      custom_id
-    }
-  }
-}
-
-query findContactByInsuranceNum($policy_number: String) {
-  findFirstContactInsurance(
-    where: { membership_number: { equals: $policy_number } }
-  ) {
-    contact_id
-    CmContact {
-      Fname
-      Lname
-      Email
-      Mobile
-      Avatar
-      custom_id
-    }
-  }
-}
+#query findContacts($searchTerm1: String, $searchTerm2: String) {
+#  cmContacts(
+#    where: {
+#      AND: [
+#        {
+#          OR: [
+#            { Fname: { contains: $searchTerm1 } }
+#            { Lname: { contains: $searchTerm1 } }
+#            { Mobile: { contains: $searchTerm1 } }
+#            { Email: { contains: $searchTerm1 } }
+#            { custom_id: { contains: $searchTerm1 } }
+#          ]
+#        }
+#        {
+#          OR: [
+#            { Fname: { contains: $searchTerm2 } }
+#            { Lname: { contains: $searchTerm2 } }
+#            { Mobile: { contains: $searchTerm2 } }
+#            { Email: { contains: $searchTerm2 } }
+#            { custom_id: { contains: $searchTerm2 } }
+#          ]
+#        }
+#      ]
+#    }
+#    take: 10
+#  ) {
+#    ID
+#    Fname
+#    Lname
+#    Email
+#    Mobile
+#    Avatar
+#    custom_id
+#  }
+#}
+#
+#
+#query findContactByInvoiceNum($invoice_number: String) {
+#  findFirstInvSale(where: { custom_id: { equals: $invoice_number } }) {
+#    CmContact {
+#      ID
+#      Fname
+#      Lname
+#      Email
+#      Mobile
+#      Avatar
+#      custom_id
+#    }
+#  }
+#}
+#
+#query findContactByInsuranceNum($policy_number: String) {
+#  findFirstContactInsurance(
+#    where: { membership_number: { equals: $policy_number } }
+#  ) {
+#    contact_id
+#    CmContact {
+#      Fname
+#      Lname
+#      Email
+#      Mobile
+#      Avatar
+#      custom_id
+#    }
+#  }
+#}

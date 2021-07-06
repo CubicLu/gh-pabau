@@ -1,0 +1,35 @@
+query GetContacts(
+  $offset: Int
+  $limit: Int
+  $active: Int = 1
+  $searchTerm: String
+) {
+  cmContacts(
+    skip: $offset
+    take: $limit
+    where: {
+      is_active: { equals: $active }
+      AND: [
+        {
+          OR: [
+            { Fname: { contains: $searchTerm } }
+            { Lname: { contains: $searchTerm } }
+            { Mobile: { contains: $searchTerm } }
+            { Email: { contains: $searchTerm } }
+          ]
+        }
+      ]
+    }
+  ) {
+    Avatar
+    ID
+    Fname
+    Lname
+    Email
+    Mobile
+    DOB
+    MailingCity
+    MailingPostal
+    is_active
+  }
+}

@@ -6,41 +6,35 @@ insert_permissions:
     backend_only: false
     check: {}
     columns:
-    - id
-    - created_at
-    - updated_at
-    - name
-    - phone
-    - email
+    - city
     - country
+    - email
+    - integration
+    - is_active
+    - name
+    - order
+    - phone
+    - postal_code
+    - provider_number
     - street
     - street2
-    - city
-    - postal_code
-    - is_active
-    - integration
-    - order
-    - provider_number
   role: public
 - permission:
     backend_only: false
     check: {}
     columns:
-    - integration
-    - is_active
-    - order
-    - postal_code
-    - provider_number
     - city
     - country
     - email
+    - integration
+    - is_active
+    - name
+    - order
     - phone
+    - postal_code
+    - provider_number
     - street
     - street2
-    - created_at
-    - updated_at
-    - id
-    - name
   role: user
 select_permissions:
 - permission:
@@ -84,27 +78,24 @@ select_permissions:
   role: user
 update_permissions:
 - permission:
-    check: {}
+    check: null
     columns:
-    - integration
-    - is_active
-    - order
-    - postal_code
-    - provider_number
     - city
     - country
     - email
+    - integration
+    - is_active
+    - name
+    - order
     - phone
+    - postal_code
+    - provider_number
     - street
     - street2
-    - created_at
-    - updated_at
-    - id
-    - name
     filter: {}
   role: public
 - permission:
-    check: {}
+    check: null
     columns:
     - integration
     - is_active

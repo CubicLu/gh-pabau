@@ -1,0 +1,7 @@
+query clientListContactsCount($active: Int = 1){
+  cmContactsCount(where: {
+    is_active: {
+      equals: $active
+    }
+  })
+}
