@@ -2881,6 +2881,7 @@ model CmStaffGeneral {
   CompanyBranch       CompanyBranch?              @relation(fields: [DefaultLocation], references: [id])
   CompanyPosition     CompanyPosition?            @relation(fields: [Position], references: [id])
   HolidayRequest      HolidayRequest[]
+  RotaShift           RotaShift[]
 
   @@index([Position], name: "Position")
   @@index([pabau_id], name: "id_index")
@@ -10006,7 +10007,6 @@ model ReportCategory {
 model RotaShift {
   id             Int            @id @default(autoincrement())
   uid            Int
-  User           User           @relation(fields: [uid], references: [id])
   start          Decimal
   end            Decimal
   company_id     Int            @map("occupier")
@@ -10035,7 +10035,7 @@ model RotaShift {
   Location       CompanyBranch  @relation(fields: [location_id], references: [id])
   CompanyRoom    CompanyRoom    @relation(fields: [room_id], references: [id])
   HolidayRequest HolidayRequest @relation(fields: [holiday_id], references: [id])
-
+  CmStaffGeneral CmStaffGeneral @relation(fields: [uid], references: [ID])
 
   @@index([end], name: "end")
   @@index([holiday_id], name: "holiday_id")
@@ -12099,7 +12099,6 @@ model TrainCourseDate {
 //}
 //
 model User {
-
   id                          Int                           @id @default(autoincrement())
   username                    String?
   full_name                   String
@@ -12196,7 +12195,6 @@ model User {
   main_contact                Boolean
   UserSecurityQuestionsAnswer UserSecurityQuestionsAnswer[]
   company                     Company?                      @relation(fields: [company_id], references: [id])
-  RotaShift                   RotaShift[]
   UserGroupMember             UserGroupMember?
   UserMainPermission          UserMainPermission[]
   UserMobilePermission        UserMobilePermission[]

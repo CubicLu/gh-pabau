@@ -1,0 +1,25 @@
+query onlineBookableStaff($shift_start: Decimal = "", $company_id: Int) {
+  cmStaffGenerals(
+    where: {
+      RotaShift: {
+        some: {
+          start: {gt: $shift_start}
+        }
+      },
+      User: {
+        hide_online_bookings: {
+          equals: 0
+        }
+      },
+      company_id: {
+        equals: $company_id
+      }
+    }
+  ) {
+    ID
+    Avatar
+    Email
+    Fname
+    Lname
+  }
+}

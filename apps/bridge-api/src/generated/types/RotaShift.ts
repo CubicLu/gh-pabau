@@ -5,7 +5,6 @@ export const RotaShift = objectType({
   definition(t) {
     t.model.id()
     t.model.uid()
-    t.model.User()
     t.model.start()
     t.model.end()
     t.model.company_id()
@@ -34,6 +33,7 @@ export const RotaShift = objectType({
     t.model.Location()
     t.model.CompanyRoom()
     t.model.HolidayRequest()
+    t.model.CmStaffGeneral()
   },
 })
 

@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import { Header } from '../../components/header'
 import { Footer } from '../../components/footer'
+
 import ServiceCategorySelector from '../../components/ServicesStep/ServiceCategorySelector'
-import { MasterCategory, Category, Service } from '../../types/services'
-import Clinic from '../../components/clinic/clinic'
-import BookingDatail from '../../components/bookingdetails/Bookingdetail'
 import ServiceSelector from '../../components/ServicesStep/ServiceSelector'
+import LocationSelector from '../../components/LocationStep/LocationSelector'
+
+import { MasterCategory, Category, Service } from '../../types/services'
+import BookingDatail from '../../components/bookingdetails/Bookingdetail'
 import moment from 'moment'
 import Payment from '../../components/payment/Payment'
 import Booked from '../../components/bookingconform/booking'
@@ -17,7 +19,10 @@ import styles from './index.module.less'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { employes } from '../../../web/mocks/connect/employMock'
 import { useTranslationI18 } from '../../../web/hooks/useTranslationI18'
-import { useCompanyServicesCategorisedQuery, useOnlineBookableLocationsQuery } from '@pabau/graphql'
+import {
+  useCompanyServicesCategorisedQuery,
+  useOnlineBookableLocationsQuery,
+} from '@pabau/graphql'
 import { Image } from 'antd'
 
 import useServices from '../../hooks/useServices'
@@ -30,6 +35,7 @@ interface BookingData {
   categoryID?: number
   serviceID?: number[]
   employeeID?: number
+  locationID?: number
 }
 
 interface userData {
@@ -103,7 +109,7 @@ export function Index(props: OnlineBookingProps) {
   const {
     loading: loadingLocations,
     error: errorLocations,
-    data: locations,
+    data: locationsResult,
   } = useOnlineBookableLocationsQuery({
     variables: {
       company_id: 8021,
@@ -189,14 +195,6 @@ export function Index(props: OnlineBookingProps) {
     console.log(user)
   }
 
-  const getlocation = (location) => {
-    user.clinic = location.name
-    user.address = location.Address
-    user.docDescription = location.description
-    // user.type = 'Acne consultation'
-    setuser(user)
-    console.log(location)
-  }
   const backbutton = () => {
     if (currentStep === 1) {
       SetselData([...defaultItems.slice(0, 4)])
@@ -322,6 +320,8 @@ export function Index(props: OnlineBookingProps) {
       return styles.slide9
     }
   }
+
+  console.log('currentData', selectedData)
   return (
     <div className={styles.onlineBooking}>
       <Header
@@ -388,11 +388,15 @@ export function Index(props: OnlineBookingProps) {
           )}
           {currentStep === 2 && (
             <div>
-              <Clinic
-                getlocation={getlocation}
-                changescreen={rech}
-                indicator={indicator}
-                setindicator={setindicator}
+              <LocationSelector
+                items={locationsResult.companyBranches}
+                onLocationSelected={(locationID) => {
+                  setSelectedData({
+                    ...selectedData,
+                    locationID: locationID,
+                  })
+                  setCurrentStep(currentStep + 1)
+                }}
                 translation={translation}
               />
             </div>

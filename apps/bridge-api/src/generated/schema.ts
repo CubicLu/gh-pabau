@@ -1862,6 +1862,7 @@ export interface CmStaffGeneral {
   CompanyBranch?: CompanyBranch;
   CompanyPosition?: CompanyPosition;
   HolidayRequest?: HolidayRequest[];
+  RotaShift?: RotaShift[];
 }
 
 export interface CompanyBranch {
@@ -2741,7 +2742,6 @@ export interface ReportCategory {
 export interface RotaShift {
   id: number;
   uid: number;
-  User: User;
   start: undefined;
   end: undefined;
   company_id: number;
@@ -2770,6 +2770,7 @@ export interface RotaShift {
   Location: CompanyBranch;
   CompanyRoom: CompanyRoom;
   HolidayRequest: HolidayRequest;
+  CmStaffGeneral: CmStaffGeneral;
 }
 
 export interface UserSalutation {
@@ -3050,7 +3051,6 @@ export interface User {
   main_contact: boolean;
   UserSecurityQuestionsAnswer?: UserSecurityQuestionsAnswer[];
   company?: Company;
-  RotaShift?: RotaShift[];
   UserGroupMember?: UserGroupMember;
   UserMainPermission?: UserMainPermission[];
   UserMobilePermission?: UserMobilePermission[];

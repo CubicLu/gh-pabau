@@ -547,7 +547,11 @@ const ServiceSelector: FC<P> = ({
                 ? `1 voucher £ ${Vprice}`
                 : `${Vcount} vouchers £ ${Vprice}`)}
           </p>
-          <Button onClick={() => onStepCompleted}>
+          <Button
+            onClick={() => {
+              onStepCompleted(selectedServices)
+            }}
+          >
             Next
             <ArrowRightOutlined />{' '}
           </Button>

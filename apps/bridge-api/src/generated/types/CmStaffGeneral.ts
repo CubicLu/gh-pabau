@@ -54,6 +54,7 @@ export const CmStaffGeneral = objectType({
     t.model.CompanyBranch()
     t.model.CompanyPosition()
     t.model.HolidayRequest()
+    t.model.RotaShift()
   },
 })
 
