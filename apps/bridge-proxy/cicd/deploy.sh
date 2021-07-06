@@ -38,6 +38,7 @@ echo "APP_TYPE=${APP_TYPE}"
 echo "VERCEL_JSON_LOCATION=${VERCEL_JSON_LOCATION}"
 echo "BITBUCKET_COMMIT=${BITBUCKET_COMMIT}"
 echo "BITBUCKET_PR_ID=${BITBUCKET_PR_ID}"
+echo "BITBUCKET_CLONE_DIR=${BITBUCKET_CLONE_DIR}"
 echo "-----------------"
 
 echo "Docker build..."
@@ -69,7 +70,7 @@ cp -r hasura/ dist/
 #rm dist/hasura/metadata/actions.yaml
 cp -f hasura/remote_schemas.production.yaml dist/hasura/remote_schemas.yaml
 docker run --rm \
-  -v "./dist/hasura/:/hasura/:ro" \
+  -v "${BITBUCKET_CLONE_DIR}/dist/hasura/:/hasura/:ro" \
   -e HASURA_GRAPHQL_ENDPOINT="${HASURA_GRAPHQL_ENDPOINT}" \
   -e HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" \
   golang:buster \
