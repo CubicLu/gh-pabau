@@ -77,7 +77,18 @@ curl -LO https://github.com/hasura/graphql-engine/releases/download/v2.0.1/cli-h
 chmod +x cli-hasura-linux-amd64
 mv ./cli-hasura-linux-amd64 /usr/local/bin/hasura
 cp -r hasura/ dist/
+rm dist/hasura/metadata/actions.yaml
 cp -f hasura/remote_schemas.production.yaml dist/hasura/remote_schemas.yaml
+echo "Applying migrations..."
 HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" hasura --project dist/hasura migrate apply --database-name default || echo "SILENTLY FAILED"
 sleep 1
+echo "Applying metadata..."
 HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" hasura --project dist/hasura metadata apply || echo "SILENTLY FAILED"
+
+echo "Trying docker..."
+docker run --rm golang:buster \
+  -v "./hasura/:/hasura/:ro" \
+  -e HASURA_GRAPHQL_ENDPOINT="https://api-v2-staging.pabau.com/" \
+  -e HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" \
+  bash -c "curl -LO https://github.com/hasura/graphql-engine/releases/download/v2.0.1/cli-hasura-linux-amd64 && chmod +x cli-hasura-linux-amd64 && mv ./cli-hasura-linux-amd64 /usr/local/bin/hasura && hasura version && hasura --project /hasura migrate apply --database-name default && hasura --project /hasura metadata apply" \
+  || echo "FAILED"
