@@ -5,20 +5,17 @@ import { Footer } from '../../components/footer'
 import ServiceCategorySelector from '../../components/ServicesStep/ServiceCategorySelector'
 import ServiceSelector from '../../components/ServicesStep/ServiceSelector'
 import LocationSelector from '../../components/LocationStep/LocationSelector'
-
-import { MasterCategory, Category, Service } from '../../types/services'
 import BookingDatail from '../../components/bookingdetails/Bookingdetail'
 import moment from 'moment'
 import Payment from '../../components/payment/Payment'
 import Booked from '../../components/bookingconform/booking'
 import PatientInfo from '../../components/patientinformatioon/PatientInfo'
-import Employ, { EmployData } from '../../components/selectemploy/employ'
+import EmployeeSelector from '../../components/EmployeeStep/EmployeeSelector'
 import DateTime from '../../components/dateTime/DateTime'
 import { defaultItems } from '../../../web/mocks/connect/onlineBooking'
 import styles from './index.module.less'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { employes } from '../../../web/mocks/connect/employMock'
-import { useTranslationI18 } from '../../../web/hooks/useTranslationI18'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import {
   useCompanyServicesCategorisedQuery,
   useOnlineBookableLocationsQuery,
@@ -164,10 +161,6 @@ export function Index(props: OnlineBookingProps) {
   const rech = () => {
     setCurrentStep(currentStep + 1)
     Setback(true)
-  }
-  const SelectEmp = (value: EmployData) => {
-    setDateTime(value)
-    console.log(value)
   }
 
   const gettime = (tm) => {
@@ -321,7 +314,6 @@ export function Index(props: OnlineBookingProps) {
     }
   }
 
-  console.log('currentData', selectedData)
   return (
     <div className={styles.onlineBooking}>
       <Header
@@ -397,17 +389,19 @@ export function Index(props: OnlineBookingProps) {
                   })
                   setCurrentStep(currentStep + 1)
                 }}
-                translation={translation}
               />
             </div>
           )}
           {currentStep === 3 && (
             <div>
-              <Employ
-                items={employes}
-                changescreen={rech}
-                onselect={SelectEmp}
-                translation={translation}
+              <EmployeeSelector
+                onEmployeeSelected={(employeeID) => {
+                  setSelectedData({
+                    ...selectedData,
+                    employeeID: employeeID,
+                  })
+                  setCurrentStep(currentStep + 1)
+                }}
               />
             </div>
           )}

@@ -3,21 +3,16 @@ import { Input, Button } from '@pabau/ui'
 import Styles from './LocationSelector.module.less'
 import { CheckCircleFilled, CloseCircleOutlined } from '@ant-design/icons'
 import fetch from 'node-fetch'
-
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { Location } from '../../types/locations'
 
 export interface P {
   items: Location[]
   onLocationSelected: (locationID) => void
-  translation: (val: string) => string
 }
 
-const LocationSelector: FC<P> = ({
-  items,
-  onLocationSelected,
-  translation,
-}) => {
-  //const { t } = useTranslationI18()
+const LocationSelector: FC<P> = ({ items, onLocationSelected }) => {
+  const { t } = useTranslationI18()
   const apiKey = process.env.google_api_key
   const [auto, setauto] = useState(true)
   const [location, setlocation] = useState<string>('')
@@ -68,7 +63,7 @@ const LocationSelector: FC<P> = ({
         <div className={Styles.slide2}>
           <div className={Styles.locationMainWrapper}>
             <p className={Styles.preHeading}>
-              {translation('connect.onlinebooking.location.title')}
+              {t('connect.onlinebooking.location.title')}
             </p>
             <div className={Styles.formGroup}>
               <div className={Styles.inputWrap}>
@@ -90,7 +85,7 @@ const LocationSelector: FC<P> = ({
                   setSearchLocation(false)
                 }}
               >
-                {translation('connect.onlinebooking.location.findbutton')}
+                {t('connect.onlinebooking.location.findbutton')}
               </Button>
             </div>
             <div className={Styles.locationBtn}>
@@ -99,7 +94,7 @@ const LocationSelector: FC<P> = ({
                   getLatLng()
                 }}
               >
-                {translation('connect.onlinebooking.location.currentlocation')}
+                {t('connect.onlinebooking.location.currentlocation')}
               </Button>
             </div>
           </div>
@@ -123,9 +118,7 @@ const LocationSelector: FC<P> = ({
               </div>
             ))}
             <div className={Styles.btnWrap}>
-              <Button>
-                {translation('connect.onlinebooking.clinic.viewall')}
-              </Button>
+              <Button>{t('connect.onlinebooking.clinic.viewall')}</Button>
             </div>
           </div>
         </div>

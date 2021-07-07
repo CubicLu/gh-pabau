@@ -3,7 +3,7 @@ import image3 from '../../assets/images/connect/mike.png'
 import image2 from '../../assets/images/connect/alex.png'
 import image1 from '../../assets/images/connect/alisa.png'
 import image4 from '../../assets/images/connect/victoria.png'
-import { EmployData } from '../../../connect/components/selectemploy/employ'
+import { EmployData } from '../../../connect/components/EmployeeStep/employ'
 export const employes: EmployData[] = [
   {
     key: 1,

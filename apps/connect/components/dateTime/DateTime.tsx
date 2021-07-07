@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react'
 import Styles from './datetime.module.less'
 import { Calendar } from 'antd'
 import moment from 'moment'
-import { EmployData } from '../selectemploy/employ'
+import { EmployData } from '../EmployeeStep/employ'
 import { useMedia } from 'react-use'
 import {
   CalendarOutlined,

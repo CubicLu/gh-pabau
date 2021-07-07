@@ -29,9 +29,6 @@ fragment RotaShiftFields on RotaShift {
 
 fragment RotaShift on RotaShift {
   ...RotaShiftFields
-  User {
-    ...UserFields
-  }
   Company {
     ...CompanyFields
   }
