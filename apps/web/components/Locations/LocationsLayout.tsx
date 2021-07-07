@@ -1,6 +1,20 @@
 import { EditFilled, LeftOutlined } from '@ant-design/icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
+  Company_Branches_Attachments_Type,
+  LocationsDocument,
+  LocationsQueryVariables,
+  useGetLastOrderQuery,
+  useGetLocationStaffListLazyQuery,
+  useInsertLocationMutation,
+  useListEmployeeQueryQuery,
+  useLocationsQuery,
+  useUpdateLocationMutation,
+  useUpdateLocationsOrderMutation,
+  useLocationLimitQuery,
+  useActiveLocationCountQuery,
+} from '@pabau/graphql'
+import {
   AvatarList,
   Breadcrumb,
   Button,
@@ -37,18 +51,7 @@ import CustomFilter from './CustomFilter'
 import General from './General'
 import LocationDetails from './LocationDetails'
 import styles from './LocationsLayout.module.less'
-import {
-  useGetLocationStaffListLazyQuery,
-  Company_Branches_Attachments_Type,
-  LocationsQueryVariables,
-  useInsertLocationMutation,
-  useLocationsQuery,
-  useListEmployeeQueryQuery,
-  LocationsDocument,
-  useGetLastOrderQuery,
-  useUpdateLocationsOrderMutation,
-  useUpdateLocationMutation,
-} from '@pabau/graphql'
+import { QuestionCircleOutlined } from '@ant-design/icons'
 
 const { Title } = Typography
 
@@ -167,6 +170,10 @@ const defaultValue: InitialLocationProps = {
   address: '',
   street: '',
   postcode: '',
+  location: '',
+  city: '',
+  country: '',
+  region: '',
   img: null,
   employees: [],
   badges: [],
@@ -195,8 +202,11 @@ const LocationsLayout: FC<P> = ({ schema }) => {
   const [tags, setTags] = useState([])
   const [locationIds, setLocationIds] = useState([])
   const [filterChange, setFilterChange] = useState(true)
-  const router = useRouter()
+  const [allowedLocationCount, setAllowedLocationCount] = useState<number>()
+  const [activeLocation, setActiveLocation] = useState<number>()
+  const [activeLocationLoading, setActiveLocationLoading] = useState(true)
 
+  const router = useRouter()
   const { getParentSetupData } = useGridData(t)
   const user = useContext(UserContext)
   const filterFormRef = useRef(null)
@@ -217,11 +227,6 @@ const LocationsLayout: FC<P> = ({ schema }) => {
       variables: {
         isActive,
         searchTerm: '%' + searchTerm + '%',
-        filter: {
-          every: {
-            type: { equals: Company_Branches_Attachments_Type['AntdBadge'] },
-          },
-        },
       },
     }
 
@@ -238,7 +243,9 @@ const LocationsLayout: FC<P> = ({ schema }) => {
         variables: {
           ...queryOptions.variables,
           filter: {
-            ...queryOptions.variables.filter,
+            every: {
+              type: { equals: Company_Branches_Attachments_Type['AntdBadge'] },
+            },
             some: {
               OR: filterData,
             },
@@ -271,6 +278,15 @@ const LocationsLayout: FC<P> = ({ schema }) => {
 
   const { data: employeeDataResponse } = useListEmployeeQueryQuery()
   const { data: lastOrder, refetch } = useGetLastOrderQuery()
+  const {
+    data: locationLimit,
+    loading: locationLimitLoading,
+  } = useLocationLimitQuery()
+  const {
+    data: activeLocationCount,
+    refetch: refetchActiveLocationCount,
+    loading: activeLoading,
+  } = useActiveLocationCountQuery()
 
   const [loadStaffList, { data: staffData }] = useGetLocationStaffListLazyQuery(
     {
@@ -313,7 +329,7 @@ const LocationsLayout: FC<P> = ({ schema }) => {
       for (const item of locationData) {
         const assignedUserData = []
         for (const staff of staffData?.cmStaffGenerals) {
-          if (staff.Location.includes(item.id.toString())) {
+          if (staff?.Location?.includes(item.id.toString())) {
             assignedUserData.push({
               id: staff.id,
               name: `${staff.Fname} ${staff.Lname}`,
@@ -331,6 +347,23 @@ const LocationsLayout: FC<P> = ({ schema }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [staffData])
+
+  useEffect(() => {
+    if (locationLimit?.companySubscriptions) {
+      setAllowedLocationCount(
+        locationLimit?.companySubscriptions?.[0]['multiple_locations']
+      )
+    }
+  }, [locationLimit])
+
+  useEffect(() => {
+    if (activeLocationCount?.companyBranchesCount) {
+      setActiveLocation(activeLocationCount.companyBranchesCount)
+    }
+    if (!activeLoading) {
+      setActiveLocationLoading(false)
+    }
+  }, [activeLocationCount, activeLoading])
 
   const [updateOrderMutation] = useUpdateLocationsOrderMutation()
 
@@ -533,6 +566,14 @@ const LocationsLayout: FC<P> = ({ schema }) => {
   }, [initialValues])
 
   const onSubmit = async (values, { resetForm }) => {
+    if (values.isActive && !(allowedLocationCount > activeLocation)) {
+      setCreateLocationModal((e) => !e)
+      resetForm()
+      return Notification(
+        NotificationType.error,
+        t('setup.locations.location.limit.error')
+      )
+    }
     const badges = []
     for (const item of values.badges) {
       badges.push({
@@ -575,6 +616,7 @@ const LocationsLayout: FC<P> = ({ schema }) => {
         }))
     resetForm()
     setCreateLocationModal((e) => !e)
+    refetchActiveLocationCount()
     if (values.id || variables.isActive === isActive) {
       setIsLoading(true)
     }
@@ -624,6 +666,16 @@ const LocationsLayout: FC<P> = ({ schema }) => {
     return prepareAddress.join(', ')
   }
 
+  const SkeletonInput = () => {
+    return (
+      <Skeleton.Input
+        active={true}
+        size={'small'}
+        style={{ width: 25, height: 20 }}
+      />
+    )
+  }
+
   return (
     <Layout {...user} requireAdminAccess={true}>
       <div className={classNames(styles.locationsPage, styles.desktopViewNone)}>
@@ -643,6 +695,7 @@ const LocationsLayout: FC<P> = ({ schema }) => {
               onResetFilter={onResetFilter}
               customFilter={renderFilter}
               mobileSearch={isMobileSearch}
+              isCreateButtonVisible={allowedLocationCount > activeLocation}
               setMobileSearch={() => {
                 setSearchTerm('')
                 setMobileSearch((e) => !e)
@@ -675,9 +728,38 @@ const LocationsLayout: FC<P> = ({ schema }) => {
           tableSearch={true}
           isCustomFilter={true}
           customFilter={renderFilter}
+          isCreateButtonVisible={allowedLocationCount > activeLocation}
         />
       </div>
       <div className={styles.locationContainer}>
+        <div className={styles.locationTitle}>
+          <div className={styles.allowContent}>
+            <h5>{t('setup.locations.allowed.location.label')}</h5>
+            <Tooltip
+              title={t('setup.locations.allowed.location.tooltip.label')}
+            >
+              <QuestionCircleOutlined /> :
+            </Tooltip>
+            <div>
+              <div className={styles.displayCount}>
+                {locationLimitLoading ? (
+                  <SkeletonInput />
+                ) : (
+                  allowedLocationCount
+                )}
+              </div>
+            </div>
+          </div>
+          <div className={styles.allowContent}>
+            <h5>{t('setup.locations.active.location.label')}</h5>
+            <span>:</span>
+            <div>
+              <div className={styles.displayCount}>
+                {activeLocationLoading ? <SkeletonInput /> : activeLocation}
+              </div>
+            </div>
+          </div>
+        </div>
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable">
             {(provided, snapshot) => (
@@ -767,18 +849,21 @@ const LocationsLayout: FC<P> = ({ schema }) => {
                                       </div>
                                     )}
                                     <div className={styles.locationIcon}>
-                                      {location?.AssignedBadge?.map((badge) => (
-                                        <Tooltip
-                                          title={badge.name}
-                                          key={badge.name}
-                                        >
-                                          <FontAwesomeIcon
-                                            color={'#9292A3'}
-                                            size="1x"
-                                            icon={badge.icon}
-                                          />
-                                        </Tooltip>
-                                      ))}
+                                      {location?.AssignedBadge?.map(
+                                        (badge) =>
+                                          badge.type === 'antd_badge' && (
+                                            <Tooltip
+                                              title={badge.name}
+                                              key={badge.name}
+                                            >
+                                              <FontAwesomeIcon
+                                                color={'#9292A3'}
+                                                size="1x"
+                                                icon={badge.icon}
+                                              />
+                                            </Tooltip>
+                                          )
+                                      )}
                                     </div>
                                   </div>
                                   <div

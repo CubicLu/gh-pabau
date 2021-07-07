@@ -22,6 +22,7 @@ interface P {
   showModalInitially?: boolean
   isDataIntegrityCheck?: boolean
   dataIntegrityCount?: number
+  isCodeGen?: boolean
 }
 
 const CrudModal: FC<P> = ({
@@ -37,6 +38,7 @@ const CrudModal: FC<P> = ({
   submitting = false,
   isDataIntegrityCheck,
   dataIntegrityCount,
+  isCodeGen = false,
 }) => {
   const { t } = useTranslationI18()
   const [openDeleteModal, setDeleteModal] = useState(
@@ -118,7 +120,7 @@ const CrudModal: FC<P> = ({
             return
           }
           await deleteMutation({
-            variables: { id },
+            variables: isCodeGen ? { where: { id: id } } : { id },
             optimisticResponse: {},
             refetchQueries: [
               {
@@ -194,7 +196,13 @@ const CrudModal: FC<P> = ({
             ? t('common-label-create')
             : t('common-label-save')
         }
-        dangerButtonText={editingRow?.id && t('common-label-delete')}
+        dangerButtonText={
+          schema?.disable?.deleteable && editingRow?.id
+            ? !formik.values[schema?.disable.conditionalField]
+              ? t('common-label-delete')
+              : null
+            : editingRow?.id && t('common-label-delete')
+        }
         specialBooleanLabel={
           !!specialFormElement && t('marketingsource-status-label')
         }

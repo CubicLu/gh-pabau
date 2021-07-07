@@ -18,12 +18,18 @@ export const permissions = shield(
       //CompanyMeta
       setOneCompanyMeta: rules.authentication.isAdmin,
 
+      //Update User Password
+      updateUserPassword: rules.authentication.isAuthenticated,
+
+      // Send Email
+      sendEmail: rules.authentication.isAuthenticated,
+
       //Page
+      createOnePage: rules.authentication.isAdmin,
       updateOnePage: rules.authentication.isAdmin,
       deleteOnePage: rules.authentication.isAdmin,
 
       //UserGroup
-      createOneUserGroup: rules.authentication.isAdmin,
       updateOneUserGroup: rules.authentication.isAdmin,
       deleteOneUserGroup: rules.authentication.isAdmin,
       // Public access mutations
@@ -32,8 +38,15 @@ export const permissions = shield(
       //CompanyBranches
       createOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
       updateOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
-      // //DuplicateContacts
-      // duplicateContacts: rules.authentication.isAuthenticated,
+
+      updateManyUser: rules.authentication.isAdmin,
+      upsertManyUsersPermissionByGroupId: rules.authentication.isAdmin,
+      upsertManyUsersReportsByGroupId: rules.authentication.isAdmin,
+      upsertGroupPermissionFeatureByGroupId: rules.authentication.isAdmin,
+      updateManyInvBiller: rules.authentication.isAdmin,
+      updateManyStaffMetaFeaturesByGroupId: rules.authentication.isAdmin,
+      upsertManyUsersMainPermissionByGroupId: rules.authentication.isAdmin,
+
       // Default fallback
       '*': and(
         rules.authentication.isAdmin,

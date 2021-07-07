@@ -38,13 +38,13 @@ export const Avatar: FC<AvatarProps> = ({
   const [shortName, setShortName] = useState('')
   useEffect(() => {
     const img = new Image()
+    img.src = src
     img.addEventListener('load', () => {
       setLoad(true)
     })
     img.addEventListener('error', () => {
       setLoad(false)
     })
-    img.src = src
     setShortName(
       name
         .toUpperCase()

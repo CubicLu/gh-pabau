@@ -1,3 +1,5 @@
+//TODO: this file is not DRY
+
 import React, { FC, useState, useEffect } from 'react'
 import { useWindowSize } from 'react-use'
 import { Card, Typography, Input as AntInput, Divider, Select } from 'antd'
@@ -19,7 +21,6 @@ import {
   BasicModal as CreateCategory,
   MobileSidebar,
   NotificationDrawer,
-  PabauMessages,
 } from '@pabau/ui'
 import SearchGlobal from '../../components/Search'
 import CreateProduct from '../../components/Setup/ProductList/CreateProduct'
@@ -94,7 +95,7 @@ const Subscription: FC = () => {
   const [showImageSelector, setShowImageSelector] = useState(false)
   const [openMenuDrawer, setMenuDrawer] = useState(false)
   const [openNotificationDrawer, setNotificationDrawer] = useState(false)
-  const [openMessageDrawer, setMessageDrawer] = useState(false)
+  const [, setMessageDrawer] = useState(false)
 
   const handleSearch = (val) => {
     console.log('val', val)
@@ -357,12 +358,6 @@ const Subscription: FC = () => {
           <NotificationDrawer
             openDrawer={openNotificationDrawer}
             closeDrawer={() => setNotificationDrawer((e) => !e)}
-          />
-        )}
-        {openMessageDrawer && (
-          <PabauMessages
-            openDrawer={openMessageDrawer}
-            closeDrawer={() => setMessageDrawer((e) => !e)}
           />
         )}
       </Layout>

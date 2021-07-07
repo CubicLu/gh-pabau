@@ -31,6 +31,19 @@ interface Schema {
   showNotification?: SchemaShowNotification
   noDataBtnText?: string
   noDataText?: string
+  disable?: DisabledFieldtype
+  ordering?: SchemaOrder
+}
+
+interface SchemaOrder {
+  name: string
+  type: string
+}
+
+interface DisabledFieldtype {
+  type: string | number | boolean
+  conditionalField: string
+  deleteable?: boolean
 }
 
 type DefaultFilterType = number | boolean

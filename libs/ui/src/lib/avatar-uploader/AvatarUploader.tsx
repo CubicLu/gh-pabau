@@ -1,4 +1,4 @@
-import React, { FC, useState, useRef, useCallback } from 'react'
+import React, { FC, useEffect, useState, useRef, useCallback } from 'react'
 import ReactCrop from 'react-image-crop'
 import { BasicModal } from '../modal/BasicModal'
 import Avatar from '../avatar/Avatar'
@@ -66,14 +66,19 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
     )
 
     return new Promise((resolve, reject) => {
-      canvas.toBlob((blob: BlobType) => {
-        if (!blob) {
-          reject('Canvas is empty')
-          return
-        }
-        blob.name = fileName
-        resolve(URL.createObjectURL(blob))
-      }, 'image/jpeg')
+      try {
+        canvas?.toBlob((blob: BlobType) => {
+          if (!blob) {
+            reject('Canvas is empty')
+            return
+          }
+          blob.name = fileName
+          resolve(URL.createObjectURL(blob))
+        }, 'image/jpeg')
+      } catch {
+        setCroppedImage('')
+        setImage('')
+      }
     })
   }
 
@@ -87,6 +92,11 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
       setCroppedImage(image)
     }
   }
+
+  useEffect(() => {
+    setImage(imageURL)
+    setCroppedImage(imageURL)
+  }, [imageURL])
 
   const selectFile = () => {
     if (fileInputRef?.current) {

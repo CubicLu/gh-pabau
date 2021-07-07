@@ -6,6 +6,16 @@
       @media (max-width: 767px) {
         min-width: 100%;
       }
+      .ant-modal-content {
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        .ant-modal-body {
+          flex: 1 1;
+          overflow: auto;
+        }
+      }
     }
     .ant-tabs {
       min-height: 60vh !important;

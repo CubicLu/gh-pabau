@@ -161,7 +161,7 @@ const Reviews: FC<ReviewConfig> = () => {
   const [paginateData, setPaginateData] = useState({
     total: 0,
     skip: 0,
-    take: 10,
+    take: 50,
     currentPage: 1,
     showingRecords: 0,
   })
@@ -267,10 +267,16 @@ const Reviews: FC<ReviewConfig> = () => {
       onCompleted(data) {
         if (data !== null) {
           if (data.updateOneSocialSurveyFeedback.public_use === 0) {
-            Notification(NotificationType.success, t('Remove from Favourite'))
+            Notification(
+              NotificationType.success,
+              t('marketingreviews.delete.message')
+            )
           }
           if (data.updateOneSocialSurveyFeedback.public_use === 1) {
-            Notification(NotificationType.success, t('Added to Favourite'))
+            Notification(
+              NotificationType.success,
+              t('marketingreviews.add.message')
+            )
           }
         }
       },
@@ -656,20 +662,28 @@ const Reviews: FC<ReviewConfig> = () => {
               <div className={styles.filterViewerStatusContainer}>
                 <Button
                   type={values.score === 'Bad' ? 'primary' : 'default'}
-                  onClick={() => setFieldValue('score', 'Bad')}
+                  onClick={() => {
+                    setFieldValue('score', values.score === 'Bad' ? '' : 'Bad')
+                  }}
                 >
                   {t('marketingreviews.filter.option.bad')}
                 </Button>
-
                 <Button
                   type={values.score === 'Ok' ? 'primary' : 'default'}
-                  onClick={() => setFieldValue('score', 'Ok')}
+                  onClick={() => {
+                    setFieldValue('score', values.score === 'Ok' ? '' : 'Ok')
+                  }}
                 >
                   {t('marketingreviews.ok.label')}
                 </Button>
                 <Button
                   type={values.score === 'Excellent' ? 'primary' : 'default'}
-                  onClick={() => setFieldValue('score', 'Excellent')}
+                  onClick={() => {
+                    setFieldValue(
+                      'score',
+                      values.score === 'Excellent' ? '' : 'Excellent'
+                    )
+                  }}
                 >
                   {t('marketingreviews.excellent.label')}
                 </Button>
@@ -688,7 +702,7 @@ const Reviews: FC<ReviewConfig> = () => {
                           ...new Set(
                             Alldata.map((item) => item.User?.full_name)
                           ),
-                        ] as string[])
+                        ].filter((item) => item !== undefined) as string[])
                       : []
                   }
                   onSelected={(val) => setFieldValue('employee', val)}
@@ -707,7 +721,7 @@ const Reviews: FC<ReviewConfig> = () => {
                     Alldata.length > 0
                       ? ([
                           ...new Set(Alldata.map((item) => item.service)),
-                        ] as string[])
+                        ].filter((item) => item !== undefined) as string[])
                       : []
                   }
                   onSelected={(val) => setFieldValue('service', val)}
@@ -1279,7 +1293,7 @@ const Reviews: FC<ReviewConfig> = () => {
                     ),
                     feedback_for: (
                       <Tooltip
-                        placement="bottom"
+                        placement="top"
                         title={`${item?.service} with ${item?.User?.full_name}`}
                       >
                         <div className={styles.avatarWrap}>
@@ -1294,7 +1308,10 @@ const Reviews: FC<ReviewConfig> = () => {
                     ),
                     visibleData: renderVisibleData(item),
                     feedback_comment: (
-                      <Tooltip placement="top" title={item?.feedback_comment}>
+                      <Tooltip
+                        placement="top"
+                        title={(item?.feedback_comment).substring(0, 2000)}
+                      >
                         {item?.feedback_comment}
                       </Tooltip>
                     ),

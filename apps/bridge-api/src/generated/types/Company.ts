@@ -100,6 +100,10 @@ export const Company = objectType({
     t.model.CompanyBranchGroup()
     t.model.CompanyBranchAttachment()
     t.model.InvPaymentType()
+    t.model.InvSale()
+    t.model.IssuingCompany()
+    t.model.DebtManageCommunication()
+    t.model.CreditNoteType()
   },
 })
 

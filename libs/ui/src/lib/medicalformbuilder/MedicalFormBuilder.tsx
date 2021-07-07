@@ -1,41 +1,125 @@
-import { EditOutlined, EyeOutlined } from '@ant-design/icons'
+import { ControlOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
+import {
+  MedicalFormItem,
+  MedicalFormTypes,
+  Notification,
+  NotificationType,
+} from '@pabau/ui'
 import { Modal, Tabs } from 'antd'
-import React, { FC, useState } from 'react'
+import className from 'classnames'
+import { cloneDeep } from 'lodash'
+import React, { FC, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import MedicalFormAdvance from './MedicalFormAdvance'
 import styles from './MedicalFormBuilder.module.less'
 import MedicalFormEdit from './MedicalFormEdit'
 import MedicalFormInfo from './MedicalFormInfo'
 import MedicalFormPreview from './MedicalFormPreview'
 import MedicalFormSetting from './MedicalFormSetting'
-import className from 'classnames'
 
 const { TabPane } = Tabs
+const defaultMedicalForm = {
+  key: '',
+  name: '',
+  formType: 'Treatment form',
+  createdAt: '23/10/2020',
+  version: {
+    currentVersion: '3',
+    history: {
+      last_week: [
+        {
+          version: '3',
+          updatedBy: 'William Brandham',
+          date: 'January 22, 2:27 PM',
+        },
+        {
+          version: '2',
+          updatedBy: 'Meri Redjepi',
+          date: 'January 22, 1:26 PM',
+        },
+        {
+          version: '1',
+          updatedBy: 'Meri Redjepi',
+          date: 'January 22, 2:27 PM',
+        },
+      ],
+    },
+  },
+  status: 'active',
+  index: 0,
+  formData: '',
+  rules: [],
+}
 
 interface MedicalFormBuilderProps {
   previewData: string
   visible: boolean
-  onCreate: () => void
-  nameForm?: string
+  onHideFormBuilder: () => void
+  onSaveForm?: (MedicalFormItem) => void
+  preFormName: string
+  create?: boolean
+  currentForm?: MedicalFormItem
 }
 
 export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
-  previewData,
-  visible,
-  onCreate,
-  nameForm,
+  previewData = '',
+  visible = false,
+  onHideFormBuilder,
+  onSaveForm,
+  preFormName = '',
+  create = true,
+  currentForm = null,
 }) => {
   const { t } = useTranslation('common')
-  const [formName, setFormName] = useState(
-    nameForm ? nameForm : 'IPL Treatment Record (Clone)'
-  )
+  const [formName, setFormName] = useState(preFormName)
+  const [formSaveLabel, setFormSaveLabel] = useState('')
+  const [
+    currentMedicalForm,
+    setCurrentMedicalForm,
+  ] = useState<MedicalFormItem>()
   const [visiblePreview, setVisiblePreview] = useState(false)
   const [activatePanel, setActivatePanel] = useState('1')
   const [clickedCreateForm, setClickedCreateForm] = useState(false)
   const [clickedPreviewForm, setClickedPreviewForm] = useState(false)
   const [formData, setFormData] = useState('')
+  const [draggedFormCnts, setDraggedFormCnts] = useState(0)
+  const [draggedForms, setDraggedForms] = useState<MedicalFormTypes[]>([])
+
+  const [disabledButton, setDisabledButton] = useState(true)
+
+  useEffect(() => {
+    setFormName(preFormName)
+  }, [preFormName])
+
+  useEffect(() => {
+    if (currentForm) setCurrentMedicalForm(currentForm)
+  }, [currentForm])
+
+  useEffect(() => {
+    if (formName !== '' && draggedFormCnts > 0) {
+      setDisabledButton(false)
+    } else {
+      setDisabledButton(true)
+    }
+  }, [formName, draggedFormCnts])
 
   const changeFormName = (formName) => {
     setFormName(formName)
+    if (currentMedicalForm) currentMedicalForm.name = formName
+    if (defaultMedicalForm) defaultMedicalForm.name = formName
+  }
+
+  const triggerChangeForms = (forms) => {
+    setDraggedFormCnts(forms.length)
+    setDraggedForms(forms)
+  }
+
+  const changeFormType = (formType) => {
+    if (defaultMedicalForm) defaultMedicalForm.formType = formType
+  }
+
+  const changeFormSaveLabel = (label) => {
+    setFormSaveLabel(label)
   }
 
   const changeTab = (key) => {
@@ -43,8 +127,9 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
     if (key === '2') {
       setVisiblePreview(true)
       clickPreviewFormBtn()
+    } else {
+      setActivatePanel(key)
     }
-    setActivatePanel('1')
   }
 
   const closePreviewDialog = () => {
@@ -72,6 +157,44 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
     setFormData(data)
   }
 
+  const showError = (errMessage) => {
+    Notification(NotificationType.error, errMessage)
+  }
+
+  const handleSaveForm = (formData) => {
+    clearCreateFormBtn()
+    if (create) {
+      if (defaultMedicalForm) {
+        if (defaultMedicalForm.name === '') {
+          showError(t('ui.medicalformbuilder.save.formname.error'))
+          return
+        }
+        defaultMedicalForm.formData = formData
+        onSaveForm?.(cloneDeep(defaultMedicalForm))
+      }
+    } else {
+      if (currentMedicalForm) {
+        if (currentMedicalForm.name === '') {
+          showError(t('ui.medicalformbuilder.save.formname.error'))
+          return
+        }
+        currentMedicalForm.formData = formData
+        onSaveForm?.(currentMedicalForm)
+      }
+    }
+  }
+
+  const handleSaveRules = (rules) => {
+    if (create) {
+      defaultMedicalForm.rules = rules
+    } else {
+      if (currentMedicalForm) {
+        currentMedicalForm.rules = rules
+        // onSaveForm?.(currentMedicalForm)
+      }
+    }
+  }
+
   return (
     <Modal
       visible={visible}
@@ -80,8 +203,15 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
       width={'100%'}
       wrapClassName={className(styles.fullScreenModal, 'fullScreenModal')}
     >
-      <MedicalFormInfo formName={formName} />
-      <MedicalFormSetting clickCreateFormBtn={clickCreateFormBtn} />
+      <MedicalFormInfo
+        formName={formName}
+        hideFormBuilder={onHideFormBuilder}
+      />
+      <MedicalFormSetting
+        clickCreateFormBtn={clickCreateFormBtn}
+        create={create}
+        disabledButton={disabledButton}
+      />
       <Tabs
         activeKey={activatePanel}
         centered
@@ -99,19 +229,24 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
           key="1"
         >
           <MedicalFormEdit
-            previewData={'previewData'}
+            previewData={previewData}
             changeFormName={changeFormName}
+            changeFormType={changeFormType}
             clickedCreateForm={clickedCreateForm}
             clickedPreviewForm={clickedPreviewForm}
             clearCreateFormBtn={clearCreateFormBtn}
             getFormData={getFormData}
+            onSaveForm={handleSaveForm}
             formName={formName}
+            triggerChangeForms={triggerChangeForms}
           />
           {visiblePreview === true && (
             <MedicalFormPreview
               visible={visiblePreview}
               closePreviewDialog={closePreviewDialog}
               formData={formData}
+              formName={formName}
+              formSaveLabel={formSaveLabel}
             />
           )}
         </TabPane>
@@ -124,6 +259,23 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
           }
           key="2"
         ></TabPane>
+        <TabPane
+          tab={
+            <span className={styles.tabName}>
+              <ControlOutlined />
+              {t('ui.medicalformbuilder.form.advanced')}
+            </span>
+          }
+          key="3"
+        >
+          <MedicalFormAdvance
+            draggedForms={draggedForms}
+            formSaveLabel={formSaveLabel}
+            changeFormSaveLabel={changeFormSaveLabel}
+            onSaveRules={handleSaveRules}
+            currentRules={currentMedicalForm?.rules}
+          />
+        </TabPane>
       </Tabs>
     </Modal>
   )

@@ -1,27 +1,29 @@
-import React, { FC } from 'react'
-import { Typography, Input } from 'antd'
 import {
-  SearchOutlined,
   LeftOutlined,
   PlusSquareFilled,
+  SearchOutlined,
 } from '@ant-design/icons'
 import {
-  TabMenu,
   Breadcrumb,
-  NotificationBanner,
   Button,
-  MobileHeader,
-  MedicalFormBuilder,
   MedicalFilter,
+  MedicalFormBuilder,
+  MedicalFormItem,
+  MobileHeader,
+  Notification,
+  NotificationBanner,
+  NotificationType,
+  TabMenu,
 } from '@pabau/ui'
+import { Input, Typography } from 'antd'
+import Link from 'next/link'
+import React, { FC, useState } from 'react'
+import notificationBannerImage from '../../../assets/images/notification-image.png'
 import Layout from '../../../components/Layout/Layout'
 import Custom from '../../../components/MedicalForms/Custom'
 import Library from '../../../components/MedicalForms/Library'
-import notificationBannerImage from '../../../assets/images/notification-image.png'
-import styles from './index.module.less'
-import Link from 'next/link'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-
+import styles from './index.module.less'
 const { Title } = Typography
 
 enum Tab {
@@ -30,11 +32,29 @@ enum Tab {
 }
 
 export const Index: FC = () => {
-  const [hideBanner, setHideBanner] = React.useState(false)
-  const [currentTab, setCurrentTab] = React.useState('0')
-  const [query, setQuery] = React.useState('')
-  const [showCreateForm, setShowCreateForm] = React.useState(false)
+  const [hideBanner, setHideBanner] = useState(false)
+  const [currentTab, setCurrentTab] = useState('0')
+  const [addItem, setAddItem] = useState<MedicalFormItem>()
+  const [query, setQuery] = useState('')
+  const [showCreateForm, setShowCreateForm] = useState(false)
   const { t } = useTranslationI18()
+
+  const saveForm = (addMedicalItem) => {
+    setShowCreateForm(false)
+    if (addMedicalItem) {
+      Notification(
+        NotificationType.success,
+        `${addMedicalItem?.name} - ${t('setup.medical.forms.create.text')}`
+      )
+      setAddItem(addMedicalItem)
+    }
+  }
+
+  const createForm = () => {
+    setShowCreateForm(true)
+    setAddItem(null)
+  }
+
   return (
     <Layout>
       <NotificationBanner
@@ -120,10 +140,7 @@ export const Index: FC = () => {
                   <MedicalFilter />
                 </div>
                 <div>
-                  <Button
-                    type="primary"
-                    onClick={() => setShowCreateForm(true)}
-                  >
+                  <Button type="primary" onClick={createForm}>
                     {t('setup.medical.forms.createForm.text')}
                   </Button>
                 </div>
@@ -141,7 +158,10 @@ export const Index: FC = () => {
               <MedicalFormBuilder
                 visible={showCreateForm}
                 previewData=""
-                onCreate={() => setShowCreateForm(false)}
+                preFormName=""
+                onHideFormBuilder={() => setShowCreateForm(false)}
+                onSaveForm={saveForm}
+                create={true}
               />
             )}
           </div>
@@ -155,7 +175,7 @@ export const Index: FC = () => {
           ]}
           onTabClick={(key) => setCurrentTab(key)}
         >
-          <Custom />
+          <Custom addItem={addItem} />
           <Library />
         </TabMenu>
       </div>

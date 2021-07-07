@@ -1,26 +1,19 @@
-import { MoreOutlined } from '@ant-design/icons'
 import { Button, ButtonTypes } from '@pabau/ui'
-import { Dropdown, Menu } from 'antd'
 import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import styles from './MedicalFormBuilder.module.less'
 
 interface P {
   clickCreateFormBtn: () => void
+  create?: boolean
+  disabledButton?: boolean
 }
 
-const menu = (
-  <Menu>
-    <Menu.Item>
-      <span>Edit Form</span>
-    </Menu.Item>
-    <Menu.Item>
-      <span>Delete Form</span>
-    </Menu.Item>
-  </Menu>
-)
-
-export const MedicalFormSetting: FC<P> = ({ clickCreateFormBtn }) => {
+export const MedicalFormSetting: FC<P> = ({
+  clickCreateFormBtn,
+  create = true,
+  disabledButton = true,
+}) => {
   const { t } = useTranslation('common')
   const onClickBtn = () => {
     clickCreateFormBtn?.()
@@ -32,14 +25,12 @@ export const MedicalFormSetting: FC<P> = ({ clickCreateFormBtn }) => {
         type={ButtonTypes.primary}
         className={styles.createButton}
         onClick={onClickBtn}
+        disabled={disabledButton}
       >
-        {t('ui.medicalformbuilder.form.create')}
+        {create
+          ? t('ui.medicalformbuilder.form.create')
+          : t('ui.medicalformbuilder.form.save')}
       </Button>
-      <Dropdown overlay={menu} placement="bottomRight" arrow>
-        <Button type={ButtonTypes.default} className={styles.moreButton}>
-          <MoreOutlined />
-        </Button>
-      </Dropdown>
     </div>
   )
 }

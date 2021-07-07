@@ -6,39 +6,41 @@ import {
 } from '@ant-design/icons'
 import { Input, Popover } from 'antd'
 import React, { PropsWithChildren, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import styles from './PasswordWithHelper.module.less'
-
-/* eslint-disable-next-line */
 
 interface PasswordWithHelperProps {
   stength?: number
   width?: string
   onChange?: (value: string) => void
+  value?: string
   placeholder?: string
 }
 
 export function PasswordWithHelper({
+  value = '',
   width,
   onChange,
   placeholder = 'New password',
 }: PropsWithChildren<PasswordWithHelperProps>): JSX.Element {
-  const [value, setValue] = useState('')
+  const { t } = useTranslation('common')
+
+  const [pass, setValue] = useState(value)
   const [strength, setStrength] = useState(0)
   const [color, setColor] = useState('red')
 
   const handleChange = (e) => {
     let strengthRank = 0
     const val = e.target.value
+    if (val.length === 0) strengthRank = 0
     if (val.length > 7) strengthRank++
     if (hasNumber(val)) strengthRank++
     if (hasUpperLower(val)) strengthRank++
     if (hasSpecial(val)) strengthRank++
-
-    if (strengthRank === 1) setColor('red')
+    if (strengthRank === 1 || strengthRank === 0) setColor('red')
     if (strengthRank === 2) setColor('#faad14')
     if (strengthRank === 3) setColor('#6699cc')
     if (strengthRank === 4) setColor('green')
-
     setStrength(strengthRank)
     setValue(e.target.value)
     onChange?.(e.target.value)
@@ -58,43 +60,43 @@ export function PasswordWithHelper({
     <>
       <div className={styles.helperPhase}>
         <p>
-          {value.length > 7 ? <CheckCircleTwoTone /> : <CheckCircleFilled />}
+          {pass.length > 7 ? <CheckCircleTwoTone /> : <CheckCircleFilled />}
           <span className={styles.helperPhaseStep}>
-            Eight or more characters
+            {t('account.settings.security.passwordhelper.description1')}
           </span>
         </p>
         <p>
-          {hasUpperLower(value) ? (
-            <CheckCircleTwoTone />
-          ) : (
-            <CheckCircleFilled />
-          )}
+          {hasUpperLower(pass) ? <CheckCircleTwoTone /> : <CheckCircleFilled />}
           <span className={styles.helperPhaseStep}>
-            Uppercase & lowercase characters
+            {t('account.settings.security.passwordhelper.description2')}
           </span>
         </p>
         <p>
-          {hasNumber(value) ? <CheckCircleTwoTone /> : <CheckCircleFilled />}
-          <span className={styles.helperPhaseStep}>At least one number</span>
+          {hasNumber(pass) ? <CheckCircleTwoTone /> : <CheckCircleFilled />}
+          <span className={styles.helperPhaseStep}>
+            {t('account.settings.security.passwordhelper.description3')}
+          </span>
         </p>
         <p>
-          {hasSpecial(value) ? <CheckCircleTwoTone /> : <CheckCircleFilled />}
+          {hasSpecial(pass) ? <CheckCircleTwoTone /> : <CheckCircleFilled />}
           <span className={styles.helperPhaseStep}>
-            At least one special character
+            {t('account.settings.security.passwordhelper.description4')}
           </span>
         </p>
       </div>
       <div className={styles.helperStrength}>
-        <div className={styles.strengthStart}>Strength</div>
+        <div className={styles.strengthStart}>
+          {t('account.settings.security.passwordhelper.statustitle')}
+        </div>
         <div className={styles.strengthEnd} style={{ color: color }}>
           {strength === 1
-            ? 'Week'
+            ? t('account.settings.security.passwordhelper.statusweek')
             : strength === 2
-            ? 'Fair'
+            ? t('account.settings.security.passwordhelper.statusfair')
             : strength === 3
-            ? 'Good'
+            ? t('account.settings.security.passwordhelper.statusgood')
             : strength === 4
-            ? 'Strong'
+            ? t('account.settings.security.passwordhelper.statusstrong')
             : ''}
         </div>
       </div>
@@ -121,7 +123,7 @@ export function PasswordWithHelper({
   return (
     <Popover placement="right" content={content}>
       <Input.Password
-        value={value}
+        value={pass}
         placeholder={placeholder}
         iconRender={(visible) =>
           visible ? <EyeOutlined /> : <EyeInvisibleOutlined />

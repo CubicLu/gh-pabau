@@ -1,15 +1,14 @@
-import React, { FC, useState } from 'react'
-import { Breadcrumb, MobileHeader, Input, Checkbox, Button } from '@pabau/ui'
-import Layout from '../../../../components/Layout/Layout'
-import Link from 'next/link'
-import { Typography, Col, Row } from 'antd'
-import { Form as AntForm } from 'antd'
-import { gql } from '@apollo/client'
 import { LeftOutlined } from '@ant-design/icons'
-import { Formik, FormikErrors } from 'formik'
+import { gql } from '@apollo/client'
+import { Breadcrumb, Button, Checkbox, Input, MobileHeader } from '@pabau/ui'
+import { Col, Form as AntForm, Row, Typography } from 'antd'
 import classNames from 'classnames'
-import styles from './index.module.less'
+import { Formik, FormikErrors } from 'formik'
+import Link from 'next/link'
+import React, { FC, useState } from 'react'
+import Layout from '../../../../components/Layout/Layout'
 import FieldRow from '../../../../components/Setup/LeadView/FieldRow'
+import styles from './index.module.less'
 
 const { Title } = Typography
 

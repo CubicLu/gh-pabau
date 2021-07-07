@@ -30,6 +30,7 @@ query locations($isActive: Int, $searchTerm: String, $filter: CompanyBranchAttac
 			company_id
 			icon: url
       name: description
+      type
     }
   }
 }
@@ -191,4 +192,14 @@ query getLocationStaffList($location: [CmStaffGeneralWhereInput]) {
       image
     }
   }
+}
+
+query locationLimit {
+  companySubscriptions {
+    multiple_locations
+  }
+}
+
+query activeLocationCount {
+  companyBranchesCount(where: {is_active: {equals: 1}})
 }

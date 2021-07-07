@@ -1,4 +1,4 @@
-import { PlusOutlined } from '@ant-design/icons'
+import { PlusOutlined, EditOutlined } from '@ant-design/icons'
 import { Button, Input } from '@pabau/ui'
 import { Col, Modal, Row, Upload } from 'antd'
 import classNames from 'classnames'
@@ -17,6 +17,8 @@ export interface LocationDetails {
   region: string
   country: string
   location: string
+  create: boolean
+  subLocality?: string
 }
 
 interface LocationDetailsProps {
@@ -45,6 +47,7 @@ const LocationDetails: FC<LocationDetailsProps> = ({
     region: t('setup.locations.region'),
     country: t('setup.locations.country'),
     location: t('setup.locations.location'),
+    create: true,
   }
   const [locationDetail, setLocationDetail] = useState<LocationDetails>(
     defaultLocationDetail
@@ -82,6 +85,7 @@ const LocationDetails: FC<LocationDetailsProps> = ({
         region: values.region,
         country: values.country,
         location: values.location,
+        create: false,
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -96,6 +100,14 @@ const LocationDetails: FC<LocationDetailsProps> = ({
     // const { originFileObj } = file.file
     // const filePath = URL.createObjectURL(originFileObj)
     // setFile(filePath)
+  }
+
+  const EditIcon = () => {
+    return (
+      <p className={styles.editIcon}>
+        <EditOutlined />
+      </p>
+    )
   }
 
   return (
@@ -116,8 +128,9 @@ const LocationDetails: FC<LocationDetailsProps> = ({
                 {t('setup.locationsdetail.address')}
               </p>
               {locationDetail?.location && (
-                <p className={styles.locationItemValue}>
+                <p className={styles.locationItemValue} onClick={hanldeAdd}>
                   {locationDetail?.location}
+                  <EditIcon />
                 </p>
               )}
               {!locationDetail?.location && (
@@ -133,8 +146,9 @@ const LocationDetails: FC<LocationDetailsProps> = ({
                 {t('setup.locations.location.apt.suite')}
               </p>
               {locationDetail?.street && (
-                <p className={styles.locationItemValue}>
+                <p className={styles.locationItemValue} onClick={hanldeAdd}>
                   {locationDetail?.street}
+                  <EditIcon />
                 </p>
               )}
               {!locationDetail?.street && (
@@ -152,8 +166,9 @@ const LocationDetails: FC<LocationDetailsProps> = ({
                 {t('setup.locations.location.postcode')}
               </p>
               {locationDetail?.postcode && (
-                <p className={styles.locationItemValue}>
+                <p className={styles.locationItemValue} onClick={hanldeAdd}>
                   {locationDetail?.postcode}
+                  <EditIcon />
                 </p>
               )}
               {!locationDetail?.postcode && (
@@ -169,8 +184,9 @@ const LocationDetails: FC<LocationDetailsProps> = ({
                 {t('setup.locationdetail.city')}
               </p>
               {locationDetail?.city && (
-                <p className={styles.locationItemValue}>
+                <p className={styles.locationItemValue} onClick={hanldeAdd}>
                   {locationDetail?.city}
+                  <EditIcon />
                 </p>
               )}
               {!locationDetail?.city && (
@@ -186,8 +202,9 @@ const LocationDetails: FC<LocationDetailsProps> = ({
                 {t('setup.locationdetail.region')}
               </p>
               {locationDetail?.region && (
-                <p className={styles.locationItemValue}>
+                <p className={styles.locationItemValue} onClick={hanldeAdd}>
                   {locationDetail?.region}
+                  <EditIcon />
                 </p>
               )}
               {!locationDetail?.region && (
@@ -203,8 +220,9 @@ const LocationDetails: FC<LocationDetailsProps> = ({
                 {t('setup.locationdetail.country')}
               </p>
               {locationDetail?.country && (
-                <p className={styles.locationItemValue}>
+                <p className={styles.locationItemValue} onClick={hanldeAdd}>
                   {locationDetail?.country}
+                  <EditIcon />
                 </p>
               )}
               {!locationDetail?.country && (

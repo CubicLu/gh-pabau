@@ -10,7 +10,7 @@ console.table({
   NODE_ENV: process.env.NODE_ENV,
 })
 
-const commandLineHead = 'npx -p hasura-cli@v2.0.0-alpha.10 hasura --project hasura'
+const commandLineHead = 'npx -p hasura-cli hasura --project hasura'
 
 const commandLine = commandLineHead + " " + process.argv.splice(2).join(' ')
 

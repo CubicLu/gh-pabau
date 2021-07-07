@@ -38,6 +38,7 @@ echo "APP_TYPE=${APP_TYPE}"
 echo "VERCEL_JSON_LOCATION=${VERCEL_JSON_LOCATION}"
 echo "BITBUCKET_COMMIT=${BITBUCKET_COMMIT}"
 echo "BITBUCKET_PR_ID=${BITBUCKET_PR_ID}"
+echo "BITBUCKET_CLONE_DIR=${BITBUCKET_CLONE_DIR}"
 echo "-----------------"
 
 echo "Docker build..."
@@ -60,5 +61,20 @@ ${APP_NAME}: https://pds.pabau.com
 HEREDOC
   echo "${message_body}" >> /tmp/bot_message.txt
 fi
+
+# James testing deploying Hasura here, because we have access to docker command here
+echo "Deploying to Hasura database..."
+echo "Destination: ${HASURA_GRAPHQL_ENDPOINT}"
+mkdir -p dist
+cp -r hasura/ dist/
+#rm dist/hasura/metadata/actions.yaml
+cp -f hasura/remote_schemas.production.yaml dist/hasura/remote_schemas.yaml
+docker run --rm \
+  -v "${BITBUCKET_CLONE_DIR}/dist/hasura/:/hasura/:ro" \
+  -e HASURA_GRAPHQL_ENDPOINT="${HASURA_GRAPHQL_ENDPOINT}" \
+  -e HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" \
+  golang:buster \
+  bash -c "curl -LO https://github.com/hasura/graphql-engine/releases/download/v2.0.1/cli-hasura-linux-amd64 && chmod +x cli-hasura-linux-amd64 && mv ./cli-hasura-linux-amd64 /usr/local/bin/hasura && hasura version && hasura --project /hasura migrate apply --database-name default && hasura --project /hasura metadata apply" \
+  || echo "FAILED"
 
 echo "EOF"

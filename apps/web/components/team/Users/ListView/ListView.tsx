@@ -16,7 +16,7 @@ export const ListView: FC<ListViewProps> = ({ users }) => {
 
   const columns = [
     {
-      title: t('team.user.listView.name.label'),
+      title: t('team.user.listview.name.label'),
       dataIndex: 'name',
       key: 'name',
       width: '250px',
@@ -33,31 +33,31 @@ export const ListView: FC<ListViewProps> = ({ users }) => {
       visible: true,
     },
     {
-      title: t('team.user.listView.lastActivity.label'),
+      title: t('team.user.listview.last.activity.label'),
       dataIndex: 'lastActivity',
       key: 'lastActivity',
       visible: true,
     },
     {
-      title: t('team.user.listView.mobile.label'),
+      title: t('team.user.listview.mobile.label'),
       dataIndex: 'mobile',
       key: 'mobile',
       visible: true,
     },
     {
-      title: t('team.user.listView.email.label'),
+      title: t('team.user.listview.email.label'),
       dataIndex: 'email',
       key: 'email',
       visible: true,
     },
     {
-      title: t('team.user.listView.location.label'),
+      title: t('team.user.listview.location.label'),
       dataIndex: 'location',
       key: 'location',
       visible: true,
     },
     {
-      title: t('team.user.listView.userGroup.label'),
+      title: t('team.user.listview.user.group.label'),
       dataIndex: 'userGroup',
       key: 'userGroup',
       visible: true,
@@ -70,7 +70,7 @@ export const ListView: FC<ListViewProps> = ({ users }) => {
       render: (text, record) =>
         rowId === record.id && (
           <Button icon={<EditOutlined />}>
-            {t('team.user.listView.edit.label')}
+            {t('team.user.listview.edit.label')}
           </Button>
         ),
       visible: true,

@@ -289,7 +289,7 @@ export const InnerElement: FC<P> = ({
       repalceTag = tagInfo
         ? {
             [tagInfo.tag]:
-              '<button type="button" class="ant-btn ant-btn-primary ant-btn-sm"><-> ' +
+              '<button type="button" class="ant-btn ant-btn-primary ant-btn-sm">&lt;-&gt; ' +
               tagInfo.name +
               ' (' +
               tagInfo.module +

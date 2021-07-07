@@ -47,7 +47,7 @@ export const FontIcon: FC<FontIconProps> = ({
                   selectedIcon = ''
                 }
                 setActivate(selectedIcon)
-                onIconSelected(selectedIcon)
+                onIconSelected(`fa-${selectedIcon}`)
               }}
             >
               {activate === icon.iconName && <CheckCircleFilled />}

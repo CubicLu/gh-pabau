@@ -1,6 +1,5 @@
 import React, { FC, useState, useEffect, useContext } from 'react'
 import Layout from '../../components/Layout/Layout'
-import CommonHeader from '../../components/CommonHeader'
 import HeaderChip from '../../components/Setup/HeaderChip/Index'
 import Grid from '../../components/Setup/Grid/Index'
 import WebinarCard from '../../components/Setup/Webinar/Index'
@@ -111,12 +110,14 @@ const Index: FC = (props) => {
 
   return (
     <div>
-      <CommonHeader
+      <Layout
+        active={'setup'}
+        isDisplayingFooter={false}
         handleSearch={handleSearch}
         title={t('setup.page.title')}
         isShowSearch={true}
-      />
-      <Layout active={'setup'} isDisplayingFooter={false} {...user}>
+        {...user}
+      >
         <div className={styles.cardWrapper}>
           <div className={styles.titleWrapper}>
             <span className={styles.title}>{title}</span>

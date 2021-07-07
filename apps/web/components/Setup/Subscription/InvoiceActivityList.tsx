@@ -9,10 +9,8 @@ import {
   useLiveQuery,
 } from '@pabau/ui'
 import { Skeleton } from 'antd'
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { UserContext } from 'apps/web/context/UserContext'
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { useTranslationI18 } from 'apps/web/hooks/useTranslationI18'
+import { UserContext } from '../../../context/UserContext'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import React, { FC, useContext, useEffect, useMemo, useState } from 'react'
 import { sendEmailService } from '../../ClientNotificationEmailPreview/sendEmailService'
 import EmailSendButton from './EmailSendButton'

@@ -18,7 +18,9 @@ pipelines:
     '**':
       - step:
           name: yarn audit
-          max-time: 15
+          runs-on:
+            - 'self.hosted'
+          max-time: 22
           caches:
             - node
           script:
@@ -26,7 +28,7 @@ pipelines:
             - git log --merges -n 1 --pretty=oneline
             # TODO: set -lt back to 4 when nrwl install postcss >=8.2.10
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 8 ]] && exit 0 || exit 1'
-            - NODE_OPTIONS=--max_old_space_size=3333 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
+            - NODE_OPTIONS=--max_old_space_size=4096 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
             - ls -al || true
             - ls -al libs/graphql/generated/ || true
             - yarn bin || true
@@ -38,6 +40,8 @@ pipelines:
       - parallel:
           - step:
               name: misc checks
+              runs-on:
+                - 'self.hosted'
               max-time: 120
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
@@ -50,16 +54,18 @@ pipelines:
                 - yarn lint:workspace || true
                 - npm i -g @graphql-inspector/cli@2.5.0 graphql || true
                 - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
-                - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
+                - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql
                 #                - graphql-inspector similar hasura/schema.graphql || echo TODO
                 - graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
+                - DANGER_BITBUCKETCLOUD_OAUTH_KEY="${BITBUCKET_CLIENT_ID}" DANGER_BITBUCKETCLOUD_OAUTH_SECRET="${BITBUCKET_CLIENT_SECRET}" yarn danger ci --no-publish-check
+                - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
 
           - step:
               name: lint
               max-time: 20
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
-                - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:lint --base=origin/master --with-deps
+                - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:lint --base=origin/master --with-deps
 
           - step:
               name: unit tests
@@ -69,7 +75,7 @@ pipelines:
               size: 2x
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
-                - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=origin/master
+                - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:test --base=origin/master
           #              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=2222 yarn affected:test --base=HEAD~1 --parallel --maxParallel=2 --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=1555 yarn affected:test --base=HEAD~1 --parallel --maxParallel=3 --skip-nx-cache
@@ -79,11 +85,11 @@ pipelines:
               name: build
               runs-on:
                 - 'self.hosted'
-              max-time: 40
+              max-time: 55
               size: 2x
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
-                - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:export --base=origin/master --prod
+                - NEXT_PUBLIC_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/v1/graphql' NEXT_PUBLIC_WS_ENDPOINT='wss://api-v2-staging.pabau.com/v1/graphql' NODE_OPTIONS=--max_old_space_size=4096 yarn affected:export --base=origin/master --prod
               artifacts:
                 - dist/**
 
@@ -110,8 +116,10 @@ pipelines:
 
       - step:
           name: deploy previews
+          image: node
           max-time: 20
           script:
+            - node -v
             - ls -al . || true
             - ls -al node_modules/ || true
             - ls -al dist || true
@@ -190,7 +198,9 @@ pipelines:
     master:
       - step:
           name: yarn audit
-          max-time: 15
+          runs-on:
+            - 'self.hosted'
+          max-time: 22
           caches:
             - node
           script:
@@ -198,7 +208,7 @@ pipelines:
             - git log --merges -n 1 --pretty=oneline
             # TODO: set -lt back to 4 when nrwl install postcss >=8.2.10
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 8 ]] && exit 0 || exit 1'
-            - NODE_OPTIONS=--max_old_space_size=3333 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
+            - NODE_OPTIONS=--max_old_space_size=4096 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
             - ls -al || true
             - ls -al node_modules || true
             - ls -al libs/graphql/generated/ || true
@@ -210,8 +220,8 @@ pipelines:
       - parallel:
           - step:
               name: misc checks
-              # runs-on:
-              #   - 'self.hosted'
+              runs-on:
+                - 'self.hosted'
               max-time: 120
               script:
                 - openssl version || true
@@ -228,11 +238,10 @@ pipelines:
                 - yarn lint:workspace || true
                 - npm i -g @graphql-inspector/cli@2.5.0 graphql || true
                 - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
-                - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
+                - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql
                 #                - graphql-inspector similar hasura/schema.graphql || echo TODO
                 - graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
-                - yarn danger ci || echo TODO
-                - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts || echo TODO
+                - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
 
           - step:
               name: lint
@@ -241,7 +250,7 @@ pipelines:
               max-time: 20
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
-                - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:lint --base=HEAD~1 --with-deps
+                - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:lint --base=HEAD~1 --with-deps
 
           - step:
               name: unit tests
@@ -251,7 +260,7 @@ pipelines:
               size: 2x
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
-                - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1
+                - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:test --base=HEAD~1
           #              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=2222 yarn affected:test --base=HEAD~1 --parallel --maxParallel=2 --skip-nx-cache
           #              - NODE_OPTIONS=--max_old_space_size=1555 yarn affected:test --base=HEAD~1 --parallel --maxParallel=3 --skip-nx-cache
@@ -264,7 +273,7 @@ pipelines:
               size: 2x
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
-                - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:export --base=HEAD~1 --prod
+                - NEXT_PUBLIC_GRAPHQL_ENDPOINT='https://api-v2.pabau.com/v1/graphql' NEXT_PUBLIC_WS_ENDPOINT='wss://api-v2.pabau.com/v1/graphql' NODE_OPTIONS=--max_old_space_size=4096 yarn affected:export --base=HEAD~1 --prod
               artifacts:
                 - dist/**
 

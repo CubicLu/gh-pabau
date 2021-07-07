@@ -119,7 +119,7 @@ export const ClientNotification: FC<P> = ({
                 style={{ width: '100%' }}
               >
                 {previewStatus === 'emailPreview'
-                  ? t('notifications.commonNotificationHeader.sendTestEmail')
+                  ? t('notifications.commonNotificationHeader.sendExampleEmail')
                   : t('notifications.commonNotificationHeader.sendTestSms')}
               </Button>
             </Col>
@@ -143,7 +143,7 @@ export const ClientNotification: FC<P> = ({
         <Modal
           title={
             previewStatus === 'emailPreview'
-              ? t('notifications.commonNotificationHeader.sendTestEmail')
+              ? t('notifications.commonNotificationHeader.sendExampleEmailail')
               : t('notifications.commonNotificationHeader.sendTestMessage')
           }
           visible={sendEmail}
