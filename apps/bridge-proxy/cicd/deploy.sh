@@ -68,7 +68,7 @@ echo "Destination: ${HASURA_GRAPHQL_ENDPOINT}"
 mkdir -p dist
 cp -r hasura/ dist/
 #rm dist/hasura/metadata/actions.yaml
-cp -f hasura/remote_schemas.production.yaml dist/hasura/remote_schemas.yaml
+cp -f hasura/remote_schemas.production.yaml dist/hasura/metadata/remote_schemas.yaml
 docker run --rm \
   -v "${BITBUCKET_CLONE_DIR}/dist/hasura/:/hasura/:ro" \
   -e HASURA_GRAPHQL_ENDPOINT="${HASURA_GRAPHQL_ENDPOINT}" \
