@@ -23,22 +23,16 @@ import { ReactComponent as SelectAll } from '../../../web/assets/images/SelectAl
 import { ReactComponent as SkinHealth } from '../../../web/assets/images/skin-health-logo.svg'
 import { ReactComponent as LogoSvg } from '../../../../libs/ui/src/lib/logo/logo.svg'
 import { MasterCategory, Category, Service } from '../../types/services'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 
 export interface P {
   catID: number
   mCatID: number
   items: MasterCategory[]
   onStepCompleted: (services: number[]) => void
-  translation: (val: string) => string
 }
 
-const ServiceSelector: FC<P> = ({
-  catID,
-  mCatID,
-  items,
-  onStepCompleted,
-  translation,
-}) => {
+const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
   // CRAP
   const [showmodal, setshowmodal] = useState(false)
   const [visible, setvisible] = useState(false)
@@ -57,6 +51,7 @@ const ServiceSelector: FC<P> = ({
   const [masterCategoryID, setMasterCategoryID] = useState(mCatID)
   const [selectedServices, setSelectedServices] = useState<number[]>([])
 
+  const { t } = useTranslationI18()
   const renderdata = (val: Service) => {
     const isSelected = selectedServices.includes(val.id)
     return (
@@ -80,9 +75,7 @@ const ServiceSelector: FC<P> = ({
               <QuestionCircleOutlined style={{ marginRight: '8px' }} />
               {val.online_only_service && (
                 <Tooltip
-                  title={`${translation(
-                    'connect.onlinebooking.selector.tooltip'
-                  )}`}
+                  title={`${t('connect.onlinebooking.selector.tooltip')}`}
                 >
                   {' '}
                   <LaptopOutlined />
@@ -94,8 +87,7 @@ const ServiceSelector: FC<P> = ({
           <div className={styles.mobiledata}>
             <span style={{ display: 'flex', alignItems: 'center' }}>
               <span className={styles.consultationTime}>
-                {val.duration}{' '}
-                {translation('connect.onlinebooking.selector.mini')}
+                {val.duration} {t('connect.onlinebooking.selector.mini')}
               </span>
               <ClockCircleOutlined />{' '}
               {!isMobile && val.is_bundle && (
@@ -136,7 +128,7 @@ const ServiceSelector: FC<P> = ({
                 >
                   {val.online_only_service ? 0 : val.review}
                   &nbsp;
-                  {translation('connect.onlinebooking.selector.review')}
+                  {t('connect.onlinebooking.selector.review')}
                 </span>
               </div>
             )}
@@ -277,7 +269,7 @@ const ServiceSelector: FC<P> = ({
                   )}
                 >
                   <MedicineBoxOutlined />
-                  {translation('connect.onlinebooking.selector.offline')}
+                  {t('connect.onlinebooking.selector.offline')}
                 </div>
                 <div
                   onClick={() => setcontype(false)}
@@ -287,7 +279,7 @@ const ServiceSelector: FC<P> = ({
                   )}
                 >
                   <LaptopOutlined />
-                  {translation('connect.onlinebooking.selector.online')}
+                  {t('connect.onlinebooking.selector.online')}
                 </div>
               </div>
             ) : (
@@ -316,7 +308,7 @@ const ServiceSelector: FC<P> = ({
         </div>
         {!isMobile && (
           <div className={styles.servicedata}>
-            {translation('connect.onlinebooking.first.description')}
+            {t('connect.onlinebooking.first.description')}
             <span>&nbsp;045787498450</span>
           </div>
         )}
@@ -519,9 +511,7 @@ const ServiceSelector: FC<P> = ({
                           <div key={item.id}>{rendervoucher(item)}</div>
                         ))}
                         <div className={styles.servicedata}>
-                          {translation(
-                            'connect.onlinebooking.first.description'
-                          )}
+                          {t('connect.onlinebooking.first.description')}
                           <span>&nbsp;045787498450</span>
                         </div>
                       </div>
@@ -604,11 +594,9 @@ const ServiceSelector: FC<P> = ({
           <div className={styles.logoHeader}> {isMobile && <SkinHealth />}</div>
           <h5 className={styles.modalHeader}>Botox Area 1 reviews</h5>
           <div className={styles.modalSubHeader}>
-            <h5>
-              1 {translation('connect.onlinebooking.selector.modal.review')}
-            </h5>
+            <h5>1 {t('connect.onlinebooking.selector.modal.review')}</h5>
             <div className={styles.rightBar}>
-              <p>{translation('connect.onlinebooking.selector.modal.sort')}:</p>
+              <p>{t('connect.onlinebooking.selector.modal.sort')}:</p>
               <Popover
                 overlayClassName={styles.dropMenu}
                 content={
@@ -625,7 +613,7 @@ const ServiceSelector: FC<P> = ({
                     >
                       <CheckOutlined />{' '}
                       <p>
-                        {translation(
+                        {t(
                           'connect.onlinebooking.selector.modal.relevent.first'
                         )}
                       </p>
@@ -639,7 +627,7 @@ const ServiceSelector: FC<P> = ({
                     >
                       <CheckOutlined />{' '}
                       <p>
-                        {translation(
+                        {t(
                           'connect.onlinebooking.selector.modal.relevent.second'
                         )}
                       </p>
@@ -652,9 +640,7 @@ const ServiceSelector: FC<P> = ({
                 //onVisibleChange={this.handleVisibleChange}
               >
                 <h6 onClick={() => setvisible(!visible)}>
-                  {translation(
-                    'connect.onlinebooking.selector.modal.relevent.first'
-                  )}
+                  {t('connect.onlinebooking.selector.modal.relevent.first')}
                   {visible ? <UpOutlined /> : <DownOutlined />}
                 </h6>
               </Popover>
@@ -688,7 +674,7 @@ const ServiceSelector: FC<P> = ({
                   </div>
                   <span className={styles.reviewRateMonth}>
                     {val.month}{' '}
-                    {translation('connect.onlinebooking.selector.modal.month')}
+                    {t('connect.onlinebooking.selector.modal.month')}
                   </span>
                 </div>
                 <p className={styles.reviewDescption}>{val.description}</p>
@@ -697,7 +683,7 @@ const ServiceSelector: FC<P> = ({
           </div>
           {isMobile && (
             <div className={styles.footerModal}>
-              <p>{translation('connect.onlinebooking.footer.data')}</p>
+              <p>{t('connect.onlinebooking.footer.data')}</p>
               <LogoSvg style={{ height: '15px', width: '60px' }} />
             </div>
           )}

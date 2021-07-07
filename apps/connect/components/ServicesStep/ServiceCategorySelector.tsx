@@ -13,19 +13,18 @@ import * as Yup from 'yup'
 import classnames from 'classnames'
 
 import { MasterCategory, Category, Service } from '../../types/services'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 
 export interface P {
   items: MasterCategory[]
   onSelected: (id: number) => void
   click: (member: number, viewbtn: boolean) => void
-  translation: (val: string) => string
 }
 
 export const ServiceCategorySelector: FC<P> = ({
   items,
   onSelected,
   click,
-  translation,
 }) => {
   const [showMasterCategories, setShowMasterCategories] = useState(true)
   const [masterCategoryID, setMasterCategoryID] = useState<number>()
@@ -51,17 +50,17 @@ export const ServiceCategorySelector: FC<P> = ({
     persons: Yup.number().min(2).max(50).required('between two and fifty'),
   })
 
+  const { t } = useTranslationI18()
+
   return (
     <div className={styles.consultation}>
       {showMasterCategories ? (
         <>
           <div className={styles.alertMsg}>
-            <p>{translation('connect.onlinebooking.selector.information')}</p>
+            <p>{t('connect.onlinebooking.selector.information')}</p>
           </div>
           <div className={styles.prsongroup}>
-            <h5>
-              {translation('connect.onlinebooking.selector.group.description')}
-            </h5>
+            <h5>{t('connect.onlinebooking.selector.group.description')}</h5>
             <div className={styles.userWrapper}>
               <div
                 className={classnames(
@@ -74,7 +73,7 @@ export const ServiceCategorySelector: FC<P> = ({
                   <UserOutlined />
                   <CheckCircleFilled />
                 </span>
-                <p>{translation('connect.onlinebooking.selector.me')}</p>
+                <p>{t('connect.onlinebooking.selector.me')}</p>
               </div>
               <div
                 className={classnames(
@@ -87,7 +86,7 @@ export const ServiceCategorySelector: FC<P> = ({
                   <TeamOutlined />
                   <CheckCircleFilled />
                 </span>
-                <p>{translation('connect.onlinebooking.selector.group')}</p>
+                <p>{t('connect.onlinebooking.selector.group')}</p>
               </div>
             </div>
 
@@ -106,10 +105,7 @@ export const ServiceCategorySelector: FC<P> = ({
                     }}
                     layout="vertical"
                   >
-                    <Form.Item
-                      label={translation('Number of people')}
-                      name="persons"
-                    >
+                    <Form.Item label={t('Number of people')} name="persons">
                       <Input
                         name="persons"
                         type={'number'}
@@ -152,7 +148,7 @@ export const ServiceCategorySelector: FC<P> = ({
                 }}
                 className={styles.viewBut}
               >
-                {translation('connect.onlinebooking.selector.viewall')}
+                {t('connect.onlinebooking.selector.viewall')}
               </Button>
             </div>
           </div>

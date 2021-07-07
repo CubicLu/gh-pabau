@@ -12,6 +12,22 @@ const client = new ApolloClient({
 function Connect({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
+      <style jsx global>{`
+        @font-face {
+          font-family: 'Circular-Std-Black';
+          src: local('Circular-Std-Black'),
+            url(../public/fonts/CircularStd-Black.otf) format('opentype');
+        }
+        @font-face {
+          font-family: 'Circular-Std-Book';
+          src: url('/fonts/CircularStd-Book.otf') format('opentype');
+        }
+
+        @font-face {
+          font-family: 'Circular-Std-Medium';
+          src: url('/fonts/CircularStd-Medium.otf') format('opentype');
+        }
+      `}</style>
       <TranslationWrapper>
         <Component {...pageProps} />
       </TranslationWrapper>

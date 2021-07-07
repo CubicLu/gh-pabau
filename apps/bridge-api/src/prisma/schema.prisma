@@ -13,7 +13,7 @@ model TwoFactorHistory {
   company_id   Int
   passcode     String
   user_id      Int
-  request_date DateTime
+  request_date DateTimeSelector
   is_confirmed Int
   company      Company  @relation(fields: [company_id], references: [id])
 
@@ -104,8 +104,8 @@ model AccountManager {
   website             String?
   sla_contract        Int?
   vat_reg_id          String
-  created_date        DateTime?
-  modified_date       DateTime?
+  created_date        DateTimeSelector?
+  modified_date       DateTimeSelector?
   company_id          Int?      @map("occupier")
   Company             Company?  @relation(fields: [company_id], references: [id])
   con_per_1           String
@@ -128,7 +128,7 @@ model AcLog {
   company_id Int      @map("occupier")
   Company    Company  @relation(fields: [company_id], references: [id])
   user_id    Int
-  date       DateTime
+  date       DateTimeSelector
   humanize   String?
   user_agent String
   ipv4       Int
@@ -181,7 +181,7 @@ model Company {
   user                             String
   digit8                           Int
   admin                            Int
-  creation_date                    DateTime
+  creation_date                    DateTimeSelector
   image                            String
   slug                             String?                            @unique
   remote_url                       String?
@@ -306,7 +306,7 @@ model ApiDebug {
   data_received String
   company_id    Int
   api_code      Int
-  created_date  DateTime
+  created_date  DateTimeSelector
   data_type     String
 
   @@map("api_debug")
@@ -317,7 +317,7 @@ model ApiKey {
   company_id    Int
   api_key       String
   app_type      String
-  created_date  DateTime
+  created_date  DateTimeSelector
   contacts      Int      @default(0)
   bookings      Int      @default(0)
   invoices      Int      @default(0)
@@ -457,7 +457,7 @@ model AtQuizTake {
   company_id Int
   name       String
   email      String
-  take_date  DateTime
+  take_date  DateTimeSelector
   answers    String
   concerns   String
   answers2   String
@@ -507,7 +507,7 @@ model AutomationDelay {
   code           String
   company        Int
   delay          Int
-  date_queued    DateTime
+  date_queued    DateTimeSelector
   appointment_id Int?
 
   @@index([company], name: "company")
@@ -528,7 +528,7 @@ model AutomationFolder {
 model AutomationLog {
   id           Int      @id @default(autoincrement())
   company      Int
-  date_created DateTime @default(now())
+  date_created DateTimeSelector @default(now())
   message      String
   parent_id    Int?
   uid          Int?
@@ -542,8 +542,8 @@ model AutomationRule {
   company      Int
   active       Boolean   @default(false)
   source       String
-  date_start   DateTime?
-  date_end     DateTime?
+  date_start   DateTimeSelector?
+  date_end     DateTimeSelector?
   description  String
   needs_config Int
   folder_id    Int       @default(1)
@@ -576,9 +576,9 @@ model AvilableDatesLog {
   company_id Int      @map("occupier")
   Company    Company  @relation(fields: [company_id], references: [id])
   uid        Int
-  date       DateTime
-  start      DateTime
-  end        DateTime
+  date       DateTimeSelector
+  start      DateTimeSelector
+  end        DateTimeSelector
 
   @@map("available_dates_log")
 }
@@ -603,8 +603,8 @@ model Batch {
   batch_no      String
   qty           Int
   uid           Int
-  creation_date DateTime
-  expiry_date   DateTime?
+  creation_date DateTimeSelector
+  expiry_date   DateTimeSelector?
 
   @@index([batch_no], name: "batch_no")
   @@index([company_id], name: "company_id")
@@ -617,7 +617,7 @@ model BatchItem {
   batch_id       Int
   company_id     Int
   product_id     Int
-  usage_date     DateTime
+  usage_date     DateTimeSelector
   patient_id     Int
   created_by_id  Int
   qty            Int      @default(0)
@@ -671,7 +671,7 @@ model BodyChartTemplate {
   company_id    Int      @map("occupier")
   Company       Company  @relation(fields: [company_id], references: [id])
   uid           Int
-  creation_date DateTime @default(now())
+  creation_date DateTimeSelector @default(now())
   chart_order   Int      @default(0)
   template_type Int      @default(1)
 
@@ -696,14 +696,14 @@ model BookingSetting {
   feedback_id                       Int
   sms_name                          String
   feedback_days_after               Int
-  feedback_send_time                DateTime
+  feedback_send_time                DateTimeSelector
   reminder_mode                     Int
   days_before                       Int      @default(0)
-  send_time                         DateTime
+  send_time                         DateTimeSelector
   sms_days_before                   Int
-  sms_send_time                     DateTime
+  sms_send_time                     DateTimeSelector
   class_sms_days_before             Int
-  class_sms_send_time               DateTime
+  class_sms_send_time               DateTimeSelector
   room_support                      Int      @default(0)
   feedback_fromemail                String
   confirm_fromemail                 String
@@ -780,7 +780,7 @@ model BookingSetting {
   disable_book_by_package           Int      @default(0)
   allow_overlapping_appts           Int      @default(0)
   modified_by                       Int
-  modified_date                     DateTime
+  modified_date                     DateTimeSelector
   conference_reminder_id            Int?
   Company                           Company  @relation(fields: [company_id], references: [id])
 
@@ -831,8 +831,8 @@ model BookingStatusChange {
   id         Int       @id @default(autoincrement())
   booking_id Int
   status     String
-  start_date DateTime
-  end_date   DateTime?
+  start_date DateTimeSelector
+  end_date   DateTimeSelector?
   company_id Int
   user_id    Int
 
@@ -976,8 +976,8 @@ model CalRangeRequest {
   id         Int      @id @default(autoincrement())
   minutes    Int
   company_id Int
-  start_date DateTime
-  end_date   DateTime
+  start_date DateTimeSelector
+  end_date   DateTimeSelector
 
   @@map("cal_range_requests")
 }
@@ -1009,8 +1009,8 @@ model CancellationPolicy {
   no_show_fee               Int
   company_id                Int       @map("occupier")
   Company                   Company   @relation(fields: [company_id], references: [id])
-  creation_date             DateTime?
-  modified_date             DateTime?
+  creation_date             DateTimeSelector?
+  modified_date             DateTimeSelector?
 
   @@map("cancellation_policy")
 }
@@ -1042,7 +1042,7 @@ model MediaLlibraryAttachment {
   contact_attachment_id   Int      @default(0)
   sales_id                Int      @default(0)
   statement_id            Int      @default(0)
-  creation_date           DateTime
+  creation_date           DateTimeSelector
 
 
   @@index([communication_id], name: "communication_id")
@@ -1061,8 +1061,8 @@ model CancelReason {
   Company                   Company   @relation(fields: [company_id], references: [id])
   late_cancel               Int
   apply_cancellation_policy Int
-  created_at                DateTime? @default(now())
-  modified_at               DateTime? @updatedAt
+  created_at                DateTimeSelector? @default(now())
+  modified_at               DateTimeSelector? @updatedAt
 
 
   @@index([company_id], name: "occupier")
@@ -1072,7 +1072,7 @@ model CancelReason {
 model Candidate {
   id               Int      @id @default(autoincrement())
   contact_id       Int
-  created_date     DateTime
+  created_date     DateTimeSelector
   opening_id       Int
   rating           Int      @default(1)
   candidate_status String?  @default("WAITING")
@@ -1081,7 +1081,7 @@ model Candidate {
   referred_by      String
   cover_letter     String
   resume           String
-  date_available   DateTime
+  date_available   DateTimeSelector
   linkedin         String
   company_id       Int?
   company          Company? @relation(fields: [company_id], references: [id])
@@ -1128,7 +1128,7 @@ model CashupReport {
   giftvoucher_actual     Float
   giftvoucher_difference Float
   comments               String
-  cashup_date            DateTime
+  cashup_date            DateTimeSelector
   finance_id             Int
 
   @@index([cashup_date], name: "cashup_date")
@@ -1139,7 +1139,7 @@ model CashupReportCustom {
   id                Int      @id @default(autoincrement())
   company_id        String
   location_id       Int      @default(0)
-  cashup_date       DateTime
+  cashup_date       DateTimeSelector
   custom_type       String
   custom_amount     Float
   custom_actual     Float
@@ -1184,8 +1184,8 @@ model CheckinProduct {
   id             Int       @id @default(autoincrement())
   queue_id       Int
   product_id     Int
-  date_start     DateTime?
-  date_end       DateTime?
+  date_start     DateTimeSelector?
+  date_end       DateTimeSelector?
   inv_product_id Int       @default(0)
 
 
@@ -1197,22 +1197,22 @@ model CheckinQueue {
   id            Int       @id @default(autoincrement())
   uid           Int
   been_before   Boolean
-  date_start    DateTime
+  date_start    DateTimeSelector
   accepted      Boolean   @default(false)
   is_lunch      Boolean   @default(false)
   name          String
-  date_accepted DateTime?
-  date_end      DateTime?
+  date_accepted DateTimeSelector?
+  date_end      DateTimeSelector?
   was_anyone    Boolean
   finalise      Boolean?
   sms_number    String?
-  sms_sent      DateTime?
+  sms_sent      DateTimeSelector?
   sms_wanted    Boolean?
   skips         Int       @default(0)
   connect_id    Int?
   order         Int
   spotify_uri   String?
-  date_binned   DateTime?
+  date_binned   DateTimeSelector?
 
 
   @@index([accepted], name: "accepted")
@@ -1244,8 +1244,8 @@ model ClassCategory {
   company_id    Int       @map("occupier")
   Company       Company   @relation(fields: [company_id], references: [id])
   uid           Int?
-  created_date  DateTime?
-  modified_date DateTime?
+  created_date  DateTimeSelector?
+  modified_date DateTimeSelector?
 
   @@map("class_categories")
 }
@@ -1398,7 +1398,7 @@ model CompanySubscription {
   company_id               Int
   company                  Company   @relation(fields: [company_id], references: [id])
   license_type             Int
-  license_expiry           DateTime
+  license_expiry           DateTimeSelector
   active                   Int
   code                     String
   max_user_count           Int
@@ -1424,10 +1424,10 @@ model CompanySubscription {
   complete_notes           String
   details_status           Int
   training_date            String
-  bill_cycle               DateTime
+  bill_cycle               DateTimeSelector
   renew_interval           String    @default("month")
   exclude_reports          Int
-  sub_start_date           DateTime
+  sub_start_date           DateTimeSelector
   price_range              String    @default("uk_pricing")
   stripe_customer_id       String
   stripe_subscription_id   String
@@ -1465,7 +1465,7 @@ model CompanySubscription {
   advanced_marketing_addon Int
   free_months              Int?      @default(0)
   hide_in_comps            Boolean?  @default(false)
-  am_start_date            DateTime?
+  am_start_date            DateTimeSelector?
   trainer_id               Int?
   onboarder_id             Int?
   is_referral              Int?      @default(0)
@@ -1503,8 +1503,8 @@ model ClassProduct {
   company_id     Int       @map("occupier")
   Company        Company   @relation(fields: [company_id], references: [id])
   uid            Int?
-  created_date   DateTime?
-  modified_date  DateTime?
+  created_date   DateTimeSelector?
+  modified_date  DateTimeSelector?
   product_desc   String
 
 
@@ -1532,8 +1532,8 @@ model ClassTemplateSetting {
   class_wait_list_sms_template_enable Int       @default(0)
   class_wait_list_sms_template_id     Int       @default(0)
   uid                                 Int?
-  creation_date                       DateTime?
-  modified_date                       DateTime?
+  creation_date                       DateTimeSelector?
+  modified_date                       DateTimeSelector?
 
   @@map("class_template_settings")
 }
@@ -1618,7 +1618,7 @@ model CmAccountNote {
   AccountID   Int
   Note        String
   Status      cm_account_notes_Status @default(Enable)
-  CreatedDate DateTime
+  CreatedDate DateTimeSelector
   IpAddress   Int
 
   @@map("cm_account_notes")
@@ -1674,7 +1674,7 @@ model CmBookingNote {
   AppointmentID Int
   Note          String
   Status        cm_booking_notes_Status @default(Enable)
-  CreatedDate   DateTime
+  CreatedDate   DateTimeSelector
   IpAddress     Int
 
   @@map("cm_booking_notes")
@@ -1716,7 +1716,7 @@ model CmCaseNote {
   CaseID      Int
   Note        String
   Status      cm_case_notes_Status @default(Enable)
-  CreatedDate DateTime
+  CreatedDate DateTimeSelector
   IpAddress   Int
 
   @@map("cm_case_notes")
@@ -1727,7 +1727,7 @@ model CmCaseReply {
   OwnerID     Int
   CaseID      Int
   Description String
-  CreatedDate DateTime
+  CreatedDate DateTimeSelector
   IpAddress   Int
   CompanyID   Int
   company     Company  @relation(fields: [CompanyID], references: [id])
@@ -1741,15 +1741,15 @@ model CmCampaign {
   CompaignName     String
   Type             Int
   Status           Int
-  StartDate        DateTime
-  EndDate          DateTime
+  StartDate        DateTimeSelector
+  EndDate          DateTimeSelector
   ExpectedRevenue  String
   BudgetedCost     String
   ActualCost       String
   ExpectedResponse String
   NumSent          String
   Description      String
-  CreatedDate      DateTime
+  CreatedDate      DateTimeSelector
   IpAddress        Int
   company_id       Int      @map("Occupier")
   company          Company  @relation(fields: [company_id], references: [id])
@@ -1763,7 +1763,7 @@ model CmCampaignNote {
   BookingID   Int
   Note        String
   Status      cm_compaign_notes_Status @default(Enable)
-  CreatedDate DateTime
+  CreatedDate DateTimeSelector
   IpAddress   Int
 
   @@map("cm_compaign_notes")
@@ -1790,7 +1790,7 @@ model CmContact {
   Department                String
   HomePhone                 String
   Fax                       String
-  DOB                       DateTime?
+  DOB                       DateTimeSelector?
   AsstPhone                 String
   EmailOptOut               cm_contacts_EmailOptOut     @default(No)
   SkypeId                   String
@@ -1809,7 +1809,7 @@ model CmContact {
   OtherCountry              String
   Description               String
   Status                    cm_contacts_Status          @default(Enable)
-  CreatedDate               DateTime
+  CreatedDate               DateTimeSelector
   IpAddress                 Int
   fbimg                     String
   MarketingSource           Int
@@ -1835,8 +1835,8 @@ model CmContact {
   is_active                 Int                         @default(1)
   xero_contact_id           String
   is_ambassador             Int                         @default(0)
-  UpdatedDate               DateTime?
-  xero_updated_date         DateTime?
+  UpdatedDate               DateTimeSelector?
+  xero_updated_date         DateTimeSelector?
   discount_type             Int
   custom_clinic_id          Int
   ambassador_id             Int
@@ -1914,7 +1914,7 @@ model CmContact {
 //  Department             String
 //  HomePhone              String
 //  Fax                    String
-//  DOB                    DateTime?
+//  DOB                    DateTimeSelector?
 //  AsstPhone              String
 //  EmailOptOut            cm_contacts_backup_hb_EmailOptOut     @default(No)
 //  SkypeId                String
@@ -1933,7 +1933,7 @@ model CmContact {
 //  OtherCountry           String
 //  Description            String
 //  Status                 cm_contacts_backup_hb_Status          @default(Enable)
-//  CreatedDate            DateTime
+//  CreatedDate            DateTimeSelector
 //  IpAddress              Int
 //  fbimg                  String
 //  MarketingSource        Int
@@ -2043,8 +2043,8 @@ model CmContact {
 //  marketing_source       String
 //  alerts                 String
 //  next_of_kin            String
-//  CreatedDate            DateTime
-//  UpdatedDate            DateTime
+//  CreatedDate            DateTimeSelector
+//  UpdatedDate            DateTimeSelector
 //  Insurer                String
 //  GP_Name                String   @map("GP Name")
 //  GP_Address             String   @map("GP Address")
@@ -2064,7 +2064,7 @@ model CmContactJson {
   id           Int      @id @default(autoincrement())
   company_id   Int      @map("occupier")
   clients_json String
-  date_updated DateTime @default(now())
+  date_updated DateTimeSelector @default(now())
   Company      Company  @relation(fields: [company_id], references: [id])
 
   @@map("cm_contacts_json")
@@ -2117,15 +2117,15 @@ model CmContactTravel {
   id                 Int                @id @default(autoincrement())
   contact_id         Int
   country_id         Int
-  start_date         DateTime
-  end_date           DateTime
+  start_date         DateTimeSelector
+  end_date           DateTimeSelector
   company_id         Int
   duration           String
   mode               Int
   uid                Int
   medical_record_id  Int
-  creation_date      DateTime
-  modified_date      DateTime
+  creation_date      DateTimeSelector
+  modified_date      DateTimeSelector
   Company            Company            @relation(fields: [company_id], references: [id])
   CmContact          CmContact          @relation(fields: [contact_id], references: [ID])
   Country            Country            @relation(fields: [country_id], references: [country_id])
@@ -2140,7 +2140,7 @@ model CmContactViewed {
   contact_id Int
   user_id    Int
   company_id Int       @map("occupier")
-  date       DateTime
+  date       DateTimeSelector
   Company    Company   @relation(fields: [company_id], references: [id])
   User       User      @relation(fields: [user_id], references: [id])
   CmContact  CmContact @relation(fields: [contact_id], references: [ID])
@@ -2156,7 +2156,7 @@ model CmContactAlert {
   ContactID             Int
   Note                  String
   Status                cm_contact_alerts_Status @default(Enable)
-  CreatedDate           DateTime
+  CreatedDate           DateTimeSelector
   IpAddress             Int
   Critical              Int
   medical_conditions_id Int                      @default(0)
@@ -2191,7 +2191,7 @@ model CmContactNote {
   ContactID   Int
   Note        String
   Status      cm_contact_notes_Status @default(Enable)
-  CreatedDate DateTime
+  CreatedDate DateTimeSelector
   IpAddress   String
   imported    Boolean                 @default(false)
   User        User                    @relation(fields: [OwnerID], references: [id])
@@ -2227,7 +2227,7 @@ model CmCoupon {
   coupon_code         String
   coupon_amount       String
   coupon_rate_type    String
-  coupon_created_date DateTime
+  coupon_created_date DateTimeSelector
   company_id          Int      @map("company")
   created_by          Int
   coupon_impressions  Int
@@ -2242,7 +2242,7 @@ model CmCoupon {
 model CmCouponClaimed {
   id              Int      @id @default(autoincrement())
   coupon_id       Int
-  claim_date      DateTime
+  claim_date      DateTimeSelector
   claim_full_name String
   claim_email     String
   active          Int
@@ -2254,7 +2254,7 @@ model CmCouponClaimed {
 model CmCouponClick {
   id         Int      @id @default(autoincrement())
   coupon_id  Int
-  click_date DateTime
+  click_date DateTimeSelector
   CmCoupon   CmCoupon @relation(fields: [coupon_id], references: [id])
 
   @@map("cm_coupon_clicks")
@@ -2272,7 +2272,7 @@ model CmDrug {
   is_active    Boolean
   product_id   Int
   lot_number   String
-  expiry_date  DateTime
+  expiry_date  DateTimeSelector
   field_order  Int?       @default(0)
   is_vaccine   Int
   is_required  Int
@@ -2343,7 +2343,7 @@ model CmExtraSalon {
 //  InvoiceID   Int
 //  Note        String
 //  Status      cm_invoice_notes_Status @default(Enable)
-//  CreatedDate DateTime
+//  CreatedDate DateTimeSelector
 //  IpAddress   Int
 //}
 
@@ -2356,7 +2356,7 @@ model CmLead {
   Salutation               String
   Fname                    String
   Lname                    String
-  DOB                      DateTime
+  DOB                      DateTimeSelector
   Title                    String
   LeadCompany              String
   company_id               Int                  @map("Occupier")
@@ -2383,7 +2383,7 @@ model CmLead {
   Description              String
   EnumStatus               cm_leads_EnumStatus  @default(Open)
   Status                   cm_leads_Status      @default(Enable)
-  CreatedDate              DateTime
+  CreatedDate              DateTimeSelector
   MarketingOptInAll        Int
   MarketingOptInEmail      Int
   MarketingOptInPhone      Int
@@ -2399,10 +2399,10 @@ model CmLead {
   old_LeadStatus           Int
   custom_id                String
   imported                 Int
-  ConvertDate              DateTime
+  ConvertDate              DateTimeSelector
   group_id                 Int
-  first_interaction        DateTime
-  latest_interaction       DateTime
+  first_interaction        DateTimeSelector
+  latest_interaction       DateTimeSelector
   location_id              Int                  @default(0)
   need_to_knows            Int                  @default(1)
   Company                  Company              @relation(fields: [company_id], references: [id])
@@ -2472,7 +2472,7 @@ model CmLead {
 //  LeadID      Int
 //  Note        String
 //  Status      cm_lead_notes_Status @default(Enable)
-//  CreatedDate DateTime
+//  CreatedDate DateTimeSelector
 //  IpAddress   Int
 //
 //  @@index([LeadID], name: "LeadID")
@@ -2522,7 +2522,7 @@ model MedicalCondition {
 //  custom_field_id    Int
 //  custom_field_label String
 //  custom_field_value String
-//  created_date       DateTime @default(now())
+//  created_date       DateTimeSelector @default(now())
 //  imported           Boolean  @default(false)
 //  is_read            Boolean  @default(false)
 //}
@@ -2532,8 +2532,8 @@ model MedicalCondition {
 //  company_id       Int
 //  contact_id       Int
 //  appointment_id   Int
-//  created_date     DateTime @default(now())
-//  updated_date     DateTime @default(now())
+//  created_date     DateTimeSelector @default(now())
+//  updated_date     DateTimeSelector @default(now())
 //  created_by       Int
 //  status           Int      @default(0)
 //  pipeline_id      Int
@@ -2593,7 +2593,7 @@ model MedicalCondition {
 //  ContactID        Int
 //  Description      String
 //  Status           cm_potentials_Status @default(Enable)
-//  CreatedDate      DateTime
+//  CreatedDate      DateTimeSelector
 //  IpAddress        Int
 //  LeadID           Int
 //
@@ -2607,7 +2607,7 @@ model MedicalCondition {
 //  PotentialID Int
 //  Note        String
 //  Status      cm_potential_notes_Status @default(Enable)
-//  CreatedDate DateTime
+//  CreatedDate DateTimeSelector
 //  IpAddress   Int
 //}
 //
@@ -2619,7 +2619,7 @@ model MedicalCondition {
 //  Stage           Int
 //  Probability     String
 //  ExpectedRevenue String
-//  CreatedDate     DateTime
+//  CreatedDate     DateTimeSelector
 //  IpAddress       Int
 //}
 //
@@ -2654,7 +2654,7 @@ model MedicalCondition {
 //  user_id             Int
 //  supplier_id         Int
 //  supplier_status     String
-//  delivery_date       DateTime?
+//  delivery_date       DateTimeSelector?
 //  notes               String
 //  is_hidden           Int       @default(0)
 //  destination_arrival String
@@ -2671,7 +2671,7 @@ model MedicalCondition {
 //  id                       Int      @id @default(autoincrement())
 //  refby                    Int
 //  refto                    Int
-//  date                     DateTime
+//  date                     DateTimeSelector
 //  status                   String
 //  occupier                 Int      @default(0)
 //  sent_to_email            String
@@ -2728,7 +2728,7 @@ model MedicalCondition {
 //  SolutionID  Int
 //  Note        String
 //  Status      cm_solution_notes_Status @default(Enable)
-//  CreatedDate DateTime
+//  CreatedDate DateTimeSelector
 //  IpAddress   Int
 //}
 //
@@ -2774,7 +2774,7 @@ model MedicalCondition {
 //model cm_staff_documents {
 //  ID      Int      @id @default(autoincrement())
 //  StaffID Int
-//  Date    DateTime
+//  Date    DateTimeSelector
 //  Name    String
 //  Type    Int
 //  File    String
@@ -2813,7 +2813,7 @@ model MedicalCondition {
 //model cm_staff_evaluations {
 //  ID          Int      @id @default(autoincrement())
 //  StaffID     Int
-//  Date        DateTime
+//  Date        DateTimeSelector
 //  Description String
 //  Initials    String
 //  Comments    String
@@ -2837,7 +2837,7 @@ model CmStaffGeneral {
   Fname               String
   Lname               String
   MI                  String
-  Birthdate           DateTime?
+  Birthdate           DateTimeSelector?
   SSN                 String
   Address1            String
   Address2            String
@@ -2852,8 +2852,8 @@ model CmStaffGeneral {
   Email               String
   Status              Int
   EmployeeNumber      String
-  HireDate            DateTime?
-  RenewalDate         DateTime?
+  HireDate            DateTimeSelector?
+  RenewalDate         DateTimeSelector?
   max_vacation_days   Int?
   Location            String
   Position            Int?
@@ -2864,9 +2864,9 @@ model CmStaffGeneral {
   Gender              Int
   EEOCode             Int
   EEOCategory         Int
-  NextReview          DateTime?
+  NextReview          DateTimeSelector?
   EnumStatus          cm_staff_general_EnumStatus @default(Enable)
-  CreatedDate         DateTime?
+  CreatedDate         DateTimeSelector?
   IpAddress           Int
   pabau_id            Int?
   DefaultLocation     Int?
@@ -2914,7 +2914,7 @@ model CmStaffGeneral {
 //model cm_staff_payrolls {
 //  ID                 Int                           @id @default(autoincrement())
 //  StaffID            Int
-//  StartDate          DateTime
+//  StartDate          DateTimeSelector
 //  Transaction        Int
 //  TransactionRate    Float
 //  TransactionTime    Float
@@ -2929,14 +2929,14 @@ model CmStaffGeneral {
 //model cm_staff_separation {
 //  ID               Int      @id @default(autoincrement())
 //  StaffID          Int
-//  Date             DateTime
+//  Date             DateTimeSelector
 //  Rehire           String
 //  SeparationReason Int
 //  Comments         String
-//  EnrolDate        DateTime
-//  DeclinedDate     DateTime
+//  EnrolDate        DateTimeSelector
+//  DeclinedDate     DateTimeSelector
 //  PaymentAmount    String
-//  EndDate          DateTime
+//  EndDate          DateTimeSelector
 //  Notes            String
 //
 //  @@index([StaffID], name: "StaffID")
@@ -2981,15 +2981,15 @@ model CmStaffGeneral {
 //  Field10 String
 //  Value10 String
 //  Field11 String
-//  Value11 DateTime
+//  Value11 DateTimeSelector
 //  Field12 String
-//  Value12 DateTime
+//  Value12 DateTimeSelector
 //  Field13 String
-//  Value13 DateTime
+//  Value13 DateTimeSelector
 //  Field14 String
-//  Value14 DateTime
+//  Value14 DateTimeSelector
 //  Field15 String
-//  Value15 DateTime
+//  Value15 DateTimeSelector
 //  Field16 String
 //  Value16 String
 //  Field17 String
@@ -3005,7 +3005,7 @@ model CmStaffGeneral {
 //model cm_staff_wages {
 //  ID       Int                 @id @default(autoincrement())
 //  StaffID  Int
-//  Date     DateTime
+//  Date     DateTimeSelector
 //  Position Int
 //  Rate     String
 //  Type     cm_staff_wages_Type @default(Hourly)
@@ -3027,8 +3027,8 @@ model CmStaffGeneral {
 //  description      String
 //  attachment       String
 //  status           cm_tasks_status @default(Enable)
-//  CreatedDate      DateTime
-//  EditedDate       DateTime
+//  CreatedDate      DateTimeSelector
+//  EditedDate       DateTimeSelector
 //  custom_task_name String
 //}
 //
@@ -3038,7 +3038,7 @@ model CmStaffGeneral {
 //  assignedby  String
 //  assignedto  String
 //  taskStatus  cm_task_assignment_taskStatus @default(Pending)
-//  CreatedDate DateTime
+//  CreatedDate DateTimeSelector
 //}
 //
 //model cm_task_notes {
@@ -3047,7 +3047,7 @@ model CmStaffGeneral {
 //  TaskID      Int
 //  Note        String
 //  Status      cm_task_notes_Status @default(Enable)
-//  CreatedDate DateTime
+//  CreatedDate DateTimeSelector
 //  IpAddress   Int
 //}
 //
@@ -3058,8 +3058,8 @@ model CmStaffGeneral {
 //  schedule_day        String
 //  cover_months        String
 //  recall_type_ids     String
-//  administration_date DateTime
-//  last_modified       DateTime
+//  administration_date DateTimeSelector
+//  last_modified       DateTimeSelector
 //  modified_by         Int
 //  company_id          Int
 //  field_order         Int
@@ -3092,11 +3092,11 @@ model CmStaffGeneral {
 //  description            String
 //  amount                 Float?
 //  valid                  cm_vouchers_valid?
-//  date_from              DateTime?
-//  date_to                DateTime?
-//  time_from              DateTime?
-//  time_to                DateTime?
-//  expiry_date            DateTime?
+//  date_from              DateTimeSelector?
+//  date_to                DateTimeSelector?
+//  time_from              DateTimeSelector?
+//  time_to                DateTimeSelector?
+//  expiry_date            DateTimeSelector?
 //  every                  cm_vouchers_every?
 //  occupier               Int?
 //  purchased_for          String
@@ -3106,7 +3106,7 @@ model CmStaffGeneral {
 //  lead_id                Int
 //  voucher_contact_email  String
 //  voucher_contact_mobile Int
-//  purchase_date          DateTime
+//  purchase_date          DateTimeSelector
 //  purchaser_contact_id   Int
 //  purchased_for_id       Int
 //  imported               Int
@@ -3127,13 +3127,13 @@ model CmStaffGeneral {
 //  custom_contact_id   Int
 //  custom_contact_name String
 //  custom_id           String
-//  date_from           DateTime
-//  date_to             DateTime
+//  date_from           DateTimeSelector
+//  date_to             DateTimeSelector
 //  custom_user_name    String
 //  amount              String
 //  remaining           String
 //  contact_id          Int
-//  date_sold           DateTime
+//  date_sold           DateTimeSelector
 //  code                String
 //}
 //
@@ -3183,8 +3183,8 @@ model CmStaffGeneral {
 //  title            String
 //  message          String?
 //  url              String
-//  date_expires     DateTime
-//  date_created     DateTime
+//  date_expires     DateTimeSelector
+//  date_created     DateTimeSelector
 //  color_background String
 //  color_text       String
 //  icon_image       String
@@ -3208,14 +3208,14 @@ model CmStaffGeneral {
 //model commission_amendment {
 //  id                 Int       @id @default(autoincrement())
 //  partner_company_id Int
-//  from_date          DateTime
-//  to_date            DateTime
+//  from_date          DateTimeSelector
+//  to_date            DateTimeSelector
 //  amount             Float
 //  description        String
 //  company_id         Int
 //  uid                Int
-//  creation_date      DateTime
-//  modified_date      DateTime?
+//  creation_date      DateTimeSelector
+//  modified_date      DateTimeSelector?
 //
 //  @@index([company_id], name: "company_id")
 //  @@index([partner_company_id], name: "partner_company_id")
@@ -3244,8 +3244,8 @@ model CmStaffGeneral {
 //  facility_fee2_active Int?      @default(1)
 //  deduct_consum_active Int?      @default(1)
 //  payout_emp_active    Int?      @default(1)
-//  creation_date        DateTime?
-//  modified_date        DateTime?
+//  creation_date        DateTimeSelector?
+//  modified_date        DateTimeSelector?
 //}
 //
 //model communications {
@@ -3256,7 +3256,7 @@ model CmStaffGeneral {
 //  location_id               Int
 //  type                      communications_type
 //  secure                    Boolean                      @default(false)
-//  date                      DateTime
+//  date                      DateTimeSelector
 //  communications_content_id Int
 //  related_id                Int?
 //  related_type              communications_related_type?
@@ -3369,8 +3369,8 @@ model CmStaffGeneral {
 //  id               Int       @id @default(autoincrement())
 //  communication_id Int
 //  appt_id          Int
-//  creation_date    DateTime?
-//  modified_date    DateTime?
+//  creation_date    DateTimeSelector?
+//  modified_date    DateTimeSelector?
 //}
 //
 //model communication_log_attachments {
@@ -3391,7 +3391,7 @@ model CmStaffGeneral {
 //  template_id   Int
 //  contact_id    Int
 //  company_id    Int
-//  sent_date     DateTime
+//  sent_date     DateTimeSelector
 //  status        Int
 //}
 //
@@ -3411,7 +3411,7 @@ model CmStaffGeneral {
 //  id               Int       @id @default(autoincrement())
 //  communication_id Int?
 //  receipient_id    String?
-//  creation_date    DateTime?
+//  creation_date    DateTimeSelector?
 //}
 //
 //model company_app_subscriptions {
@@ -3548,8 +3548,8 @@ model CompanyBranchAttachment {
 //  branch_id    Int
 //  key          String
 //  value        String
-//  date_created DateTime  @default(now())
-//  date_updated DateTime?
+//  date_created DateTimeSelector  @default(now())
+//  date_updated DateTimeSelector?
 //
 //  @@unique([branch_id, key], name: "branch_id")
 //}
@@ -3583,7 +3583,7 @@ model CompanyDepartment {
 //  form_name     String?
 //  form_dir_name Int?
 //  created_by    Int?
-//  created_date  DateTime?
+//  created_date  DateTimeSelector?
 //}
 //
 //model company_ga_filtering {
@@ -3651,7 +3651,7 @@ model CompanyLocation {
 //
 //model company_log {
 //  id       Int      @id @default(autoincrement())
-//  log_date DateTime @default(now())
+//  log_date DateTimeSelector @default(now())
 //  text     String
 //  category String
 //  severe   Boolean
@@ -3700,7 +3700,7 @@ model CompanyNote {
   company_id   Int
   user_id      Int
   note         String
-  created_date DateTime @default(now())
+  created_date DateTimeSelector @default(now())
   is_alert     Boolean
   Company      Company  @relation(fields: [company_id], references: [id])
   User         User     @relation(fields: [user_id], references: [id])
@@ -3937,8 +3937,8 @@ model CompanyService {
 //  position_name       String?
 //  price               Float?
 //  occupier            Int?
-//  created_date        DateTime?
-//  modified_date       DateTime?
+//  created_date        DateTimeSelector?
+//  modified_date       DateTimeSelector?
 //
 //  @@index([company_services_id], name: "company_services_id")
 //  @@index([occupier], name: "occupier")
@@ -3951,8 +3951,8 @@ model CompanyService {
 //  position_name       String?
 //  duration            String?
 //  occupier            Int?
-//  created_date        DateTime?
-//  modified_date       DateTime?
+//  created_date        DateTimeSelector?
+//  modified_date       DateTimeSelector?
 //
 //  @@index([company_services_id], name: "company_services_id")
 //  @@index([occupier], name: "occupier")
@@ -4005,7 +4005,7 @@ model CompanyService {
 //  company      Int
 //  key          String
 //  value        String
-//  date_created DateTime @default(now())
+//  date_created DateTimeSelector @default(now())
 //
 //  @@unique([company, key], name: "company")
 //}
@@ -4040,8 +4040,8 @@ model CompanyService {
 //  enable        Int?
 //  occupier      Int?
 //  uid           Int?
-//  created_date  DateTime?
-//  modified_date DateTime?
+//  created_date  DateTimeSelector?
+//  modified_date DateTimeSelector?
 //}
 //
 //model connect_bookings_log {
@@ -4050,7 +4050,7 @@ model CompanyService {
 //  contact_id     Int
 //  mobile         Int
 //  browser        String
-//  date_tracked   DateTime
+//  date_tracked   DateTimeSelector
 //  company_id     Int
 //
 //  @@index([appointment_id], name: "appointment_id")
@@ -4113,7 +4113,7 @@ model CompanyService {
 //  id            Int      @id @default(autoincrement())
 //  company_id    Int
 //  user_id       Int
-//  date          DateTime
+//  date          DateTimeSelector
 //  ip_address    String
 //  step_location Int      @default(0)
 //  step_service  Int      @default(0)
@@ -4252,7 +4252,7 @@ model CompanyService {
 //  broken_check          Int
 //  old_linkref           String
 //  in_folder             Int
-//  date_changed          DateTime @default(now())
+//  date_changed          DateTimeSelector @default(now())
 //}
 //
 //model contact_attachment_missing {
@@ -4301,7 +4301,7 @@ model CompanyService {
 //  Lname             String
 //  custom_user_name  String
 //  image_url         String
-//  created_date      DateTime
+//  created_date      DateTimeSelector
 //  occupier          Int
 //  imported          Int
 //  added             Int
@@ -4344,10 +4344,10 @@ model ContactInsurance {
 //  contact_id      Int
 //  package_id      Int
 //  invoice_id      Int?
-//  activation_date DateTime
-//  expiration_date DateTime
+//  activation_date DateTimeSelector
+//  expiration_date DateTimeSelector
 //  occupier        String
-//  CreatedDate     DateTime
+//  CreatedDate     DateTimeSelector
 //  sold_by         Int
 //  code            String
 //  voided          Int
@@ -4365,7 +4365,7 @@ model ContactInsurance {
 //model contact_package_used {
 //  id                 Int      @id @default(autoincrement())
 //  contact_package_id Int
-//  date_created       DateTime
+//  date_created       DateTimeSelector
 //  booking_id         Int
 //  status             String
 //  book_take          Int
@@ -4409,9 +4409,9 @@ model ContactInsurance {
 //  linkhref        String
 //  status          Int
 //  user_id         Int
-//  date_added      DateTime
-//  date_processing DateTime
-//  date_processed  DateTime
+//  date_added      DateTimeSelector
+//  date_processing DateTimeSelector
+//  date_processed  DateTimeSelector
 //}
 //
 //model contract_folders {
@@ -4550,7 +4550,7 @@ model Country {
 //  pathway_id     Int
 //  contact_id     Int
 //  booking_id     Int
-//  started_on     DateTime                 @default(now())
+//  started_on     DateTimeSelector                 @default(now())
 //  status         cp_pathways_taken_status @default(ACTIVE)
 //  comment        String
 //  cp_pathways    cp_pathways              @relation(fields: [pathway_id], references: [id])
@@ -4563,7 +4563,7 @@ model Country {
 //  id             Int              @id @default(autoincrement())
 //  company_id     Int
 //  name           String
-//  created_date   DateTime
+//  created_date   DateTimeSelector
 //  step           cp_steps_step
 //  order          Int
 //  item_id        Int
@@ -4584,7 +4584,7 @@ model Country {
 //  step_id           Int
 //  path_taken_id     Int
 //  contact_id        Int
-//  date              DateTime              @default(now())
+//  date              DateTimeSelector              @default(now())
 //  time              String?
 //  status            cp_steps_taken_status
 //  record_id         Int
@@ -4633,8 +4633,8 @@ model Country {
 //  wait_time   Float    @default(0)
 //  total_hits  Int
 //  request_uri String
-//  created_at  DateTime @default(now())
-//  modified_at DateTime
+//  created_at  DateTimeSelector @default(now())
+//  modified_at DateTimeSelector
 //  company_id  Int      @unique
 //}
 //
@@ -4645,14 +4645,14 @@ model Country {
 //  settings     String
 //  file         String
 //  status       cron_jobs_status @default(Queued)
-//  date_updated DateTime?
-//  date_created DateTime         @default(now())
+//  date_updated DateTimeSelector?
+//  date_created DateTimeSelector         @default(now())
 //}
 //
 //model cron_jobs_log {
 //  id           Int       @id @default(autoincrement())
-//  date_updated DateTime?
-//  date_created DateTime  @default(now())
+//  date_updated DateTimeSelector?
+//  date_created DateTimeSelector  @default(now())
 //  company      Int
 //  text         String
 //  severity     Int       @default(0)
@@ -4664,7 +4664,7 @@ model Country {
 //model cron_logs {
 //  id   Int      @id @default(autoincrement())
 //  type String
-//  date DateTime
+//  date DateTimeSelector
 //}
 //
 //model currencies {
@@ -4683,11 +4683,11 @@ model Country {
 //  lastname  String
 //  username  String
 //  password  String
-//  date      DateTime
+//  date      DateTimeSelector
 //  type      String
 //  city      String
 //  gender    String
-//  dob       DateTime
+//  dob       DateTimeSelector
 //  mobile    String
 //  active    Int
 //  country   String
@@ -4745,16 +4745,16 @@ model Country {
 //  status                  String
 //  quantity                Int
 //  auth_code               String
-//  start_date              DateTime
-//  end_date                DateTime
-//  date_created            DateTime
+//  start_date              DateTimeSelector
+//  end_date                DateTimeSelector
+//  date_created            DateTimeSelector
 //}
 //
 //model cycle_appointment {
 //  id           Int      @id @default(autoincrement())
 //  cycle_id     Int
 //  appt_id      Int
-//  date_created DateTime
+//  date_created DateTimeSelector
 //  occupier     Int
 //
 //  @@index([appt_id], name: "appt_id")
@@ -4766,7 +4766,7 @@ model Country {
 //  company_id Int
 //  uid        Int
 //  type       Int      @default(0)
-//  date       DateTime
+//  date       DateTimeSelector
 //}
 //
 //model dashboard {
@@ -4780,7 +4780,7 @@ model Country {
 //  id          Int      @id @default(autoincrement())
 //  output      String?
 //  cont_format String   @default("")
-//  event_date  DateTime @default(now())
+//  event_date  DateTimeSelector @default(now())
 //}
 //
 //model debt_manage_communication {
@@ -4791,8 +4791,8 @@ model Country {
 //  type             Int
 //  occupier         Int
 //  uid              Int
-//  creation_date    DateTime?
-//  modified_date    DateTime?
+//  creation_date    DateTimeSelector?
+//  modified_date    DateTimeSelector?
 //}
 //
 //model delete_track {
@@ -4825,7 +4825,7 @@ model Country {
 //  enabled        Int
 //  frequency      String
 //  included_users String
-//  LastSent       DateTime
+//  LastSent       DateTimeSelector
 //  end_week       Int
 //}
 //
@@ -4839,7 +4839,7 @@ model Country {
 //  id           Int      @id @default(autoincrement())
 //  company_id   Int
 //  disease_name String
-//  create_date  DateTime @default(now())
+//  create_date  DateTimeSelector @default(now())
 //  comments     String
 //  deleted      Int
 //  custom_id    String
@@ -4890,9 +4890,9 @@ model Country {
 //  company_id      Int
 //  uid             Int
 //  uname           String
-//  date            DateTime
+//  date            DateTimeSelector
 //  total_time      Int      @default(0)
-//  work_start      DateTime
+//  work_start      DateTimeSelector
 //  customers_total Int      @default(0)
 //  customers_9_10  Int      @default(0)
 //  customers_10_11 Int      @default(0)
@@ -4981,14 +4981,14 @@ model Country {
 //  id         Int      @id @default(autoincrement())
 //  contact_id Int
 //  group_id   Int
-//  send_time  DateTime
+//  send_time  DateTimeSelector
 //}
 //
 //model engage_connects_followup {
 //  id         Int      @id @default(autoincrement())
 //  contact_id Int
 //  group_id   Int
-//  send_time  DateTime
+//  send_time  DateTimeSelector
 //}
 //
 //model engage_custom_meters {
@@ -5005,7 +5005,7 @@ model Country {
 //  followup_period Int
 //  followup_method String
 //  contacts        String
-//  created_date    DateTime
+//  created_date    DateTimeSelector
 //  completed       Boolean
 //}
 //
@@ -5024,7 +5024,7 @@ model Country {
 //  skipped   Int
 //  type      String
 //  event_id  Int
-//  date      DateTime
+//  date      DateTimeSelector
 //  test      Boolean  @default(true)
 //}
 //
@@ -5043,7 +5043,7 @@ model Country {
 //  email_template    Int
 //  lost_period       Int
 //  method            String
-//  customer_since    DateTime
+//  customer_since    DateTimeSelector
 //  negative_feedback Int
 //  ignore_sms_optout Boolean  @default(true)
 //  no_appts_min      Int
@@ -5053,7 +5053,7 @@ model Country {
 //  client_status     String   @default("any")
 //  last_engaged      Int
 //  customer_of       Int
-//  birthday          DateTime
+//  birthday          DateTimeSelector
 //  gender            String   @default("any")
 //  age_min           Int
 //  age_max           Int
@@ -5076,7 +5076,7 @@ model Country {
 //model events {
 //  eventid        Int                 @id @default(autoincrement())
 //  brand          String
-//  date           DateTime
+//  date           DateTimeSelector
 //  title          String
 //  // This type is currently not supported by the Prisma Client.
 //  // description Unsupported("blob")
@@ -5118,8 +5118,8 @@ model Country {
 //  // body_diagram_url String?
 //  // occupier         Int?
 //  // uid              Int?
-//  // creation_date    DateTime?
-//  // modified_date    DateTime?
+//  // creation_date    DateTimeSelector?
+//  // modified_date    DateTimeSelector?
 //// }
 //
 //model failed_import {
@@ -5141,14 +5141,14 @@ model Country {
 //  id            Int      @id @default(autoincrement())
 //  company_id    Int
 //  account_name  String
-//  creation_date DateTime
+//  creation_date DateTimeSelector
 //}
 //
 //model finance_history {
 //  FinanceID           Int      @id @default(autoincrement())
 //  user_id             Int?
 //  Record_Type         String?
-//  Date                DateTime
+//  Date                DateTimeSelector
 //  Linked_Document     String?
 //  Reference           String?
 //  Amount              Float
@@ -5174,7 +5174,7 @@ model Country {
 //  amount          Float
 //  payment_type_id String
 //  company_id      Int
-//  entry_date      DateTime
+//  entry_date      DateTimeSelector
 //  finance_id      Int
 //  comments        String?
 //}
@@ -5186,7 +5186,7 @@ model Country {
 //  contact_id    Int
 //  insurer_id    Int       @default(0)
 //  occupier      Int
-//  creation_date DateTime?
+//  creation_date DateTimeSelector?
 //
 //  @@index([contact_id], name: "contact_id")
 //  @@index([occupier], name: "occupier")
@@ -5196,8 +5196,8 @@ model Country {
 //  id           Int       @id @default(autoincrement())
 //  uid          Int
 //  fingerprint  String?
-//  enrolled     DateTime?
-//  last_scanned DateTime?
+//  enrolled     DateTimeSelector?
+//  last_scanned DateTimeSelector?
 //
 //  @@index([uid], name: "uid")
 //}
@@ -5299,7 +5299,7 @@ model GlCode {
 //  contact_id          Int
 //  amount              Float
 //  payment_status      String
-//  dtime               DateTime
+//  dtime               DateTimeSelector
 //  gc_email            String
 //  payment_id          String?  @unique
 //  after_bank_transver Int      @default(0)
@@ -5330,7 +5330,7 @@ model GlCode {
 //  inv_id       Int
 //  company_id   Int
 //  payment_id   String
-//  created_date DateTime @default(now())
+//  created_date DateTimeSelector @default(now())
 //}
 //
 //model gocardless_subscriptions {
@@ -5346,13 +5346,13 @@ model GlCode {
 //  name                String
 //  description         String?
 //  setup_fee           Int
-//  created_at          DateTime?
+//  created_at          DateTimeSelector?
 //  currency            String?
-//  expires_at          DateTime?
+//  expires_at          DateTimeSelector?
 //  merchant_id         String
-//  next_interval_start DateTime?
-//  start_at            DateTime?
-//  initiated_at        DateTime?
+//  next_interval_start DateTimeSelector?
+//  start_at            DateTimeSelector?
+//  initiated_at        DateTimeSelector?
 //  status              String?
 //  go_user_id          String?
 //  go_subscription_id  String?
@@ -5409,7 +5409,7 @@ model GlCode {
 //  fb_group_id          Int?
 //  group_name           String?
 //  group_data           String?
-//  auth_date            DateTime?
+//  auth_date            DateTimeSelector?
 //  group_postable       groups_group_postable? @default(YES)
 //  group_bookmark_order Int?
 //
@@ -5420,13 +5420,13 @@ model GlCode {
 //  guestlistid     Int      @id @default(autoincrement())
 //  name            String
 //  nop             Int
-//  date            DateTime
+//  date            DateTimeSelector
 //  ip              String
 //  occupier        String
 //  mobile          String
 //  email           String
 //  location        String
-//  submission_date DateTime
+//  submission_date DateTimeSelector
 //}
 //
 //model guru_settings {
@@ -5505,11 +5505,11 @@ model HealthcodeInsurer {
 //  data_json         String
 //  data_xml          String?
 //  data_soap         String?
-//  date_inserted     DateTime                     @default(now())
+//  date_inserted     DateTimeSelector                     @default(now())
 //  status            healthcode_submittals_status @default(Pending)
 //  response_data     String?
 //  invoice_id        Int                          @unique
-//  date_updated      DateTime?
+//  date_updated      DateTimeSelector?
 //  structured_errors String?
 //  healthcode_id     String?
 //
@@ -5521,8 +5521,8 @@ model HolidayRequest {
   company_id       Int
   staff_id         Int
   request_id       Int
-  holiday_from     DateTime
-  holiday_to       DateTime
+  holiday_from     DateTimeSelector
+  holiday_to       DateTimeSelector
   status           String
   leave_type       String
   approved_by      Int
@@ -5544,7 +5544,7 @@ model HolidayRequest {
 //  company_id          Int
 //  uid                 Int
 //  uname               String
-//  date                DateTime
+//  date                DateTimeSelector
 //  customers_total     Int      @default(0)
 //  customers_9_10      Int      @default(0)
 //  customers_10_11     Int      @default(0)
@@ -5652,7 +5652,7 @@ model HolidayRequest {
 //  Phone         String
 //  Mobile        String
 //  OtherPhone    String
-//  DOB           DateTime
+//  DOB           DateTimeSelector
 //  Note          String
 //  gender        String
 //  MailingStreet String
@@ -5675,7 +5675,7 @@ model HolidayRequest {
 //  id            Int      @id @default(autoincrement())
 //  company_id    Int
 //  import_type   String
-//  date          DateTime
+//  date          DateTimeSelector
 //  file_name     String
 //  old_name      String
 //  entries       Int
@@ -5684,8 +5684,8 @@ model HolidayRequest {
 //  linkref       String
 //  json_data     String
 //  import_status Int
-//  start_date    DateTime
-//  end_date      DateTime
+//  start_date    DateTimeSelector
+//  end_date      DateTimeSelector
 //  ins_match     Int
 //  con_match     Int
 //  pro_match     Int
@@ -5734,7 +5734,7 @@ model HolidayRequest {
 //  sync             Int
 //  attach_id        Int
 //  system_id        Int
-//  attach_date      DateTime
+//  attach_date      DateTimeSelector
 //  col15            String
 //  col9             String
 //  uploader_id      Int
@@ -5763,8 +5763,8 @@ model HolidayRequest {
 //  id           Int       @id @default(autoincrement())
 //  name         String?
 //  description  String?
-//  created_date DateTime?
-//  updated_date DateTime?
+//  created_date DateTimeSelector?
+//  updated_date DateTimeSelector?
 //  sql          String?
 //}
 //
@@ -5842,7 +5842,7 @@ model InsuranceDetail {
 //  default_address_to         Boolean                         @default(false)
 //  invoice_template_id        Int?
 //  location_id                Int
-//  last_update                DateTime
+//  last_update                DateTimeSelector
 //  mp_rule_name               String
 //  rule_type                  Int
 //  second_service             Float
@@ -5883,8 +5883,8 @@ model InsuranceDetail {
 //  oct           String?
 //  nov           String?
 //  dec           String?
-//  creation_date DateTime?
-//  modified_date DateTime?
+//  creation_date DateTimeSelector?
+//  modified_date DateTimeSelector?
 //
 //  @@index([id], name: "id")
 //}
@@ -5983,8 +5983,8 @@ model InsuranceDetail {
 //  set_as_default Int       @default(0)
 //  occupier       Int
 //  uid            Int?
-//  creation_date  DateTime?
-//  modified_date  DateTime?
+//  creation_date  DateTimeSelector?
+//  modified_date  DateTimeSelector?
 //}
 //
 //model invoice_distributions_sub_cat {
@@ -5995,8 +5995,8 @@ model InsuranceDetail {
 //  description     String?
 //  occupier        Int
 //  uid             Int?
-//  creation_date   DateTime?
-//  modified_date   DateTime?
+//  creation_date   DateTimeSelector?
+//  modified_date   DateTimeSelector?
 //}
 //
 //model invoice_dist_products {
@@ -6008,8 +6008,8 @@ model InsuranceDetail {
 //  fee           Float     @default(0.00)
 //  occupier      Int
 //  uid           Int?
-//  creation_date DateTime?
-//  modified_date DateTime?
+//  creation_date DateTimeSelector?
+//  modified_date DateTimeSelector?
 //}
 //
 //model invoice_templates {
@@ -6023,8 +6023,8 @@ model InsuranceDetail {
 //  payment_information String
 //  header              String
 //  footer              String
-//  date_created        DateTime
-//  date_updated        DateTime
+//  date_created        DateTimeSelector
+//  date_updated        DateTimeSelector
 //  occupier            Int
 //  stripe_button       Int
 //}
@@ -6050,8 +6050,8 @@ model InvBiller {
   invoice_footer String
   company_id     Int?      @map("occupier")
   uid            Int?
-  created_date   DateTime?
-  modified_date  DateTime?
+  created_date   DateTimeSelector?
+  modified_date  DateTimeSelector?
   custom_id      Int
   imported       Int
   qualification  String
@@ -6073,8 +6073,8 @@ model InvCategory {
   category_type         String?               @default("retail")
   company_id            Int?                  @map("occupier")
   uid                   Int?
-  created_date          DateTime?
-  modified_date         DateTime?
+  created_date          DateTimeSelector?
+  modified_date         DateTimeSelector?
   custom_id             Int
   PriceListGroup_id     Int
   imported              Int
@@ -6104,8 +6104,8 @@ model InvCategory {
 //  uid            Int?
 //  created_by     Int?
 //  modified_by    Int?
-//  created_date   DateTime?
-//  modified_date  DateTime?
+//  created_date   DateTimeSelector?
+//  modified_date  DateTimeSelector?
 //}
 //
 //model inv_ins_payments {
@@ -6115,7 +6115,7 @@ model InvCategory {
 //  payment_id   Int      @default(0)
 //  amount       Float
 //  created_by   Int
-//  created_on   DateTime
+//  created_on   DateTimeSelector
 //  payment_type String?  @default("0")
 //  paid_amount  Float?   @default(0.00)
 //  remaining    Float?   @default(0.00)
@@ -6135,8 +6135,8 @@ model InvCategory {
 //  uid           Int?
 //  created_by    Int?
 //  modified_by   Int?
-//  created_date  DateTime?
-//  modified_date DateTime?
+//  created_date  DateTimeSelector?
+//  modified_date DateTimeSelector?
 //}
 //
 //model inv_movement {
@@ -6176,7 +6176,7 @@ model InvPayment {
   card_type           String
   charge_amount       Float
   card_digits         Int
-  datetime            DateTime?
+  datetime            DateTimeSelector?
   note                String
   new_way2            Int
   new_way3            Int
@@ -6220,7 +6220,7 @@ model InvPayment {
 //  card_type           String
 //  charge_amount       Float
 //  new_way             Int
-//  datetime            DateTime
+//  datetime            DateTimeSelector
 //  note                String
 //  new_way2            Int
 //  new_way3            Int
@@ -6252,7 +6252,7 @@ model InvPayment {
 //  custom_contact_id   Int
 //  custom_insurer_id   Int
 //  custom_contact_name String
-//  date_time           DateTime
+//  date_time           DateTimeSelector
 //  reference           String
 //  charge_amount       Float
 //  imported            Int
@@ -6269,8 +6269,8 @@ model InvPaymentType {
   description   String?
   company_id    Int?      @map("occupier")
   uid           Int?
-  created_date  DateTime?
-  modified_date DateTime?
+  created_date  DateTimeSelector?
+  modified_date DateTimeSelector?
   is_active     Int
   is_money      Int?
   type          String    @default("money")
@@ -6300,8 +6300,8 @@ model InvProduct {
   note                      String?
   company_id                Int?        @map("occupier")
   uid                       Int?
-  created_date              DateTime?
-  modified_date             DateTime?
+  created_date              DateTimeSelector?
+  modified_date             DateTimeSelector?
   Description               String
   custom_id                 String
   category_custom_id        Int
@@ -6315,7 +6315,7 @@ model InvProduct {
   open_sale                 Int
   new_imported              Int
   sage_nominal_code         String
-  procedure_date            DateTime
+  procedure_date            DateTimeSelector
   product_account_code_xero String
   allow_negative_qty        Boolean     @default(false)
   User                      User?       @relation(fields: [uid], references: [id])
@@ -6363,8 +6363,8 @@ model InvProduct {
 //  note               String?
 //  occupier           Int?
 //  uid                Int?
-//  created_date       DateTime?
-//  modified_date      DateTime?
+//  created_date       DateTimeSelector?
+//  modified_date      DateTimeSelector?
 //  Description        String
 //  custom_id          Int
 //  category_custom_id Int
@@ -6386,13 +6386,13 @@ model InvProduct {
 //  warehouse_id  Int
 //  supplier_id   Int
 //  supplier_name String
-//  date          DateTime
+//  date          DateTimeSelector
 //  note          String
 //  total         Float
 //  occupier      Int?
 //  uid           Int?
-//  created_date  DateTime?
-//  modified_date DateTime?
+//  created_date  DateTimeSelector?
+//  modified_date DateTimeSelector?
 //}
 //
 //model inv_purchase_items {
@@ -6407,13 +6407,13 @@ model InvProduct {
 //  gross_total   Float
 //  occupier      Int?
 //  uid           Int?
-//  created_date  DateTime?
-//  modified_date DateTime?
+//  created_date  DateTimeSelector?
+//  modified_date DateTimeSelector?
 //}
 //
 //model inv_quotes {
 //  id            Int       @id @default(autoincrement())
-//  date          DateTime?
+//  date          DateTimeSelector?
 //  guid          String
 //  booking_id    Int
 //  customer_id   Int
@@ -6422,8 +6422,8 @@ model InvProduct {
 //  total         Float
 //  occupier      Int
 //  uid           Int?
-//  creation_date DateTime?
-//  modified_date DateTime?
+//  creation_date DateTimeSelector?
+//  modified_date DateTimeSelector?
 //
 //  @@index([booking_id], name: "booking_id")
 //  @@index([customer_id], name: "customer_id")
@@ -6456,14 +6456,14 @@ model InvProduct {
 //  quote_id        Int
 //  template_id     Int
 //  distribution_id Int
-//  date            DateTime
+//  date            DateTimeSelector
 //  url             String
 //  form_data       String?
 //  comments        String
 //  company_id      Int
 //  uid             Int
-//  creation_date   DateTime
-//  modified_date   DateTime
+//  creation_date   DateTimeSelector
+//  modified_date   DateTimeSelector
 //}
 //
 //model inv_rolls {
@@ -6481,8 +6481,8 @@ model InvProduct {
 //  uid              Int?
 //  created_by       Int?
 //  modified_by      Int?
-//  created_date     DateTime?
-//  modified_date    DateTime?
+//  created_date     DateTimeSelector?
+//  modified_date    DateTimeSelector?
 //}
 //
 model InvSale {
@@ -6493,7 +6493,7 @@ model InvSale {
   biller_name         String
   customer_id         Int
   customer_name       String
-  date                DateTime
+  date                DateTimeSelector
   note                String?
   inv_total           Float
   total_tax           Float
@@ -6513,14 +6513,14 @@ model InvSale {
   shipping_rate       Float
   shipping_rate_id    Int
   delivery            Int?       @default(0)
-  delivery_date       DateTime?
+  delivery_date       DateTimeSelector?
   by_email            Int?       @default(0)
   by_sms              Int?       @default(0)
   tip                 Float?     @default(0.00)
   company_id          Int?       @map("occupier")
   uid                 Int?
-  created_date        DateTime?
-  modified_date       DateTime?
+  created_date        DateTimeSelector?
+  modified_date       DateTimeSelector?
   paid_by             String?
   booking_id          Int
   quaser_booking_id   Int
@@ -6538,7 +6538,7 @@ model InvSale {
   old_paid_by         String
   loyalty_points      Int
   xero_invoice_id     String
-  xero_updated_date   DateTime
+  xero_updated_date   DateTimeSelector
   split_count         Int        @default(1)
   split_guid          String
   insurer_contract_id Int        @default(0)
@@ -6577,8 +6577,8 @@ model InvSale {
 //  guid         String?
 //  sale_id      Int
 //  customer_id  Int
-//  date         DateTime
-//  date_deleted DateTime
+//  date         DateTimeSelector
+//  date_deleted DateTimeSelector
 //}
 //
 //model inv_sales_import {
@@ -6648,7 +6648,7 @@ model InvSale {
 //  biller_name         String
 //  customer_id         Int
 //  customer_name       String
-//  date                DateTime
+//  date                DateTimeSelector
 //  note                String?
 //  refund_note         String?
 //  inv_total           Float
@@ -6669,14 +6669,14 @@ model InvSale {
 //  shipping_rate       Float?
 //  shipping_rate_id    Int?
 //  delivery            Int?
-//  delivery_date       DateTime?
+//  delivery_date       DateTimeSelector?
 //  tip                 Float?    @default(0.00)
 //  by_email            Int?
 //  by_sms              Int?
 //  occupier            Int?
 //  uid                 Int?
-//  created_date        DateTime?
-//  modified_date       DateTime?
+//  created_date        DateTimeSelector?
+//  modified_date       DateTimeSelector?
 //  paid_by             String?
 //  refund_by           Int?
 //  booking_id          Int?
@@ -6691,8 +6691,8 @@ model InvSale {
 //  payment_mode         String?
 //  occupier             Int?
 //  uid                  Int?
-//  created_date         DateTime?
-//  modified_date        DateTime?
+//  created_date         DateTimeSelector?
+//  modified_date        DateTimeSelector?
 //}
 //
 //model inv_sale_items {
@@ -6711,8 +6711,8 @@ model InvSale {
 //  occupier              Int?
 //  uid                   Int?
 //  staff_purchase        Int?
-//  created_date          DateTime?
-//  modified_date         DateTime?
+//  created_date          DateTimeSelector?
+//  modified_date         DateTimeSelector?
 //  custom_id             Int
 //  sale_custom_id        Int
 //  contact_custom_id     Int
@@ -6747,7 +6747,7 @@ model InvSale {
 //  inv_sale_id  Int      @id
 //  note         String
 //  created_by   Int
-//  created_date DateTime
+//  created_date DateTimeSelector
 //}
 //
 //model inv_sale_refund_items {
@@ -6765,8 +6765,8 @@ model InvSale {
 //  val_tax       Float
 //  occupier      Int?
 //  uid           Int?
-//  created_date  DateTime?
-//  modified_date DateTime?
+//  created_date  DateTimeSelector?
+//  modified_date DateTimeSelector?
 //}
 //
 //model inv_settings {
@@ -6793,8 +6793,8 @@ model InvSale {
 //  redirect_url          String?
 //  occupier              Int?
 //  uid                   Int?
-//  created_date          DateTime?
-//  modified_date         DateTime?
+//  created_date          DateTimeSelector?
+//  modified_date         DateTimeSelector?
 //  enable_taxes          Int
 //  enable_online_payment Int
 //}
@@ -6806,8 +6806,8 @@ model InvSale {
 //  type          String
 //  occupier      Int?
 //  uid           Int?
-//  created_date  DateTime?
-//  modified_date DateTime?
+//  created_date  DateTimeSelector?
+//  modified_date DateTimeSelector?
 //}
 //
 //model inv_split_sale {
@@ -6825,8 +6825,8 @@ model InvSale {
 //  type             String
 //  occupier         Int?
 //  uid              Int?
-//  created_date     DateTime?
-//  modified_date    DateTime?
+//  created_date     DateTimeSelector?
+//  modified_date    DateTimeSelector?
 //  is_active        Int
 //  description      String
 //  date_constrained Boolean   @default(false)
@@ -6846,8 +6846,8 @@ model InvSale {
 //  city          String
 //  occupier      Int?
 //  uid           Int?
-//  created_date  DateTime?
-//  modified_date DateTime?
+//  created_date  DateTimeSelector?
+//  modified_date DateTimeSelector?
 //}
 //
 //model inv_warehouses_products {
@@ -6858,9 +6858,9 @@ model InvSale {
 //  quantity      Int
 //  occupier      Int?
 //  uid           Int?
-//  created_date  DateTime?
-//  modified_date DateTime?
-//  expiry_date   DateTime
+//  created_date  DateTimeSelector?
+//  modified_date DateTimeSelector?
+//  expiry_date   DateTimeSelector
 //  batch_code    String
 //  description   String
 //
@@ -6882,7 +6882,7 @@ model InvSale {
 //  contact_id  Int
 //  bed_id      Int
 //  booking_id  Int
-//  admitted_at DateTime
+//  admitted_at DateTimeSelector
 //}
 //
 //model ip_beds {
@@ -6895,8 +6895,8 @@ model InvSale {
 //  company_id     Int
 //  description    String?
 //  uid            Int
-//  creation_date  DateTime?
-//  modified_date  DateTime?
+//  creation_date  DateTimeSelector?
+//  modified_date  DateTimeSelector?
 //
 //  @@index([company_id], name: "company_id")
 //}
@@ -6909,8 +6909,8 @@ model InvSale {
 //  company_id    Int
 //  uid           Int
 //  rmo_uid       Int      @default(0)
-//  creation_date DateTime
-//  modified_date DateTime
+//  creation_date DateTimeSelector
+//  modified_date DateTimeSelector
 //
 //  @@index([name], name: "bed_type")
 //  @@index([company_id], name: "company_id")
@@ -6922,11 +6922,11 @@ model InvSale {
 //  code            String
 //  patient_id      Int
 //  eoc_id          Int
-//  created_at      DateTime           @default(now())
+//  created_at      DateTimeSelector           @default(now())
 //  duration        Int
-//  until           DateTime           @default(dbgenerated("'00:00:00'"))
-//  admitted_at     DateTime           @default(dbgenerated("'0000-00-00 00:00:00'"))
-//  discharced_at   DateTime           @default(dbgenerated("'0000-00-00 00:00:00'"))
+//  until           DateTimeSelector           @default(dbgenerated("'00:00:00'"))
+//  admitted_at     DateTimeSelector           @default(dbgenerated("'0000-00-00 00:00:00'"))
+//  discharced_at   DateTimeSelector           @default(dbgenerated("'0000-00-00 00:00:00'"))
 //  location_id     Int
 //  note            String
 //  status          ip_bookings_status @default(waiting)
@@ -6947,8 +6947,8 @@ model InvSale {
 //  escalation     Int       @default(0)
 //  company_id     Int
 //  uid            Int
-//  creation_date  DateTime?
-//  modified_date  DateTime?
+//  creation_date  DateTimeSelector?
+//  modified_date  DateTimeSelector?
 //
 //  @@index([company_id], name: "company_id")
 //  @@index([mid], name: "mid")
@@ -6969,8 +6969,8 @@ model InvSale {
 //  bed_id       Int
 //  plan_info    String
 //  company_id   Int
-//  created_date DateTime
-//  updated_date DateTime
+//  created_date DateTimeSelector
+//  updated_date DateTimeSelector
 //}
 //
 //model ip_hits {
@@ -6983,8 +6983,8 @@ model InvSale {
 //  id                  Int       @id @default(autoincrement())
 //  company_id          Int
 //  uid                 Int
-//  creation_date       DateTime?
-//  modified_date       DateTime?
+//  creation_date       DateTimeSelector?
+//  modified_date       DateTimeSelector?
 //  observation_form_id Int
 //  admission_form_id   Int
 //  discharge_form_id   Int
@@ -7000,9 +7000,9 @@ model InvSale {
 //  laterality       String?
 //  level            Int?
 //  note             String?
-//  created_at       DateTime  @default(now())
-//  updated_at       DateTime?
-//  deleted_at       DateTime?
+//  created_at       DateTimeSelector  @default(now())
+//  updated_at       DateTimeSelector?
+//  deleted_at       DateTimeSelector?
 //  occupier         Int
 //
 //  @@index([salon_booking_id], name: "salon_booking_id")
@@ -7014,8 +7014,8 @@ model InvSale {
 //  description   String?
 //  company_id    Int
 //  uid           Int
-//  creation_date DateTime?
-//  modified_date DateTime?
+//  creation_date DateTimeSelector?
+//  modified_date DateTimeSelector?
 //}
 //
 //model ip_service_procedure {
@@ -7029,7 +7029,7 @@ model InvSale {
 //  modality_type      String?
 //  company_id         Int
 //  uid                Int
-//  creation_date      DateTime?
+//  creation_date      DateTimeSelector?
 //
 //  @@index([company_id], name: "company_id")
 //}
@@ -7040,8 +7040,8 @@ model InvSale {
 //  description   String?
 //  company_id    Int
 //  uid           Int
-//  creation_date DateTime?
-//  modified_date DateTime?
+//  creation_date DateTimeSelector?
+//  modified_date DateTimeSelector?
 //
 //  @@index([company_id], name: "company_id")
 //}
@@ -7103,10 +7103,10 @@ model InvSale {
 //
 model Job {
   job_id            Int      @id @default(autoincrement())
-  create_date       DateTime
+  create_date       DateTimeSelector
   created_by_id     Int
-  start_date        DateTime
-  closing_date      DateTime
+  start_date        DateTimeSelector
+  closing_date      DateTimeSelector
   opening_title     String
   job_location      String
   what_you_do       String
@@ -7227,8 +7227,8 @@ model JobStatus {
 //  id               Int      @id @default(autoincrement())
 //  contact_id       Int
 //  company_id       Int
-//  request_date     DateTime
-//  last_update      DateTime
+//  request_date     DateTimeSelector
+//  last_update      DateTimeSelector
 //  request_by_id    Int
 //  request_status   Int
 //  request_lab_id   String
@@ -7239,15 +7239,15 @@ model JobStatus {
 //  send_result      String?
 //  receive_result   String?
 //  receive_raw      String?
-//  receive_date     DateTime
-//  sent_date        DateTime
+//  receive_date     DateTimeSelector
+//  sent_date        DateTimeSelector
 //}
 //
 //model lab_requests_pref_delivery {
 //  id              Int       @id @default(autoincrement())
 //  lab_requests_id Int?
 //  type            String?
-//  creation_date   DateTime?
+//  creation_date   DateTimeSelector?
 //}
 //
 //model lab_request_delivery_result {
@@ -7258,7 +7258,7 @@ model JobStatus {
 //  delivery_type   String?
 //  company_id      Int
 //  uid             Int
-//  creation_date   DateTime
+//  creation_date   DateTimeSelector
 //
 //  @@index([company_id], name: "company_id")
 //  @@index([lab_requests_id], name: "lab_requests_id")
@@ -7272,7 +7272,7 @@ model JobStatus {
 //  pending_review  Int
 //  email_subject   String
 //  attachment_name String
-//  received_date   DateTime
+//  received_date   DateTimeSelector
 //  attachment_url  String
 //  matched_on      Int
 //  channel         Int
@@ -7371,7 +7371,7 @@ model JobStatus {
 //  impression_counts      Int
 //  right_description      String
 //  thanks_message         String
-//  CreatedDate            DateTime
+//  CreatedDate            DateTimeSelector
 //  from_email             String
 //  message_id             Int
 //  to_email               String
@@ -7424,7 +7424,7 @@ model JobStatus {
 //  code_name     String
 //  points        Int
 //  activity_mode String
-//  date_added    DateTime
+//  date_added    DateTimeSelector
 //  user_added    Int
 //}
 //
@@ -7464,10 +7464,10 @@ model JobStatus {
 //  occupier     String
 //  page_url     String
 //  ip_address   String
-//  date         DateTime
+//  date         DateTimeSelector
 //  description  String
 //  lead_id      Int
-//  date_updated DateTime
+//  date_updated DateTimeSelector
 //
 //  @@index([lead_id], name: "lead_id")
 //  @@index([occupier], name: "occupier")
@@ -7505,8 +7505,8 @@ model JobStatus {
 //  status           Int
 //  queued_by_id     Int
 //  printed_by_id    Int
-//  created_date     DateTime
-//  printed_date     DateTime
+//  created_date     DateTimeSelector
+//  printed_date     DateTimeSelector
 //}
 //
 //model letter_recipient_data {
@@ -7524,8 +7524,8 @@ model JobStatus {
 //  occupier         Int
 //  merge_tags       String?
 //  merge_tags_val   String?
-//  creation_date    DateTime?
-//  modified_date    DateTime?
+//  creation_date    DateTimeSelector?
+//  modified_date    DateTimeSelector?
 //}
 //
 //model levels_indicator {
@@ -7535,8 +7535,8 @@ model JobStatus {
 //  level_value  String?
 //  occupier     Int?
 //  uid          Int?
-//  created_date DateTime?
-//  updated_date DateTime?
+//  created_date DateTimeSelector?
+//  updated_date DateTimeSelector?
 //
 //  @@unique([indicator_id, level, occupier], name: "indicator_id_2")
 //  @@index([indicator_id], name: "indicator_id")
@@ -7548,7 +7548,7 @@ model JobStatus {
 //  contact_id  Int
 //  company_id  Int
 //  amount      Float
-//  date        DateTime @default(now())
+//  date        DateTimeSelector @default(now())
 //  product_id  Int
 //  sale_id     Int
 //  referral_id Int
@@ -7575,7 +7575,7 @@ model JobStatus {
 //model login_attempts {
 //  id                  Int      @id @default(autoincrement())
 //  username            String   @unique
-//  last_attempt        DateTime
+//  last_attempt        DateTimeSelector
 //  count               String
 //  phone_attempt_count Int
 //  client_ip           String
@@ -7585,8 +7585,8 @@ model JobStatus {
 //  id              Int      @id @default(autoincrement())
 //  uid             Int
 //  occupier        String
-//  login_datetime  DateTime
-//  logout_datetime DateTime
+//  login_datetime  DateTimeSelector
+//  logout_datetime DateTimeSelector
 //  ip_address      String
 //  is_mobile       Int
 //  user_agent      String
@@ -7607,7 +7607,7 @@ model JobStatus {
 //  reminder_id       Int       @default(0)
 //  related_to_text   String?
 //  call_detail_type  Int?
-//  call_start_date   DateTime?
+//  call_start_date   DateTimeSelector?
 //  call_time_hour    Int?
 //  call_time_min     Int?
 //  call_time_format  Int?
@@ -7619,8 +7619,8 @@ model JobStatus {
 //  call_result       String?
 //  occupier          Int?
 //  ownerid           Int?
-//  created_date      DateTime?
-//  modified_date     DateTime?
+//  created_date      DateTimeSelector?
+//  modified_date     DateTimeSelector?
 //  site_section      String
 //}
 //
@@ -7675,7 +7675,7 @@ model JobStatus {
 //  sale_id        Int
 //  date           Int
 //  user_id        Int
-//  updated_on     DateTime?
+//  updated_on     DateTimeSelector?
 //  description    String
 //
 //  @@index([company_id], name: "company_id")
@@ -7696,8 +7696,8 @@ model JobStatus {
 //  user_id         Int?
 //  status          Int?
 //  amount          Float?
-//  created_date    DateTime?
-//  modified_date   DateTime?
+//  created_date    DateTimeSelector?
+//  modified_date   DateTimeSelector?
 //  points_value    Float
 //  show_on_receipt Int
 //
@@ -7735,7 +7735,7 @@ model JobStatus {
 //  contact_id   Int
 //  reward_id    Int
 //  company_id   Int
-//  date_awarded DateTime
+//  date_awarded DateTimeSelector
 //}
 //
 //model mailchimp_api {
@@ -7749,7 +7749,7 @@ model JobStatus {
 //
 //model manage_bills {
 //  id            Int      @id @default(autoincrement())
-//  date          DateTime
+//  date          DateTimeSelector
 //  customer_id   Int
 //  customer_name String?
 //  biller_id     Int?
@@ -7767,8 +7767,8 @@ model JobStatus {
 //  occupier           Int?
 //  uid                Int?
 //  location_id        Int                            @default(0)
-//  created_date       DateTime?
-//  modified_date      DateTime?
+//  created_date       DateTimeSelector?
+//  modified_date      DateTimeSelector?
 //  treatment_interest Int
 //  show_in_leads      Int
 //  field_for          manage_custom_fields_field_for
@@ -7845,10 +7845,10 @@ model JobStatus {
 //  path_taken_id  Int
 //  note           String
 //  response       String
-//  created_date   DateTime
+//  created_date   DateTimeSelector
 //  status         Int      @default(0)
 //  requested_by   Int
-//  response_date  DateTime
+//  response_date  DateTimeSelector
 //}
 //
 //model medical_approval_notes_logs {
@@ -7858,15 +7858,15 @@ model JobStatus {
 //  actioned_by         Int
 //  status              Int      @default(0)
 //  response            String
-//  date                DateTime
+//  date                DateTimeSelector
 //}
 //
 //model medical_attr {
 //  id          Int       @id @default(autoincrement())
 //  name        String?
-//  created_at  DateTime?
-//  updated_at  DateTime?
-//  deleted_at  DateTime?
+//  created_at  DateTimeSelector?
+//  updated_at  DateTimeSelector?
+//  deleted_at  DateTimeSelector?
 //  occupier    String?
 //  description String
 //
@@ -7878,9 +7878,9 @@ model JobStatus {
 //  attr_id                 Int?
 //  contact_id              Int?
 //  value                   String?
-//  updated_at              DateTime?
-//  created_at              DateTime?
-//  deleted_at              DateTime?
+//  updated_at              DateTimeSelector?
+//  created_at              DateTimeSelector?
+//  deleted_at              DateTimeSelector?
 //  nhs_locum_id            Int?
 //  group_label             String?
 //  medical_form_contact_id Int?
@@ -7899,7 +7899,7 @@ model JobStatus {
 //  user_id           Int
 //  is_enabled        Int
 //  condition         String
-//  created_date      DateTime
+//  created_date      DateTimeSelector
 //  contra_code       String
 //  question_label    String
 //  question_answer   String
@@ -7931,9 +7931,9 @@ model JobStatus {
 //  user_deleted           Int
 //  name                   String?
 //  data                   String?
-//  created_at             DateTime?
-//  updated_at             DateTime?
-//  deleted_at             DateTime?
+//  created_at             DateTimeSelector?
+//  updated_at             DateTimeSelector?
+//  deleted_at             DateTimeSelector?
 //  nhs_locum_id           Int?
 //  nhs_procedure_id       Int?
 //  locked                 Int
@@ -7966,9 +7966,9 @@ model MedicalForm {
   user_deleted           Int
   name                   String?
   data                   String?
-  created_at             DateTime?
-  updated_at             DateTime?
-  deleted_at             DateTime?
+  created_at             DateTimeSelector?
+  updated_at             DateTimeSelector?
+  deleted_at             DateTimeSelector?
   nhs_locum_id           Int?
   nhs_procedure_id       Int?
   locked                 Int
@@ -8015,16 +8015,16 @@ model MedicalForm {
 //  company_id     Int
 //  request_id     String
 //  generated_code Int
-//  expiry_date    DateTime
+//  expiry_date    DateTimeSelector
 //}
 //
 model MedicalFormContact {
   id                  Int        @id @default(autoincrement())
   form_id             Int?
   contact_id          Int?
-  created_at          DateTime?
-  updated_at          DateTime?
-  deleted_at          DateTime?
+  created_at          DateTimeSelector?
+  updated_at          DateTimeSelector?
+  deleted_at          DateTimeSelector?
   complete            Int
   locked              Int
   user_created        Int
@@ -8064,7 +8064,7 @@ model MedicalFormContact {
 //  user_id                 Int
 //  contact_id              Int
 //  occupier                String
-//  date                    DateTime
+//  date                    DateTimeSelector
 //  update_changes          String?
 //}
 //
@@ -8072,9 +8072,9 @@ model MedicalFormContact {
 //  id               Int       @id
 //  form_id          Int?
 //  contact_id       Int?
-//  created_at       DateTime?
-//  updated_at       DateTime?
-//  deleted_at       DateTime?
+//  created_at       DateTimeSelector?
+//  updated_at       DateTimeSelector?
+//  deleted_at       DateTimeSelector?
 //  complete         Int
 //  locked           Int
 //  user_created     Int
@@ -8117,8 +8117,8 @@ model MedicalFormContact {
 //  post_treatment_no   Int?
 //  occupier            Int?
 //  uid                 Int?
-//  creation_date       DateTime?
-//  modified_date       DateTime?
+//  creation_date       DateTimeSelector?
+//  modified_date       DateTimeSelector?
 //}
 //
 //model medical_form_psfs_treat_settings {
@@ -8162,8 +8162,8 @@ model MedicalFormContact {
 //  id            Int       @id @default(autoincrement())
 //  occupier      Int
 //  instruction   String?
-//  creation_date DateTime?
-//  modified_date DateTime?
+//  creation_date DateTimeSelector?
+//  modified_date DateTimeSelector?
 //}
 //
 //model medical_form_theme_settings {
@@ -8194,7 +8194,7 @@ model MedicalFormContact {
 //  action                  String?
 //  company_id              Int?
 //  medical_triggers        String?
-//  creation_date           DateTime @default(now())
+//  creation_date           DateTimeSelector @default(now())
 //  form_status             Int?
 //  form_email              String?
 //  form_email_subject      String?
@@ -8219,7 +8219,7 @@ model MedicalFormContact {
 //  autopay_mode    String
 //  payment_every   String
 //  number_payments Int
-//  CreatedDate     DateTime
+//  CreatedDate     DateTimeSelector
 //  description     String
 //  from_time       String
 //  to_time         String
@@ -8242,11 +8242,11 @@ model MedicalFormContact {
 //  contact_id      Int
 //  membership_id   Int
 //  invoice_id      Int?
-//  activation_date DateTime
-//  expiration_date DateTime
+//  activation_date DateTimeSelector
+//  expiration_date DateTimeSelector
 //  occupier        String
-//  CreatedDate     DateTime
-//  LastUpdated     DateTime
+//  CreatedDate     DateTimeSelector
+//  LastUpdated     DateTimeSelector
 //  suspended       Int
 //  first_payment   Float
 //  UID             Int
@@ -8270,8 +8270,8 @@ model MessageTemplate {
   message                   String
   created_by                Int?
   template_type             String
-  created_at                DateTime?         @default(now())
-  date_changed_at           DateTime?
+  created_at                DateTimeSelector?         @default(now())
+  date_changed_at           DateTimeSelector?
   template_sub_type         Int
   template_sub_type_service Int
   parent_id                 Int?              @default(0)
@@ -8305,8 +8305,8 @@ model MessageTemplate {
 //  message         String
 //  created_by      Int
 //  template_type   String
-//  created_at      DateTime  @default(now())
-//  date_changed_at DateTime?
+//  created_at      DateTimeSelector  @default(now())
+//  date_changed_at DateTimeSelector?
 //}
 //
 //model message_templates_services {
@@ -8379,7 +8379,7 @@ model MessageTemplate {
 //  set_class     String?
 //  company_id    Int
 //  uid           Int
-//  creation_date DateTime
+//  creation_date DateTimeSelector
 //
 //  @@index([company_id], name: "company_id")
 //  @@index([mid], name: "mid")
@@ -8409,9 +8409,9 @@ model MessageTemplate {
 //  start              String?
 //  end                String?
 //  value              Float?
-//  created_at         DateTime?
-//  updated_at         DateTime?
-//  deleted_at         DateTime?
+//  created_at         DateTimeSelector?
+//  updated_at         DateTimeSelector?
+//  deleted_at         DateTimeSelector?
 //  type               String?
 //  nhs_locum_id       Int?
 //
@@ -8422,9 +8422,9 @@ model MessageTemplate {
 //model nhs_attr {
 //  id           Int       @id @default(autoincrement())
 //  name         String?
-//  created_at   DateTime?
-//  updated_at   DateTime?
-//  deleted_at   DateTime?
+//  created_at   DateTimeSelector?
+//  updated_at   DateTimeSelector?
+//  deleted_at   DateTimeSelector?
 //  nhs_locum_id Int?
 //
 //  @@index([name], name: "attr")
@@ -8436,9 +8436,9 @@ model MessageTemplate {
 //  user_deleted     Int
 //  name             String?
 //  data             String?
-//  created_at       DateTime?
-//  updated_at       DateTime?
-//  deleted_at       DateTime?
+//  created_at       DateTimeSelector?
+//  updated_at       DateTimeSelector?
+//  deleted_at       DateTimeSelector?
 //  nhs_locum_id     Int?
 //  nhs_procedure_id Int?
 //  locked           Int
@@ -8448,9 +8448,9 @@ model MessageTemplate {
 //model nhs_import {
 //  id           Int       @id @default(autoincrement())
 //  user_id      Int?
-//  created_at   DateTime?
-//  updated_at   DateTime?
-//  deleted_at   DateTime?
+//  created_at   DateTimeSelector?
+//  updated_at   DateTimeSelector?
+//  deleted_at   DateTimeSelector?
 //  nhs_locum_id Int?
 //  name         String?
 //}
@@ -8458,27 +8458,27 @@ model MessageTemplate {
 //model nhs_locum {
 //  id         Int       @id @default(autoincrement())
 //  name       String?
-//  date_login DateTime?
+//  date_login DateTimeSelector?
 //}
 //
 //model nhs_outcome_profile_attr {
 //  id                     Int       @id @default(autoincrement())
 //  nhs_outcome_profile_id Int?
 //  nhs_attr_id            Int?
-//  created_at             DateTime?
-//  updated_at             DateTime?
-//  deleted_at             DateTime?
+//  created_at             DateTimeSelector?
+//  updated_at             DateTimeSelector?
+//  deleted_at             DateTimeSelector?
 //}
 //
 //model nhs_patient {
 //  id            Int       @id @default(autoincrement())
 //  name          String?
-//  dob           DateTime?
+//  dob           DateTimeSelector?
 //  weight        Float?
-//  created_at    DateTime?
-//  updated_at    DateTime?
+//  created_at    DateTimeSelector?
+//  updated_at    DateTimeSelector?
 //  nhs_number    String?
-//  deleted_at    DateTime?
+//  deleted_at    DateTimeSelector?
 //  nhs_locum_id  Int?
 //  notes         String?
 //  nhs_import_id Int?
@@ -8491,9 +8491,9 @@ model MessageTemplate {
 //  nhs_attr_id           Int?
 //  nhs_patient_id        Int?
 //  value                 String?
-//  updated_at            DateTime?
-//  created_at            DateTime?
-//  deleted_at            DateTime?
+//  updated_at            DateTimeSelector?
+//  created_at            DateTimeSelector?
+//  deleted_at            DateTimeSelector?
 //  nhs_locum_id          Int?
 //  group_label           String?
 //  nhs_patient_record_id Int?
@@ -8505,12 +8505,12 @@ model MessageTemplate {
 //  id                       Int       @id @default(autoincrement())
 //  nhs_patient_id           Int?
 //  note                     String?
-//  created_at               DateTime?
+//  created_at               DateTimeSelector?
 //  user_id                  Int?
 //  nhs_locum_id             Int?
 //  nhs_patient_procedure_id Int?
 //  chart                    Int?
-//  updated_at               DateTime?
+//  updated_at               DateTimeSelector?
 //}
 //
 //model nhs_patient_number {
@@ -8527,12 +8527,12 @@ model MessageTemplate {
 //  id               Int       @id @default(autoincrement())
 //  nhs_patient_id   Int?
 //  nhs_procedure_id Int?
-//  date             DateTime?
+//  date             DateTimeSelector?
 //  notes            String?
-//  created_at       DateTime?
-//  updated_at       DateTime?
-//  deleted_at       DateTime?
-//  follow_up        DateTime?
+//  created_at       DateTimeSelector?
+//  updated_at       DateTimeSelector?
+//  deleted_at       DateTimeSelector?
+//  follow_up        DateTimeSelector?
 //  nhs_locum_id     Int?
 //}
 //
@@ -8542,10 +8542,10 @@ model MessageTemplate {
 //  nhs_procedure_outcome_id Int?
 //  actual_outcome           Float?
 //  predicted_outcome        Float?
-//  created_at               DateTime?
-//  updated_at               DateTime?
-//  deleted_at               DateTime?
-//  follow_up                DateTime?
+//  created_at               DateTimeSelector?
+//  updated_at               DateTimeSelector?
+//  deleted_at               DateTimeSelector?
+//  follow_up                DateTimeSelector?
 //  nhs_locum_id             Int?
 //}
 //
@@ -8560,9 +8560,9 @@ model MessageTemplate {
 //model nhs_patient_record {
 //  id             Int       @id @default(autoincrement())
 //  nhs_patient_id Int?
-//  created_at     DateTime?
-//  updated_at     DateTime?
-//  deleted_at     DateTime?
+//  created_at     DateTimeSelector?
+//  updated_at     DateTimeSelector?
+//  deleted_at     DateTimeSelector?
 //  nhs_form_id    Int?
 //  complete       Int
 //  locked         Int
@@ -8576,9 +8576,9 @@ model MessageTemplate {
 //  name                   String?
 //  description            String?
 //  nhs_procedure_type_id  Int?
-//  created_at             DateTime?
-//  updated_at             DateTime?
-//  deleted_at             DateTime?
+//  created_at             DateTimeSelector?
+//  updated_at             DateTimeSelector?
+//  deleted_at             DateTimeSelector?
 //  nhs_locum_id           Int?
 //  nhs_outcome_profile_id Int?
 //  subname                String
@@ -8593,9 +8593,9 @@ model MessageTemplate {
 //  positive_limit    Int?
 //  negative_limit    Int?
 //  reset             Int?
-//  created_at        DateTime?
-//  updated_at        DateTime?
-//  deleted_at        DateTime?
+//  created_at        DateTimeSelector?
+//  updated_at        DateTimeSelector?
+//  deleted_at        DateTimeSelector?
 //  nhs_locum_id      Int?
 //  median            Int
 //  order_by          String
@@ -8608,9 +8608,9 @@ model MessageTemplate {
 //  time               String?
 //  nhs_risk_adjust_id Int?
 //  definition         String
-//  created_at         DateTime?
-//  updated_at         DateTime?
-//  deleted_at         DateTime?
+//  created_at         DateTimeSelector?
+//  updated_at         DateTimeSelector?
+//  deleted_at         DateTimeSelector?
 //  nhs_locum_id       String?
 //  type               String
 //}
@@ -8620,9 +8620,9 @@ model MessageTemplate {
 //  nhs_procedure_id Int?
 //  name             String?
 //  formula          String?
-//  created_at       DateTime?
-//  updated_at       DateTime?
-//  deleted_at       DateTime?
+//  created_at       DateTimeSelector?
+//  updated_at       DateTimeSelector?
+//  deleted_at       DateTimeSelector?
 //  nhs_locum_id     Int?
 //  type             String
 //
@@ -8638,7 +8638,7 @@ model MessageTemplate {
 //model nws_campaign {
 //  campaign_id   Int      @id @default(autoincrement())
 //  campaign_name String
-//  create_date   DateTime
+//  create_date   DateTimeSelector
 //  company       Int
 //}
 
@@ -8698,9 +8698,9 @@ model MessageTemplate {
 //  first_name          String
 //  last_name           String
 //  email               String
-//  join_date           DateTime
+//  join_date           DateTimeSelector
 //  ip_address          String
-//  unsubscribe_date    DateTime @default(dbgenerated("'0000-00-00'"))
+//  unsubscribe_date    DateTimeSelector @default(dbgenerated("'0000-00-00'"))
 //  unsubscribe_send_id Int
 //  company             Int
 //  temp                Int
@@ -8724,7 +8724,7 @@ model MessageTemplate {
 //
 //model nws_newsletter {
 //  newsletter_id        Int      @id @default(autoincrement())
-//  create_date          DateTime
+//  create_date          DateTimeSelector
 //  template             String
 //  subject              String
 //  from_name            String
@@ -8739,8 +8739,8 @@ model MessageTemplate {
 //  created_by           Int
 //  groups_prerecipients String
 //  campaign_status      String
-//  send_date            DateTime
-//  finished_date        DateTime
+//  send_date            DateTimeSelector
+//  finished_date        DateTimeSelector
 //  total_recips         Int
 //  body_content         String
 //
@@ -8751,7 +8751,7 @@ model MessageTemplate {
 //
 //model nws_newsletter_backup {
 //  newsletter_id        Int      @id
-//  create_date          DateTime
+//  create_date          DateTimeSelector
 //  template             String
 //  subject              String
 //  from_name            String
@@ -8766,8 +8766,8 @@ model MessageTemplate {
 //  created_by           Int
 //  groups_prerecipients String
 //  campaign_status      String
-//  send_date            DateTime
-//  finished_date        DateTime
+//  send_date            DateTimeSelector
+//  finished_date        DateTimeSelector
 //  total_recips         Int
 //  body_content         String
 //
@@ -8778,7 +8778,7 @@ model MessageTemplate {
 //  id       Int      @id @default(autoincrement())
 //  occupier Int
 //  linkhref String
-//  date     DateTime
+//  date     DateTimeSelector
 //  user_id  Int
 //}
 //
@@ -8842,7 +8842,7 @@ model MessageTemplate {
 //  id         Int      @id @default(autoincrement())
 //  user_id    Int
 //  hash       String
-//  created_at DateTime
+//  created_at DateTimeSelector
 //}
 //
 //model online_bookings_payments {
@@ -8879,7 +8879,7 @@ model MessageTemplate {
 //model pabau_care_stats {
 //  id                           Int      @id @default(autoincrement())
 //  company_id                   Int
-//  entry_date                   DateTime
+//  entry_date                   DateTimeSelector
 //  general_clients              Int
 //  general_leads                Int
 //  general_financials           Int
@@ -8966,7 +8966,7 @@ model MessageTemplate {
 //  amount      Float
 //  type        String
 //  redeemed    Int
-//  redeem_date DateTime
+//  redeem_date DateTimeSelector
 //  produced_by String
 //}
 //
@@ -9016,8 +9016,8 @@ model MessageTemplate {
 //  order_notes           String
 //  subscription_fee      Float
 //  support_fee           Float
-//  date_created          DateTime
-//  terms_signed          DateTime
+//  date_created          DateTimeSelector
+//  terms_signed          DateTimeSelector
 //  subscription_name     String
 //  lead_source           String
 //  signed_contract       String
@@ -9087,7 +9087,7 @@ model PointOfSaleSetting {
   package_use_by_date     Int?
   locked                  Int
   cron_day                Int?      @default(1)
-  lock_sale_date          DateTime?
+  lock_sale_date          DateTimeSelector?
   stock_mode              Int
   inv_template            String?
   lock_invoice_edit       Int
@@ -9170,8 +9170,8 @@ model Page {
 //  id         Int      @id @default(autoincrement())
 //  partner_id Int
 //  amount     Float
-//  from_date  DateTime
-//  to_date    DateTime
+//  from_date  DateTimeSelector
+//  to_date    DateTimeSelector
 //}
 //
 //model partners_partner {
@@ -9179,7 +9179,7 @@ model Page {
 //  partner_name  String
 //  partner_email String
 //  status        Int
-//  created_date  DateTime
+//  created_date  DateTimeSelector
 //  partner_type  String
 //  include_sms   Int
 //  recurring     Int
@@ -9188,7 +9188,7 @@ model Page {
 //model partner_payments {
 //  id          Int      @id @default(autoincrement())
 //  company_id  Int
-//  charge_date DateTime
+//  charge_date DateTimeSelector
 //  amount      Float
 //  description String
 //  partner_id  String
@@ -9209,9 +9209,9 @@ model Page {
 //model partner_track {
 //  id           Int      @id @default(autoincrement())
 //  partner_id   Int
-//  created_date DateTime
-//  from_date    DateTime
-//  to_date      DateTime
+//  created_date DateTimeSelector
+//  from_date    DateTimeSelector
+//  to_date      DateTimeSelector
 //}
 //
 //model password_reset_auth {
@@ -9219,7 +9219,7 @@ model Page {
 //  key_code     String
 //  username     String
 //  old_password String
-//  date         DateTime
+//  date         DateTimeSelector
 //}
 //
 //model payments {
@@ -9237,8 +9237,8 @@ model Page {
 //  stripe_customer_id String
 //  payment_method_id  String?
 //  contact_id         Int
-//  created_at         DateTime @default(now())
-//  modified_at        DateTime @default(now())
+//  created_at         DateTimeSelector @default(now())
+//  modified_at        DateTimeSelector @default(now())
 //  company_id         Int
 //}
 //
@@ -9246,8 +9246,8 @@ model Page {
 //  id                  Int      @id @default(autoincrement())
 //  company_id          Int
 //  period_type         Int?     @default(1)
-//  period_from         DateTime
-//  period_to           DateTime
+//  period_from         DateTimeSelector
+//  period_to           DateTimeSelector
 //  position            Int      @default(0)
 //  locations           Int?     @default(0)
 //  total_hours         String
@@ -9256,7 +9256,7 @@ model Page {
 //  commission_pay      Float    @default(0.00)
 //  total_pay           Float    @default(0.00)
 //  created_by          Int
-//  created_date        DateTime
+//  created_date        DateTimeSelector
 //  employees           String
 //  invoice_ids         String?
 //  pending_invoice_ids String?
@@ -9310,7 +9310,7 @@ model PermissionTemplate {
 //  consent_3              Int
 //  aftercare_sent         Int
 //  aftercare_template_ids String
-//  created_at             DateTime?
+//  created_at             DateTimeSelector?
 //
 //  @@index([appointment_id], name: "appointment_id")
 //  @@index([company_id], name: "company_id")
@@ -9322,7 +9322,7 @@ model PermissionTemplate {
 //  gender        String
 //  interest_area String
 //  interests     String
-//  date_taken    DateTime @default(now())
+//  date_taken    DateTimeSelector @default(now())
 //}
 //
 //model photo_album {
@@ -9330,8 +9330,8 @@ model PermissionTemplate {
 //  album_name    String
 //  contact_id    Int
 //  occupier      Int
-//  creation_date DateTime
-//  modified_date DateTime
+//  creation_date DateTimeSelector
+//  modified_date DateTimeSelector
 //}
 //
 //model phpbirthday {
@@ -9381,8 +9381,8 @@ model PermissionTemplate {
 //  stage_order      Int      @default(0)
 //  custom_field_ids String
 //  note             String
-//  created_date     DateTime @default(now())
-//  updated_date     DateTime @default(now())
+//  created_date     DateTimeSelector @default(now())
+//  updated_date     DateTimeSelector @default(now())
 //}
 //
 //model pipeline_stage_custom_fields {
@@ -9392,7 +9392,7 @@ model PermissionTemplate {
 //  stage_id           Int
 //  custom_field_id    Int
 //  custom_field_value String
-//  updated_date       DateTime @default(now())
+//  updated_date       DateTimeSelector @default(now())
 //}
 //
 //model pos2_queries {
@@ -9404,8 +9404,8 @@ model PermissionTemplate {
 //model pos2_transactions {
 //  id          Int      @id @default(autoincrement())
 //  guid        String   @unique
-//  bill_date   DateTime
-//  php_date    DateTime
+//  bill_date   DateTimeSelector
+//  php_date    DateTimeSelector
 //  uid         Int
 //  company     Int
 //  bill        String
@@ -9482,8 +9482,8 @@ model PermissionTemplate {
 //  discount_mode  String?
 //  occupier       Int?
 //  uid            Int?
-//  created_date   DateTime?
-//  updated_date   DateTime?
+//  created_date   DateTimeSelector?
+//  updated_date   DateTimeSelector?
 //}
 //
 //model product_details {
@@ -9537,7 +9537,7 @@ model PermissionTemplate {
 //model psfs_followup_email_trigger {
 //  id         Int       @id @default(autoincrement())
 //  initial_id Int?
-//  date_time  DateTime?
+//  date_time  DateTimeSelector?
 //  type       Int?      @default(1)
 //  email_type String    @default("follow up")
 //}
@@ -9549,9 +9549,9 @@ model PermissionTemplate {
 //  contact_id     Int?
 //  cycle_id       Int       @default(0)
 //  form_id        Int       @default(0)
-//  date_time      DateTime?
+//  date_time      DateTimeSelector?
 //  discharge      Int?      @default(0)
-//  discharge_date DateTime?
+//  discharge_date DateTimeSelector?
 //}
 //
 //model psfs_settings {
@@ -9563,7 +9563,7 @@ model PermissionTemplate {
 //  psfs_followup_enable      Int       @default(0)
 //  psfs_form_id              Int       @default(0)
 //  modified_by               Int?
-//  modified_date             DateTime?
+//  modified_date             DateTimeSelector?
 //}
 //
 //model purchase {
@@ -9626,7 +9626,7 @@ model PermissionTemplate {
 //model rate_limiter {
 //  ip          String   @id
 //  count       Int
-//  last_access DateTime @default(now())
+//  last_access DateTimeSelector @default(now())
 //}
 //
 //model recall_schedule {
@@ -9635,7 +9635,7 @@ model PermissionTemplate {
 //  recall_id      Int
 //  contact_id     Int
 //  date           Int
-//  scheduled_date DateTime
+//  scheduled_date DateTimeSelector
 //  notes          String
 //  sms_sent       Int
 //  recalled_by    Int
@@ -9643,8 +9643,8 @@ model PermissionTemplate {
 //  email_sent     Int
 //  deleted        Int
 //  booking_id     Int
-//  created_date   DateTime @default(now())
-//  updated_date   DateTime @default(now())
+//  created_date   DateTimeSelector @default(now())
+//  updated_date   DateTimeSelector @default(now())
 //  error_code     Int?
 //
 //  @@index([booking_id], name: "booking_id")
@@ -9731,7 +9731,7 @@ model PermissionTemplate {
 //  id         Int      @id @default(autoincrement())
 //  occupier   String
 //  contact_id Int
-//  date       DateTime
+//  date       DateTimeSelector
 //}
 //
 model Report {
@@ -9813,7 +9813,7 @@ model Report {
 //  setting_id Int
 //  UID        Int
 //  reports    String
-//  datetime   DateTime
+//  datetime   DateTimeSelector
 //  occupier   String
 //  message    String
 //  is_test    Int
@@ -9832,7 +9832,7 @@ model Report {
 //  period_to         String
 //  reports           String
 //  included_users    String
-//  LastSent          DateTime
+//  LastSent          DateTimeSelector
 //  end_week          Int
 //  time              String
 //  report_subject    String
@@ -9900,7 +9900,7 @@ model ReportCategory {
 //  uid       Int
 //  occupier  String
 //  content   String
-//  datetime  DateTime
+//  datetime  DateTimeSelector
 //  unique_id Int
 //  guid      String
 //
@@ -9925,7 +9925,7 @@ model ReportCategory {
 //  get_data     String
 //  post_data    String
 //  scheduled    Int
-//  date_created DateTime
+//  date_created DateTimeSelector
 //  url_link     String
 //  file_link    String
 //}
@@ -9939,21 +9939,21 @@ model ReportCategory {
 //  target_id      Int
 //  approved       Int
 //  approved_by_id Int
-//  approved_on    DateTime
-//  requested_on   DateTime @default(now())
+//  approved_on    DateTimeSelector
+//  requested_on   DateTimeSelector @default(now())
 //}
 //
 //model rest_bookings {
 //  id          Int      @id @default(autoincrement())
 //  table_id    Int?
 //  title       String
-//  start_date  DateTime
-//  end_date    DateTime
+//  start_date  DateTimeSelector
+//  end_date    DateTimeSelector
 //  UID         Int
 //  contact_id  Int
 //  guest_count Int
 //  occupier    String
-//  create_date DateTime
+//  create_date DateTimeSelector
 //  status      String
 //  Online      Int
 //  invoice_id  Int
@@ -10011,11 +10011,11 @@ model RotaShift {
   end            Decimal
   company_id     Int            @map("occupier")
   notes          String?
-  last_seen      DateTime?
-  last_modified  DateTime?
-  last_notified  DateTime?
-  last_published DateTime?
-  first_created  DateTime       @default(now())
+  last_seen      DateTimeSelector?
+  last_modified  DateTimeSelector?
+  last_notified  DateTimeSelector?
+  last_published DateTimeSelector?
+  first_created  DateTimeSelector       @default(now())
   user_created   Int
   repeat_id      Int?
   reason_code    String?        @default("")
@@ -10063,7 +10063,7 @@ model RotaShift {
 //model sales {
 //  id                Int      @id @default(autoincrement())
 //  seller            Int
-//  date              DateTime
+//  date              DateTimeSelector
 //  tickets_dispensed Int
 //  tickets_returned  Int
 //  paid_by           String?
@@ -10084,7 +10084,7 @@ model RotaShift {
 //  pitch_description String
 //  pitch_type        String
 //  company_id        Int
-//  created_time      DateTime
+//  created_time      DateTimeSelector
 //}
 //
 //model salon_bookings {
@@ -10185,8 +10185,8 @@ model RotaShift {
 //  type              String?
 //  reason_type       String?
 //  reason            String?
-//  created_date      DateTime?
-//  last_updated_date DateTime?
+//  created_date      DateTimeSelector?
+//  last_updated_date DateTimeSelector?
 //  cancel_by         Int
 //  cancel_reason_id  Int
 //
@@ -10212,11 +10212,11 @@ model RotaShift {
 //model salon_bookings_confirmation {
 //  id                Int       @id @default(autoincrement())
 //  booking_id        Int
-//  confirmation_date DateTime
+//  confirmation_date DateTimeSelector
 //  is_confirmed      Int
 //  contact_id        Int
 //  occupier          String
-//  updated_on        DateTime?
+//  updated_on        DateTimeSelector?
 //
 //  @@index([booking_id], name: "booking_id")
 //}
@@ -10224,11 +10224,11 @@ model RotaShift {
 //model salon_bookings_confirmation2 {
 //  id                Int       @id @default(autoincrement())
 //  booking_id        Int
-//  confirmation_date DateTime
+//  confirmation_date DateTimeSelector
 //  is_confirmed      Int
 //  contact_id        Int
 //  occupier          String
-//  updated_on        DateTime?
+//  updated_on        DateTimeSelector?
 //
 //  @@index([booking_id], name: "booking_id")
 //  @@index([contact_id], name: "contact_id")
@@ -10249,7 +10249,7 @@ model RotaShift {
 //  booking_id       Int
 //  occupier         Int
 //  max_clients      Int
-//  created_date     DateTime
+//  created_date     DateTimeSelector
 //  models_count     Int
 //  models_req_count Int
 //  imported         Int
@@ -10265,7 +10265,7 @@ model RotaShift {
 //  CourseID    Int
 //  Note        String
 //  Status      salon_bookings_groups_alerts_Status @default(Enable)
-//  CreatedDate DateTime
+//  CreatedDate DateTimeSelector
 //  IpAddress   Int
 //  Critical    Int
 //
@@ -10278,7 +10278,7 @@ model RotaShift {
 //  group_id             Int
 //  booking_id           Int
 //  contact_id           Int
-//  created_date         DateTime
+//  created_date         DateTimeSelector
 //  custom_contact_email String
 //  custom_contact_name  String
 //  custom_contact_id    Int
@@ -10295,7 +10295,7 @@ model RotaShift {
 //  group_id             Int
 //  booking_id           Int
 //  contact_id           Int
-//  created_date         DateTime
+//  created_date         DateTimeSelector
 //  custom_contact_email String
 //  custom_contact_name  String
 //  custom_contact_id    Int
@@ -10308,7 +10308,7 @@ model RotaShift {
 //  CourseID    Int
 //  Note        String
 //  Status      salon_bookings_groups_notes_Status @default(Enable)
-//  CreatedDate DateTime
+//  CreatedDate DateTimeSelector
 //  IpAddress   Int
 //
 //  @@index([CourseID], name: "CourseID")
@@ -10326,7 +10326,7 @@ model RotaShift {
 //  after_status     String
 //  before_service   String
 //  after_service    String
-//  CreatedDate      DateTime
+//  CreatedDate      DateTimeSelector
 //  UID              Int
 //  mode             String
 //  occupier         String
@@ -10388,7 +10388,7 @@ model RotaShift {
 //  created_by_uid      Int
 //  marketing_source    Int
 //  resource_id         Int
-//  date_changed        DateTime?
+//  date_changed        DateTimeSelector?
 //  location_id         Int
 //  modified_by_uid     Int
 //
@@ -10487,7 +10487,7 @@ model RotaShift {
 //  day_sat      Boolean
 //  every        Int
 //  unit         String
-//  repeat_until DateTime
+//  repeat_until DateTimeSelector
 //
 //  @@index([uid], name: "uid")
 //}
@@ -10526,7 +10526,7 @@ model UserSalutation {
 //  id            Int      @id @default(autoincrement())
 //  occupier      Int
 //  batch_id      String
-//  date_created  DateTime
+//  date_created  DateTimeSelector
 //  category_card String
 //}
 //
@@ -10534,8 +10534,8 @@ model UserSalutation {
 //  id             Int      @id @default(autoincrement())
 //  occupier       Int
 //  card_number    Int
-//  date_created   DateTime
-//  date_activated DateTime
+//  date_created   DateTimeSelector
+//  date_activated DateTimeSelector
 //  card_points    Float
 //  batch_id       String
 //  validated      Int      @default(0)
@@ -10545,7 +10545,7 @@ model UserSalutation {
 //
 //model scanner_history {
 //  trans_id   Int      @id @default(autoincrement())
-//  date       DateTime
+//  date       DateTimeSelector
 //  member_id  Int
 //  type       String
 //  amount     Float
@@ -10627,10 +10627,10 @@ model UserSalutation {
 //  duration              Int?
 //  occurance             Int?      @default(0)
 //  end_after_occurrences Int?
-//  end_date              DateTime?
+//  end_date              DateTimeSelector?
 //  occupier              Int?
-//  created_date          DateTime?
-//  modified_date         DateTime?
+//  created_date          DateTimeSelector?
+//  modified_date         DateTimeSelector?
 //}
 //
 //model schedule_invoice_template_details {
@@ -10645,8 +10645,8 @@ model UserSalutation {
 //  memo             String?
 //  to_be_emailed    Int?      @default(1)
 //  occupier         Int?
-//  created_date     DateTime?
-//  modified_date    DateTime?
+//  created_date     DateTimeSelector?
+//  modified_date    DateTimeSelector?
 //}
 //
 //model schedule_invoice_template_product_details {
@@ -10664,12 +10664,12 @@ model UserSalutation {
 //  main      String
 //  other     String
 //  uid       Int
-//  timestamp DateTime @default(now())
+//  timestamp DateTimeSelector @default(now())
 //}
 //
 //model seller {
 //  sellerid   Int      @id @default(autoincrement())
-//  start      DateTime
+//  start      DateTimeSelector
 //  name       String
 //  halls      String
 //  number     String
@@ -10737,7 +10737,7 @@ model ServiceMasterCategory {
 //  price                     Float
 //  activities                String
 //  occupier                  String
-//  CreatedDate               DateTime
+//  CreatedDate               DateTimeSelector
 //  imported                  Int
 //  inactive                  Boolean  @default(false)
 //  deleted                   Int
@@ -10763,7 +10763,7 @@ model ServiceMasterCategory {
 //  id           Int      @id @default(autoincrement())
 //  name         String
 //  occupier     Int
-//  created_date DateTime
+//  created_date DateTimeSelector
 //  deleted      Int      @default(1)
 //}
 //
@@ -10773,7 +10773,7 @@ model ServiceMasterCategory {
 //  passcode   String
 //  contact_id Int
 //  company_id Int
-//  share_date DateTime
+//  share_date DateTimeSelector
 //}
 //
 //model site_widget_settings {
@@ -10806,7 +10806,7 @@ model ServiceMasterCategory {
 //  request_uri String
 //  get_data    String
 //  post_data   String
-//  date_time   DateTime @default(now())
+//  date_time   DateTimeSelector @default(now())
 //  query_time  String
 //}
 //
@@ -10820,7 +10820,7 @@ model ServiceMasterCategory {
 //model sms_campaign {
 //  sms_id                Int      @id @default(autoincrement())
 //  sms_campaign_name     String   @default("Untitled Campaign")
-//  create_date           DateTime
+//  create_date           DateTimeSelector
 //  from_name             String
 //  content               String
 //  company               Int
@@ -10831,14 +10831,14 @@ model ServiceMasterCategory {
 //  created_by            Int
 //  groups_prerecipients  String
 //  campaign_status       String
-//  send_date             DateTime
+//  send_date             DateTimeSelector
 //  gift_voucher          String
 //  gift_expiry           Int
 //  total_recips          Int
 //  weblink               String
 //  campaign_cost         Float
 //  all_products_services Int
-//  finished_date         DateTime
+//  finished_date         DateTimeSelector
 //
 //  @@index([campaign_status], name: "campaign_status")
 //  @@index([company], name: "company")
@@ -11066,7 +11066,7 @@ model SocialSurveyFeedback {
 model SocialSurveyFeedbackResponse {
   id         Int      @id @default(autoincrement())
   response   String
-  date       DateTime @default(now())
+  date       DateTimeSelector @default(now())
   company_id Int
   uid        Int
   review_id  Int
@@ -11104,7 +11104,7 @@ model SocialSurveyQuestion {
 //  ownerid     Int?
 //  occupier    Int?
 //  category    String?
-//  CreatedDate DateTime?
+//  CreatedDate DateTimeSelector?
 //  IpAddress   Int?
 //}
 //
@@ -11149,8 +11149,8 @@ model SocialSurveyQuestion {
 //  cat_id            Int?
 //  value             String?
 //  occupier          Int?
-//  created_date      DateTime?
-//  last_updated_date DateTime?
+//  created_date      DateTimeSelector?
+//  last_updated_date DateTimeSelector?
 //}
 //
 //model staff_hours_settings {
@@ -11163,8 +11163,8 @@ model SocialSurveyQuestion {
 //  closed          Int?
 //  occupier        Int?
 //  uid             Int?
-//  created_date    DateTime?
-//  updated_date    DateTime?
+//  created_date    DateTimeSelector?
+//  updated_date    DateTimeSelector?
 //}
 //
 //model staff_limit_settings {
@@ -11174,8 +11174,8 @@ model SocialSurveyQuestion {
 //  max_value    Int?
 //  occupier     Int?
 //  uid          Int?
-//  created_date DateTime?
-//  updated_date DateTime?
+//  created_date DateTimeSelector?
+//  updated_date DateTimeSelector?
 //}
 //
 model StaffMeta {
@@ -11196,13 +11196,13 @@ model StaffMeta {
 //  enabled        Int
 //  frequency      String
 //  excluded_users String
-//  LastSent       DateTime
+//  LastSent       DateTimeSelector
 //  end_week       Int
 //}
 //
 //model staff_profiles {
 //  sellerid  Int      @id @default(autoincrement())
-//  start     DateTime
+//  start     DateTimeSelector
 //  name      String
 //  surname   String
 //  number    String
@@ -11211,7 +11211,7 @@ model StaffMeta {
 //  occupier  String
 //  visible   Int
 //  job_title String
-//  birthdate DateTime
+//  birthdate DateTimeSelector
 //  city      String
 //  postcode  String
 //  country   String
@@ -11226,7 +11226,7 @@ model StaffMeta {
 //  booking_id    Int       @default(0)
 //  staff_id      Int
 //  commission    Float
-//  creation_date DateTime?
+//  creation_date DateTimeSelector?
 //  service_id    Int
 //  quote_id      Int       @default(0)
 //
@@ -11249,11 +11249,11 @@ model StaffMeta {
 //model staff_shifts_new {
 //  id            Int      @id @default(autoincrement())
 //  staff_id      Int
-//  start_date    DateTime
-//  end_date      DateTime
+//  start_date    DateTimeSelector
+//  end_date      DateTimeSelector
 //  ss_rate       Float
 //  staff_role_id Int
-//  CreatedDate   DateTime
+//  CreatedDate   DateTimeSelector
 //  occupier      String
 //}
 //
@@ -11292,7 +11292,7 @@ model StaffMeta {
 //  id         Int      @id @default(autoincrement())
 //  company_id Int
 //  type       String
-//  date       DateTime
+//  date       DateTimeSelector
 //  event_data String
 //}
 //
@@ -11305,7 +11305,7 @@ model StaffMeta {
 //  booking_id        Int
 //  invoice_id        Int
 //  location          String
-//  date              DateTime
+//  date              DateTimeSelector
 //  status            Boolean
 //  amount_after_fee  Float
 //  charge_id         String?
@@ -11338,7 +11338,7 @@ model StaffMeta {
 //
 //model suspended_bills {
 //  id          Int      @id @default(autoincrement())
-//  date        DateTime
+//  date        DateTimeSelector
 //  customer_id Int
 //  count       Int
 //  tax1        Float
@@ -11407,7 +11407,7 @@ model StaffMeta {
 //
 //model tab_bills {
 //  id          Int      @id @default(autoincrement())
-//  date        DateTime
+//  date        DateTimeSelector
 //  customer_id Int
 //  table_no    String?
 //  count       Int
@@ -11455,7 +11455,7 @@ model StaffMeta {
 //  id                      Int       @id @default(autoincrement())
 //  task_owner              Int?
 //  subject                 String?
-//  due_date                DateTime?
+//  due_date                DateTimeSelector?
 //  assigned_to             Int?
 //  module_type             Int?
 //  contact_id              Int?
@@ -11466,13 +11466,13 @@ model StaffMeta {
 //  priority                Int?
 //  send_notification_email String?
 //  recurring_activity      String?
-//  start_date              DateTime?
-//  end_date                DateTime?
+//  start_date              DateTimeSelector?
+//  end_date                DateTimeSelector?
 //  repeat_type             Int?
 //  description             String?
 //  occupier                Int?
-//  created_date            DateTime?
-//  modified_date           DateTime?
+//  created_date            DateTimeSelector?
+//  modified_date           DateTimeSelector?
 //  closed_date             Int
 //  nhs_patient_id          Int
 //  list_id                 Int
@@ -11553,7 +11553,7 @@ model StaffMeta {
 //  contract_title       String
 //  contract_description String
 //  contract_signature   String
-//  create_date_time     DateTime
+//  create_date_time     DateTimeSelector
 //  occupier             String
 //  number_signatures    Int
 //  show_logo            Int
@@ -11595,8 +11595,8 @@ model StaffMeta {
 //  occupier          Int?
 //  uid               Int?
 //  order             Int       @default(0)
-//  created_date      DateTime?
-//  last_updated_date DateTime?
+//  created_date      DateTimeSelector?
+//  last_updated_date DateTimeSelector?
 //
 //  @@index([is_required], name: "is_required")
 //  @@index([occupier], name: "occupier")
@@ -11607,8 +11607,8 @@ model StaffMeta {
 //  contract_id         Int
 //  contract_signature  String
 //  contract_status     Int      @default(0)
-//  update_date_time    DateTime
-//  create_date_time    DateTime
+//  update_date_time    DateTimeSelector
+//  create_date_time    DateTimeSelector
 //  contact_id          Int
 //  contract_signature2 String
 //  booking_id          Int
@@ -11695,7 +11695,7 @@ model TemplateFolder {
 //// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 //// model test_creation_date {
 //  // id   Int
-//  // date DateTime
+//  // date DateTimeSelector
 //// }
 //
 //model test_notes {
@@ -11703,7 +11703,7 @@ model TemplateFolder {
 //  custom_id  Int
 //  contact_id Int
 //  note       String
-//  date       DateTime
+//  date       DateTimeSelector
 //}
 //
 //model theatre_list {
@@ -11711,12 +11711,12 @@ model TemplateFolder {
 //  contact_id   Int
 //  user_id      Int
 //  occupier     Int
-//  theatre_date DateTime
-//  tci_datetime DateTime
+//  theatre_date DateTimeSelector
+//  tci_datetime DateTimeSelector
 //  admission    String
 //  room         String
 //  anesthetist  String
-//  discharged   DateTime
+//  discharged   DateTimeSelector
 //  comments     String
 //  session      Int
 //  episode      String
@@ -11736,7 +11736,7 @@ model TemplateFolder {
 //model theatre_list_date_settings {
 //  id                        Int                       @id @default(autoincrement())
 //  company_id                Int
-//  date                      DateTime
+//  date                      DateTimeSelector
 //  hospital_id               Int
 //  anesthetist_id            Int
 //  start_time                String
@@ -11763,7 +11763,7 @@ model TemplateFolder {
 //  isvalid       String
 //  code          String
 //  eventid       Int
-//  purchase_date DateTime
+//  purchase_date DateTimeSelector
 //  occupier      String
 //  STATUS        String
 //  ticket_type   Int
@@ -11866,7 +11866,7 @@ model TemplateFolder {
 //// model training_guides_completion {
 //  // user_id        Int
 //  // training_id    Int
-//  // date_completed DateTime @default(now())
+//  // date_completed DateTimeSelector @default(now())
 //
 //  // @@index([training_id], name: "user_id")
 //// }
@@ -11886,8 +11886,8 @@ model TemplateFolder {
 //  type          String?
 //  occupier      Int
 //  uid           Int
-//  creation_date DateTime?
-//  modified_date DateTime?
+//  creation_date DateTimeSelector?
+//  modified_date DateTimeSelector?
 //}
 //
 model TrainingCourse {
@@ -11911,7 +11911,7 @@ model TrainingCourseBooking {
   id          Int      @id @default(autoincrement())
   course_id   Int
   webinar_id  Int
-  course_date DateTime
+  course_date DateTimeSelector
   trainer     String
   encore      Int?     @default(0)
 
@@ -11926,7 +11926,7 @@ model TrainCourseDate {
   user_id        Int
   company_id     Int
   status         train_course_dates_status
-  course_date    DateTime
+  course_date    DateTimeSelector
   TrainingCourse TrainingCourse            @relation(fields: [course_id], references: [id])
   User           User                      @relation(fields: [user_id], references: [id])
   Company        Company                   @relation(fields: [company_id], references: [id])
@@ -11948,7 +11948,7 @@ model TrainCourseDate {
 //  custom_user_name     String
 //  Subject              String
 //  Note                 String
-//  created_date         DateTime
+//  created_date         DateTimeSelector
 //  occupier             Int
 //  imported             Int
 //  added                Int
@@ -11967,7 +11967,7 @@ model TrainCourseDate {
 //  form_contact_id Int
 //  company_id      Int
 //  plan_data       String
-//  created_on      DateTime
+//  created_on      DateTimeSelector
 //  created_by      Int
 //  status          treatment_plans_status @default(OPEN)
 //}
@@ -11988,11 +11988,11 @@ model TrainCourseDate {
 //  number_of_measures Float
 //  numbers_of_injects Int
 //  batch_number       String
-//  expiry_date        DateTime
+//  expiry_date        DateTimeSelector
 //  other              String
 //  company_id         Int
 //  contact_id         Int
-//  date_created       DateTime @default(now())
+//  date_created       DateTimeSelector @default(now())
 //}
 //
 //model trial_mode {
@@ -12000,8 +12000,8 @@ model TrainCourseDate {
 //  company_id    Int
 //  email         String
 //  status        Int
-//  date_tracked  DateTime
-//  trial_tracked DateTime
+//  date_tracked  DateTimeSelector
+//  trial_tracked DateTimeSelector
 //}
 //
 //model trusted_browser {
@@ -12012,7 +12012,7 @@ model TrainCourseDate {
 //  city               String
 //  ip_address         String
 //  company_id         Int
-//  created_on         DateTime
+//  created_on         DateTimeSelector
 //  user_id            Int
 //  is_authorized      Boolean  @default(false)
 //  authorization_hash String?
@@ -12064,7 +12064,7 @@ model TrainCourseDate {
 //  contact_id      Int
 //  company_id      Int
 //  activity        String
-//  activity_date   DateTime
+//  activity_date   DateTimeSelector
 //  sub_status      Int
 //  contact_id_type unsubscribe_log_contact_id_type @default(CONTACT)
 //  email           String?
@@ -12075,7 +12075,7 @@ model TrainCourseDate {
 //  shortcode    String
 //  full_url     String
 //  company_id   Int
-//  date_created DateTime @default(now())
+//  date_created DateTimeSelector @default(now())
 //  clicks       Int
 //}
 //
@@ -12092,7 +12092,7 @@ model TrainCourseDate {
 //  company_id      Int
 //  sms_campaign_id Int
 //  mobile          String
-//  date_time       DateTime @default(now())
+//  date_time       DateTimeSelector @default(now())
 //
 //  @@index([mobile], name: "mobile")
 //  @@index([sms_campaign_id], name: "sms_campaign_id")
@@ -12105,8 +12105,8 @@ model User {
   password                    String?
   password_algor              Int?                          @default(1)
   salt                        String?
-  created                     DateTime?
-  last_login                  DateTime?
+  created                     DateTimeSelector?
+  last_login                  DateTimeSelector?
   company_id                  Int?                          @map("company")
   hash                        String
   email                       String
@@ -12134,8 +12134,8 @@ model User {
   custom_id                   String
   hide_calendar               Int
   calendar_order              Int
-  clocked_in                  DateTime?
-  clocked_out                 DateTime?
+  clocked_in                  DateTimeSelector?
+  clocked_out                 DateTimeSelector?
   last_password_reset         Int
   force_password              Int
   limited_user                Boolean
@@ -12235,8 +12235,8 @@ model User {
 //  id         Int       @id @default(autoincrement())
 //  user_id    Int
 //  company_id Int
-//  clock_in   DateTime
-//  clock_out  DateTime?
+//  clock_in   DateTimeSelector
+//  clock_out  DateTimeSelector?
 //}
 //
 //model user_activities_likes {
@@ -12244,7 +12244,7 @@ model User {
 //  userid   Int
 //  actid    Int
 //  occupier String
-//  date     DateTime
+//  date     DateTimeSelector
 //
 //  @@index([actid], name: "actid")
 //  @@index([actid, userid], name: "actid_user")
@@ -12281,7 +12281,7 @@ model UserActivityLog {
 //  type      String
 //  template  String
 //  time      Int
-//  time_tz   DateTime?
+//  time_tz   DateTimeSelector?
 //  status    user_activities_log_tz_status @default(Enable)
 //  ipAddress Int
 //
@@ -12337,11 +12337,11 @@ model UserAlertPermission {
 //  id          Int       @id @default(autoincrement())
 //  user        Int
 //  day         Int
-//  start_time  DateTime
-//  end_time    DateTime
+//  start_time  DateTimeSelector
+//  end_time    DateTimeSelector
 //  break       Int?
-//  start_break DateTime?
-//  end_break   DateTime?
+//  start_break DateTimeSelector?
+//  end_break   DateTimeSelector?
 //
 //  @@index([user], name: "user")
 //}
@@ -12350,10 +12350,10 @@ model UserAlertPermission {
 //  id          Int      @id @default(autoincrement())
 //  user        Int
 //  occupier    Int
-//  date        DateTime
+//  date        DateTimeSelector
 //  day         Int
-//  start_time  DateTime
-//  end_time    DateTime
+//  start_time  DateTimeSelector
+//  end_time    DateTimeSelector
 //  location_id Int
 //  imported    Int
 //  tag_name    String
@@ -12369,7 +12369,7 @@ model UserAlertPermission {
 //  id          Int      @id @default(autoincrement())
 //  user_id     Int
 //  contact_id  Int
-//  access_date DateTime @default(now())
+//  access_date DateTimeSelector @default(now())
 //
 //  @@unique([user_id, contact_id], name: "user_id")
 //}
@@ -12393,7 +12393,7 @@ model UserAlertPermission {
 //  email        String
 //  hash         String
 //  hash_algor   Int      @default(1)
-//  attempt_date DateTime @default(now())
+//  attempt_date DateTimeSelector @default(now())
 //  count        Int
 //}
 //
@@ -12432,7 +12432,7 @@ model UserGroupMember {
 //  id          Int      @id @default(autoincrement())
 //  user_id     Int
 //  lead_id     Int
-//  access_date DateTime @default(now())
+//  access_date DateTimeSelector @default(now())
 //
 //  @@unique([user_id, lead_id], name: "user_id")
 //}
@@ -12462,12 +12462,12 @@ model UserMaster {
   pass           String
   oauth_provider String
   oauth_id       String
-  timestamp      DateTime @default(now())
+  timestamp      DateTimeSelector @default(now())
   enc_key        String
   pic            String
   contact_id     Int
   mobile         String
-  last_login     DateTime
+  last_login     DateTimeSelector
   is_suspended   Boolean  @default(false)
   session_hash   String
 
@@ -12486,7 +12486,7 @@ model UserMaster {
 //  company_id     Int
 //  user_master_id Int
 //  pass           String
-//  created_at     DateTime
+//  created_at     DateTimeSelector
 //}
 //
 model UserMobilePermission {
@@ -12513,10 +12513,10 @@ model UserMobilePermission {
 //  user_id      Int
 //  note         String
 //  added_by     Int
-//  date         DateTime
-//  date_added   DateTime
+//  date         DateTimeSelector
+//  date_added   DateTimeSelector
 //  updated_by   Int
-//  date_updated DateTime
+//  date_updated DateTimeSelector
 //  rota_id      Int
 //  note_color   String
 //
@@ -12529,7 +12529,7 @@ model UserMobilePermission {
 //  custom_user_id   Int
 //  custom_user_name String
 //  note             String
-//  date             DateTime
+//  date             DateTimeSelector
 //  occupier         Int
 //  imported         Int
 //  added            Int
@@ -12541,7 +12541,7 @@ model UserMobilePermission {
 //  hash                 String
 //  hash_algor           Int      @default(1)
 //  salt                 String?
-//  created_at           DateTime @default(now())
+//  created_at           DateTimeSelector @default(now())
 //}
 //
 //// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
@@ -12593,7 +12593,7 @@ model UserReport {
 //model user_requests {
 //  id            Int      @id @default(autoincrement())
 //  email         String
-//  date          DateTime
+//  date          DateTimeSelector
 //  company       Int
 //  hash          String
 //  job_title     String
@@ -12624,7 +12624,7 @@ model UserSecurityQuestionsAnswer {
 //  user_id      Int
 //  company_id   Int
 //  indicator_id Int
-//  date         DateTime
+//  date         DateTimeSelector
 //  value        Int
 //
 //  @@index([company_id], name: "company_id")
@@ -12633,7 +12633,7 @@ model UserSecurityQuestionsAnswer {
 //
 //model user_tracking {
 //  id                Int      @id @default(autoincrement())
-//  entry_date        DateTime
+//  entry_date        DateTimeSelector
 //  company_id        Int
 //  user_count        Int
 //  subscription_name String
@@ -12644,8 +12644,8 @@ model UserSecurityQuestionsAnswer {
 //  user_id      Int
 //  key          String
 //  value        String
-//  date_created DateTime  @default(now())
-//  date_updated DateTime?
+//  date_created DateTimeSelector  @default(now())
+//  date_updated DateTimeSelector?
 //
 //  @@unique([user_id, key], name: "user_id")
 //}
@@ -12654,7 +12654,7 @@ model UserSecurityQuestionsAnswer {
 //  id       Int      @id @default(autoincrement())
 //  occupier Int
 //  uid      Int
-//  date     DateTime
+//  date     DateTimeSelector
 //  xp       Int
 //  notes    String
 //
@@ -12686,9 +12686,9 @@ model UserSecurityQuestionsAnswer {
 //  company_id            Int
 //  vaccine_id            Int
 //  recall_id             Int
-//  scheduled_admin_date  DateTime
-//  actual_admin_date     DateTime
-//  coverage_end_date     DateTime
+//  scheduled_admin_date  DateTimeSelector
+//  actual_admin_date     DateTimeSelector
+//  coverage_end_date     DateTimeSelector
 //  schedule_cover_length Int
 //  medical_record_id     Int
 //  disease_id            Int
@@ -12696,7 +12696,7 @@ model UserSecurityQuestionsAnswer {
 //  batch_no              String
 //  source                vaccine_schedule_source @default(Patient_record_)
 //  created_by            Int
-//  created_on            DateTime
+//  created_on            DateTimeSelector
 //  path_taken_id         Int
 //}
 //
@@ -12704,7 +12704,7 @@ model UserSecurityQuestionsAnswer {
 //  id                  Int      @id @default(autoincrement())
 //  vaccine_schedule_id Int      @default(0)
 //  disease_id          Int      @default(0)
-//  coverage_end_date   DateTime
+//  coverage_end_date   DateTimeSelector
 //  cover_length        Int      @default(0)
 //}
 //
@@ -12712,7 +12712,7 @@ model UserSecurityQuestionsAnswer {
 //  id         Int      @id @default(autoincrement())
 //  company_id Int
 //  user_id    Int
-//  date       DateTime @default(now())
+//  date       DateTimeSelector @default(now())
 //  extra      String?
 //  mins_used  Int
 //}
@@ -12721,7 +12721,7 @@ model UserSecurityQuestionsAnswer {
 //  id            Int      @id @default(autoincrement())
 //  company_id    Int
 //  user_id       Int
-//  accepted_date DateTime @default(now())
+//  accepted_date DateTimeSelector @default(now())
 //}
 //
 //model visit_history {
@@ -12747,7 +12747,7 @@ model UserSecurityQuestionsAnswer {
 //  issuer_id            Int?
 //  xero_invoice_id      String
 //  occupier             Int
-//  xero_updated_date    DateTime
+//  xero_updated_date    DateTimeSelector
 //  xero_not_exist       Int
 //  xero_error           Int
 //
@@ -12760,7 +12760,7 @@ model UserSecurityQuestionsAnswer {
 //  comment   String
 //  occupier  String
 //  user_id   Int
-//  datetime  DateTime
+//  datetime  DateTimeSelector
 //}
 //
 //model voting_results {
@@ -12769,7 +12769,7 @@ model UserSecurityQuestionsAnswer {
 //  user_id     Int
 //  title       String
 //  description String
-//  datetime    DateTime
+//  datetime    DateTimeSelector
 //  score       Int
 //  up_vote     Int
 //  down_vote   Int
@@ -12797,14 +12797,14 @@ model UserSecurityQuestionsAnswer {
 //  id      Int      @id @default(autoincrement())
 //  company Int
 //  amount  Float
-//  date    DateTime
+//  date    DateTimeSelector
 //}
 //
 //model waiting_list {
 //  id             Int       @id @default(autoincrement())
 //  company_id     Int?
 //  contact_id     Int?
-//  expires_on     DateTime?
+//  expires_on     DateTimeSelector?
 //  remove_on      Int?
 //  name           String?
 //  appointment    Int?
@@ -12818,10 +12818,10 @@ model UserSecurityQuestionsAnswer {
 //  comments       String?
 //  notify_sms     Int?      @default(0)
 //  notify_email   Boolean   @default(false)
-//  created_date   DateTime?
-//  modified_date  DateTime?
-//  available_from DateTime
-//  available_to   DateTime
+//  created_date   DateTimeSelector?
+//  modified_date  DateTimeSelector?
+//  available_from DateTimeSelector
+//  available_to   DateTimeSelector
 //  preference     Int
 //  urgent         Int
 //
@@ -12834,7 +12834,7 @@ model UserSecurityQuestionsAnswer {
 //  id          Int      @id @default(autoincrement())
 //  contact_id  Int
 //  company_id  Int
-//  last_invite DateTime
+//  last_invite DateTimeSelector
 //
 //  @@index([company_id], name: "company_id")
 //  @@index([contact_id], name: "contact_id")
@@ -12876,13 +12876,13 @@ model UserSecurityQuestionsAnswer {
 //  contact_id    Int
 //  course_id     Int
 //  company_id    Int
-//  creation_date DateTime?
-//  modified_date DateTime?
+//  creation_date DateTimeSelector?
+//  modified_date DateTimeSelector?
 //}
 //
 //model warning_scripts {
 //  id                  Int      @id @default(autoincrement())
-//  report_date         DateTime
+//  report_date         DateTimeSelector
 //  contact_count       Int
 //  sale_count          Int
 //  payment_count       Int
@@ -12920,7 +12920,7 @@ model UserSecurityQuestionsAnswer {
 //
 //model xero_error_logs {
 //  id              Int       @id @default(autoincrement())
-//  date            DateTime?
+//  date            DateTimeSelector?
 //  type            String
 //  company_id      Int
 //  error           String
@@ -12942,8 +12942,8 @@ model XeroIntegration {
   tracking_categories_enabled Boolean   @default(false)
   default_invoice_status      String    @default("DRAFT")
   enabled                     Boolean
-  created_at                  DateTime  @default(now())
-  modified_at                 DateTime?
+  created_at                  DateTimeSelector  @default(now())
+  modified_at                 DateTimeSelector?
   Company                     Company   @relation(fields: [company_id], references: [id])
 
 
@@ -12968,8 +12968,8 @@ model XeroIntegration {
 //  xero_invoice_id String?  @unique
 //  status          Int      @default(0)
 //  response        String?
-//  created_at      DateTime @default(now())
-//  modified_at     DateTime @default(now())
+//  created_at      DateTimeSelector @default(now())
+//  modified_at     DateTimeSelector @default(now())
 //
 //  @@index([invoice_guid], name: "INVOICEID")
 //}
@@ -12980,8 +12980,8 @@ model XeroIntegration {
 //  xero_payment_id String
 //  xero_invoice_id String
 //  status          xero_integration_payments_status @default(created)
-//  created_at      DateTime                         @default(now())
-//  modified_at     DateTime                         @default(now())
+//  created_at      DateTimeSelector                         @default(now())
+//  modified_at     DateTimeSelector                         @default(now())
 //}
 //
 //model xero_integration_tracking_categories {
@@ -12991,8 +12991,8 @@ model XeroIntegration {
 //  target      String
 //  company_id  Int
 //  status      Boolean   @default(false)
-//  created_at  DateTime  @default(now())
-//  modified_at DateTime?
+//  created_at  DateTimeSelector  @default(now())
+//  modified_at DateTimeSelector?
 //
 //  @@index([xero_id], name: "XEROTRACKINGID")
 //}
@@ -13005,8 +13005,8 @@ model XeroIntegration {
 //  invoice_id         Int
 //  invoice_guid       String
 //  xero_synced        Int
-//  date_created       DateTime
-//  xero_updated_date  DateTime
+//  date_created       DateTimeSelector
+//  xero_updated_date  DateTimeSelector
 //  result_text        String
 //  xero_error         Int
 //  custom_id          Int
@@ -13024,7 +13024,7 @@ model XeroIntegration {
 //model xero_jobs {
 //  id            Int      @id @default(autoincrement())
 //  occupier      Int
-//  date_created  DateTime
+//  date_created  DateTimeSelector
 //  sales_updated Int
 //  result_text   String
 //}
@@ -13032,10 +13032,10 @@ model XeroIntegration {
 //model xero_manual_jobs {
 //  id             Int      @id @default(autoincrement())
 //  occupier       Int
-//  ref_start_date DateTime
-//  ref_end_date   DateTime
-//  start_date     DateTime
-//  end_date       DateTime
+//  ref_start_date DateTimeSelector
+//  ref_end_date   DateTimeSelector
+//  start_date     DateTimeSelector
+//  end_date       DateTimeSelector
 //}
 //
 //model xero_settings {
@@ -13133,7 +13133,7 @@ model XeroIntegration {
 //model zenith_contact_dates {
 //  id        Int      @id @default(autoincrement())
 //  custom_id Int
-//  date      DateTime
+//  date      DateTimeSelector
 //  added     Int
 //
 //  @@index([custom_id], name: "custom_id")
@@ -13203,7 +13203,7 @@ model XeroIntegration {
 //  custom_contact_name String
 //  amount              Float
 //  custom_user_name    String
-//  date                DateTime
+//  date                DateTimeSelector
 //  description         String
 //  item                String
 //  contact_id          Int
@@ -13276,7 +13276,7 @@ model XeroIntegration {
 //  contact_id          Int
 //  subject             String?
 //  content             String
-//  date_created        DateTime
+//  date_created        DateTimeSelector
 //  email               String
 //  communication_type  String
 //  custom_user_name    String
@@ -13325,11 +13325,11 @@ model XeroIntegration {
 //  contact_id          Int
 //  package_name        String
 //  package_code        String
-//  date_created        DateTime
+//  date_created        DateTimeSelector
 //  payment_method      String
 //  amount              Float
-//  activation_date     DateTime
-//  expiration_date     DateTime
+//  activation_date     DateTimeSelector
+//  expiration_date     DateTimeSelector
 //  invoice_id          Int
 //  remaining           Int
 //  total               Int
@@ -13350,7 +13350,7 @@ model XeroIntegration {
 //  filename            String
 //  filetype            String
 //  contact_custom_id   String
-//  date_created        DateTime
+//  date_created        DateTimeSelector
 //  custom_id           Int
 //  title               String
 //  added               Int
@@ -13369,7 +13369,7 @@ model XeroIntegration {
 //  file_id           Int
 //  filename          String
 //  extension         String
-//  date_time         DateTime
+//  date_time         DateTimeSelector
 //  custom_contact_id Int
 //  custom_user_name  String
 //
@@ -13455,7 +13455,7 @@ model XeroIntegration {
 //  custom_booking_id         Int
 //  imported                  Int
 //  added                     Int
-//  created_date              DateTime
+//  created_date              DateTimeSelector
 //
 //  @@index([custom_booking_id], name: "custom_booking_id")
 //}
@@ -13505,7 +13505,7 @@ model XeroIntegration {
 //  contact_custom_name    String
 //  contact_custom_email   String
 //  custom_consultation_id Int
-//  date                   DateTime
+//  date                   DateTimeSelector
 //  title                  String
 //  added                  Int
 //
@@ -13526,11 +13526,11 @@ model XeroIntegration {
 //  occupier           Int
 //  uid                Int
 //  staff_id           Int
-//  date               DateTime
-//  start_time         DateTime
-//  end_time           DateTime
-//  break_start        DateTime
-//  break_end          DateTime
+//  date               DateTimeSelector
+//  start_time         DateTimeSelector
+//  end_time           DateTimeSelector
+//  break_start        DateTimeSelector
+//  break_end          DateTimeSelector
 //  start_date         String
 //  end_date           String
 //  notes              String
@@ -13545,7 +13545,7 @@ model XeroIntegration {
 //  id               Int      @id @default(autoincrement())
 //  occupier         Int
 //  custom_user_name String
-//  date_week        DateTime
+//  date_week        DateTimeSelector
 //  monday           String
 //  tuesday          String
 //  wednesday        String
@@ -13564,8 +13564,8 @@ model XeroIntegration {
 //  custom_contact_name String
 //  status_name         String
 //  outstanding_amount  Float
-//  issue_date          DateTime
-//  date_closed         DateTime
+//  issue_date          DateTimeSelector
+//  date_closed         DateTimeSelector
 //  deleted             String
 //  description         String
 //
@@ -13626,7 +13626,7 @@ model XeroIntegration {
 //  id          Int      @id @default(autoincrement())
 //  occupier    Int
 //  custom_id   Int
-//  paymentDate DateTime
+//  paymentDate DateTimeSelector
 //}
 //
 //model zimport_treatments {
@@ -13690,7 +13690,7 @@ model XeroIntegration {
 //  php_output String?
 //  php_result Boolean?
 //  name       String   @unique
-//  date       DateTime @default(now())
+//  date       DateTimeSelector @default(now())
 //
 //  @@map("_migrations")
 //}

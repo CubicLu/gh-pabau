@@ -14,7 +14,7 @@ import Payment from '../../components/payment/Payment'
 import Booked from '../../components/bookingconform/booking'
 import PatientInfo from '../../components/patientinformatioon/PatientInfo'
 import Employ, { EmployData } from '../../components/EmployeeStep/employ'
-import DateTime from '../../components/dateTime/DateTime'
+import DateTimeSelector from '../../components/DateTimeStep/DateTime'
 import { defaultItems } from '../../../web/mocks/connect/onlineBooking'
 import styles from './index.module.less'
 import { ArrowLeftOutlined } from '@ant-design/icons'
@@ -382,7 +382,7 @@ export function Index(props: OnlineBookingProps) {
           )}
           {currentStep === 4 && (
             <div>
-              <DateTime
+              <DateTimeSelector
                 data={datetime}
                 changescreen={rech}
                 selectslot={slot}

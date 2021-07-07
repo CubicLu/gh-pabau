@@ -11,7 +11,7 @@ import Payment from '../../components/payment/Payment'
 import Booked from '../../components/bookingconform/booking'
 import PatientInfo from '../../components/patientinformatioon/PatientInfo'
 import EmployeeSelector from '../../components/EmployeeStep/EmployeeSelector'
-import DateTime from '../../components/dateTime/DateTime'
+import DateTimeSelector from '../../components/DateTimeStep/DateTimeSelector'
 import { defaultItems } from '../../../web/mocks/connect/onlineBooking'
 import styles from './index.module.less'
 import { ArrowLeftOutlined } from '@ant-design/icons'
@@ -24,8 +24,7 @@ import { Image } from 'antd'
 
 import useServices from '../../hooks/useServices'
 
-/* eslint-disable-next-line */
-export interface OnlineBookingProps {}
+export interface P {}
 
 interface BookingData {
   masterCategoryID?: number
@@ -71,7 +70,7 @@ const userData: userData = {
   services: 0,
   vouchers: 0,
 }
-export function Index(props: OnlineBookingProps) {
+export function Index(props: P) {
   // CRAP
   const [seleData, SetselData] = useState(defaultItems.slice(0, 4))
   const [ispro, setispro] = useState(false)
@@ -80,7 +79,6 @@ export function Index(props: OnlineBookingProps) {
   const [indicator, setindicator] = useState(false)
   const [tempT, settempT] = useState('')
   const [user, setuser] = useState<userData>(userData)
-  const [datetime, setDateTime] = useState<EmployData>()
   const [date, setdate] = useState()
   const [tempprice, settempprice] = useState('')
   const [editdate, seteditdate] = useState({ time: false, date: false })
@@ -264,27 +262,42 @@ export function Index(props: OnlineBookingProps) {
       Setview(true)
     }
   }
-  const backname = () => {
+
+  const goBackButton = () => {
+    let buttonName = ''
     if (currentStep === 1) {
-      return translation('connect.onlinebooking.backButton.service')
+      buttonName = t('connect.onlinebooking.backButton.service')
     } else if (currentStep === 2) {
-      return indicator
-        ? translation('connect.onlinbooking.backButton.location')
-        : translation('connect.onlinebooking.backButton.service')
+      buttonName = translation('connect.onlinebooking.backButton.service')
     } else if (currentStep === 3) {
-      return translation('connect.onlinebooking.backButton.clinic')
+      buttonName = translation('connect.onlinbooking.backButton.location')
     } else if (currentStep === 4) {
-      return translation('connect.onlinebooking.backButton.employe')
+      buttonName = translation('connect.onlinebooking.backButton.employe')
     } else if (currentStep === 5) {
-      return translation('connect.onlinebooking.backButton.choosedate')
+      buttonName = translation('connect.onlinebooking.backButton.choosedate')
     } else if (currentStep === 6) {
-      return translation('connect.onlinebooking.backButton.conformation')
+      buttonName = translation('connect.onlinebooking.backButton.conformation')
     } else if (currentStep === 7) {
-      return translation('connect.onlinebooking.backButton.bookingdetaile')
+      buttonName = translation(
+        'connect.onlinebooking.backButton.bookingdetaile'
+      )
     }
-    // } else if (currentStep === 8) {
-    //   return translation('connect.onlinebooking.backButton.bookingdetaile')
-    // }
+
+    return (
+      currentStep > 0 &&
+      currentStep <= 7 && (
+        <div className={styles.backBut}>
+          <span className={styles.arrowLeft}>
+            <ArrowLeftOutlined
+              onClick={() =>
+                setCurrentStep(currentStep === 0 ? 0 : currentStep - 1)
+              }
+            />
+          </span>
+          <span className={styles.backName}>{buttonName}</span>
+        </div>
+      )
+    )
   }
   const userinfo = (userdata) => {
     user.firstname = userdata.first
@@ -324,19 +337,7 @@ export function Index(props: OnlineBookingProps) {
       />
 
       <div className={styles.mainBody}>
-        {(back || !view) && currentStep <= 7 && (
-          <div className={styles.backBut}>
-            <span className={styles.arrowLeft}>
-              <ArrowLeftOutlined
-                onClick={() =>
-                  setCurrentStep(currentStep === 0 ? 0 : currentStep - 1)
-                }
-              />
-            </span>
-            <span className={styles.backName}>{backname()}</span>
-          </div>
-        )}
-
+        {goBackButton()}
         <div className={classname()}>
           {currentStep === 0 && (
             <div>
@@ -350,7 +351,6 @@ export function Index(props: OnlineBookingProps) {
                   })
                   setCurrentStep(currentStep + 1)
                 }}
-                translation={translation}
               />
               <div className={styles.verification}>
                 {translation('connect.onlinebooking.first.description')}
@@ -407,9 +407,8 @@ export function Index(props: OnlineBookingProps) {
           )}
           {currentStep === 4 && (
             <div>
-              <DateTime
-                data={datetime}
-                changescreen={rech}
+              <DateTimeSelector
+                employeeID={selectedData.employeeID}
                 selectslot={slot}
                 translation={translation}
                 dateVal={date}

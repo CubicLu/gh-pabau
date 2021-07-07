@@ -4,8 +4,6 @@ import { QuestionCircleOutlined } from '@ant-design/icons'
 import { useOnlineBookableStaffQuery } from '@pabau/graphql'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 
-import { Staff } from '../../types/staff'
-
 export interface P {
   onEmployeeSelected: (employeeID: number) => void
 }

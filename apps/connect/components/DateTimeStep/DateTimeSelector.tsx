@@ -1,8 +1,8 @@
 import React, { FC, useState } from 'react'
-import Styles from './datetime.module.less'
+import Styles from './DateTimeSelector.module.less'
 import { Calendar } from 'antd'
 import moment from 'moment'
-import { EmployData } from '../EmployeeStep/employ'
+import { Staff } from '../../types/staff'
 import { useMedia } from 'react-use'
 import {
   CalendarOutlined,
@@ -16,9 +16,7 @@ import {
   Afternoon,
   Evening,
 } from '../../../web/mocks/connect/Datemock'
-//import useWindowSize from '../../../hooks/useWindowSize'
 import ClassNames from 'classnames'
-//import { inspect } from 'util'
 
 /* eslint-disable-next-line */
 export interface DandT{
@@ -26,9 +24,8 @@ export interface DandT{
   time: boolean
 }
 export interface DateTimeProps {
+  employeeID: number
   time: string
-  data: EmployData
-  changescreen: () => void
   selectslot: (slotData) => void
   translation: (val: string) => string
   dateVal: moment.Moment
@@ -42,15 +39,15 @@ export interface DoctorType {
   charges: number
   image: any
 }
-const DateTime: FC<DateTimeProps> = ({
+const DateTimeSelector: FC<DateTimeProps> = ({
+  employeeID,
   time,
-  data,
-  changescreen,
   selectslot,
   translation,
   dateVal,
   oldValue,
 }) => {
+  // CRAP
   const dateData = moment()
   const newDate = dateData.toDate()
   const date = moment(newDate).format('YYYY-MM-DD')
@@ -60,12 +57,9 @@ const DateTime: FC<DateTimeProps> = ({
 
   const [mdisplay, setmdisplay] = useState(true)
   const [calcount, setcalcount] = useState(1)
-  // const size = useWindowSize()
   const isMobile = useMedia('(max-width: 768px)', false)
   const [finaldate, setfinal] = useState(oldValue.date && dateVal)
-  // console.log(oldValue.time)
   const setevent = (event): boolean => {
-    console.log(oldValue.time, Number(time))
     if (event === 'mor') {
       for (const itm of monthData) {
         if (itm.date === moment(finaldate).date()) {
@@ -89,11 +83,6 @@ const DateTime: FC<DateTimeProps> = ({
     }
     return false
   }
-  // const [condate, setcondate] = useState({
-  //   mor: false,
-  //   after: false,
-  //   eve: false,
-  // })
   const [mor, setmor] = useState(oldValue.date ? setevent('mor') : false)
   const [after, setafter] = useState(oldValue.date ? setevent('aft') : false)
   const [eve, seteve] = useState(oldValue.date ? setevent('eve') : false)
@@ -103,6 +92,12 @@ const DateTime: FC<DateTimeProps> = ({
   const [twomonthdnt, settwomonthdnt] = useState(
     moment(dnt, 'YYYY-MM-DD').add(2, 'month')
   )
+  const data = {
+    name: 'Nenad Jovanovski',
+  }
+
+  // FIXED
+  const [selectedDate, setSelectedDate] = useState(moment())
 
   const firstmonth = (e) => {
     // console.log(e.month())
@@ -119,23 +114,6 @@ const DateTime: FC<DateTimeProps> = ({
       setmor(dateobj.morning)
       setafter(dateobj.afternoon)
       seteve(dateobj.evening)
-      // if (e.month() === dnt.month()) {
-      //   console.log(e.month() === dnt.month())
-      //   console.log(dnt.month())
-      //   setselV(true)
-      //
-      //   setDnt(e)
-      //   setfinal(e)
-      //   setmor(dateobj.morning)
-      //   setafter(dateobj.afternoon)
-      //   seteve(dateobj.evening)
-      // } else {
-      //   setDnt(dnt)
-      //   setfinal(finaldate)
-      //   setmor(mor)
-      //   setafter(after)
-      //   seteve(eve)
-      // }
     }
   }
   const secondmonth = (e) => {
@@ -220,59 +198,31 @@ const DateTime: FC<DateTimeProps> = ({
   }
   const dateCellRender = (value) => {
     const listData = getListData(value)
-    // console.log(listData)
     return (
       <div className={Styles.listData}>
         {listData.map((item) => (
-          <>
-            <div
-              className={ClassNames(
-                Styles.celllist,
-                !(item.morning && item.afternoon && item.evening) && Styles.xyzz
-              )}
-            >
-              <div className={Styles.celldatap}>
-                <p className={item.morning ? Styles.mor : Styles.white}>
-                  {item.morning}
-                </p>
-                <p className={item.afternoon ? Styles.after : Styles.white}>
-                  {item.afternoon}
-                </p>
-                <p className={item.evening ? Styles.night : Styles.white}>
-                  {item.evening}
-                </p>
-              </div>
+          <div
+            className={ClassNames(
+              Styles.celllist,
+              !(item.morning && item.afternoon && item.evening) && Styles.xyzz
+            )}
+          >
+            <div className={Styles.celldatap}>
+              <p className={item.morning ? Styles.mor : Styles.white}>
+                {item.morning}
+              </p>
+              <p className={item.afternoon ? Styles.after : Styles.white}>
+                {item.afternoon}
+              </p>
+              <p className={item.evening ? Styles.night : Styles.white}>
+                {item.evening}
+              </p>
             </div>
-
-            {/*{item.morning && (*/}
-            {/*  <p className={item.morning ? Styles.mor : null}>{item.morning}</p>*/}
-            {/*)}*/}
-            {/*{item.afternoon && (*/}
-            {/*  <p className={item.afternoon ? Styles.after : null}>*/}
-            {/*    {item.afternoon}*/}
-            {/*  </p>*/}
-            {/*)}*/}
-            {/*{item.evening && (*/}
-            {/*  <p className={item.evening ? Styles.night : null}>*/}
-            {/*    {item.evening}*/}
-            {/*  </p>*/}
-            {/*)}*/}
-          </>
+          </div>
         ))}
       </div>
     )
   }
-  // const empSelect = (dat) => {
-  //   dateobj.time = dat.time
-  //   dateobj.name = data.name
-  //   dateobj.description = data.description
-  //   dateobj.charges = data.charges + ''
-  //   dateobj.image = data.image
-  //   dateobj.date = dnt
-  //   selectslot(dateobj)
-  //   changescreen()
-  //   //console.log(dat.time)
-  // }
   const chooseSelect = (dat) => {
     dateobj.time = dat.time
     dateobj.name = dat.name
@@ -281,7 +231,6 @@ const DateTime: FC<DateTimeProps> = ({
     dateobj.image = dat.image
     dateobj.date = finaldate
     selectslot(dateobj)
-    changescreen()
   }
   const cellrender = () => {
     return (
@@ -586,13 +535,14 @@ const DateTime: FC<DateTimeProps> = ({
     }
     return dnt
   }
+
   return (
     <div className={Styles.calanderWrapper}>
       {isMobile ? (
         mdisplay && (
           <div className={Styles.content}>
             <h4 className={Styles.headTitle}>
-              {data.name === 'Choose anyone'
+              {employeeID === 0
                 ? translation('connect.onlinebooking.date&time.chooseanyone')
                 : `${translation('connect.onlinebooking.date&time.d&tfor')} ${
                     data.name
@@ -649,16 +599,13 @@ const DateTime: FC<DateTimeProps> = ({
                   : thirdmonth(e)
                 setmdisplay(false)
               }}
-              // disabledDate={(currnet)=>{
-              //   return false
-              // }}
             />
           </div>
         )
       ) : (
         <div className={Styles.content}>
           <h4 className={Styles.headTitle}>
-            {data.name === 'Choose anyone'
+            {employeeID === 0
               ? translation('connect.onlinebooking.date&time.chooseanyone')
               : `${translation('connect.onlinebooking.date&time.d&tfor')} ${
                   data.name
@@ -743,56 +690,23 @@ const DateTime: FC<DateTimeProps> = ({
       )}
 
       <div className={Styles.rightSide}>
-        {
-          data.name === 'Choose anyone'
-            ? selV
-              ? isMobile
-                ? !mdisplay && cellrender()
-                : cellrender()
-              : isMobile
-              ? mdisplay && defaultrender()
-              : defaultrender()
-            : selV
+        {employeeID === 0
+          ? selV
             ? isMobile
-              ? !mdisplay && datarender()
-              : datarender()
+              ? !mdisplay && cellrender()
+              : cellrender()
             : isMobile
             ? mdisplay && defaultrender()
             : defaultrender()
-          // <div className={Styles.emptyData}>
-          //   <button className={Styles.btnDate}>
-          //     {moment(dnt).format('MMMM')} {moment(dnt).format('YYYY')}
-          //   </button>
-          //   <div className={Styles.org}>
-          //     <div className={Styles.boxDay}>
-          //       <p>
-          //         <div className={Styles.mor} />{' '}
-          //         {translation('connect.onlinebooking.date&time.morning')}
-          //       </p>
-          //     </div>
-          //     <div className={Styles.boxDay}>
-          //       <p>
-          //         <div className={Styles.after} />{' '}
-          //         {translation('connect.onlinebooking.date&time.afternoon')}
-          //       </p>
-          //     </div>
-          //     <div className={Styles.boxDay}>
-          //       <p>
-          //         <div className={Styles.night} />{' '}
-          //         {translation('connect.onlinebooking.date&time.evening')}
-          //       </p>
-          //     </div>
-          //   </div>
-          //   <div className={Styles.datePikerWrap}>
-          //     <CalendarOutlined />
-          //     <p>
-          //       {translation('connect.onlinebooking.date&time.description')}
-          //     </p>
-          //   </div>
-          // </div>
-        }
+          : selV
+          ? isMobile
+            ? !mdisplay && datarender()
+            : datarender()
+          : isMobile
+          ? mdisplay && defaultrender()
+          : defaultrender()}
       </div>
     </div>
   )
 }
-export default DateTime
+export default DateTimeSelector
