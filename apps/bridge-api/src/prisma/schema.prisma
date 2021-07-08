@@ -3687,7 +3687,7 @@ model CompanyMeta {
   meta_value String
   Company    Company @relation(fields: [company_id], references: [id])
 
-  @@unique([company_id, meta_name], name: "company_id")
+  @@unique([company_id, meta_name], name: "company_id_name")
   @@map("company_meta")
 }
 

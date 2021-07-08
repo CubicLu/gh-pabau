@@ -1,8 +1,12 @@
-import { extendType, list, nonNull, stringArg } from 'nexus'
-import { validateEmail } from '../../app/authentication/yup'
-import { EmailInput, EmailOutput } from '../../app/email/dto'
+import { extendType, nonNull, stringArg, list } from 'nexus'
 import EmailService from '../../app/email/EmailService'
-import { EmailNexusOutput } from '../../app/email/nexus-type'
+import { EmailInput, EmailOutput } from '../../app/email/dto'
+import {
+  EmailNexusOutput,
+  DynamicTemplateData,
+} from '../../app/email/nexus-type'
+import { validateEmail } from '../../app/authentication/yup'
+import { User } from '../../generated/schema'
 import { Context } from '../../context'
 
 export const SendEmail = extendType({
@@ -34,6 +38,33 @@ export const SendEmail = extendType({
               args.name = user?.full_name
               await new EmailService().sendEmail(args)
             }
+          }
+        }
+        return { success: true } as EmailOutput
+      },
+    })
+    t.field('sendEmailWithoutLogIn', {
+      type: EmailNexusOutput,
+      args: {
+        to: nonNull(list('String')),
+        subject: stringArg(),
+        text: stringArg(),
+        html: stringArg(),
+        templateType: stringArg(),
+        fields: list(DynamicTemplateData),
+      },
+      async resolve(_, args: EmailInput, ctx: Context) {
+        const { to } = args
+        const emails = typeof to === 'string' ? [to] : [...new Set(to)]
+        for (const email of emails) {
+          if (await validateEmail.validate(email)) {
+            const user: User = await ctx.prisma.user.findFirst({
+              where: {
+                username: { equals: email },
+              },
+            })
+            args.name = user?.full_name
+            await new EmailService().sendEmail(args)
           }
         }
         return { success: true } as EmailOutput

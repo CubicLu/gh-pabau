@@ -33,8 +33,13 @@ export const permissions = shield(
       updateOneUserGroup: rules.authentication.isAdmin,
       deleteOneUserGroup: rules.authentication.isAdmin,
 
+      // Send Email Without User Login
+      sendEmailWithoutLogIn: allow,
+
       // Public access mutations
       login: allow,
+      //resetPassword
+      resetPassword: allow,
       upsertUserReportByReportCode: rules.authentication.isAdmin,
 
       //CompanyBranches
@@ -100,6 +105,7 @@ export const permissions = shield(
       //MedicalFormContact
       medicalFormContacts: rules.authentication.isAuthenticated,
       //UserPermission
+      validateUser: allow,
       userPermissions: rules.authentication.isAuthenticated,
       findFirstUserPermission: rules.authentication.isAuthenticated,
       //Authentication

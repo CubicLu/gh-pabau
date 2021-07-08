@@ -1,8 +1,9 @@
 import { extendType, nonNull, stringArg } from 'nexus'
 import AuthenticationService from '../../app/authentication/AuthenticationService'
 import {
-  ChangePasswordInputDto,
   LoginInputDto,
+  ResetPasswordInputDto,
+  ChangePasswordInputDto,
 } from '../../app/authentication/dto'
 import EmailService from '../../app/email/EmailService'
 import { Context } from '../../context'
@@ -32,6 +33,46 @@ export const Authentication = extendType({
         return true
       },
     })
+    t.field('resetPassword', {
+      type: 'Boolean',
+      args: {
+        token: nonNull(stringArg()),
+        newPassword: nonNull(stringArg()),
+      },
+      async resolve(_, input: ResetPasswordInputDto, ctx) {
+        if (input.token === null || input.newPassword === null) {
+          throw new Error('Malformed Parameters')
+        }
+        const authService = new AuthenticationService(ctx)
+        const username = await authService.encryptDecryptText(
+          'decryption',
+          input.token
+        )
+        const response = await authService.forgotPasswordGenerator({
+          token: username,
+          newPassword: input.newPassword,
+        })
+        if (response) {
+          const user = await ctx.prisma.user.findFirst({
+            where: {
+              username: username,
+            },
+          })
+          await new EmailService().sendEmail({
+            templateType: 'password-reset-confirm',
+            to: user?.username,
+            subject: 'Password Changed Confirmation',
+            fields: [
+              {
+                key: 'name',
+                value: user?.full_name,
+              },
+            ],
+          })
+        }
+        return response
+      },
+    })
     t.field('updateUserPassword', {
       type: 'Boolean',
       description: 'Updates the current user password',
@@ -51,8 +92,13 @@ export const Authentication = extendType({
           await new EmailService().sendEmail({
             templateType: 'password-reset-confirm',
             to: response?.username,
-            name: response?.full_name,
             subject: 'Password Changed Confirmation',
+            fields: [
+              {
+                key: 'name',
+                value: response?.full_name,
+              },
+            ],
           })
           return true
         }
@@ -60,7 +106,38 @@ export const Authentication = extendType({
     })
   },
 })
-
+export const isUser = extendType({
+  type: 'Query',
+  definition(t) {
+    t.field('validateUser', {
+      type: 'String',
+      args: {
+        username: nonNull(stringArg()),
+      },
+      async resolve(_, loginInput: LoginInputDto, ctx) {
+        if (loginInput.username === null) {
+          throw new Error('Malformed Parameters')
+        }
+        const valideUser = ctx.prisma.user
+          .findFirst({
+            where: {
+              email: loginInput.username,
+            },
+          })
+          .then((res) => {
+            if (res.username === null) {
+              throw new Error('Invalid User')
+            }
+            return new AuthenticationService(ctx).encryptDecryptText(
+              'encryption',
+              res.username
+            )
+          })
+        return valideUser
+      },
+    })
+  },
+})
 export const Me = extendType({
   type: 'Query',
   definition(t) {

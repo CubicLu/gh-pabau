@@ -101,7 +101,7 @@
     "@paljs/cli": "3.3.6",
     "@paljs/nexus": "3.3.3",
     "@prisma/client": "2.23.0",
-    "@sendgrid/mail": "^7.4.4",
+    "@sendgrid/mail": "^7.4.5",
     "antd": "^4.15.5",
     "apollo-server": "2.24.0",
     "canvas-confetti": "1.4.0",

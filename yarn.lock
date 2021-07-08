@@ -4752,7 +4752,7 @@
     "@sendgrid/client" "^7.4.3"
     "@sendgrid/helpers" "^7.4.3"
 
-"@sendgrid/mail@^7.4.4":
+"@sendgrid/mail@^7.4.5":
   version "7.4.5"
   resolved "https://registry.yarnpkg.com/@sendgrid/mail/-/mail-7.4.5.tgz#22cef36e793134833b36aff5d3f4f53e8f81dd52"
   integrity sha512-adXMvrTUOlYr7+UTigZRGSYR9vheBv1y4fF2mugn29NBdQMfcQPGLQ5vIHgSAfcboBFCagZdamZqM5FeSGU0Hw==

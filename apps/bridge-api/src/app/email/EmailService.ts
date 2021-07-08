@@ -7,9 +7,14 @@ export default class EmailService {
   public constructor() {
     sgMail.setApiKey(process.env.SEND_GRID_ACCESS_KEY)
   }
-
   public async sendEmail(input: EmailInput) {
-    const { to, subject, text, html, templateType } = input
+    const { to, subject, text, html, templateType, fields } = input
+
+    const data = fields.reduce(
+      (acc, cur) => ({ ...acc, [cur.key]: cur.value }),
+      {}
+    )
+
     const emailOptions = {
       to: to,
       from: environment.FROM_EMAIL,
@@ -17,26 +22,8 @@ export default class EmailService {
       text: text,
       html: html,
       templateId: EmailTemplates[templateType],
-      ...this.getTemplateEmailData(input),
+      dynamicTemplateData: data,
     }
     await sgMail.send(emailOptions)
-  }
-
-  private getTemplateEmailData(input: EmailInput) {
-    const { templateType, subject, url, name, to } = input
-    switch (EmailTemplates[templateType]) {
-      case EmailTemplates['password-reset-confirm']:
-        return {
-          dynamicTemplateData: {
-            subject: subject,
-            name: name,
-            url: url,
-            userEmail: to,
-          },
-        }
-        break
-      default:
-        return
-    }
   }
 }

@@ -1,15 +1,15 @@
-import React, { FC } from 'react'
-import styles from '../../pages/login.module.less'
-import { Button, Notification, NotificationType } from '@pabau/ui'
-import * as Yup from 'yup'
-import { Form, Input, Checkbox, SubmitButton } from 'formik-antd'
-import { Formik } from 'formik'
 import { EyeInvisibleOutlined, LinkedinFilled } from '@ant-design/icons'
+import { gql, useMutation } from '@apollo/client'
+import { Button, Notification, NotificationType } from '@pabau/ui'
+import { Formik } from 'formik'
+import { Checkbox, Form, Input, SubmitButton } from 'formik-antd'
+import { useRouter } from 'next/router'
+import React, { FC } from 'react'
+import { LoginValidation } from '@pabau/yup'
 import { ReactComponent as GoogleIcon } from '../../assets/images/google.svg'
 import { ReactComponent as SSOIcon } from '../../assets/images/sso.svg'
-import { gql, useMutation } from '@apollo/client'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import { useRouter } from 'next/router'
+import styles from '../../pages/login.module.less'
 
 export interface LoginFormProps {
   email: string
@@ -70,12 +70,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
             password: '',
             remember: false,
           }}
-          validationSchema={Yup.object({
-            email: Yup.string()
-              .email('Invalid work email')
-              .required('Email is required'),
-            password: Yup.string().required('Password is required'),
-          })}
+          validationSchema={LoginValidation}
           onSubmit={async (value: LoginFormProps) => {
             try {
               await loginHandler(value)
@@ -87,7 +82,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
               Notification(NotificationType.error, error.toString())
             }
           }}
-          render={() => (
+          render={({ isValid, values }) => (
             <Form layout="vertical">
               <Form.Item
                 label={'Email'}
@@ -118,8 +113,20 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
                 <Checkbox name={'remember'}>Remember me</Checkbox>
               </div>
               <div className={styles.btnSubmit}>
-                <SubmitButton className={styles.btnStarted} type={'primary'}>
-                  Login
+                <SubmitButton
+                  className={
+                    isValid && values.email !== '' && values.password !== ''
+                      ? styles.btnStarted
+                      : styles.btnDisabled
+                  }
+                  type={'primary'}
+                  disabled={
+                    isValid && values.email !== '' && values.password !== ''
+                      ? false
+                      : true
+                  }
+                >
+                  Confirm
                 </SubmitButton>
               </div>
               <div className={styles.accessKey}>

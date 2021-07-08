@@ -23,7 +23,7 @@ export const SetCompanyMeta = extendType({
         }
         return ctx.prisma.companyMeta.upsert({
           where: {
-            company_id: {
+            company_id_name: {
               company_id: ctx.authenticated.company,
               meta_name: input.meta_name,
             },
