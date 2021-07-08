@@ -8,7 +8,11 @@ import * as Yup from 'yup'
 import img from '../../../web/assets/images/connect/facebook.png'
 import img1 from '../../../web/assets/images/connect/Google.png'
 import { UserOutlined } from '@ant-design/icons'
-import { data, tooltip, normaldata } from '../../../web/mocks/connect/confirmMock'
+import {
+  data,
+  tooltip,
+  normaldata,
+} from '../../../web/mocks/connect/confirmMock'
 import { Verification, RenderProduct } from '../conformation/verification'
 import Conformation, {
   datatype,
@@ -184,20 +188,6 @@ const BookingDetail: FC<BookingdetailProps> = ({
   return (
     <div>
       {confim ? (
-        // <Conformation
-        //   changescreen={changescreen}
-        //   clinic={clinic}
-        //   docname={docname}
-        //   date={date}
-        //   time={time}
-        //   charge={charge}
-        //   address={address}
-        //   type={type}
-        //   image={image}
-        //   services={services}
-        //   translation={translation}
-        //   getprice={getprice}
-        // />
         <Conformation
           changescreen={changescreen}
           clinic={clinic}

@@ -24,14 +24,13 @@ import { Image } from 'antd'
 
 import useServices from '../../hooks/useServices'
 
-export interface P {}
-
 interface BookingData {
   masterCategoryID?: number
   categoryID?: number
   serviceID?: number[]
   employeeID?: number
   locationID?: number
+  dateTime?: moment.Moment
 }
 
 interface userData {
@@ -70,7 +69,7 @@ const userData: userData = {
   services: 0,
   vouchers: 0,
 }
-export function Index(props: P) {
+export function Index() {
   // CRAP
   const [seleData, SetselData] = useState(defaultItems.slice(0, 4))
   const [ispro, setispro] = useState(false)
@@ -406,16 +405,23 @@ export function Index(props: P) {
             </div>
           )}
           {currentStep === 4 && (
-            <div>
-              <DateTimeSelector
-                employeeID={selectedData.employeeID}
-                selectslot={slot}
-                translation={translation}
-                dateVal={date}
-                oldValue={editdate}
-                time={tempT}
-              />
-            </div>
+            <DateTimeSelector
+              employeeID={selectedData.employeeID}
+              onSelectedTimeslot={(dateTime) => {
+                setSelectedData({
+                  ...selectedData,
+                  dateTime: dateTime,
+                })
+                setCurrentStep(currentStep + 1)
+              }}
+              selectslot={(slot) => {
+                setCurrentStep(currentStep + 1)
+              }}
+              translation={translation}
+              dateVal={date}
+              oldValue={editdate}
+              time={tempT}
+            />
           )}
           {currentStep === 5 && (
             <div>

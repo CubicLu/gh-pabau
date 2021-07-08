@@ -2,7 +2,6 @@ import React, { FC, useState } from 'react'
 import Styles from './DateTimeSelector.module.less'
 import { Calendar } from 'antd'
 import moment from 'moment'
-import { Staff } from '../../types/staff'
 import { useMedia } from 'react-use'
 import {
   CalendarOutlined,
@@ -17,29 +16,23 @@ import {
   Evening,
 } from '../../../web/mocks/connect/Datemock'
 import ClassNames from 'classnames'
+import { useBookingAvailableShiftsQuery } from '@pabau/graphql'
 
-/* eslint-disable-next-line */
-export interface DandT{
+export interface DandT {
   date: boolean
   time: boolean
 }
-export interface DateTimeProps {
+export interface P {
   employeeID: number
+  onSelectedTimeslot: (dateTime: moment.Moment) => void
   time: string
   selectslot: (slotData) => void
   translation: (val: string) => string
   dateVal: moment.Moment
   oldValue: DandT
 }
-export interface DoctorType {
-  key: number
-  time: number
-  name: string
-  description: string
-  charges: number
-  image: any
-}
-const DateTimeSelector: FC<DateTimeProps> = ({
+
+const DateTimeSelector: FC<P> = ({
   employeeID,
   time,
   selectslot,
@@ -98,6 +91,33 @@ const DateTimeSelector: FC<DateTimeProps> = ({
 
   // FIXED
   const [selectedDate, setSelectedDate] = useState(moment())
+
+  const {
+    loading: loadingShifts,
+    error: errorShifts,
+    data: shiftsResult,
+  } = useBookingAvailableShiftsQuery({
+    variables: {
+      company_id: 8021,
+      shift_start: Number.parseInt(selectedDate.format('YYYYMMDD000000')),
+      shift_end: Number.parseInt(moment().add(3, 'M').format('YYYYMMDD235959')),
+    },
+  })
+
+  if (errorShifts) return <div>Error!</div>
+  if (loadingShifts) return <div>Loading...</div>
+
+  const shiftsByDate = []
+  for (const shift of shiftsResult.rotaShifts) {
+    if (employeeID === 0 || employeeID === shift.uid) {
+      const index = shift.start.toString().substring(0, 8)
+      if (!shiftsByDate[index]) {
+        shiftsByDate[index] = [shift]
+      } else {
+        shiftsByDate[index].push(shift)
+      }
+    }
+  }
 
   const firstmonth = (e) => {
     // console.log(e.month())
@@ -179,49 +199,56 @@ const DateTimeSelector: FC<DateTimeProps> = ({
     }
   }
 
-  const getListData = (value) => {
-    let listData = []
-    const v = Check(value.date())
-    if (v) {
-      listData = [
-        {
-          key: 1,
-          morning: dateobj.morning,
-          afternoon: dateobj.afternoon,
-          evening: dateobj.evening,
-        },
-      ]
-      return listData
+  const getShiftsOnDate = (date) => {
+    const shiftsIndex = date.format('YYYYMMDD')
+    if (shiftsByDate[shiftsIndex]?.length > 0) {
+      return {
+        key: shiftsIndex,
+        shifts: shiftsByDate[shiftsIndex],
+        morning: true,
+        afternoon: false,
+        evening: true,
+      }
     } else {
-      return []
+      return false
     }
   }
   const dateCellRender = (value) => {
-    const listData = getListData(value)
+    const shifts = getShiftsOnDate(value)
+    if (!shifts) {
+      return []
+    }
+
     return (
       <div className={Styles.listData}>
-        {listData.map((item) => (
-          <div
-            className={ClassNames(
-              Styles.celllist,
-              !(item.morning && item.afternoon && item.evening) && Styles.xyzz
-            )}
-          >
-            <div className={Styles.celldatap}>
-              <p className={item.morning ? Styles.mor : Styles.white}>
-                {item.morning}
-              </p>
-              <p className={item.afternoon ? Styles.after : Styles.white}>
-                {item.afternoon}
-              </p>
-              <p className={item.evening ? Styles.night : Styles.white}>
-                {item.evening}
-              </p>
-            </div>
+        <div
+          className={ClassNames(
+            Styles.celllist,
+            !(shifts.morning && shifts.afternoon && shifts.evening) &&
+              Styles.xyzz
+          )}
+        >
+          <div className={Styles.celldatap}>
+            <p className={shifts.morning ? Styles.mor : Styles.white}>
+              {shifts.morning}
+            </p>
+            <p className={shifts.afternoon ? Styles.after : Styles.white}>
+              {shifts.afternoon}
+            </p>
+            <p className={shifts.evening ? Styles.night : Styles.white}>
+              {shifts.evening}
+            </p>
           </div>
-        ))}
+        </div>
       </div>
     )
+  }
+  const dateHasShift = (date) => {
+    const shiftsIndex = date.format('YYYYMMDD')
+    if (shiftsByDate[shiftsIndex]) {
+      return true
+    }
+    return false
   }
   const chooseSelect = (dat) => {
     dateobj.time = dat.time
@@ -613,29 +640,12 @@ const DateTimeSelector: FC<DateTimeProps> = ({
                   'connect.onlinebooking.date&time.appointment'
                 )}`}
           </h4>
-          <h4>
-            {moment(dnt).format('MMMM')} {moment(dnt).format('YYYY')}
-          </h4>
+          <h4>{selectedDate.format('MMMM YYYY')}</h4>
           <Calendar
-            value={
-              oldValue.date
-                ? dnt.month() === moment(finaldate).month()
-                  ? moment(finaldate)
-                  : dnt
-                : dnt
-            }
+            value={selectedDate}
             dateCellRender={dateCellRender}
-            onSelect={(e) => firstmonth(e)}
-            disabledDate={(currnet) => {
-              const dt = oldValue.date
-                ? dnt.month() === moment(finaldate).month()
-                  ? moment(finaldate)
-                  : dnt
-                : dnt
-              if (dt.month() === currnet.month()) {
-                return false
-              } else return true
-            }}
+            // onSelect={(e) => firstmonth(e)}
+            disabledDate={dateHasShift}
           />
           <h4>
             {moment(monthdnt).format('MMMM')} {moment(monthdnt).format('YYYY')}

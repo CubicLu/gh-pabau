@@ -115,6 +115,7 @@ export const permissions = shield(
       serviceMasterCategories: allow,
       companyBranches: allow,
       cmStaffGenerals: allow,
+      rotaShifts: allow,
       '*': rules.interceptors.interceptAccessToCompanyData,
     },
   },
