@@ -62,7 +62,7 @@ pipelines:
 
           - step:
               name: lint
-              max-time: 20
+              max-time: 40
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
                 - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:lint --base=origin/master --with-deps
@@ -247,7 +247,7 @@ pipelines:
               name: lint
               runs-on:
                 - 'self.hosted'
-              max-time: 20
+              max-time: 40
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
                 - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:lint --base=HEAD~1 --with-deps
