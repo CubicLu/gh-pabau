@@ -268,8 +268,8 @@ In addition to Ticket workflow, if you are doing backend:
 1. Export the metadata (this overwrites on top in a "Git-safe" fashion): `yarn hasura:export`
 
 * Never change previous migrations in Git that have already been merged to master.
-* If you are out-of-sync, you'll have to `yarn hasura:clean` to start over.
-* Careful not to create a resolver in Hasura that is same as Prisma.
+* If you are out-of-sync, you'll have to `git checkout master hasura/ && yarn hasura:clean` to start over.
+* Careful not to create a resolver in Hasura that is same name as Prisma.
 * Naming conventions should follow Hasura guidelines for Hasura, and GraphQL spec for Prisma.
 * Add comments for the customer to all tables and columns. You can omit the 3-5 boilerplate columns such as `id`.
 
