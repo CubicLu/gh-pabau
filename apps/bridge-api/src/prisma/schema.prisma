@@ -1390,7 +1390,7 @@ model CompanyDetails {
   timezone                Timezone                 @relation(fields: [timezone_id], references: [timezone_id])
   company                 Company                  @relation(fields: [company_id], references: [id])
 
-
+  User User[]
   @@index([company_id], name: "company_id")
   @@index([timezone_id], name: "timezone_id")
   @@map("company_details")
@@ -7220,8 +7220,8 @@ model JobStatus {
 //  row_count    Int
 //}
 //
-//model labs {
-//  id              Int    @id @default(autoincrement())
+//model Lab {
+//  id              Int            @id @default(autoincrement())
 //  company_id      Int
 //  is_active       Int
 //  lab_name        String
@@ -7233,7 +7233,11 @@ model JobStatus {
 //  lab_postal      String
 //  lab_phone       String
 //  lab_provider_no String
+//  CompanyDetails  CompanyDetails @relation(fields: [company_id], references: [company_id])
+//
+//  @@map("labs")
 //}
+
 //
 //model lab_product_template {
 //  id          Int    @id @default(autoincrement())
@@ -12214,6 +12218,7 @@ model User {
   main_contact                Boolean
   UserSecurityQuestionsAnswer UserSecurityQuestionsAnswer[]
   company                     Company?                      @relation(fields: [company_id], references: [id])
+  CompanyDetails              CompanyDetails?               @relation(fields: [company_id], references: [company_id])
   RotaShift                   RotaShift[]
   UserGroupMember             UserGroupMember?
   UserMainPermission          UserMainPermission[]

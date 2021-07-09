@@ -17,6 +17,7 @@ export const permissions = shield(
 
       //CompanyMeta
       setOneCompanyMeta: rules.authentication.isAdmin,
+      setManyCompanyMeta: rules.authentication.isAdmin,
 
       //Update User Password
       updateUserPassword: rules.authentication.isAuthenticated,

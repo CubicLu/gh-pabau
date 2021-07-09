@@ -99,6 +99,7 @@ export const User = objectType({
     t.model.main_contact()
     t.model.UserSecurityQuestionsAnswer()
     t.model.company()
+    t.model.CompanyDetails()
     t.model.RotaShift()
     t.model.UserGroupMember()
     t.model.UserMainPermission()

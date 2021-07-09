@@ -1312,6 +1312,7 @@ en:
   setup.issuing.form.field.invoicestartingnumber: 'Invoice starting number'
   setup.issuing.form.field.invoicestartingnumber.placeholder: 'Enter inovice starting number'
   setup.issuing.form.field.vat: 'VAT registered'
+  setup.issuing.form.field.Region: 'region'
   setup.issuing.fullscreenmodal.title: '{{what}} Issuing Company'
   setup.issuing.deletemodal.title: 'Delete {{what}}?'
   setup.issuing.deletemodal.button: 'Yes, Delete'
@@ -1709,6 +1710,7 @@ en:
   marketingreferral-leaderboard.name: Name
   marketingreferral-leaderboard.points: Points
   marketingreferral-misc.paid: Paid
+  notification.coming.soon.label: (Coming soon)
   setup.business-details.header: 'Business Details'
   setup.business-details.people.appointment.singular: Patient
   setup.business-details.people.appointment.plural: Patients
@@ -1874,6 +1876,11 @@ en:
   marketingrevirews.data.updatediscounterrormessages: 'Error! While updating a response'
   marketingrevirews.data.deletediscountsuccessmessages: 'Success! You have successfully deleted a response'
   marketingrevirews.data.deletediscounterrormessages: 'Error! While deleting a response'
+  marketingreviews.data.config.title1: 'What do you call people who attend appointments with you?'
+  marketingreviews.data.config.title2: 'What do you call bookings with multiple attendees?'
+  marketingreviews.data.config.title3: 'What do you call employees who perform services?'
+  marketingreviews.data.config.title4: 'What do you call people who perform classes?'
+  marketingreviews.data.config.title5: 'What do you call TAX?'
   setup.labs.data.capitalizelabs: Labs
   setup.labs.data.lowercaselabs: labs
   setup.labs.data.capitalizelab: Lab
@@ -2905,20 +2912,29 @@ en:
   business.notification.sub.title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
   business.notification.setting.notification: 'Notification'
   business.notification.setting.email: 'Email'
-  business.notification.lead: 'When receiving a new inbound lead.'
   business.notification.review: 'When receiving a new review.'
   business.notification.sms.delivered: 'When a SMS campaign is delivered.'
   business.notification.newsletter.delivered: 'When a newsletter campaign is delivered.'
-  business.notification.report: 'When a scheduled report has been sent.'
   business.notification.holiday: 'When a staff member requests a holiday.'
   business.notification.holiday.tooltip: 'Only admins will receive this notification'
   business.notification.refer: 'When someone refers into the business.'
-  business.notification.unattended: 'When reviews have been unattended'
+  business.notification.unattended: 'When reviews have been unattended.'
   business.notification.assessment.due: 'When self assessment is due'
   business.notification.peer.review.due: 'Reminder of when peer review is due'
   business.notification.self.assessment.due: 'Reminder of when Self assessment is due'
   business.notification.manager.assessment.due: 'Reminder of when Manager assessment is due'
   business.notification.target.hit: 'When a team target is hit'
+  business.system.option.title1: 'Display in calendar only when an open cycle exists'
+  business.system.option.title2: 'Always display'
+  business.system.time.format: 'Time Format'
+  busines.system.time.format.option1: '12 hours (e.g. 9:00pm)'
+  busines.system.time.format.option2: '24 hours (e.g. 21:00)'
+  business.system.enable.labs: 'Enable Labs'
+  business.system.enable.labs.tooltip: 'Enable the ordering and receiving of lab results'
+  business.security.score: 'How do we calculate this score ?'
+  business.security.bad.message: 'Pabau baseline standard Security score : Bad'
+  business.security.good.message: 'Pabau baseline standard Security score : Good'
+  business.security.excellent.message: 'Pabau baseline standard Security score :Excellent'
   reset.password.title: 'Reset your password'
   reset.password.title.text: 'Reset password'
   reset.password.description: 'Enter the email address associated with your account, and we’ll send
@@ -3174,6 +3190,9 @@ en:
   dashboard.create.modal.create.email.title: 'New mail'
   dashboard.create.modal.create.letter.title: 'Create a letter'
   dashboard.create.modal.create.form.title: 'Create a form'
+  setup.business.details.name.message: 'Business name is required'
+  setup.business.details.email.message: 'Please enter valid company email'
+  setup.business.details.email.required: 'company email is required'
   setup.online-booking.analytics-settings: 'Analytics settings'
   setup.online-booking.analytics.setup-now: 'Set Up Now'
   setup.online-booking.analytics.status.enabled: 'Enabled'

@@ -1140,6 +1140,7 @@ export interface CompanyDetails {
   completed_setup: boolean;
   timezone: Timezone;
   company: Company;
+  User?: User[];
 }
 
 export interface CompanySubscription {
@@ -3119,6 +3120,7 @@ export interface User {
   main_contact: boolean;
   UserSecurityQuestionsAnswer?: UserSecurityQuestionsAnswer[];
   company?: Company;
+  CompanyDetails?: CompanyDetails;
   RotaShift?: RotaShift[];
   UserGroupMember?: UserGroupMember;
   UserMainPermission?: UserMainPermission[];

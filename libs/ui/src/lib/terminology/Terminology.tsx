@@ -1,15 +1,16 @@
-import React, { FC, useState, useEffect } from 'react'
-import { Divider, Button, Row, Col } from 'antd'
-import { Input, Notification, NotificationType } from '@pabau/ui'
-import styles from './Terminology.module.less'
+import { Input } from '@pabau/ui'
+import { Button, Col, Divider, Row, Skeleton } from 'antd'
+import React, { FC, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import styles from './Terminology.module.less'
 
 interface TerminologyConfigItem {
   key: string
+  label?: string
   value: string
 }
 
-interface TerminologyConfig {
+export interface TerminologyConfig {
   title: string
   items: TerminologyConfigItem[]
 }
@@ -17,13 +18,17 @@ interface TerminologyConfig {
 export interface TerminologyProps {
   config?: TerminologyConfig[]
   optIns?: TerminologyConfig[]
+  loading?: boolean
   onSave?(val): void
+  buttonClicked?: boolean
 }
 
 export const Terminology: FC<TerminologyProps> = ({
   config,
   optIns,
+  loading,
   onSave,
+  buttonClicked,
 }) => {
   const { t } = useTranslation('common')
   const defaultConfig = [
@@ -135,8 +140,8 @@ export const Terminology: FC<TerminologyProps> = ({
     },
   ]
 
-  const [configs, setConfigs] = useState(defaultConfig)
-  const [optInsItems, setOptInsItems] = useState(defaultOptIns)
+  const [configs, setConfigs] = useState(config || [])
+  const [optInsItems, setOptInsItems] = useState(optIns || [])
   const handleConfigItemChange = ({ index, itemIndex, val }) => {
     const configItems = [...configs]
     configItems[index].items[itemIndex].value = val
@@ -148,10 +153,6 @@ export const Terminology: FC<TerminologyProps> = ({
     setOptInsItems(OptInsItems)
   }
   const handleSaveChanges = () => {
-    Notification(
-      NotificationType.success,
-      t('notification.type.success.message')
-    )
     onSave?.({
       config: configs,
       optIns: optInsItems,
@@ -187,13 +188,20 @@ export const Terminology: FC<TerminologyProps> = ({
             <Row gutter={[32, 28]}>
               {configItem.items.map((item, itemIndex) => (
                 <Col className="gutter-row" xs={24} sm={12} key={item.key}>
-                  <Input
-                    text={item.value}
-                    label={item.key}
-                    onChange={(val) =>
-                      handleConfigItemChange({ index, itemIndex, val })
-                    }
-                  />
+                  {!loading ? (
+                    <Input
+                      text={item.value}
+                      label={item.key}
+                      onChange={(val) =>
+                        handleConfigItemChange({ index, itemIndex, val })
+                      }
+                    />
+                  ) : (
+                    <>
+                      <span className={styles.text}>{item.key}</span>
+                      <Skeleton.Input active={true} size={'small'} />
+                    </>
+                  )}
                 </Col>
               ))}
             </Row>
@@ -211,13 +219,20 @@ export const Terminology: FC<TerminologyProps> = ({
             <Row gutter={[32, 28]}>
               {optInsItem.items.map((item, itemIndex) => (
                 <Col className="gutter-row" xs={24} sm={12} key={item.key}>
-                  <Input
-                    text={item.value}
-                    label={item.key}
-                    onChange={(val) =>
-                      handleOptInsItemChange({ index, itemIndex, val })
-                    }
-                  />
+                  {!loading ? (
+                    <Input
+                      text={item.value}
+                      label={item.label}
+                      onChange={(val) =>
+                        handleOptInsItemChange({ index, itemIndex, val })
+                      }
+                    />
+                  ) : (
+                    <>
+                      <span className={styles.text}>{item.label}</span>
+                      <Skeleton.Input active={true} size={'small'} />
+                    </>
+                  )}
                 </Col>
               ))}
             </Row>
@@ -226,9 +241,21 @@ export const Terminology: FC<TerminologyProps> = ({
         </div>
       ))}
       <div className={styles.btnSave}>
-        <Button type="primary" onClick={() => handleSaveChanges()}>
-          {t('business.details.save.changes')}
-        </Button>
+        {!loading ? (
+          <Button
+            type="primary"
+            onClick={() => handleSaveChanges()}
+            loading={buttonClicked}
+          >
+            {t('business.details.save.changes')}
+          </Button>
+        ) : (
+          <Skeleton.Button
+            active={true}
+            size={'small'}
+            className={styles.btn}
+          />
+        )}
       </div>
     </div>
   )
