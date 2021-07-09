@@ -191,7 +191,7 @@ export default class AuthenticationService {
     action: 'encryption' | 'decryption',
     text: string
   ) {
-    const code = process.env.SECRET_KEY
+    const code = process.env.JWT_SECRET
     const key = code.repeat(32).substr(0, 32)
     const iv = code.repeat(16).substr(0, 16)
     if (text === '') {
