@@ -46,7 +46,6 @@ const DateTimeSelector: FC<P> = ({
   const date = moment(newDate).format('YYYY-MM-DD')
   const dateValue = moment(date)
   const [dnt, setDnt] = useState(dateValue)
-  const [selV, setselV] = useState(oldValue.date ? true : false)
 
   const [mdisplay, setmdisplay] = useState(true)
   const [calcount, setcalcount] = useState(1)
@@ -128,7 +127,6 @@ const DateTimeSelector: FC<P> = ({
     ) {
       console.log(e.month() === dnt.month())
       console.log(dnt.month())
-      setselV(true)
       setDnt(e)
       setfinal(e)
       setmor(dateobj.morning)
@@ -143,9 +141,6 @@ const DateTimeSelector: FC<P> = ({
       (dateobj.morning || dateobj.afternoon || dateobj.evening) &&
       e.month() === monthdnt.month()
     ) {
-      console.log(e.month())
-      console.log(monthdnt.month())
-      setselV(true)
       setmonthdnt(e)
       setfinal(e)
       //console.log(dateobj.morning)
@@ -161,9 +156,6 @@ const DateTimeSelector: FC<P> = ({
       (dateobj.morning || dateobj.afternoon || dateobj.evening) &&
       e.month() === twomonthdnt.month()
     ) {
-      console.log(e.month())
-      console.log(twomonthdnt.month())
-      setselV(true)
       settwomonthdnt(e)
       setfinal(e)
       setmor(dateobj.morning)
@@ -198,7 +190,6 @@ const DateTimeSelector: FC<P> = ({
       return false
     }
   }
-
   const getShiftsOnDate = (date) => {
     const shiftsIndex = date.format('YYYYMMDD')
     if (shiftsByDate[shiftsIndex]?.length > 0) {
@@ -206,8 +197,8 @@ const DateTimeSelector: FC<P> = ({
         key: shiftsIndex,
         shifts: shiftsByDate[shiftsIndex],
         morning: true,
-        afternoon: false,
-        evening: true,
+        afternoon: true,
+        evening: false,
       }
     } else {
       return false
@@ -244,11 +235,50 @@ const DateTimeSelector: FC<P> = ({
     )
   }
   const dateHasShift = (date) => {
-    const shiftsIndex = date.format('YYYYMMDD')
+    const shiftsIndex = Number.parseInt(date.format('YYYYMMDD'))
     if (shiftsByDate[shiftsIndex]) {
-      return true
+      return false
     }
-    return false
+    return true
+  }
+  const getDateTimeslots = (date) => {
+    const shiftsIndex = Number.parseInt(date.format('YYYYMMDD'))
+    const shift = shiftsByDate[shiftsIndex][0]
+    const shiftDate =
+      shift.start.toString().substring(0, 4) +
+      '-' +
+      shift.start.toString().substring(4, 6) +
+      '-' +
+      shift.start.toString().substring(6, 8)
+    const shiftStart = moment(
+      shiftDate +
+        ' ' +
+        shift.start.toString().substring(8, 10) +
+        ':' +
+        shift.start.toString().substring(10, 12) +
+        ':' +
+        shift.start.toString().substring(12, 14)
+    )
+    const shiftEnd = moment(
+      shiftDate +
+        ' ' +
+        shift.end.toString().substring(8, 10) +
+        ':' +
+        shift.end.toString().substring(10, 12) +
+        ':' +
+        shift.end.toString().substring(12, 14)
+    )
+
+    const timeslots = []
+    for (
+      let date = moment(shiftStart);
+      date.isBefore(shiftEnd);
+      date.add(15, 'minutes')
+    ) {
+      timeslots.push(date.format('HH:mm'))
+    }
+
+    return timeslots
   }
   const chooseSelect = (dat) => {
     dateobj.time = dat.time
@@ -272,7 +302,6 @@ const DateTimeSelector: FC<P> = ({
               className={Styles.closeicon}
               onClick={() => {
                 setmdisplay(true)
-                setselV(false)
               }}
             >
               <CloseOutlined />
@@ -395,19 +424,17 @@ const DateTimeSelector: FC<P> = ({
     )
   }
   const datarender = () => {
+    const timeslots = getDateTimeslots(selectedDate)
+    const usedTimeslots = []
     return (
       <div className={Styles.scheduleWrap}>
         <div className={Styles.btnDate}>
-          {`
-                  ${moment(finaldate).format('DD')}th
-                ${moment(finaldate).format('MMMM')}
-                ${moment(finaldate).format('YYYY')}`}
+          {selectedDate.format('Do MMMM YYYY')}
           {isMobile && (
             <button
               className={Styles.closeicon}
               onClick={() => {
                 setmdisplay(true)
-                setselV(false)
               }}
             >
               <CloseOutlined />
@@ -421,85 +448,72 @@ const DateTimeSelector: FC<P> = ({
               <div className={Styles.mor} />{' '}
               {translation('connect.onlinebooking.date&time.morning')}
             </p>
-            {Morning.map((val) => (
-              <div
-                className={
-                  mor
-                    ? oldValue.time
-                      ? Number(time) === val.time
-                        ? Styles.blue
-                        : Styles.green
-                      : Styles.green
-                    : Styles.gray
-                }
-                key={val.key}
-                onClick={() => {
-                  if (mor) {
-                    chooseSelect(val)
-                    // empSelect(val)
-                  }
-                }}
-              >
-                {console.log(mor)}
-                <p>{val.time < 10 ? `0${val.time}:00` : `${val.time}:00`}</p>
-              </div>
-            ))}
+            {timeslots.map((val) => {
+              if (val.substr(0, 2) > 11) {
+                return null
+              }
+              return (
+                <div
+                  className={false ? Styles.gray : Styles.green}
+                  key={val}
+                  onClick={() => {
+                    if (mor) {
+                      chooseSelect(val)
+                    }
+                  }}
+                >
+                  <p>{val}</p>
+                </div>
+              )
+            })}
           </div>
           <div className={Styles.boxDay}>
             <p>
               <div className={Styles.after} />
               {translation('connect.onlinebooking.date&time.afternoon')}
             </p>
-            {Afternoon.map((val) => (
-              <div
-                className={
-                  after
-                    ? oldValue.time
-                      ? Number(time) === val.key
-                        ? Styles.blue
-                        : Styles.green
-                      : Styles.green
-                    : Styles.gray
-                }
-                key={val.key}
-                onClick={() => {
-                  if (after) {
-                    chooseSelect(val)
-                    // empSelect(val)
-                  }
-                }}
-              >
-                <p>{val.time < 10 ? `0${val.time}:00` : `${val.time}:00`}</p>
-              </div>
-            ))}
+            {timeslots.map((val) => {
+              if (val.substr(0, 2) < 12 || val.substr(0, 2) > 16) {
+                return null
+              }
+              return (
+                <div
+                  className={false ? Styles.gray : Styles.green}
+                  key={val}
+                  onClick={() => {
+                    if (mor) {
+                      chooseSelect(val)
+                    }
+                  }}
+                >
+                  <p>{val}</p>
+                </div>
+              )
+            })}
           </div>
           <div className={Styles.boxDay}>
             <p>
               <div className={Styles.night} />
               {translation('connect.onlinebooking.date&time.evening')}
             </p>
-            {Evening.map((val) => (
-              <div
-                className={
-                  eve
-                    ? oldValue.time
-                      ? Number(time) === val.time
-                        ? Styles.blue
-                        : Styles.green
-                      : Styles.green
-                    : Styles.gray
-                }
-                key={val.key}
-                onClick={() => {
-                  if (eve) {
-                    chooseSelect(val)
-                    //empSelect(val)
-                  }
-                }}
-              >
-                <p>{val.time < 10 ? `0${val.time}:00` : `${val.time}:00`}</p>
-              </div>
-            ))}
+            {timeslots.map((val) => {
+              if (val.substr(0, 2) < 17) {
+                return null
+              }
+              return (
+                <div
+                  className={false ? Styles.gray : Styles.green}
+                  key={val}
+                  onClick={() => {
+                    if (mor) {
+                      chooseSelect(val)
+                    }
+                  }}
+                >
+                  <p>{val}</p>
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>
@@ -642,9 +656,11 @@ const DateTimeSelector: FC<P> = ({
           </h4>
           <h4>{selectedDate.format('MMMM YYYY')}</h4>
           <Calendar
-            value={selectedDate}
+            value={moment()}
             dateCellRender={dateCellRender}
-            // onSelect={(e) => firstmonth(e)}
+            onSelect={(e) => {
+              //setSelectedDate(e)
+            }}
             disabledDate={dateHasShift}
           />
           <h4>
@@ -700,21 +716,22 @@ const DateTimeSelector: FC<P> = ({
       )}
 
       <div className={Styles.rightSide}>
-        {employeeID === 0
-          ? selV
-            ? isMobile
-              ? !mdisplay && cellrender()
-              : cellrender()
-            : isMobile
-            ? mdisplay && defaultrender()
-            : defaultrender()
-          : selV
-          ? isMobile
-            ? !mdisplay && datarender()
-            : datarender()
-          : isMobile
-          ? mdisplay && defaultrender()
-          : defaultrender()}
+        {/*{employeeID === 0*/}
+        {/*  ? true*/}
+        {/*    ? isMobile*/}
+        {/*      ? !mdisplay && cellrender()*/}
+        {/*      : cellrender()*/}
+        {/*    : isMobile*/}
+        {/*    ? mdisplay && defaultrender()*/}
+        {/*    : defaultrender()*/}
+        {/*  : true*/}
+        {/*  ? isMobile*/}
+        {/*    ? !mdisplay && datarender()*/}
+        {/*    : datarender()*/}
+        {/*  : isMobile*/}
+        {/*  ? mdisplay && defaultrender()*/}
+        {/*  : defaultrender()}*/}
+        {datarender()}
       </div>
     </div>
   )
