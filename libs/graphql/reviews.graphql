@@ -5,7 +5,7 @@ query getSocialSurveyFeedback(
   $rating: IntFilter
   $service: String
 ) {
-  socialSurveyFeedbacks(
+  findManySocialSurveyFeedback(
     take: $take
     skip: $skip
     orderBy: { date: desc }
@@ -46,7 +46,7 @@ query getSocialSurveyFeedback(
   }
 }
 query getAllSocialSurveyFeedback {
-  socialSurveyFeedbacks(orderBy: { date: desc }) {
+  findManySocialSurveyFeedback(orderBy: { date: desc }) {
     feedback_source
     rating
     service
@@ -63,7 +63,7 @@ query getAllSocialSurveyFeedbackRecords(
   $rating: IntFilter
   $service: String
 ) {
-  socialSurveyFeedbacks(
+  findManySocialSurveyFeedback(
     orderBy: { date: desc }
     where: {
       User: { full_name: { contains: $full_name } }
@@ -76,7 +76,7 @@ query getAllSocialSurveyFeedbackRecords(
 }
 
 query socialSurveyFeedbackAggregate {
-  socialSurveyFeedbacksCount
+  findManySocialSurveyFeedbackCount
 }
 
 mutation insertSocialSurveyResposnes(

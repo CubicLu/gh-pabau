@@ -1,0 +1,485 @@
+#Fragments
+fragment Category on InvCategory {
+  id
+  name
+}
+
+fragment SupplierDetails on AccountManager {
+  id
+  organisation_name
+}
+
+fragment Location on CompanyBranch {
+  id
+  name
+}
+
+fragment AssociatedProductsCount on InvCategory {
+  _count {
+    InvProduct
+  }
+}
+
+fragment ProductTaxFields on Tax {
+  id
+  name
+  rate
+}
+
+fragment Product on InvProduct {
+  id
+  name
+  is_active
+  code
+  InvCategory {
+    ...Category
+  }
+  old_barcode
+  sku
+  size
+  supplier: Supplier {
+    ...SupplierDetails
+  }
+  Description
+  image
+  cost
+  price
+  cost
+  Tax {
+    ...ProductTaxFields
+  }
+  alert_quantity
+  allow_negative_qty
+  max_level
+  is_active
+  InvWarehouseProduct {
+    product_id
+    location_id
+    quantity
+    Location {
+      ...Location
+    }
+  }
+}
+
+fragment CategoryFields on InvCategory {
+  ...Category
+  order
+  code
+  category_type
+  image
+  disabled
+}
+
+# PurchaseOrder Queries/Mutations
+query purchaseOrdersList(
+  $offset: Int = 0
+  $limit: Int = 10
+  $isActive: Int = 0
+  $searchTerm: String = ""
+) {
+  findManyCmPurchaseOrder(
+    take: $limit
+    skip: $offset
+    where: {
+      is_hidden: { equals: $isActive }
+      AND: [
+        {
+          OR: [
+            { status: { contains: $searchTerm } }
+            { User: { username: { contains: $searchTerm } } }
+            { Location: { city: { contains: $searchTerm } } }
+            {
+              CmPurchaseItem: {
+                every: { Product: { name: { contains: $searchTerm } } }
+              }
+            }
+          ]
+        }
+      ]
+    }
+    orderBy: { date: desc }
+  ) {
+    id
+    order_no
+    created_date: date
+    status
+    Supplier {
+      ...SupplierDetails
+    }
+    User {
+      full_name
+    }
+    Location {
+      city
+    }
+    Items: CmPurchaseItem {
+      quantity
+      cost_price
+      Product {
+        price
+        name
+      }
+    }
+  }
+}
+query purchaseOrdersAggregate($isActive: Int = 0, $searchTerm: String = "") {
+  findManyCmPurchaseOrderCount(
+    where: {
+      is_hidden: { equals: $isActive }
+      AND: [
+        {
+          OR: [
+            { status: { contains: $searchTerm } }
+            { User: { username: { contains: $searchTerm } } }
+            { Location: { city: { contains: $searchTerm } } }
+            {
+              CmPurchaseItem: {
+                every: { Product: { name: { contains: $searchTerm } } }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  )
+}
+# Category Query/Mutation
+
+query findLastInvCategoryOrderId {
+  aggregateInvCategory {
+    max {
+      order
+    }
+  }
+}
+
+query categoryList(
+  $offset: Int
+  $limit: Int
+  $disabled: Boolean = false
+  $searchTerm: String
+) {
+  findManyInvCategory(
+    where: {
+      category_type: { not: { equals: "service" } }
+      disabled: { equals: $disabled }
+      name: { contains: $searchTerm }
+    }
+    take: $limit
+    skip: $offset
+    orderBy: { order: desc }
+  ) {
+    ...CategoryFields
+    _count {
+      InvProduct
+    }
+  }
+}
+
+query categoryAggregate($disabled: Boolean = false, $searchTerm: String = "") {
+  findManyInvCategoryCount(
+    where: {
+      category_type: { not: { equals: "service" } }
+      disabled: { equals: $disabled }
+      name: { contains: $searchTerm }
+    }
+  )
+}
+
+# Supplier Query/Mutation
+query suppliersList(
+  $offset: Int
+  $limit: Int
+  $searchTerm: String = ""
+  $status: Int = 3
+) {
+  findManyAccountManager(
+    where: {
+      organisation_status: { equals: $status }
+      AND: { organisation_name: { contains: $searchTerm } }
+    }
+    take: $limit
+    skip: $offset
+  ) {
+    id
+    organisation_name
+    _count {
+      InvProduct
+    }
+    organisation_status
+  }
+}
+query suppliersAggregate($status: Int = 3, $searchTerm: String = "") {
+  findManyAccountManagerCount(
+    where: {
+      organisation_status: { equals: $status }
+      AND: { organisation_name: { contains: $searchTerm } }
+    }
+  )
+}
+# Stock Queries/Mutations
+query inventoryCountList($offset: Int, $limit: Int, $searchTerm: String = "") {
+  findManyStockTakeWithInventoryDiscrepancy(
+    where: { search: $searchTerm }
+    skip: $offset
+    take: $limit
+  ) {
+    id
+    id
+    count_name
+    count_type
+    status
+    user: full_name
+    name
+    date_started
+    overage
+    shortage
+  }
+}
+query inventoryCountAggregate($searchTerm: String = "") {
+  findManyInventoryCountCount(
+    where: {
+      OR: [
+        { count_name: { contains: $searchTerm } }
+        { User: { full_name: { contains: $searchTerm } } }
+      ]
+    }
+  )
+}
+# Products Query/Mutations
+query findAssociatedCategoryGroups($group: Int) {
+  findManyInvCategory(where: { MasterCategory: { id: { equals: $group } } }) {
+    ...Category
+  }
+}
+query retrieveAllInvProducts(
+  $offset: Int
+  $limit: Int
+  $active: Int = 1
+  $search: String = ""
+  $category: Int
+  $group: Int
+  $category_type: String
+) {
+  findManyProductsWithAvailableQuantity(
+    take: $limit
+    skip: $offset
+    where: {
+      active: $active
+      search: $search
+      category: $category
+      master_category: $group
+      category_type: $category_type
+      type: PRODUCT
+    }
+  ) {
+    id
+    name
+    is_active
+    cost
+    price
+    alert_quantity
+    sum
+    category_id
+    category_name
+    product_order
+    sku
+    size
+    master_cat_id
+    Description
+    image
+    old_barcode
+    VATRate_id
+    max_level
+    allow_negative_qty
+    supplier_id
+  }
+  findManyProductsWithAvailableQuantityCount(
+    where: {
+      active: $active
+      search: $search
+      category: $category
+      master_category: $group
+      type: PRODUCT
+    }
+  )
+}
+
+query retrieveProductsGroupByMasterCategory {
+  findManyServicesMasterCategory(where: { type: { equals: PRODUCT } }) {
+    id
+    name
+    ord
+    InvCategory {
+      id
+      name
+    }
+  }
+}
+
+query retrieveProductGroups {
+  findManyInvCategory(where: { disabled: { not: { equals: true } } }) {
+    ...Category
+  }
+}
+query avilableLocations {
+  findManyCompanyBranch(orderBy: { name: asc }) {
+    ...Location
+  }
+}
+query categories {
+  findManyInvCategory(
+    where: { category_type: { not: { equals: "service" } } }
+    orderBy: { order: desc }
+  ) {
+    ...Category
+  }
+}
+
+query createProductModalInit {
+  findManyTax(orderBy: { value: asc }) {
+    ...ProductTaxFields
+  }
+
+  findManyAccountManager(
+    where: { organisation_status: { equals: 3 } }
+    orderBy: { organisation_name: asc }
+  ) {
+    id
+    organisation_name
+  }
+  findManyCompanyBranch(
+    where: { is_active: { equals: 1 } }
+    orderBy: { loc_order: desc }
+  ) {
+    ...Location
+  }
+}
+
+query productCustomFields {
+  findManyManageCustomField(
+    where: { field_for: { equals: PRODUCT }, is_active: { equals: true } }
+    orderBy: { field_order: desc }
+  ) {
+    id
+    field_label
+    field_type
+    field_order
+    ManageCustomFieldItem(orderBy: { item_order: desc }) {
+      id
+      field_id
+      item_label
+      item_value
+      item_order
+    }
+  }
+}
+
+query retrieveProductById($product: Int!) {
+  findFirstInvProduct(where: { id: { equals: $product } }) {
+    ...Product
+  }
+}
+query locationsAndProductQuantity($product: Int) {
+  findManyLocationsWithAvailableProductStock(id: $product) {
+    id
+    name
+    quantity
+  }
+}
+
+query supplierModalData {
+  findManyUser(
+    where: { deleted: { not: { equals: 1 } } }
+    orderBy: { full_name: asc }
+  ) {
+    id
+    full_name
+  }
+  findManySupplierCategory(orderBy: { category_name: desc }) {
+    id
+    category_name
+  }
+}
+mutation upsertProductStockPerLocation(
+  $locations: [ProductsAvailableAmountAcrossLocationsInput]!
+  $product_id: Int!
+) {
+  updateManyProductsAvailableAmountAcrossLocation(
+    locations: $locations
+    product_id: $product_id
+  )
+}
+mutation createOneInvProduct(
+  $data: InvProductCreateInput!
+  $stock: [ProductsAvailableAmountAcrossLocationsInput]
+  $custom_fields: [InvProductCustomFieldInput]
+) {
+  createOneInvProduct(
+    data: $data
+    stock: $stock
+    custom_fields: $custom_fields
+  ) {
+    ...InvProduct
+  }
+}
+mutation updateOneInvProduct(
+  $data: InvProductUpdateInput!
+  $stock: [ProductsAvailableAmountAcrossLocationsInput]
+  $custom_fields: [InvProductCustomFieldInput]
+  $where: InvProductWhereUniqueInput!
+) {
+  updateOneInvProduct(
+    data: $data
+    stock: $stock
+    custom_fields: $custom_fields
+    where: $where
+  ) {
+    ...InvProduct
+  }
+}
+query productCustomFieldValues($product: Int!) {
+  findManyCmProductCustomField(
+    distinct: custom_field_value
+    where: { product_id: { equals: $product } }
+  ) {
+    id
+    custom_field_id
+    custom_field_value
+  }
+}
+mutation updateProductTaxRecords($category: Int!, $tax: Int!) {
+  updateManyInvProductTaxRecords(where: { id: $category }, tax_id: $tax) {
+    ...InvProduct
+  }
+}
+mutation createOneServicesMasterCategory(
+  $data: ServicesMasterCategoryCreateInput!
+  $categories: [Int]
+) {
+  createOneServicesMasterCategory(data: $data, categories: $categories) {
+    ...ServicesMasterCategory
+  }
+}
+
+mutation updateOneServicesMasterCategory(
+  $where: ServicesMasterCategoryWhereUniqueInput!
+  $data: ServicesMasterCategoryUpdateInput!
+  $categories: [Int]
+) {
+  updateOneServicesMasterCategory(
+    where: $where
+    data: $data
+    categories: $categories
+  ) {
+    ...ServicesMasterCategory
+  }
+}
+query stockPermission {
+  me {
+    UserPermission(where: { Page: { name: { equals: "Stock" } } }) {
+      id
+    }
+  }
+}

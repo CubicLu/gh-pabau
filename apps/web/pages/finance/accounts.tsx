@@ -119,8 +119,8 @@ export function Account() {
   }, [locations])
 
   useEffect(() => {
-    if (issuingCompanyData?.issuingCompanies) {
-      const data = issuingCompanyData.issuingCompanies.map((item) => {
+    if (issuingCompanyData?.findManyIssuingCompany) {
+      const data = issuingCompanyData?.findManyIssuingCompany.map((item) => {
         return {
           id: item.id,
           name: item.name,
@@ -131,8 +131,8 @@ export function Account() {
   }, [issuingCompanyData])
 
   useEffect(() => {
-    if (creditNoteTypeData?.creditNoteTypes) {
-      setCreditNoteTypesList(creditNoteTypeData.creditNoteTypes)
+    if (creditNoteTypeData?.findManyCreditNoteType) {
+      setCreditNoteTypesList(creditNoteTypeData?.findManyCreditNoteType)
     }
   }, [creditNoteTypeData])
 

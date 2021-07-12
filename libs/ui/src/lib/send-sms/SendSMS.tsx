@@ -11,7 +11,7 @@ import _ from 'lodash'
 import moment from 'moment'
 import React, { FC, useEffect, useState } from 'react'
 import { tagList } from '../merge-tag-modal/data'
-import { defaultTemplateList } from './mock'
+import { defaultTemplateList } from './mock-data'
 import styles from './SendSMS.module.less'
 
 const HANDLE_REGEX = /\[.+?]/g

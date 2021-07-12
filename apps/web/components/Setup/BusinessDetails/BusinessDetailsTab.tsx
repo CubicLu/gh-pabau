@@ -180,7 +180,6 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
     try {
       await updateBusinessDetails({
         variables: CompanyDetailData,
-        optimisticResponse: {},
         refetchQueries: [
           {
             query: GetBussinessDetailsDocument,

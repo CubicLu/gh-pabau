@@ -1,0 +1,164 @@
+import {
+  useInventoryCountAggregateQuery,
+  useInventoryCountListQuery,
+} from '@pabau/graphql'
+import type { InventoryCount } from '@pabau/graphql'
+import { OrderDiscrepancy, Pagination, Table } from '@pabau/ui'
+import React, { useEffect, useState } from 'react'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import styles from './ProductListComponents.module.less'
+import { useRouter } from 'next/router'
+
+interface P {
+  search: string
+}
+const StokeTake = ({ search }: P): JSX.Element => {
+  const router = useRouter()
+  const { t } = useTranslationI18()
+  const [paginateData, setPaginateData] = useState({
+    total: 0,
+    offset: 0,
+    limit: 50,
+    currentPage: 1,
+    showingRecords: 0,
+  })
+
+  const { data, loading } = useInventoryCountListQuery({
+    variables: {
+      offset: paginateData.offset,
+      limit: paginateData.limit,
+      searchTerm: search,
+    },
+  })
+
+  const { data: aggregateData } = useInventoryCountAggregateQuery({
+    variables: {
+      searchTerm: search,
+    },
+  })
+
+  const StockTakeColumns = [
+    {
+      title: t('products.list.stock.column.countno'),
+      dataIndex: 'count_no',
+      className: 'drag-visible',
+      visible: true,
+    },
+    {
+      title: t('products.list.stock.column.start'),
+      dataIndex: 'start_date',
+      className: 'drag-visible',
+      visible: true,
+    },
+    {
+      title: t('products.list.stock.column.countedby'),
+      dataIndex: 'counted_by',
+      className: 'drag-visible',
+      visible: true,
+    },
+    {
+      title: t('products.list.stock.column.location'),
+      dataIndex: 'location',
+      className: 'drag-visible',
+      visible: true,
+    },
+    {
+      title: t('products.list.stock.column.discrepancies'),
+      dataIndex: 'object',
+      className: 'drag-visible',
+      visible: true,
+      width: 125,
+      render: (_, { discrepanciesUp, discrepanciesDown }) => (
+        <span className={styles.row}>
+          <span style={{ marginRight: 6 }}>
+            <OrderDiscrepancy number={discrepanciesUp} word={1} />
+          </span>
+          <OrderDiscrepancy number={discrepanciesDown} word={0} />
+        </span>
+      ),
+    },
+    {
+      title: t('products.list.stock.column.status'),
+      dataIndex: 'status',
+      className: 'drag-visible',
+      visible: true,
+      render: (_, { status }) => (
+        <span
+          className={
+            status === 'Completed'
+              ? styles.greenBtn
+              : status === 'Cancelled'
+              ? styles.redBtn
+              : styles.blueBtn
+          }
+        >
+          {status}
+        </span>
+      ),
+    },
+  ]
+
+  useEffect(() => {
+    if (aggregateData) {
+      setPaginateData((d) => ({
+        ...d,
+        total: aggregateData?.findManyInventoryCountCount,
+        showingRecords: data?.findManyStockTakeWithInventoryDiscrepancy?.length,
+      }))
+    }
+  }, [data, aggregateData])
+
+  const onPaginationChange = (currentPage) => {
+    const offset = paginateData.limit * (currentPage - 1)
+    setPaginateData({ ...paginateData, offset, currentPage: currentPage })
+  }
+  return (
+    <div className={styles.productListTab}>
+      <Table
+        loading={loading}
+        searchTerm={search}
+        noDataText={t('products.list.stock.table.nodata')}
+        noDataBtnText={t('products.list.stock.table.new')}
+        columns={StockTakeColumns}
+        scroll={{ x: 'max-content' }}
+        dataSource={data?.findManyStockTakeWithInventoryDiscrepancy.map((d) => {
+          return {
+            ...d,
+            status: d?.status,
+            count_no: d?.count_name,
+            start_date: d?.date_started,
+            counted_by: d?.user,
+            location: d?.name,
+            discrepanciesDown: d?.shortage ?? 0,
+            discrepanciesUp: d?.overage ?? 0,
+            key: d.id,
+          }
+        })}
+        onRowClick={(values: Pick<InventoryCount, 'count_name'>) => {
+          router.push(
+            `products/inventory-count/${values?.count_name?.toString()}`
+          )
+        }}
+      />
+      <div className={styles.pagination}>
+        <Pagination
+          total={paginateData.total}
+          showSizeChanger={false}
+          onChange={onPaginationChange}
+          pageSize={paginateData.limit}
+          current={paginateData.currentPage}
+          showingRecords={paginateData.showingRecords}
+          pageSizeOptions={['10', '25', '50', '100']}
+          onPageSizeChange={(pageSize) => {
+            setPaginateData({
+              ...paginateData,
+              limit: pageSize,
+            })
+          }}
+        />
+      </div>
+    </div>
+  )
+}
+
+export default StokeTake

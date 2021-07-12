@@ -1,6 +1,6 @@
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["selectRelationCount", "filterJson", "referentialActions"]
 }
 
 datasource db {
@@ -15,7 +15,7 @@ model TwoFactorHistory {
   user_id      Int
   request_date DateTime
   is_confirmed Int
-  company      Company  @relation(fields: [company_id], references: [id])
+  Company      Company  @relation(fields: [company_id], references: [id])
 
   @@map("2fa_history")
 }
@@ -84,9 +84,9 @@ model AccountBalanceLog {
 }
 
 model AccountManager {
-  id                  Int       @id @default(autoincrement())
+  id                  Int               @id @default(autoincrement())
   organisation_name   String?
-  organisation_status Int
+  organisation_status Int               @default(1)
   organisation_type   Int?
   organisation_number String?
   organisation_owner  Int?
@@ -106,15 +106,16 @@ model AccountManager {
   vat_reg_id          String
   created_date        DateTime?
   modified_date       DateTime?
-  company_id          Int?      @map("occupier")
-  Company             Company?  @relation(fields: [company_id], references: [id])
+  company_id          Int?              @map("occupier")
   con_per_1           String
   con_num_1           String
   con_per_2           String
   con_num_2           String
   con_per_3           String
   con_num_3           String
-
+  Company             Company?          @relation(fields: [company_id], references: [id])
+  CmPurchaseOrder     CmPurchaseOrder[]
+  InvProduct          InvProduct[]
 
   @@map("account_manager")
 }
@@ -270,15 +271,33 @@ model Company {
   MessageTemplate                  MessageTemplate[]
   TemplateFolder                   TemplateFolder[]
   SmsPurchase                      SmsPurchase[]
+  UserActivityLog                  UserActivityLog[]
+  CmPurchaseOrder                  CmPurchaseOrder[]
+  InventoryCount                   InventoryCount[]
+  InventoryDiscrepancy             InventoryDiscrepancy[]
+  InvPaymentType                   InvPaymentType[]
+  ServicesMasterCategory           ServicesMasterCategory[]
+  InvWarehouseProduct              InvWarehouseProduct[]
+  FavoriteReport                   FavoriteReport[]
+  InvTaxRate                       InvTaxRate[]
+  Tax                              Tax[]
+  InvCategory                      InvCategory[]
+  ManageCustomField                ManageCustomField[]
+  ManageCustomFieldCategory        ManageCustomFieldCategory[]
+  ManageCustomFieldItem            ManageCustomFieldItem[]
+  CmProductCustomField             CmProductCustomField[]
+  CompanyBranchGroup               CompanyBranchGroup[]
+  CompanyBranchAttachment          CompanyBranchAttachment[]
+  SupplierCategory                 SupplierCategory[]
+  InventoryMovement                InventoryMovement[]
+  InvWarehouse                     InvWarehouse[]
+  InvSale                          InvSale[]
+  IssuingCompany                   IssuingCompany[]
+  DebtManageCommunication          DebtManageCommunication[]
+  CreditNoteType                   CreditNoteType[]
 
-  UserActivityLog         UserActivityLog[]
-  CompanyBranchGroup      CompanyBranchGroup[]
-  CompanyBranchAttachment CompanyBranchAttachment[]
-  InvPaymentType          InvPaymentType[]
-  InvSale                 InvSale[]
-  IssuingCompany          IssuingCompany[]
-  DebtManageCommunication DebtManageCommunication[]
-  CreditNoteType          CreditNoteType[]
+  CmLeadCustomField      CmLeadCustomField[]
+  CmLeadCustomFieldOrder CmLeadCustomFieldOrder[]
   @@map("admin")
 }
 
@@ -684,7 +703,7 @@ model BodyChartTemplate {
 model BookingSetting {
 
   id                                Int      @id @default(autoincrement())
-  company_id                        Int      @map("occupier")
+  company_id                        Int      @unique @map("occupier")
   email_mode                        Int
   sms_mode                          Int
   email_id                          Int?
@@ -1025,7 +1044,7 @@ model MarketingSource {
   custom_id  Int
   public     Boolean
   imported   Int
-  company    Company @relation(fields: [company_id], references: [id])
+  Company    Company @relation(fields: [company_id], references: [id])
 
 
   CmExtraPatient CmExtraPatient[]
@@ -1087,7 +1106,7 @@ model Candidate {
   date_available   DateTime
   linkedin         String
   company_id       Int?
-  company          Company? @relation(fields: [company_id], references: [id])
+  Company          Company? @relation(fields: [company_id], references: [id])
 
 
   @@map("candidate")
@@ -1388,9 +1407,9 @@ model CompanyDetails {
   language                String
   completed_setup         Boolean                  @default(false)
   timezone                Timezone                 @relation(fields: [timezone_id], references: [timezone_id])
-  company                 Company                  @relation(fields: [company_id], references: [id])
+  Company                 Company                  @relation(fields: [company_id], references: [id])
+  User                    User[]
 
-  User User[]
   @@index([company_id], name: "company_id")
   @@index([timezone_id], name: "timezone_id")
   @@map("company_details")
@@ -1399,7 +1418,6 @@ model CompanyDetails {
 model CompanySubscription {
   license_id               Int       @id @default(autoincrement())
   company_id               Int
-  company                  Company   @relation(fields: [company_id], references: [id])
   license_type             Int
   license_expiry           DateTime
   active                   Int
@@ -1472,6 +1490,8 @@ model CompanySubscription {
   trainer_id               Int?
   onboarder_id             Int?
   is_referral              Int?      @default(0)
+  Company                  Company   @relation(fields: [company_id], references: [id])
+
 
   @@index([company_id], name: "company_id")
   @@index([license_type], name: "lic_type")
@@ -1684,7 +1704,7 @@ model CmBookingNote {
 }
 
 model CmCase {
-  id           Int     @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   case_number  String
   type         String?
   contact      String?
@@ -1707,8 +1727,8 @@ model CmCase {
   comments     String?
   CreatedDate  Int?
   IpAddress    String?
-  company_id   Int     @map("occupier")
-  company      Company @relation(fields: [company_id], references: [id])
+  company_id   Int?     @map("occupier")
+  Company      Company? @relation(fields: [company_id], references: [id])
 
   @@map("cm_cases")
 }
@@ -1732,30 +1752,30 @@ model CmCaseReply {
   Description String
   CreatedDate DateTime
   IpAddress   Int
-  CompanyID   Int
-  company     Company  @relation(fields: [CompanyID], references: [id])
+  company_id  Int?
+  Company     Company? @relation(fields: [company_id], references: [id])
 
   @@map("cm_case_replies")
 }
 
 model CmCampaign {
-  ID               Int      @id @default(autoincrement())
+  ID               Int     @id @default(autoincrement())
   OwnerID          String
   CompaignName     String
   Type             Int
   Status           Int
-  StartDate        DateTime
-  EndDate          DateTime
+  StartDate        String? @db.VarChar(16)
+  EndDate          String? @db.VarChar(16)
   ExpectedRevenue  String
   BudgetedCost     String
   ActualCost       String
   ExpectedResponse String
   NumSent          String
   Description      String
-  CreatedDate      DateTime
+  CreatedDate      String? @db.VarChar(16)
   IpAddress        Int
-  company_id       Int      @map("Occupier")
-  company          Company  @relation(fields: [company_id], references: [id])
+  company_id       Int     @map("Occupier")
+  Company          Company @relation(fields: [company_id], references: [id])
 
   @@map("cm_compaigns")
 }
@@ -1861,9 +1881,10 @@ model CmContact {
   CmExtraPatient            CmExtraPatient[]
   CmExtraSalon              CmExtraSalon[]
   InvPayment                InvPayment[]
+  InvSale                   InvSale[]
+  ContactInsurance          ContactInsurance[]
+  InventoryMovement         InventoryMovement[]
 
-  InvSale          InvSale[]
-  ContactInsurance ContactInsurance[]
   @@index([CreatedDate], name: "CreatedDate")
   @@index([Email], name: "Email")
   @@index([Fname], name: "Fname")
@@ -2410,6 +2431,7 @@ model CmLead {
   need_to_knows            Int                  @default(1)
   Company                  Company              @relation(fields: [company_id], references: [id])
 
+  CmLeadCustomField CmLeadCustomField[]
   @@index([Email], name: "Email")
   @@index([Fname], name: "Fname")
   @@index([LeadStatus], name: "LeadStatus")
@@ -2417,33 +2439,42 @@ model CmLead {
   @@index([OwnerID], name: "OwnerID")
   @@index([Fname, Lname, company_id], name: "cm_contacts_index")
   @@index([company_id], name: "occupier")
-  @@map("cm_leads")
 }
 
-//
-//model cm_leads_custom {
-//  id                 Int    @id @default(autoincrement())
-//  lead_id            Int
-//  occupier           Int
-//  custom_field_id    Int
-//  custom_field_label String
-//  custom_field_value String
-//  imported           Int
-//  old_value          String
-//
-//  @@index([custom_field_id], name: "custom_field_id")
-//  @@index([lead_id], name: "lead_id")
-//  @@index([occupier], name: "occupier")
-//}
-//
-//model cm_leads_fields_order {
-//  id         Int    @id @default(autoincrement())
-//  field_id   Int
-//  field_name String
-//  occupier   Int
-//  order_id   Int
-//  is_more    Int
-//}
+model CmLeadCustomField {
+  id                 Int                @id @default(autoincrement())
+  lead_id            Int
+  company_id         Int                @map("occupier")
+  custom_field_id    Int
+  custom_field_label String
+  custom_field_value String
+  imported           Int
+  old_value          String
+  Company            Company            @relation(fields: [company_id], references: [id])
+  CustomField        ManageCustomField? @relation(fields: [custom_field_id], references: [id])
+  Lead               CmLead             @relation(fields: [lead_id], references: [ID])
+
+
+  CmLeadCustomFieldOrder CmLeadCustomFieldOrder[]
+  @@index([custom_field_id], name: "custom_field_id")
+  @@index([lead_id], name: "lead_id")
+  @@index([company_id], name: "occupier")
+  @@map("cm_leads_custom")
+}
+
+model CmLeadCustomFieldOrder {
+  id                Int               @id @default(autoincrement())
+  field_id          Int
+  field_name        String
+  company_id        Int               @map("occupier")
+  order_id          BigInt
+  is_more           Int
+  Company           Company           @relation(fields: [company_id], references: [id])
+  CmLeadCustomField CmLeadCustomField @relation(fields: [field_id], references: [id])
+
+  @@map("cm_leads_fields_order")
+}
+
 //
 //model cm_leads_groups {
 //  id               Int     @id @default(autoincrement())
@@ -2626,49 +2657,70 @@ model MedicalCondition {
 //  IpAddress       Int
 //}
 //
-//model cm_products_custom {
-//  id                 Int    @id @default(autoincrement())
-//  product_id         Int
-//  occupier           Int
-//  custom_field_id    Int
-//  custom_field_value String
+model CmProductCustomField {
+  id                 Int                @id @default(autoincrement())
+  product_id         Int
+  company_id         Int                @map("occupier")
+  custom_field_id    Int?
+  custom_field_value String
+  Company            Company            @relation(fields: [company_id], references: [id])
+  Product            InvProduct         @relation(fields: [product_id], references: [id])
+  CustomField        ManageCustomField? @relation(fields: [custom_field_id], references: [id])
+
+  @@unique([product_id, custom_field_id, company_id], name: "unique_product_custom_field")
+  @@index([custom_field_id], name: "custom_field_id")
+  @@index([company_id], name: "occupier")
+  @@index([product_id], name: "product_id")
+  @@map("cm_products_custom")
+}
+
+// TODO add an index via up.sql
+model CmPurchaseItem {
+  id              Int              @id @default(autoincrement())
+  order_id        Int?
+  product_id      Int?
+  quantity        Int
+  cost_price      Float?
+  amount_received Int
+  Order           CmPurchaseOrder? @relation(fields: [order_id], references: [id])
+  Product         InvProduct?      @relation(fields: [product_id], references: [id])
+
+  @@map("cm_purchase_items")
+}
+
 //
-//  @@index([custom_field_id], name: "custom_field_id")
-//  @@index([occupier], name: "occupier")
-//  @@index([product_id], name: "product_id")
-//}
-//
-//model cm_purchase_items {
-//  id              Int    @id @default(autoincrement())
-//  order_id        Int
-//  product_id      Int
-//  quantity        Int
-//  cost_price      Float?
-//  amount_received Int
-//}
-//
-//model cm_purchase_order {
-//  id                  Int       @id @default(autoincrement())
-//  order_no            String
-//  date                Int
-//  status              String
-//  company_id          Int
-//  location_id         Int?      @default(0)
-//  user_id             Int
-//  supplier_id         Int
-//  supplier_status     String
-//  delivery_date       DateTime?
-//  notes               String
-//  is_hidden           Int       @default(0)
-//  destination_arrival String
-//  freight_terms       String
-//  terms_of_payment    String
-//  currency            String
-//  tags                String
-//  category_id         Int
-//  lpo_number          String
-//  grn_number          String
-//}
+// TODO add an index via up.sql
+model CmPurchaseOrder {
+  id                  Int              @id @default(autoincrement())
+  order_no            String
+  date                Int
+  status              String
+  company_id          Int
+  location_id         Int?             @default(0)
+  user_id             Int?
+  supplier_id         Int?
+  supplier_status     String
+  delivery_date       DateTime?
+  notes               String
+  is_hidden           Int              @default(0)
+  destination_arrival String
+  freight_terms       String
+  terms_of_payment    String
+  currency            String
+  tags                String
+  category_id         Int
+  lpo_number          String
+  grn_number          String
+  Location            CompanyBranch?   @relation(fields: [location_id], references: [id])
+  Company             Company          @relation(fields: [company_id], references: [id])
+  User                User?            @relation(fields: [user_id], references: [id])
+  Supplier            AccountManager?  @relation(fields: [supplier_id], references: [id])
+  CmPurchaseItem      CmPurchaseItem[]
+
+
+  @@map("cm_purchase_order")
+}
+
 //
 //model cm_refs {
 //  id                       Int      @id @default(autoincrement())
@@ -2885,6 +2937,7 @@ model CmStaffGeneral {
   CompanyPosition     CompanyPosition?            @relation(fields: [Position], references: [id])
   HolidayRequest      HolidayRequest[]
 
+  InventoryDiscrepancy InventoryDiscrepancy[]
   @@index([Position], name: "Position")
   @@index([pabau_id], name: "id_index")
   @@index([company_id], name: "occupier")
@@ -3454,43 +3507,48 @@ model CmStaffGeneral {
 //}
 //
 model CompanyBranch {
-  id                  Int                   @id @default(autoincrement())
-  group_id            Int
-  company_id          Int
-  address             String
-  street              String
-  city                String
-  county              String
-  name                String
-  postcode            String
-  online_bookings     Int
-  phone               String
-  website             String
-  is_active           Int
-  bookable_online     Int
-  calendar_bookable   Int
-  is_default          Boolean
-  lat                 Float
-  lng                 Float
-  custom_id           String
-  email               String
-  send_conf_email     Int
-  show_online         Int                   @default(1)
-  loc_order           Int
-  region              String
-  invoice_template_id Int                   @default(0)
-  color               String
-  notify_on_lead      Boolean               @default(false)
-  notice              String?
-  Company             Company               @relation(fields: [company_id], references: [id])
-  CompanyBranchGroup  CompanyBranchGroup    @relation(fields: [group_id], references: [id])
-  CompanyRoomLocation CompanyRoomLocation[]
-  RotaShift           RotaShift[]
-  CmStaffGeneral      CmStaffGeneral[]
-  CmContactLocation   CmContactLocation[]
-
+  id                      Int                       @id @default(autoincrement())
+  group_id                Int
+  company_id              Int
+  address                 String
+  street                  String
+  city                    String
+  county                  String
+  name                    String
+  postcode                String
+  online_bookings         Int
+  phone                   String
+  website                 String
+  is_active               Int
+  bookable_online         Int
+  calendar_bookable       Int
+  is_default              Boolean
+  lat                     Float
+  lng                     Float
+  custom_id               String
+  email                   String
+  send_conf_email         Int
+  show_online             Int                       @default(1)
+  loc_order               Int
+  region                  String
+  invoice_template_id     Int                       @default(0)
+  color                   String
+  notify_on_lead          Boolean                   @default(false)
+  notice                  String?
+  Company                 Company                   @relation(fields: [company_id], references: [id])
+  CompanyBranchGroup      CompanyBranchGroup        @relation(fields: [group_id], references: [id])
+  CompanyRoomLocation     CompanyRoomLocation[]
+  RotaShift               RotaShift[]
+  CmStaffGeneral          CmStaffGeneral[]
+  CmContactLocation       CmContactLocation[]
+  CmPurchaseOrder         CmPurchaseOrder[]
+  InventoryCount          InventoryCount[]
+  InvWarehouseProduct     InvWarehouseProduct[]
+  ManageCustomField       ManageCustomField[]
   CompanyBranchAttachment CompanyBranchAttachment[]
+  InventoryMovement       InventoryMovement[]
   InvSale                 InvSale[]
+
   @@index([company_id], name: "company_id")
   @@index([group_id], name: "group_id")
   @@map("company_branches")
@@ -3646,16 +3704,19 @@ model CompanyLocation {
 }
 
 //
-//model company_log {
-//  id       Int      @id @default(autoincrement())
-//  log_date DateTime @default(now())
-//  text     String
-//  category String
-//  severe   Boolean
-//  company  Int
-//
-//  @@index([company], name: "company")
-//}
+model CompanyLog {
+  id         Int      @id @default(autoincrement())
+  log_date   DateTime @default(now())
+  text       String
+  category   String
+  severe     Boolean
+  company_id Int      @map("company")
+
+
+  @@index([company_id], name: "company")
+  @@map("company_log")
+}
+
 //
 //model company_mailserver {
 //  id         Int    @id @default(autoincrement())
@@ -3996,15 +4057,18 @@ model CompanyService {
 //  @@index([user_id], name: "user_id")
 //}
 //
-//model company_variables {
-//  id           Int      @id @default(autoincrement())
-//  company      Int
-//  key          String
-//  value        String
-//  date_created DateTime @default(now())
-//
-//  @@unique([company, key], name: "company")
-//}
+model CompanyVariable {
+  id           Int      @id @default(autoincrement())
+  company_id   Int      @map("company")
+  key          String
+  value        String
+  date_created DateTime @default(now())
+
+
+  @@unique([company_id, key], name: "company")
+  @@map("company_variables")
+}
+
 //
 //model comp_emails_send_criteria {
 //  id            Int                                     @id @default(autoincrement())
@@ -5925,32 +5989,47 @@ model InsuranceDetail {
 //  order_number Int
 //}
 //
-//model inventory_count {
-//  id                  Int    @id @default(autoincrement())
-//  company_id          Int
-//  staff_id            Int
-//  date_started        Int
-//  date_committed      Int
-//  date_completed      Int
-//  notes               String
-//  count_type          String
-//  count_name          String
-//  status              String
-//  counting_categories String
-//  location_id         Int
-//}
-//
-//model inventory_discrepancy {
-//  id         Int    @id @default(autoincrement())
-//  company_id Int
-//  staff_id   Int
-//  product_id Int
-//  overage    String
-//  shortage   String
-//  count_id   Int
-//  draft      Int    @default(0)
-//  counted    Int
-//}
+// TODO add an index
+model InventoryCount {
+  id                   Int                    @id @default(autoincrement())
+  company_id           Int
+  staff_id             Int?
+  date_started         Int
+  date_committed       Int
+  date_completed       Int
+  notes                String
+  count_type           String
+  count_name           String
+  status               String
+  counting_categories  String
+  location_id          Int?
+  Company              Company                @relation(fields: [company_id], references: [id])
+  User                 User?                  @relation(fields: [staff_id], references: [id])
+  Location             CompanyBranch?         @relation(fields: [location_id], references: [id])
+  InventoryDiscrepancy InventoryDiscrepancy[]
+
+  @@map("inventory_count")
+}
+
+// TODO add an index
+model InventoryDiscrepancy {
+  id         Int             @id @default(autoincrement())
+  company_id Int
+  staff_id   Int?
+  product_id Int?
+  overage    String?
+  shortage   String?
+  count_id   Int?
+  draft      Int             @default(0)
+  counted    Int
+  Company    Company         @relation(fields: [company_id], references: [id])
+  Staff      CmStaffGeneral? @relation(fields: [staff_id], references: [ID])
+  Count      InventoryCount? @relation(fields: [count_id], references: [id])
+  Product    InvProduct?     @relation(fields: [product_id], references: [id])
+
+  @@map("inventory_discrepancy")
+}
+
 //
 //model invoices {
 //  id              Int    @id @default(autoincrement())
@@ -6073,30 +6152,33 @@ model InvBiller {
 }
 
 model InvCategory {
-  id                Int       @id @default(autoincrement())
+  id                Int                     @id @default(autoincrement())
   code              String
   name              String
-  order             Int?
-  category_type     String?   @default("retail")
-  company_id        Int?      @map("occupier")
-  uid               Int?
-  created_date      DateTime?
-  modified_date     DateTime?
+  order             BigInt?                 @db.BigInt
+  category_type     String?                 @default("retail")
+  company_id        Int?                    @map("occupier")
+  user_id           Int?                    @map("uid")
+  created_date      DateTime?               @default(now())
+  modified_date     DateTime?               @updatedAt
   custom_id         Int
   PriceListGroup_id Int
   imported          Int
   technical         Int
   image             String
-  disabled          Int
-  tax_id            Int
-  master_cat_id     Int
+  disabled          Boolean
+  tax_id            Int?
+  master_cat_id     Int?
+  Company           Company?                @relation(fields: [company_id], references: [id])
+  InvProduct        InvProduct[]
+  MasterCategory    ServicesMasterCategory? @relation("master_cat_id_to_services_master_category_id", fields: [master_cat_id], references: [id], onDelete: Restrict)
+  Tax               Tax?                    @relation(fields: [tax_id], references: [id])
+  User              User?                   @relation(fields: [user_id], references: [id])
 
-
-  InvProduct InvProduct[]
   @@index([category_type], name: "category_type")
   @@index([master_cat_id], name: "master_cat_id")
   @@index([company_id], name: "occupier_index")
-  @@index([uid], name: "uid_index")
+  @@index([user_id], name: "uid_index")
   @@map("inv_categories")
 }
 
@@ -6144,28 +6226,34 @@ model InvCategory {
 //  created_date  DateTime?
 //  modified_date DateTime?
 //}
-//
-//model inv_movement {
-//  id           Int    @id @default(autoincrement())
-//  company_id   Int
-//  location_id  Int    @default(0)
-//  date         Int
-//  type         String
-//  quantity     Int
-//  new_quantity Int
-//  entered_by   Int
-//  product_id   Int
-//  description  String
-//  room_id      Int
-//  sale_item_id Int
-//  contact_id   Int
-//
-//  @@index([company_id], name: "company_id")
-//  @@index([product_id], name: "product_id")
-//  @@index([room_id], name: "room_id")
-//  @@index([sale_item_id], name: "sale_id")
-//}
-//
+
+model InventoryMovement {
+  id           Int            @id @default(autoincrement())
+  company_id   Int?
+  location_id  Int?           @default(0)
+  date         Int?
+  type         String
+  quantity     Int
+  new_quantity Int
+  entered_by   Int?
+  product_id   Int?
+  description  String
+  room_id      Int
+  sale_item_id Int
+  contact_id   Int?
+  Contact      CmContact?     @relation(fields: [contact_id], references: [ID])
+  Company      Company?       @relation(fields: [company_id], references: [id])
+  Location     CompanyBranch? @relation(fields: [location_id], references: [id])
+  Product      InvProduct?    @relation(fields: [product_id], references: [id])
+  User         User?          @relation(fields: [entered_by], references: [id])
+
+  @@index([company_id], name: "company_id")
+  @@index([product_id], name: "product_id")
+  @@index([room_id], name: "room_id")
+  @@index([sale_item_id], name: "sale_id")
+  @@map("inv_movement")
+}
+
 model InvPayment {
 
   id                  Int        @id @default(autoincrement())
@@ -6281,15 +6369,15 @@ model InvPaymentType {
   is_money      Int?
   type          String    @default("money")
   Company       Company?  @relation(fields: [company_id], references: [id])
+  GlCode        GlCode?
 
-  GlCode GlCode?
   @@index([company_id], name: "occupier")
   @@map("inv_payment_types")
 }
 
 model InvProduct {
-  id                        Int         @id @default(autoincrement())
-  code                      String
+  id                        Int                    @id @default(autoincrement())
+  code                      String?
   name                      String
   sku                       String?
   unit                      String?
@@ -6298,38 +6386,47 @@ model InvProduct {
   um                        String
   cost                      Float?
   price                     Float
-  alert_quantity            Int         @default(20)
-  show_on_website           String?     @default("No")
-  image                     String?     @default("no_image.jpg")
-  category_id               Int
-  supplier_id               Int?        @default(0)
+  alert_quantity            Int                    @default(20)
+  show_on_website           String?                @default("No")
+  image                     String?                @default("no_image.jpg")
+  category_id               Int?
+  supplier_id               Int?                   @default(0)
   note                      String?
-  company_id                Int?        @map("occupier")
+  company_id                Int?                   @map("occupier")
   uid                       Int?
-  created_date              DateTime?
-  modified_date             DateTime?
+  created_date              DateTime?              @default(now())
+  modified_date             DateTime?              @updatedAt
   Description               String
   custom_id                 String
-  category_custom_id        Int
-  PriceListGroup_id         Int
-  VATRate_id                Int
-  imported                  Int
-  old_barcode               String
-  max_level                 Int
-  is_active                 Int         @default(1)
-  product_points            Int
-  open_sale                 Int
-  new_imported              Int
-  sage_nominal_code         String
-  procedure_date            DateTime
-  product_account_code_xero String
-  allow_negative_qty        Boolean     @default(false)
-  User                      User?       @relation(fields: [uid], references: [id])
-  Company                   Company?    @relation(fields: [company_id], references: [id])
-  InvCategory               InvCategory @relation(fields: [category_id], references: [id])
+  category_custom_id        Int                    @default(0)
+  PriceListGroup_id         Int                    @default(0)
+  VATRate_id                Int?                   @default(0)
+  imported                  Int?                   @default(0)
+  old_barcode               String?
+  max_level                 Int?
+  is_active                 Int?                   @default(1)
+  product_points            Int?                   @default(0)
+  open_sale                 Int?                   @default(0)
+  new_imported              Int?                   @default(0)
+  sage_nominal_code         String?
+  procedure_date            DateTime?              @default(now())
+  product_account_code_xero String?
+  allow_negative_qty        Boolean                @default(false)
+  User                      User?                  @relation(fields: [uid], references: [id])
+  Company                   Company?               @relation(fields: [company_id], references: [id])
+  InvCategory               InvCategory?           @relation(fields: [category_id], references: [id], onDelete: Restrict)
+  Supplier                  AccountManager?        @relation(fields: [supplier_id], references: [id], onDelete: Restrict)
+  Tax                       Tax?                   @relation(fields: [VATRate_id], references: [id])
+  CmDrug                    CmDrug[]
+  CmPurchaseItem            CmPurchaseItem[]
+  InventoryDiscrepancy      InventoryDiscrepancy[]
+  InvWarehouseProduct       InvWarehouseProduct[]
+  CmProductCustomField      CmProductCustomField[]
+  InventoryMovement         InventoryMovement[]
 
-
-  CmDrug CmDrug[]
+  @@unique([company_id, id], name: "primary")
+  @@unique([company_id, name], name: "unique_product_name")
+  @@unique([company_id, old_barcode], name: "unique_product_barcode")
   @@index([VATRate_id], name: "VATRate_id")
   @@index([category_id], name: "category_index")
   @@index([company_id], name: "company_index")
@@ -6337,6 +6434,7 @@ model InvProduct {
   @@index([name], name: "name")
   @@index([product_order], name: "product_order")
   @@map("inv_products")
+  InvSaleItem InvSaleItem[] @relation("fk_inv_sale_product_id")
 }
 
 //
@@ -6709,7 +6807,7 @@ model InvSale {
 //}
 //
 model InvSaleItem {
-  id                    Int       @id @default(autoincrement())
+  id                    Int        @id @default(autoincrement())
   sale_id               Int
   product_id            Int
   product_code          String
@@ -6745,7 +6843,8 @@ model InvSaleItem {
   tax_total             Float
   custom_product_name   String
   booking_id            Int?
-  Tax                   Tax?      @relation(fields: [VAT_id], references: [id])
+  Tax                   Tax?       @relation(fields: [VAT_id], references: [id])
+  Product               InvProduct @relation(fields: [product_id], references: [id], name: "fk_inv_sale_product_id")
 
   @@index([created_date], name: "created_date_index")
   @@index([custom_id], name: "custom_id")
@@ -6834,56 +6933,70 @@ model InvSaleItem {
 //  amount    Float
 //}
 //
-//model inv_tax_rates {
-//  id               Int       @id @default(autoincrement())
-//  name             String
-//  rate             Float
-//  type             String
-//  occupier         Int?
-//  uid              Int?
-//  created_date     DateTime?
-//  modified_date    DateTime?
-//  is_active        Int
-//  description      String
-//  date_constrained Boolean   @default(false)
-//  start_date       Int
-//  end_date         Int
-//  show_on_receipt  Int
-//  custom_id        Int
-//
-//  @@index([occupier], name: "occupier")
-//}
-//
-//model inv_warehouses {
-//  id            Int       @id @default(autoincrement())
-//  code          String
-//  name          String
-//  address       String
-//  city          String
-//  occupier      Int?
-//  uid           Int?
-//  created_date  DateTime?
-//  modified_date DateTime?
-//}
-//
-//model inv_warehouses_products {
-//  id            Int       @id @default(autoincrement())
-//  product_id    Int
-//  warehouse_id  Int
-//  location_id   Int       @default(0)
-//  quantity      Int
-//  occupier      Int?
-//  uid           Int?
-//  created_date  DateTime?
-//  modified_date DateTime?
-//  expiry_date   DateTime
-//  batch_code    String
-//  description   String
-//
-//  @@index([location_id], name: "location_id")
-//  @@index([occupier], name: "occupier")
-//  @@index([product_id], name: "product_id")
-//}
+model InvTaxRate {
+
+  id               Int       @id @default(autoincrement())
+  name             String
+  rate             Float
+  type             String
+  company_id       Int?      @map("occupier")
+  user_id          Int?      @map("uid")
+  created_date     DateTime?
+  modified_date    DateTime?
+  is_active        Int
+  description      String
+  date_constrained Boolean   @default(false)
+  start_date       Int
+  end_date         Int
+  show_on_receipt  Int
+  custom_id        Int
+  Company          Company?  @relation(fields: [company_id], references: [id])
+  User             User?     @relation(fields: [user_id], references: [id])
+
+
+  @@index([company_id], name: "occupier")
+  @@map("inv_tax_rates")
+}
+
+model InvWarehouse {
+  id            Int       @id @default(autoincrement())
+  code          String
+  name          String
+  address       String
+  city          String
+  company_id    Int?      @map("occupier")
+  uid           Int?
+  created_date  DateTime?
+  modified_date DateTime?
+  Company       Company?  @relation(fields: [company_id], references: [id])
+
+  @@map("inv_warehouses")
+}
+
+model InvWarehouseProduct {
+  id            Int            @id @default(autoincrement())
+  product_id    Int?
+  warehouse_id  Int?
+  location_id   Int?           @default(0)
+  quantity      Int
+  company_id    Int?           @map("occupier")
+  user_id       Int?           @map("uid")
+  created_date  DateTime?      @default(now())
+  modified_date DateTime?      @updatedAt
+  expiry_date   DateTime?
+  batch_code    String?
+  description   String
+  Product       InvProduct?    @relation(fields: [product_id], references: [id])
+  Company       Company?       @relation(fields: [company_id], references: [id])
+  Location      CompanyBranch? @relation(fields: [location_id], references: [id])
+  User          User?          @relation(fields: [user_id], references: [id])
+
+  @@index([location_id], name: "location_id")
+  @@index([company_id], name: "occupier")
+  @@index([product_id], name: "product_id")
+  @@map("inv_warehouses_products")
+}
+
 //
 //model ipaddress_vote_map {
 //  id         Int    @id @default(autoincrement())
@@ -7784,51 +7897,67 @@ model JobStatus {
 //  total         Float
 //}
 //
-//model manage_custom_fields {
-//  id                 Int                            @id @default(autoincrement())
-//  field_label        String?
-//  field_type         String?
-//  occupier           Int?
-//  uid                Int?
-//  location_id        Int                            @default(0)
-//  created_date       DateTime?
-//  modified_date      DateTime?
-//  treatment_interest Int
-//  show_in_leads      Int
-//  field_for          manage_custom_fields_field_for
-//  flagged            Boolean
-//  is_required        Int
-//  disable_app        Int                            @default(1)
-//  is_active          Int                            @default(1)
-//  field_order        Int                            @default(125)
-//  display_in_invoice Int                            @default(0)
-//  default_in_reports Int                            @default(0)
-//  category_id        Int
-//  in_cc_toolbar      Boolean                        @default(false)
-//  favorite           Boolean                        @default(false)
-//  show_in_cal        Boolean                        @default(true)
-//
-//  @@index([category_id], name: "category_id")
-//  @@index([occupier], name: "occupier")
-//}
-//
-//model manage_custom_fields_categories {
-//  id         Int    @id @default(autoincrement())
-//  name       String
-//  company_id Int
-//}
-//
-//model manage_custom_fields_items {
-//  id         Int    @id @default(autoincrement())
-//  field_id   Int
-//  occupier   String
-//  item_label String
-//  item_value String
-//  item_order Int
-//
-//  @@index([field_id], name: "field_id")
-//  @@index([occupier], name: "occupier")
-//}
+model ManageCustomField {
+  id                    Int                            @id @default(autoincrement())
+  field_label           String?
+  field_type            String?
+  company_id            Int?                           @map("occupier")
+  user_id               Int?                           @map("uid")
+  location_id           Int?                           @default(0)
+  created_date          DateTime?
+  modified_date         DateTime?
+  treatment_interest    Int
+  show_in_leads         Int
+  field_for             manage_custom_fields_field_for
+  flagged               Boolean
+  is_required           Int
+  disable_app           Int                            @default(1)
+  is_active             Boolean                        @default(true)
+  field_order           Int                            @default(125)
+  display_in_invoice    Int                            @default(0)
+  default_in_reports    Int                            @default(0)
+  category_id           Int?
+  in_cc_toolbar         Boolean                        @default(false)
+  favorite              Boolean                        @default(false)
+  show_in_cal           Boolean                        @default(true)
+  Company               Company?                       @relation(fields: [company_id], references: [id])
+  User                  User?                          @relation(fields: [user_id], references: [id])
+  Location              CompanyBranch?                 @relation(fields: [location_id], references: [id])
+  Category              ManageCustomFieldCategory?     @relation(fields: [category_id], references: [id])
+  ManageCustomFieldItem ManageCustomFieldItem[]
+  CmProductCustomField  CmProductCustomField[]
+
+  CmLeadCustomField CmLeadCustomField[]
+  @@index([category_id], name: "category_id")
+  @@index([company_id], name: "occupier")
+  @@map("manage_custom_fields")
+}
+
+model ManageCustomFieldCategory {
+  id         Int     @id @default(autoincrement())
+  name       String
+  company_id Int
+  Company    Company @relation(fields: [company_id], references: [id])
+
+  ManageCustomField ManageCustomField[]
+  @@map("manage_custom_fields_categories")
+}
+
+model ManageCustomFieldItem {
+  id          Int                @id @default(autoincrement())
+  field_id    Int?
+  company_id  Int?               @map("occupier")
+  item_label  String
+  item_value  String
+  item_order  Int
+  CustomField ManageCustomField? @relation(fields: [field_id], references: [id])
+  Company     Company?           @relation(fields: [company_id], references: [id])
+
+  @@index([field_id], name: "field_id")
+  @@index([company_id], name: "occupier")
+  @@map("manage_custom_fields_items")
+}
+
 //
 //model manage_fields_order {
 //  id         Int    @id @default(autoincrement())
@@ -7950,41 +8079,6 @@ model JobStatus {
 //  occupier          Int
 //}
 //
-//model medical_form {
-//  id                     Int       @id @default(autoincrement())
-//  user_deleted           Int
-//  name                   String?
-//  data                   String?
-//  created_at             DateTime?
-//  updated_at             DateTime?
-//  deleted_at             DateTime?
-//  nhs_locum_id           Int?
-//  nhs_procedure_id       Int?
-//  locked                 Int
-//  printout               String
-//  occupier               Int
-//  user_created           Int
-//  encoded                Int
-//  form_type              String
-//  service_id             String
-//  ipad_only              Int?      @default(0)
-//  heading_setting        Int?      @default(0)
-//  temp_static            Int
-//  old_data               String
-//  form_category          String
-//  author                 String
-//  diagnosis_code         String
-//  is_fav                 Int
-//  diagnosis_code_enabled Int
-//  lab_id                 Int
-//  is_private             Boolean   @default(false)
-//
-//  @@index([deleted_at], name: "deleted_at")
-//  @@index([form_type], name: "form_type")
-//  @@index([occupier], name: "occupier")
-//  @@index([service_id], name: "service_id")
-//}
-
 model MedicalForm {
   id                     Int       @id @default(autoincrement())
   user_deleted           Int
@@ -9169,6 +9263,7 @@ model Page {
   ParrentPage       Page?               @relation(fields: [parent], references: [id])
 
   Page Page[] @relation("PageToPage")
+  @@unique([name], name: "unique_page_name")
   @@index([admin], name: "admin")
   @@index([parent], name: "parent")
   @@map("pages")
@@ -9826,6 +9921,7 @@ model Report {
   ReportCategory          ReportCategory? @relation(fields: [report_category_id], references: [id])
   UserReport              UserReport[]
 
+  FavoriteReport FavoriteReport[]
   @@index([company_id], name: "occupier")
   @@index([report_category_id], name: "report_category_id")
   @@map("reports")
@@ -9863,12 +9959,17 @@ model Report {
 //  sales_summary     Int
 //}
 //
-//model reports_favourite {
-//  id        Int    @id @default(autoincrement())
-//  occupier  String
-//  report_id Int
-//  stars     Int
-//}
+model FavoriteReport {
+  id         Int      @id @default(autoincrement())
+  company_id Int?     @map("occupier")
+  report_id  Int?
+  stars      Int
+  Company    Company? @relation(fields: [company_id], references: [id])
+  Report     Report?  @relation(fields: [report_id], references: [id])
+
+  @@map("reports_favourite")
+}
+
 //
 model ReportCategory {
   id          Int      @id @default(autoincrement())
@@ -10032,8 +10133,8 @@ model RotaShift {
   id             Int            @id @default(autoincrement())
   uid            Int
   User           User           @relation(fields: [uid], references: [id])
-  start          Decimal
-  end            Decimal
+  start          Int
+  end            Int
   company_id     Int            @map("occupier")
   notes          String?
   last_seen      DateTime?
@@ -10722,14 +10823,19 @@ model UserSalutation {
 //  order Int
 //}
 //
-//model services_master_category {
-//  id       Int                           @id @default(autoincrement())
-//  name     String
-//  occupier Int
-//  ord      Int                           @default(0)
-//  type     services_master_category_type @default(SERVICE)
-//  image    String
-//}
+model ServicesMasterCategory {
+  id          Int                           @id @default(autoincrement())
+  name        String
+  company_id  Int                           @map("occupier")
+  ord         Int                           @default(0)
+  type        services_master_category_type @default(SERVICE)
+  image       String
+  Company     Company                       @relation(fields: [company_id], references: [id])
+  InvCategory InvCategory[]                 @relation("master_cat_id_to_services_master_category_id")
+
+  @@map("services_master_category")
+}
+
 //
 //model service_product_loyalty {
 //  id         Int @id @default(autoincrement())
@@ -10939,18 +11045,17 @@ model UserSalutation {
 //}
 
 model SmsPurchase {
-  id            Int    @id @default(autoincrement())
+  id            Int     @id @default(autoincrement())
   date          Int
   sms_amount    Int
-  company_id    Int    @map("cid")
-  user_id       Int?   @map("user")
+  company_id    Int     @map("cid")
+  user_id       Int?    @map("user")
   price         Float
   profit        Float
   purchase_type String
   status        Int
-
-  Company Company @relation(fields: [company_id], references: [id])
-  User    User?   @relation(fields: [user_id], references: [id])
+  Company       Company @relation(fields: [company_id], references: [id])
+  User          User?   @relation(fields: [user_id], references: [id])
 
 
   @@index([company_id], name: "company_id")
@@ -11054,45 +11159,43 @@ model SocialSurveyAnswer {
 
 model SocialSurveyFeedback {
 
-  id               Int     @id @default(autoincrement())
-  rating           Int
-  contact_id       Int?
-  feedback_source  String
-  company_id       Int     @map("company")
-  date             Decimal
-  feedback_comment String
-  feedback_name    String
-  feedback_status  String
-  related_id       Int
-  related_to       String
-  feedback_for     Int?
-  service          String
-  public_use       Int     @default(0)
-  service_id       Int
-  owner_response   String
-
-  CmContact CmContact? @relation(fields: [contact_id], references: [ID])
-  Company   Company    @relation(fields: [company_id], references: [id])
-  User      User?      @relation(fields: [feedback_for], references: [id])
-
+  id                 Int                            @id @default(autoincrement())
+  rating             Int
+  contact_id         Int?
+  feedback_source    String
+  company_id         Int                            @map("company")
+  date               Int
+  feedback_comment   String
+  feedback_name      String
+  feedback_status    String
+  related_id         Int
+  related_to         String
+  feedback_for       Int?
+  service            String
+  public_use         Int                            @default(0)
+  service_id         Int
+  owner_response     String
+  CmContact          CmContact?                     @relation(fields: [contact_id], references: [ID])
+  Company            Company                        @relation(fields: [company_id], references: [id])
+  User               User?                          @relation(fields: [feedback_for], references: [id])
   Response           SocialSurveyFeedbackResponse[]
   SocialSurveyAnswer SocialSurveyAnswer[]
+
   @@index([company_id], name: "company")
   @@index([related_id], name: "related_id")
   @@map("social_survey_feedback")
 }
 
 model SocialSurveyFeedbackResponse {
-  id         Int      @id @default(autoincrement())
+  id         Int                  @id @default(autoincrement())
   response   String
-  date       DateTime @default(now())
+  date       DateTime             @default(now())
   company_id Int
   uid        Int
   review_id  Int
-
-  Company  Company              @relation(fields: [company_id], references: [id])
-  User     User                 @relation(fields: [uid], references: [id])
-  Feedback SocialSurveyFeedback @relation(fields: [review_id], references: [id])
+  Company    Company              @relation(fields: [company_id], references: [id])
+  User       User                 @relation(fields: [uid], references: [id])
+  Feedback   SocialSurveyFeedback @relation(fields: [review_id], references: [id])
 
 
   @@index([review_id], name: "review_id")
@@ -11333,11 +11436,17 @@ model StaffMeta {
 //  reciever          Boolean  @default(false)
 //}
 //
-//model supplier_category {
-//  id            Int    @id @default(autoincrement())
-//  category_name String
-//  company_id    Int
-//}
+model SupplierCategory {
+  id            Int      @id @default(autoincrement())
+  category_name String
+  company_id    Int?
+  Company       Company? @relation(fields: [company_id], references: [id])
+
+
+  @@unique([category_name, company_id])
+  @@map("supplier_category")
+}
+
 //
 //model supplier_details {
 //  id           Int    @id @default(autoincrement())
@@ -11528,8 +11637,11 @@ model Tax {
   rate        Float
   hidden      Int           @default(0)
   default     Int           @default(0)
-  company_id  Int           @map("occupier")
+  company_id  Int?          @map("occupier")
   custom_id   Int
+  Company     Company?      @relation(fields: [company_id], references: [id])
+  InvProduct  InvProduct[]
+  InvCategory InvCategory[]
   InvSaleItem InvSaleItem[]
 
   @@index([company_id], name: "occupier")
@@ -11913,19 +12025,19 @@ model TemplateFolder {
 //}
 //
 model TrainingCourse {
-  id              Int                     @id @default(autoincrement())
-  course_name     String
-  course_tag      String
-  custom_field_id Int
-  duration        Int
-  description     String
-  premium         Int
-  encore          Int
-  category        String?                 @default("Getting Started")
-  difficulty      train_course_difficulty @default(Beginner)
-
+  id                    Int                     @id @default(autoincrement())
+  course_name           String
+  course_tag            String
+  custom_field_id       Int
+  duration              Int
+  description           String
+  premium               Int
+  encore                Int
+  category              String?                 @default("Getting Started")
+  difficulty            train_course_difficulty @default(Beginner)
   TrainingCourseBooking TrainingCourseBooking[]
   TrainCourseDate       TrainCourseDate[]
+
   @@map("train_course")
 }
 
@@ -12122,117 +12234,116 @@ model TrainCourseDate {
 //
 model User {
 
-  id                          Int                           @id @default(autoincrement())
-  username                    String?
-  full_name                   String
-  password                    String?
-  password_algor              Int?                          @default(1)
-  salt                        String?
-  created                     DateTime?
-  last_login                  DateTime?
-  company_id                  Int?                          @map("company")
-  hash                        String
-  email                       String
-  admin                       Int
-  address                     String
-  timezone                    String
-  locale                      String
-  language                    String
-  job_title                   String
-  department                  String
-  division                    String
-  super                       Int
-  default_page                String
-  signature                   String
-  image                       String
-  position                    String
-  location                    String
-  deleted                     Int
-  pass_code                   String
-  phone_number                String
-  hide_online_bookings        Int
-  passcode                    String
-  last_loaded_page            String
-  temporary_password          Boolean
-  custom_id                   String
-  hide_calendar               Int
-  calendar_order              Int
-  clocked_in                  DateTime?
-  clocked_out                 DateTime?
-  last_password_reset         Int
-  force_password              Int
-  limited_user                Boolean
-  can_void                    Boolean                       @default(true)
-  can_refund                  Boolean                       @default(true)
-  can_report                  Boolean                       @default(true)
-  can_rota                    Boolean                       @default(true)
-  staff_read_only             Boolean
-  stock_read_only             Boolean
-  all_reports                 Boolean                       @default(true)
-  performance_stats           Int
-  disable_tutorial            Boolean
-  all_services                Boolean                       @default(true)
-  delete_treatment            Boolean                       @default(true)
-  admin_tasks                 Boolean
-  admin_leads                 Int
-  imported                    Int
-  login_fail_count            Int
-  can_edit_booking_time       Int                           @default(1)
-  user_color                  String
-  disable_multiple_clinics    Int
-  is_hcp                      Int                           @default(0)
-  login_disabled              Int
-  can_patient_appoint         Boolean                       @default(true)
-  can_patient_communicatons   Boolean                       @default(true)
-  can_patient_photos          Boolean                       @default(true)
-  can_patient_fiancials       Boolean                       @default(true)
-  can_patient_treatments      Boolean                       @default(true)
-  can_patient_docs            Boolean                       @default(true)
-  can_patient_packages        Boolean                       @default(true)
-  can_patient_prescription    Boolean                       @default(true)
-  can_patient_consents        Boolean                       @default(true)
-  can_patient_giftvoucher     Boolean                       @default(true)
-  can_patient_loyalty         Boolean                       @default(true)
-  can_patient_recall          Boolean                       @default(true)
-  can_patient_memberships     Boolean                       @default(true)
-  can_cancel_booking          Boolean                       @default(true)
-  notify_on_booking           Boolean
-  can_edit_communications     Boolean                       @default(true)
-  can_delete_communications   Boolean                       @default(true)
-  can_view_full_cal           Boolean                       @default(true)
-  permission_last_role        String                        @default("")
-  can_merge                   Boolean                       @default(true)
-  can_discount                Int?                          @default(1)
-  can_discount_single         Boolean                       @default(true)
-  restored                    Int
-  google_auth_secret          String?
-  default_contract_id         Int
-  can_see_personal            Boolean                       @default(true)
-  appear_on_rota              Boolean                       @default(true)
-  can_patient_medical_history Boolean                       @default(true)
-  can_lab_requests            Boolean                       @default(false)
-  detailed_view               Int
-  can_make_blockout           Boolean                       @default(true)
-  can_delete_blockout         Boolean                       @default(true)
-  can_move_blockout           Boolean                       @default(true)
-  main_contact                Boolean
-  UserSecurityQuestionsAnswer UserSecurityQuestionsAnswer[]
-  company                     Company?                      @relation(fields: [company_id], references: [id])
-  CompanyDetails              CompanyDetails?               @relation(fields: [company_id], references: [company_id])
-  RotaShift                   RotaShift[]
-  UserGroupMember             UserGroupMember?
-  UserMainPermission          UserMainPermission[]
-  UserMobilePermission        UserMobilePermission[]
-  UserPermission              UserPermission[]
-  UserReport                  UserReport[]
-  InvBiller                   InvBiller[]
-  UserAlertType               UserAlertType?
-  UserAlertPermission         UserAlertPermission[]
-  CmContactAlert              CmContactAlert[]
-  CmStaffGeneral              CmStaffGeneral?
-  CompanyNote                 CompanyNote[]
-  TrainCourseDate             TrainCourseDate[]
-
+  id                           Int                            @id @default(autoincrement())
+  username                     String?
+  full_name                    String
+  password                     String?
+  password_algor               Int?                           @default(1)
+  salt                         String?
+  created                      DateTime?
+  last_login                   DateTime?
+  company_id                   Int?                           @map("company")
+  hash                         String
+  email                        String
+  admin                        Int
+  address                      String
+  timezone                     String
+  locale                       String
+  language                     String
+  job_title                    String
+  department                   String
+  division                     String
+  super                        Int
+  default_page                 String
+  signature                    String
+  image                        String
+  position                     String
+  location                     String
+  deleted                      Int
+  pass_code                    String
+  phone_number                 String
+  hide_online_bookings         Int
+  passcode                     String
+  last_loaded_page             String
+  temporary_password           Boolean
+  custom_id                    String
+  hide_calendar                Int
+  calendar_order               Int
+  clocked_in                   DateTime?
+  clocked_out                  DateTime?
+  last_password_reset          Int
+  force_password               Int
+  limited_user                 Boolean
+  can_void                     Boolean                        @default(true)
+  can_refund                   Boolean                        @default(true)
+  can_report                   Boolean                        @default(true)
+  can_rota                     Boolean                        @default(true)
+  staff_read_only              Boolean
+  stock_read_only              Boolean
+  all_reports                  Boolean                        @default(true)
+  performance_stats            Int
+  disable_tutorial             Boolean
+  all_services                 Boolean                        @default(true)
+  delete_treatment             Boolean                        @default(true)
+  admin_tasks                  Boolean
+  admin_leads                  Int
+  imported                     Int
+  login_fail_count             Int
+  can_edit_booking_time        Int                            @default(1)
+  user_color                   String
+  disable_multiple_clinics     Int
+  is_hcp                       Int                            @default(0)
+  login_disabled               Int
+  can_patient_appoint          Boolean                        @default(true)
+  can_patient_communicatons    Boolean                        @default(true)
+  can_patient_photos           Boolean                        @default(true)
+  can_patient_fiancials        Boolean                        @default(true)
+  can_patient_treatments       Boolean                        @default(true)
+  can_patient_docs             Boolean                        @default(true)
+  can_patient_packages         Boolean                        @default(true)
+  can_patient_prescription     Boolean                        @default(true)
+  can_patient_consents         Boolean                        @default(true)
+  can_patient_giftvoucher      Boolean                        @default(true)
+  can_patient_loyalty          Boolean                        @default(true)
+  can_patient_recall           Boolean                        @default(true)
+  can_patient_memberships      Boolean                        @default(true)
+  can_cancel_booking           Boolean                        @default(true)
+  notify_on_booking            Boolean
+  can_edit_communications      Boolean                        @default(true)
+  can_delete_communications    Boolean                        @default(true)
+  can_view_full_cal            Boolean                        @default(true)
+  permission_last_role         String                         @default("")
+  can_merge                    Boolean                        @default(true)
+  can_discount                 Int?                           @default(1)
+  can_discount_single          Boolean                        @default(true)
+  restored                     Int
+  google_auth_secret           String?
+  default_contract_id          Int
+  can_see_personal             Boolean                        @default(true)
+  appear_on_rota               Boolean                        @default(true)
+  can_patient_medical_history  Boolean                        @default(true)
+  can_lab_requests             Boolean                        @default(false)
+  detailed_view                Int
+  can_make_blockout            Boolean                        @default(true)
+  can_delete_blockout          Boolean                        @default(true)
+  can_move_blockout            Boolean                        @default(true)
+  main_contact                 Boolean
+  UserSecurityQuestionsAnswer  UserSecurityQuestionsAnswer[]
+  Company                      Company?                       @relation(fields: [company_id], references: [id])
+  CompanyDetails               CompanyDetails?                @relation(fields: [company_id], references: [company_id])
+  RotaShift                    RotaShift[]
+  UserGroupMember              UserGroupMember?
+  UserMainPermission           UserMainPermission[]
+  UserMobilePermission         UserMobilePermission[]
+  UserPermission               UserPermission[]
+  UserReport                   UserReport[]
+  InvBiller                    InvBiller[]
+  UserAlertType                UserAlertType?
+  UserAlertPermission          UserAlertPermission[]
+  CmContactAlert               CmContactAlert[]
+  CmStaffGeneral               CmStaffGeneral?
+  CompanyNote                  CompanyNote[]
+  TrainCourseDate              TrainCourseDate[]
   SocialSurveyFeedbackResponse SocialSurveyFeedbackResponse[]
   CmContactTravel              CmContactTravel[]
   CmContactViewed              CmContactViewed[]
@@ -12242,9 +12353,16 @@ model User {
   MessageTemplate              MessageTemplate[]
   UserActivityLog              UserActivityLog[]
   SmsPurchase                  SmsPurchase[]
+  StaffMeta                    StaffMeta[]
+  CmPurchaseOrder              CmPurchaseOrder[]
+  InventoryCount               InventoryCount[]
+  SocialSurveyFeedback         SocialSurveyFeedback[]
+  InvTaxRate                   InvTaxRate[]
+  InvCategory                  InvCategory[]
+  ManageCustomField            ManageCustomField[]
+  InvWarehouseProduct          InvWarehouseProduct[]
+  InventoryMovement            InventoryMovement[]
 
-  StaffMeta            StaffMeta[]
-  SocialSurveyFeedback SocialSurveyFeedback[]
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")
   @@index([deleted], name: "deleted")
@@ -12282,9 +12400,9 @@ model UserActivityLog {
   accessId          Int?
   type              String?
   template          String?
-  time              Decimal?
+  time              Int?
   status            user_activities_log_status @default(Enable)
-  ipAddress         Decimal?
+  ipAddress         Int?
   pabau_annoucement Int?
   location_id       Int?                       @default(0)
   User              User?                      @relation(fields: [userId], references: [id])
@@ -12464,9 +12582,9 @@ model UserGroupMember {
 //
 model UserMainPermission {
   id                 Int     @id @default(autoincrement())
-  user_id            Int
+  user_id            Int?
   delete_alert_notes Boolean @default(false)
-  User               User    @relation(fields: [user_id], references: [id])
+  User               User?   @relation(fields: [user_id], references: [id])
 
   @@map("user_main_permissions")
 }
@@ -13179,7 +13297,7 @@ model XeroIntegration {
 //  id                 Int    @id @default(autoincrement())
 //  custom_id          Int
 //  marketing_source   String
-//  custom_category_id Int
+//  custom_category_id` Int
 //
 //  @@index([custom_id], name: "custom_id")
 //  @@index([marketing_source], name: "marketing_source")

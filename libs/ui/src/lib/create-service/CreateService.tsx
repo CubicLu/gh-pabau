@@ -404,7 +404,7 @@ export const CreateService: FC<CreateServiceProps> = ({
                     placeholder="Select Category"
                     onSelect={(val: string) => setCategory(val)}
                   >
-                    {categories.map((item) => (
+                    {categories?.map((item) => (
                       <OptGroup
                         label={
                           <span

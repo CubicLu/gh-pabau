@@ -3,7 +3,7 @@ export const BASIC_LOGGING = {
   requestDidStart() {
     return {
       didEncounterErrors(requestContext) {
-        console.log(
+        console.error(
           'an error happened in response to query ' +
             requestContext.request.query
         )

@@ -6,7 +6,7 @@ export const FinanceInvoiceResponse = objectType({
     t.int('id')
     t.string('invoiceNo')
     t.string('location')
-    t.date('invDate')
+    t.field('invDate', { type: 'DateTime' })
     t.string('customer')
     t.string('debtor')
     t.string('payment')
@@ -26,7 +26,7 @@ export const FindManyAccountPaymentResponse = objectType({
     t.int('id')
     t.string('invoiceNo')
     t.string('location')
-    t.date('invDate')
+    t.field('invDate', { type: 'DateTime' })
     t.string('customer')
     t.string('amount')
     t.string('payment')
@@ -38,7 +38,7 @@ export const LastAction = objectType({
   name: 'LastAction',
   definition(t) {
     t.int('communication_id')
-    t.date('time')
+    t.field('time', { type: 'DateTime' })
   },
 })
 
@@ -48,7 +48,7 @@ export const FindManyAccountDebtResponse = objectType({
     t.int('id')
     t.string('invoiceNo')
     t.string('location')
-    t.date('invDate')
+    t.field('invDate', { type: 'DateTime' })
     t.string('customer')
     t.string('debtor')
     t.string('payment')
@@ -67,7 +67,7 @@ export const FindManyAccountCreditNoteResponse = objectType({
     t.int('id')
     t.string('creditNo')
     t.string('location')
-    t.date('creditDate')
+    t.field('creditDate', { type: 'DateTime' })
     t.string('customer')
     t.string('debtor')
     t.string('invoiceNo')

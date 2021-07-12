@@ -6,8 +6,10 @@ import {
   HttpLink,
   InMemoryCache,
   split,
+  NormalizedCacheObject,
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
+import { onError } from '@apollo/client/link/error'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -17,12 +19,15 @@ import { AppProps } from 'next/app'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import 'react-image-crop/dist/ReactCrop.css'
 import 'react-phone-input-2/lib/style.css'
+import Router from 'next/router'
 import 'react-quill/dist/quill.snow.css'
 import ContextWrapper from '../components/ContextWrapper'
 import TranslationWrapper from '../components/TranslationWrapper'
 require('../styles/global.less')
 require('../../../libs/ui/src/styles/antd.less')
 require('react-phone-input-2/lib/style.css')
+
+let apolloClient: ApolloClient<NormalizedCacheObject | null> = null
 
 const cache = new InMemoryCache({
   resultCaching: true,
@@ -61,6 +66,26 @@ const httpLink = new HttpLink({
 
   uri: GRAPHQL_HTTP_ENDPOINT,
 })
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    for (const error of graphQLErrors) {
+      if (process?.browser) {
+        switch (error?.message) {
+          case 'Not Authorized':
+            Router.replace('/403')
+            break
+          default:
+            console.log(
+              `[GraphQL error]: Message: ${error.message}, Location: ${error.locations}, Path: ${error.path}`
+            )
+        }
+      }
+    }
+  }
+  if (networkError) {
+    console.log(`[Network error]: ${networkError}`)
+  }
+})
 const getWebSocketLink = () => {
   const token = localStorage.getItem('token')
   return new WebSocketLink({
@@ -90,13 +115,12 @@ const terminatingLink = wsLink
         )
       },
       wsLink,
-      httpLink
+      authLink.concat(httpLink)
     )
   : httpLink
-
-export const client = new ApolloClient({
+apolloClient = new ApolloClient({
   ssrMode: false,
-  link: ApolloLink.from([authLink, terminatingLink]),
+  link: ApolloLink.from([errorLink, terminatingLink]),
   cache,
 })
 
@@ -105,7 +129,7 @@ export default function CustomApp({
   pageProps,
 }: AppProps): JSX.Element {
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={apolloClient}>
       <style jsx global>{`
         @font-face {
           font-family: 'Circular-Std-Black';

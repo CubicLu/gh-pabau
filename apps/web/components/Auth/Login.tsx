@@ -44,11 +44,6 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
     if (!result) {
       throw new Error('Wrong user/password')
     }
-    // setCookie('user', JSON.stringify(result.data?.login), {
-    //   path: '/',
-    //   maxAge: 3600,
-    //   sameSite: true,
-    // })
     localStorage.setItem('token', result.data?.login)
     return true
   }

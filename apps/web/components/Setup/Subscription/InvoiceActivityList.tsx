@@ -17,7 +17,7 @@ import EmailSendButton from './EmailSendButton'
 
 const LIST_AGGREGATE = gql`
   query countSMSPurchases {
-    smsPurchasesCount
+    findManySmsPurchaseCount
   }
 `
 const LIST_SMS_PURCHASES = gql`
@@ -27,7 +27,7 @@ const LIST_SMS_PURCHASES = gql`
     $offset: Int = 0
     $limit: Int = 10
   ) {
-    smsPurchases(
+    findManySmsPurchase(
       skip: $offset
       take: $limit
       orderBy: { date: desc }

@@ -4,17 +4,34 @@ import * as rules from './types'
 export const permissions = shield(
   {
     Mutation: {
+      // Products
+      createOneInvProduct: rules.authentication.isAuthenticated,
       //UserPermission
-      updateOneUserPermission: rules.authentication.isAdmin,
-      deleteOneUserPermission: rules.authentication.isAdmin,
-      createOneUserPermission: rules.authentication.isAdmin,
-
+      updateOneUserPermission: and(
+        rules.authentication.isAuthenticated,
+        rules.authentication.isAdmin
+      ),
+      deleteOneUserPermission: and(
+        rules.authentication.isAuthenticated,
+        rules.authentication.isAdmin
+      ),
+      createOneUserPermission: and(
+        rules.authentication.isAuthenticated,
+        rules.authentication.isAdmin
+      ),
       //StaffMeta
-      createOneStaffMeta: rules.authentication.isAdmin,
-      updateOneStaffMeta: rules.authentication.isAdmin,
-      deleteOneStaffMeta: rules.authentication.isAdmin,
-      upsertManyStaffMetaByGroupId: rules.authentication.isAdmin,
-
+      createOneStaffMeta: and(
+        rules.authentication.isAuthenticated,
+        rules.authentication.isAdmin
+      ),
+      updateOneStaffMeta: and(
+        rules.authentication.isAuthenticated,
+        rules.authentication.isAdmin
+      ),
+      deleteOneStaffMeta: and(
+        rules.authentication.isAuthenticated,
+        rules.authentication.isAdmin
+      ),
       //CompanyMeta
       setOneCompanyMeta: rules.authentication.isAdmin,
       setManyCompanyMeta: rules.authentication.isAdmin,
@@ -26,10 +43,21 @@ export const permissions = shield(
       sendEmail: rules.authentication.isAuthenticated,
 
       //Page
-      createOnePage: rules.authentication.isAdmin,
-      updateOnePage: rules.authentication.isAdmin,
-      deleteOnePage: rules.authentication.isAdmin,
-
+      createOnePage: rules.authentication.isAuthenticated,
+      updateOnePage: and(
+        rules.authentication.isAuthenticated,
+        rules.authentication.isAdmin
+      ),
+      deleteOnePage: and(
+        rules.authentication.isAuthenticated,
+        rules.authentication.isAdmin
+      ),
+      //Country
+      createOneCountry: rules.authentication.isAuthenticated,
+      //MedicalFormContact
+      createOneMedicalFormContact: rules.authentication.isAuthenticated,
+      //CmContactNode
+      createOneCmContactNote: rules.authentication.isAuthenticated,
       //UserGroup
       updateOneUserGroup: rules.authentication.isAdmin,
       deleteOneUserGroup: rules.authentication.isAdmin,
@@ -57,68 +85,91 @@ export const permissions = shield(
 
       // Default fallback
       '*': and(
+        rules.authentication.isAuthenticated,
         rules.authentication.isAdmin,
-        rules.interceptors.interceptMutation
+        rules.interceptors.injectCompany,
+        rules.interceptors.injectUser
       ),
     },
     Query: {
+      //StaffMeta
       findFirstStaffMeta: rules.authentication.isAuthenticated,
-      staffMeta: rules.authentication.isAuthenticated,
-      staffMetas: rules.authentication.isAuthenticated,
-      //UserGroup
-      userGroupMembers: rules.authentication.isAuthenticated,
-      userGroup: rules.authentication.isAuthenticated,
+      findManyStaffMeta: rules.authentication.isAuthenticated,
+      findManyStaffMetaCount: rules.authentication.isAuthenticated,
+      // //UserGroup
+      findManyUserGroupMemberCount: rules.authentication.isAuthenticated,
+      findManyUserGroupMember: rules.authentication.isAuthenticated,
       findFirstUserGroupMember: rules.authentication.isAuthenticated,
-      //Contacts
-      findFirstContactInsurance: rules.authentication.isAuthenticated,
-      //Financials
-      findFirstInvSale: rules.authentication.isAuthenticated,
-      //Report
+      // //BnfDrug
+      findFirstBnfDrug: rules.authentication.isAuthenticated,
+      findManyBnfDrug: rules.authentication.isAuthenticated,
+      findManyBnfDrugCount: rules.authentication.isAuthenticated,
+      // //TrainingCourse
+      findFirstTrainingCourse: rules.authentication.isAuthenticated,
+      findManyTrainingCourse: rules.authentication.isAuthenticated,
+      findManyTrainingCourseCount: rules.authentication.isAuthenticated,
+      // //Page
       findFirstReport: rules.interceptors.interceptSharedCompanyData,
-      reports: rules.interceptors.interceptSharedCompanyData,
+      findManyReport: rules.interceptors.interceptSharedCompanyData,
+      findManyReportCount: rules.interceptors.interceptSharedCompanyData,
       retrieveReport: rules.authentication.isAuthenticated,
       retrieveTrendReport: rules.authentication.isAuthenticated,
       //ReportCategory
       findFirstReportCategory: rules.interceptors.interceptSharedCompanyData,
-      reportCategories: rules.interceptors.interceptSharedCompanyData,
-      //BnfDrug
-      bnfDrug: rules.authentication.isAuthenticated,
-      bnfDrugs: rules.authentication.isAuthenticated,
-      //TrainingCourse
-      trainingCourses: rules.authentication.isAuthenticated,
-      trainingCoursesCount: rules.authentication.isAuthenticated,
-      //Page
-      page: rules.authentication.isAuthenticated,
-      pages: rules.authentication.isAuthenticated,
+      findManyReportCategory: rules.interceptors.interceptSharedCompanyData,
+      findManyReportCategoryCount:
+        rules.interceptors.interceptSharedCompanyData,
       findFirstPage: rules.authentication.isAuthenticated,
-      //CmContactNote
-      cmContactNotes: rules.authentication.isAuthenticated,
-      //UserMainPermission
-      userMainPermissions: rules.authentication.isAuthenticated,
-      //UserAlert
-      userAlerts: rules.authentication.isAuthenticated,
-      //UserAlertType
-      userAlertTypes: rules.authentication.isAuthenticated,
-      //SocialSurveyAnswer
-      socialSurveyAnswers: rules.authentication.isAuthenticated,
-      //Country
-      countries: rules.authentication.isAuthenticated,
-      //MedicalFormContact
-      medicalFormContacts: rules.authentication.isAuthenticated,
-      //UserPermission
-      validateUser: allow,
-      userPermissions: rules.authentication.isAuthenticated,
+      findManyPage: rules.authentication.isAuthenticated,
+      findManyPageCount: rules.authentication.isAuthenticated,
+      // //CmContactNote
+      findFirstCmContactNote: rules.authentication.isAuthenticated,
+      findManyCmContactNote: rules.authentication.isAuthenticated,
+      findManyCmContactNoteCount: rules.authentication.isAuthenticated,
+      // //UserMainPermission
+      findFirstUserMainPermission: rules.authentication.isAuthenticated,
+      findManyUserMainPermission: rules.authentication.isAuthenticated,
+      findManyUserMainPermissionCount: rules.authentication.isAuthenticated,
+      // //UserAlert
+      findFirstUserAlert: rules.authentication.isAuthenticated,
+      findManyUserAlert: rules.authentication.isAuthenticated,
+      findManyUserAlertCount: rules.authentication.isAuthenticated,
+      // //UserAlertType
+      findFirstUserAlertType: rules.authentication.isAuthenticated,
+      findManyUserAlertType: rules.authentication.isAuthenticated,
+      findManyUserAlertTypeCount: rules.authentication.isAuthenticated,
+      // //SocialSurveyAnswer
+      findFirstSocialSurveyAnswer: rules.authentication.isAuthenticated,
+      findManySocialSurveyAnswer: rules.authentication.isAuthenticated,
+      findManySocialSurveyAnswerCount: rules.authentication.isAuthenticated,
+      // //Country
+      findFirstCountry: rules.authentication.isAuthenticated,
+      findManyCountry: rules.authentication.isAuthenticated,
+      findManyCountryCount: rules.authentication.isAuthenticated,
+      // //MedicalFormContact
+      findFirstMedicalFormContact: rules.authentication.isAuthenticated,
+      findManyMedicalFormContact: rules.authentication.isAuthenticated,
+      findManyMedicalFormContactCount: rules.authentication.isAuthenticated,
+      // //UserPermission
+      findManyUserPermission: rules.authentication.isAuthenticated,
+      findManyUserPermissionCount: rules.authentication.isAuthenticated,
       findFirstUserPermission: rules.authentication.isAuthenticated,
-      //Authentication
+      findManyLocationsWithAvailableProductStock: rules.authentication.isAdmin,
+      validateUser: allow,
+      findManyProductsWithAvailableQuantity:
+        rules.authentication.isAuthenticated,
+      findManyProductsWithAvailableQuantityCount:
+        rules.authentication.isAuthenticated,
+      // //Authentication
       me: rules.authentication.isAuthenticated,
       company: rules.authentication.isAuthenticated,
       ping: allow,
       //TODO once jest mocks are resolved move it to rules.authentication.isAuthenticated
       featureRequestsWeeklyAvg: allow,
-      findManyCustomReportWithPermissions: rules.authentication.isAdmin,
-      user: rules.authentication.isAuthenticated, //TODO: insecure, fix in pure branch by masquerading the user/findOneUser and turning it into a findFirstUser in the shield injection.
-      staffList: rules.authentication.isAuthenticated,
-      '*': rules.interceptors.interceptAccessToCompanyData,
+      '*': and(
+        rules.authentication.isAuthenticated,
+        rules.interceptors.interceptAccessToCompanyData
+      ),
     },
   },
   {
@@ -128,8 +179,10 @@ export const permissions = shield(
         args,
         '\nResolver info :',
         info.path,
-        '\nReturn type',
-        info.returnType
+        '\nModel :',
+        info.returnType,
+        '\nError :',
+        error
       )
       return error
     },

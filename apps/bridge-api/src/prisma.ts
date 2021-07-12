@@ -7,7 +7,10 @@ const PABAU1_MYSQL_PASSWORD_PODS = process.env.PABAU1_MYSQL_PASSWORD_PODS
 const instances: Record<string, PrismaClient> = {}
 
 function getPodDbUrl(urlOrHostname) {
-  if (!urlOrHostname || urlOrHostname === 'https://toshe.pabau.me')
+  if (
+    !urlOrHostname ||
+    urlOrHostname === ('https://toshe.pabau.me' || 'http://localhost')
+  )
     return DATABASE_URL
 
   let url
@@ -41,18 +44,6 @@ export const prisma = (remote_url: string) => {
       {
         emit: 'event',
         level: 'query',
-      },
-      {
-        emit: 'stdout',
-        level: 'error',
-      },
-      {
-        emit: 'stdout',
-        level: 'info',
-      },
-      {
-        emit: 'stdout',
-        level: 'warn',
       },
     ],
   })

@@ -77,7 +77,7 @@ export const Chat = (props: P): JSX.Element => {
   const { data: membersData } = useChatGetUsersQuery({
     fetchPolicy: 'cache-first',
   })
-  const members = membersData?.users
+  const members = membersData?.findManyUser
 
   const [
     fetchDirectHistory,

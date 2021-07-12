@@ -9,7 +9,7 @@ fragment TwoFactorHistoryFields on TwoFactorHistory {
 
 fragment TwoFactorHistory on TwoFactorHistory {
   ...TwoFactorHistoryFields
-  company {
+  Company {
     ...CompanyFields
   }
 }

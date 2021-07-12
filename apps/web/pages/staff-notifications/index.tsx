@@ -23,7 +23,7 @@ interface InitialStaffNotifications {
 
 const USER_LIST_QUERY = gql`
   query users($isAdmin: Int = 0, $company: Int) {
-    users(
+    findManyUser(
       where: {
         AND: { company_id: { equals: $company }, admin: { equals: $isAdmin } }
       }

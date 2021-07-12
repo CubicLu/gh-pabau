@@ -3,7 +3,7 @@ query getTaxes($offset: Int, $limit: Int, $searchTerm: String = "%%") {
     offset: $offset
     limit: $limit
     order_by: { created_at: desc }
-    where: { name: { _ilike: $searchTerm } }
+    where: { name: { _like: $searchTerm } }
   ) {
     id
     name
@@ -15,7 +15,7 @@ query getTaxes($offset: Int, $limit: Int, $searchTerm: String = "%%") {
 }
 
 query getTaxesAggregate($searchTerm: String = "%%") {
-  tax_rates_aggregate(where: { name: { _ilike: $searchTerm } }) {
+  tax_rates_aggregate(where: { name: { _like: $searchTerm } }) {
     aggregate {
       count
     }

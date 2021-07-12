@@ -82,7 +82,7 @@ export const SystemTab: FC<SystemTabProps> = ({
   }
 
   useEffect(() => {
-    const record = data?.companyMetas?.reduce(
+    const record = data?.findManyCompanyMeta?.reduce(
       (opsData, { meta_name, meta_value }) => ({
         ...opsData,
         [meta_name]: meta_value,
@@ -177,7 +177,6 @@ export const SystemTab: FC<SystemTabProps> = ({
     try {
       await updateBusinessDetails({
         variables: CompanyDetailData,
-        optimisticResponse: {},
         refetchQueries: [
           {
             query: GetBussinessDetailsDocument,

@@ -1,5 +1,5 @@
 query findLeads($searchTerm1: String, $searchTerm2: String) {
-  cmLeads(
+  findManyCmLead(
     where: {
       AND: [
         {
