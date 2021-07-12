@@ -3,7 +3,7 @@ import { PhoneNumberInput, PasswordWithHelper } from '@pabau/ui'
 import { Form, Input, SubmitButton } from 'formik-antd'
 import { Select, Checkbox } from 'antd'
 import { Formik } from 'formik'
-import styles from './bookingdetail.module.less'
+import styles from './BookingDetails.module.less'
 import * as Yup from 'yup'
 import img from '../../../web/assets/images/connect/facebook.png'
 import img1 from '../../../web/assets/images/connect/Google.png'
@@ -61,7 +61,7 @@ export interface userType {
 //   verify1: any
 //   verify2: any
 // }
-const BookingDetail: FC<BookingdetailProps> = ({
+const BookingDetails: FC<BookingdetailProps> = ({
   changescreen,
   clinic,
   docname,
@@ -491,4 +491,4 @@ const BookingDetail: FC<BookingdetailProps> = ({
     </div>
   )
 }
-export default BookingDetail
+export default BookingDetails

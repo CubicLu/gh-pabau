@@ -6,7 +6,7 @@ import Selector, {
   SelectItem,
 } from '../../components/ServicesStep/ServiceCategorySelector'
 import Clinic from '../../components/LocationStep/clinic'
-import BookingDatail from '../../components/bookingdetails/Bookingdetail'
+import BookingDatail from '../../components/BookingDetailsStep/Bookingdetail'
 import ServiceSelector from '../../components/screentwo/ScreenTwo'
 import moment from 'moment'
 //import Conformation from '../../components/Connect/conformation/conformation'

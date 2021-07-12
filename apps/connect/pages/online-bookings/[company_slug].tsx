@@ -5,7 +5,7 @@ import { Footer } from '../../components/footer'
 import ServiceCategorySelector from '../../components/ServicesStep/ServiceCategorySelector'
 import ServiceSelector from '../../components/ServicesStep/ServiceSelector'
 import LocationSelector from '../../components/LocationStep/LocationSelector'
-import BookingDatail from '../../components/bookingdetails/Bookingdetail'
+import BookingDetails from '../../components/BookingDetailsStep/BookingDetails'
 import moment from 'moment'
 import Payment from '../../components/payment/Payment'
 import Booked from '../../components/bookingconform/booking'
@@ -378,31 +378,27 @@ export function Index() {
             </div>
           )}
           {currentStep === 2 && (
-            <div>
-              <LocationSelector
-                items={locationsResult.companyBranches}
-                onLocationSelected={(locationID) => {
-                  setSelectedData({
-                    ...selectedData,
-                    locationID: locationID,
-                  })
-                  setCurrentStep(currentStep + 1)
-                }}
-              />
-            </div>
+            <LocationSelector
+              items={locationsResult.companyBranches}
+              onLocationSelected={(locationID) => {
+                setSelectedData({
+                  ...selectedData,
+                  locationID: locationID,
+                })
+                setCurrentStep(currentStep + 1)
+              }}
+            />
           )}
           {currentStep === 3 && (
-            <div>
-              <EmployeeSelector
-                onEmployeeSelected={(employeeID) => {
-                  setSelectedData({
-                    ...selectedData,
-                    employeeID: employeeID,
-                  })
-                  setCurrentStep(currentStep + 1)
-                }}
-              />
-            </div>
+            <EmployeeSelector
+              onEmployeeSelected={(employeeID) => {
+                setSelectedData({
+                  ...selectedData,
+                  employeeID: employeeID,
+                })
+                setCurrentStep(currentStep + 1)
+              }}
+            />
           )}
           {currentStep === 4 && (
             <DateTimeSelector
@@ -414,18 +410,11 @@ export function Index() {
                 })
                 setCurrentStep(currentStep + 1)
               }}
-              selectslot={(slot) => {
-                setCurrentStep(currentStep + 1)
-              }}
-              translation={translation}
-              dateVal={date}
-              oldValue={editdate}
-              time={tempT}
             />
           )}
           {currentStep === 5 && (
             <div>
-              <BookingDatail
+              <BookingDetails
                 changescreen={rech}
                 clinic={user.clinic}
                 docname={user.docName}
