@@ -26,6 +26,8 @@ interface LeftSideBarProps {
   selectedLabels?: Labels[]
   setSelectedLabels?: (val: Labels[]) => void
   duplicateData?: SourceDataProps[][]
+  getClientsCountData?: any
+  duplicateContactsCount?: any
 }
 
 export const LeftSideBar: FC<LeftSideBarProps> = ({
@@ -40,12 +42,16 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
   selectedLabels,
   setSelectedLabels,
   duplicateData = [],
+  getClientsCountData,
+  duplicateContactsCount,
 }) => {
   const { t } = useTranslationI18()
 
   const handleSelectedTab = (e) => {
     setSelectedTab(e.key)
   }
+
+  console.log('duplicateContactsCount:', duplicateContactsCount)
 
   return (
     <div className={styles.clientLeftSidebar}>
@@ -60,7 +66,9 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
         <Menu.Item key={tab.clients} onClick={handleClientClick}>
           <div className={styles.clientMenuItem}>
             <span>{t('clients.leftSidebar.clients')}</span>
-            <span>{sourceData.length}</span>
+            {/*<span>{sourceData.length}</span>*/}
+            <span>{getClientsCountData?.cmContactsCount}</span>
+            {/*getClientsCountData*/}
           </div>
         </Menu.Item>
         <Menu.Item key={tab.contacts}>
@@ -71,7 +79,14 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
         <Menu.Item key={tab.mergeFix}>
           <div className={styles.clientMenuItem}>
             <span>{t('clients.leftSidebar.mergeFix')}</span>
-            <span>{duplicateData.length > 0 && duplicateData?.length}</span>
+            {/*<span>{duplicateData.length > 0 && duplicateData?.length}</span>*/}
+            <span>
+              {/*{duplicateContactsCount.length > 0 &&*/}
+              {/*  duplicateContactsCount?.length}*/}
+              {duplicateContactsCount?.duplicateContacts.length > 0 &&
+                duplicateContactsCount?.duplicateContacts.length}
+            </span>
+            {/*duplicateContactsTest.duplicateContacts.length*/}
           </div>
         </Menu.Item>
         <Menu.Divider />

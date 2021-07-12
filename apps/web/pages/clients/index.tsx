@@ -499,6 +499,7 @@ export const Clients: FC<ClientsProps> = () => {
       origin: { y: 0.6, x: 0.6 },
     })
   }
+  console.log('getClientsCountData:', getClientsCountData)
 
   const handleMerge = (data) => {
     displayConfetti()
@@ -611,6 +612,8 @@ export const Clients: FC<ClientsProps> = () => {
                     // sourceData={testData}
                     handleLabelClick={handleLabelClick}
                     duplicateData={duplicateDataList}
+                    getClientsCountData={getClientsCountData}
+                    duplicateContactsCount={duplicateContactsTest}
                   />
                 </Sider>
                 <Content>

@@ -1496,7 +1496,7 @@ export interface CmContact {
   OtherCountry: string;
   Description: string;
   Status: cm_contacts_Status;
-  CreatedDate: Date;
+  CreatedDate?: Date;
   IpAddress: number;
   fbimg: string;
   MarketingSource: number;

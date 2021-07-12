@@ -1,0 +1,3 @@
+table:
+  name: labels
+  schema: public
