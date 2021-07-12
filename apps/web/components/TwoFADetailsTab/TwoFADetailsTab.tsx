@@ -18,11 +18,11 @@ const TwoFADetailsTab = () => {
   } = useGetCompanyDetails2faQuery()
 
   const [updateCompanyDetails2faMutation] = useUpdateCompanyDetails2faMutation()
-  const [twoFAstatus, setTwoFAstatus] = useState(false)
+  const [twoFAstatus, setTwoFAstatus] = useState(0)
 
   useEffect(() => {
     if (!twoFAloading) {
-      setTwoFAstatus(!!twoFAdata.company.details.enable_2fa)
+      setTwoFAstatus(twoFAdata.company.details.enable_2fa)
     }
   }, [twoFAloading, twoFAdata])
 
@@ -31,7 +31,7 @@ const TwoFADetailsTab = () => {
       await updateCompanyDetails2faMutation({
         variables: { company_id: me.company.id, enable_2fa: 0 },
       })
-      setTwoFAstatus(false)
+      setTwoFAstatus(0)
       Notification(
         NotificationType.success,
         t('setup.business-details.2fa.update-success')
@@ -46,7 +46,7 @@ const TwoFADetailsTab = () => {
       await updateCompanyDetails2faMutation({
         variables: { company_id: me.company.id, enable_2fa: 1 },
       })
-      setTwoFAstatus(true)
+      setTwoFAstatus(1)
       Notification(
         NotificationType.success,
         t('setup.business-details.2fa.update-success')

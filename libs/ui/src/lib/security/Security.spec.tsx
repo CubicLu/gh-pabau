@@ -7,7 +7,7 @@ describe('Security', () => {
   it('should render successfully', () => {
     const { baseElement } = render(
       <Security
-        twoFAstatus={true}
+        twoFAstatus={1}
         dangerButtonText={'Cancel'}
         newButtonText={'New'}
         onDelete={() => true}

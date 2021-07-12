@@ -1,4 +1,4 @@
-import { LoginInputDto, JwtPayloadDto } from './dto'
+import { LoginInputDto, JwtPayloadDto, JwtUser } from './dto'
 import { User } from '../../generated/schema'
 import { createHash } from 'crypto'
 import jwt from 'jsonwebtoken'
@@ -33,7 +33,7 @@ export const verifyUser = (users: User[], args: LoginInputDto): User => {
   )
 }
 
-export const authenticateUser = (user: User): string => {
+export const authenticateUser = (user: JwtUser): string => {
   return jwt.sign(
     {
       user: user.id,

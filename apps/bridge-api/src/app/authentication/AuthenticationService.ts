@@ -51,6 +51,8 @@ export default class AuthenticationService {
     if (users === null) {
       throw new Error('invalid user')
     }
+
+    const tempInput = { username: null, password: input.newPassword }
     if (
       await validatePassword.validate({
         password: input.newPassword,
@@ -59,7 +61,7 @@ export default class AuthenticationService {
     ) {
       const HashPassword = AuthenticationService.generatePassword(
         users,
-        input.newPassword
+        tempInput
       )
       const update = await this.ctx.prisma.user.updateMany({
         where: {
@@ -94,13 +96,14 @@ export default class AuthenticationService {
         username: this.user.username,
       })
     ) {
+      const tempInput = { username: null, password: input.currentPassword }
       if (
         this.user.password ===
-        AuthenticationService.generatePassword(this.user, input.currentPassword)
+        AuthenticationService.generatePassword(this.user, tempInput)
       ) {
         const passwordHash = AuthenticationService.generatePassword(
           this.user,
-          input.newPassword
+          tempInput
         )
         const update = await this.ctx.prisma.user.updateMany({
           where: {
