@@ -120,7 +120,7 @@ const Layout: FC<LayoutProps> = ({
     user &&
     localStorage?.getItem('token')
   ) {
-    return requireAdminAccess && !user?.admin ? (
+    return requireAdminAccess && !loggedUser?.me?.admin ? (
       <Unauthorized />
     ) : (
       <>
