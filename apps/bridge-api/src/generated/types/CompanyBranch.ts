@@ -38,6 +38,7 @@ export const CompanyBranch = objectType({
     t.model.CmStaffGeneral()
     t.model.CmContactLocation()
     t.model.CompanyBranchAttachment()
+    t.model.InvSale()
   },
 })
 

@@ -1,0 +1,44 @@
+query LeadFields($limit: Int = 10, $offset: Int = 0, $searchTerm: String) {
+    lead_fields(
+        limit: $limit
+        offset: $offset
+        order_by: { created_date: desc }
+        where: {
+            _or: [
+                { _and: [{ name: { _ilike: $searchTerm } }] }
+                { _and: [{ label: { _ilike: $searchTerm } }] }
+                { _and: [{ category: { _ilike: $searchTerm } }] }
+                { _and: [{ format: { _ilike: $searchTerm } }] }
+            ]
+        }
+    ) {
+        id
+        name
+        label
+        format
+        fieldFor
+        category
+        is_mendatory
+        is_private
+        is_locked
+        is_active
+        created_date
+    }
+}
+
+query LeadFieldsAggregate($searchTerm: String) {
+    lead_fields_aggregate(
+        where: {
+            _or: [
+                { _and: [{ name: { _ilike: $searchTerm } }] }
+                { _and: [{ label: { _ilike: $searchTerm } }] }
+                { _and: [{ category: { _ilike: $searchTerm } }] }
+                { _and: [{ format: { _ilike: $searchTerm } }] }
+            ]
+        }
+    ) {
+        aggregate {
+            count
+        }
+    }
+}

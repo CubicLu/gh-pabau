@@ -4,12 +4,13 @@ import { ExpressContext } from 'apollo-server-express'
 import { version } from '../../../package.json'
 import { JwtPayloadDto } from './app/authentication/dto'
 import { ContextFunction } from 'apollo-server-core'
+import { PrismaClient } from '@prisma/client'
 
 export interface Context {
   /**
    * The Prisma Client
    */
-  prisma: typeof prisma
+  prisma: PrismaClient
 
   /**
    * The currently logged in user
@@ -26,7 +27,6 @@ export const createContext: ContextFunction<ExpressContext, Context> = (
   req
 ) => {
   const ret = {
-    prisma,
     version,
   } as Context
   const authorizationRaw = req.req.header('authorization')
@@ -41,5 +41,6 @@ export const createContext: ContextFunction<ExpressContext, Context> = (
       console.log('invalid jwt found')
     }
   }
+  ret.prisma = prisma(ret.authenticated?.remote_url)
   return ret
 }

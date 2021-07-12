@@ -88,6 +88,7 @@ export const CompanyDetails = objectType({
     t.model.completed_setup()
     t.model.timezone()
     t.model.company()
+    t.model.User()
   },
 })
 

@@ -1,30 +1,35 @@
 import { CheckOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
 import { SizeType } from 'antd/es/config-provider/SizeContext'
-import React, { PropsWithChildren, useState } from 'react'
+import React, { PropsWithChildren } from 'react'
 import styles from './Checkbox.module.less'
 
 interface CheckboxProps {
   label?: string
   disabled?: boolean
+  checked?: boolean
+  icon?: JSX.Element
+  onChange?: (val?: boolean) => void
   size?: SizeType
-  onChange?: () => void
 }
 
 export function ButtonCheckbox({
   label,
   disabled,
+  checked = true,
+  icon,
   size = 'large',
   onChange,
 }: PropsWithChildren<CheckboxProps>): JSX.Element {
-  const [activate, setActivate] = useState(true)
   return (
     <div className={styles.buttonCheckbox}>
       <Button
         shape="round"
-        onClick={() => setActivate((activate) => !activate)}
-        icon={activate === true ? <CheckOutlined /> : ''}
-        className={activate === true ? styles.chkActive : styles.chkInActive}
+        onClick={() => {
+          onChange?.(!checked)
+        }}
+        icon={checked === true ? icon || <CheckOutlined /> : icon || ''}
+        className={checked === true ? styles.chkActive : styles.chkInActive}
         disabled={disabled}
         size={size}
       >

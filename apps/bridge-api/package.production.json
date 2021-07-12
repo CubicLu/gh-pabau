@@ -23,7 +23,8 @@
     "@paljs/nexus": "3.3.3",
     "graphql-middleware": "^6.0.4",
     "graphql-shield": "^7.5.0",
-    "dotenv-flow": "^3.2.0"
+    "dotenv-flow": "^3.2.0",
+    "@sendgrid/mail": "^7.4.4"
   },
   "prisma": {
     "schema": "prisma/schema.prisma"

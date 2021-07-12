@@ -1,6 +1,6 @@
 import { Form, Input as AntInput } from 'antd'
 import { FormProps, Rule } from 'antd/lib/form'
-import React, { PropsWithChildren, useEffect, useState } from 'react'
+import React, { PropsWithChildren, useEffect, useState, ReactNode } from 'react'
 import styles from './Input.module.less'
 
 export enum ButtonSize {
@@ -17,7 +17,7 @@ export interface CheckBoxProps extends FormProps {
   reqiredMsg?: string
   type?: string
   tooltip?: string
-  suffix?: JSX.Element
+  suffix?: ReactNode
   onChange?(val): void
   maxLength?: number
 }
@@ -52,7 +52,6 @@ export function Input({
           message: reqiredMsg ? reqiredMsg : '',
         },
       ]
-      console.log('requiredMark', items)
     }
     if (type === 'email') {
       items = [
@@ -62,7 +61,6 @@ export function Input({
           message: 'Please enter valid email!',
         },
       ]
-      console.log('type === email', items)
     }
     setRules(items)
   }, [requiredMark, reqiredMsg, type])
@@ -82,7 +80,6 @@ export function Input({
           name="input-item"
           rules={rules}
         >
-          {console.log(text)}
           <AntInput
             className="input-style"
             placeholder={placeHolderText}

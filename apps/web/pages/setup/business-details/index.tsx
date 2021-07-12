@@ -1,8 +1,6 @@
 import { LeftOutlined } from '@ant-design/icons'
-import { gql, useMutation } from '@apollo/client'
 import {
   Breadcrumb,
-  BusinessDetails,
   BusinessDetailsNotifications,
   Button,
   MobileHeader,
@@ -10,30 +8,95 @@ import {
   NotificationType,
   System,
   TabMenu,
-  Terminology,
+  TerminologyConfig,
+  PasswordExpirationProps,
 } from '@pabau/ui'
+import { useGetBussinessDetailsQuery } from '@pabau/graphql'
 import { Typography } from 'antd'
 import { useRouter } from 'next/router'
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState, useContext } from 'react'
 import CommonHeader from '../../../components/CommonHeader'
 import Layout from '../../../components/Layout/Layout'
 import { useGridData } from '../../../hooks/useGridData'
+import { UserContext } from '../../../context/UserContext'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
 import TwoFADetailsTab from '../../../components/TwoFADetailsTab/TwoFADetailsTab'
+import SecurityTab from '../../../components/Setup/BusinessDetails/SecurityTab'
+import TerminologyTab from '../../../components/Setup/BusinessDetails/TerminologyTab'
+import SystemTab from '../../../components/Setup/BusinessDetails/SystemTab'
+import BusinessDetailTab from '../../../components/Setup/BusinessDetails/BusinessDetailsTab'
 
 const { Title } = Typography
 
 export const Index: FC = () => {
   const { t } = useTranslationI18()
+  const optIns = [
+    {
+      title: 'For Clients',
+      items: [
+        {
+          key: 'opt_in_postal',
+          label: t('business.default.opt.key.postal'),
+          value: '',
+        },
+        {
+          key: 'opt_in_sms',
+          label: t('business.default.opt.key.sms'),
+          value: '',
+        },
+        {
+          key: 'opt_in_email',
+          label: t('business.default.opt.key.email'),
+          value: '',
+        },
+        {
+          key: 'opt_in_phone',
+          label: t('business.default.opt.key.phone'),
+          value: '',
+        },
+      ],
+    },
+    {
+      title: 'For Leads',
+      items: [
+        {
+          key: 'opt_in_postal_lead',
+          label: t('business.default.opt.key.postal'),
+          value: '',
+        },
+        {
+          key: 'opt_in_sms_lead',
+          label: t('business.default.opt.key.sms'),
+          value: '',
+        },
+        {
+          key: 'opt_in_email_lead',
+          label: t('business.default.opt.key.email'),
+          value: '',
+        },
+        {
+          key: 'opt_in_phone_lead',
+          label: t('business.default.opt.key.phone'),
+          value: '',
+        },
+      ],
+    },
+  ]
+  const [opsData, setOpsData] = useState<TerminologyConfig[]>(optIns)
+  const [securityData, setSecurityData] = useState<PasswordExpirationProps>({
+    modalType: 2,
+    password_expire: '',
+    login_attempts: '',
+    password_enforce_history: '',
+    lockout_period: '',
+  })
+  const [passwordExpiration, setPasswordExpiration] = useState('0')
+  const [forcePassword, setForcePassword] = useState(0)
+  const [addrSuiteNo, setAddrSuiteNo] = useState('')
+  const [enableLab, setEnableLabs] = useState('')
+  const [location, setLocation] = useState('')
   const router = useRouter()
-  const ADD_MUTATION = gql`
-    mutation MyMutation($variable: [business_details_insert_input!]!) {
-      insert_business_details(objects: $variable) {
-        affected_rows
-      }
-    }
-  `
 
   const [createBusinessDetails] = useMutation(ADD_MUTATION)
 
@@ -46,6 +109,9 @@ export const Index: FC = () => {
   ]
   const { getParentSetupData } = useGridData(t)
   const parentMenu = getParentSetupData(router.pathname)
+  const user = useContext(UserContext)
+
+  const { data, loading } = useGetBussinessDetailsQuery()
 
   const handleBack = () => {
     if (parentMenu.length > 0) {
@@ -57,195 +123,62 @@ export const Index: FC = () => {
       router.push('/setup')
     }
   }
-  const onSave = async (values, type) => {
-    const data = {
-      businses_name: '',
-      business_type: '',
-      company_email: '',
-      phone: '',
-      website: '',
-      currency: '',
-      business_location: '',
-      date_format: '',
-      default_language_clients: '',
-      default_language_staff: '',
-      time_zone: '',
-      week_start: '',
-      vat: '',
-      disable_prescriptions: false,
-      medical_approvals: false,
-      perform_surgical: false,
-      secure_medical_forms: false,
-      people_attend_appointment_singular: t(
-        'setup.business-details.people.appointment.singular'
-      ),
-      people_attend_appointment_plural: t(
-        'setup.business-details.people.appointment.plural'
-      ),
-      booking_multiple_attendees_singular: t(
-        'setup.business-details.booking.attendees.singular'
-      ),
-      booking_multiple_attendees_plural: t(
-        'setup.business-details.booking.attendees.plural'
-      ),
-      employee_singular: t('setup.business-details.employee.singular'),
-      employee_plural: t('setup.business-details.employee.plural'),
-      teacher_singular: t('setup.business-details.teacher.singular'),
-      teacher_plural: t('setup.business-details.teacher.plural'),
-      client_postal: t('setup.business-details.client.postal'),
-      client_sms: t('setup.business-details.client.sms'),
-      client_email: t('setup.business-details.client.email'),
-      client_phone: t('setup.business-details.client.phone'),
-      leads_postal: t('setup.business-details.leads.postal'),
-      leads_sms: t('setup.business-details.leads.sms'),
-      leads_email: t('setup.business-details.leads.email'),
-      leads_phone: t('setup.business-details.leads.phone'),
-    }
-    switch (type) {
-      case 'business': {
-        const { basicInformation, businessLocation, languageSetting } = values
-        const {
-          businessName,
-          businessType,
-          companyEmail,
-          phone,
-          website,
-        } = basicInformation
-        const {
-          currency,
-          dateFormat,
-          defaultLanuageClients,
-          defaultLanuageStaff,
-          timezone,
-          weekStart,
-        } = languageSetting
-        data.businses_name = businessName
-        data.business_type = businessType
-        data.company_email = companyEmail
-        data.phone = phone
-        data.website = website
-        data.currency = currency
-        data.business_location = businessLocation
-        data.date_format = dateFormat
-        data.default_language_clients = defaultLanuageClients
-        data.default_language_staff = defaultLanuageStaff
-        data.time_zone = timezone
-        data.week_start = weekStart
-        break
-      }
-      case 'terminology': {
-        const { config, optIns } = values
-        const vat = config[4].items[0].value
-        data.vat = vat
-        data.people_attend_appointment_singular = config[0].items[0].value
-        data.people_attend_appointment_plural = config[0].item[1].value
-        data.booking_multiple_attendees_singular = config[1].item[0].value
-        data.booking_multiple_attendees_plural = config[1].item[1].value
-        data.employee_singular = config[2].item[0].value
-        data.employee_plural = config[2].item[1].value
-        data.teacher_singular = config[3].item[0].value
-        data.teacher_plural = config[3].item[1].value
-        data.client_postal = optIns[0].items[0].value
-        data.client_sms = optIns[0].items[1].value
-        data.client_email = optIns[0].items[2].value
-        data.client_phone = optIns[0].items[3].value
-        data.leads_postal = optIns[1].items[0].value
-        data.leads_sms = optIns[1].items[1].value
-        data.leads_email = optIns[1].items[2].value
-        data.leads_phone = optIns[1].items[3].value
-        break
-      }
-      case 'system': {
-        const {
-          disablePrescriptions,
-          medicalApprovals,
-          performSurgical,
-          secureMedicalForms,
-        } = values
-        data.disable_prescriptions = disablePrescriptions
-        data.medical_approvals = medicalApprovals
-        data.perform_surgical = performSurgical
-        data.secure_medical_forms = secureMedicalForms
-        break
-      }
-      case 'notification': {
-        break
-      }
-      default: {
-        const { basicInformation, businessLocation, languageSetting } = values
-        const {
-          businessName,
-          businessType,
-          companyEmail,
-          phone,
-          website,
-        } = basicInformation
-        const {
-          currency,
-          dateFormat,
-          defaultLanuageClients,
-          defaultLanuageStaff,
-          timezone,
-          weekStart,
-        } = languageSetting
-        data.businses_name = businessName
-        data.business_type = businessType
-        data.company_email = companyEmail
-        data.phone = phone
-        data.website = website
-        data.currency = currency
-        data.business_location = businessLocation
-        data.date_format = dateFormat
-        data.default_language_clients = defaultLanuageClients
-        data.default_language_staff = defaultLanuageStaff
-        data.time_zone = timezone
-        data.week_start = weekStart
-        const { config, optIns } = values
-        const vat = config[4].items[0].value
-        data.vat = vat
-        data.people_attend_appointment_singular = config[0].items[0].value
-        data.people_attend_appointment_plural = config[0].item[1].value
-        data.booking_multiple_attendees_singular = config[1].item[0].value
-        data.booking_multiple_attendees_plural = config[1].item[1].value
-        data.employee_singular = config[2].item[0].value
-        data.employee_plural = config[2].item[1].value
-        data.teacher_singular = config[3].item[0].value
-        data.teacher_plural = config[3].item[1].value
-        data.client_postal = optIns[0].items[0].value
-        data.client_sms = optIns[0].items[1].value
-        data.client_email = optIns[0].items[2].value
-        data.client_phone = optIns[0].items[3].value
-        data.leads_postal = optIns[1].items[0].value
-        data.leads_sms = optIns[1].items[1].value
-        data.leads_email = optIns[1].items[2].value
-        data.leads_phone = optIns[1].items[3].value
-        const {
-          disablePrescriptions,
-          medicalApprovals,
-          performSurgical,
-          secureMedicalForms,
-        } = values
-        data.disable_prescriptions = disablePrescriptions
-        data.medical_approvals = medicalApprovals
-        data.perform_surgical = performSurgical
-        data.secure_medical_forms = secureMedicalForms
-        break
-      }
-    }
-    try {
-      Notification(
-        NotificationType.success,
-        t('notification.type.success.message')
-      )
-      await createBusinessDetails({
-        variables: {
-          variable: data,
-        },
+
+  useEffect(() => {
+    const list = [...opsData]
+    const securityList = securityData
+
+    const record = data?.companyMetas?.reduce(
+      (data, { meta_name, meta_value }) => ({
+        ...data,
+        [meta_name]: meta_value,
+      }),
+      {}
+    )
+
+    if (record) {
+      list.map((item) => {
+        item.items.map((data) => {
+          if (data.key) {
+            data.value = record?.[`${data.key}`]
+          }
+          return data
+        })
+        return item
       })
-    } catch (error) {
-      console.log(error)
+
+      Object.keys(securityList).map((key) => {
+        if (key !== 'modalType') {
+          securityList[`${key}`] = record?.[`${key}`]
+        }
+        return key
+      })
+
+      setPasswordExpiration(record?.['password_expiration'])
+      setAddrSuiteNo(record?.['address_suite_no'])
+      setLocation(record?.['business_location'])
+      setEnableLabs(record?.['lab_enabled'])
+
+      const force_password_data = data?.company?.User?.filter(
+        (item) => item.id === user?.me.id
+      )
+      if (force_password_data && force_password_data.length > 0) {
+        setForcePassword(force_password_data[0].force_password)
+      }
+    }
+    setOpsData(list)
+    setSecurityData(securityList)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data])
+
+  const onSave = async (values, type) => {
+    switch (type) {
+      default: {
+        break
+      }
     }
   }
+
   return (
     <>
       <CommonHeader />
@@ -272,9 +205,42 @@ export const Index: FC = () => {
         </MobileHeader>
         <div className={styles.tabsForDesktop}>
           <TabMenu tabPosition="left" menuItems={tabMenuItems} minHeight="auto">
-            <BusinessDetails
-              apiKey="apikey"
-              onSave={(values) => onSave(values, 'business')}
+            <BusinessDetailTab
+              data={data}
+              addrSuiteNo={addrSuiteNo}
+              forcePassword={forcePassword}
+              user={user?.me.id}
+              location={location}
+              loading={loading}
+              t={t}
+            />
+            <TerminologyTab
+              data={data}
+              addrSuiteNo={addrSuiteNo}
+              forcePassword={forcePassword}
+              user={user?.me.id}
+              opsData={opsData}
+              loading={loading}
+              t={t}
+            />
+            <SystemTab
+              data={data}
+              addrSuiteNo={addrSuiteNo}
+              forcePassword={forcePassword}
+              enableLab={enableLab}
+              user={user?.me.id}
+              loading={loading}
+              t={t}
+            />
+            <SecurityTab
+              data={data}
+              user={user?.me.id}
+              forcePassword={forcePassword}
+              passwordExpiration={passwordExpiration}
+              addrSuiteNo={addrSuiteNo}
+              securityData={securityData}
+              loading={loading}
+              t={t}
             />
             <Terminology onSave={(values) => onSave(values, 'terminology')} />
             <System onSave={(values) => onSave(values, 'system')} />
@@ -286,11 +252,46 @@ export const Index: FC = () => {
         </div>
         <div className={styles.tabsForMobile}>
           <TabMenu tabPosition="top" menuItems={tabMenuItems} minHeight="auto">
-            <BusinessDetails apiKey="XXXXXXXXXX" />
-            <Terminology />
-            <System />
-            <TwoFADetailsTab />
-            <BusinessDetailsNotifications />
+            <BusinessDetailTab
+              data={data}
+              addrSuiteNo={addrSuiteNo}
+              forcePassword={forcePassword}
+              user={user?.me.id}
+              location={location}
+              loading={loading}
+              t={t}
+            />
+            <TerminologyTab
+              data={data}
+              addrSuiteNo={addrSuiteNo}
+              forcePassword={forcePassword}
+              user={user?.me.id}
+              opsData={opsData}
+              loading={loading}
+              t={t}
+            />
+            <SystemTab
+              data={data}
+              addrSuiteNo={addrSuiteNo}
+              forcePassword={forcePassword}
+              enableLab={enableLab}
+              user={user?.me.id}
+              loading={loading}
+              t={t}
+            />
+            <SecurityTab
+              data={data}
+              user={user?.me.id}
+              forcePassword={forcePassword}
+              passwordExpiration={passwordExpiration}
+              addrSuiteNo={addrSuiteNo}
+              securityData={securityData}
+              loading={loading}
+              t={t}
+            />
+            <BusinessDetailsNotifications
+              onSave={(values) => onSave(values, 'notification')}
+            />
           </TabMenu>
         </div>
         <div className={styles.buttonForMobile}>

@@ -1,17 +1,17 @@
-import React, { FC, useEffect, useState } from 'react'
-import { Button, MobileHeader } from '@pabau/ui'
-import styles from './AddButton.module.less'
 import {
   FilterOutlined,
-  SearchOutlined,
   InboxOutlined,
   PlusSquareFilled,
+  SearchOutlined,
 } from '@ant-design/icons'
+import { Button, MobileHeader } from '@pabau/ui'
 import { Drawer, Input, Popover, Radio } from 'antd'
 import classNames from 'classnames'
-import { useTranslationI18 } from '../hooks/useTranslationI18'
+import React, { FC, useEffect, useState } from 'react'
 import { useMedia } from 'react-use'
 import { ReactComponent as CloseIcon } from '../assets/images/close-icon.svg'
+import { useTranslationI18 } from '../hooks/useTranslationI18'
+import styles from './AddButton.module.less'
 
 // import { isMobile, isTablet } from 'react-device-detect'
 // import { useKeyPressEvent } from 'react-use'
@@ -31,6 +31,7 @@ interface P {
   onResetFilter?: () => void
   setMobileSearch?: () => void
   mobileSearch?: boolean
+  isCreateButtonVisible?: boolean
 }
 
 const AddButton: FC<P> = ({
@@ -47,6 +48,7 @@ const AddButton: FC<P> = ({
   setMobileSearch,
   mobileSearch,
   needTranslation,
+  isCreateButtonVisible = true,
 }) => {
   const [isActive, setIsActive] = useState<boolean | number>(
     schema?.filter?.primary?.default ?? true
@@ -149,10 +151,12 @@ const AddButton: FC<P> = ({
             />
           )}
 
-          <PlusSquareFilled
-            className={styles.plusIconStyle}
-            onClick={() => onClick?.()}
-          />
+          {isCreateButtonVisible && (
+            <PlusSquareFilled
+              className={styles.plusIconStyle}
+              onClick={() => onClick?.()}
+            />
+          )}
         </div>
       )}
       <Drawer
@@ -228,7 +232,7 @@ const AddButton: FC<P> = ({
             </Button>
           )}
         </Popover>
-        {schema.createButtonLabel && (
+        {schema.createButtonLabel && isCreateButtonVisible && (
           <Button
             className={styles.createSourceBtn}
             type="primary"

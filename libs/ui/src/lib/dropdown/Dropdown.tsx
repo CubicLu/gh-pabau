@@ -30,41 +30,32 @@ import Router from 'next/router'
 export interface DropDownInterface {
   isOpen?: boolean
   onCloseDrawer?: () => void
-  me?: UserProps
+  userData?: UserDataProps
   taskManagerIFrameComponent?: JSX.Element
 }
 
-interface UserProps {
-  full_name: string
-  username?: string
-  company: CompanyProps
-  _typename?: string
-}
-
-interface CompanyProps {
-  details: CompanyDetails
-}
-
-interface CompanyDetails {
-  company_name: string
+interface UserDataProps {
+  user: number
+  company: number
+  companyName: string
+  fullName: string
 }
 
 export const Dropdown: FC<DropDownInterface> = ({
   isOpen,
   onCloseDrawer,
   taskManagerIFrameComponent,
-  ...rest
+  userData,
 }): JSX.Element => {
   const { t } = useTranslation('common')
   const [activeMenu, setActiveMenu] = useState('Menu')
   const [openProfileDrawer, setProfileDrawer] = useState(isOpen)
   const [activeMenuTitle, setActiveMenuTitle] = useState('Profile')
-  const { me } = rest
-  const [user, setCurrentUser] = useState<UserProps | null>(null)
+  const [user, setCurrentUser] = useState<UserDataProps | null>(null)
 
   useEffect(() => {
-    setCurrentUser(me ?? null)
-  }, [me])
+    setCurrentUser(userData ?? null)
+  }, [userData])
 
   async function handleLogOut() {
     localStorage.removeItem('token')
@@ -75,25 +66,25 @@ export const Dropdown: FC<DropDownInterface> = ({
   const menu = (
     <Menu className={styles.avatarMenu}>
       <Menu.Item
+        key="logo"
         className={classNames(styles.dropdownMenu, styles.clinicHeader)}
         onClick={() => onClickAvatarMenu('ClinicMenu')}
       >
         <div className={styles.dropdownHeader}>
           <PABAULOGO />
-          <span className={styles.headerText}>
-            {me?.company?.details.company_name}
-          </span>
+          <span className={styles.headerText}>{user?.companyName}</span>
         </div>
         <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
-      <Menu.Item className={styles.userinfo}>
-        <div className={styles.userName}>{user?.full_name}</div>
+      <Menu.Item className={styles.userinfo} key="userName">
+        <div className={styles.userName}>{user?.fullName}</div>
         <div className={styles.userBalance}>
           <p>{t('avatar.balance')}</p>
           <span>9445,00</span>
         </div>
       </Menu.Item>
       <Menu.Item
+        key="account"
         className={classNames(styles.dropdownMenu, styles.avatarSpaceTop)}
       >
         <div className={styles.dropdownHeader}>
@@ -107,6 +98,7 @@ export const Dropdown: FC<DropDownInterface> = ({
         <LaunchSVG className={styles.launchLogo} />
       </Menu.Item>
       <Menu.Item
+        key="task"
         className={styles.dropdownMenu}
         style={{ borderBottom: '1px solid #F1F1F1' }}
         onClick={() => onClickAvatarMenu('TaskManagerMenu')}
@@ -119,6 +111,7 @@ export const Dropdown: FC<DropDownInterface> = ({
         </div>
       </Menu.Item>
       <Menu.Item
+        key="feedback"
         className={classNames(styles.dropdownMenu, styles.avatarSpaceTop)}
         onClick={() => onClickAvatarMenu('FeedbackMenu')}
       >
@@ -129,6 +122,7 @@ export const Dropdown: FC<DropDownInterface> = ({
         <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
       <Menu.Item
+        key="help"
         className={styles.dropdownMenu}
         onClick={() => onClickAvatarMenu('HelpMenu')}
       >
@@ -139,6 +133,7 @@ export const Dropdown: FC<DropDownInterface> = ({
         <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
       <Menu.Item
+        key="language"
         className={styles.dropdownMenu}
         onClick={() => onClickAvatarMenu('LangMenu')}
       >
@@ -148,7 +143,11 @@ export const Dropdown: FC<DropDownInterface> = ({
         </div>
         <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
-      <Menu.Item onClick={handleLogOut} className={styles.dropdownMenu}>
+      <Menu.Item
+        key="logout"
+        onClick={handleLogOut}
+        className={styles.dropdownMenu}
+      >
         <div className={styles.dropdownHeader}>
           <ExportOutlined className={styles.dropdownIcon} />
           <span className={styles.headerText}>{t('avatar.logout')}</span>
@@ -162,6 +161,7 @@ export const Dropdown: FC<DropDownInterface> = ({
     <QueueAnim interval={300}>
       <Menu key="2" className={styles.avatarSubMenu}>
         <Menu.Item
+          key="selectCompany"
           className={styles.subDropdownList}
           onClick={() => onClickAvatarMenu('Menu')}
           style={{ height: '56px' }}
@@ -173,7 +173,7 @@ export const Dropdown: FC<DropDownInterface> = ({
             </span>
           </div>
         </Menu.Item>
-        <Menu.Item className={styles.subDropdownList}>
+        <Menu.Item key="company" className={styles.subDropdownList}>
           <div className={styles.subDropdownListHeader}>
             <PABAULOGO />
             <span
@@ -183,7 +183,7 @@ export const Dropdown: FC<DropDownInterface> = ({
                 styles.activeMenu
               )}
             >
-              {me?.company?.details.company_name}
+              {user?.companyName}
             </span>
           </div>
           <CheckCircleFilled
@@ -199,6 +199,7 @@ export const Dropdown: FC<DropDownInterface> = ({
     <QueueAnim interval={600}>
       <Menu key="3" className={styles.avatarHelpMenu}>
         <Menu.Item
+          key="giveUsFeedback"
           className={classNames(styles.avatarHelpSubList)}
           onClick={() => setActiveMenu('Menu')}
           style={{ height: '56px' }}
@@ -210,13 +211,16 @@ export const Dropdown: FC<DropDownInterface> = ({
             </p>
           </div>
         </Menu.Item>
-        <Menu.Item className={styles.avatarHelpSubList}>
+        <Menu.Item key="helpUs" className={styles.avatarHelpSubList}>
           <div className={styles.feedbackAlignContent}>
             <InfoCircleOutlined className="" />
             <span className="">{t('avatar.give.feedback.helpus')}</span>
           </div>
         </Menu.Item>
-        <Menu.Item className={styles.avatarHelpSubList}>
+        <Menu.Item
+          key="SomethingWentWrong"
+          className={styles.avatarHelpSubList}
+        >
           <div className={styles.feedbackAlignContent}>
             <ExclamationOutlined className="" />
             <span className="">{t('avatar.give.feedback.somethingwrong')}</span>
@@ -231,6 +235,7 @@ export const Dropdown: FC<DropDownInterface> = ({
     <QueueAnim interval={600}>
       <Menu key="4" className={styles.avatarHelpMenu}>
         <Menu.Item
+          key="helpSupport"
           className={classNames(styles.avatarHelpSubList)}
           onClick={() => onClickAvatarMenu('Menu')}
           style={{ height: '56px' }}
@@ -242,7 +247,7 @@ export const Dropdown: FC<DropDownInterface> = ({
             </p>
           </div>
         </Menu.Item>
-        <Menu.Item className={styles.avatarHelpSubList}>
+        <Menu.Item key="helpCentre" className={styles.avatarHelpSubList}>
           <div className={styles.feedbackAlignContent}>
             <QuestionCircleOutlined className="" />
             <span className="">{t('avatar.help.support.centre')}</span>
@@ -251,10 +256,12 @@ export const Dropdown: FC<DropDownInterface> = ({
         <Menu.Item className={styles.avatarHelpSubList}>
           <div className={styles.feedbackAlignContent}>
             <PlaySquareOutlined className="" />
-            <span className="">{t('avatar.help.video.guides')}</span>
+            <span key="videoGuides" className="">
+              {t('avatar.help.video.guides')}
+            </span>
           </div>
         </Menu.Item>
-        <Menu.Item className={styles.avatarHelpSubList}>
+        <Menu.Item key="contactSupport" className={styles.avatarHelpSubList}>
           <div className={styles.feedbackAlignContent}>
             <ExclamationOutlined className="" />
             <span className="">{t('avatar.help.contact.support')}</span>
@@ -269,6 +276,7 @@ export const Dropdown: FC<DropDownInterface> = ({
     <QueueAnim interval={600}>
       <Menu key="5" className={styles.avatarHelpMenu}>
         <Menu.Item
+          key="selectLanguage"
           className={styles.langSubDropdownMenu}
           onClick={() => onClickAvatarMenu('Menu')}
           style={{ height: '56px' }}
@@ -310,6 +318,7 @@ export const Dropdown: FC<DropDownInterface> = ({
     <QueueAnim interval={600}>
       <Menu key="6" className={styles.avatarHelpMenu}>
         <Menu.Item
+          key="taskManager"
           className={styles.langSubDropdownMenu}
           onClick={() => onClickAvatarMenu('Menu')}
           style={{ height: '56px' }}

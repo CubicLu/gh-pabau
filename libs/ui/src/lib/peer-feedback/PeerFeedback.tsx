@@ -1,8 +1,22 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 
-import { Collapse, Row, Table as AntTable, Tooltip } from 'antd'
+import {
+  Collapse,
+  Row,
+  Table as AntTable,
+  Tooltip,
+  Input,
+  Card,
+  Rate,
+} from 'antd'
 
-import { AvatarList, Button, CustomProgress } from '@pabau/ui'
+import {
+  AvatarList,
+  Button,
+  CustomProgress,
+  BasicModal,
+  Checkbox,
+} from '@pabau/ui'
 
 import styles from './PeerFeedback.module.less'
 
@@ -11,9 +25,11 @@ import {
   DeleteOutlined,
   EyeOutlined,
   QuestionCircleOutlined,
+  SearchOutlined,
 } from '@ant-design/icons'
 
 import Avatar from 'antd/lib/avatar/avatar'
+import { useTranslation } from 'react-i18next'
 
 const relativeTime = (lan: string, date: Date): string => {
   const date1 = new Date()
@@ -65,6 +81,12 @@ interface ReviewData {
   value: number
   total: number
 }
+interface Question {
+  id: number
+  title: string
+  defaultRating: number
+  description: string
+}
 
 interface Employee {
   id: number
@@ -80,6 +102,7 @@ export interface ReportProps {
   requestedOn: string
   completedOn: string
   action: boolean
+  question?: Question[]
 }
 
 export type PeerFeedbackProps = {
@@ -115,11 +138,42 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
     progressPercent: number
     progressRest: number
   }
+  const { t } = useTranslation('common')
+  const [reportsValues, setReportsValues] = useState([...reports])
+  const [remindModal, setRemindModal] = useState(false)
+  const [previewModal, setPreviewModal] = useState(false)
+  const [selectedUser, setSelectedUser] = useState([])
+  const [userList, setUserList] = useState(users)
+  const [previewContent, setPreviewContent] = useState(reports)
+  const handleonClick = () => {
+    setRemindModal(!remindModal)
+    setSelectedUser(
+      users?.map((user) => selectedUser.push(user.id as never)) as never
+    )
+  }
+  const handleOnChange = (value, user) => {
+    const storeUser = [...selectedUser]
+    const idx = storeUser.indexOf(user as never)
+    value ? storeUser.push(user as never) : storeUser.splice(idx, 1)
+    setSelectedUser([...storeUser])
+  }
 
-  // const dateIsoFormat = (_date: Date): string => {
-  //   return moment(_date).format('YYYY-MM-DDTHH:MN:SS.MSSZ')
-  // }
+  const handleunSelect = () => {
+    setSelectedUser([])
+  }
 
+  const handleSearch = (e) => {
+    const val = e.target.value
+    val
+      ? setUserList(
+          userList
+            ?.filter((user) =>
+              user.name.toLowerCase().includes(val.toLowerCase())
+            )
+            .map((item) => ({ ...item }))
+        )
+      : setUserList(users)
+  }
   const dateFormat = (_date: Date): string => {
     const date = new Date(_date)
     return new Intl.DateTimeFormat('en-IE').format(date)
@@ -155,7 +209,7 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
         {text}
         <Tooltip
           placement="topLeft"
-          title="Prompt Text"
+          title={text}
           className={styles.toolTipMargin}
         >
           <QuestionCircleOutlined />
@@ -182,32 +236,43 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
     )
   }
 
-  interface ActionColumnProps {
-    action: boolean
-  }
-
-  const ActionColumn: FC<ActionColumnProps> = ({ action }) => {
-    return action ? (
+  const ActionColumn = ({ info }) => {
+    return info.action ? (
       <Button
         type="default"
         size="middle"
         className={styles.previewButton}
+        onClick={() => handlePreview(info.id)}
         icon={<EyeOutlined />}
       >
-        {'Preview'}
+        {t('peer.feedback.preview.button')}
       </Button>
     ) : null
   }
+  const handlePreview = (id) => {
+    const previewDetails = reports.filter((report) => report.id === id)
+    setPreviewContent(previewDetails)
+    setPreviewModal(true)
+  }
 
   const RemoveColumn = ({ info }) => {
-    return <DeleteOutlined onClick={() => onReportDelete?.(info.id)} />
+    return (
+      <DeleteOutlined
+        onClick={() => {
+          const updatedReports = reportsValues.filter(
+            (value) => value.info.id !== info.id
+          )
+          setReportsValues([...updatedReports])
+        }}
+      />
+    )
   }
 
   const employeeColumns = [
     {
       key: 'info',
       dataIndex: 'info',
-      title: 'Employee',
+      title: t('peer.feedback.overview.employees.info'),
       className: styles.columnInfo,
       width: 364,
       // eslint-disable-next-line react/display-name
@@ -216,19 +281,27 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
     {
       key: 'analyticalThinking',
       dataIndex: 'analyticalThinking',
-      title: <TooltipHeaderColumn text="Analytical thinking" />,
+      title: (
+        <TooltipHeaderColumn
+          text={t('peer.feedback.overview.employees.analytical.thinking')}
+        />
+      ),
       className: styles.columnAnalyticalThinking,
     },
     {
       key: 'attentionToDetail',
       dataIndex: 'attentionToDetail',
-      title: <TooltipHeaderColumn text="Attention to detail" />,
+      title: (
+        <TooltipHeaderColumn
+          text={t('peer.feedback.overview.employees.attentionto.detail')}
+        />
+      ),
       className: styles.columnAttentionToDetail,
     },
     {
       key: 'myCustomCategory',
       dataIndex: 'myCustomCategory',
-      title: 'My custom category',
+      title: t('peer.feedback.overview.employees.mycustom.category'),
       className: styles.columnMyCustomCategory,
     },
   ]
@@ -237,7 +310,7 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
     {
       key: 'info',
       dataIndex: 'info',
-      title: 'Reviewer',
+      title: t('peer.feedback.report.Reviewer.info'),
       className: styles.columnInfo,
       width: 364,
       // eslint-disable-next-line react/display-name
@@ -246,19 +319,19 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
     {
       key: 'requestedOn',
       dataIndex: 'requestedOn',
-      title: 'Requested on',
+      title: t('peer.feedback.report.requested'),
     },
     {
       key: 'completedOn',
       dataIndex: 'completedOn',
-      title: 'Completed on',
+      title: t('peer.feedback.report.completed'),
     },
     {
       key: 'action',
-      dataIndex: 'action',
-      title: 'Actions',
+      // dataIndex: 'action',
+      title: t('peer.feedback.report.action'),
       // eslint-disable-next-line react/display-name
-      render: (action: boolean) => <ActionColumn action={action} />,
+      render: (info: ReportProps) => <ActionColumn info={info} />,
     },
     {
       title: ' ',
@@ -292,16 +365,16 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
     return (
       <AntTable.Summary.Row>
         <AntTable.Summary.Cell index={1} className={styles.summaryTitleColumn}>
-          <div>{'Overall Avg.'}</div>
+          <div>{t('peer.feedback.overall.avg')}</div>
         </AntTable.Summary.Cell>
         <AntTable.Summary.Cell index={2} className={styles.summaryColumn}>
-          <div>{avg1}</div>
+          <div>{avg1.toFixed()}</div>
         </AntTable.Summary.Cell>
         <AntTable.Summary.Cell index={3} className={styles.summaryColumn}>
-          <div>{avg2}</div>
+          <div>{avg2.toFixed()}</div>
         </AntTable.Summary.Cell>
         <AntTable.Summary.Cell index={4} className={styles.summaryColumn}>
-          <div>{avg3}</div>
+          <div>{avg3.toFixed()}</div>
         </AntTable.Summary.Cell>
       </AntTable.Summary.Row>
     )
@@ -326,9 +399,9 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
             size="large"
             className={styles.remindButton}
             icon={<BellOutlined />}
-            onClick={onRemindClick}
+            onClick={handleonClick}
           >
-            {'Remind'}
+            {t('peer.feedback.remind.modal.button')}
           </Button>
         </div>
       </div>
@@ -340,15 +413,15 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
               {String(calPercentValue.progressPercentInt)}% {filled}
             </div>
             <div className={styles.filledNumber}>
-              {reviewData.value} {'out of'} {reviewData.total}
+              {reviewData.value} {t('peer.feedback.outof')} {reviewData.total}
             </div>
           </div>
           <div className={styles.filledProgressContainer}>
             <CustomProgress
               percent={calPercentValue.progressPercent}
               rest={calPercentValue.progressRest}
-              labelPercent="Filled"
-              labelRest="Pending"
+              labelPercent={t('peer.feedback.filled')}
+              labelRest={t('peer.feedback.pending')}
               colorPercent="#65CD98"
               colorRest="#FAAD14"
             />
@@ -357,7 +430,7 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
       </div>
       <Collapse className={styles.tableContainer} defaultActiveKey={'1'}>
         <Panel
-          header="Overview by employees"
+          header={t('peer.feedback.panel.header.Overviewby.employees')}
           key="1"
           className={styles.tableContent}
         >
@@ -373,12 +446,12 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
       </Collapse>
       <Collapse className={styles.tableContainer}>
         <Panel
-          header="Individual reports"
+          header={t('peer.feedback.panel.header.individual.reports')}
           key="2"
           className={styles.tableContent}
         >
           <AntTable
-            dataSource={reports}
+            dataSource={reportsValues}
             columns={reportColumns}
             rowClassName={styles.reportRow}
             pagination={false}
@@ -386,6 +459,85 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
           />
         </Panel>
       </Collapse>
+      <BasicModal
+        visible={previewModal}
+        modalWidth={682}
+        title={t('peer.feedback.preview.modal.title')}
+        footer={false}
+        onCancel={() => setPreviewModal(false)}
+        onOk={() => setPreviewModal(false)}
+      >
+        <div className={styles.previewModal}>
+          {previewContent.map((report) => {
+            return report?.question?.map((questionList) => {
+              return (
+                <div style={{ margin: '10px' }} key={questionList.id}>
+                  <Card>
+                    <h2 className={styles.previewTitle}>
+                      {questionList.title}
+                    </h2>
+                    <Rate allowHalf defaultValue={questionList.defaultRating} />
+                    <p className={styles.previewDescription}>
+                      {questionList.description}
+                    </p>
+                  </Card>
+                </div>
+              )
+            })
+          })}
+        </div>
+      </BasicModal>
+      <BasicModal
+        visible={remindModal}
+        modalWidth={682}
+        title={t('peer.feedback.remind.modal.title')}
+        newButtonText={t('peer.feedback.remind.modal.button')}
+        onCancel={() => setRemindModal(false)}
+        onOk={() => setRemindModal(false)}
+      >
+        <div className={styles.modalContainer}>
+          <p>{t('peer.feedback.modal.description')}</p>
+          <div className={styles.headerWrapper}>
+            <div className={styles.checkBtn}>
+              <Button onClick={() => handleunSelect()}>
+                {t('peer.feedback.modal.unselect.button')}
+              </Button>
+            </div>
+            <div className={styles.searchBox}>
+              <Input
+                placeholder={t('peer.feedback.modal.search.placeholder')}
+                allowClear
+                style={{ width: 280 }}
+                onChange={(e) => handleSearch(e)}
+                suffix={<SearchOutlined />}
+              />
+            </div>
+          </div>
+          <div className={styles.userWrapper}>
+            {userList?.map((user) => {
+              return (
+                <Checkbox
+                  checked={selectedUser.includes(user.id as never)}
+                  onChange={(value) =>
+                    handleOnChange(value.target.checked, user.id)
+                  }
+                  key={user.id}
+                >
+                  <div className={styles.flexDiv}>
+                    <div className={styles.userAvatar}>
+                      <Avatar src={user.avatarUrl} />
+                    </div>
+                    <div className={styles.flexFullDiv}>
+                      <div className={styles.userName}>{user.name}</div>
+                      <div className={styles.userTitle}>{user.title}</div>
+                    </div>
+                  </div>
+                </Checkbox>
+              )
+            })}
+          </div>
+        </div>
+      </BasicModal>
     </div>
   )
 }

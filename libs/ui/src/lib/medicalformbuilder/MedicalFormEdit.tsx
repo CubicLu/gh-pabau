@@ -286,20 +286,26 @@ const getFormInfo = (form) => {
 interface P {
   previewData: string
   changeFormName: (formName: string) => void
+  changeFormType: (formType: string) => void
   clickedCreateForm: boolean
   clickedPreviewForm: boolean
   clearCreateFormBtn: () => void
   getFormData?: (formData: string) => void
+  onSaveForm?: (formdata: string) => void
+  triggerChangeForms?: (forms: MedicalFormTypes[]) => void
   formName: string
 }
 
 const MedicalFormEdit: FC<P> = ({
   previewData,
   changeFormName,
+  changeFormType,
   clickedCreateForm,
   clearCreateFormBtn,
   clickedPreviewForm,
   getFormData,
+  onSaveForm,
+  triggerChangeForms,
   formName,
 }) => {
   const { t } = useTranslation('common')
@@ -319,12 +325,15 @@ const MedicalFormEdit: FC<P> = ({
       const reversedFormObject = {
         form_structure: reversedFormData,
       }
-      setReservedFormData(
-        btoa(unescape(encodeURIComponent(JSON.stringify(reversedFormObject))))
+      const formData = btoa(
+        unescape(encodeURIComponent(JSON.stringify(reversedFormObject)))
       )
-      setIsModalVisible(true)
+      setReservedFormData(formData)
+      onSaveForm?.(formData)
+    } else {
+      clearCreateFormBtn?.()
     }
-  }, [clickedCreateForm, draggedForms])
+  }, [clickedCreateForm, draggedForms, onSaveForm, clearCreateFormBtn])
 
   useEffect(() => {
     if (clickedPreviewForm === true && draggedForms.length > 0) {
@@ -338,6 +347,14 @@ const MedicalFormEdit: FC<P> = ({
       getFormData?.(formData)
     }
   }, [clickedPreviewForm, draggedForms, getFormData])
+
+  useEffect(() => {
+    if (draggedForms.length > 0) {
+      triggerChangeForms?.(draggedForms)
+    } else {
+      triggerChangeForms?.([])
+    }
+  }, [draggedForms.length, draggedForms, triggerChangeForms])
 
   useEffect(() => {
     setDraggedForms([])
@@ -761,6 +778,7 @@ const MedicalFormEdit: FC<P> = ({
             isEditing={isEditing}
             medicalForms={medicalForms}
             changeFormName={changeFormName}
+            changeFormType={changeFormType}
             formName={formName}
             changeLayout={changeLayout}
             runPreviewPdf={runPreviewPdf}

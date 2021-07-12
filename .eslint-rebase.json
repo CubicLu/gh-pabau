@@ -1,0 +1,10 @@
+{
+  "ignores": {
+    "apps/web/components/Chat/Chat.tsx": {
+      "graphql/template-strings": [
+        "fragment NewChat on chat {",
+        "fragment NewItem on chat_room_participant {"
+      ]
+    }
+  }
+}

@@ -32,6 +32,9 @@
     }
   },
   "projects": {
+    "hasura": {
+      "tags": []
+    },
     "web": {
       "tags": []
     },

@@ -1,0 +1,238 @@
+query findAllowedLocation {
+  findAllowedLocation {
+    id
+    name
+  }
+}
+
+query issuingCompanies {
+  issuingCompanies(
+    where: { is_active: { equals: true } }
+    orderBy: { name: asc }
+  ) {
+    id
+    name
+    is_active
+  }
+}
+
+query creditNoteTypes {
+  creditNoteTypes(orderBy: { name: asc }) {
+    name
+    id
+  }
+}
+
+query invoices(
+  $offset: Int
+  $limit: Int
+  $searchTerm: String
+  $startDate: DateTime
+  $endDate: DateTime
+  $locationId: Int
+  $issuingCompanyId: Int
+) {
+  findManyAccountInvoice(
+    skip: $offset
+    take: $limit
+    where: {
+      searchTerm: $searchTerm
+      startDate: $startDate
+      endDate: $endDate
+      locationId: $locationId
+      issuingCompanyId: $issuingCompanyId
+    }
+  ) {
+    id
+    invoice_no: invoiceNo
+    location
+    inv_date: invDate
+    customer
+    debtor
+    payment
+    net
+    vat: gst
+    gross
+    paid
+    balance
+    status
+    tooltip
+  }
+}
+
+query invoiceCount(
+  $searchTerm: String
+  $startDate: DateTime
+  $endDate: DateTime
+  $locationId: Int
+  $issuingCompanyId: Int
+) {
+  accountInvoiceCount(
+    where: {
+      searchTerm: $searchTerm
+      startDate: $startDate
+      endDate: $endDate
+      locationId: $locationId
+      issuingCompanyId: $issuingCompanyId
+    }
+  )
+}
+
+query payments(
+  $offset: Int
+  $limit: Int
+  $searchTerm: String
+  $startDate: DateTime
+  $endDate: DateTime
+  $locationId: Int
+  $issuingCompanyId: Int
+) {
+  findManyAccountPayment(
+    skip: $offset
+    take: $limit
+    where: {
+      searchTerm: $searchTerm
+      startDate: $startDate
+      endDate: $endDate
+      locationId: $locationId
+      issuingCompanyId: $issuingCompanyId
+    }
+  ) {
+    id
+    invoiceNo
+    location
+    invDate
+    customer
+    amount
+    user
+    payment
+  }
+}
+
+query paymentCount(
+  $searchTerm: String
+  $startDate: DateTime
+  $endDate: DateTime
+  $locationId: Int
+  $issuingCompanyId: Int
+) {
+  accountPaymentCount(
+    where: {
+      searchTerm: $searchTerm
+      startDate: $startDate
+      endDate: $endDate
+      locationId: $locationId
+      issuingCompanyId: $issuingCompanyId
+    }
+  )
+}
+
+query debts(
+  $offset: Int
+  $limit: Int
+  $searchTerm: String
+  $startDate: DateTime
+  $endDate: DateTime
+  $locationId: Int
+  $issuingCompanyId: Int
+) {
+  findManyAccountDebt(
+    skip: $offset
+    take: $limit
+    where: {
+      searchTerm: $searchTerm
+      startDate: $startDate
+      endDate: $endDate
+      locationId: $locationId
+      issuingCompanyId: $issuingCompanyId
+    }
+  ) {
+    id
+    invoiceNo
+    location
+    invDate
+    customer
+    debtor
+    payment
+    balance
+    tooltip
+    status
+    lastAction {
+      communication_id
+			time
+    }
+  }
+}
+
+query debtCount(
+  $searchTerm: String
+  $startDate: DateTime
+  $endDate: DateTime
+  $locationId: Int
+  $issuingCompanyId: Int
+) {
+  accountDebtCount(
+    where: {
+      searchTerm: $searchTerm
+      startDate: $startDate
+      endDate: $endDate
+      locationId: $locationId
+      issuingCompanyId: $issuingCompanyId
+    }
+  )
+}
+
+query creditNotes(
+  $offset: Int
+  $limit: Int
+  $searchTerm: String
+  $startDate: DateTime
+  $endDate: DateTime
+  $locationId: Int
+  $issuingCompanyId: Int
+  $creditNoteType: String
+) {
+  findManyAccountCreditNote(
+    skip: $offset
+    take: $limit
+    where: {
+      searchTerm: $searchTerm
+      startDate: $startDate
+      endDate: $endDate
+      locationId: $locationId
+      issuingCompanyId: $issuingCompanyId
+      creditNoteType: $creditNoteType
+    }
+  ) {
+    id
+    creditNo
+    location
+    creditDate
+    customer
+    debtor
+    invoiceNo
+    total
+    type
+    tooltip
+  }
+}
+
+query creditNoteCount(
+  $searchTerm: String
+  $startDate: DateTime
+  $endDate: DateTime
+  $locationId: Int
+  $issuingCompanyId: Int
+  $creditNoteType: String
+) {
+  accountCreditNoteCount(
+    where: {
+      searchTerm: $searchTerm
+      startDate: $startDate
+      endDate: $endDate
+      locationId: $locationId
+      issuingCompanyId: $issuingCompanyId
+      creditNoteType: $creditNoteType
+    }
+  )
+}

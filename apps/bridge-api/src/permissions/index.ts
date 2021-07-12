@@ -17,8 +17,16 @@ export const permissions = shield(
 
       //CompanyMeta
       setOneCompanyMeta: rules.authentication.isAdmin,
+      setManyCompanyMeta: rules.authentication.isAdmin,
+
+      //Update User Password
+      updateUserPassword: rules.authentication.isAuthenticated,
+
+      // Send Email
+      sendEmail: rules.authentication.isAuthenticated,
 
       //Page
+      createOnePage: rules.authentication.isAdmin,
       updateOnePage: rules.authentication.isAdmin,
       deleteOnePage: rules.authentication.isAdmin,
 
@@ -26,9 +34,13 @@ export const permissions = shield(
       updateOneUserGroup: rules.authentication.isAdmin,
       deleteOneUserGroup: rules.authentication.isAdmin,
 
+      // Send Email Without User Login
+      sendEmailWithoutLogIn: allow,
+
       // Public access mutations
       login: allow,
-      AuthenticateUser: allow,
+      //resetPassword
+      resetPassword: allow,
       upsertUserReportByReportCode: rules.authentication.isAdmin,
 
       //CompanyBranches
@@ -95,6 +107,7 @@ export const permissions = shield(
       //MedicalFormContact
       medicalFormContacts: rules.authentication.isAuthenticated,
       //UserPermission
+      validateUser: allow,
       userPermissions: rules.authentication.isAuthenticated,
       findFirstUserPermission: rules.authentication.isAuthenticated,
       cmContact: rules.authentication.isAuthenticated,

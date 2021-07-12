@@ -1,14 +1,9 @@
 /* eslint-disable */
-import React from 'react'
 import {
-  DollarCircleOutlined,
-  UserOutlined,
-  InboxOutlined,
-  CalendarOutlined,
-  MailOutlined,
-  SlackSquareOutlined,
-  WindowsOutlined
+  CalendarOutlined, DollarCircleOutlined, InboxOutlined, MailOutlined,
+  SlackSquareOutlined, UserOutlined, WindowsOutlined
 } from '@ant-design/icons'
+import React from 'react'
 import RulesContainer from './RulesContainer'
 
 export default {
@@ -39,9 +34,15 @@ export default {
         travel_destination: 'Travel Destination',
         labs_ordered: 'Labs Ordered',
     },
+    answersClientOptions: {
+      gender: 'Gender',
+      age: 'Age',
+    },
     operatorOptions: {
         is: 'is',
-        not_is: 'Not is',
+        is_not: 'is not',
+        is_empty: 'is empty',
+        is_not_empty: 'is not empty',
     },
     actionTitle: 'Pabau',
     actions: [
@@ -82,7 +83,7 @@ export default {
           }
         ]
       },
-      
+
     ],
     actionsNotAvailableTitle: 'Apps & Integrations (coming soon)',
     actionsNotAvailable:[
@@ -96,7 +97,8 @@ export default {
         text: 'Microsoft Teams',
         icon: <WindowsOutlined />
       }
-    ]
+    ],
+    medicalForms: [],
   },
   onChange: { action: 'onChange' },
   actions: { argTypesRegex: '^on[A-Z].*' },

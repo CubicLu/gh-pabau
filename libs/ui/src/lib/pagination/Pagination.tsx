@@ -51,7 +51,11 @@ export const Pagination: FC<PaginationProps & AntPaginationProps> = ({
           </Dropdown>
         </p>
       </div>
-      <AntPagination {...props} className={styles.tblPagination} />
+      <AntPagination
+        {...props}
+        className={styles.tblPagination}
+        showSizeChanger={false}
+      />
     </div>
   )
 }

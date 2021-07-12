@@ -73,7 +73,7 @@ if [ -z "${BITBUCKET_PR_ID}" ] && [ -n "${BITBUCKET_BRANCH}" ]; then
     -X POST \
     -H 'Accept: application/json' \
     -H 'Content-Type: application/json' \
-    'https://rancher.pabau.com/v3/project/c-j8bb9:p-jrqrz/workloads/deployment:toshe:api?action=redeploy'
+    'https://rancher.pabau.com/v3/project/c-j8bb9:p-jrqrz/workloads/deployment:new-clinic:bridge-api?action=redeploy'
   echo "Deployed!"
 
   echo "${APP_NAME}: https://api-toshe.pabau.me/graphql" >> /tmp/bot_message.txt

@@ -1,0 +1,29 @@
+query paymentTypes($isActive: Int = 1, $offset: Int = 0, $limit: Int = 50) {
+  stripe: bookitProGenerals(
+    where: {
+      AND: {
+        stripe_public_key: { equals: "" }
+        stripe_private_key: { equals: "" }
+        create_invoice: { equals: "1" }
+      }
+    }
+  ) {
+    create_invoice
+  }
+  invPaymentTypes(
+    skip: $offset
+    take: $limit
+    orderBy: { id: desc }
+    where: { is_active: { equals: $isActive } }
+  ) {
+    id
+    name
+    type
+    description
+    is_active
+  }
+}
+
+query paymentTypesAggregate($isActive: Int = 1) {
+  invPaymentTypesCount(where: { is_active: { equals: $isActive } })
+}
