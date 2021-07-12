@@ -6,13 +6,11 @@ import ServiceCategorySelector from '../../components/ServicesStep/ServiceCatego
 import ServiceSelector from '../../components/ServicesStep/ServiceSelector'
 import LocationSelector from '../../components/LocationStep/LocationSelector'
 import BookingDetails from '../../components/BookingDetailsStep/BookingDetails'
-import moment from 'moment'
 import Payment from '../../components/payment/Payment'
 import Booked from '../../components/bookingconform/booking'
 import PatientInfo from '../../components/patientinformatioon/PatientInfo'
 import EmployeeSelector from '../../components/EmployeeStep/EmployeeSelector'
 import DateTimeSelector from '../../components/DateTimeStep/DateTimeSelector'
-import { defaultItems } from '../../../web/mocks/connect/onlineBooking'
 import styles from './index.module.less'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
@@ -23,15 +21,7 @@ import {
 import { Image } from 'antd'
 
 import useServices from '../../hooks/useServices'
-
-interface BookingData {
-  masterCategoryID?: number
-  categoryID?: number
-  serviceID?: number[]
-  employeeID?: number
-  locationID?: number
-  dateTime?: moment.Moment
-}
+import { BookingData } from '../../types/booking'
 
 interface userData {
   firstname: string
@@ -71,14 +61,11 @@ const userData: userData = {
 }
 export function Index() {
   // CRAP
-  const [seleData, SetselData] = useState(defaultItems.slice(0, 4))
   const [ispro, setispro] = useState(false)
   const [back, Setback] = useState(false)
   const [view, Setview] = useState(true)
   const [indicator, setindicator] = useState(false)
-  const [tempT, settempT] = useState('')
   const [user, setuser] = useState<userData>(userData)
-  const [date, setdate] = useState()
   const [tempprice, settempprice] = useState('')
   const [editdate, seteditdate] = useState({ time: false, date: false })
   const [promoPrice, setpromoPrice] = useState<number>(0)
@@ -160,108 +147,6 @@ export function Index() {
     Setback(true)
   }
 
-  const gettime = (tm) => {
-    if (tm < 9) {
-      return `0${tm}:00 - 0${tm + 1}:00`
-    } else if (tm === 9) {
-      return `0${tm}:00 - ${tm + 1}:00`
-    } else if (tm > 9) {
-      return `${tm}:00 - ${tm + 1}:00`
-    }
-  }
-  const slot = (slotData) => {
-    const day = moment(slotData.date).format('DD')
-    const month = moment(slotData.date).format('MMMM')
-    const word = moment(slotData.date).format('dddd')
-    user.docDescription = slotData.description
-    user.docName = slotData.name
-    user.date = `${word}, ${day}th ${month}`
-    user.time = gettime(slotData.time)
-    user.image = slotData.image
-    console.log(userData)
-    setuser(user)
-    setdate(slotData.date)
-    settempT(slotData.time)
-    console.log(user)
-  }
-
-  const backbutton = () => {
-    if (currentStep === 1) {
-      SetselData([...defaultItems.slice(0, 4)])
-      Setback(false)
-      Setview(true)
-      setCurrentStep(0)
-      setindicator(false)
-    }
-    if (currentStep === 2) {
-      if (indicator) {
-        setindicator(false)
-        setispro(false)
-      } else {
-        setCurrentStep(currentStep - 1)
-        SetselData([...defaultItems.slice(0, 4)])
-        Setback(false)
-        setCurrentStep(0)
-        Setview(true)
-        setispro(false)
-      }
-    }
-    if (currentStep === 3) {
-      setCurrentStep(currentStep - 1)
-      SetselData([...defaultItems.slice(0, 4)])
-      setindicator(true)
-      Setview(true)
-    }
-    if (currentStep === 4) {
-      setCurrentStep(currentStep - 1)
-      SetselData([...defaultItems.slice(0, 4)])
-      Setview(true)
-      seteditdate({ date: false, time: false })
-      setindicator(true)
-    }
-    if (currentStep === 5) {
-      setCurrentStep(currentStep - 1)
-      seteditdate({ date: false, time: false })
-      // if (user.type === 'Laser') {
-      //   user.charge =
-      // } else {
-      //   user.charge = String(
-      //     (Number(user.charge) * 100) / (100 - percentage) - promoPrice
-      //   )
-      // }
-      setuser(user)
-      SetselData([...defaultItems.slice(0, 4)])
-      Setview(true)
-    }
-    if (currentStep === 6) {
-      seteditdate({ date: false, time: false })
-      setCurrentStep(currentStep - 1)
-      if (user.type === 'Laser') {
-        user.charge = tempprice
-      } else {
-        user.charge = String(
-          (Number(user.charge) * 100) / (100 - percentage) - promoPrice
-        )
-      }
-      setuser(user)
-      SetselData([...defaultItems.slice(0, 4)])
-      Setview(true)
-    }
-    if (currentStep === 7) {
-      setCurrentStep(currentStep - 2)
-      if (user.type === 'Laser') {
-        user.charge = tempprice
-      } else {
-        user.charge = String(
-          (Number(user.charge) * 100) / (100 - percentage) - promoPrice
-        )
-      }
-      setuser(user)
-      SetselData([...defaultItems.slice(0, 4)])
-      Setview(true)
-    }
-  }
-
   const goBackButton = () => {
     let buttonName = ''
     if (currentStep === 1) {
@@ -326,12 +211,32 @@ export function Index() {
     }
   }
 
+  const findServiceByIDs = (serviceIDs: number[]) => {
+    const services = []
+    for (const mcat of masterCategories) {
+      if (mcat.categories) {
+        for (const cat of mcat.categories) {
+          if (cat.services) {
+            for (const s of cat.services) {
+              if (serviceIDs.includes(s.id)) {
+                services.push(s)
+              }
+            }
+          }
+        }
+      }
+    }
+    return services
+  }
+
   return (
     <div className={styles.onlineBooking}>
       <Header
         currentStep={currentStep > 0 ? currentStep : 1}
         translation={translation}
-        back={backbutton}
+        back={() => {
+          setCurrentStep(currentStep - 1)
+        }}
         visible={(back || !view) && currentStep <= 7}
       />
 
@@ -368,9 +273,11 @@ export function Index() {
                 mCatID={selectedData.masterCategoryID}
                 translation={translation}
                 onStepCompleted={(services: number[]) => {
+                  const slist = findServiceByIDs(services)
                   setSelectedData({
                     ...selectedData,
                     serviceID: services,
+                    services: slist,
                   })
                   setCurrentStep(currentStep + 1)
                 }}
@@ -381,9 +288,13 @@ export function Index() {
             <LocationSelector
               items={locationsResult.companyBranches}
               onLocationSelected={(locationID) => {
+                const location = locationsResult.companyBranches.find(
+                  (loc) => loc.id === locationID
+                )
                 setSelectedData({
                   ...selectedData,
                   locationID: locationID,
+                  location: location,
                 })
                 setCurrentStep(currentStep + 1)
               }}
@@ -415,7 +326,10 @@ export function Index() {
           {currentStep === 5 && (
             <div>
               <BookingDetails
-                changescreen={rech}
+                bookingData={selectedData}
+                changescreen={function () {
+                  setCurrentStep(currentStep + 3)
+                }}
                 clinic={user.clinic}
                 docname={user.docName}
                 date={user.date}
@@ -429,7 +343,6 @@ export function Index() {
                 translation={translation}
                 member={user.member}
                 gotofirst={() => {
-                  SetselData([...defaultItems.slice(0, 4)])
                   setCurrentStep(1)
                   // Setback(false)
                   Setview(true)
@@ -438,27 +351,23 @@ export function Index() {
                 }}
                 gotoclinic={() => {
                   setCurrentStep(2)
-                  SetselData([...defaultItems.slice(0, 4)])
                   Setview(true)
                   setindicator(true)
                 }}
                 gotoemploy={() => {
                   setCurrentStep(3)
-                  SetselData([...defaultItems.slice(0, 4)])
                   Setview(true)
                   setindicator(true)
                 }}
                 gotodate={() => {
                   setCurrentStep(4)
                   seteditdate({ date: true, time: false })
-                  SetselData([...defaultItems.slice(0, 4)])
                   Setview(true)
                   setindicator(true)
                 }}
                 gotoedit={() => {
                   setCurrentStep(4)
                   seteditdate({ date: true, time: true })
-                  SetselData([...defaultItems.slice(0, 4)])
                   Setview(true)
                   setindicator(true)
                 }}

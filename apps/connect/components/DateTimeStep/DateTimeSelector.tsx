@@ -56,18 +56,8 @@ const DateTimeSelector: FC<P> = ({ employeeID, onSelectedTimeslot }) => {
       }
     }
   }
+  console.log('SBD', shiftsByDate)
 
-  const dateobj = {
-    morning: false,
-    afternoon: false,
-    evening: false,
-    name: '',
-    description: '',
-    charges: '',
-    image: '',
-    time: 0,
-    date: null,
-  }
   const getShiftsOnDate = (date) => {
     const shiftsIndex = date.format('YYYYMMDD')
     if (shiftsByDate[shiftsIndex]?.length > 0) {
@@ -126,6 +116,9 @@ const DateTimeSelector: FC<P> = ({ employeeID, onSelectedTimeslot }) => {
 
   const getDateTimeslots = (date) => {
     const shiftsIndex = Number.parseInt(date.format('YYYYMMDD'))
+    if (!shiftsByDate[shiftsIndex]) {
+      return []
+    }
     const shift = shiftsByDate[shiftsIndex][0]
     const shiftDate =
       shift.start.toString().substring(0, 4) +

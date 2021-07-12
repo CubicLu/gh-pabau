@@ -20,10 +20,12 @@ import Conformation, {
   productType,
 } from '../conformation/conformation'
 import { countrylist } from '../../../web/mocks/connect/mock'
+import { BookingData } from '../../types/booking'
 
 const { Option } = Select
-/* eslint-disable-next-line */
-export interface BookingdetailProps {
+
+export interface P {
+  bookingData: BookingData
   changescreen: () => void
   clinic: string
   docname: string
@@ -51,17 +53,8 @@ export interface userType {
   phone: string
   count: number
 }
-// interface user {
-//   lastname: string
-//   firstname: string
-//   email: string
-//   phone: string
-//   password: string
-//   country: string
-//   verify1: any
-//   verify2: any
-// }
-const BookingDetails: FC<BookingdetailProps> = ({
+const BookingDetails: FC<P> = ({
+  bookingData,
   changescreen,
   clinic,
   docname,
@@ -82,9 +75,6 @@ const BookingDetails: FC<BookingdetailProps> = ({
   gotoemploy,
   gotofirst,
 }) => {
-  //const { t } = useTranslationI18()
-  // const [data, setdata] = useState<user>()
-  // const [pass, setpass] = useState()
   const [valid, setvalid] = useState(false)
   const [verify, setverify] = useState(false)
   const list = () => {
@@ -168,23 +158,7 @@ const BookingDetails: FC<BookingdetailProps> = ({
       return String((Number(charge) * (100 - products.extra)) / 100)
     }
   }
-  // const buttonValidation = (): boolean => {
-  //   for (const i of mem) {
-  //     if (
-  //       i.first.length > 0 &&
-  //       i.last.length > 3 &&
-  //       i.email.length > 3 &&
-  //       i.phone.length === 10 &&
-  //       pass.password.length > 3 &&
-  //       pass.valid
-  //     ) {
-  //       console.log('##########')
-  //       return false
-  //     }
-  //   }
-  //   console.log('$$$$$$')
-  //   return true
-  // }
+  console.log('DATA GOT', bookingData)
   return (
     <div>
       {confim ? (
@@ -215,10 +189,10 @@ const BookingDetails: FC<BookingdetailProps> = ({
               {translation('connect.onlinebooking.bookdetail.conform.title')}
             </h6>
             <Verification
-              clinic={clinic}
-              docname={docname}
-              date={date}
-              time={time}
+              clinic={bookingData.location.name}
+              docname={'Nenad Jovanovski'}
+              date={bookingData.dateTime.format('dddd, Do MMMM')}
+              time={bookingData.dateTime.format('HH:mm')}
               charge={
                 type === 'Laser'
                   ? course()
@@ -228,9 +202,11 @@ const BookingDetails: FC<BookingdetailProps> = ({
                         100
                     )
               }
-              address={address}
-              image={image}
-              type={type}
+              address={bookingData.location.address}
+              image={
+                'https://crm.pabau.com//cdn/file_attachments/8021/avatar_photos/20201208134720.jpeg'
+              }
+              type={bookingData.services.map((s) => s.name).join(', ')}
               translation={translation}
               clickable={true}
               gotoedit={gotoedit}
