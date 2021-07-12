@@ -1,6 +1,6 @@
 {
   "name": "pabau",
-  "version": "2.0.396",
+  "version": "2.0.397",
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
   "workspaces": {
@@ -173,8 +173,8 @@
     "react-sortable-hoc": "1.11.0",
     "react-string-replace": "0.4.4",
     "react-use": "17.2.4",
-    "recompose": "^0.30.0",
     "react-vertical-timeline-component": "^3.3.3",
+    "recompose": "^0.30.0",
     "reflect-metadata": "0.1.13",
     "rxjs": "6.6.7",
     "sql-template-tag": "4.0.0",
