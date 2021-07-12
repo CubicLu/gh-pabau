@@ -23,6 +23,7 @@ interface P {
   isDataIntegrityCheck?: boolean
   dataIntegrityCount?: number
   isCodeGen?: boolean
+  deleteOnInactive?: boolean
 }
 
 const CrudModal: FC<P> = ({
@@ -36,9 +37,8 @@ const CrudModal: FC<P> = ({
   aggregateQuery,
   aggregateQueryVariables,
   submitting = false,
-  isDataIntegrityCheck,
-  dataIntegrityCount,
   isCodeGen = false,
+  deleteOnInactive = false,
 }) => {
   const { t } = useTranslationI18()
   const [openDeleteModal, setDeleteModal] = useState(
@@ -99,7 +99,6 @@ const CrudModal: FC<P> = ({
             true
     )
   }, [editingRow, schema?.filter?.primary?.name, specialFormElement])
-
   return (
     <>
       <Modal
@@ -112,13 +111,6 @@ const CrudModal: FC<P> = ({
         onOk={async () => {
           const { id } = editingRow
           setFormSubmitting(true)
-          if (dataIntegrityCount >= 1 && isDataIntegrityCheck) {
-            Notification(
-              NotificationType.warning,
-              `Warning! ${schema.messages.dataIntegrity}`
-            )
-            return
-          }
           await deleteMutation({
             variables: isCodeGen ? { where: { id: id } } : { id },
             optimisticResponse: {},
@@ -201,6 +193,8 @@ const CrudModal: FC<P> = ({
             ? !formik.values[schema?.disable.conditionalField]
               ? t('common-label-delete')
               : null
+            : deleteOnInactive && editingRow?.id
+            ? !formik?.values['is_active'] && t('common-label-delete')
             : editingRow?.id && t('common-label-delete')
         }
         specialBooleanLabel={
@@ -208,7 +202,7 @@ const CrudModal: FC<P> = ({
         }
         specialBooleanValue={specialBoolean}
         onSpecialBooleanClick={() => {
-          setSpecialBoolean((e) => e)
+          setSpecialBoolean((e) => !e)
           schema?.filter?.primary?.name
             ? formik.setFieldValue(
                 schema?.filter?.primary?.name?.toString(),

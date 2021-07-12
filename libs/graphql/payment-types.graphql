@@ -27,7 +27,3 @@ query paymentTypes($isActive: Int = 1, $offset: Int = 0, $limit: Int = 50) {
 query paymentTypesAggregate($isActive: Int = 1) {
   invPaymentTypesCount(where: { is_active: { equals: $isActive } })
 }
-
-query paymentMethodsDataIntegrity($paymentName: String!) {
-  invPaymentsCount(where: { pmethod: { equals: $paymentName } })
-}

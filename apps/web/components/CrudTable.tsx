@@ -1,5 +1,5 @@
 import { LeftOutlined } from '@ant-design/icons'
-import { DocumentNode, useMutation, gql } from '@apollo/client'
+import { DocumentNode, useMutation } from '@apollo/client'
 import {
   Breadcrumb,
   MobileHeader,
@@ -54,19 +54,12 @@ interface P {
   displayLock?: boolean
   isNestedQuery?: boolean
   isFilterNumber?: boolean
-  isDataIntegrityCheck?: boolean
-  dataIntegrityCheckQuery?: DocumentNode
   isNotificationBannerOnData?: boolean
   showStaticData?: boolean
   staticData?: Array<Record<string, string | boolean | number>>
   isCodeGen?: boolean
+  deleteOnInactive?: boolean
 }
-
-const defaultDataIntegrityCheck = gql`
-  query payment_methods_data_integrity($paymentName: String!) {
-    invPaymentsCount(where: { pmethod: { equals: $paymentName } })
-  }
-`
 
 const CrudTable: FC<P> = ({
   schema,
@@ -96,23 +89,18 @@ const CrudTable: FC<P> = ({
   displayLock = false,
   isNestedQuery = false,
   isFilterNumber = false,
-  isDataIntegrityCheck = false,
-  dataIntegrityCheckQuery = defaultDataIntegrityCheck,
   isNotificationBannerOnData = false,
   crudLayoutRef,
   showStaticData = false,
   staticData = [],
   isCodeGen = false,
+  deleteOnInactive = false,
 }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isActive, setIsActive] = useState<boolean | number>(
     schema?.filter?.primary?.default ?? true
   )
   const [searchTerm, setSearchTerm] = useState('')
-  const [dataIntegrityName, setDataIntegrityName] = useState<
-    string | number | boolean
-  >(schema?.dataIntegrity?.default ?? '')
-  const [dataIntegrityCount, setDataIntegrityCount] = useState<number>(0)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isMobileSearch, setMobileSearch] = useState(false)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -215,16 +203,6 @@ const CrudTable: FC<P> = ({
     lastOrder = lastOrderData?.[0].order
   }
 
-  const { data: dataIntegrityCheckData } = useLiveQuery(
-    dataIntegrityCheckQuery,
-    {
-      variables: {
-        paymentName: dataIntegrityName,
-      },
-      skip: !isDataIntegrityCheck,
-    }
-  )
-
   const getAddress = (data) => {
     const addressPreference = new Set([
       'country',
@@ -261,7 +239,12 @@ const CrudTable: FC<P> = ({
       } else if (isNotificationBannerOnData && Object.keys(data).length > 1) {
         let restData = { ...data }
         restData = restData[schema?.showNotification?.list]
-        if (showStaticData && restData.length > 0 && staticData.length > 0)
+        if (
+          showStaticData &&
+          restData.length > 0 &&
+          staticData.length > 0 &&
+          restData[0][schema?.filter?.primary?.name ?? 'is_active']
+        )
           restData = [...restData, ...staticData]
         setSourceData(restData)
       } else {
@@ -299,10 +282,6 @@ const CrudTable: FC<P> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paginateData.currentPage, paginateData.limit])
-
-  useEffect(() => {
-    setDataIntegrityCount(dataIntegrityCheckData)
-  }, [dataIntegrityCheckData])
 
   const onFilterMarketingSource = () => {
     resetPagination()
@@ -681,9 +660,8 @@ const CrudTable: FC<P> = ({
             listQueryVariables={getQueryVariables}
             aggregateQuery={aggregateQuery}
             aggregateQueryVariables={getAggregateQueryVariables}
-            isDataIntegrityCheck={isDataIntegrityCheck}
-            dataIntegrityCount={dataIntegrityCount}
             isCodeGen={isCodeGen}
+            deleteOnInactive={deleteOnInactive}
           />
         )}
         {isNotificationBannerOnData
@@ -789,9 +767,6 @@ const CrudTable: FC<P> = ({
               } else {
                 setEditingRow(e)
                 setModalShowing((e) => !e)
-              }
-              if (isDataIntegrityCheck) {
-                setDataIntegrityName(e[schema?.dataIntegrity?.name])
               }
             }}
             needTranslation={needTranslation}

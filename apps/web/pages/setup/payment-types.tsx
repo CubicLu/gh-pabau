@@ -6,7 +6,6 @@ import { NotificationBanner } from '@pabau/ui'
 import {
   PaymentTypesDocument,
   PaymentTypesAggregateDocument,
-  PaymentMethodsDataIntegrityDocument,
   CreateOneInvPaymentTypeDocument,
   UpdateOneInvPaymentTypeDocument,
   DeleteOneInvPaymentTypeDocument,
@@ -211,13 +210,12 @@ export const PaymentTypes: NextPage = () => {
       draggable={false}
       isNestedQuery={true}
       isFilterNumber={true}
-      isDataIntegrityCheck={true}
-      dataIntegrityCheckQuery={PaymentMethodsDataIntegrityDocument}
       requireAdminAccess={true}
       isNotificationBannerOnData={true}
       showStaticData={true}
       staticData={staticDataSource}
       isCodeGen={true}
+      deleteOnInactive={true}
       {...user}
     />
   )
