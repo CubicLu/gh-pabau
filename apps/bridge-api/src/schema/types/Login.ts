@@ -1,30 +1,41 @@
 import { extendType, intArg, nonNull, stringArg } from 'nexus'
 
 import { Context } from '../../context'
-import LoginService from '../../app/authentication/LoginService'
+import {
+  verifyUser,
+  authenticateUser,
+} from '../../app/authentication/LoginService'
 
 export const VerifyCredentials = extendType({
   type: 'Query',
   definition: (t) => {
     t.field('VerifyCredentials', {
       type: 'User',
+      description:
+        'First step of authentication flow - we verify the user credentials',
       args: {
         username: nonNull(stringArg()),
         password: nonNull(stringArg()),
         company_id: intArg(),
       },
       async resolve(event, args, ctx: Context) {
-        const loginService = new LoginService(ctx)
-        const users = await loginService.findUsers({
-          username: args.username,
-          password: args.password,
-        })
-
-        if (users.length > 0 && args.company_id) {
-          return loginService.verifyWithCompanyId(users, args.company_id, args)
+        let users = []
+        try {
+          users = await ctx.prisma.user.findMany({
+            where: {
+              username: {
+                equals: args.username,
+              },
+            },
+            include: {
+              company: true,
+            },
+          })
+        } catch (error) {
+          throw new Error(error)
         }
 
-        return loginService.verify(users, args)
+        return verifyUser(users, args)
       },
     })
   },
@@ -39,11 +50,20 @@ export const ListRelatedCompanies = extendType({
         username: nonNull(stringArg()),
       },
       async resolve(event, args, ctx: Context) {
-        const loginService = new LoginService(ctx)
-        return await loginService.findUsers({
-          username: args.username,
-          password: null,
-        })
+        try {
+          return await ctx.prisma.user.findMany({
+            where: {
+              username: {
+                equals: args.username,
+              },
+            },
+            include: {
+              company: true,
+            },
+          })
+        } catch (error) {
+          throw new Error(error)
+        }
       },
     })
   },
@@ -63,8 +83,7 @@ export const AuthenticateUser = extendType({
         remote_connect: stringArg(),
       },
       async resolve(event, args, ctx: Context) {
-        const loginService = new LoginService(ctx)
-        return loginService.authenticateUser({
+        return authenticateUser({
           id: args.user_id,
           company_id: args.company_id,
           admin: args.user_admin,

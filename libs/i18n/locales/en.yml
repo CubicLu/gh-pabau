@@ -1285,7 +1285,6 @@ en:
   setup.issuing.fields.name.short.lower: 'name'
   setup.issuing.fields.name.example: 'Company Name'
   setup.issuing.fields.address: 'Issuing Company'
-  setup.issuing.form.field.Region: 'Region'
   setup.issuing.fields.address.lower: 'issuing company'
   setup.issuing.fields.address.short: 'Address'
   setup.issuing.fields.address.short.lower: 'address'
@@ -2466,9 +2465,9 @@ en:
   account.finance.tab.menu.debt: 'Debt'
   account.finance.tab.menu.credit.notes: 'Credit Notes'
   account.finance.last: 'Last'
-  account.finance.filter.location: "Location"
-  account.finance.filter.issuing.company: "Issuing Company"
-  account.finance.filter.credit.note: "Credit Note Type"
+  account.finance.filter.location: 'Location'
+  account.finance.filter.issuing.company: 'Issuing Company'
+  account.finance.filter.credit.note: 'Credit Note Type'
   account.finance.send.reminder.modal.title: 'Send debt reminders'
   account.finance.payments.columns.payment.no: 'Payment No.'
   account.finance.payments.columns.invoiceNo: 'Invoice number'
@@ -2968,8 +2967,9 @@ en:
   business.security.excellent.message: 'Pabau baseline standard Security score :Excellent'
   reset.password.title: 'Reset your password'
   reset.password.title.text: 'Reset password'
-  reset.password.description: 'Enter the email address associated with your account, and we’ll send
-            you a link to reset your password.'
+  reset.password.description:
+    'Enter the email address associated with your account, and we’ll send
+    you a link to reset your password.'
   reset.password.banner.search.title: 'No search results'
   reset.password.banner.search.description: 'Your search did not return any results. Please try again'
   reset.password.banner.email.title: 'Sent email successfully'

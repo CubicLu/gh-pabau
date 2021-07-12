@@ -4,9 +4,8 @@ import {
   BusinessDetailsNotifications,
   Button,
   MobileHeader,
-  Notification,
-  NotificationType,
   System,
+  Terminology,
   TabMenu,
   TerminologyConfig,
   PasswordExpirationProps,
@@ -97,8 +96,6 @@ export const Index: FC = () => {
   const [enableLab, setEnableLabs] = useState('')
   const [location, setLocation] = useState('')
   const router = useRouter()
-
-  const [createBusinessDetails] = useMutation(ADD_MUTATION)
 
   const tabMenuItems = [
     t('business.details.tab.tabtitle'),

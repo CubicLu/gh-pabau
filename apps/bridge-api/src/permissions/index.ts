@@ -39,6 +39,7 @@ export const permissions = shield(
 
       // Public access mutations
       login: allow,
+      AuthenticateUser: allow,
       //resetPassword
       resetPassword: allow,
       upsertUserReportByReportCode: rules.authentication.isAdmin,

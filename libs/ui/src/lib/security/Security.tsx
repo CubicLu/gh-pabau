@@ -16,11 +16,11 @@ import {
 import { useTranslation } from 'react-i18next'
 
 interface SecurityProps {
-  twoFAstatus: boolean
-  newButtonText: string
-  dangerButtonText: string
-  onDelete: () => void
-  onOk?(val) => void
+  twoFAstatus: number
+  newButtonText?: string
+  dangerButtonText?: string
+  onDelete?: () => void
+  onOk?: (val) => void
   enableSensData?: number
   config?: PasswordExpirationProps
   passwordExpiration?: string
@@ -30,8 +30,6 @@ interface SecurityProps {
 
 export const Security: FC<SecurityProps> = ({
   twoFAstatus,
-  newButtonText,
-  dangerButtonText,
   onDelete,
   onOk,
   enableSensData,
@@ -43,7 +41,7 @@ export const Security: FC<SecurityProps> = ({
   const { t } = useTranslation('common')
   const [showModal, setShowModal] = useState(false)
   const percent =
-    (twoFAstatus ? 0 : 50) +
+    (!twoFAstatus ? 0 : 50) +
     (enableSensData === (undefined || 0) ? 0 : 20) +
     (config?.password_expire === '90 days' ? 20 : 0) +
     (config?.lockout_period === '10 minutes' ? 10 : 0)
@@ -53,7 +51,7 @@ export const Security: FC<SecurityProps> = ({
       title: t('business.security.tool.data.force.title'),
       name: t('business.security.tool.data.force.name'),
       imgSrc: <VideoCameraOutlined />,
-      isActive: twoFAstatus,
+      isActive: twoFAstatus ? true : false,
       modalType: 1,
       modalTitle: t('business.security.tool.data.force.modal.title'),
       modalContent: t('business.security.tool.data.force.modal.content'),

@@ -45,7 +45,7 @@ const Login: FC = () => {
           remote_connect: user.company.remote_connect,
         },
         CmStaffGeneral: {
-          CellPhone: user.CmStaffGeneral[0].CellPhone,
+          CellPhone: user.CmStaffGeneral.CellPhone,
         },
       })
 
