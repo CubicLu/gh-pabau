@@ -409,7 +409,8 @@ export const RulesContainer: FC<RulesContainerProps> = ({
   }
 
   const NoRulesContainer = () => {
-    setEditMode(false)
+    //TODO: fix the correctness of this line; dont set state on every child render
+    // setEditMode(false)
     return rules.length === 0 ? (
       <div className={styles.noRulesContainer}>
         <InfoCircleOutlined className={styles.icon} />

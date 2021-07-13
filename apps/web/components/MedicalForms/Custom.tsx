@@ -86,8 +86,8 @@ const Custom: FC<CustomProps> = ({ addItem = null, data }) => {
   const medicalFormsCount = useFindMedicalFormsCountQuery(getQueryVariables)
 
   useEffect(() => {
-    if (medicalForms.data?.medicalForms) {
-      const medicalFormList = medicalForms.data?.medicalForms.map(
+    if (medicalForms.data?.findManyMedicalForm) {
+      const medicalFormList = medicalForms.data?.findManyMedicalForm.map(
         (medicalForm, index) => ({
           key: medicalForm.id.toString(),
           name: medicalForm.name,
@@ -128,11 +128,11 @@ const Custom: FC<CustomProps> = ({ addItem = null, data }) => {
   }, [medicalForms])
 
   useEffect(() => {
-    if (medicalFormsCount.data?.medicalFormsCount) {
+    if (medicalFormsCount.data?.findManyMedicalFormCount) {
       setPaginateData((prevData) => {
         return {
           ...prevData,
-          total: medicalFormsCount.data?.medicalFormsCount,
+          total: medicalFormsCount.data?.findManyMedicalFormCount,
         }
       })
     }

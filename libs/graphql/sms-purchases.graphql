@@ -4,7 +4,7 @@ query getSmsPurchases(
   $offset: Int = 0
   $limit: Int = 10
 ) {
-  smsPurchases(
+  findManySmsPurchase(
     skip: $offset
     take: $limit
     orderBy: { date: desc }

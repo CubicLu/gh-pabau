@@ -1,11 +1,19 @@
 .system-container {
   width: 100%;
+  :global {
+   .ant-skeleton-element {
+      width: 100%;
+    }
+  }
 
   .btn-save {
     text-align: right;
     margin: 0.5rem 0.5rem 0.5rem 0.5rem;
     @media (max-width: 991px) {
       display: none;
+    }
+    .btn{
+      width: 130px;
     }
   }
 }
@@ -46,4 +54,14 @@
 
 .tab-header {
   padding: 20px 24px;
+}
+
+.text{
+  line-height: 18px;
+  color: #9292a3;
+  margin-top: 4px;
+}
+
+.input{
+  width: 200px;
 }

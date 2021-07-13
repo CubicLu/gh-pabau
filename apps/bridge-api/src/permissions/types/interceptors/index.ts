@@ -1,13 +1,24 @@
+import { GraphQLOutputType } from 'graphql'
 import { rule } from 'graphql-shield'
 import { Context } from '../../../context'
 
 /**
+ * Extracts the model name that can be used with prisma for data fetching from the graphql return type
+ *
+ * Example: return type [PaymentType!], prisma model name [paymentType]
+ */
+export const extractModelName = (returnType: GraphQLOutputType): string => {
+  const type = returnType.toString().replace('!', '')
+  return type.charAt(0).toLowerCase() + type.substr(1, type.length - 1)
+}
+/**
  * Set of interceptor middlewares to handle injecting the current company into the graphql context
  */
 export const interceptors = {
-  interceptSharedCompanyData: rule('interceptSharedCompanyData', {
-    cache: 'strict',
-  })((root, args, ctx: Context) => {
+  interceptSharedCompanyData: rule(
+    'interceptSharedCompanyData',
+    {}
+  )((_root, args, ctx: Context) => {
     args.where = {
       ...args.where,
       company_id: {
@@ -17,7 +28,7 @@ export const interceptors = {
     return true
   }),
   interceptAccessToCompanyData: rule('interceptAccessToCompanyData')(
-    (root, args, ctx: Context, info) => {
+    (_root, args, ctx: Context) => {
       args.where = {
         ...args.where,
         company_id: { equals: ctx.authenticated.company },
@@ -25,68 +36,91 @@ export const interceptors = {
       return true
     }
   ),
-  interceptAccessToAdminTable: rule('interceptAccessToAdminTable', {
-    cache: 'contextual',
-  })((root, args, ctx: Context) => {
-    args.where = {
-      ...args.where,
-      id: { equals: ctx.authenticated.company },
+  interceptAccessToAdminTable: rule('interceptAccessToAdminTable')(
+    (_root, args, ctx: Context) => {
+      args.where = {
+        ...args.where,
+        id: { equals: ctx.authenticated.company },
+      }
+      return true
+    }
+  ),
+  injectUser: rule('injectUser')((_root, args, ctx: Context) => {
+    if (args.data.User) {
+      args.data = {
+        ...args.data,
+        User: {
+          connect: { id: ctx.authenticated.user },
+        },
+      }
     }
     return true
   }),
-  interceptMutation: rule('interceptMutation', { cache: 'contextual' })(
-    async (root, args, ctx, { fieldName, returnType }) => {
+  injectCompany: rule('injectCompany')(
+    async (_root, args, ctx, { fieldName, returnType }) => {
       if (fieldName.includes('create')) {
-        if (args.data?.company?.connect?.id) {
-          return args.data.company.connect?.id === ctx.authenticated.company
-        } else if (args.data?.Company?.connect?.id) {
-          return args.data.Company.connect.id === ctx.authenticated.company
-        } else if (args.data.company) {
-          args.data = {
-            ...args.data,
-            company: {
-              connect: { id: ctx.authenticated.company },
-            },
+        try {
+          if (args.data?.company?.connect?.id) {
+            return args.data.company.connect?.id === ctx.authenticated.company
+          } else if (args.data?.Company?.connect?.id) {
+            return args.data.Company.connect.id === ctx.authenticated.company
+          } else if (args.data.company) {
+            args.data = {
+              ...args.data,
+              company: {
+                connect: { id: ctx.authenticated.company },
+              },
+            }
+            return true
+          } else if (args.data.Company) {
+            args.data = {
+              ...args.data,
+              Company: {
+                connect: { id: ctx.authenticated.company },
+              },
+            }
+            return true
+          } else {
+            return new Error('Faulty mutation detected')
           }
-          return true
-        } else if (args.data.Company) {
-          args.data = {
-            ...args.data,
-            Company: {
-              connect: { id: ctx.authenticated.company },
-            },
-          }
-          return true
-        } else {
-          throw new Error('Faulty mutation detected')
+        } catch (error) {
+          return error
         }
       } else if (fieldName.includes('updateMany')) {
-        args.where = {
-          ...args.where,
-          company_id: {
-            id: { equals: ctx.user.company },
-          },
+        try {
+          args.where = {
+            ...args.where,
+            Company: {
+              id: {
+                equals: ctx.user.Company,
+              },
+            },
+          }
+          return
+        } catch (error) {
+          return error
         }
-        return true
       } else if (
         fieldName.includes('deleteOne') ||
         fieldName.includes('updateOne')
       ) {
-        const model =
-          returnType.toString().charAt(0)?.toLowerCase() +
-          returnType.toString().slice(1)
-        const retrieveRow = await ctx.prisma[model].findFirst({
-          where: {
-            ...args.where,
-          },
-        })
-        console.log(retrieveRow)
-        return (
-          retrieveRow?.['company_id'] !== undefined &&
-          retrieveRow?.['company_id'] === ctx?.authenticated?.company
-        )
+        try {
+          console.log('model name', extractModelName(returnType))
+          const record = await ctx.prisma[
+            extractModelName(returnType)
+          ].findFirst({
+            where: {
+              ...args.where,
+            },
+          })
+          return (
+            record?.company_id !== undefined &&
+            record?.company_id === ctx?.authenticated?.company
+          )
+        } catch (error) {
+          return error
+        }
       }
-      return false
     }
   ),
 }

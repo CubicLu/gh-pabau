@@ -14,6 +14,10 @@ export interface JwtPayloadDto {
   admin?: boolean
   owner?: boolean
   remote_url: string
+  language: {
+    user: string
+    company: string
+  }
   remote_connect: string
   'https://hasura.io/jwt/claims': Hasura
 }

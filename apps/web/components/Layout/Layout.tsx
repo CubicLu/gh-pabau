@@ -38,6 +38,7 @@ interface Notification {
 
 const Layout: FC<LayoutProps> = ({
   children,
+  allowed = true,
   requireAdminAccess = false,
   ...props
 }) => {
@@ -120,7 +121,7 @@ const Layout: FC<LayoutProps> = ({
     user &&
     localStorage?.getItem('token')
   ) {
-    return requireAdminAccess && !user?.admin ? (
+    return requireAdminAccess && !loggedUser?.me?.admin ? (
       <Unauthorized />
     ) : (
       <>
@@ -133,25 +134,12 @@ const Layout: FC<LayoutProps> = ({
           user={userData}
           searchRender={() => <Search />}
           onMessageIconClick={() => setShowChat((e) => !e)}
-          // onCreateChannel={onCreateChannel}
-          // onMessageType={onMessageType}
           legacyContent={!!legacyPage}
           taskManagerIFrameComponent={<TaskManagerIFrame />}
           {...props}
         >
-          <CommonHeader
-            // handleSearch={handleSearch}
-            // title={} t('setup.page.title')
-            showChat={showChat}
-            title="yoyo"
-            isShowSearch={true}
-          />
-          <Chat
-            // closeDrawer={}
-            closeDrawer={() => setShowChat(false)}
-            visible={showChat}
-            //closeDrawer={() => setMessageDrawer((e) => !e)}
-          />
+          <CommonHeader showChat={showChat} title="Pabau" isShowSearch={true} />
+          <Chat closeDrawer={() => setShowChat(false)} visible={showChat} />
 
           {!legacyPage ? children : <Iframe urlPath={legacyPage} />}
         </PabauLayout>

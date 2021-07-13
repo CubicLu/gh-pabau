@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import AddGroupModal from './AddGroupModal'
-import { groupData } from './AddGroupModal.stories'
+import { staff as groupData } from '../../mocks/chat'
 
 describe('AddGroupModal', () => {
   it('should render successfully', () => {

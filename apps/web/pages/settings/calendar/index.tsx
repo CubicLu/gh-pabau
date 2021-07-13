@@ -1,19 +1,19 @@
 import { LeftOutlined } from '@ant-design/icons'
 import {
+  CalendarSettingsDataDocument,
+  useCalendarSettingsDataQuery,
+  useCreateOneCalendarSettingMutation,
+  useSetCompanyMetaMutation,
+  useUpdateCompanyMetaMutation,
+  useUpdateOneCalendarSettingMutation,
+} from '@pabau/graphql'
+import {
   Breadcrumb,
   Button,
   Notification,
   NotificationType,
   SettingsMenu,
 } from '@pabau/ui'
-import {
-  useCalendarSettingsDataQuery,
-  CalendarSettingsDataDocument,
-  useCreateOneCalendarSettingMutation,
-  useUpdateOneCalendarSettingMutation,
-  useSetCompanyMetaMutation,
-  useUpdateCompanyMetaMutation,
-} from '@pabau/graphql'
 import { Card, Typography } from 'antd'
 import Link from 'next/link'
 import React, { useContext, useEffect, useState } from 'react'
@@ -177,7 +177,6 @@ export function Calendar({ ...props }) {
         variables: {
           ...settings,
         },
-        optimisticResponse: {},
         refetchQueries: [
           {
             query: CalendarSettingsDataDocument,
@@ -209,7 +208,6 @@ export function Calendar({ ...props }) {
               id: updatedMeta?.id,
               value: updatedMeta?.meta_value,
             },
-            optimisticResponse: {},
             refetchQueries: [
               {
                 query: CalendarSettingsDataDocument,

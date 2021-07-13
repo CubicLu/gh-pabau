@@ -120,6 +120,10 @@
     width: 30%;
     font-size: 20px;
   }
+
+  .field{
+    margin-top: 6px;
+  }
 }
 
 @media screen and (min-width: 0px) and (max-width: 768px) {
@@ -133,6 +137,11 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  :global {
+    .ant-skeleton-element {
+       width: 90%;
+     }
+   }
 }
 
 .seconddivrow {
@@ -166,6 +175,15 @@
   @media screen and (max-width: 768px) {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .section{
+    display: flex;
+    justify-content: flex-end;
+
+    .input{
+      width: 300px;
+    }
   }
 }
 

@@ -2,46 +2,149 @@ import React, { FC } from 'react'
 import { Avatar, Typography, Tooltip } from 'antd'
 import { ButtonLabel, Stepper } from '@pabau/ui'
 import { MailOutlined, BellOutlined } from '@ant-design/icons'
-import { gql } from '@apollo/client'
-import TableLayout from './TableLayout'
+import TableLayout, { FilterValueType } from './TableLayout'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import xeroBlue from '../../assets/images/xero.svg'
+import xeroRed from '../../assets/images/xero/red.svg'
+import { tempType } from './Invoice'
+import dayjs, { Dayjs } from 'dayjs'
+import { useDebtsQuery, useDebtCountQuery } from '@pabau/graphql'
+import relativeTime from 'dayjs/plugin/relativeTime'
 
-const LIST_QUERY = gql`
-  query debt($offset: Int, $limit: Int) {
-    debt(offset: $offset, limit: $limit) {
-      id
-      invoice_no
-      location
-      inv_date
-      customer
-      debtor
-      status
-      age
-      balance
-      last_action
-    }
-  }
-`
+interface DebtProps {
+  searchTerm: string
+  selectedDates: Dayjs[]
+  filterValue: FilterValueType
+  selectedRange: string
+}
 
-const LIST_AGGREGATE = gql`
-  query debt_aggregate {
-    debt_aggregate {
-      aggregate {
-        count
-      }
-    }
-  }
-`
+interface ActionType {
+  communication_id: number
+  time: Date
+}
 
-const Debt: FC = () => {
+const Debt: FC<DebtProps> = ({
+  searchTerm,
+  selectedDates,
+  filterValue,
+  selectedRange,
+}) => {
   const { t } = useTranslationI18()
 
-  const mailIcon = (
-    <Tooltip title={t('account.finance.debt.invoice.sent')}>
+  const calculateDate = (invDate: Date): string => {
+    dayjs.extend(relativeTime)
+    const date = dayjs(invDate).fromNow()
+    return date === 'a month ago'
+      ? t('account.finance.debt.one.month.ago')
+      : date
+  }
+
+  const prepareLastAction = (lastActionData: ActionType[], date: Date) => {
+    const actions = []
+    const data = calculateDate(date)
+    actions.push(
+      {
+        tooltip: t('account.finance.invoice.create.message', {
+          data,
+        }),
+      },
+      {
+        tooltip: t('account.finance.invoice.letter.send', {
+          count: 1,
+        }),
+      }
+    )
+    if (lastActionData[0]) {
+      const data = calculateDate(lastActionData[0]?.time)
+      actions[1]['tooltip'] = t(
+        'account.finance.invoice.letter.send.with.date',
+        {
+          date: data,
+        }
+      )
+      actions.push({
+        tooltip: t('account.finance.invoice.letter.send', {
+          count: 2,
+        }),
+      })
+    }
+    if (lastActionData[1]) {
+      const data = calculateDate(lastActionData[1]?.time)
+      actions[2]['tooltip'] = t(
+        'account.finance.invoice.letter.send.with.date',
+        {
+          date: data,
+        }
+      )
+      actions.push({
+        tooltip: t('account.finance.invoice.letter.send', {
+          count: 3,
+        }),
+      })
+    }
+    if (lastActionData[2]) {
+      const data = calculateDate(lastActionData[2]?.time)
+      actions[3]['tooltip'] = t(
+        'account.finance.invoice.letter.send.with.date',
+        {
+          date: data,
+        }
+      )
+    }
+    return actions
+  }
+
+  const calculateAge = (invDate: Date): string => {
+    const date = dayjs(invDate)
+    const days = dayjs().diff(date, 'days')
+    let age = ''
+    switch (true) {
+      case days <= 30:
+        age = t('account.finance.debt.30.days')
+        break
+      case days > 30 && days < 61:
+        age = t('account.finance.debt.31.60.days')
+        break
+      case days > 60 && days < 91:
+        age = t('account.finance.debt.61.90.days')
+        break
+      case days > 90 && days < 121:
+        age = t('account.finance.debt.91.120.days')
+        break
+      case days > 120 && days < 151:
+        age = t('account.finance.debt.121.150.days')
+        break
+      case days > 150 && days < 181:
+        age = t('account.finance.debt.151.180.days')
+        break
+      case days > 180 && days < 211:
+        age = t('account.finance.debt.181.210.days')
+        break
+      case days > 210 && days < 241:
+        age = t('account.finance.debt.211.240.days')
+        break
+      case days > 240 && days < 271:
+        age = t('account.finance.debt.241.270.days')
+        break
+      case days > 270 && days < 301:
+        age = t('account.finance.debt.271.300.days')
+        break
+      case days > 300 && days < 331:
+        age = t('account.finance.debt.301.330.days')
+        break
+      default:
+        age = t('account.finance.debt.330.days')
+        break
+    }
+    return age
+  }
+
+  const mailIcon = (title = '') => (
+    <Tooltip title={title}>
       <MailOutlined style={{ fontSize: 10 }} />
     </Tooltip>
   )
-  const bellIcon = (title) => (
+  const bellIcon = (title = '') => (
     <Tooltip title={title}>
       <BellOutlined style={{ fontSize: 10 }} />
     </Tooltip>
@@ -53,78 +156,93 @@ const Debt: FC = () => {
       dataIndex: '',
       visible: true,
       width: '40px',
-      // eslint-disable-next-line react/display-name
-      render: () => (
-        <Avatar
-          src="https://explorance.com/wp-content/uploads/explorance/blue-logo.jpg"
-          size="small"
-        />
-      ),
+      skeletonWidth: '30px',
+      render: function render(_, { status, tooltip }) {
+        const image = status === 2 ? xeroBlue : xeroRed
+        return (
+          <Tooltip placement="top" title={tooltip}>
+            <Avatar src={image} size="small" />
+          </Tooltip>
+        )
+      },
     },
     {
       title: t('account.finance.debt.columns.invoice.no'),
-      dataIndex: 'invoice_no',
+      dataIndex: 'invoiceNo',
       visible: true,
-      width: '120px',
-      // eslint-disable-next-line react/display-name
-      render: (_, { invoice_no }) => (
-        <Typography.Text style={{ color: '#54B2D3' }}>
-          {invoice_no}
-        </Typography.Text>
-      ),
+      width: '110px',
+      skeletonWidth: '70px',
+      render: function render(data) {
+        return (
+          <Typography.Text style={{ color: '#54B2D3' }}>{data}</Typography.Text>
+        )
+      },
     },
     {
       title: t('account.finance.debt.columns.location'),
       dataIndex: 'location',
       visible: true,
+      skeletonWidth: '70px',
     },
     {
       title: t('account.finance.debt.columns.inv.date'),
-      dataIndex: 'inv_date',
+      dataIndex: 'invDate',
+      skeletonWidth: '70px',
       visible: true,
+      render: function render(data) {
+        return <Typography.Text>{data.split('T')[0]}</Typography.Text>
+      },
     },
     {
       title: t('account.finance.debt.columns.customer'),
       dataIndex: 'customer',
+      skeletonWidth: '70px',
       visible: true,
-      // eslint-disable-next-line react/display-name
-      render: (_, { customer }) => (
-        <Typography.Text style={{ color: '#54B2D3' }}>
-          {customer}
-        </Typography.Text>
-      ),
+      render: function render(data) {
+        return (
+          <Typography.Text style={data !== 'N/A' && { color: '#54B2D3' }}>
+            {data}
+          </Typography.Text>
+        )
+      },
       ellipsis: true,
     },
     {
       title: t('account.finance.debt.columns.debtor'),
       dataIndex: 'debtor',
+      skeletonWidth: '70px',
       visible: true,
-      // eslint-disable-next-line react/display-name
-      render: (_, { debtor }) => (
-        <Typography.Text style={{ color: '#54B2D3' }}>{debtor}</Typography.Text>
-      ),
+      render: function render(debtor) {
+        return (
+          <Typography.Text style={{ color: '#54B2D3' }}>
+            {debtor}
+          </Typography.Text>
+        )
+      },
       ellipsis: true,
     },
     {
       title: t('account.finance.debt.columns.status'),
-      dataIndex: 'status',
+      dataIndex: 'payment',
+      skeletonWidth: '70px',
       visible: true,
-      // eslint-disable-next-line react/display-name
-      render: (_, { status }) => (
-        <ButtonLabel
-          style={{ maxWidth: 52, paddingTop: 1 }}
-          type={status ? 'info' : 'danger'}
-          text={status ? 'Paid' : 'Unpaid'}
-        />
-      ),
+      render: function render(data) {
+        return (
+          <ButtonLabel
+            style={{ minWidth: 55, paddingTop: 1 }}
+            type={tempType[data]}
+            text={data}
+          />
+        )
+      },
     },
     {
       title: t('account.finance.debt.columns.age'),
       dataIndex: 'age',
+      skeletonWidth: '70px',
       visible: true,
-      // eslint-disable-next-line react/display-name
-      render: () => {
-        const age = '<=30 days'
+      render: function render(data, { invDate }) {
+        const age = calculateAge(invDate)
         return <Typography.Text>{age}</Typography.Text>
       },
     },
@@ -132,62 +250,76 @@ const Debt: FC = () => {
       title: t('account.finance.debt.columns.balance'),
       dataIndex: 'balance',
       visible: true,
-      // eslint-disable-next-line react/display-name
-      render: (_, { balance, status }) => (
-        <Typography.Text type={!status ? 'danger' : undefined}>
-          £{balance.toFixed(2)}
-        </Typography.Text>
-      ),
+      skeletonWidth: '50px',
+      width: '90px',
+      render: function render(_, { balance, status }) {
+        return (
+          <Typography.Text type={!status ? 'danger' : undefined}>
+            £{balance}
+          </Typography.Text>
+        )
+      },
     },
     {
       title: t('account.finance.debt.columns.last.action'),
-      dataIndex: 'last_action',
+      dataIndex: 'lastAction',
       visible: true,
+      skeletonWidth: '70px',
       width: '200px',
-      // eslint-disable-next-line react/display-name
-      render: (_, { last_action }) => (
-        <Stepper
-          step={last_action - 1}
-          datasource={[
-            {
-              index: 0,
-              step: 1,
-              name: '',
-              img: mailIcon,
-              isActive: true,
-            },
-            {
-              index: 1,
-              step: 2,
-              name: '',
-              img: bellIcon(t('account.finance.debt.reminder.sent')),
-              isActive: false,
-            },
-            {
-              index: 2,
-              step: 3,
-              name: '',
-              img: bellIcon(t('account.finance.debt.reminder.second.sent')),
-              isActive: false,
-            },
-            {
-              index: 3,
-              step: 4,
-              name: '',
-              img: bellIcon(t('account.finance.debt.notice.final.sent')),
-              isActive: false,
-            },
-          ]}
-        />
-      ),
+      render: function render(_, { lastAction, invDate }) {
+        const lastActionRecords = prepareLastAction(lastAction, invDate)
+        const stepper = lastActionRecords.length - 1
+        const data = [
+          {
+            index: 0,
+            step: 1,
+            name: '',
+            img: mailIcon(),
+            isActive: true,
+          },
+          {
+            index: 1,
+            step: 2,
+            name: '',
+            img: bellIcon(),
+            isActive: false,
+          },
+          {
+            index: 2,
+            step: 3,
+            name: '',
+            img: bellIcon(),
+            isActive: false,
+          },
+          {
+            index: 3,
+            step: 4,
+            name: '',
+            img: bellIcon(),
+            isActive: false,
+          },
+        ]
+        for (const [index, item] of lastActionRecords.entries()) {
+          if (index === 0) {
+            data[index]['img'] = mailIcon(item.tooltip)
+          } else {
+            data[index]['img'] = bellIcon(item.tooltip)
+          }
+        }
+        return <Stepper step={stepper} datasource={data} />
+      },
     },
   ]
 
   return (
     <TableLayout
-      listQuery={LIST_QUERY}
-      aggregateQuery={LIST_AGGREGATE}
       columns={DebtColumns}
+      searchTerm={searchTerm}
+      selectedDates={selectedDates}
+      filterValue={filterValue}
+      selectedRange={selectedRange}
+      listQuery={useDebtsQuery}
+      aggregateQuery={useDebtCountQuery}
     />
   )
 }

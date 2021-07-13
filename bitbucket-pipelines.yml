@@ -57,12 +57,12 @@ pipelines:
                 - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql
                 #                - graphql-inspector similar hasura/schema.graphql || echo TODO
                 - graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
-                - DANGER_BITBUCKETCLOUD_OAUTH_KEY="${BITBUCKET_CLIENT_ID}" DANGER_BITBUCKETCLOUD_OAUTH_SECRET="${BITBUCKET_CLIENT_SECRET}" yarn danger ci
+                - DANGER_BITBUCKETCLOUD_OAUTH_KEY="${BITBUCKET_CLIENT_ID}" DANGER_BITBUCKETCLOUD_OAUTH_SECRET="${BITBUCKET_CLIENT_SECRET}" yarn danger ci --no-publish-check
                 - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
 
           - step:
               name: lint
-              max-time: 20
+              max-time: 40
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
                 - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:lint --base=origin/master --with-deps
@@ -85,7 +85,7 @@ pipelines:
               name: build
               runs-on:
                 - 'self.hosted'
-              max-time: 55
+              max-time: 70
               size: 2x
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
@@ -247,7 +247,7 @@ pipelines:
               name: lint
               runs-on:
                 - 'self.hosted'
-              max-time: 20
+              max-time: 40
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
                 - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:lint --base=HEAD~1 --with-deps
@@ -269,7 +269,7 @@ pipelines:
               name: build
               runs-on:
                 - 'self.hosted'
-              max-time: 40
+              max-time: 70
               size: 2x
               script:
                 # - yarn postinstall || yarn --frozen-lockfile

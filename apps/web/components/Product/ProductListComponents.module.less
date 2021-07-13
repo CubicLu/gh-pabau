@@ -1,0 +1,412 @@
+.redBtn {
+  background: rgba(255, 91, 100, 0.05);
+  border: 1px solid rgba(255, 91, 100, 0.5);
+  color: #ff5b64;
+}
+
+.greenBtn {
+  background: rgba(101, 205, 152, 0.05);
+  border: 1px solid rgba(101, 205, 152, 0.5);
+  color: #65cd98;
+}
+
+.blueBtn {
+  background: #f6fbfd;
+  border: 1px solid #a5d7e8;
+  color: #54b2d3;
+}
+
+.redBtn,
+.greenBtn,
+.blueBtn {
+  box-sizing: border-box;
+  border-radius: 4px;
+  height: 24px;
+  width: 96px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.productListTab {
+  :global .ant-table-wrapper {
+    .ant-table {
+      .ant-table-container {
+        .ant-table-content {
+          table {
+              thead {
+                tr {
+                  th {
+                    &:nth-of-type(7) {
+                      text-align: center;
+                      width: 150px;
+                    }
+                  }
+                }
+              }
+            tbody {
+              tr {
+                td {
+                  .ant-skeleton {
+                    .ant-skeleton-input {
+                      width: 100px !important;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  :global {
+    .ant-table-thead {
+      th {
+        color: #9292a3;
+        background-color: white;
+      }
+    }
+    .ant-table-tbody {
+      td {
+        color: #3d3d46;
+      }
+    }
+    .ant-table-footer {
+      padding: 0px 1rem;
+      background-color: white;
+    }
+  }
+}
+
+.productsTab {
+  :global {
+    .ant-tabs-left {
+      background-color: white;
+      > .ant-tabs-nav {
+        > .ant-tabs-nav-wrap {
+          border-bottom: 1px solid #ecedf0;
+          > .ant-tabs-nav-list {
+            > .ant-tabs-tab {
+              height: 40px;
+              padding: 0px !important;
+
+              &.ant-tabs-tab-active {
+                background-color: #eef7fb !important;
+              }
+              &.ant-tabs-tab-disabled {
+                cursor: default;
+              }
+            }
+          }
+        }
+      }
+    }
+    .ant-tabs-top {
+      background-color: white;
+      > .ant-tabs-nav {
+        > .ant-tabs-nav-wrap {
+          > .ant-tabs-nav-list {
+            > .ant-tabs-tab {
+              height: 40px;
+              border-right: 1px solid #ecedf0;
+              &:first-child {
+                width: 40px;
+                padding: 0 !important;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                .anticon {
+                  margin: 0;
+                }
+              }
+              &.ant-tabs-tab-active {
+                background-color: #eef7fb !important;
+              }
+            }
+          }
+        }
+      }
+    }
+    .ant-table-thead {
+      th {
+        color: #9292a3;
+        background-color: white;
+      }
+    }
+    .ant-table-tbody {
+      td {
+        color: #3d3d46;
+      }
+    }
+    .ant-table-footer {
+      padding: 0px 1rem;
+      background-color: white;
+    }
+  }
+}
+
+.groupsItem {
+  width: 200px;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px 0 24px;
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    padding: 0px 12px;
+  }
+  > span {
+    &:nth-child(1) {
+      font-family: var(--font-family);
+      font-size: 14px;
+      line-height: 18px;
+    }
+  }
+  :global {
+    .anticon {
+      margin: 0 !important;
+    }
+  }
+}
+.tabMenuItem {
+  width: 200px;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px 0 24px;
+    span {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  @media screen and (max-width: 768px) {
+    width: 150px;
+    padding: 0px 24px;
+  }
+  > span {
+    &:nth-child(1) {
+      font-family: var(--font-family);
+      font-size: 14px;
+      line-height: 18px;
+    }
+  }
+  &:hover {
+    > span {
+      &:nth-child(1) {
+        color: var(--primary-color);
+      }
+    }
+  }
+}
+
+.tabMenuItemOps {
+  display: flex;
+  align-items: center;
+  > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-left: 12px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color-base);
+    font-size: 14px;
+    color: var(--light-grey-color);
+    :global {
+      .anticon {
+        margin: 0 !important;
+      }
+    }
+  }
+}
+
+.productsHeader {
+  border-bottom: 1px solid #ecedf0 !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 15px 25px;
+  background-color: white;
+
+  & > div {
+    display: flex;
+    align-items: center;
+    height: 40px;
+
+    &:first-child {
+      cursor: pointer;
+      div {
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 24px;
+        color: #3d3d46;
+        margin-right: 10px;
+      }
+      svg {
+        margin-top: 2.5px;
+        fill: #9292a3;
+        transition: all 0.25s;
+      }
+      &:hover {
+        svg {
+          transform: rotate(180deg);
+          fill: #54b2d3;
+        }
+      }
+    }
+  }
+
+  .tabMenuItemOps {
+    display: flex;
+    align-items: center;
+    > div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      margin-left: 12px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--border-color-base);
+      font-size: 14px;
+      color: var(--light-grey-color);
+      :global {
+        .anticon {
+          margin: 0 !important;
+        }
+      }
+    }
+  }
+}
+
+.pagination {
+  padding: 0 1rem;
+  @media (max-width: 767px) {
+    > div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        > p {
+          padding: 0 !important;
+          margin-bottom: 1rem !important;
+        }
+      }
+    }
+  }
+}
+
+.productGroupModal {
+  :global {
+    .ant-modal {
+      padding: 0;
+    }
+    .ant-modal-body {
+      & > div {
+        label {
+          font-weight: normal;
+          font-size: 14px;
+          line-height: 22px;
+          display: flex;
+          align-items: center;
+          color: #9292a3;
+          padding-top: 30px;
+          margin-bottom: 2.5px;
+        }
+      }
+      .chooseImageInput button {
+        padding-left: 20px;
+        padding-right: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 32px;
+      }
+      .footerBtnInput {
+        margin-top: 30px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        div:first-child {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          label {
+            margin-top: 5px;
+            padding: 0px 10px 0px 0px;
+          }
+        }
+        div:not(:first-child) {
+          button {
+            margin-left: 15px;
+            padding-left: 20px;
+            padding-right: 20px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.productGroupImgPreview {
+  width: 100%;
+  height: 200px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin-top: 8px;
+}
+
+.product-table {
+  :global .ant-table-wrapper {
+    .ant-table {
+        .ant-table-container {
+          .ant-table-content {
+            table {
+              thead {
+                tr {
+                  th {
+                    &:nth-of-type(4) {
+                      width: 230px;
+                    }
+                  }
+                }
+              }
+              tbody {
+                tr {
+                  td {
+                      .ant-skeleton {
+                        .ant-skeleton-input {
+                          width: 100px !important;
+                        }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+    }
+  }
+}

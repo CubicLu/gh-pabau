@@ -1,32 +1,31 @@
-import React, { useState, FC, useEffect } from 'react'
-import { useMedia } from 'react-use'
-import * as Yup from 'yup'
-import { Form, Input } from 'formik-antd'
-import { Formik } from 'formik'
-import { useTranslation } from 'react-i18next'
-
-import {
-  TabMenu,
-  BasicModal,
-  Button,
-  PermissionColumnType,
-  Notification,
-  NotificationType,
-  ReportsPermissionTableProps,
-} from '@pabau/ui'
 import {
   FindManyUserGroupsDocument,
-  useFindManyUserGroupsQuery,
+  useCreateOneUserGroupMutation,
   useFindManyPagesQuery,
   useFindManyReportsQuery,
-  useCreateOneUserGroupMutation,
+  useFindManyUserGroupsQuery,
 } from '@pabau/graphql'
-import Features from './Features'
-import Reports from './Reports'
-import Modules from './Modules'
-import Advanced from './Advanced'
-import styles from './GroupPermission.module.less'
+import {
+  BasicModal,
+  Button,
+  Notification,
+  NotificationType,
+  PermissionColumnType,
+  ReportsPermissionTableProps,
+  TabMenu,
+} from '@pabau/ui'
+import { Formik } from 'formik'
+import { Form, Input } from 'formik-antd'
+import React, { FC, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useMedia } from 'react-use'
+import * as Yup from 'yup'
 import { useData } from '../../../../mocks/Users'
+import Advanced from './Advanced'
+import Features from './Features'
+import styles from './GroupPermission.module.less'
+import Modules from './Modules'
+import Reports from './Reports'
 
 interface GroupType {
   name: string
@@ -84,8 +83,8 @@ export const GroupPermission: FC<GroupPermissionProps> = ({
   })
 
   useEffect(() => {
-    if (reportsList?.reports) {
-      const filterReports = reportsList.reports.filter(
+    if (reportsList?.findManyReport) {
+      const filterReports = reportsList.findManyReport.filter(
         (thread) => thread.company_id !== 0
       )
       if (filterReports.length > 0) {
@@ -113,8 +112,8 @@ export const GroupPermission: FC<GroupPermissionProps> = ({
 
   useEffect(() => {
     let columnData
-    if (data?.userGroups) {
-      columnData = data.userGroups.map((group) => {
+    if (data?.findManyUserGroup) {
+      columnData = data.findManyUserGroup?.map((group) => {
         return {
           key: group.group_name,
           title: group.group_name,
@@ -169,37 +168,45 @@ export const GroupPermission: FC<GroupPermissionProps> = ({
       >
         <Modules
           columns={column}
-          userGroupData={data?.userGroups.length > 0 ? data.userGroups : []}
+          userGroupData={
+            data?.findManyUserGroup.length > 0 ? data.findManyUserGroup : []
+          }
           listQuery={FindManyUserGroupsDocument}
           isListQueryLoader={isLoading}
           setIsListQueryLoading={setIsLoading}
-          listPages={listPages?.pages}
+          listPages={listPages?.findManyPage}
           listPagesLoader={listPagesLoader}
-          reports={reportsList?.reports}
+          reports={reportsList?.findManyReport}
           setTabValue={setTabValue}
           reportsTabData={reportsData}
         />
         <Features
           columns={column}
-          userGroupData={data?.userGroups.length > 0 ? data.userGroups : []}
+          userGroupData={
+            data?.findManyUserGroup.length > 0 ? data.findManyUserGroup : []
+          }
           listQuery={FindManyUserGroupsDocument}
           isListQueryLoader={isLoading}
           setIsListQueryLoading={setIsLoading}
           setTabValue={setTabValue}
         />
         <Reports
-          userGroupData={data?.userGroups.length > 0 ? data.userGroups : []}
+          userGroupData={
+            data?.findManyUserGroup.length > 0 ? data.findManyUserGroup : []
+          }
           listQuery={FindManyUserGroupsDocument}
           isListQueryLoader={isLoading}
-          listPages={listPages?.pages}
-          reports={reportsList?.reports}
+          listPages={listPages?.findManyPage}
+          reports={reportsList?.findManyReport}
           listReportLoader={listReportLoader}
           setIsListQueryLoading={setIsLoading}
           setTabValue={setTabValue}
           reportsTabData={reportsData}
         />
         <Advanced
-          userGroupData={data?.userGroups.length > 0 ? data.userGroups : []}
+          userGroupData={
+            data?.findManyUserGroup.length > 0 ? data.findManyUserGroup : []
+          }
           columns={column}
           isListQueryLoader={isLoading}
         />

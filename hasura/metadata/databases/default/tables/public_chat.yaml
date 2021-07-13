@@ -16,7 +16,7 @@ remote_relationships:
     hasura_fields:
     - from
     remote_field:
-      user:
+      findUniqueUser:
         arguments:
           where:
             id: $from
@@ -26,7 +26,7 @@ remote_relationships:
     hasura_fields:
     - to
     remote_field:
-      user:
+      findUniqueUser:
         arguments:
           where:
             id: $to

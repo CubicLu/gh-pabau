@@ -10,7 +10,7 @@ remote_relationships:
     hasura_fields:
     - user_id
     remote_field:
-      user:
+      findUniqueUser:
         arguments:
           where:
             id: $user_id

@@ -28,7 +28,6 @@ import {
   useGetSecurityTabQuery,
   useGetNotificationTabQuery,
   useGetNotificationsTypesQuery,
-  GetNotificationsTypesDocument,
   useGetNotificationsDataQuery,
   GetNotificationsDataDocument,
   useAccountSettingsUserAlertsQuery,
@@ -36,8 +35,6 @@ import {
   useUpdateOneCmStaffGeneralMutation,
   useCreateOneUserAlertPermissionMutation,
   useUpdateOneUserAlertPermissionMutation,
-  useCreateApplicationNotificationMutation,
-  useUpdateApplicatioNotificationMutation,
   useCreateNotificationToggleMutation,
   useUpdateNotificationToggleMutation,
 } from '@pabau/graphql'
@@ -63,8 +60,6 @@ const Index: FC = ({ ...props }) => {
   const [updatedNotificationToggles, setUpdatedNotificationToggles] = useState(
     []
   )
-
-  const [appsNotifications, setAppsNotifications] = useState(null)
   const [updatedAppNotifications, setUpdatedAppNotification] = useState([])
 
   const [savedNotificationsCount, setSavedNotificationsCount] = useState(0)
@@ -99,10 +94,9 @@ const Index: FC = ({ ...props }) => {
       ...securityTabData?.me,
       ...notificationTabData?.me,
     })
-    setAllAlerts(defaultAlertTypes?.userAlerts)
+    setAllAlerts(defaultAlertTypes?.findManyUserAlert)
     setNotificationTypes(notificationsTypes?.notification_types)
     setNotificationToggles(notificationsData?.notification_toggle)
-    setAppsNotifications(notificationsData?.application_notifications)
   }, [
     data,
     loading,
@@ -140,23 +134,6 @@ const Index: FC = ({ ...props }) => {
     },
   })
   const [updateAlertMutation] = useUpdateOneUserAlertPermissionMutation({
-    onCompleted() {
-      incrNotificationsSaveCounter()
-    },
-    onError() {
-      incrNotificationsSaveCounter()
-    },
-  })
-
-  const [createAppNotification] = useCreateApplicationNotificationMutation({
-    onCompleted() {
-      incrNotificationsSaveCounter()
-    },
-    onError() {
-      incrNotificationsSaveCounter()
-    },
-  })
-  const [updateAppNotification] = useUpdateApplicatioNotificationMutation({
     onCompleted() {
       incrNotificationsSaveCounter()
     },
@@ -211,7 +188,9 @@ const Index: FC = ({ ...props }) => {
         image: { set: data?.image },
         email: { set: data?.email },
         signature: { set: data?.signature },
-        full_name: { set: data?.full_name },
+        full_name: {
+          set: data?.CmStaffGeneral?.Fname + ' ' + data?.CmStaffGeneral?.Lname,
+        },
         phone_number: { set: data?.phone_number },
         language: { set: data?.language },
         timezone: { set: data?.timezone },
@@ -228,6 +207,7 @@ const Index: FC = ({ ...props }) => {
           Fname: { set: data?.CmStaffGeneral?.Fname },
           Lname: { set: data?.CmStaffGeneral?.Lname },
           Avatar: { set: data?.image },
+          CellPhone: { set: data?.phone_number },
         },
       }
       updateCmStaffGeneralMutation({
@@ -326,45 +306,6 @@ const Index: FC = ({ ...props }) => {
         }
       }
     }
-    const appNotifications = [...updatedAppNotifications]
-    if (appNotifications.length > 0) {
-      for (const el of appNotifications) {
-        setSaveLoading(true)
-        if (el?.id) {
-          updateAppNotification({
-            variables: {
-              id: el?.id,
-              enabled: el?.enabled,
-            },
-            refetchQueries: [
-              {
-                query: GetNotificationsTypesDocument,
-                variables: {
-                  uid: user?.me?.id,
-                },
-              },
-            ],
-          })
-        } else {
-          createAppNotification({
-            variables: {
-              user: user?.me?.id,
-              notification_type: el?.notification_type,
-              enabled: el?.enabled,
-            },
-            refetchQueries: [
-              {
-                query: GetNotificationsTypesDocument,
-                variables: {
-                  uid: user?.me?.id,
-                },
-              },
-            ],
-          })
-        }
-      }
-    }
-
     if (
       updatedAlerts?.length +
         updatedNotificationToggles?.length +
@@ -445,17 +386,6 @@ const Index: FC = ({ ...props }) => {
       setSavedNotificationsCount(
         savedNotificationsCount - updatedPabauToggles?.length
       )
-    }
-  }
-
-  const onAppsPermissionChange = (data) => {
-    setAppsNotifications(data)
-    setUpdatedAppNotification(data)
-    if (
-      savedNotificationsCount !== 0 &&
-      savedNotificationsCount > data?.length
-    ) {
-      setSavedNotificationsCount(savedNotificationsCount - data?.length)
     }
   }
 
@@ -553,13 +483,6 @@ const Index: FC = ({ ...props }) => {
                   )}
                   pabauWebNotificationToggles={notificationToggles}
                   onPabauNotificationChange={(data) => onPabauWebChange(data)}
-                  applicationNotificationTypes={notificationTypes?.filter(
-                    (el) => el.permission_type === 'application'
-                  )}
-                  applicationNotificationChecks={appsNotifications}
-                  onAppNotificationChange={(data) =>
-                    onAppsPermissionChange(data)
-                  }
                 />
               </TabMenu>
             </div>

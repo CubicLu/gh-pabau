@@ -139,7 +139,7 @@ export const CreateProduct: FC<CreateProductProps> = ({
                   onSelect={(val) => handleChange('category', val)}
                   defaultValue={formik.values.category}
                 >
-                  {categories.map((item) => (
+                  {categories?.map((item) => (
                     <Option key={item} value={item}>
                       {item}
                     </Option>

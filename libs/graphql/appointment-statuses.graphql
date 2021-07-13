@@ -1,5 +1,5 @@
 query appointmentStatus($offset: Int, $limit: Int) {
-  bookingStatuses(skip: $offset, take: $limit, orderBy: { ord: asc }) {
+  findManyBookingStatus(skip: $offset, take: $limit, orderBy: { ord: asc }) {
     id
     name
     value
@@ -13,11 +13,11 @@ query appointmentStatus($offset: Int, $limit: Int) {
 }
 
 query appointmentStatusAggregate {
-  bookingStatusesCount
+  findManyBookingStatusCount
 }
 
 query lastAppointmentStatusOrder {
-  bookingStatuses(take: 1, orderBy: { ord: desc }) {
+  findManyBookingStatus(take: 1, orderBy: { ord: desc }) {
     id
     order: ord
   }
