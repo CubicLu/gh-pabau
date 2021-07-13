@@ -10,7 +10,6 @@ export const ServicesMasterCategoryCreateOneMutation = mutationField(
       categories: list(intArg()),
     },
     async resolve(_parent, { data, categories }, ctx: Context) {
-      console.log(categories)
       const productGroup = await ctx.prisma.servicesMasterCategory.create({
         data: {
           ...data,

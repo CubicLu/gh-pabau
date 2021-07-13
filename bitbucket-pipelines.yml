@@ -85,7 +85,7 @@ pipelines:
               name: build
               runs-on:
                 - 'self.hosted'
-              max-time: 55
+              max-time: 70
               size: 2x
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
@@ -269,7 +269,7 @@ pipelines:
               name: build
               runs-on:
                 - 'self.hosted'
-              max-time: 40
+              max-time: 70
               size: 2x
               script:
                 # - yarn postinstall || yarn --frozen-lockfile
