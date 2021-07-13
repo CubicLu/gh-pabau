@@ -1,10 +1,11 @@
-import { ApolloServer } from 'apollo-server-express'
-import cookieSession from 'cookie-session'
+import express from 'express'
 import cors from 'cors'
-import express, { Application } from 'express'
-import { createContext } from './context'
-import { schema } from './schema'
+import cookieSession from 'cookie-session'
 import { stringToBoolean } from './utils'
+import { ApolloServer } from 'apollo-server-express'
+import { schema } from './schema'
+import { createContext } from './context'
+import { BASIC_LOGGING } from './logging'
 
 interface Options {
   tracing: boolean
@@ -16,7 +17,8 @@ interface Options {
  * Creates a testable Express app
  */
 export function createApp(options?: Options) {
-  const { debugApollo = false, tracing = false } = options || {}
+  const { debugApollo = false, logging = false, tracing = false } =
+    options || {}
   const server = new ApolloServer({
     schema,
     context: createContext,
@@ -30,11 +32,15 @@ export function createApp(options?: Options) {
         'request.credentials': 'include',
       },
     },
+    plugins: logging ? [BASIC_LOGGING] : [],
   })
 
-  const app: Application = express()
+  const app = express()
   app.set('trust proxy', true)
   app
+    .get('/', function ({ res }) {
+      res.send('<h1>Private</h1>')
+    })
     .use(cors())
     .use(
       express.urlencoded({
