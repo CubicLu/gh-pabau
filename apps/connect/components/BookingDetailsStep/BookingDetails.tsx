@@ -8,11 +8,7 @@ import * as Yup from 'yup'
 import img from '../../../web/assets/images/connect/facebook.png'
 import img1 from '../../../web/assets/images/connect/Google.png'
 import { UserOutlined } from '@ant-design/icons'
-import {
-  data,
-  tooltip,
-  normaldata,
-} from '../../../web/mocks/connect/confirmMock'
+import { data, normaldata } from '../../../web/mocks/connect/confirmMock'
 import { Verification, RenderProduct } from '../conformation/verification'
 import Conformation, {
   datatype,
@@ -33,12 +29,7 @@ export interface P {
   getinfo: (val) => void
   member: number
   translation: (val: string) => string
-  gotofirst?: () => void
-  gotoclinic?: () => void
-  gotoemploy?: () => void
-  gotodate?: () => void
-  gotoedit?: () => void
-  getprice: (price: number, percentage: number) => void
+  backToStep?: (val: number) => void
 }
 export interface userType {
   first: string
@@ -54,12 +45,7 @@ const BookingDetails: FC<P> = ({
   getinfo,
   translation,
   member,
-  getprice,
-  gotoedit,
-  gotoclinic,
-  gotodate,
-  gotoemploy,
-  gotofirst,
+  backToStep,
 }) => {
   const [valid, setvalid] = useState(false)
   const [verify, setverify] = useState(false)
@@ -150,7 +136,7 @@ const BookingDetails: FC<P> = ({
         <Conformation
           changescreen={changescreen}
           clinic={bookingData.location.name}
-          docname={bookingData.employee.name}
+          docname={'Nenad Jovanovski'}
           date={bookingData.dateTime.format('dddd, Do MMMM')}
           time={bookingData.dateTime.format('HH:mm')}
           charge={charge}
@@ -159,12 +145,7 @@ const BookingDetails: FC<P> = ({
           image={image}
           services={bookingData.services.length}
           translation={translation}
-          getprice={getprice}
-          gotoemploy={gotoemploy}
-          gotodate={gotodate}
-          gotoclinic={gotoclinic}
-          gotofirst={gotofirst}
-          gotoedit={gotoedit}
+          backToStep={backToStep}
           products={products}
         />
       ) : (
@@ -186,11 +167,7 @@ const BookingDetails: FC<P> = ({
               type={bookingData.services.map((s) => s.name).join(', ')}
               translation={translation}
               clickable={true}
-              gotoedit={gotoedit}
-              gotofirst={gotofirst}
-              gotoclinic={gotoclinic}
-              gotodate={gotodate}
-              gotoemploy={gotoemploy}
+              backToStep={backToStep}
             />
           </div>
           {/*<RenderProduct products={products} type={type} tooltip={tooltip} />*/}

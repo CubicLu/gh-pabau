@@ -7,12 +7,10 @@ import {
 import styles from './verification.module.less'
 import ClassNames from 'classnames'
 import { Input, Rate, Tooltip } from 'antd'
-//import { tooltip } from '../../../mocks/connect/confirmMock'
 import { productType } from './conformation'
 import { Button } from '@pabau/ui'
 
-/* eslint-disable-next-line */
-export interface VerificationProps {
+export interface P {
   clinic: string
   docname: string
   date: string
@@ -23,18 +21,14 @@ export interface VerificationProps {
   image: any
   translation: (val: string) => string
   clickable?: boolean
-  gotofirst?: () => void
-  gotoclinic?: () => void
-  gotoemploy?: () => void
-  gotodate?: () => void
-  gotoedit?: () => void
+  backToStep?: (val: number) => void
 }
 export interface renderProductProps {
   products: productType
   type: string
   tooltip: string
 }
-export const Verification: FC<VerificationProps> = ({
+export const Verification: FC<P> = ({
   clinic,
   docname,
   date,
@@ -44,11 +38,7 @@ export const Verification: FC<VerificationProps> = ({
   address,
   image,
   translation,
-  gotofirst,
-  gotoclinic,
-  gotoemploy,
-  gotodate,
-  gotoedit,
+  backToStep,
   clickable = false,
 }) => {
   //const { t } = useTranslationI18()
@@ -58,16 +48,27 @@ export const Verification: FC<VerificationProps> = ({
         <div className={styles.confirmBox}>
           <h5>
             {translation('connect.onlinebooking.verification.appoitmenttype')}{' '}
-            {clickable && <EditOutlined onClick={gotofirst} />}
+            {clickable && (
+              <EditOutlined
+                onClick={() => {
+                  backToStep(1)
+                }}
+              />
+            )}
           </h5>
 
           <p>{type}</p>
-          {console.log(docname)}
         </div>
         <div className={styles.confirmBox}>
           <h5>
             {translation('connect.onlinebooking.verification.clinic')}{' '}
-            {clickable && <EditOutlined onClick={gotoclinic} />}
+            {clickable && (
+              <EditOutlined
+                onClick={() => {
+                  backToStep(2)
+                }}
+              />
+            )}
           </h5>
 
           <p>{clinic}</p>
@@ -81,7 +82,13 @@ export const Verification: FC<VerificationProps> = ({
         <div className={styles.confirmBox}>
           <h5>
             {translation('connect.onlinebooking.verification.seeing')}{' '}
-            {clickable && <EditOutlined onClick={gotoemploy} />}
+            {clickable && (
+              <EditOutlined
+                onClick={() => {
+                  backToStep(3)
+                }}
+              />
+            )}
           </h5>
           <div className={styles.imgTag}>
             <img src={image} alt={'nothing'} />
@@ -91,14 +98,26 @@ export const Verification: FC<VerificationProps> = ({
         <div className={styles.confirmBox}>
           <h5>
             {translation('connect.onlinebooking.verification.date')}{' '}
-            {clickable && <EditOutlined onClick={gotodate} />}
+            {clickable && (
+              <EditOutlined
+                onClick={() => {
+                  backToStep(4)
+                }}
+              />
+            )}
           </h5>
           <p>{date}</p>
         </div>
         <div className={styles.confirmBox}>
           <h5>
             {translation('connect.onlinebooking.verification.time')}{' '}
-            {clickable && <EditOutlined onClick={gotoedit} />}
+            {clickable && (
+              <EditOutlined
+                onClick={() => {
+                  backToStep(4)
+                }}
+              />
+            )}
           </h5>
 
           <p>{time}</p>

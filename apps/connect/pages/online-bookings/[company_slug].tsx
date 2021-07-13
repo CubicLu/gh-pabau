@@ -278,7 +278,6 @@ export function Index() {
                 items={masterCategories}
                 catID={selectedData.categoryID}
                 mCatID={selectedData.masterCategoryID}
-                translation={translation}
                 onStepCompleted={(services: number[]) => {
                   const slist = findServiceByIDs(services)
                   setSelectedData({
@@ -337,7 +336,7 @@ export function Index() {
                 changescreen={function () {
                   createBooking({
                     variables: {
-                      UID: 71638,
+                      UID: selectedData.employeeID,
                       company_id: 8021,
                       location_id: selectedData.locationID,
                       service_id: 2691491,
@@ -362,49 +361,8 @@ export function Index() {
                 getinfo={userinfo}
                 translation={translation}
                 member={user.member}
-                gotofirst={() => {
-                  setCurrentStep(1)
-                  // Setback(false)
-                  Setview(true)
-                  setindicator(false)
-                  setispro(true)
-                }}
-                gotoclinic={() => {
-                  setCurrentStep(2)
-                  Setview(true)
-                  setindicator(true)
-                }}
-                gotoemploy={() => {
-                  setCurrentStep(3)
-                  Setview(true)
-                  setindicator(true)
-                }}
-                gotodate={() => {
-                  setCurrentStep(4)
-                  seteditdate({ date: true, time: false })
-                  Setview(true)
-                  setindicator(true)
-                }}
-                gotoedit={() => {
-                  setCurrentStep(4)
-                  seteditdate({ date: true, time: true })
-                  Setview(true)
-                  setindicator(true)
-                }}
-                getprice={(price, percentage) => {
-                  setpromoPrice(price)
-                  setpercentage(percentage)
-                  console.log(user.charge)
-                  settempprice(user.charge)
-                  if (user.type === 'Laser') {
-                    user.charge = String((price * (100 - percentage)) / 100)
-                  } else {
-                    user.charge = String(
-                      ((Number(user.charge) + price) * (100 - percentage)) / 100
-                    )
-                  }
-
-                  setuser(user)
+                backToStep={(step: number) => {
+                  setCurrentStep(step)
                 }}
               />
             </div>
