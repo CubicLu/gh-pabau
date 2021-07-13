@@ -2773,6 +2773,77 @@ export interface RotaShift {
   CmStaffGeneral: CmStaffGeneral;
 }
 
+export interface Booking {
+  id: number;
+  title: string;
+  start_date: undefined;
+  end_date: undefined;
+  start_time?: number;
+  end_time?: number;
+  service?: string;
+  contact_id?: number;
+  UID: number;
+  company_id: number;
+  backgroudcolor?: string;
+  create_date?: number;
+  update_date?: number;
+  status: string;
+  estimated_cost?: number;
+  tips?: number;
+  discounts?: number;
+  where?: string;
+  room_id?: number;
+  unique_id: string;
+  reason?: string;
+  invoice_id?: number;
+  booking_id?: number;
+  Online?: number;
+  package_id?: number;
+  cancel_take?: number;
+  book_take?: number;
+  class_master_id?: number;
+  unavailable?: number;
+  coupon_claim_id?: string;
+  related_id?: number;
+  service_id?: number;
+  rebook?: number;
+  repeat_id?: number;
+  requested?: number;
+  sent_sms?: number;
+  sent_email?: number;
+  sent_survey?: number;
+  custom_contact_id?: number;
+  custom_contact_name?: string;
+  custom_user_id?: string;
+  custom_user_name?: string;
+  custom_service_id?: string;
+  imported?: number;
+  client_confirmed?: number;
+  hold_guid?: string;
+  created_by_uid?: number;
+  marketing_source?: number;
+  resource_id?: number;
+  custom_room_name?: string;
+  custom_created_by_user_name?: string;
+  location_id?: number;
+  modified_by_uid?: number;
+  sent_email_reminder?: boolean;
+  disable_locations?: number;
+  participant_master_uid?: number;
+  participant_master_booking_id?: number;
+  participant_slave_uids?: string;
+  participant_slave_booking_ids?: string;
+  private?: number;
+  external_guest_ids?: string;
+  description?: string;
+  issued_to?: number;
+  contract_id?: number;
+  all_day?: number;
+  interlinked_master_uid?: number;
+  all_day_start_date?: number;
+  all_day_end_date?: number;
+}
+
 export interface UserSalutation {
   id: number;
   name: string;

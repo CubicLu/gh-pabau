@@ -27,14 +27,8 @@ const { Option } = Select
 export interface P {
   bookingData: BookingData
   changescreen: () => void
-  clinic: string
-  docname: string
-  date: string
-  time: string
   charge: string
-  address: string
   type: string
-  image: any
   services: number
   getinfo: (val) => void
   member: number
@@ -56,19 +50,11 @@ export interface userType {
 const BookingDetails: FC<P> = ({
   bookingData,
   changescreen,
-  clinic,
-  docname,
-  date,
-  time,
   charge,
-  address,
-  type,
-  image,
   getinfo,
   translation,
   member,
   getprice,
-  services,
   gotoedit,
   gotoclinic,
   gotodate,
@@ -82,7 +68,6 @@ const BookingDetails: FC<P> = ({
     for (let i = 0; i < member; i++) {
       arry.push({ count: i + 1, first: '', last: '', email: '', phone: '' })
     }
-    // setmem([...mem])
     return arry
   }
   const [mem, setmem] = useState<userType[]>(list)
@@ -164,15 +149,15 @@ const BookingDetails: FC<P> = ({
       {confim ? (
         <Conformation
           changescreen={changescreen}
-          clinic={clinic}
-          docname={docname}
-          date={date}
-          time={time}
+          clinic={bookingData.location.name}
+          docname={bookingData.employee.name}
+          date={bookingData.dateTime.format('dddd, Do MMMM')}
+          time={bookingData.dateTime.format('HH:mm')}
           charge={charge}
-          address={address}
-          type={type}
+          address={bookingData.location.address}
+          type={bookingData.services.map((s) => s.name).join(', ')}
           image={image}
-          services={services}
+          services={bookingData.services.length}
           translation={translation}
           getprice={getprice}
           gotoemploy={gotoemploy}
@@ -193,15 +178,7 @@ const BookingDetails: FC<P> = ({
               docname={'Nenad Jovanovski'}
               date={bookingData.dateTime.format('dddd, Do MMMM')}
               time={bookingData.dateTime.format('HH:mm')}
-              charge={
-                type === 'Laser'
-                  ? course()
-                  : String(
-                      ((Number(charge) + products.Sprice + products.Pprice) *
-                        (100 - products.extra)) /
-                        100
-                    )
-              }
+              charge={0}
               address={bookingData.location.address}
               image={
                 'https://crm.pabau.com//cdn/file_attachments/8021/avatar_photos/20201208134720.jpeg'
@@ -216,7 +193,7 @@ const BookingDetails: FC<P> = ({
               gotoemploy={gotoemploy}
             />
           </div>
-          <RenderProduct products={products} type={type} tooltip={tooltip} />
+          {/*<RenderProduct products={products} type={type} tooltip={tooltip} />*/}
           <div className={styles.accountLoginWrapper}>
             <p>
               {translation('connect.onlinebooking.bookdetail.alreadyaccount')}{' '}

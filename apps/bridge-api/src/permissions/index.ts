@@ -49,6 +49,8 @@ export const permissions = shield(
       updateManyStaffMetaFeaturesByGroupId: rules.authentication.isAdmin,
       upsertManyUsersMainPermissionByGroupId: rules.authentication.isAdmin,
 
+      // Bookings
+      createOneBooking: allow,
       // Default fallback
       '*': and(
         rules.authentication.isAdmin,

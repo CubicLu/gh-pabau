@@ -120,12 +120,7 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
                   defaultValue={val.online_only_service ? 0 : 5}
                 />
 
-                <span
-                  className={styles.consultationReview}
-                  onClick={(e) => {
-                    fun1(e)
-                  }}
-                >
+                <span className={styles.consultationReview} onClick={(e) => {}}>
                   {val.online_only_service ? 0 : val.review}
                   &nbsp;
                   {t('connect.onlinebooking.selector.review')}

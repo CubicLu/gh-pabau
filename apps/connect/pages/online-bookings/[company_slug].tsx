@@ -12,10 +12,12 @@ import PatientInfo from '../../components/patientinformatioon/PatientInfo'
 import EmployeeSelector from '../../components/EmployeeStep/EmployeeSelector'
 import DateTimeSelector from '../../components/DateTimeStep/DateTimeSelector'
 import styles from './index.module.less'
+import moment from 'moment'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import {
   useCompanyServicesCategorisedQuery,
+  useCreateAppointmentMutation,
   useOnlineBookableLocationsQuery,
 } from '@pabau/graphql'
 import { Image } from 'antd'
@@ -95,6 +97,11 @@ export function Index() {
     variables: {
       company_id: 8021,
     },
+  })
+
+  const [createBooking] = useCreateAppointmentMutation({
+    onCompleted(data) {},
+    onError(err) {},
   })
 
   if (errorServices || errorLocations) return <div>Error!</div>
@@ -328,18 +335,31 @@ export function Index() {
               <BookingDetails
                 bookingData={selectedData}
                 changescreen={function () {
+                  createBooking({
+                    variables: {
+                      UID: 71638,
+                      company_id: 8021,
+                      location_id: selectedData.locationID,
+                      service_id: 2691491,
+                      contact_id: 22293092,
+                      unique_id: '123',
+                      start_date: selectedData.dateTime.format(
+                        'YYYYMMDDHHmm00'
+                      ),
+                      end_date: moment(selectedData.dateTime)
+                        .add(15, 'm')
+                        .format('YYYYMMDDHHmm00'),
+                      sent_sms: 0,
+                      sent_email: 0,
+                      sent_email_reminder: false,
+                      sent_survey: 0,
+                      issued_to: 22293092,
+                    },
+                  })
                   setCurrentStep(currentStep + 3)
                 }}
-                clinic={user.clinic}
-                docname={user.docName}
-                date={user.date}
-                time={user.time}
                 charge={user.charge}
-                address={user.address}
-                image={user.image}
                 getinfo={userinfo}
-                services={user.services}
-                type={user.type}
                 translation={translation}
                 member={user.member}
                 gotofirst={() => {
