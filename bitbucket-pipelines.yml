@@ -2,7 +2,7 @@
 image: node:14-buster
 
 options:
-  max-time: 45 # max time in minutes for each step
+  max-time: 60 # max time in minutes for each step
 
 definitions:
   caches:
@@ -11,7 +11,7 @@ definitions:
     cypress: '/root/.cache/Cypress'
   services:
     docker:
-      memory: 3000
+      memory: 3210
 
 pipelines:
   pull-requests:
@@ -20,7 +20,7 @@ pipelines:
           name: yarn audit
           runs-on:
             - 'self.hosted'
-          max-time: 22
+          size: 2x
           caches:
             - node
           script:
@@ -28,7 +28,7 @@ pipelines:
             - git log --merges -n 1 --pretty=oneline
             # TODO: set -lt back to 4 when nrwl install postcss >=8.2.10
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 8 ]] && exit 0 || exit 1'
-            - NODE_OPTIONS=--max_old_space_size=4096 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
+            - CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
             - ls -al || true
             - ls -al libs/graphql/generated/ || true
             - yarn bin || true
@@ -42,9 +42,8 @@ pipelines:
               name: misc checks
               runs-on:
                 - 'self.hosted'
-              max-time: 120
+              size: 2x
               script:
-                # - yarn postinstall || yarn --frozen-lockfile
                 - openssl version || true
                 - ls -al || true
                 - yarn bin || true
@@ -62,40 +61,34 @@ pipelines:
 
           - step:
               name: lint
-              max-time: 40
+              runs-on:
+                - 'self.hosted'
+              size: 2x
               script:
-                # - yarn postinstall || yarn --frozen-lockfile
-                - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:lint --base=origin/master --with-deps
+                - yarn affected:lint --base=origin/master --with-deps
 
           - step:
               name: unit tests
               runs-on:
                 - 'self.hosted'
-              max-time: 40
               size: 2x
               script:
-                # - yarn postinstall || yarn --frozen-lockfile
-                - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:test --base=origin/master
-          #              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
-          #              - NODE_OPTIONS=--max_old_space_size=2222 yarn affected:test --base=HEAD~1 --parallel --maxParallel=2 --skip-nx-cache
-          #              - NODE_OPTIONS=--max_old_space_size=1555 yarn affected:test --base=HEAD~1 --parallel --maxParallel=3 --skip-nx-cache
+                - yarn affected:test --base=origin/master
 
-      - parallel:
           - step:
               name: build
               runs-on:
                 - 'self.hosted'
-              max-time: 70
+              max-time: 80
               size: 2x
               script:
-                # - yarn postinstall || yarn --frozen-lockfile
-                - NEXT_PUBLIC_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/v1/graphql' NEXT_PUBLIC_WS_ENDPOINT='wss://api-v2-staging.pabau.com/v1/graphql' NODE_OPTIONS=--max_old_space_size=4096 yarn affected:export --base=origin/master --prod
+                - NEXT_PUBLIC_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/v1/graphql' NEXT_PUBLIC_WS_ENDPOINT='wss://api-v2-staging.pabau.com/v1/graphql' yarn affected:export --base=origin/master --prod
               artifacts:
                 - dist/**
 
           - step:
-              size: 2x
               name: e2e
+              size: 2x
               caches:
                 - cypress
               script:
@@ -103,96 +96,102 @@ pipelines:
                 - yarn cypress install || true
                 - yarn affected:e2e --base=HEAD~1 || true
 
-      #   - step:
-      #       size: 2x
-      #       name: build
-      #       script:
-      #         - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=build --prod
-      #         - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=build-storybook --prod
-      #         - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=export --prod
-      #       artifacts:
-      #         - node_modules/.cache/**
-      #         - dist/**
+      - parallel:
 
-      - step:
-          name: deploy previews
-          image: node
-          max-time: 20
-          script:
-            - node -v
-            - ls -al . || true
-            - ls -al node_modules/ || true
-            - ls -al dist || true
-            - ls -al dist/apps || true
-            - cat /tmp/bot_message.txt || true
-            - apt-get update -y && apt-get install -y curl jq time
+          - step:
+              name: deploy dockers
+              runs-on:
+                - 'self.hosted'
+              size: 2x
+              deployment: production-dockers
+              services:
+                - docker
+              script:
+                - apt-get update -y && apt-get install -y curl jq time
+                - yarn affected --base=HEAD~1 --target=deploy-docker --prod
+                - mkdir -p dist && cp -f /tmp/bot_message.txt dist/ || true
+              artifacts:
+                - dist/bot_message.txt
 
-            # get the commit message for this merge
-            - export LAST_COMMIT_LOG=$(git log HEAD -1 | tail -n +4 | perl -p -e 's/[\r\n]//' | awk '{$1=$1;print}')
-            - echo "${LAST_COMMIT_LOG}"
-            - if [ "${LAST_COMMIT_LOG}" == "[skip ci] bumping version (patch)" ]; then (echo yes && export LAST_COMMIT_LOG=$(git log HEAD~1 -1 | tail -n +4)); fi
-            - echo "${LAST_COMMIT_LOG}"
+          - step:
+              name: deploy previews
+              image: node
+              max-time: 20
+              script:
+                - node -v
+                - ls -al . || true
+                - ls -al node_modules/ || true
+                - ls -al dist || true
+                - ls -al dist/apps || true
+                - cat /tmp/bot_message.txt || true
+                - apt-get update -y && apt-get install -y curl jq time
 
-            - NODE_OPTIONS=--max_old_space_size=2750 /usr/bin/time -v yarn affected --base=origin/master --head=HEAD --target=deploy --prod
-            - cat /tmp/bot_message.txt || true
-            - cat /tmp/bot_message2.txt || true
+                # get the commit message for this merge
+                - export LAST_COMMIT_LOG=$(git log HEAD -1 | tail -n +4 | perl -p -e 's/[\r\n]//' | awk '{$1=$1;print}')
+                - echo "${LAST_COMMIT_LOG}"
+                - if [ "${LAST_COMMIT_LOG}" == "[skip ci] bumping version (patch)" ]; then (echo yes && export LAST_COMMIT_LOG=$(git log HEAD~1 -1 | tail -n +4)); fi
+                - echo "${LAST_COMMIT_LOG}"
 
-            # Configure git to use the oauth token.
-            - |
-              curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}"
-              export PR_AUTHOR=$(curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}" | jq -r '.author.display_name')
-              export COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
+                - NODE_OPTIONS=--max_old_space_size=2750 /usr/bin/time -v yarn affected --base=origin/master --head=HEAD --target=deploy --prod
+                - cat /tmp/bot_message.txt || true
+                - cat /tmp/bot_message2.txt || true
 
-            - |
-              printf ":shallow_pan_of_food::shallow_pan_of_food: *New PR Preview*\n## <https://bitbucket.org/pabau/monorepo/pull-requests/${BITBUCKET_PR_ID}|PR ${BITBUCKET_PR_ID}> committed by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
-              npm i -g ts-node@9 && ts-node tools/cicd/PrintChangedUrls.ts "origin/master" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
-              printf "\n" >> /tmp/bot_message2.txt
-              cat /tmp/bot_message.txt >> /tmp/bot_message2.txt || true
-              printf "\n" >> /tmp/bot_message2.txt
+                # Configure git to use the oauth token.
+                - |
+                  curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}"
+                  export PR_AUTHOR=$(curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}" | jq -r '.author.display_name')
+                  export COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
 
-            - cat /tmp/bot_message.txt || true
-            - cat /tmp/bot_message2.txt || true
-            - mkdir -p dist && cp -f /tmp/bot_message2.txt dist/ || true
+                - |
+                  printf ":shallow_pan_of_food::shallow_pan_of_food: *New PR Preview*\n## <https://bitbucket.org/pabau/monorepo/pull-requests/${BITBUCKET_PR_ID}|PR ${BITBUCKET_PR_ID}> committed by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
+                  npm i -g ts-node@9 && ts-node tools/cicd/PrintChangedUrls.ts "origin/master" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
+                  printf "\n" >> /tmp/bot_message2.txt
+                  cat /tmp/bot_message.txt >> /tmp/bot_message2.txt || true
+                  printf "\n" >> /tmp/bot_message2.txt
 
-          artifacts:
-            - dist/bot_message2.txt
-            - tools/cicd/slack_notification.json
+                - cat /tmp/bot_message.txt || true
+                - cat /tmp/bot_message2.txt || true
+                - mkdir -p dist && cp -f /tmp/bot_message2.txt dist/ || true
 
-      - step:
-          name: announce to slack
-          max-time: 5
-          clone:
-            enabled: false
-          script:
-            - cat dist/bot_message2.txt || true
-            - cat dist/bot_message.txt || true
-            - apt-get update -y && apt-get install -y curl jq
+              artifacts:
+                - dist/bot_message2.txt
+                - tools/cicd/slack_notification.json
 
-            # Post to Slack
-            - |
-              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | \
-                curl -0 "${SLACK_HOOK_URL}" \
-                -H "Expect:" \
-                -H 'Content-Type: application/json; charset=utf-8' \
-                --data-binary @-
+          - step:
+              name: announce to slack
+              max-time: 5
+              clone:
+                enabled: false
+              script:
+                - cat dist/bot_message2.txt || true
+                - cat dist/bot_message.txt || true
+                - apt-get update -y && apt-get install -y curl jq
 
-            # Configure git to use the oauth token.
-            - |
-              curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}"
-              export PR_AUTHOR=$(curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}" | jq -r '.author.display_name')
-              export COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
+                # Post to Slack
+                - |
+                  jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | \
+                    curl -0 "${SLACK_HOOK_URL}" \
+                    -H "Expect:" \
+                    -H 'Content-Type: application/json; charset=utf-8' \
+                    --data-binary @-
 
-            # Post to Bitbucket PR
-            - |
-              curl https://api.bitbucket.org/2.0/repositories/pabau/monorepo/pullrequests/${BITBUCKET_PR_ID}/comments \
-                -H "Authorization: Bearer ${access_token}" \
-                --request POST \
-                --header 'Content-Type: application/json' \
-                --data '{
-                  "content": {
-                    "raw": "A new vercel was published!"
-                  }
-                }'
+                # Configure git to use the oauth token.
+                - |
+                  curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}"
+                  export PR_AUTHOR=$(curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}" | jq -r '.author.display_name')
+                  export COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
+
+                # Post to Bitbucket PR
+                - |
+                  curl https://api.bitbucket.org/2.0/repositories/pabau/monorepo/pullrequests/${BITBUCKET_PR_ID}/comments \
+                    -H "Authorization: Bearer ${access_token}" \
+                    --request POST \
+                    --header 'Content-Type: application/json' \
+                    --data '{
+                      "content": {
+                        "raw": "A new vercel was published!"
+                      }
+                    }'
 
   branches:
     master:
@@ -200,7 +199,7 @@ pipelines:
           name: yarn audit
           runs-on:
             - 'self.hosted'
-          max-time: 22
+          size: 2x
           caches:
             - node
           script:
@@ -208,7 +207,7 @@ pipelines:
             - git log --merges -n 1 --pretty=oneline
             # TODO: set -lt back to 4 when nrwl install postcss >=8.2.10
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 8 ]] && exit 0 || exit 1'
-            - NODE_OPTIONS=--max_old_space_size=4096 CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
+            - CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
             - ls -al || true
             - ls -al node_modules || true
             - ls -al libs/graphql/generated/ || true
@@ -222,7 +221,7 @@ pipelines:
               name: misc checks
               runs-on:
                 - 'self.hosted'
-              max-time: 120
+              size: 2x
               script:
                 - openssl version || true
                 - ls -al || true
@@ -247,65 +246,60 @@ pipelines:
               name: lint
               runs-on:
                 - 'self.hosted'
-              max-time: 40
+              size: 2x
               script:
-                # - yarn postinstall || yarn --frozen-lockfile
-                - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:lint --base=HEAD~1 --with-deps
+                - yarn affected:lint --base=HEAD~1 --with-deps
 
           - step:
               name: unit tests
               runs-on:
                 - 'self.hosted'
-              max-time: 40
               size: 2x
               script:
-                # - yarn postinstall || yarn --frozen-lockfile
-                - NODE_OPTIONS=--max_old_space_size=4096 yarn affected:test --base=HEAD~1
-          #              - NODE_OPTIONS=--max_old_space_size=3333 yarn affected:test --base=HEAD~1 --parallel --maxParallel=1 --skip-nx-cache
-          #              - NODE_OPTIONS=--max_old_space_size=2222 yarn affected:test --base=HEAD~1 --parallel --maxParallel=2 --skip-nx-cache
-          #              - NODE_OPTIONS=--max_old_space_size=1555 yarn affected:test --base=HEAD~1 --parallel --maxParallel=3 --skip-nx-cache
+                - yarn affected:test --base=HEAD~1
 
           - step:
-              name: build
-              runs-on:
-                - 'self.hosted'
-              max-time: 70
+              name: e2e
               size: 2x
+              caches:
+                - cypress
               script:
-                # - yarn postinstall || yarn --frozen-lockfile
-                - NEXT_PUBLIC_GRAPHQL_ENDPOINT='https://api-v2.pabau.com/v1/graphql' NEXT_PUBLIC_WS_ENDPOINT='wss://api-v2.pabau.com/v1/graphql' NODE_OPTIONS=--max_old_space_size=4096 yarn affected:export --base=HEAD~1 --prod
-              artifacts:
-                - dist/**
+                - apt update -y && apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+                - yarn cypress install || true
+                - yarn affected:e2e --base=HEAD~1 || true
 
-      # - parallel:
 
-      #   - step:
-      #       size: 2x
-      #       name: e2e
-      #       caches:
-      #         - cypress
-      #       script:
-      #         - apt update -y && apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
-      #         - yarn cypress install || true
-      #         - yarn affected:e2e --base=HEAD~1 || true
+      - step:
+          name: bump version
+          max-time: 5
+          script:
+            # Get an oauth access token using the client credentials, parsing out the token with jq.
+            - git remote set-url origin "${BITBUCKET_GIT_SSH_ORIGIN}"
 
-      #   - step:
-      #       size: 2x
-      #       name: build
-      #       script:
-      #         - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=build --prod
-      #         - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=build-storybook --prod
-      #         - NODE_OPTIONS=--max_old_space_size=2750 yarn affected --base=HEAD~1 --target=export --prod
-      #       artifacts:
-      #         - node_modules/.cache/**
-      #         - dist/**
+            # bump the package.json version by 0.0.1
+            - yarn version --message "[skip ci] bumping version (patch)" --patch --non-interactive --no-progress
+            - HUSKY=0 git push && HUSKY=0 git push --tags
+            - export PACKAGE_JSON_VERSION=$(jq -r .version < package.json)
+
+      - step:
+          name: build
+          runs-on:
+            - 'self.hosted'
+          max-time: 80
+          size: 2x
+          script:
+            - NEXT_PUBLIC_GRAPHQL_ENDPOINT='https://api-v2.pabau.com/v1/graphql' NEXT_PUBLIC_WS_ENDPOINT='wss://api-v2.pabau.com/v1/graphql' yarn affected:export --base=HEAD~1 --prod
+          artifacts:
+            - dist/**
 
       - parallel:
+
           - step:
               name: deploy dockers
               runs-on:
                 - 'self.hosted'
               max-time: 20
+              size: 2x
               deployment: production-dockers
               services:
                 - docker
@@ -318,8 +312,8 @@ pipelines:
 
           - step:
               name: deploy previews
-              # runs-on:
-              #   - 'self.hosted'
+              runs-on:
+                - 'self.hosted'
               max-time: 20
               deployment: production-serverless
               script:
@@ -335,14 +329,6 @@ pipelines:
                 - echo "${LAST_COMMIT_LOG}"
                 - if [ "${LAST_COMMIT_LOG}" == "[skip ci] bumping version (patch)" ]; then (echo yes && export LAST_COMMIT_LOG=$(git log HEAD~1 -1 | tail -n +4)); fi
                 - echo "${LAST_COMMIT_LOG}"
-
-                # Get an oauth access token using the client credentials, parsing out the token with jq.
-                - git remote set-url origin "${BITBUCKET_GIT_SSH_ORIGIN}"
-
-                # bump the package.json version by 0.0.1
-                - yarn version --message "[skip ci] bumping version (patch)" --patch --non-interactive --no-progress
-                - HUSKY=0 git push && HUSKY=0 git push --tags
-                - export PACKAGE_JSON_VERSION=$(jq -r .version < package.json)
 
                 - NODE_OPTIONS=--max_old_space_size=2750 /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=deploy --prod
                 - export COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
