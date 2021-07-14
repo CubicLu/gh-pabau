@@ -94,7 +94,7 @@ pipelines:
               script:
                 - apt update -y && apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
                 - yarn cypress install || true
-                - yarn affected:e2e --base=HEAD~1 || true
+                - yarn affected:e2e --base=origin/master || true
 
       - parallel:
 
@@ -107,7 +107,7 @@ pipelines:
                 - docker
               script:
                 - apt-get update -y && apt-get install -y curl jq time
-                - yarn affected --base=HEAD~1 --target=deploy-docker --prod
+                - yarn affected --base=origin/master --target=deploy-docker
                 - mkdir -p dist && cp -f /tmp/bot_message.txt dist/ || true
               artifacts:
                 - dist/bot_message.txt
