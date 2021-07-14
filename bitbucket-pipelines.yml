@@ -103,7 +103,6 @@ pipelines:
               runs-on:
                 - 'self.hosted'
               size: 2x
-              deployment: production-dockers
               services:
                 - docker
               script:

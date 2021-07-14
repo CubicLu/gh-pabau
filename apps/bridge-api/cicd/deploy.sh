@@ -68,7 +68,7 @@ if [ -z "${BITBUCKET_PR_ID}" ] && [ -n "${BITBUCKET_BRANCH}" ]; then
     'https://rancher.pabau.com/v3/project/c-j8bb9:p-jrqrz/workloads/deployment:new-clinic:bridge-api?action=redeploy'
   echo "Deployed!"
 
-  echo "${APP_NAME}: https://api-toshe.pabau.me/graphql" >> /tmp/bot_message.txt
+  echo "${APP_NAME}: https://api-v2-prisma.pabau.com/graphql" >> /tmp/bot_message.txt
 
 fi
 
