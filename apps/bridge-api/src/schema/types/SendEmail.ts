@@ -1,12 +1,12 @@
 import { extendType, nonNull, stringArg, list } from 'nexus'
-import EmailService from '../../app/email/EmailService'
+import EmailService from '../../app/email/email-service'
 import { EmailInput, EmailOutput } from '../../app/email/dto'
 import {
   EmailNexusOutput,
   DynamicTemplateData,
 } from '../../app/email/nexus-type'
 import { validateEmail } from '../../app/authentication/yup'
-import { User } from '../../generated/schema'
+import { User } from '@prisma/client'
 import { Context } from '../../context'
 
 export const SendEmail = extendType({

@@ -39,7 +39,7 @@ query getNotificationTab {
 }
 
 query accountSettingsUserAlerts {
-  userAlerts {
+  findManyUserAlert {
     # Dispaly all types of user alerts
     id
     title # example: Report title

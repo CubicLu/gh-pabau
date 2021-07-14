@@ -32,7 +32,7 @@ const LIST_AGGREGATE_QUERY = gql`
     $isActive: Boolean = true
     $searchTerm: String = ""
   ) {
-    marketingSourcesCount(
+    findManyMarketingSourceCount(
       where: {
         public: { equals: $isActive }
         OR: [{ AND: [{ name: { contains: $searchTerm } }] }]

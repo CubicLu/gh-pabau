@@ -298,21 +298,21 @@ const LocationsLayout: FC<P> = ({ schema }) => {
   const [locationData, setLocationData] = useState(null)
 
   useEffect(() => {
-    if (data?.companyBranches) {
+    if (data?.findManyCompanyBranch) {
       const locationIds = []
-      for (const item of data.companyBranches) {
+      for (const item of data?.findManyCompanyBranch) {
         locationIds.push(item.id)
       }
       setLocationIds(locationIds)
-      setLocationData(data.companyBranches)
+      setLocationData(data?.findManyCompanyBranch)
       loadStaffList()
     }
   }, [data, loading, filterChange, loadStaffList])
 
   useEffect(() => {
-    if (employeeDataResponse?.cmStaffGenerals) {
+    if (employeeDataResponse?.findManyCmStaffGeneral) {
       const employeeData = []
-      for (const item of employeeDataResponse.cmStaffGenerals) {
+      for (const item of employeeDataResponse.findManyCmStaffGeneral) {
         employeeData.push({
           id: item.id,
           name: `${item.Fname} ${item.Lname}`,
@@ -324,11 +324,11 @@ const LocationsLayout: FC<P> = ({ schema }) => {
   }, [employeeDataResponse])
 
   useEffect(() => {
-    if (staffData?.cmStaffGenerals) {
+    if (staffData?.findManyCmStaffGeneral) {
       const locationRecord = []
       for (const item of locationData) {
         const assignedUserData = []
-        for (const staff of staffData?.cmStaffGenerals) {
+        for (const staff of staffData?.findManyCmStaffGeneral) {
           if (staff?.Location?.includes(item.id.toString())) {
             assignedUserData.push({
               id: staff.id,
@@ -349,16 +349,16 @@ const LocationsLayout: FC<P> = ({ schema }) => {
   }, [staffData])
 
   useEffect(() => {
-    if (locationLimit?.companySubscriptions) {
+    if (locationLimit?.findManyCompanySubscription) {
       setAllowedLocationCount(
-        locationLimit?.companySubscriptions?.[0]['multiple_locations']
+        locationLimit?.findManyCompanySubscription?.[0]['multiple_locations']
       )
     }
   }, [locationLimit])
 
   useEffect(() => {
-    if (activeLocationCount?.companyBranchesCount) {
-      setActiveLocation(activeLocationCount.companyBranchesCount)
+    if (activeLocationCount?.findManyCompanyBranchCount) {
+      setActiveLocation(activeLocationCount?.findManyCompanyBranchCount)
     }
     if (!activeLoading) {
       setActiveLocationLoading(false)
@@ -406,7 +406,7 @@ const LocationsLayout: FC<P> = ({ schema }) => {
     }
     if (isCustomOrder) {
       const totalRecord = locationData.length
-      const lastOrderValue = lastOrder?.companyBranches?.[0].loc_order
+      const lastOrderValue = lastOrder?.findManyCompanyBranch?.[0].loc_order
       const newData = []
       for (const [index, item] of items.entries()) {
         newData.push({
@@ -449,7 +449,6 @@ const LocationsLayout: FC<P> = ({ schema }) => {
     if (values?.id)
       await updateOrderMutation({
         variables: values,
-        optimisticResponse: {},
         refetchQueries: [
           {
             query: LocationsDocument,

@@ -28,7 +28,7 @@ const ContextWrapper: FunctionComponent = ({ children }) => {
           username
           full_name
           admin
-          company {
+          company: Company {
             id
             remote_url
             details {

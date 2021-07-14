@@ -21,6 +21,7 @@ export interface Context {
    * The package.json version for this app
    */
   version: string
+  select: any
 }
 
 export const createContext: ContextFunction<ExpressContext, Context> = (
@@ -28,6 +29,7 @@ export const createContext: ContextFunction<ExpressContext, Context> = (
 ) => {
   const ret = {
     version,
+    select: {},
   } as Context
   const authorizationRaw = req.req.header('authorization')
   if (authorizationRaw) {

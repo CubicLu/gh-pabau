@@ -125,7 +125,7 @@ export const Index: FC = () => {
     const list = [...opsData]
     const securityList = securityData
 
-    const record = data?.companyMetas?.reduce(
+    const record = data?.findManyCompanyMeta?.reduce(
       (data, { meta_name, meta_value }) => ({
         ...data,
         [meta_name]: meta_value,

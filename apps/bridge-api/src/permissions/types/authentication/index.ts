@@ -7,18 +7,29 @@ import { Context } from '../../../context'
 export const authentication = {
   isAuthenticated: rule('isAuthenticated', { cache: 'no_cache' })(
     (_root, _args, ctx: Context) =>
-      Boolean(ctx.authenticated) || 'Not Authenticated - Please login.'
+      Boolean(ctx.authenticated) || 'Not Authenticated'
   ),
 
   isAdmin: rule('isAdmin', { cache: 'no_cache' })(
     (_root, _args, ctx: Context) =>
-      Boolean(ctx.authenticated?.admin) ||
-      'Not Authorised - Please contact your company admin for more help.'
+      Boolean(ctx.authenticated?.admin) || 'Not Authorized'
   ),
 
   isOwner: rule('isOwner', { cache: 'no_cache' })(
     (_root, _args, ctx: Context) =>
-      Boolean(ctx.authenticated?.owner) ||
-      'Not Authorised - Please contact your company owner for more help.'
+      Boolean(ctx.authenticated?.owner) || 'Not Authorized'
+  ),
+  canEditProduct: rule({ cache: 'contextual' })(
+    async (_root, _args, ctx: Context) => {
+      const record = await ctx.prisma.staffMeta.findUnique({
+        where: {
+          staff_id: {
+            staff_id: ctx.authenticated.user,
+            meta_name: 'can_edit_stock_level',
+          },
+        },
+      })
+      return record?.staff_id === ctx.authenticated.user
+    }
   ),
 }

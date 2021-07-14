@@ -202,7 +202,6 @@ export const SecurityTab: FC<SecurityTabProps> = ({
           try {
             updateBusinessDetails({
               variables: CompanyDetailData,
-              optimisticResponse: {},
               refetchQueries: [
                 {
                   query: GetBussinessDetailsDocument,
@@ -220,7 +219,6 @@ export const SecurityTab: FC<SecurityTabProps> = ({
         try {
           await updateBusinessDetails({
             variables: CompanyDetailData,
-            optimisticResponse: {},
             refetchQueries: [
               {
                 query: GetBussinessDetailsDocument,

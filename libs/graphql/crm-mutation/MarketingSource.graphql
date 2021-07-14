@@ -9,7 +9,7 @@ fragment MarketingSourceFields on MarketingSource {
 
 fragment MarketingSource on MarketingSource {
   ...MarketingSourceFields
-  company {
+  Company {
     ...CompanyFields
   }
 }

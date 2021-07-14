@@ -11,7 +11,7 @@ const LIST_QUERY = gql`
     $offset: Int
     $limit: Int
   ) {
-    companyDepartments(
+    findManyCompanyDepartment(
       take: $limit
       skip: $offset
       orderBy: { id: desc }
@@ -25,7 +25,7 @@ const LIST_QUERY = gql`
 `
 const LIST_AGGREGATE_QUERY = gql`
   query company_departmentsCount_aggregate($searchTerm: String = "") {
-    companyDepartmentsCount(
+    findManyCompanyDepartmentCount(
       where: { OR: [{ AND: [{ department: { contains: $searchTerm } }] }] }
     )
   }

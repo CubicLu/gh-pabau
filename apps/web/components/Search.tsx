@@ -5,7 +5,7 @@ import { FC, useState } from 'react'
 
 const CLIENTS_QUERY = gql`
   query findContacts($searchTerm1: String, $searchTerm2: String) {
-    cmContacts(
+    findManyCmContact(
       where: {
         AND: [
           {
@@ -43,7 +43,7 @@ const CLIENTS_QUERY = gql`
 
 const CLIENTS_ADVANCED_QUERY = gql`
   query findAdvancedContacts($where: CmContactWhereInput!) {
-    cmContacts(where: $where, take: 10) {
+    findManyCmContact(where: $where, take: 10) {
       ID
       Fname
       Lname
@@ -57,7 +57,7 @@ const CLIENTS_ADVANCED_QUERY = gql`
 
 const LEADS_ADVANCED_QUERY = gql`
   query findAdvancedLeads($where: CmLeadWhereInput!) {
-    cmLeads(where: $where, take: 10) {
+    findManyCmLead(where: $where, take: 10) {
       ID
       Fname
       Lname
@@ -71,7 +71,7 @@ const LEADS_ADVANCED_QUERY = gql`
 
 const LEADS_QUERY = gql`
   query findLeads($searchTerm1: String, $searchTerm2: String) {
-    cmLeads(
+    findManyCmLead(
       where: {
         AND: [
           {

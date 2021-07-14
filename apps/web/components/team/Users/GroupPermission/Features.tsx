@@ -1,7 +1,11 @@
-import React, { FC, useEffect, useState } from 'react'
 import { DocumentNode } from '@apollo/client'
-import { useTranslation } from 'react-i18next'
-
+import {
+  useUpdateDeleteAlertsFeaturePermissionMutation,
+  useUpdateFeatureGroupPermissionMutation,
+  useUpdateManyInvBillerMutation,
+  useUpdateManyUserMutation,
+  useUpdateStaffMetaFeaturePermissionMutation,
+} from '@pabau/graphql'
 import {
   Notification,
   NotificationType,
@@ -11,14 +15,8 @@ import {
   ReportsPermissionTable,
   ReportsPermissionTableProps,
 } from '@pabau/ui'
-import {
-  useUpdateManyUserMutation,
-  useUpdateManyInvBillerMutation,
-  useUpdateStaffMetaFeaturePermissionMutation,
-  useUpdateDeleteAlertsFeaturePermissionMutation,
-  useUpdateFeatureGroupPermissionMutation,
-} from '@pabau/graphql'
-
+import React, { FC, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useData } from '../../../../mocks/Users'
 
 interface FeatureProps {
@@ -231,7 +229,7 @@ const Features: FC<FeatureProps> = ({
                 variables: {
                   where: {
                     UserGroupMember: { group_id: { equals: groupData.id } },
-                    company: {},
+                    Company: {},
                   },
                   data: {
                     ...userKeyValues,

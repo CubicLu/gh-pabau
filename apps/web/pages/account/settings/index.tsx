@@ -94,7 +94,7 @@ const Index: FC = ({ ...props }) => {
       ...securityTabData?.me,
       ...notificationTabData?.me,
     })
-    setAllAlerts(defaultAlertTypes?.userAlerts)
+    setAllAlerts(defaultAlertTypes?.findManyUserAlert)
     setNotificationTypes(notificationsTypes?.notification_types)
     setNotificationToggles(notificationsData?.notification_toggle)
   }, [

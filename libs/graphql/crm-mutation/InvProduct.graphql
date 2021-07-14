@@ -48,28 +48,16 @@ fragment InvProduct on InvProduct {
   InvCategory {
     ...InvCategoryFields
   }
-}
-
-mutation createOneInvProduct($data: InvProductCreateInput!) {
-  createOneInvProduct(data: $data) {
-    ...InvProduct
+  Supplier {
+    ...AccountManagerFields
   }
-}
-
-mutation updateOneInvProduct($where: InvProductWhereUniqueInput!, $data: InvProductUpdateInput!) {
-  updateOneInvProduct(where: $where, data: $data) {
-    ...InvProduct
+  Tax {
+    ...TaxFields
   }
 }
 
 mutation deleteOneInvProduct($where: InvProductWhereUniqueInput!) {
   deleteOneInvProduct(where: $where) {
     ...InvProduct
-  }
-}
-
-mutation updateManyInvProduct($where: InvProductWhereInput, $data: InvProductUpdateManyMutationInput!) {
-  updateManyInvProduct(where: $where, data: $data) {
-    count
   }
 }

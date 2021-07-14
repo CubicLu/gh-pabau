@@ -5,7 +5,7 @@ fragment InvCategoryFields on InvCategory {
   order
   category_type
   company_id
-  uid
+  user_id
   created_date
   modified_date
   custom_id
@@ -20,6 +20,18 @@ fragment InvCategoryFields on InvCategory {
 
 fragment InvCategory on InvCategory {
   ...InvCategoryFields
+  Company {
+    ...CompanyFields
+  }
+  MasterCategory {
+    ...ServicesMasterCategoryFields
+  }
+  Tax {
+    ...TaxFields
+  }
+  User {
+    ...UserFields
+  }
 }
 
 mutation createOneInvCategory($data: InvCategoryCreateInput!) {

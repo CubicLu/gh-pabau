@@ -41,15 +41,10 @@ export interface LayoutProps {
   searchRender?: (innerComponent: JSX.Element) => JSX.Element
   active?: string
   onMessageIconClick?(): void
-  // onCreateChannel?: (
-  //   name: string,
-  //   description: string,
-  //   isPrivate: boolean
-  // ) => void
   isDisplayingFooter?: boolean
-  // onMessageType?: (e: MouseEvent<HTMLElement>) => void
   legacyContent?: boolean
   taskManagerIFrameComponent?: JSX.Element
+  allowed?: boolean
   requireAdminAccess?: boolean
 }
 

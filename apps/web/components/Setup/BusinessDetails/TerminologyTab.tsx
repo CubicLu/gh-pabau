@@ -204,7 +204,6 @@ export const TerminologyTab: FC<TerminologyTabProps> = ({
       try {
         await updateBusinessDetails({
           variables: CompanyDetailData,
-          optimisticResponse: {},
           refetchQueries: [
             {
               query: GetBussinessDetailsDocument,

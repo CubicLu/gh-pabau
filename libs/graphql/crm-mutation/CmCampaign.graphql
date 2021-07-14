@@ -19,7 +19,7 @@ fragment CmCampaignFields on CmCampaign {
 
 fragment CmCampaign on CmCampaign {
   ...CmCampaignFields
-  company {
+  Company {
     ...CompanyFields
   }
 }

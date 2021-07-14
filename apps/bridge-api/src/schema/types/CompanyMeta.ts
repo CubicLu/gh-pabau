@@ -30,11 +30,8 @@ export const SetCompanyMeta = extendType({
         meta_name: nonNull(stringArg()),
         meta_value: nonNull(stringArg()),
       },
-      resolve(_root, input: MetaInput, ctx: Context) {
-        if (!input.meta_name || !input.meta_value) {
-          throw new Error('Malformed Parameters')
-        }
-        return ctx.prisma.companyMeta.upsert({
+      async resolve(_root, input: MetaInput, ctx: Context) {
+        return await ctx.prisma.companyMeta.upsert({
           where: {
             company_id_name: {
               company_id: ctx.authenticated.company,

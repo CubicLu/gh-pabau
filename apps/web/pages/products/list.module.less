@@ -12,7 +12,14 @@
     }
   }
 }
-
+.filter-btn-reset {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  cursor: pointer;
+  color: #9292a3;
+  margin: 0;
+}
 .headerContainer {
   display: flex;
   justify-content: space-between;
@@ -135,6 +142,19 @@
       }
     }
   }
+  .ant-tabs-top {
+    > .ant-tabs-nav {
+      > .ant-tabs-nav-wrap {
+        border-bottom: 1px solid #ecedf0;
+        > .ant-tabs-nav-list {
+          > .ant-tabs-tab {
+            padding: 15px 50px;
+            background-color: transparent !important;
+          }
+        }
+      }
+    }
+  }
 }
 
 .productCategoryType {
@@ -142,7 +162,6 @@
   height: 50px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-
   > div {
     // Cagetory type tile
     position: relative;
@@ -157,7 +176,7 @@
     text-align: center;
     line-height: 50px;
     padding: 0 4px;
-
+    margin: 1px;
     &:nth-child(1) {
       // Retail Category
       border-radius: 4px 0 0 4px;
@@ -227,4 +246,55 @@
   color: var(--primary-color);
   font-size: 25px;
   border-radius: 4px;
+}
+
+.newCountModal {
+  .discrepancies {
+    display: flex;
+    .discrepanciesDown {
+      margin-left: 16px;
+    }
+  }
+  .custom-common {
+    :global {
+      .ant-form-item-label {
+        label {
+          font-size: 14px;
+          line-height: 24px;
+          color: #9292a3;
+          padding: 0;
+        }
+      }
+
+      .ant-form-item-control {
+        .ant-form-item-control-input {
+          .ant-form-item-control-input-content {
+            .ant-radio-group {
+              display: flex;
+              .ant-radio-wrapper {
+                padding: 0;
+                span:nth-of-type(2) {
+                  margin-top: 5px;
+                }
+              }
+            }
+            .ant-picker {
+              width: 100%;
+              height: 40px;
+            }
+
+            .ant-select {
+              .ant-select-selector {
+                height: 40px;
+
+                .ant-select-selection-item {
+                  line-height: 40px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }

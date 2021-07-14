@@ -26,7 +26,7 @@ remote_relationships:
     hasura_fields:
     - sent_by
     remote_field:
-      user:
+      findUniqueUser:
         arguments:
           where:
             id: $sent_by

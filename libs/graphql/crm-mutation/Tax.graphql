@@ -11,6 +11,9 @@ fragment TaxFields on Tax {
 
 fragment Tax on Tax {
   ...TaxFields
+  Company {
+    ...CompanyFields
+  }
 }
 
 mutation createOneTax($data: TaxCreateInput!) {

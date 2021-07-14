@@ -1,12 +1,13 @@
 import { extendType, nonNull, stringArg } from 'nexus'
-import AuthenticationService from '../../app/authentication/AuthenticationService'
+import AuthenticationService from '../../app/authentication/authentication-service'
 import {
+  ChangePasswordInputDto,
   LoginInputDto,
   ResetPasswordInputDto,
-  ChangePasswordInputDto,
 } from '../../app/authentication/dto'
-import EmailService from '../../app/email/EmailService'
+import EmailService from '../../app/email/email-service'
 import { Context } from '../../context'
+import { PrismaSelect } from '@paljs/plugins'
 
 export const Authentication = extendType({
   type: 'Mutation',
@@ -18,12 +19,7 @@ export const Authentication = extendType({
         password: nonNull(stringArg()),
       },
       async resolve(_root, args: LoginInputDto, ctx: Context) {
-        const { username, password } = args
-        if (!username || !password) {
-          throw new Error('Malformed Parameters')
-        }
-        const authService = new AuthenticationService(ctx)
-        return authService.handleLoginRequest(args)
+        return new AuthenticationService(ctx).handleLoginRequest(args)
       },
     })
     t.field('logout', {
@@ -81,10 +77,6 @@ export const Authentication = extendType({
         newPassword: nonNull(stringArg()),
       },
       async resolve(_, args: ChangePasswordInputDto, ctx: Context) {
-        const { currentPassword, newPassword } = args
-        if (!currentPassword || !newPassword) {
-          throw new Error('Malformed Parameters')
-        }
         const response = await new AuthenticationService(
           ctx
         ).handlePasswordChange(args)
@@ -106,9 +98,33 @@ export const Authentication = extendType({
     })
   },
 })
-export const isUser = extendType({
+export const Me = extendType({
   type: 'Query',
   definition(t) {
+    t.field('me', {
+      type: 'User',
+      resolve(_root, _args, ctx: Context, info) {
+        const select = new PrismaSelect(info).value
+        return ctx.prisma.user.findUnique({
+          where: {
+            id: ctx.authenticated.user,
+          },
+          ...select,
+        })
+      },
+    })
+    t.field('company', {
+      type: 'Company',
+      resolve(_root, _args, ctx: Context, info) {
+        const select = new PrismaSelect(info).value
+        return ctx.prisma.company.findUnique({
+          where: {
+            id: ctx.authenticated.company,
+          },
+          ...select,
+        })
+      },
+    })
     t.field('validateUser', {
       type: 'String',
       args: {
@@ -118,7 +134,7 @@ export const isUser = extendType({
         if (loginInput.username === null) {
           throw new Error('Malformed Parameters')
         }
-        const valideUser = ctx.prisma.user
+        return ctx.prisma.user
           .findFirst({
             where: {
               email: loginInput.username,
@@ -133,38 +149,33 @@ export const isUser = extendType({
               res.username
             )
           })
-        return valideUser
       },
     })
-  },
-})
-export const Me = extendType({
-  type: 'Query',
-  definition(t) {
-    t.field('me', {
-      type: 'User',
-      resolve(_root, _args, ctx: Context) {
-        return ctx.prisma.user.findUnique({
-          where: {
-            id: ctx.authenticated.user,
-          },
-        })
+    t.field('canAccessPage', {
+      type: 'Boolean',
+      args: {
+        page_name: nonNull(stringArg()),
       },
-    })
-  },
-})
-
-export const Company = extendType({
-  type: 'Query',
-  definition(t) {
-    t.field('company', {
-      type: 'Company',
-      resolve(_root, _args, ctx: Context) {
-        return ctx.prisma.company.findUnique({
+      async resolve(_, { page_name }, ctx: Context) {
+        const permissions = await ctx.prisma.userPermission.findFirst({
           where: {
-            id: ctx.authenticated.company,
+            Page: {
+              name: {
+                equals: page_name,
+              },
+            },
+            user: {
+              equals: ctx.authenticated.user,
+            },
+          },
+          select: {
+            id: true,
           },
         })
+        if (!permissions.id) {
+          throw new Error('Not Authorized')
+        }
+        return true
       },
     })
   },
