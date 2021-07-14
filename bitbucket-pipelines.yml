@@ -102,7 +102,7 @@ pipelines:
               name: deploy dockers
               runs-on:
                 - 'self.hosted'
-              max-time: 20
+              size: 2x
               deployment: production-dockers
               services:
                 - docker
@@ -299,6 +299,7 @@ pipelines:
               runs-on:
                 - 'self.hosted'
               max-time: 20
+              size: 2x
               deployment: production-dockers
               services:
                 - docker
