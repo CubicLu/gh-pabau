@@ -12,6 +12,7 @@ import { SourceDataProps } from './Content'
 import CreateLabel from './CreateLabel'
 import { Labels, tab } from '../../pages/clients/index'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { test } from 'shelljs'
 const { SubMenu } = Menu
 
 interface LeftSideBarProps {
@@ -28,6 +29,8 @@ interface LeftSideBarProps {
   duplicateData?: SourceDataProps[][]
   getClientsCountData?: any
   duplicateContactsCount?: any
+  testLabels?: any
+  setTestLabels?: (val) => void
 }
 
 export const LeftSideBar: FC<LeftSideBarProps> = ({
@@ -44,6 +47,8 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
   duplicateData = [],
   getClientsCountData,
   duplicateContactsCount,
+  testLabels,
+  setTestLabels,
 }) => {
   const { t } = useTranslationI18()
 
@@ -52,6 +57,9 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
   }
 
   console.log('duplicateContactsCount:', duplicateContactsCount)
+  console.log('testLabels LEFT:', testLabels)
+
+  // console.log(typeof testLabels)
 
   return (
     <div className={styles.clientLeftSidebar}>
@@ -91,19 +99,38 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
         </Menu.Item>
         <Menu.Divider />
         <SubMenu key={tab.labels} title={t('clients.leftSidebar.labels')}>
-          {labels.map((label) => {
+          {/*{labels.map((label) => {*/}
+          {/*  return (*/}
+          {/*    label?.label && (*/}
+          {/*      <Menu.Item*/}
+          {/*        key={`${label.label}`}*/}
+          {/*        onClick={() => handleLabelClick(false, label.label)}*/}
+          {/*      >*/}
+          {/*        <div className={styles.clientMenuItem}>*/}
+          {/*          <span>*/}
+          {/*            <TagOutlined />*/}
+          {/*            &nbsp;{label.label}*/}
+          {/*          </span>*/}
+          {/*          {label.count > 0 && <span>{label.count}</span>}*/}
+          {/*        </div>*/}
+          {/*      </Menu.Item>*/}
+          {/*    )*/}
+          {/*  )*/}
+          {/*})}*/}
+          {testLabels?.labels.map((label) => {
             return (
-              label?.label && (
+              label?.text && (
                 <Menu.Item
-                  key={`${label.label}`}
-                  onClick={() => handleLabelClick(false, label.label)}
+                  key={`${label.text}`}
+                  // onClick={() => handleLabelClick(false, label.text)}
+                  onClick={() => console.log('clicked label')}
                 >
                   <div className={styles.clientMenuItem}>
                     <span>
                       <TagOutlined />
-                      &nbsp;{label.label}
+                      &nbsp;{label.text}
                     </span>
-                    {label.count > 0 && <span>{label.count}</span>}
+                    {/*{label.count > 0 && <span>{label.count}</span>}*/}
                   </div>
                 </Menu.Item>
               )
@@ -114,6 +141,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
               selectedLabels={selectedLabels}
               setSelectedLabels={setSelectedLabels}
               labels={labels}
+              testLabels={testLabels}
               setLabels={setLabels}
             >
               <div>

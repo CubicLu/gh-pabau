@@ -27,6 +27,9 @@ import {
   useClientListContactsCountQuery,
   useClientListContactsCountLazyQuery,
   useDuplicateContactsQuery,
+  useGetLabelsQuery,
+  useGetLabelsLazyQuery,
+  useFindManyCompanyDepartmentsLazyQuery,
 } from '@pabau/graphql'
 
 const { TabPane } = Tabs
@@ -68,6 +71,19 @@ export const Clients: FC<ClientsProps> = () => {
     error: getuDplicateContactsError,
   } = useDuplicateContactsQuery({ fetchPolicy: 'no-cache' })
 
+  const {
+    data: getLabelsData,
+    loading: getLabelsLoading,
+    error: getLabelsError,
+  } = useGetLabelsQuery({ fetchPolicy: 'no-cache' })
+
+  // const [
+  //   getLabels,
+  //   { data: getLabelsData, loading: getLabelsLoading, error: getLabelsError },
+  // ] = useGetLabelsLazyQuery()
+
+  console.log('getLabelsData:', getLabelsData)
+
   const [paginateData, setPaginateData] = useState({
     total: 0,
     offset: 0,
@@ -87,6 +103,10 @@ export const Clients: FC<ClientsProps> = () => {
       searchTerm: searchText,
     },
   })
+
+  // useEffect(()=>{
+  //
+  // })
 
   useEffect(() => {
     if (getClientsCountData) {
@@ -148,11 +168,17 @@ export const Clients: FC<ClientsProps> = () => {
   const [duplicateContactsTest, setDuplicateContactsTest] = useState(
     getDuplicateContactsData
   )
+
+  const [testLabels, setTestLabels] = useState(getLabelsData)
   const { t } = useTranslationI18()
   // console.log('duplicateContactsTest:', duplicateContactsTest)
   const isMobile = useMedia('(max-width: 768px)', false)
 
   console.log(searchText, 'searchText')
+
+  useEffect(() => {
+    setTestLabels(getLabelsData)
+  }, [getLabelsData])
 
   useEffect(() => {
     setSourceData(clientsList)
@@ -161,11 +187,15 @@ export const Clients: FC<ClientsProps> = () => {
 
   useEffect(() => {
     setTestData(contactsData)
+    // setTestLabels(getLabelsData)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   // if (contactsData !== undefined) {
   //   setTestData(contactsData)
   // }
+
+  console.log('getLabelsData:', getLabelsData)
+  console.log('testLabels STATE:', testLabels)
 
   useEffect(() => {
     setDuplicateContactsTest(getDuplicateContactsData)
@@ -605,7 +635,9 @@ export const Clients: FC<ClientsProps> = () => {
                     setSelectedTab={setSelectedTab}
                     selectedTab={selectedTab}
                     labels={labels}
+                    testLabels={testLabels}
                     setLabels={setLabels}
+                    setTestLabels={setTestLabels}
                     selectedLabels={selectedLabels}
                     setSelectedLabels={setSelectedLabels}
                     sourceData={sourceData}

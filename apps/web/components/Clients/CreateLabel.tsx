@@ -23,6 +23,7 @@ interface CreateLabelsProps {
   defaultSelectedLabels?: Labels[]
   setDefaultSelectedLabels?: (val: Labels[]) => void
   handleApplyLabel?: (val) => void
+  testLabels?: any
 }
 
 const customColorData = [
@@ -71,6 +72,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   fromHeader = false,
   defaultSelectedLabels = [],
   handleApplyLabel,
+  testLabels,
 }) => {
   const { t } = useTranslationI18()
   const [visible, setVisible] = useState(false)
@@ -88,10 +90,38 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     color: '',
     count: 0,
   })
+  // const editLabelData = (valueObject) => {
+  //   const labelData = [...labels]
+  //   const labelIndex = labelData.findIndex(
+  //     (label) => label.label === selectedEditData.label
+  //   )
+  //   labelIndex !== -1 && labelData.splice(labelIndex, 1, valueObject)
+  //   const selectedLabelData = [...selectedLabels]
+  //   const selectedLabelIndex = selectedLabelData.findIndex(
+  //     (label) => label.label === selectedEditData.label
+  //   )
+  //   selectedLabelIndex !== -1 &&
+  //     selectedLabelData.splice(selectedLabelIndex, 1, valueObject)
+  //   const index = labelData.findIndex(
+  //     (label) => label.label === valueObject.label
+  //   )
+  //   if (index === -1 || index === editIndex) {
+  //     setLabels([...labelData])
+  //     setSelectedLabels([...selectedLabelData])
+  //     fromHeader && handleApplyLabel([...selectedLabelData])
+  //   } else {
+  //     Notification(
+  //       NotificationType.error,
+  //       t('clients.content.button.sameLabelExist')
+  //     )
+  //   }
+  //   setIsEdit(false)
+  // }
+
   const editLabelData = (valueObject) => {
-    const labelData = [...labels]
+    const labelData = [...testLabels]
     const labelIndex = labelData.findIndex(
-      (label) => label.label === selectedEditData.label
+      (label) => label.text === selectedEditData.label
     )
     labelIndex !== -1 && labelData.splice(labelIndex, 1, valueObject)
     const selectedLabelData = [...selectedLabels]
@@ -202,14 +232,47 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     return (
       <div>
         <div className={styles.scrollerTag}>
-          {labels.map((label, index) => {
+          {/*{labels.map((label, index) => {*/}
+          {/*  return (*/}
+          {/*    <div key={index}>*/}
+          {/*      {label?.label && (*/}
+          {/*        <span*/}
+          {/*          style={{ display: 'flex', flexDirection: 'row' }}*/}
+          {/*          key={index}*/}
+          {/*          onClick={() => handleSelect(label, index)}*/}
+          {/*          className={styles.tagWrap}*/}
+          {/*        >*/}
+          {/*          <div className={styles.tagLayout}>*/}
+          {/*            {label.color ? (*/}
+          {/*              <TagFilled style={{ color: label.color }} />*/}
+          {/*            ) : (*/}
+          {/*              <TagOutlined />*/}
+          {/*            )}*/}
+          {/*            <div*/}
+          {/*              className={styles.dropLayout}*/}
+          {/*              style={{ backgroundColor: label.color }}*/}
+          {/*              onClick={(e) => handleDropletClick(e, label, index)}*/}
+          {/*            >*/}
+          {/*              <CustomIcon name={'droplet'} />*/}
+          {/*            </div>*/}
+          {/*          </div>*/}
+          {/*          <div className={styles.tagName}>{label.label}</div>*/}
+          {/*          {selectedLabels.some(*/}
+          {/*            (item) => item.label === label.label*/}
+          {/*          ) && <CheckOutlined />}*/}
+          {/*        </span>*/}
+          {/*      )}*/}
+          {/*    </div>*/}
+          {/*  )*/}
+          {/*}*/}
+          {testLabels.labels.map((label, index) => {
             return (
               <div key={index}>
-                {label?.label && (
+                {label?.text && (
                   <span
                     style={{ display: 'flex', flexDirection: 'row' }}
                     key={index}
-                    onClick={() => handleSelect(label, index)}
+                    // onClick={() => handleSelect(label, index)}
                     className={styles.tagWrap}
                   >
                     <div className={styles.tagLayout}>
@@ -221,15 +284,15 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
                       <div
                         className={styles.dropLayout}
                         style={{ backgroundColor: label.color }}
-                        onClick={(e) => handleDropletClick(e, label, index)}
+                        // onClick={(e) => handleDropletClick(e, label, index)}
                       >
                         <CustomIcon name={'droplet'} />
                       </div>
                     </div>
-                    <div className={styles.tagName}>{label.label}</div>
-                    {selectedLabels.some(
-                      (item) => item.label === label.label
-                    ) && <CheckOutlined />}
+                    <div className={styles.tagName}>{label.text}</div>
+                    {/*{selectedLabels.some(*/}
+                    {/*  (item) => item.text === label.text*/}
+                    {/*) && <CheckOutlined />}*/}
                   </span>
                 )}
               </div>
