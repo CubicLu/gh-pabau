@@ -22,7 +22,7 @@ function getPodDbUrl(urlOrHostname) {
 
   return `mysql://${PABAU1_MYSQL_USERNAME_PODS}:${PABAU1_MYSQL_PASSWORD_PODS}@db.${
     url.hostname.split('.')[0]
-  }/pabau`
+  }/pabau?connection_limit=32`
 }
 
 /**
