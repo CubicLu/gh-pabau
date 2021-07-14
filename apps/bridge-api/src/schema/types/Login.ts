@@ -4,7 +4,7 @@ import { Context } from '../../context'
 import {
   verifyUser,
   authenticateUser,
-} from '../../app/authentication/LoginService'
+} from '../../app/authentication/login-service'
 
 export const VerifyCredentials = extendType({
   type: 'Query',
@@ -28,7 +28,7 @@ export const VerifyCredentials = extendType({
               },
             },
             include: {
-              company: true,
+              Company: true,
             },
           })
         } catch (error) {
@@ -58,7 +58,7 @@ export const ListRelatedCompanies = extendType({
               },
             },
             include: {
-              company: true,
+              Company: true,
             },
           })
         } catch (error) {
@@ -76,6 +76,7 @@ export const AuthenticateUser = extendType({
       type: 'String',
       args: {
         user_id: nonNull(intArg()),
+        username: nonNull(stringArg()),
         company_id: nonNull(intArg()),
         user_admin: nonNull(intArg()),
         company_admin: nonNull(intArg()),
@@ -85,6 +86,7 @@ export const AuthenticateUser = extendType({
       async resolve(event, args, ctx: Context) {
         return authenticateUser({
           id: args.user_id,
+          username: args.username,
           company_id: args.company_id,
           admin: args.user_admin,
           company: {

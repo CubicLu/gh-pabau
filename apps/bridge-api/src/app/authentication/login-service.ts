@@ -1,5 +1,5 @@
 import { LoginInputDto, JwtPayloadDto, JwtUser } from './dto'
-import { User } from '../../generated/schema'
+import { User } from '@prisma/client'
 import { createHash } from 'crypto'
 import jwt from 'jsonwebtoken'
 
@@ -37,6 +37,7 @@ export const authenticateUser = (user: JwtUser): string => {
   return jwt.sign(
     {
       user: user.id,
+      username: user.username,
       company: user.company_id,
       admin: Boolean(user.admin) ?? false,
       owner: user.id === user.company.admin ?? false,
