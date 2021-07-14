@@ -53,14 +53,6 @@ docker build "dist/apps/${APP_NAME}" -t "${APP_NAME}" -f "tools/cicd/${APP_NAME}
 
 if [ -z "${BITBUCKET_PR_ID}" ] && [ -n "${BITBUCKET_BRANCH}" ]; then
 
-  echo "Pushing to Rancher1..."
-  echo "Docker tag..."
-  docker image tag "${APP_NAME}:latest" "${DOCKER_HOSTNAME}/monorepo/${APP_NAME}"
-  echo "Docker login..."
-  docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}" "${DOCKER_HOSTNAME}"
-  echo "Docker push..."
-  docker image push "${DOCKER_HOSTNAME}/monorepo/${APP_NAME}"
-
   echo "Pushing to Rancher2..."
   echo "Docker tag..."
   docker image tag "${APP_NAME}:latest" "${DOCKER2_HOSTNAME}/monorepo/${APP_NAME}"

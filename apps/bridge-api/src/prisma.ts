@@ -48,6 +48,35 @@ export const prisma = (remote_url: string) => {
     ],
   })
 
+  /**
+   * Here we use es2015's Proxy object to extend the class at runtime.
+   *
+   * I tried the FP approach using
+   * ```
+   * const securedInstance = {
+   *   ...instance,
+   *   user: {
+   *     ...instance.user,
+   *     findUnique: (e) => instance.user.findFirst(e),
+   *   },
+   * }
+   * ```
+   * But TS doesn't like it.
+   *
+   */
+  const securedInstanceProxy = new Proxy(instance, {
+    get(target, property) {
+      return new Proxy(target[property], {
+        get(target, property) {
+          if (property === 'findUnique') {
+            return target.findFirst // switcharooy
+          }
+          return target[property]
+        },
+      })
+    },
+  })
+
   if (process.env.LOGGING && process.env.LOGGING !== '0')
     instance.$on('query', (e) => {
       console.log(
@@ -61,7 +90,8 @@ export const prisma = (remote_url: string) => {
       )
     })
 
-  instances[remote_url] = instance
+  // store this instance into memory cache
+  instances[remote_url] = securedInstanceProxy
 
-  return instance
+  return securedInstanceProxy
 }
