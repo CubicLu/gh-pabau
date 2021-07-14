@@ -33,6 +33,7 @@ const Login: FC = () => {
 
       setUser({
         id: user.id,
+        username: user.username,
         company_id: user.company_id,
         admin: user.admin,
         company: {
@@ -59,6 +60,7 @@ const Login: FC = () => {
       authenticateUserMutation({
         variables: {
           user_id: user.id,
+          username: user.username,
           company_id: user.company_id,
           user_admin: user.admin,
           company_admin: user.company.details.admin,
@@ -82,6 +84,7 @@ const Login: FC = () => {
       authenticateUserMutation({
         variables: {
           user_id: user.id,
+          username: user.username,
           company_id: user.company_id,
           user_admin: user.admin,
           company_admin: user.company.details.admin,
