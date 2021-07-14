@@ -13,12 +13,16 @@ const SendMailStory = ({ ...args }) => {
   return (
     <div
       style={{
-        width: '752px',
-        height: '824px',
+        width: 'calc(100vw - 60px)',
+        height: 'calc(100vh - 60px)',
         border: '1px solid var(--border-color-base)',
       }}
     >
-      <SendMail {...args} id="" clientId="" />
+      <SendMail
+        {...args}
+        receiverData=""
+        client={{ id: '', name: '', email: '' }}
+      />
     </div>
   )
 }

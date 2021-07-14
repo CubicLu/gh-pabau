@@ -4,7 +4,9 @@ import SendMail from './SendMail'
 
 describe('SendMail', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<SendMail clientId={''} id={''} />)
+    const { baseElement } = render(
+      <SendMail client={{ id: '', name: '', email: '' }} receiverData={''} />
+    )
     expect(baseElement).toBeTruthy()
   })
 })

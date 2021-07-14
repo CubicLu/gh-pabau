@@ -4395,6 +4395,18 @@
     prop-types "^15.6.1"
     react-lifecycles-compat "^3.0.4"
 
+"@react-hook/debounce@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@react-hook/debounce/-/debounce-4.0.0.tgz#5da87e7bfa158cfe2830ffc997dc1b755e261379"
+  integrity sha512-706Xcg+KKWHk9BuZQUQ0ZQKp9zhv3/MbqFenWVfHcynYpSGRVwQTzJRGvPxvsdtXxJv+HfgKTY/O/hEejakwmA==
+  dependencies:
+    "@react-hook/latest" "^1.0.2"
+
+"@react-hook/latest@^1.0.2":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@react-hook/latest/-/latest-1.0.3.tgz#c2d1d0b0af8b69ec6e2b3a2412ba0768ac82db80"
+  integrity sha512-dy6duzl+JnAZcDbNTfmaP3xHiKtbXYOaz3G51MGVljh548Y8MWzTr+PHLOfvpypEVW9zwvl+VyKjbWKEVbV1Rg==
+
 "@react-native-community/cli-debugger-ui@^5.0.1":
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/@react-native-community/cli-debugger-ui/-/cli-debugger-ui-5.0.1.tgz#6b1f3367b8e5211e899983065ea2e72c1901d75f"
@@ -21604,6 +21616,13 @@ react-colorful@^5.1.2:
   resolved "https://registry.yarnpkg.com/react-colorful/-/react-colorful-5.2.3.tgz#579faf42542e32645c5dee66c8530292b2d61646"
   integrity sha512-lAge4syxosZg9SX8fJiwOLd9ZJSW3poPBtypnz1aMiFoHsRnK5G3+INGGx9DGtsrso4h5uFYbiFpjAfWyK3Kag==
 
+react-confetti@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/react-confetti/-/react-confetti-6.0.1.tgz#d4f57b5a021dd908a6243b8f63b6009b00818d10"
+  integrity sha512-ZpOTBrqSNhWE4rRXCZ6E6U+wGd7iYHF5MGrqwikoiBpgBq9Akdu0DcLW+FdFnLjyZYC+VfAiV2KeFgYRMyMrkA==
+  dependencies:
+    tween-functions "^1.2.0"
+
 react-cookie@4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/react-cookie/-/react-cookie-4.0.3.tgz#ba8e5ea0047c916516e1181a3ad394c9b7580b56"
@@ -25382,7 +25401,7 @@ tunnel-agent@^0.6.0:
   dependencies:
     safe-buffer "^5.0.1"
 
-tween-functions@~1.2.0:
+tween-functions@^1.2.0, tween-functions@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/tween-functions/-/tween-functions-1.2.0.tgz#1ae3a50e7c60bb3def774eac707acbca73bbc3ff"
   integrity sha1-GuOlDnxguz3vd06scHrLynO7w/8=

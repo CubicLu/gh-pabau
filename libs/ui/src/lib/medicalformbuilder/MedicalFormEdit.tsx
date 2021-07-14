@@ -181,7 +181,6 @@ const reverseForm = (form) => {
 }
 
 const getFormInfo = (form) => {
-  // let name = ''
   let label = ''
   if (form.title) {
     if (typeof form.title === 'object') {

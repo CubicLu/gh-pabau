@@ -1,5 +1,4 @@
-import { Button } from '@pabau/ui'
-import React, { FC, useState } from 'react'
+import React, { FC } from 'react'
 import ClientCard, { ClientCardProps } from './ClientCard'
 import { searchResults, notes, clientData } from './mock'
 
@@ -8,23 +7,18 @@ export default {
   title: 'UI/ClientCard',
 }
 
-export const ClientCardStory: FC<ClientCardProps> = ({ ...args }) => {
-  const [visible, setVisible] = useState(false)
-  return (
-    <>
-      <Button type="primary" onClick={() => setVisible((e) => !e)}>
-        Open client card
-      </Button>
-      <ClientCard
-        {...args}
-        clientData={clientData}
-        notes={notes}
-        searchResults={searchResults}
-        medicalConditions={['Anxiety']}
-        alerts={[]}
-        visible={visible}
-        onClose={() => setVisible(false)}
-      />
-    </>
-  )
+const ClientCardStory: FC<ClientCardProps> = ({ ...args }) => (
+  <ClientCard {...args} />
+)
+export const Basic = ClientCardStory.bind({})
+Basic.args = {
+  visible: true,
+  onClose: () => {
+    return
+  },
+  clientData: clientData,
+  notes: notes,
+  searchResults: searchResults,
+  medicalConditions: ['Anxiety'],
+  alerts: [],
 }
