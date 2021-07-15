@@ -20,7 +20,6 @@ import { useGridData } from '../../../hooks/useGridData'
 import { UserContext } from '../../../context/UserContext'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
-import TwoFADetailsTab from '../../../components/TwoFADetailsTab/TwoFADetailsTab'
 import SecurityTab from '../../../components/Setup/BusinessDetails/SecurityTab'
 import TerminologyTab from '../../../components/Setup/BusinessDetails/TerminologyTab'
 import SystemTab from '../../../components/Setup/BusinessDetails/SystemTab'
@@ -241,7 +240,6 @@ export const Index: FC = () => {
             />
             <Terminology onSave={(values) => onSave(values, 'terminology')} />
             <System onSave={(values) => onSave(values, 'system')} />
-            <TwoFADetailsTab />
             <BusinessDetailsNotifications
               onSave={(values) => onSave(values, 'notification')}
             />

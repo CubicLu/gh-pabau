@@ -29,6 +29,8 @@ export const VerifyCredentials = extendType({
             },
             include: {
               Company: true,
+              CompanyDetails: true,
+              CmStaffGeneral: true,
             },
           })
         } catch (error) {

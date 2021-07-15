@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { ReactComponent as LoginImage } from '../assets/images/login.svg'
 import styles from './login.module.less'
 import { Logo, Notification, NotificationType } from '@pabau/ui'
@@ -14,12 +14,15 @@ import {
 } from '@pabau/graphql'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
 import { useRouter } from 'next/router'
+import fetch from 'cross-fetch'
+import { debounce } from 'lodash'
 
 const Login: FC = () => {
   const [showPage, setShowPage] = useState<string>('login')
   const [user, setUser] = useState<JwtUser>()
   const { t } = useTranslationI18()
   const router = useRouter()
+  const [tempLegacyTab, setTempLegacyTab] = useState(null)
 
   const [verifyCredentials] = useVerifyCredentialsLazyQuery({
     onCompleted(verifyData) {
@@ -38,12 +41,12 @@ const Login: FC = () => {
         admin: user.admin,
         company: {
           details: {
-            admin: user.company.details.admin,
-            enable_2fa: user.company.details.enable_2fa,
+            admin: user.CompanyDetails?.admin,
+            enable_2fa: user.CompanyDetails?.enable_2fa,
           },
-          admin: user.company.details.admin,
-          remote_url: user.company.remote_url,
-          remote_connect: user.company.remote_connect,
+          admin: user.CompanyDetails?.admin,
+          remote_url: user.Company?.remote_url,
+          remote_connect: user.Company?.remote_connect,
         },
         CmStaffGeneral: {
           CellPhone: user.CmStaffGeneral.CellPhone,
@@ -51,23 +54,59 @@ const Login: FC = () => {
       })
 
       //check for 2fa if enabled or disabled
-      if (user.company.details.enable_2fa) {
+      if (user.CompanyDetails?.enable_2fa) {
         setShowPage('twoStepAuth')
         return
       }
 
-      //regular login - authenticate user
-      authenticateUserMutation({
-        variables: {
-          user_id: user.id,
-          username: user.username,
-          company_id: user.company_id,
-          user_admin: user.admin,
-          company_admin: user.company.details.admin,
-          remote_url: user.company.remote_url,
-          remote_connect: user.company.remote_connect,
-        },
-      })
+      //simulating a pabau1(legacy) login for iframes
+      ;(async () => {
+        const formData = new FormData()
+        formData.append(
+          'company',
+          JSON.stringify({
+            company_id: user.company_id,
+            username: user.username,
+            pod_url: user.Company?.remote_url,
+            pabau2: 1,
+          })
+        )
+
+        try {
+          await fetch(process.env.NEXT_PUBLIC_LEGACY_HASH_ENDPOINT, {
+            method: 'POST',
+            body: formData,
+            mode: 'no-cors',
+          })
+            .then(
+              function (response) {
+                return response.json()
+              },
+              function (error) {
+                console.error(error.message)
+              }
+            )
+            .then((response) => {
+              const tempWindow = window.open(response, '_blank')
+              setTempLegacyTab(tempWindow)
+
+              //regular login - authenticate user
+              authenticateUserMutation({
+                variables: {
+                  user_id: user.id,
+                  username: user.username,
+                  company_id: user.company_id,
+                  user_admin: user.admin,
+                  company_admin: user.CompanyDetails?.admin,
+                  remote_url: user.Company?.remote_url,
+                  remote_connect: user.Company?.remote_connect,
+                },
+              })
+            })
+        } catch {
+          console.error('cross-platform verification failed..')
+        }
+      })()
     },
   })
 
@@ -104,6 +143,18 @@ const Login: FC = () => {
       }
     },
   })
+
+  useEffect(() => {
+    let timer = null
+    if (tempLegacyTab) {
+      //giving the user time to read the message so they dont panic by new tab open and close real quick
+      timer = setTimeout(() => tempLegacyTab.close(), 2000)
+    }
+
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [tempLegacyTab])
 
   return (
     <div className={styles.signInWrapper}>
