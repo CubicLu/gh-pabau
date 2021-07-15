@@ -562,6 +562,7 @@ export const Clients: FC<ClientsProps> = () => {
       onPaginationChange={onPaginationChange}
       getClientsCountLoading={getClientsCountLoading}
       setPaginateData={setPaginateData}
+      testLabels={testLabels}
     />
   )
 

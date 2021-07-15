@@ -41,6 +41,7 @@ interface ClientsContentProps {
   onPaginationChange?: (val) => void
   getClientsCountLoading?: boolean
   setPaginateData?: (val) => void
+  testLabels?: any
 }
 
 export interface SourceDataProps {
@@ -83,6 +84,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
   onPaginationChange,
   getClientsCountLoading,
   setPaginateData,
+  testLabels,
 }) => {
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 768px)', false)
@@ -338,6 +340,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
             defaultSelectedLabels={defaultSelectedLabels}
             setDefaultSelectedLabels={setDefaultSelectedLabels}
             handleApplyLabel={handleApplyLabel}
+            testLabels={testLabels}
           >
             {renderTooltip({
               title: t('clients.leftSidebar.createLabels'),

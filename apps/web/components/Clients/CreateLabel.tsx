@@ -8,6 +8,7 @@ import {
   Button,
   CustomIcon,
 } from '@pabau/ui'
+import { useAddLabelMutation } from '@pabau/graphql'
 import styles from '../../pages/clients/clients.module.less'
 import { Labels } from '../../pages/clients'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
@@ -90,6 +91,11 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     color: '',
     count: 0,
   })
+
+  const [
+    addLabelMutaton,
+    { data: addlabelData, loading: AddLabelLoading, error: addLabelError },
+  ] = useAddLabelMutation()
   // const editLabelData = (valueObject) => {
   //   const labelData = [...labels]
   //   const labelIndex = labelData.findIndex(
@@ -117,9 +123,13 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   //   }
   //   setIsEdit(false)
   // }
+  console.log('isEdit:', isEdit)
 
   const editLabelData = (valueObject) => {
-    const labelData = [...testLabels]
+    const labelData = [...testLabels.labels]
+    console.log('testLabels on edit:', testLabels)
+    console.log('valueObject on edit:', valueObject)
+    console.log('labelData on edit:', labelData)
     const labelIndex = labelData.findIndex(
       (label) => label.text === selectedEditData.label
     )
@@ -131,7 +141,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     selectedLabelIndex !== -1 &&
       selectedLabelData.splice(selectedLabelIndex, 1, valueObject)
     const index = labelData.findIndex(
-      (label) => label.label === valueObject.label
+      (label) => label.text === valueObject.label
     )
     if (index === -1 || index === editIndex) {
       setLabels([...labelData])
@@ -143,14 +153,37 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
         t('clients.content.button.sameLabelExist')
       )
     }
+
     setIsEdit(false)
   }
 
+  // const addLabelData = (valueObject) => {
+  //   if (!labels.some((item) => item.label === valueObject.label)) {
+  //     setLabels([...labels, valueObject])
+  //     setSelectedLabels([...selectedLabels, valueObject])
+  //     fromHeader && handleApplyLabel([...selectedLabels, valueObject])
+  //   } else {
+  //     Notification(
+  //       NotificationType.error,
+  //       t('clients.content.button.sameLabelExist')
+  //     )
+  //   }
+  // }
+
   const addLabelData = (valueObject) => {
-    if (!labels.some((item) => item.label === valueObject.label)) {
-      setLabels([...labels, valueObject])
-      setSelectedLabels([...selectedLabels, valueObject])
-      fromHeader && handleApplyLabel([...selectedLabels, valueObject])
+    if (!testLabels?.labels.some((item) => item.text === valueObject.label)) {
+      //     setLabels([...labels, valueObject])
+
+      // console.log('added new label', newLabel)
+      // console.log('testLabels on ADDING:', testLabels)
+      // console.log('valueObject:', valueObject)
+      // console.log('testLabels.labels :', testLabels.labels)
+      addLabelMutaton({
+        variables: {
+          text: newLabel.label,
+          color: newLabel.color,
+        },
+      })
     } else {
       Notification(
         NotificationType.error,
@@ -158,6 +191,8 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
       )
     }
   }
+
+  // console.log('testLabels UPDATEDB:', testLabels)
 
   const handleKeyPress = (e) => {
     const {
@@ -228,6 +263,8 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     setVisible(false)
   }
 
+  // console.log('newLabel :', newLabel)
+
   const content = () => {
     return (
       <div>
@@ -265,7 +302,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
           {/*    </div>*/}
           {/*  )*/}
           {/*}*/}
-          {testLabels.labels.map((label, index) => {
+          {testLabels?.labels.map((label, index) => {
             return (
               <div key={index}>
                 {label?.text && (

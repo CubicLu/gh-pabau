@@ -1,0 +1,7 @@
+mutation addLabel($text: String, $color: String) {
+  insert_labels_one(object:{color: $color, text: $text}){
+    id
+    color
+    text
+  }
+}
