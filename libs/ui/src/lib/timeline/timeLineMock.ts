@@ -193,7 +193,8 @@ export const eventsData: EventsProps[] = [
     id: 21,
     type: 'document',
     eventName: 'Document',
-    documentFile: 'http://www.pdf995.com/samples/pdf.pdf',
+    documentFile:
+      'https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf?hsLang=en',
     clientName: 'Martin Wade',
     sharedWith: [
       { firstName: 'Alexis', lastName: 'Moor' },
