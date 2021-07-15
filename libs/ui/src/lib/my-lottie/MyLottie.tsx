@@ -4,8 +4,12 @@ export interface MyLottieProps {
   options: {
     loop?: boolean
     autoplay?: boolean
+    autoPlay?: boolean
     animationData: unknown
     renderSettings?: {
+      [key: string]: unknown
+    }
+    rendererSettings?: {
       [key: string]: unknown
     }
     eventListeners?: {
@@ -24,8 +28,8 @@ export interface MyLottieProps {
     }[]
   }
   eventListeners?: unknown[]
-  height: string | number
-  width: string | number
+  height?: string | number
+  width?: string | number
 }
 export const MyLottie = dynamic<MyLottieProps>(() => import('react-lottie'), {
   ssr: false,

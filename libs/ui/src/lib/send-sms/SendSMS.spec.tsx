@@ -4,7 +4,9 @@ import SendSMS from './SendSMS'
 
 describe('SendSMS', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<SendSMS id="" clientId="" />)
+    const { baseElement } = render(
+      <SendSMS receiverData="" client={{ id: '', email: '', name: '' }} />
+    )
     expect(baseElement).toBeTruthy()
   })
 })

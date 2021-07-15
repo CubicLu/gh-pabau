@@ -53,7 +53,7 @@ export const clientData = {
   outStanding: 540,
   patientID: '325',
   referredBy: 'Doctor Referral',
-  dob: '1969-11-28',
+  dob: '1969-06-16',
   gender: 'Male',
   address: '68 Vassall Road, London, SW9 6HY',
   phone: '383299103',

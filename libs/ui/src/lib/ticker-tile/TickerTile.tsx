@@ -10,6 +10,9 @@ export interface TickerTileProps {
   speed: number
   showCount?: boolean
   showDots?: boolean
+  isBlank?: boolean
+  noItemText?: string
+  noItemImage?: ReactNode
 }
 
 export const TickerTile: FC<TickerTileProps> = ({
@@ -18,6 +21,9 @@ export const TickerTile: FC<TickerTileProps> = ({
   speed,
   showCount,
   showDots,
+  noItemText,
+  noItemImage,
+  isBlank,
 }) => {
   const ref = useRef<CarouselRef>(null)
   const [cardNumber, setCardNumber] = useState(0)
@@ -32,13 +38,14 @@ export const TickerTile: FC<TickerTileProps> = ({
     <div className={styles.tickerTileContainer}>
       <div className={styles.tickerTileTitle}>{title}</div>
       <div className={styles.tickerTileContent}>
-        {items.length === 1 &&
+        {!isBlank &&
+          items.length === 1 &&
           items.map((tile, index) => (
             <div className={styles.tickerTile} key={`ticker-tile-${index}`}>
               {tile}
             </div>
           ))}
-        {items.length > 1 && (
+        {!isBlank && items.length > 1 && (
           <Carousel
             dotPosition="right"
             autoplay={true}
@@ -53,8 +60,10 @@ export const TickerTile: FC<TickerTileProps> = ({
             ))}
           </Carousel>
         )}
-        {showCount && <div className={styles.tickerCount}>{items.length}</div>}
-        {showDots && (
+        {!isBlank && showCount && (
+          <div className={styles.tickerCount}>{items.length}</div>
+        )}
+        {!isBlank && showDots && (
           <div className={styles.tickerDots}>
             {items.map((_, index) => (
               <div
@@ -66,6 +75,12 @@ export const TickerTile: FC<TickerTileProps> = ({
                 onClick={() => handleChangeDetailsCard(index)}
               />
             ))}
+          </div>
+        )}
+        {isBlank && (
+          <div className={styles.noItem}>
+            {noItemImage && noItemImage}
+            <span>{noItemText || ''}</span>
           </div>
         )}
       </div>

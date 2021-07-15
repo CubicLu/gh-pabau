@@ -152,7 +152,11 @@
     height: calc(100vh - 20px);
   }
   &.expandedForm {
-    width: 750px;
+    width: 840px;
+    height: calc(100vh - 20px);
+  }
+  &.expandedPrescription {
+    width: 840px;
     height: calc(100vh - 20px);
   }
   .fullScreenContent {
@@ -229,7 +233,7 @@
         grid-template-columns: repeat(3, 1fr);
         grid-column-gap: 12px;
         .opsIcon {
-          width: 100%;
+          width: 20px;
           height: 20px;
           display: flex;
           align-items: center;
@@ -238,12 +242,15 @@
           color: var(--light-grey-color);
           cursor: pointer;
         }
+        @media (max-width: 767px) {
+          display: flex;
+          justify-content: flex-end;
+        }
       }
     }
   }
   .content {
     width: 100%;
-    max-width: 696px;
     height: calc(100% - 56px);
     overflow-y: auto;
     border-radius: 0 0 4px 4px;
