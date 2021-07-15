@@ -65,7 +65,7 @@ if [ -z "${BITBUCKET_PR_ID}" ] && [ -n "${BITBUCKET_BRANCH}" ]; then
     -X POST \
     -H 'Accept: application/json' \
     -H 'Content-Type: application/json' \
-    'https://rancher.pabau.com/v3/project/c-j8bb9:p-jrqrz/workloads/deployment:new-clinic:bridge-api?action=redeploy'
+    'https://rancher.pabau.com/v3/project/c-j8bb9:p-jrqrz/workloads/deployment:pabau2:api-v2-prisma?action=redeploy'
   echo "Deployed!"
 
   echo "${APP_NAME}: https://api-v2-prisma.pabau.com/graphql" >> /tmp/bot_message.txt
