@@ -139,22 +139,13 @@ const Login: FC = () => {
       const response = authenticateData.AuthenticateUser
       if (response) {
         localStorage.setItem('token', response)
-        router.reload()
+        setTimeout(() => {
+          tempLegacyTab.close()
+          router.reload()
+        }, 2000)
       }
     },
   })
-
-  useEffect(() => {
-    let timer = null
-    if (tempLegacyTab) {
-      //giving the user time to read the message so they dont panic by new tab open and close real quick
-      timer = setTimeout(() => tempLegacyTab.close(), 2000)
-    }
-
-    return () => {
-      clearTimeout(timer)
-    }
-  }, [tempLegacyTab])
 
   return (
     <div className={styles.signInWrapper}>
