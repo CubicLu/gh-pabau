@@ -61,6 +61,7 @@ export interface SourceDataProps {
   setupFee?: string
   is_dismissed?: boolean
   avatar?: string
+  labelTest?: any
 }
 
 export const ClientsContent: FC<ClientsContentProps> = ({
@@ -182,28 +183,59 @@ export const ClientsContent: FC<ClientsContentProps> = ({
           {t('clients.content.column.label')}
         </div>
       ),
-      dataIndex: 'label',
+      dataIndex: 'labelTest',
       visible: visiblePrimaryColumns('Label'),
       // eslint-disable-next-line react/display-name
-      render: (labels = []) => {
-        return labels.map((label, index) => {
-          return (
-            <div className={styles.labelWrapper} key={index}>
-              <Button
-                className={styles.labelButton}
-                style={{
-                  border: `1px solid ${label.color}`,
-                  color: label.color,
-                }}
-                backgroundColor={''}
-                onClick={(e) => handleLabelClick(e, label.label)}
-                icon={<TagOutlined />}
-              >
-                {label.label}
-              </Button>
-            </div>
-          )
-        })
+      // render: (labels = []) => {
+      //   return labels.map((label, index) => {
+      //     return (
+      //       <div className={styles.labelWrapper} key={index}>
+      //         <Button
+      //           className={styles.labelButton}
+      //           style={{
+      //             border: `1px solid ${label.color}`,
+      //             color: label.color,
+      //           }}
+      //           backgroundColor={''}
+      //           onClick={(e) => handleLabelClick(e, label.label)}
+      //           icon={<TagOutlined />}
+      //         >
+      //           {label.label}
+      //         </Button>
+      //       </div>
+      //     )
+      //   })
+      // },
+      // render: () => {
+      //   // const { id } = sourceData
+      //   sourceData.map((item) => item.id === 23302410)
+      //   console.log('sourceData on lanel', sourceData)
+      //
+      //   {
+      //     return (
+      //       <div className={styles.labelWrapper}>
+      //         <Button
+      //           className={styles.labelButton}
+      //           // style={{
+      //           //   border: `1px solid ${label.color}`,
+      //           //   color: label.color,
+      //           // }}
+      //           backgroundColor={''}
+      //           // onClick={(e) => handleLabelClick(e, label.label)}
+      //           icon={<TagOutlined />}
+      //         >
+      //           TESTING NEW LABEL
+      //         </Button>
+      //       </div>
+      //     )
+      //   }
+      // },
+      // eslint-disable-next-line react/display-name
+      render: (labelTest) => {
+        // const { labelTest } = data
+        console.log('labelTest onupdate:', labelTest)
+
+        return <span>{labelTest}</span>
       },
     },
     {

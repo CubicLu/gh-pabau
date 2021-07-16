@@ -178,6 +178,8 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
       // console.log('testLabels on ADDING:', testLabels)
       // console.log('valueObject:', valueObject)
       // console.log('testLabels.labels :', testLabels.labels)
+      setSelectedLabels([...selectedLabels, valueObject])
+      fromHeader && handleApplyLabel([...selectedLabels, valueObject])
       addLabelMutaton({
         variables: {
           text: newLabel.label,
@@ -309,7 +311,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
                   <span
                     style={{ display: 'flex', flexDirection: 'row' }}
                     key={index}
-                    // onClick={() => handleSelect(label, index)}
+                    onClick={() => handleSelect(label, index)}
                     className={styles.tagWrap}
                   >
                     <div className={styles.tagLayout}>
@@ -321,15 +323,15 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
                       <div
                         className={styles.dropLayout}
                         style={{ backgroundColor: label.color }}
-                        // onClick={(e) => handleDropletClick(e, label, index)}
+                        onClick={(e) => handleDropletClick(e, label, index)}
                       >
                         <CustomIcon name={'droplet'} />
                       </div>
                     </div>
                     <div className={styles.tagName}>{label.text}</div>
-                    {/*{selectedLabels.some(*/}
-                    {/*  (item) => item.text === label.text*/}
-                    {/*) && <CheckOutlined />}*/}
+                    {selectedLabels.some(
+                      (item) => item.label === label.text
+                    ) && <CheckOutlined />}
                   </span>
                 )}
               </div>

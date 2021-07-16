@@ -122,8 +122,8 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
               label?.text && (
                 <Menu.Item
                   key={`${label.text}`}
-                  // onClick={() => handleLabelClick(false, label.text)}
-                  onClick={() => console.log('clicked label')}
+                  onClick={() => handleLabelClick(false, label.text)}
+                  // onClick={() => console.log('clicked label')}
                 >
                   <div className={styles.clientMenuItem}>
                     <span>

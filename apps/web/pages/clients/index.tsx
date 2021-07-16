@@ -118,6 +118,12 @@ export const Clients: FC<ClientsProps> = () => {
     }
   }, [getContactsData, getClientsCountData])
 
+  useEffect(() => {
+    if (getContactsData) {
+      setTestData(contactsData)
+    }
+  }, [getContactsData])
+
   const onPaginationChange = (currentPage) => {
     const offset = paginateData.limit * (currentPage - 1)
     setPaginateData({
@@ -137,6 +143,7 @@ export const Clients: FC<ClientsProps> = () => {
     email: d.Email,
     mobileNumber: d.Mobile,
     is_active: d.is_active,
+    labelTest: '',
   }))
 
   // console.log(contactsData, 'contactsData')
@@ -149,10 +156,13 @@ export const Clients: FC<ClientsProps> = () => {
   >(clientsList)
   const [isArchived, setIsArchived] = useState(false)
   const [labels, setLabels] = useState<Labels[]>([])
-  const [selectedLabels, setSelectedLabels] = useState<Labels[]>([])
-  const [defaultSelectedLabels, setDefaultSelectedLabels] = useState<Labels[]>(
-    []
-  )
+  // const [selectedLabels, setSelectedLabels] = useState<Labels[]>([])
+  const [selectedLabels, setSelectedLabels] = useState([])
+
+  // const [defaultSelectedLabels, setDefaultSelectedLabels] = useState<Labels[]>(
+  //   []
+  // )
+  const [defaultSelectedLabels, setDefaultSelectedLabels] = useState([])
   const [createClientModalVisible, setCreateClientModalVisible] = useState(
     false
   )
@@ -185,14 +195,31 @@ export const Clients: FC<ClientsProps> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientsList])
 
-  useEffect(() => {
-    setTestData(contactsData)
-    // setTestLabels(getLabelsData)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  // useEffect(() => {
+  //   setTestData(contactsData)
+  //   // setTestLabels(getLabelsData)
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [getContactsData])
   // if (contactsData !== undefined) {
   //   setTestData(contactsData)
   // }
+  // if (!getContactsLoading) {
+  //   setTestData(contactsData)
+  // }
+
+  // const addingLabeltoContact =  testData?.map((item) => {
+  //   if (item.id === 23302410) {
+  //     item.labelTest = 'testLabelFunc'
+  //   }
+  // })
+
+  useEffect(() => {
+    testData?.map((item) => {
+      if (item.id === 23302410) {
+        item.labelTest = 'testLabelFunc'
+      }
+    })
+  }, [getContactsData, testData])
 
   console.log('getLabelsData:', getLabelsData)
   console.log('testLabels STATE:', testLabels)
@@ -288,6 +315,8 @@ export const Clients: FC<ClientsProps> = () => {
     }
     return res
   }
+
+  console.log('selectedRowKeys', selectedRowKeys)
 
   useEffect(() => {
     let filteredData = [...sourceData]
@@ -530,6 +559,7 @@ export const Clients: FC<ClientsProps> = () => {
     })
   }
   console.log('getClientsCountData:', getClientsCountData)
+  console.log('selectedLabels:', selectedLabels)
 
   const handleMerge = (data) => {
     displayConfetti()
@@ -543,7 +573,7 @@ export const Clients: FC<ClientsProps> = () => {
     <ContentComponent
       searchText={searchText}
       // sourceData={sourceFilteredData}
-      sourceData={contactsData}
+      sourceData={testData}
       // handleLabelClick={handleLabelClick}
       isArchived={isArchived}
       labels={labels}
@@ -575,6 +605,9 @@ export const Clients: FC<ClientsProps> = () => {
       duplicateContactsTest={duplicateContactsTest}
     />
   )
+
+  console.log('testData:', testData)
+  console.log('contactsData:', contactsData)
 
   return (
     <div>
