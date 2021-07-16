@@ -33,10 +33,9 @@ interface P {
   isFilterNumber?: boolean
   isNotificationBannerOnData?: boolean
   requireAdminAccess?: boolean
-  showStaticData?: boolean
-  staticData?: Array<Record<string, string | boolean | number>>
   isCodeGen?: boolean
   deleteOnInactive?: boolean
+  isHavingDefaultRecords?: boolean
 }
 const CrudLayout: FC<P> = ({ ...props }) => {
   const crudLayoutRef = useRef(null)

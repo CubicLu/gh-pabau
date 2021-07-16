@@ -6363,10 +6363,11 @@ model InvPaymentType {
   description   String?
   company_id    Int?      @map("occupier")
   uid           Int?
-  created_date  DateTime?
-  modified_date DateTime?
+  created_date  DateTime? @default(now())
+  modified_date DateTime? @updatedAt
   is_active     Int
   is_money      Int?
+  default       Boolean
   type          String    @default("money")
   Company       Company?  @relation(fields: [company_id], references: [id])
   GlCode        GlCode?

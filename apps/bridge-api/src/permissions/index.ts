@@ -122,6 +122,12 @@ export const permissions = shield(
       findFirstPage: rules.authentication.isAuthenticated,
       findManyPage: rules.authentication.isAuthenticated,
       findManyPageCount: rules.authentication.isAuthenticated,
+      //InvPaymentType
+      findManyInvPaymentType: rules.interceptors.interceptSharedCompanyData,
+      findManyInvPaymentTypeCount:
+        rules.interceptors.interceptSharedCompanyData,
+      findFirstInvPaymentType: rules.interceptors.interceptSharedCompanyData,
+      findUniqueInvPaymentType: rules.interceptors.interceptSharedCompanyData,
       // //CmContactNote
       findFirstCmContactNote: rules.authentication.isAuthenticated,
       findManyCmContactNote: rules.authentication.isAuthenticated,
