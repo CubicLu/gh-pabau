@@ -227,6 +227,11 @@ const LocationsLayout: FC<P> = ({ schema }) => {
       variables: {
         isActive,
         searchTerm: '%' + searchTerm + '%',
+        filter: {
+          every: {
+            AND: [],
+          },
+        },
       },
     }
 
