@@ -6,13 +6,10 @@ import {
   ShareAltOutlined,
 } from '@ant-design/icons'
 import {
-  useFindMedicalFormsCountQuery,
-  useFindMedicalFormsQuery,
-} from '@pabau/graphql'
-import {
   BasicModal,
   Button,
   DotButton,
+  EmailMessageTemplateItem,
   MedicalFormBuilder,
   MedicalFormItem,
   MedicalFormPreview,
@@ -20,139 +17,89 @@ import {
   Notification,
   NotificationType,
   Pagination,
+  SmsMessageTemplateItem,
   Table,
+  UserListItem,
   VersionHistory,
 } from '@pabau/ui'
 import { Input } from 'antd'
-import moment from 'moment'
 // import { useRouter } from 'next/router'
-import React, { FC, useEffect, useMemo, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import treatmentType from '../../assets/images/form-type/treatment.svg'
 import emailConfirmSent from '../../assets/lottie/email-confirmation-sent.json'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './Custom.module.less'
 import { medicalFormPreviewProps } from './mock'
 
-interface CustomProps {
-  addItem?: MedicalFormItem
-  data?: MedicalFormItem[]
+interface Paginate {
+  total: number
+  skip: number
+  take: number
+  currentPage: number
+  showingRecords: number
 }
 
-const Custom: FC<CustomProps> = ({ addItem = null, data }) => {
+interface CustomProps {
+  medicalFormItems: MedicalFormItem[]
+  smsMessageTemplateItems: SmsMessageTemplateItem[]
+  emailMessageTemplateItems: EmailMessageTemplateItem[]
+  userListItems: UserListItem[]
+  onSaveForm?: (MedicalFormItem) => void
+  pagenateParams: Paginate
+  updatePaginateData?: (pagenateData: Paginate) => void
+}
+
+const Custom: FC<CustomProps> = ({
+  medicalFormItems,
+  smsMessageTemplateItems,
+  emailMessageTemplateItems,
+  userListItems,
+  onSaveForm,
+  pagenateParams,
+  updatePaginateData,
+}) => {
   const [showVersions, setShowVersions] = useState(false)
   const [currentItem, setCurrentItem] = useState<MedicalFormItem>()
   const [showPreview, setShowPreview] = useState(false)
-  const [medicalFormItems, setMedicalFormItems] = useState<MedicalFormItem[]>(
-    []
-  )
   const [shareModal, setShareModal] = React.useState(false)
   const [successModal, setSuccessModal] = React.useState(false)
   const [deleteModal, setDeleteModal] = React.useState(false)
   const [editFormModal, setEditFormModal] = React.useState(false)
   const [selectedItem, setSelectedItem] = useState<MedicalFormItem>()
   const [popoverVisible, setPopoverVisible] = useState(false)
-  const [paginateData, setPaginateData] = useState({
-    total: 0,
-    skip: 0,
-    take: 10,
-    currentPage: 1,
-    showingRecords: 10,
-  })
+  const [paginateData, setPaginateData] = useState<Paginate>(pagenateParams)
 
   const { t } = useTranslationI18()
 
   const formTypeList: { [key: string]: string } = {
+    questionnaire: t('ui.medicalformbuilder.form.type.medicalhistory'),
     medicalHistory: t('ui.medicalformbuilder.form.type.medicalhistory'),
     consent: t('ui.medicalformbuilder.form.type.consent'),
-    treatmentForm: t('ui.medicalformbuilder.form.type.treatment'),
+    treatment: t('ui.medicalformbuilder.form.type.treatment'),
     epaper: t('ui.medicalformbuilder.form.type.epaper'),
-    presciption: t('ui.medicalformbuilder.form.type.presciption'),
-    labForm: t('ui.medicalformbuilder.form.type.lab'),
+    prescription: t('ui.medicalformbuilder.form.type.prescription'),
+    lab: t('ui.medicalformbuilder.form.type.lab'),
   }
 
-  const getQueryVariables = useMemo(() => {
-    const queryOptions = {
-      variables: {
-        take: paginateData.take,
-        skip: paginateData.skip,
-        isDeleted: 0,
-      },
-    }
-    return queryOptions
-  }, [paginateData.take, paginateData.skip])
-
-  const medicalForms = useFindMedicalFormsQuery(getQueryVariables)
-
-  const medicalFormsCount = useFindMedicalFormsCountQuery(getQueryVariables)
-
   useEffect(() => {
-    if (medicalForms.data?.findManyMedicalForm) {
-      const medicalFormList = medicalForms.data?.findManyMedicalForm.map(
-        (medicalForm, index) => ({
-          key: medicalForm.id.toString(),
-          name: medicalForm.name,
-          formType: medicalForm.form_type,
-          createdAt: moment(medicalForm.created_at).format(
-            'YYYY-MM-DD HH:mm:ss'
-          ),
-          version: {
-            currentVersion: '3',
-            history: {
-              last_week: [
-                {
-                  version: '3',
-                  updatedBy: 'William Brandham',
-                  date: 'January 22, 2:27 PM',
-                },
-                {
-                  version: '2',
-                  updatedBy: 'Meri Redjepi',
-                  date: 'January 22, 1:26 PM',
-                },
-                {
-                  version: '1',
-                  updatedBy: 'Meri Redjepi',
-                  date: 'January 22, 2:27 PM',
-                },
-              ],
-            },
-          },
-          status: 'active',
-          index: index,
-          formData: medicalForm.data,
-          rules: [],
-        })
-      )
-      setMedicalFormItems(medicalFormList)
-    }
-  }, [medicalForms])
-
-  useEffect(() => {
-    if (medicalFormsCount.data?.findManyMedicalFormCount) {
-      setPaginateData((prevData) => {
-        return {
-          ...prevData,
-          total: medicalFormsCount.data?.findManyMedicalFormCount,
-        }
-      })
-    }
-  }, [medicalFormsCount])
+    setPaginateData(pagenateParams)
+  }, [pagenateParams])
 
   const handleDefault = () => {
-    const mappedItems = medicalFormItems.map((item) => {
-      if (
-        item.index === selectedItem?.index &&
-        item.formType === ('Questionnaire' || 'Questionnaire Default')
-      ) {
-        return { ...item, formType: 'Questionnaire Default' }
-      }
-      if (item.formType === 'Questionnaire Default') {
-        return { ...item, formType: 'Questionnaire' }
-      }
-      return item
-    })
+    // const mappedItems = medicalFormItems?.map((item) => {
+    //   if (
+    //     item.index === selectedItem?.index &&
+    //     item.formType === ('Questionnaire' || 'Questionnaire Default')
+    //   ) {
+    //     return { ...item, formType: 'Questionnaire Default' }
+    //   }
+    //   if (item.formType === 'Questionnaire Default') {
+    //     return { ...item, formType: 'Questionnaire' }
+    //   }
+    //   return item
+    // })
 
-    setMedicalFormItems(mappedItems)
+    // setMedicalFormItems(mappedItems)
     Notification(
       NotificationType.success,
       `${selectedItem?.name}  ${t('notifications.medicalForm.DefaultForm')}`
@@ -361,41 +308,29 @@ const Custom: FC<CustomProps> = ({ addItem = null, data }) => {
     },
   ]
 
-  useEffect(() => {
-    if (addItem) {
-      setMedicalFormItems((prevItems) => [
-        ...prevItems,
-        {
-          ...addItem,
-          index: prevItems.length,
-          key: (prevItems.length + 1).toString(),
-        },
-      ])
-    }
-  }, [addItem])
-
   const handleShareClick = () => {
     setSuccessModal(true)
     setShareModal(false)
   }
 
-  const saveForm = (currentMedicalItem) => {
-    const index = medicalFormItems.findIndex(
-      (item) => item.key === currentMedicalItem.key
-    )
-    if (index !== -1) {
-      medicalFormItems.splice(index, 1, currentMedicalItem)
-      Notification(
-        NotificationType.success,
-        `${currentMedicalItem?.name} - ${t('setup.medical.forms.save.text')}`
-      )
-    }
+  const handleSaveForm = (currentMedicalItem) => {
+    onSaveForm?.(currentMedicalItem)
+    // const index = medicalFormItems.findIndex(
+    //   (item) => item.key === currentMedicalItem.key
+    // )
+    // if (index !== -1) {
+    //   medicalFormItems.splice(index, 1, currentMedicalItem)
+    //   Notification(
+    //     NotificationType.success,
+    //     `${currentMedicalItem?.name} - ${t('setup.medical.forms.save.text')}`
+    //   )
+    // }
     setEditFormModal(false)
   }
 
   const onPaginationChange = (currentPage, take) => {
     const skip = paginateData.take * (currentPage - 1)
-    setPaginateData({
+    updatePaginateData?.({
       ...paginateData,
       skip,
       take,
@@ -496,12 +431,15 @@ const Custom: FC<CustomProps> = ({ addItem = null, data }) => {
       </BasicModal>
       <MedicalFormBuilder
         visible={editFormModal}
-        previewData={currentItem?.formData}
-        preFormName={currentItem?.name}
-        currentForm={currentItem}
+        previewData={selectedItem?.formData}
+        preFormName={selectedItem?.name}
+        currentForm={selectedItem}
         onHideFormBuilder={() => setEditFormModal(false)}
-        onSaveForm={saveForm}
+        onSaveForm={handleSaveForm}
         create={false}
+        smsMessageTemplateItems={smsMessageTemplateItems}
+        emailMessageTemplateItems={emailMessageTemplateItems}
+        userListItems={userListItems}
       />
       <div className={styles.paginationContainer}>
         <Pagination
@@ -511,7 +449,7 @@ const Custom: FC<CustomProps> = ({ addItem = null, data }) => {
           onChange={onPaginationChange}
           pageSizeOptions={['10', '25', '50', '100']}
           onPageSizeChange={(pageSize) => {
-            setPaginateData({
+            updatePaginateData?.({
               ...paginateData,
               showingRecords: pageSize,
               take: pageSize,

@@ -9,7 +9,7 @@ interface P {
   onSaveTravel: () => void
   onCancelTravel: () => void
   onAddCountry: (string) => void
-  onAddDateRange: (Moment: []) => void
+  onAddDateRange: (Dayjs: []) => void
 }
 
 export const FormTravelModal: FC<P> = ({

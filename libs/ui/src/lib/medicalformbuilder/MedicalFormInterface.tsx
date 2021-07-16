@@ -34,10 +34,10 @@ export interface MedicalForms {
 export interface SelectedForms {
   medicalHistory: boolean
   consent: boolean
-  treatmentForm: boolean
+  treatment: boolean
   epaper: boolean
-  presciption: boolean
-  labForm: boolean
+  prescription: boolean
+  lab: boolean
 }
 
 export interface ArrayItem {
@@ -51,10 +51,10 @@ export interface ArrayItem {
 export const defaultSelectedFormInfos: SelectedForms = {
   medicalHistory: false,
   consent: false,
-  treatmentForm: false,
+  treatment: false,
   epaper: false,
-  presciption: false,
-  labForm: false,
+  prescription: false,
+  lab: false,
 }
 
 export const defaultFormValue: MedicalFormTypes = {
@@ -93,4 +93,24 @@ export interface MedicalFormItem {
   key: string
   formData: string
   rules: RuleProp[]
+}
+
+export interface SmsMessageTemplateItem {
+  template_id: number
+  template_name: string
+}
+
+export interface EmailMessageTemplateItem {
+  template_id: number
+  template_name: string
+}
+
+export interface CommunicationItem {
+  id: number
+  from_address: string
+}
+
+export interface UserListItem {
+  id: number
+  full_name: string
 }

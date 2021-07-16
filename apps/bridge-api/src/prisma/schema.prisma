@@ -295,9 +295,10 @@ model Company {
   IssuingCompany                   IssuingCompany[]
   DebtManageCommunication          DebtManageCommunication[]
   CreditNoteType                   CreditNoteType[]
+  MedicalForm                      MedicalForm[]
+  CmLeadCustomField                CmLeadCustomField[]
+  CmLeadCustomFieldOrder           CmLeadCustomFieldOrder[]
 
-  CmLeadCustomField      CmLeadCustomField[]
-  CmLeadCustomFieldOrder CmLeadCustomFieldOrder[]
   @@map("admin")
 }
 
@@ -8092,7 +8093,7 @@ model MedicalForm {
   nhs_procedure_id       Int?
   locked                 Int
   printout               String
-  company_id             Int       @map("occupier")
+  company_id             Int?      @map("occupier")
   user_created           Int
   encoded                Int
   form_type              String
@@ -8108,6 +8109,7 @@ model MedicalForm {
   diagnosis_code_enabled Int
   lab_id                 Int
   is_private             Boolean   @default(false)
+  Company                Company?  @relation(fields: [company_id], references: [id])
 
   @@index([deleted_at], name: "deleted_at")
   @@index([form_type], name: "form_type")

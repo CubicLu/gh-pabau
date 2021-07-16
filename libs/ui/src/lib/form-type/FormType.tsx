@@ -6,12 +6,12 @@ import { ReactComponent as ConsentSelected } from '../../assets/images/form-type
 import { ReactComponent as Consent } from '../../assets/images/form-type/consent.svg'
 import { ReactComponent as EPaperSelected } from '../../assets/images/form-type/file-pdf-selected.svg'
 import { ReactComponent as EPaper } from '../../assets/images/form-type/file-pdf.svg'
-import { ReactComponent as LabFormSelected } from '../../assets/images/form-type/lab-form-selected.svg'
-import { ReactComponent as LabForm } from '../../assets/images/form-type/lab-form.svg'
+import { ReactComponent as LabSelected } from '../../assets/images/form-type/lab-form-selected.svg'
+import { ReactComponent as Lab } from '../../assets/images/form-type/lab-form.svg'
 import { ReactComponent as MedicalHistorySelected } from '../../assets/images/form-type/medical-history-selected.svg'
 import { ReactComponent as MedicalHistory } from '../../assets/images/form-type/medical-history.svg'
-import { ReactComponent as PresciptionSelected } from '../../assets/images/form-type/presciption-selected.svg'
-import { ReactComponent as Presciption } from '../../assets/images/form-type/presciption.svg'
+import { ReactComponent as PrescriptionSelected } from '../../assets/images/form-type/prescription-selected.svg'
+import { ReactComponent as Prescription } from '../../assets/images/form-type/prescription.svg'
 import { ReactComponent as TreatmentSelected } from '../../assets/images/form-type/treatment-selected.svg'
 import { ReactComponent as Treatment } from '../../assets/images/form-type/treatment.svg'
 import styles from './FormType.module.less'
@@ -21,11 +21,12 @@ const { confirm } = Modal
 interface Setting {
   medicalHistory: boolean
   consent: boolean
-  treatmentForm: boolean
+  treatment: boolean
   epaper: boolean
-  presciption: boolean
-  labForm: boolean
+  prescription: boolean
+  lab: boolean
 }
+
 export interface FormTypeProps {
   isEditing?: () => boolean
   setting: Setting
@@ -48,6 +49,7 @@ export const FormType: FC<FormTypeProps> = ({
   onChangeSetting,
 }) => {
   const { t } = useTranslation('common')
+
   const medicalHistoryLabel = t(
     'ui.medicalformbuilder.form.type.medicalhistory'
   )
@@ -56,18 +58,18 @@ export const FormType: FC<FormTypeProps> = ({
   )
   const consentLabel = t('ui.medicalformbuilder.form.type.consent')
   const consentDesc = t('ui.medicalformbuilder.form.type.consent.description')
-  const treatmentFormLabel = t('ui.medicalformbuilder.form.type.treatment')
-  const treatmentFormDesc = t(
+  const treatmentLabel = t('ui.medicalformbuilder.form.type.treatment')
+  const treatmentDesc = t(
     'ui.medicalformbuilder.form.type.treatment.description'
   )
   const epaperLabel = t('ui.medicalformbuilder.form.type.epaper')
   const epaperDesc = t('ui.medicalformbuilder.form.type.epaper.description')
-  const presciptionLabel = t('ui.medicalformbuilder.form.type.presciption')
-  const presciptionDesc = t(
-    'ui.medicalformbuilder.form.type.presciption.description'
+  const prescriptionLabel = t('ui.medicalformbuilder.form.type.prescription')
+  const prescriptionDesc = t(
+    'ui.medicalformbuilder.form.type.prescription.description'
   )
-  const labFormLabel = t('ui.medicalformbuilder.form.type.lab')
-  const labFormDesc = t('ui.medicalformbuilder.form.type.lab.description')
+  const labLabel = t('ui.medicalformbuilder.form.type.lab')
+  const labDesc = t('ui.medicalformbuilder.form.type.lab.description')
 
   const aligns = [
     styles.formTypeStart,
@@ -100,10 +102,10 @@ export const FormType: FC<FormTypeProps> = ({
     onChangeSetting({
       medicalHistory: typeInfo.medicalHistory.selected,
       consent: typeInfo.consent.selected,
-      treatmentForm: typeInfo.treatmentForm.selected,
+      treatment: typeInfo.treatment.selected,
       epaper: typeInfo.epaper.selected,
-      presciption: typeInfo.presciption.selected,
-      labForm: typeInfo.labForm.selected,
+      prescription: typeInfo.prescription.selected,
+      lab: typeInfo.lab.selected,
     })
   }
 
@@ -131,10 +133,10 @@ export const FormType: FC<FormTypeProps> = ({
         icon: <Consent />,
         iconSelected: <ConsentSelected />,
       },
-      treatmentForm: {
-        label: treatmentFormLabel,
+      treatment: {
+        label: treatmentLabel,
         selected: false,
-        desc: treatmentFormDesc,
+        desc: treatmentDesc,
         icon: <Treatment />,
         iconSelected: <TreatmentSelected />,
       },
@@ -145,21 +147,22 @@ export const FormType: FC<FormTypeProps> = ({
         icon: <EPaper />,
         iconSelected: <EPaperSelected />,
       },
-      presciption: {
-        label: presciptionLabel,
+      prescription: {
+        label: prescriptionLabel,
         selected: false,
-        desc: presciptionDesc,
-        icon: <Presciption />,
-        iconSelected: <PresciptionSelected />,
+        desc: prescriptionDesc,
+        icon: <Prescription />,
+        iconSelected: <PrescriptionSelected />,
       },
-      labForm: {
-        label: labFormLabel,
+      lab: {
+        label: labLabel,
         selected: false,
-        desc: labFormDesc,
-        icon: <LabForm />,
-        iconSelected: <LabFormSelected />,
+        desc: labDesc,
+        icon: <Lab />,
+        iconSelected: <LabSelected />,
       },
     }
+
     const typeInfo = { ...defaultTypeInfos }
     for (const key of Object.keys(setting)) {
       typeInfo[key].selected = setting[key]
@@ -171,14 +174,14 @@ export const FormType: FC<FormTypeProps> = ({
     medicalHistoryDesc,
     consentLabel,
     consentDesc,
-    treatmentFormLabel,
-    treatmentFormDesc,
+    treatmentLabel,
+    treatmentDesc,
     epaperLabel,
     epaperDesc,
-    presciptionLabel,
-    presciptionDesc,
-    labFormLabel,
-    labFormDesc,
+    prescriptionLabel,
+    prescriptionDesc,
+    labLabel,
+    labDesc,
   ])
 
   return (

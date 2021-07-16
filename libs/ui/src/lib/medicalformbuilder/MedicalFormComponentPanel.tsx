@@ -32,9 +32,9 @@ const hideFormInfos: HideForm = {
     'basic_traveldestination',
     'basic_labtests',
   ],
-  treatmentForm: [],
+  treatment: [],
   epaper: [],
-  presciption: [
+  prescription: [
     'basic_labtests',
     'basic_vaccinehistory',
     'basic_vaccinescheduler',
@@ -44,7 +44,7 @@ const hideFormInfos: HideForm = {
     'basic_staticimage',
     'basic_photo',
   ],
-  labForm: [
+  lab: [
     'basic_drugs',
     'basic_conditions',
     'basic_vaccinehistory',

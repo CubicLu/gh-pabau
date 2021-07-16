@@ -10,10 +10,10 @@ export interface MedicalFilterType {
   formtype: {
     medicalHistory: boolean
     consent: boolean
-    treatmentForm: boolean
+    treatment: boolean
     epaper: boolean
-    presciption: boolean
-    labForm: boolean
+    prescription: boolean
+    lab: boolean
   }
 }
 
@@ -28,10 +28,10 @@ const defaultFilter: MedicalFilterType = {
   formtype: {
     medicalHistory: false,
     consent: false,
-    treatmentForm: false,
+    treatment: false,
     epaper: false,
-    presciption: false,
-    labForm: false,
+    prescription: false,
+    lab: false,
   },
 }
 

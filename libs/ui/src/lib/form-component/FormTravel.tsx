@@ -1,7 +1,7 @@
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { OptionType } from '@pabau/ui'
 import { Table } from 'antd'
-import { Moment } from 'moment'
+import { Dayjs } from 'dayjs'
 import React, { FC, useState } from 'react'
 import { countryMenu } from '../../assets/images/lang-logos'
 import styles from './FormComponent.module.less'
@@ -38,7 +38,7 @@ export const FormTravel: FC<P> = ({
   const [travelItems, setTraveItems] = useState<travelType[]>([])
 
   const [addCountry, setAddCountry] = useState('')
-  const [addDateRange, setAddDateRange] = useState<Moment[]>([])
+  const [addDateRange, setAddDateRange] = useState<Dayjs[]>([])
 
   const onSaveTravel = () => {
     const addedCountry = countryMenu.filter((item) => item.code === addCountry)
