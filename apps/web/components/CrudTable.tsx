@@ -55,10 +55,9 @@ interface P {
   isNestedQuery?: boolean
   isFilterNumber?: boolean
   isNotificationBannerOnData?: boolean
-  showStaticData?: boolean
-  staticData?: Array<Record<string, string | boolean | number>>
   isCodeGen?: boolean
   deleteOnInactive?: boolean
+  isHavingDefaultRecords?: boolean
 }
 
 const CrudTable: FC<P> = ({
@@ -91,10 +90,9 @@ const CrudTable: FC<P> = ({
   isFilterNumber = false,
   isNotificationBannerOnData = false,
   crudLayoutRef,
-  showStaticData = false,
-  staticData = [],
   isCodeGen = false,
   deleteOnInactive = false,
+  isHavingDefaultRecords = false,
 }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isActive, setIsActive] = useState<boolean | number>(
@@ -239,13 +237,6 @@ const CrudTable: FC<P> = ({
       } else if (isNotificationBannerOnData && Object.keys(data).length > 1) {
         let restData = { ...data }
         restData = restData[schema?.showNotification?.list]
-        if (
-          showStaticData &&
-          restData.length > 0 &&
-          staticData.length > 0 &&
-          restData[0][schema?.filter?.primary?.name ?? 'is_active']
-        )
-          restData = [...restData, ...staticData]
         setSourceData(restData)
       } else {
         setSourceData(data)
@@ -398,7 +389,12 @@ const CrudTable: FC<P> = ({
       }
       delete newValues.data.order
     }
-
+    if (isHavingDefaultRecords && !values.id) {
+      newValues.data = {
+        ...newValues.data,
+        default: false,
+      }
+    }
     await (values.id
       ? editMutation({
           variables: newValues,

@@ -17,6 +17,7 @@ export const InvPaymentType = objectType({
     t.nullable.field('modified_date', { type: 'DateTime' })
     t.int('is_active')
     t.nullable.int('is_money')
+    t.boolean('default')
     t.string('type')
     t.nullable.field('Company', {
       type: 'Company',
