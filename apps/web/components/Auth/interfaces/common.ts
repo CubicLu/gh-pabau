@@ -13,7 +13,7 @@ export interface JwtCompany {
 }
 export interface JwtUser {
   id: number
-  username: string,
+  username: string
   company_id: number
   admin: number
   company: JwtCompany

@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useState } from 'react'
 import { ReactComponent as LoginImage } from '../assets/images/login.svg'
 import styles from './login.module.less'
 import { Logo, Notification, NotificationType } from '@pabau/ui'
@@ -15,7 +15,6 @@ import {
 import { useTranslationI18 } from '../hooks/useTranslationI18'
 import { useRouter } from 'next/router'
 import fetch from 'cross-fetch'
-import { debounce } from 'lodash'
 
 const Login: FC = () => {
   const [showPage, setShowPage] = useState<string>('login')

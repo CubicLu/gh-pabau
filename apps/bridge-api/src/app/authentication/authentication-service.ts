@@ -99,7 +99,6 @@ export default class AuthenticationService {
         username: this.user.username,
       })
     ) {
-      const tempInput = { username: null, password: input.currentPassword }
       if (
         this.user.password ===
         this.generatePassword(this.user, input.currentPassword)
