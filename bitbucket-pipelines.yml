@@ -148,7 +148,7 @@ pipelines:
 
           - step:
               name: announce to slack
-              max-time: 5
+              max-time: 15
               clone:
                 enabled: false
               script:
@@ -327,9 +327,7 @@ pipelines:
 
       - step:
           name: announce to slack
-          runs-on:
-            - 'self.hosted'
-          max-time: 5
+          max-time: 15
           script:
             - cat dist/bot_message2.txt || true
             - cat dist/bot_message.txt || true
