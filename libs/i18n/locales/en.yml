@@ -2464,13 +2464,14 @@ en:
   account.finance.filter.credit.note: 'Credit Note Type'
   account.finance.send.reminder.modal.title: 'Send debt reminders'
   account.finance.payments.columns.payment.no: 'Payment No.'
-  account.finance.payments.columns.invoiceNo: 'Invoice number'
+  account.finance.payments.columns.invoiceNo: 'Invoice No.'
   account.finance.payments.columns.location: 'Location'
   account.finance.payments.columns.date: 'Date'
   account.finance.payments.columns.customer: 'Customer'
   account.finance.payments.columns.amount: 'Amount'
   account.finance.payments.columns.payment.method: 'Payment method'
   account.finance.payments.columns.user: 'User'
+  account.finance.payments.empty.data.text: "There aren't any payments, yet"
   account.finance.invoice.columns.invoice.no: 'Invoice No.'
   account.finance.invoice.columns.location: 'Location'
   account.finance.invoice.columns.inv.date: 'Inv Date'
@@ -2484,6 +2485,7 @@ en:
   account.finance.invoice.columns.paid: 'Paid'
   account.finance.invoice.columns.balance: 'Balance'
   account.finance.invoice.columns.card.btn: 'Pay with card'
+  account.finance.invoice.empty.data.text: "There aren't any invoices, yet"
   account.finance.debt.invoice.sent: 'Invoice sent on 23/10/2022'
   account.finance.debt.reminder.sent: 'Reminder sent 7 days later'
   account.finance.debt.reminder.second.sent: '2nd reminder sent 14 days later'
@@ -2497,6 +2499,7 @@ en:
   account.finance.debt.columns.age: 'Age'
   account.finance.debt.columns.balance: 'Balance'
   account.finance.debt.columns.last.action: 'Last Action'
+  account.finance.debt.empty.data.text: "There isn't any debt, yet"
   account.finance.debt.one.month.ago: '1 month ago'
   account.finance.debt.30.days: '<= 30 days'
   account.finance.debt.31.60.days: '31-60 days'
@@ -2521,6 +2524,7 @@ en:
   account.finance.credit.note.columns.invoice.no: 'Invoice No.'
   account.finance.credit.note.columns.total: 'Total'
   account.finance.credit.note.columns.type: 'Type'
+  account.finance.credit.not.empty.data.text: "There aren't any credit notes, yet"
   account.finance.debt.send.reminder.send.btn: 'Send'
   account.finance.debt.send.reminder.sended.btn: 'Sended'
   account.finance.debt.send.reminder.title.days: 'Days'

@@ -41,6 +41,7 @@ export interface InvoiceQueryResult {
   xero_status: number
   xero_response: string
   xero_modifiedAt: Date
+  healthcode_status: string
 }
 
 export interface FinanceCountQueryResult {
@@ -75,6 +76,7 @@ export interface DebtQueryResult {
   customerId: number
   contractId: number
   insurerName: string
+  healthcode_status: string
 }
 
 export interface CreditNoteQueryResult {
