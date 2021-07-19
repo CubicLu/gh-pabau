@@ -1,0 +1,29 @@
+query getLabels{
+  labels{
+    id
+    color
+    text
+  }
+}
+
+mutation addLabel($text: String, $color: String) {
+  insert_labels_one(object:{color: $color, text: $text}){
+    id
+    color
+    text
+  }
+}
+
+query getContactsLabels {
+  contacts_labels{
+    id
+    contact_id
+    label_id
+    label{
+      id
+      color
+      text
+    }
+  }
+}
+

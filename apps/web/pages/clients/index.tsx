@@ -28,6 +28,7 @@ import {
   useClientListContactsCountLazyQuery,
   useDuplicateContactsQuery,
   useGetLabelsQuery,
+  useGetContactsLabelsQuery,
   useGetLabelsLazyQuery,
   useFindManyCompanyDepartmentsLazyQuery,
 } from '@pabau/graphql'
@@ -77,12 +78,24 @@ export const Clients: FC<ClientsProps> = () => {
     error: getLabelsError,
   } = useGetLabelsQuery({ fetchPolicy: 'no-cache' })
 
+  const {
+    data: getContactsLabelsData,
+    loading: geContactstLabelsLoading,
+    error: getContactsLabelsError,
+  } = useGetContactsLabelsQuery({ fetchPolicy: 'no-cache' })
+
+  console.log('getContactsLabelsData:', getContactsLabelsData)
+
   // const [
   //   getLabels,
   //   { data: getLabelsData, loading: getLabelsLoading, error: getLabelsError },
   // ] = useGetLabelsLazyQuery()
 
   console.log('getLabelsData:', getLabelsData)
+
+  const [contactsLabels, setContactsLabels] = useState(getContactsLabelsData)
+
+  console.log('contactsLabels:', contactsLabels)
 
   const [paginateData, setPaginateData] = useState({
     total: 0,
@@ -123,6 +136,12 @@ export const Clients: FC<ClientsProps> = () => {
       setTestData(contactsData)
     }
   }, [getContactsData])
+
+  useEffect(() => {
+    if (getContactsLabelsData) {
+      setContactsLabels(getContactsLabelsData)
+    }
+  }, [getContactsLabelsData])
 
   const onPaginationChange = (currentPage) => {
     const offset = paginateData.limit * (currentPage - 1)
@@ -195,31 +214,39 @@ export const Clients: FC<ClientsProps> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientsList])
 
+  /// useeffect for adding labels according to id >>>> DO NOT DELETE
   // useEffect(() => {
-  //   setTestData(contactsData)
-  //   // setTestLabels(getLabelsData)
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [getContactsData])
-  // if (contactsData !== undefined) {
-  //   setTestData(contactsData)
-  // }
-  // if (!getContactsLoading) {
-  //   setTestData(contactsData)
-  // }
+  //   testData.map((item) => {
+  //     if (item.id === 23302410) {
+  //       //
+  //       console.log('item.id', item.id)
+  //       setTestData((prevState) => ({
+  //         ...prevState,
+  //       }))
+  //     } else return item
+  //   })
+  // }, [getContactsData, testData])
 
-  // const addingLabeltoContact =  testData?.map((item) => {
-  //   if (item.id === 23302410) {
-  //     item.labelTest = 'testLabelFunc'
+  // testData?.map((item) => {
+  //   console.log('testdataitem', item)
+  //   for (const labItem of contactsLabels.contacts_labels) {
+  //     const tempItem = []
+  //
+  //     console.log('labItem:', labItem)
+  //     if (labItem.contact_id === item.id) {
+  //       // item.labelTest = labItem.label.text
+  //       tempItem.push(labItem.label.text)
+  //       setTestData((prevState) => ({
+  //         ...prevState,
+  //         labelTest: tempItem,
+  //       }))
+  //     } else {
+  //       return null
+  //     }
+  //     console.log('tempItem:', tempItem)
+  //     return tempItem
   //   }
   // })
-
-  useEffect(() => {
-    testData?.map((item) => {
-      if (item.id === 23302410) {
-        item.labelTest = 'testLabelFunc'
-      }
-    })
-  }, [getContactsData, testData])
 
   console.log('getLabelsData:', getLabelsData)
   console.log('testLabels STATE:', testLabels)

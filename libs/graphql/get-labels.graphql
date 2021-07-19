@@ -1,7 +1,0 @@
-query getLabels{
-  labels{
-    id
-    color
-    text
-  }
-}
