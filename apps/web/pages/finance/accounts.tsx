@@ -7,7 +7,7 @@ import {
   Table,
   TabMenu,
   SetupSearchInput,
-  DatePicker,
+  RangePicker,
 } from '@pabau/ui'
 import {
   Divider,
@@ -62,7 +62,6 @@ export function Account() {
   ]
   const { Title } = Typography
   const { Option } = Select
-  const { RangePicker } = DatePicker
   const [activeTab, setActiveTab] = useState('0')
   const [showDateFilter, setShowDateFilter] = useState(false)
   const [selectedRange, setSelectedRange] = useState<string>(
