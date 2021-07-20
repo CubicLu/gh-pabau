@@ -1,3 +1,4 @@
+import fetch from 'cross-fetch'
 import {
   ApolloClient,
   ApolloLink,
@@ -5,8 +6,10 @@ import {
   HttpLink,
   InMemoryCache,
   split,
+  NormalizedCacheObject,
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
+import { onError } from '@apollo/client/link/error'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -16,6 +19,7 @@ import { AppProps } from 'next/app'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import 'react-image-crop/dist/ReactCrop.css'
 import 'react-phone-input-2/lib/style.css'
+import Router from 'next/router'
 import 'react-quill/dist/quill.snow.css'
 import ContextWrapper from '../components/ContextWrapper'
 import TranslationWrapper from '../components/TranslationWrapper'
@@ -23,40 +27,24 @@ require('../styles/global.less')
 require('../../../libs/ui/src/styles/antd.less')
 require('react-phone-input-2/lib/style.css')
 
-const cache = new InMemoryCache({ resultCaching: true })
+let apolloClient: ApolloClient<NormalizedCacheObject | null> = null
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-if (typeof window !== 'undefined') window.debug = { cache }
+const cache = new InMemoryCache({
+  resultCaching: true,
+})
 
-try {
-  console.log(
-    'NEXT_PUBLIC_GRAPHQL_ENDPOINT []',
-    process.env['NEXT_PUBLIC_GRAPHQL_ENDPOINT']
-  )
-  // eslint-disable-next-line no-empty
-} catch {}
-try {
-  console.log(
-    'NEXT_PUBLIC_GRAPHQL_ENDPOINT .',
-    process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT
-  )
-  // eslint-disable-next-line no-empty
-} catch {}
-try {
-  console.log(
-    'NEXT_PUBLIC_WS_ENDPOINT []',
-    process.env['NEXT_PUBLIC_WS_ENDPOINT']
-  )
-  // eslint-disable-next-line no-empty
-} catch {}
-try {
-  console.log('NEXT_PUBLIC_WS_ENDPOINT .', process.env.NEXT_PUBLIC_WS_ENDPOINT)
-  // eslint-disable-next-line no-empty
-} catch {}
+const GRAPHQL_WS_ENDPOINT =
+  process.env.NEXT_PUBLIC_WS_ENDPOINT || 'wss://api.new.pabau.com/v1/graphql'
+const GRAPHQL_HTTP_ENDPOINT =
+  process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
+  'https://api.new.pabau.com/v1/graphql'
 
-const GRAPHQL_WS_ENDPOINT = process.env.NEXT_PUBLIC_WS_ENDPOINT
-const GRAPHQL_HTTP_ENDPOINT = process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT
+//TODO: enable tree shaking
+const iconList = Object.keys(Icons)
+  .filter((key) => key !== 'fas' && key !== 'prefix')
+  .map((icon) => Icons[icon])
+library.add(...iconList)
+
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token')
   return {
@@ -68,26 +56,52 @@ const authLink = setContext((_, { headers }) => {
       : headers,
   }
 })
-const iconList = Object.keys(Icons)
-  .filter((key) => key !== 'fas' && key !== 'prefix')
-  .map((icon) => Icons[icon])
-library.add(...iconList)
 const httpLink = new HttpLink({
+  /**
+   * Fixes Jest complaining about:
+   *  Invariant Violation:
+   *    "fetch" has not been found globally and no fetcher has been configured. To fix this, install a fetch package (like https://www.npmjs.com/package/cross-fetch), instantiate the fetcher, and pass it into your HttpLink constructor.
+   */
+  fetch,
+
   uri: GRAPHQL_HTTP_ENDPOINT,
 })
-const wsLink = process.browser
-  ? new WebSocketLink({
-      uri: GRAPHQL_WS_ENDPOINT,
-      options: {
-        reconnect: true,
-        connectionParams: {
-          authToken: '',
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    for (const error of graphQLErrors) {
+      if (process?.browser) {
+        switch (error?.message) {
+          case 'Not Authorized':
+            Router.replace('/403')
+            break
+          default:
+            console.log(
+              `[GraphQL error]: Message: ${error.message}, Location: ${error.locations}, Path: ${error.path}`
+            )
+        }
+      }
+    }
+  }
+  if (networkError) {
+    console.log(`[Network error]: ${networkError}`)
+  }
+})
+const getWebSocketLink = () => {
+  const token = localStorage.getItem('token')
+  return new WebSocketLink({
+    uri: GRAPHQL_WS_ENDPOINT,
+    options: {
+      lazy: true,
+      reconnect: true,
+      connectionParams: {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
       },
-    })
-  : null
-
-// Let Apollo figure out if the request is over ws or http
+    },
+  })
+}
+const wsLink = process.browser ? getWebSocketLink() : null
 const terminatingLink = wsLink
   ? split(
       ({ query }) => {
@@ -101,23 +115,21 @@ const terminatingLink = wsLink
         )
       },
       wsLink,
-      httpLink
+      authLink.concat(httpLink)
     )
   : httpLink
+apolloClient = new ApolloClient({
+  ssrMode: false,
+  link: ApolloLink.from([errorLink, terminatingLink]),
+  cache,
+})
 
-export const getApolloClient = () => {
-  return new ApolloClient({
-    ssrMode: false,
-    link: ApolloLink.from([authLink, terminatingLink]),
-    cache,
-  })
-}
 export default function CustomApp({
   Component,
   pageProps,
 }: AppProps): JSX.Element {
   return (
-    <ApolloProvider client={getApolloClient()}>
+    <ApolloProvider client={apolloClient}>
       <style jsx global>{`
         @font-face {
           font-family: 'Circular-Std-Black';

@@ -9,24 +9,24 @@ mutation insertLabsOne(
   $postalCode: numeric
   $street: String
   $street2: String
-  ) {
-    insert_LabsTmp_one(
-      object: {
-        city: $city
-        country: $country
-        email: $email
-        is_active: $isActive
-        name: $name
-        phone: $phone
-        provider_number: $providerNumber
-        postal_code: $postalCode
-        street: $street
-        street2: $street2
-      }
-    ) {
-      id
+) {
+  insert_LabsTmp_one(
+    object: {
+      city: $city
+      country: $country
+      email: $email
+      is_active: $isActive
+      name: $name
+      phone: $phone
+      provider_number: $providerNumber
+      postal_code: $postalCode
+      street: $street
+      street2: $street2
     }
+  ) {
+    id
   }
+}
 
 mutation updateLabsByPk(
   $id: uuid!
@@ -40,28 +40,28 @@ mutation updateLabsByPk(
   $postalCode: numeric
   $street: String
   $street2: String
-    ) {
-      update_LabsTmp_by_pk(
-        pk_columns: { id: $id }
-        _set: {
-          name: $name
-          is_active: $isActive
-          city: $city
-          country: $country
-          email: $email
-          phone: $phone
-          provider_number: $providerNumber
-          postal_code: $postalCode
-          street: $street
-          street2: $street2
-        }
-      ) {
-        __typename
-        id
-        is_active
-        order
-      }
+) {
+  update_LabsTmp_by_pk(
+    pk_columns: { id: $id }
+    _set: {
+      name: $name
+      is_active: $isActive
+      city: $city
+      country: $country
+      email: $email
+      phone: $phone
+      provider_number: $providerNumber
+      postal_code: $postalCode
+      street: $street
+      street2: $street2
     }
+  ) {
+    __typename
+    id
+    is_active
+    order
+  }
+}
 
 mutation deleteLabsByPk($id: uuid!) {
   delete_LabsTmp_by_pk(id: $id) {

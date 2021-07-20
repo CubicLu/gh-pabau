@@ -2,7 +2,7 @@ import { MutationFunction } from '@apollo/client'
 import { Footer, Header, Menu } from '@pabau/ui'
 import { Card, Layout as AntLayout } from 'antd'
 import classNames from 'classnames'
-import React, { FC, MouseEvent, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { ReactComponent as IllustrationSvg } from './example.svg'
 import styles from './Layout.module.less'
 
@@ -40,27 +40,22 @@ export interface LayoutProps {
   card?: true
   searchRender?: (innerComponent: JSX.Element) => JSX.Element
   active?: string
-  onCreateChannel?: (
-    name: string,
-    description: string,
-    isPrivate: boolean
-  ) => void
+  onMessageIconClick?(): void
   isDisplayingFooter?: boolean
-  onMessageType?: (e: MouseEvent<HTMLElement>) => void
   legacyContent?: boolean
   taskManagerIFrameComponent?: JSX.Element
+  allowed?: boolean
   requireAdminAccess?: boolean
 }
 
 export const Layout: FC<LayoutProps> = ({
   searchRender,
-  onCreateChannel,
+  onMessageIconClick,
   pageTitle,
   newButtonText,
   onNewClicked,
   onCancelClicked,
   isDisplayingFooter = true,
-  onMessageType,
   card,
   children,
   active,
@@ -85,8 +80,9 @@ export const Layout: FC<LayoutProps> = ({
           updateNotification={updateNotification}
           readAddMutation={readAddMutation}
           searchRender={searchRender}
-          onCreateChannel={onCreateChannel}
-          onMessageType={onMessageType}
+          onMessageIconClick={onMessageIconClick}
+          // onCreateChannel={onCreateChannel}
+          // onMessageType={onMessageType}
           notifications={notifications}
           relativeTime={relativeTime}
           taskManagerIFrameComponent={taskManagerIFrameComponent}

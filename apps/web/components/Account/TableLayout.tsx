@@ -1,11 +1,37 @@
 import React, { FC, useState, useEffect, useMemo } from 'react'
-import { Table, useLiveQuery, Pagination } from '@pabau/ui'
-import { DocumentNode } from '@apollo/client'
+import { Table, Pagination } from '@pabau/ui'
+import { QueryResult } from '@apollo/client'
+import { Dayjs } from 'dayjs'
+import {
+  CreditNotesQueryVariables,
+  CreditNoteCountQueryVariables,
+} from '@pabau/graphql'
+
+export interface FilterValueType {
+  location: number
+  issuingCompany: number
+  creditNoteType: string
+}
+
+export interface QueryVariable {
+  variables: CreditNotesQueryVariables
+}
+
+export interface AggregateQueryVariables {
+  variables: CreditNoteCountQueryVariables
+}
 
 export interface TableLayoutProps {
-  listQuery?: DocumentNode
-  aggregateQuery?: DocumentNode
+  noDataText: string
+  tabName: string
   columns?: Column[]
+  searchTerm?: string
+  selectedDates?: Dayjs[]
+  filterValue?: FilterValueType
+  selectedRange?: string
+  listQuery?: (variable: QueryVariable) => QueryResult
+  aggregateQuery?: (variable: AggregateQueryVariables) => QueryResult
+  setIsHealthcodeEnabled?: (value: boolean) => void
 }
 interface Column {
   title: string
@@ -13,47 +39,137 @@ interface Column {
   className?: string
   visible?: boolean
   width?: string
+  skeletonWidth?: string
 }
 const TableLayout: FC<TableLayoutProps> = ({
+  columns,
+  searchTerm,
+  selectedDates,
+  filterValue,
+  selectedRange,
   listQuery,
   aggregateQuery,
-  columns,
+  noDataText,
+  tabName,
+  setIsHealthcodeEnabled,
 }) => {
   const [paginateData, setPaginateData] = useState({
     total: 0,
     offset: 0,
-    limit: 10,
+    limit: 50,
     currentPage: 1,
     showingRecords: 0,
   })
+  const [tableData, setTableData] = useState([])
+  const [aggregateCount, setAggregateCount] = useState()
+  const [isLoading, setIsLoading] = useState(true)
 
-  const { data, loading } = useLiveQuery(listQuery, {
-    variables: {
-      offset: paginateData.offset,
-      limit: paginateData.limit,
-    },
-  })
+  const getQueryVariables = useMemo(() => {
+    const queryOptions = {
+      variables: {
+        searchTerm: '%' + searchTerm + '%',
+        offset: paginateData.offset,
+        limit: paginateData.limit,
+        startDate: selectedDates?.[0].format('YYYY-MM-DD'),
+        endDate: selectedDates?.[1].format('YYYY-MM-DD'),
+        locationId: filterValue?.location,
+        issuingCompanyId: filterValue?.issuingCompany,
+        creditNoteType: filterValue?.creditNoteType,
+      },
+    }
+    if (filterValue?.location === 0) {
+      delete queryOptions.variables.locationId
+    }
+    if (filterValue?.issuingCompany === 0) {
+      delete queryOptions.variables.issuingCompanyId
+    }
+    if (filterValue?.creditNoteType === '') {
+      delete queryOptions.variables.creditNoteType
+    }
 
-  const { data: aggregateData } = useLiveQuery(aggregateQuery)
+    if (selectedRange === 'All records') {
+      delete queryOptions.variables.startDate
+      delete queryOptions.variables.endDate
+    }
+    return queryOptions
+  }, [
+    searchTerm,
+    paginateData.offset,
+    paginateData.limit,
+    selectedDates,
+    filterValue,
+    selectedRange,
+  ])
+
+  const getAggregateQueryVariables = useMemo(() => {
+    const queryOptions = {
+      variables: {
+        searchTerm: '%' + searchTerm + '%',
+        startDate: selectedDates?.[0].format('YYYY-MM-DD'),
+        endDate: selectedDates?.[1].format('YYYY-MM-DD'),
+        locationId: filterValue?.location,
+        issuingCompanyId: filterValue?.issuingCompany,
+        creditNoteType: filterValue?.creditNoteType,
+      },
+    }
+    if (filterValue?.location === 0) {
+      delete queryOptions.variables.locationId
+    }
+    if (filterValue?.issuingCompany === 0) {
+      delete queryOptions.variables.issuingCompanyId
+    }
+    if (filterValue?.creditNoteType === '') {
+      delete queryOptions.variables.creditNoteType
+    }
+    if (selectedRange === 'All records') {
+      delete queryOptions.variables.startDate
+      delete queryOptions.variables.endDate
+    }
+    return queryOptions
+  }, [searchTerm, selectedDates, filterValue, selectedRange])
+
+  const { data, loading } = listQuery(getQueryVariables)
+  const { data: aggregateData } = aggregateQuery(getAggregateQueryVariables)
+
+  useEffect(() => {
+    if (loading) {
+      setIsLoading(true)
+    }
+    if (data && !loading) {
+      const tableRecords = data?.[Object.keys(data)[0]]
+      const records = tableRecords?.map((d) => ({ ...d, key: d.id }))
+      setTableData(records)
+      if (
+        (tabName === 'invoice' || tabName === 'debt') &&
+        tableRecords?.[0]?.isHealthcodeEnabled
+      ) {
+        setIsHealthcodeEnabled(true)
+      }
+      setIsLoading(false)
+    }
+  }, [data, loading, setIsHealthcodeEnabled, tabName])
+
+  useEffect(() => {
+    if (aggregateData) {
+      const count = aggregateData?.[Object.keys(aggregateData)[0]]
+      setAggregateCount(count)
+    }
+  }, [aggregateData])
 
   const onPaginationChange = (currentPage) => {
     const offset = paginateData.limit * (currentPage - 1)
     setPaginateData((d) => ({ ...d, offset, currentPage }))
   }
 
-  const invoices = useMemo(() => data?.map((d) => ({ ...d, key: d.id })), [
-    data,
-  ])
-
   useEffect(() => {
-    if (aggregateData) {
+    if (aggregateCount !== undefined) {
       setPaginateData((paginateData) => ({
         ...paginateData,
-        total: aggregateData.aggregate?.count,
-        showingRecords: data?.length,
+        total: aggregateCount ?? 0,
+        showingRecords: tableData?.length,
       }))
     }
-  }, [data, aggregateData])
+  }, [tableData, aggregateCount])
 
   return (
     <section>
@@ -63,9 +179,11 @@ const TableLayout: FC<TableLayoutProps> = ({
           sticky={{ offsetScroll: 80, offsetHeader: 40 }}
           scroll={{ x: 'max-content' }}
           key={loading?.toString()}
-          loading={loading}
+          loading={isLoading}
           pagination={false}
-          dataSource={invoices}
+          dataSource={tableData}
+          searchTerm={searchTerm}
+          noDataText={noDataText}
         />
       </div>
       <Pagination
@@ -75,6 +193,15 @@ const TableLayout: FC<TableLayoutProps> = ({
         pageSize={paginateData.limit}
         current={paginateData.currentPage}
         onChange={onPaginationChange}
+        pageSizeOptions={['10', '25', '50', '100']}
+        onPageSizeChange={(pageSize) => {
+          setPaginateData({
+            ...paginateData,
+            limit: pageSize,
+            offset: 0,
+            currentPage: 1,
+          })
+        }}
       />
     </section>
   )

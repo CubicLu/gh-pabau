@@ -27,7 +27,7 @@ fragment CmCaseFields on CmCase {
 
 fragment CmCase on CmCase {
   ...CmCaseFields
-  company {
+  Company {
     ...CompanyFields
   }
 }

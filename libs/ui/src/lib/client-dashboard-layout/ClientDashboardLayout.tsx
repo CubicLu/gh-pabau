@@ -1,6 +1,15 @@
 import { Avatar, TickerTile } from '@pabau/ui'
 import React, { FC } from 'react'
+import { useMedia } from 'react-use'
+import { ReactComponent as MessageRead } from '../../assets/images/message-read.svg'
 import { ReactComponent as Mail } from '../../assets/images/mail.svg'
+import { ReactComponent as NoAppointment } from '../../assets/images/client-card/ticker/no-appointment.svg'
+import { ReactComponent as NoAlert } from '../../assets/images/client-card/ticker/no-alert.svg'
+import { ReactComponent as NoConversation } from '../../assets/images/client-card/ticker/no-conversation.svg'
+import { ReactComponent as NoMedicalHistory } from '../../assets/images/client-card/ticker/no-medical-history.svg'
+import { ReactComponent as NoMedication } from '../../assets/images/client-card/ticker/no-medication.svg'
+import { ReactComponent as NoProduct } from '../../assets/images/client-card/ticker/no-product.svg'
+import { ReactComponent as NoTest } from '../../assets/images/client-card/ticker/no-test.svg'
 import styles from './ClientDashboardLayout.module.less'
 
 interface NextAppointment {
@@ -66,7 +75,52 @@ export const ClientDashboardLayout: FC<ClientDashboardLayoutProps> = ({
   conversation,
 }) => {
   const width = 177
+  const mobileWidth = 160
   const height = 177
+  const mobileHeight = 160
+  const noAlert = (
+    <div className={styles.noTicketItemImage}>
+      <div className={styles.circle} />
+      <NoAlert className={styles.icon} />
+    </div>
+  )
+  const noAppointment = (
+    <div className={styles.noTicketItemImage}>
+      <div className={styles.circle} />
+      <NoAppointment className={styles.icon} />
+    </div>
+  )
+  const noMedicalHistory = (
+    <div className={styles.noTicketItemImage}>
+      <div className={styles.circle} />
+      <NoMedicalHistory className={styles.icon} />
+    </div>
+  )
+  const noMedication = (
+    <div className={styles.noTicketItemImage}>
+      <div className={styles.circle} />
+      <NoMedication className={styles.icon} />
+    </div>
+  )
+  const noProduct = (
+    <div className={styles.noTicketItemImage}>
+      <div className={styles.circle} />
+      <NoProduct className={styles.icon} />
+    </div>
+  )
+  const noTest = (
+    <div className={styles.noTicketItemImage}>
+      <div className={styles.circle} />
+      <NoTest className={styles.icon} />
+    </div>
+  )
+  const noConverstaion = (
+    <div className={styles.noTicketItemImage}>
+      <div className={styles.circle} />
+      <NoConversation className={styles.icon} />
+    </div>
+  )
+  const isMobile = useMedia('(max-width: 576px)', false)
 
   return (
     <div className={styles.clientDashboardLayout}>
@@ -96,6 +150,9 @@ export const ClientDashboardLayout: FC<ClientDashboardLayoutProps> = ({
             speed={4500}
             title="Next appointments"
             showCount={true}
+            isBlank={nextAppointments.length === 0}
+            noItemText="No upcoming appointment"
+            noItemImage={noAppointment}
           />
         </div>
         <div className={styles.medicalHistoryContainer}>
@@ -106,8 +163,8 @@ export const ClientDashboardLayout: FC<ClientDashboardLayoutProps> = ({
                   key={`medical-history-item-${index}`}
                   className={styles.squareTile}
                   style={{
-                    width: `${width - 32}px`,
-                    height: `${height - 64}px`,
+                    width: `${(isMobile ? mobileWidth : width) - 32}px`,
+                    height: `${(isMobile ? mobileHeight : height) - 64}px`,
                   }}
                 >
                   <div>
@@ -125,6 +182,9 @@ export const ClientDashboardLayout: FC<ClientDashboardLayoutProps> = ({
               ))}
               speed={8000}
               title="Medical history"
+              isBlank={medicalHistory.length === 0}
+              noItemText="No medical history"
+              noItemImage={noMedicalHistory}
             />
           </div>
         </div>
@@ -136,8 +196,8 @@ export const ClientDashboardLayout: FC<ClientDashboardLayoutProps> = ({
                   key={`medication-item-${index}`}
                   className={styles.squareTile}
                   style={{
-                    width: `${width - 32}px`,
-                    height: `${height - 64}px`,
+                    width: `${(isMobile ? mobileWidth : width) - 32}px`,
+                    height: `${(isMobile ? mobileHeight : height) - 64}px`,
                   }}
                 >
                   <div>
@@ -157,6 +217,9 @@ export const ClientDashboardLayout: FC<ClientDashboardLayoutProps> = ({
               ))}
               speed={3500}
               title="Medications"
+              isBlank={medications.length === 0}
+              noItemText="No medications"
+              noItemImage={noMedication}
             />
           </div>
         </div>
@@ -169,8 +232,8 @@ export const ClientDashboardLayout: FC<ClientDashboardLayoutProps> = ({
                   key={`product-item-${index}`}
                   className={styles.squareTile}
                   style={{
-                    width: `${width - 32}px`,
-                    height: `${height - 64}px`,
+                    width: `${(isMobile ? mobileWidth : width) - 32}px`,
+                    height: `${(isMobile ? mobileHeight : height) - 64}px`,
                   }}
                 >
                   <div>
@@ -188,6 +251,9 @@ export const ClientDashboardLayout: FC<ClientDashboardLayoutProps> = ({
               ))}
               speed={3000}
               showDots={true}
+              isBlank={products.length === 0}
+              noItemText="No products"
+              noItemImage={noProduct}
             />
           </div>
         </div>
@@ -200,8 +266,8 @@ export const ClientDashboardLayout: FC<ClientDashboardLayoutProps> = ({
                   key={`test-item-${index}`}
                   className={styles.squareTile}
                   style={{
-                    width: `${width - 32}px`,
-                    height: `${height - 64}px`,
+                    width: `${(isMobile ? mobileWidth : width) - 32}px`,
+                    height: `${(isMobile ? mobileHeight : height) - 64}px`,
                   }}
                 >
                   <div>
@@ -222,12 +288,15 @@ export const ClientDashboardLayout: FC<ClientDashboardLayoutProps> = ({
               ))}
               speed={5000}
               showCount={true}
+              isBlank={tests.length === 0}
+              noItemText="No tests"
+              noItemImage={noTest}
             />
           </div>
         </div>
         <div className={styles.alertsContainer}>
           <TickerTile
-            title="Alerts"
+            title="Staff Alerts & Allergies"
             items={[
               <div
                 key={'alert-tile-1'}
@@ -248,6 +317,9 @@ export const ClientDashboardLayout: FC<ClientDashboardLayoutProps> = ({
                 </div>
               </div>,
             ]}
+            noItemText="No alerts"
+            noItemImage={noAlert}
+            isBlank={alerts.length === 0}
             speed={2500}
           />
         </div>
@@ -275,11 +347,17 @@ export const ClientDashboardLayout: FC<ClientDashboardLayoutProps> = ({
                         {user.type}
                       </div>
                     </div>
-                    <div>{user.date}</div>
+                    <div>
+                      <span>{user.date}</span>
+                      <MessageRead />
+                    </div>
                   </div>
                 ))}
               </div>,
             ]}
+            isBlank={conversation.users.length === 0}
+            noItemText="No conversations"
+            noItemImage={noConverstaion}
             speed={2500}
           />
         </div>

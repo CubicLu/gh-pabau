@@ -38,10 +38,10 @@ const communicationFilterProps: MedicalFilterProps = {
     formtype: {
       medicalHistory: false,
       consent: false,
-      treatmentForm: false,
+      treatment: false,
       epaper: false,
-      presciption: false,
-      labForm: false,
+      prescription: false,
+      lab: false,
     },
   },
   // eslint-disable-next-line @typescript-eslint/no-empty-function

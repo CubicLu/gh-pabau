@@ -1,7 +1,7 @@
 module.exports = {
   frontend: {
     graphql: {
-      generator: 'nexus-plugin-prisma',
+      generator: 'nexus',
       output: 'libs/graphql/crm-mutation',
       disableQueries: true,
       excludeFieldsByModel: {
@@ -26,13 +26,20 @@ module.exports = {
           'upsertOne',
           'deleteOne',
         ],
-        BnfDrug: ['updateOne', 'deleteOne', 'upsertOne', 'updateMany'],
+        InvProduct: ['createOne', 'updateOne', 'upsertOne', 'updateMany'],
+        ServicesMasterCategory: [
+          'createOne',
+          'updateOne',
+          'upsertOne',
+          'updateMany',
+        ],
+        BnfDrug: ['updateOne', 'deleteOne', 'updateMany', 'upsertOne'],
         CompanyMeta: ['upsertOne'],
       },
     },
   },
   backend: {
-    generator: 'nexus-plugin-prisma',
+    generator: 'nexus',
     output: 'apps/bridge-api/src/generated/types',
     excludeFieldsByModel: {
       User: ['password', 'password_algor', 'salt', 'hash'],
@@ -56,7 +63,14 @@ module.exports = {
         'upsertOne',
         'deleteOne',
       ],
-      BnfDrug: ['updateOne', 'deleteOne', 'upsertOne', 'updateMany'],
+      InvProduct: ['createOne', 'updateOne', 'upsertOne', 'updateMany'],
+      ServicesMasterCategory: [
+        'createOne',
+        'updateOne',
+        'upsertOne',
+        'updateMany',
+      ],
+      BnfDrug: ['updateOne', 'deleteOne', 'updateMany', 'upsertOne'],
       CompanyMeta: ['upsertOne'],
     },
   },

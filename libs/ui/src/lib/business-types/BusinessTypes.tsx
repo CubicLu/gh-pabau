@@ -1,9 +1,9 @@
-import React, { FC, useState } from 'react'
-import ClassNames from 'classnames'
-import { Row, Col } from 'antd'
-import styles from './BusinessTypes.module.less'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
+import { Col, Row, Skeleton } from 'antd'
+import ClassNames from 'classnames'
+import React, { FC, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import styles from './BusinessTypes.module.less'
 
 export interface IOption {
   onselected: boolean
@@ -14,9 +14,15 @@ export interface IOption {
 
 export interface BusinessTypesProps {
   List: IOption[]
+  loading?: boolean
+  onSelect?(val: IOption[]): void
 }
 
-export const BusinessTypes: FC<BusinessTypesProps> = ({ List }) => {
+export const BusinessTypes: FC<BusinessTypesProps> = ({
+  List,
+  onSelect,
+  loading,
+}) => {
   const { t } = useTranslation('common')
   const [lists, setList] = useState([...List])
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -28,8 +34,8 @@ export const BusinessTypes: FC<BusinessTypesProps> = ({ List }) => {
     } else {
       list[index].onselected = true
     }
-    console.log('list', list)
     setList(list)
+    onSelect?.(list)
   }
   return (
     <div className={styles.businessTypesContainer}>
@@ -60,15 +66,23 @@ export const BusinessTypes: FC<BusinessTypesProps> = ({ List }) => {
                 key={type.title}
                 onClick={() => handleClickItem(type.title)}
               >
-                <div className={styles.businessTypeContent}>
-                  <img
-                    src={type.icon}
-                    width="40px"
-                    height="40px"
-                    alt="biz type"
+                {!loading ? (
+                  <div className={styles.businessTypeContent}>
+                    <img
+                      src={type.icon}
+                      width="40px"
+                      height="40px"
+                      alt="biz type"
+                    />
+                    <p>{type.title}</p>
+                  </div>
+                ) : (
+                  <Skeleton.Input
+                    active={true}
+                    size={'small'}
+                    style={{ height: 94 }}
                   />
-                  <p>{type.title}</p>
-                </div>
+                )}
               </div>
             </Col>
           ))}

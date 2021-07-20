@@ -250,51 +250,49 @@
     }
   }
   .detailsContainer {
+    margin-bottom: 12px;
     width: 100%;
+    height: 24px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 8px 0;
-    border-top: 1px solid var(--border-color-base);
-    border-bottom: 1px solid var(--border-color-base);
+    justify-content: space-between;
+    cursor: pointer;
 
     .title {
+      text-transform: uppercase;
       font-family: var(--font-family);
       font-size: 14px;
-      line-height: 22px;
-      color: #722ed1;
+      color: var(--light-grey-color);
     }
 
-    > div:nth-child(2) {
-      display: flex;
-    }
-
-    .edit {
-      width: 24px;
+    .customizeFields {
       height: 24px;
-      border: 1px solid var(--border-color-base);
-      border-radius: 2px;
-      color: var(--grey-text-color);
-      font-size: 14px;
+      padding: 0 1rem 0 12px;
+      border: 1px solid #b8b8c0;
+      border-radius: 4px;
       display: flex;
       align-items: center;
-      justify-content: center;
       cursor: pointer;
-      margin-right: 8px;
+      font-family: var(--font-family);
+      font-size: 14px;
+      color: #b8b8c0;
+
+      :global {
+        .anticon {
+          margin-right: 8px;
+        }
+      }
+
+      &:hover {
+        color: var(--primary-color);
+        border: 1px solid var(--primary-color);
+      }
     }
 
-    .customise {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: auto;
-      height: 24px;
-      border: 1px solid var(--border-color-base);
-      border-radius: 2px;
-      color: var(--grey-text-color);
-      font-size: 14px;
-      padding: 0 8px;
-      cursor: pointer;
+    &:hover {
+      .title {
+        color: var(--primary-color);
+      }
     }
   }
   .clientDetailsItem {

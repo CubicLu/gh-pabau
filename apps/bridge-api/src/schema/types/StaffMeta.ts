@@ -1,14 +1,14 @@
+import { StaffMeta, User } from '@prisma/client'
 import {
   booleanArg,
   extendType,
   inputObjectType,
   intArg,
+  list,
   nonNull,
   stringArg,
-  list,
 } from 'nexus'
 import { Context } from '../../context'
-import { StaffMeta, User } from '../../generated/schema'
 
 interface StaffMetaInput {
   meta_name: string
@@ -61,7 +61,7 @@ export const PabauStaffMeta = extendType({
               StaffMeta: true,
             },
           })
-          return users.map(async (user: User) => {
+          return users.map(async (user: User & { StaffMeta: StaffMeta[] }) => {
             const meta = user?.StaffMeta?.find(
               (meta: StaffMeta) => meta.meta_name === input.meta_name
             )
@@ -119,29 +119,31 @@ export const PabauStaffMetaMultiple = extendType({
                 StaffMeta: true,
               },
             })
-            return users.map(async (user: User) => {
-              const meta = user?.StaffMeta?.find(
-                (meta: StaffMeta) => meta.meta_name === metaData.meta_name
-              )
-              return await (meta
-                ? ctx.prisma.staffMeta.update({
-                    where: {
-                      id: meta.id,
-                    },
-                    data: {
-                      meta_value: {
-                        set: stringifiedMetaValue,
+            return users.map(
+              async (user: User & { StaffMeta: StaffMeta[] }) => {
+                const meta = user?.StaffMeta?.find(
+                  (meta: StaffMeta) => meta.meta_name === metaData.meta_name
+                )
+                return await (meta
+                  ? ctx.prisma.staffMeta.update({
+                      where: {
+                        id: meta.id,
                       },
-                    },
-                  })
-                : ctx.prisma.staffMeta.create({
-                    data: {
-                      meta_name: metaData.meta_name,
-                      meta_value: stringifiedMetaValue,
-                      staff_id: user.id,
-                    },
-                  }))
-            }).length
+                      data: {
+                        meta_value: {
+                          set: stringifiedMetaValue,
+                        },
+                      },
+                    })
+                  : ctx.prisma.staffMeta.create({
+                      data: {
+                        meta_name: metaData.meta_name,
+                        meta_value: stringifiedMetaValue,
+                        staff_id: user.id,
+                      },
+                    }))
+              }
+            ).length
           }).length
         } catch (error) {
           return error

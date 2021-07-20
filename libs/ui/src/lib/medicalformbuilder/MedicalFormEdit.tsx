@@ -1,6 +1,6 @@
 import { MedicalFormTypes } from '@pabau/ui'
 import { Col, Modal, Row } from 'antd'
-import _ from 'lodash'
+import { cloneDeep, isEqual } from 'lodash'
 import React, { FC, useEffect, useReducer, useState } from 'react'
 import { DragDropContext } from 'react-beautiful-dnd'
 import { useTranslation } from 'react-i18next'
@@ -101,6 +101,7 @@ const copy = (source, destination, droppableSourceId, endIndex, formInfo) => {
 }
 
 const reverseForm = (form) => {
+  console.log('reverseForm =', form)
   const mappingInfo = previewMapping.filter(
     (item) => Object.values(item)[0] === form.formName
   )
@@ -182,6 +183,7 @@ const reverseForm = (form) => {
 
 const getFormInfo = (form) => {
   // let name = ''
+  console.log('form =', form)
   let label = ''
   if (form.title) {
     if (typeof form.title === 'object') {
@@ -290,9 +292,9 @@ interface P {
   clickedCreateForm: boolean
   clickedPreviewForm: boolean
   clearCreateFormBtn: () => void
-  getFormData?: (formData: string) => void
-  onSaveForm?: (formdata: string) => void
-  triggerChangeForms?: (forms: MedicalFormTypes[]) => void
+  getFormData: (formData: string) => void
+  onSaveForm: (formdata: string) => void
+  triggerChangeForms: (forms: MedicalFormTypes[]) => void
   formName: string
 }
 
@@ -311,6 +313,9 @@ const MedicalFormEdit: FC<P> = ({
   const { t } = useTranslation('common')
   const [, forceUpdate] = useReducer((x) => x + 1, 0)
   const [draggedForms, setDraggedForms] = useState<MedicalFormTypes[]>([])
+  const [prevDraggedForms, setPrevDraggedForms] = useState<MedicalFormTypes[]>(
+    []
+  )
   const [reservedFormData, setReservedFormData] = useState('')
   const [selectedForm, setSelectedForm] = useState(defaultFormValue)
   const [displaySettingBar, setDisplaySettingBar] = useState(false)
@@ -329,7 +334,7 @@ const MedicalFormEdit: FC<P> = ({
         unescape(encodeURIComponent(JSON.stringify(reversedFormObject)))
       )
       setReservedFormData(formData)
-      onSaveForm?.(formData)
+      onSaveForm(formData)
     } else {
       clearCreateFormBtn?.()
     }
@@ -344,21 +349,29 @@ const MedicalFormEdit: FC<P> = ({
       const formData = btoa(
         unescape(encodeURIComponent(JSON.stringify(reversedFormObject)))
       )
-      getFormData?.(formData)
+      getFormData(formData)
     }
   }, [clickedPreviewForm, draggedForms, getFormData])
 
   useEffect(() => {
-    if (draggedForms.length > 0) {
-      triggerChangeForms?.(draggedForms)
-    } else {
-      triggerChangeForms?.([])
+    if (!isEqual(prevDraggedForms, draggedForms)) {
+      if (draggedForms.length > 0) {
+        triggerChangeForms(draggedForms)
+      } else {
+        triggerChangeForms([])
+      }
+      setPrevDraggedForms(draggedForms)
     }
-  }, [draggedForms.length, draggedForms, triggerChangeForms])
+  }, [draggedForms.length, draggedForms, prevDraggedForms, triggerChangeForms])
 
   useEffect(() => {
     setDraggedForms([])
-    if (typeof previewData != 'undefined' && previewData !== '') {
+    if (
+      previewData &&
+      typeof previewData != 'undefined' &&
+      previewData !== ''
+    ) {
+      console.log('previewData =', previewData)
       const previewDataArray = JSON.parse(atob(previewData))
       const previewForms = []
       if (previewDataArray['form_structure']) {
@@ -433,7 +446,7 @@ const MedicalFormEdit: FC<P> = ({
     )
     if (mappingForm?.length > 0) {
       const item = medicalForms[mappingForm[0].id]
-      const cloneFormInfo = _.cloneDeep(defaultFormValue)
+      const cloneFormInfo = cloneDeep(defaultFormValue)
       if (item.formType === 'custom' && item.formName === 'custom_gender') {
         const alterForm = medicalForms.filter(
           (medicalForm) => medicalForm.formName === 'basic_singlechoice'
@@ -608,7 +621,7 @@ const MedicalFormEdit: FC<P> = ({
           break
         case 'LeftSideCustom': {
           const item = medicalForms[source.index]
-          const cloneFormInfo = _.cloneDeep(defaultFormValue)
+          const cloneFormInfo = cloneDeep(defaultFormValue)
           if (item.formType === 'custom' && item.formName === 'custom_gender') {
             const alterForm = medicalForms.filter(
               (medicalForm) => medicalForm.formName === 'basic_singlechoice'

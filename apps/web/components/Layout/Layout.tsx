@@ -21,6 +21,8 @@ import Search from '../Search'
 import styles from './Layout.module.less'
 import TaskManagerIFrame from '../TaskManagerIFrame/TaskManagerIFrame'
 import { Unauthorized } from '../Unauthorized'
+import CommonHeader from '../CommonHeader'
+import Chat from '../Chat/Chat'
 
 interface Notification {
   id: string
@@ -34,22 +36,15 @@ interface Notification {
   link: string
 }
 
-const onMessageType = () => {
-  //add mutation for send message textbox
-}
-
-const onCreateChannel = (name, description, isPrivate) => {
-  //add mutation for create Channel here
-  console.log('onCreateChannel-- or another one', name, description, isPrivate)
-}
-
 const Layout: FC<LayoutProps> = ({
   children,
+  allowed = true,
   requireAdminAccess = false,
   ...props
 }) => {
   const [authenticated, user] = useLogin(false)
   const [notifications, setNotifications] = useState<Notification[]>()
+  const [showChat, setShowChat] = useState(false)
   const router = useRouter()
   const { data, error, loading } = useDisabledFeaturesQuery()
 
@@ -128,7 +123,7 @@ const Layout: FC<LayoutProps> = ({
     user &&
     localStorage?.getItem('token')
   ) {
-    return requireAdminAccess && (!user?.admin || user?.admin === undefined) ? (
+    return requireAdminAccess && !loggedUser?.me?.admin ? (
       <Unauthorized />
     ) : (
       <>
@@ -140,12 +135,14 @@ const Layout: FC<LayoutProps> = ({
           readAddMutation={insertReadNotificationOneMutation}
           user={userData}
           searchRender={() => <Search />}
-          onCreateChannel={onCreateChannel}
-          onMessageType={onMessageType}
+          onMessageIconClick={() => setShowChat((e) => !e)}
           legacyContent={!!legacyPage}
           taskManagerIFrameComponent={<TaskManagerIFrame />}
           {...props}
         >
+          <CommonHeader showChat={showChat} title="Pabau" isShowSearch={true} />
+          <Chat closeDrawer={() => setShowChat(false)} visible={showChat} />
+
           {!legacyPage ? children : <Iframe urlPath={legacyPage} />}
         </PabauLayout>
         <div className={styles.stickyPopoutContainer}>

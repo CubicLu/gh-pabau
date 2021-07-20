@@ -9,7 +9,7 @@ export interface TreeDataType {
 }
 export interface CheckboxTreeProps {
   treeData: TreeDataType[]
-  expandedKeys: string[]
+  expandedKeys?: string[]
   checkedKeys: string[]
   onExpand?: (value: string[]) => void
   onCheck?: (value: string[]) => void

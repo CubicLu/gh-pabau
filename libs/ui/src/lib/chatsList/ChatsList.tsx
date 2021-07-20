@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react'
+import React from 'react'
 import classNames from 'classnames'
 import { Badge } from 'antd'
 import { Avatar } from '@pabau/ui'
@@ -6,63 +6,34 @@ import { useTranslation } from 'react-i18next'
 import { ReactComponent as MessageRead } from '../../assets/images/message-read.svg'
 import styles from './ChatsList.module.less'
 
-export interface chatMessage {
+export interface ChatMessage {
+  id: string
+
+  /** The username or channel to display */
   userName: string
+
+  image?: string
   message: string
   unread?: number
   dateTime: string
-  isOnline: boolean
-  profileURL: string
+  isOnline?: boolean
   isMultiple?: boolean
-  data?: chatMessage[]
+  onClick?(): void
+  active?: boolean
 }
 
 interface P {
-  chatMessages?: chatMessage[]
-  showChatBox?: boolean
-  selectedContact?: chatMessage
-  typingContact?: chatMessage
-  onClick?: (selectedContact: chatMessage) => void
+  onClick?(ChatMessage): void
+  active?: ChatMessage | false
+  messages?: ChatMessage[]
   showGroupChatBox?: boolean
   isNewDm?: boolean
   isHeaderShow?: boolean
 }
 
-export const ChatsList: FC<P> = ({ ...props }) => {
-  const { chatMessages, onClick, typingContact } = props
+export const ChatsList = (props: P): JSX.Element => {
   const { t } = useTranslation('common')
-  const [activeIndex, setActiveIndex] = useState<number>(-1)
-  const [isTyping, setIsTyping] = useState<number>(-1)
-
-  useEffect(() => {
-    if (props.showGroupChatBox) {
-      setActiveIndex(-1)
-    }
-    if (props.isNewDm) {
-      setActiveIndex(-1)
-    }
-    typingContact
-      ? chatMessages?.map(
-          (item, index) =>
-            item.userName === typingContact.userName && setIsTyping(index)
-        )
-      : setIsTyping(-1)
-  }, [typingContact, chatMessages, props.showGroupChatBox, props.isNewDm])
-
-  const onClickContact = (index) => {
-    if (chatMessages) {
-      setActiveIndex(index)
-      const data = chatMessages[index]
-      onClick?.(data)
-    }
-  }
-
-  const renderMultipleField = (item) => {
-    const result = item.map((dataItem) => {
-      return dataItem.userName
-    })
-    return result.join(', ')
-  }
+  const { messages, active, onClick } = props
 
   return (
     <div>
@@ -74,41 +45,47 @@ export const ChatsList: FC<P> = ({ ...props }) => {
         </div>
       )}
       <div>
-        {chatMessages?.map((chat, index) => {
+        {messages?.map((message) => {
+          const {
+            id,
+            message: messageBody,
+            isOnline = true,
+            unread,
+            dateTime,
+            image,
+            userName,
+          } = message
+
+          // if (!fromUser) throw new Error('Item found with no fromUser')
+          // const { image } = fromUser
           return (
             <div
-              key={chat.userName}
-              onClick={() => onClickContact(index)}
+              key={id}
+              onClick={() => onClick?.(message)}
               className={styles.cursor}
             >
               <div
                 className={classNames(
                   styles.flex,
-                  activeIndex === index
+                  active === message
                     ? styles.profileChatSpaceActive
                     : styles.porfileChatSpace
                 )}
               >
                 <div className={styles.chatProfile}>
-                  {chat.isMultiple ? (
-                    <div className={styles.profileCircle}>
-                      {chat.data?.length}
-                    </div>
-                  ) : (
-                    <Badge
-                      dot
-                      color={chat.isOnline ? '#65CD98' : '#FF9E44'}
-                      offset={[-2, 32]}
-                      size="default"
-                      style={{
-                        height: '12px',
-                        width: '12px',
-                        border: '2px solid #fff',
-                      }}
-                    >
-                      <Avatar size={40} src={chat.profileURL} />
-                    </Badge>
-                  )}
+                  <Badge
+                    dot
+                    color={isOnline ? '#65CD98' : '#FF9E44'}
+                    offset={[-2, 32]}
+                    size="default"
+                    style={{
+                      height: '12px',
+                      width: '12px',
+                      border: '2px solid #fff',
+                    }}
+                  >
+                    <Avatar size={40} src={image} />
+                  </Badge>
                 </div>
                 <div className={styles.chatText}>
                   <div className={classNames(styles.dFlex, styles.userDetails)}>
@@ -119,9 +96,7 @@ export const ChatsList: FC<P> = ({ ...props }) => {
                         styles.textMd
                       )}
                     >
-                      {chat.isMultiple
-                        ? renderMultipleField(chat.data)
-                        : chat.userName}
+                      {userName}
                     </p>
                     <p
                       className={classNames(
@@ -130,7 +105,7 @@ export const ChatsList: FC<P> = ({ ...props }) => {
                         styles.textSm
                       )}
                     >
-                      {chat.dateTime}
+                      {dateTime}
                     </p>
                   </div>
                   <div className={styles.dFlex}>
@@ -143,9 +118,7 @@ export const ChatsList: FC<P> = ({ ...props }) => {
                         styles.userMessage
                       )}
                     >
-                      {isTyping === index
-                        ? `${chat.userName} is typing....`
-                        : chat.message}
+                      {messageBody}
                     </span>
                     <h6
                       className={classNames(
@@ -154,9 +127,9 @@ export const ChatsList: FC<P> = ({ ...props }) => {
                         styles.mb
                       )}
                     >
-                      {chat.unread ? (
+                      {unread ? (
                         <Badge
-                          count={chat.unread}
+                          count={unread}
                           style={{ backgroundColor: '#54B2D3' }}
                         />
                       ) : (

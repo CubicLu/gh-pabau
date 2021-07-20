@@ -1,12 +1,22 @@
 table:
   name: chat
   schema: public
+object_relationships:
+- name: room
+  using:
+    manual_configuration:
+      column_mapping:
+        to_channel: id
+      insertion_order: null
+      remote_table:
+        name: chat_room
+        schema: public
 remote_relationships:
 - definition:
     hasura_fields:
     - from
     remote_field:
-      user:
+      findUniqueUser:
         arguments:
           where:
             id: $from
@@ -16,7 +26,7 @@ remote_relationships:
     hasura_fields:
     - to
     remote_field:
-      user:
+      findUniqueUser:
         arguments:
           where:
             id: $to
@@ -38,6 +48,7 @@ insert_permissions:
     - from
     - message
     - to
+    - to_channel
     set:
       company_id: x-hasura-Org-Id
       from: x-hasura-User-Id
@@ -53,6 +64,7 @@ select_permissions:
     - message
     - read
     - to
+    - to_channel
     - updated_at
     filter:
       _and:

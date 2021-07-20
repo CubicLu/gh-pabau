@@ -4,15 +4,52 @@ import {
   PaperClipOutlined,
   PictureOutlined,
   SendOutlined,
-  SmileOutlined,
+  InfoCircleOutlined,
 } from '@ant-design/icons'
-import { Button, InputHtmlWithTags, InputWithTags } from '@pabau/ui'
-import { Checkbox, Input, Popover, Select, Tag } from 'antd'
+import {
+  Button,
+  InputHtmlWithTags,
+  InputWithTags,
+  Avatar,
+  SendMailOps,
+  AttachDialog,
+  Notification,
+  NotificationType,
+} from '@pabau/ui'
+import { Input, Popover, Select, Tag } from 'antd'
+import { UploadProps } from 'antd/es/upload'
 import cn from 'classnames'
-import React, { FC, ReactNode, useEffect, useRef, useState } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
+import { recipientList } from './mock'
 import styles from './SendMail.module.less'
 
 const { Option } = Select
+const recipientProperty = {
+  'family-member': {
+    class: styles.familyMemberTag,
+    name: 'Family',
+  },
+  'emergency-contact': {
+    class: styles.emergencyContactTag,
+    name: 'Patient',
+  },
+  'next-of-kin': {
+    class: styles.nextOfKinTag,
+    name: 'Patient',
+  },
+  practioner: {
+    class: styles.practionerTag,
+    name: 'GP',
+  },
+  'insurance-provider': {
+    class: styles.insuranceProviderTag,
+    name: 'Insurance Provider',
+  },
+  company: {
+    class: styles.companyTag,
+    name: 'Company',
+  },
+}
 
 interface Contract {
   name: string
@@ -24,57 +61,117 @@ interface Sender {
   email: string
 }
 
+interface Recipient {
+  avatar: string
+  firstName?: string
+  lastName?: string
+  company?: string
+  email: string
+  relationship: string
+}
+
 export interface MailProps {
   sendTo: Contract[]
   ccList: Contract[]
   bccList: Contract[]
   subject: string
   sender: Sender
-  medicalForm: string
-  message: ReactNode
-  secured: boolean
+  message: string
+  attachFiles: {
+    images: ImageItem[]
+    files: UploadProps[]
+  }
 }
 
 export interface SendMailComponentProps {
   draft: MailProps
   subjectsList?: string[]
   senderList: Sender[]
-  medicalFormList: string[]
+  recipientList: Recipient[]
   onSend: (mail: MailProps) => void
   onSave: (mail: MailProps) => void
-  onDiscardDraft: () => void
   onSaveDraft?: (draft: MailProps) => void
+}
+
+interface ImageItem {
+  src: string
+  name: string
 }
 
 const SendMailComponent: FC<SendMailComponentProps> = ({
   draft,
   subjectsList,
   senderList,
-  medicalFormList,
+  recipientList,
   onSend,
   onSave,
-  onDiscardDraft,
   onSaveDraft,
 }) => {
   const toRef = useRef<HTMLDivElement>(null)
+  const messageInputRef = useRef<HTMLDivElement>(null)
+  const recipRef = useRef<HTMLDivElement>(null)
   const [sendTo, setSendTo] = useState<Contract[]>([])
   const [sendToItem, setSendToItem] = useState('')
   const [ccList, setCcList] = useState<Contract[]>([])
   const [ccItem, setCcItem] = useState('')
   const [bccList, setBccList] = useState<Contract[]>([])
   const [bccItem, setBccItem] = useState('')
-  const [medicalForm, setMedicalForm] = useState('')
   const [currentSender, setCurrentSender] = useState<Sender>({
     name: '',
     email: '',
   })
   const [subject, setSubject] = useState('')
-  const [secure, setSecure] = useState(false)
   const [editCcList, setEditCcList] = useState(false)
   const [editBccList, setEditBccList] = useState(false)
   const [focusSender, setFocusSender] = useState(false)
-  const [focusMedicalForm, setFocusMedicalForm] = useState(false)
   const [receipients, setReceipients] = useState('')
+  const [message, setMessage] = useState('')
+  const [showToPopover, setShowToPopover] = useState(false)
+  const [showBccPopover, setShowBccPopover] = useState(false)
+  const [showCcPopover, setShowCcPopover] = useState(false)
+  const [showAttachDlg, setShowAttachDlg] = useState(false)
+  const [attachedImages, setAttachedImages] = useState<ImageItem[]>([])
+  const [attachedFiles, setAttachedFiles] = useState<UploadProps[]>([])
+
+  const handleAttachments = (images, fileList) => {
+    if (images.length > 0) {
+      const list = [...attachedImages, ...images]
+      setAttachedImages(list)
+      onSaveDraft?.({
+        ...draft,
+        attachFiles: { images: list, files: attachedFiles },
+      })
+    }
+    if (fileList.length > 0) {
+      const list = [...attachedFiles, ...fileList]
+      setAttachedFiles(list)
+      onSaveDraft?.({
+        ...draft,
+        attachFiles: { files: list, images: attachedImages },
+      })
+    }
+    setShowAttachDlg(false)
+  }
+
+  const handleDeleteAttachedImage = (index) => {
+    const items = [...attachedImages]
+    items.splice(index, 1)
+    setAttachedImages(items)
+    onSaveDraft?.({
+      ...draft,
+      attachFiles: { images: items, files: attachedFiles },
+    })
+  }
+
+  const handleDeleteAttachedFile = (index) => {
+    const items = [...attachedFiles]
+    items.splice(index, 1)
+    setAttachedFiles(items)
+    onSaveDraft?.({
+      ...draft,
+      attachFiles: { images: attachedImages, files: items },
+    })
+  }
 
   const handleSelectSender = (value) => {
     const findSender = senderList.find((item) => item.email === value)
@@ -85,36 +182,32 @@ const SendMailComponent: FC<SendMailComponentProps> = ({
     })
   }
 
+  const validateEmail = (email) => {
+    const re = /^(([^\s"(),.:;<>@[\\\]]+(\.[^\s"(),.:;<>@[\\\]]+)*)|(".+"))@((\[(?:\d{1,3}\.){3}\d{1,3}])|(([\dA-Za-z]+\.)+[A-Za-z]{2,}))$/
+    return re.test(email)
+  }
+
   const handleAddSendToList = () => {
     if (sendToItem) {
-      onSaveDraft?.({
-        ...draft,
-        sendTo: [...sendTo, { name: '', email: sendToItem }],
-      })
       setSendTo([...sendTo, { name: '', email: sendToItem }])
       setSendToItem('')
+      setShowToPopover(false)
     }
   }
 
   const handleAddCcList = () => {
     if (ccItem) {
-      onSaveDraft?.({
-        ...draft,
-        ccList: [...ccList, { name: '', email: ccItem }],
-      })
       setCcList([...ccList, { name: '', email: ccItem }])
       setCcItem('')
+      setShowCcPopover(false)
     }
   }
 
   const handleAddBccList = () => {
     if (bccItem) {
-      onSaveDraft?.({
-        ...draft,
-        bccList: [...bccList, { name: '', email: bccItem }],
-      })
       setBccList([...bccList, { name: '', email: bccItem }])
       setBccItem('')
+      setShowBccPopover(false)
     }
   }
 
@@ -123,10 +216,6 @@ const SendMailComponent: FC<SendMailComponentProps> = ({
     const items = [...sendTo]
     items.splice(index, 1)
     setSendTo(items)
-    onSaveDraft?.({
-      ...draft,
-      sendTo: items,
-    })
   }
 
   const handleCcClose = (e, index) => {
@@ -134,10 +223,6 @@ const SendMailComponent: FC<SendMailComponentProps> = ({
     const items = [...ccList]
     items.splice(index, 1)
     setCcList(items)
-    onSaveDraft?.({
-      ...draft,
-      ccList: items,
-    })
   }
 
   const handleBccClose = (e, index) => {
@@ -145,10 +230,6 @@ const SendMailComponent: FC<SendMailComponentProps> = ({
     const items = [...bccList]
     items.splice(index, 1)
     setBccList(items)
-    onSaveDraft?.({
-      ...draft,
-      bccList: items,
-    })
   }
 
   const handleChangeSubject = (value) => {
@@ -159,29 +240,188 @@ const SendMailComponent: FC<SendMailComponentProps> = ({
     })
   }
 
-  const handleSelectMedicalForm = (value) => {
-    setMedicalForm(value)
+  const onMessageWithTagChange = (e) => {
+    setMessage(e)
     onSaveDraft?.({
       ...draft,
-      medicalForm: value,
+      message: e,
     })
   }
 
-  const handleChangeSecure = (e) => {
-    setSecure(e.target.checked)
-    onSaveDraft?.({
-      ...draft,
-      secured: e.target.checked,
-    })
+  const onSubjectWithTagChange = (e) => {
+    handleChangeSubject(e)
   }
+
+  const addToItem = (e, recipient) => {
+    e.preventDefault()
+    const findIndex = sendTo.findIndex((el) => el.email === recipient.email)
+    if (findIndex < 0) {
+      const { company, firstName, lastName, relationship, email } = recipient
+      const item = {
+        email,
+        name:
+          relationship === 'company' || relationship === 'insurance-provider'
+            ? company
+            : `${firstName} ${lastName}`,
+      }
+      const items = [...sendTo, item]
+      setSendTo(items)
+    }
+    setShowToPopover(false)
+  }
+
+  const addCcItem = (e, recipient) => {
+    e.preventDefault()
+    const findIndex = ccList.findIndex((el) => el.email === recipient.email)
+    if (findIndex < 0) {
+      const { company, firstName, lastName, relationship, email } = recipient
+      const item = {
+        email,
+        name:
+          relationship === 'company' || relationship === 'insurance-provider'
+            ? company
+            : `${firstName} ${lastName}`,
+      }
+      const items = [...ccList, item]
+      setCcList(items)
+    }
+    setShowCcPopover(false)
+  }
+
+  const addBccItem = (e, recipient) => {
+    e.preventDefault()
+    const findIndex = bccList.findIndex((el) => el.email === recipient.email)
+    if (findIndex < 0) {
+      const { company, firstName, lastName, relationship, email } = recipient
+      const item = {
+        email,
+        name:
+          relationship === 'company' || relationship === 'insurance-provider'
+            ? company
+            : `${firstName} ${lastName}`,
+      }
+      const items = [...bccList, item]
+      setBccList(items)
+    }
+    setShowBccPopover(false)
+  }
+
+  const recipientListContentForTo = (
+    <div ref={recipRef}>
+      {recipientList.map((recipient, index) => (
+        <div
+          key={`recipient-${index}`}
+          className={styles.recipient}
+          onClick={(e) => addToItem(e, recipient)}
+        >
+          <div>
+            <Avatar src={recipient.avatar} size={32} />
+          </div>
+          <div>
+            <div className={styles.name}>
+              {recipient.relationship === 'company' ||
+              recipient.relationship === 'insurance-provider'
+                ? recipient.company
+                : `${recipient.firstName} ${recipient.lastName}`}
+            </div>
+            <div className={styles.email}>{recipient.email}</div>
+          </div>
+          <div>
+            <Tag className={recipientProperty[recipient.relationship].class}>
+              {recipientProperty[recipient.relationship].name}
+            </Tag>
+          </div>
+        </div>
+      ))}
+      <div className={styles.addRelationship}>
+        <InfoCircleOutlined style={{ marginRight: '8px' }} /> Add a relationship
+        to send to more parties
+      </div>
+    </div>
+  )
+
+  const recipientListContentForCc = (
+    <div ref={recipRef}>
+      {recipientList.map((recipient, index) => (
+        <div
+          key={`recipient-${index}`}
+          className={styles.recipient}
+          onClick={(e) => addCcItem(e, recipient)}
+        >
+          <div>
+            <Avatar src={recipient.avatar} size={32} />
+          </div>
+          <div>
+            <div className={styles.name}>
+              {recipient.relationship === 'company' ||
+              recipient.relationship === 'insurance-provider'
+                ? recipient.company
+                : `${recipient.firstName} ${recipient.lastName}`}
+            </div>
+            <div className={styles.email}>{recipient.email}</div>
+          </div>
+          <div>
+            <Tag className={recipientProperty[recipient.relationship].class}>
+              {recipientProperty[recipient.relationship].name}
+            </Tag>
+          </div>
+        </div>
+      ))}
+      <div className={styles.addRelationship}>
+        <InfoCircleOutlined style={{ marginRight: '8px' }} /> Add a relationship
+        to send to more parties
+      </div>
+    </div>
+  )
+
+  const recipientListContentForBcc = (
+    <div ref={recipRef}>
+      {recipientList.map((recipient, index) => (
+        <div
+          key={`recipient-${index}`}
+          className={styles.recipient}
+          onClick={(e) => addBccItem(e, recipient)}
+        >
+          <div>
+            <Avatar src={recipient.avatar} size={32} />
+          </div>
+          <div>
+            <div className={styles.name}>
+              {recipient.relationship === 'company' ||
+              recipient.relationship === 'insurance-provider'
+                ? recipient.company
+                : `${recipient.firstName} ${recipient.lastName}`}
+            </div>
+            <div className={styles.email}>{recipient.email}</div>
+          </div>
+          <div>
+            <Tag className={recipientProperty[recipient.relationship].class}>
+              {recipientProperty[recipient.relationship].name}
+            </Tag>
+          </div>
+        </div>
+      ))}
+      <div className={styles.addRelationship}>
+        <InfoCircleOutlined style={{ marginRight: '8px' }} /> Add a relationship
+        to send to more parties
+      </div>
+    </div>
+  )
 
   useEffect(() => {
     const handleLostFocusForReceipients = (e) => {
-      if (!!toRef && toRef.current && !toRef.current.contains(e.target)) {
-        const toText = sendTo.map((item) => item.name || item.email).join(', ')
-        const ccText = ccList.map((item) => item.name || item.email).join(', ')
+      if (
+        !!toRef &&
+        toRef.current &&
+        !toRef.current.contains(e.target) &&
+        !!recipRef &&
+        recipRef.current &&
+        !recipRef.current.contains(e.target)
+      ) {
+        const toText = sendTo.map((item) => item.email || item.name).join(', ')
+        const ccText = ccList.map((item) => item.email || item.name).join(', ')
         const bccText =
-          'Bcc:' + bccList.map((item) => item.name || item.email).join(', ')
+          'Bcc:' + bccList.map((item) => item.email || item.name).join(', ')
         let receip: string[] = []
         if (sendTo.length > 0) {
           receip = [...receip, toText]
@@ -197,13 +437,19 @@ const SendMailComponent: FC<SendMailComponentProps> = ({
           setEditBccList(false)
         }
         setReceipients(receip.join(', '))
+        onSaveDraft?.({
+          ...draft,
+          sendTo,
+          ccList,
+          bccList,
+        })
       }
     }
     document.addEventListener('mousedown', handleLostFocusForReceipients)
     return () => {
       document.removeEventListener('mousedown', handleLostFocusForReceipients)
     }
-  }, [toRef, sendTo, ccList, bccList])
+  }, [recipRef, toRef, sendTo, ccList, bccList, onSaveDraft, draft])
 
   useEffect(() => {
     if (draft) {
@@ -213,24 +459,25 @@ const SendMailComponent: FC<SendMailComponentProps> = ({
         bccList: draftBccList,
         subject: draftSubject,
         sender: draftSender,
-        medicalForm: draftMedicalForm,
-        secured: draftSecured,
+        message: draftMessage,
+        attachFiles: draftAttach,
       } = draft
       setSendTo(draftSendTo)
       setCcList(draftCcList)
       setBccList(draftBccList)
       setSubject(draftSubject)
       setCurrentSender(draftSender)
-      setMedicalForm(draftMedicalForm)
-      setSecure(draftSecured)
+      setMessage(draftMessage)
+      setAttachedFiles(draftAttach.files)
+      setAttachedImages(draftAttach.images)
       const toText = draftSendTo
-        .map((item) => item.name || item.email)
+        .map((item) => item.email || item.name)
         .join(', ')
       const ccText = draftCcList
-        .map((item) => item.name || item.email)
+        .map((item) => item.email || item.name)
         .join(', ')
       const bccText =
-        'Bcc:' + draftBccList.map((item) => item.name || item.email).join(', ')
+        'Bcc:' + draftBccList.map((item) => item.email || item.name).join(', ')
       let receip: string[] = []
       if (draftSendTo.length > 0) {
         receip = [...receip, toText]
@@ -251,13 +498,6 @@ const SendMailComponent: FC<SendMailComponentProps> = ({
     }
   }, [draft])
 
-  const onMessageWithTagChange = (e) => {
-    return
-  }
-  const onSubjectWithTagChange = (e) => {
-    handleChangeSubject(e)
-  }
-
   return (
     <div className={styles.sendMailComponentContainer}>
       <div className={styles.sendToSelect} ref={toRef}>
@@ -266,23 +506,36 @@ const SendMailComponent: FC<SendMailComponentProps> = ({
             <div className={cn(styles.item, styles.itemTitle)}>To</div>
             {sendTo.map((item, index) => (
               <div className={styles.item} key={`send-to-item-${index}`}>
-                <Tag closable onClose={(e) => handleSendToClose(e, index)}>
+                <Tag
+                  closable
+                  onClose={(e) => handleSendToClose(e, index)}
+                  color={validateEmail(item.email) ? 'default' : '#f5222d'}
+                >
                   {item.email || item.name}
                 </Tag>
               </div>
             ))}
             <div className={styles.inputContainer}>
-              <Input
-                value={sendToItem}
-                onChange={(e) => setSendToItem(e.target.value)}
-                onFocus={(e) => {
-                  setSendToItem('')
-                }}
-                onBlur={(e) => {
-                  handleAddSendToList()
-                }}
-                onPressEnter={() => handleAddSendToList()}
-              />
+              <Popover
+                visible={showToPopover}
+                onVisibleChange={(visible) => setShowToPopover(visible)}
+                placement="bottomLeft"
+                content={recipientListContentForTo}
+                trigger="click"
+                overlayClassName={styles.recipientListContainer}
+              >
+                <Input
+                  value={sendToItem}
+                  onChange={(e) => setSendToItem(e.target.value)}
+                  onFocus={(e) => {
+                    setSendToItem('')
+                  }}
+                  onBlur={(e) => {
+                    handleAddSendToList()
+                  }}
+                  onPressEnter={() => handleAddSendToList()}
+                />
+              </Popover>
             </div>
           </div>
         )}
@@ -291,23 +544,36 @@ const SendMailComponent: FC<SendMailComponentProps> = ({
             <div className={cn(styles.item, styles.itemTitle)}>Cc</div>
             {ccList.map((item, index) => (
               <div className={styles.item} key={`send-to-item-${index}`}>
-                <Tag closable onClose={(e) => handleCcClose(e, index)}>
+                <Tag
+                  closable
+                  onClose={(e) => handleCcClose(e, index)}
+                  color={validateEmail(item.email) ? 'default' : '#f5222d'}
+                >
                   {item.email || item.name}
                 </Tag>
               </div>
             ))}
             <div className={styles.inputContainer}>
-              <Input
-                value={ccItem}
-                onChange={(e) => setCcItem(e.target.value)}
-                onFocus={(e) => {
-                  setCcItem('')
-                }}
-                onBlur={(e) => {
-                  handleAddCcList()
-                }}
-                onPressEnter={() => handleAddCcList()}
-              />
+              <Popover
+                visible={showCcPopover}
+                onVisibleChange={(visible) => setShowCcPopover(visible)}
+                placement="bottomLeft"
+                content={recipientListContentForCc}
+                trigger="click"
+                overlayClassName={styles.recipientListContainer}
+              >
+                <Input
+                  value={ccItem}
+                  onChange={(e) => setCcItem(e.target.value)}
+                  onFocus={(e) => {
+                    setCcItem('')
+                  }}
+                  onBlur={(e) => {
+                    handleAddCcList()
+                  }}
+                  onPressEnter={() => handleAddCcList()}
+                />
+              </Popover>
             </div>
           </div>
         )}
@@ -316,23 +582,36 @@ const SendMailComponent: FC<SendMailComponentProps> = ({
             <div className={cn(styles.item, styles.itemTitle)}>Bcc</div>
             {bccList.map((item, index) => (
               <div className={styles.item} key={`send-to-item-${index}`}>
-                <Tag closable onClose={(e) => handleBccClose(e, index)}>
+                <Tag
+                  closable
+                  onClose={(e) => handleBccClose(e, index)}
+                  color={validateEmail(item.email) ? 'default' : '#f5222d'}
+                >
                   {item.email || item.name}
                 </Tag>
               </div>
             ))}
             <div className={styles.inputContainer}>
-              <Input
-                value={bccItem}
-                onChange={(e) => setBccItem(e.target.value)}
-                onFocus={(e) => {
-                  setBccItem('')
-                }}
-                onBlur={(e) => {
-                  handleAddBccList()
-                }}
-                onPressEnter={() => handleAddBccList()}
-              />
+              <Popover
+                visible={showBccPopover}
+                onVisibleChange={(visible) => setShowBccPopover(visible)}
+                placement="bottomLeft"
+                content={recipientListContentForBcc}
+                trigger="click"
+                overlayClassName={styles.recipientListContainer}
+              >
+                <Input
+                  value={bccItem}
+                  onChange={(e) => setBccItem(e.target.value)}
+                  onFocus={(e) => {
+                    setBccItem('')
+                  }}
+                  onBlur={(e) => {
+                    handleAddBccList()
+                  }}
+                  onPressEnter={() => handleAddBccList()}
+                />
+              </Popover>
             </div>
           </div>
         )}
@@ -377,7 +656,7 @@ const SendMailComponent: FC<SendMailComponentProps> = ({
           value={''}
           valueWithTag={''}
           disabledTags={[]}
-          maxWidth={634}
+          maxWidth={messageInputRef.current?.offsetWidth || 0 - 20}
           maxHeight={32}
         />
       </div>
@@ -399,35 +678,33 @@ const SendMailComponent: FC<SendMailComponentProps> = ({
           ))}
         </Select>
       </div>
-      <div className={styles.medicalFormSelect}>
-        {(medicalForm || focusMedicalForm) && (
-          <span className={styles.title}>Medical form</span>
-        )}
-        <Select
-          placeholder={focusMedicalForm ? '' : 'Medical form'}
-          onSelect={(value: string) => handleSelectMedicalForm(value)}
-          onFocus={(e) => setFocusMedicalForm(true)}
-          onBlur={(e) => setFocusMedicalForm(false)}
-        >
-          {medicalFormList.map((item, index) => (
-            <Option key={`medical-form-${index}`} value={item}>
-              {item}
-            </Option>
-          ))}
-        </Select>
-      </div>
-      <div className={styles.messageInput}>
+      <div className={styles.messageInput} ref={messageInputRef}>
         <InputHtmlWithTags
           placeholder={''}
           onChange={onMessageWithTagChange}
           value={''}
-          valueWithTag={''}
+          valueWithTag={message}
           disabledTags={[]}
-          maxWidth={672}
+          maxWidth={messageInputRef.current?.offsetWidth || 0 - 20}
+          maxHeight={messageInputRef.current?.offsetHeight || 0 - 20}
         />
       </div>
+      <div className={styles.attachedFiles}>
+        {attachedImages.map((item, index) => (
+          <div className={styles.attachedItem} key={`attached-image-${index}`}>
+            <span>{item.name}</span>
+            <DeleteOutlined onClick={() => handleDeleteAttachedImage(index)} />
+          </div>
+        ))}
+        {attachedFiles.map((item, index) => (
+          <div className={styles.attachedItem} key={`attached-file-${index}`}>
+            <span>{item.name}</span>
+            <DeleteOutlined onClick={() => handleDeleteAttachedFile(index)} />
+          </div>
+        ))}
+      </div>
       <div className={styles.sendMailOperations}>
-        <div>
+        <div className={styles.sendButtonContainer}>
           <Popover
             placement="topRight"
             content={
@@ -440,9 +717,11 @@ const SendMailComponent: FC<SendMailComponentProps> = ({
                     bccList,
                     subject,
                     sender: currentSender,
-                    medicalForm,
                     message: '',
-                    secured: secure,
+                    attachFiles: {
+                      files: attachedFiles,
+                      images: attachedImages,
+                    },
                   })
                 }
               >
@@ -459,9 +738,11 @@ const SendMailComponent: FC<SendMailComponentProps> = ({
                   bccList,
                   subject,
                   sender: currentSender,
-                  medicalForm,
                   message: '',
-                  secured: secure,
+                  attachFiles: {
+                    files: attachedFiles,
+                    images: attachedImages,
+                  },
                 })
               }
             >
@@ -470,41 +751,65 @@ const SendMailComponent: FC<SendMailComponentProps> = ({
               <DownOutlined />
             </Button>
           </Popover>
-          <PaperClipOutlined className={styles.operationItem} />
-          <SmileOutlined className={styles.operationItem} />
-          <PictureOutlined className={styles.operationItem} />
-          <Checkbox
-            checked={secure}
-            className={styles.operationItem}
-            onChange={(e) => handleChangeSecure(e)}
-          >
-            Secure mail
-          </Checkbox>
         </div>
-        <div>
-          <div
-            className={styles.discardChange}
-            onClick={() => onDiscardDraft()}
-          >
-            <DeleteOutlined />
-          </div>
+        <div
+          className={styles.attachIcon}
+          onClick={() => setShowAttachDlg(true)}
+        >
+          <PaperClipOutlined />
         </div>
+        <div
+          className={styles.pictureAttachIcon}
+          onClick={() => setShowAttachDlg(true)}
+        >
+          <PictureOutlined />
+        </div>
+        <SendMailOps
+          message={message}
+          onChangeSignature={(signature) =>
+            onMessageWithTagChange(message + signature)
+          }
+          onProposeTimeSelected={(time) => {
+            onMessageWithTagChange(message + time)
+          }}
+          onChooseTemplate={(template) =>
+            onMessageWithTagChange(message + template)
+          }
+        />
       </div>
+      {showAttachDlg && (
+        <AttachDialog
+          visible={showAttachDlg}
+          onClose={() => setShowAttachDlg(false)}
+          onAttached={(images, fileList) => handleAttachments(images, fileList)}
+        />
+      )}
     </div>
   )
 }
 
 interface SendMailProps {
-  clientId: string
-  id: string
+  client: {
+    id: string
+    email: string
+    name: string
+  }
+  receiverData: string
+  onSend?: () => void
 }
 
 interface DraftContent {
-  id: string
+  receiverData: string
   draft?: MailProps
 }
 
-export const SendMail: FC<SendMailProps> = ({ clientId, id }) => {
+const defaultClientEmail = 'bruno.ballardin@outlook.com'
+
+export const SendMail: FC<SendMailProps> = ({
+  client,
+  receiverData,
+  onSend,
+}) => {
   const [contentItems, setContentItems] = useState<DraftContent[]>([])
   const [draft, setDraft] = useState<MailProps>({
     sendTo: [],
@@ -512,14 +817,18 @@ export const SendMail: FC<SendMailProps> = ({ clientId, id }) => {
     bccList: [],
     subject: '',
     sender: { name: '', email: '' },
-    medicalForm: '',
     message: '',
-    secured: false,
+    attachFiles: {
+      files: [],
+      images: [],
+    },
   })
 
   const handleSaveDraft = (draft) => {
     const content = [...contentItems]
-    const findIndex = contentItems.findIndex((el) => el.id === id)
+    const findIndex = contentItems.findIndex(
+      (el) => el.receiverData === receiverData
+    )
     if (findIndex >= 0) {
       content[findIndex].draft = draft
       window.localStorage.setItem('pabau_content', JSON.stringify(content))
@@ -527,58 +836,94 @@ export const SendMail: FC<SendMailProps> = ({ clientId, id }) => {
     setDraft(draft)
   }
 
+  const handleSend = (mail: MailProps) => {
+    Notification(NotificationType.success, 'Email sent')
+    onSend?.()
+  }
+
   useEffect(() => {
     const items =
       JSON.parse(window.localStorage.getItem('pabau_content') || '{}') || []
     if (Array.isArray(items) && items.length > 0) {
       setContentItems(items)
-      const findItem = items.find((item) => item.id === id)
+      const findItem = items.find((item) => item.receiverData === receiverData)
       if (findItem) {
         setDraft(findItem.draft)
       } else {
         setContentItems([
           ...items,
           {
-            id,
+            receiverData,
             draft: {
-              sendTo: [],
+              sendTo: [{ email: client.email || defaultClientEmail, name: '' }],
               ccList: [],
               bccList: [],
-              secured: false,
               sender: { name: '', email: '' },
               subject: '',
               message: '',
-              medicalForm: '',
+              attachFiles: {
+                files: [],
+                images: [],
+              },
             },
           },
         ])
         setDraft({
-          sendTo: [],
+          sendTo: [{ email: client.email || defaultClientEmail, name: '' }],
           ccList: [],
           bccList: [],
-          secured: false,
           sender: { name: '', email: '' },
           subject: '',
           message: '',
-          medicalForm: '',
+          attachFiles: {
+            files: [],
+            images: [],
+          },
         })
       }
+    } else {
+      setContentItems([
+        {
+          receiverData,
+          draft: {
+            sendTo: [{ email: client.email || defaultClientEmail, name: '' }],
+            ccList: [],
+            bccList: [],
+            sender: { name: '', email: '' },
+            subject: '',
+            message: '',
+            attachFiles: {
+              files: [],
+              images: [],
+            },
+          },
+        },
+      ])
+      setDraft({
+        sendTo: [{ email: client.email || defaultClientEmail, name: '' }],
+        ccList: [],
+        bccList: [],
+        sender: { name: '', email: '' },
+        subject: '',
+        message: '',
+        attachFiles: {
+          files: [],
+          images: [],
+        },
+      })
     }
-  }, [id])
+  }, [receiverData, client])
 
   return (
     <div className={styles.sendMailContainer}>
       <SendMailComponent
         draft={draft}
         senderList={[]}
-        medicalFormList={[]}
+        recipientList={recipientList}
         onSend={(mail) => {
-          return
+          handleSend(mail)
         }}
         onSave={(mail) => {
-          return
-        }}
-        onDiscardDraft={() => {
           return
         }}
         onSaveDraft={(draft) => handleSaveDraft(draft)}

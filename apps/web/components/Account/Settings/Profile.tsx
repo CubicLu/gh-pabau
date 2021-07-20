@@ -85,23 +85,19 @@ export const Profile: FC<ProfileProps> = ({
 
   const onFirstNameChange = (value) => {
     const existProfile = { ...profile }
-    const userName = existProfile?.full_name?.split(' ')
-    userName[0] = value
     let CmStaffData = existProfile.CmStaffGeneral
-    if (CmStaffData) CmStaffData = { ...CmStaffData, Fname: value }
+    if (CmStaffData)
+      CmStaffData = { ...CmStaffData, Fname: value?.replace(/\s\s+/g, ' ') }
     handleInputChange({
-      full_name: userName?.join(' '),
       CmStaffGeneral: CmStaffData,
     })
   }
   const onLastNameChange = (value) => {
     const existProfile = { ...profile }
-    const userName = existProfile?.full_name?.split(' ')
-    userName[1] = value
     let CmStaffData = existProfile?.CmStaffGeneral
-    if (CmStaffData) CmStaffData = { ...CmStaffData, Lname: value }
+    if (CmStaffData)
+      CmStaffData = { ...CmStaffData, Lname: value?.replace(/\s\s+/g, ' ') }
     handleInputChange({
-      full_name: userName?.join(' '),
       CmStaffGeneral: CmStaffData,
     })
   }
@@ -279,12 +275,8 @@ export const Profile: FC<ProfileProps> = ({
                   label={t('account.settings.profile.firstname.label')}
                 >
                   <Input
-                    value={
-                      profile?.CmStaffGeneral?.Fname?.trim() ||
-                      profile?.full_name?.split(' ')?.[0] ||
-                      null
-                    }
-                    onChange={(e) => onFirstNameChange(e.target.value.trim())}
+                    value={profile?.CmStaffGeneral?.Fname || null}
+                    onChange={(e) => onFirstNameChange(e.target.value)}
                     placeholder={t(
                       'account.settings.profile.firstname.placeholder'
                     )}
@@ -295,12 +287,8 @@ export const Profile: FC<ProfileProps> = ({
               <Col span={11}>
                 <Form.Item label={t('account.settings.profile.lastname.label')}>
                   <Input
-                    value={
-                      profile?.CmStaffGeneral?.Lname?.trim() ||
-                      profile?.full_name?.split(' ')?.[1] ||
-                      null
-                    }
-                    onChange={(e) => onLastNameChange(e.target.value.trim())}
+                    value={profile?.CmStaffGeneral?.Lname || null}
+                    onChange={(e) => onLastNameChange(e.target.value)}
                     placeholder={t(
                       'account.settings.profile.lastname.placeholder'
                     )}
@@ -316,12 +304,8 @@ export const Profile: FC<ProfileProps> = ({
                     label={t('account.settings.profile.firstname.label')}
                   >
                     <Input
-                      value={
-                        profile?.CmStaffGeneral?.Fname?.trim() ||
-                        profile?.full_name?.split(' ')?.[0] ||
-                        null
-                      }
-                      onChange={(e) => onFirstNameChange(e.target.value.trim())}
+                      value={profile?.CmStaffGeneral?.Fname || null}
+                      onChange={(e) => onFirstNameChange(e.target.value)}
                       placeholder={t(
                         'account.settings.profile.firstname.placeholder'
                       )}
@@ -335,12 +319,8 @@ export const Profile: FC<ProfileProps> = ({
                     label={t('account.settings.profile.lastname.label')}
                   >
                     <Input
-                      value={
-                        profile?.CmStaffGeneral?.Lname?.trim() ||
-                        profile?.full_name?.split(' ')?.[1] ||
-                        null
-                      }
-                      onChange={(e) => onLastNameChange(e.target.value.trim())}
+                      value={profile?.CmStaffGeneral?.Lname || null}
+                      onChange={(e) => onLastNameChange(e.target.value)}
                       placeholder={t(
                         'account.settings.profile.lastname.placeholder'
                       )}

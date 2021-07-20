@@ -11,7 +11,7 @@ export default {
 }
 
 const story = ({ ...args }) => (
-  <CustomModal {...args} datasource={args.datasource} />
+  <CustomModal {...args} datasource={args.datasource} config={args.config} />
 )
 
 export const defaultTool = story.bind({})

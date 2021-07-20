@@ -26,7 +26,6 @@ import styles from './Dropdown.module.less'
 import { useTranslation } from 'react-i18next'
 import Router from 'next/router'
 
-// import { isMobile, isTablet } from 'react-device-detect'
 export interface DropDownInterface {
   isOpen?: boolean
   onCloseDrawer?: () => void
@@ -55,6 +54,7 @@ export const Dropdown: FC<DropDownInterface> = ({
 
   useEffect(() => {
     setCurrentUser(userData ?? null)
+    console.log('current user', userData)
   }, [userData])
 
   async function handleLogOut() {

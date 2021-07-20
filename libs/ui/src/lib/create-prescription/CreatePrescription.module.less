@@ -1,0 +1,346 @@
+.createPrescriptionContainer {
+  width: 100%;
+  height: 100%;
+}
+
+.createPrescriptionComponentContainer {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 432px;
+  > div {
+    overflow-y: auto;
+    &:nth-child(1) {
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+    }
+    &:nth-child(2) {
+      border-left: 1px solid var(--border-color-base);
+    }
+    &::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 4px;
+      background-color: #C9C9D1;
+    }
+  }
+}
+
+.prescriptionTitle {
+  margin: 0;
+  margin-bottom: 11px;
+  font-family: var(--font-family);
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--grey-text-color);
+}
+
+.prescriptionDetails {
+  display: flex;
+  margin-bottom: 20px;
+  > p {
+    margin: 0;
+    margin-right: 20px;
+    &:nth-child(1) {
+      font-family: var(--font-family);
+      font-size: 14px;
+      line-height: 17.71px;
+      color: var(--grey-text-color);
+    }
+    &:nth-child(2) {
+      font-family: var(--font-family);
+      font-size: 14px;
+      line-height: 17.71px;
+      color: var(--light-grey-color);
+    }
+  }
+}
+
+.clientInformation {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+  > p {
+    margin: 0;
+    margin-bottom: 4px;
+    font-family: var(--font-family);
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--grey-text-color);
+    &:nth-child(4) {
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+.medicationContainer {
+  margin-bottom: 12px;
+  position: relative;
+  .title {
+    font-family: var(--font-family);
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--grey-text-color);
+    margin-bottom: 4px;
+  }
+  .description {
+    font-family: var(--font-family);
+    font-size: 14px;
+    line-height: 17.71px;
+    color: var(--light-grey-color);
+  }
+  .alertsForAllergies {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 91, 100, 0.05);
+    border: 1px solid rgba(255, 91, 100, 0.5);
+    box-sizing: border-box;
+    border-radius: 4px;
+    height: 22px;
+    padding: 0 8px;
+    .warningIcon {
+      font-size: 14px;
+      color: #FF5B64;
+    }
+    .count {
+      font-family: var(--font-family);
+      font-size: 14px;
+      color: var(--grey-text-color);
+      margin-left: 4px;
+    }
+  }
+}
+
+.medicationInput {
+  margin-bottom: 1rem;
+}
+
+.medicationTableContainer {
+  margin-bottom: 2rem;
+  :global {
+    .ant-table-thead {
+      .ant-table-cell {
+        background-color: #f8f9fa;
+        font-family: var(--font-family);
+        font-size: 12px;
+        color: var(--light-grey-color);
+      }
+    }
+    .ant-table-tbody {
+      .ant-table-cell {
+        background-color: #eef7fb;
+        font-family: var(--font-family);
+        font-size: 14px;
+        color: var(--grey-text-color);
+      }
+    }
+  }
+}
+
+.signatureContainer {
+  margin-bottom: 20px;
+  width: 300px;
+  .title {
+    margin: 0;
+    margin-bottom: 8px;
+    font-family: var(--font-family);
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--grey-text-color);
+  }
+  .signatureInput {
+    border: 1px solid var(--border-color-base);
+    border-radius: 4px;
+    :global {
+      .ant-tabs {
+        line-height: 18px;
+      }
+      .ant-tabs.ant-tabs-top > .ant-tabs-nav {
+        width: 100%;
+        margin: 0;
+      }
+      .ant-tabs-top > .ant-tabs-nav .ant-tabs-tab,
+      .ant-tabs-tab-active {
+        padding: 11px 24px;
+        margin: 0;
+      }
+      .ant-tabs-tab-active {
+        background-color: #eef7fb;
+      }
+      .ant-tabs-tab:hover {
+        color: var(--primary-color);
+      }
+      .ant-tabs-tab-disabled {
+        opacity: 0.5;
+      }
+      .ant-tabs-tab {
+        color: var(--light-grey-color);
+      }
+    }
+  }
+  .tabPaneItem {
+    width: 100%;
+    height: 130px;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 4px;
+      background-color: #C9C9D1;
+    }
+  }
+}
+
+.tabsContainer {
+  width: 100%;
+  height: 100%;
+  :global {
+    .ant-tabs {
+      line-height: 18px;
+      width: 100%;
+      height: 100%;
+    }
+    .ant-tabs.ant-tabs-top > .ant-tabs-nav {
+      width: 100%;
+      margin: 0;
+    }
+    .ant-tabs-top > .ant-tabs-nav .ant-tabs-tab,
+    .ant-tabs-tab-active {
+      padding: 11px 24px;
+      margin: 0;
+    }
+    .ant-tabs-tab-active {
+      background-color: #eef7fb;
+    }
+    .ant-tabs-tab:hover {
+      color: var(--primary-color);
+    }
+    .ant-tabs-tab-disabled {
+      opacity: 0.5;
+    }
+    .ant-tabs-tab {
+      color: var(--light-grey-color);
+      width: 215px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ant-tabs-content-holder {
+      height: 100%;
+      .ant-tabs-content {
+        height: 100%;
+        .ant-tabs-tabpane {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+  .tabPaneItem {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    > div {
+      &:nth-child(1) {
+        background: white;
+        .tagsContainer {
+          width: 100%;
+          padding: 1rem 20px;
+          border-bottom: 1px solid var(--border-color-base);
+          .tagItem {
+            height: 24px;
+            border-radius: 20px;
+            border: 1px solid #65CD98;
+            background: rgba(101, 205, 152, 0.1);
+            color: #65CD98;
+            font-size: 14px;
+            line-height: 24px;
+            :global {
+              .anticon {
+                color: #65CD98;
+              }
+            }
+          }
+        }
+      }
+      &:nth-child(2) {
+        background: #F7F7F9;
+        overflow-y: auto;
+        width: 100%;
+        height: 100%;
+        padding: 1rem;
+        .contentItem {
+          width: 100%;
+          background: white;
+          border-radius: 4px;
+          margin-bottom: 1rem;
+          .contentItemHeader {
+            width: 100%;
+            height: 48px;
+            border-bottom: 1px solid var(--border-color-base);
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            > div {
+              margin-right: 12px;
+              border-radius: 4px;
+              width: 24px;
+              height: 24px;
+              background-color: #FAAD14;
+              color: white;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              font-size: 16px;
+            }
+            > span {
+              font-family: var(--font-family);
+              font-size: 16px;
+              line-height: 24px;
+              color: var(--light-grey-color);
+            }
+          }
+
+          .contentItemBody {
+            width: 100%;
+            padding: 1rem;
+            > p {
+              margin: 0;
+              font-family: var(--font-family);
+              font-size: 14px;
+              line-height: 22px;
+              color: var(--grey-text-color);
+            }
+          }
+        }
+
+        &::-webkit-scrollbar {
+          width: 4px;
+          height: 4px;
+        }
+        &::-webkit-scrollbar-track {
+          background-color: transparent;
+        }
+        &::-webkit-scrollbar-thumb {
+          border-radius: 4px;
+          background-color: #C9C9D1;
+        }
+      }
+    }
+  }
+}

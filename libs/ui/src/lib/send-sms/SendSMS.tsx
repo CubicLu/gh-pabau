@@ -11,7 +11,7 @@ import _ from 'lodash'
 import moment from 'moment'
 import React, { FC, useEffect, useState } from 'react'
 import { tagList } from '../merge-tag-modal/data'
-import { defaultTemplateList } from './mock'
+import { defaultTemplateList } from './mock-data'
 import styles from './SendSMS.module.less'
 
 const HANDLE_REGEX = /\[.+?]/g
@@ -228,17 +228,21 @@ const SendSMSComponent: FC<SendSMSComponentProps> = ({
 }
 
 export interface SendSMSProps {
-  clientId: string
-  id: string
+  client: {
+    id: string
+    name: string
+    email: string
+  }
+  receiverData: string
 }
 
 interface DraftContent {
-  id: string
-  draft: string
+  receiverData: string
+  draft?: string
   items?: SMSItem[]
 }
 
-export const SendSMS: FC<SendSMSProps> = ({ clientId, id }) => {
+export const SendSMS: FC<SendSMSProps> = ({ client, receiverData }) => {
   const [templateList, setTemplateList] = useState<smsTemplateProps[]>([])
   const [SMSItems, setSMSItems] = useState<SMSItem[]>([])
   const [contentItems, setContentItems] = useState<DraftContent[]>([])
@@ -248,15 +252,20 @@ export const SendSMS: FC<SendSMSProps> = ({ clientId, id }) => {
     const items = [...SMSItems, item]
     setSMSItems(items)
     const content = [...contentItems]
-    const findIndex = contentItems.findIndex((el) => el.id === id)
-    if (findIndex >= 0) content.splice(findIndex, 1, { id, items, draft: '' })
+    const findIndex = contentItems.findIndex(
+      (el) => el.receiverData === receiverData
+    )
+    if (findIndex >= 0)
+      content.splice(findIndex, 1, { receiverData, items, draft: '' })
     setContentItems(content)
     window.localStorage.setItem('pabau_content', JSON.stringify(content))
   }
 
   const handleSaveDraft = (draft) => {
     const content = [...contentItems]
-    const findIndex = contentItems.findIndex((el) => el.id === id)
+    const findIndex = contentItems.findIndex(
+      (el) => el.receiverData === receiverData
+    )
     content[findIndex].draft = draft
     setDraft(draft)
     window.localStorage.setItem('pabau_content', JSON.stringify(content))
@@ -268,16 +277,16 @@ export const SendSMS: FC<SendSMSProps> = ({ clientId, id }) => {
       ? JSON.parse(window.localStorage.getItem('pabau_content') || '{}')
       : []
     setContentItems(items)
-    const findItem = items.find((item) => item.id === id)
+    const findItem = items.find((item) => item.receiverData === receiverData)
     if (findItem) {
       setSMSItems(findItem.items)
       setDraft(findItem.draft)
     } else {
-      setContentItems([...items, { id, items: [], draft: '' }])
+      setContentItems([...items, { receiverData, items: [], draft: '' }])
       setSMSItems([])
       setDraft('')
     }
-  }, [id])
+  }, [receiverData])
 
   return (
     <div className={styles.sendSMSContainer}>

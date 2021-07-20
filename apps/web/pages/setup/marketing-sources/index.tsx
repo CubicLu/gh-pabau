@@ -12,7 +12,7 @@ const LIST_QUERY = gql`
     $offset: Int
     $limit: Int
   ) {
-    marketingSources(
+    findManyMarketingSource(
       take: $limit
       skip: $offset
       orderBy: { id: desc }
@@ -34,7 +34,7 @@ const LIST_AGGREGATE_QUERY = gql`
     $isActive: Boolean = true
     $searchTerm: String = ""
   ) {
-    marketingSourcesCount(
+    findManyMarketingSourceCount(
       where: {
         public: { equals: $isActive }
         OR: [{ AND: [{ name: { contains: $searchTerm } }] }]
@@ -62,7 +62,7 @@ const ADD_MUTATION = gql`
     createOneMarketingSource(
       data: {
         imported: $imported
-        company: {}
+        Company: {}
         name: $name
         public: $public
         custom_id: $custom_id

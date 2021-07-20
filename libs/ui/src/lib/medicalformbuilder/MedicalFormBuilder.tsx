@@ -1,9 +1,12 @@
 import { ControlOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
 import {
+  EmailMessageTemplateItem,
   MedicalFormItem,
   MedicalFormTypes,
   Notification,
   NotificationType,
+  SmsMessageTemplateItem,
+  UserListItem,
 } from '@pabau/ui'
 import { Modal, Tabs } from 'antd'
 import className from 'classnames'
@@ -59,6 +62,9 @@ interface MedicalFormBuilderProps {
   preFormName: string
   create?: boolean
   currentForm?: MedicalFormItem
+  smsMessageTemplateItems?: SmsMessageTemplateItem[]
+  emailMessageTemplateItems?: EmailMessageTemplateItem[]
+  userListItems?: UserListItem[]
 }
 
 export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
@@ -69,6 +75,9 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
   preFormName = '',
   create = true,
   currentForm = null,
+  smsMessageTemplateItems = [],
+  emailMessageTemplateItems = [],
+  userListItems = [],
 }) => {
   const { t } = useTranslation('common')
   const [formName, setFormName] = useState(preFormName)
@@ -115,6 +124,7 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
   }
 
   const changeFormType = (formType) => {
+    if (currentMedicalForm) currentMedicalForm.formType = formType
     if (defaultMedicalForm) defaultMedicalForm.formType = formType
   }
 
@@ -274,6 +284,9 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
             changeFormSaveLabel={changeFormSaveLabel}
             onSaveRules={handleSaveRules}
             currentRules={currentMedicalForm?.rules}
+            smsMessageTemplateItems={smsMessageTemplateItems}
+            emailMessageTemplateItems={emailMessageTemplateItems}
+            userListItems={userListItems}
           />
         </TabPane>
       </Tabs>

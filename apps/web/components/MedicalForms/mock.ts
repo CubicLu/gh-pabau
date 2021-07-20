@@ -2,7 +2,7 @@ export const medicalFormData = [
   {
     key: '1',
     name: 'Botox Medical Form 0',
-    formType: 'treatmentForm',
+    formType: 'treatment',
     createdAt: '23/10/2020',
     version: {
       currentVersion: '3',
@@ -134,7 +134,7 @@ export const medicalFormData = [
   {
     key: '5',
     name: 'Botox Medical Form 4',
-    formType: 'presciption',
+    formType: 'prescription',
     createdAt: '23/10/2020',
     version: {
       currentVersion: '3',
@@ -167,7 +167,7 @@ export const medicalFormData = [
   {
     key: '6',
     name: 'Botox Medical Form 5',
-    formType: 'labForm',
+    formType: 'lab',
     createdAt: '23/10/2020',
     version: {
       currentVersion: '3',

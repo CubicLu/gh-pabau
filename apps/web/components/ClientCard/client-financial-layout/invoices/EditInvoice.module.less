@@ -1,0 +1,280 @@
+.editTitleContainer {
+  & > span > span {
+    margin-left: 20px;
+  }
+  & > span > span:first-child {
+    margin-left: 0px;
+  }
+  span {
+    color: var(--light-grey-text-color);
+    font-size: 14px;
+    :global {
+      .anticon {
+        color: var(--green-primary-color);
+        margin-right: 5px;
+      }
+    }
+  }
+  span.iconWarning {
+    :global {
+      .anticon {
+        color: var(--warning-color);
+      }
+    }
+  }
+}
+.customMenuDropdown {
+  width: 200px;
+  :global {
+    .anticon {
+      margin-right: 10px;
+    }
+  }
+  .warningDropdown {
+    color: var(--red-color-text);
+  }
+}
+.voidModal {
+  .voidAlertInfo {
+    background-color: var(--primary-info-color);
+    border: var(--link-color) 1px solid;
+    padding: 20px 15px;
+    border-radius: 3px;
+    p {
+      margin: 0;
+      padding: 0;
+      color: var(--grey-text-color);
+    }
+    p:nth-child(2) {
+      color: var(--light-grey-color);
+    }
+  }
+  .footer {
+    margin: 20px 0px 15px 0px;
+    display: flex;
+    justify-content: flex-end;
+    .closeBtn {
+      background-color: var(--red-color-text);
+      border-radius: 3px;
+    }
+    :global {
+      .ant-btn {
+        margin-left: 10px;
+      }
+    }
+  }
+  :global {
+    .ant-modal-header {
+      border-bottom: none;
+      .ant-modal-title {
+        color: var(--grey-text-color);
+        font-size: 18px;
+      }
+    }
+  }
+}
+.historyDrawer {
+  :global {
+    .ant-drawer-content-wrapper {
+      width: 370px !important;
+      @media screen and (max-width: 426px) {
+        width: 100% !important;
+      }
+      .ant-drawer-content {
+        .ant-drawer-wrapper-body {
+          .ant-drawer-header {
+            display: none;
+          }
+          .ant-drawer-body {
+            padding: 0px;
+          }
+        }
+      }
+    }
+  }
+  .header {
+    border-bottom: 1px solid var(--border-color-base);
+    height: 50px;
+    padding: 0px 24px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 20px;
+    & > div {
+      display: flex;
+      & > div {
+        height: 30px;
+        width: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      & > .closeIcon {
+        border-radius: 50%;
+        border: 1px solid var(--border-color-base);
+      }
+    }
+  }
+  .histories {
+    padding-top: 20px;
+    & > .history {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 15px;
+      & > .left {
+        width: 60px;
+        position: relative;
+        .progLine {
+          position: absolute;
+          left: 50%;
+          top: -20px;
+          width: 1px;
+          height: calc(100% + 15px);
+          background: var(--border-color-base);
+        }
+        .progLineLastItem {
+          height: calc(50% + 15px);
+        }
+        .iconCont {
+          height: 30px;
+          width: 30px;
+          position: absolute;
+          top: 15px;
+          left: calc(50% - 15px);
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: var(--light-color);
+        }
+        .iconContIssue {
+          background-color: var(--green-primary-color);
+        }
+        .iconContEmail {
+          background-color: #5f37b6;
+        }
+        .iconContRefund {
+          background-color: #3d4eb4;
+        }
+        .iconContDelete {
+          background-color: #ff5b64;
+        }
+        .iconContAdd {
+          background-color: #3d4eb4;
+        }
+      }
+      & > .right {
+        padding: 10px;
+        border: 1px solid var(--border-color-base);
+        display: flex;
+        flex: 1;
+        margin-right: 15px;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+        :global {
+          h5.ant-typography {
+            margin-bottom: 0px;
+            font-size: 13px;
+          }
+        }
+        .date {
+          color: var(--light-grey-text-color);
+          font-size: 11px;
+          font-weight: 400;
+          font-family: sans-serif;
+        }
+        .desc {
+          font-size: 11px;
+          line-height: 14px;
+          margin-top: 5px;
+          font-weight: 400;
+          font-family: sans-serif;
+        }
+        .detailRow {
+          height: 20px;
+          width: 100%;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          & > span {
+            color: var(--light-grey-text-color);
+            font-size: 11px;
+            font-weight: 400;
+            font-family: sans-serif;
+          }
+          & > span.price {
+            color: var(--blue-color-text);
+            font-size: 12px;
+            font-weight: 600;
+            font-family: sans-serif;
+          }
+        }
+      }
+    }
+  }
+  .historyRefreshDrawer {
+    padding: 35px 0px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    :global {
+      .ant-typography {
+        margin: 0;
+      }
+      .anticon {
+        color: var(--primary-color);
+        font-size: 30px;
+        margin-bottom: 10px;
+      }
+    }
+    span {
+      color: var(--light-grey-color);
+      font-size: 12px;
+    }
+  }
+}
+.modalCustomHeaderBtns {
+  display: flex;
+  flex-direction: row;
+  :global {
+    .ant-btn {
+      @media screen and (max-width: 767px) {
+        margin-right: 5px !important;
+        font-size: 12px;
+      }
+    }
+  }
+}
+.checkoutWarningModal {
+  :global {
+    .ant-modal-content {
+      width: 570px;
+      .ant-modal-header {
+        border-bottom: none;
+        padding-top: 25px;
+        .ant-modal-title {
+          font-size: 20px;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+  .btnRow {
+    margin-top: 15px;
+    justify-content: flex-end;
+    display: flex;
+    flex-direction: row;
+    :global {
+      .ant-btn {
+        margin-left: 10px;
+        border-radius: 4px;
+      }
+    }
+  }
+}

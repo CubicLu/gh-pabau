@@ -36,7 +36,7 @@ const UpdateUserReport = objectType({
 })
 const reportPrefixes = new Set(['CO', 'FI', 'LE', 'MA', 'OT', 'ST', 'AD'])
 
-export const FavoriteReport = extendType({
+export const PabauFavoriteReport = extendType({
   type: 'Mutation',
   definition(t) {
     t.field('upsertUserReportByReportCode', {

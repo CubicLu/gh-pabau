@@ -5,12 +5,12 @@ fragment CmCaseReplyFields on CmCaseReply {
   Description
   CreatedDate
   IpAddress
-  CompanyID
+  company_id
 }
 
 fragment CmCaseReply on CmCaseReply {
   ...CmCaseReplyFields
-  company {
+  Company {
     ...CompanyFields
   }
 }

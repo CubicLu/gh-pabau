@@ -17,7 +17,7 @@ fragment CandidateFields on Candidate {
 
 fragment Candidate on Candidate {
   ...CandidateFields
-  company {
+  Company {
     ...CompanyFields
   }
 }
