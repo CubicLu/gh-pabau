@@ -117,10 +117,6 @@ export const Clients: FC<ClientsProps> = () => {
     },
   })
 
-  // useEffect(()=>{
-  //
-  // })
-
   useEffect(() => {
     if (getClientsCountData) {
       setPaginateData((d) => ({
@@ -135,6 +131,33 @@ export const Clients: FC<ClientsProps> = () => {
     if (getContactsData) {
       setTestData(contactsData)
     }
+  }, [getContactsData])
+
+  // DO NOT DELETE WORKINGGGGGGGG UPDATING CONTACTS WITH CUSTOM LABEL
+
+  // useEffect(() => {
+  //   setTestData(
+  //     contactsData?.map((field) =>
+  //       field.id === 23302410 ? { ...field, labelTest: 'final test' } : field
+  //     )
+  //   )
+  // }, [getContactsData])
+
+  useEffect(() => {
+    const tempContact = contactsData?.map((fieldContact) => {
+      const tempCON = []
+      for (const fieldCL of contactsLabels?.contacts_labels) {
+        console.log('fieldCL:', fieldCL)
+        console.log('fieldContact:', fieldContact)
+
+        if (fieldCL.contact_id === fieldContact.id) {
+          // ...fieldContact, labelTest: labelTest.push(fieldCL.label)
+          fieldContact.labelTest.push(fieldCL.label.text)
+        }
+      }
+    })
+    console.log('tempContact:', tempContact)
+    // setTestData(tempContact)
   }, [getContactsData])
 
   useEffect(() => {
@@ -162,7 +185,7 @@ export const Clients: FC<ClientsProps> = () => {
     email: d.Email,
     mobileNumber: d.Mobile,
     is_active: d.is_active,
-    labelTest: '',
+    labelTest: [],
   }))
 
   // console.log(contactsData, 'contactsData')
