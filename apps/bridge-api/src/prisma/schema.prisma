@@ -6426,7 +6426,6 @@ model InvProduct {
   CmProductCustomField      CmProductCustomField[]
   InventoryMovement         InventoryMovement[]
 
-  InvSaleItem InvSaleItem[] @relation("fk_inv_sale_product_id")
   @@unique([company_id, id], name: "primary")
   @@unique([company_id, name], name: "unique_product_name")
   @@unique([company_id, old_barcode], name: "unique_product_barcode")
@@ -6437,6 +6436,7 @@ model InvProduct {
   @@index([name], name: "name")
   @@index([product_order], name: "product_order")
   @@map("inv_products")
+  InvSaleItem InvSaleItem[] @relation("fk_inv_sale_product_id")
 }
 
 //

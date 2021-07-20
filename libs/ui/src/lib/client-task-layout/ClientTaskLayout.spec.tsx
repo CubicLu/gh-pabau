@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react'
 import React from 'react'
-import ClientFormsLayout from './ClientFormsLayout'
+import ClientTaskLayout from './ClientTaskLayout'
 
-describe('ClientFormsLayout', () => {
+describe('ClientTaskLayout', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<ClientFormsLayout />)
+    const { baseElement } = render(<ClientTaskLayout />)
     expect(baseElement).toBeTruthy()
   })
 })

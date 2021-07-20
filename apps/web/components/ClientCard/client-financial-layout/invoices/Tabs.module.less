@@ -1,0 +1,571 @@
+.detailsPage {
+  .detailsContainer {
+    background-color: var(--light-color);
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 520px;
+    border-radius: 3px;
+    @media screen and (max-width: 767px) {
+      max-width: 100%;
+      padding-bottom: 40px;
+    }
+    .issuedTo {
+      padding: 0px;
+      .label {
+        color: var(--light-grey-text-color);
+        margin: 0;
+      }
+      :global {
+        .ant-btn {
+          margin-bottom: 10px;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+  :global {
+    .ant-form-item-label > label {
+      color: var(--light-grey-text-color);
+    }
+  }
+}
+.invoiceTabsContainer {
+  background-color: var(--light-color);
+  min-height: 250px;
+  max-width: 1200px;
+  margin: 30px auto;
+  padding-bottom: 30px;
+  overflow-x: auto;
+  margin-bottom: 60px;
+  .addNoteLabel {
+    color: var(--primary-color);
+    cursor: pointer;
+    :global {
+      .anticon {
+        margin-right: 10px;
+      }
+    }
+  }
+  .closeLabel {
+    height: 100%;
+    width: 35px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    cursor: pointer;
+    margin-left: 15px;
+  }
+}
+.invoiceTabSectionHeader {
+  background-color: var(--light-color);
+  height: 55px;
+  width: 1200px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 15px;
+  .dateField {
+    span {
+      font-size: 13px;
+      margin-right: 10px;
+    }
+  }
+}
+.itemsHeaderAddItems {
+  :global {
+    .ant-dropdown-menu-item {
+      height: 60px;
+      min-width: 250px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      .ant-dropdown-menu-title-content {
+        flex: none;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-left: 20px;
+        .anticon {
+          background-color: var(--light-grey-color);
+          height: 50px;
+          width: 50px;
+          border-radius: 5px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 20px;
+          color: var(--light-color);
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+  .selectedItem {
+    :global {
+      .anticon {
+        color: var(--primary-color);
+      }
+      .ant-dropdown-menu-title-content {
+        margin-left: 0px;
+        .anticon {
+          background-color: var(--primary-color);
+        }
+      }
+    }
+  }
+}
+.invoiceTabSectionTableHeader {
+  background-color: var(--gray-background-light-color);
+  height: 45px;
+  width: 1200px;
+  display: flex;
+  flex-direction: row;
+  div {
+    display: flex;
+    align-items: center;
+    span {
+      color: var(--light-grey-text-color);
+    }
+  }
+  div:first-child {
+    padding-left: 15px;
+  }
+}
+.itemsTableFooter {
+  background-color: var(--gray-background-light-color);
+  height: 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin-top: 15px;
+  & > div {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    align-items: center;
+    &:nth-child(1) {
+      justify-content: flex-start;
+    }
+    &:nth-child(2) {
+      justify-content: flex-end;
+    }
+    & > div {
+      display: flex;
+      align-items: center;
+      width: 120px;
+      span {
+        color: var(--light-grey-text-color);
+        font-size: 13px;
+      }
+    }
+  }
+}
+.itemsTableFooterMobile {
+  background-color: var(--gray-background-light-color);
+  height: 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin-top: 15px;
+  & > div {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    span {
+      color: var(--light-grey-text-color);
+      font-size: 13px;
+    }
+  }
+}
+.itemsTableFooterMobileTotal {
+  margin-top: 0;
+  background-color: var(--light-color);
+  span {
+    color: #000 !important;
+    font-weight: bold;
+    font-size: 15px !important;
+  }
+  span.subtotal {
+    color: var(--green-primary-color) !important;
+  }
+}
+.itemsTableFooterMobileInTotal {
+  justify-content: space-between;
+  & > div {
+    flex: unset;
+    padding: 0 15px;
+    .addTipMobileLabel {
+      color: var(--primary-color) !important;
+      font-size: 12px !important;
+      cursor: pointer !important;
+      :global {
+        .anticon {
+          color: var(--primary-color) !important;
+          font-size: 12px !important;
+          margin-right: 5px !important;
+        }
+      }
+    }
+  }
+}
+
+.itemsTableFooterTotal {
+  margin-top: 0;
+  background-color: var(--light-color);
+  span {
+    color: #000 !important;
+  }
+}
+.itemsTableFooterRefundAction {
+  margin-top: 0;
+  background-color: var(--light-color);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 10px 20px;
+  & > div.addNoteFormContainer {
+    .formField {
+      margin-bottom: 10px;
+      label {
+        color: var(--light-grey-color);
+        font-size: 13px;
+      }
+      :global {
+        .ant-input {
+          min-width: 300px;
+        }
+      }
+    }
+  }
+  :global {
+    .ant-btn {
+      margin-left: 10px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 400;
+      font-family: sans-serif;
+    }
+  }
+  @media screen and (max-width: 767px) {
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+.itemsTableAddTipRow {
+  height: 40px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 20px;
+  margin-top: 15px;
+  & > span {
+    color: var(--primary-color);
+    font-size: 12px;
+    cursor: pointer;
+    :global {
+      .anticon {
+        margin-right: 5px;
+      }
+    }
+  }
+}
+.addTipBody {
+  min-width: 280px;
+  :global {
+    .ant-popover-title {
+      font-size: 12px;
+      color: #000;
+      min-height: 25px;
+      padding: 10px 16px 10px 15px;
+      border-bottom: none;
+    }
+    .ant-popover-inner-content {
+      padding: 0px 16px 12px 15px;
+    }
+  }
+}
+.addTipBodyContent {
+  & > div.row {
+    span.title {
+      color: var(--light-grey-color);
+      font-size: 10px;
+    }
+    & > div.bodyRow {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 10px;
+      .bodyAmountField {
+        display: flex;
+        flex: 3;
+        margin-right: 4%;
+        :global {
+          .ant-input-affix-wrapper {
+            padding-left: 0px;
+            .ant-input-prefix {
+              width: 45px;
+              font-size: 12px;
+              border-right: 1px solid #ecedf0;
+              display: flex;
+              justify-content: center;
+            }
+          }
+        }
+      }
+      .bodyTipTypeField {
+        display: flex;
+        flex: 2;
+        flex-direction: row;
+        & > div.option {
+          display: flex;
+          flex: 1;
+          border: 1px solid #ecedf0;
+          border-radius: 2px;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+        }
+        & > div.optionSelected {
+          background-color: var(--primary-color);
+          color: var(--light-color);
+          border-color: var(--primary-color);
+        }
+      }
+    }
+    & > div.buttonRow {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+  }
+}
+.invoiceTabSectionTableRow {
+  height: 45px;
+  width: 1200px;
+  display: flex;
+  flex-direction: row;
+  & > div {
+    display: flex;
+    align-items: center;
+    padding-right: 10px;
+  }
+  & > div.totalPriceColumn {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    :global {
+      .anticon {
+        cursor: pointer;
+      }
+    }
+  }
+  & > div:first-child {
+    padding-left: 15px;
+  }
+}
+.itemsTableRow {
+  height: 55px;
+  &:hover {
+    background-color: #fbfbfb;
+    border-left: 2px solid var(--red-focused-color);
+  }
+}
+.invoiceTabSectionTableNoteRowDFlex {
+  display: flex;
+}
+.invoiceTabSectionTableNoteRow {
+  float: left;
+  padding: 15px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-color-base);
+  width: 100%;
+  @media screen and (max-width: 767px) {
+    flex-direction: column;
+  }
+  .invoiceFormField {
+    padding: 15px 5px;
+    width: 60%;
+    float: left;
+    @media screen and (max-width: 767px) {
+      width: 100%;
+    }
+  }
+  .invoiceFormEditField {
+    width: 40%;
+    float: left;
+    display: flex;
+    align-items: center;
+    & > span {
+      margin-top: 12px;
+      margin-left: 15px;
+      cursor: pointer;
+    }
+    @media screen and (max-width: 767px) {
+      width: 100%;
+      width: 100%;
+      justify-content: flex-end;
+    }
+  }
+  & > div.formField {
+    width: 60%;
+    @media screen and (max-width: 767px) {
+      width: 100%;
+    }
+  }
+  :global {
+    .ant-btn {
+      margin-left: 10px;
+    }
+  }
+}
+.invoiceTabPaymentFooterRow {
+  background-color: var(--gray-background-light-color);
+  height: 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin-top: 15px;
+  justify-content: flex-end;
+  padding-right: 5px;
+  & > div {
+    display: flex;
+    flex: 1;
+    justify-content: space-around;
+    div {
+      display: flex;
+      align-items: center;
+      span {
+        color: var(--light-grey-text-color);
+      }
+    }
+  }
+  & > div:nth-child(1) {
+    @media screen and (max-width: 767px) {
+      flex: unset;
+    }
+  }
+}
+.invoiceTabPaymentActionFooterRow {
+  height: 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin-top: 15px;
+  justify-content: flex-end;
+  padding: 0px 15px;
+  :global {
+    .ant-btn {
+      margin-left: 15px;
+      @media screen and (max-width: 767px) {
+        margin-left: 0px;
+        width: 46%;
+      }
+    }
+  }
+  @media screen and (max-width: 767px) {
+    justify-content: center;
+    padding: 0;
+    justify-content: space-evenly;
+    margin-top: 25px;
+  }
+}
+.invoiceTabRow {
+  padding: 0px 15px;
+  margin-top: 15px;
+  :global {
+    .ant-alert-message {
+      float: right;
+    }
+  }
+}
+.invoiceTabPaymentTotalFooterRow {
+  margin-top: 0;
+  background: #fff;
+  & > div {
+    div {
+      span {
+        color: #000 !important;
+        font-weight: bold;
+        font-size: 15px !important;
+      }
+      span.greenText {
+        color: var(--green-primary-color) !important;
+      }
+    }
+  }
+}
+.paymentDeleteModal {
+  :global {
+    .ant-modal-content {
+      width: 570px;
+      .ant-modal-header {
+        border-bottom: none;
+        padding-top: 25px;
+        .ant-modal-title {
+          font-size: 20px;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+  .btnRow {
+    margin-top: 15px;
+    justify-content: flex-end;
+    display: flex;
+    flex-direction: row;
+    :global {
+      .ant-btn {
+        margin-left: 10px;
+        border-radius: 4px;
+      }
+    }
+  }
+}
+.addItemModalContent {
+  :global {
+    .ant-modal {
+      width: 800px !important;
+    }
+    .ant-modal-content {
+      .ant-modal-close {
+        top: 10px;
+        right: 20px;
+      }
+      .ant-modal-header {
+        border-bottom-width: 0;
+      }
+      .ant-modal-title {
+        font-family: Circular-Std-Medium;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 22px;
+        line-height: 28px;
+        text-transform: capitalize;
+        color: var(--grey-text-color);
+      }
+    }
+    .ant-tree-treenode {
+      width: 100%;
+      box-shadow: inset 0 -1px 0 #f4f4f6, inset 0 1px 0 #f4f4f6;
+      padding: 15px 25px 15px 5px !important;
+      position: relative;
+      display: flex !important;
+      justify-content: flex-start !important;
+      align-items: center !important;
+      .ant-tree-node-content-wrapper {
+        min-height: 100%;
+        padding: 15px 5px;
+      }
+    }
+  }
+  .btnsRow {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

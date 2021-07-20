@@ -1,13 +1,13 @@
 import React, { FC, useRef } from 'react'
 import { MyLottie as Lottie } from '@pabau/ui'
 import emptyState from '../../assets/lottie/empty-state.json'
-import styles from './ClientActivitiesLayout.module.less'
+import styles from './ClientTreatmentNotesLayout.module.less'
 
-export interface ClientActivitiesLayoutProps {
+export interface ClientTreatmentNotesLayoutProps {
   isEmpty?: boolean
 }
 
-export const ClientActivitiesLayout: FC<ClientActivitiesLayoutProps> = ({
+export const ClientTreatmentNotesLayout: FC<ClientTreatmentNotesLayoutProps> = ({
   isEmpty,
 }) => {
   const ref = useRef<HTMLDivElement>(null)
@@ -29,4 +29,4 @@ export const ClientActivitiesLayout: FC<ClientActivitiesLayoutProps> = ({
   )
 }
 
-export default ClientActivitiesLayout
+export default ClientTreatmentNotesLayout

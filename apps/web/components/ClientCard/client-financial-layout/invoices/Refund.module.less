@@ -1,0 +1,125 @@
+.primaryText {
+  cursor: pointer;
+  color: var(--primary-color);
+}
+.refundScreen {
+  & > div.refundContainer {
+    background-color: var(--light-color);
+    min-height: 250px;
+    max-width: 1200px;
+    margin: 30px auto;
+    padding-bottom: 30px;
+    overflow-x: auto;
+    margin-bottom: 60px;
+  }
+  & > div.refundOnlineBanner {
+    max-width: 1200px;
+    margin: 30px auto;
+    background-color: #e9faff;
+    padding: 15px;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    & > div {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      & > span {
+        margin-bottom: 8px;
+      }
+      & > span.title {
+        font-weight: bold;
+        color: #000;
+      }
+      & > span.desc {
+        font-weight: bold;
+        color: var(--grey-text-color);
+        font-size: 12px;
+      }
+      & > a {
+        font-size: 12px;
+      }
+    }
+    & > img.backgroundImg {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      height: 90%;
+    }
+    & > div.closeTag {
+      height: 50px;
+      width: 50px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+    @media screen and (max-width: 767px) {
+      display: none;
+    }
+  }
+}
+.refundModal {
+  :global {
+    .ant-modal-header {
+      padding-top: 25px;
+      border: none;
+    }
+    .ant-modal-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      img {
+        margin-bottom: 15px;
+      }
+      & > div {
+        width: 100%;
+        padding: 10px 0px;
+      }
+    }
+    .ant-modal-footer {
+      padding-bottom: 25px;
+      border: none;
+    }
+  }
+}
+.refundPackageRow {
+  margin-top: 15px;
+  padding: 0px 15px;
+  border-top: 1px solid var(--border-color-base);
+  & > div.main {
+    min-height: 100px;
+    display: flex;
+    flex-direction: row;
+    & > div.left {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      justify-content: center;
+    }
+    & > div.right {
+      display: flex;
+      flex: 2;
+      flex-direction: column;
+      justify-content: center;
+      padding-left: 25px;
+      & > div {
+        margin-top: 10px;
+      }
+      @media screen and (max-width: 767px) {
+        padding-left: 0px;
+        flex: 1;
+      }
+    }
+    @media screen and (max-width: 767px) {
+      min-height: 170px;
+      flex-direction: column-reverse;
+    }
+  }
+}

@@ -87,7 +87,6 @@ pipelines:
                 - yarn affected:e2e --base=origin/master || true
 
       - parallel:
-
           - step:
               name: deploy dockers
               runs-on:
@@ -247,7 +246,6 @@ pipelines:
                 - yarn cypress install || true
                 - yarn affected:e2e --base=HEAD~1 || true
 
-
       - step:
           name: bump version
           max-time: 5
@@ -272,7 +270,6 @@ pipelines:
             - dist/**
 
       - parallel:
-
           - step:
               name: deploy dockers
               runs-on:
