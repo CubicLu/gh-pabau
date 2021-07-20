@@ -11,8 +11,7 @@ import {
 import { Button } from '@pabau/ui'
 import * as Yup from 'yup'
 import classnames from 'classnames'
-
-import { MasterCategory, Category, Service } from '../../types/services'
+import { MasterCategory } from '../../types/services'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 
 export interface P {

@@ -106,7 +106,7 @@ export const permissions = shield(
       findFirstUserPermission: rules.authentication.isAuthenticated,
       //Authentication
       me: rules.authentication.isAuthenticated,
-      company: rules.authentication.isAuthenticated,
+      company: allow,
       ping: allow,
       //TODO once jest mocks are resolved move it to rules.authentication.isAuthenticated
       featureRequestsWeeklyAvg: allow,
@@ -118,6 +118,7 @@ export const permissions = shield(
       companyBranches: allow,
       cmStaffGenerals: allow,
       rotaShifts: allow,
+      findFirstCompany: allow,
       '*': rules.interceptors.interceptAccessToCompanyData,
     },
   },

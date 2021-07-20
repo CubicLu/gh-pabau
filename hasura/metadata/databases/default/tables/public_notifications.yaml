@@ -21,17 +21,6 @@ array_relationships:
       remote_table:
         name: read_notification
         schema: public
-remote_relationships:
-- definition:
-    hasura_fields:
-    - sent_by
-    remote_field:
-      findUniqueUser:
-        arguments:
-          where:
-            id: $sent_by
-    remote_schema: CRM
-  name: sentBy
 insert_permissions:
 - permission:
     backend_only: false

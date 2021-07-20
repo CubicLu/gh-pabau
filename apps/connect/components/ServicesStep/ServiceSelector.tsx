@@ -36,7 +36,6 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
   // CRAP
   const [showmodal, setshowmodal] = useState(false)
   const [visible, setvisible] = useState(false)
-  const [contype, setcontype] = useState(true)
   const [popover, setpopover] = useState(true)
   const [Vcount, setVcount] = useState(0)
   const [Vprice, setVprice] = useState(0)
@@ -50,9 +49,18 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
   const [categoryID, setCategoryID] = useState(catID)
   const [masterCategoryID, setMasterCategoryID] = useState(mCatID)
   const [selectedServices, setSelectedServices] = useState<number[]>([])
+  const [virtualServicesOnly, setVirtualServicesOnly] = useState<boolean>(false)
+  const [totalEstimate, setTotalEstimate] = useState<number>(0)
 
   const { t } = useTranslationI18()
-  const renderdata = (val: Service) => {
+
+  const renderService = (val: Service) => {
+    if (
+      (virtualServicesOnly && val.online_only_service !== 1) ||
+      (!virtualServicesOnly && val.online_only_service === 1)
+    ) {
+      return null
+    }
     const isSelected = selectedServices.includes(val.id)
     return (
       <div style={{ width: '100%', marginBottom: '16px' }}>
@@ -64,8 +72,10 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
               setSelectedServices(
                 selectedServices.filter((el) => el !== val.id)
               )
+              setTotalEstimate(totalEstimate - Number.parseFloat(val.price))
             } else {
               setSelectedServices([...selectedServices, val.id])
+              setTotalEstimate(totalEstimate + Number.parseFloat(val.price))
             }
           }}
         >
@@ -73,7 +83,7 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
             <span>
               <span className={styles.consultationTitle}>{val.name}</span>{' '}
               <QuestionCircleOutlined style={{ marginRight: '8px' }} />
-              {val.online_only_service && (
+              {val.online_only_service === 1 && (
                 <Tooltip
                   title={`${t('connect.onlinebooking.selector.tooltip')}`}
                 >
@@ -149,9 +159,7 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
       </div>
     )
   }
-  const selectcat = (value: MasterCategory) => {}
 
-  const setserviceactive = (id1, all: boolean, mid?: number) => {}
   const rendervoucher = (voucherd) => {
     return (
       <div
@@ -214,32 +222,6 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
       </div>
     )
   }
-  const valid = (id1, group): boolean => {
-    // if (group) {
-    //   const obj = old.find((im) => im.id === id1)
-    //   for (const im of obj.categories) {
-    //     for (const itme of im.services) {
-    //       if (itme.selected) {
-    //         return true
-    //       }
-    //     }
-    //   }
-
-    //   return false
-    // } else {
-    //   const obj = old.find((im) => im.id === id)
-    //   const obj1 = obj.categories.find((imt) => imt.id === id1)
-    //   for (const im of obj1.services) {
-    //     if (im.selected) {
-    //       return true
-    //     }
-    //   }
-
-    //   //setold([...old])
-    //   return false
-    // }
-    return false
-  }
   const renderServices = (category: Category | undefined) => {
     if (typeof category === 'undefined') {
       category = items
@@ -250,27 +232,33 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
     if (!category) {
       return null
     }
+
+    const hasOnlineConsultations =
+      typeof category?.services.find((s) => s.online_only_service === 1) !==
+      'undefined'
+        ? true
+        : false
     return (
       <div>
         <div className={styles.custCard}>
           {!voucher ? (
-            category?.video ? (
+            hasOnlineConsultations ? (
               <div className={styles.treatmentTabWrapper}>
                 <div
-                  onClick={() => setcontype(true)}
+                  onClick={() => setVirtualServicesOnly(false)}
                   className={ClassNames(
                     styles.treatmentTab,
-                    contype && styles.active
+                    !virtualServicesOnly && styles.active
                   )}
                 >
                   <MedicineBoxOutlined />
                   {t('connect.onlinebooking.selector.offline')}
                 </div>
                 <div
-                  onClick={() => setcontype(false)}
+                  onClick={() => setVirtualServicesOnly(true)}
                   className={ClassNames(
                     styles.treatmentTab,
-                    !contype && styles.active
+                    virtualServicesOnly && styles.active
                   )}
                 >
                   <LaptopOutlined />
@@ -287,15 +275,7 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
             )
           ) : null}
           {!voucher
-            ? category.services.map((val) => (
-                <div>
-                  {category.video
-                    ? contype
-                      ? !val.online_only_service && renderdata(val)
-                      : val.online_only_service && renderdata(val)
-                    : renderdata(val)}
-                </div>
-              ))
+            ? category.services.map((val) => renderService(val))
             : !isMobile &&
               VoucherData.map((item) => (
                 <div key={item.id}>{rendervoucher(item)}</div>
@@ -310,7 +290,6 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
       </div>
     )
   }
-
   const renderCategoryItem = (category: Category) => {
     return (
       <>
@@ -372,6 +351,7 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
       </>
     )
   }
+
   return (
     <>
       <div className={styles.containerWrapper}>
@@ -400,7 +380,7 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
                   setMasterCategoryID(item.id)
                 }}
               >
-                {valid(item.id, true) && (
+                {item.id === masterCategoryID && (
                   <CheckCircleFilled
                     className={styles.checkfill}
                     style={{ color: ' #54B2D3' }}
@@ -523,8 +503,8 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
         <div className={styles.servicefooter}>
           <p>
             {selectedServices.length === 1
-              ? `1 service £ ${0}`
-              : `${selectedServices.length} services £ ${0}`}
+              ? `1 service £ ${totalEstimate}`
+              : `${selectedServices.length} services £ ${totalEstimate}`}
 
             {Vcount > 0 && selectedServices.length > 0 && '  ,'}
             {Vcount > 0 &&
@@ -578,7 +558,6 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
         footer={null}
         width={682}
         onCancel={() => {
-          console.log('---------------')
           setvisible(false)
           setTimeout(() => {
             setshowmodal(false)
@@ -632,7 +611,6 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
                 placement="bottomRight"
                 trigger="click"
                 visible={visible}
-                //onVisibleChange={this.handleVisibleChange}
               >
                 <h6 onClick={() => setvisible(!visible)}>
                   {t('connect.onlinebooking.selector.modal.relevent.first')}

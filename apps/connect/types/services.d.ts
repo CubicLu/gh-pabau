@@ -23,7 +23,7 @@ export interface Service {
   rating: number
   duration: string
   price: string
-  online_only_service?: boolean
+  online_only_service?: number
   selected: boolean
   review: number
   is_bundle: boolean

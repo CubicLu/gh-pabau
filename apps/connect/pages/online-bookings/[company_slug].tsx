@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Header } from '../../components/header'
-import { Footer } from '../../components/footer'
+import { Header } from '../../components/Header'
+import { Footer } from '../../components/Footer'
 
 import ServiceCategorySelector from '../../components/ServicesStep/ServiceCategorySelector'
 import ServiceSelector from '../../components/ServicesStep/ServiceSelector'
@@ -18,12 +18,14 @@ import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import {
   useCompanyServicesCategorisedQuery,
   useCreateAppointmentMutation,
+  useGetCompanyBySlugQuery,
   useOnlineBookableLocationsQuery,
 } from '@pabau/graphql'
 import { Image } from 'antd'
 
 import useServices from '../../hooks/useServices'
 import { BookingData } from '../../types/booking'
+import { useRouter } from 'next/router'
 
 interface userData {
   firstname: string
@@ -63,21 +65,33 @@ const userData: userData = {
 }
 export function Index() {
   // CRAP
-  const [ispro, setispro] = useState(false)
   const [back, Setback] = useState(false)
   const [view, Setview] = useState(true)
-  const [indicator, setindicator] = useState(false)
   const [user, setuser] = useState<userData>(userData)
-  const [tempprice, settempprice] = useState('')
-  const [editdate, seteditdate] = useState({ time: false, date: false })
-  const [promoPrice, setpromoPrice] = useState<number>(0)
-  const [percentage, setpercentage] = useState<number>(0)
   const [lang, setlang] = useState('en')
-  const { t } = useTranslationI18()
 
   // FIXED
+  const router = useRouter()
+
   const [currentStep, setCurrentStep] = useState<number>(0)
   const [selectedData, setSelectedData] = useState<BookingData>({})
+  const { t } = useTranslationI18()
+  const companySlug =
+    typeof router.query.company_slug === 'object'
+      ? router.query.company_slug[0]
+      : router.query.company_slug
+
+  const {
+    loading: loadingSettings,
+    error: errorSettings,
+    data: companySettingsResult,
+  } = useGetCompanyBySlugQuery({
+    variables: {
+      slug: companySlug,
+    },
+  })
+
+  const company = companySettingsResult?.findFirstCompany
 
   const {
     loading: loadingServices,
@@ -85,8 +99,9 @@ export function Index() {
     data: servicesCategorised,
   } = useCompanyServicesCategorisedQuery({
     variables: {
-      company_id: 8021,
+      company_id: company?.id,
     },
+    skip: loadingSettings,
   })
 
   const {
@@ -95,8 +110,9 @@ export function Index() {
     data: locationsResult,
   } = useOnlineBookableLocationsQuery({
     variables: {
-      company_id: 8021,
+      company_id: company?.id,
     },
+    skip: loadingSettings,
   })
 
   const [createBooking] = useCreateAppointmentMutation({
@@ -104,8 +120,13 @@ export function Index() {
     onError(err) {},
   })
 
-  if (errorServices || errorLocations) return <div>Error!</div>
-  if (loadingServices || loadingLocations) return <div>Loading...</div>
+  if (errorSettings || errorServices || errorLocations) return <div>Error!</div>
+  if (loadingSettings || loadingServices || loadingLocations)
+    return <div>Loading...</div>
+
+  if (!companySettingsResult === null) {
+    return <div>Invalid Company</div>
+  }
   const masterCategories = servicesCategorised.serviceMasterCategories.map(
     (row) => {
       return {
@@ -236,11 +257,23 @@ export function Index() {
     return services
   }
 
+  const findMasterCategoryIDByCategoryID = (categoryID: number) => {
+    for (const mcat of masterCategories) {
+      if (mcat.categories) {
+        for (const cat of mcat.categories) {
+          if (cat.id === categoryID) {
+            return mcat.id
+          }
+        }
+      }
+    }
+    return null
+  }
+
   return (
     <div className={styles.onlineBooking}>
       <Header
         currentStep={currentStep > 0 ? currentStep : 1}
-        translation={translation}
         back={() => {
           setCurrentStep(currentStep - 1)
         }}
@@ -258,7 +291,7 @@ export function Index() {
                   setSelectedData({
                     ...selectedData,
                     categoryID: id,
-                    masterCategoryID: 5639,
+                    masterCategoryID: findMasterCategoryIDByCategoryID(id),
                   })
                   setCurrentStep(currentStep + 1)
                 }}
@@ -337,7 +370,7 @@ export function Index() {
                   createBooking({
                     variables: {
                       UID: selectedData.employeeID,
-                      company_id: 8021,
+                      company_id: company.id,
                       location_id: selectedData.locationID,
                       service_id: 2691491,
                       contact_id: 22293092,
@@ -407,7 +440,7 @@ export function Index() {
         </div>
       </div>
 
-      <Footer select={(value) => setlang(value)} translation={translation} />
+      <Footer select={(value) => setlang(value)} />
     </div>
   )
 }
