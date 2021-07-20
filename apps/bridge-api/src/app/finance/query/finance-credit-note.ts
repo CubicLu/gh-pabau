@@ -3,8 +3,8 @@ import { Context } from '../../../context'
 import { findManyFinanceCreditNote, creditNoteCount } from '../finance'
 import { FindManyAccountCreditNoteResponse } from '../nexus-type'
 
-export const FinanceCreditNoteWhereTnput = inputObjectType({
-  name: 'FinanceCreditNoteWhereTnput',
+export const FinanceCreditNoteWhereInput = inputObjectType({
+  name: 'FinanceCreditNoteWhereInput',
   definition(t) {
     t.string('searchTerm')
     t.field('startDate', { type: 'DateTime' })
@@ -23,7 +23,7 @@ export const AccountCreditNoteQuery = extendType({
       description:
         'Retrieve list of account credit notes based on company and location',
       args: {
-        where: 'FinanceCreditNoteWhereTnput',
+        where: 'FinanceCreditNoteWhereInput',
         skip: intArg(),
         take: intArg(),
       },
@@ -43,7 +43,7 @@ export const AccountCreditNoteQuery = extendType({
     t.field('accountCreditNoteCount', {
       type: 'Int',
       args: {
-        where: 'FinanceCreditNoteWhereTnput',
+        where: 'FinanceCreditNoteWhereInput',
       },
       description:
         'Retrieve total count of account credit note based on company and location',

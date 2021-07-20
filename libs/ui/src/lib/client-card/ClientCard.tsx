@@ -5,15 +5,17 @@ import {
   ClientDashboardLayout,
   ClientAppointmentsLayout,
   ClientCommunicationsLayout,
+  ClientConsentsLayout,
   ClientDocumentsLayout,
   ClientFinancialsLayout,
   ClientGiftVoucherLayout,
   ClientLabTestsLayout,
   ClientLoyaltyLayout,
-  ClientFormsLayout,
+  ClientMedicalHistoryLayout,
   ClientPackagesLayout,
   ClientPhotosLayout,
-  ClientActivitiesLayout,
+  ClientTaskLayout,
+  ClientTreatmentNotesLayout,
   ClientVaccineHistoryLayout,
   Button,
   TabMenu,
@@ -23,7 +25,7 @@ import {
 } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment'
-import { Modal, Popover, Input, Badge, Drawer, Tooltip } from 'antd'
+import { Modal, Popover, Input, Badge, Drawer } from 'antd'
 import {
   RightOutlined,
   LeftOutlined,
@@ -39,7 +41,7 @@ import {
   CheckCircleFilled,
   SaveOutlined,
 } from '@ant-design/icons'
-import React, { FC, useState, useEffect, useRef } from 'react'
+import React, { FC, useState, useEffect, useRef, ReactNode } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { useMedia } from 'react-use'
 import Confetti from 'react-confetti'
@@ -108,6 +110,7 @@ export interface ClientCardProps {
   medicalConditions: string[]
   alerts: string[]
   onClose: () => void
+  FinancialTabComponent?: ReactNode
 }
 
 const ClientCardModal: FC<ClientCardProps> = ({
@@ -118,6 +121,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
   medicalConditions,
   alerts,
   onClose,
+  FinancialTabComponent,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -169,39 +173,48 @@ const ClientCardModal: FC<ClientCardProps> = ({
       children: [
         {
           key: 5,
-          content: 'Forms',
+          content: 'Medical History',
         },
         {
           key: 6,
-          content: 'Photos',
+          content: 'Treatment Notes',
         },
         {
           key: 7,
-          content: 'Documents',
+          content: 'Photos',
         },
         {
           key: 8,
-          content: 'Lab Tests',
+          content: 'Documents',
         },
         {
           key: 9,
+          content: 'Consents',
+        },
+        {
+          key: 10,
+          content: 'Lab Tests',
+        },
+        {
+          key: 11,
           content: 'Vaccine History',
         },
       ],
     },
     {
-      key: 10,
+      key: 12,
       content: customTabMenutItem('Gift voucher', 15),
     },
     {
-      key: 11,
+      key: 13,
       content: customTabMenutItem('Loyalty', 7),
     },
     {
-      key: 12,
-      content: customTabMenutItem('Activities', 8),
+      key: 14,
+      content: customTabMenutItem('Tasks & Recalls', 8),
     },
   ]
+
   const [showMobileHeaderOps, setShowMobileHeaderOps] = useState(false)
   const [subOps, setSubOps] = useState(0)
   const [menuHeaderTitle, setMenuHeaderTitle] = useState(
@@ -443,6 +456,10 @@ const ClientCardModal: FC<ClientCardProps> = ({
       JSON.stringify(items)
     )
     await window.localStorage.setItem('pabau_popout_item', JSON.stringify(item))
+    // await window.localStorage.setItem(
+    //   'pabau_popout_fullscreen',
+    //   JSON.stringify(false)
+    // )
     await window.localStorage.setItem('pabau_popout_new', JSON.stringify(true))
     window.dispatchEvent(new Event('storage'))
 
@@ -510,12 +527,9 @@ const ClientCardModal: FC<ClientCardProps> = ({
       {alertItems && (
         <div className={styles.staffAlertsContainer}>
           {alertItems.map((item, index) => (
-            <Tooltip
-              key={`staff-alert-${index}`}
-              title={`Created By William - ${moment().format('DD/MM/YYYY')}`}
-            >
-              <div className={styles.staffAlert}>{item}</div>
-            </Tooltip>
+            <div className={styles.staffAlert} key={`staff-alert-${index}`}>
+              {item}
+            </div>
           ))}
         </div>
       )}
@@ -878,8 +892,12 @@ const ClientCardModal: FC<ClientCardProps> = ({
                 <div>
                   <ClientAppointmentsLayout isEmpty={true} />
                 </div>
-                <div>
-                  <ClientFinancialsLayout isEmpty={true} />
+                <div style={{ paddingBottom: 60 }}>
+                  {FinancialTabComponent ? (
+                    FinancialTabComponent
+                  ) : (
+                    <ClientFinancialsLayout />
+                  )}
                 </div>
                 <div>
                   <ClientPackagesLayout isEmpty={true} />
@@ -888,13 +906,19 @@ const ClientCardModal: FC<ClientCardProps> = ({
                   <ClientCommunicationsLayout isEmpty={true} />
                 </div>
                 <div>
-                  <ClientFormsLayout isEmpty={true} />
+                  <ClientMedicalHistoryLayout isEmpty={true} />
+                </div>
+                <div>
+                  <ClientTreatmentNotesLayout isEmpty={true} />
                 </div>
                 <div>
                   <ClientPhotosLayout isEmpty={true} />
                 </div>
                 <div>
                   <ClientDocumentsLayout isEmpty={true} />
+                </div>
+                <div>
+                  <ClientConsentsLayout isEmpty={true} />
                 </div>
                 <div>
                   <ClientLabTestsLayout isEmpty={true} />
@@ -909,7 +933,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
                   <ClientLoyaltyLayout isEmpty={true} />
                 </div>
                 <div>
-                  <ClientActivitiesLayout isEmpty={true} />
+                  <ClientTaskLayout isEmpty={true} />
                 </div>
               </CustomTabMenu>
             </div>

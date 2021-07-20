@@ -1,8 +1,8 @@
-import React, { FC } from 'react'
-import { ButtonLabel, Button } from '@pabau/ui'
+import React, { FC, useState } from 'react'
+import { ButtonLabel } from '@pabau/ui'
 import { Avatar, Typography, Tooltip } from 'antd'
 import TableLayout, { FilterValueType } from './TableLayout'
-import styles from '../../pages/setup/settings/loyalty.module.less'
+// import styles from '../../pages/setup/settings/loyalty.module.less'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import xeroBlue from '../../assets/images/xero.svg'
 import xeroRed from '../../assets/images/xero/red.svg'
@@ -13,12 +13,6 @@ export const tempType = {
   Paid: 'success',
   Unpaid: 'danger',
   'Part Paid': 'warning',
-}
-
-const tempStatus = {
-  '': 'Unprocessed',
-  0: 'Unprocessed',
-  2: 'Submitted',
 }
 
 interface InvoiceProps {
@@ -34,6 +28,7 @@ const Invoice: FC<InvoiceProps> = ({
   filterValue,
   selectedRange,
 }) => {
+  const [isHealthcodeEnabled, setIsHealthcodeEnabled] = useState<boolean>(false)
   const { t } = useTranslationI18()
   const InvoiceColumns = [
     {
@@ -107,28 +102,6 @@ const Invoice: FC<InvoiceProps> = ({
       ellipsis: true,
     },
     {
-      title: t('account.finance.invoice.columns.status'),
-      dataIndex: 'status',
-      skeletonWidth: '50px',
-      visible: true,
-      render: function render(data) {
-        const status = tempStatus[data ?? ''] ?? 'Failed'
-        return (
-          <ButtonLabel
-            style={{ minWidth: 92, paddingTop: 1 }}
-            type={
-              status === 'Failed'
-                ? 'danger'
-                : status === 'Unprocessed'
-                ? 'warning'
-                : 'info'
-            }
-            text={status}
-          />
-        )
-      },
-    },
-    {
       title: t('account.finance.invoice.columns.payment'),
       dataIndex: 'payment',
       skeletonWidth: '50px',
@@ -194,7 +167,8 @@ const Invoice: FC<InvoiceProps> = ({
         )
       },
     },
-    {
+    // We have to skip this for now as integration so just hide it from UI
+    /*{
       title: '',
       dataIndex: 'card',
       skeletonWidth: '50px',
@@ -208,8 +182,37 @@ const Invoice: FC<InvoiceProps> = ({
           )
         )
       },
-    },
+    },*/
   ]
+
+  if (isHealthcodeEnabled) {
+    InvoiceColumns.splice(6, 0, {
+      title: t('account.finance.invoice.columns.status'),
+      dataIndex: 'status',
+      skeletonWidth: '50px',
+      visible: true,
+      width: '80px',
+      render: function render(data) {
+        return (
+          data && (
+            <ButtonLabel
+              style={{ minWidth: 92, paddingTop: 1 }}
+              type={
+                data === 'Failed'
+                  ? 'danger'
+                  : data === 'Unprocessed'
+                  ? 'warning'
+                  : 'info'
+              }
+              text={data}
+            />
+          )
+        )
+      },
+    })
+  }
+
+  console.log('InvoiceColumns', InvoiceColumns)
   return (
     <TableLayout
       columns={InvoiceColumns}
@@ -219,6 +222,9 @@ const Invoice: FC<InvoiceProps> = ({
       selectedRange={selectedRange}
       listQuery={useInvoicesQuery}
       aggregateQuery={useInvoiceCountQuery}
+      noDataText={t('account.finance.invoice.empty.data.text')}
+      setIsHealthcodeEnabled={setIsHealthcodeEnabled}
+      tabName="invoice"
     />
   )
 }

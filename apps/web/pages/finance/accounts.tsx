@@ -49,6 +49,8 @@ interface FilterList {
   name: string
 }
 
+const WAIT_INTERVAL = 400
+
 export function Account() {
   const [showModal, setShowModal] = useState(false)
   const user = useContext(UserContext)
@@ -91,6 +93,7 @@ export function Account() {
     creditNoteType: '',
   })
   const [filterRange, setFilterRange] = useState<string>('This Month')
+  const [searchTerm, setSearchTerm] = useState('')
 
   const { data: locations } = useFindAllowedLocationQuery()
   const { data: issuingCompanyData } = useIssuingCompaniesQuery()
@@ -134,6 +137,15 @@ export function Account() {
       setCreditNoteTypesList(creditNoteTypeData?.findManyCreditNoteType)
     }
   }, [creditNoteTypeData])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchTerm(searchValue)
+    }, WAIT_INTERVAL)
+
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchValue])
 
   const onDateFilterApply = () => {
     setFilterDate([...selectedDates])
@@ -241,6 +253,9 @@ export function Account() {
         <RangePicker
           className={styles.rangePicker}
           value={selectedDates}
+          disabledDate={(current) => {
+            return current > dayjs().endOf('day')
+          }}
           disabled={selectedRange.toString() !== 'custom'}
           onChange={(val) => setSelectedDates(val)}
         />
@@ -494,12 +509,14 @@ export function Account() {
                   : `${selectedRange.replace('-', ' ')}`}
               </Button>
             </Dropdown>
-            <Dropdown overlay={manageOptions} placement="bottomLeft">
-              <Button type="ghost">
-                {t('account.finance.manage.options')}
-              </Button>
-            </Dropdown>
-            {activeTab === '2' && (
+            {false && (
+              <Dropdown overlay={manageOptions} placement="bottomLeft">
+                <Button type="ghost">
+                  {t('account.finance.manage.options')}
+                </Button>
+              </Dropdown>
+            )}
+            {false && (
               <Button
                 type="primary"
                 style={{ color: 'white' }}
@@ -536,25 +553,25 @@ export function Account() {
           onTabClick={(activeKey) => setActiveTab(activeKey)}
         >
           <Invoice
-            searchTerm={searchValue}
+            searchTerm={searchTerm}
             selectedDates={filterDate}
             filterValue={filterValues}
             selectedRange={filterRange}
           />
           <Payments
-            searchTerm={searchValue}
+            searchTerm={searchTerm}
             selectedDates={filterDate}
             filterValue={filterValues}
             selectedRange={filterRange}
           />
           <Debt
-            searchTerm={searchValue}
+            searchTerm={searchTerm}
             selectedDates={filterDate}
             filterValue={filterValues}
             selectedRange={filterRange}
           />
           <CreditNote
-            searchTerm={searchValue}
+            searchTerm={searchTerm}
             selectedDates={filterDate}
             filterValue={filterValues}
             selectedRange={filterRange}

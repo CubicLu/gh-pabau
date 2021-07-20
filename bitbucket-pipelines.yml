@@ -18,24 +18,14 @@ pipelines:
     '**':
       - step:
           name: yarn audit
-          runs-on:
-            - 'self.hosted'
-          size: 2x
           caches:
             - node
           script:
-            - set || true
-            - git log --merges -n 1 --pretty=oneline
-            # TODO: set -lt back to 4 when nrwl install postcss >=8.2.10
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 8 ]] && exit 0 || exit 1'
             - CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
-            - ls -al || true
-            - ls -al libs/graphql/generated/ || true
-            - yarn bin || true
           artifacts:
             - node_modules/**
             - libs/graphql/generated/**
-            - hasura/schema.json
 
       - parallel:
           - step:
@@ -97,7 +87,6 @@ pipelines:
                 - yarn affected:e2e --base=origin/master || true
 
       - parallel:
-
           - step:
               name: deploy dockers
               runs-on:
@@ -158,7 +147,7 @@ pipelines:
 
           - step:
               name: announce to slack
-              max-time: 5
+              max-time: 15
               clone:
                 enabled: false
               script:
@@ -196,21 +185,11 @@ pipelines:
     master:
       - step:
           name: yarn audit
-          runs-on:
-            - 'self.hosted'
-          size: 2x
           caches:
             - node
           script:
-            - set || true
-            - git log --merges -n 1 --pretty=oneline
-            # TODO: set -lt back to 4 when nrwl install postcss >=8.2.10
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 8 ]] && exit 0 || exit 1'
             - CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
-            - ls -al || true
-            - ls -al node_modules || true
-            - ls -al libs/graphql/generated/ || true
-            - yarn bin || true
           artifacts:
             - node_modules/**
             - libs/graphql/generated/**
@@ -267,7 +246,6 @@ pipelines:
                 - yarn cypress install || true
                 - yarn affected:e2e --base=HEAD~1 || true
 
-
       - step:
           name: bump version
           max-time: 5
@@ -292,7 +270,6 @@ pipelines:
             - dist/**
 
       - parallel:
-
           - step:
               name: deploy dockers
               runs-on:
@@ -347,9 +324,7 @@ pipelines:
 
       - step:
           name: announce to slack
-          runs-on:
-            - 'self.hosted'
-          max-time: 5
+          max-time: 15
           script:
             - cat dist/bot_message2.txt || true
             - cat dist/bot_message.txt || true

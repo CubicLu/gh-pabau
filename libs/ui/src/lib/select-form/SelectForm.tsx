@@ -8,7 +8,7 @@ import {
   SearchOutlined,
 } from '@ant-design/icons'
 import { FormComponentBuilder } from '@pabau/ui'
-import { useDebounce } from '@react-hook/debounce'
+import useDebounce from '../../hooks/useDebounce'
 import { useTranslation } from 'react-i18next'
 import { sampleFormList } from './mock'
 import styles from './SelectForm.module.less'
@@ -37,7 +37,7 @@ const SelectFormComponent: FC<SelectFormComponentProps> = ({
   const [formItems, setFormItems] = useState<FormItem[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [previewData, setPreviewData] = useState('')
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useDebounce('', 500)
+  const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
   useEffect(() => {
     setPreviewData('')
@@ -93,10 +93,6 @@ const SelectFormComponent: FC<SelectFormComponentProps> = ({
   useEffect(() => {
     setSearchTerm(searchStr)
   }, [searchStr])
-
-  useEffect(() => {
-    setDebouncedSearchTerm(searchTerm)
-  }, [searchTerm, setDebouncedSearchTerm])
 
   useEffect(() => {
     const items = formList

@@ -19,13 +19,16 @@ export const findManyFinanceInvoice = async (
 ) => {
   const locationId = input?.locationId
   const issuingCompanyId = input?.issuingCompanyId
+
+  const isHealthcode = await getHealthcodeStatus(ctx)
   const data = await retrieveInvoices(
     ctx,
     locationId,
     issuingCompanyId,
     input,
     skip,
-    take
+    take,
+    isHealthcode
   )
 
   const id = data.map((item) => item.id)
@@ -33,6 +36,11 @@ export const findManyFinanceInvoice = async (
 
   return data.map((item) => {
     const { totalNet, totalVat } = saleItemData[item.id]
+
+    let healthcodeStatus = item.healthcode_status
+    if (!healthcodeStatus && item.contractId > 0) {
+      healthcodeStatus = 'Unprocessed'
+    }
 
     return {
       id: item.id,
@@ -52,14 +60,30 @@ export const findManyFinanceInvoice = async (
       gross: item.total.toFixed(2),
       paid: item.paidAmount.toFixed(2),
       balance: item.outstanding.toFixed(2),
-      status: item.xero_status,
       tooltip: calculateTooltipMessage(
         item.xero_status,
         item.xero_response,
         item.xero_modifiedAt
       ),
+      isHealthcodeEnabled: isHealthcode,
+      healthcodeStatus: healthcodeStatus,
     }
   })
+}
+
+const getHealthcodeStatus = async (ctx: Context) => {
+  const data = await ctx.prisma.companyVariable.findUnique({
+    where: {
+      company: {
+        company_id: ctx.authenticated.company,
+        key: 'healthcode_login',
+      },
+    },
+    select: {
+      value: true,
+    },
+  })
+  return !!data?.value
 }
 
 const retrieveInvoices = async (
@@ -68,7 +92,8 @@ const retrieveInvoices = async (
   issuingCompanyId: number,
   input: FinanceInput,
   skip: number,
-  take: number
+  take: number,
+  healthcodeStatus: boolean
 ): Promise<InvoiceQueryResult[]> => {
   const locationFilterArray = await getAllowedLocation(ctx)
   return await ctx.prisma.$queryRaw<InvoiceQueryResult[]>`SELECT sales.id,
@@ -87,10 +112,20 @@ const retrieveInvoices = async (
     xjobs.status AS xero_status,
     xjobs.response AS xero_response,
     xjobs.modified_at AS xero_modifiedAt
+    ${
+      healthcodeStatus
+        ? Prisma.sql`, IF(healthcode_submittals.status = 'Error', 'Failed', healthcode_submittals.status) as healthcode_status`
+        : Prisma.empty
+    }
     FROM inv_sales AS sales
     LEFT JOIN company_branches AS loc ON loc.id = sales.location_id
     LEFT JOIN insurance_details AS insurance ON insurance.id = sales.insurer_contract_id
     LEFT JOIN xero_integration_jobs AS xjobs ON xjobs.company_id = sales.occupier AND xjobs.invoice_guid = sales.guid
+    ${
+      healthcodeStatus
+        ? Prisma.sql`LEFT JOIN healthcode_submittals ON healthcode_submittals.invoice_id = sales.id`
+        : Prisma.empty
+    }
     WHERE sales.occupier = ${ctx.authenticated.company}
     ${
       input.startDate && input.endDate
@@ -395,36 +430,52 @@ export const findManyFinanceDebt = async (
 ) => {
   const locationId = input?.locationId
   const issuingCompanyId = input?.issuingCompanyId
+
+  const isHealthcode = await getHealthcodeStatus(ctx)
   const data = await retrieveDebts(
     ctx,
     locationId,
     issuingCompanyId,
     input,
     skip,
-    take
+    take,
+    isHealthcode
   )
 
   const id = data.map((item) => item.id)
   const lastActionData = await calculateLastAction(ctx, id)
 
-  return data.map((item) => ({
-    id: item.id,
-    invoiceNo: item.invoiceNo,
-    location: item.location,
-    invDate: item.invDate,
-    customer:
-      item.contractId > 0 && item.customerId === 0 ? 'N/A' : item.debtor,
-    debtor: item.contractId !== 0 ? item.insurerName : item.debtor,
-    payment: calculateStatus(item.paidAmount, item.total, item.discountAmount),
-    balance: item.outstanding.toFixed(2),
-    status: item.xero_status,
-    tooltip: calculateTooltipMessage(
-      item.xero_status,
-      item.xero_response,
-      item.xero_modifiedAt
-    ),
-    lastAction: lastActionData[item.id],
-  }))
+  return data.map((item) => {
+    let healthcodeStatus = item.healthcode_status
+    if (!healthcodeStatus && item.contractId > 0) {
+      healthcodeStatus = 'Unprocessed'
+    }
+
+    return {
+      id: item.id,
+      invoiceNo: item.invoiceNo,
+      location: item.location,
+      invDate: item.invDate,
+      customer:
+        item.contractId > 0 && item.customerId === 0 ? 'N/A' : item.debtor,
+      debtor: item.contractId !== 0 ? item.insurerName : item.debtor,
+      payment: calculateStatus(
+        item.paidAmount,
+        item.total,
+        item.discountAmount
+      ),
+      balance: item.total.toFixed(2),
+      status: item.xero_status,
+      tooltip: calculateTooltipMessage(
+        item.xero_status,
+        item.xero_response,
+        item.xero_modifiedAt
+      ),
+      lastAction: lastActionData[item.id],
+      isHealthcodeEnabled: isHealthcode,
+      healthcodeStatus: healthcodeStatus,
+    }
+  })
 }
 
 const retrieveDebts = async (
@@ -433,7 +484,8 @@ const retrieveDebts = async (
   issuingCompanyId: number,
   input: FinanceInput,
   skip: number,
-  take: number
+  take: number,
+  healthcodeStatus: boolean
 ): Promise<DebtQueryResult[]> => {
   const locationFilterArray = await getAllowedLocation(ctx)
   return await ctx.prisma.$queryRaw<DebtQueryResult[]>`SELECT sales.id,
@@ -451,11 +503,21 @@ const retrieveDebts = async (
     SUM(discount_amount) AS discountAmount,
     xjobs.status AS xero_status,
     xjobs.response AS xero_response,
-    xjobs.modified_at AS xero_modifiedAt 
+    xjobs.modified_at AS xero_modifiedAt
+    ${
+      healthcodeStatus
+        ? Prisma.sql`, IF(healthcode_submittals.status = 'Error', 'Failed', healthcode_submittals.status) as healthcode_status`
+        : Prisma.empty
+    }
     FROM inv_sales AS sales
     LEFT JOIN company_branches AS loc ON loc.id = sales.location_id
     LEFT JOIN insurance_details AS insurance ON insurance.id = sales.insurer_contract_id
     LEFT JOIN xero_integration_jobs AS xjobs ON xjobs.company_id = sales.occupier AND xjobs.invoice_guid = sales.guid
+    ${
+      healthcodeStatus
+        ? Prisma.sql`LEFT JOIN healthcode_submittals ON healthcode_submittals.invoice_id = sales.id`
+        : Prisma.empty
+    }
     WHERE sales.occupier = ${ctx.authenticated.company}
     ${
       input.startDate && input.endDate

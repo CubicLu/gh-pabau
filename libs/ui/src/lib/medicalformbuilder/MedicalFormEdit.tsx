@@ -101,6 +101,7 @@ const copy = (source, destination, droppableSourceId, endIndex, formInfo) => {
 }
 
 const reverseForm = (form) => {
+  console.log('reverseForm =', form)
   const mappingInfo = previewMapping.filter(
     (item) => Object.values(item)[0] === form.formName
   )
@@ -181,6 +182,8 @@ const reverseForm = (form) => {
 }
 
 const getFormInfo = (form) => {
+  // let name = ''
+  console.log('form =', form)
   let label = ''
   if (form.title) {
     if (typeof form.title === 'object') {

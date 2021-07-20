@@ -1,13 +1,15 @@
 import React, { FC, useRef } from 'react'
 import { MyLottie as Lottie } from '@pabau/ui'
 import emptyState from '../../assets/lottie/empty-state.json'
-import styles from './ClientFormsLayout.module.less'
+import styles from './ClientConsentsLayout.module.less'
 
-export interface ClientFormsLayoutProps {
+export interface ClientConsentsLayoutProps {
   isEmpty?: boolean
 }
 
-export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({ isEmpty }) => {
+export const ClientConsentsLayout: FC<ClientConsentsLayoutProps> = ({
+  isEmpty,
+}) => {
   const ref = useRef<HTMLDivElement>(null)
   return (
     <div className={styles.clientLayout} ref={ref}>
@@ -27,4 +29,4 @@ export const ClientFormsLayout: FC<ClientFormsLayoutProps> = ({ isEmpty }) => {
   )
 }
 
-export default ClientFormsLayout
+export default ClientConsentsLayout
