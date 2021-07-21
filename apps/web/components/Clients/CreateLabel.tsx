@@ -8,7 +8,10 @@ import {
   Button,
   CustomIcon,
 } from '@pabau/ui'
-import { useAddLabelMutation } from '@pabau/graphql'
+import {
+  useAddLabelMutation,
+  useInsertContactsLabelsMutation,
+} from '@pabau/graphql'
 import styles from '../../pages/clients/clients.module.less'
 import { Labels } from '../../pages/clients'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
@@ -25,6 +28,7 @@ interface CreateLabelsProps {
   setDefaultSelectedLabels?: (val: Labels[]) => void
   handleApplyLabel?: (val) => void
   testLabels?: any
+  selectedRowKeys?: any
 }
 
 const customColorData = [
@@ -74,6 +78,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   defaultSelectedLabels = [],
   handleApplyLabel,
   testLabels,
+  selectedRowKeys,
 }) => {
   const { t } = useTranslationI18()
   const [visible, setVisible] = useState(false)
@@ -125,6 +130,15 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   // }
   console.log('isEdit:', isEdit)
 
+  const [
+    insertContactsLabelsMutaton,
+    {
+      data: insertContactsLabelsData,
+      loading: insertContactsLabelsLoading,
+      error: insertContactsLabelsError,
+    },
+  ] = useInsertContactsLabelsMutation()
+
   const editLabelData = (valueObject) => {
     const labelData = [...testLabels.labels]
     console.log('testLabels on edit:', testLabels)
@@ -171,7 +185,11 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   // }
 
   const addLabelData = (valueObject) => {
-    if (!testLabels?.labels.some((item) => item.text === valueObject.label)) {
+    if (
+      !testLabels?.labels.some(
+        (item) => item.text && item.color === valueObject.label
+      )
+    ) {
       //     setLabels([...labels, valueObject])
 
       // console.log('added new label', newLabel)
@@ -184,6 +202,12 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
         variables: {
           text: newLabel.label,
           color: newLabel.color,
+        },
+      })
+      insertContactsLabelsMutaton({
+        variables: {
+          contact_id: selectedRowKeys[0],
+          label_id: selectedRowKeys[0].id,
         },
       })
     } else {
@@ -240,6 +264,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
       setSelectedLabels(selectedData)
     }
   }
+  console.log('selectedLabels:', selectedLabels)
 
   const handleDropletClick = (e, label, index) => {
     e.stopPropagation()

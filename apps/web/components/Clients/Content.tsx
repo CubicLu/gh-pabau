@@ -19,6 +19,10 @@ import { clientsList } from '../../mocks/ClientsList'
 import { avatarSrc } from '../../../../libs/ui/src/lib/read-review/mock'
 import searchEmpty from '../../../../libs/ui/src/assets/images/empty.png'
 import { useImage } from '../../hooks/cdn'
+import {
+  useAddLabelMutation,
+  useInsertContactsLabelsMutation,
+} from '@pabau/graphql'
 
 interface ClientsContentProps {
   searchText?: string
@@ -232,10 +236,43 @@ export const ClientsContent: FC<ClientsContentProps> = ({
       // },
       // eslint-disable-next-line react/display-name
       render: (labelTest) => {
-        // const { labelTest } = data
+        // const [labelItemOne, labelItemOTwo] = labelTest
+        // const labelItem = () => {
+        //   const templabel = []
+        //   for (const x of labelTest) {
+        //     console.log('11111', x)
+        //     templabel.push(x)
+        //   }
+        //   return templabel
+        // }
+        // const x = labelTest.map()
         console.log('labelTest onupdate:', labelTest)
+        // console.log('labelItemOne:', labelItemOne)
+        // console.log('labelItemOTwo:', labelItemOTwo)
 
-        return <span>{labelTest}</span>
+        // eslint-disable-next-line react/destructuring-assignment
+        // return <span>{labelTest.map((item) => item)}</span>
+        return (
+          <div className={styles.labelWrapper}>
+            {labelTest?.map((xx) => (
+              <Button
+                className={styles.labelButton}
+                style={{
+                  border: `1px solid ${xx.color}`,
+                  color: xx.color,
+                }}
+                backgroundColor={''}
+                // onClick={(e) => handleLabelClick(e, label.label)}
+                icon={<TagOutlined />}
+              >
+                {/* eslint-disable-next-line react/destructuring-assignment */}
+                {/*{labelTest.length > 0 ? labelTest.map((x) => x) : null}*/}
+                {/*{labelItem}*/}
+                {xx.label}
+              </Button>
+            ))}
+          </div>
+        )
       },
     },
     {
@@ -373,6 +410,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
             setDefaultSelectedLabels={setDefaultSelectedLabels}
             handleApplyLabel={handleApplyLabel}
             testLabels={testLabels}
+            selectedRowKeys={selectedRowKeys}
           >
             {renderTooltip({
               title: t('clients.leftSidebar.createLabels'),

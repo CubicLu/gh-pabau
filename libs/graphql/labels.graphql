@@ -27,3 +27,15 @@ query getContactsLabels {
   }
 }
 
+mutation InsertContactsLabels($label_id:Int, $contact_id: Int) {
+  insert_contacts_labels(objects: {label_id: $label_id, contact_id: $contact_id}, ){
+    affected_rows
+    returning{
+      id
+      contact_id
+      label_id
+    }
+  }
+}
+
+

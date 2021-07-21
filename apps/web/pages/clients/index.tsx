@@ -143,6 +143,23 @@ export const Clients: FC<ClientsProps> = () => {
   //   )
   // }, [getContactsData])
 
+  // useEffect(() => {
+  //   const tempContact = contactsData?.map((fieldContact) => {
+  //     const tempCON = []
+  //     for (const fieldCL of contactsLabels?.contacts_labels) {
+  //       console.log('fieldCL:', fieldCL)
+  //       console.log('fieldContact:', fieldContact)
+  //
+  //       if (fieldCL.contact_id === fieldContact.id) {
+  //         // ...fieldContact, labelTest: labelTest.push(fieldCL.label)
+  //         fieldContact.labelTest.push(fieldCL.label.text)
+  //       }
+  //     }
+  //   })
+  //   console.log('tempContact:', tempContact)
+  //   // setTestData(tempContact)
+  // }, [getContactsData])
+
   useEffect(() => {
     const tempContact = contactsData?.map((fieldContact) => {
       const tempCON = []
@@ -152,7 +169,15 @@ export const Clients: FC<ClientsProps> = () => {
 
         if (fieldCL.contact_id === fieldContact.id) {
           // ...fieldContact, labelTest: labelTest.push(fieldCL.label)
-          fieldContact.labelTest.push(fieldCL.label.text)
+          // let labelComplete = {fieldCL.label.text, }
+          const labelComplete = {}
+          labelComplete['label'] = fieldCL.label.text
+          labelComplete['color'] = fieldCL.label.color
+
+          console.log('labelComplete:', labelComplete)
+
+          fieldContact.labelTest.push(labelComplete)
+          // ...fieldContact, labelTest: 'final test'
         }
       }
     })
