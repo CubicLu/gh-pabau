@@ -1,4 +1,9 @@
-import { MedicalFormTypes } from '@pabau/ui'
+import {
+  MedicalFormTypes,
+  Notification,
+  NotificationType,
+  RuleProp,
+} from '@pabau/ui'
 import { Col, Modal, Row } from 'antd'
 import { cloneDeep, isEqual } from 'lodash'
 import React, { FC, useEffect, useReducer, useState } from 'react'
@@ -296,6 +301,7 @@ interface P {
   onSaveForm: (formdata: string) => void
   triggerChangeForms: (forms: MedicalFormTypes[]) => void
   formName: string
+  currentRules?: RuleProp[]
 }
 
 const MedicalFormEdit: FC<P> = ({
@@ -309,6 +315,7 @@ const MedicalFormEdit: FC<P> = ({
   onSaveForm,
   triggerChangeForms,
   formName,
+  currentRules = [],
 }) => {
   const { t } = useTranslation('common')
   const [, forceUpdate] = useReducer((x) => x + 1, 0)
@@ -371,7 +378,6 @@ const MedicalFormEdit: FC<P> = ({
       typeof previewData != 'undefined' &&
       previewData !== ''
     ) {
-      console.log('previewData =', previewData)
       const previewDataArray = JSON.parse(atob(previewData))
       const previewForms = []
       if (previewDataArray['form_structure']) {
@@ -420,8 +426,21 @@ const MedicalFormEdit: FC<P> = ({
   }
 
   const handlingDeleteForm = (componentID) => {
-    handlingFormSetting('')
-    setDraggedForms(draggedForms.filter((item) => item['id'] !== componentID))
+    let delFlag = true
+    if (currentRules.length > 0) {
+      const rulesWithThisComponent = currentRules[0].if.answers.filter(
+        (item) => item.answer === componentID
+      )
+      if (rulesWithThisComponent.length > 0) delFlag = false
+    }
+    if (!delFlag) {
+      Notification(
+        NotificationType.error,
+        t('ui.medicalformbuilder.delete.rules.error')
+      )
+    } else {
+      setDraggedForms(draggedForms.filter((item) => item['id'] !== componentID))
+    }
   }
 
   const handlingSaveForm = (form) => {

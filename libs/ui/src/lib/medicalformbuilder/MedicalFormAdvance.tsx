@@ -56,7 +56,7 @@ const MedicalFormAdvance: FC<P> = ({
         (item) => item.txtQuestion !== '' && item.formName !== 'basic_signature'
       )
       .map((item, index) => {
-        return { [index]: { id: item.id, answer: item.txtQuestion } }
+        return { [item.id]: { id: item.id, answer: item.txtQuestion } }
       })
       .reduce(function (result, item) {
         const key = Object.keys(item)[0]

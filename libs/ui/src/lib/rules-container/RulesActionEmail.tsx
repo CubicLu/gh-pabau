@@ -71,7 +71,6 @@ export const RulesActionEmail: FC<P> = ({
         }
         forWhat={t.to === '' ? 'ruleEmpty' : 'rule'}
         disabledTags={[
-          'appointments',
           'leads',
           'opportunity',
           'datetime',
@@ -84,7 +83,7 @@ export const RulesActionEmail: FC<P> = ({
           'forms',
           'connect',
         ]}
-        enabledTags={['[CLIENTEMAIL]']}
+        enabledTags={['[CLIENTEMAIL]', '[APPOINTMENTSTAFFEMAIL]']}
       />
       {t.event !== 'send_email_using_template' && (
         <>
