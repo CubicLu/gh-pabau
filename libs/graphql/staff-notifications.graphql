@@ -20,7 +20,7 @@ mutation insert_product_news(
 }
 
 query staff_users($isAdmin: Int = 0, $company: Int) {
-  users(
+  findManyUser(
     where: {
       AND: { company_id: { equals: $company }, admin: { equals: $isAdmin } }
     }

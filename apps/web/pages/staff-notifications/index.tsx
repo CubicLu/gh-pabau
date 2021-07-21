@@ -93,7 +93,7 @@ export const StaffNotifications: NextPage = () => {
   }, [userRole, user?.company])
 
   const { data: userListData, loading } = useStaff_UsersQuery(getQueryVariables)
-  const userList = userListData?.users
+  const userList = userListData?.findManyUser
 
   const [insertNotificationsOneMutation] = useInsert_Notifications_OneMutation({
     onCompleted(data) {

@@ -30,6 +30,9 @@ fragment MedicalFormFields on MedicalForm {
 
 fragment MedicalForm on MedicalForm {
   ...MedicalFormFields
+  Company {
+    ...CompanyFields
+  }
 }
 
 mutation createOneMedicalForm($data: MedicalFormCreateInput!) {

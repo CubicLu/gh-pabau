@@ -31,6 +31,7 @@ export const notificationIcons = [
   {
     type: 'Bookout',
     icon: AppointmentSVG,
+    // Require Icon
   },
   {
     type: 'Holiday request',
@@ -47,6 +48,7 @@ export const notificationIcons = [
   {
     type: 'Inventory',
     icon: LeadSVG,
+    // Require Icon
   },
   {
     type: 'Purchase order',
@@ -55,6 +57,7 @@ export const notificationIcons = [
   {
     type: 'New feature release',
     icon: LeadSVG,
+    // Require Icon
   },
   {
     type: 'News and Announcements',

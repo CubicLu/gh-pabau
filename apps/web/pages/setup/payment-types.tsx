@@ -129,63 +129,6 @@ export const PaymentTypes: NextPage = () => {
     company: 'Company',
   }
 
-  const staticDataSource = [
-    {
-      id: '1',
-      name: 'Card',
-      type: 'money',
-      description: null,
-      is_active: true,
-      company_id: null,
-      GlCode: null,
-    },
-    {
-      id: '2',
-      name: 'Cash',
-      type: 'money',
-      description: null,
-      is_active: true,
-      company_id: null,
-      GlCode: null,
-    },
-    {
-      id: '3',
-      name: 'Loyalty',
-      type: 'money',
-      description: null,
-      is_active: true,
-      company_id: null,
-      GlCode: null,
-    },
-    {
-      id: '4',
-      name: 'Packages',
-      type: 'money',
-      description: null,
-      is_active: true,
-      company_id: null,
-      GlCode: null,
-    },
-    {
-      id: '5',
-      name: 'Account',
-      type: 'money',
-      description: null,
-      is_active: true,
-      company_id: null,
-      GlCode: null,
-    },
-    {
-      id: '6',
-      name: 'Voucher',
-      type: 'money',
-      description: null,
-      is_active: true,
-      company_id: null,
-      GlCode: null,
-    },
-  ]
-
   const [showNotificationBanner, setShowNotificationBanner] = useState(false)
   return (
     <CrudLayout
