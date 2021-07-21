@@ -11,7 +11,7 @@ definitions:
     cypress: '/root/.cache/Cypress'
   services:
     docker:
-      memory: 3210
+      memory: 3072
 
 pipelines:
   pull-requests:
@@ -21,7 +21,7 @@ pipelines:
           caches:
             - node
           script:
-            - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 8 ]] && exit 0 || exit 1'
+            - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 16 ]] && exit 0 || exit 1'
             - CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
           artifacts:
             - node_modules/**
@@ -51,9 +51,6 @@ pipelines:
 
           - step:
               name: lint
-              runs-on:
-                - 'self.hosted'
-              size: 2x
               script:
                 - yarn affected:lint --base=origin/master --with-deps
 
@@ -78,6 +75,8 @@ pipelines:
 
           - step:
               name: e2e
+              runs-on:
+                - 'self.hosted'
               size: 2x
               caches:
                 - cypress
@@ -188,7 +187,7 @@ pipelines:
           caches:
             - node
           script:
-            - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 8 ]] && exit 0 || exit 1'
+            - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 16 ]] && exit 0 || exit 1'
             - CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
           artifacts:
             - node_modules/**
@@ -222,9 +221,6 @@ pipelines:
 
           - step:
               name: lint
-              runs-on:
-                - 'self.hosted'
-              size: 2x
               script:
                 - yarn affected:lint --base=HEAD~1 --with-deps
 
@@ -238,6 +234,8 @@ pipelines:
 
           - step:
               name: e2e
+              runs-on:
+                - 'self.hosted'
               size: 2x
               caches:
                 - cypress

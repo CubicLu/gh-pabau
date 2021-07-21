@@ -1,11 +1,10 @@
 import React, { FC, ReactNode, useEffect, useState } from 'react'
 import { Popover, Tree } from 'antd'
 import styles from './Timeline.module.less'
-import { Button, DatePicker } from '@pabau/ui'
+import { Button, RangePicker } from '@pabau/ui'
 import { Dayjs } from 'dayjs'
 import { useTranslation } from 'react-i18next'
 import { types, statuses } from './Timeline'
-const { RangePicker } = DatePicker
 
 export interface TimelineFilterProps {
   children?: ReactNode

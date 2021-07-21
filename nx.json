@@ -71,9 +71,6 @@
       "tags": [],
       "implicitDependencies": ["connect"]
     },
-    "mobile": {
-      "tags": []
-    },
     "bridge-api": {
       "tags": []
     },
