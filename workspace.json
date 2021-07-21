@@ -633,8 +633,7 @@
           "builder": "@nrwl/jest:jest",
           "outputs": ["coverage/apps/bridge-api"],
           "options": {
-            "jestConfig": "apps/bridge-api/jest.config.js",
-            "passWithNoTests": true
+            "jestConfig": "apps/bridge-api/jest.config.js"
           }
         },
         "e2e": {
@@ -642,7 +641,7 @@
           "outputs": ["coverage/apps/bridge-api-e2e"],
           "options": {
             "jestConfig": "apps/bridge-api/jest.e2e.config.js",
-            "passWithNoTests": true
+            "runInBand": true
           }
         },
         "deploy-docker": {
