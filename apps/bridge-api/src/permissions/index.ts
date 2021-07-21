@@ -119,6 +119,7 @@ export const permissions = shield(
       cmStaffGenerals: allow,
       rotaShifts: allow,
       findFirstCompany: allow,
+      bookings: allow,
       '*': rules.interceptors.interceptAccessToCompanyData,
     },
   },

@@ -10,15 +10,24 @@ import {
   CloseOutlined,
 } from '@ant-design/icons'
 import ClassNames from 'classnames'
-import { useBookingAvailableShiftsQuery } from '@pabau/graphql'
+import {
+  useBookingAvailableShiftsQuery,
+  useGetBookingsBetweeenDatesByUidQuery,
+} from '@pabau/graphql'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { decimalToISO8601 } from '../../helpers/DatesHelper'
 
 export interface P {
   employeeID: number
+  staffID: number
   onSelectedTimeslot: (dateTime: moment.Moment) => void
 }
 
-const DateTimeSelector: FC<P> = ({ employeeID, onSelectedTimeslot }) => {
+const DateTimeSelector: FC<P> = ({
+  employeeID,
+  staffID,
+  onSelectedTimeslot,
+}) => {
   // CRAP
   const [mdisplay, setmdisplay] = useState(true)
   const [calcount, setcalcount] = useState(1)
@@ -37,17 +46,30 @@ const DateTimeSelector: FC<P> = ({ employeeID, onSelectedTimeslot }) => {
   } = useBookingAvailableShiftsQuery({
     variables: {
       company_id: 8021,
-      shift_start: Number.parseInt(selectedDate.format('YYYYMMDD000000')),
+      shift_start: Number.parseInt(moment().format('YYYYMMDD000000')),
       shift_end: Number.parseInt(moment().add(3, 'M').format('YYYYMMDD235959')),
     },
   })
 
-  if (errorShifts) return <div>Error!</div>
-  if (loadingShifts) return <div>Loading...</div>
+  const {
+    loading: loadingBookings,
+    error: errorBookings,
+    data: bookingsResult,
+  } = useGetBookingsBetweeenDatesByUidQuery({
+    variables: {
+      start_date: Number.parseInt(moment().format('YYYYMMDD000000')),
+      end_date: Number.parseInt(moment().add(3, 'M').format('YYYYMMDD235959')),
+      company_id: 8021,
+      user_id: employeeID,
+    },
+  })
+
+  if (errorShifts || errorBookings) return <div>Error!</div>
+  if (loadingShifts || loadingBookings) return <div>Loading...</div>
 
   const shiftsByDate = []
   for (const shift of shiftsResult.rotaShifts) {
-    if (employeeID === 0 || employeeID === shift.uid) {
+    if (staffID === 0 || staffID === shift.uid) {
       const index = shift.start.toString().substring(0, 8)
       if (!shiftsByDate[index]) {
         shiftsByDate[index] = [shift]
@@ -56,7 +78,6 @@ const DateTimeSelector: FC<P> = ({ employeeID, onSelectedTimeslot }) => {
       }
     }
   }
-  console.log('SBD', shiftsByDate)
 
   const getShiftsOnDate = (date) => {
     const shiftsIndex = date.format('YYYYMMDD')
@@ -120,30 +141,8 @@ const DateTimeSelector: FC<P> = ({ employeeID, onSelectedTimeslot }) => {
       return []
     }
     const shift = shiftsByDate[shiftsIndex][0]
-    const shiftDate =
-      shift.start.toString().substring(0, 4) +
-      '-' +
-      shift.start.toString().substring(4, 6) +
-      '-' +
-      shift.start.toString().substring(6, 8)
-    const shiftStart = moment(
-      shiftDate +
-        ' ' +
-        shift.start.toString().substring(8, 10) +
-        ':' +
-        shift.start.toString().substring(10, 12) +
-        ':' +
-        shift.start.toString().substring(12, 14)
-    )
-    const shiftEnd = moment(
-      shiftDate +
-        ' ' +
-        shift.end.toString().substring(8, 10) +
-        ':' +
-        shift.end.toString().substring(10, 12) +
-        ':' +
-        shift.end.toString().substring(12, 14)
-    )
+    const shiftStart = moment(decimalToISO8601(shift.start))
+    const shiftEnd = moment(decimalToISO8601(shift.end))
 
     const timeslots = []
     for (
@@ -154,7 +153,21 @@ const DateTimeSelector: FC<P> = ({ employeeID, onSelectedTimeslot }) => {
       timeslots.push(date.format('HH:mm'))
     }
 
-    return timeslots
+    const takenTimeslots = []
+    for (const b of bookingsResult.bookings.filter(
+      (b) =>
+        b.start_date.toString().substr(0, 8) === shiftStart.format('YYYYMMDD')
+    )) {
+      for (
+        let apptDate = moment(decimalToISO8601(b.start_date));
+        apptDate.isBefore(moment(decimalToISO8601(b.end_date)));
+        apptDate.add(15, 'minutes')
+      ) {
+        takenTimeslots.push(apptDate.format('HH:mm'))
+      }
+    }
+
+    return timeslots.filter((t) => !takenTimeslots.includes(t))
   }
   const renderTimeslots = () => {
     const timeslots = getDateTimeslots(selectedDate)
@@ -190,11 +203,11 @@ const DateTimeSelector: FC<P> = ({ employeeID, onSelectedTimeslot }) => {
                   className={false ? Styles.gray : Styles.green}
                   key={val}
                   onClick={() => {
-                    const hour = Number.parseInt(val.substring(0, 2))
-                    const minute = Number.parseInt(val.substring(3, 5))
-                    onSelectedTimeslot(
-                      moment(selectedDate).set({ hour: hour, minute: minute })
-                    )
+                    // const hour = Number.parseInt(val.substring(0, 2))
+                    // const minute = Number.parseInt(val.substring(3, 5))
+                    // onSelectedTimeslot(
+                    //   moment(selectedDate).set({ hour: hour, minute: minute })
+                    // )
                   }}
                 >
                   <p>{val}</p>
@@ -335,25 +348,25 @@ const DateTimeSelector: FC<P> = ({ employeeID, onSelectedTimeslot }) => {
           </h4>
           <h4>{selectedDate.format('MMMM YYYY')}</h4>
           <Calendar
-            value={moment()}
+            value={selectedDate}
             dateCellRender={dateCellRender}
             onSelect={dateSelectedHandler}
             disabledDate={dateHasShift}
           />
-          <h4>{moment(selectedDate).add(1, 'M').format('MMMM YYYY')}</h4>
-          <Calendar
-            value={moment().add(1, 'M')}
-            dateCellRender={dateCellRender}
-            onSelect={dateSelectedHandler}
-            disabledDate={dateHasShift}
-          />
-          <h4>{moment(selectedDate).add(2, 'M').format('MMMM YYYY')}</h4>
-          <Calendar
-            value={moment().add(2, 'M')}
-            dateCellRender={dateCellRender}
-            onSelect={dateSelectedHandler}
-            disabledDate={dateHasShift}
-          />
+          {/*<h4>{moment(selectedDate).add(1, 'M').format('MMMM YYYY')}</h4>*/}
+          {/*<Calendar*/}
+          {/*  value={moment().add(1, 'M')}*/}
+          {/*  dateCellRender={dateCellRender}*/}
+          {/*  onSelect={dateSelectedHandler}*/}
+          {/*  disabledDate={dateHasShift}*/}
+          {/*/>*/}
+          {/*<h4>{moment(selectedDate).add(2, 'M').format('MMMM YYYY')}</h4>*/}
+          {/*<Calendar*/}
+          {/*  value={moment().add(2, 'M')}*/}
+          {/*  dateCellRender={dateCellRender}*/}
+          {/*  onSelect={dateSelectedHandler}*/}
+          {/*  disabledDate={dateHasShift}*/}
+          {/*/>*/}
         </div>
       )}
 

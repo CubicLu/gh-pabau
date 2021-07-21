@@ -8,6 +8,7 @@ export interface BookingData {
   serviceID?: number[]
   services: Service[]
   employeeID?: number
+  staffID: number
   employee: Staff
   locationID?: number
   location: Location

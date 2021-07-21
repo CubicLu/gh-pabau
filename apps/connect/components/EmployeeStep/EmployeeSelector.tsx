@@ -5,7 +5,7 @@ import { useOnlineBookableStaffQuery } from '@pabau/graphql'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 
 export interface P {
-  onEmployeeSelected: (employeeID: number) => void
+  onEmployeeSelected: (employeeID: number, staffID: number) => void
 }
 
 const EmployeeSelector: FC<P> = ({ onEmployeeSelected }) => {
@@ -31,8 +31,8 @@ const EmployeeSelector: FC<P> = ({ onEmployeeSelected }) => {
       <h4>{t('connect.onlinebooking.employes.title')}</h4>
       {staffResult.cmStaffGenerals.map((val) => (
         <div
-          key={val.ID}
-          onClick={() => onEmployeeSelected(val.ID)}
+          key={val.User.id}
+          onClick={() => onEmployeeSelected(val.User.id, val.ID)}
           className={Styles.oldBox}
         >
           <div className={Styles.contentBox}>
@@ -43,9 +43,7 @@ const EmployeeSelector: FC<P> = ({ onEmployeeSelected }) => {
             <div className={Styles.userDetailWrapper}>
               <div className={Styles.userDetail}>
                 <div className={Styles.userdetailInner}>
-                  <p className={Styles.userName}>
-                    {val.Fname + ' ' + val.Lname}
-                  </p>
+                  <p className={Styles.userName}>{val.User.full_name}</p>
                   {val.description && (
                     <QuestionCircleOutlined
                       onClick={(e) => {

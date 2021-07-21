@@ -341,10 +341,11 @@ export function Index() {
           )}
           {currentStep === 3 && (
             <EmployeeSelector
-              onEmployeeSelected={(employeeID) => {
+              onEmployeeSelected={(employeeID, staffID) => {
                 setSelectedData({
                   ...selectedData,
                   employeeID: employeeID,
+                  staffID: staffID,
                 })
                 setCurrentStep(currentStep + 1)
               }}
@@ -353,6 +354,7 @@ export function Index() {
           {currentStep === 4 && (
             <DateTimeSelector
               employeeID={selectedData.employeeID}
+              staffID={selectedData.staffID}
               onSelectedTimeslot={(dateTime) => {
                 setSelectedData({
                   ...selectedData,
