@@ -63,14 +63,7 @@
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "apps/web/jest.config.js",
-            "passWithNoTests": true,
-            "reporters": ["jest-fail-on-console-reporter"],
-            "silent": true,
-            "codeCoverage": true,
-            "coverageReporters": [
-              "json-summary"
-            ]
+            "jestConfig": "apps/web/jest.config.js"
           }
         },
         "deploy": {
