@@ -57,7 +57,6 @@ export const notificationIcons = [
   {
     type: 'New feature release',
     icon: LeadSVG,
-    // Require Icon
   },
   {
     type: 'News and Announcements',
@@ -82,5 +81,10 @@ export const notificationIcons = [
   {
     type: 'Lead inquiry',
     icon: LeadSVG,
+  },
+  {
+    type: 'Lead assigned',
+    icon: LeadSVG,
+    // Require Icon
   },
 ]

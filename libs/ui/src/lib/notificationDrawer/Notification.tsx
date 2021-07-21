@@ -96,7 +96,17 @@ const Notification: FC<NotificationProps> = ({
     Intl.DateTimeFormat('en-US').format(new Date(date))
 
   const getNotificationDescOrTitle = (notification, returnType = 'desc') => {
-    const { variables } = notification
+    const { variables, notificationType, sentBy, desc } = notification
+
+    if (
+      notificationType === 'Lead assigned' &&
+      sentBy &&
+      returnType === 'desc' &&
+      !notification['desc'].includes('by')
+    ) {
+      notification['desc'] = desc + ' by [who]'
+    }
+
     if (
       typeof variables == 'object' &&
       Object.keys({ ...variables }).length > 0
