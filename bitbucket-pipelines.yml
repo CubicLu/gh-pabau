@@ -30,9 +30,7 @@ pipelines:
       - parallel:
           - step:
               name: misc checks
-              runs-on:
-                - 'self.hosted'
-              size: 2x
+              size: 1x
               script:
                 - openssl version || true
                 - ls -al || true
@@ -56,16 +54,12 @@ pipelines:
 
           - step:
               name: unit tests
-              runs-on:
-                - 'self.hosted'
-              size: 2x
+              size: 1x
               script:
                 - yarn affected:test --base=origin/master
 
           - step:
               name: build
-              runs-on:
-                - 'self.hosted'
               max-time: 80
               size: 2x
               script:
@@ -75,8 +69,6 @@ pipelines:
 
           - step:
               name: e2e
-              runs-on:
-                - 'self.hosted'
               size: 2x
               caches:
                 - cypress
@@ -88,8 +80,6 @@ pipelines:
       - parallel:
           - step:
               name: deploy dockers
-              runs-on:
-                - 'self.hosted'
               size: 2x
               services:
                 - docker
@@ -196,9 +186,7 @@ pipelines:
       - parallel:
           - step:
               name: misc checks
-              runs-on:
-                - 'self.hosted'
-              size: 2x
+              size: 1x
               script:
                 - openssl version || true
                 - ls -al || true
@@ -226,16 +214,12 @@ pipelines:
 
           - step:
               name: unit tests
-              runs-on:
-                - 'self.hosted'
-              size: 2x
+              size: 1x
               script:
                 - yarn affected:test --base=HEAD~1
 
           - step:
               name: e2e
-              runs-on:
-                - 'self.hosted'
               size: 2x
               caches:
                 - cypress
@@ -258,8 +242,6 @@ pipelines:
 
       - step:
           name: build
-          runs-on:
-            - 'self.hosted'
           max-time: 80
           size: 2x
           script:
@@ -270,9 +252,6 @@ pipelines:
       - parallel:
           - step:
               name: deploy dockers
-              runs-on:
-                - 'self.hosted'
-              max-time: 20
               size: 2x
               deployment: production-dockers
               services:
@@ -286,8 +265,6 @@ pipelines:
 
           - step:
               name: deploy previews
-              runs-on:
-                - 'self.hosted'
               max-time: 20
               deployment: production-serverless
               script:
