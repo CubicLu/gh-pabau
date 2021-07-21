@@ -18,6 +18,7 @@ pipelines:
     '**':
       - step:
           name: yarn audit
+          size: 2x
           caches:
             - node
           script:
@@ -174,6 +175,7 @@ pipelines:
     master:
       - step:
           name: yarn audit
+          size: 2x
           caches:
             - node
           script:
