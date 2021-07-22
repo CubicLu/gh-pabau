@@ -53,9 +53,13 @@ if [ -z "${BITBUCKET_PR_ID}" ]; then
   OUTPUT=$(cd "${build_output_path}" && vercel -c -C --token "${VERCEL_TOKEN}" --scope pabau2 -A "${VERCEL_JSON_LOCATION}/vercel.json")
   echo "errorlevel: $?"
   echo "output: ${OUTPUT}"
-  OUTPUT_ALIAS=$(cd "${build_output_path}" && vercel -c -C --token "${VERCEL_TOKEN}" --scope pabau2 -A "${VERCEL_JSON_LOCATION}/vercel.json" alias ${OUTPUT} prelive-crm.new.pabau.com)
+
+  vercel -v || true
+  vercel -c -C --token "${VERCEL_TOKEN}" --scope pabau2 -A "${VERCEL_JSON_LOCATION}/vercel.json" alias ${OUTPUT} prelive-crm.new.pabau.com || true
   echo "errorlevel: $?"
-  echo "alias: ${OUTPUT_ALIAS}"
+  yarn vercel -v || true
+  yarn vercel -c -C --token "${VERCEL_TOKEN}" --scope pabau2 -A "${VERCEL_JSON_LOCATION}/vercel.json" alias ${OUTPUT} prelive-crm.new.pabau.com || true
+  echo "errorlevel: $?"
 else
   echo "===== Processing type PR ====="
   OUTPUT=$(cd "${build_output_path}" && vercel -c -C --token "${VERCEL_TOKEN}" --scope pabau2 -A "${VERCEL_JSON_LOCATION}/vercel.json")
