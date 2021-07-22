@@ -45,10 +45,7 @@ mutation createOneMedicalForm($data: MedicalFormCreateInput!) {
   }
 }
 
-mutation updateOneMedicalForm(
-  $where: MedicalFormWhereUniqueInput!
-  $data: MedicalFormUpdateInput!
-) {
+mutation updateOneMedicalForm($where: MedicalFormWhereUniqueInput!, $data: MedicalFormUpdateInput!) {
   updateOneMedicalForm(where: $where, data: $data) {
     ...MedicalForm
   }
@@ -60,10 +57,7 @@ mutation deleteOneMedicalForm($where: MedicalFormWhereUniqueInput!) {
   }
 }
 
-mutation updateManyMedicalForm(
-  $where: MedicalFormWhereInput
-  $data: MedicalFormUpdateManyMutationInput!
-) {
+mutation updateManyMedicalForm($where: MedicalFormWhereInput, $data: MedicalFormUpdateManyMutationInput!) {
   updateManyMedicalForm(where: $where, data: $data) {
     count
   }

@@ -1,5 +1,4 @@
 import { HttpService, Injectable } from '@nestjs/common'
-import { environment } from '../../environments/environment'
 import { notificationType } from './mock'
 
 @Injectable()
@@ -43,7 +42,10 @@ export class NotificationServices {
       operationName: 'insert_notifications_one',
     }
     const response = await this.httpService
-      .post(environment.HASURA_GRAPHQL_ENDPOINT, data)
+      .post(
+        process.env.HASURA_GRAPHQL_ENDPOINT || 'https://api-v2.pabau.com/',
+        data
+      )
       .toPromise()
 
     return response.data
@@ -52,18 +54,22 @@ export class NotificationServices {
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   async getUserById(id: number, authorization: string): Promise<any> {
     const data = {
-      query: `query MyQuery {\n  user(where: {id: ${id}}) {\n    full_name\n  }\n}\n`,
+      query: `query MyQuery {\n  findFirstUser(where: { id: { equals : ${id} } } ){\n    full_name\n  }\n}\n`,
       variables: null,
       operationName: 'MyQuery',
     }
 
     const headers = {
       'content-type': 'application/json',
-      'x-hasura-admin-secret': environment.HASURA_GRAPHQL_ADMIN_SECRET,
+      'x-hasura-admin-secret': process.env.HASURA_GRAPHQL_ADMIN_SECRET,
       authorization: authorization,
     }
     const response = await this.httpService
-      .post(environment.HASURA_GRAPHQL_ENDPOINT, data, { headers })
+      .post(
+        process.env.HASURA_GRAPHQL_ENDPOINT || 'https://api-v2.pabau.com/',
+        data,
+        { headers }
+      )
       .toPromise()
     return response.data
   }

@@ -71,9 +71,9 @@ export class NotificationController {
       data.sent_to,
       data.sent_by,
       data.destination,
-      sentUserData?.data?.user?.full_name,
+      sentUserData?.data?.findFirstUser?.full_name,
       data.service_name,
-      clientData?.data?.user?.full_name,
+      clientData?.data?.findFirstUser?.full_name,
       data.date,
       data.time,
       data.cancellation_reason
