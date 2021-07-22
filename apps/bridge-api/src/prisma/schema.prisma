@@ -299,6 +299,8 @@ model Company {
   MedicalFormAdvancedSetting       MedicalFormAdvancedSetting[]
   CmLeadCustomField                CmLeadCustomField[]
   CmLeadCustomFieldOrder           CmLeadCustomFieldOrder[]
+  Communication                    Communication[]
+  CompanyEmail                     CompanyEmail[]
 
   @@map("admin")
 }
@@ -1883,9 +1885,13 @@ model CmContact {
   CmExtraPatient            CmExtraPatient[]
   CmExtraSalon              CmExtraSalon[]
   InvPayment                InvPayment[]
+  Insurance                 InsuranceDetail?
+  LoyaltyPoint              LoyaltyPoint?
+  Booking                   Booking[]
   InvSale                   InvSale[]
   ContactInsurance          ContactInsurance[]
   InventoryMovement         InventoryMovement[]
+  CommunicationRecipient    CommunicationRecipient[]
 
   @@index([CreatedDate], name: "CreatedDate")
   @@index([Email], name: "Email")
@@ -2375,7 +2381,7 @@ model CmExtraSalon {
 
 model CmLead {
 
-  ID                       Int                  @id @default(autoincrement())
+  ID                       Int                      @id @default(autoincrement())
   Avatar                   String
   OwnerID                  Int
   ContactID                Int
@@ -2385,7 +2391,7 @@ model CmLead {
   DOB                      DateTime
   Title                    String
   LeadCompany              String
-  company_id               Int                  @map("Occupier")
+  company_id               Int                      @map("Occupier")
   Email                    String
   Phone                    String
   Fax                      String
@@ -2397,7 +2403,7 @@ model CmLead {
   NoOfEmp                  String
   AnualRevenue             String
   Rating                   Int
-  EmailOptOut              cm_leads_EmailOptOut @default(No)
+  EmailOptOut              cm_leads_EmailOptOut     @default(No)
   SkypeId                  String
   SecondaryEmail           String
   Twitter                  String
@@ -2407,8 +2413,8 @@ model CmLead {
   MailingPostal            String
   MailingCountry           String
   Description              String
-  EnumStatus               cm_leads_EnumStatus  @default(Open)
-  Status                   cm_leads_Status      @default(Enable)
+  EnumStatus               cm_leads_EnumStatus      @default(Open)
+  Status                   cm_leads_Status          @default(Enable)
   CreatedDate              DateTime
   MarketingOptInAll        Int
   MarketingOptInEmail      Int
@@ -2429,11 +2435,12 @@ model CmLead {
   group_id                 Int
   first_interaction        DateTime
   latest_interaction       DateTime
-  location_id              Int                  @default(0)
-  need_to_knows            Int                  @default(1)
-  Company                  Company              @relation(fields: [company_id], references: [id])
+  location_id              Int                      @default(0)
+  need_to_knows            Int                      @default(1)
+  Company                  Company                  @relation(fields: [company_id], references: [id])
+  CmLeadCustomField        CmLeadCustomField[]
+  CommunicationRecipient   CommunicationRecipient[]
 
-  CmLeadCustomField CmLeadCustomField[]
   @@index([Email], name: "Email")
   @@index([Fname], name: "Fname")
   @@index([LeadStatus], name: "LeadStatus")
@@ -2441,6 +2448,7 @@ model CmLead {
   @@index([OwnerID], name: "OwnerID")
   @@index([Fname, Lname, company_id], name: "cm_contacts_index")
   @@index([company_id], name: "occupier")
+  @@map("cm_leads")
 }
 
 model CmLeadCustomField {
@@ -3305,77 +3313,86 @@ model CmStaffGeneral {
 //  modified_date        DateTime?
 //}
 //
-//model communications {
-//  id                        Int                          @id @default(autoincrement())
-//  company_id                Int
-//  from_address              String
-//  uid                       Int
-//  location_id               Int
-//  type                      communications_type
-//  secure                    Boolean                      @default(false)
-//  date                      DateTime
-//  communications_content_id Int
-//  related_id                Int?
-//  related_type              communications_related_type?
-//  communications_content    communications_content       @relation(fields: [communications_content_id], references: [id])
-//  communications_recipients communications_recipients[]
-//
-//  @@index([communications_content_id], name: "communications_content_id")
-//  @@index([company_id, uid], name: "company_id")
-//  @@index([date], name: "date")
-//}
-//
-//model communications_content {
-//  id             Int              @id @default(autoincrement())
-//  company_id     Int
-//  hash           String
-//  subject        String?
-//  body           String
-//  communications communications[]
-//
-//  @@unique([company_id, hash], name: "company_id")
-//}
-//
-//model communications_hashes {
-//  id                        Int                       @id @default(autoincrement())
-//  comm_recipient_id         Int
-//  hash                      String
-//  communications_recipients communications_recipients @relation(fields: [comm_recipient_id], references: [id])
-//
-//  @@index([comm_recipient_id], name: "communications_hashes_fk")
-//  @@index([hash], name: "hash")
-//}
-//
-//model communications_providers {
-//  id                        Int                         @id @default(autoincrement())
-//  code                      String                      @unique
-//  name                      String
-//  communications_recipients communications_recipients[]
-//}
-//
-//model communications_recipients {
-//  id                       Int                                      @id @default(autoincrement())
-//  communications_id        Int
-//  recipient_id             Int
-//  recipient_type           communications_recipients_recipient_type
-//  remote_key               String?
-//  delivered_result         String?
-//  read_count               Int                                      @default(0)
-//  to_address               String
-//  cc                       String
-//  provider_id              Int
-//  status                   String?
-//  merge_values             String
-//  communications           communications                           @relation(fields: [communications_id], references: [id])
-//  communications_providers communications_providers                 @relation(fields: [provider_id], references: [id])
-//  communications_hashes    communications_hashes[]
-//
-//  @@index([communications_id], name: "communications_id")
-//  @@index([provider_id], name: "communications_provider_id")
-//  @@index([recipient_id], name: "contact_id")
-//  @@index([remote_key], name: "remote_key")
-//}
-//
+model Communication {
+  id                        Int                          @id @default(autoincrement())
+  company_id                Int
+  from_address              String
+  uid                       Int
+  location_id               Int
+  type                      communications_type
+  secure                    Boolean                      @default(false)
+  date                      DateTime
+  communications_content_id Int
+  related_id                Int?
+  related_type              communications_related_type?
+  Content                   CommunicationContent         @relation(fields: [communications_content_id], references: [id])
+  Recipient                 CommunicationRecipient       @relation(fields: [id], references: [communications_id])
+  Company                   Company                      @relation(fields: [company_id], references: [id])
+
+  @@index([communications_content_id], name: "communications_content_id")
+  @@index([company_id, uid], name: "company_id")
+  @@index([date], name: "date")
+  @@map("communications")
+}
+
+model CommunicationContent {
+  id             Int             @id @default(autoincrement())
+  company_id     Int
+  hash           String
+  subject        String?
+  body           String
+  Communications Communication[]
+
+  @@unique([company_id, hash], name: "company_id")
+  @@map("communications_content")
+}
+
+model CommunicationHash {
+  id                Int                    @id @default(autoincrement())
+  comm_recipient_id Int
+  hash              String
+  Recipients        CommunicationRecipient @relation(fields: [comm_recipient_id], references: [id])
+
+  @@index([comm_recipient_id], name: "communications_hashes_fk")
+  @@index([hash], name: "hash")
+  @@map("communications_hashes")
+}
+
+model CommunicationProvider {
+  id        Int                      @id @default(autoincrement())
+  code      String                   @unique
+  name      String
+  Recipient CommunicationRecipient[]
+
+  @@map("communications_providers")
+}
+
+model CommunicationRecipient {
+  id                Int                                      @id @default(autoincrement())
+  communications_id Int
+  recipient_id      Int
+  recipient_type    communications_recipients_recipient_type
+  remote_key        String?
+  delivered_result  String?
+  read_count        Int                                      @default(0)
+  to_address        String
+  cc                String
+  provider_id       Int
+  status            communications_recipients_status?
+  merge_values      String
+  Communication     Communication[]
+  Provider          CommunicationProvider                    @relation(fields: [provider_id], references: [id])
+  Hash              CommunicationHash[]
+  Contact           CmContact?                               @relation(fields: [recipient_id], references: [ID])
+  Lead              CmLead?                                  @relation(fields: [recipient_id], references: [ID])
+
+  @@index([communications_id], name: "communications_id")
+  @@index([provider_id], name: "communications_provider_id")
+  @@index([recipient_id], name: "contact_id")
+  @@index([remote_key], name: "remote_key")
+  @@map("communications_recipients")
+}
+
 //model communication_id_pairs {
 //  id             Int     @id @default(autoincrement())
 //  old_id         Int     @unique
@@ -3627,18 +3644,23 @@ model CompanyDepartment {
   @@map("company_departments")
 }
 
-//model company_emails {
-//  company_id       Int
-//  company_email    String
-//  added_by         String
-//  email_id         Int    @id @default(autoincrement())
-//  senders_name     String
-//  confirmed        Int
-//  hash             String
-//  default_email    Int
-//  enterprise_email Int
-//  merge_tags       String
-//}
+model CompanyEmail {
+  company_id       Int
+  company_email    String
+  added_by         String
+  email_id         Int    @id @default(autoincrement())
+  senders_name     String
+  confirmed        Int
+  hash             String
+  default_email    Int
+  enterprise_email Int
+  merge_tags       String
+
+  Company Company? @relation(fields: [company_id], references: [id])
+  @@index([email_id], name: "email_id")
+  @@map("company_emails")
+}
+
 //
 //model company_form_builder_details {
 //  id            Int       @id @default(autoincrement())
@@ -4424,22 +4446,25 @@ model ContactInsurance {
 //  @@index([package_id], name: "package_id")
 //}
 //
-//model contact_package_used {
-//  id                 Int      @id @default(autoincrement())
-//  contact_package_id Int
-//  date_created       DateTime
-//  booking_id         Int
-//  status             String
-//  book_take          Int
-//  cancel_take        Int
-//  occupier           Int
-//  booking_master_id  Int
-//  old_booking_id     Int
-//
-//  @@index([booking_id], name: "booking_id")
-//  @@index([contact_package_id], name: "contact_package_id")
-//  @@index([occupier], name: "occupier")
-//}
+model PackageUsed {
+  id                 Int      @id @default(autoincrement())
+  contact_package_id Int
+  date_created       DateTime
+  booking_id         Int
+  status             String
+  book_take          Int
+  cancel_take        Int
+  occupier           Int
+  booking_master_id  Int
+  old_booking_id     Int
+  //  Package            Package @relation(fields: [company_id], references: [id])
+
+  @@index([booking_id], name: "booking_id")
+  @@index([contact_package_id], name: "contact_package_id")
+  @@index([occupier], name: "occupier")
+  @@map("contact_package_used")
+}
+
 //
 //model contact_relations {
 //  id              Int     @id @default(autoincrement())
@@ -5884,7 +5909,7 @@ model InsuranceDetail {
   xero_contact_id   String?
   Company           Company            @relation(fields: [company_id], references: [id])
   HealthcodeInsurer HealthcodeInsurer? @relation(fields: [healthcode_id], references: [id])
-
+  CmContact         CmContact?         @relation(fields: [id], references: [insurer_id])
 
   @@index([company_id], name: "company_id")
   @@map("insurance_details")
@@ -6116,7 +6141,7 @@ model InventoryDiscrepancy {
 //  occupier            Int
 //  stripe_button       Int
 //}
-//
+
 model InvBiller {
   id             Int       @id @default(autoincrement())
   name           String
@@ -6662,6 +6687,7 @@ model InvSale {
   Location            CompanyBranch @relation(fields: [location_id], references: [id])
   CmContact           CmContact?    @relation(fields: [customer_id], references: [ID])
 
+  Booking Booking[]
   @@index([biller_id], name: "biller_id_index")
   @@index([booking_id], name: "booking_id")
   @@index([contact_custom_id], name: "contact_custom_id")
@@ -7823,12 +7849,17 @@ model JobStatus {
 //  @@index([sale_id], name: "sale_id")
 //}
 //
-//model loyalty_points {
-//  id         Int   @id @default(autoincrement())
-//  company_id Int
-//  points     Float
-//  contact_id Int   @unique
-//}
+model LoyaltyPoint {
+  id         Int        @id @default(autoincrement())
+  company_id Int
+  points     Float
+  contact_id Int        @unique
+  CmContact  CmContact? @relation(fields: [contact_id], references: [ID])
+
+  @@index([contact_id], name: "ContactID")
+  @@map("loyalty_points")
+}
+
 //
 //model loyalty_point_settings {
 //  id              Int       @id @default(autoincrement())
@@ -10218,99 +10249,103 @@ model RotaShift {
 //  company_id        Int
 //  created_time      DateTime
 //}
-//
-//model salon_bookings {
-//  id                            Int     @id @default(autoincrement())
-//  title                         String
-//  start_date                    Int?
-//  end_date                      Int?
-//  start_time                    Int?
-//  end_time                      Int?
-//  service                       String?
-//  contact_id                    Int?
-//  UID                           Int
-//  occupier                      Int
-//  backgroudcolor                String?
-//  create_date                   Int?
-//  update_date                   Int?
-//  status                        String
-//  estimated_cost                Float
-//  tips                          Float
-//  discounts                     Float
-//  where                         String
-//  room_id                       Int?
-//  unique_id                     String
-//  reason                        String?
-//  invoice_id                    Int?
-//  booking_id                    Int
-//  Online                        Int?    @default(0)
-//  package_id                    Int
-//  cancel_take                   Int
-//  book_take                     Int
-//  class_master_id               Int
-//  unavailable                   Int
-//  coupon_claim_id               String
-//  related_id                    Int
-//  service_id                    Int
-//  rebook                        Int
-//  repeat_id                     Int
-//  requested                     Int
-//  sent_sms                      Int
-//  sent_email                    Int
-//  sent_survey                   Int
-//  custom_contact_id             Int
-//  custom_contact_name           String?
-//  custom_user_id                String
-//  custom_user_name              String?
-//  custom_service_id             String
-//  imported                      Int
-//  client_confirmed              Int
-//  hold_guid                     String
-//  created_by_uid                Int
-//  marketing_source              Int
-//  resource_id                   Int
-//  custom_room_name              String?
-//  custom_created_by_user_name   String
-//  location_id                   Int
-//  modified_by_uid               Int
-//  sent_email_reminder           Boolean @default(false)
-//  disable_locations             Int
-//  participant_master_uid        Int     @default(0)
-//  participant_master_booking_id Int     @default(0)
-//  participant_slave_uids        String
-//  participant_slave_booking_ids String
-//  private                       Int     @default(0)
-//  external_guest_ids            String
-//  description                   String
-//  issued_to                     Int
-//  contract_id                   Int
-//  all_day                       Int     @default(0)
-//  interlinked_master_uid        Int     @default(0)
-//  all_day_start_date            Int     @default(0)
-//  all_day_end_date              Int     @default(0)
-//
-//  @@index([UID], name: "UID")
-//  @@index([occupier, start_date], name: "company_time")
-//  @@index([contact_id], name: "contact_id")
-//  @@index([create_date], name: "create_date")
-//  @@index([custom_contact_id], name: "custom_contact_id")
-//  @@index([end_date], name: "end_date")
-//  @@index([invoice_id], name: "invoice_id")
-//  @@index([location_id], name: "location_id")
-//  @@index([occupier], name: "occupier")
-//  @@index([occupier, unique_id], name: "occupier_uniqueid")
-//  @@index([participant_master_booking_id], name: "participant_master_booking_id")
-//  @@index([participant_master_uid], name: "participant_master_uid")
-//  @@index([related_id], name: "related_id")
-//  @@index([repeat_id], name: "repeat_id")
-//  @@index([resource_id], name: "resource_id")
-//  @@index([room_id], name: "room_id")
-//  @@index([service], name: "service")
-//  @@index([service_id], name: "service_id")
-//  @@index([start_date], name: "start_date")
-//  @@index([status], name: "status")
-//}
-//
+
+model Booking {
+  id                            Int        @id @default(autoincrement())
+  title                         String
+  start_date                    Int?
+  end_date                      Int?
+  start_time                    Int?
+  end_time                      Int?
+  service                       String?
+  contact_id                    Int?
+  UID                           Int
+  occupier                      Int
+  backgroudcolor                String?
+  create_date                   Int?
+  update_date                   Int?
+  status                        String
+  estimated_cost                Float
+  tips                          Float
+  discounts                     Float
+  where                         String
+  room_id                       Int?
+  unique_id                     String
+  reason                        String?
+  invoice_id                    Int?
+  booking_id                    Int
+  Online                        Int?       @default(0)
+  package_id                    Int
+  cancel_take                   Int
+  book_take                     Int
+  class_master_id               Int
+  unavailable                   Int
+  coupon_claim_id               String
+  related_id                    Int
+  service_id                    Int
+  rebook                        Int
+  repeat_id                     Int
+  requested                     Int
+  sent_sms                      Int
+  sent_email                    Int
+  sent_survey                   Int
+  custom_contact_id             Int
+  custom_contact_name           String?
+  custom_user_id                String
+  custom_user_name              String?
+  custom_service_id             String
+  imported                      Int
+  client_confirmed              Int
+  hold_guid                     String
+  created_by_uid                Int
+  marketing_source              Int
+  resource_id                   Int
+  custom_room_name              String?
+  custom_created_by_user_name   String
+  location_id                   Int
+  modified_by_uid               Int
+  sent_email_reminder           Boolean    @default(false)
+  disable_locations             Int
+  participant_master_uid        Int        @default(0)
+  participant_master_booking_id Int        @default(0)
+  participant_slave_uids        String
+  participant_slave_booking_ids String
+  private                       Int        @default(0)
+  external_guest_ids            String
+  description                   String
+  issued_to                     Int
+  contract_id                   Int
+  all_day                       Int        @default(0)
+  interlinked_master_uid        Int        @default(0)
+  all_day_start_date            Int        @default(0)
+  all_day_end_date              Int        @default(0)
+  InvSale                       InvSale?   @relation(fields: [invoice_id], references: [id])
+  User                          User?      @relation(fields: [UID], references: [id])
+  Contact                       CmContact? @relation(fields: [contact_id], references: [ID])
+
+  @@index([UID], name: "UID")
+  @@index([occupier, start_date], name: "company_time")
+  @@index([contact_id], name: "contact_id")
+  @@index([create_date], name: "create_date")
+  @@index([custom_contact_id], name: "custom_contact_id")
+  @@index([end_date], name: "end_date")
+  @@index([invoice_id], name: "invoice_id")
+  @@index([location_id], name: "location_id")
+  @@index([occupier], name: "occupier")
+  @@index([occupier, unique_id], name: "occupier_uniqueid")
+  @@index([participant_master_booking_id], name: "participant_master_booking_id")
+  @@index([participant_master_uid], name: "participant_master_uid")
+  @@index([related_id], name: "related_id")
+  @@index([repeat_id], name: "repeat_id")
+  @@index([resource_id], name: "resource_id")
+  @@index([room_id], name: "room_id")
+  @@index([service], name: "service")
+  @@index([service_id], name: "service_id")
+  @@index([start_date], name: "start_date")
+  @@index([status], name: "status")
+  @@map("salon_bookings")
+}
+
 //model salon_bookings_apt_cancel {
 //  id                Int       @id @default(autoincrement())
 //  appointment_id    Int?
@@ -10859,36 +10894,38 @@ model ServicesMasterCategory {
 //  @@index([service_id], name: "service_id")
 //}
 //
-//model session_packages {
-//  id                        Int      @id @default(autoincrement())
-//  name                      String
-//  description               String?
-//  session_count             String
-//  duration                  String
-//  price                     Float
-//  activities                String
-//  occupier                  String
-//  CreatedDate               DateTime
-//  imported                  Int
-//  inactive                  Boolean  @default(false)
-//  deleted                   Int
-//  product_id                Int      @default(0)
-//  service_product_id        Int
-//  hard_deleted              Int
-//  session_package_master_id Int
-//  tax_id                    Int
-//  custom_service_name       String
-//  custom_price_item         Float
-//  empty_name                Int
-//  old_price                 Float
-//  old_duration              String
-//  disabledusers             String
-//  sold_online               Int      @default(1)
-//
-//  @@index([occupier], name: "company_id")
-//  @@index([service_product_id], name: "service_product_id")
-//  @@index([session_package_master_id], name: "session_package_master_id")
-//}
+// model SessionPackage {
+//   id                        Int      @id @default(autoincrement())
+//   name                      String
+//   description               String?
+//   session_count             String
+//   duration                  String
+//   price                     Float
+//   activities                String
+//   occupier                  String
+//   CreatedDate               DateTime
+//   imported                  Int
+//   inactive                  Boolean  @default(false)
+//   deleted                   Int
+//   product_id                Int      @default(0)
+//   service_product_id        Int
+//   hard_deleted              Int
+//   session_package_master_id Int
+//   tax_id                    Int
+//   custom_service_name       String
+//   custom_price_item         Float
+//   empty_name                Int
+//   old_price                 Float
+//   old_duration              String
+//   disabledusers             String
+//   sold_online               Int      @default(1)
+
+//   @@index([occupier], name: "company_id")
+//   @@index([service_product_id], name: "service_product_id")
+//   @@index([session_package_master_id], name: "session_package_master_id")
+//   @@map("session_packages")
+// }
+
 //
 //model session_packages_master {
 //  id           Int      @id @default(autoincrement())
@@ -12368,6 +12405,7 @@ model User {
   ManageCustomField            ManageCustomField[]
   InvWarehouseProduct          InvWarehouseProduct[]
   InventoryMovement            InventoryMovement[]
+  Booking                      Booking[]
 
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")
@@ -14103,6 +14141,19 @@ enum communications_recipients_recipient_type {
   CONTACT
   LEAD
   USER
+  EMPTY    @map("")
+}
+
+enum communications_recipients_status {
+  D
+  queued
+  sent
+  rejected
+  NON_EMPTY  @map("1")
+  EMPTY      @map("0")
+  draft
+  HB
+  SB
 }
 
 enum company_bday_settings_status {

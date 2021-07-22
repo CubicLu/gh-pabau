@@ -41,6 +41,7 @@ export const permissions = shield(
 
       // Send Email
       sendEmail: rules.authentication.isAuthenticated,
+      sendEmailTo: rules.authentication.isAuthenticated,
 
       //Page
       createOnePage: rules.authentication.isAuthenticated,
