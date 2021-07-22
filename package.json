@@ -120,7 +120,7 @@
     "formik": "2.2.6",
     "formik-antd": "2.0.1",
     "google-libphonenumber": "3.2.19",
-    "graphql": "15.5.0",
+    "graphql": "^15.5.1",
     "graphql-middleware": "6.0.10",
     "graphql-scalars": "1.9.3",
     "highcharts": "9.0.1",
