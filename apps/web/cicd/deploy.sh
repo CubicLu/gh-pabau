@@ -52,7 +52,7 @@ if [ -z "${BITBUCKET_PR_ID}" ]; then
   echo "===== Processing type COMMIT ====="
   OUTPUT=$(cd "${build_output_path}" && vercel -c -C --token "${VERCEL_TOKEN}" --scope pabau2 -A "${VERCEL_JSON_LOCATION}/vercel.json")
   echo "errorlevel: $?"
-  vercel -c -C --token "${VERCEL_TOKEN}" --scope pabau2 -A "${VERCEL_JSON_LOCATION}/vercel.json" alias prelive-crm.new.pabau.com
+  OUTPUT_ALIAS=$(cd "${build_output_path}" && vercel -c -C --token "${VERCEL_TOKEN}" --scope pabau2 -A "${VERCEL_JSON_LOCATION}/vercel.json" alias prelive-crm.new.pabau.com ${OUTPUT})")
   echo "errorlevel: $?"
 else
   echo "===== Processing type PR ====="
