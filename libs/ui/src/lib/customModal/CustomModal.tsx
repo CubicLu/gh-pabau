@@ -138,7 +138,7 @@ export function CustomModal(props: P) {
             onOk={()=>{
               handleOk(selectedData)
             }}
-            closable={false}
+            closable={true}
             centered={true}
           >
             {selectedData && (

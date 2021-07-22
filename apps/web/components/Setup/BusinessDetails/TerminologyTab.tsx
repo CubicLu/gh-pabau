@@ -169,26 +169,26 @@ export const TerminologyTab: FC<TerminologyTabProps> = ({
     const CompanyMeta = [
       {
         meta_name: 'opt_in_postal',
-        meta_value: optIns[0].items[0].value,
+        meta_value: optIns[0].items[0].value ?? '',
       },
-      { meta_name: 'opt_in_sms', meta_value: optIns[0].items[1].value },
-      { meta_name: 'opt_in_email', meta_value: optIns[0].items[2].value },
-      { meta_name: 'opt_in_phone', meta_value: optIns[0].items[3].value },
+      { meta_name: 'opt_in_sms', meta_value: optIns[0].items[1].value ?? '' },
+      { meta_name: 'opt_in_email', meta_value: optIns[0].items[2].value ?? '' },
+      { meta_name: 'opt_in_phone', meta_value: optIns[0].items[3].value ?? '' },
       {
         meta_name: 'opt_in_postal_lead',
-        meta_value: optIns[1].items[0].value,
+        meta_value: optIns[1].items[0].value ?? '',
       },
       {
         meta_name: 'opt_in_sms_lead',
-        meta_value: optIns[1].items[1].value,
+        meta_value: optIns[1].items[1].value ?? '',
       },
       {
         meta_name: 'opt_in_email_lead',
-        meta_value: optIns[1].items[2].value,
+        meta_value: optIns[1].items[2].value ?? '',
       },
       {
         meta_name: 'opt_in_phone_lead',
-        meta_value: optIns[1].items[3].value,
+        meta_value: optIns[1].items[3].value ?? '',
       },
     ]
     if (config) {
