@@ -15,8 +15,9 @@ export const FinanceInvoiceResponse = objectType({
     t.string('gross')
     t.string('paid')
     t.string('balance')
-    t.int('status')
     t.string('tooltip')
+    t.boolean('isHealthcodeEnabled')
+    t.string('healthcodeStatus')
   },
 })
 
@@ -58,6 +59,8 @@ export const FindManyAccountDebtResponse = objectType({
     t.field('lastAction', {
       type: list(LastAction),
     })
+    t.boolean('isHealthcodeEnabled')
+    t.string('healthcodeStatus')
   },
 })
 

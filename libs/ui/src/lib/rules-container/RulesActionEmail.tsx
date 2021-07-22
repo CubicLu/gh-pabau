@@ -1,4 +1,8 @@
-import { InputHtmlWithTags, InputWithTags } from '@pabau/ui'
+import {
+  EmailMessageTemplateItem,
+  InputHtmlWithTags,
+  InputWithTags,
+} from '@pabau/ui'
 import { Input, Select } from 'antd'
 import cn from 'classnames'
 import React, { FC } from 'react'
@@ -10,16 +14,21 @@ const { Option } = Select
 interface P {
   t: ThenProp
   onChangeThen: (number, any) => void
+  emailMessageTemplateItems: EmailMessageTemplateItem[]
 }
 
-export const RulesActionEmail: FC<P> = ({ t, onChangeThen }) => {
+export const RulesActionEmail: FC<P> = ({
+  t,
+  onChangeThen,
+  emailMessageTemplateItems,
+}) => {
   return (
     <div className={cn(styles.formGroup, styles.noTemplate)}>
       {t.event === 'send_email_using_template' && (
         <>
           <label>Templates</label>
           <Select
-            value={t.template}
+            // value={t.template}
             onChange={(e) =>
               onChangeThen(t.id, [
                 {
@@ -29,8 +38,14 @@ export const RulesActionEmail: FC<P> = ({ t, onChangeThen }) => {
               ])
             }
           >
-            <Option value="1">Default Template</Option>
-            <Option value="2">Client Email Template</Option>
+            {emailMessageTemplateItems?.map((emailMessageTemplateItem) => (
+              <Option
+                key={emailMessageTemplateItem.template_id}
+                value={emailMessageTemplateItem.template_id}
+              >
+                {emailMessageTemplateItem.template_name}
+              </Option>
+            ))}
           </Select>
           <div className={styles.devider}></div>
         </>
@@ -56,7 +71,6 @@ export const RulesActionEmail: FC<P> = ({ t, onChangeThen }) => {
         }
         forWhat={t.to === '' ? 'ruleEmpty' : 'rule'}
         disabledTags={[
-          'appointments',
           'leads',
           'opportunity',
           'datetime',
@@ -69,21 +83,26 @@ export const RulesActionEmail: FC<P> = ({ t, onChangeThen }) => {
           'forms',
           'connect',
         ]}
+        enabledTags={['[CLIENTEMAIL]', '[APPOINTMENTSTAFFEMAIL]']}
       />
-      <div className={styles.devider}></div>
-      <label>Email subject (Required)</label>
-      <Input />
-      <div className={styles.devider}></div>
-      <label>Body (Required)</label>
-      <div style={{ border: `1px solid #ecedf0` }}>
-        <InputHtmlWithTags
-          placeholder={''}
-          value={''}
-          valueWithTag={''}
-          disabledTags={[]}
-          maxWidth={460}
-        />
-      </div>
+      {t.event !== 'send_email_using_template' && (
+        <>
+          <div className={styles.devider}></div>
+          <label>Email subject (Required)</label>
+          <Input />
+          <div className={styles.devider}></div>
+          <label>Body (Required)</label>
+          <div style={{ border: `1px solid #ecedf0` }}>
+            <InputHtmlWithTags
+              placeholder={''}
+              value={''}
+              valueWithTag={''}
+              disabledTags={[]}
+              maxWidth={460}
+            />
+          </div>
+        </>
+      )}
       <div className={styles.devider}></div>
       <label>CC (Carbon copy)</label>
       <Select>

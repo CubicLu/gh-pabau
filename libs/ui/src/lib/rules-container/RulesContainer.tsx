@@ -9,7 +9,14 @@ import {
   PlusOutlined,
   UpOutlined,
 } from '@ant-design/icons'
-import { AnswerItem, MedicalFormTypes, OptionType } from '@pabau/ui'
+import {
+  AnswerItem,
+  EmailMessageTemplateItem,
+  MedicalFormTypes,
+  OptionType,
+  SmsMessageTemplateItem,
+  UserListItem,
+} from '@pabau/ui'
 import {
   Alert,
   Button,
@@ -58,6 +65,9 @@ export interface RulesContainerProps {
   actionsNotAvailableTitle: string
   actionsNotAvailable: ActionProp[]
   medicalForms: MedicalFormTypes[]
+  smsMessageTemplateItems?: SmsMessageTemplateItem[]
+  emailMessageTemplateItems?: EmailMessageTemplateItem[]
+  userListItems?: UserListItem[]
   onSaveRules?: (rules: RuleProp[]) => void
   currentRules?: RuleProp[]
 }
@@ -84,6 +94,9 @@ export const RulesContainer: FC<RulesContainerProps> = ({
   actionsNotAvailableTitle,
   actionsNotAvailable,
   medicalForms,
+  smsMessageTemplateItems = [],
+  emailMessageTemplateItems = [],
+  userListItems = [],
   onSaveRules,
   currentRules = [],
 }) => {
@@ -116,6 +129,19 @@ export const RulesContainer: FC<RulesContainerProps> = ({
   ]
 
   const ifInitOperators = ['is', 'is_not', 'is_empty', 'is_not_empty']
+  const ifMultiCheckboxOperators = [
+    'is',
+    'is_not',
+    'is_empty',
+    'is_not_empty',
+    'is_any_of',
+  ]
+  const ifNumberOperators = [
+    'greater_than',
+    'less_than',
+    'equal_greater_than',
+    'equal_less_than',
+  ]
 
   const [rules, setRules] = useState<RuleProp[]>([])
   const [configureMode, setConfigureMode] = useState(true)
@@ -228,7 +254,14 @@ export const RulesContainer: FC<RulesContainerProps> = ({
               a['conditionType'] = 'text'
               a['conditionValues'] = []
             }
-            setIOperators(ifInitOperators)
+            if (formInfo.formName === 'basic_multiplechoice')
+              setIOperators(ifMultiCheckboxOperators)
+            else if (
+              formInfo.formName === 'basic_shortanswer' &&
+              formInfo.txtInputType === 'number'
+            )
+              setIOperators(ifNumberOperators)
+            else setIOperators(ifInitOperators)
           }
           if (value === 'gender') {
             setIOperators(['is', 'is_not'])
@@ -876,6 +909,8 @@ export const RulesContainer: FC<RulesContainerProps> = ({
                             {ans.conditionType === 'number' && (
                               <InputNumber
                                 placeholder={ruleConditionPlaceHolder}
+                                /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+                                /* @ts-ignore */
                                 value={ans.condition}
                                 onChange={(e) =>
                                   onChangeAnswer(ans.id, 'condition', e)
@@ -907,7 +942,6 @@ export const RulesContainer: FC<RulesContainerProps> = ({
                                 showSearch
                                 mode="multiple"
                                 placeholder={ruleConditionPlaceHolder}
-                                value={ans.condition}
                                 onChange={(e) =>
                                   onChangeAnswer(ans.id, 'condition', e)
                                 }
@@ -993,16 +1027,27 @@ export const RulesContainer: FC<RulesContainerProps> = ({
                           />
                         )}
                         {t.action === 'sms' && (
-                          <RulesActionSms t={t} onChangeThen={onChangeThen} />
+                          <RulesActionSms
+                            t={t}
+                            onChangeThen={onChangeThen}
+                            smsMessageTemplateItems={smsMessageTemplateItems}
+                          />
                         )}
                         {t.action === 'activity' && (
                           <RulesActionActivity
                             t={t}
                             onChangeThen={onChangeThen}
+                            userListItems={userListItems}
                           />
                         )}
                         {t.action === 'email' && (
-                          <RulesActionEmail t={t} onChangeThen={onChangeThen} />
+                          <RulesActionEmail
+                            t={t}
+                            onChangeThen={onChangeThen}
+                            emailMessageTemplateItems={
+                              emailMessageTemplateItems
+                            }
+                          />
                         )}
                         {i === 0 ? (
                           <PlusCircleOutlined

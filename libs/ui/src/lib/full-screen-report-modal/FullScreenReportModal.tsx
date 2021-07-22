@@ -29,8 +29,10 @@ export interface FullScreenReportModalProps {
   onDelete?: () => void
   onClose?: () => void
   onCancel?: () => void
-
+  onTabChange?: (e) => void
   onAssigneeClick?: () => void
+
+  customOptionBtn?: React.ReactNode
   activeBtnText?: string
   deleteBtnText?: string
   assigneeName?: string
@@ -42,6 +44,7 @@ export interface FullScreenReportModalProps {
   activated?: boolean
   subMenu?: Array<ReactNode>
   center?: React.ReactNode
+  subTitle?: React.ReactNode
   forceDesktopOperations?: boolean
   hideBackIcon?: boolean
   hideHeaderEdge?: boolean
@@ -61,6 +64,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
   onDelete,
   onClose,
   onCancel,
+  onTabChange,
 
   deleteBtnText,
   createBtnText,
@@ -73,12 +77,14 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
   activated,
   subMenu = [],
   center,
+  subTitle,
   forceDesktopOperations = false,
   hideBackIcon = false,
   hideHeaderEdge = false,
   children,
   className,
   onAssigneeClick,
+  customOptionBtn,
   ...props
 }) => {
   const ref = useRef(null)
@@ -122,10 +128,14 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                 }}
               />
             )}
-            {title}
+            <div className={styles.titleContainer}>
+              {title}
+              {!isMobile && subTitle ? subTitle : ''}
+            </div>
           </div>
           {center && <div className={styles.centeredItem}>{center}</div>}
           <div className={styles.fullScreenModalOps}>
+            {customOptionBtn && customOptionBtn}
             {operations.map((operation) => (
               <React.Fragment key={operation}>
                 {operation === OperationType.active && (
@@ -224,7 +234,16 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
 
         <div className={styles.fullScreenModalBody}>
           {subMenu.length > 0 && Array.isArray(children) ? (
-            <TabMenu menuItems={subMenu} tabPosition="top" minHeight="1px">
+            <TabMenu
+              menuItems={subMenu}
+              tabPosition="top"
+              minHeight="1px"
+              onTabClick={(e) => {
+                if (onTabChange) {
+                  onTabChange(e)
+                }
+              }}
+            >
               {children
                 ? children.map((child, i) => (
                     <div className={styles.tabPaneItem} key={i}>

@@ -78,6 +78,7 @@ interface TP {
   onChange?: (value) => void
   onFullChange?: (value) => void
   disabledTags: string[]
+  enabledTags?: string[]
   showTagButton?: boolean
   triggerTagDlg?: boolean
   triggerEmpty?: boolean
@@ -114,6 +115,7 @@ export const InputWithTags: FC<TP> = ({ ...props }) => {
     placeholder,
     valueWithTag,
     disabledTags,
+    enabledTags = [],
     showTagButton = true,
     triggerTagDlg = false,
     triggerEmpty = false,
@@ -129,6 +131,7 @@ export const InputWithTags: FC<TP> = ({ ...props }) => {
   const [showTagsDlg, setShowTagsDlg] = useState(false)
   const [selectedTag, setSelectedTag] = useState('')
   const [disabledTagIndexs, setDisabledTagIndexs] = useState<number[]>([])
+  // const [onlyEnabledTags, setOnlyEnabledTags] = useState<string[]>([])
   const [activeDefaultKey, setActiveDefaultKey] = useState('0')
   const [selectedEntityKey, setSeletecEntityKey] = useState('')
   const [selectedBlockKey, setSelectedBlockKey] = useState('')
@@ -146,6 +149,10 @@ export const InputWithTags: FC<TP> = ({ ...props }) => {
       .filter((item) => item !== -1)
     setDisabledTagIndexs(disableTagIndexArr)
   }, [disabledTags])
+
+  // useEffect(() => {
+  //   setOnlyEnabledTags(enabledTags)
+  // }, [enabledTags])
 
   useEffect(() => {
     if (valueWithTag === '') {
@@ -607,6 +614,7 @@ export const InputWithTags: FC<TP> = ({ ...props }) => {
         selectedTag={selectedTag}
         activeDefaultKey={activeDefaultKey}
         disabledTags={disabledTagIndexs}
+        onlyEnabledTags={enabledTags}
       />
     </div>
   )

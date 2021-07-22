@@ -1,15 +1,14 @@
-import React from 'react'
 import { render } from '@testing-library/react'
-
+import React from 'react'
 import FormType from './FormType'
 
 const setting = {
   medicalHistory: false,
   consent: false,
-  treatmentForm: false,
+  treatment: false,
   epaper: false,
-  presciption: false,
-  labForm: false,
+  prescription: false,
+  lab: false,
 }
 
 describe('FormType', () => {

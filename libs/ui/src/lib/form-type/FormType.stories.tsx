@@ -15,10 +15,10 @@ Formtype.args = {
   setting: {
     medicalHistory: false,
     consent: false,
-    treatmentForm: false,
+    treatment: false,
     epaper: false,
-    presciption: false,
-    labForm: false,
+    prescription: false,
+    lab: false,
   },
   onChangeSetting: (setting) => console.log(setting),
 }

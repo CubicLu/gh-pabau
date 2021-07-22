@@ -22,6 +22,8 @@ export interface AggregateQueryVariables {
 }
 
 export interface TableLayoutProps {
+  noDataText: string
+  tabName: string
   columns?: Column[]
   searchTerm?: string
   selectedDates?: Dayjs[]
@@ -29,6 +31,7 @@ export interface TableLayoutProps {
   selectedRange?: string
   listQuery?: (variable: QueryVariable) => QueryResult
   aggregateQuery?: (variable: AggregateQueryVariables) => QueryResult
+  setIsHealthcodeEnabled?: (value: boolean) => void
 }
 interface Column {
   title: string
@@ -46,6 +49,9 @@ const TableLayout: FC<TableLayoutProps> = ({
   selectedRange,
   listQuery,
   aggregateQuery,
+  noDataText,
+  tabName,
+  setIsHealthcodeEnabled,
 }) => {
   const [paginateData, setPaginateData] = useState({
     total: 0,
@@ -133,9 +139,15 @@ const TableLayout: FC<TableLayoutProps> = ({
       const tableRecords = data?.[Object.keys(data)[0]]
       const records = tableRecords?.map((d) => ({ ...d, key: d.id }))
       setTableData(records)
+      if (
+        (tabName === 'invoice' || tabName === 'debt') &&
+        tableRecords?.[0]?.isHealthcodeEnabled
+      ) {
+        setIsHealthcodeEnabled(true)
+      }
       setIsLoading(false)
     }
-  }, [data, loading])
+  }, [data, loading, setIsHealthcodeEnabled, tabName])
 
   useEffect(() => {
     if (aggregateData) {
@@ -170,6 +182,8 @@ const TableLayout: FC<TableLayoutProps> = ({
           loading={isLoading}
           pagination={false}
           dataSource={tableData}
+          searchTerm={searchTerm}
+          noDataText={noDataText}
         />
       </div>
       <Pagination

@@ -42,6 +42,9 @@ fragment InvSaleItem on InvSaleItem {
   Tax {
     ...TaxFields
   }
+  Product {
+    ...InvProductFields
+  }
 }
 
 mutation createOneInvSaleItem($data: InvSaleItemCreateInput!) {

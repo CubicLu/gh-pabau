@@ -3,6 +3,20 @@ import {
   ClientDetails,
   CustomTabMenu,
   ClientDashboardLayout,
+  ClientAppointmentsLayout,
+  ClientCommunicationsLayout,
+  ClientConsentsLayout,
+  ClientDocumentsLayout,
+  ClientFinancialsLayout,
+  ClientGiftVoucherLayout,
+  ClientLabTestsLayout,
+  ClientLoyaltyLayout,
+  ClientMedicalHistoryLayout,
+  ClientPackagesLayout,
+  ClientPhotosLayout,
+  ClientTaskLayout,
+  ClientTreatmentNotesLayout,
+  ClientVaccineHistoryLayout,
   Button,
   TabMenu,
   Avatar,
@@ -11,7 +25,7 @@ import {
 } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment'
-import { Modal, Popover, Input } from 'antd'
+import { Modal, Popover, Input, Badge, Drawer } from 'antd'
 import {
   RightOutlined,
   LeftOutlined,
@@ -21,10 +35,16 @@ import {
   HistoryOutlined,
   PlusOutlined,
   MoreOutlined,
+  FormOutlined,
+  DeleteOutlined,
+  UndoOutlined,
+  CheckCircleFilled,
+  SaveOutlined,
 } from '@ant-design/icons'
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useState, useEffect, useRef, ReactNode } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { useMedia } from 'react-use'
+import Confetti from 'react-confetti'
 import { ReactComponent as MedicalHistory } from '../../assets/images/client-card-ops/medical-history.svg'
 import { ReactComponent as Note } from '../../assets/images/client-card-ops/note.svg'
 import { ReactComponent as Alert } from '../../assets/images/client-card-ops/alert.svg'
@@ -53,9 +73,13 @@ import {
 const { TextArea } = Input
 
 interface PopoutProps {
-  id: string
+  receiverData: string
   type: string
-  clientId: string
+  client: {
+    id: string
+    name: string
+    email: string
+  }
   title: string
 }
 
@@ -86,6 +110,7 @@ export interface ClientCardProps {
   medicalConditions: string[]
   alerts: string[]
   onClose: () => void
+  FinancialTabComponent?: ReactNode
 }
 
 const ClientCardModal: FC<ClientCardProps> = ({
@@ -96,18 +121,21 @@ const ClientCardModal: FC<ClientCardProps> = ({
   medicalConditions,
   alerts,
   onClose,
+  FinancialTabComponent,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
+  const clientNotePopoverRef = useRef<HTMLDivElement>(null)
   const [init, setInit] = useState(false)
   const [client, setClient] = useState<ClientData>()
   const [search, setSearch] = useState(false)
   const [alert, setAlert] = useState('')
   const [note, setNote] = useState('')
+  const [currentNote, setCurrentNote] = useState('')
   const [noteItems, setNoteItems] = useState<ClientNote[]>([])
   const [alertItems, setAlertItems] = useState<string[]>([])
   const [addingAlert, setAddingAlert] = useState(false)
-  const [addingNote, setAddingNote] = useState(false)
+  const [currentClientNote, setCurrentClientNote] = useState(-1)
 
   const customTabMenutItem = (title, alert) => {
     return (
@@ -145,27 +173,48 @@ const ClientCardModal: FC<ClientCardProps> = ({
       children: [
         {
           key: 5,
-          content: 'EMR 1',
+          content: 'Medical History',
         },
         {
           key: 6,
-          content: 'EMR 2',
+          content: 'Treatment Notes',
+        },
+        {
+          key: 7,
+          content: 'Photos',
+        },
+        {
+          key: 8,
+          content: 'Documents',
+        },
+        {
+          key: 9,
+          content: 'Consents',
+        },
+        {
+          key: 10,
+          content: 'Lab Tests',
+        },
+        {
+          key: 11,
+          content: 'Vaccine History',
         },
       ],
     },
     {
-      key: 7,
+      key: 12,
       content: customTabMenutItem('Gift voucher', 15),
     },
     {
-      key: 8,
+      key: 13,
       content: customTabMenutItem('Loyalty', 7),
     },
     {
-      key: 9,
+      key: 14,
       content: customTabMenutItem('Tasks & Recalls', 8),
     },
   ]
+
   const [showMobileHeaderOps, setShowMobileHeaderOps] = useState(false)
   const [subOps, setSubOps] = useState(0)
   const [menuHeaderTitle, setMenuHeaderTitle] = useState(
@@ -183,21 +232,21 @@ const ClientCardModal: FC<ClientCardProps> = ({
     setAddingAlert(false)
   }
 
-  const handleAddNote = () => {
+  const handleAddNote = (e) => {
+    e.preventDefault()
     if (note !== '') {
       const items: ClientNote[] = [
-        ...noteItems,
         {
           content: note,
           date: moment().format('YYYY-MM-DD hh:mm A'),
           client: client?.fullName || '',
           avatar: client?.avatar || '',
         },
+        ...noteItems,
       ]
       setNoteItems(items)
       setNote('')
     }
-    setAddingNote(false)
   }
 
   const handleSearchSelect = (id) => {
@@ -229,6 +278,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
       name: t('dashboard.create.menu.item.treatment.title'),
       icon: <SvgTreatment className={styles.menuItemIcon} />,
       description: t('dashboard.create.menu.item.treatment.description'),
+      handler: () => handleCreatePopout('treatment'),
     },
     {
       name: t('dashboard.create.menu.item.request.title'),
@@ -239,6 +289,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
       name: t('dashboard.create.menu.item.prescription.title'),
       icon: <SvgPrescription className={styles.menuItemIcon} />,
       description: t('dashboard.create.menu.item.prescription.description'),
+      handler: () => handleCreatePopout('prescription'),
     },
     {
       name: t('dashboard.create.menu.item.appointment.title'),
@@ -246,15 +297,24 @@ const ClientCardModal: FC<ClientCardProps> = ({
       description: t('dashboard.create.menu.item.appointment.description'),
     },
     {
-      name: t('dashboard.create.menu.item.scale.title'),
+      name: t('dashboard.create.menu.item.sale.title'),
       icon: <SvgScale className={styles.menuItemIcon} />,
-      description: t('dashboard.create.menu.item.scale.description'),
+      description: t('dashboard.create.menu.item.sale.description'),
+    },
+    {
+      name: t('dashboard.create.menu.item.activity.title'),
+      icon: <SvgAppointment className={styles.menuItemIcon} />,
+    },
+    {
+      name: t('dashboard.create.menu.item.call.title'),
+      icon: <SvgCall className={styles.svgType} />,
     },
     {
       name: t('dashboard.create.menu.item.communication.title'),
       icon: <SvgCommunication className={styles.menuItemIcon} />,
       description: t('dashboard.create.menu.item.communication.description'),
       handler: onClickCommunication,
+      hasSubMenus: true,
     },
   ]
 
@@ -293,7 +353,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
           <div className={styles.menuTitle}>{data.name}</div>
           <div className={styles.menuDescription}>{data.description}</div>
         </div>
-        {data.handler && (
+        {data.hasSubMenus && (
           <RightOutlined
             style={{ fontSize: '12px', color: '#9292A3', marginLeft: '28px' }}
           />
@@ -319,10 +379,19 @@ const ClientCardModal: FC<ClientCardProps> = ({
     const popoutList = JSON.parse(
       window.localStorage.getItem('pabau_popout_list') || '[]'
     )
-    let item: PopoutProps = {
+    const defaultClient = {
       id: '',
+      name: 'Bruno Ballardin',
+      email: 'bruno.ballardin@exmaple.com',
+    }
+    let item: PopoutProps = {
+      receiverData: '',
       type: '',
-      clientId: '',
+      client: {
+        id: '',
+        name: '',
+        email: '',
+      },
       title: '',
     }
     switch (type) {
@@ -330,8 +399,8 @@ const ClientCardModal: FC<ClientCardProps> = ({
         item = {
           type,
           title: t('dashboard.create.modal.create.sms.title'),
-          id: uuidv4(),
-          clientId: '',
+          receiverData: uuidv4(),
+          client: defaultClient,
         }
         break
       }
@@ -339,8 +408,8 @@ const ClientCardModal: FC<ClientCardProps> = ({
         item = {
           type,
           title: t('dashboard.create.modal.create.email.title'),
-          id: uuidv4(),
-          clientId: '',
+          receiverData: uuidv4(),
+          client: defaultClient,
         }
         break
       }
@@ -348,8 +417,8 @@ const ClientCardModal: FC<ClientCardProps> = ({
         item = {
           type,
           title: t('dashboard.create.modal.create.letter.title'),
-          id: uuidv4(),
-          clientId: '',
+          receiverData: uuidv4(),
+          client: defaultClient,
         }
         break
       }
@@ -357,8 +426,26 @@ const ClientCardModal: FC<ClientCardProps> = ({
         item = {
           type,
           title: t('dashboard.create.modal.create.form.title'),
-          id: uuidv4(),
-          clientId: '',
+          receiverData: uuidv4(),
+          client: defaultClient,
+        }
+        break
+      }
+      case 'treatment': {
+        item = {
+          type,
+          title: t('dashboard.create.modal.create.form.title'),
+          receiverData: uuidv4(),
+          client: defaultClient,
+        }
+        break
+      }
+      case 'prescription': {
+        item = {
+          type,
+          title: t('dashboard.create.modal.create.prescript.title'),
+          receiverData: uuidv4(),
+          client: defaultClient,
         }
         break
       }
@@ -369,10 +456,10 @@ const ClientCardModal: FC<ClientCardProps> = ({
       JSON.stringify(items)
     )
     await window.localStorage.setItem('pabau_popout_item', JSON.stringify(item))
-    await window.localStorage.setItem(
-      'pabau_popout_fullscreen',
-      JSON.stringify(false)
-    )
+    // await window.localStorage.setItem(
+    //   'pabau_popout_fullscreen',
+    //   JSON.stringify(false)
+    // )
     await window.localStorage.setItem('pabau_popout_new', JSON.stringify(true))
     window.dispatchEvent(new Event('storage'))
 
@@ -388,6 +475,22 @@ const ClientCardModal: FC<ClientCardProps> = ({
         setMenuHeaderTitle(t('dashboard.create.menu.title.create'))
       }, 1000)
     }
+  }
+
+  const handleEditClientNote = () => {
+    const notes = [...noteItems]
+    if (currentNote) notes[currentClientNote].content = currentNote
+    setNoteItems(notes)
+    setCurrentNote('')
+    setCurrentClientNote(-1)
+  }
+
+  const handleDeleteClientNote = (index) => {
+    const notes = [...noteItems]
+    notes.splice(index, 1)
+    setNoteItems(notes)
+    setCurrentNote('')
+    setCurrentClientNote(-1)
   }
 
   useEffect(() => {
@@ -462,41 +565,78 @@ const ClientCardModal: FC<ClientCardProps> = ({
         menuItems={["Client's", "Appointment's"]}
       >
         <div className={styles.clientNotesTab}>
-          <div className={styles.clientNotesContainer}>
-            {noteItems.map((note, index) => (
+          <div
+            className={styles.clientNotesContainer}
+            ref={clientNotePopoverRef}
+          >
+            {noteItems.map((item, index) => (
               <div key={`client-${index}`} className={styles.clientNote}>
-                <div>
-                  <Avatar src={note.avatar} name={note.client} size={32} />
-                </div>
-                <div>
-                  <div className={styles.content}>{note.content}</div>
-                  <div className={styles.client}>{`By ${note.client}`}</div>
-                  <div className={styles.date}>{`On ${moment(note.date).format(
-                    'D MMM YYYY hh:mm A'
-                  )}`}</div>
-                </div>
+                {index !== currentClientNote && (
+                  <div className={styles.clientNoteItem}>
+                    <div>
+                      <Avatar src={item.avatar} name={item.client} size={32} />
+                    </div>
+                    <div>
+                      <div className={styles.content}>{item.content}</div>
+                      <div className={styles.client}>{`By ${item.client}`}</div>
+                      <div className={styles.date}>{`On ${moment(
+                        item.date
+                      ).format('D MMM YYYY hh:mm A')}`}</div>
+                    </div>
+                    <div>
+                      <Button
+                        type="primary"
+                        shape="circle"
+                        size="small"
+                        icon={<FormOutlined />}
+                        onClick={() => setCurrentClientNote(index)}
+                      />
+                      <Button
+                        danger
+                        icon={<DeleteOutlined />}
+                        shape="circle"
+                        size="small"
+                        onClick={() => handleDeleteClientNote(index)}
+                      />
+                    </div>
+                  </div>
+                )}
+                {index === currentClientNote && (
+                  <div className={styles.clientNoteItemEdit}>
+                    <TextArea
+                      defaultValue={item.content}
+                      onChange={(e) => setCurrentNote(e.target.value)}
+                      style={{ marginBottom: '8px' }}
+                    />
+                    <div className={styles.editOps}>
+                      <Button
+                        type="primary"
+                        shape="circle"
+                        size="small"
+                        icon={<SaveOutlined />}
+                        onClick={() => handleEditClientNote()}
+                      />
+                      <Button
+                        icon={<UndoOutlined />}
+                        shape="circle"
+                        size="small"
+                        onClick={() => setCurrentClientNote(-1)}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
           <div className={styles.clientNoteAdd}>
-            {addingNote && (
-              <TextArea
-                value={note}
-                autoFocus
-                onChange={(e) => setNote(e.target.value)}
-                onPressEnter={(_) => handleAddNote()}
-                onBlur={(_) => handleAddNote()}
-                style={{ marginBottom: '8px' }}
-              />
-            )}
-            <Button
-              icon={<PlusOutlined />}
-              type="primary"
-              block
-              onClick={() => setAddingNote(true)}
-            >
-              Create Note
-            </Button>
+            <TextArea
+              value={note}
+              placeholder="Take a note, @name"
+              autoFocus
+              onChange={(e) => setNote(e.target.value)}
+              onPressEnter={(e) => handleAddNote(e)}
+              style={{ marginBottom: '8px' }}
+            />
           </div>
         </div>
         <div className={styles.clientNotesTab}>
@@ -564,16 +704,35 @@ const ClientCardModal: FC<ClientCardProps> = ({
 
   const plusButtonContent = (
     <div>
-      <div className={styles.contentHeader}>
-        {isSubMenu && (
+      {!isMobile && (
+        <div className={styles.contentHeader}>
+          {isSubMenu && (
+            <LeftOutlined
+              style={{
+                fontSize: '12px',
+                color: '#9292A3',
+                marginRight: '16px',
+              }}
+              onClick={onBackToMainMenu}
+            />
+          )}
+          {menuHeaderTitle}
+        </div>
+      )}
+      {isMobile && isSubMenu && (
+        <div className={styles.contentHeaderMobile}>
           <LeftOutlined
-            style={{ fontSize: '12px', color: '#9292A3', marginRight: '16px' }}
+            style={{
+              fontSize: '12px',
+              color: '#9292A3',
+              marginRight: '16px',
+            }}
             onClick={onBackToMainMenu}
           />
-        )}
-        {menuHeaderTitle}
-      </div>
-      <div className={styles.divider} />
+          {t('dashboard.create.menu.title.communication')}
+        </div>
+      )}
+      {!isMobile && <div className={styles.divider} />}
       {!isSubMenu && (
         <div className={styles.plusContentItems}>
           {menuItems.map((mi) => {
@@ -599,138 +758,236 @@ const ClientCardModal: FC<ClientCardProps> = ({
       width={'100%'}
       wrapClassName={styles.clientCard}
     >
-      <div className={styles.clientCardContainer}>
-        <div className={styles.clientCardHeader}>
-          <div className={styles.clientCardHeaderTitle}>
-            <LeftOutlined
-              onClick={() => {
-                window.dispatchEvent(new Event('storage'))
-                onClose()
-              }}
-              className={styles.backToButton}
-            />
-            <div
-              className={styles.clientFullName}
-              onClick={() => !search && setSearch(true)}
-            >
-              {!search && `${client?.fullName}`}
-              {search && (
-                <Search
-                  searchResults={searchResults}
-                  resultSelectedHandler={(id) => handleSearchSelect(id)}
-                />
+      <>
+        {moment().format('MM/DD') ===
+          moment(clientData.dob).format('MM/DD') && (
+          <Confetti
+            recycle={false}
+            tweenDuration={60000}
+            numberOfPieces={1000}
+          />
+        )}
+        <div className={styles.clientCardContainer}>
+          <div className={styles.clientCardHeader}>
+            <div className={styles.clientCardHeaderTitle}>
+              <LeftOutlined
+                onClick={() => {
+                  window.dispatchEvent(new Event('storage'))
+                  onClose()
+                }}
+                className={styles.backToButton}
+              />
+              <div
+                className={styles.clientFullName}
+                onClick={() => !search && setSearch(true)}
+              >
+                {!search && `${client?.fullName}`}
+                {search && (
+                  <Search
+                    searchResults={searchResults}
+                    resultSelectedHandler={(id) => handleSearchSelect(id)}
+                  />
+                )}
+              </div>
+            </div>
+            <div className={styles.clientCardHeaderOps}>
+              {isMobile && (
+                <div className={styles.clientCardHeaderOp}>
+                  <Popover
+                    trigger="click"
+                    placement="bottomRight"
+                    overlayClassName={styles.mobileHeaderOps}
+                    content={mobileHeaderOps}
+                  >
+                    <div
+                      className={styles.moreButton}
+                      onClick={() => setShowMobileHeaderOps(true)}
+                    >
+                      <MoreOutlined />
+                    </div>
+                  </Popover>
+                </div>
+              )}
+              {!isMobile && (
+                <>
+                  <div className={styles.clientCardHeaderOp}>
+                    <Popover
+                      title={'Medical history'}
+                      placement="bottomRight"
+                      trigger="click"
+                      content={medicalHistoryPopover}
+                      overlayClassName={styles.clientCardHeaderPopover}
+                    >
+                      <Badge
+                        count={<CheckCircleFilled />}
+                        offset={[0, 18]}
+                        style={{ color: '#65cd98' }}
+                      >
+                        <MedicalHistory className={styles.headerOpsIcon} />
+                      </Badge>
+                    </Popover>
+                  </div>
+                  <div className={styles.clientCardHeaderOp}>
+                    <Popover
+                      title={'Notes'}
+                      placement="bottomRight"
+                      trigger="click"
+                      content={clientNotesPopover}
+                      overlayClassName={styles.clientCardHeaderPopover}
+                    >
+                      <Badge
+                        count={noteItems.length}
+                        overflowCount={9}
+                        size="small"
+                        style={{ backgroundColor: 'var(--primary-color)' }}
+                      >
+                        <Note className={styles.headerOpsIcon} />
+                      </Badge>
+                    </Popover>
+                  </div>
+                  <div className={styles.clientCardHeaderOp}>
+                    <Popover
+                      title={'Staff alerts'}
+                      placement="bottomRight"
+                      trigger="click"
+                      content={clientAlertsPopover}
+                      overlayClassName={styles.clientCardHeaderPopover}
+                    >
+                      <Badge
+                        count={alertItems.length}
+                        overflowCount={9}
+                        size="small"
+                        style={{ backgroundColor: 'var(--primary-color)' }}
+                      >
+                        <Alert className={styles.headerOpsIcon} />
+                      </Badge>
+                    </Popover>
+                  </div>
+                </>
               )}
             </div>
           </div>
-          <div className={styles.clientCardHeaderOps}>
-            {isMobile && (
-              <div className={styles.clientCardHeaderOp}>
-                <Popover
-                  trigger="click"
-                  placement="bottomRight"
-                  overlayClassName={styles.mobileHeaderOps}
-                  content={mobileHeaderOps}
-                >
-                  <div
-                    className={styles.moreButton}
-                    onClick={() => setShowMobileHeaderOps(true)}
-                  >
-                    <MoreOutlined />
-                  </div>
-                </Popover>
-              </div>
-            )}
+          <div className={styles.clientCardBody}>
+            <div className={styles.clientDetails}>
+              {client && <ClientDetails clientData={client} />}
+            </div>
+            <div className={styles.clientCardContent}>
+              <CustomTabMenu
+                tabPosition={isMobile ? 'top' : 'left'}
+                tabWidth={isMobile ? '160px' : '200px'}
+                tabItems={tabItems}
+                minHeight={isMobile ? '1px' : '750px'}
+              >
+                <div style={{ padding: '12px' }}>
+                  <ClientDashboardLayout
+                    nextAppointments={nextAppointments}
+                    medicalHistory={medicalHistory}
+                    medications={medications}
+                    products={products}
+                    tests={tests}
+                    alerts={alertItems}
+                    conversation={conversation}
+                  />
+                </div>
+                <div>
+                  <ClientAppointmentsLayout isEmpty={true} />
+                </div>
+                <div style={{ paddingBottom: 60 }}>
+                  {FinancialTabComponent ? (
+                    FinancialTabComponent
+                  ) : (
+                    <ClientFinancialsLayout />
+                  )}
+                </div>
+                <div>
+                  <ClientPackagesLayout isEmpty={true} />
+                </div>
+                <div>
+                  <ClientCommunicationsLayout isEmpty={true} />
+                </div>
+                <div>
+                  <ClientMedicalHistoryLayout isEmpty={true} />
+                </div>
+                <div>
+                  <ClientTreatmentNotesLayout isEmpty={true} />
+                </div>
+                <div>
+                  <ClientPhotosLayout isEmpty={true} />
+                </div>
+                <div>
+                  <ClientDocumentsLayout isEmpty={true} />
+                </div>
+                <div>
+                  <ClientConsentsLayout isEmpty={true} />
+                </div>
+                <div>
+                  <ClientLabTestsLayout isEmpty={true} />
+                </div>
+                <div>
+                  <ClientVaccineHistoryLayout isEmpty={true} />
+                </div>
+                <div>
+                  <ClientGiftVoucherLayout isEmpty={true} />
+                </div>
+                <div>
+                  <ClientLoyaltyLayout isEmpty={true} />
+                </div>
+                <div>
+                  <ClientTaskLayout isEmpty={true} />
+                </div>
+              </CustomTabMenu>
+            </div>
+          </div>
+          <div className={styles.clientCreateButton}>
             {!isMobile && (
-              <>
-                <div className={styles.clientCardHeaderOp}>
-                  <Popover
-                    title={'Medical history'}
-                    placement="bottomRight"
-                    trigger="click"
-                    content={medicalHistoryPopover}
-                    overlayClassName={styles.clientCardHeaderPopover}
-                  >
-                    <MedicalHistory className={styles.headerOpsIcon} />
-                  </Popover>
-                </div>
-                <div className={styles.clientCardHeaderOp}>
-                  <Popover
-                    title={'Notes'}
-                    placement="bottomRight"
-                    trigger="click"
-                    content={clientNotesPopover}
-                    overlayClassName={styles.clientCardHeaderPopover}
-                  >
-                    <Note className={styles.headerOpsIcon} />
-                  </Popover>
-                </div>
-                <div className={styles.clientCardHeaderOp}>
-                  <Popover
-                    title={'Staff alerts'}
-                    placement="bottomRight"
-                    trigger="click"
-                    content={clientAlertsPopover}
-                    overlayClassName={styles.clientCardHeaderPopover}
-                  >
-                    <Alert className={styles.headerOpsIcon} />
-                  </Popover>
-                </div>
-              </>
+              <Popover
+                placement="topRight"
+                content={plusButtonContent}
+                overlayClassName={styles.plusButtonContent}
+                trigger="click"
+                onVisibleChange={onChangeVisibleHanlder}
+                visible={isOpenMenu}
+              >
+                <Button type="primary" className={styles.createButton}>
+                  <PlusOutlined />
+                </Button>
+              </Popover>
+            )}
+            {isMobile && (
+              <Button
+                type="primary"
+                className={styles.createButton}
+                onClick={() => setIsOpenMenu(true)}
+              >
+                <PlusOutlined />
+              </Button>
             )}
           </div>
-        </div>
-        <div className={styles.clientCardBody}>
-          <div className={styles.clientDetails}>
-            {client && <ClientDetails clientData={client} />}
-          </div>
-          <div className={styles.clientCardContent}>
-            <CustomTabMenu
-              tabPosition={isMobile ? 'top' : 'left'}
-              tabWidth={isMobile ? '160px' : '200px'}
-              tabItems={tabItems}
-              minHeight={isMobile ? '1px' : '750px'}
-            >
-              <div style={{ padding: '24px' }}>
-                <ClientDashboardLayout
-                  nextAppointments={nextAppointments}
-                  medicalHistory={medicalHistory}
-                  medications={medications}
-                  products={products}
-                  tests={tests}
-                  alerts={alertItems}
-                  conversation={conversation}
-                />
-              </div>
-              <div>Appointments Content</div>
-              <div>Financials Content</div>
-              <div>Packages Content</div>
-              <div>Communications Content</div>
-              <div>EMR Content 1</div>
-              <div>EMR Content 2</div>
-              <div>Gift voucher Content</div>
-              <div>Loyalty Content</div>
-              <div>Tasks & Recalls Content</div>
-            </CustomTabMenu>
+          <div className={styles.stickyPopoutContainer}>
+            <StickyPopout />
           </div>
         </div>
-        <div className={styles.clientCreateButton}>
-          <Popover
-            placement="topRight"
-            content={plusButtonContent}
-            overlayClassName={styles.plusButtonContent}
-            trigger="click"
-            onVisibleChange={onChangeVisibleHanlder}
+        {isMobile && (
+          <Drawer
             visible={isOpenMenu}
+            placement="bottom"
+            closable={false}
+            onClose={() => setIsOpenMenu(false)}
+            className={styles.createContentMobile}
           >
-            <Button type="primary" className={styles.createButton}>
-              <PlusOutlined />
-            </Button>
-          </Popover>
-        </div>
-        <div className={styles.stickyPopoutContainer}>
-          <StickyPopout />
-        </div>
-      </div>
+            <div className={styles.createContentMobileHeader}>
+              <div
+                className={styles.handler}
+                onClick={() => setIsOpenMenu(false)}
+              />
+              <div className={styles.title}>Create</div>
+            </div>
+            <div className={styles.createContentMobileBody}>
+              {plusButtonContent}
+            </div>
+          </Drawer>
+        )}
+      </>
     </Modal>
   )
 }

@@ -1,10 +1,10 @@
 import React, { FC, ReactNode, useEffect, useState } from 'react'
 import { Popover, Tree } from 'antd'
 import styles from './Timeline.module.less'
-import { Button, DatePicker } from '@pabau/ui'
+import { Button, RangePicker } from '@pabau/ui'
 import { Dayjs } from 'dayjs'
 import { useTranslation } from 'react-i18next'
-import { types, statuses } from '@pabau/ui'
+import { types, statuses } from './Timeline'
 
 export interface TimelineFilterProps {
   children?: ReactNode
@@ -30,7 +30,6 @@ export const TimelineFilter: FC<TimelineFilterProps> = ({
   const { t } = useTranslation('common')
   const [selectedKey, setSelectedKey] = useState<string[]>([])
   const [date, setDate] = useState<Dayjs[]>([])
-  const { RangePicker } = DatePicker
 
   useEffect(() => {
     setSelectedKey(selectedFilterKey)

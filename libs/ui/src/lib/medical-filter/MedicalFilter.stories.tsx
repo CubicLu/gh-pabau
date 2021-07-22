@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import MedicalFilter, { MedicalFilterType } from './MedicalFilter'
 
 export default {
@@ -39,16 +39,16 @@ export default {
     consent: {
       control: { type: 'boolean' },
     },
-    treatmentForm: {
+    treatment: {
       control: { type: 'boolean' },
     },
     epaper: {
       control: { type: 'boolean' },
     },
-    presciption: {
+    prescription: {
       control: { type: 'boolean' },
     },
-    labForm: {
+    lab: {
       control: { type: 'boolean' },
     },
   },
@@ -59,10 +59,10 @@ const defaultFilter = {
   status: 'require_setup',
   medicalHistory: false,
   consent: false,
-  treatmentForm: false,
+  treatment: false,
   epaper: false,
-  presciption: false,
-  labForm: false,
+  prescription: false,
+  lab: false,
 }
 
 interface MedicalFilterStoryProps {
@@ -70,10 +70,10 @@ interface MedicalFilterStoryProps {
   status: 'active' | 'inactive' | 'require_setup'
   medicalHistory: boolean
   consent: boolean
-  treatmentForm: boolean
+  treatment: boolean
   epaper: boolean
-  presciption: boolean
-  labForm: boolean
+  prescription: boolean
+  lab: boolean
 }
 
 const MedicalFilterStory: FC<MedicalFilterStoryProps> = (props) => {
@@ -82,10 +82,10 @@ const MedicalFilterStory: FC<MedicalFilterStoryProps> = (props) => {
     status,
     medicalHistory,
     consent,
-    treatmentForm,
+    treatment,
     epaper,
-    presciption,
-    labForm,
+    prescription,
+    lab,
   } = props
   const [filter, setFilter] = useState<MedicalFilterType>({
     language,
@@ -93,10 +93,10 @@ const MedicalFilterStory: FC<MedicalFilterStoryProps> = (props) => {
     formtype: {
       medicalHistory,
       consent,
-      treatmentForm,
+      treatment,
       epaper,
-      presciption,
-      labForm,
+      prescription,
+      lab,
     },
   })
   useEffect(() => {
@@ -106,10 +106,10 @@ const MedicalFilterStory: FC<MedicalFilterStoryProps> = (props) => {
       formtype: {
         medicalHistory,
         consent,
-        treatmentForm,
+        treatment,
         epaper,
-        presciption,
-        labForm,
+        prescription,
+        lab,
       },
     }
     setFilter(tempFilter)
@@ -118,10 +118,10 @@ const MedicalFilterStory: FC<MedicalFilterStoryProps> = (props) => {
     status,
     medicalHistory,
     consent,
-    treatmentForm,
+    treatment,
     epaper,
-    presciption,
-    labForm,
+    prescription,
+    lab,
   ])
   return (
     <MedicalFilter filter={filter} onApply={(filter) => console.log(filter)} />

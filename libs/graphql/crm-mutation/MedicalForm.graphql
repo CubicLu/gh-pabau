@@ -26,10 +26,17 @@ fragment MedicalFormFields on MedicalForm {
   diagnosis_code_enabled
   lab_id
   is_private
+  advanced_setting
 }
 
 fragment MedicalForm on MedicalForm {
   ...MedicalFormFields
+  Company {
+    ...CompanyFields
+  }
+  MedicalFormAdvancedSetting {
+    ...MedicalFormAdvancedSettingFields
+  }
 }
 
 mutation createOneMedicalForm($data: MedicalFormCreateInput!) {

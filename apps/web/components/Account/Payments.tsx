@@ -32,8 +32,13 @@ const Payments: FC<PaymentProps> = ({
       title: t('account.finance.payments.columns.invoiceNo'),
       dataIndex: 'invoiceNo',
       visible: true,
-      width: '100px',
+      width: '120px',
       skeletonWidth: '80px',
+      render: function render(data) {
+        return (
+          <Typography.Text style={{ color: '#54B2D3' }}>{data}</Typography.Text>
+        )
+      },
     },
     {
       title: t('account.finance.payments.columns.location'),
@@ -47,6 +52,7 @@ const Payments: FC<PaymentProps> = ({
       dataIndex: 'invDate',
       className: 'drag-visible',
       skeletonWidth: '80px',
+      width: '120px',
       visible: true,
       render: function render(data) {
         return <Typography.Text>{data.split('T')[0]}</Typography.Text>
@@ -69,6 +75,7 @@ const Payments: FC<PaymentProps> = ({
       dataIndex: 'amount',
       className: 'drag-visible',
       skeletonWidth: '80px',
+      width: '100px',
       visible: true,
       render: function render(amount) {
         return <Typography.Text>£{amount}</Typography.Text>
@@ -80,7 +87,7 @@ const Payments: FC<PaymentProps> = ({
       className: 'drag-visible',
       skeletonWidth: '50px',
       visible: true,
-      width: '100px',
+      width: '180px',
     },
     {
       title: t('account.finance.payments.columns.user'),
@@ -99,6 +106,8 @@ const Payments: FC<PaymentProps> = ({
       selectedRange={selectedRange}
       listQuery={usePaymentsQuery}
       aggregateQuery={usePaymentCountQuery}
+      noDataText={t('account.finance.payments.empty.data.text')}
+      tabName="payment"
     />
   )
 }

@@ -1,5 +1,4 @@
 module.exports = {
-  reporters: ['jest-silent-reporter'],
   projects: [
     '<rootDir>/apps/web',
     '<rootDir>/libs/ui',

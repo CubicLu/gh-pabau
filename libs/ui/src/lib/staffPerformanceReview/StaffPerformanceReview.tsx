@@ -1,17 +1,17 @@
 import React, { FC, ReactNode, useState } from 'react'
 import { Steps, DatePicker, Dropdown, Menu, Tooltip } from 'antd'
 import classNames from 'classnames'
-
 import {
   FileSearchOutlined,
   TeamOutlined,
   MailOutlined,
 } from '@ant-design/icons'
-import dateFormat from 'dateformat'
-import moment from 'moment'
+import dateFormat from 'dateformat' //TODO: remove this
+import moment from 'moment' //TODO: replace this
 import { Button } from '@pabau/ui'
 import styles from './StaffPerformanceReview.module.less'
 import { ClockCircleOutlined } from '@ant-design/icons/lib'
+
 const { Step } = Steps
 
 interface P {

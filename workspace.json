@@ -64,7 +64,7 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/web/jest.config.js",
-            "passWithNoTests": true
+            "runInBand": true
           }
         },
         "deploy": {
@@ -167,7 +167,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/ui/jest.config.js",
-            "passWithNoTests": true
+            "passWithNoTests": true,
+            "runInBand": true
           }
         },
         "storybook": {
@@ -274,7 +275,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/yup/jest.config.js",
-            "passWithNoTests": true
+            "passWithNoTests": true,
+            "runInBand": true
           }
         },
         "tsc": {
@@ -302,7 +304,8 @@
             "outputPath": "dist/apps/backend",
             "main": "apps/backend/src/main.ts",
             "tsConfig": "apps/backend/tsconfig.app.json",
-            "assets": ["apps/backend/src/assets"]
+            "assets": ["apps/backend/src/assets"],
+            "maxWorkers": 1
           },
           "configurations": {
             "production": {
@@ -334,7 +337,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/backend/jest.config.js",
-            "passWithNoTests": true
+            "passWithNoTests": true,
+            "runInBand": true
           }
         },
         "deploy-docker": {
@@ -404,7 +408,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/mgmt/jest.config.js",
-            "passWithNoTests": true
+            "passWithNoTests": true,
+            "runInBand": true
           }
         },
         "deploy": {
@@ -510,7 +515,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/connect/jest.config.js",
-            "passWithNoTests": true
+            "passWithNoTests": true,
+            "runInBand": true
           }
         },
         "deploy": {
@@ -571,76 +577,6 @@
         }
       }
     },
-    "mobile": {
-      "root": "apps/mobile",
-      "sourceRoot": "apps/mobile/src",
-      "projectType": "application",
-      "schematics": {},
-      "architect": {
-        "start": {
-          "builder": "@nrwl/react-native:start",
-          "options": {
-            "port": 8081
-          }
-        },
-        "serve": {
-          "builder": "@nrwl/workspace:run-commands",
-          "options": {
-            "command": "nx start mobile"
-          }
-        },
-        "run-ios": {
-          "builder": "@nrwl/react-native:run-ios",
-          "options": {}
-        },
-        "bundle-ios": {
-          "builder": "@nrwl/react-native:bundle",
-          "outputs": ["apps/mobile/build"],
-          "options": {
-            "entryFile": "apps/mobile/src/main.tsx",
-            "platform": "ios",
-            "bundleOutput": "dist/apps/mobile/ios/main.bundle"
-          }
-        },
-        "run-android": {
-          "builder": "@nrwl/react-native:run-android",
-          "options": {}
-        },
-        "build-android": {
-          "builder": "@nrwl/react-native:build-android",
-          "outputs": [
-            "apps/mobile/android/app/build/outputs/bundle",
-            "apps/mobile/android/app/build/outputs/apk"
-          ],
-          "options": {}
-        },
-        "bundle-android": {
-          "builder": "@nrwl/react-native:bundle",
-          "options": {
-            "entryFile": "apps/mobile/src/main.tsx",
-            "platform": "android",
-            "bundleOutput": "dist/apps/mobile/android/main.bundle"
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/mobile/**/*.{js,ts,tsx}"]
-          }
-        },
-        "sync-deps": {
-          "builder": "@nrwl/react-native:sync-deps",
-          "options": {}
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/mobile/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
     "bridge-api": {
       "root": "apps/bridge-api",
       "sourceRoot": "apps/bridge-api/src",
@@ -697,7 +633,7 @@
           "outputs": ["coverage/apps/bridge-api"],
           "options": {
             "jestConfig": "apps/bridge-api/jest.config.js",
-            "passWithNoTests": true
+            "runInBand": true
           }
         },
         "e2e": {
@@ -705,7 +641,7 @@
           "outputs": ["coverage/apps/bridge-api-e2e"],
           "options": {
             "jestConfig": "apps/bridge-api/jest.e2e.config.js",
-            "passWithNoTests": true
+            "runInBand": true
           }
         },
         "deploy-docker": {
@@ -746,7 +682,8 @@
           "outputs": ["coverage/libs/i18n"],
           "options": {
             "jestConfig": "libs/i18n/jest.config.js",
-            "passWithNoTests": true
+            "passWithNoTests": true,
+            "runInBand": true
           }
         },
         "tsc": {
@@ -788,7 +725,8 @@
           "outputs": ["coverage/apps/bridge-proxy"],
           "options": {
             "jestConfig": "apps/bridge-proxy/jest.config.js",
-            "passWithNoTests": true
+            "passWithNoTests": true,
+            "runInBand": true
           }
         },
         "deploy-docker": {

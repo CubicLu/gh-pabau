@@ -184,6 +184,7 @@
       grid-column-gap: 14px;
       border-bottom: 1px solid var(--border-color-base);
       padding: 10px 0;
+      cursor: pointer;
       > div {
         &:nth-child(2) {
           .name {
@@ -204,16 +205,28 @@
         }
         &:nth-child(3) {
           display: flex;
+          flex-direction: column;
           justify-content: flex-end;
           align-items: flex-end;
           font-family: var(--font-family);
           font-size: 12px;
           line-height: 16px;
           color: var(--light-grey-color);
+          > span:first-child {
+            margin-bottom: 8px;
+          }
         }
       }
       &:last-child {
         border-bottom: none;
+      }
+      &:hover {
+        background-color: #eef7fb;
+        > div:nth-child(2) {
+          .name {
+            color: var(--primary-color);
+          }
+        }
       }
     }
   }
@@ -269,5 +282,25 @@
     &:last-child {
       margin-bottom: 0;
     }
+  }
+}
+
+.noTicketItemImage {
+  width: 20px;
+  height: 20px;
+  position: relative;
+  .circle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #eef7fb;
+  }
+  .icon {
+    position: absolute;
+    bottom: 0;
+    right: 2px;
   }
 }

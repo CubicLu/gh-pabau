@@ -28,10 +28,13 @@ export const interceptors = {
     return true
   }),
   interceptAccessToCompanyData: rule('interceptAccessToCompanyData')(
-    (_root, args, ctx: Context) => {
-      args.where = {
-        ...args.where,
-        company_id: { equals: ctx.authenticated.company },
+    (_root, args, ctx: Context, { fieldName, returnType }) => {
+      if (!fieldName.includes('findUnique')) {
+        args.where = {
+          ...args.where,
+          company_id: { equals: ctx.authenticated.company },
+        }
+        return true
       }
       return true
     }
@@ -46,7 +49,7 @@ export const interceptors = {
     }
   ),
   injectUser: rule('injectUser')((_root, args, ctx: Context) => {
-    if (args.data.User) {
+    if (args?.data?.User) {
       args.data = {
         ...args.data,
         User: {

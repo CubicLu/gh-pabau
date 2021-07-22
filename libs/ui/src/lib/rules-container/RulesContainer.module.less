@@ -281,6 +281,22 @@
               width: 100%;
             }
           }
+          .dueDateCustom {
+            display: flex;
+            :global {
+              .ant-input-number,
+              .ant-select {
+                width: 25% !important;
+              }
+            }
+          }
+          .dueDatePredefined {
+            :global {
+              .ant-select {
+                width: 50% !important;
+              }
+            }
+          }
         }
         .progIfLine {
           top: 36px;
@@ -414,5 +430,11 @@
       padding: 10px 0px;
       margin-bottom: 15px;
     }
+  }
+}
+
+:global {
+  .styleForStaticOption {
+    border-bottom: 1px solid #ccc;
   }
 }

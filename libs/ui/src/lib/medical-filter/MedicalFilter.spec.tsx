@@ -1,6 +1,5 @@
-import React from 'react'
 import { render } from '@testing-library/react'
-
+import React from 'react'
 import MedicalFilter, { MedicalFilterType } from './MedicalFilter'
 
 const defaultFilter: MedicalFilterType = {
@@ -9,10 +8,10 @@ const defaultFilter: MedicalFilterType = {
   formtype: {
     medicalHistory: false,
     consent: false,
-    treatmentForm: false,
+    treatment: false,
     epaper: false,
-    presciption: false,
-    labForm: false,
+    prescription: false,
+    lab: false,
   },
 }
 

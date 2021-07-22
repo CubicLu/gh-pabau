@@ -1,0 +1,89 @@
+.requestPaymentContainer {
+  width: 100%;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 20px min-content 12px;
+  grid-column-gap: 4px;
+  align-items: center;
+  > div {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    color: var(--light-grey-color);
+    &:nth-child(1) {
+      font-size: 18px;
+    }
+    &:nth-child(2) {
+      font-size: 14px;
+      white-space: nowrap;
+    }
+    &:nth-child(3) {
+      font-size: 14px;
+    }
+  }
+}
+
+.requestPaymentPopover {
+  :global {
+    .ant-popover-content {
+      .ant-popover-inner {
+        .ant-popover-inner-content {
+          padding: 0;
+        }
+      }
+    }
+  }
+}
+
+.requestPaymentPopoverContent {
+  padding: 24px;
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .fullName {
+    margin-top: 4px;
+    font-family: var(--font-family);
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--grey-text-color);
+    text-align: center;
+  }
+  .linkContainer {
+    margin-top: 8px;
+    height: 24px;
+    display: flex;
+    .link {
+      font-family: var(--font-family);
+      font-size: 14px;
+      line-height: 24px;
+      color: #b8b8c0;
+      margin-right: 4px;
+    }
+    .copyIcon {
+      font-size: 16px;
+      color: #CFCFD7;
+      cursor: pointer;
+    }
+  }
+  .amountContainer {
+    margin-top: 12px;
+    margin-bottom: 24px;
+    display: flex;
+    .amountInput {
+      width: 100px;
+    }
+    .amount {
+      font-family: var(--font-family);
+      font-size: 20px;
+      line-height: 32px;
+      color: #65cd98;
+      margin-right: 4px;
+    }
+    .editIcon {
+      font-size: 16px;
+      color: #CFCFD7;
+      cursor: pointer;
+    }
+  }
+}
