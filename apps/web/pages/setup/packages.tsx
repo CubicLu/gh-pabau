@@ -1,11 +1,11 @@
 import { NextPage } from 'next'
 import React from 'react'
-import Iframe from '../../components/Iframe'
+import LegacyPage from '../../components/LegacyPage'
 import Layout from '../../components/Layout/Layout'
 
 const PackagesPage: NextPage = () => (
   <Layout pageTitle="Packages">
-    <Iframe urlPath="/index.php?p=packages&noheader&pab2" />
+    <LegacyPage urlPath="/index.php?p=packages&noheader&pab2" />
   </Layout>
 )
 
