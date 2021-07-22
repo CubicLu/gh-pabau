@@ -15,6 +15,7 @@ import {
   useFindMedicalFormsQuery,
   useFindMessageTemplateQuery,
   useFindUserQuery,
+  useGetBussinessDetailsQuery,
   UserOrderByInput,
   UserWhereInput,
   useUpdateOneMedicalFormMutation,
@@ -34,7 +35,7 @@ import {
   TabMenu,
   UserListItem,
 } from '@pabau/ui'
-import { Input, Select, Typography } from 'antd'
+import { Input, Typography } from 'antd'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 import React, { FC, useEffect, useMemo, useState } from 'react'
@@ -45,7 +46,6 @@ import Library from '../../../components/MedicalForms/Library'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
 const { Title } = Typography
-const { Option } = Select
 
 enum Tab {
   Custom = '0',
@@ -56,6 +56,7 @@ export const Index: FC = () => {
   const [hideBanner, setHideBanner] = useState(false)
   const [currentTab, setCurrentTab] = useState('0')
   const [query, setQuery] = useState('')
+  const [companyDateFormat, setCompanyDateFormat] = useState('d/m/Y')
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [medicalFormItems, setMedicalFormItems] = useState<MedicalFormItem[]>(
     []
@@ -66,7 +67,12 @@ export const Index: FC = () => {
   const [emailMessageTemplateItems, setEmailMessageTemplateItems] = useState<
     EmailMessageTemplateItem[]
   >([])
-  const [userListItems, setUserListItems] = useState<UserListItem[]>([])
+  const [userListItems, setUserListItems] = useState<UserListItem[]>([
+    {
+      id: 0,
+      full_name: 'Appointment owner',
+    },
+  ])
 
   const [paginateData, setPaginateData] = useState({
     total: 0,
@@ -77,7 +83,6 @@ export const Index: FC = () => {
   })
 
   const [searchData, setSearchrData] = useState({
-    formType: '',
     searchValue: '',
     sortName: 'created_at',
     sortOrder: SortOrder.Desc,
@@ -92,9 +97,6 @@ export const Index: FC = () => {
       { user_deleted: { equals: 0 } },
       { name: { not: { equals: '' } } }
     )
-    if (searchData.formType !== '') {
-      whereQuery.AND.push({ form_type: { equals: searchData.formType } })
-    }
 
     if (searchData.searchValue !== '') {
       whereQuery.AND.push({ name: { contains: searchData.searchValue } })
@@ -115,7 +117,12 @@ export const Index: FC = () => {
     return queryOptions
   }, [paginateData.take, paginateData.skip, searchData])
 
-  const medicalForms = useFindMedicalFormsQuery(getQueryVariables)
+  const businessDetails = useGetBussinessDetailsQuery()
+  // const medicalForms = useFindMedicalFormsQuery(getQueryVariables)
+  const {
+    data: medicalForms,
+    loading: loadingMedicalForms,
+  } = useFindMedicalFormsQuery(getQueryVariables)
 
   const medicalFormsCount = useFindMedicalFormsCountQuery(getQueryVariables)
 
@@ -172,15 +179,21 @@ export const Index: FC = () => {
   const userLists = useFindUserQuery(getUserListQueryVariables)
 
   useEffect(() => {
-    if (medicalForms.data?.findManyMedicalForm) {
-      const medicalFormList = medicalForms.data?.findManyMedicalForm.map(
+    if (businessDetails?.data?.company?.details?.date_format)
+      setCompanyDateFormat(businessDetails?.data?.company?.details?.date_format)
+  }, [businessDetails])
+
+  useEffect(() => {
+    if (medicalForms?.findManyMedicalForm) {
+      const medicalFormList = medicalForms?.findManyMedicalForm.map(
         (medicalForm, index) => ({
           key: medicalForm.id.toString(),
           name: medicalForm.name,
           formType: medicalForm.form_type,
-          createdAt: dayjs(medicalForm.created_at).format(
-            'YYYY-MM-DD HH:mm:ss'
-          ),
+          createdAt:
+            companyDateFormat === 'd/m/Y'
+              ? dayjs(medicalForm.created_at).format('DD/MM/YYYY HH:mm:ss')
+              : dayjs(medicalForm.created_at).format('MM/DD/YYYY HH:mm:ss'),
           version: {
             currentVersion: '3',
             history: {
@@ -211,7 +224,7 @@ export const Index: FC = () => {
       )
       setMedicalFormItems(medicalFormList)
     }
-  }, [medicalForms])
+  }, [medicalForms, companyDateFormat])
 
   useEffect(() => {
     if (medicalFormsCount.data?.findManyMedicalFormCount) {
@@ -254,6 +267,10 @@ export const Index: FC = () => {
         id: user.id,
         full_name: user.full_name,
       }))
+      userList.splice(0, 0, {
+        id: 0,
+        full_name: 'Appointment owner',
+      })
       setUserListItems(userList)
     }
   }, [userLists])
@@ -301,6 +318,7 @@ export const Index: FC = () => {
               : medicalItem.formType,
         },
         updated_at: { set: dayjs() },
+        MedicalFormAdvancedSetting: {},
       },
     }
 
@@ -328,6 +346,7 @@ export const Index: FC = () => {
         diagnosis_code_enabled: 0,
         lab_id: 0,
         Company: {},
+        MedicalFormAdvancedSetting: {},
       },
     }
 
@@ -445,61 +464,6 @@ export const Index: FC = () => {
               <>
                 <div className={styles.medicalFormsSearch}>
                   <div>
-                    <Select
-                      defaultValue={searchData.formType}
-                      style={{ width: 150 }}
-                      onChange={(e) => changeSearchData({ formType: e })}
-                    >
-                      <Option value="">{t('ui.searchtag.selectall')}</Option>
-                      <Option value="consent">
-                        {t('ui.medicalformbuilder.form.type.consent')}
-                      </Option>
-                      <Option value="treatment">
-                        {t('ui.medicalformbuilder.form.type.treatment')}
-                      </Option>
-                      <Option value="prescription">
-                        {t('ui.medicalformbuilder.form.type.prescription')}
-                      </Option>
-                      <Option value="epaper">
-                        {t('ui.medicalformbuilder.form.type.epaper')}
-                      </Option>
-                      <Option value="questionnaire">
-                        {t('ui.medicalformbuilder.form.type.medicalhistory')}
-                      </Option>
-                      <Option value="lab">
-                        {t('ui.medicalformbuilder.form.type.lab')}
-                      </Option>
-                    </Select>
-                  </div>
-                  <div>
-                    <Select
-                      defaultValue={searchData.sortName}
-                      style={{ width: 150 }}
-                      onChange={(e) => changeSearchData({ sortName: e })}
-                    >
-                      <Option value="created_at">
-                        {t('setup.medical.forms.columns.createdDate')}
-                      </Option>
-                      <Option value="name">
-                        {t('ui.medicalformbuilder.form.name')}
-                      </Option>
-                    </Select>
-                  </div>
-                  <div>
-                    <Select
-                      defaultValue={searchData.sortOrder}
-                      style={{ width: 120 }}
-                      onChange={(e) => changeSearchData({ sortOrder: e })}
-                    >
-                      <Option value={SortOrder.Asc}>
-                        {t('setup.medical.forms.search.asc')}
-                      </Option>
-                      <Option value={SortOrder.Desc}>
-                        {t('setup.medical.forms.search.desc')}
-                      </Option>
-                    </Select>
-                  </div>
-                  <div>
                     <Input
                       value={searchData.searchValue}
                       onChange={(e) =>
@@ -536,6 +500,9 @@ export const Index: FC = () => {
                 onHideFormBuilder={() => setShowCreateForm(false)}
                 onSaveForm={saveForm}
                 create={true}
+                smsMessageTemplateItems={smsMessageTemplateItems}
+                emailMessageTemplateItems={emailMessageTemplateItems}
+                userListItems={userListItems}
               />
             )}
           </div>
@@ -550,6 +517,7 @@ export const Index: FC = () => {
           onTabClick={(key) => setCurrentTab(key)}
         >
           <Custom
+            isLoading={loadingMedicalForms}
             medicalFormItems={medicalFormItems}
             smsMessageTemplateItems={smsMessageTemplateItems}
             emailMessageTemplateItems={emailMessageTemplateItems}

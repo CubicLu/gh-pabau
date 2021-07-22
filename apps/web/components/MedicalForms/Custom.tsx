@@ -40,6 +40,7 @@ interface Paginate {
 }
 
 interface CustomProps {
+  isLoading: boolean
   medicalFormItems: MedicalFormItem[]
   smsMessageTemplateItems: SmsMessageTemplateItem[]
   emailMessageTemplateItems: EmailMessageTemplateItem[]
@@ -50,6 +51,7 @@ interface CustomProps {
 }
 
 const Custom: FC<CustomProps> = ({
+  isLoading = true,
   medicalFormItems,
   smsMessageTemplateItems,
   emailMessageTemplateItems,
@@ -349,8 +351,10 @@ const Custom: FC<CustomProps> = ({
         />
       )}
       <Table
-        draggable
+        loading={isLoading}
+        draggable={!isLoading}
         dataSource={medicalFormItems as never[]}
+        noDataText={'No Data'}
         columns={columns}
         pagination={false}
         isHover={true}

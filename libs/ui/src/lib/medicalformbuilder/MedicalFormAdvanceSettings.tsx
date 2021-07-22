@@ -7,7 +7,6 @@ import {
   InputNumber,
   Radio,
   Row,
-  Select,
   Typography,
 } from 'antd'
 import classNames from 'classnames'
@@ -27,18 +26,7 @@ const MedicalFormAdvanceSettings: FC<P> = ({
   const { t } = useTranslation('common')
   const { Title } = Typography
   const { TextArea } = Input
-  const { Option } = Select
 
-  const [languageForms] = useState([
-    {
-      id: 1,
-      name: 'Medical Form Upload & Creation',
-    },
-    {
-      id: 2,
-      name: 'Medicale Bonjour le Upload',
-    },
-  ])
   const [headings, setHeadings] = useState('use_to_separate')
   const [submitButtonLabel, setSubmitButtonLabel] = useState(
     formSaveLabel === '' ? t('ui.medicalformbuilder.form.save') : formSaveLabel
@@ -56,12 +44,8 @@ const MedicalFormAdvanceSettings: FC<P> = ({
   const [cardNo, setCardNo] = useState('')
   const [cardExp, setCardExp] = useState('')
   const [cardCvv, setCardCvv] = useState('')
-  const [selectedLanguageForm, setSelectedLanguageForm] = useState(1)
   const [selectedLanguage, setSelectedLanguage] = useState('English (UK)')
 
-  const onChangeLanguageForm = (form) => {
-    setSelectedLanguageForm(form)
-  }
   const onChangeLanguage = (val) => {
     setSelectedLanguage(val)
   }
@@ -97,30 +81,11 @@ const MedicalFormAdvanceSettings: FC<P> = ({
         </Title>
         <div className={styles.formGroup}>
           <p>{t('ui.medicalformbuilder.advanced.lang.description')}</p>
-          <div className={styles.selectedLanguageContainer}>
-            <div className={styles.selectedLanguage}>
-              <div className={styles.left}>
-                <LanguageDropdown
-                  value={selectedLanguage}
-                  onSelected={(val) => onChangeLanguage(val)}
-                />
-              </div>
-              <div className={styles.center}>
-                <Select
-                  value={selectedLanguageForm}
-                  onChange={(form) => onChangeLanguageForm(form)}
-                  style={{ width: '100%' }}
-                >
-                  {languageForms.map((m, i) => {
-                    return (
-                      <Option key={i} value={m.id}>
-                        {m.name}
-                      </Option>
-                    )
-                  })}
-                </Select>
-              </div>
-            </div>
+          <div className={styles.selectedLanguage}>
+            <LanguageDropdown
+              value={selectedLanguage}
+              onSelected={(val) => onChangeLanguage(val)}
+            />
           </div>
         </div>
       </div>

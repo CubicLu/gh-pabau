@@ -34,10 +34,17 @@ export const MedicalForm = objectType({
     t.int('diagnosis_code_enabled')
     t.int('lab_id')
     t.boolean('is_private')
+    t.nullable.int('advanced_setting')
     t.nullable.field('Company', {
       type: 'Company',
       resolve(root: any) {
         return root.Company
+      },
+    })
+    t.nullable.field('MedicalFormAdvancedSetting', {
+      type: 'MedicalFormAdvancedSetting',
+      resolve(root: any) {
+        return root.MedicalFormAdvancedSetting
       },
     })
   },

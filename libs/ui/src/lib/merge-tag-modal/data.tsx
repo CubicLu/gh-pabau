@@ -292,6 +292,12 @@ export const tagList: TagModuleItems = {
     displayName: 'Appointments',
     items: [
       {
+        name: 'Staff Email',
+        module: 'appointments',
+        tag: '[APPOINTMENTSTAFFEMAIL]',
+        selected: false,
+      },
+      {
         name: 'Appt Date',
         module: 'appointments',
         tag: '[ADATE]',

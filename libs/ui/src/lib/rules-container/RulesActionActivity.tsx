@@ -1,6 +1,6 @@
 import { QuestionCircleFilled } from '@ant-design/icons'
 import { InputWithTags, UserListItem } from '@pabau/ui'
-import { Checkbox, Radio, Select } from 'antd'
+import { Checkbox, InputNumber, Radio, Select } from 'antd'
 import cn from 'classnames'
 import React, { FC, useState } from 'react'
 import styles from './RulesContainer.module.less'
@@ -167,21 +167,32 @@ export const RulesActionActivity: FC<P> = ({
       label: 'year(s)',
     },
   ]
-  const [dueDates, setDueDates] = useState<dueDateItem[]>([])
-  const changeDueDates = (e) => {
+  const [dueDates, setDueDates] = useState<dueDateItem[]>(dueDatesPreDefineds)
+  const [dueDateType, setDueDateType] = useState('predefine')
+  const [dueDate, setDueDate] = useState('')
+  const changeDueDatesType = (e) => {
     setDueDates([])
     if (e.target.value === 'predefine') {
       setDueDates(dueDatesPreDefineds)
     } else {
       setDueDates(dueDatesCustom)
     }
+    setDueDateType(e.target.value)
+    setDueDate('')
+  }
+  const changeDueDates = (e) => {
+    setDueDate(e)
   }
   return (
     <div className={cn(styles.formGroup, styles.noTemplate)}>
       <label>Assigned to</label>
       <Select>
         {userListItems?.map((userListItem) => (
-          <Option key={userListItem.id} value={userListItem.id}>
+          <Option
+            key={userListItem.id}
+            value={userListItem.id}
+            className={userListItem.id === 0 ? 'styleForStaticOption' : ''}
+          >
             {userListItem.full_name}
           </Option>
         ))}
@@ -225,17 +236,26 @@ export const RulesActionActivity: FC<P> = ({
       </Select>
       <div className={styles.devider}></div>
       <label>Due date (Required)</label>
-      <Radio.Group onChange={changeDueDates}>
+      <Radio.Group onChange={changeDueDatesType} value={dueDateType}>
         <Radio value="predefine">Predefined</Radio>
         <Radio value="custom">Custom</Radio>
       </Radio.Group>
-      <Select>
-        {dueDates.map((item) => (
-          <Option value={item.key} key={item.key}>
-            {item.label}
-          </Option>
-        ))}
-      </Select>
+      <div
+        className={cn(
+          dueDateType === 'custom'
+            ? styles.dueDateCustom
+            : styles.dueDatePredefined
+        )}
+      >
+        {dueDateType === 'custom' && <InputNumber min={0} step={1} />}
+        <Select onChange={changeDueDates} value={dueDate}>
+          {dueDates.map((item) => (
+            <Option value={item.key} key={item.key}>
+              {item.label}
+            </Option>
+          ))}
+        </Select>
+      </div>
       <Checkbox>
         Skip weekends <QuestionCircleFilled />
       </Checkbox>

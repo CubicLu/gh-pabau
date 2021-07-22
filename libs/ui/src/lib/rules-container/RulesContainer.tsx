@@ -909,6 +909,8 @@ export const RulesContainer: FC<RulesContainerProps> = ({
                             {ans.conditionType === 'number' && (
                               <InputNumber
                                 placeholder={ruleConditionPlaceHolder}
+                                /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+                                /* @ts-ignore */
                                 value={ans.condition}
                                 onChange={(e) =>
                                   onChangeAnswer(ans.id, 'condition', e)

@@ -1,27 +1,27 @@
 import { LeftOutlined } from '@ant-design/icons'
+import { useGetBussinessDetailsQuery } from '@pabau/graphql'
 import {
   Breadcrumb,
   BusinessDetailsNotifications,
   Button,
   MobileHeader,
+  PasswordExpirationProps,
   TabMenu,
   TerminologyConfig,
-  PasswordExpirationProps,
 } from '@pabau/ui'
-import { useGetBussinessDetailsQuery } from '@pabau/graphql'
 import { Typography } from 'antd'
 import { useRouter } from 'next/router'
-import React, { FC, useEffect, useState, useContext } from 'react'
+import React, { FC, useContext, useEffect, useState } from 'react'
 import CommonHeader from '../../../components/CommonHeader'
 import Layout from '../../../components/Layout/Layout'
-import { useGridData } from '../../../hooks/useGridData'
+import BusinessDetailTab from '../../../components/Setup/BusinessDetails/BusinessDetailsTab'
+import SecurityTab from '../../../components/Setup/BusinessDetails/SecurityTab'
+import SystemTab from '../../../components/Setup/BusinessDetails/SystemTab'
+import TerminologyTab from '../../../components/Setup/BusinessDetails/TerminologyTab'
 import { UserContext } from '../../../context/UserContext'
+import { useGridData } from '../../../hooks/useGridData'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
-import SecurityTab from '../../../components/Setup/BusinessDetails/SecurityTab'
-import TerminologyTab from '../../../components/Setup/BusinessDetails/TerminologyTab'
-import SystemTab from '../../../components/Setup/BusinessDetails/SystemTab'
-import BusinessDetailTab from '../../../components/Setup/BusinessDetails/BusinessDetailsTab'
 
 const { Title } = Typography
 

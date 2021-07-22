@@ -296,6 +296,7 @@ model Company {
   DebtManageCommunication          DebtManageCommunication[]
   CreditNoteType                   CreditNoteType[]
   MedicalForm                      MedicalForm[]
+  MedicalFormAdvancedSetting       MedicalFormAdvancedSetting[]
   CmLeadCustomField                CmLeadCustomField[]
   CmLeadCustomFieldOrder           CmLeadCustomFieldOrder[]
 
@@ -8082,34 +8083,36 @@ model ManageCustomFieldItem {
 //}
 //
 model MedicalForm {
-  id                     Int       @id @default(autoincrement())
-  user_deleted           Int
-  name                   String?
-  data                   String?
-  created_at             DateTime?
-  updated_at             DateTime?
-  deleted_at             DateTime?
-  nhs_locum_id           Int?
-  nhs_procedure_id       Int?
-  locked                 Int
-  printout               String
-  company_id             Int?      @map("occupier")
-  user_created           Int
-  encoded                Int
-  form_type              String
-  service_id             String
-  ipad_only              Int?      @default(0)
-  heading_setting        Int?      @default(0)
-  temp_static            Int
-  old_data               String
-  form_category          String
-  author                 String
-  diagnosis_code         String
-  is_fav                 Int
-  diagnosis_code_enabled Int
-  lab_id                 Int
-  is_private             Boolean   @default(false)
-  Company                Company?  @relation(fields: [company_id], references: [id])
+  id                         Int                         @id @default(autoincrement())
+  user_deleted               Int
+  name                       String?
+  data                       String?
+  created_at                 DateTime?
+  updated_at                 DateTime?
+  deleted_at                 DateTime?
+  nhs_locum_id               Int?
+  nhs_procedure_id           Int?
+  locked                     Int
+  printout                   String
+  company_id                 Int?                        @map("occupier")
+  user_created               Int
+  encoded                    Int
+  form_type                  String
+  service_id                 String
+  ipad_only                  Int?                        @default(0)
+  heading_setting            Int?                        @default(0)
+  temp_static                Int
+  old_data                   String
+  form_category              String
+  author                     String
+  diagnosis_code             String
+  is_fav                     Int
+  diagnosis_code_enabled     Int
+  lab_id                     Int
+  is_private                 Boolean                     @default(false)
+  advanced_setting           Int?
+  Company                    Company?                    @relation(fields: [company_id], references: [id])
+  MedicalFormAdvancedSetting MedicalFormAdvancedSetting? @relation(fields: [advanced_setting], references: [id])
 
   @@index([deleted_at], name: "deleted_at")
   @@index([form_type], name: "form_type")
@@ -13852,6 +13855,20 @@ model GroupPermission {
   Company             Company   @relation(fields: [company_id], references: [id])
 
   @@map("group_permissions")
+}
+
+model MedicalFormAdvancedSetting {
+  id              Int           @id @default(autoincrement())
+  medical_form    Int
+  company_id      Int?
+  share_to_client Boolean
+  reminder        Int
+  data            Json
+  Company         Company?      @relation(fields: [company_id], references: [id])
+  MedicalForm     MedicalForm[]
+
+  @@unique([medical_form], name: "fk_medical_form")
+  @@map("medical_form_advanced_setting")
 }
 
 enum booking_master_payment_status {

@@ -249,6 +249,9 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
             onSaveForm={handleSaveForm}
             formName={formName}
             triggerChangeForms={triggerChangeForms}
+            currentRules={
+              create ? defaultMedicalForm?.rules : currentMedicalForm?.rules
+            }
           />
           {visiblePreview === true && (
             <MedicalFormPreview

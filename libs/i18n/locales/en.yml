@@ -2151,6 +2151,7 @@ en:
   ui.medicalformbuilder.medicalcomponent.basic.other: 'other'
   ui.medicalformbuilder.medicalcomponent.basic.medical: 'medical'
   ui.medicalformbuilder.medicalcomponent.custom: 'Custom'
+  ui.medicalformbuilder.delete.rules.error: 'We can not delete because this item has been used in rule'
   ui.medicalformbuilder.save.formname.error: 'Please input form name'
   ui.medicalformbuilder.save.formdata.error: 'Empty form data'
   ui.medicalformbuilder.form.empty: 'Untitled form'

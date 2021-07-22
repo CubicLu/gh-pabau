@@ -64,13 +64,7 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/web/jest.config.js",
-            "passWithNoTests": true,
-            "reporters": ["jest-fail-on-console-reporter"],
-            "silent": true,
-            "codeCoverage": true,
-            "coverageReporters": [
-              "json-summary"
-            ]
+            "runInBand": true
           }
         },
         "deploy": {
@@ -173,7 +167,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/ui/jest.config.js",
-            "passWithNoTests": true
+            "passWithNoTests": true,
+            "runInBand": true
           }
         },
         "storybook": {
@@ -280,7 +275,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/yup/jest.config.js",
-            "passWithNoTests": true
+            "passWithNoTests": true,
+            "runInBand": true
           }
         },
         "tsc": {
@@ -341,7 +337,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/backend/jest.config.js",
-            "passWithNoTests": true
+            "passWithNoTests": true,
+            "runInBand": true
           }
         },
         "deploy-docker": {
@@ -411,7 +408,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/mgmt/jest.config.js",
-            "passWithNoTests": true
+            "passWithNoTests": true,
+            "runInBand": true
           }
         },
         "deploy": {
@@ -517,7 +515,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/connect/jest.config.js",
-            "passWithNoTests": true
+            "passWithNoTests": true,
+            "runInBand": true
           }
         },
         "deploy": {
@@ -633,7 +632,8 @@
           "builder": "@nrwl/jest:jest",
           "outputs": ["coverage/apps/bridge-api"],
           "options": {
-            "jestConfig": "apps/bridge-api/jest.config.js"
+            "jestConfig": "apps/bridge-api/jest.config.js",
+            "runInBand": true
           }
         },
         "e2e": {
@@ -682,7 +682,8 @@
           "outputs": ["coverage/libs/i18n"],
           "options": {
             "jestConfig": "libs/i18n/jest.config.js",
-            "passWithNoTests": true
+            "passWithNoTests": true,
+            "runInBand": true
           }
         },
         "tsc": {
@@ -724,7 +725,8 @@
           "outputs": ["coverage/apps/bridge-proxy"],
           "options": {
             "jestConfig": "apps/bridge-proxy/jest.config.js",
-            "passWithNoTests": true
+            "passWithNoTests": true,
+            "runInBand": true
           }
         },
         "deploy-docker": {
