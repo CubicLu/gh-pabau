@@ -21,7 +21,8 @@ interface CreateLabelsProps {
   children?: ReactNode
   labels?: Labels[]
   setLabels?: (val: Labels[]) => void
-  selectedLabels?: Labels[]
+  // selectedLabels?: Labels[]
+  selectedLabels?: any
   setSelectedLabels?: (val: Labels[]) => void
   fromHeader?: boolean
   defaultSelectedLabels?: Labels[]
@@ -96,6 +97,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     color: '',
     count: 0,
   })
+  const [selectedContacts, setSelectedContacts] = useState([])
 
   const [
     addLabelMutaton,
@@ -128,7 +130,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   //   }
   //   setIsEdit(false)
   // }
-  console.log('isEdit:', isEdit)
+  // console.log('isEdit:', isEdit)
 
   const [
     insertContactsLabelsMutaton,
@@ -141,16 +143,16 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
 
   const editLabelData = (valueObject) => {
     const labelData = [...testLabels.labels]
-    console.log('testLabels on edit:', testLabels)
-    console.log('valueObject on edit:', valueObject)
-    console.log('labelData on edit:', labelData)
+    // console.log('testLabels on edit:', testLabels)
+    // console.log('valueObject on edit:', valueObject)
+    // console.log('labelData on edit:', labelData)
     const labelIndex = labelData.findIndex(
       (label) => label.text === selectedEditData.label
     )
     labelIndex !== -1 && labelData.splice(labelIndex, 1, valueObject)
     const selectedLabelData = [...selectedLabels]
     const selectedLabelIndex = selectedLabelData.findIndex(
-      (label) => label.label === selectedEditData.label
+      (label) => label.text === selectedEditData.label
     )
     selectedLabelIndex !== -1 &&
       selectedLabelData.splice(selectedLabelIndex, 1, valueObject)
@@ -184,10 +186,16 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   //   }
   // }
 
+  // if (selectedRowKeys && selectedRowKeys.length > 0) {
+  //   for (const selContact of selectedRowKeys) {
+  //     console.log('selContact', selContact)
+  //   }
+  // }
+
   const addLabelData = (valueObject) => {
     if (
-      !testLabels?.labels.some(
-        (item) => item.text && item.color === valueObject.label
+      testLabels?.labels.some(
+        (item) => item.text && item.color !== valueObject.label
       )
     ) {
       //     setLabels([...labels, valueObject])
@@ -196,18 +204,13 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
       // console.log('testLabels on ADDING:', testLabels)
       // console.log('valueObject:', valueObject)
       // console.log('testLabels.labels :', testLabels.labels)
+
       setSelectedLabels([...selectedLabels, valueObject])
       fromHeader && handleApplyLabel([...selectedLabels, valueObject])
       addLabelMutaton({
         variables: {
           text: newLabel.label,
           color: newLabel.color,
-        },
-      })
-      insertContactsLabelsMutaton({
-        variables: {
-          contact_id: selectedRowKeys[0],
-          label_id: selectedRowKeys[0].id,
         },
       })
     } else {
@@ -253,7 +256,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
 
   const handleSelect = (label, index) => {
     const selectedData = [...selectedLabels]
-    if (selectedData.some((item) => item.label === label.label)) {
+    if (selectedData.some((item) => item.label === label.text)) {
       const selectedIndex = selectedLabels.findIndex(
         (selectedLabel) => selectedLabel.label === labels[index].label
       )
@@ -263,6 +266,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
       selectedData.push(label)
       setSelectedLabels(selectedData)
     }
+    console.log('selectedData:', selectedData)
   }
   console.log('selectedLabels:', selectedLabels)
 
@@ -284,11 +288,66 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     const diff2 = differenceBy(selectedLabels, defaultSelectedLabels) || []
     return diff1.length === 0 && diff2.length === 0
   }
+  // if (selectedRowKeys && selectedRowKeys.length > 0) {
+  //   const tempSelectedContacts = []
+  //   for (const selContact of selectedRowKeys) {
+  //     if (!tempSelectedContacts?.includes(selContact)) {
+  //       selectedContacts.push(selContact)
+  //     }
+  //   }
+  //   // console.log('tempSelectedContacts', tempSelectedContacts)
+  // }
 
+  //// DO NOT DELETE WORKINGGGG
+  // const onApplyLabel = () => {
+  //   handleApplyLabel(selectedLabels)
+  //   setVisible(false)
+  //   insertContactsLabelsMutaton({
+  //     variables: {
+  //       contact_id: selectedRowKeys[0],
+  //       label_id: 104,
+  //     },
+  //   })
+  // }
+
+  //WORKING MULTIPLE CONTACTS
+  // const onApplyLabel = () => {
+  //   handleApplyLabel(selectedLabels)
+  //   setVisible(false)
+  //   if (selectedRowKeys && selectedRowKeys.length > 0) {
+  //     for (const selectContact of selectedRowKeys) {
+  //       insertContactsLabelsMutaton({
+  //         variables: {
+  //           contact_id: selectContact,
+  //           label_id: 104,
+  //         },
+  //       })
+  //     }
+  //   }
+  // }
+
+  // WORKING MULTIPLE CONTACTS AND MULTIPLE LABELS
   const onApplyLabel = () => {
     handleApplyLabel(selectedLabels)
     setVisible(false)
+    if (selectedRowKeys && selectedRowKeys.length > 0) {
+      for (const selectContact of selectedRowKeys) {
+        for (const selectedLabel of selectedLabels) {
+          // console.log('selectedLabell :', selectedLabel)
+          insertContactsLabelsMutaton({
+            variables: {
+              contact_id: selectContact,
+              label_id: selectedLabel.id,
+            },
+          })
+        }
+      }
+    }
   }
+
+  // for (const selectedLabel of selectedLabels) {
+  //   console.log('selectedLabelll:', selectedLabel)
+  // }
 
   // console.log('newLabel :', newLabel)
 
@@ -355,7 +414,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
                     </div>
                     <div className={styles.tagName}>{label.text}</div>
                     {selectedLabels.some(
-                      (item) => item.label === label.text
+                      (item) => item.text === label.text
                     ) && <CheckOutlined />}
                   </span>
                 )}

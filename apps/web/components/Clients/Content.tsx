@@ -246,29 +246,27 @@ export const ClientsContent: FC<ClientsContentProps> = ({
         //   return templabel
         // }
         // const x = labelTest.map()
-        console.log('labelTest onupdate:', labelTest)
-        // console.log('labelItemOne:', labelItemOne)
-        // console.log('labelItemOTwo:', labelItemOTwo)
+        // console.log('labelTest onupdate:', labelTest)
 
         // eslint-disable-next-line react/destructuring-assignment
         // return <span>{labelTest.map((item) => item)}</span>
         return (
           <div className={styles.labelWrapper}>
-            {labelTest?.map((xx) => (
+            {labelTest?.map((label) => (
               <Button
                 className={styles.labelButton}
                 style={{
-                  border: `1px solid ${xx.color}`,
-                  color: xx.color,
+                  border: `1px solid ${label.color}`,
+                  color: label.color,
                 }}
                 backgroundColor={''}
-                // onClick={(e) => handleLabelClick(e, label.label)}
+                onClick={(e) => handleLabelClick(e, label.text)}
                 icon={<TagOutlined />}
               >
                 {/* eslint-disable-next-line react/destructuring-assignment */}
                 {/*{labelTest.length > 0 ? labelTest.map((x) => x) : null}*/}
                 {/*{labelItem}*/}
-                {xx.label}
+                {label.label ? label.label : label.text}
               </Button>
             ))}
           </div>

@@ -91,11 +91,11 @@ export const Clients: FC<ClientsProps> = () => {
   //   { data: getLabelsData, loading: getLabelsLoading, error: getLabelsError },
   // ] = useGetLabelsLazyQuery()
 
-  console.log('getLabelsData:', getLabelsData)
+  // console.log('getLabelsData:', getLabelsData)
 
   const [contactsLabels, setContactsLabels] = useState(getContactsLabelsData)
 
-  console.log('contactsLabels:', contactsLabels)
+  // console.log('contactsLabels:', contactsLabels)
 
   const [paginateData, setPaginateData] = useState({
     total: 0,
@@ -164,8 +164,8 @@ export const Clients: FC<ClientsProps> = () => {
     const tempContact = contactsData?.map((fieldContact) => {
       const tempCON = []
       for (const fieldCL of contactsLabels?.contacts_labels) {
-        console.log('fieldCL:', fieldCL)
-        console.log('fieldContact:', fieldContact)
+        // console.log('fieldCL:', fieldCL)
+        // console.log('fieldContact:', fieldContact)
 
         if (fieldCL.contact_id === fieldContact.id) {
           // ...fieldContact, labelTest: labelTest.push(fieldCL.label)
@@ -181,7 +181,7 @@ export const Clients: FC<ClientsProps> = () => {
         }
       }
     })
-    console.log('tempContact:', tempContact)
+    // console.log('tempContact:', tempContact)
     // setTestData(tempContact)
   }, [getContactsData])
 
@@ -251,7 +251,7 @@ export const Clients: FC<ClientsProps> = () => {
   // console.log('duplicateContactsTest:', duplicateContactsTest)
   const isMobile = useMedia('(max-width: 768px)', false)
 
-  console.log(searchText, 'searchText')
+  // console.log(searchText, 'searchText')
 
   useEffect(() => {
     setTestLabels(getLabelsData)
@@ -296,8 +296,16 @@ export const Clients: FC<ClientsProps> = () => {
   //   }
   // })
 
-  console.log('getLabelsData:', getLabelsData)
-  console.log('testLabels STATE:', testLabels)
+  // console.log('getLabelsData:', getLabelsData)
+  // console.log('testLabels STATE:', testLabels)
+
+  // if (selectedRowKeys && selectedRowKeys.length > 0) {
+  //   for (const selContact of selectedRowKeys) {
+  //     console.log('selContact', selContact)
+  //   }
+  // }
+
+  console.log(defaultSelectedLabels, 'defaultSelectedLabels')
 
   useEffect(() => {
     setDuplicateContactsTest(getDuplicateContactsData)
@@ -366,7 +374,7 @@ export const Clients: FC<ClientsProps> = () => {
   //   setDuplicateDataList(duplicateList)
   // }, [])
 
-  console.log(getDuplicateContactsData, 'getDuplicateContactsData')
+  // console.log(getDuplicateContactsData, 'getDuplicateContactsData')
 
   useEffect(() => {
     const uniqLabel = countsLabel()
@@ -386,7 +394,7 @@ export const Clients: FC<ClientsProps> = () => {
   const intersectMany = (arrs) => {
     let res = arrs[0]
     for (let i = 1; i < arrs.length; i++) {
-      res = intersectionBy(res, arrs[i], 'label')
+      res = intersectionBy(res, arrs[i], 'text')
     }
     return res
   }
@@ -434,6 +442,7 @@ export const Clients: FC<ClientsProps> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchText, selectedTab, sourceData])
 
+  // ORIGINAL
   useEffect(() => {
     const selectedData = sourceData.filter((item) =>
       selectedRowKeys?.includes(item.id)
@@ -566,31 +575,65 @@ export const Clients: FC<ClientsProps> = () => {
     setActive(false)
   }
 
+  // ORIGINAL VERSION
+  // const uniqLabel = (oldLabelList, selectedLabelList) => {
+  //   const newList = [...selectedLabelList]
+  //   const removedLabel: Labels[] = differenceBy(
+  //     defaultSelectedLabels,
+  //     selectedLabelList
+  //   )
+  //   const uniqData = oldLabelList.filter((data) => {
+  //     return (
+  //       !newList.some((item) => item.label === data.label) &&
+  //       !removedLabel.some((item) => item.label === data.label)
+  //     )
+  //   })
+  //   return [...newList, ...uniqData]
+  // }
+
+  // ORIGINAL VERSION
+  // const handleApplyLabel = (selectedLabelList) => {
+  //   const newData = sourceData.map((data) => {
+  //     const temp: SourceDataProps = { ...data }
+  //
+  //     if (selectedRowKeys.includes(data.id)) {
+  //       temp.label = uniqLabel(data.label, selectedLabelList)
+  //     }
+  //     return temp
+  //   })
+  //   setSourceData(newData)
+  // }
+
   const uniqLabel = (oldLabelList, selectedLabelList) => {
     const newList = [...selectedLabelList]
-    const removedLabel: Labels[] = differenceBy(
-      defaultSelectedLabels,
-      selectedLabelList
-    )
+    const removedLabel = differenceBy(defaultSelectedLabels, selectedLabelList)
+    console.log('removedLabel', removedLabel)
     const uniqData = oldLabelList.filter((data) => {
       return (
-        !newList.some((item) => item.label === data.label) &&
-        !removedLabel.some((item) => item.label === data.label)
+        !newList.some((item) => item.labelTest === data.labelTest) &&
+        !removedLabel.some((item) => item.labelTest === data.labelTest)
       )
     })
     return [...newList, ...uniqData]
   }
 
   const handleApplyLabel = (selectedLabelList) => {
-    const newData = sourceData.map((data) => {
-      const temp: SourceDataProps = { ...data }
+    const newData = testData?.map((data) => {
+      console.log('sourceData:', sourceData)
+      // const temp: SourceDataProps = { ...data }
+      const temp = { ...data }
 
       if (selectedRowKeys.includes(data.id)) {
-        temp.label = uniqLabel(data.label, selectedLabelList)
+        temp.labelTest = uniqLabel(data.labelTest, selectedLabelList)
       }
+      console.log('temp', temp)
+      console.log('testData', testData)
+      console.log('selectedLabelList', selectedLabelList)
+
       return temp
     })
-    setSourceData(newData)
+    // setSourceData(newData)
+    setTestData(newData)
   }
 
   const handleRowClick = (value) => {
@@ -633,7 +676,7 @@ export const Clients: FC<ClientsProps> = () => {
       origin: { y: 0.6, x: 0.6 },
     })
   }
-  console.log('getClientsCountData:', getClientsCountData)
+  // console.log('getClientsCountData:', getClientsCountData)
   console.log('selectedLabels:', selectedLabels)
 
   const handleMerge = (data) => {
@@ -681,8 +724,8 @@ export const Clients: FC<ClientsProps> = () => {
     />
   )
 
-  console.log('testData:', testData)
-  console.log('contactsData:', contactsData)
+  // console.log('testData:', testData)
+  // console.log('contactsData:', contactsData)
 
   return (
     <div>

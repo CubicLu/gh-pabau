@@ -56,8 +56,8 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
     setSelectedTab(e.key)
   }
 
-  console.log('duplicateContactsCount:', duplicateContactsCount)
-  console.log('testLabels LEFT:', testLabels)
+  // console.log('duplicateContactsCount:', duplicateContactsCount)
+  // console.log('testLabels LEFT:', testLabels)
 
   // console.log(typeof testLabels)
 
