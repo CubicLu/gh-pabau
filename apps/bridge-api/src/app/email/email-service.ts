@@ -38,9 +38,9 @@ export default class EmailService {
       preparedHtml = await prepareMessage(html, ctx, input.relations)
     }
 
-    console.info('input:', input)
-    console.info('html after:', preparedHtml)
-    return true
+    // console.info('input:', input)
+    // console.info('html after:', preparedHtml)
+    // return true
 
     const emailOptions = {
       to: to,

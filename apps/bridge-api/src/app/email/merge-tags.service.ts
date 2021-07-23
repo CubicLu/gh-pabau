@@ -78,6 +78,7 @@ export async function prepareMessage(
     CLIENTPOSTAL: Contact?.MailingPostal,
     CLIENTCOUNTY: Contact?.MailingProvince,
     CLIENTCOUNTRY: Contact?.MailingCountry,
+    CLIENTMAILINGCOUNTRY: Contact.MailingCountry,
     CLIENTLOYALTY: Contact?.LoyaltyPoint?.points,
     FULLADDRESS: function () {
       return [
@@ -101,8 +102,8 @@ export async function prepareMessage(
       return new Date(Contact?.DOB).toLocaleDateString()
     },
     CLIENT_INS_COMP: Contact?.Insurance?.insurer_name,
-    CLIENT_INS_MEM_NUM: Contact?.ContactInsurance[0]?.membership_number,
-    CLIENT_INS_AUTH_CODE: Contact?.ContactInsurance[0]?.auth_code,
+    CLIENT_INS_MEM_NUM: Contact.ContactInsurance?.membership_number,
+    CLIENT_INS_AUTH_CODE: Contact.ContactInsurance?.auth_code,
     CLIENT_INS_MOBILE: Contact?.Insurance?.phone,
     CLIENT_INS_WEBSITE: Contact?.Insurance?.website,
     CLIENT_INS_CITY: Contact?.Insurance?.city,
@@ -245,9 +246,9 @@ export async function prepareMessage(
     },
     // APPOINTMENTMANAGE: Contact.MailingCountry, //=$connect_url_default."/index.php?compid=".$r_c['company_id']."&email=".$r_sbc['Email']."";
     // PACKAGE_NAME: Contact.MailingCountry, // get package name from booking_id
-    // APPOINTMENTNAME: function () {
-    //   return [Contact.Booking?.Fname, Contact.Booking?.Lname].join(' ')
-    // },
+    APPOINTMENTNAME: function () {
+      return [Contact.Fname, Contact.Lname].join(' ')
+    },
     // ADATE: function () {
     //   return new Date().toTimeString().slice(0, 5)
     // },
