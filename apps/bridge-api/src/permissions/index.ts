@@ -175,6 +175,8 @@ export const permissions = shield(
       me: rules.authentication.isAuthenticated,
       company: rules.authentication.isAuthenticated,
       ping: allow,
+      // invoice
+      getInvoiceData: rules.authentication.isAuthenticated,
       //TODO once jest mocks are resolved move it to rules.authentication.isAuthenticated
       featureRequestsWeeklyAvg: allow,
       '*': and(

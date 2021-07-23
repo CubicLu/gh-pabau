@@ -299,6 +299,7 @@ model Company {
   MedicalFormAdvancedSetting       MedicalFormAdvancedSetting[]
   CmLeadCustomField                CmLeadCustomField[]
   CmLeadCustomFieldOrder           CmLeadCustomFieldOrder[]
+  SaleItem                         SaleItem[]
   Communication                    Communication[]
   CompanyEmail                     CompanyEmail[]
 
@@ -1413,6 +1414,8 @@ model CompanyDetails {
   timezone                Timezone                 @relation(fields: [timezone_id], references: [timezone_id])
   Company                 Company                  @relation(fields: [company_id], references: [id])
   User                    User[]
+  InvoiceTemplate         InvoiceTemplate[]
+  InvoiceDefaultTemplate  InvoiceTemplate          @relation("default_template", fields: [default_inv_template_id], references: [id])
 
   @@index([company_id], name: "company_id")
   @@index([timezone_id], name: "timezone_id")
@@ -5915,6 +5918,7 @@ model InsuranceDetail {
   HealthcodeInsurer HealthcodeInsurer? @relation(fields: [healthcode_id], references: [id])
   CmContact         CmContact?         @relation(fields: [id], references: [insurer_id])
 
+  InvSale InvSale[]
   @@index([company_id], name: "company_id")
   @@map("insurance_details")
 }
@@ -6129,23 +6133,29 @@ model InventoryDiscrepancy {
 //  modified_date DateTime?
 //}
 //
-//model invoice_templates {
-//  id                  Int      @id @default(autoincrement())
-//  name                String
-//  type                Int?     @default(1)
-//  description         String
-//  style               String
-//  activity            String
-//  appearance          String
-//  payment_information String
-//  header              String
-//  footer              String
-//  date_created        DateTime
-//  date_updated        DateTime
-//  occupier            Int
-//  stripe_button       Int
-//}
+model InvoiceTemplate {
+  id                    Int             @id @default(autoincrement())
+  name                  String
+  type                  Int?            @default(1)
+  description           String
+  style                 String
+  activity              String
+  appearance            String
+  payment_information   String
+  header                String
+  footer                String
+  date_created          DateTime
+  date_updated          DateTime
+  stripe_button         Int
+  company_id            Int?            @map("occupier")
+  CompanyDetails        CompanyDetails? @relation(fields: [company_id], references: [company_id])
+  CompanyDetailsDefault CompanyDetails? @relation("default_template")
 
+  @@index([company_id], name: "occupier")
+  @@map("invoice_templates")
+}
+
+//
 model InvBiller {
   id             Int       @id @default(autoincrement())
   name           String
@@ -6177,6 +6187,7 @@ model InvBiller {
   Company        Company?  @relation(fields: [company_id], references: [id])
 
 
+  InvSale InvSale[]
   @@index([company_id], name: "occupier")
   @@index([uid], name: "uid")
   @@map("inv_billers")
@@ -6321,6 +6332,7 @@ model InvPayment {
   CmContact           CmContact? @relation(fields: [contact_id], references: [ID])
   User                User       @relation(fields: [uid], references: [id])
   Company             Company    @relation(fields: [company_id], references: [id])
+  InvSale             InvSale?   @relation(fields: [invoice], references: [id])
 
   @@index([contact_id], name: "contact_id")
   @@index([date], name: "date")
@@ -6457,7 +6469,7 @@ model InvProduct {
   CmProductCustomField      CmProductCustomField[]
   InventoryMovement         InventoryMovement[]
 
-  InvSaleItem InvSaleItem[] @relation("fk_inv_sale_product_id")
+  SaleItem SaleItem[] @relation("fk_inv_sale_product_id")
   @@unique([company_id, id], name: "primary")
   @@unique([company_id, name], name: "unique_product_name")
   @@unique([company_id, old_barcode], name: "unique_product_barcode")
@@ -6623,7 +6635,7 @@ model InvProduct {
 //}
 //
 model InvSale {
-  id                  Int           @id @default(autoincrement())
+  id                  Int              @id @default(autoincrement())
   reference_no        String
   warehouse_id        Int?
   biller_id           Int
@@ -6637,7 +6649,7 @@ model InvSale {
   total               Float
   paid_amount         Float?
   store_discount      Float?
-  discount_amount     Float         @default(0.00)
+  discount_amount     Float            @default(0.00)
   account_amount      Float?
   loyalty_card_num    String?
   loyalty_card_amount String?
@@ -6649,12 +6661,12 @@ model InvSale {
   tax_rate2_id        Int
   shipping_rate       Float
   shipping_rate_id    Int
-  delivery            Int?          @default(0)
+  delivery            Int?             @default(0)
   delivery_date       DateTime?
-  by_email            Int?          @default(0)
-  by_sms              Int?          @default(0)
-  tip                 Float?        @default(0.00)
-  company_id          Int?          @map("occupier")
+  by_email            Int?             @default(0)
+  by_sms              Int?             @default(0)
+  tip                 Float?           @default(0.00)
+  company_id          Int?             @map("occupier")
   uid                 Int?
   created_date        DateTime?
   modified_date       DateTime?
@@ -6669,30 +6681,36 @@ model InvSale {
   Treatment_id        Int
   imported            Int
   VAT_drop            Float
-  order_id            Int?          @default(0)
-  void                Boolean       @default(false)
+  order_id            Int?             @default(0)
+  void                Boolean          @default(false)
   guid                String?
   old_paid_by         String
   loyalty_points      Int
   xero_invoice_id     String
   xero_updated_date   DateTime
-  split_count         Int           @default(1)
+  split_count         Int              @default(1)
   split_guid          String
-  insurer_contract_id Int           @default(0)
+  insurer_contract_id Int              @default(0)
   lock_sale           Int
   location_id         Int
   contract_id         Int
-  is_ok               Boolean       @default(false)
+  is_ok               Boolean          @default(false)
   refund_to           Int
-  credit_ref_id       Int           @default(0)
+  credit_ref_id       Int              @default(0)
   credit_amount       Float
-  credit_type         Int           @default(0)
+  credit_type         Int              @default(0)
   issuer_id           Int?
-  Company             Company?      @relation(fields: [company_id], references: [id])
-  Location            CompanyBranch @relation(fields: [location_id], references: [id])
-  CmContact           CmContact?    @relation(fields: [customer_id], references: [ID])
+  Company             Company?         @relation(fields: [company_id], references: [id])
+  Location            CompanyBranch    @relation(fields: [location_id], references: [id])
+  CmContact           CmContact?       @relation(fields: [customer_id], references: [ID])
+  User                User?            @relation(fields: [uid], references: [id])
+  InsuranceDetail     InsuranceDetail? @relation(fields: [insurer_contract_id], references: [id])
+  IssuingCompany      IssuingCompany?  @relation(fields: [issuer_id], references: [id])
+  InvBiller           InvBiller?       @relation(fields: [biller_id], references: [id])
 
-  Booking Booking[]
+  Booking    Booking[]
+  InvPayment InvPayment[]
+  SaleItem   SaleItem[]
   @@index([biller_id], name: "biller_id_index")
   @@index([booking_id], name: "booking_id")
   @@index([contact_custom_id], name: "contact_custom_id")
@@ -6840,7 +6858,7 @@ model InvSale {
 //  modified_date        DateTime?
 //}
 //
-model InvSaleItem {
+model SaleItem {
   id                    Int        @id @default(autoincrement())
   sale_id               Int
   product_id            Int
@@ -6853,7 +6871,7 @@ model InvSaleItem {
   unit_price            Float
   gross_total           Float
   val_tax               Float
-  occupier              Int?
+  company_id            Int?       @map("occupier")
   uid                   Int?
   staff_purchase        Int?
   created_date          DateTime?
@@ -6879,10 +6897,12 @@ model InvSaleItem {
   booking_id            Int?
   Tax                   Tax?       @relation(fields: [VAT_id], references: [id])
   Product               InvProduct @relation(fields: [product_id], references: [id], name: "fk_inv_sale_product_id")
+  InvSale               InvSale?   @relation(fields: [sale_id], references: [id])
+  Company               Company?   @relation(fields: [company_id], references: [id])
 
   @@index([created_date], name: "created_date_index")
   @@index([custom_id], name: "custom_id")
-  @@index([occupier], name: "occupier")
+  @@index([company_id], name: "occupier")
   @@index([product_id], name: "product_id_index")
   @@index([product_name], name: "product_name")
   @@index([sale_custom_id], name: "sale_custom_id_index")
@@ -7250,6 +7270,7 @@ model IssuingCompany {
   invoice_starting_number Int?
   Company                 Company? @relation(fields: [company_id], references: [id])
 
+  InvSale InvSale[]
   @@map("issuing_companies")
 }
 
@@ -11690,7 +11711,7 @@ model Tax {
   Company     Company?      @relation(fields: [company_id], references: [id])
   InvProduct  InvProduct[]
   InvCategory InvCategory[]
-  InvSaleItem InvSaleItem[]
+  SaleItem    SaleItem[]
 
   @@index([company_id], name: "occupier")
   @@map("taxes")
@@ -12412,6 +12433,7 @@ model User {
   InventoryMovement            InventoryMovement[]
   Booking                      Booking[]
 
+  InvSale InvSale[]
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")
   @@index([deleted], name: "deleted")

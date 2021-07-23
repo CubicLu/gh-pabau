@@ -9,7 +9,10 @@ import {
   PaymentQueryResult,
   DebtQueryResult,
   CreditNoteQueryResult,
+  InvoiceOutput,
+  InvoiceArgs,
 } from './types'
+import moment from 'moment'
 
 export const findManyFinanceInvoice = async (
   ctx: Context,
@@ -129,7 +132,7 @@ const retrieveInvoices = async (
     WHERE sales.occupier = ${ctx.authenticated.company}
     ${
       input.startDate && input.endDate
-        ? Prisma.sql`AND DATE(sales.date) BETWEEN ${input.startDate} 
+        ? Prisma.sql`AND DATE(sales.date) BETWEEN ${input.startDate}
       AND ${input.endDate}`
         : Prisma.empty
     }
@@ -224,7 +227,7 @@ const calculateNetAndGst = async (
   ctx: Context,
   ids: number[]
 ): Promise<InvoiceResponse> => {
-  const invSaleItemRecords = await ctx.prisma.invSaleItem.findMany({
+  const invSaleItemRecords = await ctx.prisma.saleItem.findMany({
     where: {
       sale_id: { in: ids },
     },
@@ -281,12 +284,12 @@ export const invoiceCount = async (
   const locationFilterArray = await getAllowedLocation(ctx)
   return await ctx.prisma.$queryRaw<FinanceCountQueryResult[]>`SELECT sales.id
     FROM inv_sales AS sales
-    LEFT JOIN company_branches AS loc ON loc.id = sales.location_id 
+    LEFT JOIN company_branches AS loc ON loc.id = sales.location_id
     LEFT JOIN xero_integration_jobs AS xjobs ON xjobs.company_id = sales.occupier AND xjobs.invoice_guid = sales.guid
     WHERE sales.occupier = ${ctx.authenticated.company}
     ${
       input.startDate && input.endDate
-        ? Prisma.sql`AND DATE(sales.date) BETWEEN ${input.startDate} 
+        ? Prisma.sql`AND DATE(sales.date) BETWEEN ${input.startDate}
         AND ${input.endDate}`
         : Prisma.empty
     }
@@ -359,7 +362,7 @@ const retrievePayments = async (
     WHERE sales.occupier = ${ctx.authenticated.company}
     ${
       input.startDate && input.endDate
-        ? Prisma.sql`AND DATE(sales.date) BETWEEN ${input.startDate} 
+        ? Prisma.sql`AND DATE(sales.date) BETWEEN ${input.startDate}
         AND ${input.endDate}`
         : Prisma.empty
     }
@@ -398,7 +401,7 @@ export const paymentCount = async (
     WHERE sales.occupier = ${ctx.authenticated.company}
     ${
       input.startDate && input.endDate
-        ? Prisma.sql`AND DATE(sales.date) BETWEEN ${input.startDate} 
+        ? Prisma.sql`AND DATE(sales.date) BETWEEN ${input.startDate}
       AND ${input.endDate}`
         : Prisma.empty
     }
@@ -521,7 +524,7 @@ const retrieveDebts = async (
     WHERE sales.occupier = ${ctx.authenticated.company}
     ${
       input.startDate && input.endDate
-        ? Prisma.sql`AND DATE(sales.date) BETWEEN ${input.startDate} 
+        ? Prisma.sql`AND DATE(sales.date) BETWEEN ${input.startDate}
       AND ${input.endDate}`
         : Prisma.empty
     }
@@ -556,12 +559,12 @@ export const debtCount = async (
   const locationFilterArray = await getAllowedLocation(ctx)
   return await ctx.prisma.$queryRaw<FinanceCountQueryResult[]>`SELECT sales.id
     FROM inv_sales AS sales
-    LEFT JOIN company_branches AS loc ON loc.id = sales.location_id 
+    LEFT JOIN company_branches AS loc ON loc.id = sales.location_id
     LEFT JOIN xero_integration_jobs AS xjobs ON xjobs.company_id = sales.occupier AND xjobs.invoice_guid = sales.guid
     WHERE sales.occupier = ${ctx.authenticated.company}
     ${
       input.startDate && input.endDate
-        ? Prisma.sql`AND DATE(sales.date) BETWEEN ${input.startDate} 
+        ? Prisma.sql`AND DATE(sales.date) BETWEEN ${input.startDate}
       AND ${input.endDate}`
         : Prisma.empty
     }
@@ -683,16 +686,16 @@ const retrieveCreditNotes = async (
     sales.date AS invDate,
     xjobs.status AS xero_status,
     xjobs.response AS xero_response,
-    xjobs.modified_at AS xero_modifiedAt 
-    FROM inv_sales AS sales 
+    xjobs.modified_at AS xero_modifiedAt
+    FROM inv_sales AS sales
     LEFT JOIN credit_note_type AS cnt ON cnt.id = sales.credit_type
     LEFT JOIN insurance_details AS insurance ON insurance.id = sales.insurer_contract_id
-    LEFT JOIN company_branches AS loc ON loc.id = sales.location_id 
+    LEFT JOIN company_branches AS loc ON loc.id = sales.location_id
     LEFT JOIN xero_integration_jobs AS xjobs ON xjobs.company_id = sales.occupier AND xjobs.invoice_guid = sales.guid
     WHERE sales.occupier = ${ctx.authenticated.company}
     ${
       input.startDate && input.endDate
-        ? Prisma.sql`AND DATE(sales.date) BETWEEN ${input.startDate} 
+        ? Prisma.sql`AND DATE(sales.date) BETWEEN ${input.startDate}
       AND ${input.endDate}`
         : Prisma.empty
     }
@@ -731,14 +734,14 @@ export const creditNoteCount = async (
 ): Promise<FinanceCountQueryResult[]> => {
   const locationFilterArray = await getAllowedLocation(ctx)
   return await ctx.prisma.$queryRaw<FinanceCountQueryResult[]>`SELECT sales.id
-    FROM inv_sales AS sales 
+    FROM inv_sales AS sales
     LEFT JOIN credit_note_type AS cnt ON cnt.id = sales.credit_type
-    LEFT JOIN company_branches AS loc ON loc.id = sales.location_id 
+    LEFT JOIN company_branches AS loc ON loc.id = sales.location_id
     LEFT JOIN xero_integration_jobs AS xjobs ON xjobs.company_id = sales.occupier AND xjobs.invoice_guid = sales.guid
     WHERE sales.occupier = ${ctx.authenticated.company}
     ${
       input.startDate && input.endDate
-        ? Prisma.sql`AND DATE(sales.date) BETWEEN ${input.startDate} 
+        ? Prisma.sql`AND DATE(sales.date) BETWEEN ${input.startDate}
       AND ${input.endDate}`
         : Prisma.empty
     }
@@ -768,4 +771,213 @@ export const creditNoteCount = async (
     AND sales.reference_no = '**CREDIT NOTE**'
     GROUP BY IFNULL(sales.guid, sales.id)
     ORDER BY sales.date DESC`
+}
+
+export const getInvoiceData = async (
+  ctx: Context,
+  input: InvoiceArgs
+): Promise<InvoiceOutput> => {
+  const sales = await ctx.prisma.invSale.findMany({
+    where: {
+      OR: [
+        { guid: { equals: input?.guid } },
+        { id: { equals: input?.saleId } },
+      ],
+    },
+    select: {
+      id: true,
+      paid_amount: true,
+      discount_amount: true,
+      inv_total: true,
+      total: true,
+      custom_id: true,
+      Company: {
+        select: {
+          details: {
+            select: {
+              default_inv_template_id: true,
+            },
+          },
+        },
+      },
+      User: {
+        select: {
+          full_name: true,
+        },
+      },
+      InsuranceDetail: {
+        select: {
+          insurer_name: true,
+        },
+      },
+      Booking: {
+        select: {
+          User: {
+            select: {
+              full_name: true,
+            },
+          },
+        },
+      },
+      InvPayment: {
+        select: {
+          datetime: true,
+          pmethod: true,
+          amount: true,
+        },
+      },
+      SaleItem: {
+        select: {
+          VAT_id: true,
+          tax_total: true,
+          gross_total: true,
+          quantity: true,
+          unit_price: true,
+          val_tax: true,
+          discount_reason: true,
+          created_date: true,
+          product_category_name: true,
+          Tax: {
+            select: {
+              rate: true,
+              value: true,
+            },
+          },
+          Product: {
+            select: {
+              sku: true,
+              InvCategory: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+  if (!sales) {
+    throw new Error('Invalid guid or sale id')
+  }
+  const refund = await ctx.prisma.invSale.findMany({
+    where: { refund_to: { in: sales.map((sale) => sale.id) } },
+    select: {
+      total: true,
+    },
+  })
+  const data = []
+  const payment = []
+  let total_discount_amount
+  let inv_total
+  let paid_amount
+  let total
+  sales.map((sale) => {
+    total_discount_amount += sale.discount_amount
+    inv_total += sale.inv_total
+    paid_amount += sale.paid_amount
+    total += sale.total
+    if (sale?.SaleItem) {
+      sale?.SaleItem.map((saleItem, index) => {
+        const vat_value = saleItem.tax_total
+        const net_value = saleItem.gross_total - saleItem.val_tax - vat_value
+        const tax_rate =
+          saleItem.Tax?.rate !== undefined ? saleItem.Tax?.rate : 0
+        data.push({
+          key: `${index}`,
+          quantity: saleItem.quantity ?? '1',
+          unitprice: saleItem.unit_price ?? '0.00',
+          total: vat_value + net_value ? (vat_value + net_value).toFixed(2) : 0,
+          vat_per: saleItem.Tax?.value ?? '0.00',
+          vat:
+            saleItem.unit_price - saleItem.unit_price / (tax_rate / 100 + 1)
+              ? (
+                  saleItem.unit_price -
+                  saleItem.unit_price / (tax_rate / 100 + 1)
+                ).toFixed(2)
+              : '0.00',
+          net: net_value ? net_value.toFixed(2) : '0.00',
+          after_disc:
+            saleItem.unit_price - saleItem.val_tax
+              ? (saleItem.unit_price - saleItem.val_tax).toFixed(2)
+              : '0.00',
+          disc_amount: saleItem.val_tax ? saleItem.val_tax.toFixed(2) : '0.00',
+          disc_per:
+            (saleItem.val_tax / saleItem.unit_price) * 100
+              ? ((saleItem.val_tax / saleItem.unit_price) * 100).toFixed(2)
+              : '0.00',
+          description: saleItem.discount_reason ?? '',
+          date: `${new Date(saleItem.created_date).toLocaleDateString(
+            'en-GB'
+          )}`,
+          category: saleItem.product_category_name,
+          practitioner: sales[0]?.Booking[0]?.User?.full_name ?? '',
+          product: saleItem.Product?.InvCategory?.name ?? '',
+          sku: saleItem.Product?.sku ?? '',
+        })
+        return saleItem
+      })
+    }
+    if (sale?.InvPayment) {
+      sale?.InvPayment?.map((paymentItem, index) => {
+        payment.push({
+          key: `${index}`,
+          insurer: sales[0]?.InsuranceDetail?.insurer_name ?? '',
+          payment_date: `${new Date(paymentItem.datetime).toLocaleDateString(
+            'en-GB'
+          )}`,
+          payment_method: paymentItem.pmethod ?? '',
+          payment_amount: paymentItem.amount ?? '0.00',
+        })
+        return paymentItem
+      })
+    }
+    return sale
+  })
+  const sub_total =
+    total_discount_amount !== 0 ? inv_total + total_discount_amount : inv_total
+  const payment_method_data = sales?.map((i) => i.InvPayment)
+  const pmethod = payment_method_data[0]?.map((i) => i.pmethod)
+  const details = {
+    key: 0,
+    total_vat: data?.reduce((prev, cur) => {
+      return prev + Number.parseFloat(cur.vat)
+    }, 0),
+    amount_paid: paid_amount ? paid_amount.toFixed(2) : 0,
+    sub_total_amount: sub_total ? sub_total : 0,
+    outstanding: paid_amount ? paid_amount.toFixed(2) : 0,
+    grand_total:
+      sub_total + total_discount_amount ? sub_total + total_discount_amount : 0,
+    refund_amount: refund?.reduce((prev, cur) => {
+      return prev + cur.total
+    }, 0),
+    paid: payment
+      ?.reduce((prev, cur) => {
+        return prev + Number.parseFloat(cur.payment_amount)
+      }, 0)
+      .toFixed(2),
+    total_net: data
+      ?.reduce((prev, cur) => {
+        return prev + Number.parseFloat(cur.net)
+      }, 0)
+
+      .toFixed(2),
+    payment_time: moment(sales[0]?.InvPayment[0]?.datetime).format(
+      'D MMM YYYY, hh:mm A'
+    ),
+    total: total ? total : 0,
+    card: pmethod?.filter((i) => i === 'card').length,
+    cash: pmethod?.filter((i) => i === 'cash').length,
+  }
+
+  return {
+    details: {
+      issue_to: sales[0]?.InsuranceDetail?.insurer_name ?? '',
+      issue_by: sales[0]?.User?.full_name,
+      invoice_id: sales[0]?.custom_id,
+    },
+    items: data,
+    payments: payment,
+    payment_details: details,
+  }
 }

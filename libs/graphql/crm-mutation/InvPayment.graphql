@@ -42,6 +42,9 @@ fragment InvPayment on InvPayment {
   Company {
     ...CompanyFields
   }
+  InvSale {
+    ...InvSaleFields
+  }
 }
 
 mutation createOneInvPayment($data: InvPaymentCreateInput!) {

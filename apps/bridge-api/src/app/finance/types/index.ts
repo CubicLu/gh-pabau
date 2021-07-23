@@ -95,3 +95,64 @@ export interface CreditNoteQueryResult {
   xero_response: string
   xero_modifiedAt: Date
 }
+
+export interface InvoiceArgs {
+  guid?: string
+  saleId?: number
+}
+
+export interface SalesData {
+  key: string
+  after_disc: string
+  category: string
+  date: string
+  description: string
+  disc_amount: string
+  disc_per: string
+  net: string
+  practitioner: string
+  product: string
+  quantity: string
+  sku: string
+  total: string
+  unitprice: string
+  vat: string
+  vat_per: string
+}
+
+export interface PaymentsData {
+  key: string
+  insurer: string
+  payment_date: string
+  payment_method: string
+  payment_amount: string
+}
+
+export interface PaymentsDetails {
+  key: number
+  total_vat: string
+  amount_paid: string
+  sub_total_amount: number
+  outstanding: number
+  grand_total: number
+  refund_amount: number
+  paid: number
+  total_net: string
+  payment_time: string
+  total: number
+  card: number
+  cash: number
+}
+
+export interface Details {
+  issue_to: string
+  issue_by: string
+  invoice_id: string
+}
+
+export interface InvoiceOutput {
+  details: Details
+  items: SalesData[]
+  payments: PaymentsData[]
+  payment_details: PaymentsDetails
+}

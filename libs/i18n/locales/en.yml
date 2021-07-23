@@ -929,6 +929,25 @@ en:
   ui.sms-purchase-modal.confirm: 'Confirm'
   ui.timeinput.btns.ok: 'Ok'
   ui.timeinput.btns.now: 'Now'
+  invoice.label.name.from: From
+  invoice.invoice.label: Invoice
+  invoice.issue.to.label: Issued To
+  invoice.issue.by.label: Issued By
+  invoice.bank.account: Bank account
+  invoice.bank.iban: IBAN
+  invoice.register.company.number: Reg. company No
+  invoice.account.number: Account number
+  invoice.bank.swift: Swift
+  invoice.bank.sort.code: Sort Code
+  invoice.bank.address: Address
+  invoice.bank.name: Bank name
+  invoice.regiter.company.address: Reg. company address
+  invoice.date.label: Date
+  invoice.payment.label: Payment
+  invoice.total.label: Total
+  invoice.card.label: Card
+  invoice.cash.label: Cash
+  invoice.pay.button.label: Pay with card
   settings-header: Settings
   settings-performance-save: 'Save Changes'
   settings-performance-tab-header1: 'Review Schedule'
