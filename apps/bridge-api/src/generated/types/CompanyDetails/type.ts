@@ -116,6 +116,26 @@ export const CompanyDetails = objectType({
         return root.User
       },
     })
+    t.list.field('InvoiceTemplate', {
+      type: 'InvoiceTemplate',
+      args: {
+        where: 'InvoiceTemplateWhereInput',
+        orderBy: 'InvoiceTemplateOrderByInput',
+        cursor: 'InvoiceTemplateWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'InvoiceTemplateScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.InvoiceTemplate
+      },
+    })
+    t.field('InvoiceDefaultTemplate', {
+      type: 'InvoiceTemplate',
+      resolve(root: any) {
+        return root.InvoiceDefaultTemplate
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyDetailsCountOutputType',
       resolve(root: any) {

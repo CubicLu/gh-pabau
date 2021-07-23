@@ -1555,6 +1555,20 @@ export const Company = objectType({
         return root.CmLeadCustomFieldOrder
       },
     })
+    t.list.field('SaleItem', {
+      type: 'SaleItem',
+      args: {
+        where: 'SaleItemWhereInput',
+        orderBy: 'SaleItemOrderByInput',
+        cursor: 'SaleItemWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'SaleItemScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.SaleItem
+      },
+    })
     t.list.field('Communication', {
       type: 'Communication',
       args: {

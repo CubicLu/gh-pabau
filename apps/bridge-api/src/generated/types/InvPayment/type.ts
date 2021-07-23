@@ -55,5 +55,11 @@ export const InvPayment = objectType({
         return root.Company
       },
     })
+    t.nullable.field('InvSale', {
+      type: 'InvSale',
+      resolve(root: any) {
+        return root.InvSale
+      },
+    })
   },
 })

@@ -90,6 +90,30 @@ export const InvSale = objectType({
         return root.CmContact
       },
     })
+    t.nullable.field('User', {
+      type: 'User',
+      resolve(root: any) {
+        return root.User
+      },
+    })
+    t.nullable.field('InsuranceDetail', {
+      type: 'InsuranceDetail',
+      resolve(root: any) {
+        return root.InsuranceDetail
+      },
+    })
+    t.nullable.field('IssuingCompany', {
+      type: 'IssuingCompany',
+      resolve(root: any) {
+        return root.IssuingCompany
+      },
+    })
+    t.nullable.field('InvBiller', {
+      type: 'InvBiller',
+      resolve(root: any) {
+        return root.InvBiller
+      },
+    })
     t.list.field('Booking', {
       type: 'Booking',
       args: {
@@ -102,6 +126,34 @@ export const InvSale = objectType({
       },
       resolve(root: any) {
         return root.Booking
+      },
+    })
+    t.list.field('InvPayment', {
+      type: 'InvPayment',
+      args: {
+        where: 'InvPaymentWhereInput',
+        orderBy: 'InvPaymentOrderByInput',
+        cursor: 'InvPaymentWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'InvPaymentScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.InvPayment
+      },
+    })
+    t.list.field('SaleItem', {
+      type: 'SaleItem',
+      args: {
+        where: 'SaleItemWhereInput',
+        orderBy: 'SaleItemOrderByInput',
+        cursor: 'SaleItemWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'SaleItemScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.SaleItem
       },
     })
     t.nullable.field('_count', {
