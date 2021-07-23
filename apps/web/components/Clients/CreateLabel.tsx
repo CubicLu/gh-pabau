@@ -9,8 +9,11 @@ import {
   CustomIcon,
 } from '@pabau/ui'
 import {
+  GetFeatureFlagsDocument,
   useAddLabelMutation,
+  useGetContactsLabelsQuery,
   useInsertContactsLabelsMutation,
+  useGetLabelsQuery,
 } from '@pabau/graphql'
 import styles from '../../pages/clients/clients.module.less'
 import { Labels } from '../../pages/clients'
@@ -99,10 +102,15 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   })
   const [selectedContacts, setSelectedContacts] = useState([])
 
-  const [
-    addLabelMutaton,
-    { data: addlabelData, loading: AddLabelLoading, error: addLabelError },
-  ] = useAddLabelMutation()
+  // const [
+  //   addLabelMutaton,
+  //   { data: addlabelData, loading: AddLabelLoading, error: addLabelError },
+  // ] = useAddLabelMutation()
+
+  const [addLabelMutaton] = useAddLabelMutation({
+    fetchPolicy: 'no-cache',
+  })
+
   // const editLabelData = (valueObject) => {
   //   const labelData = [...labels]
   //   const labelIndex = labelData.findIndex(
@@ -212,6 +220,11 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
           text: newLabel.label,
           color: newLabel.color,
         },
+        // refetchQueries: [
+        //   {
+        //     query: [{ useGetLabelsQuery }],
+        //   },
+        // ],
       })
     } else {
       Notification(
@@ -326,6 +339,12 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   //   }
   // }
 
+  const {
+    data: getContactsLabelsData,
+    loading: geContactstLabelsLoading,
+    error: getContactsLabelsError,
+  } = useGetContactsLabelsQuery({ fetchPolicy: 'no-cache' })
+
   // WORKING MULTIPLE CONTACTS AND MULTIPLE LABELS
   const onApplyLabel = () => {
     handleApplyLabel(selectedLabels)
@@ -414,7 +433,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
                     </div>
                     <div className={styles.tagName}>{label.text}</div>
                     {selectedLabels.some(
-                      (item) => item.text === label.text
+                      (item) => (item.text || item.label) === label.text
                     ) && <CheckOutlined />}
                   </span>
                 )}

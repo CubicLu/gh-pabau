@@ -31,6 +31,7 @@ import {
   useGetContactsLabelsQuery,
   useGetLabelsLazyQuery,
   useFindManyCompanyDepartmentsLazyQuery,
+  useAddLabelMutation,
 } from '@pabau/graphql'
 
 const { TabPane } = Tabs
@@ -72,11 +73,29 @@ export const Clients: FC<ClientsProps> = () => {
     error: getuDplicateContactsError,
   } = useDuplicateContactsQuery({ fetchPolicy: 'no-cache' })
 
-  const {
-    data: getLabelsData,
-    loading: getLabelsLoading,
-    error: getLabelsError,
-  } = useGetLabelsQuery({ fetchPolicy: 'no-cache' })
+  // const {
+  //   data: getLabelsData,
+  //   loading: getLabelsLoading,
+  //   error: getLabelsError,
+  // } = useGetLabelsQuery({ fetchPolicy: 'network-only' })
+
+  // const [ getLabelsQuery,{
+  //   data: getLabelsData,
+  //   loading: getLabelsLoading,
+  //   error: getLabelsError,
+  // }] = useGetLabelsQuery({ fetchPolicy: 'network-only' })
+
+  const [getLabelsQuery, { data: getLabelsData }] = useGetLabelsLazyQuery({
+    fetchPolicy: 'network-only',
+  })
+
+  const [addLabelMutaton] = useAddLabelMutation({
+    fetchPolicy: 'no-cache',
+  })
+
+  useEffect(() => {
+    getLabelsQuery()
+  }, [getLabelsQuery])
 
   const {
     data: getContactsLabelsData,
@@ -85,6 +104,8 @@ export const Clients: FC<ClientsProps> = () => {
   } = useGetContactsLabelsQuery({ fetchPolicy: 'no-cache' })
 
   console.log('getContactsLabelsData:', getContactsLabelsData)
+
+  console.log('getLabelsData:', getLabelsData)
 
   // const [
   //   getLabels,
@@ -171,8 +192,10 @@ export const Clients: FC<ClientsProps> = () => {
           // ...fieldContact, labelTest: labelTest.push(fieldCL.label)
           // let labelComplete = {fieldCL.label.text, }
           const labelComplete = {}
-          labelComplete['label'] = fieldCL.label.text
+          labelComplete['text'] = fieldCL.label.text
           labelComplete['color'] = fieldCL.label.color
+          // labelComplete['label'] = fieldCL.label?.text
+          // labelComplete['color'] = fieldCL.label?.color
 
           console.log('labelComplete:', labelComplete)
 
@@ -376,13 +399,13 @@ export const Clients: FC<ClientsProps> = () => {
 
   // console.log(getDuplicateContactsData, 'getDuplicateContactsData')
 
-  useEffect(() => {
-    const uniqLabel = countsLabel()
-    setLabels(uniqLabel)
-    setSelectedLabels(uniqLabel)
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sourceData])
+  // useEffect(() => {
+  //   const uniqLabel = countsLabel()
+  //   setLabels(uniqLabel)
+  //   setSelectedLabels(uniqLabel)
+  //
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [sourceData])
 
   useEffect(() => {
     selectedTab === tab.archived ? setIsArchived(true) : setIsArchived(false)
@@ -394,7 +417,7 @@ export const Clients: FC<ClientsProps> = () => {
   const intersectMany = (arrs) => {
     let res = arrs[0]
     for (let i = 1; i < arrs.length; i++) {
-      res = intersectionBy(res, arrs[i], 'text')
+      res = intersectionBy(res, arrs[i], 'label')
     }
     return res
   }
@@ -443,19 +466,41 @@ export const Clients: FC<ClientsProps> = () => {
   }, [searchText, selectedTab, sourceData])
 
   // ORIGINAL
+  // useEffect(() => {
+  //   const selectedData = sourceData.filter((item) =>
+  //     selectedRowKeys?.includes(item.id)
+  //   )
+  //   const labelsArray = selectedData.map((data) => {
+  //     return data.label
+  //   })
+  //   console.log('labelsArray:', labelsArray)
+  //   console.log('selectedData', selectedData)
+  //   const data = intersectMany(labelsArray) || []
+  //   setSelectedLabels(data)
+  //   setDefaultSelectedLabels(data)
+  //   console.log('sourceData', sourceData)
+  //
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [selectedRowKeys, sourceData])
+
   useEffect(() => {
-    const selectedData = sourceData.filter((item) =>
+    const selectedData = testData?.filter((item) =>
       selectedRowKeys?.includes(item.id)
     )
-    const labelsArray = selectedData.map((data) => {
-      return data.label
+    const labelsArray = selectedData?.map((data) => {
+      return data.labelTest
     })
-    const data = intersectMany(labelsArray) || []
-    setSelectedLabels(data)
-    setDefaultSelectedLabels(data)
+    console.log('selectedData:', selectedData)
+    console.log('labelsArray:', labelsArray)
+    // console.log('defaultSelectedLabels:', defaultSelectedLabels)
+    if (labelsArray) {
+      const data = intersectMany(labelsArray) || []
+      setSelectedLabels(data)
+      setDefaultSelectedLabels(data)
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedRowKeys, sourceData])
+  }, [selectedRowKeys, testData])
 
   const countsLabel = () => {
     const labelsWithCount = sourceData.reduce((p, c) => {
@@ -607,11 +652,20 @@ export const Clients: FC<ClientsProps> = () => {
   const uniqLabel = (oldLabelList, selectedLabelList) => {
     const newList = [...selectedLabelList]
     const removedLabel = differenceBy(defaultSelectedLabels, selectedLabelList)
+    console.log('selectedLabelList before remove', selectedLabelList)
     console.log('removedLabel', removedLabel)
     const uniqData = oldLabelList.filter((data) => {
       return (
         !newList.some((item) => item.labelTest === data.labelTest) &&
         !removedLabel.some((item) => item.labelTest === data.labelTest)
+        // !newList.some(
+        //   (item) =>
+        //     item.label === data.label || item.labelTest === data.labelTest
+        // ) &&
+        // !removedLabel.some(
+        //   (item) =>
+        //     item.label === data.label || item.labelTest === data.labelTest
+        // )
       )
     })
     return [...newList, ...uniqData]
@@ -711,6 +765,7 @@ export const Clients: FC<ClientsProps> = () => {
       getClientsCountLoading={getClientsCountLoading}
       setPaginateData={setPaginateData}
       testLabels={testLabels}
+      addLabelMutaton={addLabelMutaton}
     />
   )
 

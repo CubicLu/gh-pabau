@@ -46,6 +46,7 @@ interface ClientsContentProps {
   getClientsCountLoading?: boolean
   setPaginateData?: (val) => void
   testLabels?: any
+  addLabelMutaton?: (val) => void
 }
 
 export interface SourceDataProps {
@@ -250,9 +251,11 @@ export const ClientsContent: FC<ClientsContentProps> = ({
 
         // eslint-disable-next-line react/destructuring-assignment
         // return <span>{labelTest.map((item) => item)}</span>
+        console.log('labelTest:', labelTest)
         return (
           <div className={styles.labelWrapper}>
             {labelTest?.map((label) => (
+              // console.log('111', label)
               <Button
                 className={styles.labelButton}
                 style={{
@@ -267,6 +270,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
                 {/*{labelTest.length > 0 ? labelTest.map((x) => x) : null}*/}
                 {/*{labelItem}*/}
                 {label.label ? label.label : label.text}
+                {/*{label.label}*/}
               </Button>
             ))}
           </div>
