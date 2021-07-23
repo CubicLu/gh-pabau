@@ -31,6 +31,9 @@ fragment InsuranceDetail on InsuranceDetail {
   HealthcodeInsurer {
     ...HealthcodeInsurerFields
   }
+  CmContact {
+    ...CmContactFields
+  }
 }
 
 mutation createOneInsuranceDetail($data: InsuranceDetailCreateInput!) {

@@ -35,7 +35,6 @@ export const Reports = extendType({
             company_id: ctx.authenticated.company.toString(),
             user_id: ctx.authenticated.user.toString(),
           })
-          console.log(`${url}/api/pabau2.php?${params}`)
           return await fetch(`${url}/api/pabau2.php?${params}`)
             .then((result) => result.json())
             .catch((error) => {
@@ -74,7 +73,6 @@ export const Reports = extendType({
             company_id: ctx.authenticated.company.toString(),
             user_id: ctx.authenticated.user.toString(),
           })
-          console.log(`${url}/api/pabau2.php?${params}`)
           return await fetch(`${url}/api/pabau2.php?${params}`)
             .then((result) => result.json())
             .catch((error) => {

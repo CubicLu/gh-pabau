@@ -7,7 +7,6 @@ import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from '../../pages/products/list.module.less'
 
 interface P {
-  filter: number
   initialValues: { status: number; type: string }
   selectedCategoryType: string
   activeTab: string
@@ -18,7 +17,6 @@ interface P {
 }
 
 export const Filter = ({
-  filter,
   initialValues,
   selectedCategoryType,
   activeTab,
@@ -33,7 +31,7 @@ export const Filter = ({
       initialValues={initialValues}
       enableReinitialize={true}
       onSubmit={async (values) => {
-        if (values?.status !== filter) changeFilter(values?.status)
+        changeFilter(values?.status)
         if (values?.type !== selectedCategoryType) {
           changeCategoryType(values?.type)
         }

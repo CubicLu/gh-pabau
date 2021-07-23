@@ -45,13 +45,8 @@ export default class Stock {
     const stock = await this.calculateAvailableStock(
       this.product_id ?? null
     ).then((stock) => stock)
-    console.log('availableStockPerLocation', location_id)
     console.log('all stock', stock)
-    return this._availableStock?.find((stock) => {
-      console.log('_availableStock stock.id', stock?.id)
-      console.log('_availableStock new location_id', location_id)
-      return stock?.id === location_id
-    })
+    return this._availableStock?.find((stock) => stock?.id === location_id)
   }
   /**
    *
@@ -63,7 +58,6 @@ export default class Stock {
     new_stock: number
   ): Promise<InvWarehouseProduct> {
     const stock = await this.availableStockPerLocation(location_id)
-    console.log('update', stock)
     const stockToBeUpdated =
       stock?.quantity === 0 ? new_stock : Math.abs(stock.quantity - new_stock)
     try {

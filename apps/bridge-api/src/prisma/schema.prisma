@@ -2684,7 +2684,6 @@ model CmProductCustomField {
   @@map("cm_products_custom")
 }
 
-// TODO add an index via up.sql
 model CmPurchaseItem {
   id              Int              @id @default(autoincrement())
   order_id        Int?
@@ -2695,11 +2694,11 @@ model CmPurchaseItem {
   Order           CmPurchaseOrder? @relation(fields: [order_id], references: [id])
   Product         InvProduct?      @relation(fields: [product_id], references: [id])
 
+  @@index([product_id], name: "product_id")
+  @@index([order_id], name: "order_id")
   @@map("cm_purchase_items")
 }
 
-//
-// TODO add an index via up.sql
 model CmPurchaseOrder {
   id                  Int              @id @default(autoincrement())
   order_no            String
@@ -2718,16 +2717,21 @@ model CmPurchaseOrder {
   terms_of_payment    String
   currency            String
   tags                String
-  category_id         Int
+  category_id         Int?
   lpo_number          String
   grn_number          String
   Location            CompanyBranch?   @relation(fields: [location_id], references: [id])
   Company             Company          @relation(fields: [company_id], references: [id])
   User                User?            @relation(fields: [user_id], references: [id])
   Supplier            AccountManager?  @relation(fields: [supplier_id], references: [id])
+  Category            InvCategory?     @relation(fields: [category_id], references: [id])
   CmPurchaseItem      CmPurchaseItem[]
 
-
+  @@index([category_id], name: "category_id")
+  @@index([company_id], name: "company_id")
+  @@index([location_id], name: "location_id")
+  @@index([supplier_id], name: "supplier_id")
+  @@index([is_hidden], name: "is_hidden")
   @@map("cm_purchase_order")
 }
 
@@ -6198,10 +6202,11 @@ model InvCategory {
   master_cat_id     Int?
   Company           Company?                @relation(fields: [company_id], references: [id])
   InvProduct        InvProduct[]
-  MasterCategory    ServicesMasterCategory? @relation("master_cat_id_to_services_master_category_id", fields: [master_cat_id], references: [id], onDelete: Restrict)
+  MasterCategory    ServicesMasterCategory? @relation("master_cat_id_to_services_master_category_id", fields: [master_cat_id], references: [id], onDelete: Cascade)
   Tax               Tax?                    @relation(fields: [tax_id], references: [id])
   User              User?                   @relation(fields: [user_id], references: [id])
 
+  CmPurchaseOrder CmPurchaseOrder[]
   @@index([category_type], name: "category_type")
   @@index([master_cat_id], name: "master_cat_id")
   @@index([company_id], name: "occupier_index")
@@ -6442,8 +6447,8 @@ model InvProduct {
   allow_negative_qty        Boolean                @default(false)
   User                      User?                  @relation(fields: [uid], references: [id])
   Company                   Company?               @relation(fields: [company_id], references: [id])
-  InvCategory               InvCategory?           @relation(fields: [category_id], references: [id], onDelete: Restrict)
-  Supplier                  AccountManager?        @relation(fields: [supplier_id], references: [id], onDelete: Restrict)
+  InvCategory               InvCategory?           @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  Supplier                  AccountManager?        @relation(fields: [supplier_id], references: [id])
   Tax                       Tax?                   @relation(fields: [VATRate_id], references: [id])
   CmDrug                    CmDrug[]
   CmPurchaseItem            CmPurchaseItem[]

@@ -167,7 +167,6 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                         onClick={() => onDelete?.()}
                         style={{ marginRight: '1rem' }}
                         type="text"
-                        danger
                       >
                         {deleteBtnText || 'Delete'}
                       </Button>

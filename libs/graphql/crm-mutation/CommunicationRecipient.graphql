@@ -18,6 +18,12 @@ fragment CommunicationRecipient on CommunicationRecipient {
   Provider {
     ...CommunicationProviderFields
   }
+  Contact {
+    ...CmContactFields
+  }
+  Lead {
+    ...CmLeadFields
+  }
 }
 
 mutation createOneCommunicationRecipient($data: CommunicationRecipientCreateInput!) {

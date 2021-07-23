@@ -87,7 +87,6 @@ export const permissions = shield(
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
-        rules.authentication.isAdmin,
         rules.interceptors.injectCompany,
         rules.interceptors.injectUser
       ),

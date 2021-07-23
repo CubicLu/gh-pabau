@@ -151,31 +151,32 @@ export const Me = extendType({
           })
       },
     })
-    t.field('canAccessPage', {
+    t.field('permission', {
       type: 'Boolean',
+      description: 'Validates can a user access a page',
       args: {
-        page_name: nonNull(stringArg()),
+        page: nonNull(stringArg()),
       },
-      async resolve(_, { page_name }, ctx: Context) {
-        const permissions = await ctx.prisma.userPermission.findFirst({
-          where: {
-            Page: {
-              name: {
-                equals: page_name,
+      resolve(_, { page }, ctx: Context) {
+        return ctx.prisma.userPermission
+          .findFirst({
+            where: {
+              user: {
+                equals: ctx.authenticated.user,
+              },
+              Page: {
+                name: {
+                  equals: page,
+                },
               },
             },
-            user: {
-              equals: ctx.authenticated.user,
-            },
-          },
-          select: {
-            id: true,
-          },
-        })
-        if (!permissions.id) {
-          throw new Error('Not Authorized')
-        }
-        return true
+          })
+          .then((data) => {
+            if (data?.user !== ctx.authenticated.user) {
+              throw new Error('Not Authorized')
+            }
+            return true
+          })
       },
     })
   },
