@@ -1,8 +1,3 @@
-import album1 from '../../assets/images/attach-dialog/albums/album1.png'
-import album2 from '../../assets/images/attach-dialog/albums/album2.png'
-import album3 from '../../assets/images/attach-dialog/albums/album3.png'
-import album4 from '../../assets/images/attach-dialog/albums/album4.png'
-import album5 from '../../assets/images/attach-dialog/albums/album5.png'
 import image1 from '../../assets/images/attach-dialog/sample/image1.png'
 import image2 from '../../assets/images/attach-dialog/sample/image2.png'
 import image3 from '../../assets/images/attach-dialog/sample/image3.png'
@@ -31,7 +26,6 @@ import image24 from '../../assets/images/attach-dialog/sample/image24.png'
 export const imageAlbums = [
   {
     name: 'Ordinary',
-    thumbnail: album1,
     items: [
       { src: image1, name: 'image 1' },
       { src: image2, name: 'image 2' },
@@ -53,7 +47,6 @@ export const imageAlbums = [
   },
   {
     name: 'Album Two',
-    thumbnail: album2,
     items: [
       { src: image17, name: 'image 17' },
       { src: image18, name: 'image 18' },
@@ -61,7 +54,6 @@ export const imageAlbums = [
   },
   {
     name: 'Three',
-    thumbnail: album3,
     items: [
       { src: image19, name: 'image 19' },
       { src: image20, name: 'image 20' },
@@ -69,7 +61,6 @@ export const imageAlbums = [
   },
   {
     name: 'Four',
-    thumbnail: album4,
     items: [
       { src: image21, name: 'image 21' },
       { src: image22, name: 'image 22' },
@@ -77,7 +68,6 @@ export const imageAlbums = [
   },
   {
     name: 'Five',
-    thumbnail: album5,
     items: [
       { src: image23, name: 'image 23' },
       { src: image24, name: 'image 24' },

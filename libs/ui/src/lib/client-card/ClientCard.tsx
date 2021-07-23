@@ -5,17 +5,15 @@ import {
   ClientDashboardLayout,
   ClientAppointmentsLayout,
   ClientCommunicationsLayout,
-  ClientConsentsLayout,
   ClientDocumentsLayout,
   ClientFinancialsLayout,
   ClientGiftVoucherLayout,
   ClientLabTestsLayout,
   ClientLoyaltyLayout,
-  ClientMedicalHistoryLayout,
+  ClientFormsLayout,
   ClientPackagesLayout,
   ClientPhotosLayout,
-  ClientTaskLayout,
-  ClientTreatmentNotesLayout,
+  ClientActivitiesLayout,
   ClientVaccineHistoryLayout,
   Button,
   TabMenu,
@@ -25,7 +23,7 @@ import {
 } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment'
-import { Modal, Popover, Input, Badge, Drawer } from 'antd'
+import { Modal, Popover, Input, Badge, Drawer, Tooltip } from 'antd'
 import {
   RightOutlined,
   LeftOutlined,
@@ -68,6 +66,7 @@ import {
   conversation,
   tests,
   products,
+  clientPackages,
 } from './mock'
 
 const { TextArea } = Input
@@ -173,45 +172,37 @@ const ClientCardModal: FC<ClientCardProps> = ({
       children: [
         {
           key: 5,
-          content: 'Medical History',
+          content: 'Forms',
         },
         {
           key: 6,
-          content: 'Treatment Notes',
-        },
-        {
-          key: 7,
           content: 'Photos',
         },
         {
-          key: 8,
+          key: 7,
           content: 'Documents',
         },
         {
-          key: 9,
-          content: 'Consents',
-        },
-        {
-          key: 10,
+          key: 8,
           content: 'Lab Tests',
         },
         {
-          key: 11,
+          key: 9,
           content: 'Vaccine History',
         },
       ],
     },
     {
-      key: 12,
+      key: 10,
       content: customTabMenutItem('Gift voucher', 15),
     },
     {
-      key: 13,
+      key: 11,
       content: customTabMenutItem('Loyalty', 7),
     },
     {
-      key: 14,
-      content: customTabMenutItem('Tasks & Recalls', 8),
+      key: 12,
+      content: customTabMenutItem('Activities', 8),
     },
   ]
 
@@ -456,10 +447,6 @@ const ClientCardModal: FC<ClientCardProps> = ({
       JSON.stringify(items)
     )
     await window.localStorage.setItem('pabau_popout_item', JSON.stringify(item))
-    // await window.localStorage.setItem(
-    //   'pabau_popout_fullscreen',
-    //   JSON.stringify(false)
-    // )
     await window.localStorage.setItem('pabau_popout_new', JSON.stringify(true))
     window.dispatchEvent(new Event('storage'))
 
@@ -527,9 +514,12 @@ const ClientCardModal: FC<ClientCardProps> = ({
       {alertItems && (
         <div className={styles.staffAlertsContainer}>
           {alertItems.map((item, index) => (
-            <div className={styles.staffAlert} key={`staff-alert-${index}`}>
-              {item}
-            </div>
+            <Tooltip
+              key={`staff-alert-${index}`}
+              title={`Created By William - ${moment().format('DD/MM/YYYY')}`}
+            >
+              <div className={styles.staffAlert}>{item}</div>
+            </Tooltip>
           ))}
         </div>
       )}
@@ -900,25 +890,19 @@ const ClientCardModal: FC<ClientCardProps> = ({
                   )}
                 </div>
                 <div>
-                  <ClientPackagesLayout isEmpty={true} />
+                  <ClientPackagesLayout items={clientPackages} />
                 </div>
                 <div>
                   <ClientCommunicationsLayout isEmpty={true} />
                 </div>
                 <div>
-                  <ClientMedicalHistoryLayout isEmpty={true} />
-                </div>
-                <div>
-                  <ClientTreatmentNotesLayout isEmpty={true} />
+                  <ClientFormsLayout isEmpty={true} />
                 </div>
                 <div>
                   <ClientPhotosLayout isEmpty={true} />
                 </div>
                 <div>
                   <ClientDocumentsLayout isEmpty={true} />
-                </div>
-                <div>
-                  <ClientConsentsLayout isEmpty={true} />
                 </div>
                 <div>
                   <ClientLabTestsLayout isEmpty={true} />
@@ -933,7 +917,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
                   <ClientLoyaltyLayout isEmpty={true} />
                 </div>
                 <div>
-                  <ClientTaskLayout isEmpty={true} />
+                  <ClientActivitiesLayout isEmpty={true} />
                 </div>
               </CustomTabMenu>
             </div>
