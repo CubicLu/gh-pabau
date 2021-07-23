@@ -1,12 +1,13 @@
-import { Controller, Post, Body, Headers } from '@nestjs/common'
+import { Controller, Post, Body } from '@nestjs/common'
 import { NotificationServices } from './notification.service'
 import { notificationType } from './mock'
 
 interface ResponseType {
   success: boolean
   message?: string | string[]
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  response?: any
+  response?: {
+    id: string
+  }
 }
 
 interface BodyData {
@@ -17,18 +18,19 @@ interface BodyData {
   user_name: string
   service_name: string
   client_name: string
-  date: string | Date
-  time: string | Date
+  date: string
+  time: string
+  company_id: number
   cancellation_reason?: string
+  client_id?: number
 }
 
 const requiredFields = [
   'type',
-  'sent_to',
   'sent_by',
   'user_name',
   'service_name',
-  'client_name',
+  'client_id',
   'date',
   'time',
 ]
@@ -38,11 +40,19 @@ export class NotificationController {
   constructor(private readonly notificationService: NotificationServices) {}
 
   @Post('notification')
-  async sendNotification(
-    @Body() data: BodyData,
-    @Headers() headers
-  ): Promise<ResponseType> {
-    if (data.type === notificationType.cancelled_appointment_via_calendar) {
+  async sendNotification(@Body() data: BodyData): Promise<ResponseType> {
+    const {
+      type,
+      sent_by,
+      company_id,
+      destination,
+      service_name,
+      date,
+      time,
+      cancellation_reason,
+      client_id,
+    } = data
+    if (type === notificationType.cancelled_appointment_via_calendar) {
       requiredFields.push('cancellation_reason')
     }
 
@@ -57,27 +67,33 @@ export class NotificationController {
       return { success: false, message: errors }
     }
 
-    const sentUserData = await this.notificationService.getUserById(
-      data.sent_by,
-      headers?.authorization
+    const staffMembers = await this.notificationService.findStaffMembersByCompany(
+      company_id
     )
-    const clientData = await this.notificationService.getUserById(
-      data.sent_to?.[0],
-      headers?.authorization
+    const managers = await this.notificationService.findManagersByCompany(
+      company_id
     )
 
-    const response = await this.notificationService.sendNotification(
-      data.type,
-      data.sent_to,
-      data.sent_by,
-      data.destination,
-      sentUserData?.data?.findFirstUser?.full_name,
-      data.service_name,
-      clientData?.data?.findFirstUser?.full_name,
-      data.date,
-      data.time,
-      data.cancellation_reason
-    )
-    return { success: true, response }
+    const sentUserData = await this.notificationService.findUserById(sent_by)
+    const clientData = await this.notificationService.findUserById(client_id)
+
+    const response = await this.notificationService.sendNotification({
+      type,
+      sent_to: [...staffMembers, ...managers],
+      sent_by,
+      destination,
+      user_name: sentUserData?.full_name,
+      service_name,
+      client_name: clientData?.full_name,
+      date,
+      time,
+      cancellation_reason,
+    })
+
+    return {
+      success: true,
+      message: 'Notification pushed successfully',
+      response,
+    }
   }
 }
