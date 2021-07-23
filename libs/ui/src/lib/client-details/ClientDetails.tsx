@@ -55,58 +55,64 @@ export interface ClientDetailsProps {
   clientData: ClientData
 }
 
-enum FieldType {
-  patientId,
-  referredBy,
-  dob,
-  gender,
-  address,
-  mobile,
-  email,
+type FieldType =
+  | 'patientId'
+  | 'referredBy'
+  | 'dob'
+  | 'gender'
+  | 'address'
+  | 'mobile'
+  | 'email'
+
+interface FieldOrderItem {
+  title: string
+  fieldName: string
+  type: string
+  field: FieldType
 }
 
 export const ClientDetails: FC<ClientDetailsProps> = ({ clientData }) => {
   const { t } = useTranslation('common')
-  const defaultFieldOrder = [
+  const defaultFieldOrder: FieldOrderItem[] = [
     {
       type: 'text',
-      field: FieldType.patientId,
+      field: 'patientId',
       fieldName: 'patientID',
       title: t('ui.clientdetails.patientid'),
     },
     {
       type: 'text',
-      field: FieldType.referredBy,
+      field: 'referredBy',
       fieldName: 'referredBy',
       title: t('ui.clientdetails.referredby'),
     },
     {
       type: 'date',
-      field: FieldType.dob,
+      field: 'dob',
       fieldName: 'dob',
       title: t('ui.clientdetails.dob'),
     },
     {
       type: 'text',
-      field: FieldType.gender,
+      field: 'gender',
       fieldName: 'gender',
       title: t('ui.clientdetails.gender'),
     },
     {
       type: 'text',
-      field: FieldType.address,
+      field: 'address',
       fieldName: 'address',
       title: t('ui.clientdetails.address'),
     },
     {
       type: 'phone',
-      field: FieldType.mobile,
+      field: 'mobile',
       fieldName: 'phone',
       title: t('ui.clientdetails.mobilephone'),
     },
     {
       type: 'email',
-      field: FieldType.email,
+      field: 'email',
       fieldName: 'email',
       title: t('ui.clientdetails.email'),
     },
@@ -146,7 +152,9 @@ export const ClientDetails: FC<ClientDetailsProps> = ({ clientData }) => {
   const [type, setType] = useState('')
   const [customizingFields, setCustomizingFields] = useState(false)
   const [hoverDetails, setHoverDetails] = useState(false)
-  const [fieldsOrder, setFieldsOrder] = useState(defaultFieldOrder)
+  const [fieldsOrder, setFieldsOrder] = useState<FieldOrderItem[]>(
+    defaultFieldOrder
+  )
   const [form] = Form.useForm()
 
   const handleOpenAddModal = (type: string) => {

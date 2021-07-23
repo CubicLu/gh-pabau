@@ -5,12 +5,7 @@ import {
   useDelete_Notifications_By_PkMutation,
   useInsert_Read_Notification_OneMutation,
 } from '@pabau/graphql'
-import {
-  Iframe,
-  Layout as PabauLayout,
-  LayoutProps,
-  StickyPopout,
-} from '@pabau/ui'
+import { Layout as PabauLayout, LayoutProps, StickyPopout } from '@pabau/ui'
 import { useRouter } from 'next/router'
 import React, { FC, useContext, useEffect, useState } from 'react'
 import { UserContext } from '../../context/UserContext'
@@ -23,6 +18,7 @@ import TaskManagerIFrame from '../TaskManagerIFrame/TaskManagerIFrame'
 import { Unauthorized } from '../Unauthorized'
 import CommonHeader from '../CommonHeader'
 import Chat from '../Chat/Chat'
+import LegacyPage from '../LegacyPage'
 
 interface Notification {
   id: string
@@ -143,7 +139,7 @@ const Layout: FC<LayoutProps> = ({
           <CommonHeader showChat={showChat} title="Pabau" isShowSearch={true} />
           <Chat closeDrawer={() => setShowChat(false)} visible={showChat} />
 
-          {!legacyPage ? children : <Iframe urlPath={legacyPage} />}
+          {!legacyPage ? children : <LegacyPage urlPath={legacyPage} />}
         </PabauLayout>
         <div className={styles.stickyPopoutContainer}>
           <StickyPopout />

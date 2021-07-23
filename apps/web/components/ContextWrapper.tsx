@@ -34,6 +34,7 @@ const ContextWrapper: FunctionComponent = ({ children }) => {
             details {
               company_name
               language
+              currency
             }
           }
         }

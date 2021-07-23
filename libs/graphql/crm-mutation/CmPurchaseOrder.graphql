@@ -35,6 +35,9 @@ fragment CmPurchaseOrder on CmPurchaseOrder {
   Supplier {
     ...AccountManagerFields
   }
+  Category {
+    ...InvCategoryFields
+  }
 }
 
 mutation createOneCmPurchaseOrder($data: CmPurchaseOrderCreateInput!) {

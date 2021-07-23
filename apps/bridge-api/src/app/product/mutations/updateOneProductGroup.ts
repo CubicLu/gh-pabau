@@ -24,13 +24,31 @@ export const ServicesMasterCategoryUpdateOneMutation = mutationField(
       if (categories) {
         await ctx.prisma.invCategory.updateMany({
           where: {
+            master_cat_id: {
+              equals: productGroup?.id,
+            },
+            id: {
+              not: {
+                in: categories,
+              },
+            },
+            company_id: {
+              equals: ctx.authenticated.company,
+            },
+          },
+          data: {
+            master_cat_id: {
+              set: null,
+            },
+          },
+        })
+        await ctx.prisma.invCategory.updateMany({
+          where: {
             id: {
               in: categories,
             },
-            Company: {
-              id: {
-                equals: ctx.authenticated.company,
-              },
+            company_id: {
+              equals: ctx.authenticated.company,
             },
           },
           data: {

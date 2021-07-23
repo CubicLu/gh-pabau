@@ -1,10 +1,7 @@
 import { ShopOutlined } from '@ant-design/icons'
-import {
-  useSuppliersAggregateQuery,
-  useSuppliersListQuery,
-} from '@pabau/graphql'
+import { useSuppliersListQuery } from '@pabau/graphql'
 import { Pagination, Table } from '@pabau/ui'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState, useMemo } from 'react'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './ProductListComponents.module.less'
 
@@ -12,7 +9,7 @@ interface P {
   search: string
 }
 
-const Suppliers: FC<P> = ({ search }) => {
+const Suppliers: FC<P> = ({ search = '' }) => {
   const { t } = useTranslationI18()
   const [paginateData, setPaginateData] = useState({
     total: 0,
@@ -21,18 +18,16 @@ const Suppliers: FC<P> = ({ search }) => {
     currentPage: 1,
     showingRecords: 0,
   })
-  const { data, loading } = useSuppliersListQuery({
-    variables: {
+  const getQueryVariables = useMemo(() => {
+    return {
+      searchTerm: search,
       offset: paginateData.offset,
       limit: paginateData.limit,
-      searchTerm: search,
-      status: 3,
-    },
-  })
-  const { data: aggregateData } = useSuppliersAggregateQuery({
+    }
+  }, [search, paginateData.offset, paginateData.limit])
+  const { data, loading } = useSuppliersListQuery({
     variables: {
-      status: 3,
-      searchTerm: search,
+      ...getQueryVariables,
     },
   })
   const SupplierColumns = [
@@ -59,14 +54,14 @@ const Suppliers: FC<P> = ({ search }) => {
   ]
 
   useEffect(() => {
-    if (aggregateData) {
+    if (data?.findManyAccountManagerCount) {
       setPaginateData((d) => ({
         ...d,
-        total: aggregateData?.findManyAccountManagerCount,
+        total: data?.findManyAccountManagerCount,
         showingRecords: data?.findManyAccountManager?.length,
       }))
     }
-  }, [data, aggregateData])
+  }, [data])
 
   const onPaginationChange = (currentPage: number) => {
     const offset = paginateData.limit * (currentPage - 1)

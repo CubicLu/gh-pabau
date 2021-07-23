@@ -41,5 +41,11 @@ export const InsuranceDetail = objectType({
         return root.HealthcodeInsurer
       },
     })
+    t.nullable.field('CmContact', {
+      type: 'CmContact',
+      resolve(root: any) {
+        return root.CmContact
+      },
+    })
   },
 })

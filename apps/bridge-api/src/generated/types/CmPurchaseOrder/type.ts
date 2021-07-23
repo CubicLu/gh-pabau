@@ -24,7 +24,7 @@ export const CmPurchaseOrder = objectType({
     t.string('terms_of_payment')
     t.string('currency')
     t.string('tags')
-    t.int('category_id')
+    t.nullable.int('category_id')
     t.string('lpo_number')
     t.string('grn_number')
     t.nullable.field('Location', {
@@ -49,6 +49,12 @@ export const CmPurchaseOrder = objectType({
       type: 'AccountManager',
       resolve(root: any) {
         return root.Supplier
+      },
+    })
+    t.nullable.field('Category', {
+      type: 'InvCategory',
+      resolve(root: any) {
+        return root.Category
       },
     })
     t.list.field('CmPurchaseItem', {

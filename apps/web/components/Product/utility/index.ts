@@ -9,3 +9,4 @@ export const updateTable = (proxy, existing, query, values) => {
     })
   }
 }
+export const filter = (status: number): boolean => status === 0

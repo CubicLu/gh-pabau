@@ -1,18 +1,17 @@
 import type { Tax } from '@pabau/graphql'
 import {
-  CategoryAggregateDocument,
   CategoryListDocument,
-  useCategoryAggregateQuery,
   useCategoryListQuery,
   useCreateOneInvCategoryMutation,
   useUpdateOneInvCategoryMutation,
-  useUpdateProductTaxRecordsMutation,
+  useDeleteOneInvCategoryMutation,
 } from '@pabau/graphql'
 import { Notification, NotificationType, Pagination, Table } from '@pabau/ui'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { CreateCategory } from './CreateCategory'
 import styles from './ProductListComponents.module.less'
+import { filter } from './utility'
 
 interface P {
   showGroup?: boolean
@@ -45,7 +44,6 @@ const CategoryList = ({
     currentPage: 1,
     showingRecords: 0,
   }
-  const filter = (status: number): boolean => status === 0
   const [paginateData, setPaginateData] = useState(defaultPaginateData)
   const [sourceData, setSourceData] = useState(null)
   const [record, setRecord] = useState(null)
@@ -57,14 +55,29 @@ const CategoryList = ({
       disabled: filter(filterByStatus),
     }
   }, [search, paginateData.offset, paginateData.limit, filterByStatus])
-  const getAggregateQueryVariables = useMemo(() => {
-    return {
-      searchTerm: search,
-      disabled: filter(filterByStatus),
-    }
-  }, [search, filterByStatus])
-  const [updateTaxRecords] = useUpdateProductTaxRecordsMutation()
-
+  const [deleteCategory] = useDeleteOneInvCategoryMutation({
+    onCompleted(group) {
+      changeModalState(false)
+      Notification(
+        NotificationType.success,
+        t('products.list.category.notification.delete.success', {
+          name: group?.deleteOneInvCategory?.name,
+        })
+      )
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        t('products.list.category.notification.delete.error')
+      )
+    },
+    refetchQueries: [
+      {
+        query: CategoryListDocument,
+        variables: { ...getQueryVariables },
+      },
+    ],
+  })
   const [addMutation] = useCreateOneInvCategoryMutation({
     onCompleted(category) {
       Notification(
@@ -73,6 +86,7 @@ const CategoryList = ({
           name: category?.createOneInvCategory?.name,
         })
       )
+      changeModalState(false)
     },
     onError() {
       Notification(
@@ -84,10 +98,6 @@ const CategoryList = ({
       {
         query: CategoryListDocument,
         variables: { ...getQueryVariables },
-      },
-      {
-        query: CategoryAggregateDocument,
-        ...getAggregateQueryVariables,
       },
     ],
   })
@@ -104,28 +114,34 @@ const CategoryList = ({
     }
   }, [data])
 
-  const { data: aggregateData } = useCategoryAggregateQuery({
-    variables: {
-      ...getAggregateQueryVariables,
-    },
-  })
-
   const [updateMutation] = useUpdateOneInvCategoryMutation({
+    onCompleted(category) {
+      Notification(
+        NotificationType.success,
+        t('products.list.products.notification.product.update.success', {
+          name: category?.updateOneInvCategory?.name,
+        })
+      )
+      changeModalState(false)
+    },
     onError() {
       Notification(
         NotificationType.error,
         t('products.list.category.notification.updateorder.error')
       )
     },
+  })
+
+  const [updateOrderMutation] = useUpdateOneInvCategoryMutation({
     fetchPolicy: 'no-cache',
   })
 
   const updateOrder = (values: { id: number; order: number }) => {
-    updateMutation({
+    updateOrderMutation({
       variables: {
         data: {
           order: {
-            set: values?.order,
+            set: !values?.order ? 1 : values?.order,
           },
         },
         where: {
@@ -136,14 +152,14 @@ const CategoryList = ({
   }
 
   useEffect(() => {
-    if (aggregateData) {
+    if (data?.findManyInvCategoryCount) {
       setPaginateData((d) => ({
         ...d,
-        total: aggregateData?.findManyInvCategoryCount,
+        total: data?.findManyInvCategoryCount,
         showingRecords: data?.findManyInvCategory?.length,
       }))
     }
-  }, [data, aggregateData, search])
+  }, [data, search])
 
   const onPaginationChange = (currentPage: number) => {
     const offset = paginateData.limit * (currentPage - 1)
@@ -255,9 +271,17 @@ const CategoryList = ({
           action={action}
           taxes={taxes}
           category={record}
+          onDelete={async (id: number) => {
+            await deleteCategory({
+              variables: {
+                where: {
+                  id: id,
+                },
+              },
+            })
+          }}
           onClose={() => changeModalState(false)}
           onCreate={async (category) => {
-            changeModalState(false)
             const categoryData = {
               code: category.code,
               disabled: !category.disabled,
@@ -277,7 +301,7 @@ const CategoryList = ({
                 },
               },
             }
-            if (!category?.tax_id || typeof category?.tax_id !== 'number') {
+            if (!category?.tax_id) {
               delete categoryData?.Tax
             }
             await addMutation({
@@ -288,44 +312,41 @@ const CategoryList = ({
               },
             })
           }}
-          onUpdate={async (values) => {
-            changeModalState(false)
+          onUpdate={async (category) => {
+            const categoryData = {
+              Company: {},
+              User: {},
+              Tax: {
+                connect: {
+                  id: category?.tax_id,
+                },
+              },
+              disabled: {
+                set: !category.disabled,
+              },
+              name: {
+                set: category.name,
+              },
+              image: {
+                set: category.image,
+              },
+              code: {
+                set: category.code,
+              },
+            }
+            if (!category?.tax_id) {
+              delete categoryData?.Tax
+            }
             await updateMutation({
               variables: {
                 data: {
-                  Company: {},
-                  User: {},
-                  Tax: {
-                    connect: {
-                      id: values?.tax_id,
-                    },
-                  },
-                  disabled: {
-                    set: !values.disabled,
-                  },
-                  name: {
-                    set: values.name,
-                  },
-                  image: {
-                    set: values.image,
-                  },
-                  code: {
-                    set: values.code,
-                  },
+                  ...categoryData,
                 },
                 where: {
-                  id: values.id,
+                  id: category.id,
                 },
               },
             })
-            if (values?.tax_id) {
-              updateTaxRecords({
-                variables: {
-                  category: values?.id,
-                  tax: values?.tax_id,
-                },
-              })
-            }
           }}
         />
       )}

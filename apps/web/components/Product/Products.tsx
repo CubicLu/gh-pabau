@@ -7,7 +7,6 @@ import {
 } from '@ant-design/icons'
 import type {
   CreateProductModalInitQuery,
-  LocationsAndProductQuantityQuery,
   ServicesMasterCategory,
   InvCategory,
   ServicesMasterCategoryCreateInput,
@@ -24,7 +23,10 @@ import {
   useUpdateOneServicesMasterCategoryMutation,
   useProductCustomFieldValuesLazyQuery,
   useDeleteOneServicesMasterCategoryMutation,
+  useLocationsAndProductQuantityQuery,
+  useDeleteOneInvProductMutation,
 } from '@pabau/graphql'
+import type { Product } from './CreateProduct/CreateProduct'
 import type { CategoryFragment } from '@pabau/graphql'
 import {
   ButtonLabel,
@@ -47,11 +49,9 @@ interface P {
   search?: string
   modal: CreateProductModalInitQuery
   visible: boolean
-  locations: LocationsAndProductQuantityQuery
   filterByStatus?: number
   filterByCategoryType: string
   categories: CategoryFragment[]
-  loadingCategories: boolean
   fetchingInitialData: boolean
   action: 'Edit' | 'Create'
   changeModalState: (state: boolean) => void
@@ -62,9 +62,7 @@ export const Products = ({
   search = '',
   changeModalState,
   visible,
-  locations,
   categories,
-  loadingCategories,
   modal,
   action,
   isEditing,
@@ -148,7 +146,7 @@ export const Products = ({
       ),
     },
   ]
-  const [record, setRecord] = useState(null)
+  const [record, setRecord] = useState<Product>(null)
   const [sourceData, setSourceData] = useState(null)
   const [groups, setGroups] = useState([])
   const newGroup = {
@@ -165,6 +163,11 @@ export const Products = ({
   const [showGroupModal, setShowGroupModal] = useState(false)
   const [currentGroup, setCurrentGroup] = useState(newGroup)
   const [formikInitialValues, setFormikInitialValues] = useState(newGroup)
+  const { data: locationStockData } = useLocationsAndProductQuantityQuery({
+    variables: {
+      product: record?.id,
+    },
+  })
   const [selectedCategory, setSelectedCategory] = useState<
     Partial<InvCategory>
   >()
@@ -184,7 +187,7 @@ export const Products = ({
       limit: paginateData.limit,
       category_type: filterByCategoryType,
     }
-    if (!currentGroup?.id) {
+    if (!currentGroup?.id || currentGroup?.id === 0) {
       delete queryOptions.group
     }
     if (!selectedCategory?.id) {
@@ -193,9 +196,11 @@ export const Products = ({
     if (!search) {
       delete queryOptions.search
     }
+    if (!filterByCategoryType) {
+      delete queryOptions.category_type
+    }
     if (currentTab === 2) {
       queryOptions.group = 0
-      queryOptions.category = 0
     }
     return queryOptions
   }, [
@@ -311,10 +316,7 @@ export const Products = ({
       variables: {
         data: {
           product_order: {
-            increment:
-              values?.product_order !== null || values?.product_order !== 0
-                ? values?.product_order
-                : 1,
+            set: values?.product_order ?? 1,
           },
         },
         where: {
@@ -401,7 +403,7 @@ export const Products = ({
   }, [listAllProducts])
 
   useEffect(() => {
-    if (!loading && !fetchingInitialData && !loadingCategories) {
+    if (!loading && !fetchingInitialData) {
       setGroups([
         {
           id: 1,
@@ -423,8 +425,9 @@ export const Products = ({
         },
         ...data?.findManyServicesMasterCategory,
       ])
+      setCurrentTab(1)
     }
-  }, [categories, data, fetchingInitialData, loading, loadingCategories, t])
+  }, [categories, data, fetchingInitialData, loading, t])
 
   const GroupsItem = ({ shorten = false }) => {
     const [showOps, setShowOps] = useState(false)
@@ -543,8 +546,8 @@ export const Products = ({
     }
   }
 
-  const renderSideMenu = (isMobile: boolean) => {
-    return isMobile
+  const renderSideMenu = (isMobile: boolean) =>
+    isMobile
       ? [
           <Fragment key="groups">
             <GroupsItem shorten={true} />
@@ -579,7 +582,6 @@ export const Products = ({
             }
           }),
         ]
-  }
 
   const renderTable = (
     renderTableData: typeof listAllProducts.findManyProductsWithAvailableQuantity
@@ -598,22 +600,28 @@ export const Products = ({
           cost: d?.cost,
           is_active: d?.is_active,
           retail: d?.price,
-          quantity: d?.sum,
-          status: d?.alert_quantity > d?.sum ? 'Low' : 'Good',
+          quantity: d?.sum ?? 0,
+          status:
+            d?.alert_quantity > d?.sum
+              ? t('products.list.products.quantity.low')
+              : t('products.list.products.quantity.good'),
           category: d?.category_name,
           key: d.id,
         }))}
         updateDataSource={({ newData, oldIndex, newIndex }) => {
           setSourceData(
-            (newData = newData.map((data: { order: number }, i: number) => {
-              data.order =
-                sourceData[i]?.order === sourceData[i + 1]?.order
-                  ? sourceData[i].order - 1
-                  : sourceData[i].order === (0 || undefined)
-                  ? 1
-                  : sourceData[i].order
-              return data
-            }))
+            (newData = newData.map(
+              (data: { product_order: number }, i: number) => {
+                data.product_order =
+                  sourceData[i]?.product_order ===
+                  sourceData[i + 1]?.product_order
+                    ? sourceData[i].product_order - 1
+                    : sourceData[i].product_order === (0 || undefined)
+                    ? 1
+                    : sourceData[i].product_order
+                return data
+              }
+            ))
           )
           if (oldIndex > newIndex) {
             for (let i = newIndex; i <= oldIndex; i++) {
@@ -757,17 +765,52 @@ export const Products = ({
     ])
   }
 
-  const activeDefaultKey = (): string =>
-    !loadingAllProducts && groups ? '1' : null
+  useEffect(() => {
+    if (currentTab === 1) {
+      setCurrentGroup(null)
+      setSelectedCategory(groups[0]?.InvCategory?.[0])
+    } else {
+      setCurrentGroup(groups[currentTab - 1])
+      setSelectedCategory(groups[currentTab - 1]?.InvCategory?.[0])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTab])
+
+  const [deleteProduct] = useDeleteOneInvProductMutation({
+    onCompleted(group) {
+      changeModalState(false)
+      Notification(
+        NotificationType.success,
+        t('products.list.category.notification.delete.success', {
+          name: group?.deleteOneInvProduct?.name,
+        })
+      )
+    },
+    onError() {
+      Notification(
+        NotificationType.error,
+        t('products.list.product.notification.delete.error')
+      )
+    },
+    refetchQueries: [
+      {
+        query: RetrieveProductsGroupByMasterCategoryDocument,
+      },
+      {
+        query: RetrieveAllInvProductsDocument,
+        ...getQueryVariables,
+      },
+    ],
+  })
 
   return (
-    <Spin spinning={loading}>
+    <Spin spinning={loading && loadingAllProducts}>
       <div className={styles.productsTab}>
         <TabMenu
           tabPosition={isMobile ? 'top' : 'left'}
           menuItems={renderSideMenu(isMobile)}
           disabledKeys={[0]}
-          activeDefaultKey={activeDefaultKey()}
+          activeKey={currentTab?.toString()}
           minHeight="1px"
           onTabClick={(activeTab) => handleGroupSwitch(Number(activeTab))}
         >
@@ -777,7 +820,6 @@ export const Products = ({
       <CreateProductGroup
         changeModalState={(state: boolean) => setShowGroupModal(state)}
         categories={categories}
-        loadingCategories={loadingCategories}
         formikValues={formikInitialValues}
         visible={showGroupModal}
         groupModalType={groupModalType}
@@ -785,6 +827,8 @@ export const Products = ({
           values: { name: string; id: number },
           categories: number[]
         ) => {
+          console.log('categories,', categories)
+          console.log('values', values)
           updateServiceGroup({
             variables: {
               data: {
@@ -814,6 +858,15 @@ export const Products = ({
           }
           product={record}
           onClose={() => changeModalState(false)}
+          onDelete={async (product) =>
+            await deleteProduct({
+              variables: {
+                where: {
+                  id: product,
+                },
+              },
+            })
+          }
           onSave={async (product, customFields) => {
             const data = {
               name: product.name,
@@ -832,7 +885,7 @@ export const Products = ({
                   id: Number(product?.tax),
                 },
               },
-              old_barcode: product?.old_barcode,
+              code: product?.code,
               sku: product?.sku,
               size: product?.size,
               Description: product?.Description,
@@ -841,8 +894,7 @@ export const Products = ({
               price: Number(product?.price),
               cost: Number(product?.cost),
               product_order: sourceData?.[0]?.product_order ?? 1,
-              is_active: product?.is_active,
-              code: '',
+              is_active: Number(product?.is_active),
               PriceListGroup_id: 0,
               imported: 0,
               open_sale: 0,
@@ -873,8 +925,8 @@ export const Products = ({
               sku: {
                 set: product?.sku,
               },
-              old_barcode: {
-                set: product?.old_barcode,
+              code: {
+                set: product?.code,
               },
               name: {
                 set: product?.name,
@@ -883,10 +935,10 @@ export const Products = ({
                 set: product?.size,
               },
               cost: {
-                set: product?.cost,
+                set: Number(product?.cost),
               },
               price: {
-                set: product?.price,
+                set: Number(product?.price),
               },
               max_level: {
                 set: product?.max_level,
@@ -916,7 +968,7 @@ export const Products = ({
                 set: Boolean(product?.allow_negative_qty),
               },
               is_active: {
-                set: product?.is_active ?? 1,
+                set: Number(product?.is_active) ?? 1,
               },
             }
             if (typeof product?.supplier !== 'number') delete data?.Supplier
@@ -935,8 +987,10 @@ export const Products = ({
               },
             })
           }}
-          locations={locations?.findManyLocationsWithAvailableProductStock}
-          categories={!loadingCategories && categories}
+          locations={
+            locationStockData?.findManyLocationsWithAvailableProductStock
+          }
+          categories={categories}
           suppliers={modal?.findManyAccountManager}
           taxes={modal?.findManyTax}
         />

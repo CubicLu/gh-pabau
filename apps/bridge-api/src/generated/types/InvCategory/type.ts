@@ -62,6 +62,20 @@ export const InvCategory = objectType({
         return root.User
       },
     })
+    t.list.field('CmPurchaseOrder', {
+      type: 'CmPurchaseOrder',
+      args: {
+        where: 'CmPurchaseOrderWhereInput',
+        orderBy: 'CmPurchaseOrderOrderByInput',
+        cursor: 'CmPurchaseOrderWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CmPurchaseOrderScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CmPurchaseOrder
+      },
+    })
     t.nullable.field('_count', {
       type: 'InvCategoryCountOutputType',
       resolve(root: any) {

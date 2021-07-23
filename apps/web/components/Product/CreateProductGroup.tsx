@@ -23,7 +23,6 @@ interface P {
   groupModalType: string
   changeModalState: (visible: boolean) => void
   categories: CategoryFragment[]
-  loadingCategories: boolean
   formikValues: typeof newGroup
   onCreate: (
     values: { name: string; id: number },
@@ -38,7 +37,6 @@ const CreateProductGroup = ({
   onCreate,
   onEdit,
   categories,
-  loadingCategories,
   changeModalState,
   formikValues,
   visible,
@@ -76,7 +74,7 @@ const CreateProductGroup = ({
       enableReinitialize={true}
       validationSchema={Yup.object({
         name: Yup.string()
-          .required('Name is  required!')
+          .required(t('products.list.products.name.required'))
           .min(
             2,
             t('crud-table-input-min-length-validate', {
@@ -131,14 +129,12 @@ const CreateProductGroup = ({
                 <CheckboxTree
                   treeData={[
                     {
-                      children:
-                        !loadingCategories &&
-                        categories?.map((category) => {
-                          return {
-                            key: category?.id.toString(),
-                            title: category?.name,
-                          }
-                        }),
+                      children: categories?.map((category) => {
+                        return {
+                          key: category?.id.toString(),
+                          title: category?.name,
+                        }
+                      }),
                       key: 'all',
                       title: t('products.list.products.groupmodal.category'),
                     },
@@ -172,9 +168,16 @@ const CreateProductGroup = ({
               </div>
               <div className="footerBtnInput">
                 <div>
-                  <SubmitButton type="default" size="large">
+                  <Button
+                    type="default"
+                    size="large"
+                    onClick={() => {
+                      resetForm()
+                      changeModalState(false)
+                    }}
+                  >
                     {t('common-label-cancel')}
-                  </SubmitButton>
+                  </Button>
                 </div>
                 <div>
                   <SubmitButton type="primary" size="large" disabled={!isValid}>

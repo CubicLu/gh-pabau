@@ -34,7 +34,7 @@ fragment Product on InvProduct {
   InvCategory {
     ...Category
   }
-  old_barcode
+  code
   sku
   size
   supplier: Supplier {
@@ -69,20 +69,21 @@ fragment CategoryFields on InvCategory {
   category_type
   image
   disabled
+  tax_id
 }
 
 # PurchaseOrder Queries/Mutations
 query purchaseOrdersList(
   $offset: Int = 0
-  $limit: Int = 10
-  $isActive: Int = 0
+  $limit: Int = 50
+  $isHidden: Int = 0
   $searchTerm: String = ""
 ) {
   findManyCmPurchaseOrder(
     take: $limit
     skip: $offset
     where: {
-      is_hidden: { equals: $isActive }
+      is_hidden: { equals: $isHidden }
       AND: [
         {
           OR: [
@@ -102,16 +103,20 @@ query purchaseOrdersList(
   ) {
     id
     order_no
+    grn_number
     created_date: date
     status
+    is_hidden
     Supplier {
       ...SupplierDetails
     }
     User {
+      id
       full_name
     }
     Location {
-      city
+      id
+      name
     }
     Items: CmPurchaseItem {
       quantity
@@ -122,11 +127,9 @@ query purchaseOrdersList(
       }
     }
   }
-}
-query purchaseOrdersAggregate($isActive: Int = 0, $searchTerm: String = "") {
   findManyCmPurchaseOrderCount(
     where: {
-      is_hidden: { equals: $isActive }
+      is_hidden: { equals: $isHidden }
       AND: [
         {
           OR: [
@@ -144,6 +147,7 @@ query purchaseOrdersAggregate($isActive: Int = 0, $searchTerm: String = "") {
     }
   )
 }
+
 # Category Query/Mutation
 
 query findLastInvCategoryOrderId {
@@ -175,9 +179,6 @@ query categoryList(
       InvProduct
     }
   }
-}
-
-query categoryAggregate($disabled: Boolean = false, $searchTerm: String = "") {
   findManyInvCategoryCount(
     where: {
       category_type: { not: { equals: "service" } }
@@ -191,7 +192,7 @@ query categoryAggregate($disabled: Boolean = false, $searchTerm: String = "") {
 query suppliersList(
   $offset: Int
   $limit: Int
-  $searchTerm: String = ""
+  $searchTerm: String
   $status: Int = 3
 ) {
   findManyAccountManager(
@@ -200,6 +201,7 @@ query suppliersList(
       AND: { organisation_name: { contains: $searchTerm } }
     }
     take: $limit
+    orderBy: { id: desc }
     skip: $offset
   ) {
     id
@@ -209,8 +211,6 @@ query suppliersList(
     }
     organisation_status
   }
-}
-query suppliersAggregate($status: Int = 3, $searchTerm: String = "") {
   findManyAccountManagerCount(
     where: {
       organisation_status: { equals: $status }
@@ -226,7 +226,6 @@ query inventoryCountList($offset: Int, $limit: Int, $searchTerm: String = "") {
     take: $limit
   ) {
     id
-    id
     count_name
     count_type
     status
@@ -236,8 +235,6 @@ query inventoryCountList($offset: Int, $limit: Int, $searchTerm: String = "") {
     overage
     shortage
   }
-}
-query inventoryCountAggregate($searchTerm: String = "") {
   findManyInventoryCountCount(
     where: {
       OR: [
@@ -271,7 +268,6 @@ query retrieveAllInvProducts(
       category: $category
       master_category: $group
       category_type: $category_type
-      type: PRODUCT
     }
   ) {
     id
@@ -289,7 +285,7 @@ query retrieveAllInvProducts(
     master_cat_id
     Description
     image
-    old_barcode
+    code
     VATRate_id
     max_level
     allow_negative_qty
@@ -301,7 +297,7 @@ query retrieveAllInvProducts(
       search: $search
       category: $category
       master_category: $group
-      type: PRODUCT
+      category_type: $category_type
     }
   )
 }
@@ -319,7 +315,13 @@ query retrieveProductsGroupByMasterCategory {
 }
 
 query retrieveProductGroups {
-  findManyInvCategory(where: { disabled: { not: { equals: true } } }) {
+  findManyInvCategory(
+    where: {
+      disabled: { not: { equals: true } }
+      category_type: { not: { equals: "service" } }
+    }
+    orderBy: { order: desc }
+  ) {
     ...Category
   }
 }
@@ -328,20 +330,19 @@ query avilableLocations {
     ...Location
   }
 }
-query categories {
-  findManyInvCategory(
-    where: { category_type: { not: { equals: "service" } } }
-    orderBy: { order: desc }
-  ) {
-    ...Category
-  }
-}
-
 query createProductModalInit {
   findManyTax(orderBy: { value: asc }) {
     ...ProductTaxFields
   }
-
+  findManyInvCategory(
+    where: {
+      disabled: { not: { equals: true } }
+      category_type: { not: { equals: "service" } }
+    }
+    orderBy: { order: desc }
+  ) {
+    ...Category
+  }
   findManyAccountManager(
     where: { organisation_status: { equals: 3 } }
     orderBy: { organisation_name: asc }
@@ -474,12 +475,5 @@ mutation updateOneServicesMasterCategory(
     categories: $categories
   ) {
     ...ServicesMasterCategory
-  }
-}
-query stockPermission {
-  me {
-    UserPermission(where: { Page: { name: { equals: "Stock" } } }) {
-      id
-    }
   }
 }

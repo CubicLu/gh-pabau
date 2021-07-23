@@ -1,6 +1,7 @@
-import { Avatar, TickerTile } from '@pabau/ui'
+import { Avatar, TickerTile, Timeline } from '@pabau/ui'
 import React, { FC } from 'react'
 import { useMedia } from 'react-use'
+import { timelineClientDetail, eventsData } from './mock'
 import { ReactComponent as MessageRead } from '../../assets/images/message-read.svg'
 import { ReactComponent as Mail } from '../../assets/images/mail.svg'
 import { ReactComponent as NoAppointment } from '../../assets/images/client-card/ticker/no-appointment.svg'
@@ -363,7 +364,14 @@ export const ClientDashboardLayout: FC<ClientDashboardLayoutProps> = ({
         </div>
       </div>
       {/* acitivity part */}
-      <div></div>
+      <div>
+        <Timeline
+          clientDetail={timelineClientDetail}
+          eventsData={eventsData}
+          eventDateFormat="DD-MM-YYYY, h:mm a"
+          isLoading={false}
+        />
+      </div>
     </div>
   )
 }

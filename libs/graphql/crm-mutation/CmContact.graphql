@@ -82,6 +82,12 @@ fragment CmContact on CmContact {
   SocialSurveyFeedback {
     ...SocialSurveyFeedbackFields
   }
+  Insurance {
+    ...InsuranceDetailFields
+  }
+  LoyaltyPoint {
+    ...LoyaltyPointFields
+  }
 }
 
 mutation createOneCmContact($data: CmContactCreateInput!) {

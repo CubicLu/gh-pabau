@@ -20,10 +20,11 @@ interface P {
   visible: boolean
   category: Category
   taxes: Pick<Tax, 'id' | 'name' | 'rate'>[]
+  action: 'Edit' | 'Create'
   onCreate: (categoryData: Partial<Category>) => void
   onUpdate: (categoryData: Partial<Category>) => void
+  onDelete: (id: number) => void
   onClose: () => void
-  action: 'Edit' | 'Create'
 }
 
 export const CreateCategory = ({
@@ -31,9 +32,10 @@ export const CreateCategory = ({
   visible,
   taxes,
   category,
+  action,
   onClose,
   onUpdate,
-  action,
+  onDelete,
   onCreate,
 }: P): JSX.Element => {
   const { t } = useTranslationI18()
@@ -50,7 +52,8 @@ export const CreateCategory = ({
     image: '',
     code: '',
     category_type: categoryType[0],
-    disabled: true,
+    disabled: false,
+    tax_id: null,
   }
   const [formikInitialValues, setFormikInitialValues] = useState<
     Partial<Category>
@@ -77,9 +80,10 @@ export const CreateCategory = ({
     action === 'Edit' && category
       ? setFormikInitialValues({
           code: category?.code,
-          disabled: category?.disabled,
+          disabled: !category?.disabled,
           image: category?.image ?? null,
           category_type: category?.category_type,
+          tax_id: category?.tax_id !== 0 ? category?.tax_id : null,
           name: category?.name,
           id: category?.id,
         })
@@ -110,9 +114,8 @@ export const CreateCategory = ({
           ),
         category_type: Yup.string().required('Type is  required!'),
       })}
-      onSubmit={async (values: Partial<Category>, isValid) => {
+      onSubmit={async (values: Partial<Category>) => {
         values?.id ? onUpdate(values) : onCreate(values)
-        onClose()
       }}
     >
       {({ values, setFieldValue, isValid, resetForm }) => (
@@ -200,7 +203,7 @@ export const CreateCategory = ({
               <Select
                 name="tax_id"
                 placeholder={t('products.list.create.category.tax.placeholder')}
-                onSelect={(val) => inputHandler('Tax', val, setFieldValue)}
+                onSelect={(val) => inputHandler('tax_id', val, setFieldValue)}
                 disabled={loading}
               >
                 {taxes?.map((item) => (
@@ -215,13 +218,22 @@ export const CreateCategory = ({
                 <label>{t('products.list.create.category.active')}</label>
                 <Switch
                   defaultChecked={newCategoryData.disabled}
-                  name={'is_active'}
+                  name={'disabled'}
                   onChange={(check) =>
                     inputHandler('is_active', check, setFieldValue)
                   }
                   size="small"
                 />
               </div>
+              {values?.disabled === false && values?.id && (
+                <Button
+                  type="default"
+                  size="large"
+                  onClick={() => onDelete(values?.id)}
+                >
+                  {t('common-label-delete')}
+                </Button>
+              )}
               <div>
                 <SubmitButton type="primary" size="large" disabled={!isValid}>
                   {values?.id
