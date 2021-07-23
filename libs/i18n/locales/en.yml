@@ -948,6 +948,8 @@ en:
   invoice.card.label: Card
   invoice.cash.label: Cash
   invoice.pay.button.label: Pay with card
+  receipt.payment.date.label: Payment Date
+  receipt.payment.with.invoice: Payments applied to invoices
   settings-header: Settings
   settings-performance-save: 'Save Changes'
   settings-performance-tab-header1: 'Review Schedule'
