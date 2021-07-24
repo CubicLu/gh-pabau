@@ -17,7 +17,8 @@ interface Notification {
 @Injectable()
 export class NotificationServices {
   constructor(private httpService: HttpService) {}
-
+  private GRAPHQL_ENDPOINT: string =
+    process.env.HASURA_GRAPHQL_ENDPOINT || 'https://api-v2.pabau.com/'
   async sendNotification(notification: Notification): Promise<{ id: string }> {
     const {
       user_name,
@@ -55,10 +56,7 @@ export class NotificationServices {
       operationName: 'insert_notifications_one',
     }
     const response = await this.httpService
-      .post(
-        process.env.HASURA_GRAPHQL_ENDPOINT || 'https://api-v2.pabau.com/',
-        data
-      )
+      .post(this.GRAPHQL_ENDPOINT, data)
       .toPromise()
 
     const notificationId = response.data?.data?.insert_notifications_one?.id
@@ -73,10 +71,7 @@ export class NotificationServices {
     }
 
     const response = await this.httpService
-      .post(
-        process.env.HASURA_GRAPHQL_ENDPOINT || 'https://api-v2.pabau.com/',
-        data
-      )
+      .post(this.GRAPHQL_ENDPOINT, data)
       .toPromise()
     const full_name = response.data?.data?.findFirstUser?.full_name
     return { full_name }
@@ -90,10 +85,7 @@ export class NotificationServices {
     }
 
     const response = await this.httpService
-      .post(
-        process.env.HASURA_GRAPHQL_ENDPOINT || 'https://api-v2.pabau.com/',
-        data
-      )
+      .post(this.GRAPHQL_ENDPOINT, data)
       .toPromise()
     const staffMembers = response?.data?.data?.findManyCmStaffGeneral.map(
       (staff) => staff?.ID
@@ -109,10 +101,7 @@ export class NotificationServices {
     }
 
     const response = await this.httpService
-      .post(
-        process.env.HASURA_GRAPHQL_ENDPOINT || 'https://api-v2.pabau.com/',
-        data
-      )
+      .post(this.GRAPHQL_ENDPOINT, data)
       .toPromise()
     const managers = response?.data?.data?.findManyUser.map(
       (manager) => manager?.id
