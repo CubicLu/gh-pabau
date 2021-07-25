@@ -12,6 +12,7 @@ import {
 } from '@ant-design/icons'
 import {
   EmailMessageTemplateItem,
+  MedicaFormAdvanceSettingData,
   MedicalFormTypes,
   RuleProp,
   RulesContainer,
@@ -33,6 +34,8 @@ interface P {
   emailMessageTemplateItems?: EmailMessageTemplateItem[]
   smsMessageTemplateItems?: SmsMessageTemplateItem[]
   userListItems?: UserListItem[]
+  onSaveAdvSettings?: (advSettings: MedicaFormAdvanceSettingData) => void
+  currentAdvSettings?: MedicaFormAdvanceSettingData
 }
 
 const MedicalFormAdvance: FC<P> = ({
@@ -44,6 +47,8 @@ const MedicalFormAdvance: FC<P> = ({
   emailMessageTemplateItems = [],
   smsMessageTemplateItems = [],
   userListItems = [],
+  onSaveAdvSettings,
+  currentAdvSettings,
 }) => {
   const [activatePanel, setActivatePanel] = useState('1')
   const [answersOptions, setAnswersOptions] = useState({})
@@ -187,6 +192,8 @@ const MedicalFormAdvance: FC<P> = ({
         <MedicalFormAdvanceSettings
           changeFormSaveLabel={changeFormSaveLabel}
           formSaveLabel={formSaveLabel}
+          onSaveAdvSettings={onSaveAdvSettings}
+          currentAdvSettings={currentAdvSettings}
         />
       </TabPane>
       <TabPane

@@ -1,6 +1,8 @@
 import { ControlOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
 import {
+  defaultMedicaFormAdvanceSettingData,
   EmailMessageTemplateItem,
+  MedicaFormAdvanceSettingData,
   MedicalFormItem,
   MedicalFormTypes,
   Notification,
@@ -52,6 +54,7 @@ const defaultMedicalForm = {
   index: 0,
   formData: '',
   rules: [],
+  advSetting: defaultMedicaFormAdvanceSettingData,
 }
 
 interface MedicalFormBuilderProps {
@@ -91,6 +94,12 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
   const [clickedCreateForm, setClickedCreateForm] = useState(false)
   const [clickedPreviewForm, setClickedPreviewForm] = useState(false)
   const [formData, setFormData] = useState('')
+  const [
+    advSettingData,
+    setAdvSettingData,
+  ] = useState<MedicaFormAdvanceSettingData>(
+    defaultMedicaFormAdvanceSettingData
+  )
   const [draggedFormCnts, setDraggedFormCnts] = useState(0)
   const [draggedForms, setDraggedForms] = useState<MedicalFormTypes[]>([])
 
@@ -180,6 +189,7 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
           return
         }
         defaultMedicalForm.formData = formData
+        defaultMedicalForm.advSetting = advSettingData
         onSaveForm?.(cloneDeep(defaultMedicalForm))
       }
     } else {
@@ -189,6 +199,7 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
           return
         }
         currentMedicalForm.formData = formData
+        currentMedicalForm.advSetting = advSettingData
         onSaveForm?.(currentMedicalForm)
       }
     }
@@ -200,9 +211,12 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
     } else {
       if (currentMedicalForm) {
         currentMedicalForm.rules = rules
-        // onSaveForm?.(currentMedicalForm)
       }
     }
+  }
+
+  const handleAdvSettings = (advSettings) => {
+    setAdvSettingData(advSettings)
   }
 
   return (
@@ -290,6 +304,8 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
             smsMessageTemplateItems={smsMessageTemplateItems}
             emailMessageTemplateItems={emailMessageTemplateItems}
             userListItems={userListItems}
+            onSaveAdvSettings={handleAdvSettings}
+            currentAdvSettings={currentMedicalForm?.advSetting}
           />
         </TabPane>
       </Tabs>
