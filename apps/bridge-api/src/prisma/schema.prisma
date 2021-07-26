@@ -12432,8 +12432,8 @@ model User {
   InvWarehouseProduct          InvWarehouseProduct[]
   InventoryMovement            InventoryMovement[]
   Booking                      Booking[]
+  InvSale                      InvSale[]
 
-  InvSale InvSale[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")
