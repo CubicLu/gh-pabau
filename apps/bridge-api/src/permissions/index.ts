@@ -1,11 +1,22 @@
-import { allow, and, shield } from 'graphql-shield'
+import { allow, and, shield, or } from 'graphql-shield'
 import * as rules from './types'
 
 export const permissions = shield(
   {
     Mutation: {
       // Products
-      createOneInvProduct: rules.authentication.isAuthenticated,
+      createOneInvProduct: or(
+        rules.authentication.isAdmin,
+        rules.stock.stockManager
+      ),
+      deleteOneInvProduct: or(
+        rules.authentication.isAdmin,
+        rules.stock.stockManager
+      ),
+      updateOneInvProduct: or(
+        rules.authentication.isAdmin,
+        rules.stock.stockManager
+      ),
       //UserPermission
       updateOneUserPermission: and(
         rules.authentication.isAuthenticated,

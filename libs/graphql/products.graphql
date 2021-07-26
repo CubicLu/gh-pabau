@@ -172,7 +172,7 @@ query categoryList(
     }
     take: $limit
     skip: $offset
-    orderBy: { order: desc }
+    orderBy: { order: asc }
   ) {
     ...CategoryFields
     _count {
@@ -316,11 +316,8 @@ query retrieveProductsGroupByMasterCategory {
 
 query retrieveProductGroups {
   findManyInvCategory(
-    where: {
-      disabled: { not: { equals: true } }
-      category_type: { not: { equals: "service" } }
-    }
-    orderBy: { order: desc }
+    where: { category_type: { not: { equals: "service" } } }
+    orderBy: { order: asc }
   ) {
     ...Category
   }
@@ -335,11 +332,8 @@ query createProductModalInit {
     ...ProductTaxFields
   }
   findManyInvCategory(
-    where: {
-      disabled: { not: { equals: true } }
-      category_type: { not: { equals: "service" } }
-    }
-    orderBy: { order: desc }
+    where: { category_type: { not: { equals: "service" } } }
+    orderBy: { order: asc }
   ) {
     ...Category
   }
@@ -355,6 +349,19 @@ query createProductModalInit {
     orderBy: { loc_order: desc }
   ) {
     ...Location
+  }
+  me {
+    StaffMeta(
+      where: {
+        meta_name: {
+          in: ["can_edit_stock_descriptions", "can_edit_stock_level"]
+        }
+      }
+    ) {
+      id
+      meta_name
+      meta_value
+    }
   }
 }
 

@@ -152,7 +152,7 @@ export const Me = extendType({
       },
     })
     t.field('permission', {
-      type: 'Boolean',
+      type: 'UserPermission',
       description: 'Validates can a user access a page',
       args: {
         page: nonNull(stringArg()),
@@ -175,7 +175,7 @@ export const Me = extendType({
             if (data?.user !== ctx.authenticated.user) {
               throw new Error('Not Authorized')
             }
-            return true
+            return data
           })
       },
     })

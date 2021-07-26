@@ -27,7 +27,6 @@ import {
   useDeleteOneInvProductMutation,
 } from '@pabau/graphql'
 import type { Product } from './CreateProduct/CreateProduct'
-import type { CategoryFragment } from '@pabau/graphql'
 import {
   ButtonLabel,
   Notification,
@@ -35,6 +34,7 @@ import {
   Pagination,
   Table,
   TabMenu,
+  ConfirmationDialog,
 } from '@pabau/ui'
 import { Dropdown, Menu, Spin } from 'antd'
 import React, { Fragment, useEffect, useMemo, useState } from 'react'
@@ -51,7 +51,6 @@ interface P {
   visible: boolean
   filterByStatus?: number
   filterByCategoryType: string
-  categories: CategoryFragment[]
   fetchingInitialData: boolean
   action: 'Edit' | 'Create'
   changeModalState: (state: boolean) => void
@@ -62,7 +61,6 @@ export const Products = ({
   search = '',
   changeModalState,
   visible,
-  categories,
   modal,
   action,
   isEditing,
@@ -73,6 +71,8 @@ export const Products = ({
   const { t } = useTranslationI18()
   const [isMobile, setIsMobile] = useState(false)
   const { width } = useWindowSize()
+  const [showConfirmationDialog, setShowConfirmationDialog] = useState(false)
+  const [submitting, changeSubmittingStatus] = useState(false)
   const [paginateData, setPaginateData] = useState({
     total: 0,
     offset: 0,
@@ -414,7 +414,7 @@ export const Products = ({
               id: 0,
               name: t('products.list.filter.all'),
             },
-            ...categories,
+            ...modal?.findManyInvCategory,
           ],
         },
         {
@@ -427,7 +427,7 @@ export const Products = ({
       ])
       setCurrentTab(1)
     }
-  }, [categories, data, fetchingInitialData, loading, t])
+  }, [data, fetchingInitialData, loading, modal?.findManyInvCategory, t])
 
   const GroupsItem = ({ shorten = false }) => {
     const [showOps, setShowOps] = useState(false)
@@ -529,20 +529,20 @@ export const Products = ({
     }
   }
 
-  const handleDeleteGroup = async (id: number) => {
+  const handleDeleteGroup = async (id: number): Promise<boolean> => {
     const groupItems = [...groups]
     const groupData = groupItems.find((el) => el?.id === id)
     const index = groupItems.indexOf(groupData)
     if (index !== -1) {
       groupItems.splice(index, 1)
       setGroups(groupItems)
-      await deleteServiceGroup({
+      return !!(await deleteServiceGroup({
         variables: {
           where: {
             id: id,
           },
         },
-      })
+      }))
     }
   }
 
@@ -575,7 +575,7 @@ export const Products = ({
                   <TabMenuItem
                     title={group?.name}
                     onEdit={() => handleEditEvent(group?.id)}
-                    onDelete={() => handleDeleteGroup(group?.id)}
+                    onDelete={() => setShowConfirmationDialog(true)}
                   />
                 </Fragment>
               )
@@ -615,8 +615,8 @@ export const Products = ({
                 data.product_order =
                   sourceData[i]?.product_order ===
                   sourceData[i + 1]?.product_order
-                    ? sourceData[i].product_order - 1
-                    : sourceData[i].product_order === (0 || undefined)
+                    ? sourceData[i].product_order + 1
+                    : !sourceData[i].product_order
                     ? 1
                     : sourceData[i].product_order
                 return data
@@ -730,7 +730,7 @@ export const Products = ({
   const findCategories = (
     selectedCategories: number[]
   ): { id: number; name: string }[] => {
-    return categories?.map((category) =>
+    return modal?.findManyInvCategory.map((category) =>
       category?.id === selectedCategories?.find((curr) => curr === category?.id)
         ? category
         : null
@@ -819,7 +819,7 @@ export const Products = ({
       </div>
       <CreateProductGroup
         changeModalState={(state: boolean) => setShowGroupModal(state)}
-        categories={categories}
+        categories={modal?.findManyInvCategory}
         formikValues={formikInitialValues}
         visible={showGroupModal}
         groupModalType={groupModalType}
@@ -848,6 +848,24 @@ export const Products = ({
           categories: number[]
         ) => handleNewGroup(values, categories)}
       />
+      {showConfirmationDialog && (
+        <ConfirmationDialog
+          visible={showConfirmationDialog}
+          loading={submitting}
+          title={t('products.list.products.notification.group.delete.header')}
+          tooltip={t(
+            'products.list.products.notification.category.delete.tooltip'
+          )}
+          onClose={() => setShowConfirmationDialog(false)}
+          onSubmit={async () => {
+            changeSubmittingStatus(true)
+            changeSubmittingStatus(await handleDeleteGroup(currentGroup?.id))
+            setShowConfirmationDialog(false)
+          }}
+        >
+          {t('products.list.delete.group.text')}
+        </ConfirmationDialog>
+      )}
       {visible && (
         <CreateProduct
           loading={productIsBeingUpdated || addMutationLoading}
@@ -856,10 +874,11 @@ export const Products = ({
           defaultCustomField={
             defaultProductCustomFields?.findManyCmProductCustomField
           }
+          permissions={modal?.me?.StaffMeta}
           product={record}
           onClose={() => changeModalState(false)}
           onDelete={async (product) =>
-            await deleteProduct({
+            !!deleteProduct({
               variables: {
                 where: {
                   id: product,
@@ -910,7 +929,7 @@ export const Products = ({
             }
             if (typeof product?.supplier !== 'number') delete data?.Supplier
             if (typeof product?.tax !== 'number') delete data?.Tax
-            createOneInvProductMutation({
+            return !!createOneInvProductMutation({
               variables: {
                 data: {
                   ...data,
@@ -918,7 +937,7 @@ export const Products = ({
                 stock: product?.locations?.filter?.((curr) => curr),
                 custom_fields: customFields,
               },
-            }).then(() => changeModalState(false))
+            })
           }}
           onEdit={async (product, customFields) => {
             const data = {
@@ -968,13 +987,13 @@ export const Products = ({
                 set: Boolean(product?.allow_negative_qty),
               },
               is_active: {
-                set: Number(product?.is_active) ?? 1,
+                set: Number(product?.is_active),
               },
             }
             if (typeof product?.supplier !== 'number') delete data?.Supplier
             if (typeof product?.tax !== 'number') delete data?.Tax
             if (!product?.category_id) delete data?.InvCategory
-            await updateMutation({
+            return !!(await updateMutation({
               variables: {
                 where: {
                   id: product?.id,
@@ -985,12 +1004,12 @@ export const Products = ({
                 stock: product?.locations?.filter?.((curr) => curr),
                 custom_fields: customFields,
               },
-            })
+            }))
           }}
           locations={
             locationStockData?.findManyLocationsWithAvailableProductStock
           }
-          categories={categories}
+          categories={modal?.findManyInvCategory}
           suppliers={modal?.findManyAccountManager}
           taxes={modal?.findManyTax}
         />

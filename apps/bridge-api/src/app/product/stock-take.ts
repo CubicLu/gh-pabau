@@ -55,43 +55,82 @@ export default class Stock {
    */
   public async update(
     location_id: number,
-    new_stock: number
+    new_stock: number,
+    room_id?: number,
+    sale_item_id?: number
   ): Promise<InvWarehouseProduct> {
     const stock = await this.availableStockPerLocation(location_id)
-    const stockToBeUpdated =
-      stock?.quantity === 0 ? new_stock : Math.abs(stock.quantity - new_stock)
-    try {
-      return await this.ctx.prisma.invWarehouseProduct.create({
-        data: {
-          Location: {
-            connect: {
-              id: stock?.id,
-            },
+    const quantity =
+      new_stock > stock?.quantity
+        ? new_stock - stock?.quantity
+        : stock?.quantity - new_stock
+    const user = await this.ctx.prisma.user.findUnique({
+      where: {
+        id: this.ctx.authenticated.user,
+      },
+      select: {
+        full_name: true,
+      },
+    })
+    const warehouse = this.ctx.prisma.invWarehouseProduct.create({
+      data: {
+        Location: {
+          connect: {
+            id: stock?.id,
           },
-          Product: {
-            connect: {
-              id: this?.product_id,
-            },
-          },
-          Company: {
-            connect: {
-              id: this.ctx.authenticated.company,
-            },
-          },
-          User: {
-            connect: {
-              id: this.ctx.authenticated.user,
-            },
-          },
-          quantity: stockToBeUpdated,
-          batch_code: '',
-          description: '',
-          expiry_date: null,
         },
-      })
-    } catch {
-      throw new Error(`Stock update failed for location ${location_id}`)
-    }
+        Product: {
+          connect: {
+            id: this?.product_id,
+          },
+        },
+        Company: {
+          connect: {
+            id: this.ctx.authenticated.company,
+          },
+        },
+        User: {
+          connect: {
+            id: this.ctx.authenticated.user,
+          },
+        },
+        quantity: new_stock,
+        batch_code: '',
+        description: '',
+        expiry_date: null,
+      },
+    })
+    await this.ctx.prisma.inventoryMovement.create({
+      data: {
+        Location: {
+          connect: {
+            id: stock?.id,
+          },
+        },
+        Product: {
+          connect: {
+            id: this?.product_id,
+          },
+        },
+        Company: {
+          connect: {
+            id: this.ctx.authenticated.company,
+          },
+        },
+        User: {
+          connect: {
+            id: this.ctx.authenticated.user,
+          },
+        },
+        description: '',
+        type: `${user?.full_name}  Logged: ${quantity}`,
+        new_quantity: quantity,
+        quantity: new_stock,
+        room_id: room_id ?? 0,
+        sale_item_id: sale_item_id ?? 0,
+      },
+    })
+    return warehouse
   }
 
   private async createNewLocationStock(
@@ -99,7 +138,7 @@ export default class Stock {
     stock: ProductStockPerLocation,
     warehouse_id?: number
   ): Promise<InvWarehouseProduct> {
-    return await this.ctx.prisma.invWarehouseProduct.create({
+    const warehouse = await this.ctx.prisma.invWarehouseProduct.create({
       data: {
         quantity: stock?.max ?? 0,
         Company: {
@@ -126,6 +165,37 @@ export default class Stock {
         description: product.Description,
       },
     })
+    await this.ctx.prisma.inventoryMovement.create({
+      data: {
+        Location: {
+          connect: {
+            id: stock?.id,
+          },
+        },
+        Product: {
+          connect: {
+            id: this?.product_id,
+          },
+        },
+        Company: {
+          connect: {
+            id: this.ctx.authenticated.company,
+          },
+        },
+        User: {
+          connect: {
+            id: this.ctx.authenticated.user,
+          },
+        },
+        description: '',
+        type: `Opening Count`,
+        new_quantity: stock?.max,
+        quantity: stock?.max,
+        room_id: 0,
+        sale_item_id: 0,
+      },
+    })
+    return warehouse
   }
 
   public async create(

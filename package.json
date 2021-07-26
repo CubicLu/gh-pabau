@@ -1,6 +1,6 @@
 {
   "name": "pabau",
-  "version": "2.0.432",
+  "version": "2.0.435",
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
   "workspaces": {
@@ -12,7 +12,7 @@
     ]
   },
   "scripts": {
-    "nx": "cross-env NODE_OPTIONS='--max-old-space-size=5000' nx",
+    "nx": "cross-env NODE_OPTIONS=\"--max-old-space-size=5000\" nx",
     "serve": "yarn nx serve",
     "vercel": "vercel",
     "apollo": "ts-node tools/cli/apollo.ts",
@@ -242,7 +242,6 @@
     "@typescript-eslint/eslint-plugin": "4.28.0",
     "@typescript-eslint/parser": "4.28.0",
     "@vercel/node": "1.10.0",
-    "apollo": "^2.33.4",
     "apollo-server-testing": "2.24.0",
     "babel-jest": "27.0.6",
     "babel-loader": "8.2.2",
@@ -286,11 +285,11 @@
     "react-test-renderer": "17.0.2",
     "rimraf": "^3.0.2",
     "run-script-os": "^1.1.6",
-    "shelljs": "^0.8.4",
+    "shx": "0.3.3",
     "ts-jest": "27.0.3",
     "ts-node": "9.1.1",
     "typescript": "4.3.5",
-    "vercel": "22.0.1",
+    "vercel": "^23.0.1",
     "yaml-loader": "0.6.0"
   },
   "bump-rebuild-all": 45,

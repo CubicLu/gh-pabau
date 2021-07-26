@@ -156,7 +156,7 @@ pipelines:
 
             # Post to Slack
             - |
-              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | \
+              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)${IFS}$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | \
                 curl -0 "${SLACK_HOOK_URL}" \
                 -H "Expect:" \
                 -H 'Content-Type: application/json; charset=utf-8' \
@@ -213,7 +213,7 @@ pipelines:
                 - yarn lint:tsc --with-deps --base=HEAD~1
                 - yarn lint:ls || true
                 - yarn lint:workspace || true
-                - npm i -g @graphql-inspector/cli@2.5.0 graphql || true
+                - npm i -g @graphql-inspector/cli graphql || true
                 - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
                 - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql
                 #                - graphql-inspector similar hasura/schema.graphql || echo TODO
@@ -327,7 +327,7 @@ pipelines:
 
             # Post to Slack
             - |
-              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
+              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)${IFS}$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
               -H "Expect:" \
               -H 'Content-Type: application/json; charset=utf-8' \
               --data-binary @-
