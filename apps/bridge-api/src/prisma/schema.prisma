@@ -6687,7 +6687,7 @@ model InvSale {
   old_paid_by         String
   loyalty_points      Int
   xero_invoice_id     String
-  xero_updated_date   DateTime
+  xero_updated_date   DateTime?
   split_count         Int              @default(1)
   split_guid          String
   insurer_contract_id Int              @default(0)
