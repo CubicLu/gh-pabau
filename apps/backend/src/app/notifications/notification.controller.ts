@@ -75,7 +75,7 @@ export class NotificationController {
     )
 
     const sentUserData = await this.notificationService.findUserById(sent_by)
-    const clientData = await this.notificationService.findUserById(client_id)
+    const clientData = await this.notificationService.findClientById(client_id)
 
     const response = await this.notificationService.sendNotification({
       type,
