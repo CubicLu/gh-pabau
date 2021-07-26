@@ -4,9 +4,9 @@ import {
   Breadcrumb,
   BusinessDetailsNotifications,
   MobileHeader,
-  PasswordExpirationProps,
   System,
   Terminology,
+  PasswordExpirationProps,
   TabMenu,
   TerminologyConfig,
 } from '@pabau/ui'
