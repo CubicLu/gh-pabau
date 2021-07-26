@@ -54,7 +54,6 @@ export const Dropdown: FC<DropDownInterface> = ({
 
   useEffect(() => {
     setCurrentUser(userData ?? null)
-    console.log('current user', userData)
   }, [userData])
 
   async function handleLogOut() {

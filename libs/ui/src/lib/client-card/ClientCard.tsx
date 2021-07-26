@@ -39,7 +39,7 @@ import {
   CheckCircleFilled,
   SaveOutlined,
 } from '@ant-design/icons'
-import React, { FC, useState, useEffect, useRef } from 'react'
+import React, { FC, useState, useEffect, useRef, ReactNode } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { useMedia } from 'react-use'
 import Confetti from 'react-confetti'
@@ -66,6 +66,7 @@ import {
   conversation,
   tests,
   products,
+  clientPackages,
 } from './mock'
 
 const { TextArea } = Input
@@ -108,6 +109,7 @@ export interface ClientCardProps {
   medicalConditions: string[]
   alerts: string[]
   onClose: () => void
+  FinancialTabComponent?: ReactNode
 }
 
 const ClientCardModal: FC<ClientCardProps> = ({
@@ -118,6 +120,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
   medicalConditions,
   alerts,
   onClose,
+  FinancialTabComponent,
 }) => {
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 767px)', false)
@@ -202,6 +205,7 @@ const ClientCardModal: FC<ClientCardProps> = ({
       content: customTabMenutItem('Activities', 8),
     },
   ]
+
   const [showMobileHeaderOps, setShowMobileHeaderOps] = useState(false)
   const [subOps, setSubOps] = useState(0)
   const [menuHeaderTitle, setMenuHeaderTitle] = useState(
@@ -878,11 +882,15 @@ const ClientCardModal: FC<ClientCardProps> = ({
                 <div>
                   <ClientAppointmentsLayout isEmpty={true} />
                 </div>
-                <div>
-                  <ClientFinancialsLayout isEmpty={true} />
+                <div style={{ paddingBottom: 60 }}>
+                  {FinancialTabComponent ? (
+                    FinancialTabComponent
+                  ) : (
+                    <ClientFinancialsLayout />
+                  )}
                 </div>
                 <div>
-                  <ClientPackagesLayout isEmpty={true} />
+                  <ClientPackagesLayout items={clientPackages} />
                 </div>
                 <div>
                   <ClientCommunicationsLayout isEmpty={true} />

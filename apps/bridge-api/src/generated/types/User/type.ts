@@ -533,6 +533,34 @@ export const User = objectType({
         return root.InventoryMovement
       },
     })
+    t.list.field('Booking', {
+      type: 'Booking',
+      args: {
+        where: 'BookingWhereInput',
+        orderBy: 'BookingOrderByInput',
+        cursor: 'BookingWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'BookingScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Booking
+      },
+    })
+    t.list.field('InvSale', {
+      type: 'InvSale',
+      args: {
+        where: 'InvSaleWhereInput',
+        orderBy: 'InvSaleOrderByInput',
+        cursor: 'InvSaleWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'InvSaleScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.InvSale
+      },
+    })
     t.nullable.field('_count', {
       type: 'UserCountOutputType',
       resolve(root: any) {

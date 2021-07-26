@@ -1,5 +1,6 @@
 import { TabMenu } from '@pabau/ui'
 import { Modal } from 'antd'
+import cn from 'classnames'
 import React, { FC } from 'react'
 import { tagList, TagModule, TagModuleItems } from './data'
 import styles from './MergeTagModal.module.less'
@@ -13,6 +14,7 @@ export interface MergeTagModalProps {
   selectedTag?: string
   activeDefaultKey?: string
   disabledTags: number[]
+  onlyEnabledTags?: string[]
 }
 
 export const MergeTagModal: FC<MergeTagModalProps> = ({
@@ -24,9 +26,14 @@ export const MergeTagModal: FC<MergeTagModalProps> = ({
   selectedTag = '',
   activeDefaultKey = '0',
   disabledTags = [],
+  onlyEnabledTags = [],
 }) => {
   const onClick = (tag: TagModule, key: string, index: number) => {
-    onAdd(tag, key, index)
+    if (
+      onlyEnabledTags.length === 0 ||
+      (onlyEnabledTags.length > 0 && onlyEnabledTags.includes(tag.tag))
+    )
+      onAdd(tag, key, index)
   }
 
   const menuList = (tagModuleItems: TagModuleItems) => {
@@ -48,11 +55,16 @@ export const MergeTagModal: FC<MergeTagModalProps> = ({
         <div key={key} className={styles.tagContent}>
           {tagModuleItems[key].items.map((tag, _index) => (
             <div
-              className={
+              className={cn(
                 tag.selected || tag.tag === selectedTag
                   ? styles.tagItemContentActive
-                  : styles.tagItemContent
-              }
+                  : styles.tagItemContent,
+                onlyEnabledTags.length === 0 ||
+                  (onlyEnabledTags.length > 0 &&
+                    onlyEnabledTags.includes(tag.tag))
+                  ? ''
+                  : styles.tagItemContentDisable
+              )}
               key={_index}
               onClick={() => onClick(tag, key, _index)}
             >

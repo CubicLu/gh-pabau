@@ -1,7 +1,4 @@
-import {
-  usePurchaseOrdersAggregateQuery,
-  usePurchaseOrdersListQuery,
-} from '@pabau/graphql'
+import { usePurchaseOrdersListQuery } from '@pabau/graphql'
 import { Pagination, Table } from '@pabau/ui'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
@@ -9,10 +6,9 @@ import styles from './ProductListComponents.module.less'
 
 interface P {
   search: string
-  active?: number
+  filterByStatus?: number
 }
-
-const PurchaseOrders = ({ search, active }: P): JSX.Element => {
+const PurchaseOrders = ({ search, filterByStatus }: P): JSX.Element => {
   const { t } = useTranslationI18()
   const [paginateData, setPaginateData] = useState({
     total: 0,
@@ -21,10 +17,11 @@ const PurchaseOrders = ({ search, active }: P): JSX.Element => {
     currentPage: 1,
     showingRecords: 0,
   })
+
   const getQueryVariables = useMemo(() => {
     const queryOptions = {
       variables: {
-        isActive: Number(active),
+        isHidden: Number(!filterByStatus),
         searchTerm: search,
         offset: paginateData.offset,
         limit: paginateData.limit,
@@ -33,33 +30,23 @@ const PurchaseOrders = ({ search, active }: P): JSX.Element => {
     if (!search) {
       delete queryOptions.variables.searchTerm
     }
-    if (!active) {
-      delete queryOptions.variables.isActive
-    }
     return queryOptions
-  }, [active, search, paginateData.offset, paginateData.limit])
-
-  const getAggregateQueryVariables = useMemo(() => {
-    const queryOptions = {
-      variables: {
-        isActive: Number(active),
-        searchTerm: search,
-      },
-    }
-    if (!search) {
-      delete queryOptions.variables.searchTerm
-    }
-    if (!active) {
-      delete queryOptions.variables.isActive
-    }
-    return queryOptions
-  }, [active, search])
+  }, [filterByStatus, search, paginateData.offset, paginateData.limit])
 
   const { data, loading } = usePurchaseOrdersListQuery(getQueryVariables)
 
-  const { data: aggregateData } = usePurchaseOrdersAggregateQuery(
-    getAggregateQueryVariables
-  )
+  const calculateTotalCost = (
+    items: {
+      cost_price?: number
+      quantity: number
+    }[]
+  ): string =>
+    items
+      ?.map((item) => item?.cost_price * item?.quantity)
+      .reduce((amount, sum) => {
+        return sum + amount
+      }, 0)
+      .toFixed(2)
 
   const PurchaseOrderColumns = [
     {
@@ -81,20 +68,8 @@ const PurchaseOrders = ({ search, active }: P): JSX.Element => {
       visible: true,
     },
     {
-      title: t('products.list.purchase.column.supplier'),
-      dataIndex: 'supplier',
-      className: 'drag-visible',
-      visible: true,
-    },
-    {
       title: t('products.list.purchase.column.createdby'),
       dataIndex: 'created_by',
-      className: 'drag-visible',
-      visible: true,
-    },
-    {
-      title: t('products.list.purchase.column.location'),
-      dataIndex: 'location',
       className: 'drag-visible',
       visible: true,
     },
@@ -104,18 +79,61 @@ const PurchaseOrders = ({ search, active }: P): JSX.Element => {
       className: 'drag-visible',
       visible: true,
     },
+    {
+      title: t('products.list.purchase.column.grnNumber'),
+      dataIndex: 'grn_number',
+      className: 'drag-visible',
+      visible: true,
+    },
+    {
+      title: t('products.list.stock.column.status'),
+      dataIndex: 'status',
+      className: 'drag-visible',
+      visible: true,
+      render: (_, { status }) => (
+        <span
+          className={
+            status === 'complete'
+              ? styles.greenBtn
+              : status === 'open'
+              ? styles.redBtn
+              : styles.blueBtn
+          }
+        >
+          {status}
+        </span>
+      ),
+    },
+    {
+      title: t('products.list.purchase.column.location'),
+      dataIndex: 'location',
+      className: 'drag-visible',
+      visible: true,
+    },
+    {
+      title: t('products.list.purchase.column.supplier'),
+      dataIndex: 'supplier',
+      className: 'drag-visible',
+      visible: true,
+    },
+    {
+      title: t('products.list.purchase.column.category'),
+      dataIndex: 'category',
+      className: 'drag-visible',
+      visible: true,
+    },
   ]
 
   useEffect(() => {
-    if (aggregateData) {
+    if (data?.findManyCmPurchaseOrderCount) {
       setPaginateData((d) => ({
         ...d,
-        total: aggregateData.findManyCmPurchaseOrderCount,
+        total: data?.findManyCmPurchaseOrderCount,
         showingRecords: data?.findManyCmPurchaseOrder.length,
         searchTerm: search,
       }))
     }
-  }, [data, aggregateData, search])
+  }, [data, search])
 
   const onPaginationChange = (currentPage: number) => {
     const offset = paginateData.limit * (currentPage - 1)
@@ -133,13 +151,17 @@ const PurchaseOrders = ({ search, active }: P): JSX.Element => {
         dataSource={data?.findManyCmPurchaseOrder?.map((d) => {
           return {
             ...d,
+            created_date: new Date(d?.created_date * 1000).toLocaleDateString(
+              'en-GB'
+            ),
             supplier: d?.Supplier?.organisation_name,
             created_by: d?.User?.full_name,
-            location: d?.Location?.city,
-            is_active: d?.status,
-            total_cost: d?.Items?.map(
-              (item) => item.cost_price * item.quantity
-            ),
+            grn_number:
+              d?.grn_number ??
+              t('products.list.purchase.column.grnNumber.empty'),
+            location: d?.Location?.name,
+            is_active: Number(!d?.is_hidden),
+            total_cost: calculateTotalCost(d?.Items),
             key: d.id,
           }
         })}

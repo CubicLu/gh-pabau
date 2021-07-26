@@ -15,8 +15,9 @@ export const FinanceInvoiceResponse = objectType({
     t.string('gross')
     t.string('paid')
     t.string('balance')
-    t.int('status')
     t.string('tooltip')
+    t.boolean('isHealthcodeEnabled')
+    t.string('healthcodeStatus')
   },
 })
 
@@ -58,6 +59,8 @@ export const FindManyAccountDebtResponse = objectType({
     t.field('lastAction', {
       type: list(LastAction),
     })
+    t.boolean('isHealthcodeEnabled')
+    t.string('healthcodeStatus')
   },
 })
 
@@ -74,5 +77,74 @@ export const FindManyAccountCreditNoteResponse = objectType({
     t.string('total')
     t.string('type')
     t.string('tooltip')
+  },
+})
+
+const SalesData = objectType({
+  name: 'SalesData',
+  definition(t) {
+    t.string('key')
+    t.string('after_disc')
+    t.string('category')
+    t.string('date')
+    t.string('description')
+    t.string('disc_amount')
+    t.string('disc_per')
+    t.string('net')
+    t.string('practitioner')
+    t.string('product')
+    t.string('quantity')
+    t.string('sku')
+    t.string('total')
+    t.string('unitprice')
+    t.string('vat')
+    t.string('vat_per')
+  },
+})
+const PaymentsData = objectType({
+  name: 'PaymentsData',
+  definition(t) {
+    t.string('key')
+    t.string('insurer')
+    t.string('payment_date')
+    t.string('payment_method')
+    t.string('payment_amount')
+  },
+})
+const PaymentsDetails = objectType({
+  name: 'payment',
+  definition(t) {
+    t.int('key')
+    t.string('total_vat')
+    t.string('amount_paid')
+    t.int('sub_total_amount')
+    t.int('outstanding')
+    t.int('grand_total')
+    t.int('refund_amount')
+    t.int('paid')
+    t.string('total_net')
+    t.string('payment_time')
+    t.int('total')
+    t.int('card')
+    t.int('cash')
+  },
+})
+
+const invSaleDetails = objectType({
+  name: 'details',
+  definition(t) {
+    t.string('issue_to')
+    t.string('issue_by')
+    t.string('invoice_id')
+  },
+})
+
+export const InvSaleData = objectType({
+  name: 'InvSaleData',
+  definition(t) {
+    t.field('details', { type: invSaleDetails })
+    t.list.field('items', { type: SalesData })
+    t.list.field('payments', { type: PaymentsData })
+    t.field('payment_details', { type: PaymentsDetails })
   },
 })

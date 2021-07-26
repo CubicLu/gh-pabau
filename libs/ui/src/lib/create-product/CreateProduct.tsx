@@ -61,6 +61,7 @@ export const CreateProduct: FC<CreateProductProps> = ({
     plotColor: '',
     incrementDefault: '',
     minStockLevel: 0,
+    is_active: 0,
     maxStockLevel: 0,
     selectedImage: '',
   }

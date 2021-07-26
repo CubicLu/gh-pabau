@@ -1,0 +1,23 @@
+.invoiceFooter {
+  height: 50px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  div {
+    cursor: pointer;
+    background-color: var(--grey-text-color);
+    margin: 0px 5px;
+    align-items: center;
+    justify-content: space-between;
+    display: flex;
+    width: 200px;
+    padding: 10px;
+    border-radius: 5px 5px 0px 0px;
+    :global {
+      .ant-typography {
+        color: #85858b;
+      }
+    }
+  }
+}

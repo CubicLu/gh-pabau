@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import { Avatar, Typography, Tooltip } from 'antd'
 import { ButtonLabel, Stepper } from '@pabau/ui'
 import { MailOutlined, BellOutlined } from '@ant-design/icons'
@@ -29,6 +29,7 @@ const Debt: FC<DebtProps> = ({
   filterValue,
   selectedRange,
 }) => {
+  const [isHealthcodeEnabled, setIsHealthcodeEnabled] = useState<boolean>(false)
   const { t } = useTranslationI18()
 
   const calculateDate = (invDate: Date): string => {
@@ -311,6 +312,33 @@ const Debt: FC<DebtProps> = ({
     },
   ]
 
+  if (isHealthcodeEnabled) {
+    DebtColumns.splice(8, 0, {
+      title: t('account.finance.invoice.columns.status'),
+      dataIndex: 'healthcodeStatus',
+      skeletonWidth: '50px',
+      visible: true,
+      width: '80px',
+      render: function render(data) {
+        return (
+          data && (
+            <ButtonLabel
+              style={{ minWidth: 92, paddingTop: 1 }}
+              type={
+                data === 'Failed'
+                  ? 'danger'
+                  : data === 'Unprocessed'
+                  ? 'warning'
+                  : 'info'
+              }
+              text={data}
+            />
+          )
+        )
+      },
+    })
+  }
+
   return (
     <TableLayout
       columns={DebtColumns}
@@ -320,6 +348,9 @@ const Debt: FC<DebtProps> = ({
       selectedRange={selectedRange}
       listQuery={useDebtsQuery}
       aggregateQuery={useDebtCountQuery}
+      noDataText={t('account.finance.debt.empty.data.text')}
+      setIsHealthcodeEnabled={setIsHealthcodeEnabled}
+      tabName="debt"
     />
   )
 }
