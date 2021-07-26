@@ -83,5 +83,5 @@ export const prisma = (remote_url: string) => {
   // store this instance into memory cache
   instances[remote_url] = instance
 
-  return securedInstanceProxy
+  return instance
 }
