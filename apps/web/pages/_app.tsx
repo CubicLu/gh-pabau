@@ -31,6 +31,18 @@ let apolloClient: ApolloClient<NormalizedCacheObject | null> = null
 
 const cache = new InMemoryCache({
   resultCaching: true,
+  typePolicies: {
+    chat_room: {
+      fields: {
+        chats: {
+          merge(existing = [], incoming: any[]) {
+            console.log('APOLLO CACHE: room.chat.merge()', existing, incoming)
+            return [...existing, ...incoming]
+          },
+        },
+      },
+    },
+  },
 })
 
 const GRAPHQL_WS_ENDPOINT =
