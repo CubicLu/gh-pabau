@@ -1,4 +1,6 @@
 import {
+  defaultMedicaFormAdvanceSettingData,
+  MedicaFormAdvanceSettingData,
   MedicalFormTypes,
   Notification,
   NotificationType,
@@ -300,6 +302,7 @@ interface P {
   triggerChangeForms: (forms: MedicalFormTypes[]) => void
   formName: string
   currentRules?: RuleProp[]
+  currentAdvSettings?: MedicaFormAdvanceSettingData
 }
 
 const MedicalFormEdit: FC<P> = ({
@@ -314,6 +317,7 @@ const MedicalFormEdit: FC<P> = ({
   triggerChangeForms,
   formName,
   currentRules = [],
+  currentAdvSettings = defaultMedicaFormAdvanceSettingData,
 }) => {
   const { t } = useTranslation('common')
   const [, forceUpdate] = useReducer((x) => x + 1, 0)

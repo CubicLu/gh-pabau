@@ -948,6 +948,8 @@ en:
   invoice.card.label: Card
   invoice.cash.label: Cash
   invoice.pay.button.label: Pay with card
+  receipt.payment.date.label: Payment Date
+  receipt.payment.with.invoice: Payments applied to invoices
   settings-header: Settings
   settings-performance-save: 'Save Changes'
   settings-performance-tab-header1: 'Review Schedule'
@@ -2199,15 +2201,15 @@ en:
   ui.medicalformbuilder.advanced.basic.submit: 'Submit Button Label'
   ui.medicalformbuilder.advanced.basic.submit.placeholder: 'Submit Button Label'
   ui.medicalformbuilder.advanced.basic.sharelink: 'Share a copy of the form with the client in Pabau Connect'
-  ui.medicalformbuilder.advanced.basic.social: 'Send a reminder to the client to complete the form if they haven’t done so within'
+  ui.medicalformbuilder.advanced.basic.reminder: 'Send a reminder to the client to complete the form if they haven’t done so within'
   ui.medicalformbuilder.advanced.acknowledgement.title: 'Acknowledgement & Redirects'
   ui.medicalformbuilder.advanced.acknowledgement.description: 'Configure a Thank you page to acknowledge your respondents submission or choose where to redirect them to next (for connect only)'
   ui.medicalformbuilder.advanced.acknowledgement.thankpage.title: 'Thank You Page'
   ui.medicalformbuilder.advanced.acknowledgement.thankpage.description: 'Customize your Thank You page message-.'
   ui.medicalformbuilder.advanced.acknowledgement.ty.plain: 'Plain Text'
   ui.medicalformbuilder.advanced.acknowledgement.ty.rich: 'Rich Text'
-  ui.medicalformbuilder.advanced.acknowledgement.sharecopy: 'Show link to Pabau connect where client can manage their appointment'
-  ui.medicalformbuilder.advanced.acknowledgement.sendreminder: 'Add Google Analytics or Facebook Pixel tracking code'
+  ui.medicalformbuilder.advanced.acknowledgement.showlink: 'Show link to Pabau connect where client can manage their appointment'
+  ui.medicalformbuilder.advanced.acknowledgement.addsocial: 'Add Google Analytics or Facebook Pixel tracking code'
   ui.medicalformbuilder.advanced.acknowledgement.redirecttype: 'Choose where you want to redirect clients on form submission'
   ui.medicalformbuilder.advanced.payment.title: 'Payment Processing'
   ui.medicalformbuilder.advanced.payment.description: 'Take a payment when the client submits the form.'

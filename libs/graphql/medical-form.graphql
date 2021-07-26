@@ -4,13 +4,24 @@ query findMedicalForms(
   $where: MedicalFormWhereInput
   $orderBy: [MedicalFormOrderByInput!]
 ) {
-  findManyMedicalForm(take: $take, skip: $skip, orderBy: $orderBy, where: $where) {
+  findManyMedicalForm(
+    take: $take
+    skip: $skip
+    orderBy: $orderBy
+    where: $where
+  ) {
     id
     name
     created_at
     form_type
     company_id
     data
+    MedicalFormAdvancedSetting {
+      id
+      share_to_client
+      reminder
+      data
+    }
   }
 }
 query findMedicalFormsCount($where: MedicalFormWhereInput) {

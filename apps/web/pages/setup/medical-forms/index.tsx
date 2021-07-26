@@ -23,6 +23,7 @@ import {
 import {
   Breadcrumb,
   Button,
+  defaultMedicaFormAdvanceSettingData,
   EmailMessageTemplateItem,
   MedicalFilter,
   MedicalFormBuilder,
@@ -50,6 +51,15 @@ const { Title } = Typography
 enum Tab {
   Custom = '0',
   Library = '1',
+}
+
+function isValidJSONString(str) {
+  try {
+    JSON.parse(str)
+  } catch {
+    return false
+  }
+  return true
 }
 
 export const Index: FC = () => {
@@ -118,7 +128,6 @@ export const Index: FC = () => {
   }, [paginateData.take, paginateData.skip, searchData])
 
   const businessDetails = useGetBussinessDetailsQuery()
-  // const medicalForms = useFindMedicalFormsQuery(getQueryVariables)
   const {
     data: medicalForms,
     loading: loadingMedicalForms,
@@ -220,6 +229,22 @@ export const Index: FC = () => {
           index: index,
           formData: medicalForm.data,
           rules: [],
+          advSetting:
+            medicalForm.MedicalFormAdvancedSetting.length > 0
+              ? {
+                  id: medicalForm.MedicalFormAdvancedSetting[0].id,
+                  shareToClient: medicalForm.MedicalFormAdvancedSetting[0]
+                    .share_to_client
+                    ? 1
+                    : 0,
+                  reminder: medicalForm.MedicalFormAdvancedSetting[0].reminder,
+                  data: isValidJSONString(
+                    medicalForm.MedicalFormAdvancedSetting[0].data
+                  )
+                    ? JSON.parse(medicalForm.MedicalFormAdvancedSetting[0].data)
+                    : defaultMedicaFormAdvanceSettingData.data,
+                }
+              : defaultMedicaFormAdvanceSettingData,
         })
       )
       setMedicalFormItems(medicalFormList)
@@ -303,7 +328,9 @@ export const Index: FC = () => {
   })
 
   const saveForm = async (medicalItem) => {
+    console.log('medicalItem =', medicalItem)
     setShowCreateForm(false)
+
     const updateVariables = {
       where: {
         id: Number(medicalItem.key),
@@ -318,7 +345,37 @@ export const Index: FC = () => {
               : medicalItem.formType,
         },
         updated_at: { set: dayjs() },
-        MedicalFormAdvancedSetting: {},
+        MedicalFormAdvancedSetting:
+          Number(medicalItem.advSetting.id) === 0
+            ? {
+                create: [
+                  {
+                    share_to_client:
+                      medicalItem.advSetting.shareToClient === 1 ? true : false,
+                    reminder: medicalItem.advSetting.reminder,
+                    data: JSON.stringify(medicalItem.advSetting.data),
+                  },
+                ],
+              }
+            : {
+                update: [
+                  {
+                    data: {
+                      share_to_client: {
+                        set:
+                          medicalItem.advSetting.shareToClient === 1
+                            ? true
+                            : false,
+                      },
+                      reminder: { set: medicalItem.advSetting.reminder },
+                      data: JSON.stringify(medicalItem.advSetting.data),
+                    },
+                    where: {
+                      id: Number(medicalItem.advSetting.id),
+                    },
+                  },
+                ],
+              },
       },
     }
 
@@ -346,7 +403,16 @@ export const Index: FC = () => {
         diagnosis_code_enabled: 0,
         lab_id: 0,
         Company: {},
-        MedicalFormAdvancedSetting: {},
+        MedicalFormAdvancedSetting: {
+          create: [
+            {
+              share_to_client:
+                medicalItem.advSetting.shareToClient === 1 ? true : false,
+              reminder: medicalItem.advSetting.reminder,
+              data: JSON.stringify(medicalItem.advSetting.data),
+            },
+          ],
+        },
       },
     }
 

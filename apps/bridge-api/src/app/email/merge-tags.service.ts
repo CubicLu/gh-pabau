@@ -25,7 +25,7 @@ export async function prepareMessage(
           },
         },
       })
-    : []
+    : null
 
   const Lead = relation.lead_id
     ? await ctx.prisma.cmLead.findUnique({
@@ -41,7 +41,7 @@ export async function prepareMessage(
           },
         },
       })
-    : []
+    : null
 
   const User = relation.staff_id
     ? await ctx.prisma.user.findUnique({
@@ -52,7 +52,7 @@ export async function prepareMessage(
           CmStaffGeneral: true,
         },
       })
-    : []
+    : null
 
   const Company = await ctx.prisma.company.findUnique({
     where: {
@@ -78,7 +78,7 @@ export async function prepareMessage(
     CLIENTPOSTAL: Contact?.MailingPostal,
     CLIENTCOUNTY: Contact?.MailingProvince,
     CLIENTCOUNTRY: Contact?.MailingCountry,
-    CLIENTMAILINGCOUNTRY: Contact.MailingCountry,
+    CLIENTMAILINGCOUNTRY: Contact?.MailingCountry,
     CLIENTLOYALTY: Contact?.LoyaltyPoint?.points,
     FULLADDRESS: function () {
       return [
@@ -99,11 +99,11 @@ export async function prepareMessage(
       ].join(',')
     },
     CLIENTDOB: function () {
-      return new Date(Contact?.DOB).toLocaleDateString()
+      return Contact?.DOB ? new Date(Contact?.DOB).toLocaleDateString() : ''
     },
     CLIENT_INS_COMP: Contact?.Insurance?.insurer_name,
-    CLIENT_INS_MEM_NUM: Contact.ContactInsurance?.membership_number,
-    CLIENT_INS_AUTH_CODE: Contact.ContactInsurance?.auth_code,
+    CLIENT_INS_MEM_NUM: Contact?.ContactInsurance?.membership_number,
+    CLIENT_INS_AUTH_CODE: Contact?.ContactInsurance?.auth_code,
     CLIENT_INS_MOBILE: Contact?.Insurance?.phone,
     CLIENT_INS_WEBSITE: Contact?.Insurance?.website,
     CLIENT_INS_CITY: Contact?.Insurance?.city,
@@ -114,7 +114,7 @@ export async function prepareMessage(
     CLIENT_INS_IMAGE: Contact?.Insurance?.image,
     CLIENT_INS_COUNTRY: Contact?.Insurance?.country,
     CLIENT_INS_STREET2: Contact?.Insurance?.street2,
-    CLIENT_INS_PROVIDERNUM: Contact?.ContactInsurance[0]?.provider_number,
+    CLIENT_INS_PROVIDERNUM: Contact?.ContactInsurance?.provider_number,
     APPOINTMENTFIRSTNAME: Contact?.Fname,
     APPOINTMENTLASTNAME: Contact?.Lname,
     CLIENT_PREFERENCES: function () {
@@ -157,8 +157,10 @@ export async function prepareMessage(
             FROM cycle_appointment
             INNER JOIN salon_bookings ON cycle_appointment.appt_id=salon_bookings.id
             LEFT JOIN cycles ON cycles.id=cycle_appointment.cycle_id
-            WHERE salon_bookings.contact_id = ${relation.contact_id}
-            AND salon_bookings.status != 'Cancelled' AND salon_bookings.end_date < NOW() AND cycles.id > 0 AND cycles.id != '' AND salon_bookings.occupier = ${ctx.authenticated.company}`
+            WHERE salon_bookings.contact_id = ${relation.contact_id ?? 0}
+            AND salon_bookings.status != 'Cancelled' AND salon_bookings.end_date < NOW() AND cycles.id > 0 AND cycles.id != '' AND salon_bookings.occupier = ${
+              ctx.authenticated.company
+            }`
       return response[0]?.count ?? 0
     },
     DIAG_CODE: async function () {
@@ -167,7 +169,9 @@ export async function prepareMessage(
                   INNER JOIN salon_bookings ON cycle_appointment.appt_id=salon_bookings.id
                   INNER JOIN cycles ON cycles.id=cycle_appointment.cycle_id
                   LEFT JOIN diagnosis_code ON diagnosis_code.id=cycles.diagnosis_code_id
-                  WHERE salon_bookings.occupier = ${ctx.authenticated.company} AND salon_bookings.contact_id = ${relation.contact_id}
+                  WHERE salon_bookings.occupier = ${
+                    ctx.authenticated.company
+                  } AND salon_bookings.contact_id = ${relation.contact_id ?? 0}
                   ORDER BY cycle_appointment.date_created DESC LIMIT 1`
       return response[0]?.code ?? ''
     },
@@ -247,7 +251,7 @@ export async function prepareMessage(
     // APPOINTMENTMANAGE: Contact.MailingCountry, //=$connect_url_default."/index.php?compid=".$r_c['company_id']."&email=".$r_sbc['Email']."";
     // PACKAGE_NAME: Contact.MailingCountry, // get package name from booking_id
     APPOINTMENTNAME: function () {
-      return [Contact.Fname, Contact.Lname].join(' ')
+      return [Contact?.Fname, Contact?.Lname].join(' ')
     },
     // ADATE: function () {
     //   return new Date().toTimeString().slice(0, 5)
@@ -289,7 +293,7 @@ export async function prepareMessage(
   while ((result = HANDLE_REGEX.exec(html))) {
     const name = result[0]
     const name2 = name.slice(1, -1)
-    html = html.replace(name, TAGS[name2])
+    html = html.replace(name, TAGS[name2] ?? '')
   }
   return html
 }
