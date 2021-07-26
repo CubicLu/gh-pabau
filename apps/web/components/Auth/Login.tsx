@@ -1,14 +1,14 @@
+import React, { FC } from 'react'
 import { EyeInvisibleOutlined, LinkedinFilled } from '@ant-design/icons'
-import { gql, useMutation } from '@apollo/client'
-import { Button, Notification, NotificationType } from '@pabau/ui'
+import { Button } from '@pabau/ui'
 import { Formik } from 'formik'
 import { Checkbox, Form, Input, SubmitButton } from 'formik-antd'
-import { useRouter } from 'next/router'
-import React, { FC } from 'react'
 import { LoginValidation } from '@pabau/yup'
 import { ReactComponent as GoogleIcon } from '../../assets/images/google.svg'
 import { ReactComponent as SSOIcon } from '../../assets/images/sso.svg'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { Exact } from '@pabau/graphql'
+import { QueryLazyOptions } from '@apollo/client'
 import styles from '../../pages/login.module.less'
 
 export interface LoginFormProps {
@@ -18,33 +18,26 @@ export interface LoginFormProps {
 }
 
 interface LoginProps {
-  handlePageShow: (page: string) => void
+  handlePageShow: React.Dispatch<React.SetStateAction<string>>
+  verifyCredentials: (
+    options?: QueryLazyOptions<Exact<{ username: string; password: string }>>
+  ) => void
 }
-const LOGIN_MUTATION = gql`
-  mutation login($email: String!, $password: String!) {
-    login(username: $email, password: $password)
-  }
-`
-const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
-  const [login] = useMutation(LOGIN_MUTATION)
+
+const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
   const { t } = useTranslationI18()
-  const router = useRouter()
 
   const loginHandler = async (loginProps: LoginFormProps): Promise<boolean> => {
     if (localStorage?.getItem('token')) {
       localStorage.removeItem('token')
     }
     const { email, password } = loginProps
-    const result = await login({
+    await verifyCredentials({
       variables: {
-        email,
-        password,
+        username: email,
+        password: password,
       },
     })
-    if (!result) {
-      throw new Error('Wrong user/password')
-    }
-    localStorage.setItem('token', result.data?.login)
     return true
   }
 
@@ -67,15 +60,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
           }}
           validationSchema={LoginValidation}
           onSubmit={async (value: LoginFormProps) => {
-            try {
-              await loginHandler(value)
-              router.reload()
-            } catch (error) {
-              if (localStorage?.getItem('token')) {
-                localStorage.removeItem('token')
-              }
-              Notification(NotificationType.error, error.toString())
-            }
+            await loginHandler(value)
           }}
           render={({ isValid, values }) => (
             <Form layout="vertical">

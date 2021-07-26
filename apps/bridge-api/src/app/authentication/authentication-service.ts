@@ -125,8 +125,7 @@ export default class AuthenticationService {
   private generateHash(password: string, encryption: 'md5' | 'sha1'): string {
     return createHash(encryption).update(password).digest(this.encoding)
   }
-
-  private generateJWT(): string {
+  public generateJWT(): string {
     return jwt.sign(
       {
         remote_url: this.user.Company.remote_url,
@@ -158,9 +157,9 @@ export default class AuthenticationService {
    * Enum: [1: md5, 2:sha1]
    *
    * @param user - The `User` database model
-   * @param password - The password to be encrypted
+   * @param loginInput - The user-supplied login form
    *
-   * @returns string encrypted password as string
+   * @returns encoded password as string
    */
   private generatePassword(user: AuthenticatedUser, password: string): string {
     switch (user.password_algor) {
