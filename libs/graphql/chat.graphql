@@ -27,10 +27,7 @@ subscription chatListRoomNotify {
   }
 }
 
-query chatRoomHistory(
-  $roomId: uuid!
-  $whereFromUser: UserWhereUniqueInput_remote_rel_public_chatfromUser!
-) {
+query chatRoomHistory($roomId: uuid!) {
   chat_room_by_pk(id: $roomId) {
     id
     name
@@ -41,7 +38,7 @@ query chatRoomHistory(
       id
       message
       created_at
-      fromUser(where: $whereFromUser) {
+      fromUser {
         id
         full_name
         username
@@ -51,11 +48,7 @@ query chatRoomHistory(
   }
 }
 
-query chatDirectHistory(
-  $userId: Int!
-  $whereFromUser: UserWhereUniqueInput_remote_rel_public_chatfromUser!
-  $whereToUser: UserWhereUniqueInput_remote_rel_public_chattoUser!
-) {
+query chatDirectHistory($userId: Int!) {
   chat(
     where: {
       _and: {
@@ -69,13 +62,13 @@ query chatDirectHistory(
     id
     message
     created_at
-    fromUser(where: $whereFromUser) {
+    fromUser {
       id
       username
       full_name
       image
     }
-    toUser(where: $whereToUser) {
+    toUser {
       id
       username
       full_name
@@ -84,10 +77,7 @@ query chatDirectHistory(
   }
 }
 
-query chatListRooms(
-  $whereFromUser: UserWhereUniqueInput_remote_rel_public_chatfromUser!
-  $whereToUser: UserWhereUniqueInput_remote_rel_public_chattoUser!
-) {
+query chatListRooms {
   chat_room_participant {
     id
     room {
@@ -104,12 +94,12 @@ query chatListRooms(
           id
           name
         }
-        toUser(where: $whereToUser) {
+        toUser {
           id
           username
           full_name
         }
-        fromUser(where: $whereFromUser) {
+        fromUser {
           id
           username
           full_name
@@ -133,7 +123,7 @@ query chatListRooms(
     message
     created_at
     to
-    toUser(where: $whereToUser) {
+    toUser {
       id
       username
       full_name
@@ -147,7 +137,7 @@ query chatListRooms(
         }
       }
     }
-    fromUser(where: $whereFromUser) {
+    fromUser {
       id
       username
       full_name
