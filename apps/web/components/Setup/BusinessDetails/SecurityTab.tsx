@@ -244,7 +244,7 @@ export const SecurityTab: FC<SecurityTabProps> = ({
   }
   return (
     <Security
-      force2FA={data?.company?.details?.enable_2fa}
+      twoFAstatus={data?.company?.details?.enable_2fa}
       onOk={handleSecurityChange}
       enableSensData={data?.company?.details?.enable_sens_data}
       config={securityData}

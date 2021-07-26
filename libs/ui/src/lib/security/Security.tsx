@@ -16,28 +16,32 @@ import {
 import { useTranslation } from 'react-i18next'
 
 interface SecurityProps {
+  twoFAstatus: number
+  newButtonText?: string
+  dangerButtonText?: string
+  onDelete?: () => void
+  onOk?: (val) => void
   enableSensData?: number
-  force2FA?: number
-  onOk?(val): void
   config?: PasswordExpirationProps
   passwordExpiration?: string
   loading?: boolean
   onForceResetPassword?(val): void
 }
+
 export const Security: FC<SecurityProps> = ({
-  force2FA,
-  enableSensData,
+  twoFAstatus,
+  onDelete,
   onOk,
+  enableSensData,
   config,
   passwordExpiration,
   loading,
   onForceResetPassword,
 }) => {
-  const [show, setShow] = useState(false)
-  const [showModal, setShowModal] = useState(false)
   const { t } = useTranslation('common')
+  const [showModal, setShowModal] = useState(false)
   const percent =
-    (force2FA === 0 ? 0 : 50) +
+    (!twoFAstatus ? 0 : 50) +
     (enableSensData === (undefined || 0) ? 0 : 20) +
     (config?.password_expire === '90 days' ? 20 : 0) +
     (config?.lockout_period === '10 minutes' ? 10 : 0)
@@ -47,7 +51,7 @@ export const Security: FC<SecurityProps> = ({
       title: t('business.security.tool.data.force.title'),
       name: t('business.security.tool.data.force.name'),
       imgSrc: <VideoCameraOutlined />,
-      isActive: force2FA === 0 ? false : true,
+      isActive: twoFAstatus ? true : false,
       modalType: 1,
       modalTitle: t('business.security.tool.data.force.modal.title'),
       modalContent: t('business.security.tool.data.force.modal.content'),
@@ -157,7 +161,7 @@ export const Security: FC<SecurityProps> = ({
   }
 
   const handleButtonClick = () => {
-    setShow(true)
+    setShowModal(true)
   }
 
   return (
@@ -222,12 +226,12 @@ export const Security: FC<SecurityProps> = ({
       </div>
       <BasicModal
         title={t('business.security.score')}
-        visible={show}
-        onCancel={() => setShow(false)}
+        visible={showModal}
+        onCancel={() => setShowModal(false)}
         newButtonText={'Ok'}
         centered={true}
         onOk={() => {
-          setShow(false)
+          setShowModal(false)
         }}
       >
         {percent < 30

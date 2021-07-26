@@ -1,11 +1,22 @@
-import { allow, and, shield } from 'graphql-shield'
+import { allow, and, shield, or } from 'graphql-shield'
 import * as rules from './types'
 
 export const permissions = shield(
   {
     Mutation: {
       // Products
-      createOneInvProduct: rules.authentication.isAuthenticated,
+      createOneInvProduct: or(
+        rules.authentication.isAdmin,
+        rules.stock.stockManager
+      ),
+      deleteOneInvProduct: or(
+        rules.authentication.isAdmin,
+        rules.stock.stockManager
+      ),
+      updateOneInvProduct: or(
+        rules.authentication.isAdmin,
+        rules.stock.stockManager
+      ),
       //UserPermission
       updateOneUserPermission: and(
         rules.authentication.isAuthenticated,
@@ -68,6 +79,7 @@ export const permissions = shield(
 
       // Public access mutations
       login: allow,
+      AuthenticateUser: allow,
       //resetPassword
       resetPassword: allow,
       upsertUserReportByReportCode: rules.authentication.isAdmin,
@@ -76,6 +88,7 @@ export const permissions = shield(
       createOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
       updateOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
 
+      updateOneCompany: rules.authentication.isAdmin,
       updateManyUser: rules.authentication.isAdmin,
       upsertManyUsersPermissionByGroupId: rules.authentication.isAdmin,
       upsertManyUsersReportsByGroupId: rules.authentication.isAdmin,
@@ -160,6 +173,8 @@ export const permissions = shield(
       findManyUserPermission: rules.authentication.isAuthenticated,
       findManyUserPermissionCount: rules.authentication.isAuthenticated,
       findFirstUserPermission: rules.authentication.isAuthenticated,
+      findManyCmContact: rules.authentication.isAuthenticated,
+      //Authentication
       findManyLocationsWithAvailableProductStock: rules.authentication.isAdmin,
       validateUser: allow,
       findManyProductsWithAvailableQuantity:
@@ -169,6 +184,8 @@ export const permissions = shield(
       // //Authentication
       me: rules.authentication.isAuthenticated,
       company: rules.authentication.isAuthenticated,
+      VerifyCredentials: allow,
+      VerifyTwoFaCode: allow,
       ping: allow,
       // invoice
       getInvoiceData: rules.authentication.isAuthenticated,

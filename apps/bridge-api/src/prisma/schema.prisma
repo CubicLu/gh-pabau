@@ -6687,7 +6687,7 @@ model InvSale {
   old_paid_by         String
   loyalty_points      Int
   xero_invoice_id     String
-  xero_updated_date   DateTime
+  xero_updated_date   DateTime?
   split_count         Int              @default(1)
   split_guid          String
   insurer_contract_id Int              @default(0)
@@ -12432,8 +12432,8 @@ model User {
   InvWarehouseProduct          InvWarehouseProduct[]
   InventoryMovement            InventoryMovement[]
   Booking                      Booking[]
+  InvSale                      InvSale[]
 
-  InvSale InvSale[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")

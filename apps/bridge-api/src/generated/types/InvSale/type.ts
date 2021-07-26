@@ -59,7 +59,7 @@ export const InvSale = objectType({
     t.string('old_paid_by')
     t.int('loyalty_points')
     t.string('xero_invoice_id')
-    t.field('xero_updated_date', { type: 'DateTime' })
+    t.nullable.field('xero_updated_date', { type: 'DateTime' })
     t.int('split_count')
     t.string('split_guid')
     t.int('insurer_contract_id')

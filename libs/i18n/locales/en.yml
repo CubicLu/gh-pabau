@@ -38,6 +38,8 @@ en:
   james-testing-2: 'test two'
   james-test-3: 'Hello World!=)'
   login.title: 'Log In!!'
+  login.wrong_credentials: 'Wrong username or password - please re-try again carefully.'
+  login.wrong_credentials_2fa: 'Unable to validate the provided code!'
   notifications.clientNotifications.menuItem.appointments: 'Appointments'
   notifications.clientNotifications.menuItem.engagement: 'Engagement'
   notifications.clientNotifications.menuItem.sharing: 'Sharing'
@@ -1444,6 +1446,30 @@ en:
   setup.creditnotes.schema.fields.invoiceprefix.description: 'A exmaple prefix'
   setup.creditnotes.schema.fields.invoiceprefix.example: 'RCN'
   setup.creditnotes.schema.fields.isactive: 'Status'
+  setup.taxrate.notification.create.success: Success! You have successfully created a tax rate
+  setup.taxrate.notification.create.error: Error! While creating a tax rate
+  setup.taxrate.notification.edit.success: Success! You have successfully edited a tax rate
+  setup.taxrate.notification.edit.error: Error! While editing a tax rate
+  setup.taxrate.notification.delete.success: Success! You have successfully deleted a tax rate
+  setup.taxrate.notification.delete.error: Error! While deleting a tax rate
+  setup.taxrate.notification.order.error: Error! While deleting a tax rate
+  setup.taxrate.notification.deletemodal.title: Delete tax rate?
+  setup.taxrate.notification.deletemodal.para: will be deleted. This action is irreversable.
+  setup.taxrate.notification.deletemodal.deletebtn: Yes, Delete
+  setup.taxrate.notification.updatemodal.title: Update
+  setup.taxrate.notification.createmodal.title: Create
+  setup.taxrate.notification.createmodal.inputs.name: Name
+  setup.taxrate.notification.createmodal.inputs.name.placeholder: eg. VAT20
+  setup.taxrate.notification.createmodal.inputs.name.error: Tax name is required
+  setup.taxrate.notification.createmodal.inputs.amount: Amount
+  setup.taxrate.notification.createmodal.inputs.amount.error1: Tax amount is required
+  setup.taxrate.notification.createmodal.inputs.amount.error2: Percentage cannot be in negative
+  setup.taxrate.notification.createmodal.inputs.amount.error3: Amount cannot exceeds 100
+  setup.taxrate.notification.createmodal.inputs.advanced.title: Advanced
+  setup.taxrate.notification.createmodal.inputs.glcode: GL Code
+  setup.taxrate.notification.createmodal.inputs.glcode.placeholder: eg. Nail Bar
+  setup.taxrate.notification.createmodal.deletebtn: Delete
+  setup.taxrate.notification.createmodal.activebtn: Active
   products.list.newbtn.product: 'New Product'
   products.list.newbtn.category: 'New Category'
   products.list.newbtn.supplier: 'New Supplier'
@@ -1465,7 +1491,7 @@ en:
   products.list.products.notification.group.success: 'Success! A new product group was created'
   products.list.products.notification.group.update.error: 'Error! While updating a product group'
   products.list.products.notification.group.update.success: 'Success! The product group was updated'
-  products.list.products.notification.group.delete.success: 'Success! The {{name}} was removed'
+  products.list.products.notification.group.delete.success: 'Success! {{name}} was removed'
   products.list.products.notification.group.delete.error: 'Error! while removing a product group'
   products.list.products.notification.product.create.success: 'Success! {{name}} was created'
   products.list.products.notification.product.update.success: 'Success! {{name}} was updated'
@@ -1473,6 +1499,7 @@ en:
   products.list.products.notification.product.create.error: 'Error! While creating a new product'
   products.list.products.notification.edit.success: 'Success! {{name}} was updated'
   products.list.products.notification.edit.error: 'Error! Product was not updated'
+  products.list.products.notification.category.delete.tooltip: 'This action is irreversable'
   products.list.products.name.required: 'Name is required'
   products.list.products.quantity.low: 'Low'
   products.list.products.quantity.good: 'Good'
@@ -1486,9 +1513,13 @@ en:
   products.list.create.category.categorycode: 'Category code'
   products.list.create.category.categorycode.placeholder: 'Enter category code'
   products.list.create.category.categorytype: 'Category type'
+  products.list.delete.category.text: 'Are u sure u want to delete this category and associated products?'
+  products.list.delete.group.text: 'Are u sure u want to delete this group, assigned categories and associated products?'
   products.list.create.category.tax: 'Tax'
   products.list.create.category.tax.placeholder: 'Select tax'
   products.list.filter.all: 'All'
+  products.list.products.notification.category.delete.header: 'Delete this category?'
+  products.list.products.notification.group.delete.header: 'Delete this group?'
   products.list.filter.unallocated: 'Everything else'
   products.list.create.category.active: 'Active'
   products.list.products.column.status: 'Status'
@@ -1742,6 +1773,7 @@ en:
   ui.employees.show.more: 'Load More'
   common-label-plus: Plus
   common-label-edit: Edit
+  common-label-confirm: 'Yes'
   common-label-active: 'Active'
   common-label-inactive: 'Inactive'
   common-label-archived: 'Archived'
@@ -1780,6 +1812,10 @@ en:
   setup.business-details.leads.sms: 'Whould you like to receive SMS messages from us?'
   setup.business-details.leads.email: 'Whould you like to receive email communications?'
   setup.business-details.leads.phone: 'Whould you like to receive phone calls?'
+  setup.business-details.2fa.title: 'Force 2 Factor Authentication'
+  setup.business-details.2fa.tooltip: 'Force 2 Factor Authentication for your system to enhance logging and browsing security throughout the system.'
+  setup.business-details.2fa.content: 'Two-factor authentication adds an extra layer of security to your Pabau account. By asking you to enter a verification code after entering the correct email address and password, it will protect you from potential attackers who also might have gained access to your email address. It will ensure that the secure data you share with your clients stays secure, as they will need to enter a verification code as well. /n*SMS credits are mandatory, in order for the two-factor authentication to work.'
+  setup.business-details.2fa.update-success: 'Updated successfully!'
   settings-performance-tab-header-description: 'Lorem ipsum carrots, enhanced undergraduate developer, but they do occaecat time and vitality.'
   account.settings.response.notification.profilesection.success: Profile Updated Successfully
   account.settings.response.notification.securitysection.success: Security Information Updated Successfully
@@ -4396,3 +4432,4 @@ en:
   peer.feedback.outof: 'out of'
   peer.feedback.filled: 'Filled'
   peer.feedback.pending: 'Pending'
+  modal.confirmation.header.title: 'Are u sure u want to delete this {{name}}'

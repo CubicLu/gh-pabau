@@ -300,7 +300,7 @@ pipelines:
                 - if [ "${LAST_COMMIT_LOG}" == "[skip ci] bumping version (patch)" ]; then (echo yes && export LAST_COMMIT_LOG=$(git log HEAD~1 -1 | tail -n +4)); fi
                 - echo "${LAST_COMMIT_LOG}"
 
-                - NODE_OPTIONS=--max_old_space_size=2750 /usr/bin/time -v yarn affected --base=HEAD~1 --target=deploy --prod
+                - NODE_OPTIONS=--max_old_space_size=2750 /usr/bin/time -v yarn affected --head=HEAD~1 --target=deploy --prod
                 - export COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
 
                 - |

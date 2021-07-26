@@ -7,6 +7,9 @@ import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { Button } from '@pabau/ui'
 import { MinusOutlined } from '@ant-design/icons'
+import { JwtUser } from './interfaces/common'
+import { Exact } from '@pabau/graphql'
+import { QueryLazyOptions } from '@apollo/client'
 
 export interface TowStepFormProps {
   code: string
@@ -14,10 +17,16 @@ export interface TowStepFormProps {
 
 interface TwoStepAuthenticationProps {
   handlePageShow: (page: string) => void
+  currentUser: JwtUser
+  verifyTwoFaCode: (
+    options?: QueryLazyOptions<Exact<{ pincode: string }>>
+  ) => void
 }
 
 const TwoStepAuthentication: FC<TwoStepAuthenticationProps> = ({
   handlePageShow,
+  currentUser,
+  verifyTwoFaCode,
 }) => {
   const inputs = useRef([])
   return (
@@ -27,7 +36,13 @@ const TwoStepAuthentication: FC<TwoStepAuthenticationProps> = ({
           <h6>Two-step authentication</h6>
           <span className={styles.textContent}>
             To continue, please, enter the 6-digit verification code sent to
-            <b> your phone ending in 0000</b>
+            <b>
+              {' '}
+              your phone ending in{' '}
+              {currentUser.CmStaffGeneral.CellPhone.length > 0
+                ? currentUser.CmStaffGeneral.CellPhone.substr(-4)
+                : `N/A`}
+            </b>
           </span>
           <span className={styles.textContent}>
             Did not receive a code? <a>Resend.</a>
@@ -58,7 +73,7 @@ const TwoStepAuthentication: FC<TwoStepAuthenticationProps> = ({
           })}
           onSubmit={(value) => {
             const verificationCode = Object.values(value.code).join('')
-            console.log(verificationCode)
+            verifyTwoFaCode({ variables: { pincode: verificationCode } })
           }}
           render={({ values, setFieldValue }) => {
             return (
