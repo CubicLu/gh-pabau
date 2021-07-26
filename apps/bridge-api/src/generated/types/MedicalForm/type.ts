@@ -34,17 +34,30 @@ export const MedicalForm = objectType({
     t.int('diagnosis_code_enabled')
     t.int('lab_id')
     t.boolean('is_private')
-    t.nullable.int('advanced_setting')
     t.nullable.field('Company', {
       type: 'Company',
       resolve(root: any) {
         return root.Company
       },
     })
-    t.nullable.field('MedicalFormAdvancedSetting', {
+    t.list.field('MedicalFormAdvancedSetting', {
       type: 'MedicalFormAdvancedSetting',
+      args: {
+        where: 'MedicalFormAdvancedSettingWhereInput',
+        orderBy: 'MedicalFormAdvancedSettingOrderByInput',
+        cursor: 'MedicalFormAdvancedSettingWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalFormAdvancedSettingScalarFieldEnum',
+      },
       resolve(root: any) {
         return root.MedicalFormAdvancedSetting
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'MedicalFormCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

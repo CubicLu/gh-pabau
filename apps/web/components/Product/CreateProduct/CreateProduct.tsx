@@ -23,17 +23,18 @@ import {
 import { InputNumber, Tooltip, Checkbox } from 'antd'
 import { Formik } from 'formik'
 import { Form, Input, Select, Radio } from 'formik-antd'
-import React, { FC, useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { NumberFormatValues } from 'react-number-format'
 import { UserContext } from '../../../context/UserContext'
 import * as Yup from 'yup'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './CreateProduct.module.less'
 import dayjs from 'dayjs'
+import stringToCurrencySignConverter from '../../../helper/stringToCurrencySignConverter'
 
 const { Option } = Select
 
-type Product = InvProductWithQuantitySumResult & {
+export type Product = InvProductWithQuantitySumResult & {
   tax?: string
   supplier: string
   locations?: {
@@ -65,13 +66,14 @@ export interface P {
   onClose: () => void
   onSave: (values: Partial<Product>, customFields: CustomField[]) => void
   onEdit: (values: Partial<Product>, customFields: CustomField[]) => void
+  onDelete: (product: number) => void
   action: 'Create' | 'Edit'
 }
 
 const defaultValue: Partial<Product> = {
   id: null,
   sku: '',
-  old_barcode: '',
+  code: '',
   category_id: null,
   size: '',
   name: '',
@@ -85,7 +87,7 @@ const defaultValue: Partial<Product> = {
   allow_negative_qty: null,
 }
 
-export const CreateProduct: FC<P> = ({
+export const CreateProduct = ({
   loading,
   taxes,
   categories,
@@ -98,10 +100,10 @@ export const CreateProduct: FC<P> = ({
   onClose,
   onSave,
   onEdit,
-}) => {
+  onDelete,
+}: P): JSX.Element => {
   const { t } = useTranslationI18()
   const user = useContext(UserContext)
-  const [active, setActive] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [showImageSelector, setShowImageSelector] = useState(false)
   const [initialValue, setInitialValue] = useState(defaultValue)
@@ -118,25 +120,25 @@ export const CreateProduct: FC<P> = ({
     action === 'Edit'
       ? setInitialValue({
           id: product?.id,
-          sku: product?.sku ?? '',
-          old_barcode: product?.old_barcode ?? '',
-          size: product?.size ?? '',
-          name: product?.name ?? '',
-          category_id: product?.category_id ?? null,
+          sku: product?.sku,
+          code: product?.code,
+          size: product?.size,
+          is_active: product?.is_active,
+          name: product?.name,
+          category_id: product?.category_id,
           category_name:
             categories?.find(
               (category) => category?.id === product?.category_id
             )?.name ?? '',
-          Description: product?.Description ?? '',
-          supplier:
-            suppliers?.find((supplier) => supplier?.id === product?.supplier_id)
-              ?.organisation_name ?? '',
-          tax:
-            taxes?.find((tax) => tax?.id === product?.VATRate_id)?.name ?? '',
-          cost: product?.cost ?? 0,
+          Description: product?.Description,
+          supplier: suppliers?.find(
+            (supplier) => supplier?.id === product?.supplier_id
+          )?.organisation_name,
+          tax: taxes?.find((tax) => tax?.id === product?.VATRate_id)?.name,
+          cost: product?.cost,
           max_level: product?.max_level,
-          price: product?.price ?? 0,
-          image: product?.image ?? null,
+          price: product?.price,
+          image: `https://cdn.pabau.com/cdn/${product?.image}` ?? null,
           alert_quantity: product?.alert_quantity,
           allow_negative_qty: product?.allow_negative_qty,
         })
@@ -149,7 +151,6 @@ export const CreateProduct: FC<P> = ({
     )
     return defaultValue?.custom_field_value ?? null
   }
-
   return (
     <Formik
       initialValues={initialValue}
@@ -167,13 +168,13 @@ export const CreateProduct: FC<P> = ({
           .max(
             50,
             t('crud-table-input-max-length-validate', {
-              max: 5,
+              max: 50,
             })
           ),
         category_name: Yup.string().required(
           t('ui.create.product.category.validate.required')
         ),
-        old_barcode: Yup.string()
+        code: Yup.string()
           .min(
             2,
             t('crud-table-input-min-length-validate', {
@@ -184,7 +185,7 @@ export const CreateProduct: FC<P> = ({
           .max(
             50,
             t('crud-table-input-max-length-validate', {
-              max: 5,
+              max: 50,
             })
           ),
         sku: Yup.string()
@@ -216,7 +217,7 @@ export const CreateProduct: FC<P> = ({
           t('ui.create.product.maxstock.validate.more')
         ),
       })}
-      onSubmit={(values, errors) => {
+      onSubmit={(values) => {
         const customFields: CustomField[] = []
         for (const [key, value] of Object.entries(values)) {
           if (key?.toString()?.includes('customField-')) {
@@ -229,16 +230,22 @@ export const CreateProduct: FC<P> = ({
         values?.id ? onEdit(values, customFields) : onSave(values, customFields)
       }}
     >
-      {({ setFieldValue, values, isValid, resetForm, submitForm, errors }) => (
+      {({ setFieldValue, values, isValid, resetForm, submitForm }) => (
         <FullScreenReportModal
           visible={showModal}
+          onDelete={() => onDelete(values?.id)}
+          activated={Boolean(values?.is_active)}
+          deleteBtnText={t('common-label-delete')}
           title={
             product?.id
               ? t('ui.edit.product.title')
               : t('ui.create.product.title')
           }
-          operations={[OperationType.active, OperationType.create]}
-          activated={active}
+          operations={[
+            OperationType.active,
+            OperationType.create,
+            OperationType.delete,
+          ]}
           createBtnText={
             product?.id ? t('common-label-edit') : t('common-label-create')
           }
@@ -255,7 +262,7 @@ export const CreateProduct: FC<P> = ({
             onClose()
             setShowModal(false)
           }}
-          onActivated={(val) => setActive(val)}
+          onActivated={(val) => setFieldValue('is_active', val)}
           onCreate={() => submitForm()}
         >
           <Form layout="vertical">
@@ -303,10 +310,10 @@ export const CreateProduct: FC<P> = ({
                 <div className={styles.createProductSectionItem}>
                   <Form.Item
                     label={t('ui.create.product.general.barcode')}
-                    name="old_barcode"
+                    name="code"
                   >
                     <Input
-                      name="old_barcode"
+                      name="code"
                       placeholder={t(
                         'ui.create.product.general.barcode.placeholder'
                       )}
@@ -392,7 +399,7 @@ export const CreateProduct: FC<P> = ({
                   className={styles.createProductImageContainer}
                   style={{ backgroundImage: `url(${values.image})` }}
                 >
-                  {!values.image && (
+                  {!values?.image && (
                     <PictureOutlined
                       style={{
                         color: 'var(--light-grey-color)',
@@ -404,7 +411,7 @@ export const CreateProduct: FC<P> = ({
               </div>
               <ImageSelectorModal
                 visible={showImageSelector}
-                initialSearch={values.name}
+                initialSearch={values?.name}
                 onCancel={() => setShowImageSelector(false)}
                 onOk={(image) => {
                   setShowImageSelector(false)
@@ -428,8 +435,10 @@ export const CreateProduct: FC<P> = ({
                     name="cost"
                   >
                     <CurrencyInput
-                      unit={`${user?.me?.Company?.details?.currency} `}
-                      value={values.cost}
+                      unit={stringToCurrencySignConverter(
+                        user?.me?.company?.details?.currency
+                      )}
+                      value={values?.cost}
                       onChange={(val: NumberFormatValues) =>
                         setFieldValue('cost', val.value)
                       }
@@ -442,8 +451,10 @@ export const CreateProduct: FC<P> = ({
                     name="price"
                   >
                     <CurrencyInput
-                      unit={`${user?.me?.Company?.details?.currency} `}
-                      value={values.price}
+                      unit={stringToCurrencySignConverter(
+                        user?.me?.company?.details?.currency
+                      )}
+                      value={values?.price}
                       onChange={(val: NumberFormatValues) =>
                         setFieldValue('price', val.value)
                       }
@@ -469,7 +480,7 @@ export const CreateProduct: FC<P> = ({
                       </Option>
                       {taxes?.map((item) => (
                         <Option key={item?.id} value={item?.id}>
-                          {item?.rate}
+                          {item?.name}
                         </Option>
                       ))}
                     </Select>
@@ -494,7 +505,7 @@ export const CreateProduct: FC<P> = ({
                         name={'alert_quantity'}
                         type="number"
                         placeholder="0"
-                        value={values.alert_quantity}
+                        value={values?.alert_quantity}
                         onChange={(value) =>
                           setFieldValue('alert_quantity', Number(value))
                         }
@@ -510,7 +521,7 @@ export const CreateProduct: FC<P> = ({
                         name={'max_level'}
                         type="number"
                         placeholder="0"
-                        value={values.max_level}
+                        value={values?.max_level}
                         onChange={(value) =>
                           setFieldValue('max_level', Number(value))
                         }
@@ -552,9 +563,8 @@ export const CreateProduct: FC<P> = ({
                     <div>
                       <InputNumber
                         type="number"
-                        min={values.alert_quantity}
-                        max={values.max_level}
                         placeholder="0"
+                        defaultValue={location?.quantity}
                         onChange={(val) =>
                           setFieldValue(`locations.${location?.id}`, {
                             id: location?.id,
@@ -670,41 +680,42 @@ export const CreateProduct: FC<P> = ({
                                     </Select>
                                   ) : item.field_type === 'date' ? (
                                     <DatePicker
-                                      name={`customField-${item.id}`}
-                                      format={
-                                        user?.me?.Company?.details
-                                          ?.date_format ?? 'DD/MM/YY'
-                                      }
+                                      name={`customField-${item?.id}`}
+                                      key={item.id}
+                                      format={'DD/MM/YY'}
                                       value={
-                                        values?.[`customField-${item.id}`]
+                                        values?.[`customField-${item?.id}`]
                                           ? dayjs(
-                                              values[
-                                                `customField-${item.id}`
+                                              values?.[
+                                                `customField-${item?.id}`
                                               ]?.toString()
                                             )
                                           : undefined
                                       }
                                       onChange={(date) =>
                                         setFieldValue(
-                                          `customField-${item?.field_label}`,
+                                          `customField-${item?.id}`,
                                           date
                                         )
                                       }
-                                      placeholder={t('Select a date')}
+                                      placeholder={t(
+                                        'products.list.product.customField.date.placeholder'
+                                      )}
                                     />
                                   ) : item.field_type === 'phone' ? (
                                     <PhoneNumberInput
+                                      key={item.id}
                                       label={item.field_label}
                                       value={
-                                        values?.[`customField-${item.id}`]
-                                          ? values[
-                                              `customField-${item.id}`
+                                        values?.[`customField-${item?.id}`]
+                                          ? values?.[
+                                              `customField-${item?.id}`
                                             ]?.toString()
                                           : undefined
                                       }
                                       onChange={(value) =>
                                         setFieldValue(
-                                          `customField-${item.id}`,
+                                          `customField-${item?.id}`,
                                           value
                                         )
                                       }

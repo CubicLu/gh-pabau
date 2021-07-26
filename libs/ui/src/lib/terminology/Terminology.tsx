@@ -246,6 +246,7 @@ export const Terminology: FC<TerminologyProps> = ({
             type="primary"
             onClick={() => handleSaveChanges()}
             loading={buttonClicked}
+            className={styles.savebtn}
           >
             {t('business.details.save.changes')}
           </Button>

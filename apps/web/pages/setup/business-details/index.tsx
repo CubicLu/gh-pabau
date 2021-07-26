@@ -3,7 +3,6 @@ import { useGetBussinessDetailsQuery } from '@pabau/graphql'
 import {
   Breadcrumb,
   BusinessDetailsNotifications,
-  Button,
   MobileHeader,
   PasswordExpirationProps,
   TabMenu,
@@ -148,10 +147,10 @@ export const Index: FC = () => {
         return key
       })
 
-      setPasswordExpiration(record?.['password_expiration'])
-      setAddrSuiteNo(record?.['address_suite_no'])
-      setLocation(record?.['business_location'])
-      setEnableLabs(record?.['lab_enabled'])
+      setPasswordExpiration(record?.['password_expiration'] ?? '')
+      setAddrSuiteNo(record?.['address_suite_no'] ?? '')
+      setLocation(record?.['business_location'] ?? '')
+      setEnableLabs(record?.['lab_enabled'] ?? '')
 
       const force_password_data = data?.company?.User?.filter(
         (item) => item.id === user?.me.id
@@ -284,16 +283,6 @@ export const Index: FC = () => {
               onSave={(values) => onSave(values, 'notification')}
             />
           </TabMenu>
-        </div>
-        <div className={styles.buttonForMobile}>
-          <div className={styles.btnSaveWrap}>
-            <Button
-              type="primary"
-              onClick={(values) => onSave(values, 'notification')}
-            >
-              {t('business.details.save.changes')}
-            </Button>
-          </div>
         </div>
       </Layout>
     </>

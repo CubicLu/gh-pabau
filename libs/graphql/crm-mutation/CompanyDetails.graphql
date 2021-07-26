@@ -92,6 +92,9 @@ fragment CompanyDetails on CompanyDetails {
   Company {
     ...CompanyFields
   }
+  InvoiceDefaultTemplate {
+    ...InvoiceTemplateFields
+  }
 }
 
 mutation createOneCompanyDetails($data: CompanyDetailsCreateInput!) {

@@ -7,9 +7,7 @@ import {
 } from '@ant-design/icons'
 import {
   useCreateProductModalInitQuery,
-  useLocationsAndProductQuantityQuery,
-  useStockPermissionQuery,
-  useCategoriesQuery,
+  // usePageAccessAuthorizationQuery,
 } from '@pabau/graphql'
 import { Button, MobileSidebar, NotificationDrawer, TabMenu } from '@pabau/ui'
 import { Card, Divider, Input as AntInput, Typography } from 'antd'
@@ -44,7 +42,14 @@ const ProductList = (): JSX.Element => {
     StockTake = '4',
   }
   const [activeTab, setActiveTab] = useState('0')
-  const { data: permission } = useStockPermissionQuery()
+  // const {
+  //   data: pageAccess,
+  //   loading: fetchingPermissions,
+  // } = usePageAccessAuthorizationQuery({
+  //   variables: {
+  //     pageName: 'Stock',
+  //   },
+  // })
   const newBtnText = [
     t('products.list.newbtn.product'),
     t('products.list.newbtn.category'),
@@ -86,24 +91,22 @@ const ProductList = (): JSX.Element => {
   const {
     loading: productModalLoading,
     data: initialProductModalData,
+    refetch: refetchModalData,
   } = useCreateProductModalInitQuery()
-  const {
-    data: categories,
-    loading: loadingCategories,
-    refetch: refetchCategories,
-  } = useCategoriesQuery()
-  const [filter, setFilter] = useState(1)
+  const [productFilter, setProductFilter] = useState(1)
+  const [categoryFilter, setCategoryFilter] = useState(1)
+  const [purchaseOrdersFilter, setPurchaseOrdersFilter] = useState(1)
+
   const [, setMessageDrawer] = useState(false)
-  const { data: locationStockData } = useLocationsAndProductQuantityQuery()
 
   const user = useContext(UserContext)
   const router = useRouter()
 
   useEffect(() => {
     if (activeTab === '0') {
-      refetchCategories()
+      refetchModalData()
     }
-  }, [activeTab, refetchCategories])
+  }, [activeTab, refetchModalData])
 
   const handleCreate = async () => {
     switch (activeTab) {
@@ -146,6 +149,20 @@ const ProductList = (): JSX.Element => {
     }
   }
 
+  const updateFilterStatus = (status: number) => {
+    switch (activeTab) {
+      case '0':
+        setProductFilter(status)
+        break
+      case '1':
+        setCategoryFilter(status)
+        break
+      case '3':
+        setPurchaseOrdersFilter(status)
+        break
+    }
+  }
+
   useEffect(() => {
     setIsMobile(width < 768)
   }, [width])
@@ -161,7 +178,7 @@ const ProductList = (): JSX.Element => {
 
   return (
     <div className={styles.productsListContainer}>
-      <Layout allowed={permission?.me?.UserPermission} {...user}>
+      <Layout {...user}>
         <Card bodyStyle={{ padding: 0 }} style={{ borderBottomWidth: 0 }}>
           <div className={styles.headerContainer}>
             <Title>
@@ -199,14 +216,15 @@ const ProductList = (): JSX.Element => {
                 activeTab === ActiveTab.Category) &&
                 !isMobile && (
                   <Filter
-                    filter={filter}
                     initialValues={initialValues}
                     selectedCategoryType={selectedCategoryType}
                     activeTab={activeTab}
                     categoryType={categoryType}
                     ActiveTab={ActiveTab}
-                    changeFilter={(status) => setFilter(status)}
-                    changeCategoryType={(type) => setSelectedCategoryType(type)}
+                    changeFilter={(status) => updateFilterStatus(status)}
+                    changeCategoryType={(type) => {
+                      if (activeTab === '0') setSelectedCategoryType(type)
+                    }}
                   />
                 )}
               {(activeTab === ActiveTab.Products ||
@@ -241,15 +259,13 @@ const ProductList = (): JSX.Element => {
         >
           <Product
             modal={initialProductModalData}
-            locations={locationStockData}
-            categories={categories?.findManyInvCategory}
-            loadingCategories={loadingCategories}
+            categories={initialProductModalData?.findManyInvCategory}
             action={action}
             fetchingInitialData={productModalLoading}
             search={productSearchTerm}
             visible={showCreateProduct}
             filterByCategoryType={selectedCategoryType}
-            filterByStatus={filter}
+            filterByStatus={productFilter}
             changeModalState={(state: boolean) => {
               setShowCreateProduct(state)
             }}
@@ -260,7 +276,7 @@ const ProductList = (): JSX.Element => {
             visible={showCreateCategoryModal}
             action={action}
             search={categorySearchTerm}
-            filterByStatus={filter}
+            filterByStatus={categoryFilter}
             taxes={initialProductModalData?.findManyTax}
             changeModalState={(state: boolean) => {
               setShowCreateCategoryModal(state)
@@ -268,7 +284,10 @@ const ProductList = (): JSX.Element => {
             isEditing={() => setAction('Edit')}
           />
           <Supplier search={supplierSearchTerm} />
-          <PurchaseOrder search={purchaseOrdersSearchTerm} />
+          <PurchaseOrder
+            filterByStatus={purchaseOrdersFilter}
+            search={purchaseOrdersSearchTerm}
+          />
           <StockTake search={stockSearchTerm} />
         </TabMenu>
         {openMenuDrawer && (

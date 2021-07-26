@@ -83,18 +83,6 @@ export interface MedicalFormVersion {
   }
 }
 
-export interface MedicalFormItem {
-  name: string
-  formType: string
-  createdAt: string
-  version: MedicalFormVersion
-  status: string
-  index?: number | string
-  key: string
-  formData: string
-  rules: RuleProp[]
-}
-
 export interface SmsMessageTemplateItem {
   template_id: number
   template_name: string
@@ -113,4 +101,63 @@ export interface CommunicationItem {
 export interface UserListItem {
   id: number
   full_name: string
+}
+
+export interface MedicalFormAdvancedSettingItem {
+  language: string
+  headingUse: string
+  submitButtonLabel: string
+  ackRedirect: string
+  thkTextType: string
+  thkShowLink: number
+  thkAddSocial: number
+  thkText: string
+  redirectText: string
+  paymentEnable: number
+  paymentAmount: number
+  cardNumber: string
+  cardExpiration: string
+  cardCvv: string
+}
+
+export interface MedicaFormAdvanceSettingData {
+  id: number
+  shareToClient: number
+  reminder: number
+  data: MedicalFormAdvancedSettingItem
+}
+
+export const defaultMedicaFormAdvanceSettingData: MedicaFormAdvanceSettingData = {
+  id: 0,
+  shareToClient: 0,
+  reminder: 0,
+  data: {
+    language: 'English (UK)',
+    headingUse: 'use_to_separate',
+    submitButtonLabel: '',
+    ackRedirect: 'ty_page',
+    thkTextType: 'plain_text',
+    thkShowLink: 0,
+    thkAddSocial: 0,
+    thkText: '',
+    redirectText: '',
+    paymentEnable: 0,
+    paymentAmount: 0,
+    cardNumber: '',
+    cardExpiration: '',
+    cardCvv: '',
+  },
+}
+
+export interface MedicalFormItem {
+  name: string
+  formType: string
+  createdAt: string
+  version: MedicalFormVersion
+  status: string
+  index?: number | string
+  key: string
+  formData: string
+  rules: RuleProp[]
+  advSetting: MedicaFormAdvanceSettingData
 }

@@ -14,3 +14,14 @@ export const DynamicTemplateData = inputObjectType({
     t.nonNull.string('value')
   },
 })
+
+export const EmailRelationData = inputObjectType({
+  name: 'EmailRelationData',
+  definition(t) {
+    t.int('contact_id')
+    t.int('lead_id')
+    t.int('staff_id')
+    t.int('booking_id')
+    t.int('invoice_id')
+  },
+})

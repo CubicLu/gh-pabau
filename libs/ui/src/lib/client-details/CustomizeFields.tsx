@@ -1,7 +1,6 @@
 import React, { FC, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import { createPortal } from 'react-dom'
 import {
   PlusOutlined,
   EditOutlined,
@@ -15,18 +14,14 @@ import { ReactComponent as CustomDateOutlined } from '../../assets/images/custom
 import { ReactComponent as DragAreaOutlined } from '../../assets/images/drag-area.svg'
 import styles from './CustomizeFields.module.less'
 
-const dragEl =
-  typeof document !== 'undefined' && document.querySelector('#draggable')
-
-enum FieldType {
-  patientId,
-  referredBy,
-  dob,
-  gender,
-  address,
-  mobile,
-  email,
-}
+type FieldType =
+  | 'patientId'
+  | 'referredBy'
+  | 'dob'
+  | 'gender'
+  | 'address'
+  | 'mobile'
+  | 'email'
 interface FieldOrderItem {
   title: string
   fieldName: string
@@ -47,13 +42,6 @@ export const CustomizeFields: FC<CustomizeFieldsProps> = ({
 }) => {
   const { t } = useTranslation('common')
   const [fieldOrder, setFieldOrder] = useState<FieldOrderItem[]>([])
-  const optionalPortal = (styles, element) => {
-    if (styles.position === 'fixed' && dragEl) {
-      return createPortal(element, dragEl)
-    }
-    return element
-  }
-
   useEffect(() => {
     setFieldOrder(defaultOrder)
   }, [defaultOrder])
@@ -103,9 +91,14 @@ export const CustomizeFields: FC<CustomizeFieldsProps> = ({
                     draggableId={`draggable-item-${index}`}
                     index={index}
                   >
-                    {(provided, snapshot) =>
-                      optionalPortal(
-                        provided.draggableProps.style,
+                    {(provided, snapshot) => {
+                      if (snapshot.isDragging) {
+                        provided.draggableProps.style.left =
+                          provided.draggableProps.style.offsetLeft
+                        provided.draggableProps.style.top =
+                          provided.draggableProps.style.offsetTop
+                      }
+                      return (
                         <div
                           className={styles.draggingItemContainer}
                           ref={provided.innerRef}
@@ -140,7 +133,7 @@ export const CustomizeFields: FC<CustomizeFieldsProps> = ({
                           )}
                         </div>
                       )
-                    }
+                    }}
                   </Draggable>
                 ))}
                 {provided.placeholder}

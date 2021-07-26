@@ -12,6 +12,9 @@ fragment MedicalFormAdvancedSetting on MedicalFormAdvancedSetting {
   Company {
     ...CompanyFields
   }
+  MedicalForm {
+    ...MedicalFormFields
+  }
 }
 
 mutation createOneMedicalFormAdvancedSetting($data: MedicalFormAdvancedSettingCreateInput!) {

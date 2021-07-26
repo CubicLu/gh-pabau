@@ -19,24 +19,10 @@ export const MedicalFormAdvancedSetting = objectType({
         return root.Company
       },
     })
-    t.list.field('MedicalForm', {
+    t.field('MedicalForm', {
       type: 'MedicalForm',
-      args: {
-        where: 'MedicalFormWhereInput',
-        orderBy: 'MedicalFormOrderByInput',
-        cursor: 'MedicalFormWhereUniqueInput',
-        take: 'Int',
-        skip: 'Int',
-        distinct: 'MedicalFormScalarFieldEnum',
-      },
       resolve(root: any) {
         return root.MedicalForm
-      },
-    })
-    t.nullable.field('_count', {
-      type: 'MedicalFormAdvancedSettingCountOutputType',
-      resolve(root: any) {
-        return root._count
       },
     })
   },

@@ -1555,6 +1555,48 @@ export const Company = objectType({
         return root.CmLeadCustomFieldOrder
       },
     })
+    t.list.field('SaleItem', {
+      type: 'SaleItem',
+      args: {
+        where: 'SaleItemWhereInput',
+        orderBy: 'SaleItemOrderByInput',
+        cursor: 'SaleItemWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'SaleItemScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.SaleItem
+      },
+    })
+    t.list.field('Communication', {
+      type: 'Communication',
+      args: {
+        where: 'CommunicationWhereInput',
+        orderBy: 'CommunicationOrderByInput',
+        cursor: 'CommunicationWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Communication
+      },
+    })
+    t.list.field('CompanyEmail', {
+      type: 'CompanyEmail',
+      args: {
+        where: 'CompanyEmailWhereInput',
+        orderBy: 'CompanyEmailOrderByInput',
+        cursor: 'CompanyEmailWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CompanyEmailScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CompanyEmail
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyCountOutputType',
       resolve(root: any) {

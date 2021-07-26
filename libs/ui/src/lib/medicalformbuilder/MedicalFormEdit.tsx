@@ -1,4 +1,6 @@
 import {
+  defaultMedicaFormAdvanceSettingData,
+  MedicaFormAdvanceSettingData,
   MedicalFormTypes,
   Notification,
   NotificationType,
@@ -187,8 +189,6 @@ const reverseForm = (form) => {
 }
 
 const getFormInfo = (form) => {
-  // let name = ''
-  console.log('form =', form)
   let label = ''
   if (form.title) {
     if (typeof form.title === 'object') {
@@ -302,6 +302,7 @@ interface P {
   triggerChangeForms: (forms: MedicalFormTypes[]) => void
   formName: string
   currentRules?: RuleProp[]
+  currentAdvSettings?: MedicaFormAdvanceSettingData
 }
 
 const MedicalFormEdit: FC<P> = ({
@@ -316,6 +317,7 @@ const MedicalFormEdit: FC<P> = ({
   triggerChangeForms,
   formName,
   currentRules = [],
+  currentAdvSettings = defaultMedicaFormAdvanceSettingData,
 }) => {
   const { t } = useTranslation('common')
   const [, forceUpdate] = useReducer((x) => x + 1, 0)

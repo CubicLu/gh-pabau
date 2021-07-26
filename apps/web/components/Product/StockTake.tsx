@@ -1,19 +1,13 @@
-import {
-  useInventoryCountAggregateQuery,
-  useInventoryCountListQuery,
-} from '@pabau/graphql'
-import type { InventoryCount } from '@pabau/graphql'
+import { useInventoryCountListQuery } from '@pabau/graphql'
 import { OrderDiscrepancy, Pagination, Table } from '@pabau/ui'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './ProductListComponents.module.less'
-import { useRouter } from 'next/router'
 
 interface P {
   search: string
 }
-const StokeTake = ({ search }: P): JSX.Element => {
-  const router = useRouter()
+const StokeTake = ({ search = '' }: P): JSX.Element => {
   const { t } = useTranslationI18()
   const [paginateData, setPaginateData] = useState({
     total: 0,
@@ -22,18 +16,17 @@ const StokeTake = ({ search }: P): JSX.Element => {
     currentPage: 1,
     showingRecords: 0,
   })
+  const getQueryVariables = useMemo(() => {
+    return {
+      searchTerm: '%' + search + '%',
+      offset: paginateData.offset,
+      limit: paginateData.limit,
+    }
+  }, [search, paginateData.offset, paginateData.limit])
 
   const { data, loading } = useInventoryCountListQuery({
     variables: {
-      offset: paginateData.offset,
-      limit: paginateData.limit,
-      searchTerm: search,
-    },
-  })
-
-  const { data: aggregateData } = useInventoryCountAggregateQuery({
-    variables: {
-      searchTerm: search,
+      ...getQueryVariables,
     },
   })
 
@@ -99,14 +92,14 @@ const StokeTake = ({ search }: P): JSX.Element => {
   ]
 
   useEffect(() => {
-    if (aggregateData) {
+    if (data?.findManyInventoryCountCount) {
       setPaginateData((d) => ({
         ...d,
-        total: aggregateData?.findManyInventoryCountCount,
+        total: data?.findManyInventoryCountCount,
         showingRecords: data?.findManyStockTakeWithInventoryDiscrepancy?.length,
       }))
     }
-  }, [data, aggregateData])
+  }, [data])
 
   const onPaginationChange = (currentPage) => {
     const offset = paginateData.limit * (currentPage - 1)
@@ -121,24 +114,24 @@ const StokeTake = ({ search }: P): JSX.Element => {
         noDataBtnText={t('products.list.stock.table.new')}
         columns={StockTakeColumns}
         scroll={{ x: 'max-content' }}
-        dataSource={data?.findManyStockTakeWithInventoryDiscrepancy.map((d) => {
-          return {
-            ...d,
-            status: d?.status,
-            count_no: d?.count_name,
-            start_date: d?.date_started,
-            counted_by: d?.user,
-            location: d?.name,
-            discrepanciesDown: d?.shortage ?? 0,
-            discrepanciesUp: d?.overage ?? 0,
-            key: d.id,
+        dataSource={data?.findManyStockTakeWithInventoryDiscrepancy?.map?.(
+          (d) => {
+            return {
+              ...d,
+              status: d?.status,
+              count_no: d?.count_name,
+
+              start_date: new Date(d?.date_started * 1000).toLocaleDateString(
+                'en-GB'
+              ),
+              counted_by: d?.user,
+              location: d?.name,
+              discrepanciesDown: d?.shortage ?? 0,
+              discrepanciesUp: d?.overage ?? 0,
+              key: d?.id,
+            }
           }
-        })}
-        onRowClick={(values: Pick<InventoryCount, 'count_name'>) => {
-          router.push(
-            `products/inventory-count/${values?.count_name?.toString()}`
-          )
-        }}
+        )}
       />
       <div className={styles.pagination}>
         <Pagination

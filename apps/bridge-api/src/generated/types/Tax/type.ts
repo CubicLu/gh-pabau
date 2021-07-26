@@ -49,18 +49,18 @@ export const Tax = objectType({
         return root.InvCategory
       },
     })
-    t.list.field('InvSaleItem', {
-      type: 'InvSaleItem',
+    t.list.field('SaleItem', {
+      type: 'SaleItem',
       args: {
-        where: 'InvSaleItemWhereInput',
-        orderBy: 'InvSaleItemOrderByInput',
-        cursor: 'InvSaleItemWhereUniqueInput',
+        where: 'SaleItemWhereInput',
+        orderBy: 'SaleItemOrderByInput',
+        cursor: 'SaleItemWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
-        distinct: 'InvSaleItemScalarFieldEnum',
+        distinct: 'SaleItemScalarFieldEnum',
       },
       resolve(root: any) {
-        return root.InvSaleItem
+        return root.SaleItem
       },
     })
     t.nullable.field('_count', {

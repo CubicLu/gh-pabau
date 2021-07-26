@@ -66,7 +66,14 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
   const [userImage, setUserImage] = useState<string>(NormalClinicLogo)
   const [businessType, setBusinessType] = useState<IOption[]>(bizTypes)
   const [businessTypeData, setBusinessTypeData] = useState('')
-  const [locationDetails, setLocationDetails] = useState()
+  const [locationDetails, setLocationDetails] = useState({
+    address: '',
+    apt: '',
+    city: '',
+    country: '',
+    postcode: '',
+    region: '',
+  })
   const [businessLocationData, setBusinessLocationData] = useState('')
 
   useEffect(() => {
@@ -150,7 +157,14 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
   })
 
   const handleLocationChanges = (value, data) => {
-    setLocationDetails(data)
+    setLocationDetails({
+      address: data.address ?? '',
+      apt: data.apt ?? '',
+      city: data.city ?? '',
+      country: data.country ?? '',
+      postcode: data.postcode ?? '',
+      region: data.region ?? '',
+    })
     setBusinessLocationData(value)
   }
 
@@ -443,6 +457,7 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
                   type="primary"
                   htmlType="submit"
                   loading={buttonClicked}
+                  className={styles.savebtn}
                   onClick={() => handleSaveChanges(handleSubmit, values)}
                 >
                   {t('business.details.save.changes')}

@@ -83,6 +83,20 @@ export const CmLead = objectType({
         return root.CmLeadCustomField
       },
     })
+    t.list.field('CommunicationRecipient', {
+      type: 'CommunicationRecipient',
+      args: {
+        where: 'CommunicationRecipientWhereInput',
+        orderBy: 'CommunicationRecipientOrderByInput',
+        cursor: 'CommunicationRecipientWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationRecipientScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CommunicationRecipient
+      },
+    })
     t.nullable.field('_count', {
       type: 'CmLeadCountOutputType',
       resolve(root: any) {
