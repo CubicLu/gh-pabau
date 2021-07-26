@@ -259,7 +259,6 @@ const ProductList = (): JSX.Element => {
         >
           <Product
             modal={initialProductModalData}
-            categories={initialProductModalData?.findManyInvCategory}
             action={action}
             fetchingInitialData={productModalLoading}
             search={productSearchTerm}

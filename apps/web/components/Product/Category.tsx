@@ -229,8 +229,8 @@ const CategoryList = ({
             (newData = newData.map((data: { order: number }, i: number) => {
               data.order =
                 sourceData[i]?.order === sourceData[i + 1]?.order
-                  ? sourceData[i].order - 1
-                  : sourceData[i].order === (0 || undefined)
+                  ? sourceData[i].order + 1
+                  : !sourceData[i].order
                   ? 1
                   : sourceData[i].order
               return data
@@ -272,27 +272,27 @@ const CategoryList = ({
           taxes={taxes}
           category={record}
           onDelete={async (id: number) => {
-            await deleteCategory({
+            return !!(await deleteCategory({
               variables: {
                 where: {
                   id: id,
                 },
               },
-            })
+            }))
           }}
           onClose={() => changeModalState(false)}
           onCreate={async (category) => {
             const categoryData = {
-              code: category.code,
+              code: category?.code,
               disabled: !category.disabled,
               PriceListGroup_id: 0,
               technical: 0,
               custom_id: 0,
               imported: 0,
               order: data?.findManyInvCategory?.[0]?.order + 1,
-              name: category.name,
-              image: category.image,
-              category_type: category.category_type.toLowerCase(),
+              name: category?.name,
+              image: category?.image,
+              category_type: category?.category_type?.toLowerCase(),
               Company: {},
               User: {},
               Tax: {
@@ -304,13 +304,13 @@ const CategoryList = ({
             if (!category?.tax_id) {
               delete categoryData?.Tax
             }
-            await addMutation({
+            return !!(await addMutation({
               variables: {
                 data: {
                   ...categoryData,
                 },
               },
-            })
+            }))
           }}
           onUpdate={async (category) => {
             const categoryData = {
@@ -325,19 +325,22 @@ const CategoryList = ({
                 set: !category.disabled,
               },
               name: {
-                set: category.name,
+                set: category?.name,
               },
               image: {
-                set: category.image,
+                set: category?.image,
               },
               code: {
-                set: category.code,
+                set: category?.code,
+              },
+              category_type: {
+                set: category?.category_type,
               },
             }
             if (!category?.tax_id) {
               delete categoryData?.Tax
             }
-            await updateMutation({
+            return !!(await updateMutation({
               variables: {
                 data: {
                   ...categoryData,
@@ -346,7 +349,7 @@ const CategoryList = ({
                   id: category.id,
                 },
               },
-            })
+            }))
           }}
         />
       )}
