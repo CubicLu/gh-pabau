@@ -28,10 +28,15 @@ APP_TYPE="$(basename "$(dirname "$(
 )")")"
 VERCEL_JSON_LOCATION=$(cd "${APP_TYPE}/${APP_NAME}" && pwd)
 
+apt update -y
+apt install -y jq
+APP_VERSION=$(jq -r '.version' package.json)
+
 echo "----- DEBUG -----"
 echo "(pwd)=$(pwd)"
 echo "NODE_OPTIONS=${NODE_OPTIONS}"
 echo "APP_NAME=${APP_NAME}"
+echo "APP_VERSION=${APP_VERSION}"
 echo "APP_TYPE=${APP_TYPE}"
 echo "VERCEL_JSON_LOCATION=${VERCEL_JSON_LOCATION}"
 echo "BITBUCKET_COMMIT=${BITBUCKET_COMMIT}"
@@ -53,13 +58,9 @@ if [ -z "${BITBUCKET_PR_ID}" ]; then
   OUTPUT=$(cd "${build_output_path}" && vercel -c -C --token "${VERCEL_TOKEN}" --scope pabau2 -A "${VERCEL_JSON_LOCATION}/vercel.json")
   echo "errorlevel: $?"
   echo "output: ${OUTPUT}"
-
-  vercel -v || true
-  vercel -c -C --token "${VERCEL_TOKEN}" --scope pabau2 -A "${VERCEL_JSON_LOCATION}/vercel.json" alias ${OUTPUT} prelive-crm.new.pabau.com || true
+  yarn vercel --token "${VERCEL_TOKEN}" --scope pabau2 alias ${OUTPUT} prelive-crm.new.pabau.com
   echo "errorlevel: $?"
-  yarn vercel -v || true
-  yarn vercel -c -C --token "${VERCEL_TOKEN}" --scope pabau2 -A "${VERCEL_JSON_LOCATION}/vercel.json" alias ${OUTPUT} prelive-crm.new.pabau.com || true
-  echo "errorlevel: $?"
+  echo "<https://mgmt.new.pabau.com/deploy/${APP_VERSION}?deployment=${OUTPUT}|Deploy to prod>" >> /tmp/bot_message.txt
 else
   echo "===== Processing type PR ====="
   OUTPUT=$(cd "${build_output_path}" && vercel -c -C --token "${VERCEL_TOKEN}" --scope pabau2 -A "${VERCEL_JSON_LOCATION}/vercel.json")
@@ -73,8 +74,4 @@ LAST_LINE=$(echo "${OUTPUT}" | tail -n1)
 echo "last line: ${LAST_LINE}"
 echo "${LAST_LINE}" > "/tmp/bot_url_${APP_NAME}.txt"
 
-message_body=''
-read_heredoc message_body <<HEREDOC
-${APP_NAME}: ${LAST_LINE}
-HEREDOC
-echo "${message_body}" >> /tmp/bot_message.txt
+echo "${APP_NAME}: ${LAST_LINE}" >> /tmp/bot_message.txt

@@ -12434,6 +12434,7 @@ model User {
   Booking                      Booking[]
 
   InvSale InvSale[]
+  @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")
   @@index([deleted], name: "deleted")
