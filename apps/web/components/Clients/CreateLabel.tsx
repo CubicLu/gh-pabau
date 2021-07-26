@@ -28,11 +28,13 @@ interface CreateLabelsProps {
   selectedLabels?: any
   setSelectedLabels?: (val: Labels[]) => void
   fromHeader?: boolean
-  defaultSelectedLabels?: Labels[]
-  setDefaultSelectedLabels?: (val: Labels[]) => void
+  defaultSelectedLabels?: any
+  setDefaultSelectedLabels?: (val) => void
   handleApplyLabel?: (val) => void
   testLabels?: any
   selectedRowKeys?: any
+  setTestLabels?: (val) => void
+  getContactsLabelsQuery: (val) => any
 }
 
 const customColorData = [
@@ -83,11 +85,18 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   handleApplyLabel,
   testLabels,
   selectedRowKeys,
+  setTestLabels,
+  getContactsLabelsQuery,
 }) => {
   const { t } = useTranslationI18()
   const [visible, setVisible] = useState(false)
-  const [newLabel, setNewLabel] = useState<Labels>({
-    label: '',
+  // const [newLabel, setNewLabel] = useState<Labels>({
+  //   label: '',
+  //   color: '',
+  //   count: 0,
+  // })
+  const [newLabel, setNewLabel] = useState({
+    text: '',
     color: '',
     count: 0,
   })
@@ -95,8 +104,13 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   const [displayColorPicker, setDisplayColorPicker] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
   const [editIndex, setEditIndex] = useState<number>()
-  const [selectedEditData, setSelectedEditData] = useState<Labels>({
-    label: '',
+  // const [selectedEditData, setSelectedEditData] = useState<Labels>({
+  //   label: '',
+  //   color: '',
+  //   count: 0,
+  // })
+  const [selectedEditData, setSelectedEditData] = useState({
+    text: '',
     color: '',
     count: 0,
   })
@@ -155,12 +169,12 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     // console.log('valueObject on edit:', valueObject)
     // console.log('labelData on edit:', labelData)
     const labelIndex = labelData.findIndex(
-      (label) => label.text === selectedEditData.label
+      (label) => label.text === selectedEditData.text
     )
     labelIndex !== -1 && labelData.splice(labelIndex, 1, valueObject)
     const selectedLabelData = [...selectedLabels]
     const selectedLabelIndex = selectedLabelData.findIndex(
-      (label) => label.text === selectedEditData.label
+      (label) => label.text === selectedEditData.text
     )
     selectedLabelIndex !== -1 &&
       selectedLabelData.splice(selectedLabelIndex, 1, valueObject)
@@ -168,7 +182,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
       (label) => label.text === valueObject.label
     )
     if (index === -1 || index === editIndex) {
-      setLabels([...labelData])
+      setTestLabels([...labelData])
       setSelectedLabels([...selectedLabelData])
       fromHeader && handleApplyLabel([...selectedLabelData])
     } else {
@@ -206,18 +220,16 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
         (item) => item.text && item.color !== valueObject.label
       )
     ) {
-      //     setLabels([...labels, valueObject])
-
       // console.log('added new label', newLabel)
       // console.log('testLabels on ADDING:', testLabels)
       // console.log('valueObject:', valueObject)
       // console.log('testLabels.labels :', testLabels.labels)
-
+      setTestLabels([...labels, valueObject])
       setSelectedLabels([...selectedLabels, valueObject])
       fromHeader && handleApplyLabel([...selectedLabels, valueObject])
       addLabelMutaton({
         variables: {
-          text: newLabel.label,
+          text: newLabel.text,
           color: newLabel.color,
         },
         // refetchQueries: [
@@ -243,11 +255,11 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     } = e
     if (key === 'Enter' && value) {
       if (isEdit) {
-        editLabelData({ label: value, color: selectedColor, count: 0 })
+        editLabelData({ text: value, color: selectedColor, count: 0 })
       } else {
-        addLabelData({ label: value, color: selectedColor, count: 0 })
+        addLabelData({ text: value, color: selectedColor, count: 0 })
       }
-      setNewLabel({ label: '', color: '', count: 0 })
+      setNewLabel({ text: '', color: '', count: 0 })
       setVisible(false)
       setDisplayColorPicker(false)
       setSelectedColor('')
@@ -256,11 +268,11 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
 
   const handleVisible = (value) => {
     if (isEdit) {
-      editLabelData({ label: newLabel.label, color: selectedColor, count: 0 })
-    } else if (!value && newLabel.label) {
-      addLabelData({ label: newLabel.label, color: selectedColor, count: 0 })
+      editLabelData({ text: newLabel.text, color: selectedColor, count: 0 })
+    } else if (!value && newLabel.text) {
+      addLabelData({ text: newLabel.text, color: selectedColor, count: 0 })
     }
-    setNewLabel({ label: '', color: '', count: 0 })
+    setNewLabel({ text: '', color: '', count: 0 })
     setVisible(value)
     setDisplayColorPicker(false)
     setSelectedColor('')
@@ -269,9 +281,9 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
 
   const handleSelect = (label, index) => {
     const selectedData = [...selectedLabels]
-    if (selectedData.some((item) => item.label === label.text)) {
-      const selectedIndex = selectedLabels.findIndex(
-        (selectedLabel) => selectedLabel.label === labels[index].label
+    if (selectedData.some((item) => item.text === label.text)) {
+      const selectedIndex = selectedLabels?.findIndex(
+        (selectedLabel) => selectedLabel.text === testLabels.labels[index].text
       )
       selectedIndex !== -1 && selectedData.splice(selectedIndex, 1)
       setSelectedLabels(selectedData)
@@ -282,6 +294,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     console.log('selectedData:', selectedData)
   }
   console.log('selectedLabels:', selectedLabels)
+  console.log('testLabels:', testLabels)
 
   const handleDropletClick = (e, label, index) => {
     e.stopPropagation()
@@ -358,7 +371,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
               contact_id: selectContact,
               label_id: selectedLabel.id,
             },
-          })
+          }).then(getContactsLabelsQuery)
         }
       }
     }
@@ -367,6 +380,8 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   // for (const selectedLabel of selectedLabels) {
   //   console.log('selectedLabelll:', selectedLabel)
   // }
+
+  // for(const selected)
 
   // console.log('newLabel :', newLabel)
 
@@ -456,10 +471,10 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
                 autoComplete={'off'}
                 size="middle"
                 name={'label'}
-                value={newLabel?.label}
+                value={newLabel?.text}
                 onChange={(e) =>
                   setNewLabel({
-                    label: e.target.value,
+                    text: e.target.value,
                     color: selectedColor,
                     count: 0,
                   })

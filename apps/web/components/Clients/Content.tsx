@@ -47,6 +47,9 @@ interface ClientsContentProps {
   setPaginateData?: (val) => void
   testLabels?: any
   addLabelMutaton?: (val) => void
+  setTestLabels?: (val) => void
+  getContactsLabelsData?: any
+  getContactsLabelsQuery?: (val) => void
 }
 
 export interface SourceDataProps {
@@ -67,6 +70,7 @@ export interface SourceDataProps {
   is_dismissed?: boolean
   avatar?: string
   labelTest?: any
+  setTestLabels?: (val) => void
 }
 
 export const ClientsContent: FC<ClientsContentProps> = ({
@@ -91,6 +95,8 @@ export const ClientsContent: FC<ClientsContentProps> = ({
   getClientsCountLoading,
   setPaginateData,
   testLabels,
+  setTestLabels,
+  getContactsLabelsQuery,
 }) => {
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 768px)', false)
@@ -269,7 +275,9 @@ export const ClientsContent: FC<ClientsContentProps> = ({
                 {/* eslint-disable-next-line react/destructuring-assignment */}
                 {/*{labelTest.length > 0 ? labelTest.map((x) => x) : null}*/}
                 {/*{labelItem}*/}
-                {label.label ? label.label : label.text}
+                {/*{label.label ? label.label : label.text}*/}
+                {label.text}
+
                 {/*{label.label}*/}
               </Button>
             ))}
@@ -413,6 +421,8 @@ export const ClientsContent: FC<ClientsContentProps> = ({
             handleApplyLabel={handleApplyLabel}
             testLabels={testLabels}
             selectedRowKeys={selectedRowKeys}
+            setTestLabels={setTestLabels}
+            getContactsLabelsQuery={getContactsLabelsQuery}
           >
             {renderTooltip({
               title: t('clients.leftSidebar.createLabels'),

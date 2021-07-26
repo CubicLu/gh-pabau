@@ -32,6 +32,7 @@ import {
   useGetLabelsLazyQuery,
   useFindManyCompanyDepartmentsLazyQuery,
   useAddLabelMutation,
+  useGetContactsLabelsLazyQuery,
 } from '@pabau/graphql'
 
 const { TabPane } = Tabs
@@ -97,15 +98,29 @@ export const Clients: FC<ClientsProps> = () => {
     getLabelsQuery()
   }, [getLabelsQuery])
 
-  const {
-    data: getContactsLabelsData,
-    loading: geContactstLabelsLoading,
-    error: getContactsLabelsError,
-  } = useGetContactsLabelsQuery({ fetchPolicy: 'no-cache' })
+  // const {
+  //   data: getContactsLabelsData,
+  //   loading: geContactstLabelsLoading,
+  //   error: getContactsLabelsError,
+  // } = useGetContactsLabelsQuery({ fetchPolicy: 'no-cache' })
+
+  const [
+    getContactsLabelsQuery,
+    {
+      data: getContactsLabelsData,
+      loading: geContactstLabelsLoading,
+      error: getContactsLabelsError,
+    },
+  ] = useGetContactsLabelsLazyQuery({ fetchPolicy: 'no-cache' })
 
   console.log('getContactsLabelsData:', getContactsLabelsData)
 
   console.log('getLabelsData:', getLabelsData)
+
+  useEffect(() => {
+    getContactsLabelsQuery()
+    console.log('calling query for get contactsLabels')
+  }, [])
 
   // const [
   //   getLabels,
@@ -182,7 +197,7 @@ export const Clients: FC<ClientsProps> = () => {
   // }, [getContactsData])
 
   useEffect(() => {
-    const tempContact = contactsData?.map((fieldContact) => {
+    contactsData?.map((fieldContact) => {
       const tempCON = []
       for (const fieldCL of contactsLabels?.contacts_labels) {
         // console.log('fieldCL:', fieldCL)
@@ -223,7 +238,7 @@ export const Clients: FC<ClientsProps> = () => {
     })
   }
 
-  // console.log(getContactsData, 'getContactsData')
+  console.log(getContactsData, 'getContactsData')
 
   const contactsData = getContactsData?.cmContacts.map((d) => ({
     id: d.ID,
@@ -500,7 +515,9 @@ export const Clients: FC<ClientsProps> = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedRowKeys, testData])
+  }, [selectedRowKeys, testData, contactsLabels])
+
+  console.log('contactsLabels:', contactsLabels)
 
   const countsLabel = () => {
     const labelsWithCount = sourceData.reduce((p, c) => {
@@ -765,7 +782,10 @@ export const Clients: FC<ClientsProps> = () => {
       getClientsCountLoading={getClientsCountLoading}
       setPaginateData={setPaginateData}
       testLabels={testLabels}
+      setTestLabels={setTestLabels}
       addLabelMutaton={addLabelMutaton}
+      getContactsLabelsData={getContactsLabelsData}
+      getContactsLabelsQuery={getContactsLabelsQuery}
     />
   )
 
