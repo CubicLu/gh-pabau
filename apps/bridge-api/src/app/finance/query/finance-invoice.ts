@@ -1,7 +1,12 @@
-import { extendType, intArg } from 'nexus'
+import { extendType, intArg, stringArg } from 'nexus'
 import { Context } from '../../../context'
-import { findManyFinanceInvoice, invoiceCount } from '../finance'
-import { FinanceInvoiceResponse } from '../nexus-type'
+import {
+  findManyFinanceInvoice,
+  invoiceCount,
+  getInvoiceData,
+} from '../finance'
+import { FinanceInvoiceResponse, InvSaleData } from '../nexus-type'
+import { InvoiceArgs } from '../types/index'
 
 export const AccountInvoiceQuery = extendType({
   type: 'Query',
@@ -42,6 +47,19 @@ export const AccountInvoiceQuery = extendType({
         } catch (error) {
           return error
         }
+      },
+    })
+    t.field('getInvoiceData', {
+      type: InvSaleData,
+      args: {
+        guid: stringArg(),
+        saleId: intArg(),
+      },
+      async resolve(_, args: InvoiceArgs, ctx: Context) {
+        if (!args.guid && !args.saleId) {
+          throw new Error('can not be nullable, must required guid or sale id')
+        }
+        return await getInvoiceData(ctx, args)
       },
     })
   },

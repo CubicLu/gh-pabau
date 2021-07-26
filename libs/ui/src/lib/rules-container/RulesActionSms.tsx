@@ -1,4 +1,4 @@
-import { InputWithTags } from '@pabau/ui'
+import { InputWithTags, SmsMessageTemplateItem } from '@pabau/ui'
 import { Select } from 'antd'
 import React, { FC } from 'react'
 import styles from './RulesContainer.module.less'
@@ -8,16 +8,39 @@ const { Option } = Select
 interface P {
   t: ThenProp
   onChangeThen: (number, any) => void
+  smsMessageTemplateItems: SmsMessageTemplateItem[]
 }
 
-export const RulesActionSms: FC<P> = ({ t, onChangeThen }) => {
+export const RulesActionSms: FC<P> = ({
+  t,
+  onChangeThen,
+  smsMessageTemplateItems = [],
+}) => {
   return (
     <>
       <div className={styles.formGroup}>
+        <label>From</label>
+        <Select
+          style={{ width: 130 }}
+          // value={t.from}
+          onChange={(e) =>
+            onChangeThen(t.id, [
+              {
+                key: 'from',
+                value: e,
+              },
+            ])
+          }
+        >
+          <Option value="1">From-1</Option>
+          <Option value="2">From-2</Option>
+        </Select>
+      </div>
+      <div className={styles.formGroup}>
         <label>Templates</label>
         <Select
-          style={{ width: 200 }}
-          value={t.template}
+          style={{ width: 130 }}
+          // value={t.template}
           onChange={(e) =>
             onChangeThen(t.id, [
               {
@@ -27,14 +50,20 @@ export const RulesActionSms: FC<P> = ({ t, onChangeThen }) => {
             ])
           }
         >
-          <Option value="1">Default Template</Option>
-          <Option value="2">Client Email Template</Option>
+          {smsMessageTemplateItems?.map((smsMessageTemplateItem) => (
+            <Option
+              key={smsMessageTemplateItem.template_id}
+              value={smsMessageTemplateItem.template_id}
+            >
+              {smsMessageTemplateItem.template_name}
+            </Option>
+          ))}
         </Select>
       </div>
       <div className={styles.formGroup} style={{ marginRight: 10 }}>
         <label>To</label>
         <InputWithTags
-          width={250}
+          width={180}
           placeholder="Mobile number you'd like to send to"
           value={t.to}
           valueWithTag={t.to}
@@ -61,6 +90,7 @@ export const RulesActionSms: FC<P> = ({ t, onChangeThen }) => {
             'forms',
             'connect',
           ]}
+          enabledTags={['[CLIENTMOBILE]']}
         />
       </div>
     </>

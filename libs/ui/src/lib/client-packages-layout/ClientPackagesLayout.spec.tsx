@@ -4,7 +4,7 @@ import ClientPackagesLayout from './ClientPackagesLayout'
 
 describe('ClientPackagesLayout', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<ClientPackagesLayout />)
+    const { baseElement } = render(<ClientPackagesLayout items={[]} />)
     expect(baseElement).toBeTruthy()
   })
 })

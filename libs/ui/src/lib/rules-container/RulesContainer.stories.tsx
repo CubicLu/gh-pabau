@@ -99,6 +99,36 @@ export default {
       }
     ],
     medicalForms: [],
+    smsMessageTemplateItems: [
+      {
+        template_id: 1,
+        template_name: "hello1"
+      },
+      {
+        template_id: 2,
+        template_name: "hello2"
+      }
+    ],
+    emailMessageTemplateItems: [
+      {
+        template_id: 1,
+        template_name: "hello1"
+      },
+      {
+        template_id: 2,
+        template_name: "hello2"
+      }
+    ],
+    userListItems: [
+      {
+        id: 1,
+        full_name: 'user1'
+      },
+      {
+        id: 2,
+        full_name: 'user2'
+      }
+    ],
   },
   onChange: { action: 'onChange' },
   actions: { argTypesRegex: '^on[A-Z].*' },

@@ -1,7 +1,6 @@
 import {
   Breadcrumb,
   InstallationModal,
-  Layout,
   SetupEmptySearch,
   SetupSearchInput,
 } from '@pabau/ui'
@@ -10,6 +9,7 @@ import React, { FC, useContext, useState } from 'react'
 import Highlighter from 'react-highlight-words'
 import { useMedia } from 'react-use'
 import CommonHeader from '../../components/CommonHeader'
+import Layout from '../../components/Layout/Layout'
 import IntegrationHeader, {
   IntegrationTabBody,
   ModalSchema,

@@ -41,6 +41,7 @@ export const permissions = shield(
 
       // Send Email
       sendEmail: rules.authentication.isAuthenticated,
+      sendEmailTo: rules.authentication.isAuthenticated,
 
       //Page
       createOnePage: rules.authentication.isAuthenticated,
@@ -88,7 +89,6 @@ export const permissions = shield(
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
-        rules.authentication.isAdmin,
         rules.interceptors.injectCompany,
         rules.interceptors.injectUser
       ),
@@ -176,6 +176,8 @@ export const permissions = shield(
       VerifyCredentials: allow,
       VerifyTwoFaCode: allow,
       ping: allow,
+      // invoice
+      getInvoiceData: rules.authentication.isAuthenticated,
       //TODO once jest mocks are resolved move it to rules.authentication.isAuthenticated
       featureRequestsWeeklyAvg: allow,
       '*': and(

@@ -1499,6 +1499,34 @@ export const Company = objectType({
         return root.CreditNoteType
       },
     })
+    t.list.field('MedicalForm', {
+      type: 'MedicalForm',
+      args: {
+        where: 'MedicalFormWhereInput',
+        orderBy: 'MedicalFormOrderByInput',
+        cursor: 'MedicalFormWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalFormScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalForm
+      },
+    })
+    t.list.field('MedicalFormAdvancedSetting', {
+      type: 'MedicalFormAdvancedSetting',
+      args: {
+        where: 'MedicalFormAdvancedSettingWhereInput',
+        orderBy: 'MedicalFormAdvancedSettingOrderByInput',
+        cursor: 'MedicalFormAdvancedSettingWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'MedicalFormAdvancedSettingScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.MedicalFormAdvancedSetting
+      },
+    })
     t.list.field('CmLeadCustomField', {
       type: 'CmLeadCustomField',
       args: {
@@ -1525,6 +1553,48 @@ export const Company = objectType({
       },
       resolve(root: any) {
         return root.CmLeadCustomFieldOrder
+      },
+    })
+    t.list.field('SaleItem', {
+      type: 'SaleItem',
+      args: {
+        where: 'SaleItemWhereInput',
+        orderBy: 'SaleItemOrderByInput',
+        cursor: 'SaleItemWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'SaleItemScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.SaleItem
+      },
+    })
+    t.list.field('Communication', {
+      type: 'Communication',
+      args: {
+        where: 'CommunicationWhereInput',
+        orderBy: 'CommunicationOrderByInput',
+        cursor: 'CommunicationWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Communication
+      },
+    })
+    t.list.field('CompanyEmail', {
+      type: 'CompanyEmail',
+      args: {
+        where: 'CompanyEmailWhereInput',
+        orderBy: 'CompanyEmailOrderByInput',
+        cursor: 'CompanyEmailWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CompanyEmailScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CompanyEmail
       },
     })
     t.nullable.field('_count', {

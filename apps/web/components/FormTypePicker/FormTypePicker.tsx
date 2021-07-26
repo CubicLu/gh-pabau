@@ -1,32 +1,34 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { FormTypeButton } from '@pabau/ui'
 import { Modal, Row } from 'antd'
 import React, { FC, ReactNode, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ReactComponent as ConsentSelected } from '../../assets/images/form-type/consent-selected.svg'
 import { ReactComponent as Consent } from '../../assets/images/form-type/consent.svg'
 import { ReactComponent as EPaperSelected } from '../../assets/images/form-type/file-pdf-selected.svg'
 import { ReactComponent as EPaper } from '../../assets/images/form-type/file-pdf.svg'
-import { ReactComponent as LabFormSelected } from '../../assets/images/form-type/lab-form-selected.svg'
-import { ReactComponent as LabForm } from '../../assets/images/form-type/lab-form.svg'
+import { ReactComponent as LabSelected } from '../../assets/images/form-type/lab-form-selected.svg'
+import { ReactComponent as Lab } from '../../assets/images/form-type/lab-form.svg'
 import { ReactComponent as MedicalHistorySelected } from '../../assets/images/form-type/medical-history-selected.svg'
 import { ReactComponent as MedicalHistory } from '../../assets/images/form-type/medical-history.svg'
-import { ReactComponent as PresciptionSelected } from '../../assets/images/form-type/presciption-selected.svg'
-import { ReactComponent as Presciption } from '../../assets/images/form-type/presciption.svg'
+import {
+  ReactComponent as Prescription,
+  ReactComponent as PrescriptionSelected,
+} from '../../assets/images/form-type/prescription.svg'
 import { ReactComponent as TreatmentSelected } from '../../assets/images/form-type/treatment-selected.svg'
 import { ReactComponent as Treatment } from '../../assets/images/form-type/treatment.svg'
-import { useTranslation } from 'react-i18next'
 import styles from './FormTypePicker.module.less'
-import { FormTypeButton } from '@pabau/ui'
 
 const { confirm } = Modal
 
 export interface Setting {
   medicalHistory: boolean
   consent: boolean
-  treatmentForm: boolean
+  treatment: boolean
   epaper: boolean
-  presciption: boolean
-  labForm: boolean
+  prescription: boolean
+  lab: boolean
 }
 export interface FormTypeProps {
   isEditing?: () => boolean
@@ -72,10 +74,10 @@ export const FormTypePicker: FC<FormTypeProps> = ({
       icon: <Consent />,
       iconSelected: <ConsentSelected />,
     },
-    treatmentForm: {
-      label: t('setup.medical.forms.filter.formType.treatmentForm.label'),
+    treatment: {
+      label: t('setup.medical.forms.filter.formType.treatment.label'),
       selected: false,
-      desc: t('setup.medical.forms.filter.formType.treatmentForm.desc'),
+      desc: t('setup.medical.forms.filter.formType.treatment.desc'),
       icon: <Treatment />,
       iconSelected: <TreatmentSelected />,
     },
@@ -86,21 +88,19 @@ export const FormTypePicker: FC<FormTypeProps> = ({
       icon: <EPaper />,
       iconSelected: <EPaperSelected />,
     },
-    presciption: {
-      label: t('setup.medical.forms.filter.formType.presciption.label'),
-
+    prescription: {
+      label: t('setup.medical.forms.filter.formType.prescription.label'),
       selected: false,
-      desc: t('setup.medical.forms.filter.formType.presciption.desc'),
-
-      icon: <Presciption />,
-      iconSelected: <PresciptionSelected />,
+      desc: t('setup.medical.forms.filter.formType.prescription.desc'),
+      icon: <Prescription />,
+      iconSelected: <PrescriptionSelected />,
     },
-    labForm: {
-      label: t('setup.medical.forms.filter.formType.labForm.label'),
+    lab: {
+      label: t('setup.medical.forms.filter.formType.lab.label'),
       selected: false,
-      desc: t('setup.medical.forms.filter.formType.labForm.desc'),
-      icon: <LabForm />,
-      iconSelected: <LabFormSelected />,
+      desc: t('setup.medical.forms.filter.formType.lab.desc'),
+      icon: <Lab />,
+      iconSelected: <LabSelected />,
     },
   }
 
@@ -133,10 +133,10 @@ export const FormTypePicker: FC<FormTypeProps> = ({
     onChangeSetting({
       medicalHistory: typeInfo.medicalHistory.selected,
       consent: typeInfo.consent.selected,
-      treatmentForm: typeInfo.treatmentForm.selected,
+      treatment: typeInfo.treatment.selected,
       epaper: typeInfo.epaper.selected,
-      presciption: typeInfo.presciption.selected,
-      labForm: typeInfo.labForm.selected,
+      prescription: typeInfo.prescription.selected,
+      lab: typeInfo.lab.selected,
     })
   }
 

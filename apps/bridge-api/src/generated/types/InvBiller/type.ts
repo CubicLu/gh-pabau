@@ -45,5 +45,25 @@ export const InvBiller = objectType({
         return root.Company
       },
     })
+    t.list.field('InvSale', {
+      type: 'InvSale',
+      args: {
+        where: 'InvSaleWhereInput',
+        orderBy: 'InvSaleOrderByInput',
+        cursor: 'InvSaleWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'InvSaleScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.InvSale
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'InvBillerCountOutputType',
+      resolve(root: any) {
+        return root._count
+      },
+    })
   },
 })

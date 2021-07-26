@@ -1,20 +1,20 @@
-import React, { FC, useState, useEffect, ReactNode } from 'react'
-import { Row, Col } from 'antd'
 import {
-  FieldTimeOutlined,
   AliwangwangOutlined,
-  MedicineBoxOutlined,
+  AliyunOutlined,
+  CheckCircleFilled,
+  FieldTimeOutlined,
   FileImageOutlined,
   FileProtectOutlined,
   ForkOutlined,
-  AliyunOutlined,
+  MedicineBoxOutlined,
 } from '@ant-design/icons'
-import { Button, BasicModal as LibraryInstallerModal } from '@pabau/ui'
-import { CheckCircleFilled } from '@ant-design/icons'
+import { BasicModal as LibraryInstallerModal, Button } from '@pabau/ui'
+import { Col, Row } from 'antd'
+import React, { FC, ReactNode, useEffect, useState } from 'react'
 import { ReactComponent as Consent } from '../../assets/images/form-type/consent.svg'
 import { ReactComponent as EPaper } from '../../assets/images/form-type/file-pdf.svg'
-import { ReactComponent as LabForm } from '../../assets/images/form-type/lab-form.svg'
-import { ReactComponent as Presciption } from '../../assets/images/form-type/presciption.svg'
+import { ReactComponent as Lab } from '../../assets/images/form-type/lab-form.svg'
+import { ReactComponent as Prescription } from '../../assets/images/form-type/prescription.svg'
 import { ReactComponent as Treatment } from '../../assets/images/form-type/treatment.svg'
 import AfterCare from './assets/AfterCare'
 import BeforeCare from './assets/BeforeCare'
@@ -42,12 +42,12 @@ const defaultBundleTypes: DefaultBundleType = {
   TreatmentForm: {
     selected: false,
     title: 'Treatment Form',
-    icon: <LabForm />,
+    icon: <Lab />,
   },
   PrescriptionForm: {
     selected: false,
     title: 'Prescription Form',
-    icon: <Presciption />,
+    icon: <Prescription />,
   },
   Service: {
     selected: false,

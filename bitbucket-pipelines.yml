@@ -1,5 +1,5 @@
 # Bitbucket Pipeline definition
-image: node:14-buster
+image: node:16-buster
 
 options:
   max-time: 60 # max time in minutes for each step
@@ -11,39 +11,30 @@ definitions:
     cypress: '/root/.cache/Cypress'
   services:
     docker:
-      memory: 3210
+      memory: 3072
 
 pipelines:
   pull-requests:
     '**':
       - step:
           name: yarn audit
-          runs-on:
-            - 'self.hosted'
           size: 2x
           caches:
             - node
           script:
-            - set || true
-            - git log --merges -n 1 --pretty=oneline
-            # TODO: set -lt back to 4 when nrwl install postcss >=8.2.10
-            - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 8 ]] && exit 0 || exit 1'
+#            - while true; do ps -aux && sleep 30; done &
+            - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 16 ]] && exit 0 || exit 1'
             - CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
-            - ls -al || true
-            - ls -al libs/graphql/generated/ || true
-            - yarn bin || true
           artifacts:
             - node_modules/**
             - libs/graphql/generated/**
-            - hasura/schema.json
 
       - parallel:
           - step:
               name: misc checks
-              runs-on:
-                - 'self.hosted'
-              size: 2x
+              size: 1x
               script:
+#                - while true; do ps -aux && sleep 30; done &
                 - openssl version || true
                 - ls -al || true
                 - yarn bin || true
@@ -61,27 +52,23 @@ pipelines:
 
           - step:
               name: lint
-              runs-on:
-                - 'self.hosted'
-              size: 2x
               script:
+#                - while true; do ps -aux && sleep 30; done &
                 - yarn affected:lint --base=origin/master --with-deps
 
           - step:
               name: unit tests
-              runs-on:
-                - 'self.hosted'
-              size: 2x
+              size: 1x
               script:
+#                - while true; do ps -aux && sleep 30; done &
                 - yarn affected:test --base=origin/master
 
           - step:
               name: build
-              runs-on:
-                - 'self.hosted'
               max-time: 80
               size: 2x
               script:
+#                - while true; do ps -aux && sleep 30; done &
                 - NEXT_PUBLIC_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/v1/graphql' NEXT_PUBLIC_WS_ENDPOINT='wss://api-v2-staging.pabau.com/v1/graphql' yarn affected:export --base=origin/master --prod
               artifacts:
                 - dist/**
@@ -92,20 +79,19 @@ pipelines:
               caches:
                 - cypress
               script:
+#                - while true; do ps -aux && sleep 30; done &
                 - apt update -y && apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
                 - yarn cypress install || true
                 - yarn affected:e2e --base=origin/master || true
 
       - parallel:
-
           - step:
               name: deploy dockers
-              runs-on:
-                - 'self.hosted'
               size: 2x
               services:
                 - docker
               script:
+#                - while true; do ps -aux && sleep 30; done &
                 - apt-get update -y && apt-get install -y curl jq time
                 - yarn affected --base=origin/master --target=deploy-docker
                 - mkdir -p dist && cp -f /tmp/bot_message.txt dist/ || true
@@ -117,6 +103,7 @@ pipelines:
               image: node
               max-time: 20
               script:
+#                - while true; do ps -aux && sleep 30; done &
                 - node -v
                 - ls -al . || true
                 - ls -al node_modules/ || true
@@ -156,61 +143,54 @@ pipelines:
                 - dist/bot_message2.txt
                 - tools/cicd/slack_notification.json
 
-          - step:
-              name: announce to slack
-              max-time: 5
-              clone:
-                enabled: false
-              script:
-                - cat dist/bot_message2.txt || true
-                - cat dist/bot_message.txt || true
-                - apt-get update -y && apt-get install -y curl jq
+      - step:
+          name: announce to slack
+          max-time: 15
+          clone:
+            enabled: false
+          script:
+#                - while true; do ps -aux && sleep 30; done &
+            - cat dist/bot_message2.txt || true
+            - cat dist/bot_message.txt || true
+            - apt-get update -y && apt-get install -y curl jq
 
-                # Post to Slack
-                - |
-                  jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | \
-                    curl -0 "${SLACK_HOOK_URL}" \
-                    -H "Expect:" \
-                    -H 'Content-Type: application/json; charset=utf-8' \
-                    --data-binary @-
+            # Post to Slack
+            - |
+              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)${IFS}$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | \
+                curl -0 "${SLACK_HOOK_URL}" \
+                -H "Expect:" \
+                -H 'Content-Type: application/json; charset=utf-8' \
+                --data-binary @-
 
-                # Configure git to use the oauth token.
-                - |
-                  curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}"
-                  export PR_AUTHOR=$(curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}" | jq -r '.author.display_name')
-                  export COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
+            # Configure git to use the oauth token.
+            - |
+              curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}"
+              export PR_AUTHOR=$(curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}" | jq -r '.author.display_name')
+              export COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
 
-                # Post to Bitbucket PR
-                - |
-                  curl https://api.bitbucket.org/2.0/repositories/pabau/monorepo/pullrequests/${BITBUCKET_PR_ID}/comments \
-                    -H "Authorization: Bearer ${access_token}" \
-                    --request POST \
-                    --header 'Content-Type: application/json' \
-                    --data '{
-                      "content": {
-                        "raw": "A new vercel was published!"
-                      }
-                    }'
+            # Post to Bitbucket PR
+            - |
+              curl https://api.bitbucket.org/2.0/repositories/pabau/monorepo/pullrequests/${BITBUCKET_PR_ID}/comments \
+                -H "Authorization: Bearer ${access_token}" \
+                --request POST \
+                --header 'Content-Type: application/json' \
+                --data '{
+                  "content": {
+                    "raw": "A new vercel was published!"
+                  }
+                }'
 
   branches:
     master:
       - step:
           name: yarn audit
-          runs-on:
-            - 'self.hosted'
           size: 2x
           caches:
             - node
           script:
-            - set || true
-            - git log --merges -n 1 --pretty=oneline
-            # TODO: set -lt back to 4 when nrwl install postcss >=8.2.10
-            - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 8 ]] && exit 0 || exit 1'
+#            - while true; do ps -aux && sleep 30; done &
+            - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 16 ]] && exit 0 || exit 1'
             - CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
-            - ls -al || true
-            - ls -al node_modules || true
-            - ls -al libs/graphql/generated/ || true
-            - yarn bin || true
           artifacts:
             - node_modules/**
             - libs/graphql/generated/**
@@ -218,10 +198,9 @@ pipelines:
       - parallel:
           - step:
               name: misc checks
-              runs-on:
-                - 'self.hosted'
-              size: 2x
+              size: 1x
               script:
+#                - while true; do ps -aux && sleep 30; done &
                 - openssl version || true
                 - ls -al || true
                 - ls -al node_modules || true
@@ -234,7 +213,7 @@ pipelines:
                 - yarn lint:tsc --with-deps --base=HEAD~1
                 - yarn lint:ls || true
                 - yarn lint:workspace || true
-                - npm i -g @graphql-inspector/cli@2.5.0 graphql || true
+                - npm i -g @graphql-inspector/cli graphql || true
                 - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
                 - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql
                 #                - graphql-inspector similar hasura/schema.graphql || echo TODO
@@ -243,18 +222,15 @@ pipelines:
 
           - step:
               name: lint
-              runs-on:
-                - 'self.hosted'
-              size: 2x
               script:
+#                - while true; do ps -aux && sleep 30; done &
                 - yarn affected:lint --base=HEAD~1 --with-deps
 
           - step:
               name: unit tests
-              runs-on:
-                - 'self.hosted'
-              size: 2x
+              size: 1x
               script:
+#                - while true; do ps -aux && sleep 30; done &
                 - yarn affected:test --base=HEAD~1
 
           - step:
@@ -263,10 +239,10 @@ pipelines:
               caches:
                 - cypress
               script:
+#                - while true; do ps -aux && sleep 30; done &
                 - apt update -y && apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
                 - yarn cypress install || true
                 - yarn affected:e2e --base=HEAD~1 || true
-
 
       - step:
           name: bump version
@@ -282,27 +258,23 @@ pipelines:
 
       - step:
           name: build
-          runs-on:
-            - 'self.hosted'
           max-time: 80
           size: 2x
           script:
+#            - while true; do ps -aux && sleep 30; done &
             - NEXT_PUBLIC_GRAPHQL_ENDPOINT='https://api-v2.pabau.com/v1/graphql' NEXT_PUBLIC_WS_ENDPOINT='wss://api-v2.pabau.com/v1/graphql' yarn affected:export --base=HEAD~1 --prod
           artifacts:
             - dist/**
 
       - parallel:
-
           - step:
               name: deploy dockers
-              runs-on:
-                - 'self.hosted'
-              max-time: 20
               size: 2x
               deployment: production-dockers
               services:
                 - docker
               script:
+#                - while true; do ps -aux && sleep 30; done &
                 - apt-get update -y && apt-get install -y curl jq time
                 - yarn affected --base=HEAD~1 --target=deploy-docker --prod
                 - mkdir -p dist && cp -f /tmp/bot_message.txt dist/ || true
@@ -311,11 +283,10 @@ pipelines:
 
           - step:
               name: deploy previews
-              runs-on:
-                - 'self.hosted'
               max-time: 20
               deployment: production-serverless
               script:
+#                - while true; do ps -aux && sleep 30; done &
                 - ls -al . || true
                 - ls -al node_modules/ || true
                 - ls -al dist || true
@@ -347,17 +318,16 @@ pipelines:
 
       - step:
           name: announce to slack
-          runs-on:
-            - 'self.hosted'
-          max-time: 5
+          max-time: 15
           script:
+#            - while true; do ps -aux && sleep 30; done &
             - cat dist/bot_message2.txt || true
             - cat dist/bot_message.txt || true
             - apt-get update -y && apt-get install -y curl jq time
 
             # Post to Slack
             - |
-              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
+              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)${IFS}$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
               -H "Expect:" \
               -H 'Content-Type: application/json; charset=utf-8' \
               --data-binary @-

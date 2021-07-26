@@ -131,6 +131,8 @@ const CreditNotes: FC<CreditNoteProps> = ({
       selectedRange={selectedRange}
       listQuery={useCreditNotesQuery}
       aggregateQuery={useCreditNoteCountQuery}
+      noDataText={t('account.finance.credit.not.empty.data.text')}
+      tabName="creditNote"
     />
   )
 }

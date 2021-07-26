@@ -30,8 +30,8 @@ export const InvProductCreateOneMutation = mutationField(
               },
             },
             {
-              old_barcode: {
-                equals: data?.old_barcode,
+              code: {
+                equals: data?.code,
               },
             },
           ],
@@ -40,8 +40,8 @@ export const InvProductCreateOneMutation = mutationField(
       if (existingProduct?.name === data?.name) {
         throw new UniqueConstraintError('name', 'InvProduct')
       }
-      if (existingProduct?.old_barcode === data?.old_barcode) {
-        throw new UniqueConstraintError('old_barcode', 'InvProduct')
+      if (existingProduct?.code === data?.code) {
+        throw new UniqueConstraintError('barcode', 'InvProduct')
       }
       const service = new ProductService(ctx)
       const product = await service.newProduct(data, stock)
