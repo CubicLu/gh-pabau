@@ -154,7 +154,7 @@ const Layout: FC<LayoutProps> = ({
 
   let legacyPage: boolean | string = false
   for (const [, row] of data.feature_flags.entries()) {
-    if (router.pathname.substring(1) === row.page_slug) {
+    if (router.asPath.substring(1) === row.page_slug) {
       legacyPage = '/' + row.fallback_slug
     }
   }
