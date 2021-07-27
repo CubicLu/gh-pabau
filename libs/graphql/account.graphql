@@ -55,8 +55,9 @@ query invoices(
     gross
     paid
     balance
-    status
     tooltip
+    isHealthcodeEnabled
+		status: healthcodeStatus
   }
 }
 
@@ -161,6 +162,8 @@ query debts(
       communication_id
       time
     }
+    isHealthcodeEnabled
+		healthcodeStatus
   }
 }
 

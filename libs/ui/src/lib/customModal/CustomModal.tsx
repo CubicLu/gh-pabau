@@ -17,6 +17,9 @@ export interface PasswordExpirationProps{
 
 interface P {
   datasource: SecurityToolsItemInfo[]
+  newButtonText?: string
+  dangerButtonText?: string
+  onDelete?: () => void
   onOk?(val):void;
   loading?: boolean
   config?: PasswordExpirationProps
@@ -24,7 +27,7 @@ interface P {
 
 export function CustomModal(props: P) {
   const { t } = useTranslation('common')
-  const { datasource = [], onOk, config, loading } = props
+  const { datasource = [], newButtonText, dangerButtonText, onDelete, onOk, config, loading } = props
 
   const defaultPasswordExpirationData= {
     modalType: 2,
@@ -115,6 +118,8 @@ export function CustomModal(props: P) {
             title={selectedData ? selectedData.modalTitle : ''}
             visible={Boolean(selectedData)}
             onCancel={() => setSelectedData(null)}
+            dangerButtonText={(dangerButtonText) ? dangerButtonText : "Cancel"}
+            onDelete={onDelete}
             newButtonText={dataSource[0].isActive === true ? "Disable" : "Enable"}
             centered={true}
             onOk={()=>{
@@ -132,13 +137,14 @@ export function CustomModal(props: P) {
           <BasicModal
             title={selectedData ? selectedData.modalTitle : ''}
             visible={Boolean(selectedData)}
+            onCancel={() => setSelectedData(null)}
             onDelete={() => setSelectedData(null)}
             newButtonText={dataSource[0].isActive === true ? "Disable" : "Enable"}
             dangerButtonText="Cancel"
             onOk={()=>{
               handleOk(selectedData)
             }}
-            closable={false}
+            closable={true}
             centered={true}
           >
             {selectedData && (

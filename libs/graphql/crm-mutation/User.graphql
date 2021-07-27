@@ -108,6 +108,9 @@ fragment User on User {
   CmStaffGeneral {
     ...CmStaffGeneralFields
   }
+  CompanyOwner {
+    ...CompanyFields
+  }
 }
 
 mutation createOneUser($data: UserCreateInput!) {

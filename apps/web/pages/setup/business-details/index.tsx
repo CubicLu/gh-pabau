@@ -1,27 +1,28 @@
 import { LeftOutlined } from '@ant-design/icons'
+import { useGetBussinessDetailsQuery } from '@pabau/graphql'
 import {
   Breadcrumb,
   BusinessDetailsNotifications,
-  Button,
   MobileHeader,
+  System,
+  Terminology,
+  PasswordExpirationProps,
   TabMenu,
   TerminologyConfig,
-  PasswordExpirationProps,
 } from '@pabau/ui'
-import { useGetBussinessDetailsQuery } from '@pabau/graphql'
 import { Typography } from 'antd'
 import { useRouter } from 'next/router'
-import React, { FC, useEffect, useState, useContext } from 'react'
+import React, { FC, useContext, useEffect, useState } from 'react'
 import CommonHeader from '../../../components/CommonHeader'
 import Layout from '../../../components/Layout/Layout'
-import { useGridData } from '../../../hooks/useGridData'
+import BusinessDetailTab from '../../../components/Setup/BusinessDetails/BusinessDetailsTab'
+import SecurityTab from '../../../components/Setup/BusinessDetails/SecurityTab'
+import SystemTab from '../../../components/Setup/BusinessDetails/SystemTab'
+import TerminologyTab from '../../../components/Setup/BusinessDetails/TerminologyTab'
 import { UserContext } from '../../../context/UserContext'
+import { useGridData } from '../../../hooks/useGridData'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
-import SecurityTab from '../../../components/Setup/BusinessDetails/SecurityTab'
-import TerminologyTab from '../../../components/Setup/BusinessDetails/TerminologyTab'
-import SystemTab from '../../../components/Setup/BusinessDetails/SystemTab'
-import BusinessDetailTab from '../../../components/Setup/BusinessDetails/BusinessDetailsTab'
 
 const { Title } = Typography
 
@@ -148,10 +149,10 @@ export const Index: FC = () => {
         return key
       })
 
-      setPasswordExpiration(record?.['password_expiration'])
-      setAddrSuiteNo(record?.['address_suite_no'])
-      setLocation(record?.['business_location'])
-      setEnableLabs(record?.['lab_enabled'])
+      setPasswordExpiration(record?.['password_expiration'] ?? '')
+      setAddrSuiteNo(record?.['address_suite_no'] ?? '')
+      setLocation(record?.['business_location'] ?? '')
+      setEnableLabs(record?.['lab_enabled'] ?? '')
 
       const force_password_data = data?.company?.User?.filter(
         (item) => item.id === user?.me.id
@@ -236,6 +237,8 @@ export const Index: FC = () => {
               loading={loading}
               t={t}
             />
+            <Terminology onSave={(values) => onSave(values, 'terminology')} />
+            <System onSave={(values) => onSave(values, 'system')} />
             <BusinessDetailsNotifications
               onSave={(values) => onSave(values, 'notification')}
             />
@@ -284,16 +287,6 @@ export const Index: FC = () => {
               onSave={(values) => onSave(values, 'notification')}
             />
           </TabMenu>
-        </div>
-        <div className={styles.buttonForMobile}>
-          <div className={styles.btnSaveWrap}>
-            <Button
-              type="primary"
-              onClick={(values) => onSave(values, 'notification')}
-            >
-              {t('business.details.save.changes')}
-            </Button>
-          </div>
         </div>
       </Layout>
     </>

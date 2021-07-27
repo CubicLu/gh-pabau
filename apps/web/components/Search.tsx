@@ -1,5 +1,5 @@
-import { gql } from '@apollo/client'
-import { Search as PabauSearch, useLiveQuery } from '@pabau/ui'
+import { gql, useLazyQuery } from '@apollo/client'
+import { Search as PabauSearch } from '@pabau/ui'
 import { useRouter } from 'next/router'
 import { FC, useState } from 'react'
 
@@ -183,7 +183,7 @@ const Search: FC = () => {
       variables['where'].AND = []
 
       for (const key in searchTerms) {
-        if (key === 'is_active') {
+        if (key === 'is_active' && searchFor !== SearchMode.Leads) {
           if (!searchTerms[key]) {
             variables['where'].AND.push({ [key]: { equals: 1 } })
           }
@@ -199,17 +199,25 @@ const Search: FC = () => {
     }
   }
 
-  let { data } = useLiveQuery(SEARCH_QUERY, {
+  const [loadContacts, { data }] = useLazyQuery(SEARCH_QUERY, {
     variables: variables,
-    skip: variables.length > 0,
   })
 
-  if (data?.CmContact) {
-    data = [data.CmContact]
-  }
+  let results = []
 
+  if (data?.CmContact) {
+    results = [data.CmContact]
+  } else if (data?.findFirstInvSale) {
+    results = [data.findFirstInvSale.CmContact]
+  } else if (data?.findFirstContactInsurance) {
+    results = [data.findFirstContactInsurance.CmContact]
+  } else if (data?.findManyCmContact) {
+    results = data.findManyCmContact
+  } else if (data?.findManyCmLead) {
+    results = data.findManyCmLead
+  }
   const setSearchMode = (mode: SearchMode) => {
-    setSearchTerms([])
+    //setSearchTerms([])
     setSearchFor(mode)
   }
 
@@ -227,7 +235,7 @@ const Search: FC = () => {
 
   return (
     <PabauSearch
-      searchResults={data?.map(
+      searchResults={results?.map(
         ({ ID, Fname, Lname, Avatar, Email, Mobile, ...rest }) => ({
           id: ID,
           firstName: Fname,
@@ -254,8 +262,9 @@ const Search: FC = () => {
         if (wordBits.length < 2) {
           wordBits.push('%')
         }
-
+        setAdvancedSearch(false)
         setSearchTerms([...wordBits])
+        loadContacts()
       }}
     />
   )

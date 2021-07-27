@@ -4,7 +4,7 @@ import { Context } from '../../../context'
 export const UpdateManyInvProductTaxRecords = mutationField(
   'updateManyInvProductTaxRecords',
   {
-    type: nonNull('BatchPayload'),
+    type: 'BatchPayload',
     args: {
       where: nonNull('InvCategoryWhereUniqueInput'),
       tax_id: nonNull(intArg()),
@@ -17,11 +17,13 @@ export const UpdateManyInvProductTaxRecords = mutationField(
           },
         },
         where: {
+          Company: {
+            id: {
+              equals: ctx.authenticated.company,
+            },
+          },
           category_id: {
             equals: args.where.id,
-          },
-          company_id: {
-            equals: ctx.authenticated.company,
           },
         },
       })

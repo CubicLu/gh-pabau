@@ -4,7 +4,6 @@ import {
   VerticalTimelineElement,
 } from 'react-vertical-timeline-component'
 import confetti from 'canvas-confetti'
-import { Document, Page, pdfjs } from 'react-pdf'
 import {
   PrinterOutlined,
   MailOutlined,
@@ -32,7 +31,7 @@ import { groupByDay } from './utils'
 import dayjs, { Dayjs } from 'dayjs'
 import { Button, Avatar } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
-
+import dynamic from 'next/dynamic'
 import { ReactComponent as PaymentIcon } from '../../assets/images/timeline/payment-icon.svg'
 import { ReactComponent as AppointmentIcon } from '../../assets/images/timeline/appointment.svg'
 import { ReactComponent as ClientNoteIcon } from '../../assets/images/timeline/client-note-icon.svg'
@@ -62,8 +61,6 @@ import TimelineSkeleton from './TimelineSkeleton'
 import classNames from 'classnames'
 import calendar from 'dayjs/plugin/calendar'
 dayjs.extend(calendar)
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
 export interface TimelineProps {
   eventsData: EventsProps[]
@@ -149,6 +146,10 @@ export const types = {
   pabauConnect: 'pabauConnect',
   task: 'task',
 }
+
+const DocumentPdf = dynamic(() => import('./DocumentPdf'), {
+  ssr: false,
+})
 
 export const Timeline: FC<TimelineProps> = ({
   eventsData = [],
@@ -598,16 +599,7 @@ export const Timeline: FC<TimelineProps> = ({
         {event.documentFile && (
           <div>
             <div className={styles.pdfViewWrap}>
-              <Document
-                file={{
-                  url: `https://cors-anywhere.herokuapp.com/${event.documentFile}`,
-                  httpHeaders: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                  },
-                }}
-              >
-                <Page pageNumber={1} scale={1.3} />
-              </Document>
+              <DocumentPdf pageNumber={1} pdfURL={event.documentFile} />
             </div>
             <div>{getFilename(event.documentFile)}</div>
           </div>

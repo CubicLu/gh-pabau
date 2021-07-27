@@ -1,0 +1,42 @@
+version: '2'
+services:
+  db:
+    image: mariadb:10.4
+    restart: 'no'
+    environment:
+      MYSQL_DATABASE: pabau
+      MYSQL_PASSWORD: '1234'
+      MYSQL_ROOT_PASSWORD: 'SuperSecret'
+      MYSQL_USER: web
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql/
+      - ./db_init/:/docker-entrypoint-initdb.d/:ro
+    command:
+      - mysqld
+      - --key-buffer-size=64K
+      - --max-allowed-packet=1073741824
+      - --max-connections=1500
+      - --sql-mode=NO_ENGINE_SUBSTITUTION
+      - --query-cache-limit=100K
+      - --query-cache-size=4M
+      - --query-cache-type=2
+      - --innodb-buffer-pool-size=48M
+      - --innodb-buffer-pool-instances=1
+      - --log-error=/var/log/mysql/error.log
+      - --expire-logs-days=2
+      - --myisam-recover-options=BACKUP
+      - --thread-cache-size=32
+      - --table-open-cache=2000
+      - --skip-ssl
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --performance-schema=off
+    logging:
+      driver: json-file
+      options:
+        max-size: 50m
+        max-file: '10'
+volumes:
+  mysql-data:

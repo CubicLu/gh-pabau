@@ -37,15 +37,6 @@ export default {
         date: '12/03/2021',
       },
     ],
-    headersColumns: ['Item Name', 'Qty', 'Price', 'Net', 'VAT', 'Total'],
-    data: [
-      'Laser Hair Removal – HollyWood and Abdomen (9)',
-      '2',
-      '2,520.00',
-      '2,520.00',
-      '2,520.00',
-      '2,520.00',
-    ],
     paymentDetails: [
       {
         key: 0,
@@ -70,8 +61,6 @@ const InvoiceTemplateStory = ({
   titleDescription,
   clinicDetails,
   invoiceDetails,
-  data,
-  headersColumns,
   paymentDetails,
 }) => (
   <InvoiceTemplateComponents
@@ -81,8 +70,6 @@ const InvoiceTemplateStory = ({
     titleDescription={titleDescription}
     clinicDetails={clinicDetails}
     invoiceDetails={invoiceDetails}
-    headersColumns={headersColumns}
-    data={data}
     paymentDetails={paymentDetails}
   />
 )

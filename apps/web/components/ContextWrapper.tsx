@@ -28,12 +28,14 @@ const ContextWrapper: FunctionComponent = ({ children }) => {
           username
           full_name
           admin
+          timezone
           company: Company {
             id
             remote_url
             details {
               company_name
               language
+              currency
             }
           }
         }

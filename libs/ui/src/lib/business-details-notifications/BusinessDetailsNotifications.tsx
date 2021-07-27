@@ -193,7 +193,11 @@ export const BusinessDetailsNotifications: FC<BusinessDetailsNotificationsProps>
         </React.Fragment>
       ))}
       <div className={styles.btnSave}>
-        <Button type="primary" onClick={() => handleSaveChanges()}>
+        <Button
+          type="primary"
+          onClick={() => handleSaveChanges()}
+          className={styles.savebtn}
+        >
           {t('business.details.save.changes')}
         </Button>
       </div>

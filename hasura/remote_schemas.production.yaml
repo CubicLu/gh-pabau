@@ -1,5 +1,5 @@
 - name: CRM
   definition:
-    url: https://pds.pabau.com/graphql
+    url: https://api-v2-prisma.pabau.com/graphql
     timeout_seconds: 60
     forward_client_headers: true

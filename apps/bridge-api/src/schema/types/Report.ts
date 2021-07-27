@@ -35,7 +35,6 @@ export const Reports = extendType({
             company_id: ctx.authenticated.company.toString(),
             user_id: ctx.authenticated.user.toString(),
           })
-          console.log(`${url}/api/pabau2.php?${params}`)
           return await fetch(`${url}/api/pabau2.php?${params}`)
             .then((result) => result.json())
             .catch((error) => {
@@ -54,6 +53,7 @@ export const Reports = extendType({
         location_ids: list('Int'),
         type: stringArg(),
         columns: list('String'),
+        staff_ids: list('Int'),
       },
       async resolve(_, input: TrendReportInputDto, ctx: Context) {
         if (!input.start_date || !input.end_date) {
@@ -71,10 +71,10 @@ export const Reports = extendType({
             location_ids: input.location_ids?.toString() ?? '0',
             type: input.type?.toString() ?? '',
             columns: input.columns?.toString() ?? '',
+            staffs: input.staff_ids?.toString() ?? '',
             company_id: ctx.authenticated.company.toString(),
             user_id: ctx.authenticated.user.toString(),
           })
-          console.log(`${url}/api/pabau2.php?${params}`)
           return await fetch(`${url}/api/pabau2.php?${params}`)
             .then((result) => result.json())
             .catch((error) => {

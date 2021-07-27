@@ -1,11 +1,22 @@
-import { allow, and, shield } from 'graphql-shield'
+import { allow, and, shield, or } from 'graphql-shield'
 import * as rules from './types'
 
 export const permissions = shield(
   {
     Mutation: {
       // Products
-      createOneInvProduct: rules.authentication.isAuthenticated,
+      createOneInvProduct: or(
+        rules.authentication.isAdmin,
+        rules.stock.stockManager
+      ),
+      deleteOneInvProduct: or(
+        rules.authentication.isAdmin,
+        rules.stock.stockManager
+      ),
+      updateOneInvProduct: or(
+        rules.authentication.isAdmin,
+        rules.stock.stockManager
+      ),
       //UserPermission
       updateOneUserPermission: and(
         rules.authentication.isAuthenticated,
@@ -41,6 +52,7 @@ export const permissions = shield(
 
       // Send Email
       sendEmail: rules.authentication.isAuthenticated,
+      sendEmailTo: rules.authentication.isAuthenticated,
 
       //Page
       createOnePage: rules.authentication.isAuthenticated,
@@ -67,6 +79,7 @@ export const permissions = shield(
 
       // Public access mutations
       login: allow,
+      AuthenticateUser: allow,
       //resetPassword
       resetPassword: allow,
       upsertUserReportByReportCode: rules.authentication.isAdmin,
@@ -75,6 +88,7 @@ export const permissions = shield(
       createOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
       updateOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
 
+      updateOneCompany: rules.authentication.isAdmin,
       updateManyUser: rules.authentication.isAdmin,
       upsertManyUsersPermissionByGroupId: rules.authentication.isAdmin,
       upsertManyUsersReportsByGroupId: rules.authentication.isAdmin,
@@ -86,7 +100,6 @@ export const permissions = shield(
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
-        rules.authentication.isAdmin,
         rules.interceptors.injectCompany,
         rules.interceptors.injectUser
       ),
@@ -122,6 +135,12 @@ export const permissions = shield(
       findFirstPage: rules.authentication.isAuthenticated,
       findManyPage: rules.authentication.isAuthenticated,
       findManyPageCount: rules.authentication.isAuthenticated,
+      //InvPaymentType
+      findManyInvPaymentType: rules.interceptors.interceptSharedCompanyData,
+      findManyInvPaymentTypeCount:
+        rules.interceptors.interceptSharedCompanyData,
+      findFirstInvPaymentType: rules.interceptors.interceptSharedCompanyData,
+      findUniqueInvPaymentType: rules.interceptors.interceptSharedCompanyData,
       // //CmContactNote
       findFirstCmContactNote: rules.authentication.isAuthenticated,
       findManyCmContactNote: rules.authentication.isAuthenticated,
@@ -154,6 +173,8 @@ export const permissions = shield(
       findManyUserPermission: rules.authentication.isAuthenticated,
       findManyUserPermissionCount: rules.authentication.isAuthenticated,
       findFirstUserPermission: rules.authentication.isAuthenticated,
+      findManyCmContact: rules.authentication.isAuthenticated,
+      //Authentication
       findManyLocationsWithAvailableProductStock: rules.authentication.isAdmin,
       validateUser: allow,
       findManyProductsWithAvailableQuantity:
@@ -163,7 +184,17 @@ export const permissions = shield(
       // //Authentication
       me: rules.authentication.isAuthenticated,
       company: rules.authentication.isAuthenticated,
+      VerifyCredentials: allow,
+      VerifyTwoFaCode: allow,
       ping: allow,
+      //Subscriptions
+      subscriptionInvoices: rules.authentication.isAuthenticated,
+      subscriptionInvoicesTotal: rules.authentication.isAuthenticated,
+      subscriptionDetails: rules.authentication.isAuthenticated,
+      subscriptionCardDetails: rules.authentication.isAuthenticated,
+
+      // invoice
+      getInvoiceData: rules.authentication.isAuthenticated,
       //TODO once jest mocks are resolved move it to rules.authentication.isAuthenticated
       featureRequestsWeeklyAvg: allow,
       '*': and(

@@ -11,6 +11,7 @@ export const extractModelName = (returnType: GraphQLOutputType): string => {
   const type = returnType.toString().replace('!', '')
   return type.charAt(0).toLowerCase() + type.substr(1, type.length - 1)
 }
+
 /**
  * Set of interceptor middlewares to handle injecting the current company into the graphql context
  */
@@ -18,21 +19,37 @@ export const interceptors = {
   interceptSharedCompanyData: rule(
     'interceptSharedCompanyData',
     {}
-  )((_root, args, ctx: Context) => {
-    args.where = {
-      ...args.where,
-      company_id: {
-        in: [0, ctx.authenticated.company],
-      },
-    }
+  )((_root, args, ctx: Context, { fieldName }) => {
+    fieldName.includes('findUnique')
+      ? (args.where = {
+          primary: {
+            ...args.where,
+            company_id: ctx.authenticated.company,
+          },
+        })
+      : (args.where = {
+          ...args.where,
+          company_id: {
+            in: [0, ctx.authenticated.company],
+          },
+        })
     return true
   }),
   interceptAccessToCompanyData: rule('interceptAccessToCompanyData')(
-    (_root, args, ctx: Context) => {
-      args.where = {
-        ...args.where,
-        company_id: { equals: ctx.authenticated.company },
-      }
+    (_root, args, ctx: Context, { fieldName }) => {
+      fieldName.includes('findUnique')
+        ? (args.where = {
+            primary: {
+              ...args.where,
+              company_id: ctx.authenticated.company,
+            },
+          })
+        : (args.where = {
+            ...args.where,
+            company_id: {
+              in: [0, ctx.authenticated.company],
+            },
+          })
       return true
     }
   ),
@@ -46,7 +63,7 @@ export const interceptors = {
     }
   ),
   injectUser: rule('injectUser')((_root, args, ctx: Context) => {
-    if (args.data.User) {
+    if (args?.data?.User) {
       args.data = {
         ...args.data,
         User: {
@@ -105,7 +122,6 @@ export const interceptors = {
         fieldName.includes('updateOne')
       ) {
         try {
-          console.log('model name', extractModelName(returnType))
           const record = await ctx.prisma[
             extractModelName(returnType)
           ].findFirst({
@@ -117,8 +133,8 @@ export const interceptors = {
             record?.company_id !== undefined &&
             record?.company_id === ctx?.authenticated?.company
           )
-        } catch (error) {
-          return error
+        } catch {
+          return new Error('Not Authorized')
         }
       }
     }

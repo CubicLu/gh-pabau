@@ -1,10 +1,21 @@
 import { PrismaClient } from '@prisma/client'
+import { stringToBoolean } from './utils'
 
 const DATABASE_URL = process.env.DATABASE_URL
 const PABAU1_MYSQL_USERNAME_PODS = process.env.PABAU1_MYSQL_USERNAME_PODS
 const PABAU1_MYSQL_PASSWORD_PODS = process.env.PABAU1_MYSQL_PASSWORD_PODS
+const PODS_CONNECTION_LIMIT = process.env.PODS_CONNECTION_LIMIT
+  ? process.env.PODS_CONNECTION_LIMIT
+  : 20
+const LOGGING = stringToBoolean(process.env.LOGGING)
 
 const instances: Record<string, PrismaClient> = {}
+
+if (!PABAU1_MYSQL_USERNAME_PODS || !PABAU1_MYSQL_PASSWORD_PODS) {
+  console.error(
+    'To locally access companies with a remote_url, you will need to set the PABAU1_MYSQL_USERNAME_PODS and PABAU1_MYSQL_PASSWORD_PODS env vars.'
+  )
+}
 
 function getPodDbUrl(urlOrHostname) {
   if (
@@ -17,12 +28,21 @@ function getPodDbUrl(urlOrHostname) {
   try {
     url = new URL(urlOrHostname)
   } catch {
-    url = new URL(`https://${urlOrHostname}`)
+    try {
+      url = new URL(`https://${urlOrHostname}`)
+    } catch {
+      return DATABASE_URL
+    }
+  }
+
+  if (!url || !url.hostname) {
+    console.warn(`Warning: Bad URL found from "${urlOrHostname}"`)
+    return DATABASE_URL
   }
 
   return `mysql://${PABAU1_MYSQL_USERNAME_PODS}:${PABAU1_MYSQL_PASSWORD_PODS}@db.${
     url.hostname.split('.')[0]
-  }/pabau`
+  }/pabau?connection_limit=${PODS_CONNECTION_LIMIT}`
 }
 
 /**
@@ -35,20 +55,22 @@ export const prisma = (remote_url: string) => {
   console.log(
     'Lazily instantiating PrismaClient for',
     remote_url,
-    'to',
-    Boolean(url)
+    'Logging:',
+    LOGGING
   )
   const instance = new PrismaClient({
     datasources: { db: { url } },
-    log: [
-      {
-        emit: 'event',
-        level: 'query',
-      },
-    ],
+    log: LOGGING
+      ? [
+          {
+            emit: 'event',
+            level: 'query',
+          },
+        ]
+      : [],
   })
 
-  if (process.env.LOGGING && process.env.LOGGING !== '0')
+  if (LOGGING)
     instance.$on('query', (e) => {
       console.log(
         '[' +
@@ -61,6 +83,7 @@ export const prisma = (remote_url: string) => {
       )
     })
 
+  // store this instance into memory cache
   instances[remote_url] = instance
 
   return instance

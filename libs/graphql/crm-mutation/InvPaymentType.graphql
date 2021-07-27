@@ -9,6 +9,7 @@ fragment InvPaymentTypeFields on InvPaymentType {
   modified_date
   is_active
   is_money
+  default
   type
 }
 

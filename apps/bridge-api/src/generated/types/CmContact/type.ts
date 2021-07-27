@@ -274,6 +274,32 @@ export const CmContact = objectType({
         return root.InvPayment
       },
     })
+    t.nullable.field('Insurance', {
+      type: 'InsuranceDetail',
+      resolve(root: any) {
+        return root.Insurance
+      },
+    })
+    t.nullable.field('LoyaltyPoint', {
+      type: 'LoyaltyPoint',
+      resolve(root: any) {
+        return root.LoyaltyPoint
+      },
+    })
+    t.list.field('Booking', {
+      type: 'Booking',
+      args: {
+        where: 'BookingWhereInput',
+        orderBy: 'BookingOrderByInput',
+        cursor: 'BookingWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'BookingScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Booking
+      },
+    })
     t.list.field('InvSale', {
       type: 'InvSale',
       args: {
@@ -314,6 +340,20 @@ export const CmContact = objectType({
       },
       resolve(root: any) {
         return root.InventoryMovement
+      },
+    })
+    t.list.field('CommunicationRecipient', {
+      type: 'CommunicationRecipient',
+      args: {
+        where: 'CommunicationRecipientWhereInput',
+        orderBy: 'CommunicationRecipientOrderByInput',
+        cursor: 'CommunicationRecipientWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CommunicationRecipientScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CommunicationRecipient
       },
     })
     t.nullable.field('_count', {

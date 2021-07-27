@@ -12,7 +12,11 @@ export default {
 const SendSMSStory = ({ ...args }: SendSMSProps) => {
   return (
     <div style={{ width: '460px', height: 'calc(100vh - 76px)' }}>
-      <SendSMS {...args} id="" clientId="" />
+      <SendSMS
+        {...args}
+        receiverData=""
+        client={{ id: '', name: '', email: '' }}
+      />
     </div>
   )
 }

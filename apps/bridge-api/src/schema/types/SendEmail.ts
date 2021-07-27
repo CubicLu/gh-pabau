@@ -1,6 +1,16 @@
-import { extendType, nonNull, stringArg, list } from 'nexus'
-import EmailService from '../../app/email/email-service'
-import { EmailInput, EmailOutput } from '../../app/email/dto'
+import {
+  extendType,
+  nonNull,
+  stringArg,
+  list,
+  arg,
+  inputObjectType,
+} from 'nexus'
+import {
+  EmailInput,
+  EmailOutput,
+  EmailWithTagsInput,
+} from '../../app/email/dto'
 import {
   EmailNexusOutput,
   DynamicTemplateData,
@@ -8,6 +18,7 @@ import {
 import { validateEmail } from '../../app/authentication/yup'
 import { User } from '@prisma/client'
 import { Context } from '../../context'
+import EmailService from '../../app/email/email-service'
 
 export const SendEmail = extendType({
   type: 'Mutation',
@@ -68,6 +79,38 @@ export const SendEmail = extendType({
           }
         }
         return { success: true } as EmailOutput
+      },
+    })
+    t.field('sendEmailTo', {
+      type: 'Boolean',
+      args: {
+        to: nonNull(list('String')),
+        from: stringArg(),
+        subject: nonNull('String'),
+        text: nonNull('String'),
+        html: nonNull('String'),
+        relations: arg({
+          type: inputObjectType({
+            name: 'EmailRelationData',
+            definition: (t) => {
+              t.int('contact_id')
+              t.int('lead_id')
+              t.int('staff_id')
+              t.int('booking_id')
+              t.int('invoice_id')
+            },
+          }),
+        }),
+      },
+      async resolve(_, args: EmailWithTagsInput, ctx: Context) {
+        console.info('args:', args)
+        try {
+          return await new EmailService().sendEmailWithTags(args, ctx)
+          // console.info('response', response)
+          // return true
+        } catch (error) {
+          return error
+        }
       },
     })
   },

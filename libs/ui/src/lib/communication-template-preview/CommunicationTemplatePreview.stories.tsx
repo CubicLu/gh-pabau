@@ -10,5 +10,5 @@ export default {
   },
 }
 export const CommunicationTemplate: FC = () => {
-  return <CommunicationTemplatePreview />
+  return <CommunicationTemplatePreview sms={'Test sms message'} />
 }

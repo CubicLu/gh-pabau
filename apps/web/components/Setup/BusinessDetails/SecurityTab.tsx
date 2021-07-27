@@ -170,19 +170,19 @@ export const SecurityTab: FC<SecurityTabProps> = ({
           const CompanyMeta = [
             {
               meta_name: 'password_expire',
-              meta_value: values.password_expire,
+              meta_value: values.password_expire ?? '',
             },
             {
               meta_name: 'login_attempts',
-              meta_value: values.login_attempts,
+              meta_value: values.login_attempts ?? '',
             },
             {
               meta_name: 'password_enforce_history',
-              meta_value: values.password_enforce_history,
+              meta_value: values.password_enforce_history ?? '',
             },
             {
               meta_name: 'lockout_period',
-              meta_value: values.lockout_period,
+              meta_value: values.lockout_period ?? '',
             },
           ]
 
@@ -244,7 +244,7 @@ export const SecurityTab: FC<SecurityTabProps> = ({
   }
   return (
     <Security
-      force2FA={data?.company?.details?.enable_2fa}
+      twoFAstatus={data?.company?.details?.enable_2fa}
       onOk={handleSecurityChange}
       enableSensData={data?.company?.details?.enable_sens_data}
       config={securityData}
