@@ -58,7 +58,7 @@ pipelines:
 
           - step:
               name: unit tests
-              size: 1x
+              size: 2x
               script:
                 #                - while true; do ps -aux && sleep 30; done &
                 - yarn affected:test --base=origin/master
@@ -226,7 +226,7 @@ pipelines:
 
           - step:
               name: unit tests
-              size: 1x
+              size: 2x
               script:
                 #                - while true; do ps -aux && sleep 30; done &
                 - yarn affected:test --base=HEAD~1
