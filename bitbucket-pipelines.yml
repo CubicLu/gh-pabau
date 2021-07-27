@@ -126,7 +126,7 @@ pipelines:
                 - |
                   curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}"
                   export PR_AUTHOR=$(curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}" | jq -r '.author.display_name')
-                  export COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
+                  export COMMIT_AUTHOR=$(git log -2 --pretty=format:'%an' | head -n1)
 
                 - |
                   printf ":shallow_pan_of_food::shallow_pan_of_food: *New PR Preview*\n## <https://bitbucket.org/pabau/monorepo/pull-requests/${BITBUCKET_PR_ID}|PR ${BITBUCKET_PR_ID}> committed by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
@@ -166,7 +166,7 @@ pipelines:
             - |
               curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}"
               export PR_AUTHOR=$(curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}" | jq -r '.author.display_name')
-              export COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
+              export COMMIT_AUTHOR=$(git log -2 --pretty=format:'%an' | tail -n1)
 
             # Post to Bitbucket PR
             - |
