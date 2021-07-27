@@ -141,7 +141,6 @@ pipelines:
 
               artifacts:
                 - dist/bot_message2.txt
-                - tools/cicd/slack_notification.json
 
       - step:
           name: announce to slack
@@ -160,6 +159,9 @@ pipelines:
                 -H 'Content-Type: application/json; charset=utf-8' \
                 --data-binary @-
 
+            - |
+              export access_token=$(curl -s -X POST -u "${BITBUCKET_CLIENT_ID}:${BITBUCKET_CLIENT_SECRET}" https://bitbucket.org/site/oauth2/access_token -d grant_type=client_credentials | tee | jq -r '.access_token')
+
             # Configure git to use the oauth token.
             - |
               curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}"
@@ -168,15 +170,13 @@ pipelines:
 
             # Post to Bitbucket PR
             - |
-              curl https://api.bitbucket.org/2.0/repositories/pabau/monorepo/pullrequests/${BITBUCKET_PR_ID}/comments \
-                -H "Authorization: Bearer ${access_token}" \
-                --request POST \
-                --header 'Content-Type: application/json' \
-                --data '{
-                  "content": {
-                    "raw": "A new vercel was published!"
-                  }
-                }'
+              jq --arg var "$(cat dist/bot_message2.txt | head -c 5900)${IFS}$(cat dist/bot_message.txt | head -c 5900)" '.content.raw = $var' tools/cicd/bitbucket_comment.json | \
+              curl -0 https://api.bitbucket.org/2.0/repositories/pabau/monorepo/pullrequests/${BITBUCKET_PR_ID}/comments \
+                              --header "Authorization: Bearer ${access_token}" \
+                              --request POST \
+                              --header 'Content-Type: application/json' \
+                              --data-binary @-
+
 
   branches:
     master:
@@ -302,6 +302,7 @@ pipelines:
                 - export COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
 
                 - |
+                  export PACKAGE_JSON_VERSION=$(jq -r .version < package.json)
                   printf "*New Version Staged for Production*\n# v${PACKAGE_JSON_VERSION} committed by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
                   npm i -g ts-node@9 && ts-node tools/cicd/PrintChangedUrls.ts "HEAD~1" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
                   printf "\n" >> /tmp/bot_message2.txt
