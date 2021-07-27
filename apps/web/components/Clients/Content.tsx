@@ -50,6 +50,7 @@ interface ClientsContentProps {
   setTestLabels?: (val) => void
   getContactsLabelsData?: any
   getContactsLabelsQuery?: (val) => void
+  getLabelsQuery?: (val) => void
 }
 
 export interface SourceDataProps {
@@ -97,6 +98,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
   testLabels,
   setTestLabels,
   getContactsLabelsQuery,
+  getLabelsQuery,
 }) => {
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 768px)', false)
@@ -423,6 +425,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
             selectedRowKeys={selectedRowKeys}
             setTestLabels={setTestLabels}
             getContactsLabelsQuery={getContactsLabelsQuery}
+            getLabelsQuery={getLabelsQuery}
           >
             {renderTooltip({
               title: t('clients.leftSidebar.createLabels'),

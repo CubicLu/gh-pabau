@@ -87,16 +87,16 @@ export const Clients: FC<ClientsProps> = () => {
   // }] = useGetLabelsQuery({ fetchPolicy: 'network-only' })
 
   const [getLabelsQuery, { data: getLabelsData }] = useGetLabelsLazyQuery({
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'no-cache',
   })
 
   const [addLabelMutaton] = useAddLabelMutation({
     fetchPolicy: 'no-cache',
   })
 
-  useEffect(() => {
-    getLabelsQuery()
-  }, [getLabelsQuery])
+  // useEffect(() => {
+  //   getLabelsQuery()
+  // }, [testLabels])
 
   // const {
   //   data: getContactsLabelsData,
@@ -294,6 +294,10 @@ export const Clients: FC<ClientsProps> = () => {
   useEffect(() => {
     setTestLabels(getLabelsData)
   }, [getLabelsData])
+
+  useEffect(() => {
+    getLabelsQuery()
+  }, [getContactsLabelsData])
 
   useEffect(() => {
     setSourceData(clientsList)
@@ -786,6 +790,7 @@ export const Clients: FC<ClientsProps> = () => {
       addLabelMutaton={addLabelMutaton}
       getContactsLabelsData={getContactsLabelsData}
       getContactsLabelsQuery={getContactsLabelsQuery}
+      getLabelsQuery={getLabelsQuery}
     />
   )
 

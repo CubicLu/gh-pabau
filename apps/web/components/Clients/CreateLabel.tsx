@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useState } from 'react'
+import React, { FC, ReactNode, useEffect, useState } from 'react'
 import { Input, Popover } from 'antd'
 import { CheckOutlined, TagFilled, TagOutlined } from '@ant-design/icons'
 import {
@@ -13,7 +13,8 @@ import {
   useAddLabelMutation,
   useGetContactsLabelsQuery,
   useInsertContactsLabelsMutation,
-  useGetLabelsQuery,
+  useGetLabelsLazyQuery,
+  // useGetLabelsQuery,
 } from '@pabau/graphql'
 import styles from '../../pages/clients/clients.module.less'
 import { Labels } from '../../pages/clients'
@@ -34,7 +35,8 @@ interface CreateLabelsProps {
   testLabels?: any
   selectedRowKeys?: any
   setTestLabels?: (val) => void
-  getContactsLabelsQuery: (val) => any
+  getContactsLabelsQuery?: () => any
+  // getLabelsQuery?: () => any
 }
 
 const customColorData = [
@@ -87,6 +89,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   selectedRowKeys,
   setTestLabels,
   getContactsLabelsQuery,
+  // getLabelsQuery,
 }) => {
   const { t } = useTranslationI18()
   const [visible, setVisible] = useState(false)
@@ -118,10 +121,21 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
 
   // const [
   //   addLabelMutaton,
-  //   { data: addlabelData, loading: AddLabelLoading, error: addLabelError },
+  //   { data: addlabelData, loading: addLabelLoading, error: addLabelError },
   // ] = useAddLabelMutation()
 
   const [addLabelMutaton] = useAddLabelMutation({
+    fetchPolicy: 'no-cache',
+    onCompleted(response) {
+      console.log('on COMPLETE adding label')
+      getLabelsQuery()
+    },
+    onError(error) {
+      console.log('not added label')
+    },
+  })
+
+  const [getLabelsQuery, { data: getLabelsData }] = useGetLabelsLazyQuery({
     fetchPolicy: 'no-cache',
   })
 
@@ -179,7 +193,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     selectedLabelIndex !== -1 &&
       selectedLabelData.splice(selectedLabelIndex, 1, valueObject)
     const index = labelData.findIndex(
-      (label) => label.text === valueObject.label
+      (label) => label.text === valueObject.text
     )
     if (index === -1 || index === editIndex) {
       setTestLabels([...labelData])
@@ -214,30 +228,28 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   //   }
   // }
 
-  const addLabelData = (valueObject) => {
+  const addLabelData = async (valueObject) => {
     if (
       testLabels?.labels.some(
-        (item) => item.text && item.color !== valueObject.label
+        (item) => item.text && item.color !== valueObject.text
       )
     ) {
       // console.log('added new label', newLabel)
-      // console.log('testLabels on ADDING:', testLabels)
-      // console.log('valueObject:', valueObject)
+      console.log('testLabels on ADDING:', testLabels)
+      console.log('valueObject:', valueObject)
       // console.log('testLabels.labels :', testLabels.labels)
-      setTestLabels([...labels, valueObject])
+      // setTestLabels({[...testLabels, valueObject]})
+      testLabels.labels.push(valueObject)
+      // setTestLabels(() => [...testLabels, valueObject])
       setSelectedLabels([...selectedLabels, valueObject])
       fromHeader && handleApplyLabel([...selectedLabels, valueObject])
-      addLabelMutaton({
+      await addLabelMutaton({
         variables: {
           text: newLabel.text,
           color: newLabel.color,
         },
-        // refetchQueries: [
-        //   {
-        //     query: [{ useGetLabelsQuery }],
-        //   },
-        // ],
       })
+      getLabelsQuery()
     } else {
       Notification(
         NotificationType.error,
@@ -256,8 +268,10 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     if (key === 'Enter' && value) {
       if (isEdit) {
         editLabelData({ text: value, color: selectedColor, count: 0 })
+        // getLabelsQuery()
       } else {
         addLabelData({ text: value, color: selectedColor, count: 0 })
+        // getLabelsQuery()
       }
       setNewLabel({ text: '', color: '', count: 0 })
       setVisible(false)
@@ -324,6 +338,11 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   //   // console.log('tempSelectedContacts', tempSelectedContacts)
   // }
 
+  // useEffect(() => {
+  //   getLabelsQuery()
+  //   console.log('getlabelsQueryyyyy')
+  // }, [])
+
   //// DO NOT DELETE WORKINGGGG
   // const onApplyLabel = () => {
   //   handleApplyLabel(selectedLabels)
@@ -359,19 +378,20 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   } = useGetContactsLabelsQuery({ fetchPolicy: 'no-cache' })
 
   // WORKING MULTIPLE CONTACTS AND MULTIPLE LABELS
-  const onApplyLabel = () => {
+  const onApplyLabel = async () => {
     handleApplyLabel(selectedLabels)
     setVisible(false)
     if (selectedRowKeys && selectedRowKeys.length > 0) {
       for (const selectContact of selectedRowKeys) {
         for (const selectedLabel of selectedLabels) {
           // console.log('selectedLabell :', selectedLabel)
-          insertContactsLabelsMutaton({
+          await insertContactsLabelsMutaton({
             variables: {
               contact_id: selectContact,
               label_id: selectedLabel.id,
             },
-          }).then(getContactsLabelsQuery)
+          })
+          await getContactsLabelsQuery()
         }
       }
     }
