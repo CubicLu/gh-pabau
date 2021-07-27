@@ -1,21 +1,19 @@
-import React, { FC, useState } from 'react'
-import { BasicModal, TeamReportChartSeries } from '@pabau/ui'
-import { Row, Col } from 'antd'
-
-import styles from './TeamReportModal.module.less'
-
-import HichartsReact from 'highcharts-react-official'
-import * as Highcharts from 'highcharts'
-import HighchartsMap from 'highcharts/modules/map'
-import HighchartsStock from 'highcharts/modules/stock'
 import {
   CaretDownOutlined,
   CaretUpOutlined,
   LeftOutlined,
 } from '@ant-design/icons'
+import { BasicModal } from '@pabau/ui'
+import { Col, Row, Skeleton } from 'antd'
+import * as Highcharts from 'highcharts'
+import HichartsReact from 'highcharts-react-official'
+import HighchartsMap from 'highcharts/modules/map'
+import HighchartsStock from 'highcharts/modules/stock'
+import React, { FC, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
 import Button from '../button/Button'
-import { useTranslation } from 'react-i18next'
+import styles from './TeamReportModal.module.less'
 
 if (typeof Highcharts === 'object') {
   HighchartsMap(Highcharts)
@@ -26,12 +24,16 @@ const LabelValue = ({
   title,
   value,
   trend,
+  loading,
 }: {
   title?: string
   value: string
   trend?: 'up' | 'down'
+  loading?: boolean
 }) => {
-  return (
+  return loading ? (
+    <Skeleton active paragraph={{ rows: 1 }} />
+  ) : (
     <div className={styles.labelWrapper}>
       {title && <div className={styles.title}>{title}</div>}
       <div className={styles.value}>
@@ -65,7 +67,9 @@ export interface TeamReportModalProps {
   service: string
   description?: string
   ticks: string[]
-  series: TeamReportChartSeries
+  series: number[]
+  target?: number
+  loading?: boolean
   type?: 'line' | 'column' | 'area'
   prefix?: string
   suffix?: string
@@ -79,6 +83,8 @@ export const TeamReportModal: FC<TeamReportModalProps> = ({
   description,
   ticks,
   series,
+  target,
+  loading,
   type,
   prefix,
   suffix,
@@ -88,13 +94,25 @@ export const TeamReportModal: FC<TeamReportModalProps> = ({
   const { t } = useTranslation('common')
   const isMobile = useMedia('(max-width: 768px)')
   const [focusedIndex, setFocused] = useState(0)
-  const [range, setRange] = useState({ start: 0, end: ticks.length - 1 })
+  const [range, setRange] = useState({ start: 0, end: ticks.length })
 
   const count = ticks.length / 2
   const ranges = [0, 1].map((_, i) => ({
     start: Math.ceil(i * count),
-    end: Math.ceil((i + 1) * count - 1),
+    end: Math.ceil((i + 1) * count),
   }))
+
+  useEffect(() => {
+    if (isMobile && ticks.length > 10) {
+      setRange({ start: 0, end: Math.ceil(ticks.length / 2) })
+    }
+  }, [ticks.length, isMobile])
+
+  useEffect(() => {
+    if (!isMobile || ticks.length <= 10) {
+      setRange({ start: range.start, end: ticks.length })
+    }
+  }, [range.start, ticks.length, isMobile])
 
   const config = {
     mapNavigation: {
@@ -161,19 +179,15 @@ export const TeamReportModal: FC<TeamReportModalProps> = ({
     series: [
       {
         type: type,
-        name: series.title,
-        data: series.data.slice(range.start, range.end),
-        color: series.color,
+        name: service,
+        data: series.slice(range.start, range.end),
       },
       {
         type: 'line',
-        name: `Target of ${series.title}`,
-        data: series.data
-          .slice(range.start, range.end)
-          .map(() => series.target),
-        color: `${series.color}C0`,
+        name: `Target of ${service}`,
+        data: series.slice(range.start, range.end).map(() => target),
         dashStyle: 'Dash',
-        target: series.target,
+        target,
       },
     ],
     plotOptions: {
@@ -236,7 +250,7 @@ export const TeamReportModal: FC<TeamReportModalProps> = ({
         <Col xs={24} sm={12} md={17} className={styles.leftPane}>
           <div className={styles.service}>{service}</div>
           <div className={styles.description}>{description}</div>
-          {isMobile && (
+          {isMobile && ticks.length > 10 && (
             <div className={styles.ranges}>
               {ranges.map((item) => (
                 <Button
@@ -251,7 +265,11 @@ export const TeamReportModal: FC<TeamReportModalProps> = ({
             </div>
           )}
           <div className={styles.chartWrapper}>
-            <HichartsReact options={config} highcharts={Highcharts} />
+            {loading ? (
+              <Skeleton.Input className={styles.chartLoader} active />
+            ) : (
+              <HichartsReact options={config} highcharts={Highcharts} />
+            )}
           </div>
         </Col>
         <Col xs={24} sm={12} md={7} className={styles.rightPane}>
@@ -260,14 +278,16 @@ export const TeamReportModal: FC<TeamReportModalProps> = ({
               <Col xs={12} sm={24}>
                 <LabelValue
                   title={ticks[focusedIndex]}
-                  value={formatValue(series.data[focusedIndex], prefix, suffix)}
+                  value={formatValue(series[focusedIndex], prefix, suffix)}
+                  loading={loading}
                 />
               </Col>
-              {series.target && (
+              {target && (
                 <Col xs={12} sm={24}>
                   <LabelValue
                     title="Target"
-                    value={formatValue(series.target, prefix, suffix)}
+                    value={formatValue(target, prefix, suffix)}
+                    loading={loading}
                   />
                 </Col>
               )}
@@ -276,16 +296,17 @@ export const TeamReportModal: FC<TeamReportModalProps> = ({
                   <LabelValue
                     title={t('team-report-modal-prior-month')}
                     value={getChangedValue(
-                      series.data[focusedIndex],
-                      series.data[focusedIndex - 1],
+                      series[focusedIndex],
+                      series[focusedIndex - 1],
                       prefix,
                       suffix
                     )}
                     trend={
-                      series.data[focusedIndex] > series.data[focusedIndex - 1]
+                      series[focusedIndex] > series[focusedIndex - 1]
                         ? 'up'
                         : 'down'
                     }
+                    loading={loading}
                   />
                 </Col>
               )}
@@ -294,14 +315,13 @@ export const TeamReportModal: FC<TeamReportModalProps> = ({
                   <LabelValue
                     title={`${t('team-report-modal-change-from')} ${ticks[0]}`}
                     value={getChangedValue(
-                      series.data[focusedIndex],
-                      series.data[0],
+                      series[focusedIndex],
+                      series[0],
                       prefix,
                       suffix
                     )}
-                    trend={
-                      series.data[focusedIndex] > series.data[0] ? 'up' : 'down'
-                    }
+                    trend={series[focusedIndex] > series[0] ? 'up' : 'down'}
+                    loading={loading}
                   />
                 </Col>
               )}
@@ -310,12 +330,13 @@ export const TeamReportModal: FC<TeamReportModalProps> = ({
                   title={t('team-report-modal-rolling-avg')}
                   value={formatValue(
                     Math.ceil(
-                      series.data.reduce((prev, cur) => prev + cur, 0) /
-                        (series.data.length > 0 ? series.data.length : 1)
+                      series.reduce((prev, cur) => prev + cur, 0) /
+                        (series.length > 0 ? series.length : 1)
                     ),
                     prefix,
                     suffix
                   )}
+                  loading={loading}
                 />
               </Col>
             </Row>

@@ -700,41 +700,60 @@ en:
     +44 000 987 507
 
     info@theclinic.com'
+  ui.report-help-sidebar.payroll-title: Payroll
   ui.report-help-sidebar.payroll-team-commission-title: 'Team Comission'
   ui.report-help-sidebar.payroll-team-commission-content: ui.report-help-sidebar.payroll-team-commission-content-en
   ui.report-help-sidebar.payroll-team-wages-title: 'Team Wages'
   ui.report-help-sidebar.payroll-team-wages-content: ui.report-help-sidebar.payroll-team-wages-content-en
+  ui.report-help-sidebar.shifts-title: Shifts
   ui.report-help-sidebar.shifts-days-worked-title: 'Days Worked'
   ui.report-help-sidebar.shifts-days-worked-content: ui.report-help-sidebar.shifts-days-worked-content-en
   ui.report-help-sidebar.shifts-days-off-title: 'Days Off'
   ui.report-help-sidebar.shifts-days-off-content: ui.report-help-sidebar.shifts-days-off-content-en
-  ui.report-help-sidebar.performance-title: performance
+  ui.report-help-sidebar.shifts-holiday-title: Holiday
+  ui.report-help-sidebar.shifts-others-title: Others
+  ui.report-help-sidebar.shifts-sickness-title: Sickness
+  ui.report-help-sidebar.performance-title: Performance
   ui.report-help-sidebar.performance-services-title: Services
   ui.report-help-sidebar.performance-services-content: ui.report-help-sidebar.performance-services-content-en
   ui.report-help-sidebar.performance-products-title: Products
   ui.report-help-sidebar.performance-products-content: ui.report-help-sidebar.performance-products-content-en
   ui.report-help-sidebar.performance-packages-title: Packages
   ui.report-help-sidebar.performance-packages-content: ui.report-help-sidebar.performance-packages-content-en
+  ui.report-help-sidebar.performance-accounts-title: Accounts
+  ui.report-help-sidebar.performance-retails-title: Retails
   ui.report-help-sidebar.performance-vouchers-title: Vouchers
   ui.report-help-sidebar.performance-vouchers-content: ui.report-help-sidebar.performance-vouchers-content-en
-  ui.report-help-sidebar.kpis-title: kpis
+  ui.report-help-sidebar.kpis-title: Kpis
   ui.report-help-sidebar.kpis-services-title: Services
   ui.report-help-sidebar.kpis-services-content: ui.report-help-sidebar.kpis-services-content-en
   ui.report-help-sidebar.kpis-products-title: Products
   ui.report-help-sidebar.kpis-products-content: ui.report-help-sidebar.kpis-products-content-en
   ui.report-help-sidebar.kpis-avg-bill-title: 'Avg Bill (per visit)'
   ui.report-help-sidebar.kpis-avg-bill-content: ui.report-help-sidebar.kpis-avg-bill-content-en
+  ui.report-help-sidebar.kpis-avg-per-user-title: Avg Bill (per user)
+  ui.report-help-sidebar.kpis-packages-title: Packages
+  ui.report-help-sidebar.kpis-vouchers-title: Vouchers
+  ui.report-help-sidebar.kpis-accounts-title: Accounts
+  ui.report-help-sidebar.kpis-retails-title: Retails
   ui.report-help-sidebar.kpis-client-visits-title: 'Client Visits'
   ui.report-help-sidebar.kpis-client-visits-content: ui.report-help-sidebar.kpis-client-visits-content-en
+  ui.report-help-sidebar.kpis-new-clients-title: New Clients
+  ui.report-help-sidebar.kpis-existing-clients-title: Existing Clients
+  ui.report-help-sidebar.kpis-walking-title: Walking
   ui.report-help-sidebar.kpis-rebook-title: Rebook
   ui.report-help-sidebar.kpis-rebook-content: ui.report-help-sidebar.kpis-rebook-content-en
   ui.report-help-sidebar.kpis-utilization-title: Utilization
   ui.report-help-sidebar.kpis-utilization-content: ui.report-help-sidebar.kpis-utilization-content-en
   ui.report-help-sidebar.kpis-review-score-title: 'Review Score'
   ui.report-help-sidebar.kpis-review-score-content: ui.report-help-sidebar.kpis-review-score-content-en
+  ui.report-help-sidebar.kpis-review-5-title: 5* Review
+  ui.report-help-sidebar.kpis-review-4-title: 4* Review
+  ui.report-help-sidebar.kpis-review-3-title: 3* Review
+  ui.report-help-sidebar.kpis-review-2-title: 2* Review
+  ui.report-help-sidebar.kpis-review-1-title: 1* Review
   ui.report-help-sidebar.kpis-care-factor-title: 'Care Factor'
   ui.report-help-sidebar.kpis-care-factor-content: ui.report-help-sidebar.kpis-care-factor-content-en
-  ui.report-help-sidebar.kpis-vouchers-title: Vouchers
   ui.report-help-sidebar.kpis-vouchers-content: ui.report-help-sidebar.kpis-vouchers-content_en
   marketingsource-title-short: Source
   marketingsource-status-field: Status
@@ -976,7 +995,6 @@ en:
   setup.discount.data.consultation: Consultation
   setup.discount.data.cooltech: Cooltech
   setup.discount.data.cooltech+accentprime: 'Cooltech + Accent Prime'
-  ui.report-help-sidebar.payroll-title: payroll
   setup.discount.data.dermalux: 'Dermalux'
   setup.discount.data.londonroad,london,england: 'London Road, London, England'
   setup.discount.data.loremstreet,liverpool,england: 'Lorem Street, Liverpool, England'
@@ -2342,6 +2360,37 @@ en:
   ui.medicalform.setting.requried.tooltip: 'You must use "Required" if you wish to link the answer from the client to a field'
   ui.inputwithtag.addtag: 'Add field'
   ui.inputwithtag.modal.title: 'Add a Personalization'
+  setup.reports.team-report: Team Report
+  setup.reports.search-report: Search by report name
+  setup.reports.team.title: Team
+  setup.reports.financials.title: Financials
+  setup.reports.team.report-details: Report Details
+  setup.reports.team.kpi-explorer: KPI Explorer
+  setup.reports.team.trend: Trend
+  setup.reports.enable-benchmarks: Enable industry benchmarks
+  setup.reports.download: Download
+  setup.reports.settings: Settings
+  setup.reports.help: Help
+  setup.reports.by-teams: By Teams
+  setup.reports.by-locations: By Locations
+  setup.reports.by-time-period: By Time Period
+  setup.reports.by-date: By Date
+  setup.reports.coming-soon: Coming Soon
+  setup.reports.all-team: All Team
+  setup.reports.for: For
+  setup.reports.of: of
+  setup.reports.select-range-type: Select a
+  setup.reports.all: All
+  setup.reports.select-employee: Select an employee
+  setup.reports.by: By
+  setup.reports.at: at
+  setup.reports.all-locations: All Locations
+  setup.reports.select-location: Select location
+  setup.reports.select-all: Select All
+  setup.reports.target: Target
+  setup.reports.remove-metric: Remove Metric
+  setup.reports.showing: Showing
+  setup.reports.show: Show
   setup.reports.title: Reports
   setup.reports.search.result: 'Search results'
   setup.reports.search.text.placeholder: 'Search by report name'
@@ -2485,6 +2534,8 @@ en:
   setup.reports.hide: 'Hide'
   setup.reports.showmore: 'Show more'
   setup.reports.custome.description: 'Create your first custom report by finding a report, editing and saving.'
+  setup.reports.table.error: Error occured while loading a table, data can't be rendered right now
+  setup.reports.table.empty: There is no data available for now
   setup.reports.month.Jan: 'Jan'
   setup.reports.month.Feb: 'Feb'
   setup.reports.month.Mar: 'Mar'
