@@ -39,7 +39,7 @@ export class NotificationServices {
       time,
     }
 
-    if (type === notificationType.cancelled_appointment_via_calendar) {
+    if (type === notificationType.cancelled_appointment_via_calendar.type) {
       variables['cancellation_reason'] = notification.cancellation_reason
     }
 
@@ -123,5 +123,24 @@ export class NotificationServices {
       (manager) => manager?.id
     )
     return managers
+  }
+
+  async findUserEnabledNotifications(
+    company: number,
+    type: string
+  ): Promise<[number]> {
+    const data = {
+      query: `query findUserEnabledNotification {\n  notification_toggle( where: { _and: {  notificationTypeByNotificationType:{ type : { _eq: "${type}" }  } enabled:{  _eq : true } company:{ _eq: ${company} }} }) {\n    user\n  }\n}`,
+      variables: null,
+      operationName: 'findUserEnabledNotification',
+    }
+
+    const response = await this.httpService
+      .post(this.GRAPHQL_ENDPOINT, data)
+      .toPromise()
+    const users = response.data?.data?.notification_toggle?.map(
+      (notification) => notification.user
+    )
+    return users
   }
 }
