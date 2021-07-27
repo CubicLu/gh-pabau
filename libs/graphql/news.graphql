@@ -1,0 +1,26 @@
+subscription product_news {
+  product_news(order_by: { order: desc }) {
+    img
+    link
+    order
+    title
+    id
+    description
+    created_at
+    read_by {
+      user
+    }
+  }
+}
+
+mutation insert_product_news_read_one(
+  $company: Int
+  $product_news: uuid
+  $user: Int
+) {
+  insert_product_news_read_one(
+    object: { company: $company, product_news: $product_news, user: $user }
+  ) {
+    id
+  }
+}

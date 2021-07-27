@@ -839,7 +839,9 @@ en:
   notifications.holidayrequest: 'Holiday Request'
   notifications.businessrefer: 'Business Refer'
   notifications.empty.msg: 'No notifications yet'
+  news.empty.msg: 'No news yet'
   notifications.empty.hint: 'Stay tuned! Notifications about your activity will show up here.'
+  news.empty.hint: 'Stay tuned! News will show up here'
   notifications.empty.anchor: 'Notification settings'
   quickcreate.client: Client
   quickcreate.lead: Lead
