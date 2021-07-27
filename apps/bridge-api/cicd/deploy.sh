@@ -67,8 +67,8 @@ if [ -z "${BITBUCKET_PR_ID}" ] && [ -n "${BITBUCKET_BRANCH}" ]; then
   docker image tag "${APP_NAME}:latest" "${DOCKER2_HOSTNAME}/monorepo/${APP_NAME}:commit-${BITBUCKET_COMMIT}"
   echo "Docker login..."
   docker login -u "${DOCKER2_USERNAME}" -p "${DOCKER2_PASSWORD}" "${DOCKER2_HOSTNAME}"
-  echo "Docker push..."
-  docker image push "${DOCKER2_HOSTNAME}/monorepo/${APP_NAME}"
+  echo "Docker push (all tags)..."
+  docker image push "${DOCKER2_HOSTNAME}/monorepo/${APP_NAME}" --all-tags
   echo "Rancher deploy..."
   curl -u "${RANCHER2_ACCESS_KEY}:${RANCHER2_SECRET_KEY}" \
     -X POST \
