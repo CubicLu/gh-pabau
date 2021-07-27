@@ -2,7 +2,9 @@ ls:
   apps:
     web:
       pages:
-        .dir: kebabcase
+        test:
+          austin.png:
+        .dir: 'kebabcase | regex:\[[a-z]*\]$'
         .stories.tsx: 'regex:[^.]'
         .spec.tsx: 'regex:[^.]'
         .jsx: 'regex:[^.]'
@@ -12,10 +14,12 @@ ls:
         .jpg: 'regex:[^.]'
         .svg: 'regex:[^.]'
         .json: 'regex:[^.]'
+        assets:
+          .dir: 'regex:[^.]'
         .tsx: 'kebabcase | regex:\[[a-z]*\]$ | regex:^\_app$'
         .module.less: kebabcase
       components:
-        .dir: kebabcase
+        .dir: pascalcase
         .stories.tsx: pascalcase
         .spec.tsx: pascalcase
         .tsx: pascalcase

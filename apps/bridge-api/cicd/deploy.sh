@@ -45,23 +45,25 @@ echo "BITBUCKET_COMMIT=${BITBUCKET_COMMIT}"
 echo "BITBUCKET_PR_ID=${BITBUCKET_PR_ID}"
 echo "-----------------"
 
-#echo "ABORTING UNTIL https://github.com/prisma/prisma/issues/5304 IS FIXED!!!!"
-#exit;
-
-echo "Copying assets..."
-ls -al "dist/apps/${APP_NAME}/"
-cp "apps/${APP_NAME}/package.production.json" "dist/apps/${APP_NAME}/"
-echo "Done"
-
 echo "Docker build..."
 docker build "dist/apps/${APP_NAME}" -t "${APP_NAME}" -f "tools/cicd/${APP_NAME}.Dockerfile"
+
+echo "Test the docker..."
+docker run -d -p 5823:4000 "${APP_NAME}"
+apt update
+apt install wait-for-it
+echo "Waiting for docker to be up..."
+wait-for-it localhost:5823 -t 500
+echo "We have a result.. $?"
 
 if [ -z "${BITBUCKET_PR_ID}" ] && [ -n "${BITBUCKET_BRANCH}" ]; then
 
   echo "Pushing to Rancher2..."
   echo "Docker tag..."
   docker image tag "${APP_NAME}:latest" "${DOCKER2_HOSTNAME}/monorepo/${APP_NAME}"
+  echo "Docker tag as v${APP_VERSION}..."
   docker image tag "${APP_NAME}:latest" "${DOCKER2_HOSTNAME}/monorepo/${APP_NAME}:v${APP_VERSION}"
+  echo "Docker tag as commit-${BITBUCKET_COMMIT}..."
   docker image tag "${APP_NAME}:latest" "${DOCKER2_HOSTNAME}/monorepo/${APP_NAME}:commit-${BITBUCKET_COMMIT}"
   echo "Docker login..."
   docker login -u "${DOCKER2_USERNAME}" -p "${DOCKER2_PASSWORD}" "${DOCKER2_HOSTNAME}"
