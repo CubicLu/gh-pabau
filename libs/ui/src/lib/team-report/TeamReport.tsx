@@ -1,9 +1,11 @@
-import React, { FC } from 'react'
-import { Table, Badge, Typography, Tooltip } from 'antd'
-import { LetterBadge, LetterBadgeColors } from '../letter-badge/LetterBadge'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
+import { Badge, Table, Tooltip, Typography, Skeleton, Space, Empty } from 'antd'
 import { PresetStatusColorType } from 'antd/lib/_util/colors'
+import React, { FC, useState } from 'react'
+import { useMedia } from 'react-use'
+import { LetterBadge, LetterBadgeColors } from '../letter-badge/LetterBadge'
 import styles from './TeamReport.module.less'
+import { useTranslation } from 'react-i18next'
 const { Text } = Typography
 
 export enum TableRowType {
@@ -35,7 +37,7 @@ interface ColumnTransformer {
   (text: string, record: TeamReportRow): JSX.Element
 }
 
-interface TeamReportColumn {
+type TeamReportColumn = {
   title: string
   dataIndex: string
   key: number | string
@@ -47,6 +49,8 @@ interface TeamReportParams {
   source: TeamReportRow[]
   columns: TeamReportColumn[]
   loading?: boolean
+  onSelect?: (row: number, column: string | number, record: unknown) => void
+  error?: boolean
 }
 
 const letter_badges = [
@@ -66,19 +70,24 @@ const letter_badges = [
     letter: 'D',
     color: LetterBadgeColors.purple,
   },
+  {
+    letter: 'E',
+    color: LetterBadgeColors.blue,
+  },
 ]
 
 const transformTableCell = (
   text: string | TeamReportCellValue,
-  record: TeamReportRow
+  record: TeamReportRow,
+  onClick: VoidFunction
 ): JSX.Element => {
   let badge = <Badge color="transparent" />
   if (typeof text === 'object') {
     const tootltip = (
       <div>
-        Revenue £{text.Revenue}
+        Revenue {text.Revenue}
         <br />
-        Target £{text.Target}
+        Target {text.Target}
       </div>
     )
     badge = (
@@ -110,7 +119,11 @@ const transformTableCell = (
       </Text>
     )
   }
-  return ret
+  return (
+    <div style={{ cursor: 'pointer' }} onClick={() => onClick()}>
+      {ret}
+    </div>
+  )
 }
 
 const transformTotalColumn = (
@@ -121,9 +134,9 @@ const transformTotalColumn = (
   if (typeof text === 'object') {
     const tootltip = (
       <div>
-        Revenue £{text.Revenue}
+        Revenue {text.Revenue}
         <br />
-        Target £{text.Target}
+        Target {text.Target}
       </div>
     )
     badge = (
@@ -144,18 +157,59 @@ export const TeamReport: FC<TeamReportParams> = ({
   source,
   columns,
   loading = false,
+  onSelect,
+  error,
 }) => {
-  columns = columns.map((col) => {
-    col.render = col.key === 'total' ? transformTotalColumn : transformTableCell
-    return col
+  const isMobile = useMedia('(max-width: 767px)', false)
+  const { t } = useTranslation('common')
+  const [selectedRow, setSelectedRow] = useState<number>(-1)
+  const [selectedColumn, setSelectedColumn] = useState<string | number>('')
+  const tableColumns = columns.map((col) => {
+    return {
+      ...col,
+      width: 200,
+      onCell: (record) => ({
+        className:
+          record.key === selectedRow && col.key === selectedColumn
+            ? styles.selectedCell
+            : undefined,
+      }),
+      render: (value, record) =>
+        col.key === 'total'
+          ? transformTotalColumn(value, record)
+          : transformTableCell(value, record, () => {
+              if (
+                value &&
+                col.title &&
+                !(record.key === selectedRow && col.key === selectedColumn)
+              ) {
+                setSelectedRow(record.key)
+                setSelectedColumn(col.key)
+                onSelect?.(record.key, col.key, record)
+              } else {
+                setSelectedRow(-1)
+                setSelectedColumn('')
+                onSelect?.(-1, '', null)
+              }
+            }),
+    }
   })
 
-  return (
+  return loading ? (
+    <Space direction="vertical" className={styles.loader}>
+      {[0, 1, 2, 3, 4, 5, 6, 7].map((index) => (
+        <Space key={index} direction="horizontal" style={{ width: '100%' }}>
+          {(isMobile ? [0, 1] : [0, 1, 2, 3, 4]).map((col) => (
+            <Skeleton.Input key={col} active />
+          ))}
+        </Space>
+      ))}
+    </Space>
+  ) : (
     <Table
-      dataSource={source}
-      columns={columns}
-      scroll={{ x: 1200, y: 1200 }}
-      loading={loading}
+      dataSource={error ? [] : source}
+      columns={tableColumns}
+      scroll={{ x: 1200, y: 'calc(100vh - 140px)' }}
       size="small"
       pagination={false}
       expandable={{
@@ -170,6 +224,18 @@ export const TeamReport: FC<TeamReportParams> = ({
             )
           ) : null
         },
+      }}
+      locale={{
+        emptyText: (
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description={
+              error
+                ? t('setup.reports.table.error')
+                : t('setup.reports.table.empty')
+            }
+          />
+        ),
       }}
     />
   )

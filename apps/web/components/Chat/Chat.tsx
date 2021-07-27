@@ -31,6 +31,12 @@ export const Chat = (props: P): JSX.Element => {
 
   useChatListRoomNotifySubscription({
     skip: typeof window === 'undefined',
+    onSubscriptionData(e) {
+      console.log(
+        'ws update for rooms:',
+        e.subscriptionData.data.chat_room_participant
+      )
+    },
   })
   useChatListMessagesNotifySubscription({
     skip: typeof window === 'undefined',

@@ -594,7 +594,7 @@
               "apps/bridge-api/src/assets",
               "apps/bridge-api/src/prisma"
             ],
-            "maxWorkers": 1
+            "maxWorkers": 2
           },
           "configurations": {
             "production": {

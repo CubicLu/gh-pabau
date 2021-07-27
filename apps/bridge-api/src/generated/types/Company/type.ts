@@ -29,6 +29,12 @@ export const Company = objectType({
         return root.subscription
       },
     })
+    t.nullable.field('owner', {
+      type: 'User',
+      resolve(root: any) {
+        return root.owner
+      },
+    })
     t.list.field('TwoFactorHistory', {
       type: 'TwoFactorHistory',
       args: {

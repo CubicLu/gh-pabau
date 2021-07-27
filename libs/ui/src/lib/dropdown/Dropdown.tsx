@@ -3,7 +3,6 @@ import {
   CheckCircleFilled,
   ExclamationOutlined,
   ExportOutlined,
-  GlobalOutlined,
   InfoCircleOutlined,
   LeftOutlined,
   LoadingOutlined,
@@ -131,7 +130,8 @@ export const Dropdown: FC<DropDownInterface> = ({
         </div>
         <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
-      <Menu.Item
+      {/* TODO Temp commenting it out due to translation not being part of the MVP
+       <Menu.Item
         key="language"
         className={styles.dropdownMenu}
         onClick={() => onClickAvatarMenu('LangMenu')}
@@ -141,7 +141,7 @@ export const Dropdown: FC<DropDownInterface> = ({
           <span className={styles.headerText}>English</span>
         </div>
         <RightOutlined className={styles.dropdownIcon} />
-      </Menu.Item>
+      </Menu.Item> */}
       <Menu.Item
         key="logout"
         onClick={handleLogOut}

@@ -4,6 +4,8 @@ import {
   useUpdate_Notifications_By_PkMutation,
   useDelete_Notifications_By_PkMutation,
   useInsert_Read_Notification_OneMutation,
+  useProduct_NewsSubscription,
+  useInsert_Product_News_Read_OneMutation,
 } from '@pabau/graphql'
 import { Layout as PabauLayout, LayoutProps, StickyPopout } from '@pabau/ui'
 import { useRouter } from 'next/router'
@@ -32,6 +34,27 @@ interface Notification {
   link: string
 }
 
+interface ProductNews {
+  id: string
+  img: string
+  link: string
+  title: string
+  description: string
+  time: Date | string
+  readUsers: number[]
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const onMessageType = () => {
+  //add mutation for send message textbox
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const onCreateChannel = (name, description, isPrivate) => {
+  //add mutation for create Channel here
+  console.log('onCreateChannel-- or another one', name, description, isPrivate)
+}
+
 const Layout: FC<LayoutProps> = ({
   children,
   allowed = true,
@@ -40,6 +63,7 @@ const Layout: FC<LayoutProps> = ({
 }) => {
   const [authenticated, user] = useLogin(false)
   const [notifications, setNotifications] = useState<Notification[]>()
+  const [productNews, setProductNews] = useState<ProductNews[]>()
   const [showChat, setShowChat] = useState(false)
   const router = useRouter()
   const { data, error, loading } = useDisabledFeaturesQuery()
@@ -47,6 +71,8 @@ const Layout: FC<LayoutProps> = ({
   const { data: notificationData } = useNotificationsSubscription({
     variables: { user: [user?.user] },
   })
+
+  const { data: productNewsData } = useProduct_NewsSubscription()
 
   const loggedUser = useContext(UserContext)
   const userData = {
@@ -64,6 +90,28 @@ const Layout: FC<LayoutProps> = ({
   const [
     deleteNotificationsByPkMutation,
   ] = useDelete_Notifications_By_PkMutation()
+
+  const [
+    insertProductNewsReadOneMutation,
+  ] = useInsert_Product_News_Read_OneMutation()
+  useEffect(() => {
+    if (productNewsData?.product_news?.length > 0) {
+      const news: ProductNews[] = productNewsData?.product_news.map((news) => {
+        const readUsers = news?.read_by?.map((users) => users.user)
+        return {
+          id: news.id,
+          img: news.img,
+          link: news.link,
+          title: news.title,
+          description: news.description,
+          time: news.created_at,
+          readUsers,
+        }
+      })
+      setProductNews(news)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productNewsData?.product_news])
 
   useEffect(() => {
     if (notificationData?.notifications?.length > 0) {
@@ -108,7 +156,7 @@ const Layout: FC<LayoutProps> = ({
 
   let legacyPage: boolean | string = false
   for (const [, row] of data.feature_flags.entries()) {
-    if (router.pathname.substring(1) === row.page_slug) {
+    if (router.asPath.substring(1) === row.page_slug) {
       legacyPage = '/' + row.fallback_slug
     }
   }
@@ -126,9 +174,11 @@ const Layout: FC<LayoutProps> = ({
         <PabauLayout
           relativeTime={relativeTime}
           notifications={notifications}
+          productNews={productNews}
           deleteNotification={deleteNotificationsByPkMutation}
           updateNotification={updateNotificationsByPkMutation}
           readAddMutation={insertReadNotificationOneMutation}
+          readNewsMutation={insertProductNewsReadOneMutation}
           user={userData}
           searchRender={() => <Search />}
           onMessageIconClick={() => setShowChat((e) => !e)}

@@ -561,6 +561,12 @@ export const User = objectType({
         return root.InvSale
       },
     })
+    t.nullable.field('CompanyOwner', {
+      type: 'Company',
+      resolve(root: any) {
+        return root.CompanyOwner
+      },
+    })
     t.nullable.field('_count', {
       type: 'UserCountOutputType',
       resolve(root: any) {

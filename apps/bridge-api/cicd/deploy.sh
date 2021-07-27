@@ -28,12 +28,17 @@ APP_TYPE="$(basename "$(dirname "$(
 )")")"
 VERCEL_JSON_LOCATION=$(cd "${APP_TYPE}/${APP_NAME}" && pwd)
 
+apt update -y
+apt install -y jq
+APP_VERSION=$(jq -r '.version' package.json)
+
 echo "----- DEBUG -----"
 echo "(pwd)=$(pwd)"
 echo "DOCKER_HOSTNAME=${DOCKER_HOSTNAME}"
 echo "DOCKER_USERNAME=${DOCKER_USERNAME}"
 echo "NODE_OPTIONS=${NODE_OPTIONS}"
 echo "APP_NAME=${APP_NAME}"
+echo "APP_VERSION=${APP_VERSION}"
 echo "APP_TYPE=${APP_TYPE}"
 echo "VERCEL_JSON_LOCATION=${VERCEL_JSON_LOCATION}"
 echo "BITBUCKET_COMMIT=${BITBUCKET_COMMIT}"
@@ -56,6 +61,8 @@ if [ -z "${BITBUCKET_PR_ID}" ] && [ -n "${BITBUCKET_BRANCH}" ]; then
   echo "Pushing to Rancher2..."
   echo "Docker tag..."
   docker image tag "${APP_NAME}:latest" "${DOCKER2_HOSTNAME}/monorepo/${APP_NAME}"
+  docker image tag "${APP_NAME}:latest" "${DOCKER2_HOSTNAME}/monorepo/${APP_NAME}:v${APP_VERSION}"
+  docker image tag "${APP_NAME}:latest" "${DOCKER2_HOSTNAME}/monorepo/${APP_NAME}:commit-${BITBUCKET_COMMIT}"
   echo "Docker login..."
   docker login -u "${DOCKER2_USERNAME}" -p "${DOCKER2_PASSWORD}" "${DOCKER2_HOSTNAME}"
   echo "Docker push..."

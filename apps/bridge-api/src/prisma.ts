@@ -4,6 +4,9 @@ import { stringToBoolean } from './utils'
 const DATABASE_URL = process.env.DATABASE_URL
 const PABAU1_MYSQL_USERNAME_PODS = process.env.PABAU1_MYSQL_USERNAME_PODS
 const PABAU1_MYSQL_PASSWORD_PODS = process.env.PABAU1_MYSQL_PASSWORD_PODS
+const PODS_CONNECTION_LIMIT = process.env.PODS_CONNECTION_LIMIT
+  ? process.env.PODS_CONNECTION_LIMIT
+  : 20
 const LOGGING = stringToBoolean(process.env.LOGGING)
 
 const instances: Record<string, PrismaClient> = {}
@@ -39,7 +42,7 @@ function getPodDbUrl(urlOrHostname) {
 
   return `mysql://${PABAU1_MYSQL_USERNAME_PODS}:${PABAU1_MYSQL_PASSWORD_PODS}@db.${
     url.hostname.split('.')[0]
-  }/pabau`
+  }/pabau?connection_limit=${PODS_CONNECTION_LIMIT}`
 }
 
 /**

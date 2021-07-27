@@ -190,6 +190,7 @@ model Company {
   cron_enabled                     Boolean?
   details                          CompanyDetails?
   subscription                     CompanySubscription?
+  owner                            User?                              @relation("owner", fields: [admin], references: [id])
   TwoFactorHistory                 TwoFactorHistory[]
   ThirdPartyAccess                 ThirdPartyAccess[]
   AcceptEmailToken                 AcceptEmailToken[]
@@ -12433,6 +12434,7 @@ model User {
   InventoryMovement            InventoryMovement[]
   Booking                      Booking[]
   InvSale                      InvSale[]
+  CompanyOwner                 Company?                       @relation("owner")
 
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")

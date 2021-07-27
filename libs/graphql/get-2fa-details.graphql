@@ -1,0 +1,7 @@
+query getCompanyDetails2fa{
+  company{
+    details{
+      enable_2fa
+    }
+  }
+}

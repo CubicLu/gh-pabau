@@ -1,6 +1,6 @@
-import { TeamReportChartSeries } from './TeamReportChart'
-import userImage from '../../assets/images/user.png'
 import { TeamReportEmployee, TeamReportMeta } from '@pabau/ui'
+import userImage from '../../assets/images/user.png'
+import { TeamReportChartSeries } from './TeamReportChart'
 
 export const yearsData = {
   monthly: [
@@ -17,7 +17,7 @@ export const yearsData = {
     'Jul 20',
     'Aug 20',
   ],
-  quater: [
+  quarter: [
     'Q4 17/18',
     'Q1 18/19',
     'Q2 18/19',
@@ -46,7 +46,7 @@ export const ticks = {
     'Jul 20',
     'Aug 20',
   ],
-  quater: [
+  quarter: [
     'Q4 17/18',
     'Q1 18/19',
     'Q2 18/19',
@@ -62,18 +62,22 @@ export const ticks = {
 
 export const employees: TeamReportEmployee[] = [
   {
+    id: '1',
     name: 'Will Lawsons',
     src: userImage,
   },
   {
+    id: '2',
     name: 'User 2',
     src: userImage,
   },
   {
+    id: '3',
     name: 'User 3',
     src: userImage,
   },
   {
+    id: '4',
     name: 'User 4',
     src: userImage,
   },
@@ -90,32 +94,31 @@ export const meta: TeamReportMeta = {
     { name: 'Rebook', chart: 'line', suffix: '%' },
   ],
   employees: ['Will Lawsons', 'User 2', 'User 3', 'User 4'],
-  year: 'Sep 19',
-  location: 'All Locations',
+  locations: [],
 }
 
 export const seriesData: TeamReportChartSeries[] = [
   {
-    title: 'Team Commision',
-    serviceName: 'Team Commision',
+    label: 'Team Commision',
+    name: 'Team Commision',
     data: [0, 100, 250, 100, 150, 0, 120, 140, 200, 250, 200, 100],
     color: '#54B2D3',
   },
   {
-    title: 'Days Worked',
-    serviceName: 'Days Worked',
+    label: 'Days Worked',
+    name: 'Days Worked',
     data: [12, 12, 32, 32, 128, 30.5, 64.5, 34, 0, 92, 92, 128],
     color: '#65CD98',
   },
   {
-    title: 'LHR - Front',
-    serviceName: 'LHR - Front',
+    label: 'LHR - Front',
+    name: 'LHR - Front',
     data: [100, 50, 0, 100, 250, 100, 20, 40, 100, 150, 200, 250],
     color: '#FAAD14',
   },
   {
-    title: 'Rebook',
-    serviceName: 'Rebook',
+    label: 'Rebook',
+    name: 'Rebook',
     data: [0, 150, 100, 100, 150, 200, 220, 240, 0, -50, 100, 150],
     color: '#7B61E2',
   },

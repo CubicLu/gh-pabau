@@ -1,14 +1,13 @@
 import { CloseOutlined } from '@ant-design/icons'
 import { MutationFunction } from '@apollo/client'
-import { Drawer } from 'antd'
+import { Drawer, Badge } from 'antd'
 import classNames from 'classnames'
 import React, { FC, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ReactComponent as Lead1SVG } from '../../assets/images/lead.svg'
-import { ReactComponent as Lead2SVG } from '../../assets/images/lead1.svg'
 import { ReactComponent as EmptySVG } from '../../assets/images/notification-empty.svg'
 import Notification from './Notification'
 import styles from './NotificationDrawer.module.less'
+import News from './News'
 
 interface UserProps {
   user: number
@@ -28,13 +27,27 @@ export interface Notifications {
   link: string
 }
 
+export interface ProductNews {
+  id: string
+  img: string
+  link: string
+  title: string
+  description: string
+  time: Date | string
+  readUsers: number[]
+}
+
 interface P {
   deleteNotification?: MutationFunction
   updateNotification?: MutationFunction
+  readNewsMutation?: MutationFunction
   readAddMutation?: MutationFunction
+  unreadNewsCount?: number
+  unreadNotificationCount?: number
   openDrawer?: boolean
   closeDrawer?: () => void
   notifications?: Notifications[]
+  productNews?: ProductNews[]
   user?: UserProps
   relativeTime?: (lan: string, date: Date) => string
 }
@@ -43,50 +56,20 @@ export const NotificationDrawer: FC<P> = ({
   openDrawer = true,
   closeDrawer,
   notifications = [],
+  productNews = [],
   relativeTime,
   deleteNotification,
   updateNotification,
   readAddMutation,
+  readNewsMutation,
+  unreadNewsCount,
+  unreadNotificationCount,
   user,
 }) => {
   const { t } = useTranslation('common')
   const [notificationDrawer, setNotificationDrawer] = useState(openDrawer)
   const [notifyTab, setNotifyTab] = useState('Activity')
   const [notificationData] = useState<Notifications[]>(notifications)
-
-  const notificationTypes = {
-    report: 'notifications.report',
-    appointment: 'notifications.appointment',
-    review: 'notifications.review',
-    smscampaign: 'notifications.smscampaign',
-    newslettercampaign: 'notifications.newslettercampaign',
-    holidayrequest: 'notifications.holidayrequest',
-    businessrefer: 'notifications.businessrefer',
-    lead: 'notifications.lead',
-  }
-
-  const notificationLeadsData = [
-    {
-      Today: [
-        {
-          leadDate: new Date(),
-          title: 'New features to sell vouchers with blase messages',
-          desc:
-            'Encourage clients and loved ones to treat themselves right in the time for the festive season!',
-        },
-      ],
-    },
-    {
-      '14 December': [
-        {
-          leadDate: new Date(),
-          title: 'Are you ready for reopening soon?',
-          desc:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean malesuada lobortis ex eget viverra. Ut viverra non nisi eget viverra.',
-        },
-      ],
-    },
-  ]
 
   const closeDrawerMenu = () => {
     setNotificationDrawer(false)
@@ -98,6 +81,19 @@ export const NotificationDrawer: FC<P> = ({
     const length = Object.values(item)[0] ? Object.values(item)[0].length : 0
     lengths = lengths + length
   }
+
+  const renderEmptyPlaceholder = (title: string, hint: string) => (
+    <div className={styles.notificationEmpty}>
+      <EmptySVG />
+      <p className={styles.emptyMessage}>{title}</p>
+      <p className={styles.emptyHint}>{hint}</p>
+      {notifyTab === 'Activity' && (
+        <a href="#test" className={styles.emptyAnchor}>
+          {t('notifications.empty.anchor')} {'>'}
+        </a>
+      )}
+    </div>
+  )
 
   return (
     <Drawer
@@ -127,6 +123,10 @@ export const NotificationDrawer: FC<P> = ({
             onClick={() => setNotifyTab('Activity')}
           >
             {t('notifications.tab.activity')}
+            <Badge
+              count={unreadNotificationCount}
+              className={styles.badgeCircle}
+            />
           </button>
           <button
             className={classNames(
@@ -136,6 +136,7 @@ export const NotificationDrawer: FC<P> = ({
             onClick={() => setNotifyTab('News')}
           >
             {t('notifications.tab.news')}
+            <Badge count={unreadNewsCount} className={styles.badgeCircle} />
           </button>
         </div>
       </div>
@@ -167,89 +168,27 @@ export const NotificationDrawer: FC<P> = ({
 
       {Array.isArray(notifications) &&
         notifications.length === 0 &&
-        notifyTab === 'Activity' && (
-          <div className={styles.notificationEmpty}>
-            <EmptySVG />
-            <p className={styles.emptyMessage}>
-              {t('notifications.empty.msg')}
-            </p>
-            <p className={styles.emptyHint}>{t('notifications.empty.hint')}</p>
-            <a href="#test" className={styles.emptyAnchor}>
-              {t('notifications.empty.anchor')} {'>'}
-            </a>
-          </div>
+        notifyTab === 'Activity' &&
+        renderEmptyPlaceholder(
+          t('notifications.empty.msg'),
+          t('notifications.empty.hint')
         )}
 
+      {Array.isArray(productNews) &&
+        productNews.length === 0 &&
+        notifyTab === 'News' &&
+        renderEmptyPlaceholder(t('news.empty.msg'), t('news.empty.hint'))}
+
       {notifyTab === 'News' &&
-        notificationLeadsData.map((notify, index) => {
-          return Object.keys(notify).map((notification) => {
-            return (
-              <>
-                <div
-                  className={classNames(
-                    styles.notificationAlign,
-                    styles.todayTextTopSpace
-                  )}
-                >
-                  <h2>
-                    {notification === 'Today'
-                      ? t('notifications.today')
-                      : notification === 'Yesterday'
-                      ? t('notifications.yesterday')
-                      : notification}
-                  </h2>
-                </div>
-                {notify[notification].map((dayNotify, index) => {
-                  return (
-                    <>
-                      <div
-                        key={dayNotify.title}
-                        className={styles.notificationCard}
-                      >
-                        <div className={styles.notifyAlign}>
-                          <div className={classNames(styles.logo, styles.flex)}>
-                            {notification === 'Today' ? (
-                              <Lead1SVG />
-                            ) : (
-                              <Lead2SVG />
-                            )}
-                            <p className={styles.textSm}>
-                              {notificationTypes[
-                                dayNotify.notificationType
-                                  ?.toLowerCase()
-                                  ?.replace(' ', '')
-                              ]
-                                ? t(
-                                    notificationTypes[
-                                      dayNotify.notificationType
-                                        ?.toLowerCase()
-                                        ?.replace(' ', '')
-                                    ]
-                                  )
-                                : dayNotify.notificationType}
-                            </p>
-                          </div>
-                        </div>
-                        <div className={styles.leadTitleDesc}>
-                          <h1>{dayNotify.title}</h1>
-                          <p>{dayNotify.desc}</p>
-                        </div>
-                        <span
-                          className={classNames(
-                            styles.textMd,
-                            styles.learnMore
-                          )}
-                        >
-                          {t('news.learn')}
-                        </span>
-                      </div>
-                      <div className={styles.cardBorder} />
-                    </>
-                  )
-                })}
-              </>
-            )
-          })
+        productNews.map((news) => {
+          return (
+            <News
+              key={news.id}
+              notify={news}
+              user={user}
+              readNewsMutation={readNewsMutation}
+            />
+          )
         })}
     </Drawer>
   )

@@ -1,18 +1,18 @@
+import { TeamReportMeta } from '@pabau/ui'
 import React, { useState } from 'react'
+import { serviceGroups } from '../team-report-header/data'
+import {
+  employees,
+  locations,
+  meta,
+  series,
+  seriesData,
+  ticks,
+  yearsData,
+} from './mock'
 import TeamReportChartComponent, {
   TeamReportChartProps,
 } from './TeamReportChart'
-import {
-  ticks,
-  series,
-  seriesData,
-  meta,
-  employees,
-  locations,
-  yearsData,
-} from './mock'
-import { TeamReportMeta } from '@pabau/ui'
-import { serviceGroups } from '../team-report-header/data'
 
 export default {
   component: TeamReportChartComponent,
@@ -26,25 +26,24 @@ const TeamReportChartTemplate = ({ ...args }: TeamReportChartProps) => {
   const [mockSeries, setMockSeries] = useState(args.series)
   const [mockMeta, setMockMeta] = useState(args.meta)
   const [mockTicks, setMockTicks] = useState(args.ticks)
-  const [mockYears, setMockYears] = useState(args.years)
   const mockChangeMeta = (newMeta: TeamReportMeta): void => {
     if (newMeta.rangeType !== mockMeta.rangeType) {
-      newMeta.year = yearsData[newMeta.rangeType][0]
+      // newMeta.endDate = yearsData[newMeta.rangeType][0]
     }
     setMockMeta(newMeta)
 
-    setMockYears(yearsData[newMeta.rangeType])
+    // setMockYears(yearsData[newMeta.rangeType])
 
     setMockTicks(ticks[newMeta.rangeType])
 
     setMockSeries(
       seriesData
         .filter((serie) =>
-          newMeta.services.find((item) => item.name === serie.serviceName)
+          newMeta.services.find((item) => item.name === serie.name)
         )
         .map((serie) => {
           const service = newMeta.services.find(
-            (item) => item.name === serie.serviceName
+            (item) => item.name === serie.name
           )
           return {
             ...serie,
@@ -60,7 +59,6 @@ const TeamReportChartTemplate = ({ ...args }: TeamReportChartProps) => {
       onChangeMeta={mockChangeMeta}
       series={mockSeries}
       meta={mockMeta}
-      years={mockYears}
       ticks={mockTicks}
     />
   )
