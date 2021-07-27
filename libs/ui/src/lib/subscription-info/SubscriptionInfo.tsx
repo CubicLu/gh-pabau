@@ -12,16 +12,19 @@ import ve from '../../assets/images/icons/Vector.png'
 import logo from '../../assets/images/icons/log.png'
 import stamp from '../../assets/images/icons/stamp.png'
 import styles from './SubscriptionInfo.module.less'
+import { useTranslation } from 'react-i18next'
+
+export type SubscriptionType =
+  | 'Trial'
+  | 'Startup'
+  | 'Solo'
+  | 'Medium'
+  | 'Group'
+  | 'Enterprise'
+  | 'Bespoke'
 
 export interface SubscriptionInfoProps {
-  subscriptionName:
-    | 'Trial'
-    | 'Startup'
-    | 'Solo'
-    | 'Medium'
-    | 'Group'
-    | 'Enterprise'
-    | 'Bespoke'
+  subscriptionName: SubscriptionType
   marketingPlusActive?: boolean
   marketingPlusStartDate?: Date
   goPlusActive?: boolean
@@ -69,10 +72,13 @@ export const SubscriptionInfo: FC<SubscriptionInfoProps> = (props) => {
     marketingPlusStartDate,
   } = props
   const { Text, Paragraph } = Typography
+  const { t } = useTranslation('common')
 
   const renderLearnMore = (isActive = false) => {
     if (isActive) return
-    return <Text className={styles.link}>Learn more</Text>
+    return (
+      <Text className={styles.link}>{t('setup.subscription.learn-more')}</Text>
+    )
   }
 
   return (
@@ -81,7 +87,7 @@ export const SubscriptionInfo: FC<SubscriptionInfoProps> = (props) => {
         <h6 className={styles.title}>{subscriptionName}</h6>
         {inTrial && (
           <Button type="link" size="small" className={styles.inTrial}>
-            in trial
+            {t('setup.subscription.in-trial')}
           </Button>
         )}
         <div className={styles.logo}>
@@ -93,11 +99,14 @@ export const SubscriptionInfo: FC<SubscriptionInfoProps> = (props) => {
           <Divider style={{ margin: 0 }} />
           <div style={{ padding: 20 }}>
             <Text className={styles.blackText}>
-              You have {trialDaysRemaining || 7} days left in your free trial
+              {t('setup.subscription.you-have-trial-d', {
+                trialDays: trialDaysRemaining || 7,
+              })}
             </Text>
             <Paragraph className={styles.info} style={{ marginBottom: 0 }}>
-              Reach out to you product specialist or give us a call at
-              801-724-6601 to sign up.
+              {t('setup.subscription.reach-out', {
+                phoneNumber: '801-724-6601',
+              })}
             </Paragraph>
           </div>
         </>
@@ -109,11 +118,13 @@ export const SubscriptionInfo: FC<SubscriptionInfoProps> = (props) => {
             <DollarCircleOutlined style={{ fontSize: 16 }} />
           </div>
           <div>
-            <Paragraph className={styles.subTitle}>Marketing Plus</Paragraph>
+            <Paragraph className={styles.subTitle}>
+              {t('setup.subscription.marketing-plus')}
+            </Paragraph>
             <Text className={styles.info}>
               {props.marketingPlusActive
                 ? `Using it${getDateStr(marketingPlusStartDate)}.`
-                : 'Supercharge your marketing with our extended suite of tools.'}{' '}
+                : t('setup.subscription.supercharge-your-m')}{' '}
             </Text>
             {renderLearnMore(props.marketingPlusActive)}
           </div>
@@ -123,11 +134,13 @@ export const SubscriptionInfo: FC<SubscriptionInfoProps> = (props) => {
             <img src={ve} height={16} alt="logo" />
           </div>
           <div>
-            <Paragraph className={styles.subTitle}>Care Plus</Paragraph>
+            <Paragraph className={styles.subTitle}>
+              {t('setup.subscription.care-plus')}
+            </Paragraph>
             <Text className={styles.info}>
               {props.goPlusActive
                 ? `Using it${getDateStr(props.goPlusStartDate)}.`
-                : 'Create custom pathways and embrace automated care with Pabau care.'}{' '}
+                : t('setup.subscription.create-custom-p')}{' '}
             </Text>
             {renderLearnMore(props.goPlusActive)}
           </div>
@@ -137,7 +150,9 @@ export const SubscriptionInfo: FC<SubscriptionInfoProps> = (props) => {
             <img src={stamp} height={16} alt="logo" />
           </div>
           <div>
-            <Paragraph className={styles.subTitle}>Automation</Paragraph>
+            <Paragraph className={styles.subTitle}>
+              {t('setup.subscription.automation')}
+            </Paragraph>
             <Text className={styles.info}>
               {props.automationActive
                 ? `Using it${getDateStr(props.automationStartDate)}.`
@@ -151,7 +166,9 @@ export const SubscriptionInfo: FC<SubscriptionInfoProps> = (props) => {
             <DashboardOutlined style={{ fontSize: 16 }} />
           </div>
           <div>
-            <Paragraph className={styles.subTitle}>Intelligence</Paragraph>
+            <Paragraph className={styles.subTitle}>
+              {t('setup.subscription.intelligence')}
+            </Paragraph>
             <Text className={styles.info}>
               {props.intelligenceActive
                 ? `Using it${getDateStr(props.intelligenceStartDate)}.`
@@ -165,7 +182,9 @@ export const SubscriptionInfo: FC<SubscriptionInfoProps> = (props) => {
             <TeamOutlined style={{ fontSize: 16 }} />
           </div>
           <div>
-            <Paragraph className={styles.subTitle}>Team Plus</Paragraph>
+            <Paragraph className={styles.subTitle}>
+              {t('setup.subscription.team-plus')}
+            </Paragraph>
             <Text className={styles.info}>
               {' '}
               {props.teamPlusActive

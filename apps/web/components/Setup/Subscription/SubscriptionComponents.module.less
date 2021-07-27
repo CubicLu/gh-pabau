@@ -77,3 +77,30 @@
   color: #54b2d3 !important;
   float: right;
 }
+.skeletonBillingInformation {
+  display: block;
+  width: 17vh;
+  max-height: 2vh;
+}
+.skeletonAccountInformation {
+  text-align: center;
+  display: block;
+  padding: 12px;
+}
+.skeletonBorder {
+  border: 1px solid #c0c0c040;
+}
+
+.subscriptionInvoiceModal {
+  padding: 0;
+  margin: 0;
+  :global {
+    // .ant-modal-body iframe{
+    //   height: 72vh;
+    // }
+    .ant-modal-mask{
+      background-color: rgb(0 0 0 / 6%);
+    }
+    
+  }
+}

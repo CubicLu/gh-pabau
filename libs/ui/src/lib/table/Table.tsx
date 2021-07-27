@@ -222,6 +222,10 @@ export const Table: FC<TableType> = ({
     )
   }
 
+  const renderAmount = (val) => {
+    return <div> $ {val?.toFixed(2)} </div>
+  }
+
   const renderCodeInput = (code) => {
     return (
       <Button type="dashed" className={styles.codeBtn}>
@@ -316,6 +320,11 @@ export const Table: FC<TableType> = ({
               }
               case 'days': {
                 col.render = renderDays
+
+                break
+              }
+              case 'amount': {
+                col.render = renderAmount
 
                 break
               }

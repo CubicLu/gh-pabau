@@ -187,6 +187,12 @@ export const permissions = shield(
       VerifyCredentials: allow,
       VerifyTwoFaCode: allow,
       ping: allow,
+      //Subscriptions
+      subscriptionInvoices: rules.authentication.isAuthenticated,
+      subscriptionInvoicesTotal: rules.authentication.isAuthenticated,
+      subscriptionDetails: rules.authentication.isAuthenticated,
+      subscriptionCardDetails: rules.authentication.isAuthenticated,
+
       // invoice
       getInvoiceData: rules.authentication.isAuthenticated,
       //TODO once jest mocks are resolved move it to rules.authentication.isAuthenticated
