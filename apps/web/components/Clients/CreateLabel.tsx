@@ -27,7 +27,7 @@ interface CreateLabelsProps {
   setLabels?: (val: Labels[]) => void
   // selectedLabels?: Labels[]
   selectedLabels?: any
-  setSelectedLabels?: (val: Labels[]) => void
+  setSelectedLabels?: (val) => void
   fromHeader?: boolean
   defaultSelectedLabels?: any
   setDefaultSelectedLabels?: (val) => void
@@ -37,6 +37,7 @@ interface CreateLabelsProps {
   setTestLabels?: (val) => void
   getContactsLabelsQuery?: () => any
   // getLabelsQuery?: () => any
+  sourceData?: any
 }
 
 const customColorData = [
@@ -90,14 +91,11 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   setTestLabels,
   getContactsLabelsQuery,
   // getLabelsQuery,
+  sourceData,
 }) => {
   const { t } = useTranslationI18()
   const [visible, setVisible] = useState(false)
-  // const [newLabel, setNewLabel] = useState<Labels>({
-  //   label: '',
-  //   color: '',
-  //   count: 0,
-  // })
+
   const [newLabel, setNewLabel] = useState({
     text: '',
     color: '',
@@ -118,17 +116,32 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     count: 0,
   })
   const [selectedContacts, setSelectedContacts] = useState([])
+  const [responseSelectedContact, setResponseSelectedContcat] = useState({})
+
+  console.log('responseSelectedContact:', responseSelectedContact)
 
   // const [
   //   addLabelMutaton,
   //   { data: addlabelData, loading: addLabelLoading, error: addLabelError },
   // ] = useAddLabelMutation()
 
+  const [tempSelectedContact, setTempSelectedContact] = useState([])
+
   const [addLabelMutaton] = useAddLabelMutation({
     fetchPolicy: 'no-cache',
     onCompleted(response) {
-      console.log('on COMPLETE adding label')
+      console.log('on COMPLETE adding label', response.insert_labels_one.id)
+      const responseLabel = {
+        id: response.insert_labels_one.id,
+        text: response.insert_labels_one.text,
+        color: response.insert_labels_one.color,
+      }
+      setResponseSelectedContcat(responseLabel)
+      // setSelectedLabels([responseLabel])
       getLabelsQuery()
+      // insertContactsLabelsMutaton()
+      // onApplyLabel()
+      return responseLabel
     },
     onError(error) {
       console.log('not added label')
@@ -175,7 +188,15 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
       loading: insertContactsLabelsLoading,
       error: insertContactsLabelsError,
     },
-  ] = useInsertContactsLabelsMutation()
+  ] = useInsertContactsLabelsMutation({
+    onCompleted(response) {
+      console.log('added contactslabels')
+      // getLabelsQuery()
+    },
+    onError(error) {
+      console.log('not added contactslabels')
+    },
+  })
 
   const editLabelData = (valueObject) => {
     const labelData = [...testLabels.labels]
@@ -234,13 +255,15 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
         (item) => item.text && item.color !== valueObject.text
       )
     ) {
-      // console.log('added new label', newLabel)
+      console.log('added new label', newLabel)
       console.log('testLabels on ADDING:', testLabels)
       console.log('valueObject:', valueObject)
       // console.log('testLabels.labels :', testLabels.labels)
       // setTestLabels({[...testLabels, valueObject]})
-      testLabels.labels.push(valueObject)
+      // testLabels.labels.push(valueObject)
       // setTestLabels(() => [...testLabels, valueObject])
+      testLabels.labels.push(valueObject)
+
       setSelectedLabels([...selectedLabels, valueObject])
       fromHeader && handleApplyLabel([...selectedLabels, valueObject])
       await addLabelMutaton({
@@ -260,15 +283,41 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
 
   // console.log('testLabels UPDATEDB:', testLabels)
 
+  // const handleKeyPress = (e) => {
+  //   console.log('on 1111 key press')
+  //   const {
+  //     target: { value },
+  //     key,
+  //   } = e
+  //   if (key === 'Enter' && value) {
+  //     if (isEdit) {
+  //       editLabelData({ text: value, color: selectedColor, count: 0 })
+  //       // getLabelsQuery()
+  //     } else {
+  //       addLabelData({ text: value, color: selectedColor, count: 0 })
+  //       // getLabelsQuery()
+  //     }
+  //     setNewLabel({ text: '', color: '', count: 0 })
+  //     setVisible(false)
+  //     setDisplayColorPicker(false)
+  //     setSelectedColor('')
+  //   }
+  // }
+
   const handleKeyPress = (e) => {
+    console.log('on 1111 key press')
+    console.log('responseSelectedContact keypress', responseSelectedContact)
     const {
       target: { value },
       key,
     } = e
+
     if (key === 'Enter' && value) {
+      // onApplyLabel()
       if (isEdit) {
         editLabelData({ text: value, color: selectedColor, count: 0 })
         // getLabelsQuery()
+        // onApplyLabel()
       } else {
         addLabelData({ text: value, color: selectedColor, count: 0 })
         // getLabelsQuery()
@@ -277,6 +326,8 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
       setVisible(false)
       setDisplayColorPicker(false)
       setSelectedColor('')
+      // await onApplyLabel()
+      // onApplyLabel()
     }
   }
 
@@ -293,6 +344,22 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     setIsEdit(false)
   }
 
+  // WORKING handleSELECT DO NOT DELETE
+  // const handleSelect = (label, index) => {
+  //   const selectedData = [...selectedLabels]
+  //   if (selectedData.some((item) => item.text === label.text)) {
+  //     const selectedIndex = selectedLabels?.findIndex(
+  //       (selectedLabel) => selectedLabel.text === testLabels.labels[index].text
+  //     )
+  //     selectedIndex !== -1 && selectedData.splice(selectedIndex, 1)
+  //     setSelectedLabels(selectedData)
+  //   } else {
+  //     selectedData.push(label)
+  //     setSelectedLabels(selectedData)
+  //   }
+  //   console.log('selectedDataa:', selectedData)
+  // }
+
   const handleSelect = (label, index) => {
     const selectedData = [...selectedLabels]
     if (selectedData.some((item) => item.text === label.text)) {
@@ -305,7 +372,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
       selectedData.push(label)
       setSelectedLabels(selectedData)
     }
-    console.log('selectedData:', selectedData)
+    console.log('selectedDataa:', selectedData)
   }
   console.log('selectedLabels:', selectedLabels)
   console.log('testLabels:', testLabels)
@@ -328,6 +395,22 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     const diff2 = differenceBy(selectedLabels, defaultSelectedLabels) || []
     return diff1.length === 0 && diff2.length === 0
   }
+
+  // const checkRemovedLabel = () => {
+  //   console.log('defaultSelectedLabels 3333', defaultSelectedLabels)
+  //   console.log('selectedLabels 3333', selectedLabels)
+  //   console.log('selectedRow 3333', selectedRowKeys)
+  //   const diffRemovedLabel = differenceBy(defaultSelectedLabels, selectedLabels)
+  //   console.log('diffRemovedLabel 3333', diffRemovedLabel)
+  //   // if (sourceData) {
+  //   //   sourceData?.filter((item) => item.text === diffRemovedLabel.includes())
+  //   // }
+  //   // for(const x of sou)
+  // }
+  //
+  // checkRemovedLabel()
+
+  console.log('sourceData', sourceData)
   // if (selectedRowKeys && selectedRowKeys.length > 0) {
   //   const tempSelectedContacts = []
   //   for (const selContact of selectedRowKeys) {
@@ -378,20 +461,51 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   } = useGetContactsLabelsQuery({ fetchPolicy: 'no-cache' })
 
   // WORKING MULTIPLE CONTACTS AND MULTIPLE LABELS
+  // const onApplyLabel = () => {
+  //   console.log('on 1111 apply label')
+  //   handleApplyLabel(selectedLabels)
+  //   console.log('selectedLabels 22222:', selectedLabels)
+  //   setVisible(false)
+  //   if (selectedRowKeys && selectedRowKeys.length > 0) {
+  //     // getLabelsQuery()
+  //     for (const selectContact of selectedRowKeys) {
+  //       for (const selectedLabel of selectedLabels) {
+  //         // console.log('selectedLabelll :', selectedLabel)
+  //         // setTempSelectedContact(selectedLabel)
+  //         // console.log('tempSelectedContact', tempSelectedContact)
+  //         // await getLabelsQuery()
+  //         // await getLabelsQuery()
+  //         insertContactsLabelsMutaton({
+  //           variables: {
+  //             contact_id: selectContact,
+  //             label_id: selectedLabel.id,
+  //           },
+  //         })
+  //         getContactsLabelsQuery()
+  //       }
+  //     }
+  //   }
+  //   // setSelectedLabels([])
+  // }
+
   const onApplyLabel = async () => {
+    console.log('on 1111 apply label')
     handleApplyLabel(selectedLabels)
+    console.log('selectedLabels 22222:', selectedLabels)
     setVisible(false)
     if (selectedRowKeys && selectedRowKeys.length > 0) {
+      // getLabelsQuery()
       for (const selectContact of selectedRowKeys) {
         for (const selectedLabel of selectedLabels) {
-          // console.log('selectedLabell :', selectedLabel)
+          console.log('selectedLabel ID 00000', selectedLabel.id)
+
           await insertContactsLabelsMutaton({
             variables: {
               contact_id: selectContact,
               label_id: selectedLabel.id,
             },
           })
-          await getContactsLabelsQuery()
+          getContactsLabelsQuery()
         }
       }
     }

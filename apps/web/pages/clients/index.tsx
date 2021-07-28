@@ -90,9 +90,20 @@ export const Clients: FC<ClientsProps> = () => {
     fetchPolicy: 'no-cache',
   })
 
-  const [addLabelMutaton] = useAddLabelMutation({
-    fetchPolicy: 'no-cache',
-  })
+  // const [addLabelMutaton] = useAddLabelMutation({
+  //   fetchPolicy: 'no-cache',
+  // })
+
+  // const [addLabelMutaton] = useAddLabelMutation({
+  //   fetchPolicy: 'no-cache',
+  //   onCompleted(response) {
+  //     console.log('on COMPLETE adding label')
+  //     getLabelsQuery()
+  //   },
+  //   onError(error) {
+  //     console.log('not added label')
+  //   },
+  // })
 
   // useEffect(() => {
   //   getLabelsQuery()
@@ -169,33 +180,6 @@ export const Clients: FC<ClientsProps> = () => {
     }
   }, [getContactsData])
 
-  // DO NOT DELETE WORKINGGGGGGGG UPDATING CONTACTS WITH CUSTOM LABEL
-
-  // useEffect(() => {
-  //   setTestData(
-  //     contactsData?.map((field) =>
-  //       field.id === 23302410 ? { ...field, labelTest: 'final test' } : field
-  //     )
-  //   )
-  // }, [getContactsData])
-
-  // useEffect(() => {
-  //   const tempContact = contactsData?.map((fieldContact) => {
-  //     const tempCON = []
-  //     for (const fieldCL of contactsLabels?.contacts_labels) {
-  //       console.log('fieldCL:', fieldCL)
-  //       console.log('fieldContact:', fieldContact)
-  //
-  //       if (fieldCL.contact_id === fieldContact.id) {
-  //         // ...fieldContact, labelTest: labelTest.push(fieldCL.label)
-  //         fieldContact.labelTest.push(fieldCL.label.text)
-  //       }
-  //     }
-  //   })
-  //   console.log('tempContact:', tempContact)
-  //   // setTestData(tempContact)
-  // }, [getContactsData])
-
   useEffect(() => {
     contactsData?.map((fieldContact) => {
       const tempCON = []
@@ -261,12 +245,7 @@ export const Clients: FC<ClientsProps> = () => {
   >(clientsList)
   const [isArchived, setIsArchived] = useState(false)
   const [labels, setLabels] = useState<Labels[]>([])
-  // const [selectedLabels, setSelectedLabels] = useState<Labels[]>([])
   const [selectedLabels, setSelectedLabels] = useState([])
-
-  // const [defaultSelectedLabels, setDefaultSelectedLabels] = useState<Labels[]>(
-  //   []
-  // )
   const [defaultSelectedLabels, setDefaultSelectedLabels] = useState([])
   const [createClientModalVisible, setCreateClientModalVisible] = useState(
     false
@@ -297,55 +276,12 @@ export const Clients: FC<ClientsProps> = () => {
 
   useEffect(() => {
     getLabelsQuery()
-  }, [getContactsLabelsData])
+  }, [getContactsLabelsData, selectedLabels])
 
   useEffect(() => {
     setSourceData(clientsList)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientsList])
-
-  /// useeffect for adding labels according to id >>>> DO NOT DELETE
-  // useEffect(() => {
-  //   testData.map((item) => {
-  //     if (item.id === 23302410) {
-  //       //
-  //       console.log('item.id', item.id)
-  //       setTestData((prevState) => ({
-  //         ...prevState,
-  //       }))
-  //     } else return item
-  //   })
-  // }, [getContactsData, testData])
-
-  // testData?.map((item) => {
-  //   console.log('testdataitem', item)
-  //   for (const labItem of contactsLabels.contacts_labels) {
-  //     const tempItem = []
-  //
-  //     console.log('labItem:', labItem)
-  //     if (labItem.contact_id === item.id) {
-  //       // item.labelTest = labItem.label.text
-  //       tempItem.push(labItem.label.text)
-  //       setTestData((prevState) => ({
-  //         ...prevState,
-  //         labelTest: tempItem,
-  //       }))
-  //     } else {
-  //       return null
-  //     }
-  //     console.log('tempItem:', tempItem)
-  //     return tempItem
-  //   }
-  // })
-
-  // console.log('getLabelsData:', getLabelsData)
-  // console.log('testLabels STATE:', testLabels)
-
-  // if (selectedRowKeys && selectedRowKeys.length > 0) {
-  //   for (const selContact of selectedRowKeys) {
-  //     console.log('selContact', selContact)
-  //   }
-  // }
 
   console.log(defaultSelectedLabels, 'defaultSelectedLabels')
 
@@ -674,30 +610,21 @@ export const Clients: FC<ClientsProps> = () => {
     const newList = [...selectedLabelList]
     const removedLabel = differenceBy(defaultSelectedLabels, selectedLabelList)
     console.log('selectedLabelList before remove', selectedLabelList)
-    console.log('removedLabel', removedLabel)
     const uniqData = oldLabelList.filter((data) => {
       return (
         !newList.some((item) => item.labelTest === data.labelTest) &&
         !removedLabel.some((item) => item.labelTest === data.labelTest)
-        // !newList.some(
-        //   (item) =>
-        //     item.label === data.label || item.labelTest === data.labelTest
-        // ) &&
-        // !removedLabel.some(
-        //   (item) =>
-        //     item.label === data.label || item.labelTest === data.labelTest
-        // )
       )
     })
+    console.log('removedLabel 55555', removedLabel)
+    console.log('newList 55555', newList)
+
     return [...newList, ...uniqData]
   }
 
   const handleApplyLabel = (selectedLabelList) => {
     const newData = testData?.map((data) => {
-      console.log('sourceData:', sourceData)
-      // const temp: SourceDataProps = { ...data }
       const temp = { ...data }
-
       if (selectedRowKeys.includes(data.id)) {
         temp.labelTest = uniqLabel(data.labelTest, selectedLabelList)
       }
@@ -708,8 +635,23 @@ export const Clients: FC<ClientsProps> = () => {
       return temp
     })
     // setSourceData(newData)
+    console.log('newData', newData)
     setTestData(newData)
   }
+
+  // const checkRemovedLabel = () => {
+  //   console.log('defaultSelectedLabels 3333', defaultSelectedLabels)
+  //   console.log('selectedLabels 3333', selectedLabels)
+  //   console.log('selectedRow 3333', selectedRowKeys)
+  //   const diffRemovedLabel = differenceBy(defaultSelectedLabels, selectedLabels)
+  //   console.log('diffRemovedLabel 3333', diffRemovedLabel)
+  //   // if (sourceData) {
+  //   //   sourceData?.filter((item) => item.text === diffRemovedLabel.includes())
+  //   // }
+  //   // for(const x of sou)
+  // }
+  //
+  // checkRemovedLabel()
 
   const handleRowClick = (value) => {
     setEditedValues(value)
@@ -787,7 +729,7 @@ export const Clients: FC<ClientsProps> = () => {
       setPaginateData={setPaginateData}
       testLabels={testLabels}
       setTestLabels={setTestLabels}
-      addLabelMutaton={addLabelMutaton}
+      // addLabelMutaton={addLabelMutaton}
       getContactsLabelsData={getContactsLabelsData}
       getContactsLabelsQuery={getContactsLabelsQuery}
       getLabelsQuery={getLabelsQuery}
@@ -804,8 +746,8 @@ export const Clients: FC<ClientsProps> = () => {
     />
   )
 
-  // console.log('testData:', testData)
-  // console.log('contactsData:', contactsData)
+  console.log('testData:', testData)
+  console.log('contactsData:', contactsData)
 
   return (
     <div>

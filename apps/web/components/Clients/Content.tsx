@@ -99,6 +99,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
   setTestLabels,
   getContactsLabelsQuery,
   getLabelsQuery,
+  addLabelMutaton,
 }) => {
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 768px)', false)
@@ -426,6 +427,8 @@ export const ClientsContent: FC<ClientsContentProps> = ({
             setTestLabels={setTestLabels}
             getContactsLabelsQuery={getContactsLabelsQuery}
             getLabelsQuery={getLabelsQuery}
+            // addLabelMutaton={addLabelMutaton}
+            sourceData={sourceData}
           >
             {renderTooltip({
               title: t('clients.leftSidebar.createLabels'),
