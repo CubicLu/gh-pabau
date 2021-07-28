@@ -5,7 +5,7 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
 } from '@ant-design/icons'
-import { Button } from '@pabau/ui'
+import { Button } from '../../index'
 import styles from './Menu.module.less'
 import classNames from 'classnames'
 import Link from 'next/link'

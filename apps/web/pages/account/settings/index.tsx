@@ -40,7 +40,7 @@ import {
 } from '@pabau/graphql'
 import styles from './index.module.less'
 
-const Index: FC = ({ ...props }) => {
+const Index: FC = () => {
   const user = useContext(UserContext)
   const size = useWindowSize()
   const { t } = useTranslationI18()
@@ -241,6 +241,7 @@ const Index: FC = ({ ...props }) => {
           const variables = {
             where: { id: el?.id },
             data: {
+              ios_notification: { set: el?.ios_notification },
               sms_notification: { set: el?.sms_notification },
               email_notification: { set: el?.email_notification },
             },
