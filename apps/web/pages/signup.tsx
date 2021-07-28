@@ -1,4 +1,5 @@
 import { Logo } from '@pabau/ui'
+import Link from 'next/link'
 import React, { FC, useState } from 'react'
 import { ReactComponent as LaunchingImage } from '../assets/images/launching-pana.svg'
 import styles from '../components/Auth/Common.module.less'
@@ -44,7 +45,7 @@ const Signup: FC = () => {
           )}
           <div className={styles.signupLogin}>
             <span>
-              Already has an account? <a>Log in</a>
+              Already has an account? <Link href="login">Log in</Link>
             </span>
           </div>
         </div>

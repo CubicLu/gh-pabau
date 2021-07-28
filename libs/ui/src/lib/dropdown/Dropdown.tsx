@@ -76,10 +76,10 @@ export const Dropdown: FC<DropDownInterface> = ({
       </Menu.Item>
       <Menu.Item className={styles.userinfo} key="userName">
         <div className={styles.userName}>{user?.fullName}</div>
-        <div className={styles.userBalance}>
+        {/* <div className={styles.userBalance}>
           <p>{t('avatar.balance')}</p>
           <span>9445,00</span>
-        </div>
+        </div> */}
       </Menu.Item>
       <Menu.Item
         key="account"
