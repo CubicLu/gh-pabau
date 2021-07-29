@@ -1,21 +1,30 @@
 import React, { FC, useState } from 'react'
 import styles from '../ClientCreate.module.less'
-import { InitialDetailsProps } from '../ClientCreate'
-import { Form as AntForm, Input, Radio } from 'formik-antd'
 import {
-  SimpleDropdown,
+  Form as AntForm,
+  Input,
+  Radio,
+  Select,
+  AutoComplete,
+} from 'formik-antd'
+import { Skeleton } from 'antd'
+import {
+  InitialDetailsProps,
   Button,
   ColorPicker,
   Notification,
   NotificationType,
   DatePicker,
+  languageMenu,
+  LabelDataProps,
+  FieldSetting,
 } from '@pabau/ui'
-import { Image, Select, Popover } from 'antd'
+import { Image, Popover } from 'antd'
 import { TagOutlined, CheckOutlined, TagFilled } from '@ant-design/icons'
 import { ReactComponent as Droplet } from '../../../assets/images/droplet.svg'
 import { useTranslation } from 'react-i18next'
-import { languageMenu } from '@pabau/ui'
 import dayjs, { Dayjs } from 'dayjs'
+import { CommonProps } from './index'
 
 interface GeneralProps {
   values?: InitialDetailsProps
@@ -23,10 +32,16 @@ interface GeneralProps {
     field: keyof InitialDetailsProps,
     values: string | string[] | boolean | number | Dayjs | null
   ): void
+  salutationData?: CommonProps[]
+  fieldsSettings?: FieldSetting[]
+  marketingSources?: CommonProps[]
   labels: Label[]
   setLabels: (val: Label[]) => void
   selectedLabels: Label[]
   setSelectedLabels: (val: Label[]) => void
+  isLoading?: boolean
+  isMarketingSourceLoading?: boolean
+  labelsData: LabelDataProps[]
 }
 
 interface Label {
@@ -75,15 +90,22 @@ const customColorData = [
 export const General: FC<GeneralProps> = ({
   setFieldValue,
   values,
+  salutationData,
+  fieldsSettings,
+  marketingSources,
   labels,
   setLabels,
   selectedLabels,
   setSelectedLabels,
+  isLoading = false,
+  isMarketingSourceLoading = false,
+  labelsData,
 }) => {
   const { t } = useTranslation('common')
   const [visible, setVisible] = useState(false)
   const [newLabel, setNewLabel] = useState<Label>({ label: '', color: '' })
   const [selectedColor, setSelectedColor] = useState('')
+  const [selectedId, setSelectedId] = useState('')
   const [displayColorPicker, setDisplayColorPicker] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
   const [editIndex, setEditIndex] = useState<number>()
@@ -91,13 +113,6 @@ export const General: FC<GeneralProps> = ({
     label: '',
     color: '',
   })
-  const onClickLang = (index) => {
-    setFieldValue('preferredLanguage', index)
-  }
-
-  const onClickDate = (val) => {
-    setFieldValue('dateOfBirth', val)
-  }
 
   const editLabelData = (valueObject) => {
     const labelData = [...labels]
@@ -144,12 +159,22 @@ export const General: FC<GeneralProps> = ({
       if (isEdit) {
         editLabelData({ label: value, color: selectedColor })
       } else {
-        addLabelData({ label: value, color: selectedColor })
+        if (selectedId) {
+          addLabelData({ id: selectedId, label: value, color: selectedColor })
+        } else {
+          if (labelsData.some((item) => item.value === value)) {
+            const data = labelsData.find((item) => item.value === value)
+            addLabelData({ id: data?.id, label: value, color: selectedColor })
+          } else {
+            addLabelData({ label: value, color: selectedColor })
+          }
+        }
       }
       setNewLabel({ label: '', color: '' })
       setVisible(false)
       setDisplayColorPicker(false)
       setSelectedColor('')
+      setSelectedId('')
     }
   }
 
@@ -157,12 +182,22 @@ export const General: FC<GeneralProps> = ({
     if (isEdit) {
       editLabelData({ label: newLabel.label, color: selectedColor })
     } else if (!value && newLabel.label) {
-      addLabelData({ label: newLabel.label, color: selectedColor })
+      if (selectedId) {
+        addLabelData({ id: selectedId, label: value, color: selectedColor })
+      } else {
+        if (labelsData.some((item) => item.value === value)) {
+          const data = labelsData.find((item) => item.value === value)
+          addLabelData({ id: data?.id, label: value, color: selectedColor })
+        } else {
+          addLabelData({ label: value, color: selectedColor })
+        }
+      }
     }
     setNewLabel({ label: '', color: '' })
     setVisible(value)
     setDisplayColorPicker(false)
     setSelectedColor('')
+    setSelectedId('')
     setIsEdit(false)
   }
 
@@ -182,7 +217,12 @@ export const General: FC<GeneralProps> = ({
 
   const handleDropletClick = (e, label, index) => {
     e.stopPropagation()
-    setDisplayColorPicker(true)
+    if (!label.id) {
+      setDisplayColorPicker(true)
+      setSelectedId('')
+    } else {
+      setSelectedId(label.id)
+    }
     setNewLabel(label)
     setIsEdit(true)
     setSelectedEditData(label)
@@ -227,7 +267,7 @@ export const General: FC<GeneralProps> = ({
           })}
         </div>
         <div
-          onMouseMove={() => setDisplayColorPicker(true)}
+          onMouseMove={() => !selectedId && setDisplayColorPicker(true)}
           onMouseLeave={() => setDisplayColorPicker(false)}
         >
           <div className={styles.inputLine}>
@@ -236,19 +276,29 @@ export const General: FC<GeneralProps> = ({
             ) : (
               <TagOutlined />
             )}
-            <Input
-              autoComplete={'off'}
-              size="middle"
+            <AutoComplete
               name={'label'}
+              size={'middle'}
               value={newLabel?.label}
-              onChange={(e) =>
-                setNewLabel({ label: e.target.value, color: selectedColor })
+              onChange={(value) =>
+                !selectedId &&
+                setNewLabel({ label: value, color: selectedColor })
               }
-              onKeyDown={handleKeyPress}
+              options={labelsData}
               placeholder={t('quickCreate.client.modal.general.newLabel')}
+              filterOption={(inputValue, option) =>
+                option?.value
+                  .toUpperCase()
+                  .indexOf(inputValue.toUpperCase()) !== -1
+              }
+              onSelect={(value, option) => {
+                setSelectedId(option.id)
+                setSelectedColor(option.color)
+              }}
+              onKeyDown={handleKeyPress}
             />
           </div>
-          {displayColorPicker && (
+          {displayColorPicker && !selectedId && (
             <div className={styles.tagCustomWrap}>
               <ColorPicker
                 className={styles.tagColorPicker}
@@ -265,6 +315,19 @@ export const General: FC<GeneralProps> = ({
     )
   }
 
+  const SkeletonContent = () => {
+    return (
+      <div className={styles.skeletonWrapper}>
+        <Skeleton
+          className={styles.skeletonName}
+          paragraph={false}
+          round
+          active
+        />
+        <Skeleton className={styles.skeletonInput} paragraph={false} active />
+      </div>
+    )
+  }
   return (
     <div className={styles.generalDiv}>
       <div className={styles.generalHeaderTitle}>
@@ -289,27 +352,35 @@ export const General: FC<GeneralProps> = ({
           </Button>
         </Popover>
       </div>
-
       <AntForm layout={'vertical'} requiredMark={false}>
         <div className={styles.salutationFirstDiv}>
-          <AntForm.Item
-            label={t('quickCreate.client.modal.general.salutation')}
-            name={'salutation'}
-          >
-            <SimpleDropdown
-              defaultValue={'Mr'}
-              onSelected={(value) => setFieldValue('salutation', value)}
-              dropdownItems={['Mr', 'Mrs.']}
-            />
-          </AntForm.Item>
+          {fieldsSettings?.find(
+            (thread) => thread.field_name === 'salutation'
+          ) && (
+            <div className={styles.salutation}>
+              <AntForm.Item
+                label={t('quickCreate.client.modal.general.salutation')}
+                name={'salutation'}
+              >
+                <Select name={'salutation'}>
+                  {salutationData?.map((item) => (
+                    <Select.Option key={item.id} value={item.name}>
+                      {item.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </AntForm.Item>
+            </div>
+          )}
+
           <div className={styles.firstName}>
             <AntForm.Item
               label={t('quickCreate.client.modal.general.firstName')}
-              name={'firstName'}
+              name={'Fname'}
             >
               <Input
                 size="middle"
-                name={'firstName'}
+                name={'Fname'}
                 placeholder={t(
                   'quickCreate.client.modal.general.firstName.placeHolder'
                 )}
@@ -319,11 +390,11 @@ export const General: FC<GeneralProps> = ({
           <div className={styles.lastName}>
             <AntForm.Item
               label={t('quickCreate.client.modal.general.lastName')}
-              name={'lastName'}
+              name={'Lname'}
             >
               <Input
                 size="middle"
-                name={'lastName'}
+                name={'Lname'}
                 placeholder={t(
                   'quickCreate.client.modal.general.lastName.placeHolder'
                 )}
@@ -331,86 +402,122 @@ export const General: FC<GeneralProps> = ({
             </AntForm.Item>
           </div>
         </div>
-        <AntForm.Item
-          className={styles.customCommon}
-          label={t('quickCreate.client.modal.general.gender')}
-          name={'gender'}
-        >
-          <Radio.Group
-            name={'gender'}
-            onChange={(e) => setFieldValue('gender', e.target.value)}
-          >
-            {[
-              t('quickCreate.client.modal.general.gender.other'),
-              t('quickCreate.client.modal.general.gender.male'),
-              t('quickCreate.client.modal.general.gender.female'),
-            ]?.map((item, index) => (
-              <Radio key={index} value={item} name={item}>
-                {item}
-              </Radio>
-            ))}
-          </Radio.Group>
-        </AntForm.Item>
-        <AntForm.Item
-          className={styles.customCommon}
-          label={t('quickCreate.client.modal.general.hearOption.label')}
-          name={'hearOption'}
-        >
-          <SimpleDropdown
-            name={'hearOption'}
-            defaultValue={t(
-              'quickCreate.client.modal.general.hearOption.selectOption'
-            )}
-            onSelected={(value) => setFieldValue('hearOption', value)}
-            dropdownItems={[
-              t('quickCreate.client.modal.general.hearOption.selectOption'),
-              t('quickCreate.client.modal.general.hearOption.anythingHere'),
-            ]}
-          />
-        </AntForm.Item>
-        <AntForm.Item
-          className={styles.customCommon}
-          label={t('quickCreate.client.modal.general.date')}
-          name={'dateOfBirth'}
-        >
-          <DatePicker
-            name={'dateOfBirth'}
-            format={'DD/MM/YY'}
-            value={dayjs(values?.dateOfBirth)}
-            onChange={(date) => onClickDate(date)}
-            placeholder={'DD/MM/YY'}
-          />
-        </AntForm.Item>
-        <AntForm.Item
-          className={styles.customCommon}
-          label={t('quickCreate.client.modal.general.preferredLanguage')}
-          name={'preferredLanguage'}
-        >
-          <Select
-            dropdownClassName={styles.generalDropdown}
-            size={'middle'}
-            defaultValue={t(
-              'quickCreate.client.modal.general.preferredLanguage.default'
-            )}
-            onSelect={(value) => onClickLang(value)}
-          >
-            {languageMenu.map((item, index) => (
-              <Select.Option key={index} value={item.label}>
-                <div key={item.label} className={styles.languageItem}>
-                  <div className={styles.languageLeft}>
-                    <Image
-                      src={item.logo}
-                      width={18}
-                      alt={item.label}
-                      preview={false}
-                    />
-                    <span className={styles.languageName}>{item.label}</span>
-                  </div>
+
+        {isLoading ? (
+          <SkeletonContent />
+        ) : (
+          fieldsSettings?.find((thread) => thread.field_name === 'gender') && (
+            <AntForm.Item
+              className={styles.customCommon}
+              label={t('quickCreate.client.modal.general.gender')}
+              name={'gender'}
+            >
+              <Radio.Group name={'gender'}>
+                {[
+                  t('quickCreate.client.modal.general.gender.other'),
+                  t('quickCreate.client.modal.general.gender.male'),
+                  t('quickCreate.client.modal.general.gender.female'),
+                ]?.map((item, index) => (
+                  <Radio key={index} value={item} name={'gender'}>
+                    {item}
+                  </Radio>
+                ))}
+              </Radio.Group>
+            </AntForm.Item>
+          )
+        )}
+        {isLoading ? (
+          <SkeletonContent />
+        ) : (
+          fieldsSettings?.find(
+            (thread) => thread.field_name === 'MarketingSource'
+          ) && (
+            <AntForm.Item
+              className={styles.customCommon}
+              label={t('quickCreate.client.modal.general.hearOption.label')}
+              name={'MarketingSource'}
+            >
+              {!isMarketingSourceLoading ? (
+                <Select
+                  name={'MarketingSource'}
+                  placeholder={t(
+                    'quickCreate.client.modal.general.hearOption.selectOption'
+                  )}
+                >
+                  {marketingSources?.map((item) => (
+                    <Select.Option key={item.id} value={item.id}>
+                      {item.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              ) : (
+                <div className={styles.skeletonWrapper}>
+                  <Skeleton
+                    className={styles.skeletonInput}
+                    paragraph={false}
+                    active
+                  />
                 </div>
-              </Select.Option>
-            ))}
-          </Select>
-        </AntForm.Item>
+              )}
+            </AntForm.Item>
+          )
+        )}
+        {isLoading ? (
+          <SkeletonContent />
+        ) : (
+          fieldsSettings?.find((thread) => thread.field_name === 'DOB') && (
+            <AntForm.Item
+              className={styles.customCommon}
+              label={t('quickCreate.client.modal.general.date')}
+              name={'DOB'}
+            >
+              <DatePicker
+                name={'DOB'}
+                format={'DD/MM/YY'}
+                value={values?.DOB && dayjs(values?.DOB)}
+                disabledDate={(current) => {
+                  return current && current > dayjs().endOf('day')
+                }}
+                onChange={(date) => setFieldValue('DOB', date)}
+                placeholder={'DD/MM/YY'}
+              />
+            </AntForm.Item>
+          )
+        )}
+        {isLoading ? (
+          <SkeletonContent />
+        ) : (
+          <AntForm.Item
+            className={styles.customCommon}
+            label={t('quickCreate.client.modal.general.preferredLanguage')}
+            name={'preferredLanguage'}
+          >
+            <Select
+              name={'preferredLanguage'}
+              dropdownClassName={styles.generalDropdown}
+              size={'middle'}
+              defaultValue={t(
+                'quickCreate.client.modal.general.preferredLanguage.default'
+              )}
+            >
+              {languageMenu.map((item, index) => (
+                <Select.Option key={index} value={item.shortLabel}>
+                  <div key={item.label} className={styles.languageItem}>
+                    <div className={styles.languageLeft}>
+                      <Image
+                        src={item.logo}
+                        width={18}
+                        alt={item.label}
+                        preview={false}
+                      />
+                      <span className={styles.languageName}>{item.label}</span>
+                    </div>
+                  </div>
+                </Select.Option>
+              ))}
+            </Select>
+          </AntForm.Item>
+        )}
       </AntForm>
     </div>
   )

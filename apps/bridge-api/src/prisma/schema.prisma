@@ -303,6 +303,10 @@ model Company {
   SaleItem                         SaleItem[]
   Communication                    Communication[]
   CompanyEmail                     CompanyEmail[]
+  TblModuleFieldsSetting           TblModuleFieldsSetting[]
+  CmContactCustom                  CmContactCustom[]
+  CmLabel                          CmLabel[]
+  CmContactLabel                   CmContactLabel[]
 
   @@map("admin")
 }
@@ -1802,7 +1806,7 @@ model CmCampaignNote {
 
 model CmContact {
   ID                        Int                         @id @default(autoincrement())
-  Avatar                    String
+  Avatar                    String?                     @default("")
   OwnerID                   Int
   Salutation                String                      @default("None")
   Fname                     String
@@ -1811,23 +1815,23 @@ model CmContact {
   location_id               Int                         @default(0)
   Email                     String
   Phone                     String
-  OtherPhone                String
+  OtherPhone                String?                     @default("")
   Mobile                    String
-  Assistant                 String
-  ReportsTo                 String
-  LeadSource                String
+  Assistant                 String?                     @default("")
+  ReportsTo                 String?                     @default("")
+  LeadSource                String?                     @default("")
   Lname                     String
-  Title                     String
-  Department                String
-  HomePhone                 String
-  Fax                       String
+  Title                     String?                     @default("")
+  Department                String?                     @default("")
+  HomePhone                 String?                     @default("")
+  Fax                       String?                     @default("")
   DOB                       DateTime?
-  AsstPhone                 String
+  AsstPhone                 String?                     @default("")
   EmailOptOut               cm_contacts_EmailOptOut     @default(No)
-  SkypeId                   String
+  SkypeId                   String?
   AddToQuickBooks           cm_contacts_AddToQuickBooks @default(No)
-  SecondaryEmail            String
-  Twitter                   String
+  SecondaryEmail            String?
+  Twitter                   String?                     @default("")
   MailingStreet             String
   OtherStreet               String
   MailingCity               String
@@ -1838,43 +1842,44 @@ model CmContact {
   OtherPostal               String
   MailingCountry            String
   OtherCountry              String
-  Description               String
+  Description               String?                     @default("")
   Status                    cm_contacts_Status          @default(Enable)
-  CreatedDate               DateTime
-  IpAddress                 Int
-  fbimg                     String
-  MarketingSource           Int
+  CreatedDate               DateTime?                   @default(now())
+  IpAddress                 Int?                        @default(0)
+  fbimg                     String?                     @default("")
+  MarketingSource           Int?                        @default(0)
   RefferalSource            String?
-  LeadID                    Int
-  group_tag                 String
-  polite_notice             String
+  LeadID                    Int?                        @default(0)
+  group_tag                 String?                     @default("")
+  polite_notice             String?                     @default("")
   custom_id                 String
   gender                    String
-  MarketingOptInAll         Int?
+  MarketingOptInAll         Int?                        @default(0)
   MarketingOptInEmail       Int?
   MarketingOptInPhone       Int?
   MarketingOptInPost        Int?
   MarketingOptInText        Int?
-  notes_drop                String
-  imported                  Int
-  alerts_drop               String
-  MarketingSourceRelated    Int
-  customer_reference        String
+  notes_drop                String?                     @default("")
+  imported                  Int?                        @default(0)
+  alerts_drop               String?                     @default("")
+  MarketingSourceRelated    Int?                        @default(0)
+  customer_reference        String?                     @default("")
   MarketingOptInNewsletter  Int                         @default(1)
-  custom_marketing_source   String
-  insurer_id                Int
+  custom_marketing_source   String?                     @default("")
+  insurer_id                Int?                        @default(0)
   is_active                 Int                         @default(1)
-  xero_contact_id           String
+  xero_contact_id           String?                     @default("")
   is_ambassador             Int                         @default(0)
-  UpdatedDate               DateTime?
+  UpdatedDate               DateTime?                   @updatedAt
   xero_updated_date         DateTime?
-  discount_type             Int
-  custom_clinic_id          Int
-  ambassador_id             Int
-  contract_id               Int
-  privacy_policy            String
-  need_to_knows             Boolean                     @default(false)
+  discount_type             Int?                        @default(0)
+  custom_clinic_id          Int?                        @default(0)
+  ambassador_id             Int?                        @default(0)
+  contract_id               Int?                        @default(0)
+  privacy_policy            String?                     @default("")
+  need_to_knows             Boolean?                    @default(false)
   contact_type              Int                         @default(0)
+  preferred_language        String?
   SocialSurveyFeedback      SocialSurveyFeedback?
   CmContactAlert            CmContactAlert[]
   AccountBalance            AccountBalance[]
@@ -1896,6 +1901,8 @@ model CmContact {
   ContactInsurance          ContactInsurance[]
   InventoryMovement         InventoryMovement[]
   CommunicationRecipient    CommunicationRecipient[]
+  CmContactCustom           CmContactCustom[]
+  CmContactLabel            CmContactLabel[]
 
   @@index([CreatedDate], name: "CreatedDate")
   @@index([Email], name: "Email")
@@ -1913,6 +1920,35 @@ model CmContact {
   @@index([is_active], name: "is_active")
   @@index([OwnerID, company_id], name: "owner_company")
   @@map("cm_contacts")
+}
+
+model CmLabel {
+  id         Int       @id @default(autoincrement())
+  name       String    @unique
+  color      String?
+  company_id Int
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  Company Company @relation(fields: [company_id], references: [id])
+
+  CmContactLabel CmContactLabel[]
+  @@index([name, company_id], name: "cm_label_name_company_id__index")
+  @@map("cm_label")
+}
+
+model CmContactLabel {
+  id         Int @id @default(autoincrement())
+  company_id Int
+  contact_id Int
+  label_id   Int
+
+  Company   Company   @relation(fields: [company_id], references: [id])
+  CmContact CmContact @relation(fields: [contact_id], references: [ID])
+  CmLabel   CmLabel   @relation(fields: [label_id], references: [id])
+
+  @@index([contact_id, company_id], name: "cm_contact_label_contact_id_company_id__index")
+  @@map("cm_contact_label")
 }
 
 //model cm_contacts_alerts_import_helper {
@@ -1999,20 +2035,26 @@ model CmContact {
 //  @@index([Fname, Lname], name: "smart_search_primary")
 //}
 //
-//model cm_contacts_custom {
-//  id                 Int    @id @default(autoincrement())
-//  contact_id         Int
-//  occupier           Int
-//  custom_field_id    Int
-//  custom_field_label String
-//  custom_field_value String
-//  imported           Int
-//  old_value          String
-//
-//  @@index([contact_id], name: "contact_id")
-//  @@index([custom_field_id], name: "custom_field_id")
-//  @@index([occupier], name: "occupier")
-//}
+
+model CmContactCustom {
+  id                 Int               @id @default(autoincrement())
+  contact_id         Int
+  company_id         Int               @map("occupier")
+  custom_field_id    Int
+  custom_field_label String
+  custom_field_value String
+  imported           Int?              @default(0)
+  old_value          String?           @default("")
+  Company            Company           @relation(fields: [company_id], references: [id])
+  CmContact          CmContact         @relation(fields: [contact_id], references: [ID])
+  ManageCustomField  ManageCustomField @relation(fields: [custom_field_id], references: [id])
+
+  @@index([contact_id], name: "contact_id")
+  @@index([custom_field_id], name: "custom_field_id")
+  @@index([company_id], name: "occupier")
+  @@map("cm_contacts_custom")
+}
+
 //
 //model cm_contacts_custom_import_helper {
 //  id                  Int     @id @default(autoincrement())
@@ -7987,8 +8029,9 @@ model ManageCustomField {
   Category              ManageCustomFieldCategory?     @relation(fields: [category_id], references: [id])
   ManageCustomFieldItem ManageCustomFieldItem[]
   CmProductCustomField  CmProductCustomField[]
+  CmContactCustom       CmContactCustom[]
+  CmLeadCustomField     CmLeadCustomField[]
 
-  CmLeadCustomField CmLeadCustomField[]
   @@index([category_id], name: "category_id")
   @@index([company_id], name: "occupier")
   @@map("manage_custom_fields")
@@ -11789,22 +11832,25 @@ model Tax {
 //  is_active   Int?
 //}
 //
-//model tbl_module_fields_setting {
-//  id                Int       @id @default(autoincrement())
-//  module_id         Int?
-//  field_name        String?
-//  field_label       String?
-//  is_active         Boolean?
-//  is_required       Int
-//  occupier          Int?
-//  uid               Int?
-//  order             Int       @default(0)
-//  created_date      DateTime?
-//  last_updated_date DateTime?
-//
-//  @@index([is_required], name: "is_required")
-//  @@index([occupier], name: "occupier")
-//}
+model TblModuleFieldsSetting {
+  id                Int       @id @default(autoincrement())
+  module_id         Int?
+  field_name        String?
+  field_label       String?
+  is_active         Boolean?
+  is_required       Int
+  company_id        Int?      @map("occupier")
+  uid               Int?
+  order             Int       @default(0)
+  created_date      DateTime?
+  last_updated_date DateTime?
+  Company           Company?  @relation(fields: [company_id], references: [id])
+
+  @@index([is_required], name: "is_required")
+  @@index([company_id], name: "occupier")
+  @@map("tbl_module_fields_setting")
+}
+
 //
 //model tbl_signed_contracts {
 //  id                  Int      @id @default(autoincrement())

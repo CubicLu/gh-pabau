@@ -61,6 +61,7 @@ interface P {
   // ) => void
   // onMessageType?: (e: MouseEvent<HTMLElement>) => void
   taskManagerIFrameComponent?: JSX.Element
+  clientCreateRender?: () => JSX.Element
 }
 
 export const Header = ({
@@ -77,6 +78,7 @@ export const Header = ({
   readAddMutation,
   readNewsMutation,
   taskManagerIFrameComponent,
+  clientCreateRender,
   ...rest
 }: P): JSX.Element => {
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
@@ -157,7 +159,7 @@ export const Header = ({
                   />
                 </Badge>
                 <div>
-                  <QuickCreate />
+                  <QuickCreate clientCreateRender={clientCreateRender} />
                 </div>
                 <AvatarDropDown
                   taskManagerIFrameComponent={taskManagerIFrameComponent}

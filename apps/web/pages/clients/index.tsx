@@ -13,10 +13,10 @@ import CommonHeader from '../../components/CommonHeader'
 import MergeComponent from '../../components/Clients/MergeComponent'
 import { clientsList } from '../../mocks/ClientsList'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import { BasicModal, ClientCreate } from '@pabau/ui'
+import { BasicModal } from '@pabau/ui'
 import { intersectionBy, differenceBy, groupBy } from 'lodash'
 import confetti from 'canvas-confetti'
-
+import ClientCreate from '../../components/Clients/ClientCreate'
 const { TabPane } = Tabs
 const { Sider, Content } = Layout
 
@@ -498,19 +498,18 @@ export const Clients: FC<ClientsProps> = () => {
           onActivated={(val) => setActive(val)}
           editedValues={
             isEdit && {
-              firstName: editedValues?.firstName,
-              lastName: editedValues?.lastName,
+              Fname: editedValues?.firstName,
+              Lname: editedValues?.lastName,
               gender: t('quickCreate.client.modal.general.gender.other'),
-              hearOption: t(
+              MarketingSource: t(
                 'quickCreate.client.modal.general.hearOption.selectOption'
               ),
-              dateOfBirth: dayjs(editedValues?.dob, 'DD-MM-YYYY'),
-              email: editedValues?.email,
-              phoneNumber: editedValues?.mobileNumber,
-              telePhone: '',
-              address: '',
-              city: editedValues?.city,
-              postCode: editedValues?.postal,
+              DOB: dayjs(editedValues?.dob, 'DD-MM-YYYY'),
+              Email: editedValues?.email,
+              Mobile: editedValues?.mobileNumber,
+              Phone: '',
+              MailingCity: editedValues?.city,
+              MailingPostal: editedValues?.postal,
             }
           }
           handleDelete={handleDeleteToggle}

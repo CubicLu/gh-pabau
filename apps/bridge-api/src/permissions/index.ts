@@ -83,6 +83,7 @@ export const permissions = shield(
       //resetPassword
       resetPassword: allow,
       upsertUserReportByReportCode: rules.authentication.isAdmin,
+      createOneContact: rules.authentication.isAdmin,
 
       //CompanyBranches
       createOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
@@ -181,6 +182,8 @@ export const permissions = shield(
         rules.authentication.isAuthenticated,
       findManyProductsWithAvailableQuantityCount:
         rules.authentication.isAuthenticated,
+      //CmLabels
+      findManyCmLabel: rules.interceptors.interceptSharedCompanyData,
       // //Authentication
       me: rules.authentication.isAuthenticated,
       company: rules.authentication.isAuthenticated,

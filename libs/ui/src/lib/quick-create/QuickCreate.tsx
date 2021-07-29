@@ -13,8 +13,12 @@ import { Button } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 import styles from './QuickCreate.module.less'
 import { ClientCreate, LeadCreate } from '@pabau/ui'
+import { initialValues } from '../client-create/mock'
 
-export const QuickCreate: FC = () => {
+interface QuickCreateProps {
+  clientCreateRender?: () => JSX.Element
+}
+export const QuickCreate: FC<QuickCreateProps> = ({ clientCreateRender }) => {
   const [visible, setVisible] = useState(false)
   const [clientModalVisible, setClientModalVisible] = useState(false)
   const [leadModalVisible, setLeadModalVisible] = useState(false)
@@ -79,10 +83,15 @@ export const QuickCreate: FC = () => {
           </div>
         </div>
       </div>
-      <ClientCreate
-        modalVisible={clientModalVisible}
-        handleClose={toggleCreateClientModal}
-      />
+      {clientCreateRender ? (
+        clientModalVisible && clientCreateRender()
+      ) : (
+        <ClientCreate
+          modalVisible={clientModalVisible}
+          handleClose={toggleCreateClientModal}
+          initialValues={initialValues}
+        />
+      )}
       <LeadCreate
         modalVisible={leadModalVisible}
         handleClose={toggleCreateLeadModal}

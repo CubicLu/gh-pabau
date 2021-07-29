@@ -17,9 +17,9 @@ export const ThirdPartyDetail: FC<Props> = ({ setFieldValue, values }) => {
   const { t } = useTranslation('common')
 
   return (
-    <div className={styles.thirdPartyForm}>
+    <div className={styles.customFieldForm}>
       <AntForm
-        className={styles.thirdFormInput}
+        className={styles.customFormInput}
         layout={'vertical'}
         requiredMark={false}
       >
@@ -28,7 +28,7 @@ export const ThirdPartyDetail: FC<Props> = ({ setFieldValue, values }) => {
         <AntForm.Item name={'thirdPartyDetails'}>
           <RadioGroup
             name={'thirdPartyDetails'}
-            value={values?.thirdPartyDetails || ''}
+            value={values?.thirdPartyDetails?.toString() || ''}
             radioItems={[
               t('quickCreate.client.modal.general.thirdParty.botox'),
               t('quickCreate.client.modal.general.thirdParty.laser'),

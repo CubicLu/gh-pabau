@@ -81,6 +81,20 @@ export const ManageCustomField = objectType({
         return root.CmProductCustomField
       },
     })
+    t.list.field('CmContactCustom', {
+      type: 'CmContactCustom',
+      args: {
+        where: 'CmContactCustomWhereInput',
+        orderBy: 'CmContactCustomOrderByInput',
+        cursor: 'CmContactCustomWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CmContactCustomScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CmContactCustom
+      },
+    })
     t.list.field('CmLeadCustomField', {
       type: 'CmLeadCustomField',
       args: {
