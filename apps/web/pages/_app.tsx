@@ -34,8 +34,7 @@ require('react-phone-input-2/lib/style.css')
 let apolloClient: ApolloClient<NormalizedCacheObject | null> = null
 
 Sentry.init({
-  dsn:
-    'https://c7185e52dd3a43ceb066bb154572adda@o134884.ingest.sentry.io/298098',
+  dsn: process.env.SENTRY_DSN || '',
   release: 'pabau2',
   integrations: [new Integrations.BrowserTracing()],
   tracesSampleRate: 1,
