@@ -4,8 +4,6 @@ import {
   Breadcrumb,
   BusinessDetailsNotifications,
   MobileHeader,
-  System,
-  Terminology,
   PasswordExpirationProps,
   TabMenu,
   TerminologyConfig,
@@ -237,8 +235,6 @@ export const Index: FC = () => {
               loading={loading}
               t={t}
             />
-            <Terminology onSave={(values) => onSave(values, 'terminology')} />
-            <System onSave={(values) => onSave(values, 'system')} />
             <BusinessDetailsNotifications
               onSave={(values) => onSave(values, 'notification')}
             />
