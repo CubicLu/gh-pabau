@@ -60,7 +60,7 @@ if [ -z "${BITBUCKET_PR_ID}" ]; then
   echo "output: ${OUTPUT}"
   yarn vercel --token "${VERCEL_TOKEN}" --scope pabau2 alias ${OUTPUT} prelive-crm.new.pabau.com
   echo "errorlevel: $?"
-  echo "<https://mgmt.new.pabau.com/deploy/${APP_VERSION}?deployment=${OUTPUT}|Deploy to prod>" >> /tmp/bot_message.txt
+  echo "<https://mgmt.new.pabau.com/deploy/?version=${APP_VERSION}&deployment=${OUTPUT}&service=${APP_NAME}|Deploy ${APP_NAME} to prod>" >> /tmp/bot_message.txt
 else
   echo "===== Processing type PR ====="
   OUTPUT=$(cd "${build_output_path}" && vercel -c -C --token "${VERCEL_TOKEN}" --scope pabau2 -A "${VERCEL_JSON_LOCATION}/vercel.json")
