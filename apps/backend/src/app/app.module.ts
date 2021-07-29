@@ -3,6 +3,7 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { ConfigModule } from '@nestjs/config'
 import { EmailModule } from './email/email.module'
+import { NewsModule } from './news/news.module'
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { EmailModule } from './email/email.module'
       isGlobal: true,
     }),
     EmailModule,
+    NewsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

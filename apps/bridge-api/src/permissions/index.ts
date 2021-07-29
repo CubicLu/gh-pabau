@@ -83,6 +83,7 @@ export const permissions = shield(
       //resetPassword
       resetPassword: allow,
       upsertUserReportByReportCode: rules.authentication.isAdmin,
+      createOneContact: rules.authentication.isAdmin,
 
       //CompanyBranches
       createOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
@@ -181,12 +182,20 @@ export const permissions = shield(
         rules.authentication.isAuthenticated,
       findManyProductsWithAvailableQuantityCount:
         rules.authentication.isAuthenticated,
+      //CmLabels
+      findManyCmLabel: rules.interceptors.interceptSharedCompanyData,
       // //Authentication
       me: rules.authentication.isAuthenticated,
       company: rules.authentication.isAuthenticated,
       VerifyCredentials: allow,
       VerifyTwoFaCode: allow,
       ping: allow,
+      //Subscriptions
+      subscriptionInvoices: rules.authentication.isAuthenticated,
+      subscriptionInvoicesTotal: rules.authentication.isAuthenticated,
+      subscriptionDetails: rules.authentication.isAuthenticated,
+      subscriptionCardDetails: rules.authentication.isAuthenticated,
+
       // invoice
       getInvoiceData: rules.authentication.isAuthenticated,
       //TODO once jest mocks are resolved move it to rules.authentication.isAuthenticated

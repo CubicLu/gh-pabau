@@ -1,3 +1,7 @@
+export * from './TblModuleFieldsSetting'
+export * from './CmContactCustom'
+export * from './CmContactLabel'
+export * from './CmLabel'
 export * from './MedicalFormAdvancedSetting'
 export * from './GroupPermission'
 export * from './XeroIntegration'

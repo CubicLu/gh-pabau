@@ -28,9 +28,23 @@ export const VerifyCredentials = extendType({
               },
             },
             include: {
-              Company: true,
-              CompanyDetails: true,
-              CmStaffGeneral: true,
+              Company: {
+                select: {
+                  remote_url: true,
+                  remote_connect: true,
+                },
+              },
+              CompanyDetails: {
+                select: {
+                  admin: true,
+                  enable_2fa: true,
+                },
+              },
+              CmStaffGeneral: {
+                select: {
+                  CellPhone: true,
+                },
+              },
             },
           })
         } catch (error) {

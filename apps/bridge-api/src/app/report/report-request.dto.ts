@@ -13,4 +13,5 @@ export interface TrendReportInputDto {
   location_ids?: Array<number>
   type: string
   columns: Array<string>
+  staff_ids?: Array<number>
 }

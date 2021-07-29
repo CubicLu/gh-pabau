@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Input } from 'antd'
-import { Button, BasicModal, Avatar } from '@pabau/ui'
+import { Button, BasicModal, Avatar } from '../../index'
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons'
 import styles from './AddGroupModal.module.less'
 import { Participant } from '../groupList/GroupList'

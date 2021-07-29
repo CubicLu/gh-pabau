@@ -20,6 +20,16 @@ interface Notification {
   link: string
 }
 
+interface ProductNews {
+  id: string
+  img: string
+  link: string
+  title: string
+  description: string
+  time: Date | string
+  readUsers: number[]
+}
+
 interface UserProps {
   user: number
   company: number
@@ -29,9 +39,11 @@ interface UserProps {
 export interface LayoutProps {
   deleteNotification?: MutationFunction
   updateNotification?: MutationFunction
+  readNewsMutation?: MutationFunction
   readAddMutation?: MutationFunction
   relativeTime?: (lan: string, date: Date) => string
   notifications?: Notification[]
+  productNews?: ProductNews[]
   user?: UserProps
   pageTitle?: string
   newButtonText?: string
@@ -46,6 +58,8 @@ export interface LayoutProps {
   taskManagerIFrameComponent?: JSX.Element
   allowed?: boolean
   requireAdminAccess?: boolean
+  clientCreateRender?: () => JSX.Element
+  handleSearch?: (searchTerm: string) => void
 }
 
 export const Layout: FC<LayoutProps> = ({
@@ -61,12 +75,15 @@ export const Layout: FC<LayoutProps> = ({
   active,
   legacyContent = false,
   notifications,
+  productNews,
   relativeTime,
   deleteNotification,
   updateNotification,
   readAddMutation,
+  readNewsMutation,
   user,
   taskManagerIFrameComponent,
+  clientCreateRender,
   ...rest
 }) => {
   const [collapsed, setCollapsed] = useState(true)
@@ -78,14 +95,17 @@ export const Layout: FC<LayoutProps> = ({
           user={user}
           deleteNotification={deleteNotification}
           updateNotification={updateNotification}
+          readNewsMutation={readNewsMutation}
           readAddMutation={readAddMutation}
           searchRender={searchRender}
           onMessageIconClick={onMessageIconClick}
           // onCreateChannel={onCreateChannel}
           // onMessageType={onMessageType}
           notifications={notifications}
+          productNews={productNews}
           relativeTime={relativeTime}
           taskManagerIFrameComponent={taskManagerIFrameComponent}
+          clientCreateRender={clientCreateRender}
           {...rest}
         />
         <AntLayout className={styles.headerMargin}>

@@ -22,7 +22,7 @@ pipelines:
           caches:
             - node
           script:
-#            - while true; do ps -aux && sleep 30; done &
+            #            - while true; do ps -aux && sleep 30; done &
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 16 ]] && exit 0 || exit 1'
             - CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
           artifacts:
@@ -34,7 +34,7 @@ pipelines:
               name: misc checks
               size: 1x
               script:
-#                - while true; do ps -aux && sleep 30; done &
+                #                - while true; do ps -aux && sleep 30; done &
                 - openssl version || true
                 - ls -al || true
                 - yarn bin || true
@@ -53,14 +53,14 @@ pipelines:
           - step:
               name: lint
               script:
-#                - while true; do ps -aux && sleep 30; done &
+                #                - while true; do ps -aux && sleep 30; done &
                 - yarn affected:lint --base=origin/master --with-deps
 
           - step:
               name: unit tests
-              size: 1x
+              size: 2x
               script:
-#                - while true; do ps -aux && sleep 30; done &
+                #                - while true; do ps -aux && sleep 30; done &
                 - yarn affected:test --base=origin/master
 
           - step:
@@ -68,7 +68,7 @@ pipelines:
               max-time: 80
               size: 2x
               script:
-#                - while true; do ps -aux && sleep 30; done &
+                #                - while true; do ps -aux && sleep 30; done &
                 - NEXT_PUBLIC_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/v1/graphql' NEXT_PUBLIC_WS_ENDPOINT='wss://api-v2-staging.pabau.com/v1/graphql' yarn affected:export --base=origin/master --prod
               artifacts:
                 - dist/**
@@ -79,7 +79,7 @@ pipelines:
               caches:
                 - cypress
               script:
-#                - while true; do ps -aux && sleep 30; done &
+                #                - while true; do ps -aux && sleep 30; done &
                 - apt update -y && apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
                 - yarn cypress install || true
                 - yarn affected:e2e --base=origin/master || true
@@ -91,7 +91,7 @@ pipelines:
               services:
                 - docker
               script:
-#                - while true; do ps -aux && sleep 30; done &
+                #                - while true; do ps -aux && sleep 30; done &
                 - apt-get update -y && apt-get install -y curl jq time
                 - yarn affected --base=origin/master --target=deploy-docker
                 - mkdir -p dist && cp -f /tmp/bot_message.txt dist/ || true
@@ -103,7 +103,7 @@ pipelines:
               image: node
               max-time: 20
               script:
-#                - while true; do ps -aux && sleep 30; done &
+                #                - while true; do ps -aux && sleep 30; done &
                 - node -v
                 - ls -al . || true
                 - ls -al node_modules/ || true
@@ -126,7 +126,7 @@ pipelines:
                 - |
                   curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}"
                   export PR_AUTHOR=$(curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}" | jq -r '.author.display_name')
-                  export COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
+                  export COMMIT_AUTHOR=$(git log -2 --pretty=format:'%an' | head -n1)
 
                 - |
                   printf ":shallow_pan_of_food::shallow_pan_of_food: *New PR Preview*\n## <https://bitbucket.org/pabau/monorepo/pull-requests/${BITBUCKET_PR_ID}|PR ${BITBUCKET_PR_ID}> committed by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
@@ -141,15 +141,12 @@ pipelines:
 
               artifacts:
                 - dist/bot_message2.txt
-                - tools/cicd/slack_notification.json
 
       - step:
           name: announce to slack
-          max-time: 15
-          clone:
-            enabled: false
+          max-time: 25
           script:
-#                - while true; do ps -aux && sleep 30; done &
+            #                - while true; do ps -aux && sleep 30; done &
             - cat dist/bot_message2.txt || true
             - cat dist/bot_message.txt || true
             - apt-get update -y && apt-get install -y curl jq
@@ -162,23 +159,24 @@ pipelines:
                 -H 'Content-Type: application/json; charset=utf-8' \
                 --data-binary @-
 
+            - |
+              export access_token=$(curl -s -X POST -u "${BITBUCKET_CLIENT_ID}:${BITBUCKET_CLIENT_SECRET}" https://bitbucket.org/site/oauth2/access_token -d grant_type=client_credentials | tee | jq -r '.access_token')
+
             # Configure git to use the oauth token.
             - |
               curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}"
               export PR_AUTHOR=$(curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}" | jq -r '.author.display_name')
-              export COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
+              export COMMIT_AUTHOR=$(git log -2 --pretty=format:'%an' | tail -n1)
 
             # Post to Bitbucket PR
             - |
-              curl https://api.bitbucket.org/2.0/repositories/pabau/monorepo/pullrequests/${BITBUCKET_PR_ID}/comments \
-                -H "Authorization: Bearer ${access_token}" \
-                --request POST \
-                --header 'Content-Type: application/json' \
-                --data '{
-                  "content": {
-                    "raw": "A new vercel was published!"
-                  }
-                }'
+              jq --arg var "$(cat dist/bot_message2.txt | head -c 5900)${IFS}$(cat dist/bot_message.txt | head -c 5900)" '.content.raw = $var' tools/cicd/bitbucket_comment.json | \
+              curl -0 https://api.bitbucket.org/2.0/repositories/pabau/monorepo/pullrequests/${BITBUCKET_PR_ID}/comments \
+                              --header "Authorization: Bearer ${access_token}" \
+                              --request POST \
+                              --header 'Content-Type: application/json' \
+                              --data-binary @-
+
 
   branches:
     master:
@@ -188,7 +186,7 @@ pipelines:
           caches:
             - node
           script:
-#            - while true; do ps -aux && sleep 30; done &
+            #            - while true; do ps -aux && sleep 30; done &
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 16 ]] && exit 0 || exit 1'
             - CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
           artifacts:
@@ -200,7 +198,7 @@ pipelines:
               name: misc checks
               size: 1x
               script:
-#                - while true; do ps -aux && sleep 30; done &
+                #                - while true; do ps -aux && sleep 30; done &
                 - openssl version || true
                 - ls -al || true
                 - ls -al node_modules || true
@@ -223,14 +221,14 @@ pipelines:
           - step:
               name: lint
               script:
-#                - while true; do ps -aux && sleep 30; done &
+                #                - while true; do ps -aux && sleep 30; done &
                 - yarn affected:lint --base=HEAD~1 --with-deps
 
           - step:
               name: unit tests
-              size: 1x
+              size: 2x
               script:
-#                - while true; do ps -aux && sleep 30; done &
+                #                - while true; do ps -aux && sleep 30; done &
                 - yarn affected:test --base=HEAD~1
 
           - step:
@@ -239,7 +237,7 @@ pipelines:
               caches:
                 - cypress
               script:
-#                - while true; do ps -aux && sleep 30; done &
+                #                - while true; do ps -aux && sleep 30; done &
                 - apt update -y && apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
                 - yarn cypress install || true
                 - yarn affected:e2e --base=HEAD~1 || true
@@ -261,7 +259,7 @@ pipelines:
           max-time: 80
           size: 2x
           script:
-#            - while true; do ps -aux && sleep 30; done &
+            #            - while true; do ps -aux && sleep 30; done &
             - NEXT_PUBLIC_GRAPHQL_ENDPOINT='https://api-v2.pabau.com/v1/graphql' NEXT_PUBLIC_WS_ENDPOINT='wss://api-v2.pabau.com/v1/graphql' yarn affected:export --base=HEAD~1 --prod
           artifacts:
             - dist/**
@@ -274,7 +272,7 @@ pipelines:
               services:
                 - docker
               script:
-#                - while true; do ps -aux && sleep 30; done &
+                #                - while true; do ps -aux && sleep 30; done &
                 - apt-get update -y && apt-get install -y curl jq time
                 - yarn affected --base=HEAD~1 --target=deploy-docker --prod
                 - mkdir -p dist && cp -f /tmp/bot_message.txt dist/ || true
@@ -286,7 +284,7 @@ pipelines:
               max-time: 20
               deployment: production-serverless
               script:
-#                - while true; do ps -aux && sleep 30; done &
+                #                - while true; do ps -aux && sleep 30; done &
                 - ls -al . || true
                 - ls -al node_modules/ || true
                 - ls -al dist || true
@@ -304,6 +302,7 @@ pipelines:
                 - export COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
 
                 - |
+                  export PACKAGE_JSON_VERSION=$(jq -r .version < package.json)
                   printf "*New Version Staged for Production*\n# v${PACKAGE_JSON_VERSION} committed by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
                   npm i -g ts-node@9 && ts-node tools/cicd/PrintChangedUrls.ts "HEAD~1" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
                   printf "\n" >> /tmp/bot_message2.txt
@@ -318,9 +317,9 @@ pipelines:
 
       - step:
           name: announce to slack
-          max-time: 15
+          max-time: 25
           script:
-#            - while true; do ps -aux && sleep 30; done &
+            #            - while true; do ps -aux && sleep 30; done &
             - cat dist/bot_message2.txt || true
             - cat dist/bot_message.txt || true
             - apt-get update -y && apt-get install -y curl jq time

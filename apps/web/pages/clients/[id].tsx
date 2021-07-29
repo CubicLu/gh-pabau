@@ -1,15 +1,18 @@
 import React from 'react'
-import Layout from '../../components/Layout/Layout'
+import { Layout } from '@pabau/ui'
 import './clients.module.less'
+import LegacyPage from '../../components/LegacyPage'
+import { useRouter } from 'next/router'
 
-/* eslint-disable-next-line */
-export interface ClientProps {}
+export function Client() {
+  const router = useRouter()
+  const contact_id =
+    typeof router.query.id === 'object' ? router.query.id[0] : router.query.id
 
-export function Client(props: ClientProps) {
   return (
     <div>
-      <Layout active={'clients'}>
-        <h1>Single client page</h1>
+      <Layout legacyContent={true}>
+        <LegacyPage urlPath={'pages/contacts/3/?id=' + contact_id} />
       </Layout>
     </div>
   )

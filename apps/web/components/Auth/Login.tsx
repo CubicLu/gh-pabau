@@ -6,7 +6,6 @@ import { Checkbox, Form, Input, SubmitButton } from 'formik-antd'
 import { LoginValidation } from '@pabau/yup'
 import { ReactComponent as GoogleIcon } from '../../assets/images/google.svg'
 import { ReactComponent as SSOIcon } from '../../assets/images/sso.svg'
-import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { Exact } from '@pabau/graphql'
 import { QueryLazyOptions } from '@apollo/client'
 import styles from '../../pages/login.module.less'
@@ -25,8 +24,6 @@ interface LoginProps {
 }
 
 const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
-  const { t } = useTranslationI18()
-
   const loginHandler = async (loginProps: LoginFormProps): Promise<boolean> => {
     if (localStorage?.getItem('token')) {
       localStorage.removeItem('token')
@@ -45,7 +42,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
     <div>
       <div className={styles.signInForm}>
         <div className={styles.formHead}>
-          <h6>{t('login.title')}</h6>
+          <h6>Log In!!</h6>
           <span>
             Do not have an account? <a>Start a free trial</a>
           </span>

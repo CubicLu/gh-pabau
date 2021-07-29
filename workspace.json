@@ -305,7 +305,8 @@
             "main": "apps/backend/src/main.ts",
             "tsConfig": "apps/backend/tsconfig.app.json",
             "assets": ["apps/backend/src/assets"],
-            "maxWorkers": 1
+            "maxWorkers": 2,
+            "generatePackageJson": true
           },
           "configurations": {
             "production": {
@@ -594,7 +595,8 @@
               "apps/bridge-api/src/assets",
               "apps/bridge-api/src/prisma"
             ],
-            "maxWorkers": 2
+            "maxWorkers": 2,
+            "generatePackageJson": true
           },
           "configurations": {
             "production": {

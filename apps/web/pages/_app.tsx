@@ -21,13 +21,24 @@ import 'react-image-crop/dist/ReactCrop.css'
 import 'react-phone-input-2/lib/style.css'
 import Router from 'next/router'
 import 'react-quill/dist/quill.snow.css'
+import i18next from 'i18next'
+import { I18nextProvider, initReactI18next } from 'react-i18next'
+import { languages } from '@pabau/i18n'
 import ContextWrapper from '../components/ContextWrapper'
-import TranslationWrapper from '../components/TranslationWrapper'
+import { Integrations } from '@sentry/tracing'
+import * as Sentry from '@sentry/react'
 require('../styles/global.less')
 require('../../../libs/ui/src/styles/antd.less')
 require('react-phone-input-2/lib/style.css')
 
 let apolloClient: ApolloClient<NormalizedCacheObject | null> = null
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN || '',
+  release: 'pabau2',
+  integrations: [new Integrations.BrowserTracing()],
+  tracesSampleRate: 1,
+})
 
 const cache = new InMemoryCache({
   resultCaching: true,
@@ -136,33 +147,41 @@ apolloClient = new ApolloClient({
   cache,
 })
 
-export default function CustomApp({
-  Component,
-  pageProps,
-}: AppProps): JSX.Element {
-  return (
-    <ApolloProvider client={apolloClient}>
-      <style jsx global>{`
-        @font-face {
-          font-family: 'Circular-Std-Black';
-          src: local('Circular-Std-Black'),
-            url(../public/fonts/CircularStd-Black.otf) format('opentype');
-        }
-        @font-face {
-          font-family: 'Circular-Std-Book';
-          src: url('/fonts/CircularStd-Book.otf') format('opentype');
-        }
+i18next.use(initReactI18next).init({
+  interpolation: { escapeValue: false },
+  lng: 'en',
+  keySeparator: false,
+  resources: languages,
+})
 
-        @font-face {
-          font-family: 'Circular-Std-Medium';
-          src: url('/fonts/CircularStd-Medium.otf') format('opentype');
-        }
-      `}</style>
-      <ContextWrapper>
-        <TranslationWrapper>
-          <Component {...pageProps} />
-        </TranslationWrapper>
-      </ContextWrapper>
-    </ApolloProvider>
+function CustomApp({ Component, pageProps }: AppProps): JSX.Element {
+  return (
+    <Sentry.ErrorBoundary fallback={'An error has occurred'}>
+      <ApolloProvider client={apolloClient}>
+        <I18nextProvider i18n={i18next}>
+          <style jsx global>{`
+            @font-face {
+              font-family: 'Circular-Std-Black';
+              src: local('Circular-Std-Black'),
+                url(../public/fonts/CircularStd-Black.otf) format('opentype');
+            }
+            @font-face {
+              font-family: 'Circular-Std-Book';
+              src: url('/fonts/CircularStd-Book.otf') format('opentype');
+            }
+
+            @font-face {
+              font-family: 'Circular-Std-Medium';
+              src: url('/fonts/CircularStd-Medium.otf') format('opentype');
+            }
+          `}</style>
+          <ContextWrapper>
+            <Component {...pageProps} />
+          </ContextWrapper>
+        </I18nextProvider>
+      </ApolloProvider>
+    </Sentry.ErrorBoundary>
   )
 }
+
+export default Sentry.withProfiler(CustomApp)

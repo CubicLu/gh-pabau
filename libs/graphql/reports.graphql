@@ -22,8 +22,34 @@ query getReportByCode($code: String) {
   }
 }
 
-query teamReport($startDate: String!, $endDate: String!) {
-  retrieveReport(id: "team_report", start_date: $startDate, end_date: $endDate)
+query listTeamReport(
+  $startDate: String!
+  $endDate: String!
+  $locationIds: [Int]
+) {
+  retrieveReport(
+    id: "team_report"
+    start_date: $startDate
+    end_date: $endDate
+    location_ids: $locationIds
+  )
+}
+
+query cellDetails(
+  $startDate: String!
+  $endDate: String!
+  $locationIds: [Int]
+  $staffIds: [Int]
+  $columns: [String]
+) {
+  retrieveReport(
+    id: "cell"
+    start_date: $startDate
+    end_date: $endDate
+    location_ids: $locationIds
+    columns: $columns
+    staff_ids: $staffIds
+  )
 }
 
 query miniGraphs($startDate: String!, $endDate: String!) {
@@ -38,12 +64,25 @@ query listReportById(
   retrieveReport(id: $reportId, start_date: $startDate, end_date: $endDate)
 }
 
-query graphsData($startDate: String!, $endDate: String!) {
+query listTrendReport(
+  $startDate: String!
+  $endDate: String!
+  $locationIds: [Int]
+  $columns: [String]
+  $staffIds: [Int]
+) {
   retrieveReport(
-    id: "mini_graphs"
+    id: "trend"
     start_date: $startDate
     end_date: $endDate
+    location_ids: $locationIds
+    columns: $columns
+    staff_ids: $staffIds
   )
+}
+
+query graphsData($startDate: String!, $endDate: String!) {
+  retrieveReport(id: "mini_graphs", start_date: $startDate, end_date: $endDate)
 }
 
 query listReportPermission {
@@ -79,13 +118,13 @@ query findCustomReport {
 }
 
 query getUserAccessPageList {
-    me {
-      userPermission: UserPermission {
-        Page {
-          name
-        }
+  me {
+    userPermission: UserPermission {
+      Page {
+        name
       }
     }
+  }
 }
 
 # {
