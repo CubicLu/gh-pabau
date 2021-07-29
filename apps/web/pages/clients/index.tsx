@@ -13,24 +13,14 @@ import CommonHeader from '../../components/CommonHeader'
 import MergeComponent from '../../components/Clients/MergeComponent'
 import { clientsList } from '../../mocks/ClientsList'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import {
-  BasicModal,
-  ClientCreate,
-  Notification,
-  NotificationType,
-} from '@pabau/ui'
+import { BasicModal, ClientCreate } from '@pabau/ui'
 import { intersectionBy, differenceBy, groupBy } from 'lodash'
 import confetti from 'canvas-confetti'
 import {
-  useGetContactsLazyQuery,
   useGetContactsQuery,
   useClientListContactsCountQuery,
-  useClientListContactsCountLazyQuery,
   useDuplicateContactsQuery,
-  useGetLabelsQuery,
-  useGetContactsLabelsQuery,
   useGetLabelsLazyQuery,
-  useFindManyCompanyDepartmentsLazyQuery,
   useAddLabelMutation,
   useGetContactsLabelsLazyQuery,
 } from '@pabau/graphql'
@@ -60,6 +50,7 @@ export const tab = {
 
 export const Clients: FC<ClientsProps> = () => {
   const [searchText, setSearchText] = useState('')
+  const [responseSelectedContact, setResponseSelectedContcat] = useState({})
 
   //WORKING DO NOT DELETE
   const {
@@ -74,46 +65,16 @@ export const Clients: FC<ClientsProps> = () => {
     error: getuDplicateContactsError,
   } = useDuplicateContactsQuery({ fetchPolicy: 'no-cache' })
 
-  // const {
-  //   data: getLabelsData,
-  //   loading: getLabelsLoading,
-  //   error: getLabelsError,
-  // } = useGetLabelsQuery({ fetchPolicy: 'network-only' })
-
-  // const [ getLabelsQuery,{
-  //   data: getLabelsData,
-  //   loading: getLabelsLoading,
-  //   error: getLabelsError,
-  // }] = useGetLabelsQuery({ fetchPolicy: 'network-only' })
-
   const [getLabelsQuery, { data: getLabelsData }] = useGetLabelsLazyQuery({
     fetchPolicy: 'no-cache',
+    onCompleted(response) {
+      console.log('onCompleted response getLabels')
+      setTestLabels(response?.labels)
+    },
+    onError(error) {
+      console.error(error)
+    },
   })
-
-  // const [addLabelMutaton] = useAddLabelMutation({
-  //   fetchPolicy: 'no-cache',
-  // })
-
-  // const [addLabelMutaton] = useAddLabelMutation({
-  //   fetchPolicy: 'no-cache',
-  //   onCompleted(response) {
-  //     console.log('on COMPLETE adding label')
-  //     getLabelsQuery()
-  //   },
-  //   onError(error) {
-  //     console.log('not added label')
-  //   },
-  // })
-
-  // useEffect(() => {
-  //   getLabelsQuery()
-  // }, [testLabels])
-
-  // const {
-  //   data: getContactsLabelsData,
-  //   loading: geContactstLabelsLoading,
-  //   error: getContactsLabelsError,
-  // } = useGetContactsLabelsQuery({ fetchPolicy: 'no-cache' })
 
   const [
     getContactsLabelsQuery,
@@ -124,25 +85,36 @@ export const Clients: FC<ClientsProps> = () => {
     },
   ] = useGetContactsLabelsLazyQuery({ fetchPolicy: 'no-cache' })
 
-  console.log('getContactsLabelsData:', getContactsLabelsData)
+  const [addLabelMutation] = useAddLabelMutation({
+    fetchPolicy: 'no-cache',
+    onCompleted(response) {
+      console.log('on COMPLETE adding label', response.insert_labels_one)
+      const responseLabel = {
+        id: response.insert_labels_one.id,
+        text: response.insert_labels_one.text,
+        color: response.insert_labels_one.color,
+      }
 
-  console.log('getLabelsData:', getLabelsData)
+      console.log('responseLabel:', responseLabel)
 
+      setResponseSelectedContcat(responseLabel)
+      setTestLabels([...testLabels, responseLabel])
+      setSelectedLabels([...selectedLabels, responseLabel])
+      handleApplyLabel(selectedLabels)
+      // return responseLabel
+    },
+    onError(error) {
+      console.log('not added label')
+    },
+  })
+
+  // console.log('index', addLabelMutation)
   useEffect(() => {
     getContactsLabelsQuery()
     console.log('calling query for get contactsLabels')
   }, [])
 
-  // const [
-  //   getLabels,
-  //   { data: getLabelsData, loading: getLabelsLoading, error: getLabelsError },
-  // ] = useGetLabelsLazyQuery()
-
-  // console.log('getLabelsData:', getLabelsData)
-
   const [contactsLabels, setContactsLabels] = useState(getContactsLabelsData)
-
-  // console.log('contactsLabels:', contactsLabels)
 
   const [paginateData, setPaginateData] = useState({
     total: 0,
@@ -263,7 +235,7 @@ export const Clients: FC<ClientsProps> = () => {
     getDuplicateContactsData
   )
 
-  const [testLabels, setTestLabels] = useState(getLabelsData)
+  const [testLabels, setTestLabels] = useState([])
   const { t } = useTranslationI18()
   // console.log('duplicateContactsTest:', duplicateContactsTest)
   const isMobile = useMedia('(max-width: 768px)', false)
@@ -729,7 +701,7 @@ export const Clients: FC<ClientsProps> = () => {
       setPaginateData={setPaginateData}
       testLabels={testLabels}
       setTestLabels={setTestLabels}
-      // addLabelMutaton={addLabelMutaton}
+      addLabelMutation={addLabelMutation}
       getContactsLabelsData={getContactsLabelsData}
       getContactsLabelsQuery={getContactsLabelsQuery}
       getLabelsQuery={getLabelsQuery}
@@ -820,6 +792,7 @@ export const Clients: FC<ClientsProps> = () => {
                     duplicateData={duplicateDataList}
                     getClientsCountData={getClientsCountData}
                     duplicateContactsCount={duplicateContactsTest}
+                    addLabelMutation={addLabelMutation}
                   />
                 </Sider>
                 <Content>

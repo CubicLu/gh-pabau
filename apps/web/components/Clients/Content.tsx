@@ -15,14 +15,9 @@ import CreateLabel from './CreateLabel'
 import ManageColumnsPopover from './ManageColumnPopover'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import classNames from 'classnames'
-import { clientsList } from '../../mocks/ClientsList'
-import { avatarSrc } from '../../../../libs/ui/src/lib/read-review/mock'
-import searchEmpty from '../../../../libs/ui/src/assets/images/empty.png'
 import { useImage } from '../../hooks/cdn'
-import {
-  useAddLabelMutation,
-  useInsertContactsLabelsMutation,
-} from '@pabau/graphql'
+import { FetchResult, MutationFunctionOptions } from '@apollo/client'
+import { AddLabelMutation, Exact } from '@pabau/graphql'
 
 interface ClientsContentProps {
   searchText?: string
@@ -46,7 +41,14 @@ interface ClientsContentProps {
   getClientsCountLoading?: boolean
   setPaginateData?: (val) => void
   testLabels?: any
-  addLabelMutaton?: (val) => void
+  addLabelMutation?: (
+    options?: MutationFunctionOptions<
+      AddLabelMutation,
+      Exact<{ text?: string; color?: string }>
+    >
+  ) => Promise<
+    FetchResult<AddLabelMutation, Record<any, any>, Record<any, any>>
+  >
   setTestLabels?: (val) => void
   getContactsLabelsData?: any
   getContactsLabelsQuery?: (val) => void
@@ -99,7 +101,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
   setTestLabels,
   getContactsLabelsQuery,
   getLabelsQuery,
-  addLabelMutaton,
+  addLabelMutation,
 }) => {
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 768px)', false)
@@ -401,6 +403,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
     return <Tooltip title={title}>{icon}</Tooltip>
   }
 
+  // console.log('content', addLabelMutation)
   return (
     <div className={styles.tableContent}>
       {!isMobile && selectedRowKeys.length > 0 && (
@@ -427,7 +430,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
             setTestLabels={setTestLabels}
             getContactsLabelsQuery={getContactsLabelsQuery}
             getLabelsQuery={getLabelsQuery}
-            // addLabelMutaton={addLabelMutaton}
+            addLabelMutation={addLabelMutation}
             sourceData={sourceData}
           >
             {renderTooltip({

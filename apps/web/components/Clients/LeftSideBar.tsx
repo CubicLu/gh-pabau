@@ -13,6 +13,8 @@ import CreateLabel from './CreateLabel'
 import { Labels, tab } from '../../pages/clients/index'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { test } from 'shelljs'
+import { FetchResult, MutationFunctionOptions } from '@apollo/client'
+import { AddLabelMutation, Exact } from '@pabau/graphql'
 const { SubMenu } = Menu
 
 interface LeftSideBarProps {
@@ -31,6 +33,14 @@ interface LeftSideBarProps {
   duplicateContactsCount?: any
   testLabels?: any
   setTestLabels?: (val) => void
+  addLabelMutation?: (
+    options?: MutationFunctionOptions<
+      AddLabelMutation,
+      Exact<{ text?: string; color?: string }>
+    >
+  ) => Promise<
+    FetchResult<AddLabelMutation, Record<any, any>, Record<any, any>>
+  >
 }
 
 export const LeftSideBar: FC<LeftSideBarProps> = ({
@@ -49,6 +59,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
   duplicateContactsCount,
   testLabels,
   setTestLabels,
+  addLabelMutation,
 }) => {
   const { t } = useTranslationI18()
 
@@ -143,6 +154,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
               labels={labels}
               testLabels={testLabels}
               setLabels={setLabels}
+              addLabelMutation={addLabelMutation}
             >
               <div>
                 <PlusCircleOutlined /> {t('clients.leftSidebar.createLabels')}

@@ -9,17 +9,17 @@ import {
   CustomIcon,
 } from '@pabau/ui'
 import {
-  GetFeatureFlagsDocument,
-  useAddLabelMutation,
   useGetContactsLabelsQuery,
   useInsertContactsLabelsMutation,
-  useGetLabelsLazyQuery,
-  // useGetLabelsQuery,
+  // useGetLabelsLazyQuery,
+  AddLabelMutation,
+  Exact,
 } from '@pabau/graphql'
 import styles from '../../pages/clients/clients.module.less'
 import { Labels } from '../../pages/clients'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { differenceBy } from 'lodash'
+import { FetchResult, MutationFunctionOptions } from '@apollo/client'
 
 interface CreateLabelsProps {
   children?: ReactNode
@@ -38,6 +38,14 @@ interface CreateLabelsProps {
   getContactsLabelsQuery?: () => any
   // getLabelsQuery?: () => any
   sourceData?: any
+  addLabelMutation?: (
+    options?: MutationFunctionOptions<
+      AddLabelMutation,
+      Exact<{ text?: string; color?: string }>
+    >
+  ) => Promise<
+    FetchResult<AddLabelMutation, Record<any, any>, Record<any, any>>
+  >
 }
 
 const customColorData = [
@@ -92,6 +100,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   getContactsLabelsQuery,
   // getLabelsQuery,
   sourceData,
+  addLabelMutation,
 }) => {
   const { t } = useTranslationI18()
   const [visible, setVisible] = useState(false)
@@ -116,42 +125,13 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     count: 0,
   })
   const [selectedContacts, setSelectedContacts] = useState([])
-  const [responseSelectedContact, setResponseSelectedContcat] = useState({})
-
-  console.log('responseSelectedContact:', responseSelectedContact)
-
-  // const [
-  //   addLabelMutaton,
-  //   { data: addlabelData, loading: addLabelLoading, error: addLabelError },
-  // ] = useAddLabelMutation()
-
   const [tempSelectedContact, setTempSelectedContact] = useState([])
 
-  const [addLabelMutaton] = useAddLabelMutation({
-    fetchPolicy: 'no-cache',
-    onCompleted(response) {
-      console.log('on COMPLETE adding label', response.insert_labels_one.id)
-      const responseLabel = {
-        id: response.insert_labels_one.id,
-        text: response.insert_labels_one.text,
-        color: response.insert_labels_one.color,
-      }
-      setResponseSelectedContcat(responseLabel)
-      // setSelectedLabels([responseLabel])
-      getLabelsQuery()
-      // insertContactsLabelsMutaton()
-      // onApplyLabel()
-      return responseLabel
-    },
-    onError(error) {
-      console.log('not added label')
-    },
-  })
+  // const [getLabelsQuery, { data: getLabelsData }] = useGetLabelsLazyQuery({
+  //   fetchPolicy: 'no-cache',
+  // })
 
-  const [getLabelsQuery, { data: getLabelsData }] = useGetLabelsLazyQuery({
-    fetchPolicy: 'no-cache',
-  })
-
+  // console.log('createLabel', addLabelMutation)
   // const editLabelData = (valueObject) => {
   //   const labelData = [...labels]
   //   const labelIndex = labelData.findIndex(
@@ -243,13 +223,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   //   }
   // }
 
-  // if (selectedRowKeys && selectedRowKeys.length > 0) {
-  //   for (const selContact of selectedRowKeys) {
-  //     console.log('selContact', selContact)
-  //   }
-  // }
-
-  const addLabelData = async (valueObject) => {
+  const addLabelData = (valueObject) => {
     if (
       testLabels?.labels.some(
         (item) => item.text && item.color !== valueObject.text
@@ -258,21 +232,18 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
       console.log('added new label', newLabel)
       console.log('testLabels on ADDING:', testLabels)
       console.log('valueObject:', valueObject)
-      // console.log('testLabels.labels :', testLabels.labels)
-      // setTestLabels({[...testLabels, valueObject]})
-      // testLabels.labels.push(valueObject)
-      // setTestLabels(() => [...testLabels, valueObject])
-      testLabels.labels.push(valueObject)
 
+      // setTestLabels([...testLabels.labels, valueObject])
+      testLabels.labels.push(valueObject)
       setSelectedLabels([...selectedLabels, valueObject])
       fromHeader && handleApplyLabel([...selectedLabels, valueObject])
-      await addLabelMutaton({
+      addLabelMutation({
         variables: {
           text: newLabel.text,
           color: newLabel.color,
         },
       })
-      getLabelsQuery()
+      // getLabelsQuery()
     } else {
       Notification(
         NotificationType.error,
@@ -305,8 +276,6 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   // }
 
   const handleKeyPress = (e) => {
-    console.log('on 1111 key press')
-    console.log('responseSelectedContact keypress', responseSelectedContact)
     const {
       target: { value },
       key,
@@ -320,6 +289,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
         // onApplyLabel()
       } else {
         addLabelData({ text: value, color: selectedColor, count: 0 })
+        // onApplyLabel()
         // getLabelsQuery()
       }
       setNewLabel({ text: '', color: '', count: 0 })
@@ -343,22 +313,6 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     setSelectedColor('')
     setIsEdit(false)
   }
-
-  // WORKING handleSELECT DO NOT DELETE
-  // const handleSelect = (label, index) => {
-  //   const selectedData = [...selectedLabels]
-  //   if (selectedData.some((item) => item.text === label.text)) {
-  //     const selectedIndex = selectedLabels?.findIndex(
-  //       (selectedLabel) => selectedLabel.text === testLabels.labels[index].text
-  //     )
-  //     selectedIndex !== -1 && selectedData.splice(selectedIndex, 1)
-  //     setSelectedLabels(selectedData)
-  //   } else {
-  //     selectedData.push(label)
-  //     setSelectedLabels(selectedData)
-  //   }
-  //   console.log('selectedDataa:', selectedData)
-  // }
 
   const handleSelect = (label, index) => {
     const selectedData = [...selectedLabels]
@@ -411,32 +365,6 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   // checkRemovedLabel()
 
   console.log('sourceData', sourceData)
-  // if (selectedRowKeys && selectedRowKeys.length > 0) {
-  //   const tempSelectedContacts = []
-  //   for (const selContact of selectedRowKeys) {
-  //     if (!tempSelectedContacts?.includes(selContact)) {
-  //       selectedContacts.push(selContact)
-  //     }
-  //   }
-  //   // console.log('tempSelectedContacts', tempSelectedContacts)
-  // }
-
-  // useEffect(() => {
-  //   getLabelsQuery()
-  //   console.log('getlabelsQueryyyyy')
-  // }, [])
-
-  //// DO NOT DELETE WORKINGGGG
-  // const onApplyLabel = () => {
-  //   handleApplyLabel(selectedLabels)
-  //   setVisible(false)
-  //   insertContactsLabelsMutaton({
-  //     variables: {
-  //       contact_id: selectedRowKeys[0],
-  //       label_id: 104,
-  //     },
-  //   })
-  // }
 
   //WORKING MULTIPLE CONTACTS
   // const onApplyLabel = () => {
@@ -460,38 +388,9 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     error: getContactsLabelsError,
   } = useGetContactsLabelsQuery({ fetchPolicy: 'no-cache' })
 
-  // WORKING MULTIPLE CONTACTS AND MULTIPLE LABELS
-  // const onApplyLabel = () => {
-  //   console.log('on 1111 apply label')
-  //   handleApplyLabel(selectedLabels)
-  //   console.log('selectedLabels 22222:', selectedLabels)
-  //   setVisible(false)
-  //   if (selectedRowKeys && selectedRowKeys.length > 0) {
-  //     // getLabelsQuery()
-  //     for (const selectContact of selectedRowKeys) {
-  //       for (const selectedLabel of selectedLabels) {
-  //         // console.log('selectedLabelll :', selectedLabel)
-  //         // setTempSelectedContact(selectedLabel)
-  //         // console.log('tempSelectedContact', tempSelectedContact)
-  //         // await getLabelsQuery()
-  //         // await getLabelsQuery()
-  //         insertContactsLabelsMutaton({
-  //           variables: {
-  //             contact_id: selectContact,
-  //             label_id: selectedLabel.id,
-  //           },
-  //         })
-  //         getContactsLabelsQuery()
-  //       }
-  //     }
-  //   }
-  //   // setSelectedLabels([])
-  // }
-
-  const onApplyLabel = async () => {
-    console.log('on 1111 apply label')
+  const onApplyLabel = () => {
     handleApplyLabel(selectedLabels)
-    console.log('selectedLabels 22222:', selectedLabels)
+
     setVisible(false)
     if (selectedRowKeys && selectedRowKeys.length > 0) {
       // getLabelsQuery()
@@ -499,63 +398,22 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
         for (const selectedLabel of selectedLabels) {
           console.log('selectedLabel ID 00000', selectedLabel.id)
 
-          await insertContactsLabelsMutaton({
+          insertContactsLabelsMutaton({
             variables: {
               contact_id: selectContact,
               label_id: selectedLabel.id,
             },
           })
-          getContactsLabelsQuery()
+          // getContactsLabelsQuery()
         }
       }
     }
   }
 
-  // for (const selectedLabel of selectedLabels) {
-  //   console.log('selectedLabelll:', selectedLabel)
-  // }
-
-  // for(const selected)
-
-  // console.log('newLabel :', newLabel)
-
   const content = () => {
     return (
       <div>
         <div className={styles.scrollerTag}>
-          {/*{labels.map((label, index) => {*/}
-          {/*  return (*/}
-          {/*    <div key={index}>*/}
-          {/*      {label?.label && (*/}
-          {/*        <span*/}
-          {/*          style={{ display: 'flex', flexDirection: 'row' }}*/}
-          {/*          key={index}*/}
-          {/*          onClick={() => handleSelect(label, index)}*/}
-          {/*          className={styles.tagWrap}*/}
-          {/*        >*/}
-          {/*          <div className={styles.tagLayout}>*/}
-          {/*            {label.color ? (*/}
-          {/*              <TagFilled style={{ color: label.color }} />*/}
-          {/*            ) : (*/}
-          {/*              <TagOutlined />*/}
-          {/*            )}*/}
-          {/*            <div*/}
-          {/*              className={styles.dropLayout}*/}
-          {/*              style={{ backgroundColor: label.color }}*/}
-          {/*              onClick={(e) => handleDropletClick(e, label, index)}*/}
-          {/*            >*/}
-          {/*              <CustomIcon name={'droplet'} />*/}
-          {/*            </div>*/}
-          {/*          </div>*/}
-          {/*          <div className={styles.tagName}>{label.label}</div>*/}
-          {/*          {selectedLabels.some(*/}
-          {/*            (item) => item.label === label.label*/}
-          {/*          ) && <CheckOutlined />}*/}
-          {/*        </span>*/}
-          {/*      )}*/}
-          {/*    </div>*/}
-          {/*  )*/}
-          {/*}*/}
           {testLabels?.labels.map((label, index) => {
             return (
               <div key={index}>
