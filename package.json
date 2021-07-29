@@ -103,6 +103,8 @@
     "@prisma/client": "2.26.0",
     "@react-hook/debounce": "^4.0.0",
     "@sendgrid/mail": "^7.4.4",
+    "@sentry/react": "^6.10.0",
+    "@sentry/tracing": "^6.10.0",
     "antd": "https://github.com/binary64/ant-design/releases/download/master/antd-4.10.3.tgz",
     "apollo-server": "2.24.0",
     "canvas-confetti": "1.4.0",
