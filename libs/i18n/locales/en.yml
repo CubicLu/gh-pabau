@@ -1090,7 +1090,8 @@ en:
   setup.clinic.data.custom.field: 'Custom Fields'
   setup.clinic.data.imports: 'Data Imports'
   setup.clinic.subscription: 'Pabau Subscription'
-  setup.clinic.subscription.billing: 'Billing Activity'
+  setup.clinic.subscription.billing: 'Billing Details'
+  setup.clinic.subscription.billing.details: 'Billing history'
   setup.clinic.subscription.addons: Addons
   setup.product.service.title: 'Products & Services'
   setup.services: Services

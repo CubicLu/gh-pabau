@@ -59,6 +59,7 @@ export interface LayoutProps {
   allowed?: boolean
   requireAdminAccess?: boolean
   clientCreateRender?: () => JSX.Element
+  handleSearch?: (searchTerm: string) => void
 }
 
 export const Layout: FC<LayoutProps> = ({

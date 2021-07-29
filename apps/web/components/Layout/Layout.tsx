@@ -60,6 +60,7 @@ const Layout: FC<LayoutProps> = ({
   children,
   allowed = true,
   requireAdminAccess = false,
+  handleSearch,
   ...props
 }) => {
   const [authenticated, user] = useLogin(false)
@@ -186,7 +187,12 @@ const Layout: FC<LayoutProps> = ({
           clientCreateRender={() => <ClientCreate />}
           {...props}
         >
-          <CommonHeader showChat={showChat} title="Pabau" isShowSearch={true} />
+          <CommonHeader
+            showChat={showChat}
+            title="Pabau"
+            isShowSearch={true}
+            handleSearch={handleSearch}
+          />
           <Chat closeDrawer={() => setShowChat(false)} visible={showChat} />
 
           {!legacyPage ? children : <LegacyPage urlPath={legacyPage} />}

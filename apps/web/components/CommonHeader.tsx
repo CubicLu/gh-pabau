@@ -81,25 +81,26 @@ const CommonHeader: FC<P> = ({
             <p>{title}</p>
           </div>
           <div className={styles.rightContentWrapper}>
-            {!isLeftOutlined ||
-              (isShowSearch && (
-                <div className={styles.searchInput}>
-                  {!showSearch ? (
-                    <SearchOutlined
-                      onClick={() => {
-                        setShowSearch(true)
-                      }}
+            {!isLeftOutlined && isShowSearch && (
+              <div className={styles.searchInput}>
+                {!showSearch ? (
+                  <SearchOutlined
+                    onClick={() => {
+                      setShowSearch(true)
+                    }}
+                  />
+                ) : (
+                  <div className={styles.search}>
+                    <SetupSearchInput
+                      onChange={handleSearch}
+                      placeholder={
+                        isLeftOutlined ? t('integration.search') : ''
+                      }
                     />
-                  ) : (
-                    <div className={styles.search}>
-                      <SetupSearchInput
-                        onChange={handleSearch}
-                        placeholder={isLeftOutlined && t('integration.search')}
-                      />
-                    </div>
-                  )}
-                </div>
-              ))}
+                  </div>
+                )}
+              </div>
+            )}
             {isContent && <ContentJsx />}
           </div>
           {displayCreateButton && (
