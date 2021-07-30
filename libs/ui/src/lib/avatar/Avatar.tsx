@@ -2,7 +2,7 @@ import { UserOutlined } from '@ant-design/icons'
 import { Avatar as AntAvatar, Tooltip } from 'antd'
 import { AvatarProps as NativeAvatarProps } from 'antd/lib/avatar/avatar'
 import ClassNames from 'classnames'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import stc from 'string-to-color'
 import { ReactComponent as EditIcon } from '../../assets/images/edit_icon.svg'
 import styles from './Avatar.module.less'
@@ -34,25 +34,8 @@ export const Avatar: FC<AvatarProps> = ({
   isTooltip = true,
   ...props
 }) => {
-  const [load, setLoad] = useState(true)
-  const [shortName, setShortName] = useState('')
-  useEffect(() => {
-    const img = new Image()
-    img.src = src
-    img.addEventListener('load', () => {
-      setLoad(true)
-    })
-    img.addEventListener('error', () => {
-      setLoad(false)
-    })
-    setShortName(
-      name
-        .toUpperCase()
-        .split(' ')
-        .map((item) => item.charAt(0))
-        .join('')
-    )
-  }, [name, src])
+  const [load] = useState(true)
+  const [shortName] = useState('')
 
   return (
     <div className={styles.avatarContainer} style={{ zIndex, marginLeft }}>

@@ -171,6 +171,7 @@
     "react-i18next": "11.8.13",
     "react-image-crop": "8.6.9",
     "react-indiana-drag-scroll": "^2.0.1",
+    "react-cropper": "2.1.7",
     "react-jsx-highcharts": "4.2.1",
     "react-lottie": "1.2.3",
     "react-number-format": "4.5.5",

@@ -1,10 +1,10 @@
 import {
   Avatar,
-  AvatarUploader,
   LanguageDropdown,
   PhoneNumberInput,
   timezone as timezones,
 } from '@pabau/ui'
+import AvatarUploader from '../../../../web/components/Uploaders/AvatarUploader/AvatarUploader'
 import {
   Button,
   Col,
@@ -18,7 +18,7 @@ import {
 } from 'antd'
 import dynamic from 'next/dynamic'
 import React, { FC, useEffect, useState } from 'react'
-import { getImage } from '../../../helper/cdn/imageUrl'
+import { getImage } from '../../Uploaders/UploadHelpers/UploadHelpers'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import useWindowSize from '../../../hooks/useWindowSize'
 import styles from './skeleton.module.less'
@@ -46,6 +46,7 @@ export interface ProfileProps {
   profileData?: Profile
   setPhoneValid?: (valid: boolean) => void
   onProfileChange?: (data) => void
+  onAvatarChange?: (data) => void
 }
 
 export const Profile: FC<ProfileProps> = ({
@@ -53,6 +54,7 @@ export const Profile: FC<ProfileProps> = ({
   profileData,
   setPhoneValid,
   onProfileChange,
+  onAvatarChange,
   ...rest
 }) => {
   const { Option } = Select
@@ -76,6 +78,12 @@ export const Profile: FC<ProfileProps> = ({
       setProfile({ ...profile, ...obj })
       onProfileChange({ ...profile, ...obj })
     }
+  }
+
+  const handleImage = (imageData) => {
+    console.log(imageData)
+    onAvatarChange(imageData)
+    handleChangeImage(imageData.url)
   }
 
   const handleChangeImage = (image: string) => {
@@ -105,9 +113,7 @@ export const Profile: FC<ProfileProps> = ({
   useEffect(() => {
     const profileInfo = { ...profileData }
     setProfile(profileInfo)
-    if (profileInfo?.image && profileInfo?.image?.includes('/cdn/')) {
-      setUserImage(getImage(`${profileInfo.image}`))
-    }
+    setUserImage(getImage(`${profileInfo.image}`))
     async function getIPLocation() {
       await fetch(`https://extreme-ip-lookup.com/json`)
         .then((res) => res.json())
@@ -397,9 +403,13 @@ export const Profile: FC<ProfileProps> = ({
         <AvatarUploader
           visible={showAvatarUploader}
           title={t('account.settings.profile.avatarupload.title')}
-          onCreate={handleChangeImage}
           imageURL={userImage}
           onCancel={() => setShowAvatarUploader(false)}
+          width={400}
+          height={400}
+          section={'avatar_photos'}
+          type={'file_attachments'}
+          successHandler={handleImage}
         />
       )}
     </div>

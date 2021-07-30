@@ -82,6 +82,7 @@
     },
     "graphql": {
       "tags": []
-    }
+    },
+    "storage": { "tags": [] }
   }
 }
