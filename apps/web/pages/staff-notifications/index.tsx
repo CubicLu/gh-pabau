@@ -38,7 +38,6 @@ interface InitialNews {
 
 const users = ['All Admins', 'All Users']
 const loops = [2, 5, 7]
-const { Title } = Typography
 
 const initialValues: InitialStaffNotifications = {
   type: '',
@@ -65,7 +64,6 @@ export const StaffNotifications: NextPage = () => {
   const notificationTypes = notificationTypesData?.notification_types
 
   const [user, setUser] = useState<LoggedUser>()
-  const size = useWindowSize()
   const loggedUser = useContext(UserContext)
 
   useEffect(() => {
