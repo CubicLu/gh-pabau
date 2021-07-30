@@ -93,7 +93,7 @@ export const MobileSidebar: FC<SidebarProps> = ({
       <div className={styles.mobileViewAlign}>
         <div className={styles.menuHeaderHeading}>
           <CloseOutlined
-            className="menuHeaderIconColor"
+            className={styles.menuHeaderIconColor}
             onClick={onSideBarClosed}
           />
           <p>{t('sidebar.mobile.menu')}</p>

@@ -19,7 +19,7 @@ import ClientCreate from '../Clients/ClientCreate'
 import styles from './Layout.module.less'
 import TaskManagerIFrame from '../TaskManagerIFrame/TaskManagerIFrame'
 import { Unauthorized } from '../Unauthorized'
-import CommonHeader from '../CommonHeader'
+import MobileHeader from '../MobileHeader'
 import Chat from '../Chat/Chat'
 import LegacyPage from '../LegacyPage'
 
@@ -189,7 +189,7 @@ const Layout: FC<LayoutProps> = ({
           clientCreateRender={() => <ClientCreate />}
           {...props}
         >
-          <CommonHeader
+          <MobileHeader
             showChat={showChat}
             title="Pabau"
             isShowSearch={true}

@@ -3,7 +3,6 @@ import {
   CloudDownloadOutlined,
   FileSearchOutlined,
   FilterOutlined,
-  LeftOutlined,
   LineChartOutlined,
   MoreOutlined,
   QuestionCircleOutlined,
@@ -22,7 +21,6 @@ import {
   Button,
   ChartData,
   CircleGraph,
-  MobileHeader,
   PabauPlus,
   ReportHelpSidebar,
   Switch,
@@ -40,8 +38,8 @@ import {
 } from '@pabau/ui'
 import { Col, Drawer, Input, Row, Space, Typography } from 'antd'
 import classNames from 'classnames'
-import Link from 'next/link'
 import userImage from '../../assets/images/user.png'
+import MobileHeader from '../../components/MobileHeader'
 import {
   getFormattedDateLabel,
   getSortedDate,
@@ -57,6 +55,7 @@ import Layout from './../../components/Layout/Layout'
 import { useTranslationI18 } from './../../hooks/useTranslationI18'
 import styles from './report.module.less'
 import FilterDrawer from './../../components/team/Report/FilterDrawer'
+import useWindowSize from '../../hooks/useWindowSize'
 
 const { Title } = Typography
 
@@ -165,7 +164,7 @@ export interface ReportProps {}
 
 export function Report(props: ReportProps) {
   const { t } = useTranslationI18()
-
+  const size = useWindowSize()
   const [selectedCell, setSelectedCell] = useState<{
     row: string | number
     col: string | number
@@ -520,15 +519,9 @@ export function Report(props: ReportProps) {
 
   return (
     <>
-      <div className={styles.desktopViewNone}>
-        <MobileHeader className={styles.mobileHeader}>
+      <Layout active={'setup'}>
+        <MobileHeader title={t('setup.reports.title')} parent="/setup">
           <div className={styles.allContentAlignMobile}>
-            <div className={styles.mobileHeaderTextStyle}>
-              <Link href="/setup">
-                <LeftOutlined />
-              </Link>
-              <p>{t('setup.reports.title')}</p>
-            </div>
             <Button
               className={styles.btnCircle}
               shape="circle"
@@ -571,33 +564,35 @@ export function Report(props: ReportProps) {
             )}
           </div>
         </MobileHeader>
-      </div>
-
-      <Layout active={'setup'}>
         <div className={styles.cardWrapper}>
-          <div className={classNames(styles.cardHeader, styles.mobileViewNone)}>
-            <div>
-              <Breadcrumb
-                breadcrumbItems={[
-                  { breadcrumbName: t('setup.reports.title'), path: 'setup' },
-                  { breadcrumbName: t('setup.reports.team-report'), path: '' },
-                ]}
-              />
-              <Title>{t('setup.reports.title')}</Title>
-            </div>
-            {handleSearch && (
-              <div className={styles.actions}>
-                <Input
-                  className={styles.searchInput}
-                  placeholder={t('setup.reports.search-report')}
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
-                  autoFocus
+          {size.width > 767 && (
+            <div className={styles.cardHeader}>
+              <div>
+                <Breadcrumb
+                  items={[
+                    { breadcrumbName: t('setup.reports.title'), path: 'setup' },
+                    {
+                      breadcrumbName: t('setup.reports.team-report'),
+                      path: '',
+                    },
+                  ]}
                 />
+                <Title>{t('setup.reports.title')}</Title>
               </div>
-            )}
-          </div>
+              {handleSearch && (
+                <div className={styles.actions}>
+                  <Input
+                    className={styles.searchInput}
+                    placeholder={t('setup.reports.search-report')}
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
+                    autoFocus
+                  />
+                </div>
+              )}
+            </div>
+          )}
           <div className={styles.cardContent}>
             <TabMenu
               tabPosition="top"

@@ -1,16 +1,18 @@
-import React, { FC, useEffect, useState } from 'react'
-import LayoutComponent from '../../components/Layout/Layout'
-import { Layout, Tabs } from 'antd'
+import React, { FC, useContext, useEffect, useState } from 'react'
+import Layout from '../../components/Layout/Layout'
+import { UserContext } from '../../context/UserContext'
+import useWindowSize from '../../hooks/useWindowSize'
+import { Layout as AntLayout, Tabs } from 'antd'
 import dayjs from 'dayjs'
-import { useMedia } from 'react-use'
 import styles from './clients.module.less'
 import ClientsHeader from '../../components/Clients/ClientsHeader'
 import LeftSideBar from '../../components/Clients/LeftSideBar'
 import ContentComponent, {
   SourceDataProps,
 } from '../../components/Clients/Content'
-import CommonHeader from '../../components/CommonHeader'
 import MergeComponent from '../../components/Clients/MergeComponent'
+import AddButton from '../../components/AddButton'
+import MobileHeader from '../../components/MobileHeader'
 import { clientsList } from '../../mocks/ClientsList'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { BasicModal } from '@pabau/ui'
@@ -18,10 +20,7 @@ import { intersectionBy, differenceBy, groupBy } from 'lodash'
 import confetti from 'canvas-confetti'
 import ClientCreate from '../../components/Clients/ClientCreate'
 const { TabPane } = Tabs
-const { Sider, Content } = Layout
-
-/* eslint-disable-next-line */
-export interface ClientsProps {}
+const { Sider, Content } = AntLayout
 
 export interface Labels {
   label?: string
@@ -40,10 +39,11 @@ export const tab = {
   labels: 'labels',
 }
 
-export const Clients: FC<ClientsProps> = () => {
+export const Clients: FC = () => {
   const [searchText, setSearchText] = useState('')
   const [sourceData, setSourceData] = useState<SourceDataProps[]>(clientsList)
   const [selectedTab, setSelectedTab] = useState(tab.clients)
+  const [mobileSearch, setMobileSearch] = useState(false)
   const [sourceFilteredData, setSourceFilteredData] = useState<
     SourceDataProps[]
   >(clientsList)
@@ -65,8 +65,8 @@ export const Clients: FC<ClientsProps> = () => {
     SourceDataProps[][]
   >([])
   const { t } = useTranslationI18()
-
-  const isMobile = useMedia('(max-width: 768px)', false)
+  const size = useWindowSize()
+  const user = useContext(UserContext)
 
   useEffect(() => {
     setSourceData(clientsList)
@@ -376,6 +376,12 @@ export const Clients: FC<ClientsProps> = () => {
     displayConfetti()
   }
 
+  const onMobileSearch = () => {
+    const cMobileSearch = !mobileSearch
+    setMobileSearch(() => cMobileSearch)
+    if (!cMobileSearch) setSearchText('')
+  }
+
   const renderContentTable = (
     <ContentComponent
       searchText={searchText}
@@ -408,28 +414,31 @@ export const Clients: FC<ClientsProps> = () => {
 
   return (
     <div>
-      <CommonHeader
-        title={t('clients.commonHeader')}
-        isShowSearch={false}
-        displayCreateButton={true}
-        handleCreate={toggleCreateClientModal}
-      />
-      <LayoutComponent active={'clients'} isDisplayingFooter={false}>
+      <Layout active={'clients'} isDisplayingFooter={false} {...user}>
+        <MobileHeader title={t('clients.commonHeader')}>
+          <AddButton
+            onClick={toggleCreateClientModal}
+            onFilterSource={() => false}
+            onSearch={(searchTerm) => setSearchText(searchTerm)}
+            addFilter={false}
+            schema={{
+              createButtonLabel: t('setup.taxrate.newbtn'),
+              searchPlaceholder: t('clients.header.search.placeHolder'),
+            }}
+            tableSearch={true}
+            needTranslation={true}
+            mobileSearch={mobileSearch}
+            setMobileSearch={onMobileSearch}
+          />
+        </MobileHeader>
         <div>
-          {isMobile && (
+          {size.width < 768 && (
             <Tabs
               style={{ minHeight: '0vh' }}
               className={styles.tabContentWrap}
               onChange={(val) => setSelectedTab(val)}
               defaultActiveKey={selectedTab}
             >
-              <div>
-                <ClientsHeader
-                  searchText={searchText}
-                  setSearchText={setSearchText}
-                  toggleCreateClientModal={toggleCreateClientModal}
-                />
-              </div>
               <TabPane tab={t('clients.leftSidebar.clients')} key={tab.clients}>
                 {renderContentTable}
               </TabPane>
@@ -453,14 +462,14 @@ export const Clients: FC<ClientsProps> = () => {
               </TabPane>
             </Tabs>
           )}
-          {!isMobile && (
+          {size.width > 767 && (
             <div>
               <ClientsHeader
                 searchText={searchText}
                 setSearchText={setSearchText}
                 toggleCreateClientModal={toggleCreateClientModal}
               />
-              <Layout className={styles.clientBodyWrap}>
+              <AntLayout className={styles.clientBodyWrap}>
                 <Sider>
                   <LeftSideBar
                     setSelectedTab={setSelectedTab}
@@ -483,11 +492,11 @@ export const Clients: FC<ClientsProps> = () => {
                     <div>{renderContentTable}</div>
                   )}
                 </Content>
-              </Layout>
+              </AntLayout>
             </div>
           )}
         </div>
-      </LayoutComponent>
+      </Layout>
       {(createClientModalVisible || isEdit) && (
         <ClientCreate
           modalVisible={createClientModalVisible || isEdit}

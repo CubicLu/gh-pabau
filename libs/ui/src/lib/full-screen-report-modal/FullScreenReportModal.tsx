@@ -138,7 +138,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
             {customOptionBtn && customOptionBtn}
             {operations.map((operation) => (
               <React.Fragment key={operation}>
-                {operation === OperationType.active && (
+                {isMobile && operation === OperationType.active && (
                   <div
                     className={styles.operationSwitch}
                     style={isMobile ? { marginRight: '0px' } : {}}
@@ -214,7 +214,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                 )}
               </React.Fragment>
             ))}
-            {isMobile &&
+            {!isMobile &&
               operations.includes(OperationType.active) &&
               !props.footer &&
               !forceDesktopOperations && (

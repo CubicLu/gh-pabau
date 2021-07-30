@@ -8,14 +8,23 @@ import {
   useFindManyCompanyBranchesLazyQuery,
   useFindManyCompanyDepartmentsLazyQuery,
 } from '@pabau/graphql'
-import { Button, GridVsList, MobileHeader, SimpleDropdown } from '@pabau/ui'
-import { Checkbox, Drawer, Input, Popover, Radio, Select, Skeleton } from 'antd'
+import { Button, GridVsList, SimpleDropdown } from '@pabau/ui'
+import {
+  Checkbox,
+  Drawer,
+  Input,
+  Popover,
+  Radio,
+  Select,
+  Skeleton,
+  Layout as AntLayout,
+} from 'antd'
 import classNames from 'classnames'
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import addButtonStyles from '../../../AddButton.module.less'
 import styles from './Filter.module.less'
-
+const { Header: AntHeader } = AntLayout
 interface P {
   onNewStaffMemberClick?: () => void
   onNewGroupClick?: () => void
@@ -194,13 +203,12 @@ export const Filter: FunctionComponent<P> = ({
 
   return (
     <div className={styles.mainWrapper}>
-      {/* Mobile header */}
       <Drawer
         visible={mobFilterDrawer}
         className={addButtonStyles.mobFilterDrawer}
         closable={false}
       >
-        <MobileHeader className={addButtonStyles.marketingSourceFilterHeader}>
+        <AntHeader className={addButtonStyles.marketingSourceFilterHeader}>
           <div className={addButtonStyles.allContentAlignMobile}>
             <div className={addButtonStyles.marketingTextStyle}>
               <span onClick={handleReset}>
@@ -212,7 +220,7 @@ export const Filter: FunctionComponent<P> = ({
               </span>
             </div>
           </div>
-        </MobileHeader>
+        </AntHeader>
         <div style={{ marginTop: '91px', padding: '0 24px' }}>
           {filterContent(true)}
         </div>

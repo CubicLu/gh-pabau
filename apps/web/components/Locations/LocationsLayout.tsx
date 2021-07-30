@@ -1,4 +1,4 @@
-import { EditFilled, LeftOutlined } from '@ant-design/icons'
+import { EditFilled } from '@ant-design/icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   Company_Branches_Attachments_Type,
@@ -20,15 +20,12 @@ import {
   Button,
   Employees,
   FullScreenReportModal,
-  MobileHeader,
   Notification,
   NotificationType,
   OperationType,
 } from '@pabau/ui'
 import { Avatar, Col, Image, Row, Skeleton, Tooltip, Typography } from 'antd'
-import classNames from 'classnames'
 import { Formik } from 'formik'
-import { useRouter } from 'next/router'
 import React, {
   FC,
   useContext,
@@ -41,7 +38,8 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import * as Yup from 'yup'
 import LogoSvg from '../../assets/images/logo.svg'
 import { UserContext } from '../../context/UserContext'
-import { useGridData } from '../../hooks/useGridData'
+import useWindowSize from '../../hooks/useWindowSize'
+import MobileHeader from '../../components/MobileHeader'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { getBadgesList } from '../../mocks/Locations'
 import AddButton from '../AddButton'
@@ -187,6 +185,7 @@ const defaultValue: InitialLocationProps = {
 const LocationsLayout: FC<P> = ({ schema }) => {
   const { t } = useTranslationI18()
   const { badgesList } = getBadgesList(t)
+  const size = useWindowSize()
   const [initialValues, setInitialValues] = useState<InitialLocationProps>(
     defaultValue
   )
@@ -206,8 +205,6 @@ const LocationsLayout: FC<P> = ({ schema }) => {
   const [activeLocation, setActiveLocation] = useState<number>()
   const [activeLocationLoading, setActiveLocationLoading] = useState(true)
 
-  const router = useRouter()
-  const { getParentSetupData } = useGridData(t)
   const user = useContext(UserContext)
   const filterFormRef = useRef(null)
 
@@ -645,18 +642,6 @@ const LocationsLayout: FC<P> = ({ schema }) => {
     <CustomFilter onFilter={onFilter} formRef={filterFormRef} />
   )
 
-  const handleBack = () => {
-    const parentMenu = getParentSetupData(router.pathname)
-    if (parentMenu.length > 0) {
-      router.push({
-        pathname: '/setup',
-        query: { menu: parentMenu[0]?.keyValue },
-      })
-    } else {
-      router.push('/setup')
-    }
-  }
-
   const bindLocation = (location) => {
     const prepareAddress = []
     const addressFields = ['street', 'location', 'city', 'country']
@@ -682,48 +667,7 @@ const LocationsLayout: FC<P> = ({ schema }) => {
 
   return (
     <Layout {...user} requireAdminAccess={true}>
-      <div className={classNames(styles.locationsPage, styles.desktopViewNone)}>
-        <MobileHeader className={styles.locationsHeader}>
-          <div className={styles.allContentAlignMobile}>
-            <div className={styles.locationsTextStyle}>
-              <LeftOutlined onClick={handleBack} />
-              <p> {schema.full || schema.short} </p>
-            </div>
-            <AddButton
-              onClick={createNew}
-              onFilterSource={onFilterLocations}
-              onSearch={onSearch}
-              schema={schema}
-              tableSearch={true}
-              isCustomFilter={true}
-              onResetFilter={onResetFilter}
-              customFilter={renderFilter}
-              mobileSearch={isMobileSearch}
-              isCreateButtonVisible={allowedLocationCount > activeLocation}
-              setMobileSearch={() => {
-                setSearchTerm('')
-                setMobileSearch((e) => !e)
-              }}
-            />
-          </div>
-        </MobileHeader>
-      </div>
-      <div
-        className={classNames(styles.tableMainHeading, styles.mobileViewNone)}
-      >
-        <div style={{ background: '#FFF' }}>
-          <Breadcrumb
-            breadcrumbItems={[
-              {
-                breadcrumbName: t('navigation-breadcrumb-setup'),
-                path: 'setup',
-              },
-              { breadcrumbName: schema.full || schema.short, path: '' },
-            ]}
-          />
-          <Title>{schema.full || schema.short}</Title>
-        </div>
-
+      <MobileHeader parent="/setup" title={schema.full || schema.short}>
         <AddButton
           onClick={createNew}
           onFilterSource={onFilterLocations}
@@ -731,10 +675,43 @@ const LocationsLayout: FC<P> = ({ schema }) => {
           schema={schema}
           tableSearch={true}
           isCustomFilter={true}
+          onResetFilter={onResetFilter}
           customFilter={renderFilter}
+          mobileSearch={isMobileSearch}
           isCreateButtonVisible={allowedLocationCount > activeLocation}
+          setMobileSearch={() => {
+            setSearchTerm('')
+            setMobileSearch((e) => !e)
+          }}
         />
-      </div>
+      </MobileHeader>
+      {size.width > 767 && (
+        <div className={styles.tableMainHeading}>
+          <div style={{ background: '#FFF' }}>
+            <Breadcrumb
+              items={[
+                {
+                  breadcrumbName: t('navigation-breadcrumb-setup'),
+                  path: 'setup',
+                },
+                { breadcrumbName: schema.full || schema.short, path: '' },
+              ]}
+            />
+            <Title>{schema.full || schema.short}</Title>
+          </div>
+
+          <AddButton
+            onClick={createNew}
+            onFilterSource={onFilterLocations}
+            onSearch={onSearch}
+            schema={schema}
+            tableSearch={true}
+            isCustomFilter={true}
+            customFilter={renderFilter}
+            isCreateButtonVisible={allowedLocationCount > activeLocation}
+          />
+        </div>
+      )}
       <div className={styles.locationContainer}>
         <div className={styles.locationTitle}>
           <div className={styles.allowContent}>

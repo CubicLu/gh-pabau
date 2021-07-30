@@ -1,18 +1,18 @@
 import {
   FilterOutlined,
-  LeftOutlined,
   MailOutlined,
   MobileOutlined,
   PlusSquareFilled,
 } from '@ant-design/icons'
-import { Breadcrumb, Button, MobileHeader } from '@pabau/ui'
+import { Breadcrumb, Button } from '@pabau/ui'
 import { Col, Row, Typography } from 'antd'
 import { useRouter } from 'next/router'
 import React, { useContext } from 'react'
 import { ReactComponent as Verified } from '../../assets/images/verified.svg'
 import Layout from '../../components/Layout/Layout'
+import MobileHeader from '../../components/MobileHeader'
+import useWindowSize from '../../hooks/useWindowSize'
 import { UserContext } from '../../context/UserContext'
-import { useGridData } from '../../hooks/useGridData'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './senders.module.less'
 
@@ -74,45 +74,24 @@ export const mergeTagTypeOptions = ['Tag Type 1', 'Tag Type 2']
 export const Communications: React.FC = () => {
   const user = useContext(UserContext)
   const router = useRouter()
+  const size = useWindowSize()
   const { t } = useTranslationI18()
-  const { getParentSetupData } = useGridData(t)
-  const parentMenu = getParentSetupData(router.pathname)
-  const handleBack = () => {
-    if (parentMenu.length > 0) {
-      router.push({
-        pathname: '/setup',
-        query: { menu: parentMenu[0]?.keyValue },
-      })
-    } else {
-      router.push('/setup')
-    }
-  }
-  return (
-    <>
-      <div className={styles.desktopViewNone}>
-        <MobileHeader className={styles.mobileHeader}>
-          <div className={styles.allContentAlignMobile}>
-            <div className={styles.mobileHeaderTextStyle}>
-              <LeftOutlined onClick={handleBack} />
-              <p>{t('setup.senders.title')}</p>
-            </div>
-            <div className={styles.mobileHeaderOpsStyle}>
-              <FilterOutlined className={styles.filterIconStyle} />
-              <PlusSquareFilled
-                className={styles.plusIconStyle}
-                onClick={() => router.push('senders/create')}
-              />
-            </div>
-          </div>
-        </MobileHeader>
-      </div>
 
-      <Layout {...user} active={'setup'}>
-        <div className={styles.cardWrapper}>
+  return (
+    <Layout {...user} active={'setup'}>
+      <MobileHeader title={t('setup.senders.title')} parent="/setup">
+        <FilterOutlined className={styles.filterIconStyle} />
+        <PlusSquareFilled
+          className={styles.plusIconStyle}
+          onClick={() => router.push('senders/create')}
+        />
+      </MobileHeader>
+      <div className={styles.cardWrapper}>
+        {size.width > 767 && (
           <div className={styles.cardHeader}>
             <div>
               <Breadcrumb
-                breadcrumbItems={[
+                items={[
                   { breadcrumbName: t('sidebar.setup'), path: 'setup' },
                   { breadcrumbName: t('setup.senders.title'), path: '' },
                 ]}
@@ -133,43 +112,43 @@ export const Communications: React.FC = () => {
               </Button>
             </div>
           </div>
-          <div className={styles.cardContent}>
-            <Row gutter={16}>
-              {senderItems.map((item, index) => (
-                <Col span={4} xs={12} sm={8} md={6} key={index}>
-                  <Button
-                    className={styles.senderItem}
-                    onClick={() => router.push(`senders/edit/${item.id}`)}
-                  >
-                    <div className={styles.itemHeader}>
-                      {item.type === 'email' ? (
-                        <MailOutlined className={styles.itemIcon} />
-                      ) : (
-                        <MobileOutlined className={styles.itemIcon} />
+        )}
+        <div className={styles.cardContent}>
+          <Row gutter={16}>
+            {senderItems.map((item, index) => (
+              <Col span={4} xs={12} sm={8} md={6} key={index}>
+                <Button
+                  className={styles.senderItem}
+                  onClick={() => router.push(`senders/edit/${item.id}`)}
+                >
+                  <div className={styles.itemHeader}>
+                    {item.type === 'email' ? (
+                      <MailOutlined className={styles.itemIcon} />
+                    ) : (
+                      <MobileOutlined className={styles.itemIcon} />
+                    )}
+                    <div className={styles.verifiedWrapper}>
+                      {item.isDefaultSender && (
+                        <div className={styles.defaultText}>
+                          {t('setup.senders.default')}
+                        </div>
                       )}
-                      <div className={styles.verifiedWrapper}>
-                        {item.isDefaultSender && (
-                          <div className={styles.defaultText}>
-                            {t('setup.senders.default')}
-                          </div>
-                        )}
-                        {item.isEnableReplies && <Verified />}
-                      </div>
+                      {item.isEnableReplies && <Verified />}
                     </div>
-                    <div className={styles.itemBody}>
-                      <div>{item.fromName}</div>
-                      {item.fromEmail && (
-                        <div className={styles.email}>{item.fromEmail}</div>
-                      )}
-                    </div>
-                  </Button>
-                </Col>
-              ))}
-            </Row>
-          </div>
+                  </div>
+                  <div className={styles.itemBody}>
+                    <div>{item.fromName}</div>
+                    {item.fromEmail && (
+                      <div className={styles.email}>{item.fromEmail}</div>
+                    )}
+                  </div>
+                </Button>
+              </Col>
+            ))}
+          </Row>
         </div>
-      </Layout>
-    </>
+      </div>
+    </Layout>
   )
 }
 

@@ -7,8 +7,7 @@ import {
 import { Card, Tabs, Typography } from 'antd'
 import React, { FC, useContext, useState } from 'react'
 import Highlighter from 'react-highlight-words'
-import { useMedia } from 'react-use'
-import CommonHeader from '../../components/CommonHeader'
+import MobileHeader from '../../components/MobileHeader'
 import Layout from '../../components/Layout/Layout'
 import IntegrationHeader, {
   IntegrationTabBody,
@@ -17,6 +16,7 @@ import IntegrationHeader, {
 import { UserContext } from '../../context/UserContext'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { setupIntegrationData } from '../../mocks/SetupIntegration'
+import useWindowSize from '../../hooks/useWindowSize'
 import logo from './../../assets/images/pabau-badge-1.png'
 import styles from './integration.module.less'
 const { Title } = Typography
@@ -106,7 +106,7 @@ export const Integration: FC = () => {
   const [searchItemsArray, setSearchItemsArray] = useState<SearchItemProps[]>(
     []
   )
-  const isMobile = useMedia('(min-width: 541px)')
+  const size = useWindowSize()
 
   const handleSearch = (searchTerm: string) => {
     setSearchValue(searchTerm)
@@ -128,42 +128,48 @@ export const Integration: FC = () => {
 
   return (
     <div>
-      <CommonHeader title={t('integration.page.title')} isLeftOutlined={true} />
       <Layout {...user}>
+        <MobileHeader
+          title={t('integration.page.title')}
+          parent="/setup"
+          isShowSearch
+          handleSearch={handleSearch}
+        />
         <div className={styles.mainDiv}>
           <div className={styles.headWrapper}>
-            {isMobile && (
-              <div>
-                <Breadcrumb
-                  breadcrumbItems={[
-                    {
-                      breadcrumbName: t(
-                        'basic-crud-table-header-breadcrumb-setup-link'
-                      ),
-                      path: 'setup',
-                    },
-                    {
-                      breadcrumbName: t('integration.breadcrumbs'),
-                      path: '/integration',
-                    },
-                  ]}
-                />
+            {size.width > 767 && (
+              <>
+                <div>
+                  <Breadcrumb
+                    items={[
+                      {
+                        breadcrumbName: t(
+                          'basic-crud-table-header-breadcrumb-setup-link'
+                        ),
+                        path: 'setup',
+                      },
+                      {
+                        breadcrumbName: t('integration.breadcrumbs'),
+                        path: '/integration',
+                      },
+                    ]}
+                  />
 
-                <Title>{t('integration.page.title')}</Title>
-              </div>
+                  <Title>{t('integration.page.title')}</Title>
+                </div>
+                <div className={styles.searchWrapper}>
+                  <SetupSearchInput
+                    onChange={handleSearch}
+                    placeholder={t('integration.search')}
+                  />
+                </div>
+              </>
             )}
-
-            <div className={styles.searchWrapper}>
-              <SetupSearchInput
-                onChange={handleSearch}
-                placeholder={t('integration.search')}
-              />
-            </div>
           </div>
           {!searchValue ? (
             <div className={styles.manageWrapper}>
               <Tabs
-                tabPosition="left"
+                tabPosition={size.width > 767 ? 'left' : 'top'}
                 defaultActiveKey={active}
                 activeKey={active}
                 onTabClick={(value) => setActive(value)}

@@ -4,6 +4,7 @@ import styles from './NotificationBanner.module.less'
 import { Row, Col } from 'antd'
 import iconClose from '../../assets/images/icon_close.svg'
 import { useRouter } from 'next/router'
+import classNames from 'classnames'
 
 interface P {
   title?: string
@@ -37,7 +38,9 @@ export const NotificationBanner: FC<P> = ({
 
   return (
     <div
-      className={isHide ? styles.hideBlock : styles.notificationBody}
+      className={classNames(
+        isHide ? styles.hideBlock : styles.notificationBody
+      )}
       style={{ backgroundImage: `url(${imgPath})`, backgroundSize: 'contain' }}
     >
       <Row className={styles.rowPosition}>

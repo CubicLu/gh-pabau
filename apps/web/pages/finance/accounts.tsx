@@ -17,6 +17,7 @@ import {
   Select,
   Typography,
   Popover,
+  Input,
 } from 'antd'
 import {
   CalendarOutlined,
@@ -24,6 +25,7 @@ import {
   ExportOutlined,
   FilterOutlined,
   MailOutlined,
+  SearchOutlined,
 } from '@ant-design/icons'
 import classNames from 'classnames'
 import Layout from '../../components/Layout/Layout'
@@ -31,10 +33,11 @@ import Invoice from '../../components/Account/Invoice'
 import Payments from '../../components/Account/Payments'
 import Debt from '../../components/Account/Debt'
 import CreditNote from '../../components/Account/CreditNote'
+import MobileHeader from '../../components/MobileHeader'
 import { FilterValueType } from '../../components/Account/TableLayout'
+import { ReactComponent as CloseIcon } from '../../assets/images/close-icon.svg'
 import styles from './accounts.module.less'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import CommonHeader from '../../components/CommonHeader'
 import dayjs, { Dayjs } from 'dayjs'
 import { Formik } from 'formik'
 import { UserContext } from '../../context/UserContext'
@@ -65,6 +68,7 @@ export function Account() {
   const { Title } = Typography
   const { Option } = Select
   const [activeTab, setActiveTab] = useState('0')
+  const [mobileSearch, setMobileSearch] = useState(false)
   const [showDateFilter, setShowDateFilter] = useState(false)
   const [selectedRange, setSelectedRange] = useState<string>(
     t('account.finance.date.range.option.month')
@@ -468,134 +472,181 @@ export function Account() {
   }
 
   return (
-    <React.Fragment>
-      <CommonHeader />
-      <Layout active={'account'} {...user}>
-        <div
-          className={classNames(styles.desktopHeader, styles.mobileViewNone)}
-        >
-          <div style={{ marginTop: '17px' }}>
-            <Title>{t('account.finance.title')}</Title>
-          </div>
-          <div className={styles.searchInputText}>
-            <div
-              className={classNames(
-                styles.searchInput,
-                activeTab === '1' && styles.paymentSearch
-              )}
-            >
-              <SetupSearchInput
+    <Layout active={'account'} {...user}>
+      <MobileHeader title={t('account.finance.title')}>
+        <div className={styles.searchInputText}>
+          {mobileSearch && (
+            <div className={styles.mobileSearchInput}>
+              <Input
+                className={styles.searchMarketingStyle}
                 placeholder={searchPlaceHoler[activeTab]}
-                onChange={(item) => {
-                  setSearchValue(item)
-                }}
+                onChange={(e) => setSearchValue(e.target.value)}
+                suffix={
+                  <CloseIcon
+                    onClick={() => {
+                      setSearchValue('')
+                      setMobileSearch(() => !mobileSearch)
+                    }}
+                  />
+                }
+                autoFocus
               />
             </div>
-            <Dropdown
-              overlay={dateRange}
-              placement="bottomRight"
-              trigger={['click']}
-              visible={showDateFilter}
-              onVisibleChange={(val) => setShowDateFilter(val)}
-            >
+          )}
+          {!mobileSearch && (
+            <div className={styles.marketingIcon}>
+              <SearchOutlined
+                onClick={() => {
+                  setMobileSearch(() => !mobileSearch)
+                }}
+                className={styles.marketingIconStyle}
+              />
+              <Dropdown
+                overlay={dateRange}
+                placement="bottomRight"
+                trigger={['click']}
+                visible={showDateFilter}
+                onVisibleChange={(val) => setShowDateFilter(val)}
+              >
+                <CalendarOutlined className={styles.marketingIconStyle} />
+              </Dropdown>
+
+              <Popover
+                trigger="click"
+                content={renderFilter}
+                placement="bottomRight"
+                overlayClassName={styles.filterPopOver}
+                visible={isPopOverVisible}
+                onVisibleChange={(visible) => setIsPopOverVisible(visible)}
+              >
+                <FilterOutlined className={styles.marketingIconStyle} />
+              </Popover>
+            </div>
+          )}
+        </div>
+      </MobileHeader>
+      <div className={classNames(styles.desktopHeader, styles.mobileViewNone)}>
+        <div style={{ marginTop: '17px' }}>
+          <Title>{t('account.finance.title')}</Title>
+        </div>
+        <div className={styles.searchInputText}>
+          <div
+            className={classNames(
+              styles.searchInput,
+              activeTab === '1' && styles.paymentSearch
+            )}
+          >
+            <SetupSearchInput
+              placeholder={searchPlaceHoler[activeTab]}
+              onChange={(item) => {
+                setSearchValue(item)
+              }}
+            />
+          </div>
+          <Dropdown
+            overlay={dateRange}
+            placement="bottomRight"
+            trigger={['click']}
+            visible={showDateFilter}
+            onVisibleChange={(val) => setShowDateFilter(val)}
+          >
+            <Button type="ghost">
+              <CalendarOutlined />{' '}
+              {selectedRange === 'custom'
+                ? `${Intl.DateTimeFormat('en').format(
+                    new Date(`${selectedDates[0]}`)
+                  )} - ${Intl.DateTimeFormat('en').format(
+                    new Date(`${selectedDates[1]}`)
+                  )}`
+                : `${selectedRange.replace('-', ' ')}`}
+            </Button>
+          </Dropdown>
+          {false && (
+            <Dropdown overlay={manageOptions} placement="bottomLeft">
               <Button type="ghost">
-                <CalendarOutlined />{' '}
-                {selectedRange === 'custom'
-                  ? `${Intl.DateTimeFormat('en').format(
-                      new Date(`${selectedDates[0]}`)
-                    )} - ${Intl.DateTimeFormat('en').format(
-                      new Date(`${selectedDates[1]}`)
-                    )}`
-                  : `${selectedRange.replace('-', ' ')}`}
+                {t('account.finance.manage.options')}
               </Button>
             </Dropdown>
-            {false && (
-              <Dropdown overlay={manageOptions} placement="bottomLeft">
-                <Button type="ghost">
-                  {t('account.finance.manage.options')}
-                </Button>
-              </Dropdown>
-            )}
-            {false && (
-              <Button
-                type="primary"
-                style={{ color: 'white' }}
-                onClick={() => {
-                  setShowModal(true)
-                }}
-              >
-                <MailOutlined /> {t('account.finance.send.reminders')}
-                <span className={styles.reminderText2}>
-                  {t('account.finance.send.reminders.count')}
-                </span>
-              </Button>
-            )}
-            <Popover
-              trigger="click"
-              content={renderFilter}
-              placement="bottomRight"
-              overlayClassName={styles.filterPopOver}
-              visible={isPopOverVisible}
-              onVisibleChange={(visible) => setIsPopOverVisible(visible)}
+          )}
+          {false && (
+            <Button
+              type="primary"
+              style={{ color: 'white' }}
+              onClick={() => {
+                setShowModal(true)
+              }}
             >
-              <Button type="ghost">
-                <FilterOutlined />
-                {t('account.finance.filter')}
-              </Button>
-            </Popover>
-          </div>
+              <MailOutlined /> {t('account.finance.send.reminders')}
+              <span className={styles.reminderText2}>
+                {t('account.finance.send.reminders.count')}
+              </span>
+            </Button>
+          )}
+          <Popover
+            trigger="click"
+            content={renderFilter}
+            placement="bottomRight"
+            overlayClassName={styles.filterPopOver}
+            visible={isPopOverVisible}
+            onVisibleChange={(visible) => setIsPopOverVisible(visible)}
+          >
+            <Button type="ghost">
+              <FilterOutlined />
+              {t('account.finance.filter')}
+            </Button>
+          </Popover>
         </div>
-        <Divider style={{ margin: 0 }} />
-        <TabMenu
-          tabPosition="top"
-          menuItems={tabMenuItems}
-          tabBarStyle={{ backgroundColor: '#FFF' }}
-          onTabClick={(activeKey) => setActiveTab(activeKey)}
-        >
-          <Invoice
-            searchTerm={searchTerm}
-            selectedDates={filterDate}
-            filterValue={filterValues}
-            selectedRange={filterRange}
-          />
-          <Payments
-            searchTerm={searchTerm}
-            selectedDates={filterDate}
-            filterValue={filterValues}
-            selectedRange={filterRange}
-          />
-          <Debt
-            searchTerm={searchTerm}
-            selectedDates={filterDate}
-            filterValue={filterValues}
-            selectedRange={filterRange}
-          />
-          <CreditNote
-            searchTerm={searchTerm}
-            selectedDates={filterDate}
-            filterValue={filterValues}
-            selectedRange={filterRange}
-          />
-        </TabMenu>
-        <Modal
-          title={t('account.finance.send.reminder.modal.title')}
-          visible={showModal}
-          onCancel={() => {
-            setShowModal(false)
-          }}
-          footer={false}
-          width={680}
-          bodyStyle={{ paddingTop: '0px' }}
-          centered={true}
-        >
-          <Table
-            columns={columns}
-            dataSource={data as never[]}
-            bordered={false}
-          />
-        </Modal>
-      </Layout>
-    </React.Fragment>
+      </div>
+      <Divider style={{ margin: 0 }} />
+      <TabMenu
+        tabPosition="top"
+        menuItems={tabMenuItems}
+        tabBarStyle={{ backgroundColor: '#FFF' }}
+        onTabClick={(activeKey) => setActiveTab(activeKey)}
+      >
+        <Invoice
+          searchTerm={searchTerm}
+          selectedDates={filterDate}
+          filterValue={filterValues}
+          selectedRange={filterRange}
+        />
+        <Payments
+          searchTerm={searchTerm}
+          selectedDates={filterDate}
+          filterValue={filterValues}
+          selectedRange={filterRange}
+        />
+        <Debt
+          searchTerm={searchTerm}
+          selectedDates={filterDate}
+          filterValue={filterValues}
+          selectedRange={filterRange}
+        />
+        <CreditNote
+          searchTerm={searchTerm}
+          selectedDates={filterDate}
+          filterValue={filterValues}
+          selectedRange={filterRange}
+        />
+      </TabMenu>
+      <Modal
+        title={t('account.finance.send.reminder.modal.title')}
+        visible={showModal}
+        onCancel={() => {
+          setShowModal(false)
+        }}
+        footer={false}
+        width={680}
+        bodyStyle={{ paddingTop: '0px' }}
+        centered={true}
+      >
+        <Table
+          columns={columns}
+          dataSource={data as never[]}
+          bordered={false}
+        />
+      </Modal>
+    </Layout>
   )
 }
 

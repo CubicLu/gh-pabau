@@ -1,7 +1,5 @@
 import {
   DownloadOutlined,
-  FilterOutlined,
-  MenuOutlined,
   PlusSquareFilled,
   SearchOutlined,
 } from '@ant-design/icons'
@@ -14,6 +12,7 @@ import { Card, Divider, Input as AntInput, Typography } from 'antd'
 import { useRouter } from 'next/router'
 import React, { SetStateAction, useContext, useEffect, useState } from 'react'
 import { useWindowSize } from 'react-use'
+import { ReactComponent as CloseIcon } from '../../assets/images/close-icon.svg'
 import Layout from '../../components/Layout/Layout'
 import SearchGlobal from '../../components/Search'
 import Category from '../../components/Product/Category'
@@ -22,6 +21,7 @@ import PurchaseOrder from '../../components/Product/PurchaseOrder'
 import StockTake from '../../components/Product/StockTake'
 import Supplier from '../../components/Product/Supplier'
 import Filter from '../../components/Product/Filter'
+import MobileHeader from '../../components/MobileHeader'
 import { UserContext } from '../../context/UserContext'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './list.module.less'
@@ -72,6 +72,7 @@ const ProductList = (): JSX.Element => {
   const [showCreateProduct, setShowCreateProduct] = useState(false)
   const [categorySearchTerm, setCategorySearchTerm] = useState<string>()
   const [searchTerm, setSearchTerm] = useState<string>(null)
+  const [mobileSearch, setMobileSearch] = useState(false)
   const initialValues: { status: number; type: string } = {
     status: 1,
     type: 'Retail',
@@ -179,17 +180,57 @@ const ProductList = (): JSX.Element => {
   return (
     <div className={styles.productsListContainer}>
       <Layout {...user}>
-        <Card bodyStyle={{ padding: 0 }} style={{ borderBottomWidth: 0 }}>
-          <div className={styles.headerContainer}>
-            <Title>
-              {isMobile && (
-                <MenuOutlined
-                  className={styles.menuIconStyle}
-                  onClick={() => setMenuDrawer(true)}
+        <MobileHeader title={tabItemText[activeTab]}>
+          {mobileSearch && (
+            <AntInput
+              placeholder={t('products.list.searchbar.placeholder')}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              suffix={
+                <CloseIcon
+                  onClick={() => {
+                    setMobileSearch(() => !mobileSearch)
+                  }}
+                />
+              }
+              autoFocus
+            />
+          )}
+          {!mobileSearch && (
+            <>
+              <SearchOutlined
+                className={styles.searchIconStyle}
+                onClick={() => {
+                  setMobileSearch(() => !mobileSearch)
+                }}
+              />
+              {activeTab === ActiveTab.Products && (
+                <DownloadOutlined className={styles.downloadIconStyle} />
+              )}
+              {(activeTab === ActiveTab.Products ||
+                activeTab === ActiveTab.PurchaseOrders ||
+                activeTab === ActiveTab.Category) && (
+                <Filter
+                  initialValues={initialValues}
+                  selectedCategoryType={selectedCategoryType}
+                  activeTab={activeTab}
+                  categoryType={categoryType}
+                  ActiveTab={ActiveTab}
+                  changeFilter={(status) => updateFilterStatus(status)}
+                  changeCategoryType={(type) => {
+                    if (activeTab === '0') setSelectedCategoryType(type)
+                  }}
                 />
               )}
-              {tabItemText[activeTab]}
-            </Title>
+              <PlusSquareFilled
+                className={styles.plusIconStyle}
+                onClick={() => handleCreate()}
+              />
+            </>
+          )}
+        </MobileHeader>
+        <Card bodyStyle={{ padding: 0 }} style={{ borderBottomWidth: 0 }}>
+          <div className={styles.headerContainer}>
+            <Title>{tabItemText[activeTab]}</Title>
             <div className={styles.headerRight}>
               {!isMobile && (
                 <Search
@@ -199,18 +240,13 @@ const ProductList = (): JSX.Element => {
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               )}
-              {isMobile && (
-                <SearchOutlined className={styles.searchIconStyle} />
-              )}
               {activeTab === ActiveTab.Products && !isMobile && (
                 <Button onClick={() => router.push('/products/export')}>
                   <DownloadOutlined />
                   {t('products.list.export')}
                 </Button>
               )}
-              {activeTab === ActiveTab.Products && isMobile && (
-                <DownloadOutlined className={styles.downloadIconStyle} />
-              )}
+
               {(activeTab === ActiveTab.Products ||
                 activeTab === ActiveTab.PurchaseOrders ||
                 activeTab === ActiveTab.Category) &&
@@ -227,22 +263,10 @@ const ProductList = (): JSX.Element => {
                     }}
                   />
                 )}
-              {(activeTab === ActiveTab.Products ||
-                activeTab === ActiveTab.PurchaseOrders ||
-                activeTab === ActiveTab.Category) &&
-                isMobile && (
-                  <FilterOutlined className={styles.filterIconStyle} />
-                )}
               {!isMobile && (
                 <Button type="primary" onClick={() => handleCreate()}>
                   {newBtnText[activeTab]}
                 </Button>
-              )}
-              {isMobile && (
-                <PlusSquareFilled
-                  className={styles.plusIconStyle}
-                  onClick={() => handleCreate()}
-                />
               )}
             </div>
           </div>
