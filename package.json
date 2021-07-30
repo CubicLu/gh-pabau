@@ -1,6 +1,6 @@
 {
   "name": "pabau",
-  "version": "2.0.456",
+  "version": "2.0.457",
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
   "workspaces": {
@@ -256,8 +256,8 @@
     "@typescript-eslint/parser": "4.28.0",
     "@vercel/node": "1.11.1",
     "apollo-server-testing": "2.24.0",
-    "babel-jest": "27.0.6",
     "atob": "^2.1.2",
+    "babel-jest": "27.0.6",
     "babel-loader": "8.2.2",
     "bitbucket": "2.6.1",
     "concurrently": "6.1.0",
