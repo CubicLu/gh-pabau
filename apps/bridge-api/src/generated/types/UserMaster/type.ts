@@ -26,7 +26,7 @@ export const UserMaster = objectType({
     t.string('pic')
     t.int('contact_id')
     t.string('mobile')
-    t.field('last_login', { type: 'DateTime' })
+    t.nullable.field('last_login', { type: 'DateTime' })
     t.boolean('is_suspended')
     t.string('session_hash')
     t.field('Company', {
