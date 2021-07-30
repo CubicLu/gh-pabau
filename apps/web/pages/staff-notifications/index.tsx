@@ -1,12 +1,14 @@
 import { gql, useMutation } from '@apollo/client'
 import { Notification, NotificationType, useLiveQuery } from '@pabau/ui'
-import { Button, Col, Row } from 'antd'
+import { Button, Col, Row, Typography, Divider } from 'antd'
 import { Formik } from 'formik'
 import { Form as AntForm, Input, Select } from 'formik-antd'
 import { NextPage } from 'next'
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import Layout from '../../components/Layout/Layout'
 import { UserContext } from '../../context/UserContext'
+import MobileHeader from '../../components/MobileHeader'
+import useWindowSize from '../../hooks/useWindowSize'
 import { notificationVariables } from '../../mocks/StaffNotifications'
 import styles from './staff-notifications.module.less'
 
@@ -72,6 +74,7 @@ const ADD_MUTATION = gql`
 
 const users = ['All Admins', 'All Users']
 const loops = [2, 5, 7]
+const { Title } = Typography
 
 const initialValues: InitialStaffNotifications = {
   type: '',
@@ -89,6 +92,7 @@ interface LoggedUser {
 export const StaffNotifications: NextPage = () => {
   const { data: notificationTypes } = useLiveQuery(LIST_QUERY)
   const [user, setUser] = useState<LoggedUser>()
+  const size = useWindowSize()
   const loggedUser = useContext(UserContext)
 
   useEffect(() => {
@@ -171,72 +175,79 @@ export const StaffNotifications: NextPage = () => {
   }
 
   return (
-    <div>
-      <Layout>
-        <div className={styles.mainContainer}>
-          <Row>
-            <Col md={8}>
-              <Formik
-                innerRef={formRef}
-                initialValues={initialValues}
-                onSubmit={onSubmit}
-              >
-                {({ handleSubmit, handleChange }) => (
-                  <AntForm layout={'vertical'} requiredMark={false}>
-                    <AntForm.Item label={'Notification Type'} name={'type'}>
-                      <Select name={'type'} style={{ width: '100%' }}>
-                        {notificationTypes?.map((notification_type) => (
-                          <Select.Option
-                            key={notification_type.id}
-                            value={notification_type.id}
-                          >
-                            {notification_type.type}
-                          </Select.Option>
-                        ))}
-                      </Select>
-                    </AntForm.Item>
-                    <AntForm.Item
-                      label={'Destination ID'}
-                      name={'destination_id'}
+    <Layout>
+      <MobileHeader title="Staff Notifications" />
+      <div className={styles.mainContainer}>
+        {size.width > 767 && (
+          <>
+            <div className={styles.headerContainer}>
+              <Title>Staff Notifications</Title>
+            </div>
+            <Divider style={{ margin: 0 }} />
+          </>
+        )}
+        <Row className={styles.formikRow}>
+          <Col md={8}>
+            <Formik
+              innerRef={formRef}
+              initialValues={initialValues}
+              onSubmit={onSubmit}
+            >
+              {({ handleSubmit, handleChange }) => (
+                <AntForm layout={'vertical'} requiredMark={false}>
+                  <AntForm.Item label={'Notification Type'} name={'type'}>
+                    <Select name={'type'} style={{ width: '100%' }}>
+                      {notificationTypes?.map((notification_type) => (
+                        <Select.Option
+                          key={notification_type.id}
+                          value={notification_type.id}
+                        >
+                          {notification_type.type}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                  </AntForm.Item>
+                  <AntForm.Item
+                    label={'Destination ID'}
+                    name={'destination_id'}
+                  >
+                    <Input name={'destination_id'} />
+                  </AntForm.Item>
+                  <AntForm.Item label={'Users'} name={'users'}>
+                    <Select
+                      onChange={(e) => {
+                        setUserRole(e)
+                        handleChange(e)
+                      }}
+                      name={'users'}
+                      style={{ width: '100%' }}
                     >
-                      <Input name={'destination_id'} />
-                    </AntForm.Item>
-                    <AntForm.Item label={'Users'} name={'users'}>
-                      <Select
-                        onChange={(e) => {
-                          setUserRole(e)
-                          handleChange(e)
-                        }}
-                        name={'users'}
-                        style={{ width: '100%' }}
-                      >
-                        {users.map((role) => (
-                          <Select.Option key={role} value={role}>
-                            {role}
-                          </Select.Option>
-                        ))}
-                      </Select>
-                    </AntForm.Item>
-                    <AntForm.Item label={'Loop'} name={'loop'}>
-                      <Select name={'loop'} style={{ width: '100%' }}>
-                        {loops.map((day) => (
-                          <Select.Option key={day} value={day}>
-                            {day + ' days'}
-                          </Select.Option>
-                        ))}
-                      </Select>
-                    </AntForm.Item>
-                    <Button type="primary" onClick={() => handleSubmit()}>
-                      Create
-                    </Button>
-                  </AntForm>
-                )}
-              </Formik>
-            </Col>
-          </Row>
-        </div>
-      </Layout>
-    </div>
+                      {users.map((role) => (
+                        <Select.Option key={role} value={role}>
+                          {role}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                  </AntForm.Item>
+                  <AntForm.Item label={'Loop'} name={'loop'}>
+                    <Select name={'loop'} style={{ width: '100%' }}>
+                      {loops.map((day) => (
+                        <Select.Option key={day} value={day}>
+                          {day + ' days'}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                  </AntForm.Item>
+                  <Button type="primary" onClick={() => handleSubmit()}>
+                    Create
+                  </Button>
+                </AntForm>
+              )}
+            </Formik>
+          </Col>
+        </Row>
+      </div>
+    </Layout>
   )
 }
 

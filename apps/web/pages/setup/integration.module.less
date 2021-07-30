@@ -7,8 +7,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
-
 
   .search-wrapper {
     display: flex;
@@ -19,8 +17,8 @@
 
     .Input_input-container {
       height: 40px;
-      border: 1px solid #ECEDF0;
-      background: #FFFFFF;
+      border: 1px solid #ecedf0;
+      background: #ffffff;
       border-radius: 4px;
     }
   }
@@ -33,11 +31,15 @@
       .ant-tabs-nav-wrap {
         .ant-tabs-nav-list {
           .ant-tabs-tab {
-            color: #9292A3;
+            color: #9292a3;
             font-size: 14px;
+            @media screen and (max-width: 767px) {
+              margin: 0px;
+              padding: 12px 24px;
+            }
           }
           .ant-tabs-tab-disabled {
-            color: #3D3D46;
+            color: #3d3d46;
             font-size: 16px;
           }
           .ant-tabs-ink-bar-animated {
@@ -49,20 +51,20 @@
     .ant-tabs-content-holder {
       .ant-tabs-content {
         .ant-tabs-tabpane {
-            padding-left: 0;
+          padding-left: 0;
         }
       }
     }
   }
   .popular-wrapper {
-      padding: 0 24px;
-      h5 {
-        font-size: 16px;
-        line-height: 24px;
-        color: #3D3D46;
-        margin-bottom: 0;
-      }
-  } 
+    padding: 0 24px;
+    h5 {
+      font-size: 16px;
+      line-height: 24px;
+      color: #3d3d46;
+      margin-bottom: 0;
+    }
+  }
 }
 
 .error-wrapper {
@@ -70,8 +72,8 @@
 }
 
 .search-string {
-  background: #FFFFFF;
-  border: 1px solid #ECEDF0;
+  background: #ffffff;
+  border: 1px solid #ecedf0;
   box-sizing: border-box;
   border-radius: 4px;
   height: 40px;
@@ -79,11 +81,11 @@
   line-height: 40px;
 
   span {
-    background: #EEF7FB;
+    background: #eef7fb;
     border-radius: 4px;
     font-size: 14px;
     line-height: 22px;
-    color: #54B2D3;
+    color: #54b2d3;
     padding: 4px;
   }
 }
@@ -101,14 +103,14 @@
     p {
       font-size: 14px;
       line-height: 22px;
-      color: #9292A3;
+      color: #9292a3;
     }
 
     h4 {
       font-weight: 500;
       font-size: 16px;
       line-height: 24px;
-      color: #3D3D46;
+      color: #3d3d46;
       margin-bottom: 0;
     }
   }
@@ -119,9 +121,8 @@
     padding-left: 24px;
     font-size: 16px;
     line-height: 24px;
-    color: #3D3D46;
+    color: #3d3d46;
   }
-
 }
 
 .popular-wrapper {
@@ -135,7 +136,7 @@
     font-size: 14px;
     line-height: 20px;
     text-transform: capitalize;
-    color: #54B2D3;
+    color: #54b2d3;
     cursor: pointer;
   }
 }

@@ -13,6 +13,7 @@ import { useGridData } from '../../hooks/useGridData'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './setup.module.less'
 import { UserContext } from '../../context/UserContext'
+import MobileHeader from '../../components/MobileHeader'
 
 export interface LoadingType {
   videoLoader: boolean
@@ -113,10 +114,15 @@ const Index: FC = (props) => {
       <Layout
         active={'setup'}
         isDisplayingFooter={false}
-        handleSearch={handleSearch}
         title={t('setup.page.title')}
         {...user}
       >
+        <MobileHeader
+          title={t('setup.page.title')}
+          isShowSearch
+          searchInputPlaceHolder={t('setup.reports.search.text.placeholder')}
+          handleSearch={handleSearch}
+        />
         <div className={styles.cardWrapper}>
           <div className={styles.titleWrapper}>
             <span className={styles.title}>{title}</span>

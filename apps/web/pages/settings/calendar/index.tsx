@@ -1,4 +1,3 @@
-import { LeftOutlined } from '@ant-design/icons'
 import {
   CalendarSettingsDataDocument,
   useCalendarSettingsDataQuery,
@@ -15,13 +14,14 @@ import {
   SettingsMenu,
 } from '@pabau/ui'
 import { Card, Typography } from 'antd'
-import Link from 'next/link'
+import useWindowSize from '../../../hooks/useWindowSize'
 import React, { useContext, useEffect, useState } from 'react'
 import Layout from '../../../components/Layout/Layout'
 import Advanced from '../../../components/Settings/Calendar/Advanced'
 import Appearance from '../../../components/Settings/Calendar/Appearance'
 import AppointmentSettings from '../../../components/Settings/Calendar/AppointmentSettings'
 import Configuration from '../../../components/Settings/Calendar/Configuration'
+import MobileHeader from '../../../components/MobileHeader'
 import { UserContext } from '../../../context/UserContext'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
@@ -31,6 +31,7 @@ const { Title } = Typography
 export function Calendar({ ...props }) {
   const { t } = useTranslationI18()
   const user = useContext(UserContext)
+  const size = useWindowSize()
 
   const [isLoading, setIsLoading] = useState(false)
   const [settingsData, setSettingsData] = useState(null)
@@ -116,14 +117,14 @@ export function Calendar({ ...props }) {
   ]
 
   const [createMutation] = useCreateOneCalendarSettingMutation({
-    onCompleted(data) {
+    onCompleted() {
       Notification(
         NotificationType['success'],
         t('settings.calendar.success.notification')
       )
       setIsLoading(false)
     },
-    onError(err) {
+    onError() {
       Notification(
         NotificationType.error,
         t('settings.calendar.error.notification')
@@ -133,14 +134,14 @@ export function Calendar({ ...props }) {
   })
 
   const [updateMutation] = useUpdateOneCalendarSettingMutation({
-    onCompleted(data) {
+    onCompleted() {
       Notification(
         NotificationType['success'],
         t('settings.calendar.success.notification')
       )
       setIsLoading(false)
     },
-    onError(err) {
+    onError() {
       Notification(
         NotificationType.error,
         t('settings.calendar.error.notification')
@@ -233,51 +234,51 @@ export function Calendar({ ...props }) {
   }
 
   return (
-    <div className={styles.calendarWrapper}>
-      <Layout
-        {...user}
-        requireAdminAccess={
-          user?.me?.admin === 0 || user?.me?.admin === undefined ? false : true
-        }
-      >
+    <Layout
+      {...user}
+      requireAdminAccess={
+        user?.me?.admin === 0 || user?.me?.admin === undefined ? false : true
+      }
+    >
+      <MobileHeader parent="/setup" title={t('settings.calendar.title')} />
+      <div className={styles.calendarWrapper}>
         <Card className={styles.calendarCard}>
           <div className={styles.mainTabWrapper}>
-            <div className={styles.titleWrapper}>
-              <span className={styles.hideSection}>
-                <Breadcrumb
-                  breadcrumbItems={[
-                    {
-                      breadcrumbName: t('navigation-breadcrumb-setup'),
-                      path: 'setup',
-                    },
-                    {
-                      breadcrumbName: t('settings.calendar.breadcrumb.title'),
-                      path: '',
-                    },
-                  ]}
-                />
-              </span>
-              <Title>
-                <span className={`${styles.backArrow}`}>
-                  <Link href={'/setup'}>
-                    <LeftOutlined className={styles.leftIcon} />
-                  </Link>
-                </span>
-                {t('settings.calendar.title')}
-              </Title>
-            </div>
-            <div className={styles.saveBtn}>
-              <Button
-                type="primary"
-                onClick={!isLoading && onSaveChange}
-                loading={isLoading}
-                disabled={isLoading}
-                backgroundColor="#54b2d3"
-                className="saveBtn"
-              >
-                {t('settings.calendar.save.button')}
-              </Button>
-            </div>
+            {size.width > 767 && (
+              <>
+                <div className={styles.titleWrapper}>
+                  <span className={styles.hideSection}>
+                    <Breadcrumb
+                      items={[
+                        {
+                          breadcrumbName: t('navigation-breadcrumb-setup'),
+                          path: 'setup',
+                        },
+                        {
+                          breadcrumbName: t(
+                            'settings.calendar.breadcrumb.title'
+                          ),
+                          path: '',
+                        },
+                      ]}
+                    />
+                  </span>
+                  <Title>{t('settings.calendar.title')}</Title>
+                </div>
+                <div className={styles.saveBtn}>
+                  <Button
+                    type="primary"
+                    onClick={!isLoading && onSaveChange}
+                    loading={isLoading}
+                    disabled={isLoading}
+                    backgroundColor="#54b2d3"
+                    className="saveBtn"
+                  >
+                    {t('settings.calendar.save.button')}
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
           <SettingsMenu items={generalSettingsMenu1} />
           <div className={styles.calendarMobileSave}>
@@ -295,8 +296,8 @@ export function Calendar({ ...props }) {
             </div>
           </div>
         </Card>
-      </Layout>
-    </div>
+      </div>
+    </Layout>
   )
 }
 

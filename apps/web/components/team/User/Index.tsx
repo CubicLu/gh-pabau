@@ -20,7 +20,7 @@ import Performance from './Performance/Performance'
 import Emergency from './Emergency/Emergency'
 import CustomizeFields from './PersonalDetail/CustomizeFields'
 import AvatarImage from '../../../assets/images/avatar.png'
-import { LeftOutlined } from '@ant-design/icons'
+import MobileHeader from '../../../components/MobileHeader'
 const { TabPane } = Tabs
 
 export interface customFieldsProps {
@@ -63,17 +63,15 @@ const Index: FC = () => {
     setTabKey(key)
   }
   return (
-    <div className={styles.userDetailMain}>
-      <Layout>
+    <Layout>
+      <MobileHeader parent="/team/users" />
+      <div className={styles.userDetailMain}>
         <div className={styles.userDetailMainWrapper}>
           <div className={styles.userDetailWrapper}>
-            <div className={styles.mobileUserHeader}>
-              <LeftOutlined /> <h2>{userDetail.name}</h2>
-            </div>
             <div className={styles.userDetailHeader}>
               <div>
                 <Breadcrumb
-                  breadcrumbItems={[
+                  items={[
                     { breadcrumbName: 'Users', path: 'team/users' },
                     { breadcrumbName: userDetail.name, path: '' },
                   ]}
@@ -192,8 +190,8 @@ const Index: FC = () => {
           onCreate={handleChangeImage}
           onCancel={() => setShowAvatarUploader(false)}
         />
-      </Layout>
-    </div>
+      </div>
+    </Layout>
   )
 }
 

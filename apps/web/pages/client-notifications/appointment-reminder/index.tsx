@@ -1,10 +1,13 @@
 import { Notification, NotificationType } from '@pabau/ui'
-import React, { FC, useRef, useState } from 'react'
+import React, { FC, useRef, useState, useContext } from 'react'
+import { UserContext } from '../../../context/UserContext'
 import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
 import ClientNotification from '../../../components/ClientNotification/Index'
 import AppointmentEmailPreview from '../../../components/ClientNotificationEmailPreview/AppointmentReminderEmailPreview'
 import { sendEmailService } from '../../../components/ClientNotificationEmailPreview/sendEmailService'
+import MobileHeader from '../../../components/MobileHeader'
 import Layout from '../../../components/Layout/Layout'
+import useWindowSize from '../../../hooks/useWindowSize'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
@@ -13,6 +16,8 @@ const Index: FC = () => {
   )
   const ref = useRef(null)
   const { t } = useTranslationI18()
+  const size = useWindowSize()
+  const user = useContext(UserContext)
 
   const showNotification = (email) => {
     if (selectedTab === 'emailPreview') {
@@ -72,28 +77,34 @@ const Index: FC = () => {
   }
 
   return (
-    <Layout>
-      <CommonNotificationHeader
-        breadcrumbItems={[
-          {
-            path: 'setup',
-            breadcrumbName: t('notifications.breadcrumb.setup'),
-          },
-          {
-            path: 'client-notifications',
-            breadcrumbName: t('notifications.breadcrumb.notificationMessage'),
-          },
-          {
-            path: 'client-notifications/appointment-reminder',
-            breadcrumbName: t(
-              'notifications.upcomingAppointmentReminder.title'
-            ),
-          },
-        ]}
+    <Layout {...user}>
+      <MobileHeader
         title={t('notifications.upcomingAppointmentReminder.title')}
-        selectedTab={selectedTab}
-        handleNotificationSubmit={showNotification}
+        parent="/client-notifications"
       />
+      {size.width > 767 && (
+        <CommonNotificationHeader
+          items={[
+            {
+              path: 'setup',
+              breadcrumbName: t('notifications.breadcrumb.setup'),
+            },
+            {
+              path: 'client-notifications',
+              breadcrumbName: t('notifications.breadcrumb.notificationMessage'),
+            },
+            {
+              path: 'client-notifications/appointment-reminder',
+              breadcrumbName: t(
+                'notifications.upcomingAppointmentReminder.title'
+              ),
+            },
+          ]}
+          title={t('notifications.upcomingAppointmentReminder.title')}
+          selectedTab={selectedTab}
+          handleNotificationSubmit={showNotification}
+        />
+      )}
       <ClientNotification
         ref={ref}
         onSelectedTab={(value) => setSelectedTab(value)}
