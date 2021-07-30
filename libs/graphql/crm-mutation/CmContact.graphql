@@ -72,6 +72,7 @@ fragment CmContactFields on CmContact {
   privacy_policy
   need_to_knows
   contact_type
+  preferred_language
 }
 
 fragment CmContact on CmContact {
@@ -87,12 +88,6 @@ fragment CmContact on CmContact {
   }
   LoyaltyPoint {
     ...LoyaltyPointFields
-  }
-}
-
-mutation createOneCmContact($data: CmContactCreateInput!) {
-  createOneCmContact(data: $data) {
-    ...CmContact
   }
 }
 

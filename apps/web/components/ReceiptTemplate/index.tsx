@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { ReceiptTemplate } from '@pabau/ui'
-import { getImage } from '../../../web/helper/cdn/imageUrl'
+import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
 import { useQuery } from '@apollo/client'
 import { ReceiptTemplateSkeleton } from './skeleton'
 import {

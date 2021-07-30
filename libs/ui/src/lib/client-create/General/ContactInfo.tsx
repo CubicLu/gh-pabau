@@ -1,8 +1,7 @@
 import React, { FC } from 'react'
 import styles from '../ClientCreate.module.less'
-import { InitialDetailsProps } from '../ClientCreate'
 import { Form as AntForm, Input } from 'formik-antd'
-import { PhoneNumberInput } from '@pabau/ui'
+import { InitialDetailsProps, PhoneNumberInput, FieldSetting } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 
 interface GeneralProps {
@@ -11,9 +10,14 @@ interface GeneralProps {
     field: keyof InitialDetailsProps,
     values: string | string[] | boolean | number
   ): void
+  fieldsSettings: FieldSetting[]
 }
 
-export const ContactInfo: FC<GeneralProps> = ({ setFieldValue, values }) => {
+export const ContactInfo: FC<GeneralProps> = ({
+  setFieldValue,
+  values,
+  fieldsSettings,
+}) => {
   const { t } = useTranslation('common')
   return (
     <div className={styles.contactInfo}>
@@ -25,28 +29,34 @@ export const ContactInfo: FC<GeneralProps> = ({ setFieldValue, values }) => {
       >
         <AntForm.Item
           label={t('quickCreate.client.modal.general.email')}
-          name={'email'}
+          name={'Email'}
         >
           <Input
-            name={'email'}
+            name={'Email'}
             placeholder={t(
               'quickCreate.client.modal.general.email.placeHolder'
             )}
           />
         </AntForm.Item>
-        <AntForm.Item name={'phoneNumber'}>
-          <PhoneNumberInput
-            label={t('quickCreate.client.modal.general.mobilePhone')}
-            value={values?.phoneNumber}
-            onChange={(value) => setFieldValue('phoneNumber', value)}
-          />
-        </AntForm.Item>
-        <AntForm.Item
-          label={t('quickCreate.client.modal.general.telephone')}
-          name={'telePhone'}
-        >
-          <Input name={'telePhone'} placeholder={'+ _ ___ _____'} />
-        </AntForm.Item>
+        {fieldsSettings.find((thread) => thread.field_name === 'Mobile') && (
+          <AntForm.Item name={'Mobile'}>
+            <PhoneNumberInput
+              label={t('quickCreate.client.modal.general.mobilePhone')}
+              value={values?.Mobile}
+              onChange={(value) => {
+                setFieldValue('Mobile', value)
+              }}
+            />
+          </AntForm.Item>
+        )}
+        {fieldsSettings.find((thread) => thread.field_name === 'Phone') && (
+          <AntForm.Item
+            label={t('quickCreate.client.modal.general.telephone')}
+            name={'Phone'}
+          >
+            <Input name={'Phone'} placeholder={'+ _ ___ _____'} />
+          </AntForm.Item>
+        )}
       </AntForm>
     </div>
   )

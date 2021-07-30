@@ -15,6 +15,7 @@ import { relativeTime } from '../../helper/relativeTimeFormat'
 import useLogin from '../../hooks/authentication/useLogin'
 import Login from '../../pages/login'
 import Search from '../Search'
+import ClientCreate from '../Clients/ClientCreate'
 import styles from './Layout.module.less'
 import TaskManagerIFrame from '../TaskManagerIFrame/TaskManagerIFrame'
 import { Unauthorized } from '../Unauthorized'
@@ -59,6 +60,7 @@ const Layout: FC<LayoutProps> = ({
   children,
   allowed = true,
   requireAdminAccess = false,
+  handleSearch,
   ...props
 }) => {
   const [authenticated, user] = useLogin(false)
@@ -184,9 +186,15 @@ const Layout: FC<LayoutProps> = ({
           onMessageIconClick={() => setShowChat((e) => !e)}
           legacyContent={!!legacyPage}
           taskManagerIFrameComponent={<TaskManagerIFrame />}
+          clientCreateRender={() => <ClientCreate />}
           {...props}
         >
-          <CommonHeader showChat={showChat} title="Pabau" isShowSearch={true} />
+          <CommonHeader
+            showChat={showChat}
+            title="Pabau"
+            isShowSearch={true}
+            handleSearch={handleSearch}
+          />
           <Chat closeDrawer={() => setShowChat(false)} visible={showChat} />
 
           {!legacyPage ? children : <LegacyPage urlPath={legacyPage} />}

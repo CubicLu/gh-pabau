@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from 'react'
 import { InvoiceTemplate, ICol } from '@pabau/ui'
-import { getImage } from '../../../web/helper/cdn/imageUrl'
+import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
 import { useQuery } from '@apollo/client'
 import InvoiceSkeleton from './skeleton'
 import {

@@ -1603,6 +1603,62 @@ export const Company = objectType({
         return root.CompanyEmail
       },
     })
+    t.list.field('TblModuleFieldsSetting', {
+      type: 'TblModuleFieldsSetting',
+      args: {
+        where: 'TblModuleFieldsSettingWhereInput',
+        orderBy: 'TblModuleFieldsSettingOrderByInput',
+        cursor: 'TblModuleFieldsSettingWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'TblModuleFieldsSettingScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.TblModuleFieldsSetting
+      },
+    })
+    t.list.field('CmContactCustom', {
+      type: 'CmContactCustom',
+      args: {
+        where: 'CmContactCustomWhereInput',
+        orderBy: 'CmContactCustomOrderByInput',
+        cursor: 'CmContactCustomWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CmContactCustomScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CmContactCustom
+      },
+    })
+    t.list.field('CmLabel', {
+      type: 'CmLabel',
+      args: {
+        where: 'CmLabelWhereInput',
+        orderBy: 'CmLabelOrderByInput',
+        cursor: 'CmLabelWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CmLabelScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CmLabel
+      },
+    })
+    t.list.field('CmContactLabel', {
+      type: 'CmContactLabel',
+      args: {
+        where: 'CmContactLabelWhereInput',
+        orderBy: 'CmContactLabelOrderByInput',
+        cursor: 'CmContactLabelWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CmContactLabelScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CmContactLabel
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyCountOutputType',
       resolve(root: any) {

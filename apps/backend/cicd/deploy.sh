@@ -49,12 +49,15 @@ echo "Docker build..."
 docker build "dist/apps/${APP_NAME}" -t "${APP_NAME}" -f "tools/cicd/${APP_NAME}.Dockerfile"
 
 echo "Test the docker..."
-docker run -p 5823:3333 "${APP_NAME}" &
+docker run -p 5823:3333 --name docker_up_test "${APP_NAME}" &
 apt update
 apt install wait-for-it
 echo "Waiting for docker to be up..."
 time wait-for-it localhost:5823 -t 250
 echo "We have a result.. $?"
+docker stop -t 10 docker_up_test || echo "Couldn't stop"
+docker rm -vf docker_up_test
+echo "Cleaned up"
 
 if [ -z "${BITBUCKET_PR_ID}" ] && [ -n "${BITBUCKET_BRANCH}" ]; then
 
