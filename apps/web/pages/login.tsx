@@ -53,7 +53,8 @@ const Login: FC = () => {
       })
 
       //check for 2fa if enabled or disabled
-      if (user.CompanyDetails?.enable_2fa) {
+      // eslint-disable-next-line no-constant-condition
+      if (false && user.CompanyDetails?.enable_2fa) {
         setShowPage('twoStepAuth')
         return
       }
