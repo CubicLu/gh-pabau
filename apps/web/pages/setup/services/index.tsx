@@ -3,24 +3,24 @@ import Layout from '../../../components/Layout/Layout'
 import ServicesTab from '../../../components/services/ServicesTab/ServicesTab'
 import CategoriesTab from '../../../components/services/CategoriesTab/CategoriesTab'
 import LibrariesTab from '../../../components/services/LibrariesTab/LibrariesTab'
-import MobileHeader from '../../../components/MobileHeader'
-import useWindowSize from '../../../hooks/useWindowSize'
-import { ReactComponent as CloseIcon } from '../../../assets/images/close-icon.svg'
 import { TabMenu, Breadcrumb, Button, Pagination } from '@pabau/ui'
 import { Card, Input, Popover, Radio, Select } from 'antd'
+import className from 'classnames'
+import { useMedia } from 'react-use'
+import { useRouter } from 'next/router'
 import {
+  LeftOutlined,
   SearchOutlined,
   FilterOutlined,
   ExportOutlined,
-  PlusSquareFilled,
+  PlusOutlined,
 } from '@ant-design/icons'
 import styles from './index.module.less'
 
 const { Option } = Select
 
 export const Index: FC = () => {
-  const size = useWindowSize()
-  const [mobileSearch, setMobileSearch] = useState(false)
+  const [showSearchInput, setShowSearchInput] = useState(false)
 
   const TopTabMenuItems = ['Services', 'Categories', 'Library']
   const AddBtnLabels = ['New Service', 'New Category']
@@ -36,6 +36,9 @@ export const Index: FC = () => {
   const [addBtnLabel, setAddBtnLabel] = useState(AddBtnLabels[0])
   const [updatedCategories, setUpdatedCategories] = useState(null)
   const [addCategoryModal, setAddCategoryModal] = useState(false)
+
+  const isMobile = useMedia('(max-width: 768px)', false)
+  const router = useRouter()
 
   const filterContent = (isMobile = false) => (
     <div className="filterContent">
@@ -102,21 +105,54 @@ export const Index: FC = () => {
     }
   }
 
-  const CardHeader = () => (
+  const handleBack = () => {
+    router.back()
+  }
+
+  const CardHeader = (
     <div className={styles.header}>
       <div className="leftDiv">
-        <Breadcrumb
-          items={[
-            { breadcrumbName: 'Setup', path: 'setup' },
-            { breadcrumbName: 'Services', path: '' },
-          ]}
-        />
-        <h3 className={styles.servicesHeading}>Services</h3>
+        <div className="hidden-sm">
+          <Breadcrumb
+            breadcrumbItems={[
+              { breadcrumbName: 'Setup', path: 'setup' },
+              { breadcrumbName: 'Services', path: '' },
+            ]}
+          />
+        </div>
+        <h3 className={styles.servicesHeading}>
+          <span className="hidden-lg">
+            <LeftOutlined onClick={handleBack} />
+          </span>{' '}
+          Services
+        </h3>
       </div>
       <div className="rightDiv">
+        <span className="hidden-lg">
+          {isMobile && showSearchInput ? (
+            <Input
+              className="isMobile-search-input"
+              value={searchTerm}
+              autoFocus
+              placeholder="Search"
+              suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
+              onChange={(e) => {
+                setSearchTerm(e.target.value)
+              }}
+            />
+          ) : (
+            <SearchOutlined
+              className="isMobile-search-icon"
+              onClick={() =>
+                setShowSearchInput((showSearchInput) => !showSearchInput)
+              }
+            />
+          )}
+        </span>
+
         <Input
           value={searchTerm}
-          className={styles.searchDrugsListing}
+          className={className(styles.searchDrugsListing, 'hidden-sm')}
           autoFocus
           placeholder="Search"
           suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
@@ -126,7 +162,7 @@ export const Index: FC = () => {
         />
         {showCreateBtn && (
           <div>
-            <Button type="default" size="large">
+            <Button type="default" size="large" className="hidden-sm">
               <ExportOutlined /> Export
             </Button>
             <Popover
@@ -135,14 +171,37 @@ export const Index: FC = () => {
               placement="bottomRight"
               overlayClassName={styles.filterPopover}
             >
-              <Button className={styles.filterBtn} size="large">
+              <span className="hidden-lg">
+                <FilterOutlined />
+              </span>
+              <Button
+                className={className(styles.filterBtn, 'hidden-sm')}
+                size="large"
+              >
                 <FilterOutlined /> Filter
               </Button>
             </Popover>
             {addBtnState && (
-              <Button type="primary" size="large" onClick={() => addBtnClick()}>
-                {addBtnLabel}
-              </Button>
+              <>
+                <Button
+                  type="primary"
+                  size="middle"
+                  className="hidden-lg"
+                  onClick={() => addBtnClick()}
+                >
+                  <span>
+                    <PlusOutlined />
+                  </span>
+                </Button>
+                <Button
+                  type="primary"
+                  size="large"
+                  className="hidden-sm"
+                  onClick={() => addBtnClick()}
+                >
+                  {addBtnLabel}
+                </Button>
+              </>
             )}
           </div>
         )}
@@ -152,7 +211,7 @@ export const Index: FC = () => {
 
   const checkClickOutsideInput = (e) => {
     if (e.key === 'Escape') {
-      setMobileSearch(false)
+      setShowSearchInput(false)
     }
   }
 
@@ -190,50 +249,8 @@ export const Index: FC = () => {
 
   return (
     <Layout>
-      <MobileHeader parent="/setup" title={'Services'}>
-        {mobileSearch && (
-          <Input
-            className={styles.searchMarketingStyle}
-            placeholder="Search"
-            onChange={(e) => setSearchTerm(e.target.value)}
-            suffix={
-              <CloseIcon
-                onClick={() => {
-                  setMobileSearch(() => !mobileSearch)
-                }}
-              />
-            }
-            autoFocus
-          />
-        )}
-        {!mobileSearch && (
-          <div className={styles.marketingIcon}>
-            <SearchOutlined
-              onClick={() => {
-                setMobileSearch(() => !mobileSearch)
-              }}
-              className={styles.marketingIconStyle}
-            />
-            <Popover
-              trigger="click"
-              content={filterContent}
-              placement="bottomRight"
-              overlayClassName={styles.filterPopover}
-            >
-              <FilterOutlined className={styles.marketingIconStyle} />
-            </Popover>
-            {addBtnState && (
-              <PlusSquareFilled
-                className={styles.plusIconStyle}
-                onClick={() => addBtnClick()}
-              />
-            )}
-          </div>
-        )}
-      </MobileHeader>
       <div className={styles.servicesMain}>
-        <Card>
-          {size.width > 767 && <CardHeader />}
+        <Card title={CardHeader}>
           <div className={styles.body}>
             <TabMenu
               tabPosition="top"

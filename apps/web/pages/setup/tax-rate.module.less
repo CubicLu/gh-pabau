@@ -102,3 +102,42 @@
   font-size: 25px;
   border-radius: 4px;
 }
+
+.desktop-view-none {
+  display: none;
+}
+
+@media (min-width: 200px) and (max-width: 767px) {
+  .mobile-view-none {
+    display: none;
+  }
+  .desktop-view-none {
+    display: block;
+  }
+}
+
+.marketing-source-page {
+  .marketing-text-style {
+    display: flex;
+    align-items: center;
+    p {
+      margin-bottom: 0px;
+      font-family: Circular-Std-Medium;
+      font-style: normal;
+      font-weight: bolder;
+      font-size: 17px;
+      line-height: 22px;
+      text-transform: capitalize;
+      color: var(--grey-text-color);
+      padding-left: 10px;
+    }
+  }
+  .marketing-source-header {
+    background-color: #fff;
+  }
+  .all-content-align-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

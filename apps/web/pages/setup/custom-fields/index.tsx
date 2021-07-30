@@ -4,21 +4,20 @@ import { ClientData } from '../../../components/Setup/CustomFields/ClientDataTab
 import { LeadFields } from '../../../components/Setup/CustomFields/LeadFieldsTab'
 import { Categories } from '../../../components/Setup/CustomFields/CategoriesTab'
 import { OthersTab } from '../../../components/Setup/CustomFields/OthersTab'
-import AddButton from '../../../components/AddButton'
-import useWindowSize from '../../../hooks/useWindowSize'
 import { CreateCustomFieldModal } from '../../../components/Setup/CustomFields/CreateCustomFieldsModal'
-import MobileHeader from '../../../components/MobileHeader'
-import { TabMenu, Breadcrumb, Pagination } from '@pabau/ui'
-import { DownOutlined } from '@ant-design/icons'
-import { Card, Popover } from 'antd'
+import { TabMenu, Button, Breadcrumb, Pagination } from '@pabau/ui'
+import { Card, Input, Popover } from 'antd'
+import { useMedia } from 'react-use'
+import classNames from 'classnames'
+import { SearchOutlined, DownOutlined, PlusOutlined } from '@ant-design/icons'
 import styles from './index.module.less'
 import { useTranslation } from 'react-i18next'
 
 export const Index: FC = () => {
   const { t } = useTranslation('common')
-  const size = useWindowSize()
+  const isMobile = useMedia('(max-width: 767px)', true)
   const [otherTab, setOtherTab] = useState('Others')
-  const [mobileSearch, setMobileSearch] = useState(false)
+  const [mobileInput, setMobileInput] = useState(false)
   const [selectedTab, setSelectedTab] = useState('Client Data')
   const tabLabels = [
     t('setup.custom-fields.client-data'),
@@ -114,12 +113,55 @@ export const Index: FC = () => {
     'setup.custom-fields.new'
   )} ${selectedAttributeLabel} ${t('setup.custom-fields.attribute')}`
 
-  const CardHeader = () => (
+  const MobileHeaderRightSide = () => {
+    return (
+      <>
+        {mobileInput ? (
+          <Input
+            className={classNames(
+              styles.searchFieldsListing,
+              'mobileViewInput'
+            )}
+            autoFocus
+            size="middle"
+            placeholder={t('setup.custom-fields.search-in-name')}
+            suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
+            value={searchTerm || ''}
+            onChange={(e) => {
+              setSearchTerm(e.target.value)
+            }}
+          />
+        ) : (
+          <span
+            className="mobileViewSearchIcon"
+            onClick={() => setMobileInput((mobileInput) => !mobileInput)}
+          >
+            <SearchOutlined />
+          </span>
+        )}
+
+        <Button
+          type="primary"
+          size="middle"
+          className="plus-btn"
+          onClick={() =>
+            setCreateCustomFieldModal(
+              (createCustomFieldModal) => !createCustomFieldModal
+            )
+          }
+        >
+          <PlusOutlined />
+        </Button>
+      </>
+    )
+  }
+
+  const cardHeader = (
     <div className={styles.header}>
       <div className="leftDiv">
         <div>
           <Breadcrumb
-            items={[
+            breadcrumbItems={[
               {
                 breadcrumbName: t('sidebar.setup'),
                 path: 'setup',
@@ -135,18 +177,35 @@ export const Index: FC = () => {
           <h3 className={styles.fieldsHeading}>{t('setup.custom-fields')}</h3>
         </div>
       </div>
-      <AddButton
-        onFilterSource={() => false}
-        addFilter={false}
-        schema={{
-          createButtonLabel: createAttributeLabel,
-          searchPlaceholder: t('setup.custom-fields.search-in-name'),
-        }}
-        onClick={() => setCreateCustomFieldModal(() => !createCustomFieldModal)}
-        tableSearch
-        onSearch={(text) => setSearchTerm(text)}
-        needTranslation
-      />
+      <div className="rightDiv">
+        {isMobile ? (
+          <MobileHeaderRightSide />
+        ) : (
+          <>
+            <Input
+              className={styles.searchFieldsListing}
+              autoFocus
+              placeholder={t('setup.custom-fields.search-in-name')}
+              suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
+              value={searchTerm || ''}
+              onChange={(e) => {
+                setSearchTerm(e.target.value)
+              }}
+            />
+            <Button
+              type="primary"
+              size="large"
+              onClick={() =>
+                setCreateCustomFieldModal(
+                  (createCustomFieldModal) => !createCustomFieldModal
+                )
+              }
+            >
+              {createAttributeLabel}
+            </Button>
+          </>
+        )}
+      </div>
     </div>
   )
 
@@ -170,27 +229,8 @@ export const Index: FC = () => {
 
   return (
     <Layout>
-      <MobileHeader parent="/setup" title={t('setup.custom-fields')}>
-        <AddButton
-          onFilterSource={() => false}
-          onSearch={(text) => setSearchTerm(text)}
-          schema={{
-            createButtonLabel: createAttributeLabel,
-            searchPlaceholder: t('setup.custom-fields.search-in-name'),
-          }}
-          tableSearch={true}
-          onClick={() =>
-            setCreateCustomFieldModal(() => !createCustomFieldModal)
-          }
-          needTranslation={false}
-          mobileSearch={mobileSearch}
-          setMobileSearch={() => setMobileSearch(() => !mobileSearch)}
-          addFilter={true}
-        />
-      </MobileHeader>
       <div className={styles.mainCustomFieldsWrapper}>
-        <Card>
-          {size.width > 767 && <CardHeader />}
+        <Card title={cardHeader}>
           <div className={styles.body}>
             <TabMenu
               tabPosition="top"

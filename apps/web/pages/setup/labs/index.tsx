@@ -102,7 +102,7 @@ const Labs: NextPage = () => {
         )}`
       )
     },
-    onError() {
+    onError(err) {
       Notification(
         NotificationType.error,
         `${t('setup.labs.data.error')}${t(
@@ -153,14 +153,14 @@ const Labs: NextPage = () => {
   const initialValues = {
     id: '',
     name: '',
-    providerNumber: null,
+    providerNumber: undefined,
     phone: '',
     email: '',
     country: '',
     city: '',
     street: '',
     street2: '',
-    postal_code: null,
+    postal_code: undefined,
     isActive: true,
   }
   const setEditFields = () => {

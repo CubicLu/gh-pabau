@@ -1,7 +1,7 @@
 import React from 'react'
 import Index from '../../components/team/User/Index'
 
-export function User() {
+export function User(props) {
   return <Index />
 }
 

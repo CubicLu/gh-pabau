@@ -17,7 +17,7 @@ import * as Yup from 'yup'
 import countries from 'i18n-iso-countries'
 import english from 'i18n-iso-countries/langs/en.json'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-import styles from './index.module.less'
+import styles from './issuing-company.module.less'
 
 const LIST_QUERY = gql`
   query issuing_company($isActive: Boolean = true, $offset: Int, $limit: Int) {

@@ -6,13 +6,13 @@ export default {
   title: 'Basics/Breadcurmb',
 }
 
-const BreadcrumbStory = ({ items }) => {
-  return <Breadcrumb items={items} />
+const BreadcrumbStory = ({ breadcrumbItems }) => {
+  return <Breadcrumb breadcrumbItems={breadcrumbItems} />
 }
 
 export const Basic = BreadcrumbStory.bind({})
 Basic.args = {
-  items: [
+  breadcrumbItems: [
     { breadcrumbName: 'Setup', path: '' },
     { breadcrumbName: 'Source', path: '' },
   ],

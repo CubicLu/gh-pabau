@@ -1,4 +1,8 @@
-import { PlusSquareFilled, SearchOutlined } from '@ant-design/icons'
+import {
+  LeftOutlined,
+  PlusSquareFilled,
+  SearchOutlined,
+} from '@ant-design/icons'
 import {
   FindMedicalFormsDocument,
   MedicalFormOrderByInput,
@@ -24,6 +28,7 @@ import {
   MedicalFilter,
   MedicalFormBuilder,
   MedicalFormItem,
+  MobileHeader,
   Notification,
   NotificationBanner,
   NotificationType,
@@ -33,13 +38,12 @@ import {
 } from '@pabau/ui'
 import { Input, Typography } from 'antd'
 import dayjs from 'dayjs'
+import Link from 'next/link'
 import React, { FC, useEffect, useMemo, useState } from 'react'
 import notificationBannerImage from '../../../assets/images/notification-image.png'
-import { ReactComponent as CloseIcon } from '../../../assets/images/close-icon.svg'
 import Layout from '../../../components/Layout/Layout'
 import Custom from '../../../components/MedicalForms/Custom'
 import Library from '../../../components/MedicalForms/Library'
-import MobileHeader from '../../../components/MobileHeader'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
 const { Title } = Typography
@@ -62,7 +66,6 @@ export const Index: FC = () => {
   const [hideBanner, setHideBanner] = useState(false)
   const [currentTab, setCurrentTab] = useState('0')
   const [query, setQuery] = useState('')
-  const [mobileSearch, setMobileSearch] = useState(false)
   const [companyDateFormat, setCompanyDateFormat] = useState('d/m/Y')
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [medicalFormItems, setMedicalFormItems] = useState<MedicalFormItem[]>(
@@ -465,49 +468,51 @@ export const Index: FC = () => {
 
       <div className={styles.medicalFormsContainer}>
         <div className={styles.desktopViewNone}>
-          <MobileHeader
-            title={t('setup.medical.forms.patientFormName')}
-            parent="/setup"
-          >
-            {currentTab === Tab.Custom && (
-              <>
-                <MedicalFilter mobileView />
-                <PlusSquareFilled
-                  className={styles.plusIconStyle}
-                  onClick={() => setShowCreateForm(true)}
-                />
-              </>
-            )}
-            {currentTab === Tab.Library &&
-              (mobileSearch ? (
-                <Input
-                  value={searchData.searchValue}
-                  className={styles.searchMarketingStyle}
-                  placeholder={t('setup.medical.forms.searchLibrary')}
-                  onChange={(e) =>
-                    changeSearchData({ searchValue: e.target.value })
-                  }
-                  suffix={
-                    <CloseIcon
-                      onClick={() => {
-                        setMobileSearch(() => !mobileSearch)
-                      }}
-                    />
-                  }
-                  autoFocus
-                />
-              ) : (
-                <SearchOutlined
-                  className={styles.marketingIconStyle}
-                  onClick={() => setMobileSearch(() => !mobileSearch)}
-                />
-              ))}
-          </MobileHeader>
+          {currentTab === Tab.Custom && (
+            <MobileHeader className={styles.mobileHeader}>
+              <div className={styles.allContentAlignMobile}>
+                <div className={styles.mobileHeaderTextStyle}>
+                  <Link href="/setup">
+                    <LeftOutlined />
+                  </Link>
+                  <p>{t('setup.medical.forms.patientFormName')}</p>
+                </div>
+                <div className={styles.mobileHeaderOpsStyle}>
+                  <MedicalFilter />
+                  <PlusSquareFilled
+                    className={styles.plusIconStyle}
+                    onClick={() => setShowCreateForm(true)}
+                  />
+                </div>
+              </div>
+            </MobileHeader>
+          )}
+          {currentTab === Tab.Library && (
+            <MobileHeader className={styles.mobileHeader}>
+              <div className={styles.allContentAlignMobile}>
+                <div className={styles.mobileHeaderTextStyle}>
+                  <Link href="/setup">
+                    <LeftOutlined />
+                  </Link>
+                  <p>{t('setup.medical.forms.patientFormName')}</p>
+                </div>
+                <div className={styles.mobileHeaderOpsStyle}>
+                  <Input
+                    value={searchData.searchValue}
+                    onChange={(e) =>
+                      changeSearchData({ searchValue: e.target.value })
+                    }
+                    placeholder={t('setup.medical.forms.searchLibrary')}
+                  />
+                </div>
+              </div>
+            </MobileHeader>
+          )}
         </div>
         <div className={styles.medicalFormsHeader}>
           <div>
             <Breadcrumb
-              items={[
+              breadcrumbItems={[
                 {
                   breadcrumbName: t('navigation-breadcrumb-setup'),
                   path: 'setup',

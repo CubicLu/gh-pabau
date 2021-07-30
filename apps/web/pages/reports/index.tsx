@@ -7,7 +7,7 @@ import {
 import { Card, Col, Divider, Row, Typography, Spin } from 'antd'
 import classNames from 'classnames'
 import React, { FC, useContext, useEffect, useState } from 'react'
-import MobileHeader from '../../components/MobileHeader'
+import CommonHeader from '../../components/CommonHeader'
 import Layout from '../../components/Layout/Layout'
 import SearchResults from '../../components/Setup/SearchResults/Index'
 import { UserContext } from '../../context/UserContext'
@@ -301,17 +301,13 @@ const Reports: FC = () => {
     <Unauthorized />
   ) : (
     <Layout {...user} active="reports">
-      <MobileHeader
-        title={t('setup.reports.title')}
-        isShowSearch
-        handleSearch={handleSearch}
-      />
+      <CommonHeader title={t('setup.reports.title')} />
       <Card bodyStyle={{ padding: 0 }}>
         <Row
           className={classNames(styles.headerContainer, styles.mobileViewNone)}
         >
           <Col span={24} sm={10} className={styles.headingContainer}>
-            {/* <div /> */}
+            <div />
             <Title>
               {!searchValue
                 ? t('setup.reports.title')
@@ -325,9 +321,9 @@ const Reports: FC = () => {
           </Col>
         </Row>
         <Divider style={{ margin: 0 }} className={styles.mobileViewNone} />
-        {/* <div className={classNames(styles.search, styles.desktopViewNone)}>
+        <div className={classNames(styles.search, styles.desktopViewNone)}>
           <SetupSearchInput onChange={handleSearch} />
-        </div> */}
+        </div>
         {!searchValue ? (
           <Row className={styles.bodyContainer} gutter={{ md: 24, xs: 16 }}>
             {reportsData.map((item, index) => {

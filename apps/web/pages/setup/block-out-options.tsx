@@ -10,6 +10,8 @@ import {
 import { Card, Col, Row, Typography } from 'antd'
 import { gql, useMutation } from '@apollo/client'
 import { useMedia } from 'react-use'
+import { useRouter } from 'next/router'
+import { LeftOutlined } from '@ant-design/icons'
 
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import Layout from '../../components/Layout/Layout'
@@ -117,8 +119,9 @@ const LIST_AGGREGATE_QUERY = gql`
 
 export function BlockOutOptions(props: BlockOutOptionsProps) {
   const { t } = useTranslationI18()
+  const router = useRouter()
   const isMobile = useMedia('(max-width: 767px)', false)
-  const { Title } = Typography
+  const { Paragraph, Title } = Typography
 
   const columns = [
     {
@@ -153,7 +156,7 @@ export function BlockOutOptions(props: BlockOutOptionsProps) {
     showingRecords: 0,
   })
 
-  const { data, loading } = useLiveQuery(LIST_QUERY, {
+  const { data, error, loading } = useLiveQuery(LIST_QUERY, {
     variables: {
       offset: paginateData.offset,
       limit: paginateData.limit,
@@ -313,6 +316,10 @@ export function BlockOutOptions(props: BlockOutOptionsProps) {
     })
   }
 
+  const handleBack = () => {
+    router.push('/setup')
+  }
+
   const onFilter = () => {
     resetPagination()
     setIsActive((e) => !e)
@@ -322,31 +329,39 @@ export function BlockOutOptions(props: BlockOutOptionsProps) {
     <div className={styles.setupBlockOutOptionsContainer}>
       <Layout>
         <Card bodyStyle={{ padding: 0 }}>
-          {!isMobile && (
-            <Row className={styles.headerContainer}>
-              <Col>
-                <Breadcrumb
-                  items={[
-                    { breadcrumbName: t('sidebar.setup'), path: 'setup' },
-                    { breadcrumbName: t('setup.blockout.title'), path: '' },
-                  ]}
-                />
-                <Title>{t('setup.blockout.title')}</Title>
-              </Col>
-              <Col>
-                <AddButton
-                  addFilter
-                  onFilterSource={onFilter}
-                  onClick={createClick}
-                  schema={{
-                    createButtonLabel: t('setup.blockout.create.text'),
-                  }}
-                  tableSearch={false}
-                  needTranslation={false}
-                />
-              </Col>
-            </Row>
-          )}
+          <Row className={styles.headerContainer}>
+            <Col>
+              {!isMobile ? (
+                <>
+                  <Breadcrumb
+                    breadcrumbItems={[
+                      { breadcrumbName: t('sidebar.setup'), path: 'setup' },
+                      { breadcrumbName: t('setup.blockout.title'), path: '' },
+                    ]}
+                  />
+                  <Title>{t('setup.blockout.title')}</Title>
+                </>
+              ) : (
+                <>
+                  <LeftOutlined
+                    className={styles.backToSetup}
+                    onClick={handleBack}
+                  />
+                  <Title>{t('setup.blockout.title')}</Title>
+                </>
+              )}
+            </Col>
+            <Col>
+              <AddButton
+                addFilter
+                onFilterSource={onFilter}
+                onClick={createClick}
+                schema={{ createButtonLabel: t('setup.blockout.create.text') }}
+                tableSearch={false}
+                needTranslation={false}
+              />
+            </Col>
+          </Row>
           <Table
             columns={columns}
             dataSource={data?.map((d) => ({ ...d, key: d.id }))}
@@ -357,6 +372,7 @@ export function BlockOutOptions(props: BlockOutOptionsProps) {
             onAddTemplate={createClick}
             rowKey="id"
           />
+          {error && <Paragraph type="danger">{error.message}</Paragraph>}
         </Card>
         <Pagination
           showingRecords={paginateData.showingRecords}

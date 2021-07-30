@@ -1,22 +1,24 @@
-import React, { FC, useContext } from 'react'
+import React, { FC } from 'react'
 import {
   Breadcrumb,
   Button,
   PhoneNumberInput,
   Notification,
   NotificationType,
+  MobileHeader,
 } from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
-import MobileHeader from '../../../components/MobileHeader'
-import useWindowSize from '../../../hooks/useWindowSize'
-import { UserContext } from '../../../context/UserContext'
 import { Typography } from 'antd'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
 import { Form, Input, SubmitButton, Checkbox } from 'formik-antd'
 import { useRouter } from 'next/router'
 import { gql, useMutation } from '@apollo/client'
+import { useMedia } from 'react-use'
+import { LeftOutlined, CloseOutlined } from '@ant-design/icons'
+
 import styles from './index.module.less'
+
 const { Title } = Typography
 
 const ADD_MUTATION = gql`
@@ -64,9 +66,8 @@ export interface CreateLabFormProps {
 }
 
 export const Index: FC = () => {
+  const isMobile = useMedia('(max-width: 768px)', false)
   const router = useRouter()
-  const user = useContext(UserContext)
-  const size = useWindowSize()
   const [addMutation] = useMutation(ADD_MUTATION, {
     onCompleted(data) {
       Notification(
@@ -81,14 +82,14 @@ export const Index: FC = () => {
 
   const formikInitialValues = {
     name: '',
-    providerNumber: null,
+    providerNumber: undefined,
     phone: '',
     email: '',
-    country: null,
-    city: null,
-    street: null,
-    street2: null,
-    postalCode: null,
+    country: undefined,
+    city: undefined,
+    street: undefined,
+    street2: undefined,
+    postalCode: undefined,
     isActive: true,
   }
 
@@ -106,7 +107,7 @@ export const Index: FC = () => {
 
   const renderForm = (setFieldValue) => {
     return (
-      <div className={styles.formDiv}>
+      <div>
         <div className={styles.basicInfo}>
           <h6>Basic information</h6>
           <div className={styles.infoList}>
@@ -185,13 +186,14 @@ export const Index: FC = () => {
     )
   }
 
-  return (
-    <Layout active={'Lab'} {...user}>
-      <div className={styles.labWrapper}>
+  return isMobile ? (
+    <div>
+      <MobileHeader className={styles.createLabMobileHeader}>
         <Formik
           initialValues={formikInitialValues}
           validationSchema={formikValidationSchema}
           onSubmit={async (values: CreateLabFormProps) => {
+            console.log('asdasdasdasdas', values)
             await addMutation({
               variables: values,
               optimisticResponse: {},
@@ -207,62 +209,86 @@ export const Index: FC = () => {
               }}
               layout="vertical"
             >
-              <MobileHeader title="Create Lab" parent="/setup/labs">
-                <div className={styles.createHeaderWrapper}>
-                  <div className={styles.creatRight}>
-                    <Checkbox name="isActive" className={styles.checkActivate}>
-                      Active
-                    </Checkbox>
-                  </div>
-                </div>
-              </MobileHeader>
-              {size.width > 767 && (
-                <div className={styles.createHeaderWrapper}>
-                  <div className={styles.creatHead}>
-                    <div className={styles.headBreadTitle}>
-                      <Breadcrumb
-                        items={[
-                          { breadcrumbName: 'Setup', path: 'setup' },
-                          { breadcrumbName: 'Labs', path: 'setup/labs' },
-                          { breadcrumbName: 'Create Lab', path: '' },
-                        ]}
-                      />
-                      <Title>Create Lab</Title>
-                    </div>
-                    <div className={styles.creatRight}>
-                      <Checkbox
-                        name="isActive"
-                        className={styles.checkActivate}
-                      >
-                        Active
-                      </Checkbox>
-                      <Button
-                        className={styles.cancelBtn}
-                        onClick={() => router.push('/setup/labs')}
-                      >
-                        Cancel
-                      </Button>
-                      <SubmitButton className={styles.createBtn} type="primary">
-                        Create Lab
-                      </SubmitButton>
-                    </div>
-                  </div>
-                </div>
-              )}
-              {renderForm(setFieldValue)}
-              {size.width < 768 && (
-                <div className={styles.footer}>
+              <div className={styles.allContentAlignMobile}>
+                <div className={styles.labTextStyle}>
+                  <LeftOutlined onClick={() => router.push('/setup/labs')} />
+                  <p>Create Lab</p>
+                  <Checkbox className={styles.checkActivate} name="isActive">
+                    Active
+                  </Checkbox>
                   <Button
                     className={styles.cancelBtn}
                     onClick={() => router.push('/setup/labs')}
                   >
-                    Cancel
+                    <CloseOutlined />
                   </Button>
-                  <SubmitButton className={styles.createBtn} type="primary">
+                  <SubmitButton
+                    className={styles.createBtn}
+                    type="primary"
+                    htmlType="submit"
+                  >
                     Create Lab
                   </SubmitButton>
                 </div>
-              )}
+              </div>
+              {renderForm(setFieldValue)}
+            </Form>
+          )}
+        </Formik>
+      </MobileHeader>
+    </div>
+  ) : (
+    <Layout active={'Lab'}>
+      <div className={styles.labWrapper}>
+        <Formik
+          initialValues={formikInitialValues}
+          validationSchema={formikValidationSchema}
+          onSubmit={async (values: CreateLabFormProps) => {
+            console.log('asdasdasdasdas', values)
+            await addMutation({
+              variables: values,
+              optimisticResponse: {},
+            })
+            router.push('/setup/labs')
+          }}
+        >
+          {({ setFieldValue }) => (
+            <Form
+              name="basic"
+              initialValues={{
+                remember: true,
+              }}
+              layout="vertical"
+            >
+              <div className={styles.createHeaderWrapper}>
+                <div className={styles.creatHead}>
+                  <div className={styles.headBreadTitle}>
+                    <Breadcrumb
+                      breadcrumbItems={[
+                        { breadcrumbName: 'Setup', path: 'setup' },
+                        { breadcrumbName: 'Labs', path: 'setup/labs' },
+                        { breadcrumbName: 'Create Lab', path: '' },
+                      ]}
+                    />
+                    <Title>Create Lab</Title>
+                  </div>
+                  <div className={styles.creatRight}>
+                    <Checkbox name="isActive" className={styles.checkActivate}>
+                      Active
+                    </Checkbox>
+                    <Button
+                      className={styles.cancelBtn}
+                      onClick={() => router.push('/setup/labs')}
+                    >
+                      Cancel
+                    </Button>
+                    <SubmitButton className={styles.createBtn} type="primary">
+                      Create Lab
+                    </SubmitButton>
+                  </div>
+                </div>
+              </div>
+              {renderForm(setFieldValue)}
             </Form>
           )}
         </Formik>

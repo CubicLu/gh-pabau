@@ -157,19 +157,21 @@ export function Leads(props: LeadsProps) {
   }
 
   return (
-    <CrudLayout
-      schema={schema}
-      tableSearch={false}
-      addQuery={ADD_MUTATION}
-      deleteQuery={DELETE_MUTATION}
-      listQuery={LIST_QUERY}
-      editQuery={EDIT_MUTATION}
-      aggregateQuery={LIST_AGGREGATE_QUERY}
-      updateOrderQuery={UPDATE_ORDER_MUTATION}
-      showNotificationBanner={true}
-      createPage={true}
-      createPageOnClick={createPageOnClick}
-    />
+    <div>
+      <CrudLayout
+        schema={schema}
+        tableSearch={false}
+        addQuery={ADD_MUTATION}
+        deleteQuery={DELETE_MUTATION}
+        listQuery={LIST_QUERY}
+        editQuery={EDIT_MUTATION}
+        aggregateQuery={LIST_AGGREGATE_QUERY}
+        updateOrderQuery={UPDATE_ORDER_MUTATION}
+        showNotificationBanner={true}
+        createPage={true}
+        createPageOnClick={createPageOnClick}
+      />
+    </div>
   )
 }
 

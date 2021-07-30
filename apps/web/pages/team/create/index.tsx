@@ -1,16 +1,21 @@
 import React, { useState } from 'react'
-import { Breadcrumb, Button, Input, NotificationBanner } from '@pabau/ui'
+import {
+  Breadcrumb,
+  Button,
+  Input,
+  MobileHeader,
+  NotificationBanner,
+} from '@pabau/ui'
 import Layout from '../../../components/Layout/Layout'
-import MobileHeader from '../../../components/MobileHeader'
 import classNames from 'classnames'
 import { Form, Typography } from 'antd'
 import styles from './create.module.less'
-import { CheckCircleFilled } from '@ant-design/icons'
+import { CheckCircleFilled, LeftOutlined } from '@ant-design/icons'
 import location from '../../../assets/images/location.png'
 import locationFill from '../../../assets/images/locationFill.png'
 import createBannerPageImage from '../../../assets/images/createBannerPageImage.svg'
-import Permissions from '../../../components/team/Permissions/permissions'
 
+import Permissions from './permissions'
 const { Title } = Typography
 
 /* eslint-disable-next-line */
@@ -28,24 +33,30 @@ export function Create(props: CreateProps) {
   return (
     <div>
       <Layout>
-        <MobileHeader title="Invite teammates" parent="/team" />
-        <NotificationBanner
-          title="Add 1 set to your plan"
-          desc="Your monthly price will go up by $ 19 for 1 set added to your monthly plan."
-          imgPath={createBannerPageImage}
-          allowClose={true}
-          setHide={[hideBanner, setHideBanner]}
-          showPaymentButton={true}
-          showEmail={true}
-          showPaymentTitle="Add"
-        />
-
+        <div className={styles.mobileViewNone}>
+          <NotificationBanner
+            title="Add 1 set to your plan"
+            desc="Your monthly price will go up by $ 19 for 1 set added to your monthly plan."
+            imgPath={createBannerPageImage}
+            allowClose={true}
+            setHide={[hideBanner, setHideBanner]}
+            showPaymentButton={true}
+            showEmail={true}
+            showPaymentTitle="Add"
+          />
+        </div>
+        <MobileHeader className={styles.inviteMobile}>
+          <div className={styles.header}>
+            <LeftOutlined />
+            <p>Invite teammates</p>
+          </div>
+        </MobileHeader>
         <div
           className={classNames(styles.tableMainHeading, styles.mobileViewNone)}
         >
           <div style={{ background: '#FFF' }}>
             <Breadcrumb
-              items={[
+              breadcrumbItems={[
                 { breadcrumbName: 'Team', path: 'team' },
                 { breadcrumbName: 'Create', path: '' },
               ]}
