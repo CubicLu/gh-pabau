@@ -14,8 +14,14 @@ export const PackageUsed = objectType({
     t.string('status')
     t.int('book_take')
     t.int('cancel_take')
-    t.int('occupier')
+    t.nullable.int('company_id')
     t.int('booking_master_id')
     t.int('old_booking_id')
+    t.nullable.field('contact_package', {
+      type: 'ContactPackage',
+      resolve(root: any) {
+        return root.contact_package
+      },
+    })
   },
 })

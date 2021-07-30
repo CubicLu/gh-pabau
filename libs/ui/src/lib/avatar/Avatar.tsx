@@ -7,7 +7,7 @@ import stc from 'string-to-color'
 import { ReactComponent as EditIcon } from '../../assets/images/edit_icon.svg'
 import styles from './Avatar.module.less'
 
-export enum Status {
+export enum AvatarStatus {
   default = 'default',
   active = 'active',
   inactive = 'inactive',
@@ -18,7 +18,7 @@ export interface AvatarProps extends NativeAvatarProps {
   marginLeft?: string
   name?: string
   src?: string
-  active?: Status
+  active?: AvatarStatus
   edit?: boolean
   isTooltip?: boolean
 }
@@ -71,10 +71,10 @@ export const Avatar: FC<AvatarProps> = ({
                 <EditIcon />
               </div>
             ) : (
-              active !== Status.default && (
+              active !== AvatarStatus.default && (
                 <div
                   className={
-                    active === Status.active
+                    active === AvatarStatus.active
                       ? styles.avatarStatus
                       : ClassNames(styles.avatarStatus, styles.avatarInactive)
                   }

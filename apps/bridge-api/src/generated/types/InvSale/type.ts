@@ -114,6 +114,12 @@ export const InvSale = objectType({
         return root.InvBiller
       },
     })
+    t.nullable.field('package', {
+      type: 'ContactPackage',
+      resolve(root: any) {
+        return root.package
+      },
+    })
     t.list.field('Booking', {
       type: 'Booking',
       args: {

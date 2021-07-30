@@ -1,0 +1,96 @@
+.billingHistory {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  @media (max-width: 767px) {
+    background-color: white;
+    height: 100%;
+  }
+}
+
+.billingHistoryHeader {
+  width: 100%;
+  :global {
+    .ant-typography {
+      font-family: var(--font-family);
+    }
+  }
+  @media (max-width: 767px) {
+    display: none;
+  }
+}
+
+.billingHistoryMobileHeader {
+  width: 100%;
+  display: none;
+  padding: 2rem 0 28px 20px;
+  :global {
+    .ant-typography {
+      font-family: var(--font-family);
+      padding: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    display: block;
+  }
+}
+
+.billingHistoryContent {
+  width: 100%;
+  padding: 0 20px;
+  > div {
+    background-color: white;
+  }
+  @media (max-width: 767px) {
+    padding: 0;
+  }
+}
+
+.billingHistoryTableContainer {
+  width: 100%;
+  :global {
+    .ant-table-thead {
+      background-color: white;
+      .ant-table-cell {
+        background-color: white;
+        font-family: var(--font-family);
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        letter-spacing: 1%;
+        color: #737373;
+      }
+    }
+    .ant-table-tbody {
+      .ant-table-cell {
+        font-family: var(--font-family);
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+        color: var(--grey-text-color);
+      }
+    }
+  }
+}
+
+.paginationContainer {
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.buttonLabelContainer {
+  width: 88px;
+}
+
+.invoiceStatusPaid {
+  color: #65cd98 !important;
+  border-color: rgba(#65cd98, 0.5) !important;
+  background-color: rgba(#65cd98, 0.05) !important;
+}
+
+.inoviceStatusUnpaid {
+  color: #ff5b64 !important;
+  border-color: rgba(#ff5b64, 0.5) !important;
+  background-color: rgba(#ff5b64, 0.05) !important;
+}

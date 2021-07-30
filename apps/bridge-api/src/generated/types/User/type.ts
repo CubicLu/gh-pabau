@@ -407,6 +407,20 @@ export const User = objectType({
         return root.SmsPurchase
       },
     })
+    t.list.field('Attachments', {
+      type: 'ContactAttachment',
+      args: {
+        where: 'ContactAttachmentWhereInput',
+        orderBy: 'ContactAttachmentOrderByInput',
+        cursor: 'ContactAttachmentWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ContactAttachmentScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Attachments
+      },
+    })
     t.list.field('StaffMeta', {
       type: 'StaffMeta',
       args: {

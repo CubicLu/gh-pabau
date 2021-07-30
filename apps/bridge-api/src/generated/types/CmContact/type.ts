@@ -275,16 +275,58 @@ export const CmContact = objectType({
         return root.InvPayment
       },
     })
+    t.list.field('LoyaltyLog', {
+      type: 'LoyaltyLog',
+      args: {
+        where: 'LoyaltyLogWhereInput',
+        orderBy: 'LoyaltyLogOrderByInput',
+        cursor: 'LoyaltyLogWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'LoyaltyLogScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.LoyaltyLog
+      },
+    })
+    t.nullable.field('LoyaltyPoints', {
+      type: 'LoyaltyPoints',
+      resolve(root: any) {
+        return root.LoyaltyPoints
+      },
+    })
+    t.list.field('Attachments', {
+      type: 'ContactAttachment',
+      args: {
+        where: 'ContactAttachmentWhereInput',
+        orderBy: 'ContactAttachmentOrderByInput',
+        cursor: 'ContactAttachmentWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ContactAttachmentScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Attachments
+      },
+    })
+    t.list.field('Packages', {
+      type: 'ContactPackage',
+      args: {
+        where: 'ContactPackageWhereInput',
+        orderBy: 'ContactPackageOrderByInput',
+        cursor: 'ContactPackageWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ContactPackageScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Packages
+      },
+    })
     t.nullable.field('Insurance', {
       type: 'InsuranceDetail',
       resolve(root: any) {
         return root.Insurance
-      },
-    })
-    t.nullable.field('LoyaltyPoint', {
-      type: 'LoyaltyPoint',
-      resolve(root: any) {
-        return root.LoyaltyPoint
       },
     })
     t.list.field('Booking', {
@@ -315,20 +357,6 @@ export const CmContact = objectType({
         return root.InvSale
       },
     })
-    t.list.field('ContactInsurance', {
-      type: 'ContactInsurance',
-      args: {
-        where: 'ContactInsuranceWhereInput',
-        orderBy: 'ContactInsuranceOrderByInput',
-        cursor: 'ContactInsuranceWhereUniqueInput',
-        take: 'Int',
-        skip: 'Int',
-        distinct: 'ContactInsuranceScalarFieldEnum',
-      },
-      resolve(root: any) {
-        return root.ContactInsurance
-      },
-    })
     t.list.field('InventoryMovement', {
       type: 'InventoryMovement',
       args: {
@@ -341,6 +369,34 @@ export const CmContact = objectType({
       },
       resolve(root: any) {
         return root.InventoryMovement
+      },
+    })
+    t.list.field('InsuranceCompany', {
+      type: 'ContactInsurance',
+      args: {
+        where: 'ContactInsuranceWhereInput',
+        orderBy: 'ContactInsuranceOrderByInput',
+        cursor: 'ContactInsuranceWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ContactInsuranceScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.InsuranceCompany
+      },
+    })
+    t.list.field('ContactMeta', {
+      type: 'ContactMeta',
+      args: {
+        where: 'ContactMetaWhereInput',
+        orderBy: 'ContactMetaOrderByInput',
+        cursor: 'ContactMetaWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ContactMetaScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ContactMeta
       },
     })
     t.list.field('CommunicationRecipient', {

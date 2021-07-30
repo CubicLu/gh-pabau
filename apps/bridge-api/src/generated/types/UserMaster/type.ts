@@ -35,5 +35,25 @@ export const UserMaster = objectType({
         return root.Company
       },
     })
+    t.list.field('SalonBookings', {
+      type: 'Booking',
+      args: {
+        where: 'BookingWhereInput',
+        orderBy: 'BookingOrderByInput',
+        cursor: 'BookingWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'BookingScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.SalonBookings
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'UserMasterCountOutputType',
+      resolve(root: any) {
+        return root._count
+      },
+    })
   },
 })
