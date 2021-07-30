@@ -1,12 +1,11 @@
 import { Notification, NotificationType } from '@pabau/ui'
-import { Button, Col, Row, Typography } from 'antd'
+import { Button, Col, Row } from 'antd'
 import { Formik } from 'formik'
 import { Form as AntForm, Input, Select } from 'formik-antd'
 import { NextPage } from 'next'
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import Layout from '../../components/Layout/Layout'
 import { UserContext } from '../../context/UserContext'
-import useWindowSize from '../../hooks/useWindowSize'
 import { notificationVariables } from '../../mocks/StaffNotifications'
 import styles from './staff-notifications.module.less'
 import {
