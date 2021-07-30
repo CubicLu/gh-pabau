@@ -1,4 +1,5 @@
 import en from '../../locales/en.yml'
+import connectEn from '../../locales/connect/en.yml'
 import fr from '../../locales/fr.yml'
 import bg from '../../locales/bg.yml'
 import da from '../../locales/da.yml'
@@ -23,7 +24,7 @@ import cs from '../../locales/cs.yml'
 import ar from '../../locales/ar_AE.yml'
 
 export const languages = {
-  en: { common: en.en },
+  en: { common: en.en, connect: connectEn.en },
   fr: { common: fr.fr },
   bg: { common: bg.bg },
   da: { common: da.da },

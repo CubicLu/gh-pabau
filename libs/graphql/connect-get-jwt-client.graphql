@@ -1,0 +1,9 @@
+mutation ConnectGetJWTClient($token: String!){
+  ConnectGetJWTClient(jwt: $token){
+    company_id
+    contact_id
+    fname
+    lname
+    email
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "pabau",
-  "version": "2.0.456",
+  "version": "2.0.457",
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
   "workspaces": {
@@ -24,7 +24,9 @@
     "web:start": "yarn nodemon -x \"yarn nx serve || shx touch apps/web/next.config.js\" -e '' -w 'apps/web/next.config.js'",
     "start:linux": "yarn dev:linux",
     "start:windows": "yarn dev:windows",
+    "connect:start": "nx serve connect --port=4400",
     "dev": "concurrently -m 16 --kill-others-on-fail -n GRAPHQL-CODEGEN,HASURA,PRISMA,HASURA-METADATA,WEB,WEB-PRELOADER,LAUNCH-BROWSER,BACKEND -c yellow,red,green,grey,blue,grey,grey,magenta \"yarn graphql-codegen:watch\" \"yarn hasura:start\" \"yarn bridge:start\" \"wait-on -w 1200 http-get://localhost:4000 && echo BRIDGE NOW ALIVE && wait-on -w 1200 http-get://localhost:8080/console && echo HASURA AND BRIDGE ALIVE && yarn hasura:cli metadata reload && yarn hasura:refresh-metadata && yarn hasura:cli console\" \"yarn web:start\" \"wait-on tcp:4000 && wait-on -w 1200 http-get://localhost:8080/console && wait-on http://localhost:4200 && open-cli \\\"http://web.localhost:4200\\\"\" \"wait-on http://localhost:4200\" \"yarn nx serve backend\"",
+    "dev:connect": "concurrently -m 16 --kill-others-on-fail -n HASURA,HASURA-SEED,PRISMA,WEB,WEB-PRELOADER,LAUNCH-BROWSER,BACKEND -c red,red,green,blue,grey,grey,magenta \"delay 5 && yarn hasura:stop && docker-compose -f hasura/docker-compose.yml up -d postgres && wait-on -w 1200 http-get://localhost:4000 && yarn hasura:start\" \"delay 22 && wait-on -w 1200 http-get://localhost:8080/console && (yarn hasura:cli seeds apply --database-name default || echo 'Seed apply failed') && open-cli 'http://localhost:8080' && wait-on http://localhost:4200 && open-cli 'http://localhost:4200'\" \"yarn bridge:start\" \"delay 25 && yarn connect:start\" \"delay 15 && wait-on tcp:4000 && wait-on http://localhost:4200\" \"delay 20 && wait-on http://localhost:4200\" \"yarn nx serve backend\"",
     "dev:light": "concurrently \"yarn nx serve web\" \"yarn nx serve bridge-api\"",
     "bridge:start": "yarn nx serve bridge-api",
     "mysql:start": "docker-compose -f tools/pabau1/docker-compose.yml up -d || (docker-compose -f tools/pabau1/docker-compose.yml down && docker-compose -f tools/pabau1/docker-compose.yml up -d)",
@@ -66,7 +68,7 @@
     "workspace-schematic": "yarn nx workspace-schematic",
     "dep-graph": "yarn nx dep-graph",
     "nexus:generate": "ts-node-dev --transpile-only apps/bridge-api/src/schema --nexus-typegen",
-    "bridge:generate": "rm -rf libs/graphql/crm-mutation && prisma format && prisma generate && yarn pal g && yarn nexus:generate",
+    "bridge:generate": "rm -rf libs/graphql/crm-mutation && prisma format && prisma generate && yarn dotenv-flow -p apps/bridge-api pal g && yarn nexus:generate",
     "bridge:prune": "rm -rf apps/bridge-api/src/generated libs/graphql/crm-mutation",
     "postinstall": "concurrently -n HUSKY,PRISMA,GRAPHQL-CODEGEN,PATCH-PACKAGE -c yellow,green \"husky install\" \"prisma generate\" graphql-codegen \"patch-package --patch-dir tools/patches\""
   },
@@ -254,6 +256,7 @@
     "@typescript-eslint/parser": "4.28.0",
     "@vercel/node": "1.11.1",
     "apollo-server-testing": "2.24.0",
+    "atob": "^2.1.2",
     "babel-jest": "27.0.6",
     "babel-loader": "8.2.2",
     "bitbucket": "2.6.1",
@@ -261,6 +264,7 @@
     "cypress": "^6",
     "danger": "^10.6.4",
     "dotenv": "9.0.2",
+    "dotenv-flow-cli": "^1.0.0",
     "eslint": "7.29.0",
     "eslint-config-canonical": "26.2.3",
     "eslint-config-prettier": "8.3.0",

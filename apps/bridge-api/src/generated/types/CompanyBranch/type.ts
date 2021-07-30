@@ -173,6 +173,20 @@ export const CompanyBranch = objectType({
         return root.CompanyBranchAttachment
       },
     })
+    t.list.field('SalonBookings', {
+      type: 'Booking',
+      args: {
+        where: 'BookingWhereInput',
+        orderBy: 'BookingOrderByInput',
+        cursor: 'BookingWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'BookingScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.SalonBookings
+      },
+    })
     t.list.field('InventoryMovement', {
       type: 'InventoryMovement',
       args: {

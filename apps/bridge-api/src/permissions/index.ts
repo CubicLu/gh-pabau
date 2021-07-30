@@ -1,4 +1,4 @@
-import { allow, and, shield, or } from 'graphql-shield'
+import { allow, and, or, shield } from 'graphql-shield'
 import * as rules from './types'
 
 export const permissions = shield(
@@ -79,11 +79,20 @@ export const permissions = shield(
 
       // Public access mutations
       login: allow,
+      ConnectVerifyCredentials: allow,
+      ConnectAuthorizeUser: allow,
+      logout: rules.authentication.isAuthenticated,
+
       AuthenticateUser: allow,
       //resetPassword
       resetPassword: allow,
       upsertUserReportByReportCode: rules.authentication.isAdmin,
       createOneContact: rules.authentication.isAdmin,
+
+      upsertManyStaffMetaByGroupId: and(
+        rules.authentication.isAuthenticated,
+        rules.authentication.isAdmin
+      ),
 
       //CompanyBranches
       createOneCompanyBranchWithAssignedStaff: rules.authentication.isAdmin,
@@ -98,6 +107,8 @@ export const permissions = shield(
       updateManyStaffMetaFeaturesByGroupId: rules.authentication.isAdmin,
       upsertManyUsersMainPermissionByGroupId: rules.authentication.isAdmin,
 
+      ConnectGetJWTClient: allow,
+
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
@@ -106,6 +117,11 @@ export const permissions = shield(
       ),
     },
     Query: {
+      findManyContactPackage: allow,
+      findFirstCmContact: allow,
+      findManyBooking: allow,
+      findFirstUserMaster: allow,
+      findManyLoyaltyPoints: allow,
       //StaffMeta
       findFirstStaffMeta: rules.authentication.isAuthenticated,
       findManyStaffMeta: rules.authentication.isAuthenticated,
@@ -194,9 +210,13 @@ export const permissions = shield(
       // //Authentication
       me: rules.authentication.isAuthenticated,
       company: rules.authentication.isAuthenticated,
+      //companies: rules.authentication.isAuthenticated,
+      ping: allow,
+      findManyCustomReportWithPermissions: rules.authentication.isAdmin,
+      //user: rules.authentication.isAuthenticated, //TODO: insecure, fix in pure branch by masquerading the user/findOneUser and turning it into a findFirstUser in the shield injection.
+      staffList: rules.authentication.isAuthenticated,
       VerifyCredentials: allow,
       VerifyTwoFaCode: allow,
-      ping: allow,
       //Subscriptions
       subscriptionInvoices: rules.authentication.isAuthenticated,
       subscriptionInvoicesTotal: rules.authentication.isAuthenticated,

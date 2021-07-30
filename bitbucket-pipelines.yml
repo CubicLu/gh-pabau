@@ -39,6 +39,8 @@ pipelines:
                 - ls -al || true
                 - yarn bin || true
                 - yarn bin || true
+                - yarn bridge:generate
+                - git status || true
                 - yarn lint:tsc --with-deps --base=origin/master
                 - yarn lint:ls || true
                 - yarn lint:workspace || true
@@ -208,6 +210,8 @@ pipelines:
                 - ls -al libs/graphql/generated/ || true
                 - yarn bin || true
                 - yarn bin || true
+                - yarn bridge:generate
+                - git status || true
                 - yarn lint:tsc --with-deps --base=HEAD~1
                 - yarn lint:ls || true
                 - yarn lint:workspace || true

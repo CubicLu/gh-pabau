@@ -6,13 +6,16 @@ fragment PackageUsedFields on PackageUsed {
   status
   book_take
   cancel_take
-  occupier
+  company_id
   booking_master_id
   old_booking_id
 }
 
 fragment PackageUsed on PackageUsed {
   ...PackageUsedFields
+  contact_package {
+    ...ContactPackageFields
+  }
 }
 
 mutation createOnePackageUsed($data: PackageUsedCreateInput!) {

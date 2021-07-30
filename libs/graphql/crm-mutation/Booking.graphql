@@ -80,6 +80,15 @@ fragment Booking on Booking {
   Contact {
     ...CmContactFields
   }
+  connect_client {
+    ...UserMasterFields
+  }
+  practitioner {
+    ...CmStaffGeneralFields
+  }
+  booking_location {
+    ...CompanyBranchFields
+  }
 }
 
 mutation createOneBooking($data: BookingCreateInput!) {
