@@ -47,7 +47,6 @@ export function useLiveQuery<T>(
   })
 
   useEffect(() => {
-    console.log('creating sub!')
     const cancelFunc = subscribeToMore({
       document: options?.subscription || convert(query),
       variables: options?.variables ? options.variables : undefined,
@@ -62,7 +61,6 @@ export function useLiveQuery<T>(
       },
     })
     return () => {
-      console.log('cleaning up sub!')
       cancelFunc()
     }
   }, [query, subscribeToMore, options])

@@ -33,6 +33,7 @@ interface LeftSideBarProps {
   duplicateContactsCount?: any
   testLabels?: any
   setTestLabels?: (val) => void
+  handleApplyLabel?: (val) => void
   addLabelMutation?: (
     options?: MutationFunctionOptions<
       AddLabelMutation,
@@ -60,6 +61,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
   testLabels,
   setTestLabels,
   addLabelMutation,
+  handleApplyLabel,
 }) => {
   const { t } = useTranslationI18()
 
@@ -67,10 +69,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
     setSelectedTab(e.key)
   }
 
-  // console.log('duplicateContactsCount:', duplicateContactsCount)
-  // console.log('testLabels LEFT:', testLabels)
-
-  // console.log(typeof testLabels)
+  console.log('testLabels leftSidebar', testLabels)
 
   return (
     <div className={styles.clientLeftSidebar}>
@@ -110,25 +109,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
         </Menu.Item>
         <Menu.Divider />
         <SubMenu key={tab.labels} title={t('clients.leftSidebar.labels')}>
-          {/*{labels.map((label) => {*/}
-          {/*  return (*/}
-          {/*    label?.label && (*/}
-          {/*      <Menu.Item*/}
-          {/*        key={`${label.label}`}*/}
-          {/*        onClick={() => handleLabelClick(false, label.label)}*/}
-          {/*      >*/}
-          {/*        <div className={styles.clientMenuItem}>*/}
-          {/*          <span>*/}
-          {/*            <TagOutlined />*/}
-          {/*            &nbsp;{label.label}*/}
-          {/*          </span>*/}
-          {/*          {label.count > 0 && <span>{label.count}</span>}*/}
-          {/*        </div>*/}
-          {/*      </Menu.Item>*/}
-          {/*    )*/}
-          {/*  )*/}
-          {/*})}*/}
-          {testLabels?.labels.map((label) => {
+          {testLabels?.map((label) => {
             return (
               label?.text && (
                 <Menu.Item
@@ -155,6 +136,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
               testLabels={testLabels}
               setLabels={setLabels}
               addLabelMutation={addLabelMutation}
+              handleApplyLabel={handleApplyLabel}
             >
               <div>
                 <PlusCircleOutlined /> {t('clients.leftSidebar.createLabels')}

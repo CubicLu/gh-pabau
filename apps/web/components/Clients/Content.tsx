@@ -53,6 +53,7 @@ interface ClientsContentProps {
   getContactsLabelsData?: any
   getContactsLabelsQuery?: (val) => void
   getLabelsQuery?: (val) => void
+  insertContactsLabelsMutaton?: (val) => void
 }
 
 export interface SourceDataProps {
@@ -102,6 +103,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
   getContactsLabelsQuery,
   getLabelsQuery,
   addLabelMutation,
+  insertContactsLabelsMutaton,
 }) => {
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 768px)', false)
@@ -113,7 +115,6 @@ export const ClientsContent: FC<ClientsContentProps> = ({
     'Label',
   ])
   const [selectedSecondaryColumn, setSelectedSecondaryColumn] = useState([])
-
   const rowSelection = {
     selectedRowKeys,
     onChange: setSelectedRowKeys,
@@ -159,10 +160,12 @@ export const ClientsContent: FC<ClientsContentProps> = ({
               {/*<Image src={data.avatar} preview={false} />*/}
               {/*<Avatar size={40} src={data.avatar} />*/}
               {avatar ? (
-                <Avatar size={30} src={useImage(avatar)} />
+                // <Avatar size={30} src={useImage(avatar)} />
+                <div>{firstName}</div>
               ) : (
                 // <div style={{ background: useImage(avatar) }}></div>
-                <Avatar name={firstName} />
+                // <Avatar name={firstName} />
+                <div>{firstName}</div>
               )}
             </span>
           </div>
@@ -202,67 +205,8 @@ export const ClientsContent: FC<ClientsContentProps> = ({
       dataIndex: 'labelTest',
       visible: visiblePrimaryColumns('Label'),
       // eslint-disable-next-line react/display-name
-      // render: (labels = []) => {
-      //   return labels.map((label, index) => {
-      //     return (
-      //       <div className={styles.labelWrapper} key={index}>
-      //         <Button
-      //           className={styles.labelButton}
-      //           style={{
-      //             border: `1px solid ${label.color}`,
-      //             color: label.color,
-      //           }}
-      //           backgroundColor={''}
-      //           onClick={(e) => handleLabelClick(e, label.label)}
-      //           icon={<TagOutlined />}
-      //         >
-      //           {label.label}
-      //         </Button>
-      //       </div>
-      //     )
-      //   })
-      // },
-      // render: () => {
-      //   // const { id } = sourceData
-      //   sourceData.map((item) => item.id === 23302410)
-      //   console.log('sourceData on lanel', sourceData)
-      //
-      //   {
-      //     return (
-      //       <div className={styles.labelWrapper}>
-      //         <Button
-      //           className={styles.labelButton}
-      //           // style={{
-      //           //   border: `1px solid ${label.color}`,
-      //           //   color: label.color,
-      //           // }}
-      //           backgroundColor={''}
-      //           // onClick={(e) => handleLabelClick(e, label.label)}
-      //           icon={<TagOutlined />}
-      //         >
-      //           TESTING NEW LABEL
-      //         </Button>
-      //       </div>
-      //     )
-      //   }
-      // },
-      // eslint-disable-next-line react/display-name
       render: (labelTest) => {
-        // const [labelItemOne, labelItemOTwo] = labelTest
-        // const labelItem = () => {
-        //   const templabel = []
-        //   for (const x of labelTest) {
-        //     console.log('11111', x)
-        //     templabel.push(x)
-        //   }
-        //   return templabel
-        // }
-        // const x = labelTest.map()
-        // console.log('labelTest onupdate:', labelTest)
-
-        // eslint-disable-next-line react/destructuring-assignment
-        // return <span>{labelTest.map((item) => item)}</span>
-        console.log('labelTest:', labelTest)
+        // console.log('contentLabelTest', labelTest)
         return (
           <div className={styles.labelWrapper}>
             {labelTest?.map((label) => (
@@ -277,13 +221,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
                 onClick={(e) => handleLabelClick(e, label.text)}
                 icon={<TagOutlined />}
               >
-                {/* eslint-disable-next-line react/destructuring-assignment */}
-                {/*{labelTest.length > 0 ? labelTest.map((x) => x) : null}*/}
-                {/*{labelItem}*/}
-                {/*{label.label ? label.label : label.text}*/}
                 {label.text}
-
-                {/*{label.label}*/}
               </Button>
             ))}
           </div>
@@ -378,7 +316,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
   const mobileLabelPopupContent = (data) => {
     return (
       <div>
-        {data.label.map((label, index) => {
+        {data.label?.map((label, index) => {
           return (
             <div className={styles.labelWrapper} key={index}>
               <Button
@@ -403,7 +341,6 @@ export const ClientsContent: FC<ClientsContentProps> = ({
     return <Tooltip title={title}>{icon}</Tooltip>
   }
 
-  // console.log('content', addLabelMutation)
   return (
     <div className={styles.tableContent}>
       {!isMobile && selectedRowKeys.length > 0 && (
@@ -432,6 +369,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
             getLabelsQuery={getLabelsQuery}
             addLabelMutation={addLabelMutation}
             sourceData={sourceData}
+            insertContactsLabelsMutaton={insertContactsLabelsMutaton}
           >
             {renderTooltip({
               title: t('clients.leftSidebar.createLabels'),
