@@ -41,6 +41,7 @@ pipelines:
                 - yarn bin || true
                 - yarn bridge:generate
                 - git status || true
+                - git diff --exit-code --no-ext-diff -p || true
                 - yarn lint:tsc --with-deps --base=origin/master
                 - yarn lint:ls || true
                 - yarn lint:workspace || true
@@ -212,6 +213,7 @@ pipelines:
                 - yarn bin || true
                 - yarn bridge:generate
                 - git status || true
+                - git diff --exit-code --no-ext-diff -p || true
                 - yarn lint:tsc --with-deps --base=HEAD~1
                 - yarn lint:ls || true
                 - yarn lint:workspace || true
