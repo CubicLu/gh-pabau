@@ -311,6 +311,7 @@ query retrieveProductsGroupByMasterCategory {
       id
       name
     }
+    image
   }
 }
 

@@ -260,7 +260,7 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
       <AvatarUploader
         visible={showAvatarUploader}
         title={t('setup.business-details.uploadlogo')}
-        imageURL={''}
+        imageURL={companyLogo}
         onCancel={() => setShowAvatarUploader(false)}
         shape={'rectangle'}
         width={400}

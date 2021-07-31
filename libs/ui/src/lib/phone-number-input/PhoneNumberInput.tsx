@@ -11,6 +11,7 @@ export interface PhoneNumberInputProps {
   value?: string
   labelStyle?: string
   onChange(val: string, valid?: boolean): void
+  placeholder?: string
 }
 
 export const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
@@ -19,6 +20,7 @@ export const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
   value = '44',
   onChange,
   labelStyle,
+  placeholder = '',
 }) => {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [valid, setValid] = useState(true)
@@ -70,6 +72,9 @@ export const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
           value={phoneNumber}
           country={country.toLowerCase()}
           onChange={(value, country) => handleChangeInput(value, country)}
+          inputProps={{
+            placeholder: placeholder,
+          }}
         />
       </div>
       {!valid && (

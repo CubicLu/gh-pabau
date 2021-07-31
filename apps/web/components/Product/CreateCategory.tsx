@@ -96,21 +96,26 @@ export const CreateCategory = ({
       enableReinitialize={true}
       validationSchema={Yup.object({
         name: Yup.string()
-          .required('Name is  required!')
+          .required(
+            t('crud-table-input-required', {
+              what: t('products.list.create.category.name'),
+            })
+          )
           .min(
             2,
             t('crud-table-input-min-length-validate', {
-              what: 'product group name',
+              what: t('products.list.create.category.name').toLowerCase(),
               min: 2,
             })
           )
           .max(
             50,
             t('crud-table-input-max-length-validate', {
-              what: 'product group name',
+              what: t('products.list.create.category.name').toLowerCase(),
+              max: 50,
             })
           ),
-        category_type: Yup.string().required('Type is  required!'),
+        category_type: Yup.string().required('Type is required!'),
       })}
       onSubmit={async (values: Partial<Category>) => {
         changeSubmittingStatus(true)
@@ -119,7 +124,7 @@ export const CreateCategory = ({
         )
       }}
     >
-      {({ values, setFieldValue, isValid, resetForm, dirty }) => (
+      {({ values, setFieldValue, resetForm }) => (
         <>
           <BasicModal
             visible={showModal}
@@ -137,17 +142,19 @@ export const CreateCategory = ({
             }}
           >
             <Form layout="vertical">
-              <div>
-                <label>{t('products.list.create.category.name')}</label>
-                <Input
-                  size={'large'}
-                  type="text"
-                  placeholder={t(
-                    'products.list.create.category.name.placeholder'
-                  )}
-                  name="name"
-                />
-              </div>
+              <Form.Item name="name">
+                <div>
+                  <label>{t('products.list.create.category.name')}</label>
+                  <Input
+                    size={'large'}
+                    type="text"
+                    placeholder={t(
+                      'products.list.create.category.name.placeholder'
+                    )}
+                    name="name"
+                  />
+                </div>
+              </Form.Item>
               <div className="chooseImageInput">
                 <label>{t('products.list.create.category.image')}</label>
                 <Button
@@ -186,27 +193,33 @@ export const CreateCategory = ({
                   {t('common-label-delete')}
                 </Button>
               )}
-              <div>
-                <label>{t('products.list.create.category.categorytype')}</label>
-                <div className={styles.productCategoryType}>
-                  {categoryType?.map((type) => (
-                    <div
-                      key={type.name}
-                      className={
-                        type.name === values?.category_type
-                          ? styles.selected
-                          : ''
-                      }
-                      onClick={() => setFieldValue('category_type', type.name)}
-                    >
-                      {type?.translation}
-                      <div>
-                        <CheckCircleFilled />
+              <Form.Item name="category_type">
+                <div>
+                  <label>
+                    {t('products.list.create.category.categorytype')}
+                  </label>
+                  <div className={styles.productCategoryType}>
+                    {categoryType?.map((type) => (
+                      <div
+                        key={type.name}
+                        className={
+                          type.name === values?.category_type
+                            ? styles.selected
+                            : ''
+                        }
+                        onClick={() =>
+                          setFieldValue('category_type', type.name)
+                        }
+                      >
+                        {type?.translation}
+                        <div>
+                          <CheckCircleFilled />
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
+              </Form.Item>
               <div>
                 <label>{t('products.list.create.category.tax')}</label>
                 <Select
@@ -250,10 +263,10 @@ export const CreateCategory = ({
                   <SubmitButton
                     type="primary"
                     size="large"
-                    disabled={(!isValid && !dirty) || submitting}
+                    disabled={submitting}
                   >
                     {values?.id
-                      ? t('common-label-edit')
+                      ? t('common-label-save')
                       : t('common-label-create')}
                   </SubmitButton>
                 </div>
