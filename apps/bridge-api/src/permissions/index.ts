@@ -198,8 +198,6 @@ export const permissions = shield(
         rules.authentication.isAuthenticated,
       findManyProductsWithAvailableQuantityCount:
         rules.authentication.isAuthenticated,
-      // // CmContact
-      findFirstCmContact: allow,
       // // CmStaffGeneral
       findManyCmStaffGeneral: allow,
       // //Users
