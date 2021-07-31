@@ -137,6 +137,8 @@ const Layout: FC<LayoutProps> = ({
         }
       )
       setNotifications(todayNotification)
+    } else {
+      setNotifications([])
     }
   }, [notificationData?.notifications])
 
