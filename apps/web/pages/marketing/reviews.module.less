@@ -398,7 +398,6 @@
   padding: 24px 24px 24px 0;
   @media screen and (max-width: 767px) {
     overflow: auto;
-    padding: 0px 0px 24px 0px;
   }
 }
 
@@ -786,11 +785,11 @@
     }
   }
 }
-// @media screen and (max-width: 767px) {
-//   .notification-banner {
-//     display: none;
-//   }
-// }
+@media screen and (max-width: 767px) {
+  .notification-banner {
+    display: none;
+  }
+}
 
 .review-share-wrapper {
   padding: 40px;
@@ -929,6 +928,6 @@
   margin: 18px 0;
   display: flex;
 }
-:global .ant-tooltip {
+:global .ant-tooltip{
   max-width: 1000px;
 }

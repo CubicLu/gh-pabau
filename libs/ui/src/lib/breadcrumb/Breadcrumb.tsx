@@ -11,10 +11,10 @@ export interface BreadcrumbItemInterface {
   }>
 }
 interface P {
-  items: BreadcrumbItemInterface[]
+  breadcrumbItems: BreadcrumbItemInterface[]
 }
 
-export const Breadcrumb: FC<P> = ({ items }) => {
+export const Breadcrumb: FC<P> = ({ breadcrumbItems }) => {
   const itemRender = (route, params, routes, paths) => {
     const last = routes.indexOf(route) === routes.length - 1
     return last ? (
@@ -29,7 +29,7 @@ export const Breadcrumb: FC<P> = ({ items }) => {
       separator=">"
       className={styles.breadcrumb}
       itemRender={itemRender}
-      routes={items}
+      routes={breadcrumbItems}
     />
   )
 }

@@ -1,21 +1,24 @@
+import { LeftOutlined } from '@ant-design/icons'
 import { useGetBussinessDetailsQuery } from '@pabau/graphql'
 import {
   Breadcrumb,
   BusinessDetailsNotifications,
+  MobileHeader,
   PasswordExpirationProps,
   TabMenu,
   TerminologyConfig,
 } from '@pabau/ui'
 import { Typography } from 'antd'
+import { useRouter } from 'next/router'
 import React, { FC, useContext, useEffect, useState } from 'react'
-import MobileHeader from '../../../components/MobileHeader'
+import CommonHeader from '../../../components/CommonHeader'
 import Layout from '../../../components/Layout/Layout'
 import BusinessDetailTab from '../../../components/Setup/BusinessDetails/BusinessDetailsTab'
 import SecurityTab from '../../../components/Setup/BusinessDetails/SecurityTab'
 import SystemTab from '../../../components/Setup/BusinessDetails/SystemTab'
 import TerminologyTab from '../../../components/Setup/BusinessDetails/TerminologyTab'
-import useWindowSize from '../../../hooks/useWindowSize'
 import { UserContext } from '../../../context/UserContext'
+import { useGridData } from '../../../hooks/useGridData'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
 
@@ -23,7 +26,6 @@ const { Title } = Typography
 
 export const Index: FC = () => {
   const { t } = useTranslationI18()
-  const size = useWindowSize()
   const optIns = [
     {
       title: 'For Clients',
@@ -89,6 +91,7 @@ export const Index: FC = () => {
   const [addrSuiteNo, setAddrSuiteNo] = useState('')
   const [enableLab, setEnableLabs] = useState('')
   const [location, setLocation] = useState('')
+  const router = useRouter()
 
   const tabMenuItems = [
     t('business.details.tab.tabtitle'),
@@ -97,10 +100,22 @@ export const Index: FC = () => {
     t('business.security.tab.title'),
     t('business.notification.tab.title'),
   ]
-
+  const { getParentSetupData } = useGridData(t)
+  const parentMenu = getParentSetupData(router.pathname)
   const user = useContext(UserContext)
 
   const { data, loading } = useGetBussinessDetailsQuery()
+
+  const handleBack = () => {
+    if (parentMenu.length > 0) {
+      router.push({
+        pathname: '/setup',
+        query: { menu: parentMenu[0]?.keyValue },
+      })
+    } else {
+      router.push('/setup')
+    }
+  }
 
   useEffect(() => {
     const list = [...opsData]
@@ -158,15 +173,12 @@ export const Index: FC = () => {
   }
 
   return (
-    <Layout>
-      <MobileHeader
-        parent="/setup"
-        title={t('setup.business-details.header')}
-      />
-      {size.width > 767 && (
+    <>
+      <CommonHeader />
+      <Layout>
         <div className={styles.businessDetailsContainer}>
           <Breadcrumb
-            items={[
+            breadcrumbItems={[
               {
                 breadcrumbName: t('navigation-breadcrumb-setup'),
                 path: 'setup',
@@ -176,97 +188,104 @@ export const Index: FC = () => {
           />
           <Title>{t('setup.business-details.header')}</Title>
         </div>
-      )}
-
-      <div className={styles.tabsForDesktop}>
-        <TabMenu tabPosition="left" menuItems={tabMenuItems} minHeight="auto">
-          <BusinessDetailTab
-            data={data}
-            addrSuiteNo={addrSuiteNo}
-            forcePassword={forcePassword}
-            user={user?.me.id}
-            location={location}
-            loading={loading}
-            t={t}
-          />
-          <TerminologyTab
-            data={data}
-            addrSuiteNo={addrSuiteNo}
-            forcePassword={forcePassword}
-            user={user?.me.id}
-            opsData={opsData}
-            loading={loading}
-            t={t}
-          />
-          <SystemTab
-            data={data}
-            addrSuiteNo={addrSuiteNo}
-            forcePassword={forcePassword}
-            enableLab={enableLab}
-            user={user?.me.id}
-            loading={loading}
-            t={t}
-          />
-          <SecurityTab
-            data={data}
-            user={user?.me.id}
-            forcePassword={forcePassword}
-            passwordExpiration={passwordExpiration}
-            addrSuiteNo={addrSuiteNo}
-            securityData={securityData}
-            loading={loading}
-            t={t}
-          />
-          <BusinessDetailsNotifications
-            onSave={(values) => onSave(values, 'notification')}
-          />
-        </TabMenu>
-      </div>
-      <div className={styles.tabsForMobile}>
-        <TabMenu tabPosition="top" menuItems={tabMenuItems} minHeight="auto">
-          <BusinessDetailTab
-            data={data}
-            addrSuiteNo={addrSuiteNo}
-            forcePassword={forcePassword}
-            user={user?.me.id}
-            location={location}
-            loading={loading}
-            t={t}
-          />
-          <TerminologyTab
-            data={data}
-            addrSuiteNo={addrSuiteNo}
-            forcePassword={forcePassword}
-            user={user?.me.id}
-            opsData={opsData}
-            loading={loading}
-            t={t}
-          />
-          <SystemTab
-            data={data}
-            addrSuiteNo={addrSuiteNo}
-            forcePassword={forcePassword}
-            enableLab={enableLab}
-            user={user?.me.id}
-            loading={loading}
-            t={t}
-          />
-          <SecurityTab
-            data={data}
-            user={user?.me.id}
-            forcePassword={forcePassword}
-            passwordExpiration={passwordExpiration}
-            addrSuiteNo={addrSuiteNo}
-            securityData={securityData}
-            loading={loading}
-            t={t}
-          />
-          <BusinessDetailsNotifications
-            onSave={(values) => onSave(values, 'notification')}
-          />
-        </TabMenu>
-      </div>
-    </Layout>
+        <MobileHeader className={styles.businessDetailsHeaderMobile}>
+          <div className={styles.allContentAlignMobile}>
+            <div className={styles.marketingTextStyle}>
+              <LeftOutlined onClick={handleBack} />
+              <Title>{t('setup.business-details.header')}</Title>
+            </div>
+          </div>
+        </MobileHeader>
+        <div className={styles.tabsForDesktop}>
+          <TabMenu tabPosition="left" menuItems={tabMenuItems} minHeight="auto">
+            <BusinessDetailTab
+              data={data}
+              addrSuiteNo={addrSuiteNo}
+              forcePassword={forcePassword}
+              user={user?.me.id}
+              location={location}
+              loading={loading}
+              t={t}
+            />
+            <TerminologyTab
+              data={data}
+              addrSuiteNo={addrSuiteNo}
+              forcePassword={forcePassword}
+              user={user?.me.id}
+              opsData={opsData}
+              loading={loading}
+              t={t}
+            />
+            <SystemTab
+              data={data}
+              addrSuiteNo={addrSuiteNo}
+              forcePassword={forcePassword}
+              enableLab={enableLab}
+              user={user?.me.id}
+              loading={loading}
+              t={t}
+            />
+            <SecurityTab
+              data={data}
+              user={user?.me.id}
+              forcePassword={forcePassword}
+              passwordExpiration={passwordExpiration}
+              addrSuiteNo={addrSuiteNo}
+              securityData={securityData}
+              loading={loading}
+              t={t}
+            />
+            <BusinessDetailsNotifications
+              onSave={(values) => onSave(values, 'notification')}
+            />
+          </TabMenu>
+        </div>
+        <div className={styles.tabsForMobile}>
+          <TabMenu tabPosition="top" menuItems={tabMenuItems} minHeight="auto">
+            <BusinessDetailTab
+              data={data}
+              addrSuiteNo={addrSuiteNo}
+              forcePassword={forcePassword}
+              user={user?.me.id}
+              location={location}
+              loading={loading}
+              t={t}
+            />
+            <TerminologyTab
+              data={data}
+              addrSuiteNo={addrSuiteNo}
+              forcePassword={forcePassword}
+              user={user?.me.id}
+              opsData={opsData}
+              loading={loading}
+              t={t}
+            />
+            <SystemTab
+              data={data}
+              addrSuiteNo={addrSuiteNo}
+              forcePassword={forcePassword}
+              enableLab={enableLab}
+              user={user?.me.id}
+              loading={loading}
+              t={t}
+            />
+            <SecurityTab
+              data={data}
+              user={user?.me.id}
+              forcePassword={forcePassword}
+              passwordExpiration={passwordExpiration}
+              addrSuiteNo={addrSuiteNo}
+              securityData={securityData}
+              loading={loading}
+              t={t}
+            />
+            <BusinessDetailsNotifications
+              onSave={(values) => onSave(values, 'notification')}
+            />
+          </TabMenu>
+        </div>
+      </Layout>
+    </>
   )
 }
 

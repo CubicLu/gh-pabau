@@ -204,7 +204,7 @@ export const Index: FC = () => {
           <div className={styles.cardHeader}>
             <div>
               <div className={styles.breadScrumb}>
-                <Breadcrumb items={schema.breadScrumbs} />
+                <Breadcrumb breadcrumbItems={schema.breadScrumbs} />
               </div>
               <div className={styles.cardTitle}>
                 <h1>{schema.short}</h1>

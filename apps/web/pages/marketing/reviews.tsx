@@ -66,12 +66,11 @@ import clinicLogo from '../../assets/images/clinic-logo.png'
 import PabauLogo from '../../assets/images/logo.svg'
 import notificationBannerReviewPageImage from '../../assets/images/notification-image-review.png'
 import { apiURL } from '../../baseUrl'
-import MobileHeader from '../../components/MobileHeader'
+import CommonHeader from '../../components/CommonHeader'
 import Layout from '../../components/Layout/Layout'
 import { UserContext } from '../../context/UserContext'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './reviews.module.less'
-import { TFunction } from 'i18next'
 
 const progressDataList = [
   {
@@ -141,7 +140,8 @@ interface ReviewConfig {
 }
 
 interface TranslationProps {
-  t?: TFunction
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  t?: Function
 }
 
 const Reviews: FC<ReviewConfig> = () => {
@@ -751,7 +751,7 @@ const Reviews: FC<ReviewConfig> = () => {
       <Row className={styles.mainWrapper}>
         <Col span={12} className={styles.titleWrapper}>
           <Breadcrumb
-            items={[
+            breadcrumbItems={[
               {
                 breadcrumbName: t('marketingreviews.notification.title'),
                 path: '',
@@ -1043,8 +1043,8 @@ const Reviews: FC<ReviewConfig> = () => {
   const handleInputChange = (e) => {
     setMessage(e.target.value)
   }
-
-  const renderModalData = (modalValue: string, t: TFunction) => {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  const renderModalData = (modalValue: string, t: Function) => {
     return (
       <>
         {isMobile ? (
@@ -1159,191 +1159,199 @@ const Reviews: FC<ReviewConfig> = () => {
   }
 
   return (
-    <Layout>
-      <MobileHeader title={t('marketingreviews.notification.title')} />
-      <div className={styles.notificationBanner}>
-        <NotificationBanner
-          title={t('marketingreviews.notification.title')}
-          desc={t('marketingreviews.notification.description')}
-          imgPath={notificationBannerReviewPageImage}
-          allowClose={true}
-          setHide={[hideBanner, setHideBanner]}
-          showPaymentButton={true}
-          showEmail={true}
-          showPaymentTitle={t('marketingreviews.notification.button')}
-        />
-      </div>
-      <Card className={styles.reviewContainer}>
-        <DeskTopHeader t={t} />
-        <Modal
-          visible={modalShowing}
-          width={'100%'}
-          footer={null}
-          onCancel={onHandleModal}
-          className={styles.respondWrapper}
-          wrapClassName={isMobile && styles.fullScreenModal}
-        >
-          {renderModalData(modalValue, t)}
-        </Modal>
-        {reviewComponentRender(
-          aggregateData !== undefined
-            ? (average?.reduce((v, i) => v + i, 0) / aggregateData).toFixed(1)
-            : 0
-        )}
-        <div className={styles.tableMob}>
-          {loading ? (
-            <div className={styles.table}>
+    <>
+      <CommonHeader title={t('marketingreviews.notification.title')} />
+      <Layout>
+        <div className={styles.notificationBanner}>
+          <NotificationBanner
+            title={t('marketingreviews.notification.title')}
+            desc={t('marketingreviews.notification.description')}
+            imgPath={notificationBannerReviewPageImage}
+            allowClose={true}
+            setHide={[hideBanner, setHideBanner]}
+            showPaymentButton={true}
+            showEmail={true}
+            showPaymentTitle={t('marketingreviews.notification.button')}
+          />
+        </div>
+        <Card className={styles.reviewContainer}>
+          <DeskTopHeader t={t} />
+          <Modal
+            visible={modalShowing}
+            width={'100%'}
+            footer={null}
+            onCancel={onHandleModal}
+            className={styles.respondWrapper}
+            wrapClassName={isMobile && styles.fullScreenModal}
+          >
+            {renderModalData(modalValue, t)}
+          </Modal>
+          {reviewComponentRender(
+            aggregateData !== undefined
+              ? (average?.reduce((v, i) => v + i, 0) / aggregateData).toFixed(1)
+              : 0
+          )}
+          <div className={styles.tableMob}>
+            {loading ? (
+              <div className={styles.table}>
+                <Table
+                  rowKey="key"
+                  pagination={false}
+                  dataSource={[...Array.from({ length: 10 })].map(
+                    (_, index) => ({
+                      key: `key${index}`,
+                    })
+                  )}
+                  columns={columnData.map((column) => {
+                    return {
+                      ...column,
+                      render: function renderPlaceholder() {
+                        switch (column.dataIndex) {
+                          case 'feedback_source':
+                            return (
+                              <Skeleton
+                                loading={loading}
+                                active
+                                avatar
+                                className={styles.skeleton}
+                              />
+                            )
+                          case 'rating':
+                            return (
+                              <Skeleton
+                                loading={loading}
+                                active
+                                title={true}
+                                paragraph={false}
+                              />
+                            )
+                          case 'date':
+                            return (
+                              <Skeleton
+                                loading={loading}
+                                active
+                                title={true}
+                                paragraph={false}
+                              />
+                            )
+                          case 'feedback_for':
+                            return (
+                              <Skeleton
+                                loading={loading}
+                                active
+                                avatar
+                                className={styles.skeleton}
+                              />
+                            )
+                          case 'feedback_comment':
+                            return (
+                              <Skeleton
+                                loading={loading}
+                                active
+                                title={true}
+                                paragraph={false}
+                              />
+                            )
+                          case 'visibleData':
+                            return (
+                              <Skeleton
+                                loading={loading}
+                                active
+                                title={true}
+                                paragraph={false}
+                              />
+                            )
+                          default:
+                            return (
+                              <Skeleton
+                                loading={loading}
+                                active
+                                title={true}
+                                paragraph={false}
+                              />
+                            )
+                        }
+                      },
+                    }
+                  })}
+                />
+              </div>
+            ) : dataList.length > 0 ? (
               <Table
-                rowKey="key"
-                pagination={false}
-                dataSource={[...Array.from({ length: 10 })].map((_, index) => ({
-                  key: `key${index}`,
-                }))}
-                columns={columnData.map((column) => {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                columns={columnData}
+                dataSource={dataList.map((item) => {
                   return {
-                    ...column,
-                    render: function renderPlaceholder() {
-                      switch (column.dataIndex) {
-                        case 'feedback_source':
-                          return (
-                            <Skeleton
-                              loading={loading}
-                              active
-                              avatar
-                              className={styles.skeleton}
-                            />
-                          )
-                        case 'rating':
-                          return (
-                            <Skeleton
-                              loading={loading}
-                              active
-                              title={true}
-                              paragraph={false}
-                            />
-                          )
-                        case 'date':
-                          return (
-                            <Skeleton
-                              loading={loading}
-                              active
-                              title={true}
-                              paragraph={false}
-                            />
-                          )
-                        case 'feedback_for':
-                          return (
-                            <Skeleton
-                              loading={loading}
-                              active
-                              avatar
-                              className={styles.skeleton}
-                            />
-                          )
-                        case 'feedback_comment':
-                          return (
-                            <Skeleton
-                              loading={loading}
-                              active
-                              title={true}
-                              paragraph={false}
-                            />
-                          )
-                        case 'visibleData':
-                          return (
-                            <Skeleton
-                              loading={loading}
-                              active
-                              title={true}
-                              paragraph={false}
-                            />
-                          )
-                        default:
-                          return (
-                            <Skeleton
-                              loading={loading}
-                              active
-                              title={true}
-                              paragraph={false}
-                            />
-                          )
-                      }
-                    },
+                    ...item,
+                    feedback_source: renderSocialMediaIcon(
+                      item?.feedback_source
+                    ),
+                    rating: `${item?.rating}/5`,
+                    date: new Date(item?.date * 1000).toLocaleDateString(
+                      'en-GB'
+                    ),
+                    feedback_for: (
+                      <Tooltip
+                        placement="top"
+                        title={`${item?.service} with ${item?.User?.full_name}`}
+                      >
+                        <div className={styles.avatarWrap}>
+                          <Avatar
+                            src={`https://crm.pabau.com/${item?.User?.image}`}
+                            name={item?.User?.full_name}
+                            size="default"
+                            isTooltip={false}
+                          />
+                        </div>
+                      </Tooltip>
+                    ),
+                    visibleData: renderVisibleData(item),
+                    feedback_comment: (
+                      <Tooltip
+                        placement="top"
+                        title={(item?.feedback_comment).substring(0, 2000)}
+                      >
+                        {item?.feedback_comment}
+                      </Tooltip>
+                    ),
                   }
                 })}
+                loading={loading}
+                isHover={true}
+                onRowHover={onHoverHandle}
+                onLeaveRow={onHoverLeave}
+                updateDataSource={updateDataSource}
+                pagination={dataList?.length > 10 ? {} : false}
               />
-            </div>
-          ) : dataList.length > 0 ? (
-            <Table
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              columns={columnData}
-              dataSource={dataList.map((item) => {
-                return {
-                  ...item,
-                  feedback_source: renderSocialMediaIcon(item?.feedback_source),
-                  rating: `${item?.rating}/5`,
-                  date: new Date(item?.date * 1000).toLocaleDateString('en-GB'),
-                  feedback_for: (
-                    <Tooltip
-                      placement="top"
-                      title={`${item?.service} with ${item?.User?.full_name}`}
-                    >
-                      <div className={styles.avatarWrap}>
-                        <Avatar
-                          src={`https://crm.pabau.com/${item?.User?.image}`}
-                          name={item?.User?.full_name}
-                          size="default"
-                          isTooltip={false}
-                        />
-                      </div>
-                    </Tooltip>
-                  ),
-                  visibleData: renderVisibleData(item),
-                  feedback_comment: (
-                    <Tooltip
-                      placement="top"
-                      title={(item?.feedback_comment).substring(0, 2000)}
-                    >
-                      {item?.feedback_comment}
-                    </Tooltip>
-                  ),
-                }
-              })}
-              loading={loading}
-              isHover={true}
-              onRowHover={onHoverHandle}
-              onLeaveRow={onHoverLeave}
-              updateDataSource={updateDataSource}
-              pagination={dataList?.length > 10 ? {} : false}
-            />
-          ) : (
-            <div className={styles.empty}>
-              <Empty
-                description={t('marketingreviews.data.nodata.content')}
-                className={styles.noData}
-              />
-            </div>
-          )}
-        </div>
-      </Card>
-      <Pagination
-        total={paginateData.total}
-        defaultPageSize={10}
-        showSizeChanger={false}
-        onChange={onPaginationChange}
-        pageSizeOptions={['10', '25', '50', '100']}
-        onPageSizeChange={(pageSize) => {
-          setPaginateData({
-            ...paginateData,
-            take: pageSize,
-          })
-        }}
-        pageSize={paginateData.take}
-        current={paginateData.currentPage}
-        showingRecords={paginateData.showingRecords}
-      />
-    </Layout>
+            ) : (
+              <div className={styles.empty}>
+                <Empty
+                  description={t('marketingreviews.data.nodata.content')}
+                  className={styles.noData}
+                />
+              </div>
+            )}
+          </div>
+        </Card>
+        <Pagination
+          total={paginateData.total}
+          defaultPageSize={10}
+          showSizeChanger={false}
+          onChange={onPaginationChange}
+          pageSizeOptions={['10', '25', '50', '100']}
+          onPageSizeChange={(pageSize) => {
+            setPaginateData({
+              ...paginateData,
+              take: pageSize,
+            })
+          }}
+          pageSize={paginateData.take}
+          current={paginateData.currentPage}
+          showingRecords={paginateData.showingRecords}
+        />
+      </Layout>
+    </>
   )
 }
 

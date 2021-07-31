@@ -66,7 +66,7 @@ const Index: FC = () => {
   return (
     <Layout>
       <CommonNotificationHeader
-        items={[
+        breadcrumbItems={[
           {
             path: 'setup',
             breadcrumbName: t('notifications.breadcrumb.setup'),

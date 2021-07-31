@@ -1,3 +1,4 @@
+import { LeftOutlined } from '@ant-design/icons'
 import {
   AvatarList,
   Breadcrumb,
@@ -9,8 +10,6 @@ import { Typography } from 'antd'
 import React, { FC, useState } from 'react'
 import AddButton from '../../../components/AddButton'
 import Layout from '../../../components/Layout/Layout'
-import useWindowSize from '../../../hooks/useWindowSize'
-import MobileHeader from '../../../components/MobileHeader'
 import CreateCourse, {
   InitialCoursesProps,
 } from '../../../components/Setup/CoursesPackages/CreateCourse'
@@ -50,7 +49,7 @@ const packageFormikInitialValue: InitialPackagesProps = {
 
 export const Index: FC = () => {
   const { t } = useTranslationI18()
-  const size = useWindowSize()
+
   const onFilterSource = () => {
     return
   }
@@ -216,7 +215,6 @@ export const Index: FC = () => {
     },
   }
 
-  const [mobileSearch, setMobileSearch] = useState(false)
   const [showCreateCourseModal, setShowCreateCourseModal] = useState(false)
   const [showCreatePackageModal, setShowCreatePackageModal] = useState(false)
   const [currentTab, setCurrentTab] = useState('0')
@@ -283,24 +281,11 @@ export const Index: FC = () => {
   return (
     <>
       <Layout>
-        <MobileHeader parent="/setup" title={t('setup.courses-and-packages')}>
-          <AddButton
-            onFilterSource={onFilterSource}
-            onSearch={onSearch}
-            schema={currentTab === '1' ? packageSchema : courseSchema}
-            tableSearch={true}
-            onClick={handleCreatenNew}
-            needTranslation={false}
-            mobileSearch={mobileSearch}
-            setMobileSearch={() => setMobileSearch(() => !mobileSearch)}
-            addFilter={true}
-          />
-        </MobileHeader>
-        {size.width > 767 && (
-          <div className={styles.coursesWrapper}>
+        <div className={styles.coursesWrapper}>
+          <div className={styles.hideMobileView}>
             <div className={styles.header}>
               <Breadcrumb
-                items={[
+                breadcrumbItems={[
                   { path: 'setup', breadcrumbName: t('sidebar.setup') },
                   {
                     path: '',
@@ -322,7 +307,22 @@ export const Index: FC = () => {
               addFilter={true}
             />
           </div>
-        )}
+          <div className={styles.hideDesktopView}>
+            <div className={styles.courseWrap}>
+              <LeftOutlined className={styles.leftIcon} />{' '}
+              <h6>{t('setup.courses-and-packages')}</h6>
+            </div>
+            <AddButton
+              onFilterSource={onFilterSource}
+              onSearch={onSearch}
+              schema={currentTab === '1' ? packageSchema : courseSchema}
+              tableSearch={true}
+              onClick={handleCreatenNew}
+              needTranslation={false}
+              addFilter={true}
+            />
+          </div>
+        </div>
         <div className={styles.tableBackground}>
           <TabbedTable
             tabItems={[

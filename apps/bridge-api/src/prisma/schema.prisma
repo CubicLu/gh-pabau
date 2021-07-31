@@ -12737,7 +12737,7 @@ model UserMainPermission {
 
 //
 model UserMaster {
-  id             Int      @id @default(autoincrement())
+  id             Int       @id @default(autoincrement())
   company_id     Int
   fname          String
   lname          String
@@ -12747,17 +12747,17 @@ model UserMaster {
   country        String
   postalcode     String
   prefloc        String
-  email          String   @unique
+  email          String    @unique
   pass           String
   oauth_provider String
   oauth_id       String
-  timestamp      DateTime @default(now())
+  timestamp      DateTime  @default(now())
   enc_key        String
   pic            String
-  contact_id     Int      @unique
+  contact_id     Int       @unique
   mobile         String
-  last_login     DateTime
-  is_suspended   Boolean  @default(false)
+  last_login     DateTime?
+  is_suspended   Boolean   @default(false)
   session_hash   String
 
   Company Company @relation(fields: [company_id], references: [id])

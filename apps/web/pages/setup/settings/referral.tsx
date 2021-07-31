@@ -1,14 +1,16 @@
+import { LeftOutlined } from '@ant-design/icons'
 import { Breadcrumb, Button, Notification, NotificationType } from '@pabau/ui'
 import { Card, Col, Row } from 'antd'
 import { useFormik } from 'formik'
+import { useRouter } from 'next/router'
 import React, { FC, useContext } from 'react'
 import * as Yup from 'yup'
 import Layout from '../../../components/Layout/Layout'
 import General from '../../../components/Setup/Settings/ReferralSettings/General'
 import { UserContext } from '../../../context/UserContext'
+import { useGridData } from '../../../hooks/useGridData'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import useWindowSize from '../../../hooks/useWindowSize'
-import MobileHeader from '../../../components/MobileHeader'
 import { GeneralReferralConfig } from '../../../types/referralSettings'
 import styles from './referral.module.less'
 
@@ -59,6 +61,7 @@ const Referral: FC<P> = () => {
   }
   const listInput = ReferralConfigObj.general
   const size = useWindowSize()
+  const router = useRouter()
 
   const referralFormik = useFormik({
     initialValues: {
@@ -90,19 +93,48 @@ const Referral: FC<P> = () => {
     referralFormik.handleSubmit()
   }
 
+  const { getParentSetupData } = useGridData(t)
+  let path = router.pathname
+  const pathArray = router.pathname.split('/')
+  if (pathArray.length > 3) {
+    pathArray.pop()
+    path = pathArray.join('/')
+  }
+  const parentMenu = getParentSetupData(path)
+  const handleBack = () => {
+    if (parentMenu.length > 0) {
+      router.push({
+        pathname: '/setup',
+        query: { menu: parentMenu[0]?.keyValue },
+      })
+    } else {
+      router.push('/setup')
+    }
+  }
+
   return (
     <div className={styles.referralMainWrapper}>
       <Layout {...user}>
-        <MobileHeader
-          title={t('setup.settings.referral.title')}
-          parent="/setup"
-        />
         <Card className={styles.referralContainer}>
-          {size.width > 767 && (
+          {size.width <= 767 ? (
+            <div className={styles.hideDesktopView}>
+              <Row className={styles.mobDevice}>
+                <Col span={24}>
+                  <div className={styles.mobTopHead}>
+                    <div className={styles.mobTopHeadRow}>
+                      <LeftOutlined onClick={handleBack} />{' '}
+                      <h6>{t('setup.settings.referral.title')}</h6>
+                    </div>
+                    <p>{t('setup.settings.referral.description')}</p>
+                  </div>
+                </Col>
+              </Row>
+            </div>
+          ) : (
             <Row className={styles.titleWrapper}>
               <Col span={'auto'} className={styles.title}>
                 <Breadcrumb
-                  items={[
+                  breadcrumbItems={[
                     { breadcrumbName: t('sidebar.setup'), path: 'setup' },
                     {
                       breadcrumbName: t('setup.settings.referral.title'),
@@ -126,7 +158,6 @@ const Referral: FC<P> = () => {
               </Col>
             </Row>
           )}
-
           <General
             generalObj={ReferralConfigObj.general}
             values={referralFormik.values}

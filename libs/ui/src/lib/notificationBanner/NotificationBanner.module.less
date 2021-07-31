@@ -1,13 +1,10 @@
 .notification-body {
   background: #e9faff no-repeat right bottom;
-  margin-bottom: 16px;
+  margin-bottom: 32px;
   min-height: 144px;
   @media screen and (max-width: 767px) {
-    margin-top: 16px;
-    margin-left: 16px;
-    margin-right: 16px;
-
-    background-position: right bottom;
+    margin-top: 15px;
+    background-position: top;
   }
 }
 
@@ -77,11 +74,11 @@
 .rowPosition {
   position: relative !important;
   min-height: 144px;
-  // @media screen and (max-width: 767px) {
-  //   :global .ant-col {
-  //     margin-top: 110px;
-  //   }
-  // }
+  @media screen and (max-width: 767px) {
+    :global .ant-col {
+      margin-top: 110px;
+    }
+  }
 }
 
 .iconClose {

@@ -1,4 +1,4 @@
-import { FilterOutlined, SearchOutlined } from '@ant-design/icons'
+import { FilterOutlined } from '@ant-design/icons'
 import { Breadcrumb, Button, NotificationBanner, TabMenu } from '@pabau/ui'
 import { Card, Divider, Input, Popover, Radio, Typography } from 'antd'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
@@ -10,9 +10,6 @@ import Layout from '../../components/Layout/Layout'
 import AccountInformation from '../../components/Setup/Subscription/AccountInformation'
 import BillingInformation from '../../components/Setup/Subscription/BillingInformation'
 import InvoiceActivity from '../../components/Setup/Subscription/InvoiceActivityList'
-import { ReactComponent as CloseIcon } from '../../assets/images/close-icon.svg'
-import MobileHeader from '../../components/MobileHeader'
-import useWindowSize from '../../hooks/useWindowSize'
 import styles from './subscription.module.less'
 import { useRouter } from 'next/router'
 
@@ -23,9 +20,8 @@ const tabName = {
 }
 const Subscription: FC = () => {
   const { Title } = Typography
-  const size = useWindowSize()
+  const { Search } = Input
   const [activeTab, setActiveTab] = useState('0')
-  const [mobileSearch, setMobileSearch] = useState(false)
   const setHide = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterValue, setFilterValue] = useState<'ALL' | 'PAID' | 'NOT_PAID'>(
@@ -97,78 +93,40 @@ const Subscription: FC = () => {
         setHide={setHide}
         imgPath={paymentUpdateBanner}
       />
-      <MobileHeader parent="/setup" title={`Pabau ${t('setup.subscription')}`}>
-        {mobileSearch && (
-          <Input
-            className={styles.searchMarketingStyle}
-            placeholder={t('setup.crud.subscription.searchholder')}
-            onChange={(e) => handleSearch(e.target.value)}
-            suffix={
-              <CloseIcon
-                onClick={() => {
-                  setMobileSearch(() => !mobileSearch)
-                }}
-              />
-            }
-            autoFocus
-          />
-        )}
-        {!mobileSearch && activeTab === '0' && (
-          <>
-            <SearchOutlined
-              className={styles.marketingIconStyle}
-              onClick={() => setMobileSearch(() => !mobileSearch)}
-            />
-            <Popover
-              trigger="click"
-              content={filterContent}
-              placement="bottomRight"
-              overlayClassName={styles.filterPopover}
-            >
-              <FilterOutlined className={styles.marketingIconStyle} />
-            </Popover>
-          </>
-        )}
-      </MobileHeader>
       <Card bodyStyle={{ padding: 0 }}>
-        {size.width > 767 && (
-          <div className={styles.headerContainer}>
-            <div>
-              <Breadcrumb
-                items={[
-                  { breadcrumbName: t('sidebar.setup'), path: 'setup' },
-                  { breadcrumbName: t('setup.subscription'), path: '' },
-                ]}
-              />
-              <Title>Pabau {t('setup.subscription')}</Title>
-            </div>
-            {activeTab === '0' && (
-              <div className={styles.searchBarContainer}>
-                <Input
-                  className={styles.searchMarketingStyle}
-                  placeholder={t('setup.crud.subscription.searchholder')}
-                  onChange={(e) => {
-                    handleSearch(e.target.value)
-                  }}
-                  suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
-                  autoFocus
-                />
-                <div className={styles.btnWrapperFilter}>
-                  <Popover
-                    trigger="click"
-                    content={filterContent}
-                    placement="bottomRight"
-                    overlayClassName={styles.filterPopover}
-                  >
-                    <Button size="large" className={styles.filterBtn}>
-                      <FilterOutlined /> {t('setup.crud.filter')}
-                    </Button>
-                  </Popover>
-                </div>
-              </div>
-            )}
+        <div className={styles.headerContainer}>
+          <div>
+            <Breadcrumb
+              breadcrumbItems={[
+                { breadcrumbName: t('sidebar.setup'), path: 'setup' },
+                { breadcrumbName: t('setup.subscription'), path: '' },
+              ]}
+            />
+            <Title>Pabau {t('setup.subscription')}</Title>
           </div>
-        )}
+          {activeTab === '0' && (
+            <div className={styles.searchBarContainer}>
+              <Search
+                placeholder={t('setup.crud.subscription.searchholder')}
+                allowClear
+                onSearch={handleSearch}
+                className={styles.searchBar}
+              />
+              <div className={styles.btnWrapperFilter}>
+                <Popover
+                  trigger="click"
+                  content={filterContent}
+                  placement="bottomRight"
+                  overlayClassName={styles.filterPopover}
+                >
+                  <Button className={styles.filterBtn}>
+                    <FilterOutlined /> {t('setup.crud.filter')}
+                  </Button>
+                </Popover>
+              </div>
+            </div>
+          )}
+        </div>
         <Divider style={{ margin: 0 }} />
         <TabMenu
           tabPosition={'top'}

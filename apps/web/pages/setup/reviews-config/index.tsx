@@ -1,11 +1,13 @@
 import React, { FC, useState, useEffect, useRef } from 'react'
 import { Typography } from 'antd'
 import {
+  LeftOutlined,
   ToolOutlined,
   QuestionOutlined,
   ShareAltOutlined,
   LinkOutlined,
 } from '@ant-design/icons'
+import { useRouter } from 'next/router'
 import { Breadcrumb, NotificationBanner, Switch, Stepper } from '@pabau/ui'
 import confetti from 'canvas-confetti'
 import {
@@ -15,9 +17,8 @@ import {
   ReviewsConfigStepThree,
   ReviewsConfigStepFour,
 } from '../../../components/Setup/ReviewsConfig'
-import useWindowSize from '../../../hooks/useWindowSize'
 import Layout from '../../../components/Layout/Layout'
-import MobileHeader from '../../../components/MobileHeader'
+import CommonHeader from '../../../components/CommonHeader'
 import reviewsConfigBanner from '../../../assets/images/reviews-config-banner.png'
 import { ReactComponent as ExternalLink } from '../../../assets/images/external-link.svg'
 import {
@@ -74,8 +75,6 @@ export const Index: FC<ReviewsConfigProps> = ({
   const [setting, setSetting] = useState<FeedbackSurveyBuilder>(
     defaultBuilderSetting
   )
-
-  const size = useWindowSize()
   const [step, setStep] = useState(0)
 
   const randomInRange = (min, max) => {
@@ -98,35 +97,30 @@ export const Index: FC<ReviewsConfigProps> = ({
     }
   }, [step])
 
+  const router = useRouter()
+
+  const handleBack = () => {
+    router.back()
+  }
+
   return (
     <div ref={reviewsConfigRef}>
+      <CommonHeader />
       <Layout>
-        <MobileHeader parent="/setup" title="Feedback Survey">
-          <div className={styles.reviewsConfigOps}>
-            <div className={styles.reviewLink}>
-              Review Link <Switch size="small" />
-            </div>
-            <a
-              href="https://www.pabau.com/reviews/cadogan-clinic"
-              rel="noreferrer"
-              target="_blank"
-            >
-              www.pabau.com/reviews/cadogan-clinic <ExternalLink />
-            </a>
-          </div>
-        </MobileHeader>
-        <NotificationBanner
-          title="Reviews"
-          desc="Increase the number of reviews your clients complete by by 72% by enabling feedback requests via SMS"
-          imgPath={reviewsConfigBanner}
-          allowClose={true}
-          setHide={[showBanner, setShowBanner]}
-        />
+        <div className={styles.reviewsConfigBanner}>
+          <NotificationBanner
+            title="Reviews"
+            desc="Increase the number of reviews your clients complete by by 72% by enabling feedback requests via SMS"
+            imgPath={reviewsConfigBanner}
+            allowClose={true}
+            setHide={[showBanner, setShowBanner]}
+          />
+        </div>
         <div className={styles.reviewsConfigContainer}>
           <div className={styles.reviewsConfigHeader}>
             <div className={styles.reviewsConfigBreadcrumb}>
               <Breadcrumb
-                items={[
+                breadcrumbItems={[
                   { breadcrumbName: 'Setup', path: '/setup' },
                   {
                     breadcrumbName: 'Feedback Survey',
@@ -136,20 +130,23 @@ export const Index: FC<ReviewsConfigProps> = ({
               />
               <Typography.Title>Feedback Survey</Typography.Title>
             </div>
-            {size.width > 767 && (
-              <div className={styles.reviewsConfigOps}>
-                <div className={styles.reviewLink}>
-                  Review Link <Switch size="small" />
-                </div>
-                <a
-                  href="https://www.pabau.com/reviews/cadogan-clinic"
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  www.pabau.com/reviews/cadogan-clinic <ExternalLink />
-                </a>
+            <div className={styles.reviewsConfigBreadcrumbMobile}>
+              <Typography.Title>
+                <LeftOutlined onClick={handleBack} /> Feedback Survey
+              </Typography.Title>
+            </div>
+            <div className={styles.reviewsConfigOps}>
+              <div className={styles.reviewLink}>
+                Review Link <Switch size="small" />
               </div>
-            )}
+              <a
+                href="https://www.pabau.com/reviews/cadogan-clinic"
+                rel="noreferrer"
+                target="_blank"
+              >
+                www.pabau.com/reviews/cadogan-clinic <ExternalLink />
+              </a>
+            </div>
           </div>
           <div className={styles.reviewsConfigStep}>
             <div>

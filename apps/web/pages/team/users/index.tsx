@@ -21,7 +21,7 @@ import { useMedia } from 'react-use'
 import searchEmpty from '../../../../../libs/ui/src/assets/images/empty.png'
 import { ReactComponent as CloseIcon } from '../../../assets/images/close-icon.svg'
 import addButtonStyles from '../../../components/AddButton.module.less'
-import MobileHeader from '../../../components/MobileHeader'
+import CommonHeader from '../../../components/CommonHeader'
 import Layout from '../../../components/Layout/Layout'
 import {
   Filter,
@@ -224,21 +224,23 @@ const Index: FunctionComponent = () => {
   const MobileHeaderButtonJsx = () => {
     return tabValue.toString() === '0' ? (
       isMobileSearch ? (
-        <Input
-          className={styles.searchMarketingStyle}
-          placeholder={t('team.user.header.search.placeholder')}
-          value={searchValue}
-          onChange={(e) => handleSearch(e.target.value)}
-          suffix={
-            <CloseIcon
-              onClick={() => {
-                setSearchValue('')
-                setMobileSearch(false)
-              }}
-            />
-          }
-          autoFocus
-        />
+        <div className={styles.mobileSearchInput}>
+          <Input
+            className={styles.searchMarketingStyle}
+            placeholder={t('team.user.header.search.placeholder')}
+            value={searchValue}
+            onChange={(e) => handleSearch(e.target.value)}
+            suffix={
+              <CloseIcon
+                onClick={() => {
+                  setSearchValue('')
+                  setMobileSearch(false)
+                }}
+              />
+            }
+            autoFocus
+          />
+        </div>
       ) : (
         <div
           className={classNames(
@@ -281,16 +283,18 @@ const Index: FunctionComponent = () => {
 
   return (
     <div className={styles.userMainWrapper}>
+      <CommonHeader
+        title={'Users'}
+        isContent={true}
+        ContentJsx={MobileHeaderButtonJsx}
+      />
       <Layout {...user}>
-        <MobileHeader title={'Users'} parent="/team/users">
-          <MobileHeaderButtonJsx />
-        </MobileHeader>
         <div className={styles.header}>
           <div className={styles.headerTitle}>
             {!isMobile && (
               <>
                 <Breadcrumb
-                  items={[
+                  breadcrumbItems={[
                     {
                       path: '/team',
                       breadcrumbName: t('team.user.breadcrumb.team'),

@@ -1,5 +1,10 @@
 import React, { useState } from 'react'
-import { Breadcrumb, Wstepper as WStepper, StepperItem } from '@pabau/ui'
+import {
+  Breadcrumb,
+  Wstepper as WStepper,
+  StepperItem,
+  MobileHeader,
+} from '@pabau/ui'
 import Layout from '../../components/Layout/Layout'
 import styles from './lead-forms.module.less'
 import LeadSettings from '../../components/Setup/LeadCapture/LeadSetting'
@@ -8,9 +13,13 @@ import LeadTesting from '../../components/Setup/LeadCapture/LeadTesting'
 import LeadResult from '../../components/Setup/LeadCapture/LeadResult'
 import LeadFormResult from '../../components/Setup/LeadCapture/lead-forms/LeadFormResult'
 import LeadCustomizeForm from '../../components/Setup/LeadCapture/lead-forms/LeadCustomizeForm'
-import MobileHeader from '../../components/MobileHeader'
-import useWindowSize from '../../hooks/useWindowSize'
-import { FlagOutlined, HomeOutlined, ToolOutlined } from '@ant-design/icons'
+import { useRouter } from 'next/router'
+import {
+  FlagOutlined,
+  HomeOutlined,
+  LeftOutlined,
+  ToolOutlined,
+} from '@ant-design/icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as Icons from '@fortawesome/free-solid-svg-icons'
 import { Typography } from 'antd'
@@ -22,7 +31,6 @@ export const LeadForms: React.FC = () => {
   const allFormSteps = ['Basic', 'Customize Form', 'Result']
   const [activeStepper, setActiveStepper] = useState('API')
   const [activeStep, setActiveStep] = useState(0)
-  const size = useWindowSize()
 
   const apiStepper: StepperItem[] = [
     {
@@ -97,59 +105,75 @@ export const LeadForms: React.FC = () => {
     setActiveStep(allAPISteps.length - 1)
   }
 
+  const router = useRouter()
+
+  const handleBack = () => {
+    router.back()
+  }
+
   return (
-    <Layout active={'setup'}>
-      <MobileHeader title="Lead Capture" parent="/setup" />
-      <div className={styles.cardWrapper}>
-        {size.width > 767 && (
+    <>
+      <div className={styles.desktopViewNone}>
+        <MobileHeader className={styles.mobileHeader}>
+          <div className={styles.allContentAlignMobile}>
+            <div className={styles.mobileHeaderTextStyle}>
+              <LeftOutlined onClick={handleBack} />
+              <p>Lead Capture</p>
+            </div>
+          </div>
+        </MobileHeader>
+      </div>
+
+      <Layout active={'setup'}>
+        <div className={styles.cardWrapper}>
           <div style={{ background: '#FFF' }}>
             <Breadcrumb
-              items={[
+              breadcrumbItems={[
                 { breadcrumbName: 'Setup', path: 'setup' },
                 { breadcrumbName: 'Lead Capture', path: '' },
               ]}
             />
             <Title>Lead Capture</Title>
           </div>
-        )}
-        <WStepper
-          data={activeStepper === 'API' ? apiStepper : formStepper}
-          active={activeStep}
-          disableNextStep={
-            activeStepper === 'API' &&
-            allAPISteps[activeStep] === 'Testing (API)'
-          }
-          onActiveStepChange={(step) => {
-            setActiveStep(step)
-          }}
-        >
-          {allAPISteps[activeStep] === 'Basic' && (
-            <LeadSettings
-              activeStepper={activeStepper}
-              captureLeadStepChange={setActiveStepperForLead}
-            />
-          )}
-          {activeStepper === 'API' ? (
-            <>
-              {allAPISteps[activeStep] === 'Configure (API)' && (
-                <LeadIntegration />
-              )}
-              {allAPISteps[activeStep] === 'Testing (API)' && (
-                <LeadTesting onAPIFlowComplete={onAPIFlowComplete} />
-              )}
-              {allAPISteps[activeStep] === 'Result' && <LeadResult />}
-            </>
-          ) : (
-            <>
-              {allFormSteps[activeStep] === 'Customize Form' && (
-                <LeadCustomizeForm />
-              )}
-              {allFormSteps[activeStep] === 'Result' && <LeadFormResult />}
-            </>
-          )}
-        </WStepper>
-      </div>
-    </Layout>
+          <WStepper
+            data={activeStepper === 'API' ? apiStepper : formStepper}
+            active={activeStep}
+            disableNextStep={
+              activeStepper === 'API' &&
+              allAPISteps[activeStep] === 'Testing (API)'
+            }
+            onActiveStepChange={(step) => {
+              setActiveStep(step)
+            }}
+          >
+            {allAPISteps[activeStep] === 'Basic' && (
+              <LeadSettings
+                activeStepper={activeStepper}
+                captureLeadStepChange={setActiveStepperForLead}
+              />
+            )}
+            {activeStepper === 'API' ? (
+              <>
+                {allAPISteps[activeStep] === 'Configure (API)' && (
+                  <LeadIntegration />
+                )}
+                {allAPISteps[activeStep] === 'Testing (API)' && (
+                  <LeadTesting onAPIFlowComplete={onAPIFlowComplete} />
+                )}
+                {allAPISteps[activeStep] === 'Result' && <LeadResult />}
+              </>
+            ) : (
+              <>
+                {allFormSteps[activeStep] === 'Customize Form' && (
+                  <LeadCustomizeForm />
+                )}
+                {allFormSteps[activeStep] === 'Result' && <LeadFormResult />}
+              </>
+            )}
+          </WStepper>
+        </div>
+      </Layout>
+    </>
   )
 }
 
