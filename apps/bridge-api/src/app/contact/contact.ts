@@ -71,7 +71,7 @@ export const create = async (
       ...input.data,
       company_id: id,
       preferred_language: !input.data.preferred_language
-        ? ctx.authenticated.language.company
+        ? ctx.authenticated.language?.company
         : input.data.preferred_language,
       OwnerID: ctx.authenticated.user,
       DOB: input.data.DOB ? new Date(input.data.DOB) : null,

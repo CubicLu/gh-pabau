@@ -70,6 +70,24 @@ export const Index: FC<GeneralProps> = ({
     setMoreVisible(!moreVisible)
   }
 
+  const isAddress = () => {
+    if (fieldsSettings && fieldsSettings?.length > 0) {
+      for (const field of fieldsSettings) {
+        if (
+          field.field_name === 'MailingStreet' ||
+          field.field_name === 'MailingProvince' ||
+          field.field_name === 'MailingCity' ||
+          field.field_name === 'MailingCountry' ||
+          field.field_name === 'MailingPostal' ||
+          field.field_name === 'secondary_address'
+        ) {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
   return (
     <div className={styles.mainDiv}>
       <GeneralComponent
@@ -96,7 +114,10 @@ export const Index: FC<GeneralProps> = ({
       {fieldsSettings?.find((thread) => thread.field_name === 'opt_in') && (
         <Subscriptions />
       )}
-      {fieldsSettings && (
+      {(isAddress() ||
+        (limitContactsLocations && limitContactsLocations.length > 0) ||
+        (otherCompanies && otherCompanies.length > 0) ||
+        (customFields && customFields.length > 0)) && (
         <div
           className={`${styles.moreBtn} ${!moreVisible && styles.paddingAtEnd}`}
           onClick={toggleMore}
@@ -107,7 +128,9 @@ export const Index: FC<GeneralProps> = ({
       )}
       {moreVisible && (
         <div className={styles.paddingAtEnd}>
-          {fieldsSettings && <Addresses fieldsSettings={fieldsSettings} />}
+          {isAddress() && fieldsSettings && (
+            <Addresses fieldsSettings={fieldsSettings} />
+          )}
           {limitContactsLocations && limitContactsLocations?.length > 0 && (
             <AntForm
               className={styles.subscriptionForm}
