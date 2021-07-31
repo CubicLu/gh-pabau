@@ -16,6 +16,7 @@ import useLogin from '../../hooks/authentication/useLogin'
 import Login from '../../pages/login'
 import Search from '../Search'
 import ClientCreate from '../Clients/ClientCreate'
+import LeadCreate from '../Lead/LeadCreate'
 import styles from './Layout.module.less'
 import TaskManagerIFrame from '../TaskManagerIFrame/TaskManagerIFrame'
 import { Unauthorized } from '../Unauthorized'
@@ -187,6 +188,7 @@ const Layout: FC<LayoutProps> = ({
           legacyContent={!!legacyPage}
           taskManagerIFrameComponent={<TaskManagerIFrame />}
           clientCreateRender={() => <ClientCreate />}
+          leadCreateRender={() => <LeadCreate />}
           {...props}
         >
           <CommonHeader

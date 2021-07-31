@@ -307,6 +307,7 @@ model Company {
   CmContactCustom                  CmContactCustom[]
   CmLabel                          CmLabel[]
   CmContactLabel                   CmContactLabel[]
+  LeadStatus                       LeadStatus[]
 
   @@map("admin")
 }
@@ -2431,31 +2432,31 @@ model CmExtraSalon {
 model CmLead {
 
   ID                       Int                      @id @default(autoincrement())
-  Avatar                   String
+  Avatar                   String?                  @default("")
   OwnerID                  Int
-  ContactID                Int
+  ContactID                Int?                     @default(0)
   Salutation               String
   Fname                    String
   Lname                    String
-  DOB                      DateTime
-  Title                    String
-  LeadCompany              String
+  DOB                      DateTime?
+  Title                    String?                  @default("")
+  LeadCompany              String?                  @default("")
   company_id               Int                      @map("Occupier")
   Email                    String
   Phone                    String
-  Fax                      String
+  Fax                      String?                  @default("")
   Mobile                   String
-  Website                  String
+  Website                  String?                  @default("")
   LeadSource               Int
   LeadStatus               Int
-  Industry                 String
-  NoOfEmp                  String
-  AnualRevenue             String
-  Rating                   Int
+  Industry                 String?                  @default("")
+  NoOfEmp                  String?                  @default("")
+  AnualRevenue             String?                  @default("")
+  Rating                   Int?                     @default(0)
   EmailOptOut              cm_leads_EmailOptOut     @default(No)
-  SkypeId                  String
-  SecondaryEmail           String
-  Twitter                  String
+  SkypeId                  String?                  @default("")
+  SecondaryEmail           String?                  @default("")
+  Twitter                  String?                  @default("")
   MailingStreet            String
   MailingCity              String
   MailingProvince          String
@@ -2464,31 +2465,32 @@ model CmLead {
   Description              String
   EnumStatus               cm_leads_EnumStatus      @default(Open)
   Status                   cm_leads_Status          @default(Enable)
-  CreatedDate              DateTime
-  MarketingOptInAll        Int
+  CreatedDate              DateTime?                @default(now())
+  MarketingOptInAll        Int?                     @default(0)
   MarketingOptInEmail      Int
   MarketingOptInPhone      Int
   MarketingOptInPost       Int
   MarketingOptInText       Int
-  MarketingOptInNewsletter Int
-  IpAddress                String
-  fbimg                    String
-  LastUpdated              String
-  custom_tag1              String
-  online_capture           Int
-  capture_id               Int
-  old_LeadStatus           Int
-  custom_id                String
-  imported                 Int
-  ConvertDate              DateTime
-  group_id                 Int
-  first_interaction        DateTime
-  latest_interaction       DateTime
-  location_id              Int                      @default(0)
-  need_to_knows            Int                      @default(1)
+  MarketingOptInNewsletter Int?                     @default(0)
+  IpAddress                String?                  @default("")
+  fbimg                    String?                  @default("")
+  LastUpdated              String?                  @default("")
+  custom_tag1              String?                  @default("")
+  online_capture           Int?                     @default(0)
+  capture_id               Int?                     @default(0)
+  old_LeadStatus           Int?                     @default(0)
+  custom_id                String?                  @default("")
+  imported                 Int?                     @default(0)
+  ConvertDate              DateTime?
+  group_id                 Int?                     @default(0)
+  first_interaction        DateTime?
+  latest_interaction       DateTime?
+  location_id              Int?                     @default(0)
+  need_to_knows            Int?                     @default(1)
   Company                  Company                  @relation(fields: [company_id], references: [id])
   CmLeadCustomField        CmLeadCustomField[]
   CommunicationRecipient   CommunicationRecipient[]
+  CmLeadNote               CmLeadNote[]
 
   @@index([Email], name: "Email")
   @@index([Fname], name: "Fname")
@@ -2507,8 +2509,8 @@ model CmLeadCustomField {
   custom_field_id    Int
   custom_field_label String
   custom_field_value String
-  imported           Int
-  old_value          String
+  imported           Int?               @default(0)
+  old_value          String?            @default("")
   Company            Company            @relation(fields: [company_id], references: [id])
   CustomField        ManageCustomField? @relation(fields: [custom_field_id], references: [id])
   Lead               CmLead             @relation(fields: [lead_id], references: [ID])
@@ -2559,18 +2561,22 @@ model CmLeadCustomFieldOrder {
 //  company_id Int
 //}
 //
-//model cm_lead_notes {
-//  ID          Int                  @id @default(autoincrement())
-//  OwnerID     Int
-//  LeadID      Int
-//  Note        String
-//  Status      cm_lead_notes_Status @default(Enable)
-//  CreatedDate DateTime
-//  IpAddress   Int
-//
-//  @@index([LeadID], name: "LeadID")
-//  @@index([OwnerID], name: "OwnerID")
-//}
+model CmLeadNote {
+  ID          Int                  @id @default(autoincrement())
+  OwnerID     Int
+  LeadID      Int
+  Note        String
+  Status      cm_lead_notes_Status @default(Enable)
+  CreatedDate DateTime?            @default(now())
+  IpAddress   Int?                 @default(0)
+  CmLead      CmLead               @relation(fields: [LeadID], references: [ID])
+
+
+  @@index([LeadID], name: "LeadID")
+  @@index([OwnerID], name: "OwnerID")
+  @@map("cm_lead_notes")
+}
+
 //
 //model cm_linkprw {
 //  ID          Int              @id @default(autoincrement())
@@ -7681,7 +7687,21 @@ model JobStatus {
 //  date_added    DateTime
 //  user_added    Int
 //}
-//
+
+model LeadStatus {
+  id                  Int      @id @default(autoincrement())
+  company_id          Int?
+  status_name         String
+  status_order        Int
+  email_template_id   Int
+  email_template_from String
+  is_default          Int
+  is_convert          Int
+  Company             Company? @relation(fields: [company_id], references: [id])
+
+  @@map("lead_status")
+}
+
 //model lead_status {
 //  id                  Int    @id @default(autoincrement())
 //  company_id          Int

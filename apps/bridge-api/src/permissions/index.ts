@@ -64,6 +64,10 @@ export const permissions = shield(
         rules.authentication.isAuthenticated,
         rules.authentication.isAdmin
       ),
+      createOneLead: and(
+        rules.authentication.isAuthenticated,
+        rules.authentication.isAdmin
+      ),
       //Country
       createOneCountry: rules.authentication.isAuthenticated,
       //MedicalFormContact

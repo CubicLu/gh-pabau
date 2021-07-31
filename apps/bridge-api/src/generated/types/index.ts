@@ -1,3 +1,5 @@
+export * from './LeadStatus'
+export * from './CmLeadNote'
 export * from './MedicalFormAdvancedSetting'
 export * from './GroupPermission'
 export * from './XeroIntegration'

@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import styles from '../ClientCreate.module.less'
+import styles from '../General/CustomField.module.less'
 import {
   Checkbox,
   Form as AntForm,
@@ -13,6 +13,7 @@ import {
   DatePicker,
   InitialDetailsProps,
   PhoneNumberInput,
+  InitialDetailsDataProps,
 } from '@pabau/ui'
 import dayjs, { Dayjs } from 'dayjs'
 const { TextArea } = Input
@@ -22,7 +23,7 @@ interface CustomFieldProps {
     field: keyof InitialDetailsProps,
     values: string | string[] | boolean | number | Dayjs | null
   ): void
-  values?: InitialDetailsProps
+  values?: InitialDetailsProps | InitialDetailsDataProps
 }
 const CustomField: FC<CustomFieldProps> = ({
   customFields,

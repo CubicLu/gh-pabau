@@ -64,12 +64,6 @@ fragment CmLead on CmLead {
   }
 }
 
-mutation createOneCmLead($data: CmLeadCreateInput!) {
-  createOneCmLead(data: $data) {
-    ...CmLead
-  }
-}
-
 mutation updateOneCmLead($where: CmLeadWhereUniqueInput!, $data: CmLeadUpdateInput!) {
   updateOneCmLead(where: $where, data: $data) {
     ...CmLead

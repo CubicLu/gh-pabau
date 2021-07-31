@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import {
   FullScreenReportModal,
   OperationType as Operation,
@@ -6,12 +6,26 @@ import {
   Employees,
   Employee,
   Button,
+  CustomFieldsProps,
+  FieldSetting,
 } from '@pabau/ui'
 import { Formik } from 'formik'
 import General from './General/index'
 import { useTranslation } from 'react-i18next'
 import styles from './LeadCreate.module.less'
 import * as Yup from 'yup'
+import { Dayjs } from 'dayjs'
+import { CommonProps } from '../client-create/General'
+
+export interface LeadStatusProps {
+  id: number
+  status_name: string
+}
+
+export interface LocationProps {
+  id: number
+  name: string
+}
 
 export interface LeadCreateProps {
   modalVisible?: boolean
@@ -20,130 +34,76 @@ export interface LeadCreateProps {
   onSelectTemplate?: (string) => void
   searchText?: string
   onSearchTextChange?: (string) => void
+  fieldsSettings?: FieldSetting[]
+  employeeList: Employee[]
+  salutationData?: CommonProps[]
+  marketingSources?: CommonProps[]
+  leadStatusData?: LeadStatusProps[]
+  locationData?: LocationProps[]
+  customFields?: CustomFieldsProps[]
+  isFieldSettingLoading?: boolean
+  isMarketingSourceLoading?: boolean
+  isLocationLoading?: boolean
+  isLeadStatusLoading?: boolean
+  initialValues: InitialDetailsDataProps
+  validationObject?: {
+    [key: string]: Yup.AnyObjectSchema
+  }
+  handleSubmit?: (
+    val,
+    selectedEmployees: Employee[],
+    resetForm?: () => void,
+    setSelectedEmployees?: (
+      value: ((prevState: Employee[]) => Employee[]) | Employee[]
+    ) => void
+  ) => void
 }
 
 export interface InitialDetailsDataProps {
   firstName: string
   lastName: string
-  hearOption: string
-  dateOfBirth: Date
-  leadStage: string
+  Salutation: string
+  lead_source: number | undefined
+  DOB: Dayjs | undefined
+  leadStatus: number
+  location: number
   note: string
-  email: string
-  phoneNumber: string
-  telePhone: string
-  address: string
-  country: string
-  city: string
-  postCode: string
-  newsLetter: string
-  sms: string
-  postal: string
-  phoneCalls: string
-  procedureType: string
-  treatmentInterestPage: string
-  title: string
-  keyword: string
+  Email: string
+  Description: string
+  MailingStreet: string
+  MailingProvince: string
+  MailingCity: string
+  MailingCountry: string
+  MailingPostal: string
+  Phone: string
+  Mobile: string
+  MarketingOptInEmail?: boolean
+  MarketingOptInText?: boolean
+  MarketingOptInPost?: boolean
+  MarketingOptInPhone?: boolean
+  [key: string]: string | number | Dayjs | boolean | undefined | null
 }
-
-const employeeList = [
-  { name: 'Jessica Winter', selected: true },
-  { name: 'Jeff Hackley', selected: false },
-  { name: 'Alexander Wang', selected: false },
-  { name: 'Linda Davis', selected: false },
-  { name: 'William Tyson', selected: false },
-  { name: 'Max Starck', selected: false },
-  { name: 'Kyle Walsh', selected: false },
-  { name: 'Owen Phillips', selected: false },
-  { name: 'Aidan Kelly', selected: false },
-  { name: 'Ewan Morgan', selected: false },
-  { name: 'Jordan Martin', selected: false },
-  { name: 'Grant Dudley', selected: false },
-]
 
 export const LeadCreate: FC<LeadCreateProps> = ({
   modalVisible = true,
   handleClose,
+  employeeList,
+  fieldsSettings,
+  initialValues,
+  validationObject,
+  handleSubmit,
+  ...props
 }) => {
   const [assigneeModalOpen, setAssigneeModalOpen] = useState(false)
   const [selectedEmployees, setSelectedEmployees] = useState<Employee[]>([])
-  const [assigneeName, setAssigneeName] = useState('Jessica Winter')
-
   const { t } = useTranslation('common')
-
-  useEffect(() => {
-    setSelectedEmployees(
-      employeeList.filter(
-        (item) => item.name === assigneeName && item.selected === true
-      )
-    )
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const handleAssigneeToggle = () => {
     setAssigneeModalOpen(!assigneeModalOpen)
-    setSelectedEmployees(
-      employeeList.filter((item) => item.name === assigneeName)
-    )
-  }
-
-  const initialValues: InitialDetailsDataProps = {
-    firstName: '',
-    lastName: '',
-    note: '',
-    leadStage: '',
-    hearOption: t('quickCreate.client.modal.general.hearOption.selectOption'),
-    dateOfBirth: new Date(),
-    email: '',
-    phoneNumber: '',
-    telePhone: '',
-    address: '',
-    country: '',
-    city: '',
-    postCode: '',
-    newsLetter: '',
-    sms: '',
-    postal: '',
-    phoneCalls: '',
-    procedureType: '',
-    treatmentInterestPage: '',
-    title: '',
-    keyword: '',
   }
 
   const validationSchema = Yup.object({
-    firstName: Yup.string().required(
-      t('quickCreate.validation.firstName.required')
-    ),
-    lastName: Yup.string().required(
-      t('quickCreate.validation.lastName.required')
-    ),
-    hearOption: Yup.string().required(
-      t('quickCreate.validation.hearOption.required')
-    ),
-    email: Yup.string()
-      .email(t('quickCreate.validation.email.validate'))
-      .required(t('quickCreate.validation.email.required')),
-    address: Yup.string().required(
-      t('quickCreate.validation.address.required')
-    ),
-    country: Yup.string().required(
-      t('quickCreate.validation.country.required')
-    ),
-    city: Yup.string().required(t('quickCreate.validation.city.required')),
-    postCode: Yup.string().required(
-      t('quickCreate.validation.postCode.required')
-    ),
-    procedureType: Yup.string().required(
-      t('quickCreate.validation.procedureType.required')
-    ),
-    treatmentInterestPage: Yup.string().required(
-      t('quickCreate.validation.treatmentInterestPage.required')
-    ),
-    title: Yup.string().required(t('quickCreate.validation.title.required')),
-    keyword: Yup.string().required(
-      t('quickCreate.validation.keyword.required')
-    ),
+    ...validationObject,
   })
 
   const handleSelectEmployees = (items: Employee[]) => {
@@ -151,7 +111,6 @@ export const LeadCreate: FC<LeadCreateProps> = ({
   }
 
   const handleAddEmployee = () => {
-    setAssigneeName(selectedEmployees[0].name)
     setAssigneeModalOpen(!assigneeModalOpen)
   }
 
@@ -169,9 +128,18 @@ export const LeadCreate: FC<LeadCreateProps> = ({
         initialValues={initialValues}
         enableReinitialize={true}
         validationSchema={validationSchema}
-        onSubmit={() => console.log('submitted')}
+        onSubmit={async (values, { resetForm, setSubmitting }) => {
+          setSubmitting(true)
+          await handleSubmit?.(
+            values,
+            selectedEmployees,
+            resetForm,
+            setSelectedEmployees
+          )
+          setSubmitting(false)
+        }}
       >
-        {({ setFieldValue, handleSubmit, values, isValid, dirty, errors }) => {
+        {({ setFieldValue, handleSubmit, values, isSubmitting }) => {
           return (
             <FullScreenReportModal
               title={t('quickCreate.lead.modal.newLead')}
@@ -179,20 +147,26 @@ export const LeadCreate: FC<LeadCreateProps> = ({
               visible={modalVisible}
               onBackClick={handleClose}
               createBtnText={t('quickCreate.client.modal.create')}
-              subMenu={[t('quickCreate.lead.modal.tab.general')]}
-              enableCreateBtn={isValid}
+              enableCreateBtn={!isSubmitting}
               onCreate={handleSubmit}
               assigneeTitle={t('quickCreate.lead.modal.newLead.assigneeTitle')}
-              assigneeName={assigneeName}
+              assigneeName={
+                selectedEmployees.length > 0
+                  ? selectedEmployees[0].name
+                  : 'Automatic'
+              }
+              avatar={
+                selectedEmployees.length > 0 ? selectedEmployees[0].avatar : ''
+              }
               onAssigneeClick={handleAssigneeToggle}
             >
-              {[
-                <General
-                  key={'general'}
-                  values={initialValues}
-                  setFieldValue={setFieldValue}
-                />,
-              ]}
+              <General
+                key={'general'}
+                values={values}
+                setFieldValue={setFieldValue}
+                fieldsSettings={fieldsSettings}
+                {...props}
+              />
             </FullScreenReportModal>
           )
         }}

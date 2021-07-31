@@ -1,5 +1,6 @@
 export * from '../../app/contact/mutation'
 export * from '../../app/contact/query'
+export * from '../../app/lead/mutation'
 export * from '../../app/product/mutations'
 export * from '../../app/product/queries'
 export * from '../../app/finance/query'
