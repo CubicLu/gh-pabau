@@ -258,7 +258,14 @@ export const CreateProduct = ({
         )
       }}
     >
-      {({ setFieldValue, values, resetForm, submitForm }) => (
+      {({
+        setFieldValue,
+        values,
+        resetForm,
+        submitForm,
+        isValid,
+        submitCount,
+      }) => (
         <>
           <FullScreenReportModal
             visible={showModal}
@@ -277,7 +284,9 @@ export const CreateProduct = ({
               product?.id ? t('common-label-save') : t('common-label-create')
             }
             activeBtnText={t('common-label-active')}
-            enableCreateBtn={!submitting}
+            enableCreateBtn={
+              submitCount === 0 ? !submitting : !submitting && isValid
+            }
             subMenu={[
               t('ui.create.product.tab.general'),
               t('ui.create.product.tab.pricing'),

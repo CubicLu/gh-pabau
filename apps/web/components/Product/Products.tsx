@@ -865,7 +865,7 @@ export const Products = ({
           onClose={() => setShowConfirmationDialog(false)}
           onSubmit={async () => {
             changeSubmittingStatus(true)
-            changeSubmittingStatus(await handleDeleteGroup(currentGroup?.id))
+            changeSubmittingStatus(!(await handleDeleteGroup(currentGroup?.id)))
             setShowConfirmationDialog(false)
           }}
         >
@@ -921,7 +921,7 @@ export const Products = ({
               alert_quantity: product?.alert_quantity,
               price: Number(product?.price),
               cost: Number(product?.cost),
-              product_order: sourceData?.[0]?.product_order ?? 1,
+              product_order: sourceData?.[0]?.product_order + 1 ?? 1,
               is_active: Number(product?.is_active),
               PriceListGroup_id: 0,
               imported: 0,

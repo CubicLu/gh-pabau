@@ -124,7 +124,7 @@ export const CreateCategory = ({
         )
       }}
     >
-      {({ values, setFieldValue, resetForm }) => (
+      {({ values, setFieldValue, resetForm, isValid }) => (
         <>
           <BasicModal
             visible={showModal}
@@ -263,7 +263,7 @@ export const CreateCategory = ({
                   <SubmitButton
                     type="primary"
                     size="large"
-                    disabled={submitting}
+                    disabled={submitting || !isValid}
                   >
                     {values?.id
                       ? t('common-label-save')
