@@ -11,12 +11,14 @@ interface GeneralProps {
     values: string | string[] | boolean | number
   ): void
   fieldsSettings: FieldSetting[]
+  requiredLabel: (name: string) => string
 }
 
 export const ContactInfo: FC<GeneralProps> = ({
   setFieldValue,
   values,
   fieldsSettings,
+  requiredLabel,
 }) => {
   const { t } = useTranslation('common')
   return (
@@ -28,7 +30,9 @@ export const ContactInfo: FC<GeneralProps> = ({
         requiredMark={false}
       >
         <AntForm.Item
-          label={t('quickCreate.client.modal.general.email')}
+          label={`${t('quickCreate.client.modal.general.email')}${requiredLabel(
+            'Email'
+          )}`}
           name={'Email'}
         >
           <Input
@@ -41,17 +45,22 @@ export const ContactInfo: FC<GeneralProps> = ({
         {fieldsSettings.find((thread) => thread.field_name === 'Mobile') && (
           <AntForm.Item name={'Mobile'}>
             <PhoneNumberInput
-              label={t('quickCreate.client.modal.general.mobilePhone')}
+              label={`${t(
+                'quickCreate.client.modal.general.mobilePhone'
+              )}${requiredLabel('Mobile')}`}
               value={values?.Mobile}
               onChange={(value) => {
                 setFieldValue('Mobile', value)
               }}
+              showValidErrorMessage={false}
             />
           </AntForm.Item>
         )}
         {fieldsSettings.find((thread) => thread.field_name === 'Phone') && (
           <AntForm.Item
-            label={t('quickCreate.client.modal.general.telephone')}
+            label={`${t(
+              'quickCreate.client.modal.general.telephone'
+            )}${requiredLabel('Phone')}`}
             name={'Phone'}
           >
             <Input name={'Phone'} placeholder={'+ _ ___ _____'} />

@@ -31,6 +31,7 @@ interface GeneralProps {
   isMarketingSourceLoading?: boolean
   isLocationLoading?: boolean
   isLeadStatusLoading?: boolean
+  requiredLabel: (name: string) => string
 }
 
 export const General: FC<GeneralProps> = ({
@@ -45,6 +46,7 @@ export const General: FC<GeneralProps> = ({
   isMarketingSourceLoading,
   isLocationLoading,
   isLeadStatusLoading,
+  requiredLabel,
 }) => {
   const { t } = useTranslation('common')
 
@@ -69,12 +71,12 @@ export const General: FC<GeneralProps> = ({
         <div className={styles.wrapNameInfo}>
           <div className={styles.salutation}>
             <AntForm.Item
-              label={
+              label={`${
                 fieldsSettings?.find(
                   (thread) => thread.field_name === 'Salutation'
                 )?.field_label ||
                 t('quickCreate.client.modal.general.salutation')
-              }
+              }${requiredLabel('Salutation')}`}
               name={'Salutation'}
             >
               <Select name={'Salutation'}>
@@ -88,11 +90,11 @@ export const General: FC<GeneralProps> = ({
           </div>
           <div className={styles.firstName}>
             <AntForm.Item
-              label={
+              label={`${
                 fieldsSettings?.find((thread) => thread.field_name === 'Fname')
                   ?.field_label ||
                 t('quickCreate.client.modal.general.firstName')
-              }
+              } (${t('quickcreate.required.label')})`}
               name={'firstName'}
             >
               <Input
@@ -106,11 +108,11 @@ export const General: FC<GeneralProps> = ({
           </div>
           <div className={styles.lastName}>
             <AntForm.Item
-              label={
+              label={`${
                 fieldsSettings?.find((thread) => thread.field_name === 'Lname')
                   ?.field_label ||
                 t('quickCreate.client.modal.general.lastName')
-              }
+              } (${t('quickcreate.required.label')})`}
               name={'lastName'}
             >
               <Input
@@ -131,12 +133,12 @@ export const General: FC<GeneralProps> = ({
           ) && (
             <AntForm.Item
               className={styles.customCommon}
-              label={
+              label={`${
                 fieldsSettings?.find(
                   (thread) => thread.field_name === 'lead_source'
                 )?.field_label ||
                 t('quickCreate.client.modal.general.hearOption.label')
-              }
+              }${requiredLabel('lead_source')}`}
               name={'lead_source'}
             >
               {!isMarketingSourceLoading ? (
@@ -172,12 +174,12 @@ export const General: FC<GeneralProps> = ({
           ) && (
             <AntForm.Item
               className={styles.customCommon}
-              label={
+              label={`${
                 fieldsSettings?.find(
                   (thread) => thread.field_name === 'Description'
                 )?.field_label ||
                 t('quickCreate.client.modal.general.description.label')
-              }
+              }${requiredLabel('Description')}`}
               name={'Description'}
             >
               <Input
@@ -196,10 +198,10 @@ export const General: FC<GeneralProps> = ({
           fieldsSettings?.find((thread) => thread.field_name === 'DOB') && (
             <AntForm.Item
               className={styles.customCommon}
-              label={
+              label={`${
                 fieldsSettings?.find((thread) => thread.field_name === 'DOB')
                   ?.field_label || t('quickCreate.client.modal.general.date')
-              }
+              }${requiredLabel('DOB')}`}
               name={'DOB'}
             >
               <DatePicker

@@ -62,11 +62,6 @@ export interface InitialDetailsProps {
   MailingStreet?: string
   MailingCity: string
   MailingPostal: string
-  OtherStreet?: string
-  OtherProvince?: string
-  OtherCity?: string
-  OtherCountry?: string
-  OtherPostal?: string
   MarketingOptInEmail?: boolean
   MarketingOptInText?: boolean
   MarketingOptInPost?: boolean
@@ -180,7 +175,14 @@ export const ClientCreate: FC<ClientCreateProps> = ({
           setSubmitting(false)
         }}
       >
-        {({ setFieldValue, handleSubmit, values, isSubmitting }) => (
+        {({
+          setFieldValue,
+          handleSubmit,
+          values,
+          isValid,
+          isSubmitting,
+          submitCount,
+        }) => (
           <FullScreenReportModal
             title={
               !isEdit
@@ -199,7 +201,9 @@ export const ClientCreate: FC<ClientCreateProps> = ({
                 ? t('quickCreate.client.modal.create')
                 : t('common-label-save')
             }
-            enableCreateBtn={!isSubmitting}
+            enableCreateBtn={
+              submitCount === 0 ? !isSubmitting : !isSubmitting && isValid
+            }
             onCreate={handleSubmit}
             activated={activated}
             onActivated={onActivated}

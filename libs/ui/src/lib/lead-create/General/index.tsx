@@ -43,7 +43,7 @@ export const Index: FC<GeneralProps> = ({
   isFieldSettingLoading,
   ...props
 }) => {
-  const [moreVisible, setMoreVisible] = useState(false)
+  const [moreVisible, setMoreVisible] = useState(true)
 
   const { t } = useTranslation('common')
 
@@ -68,6 +68,13 @@ export const Index: FC<GeneralProps> = ({
     return false
   }
 
+  const requiredLabel = (name: string) => {
+    return fieldsSettings?.find((thread) => thread.field_name === name)
+      ?.is_required === 1
+      ? ` (${t('quickcreate.required.label')})`
+      : ''
+  }
+
   return (
     <div className={styles.mainDiv}>
       <GeneralComponent
@@ -75,6 +82,7 @@ export const Index: FC<GeneralProps> = ({
         setFieldValue={setFieldValue}
         fieldsSettings={fieldsSettings}
         isFieldSettingLoading={isFieldSettingLoading}
+        requiredLabel={requiredLabel}
         {...props}
       />
       <ContactInfo
@@ -82,6 +90,7 @@ export const Index: FC<GeneralProps> = ({
         setFieldValue={setFieldValue}
         fieldsSettings={fieldsSettings}
         isFieldSettingLoading={isFieldSettingLoading}
+        requiredLabel={requiredLabel}
       />
       {(isAddress() ||
         (customFields && customFields.length > 0) ||
@@ -102,10 +111,9 @@ export const Index: FC<GeneralProps> = ({
           )}
           {isAddress() && (
             <Addresses
-              values={values}
-              setFieldValue={setFieldValue}
               fieldsSettings={fieldsSettings}
               isFieldSettingLoading={isFieldSettingLoading}
+              requiredLabel={requiredLabel}
             />
           )}
           <CustomField

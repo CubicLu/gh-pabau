@@ -167,11 +167,6 @@ mutation createOneContact(
   $marketingOptInPost: Int!
   $marketingOptInText: Int!
   $marketingSource: Int!
-  $otherStreet: String!
-  $otherCity: String!
-  $otherPostal: String!
-  $otherProvince: String!
-  $otherCountry: String!
   $DOB: DateTime
   $mobile: String!
   $phone: String!
@@ -198,11 +193,6 @@ mutation createOneContact(
       MarketingOptInPost: $marketingOptInPost
       MarketingOptInText: $marketingOptInText
       MarketingSource: $marketingSource
-      OtherStreet: $otherStreet
-      OtherCity: $otherCity
-      OtherPostal: $otherPostal
-      OtherProvince: $otherProvince
-      OtherCountry: $otherCountry
       DOB: $DOB
       Mobile: $mobile
       Phone: $phone

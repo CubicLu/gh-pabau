@@ -1,25 +1,20 @@
 import React, { FC } from 'react'
 import styles from '../LeadCreate.module.less'
-import { InitialDetailsDataProps, FieldSetting } from '@pabau/ui'
+import { FieldSetting } from '@pabau/ui'
 import { Form as AntForm, Input } from 'formik-antd'
 import { useTranslation } from 'react-i18next'
 import { Skeleton } from 'antd'
 
 interface Props {
-  values?: InitialDetailsDataProps
-  setFieldValue(
-    field: keyof InitialDetailsDataProps,
-    values: string | string[] | boolean | number
-  ): void
   fieldsSettings?: FieldSetting[]
   isFieldSettingLoading?: boolean
+  requiredLabel: (name: string) => string
 }
 
 export const Addresses: FC<Props> = ({
-  setFieldValue,
-  values,
   fieldsSettings,
   isFieldSettingLoading,
+  requiredLabel,
 }) => {
   const { t } = useTranslation('common')
 
@@ -52,12 +47,12 @@ export const Addresses: FC<Props> = ({
             (thread) => thread.field_name === 'MailingStreet'
           ) && (
             <AntForm.Item
-              label={
+              label={`${
                 fieldsSettings.find(
                   (thread) => thread.field_name === 'MailingStreet'
                 )?.field_label ||
                 t('quickCreate.client.modal.general.addresses.label')
-              }
+              }${requiredLabel('MailingStreet')}`}
               name={'MailingStreet'}
             >
               <Input name={'MailingStreet'} />
@@ -71,12 +66,12 @@ export const Addresses: FC<Props> = ({
             (thread) => thread.field_name === 'MailingProvince'
           ) && (
             <AntForm.Item
-              label={
+              label={`${
                 fieldsSettings.find(
                   (thread) => thread.field_name === 'MailingProvince'
                 )?.field_label ||
                 t('quickCreate.client.modal.general.address.two.label')
-              }
+              }${requiredLabel('MailingProvince')}`}
               name={'MailingProvince'}
             >
               <Input name={'MailingProvince'} />
@@ -90,12 +85,12 @@ export const Addresses: FC<Props> = ({
             (thread) => thread.field_name === 'MailingCity'
           ) && (
             <AntForm.Item
-              label={
+              label={`${
                 fieldsSettings.find(
                   (thread) => thread.field_name === 'MailingCity'
                 )?.field_label ||
                 t('quickCreate.client.modal.general.addresses.city')
-              }
+              }${requiredLabel('MailingCity')}`}
               name={'MailingCity'}
             >
               <Input name={'MailingCity'} />
@@ -109,12 +104,12 @@ export const Addresses: FC<Props> = ({
             (thread) => thread.field_name === 'MailingCountry'
           ) && (
             <AntForm.Item
-              label={
+              label={`${
                 fieldsSettings.find(
                   (thread) => thread.field_name === 'MailingCountry'
                 )?.field_label ||
                 t('quickCreate.client.modal.general.addresses.country')
-              }
+              }${requiredLabel('MailingCountry')}`}
               name={'MailingCountry'}
             >
               <Input name={'MailingCountry'} />
@@ -128,12 +123,13 @@ export const Addresses: FC<Props> = ({
             (thread) => thread.field_name === 'MailingPostal'
           ) && (
             <AntForm.Item
-              label={
+              label={`${
                 fieldsSettings.find(
                   (thread) => thread.field_name === 'MailingPostal'
                 )?.field_label ||
                 t('quickCreate.client.modal.general.addresses.postcode')
-              }
+              }${requiredLabel('MailingPostal')}
+              `}
               name={'MailingPostal'}
             >
               <Input name={'MailingPostal'} />

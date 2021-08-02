@@ -12,6 +12,7 @@ export interface PhoneNumberInputProps {
   labelStyle?: string
   onChange(val: string, valid?: boolean): void
   placeholder?: string
+  showValidErrorMessage?: boolean
 }
 
 export const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
@@ -21,6 +22,7 @@ export const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
   onChange,
   labelStyle,
   placeholder = '',
+  showValidErrorMessage = true,
 }) => {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [valid, setValid] = useState(true)
@@ -77,7 +79,7 @@ export const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
           }}
         />
       </div>
-      {!valid && (
+      {showValidErrorMessage && !valid && (
         <div className={styles.phoneNumberValidMsg}>
           Please enter a valid phone number
         </div>

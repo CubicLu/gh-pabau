@@ -59,8 +59,9 @@ export const createLead = mutationField('createOneLead', {
         Note: leadInputData.notes,
         OwnerID: ctx.authenticated.user,
       }
-      delete leadInputData.notes
     }
+
+    delete leadInputData.notes
 
     const customFieldData = input.customFields
       ? input.customFields.map((cmFields) => {

@@ -165,7 +165,7 @@ export const LeadCreateWeb: FC<LeadCreateProps> = ({
           item.is_required === 1 &&
           item.field_name !== 'Fname' &&
           item.field_name !== 'Lname' &&
-          item.field_name !== 'opt_in'
+          item.field_name in initialValues
         ) {
           requiredField[item.field_name] = Yup.string().required(
             `${t('quickCreate.validation.is.required', {

@@ -14,6 +14,7 @@ interface GeneralProps {
   ): void
   fieldsSettings?: FieldSetting[]
   isFieldSettingLoading?: boolean
+  requiredLabel: (name: string) => string
 }
 
 export const ContactInfo: FC<GeneralProps> = ({
@@ -21,6 +22,7 @@ export const ContactInfo: FC<GeneralProps> = ({
   values,
   fieldsSettings,
   isFieldSettingLoading,
+  requiredLabel,
 }) => {
   const { t } = useTranslation('common')
 
@@ -47,10 +49,10 @@ export const ContactInfo: FC<GeneralProps> = ({
         requiredMark={false}
       >
         <AntForm.Item
-          label={
+          label={`${
             fieldsSettings?.find((thread) => thread.field_name === 'Email')
               ?.field_label || t('quickCreate.client.modal.general.email')
-          }
+          }${requiredLabel('Email')}`}
           name={'Email'}
         >
           <Input
@@ -66,14 +68,15 @@ export const ContactInfo: FC<GeneralProps> = ({
           fieldsSettings?.find((thread) => thread.field_name === 'Mobile') && (
             <AntForm.Item name={'Mobile'}>
               <PhoneNumberInput
-                label={
+                label={`${
                   fieldsSettings?.find(
                     (thread) => thread.field_name === 'Mobile'
                   )?.field_label ||
                   t('quickCreate.client.modal.general.mobilePhone')
-                }
+                }${requiredLabel('Mobile')}`}
                 value={values?.Mobile}
                 onChange={(value) => setFieldValue('Mobile', value)}
+                showValidErrorMessage={false}
               />
             </AntForm.Item>
           )
@@ -83,11 +86,11 @@ export const ContactInfo: FC<GeneralProps> = ({
         ) : (
           fieldsSettings?.find((thread) => thread.field_name === 'Phone') && (
             <AntForm.Item
-              label={
+              label={`${
                 fieldsSettings?.find((thread) => thread.field_name === 'Phone')
                   ?.field_label ||
                 t('quickCreate.client.modal.general.telephone')
-              }
+              }${requiredLabel('Phone')}`}
               name={'Phone'}
             >
               <Input name={'Phone'} placeholder={'+ _ ___ _____'} />

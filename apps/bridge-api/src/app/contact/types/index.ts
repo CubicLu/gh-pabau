@@ -29,11 +29,6 @@ export interface ContactInput {
   Mobile: string
   Phone: string
   gender: string
-  OtherStreet: string
-  OtherCity: string
-  OtherProvince: string
-  OtherPostal: string
-  OtherCountry: string
   preferred_language: string
 }
 

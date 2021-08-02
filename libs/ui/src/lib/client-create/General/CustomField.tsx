@@ -16,7 +16,9 @@ import {
   InitialDetailsDataProps,
 } from '@pabau/ui'
 import dayjs, { Dayjs } from 'dayjs'
+import { useTranslation } from 'react-i18next'
 const { TextArea } = Input
+
 interface CustomFieldProps {
   customFields?: CustomFieldsProps[]
   setFieldValue(
@@ -25,11 +27,13 @@ interface CustomFieldProps {
   ): void
   values?: InitialDetailsProps | InitialDetailsDataProps
 }
+
 const CustomField: FC<CustomFieldProps> = ({
   customFields,
   setFieldValue,
   values,
 }) => {
+  const { t } = useTranslation('common')
   return (
     <div>
       {customFields?.map((field) => (
@@ -42,7 +46,13 @@ const CustomField: FC<CustomFieldProps> = ({
             <h5>{field?.name}</h5>
             {field?.CmFields.map((item) => (
               <div key={item.id}>
-                {item?.field_type !== 'phone' && <p>{item?.field_label}</p>}
+                {item?.field_type !== 'phone' && (
+                  <p>{`${item?.field_label}${
+                    item.is_required
+                      ? ` (${t('quickcreate.required.label')})`
+                      : ''
+                  }`}</p>
+                )}
                 <AntForm.Item name={`customField_${item.id}`}>
                   {item?.field_type === 'string' ||
                   item?.field_type === 'email' ||
@@ -111,7 +121,11 @@ const CustomField: FC<CustomFieldProps> = ({
                     />
                   ) : item?.field_type === 'phone' ? (
                     <PhoneNumberInput
-                      label={item?.field_label ? item.field_label : ''}
+                      label={`${item?.field_label || item.field_label}${
+                        item.is_required
+                          ? ` (${t('quickcreate.required.label')})`
+                          : ''
+                      }`}
                       value={
                         values?.[`customField_${item.id}`]
                           ? values[`customField_${item.id}`]?.toString()
@@ -120,6 +134,7 @@ const CustomField: FC<CustomFieldProps> = ({
                       onChange={(value) =>
                         setFieldValue(`customField_${item.id}`, value)
                       }
+                      showValidErrorMessage={false}
                     />
                   ) : null}
                 </AntForm.Item>

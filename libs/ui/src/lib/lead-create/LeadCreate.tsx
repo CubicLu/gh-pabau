@@ -139,7 +139,14 @@ export const LeadCreate: FC<LeadCreateProps> = ({
           setSubmitting(false)
         }}
       >
-        {({ setFieldValue, handleSubmit, values, isSubmitting }) => {
+        {({
+          setFieldValue,
+          handleSubmit,
+          values,
+          isValid,
+          isSubmitting,
+          submitCount,
+        }) => {
           return (
             <FullScreenReportModal
               title={t('quickCreate.lead.modal.newLead')}
@@ -147,7 +154,9 @@ export const LeadCreate: FC<LeadCreateProps> = ({
               visible={modalVisible}
               onBackClick={handleClose}
               createBtnText={t('quickCreate.client.modal.create')}
-              enableCreateBtn={!isSubmitting}
+              enableCreateBtn={
+                submitCount === 0 ? !isSubmitting : !isSubmitting && isValid
+              }
               onCreate={handleSubmit}
               assigneeTitle={t('quickCreate.lead.modal.newLead.assigneeTitle')}
               assigneeName={
