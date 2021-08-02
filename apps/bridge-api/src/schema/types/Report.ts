@@ -20,11 +20,9 @@ export const Reports = extendType({
         if (!input.id || !input.start_date || !input.end_date) {
           throw new Error('Malformed Parameters')
         }
-        if (!ctx.authenticated?.remote_url) {
-          throw new Error('Malformed JWT')
-        }
         try {
-          const url = ctx.authenticated.remote_url
+          const url =
+            ctx.authenticated.remote_url || 'https://prelive-crm.pabau.com/'
           const params = new URLSearchParams({
             id: input.id.toString(),
             start_date: input.start_date.toString(),
@@ -59,11 +57,9 @@ export const Reports = extendType({
         if (!input.start_date || !input.end_date) {
           throw new Error('Malformed Parameters')
         }
-        if (!ctx.authenticated?.remote_url) {
-          throw new Error('Malformed JWT')
-        }
         try {
-          const url = ctx.authenticated.remote_url
+          const url =
+            ctx.authenticated.remote_url || 'https://prelive-crm.pabau.com/'
           const params = new URLSearchParams({
             id: 'trend',
             start_date: input.start_date.toString(),
