@@ -98,7 +98,7 @@ export default class AuthenticationService {
     )
 
     // Check if user appears to have no remote_url on pod db
-    if (this.ctx.authenticated?.remote_url && !this.user.Company.remote_url) {
+    if (this.ctx.authenticated?.remote_url && !user.Company.remote_url) {
       throw new Error('Legacy/pod mismatch 1')
     }
 
@@ -106,7 +106,7 @@ export default class AuthenticationService {
     if (
       this.ctx.authenticated &&
       !this.ctx.authenticated.remote_url &&
-      this.user.Company.remote_url
+      user.Company.remote_url
     ) {
       throw new Error('Legacy/pod mismatch 2')
     }
@@ -114,7 +114,7 @@ export default class AuthenticationService {
     // If user belongs to a pod, but we are legacy, then re-authenticate against the correct pod
     if (
       Boolean(this.ctx.authenticated?.remote_url) !==
-      Boolean(this.user.Company.remote_url)
+      Boolean(user.Company.remote_url)
     ) {
       const user2 = await this.queryUser(
         this.ctx.prismaArray(user.Company.remote_url),
