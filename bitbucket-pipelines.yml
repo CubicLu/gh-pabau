@@ -41,6 +41,7 @@ pipelines:
                 - yarn bin || true
                 - yarn bridge:generate
                 - git status || true
+                - git config core.whitespace cr-at-eol
                 - git diff --exit-code --no-ext-diff -p
                 - yarn lint:tsc --base=origin/master
                 - yarn lint:ls || true
@@ -213,6 +214,7 @@ pipelines:
                 - yarn bin || true
                 - yarn bridge:generate
                 - git status || true
+                - git config core.whitespace cr-at-eol
                 - git diff --exit-code --no-ext-diff -p
                 - yarn lint:tsc --base=HEAD~1
                 - yarn lint:ls || true
