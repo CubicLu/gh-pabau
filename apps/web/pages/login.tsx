@@ -21,7 +21,7 @@ const Login: FC = () => {
   const [user, setUser] = useState<JwtUser>()
   const { t } = useTranslationI18()
   const router = useRouter()
-  const [tempLegacyTab, setTempLegacyTab] = useState(null)
+  const [tempLegacyTab, setTempLegacyTab] = useState<Window | null>(null)
 
   const [verifyCredentials] = useVerifyCredentialsLazyQuery({
     onCompleted(verifyData) {
@@ -140,7 +140,7 @@ const Login: FC = () => {
       if (response) {
         localStorage.setItem('token', response)
         setTimeout(() => {
-          tempLegacyTab.close()
+          tempLegacyTab?.close()
           router.reload()
         }, 2000)
       }
