@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useState, useEffect, useMemo } from 'react'
 import { InvoiceTemplate, ICol } from '@pabau/ui'
 import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
 import { useQuery } from '@apollo/client'
@@ -40,9 +40,12 @@ export const InvoiceTemplates: FC<InvoiceProps> = ({ guid, saleId }) => {
     ? JSON.parse(templateData?.company?.InvoiceDefaultTemplate?.appearance)
     : {}
 
-  const activity = templateData
-    ? JSON.parse(templateData?.company?.InvoiceDefaultTemplate?.activity)
-    : {}
+  const activity = useMemo(() => {
+    const data = templateData
+      ? JSON.parse(templateData?.company?.InvoiceDefaultTemplate?.activity)
+      : {}
+    return data
+  }, [templateData])
 
   useEffect(() => {
     const sale_columns = []
@@ -84,8 +87,7 @@ export const InvoiceTemplates: FC<InvoiceProps> = ({ guid, saleId }) => {
       setPaymentColumnData(payment_columns)
       return key
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [templateData])
+  }, [templateData, activity])
 
   return !invoice_loading && !template_loading ? (
     <InvoiceTemplate
@@ -97,36 +99,23 @@ export const InvoiceTemplates: FC<InvoiceProps> = ({ guid, saleId }) => {
         templateData?.company?.InvoiceDefaultTemplate?.description
       }
       columns={columnData}
-      salesData={salesDetails?.getInvoiceData?.items}
+      salesData={salesDetails?.data?.items}
       paymentColumns={paymentColumnData}
-      paymentData={salesDetails?.getInvoiceData?.payments}
+      paymentData={salesDetails?.data?.payments}
       clinicDetails={[
         {
           key: 0,
-          website:
-            templateData?.company?.InvoiceDefaultTemplate?.CompanyDetails
-              ?.website ?? '',
-          email:
-            templateData?.company?.InvoiceDefaultTemplate?.CompanyDetails
-              ?.info_email ?? '',
-          phone:
-            templateData?.company?.InvoiceDefaultTemplate?.CompanyDetails
-              ?.phone ?? '',
+          website: templateData?.company?.website ?? '',
+          email: templateData?.company?.info_email ?? '',
+          phone: templateData?.company?.phone ?? '',
           regCompanyNo: paymentInfo?.registeredCompanyNumber,
-          address: `${
-            templateData?.company?.InvoiceDefaultTemplate?.CompanyDetails
-              ?.street
-          }${
-            templateData?.company?.InvoiceDefaultTemplate?.CompanyDetails
-              ?.city === ''
+          address: `${templateData?.company?.street}${
+            templateData?.company?.city === ''
               ? ''
-              : templateData?.company?.InvoiceDefaultTemplate?.CompanyDetails
-                  ?.city
+              : templateData?.company?.city
           }`,
           regCompanyAddress: paymentInfo?.registeredCompanyAddress ?? '',
-          country:
-            templateData?.company?.InvoiceDefaultTemplate?.CompanyDetails
-              ?.country ?? '',
+          country: templateData?.company?.country ?? '',
           account: paymentInfo?.bankAccount ?? '',
           accountNumber: paymentInfo?.bankNumber ?? '',
           sortCode: paymentInfo?.sortCode ?? '',
@@ -138,9 +127,9 @@ export const InvoiceTemplates: FC<InvoiceProps> = ({ guid, saleId }) => {
       invoiceDetails={[
         {
           key: 0,
-          invoice: salesDetails?.getInvoiceData?.details?.invoice_id ?? '',
-          issuedTo: salesDetails?.getInvoiceData?.details?.issue_to ?? '',
-          issuedBy: salesDetails?.getInvoiceData?.details?.issue_by ?? '',
+          invoice: salesDetails?.data?.details?.invoice_id ?? '',
+          issuedTo: salesDetails?.data?.details?.issue_to ?? '',
+          issuedBy: salesDetails?.data?.details?.issue_by ?? '',
           date: `${new Date(
             templateData?.company?.InvoiceDefaultTemplate?.date_created
           ).toLocaleDateString('en-GB')}`,
@@ -148,23 +137,19 @@ export const InvoiceTemplates: FC<InvoiceProps> = ({ guid, saleId }) => {
       ]}
       paymentDetails={[
         {
-          key: salesDetails?.getInvoiceData?.payment_details.key,
-          totalVat: salesDetails?.getInvoiceData?.payment_details.total_vat,
-          amountPaid: salesDetails?.getInvoiceData?.payment_details.amount_paid,
-          subTotalAmount:
-            salesDetails?.getInvoiceData?.payment_details.sub_total_amount,
-          outstanding:
-            salesDetails?.getInvoiceData?.payment_details.outstanding,
-          grandTotal: salesDetails?.getInvoiceData?.payment_details.grand_total,
-          paymentTime:
-            salesDetails?.getInvoiceData?.payment_details.payment_time,
-          total: salesDetails?.getInvoiceData?.payment_details.total,
-          card: salesDetails?.getInvoiceData?.payment_details.card,
-          cash: salesDetails?.getInvoiceData?.payment_details.cash,
-          paid: salesDetails?.getInvoiceData?.payment_details.paid,
-          refundAmount:
-            salesDetails?.getInvoiceData?.payment_details.refund_amount,
-          totalNet: salesDetails?.getInvoiceData?.payment_details.total_net,
+          key: salesDetails?.data?.payment_details.key,
+          totalVat: salesDetails?.data?.payment_details.total_vat,
+          amountPaid: salesDetails?.data?.payment_details.amount_paid,
+          subTotalAmount: salesDetails?.data?.payment_details.sub_total_amount,
+          outstanding: salesDetails?.data?.payment_details.outstanding,
+          grandTotal: salesDetails?.data?.payment_details.grand_total,
+          paymentTime: salesDetails?.data?.payment_details.payment_time,
+          total: salesDetails?.data?.payment_details.total,
+          card: salesDetails?.data?.payment_details.card,
+          cash: salesDetails?.data?.payment_details.cash,
+          paid: salesDetails?.data?.payment_details.paid,
+          refundAmount: salesDetails?.data?.payment_details.refund_amount,
+          totalNet: salesDetails?.data?.payment_details.total_net,
         },
       ]}
     />

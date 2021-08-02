@@ -6927,7 +6927,7 @@ model InvSale {
 //}
 //
 model SaleItem {
-  id                    Int        @id @default(autoincrement())
+  id                    Int         @id @default(autoincrement())
   sale_id               Int
   product_id            Int
   product_code          String
@@ -6939,7 +6939,7 @@ model SaleItem {
   unit_price            Float
   gross_total           Float
   val_tax               Float
-  company_id            Int?       @map("occupier")
+  company_id            Int?        @map("occupier")
   uid                   Int?
   staff_purchase        Int?
   created_date          DateTime?
@@ -6963,10 +6963,10 @@ model SaleItem {
   tax_total             Float
   custom_product_name   String
   booking_id            Int?
-  Tax                   Tax?       @relation(fields: [VAT_id], references: [id])
-  Product               InvProduct @relation(fields: [product_id], references: [id], name: "fk_inv_sale_product_id")
-  InvSale               InvSale?   @relation(fields: [sale_id], references: [id])
-  Company               Company?   @relation(fields: [company_id], references: [id])
+  Tax                   Tax?        @relation(fields: [VAT_id], references: [id])
+  Product               InvProduct? @relation(fields: [product_id], references: [id], name: "fk_inv_sale_product_id")
+  InvSale               InvSale?    @relation(fields: [sale_id], references: [id])
+  Company               Company?    @relation(fields: [company_id], references: [id])
 
   @@index([created_date], name: "created_date_index")
   @@index([custom_id], name: "custom_id")

@@ -49,7 +49,7 @@ export const SaleItem = objectType({
         return root.Tax
       },
     })
-    t.field('Product', {
+    t.nullable.field('Product', {
       type: 'InvProduct',
       resolve(root: any) {
         return root.Product

@@ -974,6 +974,9 @@ en:
   invoice.card.label: Card
   invoice.cash.label: Cash
   invoice.pay.button.label: Pay with card
+  statement.invoice.label: Statment Invoice
+  statement.invoice.date.label: Statment Date
+  statement.period.label: Statement Period
   receipt.payment.date.label: Payment Date
   receipt.payment.with.invoice: Payments applied to invoices
   settings-header: Settings

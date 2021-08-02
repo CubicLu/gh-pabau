@@ -49,12 +49,14 @@ describe('StatementTemplate', () => {
             key: 0,
             totalVat: 0,
             amountPaid: 0,
-            subTotalAmount: 2520,
-            outStanding: 2520,
-            totalInvoiced: 2500,
+            subTotalAmount: 0,
+            outstanding: 0,
+            grandTotal: 0,
+            refundAmount: 0,
+            paid: 0,
+            totalNet: 0,
           },
         ]}
-        headersColumns={['Item Name', 'Qty', 'Price', 'Net', 'VAT', 'Total']}
       />
     )
     expect(baseElement).toBeTruthy()

@@ -98,7 +98,7 @@ export interface CreditNoteQueryResult {
 
 export interface InvoiceArgs {
   guid?: string
-  saleId?: number
+  saleId: number
 }
 
 export interface SalesData {
@@ -144,6 +144,18 @@ export interface PaymentsDetails {
   cash: number
 }
 
+export interface StatementPaymentDetails {
+  key: number
+  total_vat: string
+  amount_paid: number
+  sub_total_amount: number
+  outstanding: number
+  grand_total: number
+  refund_amount: number
+  paid: number
+  total_net: string
+}
+
 export interface Details {
   issue_to: string
   issue_by: string
@@ -155,4 +167,17 @@ export interface InvoiceOutput {
   items: SalesData[]
   payments: PaymentsData[]
   payment_details: PaymentsDetails
+}
+
+export interface StatementArgs {
+  locationId?: number
+  customerId: number
+  statementPeriodFrom?: string
+  statementPeriodTo?: string
+}
+
+export interface StatementOutput {
+  details: Details
+  items: SalesData[]
+  payments: StatementPaymentDetails
 }

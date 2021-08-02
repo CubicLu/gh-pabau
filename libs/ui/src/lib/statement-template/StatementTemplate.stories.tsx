@@ -39,88 +39,17 @@ export default {
         statementPeriodTo: '24/11/2021',
       },
     ],
-    headersColumns: [
-      'ID',
-      'Date',
-      'Type',
-      'Payment Method',
-      'Item Name',
-      'Qty',
-      'Price',
-      'Net',
-      'VAT',
-      'Total',
-    ],
-    data: [
-      [
-        'INV-891',
-        '12/03/2021',
-        'Invoice',
-        'Card',
-        'Laser Hair Removal – HollyWood and Abdomen (9)',
-        '2',
-        '2,520.00',
-        '2,520.00',
-        '2,520.00',
-        '2,520.00',
-      ],
-      [
-        'INV-892',
-        '12/03/2021',
-        'Invoice',
-        'Card',
-        'Laser Hair Removal',
-        '3',
-        '3,520.00',
-        '3,520.00',
-        '3,520.00',
-        '3,520.00',
-      ],
-      [
-        'INV-893',
-        '12/03/2021',
-        'Invoice',
-        'Card',
-        'Botox area 1',
-        '5',
-        '3,520.00',
-        '3,520.00',
-        '3,520.00',
-        '3,520.00',
-      ],
-      [
-        'INV-894',
-        '12/03/2021',
-        'Invoice',
-        'Card',
-        'Laser Hair Removal',
-        '1',
-        '3,520.00',
-        '3,520.00',
-        '3,520.00',
-        '3,520.00',
-      ],
-      [
-        'INV-895',
-        '12/03/2021',
-        'Invoice',
-        'Card',
-        'Botox area 1',
-        '2',
-        '3,520.00',
-        '3,520.00',
-        '3,520.00',
-        '3,520.00',
-      ],
-    ],
     paymentDetails: [
       {
         key: 0,
         totalVat: 0,
         amountPaid: 0,
-        subTotalAmount: 2520,
-        outStanding: 2520,
-        totalInvoiced: 2500,
+        subTotalAmount: 0,
+        outstanding: 0,
+        grandTotal: 0,
+        refundAmount: 0,
+        paid: 0,
+        totalNet: 0,
       },
     ],
   },
@@ -133,8 +62,6 @@ const StatementTemplateStory = ({
   titleDescription,
   clinicDetails,
   statementDetails,
-  data,
-  headersColumns,
   paymentDetails,
 }) => (
   <StatementTemplateComponents
@@ -144,8 +71,6 @@ const StatementTemplateStory = ({
     titleDescription={titleDescription}
     clinicDetails={clinicDetails}
     statementDetails={statementDetails}
-    headersColumns={headersColumns}
-    data={data}
     paymentDetails={paymentDetails}
   />
 )

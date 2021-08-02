@@ -130,6 +130,21 @@ const PaymentsDetails = objectType({
   },
 })
 
+const PaymentsDetail = objectType({
+  name: 'statementpayment',
+  definition(t) {
+    t.int('key')
+    t.string('total_vat')
+    t.int('amount_paid')
+    t.int('sub_total_amount')
+    t.int('outstanding')
+    t.int('grand_total')
+    t.int('refund_amount')
+    t.int('paid')
+    t.string('total_net')
+  },
+})
+
 const invSaleDetails = objectType({
   name: 'details',
   definition(t) {
@@ -146,5 +161,14 @@ export const InvSaleData = objectType({
     t.list.field('items', { type: SalesData })
     t.list.field('payments', { type: PaymentsData })
     t.field('payment_details', { type: PaymentsDetails })
+  },
+})
+
+export const StatementSaleData = objectType({
+  name: 'StatementSaleData',
+  definition(t) {
+    t.field('details', { type: invSaleDetails })
+    t.list.field('items', { type: SalesData })
+    t.field('payments', { type: PaymentsDetail })
   },
 })

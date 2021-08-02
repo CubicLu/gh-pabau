@@ -240,69 +240,67 @@ export const SendEmailSkeleton: FC = () => {
                 </div>
               </div>
             </div>
-            {/* <div className={styles.section3Inner}>
+            <div className={styles.section3Inner}>
               <div className={styles.left}>
                 <div className={styles.rightInner}>
                   <div className={styles.inner}>
                     <span className={styles.headerText}>
-                        <Skeleton.Input
-                          active
-                          size={'small'}
-                          className={styles.fromSkeleton}
-                        />
+                      <Skeleton.Input
+                        active
+                        size={'small'}
+                        className={styles.fromSkeleton}
+                      />
                     </span>
                     <span className={styles.infoText}>
-                        <Skeleton.Input
-                          active
-                          size={'small'}
-                          className={styles.inputSkeleton}
-                        />
+                      <Skeleton.Input
+                        active
+                        size={'small'}
+                        className={styles.inputSkeleton}
+                      />
                     </span>
                   </div>
                   <div className={styles.inner}>
                     <span className={styles.headerText}>
-                        <Skeleton.Input
-                          active
-                          size={'small'}
-                          className={styles.fromSkeleton}
-                        />
+                      <Skeleton.Input
+                        active
+                        size={'small'}
+                        className={styles.fromSkeleton}
+                      />
                     </span>
                     <span className={styles.infoText}>
-                        <Skeleton.Input
-                          active
-                          size={'small'}
-                          className={styles.inputSkeleton}
-                        />
+                      <Skeleton.Input
+                        active
+                        size={'small'}
+                        className={styles.inputSkeleton}
+                      />
                     </span>
                   </div>
                 </div>
                 <div className={styles.section3Links}>
                   <span className={styles.link}>
-                      <Skeleton.Input
-                        active
-                        size={'small'}
-                        className={styles.inputSkeleton}
-                      />
-                  </span>
-                  <span className={styles.link}>
-                      <Skeleton.Input
-                        active
-                        size={'small'}
-                        className={styles.inputSkeleton}
-                      />
-                  </span>
-                </div>
-              </div>
-              {payment[0].outStanding > 0.01 && (
-                <div className={styles.right}>
                     <Skeleton.Input
                       active
                       size={'small'}
-                      className={styles.inputSpaywithCardkeleton}
+                      className={styles.inputSkeleton}
                     />
+                  </span>
+                  <span className={styles.link}>
+                    <Skeleton.Input
+                      active
+                      size={'small'}
+                      className={styles.inputSkeleton}
+                    />
+                  </span>
                 </div>
-              )}
-            </div> */}
+              </div>
+              <div className={styles.right}>
+                <Skeleton.Input
+                  active
+                  size={'small'}
+                  className={styles.inputSpaywithCardkeleton}
+                />
+              </div>
+            </div>
           </div>
           <div className={styles.section4}>
             <div className={styles.section4Inner}>

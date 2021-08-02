@@ -227,6 +227,8 @@ export const permissions = shield(
 
       // invoice
       getInvoiceData: rules.authentication.isAuthenticated,
+      //statement template
+      getStatementData: rules.authentication.isAuthenticated,
       //TODO once jest mocks are resolved move it to rules.authentication.isAuthenticated
       featureRequestsWeeklyAvg: allow,
       '*': and(
