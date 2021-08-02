@@ -24,13 +24,24 @@ const Login: FC = () => {
   const [tempLegacyTab, setTempLegacyTab] = useState<Window | null>(null)
 
   const [verifyCredentials] = useVerifyCredentialsLazyQuery({
+    onError(e) {
+      console.log('handling useVerifyCredentialsLazyQuery onError!', e)
+      Notification(NotificationType.error, 'Error logging in')
+    },
+    fetchPolicy: 'network-only',
     onCompleted(verifyData) {
       const user = verifyData.VerifyCredentials
+
       if (!user) {
         return Notification(
           NotificationType.error,
           t('login.wrong_credentials')
         )
+      }
+
+      if (!user.CmStaffGeneral) {
+        Notification(NotificationType.error, 'You are not a staff member')
+        return
       }
 
       setUser({
@@ -48,7 +59,7 @@ const Login: FC = () => {
           remote_connect: user.Company?.remote_connect,
         },
         CmStaffGeneral: {
-          CellPhone: user.CmStaffGeneral.CellPhone,
+          CellPhone: user.CmStaffGeneral?.CellPhone,
         },
       })
 
@@ -89,6 +100,8 @@ const Login: FC = () => {
             .then((response) => {
               const tempWindow = window.open(response, '_blank')
               setTempLegacyTab(tempWindow)
+
+              console.log('logging in properly..')
 
               //regular login - authenticate user
               authenticateUserMutation({
