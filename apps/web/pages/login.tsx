@@ -21,16 +21,27 @@ const Login: FC = () => {
   const [user, setUser] = useState<JwtUser>()
   const { t } = useTranslationI18()
   const router = useRouter()
-  const [tempLegacyTab, setTempLegacyTab] = useState(null)
+  const [tempLegacyTab, setTempLegacyTab] = useState<Window | null>(null)
 
   const [verifyCredentials] = useVerifyCredentialsLazyQuery({
+    onError(e) {
+      console.log('handling useVerifyCredentialsLazyQuery onError!', e)
+      Notification(NotificationType.error, 'Error logging in')
+    },
+    fetchPolicy: 'network-only',
     onCompleted(verifyData) {
       const user = verifyData.VerifyCredentials
+
       if (!user) {
         return Notification(
           NotificationType.error,
           t('login.wrong_credentials')
         )
+      }
+
+      if (!user.CmStaffGeneral) {
+        Notification(NotificationType.error, 'You are not a staff member')
+        return
       }
 
       setUser({
@@ -48,12 +59,13 @@ const Login: FC = () => {
           remote_connect: user.Company?.remote_connect,
         },
         CmStaffGeneral: {
-          CellPhone: user.CmStaffGeneral.CellPhone,
+          CellPhone: user.CmStaffGeneral?.CellPhone,
         },
       })
 
       //check for 2fa if enabled or disabled
-      if (user.CompanyDetails?.enable_2fa) {
+      // eslint-disable-next-line no-constant-condition
+      if (false && user.CompanyDetails?.enable_2fa) {
         setShowPage('twoStepAuth')
         return
       }
@@ -88,6 +100,8 @@ const Login: FC = () => {
             .then((response) => {
               const tempWindow = window.open(response, '_blank')
               setTempLegacyTab(tempWindow)
+
+              console.log('logging in properly..')
 
               //regular login - authenticate user
               authenticateUserMutation({
@@ -139,7 +153,7 @@ const Login: FC = () => {
       if (response) {
         localStorage.setItem('token', response)
         setTimeout(() => {
-          tempLegacyTab.close()
+          tempLegacyTab?.close()
           router.reload()
         }, 2000)
       }

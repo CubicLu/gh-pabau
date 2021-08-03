@@ -55,7 +55,8 @@ apt install wait-for-it
 echo "Waiting for docker to be up..."
 time wait-for-it localhost:5823 -t 250
 echo "We have a result.. $?"
-docker stop -t 10 docker_up_test
+docker stop -t 10 docker_up_test || echo "Couldn't stop"
+docker rm -vf docker_up_test
 echo "Cleaned up"
 
 if [ -z "${BITBUCKET_PR_ID}" ] && [ -n "${BITBUCKET_BRANCH}" ]; then

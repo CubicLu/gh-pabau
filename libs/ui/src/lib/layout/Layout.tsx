@@ -59,6 +59,7 @@ export interface LayoutProps {
   allowed?: boolean
   requireAdminAccess?: boolean
   clientCreateRender?: () => JSX.Element
+  leadCreateRender?: () => JSX.Element
   handleSearch?: (searchTerm: string) => void
 }
 
@@ -84,6 +85,7 @@ export const Layout: FC<LayoutProps> = ({
   user,
   taskManagerIFrameComponent,
   clientCreateRender,
+  leadCreateRender,
   ...rest
 }) => {
   const [collapsed, setCollapsed] = useState(true)
@@ -106,6 +108,7 @@ export const Layout: FC<LayoutProps> = ({
           relativeTime={relativeTime}
           taskManagerIFrameComponent={taskManagerIFrameComponent}
           clientCreateRender={clientCreateRender}
+          leadCreateRender={leadCreateRender}
           {...rest}
         />
         <AntLayout className={styles.headerMargin}>

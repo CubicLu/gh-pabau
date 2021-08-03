@@ -595,7 +595,7 @@
               "apps/bridge-api/src/assets",
               "apps/bridge-api/src/prisma"
             ],
-            "maxWorkers": 2,
+            "maxWorkers": 4,
             "generatePackageJson": true
           },
           "configurations": {
@@ -739,6 +739,57 @@
           },
           "configurations": {
             "production": {}
+          }
+        }
+      }
+    },
+    "storage": {
+      "root": "apps/storage",
+      "sourceRoot": "apps/storage/src",
+      "projectType": "application",
+      "prefix": "storage",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/storage",
+            "main": "apps/storage/src/main.ts",
+            "tsConfig": "apps/storage/tsconfig.app.json",
+            "assets": ["apps/storage/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/storage/src/environments/environment.ts",
+                  "with": "apps/storage/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "storage:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/storage/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/storage"],
+          "options": {
+            "jestConfig": "apps/storage/jest.config.js",
+            "passWithNoTests": true
           }
         }
       }

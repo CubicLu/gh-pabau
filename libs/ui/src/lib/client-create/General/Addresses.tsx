@@ -6,9 +6,10 @@ import { FieldSetting } from '@pabau/ui'
 
 interface Props {
   fieldsSettings: FieldSetting[]
+  requiredLabel: (name: string) => string
 }
 
-export const Addresses: FC<Props> = ({ fieldsSettings }) => {
+export const Addresses: FC<Props> = ({ fieldsSettings, requiredLabel }) => {
   const { t } = useTranslation('common')
   return (
     <div className={styles.addressForm}>
@@ -22,11 +23,12 @@ export const Addresses: FC<Props> = ({ fieldsSettings }) => {
           (thread) => thread.field_name === 'MailingStreet'
         ) && (
           <AntForm.Item
-            label={
+            label={`${
               fieldsSettings.find(
                 (thread) => thread.field_name === 'MailingStreet'
-              )?.field_label
-            }
+              )?.field_label ||
+              t('quickCreate.client.modal.general.addresses.label')
+            }${requiredLabel('MailingStreet')}`}
             name={'MailingStreet'}
           >
             <Input name={'MailingStreet'} />
@@ -36,11 +38,12 @@ export const Addresses: FC<Props> = ({ fieldsSettings }) => {
           (thread) => thread.field_name === 'MailingProvince'
         ) && (
           <AntForm.Item
-            label={
+            label={`${
               fieldsSettings.find(
                 (thread) => thread.field_name === 'MailingProvince'
-              )?.field_label
-            }
+              )?.field_label ||
+              t('quickCreate.client.modal.general.county.label')
+            }${requiredLabel('MailingProvince')}`}
             name={'MailingProvince'}
           >
             <Input name={'MailingProvince'} />
@@ -50,11 +53,12 @@ export const Addresses: FC<Props> = ({ fieldsSettings }) => {
           (thread) => thread.field_name === 'MailingCity'
         ) && (
           <AntForm.Item
-            label={
+            label={`${
               fieldsSettings.find(
                 (thread) => thread.field_name === 'MailingCity'
-              )?.field_label
-            }
+              )?.field_label ||
+              t('quickCreate.client.modal.general.addresses.city')
+            }${requiredLabel('MailingCity')}`}
             name={'MailingCity'}
           >
             <Input name={'MailingCity'} />
@@ -64,11 +68,12 @@ export const Addresses: FC<Props> = ({ fieldsSettings }) => {
           (thread) => thread.field_name === 'MailingCountry'
         ) && (
           <AntForm.Item
-            label={
+            label={`${
               fieldsSettings.find(
                 (thread) => thread.field_name === 'MailingCountry'
-              )?.field_label
-            }
+              )?.field_label ||
+              t('quickCreate.client.modal.general.addresses.country')
+            }${requiredLabel('MailingCountry')}`}
             name={'MailingCountry'}
           >
             <Input name={'MailingCountry'} />
@@ -78,36 +83,16 @@ export const Addresses: FC<Props> = ({ fieldsSettings }) => {
           (thread) => thread.field_name === 'MailingPostal'
         ) && (
           <AntForm.Item
-            label={
+            label={`${
               fieldsSettings.find(
                 (thread) => thread.field_name === 'MailingPostal'
-              )?.field_label
-            }
+              )?.field_label ||
+              t('quickCreate.client.modal.general.addresses.postcode')
+            }${requiredLabel('MailingPostal')}`}
             name={'MailingPostal'}
           >
             <Input name={'MailingPostal'} />
           </AntForm.Item>
-        )}
-        {fieldsSettings.find(
-          (thread) => thread.field_name === 'secondary_address'
-        ) && (
-          <>
-            <AntForm.Item label={'Other Street'} name={'OtherStreet'}>
-              <Input name={'OtherStreet'} />
-            </AntForm.Item>
-            <AntForm.Item label={'Other Country'} name={'OtherProvince'}>
-              <Input name={'OtherProvince'} />
-            </AntForm.Item>
-            <AntForm.Item label={'Other City / Town'} name={'OtherCity'}>
-              <Input name={'OtherCity'} />
-            </AntForm.Item>
-            <AntForm.Item label={'Other Country'} name={'OtherCountry'}>
-              <Input name={'OtherCountry'} />
-            </AntForm.Item>
-            <AntForm.Item label={'Other Post Code'} name={'OtherPostal'}>
-              <Input name={'OtherPostal'} />
-            </AntForm.Item>
-          </>
         )}
       </AntForm>
     </div>

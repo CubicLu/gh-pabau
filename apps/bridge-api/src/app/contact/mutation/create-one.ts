@@ -41,11 +41,6 @@ export const ContactDataInput = inputObjectType({
     t.nonNull.string('Mobile')
     t.nonNull.string('Phone')
     t.nonNull.string('gender')
-    t.nonNull.string('OtherStreet')
-    t.nonNull.string('OtherCity')
-    t.nonNull.string('OtherProvince')
-    t.nonNull.string('OtherPostal')
-    t.nonNull.string('OtherCountry')
     t.nonNull.string('preferred_language')
   },
 })

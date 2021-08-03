@@ -8,6 +8,7 @@ import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import React, { FC, useState } from 'react'
 import styles from './index.module.less'
 import { ConfirmPasswordValidation } from '@pabau/yup'
+import { useRouter } from 'next/router'
 
 export interface PasswordFormProps {
   password: string
@@ -18,17 +19,17 @@ const Index: FC = () => {
   const { t } = useTranslationI18()
   const [loginButton, setLoginButton] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [link, setLink] = useState(false)
   const [error, setError] = useState(false)
 
   const params = new URLSearchParams(window.location.search)
+  const router = useRouter()
 
   const [updateUserPassword] = useMutation(PasswordResetDocument, {
     onCompleted() {
       setIsLoading(false)
       setLoginButton(true)
       setError(false)
-      setLink(true)
+      router.push('/')
     },
     onError() {
       setIsLoading(false)
@@ -143,15 +144,6 @@ const Index: FC = () => {
                     {t('reset.password.change.button', { fallbackLng: 'en' })}
                   </SubmitButton>
                 </div>
-                {link && (
-                  <div className={styles.link}>
-                    <a href={`/`}>
-                      {t('reset.password.login.link.text', {
-                        fallbackLng: 'en',
-                      })}
-                    </a>
-                  </div>
-                )}
               </Form>
             )}
           />

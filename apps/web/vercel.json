@@ -26,6 +26,6 @@
     }
   ],
   "rewrites": [
-    {"source": "/reports/:name", "destination": "/reports/:name"}
+    {"source": "/reports/:name", "destination": "/reports/[name].tsx"}
   ]
 }

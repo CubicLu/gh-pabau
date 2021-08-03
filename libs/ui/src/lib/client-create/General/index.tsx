@@ -62,12 +62,36 @@ export const Index: FC<GeneralProps> = ({
   labelsData,
   isMarketingSourceLoading,
 }) => {
-  const [moreVisible, setMoreVisible] = useState(false)
+  const [moreVisible, setMoreVisible] = useState(true)
 
   const { t } = useTranslation('common')
 
   const toggleMore = () => {
     setMoreVisible(!moreVisible)
+  }
+
+  const isAddress = () => {
+    if (fieldsSettings && fieldsSettings?.length > 0) {
+      for (const field of fieldsSettings) {
+        if (
+          field.field_name === 'MailingStreet' ||
+          field.field_name === 'MailingProvince' ||
+          field.field_name === 'MailingCity' ||
+          field.field_name === 'MailingCountry' ||
+          field.field_name === 'MailingPostal'
+        ) {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
+  const requiredLabel = (name: string) => {
+    return fieldsSettings?.find((thread) => thread.field_name === name)
+      ?.is_required === 1
+      ? ` (${t('quickcreate.required.label')})`
+      : ''
   }
 
   return (
@@ -85,18 +109,23 @@ export const Index: FC<GeneralProps> = ({
         isLoading={isLoading}
         labelsData={labelsData}
         isMarketingSourceLoading={isMarketingSourceLoading}
+        requiredLabel={requiredLabel}
       />
       {fieldsSettings && (
         <ContactInfo
           values={values}
           fieldsSettings={fieldsSettings}
           setFieldValue={setFieldValue}
+          requiredLabel={requiredLabel}
         />
       )}
       {fieldsSettings?.find((thread) => thread.field_name === 'opt_in') && (
         <Subscriptions />
       )}
-      {fieldsSettings && (
+      {(isAddress() ||
+        (limitContactsLocations && limitContactsLocations.length > 0) ||
+        (otherCompanies && otherCompanies.length > 0) ||
+        (customFields && customFields.length > 0)) && (
         <div
           className={`${styles.moreBtn} ${!moreVisible && styles.paddingAtEnd}`}
           onClick={toggleMore}
@@ -107,7 +136,12 @@ export const Index: FC<GeneralProps> = ({
       )}
       {moreVisible && (
         <div className={styles.paddingAtEnd}>
-          {fieldsSettings && <Addresses fieldsSettings={fieldsSettings} />}
+          {isAddress() && fieldsSettings && (
+            <Addresses
+              fieldsSettings={fieldsSettings}
+              requiredLabel={requiredLabel}
+            />
+          )}
           {limitContactsLocations && limitContactsLocations?.length > 0 && (
             <AntForm
               className={styles.subscriptionForm}

@@ -42,6 +42,7 @@ interface GeneralProps {
   isLoading?: boolean
   isMarketingSourceLoading?: boolean
   labelsData: LabelDataProps[]
+  requiredLabel: (name: string) => string
 }
 
 interface Label {
@@ -100,6 +101,7 @@ export const General: FC<GeneralProps> = ({
   isLoading = false,
   isMarketingSourceLoading = false,
   labelsData,
+  requiredLabel,
 }) => {
   const { t } = useTranslation('common')
   const [visible, setVisible] = useState(false)
@@ -359,7 +361,9 @@ export const General: FC<GeneralProps> = ({
           ) && (
             <div className={styles.salutation}>
               <AntForm.Item
-                label={t('quickCreate.client.modal.general.salutation')}
+                label={`${t(
+                  'quickCreate.client.modal.general.salutation'
+                )}${requiredLabel('salutation')}`}
                 name={'salutation'}
               >
                 <Select name={'salutation'}>
@@ -375,7 +379,9 @@ export const General: FC<GeneralProps> = ({
 
           <div className={styles.firstName}>
             <AntForm.Item
-              label={t('quickCreate.client.modal.general.firstName')}
+              label={`${t('quickCreate.client.modal.general.firstName')} (${t(
+                'quickcreate.required.label'
+              )})`}
               name={'Fname'}
             >
               <Input
@@ -389,7 +395,9 @@ export const General: FC<GeneralProps> = ({
           </div>
           <div className={styles.lastName}>
             <AntForm.Item
-              label={t('quickCreate.client.modal.general.lastName')}
+              label={`${t('quickCreate.client.modal.general.lastName')} (${t(
+                'quickcreate.required.label'
+              )})`}
               name={'Lname'}
             >
               <Input
@@ -409,7 +417,9 @@ export const General: FC<GeneralProps> = ({
           fieldsSettings?.find((thread) => thread.field_name === 'gender') && (
             <AntForm.Item
               className={styles.customCommon}
-              label={t('quickCreate.client.modal.general.gender')}
+              label={`${t(
+                'quickCreate.client.modal.general.gender'
+              )}${requiredLabel('gender')}`}
               name={'gender'}
             >
               <Radio.Group name={'gender'}>
@@ -434,7 +444,9 @@ export const General: FC<GeneralProps> = ({
           ) && (
             <AntForm.Item
               className={styles.customCommon}
-              label={t('quickCreate.client.modal.general.hearOption.label')}
+              label={`${t(
+                'quickCreate.client.modal.general.hearOption.label'
+              )}${requiredLabel('MarketingSource')}`}
               name={'MarketingSource'}
             >
               {!isMarketingSourceLoading ? (
@@ -468,7 +480,9 @@ export const General: FC<GeneralProps> = ({
           fieldsSettings?.find((thread) => thread.field_name === 'DOB') && (
             <AntForm.Item
               className={styles.customCommon}
-              label={t('quickCreate.client.modal.general.date')}
+              label={`${t(
+                'quickCreate.client.modal.general.date'
+              )}${requiredLabel('DOB')}`}
               name={'DOB'}
             >
               <DatePicker

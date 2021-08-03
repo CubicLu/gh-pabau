@@ -6,9 +6,16 @@
     height: 149px;
     border: 1px dashed #9191a199;
     border-radius: 4px;
-    :global .ant-upload-btn {
-      padding-left: 20px;
-      padding-right: 20px;
+    :global {
+      .ant-upload-btn {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+    }
+  }
+  :global {
+    .ant-upload-list {
+      display: none;
     }
   }
 }
@@ -60,4 +67,22 @@
   button {
     color: #9292a3;
   }
+}
+
+.selectedFileList {
+  margin-top: 28px;
+  .fileWrap {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2px;
+    button {
+      color: #ff5b64;
+    }
+  }
+}
+
+.pdfIcon, .imageIcon, .excelIcon {
+  color: var(--primary-color);
+  margin-right: 8px;
+  font-size: 20px;
 }

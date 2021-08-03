@@ -89,6 +89,9 @@ fragment InvSale on InvSale {
   InvBiller {
     ...InvBillerFields
   }
+  package {
+    ...ContactPackageFields
+  }
 }
 
 mutation createOneInvSale($data: InvSaleCreateInput!) {

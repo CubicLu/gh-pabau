@@ -1659,6 +1659,20 @@ export const Company = objectType({
         return root.CmContactLabel
       },
     })
+    t.list.field('LeadStatus', {
+      type: 'LeadStatus',
+      args: {
+        where: 'LeadStatusWhereInput',
+        orderBy: 'LeadStatusOrderByInput',
+        cursor: 'LeadStatusWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'LeadStatusScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.LeadStatus
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyCountOutputType',
       resolve(root: any) {

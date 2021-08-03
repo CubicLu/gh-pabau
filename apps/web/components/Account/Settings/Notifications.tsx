@@ -88,14 +88,14 @@ const Notification: FC<NotificationProps> = ({
       ),
     },
     'Appointment Booked': {
-      type: 'New Appointment via pabau',
+      type: 'New Appointment via calendar',
       title: t('account.settings.notification.general.appointmentbooked'),
       description: t(
         'account.settings.notification.general.appointmentbooked.description'
       ),
     },
     'Appointment Cancelled': {
-      type: 'Cancelled appointment via pabau',
+      type: 'Cancelled appointment via calendar',
       title: t('account.settings.notification.general.appointmentcancelled'),
       description: t(
         'account.settings.notification.general.appointmentcancelled.description'

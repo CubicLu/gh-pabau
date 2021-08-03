@@ -786,6 +786,7 @@ en:
   crud-table-pagination-test-displaying: 'Rows per page'
   crud-table-no-search-results: 'No results found'
   crud-table-try-adjust: 'Try adjusting your search to find what you’re looking for'
+  crud-table-input-required: '{{what}} is required!'
   crud-table-input-min-length-validate: 'The value for {{what}} must be at least {{min}} characters.'
   crud-table-input-max-length-validate: 'The max length of {{max}} is reached.'
   crud-table-input-invalid-validate: 'Invalid {{what}}'
@@ -801,6 +802,8 @@ en:
   common-label-create: Create
   common-label-cancel: Cancel
   common-label-save: Save
+  common-label-select: Select {{what}}
+  common-label-enter: Enter {{what}}
   common-label-delete-warning: 'will be deleted. This action is irreversible'
   webinar-header-recomended-webinar: 'Recommended Webinar'
   intercom-title-type-article: Article
@@ -971,6 +974,9 @@ en:
   invoice.card.label: Card
   invoice.cash.label: Cash
   invoice.pay.button.label: Pay with card
+  statement.invoice.label: Statment Invoice
+  statement.invoice.date.label: Statment Date
+  statement.period.label: Statement Period
   receipt.payment.date.label: Payment Date
   receipt.payment.with.invoice: Payments applied to invoices
   settings-header: Settings
@@ -1837,6 +1843,10 @@ en:
   setup.business-details.2fa.tooltip: 'Force 2 Factor Authentication for your system to enhance logging and browsing security throughout the system.'
   setup.business-details.2fa.content: 'Two-factor authentication adds an extra layer of security to your Pabau account. By asking you to enter a verification code after entering the correct email address and password, it will protect you from potential attackers who also might have gained access to your email address. It will ensure that the secure data you share with your clients stays secure, as they will need to enter a verification code as well. /n*SMS credits are mandatory, in order for the two-factor authentication to work.'
   setup.business-details.2fa.update-success: 'Updated successfully!'
+  setup.business-details.uploadlogo: 'Upload Logo'
+  setup.business-details.delete: 'Delete'
+  setup.business-details.update.success: 'Company details updated succesfully'
+  setup.business-details.update.error: 'Something went wrong while updating the data.'
   settings-performance-tab-header-description: 'Lorem ipsum carrots, enhanced undergraduate developer, but they do occaecat time and vitality.'
   account.settings.response.notification.profilesection.success: Profile Updated Successfully
   account.settings.response.notification.securitysection.success: Security Information Updated Successfully
@@ -2667,6 +2677,7 @@ en:
     Please find attached your file. If you have any questions do not hesitate to contact us at +44 000 987 507.
     Kind regards,
     The clinic Team'
+  quickcreate.required.label: 'Required'
   quickCreate.client.modal.newContact: 'New Contact'
   quickCreate.client.modal.cancel: 'Cancel'
   quickCreate.client.modal.create: 'Create'
@@ -2687,9 +2698,13 @@ en:
   quickCreate.client.modal.general.gender.male: 'Male'
   quickCreate.client.modal.general.gender.female: 'Female'
   quickCreate.client.modal.general.hearOption.label: 'How did you hear about us?'
+  quickCreate.client.modal.general.lead.status.label: 'Lead Stage'
+  quickCreate.client.modal.general.description.label: 'Description'
+  quickCreate.client.modal.general.description.placeholder: 'Enter description'
   quickCreate.client.modal.general.hearOption.selectOption: 'Select an option'
   quickCreate.client.modal.general.hearOption.anythingHere: 'Anything here'
   quickCreate.client.modal.general.date: 'Date of birth'
+  quickCreate.client.modal.general.location.label: 'Location'
   quickCreate.client.modal.general.preferredLanguage: 'Select preferred language'
   quickCreate.client.modal.general.preferredLanguage.default: 'Use Provider Language (English)'
   quickCreate.client.modal.general.contactInfo: 'Contact Info'
@@ -2701,13 +2716,15 @@ en:
   quickCreate.client.modal.general.subscription.detail:
     'When you ask a client to opt in, please do remind them that you will
     always send information deemed to be critical'
-  quickCreate.client.modal.general.subscription.newsLetter: 'NewsLatter'
+  quickCreate.client.modal.general.subscription.newsLetter: 'Newslatter'
   quickCreate.client.modal.general.subscription.sms: 'SMS'
   quickCreate.client.modal.general.subscription.postal: 'Postal'
   quickCreate.client.modal.general.subscription.phoneCalls: 'Phone Calls'
   quickCreate.client.modal.general.addresses: 'Address'
-  quickCreate.client.modal.general.addresses.label: 'Addresses'
+  quickCreate.client.modal.general.addresses.label: 'Address'
   quickCreate.client.modal.general.addresses.placeHolder: 'Search Address'
+  quickCreate.client.modal.general.county.label: 'County'
+  quickCreate.client.modal.general.address.two.label: 'Address 2'
   quickCreate.client.modal.general.addresses.country: 'Country'
   quickCreate.client.modal.general.addresses.country.placeHolder: 'Select country'
   quickCreate.client.modal.general.addresses.city: 'City'
@@ -2722,6 +2739,7 @@ en:
   quickCreate.client.modal.create.success: 'Success! Contact successfully created'
   quickCreate.client.modal.create.contact.exits.error: 'A contact already exists!'
   quickCreate.client.modal.create.contact.error: 'Error! while add contact'
+  quickCreate.number.validation.message: '{{field}} must be a number'
   quickCreate.validation.is.required: '{{field}} is required'
   quickCreate.validation.firstName.required: 'First name is required'
   quickCreate.validation.lastName.required: 'Last name is required'
@@ -2737,20 +2755,12 @@ en:
   quickCreate.validation.keyword.required: 'Keyword is required'
   quickCreate.lead.modal.newLead: 'New Lead'
   quickCreate.lead.modal.newLead.assigneeTitle: 'Assignee'
-  quickCreate.lead.modal.tab.general: 'General'
   quickCreate.lead.modal.general.notes: 'Notes'
   quickCreate.lead.modal.general.notes.placeholder: 'Note'
-  quickCreate.lead.modal.general.statisticCustom: 'Statistic *custom*'
-  quickCreate.lead.modal.general.procedureType: 'Procedure Type'
-  quickCreate.lead.modal.general.procedureType.placeholder: 'Enter Procedure Type'
-  quickCreate.lead.modal.general.title: 'Title'
-  quickCreate.lead.modal.general.title.placeholder: 'Enter Title'
-  quickCreate.lead.modal.general.keyword: 'Keyword'
-  quickCreate.lead.modal.general.keyword.placeholder: 'Enter keyword'
-  quickCreate.lead.modal.general.treatmentInterestPage: 'Treatment interest page'
-  quickCreate.lead.modal.general.treatmentInterestPage.placeholder: 'Select Treatment interest'
   quickCreate.lead.modal.general.addEmployee: 'Add Employee'
   quickCreate.lead.modal.general.selectEmployee: 'Select Employee'
+  quickCreate.lead.modal.create.success: 'Success! Lead successfully created'
+  quickCreate.lead.modal.create.error: 'Error! while create lead'
   settings.calendar.title: Calendar settings
   settings.calendar.breadcrumb.setup: Setup
   settings.calendar.breadcrumb.title: Calendar Settings
@@ -4554,3 +4564,7 @@ en:
   peer.feedback.filled: 'Filled'
   peer.feedback.pending: 'Pending'
   modal.confirmation.header.title: 'Are u sure u want to delete this {{name}}'
+  upload.cropper.error.invalidFile.message: 'Invalid File.'
+  upload.cropper.error.invalidImageFile.message: 'Invalid Image File.'
+  upload.cropper.error.malformedImage.message: 'Malformed Image File.'
+  upload.cropper.success.message: 'Upload Successfully'

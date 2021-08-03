@@ -200,7 +200,7 @@ export const Chat = (props: P): JSX.Element => {
           id,
           message,
           userName:
-            (fromUser.id === me.me.user
+            (fromUser.id !== me.me.id
               ? fromUser?.full_name
               : toUser?.full_name) || '??',
           dateTime: dayjs(created_at).calendar(),

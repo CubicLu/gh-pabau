@@ -80,11 +80,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
     MailingStreet: '',
     MailingCity: '',
     MailingPostal: '',
-    OtherStreet: '',
-    OtherProvince: '',
-    OtherCity: '',
-    OtherCountry: '',
-    OtherPostal: '',
     MarketingOptInEmail: false,
     MarketingOptInText: false,
     MarketingOptInPost: false,
@@ -185,7 +180,8 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
           item.field_name &&
           item.is_required === 1 &&
           item.field_name !== 'Fname' &&
-          item.field_name !== 'Lname'
+          item.field_name !== 'Lname' &&
+          item.field_name in initialValues
         ) {
           requiredField[item.field_name] = Yup.string().required(
             `${t('quickCreate.validation.is.required', {
@@ -231,20 +227,39 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
 
   useEffect(() => {
     if (customFieldData) {
-      const data = customFieldData.custom.map((thread) => {
-        return {
-          id: thread.id,
-          name: thread.name,
-          CmFields: thread.ManageCustomField.filter(
-            (thread) => thread.is_active
-          ),
+      const data = customFieldData.custom
+        .map((thread) => {
+          return {
+            id: thread.id,
+            name: thread.name,
+            CmFields: thread.ManageCustomField.filter(
+              (thread) => thread.is_active
+            ),
+          }
+        })
+        .filter((thread) => thread.CmFields.length > 0)
+
+      if (customFieldData.generalCustom.length > 0) {
+        const generalCmFields = []
+        for (const general of customFieldData.generalCustom) {
+          if (
+            general.field_type === 'bool' ||
+            general.field_type === 'multiple' ||
+            general.field_type === 'list'
+          ) {
+            if (general.ManageCustomFieldItem.length > 0) {
+              generalCmFields.push(general)
+            }
+          } else {
+            generalCmFields.push(general)
+          }
         }
-      })
-      data.push({
-        id: 0,
-        name: 'General',
-        CmFields: customFieldData.generalCustom,
-      })
+        data.push({
+          id: 0,
+          name: 'General',
+          CmFields: generalCmFields,
+        })
+      }
       setCustomFields(data)
 
       if (data.length > 0) {
@@ -255,13 +270,30 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
             for (const thread of item.CmFields) {
               initialValuesObj[`customField_${thread.id}`] = ''
               if (thread.is_required === 1) {
-                requiredField[
-                  `customField_${thread.id}`
-                ] = Yup.string().required(
-                  `${t('quickCreate.validation.is.required', {
-                    field: thread.field_label,
-                  })}`
-                )
+                requiredField[`customField_${thread.id}`] =
+                  thread.field_type === 'multiple'
+                    ? Yup.array().required(
+                        `${t('quickCreate.validation.is.required', {
+                          field: thread.field_label,
+                        })}`
+                      )
+                    : thread.field_type === 'number'
+                    ? Yup.number()
+                        .required(
+                          `${t('quickCreate.validation.is.required', {
+                            field: thread.field_label,
+                          })}`
+                        )
+                        .typeError(
+                          `${t('quickCreate.number.validation.message', {
+                            field: thread.field_label,
+                          })}`
+                        )
+                    : Yup.string().required(
+                        `${t('quickCreate.validation.is.required', {
+                          field: thread.field_label,
+                        })}`
+                      )
               }
             }
           }
@@ -327,11 +359,6 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       mailingStreet: values.MailingStreet,
       mailingPostal: values.MailingPostal,
       mailingCountry: values.MailingCountry,
-      otherStreet: values.OtherStreet,
-      otherCity: values.OtherCity,
-      otherPostal: values.OtherPostal,
-      otherProvince: values.OtherProvince,
-      otherCountry: values.OtherCountry,
       marketingOptInEmail: values.MarketingOptInEmail ? 1 : 0,
       marketingOptInPhone: values.MarketingOptInPhone ? 1 : 0,
       marketingOptInPost: values.MarketingOptInPost ? 1 : 0,

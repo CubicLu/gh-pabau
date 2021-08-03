@@ -6,9 +6,8 @@ import { Checkbox, Form, Input, SubmitButton } from 'formik-antd'
 import { LoginValidation } from '@pabau/yup'
 import { ReactComponent as GoogleIcon } from '../../assets/images/google.svg'
 import { ReactComponent as SSOIcon } from '../../assets/images/sso.svg'
-import { Exact } from '@pabau/graphql'
-import { QueryLazyOptions } from '@apollo/client'
 import styles from '../../pages/login.module.less'
+import { QueryLazyOptions } from '@apollo/client'
 
 export interface LoginFormProps {
   email: string
@@ -19,12 +18,12 @@ export interface LoginFormProps {
 interface LoginProps {
   handlePageShow: React.Dispatch<React.SetStateAction<string>>
   verifyCredentials: (
-    options?: QueryLazyOptions<Exact<{ username: string; password: string }>>
+    options: QueryLazyOptions<{ username: string; password: string }>
   ) => void
 }
 
 const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
-  const loginHandler = async (loginProps: LoginFormProps): Promise<boolean> => {
+  const loginHandler = async (loginProps: LoginFormProps) => {
     if (localStorage?.getItem('token')) {
       localStorage.removeItem('token')
     }
@@ -35,7 +34,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
         password: password,
       },
     })
-    return true
+    console.log('finished verifyCredentials')
   }
 
   return (
@@ -57,6 +56,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
           }}
           validationSchema={LoginValidation}
           onSubmit={async (value: LoginFormProps) => {
+            console.log('logging in...')
             await loginHandler(value)
           }}
           render={({ isValid, values }) => (
@@ -91,17 +91,9 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
               </div>
               <div className={styles.btnSubmit}>
                 <SubmitButton
-                  className={
-                    isValid && values.email !== '' && values.password !== ''
-                      ? styles.btnStarted
-                      : styles.btnDisabled
-                  }
+                  className={isValid ? styles.btnStarted : styles.btnDisabled}
                   type={'primary'}
-                  disabled={
-                    isValid && values.email !== '' && values.password !== ''
-                      ? false
-                      : true
-                  }
+                  disabled={!isValid}
                 >
                   Confirm
                 </SubmitButton>

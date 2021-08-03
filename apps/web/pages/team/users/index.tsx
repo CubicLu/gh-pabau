@@ -29,7 +29,7 @@ import {
   ListView,
 } from '../../../components/team/Users'
 import { UserContext } from '../../../context/UserContext'
-import { getImage } from '../../../helper/cdn/imageUrl'
+import { getImage } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
 import styles from './index.module.less'
 
 export interface userDataProps extends UserProps {

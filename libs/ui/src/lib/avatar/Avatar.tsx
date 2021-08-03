@@ -2,12 +2,12 @@ import { UserOutlined } from '@ant-design/icons'
 import { Avatar as AntAvatar, Tooltip } from 'antd'
 import { AvatarProps as NativeAvatarProps } from 'antd/lib/avatar/avatar'
 import ClassNames from 'classnames'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import stc from 'string-to-color'
 import { ReactComponent as EditIcon } from '../../assets/images/edit_icon.svg'
 import styles from './Avatar.module.less'
 
-export enum Status {
+export enum AvatarStatus {
   default = 'default',
   active = 'active',
   inactive = 'inactive',
@@ -18,7 +18,7 @@ export interface AvatarProps extends NativeAvatarProps {
   marginLeft?: string
   name?: string
   src?: string
-  active?: Status
+  active?: AvatarStatus
   edit?: boolean
   isTooltip?: boolean
 }
@@ -34,25 +34,8 @@ export const Avatar: FC<AvatarProps> = ({
   isTooltip = true,
   ...props
 }) => {
-  const [load, setLoad] = useState(true)
-  const [shortName, setShortName] = useState('')
-  useEffect(() => {
-    const img = new Image()
-    img.src = src
-    img.addEventListener('load', () => {
-      setLoad(true)
-    })
-    img.addEventListener('error', () => {
-      setLoad(false)
-    })
-    setShortName(
-      name
-        .toUpperCase()
-        .split(' ')
-        .map((item) => item.charAt(0))
-        .join('')
-    )
-  }, [name, src])
+  const [load] = useState(true)
+  const [shortName] = useState('')
 
   return (
     <div className={styles.avatarContainer} style={{ zIndex, marginLeft }}>
@@ -88,10 +71,10 @@ export const Avatar: FC<AvatarProps> = ({
                 <EditIcon />
               </div>
             ) : (
-              active !== Status.default && (
+              active !== AvatarStatus.default && (
                 <div
                   className={
-                    active === Status.active
+                    active === AvatarStatus.active
                       ? styles.avatarStatus
                       : ClassNames(styles.avatarStatus, styles.avatarInactive)
                   }
