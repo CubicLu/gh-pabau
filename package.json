@@ -36,7 +36,7 @@
     "mysql:clean": "docker-compose -f tools/pabau1/docker-compose.yml down -v",
     "hasura:export": "yarn hasura:cli metadata export && yarn apollo client:download-schema hasura/schema.graphql && yarn graphql-codegen",
     "graphql-codegen": "graphql-codegen",
-    "graphql-codegen:watch": "nodemon -w libs/graphql -x graphql-codegen -e graphql",
+    "graphql-codegen:watch": "graphql-codegen --watch",
     "production:web": "env-cmd -f apps/web/.env.production yarn nx serve",
     "production:start": "yarn nx affected --uncommitted=true --target=export && npx serve dist/apps/web/exported",
     "build": "pwd && ls -al && rm -rf public/ && nx build backend --no-cache && cp -rf dist/apps/backend/ public/ && cp apps/backend/vercel.json public/ && cp package.json public/",
