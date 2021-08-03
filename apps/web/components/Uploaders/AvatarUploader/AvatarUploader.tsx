@@ -107,7 +107,7 @@ export const AvatarUploader: FC<AvatarUploaderProps> = ({
         mode: 'upload-cropped-photo',
         imageData: await cropper
           .getCroppedCanvas({ width: width, height: height })
-          .toDataURL('image/jpeg'),
+          .toDataURL(),
         section: section,
         type: type,
       },
