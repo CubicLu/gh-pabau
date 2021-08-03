@@ -40,7 +40,7 @@
     "graphql-codegen": "graphql-codegen",
     "graphql-codegen:watch": "graphql-codegen --watch",
     "production:web": "env-cmd -f apps/web/.env.production yarn nx serve",
-    "production:start": "yarn nx affected --uncommitted=true --target=export && npx serve dist/apps/web/exported",
+    "production:start": "yarn nx run web:export && npx serve dist/apps/web/exported",
     "build": "pwd && ls -al && rm -rf public/ && nx build backend --no-cache && cp -rf dist/apps/backend/ public/ && cp apps/backend/vercel.json public/ && cp package.json public/",
     "pipeline-checks": "yarn --pure-lockfile --prefer-offline && yarn lint:workspace && yarn nx affected --all --target=tsc --parallel --skip-nx-cache && yarn nx affected --all --target=lint --parallel --skip-nx-cache && yarn nx affected --all --target=test --parallel --skip-nx-cache",
     "pipeline-checks:slow": "yarn --pure-lockfile --prefer-offline && yarn lint:tsc && yarn lint:workspace && yarn nx affected --all --target=lint && yarn nx affected --all --target=test && yarn nx affected --all --target=build",
