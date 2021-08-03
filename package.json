@@ -70,7 +70,8 @@
     "nexus:generate": "ts-node-dev --transpile-only apps/bridge-api/src/schema --nexus-typegen",
     "bridge:generate": "rm -rf libs/graphql/crm-mutation && prisma format && prisma generate && yarn dotenv-flow -p apps/bridge-api pal g && yarn nexus:generate",
     "bridge:prune": "rm -rf apps/bridge-api/src/generated libs/graphql/crm-mutation",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "graphql-codegen"
   },
   "resolutions": {
     "**/immer": ">=8.0.1",

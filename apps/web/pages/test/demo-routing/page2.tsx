@@ -1,6 +1,5 @@
 import * as React from 'react'
 import Link from 'next/link'
-import DemoDyn from './dyn/[id]'
 
 export const DemoPage2 = () => {
   return (
