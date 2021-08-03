@@ -26,6 +26,7 @@ import {
   useInsertContactsLabelsMutation,
 } from '@pabau/graphql'
 import { count } from 'rxjs/operators'
+import { allowedStatusCodes } from 'next/dist/lib/load-custom-routes'
 
 const { TabPane } = Tabs
 const { Sider, Content } = Layout
@@ -55,10 +56,33 @@ export const Clients: FC<ClientsProps> = () => {
   const [responseSelectedContact, setResponseSelectedContcat] = useState({})
   const [testLabels, setTestLabels] = useState([])
   const [dataLoaded, setDataLoaded] = useState(false)
+  // const [countLabelS, setCountLabelS] = useState(contactsLabels)
 
   const [insertContactsLabelsMutaton] = useInsertContactsLabelsMutation({
     onCompleted(response) {
       console.log('contactsLabelInsertResponse', response)
+      // const labelCountAll = countLabels()
+      // countLabels()
+      //
+      // setCountLabelS(labelCountAll)
+      // const tempLab = {
+      //   id: response.insert_contacts_labels.returning
+      // }
+      const tempResArr = []
+      const tempLab = response.insert_contacts_labels.returning[0]
+      // tempResArr.push(...tempLab, tempLab)
+      setResponseLabels(true)
+      setCountLabelS(() => [...countLabelS, tempLab])
+      // setContactsLabels(prevState => {
+      //   {
+      //     ...prevState,
+      //     contactsLabels
+      //   }
+      // })
+      // setResponseLabels(false)
+
+      console.log('tempResArr', tempLab)
+      // setContactsLabels([...contactsLabels, response.insert_contacts_labels.returning])
     },
     onError(error) {
       console.log('not added contactslabels')
@@ -93,6 +117,7 @@ export const Clients: FC<ClientsProps> = () => {
     fetchPolicy: 'no-cache',
     onCompleted(response) {
       setContactsLabels(response.contacts_labels)
+      // countLabels()
     },
     onError(error) {
       console.error(error)
@@ -190,7 +215,7 @@ export const Clients: FC<ClientsProps> = () => {
           // ...fieldContact, labelTest: labelTest.push(fieldCL.label)
           // let labelComplete = {fieldCL.label.text, }
           const labelComplete = {}
-          labelComplete['id'] = 13
+          labelComplete['id'] = ''
           labelComplete['text'] = fieldCL.label.text
           labelComplete['color'] = fieldCL.label.color
           // labelComplete['label'] = fieldCL.label?.text
@@ -252,6 +277,9 @@ export const Clients: FC<ClientsProps> = () => {
   const [duplicateContactsTest, setDuplicateContactsTest] = useState(
     getDuplicateContactsData
   )
+  const [countLabelS, setCountLabelS] = useState(contactsLabels)
+  const [responseLabels, setResponseLabels] = useState(false)
+
   const { t } = useTranslationI18()
   // console.log('duplicateContactsTest:', duplicateContactsTest)
   const isMobile = useMedia('(max-width: 768px)', false)
@@ -506,6 +534,10 @@ export const Clients: FC<ClientsProps> = () => {
     return [...newList, ...uniqData]
   }
 
+  useEffect(() => {
+    setCountLabelS(contactsLabels)
+  }, [])
+
   const handleApplyLabel = (selectedLabelList) => {
     const newData = testData?.map((data) => {
       const temp = { ...data }
@@ -524,6 +556,8 @@ export const Clients: FC<ClientsProps> = () => {
     setActive(!!value.is_active)
     setIsEdit((e) => !e)
   }
+
+  console.log('sourceData index', sourceData)
 
   const handleRecoverClick = (recoverData) => {
     const newSourceData = sourceData.map((data) => {
@@ -567,6 +601,75 @@ export const Clients: FC<ClientsProps> = () => {
   const handleMergeAll = (data) => {
     displayConfetti()
   }
+
+  // const countLabels = () => {
+  //   const tempArr = []
+  //   contactsLabels.map((item) => tempArr.push(item.label.id))
+  //   console.log('tempArr', tempArr)
+  //   tempArr.sort()
+  //   let current = null
+  //   let cnt = 0
+  //   for (const element of tempArr) {
+  //     if (element != current) {
+  //       if (cnt > 0) {
+  //         console.log(current + ' comes --> ' + cnt + ' times')
+  //       }
+  //       current = element
+  //       cnt = 1
+  //     } else {
+  //       cnt++
+  //     }
+  //   }
+  //   if (cnt > 0) {
+  //     console.log(current + ' comes --> ' + cnt + ' times')
+  //   }
+  // }
+
+  const countLabels = () => {
+    const tempArr = []
+    if (responseLabels) {
+      countLabelS.map((item) => tempArr.push(item.label_id))
+    } else {
+      // contactsLabels.map((item) => tempArr.push(item.label_id))
+      console.log('return else')
+    }
+
+    // console.log('tempArr', tempArr)
+    tempArr.sort()
+    let current = null
+    let cnt = 0
+    const tempObj = {}
+    const tempFinalArr = []
+    for (const element of tempArr) {
+      if (element != current) {
+        if (cnt > 0) {
+          // console.log(current + ' comes --> ' + cnt + ' times')
+          tempObj[current] = cnt
+          // console.log('tempObj', tempObj)
+        }
+        current = element
+        cnt = 1
+      } else {
+        cnt++
+      }
+    }
+    if (cnt > 0) {
+      // console.log(current + ' comes --> ' + cnt + ' times')
+      // tempFinalArr.push(tempObj)
+      // console.log('tempFinalArr', tempFinalArr)
+      tempObj[current] = cnt
+      // console.log('tempObj', tempObj)
+    }
+    return tempObj
+  }
+
+  countLabels()
+
+  const labelCountAll = countLabels()
+
+  console.log('labelCountAll', labelCountAll)
+  console.log('contactsLabels index', contactsLabels)
+  console.log('countlabels', countLabelS)
 
   const renderContentTable = (
     <ContentComponent
@@ -684,6 +787,7 @@ export const Clients: FC<ClientsProps> = () => {
                     duplicateContactsCount={duplicateContactsTest}
                     addLabelMutation={addLabelMutation}
                     handleApplyLabel={handleApplyLabel}
+                    labelCountAll={labelCountAll}
                   />
                 </Sider>
                 <Content>

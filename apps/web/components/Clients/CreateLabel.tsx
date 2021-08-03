@@ -258,7 +258,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
       // getLabelsQuery()
       for (const selectContact of selectedRowKeys) {
         for (const selectedLabel of selectedLabels) {
-          console.log('selectedLabel ID 00000', selectedLabel.id)
+          // console.log('selectedLabel ID 00000', selectedLabel.id)
 
           insertContactsLabelsMutaton({
             variables: {
