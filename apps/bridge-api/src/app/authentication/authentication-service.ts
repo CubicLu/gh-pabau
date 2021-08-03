@@ -178,6 +178,7 @@ export default class AuthenticationService {
       {
         remote_url: this.user.Company.remote_url,
         remote_connect: this.user.Company.remote_connect,
+        username: this.user.username,
         user: this.user.id,
         company: this.user.Company.id,
         admin: Boolean(this.user.admin) ?? false,

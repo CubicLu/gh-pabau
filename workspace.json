@@ -595,11 +595,12 @@
               "apps/bridge-api/src/assets",
               "apps/bridge-api/src/prisma"
             ],
-            "maxWorkers": 4,
+            "maxWorkers": 1,
             "generatePackageJson": true
           },
           "configurations": {
             "production": {
+              "maxWorkers": 4,
               "optimization": true,
               "extractLicenses": true,
               "inspect": false,

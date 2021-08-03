@@ -4,6 +4,7 @@ import * as rules from './types'
 export const permissions = shield(
   {
     Mutation: {
+      enroll: rules.authentication.isAuthenticated,
       // Products
       createOneInvProduct: or(
         rules.authentication.isAdmin,

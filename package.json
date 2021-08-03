@@ -1,6 +1,6 @@
 {
   "name": "pabau",
-  "version": "2.0.472",
+  "version": "2.0.474",
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
   "workspaces": {
@@ -161,6 +161,7 @@
     "react-color": "2.19.3",
     "react-confetti": "6.0.1",
     "react-copy-to-clipboard": "5.0.3",
+    "react-countdown": "2.3.2",
     "react-cropper": "2.1.7",
     "react-custom-scrollbars": "4.2.1",
     "react-device-detect": "1.17.0",
@@ -306,7 +307,7 @@
     "vercel": "23.0.1",
     "yaml-loader": "0.6.0"
   },
-  "bump-rebuild-all": 48,
+  "bump-rebuild-all": 49,
   "prisma": {
     "schema": "apps/bridge-api/src/prisma/schema.prisma"
   }
