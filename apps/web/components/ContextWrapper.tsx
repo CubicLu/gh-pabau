@@ -77,8 +77,6 @@ const ContextWrapper: FunctionComponent = ({ children }) => {
       />
     )
   }
-
-  console.log('got context me data', data)
   return <UserContext.Provider value={data}>{children}</UserContext.Provider>
 }
 

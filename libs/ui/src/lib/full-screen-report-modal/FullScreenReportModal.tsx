@@ -20,7 +20,7 @@ export enum OperationType {
 export interface FullScreenReportModalProps {
   title: ReactNode
   visible: boolean
-  operations: Array<OperationType>
+  operations?: Array<OperationType>
   onActivated?: (val: boolean) => void
   onBackClick?: (e?: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void
   onSave?: () => void
