@@ -1,4 +1,4 @@
-import { useGetReportByCodeQuery, useGetReportByIdQuery } from '@pabau/graphql'
+  import { useGetReportByCodeQuery, useGetReportByIdQuery } from '@pabau/graphql'
 import { useRouter } from 'next/router'
 import React from 'react'
 import Layout from '../../components/Layout/Layout'
