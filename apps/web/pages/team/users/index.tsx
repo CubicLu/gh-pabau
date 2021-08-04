@@ -369,7 +369,7 @@ const Index: FunctionComponent = () => {
                               isPending(user.staff_id)
                             }
                             owner={user.main_contact}
-                            img={getImage(user.image)}
+                            img={user.image && getImage(user.image)}
                             admin={user.admin}
                             isLoading={loading}
                             isSick={user.sickness === 1}
