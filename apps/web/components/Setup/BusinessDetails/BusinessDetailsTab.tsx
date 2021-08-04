@@ -257,18 +257,20 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
         showUploader={showUploader}
         companyLogo={companyLogo}
       />
-      <AvatarUploader
-        visible={showAvatarUploader}
-        title={t('setup.business-details.uploadlogo')}
-        imageURL={companyLogo}
-        onCancel={() => setShowAvatarUploader(false)}
-        shape={'rectangle'}
-        width={400}
-        height={200}
-        section={'avatar_photos'}
-        type={'file_attachments'}
-        successHandler={handleLogoUpload}
-      />
+      {showAvatarUploader && (
+        <AvatarUploader
+          visible={showAvatarUploader}
+          title={t('setup.business-details.uploadlogo')}
+          imageURL={companyLogo}
+          onCancel={() => setShowAvatarUploader(false)}
+          shape={'rectangle'}
+          width={400}
+          height={200}
+          section={'avatar_photos'}
+          type={'file_attachments'}
+          successHandler={handleLogoUpload}
+        />
+      )}
     </div>
   )
 }
