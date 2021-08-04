@@ -35,10 +35,11 @@ export abstract class SubscriptionService {
       },
     })
     const response: { [key: string]: string } = {
-      id: subscription.gc_customer_id ?? subscription.stripe_customer_id,
-      type: subscription.gc_customer_id
-        ? 'SubscriptionGoCardless'
-        : 'SubscriptionStripe',
+      id: subscription.gc_customer_id || subscription.stripe_customer_id,
+      type:
+        subscription.gc_customer_id !== ''
+          ? 'SubscriptionGoCardless'
+          : 'SubscriptionStripe',
     }
 
     return response
