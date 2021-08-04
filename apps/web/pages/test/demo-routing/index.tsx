@@ -15,6 +15,12 @@ const DemoIndex = () => {
         <Link href="demo-routing/dyn/123">dyn/123</Link>
       </li>
       <li>
+        <Link href="demo-routing/dyn-nextjs/123">dyn-nextjs/123</Link>
+      </li>
+      <li>
+        <Link href="demo-routing/dyn-both/123">dyn-both/123</Link>
+      </li>
+      <li>
         <Link
           href={{
             pathname: 'demo-routing/dyn/[id]',

@@ -6,7 +6,7 @@ const DemoDyn = () => {
   const router = useRouter()
   return (
     <>
-      <h1>dyn-vercel</h1>
+      <h1>dyn nextjs</h1>
       <div>
         <p>Your query is: {JSON.stringify(router.query)}</p>
         <p>Your slug is: {router.query.id}</p>
