@@ -35,6 +35,7 @@ interface LeftSideBarProps {
   setTestLabels?: (val) => void
   handleApplyLabel?: (val) => void
   labelCountAll?: any
+  contactsLabels?: any
   addLabelMutation?: (
     options?: MutationFunctionOptions<
       AddLabelMutation,
@@ -64,6 +65,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
   addLabelMutation,
   handleApplyLabel,
   labelCountAll,
+  contactsLabels,
 }) => {
   const { t } = useTranslationI18()
 
@@ -71,7 +73,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
     setSelectedTab(e.key)
   }
 
-  console.log('testLabels leftSidebar', testLabels)
+  // console.log('testLabels leftSidebar', testLabels)
 
   // function getKeyByValue(object, value) {
   //   return Object.keys(object).find(key => object[key] === value);
@@ -86,7 +88,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
   }
 
   // console.log('keyvalue', getValueByKey(labelCountAll, 505))
-  console.log('labelCountAll LeftSideBar', labelCountAll)
+  // console.log('labelCountAll LeftSideBar', labelCountAll)
 
   return (
     <div className={styles.clientLeftSidebar}>

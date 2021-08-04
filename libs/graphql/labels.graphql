@@ -38,4 +38,10 @@ mutation InsertContactsLabels($label_id:Int, $contact_id: Int) {
   }
 }
 
+mutation DeleteContactsLabels($id: Int!) {
+  delete_contacts_labels_by_pk(id: $id) {
+    id
+  }
+}
+
 

@@ -50,7 +50,7 @@ interface ClientsContentProps {
     FetchResult<AddLabelMutation, Record<any, any>, Record<any, any>>
   >
   setTestLabels?: (val) => void
-  getContactsLabelsData?: any
+  contactsLabels?: any
   getContactsLabelsQuery?: (val) => void
   getLabelsQuery?: (val) => void
   insertContactsLabelsMutaton?: (val) => void
@@ -104,6 +104,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
   getLabelsQuery,
   addLabelMutation,
   insertContactsLabelsMutaton,
+  contactsLabels,
 }) => {
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 768px)', false)
@@ -370,6 +371,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
             addLabelMutation={addLabelMutation}
             sourceData={sourceData}
             insertContactsLabelsMutaton={insertContactsLabelsMutaton}
+            contactsLabels={contactsLabels}
           >
             {renderTooltip({
               title: t('clients.leftSidebar.createLabels'),

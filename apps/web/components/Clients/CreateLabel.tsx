@@ -14,6 +14,7 @@ import {
   // useGetLabelsLazyQuery,
   AddLabelMutation,
   Exact,
+  useDeleteContactsLabelsMutation,
 } from '@pabau/graphql'
 import styles from '../../pages/clients/clients.module.less'
 import { Labels } from '../../pages/clients'
@@ -39,6 +40,7 @@ interface CreateLabelsProps {
   // getLabelsQuery?: () => any
   sourceData?: any
   insertContactsLabelsMutaton?: (val) => void
+  contactsLabels?: any
   addLabelMutation?: (
     options?: MutationFunctionOptions<
       AddLabelMutation,
@@ -103,6 +105,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   sourceData,
   addLabelMutation,
   insertContactsLabelsMutaton,
+  contactsLabels,
 }) => {
   const { t } = useTranslationI18()
   const [visible, setVisible] = useState(false)
@@ -129,11 +132,17 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   const [selectedContacts, setSelectedContacts] = useState([])
   const [tempSelectedContact, setTempSelectedContact] = useState([])
 
+  const [deleteContactsLabelsMutaton] = useDeleteContactsLabelsMutation({
+    onCompleted(response) {
+      console.log('deleted contactLabel')
+    },
+    onError(error) {
+      console.log('not deleted contactLabel')
+    },
+  })
+
   const editLabelData = (valueObject) => {
     const labelData = [...testLabels]
-    // console.log('testLabels on edit:', testLabels)
-    // console.log('valueObject on edit:', valueObject)
-    // console.log('labelData on edit:', labelData)
     const labelIndex = labelData.findIndex(
       (label) => label.text === selectedEditData.text
     )
@@ -160,6 +169,8 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
 
     setIsEdit(false)
   }
+
+  console.log('contactsLabels createLabel', contactsLabels)
 
   const addLabelData = (valueObject) => {
     if (
@@ -219,12 +230,15 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
 
   const handleSelect = (label, index) => {
     const selectedData = [...selectedLabels]
+    console.log('selectedData', selectedData)
+
     if (selectedData.some((item) => item.text === label.text)) {
       const selectedIndex = selectedLabels?.findIndex(
         (selectedLabel) => selectedLabel.text === testLabels[index].text
       )
       selectedIndex !== -1 && selectedData.splice(selectedIndex, 1)
       setSelectedLabels(selectedData)
+      console.log('selectedIndex', selectedIndex)
     } else {
       selectedData.push(label)
       setSelectedLabels(selectedData)
@@ -249,6 +263,31 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     const diff2 = differenceBy(selectedLabels, defaultSelectedLabels) || []
     return diff1.length === 0 && diff2.length === 0
   }
+  console.log('selectedLabels createLabel', selectedLabels)
+  console.log('defaultSelectedLabels createlabel', defaultSelectedLabels)
+
+  // const onApplyLabel = () => {
+  //   handleApplyLabel(selectedLabels)
+  //
+  //   setVisible(false)
+  //   if (selectedRowKeys && selectedRowKeys.length > 0) {
+  //     // getLabelsQuery()
+  //     for (const selectContact of selectedRowKeys) {
+  //       console.log('selectContact 00000', selectContact)
+  //       for (const selectedLabel of selectedLabels) {
+  //         console.log('selectedLabel ID 00000', selectedLabel)
+  //
+  //         insertContactsLabelsMutaton({
+  //           variables: {
+  //             contact_id: selectContact,
+  //             label_id: selectedLabel.id,
+  //           },
+  //         })
+  //         // getContactsLabelsQuery()
+  //       }
+  //     }
+  //   }
+  // }
 
   const onApplyLabel = () => {
     handleApplyLabel(selectedLabels)
@@ -257,20 +296,48 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     if (selectedRowKeys && selectedRowKeys.length > 0) {
       // getLabelsQuery()
       for (const selectContact of selectedRowKeys) {
+        console.log('selectContact 00000', selectContact)
         for (const selectedLabel of selectedLabels) {
-          // console.log('selectedLabel ID 00000', selectedLabel.id)
+          console.log('selectedLabel ID 00000', selectedLabel)
+          console.log('selectedLabels ID 00000', selectedLabels)
+          if (
+            !defaultSelectedLabels.includes(selectedLabel.id)
+            // defaultSelectedLabels.length < selectedLabels.length
+          ) {
+            console.log('entering if')
 
-          insertContactsLabelsMutaton({
-            variables: {
-              contact_id: selectContact,
-              label_id: selectedLabel.id,
-            },
-          })
-          // getContactsLabelsQuery()
+            insertContactsLabelsMutaton({
+              variables: {
+                contact_id: selectContact,
+                label_id: selectedLabel.id,
+              },
+            })
+          }
+          // if (defaultSelectedLabels.includes(selectedLabel)) {
+          //   // console.log('removedLabel', removedLabel[0].id)
+          //   const removedLabel = differenceBy(
+          //     defaultSelectedLabels,
+          //     selectedLabels
+          //   )
+          //   const findToDeleteCL = contactsLabels?.find(
+          //     (x) => x.label_id === removedLabel[0].id
+          //   )
+          //   console.log('findToDeleteCL', findToDeleteCL)
+          //   // console.log('selectContact 111111', selectContact)
+          //   deleteContactsLabelsMutaton({
+          //     variables: {
+          //       id: findToDeleteCL.id,
+          //     },
+          //   })
+          // }
         }
       }
     }
   }
+
+  console.log('testLabels createLabel')
+
+  console.log('selectedLabels createLabel', selectedLabels)
 
   const content = () => {
     return (
@@ -283,7 +350,8 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
                   <span
                     style={{ display: 'flex', flexDirection: 'row' }}
                     key={`s-${label.id}`}
-                    onClick={() => handleSelect(label, label.id)}
+                    onClick={() => handleSelect(label, index)}
+                    // onClick={() => console.log('label.id', index)}
                     className={styles.tagWrap}
                   >
                     <div className={styles.tagLayout} key={`d-${label.id}`}>
