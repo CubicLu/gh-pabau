@@ -47,6 +47,7 @@
     }
   ],
   "rewrites": [
-    {"source": "/reports/:name", "destination": "/reports/[name]?name=:name"}
+    {"source": "/reports/:name", "destination": "/reports/[name]?name=:name"},
+    {"source": "/clients/:id", "destination": "/clients/[id]?id=:id"}
   ]
 }
