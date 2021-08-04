@@ -47,7 +47,7 @@ export default function Report() {
   return (
     name && (
       <Layout active="reports">
-        <h1>{report?.name}</h1>
+        <h1>{name}</h1>
         <p>report content page...</p>
       </Layout>
     )
