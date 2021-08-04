@@ -172,41 +172,6 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active }) => {
           </Tooltip>
         </AntMenu.Item>
       </AntMenu>
-      <span>
-        <Tooltip title={collapsed ? t('sidebar.setup') : ''} placement="left">
-          <div
-            className={styles.sidebarBtnAlign}
-            onClick={() => setActive('setup')}
-          >
-            <Link href="/setup">
-              {collapsed ? (
-                <SettingOutlined
-                  className={`${
-                    activeMenu === 'setup'
-                      ? styles.activeSidebarMenu
-                      : styles.sidebarMenu
-                  }`}
-                />
-              ) : (
-                <Button
-                  icon={
-                    <SettingOutlined
-                      className={`${
-                        activeMenu === 'setup'
-                          ? styles.activeSidebarMenu
-                          : styles.sidebarMenu
-                      }`}
-                    />
-                  }
-                  className={styles.setupBtn}
-                >
-                  {t('sidebar.setup')}
-                </Button>
-              )}
-            </Link>
-          </div>
-        </Tooltip>
-      </span>
     </Sider>
   )
 }
