@@ -1,5 +1,6 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useContext } from 'react'
 import { ReactComponent as LoginImage } from '../assets/images/login.svg'
+import { UserContext } from '../context/UserContext'
 import styles from './login.module.less'
 import { Logo, Notification, NotificationType } from '@pabau/ui'
 import LoginMain from '../components/Auth/Login'
@@ -17,6 +18,7 @@ import { useRouter } from 'next/router'
 import fetch from 'cross-fetch'
 
 const Login: FC = () => {
+  const loggedInUser = useContext(UserContext)
   const [showPage, setShowPage] = useState<string>('login')
   const [user, setUser] = useState<JwtUser>()
   const { t } = useTranslationI18()
@@ -160,7 +162,13 @@ const Login: FC = () => {
     },
   })
 
-  return (
+  if (router.pathname.includes('login') && loggedInUser?.me?.id) {
+    window.location.href = window.location.origin
+  }
+
+  return loggedInUser?.me?.id ? (
+    <div />
+  ) : (
     <div className={styles.signInWrapper}>
       <div className={styles.signInBackground}>
         <LoginImage />

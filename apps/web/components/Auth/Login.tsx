@@ -1,13 +1,13 @@
 import React, { FC } from 'react'
-import { EyeInvisibleOutlined, LinkedinFilled } from '@ant-design/icons'
-import { Button } from '@pabau/ui'
+import { EyeInvisibleOutlined } from '@ant-design/icons'
 import { Formik } from 'formik'
 import { Checkbox, Form, Input, SubmitButton } from 'formik-antd'
 import { LoginValidation } from '@pabau/yup'
-import { ReactComponent as GoogleIcon } from '../../assets/images/google.svg'
-import { ReactComponent as SSOIcon } from '../../assets/images/sso.svg'
+// import { ReactComponent as GoogleIcon } from '../../assets/images/google.svg'
+// import { ReactComponent as SSOIcon } from '../../assets/images/sso.svg'
 import styles from '../../pages/login.module.less'
 import { QueryLazyOptions } from '@apollo/client'
+import Link from 'next/link'
 
 export interface LoginFormProps {
   email: string
@@ -43,7 +43,8 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
         <div className={styles.formHead}>
           <h6>Log In!!</h6>
           <span>
-            Do not have an account? <a>Start a free trial</a>
+            Do not have an account?{' '}
+            <Link href="/signup">Start a free trial</Link>
           </span>
         </div>
       </div>
@@ -98,7 +99,8 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
                   Confirm
                 </SubmitButton>
               </div>
-              <div className={styles.accessKey}>
+              {/* TODO uncomment them (followings) once something gets done */}
+              {/*<div className={styles.accessKey}>
                 <div className={styles.line}>
                   <span>or access quickly</span>
                 </div>
@@ -107,6 +109,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
                 <div className={styles.google}>
                   <Button
                     className={styles.btnStarted}
+                    disabled
                     type={'default'}
                     icon={<GoogleIcon />}
                   >
@@ -115,6 +118,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
                 </div>
                 <div className={styles.socialLine}>
                   <Button
+                    disabled
                     className={styles.btnStarted}
                     type={'default'}
                     icon={<LinkedinFilled />}
@@ -122,6 +126,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
                     LinkedIn
                   </Button>
                   <Button
+                    disabled
                     className={styles.btnStarted}
                     type={'default'}
                     icon={<SSOIcon className={styles.keyIc} />}
@@ -129,7 +134,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
                     <span className={styles.iconTxtKey}>SSO</span>
                   </Button>
                 </div>
-              </div>
+              </div>*/}
             </Form>
           )}
         />

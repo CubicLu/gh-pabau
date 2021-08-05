@@ -253,6 +253,7 @@ const ProductList = (): JSX.Element => {
           menuItems={tabItemText}
           onTabClick={(activeKey) => setActiveTab(activeKey)}
           tabBarStyle={{ backgroundColor: '#FFF' }}
+          disabledKeys={[2, 3, 4]}
           minHeight="1px"
         >
           <Product
