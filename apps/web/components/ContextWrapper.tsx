@@ -48,7 +48,7 @@ const ContextWrapper: FunctionComponent = ({ children }) => {
     {
       ssr: false,
       fetchPolicy: 'cache-first',
-      returnPartialData: true,
+      // returnPartialData: true,
       onError: (e) => {
         console.log('ContextWrapper onError', e)
       },
