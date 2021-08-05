@@ -496,8 +496,8 @@ export const Clients: FC<ClientsProps> = () => {
         !removedLabel.some((item) => item.labelTest === data.labelTest)
       )
     })
-    console.log('newList', newList)
-    console.log('uniqData', uniqData)
+    // console.log('newList', newList)
+    // console.log('uniqData', uniqData)
     return [...newList, ...uniqData]
   }
 
@@ -527,14 +527,14 @@ export const Clients: FC<ClientsProps> = () => {
       const temp = { ...data }
       const contactLabelID = []
       if (selectedRowKeys.includes(data.id)) {
-        console.log('data.id', data.id)
-        console.log('temp.labelTest handleApply', temp)
+        // console.log('data.id', data.id)
+        // console.log('temp.labelTest handleApply', temp)
         temp.labelTest = uniqLabel(data.labelTest, selectedLabelList)
       }
       return temp
     })
-    console.log('testData index', testData)
-    console.log('newData index', newData)
+    // console.log('testData index', testData)
+    // console.log('newData index', newData)
 
     setTestData(newData)
   }
@@ -588,7 +588,7 @@ export const Clients: FC<ClientsProps> = () => {
     displayConfetti()
   }
 
-  console.log('contactsLabels', contactsLabels)
+  console.log('contactsLabels index', contactsLabels)
 
   const countLabels = () => {
     const tempArr = []

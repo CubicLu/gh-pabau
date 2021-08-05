@@ -294,18 +294,23 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
 
     setVisible(false)
     if (selectedRowKeys && selectedRowKeys.length > 0) {
-      // getLabelsQuery()
       for (const selectContact of selectedRowKeys) {
-        console.log('selectContact 00000', selectContact)
         for (const selectedLabel of selectedLabels) {
-          console.log('selectedLabel ID 00000', selectedLabel)
-          console.log('selectedLabels ID 00000', selectedLabels)
-          if (
-            !defaultSelectedLabels.includes(selectedLabel.id)
-            // defaultSelectedLabels.length < selectedLabels.length
-          ) {
-            console.log('entering if')
+          console.log('selectedLabel ID createLabel', selectedLabel)
+          const removedLabel: any = differenceBy(
+            defaultSelectedLabels,
+            selectedLabels
+          )
+          // console.log('selectedLabels ID 00000', selectedLabels)
+          // if (!defaultSelectedLabels.includes(selectedLabel.id))
+          const copySelectedLabel = [...selectedLabels]
+          const xxxx = copySelectedLabel.find((obj) =>
+            Object.keys(obj).includes('__typename')
+          )
+          // console.log('key createLabel', xxxx)
 
+          console.log('entering if INSERT')
+          if (xxxx && !defaultSelectedLabels.includes(selectedLabel)) {
             insertContactsLabelsMutaton({
               variables: {
                 contact_id: selectContact,
@@ -313,31 +318,47 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
               },
             })
           }
-          // if (defaultSelectedLabels.includes(selectedLabel)) {
-          //   // console.log('removedLabel', removedLabel[0].id)
-          //   const removedLabel = differenceBy(
-          //     defaultSelectedLabels,
-          //     selectedLabels
-          //   )
-          //   const findToDeleteCL = contactsLabels?.find(
-          //     (x) => x.label_id === removedLabel[0].id
-          //   )
-          //   console.log('findToDeleteCL', findToDeleteCL)
-          //   // console.log('selectContact 111111', selectContact)
-          //   deleteContactsLabelsMutaton({
-          //     variables: {
-          //       id: findToDeleteCL.id,
-          //     },
-          //   })
-          // }
+          // else {
+          //     console.log('entering ELSE DELETE')
+          //     const removedLabel: any[] = differenceBy(
+          //       defaultSelectedLabels,
+          //       selectedLabels
+          //     )
+          //     console.log('removedLabel', removedLabel)
+          //     const copyCL = [...contactsLabels]
+          //     const findToDeleteCL = copyCL?.find(
+          //       (x) => x.label_id === removedLabel[0].id
+          //     )
+          //     console.log('findToDeleteCL', findToDeleteCL)
+          //
+          //     deleteContactsLabelsMutaton({
+          //       variables: {
+          //         id: findToDeleteCL.id,
+          //       },
+          //     })
+          //   }
+          if (!xxxx && defaultSelectedLabels.includes(selectedLabel)) {
+            console.log('entering ELSE DELETE')
+            // console.log('removedLabel', removedLabel[0].id)
+            // const removedLabel: any = differenceBy(
+            //   defaultSelectedLabels,
+            //   selectedLabels
+            // )
+            const findToDeleteCL = contactsLabels?.find(
+              (x) => x.label_id === removedLabel[0].id
+            )
+            // console.log('findToDeleteCL', findToDeleteCL)
+            // console.log('selectContact 111111', selectContact)
+            deleteContactsLabelsMutaton({
+              variables: {
+                id: findToDeleteCL.id,
+              },
+            })
+          }
         }
       }
     }
   }
-
-  console.log('testLabels createLabel')
-
-  console.log('selectedLabels createLabel', selectedLabels)
 
   const content = () => {
     return (
