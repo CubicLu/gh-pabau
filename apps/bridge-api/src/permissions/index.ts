@@ -195,7 +195,6 @@ export const permissions = shield(
       findManyUserPermission: rules.authentication.isAuthenticated,
       findManyUserPermissionCount: rules.authentication.isAuthenticated,
       findFirstUserPermission: rules.authentication.isAuthenticated,
-      findManyCmContact: rules.authentication.isAuthenticated,
       //Authentication
       findManyLocationsWithAvailableProductStock: rules.authentication.isAdmin,
       validateUser: allow,

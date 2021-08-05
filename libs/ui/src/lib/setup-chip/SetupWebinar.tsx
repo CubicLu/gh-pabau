@@ -145,7 +145,7 @@ export const Webinar: FC<WebinarProps> = ({
             {name} <br />{' '}
             <span>{t('setup.page.live.upcoming.getting-started.label')}</span>
           </h6>
-          <h5>{dayjs(time)?.format('dddd, D H:mm')}</h5>
+          <h5>{dayjs(time)?.format('dddd, D/MM H:mm')}</h5>
           <RenderWebinarContent />
         </div>
       </div>
