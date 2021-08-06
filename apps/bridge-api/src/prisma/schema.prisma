@@ -3614,6 +3614,7 @@ model CompanyBranch {
   color                   String
   notify_on_lead          Boolean                   @default(false)
   notice                  String?
+  image                   String?
   Company                 Company                   @relation(fields: [company_id], references: [id])
   CompanyBranchGroup      CompanyBranchGroup        @relation(fields: [group_id], references: [id])
   CompanyRoomLocation     CompanyRoomLocation[]
