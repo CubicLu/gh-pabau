@@ -68,9 +68,7 @@ export const ListRelatedCompanies = extendType({
       },
       async resolve(event, args, ctx: Context) {
         try {
-          const data = await (ctx.prismaArray(
-            undefined
-          ) as PrismaClient).user.findMany({
+          const data = await ctx.prismaArray(undefined).user.findMany({
             where: {
               username: {
                 equals: args.username,
@@ -83,7 +81,7 @@ export const ListRelatedCompanies = extendType({
           for (const row of data) {
             // Overwrite each row with the correct user id
             row.id = (
-              await ctx.prisma.user.findFirst({
+              await ctx.prismaArray(row.Company.remote_url).user.findFirst({
                 where: {
                   username: row.username,
                   company_id: row.Company.id,
