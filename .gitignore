@@ -104,3 +104,5 @@ buck-out/
 
 ## CocoaPods
 **/ios/Pods/
+
+.postmon-lock
