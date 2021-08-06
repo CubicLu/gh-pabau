@@ -1,9 +1,9 @@
 import fetch from 'node-fetch';
 import {config} from 'dotenv-flow'
-const retry = require("async-retry");
+const retry = require("async-retry")
 
 config({path: 'hasura', default_node_env: 'development'})
-console.table({
+if (process.env.DEBUG) console.table({
   cwd: process.cwd(),
   HASURA_GRAPHQL_ENDPOINT: process.env.HASURA_GRAPHQL_ENDPOINT,
   HASURA_GRAPHQL_ADMIN_SECRET: process.env.HASURA_GRAPHQL_ADMIN_SECRET,
@@ -38,4 +38,4 @@ retry(async (bail) => {
         throw new Error("Error from remote")
       }
     })
-}, { retries: 6 })
+}, { retries: 15 })
