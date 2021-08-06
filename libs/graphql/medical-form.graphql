@@ -42,3 +42,20 @@ query findUser($where: UserWhereInput, $orderBy: [UserOrderByInput!]) {
     full_name
   }
 }
+
+query getMedicalFormDetails($medicalFormId: Int!) {
+  findUniqueMedicalForm(where: { id: $medicalFormId }) {
+    id
+    name
+    created_at
+    form_type
+    company_id
+    data
+    MedicalFormAdvancedSetting {
+      id
+      share_to_client
+      reminder
+      data
+    }
+  }
+}

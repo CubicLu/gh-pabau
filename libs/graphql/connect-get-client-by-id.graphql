@@ -1,0 +1,20 @@
+query getContactDetails($contactId: IntFilter) {
+  findManyCmContact(where: { ID: $contactId }) {
+    Avatar
+    Fname
+    Lname
+    DOB
+    gender
+    Phone
+    Mobile
+    Email
+    MailingStreet
+    MailingPostal
+    MailingCity
+    MailingCountry
+    ContactMeta {
+      meta_name
+      meta_value
+    }
+  }
+}

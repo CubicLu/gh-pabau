@@ -1,0 +1,1 @@
+INSERT INTO `user_alerts` (`title`, `description`, `image`, `email_template_id`, `ios_message`, `sms_message`, `pabau_message`) VALUES ('Lead Assigned', 'Receive notification whenever you assigned to new lead.','/images/icons/lead-manager-icon.png',148846,'[CUSTOM_MESSAGE]','[CUSTOM_MESSAGE]','[CUSTOM_MESSAGE]');

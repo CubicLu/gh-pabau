@@ -1,0 +1,339 @@
+.connectDashboard {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 56px 20px;
+  box-sizing: border-box;
+
+  @media (max-width: 767px) {
+    padding: 0 20px;
+    margin: 32px 0;
+  }
+}
+
+.connectDashboardTitle {
+  font-family: var(--font-family);
+  font-size: 22px;
+  font-weight: bold;
+  line-height: 24px;
+  letter-spacing: 1%;
+  color: var(--grey-text-color);
+  margin: 0;
+  margin-bottom: 24px;
+}
+
+.connectDashboardContent {
+  display: flex;
+  flex-direction: column;
+
+  > div {
+    &:nth-child(1) {
+      display: grid;
+      grid-template-columns: 59fr 84fr;
+      grid-column-gap: 32px;
+      min-height: 327px;
+    }
+    &:nth-child(2) {
+      margin-top: 32px;
+      min-height: 273px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    display: flex;
+    flex-direction: column;
+    > div {
+      &:nth-child(1) {
+        display: flex;
+        flex-direction: column;
+        min-height: 327px;
+        > div {
+          width: 100%;
+          margin-bottom: 32px;
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
+      &:nth-child(2) {
+        min-height: 273px;
+      }
+    }
+  }
+}
+
+.connectDashboardSection {
+  background-color: white;
+  border-radius: 4px;
+  border: 1px solid #f4f5f7;
+  box-sizing: border-box;
+  box-shadow: 2px 2px 17px rgba(9, 20, 41, 0.05);
+  width: 100%;
+  height: 100%;
+}
+
+.connectDashboardSectionHeader {
+  width: 100%;
+  height: 60px;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+  font-family: var(--font-family);
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: 500;
+  letter-spacing: 3%;
+  color: #40a0c1;
+  border-bottom: 1px solid var(--border-color-base);
+  margin: 0;
+  @media (max-width: 767px) {
+    padding: 0 1rem;
+  }
+}
+
+.connectDashboardSectionBody {
+  width: 100%;
+  height: calc(100% - 60px);
+  overflow-y: auto;
+}
+
+.noItems {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.noItemsImageContainer {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  position: relative;
+  background-color: rgba(238, 247, 251, 0.6);
+  margin-bottom: 12px;
+  .noItemsImage {
+    position: absolute;
+    top: 7px;
+    left: 10px;
+  }
+}
+
+.noItemsText {
+  font-family: var(--font-family);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  color: #737387;
+  text-align: center;
+  margin: 0;
+}
+
+.upcomingAppointment {
+  width: 100%;
+  height: 100%;
+  padding: 24px 28px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  .upcomingAppointmentHeader {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    .userAvatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-position: center;
+      background-size: cover;
+      margin-right: 12px;
+    }
+    .userInfo {
+      .userName {
+        font-family: var(--font-family);
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 20px;
+        color: var(--grey-text-color);
+        margin: 0;
+        margin-bottom: 2px;
+      }
+      .userPosition {
+        font-family: var(--font-family);
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        color: #737377;
+        margin: 0;
+      }
+    }
+  }
+  .upcomingAppointmentBody {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    .upcomingAppointmentItem {
+      width: calc(50% - 10px);
+      max-width: calc(50% - 10px);
+      margin-bottom: 20px;
+      .upcomingAppointmentItemTitle {
+        font-family: var(--font-family);
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        color: #737377;
+        margin: 0;
+        margin-bottom: 2px;
+      }
+      .upcomingAppointmentItemContent {
+        font-family: var(--font-family);
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 24px;
+        color: var(--grey-text-color);
+        margin: 0;
+      }
+      .upcomingAppointmentItemDuration {
+        display: flex;
+        align-items: center;
+        font-family: var(--font-family);
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 24px;
+        color: #40a0c1;
+        margin: 0;
+        margin-top: 2px;
+        .duration {
+          margin-left: 8px;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 767px) {
+    padding: 1rem;
+    .upcomingAppointmentBody {
+      flex-direction: column;
+      > div {
+        margin-bottom: 16px;
+      }
+    }
+  }
+}
+
+.notifications {
+  width: 100%;
+  height: 100%;
+  padding: 24px 28px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  .notificationItem {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    grid-column-gap: 12px;
+    margin-bottom: 1rem;
+
+    > div {
+      &:nth-child(1) {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(238, 247, 251, 0.6);
+        font-size: 21px;
+        color: var(--primary-color);
+      }
+      &:nth-child(2) {
+        .notificationDate {
+          font-family: var(--font-family);
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 20px;
+          color: #737377;
+          margin: 0;
+          margin-bottom: 4px;
+        }
+        .notificationContent {
+          font-family: var(--font-family);
+          font-size: 16px;
+          font-weight: 400;
+          line-height: 20px;
+          color: var(--grey-text-color);
+          margin: 0;
+
+          a {
+            color: var(--primary-color);
+            text-decoration: underline;
+            text-decoration-color: var(--primary-color);
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 767px) {
+    padding: 1rem;
+  }
+}
+
+.activityDoctor {
+  display: flex;
+  align-items: center;
+
+  .activityDoctorAvatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-position: center;
+    background-size: cover;
+    margin-right: 8px;
+  }
+
+  .activityDoctorName {
+    font-family: var(--font-family);
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--grey-text-color);
+  }
+}
+
+.appointmentActivity {
+  width: 100%;
+  :global {
+    .ant-table-thead {
+      background-color: white;
+      .ant-table-cell {
+        font-family: var(--font-family);
+        font-size: 14px;
+        font-weight: 400;
+        letter-spacing: 1%;
+        color: #737387;
+        background-color: white;
+      }
+    }
+    .ant-table-tbody {
+      .ant-table-cell {
+        font-family: var(--font-family);
+        font-size: 16px;
+        font-weight: 400;
+        color: var(--grey-text-color);
+      }
+    }
+  }
+}
+
+.buttonLabelContainer {
+  width: 88px;
+}
+
+.buttonLabelCancelled {
+  border: 1px solid rgba(146, 146, 163, 0.5) !important;
+  color: var(--light-grey-color) !important;
+  background: rgba(146, 146, 163, 0.05) !important;
+}

@@ -294,11 +294,22 @@ export const InvoiceSkeleton: FC = () => {
                 </div>
               </div>
               <div className={styles.right}>
-                <Skeleton.Input
-                  active
-                  size={'small'}
-                  className={styles.inputSpaywithCardkeleton}
-                />
+                <div className={styles.inner}>
+                  <span className={styles.headerText}>
+                    <Skeleton.Input
+                      active
+                      size={'small'}
+                      className={styles.inputSkeleton}
+                    />
+                  </span>
+                  <span className={styles.infoText}>
+                    <Skeleton.Input
+                      active
+                      size={'small'}
+                      className={styles.grandTotalSkeleton}
+                    />
+                  </span>
+                </div>
               </div>
             </div>
           </div>

@@ -32,3 +32,143 @@ query findLeads($searchTerm1: String, $searchTerm2: String) {
     custom_id
   }
 }
+
+query getLeadTblModuleFieldsSettings {
+    findManyTblModuleFieldsSetting(
+      where: { module_id: { equals: 3 }, is_active: { equals: true } }
+    ) {
+      id
+      field_name
+      field_label
+      is_required
+      is_active
+    }
+}
+
+query getLeadCustomFields {
+    custom: findManyManageCustomFieldCategory(
+      where: {
+        ManageCustomField: {
+          some: {
+            AND: {
+              is_active: { equals: true }
+              field_for: { in: [LEAD, CONTACTLEAD] }
+            }
+          }
+        }
+      }
+    ) {
+      id
+      name
+      ManageCustomField {
+        id
+        field_label
+        field_type
+        is_required
+        is_active
+        ManageCustomFieldItem {
+          id
+          item_label
+        }
+      }
+    }
+    generalCustom: findManyManageCustomField(
+      where: {
+        category_id: { equals: 0 }
+        is_active: { equals: true }
+        field_for: { in: [LEAD, CONTACTLEAD] }
+      }
+    ) {
+      id
+      field_label
+      field_type
+      category_id
+      is_required
+      is_active
+      ManageCustomFieldItem {
+        id
+        item_label
+      }
+    }
+}
+
+query getLeadEmployeeList {
+    findManyUser(
+      where: { deleted: { equals: 0 } }
+      orderBy: { full_name: asc }
+    ) {
+      id
+      full_name
+      image
+    }
+}
+
+query getLeadStatus {
+    findManyLeadStatus(orderBy: { status_order: asc }) {
+      id
+      status_name
+    }
+}
+
+query getLocationList {
+  findAllowedLocation {
+    id
+    name
+  }
+}
+
+mutation createOneLead(
+    $firstName: String!
+    $lastName: String!
+    $email: String!
+    $salutation: String!
+    $mailingProvince: String!
+    $mailingCity: String!
+    $mailingStreet: String!
+    $mailingPostal: String!
+    $mailingCountry: String!
+    $marketingOptInEmail: Int!
+    $marketingOptInPhone: Int!
+    $marketingOptInPost: Int!
+    $marketingOptInText: Int!
+    $DOB: DateTime
+    $mobile: String!
+    $phone: String!
+    $leadSource: Int!
+    $leadStatus: Int!
+    $location: Int!
+    $description: String!
+    $notes: String
+    $ownerId: Int
+    $customFields: [createLeadCustomFieldType]
+  ) {
+    createOneLead(
+      data: {
+        Fname: $firstName
+        Lname: $lastName
+        Email: $email
+        Salutation: $salutation
+        MailingProvince: $mailingProvince
+        MailingCity: $mailingCity
+        MailingStreet: $mailingStreet
+        MailingPostal: $mailingPostal
+        MailingCountry: $mailingCountry
+        MarketingOptInEmail: $marketingOptInEmail
+        MarketingOptInPhone: $marketingOptInPhone
+        MarketingOptInPost: $marketingOptInPost
+        MarketingOptInText: $marketingOptInText
+        DOB: $DOB
+        Mobile: $mobile
+        Phone: $phone
+        LeadSource: $leadSource
+        LeadStatus: $leadStatus
+        Description: $description
+        location_id: $location
+        notes: $notes
+        OwnerID: $ownerId
+      }
+      customFields: $customFields
+    ) {
+      ID
+    }
+}

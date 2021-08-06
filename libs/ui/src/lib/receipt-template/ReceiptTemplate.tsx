@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 import { Modal } from 'antd'
 import styles from './ReceiptTemplate.module.less'
+import { ITotalDetails } from '@pabau/ui'
 import { useTranslation } from 'react-i18next'
 
 interface clinicDetails {
@@ -41,6 +42,8 @@ export interface ReceiptTemplateProps {
   logo: string
   title: string
   titleDescription: string
+  grandTotal?: ITotalDetails
+  Total?: ITotalDetails
   clinicDetails: clinicDetails[]
   receiptDetails: receiptDetails[]
   paymentDetails: paymentDetails[]
@@ -52,6 +55,8 @@ export const ReceiptTemplate: FC<ReceiptTemplateProps> = ({
   visible,
   title,
   logo,
+  grandTotal,
+  Total,
   titleDescription,
   clinicDetails,
   receiptDetails,
@@ -160,25 +165,29 @@ export const ReceiptTemplate: FC<ReceiptTemplateProps> = ({
                       {t('invoice.cash.label')}: {payment[0].cash}
                     </span>
                   </div>
-                  <div className={styles.inner}>
-                    <span className={styles.headerText}>
-                      {t('invoice.total.label')}
-                    </span>
-                    <span className={styles.infoText}>£{payment[0].total}</span>
-                  </div>
+                  {Total?.enabled === 1 && (
+                    <div className={styles.inner}>
+                      <span className={styles.headerText}>{Total?.label}</span>
+                      <span className={styles.infoText}>
+                        £{payment[0].total}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className={styles.right}>
-                <div className={styles.inner}>
-                  <div style={{ marginRight: '20px' }}>
-                    <div className={styles.headerText}>
-                      {t('ui.client-card-financial.grand-total')}
-                    </div>
-                    <div className={styles.infoText}>
-                      £{payment[0].totalPayment}
+                {grandTotal?.enabled === 1 && (
+                  <div className={styles.inner}>
+                    <div style={{ marginRight: '20px' }}>
+                      <div className={styles.headerText}>
+                        {grandTotal?.label}
+                      </div>
+                      <div className={styles.infoText}>
+                        £{payment[0].totalPayment}
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
             <div className={styles.section2Inner}>

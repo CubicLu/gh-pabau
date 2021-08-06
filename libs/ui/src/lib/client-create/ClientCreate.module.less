@@ -1,5 +1,5 @@
 .main-div {
-  width: 502px;
+  width: 600px;
   margin: auto;
   .more-btn {
     margin: 28px 0 12px;
@@ -53,6 +53,15 @@
             color: #9292a3;
           }
         }
+        .ant-form-item-control {
+          .ant-form-item-control-input {
+            .ant-form-item-control-input-content {
+              .ant-select-single {
+                width: 140px;
+              }
+            }
+          }
+        }
         .ant-select {
           .ant-select-selector {
             height: 40px;
@@ -62,9 +71,13 @@
           }
         }
       }
-      .first-name,
-      .last-name {
-        margin-left: 16px;
+      .salutation{
+         margin-right: 16px;
+      }
+      .first-name{
+        margin-right: 16px;
+      }
+      .last-name, .first-name {
         :global {
           .ant-form-item {
             .ant-form-item-label {
@@ -103,8 +116,22 @@
       input {
         border: 1px solid #ecedf0;
         border-radius: 4px;
-        color: #cccfd6;
         font-size: 16px;
+      }
+    }
+
+    .skeleton-wrapper {
+      margin-bottom: 24px;
+      .skeleton-input {
+        h3 {
+          margin-top: 0;
+          height: 32px;
+        }
+      }
+      .skeletonName{
+        h3 {
+          width: 100px;
+        }
       }
     }
 
@@ -129,6 +156,9 @@
                   height: 40px;
                   .ant-select-selection-item {
                     line-height: 40px;
+                  }
+                  .ant-select-selection-placeholder{
+                    margin-top: 4px;
                   }
                 }
               }
@@ -287,42 +317,6 @@
       }
     }
   }
-  .third-party-form {
-    background: #ffffff;
-    border-radius: 4px;
-    padding: 27px 32px;
-    margin-top: 24px;
-    margin-bottom: 200px;
-    .third-form-input {
-      h5 {
-        font-size: 14px;
-        line-height: 24px;
-        margin-bottom: 0;
-        color: #3d3d46;
-      }
-      p {
-        font-size: 14px;
-        line-height: 22px;
-        color: #9292a3;
-        margin-bottom: 19px;
-      }
-      :global .ant-form-item {
-        .ant-radio-group {
-          display: flex;
-          flex-direction: column;
-          .ant-radio-wrapper {
-            font-size: 14px;
-            line-height: 22px;
-            color: #3d3d46;
-            margin-bottom: 14px;
-            &:last-child {
-              margin-bottom: 0;
-            }
-          }
-        }
-      }
-    }
-  }
 }
 
 :global .ant-select-dropdown {
@@ -411,17 +405,18 @@
   &:hover {
     background: #eeeeee;
   }
-  input {
-    border-bottom: 1px solid #eeeeee;
-    border-left: none;
-    border-top: none;
-    border-right: none;
-    border-radius: 0;
-    outline: none;
-    background: transparent;
-    &:focus {
+  :global .ant-select {
+    width: 100%;
+    border-color: transparent;
+    .ant-select-selector{
+      border-bottom: 1px solid #eeeeee;
+      border-left: none;
+      border-top: none;
+      border-right: none;
+      border-radius: 0;
       outline: none;
-      box-shadow: none;
+      background: transparent;
+      box-shadow: none !important;
     }
   }
   :global {
@@ -461,11 +456,25 @@
       .salutation-first-div {
         display: flex;
         flex-direction: column;
+        :global .ant-form-item{
+          .ant-form-item-control {
+            .ant-form-item-control-input {
+              .ant-form-item-control-input-content {
+                .ant-select-single {
+                  width: 100%;
+                }
+              }
+            }
+          }
+        }
+        .salutation{
+          margin-right: 0;
+        }
         .first-name {
-          margin-left: 0;
+          margin-right: 0;
         }
         .last-name {
-          margin-left: 0;
+          margin-right: 0;
         }
       }
 

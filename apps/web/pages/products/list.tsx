@@ -111,8 +111,8 @@ const ProductList = (): JSX.Element => {
   const handleCreate = async () => {
     switch (activeTab) {
       case '0':
-        setShowCreateProduct(true)
         setAction('Create')
+        setShowCreateProduct(true)
         break
       case '1':
         setShowCreateCategoryModal(true)
@@ -251,10 +251,9 @@ const ProductList = (): JSX.Element => {
         <TabMenu
           tabPosition={'top'}
           menuItems={tabItemText}
-          onTabClick={(activeKey) => {
-            setActiveTab(activeKey)
-          }}
+          onTabClick={(activeKey) => setActiveTab(activeKey)}
           tabBarStyle={{ backgroundColor: '#FFF' }}
+          disabledKeys={[2, 3, 4]}
           minHeight="1px"
         >
           <Product

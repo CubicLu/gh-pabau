@@ -1,6 +1,4 @@
 import {
-  Avatar,
-  AvatarUploader,
   BusinessLocation,
   BusinessTypes,
   Button,
@@ -9,13 +7,12 @@ import {
   PhoneNumberInput,
   SimpleDropdown,
 } from '@pabau/ui'
-import { Col, Divider, Row, Skeleton } from 'antd'
+import { Col, Divider, Row, Skeleton, Image } from 'antd'
 import React, { FC, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useWindowSize } from 'react-use'
 import currency from '../../assets/currency'
 import { bizTypes } from '../../assets/images/biz-types'
-import NormalClinicLogo from '../../assets/images/our-clinic.png'
 import timezones from '../../assets/timezone'
 import styles from './BusinessDetails.module.less'
 import * as Yup from 'yup'
@@ -27,6 +24,7 @@ export interface BasicInformation {
   companyEmail: string
   phone: string
   website: string
+  logo: string
   businessType: string
 }
 
@@ -47,6 +45,8 @@ export interface BusinessDetailsProps {
   languageSetting?: LanguageSetting
   businessLocation?: string
   buttonClicked?: boolean
+  showUploader?: () => void
+  companyLogo?: string
 }
 
 export const BusinessDetails: FC<BusinessDetailsProps> = ({
@@ -57,13 +57,13 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
   languageSetting,
   businessLocation,
   buttonClicked,
+  showUploader,
+  companyLogo,
 }) => {
   const { t } = useTranslation('common')
   const size = useWindowSize()
 
   const [location, setLocation] = useState('')
-  const [showAvatarUploader, setShowAvatarUploader] = useState(false)
-  const [userImage, setUserImage] = useState<string>(NormalClinicLogo)
   const [businessType, setBusinessType] = useState<IOption[]>(bizTypes)
   const [businessTypeData, setBusinessTypeData] = useState('')
   const [locationDetails, setLocationDetails] = useState({
@@ -80,13 +80,14 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
     if (businessLocation !== undefined) {
       setLocation(businessLocation)
     }
+
     const List = [...businessType]
     const type =
       basicInformation?.businessType !== undefined
         ? basicInformation?.businessType
         : ''
-    const typeList = type.split(',')
 
+    const typeList = type.split(',')
     typeList.map((item) => {
       const index = List.findIndex((i) => i.title === item)
       if (index !== -1) {
@@ -98,12 +99,6 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [basicInformation])
 
-  const handleChangeImage = (image: string) => {
-    setUserImage(image)
-  }
-  const uploadPhoto = () => {
-    setShowAvatarUploader(true)
-  }
   const handleSaveChanges = (handleSubmit, values) => {
     handleSubmit()
     onSave?.({
@@ -203,16 +198,34 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
                 {t('business.details.tab.basic.information.section')}
               </p>
               <div className={styles.normalClinicLogo}>
-                <div onClick={uploadPhoto}>
-                  <Avatar
-                    src={userImage}
-                    size={size.width > 767 ? 128 : 88}
-                    name={'Clinic Logo'}
-                    edit={true}
-                  />
+                <div>
+                  {!loading ? (
+                    <Image preview={false} width={200} src={companyLogo} />
+                  ) : (
+                    <Skeleton.Image style={{ width: 200 }} />
+                  )}
                 </div>
               </div>
-              <Row gutter={[32, 28]} className={styles.name}>
+              <div className={styles.normalClinicLogo}>
+                <Button
+                  style={
+                    size.width > 767
+                      ? { margin: '0 16px', verticalAlign: 'middle' }
+                      : { margin: '0 10px', verticalAlign: 'middle' }
+                  }
+                  onClick={showUploader}
+                >
+                  {t('setup.business-details.uploadlogo')}
+                </Button>
+                <Button style={{ verticalAlign: 'middle' }}>
+                  {t('setup.business-details.delete')}
+                </Button>
+              </div>
+              <Row gutter={[48, 0]}>
+                <Divider style={{ marginTop: 10, marginBottom: 25 }} />
+              </Row>
+
+              <Row gutter={[32, 0]} className={styles.name}>
                 <Col className="gutter-row" xs={24} sm={12}>
                   <Form.Item
                     label={t('business.details.input.business.name')}
@@ -473,14 +486,6 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
           </Form>
         )}
       </Formik>
-      <AvatarUploader
-        visible={showAvatarUploader}
-        title={t('account.settings.profile.avatarupload.title')}
-        onCreate={handleChangeImage}
-        imageURL={userImage}
-        onCancel={() => setShowAvatarUploader(false)}
-        shape={'rectangle'}
-      />
     </div>
   )
 }

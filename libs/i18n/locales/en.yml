@@ -786,6 +786,7 @@ en:
   crud-table-pagination-test-displaying: 'Rows per page'
   crud-table-no-search-results: 'No results found'
   crud-table-try-adjust: 'Try adjusting your search to find what you’re looking for'
+  crud-table-input-required: '{{what}} is required!'
   crud-table-input-min-length-validate: 'The value for {{what}} must be at least {{min}} characters.'
   crud-table-input-max-length-validate: 'The max length of {{max}} is reached.'
   crud-table-input-invalid-validate: 'Invalid {{what}}'
@@ -801,14 +802,27 @@ en:
   common-label-create: Create
   common-label-cancel: Cancel
   common-label-save: Save
+  common-label-select: Select {{what}}
+  common-label-enter: Enter {{what}}
   common-label-delete-warning: 'will be deleted. This action is irreversible'
   webinar-header-recomended-webinar: 'Recommended Webinar'
   intercom-title-type-article: Article
   webinar-body-type-video: Video
-  intercom-article-title-setting-up-a-marketing-source: 'Setting up a Marketing Source'
-  intercom-article-title-create-a-marketing-source: 'Creating a Marketing Source'
+  webinar-body-type-blog: Blog
+  intercom.article.title.how.pabau.help: 'How Pabau helps you with HIPAA compliance'
+  intercom.article.title.how.setup.rota: 'How to set up Rota Templates'
+  intercom.article.title.how.send.social: 'How to send a Social Survey manually'
+  intercom.article.title.how.add.links: 'How to add and hyperlink a picture in a template'
   header-search-text-placeholder: 'Search clients or leads'
   footer-guides-header-status-text: 'Related guides'
+  footer.webinar.join.btn: 'Join class'
+  footer.webinar.register.btn: 'Register'
+  footer.webinar.getting.started: 'Getting Started'
+  footer.webinar.elapsed: 'elapsed'
+  footer.webinar.progress: 'in progress'
+  footer.webinar.minutes: 'minutes'
+  footer.webinar.join: 'Join'
+  footer.webinar.register: 'Register'
   avatar.give.feedback.giveus: 'Give us feedback'
   avatar.give.feedback.helpus: 'Help us improve Pabau'
   avatar.give.feedback.somethingwrong: 'Something went wrong'
@@ -971,6 +985,9 @@ en:
   invoice.card.label: Card
   invoice.cash.label: Cash
   invoice.pay.button.label: Pay with card
+  statement.invoice.label: Statment Invoice
+  statement.invoice.date.label: Statment Date
+  statement.period.label: Statement Period
   receipt.payment.date.label: Payment Date
   receipt.payment.with.invoice: Payments applied to invoices
   settings-header: Settings
@@ -1090,7 +1107,8 @@ en:
   setup.clinic.data.custom.field: 'Custom Fields'
   setup.clinic.data.imports: 'Data Imports'
   setup.clinic.subscription: 'Pabau Subscription'
-  setup.clinic.subscription.billing: 'Billing Activity'
+  setup.clinic.subscription.billing: 'Billing Details'
+  setup.clinic.subscription.billing.details: 'Billing history'
   setup.clinic.subscription.addons: Addons
   setup.product.service.title: 'Products & Services'
   setup.services: Services
@@ -1836,6 +1854,10 @@ en:
   setup.business-details.2fa.tooltip: 'Force 2 Factor Authentication for your system to enhance logging and browsing security throughout the system.'
   setup.business-details.2fa.content: 'Two-factor authentication adds an extra layer of security to your Pabau account. By asking you to enter a verification code after entering the correct email address and password, it will protect you from potential attackers who also might have gained access to your email address. It will ensure that the secure data you share with your clients stays secure, as they will need to enter a verification code as well. /n*SMS credits are mandatory, in order for the two-factor authentication to work.'
   setup.business-details.2fa.update-success: 'Updated successfully!'
+  setup.business-details.uploadlogo: 'Upload Logo'
+  setup.business-details.delete: 'Delete'
+  setup.business-details.update.success: 'Company details updated succesfully'
+  setup.business-details.update.error: 'Something went wrong while updating the data.'
   settings-performance-tab-header-description: 'Lorem ipsum carrots, enhanced undergraduate developer, but they do occaecat time and vitality.'
   account.settings.response.notification.profilesection.success: Profile Updated Successfully
   account.settings.response.notification.securitysection.success: Security Information Updated Successfully
@@ -1939,6 +1961,8 @@ en:
   account.settings.notification.general.appointmentcancelled.description: 'Who cancelled service appointment'
   account.settings.notification.general.leadinquiry: 'Lead Enquiry'
   account.settings.notification.general.leadinquiry.description: 'Receive notification whenever you receive new Enquiry.'
+  account.settings.notification.general.lead.assigned.title: 'Lead Assigned'
+  account.settings.notification.general.lead.assigned.description: 'Receive notification whenever you assigned to lead.'
   account.settings.notification.application.label: APPLICATION
   account.settings.notification.general.button.label1: iOS
   account.settings.notification.general.button.label2: Email
@@ -2664,12 +2688,11 @@ en:
     Please find attached your file. If you have any questions do not hesitate to contact us at +44 000 987 507.
     Kind regards,
     The clinic Team'
+  quickcreate.required.label: 'Required'
   quickCreate.client.modal.newContact: 'New Contact'
   quickCreate.client.modal.cancel: 'Cancel'
   quickCreate.client.modal.create: 'Create'
   quickCreate.client.modal.tab.general: 'General'
-  quickCreate.client.modal.tab.gpDetails: 'GP Details'
-  quickCreate.client.modal.tab.customDetails: 'Custom Details'
   quickCreate.client.modal.more: 'More'
   quickCreate.client.modal.general: 'General'
   quickCreate.client.modal.general.noLabel: 'No label'
@@ -2686,9 +2709,13 @@ en:
   quickCreate.client.modal.general.gender.male: 'Male'
   quickCreate.client.modal.general.gender.female: 'Female'
   quickCreate.client.modal.general.hearOption.label: 'How did you hear about us?'
+  quickCreate.client.modal.general.lead.status.label: 'Lead Stage'
+  quickCreate.client.modal.general.description.label: 'Description'
+  quickCreate.client.modal.general.description.placeholder: 'Enter description'
   quickCreate.client.modal.general.hearOption.selectOption: 'Select an option'
   quickCreate.client.modal.general.hearOption.anythingHere: 'Anything here'
   quickCreate.client.modal.general.date: 'Date of birth'
+  quickCreate.client.modal.general.location.label: 'Location'
   quickCreate.client.modal.general.preferredLanguage: 'Select preferred language'
   quickCreate.client.modal.general.preferredLanguage.default: 'Use Provider Language (English)'
   quickCreate.client.modal.general.contactInfo: 'Contact Info'
@@ -2700,13 +2727,15 @@ en:
   quickCreate.client.modal.general.subscription.detail:
     'When you ask a client to opt in, please do remind them that you will
     always send information deemed to be critical'
-  quickCreate.client.modal.general.subscription.newsLetter: 'NewsLatter'
+  quickCreate.client.modal.general.subscription.newsLetter: 'Newslatter'
   quickCreate.client.modal.general.subscription.sms: 'SMS'
   quickCreate.client.modal.general.subscription.postal: 'Postal'
   quickCreate.client.modal.general.subscription.phoneCalls: 'Phone Calls'
   quickCreate.client.modal.general.addresses: 'Address'
-  quickCreate.client.modal.general.addresses.label: 'Addresses'
+  quickCreate.client.modal.general.addresses.label: 'Address'
   quickCreate.client.modal.general.addresses.placeHolder: 'Search Address'
+  quickCreate.client.modal.general.county.label: 'County'
+  quickCreate.client.modal.general.address.two.label: 'Address 2'
   quickCreate.client.modal.general.addresses.country: 'Country'
   quickCreate.client.modal.general.addresses.country.placeHolder: 'Select country'
   quickCreate.client.modal.general.addresses.city: 'City'
@@ -2718,39 +2747,31 @@ en:
   quickCreate.client.modal.general.thirdParty.botox: 'Botox'
   quickCreate.client.modal.general.thirdParty.laser: 'Laser'
   quickCreate.client.modal.general.addLabel.duplicateError: 'Same Label already Exist'
-  quickCreate.validation.salutation.required: 'Salutation is required'
+  quickCreate.client.modal.create.success: 'Success! Contact successfully created'
+  quickCreate.client.modal.create.contact.exits.error: 'A contact already exists!'
+  quickCreate.client.modal.create.contact.error: 'Error! while add contact'
+  quickCreate.number.validation.message: '{{field}} must be a number'
+  quickCreate.validation.is.required: '{{field}} is required'
   quickCreate.validation.firstName.required: 'First name is required'
   quickCreate.validation.lastName.required: 'Last name is required'
-  quickCreate.validation.gender.required: 'Gender is required'
   quickCreate.validation.hearOption.required: 'Hear option is required'
-  quickCreate.validation.preferredLanguage.required: 'Preferred Language is required'
   quickCreate.validation.email.required: 'Email is required'
   quickCreate.validation.address.required: 'Address is required'
   quickCreate.validation.country.required: 'Country is required'
   quickCreate.validation.city.required: 'City is required'
   quickCreate.validation.postCode.required: 'Postcode is required'
-  quickCreate.validation.thirdPartyDetails.required: 'Third Party detail is required'
   quickCreate.validation.email.validate: 'Please enter valid email'
-  quickCreate.validation.procedureType.required: 'Procedure type is required'
   quickCreate.validation.treatmentInterestPage.required: 'Treatment interest page is required'
   quickCreate.validation.title.required: 'Title is required'
   quickCreate.validation.keyword.required: 'Keyword is required'
   quickCreate.lead.modal.newLead: 'New Lead'
   quickCreate.lead.modal.newLead.assigneeTitle: 'Assignee'
-  quickCreate.lead.modal.tab.general: 'General'
   quickCreate.lead.modal.general.notes: 'Notes'
   quickCreate.lead.modal.general.notes.placeholder: 'Note'
-  quickCreate.lead.modal.general.statisticCustom: 'Statistic *custom*'
-  quickCreate.lead.modal.general.procedureType: 'Procedure Type'
-  quickCreate.lead.modal.general.procedureType.placeholder: 'Enter Procedure Type'
-  quickCreate.lead.modal.general.title: 'Title'
-  quickCreate.lead.modal.general.title.placeholder: 'Enter Title'
-  quickCreate.lead.modal.general.keyword: 'Keyword'
-  quickCreate.lead.modal.general.keyword.placeholder: 'Enter keyword'
-  quickCreate.lead.modal.general.treatmentInterestPage: 'Treatment interest page'
-  quickCreate.lead.modal.general.treatmentInterestPage.placeholder: 'Select Treatment interest'
   quickCreate.lead.modal.general.addEmployee: 'Add Employee'
   quickCreate.lead.modal.general.selectEmployee: 'Select Employee'
+  quickCreate.lead.modal.create.success: 'Success! Lead successfully created'
+  quickCreate.lead.modal.create.error: 'Error! while create lead'
   settings.calendar.title: Calendar settings
   settings.calendar.breadcrumb.setup: Setup
   settings.calendar.breadcrumb.title: Calendar Settings
@@ -3508,9 +3529,21 @@ en:
   setup.page.live.upcoming.webinar.title: 'Live & Upcoming Webinars'
   setup.page.live.upcoming.webinar.view.schedule: 'View Full Schedule'
   setup.page.live.upcoming.webinar.join.class.label: 'Join class'
+  setup.page.live.upcoming.webinar.closed.label: 'Closed'
+  setup.page.live.upcoming.webinar.closed-at.label: 'Closed at'
   setup.page.live.upcoming.webinar.count.me.label: 'Count me in'
+  setup.page.live.upcoming.getting-started.label: 'Getting Started'
+  setup.page.live.upcoming.start.label: 'start'
+  setup.page.live.upcoming.elapsed.label: 'elapsed'
+  setup.page.live.upcoming.closedAt.label: 'Closed at'
+  setup.page.live.upcoming.elapsed.uppercase.label: 'Elapsed'
   setup.page.webinar.modal.join.label: 'Join'
   setup.page.webinar.modal.register.label: 'Register'
+  setup.page.webinar.modal.register.show: 'Show Results'
+  modals.webinar.tab.discover: 'Discover & Learn'
+  modals.webinar.tab.schedule: 'Your schedule'
+  modals.webinar.tab.schedule.empty: 'You don’t have any upcoming webinars'
+  modals.webinar.title: 'Discover & Learn'
   iframe-incompatible: 'Unable to load content. Please update your browser.'
   avatar.task_manager: 'Task Manager'
   rules.no-configured-message: 'No field rules are configured for this form'
@@ -4554,3 +4587,8 @@ en:
   peer.feedback.filled: 'Filled'
   peer.feedback.pending: 'Pending'
   modal.confirmation.header.title: 'Are u sure u want to delete this {{name}}'
+  upload.cropper.error.invalidFile.message: 'Invalid File.'
+  upload.cropper.error.invalidImageFile.message: 'Invalid Image File.'
+  upload.cropper.error.malformedImage.message: 'Malformed Image File.'
+  upload.cropper.success.message: 'Upload Successfully'
+  intercom-article-title-setting-up-a-marketing-source: "Setting up a marketing source"

@@ -13,6 +13,14 @@ export interface Context {
   prisma: PrismaClient
 
   /**
+   * For Authentication module to resolve pod user.id, we have this emergency hatch that returns a PrismaClient instance
+   * for the specified pod.
+   *
+   * @param remote_url - The `remote_url` from the database
+   */
+  prismaArray(remote_url: string): PrismaClient
+
+  /**
    * The currently logged in user
    */
   authenticated?: JwtPayloadDto
@@ -21,6 +29,10 @@ export interface Context {
    * The package.json version for this app
    */
   version: string
+
+  /**
+   * Required for PrismaSelect plugin to operate
+   */
   select: any
 }
 
@@ -44,5 +56,7 @@ export const createContext: ContextFunction<ExpressContext, Context> = (
     }
   }
   ret.prisma = prisma(ret.authenticated?.remote_url)
+  ret.prismaArray = (remote_url) => prisma(remote_url)
+
   return ret
 }

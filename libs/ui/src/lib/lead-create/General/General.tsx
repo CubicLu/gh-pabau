@@ -1,10 +1,18 @@
 import React, { FC } from 'react'
 import styles from '../LeadCreate.module.less'
-import { InitialDetailsDataProps } from '../LeadCreate'
-import { Form as AntForm, Input } from 'formik-antd'
-import { SimpleDropdown } from '@pabau/ui'
-import { DatePicker } from 'antd'
+import {
+  FieldSetting,
+  InitialDetailsDataProps,
+  LeadStatusProps,
+  LocationProps,
+  DatePicker,
+} from '@pabau/ui'
+import { Form as AntForm, Input, Select } from 'formik-antd'
+import { SliderCustom } from '@pabau/ui'
+import { Skeleton } from 'antd'
 import { useTranslation } from 'react-i18next'
+import { CommonProps } from '../../client-create/General'
+import dayjs, { Dayjs } from 'dayjs'
 
 const { TextArea } = Input
 
@@ -12,21 +20,81 @@ interface GeneralProps {
   values?: InitialDetailsDataProps
   setFieldValue(
     field: keyof InitialDetailsDataProps,
-    values: string | string[] | boolean | number
+    values: string | string[] | boolean | number | Dayjs | null
   ): void
+  fieldsSettings?: FieldSetting[]
+  salutationData?: CommonProps[]
+  marketingSources?: CommonProps[]
+  leadStatusData?: LeadStatusProps[]
+  locationData?: LocationProps[]
+  isFieldSettingLoading?: boolean
+  isMarketingSourceLoading?: boolean
+  isLocationLoading?: boolean
+  isLeadStatusLoading?: boolean
+  requiredLabel: (name: string) => string
 }
 
-export const General: FC<GeneralProps> = ({ setFieldValue, values }) => {
+export const General: FC<GeneralProps> = ({
+  setFieldValue,
+  values,
+  fieldsSettings,
+  salutationData,
+  marketingSources,
+  leadStatusData,
+  locationData,
+  isFieldSettingLoading,
+  isMarketingSourceLoading,
+  isLocationLoading,
+  isLeadStatusLoading,
+  requiredLabel,
+}) => {
   const { t } = useTranslation('common')
+
+  const SkeletonContent = () => {
+    return (
+      <div className={styles.skeletonWrapper}>
+        <Skeleton
+          className={styles.skeletonName}
+          paragraph={false}
+          round
+          active
+        />
+        <Skeleton className={styles.skeletonInput} paragraph={false} active />
+      </div>
+    )
+  }
 
   return (
     <div className={styles.generalDiv}>
       <h5>{t('quickCreate.client.modal.general')}</h5>
       <AntForm layout={'vertical'} requiredMark={false}>
         <div className={styles.wrapNameInfo}>
+          <div className={styles.salutation}>
+            <AntForm.Item
+              label={`${
+                fieldsSettings?.find(
+                  (thread) => thread.field_name === 'Salutation'
+                )?.field_label ||
+                t('quickCreate.client.modal.general.salutation')
+              }${requiredLabel('Salutation')}`}
+              name={'Salutation'}
+            >
+              <Select name={'Salutation'}>
+                {salutationData?.map((item) => (
+                  <Select.Option key={item.id} value={item.name}>
+                    {item.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </AntForm.Item>
+          </div>
           <div className={styles.firstName}>
             <AntForm.Item
-              label={t('quickCreate.client.modal.general.firstName')}
+              label={`${
+                fieldsSettings?.find((thread) => thread.field_name === 'Fname')
+                  ?.field_label ||
+                t('quickCreate.client.modal.general.firstName')
+              } (${t('quickcreate.required.label')})`}
               name={'firstName'}
             >
               <Input
@@ -40,7 +108,11 @@ export const General: FC<GeneralProps> = ({ setFieldValue, values }) => {
           </div>
           <div className={styles.lastName}>
             <AntForm.Item
-              label={t('quickCreate.client.modal.general.lastName')}
+              label={`${
+                fieldsSettings?.find((thread) => thread.field_name === 'Lname')
+                  ?.field_label ||
+                t('quickCreate.client.modal.general.lastName')
+              } (${t('quickcreate.required.label')})`}
               name={'lastName'}
             >
               <Input
@@ -53,38 +125,152 @@ export const General: FC<GeneralProps> = ({ setFieldValue, values }) => {
             </AntForm.Item>
           </div>
         </div>
+        {isFieldSettingLoading ? (
+          <SkeletonContent />
+        ) : (
+          fieldsSettings?.find(
+            (thread) => thread.field_name === 'lead_source'
+          ) && (
+            <AntForm.Item
+              className={styles.customCommon}
+              label={`${
+                fieldsSettings?.find(
+                  (thread) => thread.field_name === 'lead_source'
+                )?.field_label ||
+                t('quickCreate.client.modal.general.hearOption.label')
+              }${requiredLabel('lead_source')}`}
+              name={'lead_source'}
+            >
+              {!isMarketingSourceLoading ? (
+                <Select
+                  name={'lead_source'}
+                  placeholder={t(
+                    'quickCreate.client.modal.general.hearOption.selectOption'
+                  )}
+                >
+                  {marketingSources?.map((item) => (
+                    <Select.Option key={item.id} value={item.id}>
+                      {item.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              ) : (
+                <div className={styles.skeletonWrapper}>
+                  <Skeleton
+                    className={styles.skeletonInput}
+                    paragraph={false}
+                    active
+                  />
+                </div>
+              )}
+            </AntForm.Item>
+          )
+        )}
+        {isFieldSettingLoading ? (
+          <SkeletonContent />
+        ) : (
+          fieldsSettings?.find(
+            (thread) => thread.field_name === 'Description'
+          ) && (
+            <AntForm.Item
+              className={styles.customCommon}
+              label={`${
+                fieldsSettings?.find(
+                  (thread) => thread.field_name === 'Description'
+                )?.field_label ||
+                t('quickCreate.client.modal.general.description.label')
+              }${requiredLabel('Description')}`}
+              name={'Description'}
+            >
+              <Input
+                size="large"
+                name={'Description'}
+                placeholder={t(
+                  'quickCreate.client.modal.general.description.placeholder'
+                )}
+              />
+            </AntForm.Item>
+          )
+        )}
+        {isFieldSettingLoading ? (
+          <SkeletonContent />
+        ) : (
+          fieldsSettings?.find((thread) => thread.field_name === 'DOB') && (
+            <AntForm.Item
+              className={styles.customCommon}
+              label={`${
+                fieldsSettings?.find((thread) => thread.field_name === 'DOB')
+                  ?.field_label || t('quickCreate.client.modal.general.date')
+              }${requiredLabel('DOB')}`}
+              name={'DOB'}
+            >
+              <DatePicker
+                onChange={(date) => setFieldValue('DOB', date)}
+                name={'DOB'}
+                value={values?.DOB && dayjs(values?.DOB)}
+                disabledDate={(current) => {
+                  return current && current > dayjs().endOf('day')
+                }}
+                format={'DD/MM/YY'}
+                placeholder={'DD/MM/YY'}
+              />
+            </AntForm.Item>
+          )
+        )}
         <AntForm.Item
           className={styles.customCommon}
-          label={t('quickCreate.client.modal.general.hearOption.label')}
-          name={'hearOption'}
+          label={t('quickCreate.client.modal.general.location.label')}
+          name={'location'}
         >
-          <SimpleDropdown
-            name={'hearOption'}
-            defaultValue={t(
-              'quickCreate.client.modal.general.hearOption.selectOption'
-            )}
-            onSelected={(value) => setFieldValue('hearOption', value)}
-            dropdownItems={[
-              t('quickCreate.client.modal.general.hearOption.selectOption'),
-              t('quickCreate.client.modal.general.hearOption.anythingHere'),
-            ]}
-          />
+          {!isLocationLoading ? (
+            <Select
+              name={'location'}
+              placeholder={t(
+                'quickCreate.client.modal.general.hearOption.selectOption'
+              )}
+              defaultValue={0}
+            >
+              <Select.Option value={0}>Automatic</Select.Option>
+              {locationData?.map((item) => (
+                <Select.Option key={item.id} value={item.id}>
+                  {item.name}
+                </Select.Option>
+              ))}
+            </Select>
+          ) : (
+            <div className={styles.skeletonWrapper}>
+              <Skeleton
+                className={styles.skeletonInput}
+                paragraph={false}
+                active
+              />
+            </div>
+          )}
         </AntForm.Item>
-        <AntForm.Item
-          className={styles.customCommon}
-          label={t('quickCreate.client.modal.general.date')}
-          name={'dateOfBirth'}
-        >
-          <DatePicker
-            onChange={(date, dateString) =>
-              setFieldValue('dateOfBirth', dateString)
-            }
-            name={'dateOfBirth'}
-            format={'DD/MM/YY'}
-            placeholder={'DD/MM/YY'}
-          />
-        </AntForm.Item>
-        <div>Lead Stage (coming soon..)</div>
+        {isLeadStatusLoading ? (
+          <SkeletonContent />
+        ) : (
+          leadStatusData &&
+          leadStatusData?.length > 0 && (
+            <div>
+              <div>
+                {t('quickCreate.client.modal.general.lead.status.label')}
+              </div>
+              <SliderCustom
+                data={leadStatusData?.map((thread) => {
+                  return {
+                    id: thread.id,
+                    name: thread.status_name,
+                  }
+                })}
+                handleChange={(value) => {
+                  setFieldValue('leadStatus', value?.id || 0)
+                }}
+                value={values?.leadStatus}
+              />
+            </div>
+          )
+        )}
         <AntForm.Item
           className={styles.customCommon}
           label={t('quickCreate.lead.modal.general.notes')}

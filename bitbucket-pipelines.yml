@@ -39,7 +39,11 @@ pipelines:
                 - ls -al || true
                 - yarn bin || true
                 - yarn bin || true
-                - yarn lint:tsc --with-deps --base=origin/master
+                - yarn bridge:generate
+                - git status || true
+                - git config core.whitespace cr-at-eol
+                - git diff --exit-code --no-ext-diff -p
+                - yarn lint:tsc --base=origin/master
                 - yarn lint:ls || true
                 - yarn lint:workspace || true
                 - npm i -g @graphql-inspector/cli@2.5.0 graphql || true
@@ -54,11 +58,11 @@ pipelines:
               name: lint
               script:
                 #                - while true; do ps -aux && sleep 30; done &
-                - yarn affected:lint --base=origin/master --with-deps
+                - yarn affected:lint --base=origin/master
 
           - step:
               name: unit tests
-              size: 1x
+              size: 2x
               script:
                 #                - while true; do ps -aux && sleep 30; done &
                 - yarn affected:test --base=origin/master
@@ -208,7 +212,11 @@ pipelines:
                 - ls -al libs/graphql/generated/ || true
                 - yarn bin || true
                 - yarn bin || true
-                - yarn lint:tsc --with-deps --base=HEAD~1
+                - yarn bridge:generate
+                - git status || true
+                - git config core.whitespace cr-at-eol
+                - git diff --exit-code --no-ext-diff -p
+                - yarn lint:tsc --base=HEAD~1
                 - yarn lint:ls || true
                 - yarn lint:workspace || true
                 - npm i -g @graphql-inspector/cli graphql || true
@@ -222,11 +230,11 @@ pipelines:
               name: lint
               script:
                 #                - while true; do ps -aux && sleep 30; done &
-                - yarn affected:lint --base=HEAD~1 --with-deps
+                - yarn affected:lint --base=HEAD~1
 
           - step:
               name: unit tests
-              size: 1x
+              size: 2x
               script:
                 #                - while true; do ps -aux && sleep 30; done &
                 - yarn affected:test --base=HEAD~1
@@ -303,7 +311,7 @@ pipelines:
 
                 - |
                   export PACKAGE_JSON_VERSION=$(jq -r .version < package.json)
-                  printf "*New Version Staged for Production*\n# v${PACKAGE_JSON_VERSION} committed by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
+                  printf "*:rocket: New Version Staged for Production*\n# v${PACKAGE_JSON_VERSION} committed by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
                   npm i -g ts-node@9 && ts-node tools/cicd/PrintChangedUrls.ts "HEAD~1" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
                   printf "\n" >> /tmp/bot_message2.txt
                   cat /tmp/bot_message.txt >> /tmp/bot_message2.txt || true

@@ -20,7 +20,7 @@ export enum OperationType {
 export interface FullScreenReportModalProps {
   title: ReactNode
   visible: boolean
-  operations: Array<OperationType>
+  operations?: Array<OperationType>
   onActivated?: (val: boolean) => void
   onBackClick?: (e?: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void
   onSave?: () => void
@@ -50,6 +50,7 @@ export interface FullScreenReportModalProps {
   hideHeaderEdge?: boolean
   footer?: boolean
   className?: string
+  avatar?: string
 }
 
 export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
@@ -85,6 +86,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
   className,
   onAssigneeClick,
   customOptionBtn,
+  avatar,
   ...props
 }) => {
   const ref = useRef(null)
@@ -189,7 +191,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                           className={styles.avatarIcon}
                           name={assigneeName}
                           size="large"
-                          src=""
+                          src={avatar}
                           zIndex={1}
                         />
                         <h6>{assigneeName}</h6>

@@ -4,8 +4,6 @@ import {
   Breadcrumb,
   BusinessDetailsNotifications,
   MobileHeader,
-  System,
-  Terminology,
   PasswordExpirationProps,
   TabMenu,
   TerminologyConfig,
@@ -155,7 +153,7 @@ export const Index: FC = () => {
       setEnableLabs(record?.['lab_enabled'] ?? '')
 
       const force_password_data = data?.company?.User?.filter(
-        (item) => item.id === user?.me.id
+        (item) => item.id === user?.me?.id
       )
       if (force_password_data && force_password_data.length > 0) {
         setForcePassword(force_password_data[0].force_password)
@@ -177,7 +175,7 @@ export const Index: FC = () => {
   return (
     <>
       <CommonHeader />
-      <Layout>
+      <Layout {...user}>
         <div className={styles.businessDetailsContainer}>
           <Breadcrumb
             breadcrumbItems={[
@@ -204,7 +202,7 @@ export const Index: FC = () => {
               data={data}
               addrSuiteNo={addrSuiteNo}
               forcePassword={forcePassword}
-              user={user?.me.id}
+              user={user?.me?.id}
               location={location}
               loading={loading}
               t={t}
@@ -213,7 +211,7 @@ export const Index: FC = () => {
               data={data}
               addrSuiteNo={addrSuiteNo}
               forcePassword={forcePassword}
-              user={user?.me.id}
+              user={user?.me?.id}
               opsData={opsData}
               loading={loading}
               t={t}
@@ -223,13 +221,13 @@ export const Index: FC = () => {
               addrSuiteNo={addrSuiteNo}
               forcePassword={forcePassword}
               enableLab={enableLab}
-              user={user?.me.id}
+              user={user?.me?.id}
               loading={loading}
               t={t}
             />
             <SecurityTab
               data={data}
-              user={user?.me.id}
+              user={user?.me?.id}
               forcePassword={forcePassword}
               passwordExpiration={passwordExpiration}
               addrSuiteNo={addrSuiteNo}
@@ -237,8 +235,6 @@ export const Index: FC = () => {
               loading={loading}
               t={t}
             />
-            <Terminology onSave={(values) => onSave(values, 'terminology')} />
-            <System onSave={(values) => onSave(values, 'system')} />
             <BusinessDetailsNotifications
               onSave={(values) => onSave(values, 'notification')}
             />
@@ -250,7 +246,7 @@ export const Index: FC = () => {
               data={data}
               addrSuiteNo={addrSuiteNo}
               forcePassword={forcePassword}
-              user={user?.me.id}
+              user={user?.me?.id}
               location={location}
               loading={loading}
               t={t}
@@ -259,7 +255,7 @@ export const Index: FC = () => {
               data={data}
               addrSuiteNo={addrSuiteNo}
               forcePassword={forcePassword}
-              user={user?.me.id}
+              user={user?.me?.id}
               opsData={opsData}
               loading={loading}
               t={t}
@@ -269,13 +265,13 @@ export const Index: FC = () => {
               addrSuiteNo={addrSuiteNo}
               forcePassword={forcePassword}
               enableLab={enableLab}
-              user={user?.me.id}
+              user={user?.me?.id}
               loading={loading}
               t={t}
             />
             <SecurityTab
               data={data}
-              user={user?.me.id}
+              user={user?.me?.id}
               forcePassword={forcePassword}
               passwordExpiration={passwordExpiration}
               addrSuiteNo={addrSuiteNo}

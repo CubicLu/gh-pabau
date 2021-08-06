@@ -1,5 +1,5 @@
 .main-div {
-  width: 502px;
+  width: 600px;
   margin: auto;
   .more-btn {
     margin: 28px 0 12px;
@@ -30,6 +30,9 @@
     }
     .wrap-name-info {
       display: flex;
+      .salutation{
+        margin-right: 16px;
+      }
       .first-name {
         margin-right: 16px;
       }
@@ -40,6 +43,23 @@
             font-size: 14px;
             line-height: 22px;
             color: #9292a3;
+          }
+        }
+        .ant-form-item-control {
+          .ant-form-item-control-input {
+            .ant-form-item-control-input-content {
+              .ant-select-single {
+                width: 140px;
+              }
+            }
+          }
+        }
+        .ant-select {
+          .ant-select-selector {
+            height: 40px;
+            .ant-select-selection-item {
+              line-height: 40px;
+            }
           }
         }
       }
@@ -84,7 +104,6 @@
       input {
         border: 1px solid #ecedf0;
         border-radius: 4px;
-        color: #cccfd6;
         font-size: 16px;
       }
     }
@@ -110,6 +129,9 @@
                   height: 40px;
                   .ant-select-selection-item {
                     line-height: 40px;
+                  }
+                  .ant-select-selection-placeholder{
+                    margin-top: 4px;
                   }
                 }
               }
@@ -318,6 +340,20 @@
       }
     }
   }
+  .skeleton-wrapper {
+    margin-bottom: 24px;
+    .skeleton-input {
+      h3 {
+        margin-top: 0;
+        height: 32px;
+      }
+    }
+    .skeletonName{
+      h3 {
+        width: 100px;
+      }
+    }
+  }
 }
 
 @media screen and (max-width: 767px) {
@@ -331,12 +367,26 @@
       .wrap-name-info {
         display: flex;
         flex-direction: column;
-        .first-name {
-          margin-left: 0;
+        :global .ant-form-item{
+          .ant-form-item-control {
+            .ant-form-item-control-input {
+              .ant-form-item-control-input-content {
+                .ant-select-single {
+                  width: 100%;
+                }
+              }
+            }
+          }
         }
-        .last-name {
-          margin-left: 0;
+        .salutation{
+          margin-right: 0;
         }
+        .first-name, .last-name {
+          margin-left: 0;
+          width: 100%;
+          margin-right: 0;
+        }
+
       }
 
       .custom-common {

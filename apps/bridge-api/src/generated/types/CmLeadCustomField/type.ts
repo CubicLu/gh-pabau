@@ -13,8 +13,8 @@ export const CmLeadCustomField = objectType({
     t.int('custom_field_id')
     t.string('custom_field_label')
     t.string('custom_field_value')
-    t.int('imported')
-    t.string('old_value')
+    t.nullable.int('imported')
+    t.nullable.string('old_value')
     t.field('Company', {
       type: 'Company',
       resolve(root: any) {

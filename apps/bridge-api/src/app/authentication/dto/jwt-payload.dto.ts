@@ -12,6 +12,7 @@ export interface JwtPayloadDto {
   user: number
   company: number
   admin?: boolean
+  username?: string
   owner?: boolean
   remote_url: string
   language?: {

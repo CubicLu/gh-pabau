@@ -26,13 +26,33 @@ export const UserMaster = objectType({
     t.string('pic')
     t.int('contact_id')
     t.string('mobile')
-    t.field('last_login', { type: 'DateTime' })
+    t.nullable.field('last_login', { type: 'DateTime' })
     t.boolean('is_suspended')
     t.string('session_hash')
     t.field('Company', {
       type: 'Company',
       resolve(root: any) {
         return root.Company
+      },
+    })
+    t.list.field('SalonBookings', {
+      type: 'Booking',
+      args: {
+        where: 'BookingWhereInput',
+        orderBy: 'BookingOrderByInput',
+        cursor: 'BookingWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'BookingScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.SalonBookings
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'UserMasterCountOutputType',
+      resolve(root: any) {
+        return root._count
       },
     })
   },

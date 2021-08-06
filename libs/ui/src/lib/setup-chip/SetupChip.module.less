@@ -144,18 +144,13 @@
 }
 
 .webinar-banner {
-  background-size: cover;
   background-repeat: no-repeat;
-  height: 157px;
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 124px;
+  background-size: 125px 150px;
+  background-position: bottom right;
 }
 
 .webinar-box {
-  width: 270px;
-  height: 180px;
+  width: 290px;
   background-color: #ffffff;
   border: 1px solid #ecedf0;
   border-radius: 4px;
@@ -233,25 +228,14 @@
   height: 25px;
   display: flex;
   align-items: center;
+
   @media screen and (min-width: 1366px) {
     font-size: 14px;
     min-width: 100px;
     padding: 1px 12px;
-
-    span {
-      margin-left: 3px !important;
-    }
   }
-  span {
-    display: inline-flex;
-    align-items: center;
-    &:last-child {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      width: 70px;
-      display: inline-block;
-    }
+  span:last-child {
+    line-height: 100%;
   }
 }
 
@@ -267,24 +251,14 @@
   height: 25px;
   display: flex;
   align-items: center;
-  span {
-    margin-left: 3px !important;
-    display: inline-flex;
-    align-items: center;
-    &:last-child {
-      margin-top: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      display: inline-block;
-      text-overflow: ellipsis;
-      width: 73px;
-    }
-  }
 
   @media screen and (min-width: 1366px) {
     font-size: 12px;
     min-width: 100px;
     padding: 1px 10px;
+  }
+  span:last-child {
+    line-height: 100%;
   }
 }
 

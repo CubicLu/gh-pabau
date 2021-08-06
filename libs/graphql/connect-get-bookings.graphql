@@ -1,0 +1,25 @@
+query GetClientAppointments($take: Int, $skip: Int, $orderBy: SortOrder, $contactId: Int) {
+  findManyBooking(take: $take, skip: $skip, orderBy: {id: $orderBy}, where: {contact_id: {equals: $contactId}}) {
+    id
+    status
+    location_id
+    practitioner {
+      Fname
+      Lname
+      Avatar
+    }
+    service
+    start_date
+    end_date
+    booking_location {
+      address
+      street
+      postcode
+      city
+    }
+    where
+  }
+  totalCount:findManyBooking(where:{contact_id:{equals: $contactId}}){
+    id
+  }
+}

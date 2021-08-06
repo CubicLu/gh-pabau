@@ -1,35 +1,68 @@
 import React, { FC, useState } from 'react'
 import styles from '../ClientCreate.module.less'
-import { InitialDetailsProps, Label } from '../ClientCreate'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
 import GeneralComponent from './General'
 import ContactInfo from './ContactInfo'
-import Subscriptions from './Subscriptions'
+import { Subscriptions } from './Subscriptions'
 import Addresses from './Addresses'
-import ThirdPartyDetail from './ThirdPartyDetail'
+import CustomField from './CustomField'
 import { useTranslation } from 'react-i18next'
+import { Form as AntForm, Switch } from 'formik-antd'
+import {
+  CustomFieldsProps,
+  InitialDetailsProps,
+  Label,
+  LabelDataProps,
+  FieldSetting,
+  LimitLocation,
+  OtherCompany,
+} from '@pabau/ui'
+import { Dayjs } from 'dayjs'
+
+export interface CommonProps {
+  id: number
+  name: string
+}
 
 interface GeneralProps {
   values?: InitialDetailsProps
   setFieldValue(
     field: keyof InitialDetailsProps,
-    values: string | string[] | boolean | number
+    values: string | string[] | boolean | number | Dayjs | null
   ): void
   labels: Label[]
   setLabels: (val: Label[]) => void
   selectedLabels: Label[]
   setSelectedLabels: (val: Label[]) => void
+  salutationData?: CommonProps[]
+  customFields?: CustomFieldsProps[]
+  fieldsSettings?: FieldSetting[]
+  marketingSources?: CommonProps[]
+  limitContactsLocations?: LimitLocation[]
+  otherCompanies?: OtherCompany[]
+  isLoading?: boolean
+  isMarketingSourceLoading?: boolean
+  labelsData: LabelDataProps[]
 }
 
 export const Index: FC<GeneralProps> = ({
   setFieldValue,
   values,
+  salutationData,
+  customFields,
+  fieldsSettings,
+  marketingSources,
   labels,
   setLabels,
   selectedLabels,
   setSelectedLabels,
+  limitContactsLocations,
+  otherCompanies,
+  isLoading = false,
+  labelsData,
+  isMarketingSourceLoading,
 }) => {
-  const [moreVisible, setMoreVisible] = useState(false)
+  const [moreVisible, setMoreVisible] = useState(true)
 
   const { t } = useTranslation('common')
 
@@ -37,30 +70,129 @@ export const Index: FC<GeneralProps> = ({
     setMoreVisible(!moreVisible)
   }
 
+  const isAddress = () => {
+    if (fieldsSettings && fieldsSettings?.length > 0) {
+      for (const field of fieldsSettings) {
+        if (
+          field.field_name === 'MailingStreet' ||
+          field.field_name === 'MailingProvince' ||
+          field.field_name === 'MailingCity' ||
+          field.field_name === 'MailingCountry' ||
+          field.field_name === 'MailingPostal'
+        ) {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
+  const requiredLabel = (name: string) => {
+    return fieldsSettings?.find((thread) => thread.field_name === name)
+      ?.is_required === 1
+      ? ` (${t('quickcreate.required.label')})`
+      : ''
+  }
+
   return (
     <div className={styles.mainDiv}>
       <GeneralComponent
         values={values}
         setFieldValue={setFieldValue}
+        salutationData={salutationData}
+        marketingSources={marketingSources}
+        fieldsSettings={fieldsSettings}
         labels={labels}
         setLabels={setLabels}
         selectedLabels={selectedLabels}
         setSelectedLabels={setSelectedLabels}
+        isLoading={isLoading}
+        labelsData={labelsData}
+        isMarketingSourceLoading={isMarketingSourceLoading}
+        requiredLabel={requiredLabel}
       />
-      <ContactInfo values={values} setFieldValue={setFieldValue} />
-      <Subscriptions values={values} setFieldValue={setFieldValue} />
-      <div
-        className={`${styles.moreBtn} ${!moreVisible && styles.paddingAtEnd}`}
-        onClick={toggleMore}
-      >
-        {moreVisible ? <UpOutlined /> : <DownOutlined />}
-        <p> {t('quickCreate.client.modal.more')}</p>
-      </div>
+      {fieldsSettings && (
+        <ContactInfo
+          values={values}
+          fieldsSettings={fieldsSettings}
+          setFieldValue={setFieldValue}
+          requiredLabel={requiredLabel}
+        />
+      )}
+      {fieldsSettings?.find((thread) => thread.field_name === 'opt_in') && (
+        <Subscriptions />
+      )}
+      {(isAddress() ||
+        (limitContactsLocations && limitContactsLocations.length > 0) ||
+        (otherCompanies && otherCompanies.length > 0) ||
+        (customFields && customFields.length > 0)) && (
+        <div
+          className={`${styles.moreBtn} ${!moreVisible && styles.paddingAtEnd}`}
+          onClick={toggleMore}
+        >
+          {moreVisible ? <UpOutlined /> : <DownOutlined />}
+          <p> {t('quickCreate.client.modal.more')}</p>
+        </div>
+      )}
       {moreVisible && (
-        <>
-          <Addresses values={values} setFieldValue={setFieldValue} />
-          <ThirdPartyDetail values={values} setFieldValue={setFieldValue} />
-        </>
+        <div className={styles.paddingAtEnd}>
+          {isAddress() && fieldsSettings && (
+            <Addresses
+              fieldsSettings={fieldsSettings}
+              requiredLabel={requiredLabel}
+            />
+          )}
+          {limitContactsLocations && limitContactsLocations?.length > 0 && (
+            <AntForm
+              className={styles.subscriptionForm}
+              layout={'vertical'}
+              requiredMark={false}
+            >
+              <h5>Available in locations</h5>
+              {limitContactsLocations.map((item) => (
+                <AntForm.Item
+                  name={`limitContactsLocations_${item.id}`}
+                  key={item.id}
+                >
+                  <div className={styles.switchBtn}>
+                    <Switch
+                      name={`limitContactsLocations_${item.id}`}
+                      defaultChecked={true}
+                    />
+                    <p>{item.name}</p>
+                  </div>
+                </AntForm.Item>
+              ))}
+            </AntForm>
+          )}
+          {otherCompanies && otherCompanies.length > 0 && (
+            <AntForm
+              className={styles.subscriptionForm}
+              layout={'vertical'}
+              requiredMark={false}
+            >
+              <h5>Other Companies</h5>
+              {otherCompanies.map((item) => (
+                <AntForm.Item
+                  name={`otherCompany_${item.company_id}`}
+                  key={item.company_id}
+                >
+                  <div className={styles.switchBtn}>
+                    <Switch name={`otherCompany_${item.company_id}`} />
+                    <p>{item.company_name}</p>
+                  </div>
+                </AntForm.Item>
+              ))}
+            </AntForm>
+          )}
+          {customFields && customFields?.length > 0 && (
+            <CustomField
+              customFields={customFields}
+              setFieldValue={setFieldValue}
+              values={values}
+            />
+          )}
+        </div>
       )}
     </div>
   )

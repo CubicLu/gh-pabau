@@ -2,24 +2,30 @@ import React, { FunctionComponent } from 'react'
 import { gql, useQuery } from '@apollo/client'
 import { UserContext } from '../context/UserContext'
 import { Spin } from 'antd'
+import { useRouter } from 'next/router'
 import { LoadingOutlined } from '@ant-design/icons'
 
-interface User {
-  id: string
+export interface User {
+  id: number
   username: string
   full_name: string
+  admin: number
   company: Company
+  timezone: string
 }
 
-interface Company {
+export interface Company {
   id: number
+  remote_url: string
   details: {
     company_name: string
     language: string
+    currency: string
   }
 }
 
 const ContextWrapper: FunctionComponent = ({ children }) => {
+  const router = useRouter()
   const { loading, error, data } = useQuery(
     gql`
       query retrieveAuthenticatedUser {
@@ -41,13 +47,28 @@ const ContextWrapper: FunctionComponent = ({ children }) => {
         }
       }
     `,
-    { ssr: false }
+    {
+      ssr: false,
+      fetchPolicy: 'cache-first',
+      // returnPartialData: true,
+      onError: (e) => {
+        console.log('ContextWrapper onError', e)
+      },
+    }
   )
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
 
-  if (error) {
-    console.error(error)
+  if (
+    (router.pathname.includes('login') || router.pathname.includes('signup')) &&
+    data?.me?.id
+  ) {
+    window.location.href = window.location.origin
   }
+
+  if (error) {
+    console.error('ContextWrapper error', error)
+  }
+
   if (loading) {
     return (
       <Spin
@@ -65,10 +86,7 @@ const ContextWrapper: FunctionComponent = ({ children }) => {
       />
     )
   }
-
-  return (
-    <UserContext.Provider value={data as User}>{children}</UserContext.Provider>
-  )
+  return <UserContext.Provider value={data}>{children}</UserContext.Provider>
 }
 
 export default ContextWrapper

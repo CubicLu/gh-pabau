@@ -43,7 +43,7 @@ export default {
         totalVat: 0,
         amountPaid: 0,
         subTotalAmount: 2520,
-        outStanding: 2520,
+        outstanding: 2520,
         grandTotal: 2500,
         paymentTime: '29 May 2021, 1:09PM',
         total: 15,

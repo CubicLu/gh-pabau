@@ -18,27 +18,27 @@ export const Subscriptions: FC<Props> = ({ setFieldValue, values }) => {
     <div className={styles.subscriptionForm}>
       <h5>{t('quickCreate.client.modal.general.subscription')}</h5>
       <p>{t('quickCreate.client.modal.general.subscription.detail')}</p>
-      <AntForm.Item name="newsLetter">
+      <AntForm.Item name="MarketingOptInEmail">
         <div className={styles.switchBtn}>
-          <Switch name="newsLetter" />
+          <Switch name="MarketingOptInEmail" />
           <p>{t('quickCreate.client.modal.general.subscription.newsLetter')}</p>
         </div>
       </AntForm.Item>
-      <AntForm.Item name="sms">
+      <AntForm.Item name="MarketingOptInText">
         <div className={styles.switchBtn}>
-          <Switch name="sms" />
+          <Switch name="MarketingOptInText" />
           <p> {t('quickCreate.client.modal.general.subscription.sms')}</p>
         </div>
       </AntForm.Item>
-      <AntForm.Item name="postal">
+      <AntForm.Item name="MarketingOptInPost">
         <div className={styles.switchBtn}>
-          <Switch name="postal" />
+          <Switch name="MarketingOptInPost" />
           <p> {t('quickCreate.client.modal.general.subscription.postal')}</p>
         </div>
       </AntForm.Item>
-      <AntForm.Item name="phoneCalls">
+      <AntForm.Item name="MarketingOptInPhone">
         <div className={styles.switchBtn}>
-          <Switch name="phoneCalls" />
+          <Switch name="MarketingOptInPhone" />
           <p>{t('quickCreate.client.modal.general.subscription.phoneCalls')}</p>
         </div>
       </AntForm.Item>

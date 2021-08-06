@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import {
   BusinessDetails,
   BasicInformation,
@@ -11,8 +11,12 @@ import {
   GetBussinessDetailsDocument,
   useUpdateCompanyDetailsMutation,
   useSetMultipleMetaDataMutation,
+  useUpdateOneCompanyDetailsMutation,
 } from '@pabau/graphql'
 import { TFunction } from 'react-i18next'
+import AvatarUploader from '../../Uploaders/AvatarUploader/AvatarUploader'
+import { cdnURL } from '../../../baseUrl'
+import { message } from 'antd'
 
 interface BusinessDetailsTabProps {
   data: GetBussinessDetailsQuery
@@ -34,7 +38,19 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
   t,
 }) => {
   const [updateApply, setUpdate] = useState(false)
+  const [showAvatarUploader, setShowAvatarUploader] = useState(false)
   const [buttonClicked, setButtonClicked] = useState(false)
+  const [companyLogo, setCompanyLogo] = useState<string>()
+
+  useEffect(() => {
+    setCompanyLogo(cdnURL + data?.company?.details?.logo)
+  }, [data])
+
+  const showUploader = () => {
+    setShowAvatarUploader(true)
+  }
+  const [updateBusinessLogo] = useUpdateOneCompanyDetailsMutation()
+
   const [updateBusinessDetails] = useUpdateCompanyDetailsMutation({
     onCompleted() {
       setUpdate(true)
@@ -69,6 +85,7 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
     companyEmail: data?.company?.details?.info_email,
     phone: data?.company?.details?.phone,
     website: data?.company?.details?.website,
+    logo: cdnURL + data?.company?.details?.logo,
     businessType: data?.company?.details?.industry_sector,
   }
 
@@ -87,6 +104,28 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
     weekStart: data?.company?.details?.week_start_day,
   }
 
+  const handleLogoUpload = (imageData) => {
+    try {
+      updateBusinessLogo({
+        variables: {
+          data: {
+            logo: {
+              set: imageData.path,
+            },
+          },
+          where: {
+            details_id: data?.company?.details?.details_id,
+          },
+        },
+      })
+      setCompanyLogo(cdnURL + imageData.path)
+      message.success(t('setup.business-details.update.success'))
+    } catch (error) {
+      message.error(t('setup.business-details.update.error'))
+      throw new Error(error)
+    }
+  }
+
   const handleSaveDetail = async (values) => {
     setButtonClicked(true)
     setUpdate(false)
@@ -97,6 +136,7 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
       info_email: data?.company?.details?.info_email,
       phone: data?.company?.details?.phone,
       website: data?.company?.details?.website,
+      logo: data?.company?.details?.logo,
       industry_sector: data?.company?.details?.industry_sector,
       language: data?.company?.details?.language,
       timezone: data?.company?.details?.timezone?.db_format,
@@ -140,6 +180,7 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
       companyEmail,
       phone,
       website,
+      logo,
     } = basicInformation
     const {
       currency,
@@ -154,6 +195,7 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
     CompanyDetailData.info_email = companyEmail
     CompanyDetailData.phone = phone
     CompanyDetailData.website = website
+    CompanyDetailData.logo = logo
     CompanyDetailData.language = defaultLanuageStaff
     CompanyDetailData.timezone = timezone
     CompanyDetailData.currency = currency
@@ -203,15 +245,33 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
   }
 
   return (
-    <BusinessDetails
-      apiKey={process.env.google_api_key}
-      basicInformation={basicInformation}
-      languageSetting={languageSetting}
-      businessLocation={location}
-      loading={loading}
-      onSave={(val) => handleSaveDetail(val)}
-      buttonClicked={buttonClicked}
-    />
+    <div>
+      <BusinessDetails
+        apiKey={process.env.google_api_key}
+        basicInformation={basicInformation}
+        languageSetting={languageSetting}
+        businessLocation={location}
+        loading={loading}
+        onSave={(val) => handleSaveDetail(val)}
+        buttonClicked={buttonClicked}
+        showUploader={showUploader}
+        companyLogo={companyLogo}
+      />
+      {showAvatarUploader && (
+        <AvatarUploader
+          visible={showAvatarUploader}
+          title={t('setup.business-details.uploadlogo')}
+          imageURL={companyLogo}
+          onCancel={() => setShowAvatarUploader(false)}
+          shape={'rectangle'}
+          width={400}
+          height={200}
+          section={'avatar_photos'}
+          type={'file_attachments'}
+          successHandler={handleLogoUpload}
+        />
+      )}
+    </div>
   )
 }
 

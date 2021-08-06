@@ -18,7 +18,7 @@ export interface LoadingType {
   videoLoader: boolean
   communityLoader: boolean
 }
-const Index: FC = (props) => {
+const Index: FC = () => {
   const { t } = useTranslationI18()
   const [searchValue, setSearchValue] = useState<string>('')
   const [title, setTitle] = useState<string>(t('setup.page.title'))
@@ -114,8 +114,7 @@ const Index: FC = (props) => {
         active={'setup'}
         isDisplayingFooter={false}
         handleSearch={handleSearch}
-        title={t('setup.page.title')}
-        isShowSearch={true}
+        pageTitle={t('setup.page.title')}
         {...user}
       >
         <div className={styles.cardWrapper}>

@@ -113,6 +113,9 @@ export const Products = ({
       dataIndex: 'cost',
       className: 'drag-visible',
       visible: true,
+      render: (_, { cost }) => {
+        return cost ? <span>{Number(cost).toFixed(2)}</span> : 0
+      },
     },
     {
       title: t('products.list.products.column.retail'),
@@ -665,7 +668,7 @@ export const Products = ({
   )
 
   const renderCategoryDropdown = (masterCategory: ServicesMasterCategory) => (
-    <Menu>
+    <Menu style={{ maxHeight: '400px', overflowY: 'auto' }}>
       {masterCategory?.InvCategory?.map((category) => (
         <Menu.Item
           key={category.id}
@@ -745,7 +748,7 @@ export const Products = ({
         data: {
           name: values?.name,
           type: Services_Master_Category_Type.Product,
-          image: '/cdn/not-finished-yet.png',
+          image: values?.image ?? '/cdn/not-finished-yet.png',
           Company: {},
         },
         categories: categories,
@@ -824,7 +827,7 @@ export const Products = ({
         visible={showGroupModal}
         groupModalType={groupModalType}
         onEdit={(
-          values: { name: string; id: number },
+          values: { name: string; id: number; image: string },
           categories: number[]
         ) => {
           console.log('categories,', categories)
@@ -834,6 +837,9 @@ export const Products = ({
               data: {
                 name: {
                   set: values?.name,
+                },
+                image: {
+                  set: values?.image,
                 },
               },
               categories: categories,
@@ -859,7 +865,7 @@ export const Products = ({
           onClose={() => setShowConfirmationDialog(false)}
           onSubmit={async () => {
             changeSubmittingStatus(true)
-            changeSubmittingStatus(await handleDeleteGroup(currentGroup?.id))
+            changeSubmittingStatus(!(await handleDeleteGroup(currentGroup?.id)))
             setShowConfirmationDialog(false)
           }}
         >
@@ -876,7 +882,10 @@ export const Products = ({
           }
           permissions={modal?.me?.StaffMeta}
           product={record}
-          onClose={() => changeModalState(false)}
+          onClose={() => {
+            changeModalState(false)
+            setRecord(null)
+          }}
           onDelete={async (product) =>
             !!deleteProduct({
               variables: {
@@ -912,7 +921,7 @@ export const Products = ({
               alert_quantity: product?.alert_quantity,
               price: Number(product?.price),
               cost: Number(product?.cost),
-              product_order: sourceData?.[0]?.product_order ?? 1,
+              product_order: sourceData?.[0]?.product_order + 1 ?? 1,
               is_active: Number(product?.is_active),
               PriceListGroup_id: 0,
               imported: 0,
@@ -946,6 +955,9 @@ export const Products = ({
               },
               code: {
                 set: product?.code,
+              },
+              image: {
+                set: product?.image,
               },
               name: {
                 set: product?.name,

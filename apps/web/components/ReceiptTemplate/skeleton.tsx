@@ -210,20 +210,20 @@ export const ReceiptTemplateSkeleton: FC = () => {
               </div>
               <div className={styles.right}>
                 <div className={styles.inner}>
-                  <div className={styles.headerText}>
+                  <span className={styles.headerText}>
                     <Skeleton.Input
                       active
                       size={'small'}
                       className={styles.inputSkeleton}
                     />
-                  </div>
-                  <div className={styles.infoText}>
+                  </span>
+                  <span className={styles.infoText}>
                     <Skeleton.Input
                       active
                       size={'small'}
-                      className={styles.inputSkeleton}
+                      className={styles.grandTotalSkeleton}
                     />
-                  </div>
+                  </span>
                 </div>
               </div>
             </div>

@@ -1,5 +1,4 @@
-import { gql, useMutation } from '@apollo/client'
-import { Notification, NotificationType, useLiveQuery } from '@pabau/ui'
+import { Notification, NotificationType } from '@pabau/ui'
 import { Button, Col, Row } from 'antd'
 import { Formik } from 'formik'
 import { Form as AntForm, Input, Select } from 'formik-antd'
@@ -9,6 +8,14 @@ import Layout from '../../components/Layout/Layout'
 import { UserContext } from '../../context/UserContext'
 import { notificationVariables } from '../../mocks/StaffNotifications'
 import styles from './staff-notifications.module.less'
+import {
+  useStaff_Notification_TypesQuery,
+  useInsert_Product_NewsMutation,
+  useStaff_UsersQuery,
+  useInsert_Notifications_OneMutation,
+} from '@pabau/graphql'
+
+const { TextArea } = Input
 
 enum Users {
   AllAdmins = 'All Admins',
@@ -21,54 +28,12 @@ interface InitialStaffNotifications {
   loop: number
 }
 
-const USER_LIST_QUERY = gql`
-  query users($isAdmin: Int = 0, $company: Int) {
-    findManyUser(
-      where: {
-        AND: { company_id: { equals: $company }, admin: { equals: $isAdmin } }
-      }
-    ) {
-      id
-      admin
-      full_name
-      username
-      company_id
-    }
-  }
-`
-
-const LIST_QUERY = gql`
-  query notification_types {
-    notification_types {
-      type
-      id
-      notification_type
-    }
-  }
-`
-
-const ADD_MUTATION = gql`
-  mutation insert_notifications_one(
-    $type: String
-    $sent_to: jsonb
-    $variables: jsonb
-    $destination: String!
-    $sent_by: Int # $loop: Int
-  ) {
-    insert_notifications_one(
-      object: {
-        type: $type
-        destination: $destination
-        sent_to: $sent_to
-        variables: $variables
-        sent_by: $sent_by
-        # loop: $loop
-      }
-    ) {
-      id
-    }
-  }
-`
+interface InitialNews {
+  link: string
+  description: string
+  title: string
+  users: Users
+}
 
 const users = ['All Admins', 'All Users']
 const loops = [2, 5, 7]
@@ -80,6 +45,13 @@ const initialValues: InitialStaffNotifications = {
   loop: null,
 }
 
+const initialNewsValues: InitialNews = {
+  link: '',
+  description: '',
+  title: '',
+  users: Users.AllUsers,
+}
+
 interface LoggedUser {
   user: number
   company: number
@@ -87,7 +59,9 @@ interface LoggedUser {
 }
 
 export const StaffNotifications: NextPage = () => {
-  const { data: notificationTypes } = useLiveQuery(LIST_QUERY)
+  const { data: notificationTypesData } = useStaff_Notification_TypesQuery()
+  const notificationTypes = notificationTypesData?.notification_types
+
   const [user, setUser] = useState<LoggedUser>()
   const loggedUser = useContext(UserContext)
 
@@ -118,9 +92,10 @@ export const StaffNotifications: NextPage = () => {
     return queryOptions
   }, [userRole, user?.company])
 
-  const { data: userList } = useLiveQuery(USER_LIST_QUERY, getQueryVariables)
+  const { data: userListData, loading } = useStaff_UsersQuery(getQueryVariables)
+  const userList = userListData?.findManyUser
 
-  const [addMutation] = useMutation(ADD_MUTATION, {
+  const [insertNotificationsOneMutation] = useInsert_Notifications_OneMutation({
     onCompleted(data) {
       Notification(NotificationType.success, 'Notification sent')
     },
@@ -129,8 +104,19 @@ export const StaffNotifications: NextPage = () => {
     },
   })
 
-  const getNotification = (id) => {
-    return notificationTypes.find((notificaiton) => notificaiton.id === id)
+  const [insertProductNewsMutation] = useInsert_Product_NewsMutation({
+    onCompleted(data) {
+      Notification(NotificationType.success, 'News sent')
+    },
+    onError(err) {
+      Notification(NotificationType.error, 'While sending the news')
+    },
+  })
+
+  const getNotification = (type) => {
+    return notificationTypes.find(
+      (notificaiton) => notificaiton.notification_type === type
+    )
   }
 
   const getTypeVariable = (_type) => {
@@ -142,7 +128,6 @@ export const StaffNotifications: NextPage = () => {
 
   const onSubmit = async (values) => {
     const notification = getNotification(values.type)
-
     const notificationVariable = getTypeVariable(
       notification?.notification_type
     )
@@ -164,7 +149,26 @@ export const StaffNotifications: NextPage = () => {
       variables['variables'] = notificationVariable
     }
 
-    await addMutation({
+    await insertNotificationsOneMutation({
+      variables,
+      optimisticResponse: {},
+    })
+  }
+
+  const onNewsCreate = async (values) => {
+    const sent_users = []
+    for (const user of userList) {
+      sent_users.push(user.id)
+    }
+    const variables = {
+      img: 'https://www.pabau.com/wp-content/uploads/2021/03/jhjhb-2.png',
+      sent_to: sent_users,
+      link: values.link,
+      description: values.description,
+      title: values.title,
+    }
+
+    await insertProductNewsMutation({
       variables,
       optimisticResponse: {},
     })
@@ -176,6 +180,7 @@ export const StaffNotifications: NextPage = () => {
         <div className={styles.mainContainer}>
           <Row>
             <Col md={8}>
+              <h1 style={{ fontSize: 18 }}>Notification</h1>
               <Formik
                 innerRef={formRef}
                 initialValues={initialValues}
@@ -188,7 +193,7 @@ export const StaffNotifications: NextPage = () => {
                         {notificationTypes?.map((notification_type) => (
                           <Select.Option
                             key={notification_type.id}
-                            value={notification_type.id}
+                            value={notification_type.notification_type}
                           >
                             {notification_type.type}
                           </Select.Option>
@@ -226,9 +231,56 @@ export const StaffNotifications: NextPage = () => {
                         ))}
                       </Select>
                     </AntForm.Item>
-                    <Button type="primary" onClick={() => handleSubmit()}>
-                      Create
-                    </Button>
+                    {!loading && (
+                      <Button type="primary" onClick={() => handleSubmit()}>
+                        Create
+                      </Button>
+                    )}
+                  </AntForm>
+                )}
+              </Formik>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={8} style={{ marginTop: 20 }}>
+              <h1 style={{ fontSize: 18 }}>News</h1>
+              <Formik initialValues={initialNewsValues} onSubmit={onNewsCreate}>
+                {({ handleSubmit, handleChange, setFieldValue }) => (
+                  <AntForm layout={'vertical'} requiredMark={false}>
+                    <AntForm.Item label={'Title'} name={'title'}>
+                      <Input name={'title'} />
+                    </AntForm.Item>
+
+                    <AntForm.Item label={'Description'} name={'description'}>
+                      <TextArea rows={4} name={'description'} />
+                    </AntForm.Item>
+
+                    <AntForm.Item label={'Destination'} name={'link'}>
+                      <Input name={'link'} />
+                    </AntForm.Item>
+
+                    <AntForm.Item label={'Users'} name={'users'}>
+                      <Select
+                        onChange={(e) => {
+                          setUserRole(e)
+                          handleChange(e)
+                        }}
+                        name={'users'}
+                        style={{ width: '100%' }}
+                      >
+                        {users.map((role) => (
+                          <Select.Option key={role} value={role}>
+                            {role}
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    </AntForm.Item>
+
+                    {!loading && (
+                      <Button type="primary" onClick={() => handleSubmit()}>
+                        Create
+                      </Button>
+                    )}
                   </AntForm>
                 )}
               </Formik>
