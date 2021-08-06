@@ -71,7 +71,7 @@ export const LeadCreateWeb: FC<LeadCreateProps> = ({
 
   const [
     getSalutationData,
-    { data: salutationData },
+    { data: salutationData, loading: isSalutationLoading },
   ] = useGetSalutationsLazyQuery()
 
   const [
@@ -81,7 +81,7 @@ export const LeadCreateWeb: FC<LeadCreateProps> = ({
 
   const [
     getEmployeeList,
-    { data: employeeListData },
+    { data: employeeListData, loading: isEmployeeLoading },
   ] = useGetLeadEmployeeListLazyQuery()
 
   const [
@@ -91,7 +91,7 @@ export const LeadCreateWeb: FC<LeadCreateProps> = ({
 
   const [
     getCustomFieldData,
-    { data: customFieldData },
+    { data: customFieldData, loading: isCustomFieldLoading },
   ] = useGetLeadCustomFieldsLazyQuery()
 
   const [
@@ -119,9 +119,9 @@ export const LeadCreateWeb: FC<LeadCreateProps> = ({
   useEffect(() => {
     if (isVisible) {
       getFieldSettingData()
+      getEmployeeList()
       getSalutationData()
       getMarketingSourceData()
-      getEmployeeList()
       getLeadStatusData()
       getLocationData()
       getCustomFieldData()
@@ -178,6 +178,38 @@ export const LeadCreateWeb: FC<LeadCreateProps> = ({
     setValidationObject(requiredField)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fieldSettingData])
+
+  useEffect(() => {
+    if (salutationData?.findManyUserSalutation?.length > 0) {
+      const initialValuesObj = initialValues
+      initialValuesObj['Salutation'] =
+        salutationData?.findManyUserSalutation[0].name
+      setInitialValues(initialValuesObj)
+    } else {
+      const validationObj = validationObject
+      delete validationObj['Salutation']
+      setValidationObject(validationObj)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [salutationData, initialValues])
+
+  useEffect(() => {
+    if (marketingSourceData?.findManyMarketingSource?.length === 0) {
+      const validationObj = validationObject
+      delete validationObj['lead_source']
+      setValidationObject(validationObj)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [marketingSourceData, initialValues])
+
+  useEffect(() => {
+    if (locationData?.findAllowedLocation?.length === 0) {
+      const validationObj = validationObject
+      delete validationObj['location']
+      setValidationObject(validationObj)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [marketingSourceData, initialValues])
 
   useEffect(() => {
     if (leadStatusData?.findManyLeadStatus?.length > 0) {
@@ -266,6 +298,18 @@ export const LeadCreateWeb: FC<LeadCreateProps> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customFieldData])
+
+  const checkIsLoading = () => {
+    return (
+      isSalutationLoading ||
+      isFieldSettingLoading ||
+      isMarketingSourceLoading ||
+      isLocationLoading ||
+      isCustomFieldLoading ||
+      isLeadStatusLoading ||
+      isEmployeeLoading
+    )
+  }
 
   const handleSubmit = async (
     values,
@@ -366,9 +410,11 @@ export const LeadCreateWeb: FC<LeadCreateProps> = ({
       isMarketingSourceLoading={isMarketingSourceLoading}
       isLocationLoading={isLocationLoading}
       isLeadStatusLoading={isLeadStatusLoading}
+      isSalutationLoading={isSalutationLoading}
       customFields={customFields}
       initialValues={initialValues}
       validationObject={validationObject}
+      loading={checkIsLoading()}
     />
   )
 }

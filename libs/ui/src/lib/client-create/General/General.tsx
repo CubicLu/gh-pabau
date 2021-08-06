@@ -25,6 +25,7 @@ import { ReactComponent as Droplet } from '../../../assets/images/droplet.svg'
 import { useTranslation } from 'react-i18next'
 import dayjs, { Dayjs } from 'dayjs'
 import { CommonProps } from './index'
+import className from 'classnames'
 
 interface GeneralProps {
   values?: InitialDetailsProps
@@ -41,6 +42,7 @@ interface GeneralProps {
   setSelectedLabels: (val: Label[]) => void
   isLoading?: boolean
   isMarketingSourceLoading?: boolean
+  isSalutationLoading?: boolean
   labelsData: LabelDataProps[]
   requiredLabel: (name: string) => string
 }
@@ -100,6 +102,7 @@ export const General: FC<GeneralProps> = ({
   setSelectedLabels,
   isLoading = false,
   isMarketingSourceLoading = false,
+  isSalutationLoading = false,
   labelsData,
   requiredLabel,
 }) => {
@@ -361,18 +364,33 @@ export const General: FC<GeneralProps> = ({
           ) && (
             <div className={styles.salutation}>
               <AntForm.Item
-                label={`${t(
-                  'quickCreate.client.modal.general.salutation'
-                )}${requiredLabel('salutation')}`}
+                label={`${t('quickCreate.client.modal.general.salutation')}${
+                  salutationData && salutationData?.length > 0
+                    ? requiredLabel('salutation')
+                    : ''
+                }`}
                 name={'salutation'}
               >
-                <Select name={'salutation'}>
-                  {salutationData?.map((item) => (
-                    <Select.Option key={item.id} value={item.name}>
-                      {item.name}
-                    </Select.Option>
-                  ))}
-                </Select>
+                {!isSalutationLoading ? (
+                  <Select name={'salutation'}>
+                    {salutationData?.map((item) => (
+                      <Select.Option key={item.id} value={item.name}>
+                        {item.name}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                ) : (
+                  <div className={styles.skeletonWrapper}>
+                    <Skeleton
+                      className={className(
+                        styles.salutationSkeleton,
+                        styles.skeletonInput
+                      )}
+                      paragraph={false}
+                      active
+                    />
+                  </div>
+                )}
               </AntForm.Item>
             </div>
           )}
@@ -446,7 +464,11 @@ export const General: FC<GeneralProps> = ({
               className={styles.customCommon}
               label={`${t(
                 'quickCreate.client.modal.general.hearOption.label'
-              )}${requiredLabel('MarketingSource')}`}
+              )}${
+                marketingSources && marketingSources.length > 0
+                  ? requiredLabel('MarketingSource')
+                  : ''
+              }`}
               name={'MarketingSource'}
             >
               {!isMarketingSourceLoading ? (

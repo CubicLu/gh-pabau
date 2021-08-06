@@ -107,11 +107,13 @@ export interface ClientCreateProps {
   otherCompanies?: OtherCompany[]
   isLoading?: boolean
   isMarketingSourceLoading?: boolean
+  isSalutationLoading?: boolean
   labelsData?: LabelDataProps[]
   validationObject?: {
     [key: string]: Yup.AnyObjectSchema
   }
   initialValues: InitialDetailsProps
+  isDisabledBtn?: boolean
 }
 
 export interface Label {
@@ -141,6 +143,7 @@ export const ClientCreate: FC<ClientCreateProps> = ({
   labelsData,
   initialValues,
   validationObject,
+  isDisabledBtn,
   ...props
 }) => {
   const { t } = useTranslation('common')
@@ -202,7 +205,9 @@ export const ClientCreate: FC<ClientCreateProps> = ({
                 : t('common-label-save')
             }
             enableCreateBtn={
-              submitCount === 0 ? !isSubmitting : !isSubmitting && isValid
+              submitCount === 0
+                ? !(!isSubmitting && isDisabledBtn)
+                : !isSubmitting && isValid
             }
             onCreate={handleSubmit}
             activated={activated}
