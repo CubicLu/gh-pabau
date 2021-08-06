@@ -132,6 +132,7 @@ export const Clients: FC<ClientsProps> = () => {
 
           return contact
         })
+        // setTestData(tempData)
         setTestData(tempData)
       }
       return responseLabel
@@ -732,8 +733,8 @@ export const Clients: FC<ClientsProps> = () => {
                     setTestLabels={setTestLabels}
                     selectedLabels={selectedLabels}
                     setSelectedLabels={setSelectedLabels}
-                    sourceData={sourceData}
-                    // sourceData={testData}
+                    // sourceData={sourceData}
+                    sourceData={testData}
                     handleLabelClick={handleLabelClick}
                     duplicateData={duplicateDataList}
                     getClientsCountData={getClientsCountData}

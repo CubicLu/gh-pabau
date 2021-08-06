@@ -119,6 +119,8 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   const [displayColorPicker, setDisplayColorPicker] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
   const [editIndex, setEditIndex] = useState<number>()
+  const [removedLabelFlag, setRemovedLabelFlag] = useState(false)
+  // console.log('removedLabelFlag createlabel', removedLabelFlag)
   // const [selectedEditData, setSelectedEditData] = useState<Labels>({
   //   label: '',
   //   color: '',
@@ -129,8 +131,8 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     color: '',
     count: 0,
   })
-  const [selectedContacts, setSelectedContacts] = useState([])
-  const [tempSelectedContact, setTempSelectedContact] = useState([])
+  // const [selectedContacts, setSelectedContacts] = useState([])
+  // const [tempSelectedContact, setTempSelectedContact] = useState([])
 
   const [deleteContactsLabelsMutaton] = useDeleteContactsLabelsMutation({
     onCompleted(response) {
@@ -170,7 +172,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     setIsEdit(false)
   }
 
-  console.log('contactsLabels createLabel', contactsLabels)
+  // console.log('contactsLabels createLabel', contactsLabels)
 
   const addLabelData = (valueObject) => {
     if (
@@ -230,7 +232,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
 
   const handleSelect = (label, index) => {
     const selectedData = [...selectedLabels]
-    console.log('selectedData', selectedData)
+    // console.log('selectedData', selectedData)
 
     if (selectedData.some((item) => item.text === label.text)) {
       const selectedIndex = selectedLabels?.findIndex(
@@ -238,10 +240,12 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
       )
       selectedIndex !== -1 && selectedData.splice(selectedIndex, 1)
       setSelectedLabels(selectedData)
-      console.log('selectedIndex', selectedIndex)
+      // setRemovedLabelFlag(true)
+      // console.log('selectedIndex', selectedIndex)
     } else {
       selectedData.push(label)
       setSelectedLabels(selectedData)
+      // setRemovedLabelFlag(false)
     }
   }
 
@@ -266,28 +270,9 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   console.log('selectedLabels createLabel', selectedLabels)
   console.log('defaultSelectedLabels createlabel', defaultSelectedLabels)
 
-  // const onApplyLabel = () => {
-  //   handleApplyLabel(selectedLabels)
+  // const removedLabel: any = differenceBy(defaultSelectedLabels, selectedLabels)
   //
-  //   setVisible(false)
-  //   if (selectedRowKeys && selectedRowKeys.length > 0) {
-  //     // getLabelsQuery()
-  //     for (const selectContact of selectedRowKeys) {
-  //       console.log('selectContact 00000', selectContact)
-  //       for (const selectedLabel of selectedLabels) {
-  //         console.log('selectedLabel ID 00000', selectedLabel)
-  //
-  //         insertContactsLabelsMutaton({
-  //           variables: {
-  //             contact_id: selectContact,
-  //             label_id: selectedLabel.id,
-  //           },
-  //         })
-  //         // getContactsLabelsQuery()
-  //       }
-  //     }
-  //   }
-  // }
+  // console.log('removedLabel', removedLabel)
 
   const onApplyLabel = () => {
     handleApplyLabel(selectedLabels)

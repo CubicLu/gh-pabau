@@ -158,6 +158,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
               addLabelMutation={addLabelMutation}
               handleApplyLabel={handleApplyLabel}
               contactsLabels={contactsLabels}
+              sourceData={sourceData}
             >
               <div>
                 <PlusCircleOutlined /> {t('clients.leftSidebar.createLabels')}
