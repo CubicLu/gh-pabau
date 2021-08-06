@@ -1,6 +1,6 @@
 import { CloseOutlined, LeftOutlined } from '@ant-design/icons'
 import { Avatar, Button, TabMenu } from '@pabau/ui'
-import { Modal, Switch } from 'antd'
+import { Modal, Switch, ConfigProvider } from 'antd'
 import classnames from 'classnames'
 import React, { FC, ReactNode, useEffect, useRef, useState } from 'react'
 import { useMedia } from 'react-use'
@@ -233,35 +233,43 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
           </div>
         </div>
 
-        <div className={styles.fullScreenModalBody}>
-          {subMenu.length > 0 && Array.isArray(children) ? (
-            <TabMenu
-              menuItems={subMenu}
-              tabPosition="top"
-              minHeight="1px"
-              onTabClick={(e) => {
-                if (onTabChange) {
-                  onTabChange(e)
-                }
-              }}
-            >
-              {children
-                ? children.map((child, i) => (
-                    <div className={styles.tabPaneItem} key={i}>
-                      {child}
-                    </div>
-                  ))
-                : subMenu.map((menu, i) => (
-                    <div className={styles.tabPaneItem} key={i}>
-                      {menu}
-                    </div>
-                  ))}
-            </TabMenu>
-          ) : (
-            children
-          )}
-        </div>
-
+        <ConfigProvider
+          getPopupContainer={(node) => {
+            if (node) {
+              return node.childNodes[0] as HTMLElement
+            }
+            return document.body as HTMLElement
+          }}
+        >
+          <div className={styles.fullScreenModalBody}>
+            {subMenu.length > 0 && Array.isArray(children) ? (
+              <TabMenu
+                menuItems={subMenu}
+                tabPosition="top"
+                minHeight="1px"
+                onTabClick={(e) => {
+                  if (onTabChange) {
+                    onTabChange(e)
+                  }
+                }}
+              >
+                {children
+                  ? children.map((child, i) => (
+                      <div className={styles.tabPaneItem} key={i}>
+                        {child}
+                      </div>
+                    ))
+                  : subMenu.map((menu, i) => (
+                      <div className={styles.tabPaneItem} key={i}>
+                        {menu}
+                      </div>
+                    ))}
+              </TabMenu>
+            ) : (
+              children
+            )}
+          </div>
+        </ConfigProvider>
         {isMobile && (
           <div
             className={styles.fullScreenModalFooter}

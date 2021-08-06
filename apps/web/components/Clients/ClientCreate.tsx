@@ -95,7 +95,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
 
   const [
     getSalutationData,
-    { data: salutationData },
+    { data: salutationData, loading: salutationLoading },
   ] = useGetSalutationsLazyQuery()
 
   const [
@@ -105,17 +105,17 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
 
   const [
     getLimitLocationData,
-    { data: limitLocationData },
+    { data: limitLocationData, loading: locationLoading },
   ] = useFindManyLimitContactLocationLazyQuery()
 
   const [
     getOtherCompaniesData,
-    { data: otherCompaniesData },
+    { data: otherCompaniesData, loading: otherCompanyLoading },
   ] = useFindManySharedCompanyLazyQuery()
 
   const [
     getCustomFieldData,
-    { data: customFieldData },
+    { data: customFieldData, loading: customFieldLoading },
   ] = useGetContactCustomFieldsLazyQuery()
 
   const [getLabels, { data: labelsQueryData }] = useGetCmLabelsLazyQuery()
@@ -226,6 +226,29 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   }, [limitLocationData])
 
   useEffect(() => {
+    if (salutationData?.findManyUserSalutation?.length > 0) {
+      const initialValuesObj = initialValues
+      initialValuesObj['salutation'] =
+        salutationData?.findManyUserSalutation[0].name
+      setInitialValues(initialValuesObj)
+    } else {
+      const validationObj = validationObject
+      delete validationObj['salutation']
+      setValidationObject(validationObj)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [salutationData, initialValues])
+
+  useEffect(() => {
+    if (marketingSourceData?.findManyMarketingSource?.length === 0) {
+      const validationObj = validationObject
+      delete validationObj['MarketingSource']
+      setValidationObject(validationObj)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [marketingSourceData, initialValues])
+
+  useEffect(() => {
     if (customFieldData) {
       const data = customFieldData.custom
         .map((thread) => {
@@ -304,6 +327,17 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customFieldData])
+
+  const checkIsLoading = () => {
+    return (
+      salutationLoading ||
+      loading ||
+      marketingSourceLoading ||
+      locationLoading ||
+      customFieldLoading ||
+      otherCompanyLoading
+    )
+  }
 
   const handleCloseModal = () => {
     setVisible(false)
@@ -417,9 +451,11 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       otherCompanies={otherCompaniesData?.findManySharedCompany}
       isLoading={loading}
       isMarketingSourceLoading={marketingSourceLoading}
+      isSalutationLoading={salutationLoading}
       labelsData={labelsData}
       initialValues={initialValues}
       validationObject={validationObject}
+      isDisabledBtn={checkIsLoading()}
       {...props}
     />
   )
