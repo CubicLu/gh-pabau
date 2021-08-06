@@ -67,7 +67,7 @@ export const ListRelatedCompanies = extendType({
       },
       async resolve(event, args, ctx: Context) {
         try {
-          return await ctx.prisma.user.findMany({
+          return await ctx.prismaArray(undefined).user.findMany({
             where: {
               username: {
                 equals: args.username,
