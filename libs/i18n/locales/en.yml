@@ -3127,6 +3127,8 @@ en:
   reset.password.confirm.required.message: 'confirm password is required'
   reset.password.confirm.match.message: 'password & confirm password both need to be the same'
   reset.password.confirm.title: 'Confirm Password'
+  reset.company.name.title: 'Company Name'
+  reset.username.title: 'Email'
   reset.password.change.button: 'Change'
   setup.appointmentstatuses.schema.title: 'Appointment Status'
   setup.appointmentstatuses.schema.title.lowercase: 'appointment status'

@@ -9481,13 +9481,17 @@ model Page {
 //  to_date      DateTime
 //}
 //
-//model password_reset_auth {
-//  id           Int      @id @default(autoincrement())
-//  key_code     String
-//  username     String
-//  old_password String
-//  date         DateTime
-//}
+model PasswordResetAuth {
+  id           Int       @id @default(autoincrement())
+  key_code     String
+  username     String    @unique
+  old_password String
+  date         DateTime?
+  User         User      @relation(fields: [username], references: [username])
+
+  @@map("password_reset_auth")
+}
+
 //
 //model payments {
 //  id       Int    @id @default(autoincrement())
@@ -12528,6 +12532,7 @@ model User {
   InvSale                      InvSale[]
   CompanyOwner                 Company?                       @relation("owner")
 
+  PasswordResetAuth PasswordResetAuth[]
   @@unique([id, company_id], name: "primary")
   @@index([calendar_order], name: "calendar_order")
   @@index([company_id], name: "company")

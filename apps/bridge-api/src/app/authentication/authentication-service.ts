@@ -271,9 +271,9 @@ export default class AuthenticationService {
       })
     ) {
       const HashPassword = this.generatePassword(users, input.newPassword)
-      const update = await this.ctx.prisma.user.updateMany({
+      const update = await this.ctx.prisma.user.update({
         where: {
-          username: users.username,
+          id: users.id,
         },
         data: {
           password: HashPassword,
