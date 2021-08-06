@@ -5,6 +5,7 @@ import {
   verifyUser,
   authenticateUser,
 } from '../../app/authentication/login-service'
+import { PrismaClient } from '@prisma/client'
 
 export const VerifyCredentials = extendType({
   type: 'Query',
@@ -67,7 +68,9 @@ export const ListRelatedCompanies = extendType({
       },
       async resolve(event, args, ctx: Context) {
         try {
-          return await ctx.prismaArray(undefined).user.findMany({
+          const data = await (ctx.prismaArray(
+            undefined
+          ) as PrismaClient).user.findMany({
             where: {
               username: {
                 equals: args.username,
@@ -77,6 +80,21 @@ export const ListRelatedCompanies = extendType({
               Company: true,
             },
           })
+          for (const row of data) {
+            // Overwrite each row with the correct user id
+            row.id = (
+              await ctx.prisma.user.findFirst({
+                where: {
+                  username: row.username,
+                  company_id: row.Company.id,
+                },
+                select: {
+                  id: true,
+                },
+              })
+            ).id
+          }
+          return data
         } catch (error) {
           throw new Error(error)
         }
