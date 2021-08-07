@@ -173,15 +173,17 @@ const InvoiceActivity: FC<P> = (p) => {
           showingRecords={paginateData.showingRecords}
         />
       </div>
-      <BasicModal
-        wrapClassName={styles.subscriptionInvoiceModal}
-        title={t('setup.subscription.invoice')}
-        visible={showPreview}
-        width="50%"
-        onCancel={onCloseInvoicePreview}
-      >
-        <iframe title={t('setup.subscription.invoice')} src={urlPreview} />
-      </BasicModal>
+      {showPreview && (
+        <BasicModal
+          wrapClassName={styles.subscriptionInvoiceModal}
+          title={t('setup.subscription.invoice')}
+          visible={showPreview}
+          width="50%"
+          onCancel={onCloseInvoicePreview}
+        >
+          <iframe title={t('setup.subscription.invoice')} src={urlPreview} />
+        </BasicModal>
+      )}
     </div>
   )
 }

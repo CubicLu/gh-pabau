@@ -199,7 +199,8 @@ export const permissions = shield(
         rules.authentication.isAuthenticated,
       findManyProductsWithAvailableQuantityCount:
         rules.authentication.isAuthenticated,
-      findFirstPasswordResetAuth: allow,
+      findFirstPasswordResetAuth:
+        rules.interceptors.interceptResetPasswordToken,
       //CmLabels
       findManyCmLabel: rules.interceptors.interceptSharedCompanyData,
       // //Authentication
