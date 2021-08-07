@@ -3,7 +3,7 @@ import cors from 'cors'
 import cookieSession from 'cookie-session'
 import { stringToBoolean } from './utils'
 import { ApolloServer } from 'apollo-server-express'
-import { schema } from './schema'
+import { middleware } from './schema'
 import { createContext } from './context'
 import { BASIC_LOGGING } from './logging'
 
@@ -20,7 +20,7 @@ export function createApp(options?: Options) {
   const { debugApollo = false, logging = false, tracing = false } =
     options || {}
   const server = new ApolloServer({
-    schema,
+    schema: middleware,
     context: createContext,
     tracing,
     introspection: true,

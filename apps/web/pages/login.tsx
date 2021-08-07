@@ -28,7 +28,7 @@ const Login: FC = () => {
   const [verifyCredentials] = useVerifyCredentialsLazyQuery({
     onError(e) {
       console.log('handling useVerifyCredentialsLazyQuery onError!', e)
-      Notification(NotificationType.error, 'Error logging in')
+      Notification(NotificationType.error, e.message || 'Error logging in')
     },
     fetchPolicy: 'network-only',
     onCompleted(verifyData) {
