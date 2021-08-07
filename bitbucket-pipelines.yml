@@ -35,18 +35,12 @@ pipelines:
               size: 1x
               script:
                 #                - while true; do ps -aux && sleep 30; done &
-                - openssl version || true
-                - ls -al || true
-                - yarn bin || true
-                - yarn bin || true
-                - yarn bridge:generate
-                - git status || true
-                - git config core.whitespace cr-at-eol
-                - git diff --exit-code --no-ext-diff -p
+                - yarn bridge:generate && git diff --exit-code --no-ext-diff -p
+                - yarn graphql-codegen && git diff --exit-code --no-ext-diff -p
                 - yarn lint:tsc --base=origin/master
                 - yarn lint:ls || true
-                - yarn lint:workspace || true
-                - npm i -g @graphql-inspector/cli@2.5.0 graphql || true
+                - yarn lint:workspace
+                - npm i -g @graphql-inspector/cli
                 - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
                 - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql
                 #                - graphql-inspector similar hasura/schema.graphql || echo TODO
@@ -203,22 +197,11 @@ pipelines:
               size: 1x
               script:
                 #                - while true; do ps -aux && sleep 30; done &
-                - openssl version || true
-                - ls -al || true
-                - ls -al node_modules || true
-                - ls -al libs/graphql/generated/ || true
-                - yarn postinstall || yarn --frozen-lockfile
-                - ls -al node_modules || true
-                - ls -al libs/graphql/generated/ || true
-                - yarn bin || true
-                - yarn bin || true
-                - yarn bridge:generate
-                - git status || true
-                - git config core.whitespace cr-at-eol
-                - git diff --exit-code --no-ext-diff -p
+                - yarn bridge:generate && git diff --exit-code --no-ext-diff -p
+                - yarn graphql-codegen && git diff --exit-code --no-ext-diff -p
                 - yarn lint:tsc --base=HEAD~1
                 - yarn lint:ls || true
-                - yarn lint:workspace || true
+                - yarn lint:workspace
                 - npm i -g @graphql-inspector/cli graphql || true
                 - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
                 - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql
