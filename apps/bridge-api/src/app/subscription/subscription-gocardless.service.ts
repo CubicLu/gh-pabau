@@ -20,7 +20,7 @@ export default class SubscriptionGoCardless extends SubscriptionService {
     console.info('Subscription gocardless is initialized')
     this.type = 'GoCardless'
     this.client = new GoCardlessClient(
-      process.env.GC_ACCESS_TOKEN,
+      process.env.GOCARDLESS_ACCESS_TOKEN,
       Environments.Live,
       { raiseOnIdempotencyConflict: false }
     )
