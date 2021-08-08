@@ -12,7 +12,7 @@ const schema = makeSchema({
   shouldGenerateArtifacts: process.argv.includes('--nexus-typegen'),
   types,
   outputs: {
-    typegen: __dirname + '/generated/nexus.d.ts',
+    typegen: __dirname + '/generated/nexus.ts',
   },
   sourceTypes: {
     modules: [

@@ -1,4 +1,4 @@
-import { UserMaster } from '../../../generated/types/index'
+import { UserMaster } from '../../../generated/types'
 import { Context } from '../../../context'
 import { ConnectCredentials } from './interfaces/ConnectCredentials'
 import { createHash } from 'crypto'
@@ -34,10 +34,9 @@ export default class AuthenticationService {
   }
 
   public verifyPassword(inputPassword: string, userPassword: string) {
-    return createHash('md5').update(inputPassword).digest('hex') ===
-      userPassword
-      ? true
-      : false
+    return (
+      createHash('md5').update(inputPassword).digest('hex') === userPassword
+    )
   }
 
   public generateJWT(contactId, companyId): string {
