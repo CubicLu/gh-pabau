@@ -11,9 +11,6 @@ const schema = makeSchema({
   plugins: [paljs()],
   shouldGenerateArtifacts: process.argv.includes('--nexus-typegen'),
   types,
-  outputs: {
-    typegen: __dirname + '/generated/nexus.d.ts',
-  },
   sourceTypes: {
     modules: [
       {
