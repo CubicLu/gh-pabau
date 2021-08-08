@@ -70,7 +70,7 @@
     "workspace-schematic": "yarn nx workspace-schematic",
     "dep-graph": "yarn nx dep-graph",
     "nexus:generate": "ts-node-dev --transpile-only apps/bridge-api/src/schema --nexus-typegen",
-    "bridge:generate": "prisma format && prisma generate && rimraf libs/graphql/crm-mutation && yarn dotenv-flow -p apps/bridge-api pal g && concurrently -n NEXUS,GRAPHQL-CODEGEN -c blue,yellow,green \"yarn nexus:generate\" \"yarn graphql-codegen:cached\"",
+    "bridge:generate": "prisma format && prisma generate && node tools/cli/convert-file-to-lf.js apps/bridge-api/src/prisma/schema.prisma && rimraf apps/bridge-api/src/generated libs/graphql/crm-mutation && yarn dotenv-flow -p apps/bridge-api pal g && concurrently -n NEXUS,GRAPHQL-CODEGEN -c blue,yellow,green \\\"yarn nexus:generate\\\" \\\"yarn graphql-codegen:cached\\\"",
     "bridge:prune": "rm -rf apps/bridge-api/src/generated libs/graphql/crm-mutation",
     "postinstall": "patch-package --patch-dir tools/patches && husky install && yarn graphql-codegen:cached"
   },
