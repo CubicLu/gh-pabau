@@ -46,8 +46,31 @@ const cache = new InMemoryCache({
       fields: {
         chats: {
           merge(existing = [], incoming: any[]) {
-            console.log('APOLLO CACHE: room.chat.merge()', existing, incoming)
-            return [...existing, ...incoming]
+            if (
+              !incoming ||
+              !existing ||
+              existing.some((e) => !e.__ref) ||
+              incoming.some((e) => !e.__ref)
+            ) {
+              console.log(
+                'APOLLO CACHE: Updated without a __ref room.chat.merge()',
+                existing,
+                incoming
+              )
+              // return [
+              //   ...existing.map((e) => ({
+              //     ...e,
+              //     ...incoming.find((e2) => e2.id === e.id),
+              //   })),
+              //   ...incoming.filter((e) => existing.some((e2) => e2.id === e.id)),
+              // ]
+            }
+            return [
+              ...existing,
+              ...incoming.filter(
+                (e) => !existing.some((e2) => e2.__ref === e.__ref)
+              ),
+            ]
           },
         },
       },
