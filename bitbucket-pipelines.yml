@@ -35,8 +35,8 @@ pipelines:
               size: 1x
               script:
                 #                - while true; do ps -aux && sleep 30; done &
-                - yarn bridge:generate && git diff --exit-code --no-ext-diff -p
-                - yarn graphql-codegen && git diff --exit-code --no-ext-diff -p
+                - rm -rf libs/graphql/crm-mutation apps/bridge-api/src/generated && yarn bridge:generate && git diff --exit-code --no-ext-diff -p
+                - rm -rf libs/graphql/generated && yarn graphql-codegen && git diff --exit-code --no-ext-diff -p
                 - yarn lint:tsc --base=origin/master
                 - yarn lint:ls || true
                 - yarn lint:workspace
