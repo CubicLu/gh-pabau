@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect, useState } from 'react'
+import React, { FC, ReactNode, useState } from 'react'
 import { Input, Popover } from 'antd'
 import { CheckOutlined, TagFilled, TagOutlined } from '@ant-design/icons'
 import {
@@ -9,9 +9,6 @@ import {
   CustomIcon,
 } from '@pabau/ui'
 import {
-  useGetContactsLabelsQuery,
-  useInsertContactsLabelsMutation,
-  // useGetLabelsLazyQuery,
   AddLabelMutation,
   Exact,
   useDeleteContactsLabelsMutation,
@@ -26,7 +23,6 @@ interface CreateLabelsProps {
   children?: ReactNode
   labels?: Labels[]
   setLabels?: (val: Labels[]) => void
-  // selectedLabels?: Labels[]
   selectedLabels?: any
   setSelectedLabels?: (val) => void
   fromHeader?: boolean
@@ -37,7 +33,6 @@ interface CreateLabelsProps {
   selectedRowKeys?: any
   setTestLabels?: (val) => void
   getContactsLabelsQuery?: () => any
-  // getLabelsQuery?: () => any
   sourceData?: any
   insertContactsLabelsMutaton?: (val) => void
   contactsLabels?: any
@@ -119,20 +114,11 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   const [displayColorPicker, setDisplayColorPicker] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
   const [editIndex, setEditIndex] = useState<number>()
-  const [removedLabelFlag, setRemovedLabelFlag] = useState(false)
-  // console.log('removedLabelFlag createlabel', removedLabelFlag)
-  // const [selectedEditData, setSelectedEditData] = useState<Labels>({
-  //   label: '',
-  //   color: '',
-  //   count: 0,
-  // })
   const [selectedEditData, setSelectedEditData] = useState({
     text: '',
     color: '',
     count: 0,
   })
-  // const [selectedContacts, setSelectedContacts] = useState([])
-  // const [tempSelectedContact, setTempSelectedContact] = useState([])
 
   const [deleteContactsLabelsMutaton] = useDeleteContactsLabelsMutation({
     onCompleted(response) {
@@ -176,7 +162,10 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
 
   const addLabelData = (valueObject) => {
     if (
-      testLabels?.some((item) => item.text && item.color !== valueObject.text)
+      testLabels?.some(
+        (item) => item.text && item.color !== valueObject.text
+      ) ||
+      testLabels.length !== -1
     ) {
       // setTestLabels([...testLabels, valueObject])
       testLabels.push(valueObject)
@@ -240,12 +229,9 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
       )
       selectedIndex !== -1 && selectedData.splice(selectedIndex, 1)
       setSelectedLabels(selectedData)
-      // setRemovedLabelFlag(true)
-      // console.log('selectedIndex', selectedIndex)
     } else {
       selectedData.push(label)
       setSelectedLabels(selectedData)
-      // setRemovedLabelFlag(false)
     }
   }
 
@@ -286,14 +272,10 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
             defaultSelectedLabels,
             selectedLabels
           )
-          // console.log('selectedLabels ID 00000', selectedLabels)
-          // if (!defaultSelectedLabels.includes(selectedLabel.id))
           const copySelectedLabel = [...selectedLabels]
           const xxxx = copySelectedLabel.find((obj) =>
             Object.keys(obj).includes('__typename')
           )
-          // console.log('key createLabel', xxxx)
-
           console.log('entering if INSERT')
           if (xxxx && !defaultSelectedLabels.includes(selectedLabel)) {
             insertContactsLabelsMutaton({
@@ -303,25 +285,6 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
               },
             })
           }
-          // else {
-          //     console.log('entering ELSE DELETE')
-          //     const removedLabel: any[] = differenceBy(
-          //       defaultSelectedLabels,
-          //       selectedLabels
-          //     )
-          //     console.log('removedLabel', removedLabel)
-          //     const copyCL = [...contactsLabels]
-          //     const findToDeleteCL = copyCL?.find(
-          //       (x) => x.label_id === removedLabel[0].id
-          //     )
-          //     console.log('findToDeleteCL', findToDeleteCL)
-          //
-          //     deleteContactsLabelsMutaton({
-          //       variables: {
-          //         id: findToDeleteCL.id,
-          //       },
-          //     })
-          //   }
           if (!xxxx && defaultSelectedLabels.includes(selectedLabel)) {
             console.log('entering ELSE DELETE')
             // console.log('removedLabel', removedLabel[0].id)

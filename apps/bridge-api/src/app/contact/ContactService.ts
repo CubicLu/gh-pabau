@@ -29,7 +29,7 @@ export default class ContactService {
   }
 
   public async findAllDuplicates(): Promise<any> {
-    /// all patient in array
+    /// all patients in array
     const allContacts = await this.getAllClients()
     const duplicates = []
     const tempArray = []
@@ -44,7 +44,6 @@ export default class ContactService {
             !tempArray.includes(mainContact.ID)
           ) {
             foundGroup.push(mainContact)
-            // foundGroup.push({ [mainContact.ID]: mainContact })
             tempArray.push(mainContact.ID)
           }
           if (
@@ -52,7 +51,6 @@ export default class ContactService {
             !tempArray.includes(queryContact.ID)
           ) {
             foundGroup.push(queryContact)
-            // foundGroup.push({ [queryContact.ID]: queryContact })
             tempArray.push(queryContact.ID)
           }
         }
@@ -61,13 +59,6 @@ export default class ContactService {
       if (foundGroup.length > 0) duplicates.push(foundGroup)
     }
 
-    // console.log('duplicates', allContacts)
-    // console.log('duplicates:', duplicates)
-    // console.log('duplicates.length:', duplicates.length)
-    // console.log('tempArray:', tempArray)
-    // console.log('tempArray.length:', tempArray.length)
-
     return duplicates
-    // return []
   }
 }

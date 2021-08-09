@@ -10,9 +10,8 @@ import { ReactComponent as ArchivedIcon } from '../../assets/images/archived-ico
 import styles from '../../pages/clients/clients.module.less'
 import { SourceDataProps } from './Content'
 import CreateLabel from './CreateLabel'
-import { Labels, tab } from '../../pages/clients/index'
+import { Labels, tab } from '../../pages/clients'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import { test } from 'shelljs'
 import { FetchResult, MutationFunctionOptions } from '@apollo/client'
 import { AddLabelMutation, Exact } from '@pabau/graphql'
 const { SubMenu } = Menu
@@ -57,11 +56,11 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
   setLabels,
   selectedLabels,
   setSelectedLabels,
-  duplicateData = [],
+  // duplicateData = [],
   getClientsCountData,
   duplicateContactsCount,
   testLabels,
-  setTestLabels,
+  // setTestLabels,
   addLabelMutation,
   handleApplyLabel,
   labelCountAll,
@@ -134,7 +133,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
                 <Menu.Item
                   key={`${label.text}`}
                   onClick={() => handleLabelClick(false, label.text)}
-                  // onClick={() => console.log('clicked label')}
+                  // onClick={() => console.log('clicked label leftSidebar')}
                 >
                   <div className={styles.clientMenuItem}>
                     <span>

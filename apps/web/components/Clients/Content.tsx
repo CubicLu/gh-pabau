@@ -151,6 +151,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
       //     </div>
       //   )
       // },
+      // eslint-disable-next-line react/display-name
       render: (data) => {
         const { avatar, firstName } = data
         return (
@@ -211,9 +212,9 @@ export const ClientsContent: FC<ClientsContentProps> = ({
         return (
           <div className={styles.labelWrapper}>
             {labelTest?.map((label) => (
-              // console.log('111', label)
               <Button
                 className={styles.labelButton}
+                key={label.id}
                 style={{
                   border: `1px solid ${label.color}`,
                   color: label.color,
