@@ -10,10 +10,16 @@ import { Filter, IFilter } from './Filter'
 import { useTranslation } from 'react-i18next'
 import styles from './ViewSchedule.module.less'
 import Alex from '../../assets/images/users/alex.png'
+import Iva from '../../assets/images/users/rsz_iva.jpg'
+import Joy from '../../assets/images/users/rsz_joy.jpg'
 import { groupBy } from 'lodash'
 import dayjs from 'dayjs'
 
-const TRAINERS = [{ name: 'alex', image: Alex }]
+const TRAINERS = [
+  { name: 'alex', image: Alex },
+  { name: 'iva', image: Iva },
+  { name: 'joy', image: Joy },
+]
 
 export interface IWebinar {
   id: number
@@ -175,8 +181,8 @@ export const ViewScheduleModal: FC<ViewScheduleProps> = ({
               <h4>
                 {formatDate(orderByDay?.[0], 'DD/MM/YYYY') ===
                 dayjs().format('DD/MM/YYYY')
-                  ? 'Today'
-                  : formatDate(orderByDay?.[0], 'dddd, D')}
+                  ? t('account.finance.date.range.option.today')
+                  : formatDate(orderByDay?.[0], 'dddd, MMMM, D, YYYY')}
               </h4>
               <div className={styles.webinarWrapperModal}>
                 {orderByDay?.[1]?.map((webinar) => {
