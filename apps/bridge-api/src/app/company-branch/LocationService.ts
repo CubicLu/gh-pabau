@@ -55,6 +55,7 @@ export default class LocationService {
         website: input.website,
         show_online: input.showOnline,
         company_id: companyId,
+        image: input.image,
       },
     })
   }
@@ -121,6 +122,9 @@ export default class LocationService {
         },
         show_online: {
           set: input.showOnline,
+        },
+        image: {
+          set: input.image,
         },
       },
     })

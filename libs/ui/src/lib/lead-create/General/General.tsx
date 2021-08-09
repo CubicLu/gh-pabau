@@ -8,6 +8,7 @@ import {
   DatePicker,
 } from '@pabau/ui'
 import { Form as AntForm, Input, Select } from 'formik-antd'
+import className from 'classnames'
 import { SliderCustom } from '@pabau/ui'
 import { Skeleton } from 'antd'
 import { useTranslation } from 'react-i18next'
@@ -31,6 +32,7 @@ interface GeneralProps {
   isMarketingSourceLoading?: boolean
   isLocationLoading?: boolean
   isLeadStatusLoading?: boolean
+  isSalutationLoading?: boolean
   requiredLabel: (name: string) => string
 }
 
@@ -46,6 +48,7 @@ export const General: FC<GeneralProps> = ({
   isMarketingSourceLoading,
   isLocationLoading,
   isLeadStatusLoading,
+  isSalutationLoading,
   requiredLabel,
 }) => {
   const { t } = useTranslation('common')
@@ -79,13 +82,26 @@ export const General: FC<GeneralProps> = ({
               }${requiredLabel('Salutation')}`}
               name={'Salutation'}
             >
-              <Select name={'Salutation'}>
-                {salutationData?.map((item) => (
-                  <Select.Option key={item.id} value={item.name}>
-                    {item.name}
-                  </Select.Option>
-                ))}
-              </Select>
+              {!isSalutationLoading ? (
+                <Select name={'Salutation'}>
+                  {salutationData?.map((item) => (
+                    <Select.Option key={item.id} value={item.name}>
+                      {item.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              ) : (
+                <div className={styles.skeletonWrapper}>
+                  <Skeleton
+                    className={className(
+                      styles.salutationSkeleton,
+                      styles.skeletonInput
+                    )}
+                    paragraph={false}
+                    active
+                  />
+                </div>
+              )}
             </AntForm.Item>
           </div>
           <div className={styles.firstName}>
@@ -138,7 +154,11 @@ export const General: FC<GeneralProps> = ({
                   (thread) => thread.field_name === 'lead_source'
                 )?.field_label ||
                 t('quickCreate.client.modal.general.hearOption.label')
-              }${requiredLabel('lead_source')}`}
+              }${
+                marketingSources && marketingSources.length > 0
+                  ? requiredLabel('lead_source')
+                  : ''
+              }`}
               name={'lead_source'}
             >
               {!isMarketingSourceLoading ? (

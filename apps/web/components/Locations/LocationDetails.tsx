@@ -1,4 +1,4 @@
-import { PlusOutlined, EditOutlined } from '@ant-design/icons'
+import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import { Button, Input } from '@pabau/ui'
 import { Col, Modal, Row, Upload } from 'antd'
 import classNames from 'classnames'
@@ -7,6 +7,7 @@ import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { InitialLocationProps, Position } from './LocationsLayout'
 import styles from './LocationsLayout.module.less'
 import Map from './Map'
+import { getImage } from '../Uploaders/UploadHelpers/UploadHelpers'
 
 export interface LocationDetails {
   street?: string
@@ -19,6 +20,8 @@ export interface LocationDetails {
   location: string
   create: boolean
   subLocality?: string
+  imageUrl?: string
+  imageData?: string
 }
 
 interface LocationDetailsProps {
@@ -48,6 +51,7 @@ const LocationDetails: FC<LocationDetailsProps> = ({
     country: t('setup.locations.country'),
     location: t('setup.locations.location'),
     create: true,
+    imageUrl: '',
   }
   const [locationDetail, setLocationDetail] = useState<LocationDetails>(
     defaultLocationDetail
@@ -55,8 +59,8 @@ const LocationDetails: FC<LocationDetailsProps> = ({
   const [showModal, setShowModal] = useState(false)
   const [detailForModal, setDetailForModal] = useState<LocationDetails>()
 
-  // uncomment file variable once we have file upload mechanism
-  // const [file, setFile] = useState<any>()
+  const [file, setFile] = useState<string>()
+  const [isNewFile, setNewFile] = useState(false)
   useEffect(() => {
     if (locationDetail) {
       setFieldValue('street', locationDetail.street)
@@ -67,6 +71,8 @@ const LocationDetails: FC<LocationDetailsProps> = ({
       setFieldValue('region', locationDetail.region)
       setFieldValue('country', locationDetail.country)
       setFieldValue('location', locationDetail.location)
+      setFieldValue('imageUrl', locationDetail.imageUrl)
+      setFile(locationDetail.imageUrl)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locationDetail])
@@ -86,6 +92,7 @@ const LocationDetails: FC<LocationDetailsProps> = ({
         country: values.country,
         location: values.location,
         create: false,
+        imageUrl: values.imageUrl,
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -97,9 +104,17 @@ const LocationDetails: FC<LocationDetailsProps> = ({
   }
 
   const handleFileChange = (file) => {
-    // const { originFileObj } = file.file
-    // const filePath = URL.createObjectURL(originFileObj)
-    // setFile(filePath)
+    const { originFileObj } = file.file
+    const filePath = URL.createObjectURL(originFileObj)
+    setFile(filePath)
+    setNewFile(true)
+    const reader = new FileReader()
+    if (originFileObj?.type?.match('image.*')) {
+      reader.readAsDataURL(originFileObj)
+    }
+    reader.onloadend = async () => {
+      setFieldValue('imageData', reader.result.toString())
+    }
   }
 
   const EditIcon = () => {
@@ -108,6 +123,13 @@ const LocationDetails: FC<LocationDetailsProps> = ({
         <EditOutlined />
       </p>
     )
+  }
+
+  const onDeleteImage = () => {
+    setFile(null)
+    setFieldValue('imageUrl', '')
+    setFieldValue('imageData', null)
+    setNewFile(false)
   }
 
   return (
@@ -244,16 +266,31 @@ const LocationDetails: FC<LocationDetailsProps> = ({
                   'setup.locations.location.optional'
                 )}`}
               </p>
-              {/* {
-              file && <img src={file} />
-            } */}
+              {file && (
+                <img
+                  alt="location"
+                  src={
+                    locationDetail.imageUrl && !isNewFile
+                      ? getImage(file)
+                      : file
+                  }
+                />
+              )}
               <div>
-                {/* {
-                file && <Button onClick={() => { setFile(null) }} className={styles.imgDeleteBtn} icon={<DeleteOutlined />} >
-                  {'Delete'}
-                </Button>
-              } */}
-                <Upload multiple={false} onChange={handleFileChange}>
+                {file && (
+                  <Button
+                    onClick={onDeleteImage}
+                    className={styles.imgDeleteBtn}
+                    icon={<DeleteOutlined />}
+                  >
+                    {'Delete'}
+                  </Button>
+                )}
+                <Upload
+                  multiple={false}
+                  onChange={handleFileChange}
+                  showUploadList={false}
+                >
                   <Button className={styles.uploadBtn} icon={<PlusOutlined />}>
                     {t('setup.locations.location.choose.file')}
                   </Button>

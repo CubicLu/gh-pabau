@@ -35,6 +35,7 @@ export const CompanyBranch = objectType({
     t.string('color')
     t.boolean('notify_on_lead')
     t.nullable.string('notice')
+    t.nullable.string('image')
     t.field('Company', {
       type: 'Company',
       resolve(root: any) {

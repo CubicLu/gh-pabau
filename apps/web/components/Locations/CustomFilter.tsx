@@ -76,6 +76,7 @@ const CustomFilter: FC<P> = ({ onFilter, formRef }) => {
               mode="multiple"
               showArrow
               style={{ width: '100%' }}
+              dropdownClassName={styles.customSelect}
               placeholder={t('setup.locations.selecttags')}
               value={values.tags}
               onChange={(value) => {

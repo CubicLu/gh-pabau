@@ -13,7 +13,7 @@ import styles from '../../pages/login.module.less'
 import { ResetPasswordValidation } from '@pabau/yup'
 
 interface ResetPasswordProps {
-  handlePageShow: (page: string) => void
+  handlePageShow?: (page: string) => void
 }
 
 const ResetPassword: FC<ResetPasswordProps> = ({ handlePageShow }) => {
@@ -127,7 +127,9 @@ const ResetPassword: FC<ResetPasswordProps> = ({ handlePageShow }) => {
                 />
               ) : null}
               <Form.Item
-                label={t('clients.content.column.email', { fallbackLng: 'en' })}
+                label={t('clients.content.column.email', {
+                  fallbackLng: 'en',
+                })}
                 name={'email'}
                 className={styles.signupInput}
               >
@@ -176,7 +178,9 @@ const ResetPassword: FC<ResetPasswordProps> = ({ handlePageShow }) => {
                   })}
                 </p>
                 <span>
-                  {t('reset.password.start.trial.text', { fallbackLng: 'en' })}
+                  {t('reset.password.start.trial.text', {
+                    fallbackLng: 'en',
+                  })}
                 </span>
               </div>
             </Form>
