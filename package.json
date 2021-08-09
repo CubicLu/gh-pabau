@@ -12,7 +12,7 @@
     ]
   },
   "scripts": {
-    "nx": "cross-env NODE_OPTIONS=\"--max-old-space-size=6543\" nx",
+    "nx": "cross-env NODE_OPTIONS=\"--max-old-space-size=6543 --inspect\" nx",
     "serve": "yarn nx serve",
     "apollo": "ts-node tools/cli/apollo.ts",
     "build:bridge-api": "yarn nx export bridge-api",
@@ -246,6 +246,7 @@
     "atob": "2.1.2",
     "babel-jest": "27.0.6",
     "babel-loader": "8.2.2",
+    "babel-plugin-import": "1.13.3",
     "bitbucket": "2.6.2",
     "concurrently": "6.1.0",
     "cypress": "6.9.1",

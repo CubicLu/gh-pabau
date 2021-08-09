@@ -26,9 +26,9 @@ import { languages } from '@pabau/i18n'
 import ContextWrapper from '../components/ContextWrapper'
 import { Integrations } from '@sentry/tracing'
 import * as Sentry from '@sentry/react'
-require('../styles/global.less')
-require('../../../libs/ui/src/styles/antd.less')
-require('react-phone-input-2/lib/style.css')
+// require('../styles/global.less')
+// require('../../../libs/ui/src/styles/antd.less')
+// require('react-phone-input-2/lib/style.css')
 
 let apolloClient: ApolloClient<NormalizedCacheObject | null> = null
 

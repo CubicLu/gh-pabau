@@ -3,27 +3,17 @@ module.exports = {
   presets: [
     [
       'next/babel',
-      {
-        'preset-env': {},
-        // 'styled-jsx': {
-        //   plugins: ['styled-jsx-plugin-postcss'],
-        // },
-
-        'styled-jsx': {
-          //plugins: ['styled-jsx-plugin-less'],
-        },
-      },
     ],
   ],
   plugins: [
-    // [
-    //   'import',
-    //   {
-    //     libraryName: 'antd',
-    //     //libraryDirectory: 'es',
-    //     style: true,
-    //   },
-    // ],
+    [
+      'import',
+      {
+        libraryName: 'antd',
+        //libraryDirectory: 'es',
+        style: true,
+      },
+    ],
     // [
     //   'import',
     //   {
