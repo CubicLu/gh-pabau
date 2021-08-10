@@ -76,6 +76,7 @@ export const ListRelatedCompanies = extendType({
             },
             include: {
               Company: true,
+              CompanyDetails: true,
             },
           })
           for (const row of data) {
