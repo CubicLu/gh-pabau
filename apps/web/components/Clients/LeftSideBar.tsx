@@ -14,7 +14,10 @@ import { Labels, tab } from '../../pages/clients'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { FetchResult, MutationFunctionOptions } from '@apollo/client'
 import { AddLabelMutation, Exact } from '@pabau/graphql'
+import { CustomScrollbar } from '../CustomScrollbar/Index'
+import Scrollbars from 'react-custom-scrollbars'
 const { SubMenu } = Menu
+// import { CustomScrollbar } from '../../../components/CustomScrollbar/Index'
 
 interface LeftSideBarProps {
   selectedTab?: string
@@ -126,27 +129,61 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
           </div>
         </Menu.Item>
         <Menu.Divider />
-        <SubMenu key={tab.labels} title={t('clients.leftSidebar.labels')}>
+        <SubMenu
+          key={tab.labels}
+          title={t('clients.leftSidebar.labels')}
+          // popupOffset={[0, 0]}
+          // popupClassName={styles.labelScroll}
+
+          // style={{
+          //   maxHeight: '400px',
+          //   overflowY: 'auto',
+          //   overflowX: 'hidden',
+          //   // scroll,
+          // }}
+          // style={{ maxHeight: '125px', overflowY: 'scroll' }}
+          // className={styles.labelScroll}
+          // style={{ height: '120px', overflowY: 'auto' }}
+        >
+          {/*<div className={testLabels.length >= 3 ? styles.labelScroll : null}>*/}
+          {/*<CustomScrollbar autoHide={true} className={styles.customScrollbar}>*/}
+          {/*<div>*/}
+          {/*<SubMenu*/}
+          {/*  style={{*/}
+          {/*    height: '200px',*/}
+          {/*    maxHeight: '400px',*/}
+          {/*    overflowY: 'auto',*/}
+          {/*    overflowX: 'hidden',*/}
+          {/*    // scroll,*/}
+          {/*  }}*/}
+          {/*>*/}
           {testLabels?.map((label) => {
             return (
               label?.text && (
                 <Menu.Item
                   key={`${label.text}`}
                   onClick={() => handleLabelClick(false, label.text)}
+                  // style={{ position: 'relative' }}
+                  // className={styles.labelScroll}
+
                   // onClick={() => console.log('clicked label leftSidebar')}
                 >
                   <div className={styles.clientMenuItem}>
-                    <span>
-                      <TagOutlined />
-                      &nbsp;{label.text}
-                    </span>
-                    {/*{label.count > 0 && <span>{label.count}</span>}*/}
-                    {getValueByKey(labelCountAll, label.id)}
+                    <div className="testLabel">
+                      <span>
+                        <TagOutlined />
+                        &nbsp;{label.text}
+                      </span>
+                      {/*{label.count > 0 && <span>{label.count}</span>}*/}
+                      {getValueByKey(labelCountAll, label.id)}
+                    </div>
                   </div>
                 </Menu.Item>
               )
             )
           })}
+          {/*</SubMenu>*/}
+          {/*</div>*/}
           <Menu.Item key={tab.createLabel}>
             <CreateLabel
               selectedLabels={selectedLabels}
@@ -164,6 +201,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
               </div>
             </CreateLabel>
           </Menu.Item>
+          {/*</CustomScrollbar>*/}
         </SubMenu>
         <Menu.Divider />
         <Menu.Item key={tab.import}>

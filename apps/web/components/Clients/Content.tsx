@@ -204,14 +204,45 @@ export const ClientsContent: FC<ClientsContentProps> = ({
           {t('clients.content.column.label')}
         </div>
       ),
+      //   dataIndex: 'labelTest',
+      //   visible: visiblePrimaryColumns('Label'),
+      //   // eslint-disable-next-line react/display-name
+      //   render: (labelTest) => {
+      //     // console.log('contentLabelTest', labelTest)
+      //     return (
+      //       <div
+      //         className={styles.labelShow}
+      //         onMouseOver={() => console.log('hover labels')}
+      //       >
+      //         {labelTest?.map((label) => (
+      //           <Button
+      //             className={styles.labelButton}
+      //             key={label.id}
+      //             style={{
+      //               border: `1px solid ${label.color}`,
+      //               color: label.color,
+      //             }}
+      //             backgroundColor={''}
+      //             onClick={(e) => handleLabelClick(e, label.text)}
+      //             icon={<TagOutlined />}
+      //           >
+      //             {label.text}
+      //           </Button>
+      //         ))}
+      //       </div>
+      //     )
+      //   },
+      // },
       dataIndex: 'labelTest',
       visible: visiblePrimaryColumns('Label'),
       // eslint-disable-next-line react/display-name
       render: (labelTest) => {
         // console.log('contentLabelTest', labelTest)
         return (
-          <div className={styles.labelWrapper}>
-            {labelTest?.map((label) => (
+          <Popover
+            trigger={'hover'}
+            placement={'bottom'}
+            content={labelTest?.map((label) => (
               <Button
                 className={styles.labelButton}
                 key={label.id}
@@ -226,7 +257,32 @@ export const ClientsContent: FC<ClientsContentProps> = ({
                 {label.text}
               </Button>
             ))}
-          </div>
+          >
+            <div
+              className={styles.labelShow}
+              onMouseOver={() => console.log('hover labels')}
+            >
+              {labelTest?.slice(0, 2).map((label) => (
+                <div>
+                  <Button
+                    className={styles.labelButton}
+                    key={label.id}
+                    style={{
+                      border: `1px solid ${label.color}`,
+                      color: label.color,
+                    }}
+                    backgroundColor={''}
+                    onClick={(e) => handleLabelClick(e, label.text)}
+                    icon={<TagOutlined />}
+                  >
+                    {label.text}
+                  </Button>
+                </div>
+              ))}
+              {/*<p>...</p>*/}
+              {labelTest.length > 0 ? <p>...</p> : null}
+            </div>
+          </Popover>
         )
       },
     },
