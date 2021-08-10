@@ -242,11 +242,13 @@ const Reports: FC = () => {
       for (const item of temp) {
         if (item.graphDataKey) {
           const graphRecord = graphData?.retrieveReport[item.graphDataKey]
-          const graph = []
-          for (const month of Object.keys(graphRecord)) {
-            graph.push([month, Number.parseFloat(graphRecord[month])])
+          if (graphRecord) {
+            const graph = []
+            for (const month of Object.keys(graphRecord)) {
+              graph.push([month, Number.parseFloat(graphRecord[month])])
+            }
+            item.graphData = graph
           }
-          item.graphData = graph
         }
       }
       setReportsData(temp)
