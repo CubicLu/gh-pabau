@@ -55,14 +55,3 @@ export const authenticateUser = (user: JwtUser): string => {
     { algorithm: 'HS512' }
   )
 }
-
-export const generateLegacyJWT = (args): string => {
-  return jwt.sign(
-    {
-      u: args.user_id,
-      c: args.company_id,
-    },
-    process.env.JWT_SECRET_LEGACY,
-    { algorithm: 'HS512' }
-  )
-}

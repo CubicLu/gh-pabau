@@ -4,7 +4,6 @@ import { Context } from '../../context'
 import {
   verifyUser,
   authenticateUser,
-  generateLegacyJWT,
 } from '../../app/authentication/login-service'
 import { PrismaClient } from '@prisma/client'
 
@@ -76,10 +75,9 @@ export const ListRelatedCompanies = extendType({
               },
             },
             include: {
-              Company: true,
-              CompanyDetails: {
-                select: {
-                  company_name: true,
+              Company: {
+                include: {
+                  details: true,
                 },
               },
             },
@@ -133,22 +131,6 @@ export const AuthenticateUser = extendType({
             remote_connect: args.remote_connect,
           },
         })
-      },
-    })
-  },
-})
-
-export const changeCompany = extendType({
-  type: 'Mutation',
-  definition: (t) => {
-    t.field('changeCompany', {
-      type: 'String',
-      args: {
-        user_id: nonNull(intArg()),
-        company_id: nonNull(intArg()),
-      },
-      async resolve(event, args, ctx: Context) {
-        return generateLegacyJWT(args)
       },
     })
   },
