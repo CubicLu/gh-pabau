@@ -1,9 +1,9 @@
 import { ApolloServer } from 'apollo-server'
-import { schema } from '../../src/schema'
+import { middleware } from '../../src/schema'
 
 it('can instantiate ApolloServer with schema', async () => {
   const server = new ApolloServer({
-    schema,
+    schema: middleware,
   })
   expect(server).toBeTruthy()
 })

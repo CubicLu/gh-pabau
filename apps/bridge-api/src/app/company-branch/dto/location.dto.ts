@@ -29,6 +29,7 @@ export interface CreateBranchInputType {
   sendConfEmil: number
   onlineBooking: number
   customId: string
+  image: string
   employees?: EmployeeList[]
   badges?: BadgesList[]
 }

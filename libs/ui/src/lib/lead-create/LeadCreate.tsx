@@ -45,6 +45,7 @@ export interface LeadCreateProps {
   isMarketingSourceLoading?: boolean
   isLocationLoading?: boolean
   isLeadStatusLoading?: boolean
+  isSalutationLoading?: boolean
   initialValues: InitialDetailsDataProps
   validationObject?: {
     [key: string]: Yup.AnyObjectSchema
@@ -57,6 +58,7 @@ export interface LeadCreateProps {
       value: ((prevState: Employee[]) => Employee[]) | Employee[]
     ) => void
   ) => void
+  loading?: boolean
 }
 
 export interface InitialDetailsDataProps {
@@ -92,6 +94,7 @@ export const LeadCreate: FC<LeadCreateProps> = ({
   initialValues,
   validationObject,
   handleSubmit,
+  loading,
   ...props
 }) => {
   const [assigneeModalOpen, setAssigneeModalOpen] = useState(false)
@@ -155,7 +158,9 @@ export const LeadCreate: FC<LeadCreateProps> = ({
               onBackClick={handleClose}
               createBtnText={t('quickCreate.client.modal.create')}
               enableCreateBtn={
-                submitCount === 0 ? !isSubmitting : !isSubmitting && isValid
+                submitCount === 0
+                  ? !(!isSubmitting && loading)
+                  : !isSubmitting && isValid
               }
               onCreate={handleSubmit}
               assigneeTitle={t('quickCreate.lead.modal.newLead.assigneeTitle')}

@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useState } from 'react'
 import { Notification, NotificationType, System } from '@pabau/ui'
 import {
   GetBussinessDetailsQuery,
@@ -12,6 +12,8 @@ interface SystemTabProps {
   data: GetBussinessDetailsQuery
   addrSuiteNo: string
   enableLab: string
+  historyData: string
+  timeFormat: string
   forcePassword: number
   user: number
   loading?: boolean
@@ -24,12 +26,12 @@ export const SystemTab: FC<SystemTabProps> = ({
   forcePassword,
   enableLab,
   user,
+  historyData,
+  timeFormat,
   loading,
   t,
 }) => {
   const [updateApply, setUpdate] = useState(false)
-  const [historyData, setHistoryData] = useState('')
-  const [timeFormat, setTimeFormat] = useState('')
   const [buttonClicked, setButtonClicked] = useState(false)
   const [updateBusinessDetails] = useUpdateCompanyDetailsMutation({
     onCompleted() {
@@ -75,26 +77,8 @@ export const SystemTab: FC<SystemTabProps> = ({
       data?.company?.details?.medical_approvals === 0 ? false : true,
     historyData: historyData === '0' ? false : true,
     enableLabs: enableLab === '0' ? false : true,
-    timeFormat:
-      timeFormat === '12 hours (e.g. 9:00pm)'
-        ? '12 hours (e.g. 9:00pm)'
-        : '24 hours (e.g. 21:00)',
+    timeFormat: timeFormat,
   }
-
-  useEffect(() => {
-    const record = data?.findManyCompanyMeta?.reduce(
-      (opsData, { meta_name, meta_value }) => ({
-        ...opsData,
-        [meta_name]: meta_value,
-      }),
-      {}
-    )
-
-    if (record) {
-      setHistoryData(record?.['history_data'])
-      setTimeFormat(record?.['time_format'])
-    }
-  }, [data])
 
   const handleSaveDetail = async (values) => {
     setButtonClicked(true)

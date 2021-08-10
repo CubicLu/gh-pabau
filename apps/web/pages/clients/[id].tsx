@@ -2,6 +2,7 @@ import React from 'react'
 import { Layout } from '@pabau/ui'
 import './clients.module.less'
 import LegacyPage from '../../components/LegacyPage'
+import Search from '../../components/Search'
 import { useRouter } from 'next/router'
 
 export function Client() {
@@ -11,7 +12,7 @@ export function Client() {
 
   return (
     <div>
-      <Layout legacyContent={true}>
+      <Layout legacyContent={true} searchRender={() => <Search />}>
         <LegacyPage urlPath={'pages/contacts/3/?id=' + contact_id} />
       </Layout>
     </div>

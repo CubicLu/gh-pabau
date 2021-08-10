@@ -20,7 +20,7 @@ export default class SubscriptionGoCardless extends SubscriptionService {
     console.info('Subscription gocardless is initialized')
     this.type = 'GoCardless'
     this.client = new GoCardlessClient(
-      process.env.GC_ACCESS_TOKEN,
+      process.env.GOCARDLESS_ACCESS_TOKEN,
       Environments.Live,
       { raiseOnIdempotencyConflict: false }
     )
@@ -124,9 +124,10 @@ export default class SubscriptionGoCardless extends SubscriptionService {
       status: subscription.status,
       app_fee: subscription.app_fee,
       next_charge_date: subscription.upcoming_payments[0]?.charge_date,
-      next_charge_amount:
-        Number(subscription.upcoming_payments[0]?.amount) / 100,
-      amount: Number(subscription.amount) / 100,
+      next_charge_amount: subscription.upcoming_payments[0]?.amount
+        ? Number(subscription.upcoming_payments[0]?.amount) / 100
+        : 0,
+      amount: subscription.amount ? Number(subscription.amount) / 100 : 0,
     }
   }
 

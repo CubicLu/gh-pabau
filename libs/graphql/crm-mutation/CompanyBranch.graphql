@@ -27,6 +27,7 @@ fragment CompanyBranchFields on CompanyBranch {
   color
   notify_on_lead
   notice
+  image
 }
 
 fragment CompanyBranch on CompanyBranch {

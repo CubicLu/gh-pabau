@@ -53,6 +53,19 @@ export const interceptors = {
       return true
     }
   ),
+  interceptResetPasswordToken: rule('injectResetPasswordToken')(
+    (_root, args, ctx: Context) => {
+      if (!args?.where?.key_code) return new Error('Token not found')
+
+      args.where = {
+        key_code: args.where.key_code,
+        date: {
+          gte: new Date(Date.now() - 30 * 60000).toJSON(),
+        },
+      }
+      return true
+    }
+  ),
   interceptAccessToAdminTable: rule('interceptAccessToAdminTable')(
     (_root, args, ctx: Context) => {
       args.where = {

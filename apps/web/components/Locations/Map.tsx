@@ -56,7 +56,7 @@ const getLocationDetails = (address_components, locationDetail) => {
       item.types.includes('route')
     )
     locationDetail.subLocality = sublocality?.long_name ?? ''
-    locationDetail.location = address?.long_name ?? subAddress?.long_name
+    locationDetail.location = address?.long_name ?? subAddress?.long_name ?? ''
     locationDetail.region = region.join(', ')
   }
 }
@@ -72,7 +72,7 @@ const Map: FC<MapProps> = compose(
   lifecycle({
     componentWillMount() {
       const refs: any = {} // eslint-disable-line  @typescript-eslint/no-explicit-any
-      const { setLocationDetail } = this.props
+      const { setLocationDetail, locationDetail: locationData } = this.props
       this.setState({
         places: [],
         // eslint-disable-next-line   @typescript-eslint/no-explicit-any
@@ -95,6 +95,7 @@ const Map: FC<MapProps> = compose(
             country: '',
             location: '',
             street: '',
+            imageUrl: locationData.imageUrl,
           }
 
           const { geometry, address_components } = placeDetail
@@ -144,6 +145,7 @@ const Map: FC<MapProps> = compose(
                 location: '',
                 street: '',
                 subLocality: '',
+                imageUrl: props.locationDetail?.imageUrl,
               }
               locationDetail.position = {
                 lat: item.coords.latitude,

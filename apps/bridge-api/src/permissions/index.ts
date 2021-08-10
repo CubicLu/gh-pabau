@@ -65,10 +65,7 @@ export const permissions = shield(
         rules.authentication.isAuthenticated,
         rules.authentication.isAdmin
       ),
-      createOneLead: and(
-        rules.authentication.isAuthenticated,
-        rules.authentication.isAdmin
-      ),
+      createOneLead: rules.authentication.isAuthenticated,
       //Country
       createOneCountry: rules.authentication.isAuthenticated,
       //MedicalFormContact
@@ -92,7 +89,7 @@ export const permissions = shield(
       //resetPassword
       resetPassword: allow,
       upsertUserReportByReportCode: rules.authentication.isAdmin,
-      createOneContact: rules.authentication.isAdmin,
+      createOneContact: rules.authentication.isAuthenticated,
 
       upsertManyStaffMetaByGroupId: and(
         rules.authentication.isAuthenticated,
@@ -202,6 +199,8 @@ export const permissions = shield(
         rules.authentication.isAuthenticated,
       findManyProductsWithAvailableQuantityCount:
         rules.authentication.isAuthenticated,
+      findFirstPasswordResetAuth:
+        rules.interceptors.interceptResetPasswordToken,
       //CmLabels
       findManyCmLabel: rules.interceptors.interceptSharedCompanyData,
       // //Authentication
