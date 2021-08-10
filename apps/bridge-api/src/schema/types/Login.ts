@@ -4,6 +4,7 @@ import { Context } from '../../context'
 import {
   verifyUser,
   authenticateUser,
+  generateLegacyJWT,
 } from '../../app/authentication/login-service'
 import { PrismaClient } from '@prisma/client'
 
@@ -76,6 +77,11 @@ export const ListRelatedCompanies = extendType({
             },
             include: {
               Company: true,
+              CompanyDetails: {
+                select: {
+                  company_name: true,
+                },
+              },
             },
           })
           for (const row of data) {
@@ -139,10 +145,10 @@ export const changeCompany = extendType({
       type: 'String',
       args: {
         user_id: nonNull(intArg()),
-        company_id: nonNull(stringArg()),
+        company_id: nonNull(intArg()),
       },
       async resolve(event, args, ctx: Context) {
-        return 'jwtcool'
+        return generateLegacyJWT(args)
       },
     })
   },
