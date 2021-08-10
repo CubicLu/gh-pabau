@@ -84,6 +84,7 @@ export const permissions = shield(
       ConnectVerifyCredentials: allow,
       ConnectAuthorizeUser: allow,
       logout: rules.authentication.isAuthenticated,
+      changeCompany: rules.authentication.isAuthenticated,
 
       AuthenticateUser: allow,
       //resetPassword

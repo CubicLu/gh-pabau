@@ -1,0 +1,5 @@
+query getRelatedCompanies($username: String!) {
+  ListRelatedCompanies(username: $username) {
+    company_id
+  }
+}
