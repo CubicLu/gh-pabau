@@ -86,7 +86,8 @@
     "**/css-what": ">=5.0.1",
     "ts-node-dev/**/meow": ">=10.0.1",
     "**/cssnano": ">=5.0.6",
-    "**/mini-css-extract-plugin": ">=1.6.0"
+    "**/mini-css-extract-plugin": ">=1.6.0",
+    "eslint-plugin-graphql/**/graphql-config": "3.0.2"
   },
   "dependencies": {
     "@anchan828/nest-sendgrid": "0.4.19",
