@@ -69,7 +69,7 @@
     "update": "yarn upgrade-interactive && yarn nx migrate latest",
     "workspace-schematic": "yarn nx workspace-schematic",
     "dep-graph": "yarn nx dep-graph",
-    "nexus:generate": "node tools/cli/esbuild.cjs && yarn env-cmd -f apps/bridge-api/.env node dist/asdf/bridge-api-nexus.cjs && mv -f dist/asdf/nexus.d.ts apps/bridge-api/src/generated/",
+    "nexus:generate": "node tools/cli/esbuild.cjs && ls -al tools/cli/ && ls -al dist/ && ls -al dist/asdf/ && yarn env-cmd -f apps/bridge-api/.env node dist/asdf/bridge-api-nexus.cjs && ls -al tools/cli/ && ls -al dist/ && ls -al dist/asdf/ && cp -f dist/asdf/nexus.d.ts apps/bridge-api/src/generated/",
     "bridge:generate": "prisma format && prisma generate && rimraf libs/graphql/crm-mutation && yarn dotenv-flow -p apps/bridge-api pal g && concurrently -n NEXUS,GRAPHQL-CODEGEN -c blue,yellow,green \"yarn nexus:generate\" \"yarn graphql-codegen:cached\"",
     "bridge:prune": "rm -rf apps/bridge-api/src/generated libs/graphql/crm-mutation",
     "postinstall": "patch-package --patch-dir tools/patches && husky install && yarn graphql-codegen:cached"
