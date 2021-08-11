@@ -58,6 +58,7 @@ export const Clients: FC<ClientsProps> = () => {
       const tempLab = response.insert_contacts_labels.returning[0]
       setResponseLabels(true)
       setCountLabelS(() => [...countLabelS, tempLab])
+      getContactsLabelsQuery()
     },
     onError() {
       console.log('not added contactslabels')
@@ -259,7 +260,7 @@ export const Clients: FC<ClientsProps> = () => {
     // setSourceFilteredData(sourceData)
     setSourceFilteredData(contactsData)
 
-    console.log('testing change filtereddata')
+    // console.log('testing change filtereddata')
     const duplicateList = []
     const newList = sourceData.filter((data) => !data.is_dismissed)
     const data = groupBy(newList, (data) => {
@@ -345,7 +346,7 @@ export const Clients: FC<ClientsProps> = () => {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [searchText, selectedTab, sourceData])
 
-  console.log('searchText 222', searchText)
+  // console.log('searchText 222', searchText)
 
   useEffect(() => {
     // console.log('enter 1 5555')

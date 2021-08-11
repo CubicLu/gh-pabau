@@ -141,38 +141,38 @@ export const ClientsContent: FC<ClientsContentProps> = ({
       visible: visiblePrimaryColumns('Avatar'),
       columnType: 'avatar',
       // eslint-disable-next-line react/display-name
-      // render: (data) => {
-      //   const { firstName } = data
-      //   return (
-      //     <div>
-      //       <span className={styles.avatarWrapper}>
-      //         <Avatar name={firstName} />
-      //       </span>
-      //     </div>
-      //   )
-      // },
-      // eslint-disable-next-line react/display-name
       render: (data) => {
-        const { avatar, firstName } = data
+        const { firstName } = data
         return (
           <div>
             <span className={styles.avatarWrapper}>
-              {/*<img src="/cdn/attachments/8254/avatar_photos/thumb_20200108142441.jpeg?time=1578493621" />*/}
-              {/*<img>{data.avatar}</img>*/}
-              {/*<Image src={data.avatar} preview={false} />*/}
-              {/*<Avatar size={40} src={data.avatar} />*/}
-              {avatar ? (
-                // <Avatar size={30} src={useImage(avatar)} />
-                <div>{firstName}</div>
-              ) : (
-                // <div style={{ background: useImage(avatar) }}></div>
-                // <Avatar name={firstName} />
-                <div>{firstName}</div>
-              )}
+              <Avatar name={firstName} />
             </span>
           </div>
         )
       },
+      // eslint-disable-next-line react/display-name
+      // render: (data) => {
+      //   const { avatar, firstName } = data
+      //   return (
+      //     <div>
+      //       <span className={styles.avatarWrapper}>
+      //         {/*<img src="/cdn/attachments/8254/avatar_photos/thumb_20200108142441.jpeg?time=1578493621" />*/}
+      //         {/*<img>{data.avatar}</img>*/}
+      //         {/*<Image src={data.avatar} preview={false} />*/}
+      //         {/*<Avatar size={40} src={data.avatar} />*/}
+      //         {avatar ? (
+      //           // <Avatar size={30} src={useImage(avatar)} />
+      //           <div>{firstName}</div>
+      //         ) : (
+      //           // <div style={{ background: useImage(avatar) }}></div>
+      //           // <Avatar name={firstName} />
+      //           <div>{firstName}</div>
+      //         )}
+      //       </span>
+      //     </div>
+      //   )
+      // },
     },
     {
       title: t('clients.content.column.name'),
@@ -255,12 +255,13 @@ export const ClientsContent: FC<ClientsContentProps> = ({
                 icon={<TagOutlined />}
               >
                 {label.text}
+                {/*{labelTest.length < 0 ? label.text : null}*/}
               </Button>
             ))}
           >
             <div
               className={styles.labelShow}
-              onMouseOver={() => console.log('hover labels')}
+              // onMouseOver={() => console.log('hover labels')}
             >
               {labelTest?.slice(0, 2).map((label) => (
                 <div>
@@ -280,7 +281,11 @@ export const ClientsContent: FC<ClientsContentProps> = ({
                 </div>
               ))}
               {/*<p>...</p>*/}
-              {labelTest.length > 0 ? <p>...</p> : null}
+              {labelTest.length > 2 ? (
+                <p>
+                  <b>. . .</b>
+                </p>
+              ) : null}
             </div>
           </Popover>
         )

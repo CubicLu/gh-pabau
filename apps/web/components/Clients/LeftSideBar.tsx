@@ -98,7 +98,8 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
         className={styles.clientMenu}
         defaultSelectedKeys={[tab.clients]}
         selectedKeys={[selectedTab]}
-        defaultOpenKeys={[tab.labels]}
+        // defaultOpenKeys={[tab.labels, 'testKey']}
+        defaultOpenKeys={['testKey', tab.labels]}
         mode="inline"
         onClick={handleSelectedTab}
       >
@@ -129,47 +130,30 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
           </div>
         </Menu.Item>
         <Menu.Divider />
-        <SubMenu
-          key={tab.labels}
-          title={t('clients.leftSidebar.labels')}
-          // popupOffset={[0, 0]}
-          // popupClassName={styles.labelScroll}
-
-          // style={{
-          //   maxHeight: '400px',
-          //   overflowY: 'auto',
-          //   overflowX: 'hidden',
-          //   // scroll,
-          // }}
-          // style={{ maxHeight: '125px', overflowY: 'scroll' }}
-          // className={styles.labelScroll}
-          // style={{ height: '120px', overflowY: 'auto' }}
-        >
-          {/*<div className={testLabels.length >= 3 ? styles.labelScroll : null}>*/}
-          {/*<CustomScrollbar autoHide={true} className={styles.customScrollbar}>*/}
-          {/*<div>*/}
-          {/*<SubMenu*/}
-          {/*  style={{*/}
-          {/*    height: '200px',*/}
-          {/*    maxHeight: '400px',*/}
-          {/*    overflowY: 'auto',*/}
-          {/*    overflowX: 'hidden',*/}
-          {/*    // scroll,*/}
-          {/*  }}*/}
-          {/*>*/}
-          {testLabels?.map((label) => {
-            return (
-              label?.text && (
-                <Menu.Item
-                  key={`${label.text}`}
-                  onClick={() => handleLabelClick(false, label.text)}
-                  // style={{ position: 'relative' }}
-                  // className={styles.labelScroll}
-
-                  // onClick={() => console.log('clicked label leftSidebar')}
-                >
-                  <div className={styles.clientMenuItem}>
-                    <div className="testLabel">
+        <SubMenu title={t('clients.leftSidebar.labels')} key="testKey">
+          <SubMenu
+            style={
+              testLabels.length > 10
+                ? {
+                    minHeight: '200px',
+                    maxHeight: '400px',
+                    overflowY: 'scroll',
+                    overflowX: 'hidden',
+                  }
+                : null
+            }
+            key={tab.labels}
+            title={'should be GONE'}
+            className={styles.modifiedItem}
+          >
+            {testLabels?.map((label) => {
+              return (
+                label?.text && (
+                  <Menu.Item
+                    key={`${label.text}`}
+                    onClick={() => handleLabelClick(false, label.text)}
+                  >
+                    <div className={styles.clientMenuItem}>
                       <span>
                         <TagOutlined />
                         &nbsp;{label.text}
@@ -177,12 +161,11 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
                       {/*{label.count > 0 && <span>{label.count}</span>}*/}
                       {getValueByKey(labelCountAll, label.id)}
                     </div>
-                  </div>
-                </Menu.Item>
+                  </Menu.Item>
+                )
               )
-            )
-          })}
-          {/*</SubMenu>*/}
+            })}
+          </SubMenu>
           {/*</div>*/}
           <Menu.Item key={tab.createLabel}>
             <CreateLabel
