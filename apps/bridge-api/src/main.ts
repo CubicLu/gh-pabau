@@ -1,8 +1,4 @@
-import {
-  assertEnvVarsExist,
-  stringToBoolean,
-  truthyToMaskedString,
-} from './utils'
+import { assertEnvVarsExist } from './utils'
 import { config } from 'dotenv-flow'
 import { version } from '../../../package.json'
 import { createApp } from './app'
