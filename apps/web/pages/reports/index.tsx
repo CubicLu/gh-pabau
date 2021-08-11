@@ -155,8 +155,6 @@ const Reports: FC = () => {
       }
 
       setSearchData(searchDataArray)
-    } else {
-      // setTitle('Setup')
     }
   }
 
