@@ -72,7 +72,8 @@
     "nexus:generate": "node tools/cli/esbuild.cjs && ls -al tools/cli/ && ls -al dist/ && ls -al dist/asdf/ && yarn env-cmd -f apps/bridge-api/.env node dist/asdf/bridge-api-nexus.cjs && ls -al tools/cli/ && ls -al dist/ && ls -al dist/asdf/ && ls -al && ls -al apps/bridge-api/src && cp -f dist/asdf/nexus.d.ts apps/bridge-api/src/generated/",
     "bridge:generate": "prisma format && prisma generate && rimraf libs/graphql/crm-mutation && yarn dotenv-flow -p apps/bridge-api pal g && concurrently -n NEXUS,GRAPHQL-CODEGEN -c blue,yellow,green \"yarn nexus:generate\" \"yarn graphql-codegen:cached\"",
     "bridge:prune": "rm -rf apps/bridge-api/src/generated libs/graphql/crm-mutation",
-    "postinstall": "patch-package --patch-dir tools/patches && husky install && yarn graphql-codegen:cached"
+    "lint:graphql-inspector": "yarn graphql-inspector validate \"{libs,apps}/**/*.{graphql,tsx}\" hasura/schema.graphql",
+    "postinstall": "patch-package --patch-dir tools/patches && husky install && (yarn graphql-codegen:cached || (yarn lint:graphql-inspector && exit 1))"
   },
   "resolutions": {
     "**/immer": ">=8.0.1",
@@ -87,8 +88,7 @@
     "ts-node-dev/**/meow": ">=10.0.1",
     "**/cssnano": ">=5.0.6",
     "**/mini-css-extract-plugin": ">=1.6.0",
-    "eslint-plugin-graphql/**/graphql-config": "3.0.2",
-    "@grapqhl-inspector/**/apollo-server-express": "2.2.6"
+    "eslint-plugin-graphql/**/graphql-config": "3.0.2"
   },
   "dependencies": {
     "@anchan828/nest-sendgrid": "0.4.19",
