@@ -1,4 +1,4 @@
-query getBussinessDetails {
+query getBusinessDetails {
   me {
     Company {
       details {
