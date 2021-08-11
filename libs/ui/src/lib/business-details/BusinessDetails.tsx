@@ -6,6 +6,7 @@ import {
   LanguageDropdown,
   PhoneNumberInput,
   SimpleDropdown,
+  AddressDetails,
 } from '@pabau/ui'
 import { Col, Divider, Row, Skeleton, Image } from 'antd'
 import React, { FC, useEffect, useState } from 'react'
@@ -47,6 +48,7 @@ export interface BusinessDetailsProps {
   buttonClicked?: boolean
   showUploader?: () => void
   companyLogo?: string
+  AddressDetails?: AddressDetails
 }
 
 export const BusinessDetails: FC<BusinessDetailsProps> = ({
@@ -59,9 +61,41 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
   buttonClicked,
   showUploader,
   companyLogo,
+  AddressDetails,
 }) => {
   const { t } = useTranslation('common')
   const size = useWindowSize()
+
+  const weeklist = [
+    {
+      key: 'monday',
+      label: t('business.details.week.day.monday'),
+    },
+    {
+      key: 'tuesday',
+      label: t('business.details.week.day.tuesday'),
+    },
+    {
+      key: 'wednesday',
+      label: t('business.details.week.day.wednesday'),
+    },
+    {
+      key: 'thursday',
+      label: t('business.details.week.day.thursday'),
+    },
+    {
+      key: 'friday',
+      label: t('business.details.week.day.friday'),
+    },
+    {
+      key: 'saturday',
+      label: t('business.details.week.day.saturday'),
+    },
+    {
+      key: 'sunday',
+      label: t('business.details.week.day.sunday'),
+    },
+  ]
 
   const [location, setLocation] = useState('')
   const [businessType, setBusinessType] = useState<IOption[]>(bizTypes)
@@ -115,7 +149,8 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
         timezone: values.timezone,
         currency: values.currency,
         dateFormat: values.dateFormat,
-        weekStart: values.weekStart,
+        weekStart: weeklist.find((item) => item.label === values.weekStart)
+          ?.key,
       },
       businessLocation: locationDetails,
       businessLocationData: businessLocationData,
@@ -139,7 +174,9 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
     timezone: languageSetting?.timezone || '',
     currency: languageSetting?.currency || '',
     dateFormat: languageSetting?.dateFormat || '',
-    weekStart: languageSetting?.weekStart || '',
+    weekStart:
+      weeklist.find((item) => item.key === languageSetting?.weekStart)?.label ||
+      '',
   }
 
   const formikValidationSchema = Yup.object({
@@ -153,12 +190,12 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
 
   const handleLocationChanges = (value, data) => {
     setLocationDetails({
-      address: data.address ?? '',
-      apt: data.apt ?? '',
-      city: data.city ?? '',
-      country: data.country ?? '',
-      postcode: data.postcode ?? '',
-      region: data.region ?? '',
+      address: data?.address ?? '',
+      apt: data?.apt ?? '',
+      city: data?.city ?? '',
+      country: data?.country ?? '',
+      postcode: data?.postcode ?? '',
+      region: data?.region ?? '',
     })
     setBusinessLocationData(value)
   }
@@ -372,7 +409,9 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
                         dropdownItems={timezones.map(
                           (timezone) => timezone.text || ''
                         )}
-                        onSelected={(value) => setFieldValue('timezone', value)}
+                        onSelected={(value) => {
+                          setFieldValue('timezone', value)
+                        }}
                       />
                     ) : (
                       <Skeleton.Input active={true} size={'small'} />
@@ -422,7 +461,7 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
                 </Col>
                 <Col className="gutter-row" xs={24} sm={12}>
                   <Form.Item
-                    name={'values'}
+                    name={'weekStart'}
                     label={
                       loading ? t('business.details.week.start.label') : ''
                     }
@@ -432,18 +471,10 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
                         label={t('business.details.week.start.label')}
                         tooltip={t('business.details.week.start.tooltip')}
                         value={values.weekStart}
-                        dropdownItems={[
-                          t('business.details.week.day.monday'),
-                          t('business.details.week.day.tuesday'),
-                          t('business.details.week.day.wednesday'),
-                          t('business.details.week.day.thursday'),
-                          t('business.details.week.day.friday'),
-                          t('business.details.week.day.saturday'),
-                          t('business.details.week.day.sunday'),
-                        ]}
-                        onSelected={(value) =>
+                        dropdownItems={weeklist.map((item) => item.label)}
+                        onSelected={(value) => {
                           setFieldValue('weekStart', value)
-                        }
+                        }}
                       />
                     ) : (
                       <Skeleton.Input active={true} size={'small'} />
@@ -462,6 +493,7 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
                 loading={loading}
                 value={location}
                 onChange={handleLocationChanges}
+                AddressDetails={AddressDetails}
               />
             </div>
             <div className={styles.btnSave}>
