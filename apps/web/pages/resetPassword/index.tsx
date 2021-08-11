@@ -7,7 +7,7 @@ import { Form, Input, SubmitButton } from 'formik-antd'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import React, { FC, useState } from 'react'
 import styles from './index.module.less'
-import { ConfirmPasswordValidation } from '@pabau/yup'
+import { validatePasswordWithConfirm } from '@pabau/yup'
 import { useRouter } from 'next/router'
 import { useQuery } from '@apollo/client'
 import { TokenVerificationDocument } from '@pabau/graphql'
@@ -94,7 +94,7 @@ const Index: FC = () => {
               password: '',
               confirmPassword: '',
             }}
-            validationSchema={ConfirmPasswordValidation}
+            validationSchema={validatePasswordWithConfirm}
             onSubmit={async (value: PasswordFormProps) => {
               setIsLoading(true)
               updateUserPassword({
@@ -238,11 +238,11 @@ const Index: FC = () => {
                       type={'primary'}
                       loading={isLoading}
                       disabled={
-                        isValid &&
-                        values.password !== '' &&
-                        values.confirmPassword !== ''
-                          ? false
-                          : true
+                        !(
+                          isValid &&
+                          values.password !== '' &&
+                          values.confirmPassword !== ''
+                        )
                       }
                     >
                       {t('reset.password.change.button', { fallbackLng: 'en' })}

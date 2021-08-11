@@ -9486,7 +9486,7 @@ model PasswordResetAuth {
   id           Int       @id @default(autoincrement())
   key_code     String
   username     String    @unique
-  old_password String
+  old_password String?
   date         DateTime?
   User         User      @relation(fields: [username], references: [username])
 
