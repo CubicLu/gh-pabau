@@ -11,11 +11,9 @@ export function Client() {
     typeof router.query.id === 'object' ? router.query.id[0] : router.query.id
 
   return (
-    <div>
-      <Layout legacyContent={true} searchRender={() => <Search />}>
-        <LegacyPage urlPath={'pages/contacts/3/?id=' + contact_id} />
-      </Layout>
-    </div>
+    <Layout legacyContent={true} searchRender={() => <Search />}>
+      <LegacyPage urlPath={'pages/contacts/3/?id=' + contact_id} />
+    </Layout>
   )
 }
 
