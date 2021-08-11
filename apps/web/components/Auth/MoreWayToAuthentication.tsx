@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import styles from '../../pages/login.module.less'
 
-const MoreWayAuthentication: FC = () => {
+const MoreWayToAuthentication: FC = () => {
   return (
     <div>
       <div className={styles.signInForm}>
@@ -21,4 +21,4 @@ const MoreWayAuthentication: FC = () => {
   )
 }
 
-export default MoreWayAuthentication
+export default MoreWayToAuthentication

@@ -8,7 +8,9 @@ import {
 } from '@pabau/ui'
 import React, { FC, useState } from 'react'
 import dayjs from 'dayjs'
-import Alex from '../../../assets/images/trainers/alex.png'
+import Alex from '../../../assets/images/users/alex.png'
+import Iva from '../../../assets/images/trainers/rsz_iva.jpg'
+import Joy from '../../../assets/images/trainers/rsz_joy.jpg'
 import styles from '../../../pages/setup/setup.module.less'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import {
@@ -20,7 +22,11 @@ import { useRouter } from 'next/router'
 
 const WEBINARS_PER_PAGE = 6
 
-const TRAINERS = [{ name: 'alex', image: Alex }]
+const TRAINERS = [
+  { name: 'alex', image: Alex },
+  { name: 'iva', image: Iva },
+  { name: 'joy', image: Joy },
+]
 
 const WebinarCard: FC = () => {
   const [isOpenModal, setIsOpen] = useState<boolean>(false)

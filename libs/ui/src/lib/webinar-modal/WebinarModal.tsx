@@ -19,7 +19,6 @@ export interface WebinarModalProps {
   buttonType: string
   registered_id?: number
   visible?: boolean
-  userLang?: string
   awaitingResponse?: boolean
   onCancel?: () => void
   onRegister?: (
@@ -47,7 +46,6 @@ export const WebinarModal: FC<WebinarModalProps> = ({
   description,
   backgroundImage,
   buttonType,
-  userLang,
   course_id,
   webinar_id,
   registered_id,
@@ -99,17 +97,7 @@ export const WebinarModal: FC<WebinarModalProps> = ({
           <p className={styles.name}>{name}</p>
           <p className={styles.start}>{t('footer.webinar.getting.started')}</p>
           <p className={styles.name}>
-            {new Date(String(time)).toLocaleString(
-              userLang?.toString()?.slice(0, 2) || 'en',
-              {
-                day: 'numeric', // numeric, 2-digit
-                year: 'numeric', // numeric, 2-digit
-                month: 'short', // numeric, 2-digit, long, short, narrow
-                hour: 'numeric', // numeric, 2-digit
-                minute: 'numeric', // numeric, 2-digit
-                second: 'numeric', // numeric, 2-digit
-              }
-            )}
+            {dayjs(time)?.format('MMMM DD, YYYY, HH:mm:ss')}
           </p>
           {finished && (
             <p style={{ display: 'inline' }}>
