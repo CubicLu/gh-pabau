@@ -1,15 +1,15 @@
 import React, { FC, useState } from 'react'
 import { Notification, NotificationType, System } from '@pabau/ui'
 import {
-  GetBussinessDetailsQuery,
-  GetBussinessDetailsDocument,
+  GetBusinessDetailsQuery,
+  GetBusinessDetailsDocument,
   useUpdateCompanyDetailsMutation,
   useSetMultipleMetaDataMutation,
 } from '@pabau/graphql'
 import { TFunction } from 'react-i18next'
 
 interface SystemTabProps {
-  data: GetBussinessDetailsQuery
+  data: GetBusinessDetailsQuery
   addrSuiteNo: string
   enableLab: string
   historyData: string
@@ -175,7 +175,7 @@ export const SystemTab: FC<SystemTabProps> = ({
         optimisticResponse: {},
         refetchQueries: [
           {
-            query: GetBussinessDetailsDocument,
+            query: GetBusinessDetailsDocument,
           },
         ],
       })

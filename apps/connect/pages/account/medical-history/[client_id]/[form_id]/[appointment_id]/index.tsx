@@ -1,5 +1,5 @@
 import {
-  useGetBussinessDetailsQuery,
+  useGetBusinessDetailsQuery,
   useGetContactDetailsLazyQuery,
   useGetMedicalFormDetailsLazyQuery,
 } from '@pabau/graphql'
@@ -155,7 +155,7 @@ export const MedicalHistory = () => {
     console.log('router.query.appointment_id =', router.query.appointment_id)
   }, [router.query.appointment_id])
 
-  const businessDetails = useGetBussinessDetailsQuery()
+  const businessDetails = useGetBusinessDetailsQuery()
 
   useEffect(() => {
     if (businessDetails?.data?.company?.details?.date_format)
