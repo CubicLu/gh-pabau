@@ -677,7 +677,11 @@
             "assets": [
               "apps/bridge-api/src/assets",
               "apps/bridge-api/src/prisma",
-              "apps/bridge-api/cicd/healthcheck.sh"
+              {
+                "glob": "healthcheck.sh",
+                "input": "apps/bridge-api/cicd",
+                "output": "/"
+              }
             ],
             "maxWorkers": 1,
             "generatePackageJson": true
