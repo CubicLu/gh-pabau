@@ -5,7 +5,6 @@ import { Checkbox, Form, Input, SubmitButton } from 'formik-antd'
 import { LoginValidation } from '@pabau/yup'
 import styles from '../../pages/login.module.less'
 import Link from 'next/link'
-
 export interface LoginFormProps {
   email: string
   password: string
@@ -22,13 +21,12 @@ const LoginMain: FC<P> = ({ handlePageShow }) => {
       localStorage.removeItem('token')
     }
     const { email, password } = loginProps
-    await verifyCredentials({
-      variables: {
-        username: email,
-        password: password,
-      },
-    })
-    console.log('finished verifyCredentials')
+    // await login({
+    //   variables: {
+    //     username: email,
+    //     password: password,
+    //   },
+    // })
   }
 
   return (

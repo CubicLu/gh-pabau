@@ -52,16 +52,16 @@ export const Login = extendType({
         })
         if (!(users?.length > 0)) throw new Error('Incorrect email or password')
 
-        if (users.some((e) => e.password_algor !== 2))
-          throw new Error(
-            'Error 5B - Your password has not been changed for some time. Please use Pabau 1 to change it before proceeding.'
-          )
+        // if (users.some((e) => e.password_algor !== 2))
+        //   throw new Error(
+        //     'Error 5B - Your password has not been changed for some time. Please use Pabau 1 to change it before proceeding.'
+        //   )
 
-        const salt = users[0].salt
-        if (!salt)
-          throw new Error(
-            'Error 5S - Your password has not been changed for some time. Please use Pabau 1 to change it before proceeding.'
-          )
+        // const salt = users[0].salt
+        // if (!salt)
+        //   throw new Error(
+        //     'Error 5S - Your password has not been changed for some time. Please use Pabau 1 to change it before proceeding.'
+        //   )
 
         const passwordHash = createPabau1PasswordHash(password, salt)
 

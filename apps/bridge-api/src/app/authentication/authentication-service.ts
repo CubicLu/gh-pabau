@@ -46,6 +46,7 @@ export const generateJWT = (user: AuthenticatedUser): string => {
   )
 }
 
+/* Legacy */
 const generatePab1JWT = ({
   id,
   Company: { id: companyId },

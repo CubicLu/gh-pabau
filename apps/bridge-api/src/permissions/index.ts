@@ -217,6 +217,9 @@ export const permissions = shield(
       //statement template
       getStatementData: rules.authentication.isAuthenticated,
       //TODO once jest mocks are resolved move it to rules.authentication.isAuthenticated
+
+      // listRelatedCompanies: rules.authentication.isAuthenticated,
+      // VerifyCredentials: allow,
       featureRequestsWeeklyAvg: allow,
       '*': and(
         rules.authentication.isAuthenticated,
