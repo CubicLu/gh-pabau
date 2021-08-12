@@ -36,6 +36,7 @@ export interface Labels {
   label?: string
   count?: number
   color?: string
+  id?: number
 }
 
 export const tab = {
@@ -107,6 +108,8 @@ export const Clients: FC<ClientsProps> = () => {
         text: response.insert_labels_one.text,
         color: response.insert_labels_one.color,
       }
+      setTestLabels([...testLabels, responseLabel])
+
       if (selectedRowKeys.length > 0) {
         setSelectedLabels([...selectedLabels, responseLabel])
 
@@ -129,7 +132,9 @@ export const Clients: FC<ClientsProps> = () => {
           return contact
         })
         // setTestData(tempData)
+        // getLabelsQuery()
         setTestData(tempData)
+        console.log('testLabels addLabel', testLabels)
       }
       return responseLabel
     },
@@ -137,6 +142,8 @@ export const Clients: FC<ClientsProps> = () => {
       console.log(error)
     },
   })
+
+  // console.log('testData', testData)
 
   useEffect(() => {
     getContactsLabelsQuery()
@@ -289,6 +296,8 @@ export const Clients: FC<ClientsProps> = () => {
     }
     setDuplicateDataList(duplicateList)
   }, [sourceData])
+
+  // console.log('testData', testData)
 
   useEffect(() => {
     selectedTab === tab.archived ? setIsArchived(true) : setIsArchived(false)

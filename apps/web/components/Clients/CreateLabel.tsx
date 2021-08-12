@@ -16,8 +16,9 @@ import {
 import styles from '../../pages/clients/clients.module.less'
 import { Labels } from '../../pages/clients'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import { differenceBy } from 'lodash'
+import { differenceBy, difference } from 'lodash'
 import { FetchResult, MutationFunctionOptions } from '@apollo/client'
+import { test } from 'shelljs'
 
 interface CreateLabelsProps {
   children?: ReactNode
@@ -160,16 +161,17 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   }
 
   console.log('contactsLabels createLabel', contactsLabels)
+  console.log('testLabels 4444', testLabels)
 
   const addLabelData = (valueObject) => {
     if (
-      testLabels?.some(
-        (item) => item.text && item.color !== valueObject.text
-      ) ||
-      testLabels.length !== -1
+      !testLabels?.some((item) => item.text === valueObject.text)
+      // || testLabels.length !== -1
     ) {
+      console.log('valueObject 3333', valueObject)
+      console.log('testLabels 3333', testLabels)
       // setTestLabels([...testLabels, valueObject])
-      testLabels.push(valueObject)
+      // testLabels.push(valueObject)
       setSelectedLabels([...selectedLabels, valueObject])
       fromHeader && handleApplyLabel([...selectedLabels, valueObject])
       addLabelMutation({
@@ -317,46 +319,31 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
       for (const selectContact of selectedRowKeys) {
         for (const selectedLabel of selectedLabels) {
           console.log('selectedLabel ID createLabel', selectedLabel)
-          const removedLabel: any = differenceBy(
-            defaultSelectedLabels,
-            selectedLabels
-          )
-          const addedLabel: any = differenceBy(
+          const addedLabel: any = difference(
             selectedLabels,
             defaultSelectedLabels
           )
-
+          // const removedLabel: any = difference(
+          //   defaultSelectedLabels,
+          //   selectedLabels
+          // )
+          // const removedLabel = defaultSelectedLabels.filter((o1) =>
+          //   selectedLabels.some((o2) => o1.id !== o2.id)
+          // )
+          let removedLabel = []
+          if (selectedLabels.length > 0) {
+            removedLabel = difference(defaultSelectedLabels, selectedLabels)
+          } else {
+            removedLabel = defaultSelectedLabels
+          }
+          console.log('removedLabel createLabel', removedLabel)
           console.log('addedLabel createLabel', addedLabel)
-          const copySelectedLabel = [...selectedLabels]
-          const xxxx = copySelectedLabel.find((obj) =>
-            Object.keys(obj).includes('__typename')
-          )
-          console.log('entering if INSERT')
-          // if (xxxx && !defaultSelectedLabels.includes(selectedLabel)) {
-          //   insertContactsLabelsMutaton({
-          //     variables: {
-          //       contact_id: selectContact,
-          //       label_id: selectedLabel.id,
-          //     },
-          //   })
-          // }
-          // if (!xxxx && defaultSelectedLabels.includes(selectedLabel)) {
-          //   console.log('entering ELSE DELETE')
-          //   console.log('removedLabel createLabel', removedLabel)
-          //
-          //   const findToDeleteCL = contactsLabels?.find(
-          //     (x) => x.label_id === removedLabel[0].id
-          //   )
-          //   deleteContactsLabelsMutaton({
-          //     variables: {
-          //       id: findToDeleteCL.id,
-          //     },
-          //   })
-          // }
           if (
             addedLabel.length > 0 &&
             !defaultSelectedLabels.includes(selectedLabel)
+            // && contactsLabels.some((e) => e.label.text === addedLabel.text)
           ) {
+            console.log('enter insert')
             insertContactsLabelsMutaton({
               variables: {
                 contact_id: selectContact,
@@ -365,9 +352,15 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
             })
           }
           if (removedLabel.length > 0) {
+            console.log('enter delete')
+
             const findToDeleteCL = contactsLabels?.find(
               (x) => x.label_id === removedLabel[0].id
             )
+            // const findToDeleteCL = contactsLabels?.find(
+            //   (x) => x.label_id === removedLabel.map(e=> e.id)
+            // )
+            console.log('findToDeleteCL', findToDeleteCL)
             deleteContactsLabelsMutaton({
               variables: {
                 id: findToDeleteCL.id,
