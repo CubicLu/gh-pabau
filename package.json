@@ -297,7 +297,7 @@
     "nodemon": "2.0.12",
     "patch-package": "6.4.7",
     "postinstall-postinstall": "https://github.com/simply-vat/postinstall-postinstall",
-    "postmon": "0.1.0",
+    "postmon": "0.1.1",
     "prettier": "2.2.1",
     "react-cookie": "4.0.3",
     "react-docgen-typescript": "1.22.0",
