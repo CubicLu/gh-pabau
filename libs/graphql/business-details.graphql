@@ -1,44 +1,46 @@
-query getBussinessDetails {
-  company {
-    details {
-      details_id
-      company_name
-      info_email
-      phone
-      website
-      logo
-      language
-      timezone {
-        db_format
+query getBusinessDetails {
+  me {
+    Company {
+      details {
+        details_id
+        company_name
+        info_email
+        phone
+        website
+        logo
+        language
+        timezone {
+          db_format
+        }
+        currency
+        street
+        city
+        county
+        country
+        post_code
+        contact_term_singular
+        contact_term_plural
+        employee_term_singular
+        employee_term_plural
+        class_teacher_singular
+        class_term_singular
+        class_term_plural
+        tax_name
+        cycles_display
+        disable_prescriptions
+        medical_approvals
+        secure_medical_forms
+        is_surgical
+        enable_2fa
+        date_format
+        week_start_day
+        industry_sector
+        enable_sens_data
       }
-      currency
-      street
-      city
-      county
-      country
-      post_code
-      contact_term_singular
-      contact_term_plural
-      employee_term_singular
-      employee_term_plural
-      class_teacher_singular
-      class_term_singular
-      class_term_plural
-      tax_name
-      cycles_display
-      disable_prescriptions
-      medical_approvals
-      secure_medical_forms
-      is_surgical
-      enable_2fa
-      date_format
-      week_start_day
-      industry_sector
-      enable_sens_data
-    }
-    User {
-      id
-      force_password
+      User {
+        id
+        force_password
+      }
     }
   }
   findManyCompanyMeta(

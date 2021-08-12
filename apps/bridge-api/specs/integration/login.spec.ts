@@ -1,18 +1,15 @@
+import { createTestClient } from 'apollo-server-integration-testing'
+import { server } from '../../src/server'
 import { gql } from 'apollo-server'
-import { createTestContext } from './__helpers'
 
-const ctx = createTestContext()
-
-it('server answers connections', async () => {
-  await expect(
-    ctx.client.request('HIYA')
-  ).rejects.toThrowErrorMatchingSnapshot()
+const { query } = createTestClient({
+  apolloServer: server,
 })
 
-it.skip('denies invalid logins', async () => {
-  await expect(
-    ctx.client.request(
-      gql`
+it('denies invalid logins', () => {
+  expect(
+    query(
+      `
         mutation {
           login(username: "doesntexist@nowhere.com", password: "blah")
         }
@@ -27,14 +24,36 @@ it.skip('denies invalid logins', async () => {
       ],
     },
   })
+  expect(
+    query(`mutation { login(username: "pabau@local.com", password: "") }`)
+  ).rejects.toMatchObject({
+    response: {
+      errors: [
+        expect.objectContaining({
+          message: expect.stringMatching('Not Auth'),
+        }),
+      ],
+    },
+  })
 })
 
-it.skip('allows valid logins', async () => {
-  await expect(
-    ctx.client.request(
+it('allows valid logins', async () => {
+  expect(
+    query(
       gql`
         mutation {
-          login(username: "toshe@pabau.me", password: "test")
+          login(username: "pabau@local.com", password: "test")
+        }
+      `
+    )
+  ).resolves.toMatchObject({
+    login: expect.anything(),
+  })
+  expect(
+    query(
+      gql`
+        mutation {
+          login(username: "pabau@local.COM", password: "test")
         }
       `
     )

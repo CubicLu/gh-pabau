@@ -1,5 +1,5 @@
 import { LeftOutlined } from '@ant-design/icons'
-import { useGetBussinessDetailsQuery } from '@pabau/graphql'
+import { useGetBusinessDetailsQuery } from '@pabau/graphql'
 import {
   Breadcrumb,
   BusinessDetailsNotifications,
@@ -91,6 +91,8 @@ export const Index: FC = () => {
   const [addrSuiteNo, setAddrSuiteNo] = useState('')
   const [enableLab, setEnableLabs] = useState('')
   const [location, setLocation] = useState('')
+  const [historyData, setHistoryData] = useState('')
+  const [timeFormat, setTimeFormat] = useState('')
   const router = useRouter()
 
   const tabMenuItems = [
@@ -104,7 +106,7 @@ export const Index: FC = () => {
   const parentMenu = getParentSetupData(router.pathname)
   const user = useContext(UserContext)
 
-  const { data, loading } = useGetBussinessDetailsQuery()
+  const { data, loading } = useGetBusinessDetailsQuery()
 
   const handleBack = () => {
     if (parentMenu.length > 0) {
@@ -151,6 +153,8 @@ export const Index: FC = () => {
       setAddrSuiteNo(record?.['address_suite_no'] ?? '')
       setLocation(record?.['business_location'] ?? '')
       setEnableLabs(record?.['lab_enabled'] ?? '')
+      setHistoryData(record?.['history_data'])
+      setTimeFormat(record?.['time_format'])
 
       const force_password_data = data?.company?.User?.filter(
         (item) => item.id === user?.me?.id
@@ -197,7 +201,12 @@ export const Index: FC = () => {
           </div>
         </MobileHeader>
         <div className={styles.tabsForDesktop}>
-          <TabMenu tabPosition="left" menuItems={tabMenuItems} minHeight="auto">
+          <TabMenu
+            tabPosition="left"
+            menuItems={tabMenuItems}
+            minHeight="auto"
+            disabledKeys={loading ? [0, 1, 2, 3, 4] : []}
+          >
             <BusinessDetailTab
               data={data}
               addrSuiteNo={addrSuiteNo}
@@ -223,6 +232,8 @@ export const Index: FC = () => {
               enableLab={enableLab}
               user={user?.me?.id}
               loading={loading}
+              historyData={historyData}
+              timeFormat={timeFormat}
               t={t}
             />
             <SecurityTab
@@ -267,6 +278,8 @@ export const Index: FC = () => {
               enableLab={enableLab}
               user={user?.me?.id}
               loading={loading}
+              historyData={historyData}
+              timeFormat={timeFormat}
               t={t}
             />
             <SecurityTab

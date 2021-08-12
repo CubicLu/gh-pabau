@@ -18,7 +18,7 @@ import {
 import { validateEmail } from '../../app/authentication/yup'
 import { User } from '@prisma/client'
 import { Context } from '../../context'
-import EmailService from '../../app/email/email-service'
+import { sendEmail, sendEmailWithTags } from '../../app/email/email-service'
 
 export const SendEmail = extendType({
   type: 'Mutation',
@@ -47,7 +47,7 @@ export const SendEmail = extendType({
             const user = users.find((el) => el.username === email)
             if (user) {
               args.name = user?.full_name
-              await new EmailService().sendEmail(args)
+              await sendEmail(args)
             }
           }
         }
@@ -75,7 +75,7 @@ export const SendEmail = extendType({
               },
             })
             args.name = user?.full_name
-            await new EmailService().sendEmail(args)
+            await sendEmail(args)
           }
         }
         return { success: true } as EmailOutput
@@ -102,15 +102,8 @@ export const SendEmail = extendType({
           }),
         }),
       },
-      async resolve(_, args: EmailWithTagsInput, ctx: Context) {
-        console.info('args:', args)
-        try {
-          return await new EmailService().sendEmailWithTags(args, ctx)
-          // console.info('response', response)
-          // return true
-        } catch (error) {
-          return error
-        }
+      async resolve(_root, args: EmailWithTagsInput, ctx: Context) {
+        return sendEmailWithTags(args, ctx)
       },
     })
   },

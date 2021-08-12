@@ -1,7 +1,12 @@
 import * as yup from 'yup'
+import yupPassword from 'yup-password'
 
-export const ConfirmPasswordValidation = yup.object().shape({
-  password: yup.string().required('password is required'),
+yupPassword(yup)
+
+export const validatePassword = yup.string().password().required()
+
+export const validatePasswordWithConfirm = yup.object().shape({
+  password: validatePassword,
   confirmPassword: yup
     .string()
     .required('confirm password is required')

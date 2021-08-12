@@ -3,10 +3,7 @@ import { EyeInvisibleOutlined } from '@ant-design/icons'
 import { Formik } from 'formik'
 import { Checkbox, Form, Input, SubmitButton } from 'formik-antd'
 import { LoginValidation } from '@pabau/yup'
-// import { ReactComponent as GoogleIcon } from '../../assets/images/google.svg'
-// import { ReactComponent as SSOIcon } from '../../assets/images/sso.svg'
 import styles from '../../pages/login.module.less'
-import { QueryLazyOptions } from '@apollo/client'
 import Link from 'next/link'
 
 export interface LoginFormProps {
@@ -15,14 +12,11 @@ export interface LoginFormProps {
   remember?: boolean
 }
 
-interface LoginProps {
+interface P {
   handlePageShow: React.Dispatch<React.SetStateAction<string>>
-  verifyCredentials: (
-    options: QueryLazyOptions<{ username: string; password: string }>
-  ) => void
 }
 
-const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
+const LoginMain: FC<P> = ({ handlePageShow }) => {
   const loginHandler = async (loginProps: LoginFormProps) => {
     if (localStorage?.getItem('token')) {
       localStorage.removeItem('token')

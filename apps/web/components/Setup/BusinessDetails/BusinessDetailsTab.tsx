@@ -5,10 +5,11 @@ import {
   LanguageSetting,
   Notification,
   NotificationType,
+  AddressDetails,
 } from '@pabau/ui'
 import {
-  GetBussinessDetailsQuery,
-  GetBussinessDetailsDocument,
+  GetBusinessDetailsQuery,
+  GetBusinessDetailsDocument,
   useUpdateCompanyDetailsMutation,
   useSetMultipleMetaDataMutation,
   useUpdateOneCompanyDetailsMutation,
@@ -19,7 +20,7 @@ import { cdnURL } from '../../../baseUrl'
 import { message } from 'antd'
 
 interface BusinessDetailsTabProps {
-  data: GetBussinessDetailsQuery
+  data: GetBusinessDetailsQuery
   addrSuiteNo: string
   forcePassword: number
   user: number
@@ -102,6 +103,16 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
     currency: data?.company?.details?.currency,
     dateFormat: data?.company?.details?.date_format,
     weekStart: data?.company?.details?.week_start_day,
+  }
+
+  const AddressDetails: AddressDetails = {
+    FullAddress: location ?? '',
+    address: data?.company?.details?.street ?? '',
+    apt: data && addrSuiteNo,
+    postcode: data?.company?.details?.post_code ?? '',
+    city: data?.company?.details?.city ?? '',
+    region: data?.company?.details?.county ?? '',
+    country: data?.company?.details?.country ?? '',
   }
 
   const handleLogoUpload = (imageData) => {
@@ -224,7 +235,7 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
         variables: CompanyDetailData,
         refetchQueries: [
           {
-            query: GetBussinessDetailsDocument,
+            query: GetBusinessDetailsDocument,
           },
         ],
       })
@@ -235,7 +246,7 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
         optimisticResponse: {},
         refetchQueries: [
           {
-            query: GetBussinessDetailsDocument,
+            query: GetBusinessDetailsDocument,
           },
         ],
       })
@@ -256,6 +267,7 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
         buttonClicked={buttonClicked}
         showUploader={showUploader}
         companyLogo={companyLogo}
+        AddressDetails={data && AddressDetails}
       />
       {showAvatarUploader && (
         <AvatarUploader

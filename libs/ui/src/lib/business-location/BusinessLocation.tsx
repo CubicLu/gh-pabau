@@ -6,7 +6,8 @@ import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import styles from './BusinessLocation.module.less'
 import { useTranslation } from 'react-i18next'
 
-interface AddressDetails {
+export interface AddressDetails {
+  FullAddress?: string
   address?: string
   apt?: string
   postcode?: string
@@ -16,9 +17,11 @@ interface AddressDetails {
 }
 
 export interface BusinessLocationProps {
+  data?: AddressDetails
   apiKey: string
   loading?: boolean
   value?: string
+  AddressDetails?: AddressDetails
   onChange?(address, detailedAddress): void
 }
 
@@ -27,12 +30,16 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
   loading,
   value,
   onChange,
+  AddressDetails,
 }) => {
   const { t } = useTranslation('common')
   const [showModal, setShowModal] = useState(false)
-  const [detail, setDetail] = useState<AddressDetails>({})
-  const [detailForModal, setDetailForModal] = useState<AddressDetails>({})
+  const [detail, setDetail] = useState(AddressDetails)
+  const [detailForModal, setDetailForModal] = useState(AddressDetails)
   const [data, setData] = useState('')
+  const [fullAddress, setFullAddress] = useState(data)
+  const [active, setActive] = useState(false)
+  const [addActive, setAddActive] = useState(false)
   const [add, setAdd] = useState({
     label: '',
     value: {},
@@ -41,10 +48,20 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
   useEffect(() => {
     if (value !== undefined) {
       setData(value)
-      handleChange(value)
+      setDetailForModal(AddressDetails)
+      setDetail(AddressDetails)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value])
+
+  useEffect(() => {
+    if (AddressDetails && active === false) {
+      setDetailForModal(AddressDetails)
+      setDetail(AddressDetails)
+      setActive(true)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [AddressDetails])
 
   let detailedAddress: AddressDetails = {
     address: '',
@@ -99,6 +116,7 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
             apt: streetNumber ? streetNumber.long_name : '',
           }
           setDetail(detailedAddress)
+          setDetailForModal(detailedAddress)
           onChange?.(address, detailedAddress)
         }
       })
@@ -109,19 +127,28 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
   }
 
   useEffect(() => {
-    if (add !== undefined) {
+    if (add !== undefined && addActive) {
       handleChange(add?.label)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [add])
 
   useEffect(() => {
-    if (add !== undefined && !showModal && detailForModal !== {}) {
-      onChange?.(add?.label, detailForModal)
+    if (data !== '') {
+      setFullAddress(data)
+    }
+    if (data !== '' && addActive === false) {
+      setAdd({ label: data, value: {} })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showModal, add, detailForModal])
+  }, [data])
 
+  useEffect(() => {
+    if (add !== undefined && !showModal && detailForModal !== {}) {
+      onChange?.(add?.label, { ...detailForModal, FullAddress: fullAddress })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showModal, add])
   return (
     <div className={styles.businessLocationContainer}>
       <p>Where is your business located?</p>
@@ -129,12 +156,17 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
         <GooglePlacesAutocomplete
           apiKey={apiKey}
           selectProps={{
-            inputValue: data,
-            value: add,
+            inputValue: data !== null ? data : fullAddress,
+            value: data !== '' ? { label: fullAddress, value: {} } : add,
             onInputChange: (val) => {
               setData(val)
+              setDetailForModal({
+                ...detailForModal,
+                FullAddress: val,
+              })
             },
             onChange: (val) => {
+              setAddActive(true)
               setAdd(val)
             },
           }}
@@ -163,10 +195,10 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
                 {t('business.details.business.address')}
               </p>
               {!loading ? (
-                (detail.address && (
+                (detail?.address && (
                   <p className={styles.locationItemValue}>{detail.address}</p>
                 )) ||
-                (!detail.address && (
+                (!detail?.address && (
                   <p
                     className={styles.locationItemAdd}
                     onClick={() => {
@@ -188,10 +220,10 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
                 {t('business.details.business.apt')}
               </p>
               {!loading ? (
-                (detail.apt && (
+                (detail?.apt && (
                   <p className={styles.locationItemValue}>{detail.apt}</p>
                 )) ||
-                (!detail.apt && (
+                (!detail?.apt && (
                   <p
                     className={styles.locationItemAdd}
                     onClick={() => {
@@ -213,10 +245,10 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
                 {t('setup.issuing.form.field.postcode')}
               </p>
               {!loading ? (
-                (detail.postcode && (
+                (detail?.postcode && (
                   <p className={styles.locationItemValue}>{detail.postcode}</p>
                 )) ||
-                (!detail.postcode && (
+                (!detail?.postcode && (
                   <p
                     className={styles.locationItemAdd}
                     onClick={() => {
@@ -238,10 +270,10 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
                 {t('setup.issuing.form.field.city')}
               </p>
               {!loading ? (
-                (detail.city && (
+                (detail?.city && (
                   <p className={styles.locationItemValue}>{detail.city}</p>
                 )) ||
-                (!detail.city && (
+                (!detail?.city && (
                   <p
                     className={styles.locationItemAdd}
                     onClick={() => {
@@ -263,10 +295,10 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
                 {t('setup.issuing.form.field.Region')}
               </p>
               {!loading ? (
-                (detail.region && (
+                (detail?.region && (
                   <p className={styles.locationItemValue}>{detail.region}</p>
                 )) ||
-                (!detail.region && (
+                (!detail?.region && (
                   <p
                     className={styles.locationItemAdd}
                     onClick={() => {
@@ -288,10 +320,10 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
                 {t('setup.issuing.form.field.country')}
               </p>
               {!loading ? (
-                (detail.country && (
+                (detail?.country && (
                   <p className={styles.locationItemValue}>{detail.country}</p>
                 )) ||
-                (!detail.country && (
+                (!detail?.country && (
                   <p
                     className={styles.locationItemAdd}
                     onClick={() => {
@@ -325,7 +357,7 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
               <Col className="gutter-row" xs={24} sm={12}>
                 <Input
                   label={t('business.details.business.address')}
-                  text={detailForModal.address}
+                  text={detailForModal?.address}
                   onChange={(value_) =>
                     setDetailForModal({ ...detailForModal, address: value_ })
                   }
@@ -334,7 +366,7 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
               <Col className="gutter-row" xs={24} sm={12}>
                 <Input
                   label={t('business.details.business.apt')}
-                  text={detailForModal.apt}
+                  text={detailForModal?.apt}
                   onChange={(value_) =>
                     setDetailForModal({ ...detailForModal, apt: value_ })
                   }
@@ -343,7 +375,7 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
               <Col className="gutter-row" xs={24} sm={12}>
                 <Input
                   label={t('setup.issuing.form.field.postcode')}
-                  text={detailForModal.postcode}
+                  text={detailForModal?.postcode}
                   onChange={(value_) =>
                     setDetailForModal({ ...detailForModal, postcode: value_ })
                   }
@@ -352,7 +384,7 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
               <Col className="gutter-row" xs={24} sm={12}>
                 <Input
                   label={t('setup.issuing.form.field.city')}
-                  text={detailForModal.city}
+                  text={detailForModal?.city}
                   onChange={(value_) =>
                     setDetailForModal({ ...detailForModal, city: value_ })
                   }
@@ -361,7 +393,7 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
               <Col className="gutter-row" xs={24} sm={12}>
                 <Input
                   label={t('setup.issuing.form.field.Region')}
-                  text={detailForModal.region}
+                  text={detailForModal?.region}
                   onChange={(value_) =>
                     setDetailForModal({ ...detailForModal, region: value_ })
                   }
@@ -370,7 +402,7 @@ export const BusinessLocation: FC<BusinessLocationProps> = ({
               <Col className="gutter-row" xs={24} sm={12}>
                 <Input
                   label={t('setup.issuing.form.field.country')}
-                  text={detailForModal.country}
+                  text={detailForModal?.country}
                   onChange={(value_) =>
                     setDetailForModal({ ...detailForModal, country: value_ })
                   }

@@ -581,6 +581,20 @@ export const User = objectType({
         return root.CompanyOwner
       },
     })
+    t.list.field('PasswordResetAuth', {
+      type: 'PasswordResetAuth',
+      args: {
+        where: 'PasswordResetAuthWhereInput',
+        orderBy: 'PasswordResetAuthOrderByInput',
+        cursor: 'PasswordResetAuthWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'PasswordResetAuthScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.PasswordResetAuth
+      },
+    })
     t.nullable.field('_count', {
       type: 'UserCountOutputType',
       resolve(root: any) {
