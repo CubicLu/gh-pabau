@@ -57,7 +57,7 @@ export const Login = extendType({
         //     'Error 5B - Your password has not been changed for some time. Please use Pabau 1 to change it before proceeding.'
         //   )
 
-        // const salt = users[0].salt
+        const salt = users[0].salt
         // if (!salt)
         //   throw new Error(
         //     'Error 5S - Your password has not been changed for some time. Please use Pabau 1 to change it before proceeding.'
