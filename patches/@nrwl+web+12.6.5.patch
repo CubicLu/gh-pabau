@@ -1,0 +1,14 @@
+diff --git a/node_modules/@nrwl/web/src/utils/normalize.js b/node_modules/@nrwl/web/src/utils/normalize.js
+index f4d23a5..30190bb 100644
+--- a/node_modules/@nrwl/web/src/utils/normalize.js
++++ b/node_modules/@nrwl/web/src/utils/normalize.js
+@@ -47,9 +47,6 @@ function normalizeAssets(assets, root, sourceRoot) {
+             const assetPath = devkit_1.normalizePath(asset);
+             const resolvedAssetPath = path_1.resolve(root, assetPath);
+             const resolvedSourceRoot = path_1.resolve(root, sourceRoot);
+-            if (!resolvedAssetPath.startsWith(resolvedSourceRoot)) {
+-                throw new Error(`The ${resolvedAssetPath} asset path must start with the project source root: ${sourceRoot}`);
+-            }
+             const isDirectory = fs_1.statSync(resolvedAssetPath).isDirectory();
+             const input = isDirectory
+                 ? resolvedAssetPath
