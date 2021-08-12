@@ -676,7 +676,8 @@
             "tsConfig": "apps/bridge-api/tsconfig.app.json",
             "assets": [
               "apps/bridge-api/src/assets",
-              "apps/bridge-api/src/prisma"
+              "apps/bridge-api/src/prisma",
+              "apps/bridge-api/cicd/healthcheck.sh"
             ],
             "maxWorkers": 1,
             "generatePackageJson": true

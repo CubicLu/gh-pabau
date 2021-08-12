@@ -1,6 +1,6 @@
 {
   "name": "pabau",
-  "version": "2.0.501",
+  "version": "2.0.502",
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
   "workspaces": {
@@ -105,7 +105,8 @@
     "@nestjs/platform-express": "7.6.15",
     "@paljs/cli": "3.6.0",
     "@paljs/nexus": "3.3.3",
-    "@prisma/client": "2.28.0",
+    "@prisma/client": "2.29.0",
+    "prisma": "2.29.0",
     "@react-hook/debounce": "4.0.0",
     "@sendgrid/mail": "7.4.5",
     "@sentry/react": "6.10.0",
@@ -298,7 +299,6 @@
     "postinstall-postinstall": "https://github.com/simply-vat/postinstall-postinstall",
     "postmon": "0.1.0",
     "prettier": "2.2.1",
-    "prisma": "2.28.0",
     "react-cookie": "4.0.3",
     "react-docgen-typescript": "1.22.0",
     "react-test-renderer": "17.0.2",
