@@ -1,4 +1,7 @@
 FROM node:16-buster
+
+RUN apt update && apt install -y jq
+
 WORKDIR /usr/app
 ENV HUSKY_SKIP_INSTALL=1
 ENV HUSKY=0
@@ -7,7 +10,7 @@ RUN yarn install
 COPY . .
 
 # Install Prisma here because it's a devDependency, it doesn't get installed.
-RUN yarn add -D prisma@2.28.0
+RUN yarn add -D prisma@2.29.0
 RUN node_modules/.bin/prisma generate
 
 EXPOSE 4000

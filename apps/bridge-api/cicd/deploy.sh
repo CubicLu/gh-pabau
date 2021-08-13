@@ -46,7 +46,7 @@ echo "BITBUCKET_PR_ID=${BITBUCKET_PR_ID}"
 echo "-----------------"
 
 echo "Docker build..."
-docker build "dist/apps/${APP_NAME}" -t "${APP_NAME}" -f "tools/cicd/${APP_NAME}.Dockerfile"
+docker build "dist/apps/${APP_NAME}" -t "${APP_NAME}" -f "${APP_TYPE}/${APP_NAME}/cicd/Dockerfile"
 
 echo "Test the docker..."
 docker run -p 5823:4000 --name docker_up_test "${APP_NAME}" &

@@ -114,7 +114,6 @@ const Index: FC = () => {
         active={'setup'}
         isDisplayingFooter={false}
         handleSearch={handleSearch}
-        pageTitle={t('setup.page.title')}
         {...user}
       >
         <div className={styles.cardWrapper}>
