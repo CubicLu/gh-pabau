@@ -134,6 +134,8 @@ export const ClientsContent: FC<ClientsContentProps> = ({
     handleRecoverClick(data)
   }
 
+  // console.log('')
+
   const columns = [
     {
       title: '',
@@ -403,6 +405,8 @@ export const ClientsContent: FC<ClientsContentProps> = ({
   const renderTooltip = ({ title, icon }) => {
     return <Tooltip title={title}>{icon}</Tooltip>
   }
+
+  console.log('sourceData', sourceData)
 
   return (
     <div className={styles.tableContent}>

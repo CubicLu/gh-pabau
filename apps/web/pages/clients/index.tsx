@@ -25,6 +25,7 @@ import {
   useGetContactsLabelsLazyQuery,
   useInsertContactsLabelsMutation,
 } from '@pabau/graphql'
+import { test } from 'shelljs'
 
 const { TabPane } = Tabs
 const { Sider, Content } = Layout
@@ -151,6 +152,8 @@ export const Clients: FC<ClientsProps> = () => {
 
   const [contactsLabels, setContactsLabels] = useState([])
 
+  console.log('contactsLabels index', contactsLabels)
+
   const [paginateData, setPaginateData] = useState({
     total: 0,
     offset: 0,
@@ -177,12 +180,24 @@ export const Clients: FC<ClientsProps> = () => {
     }
   }, [getContactsData, getClientsCountData])
 
+  const contactsData = getContactsData?.cmContacts.map((d) => ({
+    id: d.ID,
+    avatar: d.Avatar,
+    firstName: d.Fname,
+    lastName: d.Lname,
+    email: d.Email,
+    mobileNumber: d.Mobile,
+    is_active: d.is_active,
+    labelTest: [],
+  }))
+
   useEffect(() => {
     if (getContactsData) {
       setTestData(contactsData)
     }
   }, [getContactsData])
 
+  // WORKING
   useEffect(() => {
     contactsData?.map((fieldContact) => {
       // const tempCON = []
@@ -194,10 +209,30 @@ export const Clients: FC<ClientsProps> = () => {
           labelComplete['text'] = fieldCL.label.text
           labelComplete['color'] = fieldCL.label.color
           fieldContact.labelTest.push(labelComplete)
+          // setContactsLabels([...contactsLabels, labelComplete])
+          // return fieldContact
         }
       }
     })
   }, [getContactsData])
+
+  // useEffect(() => {
+  //   testData?.map((fieldContact) => {
+  //     // const tempCON = []
+  //     for (const fieldCL of contactsLabels) {
+  //       if (fieldCL.contact_id === fieldContact.id) {
+  //         const labelComplete = {}
+  //         // labelComplete['id'] = ''
+  //         labelComplete['id'] = fieldCL.label.id
+  //         labelComplete['text'] = fieldCL.label.text
+  //         labelComplete['color'] = fieldCL.label.color
+  //         fieldContact.labelTest.push(labelComplete)
+  //         // setContactsLabels([...contactsLabels, labelComplete])
+  //         // return fieldContact
+  //       }
+  //     }
+  //   })
+  // }, [testData])
 
   const onPaginationChange = (currentPage) => {
     const offset = paginateData.limit * (currentPage - 1)
@@ -208,16 +243,16 @@ export const Clients: FC<ClientsProps> = () => {
     })
   }
 
-  const contactsData = getContactsData?.cmContacts.map((d) => ({
-    id: d.ID,
-    avatar: d.Avatar,
-    firstName: d.Fname,
-    lastName: d.Lname,
-    email: d.Email,
-    mobileNumber: d.Mobile,
-    is_active: d.is_active,
-    labelTest: [],
-  }))
+  // const contactsData = getContactsData?.cmContacts.map((d) => ({
+  //   id: d.ID,
+  //   avatar: d.Avatar,
+  //   firstName: d.Fname,
+  //   lastName: d.Lname,
+  //   email: d.Email,
+  //   mobileNumber: d.Mobile,
+  //   is_active: d.is_active,
+  //   labelTest: [],
+  // }))
 
   const [sourceData, setSourceData] = useState<SourceDataProps[]>(clientsList)
   const [selectedTab, setSelectedTab] = useState(tab.clients)
@@ -250,6 +285,47 @@ export const Clients: FC<ClientsProps> = () => {
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 768px)', false)
 
+  //WORKIN
+  // useEffect(() => {
+  //   testData?.map((fieldContact) => {
+  //     // const tempCON = []
+  //     for (const fieldCL of contactsLabels) {
+  //       if (fieldCL.contact_id === fieldContact.id) {
+  //         const labelComplete = {}
+  //         // labelComplete['id'] = ''
+  //         labelComplete['id'] = fieldCL.label.id
+  //         labelComplete['text'] = fieldCL.label.text
+  //         labelComplete['color'] = fieldCL.label.color
+  //         fieldContact.labelTest.push(labelComplete)
+  //         // setContactsLabels([...contactsLabels, labelComplete])
+  //         // return fieldContact
+  //       }
+  //     }
+  //     // return fieldContact
+  //   })
+  // }, [testData])
+
+  // useEffect(() => {
+  //   testData?.map((fieldContact) => {
+  //     // const tempCON = []
+  //     for (const fieldCL of contactsLabels) {
+  //       if (fieldCL.contact_id === fieldContact.id) {
+  //         const labelComplete = {}
+  //         // labelComplete['id'] = ''
+  //         labelComplete['id'] = fieldCL.label.id
+  //         labelComplete['text'] = fieldCL.label.text
+  //         labelComplete['color'] = fieldCL.label.color
+  //         if (fieldContact.labelTest.some((e) => e.id === fieldCL.label.id)) {
+  //           fieldContact.labelTest.push(labelComplete)
+  //         }
+  //         // setContactsLabels([...contactsLabels, labelComplete])
+  //         // return fieldContact
+  //       }
+  //     }
+  //     // return fieldContact
+  //   })
+  // }, [testData])
+
   useEffect(() => {
     getLabelsQuery()
   }, [getLabelsQuery])
@@ -266,6 +342,7 @@ export const Clients: FC<ClientsProps> = () => {
   useEffect(() => {
     // setSourceFilteredData(sourceData)
     setSourceFilteredData(contactsData)
+    // setSourceFilteredData(testData)
 
     // console.log('testing change filtereddata')
     const duplicateList = []
@@ -297,7 +374,9 @@ export const Clients: FC<ClientsProps> = () => {
     setDuplicateDataList(duplicateList)
   }, [sourceData])
 
-  // console.log('testData', testData)
+  if (sourceFilteredData) {
+    console.log('sourceFilteredData', sourceFilteredData[0].labelTest)
+  }
 
   useEffect(() => {
     selectedTab === tab.archived ? setIsArchived(true) : setIsArchived(false)
@@ -314,58 +393,19 @@ export const Clients: FC<ClientsProps> = () => {
     return res
   }
 
-  // useEffect(() => {
-  //   let filteredData = [...sourceData]
-  //   if (selectedTab === tab.clients) {
-  //     filteredData = sourceData
-  //   } else if (selectedTab === tab.archived) {
-  //     filteredData = sourceData.filter((item) => item.is_active === 0)
-  //   } else if (
-  //     selectedTab === tab.contacts ||
-  //     selectedTab === tab.mergeFix ||
-  //     selectedTab === tab.createLabel ||
-  //     selectedTab === tab.import ||
-  //     selectedTab === tab.export
-  //   ) {
-  //     filteredData = [...filteredData]
-  //   } else {
-  //     filteredData = sourceData.filter((item) =>
-  //       item.label.some((x) => x.label === selectedTab)
-  //     )
-  //   }
-  //   if (searchText) {
-  //     const filterObject = []
-  //     for (const data of filteredData) {
-  //       for (const key of Object.keys(data)) {
-  //         if (
-  //           (key === 'firstName' ||
-  //             key === 'lastName' ||
-  //             key === 'email' ||
-  //             key === 'mobileNumber') &&
-  //           `${data[key]}`.toLowerCase().includes(searchText.toLowerCase())
-  //         ) {
-  //           filterObject.push(data)
-  //           break
-  //         }
-  //       }
-  //     }
-  //     filteredData = filterObject
-  //   }
-  //   setSourceFilteredData(filteredData)
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [searchText, selectedTab, sourceData])
-
-  // console.log('searchText 222', searchText)
-
   useEffect(() => {
     // console.log('enter 1 5555')
     // let filteredData = [...testData]
     let filteredData = testData?.map((a) => ({ ...a }))
-    // console.log('enter 2 5555')
+    console.log('filteredData', filteredData)
 
     if (selectedTab === tab.clients) {
+      console.log('entering else 1')
+
       filteredData = testData
     } else if (selectedTab === tab.archived) {
+      console.log('entering else 2')
+
       filteredData = testData.filter((item) => item.is_active === 0)
     } else if (
       selectedTab === tab.contacts ||
@@ -374,12 +414,18 @@ export const Clients: FC<ClientsProps> = () => {
       selectedTab === tab.import ||
       selectedTab === tab.export
     ) {
+      console.log('entering else 3')
+
       filteredData = [...filteredData]
     } else {
+      console.log('entering else 4')
       filteredData = testData?.filter((item) =>
         item.labelTest.some((x) => x.text === selectedTab)
       )
     }
+
+    console.log('testData index1', testData)
+    console.log('contactsData index1', contactsData)
 
     if (searchText) {
       const filterObject = []
