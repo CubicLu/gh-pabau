@@ -33,9 +33,6 @@ const LoginMain: FC<P> = ({ handlePageShow }) => {
         '&r=' +
         encodeURIComponent(window.location.origin)
     },
-    onError(error) {
-      console.log(error.message)
-    },
   })
   const loginHandler = async (loginProps: LoginFormProps) => {
     if (localStorage?.getItem('token')) {
