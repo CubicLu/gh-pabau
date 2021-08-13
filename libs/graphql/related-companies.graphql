@@ -1,14 +1,10 @@
-# query getRelatedCompanies($username: String!) {
-#   ListRelatedCompanies(username: $username) {
-#     id
-#     company_id
-#     last_login
-#     Company {
-#       remote_url
-#       details {
-#         company_name
-#         logo
-#       }
-#     }
-#   }
-# }
+query getRelatedCompanies {
+  me {
+    companies {
+      id
+      isPod
+      logo
+      name
+    }
+  }
+}

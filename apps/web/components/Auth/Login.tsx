@@ -5,6 +5,9 @@ import { Checkbox, Form, Input, SubmitButton } from 'formik-antd'
 import { LoginValidation } from '@pabau/yup'
 import styles from '../../pages/login.module.less'
 import Link from 'next/link'
+import { useLoginMutation } from '@pabau/graphql'
+import jwt from 'jsonwebtoken'
+
 export interface LoginFormProps {
   email: string
   password: string
@@ -16,24 +19,38 @@ interface P {
 }
 
 const LoginMain: FC<P> = ({ handlePageShow }) => {
+  const [login] = useLoginMutation({
+    onCompleted(data) {
+      localStorage.setItem('token', data.login)
+      /*
+      In an ideal scenario where we don't have Pabau1
+      we would do router.reload(), until then it is what it is:)
+       */
+      const pab1JWT = jwt.decode(data.login) as any /*<-- To Improve */
+      window.location.href = 'https://crm.pabau.com/auth.php?t=' + pab1JWT.pab1
+    },
+    onError(error) {
+      console.log(error.message)
+    },
+  })
   const loginHandler = async (loginProps: LoginFormProps) => {
     if (localStorage?.getItem('token')) {
       localStorage.removeItem('token')
     }
     const { email, password } = loginProps
-    // await login({
-    //   variables: {
-    //     username: email,
-    //     password: password,
-    //   },
-    // })
+    login({
+      variables: {
+        username: email,
+        password: password,
+      },
+    })
   }
 
   return (
     <div>
       <div className={styles.signInForm}>
         <div className={styles.formHead}>
-          <h6>Log In!!</h6>
+          <h6>Log In!</h6>
           <span>
             Do not have an account?{' '}
             <Link href="/signup">Start a free trial</Link>
