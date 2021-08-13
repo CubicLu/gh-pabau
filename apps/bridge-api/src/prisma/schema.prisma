@@ -1854,7 +1854,7 @@ model CmContact {
   group_tag                 String?                     @default("")
   polite_notice             String?                     @default("")
   custom_id                 String
-  gender                    String
+  gender                    String?                     @default("")
   MarketingOptInAll         Int?                        @default(0)
   MarketingOptInEmail       Int?
   MarketingOptInPhone       Int?
@@ -1880,7 +1880,6 @@ model CmContact {
   privacy_policy            String?                     @default("")
   need_to_knows             Boolean?                    @default(false)
   contact_type              Int                         @default(0)
-  preferred_language        String?
   SocialSurveyFeedback      SocialSurveyFeedback?
   CmContactAlert            CmContactAlert[]
   AccountBalance            AccountBalance[]

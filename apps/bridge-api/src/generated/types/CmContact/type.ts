@@ -60,7 +60,7 @@ export const CmContact = objectType({
     t.nullable.string('group_tag')
     t.nullable.string('polite_notice')
     t.string('custom_id')
-    t.string('gender')
+    t.nullable.string('gender')
     t.nullable.int('MarketingOptInAll')
     t.nullable.int('MarketingOptInEmail')
     t.nullable.int('MarketingOptInPhone')
@@ -86,7 +86,6 @@ export const CmContact = objectType({
     t.nullable.string('privacy_policy')
     t.nullable.boolean('need_to_knows')
     t.int('contact_type')
-    t.nullable.string('preferred_language')
     t.nullable.field('SocialSurveyFeedback', {
       type: 'SocialSurveyFeedback',
       resolve(root: any) {
