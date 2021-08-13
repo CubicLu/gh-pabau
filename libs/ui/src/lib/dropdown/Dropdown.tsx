@@ -25,18 +25,19 @@ import styles from './Dropdown.module.less'
 import { useTranslation } from 'react-i18next'
 import Router from 'next/router'
 
+export interface UserDataProps {
+  user: number
+  company: number
+  companyName: string
+  fullName: string
+  image?: string
+}
+
 export interface DropDownInterface {
   isOpen?: boolean
   onCloseDrawer?: () => void
   userData?: UserDataProps
   taskManagerIFrameComponent?: JSX.Element
-}
-
-interface UserDataProps {
-  user: number
-  company: number
-  companyName: string
-  fullName: string
 }
 
 export const Dropdown: FC<DropDownInterface> = ({
@@ -76,6 +77,7 @@ export const Dropdown: FC<DropDownInterface> = ({
       </Menu.Item>
       <Menu.Item className={styles.userinfo} key="userName">
         <div className={styles.userName}>{user?.fullName}</div>
+        {/* TODO */}
         {/* <div className={styles.userBalance}>
           <p>{t('avatar.balance')}</p>
           <span>9445,00</span>
@@ -440,7 +442,7 @@ export const Dropdown: FC<DropDownInterface> = ({
               size="default"
               style={{ height: '8px', width: '8px' }}
             >
-              <Avatar size={40} icon={<UserOutlined />} />
+              <Avatar src={user?.image} size={40} icon={<UserOutlined />} />
             </Badge>
 
             <CaretDownOutlined

@@ -1,4 +1,7 @@
 .messages-drawer {
+  @media screen and (max-width: 767px) {
+    z-index: 5 !important;
+  }
   :global {
     .ant-drawer-body {
       display: flex;
@@ -218,6 +221,10 @@
   flex-direction: column;
   align-content: space-between;
   width: calc(100% - 392px);
+
+  @media screen and (max-width: 767px) {
+    width: calc(100% - 45%);
+  }
   height: 100vh;
   .chat-header-container {
     display: flex;
@@ -447,7 +454,7 @@
       }
     }
     .message-box {
-      width: 100%;
+      width: 45%;
     }
   }
 }
