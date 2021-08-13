@@ -27,7 +27,11 @@ const LoginMain: FC<P> = ({ handlePageShow }) => {
       we would do router.reload(), until then it is what it is:)
        */
       const pab1JWT = jwt.decode(data.login) as any /*<-- To Improve */
-      window.location.href = 'https://crm.pabau.com/auth.php?t=' + pab1JWT.pab1
+      window.location.href =
+        'https://crm.pabau.com/auth.php?t=' +
+        pab1JWT.pab1 +
+        '&r=' +
+        encodeURIComponent(window.location.origin)
     },
     onError(error) {
       console.log(error.message)
