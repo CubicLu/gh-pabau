@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["selectRelationCount", "filterJson", "referentialActions", "nApi"]
+  previewFeatures = ["selectRelationCount", "filterJson", "referentialActions"]
 }
 
 datasource db {
@@ -12399,7 +12399,6 @@ model TrainCourseDate {
 //}
 //
 model User {
-
   id                           Int                            @id @default(autoincrement())
   username                     String?
   full_name                    String
