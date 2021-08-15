@@ -46,9 +46,7 @@ export const interceptors = {
           })
         : (args.where = {
             ...args.where,
-            company_id: {
-              in: [0, ctx.authenticated.company],
-            },
+            company_id: ctx.authenticated.company,
           })
       return true
     }

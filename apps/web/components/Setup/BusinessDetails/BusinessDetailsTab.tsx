@@ -5,6 +5,7 @@ import {
   LanguageSetting,
   Notification,
   NotificationType,
+  AddressDetails,
 } from '@pabau/ui'
 import {
   GetBussinessDetailsQuery,
@@ -102,6 +103,16 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
     currency: data?.company?.details?.currency,
     dateFormat: data?.company?.details?.date_format,
     weekStart: data?.company?.details?.week_start_day,
+  }
+
+  const AddressDetails: AddressDetails = {
+    FullAddress: location ?? '',
+    address: data?.company?.details?.street ?? '',
+    apt: data && addrSuiteNo,
+    postcode: data?.company?.details?.post_code ?? '',
+    city: data?.company?.details?.city ?? '',
+    region: data?.company?.details?.county ?? '',
+    country: data?.company?.details?.country ?? '',
   }
 
   const handleLogoUpload = (imageData) => {
@@ -256,6 +267,7 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
         buttonClicked={buttonClicked}
         showUploader={showUploader}
         companyLogo={companyLogo}
+        AddressDetails={data && AddressDetails}
       />
       {showAvatarUploader && (
         <AvatarUploader

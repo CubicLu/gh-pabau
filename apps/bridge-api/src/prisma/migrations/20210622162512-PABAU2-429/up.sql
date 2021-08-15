@@ -1,5 +1,4 @@
 START TRANSACTION;
-ALTER TABLE `cm_contacts` ADD IF NOT EXISTS `preferred_language` VARCHAR(50) AFTER `contact_type`;
 CREATE TABLE IF NOT EXISTS `cm_label` (
    `id` int auto_increment,
    `name` varchar(200) NOT NULL unique,

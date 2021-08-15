@@ -3,7 +3,7 @@ import Link from 'next/link'
 import React, { FC, useState, useContext } from 'react'
 import { UserContext } from '../context/UserContext'
 import { ReactComponent as LaunchingImage } from '../assets/images/launching-pana.svg'
-import styles from '../components/Auth/Common.module.less'
+import styles from './signup.module.less'
 import {
   SignupStepOne,
   StepOneFormProps,

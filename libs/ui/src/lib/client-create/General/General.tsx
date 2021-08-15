@@ -372,7 +372,12 @@ export const General: FC<GeneralProps> = ({
                 name={'salutation'}
               >
                 {!isSalutationLoading ? (
-                  <Select name={'salutation'}>
+                  <Select
+                    name={'salutation'}
+                    placeholder={t(
+                      'quickCreate.client.modal.general.salutation.placeholder'
+                    )}
+                  >
                     {salutationData?.map((item) => (
                       <Select.Option key={item.id} value={item.name}>
                         {item.name}
@@ -442,9 +447,9 @@ export const General: FC<GeneralProps> = ({
             >
               <Radio.Group name={'gender'}>
                 {[
-                  t('quickCreate.client.modal.general.gender.other'),
                   t('quickCreate.client.modal.general.gender.male'),
                   t('quickCreate.client.modal.general.gender.female'),
+                  t('quickCreate.client.modal.general.gender.other'),
                 ]?.map((item, index) => (
                   <Radio key={index} value={item} name={'gender'}>
                     {item}
@@ -516,6 +521,9 @@ export const General: FC<GeneralProps> = ({
                 }}
                 onChange={(date) => setFieldValue('DOB', date)}
                 placeholder={'DD/MM/YY'}
+                getPopupContainer={(trigger) =>
+                  trigger.parentElement as HTMLElement
+                }
               />
             </AntForm.Item>
           )
@@ -532,7 +540,7 @@ export const General: FC<GeneralProps> = ({
               name={'preferredLanguage'}
               dropdownClassName={styles.generalDropdown}
               size={'middle'}
-              defaultValue={t(
+              placeholder={t(
                 'quickCreate.client.modal.general.preferredLanguage.default'
               )}
             >

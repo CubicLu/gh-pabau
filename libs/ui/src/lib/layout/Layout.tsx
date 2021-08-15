@@ -1,5 +1,5 @@
 import { MutationFunction } from '@apollo/client'
-import { Footer, Header, Menu } from '@pabau/ui'
+import { Footer, Header, Menu, UserDataProps } from '@pabau/ui'
 import { Card, Layout as AntLayout } from 'antd'
 import classNames from 'classnames'
 import React, { FC, useState } from 'react'
@@ -30,12 +30,6 @@ interface ProductNews {
   readUsers: number[]
 }
 
-interface UserProps {
-  user: number
-  company: number
-  companyName: string
-  fullName: string
-}
 export interface LayoutProps {
   deleteNotification?: MutationFunction
   updateNotification?: MutationFunction
@@ -44,7 +38,7 @@ export interface LayoutProps {
   relativeTime?: (lan: string, date: Date) => string
   notifications?: Notification[]
   productNews?: ProductNews[]
-  user?: UserProps
+  user?: UserDataProps
   pageTitle?: string
   newButtonText?: string
   onNewClicked?: string | (() => void)

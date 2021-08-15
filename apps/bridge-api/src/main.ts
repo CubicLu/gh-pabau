@@ -8,6 +8,7 @@ import { version } from '../../../package.json'
 import { createApp } from './app'
 
 console.log(`Starting bridge-api v${version}`)
+console.log('NODE_ENV', process.env.NODE_ENV)
 
 const LOGGING = !!stringToBoolean(process.env['LOGGING'])
 const TRACING = !!stringToBoolean(process.env['TRACING'])

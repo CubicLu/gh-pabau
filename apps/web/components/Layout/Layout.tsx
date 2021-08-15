@@ -184,6 +184,9 @@ const Layout: FC<LayoutProps> = ({
             showChat={showChat}
             title="Pabau"
             isShowSearch={true}
+            onChatClick={() => setShowChat((e) => !e)}
+            clientCreateRender={() => <ClientCreate />}
+            leadCreateRender={() => <LeadCreate />}
             handleSearch={handleSearch}
           />
           <Chat closeDrawer={() => setShowChat(false)} visible={showChat} />

@@ -68,7 +68,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
     salutation: '',
     Fname: '',
     Lname: '',
-    gender: t('quickCreate.client.modal.general.gender.other'),
+    gender: '',
     MarketingSource: '',
     DOB: undefined,
     preferredLanguage: '',

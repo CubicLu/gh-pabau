@@ -1,6 +1,6 @@
 {
   "name": "pabau",
-  "version": "2.0.494",
+  "version": "2.0.509",
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
   "workspaces": {
@@ -26,7 +26,7 @@
     "connect:start": "nx serve connect --port=4400",
     "start": "yarn dev",
     "dev": "concurrently -m 16 --kill-others-on-fail -n GRAPHQL-CODEGEN,HASURA,PRISMA,HASURA-METADATA,WEB,LAUNCH-BROWSER -c yellow,red,green,grey,blue,grey,grey,magenta \"yarn graphql-codegen:watch\" \"yarn hasura:start\" \"yarn bridge:start\" \"wait-on -w 1200 http-get://localhost:4000 && echo BRIDGE NOW ALIVE && wait-on -w 1200 http-get://localhost:8080/console && echo HASURA AND BRIDGE ALIVE && yarn hasura:cli metadata reload && yarn hasura:refresh-metadata && yarn hasura:cli console\" \"yarn web:start\" \"wait-on tcp:4000 && wait-on -w 1200 http-get://localhost:8080/console && wait-on http://localhost:4200 && open-cli \\\"http://web.localhost:4200\\\"\"",
-    "dev2": "concurrently -m 16 --kill-others-on-fail -n DOCKER,PRISMA,HASURA-METADATA,WEB,LAUNCH-BROWSER -c yellow,red,green,grey,blue,grey,grey,magenta \"yarn mysql:start && yarn hasura:start\" \"yarn bridge:start2\" \"wait-on -w 1200 http-get://localhost:4000 && echo BRIDGE NOW ALIVE && wait-on -w 1200 http-get://localhost:8080/console && echo HASURA AND BRIDGE ALIVE && yarn hasura:cli metadata reload && yarn hasura:cli console\" \"yarn web:start\" \"wait-on http://localhost:4200 && wait-on tcp:4000 && wait-on -w 1200 http-get://localhost:8080/console && wait-on -w 1200 tcp:9695 && open-cli \\\"http://web.localhost:4200\\\"\" ",
+    "dev2": "concurrently -m 16 --kill-others-on-fail -n DOCKER,PRISMA,HASURA-METADATA,WEB,LAUNCH-BROWSER -c yellow,red,green,grey,blue,grey,grey,magenta \"yarn mysql:start && yarn hasura:start\" \"yarn bridge:start2\" \"wait-on -w 1200 http-get://localhost:4000 && echo BRIDGE NOW ALIVE && wait-on -w 1200 http-get://localhost:8080/console && echo HASURA AND BRIDGE ALIVE && yarn hasura:refresh-metadata && yarn hasura:cli console\" \"yarn web:start\" \"wait-on http://localhost:4200 && wait-on tcp:4000 && wait-on -w 1200 http-get://localhost:8080/console && wait-on -w 1200 tcp:9695 && open-cli \\\"http://web.localhost:4200\\\"\" ",
     "dev:connect": "concurrently -m 16 --kill-others-on-fail -n HASURA,HASURA-SEED,PRISMA,WEB,WEB-PRELOADER,LAUNCH-BROWSER,BACKEND -c red,red,green,blue,grey,grey,magenta \"delay 5 && yarn hasura:stop && docker-compose -f hasura/docker-compose.yml up -d postgres && wait-on -w 1200 http-get://localhost:4000 && yarn hasura:start\" \"delay 22 && wait-on -w 1200 http-get://localhost:8080/console && (yarn hasura:cli seeds apply --database-name default || echo 'Seed apply failed') && open-cli 'http://localhost:8080' && wait-on http://localhost:4200 && open-cli 'http://localhost:4200'\" \"yarn bridge:start\" \"delay 25 && yarn connect:start\" \"delay 15 && wait-on tcp:4000 && wait-on http://localhost:4200\" \"delay 20 && wait-on http://localhost:4200\" \"yarn nx serve backend\"",
     "dev:light": "concurrently \"yarn nx serve web\" \"yarn nx serve bridge-api\"",
     "bridge:start": "yarn nx serve bridge-api",
@@ -86,7 +86,8 @@
     "**/css-what": ">=5.0.1",
     "ts-node-dev/**/meow": ">=10.0.1",
     "**/cssnano": ">=5.0.6",
-    "**/mini-css-extract-plugin": ">=1.6.0"
+    "**/mini-css-extract-plugin": ">=1.6.0",
+    "eslint-plugin-graphql/**/graphql-config": "3.0.2"
   },
   "dependencies": {
     "@anchan828/nest-sendgrid": "0.4.19",
@@ -102,9 +103,9 @@
     "@nestjs/config": "0.6.3",
     "@nestjs/core": "7.6.15",
     "@nestjs/platform-express": "7.6.15",
-    "@paljs/cli": "3.8.1",
-    "@paljs/nexus": "3.8.0",
-    "@prisma/client": "2.28.0",
+    "@paljs/cli": "3.6.0",
+    "@paljs/nexus": "3.3.3",
+    "@prisma/client": "2.29.0",
     "@react-hook/debounce": "4.0.0",
     "@sendgrid/mail": "7.4.5",
     "@sentry/react": "6.10.0",
@@ -298,7 +299,7 @@
     "postinstall-postinstall": "https://github.com/simply-vat/postinstall-postinstall",
     "postmon": "0.0.6",
     "prettier": "2.2.1",
-    "prisma": "2.28.0",
+    "prisma": "2.29.0",
     "react-cookie": "4.0.3",
     "react-docgen-typescript": "1.22.0",
     "react-test-renderer": "17.0.2",
@@ -311,7 +312,7 @@
     "vercel": "23.0.1",
     "yaml-loader": "0.6.0"
   },
-  "bump-rebuild-all": 49,
+  "bump-rebuild-all": 52,
   "prisma": {
     "schema": "apps/bridge-api/src/prisma/schema.prisma"
   }
