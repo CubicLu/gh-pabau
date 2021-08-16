@@ -105,6 +105,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
   addLabelMutation,
   insertContactsLabelsMutaton,
   contactsLabels,
+  // labelTest,
 }) => {
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 768px)', false)
@@ -133,8 +134,6 @@ export const ClientsContent: FC<ClientsContentProps> = ({
     e.stopPropagation()
     handleRecoverClick(data)
   }
-
-  // console.log('')
 
   const columns = [
     {
@@ -206,40 +205,10 @@ export const ClientsContent: FC<ClientsContentProps> = ({
           {t('clients.content.column.label')}
         </div>
       ),
-      //   dataIndex: 'labelTest',
-      //   visible: visiblePrimaryColumns('Label'),
-      //   // eslint-disable-next-line react/display-name
-      //   render: (labelTest) => {
-      //     // console.log('contentLabelTest', labelTest)
-      //     return (
-      //       <div
-      //         className={styles.labelShow}
-      //         onMouseOver={() => console.log('hover labels')}
-      //       >
-      //         {labelTest?.map((label) => (
-      //           <Button
-      //             className={styles.labelButton}
-      //             key={label.id}
-      //             style={{
-      //               border: `1px solid ${label.color}`,
-      //               color: label.color,
-      //             }}
-      //             backgroundColor={''}
-      //             onClick={(e) => handleLabelClick(e, label.text)}
-      //             icon={<TagOutlined />}
-      //           >
-      //             {label.text}
-      //           </Button>
-      //         ))}
-      //       </div>
-      //     )
-      //   },
-      // },
       dataIndex: 'labelTest',
       visible: visiblePrimaryColumns('Label'),
       // eslint-disable-next-line react/display-name
       render: (labelTest) => {
-        // console.log('contentLabelTest', labelTest)
         return (
           <Popover
             trigger={'hover'}
@@ -261,10 +230,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
               </Button>
             ))}
           >
-            <div
-              className={styles.labelShow}
-              // onMouseOver={() => console.log('hover labels')}
-            >
+            <div className={styles.labelShow}>
               {labelTest?.slice(0, 2).map((label) => (
                 <div>
                   <Button
@@ -279,6 +245,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
                     icon={<TagOutlined />}
                   >
                     {label.text}
+                    {/*vlatko*/}
                   </Button>
                 </div>
               ))}
@@ -406,7 +373,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
     return <Tooltip title={title}>{icon}</Tooltip>
   }
 
-  console.log('sourceData', sourceData)
+  // console.log('sourceData', sourceData)
 
   return (
     <div className={styles.tableContent}>

@@ -58,6 +58,8 @@ export const Clients: FC<ClientsProps> = () => {
   const [insertContactsLabelsMutaton] = useInsertContactsLabelsMutation({
     onCompleted(response) {
       const tempLab = response.insert_contacts_labels.returning[0]
+      // setTestLabels([tempLab])
+      // setContactsLabels([...contactsLabels, tempLab])
       setResponseLabels(true)
       setCountLabelS(() => [...countLabelS, tempLab])
       getContactsLabelsQuery()
@@ -135,7 +137,6 @@ export const Clients: FC<ClientsProps> = () => {
         // setTestData(tempData)
         // getLabelsQuery()
         setTestData(tempData)
-        console.log('testLabels addLabel', testLabels)
       }
       return responseLabel
     },
@@ -144,15 +145,11 @@ export const Clients: FC<ClientsProps> = () => {
     },
   })
 
-  // console.log('testData', testData)
-
   useEffect(() => {
     getContactsLabelsQuery()
   }, [])
 
   const [contactsLabels, setContactsLabels] = useState([])
-
-  console.log('contactsLabels index', contactsLabels)
 
   const [paginateData, setPaginateData] = useState({
     total: 0,
@@ -216,23 +213,7 @@ export const Clients: FC<ClientsProps> = () => {
     })
   }, [getContactsData])
 
-  // useEffect(() => {
-  //   testData?.map((fieldContact) => {
-  //     // const tempCON = []
-  //     for (const fieldCL of contactsLabels) {
-  //       if (fieldCL.contact_id === fieldContact.id) {
-  //         const labelComplete = {}
-  //         // labelComplete['id'] = ''
-  //         labelComplete['id'] = fieldCL.label.id
-  //         labelComplete['text'] = fieldCL.label.text
-  //         labelComplete['color'] = fieldCL.label.color
-  //         fieldContact.labelTest.push(labelComplete)
-  //         // setContactsLabels([...contactsLabels, labelComplete])
-  //         // return fieldContact
-  //       }
-  //     }
-  //   })
-  // }, [testData])
+  // console.log('contactsLabels', contactsLabels)
 
   const onPaginationChange = (currentPage) => {
     const offset = paginateData.limit * (currentPage - 1)
@@ -243,20 +224,8 @@ export const Clients: FC<ClientsProps> = () => {
     })
   }
 
-  // const contactsData = getContactsData?.cmContacts.map((d) => ({
-  //   id: d.ID,
-  //   avatar: d.Avatar,
-  //   firstName: d.Fname,
-  //   lastName: d.Lname,
-  //   email: d.Email,
-  //   mobileNumber: d.Mobile,
-  //   is_active: d.is_active,
-  //   labelTest: [],
-  // }))
-
   const [sourceData, setSourceData] = useState<SourceDataProps[]>(clientsList)
   const [selectedTab, setSelectedTab] = useState(tab.clients)
-  // console.log('selectedTab', selectedTab)
   const [sourceFilteredData, setSourceFilteredData] = useState<
     SourceDataProps[]
   >(contactsData)
@@ -285,47 +254,6 @@ export const Clients: FC<ClientsProps> = () => {
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 768px)', false)
 
-  //WORKIN
-  // useEffect(() => {
-  //   testData?.map((fieldContact) => {
-  //     // const tempCON = []
-  //     for (const fieldCL of contactsLabels) {
-  //       if (fieldCL.contact_id === fieldContact.id) {
-  //         const labelComplete = {}
-  //         // labelComplete['id'] = ''
-  //         labelComplete['id'] = fieldCL.label.id
-  //         labelComplete['text'] = fieldCL.label.text
-  //         labelComplete['color'] = fieldCL.label.color
-  //         fieldContact.labelTest.push(labelComplete)
-  //         // setContactsLabels([...contactsLabels, labelComplete])
-  //         // return fieldContact
-  //       }
-  //     }
-  //     // return fieldContact
-  //   })
-  // }, [testData])
-
-  // useEffect(() => {
-  //   testData?.map((fieldContact) => {
-  //     // const tempCON = []
-  //     for (const fieldCL of contactsLabels) {
-  //       if (fieldCL.contact_id === fieldContact.id) {
-  //         const labelComplete = {}
-  //         // labelComplete['id'] = ''
-  //         labelComplete['id'] = fieldCL.label.id
-  //         labelComplete['text'] = fieldCL.label.text
-  //         labelComplete['color'] = fieldCL.label.color
-  //         if (fieldContact.labelTest.some((e) => e.id === fieldCL.label.id)) {
-  //           fieldContact.labelTest.push(labelComplete)
-  //         }
-  //         // setContactsLabels([...contactsLabels, labelComplete])
-  //         // return fieldContact
-  //       }
-  //     }
-  //     // return fieldContact
-  //   })
-  // }, [testData])
-
   useEffect(() => {
     getLabelsQuery()
   }, [getLabelsQuery])
@@ -344,7 +272,6 @@ export const Clients: FC<ClientsProps> = () => {
     setSourceFilteredData(contactsData)
     // setSourceFilteredData(testData)
 
-    // console.log('testing change filtereddata')
     const duplicateList = []
     const newList = sourceData.filter((data) => !data.is_dismissed)
     const data = groupBy(newList, (data) => {
@@ -374,10 +301,6 @@ export const Clients: FC<ClientsProps> = () => {
     setDuplicateDataList(duplicateList)
   }, [sourceData])
 
-  if (sourceFilteredData) {
-    console.log('sourceFilteredData', sourceFilteredData[0].labelTest)
-  }
-
   useEffect(() => {
     selectedTab === tab.archived ? setIsArchived(true) : setIsArchived(false)
     if (selectedTab === tab.clients || selectedTab === tab.archived) {
@@ -393,19 +316,15 @@ export const Clients: FC<ClientsProps> = () => {
     return res
   }
 
+  // if (selectedRowKeys.length > 2) {
+  //   setDefaultSelectedLabels([])
+  // }
+
   useEffect(() => {
-    // console.log('enter 1 5555')
-    // let filteredData = [...testData]
     let filteredData = testData?.map((a) => ({ ...a }))
-    console.log('filteredData', filteredData)
-
     if (selectedTab === tab.clients) {
-      console.log('entering else 1')
-
       filteredData = testData
     } else if (selectedTab === tab.archived) {
-      console.log('entering else 2')
-
       filteredData = testData.filter((item) => item.is_active === 0)
     } else if (
       selectedTab === tab.contacts ||
@@ -414,18 +333,12 @@ export const Clients: FC<ClientsProps> = () => {
       selectedTab === tab.import ||
       selectedTab === tab.export
     ) {
-      console.log('entering else 3')
-
       filteredData = [...filteredData]
     } else {
-      console.log('entering else 4')
       filteredData = testData?.filter((item) =>
         item.labelTest.some((x) => x.text === selectedTab)
       )
     }
-
-    console.log('testData index1', testData)
-    console.log('contactsData index1', contactsData)
 
     if (searchText) {
       const filterObject = []
@@ -461,6 +374,9 @@ export const Clients: FC<ClientsProps> = () => {
       setSelectedLabels(data)
       setDefaultSelectedLabels(data)
     }
+    // if (selectedRowKeys.length > 1) {
+    //   setDefaultSelectedLabels([])
+    // }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedRowKeys, testData, contactsLabels])
@@ -565,17 +481,13 @@ export const Clients: FC<ClientsProps> = () => {
   const uniqLabel = (oldLabelList, selectedLabelList) => {
     const newList = [...selectedLabelList]
     const removedLabel = differenceBy(defaultSelectedLabels, selectedLabelList)
-
-    // console.log(removedLabel, 'removedLabel')
-
     const uniqData = oldLabelList.filter((data) => {
       return (
         !newList.some((item) => item.labelTest === data.labelTest) &&
         !removedLabel.some((item) => item.labelTest === data.labelTest)
       )
     })
-    // console.log('newList', newList)
-    // console.log('uniqData', uniqData)
+
     return [...newList, ...uniqData]
   }
 
@@ -583,30 +495,10 @@ export const Clients: FC<ClientsProps> = () => {
     setCountLabelS(contactsLabels)
   }, [contactsLabels])
 
-  // const handleApplyLabel = (selectedLabelList) => {
-  //   const newData = testData?.map((data) => {
-  //     const temp = { ...data }
-  //     const contactLabelID = []
-  //     if (selectedRowKeys.includes(data.id)) {
-  //       console.log('data.id', data.id)
-  //       console.log('temp.labelTest handleApply', temp)
-  //       temp.labelTest = uniqLabel(data.labelTest, selectedLabelList)
-  //     }
-  //     return temp
-  //   })
-  //   console.log('testData index', testData)
-  //   console.log('newData index', newData)
-  //
-  //   setTestData(newData)
-  // }
-
   const handleApplyLabel = (selectedLabelList) => {
     const newData = testData?.map((data) => {
       const temp = { ...data }
-      // const contactLabelID = []
       if (selectedRowKeys.includes(data.id)) {
-        // console.log('data.id', data.id)
-        // console.log('temp.labelTest handleApply', temp)
         temp.labelTest = uniqLabel(data.labelTest, selectedLabelList)
       }
       return temp
@@ -815,6 +707,7 @@ export const Clients: FC<ClientsProps> = () => {
                     handleApplyLabel={handleApplyLabel}
                     labelCountAll={labelCountAll}
                     contactsLabels={contactsLabels}
+                    selectedRowKeys={selectedRowKeys}
                   />
                 </Sider>
                 <Content>

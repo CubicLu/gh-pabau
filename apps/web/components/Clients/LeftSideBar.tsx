@@ -38,6 +38,7 @@ interface LeftSideBarProps {
   handleApplyLabel?: (val) => void
   labelCountAll?: any
   contactsLabels?: any
+  selectedRowKeys?: any
   addLabelMutation?: (
     options?: MutationFunctionOptions<
       AddLabelMutation,
@@ -68,6 +69,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
   handleApplyLabel,
   labelCountAll,
   contactsLabels,
+  selectedRowKeys,
 }) => {
   const { t } = useTranslationI18()
 

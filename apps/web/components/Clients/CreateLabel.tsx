@@ -102,6 +102,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   addLabelMutation,
   insertContactsLabelsMutaton,
   contactsLabels,
+  setDefaultSelectedLabels,
 }) => {
   const { t } = useTranslationI18()
   const [visible, setVisible] = useState(false)
@@ -160,18 +161,8 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     setIsEdit(false)
   }
 
-  console.log('contactsLabels createLabel', contactsLabels)
-  console.log('testLabels 4444', testLabels)
-
   const addLabelData = (valueObject) => {
-    if (
-      !testLabels?.some((item) => item.text === valueObject.text)
-      // || testLabels.length !== -1
-    ) {
-      console.log('valueObject 3333', valueObject)
-      console.log('testLabels 3333', testLabels)
-      // setTestLabels([...testLabels, valueObject])
-      // testLabels.push(valueObject)
+    if (!testLabels?.some((item) => item.text === valueObject.text)) {
       setSelectedLabels([...selectedLabels, valueObject])
       fromHeader && handleApplyLabel([...selectedLabels, valueObject])
       addLabelMutation({
@@ -180,7 +171,6 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
           color: newLabel.color,
         },
       })
-      // getLabelsQuery()
     } else {
       Notification(
         NotificationType.error,
@@ -224,8 +214,6 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
 
   const handleSelect = (label, index) => {
     const selectedData = [...selectedLabels]
-    // console.log('selectedData', selectedData)
-
     if (selectedData.some((item) => item.text === label.text)) {
       const selectedIndex = selectedLabels?.findIndex(
         (selectedLabel) => selectedLabel.text === testLabels[index].text
@@ -256,59 +244,11 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     const diff2 = differenceBy(selectedLabels, defaultSelectedLabels) || []
     return diff1.length === 0 && diff2.length === 0
   }
-  console.log('selectedLabels createLabel', selectedLabels)
-  console.log('defaultSelectedLabels createlabel', defaultSelectedLabels)
 
-  // const removedLabel: any = differenceBy(defaultSelectedLabels, selectedLabels)
-  //
-  // console.log('removedLabel', removedLabel)
+  console.log('selectedRowKeys createLabel', selectedRowKeys)
 
-  // const onApplyLabel = () => {
-  //   handleApplyLabel(selectedLabels)
-  //
-  //   setVisible(false)
-  //   if (selectedRowKeys && selectedRowKeys.length > 0) {
-  //     for (const selectContact of selectedRowKeys) {
-  //       for (const selectedLabel of selectedLabels) {
-  //         console.log('selectedLabel ID createLabel', selectedLabel)
-  //         const removedLabel: any = differenceBy(
-  //           defaultSelectedLabels,
-  //           selectedLabels
-  //         )
-  //         const copySelectedLabel = [...selectedLabels]
-  //         const xxxx = copySelectedLabel.find((obj) =>
-  //           Object.keys(obj).includes('__typename')
-  //         )
-  //         console.log('entering if INSERT')
-  //         if (xxxx && !defaultSelectedLabels.includes(selectedLabel)) {
-  //           insertContactsLabelsMutaton({
-  //             variables: {
-  //               contact_id: selectContact,
-  //               label_id: selectedLabel.id,
-  //             },
-  //           })
-  //         }
-  //         if (!xxxx && defaultSelectedLabels.includes(selectedLabel)) {
-  //           console.log('entering ELSE DELETE')
-  //           // console.log('removedLabel', removedLabel[0].id)
-  //           // const removedLabel: any = differenceBy(
-  //           //   defaultSelectedLabels,
-  //           //   selectedLabels
-  //           // )
-  //           const findToDeleteCL = contactsLabels?.find(
-  //             (x) => x.label_id === removedLabel[0].id
-  //           )
-  //           // console.log('findToDeleteCL', findToDeleteCL)
-  //           // console.log('selectContact 111111', selectContact)
-  //           deleteContactsLabelsMutaton({
-  //             variables: {
-  //               id: findToDeleteCL.id,
-  //             },
-  //           })
-  //         }
-  //       }
-  //     }
-  //   }
+  // if (selectedRowKeys.length > 1) {
+  //   setDefaultSelectedLabels([])
   // }
 
   const onApplyLabel = () => {
@@ -318,7 +258,8 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     if (selectedRowKeys && selectedRowKeys.length > 0) {
       for (const selectContact of selectedRowKeys) {
         for (const selectedLabel of selectedLabels) {
-          console.log('selectedLabel ID createLabel', selectedLabel)
+          console.log('selectedLabel 1111', selectedLabel)
+          console.log('defaultSelectedLabels 1111', defaultSelectedLabels)
           const addedLabel: any = difference(
             selectedLabels,
             defaultSelectedLabels
@@ -327,15 +268,21 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
             defaultSelectedLabels,
             selectedLabels
           )
-          console.log('removedLabel createLabel', removedLabel)
-          console.log('addedLabel createLabel', addedLabel)
+          // const testEqual = contactsLabels.some(
+          //   (e) => e.label_id === selectedLabel.id
+          // )
+          console.log('addedLabel 1111', addedLabel)
+          const testEqual = defaultSelectedLabels.some(
+            (e) => e.id === addedLabel.id
+          )
+          console.log('testEqual 1111', testEqual)
+
           if (
             addedLabel.length > 0 &&
-            !defaultSelectedLabels.includes(selectedLabel)
-            // defaultSelectedLabels.some((e) => e.text !== addedLabel.text)
-            // contactsLabels.some((e) => e.label.text === addedLabel.text)
+            !testEqual
+            // !defaultSelectedLabels.includes(selectedLabel)
+            // defaultSelectedLabels.some((e) => e.text !== selectedLabel.text)
           ) {
-            console.log('enter insert')
             insertContactsLabelsMutaton({
               variables: {
                 contact_id: selectContact,
@@ -344,21 +291,19 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
             })
           }
           if (removedLabel.length > 0) {
-            console.log('enter delete')
-
-            const findToDeleteCL = contactsLabels?.find(
-              (x) => x.label_id === removedLabel[0].id
-            )
-            console.log('findToDeleteCL', findToDeleteCL)
-            deleteContactsLabelsMutaton({
-              variables: {
-                id: findToDeleteCL.id,
-              },
+            removedLabel.map((label) => {
+              const findToDeleteCL = contactsLabels?.find(
+                (x) => x.label_id === label.id
+              )
+              deleteContactsLabelsMutaton({
+                variables: {
+                  id: findToDeleteCL.id,
+                },
+              })
             })
           }
         }
         if (selectedLabels.length === 0 && defaultSelectedLabels.length > 0) {
-          console.log('enter selectedLabels 0', defaultSelectedLabels)
           const findToDeleteCL = contactsLabels?.find(
             (x) => x.label_id === defaultSelectedLabels[0].id
           )
@@ -384,7 +329,6 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
                     style={{ display: 'flex', flexDirection: 'row' }}
                     key={`s-${label.id}`}
                     onClick={() => handleSelect(label, index)}
-                    // onClick={() => console.log('label.id', index)}
                     className={styles.tagWrap}
                   >
                     <div className={styles.tagLayout} key={`d-${label.id}`}>
