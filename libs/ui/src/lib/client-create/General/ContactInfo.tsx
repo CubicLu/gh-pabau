@@ -53,6 +53,11 @@ export const ContactInfo: FC<GeneralProps> = ({
                 setFieldValue('Mobile', value)
               }}
               showValidErrorMessage={false}
+              placeholder={t('common-label-enter', {
+                what: t(
+                  'quickCreate.client.modal.general.mobilePhone'
+                ).toLowerCase(),
+              })}
             />
           </AntForm.Item>
         )}

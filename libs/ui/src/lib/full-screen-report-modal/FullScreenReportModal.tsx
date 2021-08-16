@@ -236,7 +236,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
         <ConfigProvider
           getPopupContainer={(node) => {
             if (node) {
-              return node.childNodes[0] as HTMLElement
+              return node as HTMLElement
             }
             return document.body as HTMLElement
           }}

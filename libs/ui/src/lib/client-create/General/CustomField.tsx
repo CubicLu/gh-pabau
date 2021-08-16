@@ -57,19 +57,33 @@ const CustomField: FC<CustomFieldProps> = ({
                   {item?.field_type === 'string' ||
                   item?.field_type === 'email' ||
                   item?.field_type === 'url' ? (
-                    <Input size={'middle'} name={`customField_${item.id}`} />
+                    <Input
+                      size={'middle'}
+                      name={`customField_${item.id}`}
+                      placeholder={t('common-label-enter', {
+                        what: item?.field_label?.toLowerCase(),
+                      })}
+                    />
                   ) : item?.field_type === 'text' ? (
-                    <TextArea name={`customField_${item.id}`} rows={4} />
+                    <TextArea
+                      name={`customField_${item.id}`}
+                      rows={4}
+                      placeholder={t('common-label-enter', {
+                        what: item?.field_label?.toLowerCase(),
+                      })}
+                    />
                   ) : item?.field_type === 'number' ? (
                     <InputNumber
                       name={`customField_${item.id}`}
-                      size="large"
                       onChange={(value) =>
                         setFieldValue(
                           `customField_${item.id}`,
                           value ? value : 0
                         )
                       }
+                      placeholder={t('common-label-enter', {
+                        what: item?.field_label?.toLowerCase(),
+                      })}
                     />
                   ) : item?.field_type === 'multiple' ? (
                     <Checkbox.Group
@@ -95,7 +109,12 @@ const CustomField: FC<CustomFieldProps> = ({
                       ))}
                     </Radio.Group>
                   ) : item?.field_type === 'list' ? (
-                    <Select name={`customField_${item.id}`}>
+                    <Select
+                      name={`customField_${item.id}`}
+                      placeholder={t('common-label-select', {
+                        what: item?.field_label?.toLowerCase(),
+                      })}
+                    >
                       {item.ManageCustomFieldItem.map((item) => (
                         <Select.Option
                           key={item.id}
@@ -117,7 +136,12 @@ const CustomField: FC<CustomFieldProps> = ({
                       onChange={(date) =>
                         setFieldValue(`customField_${item.id}`, date)
                       }
-                      placeholder={'DD/MM/YY'}
+                      placeholder={t(
+                        'quickCreate.custom.field.date.placeholder'
+                      )}
+                      getPopupContainer={(trigger) =>
+                        trigger.parentElement as HTMLElement
+                      }
                     />
                   ) : item?.field_type === 'phone' ? (
                     <PhoneNumberInput
@@ -129,12 +153,15 @@ const CustomField: FC<CustomFieldProps> = ({
                       value={
                         values?.[`customField_${item.id}`]
                           ? values[`customField_${item.id}`]?.toString()
-                          : undefined
+                          : ''
                       }
                       onChange={(value) =>
                         setFieldValue(`customField_${item.id}`, value)
                       }
                       showValidErrorMessage={false}
+                      placeholder={t('common-label-enter', {
+                        what: item?.field_label?.toLowerCase(),
+                      })}
                     />
                   ) : null}
                 </AntForm.Item>
