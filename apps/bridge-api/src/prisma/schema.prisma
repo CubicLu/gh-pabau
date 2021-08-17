@@ -10291,7 +10291,6 @@ model ReportCategory {
 model RotaShift {
   id             Int            @id @default(autoincrement())
   uid            Int
-  User           User           @relation(fields: [uid], references: [id])
   start          Int
   end            Int
   company_id     Int            @map("occupier")
@@ -12503,7 +12502,6 @@ model User {
   UserSecurityQuestionsAnswer  UserSecurityQuestionsAnswer[]
   Company                      Company?                       @relation(fields: [company_id], references: [id])
   CompanyDetails               CompanyDetails?                @relation(fields: [company_id], references: [company_id])
-  RotaShift                    RotaShift[]
   UserGroupMember              UserGroupMember?
   UserMainPermission           UserMainPermission[]
   UserMobilePermission         UserMobilePermission[]
