@@ -7,13 +7,14 @@ describe('AddThirdParty', () => {
     const { baseElement } = render(
       <AddThirdParty
         visible={false}
-        thirdPartyType="practice"
+        thirdPartyType="practioner"
         onClose={() => {
           return
         }}
         onAddRelationship={(relationship) => {
           return
         }}
+        searchResults={[]}
       />
     )
     expect(baseElement).toBeTruthy()
