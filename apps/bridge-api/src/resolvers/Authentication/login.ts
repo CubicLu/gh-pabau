@@ -40,7 +40,7 @@ export const Login = extendType({
       async resolve(
         _root,
         { username, password },
-        { authenticated, prismaArray }
+        { authenticated, prismaArray }: Context
       ) {
         const users = await prismaArray(undefined).user.findMany({
           where: {
