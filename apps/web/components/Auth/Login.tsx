@@ -28,7 +28,7 @@ const LoginMain: FC<P> = ({ handlePageShow }) => {
        */
       const pab1JWT = jwt.decode(data.login) as any
       window.location.href =
-        'https://prelive-crm.pabau.com/auth.php?t=' +
+        'https://crm.pabau.com/auth.php?t=' +
         pab1JWT.pab1 +
         '&r=' +
         encodeURIComponent(window.location.origin)
