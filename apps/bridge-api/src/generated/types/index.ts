@@ -1,3 +1,4 @@
+export * from './ServiceCategory'
 export * from './PasswordResetAuth'
 export * from './LeadStatus'
 export * from './CmLeadNote'
