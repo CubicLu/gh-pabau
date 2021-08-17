@@ -6,7 +6,7 @@ export const Index = () => {
   return (
     <div>
       <Layout>
-        <h1>Welcome to body-charts!</h1>
+        <h1>Welcome to body charts!</h1>
       </Layout>
     </div>
   )

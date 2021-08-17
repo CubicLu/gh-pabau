@@ -6,23 +6,22 @@
       "production": {
         "url": "https://api-v2.pabau.com/v1/graphql",
         "headers": {
-          "Authorization": "Bearer ${env:GITHUB-ACCESS-TOKEN}",
+          "X-Hasura-Admin-Secret": "${env:HASURA_GRAPHQL_ADMIN_SECRET}",
           "user-agent": "JS GraphQL"
         },
-        "introspect": false
+        "introspect": true
       },
       "local": {
         "url": "http://localhost:8080/v1/graphql",
         "headers": {
-          "Authorization": "Bearer ${env:HASURA_GRAPHQL_ADMIN_SECRET}",
+          "X-Hasura-Admin-Secret": "1234",
           "user-agent": "JS GraphQL"
         },
-        "introspect": false
+        "introspect": true
       }
     }
   },
   "includes": [
-    "hasura/schema.graphql",
     "libs/**/*.graphql",
     "apps/**/*.tsx"
   ]

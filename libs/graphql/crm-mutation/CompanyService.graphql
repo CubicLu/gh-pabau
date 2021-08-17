@@ -1,7 +1,7 @@
 fragment CompanyServiceFields on CompanyService {
   id
   company_id
-  name
+  service
   duration
   description
   price
@@ -48,6 +48,9 @@ fragment CompanyService on CompanyService {
   ...CompanyServiceFields
   Company {
     ...CompanyFields
+  }
+  ServiceCategory {
+    ...ServiceCategoryFields
   }
 }
 

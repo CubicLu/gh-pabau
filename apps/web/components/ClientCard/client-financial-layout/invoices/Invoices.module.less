@@ -1,0 +1,170 @@
+.invoices {
+  .filterRow {
+    height: 50px;
+    width: 100%;
+    background-color: var(--light-color);
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    .filter {
+      height: 50px;
+      width: 50px;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      cursor: pointer;
+      :global {
+        .anticon {
+          font-size: 20px;
+        }
+      }
+    }
+  }
+  .invoiceNo {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    align-items: center;
+    color: var(--light-grey-color);
+    font-size: 12px;
+    span:nth-child(2) {
+      color: var(--primary-color);
+    }
+  }
+  :global {
+    .ant-table-thead > tr > th {
+      background: var(--gray-background-color) !important;
+      color: var(--light-grey-color) !important;
+      font-size: 12px !important;
+    }
+  }
+}
+.rowExpand {
+  margin: -15px;
+  padding: 15px;
+  background: var(--gray-background-color);
+  .items {
+    margin-bottom: 15px;
+    .item {
+      display: flex;
+      flex-direction: row;
+      height: 48px;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color-base);
+      & > div {
+        :global {
+          .ant-typography {
+            color: var(--grey-text-color);
+          }
+        }
+      }
+      & > div:nth-child(1) {
+        display: flex;
+        flex: 2;
+        justify-content: flex-start;
+      }
+      & > div:nth-child(2) {
+        display: flex;
+        flex: 1;
+        justify-content: center;
+      }
+      & > div:nth-child(3) {
+        display: flex;
+        flex: 1;
+        justify-content: flex-end;
+      }
+    }
+  }
+  .content {
+    display: flex;
+    height: 120px;
+    & > div {
+      flex: 1;
+    }
+    .left {
+      display: flex;
+      flex-direction: row;
+      height: 100%;
+      div {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        div {
+          justify-content: center;
+          :global {
+            .ant-typography {
+              padding: 0;
+              margin: 0;
+              font-size: 12px;
+              &:first-child {
+                font-size: 14px;
+              }
+            }
+          }
+        }
+      }
+    }
+    & > div.right {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      :global {
+        .ant-typography {
+          margin: 0;
+          padding: 0;
+        }
+        .ant-btn-primary {
+          margin-top: 10px;
+        }
+      }
+    }
+  }
+}
+.pagination {
+  padding: 0 1rem;
+  @media (max-width: 767px) {
+    > div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        > p {
+          padding: 0 !important;
+          margin-bottom: 1rem !important;
+        }
+      }
+    }
+  }
+}
+.invoicesFilter {
+  width: 250px;
+  :global {
+    .ant-popover-inner {
+      padding-top: 10px;
+      .ant-popover-title {
+        border-bottom: none;
+        font-weight: 1000;
+      }
+      .ant-popover-inner-content {
+        padding: 3px 16px 12px 16px;
+      }
+    }
+  }
+  .invoicesFilCont {
+    margin-top: 10px;
+    :global {
+      .ant-radio-wrapper {
+        color: var(--light-grey-text-color);
+        font-size: 12px;
+      }
+      .ant-typography {
+        color: #000;
+        font-size: 13px;
+      }
+    }
+  }
+}

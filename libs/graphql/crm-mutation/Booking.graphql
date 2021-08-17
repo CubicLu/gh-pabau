@@ -8,7 +8,7 @@ fragment BookingFields on Booking {
   service
   contact_id
   UID
-  company_id
+  occupier
   backgroudcolor
   create_date
   update_date
@@ -71,6 +71,24 @@ fragment BookingFields on Booking {
 
 fragment Booking on Booking {
   ...BookingFields
+  InvSale {
+    ...InvSaleFields
+  }
+  User {
+    ...UserFields
+  }
+  Contact {
+    ...CmContactFields
+  }
+  connect_client {
+    ...UserMasterFields
+  }
+  practitioner {
+    ...CmStaffGeneralFields
+  }
+  booking_location {
+    ...CompanyBranchFields
+  }
 }
 
 mutation createOneBooking($data: BookingCreateInput!) {

@@ -1,60 +1,28 @@
 import { paljs } from '@paljs/nexus'
 import { applyMiddleware } from 'graphql-middleware'
-import { GraphQLDate, GraphQLDateTime } from 'graphql-scalars'
-import { makeSchema, nullabilityGuardPlugin } from 'nexus'
-import { nexusPrisma } from 'nexus-plugin-prisma'
-import * as customTypes from '../src/schema/types'
-import * as generatedTypes from './generated/types'
+import { makeSchema } from 'nexus'
 import { permissions } from './permissions'
+import * as types from './schema/types'
 
-export const schema = applyMiddleware(
-  makeSchema({
-    types: [generatedTypes, customTypes],
-    plugins: [
-      paljs(),
-      nexusPrisma({
-        shouldGenerateArtifacts: process.argv.includes('--nexus-typegen'),
-        experimentalCRUD: true,
-        paginationStrategy: 'prisma',
-        scalars: {
-          GraphQLDate,
-          GraphQLDateTime,
-        },
-      }),
-      nullabilityGuardPlugin({
-        onGuarded({ ctx, info }) {
-          console.error(
-            `Error: Saw a null value for non-null field ${info.parentType.name}.${info.fieldName}`
-          )
-          console.error(ctx)
-        },
-        fallbackValues: {
-          Int: () => 0,
-          String: () => '',
-          Boolean: () => false,
-          Float: () => 0,
-          Decimal: () => 0,
-          DateTime: () => '1970-01-01T1:00:00+00:00',
-          Json: () => [],
-          BigInt: () => '0',
-        },
-      }),
+//TODO: speed this up
+console.log('Loading schema (this may take up to a minute)...')
+
+const schema = makeSchema({
+  plugins: [paljs()],
+  shouldGenerateArtifacts: process.argv.includes('--nexus-typegen'),
+  types,
+  outputs: {
+    typegen: __dirname + '/generated/nexus.d.ts',
+  },
+  sourceTypes: {
+    modules: [
+      {
+        module: '@prisma/client',
+        alias: 'prisma',
+      },
     ],
-    outputs: {
-      schema: __dirname + '/generated/schema.graphql',
-      typegen: __dirname + '/generated/typegen-nexus-plugin-prisma.d.ts',
-    },
-    sourceTypes: {
-      headers: [
-        'import { ConnectionFieldOpts } from "@packages/api-graphql/src/extensions/connectionType"',
-      ],
-      modules: [
-        {
-          module: '@prisma/client',
-          alias: 'prisma',
-        },
-      ],
-    },
-  }),
-  permissions
-)
+  },
+})
+
+console.log('Applying shields...')
+export const middleware = applyMiddleware(schema, permissions)

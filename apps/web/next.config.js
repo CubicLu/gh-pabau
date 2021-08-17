@@ -7,6 +7,30 @@ module.exports = {
   env: {
     google_api_key: 'AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw',
   },
+  async rewrites() {
+    return [
+      {
+        source: '/reports/:name',
+        destination: '/reports/[name]?name=:name',
+      },
+      {
+        source: '/clients/:id',
+        destination: '/clients/[id]?id=:id',
+      },
+      {
+        source: '/clients/finance/invoice/:id',
+        destination: '/clients/finance/invoice/[id]?id=:id',
+      },
+      {
+        source: '/clients/finance/receipt/:id',
+        destination: '/clients/finance/receipt/[id]?id=:id',
+      },
+      {
+        source: '/clients/finance/statement/:id',
+        destination: '/clients/finance/statement/[id]?id=:id',
+      },
+    ]
+  },
   typescript: {
     // !! WARN !!
     // Dangerously allow production builds to successfully complete even if
@@ -42,7 +66,7 @@ module.exports = {
       'woff2',
       'otf',
     ],
-    inlineImageLimit: 100_000,
+    inlineImageLimit: 9_000,
     ...withAntdLess({
       lessVarsFilePath: 'libs/ui/src/styles/antd.less',
       importLoaders: 3,

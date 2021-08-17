@@ -164,4 +164,11 @@ export const notificationVariables = [
       purchase_order_date: Intl.DateTimeFormat('en-US').format(new Date()),
     },
   },
+  {
+    type: 'lead_assigned',
+    variables: {
+      lead_name: 'lead name',
+      who: 'Olivia Sanders',
+    },
+  },
 ]

@@ -35,7 +35,7 @@ let fatalError = false
 for (const line of lines) {
   if (line.startsWith('apps/web/pages/')) {
     const path = removeIndexTsx('/' + line.substr('apps/web/pages/'.length))
-    output.push(`<${myArgs[1]}${path}|${path}>`)
+    output.push(`<${myArgs[1]}${path || '/'}|${path || '/'}>`)
   }
 
   if (line.startsWith('libs/ui/src/lib/')) {

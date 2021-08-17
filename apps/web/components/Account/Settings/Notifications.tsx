@@ -1,11 +1,5 @@
 import { ButtonCheckbox } from '@pabau/ui'
-import {
-  Checkbox as AntCheckbox,
-  Descriptions,
-  Divider,
-  Form,
-  Skeleton,
-} from 'antd'
+import { Descriptions, Divider, Form, Skeleton } from 'antd'
 import React, { FC, useEffect, useState } from 'react'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import useWindowSize from '../../../hooks/useWindowSize'
@@ -38,17 +32,6 @@ export interface NotificationProps {
     enabled?: boolean
   }[]
   onPabauNotificationChange?: (data) => void
-
-  applicationNotificationTypes?: {
-    id?: string
-    notification_type?: string
-  }[]
-  applicationNotificationChecks?: {
-    id?: string
-    notification_type?: string
-    enabled?: boolean
-  }[]
-  onAppNotificationChange?: (data) => void
 }
 
 const Notification: FC<NotificationProps> = ({
@@ -60,10 +43,6 @@ const Notification: FC<NotificationProps> = ({
   pabauWebNotificationTypes,
   pabauWebNotificationToggles,
   onPabauNotificationChange,
-
-  applicationNotificationTypes,
-  applicationNotificationChecks,
-  onAppNotificationChange,
   ...rest
 }) => {
   const { t } = useTranslationI18()
@@ -85,20 +64,6 @@ const Notification: FC<NotificationProps> = ({
     },
   ]
   const size = useWindowSize()
-  const apptNotifications = [
-    {
-      key: 'news_and_announcements',
-      label: t('account.settings.notification.application.label1'),
-    },
-    {
-      key: 'new_feature_release',
-      label: t('account.settings.notification.application.label2'),
-    },
-    {
-      key: 'new_blog_post',
-      label: t('account.settings.notification.application.label3'),
-    },
-  ]
 
   const alertTranslations = {
     'Feed Post': {
@@ -123,14 +88,14 @@ const Notification: FC<NotificationProps> = ({
       ),
     },
     'Appointment Booked': {
-      type: 'New Appointment via pabau',
+      type: 'New Appointment via calendar',
       title: t('account.settings.notification.general.appointmentbooked'),
       description: t(
         'account.settings.notification.general.appointmentbooked.description'
       ),
     },
     'Appointment Cancelled': {
-      type: 'Cancelled appointment via pabau',
+      type: 'Cancelled appointment via calendar',
       title: t('account.settings.notification.general.appointmentcancelled'),
       description: t(
         'account.settings.notification.general.appointmentcancelled.description'
@@ -143,24 +108,24 @@ const Notification: FC<NotificationProps> = ({
         'account.settings.notification.general.leadinquiry.description'
       ),
     },
+    'Lead Assigned': {
+      type: 'Lead assigned via pabau',
+      title: t('account.settings.notification.general.lead.assigned.title'),
+      description: t(
+        'account.settings.notification.general.lead.assigned.description'
+      ),
+    },
   }
 
   const [allAlertsState, setAllAlertsState] = useState<UserAlert[]>(null)
   const [userAlertsState, setUserAlertsState] = useState(null)
   const [userPabauNotifications, setUserPabauNotifications] = useState(null)
-  const [userCurrentNotifications, setUserCurrentNotifications] = useState(null)
 
   useEffect(() => {
     setUserAlertsState(profileData?.UserAlertPermission)
     setAllAlertsState(allAlerts)
-    setUserCurrentNotifications(applicationNotificationChecks)
     setUserPabauNotifications(pabauWebNotificationToggles)
-  }, [
-    allAlerts,
-    profileData,
-    applicationNotificationChecks,
-    pabauWebNotificationToggles,
-  ])
+  }, [allAlerts, profileData, pabauWebNotificationToggles])
 
   const RenderAlertCheckBox = ({ type, label, current, ...rest }) => {
     const [currentTab, setCurrentTab] = useState(current)
@@ -233,13 +198,25 @@ const Notification: FC<NotificationProps> = ({
     if (!current) {
       current = defaultTab
     }
+    const checkBtnOptions = [...btnOptions]
+    if (
+      rest?.title === 'Appointment Booked' ||
+      rest?.title === 'Appointment Cancelled'
+    ) {
+      const ios_obj = {
+        key: 'ios_notification',
+        label: t('account.settings.notification.general.button.label1'),
+        disabled: false,
+      }
+      checkBtnOptions.unshift(ios_obj)
+    }
     return (
       <>
         <h2>{alertTranslations[`${rest?.title}`]?.title}</h2>
         <span>{alertTranslations[`${rest?.title}`]?.description}</span>
         <br />
         <br />
-        {btnOptions.map(({ key, label }) =>
+        {checkBtnOptions.map(({ key, label }) =>
           loading ? (
             <Skeleton.Button
               active
@@ -263,57 +240,6 @@ const Notification: FC<NotificationProps> = ({
     )
   }
 
-  const applicationNotificationClick = (enabled, currentNotification) => {
-    currentNotification = { ...currentNotification, enabled: enabled }
-    const userCurrents = userCurrentNotifications
-      ? [...userCurrentNotifications]
-      : []
-    if (currentNotification?.notification_type) {
-      const existedIndex = userCurrents?.findIndex(
-        (el) => el?.notification_type === currentNotification?.notification_type
-      )
-      if (existedIndex !== -1) {
-        userCurrents.splice(existedIndex, 1, currentNotification)
-      } else {
-        userCurrents.push(currentNotification)
-      }
-    }
-    setUserCurrentNotifications(userCurrents)
-    onAppNotificationChange([...userCurrents])
-  }
-
-  const ApplicationNotificationAction = ({ ...rest }) => {
-    const appNotification = applicationNotificationTypes?.find(
-      (el) => el?.notification_type === rest?.type
-    )
-
-    let currentType = userCurrentNotifications?.find(
-      (el) => el?.notification_type === appNotification?.id
-    )
-    if (!currentType) {
-      currentType = {
-        enabled: false,
-        notification_type: appNotification?.id,
-      }
-    }
-    const checked = currentType?.enabled
-    return (
-      <>
-        <AntCheckbox
-          onChange={(e) =>
-            applicationNotificationClick(e.target.checked, currentType)
-          }
-          className="nofiticaionAppChk"
-          checked={checked}
-          key={rest?.key}
-        >
-          {rest?.label}
-        </AntCheckbox>
-        <br />
-      </>
-    )
-  }
-
   return (
     <div className={styles.skeletonWrapper}>
       <Descriptions title={t('account.settings.tab.header3')}>
@@ -326,47 +252,22 @@ const Notification: FC<NotificationProps> = ({
         <Form.Item>
           <h1>{t('account.settings.notification.general.label')}</h1>
         </Form.Item>
-        {allAlertsState?.map(({ id, title, description }, index) => (
-          <>
-            <Form.Item key={`allAlerts${index}`}>
-              <AlertAction
-                title={title}
-                description={description}
-                alertId={id}
-              />
-            </Form.Item>
-            <Divider />
-          </>
-        ))}
-
-        <Form.Item>
-          <h1 className="nofiticaionApp">
-            {t('account.settings.notification.application.label')}
-          </h1>
-          {loading
-            ? [1, 2, 3].map((id) => (
-                <div key={id} className="sFlex" style={{ display: 'flex' }}>
-                  <span>
-                    <Skeleton.Avatar
-                      active
-                      shape="square"
-                      style={{ height: 20, width: 20 }}
-                    />
-                  </span>
-                  <label key={id}>
-                    <Skeleton active paragraph={{ rows: 0 }} />
-                  </label>
-                </div>
-              ))
-            : apptNotifications.map(({ key, label }) => (
-                <ApplicationNotificationAction
-                  key={key}
-                  type={key}
-                  label={label}
-                />
-              ))}
-        </Form.Item>
-        <Form.Item></Form.Item>
+        {allAlertsState?.map(
+          ({ id, title, description }, index) =>
+            title !== 'Feed Post' &&
+            title !== 'Like Post' && (
+              <>
+                <Form.Item key={`allAlerts${index}`}>
+                  <AlertAction
+                    title={title}
+                    description={description}
+                    alertId={id}
+                  />
+                </Form.Item>
+                <Divider />
+              </>
+            )
+        )}
       </Form>
     </div>
   )

@@ -5,6 +5,7 @@ import {
 } from '@ant-design/icons'
 import { Avatar, Modal } from 'antd'
 import classNames from 'classnames'
+import { useMedia } from 'react-use'
 import React, { FC, createRef, RefObject, useEffect, useState } from 'react'
 import { ReactComponent as Maximize } from '../../assets/images/popout/maximize.svg'
 import { ReactComponent as Minimize } from '../../assets/images/popout/minimize.svg'
@@ -12,23 +13,37 @@ import { ReactComponent as TypeEmail } from '../../assets/images/popout/TypeEmai
 import { ReactComponent as TypeForm } from '../../assets/images/popout/TypeForm.svg'
 import { ReactComponent as TypeLetter } from '../../assets/images/popout/TypeLetter.svg'
 import { ReactComponent as TypeSMS } from '../../assets/images/popout/TypeSMS.svg'
-import { SendMail, SendSMS } from '@pabau/ui'
+import { ReactComponent as TypePrescription } from '../../assets/images/popout/TypePrescription.svg'
+import { SendMail, SendSMS, SelectForm, CreatePrescription } from '@pabau/ui'
 import userAvatar from '../../assets/images/users/austin.png'
 import styles from './StickyPopout.module.less'
 
 interface PopoutProps {
-  id?: string
+  receiverData?: string
   type?: string
-  clientId?: string
+  client?: {
+    id: string
+    name: string
+    email: string
+  }
   title?: string
   ref?: RefObject<HTMLDivElement>
 }
 
+const defaultClient = {
+  id: '',
+  name: 'Bruno Ballardin',
+  email: 'bruno.ballardin@example.com',
+}
+
 export const StickyPopout: FC = () => {
+  const isMobile = useMedia('(max-width: 767px)', false)
   const [isFullScreen, setIsFullScreen] = useState(false)
   const [popouts, setPopouts] = useState<PopoutProps[]>([])
   const [currentPopout, setCurrentPopout] = useState<PopoutProps>({})
   const expandedClasses = {
+    prescription: styles.expandedPrescription,
+    treatment: styles.expandedForm,
     form: styles.expandedForm,
     email: styles.expandedEmail,
     sms: styles.expandedSMS,
@@ -44,7 +59,7 @@ export const StickyPopout: FC = () => {
 
   const handleFullScreenExitHeader = async (e, item: PopoutProps) => {
     const { ref } = item
-    if (ref?.current && !ref.current.contains(e.target)) {
+    if (!isMobile && ref?.current && !ref.current.contains(e.target)) {
       await setCurrentPopout({})
       await window.localStorage.setItem('pabau_popout_item', JSON.stringify({}))
       await setIsFullScreen(false)
@@ -52,15 +67,15 @@ export const StickyPopout: FC = () => {
   }
 
   const handleMinimize = async (item: PopoutProps) => {
-    if (!currentPopout.id) {
+    if (!currentPopout.receiverData) {
       // maximize
       await setCurrentPopout(item)
       await window.localStorage.setItem(
         'pabau_popout_item',
         JSON.stringify({
-          id: item.id,
+          receiverData: item.receiverData,
           type: item.type,
-          clientId: item.clientId,
+          client: item.client,
           title: item.title,
         })
       )
@@ -79,6 +94,9 @@ export const StickyPopout: FC = () => {
         {type === 'sms' && <TypeSMS className={styles.typeIcon} />}
         {type === 'letter' && <TypeLetter className={styles.typeIcon} />}
         {type === 'form' && <TypeForm className={styles.typeIcon} />}
+        {type === 'prescription' && (
+          <TypePrescription className={styles.typeIcon} />
+        )}
       </div>
     )
   }
@@ -88,9 +106,9 @@ export const StickyPopout: FC = () => {
     await window.localStorage.setItem(
       'pabau_popout_item',
       JSON.stringify({
-        id: item.id,
+        receiverData: item.receiverData,
         type: item.type,
-        clientId: item.clientId,
+        client: item.client,
         title: item.title,
       })
     )
@@ -99,10 +117,10 @@ export const StickyPopout: FC = () => {
 
   const handleClose = async (item: PopoutProps) => {
     const findIndex = popouts.findIndex((el) => {
-      const { id } = el
-      return id === item.id
+      const { receiverData } = el
+      return receiverData === item.receiverData
     })
-    if (item.id === currentPopout?.id) {
+    if (item.receiverData === currentPopout?.receiverData) {
       await setCurrentPopout({})
       await window.localStorage.setItem('pabau_popout_item', JSON.stringify({}))
     }
@@ -113,9 +131,9 @@ export const StickyPopout: FC = () => {
       'pabau_popout_list',
       JSON.stringify(
         items.map((item) => ({
-          id: item.id,
+          recieverData: item.receiverData,
           type: item.type,
-          clientId: item.clientId,
+          client: item.client,
           title: item.title,
         }))
       )
@@ -124,7 +142,9 @@ export const StickyPopout: FC = () => {
     // remove content
     const content = window.localStorage.getItem('pabau_content')
     const contentItems = content ? JSON.parse(content) : []
-    const findContentIndex = contentItems.findIndex((el) => el.id === item.id)
+    const findContentIndex = contentItems.findIndex(
+      (el) => el.receiverData === item.receiverData
+    )
     if (findContentIndex >= 0) contentItems.splice(findContentIndex, 1)
     await window.localStorage.setItem(
       'pabau_content',
@@ -140,7 +160,7 @@ export const StickyPopout: FC = () => {
       window.localStorage.getItem('pabau_popout_list') || '[]'
     )
     setIsFullScreen(false)
-    if (!!item && item.id) {
+    if (!!item && item.receiverData) {
       setCurrentPopout({ ...item, ref: createRef() })
     } else {
       setCurrentPopout({})
@@ -156,11 +176,11 @@ export const StickyPopout: FC = () => {
       const items = JSON.parse(
         window.localStorage.getItem('pabau_popout_list') || '[]'
       )
-      const fullScreen = JSON.parse(
-        window.localStorage.getItem('pabau_popout_fullscreen') || `${false}`
-      )
-      setIsFullScreen(fullScreen)
-      if (!!item && item.id) {
+      // const fullScreen = JSON.parse(
+      //   window.localStorage.getItem('pabau_popout_fullscreen') || `${false}`
+      // )
+      // setIsFullScreen(fullScreen)
+      if (!!item && item.receiverData) {
         setCurrentPopout({ ...item, ref: createRef() })
       } else {
         setCurrentPopout({})
@@ -174,7 +194,8 @@ export const StickyPopout: FC = () => {
 
   return (
     <div className={styles.stickyPopoutContainer}>
-      {!isFullScreen &&
+      {!isMobile &&
+        !isFullScreen &&
         popouts.map((item, index) => (
           <div
             key={`sticky-popout-${index}`}
@@ -183,7 +204,7 @@ export const StickyPopout: FC = () => {
             <div
               className={classNames(
                 styles.popoutContainer,
-                item.id === currentPopout?.id
+                item.receiverData === currentPopout?.receiverData
                   ? expandedClasses[currentPopout.type || '']
                   : null
               )}
@@ -199,7 +220,7 @@ export const StickyPopout: FC = () => {
                     className={styles.opsIcon}
                     onClick={() => handleMinimize(item)}
                   >
-                    {item.id === currentPopout?.id ? (
+                    {item.receiverData === currentPopout?.receiverData ? (
                       <Maximize />
                     ) : (
                       <Minimize />
@@ -219,18 +240,32 @@ export const StickyPopout: FC = () => {
                   </div>
                 </div>
               </div>
-              {item.id === currentPopout?.id && (
+              {item.receiverData === currentPopout?.receiverData && (
                 <div className={styles.content}>
                   {item.type === 'sms' && (
                     <SendSMS
-                      clientId={item.clientId || ''}
-                      id={item.id || ''}
+                      client={item.client || defaultClient}
+                      receiverData={item.receiverData || ''}
                     />
                   )}
                   {item.type === 'email' && (
                     <SendMail
-                      clientId={item.clientId || ''}
-                      id={item.id || ''}
+                      client={item.client || defaultClient}
+                      receiverData={item.receiverData || ''}
+                      onSend={() => handleClose(item)}
+                    />
+                  )}
+                  {item.type === 'treatment' && (
+                    <SelectForm
+                      client={item.client || defaultClient}
+                      receiverData={item.receiverData || ''}
+                      type={item.type}
+                    />
+                  )}
+                  {item.type === 'prescription' && (
+                    <CreatePrescription
+                      client={item.client || defaultClient}
+                      receiverData={item.receiverData || ''}
                     />
                   )}
                 </div>
@@ -238,9 +273,9 @@ export const StickyPopout: FC = () => {
             </div>
           </div>
         ))}
-      {isFullScreen && currentPopout.id && (
+      {(isFullScreen || isMobile) && currentPopout.receiverData && (
         <Modal
-          visible={isFullScreen}
+          visible={isFullScreen || isMobile}
           closable={false}
           footer={null}
           centered
@@ -255,27 +290,31 @@ export const StickyPopout: FC = () => {
               {renderAvatar(currentPopout.type || '')}
               <div>{currentPopout.title}</div>
               <div ref={currentPopout.ref}>
-                <div
-                  className={styles.opsIcon}
-                  onClick={async () => {
-                    setIsFullScreen(false)
-                    setCurrentPopout({})
-                    await window.localStorage.setItem(
-                      'pabau_popout_item',
-                      JSON.stringify({})
-                    )
-                  }}
-                >
-                  <Minimize />
-                </div>
-                <div
-                  className={styles.opsIcon}
-                  onClick={() => {
-                    setIsFullScreen(false)
-                  }}
-                >
-                  <ShrinkOutlined />
-                </div>
+                {!isMobile && (
+                  <div
+                    className={styles.opsIcon}
+                    onClick={async () => {
+                      setIsFullScreen(false)
+                      setCurrentPopout({})
+                      await window.localStorage.setItem(
+                        'pabau_popout_item',
+                        JSON.stringify({})
+                      )
+                    }}
+                  >
+                    <Minimize />
+                  </div>
+                )}
+                {!isMobile && (
+                  <div
+                    className={styles.opsIcon}
+                    onClick={() => {
+                      setIsFullScreen(false)
+                    }}
+                  >
+                    <ShrinkOutlined />
+                  </div>
+                )}
                 <div
                   className={styles.opsIcon}
                   onClick={() => {
@@ -290,14 +329,31 @@ export const StickyPopout: FC = () => {
             <div className={styles.content}>
               {currentPopout.type === 'sms' && (
                 <SendSMS
-                  clientId={currentPopout.clientId || ''}
-                  id={currentPopout.id || ''}
+                  client={currentPopout.client || defaultClient}
+                  receiverData={currentPopout.receiverData || ''}
                 />
               )}
               {currentPopout.type === 'email' && (
                 <SendMail
-                  clientId={currentPopout.clientId || ''}
-                  id={currentPopout.id || ''}
+                  client={currentPopout.client || defaultClient}
+                  receiverData={currentPopout.receiverData || ''}
+                  onSend={() => {
+                    setIsFullScreen(false)
+                    handleClose(currentPopout)
+                  }}
+                />
+              )}
+              {currentPopout.type === 'treatment' && (
+                <SelectForm
+                  client={currentPopout.client || defaultClient}
+                  receiverData={currentPopout.receiverData || ''}
+                  type={currentPopout.type}
+                />
+              )}
+              {currentPopout.type === 'prescription' && (
+                <CreatePrescription
+                  client={currentPopout.client || defaultClient}
+                  receiverData={currentPopout.receiverData || ''}
                 />
               )}
             </div>

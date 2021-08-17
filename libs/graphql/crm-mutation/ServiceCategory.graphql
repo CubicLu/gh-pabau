@@ -17,8 +17,11 @@ fragment ServiceCategoryFields on ServiceCategory {
 
 fragment ServiceCategory on ServiceCategory {
   ...ServiceCategoryFields
-  ServiceMasterCategory {
-    ...ServiceMasterCategoryFields
+  ServicesMasterCategory {
+    ...ServicesMasterCategoryFields
+  }
+  InvCategory {
+    ...InvCategoryFields
   }
 }
 

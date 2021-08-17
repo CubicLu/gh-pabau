@@ -1,0 +1,11 @@
+query GetContactAttachments($contactId: IntFilter){
+    findManyCmContact(where: {ID: $contactId}){
+        Attachments{
+            linkref
+            date
+            attach_name
+            attachment_title
+            attachment_type
+        }
+    }
+}

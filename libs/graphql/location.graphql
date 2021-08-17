@@ -1,5 +1,9 @@
-query locations($isActive: Int, $searchTerm: String, $filter: CompanyBranchAttachmentListRelationFilter) {
-  companyBranches(
+query locations(
+  $isActive: Int
+  $searchTerm: String
+  $filter: CompanyBranchAttachmentListRelationFilter
+) {
+  findManyCompanyBranch(
     orderBy: { loc_order: desc }
     where: {
       is_active: { equals: $isActive }
@@ -25,34 +29,16 @@ query locations($isActive: Int, $searchTerm: String, $filter: CompanyBranchAttac
     street
     postcode
     order: loc_order
+    imageUrl: image
     AssignedBadge: CompanyBranchAttachment {
       id
-			company_id
-			icon: url
+      company_id
+      icon: url
       name: description
       type
     }
   }
 }
-
-query onlineBookableLocations($company_id: Int) {
-  companyBranches(where: {company_id: {equals: $company_id}}) {
-    id
-    address
-    street
-    city
-    county
-    name
-    postcode
-    online_bookings
-    phone
-    website
-    bookable_online
-    lat
-    lng
-  }
-}
-
 
 mutation insertLocation(
   $name: String!
@@ -77,6 +63,7 @@ mutation insertLocation(
   $sendConfEmil: Int! = 0
   $employees: [EmployeeType]
   $badges: [BadgeType]
+  $image: String!
 ) {
   createOneCompanyBranchWithAssignedStaff(
     name: $name
@@ -101,6 +88,7 @@ mutation insertLocation(
     customId: $customId
     employees: $employees
     badges: $badges
+    image: $image
   ) {
     id
   }
@@ -137,6 +125,7 @@ mutation updateLocation(
   $sendConfEmil: Int! = 0
   $employees: [EmployeeType]
   $badges: [BadgeType]
+  $image: String!
 ) {
   updateOneCompanyBranchWithAssignedStaff(
     id: $id
@@ -160,20 +149,21 @@ mutation updateLocation(
     onlineBooking: $onlineBooking
     employees: $employees
     badges: $badges
+    image: $image
   ) {
     affected_row
   }
 }
 
 query getLastOrder {
-  companyBranches(take: 1, orderBy: { loc_order: desc }) {
+  findManyCompanyBranch(take: 1, orderBy: { loc_order: desc }) {
     id
     loc_order
   }
 }
 
 query listEmployeeQuery {
-  cmStaffGenerals(
+  findManyCmStaffGeneral(
     where: {
       Status: { not: { equals: 5 } }
       OR: [{ deleted_on: { equals: "" } }, { deleted_on: { equals: "0" } }]
@@ -183,29 +173,24 @@ query listEmployeeQuery {
     id: ID
     Fname
     Lname
+    User {
+      image
+    }
   }
 }
 
 query getLocationStaffList($location: [CmStaffGeneralWhereInput]) {
-  cmStaffGenerals(where: {
-    Status: { not: {equals: 5}}
-    AND: {OR: $location}
-		OR: [
-      {
-        deleted_on: {
-          equals: "",
-        },
-      },
-      {
-        deleted_on: {
-          equals: "0",
-        },
-      },
-    ]
-  } orderBy: {Fname: asc}) {
+  findManyCmStaffGeneral(
+    where: {
+      Status: { not: { equals: 5 } }
+      AND: { OR: $location }
+      OR: [{ deleted_on: { equals: "" } }, { deleted_on: { equals: "0" } }]
+    }
+    orderBy: { Fname: asc }
+  ) {
     id: ID
- 		Location
-		Fname
+    Location
+    Fname
     Lname
     User {
       image
@@ -214,11 +199,12 @@ query getLocationStaffList($location: [CmStaffGeneralWhereInput]) {
 }
 
 query locationLimit {
-  companySubscriptions {
+  findManyCompanySubscription {
+    id: license_id
     multiple_locations
   }
 }
 
 query activeLocationCount {
-  companyBranchesCount(where: {is_active: {equals: 1}})
+  findManyCompanyBranchCount(where: { is_active: { equals: 1 } })
 }

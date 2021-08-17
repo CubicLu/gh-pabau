@@ -8,13 +8,15 @@ import {
   MobileHeader,
   MobileSidebar,
   NotificationDrawer,
-  PabauMessages,
   SetupSearchInput,
+  UserDataProps,
 } from '@pabau/ui'
 import classNames from 'classnames'
 import { useRouter } from 'next/router'
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useContext } from 'react'
 import Search from '../components/Search'
+import { UserContext } from '../context/UserContext'
+import { getImage } from './Uploaders/UploadHelpers/UploadHelpers'
 import { useGridData } from '../hooks/useGridData'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
 import styles from './Setup.module.less'
@@ -28,9 +30,14 @@ interface P {
   isLeftOutlined?: boolean
   displayCreateButton?: boolean
   handleCreate?: () => void
+  showChat?: boolean
+  onChatClick?: () => void
+  clientCreateRender?: () => JSX.Element
+  leadCreateRender?: () => JSX.Element
 }
 
 const CommonHeader: FC<P> = ({
+  showChat,
   handleSearch,
   title = 'Setup',
   isShowSearch,
@@ -39,12 +46,15 @@ const CommonHeader: FC<P> = ({
   isLeftOutlined = false,
   displayCreateButton = false,
   handleCreate,
+  onChatClick,
+  clientCreateRender,
+  leadCreateRender,
 }) => {
+  const user = useContext(UserContext)
   const [openMenuDrawer, setMenuDrawer] = useState<boolean>(false)
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
     false
   )
-  const [openMessageDrawer, setMessageDrawer] = useState<boolean>(false)
   const [showSearch, setShowSearch] = useState(false)
   const { t } = useTranslationI18()
   const { getParentSetupData } = useGridData(t)
@@ -81,25 +91,26 @@ const CommonHeader: FC<P> = ({
             <p>{title}</p>
           </div>
           <div className={styles.rightContentWrapper}>
-            {!isLeftOutlined ||
-              (isShowSearch && (
-                <div className={styles.searchInput}>
-                  {!showSearch ? (
-                    <SearchOutlined
-                      onClick={() => {
-                        setShowSearch(true)
-                      }}
+            {!isLeftOutlined && isShowSearch && (
+              <div className={styles.searchInput}>
+                {!showSearch ? (
+                  <SearchOutlined
+                    onClick={() => {
+                      setShowSearch(true)
+                    }}
+                  />
+                ) : (
+                  <div className={styles.search}>
+                    <SetupSearchInput
+                      onChange={handleSearch}
+                      placeholder={
+                        isLeftOutlined ? t('integration.search') : ''
+                      }
                     />
-                  ) : (
-                    <div className={styles.search}>
-                      <SetupSearchInput
-                        onChange={handleSearch}
-                        placeholder={isLeftOutlined && t('integration.search')}
-                      />
-                    </div>
-                  )}
-                </div>
-              ))}
+                  </div>
+                )}
+              </div>
+            )}
             {isContent && <ContentJsx />}
           </div>
           {displayCreateButton && (
@@ -117,19 +128,24 @@ const CommonHeader: FC<P> = ({
           searchRender={() => <Search />}
           onSideBarClosed={() => setMenuDrawer(() => !openMenuDrawer)}
           onClickNotificationDrawer={() => setNotificationDrawer((e) => !e)}
-          onClickChatDrawer={() => setMessageDrawer((e) => !e)}
+          onClickChatDrawer={onChatClick}
+          clientCreateRender={clientCreateRender}
+          leadCreateRender={leadCreateRender}
+          userData={
+            {
+              company: user?.me?.company?.id,
+              user: user?.me?.id,
+              fullName: user?.me?.full_name,
+              companyName: user?.me?.company?.details?.company_name,
+              image: getImage(user?.me?.image),
+            } as UserDataProps
+          }
         />
       )}
       {openNotificationDrawer && (
         <NotificationDrawer
           openDrawer={openNotificationDrawer}
           closeDrawer={() => setNotificationDrawer((e) => !e)}
-        />
-      )}
-      {openMessageDrawer && (
-        <PabauMessages
-          openDrawer={openMessageDrawer}
-          closeDrawer={() => setMessageDrawer((e) => !e)}
         />
       )}
     </div>

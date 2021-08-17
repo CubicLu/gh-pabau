@@ -1,20 +1,20 @@
-import React, { FC, useEffect, useState } from 'react'
+import { BarsOutlined, CheckOutlined } from '@ant-design/icons'
 import { gql } from '@apollo/client'
 import { MedicalFormCard, useLiveQuery } from '@pabau/ui'
-import { Form, Divider, Button, Popover, Tag } from 'antd'
-import { BarsOutlined, CheckOutlined } from '@ant-design/icons'
-import styles from './Library.module.less'
+import { Button, Divider, Form, Popover, Tag } from 'antd'
+import React, { FC, useEffect, useState } from 'react'
 import FormTypePicker, {
   Setting as FormTypeSetting,
 } from '../FormTypePicker/FormTypePicker'
+import styles from './Library.module.less'
 
 const defaultFormTypes: FormTypeSetting = {
   medicalHistory: false,
   consent: false,
-  treatmentForm: false,
+  treatment: false,
   epaper: false,
-  presciption: false,
-  labForm: false,
+  prescription: false,
+  lab: false,
 }
 
 const LIST_QUERY = gql`

@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   ignorePatterns: ['**/*', '!/*.js'],
-  plugins: ['@nrwl/nx', 'tsdoc', 'graphql'],
+  plugins: ['@nrwl/nx', 'tsdoc', 'graphql', 'rebase'],
   extends: [
     'plugin:unicorn/recommended',
     'plugin:you-dont-need-lodash-underscore/compatible',
@@ -42,6 +42,7 @@ module.exports = {
           'error',
           {
             enforceBuildableLibDependency: true,
+            allowCircularSelfDependency: true, //TODO: make this false
             allow: [],
             depConstraints: [
               {

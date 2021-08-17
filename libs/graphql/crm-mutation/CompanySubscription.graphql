@@ -77,7 +77,7 @@ fragment CompanySubscriptionFields on CompanySubscription {
 
 fragment CompanySubscription on CompanySubscription {
   ...CompanySubscriptionFields
-  company {
+  Company {
     ...CompanyFields
   }
 }

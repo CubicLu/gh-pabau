@@ -29,6 +29,9 @@ fragment RotaShiftFields on RotaShift {
 
 fragment RotaShift on RotaShift {
   ...RotaShiftFields
+  User {
+    ...UserFields
+  }
   Company {
     ...CompanyFields
   }
@@ -40,6 +43,9 @@ fragment RotaShift on RotaShift {
   }
   HolidayRequest {
     ...HolidayRequestFields
+  }
+  CmStaffGeneral {
+    ...CmStaffGeneralFields
   }
 }
 

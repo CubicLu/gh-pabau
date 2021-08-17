@@ -11,9 +11,13 @@
       margin-bottom: 0px;
       height: 80px;
       background: white;
+      position: fixed;
+      width: 100%;
+      z-index: 1;
     }
     .ant-tabs-content-holder {
       background: #f7f7f9;
+      margin-top: 80px;
     }
     .ant-tabs-tab {
       align-items: flex-end;
@@ -119,6 +123,14 @@
 }
 .MedicalFormEditLeft {
   width: 336px;
+  :global {
+    .ant-tabs-nav {
+      position: relative;
+    }
+    .ant-tabs-content-holder {
+      margin-top: 0px;
+    }
+  }
 }
 .MedicalFormEditMain {
   max-height: 805px;
@@ -190,8 +202,8 @@
   display: block;
 }
 .medicalFormSettingPanel {
-  z-index: 1;
-  position: absolute;
+  z-index: 2;
+  position: fixed;
   right: 16px;
   margin-top: 25px;
   .createButton {
@@ -202,8 +214,8 @@
   }
 }
 .medicalFormInfoPanel {
-  z-index: 1;
-  position: absolute;
+  z-index: 2;
+  position: fixed;
   left: 16px;
   padding-top: 30px;
   span {
@@ -286,6 +298,7 @@
 .fullScreenModal {
   padding: 0;
   margin: 0;
+  overflow: overlay;
   :global {
     .ant-modal {
       padding: 0;

@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
+import { serviceGroups } from './data'
+import { employees, locations, meta } from './mock'
 import TeamReportHeader, {
   TeamReportHeaderProps,
   TeamReportMeta,
 } from './TeamReportHeader'
-import { meta, employees, locations, yearsData } from './mock'
-import { serviceGroups } from './data'
 
 export default {
   component: TeamReportHeader,
@@ -16,14 +16,14 @@ export default {
 
 const TeamReportHeaderTemplate = ({ ...args }: TeamReportHeaderProps) => {
   const [mockMeta, setMockMeta] = useState(args.meta)
-  const [mockYears, setMockYears] = useState(args.years)
+  const [mockYears] = useState(args.dateOptions)
   const mockChangeMeta = (newMeta: TeamReportMeta): void => {
     if (newMeta.rangeType !== mockMeta.rangeType) {
-      newMeta.year = yearsData[newMeta.rangeType][0]
+      // newMeta.endDate = yearsData[newMeta.rangeType][0]
     }
     setMockMeta(newMeta)
 
-    setMockYears(yearsData[newMeta.rangeType])
+    // setMockYears(yearsData[newMeta.rangeType])
   }
 
   return (
@@ -31,7 +31,7 @@ const TeamReportHeaderTemplate = ({ ...args }: TeamReportHeaderProps) => {
       {...args}
       onChangeMeta={mockChangeMeta}
       meta={mockMeta}
-      years={mockYears}
+      dateOptions={mockYears}
     />
   )
 }
@@ -41,6 +41,5 @@ TeamReportHeaderStory.args = {
   serviceGroups: serviceGroups,
   employees: employees,
   meta: meta,
-  years: yearsData.monthly,
   locations: locations,
 }

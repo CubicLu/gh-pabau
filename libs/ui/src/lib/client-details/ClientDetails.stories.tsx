@@ -23,6 +23,36 @@ const ClientDetailsStory: FC<ClientDetailsProps> = ({ ...args }) => {
   )
 }
 
+const searchResults = [
+  {
+    name: 'Deddington Health Centre',
+    postCode: 'OX15 0TQ',
+    city: 'Deddington',
+    street: 'Banbury',
+    country: 'United Kingdom',
+    phone: '+44 (0) 1869338611',
+  },
+  {
+    name: 'Deddington Lorem Health Centre',
+    postCode: 'OX15 4TN',
+    city: 'Deddington',
+    street: 'Banbury',
+    country: 'United Kingdom',
+    phone: '+44 (0) 1869338611',
+  },
+]
+
+const sampleAppointments = [
+  {
+    id: '1',
+    firstName: 'Bruno',
+    lastName: 'Ballardin',
+    avatarUrl: userAvatar,
+    mobile: '383299103',
+    email: 'bruno.barllardin@sample.io',
+  },
+]
+
 export const Basic = ClientDetailsStory.bind({})
 Basic.args = {
   clientData: {
@@ -56,4 +86,6 @@ Basic.args = {
     membershipNumber: 'BL-4444-0000-2222',
     allocatedAuthorisations: '',
   },
+  searchResults: searchResults,
+  appointments: sampleAppointments,
 }

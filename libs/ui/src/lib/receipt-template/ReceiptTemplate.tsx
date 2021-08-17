@@ -1,6 +1,8 @@
 import React, { FC } from 'react'
 import { Modal } from 'antd'
 import styles from './ReceiptTemplate.module.less'
+import { ITotalDetails } from '@pabau/ui'
+import { useTranslation } from 'react-i18next'
 
 interface clinicDetails {
   key: number
@@ -40,6 +42,8 @@ export interface ReceiptTemplateProps {
   logo: string
   title: string
   titleDescription: string
+  grandTotal?: ITotalDetails
+  Total?: ITotalDetails
   clinicDetails: clinicDetails[]
   receiptDetails: receiptDetails[]
   paymentDetails: paymentDetails[]
@@ -51,6 +55,8 @@ export const ReceiptTemplate: FC<ReceiptTemplateProps> = ({
   visible,
   title,
   logo,
+  grandTotal,
+  Total,
   titleDescription,
   clinicDetails,
   receiptDetails,
@@ -58,6 +64,7 @@ export const ReceiptTemplate: FC<ReceiptTemplateProps> = ({
   paymentDetails,
 }) => {
   const payment = { ...paymentDetails }
+  const { t } = useTranslation('common')
   return (
     <Modal
       visible={visible}
@@ -79,7 +86,9 @@ export const ReceiptTemplate: FC<ReceiptTemplateProps> = ({
         <div className={styles.mainBody}>
           <div className={styles.section1}>
             <div className={styles.left}>
-              <span className={styles.fromText}>From</span>
+              <span className={styles.fromText}>
+                {t('invoice.label.name.from')}
+              </span>
               {clinicDetails?.map((clinicDetails) => {
                 const {
                   website,
@@ -115,17 +124,23 @@ export const ReceiptTemplate: FC<ReceiptTemplateProps> = ({
                       <span className={styles.infoText}>{receipt}</span>
                     </div>
                     <div className={styles.inner1}>
-                      <span className={styles.headText}>Issued To</span>
+                      <span className={styles.headText}>
+                        {t('invoice.issue.to.label')}
+                      </span>
                       <span className={styles.infoText}>{issuedTo}</span>
                     </div>
                   </div>
                   <div className={styles.rightInner}>
                     <div className={styles.inner}>
-                      <span className={styles.headText}>Payment Date</span>
+                      <span className={styles.headText}>
+                        {t('receipt.payment.date.label')}
+                      </span>
                       <span className={styles.infoText}>{paymentDate}</span>
                     </div>
                     <div className={styles.inner1}>
-                      <span className={styles.headText}>Issued By</span>
+                      <span className={styles.headText}>
+                        {t('invoice.issue.by.label')}
+                      </span>
                       <span className={styles.infoText}>{issuedBy}</span>
                     </div>
                   </div>
@@ -138,31 +153,41 @@ export const ReceiptTemplate: FC<ReceiptTemplateProps> = ({
               <div className={styles.left}>
                 <div className={styles.rightInner}>
                   <div className={styles.inner}>
-                    <span className={styles.headerText}>Payment</span>
+                    <span className={styles.headerText}>
+                      {t('invoice.payment.label')}
+                    </span>
                     <span className={styles.infoText}>
                       {payment[0].paymentTime}
                     </span>
                     <span className={styles.infoText}>
-                      Card: £{payment[0].card.toFixed(2)}
+                      {t('invoice.card.label')}: {payment[0].card}
                       <span className={styles.borderSpan}>|</span>
-                      Cash: £{payment[0].cash.toFixed(2)}
+                      {t('invoice.cash.label')}: {payment[0].cash}
                     </span>
                   </div>
-                  <div className={styles.inner}>
-                    <span className={styles.headerText}>Total</span>
-                    <span className={styles.infoText}>
-                      £{payment[0].total.toFixed(2)}
-                    </span>
-                  </div>
+                  {Total?.enabled === 1 && (
+                    <div className={styles.inner}>
+                      <span className={styles.headerText}>{Total?.label}</span>
+                      <span className={styles.infoText}>
+                        £{payment[0].total}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className={styles.right}>
-                <div className={styles.inner}>
-                  <div className={styles.headerText}>Grand total</div>
-                  <div className={styles.infoText}>
-                    £{payment[0].totalPayment.toFixed(2)}
+                {grandTotal?.enabled === 1 && (
+                  <div className={styles.inner}>
+                    <div style={{ marginRight: '20px' }}>
+                      <div className={styles.headerText}>
+                        {grandTotal?.label}
+                      </div>
+                      <div className={styles.infoText}>
+                        £{payment[0].totalPayment}
+                      </div>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
             <div className={styles.section2Inner}>
@@ -170,7 +195,7 @@ export const ReceiptTemplate: FC<ReceiptTemplateProps> = ({
                 <div className={styles.rightInner}>
                   <div className={styles.inner}>
                     <span className={styles.headerText}>
-                      Payments applied to invoices
+                      {t('receipt.payment.with.invoice')}
                     </span>
                     <span className={styles.infoText}>
                       <span className={styles.link}>
@@ -200,46 +225,62 @@ export const ReceiptTemplate: FC<ReceiptTemplateProps> = ({
               <div className={styles.section3} key={key}>
                 <div className={styles.section3Inner}>
                   <div className={styles.inner}>
-                    <span className={styles.headText}>Bank account</span>
+                    <span className={styles.headText}>
+                      {t('invoice.bank.account')}
+                    </span>
                     <span className={styles.infoText}>{account}</span>
                   </div>
                   <div className={styles.inner}>
-                    <span className={styles.headText}>IBAN</span>
+                    <span className={styles.headText}>
+                      {t('invoice.bank.iban')}
+                    </span>
                     <span className={styles.infoText}>{iban}</span>
                   </div>
                   <div className={styles.inner}>
-                    <span className={styles.headText}>Reg. company No</span>
+                    <span className={styles.headText}>
+                      {t('invoice.register.company.number')}
+                    </span>
                     <span className={styles.infoText}>{regCompanyNo}</span>
                   </div>
                 </div>
                 <div className={styles.section3Inner}>
                   <div className={styles.inner}>
-                    <span className={styles.headText}>Account number</span>
+                    <span className={styles.headText}>
+                      {t('invoice.account.number')}
+                    </span>
                     <span className={styles.infoText}>{accountNumber}</span>
                   </div>
                   <div className={styles.inner}>
-                    <span className={styles.headText}>Swift</span>
+                    <span className={styles.headText}>
+                      {t('invoice.bank.swift')}
+                    </span>
                     <span className={styles.infoText}>{swift}</span>
                   </div>
                 </div>
                 <div className={styles.section3Inner}>
                   <div className={styles.inner}>
-                    <span className={styles.headText}>Sort Code</span>
+                    <span className={styles.headText}>
+                      {t('invoice.bank.sort.code')}
+                    </span>
                     <span className={styles.infoText}>{sortCode}</span>
                   </div>
                   <div className={styles.inner}>
-                    <span className={styles.headText}>Address</span>
+                    <span className={styles.headText}>
+                      {t('invoice.bank.address')}
+                    </span>
                     <span className={styles.infoText}>{address}</span>
                   </div>
                 </div>
                 <div className={styles.section3Inner}>
                   <div className={styles.inner}>
-                    <span className={styles.headText}>Bank name</span>
+                    <span className={styles.headText}>
+                      {t('invoice.bank.name')}
+                    </span>
                     <span className={styles.infoText}>{bankName}</span>
                   </div>
                   <div className={styles.inner}>
                     <span className={styles.headText}>
-                      Reg. company address
+                      {t('invoice.regiter.company.address')}
                     </span>
                     <span className={styles.infoText}>{regCompanyAddress}</span>
                   </div>

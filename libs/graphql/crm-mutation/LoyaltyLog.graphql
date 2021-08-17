@@ -1,0 +1,43 @@
+fragment LoyaltyLogFields on LoyaltyLog {
+  id
+  company_id
+  contact_id
+  amount
+  promotion_type
+  sale_id
+  date
+  user_id
+  updated_on
+  description
+}
+
+fragment LoyaltyLog on LoyaltyLog {
+  ...LoyaltyLogFields
+  Contact {
+    ...CmContactFields
+  }
+}
+
+mutation createOneLoyaltyLog($data: LoyaltyLogCreateInput!) {
+  createOneLoyaltyLog(data: $data) {
+    ...LoyaltyLog
+  }
+}
+
+mutation updateOneLoyaltyLog($where: LoyaltyLogWhereUniqueInput!, $data: LoyaltyLogUpdateInput!) {
+  updateOneLoyaltyLog(where: $where, data: $data) {
+    ...LoyaltyLog
+  }
+}
+
+mutation deleteOneLoyaltyLog($where: LoyaltyLogWhereUniqueInput!) {
+  deleteOneLoyaltyLog(where: $where) {
+    ...LoyaltyLog
+  }
+}
+
+mutation updateManyLoyaltyLog($where: LoyaltyLogWhereInput, $data: LoyaltyLogUpdateManyMutationInput!) {
+  updateManyLoyaltyLog(where: $where, data: $data) {
+    count
+  }
+}

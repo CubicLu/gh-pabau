@@ -32,8 +32,13 @@
     }
   },
   "projects": {
+    "hasura": {
+      "tags": [],
+      "implicitDependencies": ["bridge-api", "backend"]
+    },
     "web": {
-      "tags": []
+      "tags": [],
+      "implicitDependencies": ["hasura"]
     },
     "web-e2e": {
       "tags": [],
@@ -54,7 +59,7 @@
     },
     "mgmt": {
       "tags": [],
-      "implicitDependencies": ["backend"]
+      "implicitDependencies": ["hasura"]
     },
     "mgmt-e2e": {
       "tags": [],
@@ -62,14 +67,11 @@
     },
     "connect": {
       "tags": [],
-      "implicitDependencies": ["backend"]
+      "implicitDependencies": ["hasura"]
     },
     "connect-e2e": {
       "tags": [],
       "implicitDependencies": ["connect"]
-    },
-    "mobile": {
-      "tags": []
     },
     "bridge-api": {
       "tags": []
@@ -78,10 +80,12 @@
       "tags": []
     },
     "bridge-proxy": {
-      "tags": []
+      "tags": [],
+      "implicitDependencies": ["bridge-api"]
     },
     "graphql": {
       "tags": []
-    }
+    },
+    "storage": { "tags": [] }
   }
 }

@@ -1,62 +1,27 @@
 import { EyeOutlined } from '@ant-design/icons'
-import { gql } from '@apollo/client'
-import {
-  Button,
-  Notification,
-  NotificationType,
-  Pagination,
-  Table,
-  useLiveQuery,
-} from '@pabau/ui'
-import { Skeleton } from 'antd'
+import { BasicModal, Button, Pagination, Table } from '@pabau/ui'
 import { UserContext } from '../../../context/UserContext'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-import React, { FC, useContext, useEffect, useMemo, useState } from 'react'
+import React, { FC, useContext, useEffect, useState } from 'react'
 import { sendEmailService } from '../../ClientNotificationEmailPreview/sendEmailService'
 import EmailSendButton from './EmailSendButton'
+import styles from './SubscriptionComponents.module.less'
+import {
+  SubscriptionInvoice,
+  useSubscriptionInvoicesQuery,
+  useTotalSubscriptionsQuery,
+} from '@pabau/graphql'
 
-const LIST_AGGREGATE = gql`
-  query countSMSPurchases {
-    smsPurchasesCount
-  }
-`
-const LIST_SMS_PURCHASES = gql`
-  query getSmsPurchases(
-    $isActive: Int = 1
-    $searchTerm: String = ""
-    $offset: Int = 0
-    $limit: Int = 10
-  ) {
-    smsPurchases(
-      skip: $offset
-      take: $limit
-      orderBy: { date: desc }
-      where: {
-        status: { equals: $isActive }
-        OR: [{ AND: [{ purchase_type: { contains: $searchTerm } }] }]
-      }
-    ) {
-      __typename
-      id
-      user_id
-      company_id
-      date
-      sms_amount
-      price
-      profit
-      purchase_type
-      User {
-        full_name
-      }
-    }
-  }
-`
 interface P {
   searchTerm: string
-  filterValue: number
+  filterValue: string
 }
+type FilterStatus = 'ALL' | 'PAID' | 'NOT_PAID'
+
 const InvoiceActivity: FC<P> = (p) => {
-  const [dataList, setDataList] = useState<any>([])
+  const [dataList, setDataList] = useState<SubscriptionInvoice[]>([])
+  const [status, setStatus] = useState<FilterStatus>('ALL')
+  const [searchTerm, setSearchTerm] = useState('')
   const { t } = useTranslationI18()
   const user = useContext(UserContext)
 
@@ -67,6 +32,8 @@ const InvoiceActivity: FC<P> = (p) => {
     currentPage: 1,
     showingRecords: 0,
   })
+  const [showPreview, setShowPreview] = useState(false)
+  const [urlPreview, setUrlPreview] = useState('')
   const invoiceColumns = [
     {
       title: t('setup.table.column.invoicedate'),
@@ -75,7 +42,7 @@ const InvoiceActivity: FC<P> = (p) => {
     },
     {
       title: t('setup.table.column.invoice'),
-      dataIndex: 'number',
+      dataIndex: 'id',
       visible: true,
     },
     {
@@ -90,18 +57,21 @@ const InvoiceActivity: FC<P> = (p) => {
     },
     {
       title: t('setup.table.column.status'),
-      dataIndex: 'invoice_status',
+      dataIndex: 'status',
       visible: true,
     },
     {
-      title: '',
-      dataIndex: 'buttonGp',
+      title: t('setup.table.column.actions'),
+      dataIndex: 'invoice_link',
       visible: true,
       // eslint-disable-next-line react/display-name
-      render: () => (
+      render: (_, { invoice_link }: SubscriptionInvoice) => (
         <div>
-          <EmailSendButton style={{ marginRight: 16 }} onClick={sendEmail} />
-          <Button onClick={previewInvoice}>
+          <EmailSendButton
+            style={{ marginRight: 16 }}
+            onClick={() => sendEmail(invoice_link)}
+          />
+          <Button onClick={() => onPreviewInvoice(invoice_link)}>
             <EyeOutlined /> {t('setup.table.btn.preview')}
           </Button>
         </div>
@@ -109,107 +79,89 @@ const InvoiceActivity: FC<P> = (p) => {
     },
   ]
 
-  // eslint-disable-next-line react/destructuring-assignment
-  const { data, loading } = useLiveQuery(LIST_SMS_PURCHASES, {
+  const { data, loading } = useSubscriptionInvoicesQuery({
     variables: {
-      // eslint-disable-next-line react/destructuring-assignment
-      isActive: p.filterValue,
-      // eslint-disable-next-line react/destructuring-assignment
-      searchTerm: '%' + p.searchTerm + '%',
+      status: status === 'ALL' ? '' : status,
+      searchTerm: searchTerm,
       offset: paginateData.offset,
       limit: paginateData.limit,
     },
   })
 
-  const { data: totalCount } = useLiveQuery(LIST_AGGREGATE)
-
-  const mappedData = useMemo(
-    () =>
-      data?.smsPurchases?.map((d) => ({
-        description: `${d.sms_amount} X SMS`,
-        number: `#INV${d.id}`,
-        amount: d.price.toFixed(2),
-        date: new Date(d?.date * 1000).toLocaleDateString('en-GB'),
-        invoice_status: d.status
-          ? t('setup.table.status.submitted')
-          : t('setup.table.status.paidout'),
-      })),
-    [data, t]
-  )
+  const { data: totalCount } = useTotalSubscriptionsQuery({
+    variables: {
+      status: status === 'ALL' ? '' : status,
+      searchTerm: searchTerm,
+    },
+  })
 
   useEffect(() => {
-    setDataList(data?.smsPurchases ?? [])
-  }, [dataList, data])
+    if (paginateData.currentPage !== 1 && p.searchTerm + p.filterValue !== '') {
+      setPaginateData((d) => ({
+        ...d,
+        offset: 0,
+        currentPage: 1,
+      }))
+    }
+    setStatus(p.filterValue as FilterStatus)
+    setSearchTerm(p.searchTerm)
+  }, [p, paginateData])
+
+  useEffect(() => {
+    if (data !== undefined) {
+      setDataList(data.invoices)
+    }
+  }, [data])
 
   useEffect(() => {
     if (totalCount) {
       setPaginateData((d) => ({
         ...d,
-        total: totalCount,
-        showingRecords: data?.smsPurchases?.length,
+        total: totalCount.total,
+        showingRecords: data?.invoices?.length,
       }))
     }
   }, [data, totalCount])
 
-  const onPaginationChange = (currentPage) => {
+  const onPaginationChange = (currentPage: number) => {
     const offset = paginateData.limit * (currentPage - 1)
     setPaginateData({ ...paginateData, offset, currentPage: currentPage })
   }
 
-  const email = user.me.username
-  const bodyContent = 'Hi you are pretty nice person.'
-  const sendEmail = () => {
+  const onPreviewInvoice = (url: React.SetStateAction<string>) => {
+    if (url.toString().includes('stripe')) {
+      window.open(url.toString(), '_blank')
+    } else {
+      setUrlPreview(url)
+      setShowPreview((showPreview) => !showPreview)
+    }
+  }
+  const onCloseInvoicePreview = () => {
+    setUrlPreview('')
+    setShowPreview(false)
+  }
+
+  const sendEmail = (url: string) => {
+    const email = user.me.username
+    const bodyContent = `${t('setup.subscription.invoice')}: ${url}`
     sendEmailService({
       email,
-      subject: t('notifications.email.invoice.subject'),
+      subject: t('setup.subscription.invoice'),
       bodyContent,
       successMessage: t('notifications.email.send.successMessage'),
       failedMessage: t('notifications.email.send.failedMessage'),
     })
   }
 
-  const previewInvoice = () => {
-    Notification(
-      NotificationType.error,
-      'Invoice preview component still not ready'
-    )
-  }
-
   return (
     <div>
-      {loading ? (
-        <Table
-          rowKey="key"
-          pagination={false}
-          dataSource={[...Array.from({ length: 6 })].map((_, index) => ({
-            key: `key${index}`,
-          }))}
-          columns={invoiceColumns.map((column) => {
-            return {
-              ...column,
-              render: function renderPlaceholder() {
-                return (
-                  <Skeleton
-                    loading={loading}
-                    active
-                    title={true}
-                    paragraph={false}
-                  />
-                )
-              },
-            }
-          })}
-        />
-      ) : (
-        <Table
-          loading={loading}
-          noDataText={t('crud-table-no-search-results')}
-          pagination={mappedData?.length > 10 ? {} : false}
-          columns={invoiceColumns}
-          dataSource={mappedData}
-        />
-      )}
-
+      <Table
+        loading={loading}
+        noDataText={t('crud-table-no-search-results')}
+        pagination={dataList?.length > 10 ? {} : false}
+        columns={invoiceColumns}
+        dataSource={dataList}
+      />
       <div style={{ margin: 24 }}>
         <Pagination
           total={paginateData.total}
@@ -221,6 +173,17 @@ const InvoiceActivity: FC<P> = (p) => {
           showingRecords={paginateData.showingRecords}
         />
       </div>
+      {showPreview && (
+        <BasicModal
+          wrapClassName={styles.subscriptionInvoiceModal}
+          title={t('setup.subscription.invoice')}
+          visible={showPreview}
+          width="50%"
+          onCancel={onCloseInvoicePreview}
+        >
+          <iframe title={t('setup.subscription.invoice')} src={urlPreview} />
+        </BasicModal>
+      )}
     </div>
   )
 }

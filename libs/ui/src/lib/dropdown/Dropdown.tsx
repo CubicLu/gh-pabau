@@ -3,7 +3,6 @@ import {
   CheckCircleFilled,
   ExclamationOutlined,
   ExportOutlined,
-  GlobalOutlined,
   InfoCircleOutlined,
   LeftOutlined,
   LoadingOutlined,
@@ -26,19 +25,19 @@ import styles from './Dropdown.module.less'
 import { useTranslation } from 'react-i18next'
 import Router from 'next/router'
 
-// import { isMobile, isTablet } from 'react-device-detect'
+export interface UserDataProps {
+  user: number
+  company: number
+  companyName: string
+  fullName: string
+  image?: string
+}
+
 export interface DropDownInterface {
   isOpen?: boolean
   onCloseDrawer?: () => void
   userData?: UserDataProps
   taskManagerIFrameComponent?: JSX.Element
-}
-
-interface UserDataProps {
-  user: number
-  company: number
-  companyName: string
-  fullName: string
 }
 
 export const Dropdown: FC<DropDownInterface> = ({
@@ -78,10 +77,11 @@ export const Dropdown: FC<DropDownInterface> = ({
       </Menu.Item>
       <Menu.Item className={styles.userinfo} key="userName">
         <div className={styles.userName}>{user?.fullName}</div>
-        <div className={styles.userBalance}>
+        {/* TODO */}
+        {/* <div className={styles.userBalance}>
           <p>{t('avatar.balance')}</p>
           <span>9445,00</span>
-        </div>
+        </div> */}
       </Menu.Item>
       <Menu.Item
         key="account"
@@ -132,7 +132,8 @@ export const Dropdown: FC<DropDownInterface> = ({
         </div>
         <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
-      <Menu.Item
+      {/* TODO Temp commenting it out due to translation not being part of the MVP
+       <Menu.Item
         key="language"
         className={styles.dropdownMenu}
         onClick={() => onClickAvatarMenu('LangMenu')}
@@ -142,7 +143,7 @@ export const Dropdown: FC<DropDownInterface> = ({
           <span className={styles.headerText}>English</span>
         </div>
         <RightOutlined className={styles.dropdownIcon} />
-      </Menu.Item>
+      </Menu.Item> */}
       <Menu.Item
         key="logout"
         onClick={handleLogOut}
@@ -441,7 +442,7 @@ export const Dropdown: FC<DropDownInterface> = ({
               size="default"
               style={{ height: '8px', width: '8px' }}
             >
-              <Avatar size={40} icon={<UserOutlined />} />
+              <Avatar src={user?.image} size={40} icon={<UserOutlined />} />
             </Badge>
 
             <CaretDownOutlined

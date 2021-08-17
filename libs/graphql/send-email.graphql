@@ -1,0 +1,71 @@
+query sendEmailData {
+  senders: findManyCompanyEmail(
+    where: { confirmed: { equals: 1 } }
+    orderBy: { default_email: desc }
+  ) {
+    email_id
+    company_email
+    default_email
+    senders_name
+    enterprise_email
+    hash
+    merge_tags
+  }
+  templates: findManyMessageTemplate(where: {template_type: {contains: "email"}, template_name: {not: {equals: ""}}, company_id: {not: {equals: 0}}}, orderBy: [{template_group: asc}, {template_name: asc}], distinct: template_name) {
+    template_id
+    template_name
+    template_group
+    subject
+    message
+  }
+  forms: findManyMedicalForm(
+    where: {
+      deleted_at: { equals: "" }
+      form_type: { not: { equals: "epaper" } }
+    }
+    orderBy: { form_type: asc }
+  ) {
+    id
+    form_type
+    name
+  }
+}
+
+query emailReceiver($contactID: Int = 0, $leadID: Int = 0, $userID: Int = 0) {
+  contact: findFirstCmContact(where: { ID: { equals: $contactID } }) {
+    ID
+    Email
+  }
+  lead: findFirstCmLead(where: { ID: { equals: $leadID } }) {
+    ID
+    Email
+  }
+  user: findFirstUser(where: { id: { equals: $userID } }) {
+    id
+    Email: username
+  }
+}
+
+mutation sendEmailWithTags(
+  $to: [String]!
+  $from: String
+  $subject: String!
+  $text: String!
+  $html: String!
+  $contact_id: Int
+  $lead_id: Int
+  $staff_id: Int
+) {
+  sendEmailTo(
+    to: $to
+    from: $from
+    subject: $subject
+    text: $text
+    html: $html
+    relations: {
+      contact_id: $contact_id
+      lead_id: $lead_id
+      staff_id: $staff_id
+    }
+  )
+}

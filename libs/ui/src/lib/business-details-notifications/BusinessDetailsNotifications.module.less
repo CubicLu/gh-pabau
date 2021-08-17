@@ -14,7 +14,33 @@
     text-align: right;
     margin: 0.5rem 0.5rem 0.5rem 0.5rem;
     @media (max-width: 991px) {
-      display: none;
+      position: fixed;
+      bottom: 0;
+    left: 0;
+    right: 0;
+     width: 100%;
+    background-color: #fff;
+    padding: 16px;
+    margin: 0;
+    z-index: 99999;
+      .savebtn{
+        color: #fff;
+        background: #54b2d3;
+        border-color: #54b2d3;
+        text-shadow: 0 -1px 0 rgb(0 0 0 / 12%);
+        box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
+        width: 100%;
+        height: 32px;
+      }
+      .btn{
+        width: 100%;
+      }
+    }
+    .btn{
+      width: 130px;
+      @media (max-width: 991px) {
+        width: 100%;
+      }
     }
   }
 }
@@ -52,7 +78,22 @@
 .section-container {
   padding: 20px 20px 0;
   margin-bottom: 20px;
+  .main-div{
+    display: flex;
+    .title{
+      font-size: 14px;
+      color: #9292a3;
+
+    }
+    .label{
+      margin-left: 10px;
+      font-size: 14px;
+      color: rgb(146, 146, 163);
+    }
+  }
 }
+
+
 
 .section-title {
   font-family: 'Circular-Std-Book';

@@ -1,20 +1,43 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react'
-
 import styles from './CustomModal.module.less'
-import { SecurityTools, SecurityToolsItemInfo } from '@pabau/ui'
+import { SecurityTools, SecurityToolsItemInfo, Notification, NotificationType, SimpleDropdown } from '@pabau/ui'
 import BasicModal from '../modal/BasicModal'
-import { Menu, Dropdown, Button } from 'antd'
-import { DownOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
+import { Form } from 'formik-antd'
+import { Formik } from 'formik'
+
+export interface PasswordExpirationProps{
+  modalType: Number
+  password_expire: string
+  login_attempts: string
+  password_enforce_history: string
+  lockout_period: string
+}
 
 interface P {
   datasource: SecurityToolsItemInfo[]
+  newButtonText?: string
+  dangerButtonText?: string
+  onDelete?: () => void
+  onOk?(val):void;
+  loading?: boolean
+  config?: PasswordExpirationProps
 }
 
 export function CustomModal(props: P) {
   const { t } = useTranslation('common')
-  const { datasource = [] } = props
+  const { datasource = [], newButtonText, dangerButtonText, onDelete, onOk, config, loading } = props
+
+  const defaultPasswordExpirationData= {
+    modalType: 2,
+    password_expire: config?.password_expire,
+    login_attempts: config?.login_attempts,
+    password_enforce_history: config?.password_enforce_history,
+    lockout_period: config?.lockout_period
+  }
+
+  const [dataSource, setDataSource] = React.useState(datasource)
   const [selectedData, setSelectedData] = React.useState<any>(null)
 
   const [width, setWidth] = useState(window.innerWidth)
@@ -27,12 +50,65 @@ export function CustomModal(props: P) {
     return () => window.removeEventListener('resize', updateDimensions)
   }, [])
 
+  const handleOk=(data)=>{
+    const List = [...dataSource]
+
+    if(data.modalType === 1){
+      if(data.isActive === true){
+        List[0].isActive = false
+      }else{
+        List[0].isActive = true
+      }
+    }
+
+    if(data.modalType === 3){
+      if(data.isActive === true){
+        List[2].isActive = false
+      }else{
+        List[2].isActive = true
+      }
+    }
+
+    onOk?.(
+      data.modalType === 1 ? List[0] :
+      data.modalType === 3 ? List[2] : {}
+      )
+    setDataSource(List)
+    setSelectedData(null)
+  }
+
+  useEffect(()=>{
+    const List = [...dataSource]
+    if(dataSource.length > 0){
+      if(dataSource[0].modalType === 1){
+        if(dataSource[0].isActive === true){
+          List[0].isActive = true
+        }else{
+          List[0].isActive = false
+        }
+      }
+
+      if(dataSource[2].modalType === 3){
+        if(dataSource[2].isActive === true){
+          List[2].isActive = true
+        }else{
+          List[2].isActive = false
+        }
+      }
+    }
+
+    setDataSource(List)
+  },[datasource])
+
   return (
     <div>
       <SecurityTools
-        datasource={datasource}
+        datasource={dataSource}
         title={t('business.security.title')}
-        onItemClick={(index) => setSelectedData(datasource[index])}
+        onItemClick={(index) => {
+          setSelectedData(dataSource[index])
+        }}
+        loading={loading}
       />
 
       {selectedData &&
@@ -42,8 +118,13 @@ export function CustomModal(props: P) {
             title={selectedData ? selectedData.modalTitle : ''}
             visible={Boolean(selectedData)}
             onCancel={() => setSelectedData(null)}
-            newButtonText="null"
+            dangerButtonText={(dangerButtonText) ? dangerButtonText : "Cancel"}
+            onDelete={onDelete}
+            newButtonText={dataSource[0].isActive === true ? "Disable" : "Enable"}
             centered={true}
+            onOk={()=>{
+              handleOk(selectedData)
+            }}
           >
             {selectedData && (
               <div
@@ -57,9 +138,13 @@ export function CustomModal(props: P) {
             title={selectedData ? selectedData.modalTitle : ''}
             visible={Boolean(selectedData)}
             onCancel={() => setSelectedData(null)}
-            newButtonText="null"
+            onDelete={() => setSelectedData(null)}
+            newButtonText={dataSource[0].isActive === true ? "Disable" : "Enable"}
             dangerButtonText="Cancel"
-            closable={false}
+            onOk={()=>{
+              handleOk(selectedData)
+            }}
+            closable={true}
             centered={true}
           >
             {selectedData && (
@@ -74,21 +159,86 @@ export function CustomModal(props: P) {
       {selectedData &&
         selectedData.modalType === 2 &&
         (width > 768 ? (
-          <BasicModal
-            title={selectedData ? selectedData.modalTitle : ''}
-            visible={Boolean(selectedData)}
-            onCancel={() => setSelectedData(null)}
-            newButtonText={selectedData.okbtn}
-            centered={true}
-          >
-            {selectedData && (
-              <ModalType2Container
-                menu={selectedData.modalMenu}
-                content={selectedData.modalContent}
-              />
-            )}
-          </BasicModal>
+          <Formik
+          initialValues={defaultPasswordExpirationData}
+          enableReinitialize={true}
+          onSubmit={(values) => {
+            onOk?.(values)
+            setSelectedData(null)
+          }}
+        >
+          {({ setFieldValue, values, handleSubmit }) => (
+              <Form
+                name="basic"
+                initialValues={{
+                  remember: true,
+                }}
+                layout="vertical"
+              >
+                <BasicModal
+                  title={selectedData ? selectedData.modalTitle : ''}
+                  visible={Boolean(selectedData)}
+                  onCancel={() => setSelectedData(null)}
+                  newButtonText={selectedData.okbtn}
+                  centered={true}
+                  onOk={()=>{
+                    handleSubmit()
+                  }}
+                >
+                  {selectedData && (
+                    <div className={styles.modalContainer}>
+                      <div className={styles.leftpane}>
+                      <SimpleDropdown
+                        label={selectedData.modalMenu[0]}
+                        dropdownItems={[selectedData.modalContent[0][0], selectedData.modalContent[0][1], selectedData.modalContent[0][2], selectedData.modalContent[0][3]]}
+                        onSelected={(val) => setFieldValue('password_expire', val)}
+                        value={values.password_expire}
+                      />
+                      <SimpleDropdown
+                      label={selectedData.modalMenu[2]}
+                        dropdownItems={[selectedData.modalContent[1][0], selectedData.modalContent[1][1], selectedData.modalContent[1][2]]}
+                        onSelected={(val) => setFieldValue('login_attempts', val)}
+                        value={values.login_attempts}
+                      />
+                      </div>
+                      <div className={styles.rightpane}>
+                        <SimpleDropdown
+                        label={selectedData.modalMenu[1]}
+                          dropdownItems={[selectedData.modalContent[2][0], selectedData.modalContent[2][1], selectedData.modalContent[2][2], selectedData.modalContent[2][3]]}
+                          onSelected={(val) => setFieldValue('password_enforce_history', val)}
+                          value={values.password_enforce_history}
+                        />
+                        <SimpleDropdown
+                        label={selectedData.modalMenu[3]}
+                          dropdownItems={[selectedData.modalContent[3][0], selectedData.modalContent[3][1], selectedData.modalContent[3][2]]}
+                          onSelected={(val) => setFieldValue('lockout_period', val)}
+                          value={values.lockout_period}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </BasicModal>
+              </Form>
+              )
+            }
+          </Formik>
         ) : (
+          <Formik
+          initialValues={defaultPasswordExpirationData}
+          enableReinitialize={true}
+          onSubmit={(values) => {
+            onOk?.(values);
+            setSelectedData(null)
+          }}
+        >
+          {({ setFieldValue, values, handleSubmit }) => (
+              <Form
+                name="basic"
+                initialValues={{
+                  remember: true,
+                }}
+                layout="vertical"
+              >
           <BasicModal
             title={selectedData ? selectedData.modalTitle : ''}
             visible={Boolean(selectedData)}
@@ -97,16 +247,48 @@ export function CustomModal(props: P) {
             dangerButtonText="Cancel"
             closable={false}
             centered={true}
+            onOk={()=>{
+              handleSubmit()
+            }}
           >
             {selectedData && (
-              <ModalType2Container
-                menu={selectedData.modalMenu}
-                content={selectedData.modalContent}
-              />
+               <div className={styles.modalContainer}>
+               <div className={styles.leftpane}>
+               <SimpleDropdown
+                        label={selectedData.modalMenu[0]}
+                        dropdownItems={[selectedData.modalContent[0][0], selectedData.modalContent[0][1], selectedData.modalContent[0][2], selectedData.modalContent[0][3]]}
+                        onSelected={(val) => setFieldValue('password_expire', val)}
+                        value={values.password_expire}
+                      />
+                      <SimpleDropdown
+                      label={selectedData.modalMenu[2]}
+                        dropdownItems={[selectedData.modalContent[1][0], selectedData.modalContent[1][1], selectedData.modalContent[1][2]]}
+                        onSelected={(val) => setFieldValue('login_attempts', val)}
+                        value={values.login_attempts}
+                      />
+                      </div>
+                      <div className={styles.rightpane}>
+                        <SimpleDropdown
+                        label={selectedData.modalMenu[1]}
+                          dropdownItems={[selectedData.modalContent[2][0], selectedData.modalContent[2][1], selectedData.modalContent[2][2], selectedData.modalContent[2][3]]}
+                          onSelected={(val) => setFieldValue('password_enforce_history', val)}
+                          value={values.password_enforce_history}
+                        />
+                        <SimpleDropdown
+                        label={selectedData.modalMenu[3]}
+                          dropdownItems={[selectedData.modalContent[3][0], selectedData.modalContent[3][1], selectedData.modalContent[3][2]]}
+                          onSelected={(val) => setFieldValue('lockout_period', val)}
+                          value={values.lockout_period}
+                        />
+               </div>
+             </div>
             )}
           </BasicModal>
+           </Form>
+           )
+         }
+       </Formik>
         ))}
-
       {selectedData &&
         selectedData.modalType === 3 &&
         (width > 768 ? (
@@ -114,7 +296,10 @@ export function CustomModal(props: P) {
             title={selectedData ? selectedData.modalTitle : ''}
             visible={Boolean(selectedData)}
             onCancel={() => setSelectedData(null)}
-            newButtonText={selectedData.okbtn}
+            newButtonText={dataSource[2].isActive === true ? "Disable" : "Enable"}
+            onOk={()=>{
+              handleOk(selectedData)
+            }}
             centered={true}
           >
             {selectedData && (
@@ -128,7 +313,10 @@ export function CustomModal(props: P) {
             title={selectedData ? selectedData.modalTitle : ''}
             visible={Boolean(selectedData)}
             onCancel={() => setSelectedData(null)}
-            newButtonText={selectedData.okbtn}
+            newButtonText={dataSource[2].isActive === true ? "Disable" : "Enable"}
+            onOk={()=>{
+              handleOk(selectedData)
+            }}
             dangerButtonText="Cancel"
             closable={false}
             centered={true}
@@ -158,86 +346,3 @@ export function CustomModal(props: P) {
 }
 
 export default CustomModal
-
-function ModalType2Container(props) {
-  const { menu = [], content = [] } = props
-
-  function handleButtonClick(e) {
-    console.log('click left button', e)
-  }
-
-  function handleMenuClick(e) {
-    console.log('click', e)
-  }
-
-  const menuData1 = (
-    <Menu onClick={handleMenuClick}>
-      <Menu.Item key="1">{content[0][0]}</Menu.Item>
-      <Menu.Item key="2">{content[0][1]}</Menu.Item>
-      <Menu.Item key="3">{content[0][2]}</Menu.Item>
-      <Menu.Item key="4">{content[0][3]}</Menu.Item>
-    </Menu>
-  )
-
-  const menuData2 = (
-    <Menu onClick={handleMenuClick}>
-      <Menu.Item key="1">{content[1][0]}</Menu.Item>
-      <Menu.Item key="2">{content[1][1]}</Menu.Item>
-      <Menu.Item key="3">{content[1][2]}</Menu.Item>
-    </Menu>
-  )
-
-  const menuData3 = (
-    <Menu onClick={handleMenuClick}>
-      <Menu.Item key="1">{content[2][0]}</Menu.Item>
-      <Menu.Item key="2">{content[2][1]}</Menu.Item>
-      <Menu.Item key="3">{content[2][2]}</Menu.Item>
-      <Menu.Item key="3">{content[2][3]}</Menu.Item>
-    </Menu>
-  )
-
-  const menuData4 = (
-    <Menu onClick={handleMenuClick}>
-      <Menu.Item key="1">{content[3][0]}</Menu.Item>
-      <Menu.Item key="2">{content[3][1]}</Menu.Item>
-      <Menu.Item key="3">{content[3][2]}</Menu.Item>
-    </Menu>
-  )
-
-  return (
-    <div className={styles.modalContainer}>
-      <div className={styles.leftpane}>
-        <span className={styles.modalType2Span}>{menu[0]}</span>
-        <Dropdown overlay={menuData1} className={styles.customDropdown}>
-          <Button>
-            {content[0][0]}
-            <DownOutlined />
-          </Button>
-        </Dropdown>
-        <span className={styles.modalType2Span}>{menu[2]}</span>
-        <Dropdown overlay={menuData2} className={styles.customDropdown}>
-          <Button>
-            {content[1][0]}
-            <DownOutlined />
-          </Button>
-        </Dropdown>
-      </div>
-      <div className={styles.rightpane}>
-        <span className={styles.modalType2Span}>{menu[1]}</span>
-        <Dropdown overlay={menuData3} className={styles.customDropdown}>
-          <Button>
-            {content[2][0]}
-            <DownOutlined />
-          </Button>
-        </Dropdown>
-        <span className={styles.modalType2Span}>{menu[3]}</span>
-        <Dropdown overlay={menuData4} className={styles.customDropdown}>
-          <Button>
-            {content[3][0]}
-            <DownOutlined />
-          </Button>
-        </Dropdown>
-      </div>
-    </div>
-  )
-}

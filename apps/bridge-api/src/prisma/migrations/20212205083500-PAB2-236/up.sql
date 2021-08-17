@@ -1,0 +1,7 @@
+ALTER TABLE `cm_purchase_items` ADD INDEX(`order_id`)
+ALTER TABLE `cm_purchase_items` ADD INDEX(`product_id`)
+ALTER TABLE `cm_purchase_order` ADD INDEX(`category_id`)
+ALTER TABLE `cm_purchase_order` ADD INDEX(`company_id`)
+ALTER TABLE `cm_purchase_order` ADD INDEX(`location_id`)
+ALTER TABLE `cm_purchase_order` ADD INDEX(`supplier_id`)
+ALTER TABLE `cm_purchase_order` ADD INDEX(`is_hidden`)

@@ -14,7 +14,10 @@
   padding-right: 24px;
 
   .searchInput {
-    max-width: 250px;
+    width: 250px;
+    &.payment-search {
+      width: 305px;
+    }
   }
 
   button {
@@ -88,4 +91,33 @@
   justify-content: center;
   text-align: center;
   width:100px;
+}
+
+.filter-box {
+  width: 350px;
+  padding: 20px 24px 0;
+  p {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+  .footer-wrapper {
+   display: flex;
+   justify-content: flex-end;
+   padding: 20px 0;
+   .clear-btn {
+    margin-right: 12px;
+   }
+  }
+}
+
+.filter-pop-over {
+  :global {
+    .ant-popover-content {
+      .ant-popover-inner {
+        .ant-popover-inner-content {
+          padding: 0;
+        }
+      }
+    }
+  }
 }

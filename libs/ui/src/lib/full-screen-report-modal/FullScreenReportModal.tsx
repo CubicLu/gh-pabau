@@ -1,6 +1,6 @@
 import { CloseOutlined, LeftOutlined } from '@ant-design/icons'
 import { Avatar, Button, TabMenu } from '@pabau/ui'
-import { Modal, Switch } from 'antd'
+import { Modal, Switch, ConfigProvider } from 'antd'
 import classnames from 'classnames'
 import React, { FC, ReactNode, useEffect, useRef, useState } from 'react'
 import { useMedia } from 'react-use'
@@ -20,7 +20,7 @@ export enum OperationType {
 export interface FullScreenReportModalProps {
   title: ReactNode
   visible: boolean
-  operations: Array<OperationType>
+  operations?: Array<OperationType>
   onActivated?: (val: boolean) => void
   onBackClick?: (e?: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void
   onSave?: () => void
@@ -29,8 +29,10 @@ export interface FullScreenReportModalProps {
   onDelete?: () => void
   onClose?: () => void
   onCancel?: () => void
-
+  onTabChange?: (e) => void
   onAssigneeClick?: () => void
+
+  customOptionBtn?: React.ReactNode
   activeBtnText?: string
   deleteBtnText?: string
   assigneeName?: string
@@ -42,11 +44,13 @@ export interface FullScreenReportModalProps {
   activated?: boolean
   subMenu?: Array<ReactNode>
   center?: React.ReactNode
+  subTitle?: React.ReactNode
   forceDesktopOperations?: boolean
   hideBackIcon?: boolean
   hideHeaderEdge?: boolean
   footer?: boolean
   className?: string
+  avatar?: string
 }
 
 export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
@@ -61,6 +65,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
   onDelete,
   onClose,
   onCancel,
+  onTabChange,
 
   deleteBtnText,
   createBtnText,
@@ -73,12 +78,15 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
   activated,
   subMenu = [],
   center,
+  subTitle,
   forceDesktopOperations = false,
   hideBackIcon = false,
   hideHeaderEdge = false,
   children,
   className,
   onAssigneeClick,
+  customOptionBtn,
+  avatar,
   ...props
 }) => {
   const ref = useRef(null)
@@ -122,10 +130,14 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                 }}
               />
             )}
-            {title}
+            <div className={styles.titleContainer}>
+              {title}
+              {!isMobile && subTitle ? subTitle : ''}
+            </div>
           </div>
           {center && <div className={styles.centeredItem}>{center}</div>}
           <div className={styles.fullScreenModalOps}>
+            {customOptionBtn && customOptionBtn}
             {operations.map((operation) => (
               <React.Fragment key={operation}>
                 {operation === OperationType.active && (
@@ -157,7 +169,6 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                         onClick={() => onDelete?.()}
                         style={{ marginRight: '1rem' }}
                         type="text"
-                        danger
                       >
                         {deleteBtnText || 'Delete'}
                       </Button>
@@ -180,7 +191,7 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
                           className={styles.avatarIcon}
                           name={assigneeName}
                           size="large"
-                          src=""
+                          src={avatar}
                           zIndex={1}
                         />
                         <h6>{assigneeName}</h6>
@@ -222,26 +233,43 @@ export const FullScreenReportModal: FC<FullScreenReportModalProps> = ({
           </div>
         </div>
 
-        <div className={styles.fullScreenModalBody}>
-          {subMenu.length > 0 && Array.isArray(children) ? (
-            <TabMenu menuItems={subMenu} tabPosition="top" minHeight="1px">
-              {children
-                ? children.map((child, i) => (
-                    <div className={styles.tabPaneItem} key={i}>
-                      {child}
-                    </div>
-                  ))
-                : subMenu.map((menu, i) => (
-                    <div className={styles.tabPaneItem} key={i}>
-                      {menu}
-                    </div>
-                  ))}
-            </TabMenu>
-          ) : (
-            children
-          )}
-        </div>
-
+        <ConfigProvider
+          getPopupContainer={(node) => {
+            if (node) {
+              return node as HTMLElement
+            }
+            return document.body as HTMLElement
+          }}
+        >
+          <div className={styles.fullScreenModalBody}>
+            {subMenu.length > 0 && Array.isArray(children) ? (
+              <TabMenu
+                menuItems={subMenu}
+                tabPosition="top"
+                minHeight="1px"
+                onTabClick={(e) => {
+                  if (onTabChange) {
+                    onTabChange(e)
+                  }
+                }}
+              >
+                {children
+                  ? children.map((child, i) => (
+                      <div className={styles.tabPaneItem} key={i}>
+                        {child}
+                      </div>
+                    ))
+                  : subMenu.map((menu, i) => (
+                      <div className={styles.tabPaneItem} key={i}>
+                        {menu}
+                      </div>
+                    ))}
+              </TabMenu>
+            ) : (
+              children
+            )}
+          </div>
+        </ConfigProvider>
         {isMobile && (
           <div
             className={styles.fullScreenModalFooter}

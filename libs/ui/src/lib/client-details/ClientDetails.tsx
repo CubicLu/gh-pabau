@@ -13,6 +13,8 @@ import {
   Avatar,
   AvatarUploader,
   Relationship,
+  RelationshipType,
+  CustomizeFields,
 } from '@pabau/ui'
 import { Carousel, Form } from 'antd'
 import { CarouselRef } from 'antd/lib/carousel'
@@ -50,12 +52,96 @@ export interface ClientData {
   allocatedAuthorisations: string
 }
 
-export interface ClientDetailsProps {
-  clientData: ClientData
+interface SearchItem {
+  name: string
+  street: string
+  postCode: string
+  city: string
+  country: string
+  phone: string
 }
 
-export const ClientDetails: FC<ClientDetailsProps> = ({ clientData }) => {
+interface Appointment {
+  id: string
+  firstName: string
+  lastName: string
+  avatarUrl?: string
+  mobile?: string
+  email?: string
+}
+
+type FieldType =
+  | 'patientId'
+  | 'referredBy'
+  | 'dob'
+  | 'gender'
+  | 'address'
+  | 'mobile'
+  | 'email'
+
+interface FieldOrderItem {
+  title: string
+  fieldName: string
+  type: string
+  field: FieldType
+}
+
+export interface ClientDetailsProps {
+  clientData: ClientData
+  searchResults: SearchItem[]
+  appointments: Appointment[]
+}
+
+export const ClientDetails: FC<ClientDetailsProps> = ({
+  clientData,
+  searchResults,
+  appointments,
+}) => {
   const { t } = useTranslation('common')
+  const defaultFieldOrder: FieldOrderItem[] = [
+    {
+      type: 'text',
+      field: 'patientId',
+      fieldName: 'patientID',
+      title: t('ui.clientdetails.patientid'),
+    },
+    {
+      type: 'text',
+      field: 'referredBy',
+      fieldName: 'referredBy',
+      title: t('ui.clientdetails.referredby'),
+    },
+    {
+      type: 'date',
+      field: 'dob',
+      fieldName: 'dob',
+      title: t('ui.clientdetails.dob'),
+    },
+    {
+      type: 'text',
+      field: 'gender',
+      fieldName: 'gender',
+      title: t('ui.clientdetails.gender'),
+    },
+    {
+      type: 'text',
+      field: 'address',
+      fieldName: 'address',
+      title: t('ui.clientdetails.address'),
+    },
+    {
+      type: 'phone',
+      field: 'mobile',
+      fieldName: 'phone',
+      title: t('ui.clientdetails.mobilephone'),
+    },
+    {
+      type: 'email',
+      field: 'email',
+      fieldName: 'email',
+      title: t('ui.clientdetails.email'),
+    },
+  ]
   const isMobile = useMedia('(max-width: 767px)', false)
   const ref = useRef<CarouselRef>(null)
   const [client, setClient] = useState<ClientData>({
@@ -88,10 +174,15 @@ export const ClientDetails: FC<ClientDetailsProps> = ({ clientData }) => {
   const [addRelationship, setAddRelationship] = useState(false)
   const [addContact, setAddContact] = useState(false)
   const [addThirdParty, setAddThirdParty] = useState(false)
-  const [type, setType] = useState('')
+  const [type, setType] = useState<RelationshipType>('family-member')
+  const [customizingFields, setCustomizingFields] = useState(false)
+  const [hoverDetails, setHoverDetails] = useState(false)
+  const [fieldsOrder, setFieldsOrder] = useState<FieldOrderItem[]>(
+    defaultFieldOrder
+  )
   const [form] = Form.useForm()
 
-  const handleOpenAddModal = (type: string) => {
+  const handleOpenAddModal = (type: RelationshipType) => {
     setType(type)
     if (
       type === 'family-member' ||
@@ -110,7 +201,51 @@ export const ClientDetails: FC<ClientDetailsProps> = ({ clientData }) => {
     setAddContact(false)
     setAddThirdParty(false)
     const data = { ...client }
-    data.relationships.push(relationship)
+    const findIndex = data.relationships.findIndex((el) => {
+      const {
+        type,
+        firstName,
+        lastName,
+        phone,
+        email,
+        address,
+        avatar,
+        surgeryName,
+        company,
+      } = relationship
+      if (
+        (type === 'family-member' ||
+          type === 'emergency-contact' ||
+          type === 'next-of-kin') &&
+        el.type === type &&
+        el.firstName === firstName &&
+        el.lastName === lastName &&
+        el.phone === phone &&
+        el.email === email &&
+        el.avatar === avatar
+      )
+        return true
+      if (
+        (type === 'company' || type === 'insurance-provider') &&
+        el.type === type &&
+        company === el.company &&
+        address === el.address &&
+        phone === el.phone
+      )
+        return true
+      if (
+        type === 'practioner' &&
+        type === el.type &&
+        el.surgeryName === surgeryName &&
+        address === el.address &&
+        phone === el.phone
+      )
+        return true
+      return false
+    })
+    if (findIndex < 0) {
+      data.relationships.push(relationship)
+    }
     setClient(data)
   }
 
@@ -237,200 +372,105 @@ export const ClientDetails: FC<ClientDetailsProps> = ({ clientData }) => {
                   <PlusCircleOutlined />
                 </div>
               </div>
-              {/* <div className={styles.onAccountContainer}>
-                <div>
+              {!customizingFields && (
+                <div
+                  className={styles.detailsContainer}
+                  onMouseOver={() => setHoverDetails(true)}
+                  onMouseLeave={() => setHoverDetails(false)}
+                >
                   <div className={styles.title}>
-                    {t('ui.clientdetails.onaccount')}
+                    {t('ui.clientdetails.details')}
                   </div>
-                  <div className={styles.content}>
-                    {`${client.onAccount < 0 ? '-' : ''}£${Number(
-                      Math.abs(client.onAccount)
-                    ).toFixed(2)}`}
-                  </div>
+                  {hoverDetails && (
+                    <div
+                      className={styles.customizeFields}
+                      onClick={() => setCustomizingFields(true)}
+                    >
+                      <EditOutlined />
+                      {t('ui.clientdetails.customise')}
+                    </div>
+                  )}
                 </div>
-                <div>
-                  <div className={styles.title}>
-                    {t('ui.clientdetails.outstanding')}
-                  </div>
-                  <div className={styles.content}>
-                    {' '}
-                    {`${client.outStanding < 0 ? '-' : ''}£${Number(
-                      Math.abs(client.outStanding)
-                    ).toFixed(2)}`}
-                  </div>
-                </div>
-              </div> */}
-              <div className={styles.detailsContainer}>
-                <div className={styles.title}>
-                  {t('ui.clientdetails.details')}
-                </div>
-                <div>
-                  <div className={styles.edit}>
-                    <EditOutlined />
-                  </div>
-                  <div className={styles.customise}>
-                    {t('ui.clientdetails.customise')}
-                  </div>
-                </div>
-              </div>
-              {!isMobile && (
-                <>
-                  <div className={styles.clientDetailsItem}>
-                    <div>
-                      <div className={styles.title}>
-                        {t('ui.clientdetails.patientid')}
-                      </div>
-                      <div
-                        className={styles.content}
-                        style={{
-                          color: `${
-                            client?.patientID
-                              ? 'var(--grey-text-color)'
-                              : 'var(--light-grey-color)'
-                          }`,
-                        }}
-                      >
-                        {client?.patientID || t('ui.clientdetails.empty')}
-                      </div>
-                    </div>
-                    <div>
-                      {client?.patientID ? <EditOutlined /> : <PlusOutlined />}
-                    </div>
-                  </div>
-                  <div className={styles.clientDetailsItem}>
-                    <div>
-                      <div className={styles.title}>
-                        {t('ui.clientdetails.referredby')}
-                      </div>
-                      <div
-                        className={styles.content}
-                        style={{
-                          color: `${
-                            client?.referredBy
-                              ? 'var(--grey-text-color)'
-                              : 'var(--light-grey-color)'
-                          }`,
-                        }}
-                      >
-                        {client?.referredBy || t('ui.clientdetails.empty')}
-                      </div>
-                    </div>
-                    <div>
-                      {client?.referredBy ? <EditOutlined /> : <PlusOutlined />}
-                    </div>
-                  </div>
-                  <div className={styles.clientDetailsItem}>
-                    <div>
-                      <div className={styles.title}>
-                        {t('ui.clientdetails.dob')}
-                      </div>
-                      <div
-                        className={styles.content}
-                        style={{
-                          color: `${
-                            client?.dob
-                              ? 'var(--grey-text-color)'
-                              : 'var(--light-grey-color)'
-                          }`,
-                        }}
-                      >
-                        {client.dob
-                          ? `${moment(client.dob).format(
-                              'DD/MM/YYYY'
-                            )} (${moment(client.dob).fromNow(true)})`
-                          : 'Empty'}
-                      </div>
-                    </div>
-                    <div>
-                      {client.dob ? <EditOutlined /> : <PlusOutlined />}
-                    </div>
-                  </div>
-                  <div className={styles.clientDetailsItem}>
-                    <div>
-                      <div className={styles.title}>
-                        {t('ui.clientdetails.gender')}
-                      </div>
-                      <div
-                        className={styles.content}
-                        style={{
-                          color: `${
-                            client?.gender
-                              ? 'var(--grey-text-color)'
-                              : 'var(--light-grey-color)'
-                          }`,
-                        }}
-                      >
-                        {client?.gender || t('ui.clientdetails.empty')}
-                      </div>
-                    </div>
-                    <div>
-                      {client?.gender ? <EditOutlined /> : <PlusOutlined />}
-                    </div>
-                  </div>
-                  <div className={styles.clientDetailsItem}>
-                    <div>
-                      <div className={styles.title}>
-                        {t('ui.clientdetails.address')}
-                      </div>
-                      <div
-                        className={styles.content}
-                        style={{
-                          color: `${
-                            client?.address
-                              ? 'var(--grey-text-color)'
-                              : 'var(--light-grey-color)'
-                          }`,
-                        }}
-                      >
-                        {client?.address || t('ui.clientdetails.empty')}
-                      </div>
-                    </div>
-                    <div>
-                      {client?.address ? <EditOutlined /> : <PlusOutlined />}
-                    </div>
-                  </div>
-                </>
               )}
-              <div className={styles.clientDetailsItem}>
-                <div>
-                  <div className={styles.title}>
-                    {t('ui.clientdetails.mobilephone')}
-                  </div>
-                  <div
-                    className={styles.content}
-                    style={{
-                      color: `${
-                        client?.phone
-                          ? 'var(--grey-text-color)'
-                          : 'var(--light-grey-color)'
-                      }`,
-                    }}
-                  >
-                    {client?.phone || t('ui.clientdetails.empty')}
-                  </div>
-                </div>
-                <div>{client?.phone ? <EditOutlined /> : <PlusOutlined />}</div>
-              </div>
-              <div className={styles.clientDetailsItem}>
-                <div>
-                  <div className={styles.title}>
-                    {t('ui.clientdetails.email')}
-                  </div>
-                  <div
-                    className={styles.content}
-                    style={{
-                      color: `${
-                        client?.email
-                          ? 'var(--grey-text-color)'
-                          : 'var(--light-grey-color)'
-                      }`,
-                    }}
-                  >
-                    {client?.email || t('ui.clientdetails.empty')}
-                  </div>
-                </div>
-                <div>{client?.email ? <EditOutlined /> : <PlusOutlined />}</div>
-              </div>
+              {!customizingFields &&
+                fieldsOrder.map((field, index) => (
+                  <React.Fragment key={`client-details-item-${index}`}>
+                    {(field.fieldName === 'phone' ||
+                      field.fieldName === 'email') && (
+                      <div className={styles.clientDetailsItem}>
+                        <div>
+                          <div className={styles.title}>{field.title}</div>
+                          <div
+                            className={styles.content}
+                            style={{
+                              color: `${
+                                client[field.fieldName]
+                                  ? 'var(--grey-text-color)'
+                                  : 'var(--light-grey-color)'
+                              }`,
+                            }}
+                          >
+                            {client[field.fieldName] ||
+                              t('ui.clientdetails.empty')}
+                          </div>
+                        </div>
+                        <div>
+                          {client[field.fieldName] ? (
+                            <EditOutlined />
+                          ) : (
+                            <PlusOutlined />
+                          )}
+                        </div>
+                      </div>
+                    )}
+                    {field.fieldName !== 'phone' &&
+                      field.fieldName !== 'email' &&
+                      !isMobile && (
+                        <div className={styles.clientDetailsItem}>
+                          <div>
+                            <div className={styles.title}>{field.title}</div>
+                            <div
+                              className={styles.content}
+                              style={{
+                                color: `${
+                                  client[field.fieldName]
+                                    ? 'var(--grey-text-color)'
+                                    : 'var(--light-grey-color)'
+                                }`,
+                              }}
+                            >
+                              {field.type !== 'date' &&
+                                (client[field.fieldName] ||
+                                  t('ui.clientdetails.empty'))}
+                              {field.type === 'date' &&
+                                (client[field.fieldName]
+                                  ? `${moment(client.dob).format(
+                                      'DD/MM/YYYY'
+                                    )} (${moment(client.dob).fromNow(true)})`
+                                  : t('ui.clientdetails.empty'))}
+                            </div>
+                          </div>
+                          <div>
+                            {client[field.fieldName] ? (
+                              <EditOutlined />
+                            ) : (
+                              <PlusOutlined />
+                            )}
+                          </div>
+                        </div>
+                      )}
+                  </React.Fragment>
+                ))}
+              {customizingFields && (
+                <CustomizeFields
+                  defaultOrder={fieldsOrder}
+                  onCancel={() => setCustomizingFields(false)}
+                  onChange={(order) => {
+                    setFieldsOrder(order)
+                    setCustomizingFields(false)
+                  }}
+                />
+              )}
             </div>
           </div>
           <div className={styles.detailsTwo}>
@@ -451,14 +491,20 @@ export const ClientDetails: FC<ClientDetailsProps> = ({ clientData }) => {
                       key={`relationship-item-${index}`}
                     >
                       <div>
-                        <MedicalCenter />
+                        {relationship.avatar ? (
+                          <Avatar src={relationship.avatar} size={32} />
+                        ) : (
+                          <MedicalCenter />
+                        )}
                       </div>
                       <div>
                         <div className={styles.companyName}>
-                          {relationship.company}
+                          {relationship.company ||
+                            relationship.surgeryName ||
+                            `${relationship.firstName} ${relationship.lastName}`}
                         </div>
                         <div className={styles.address}>
-                          {relationship.address}
+                          {relationship.address || relationship.email}
                         </div>
                         <div className={styles.phone}>{relationship.phone}</div>
                       </div>
@@ -619,27 +665,34 @@ export const ClientDetails: FC<ClientDetailsProps> = ({ clientData }) => {
         onCancel={() => setShowAvatarUploader(false)}
       />
 
-      <AddRelationship
-        visible={addRelationship}
-        title={t('ui.add.relationship.title')}
-        onClose={() => setAddRelationship(false)}
-        onOpenAddModal={(type) => handleOpenAddModal(type)}
-      />
+      {addRelationship && (
+        <AddRelationship
+          visible={addRelationship}
+          title={t('ui.add.relationship.title')}
+          onClose={() => setAddRelationship(false)}
+          onOpenAddModal={(type) => handleOpenAddModal(type)}
+        />
+      )}
 
-      <AddContact
-        visible={addContact}
-        contactType={type}
-        appointments={[]}
-        onClose={() => setAddContact(false)}
-        onAddRelationship={handleAddRelationship}
-      />
+      {addContact && (
+        <AddContact
+          visible={addContact}
+          contactType={type}
+          appointments={appointments}
+          onClose={() => setAddContact(false)}
+          onAddRelationship={handleAddRelationship}
+        />
+      )}
 
-      <AddThirdParty
-        visible={addThirdParty}
-        thirdPartyType={type}
-        onClose={() => setAddThirdParty(false)}
-        onAddRelationship={handleAddRelationship}
-      />
+      {addThirdParty && (
+        <AddThirdParty
+          visible={addThirdParty}
+          thirdPartyType={type}
+          onClose={() => setAddThirdParty(false)}
+          onAddRelationship={handleAddRelationship}
+          searchResults={searchResults}
+        />
+      )}
     </div>
   )
 }

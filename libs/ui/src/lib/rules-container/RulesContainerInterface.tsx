@@ -1,4 +1,4 @@
-import { OptionType } from '@pabau/ui'
+import { OptionType } from '../../index'
 
 export interface ActionProp {
   key: string

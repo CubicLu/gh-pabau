@@ -1,8 +1,7 @@
-import React from 'react'
 import { render } from '@testing-library/react'
-import { meta, employees, yearsData, locations } from './mock'
+import React from 'react'
 import { serviceGroups } from './data'
-
+import { dateOptions, employees, locations, meta } from './mock'
 import TeamReportHeader from './TeamReportHeader'
 
 describe('TeamReportHeader', () => {
@@ -12,8 +11,8 @@ describe('TeamReportHeader', () => {
         meta={meta}
         serviceGroups={serviceGroups}
         employees={employees}
-        years={yearsData.monthly}
         locations={locations}
+        dateOptions={dateOptions}
       />
     )
     expect(baseElement).toBeTruthy()

@@ -89,8 +89,11 @@ fragment CompanyDetails on CompanyDetails {
   timezone {
     ...TimezoneFields
   }
-  company {
+  Company {
     ...CompanyFields
+  }
+  InvoiceDefaultTemplate {
+    ...InvoiceTemplateFields
   }
 }
 

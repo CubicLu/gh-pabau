@@ -1,102 +1,113 @@
 import React, { FC } from 'react'
 import { Typography } from 'antd'
-import { gql } from '@apollo/client'
-import TableLayout from './TableLayout'
+import TableLayout, { FilterValueType } from './TableLayout'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { Dayjs } from 'dayjs'
+import { usePaymentsQuery, usePaymentCountQuery } from '@pabau/graphql'
 
-const LIST_QUERY = gql`
-  query payments($offset: Int, $limit: Int) {
-    payments(offset: $offset, limit: $limit) {
-      id
-      payment_no
-      against
-      location
-      inv_date
-      account
-      amount
-      payment_method
-      user
-    }
-  }
-`
+interface PaymentProps {
+  searchTerm: string
+  selectedDates: Dayjs[]
+  filterValue: FilterValueType
+  selectedRange: string
+}
 
-const LIST_AGGREGATE = gql`
-  query payments_aggregate {
-    payments_aggregate {
-      aggregate {
-        count
-      }
-    }
-  }
-`
-const Payments: FC = () => {
+const Payments: FC<PaymentProps> = ({
+  searchTerm,
+  selectedDates,
+  filterValue,
+  selectedRange,
+}) => {
   const { t } = useTranslationI18()
   const PaymentColumns = [
     {
       title: t('account.finance.payments.columns.payment.no'),
-      dataIndex: 'payment_no',
+      dataIndex: 'id',
       className: 'drag-visible',
       visible: true,
       width: '120px',
+      skeletonWidth: '80px',
     },
     {
-      title: t('account.finance.payments.columns.Against'),
-      dataIndex: 'against',
+      title: t('account.finance.payments.columns.invoiceNo'),
+      dataIndex: 'invoiceNo',
       visible: true,
-      width: '150px',
+      width: '120px',
+      skeletonWidth: '80px',
+      render: function render(data) {
+        return (
+          <Typography.Text style={{ color: '#54B2D3' }}>{data}</Typography.Text>
+        )
+      },
     },
     {
-      title: t('account.finance.payments.columns.Location'),
+      title: t('account.finance.payments.columns.location'),
       dataIndex: 'location',
       className: 'drag-visible',
+      skeletonWidth: '80px',
       visible: true,
     },
     {
-      title: t('account.finance.payments.columns.Date'),
-      dataIndex: 'inv_date',
+      title: t('account.finance.payments.columns.date'),
+      dataIndex: 'invDate',
       className: 'drag-visible',
+      skeletonWidth: '80px',
+      width: '120px',
       visible: true,
+      render: function render(data) {
+        return <Typography.Text>{data.split('T')[0]}</Typography.Text>
+      },
     },
     {
-      title: t('account.finance.payments.columns.Account'),
-      dataIndex: 'account',
+      title: t('account.finance.payments.columns.customer'),
+      dataIndex: 'customer',
       className: 'drag-visible',
+      skeletonWidth: '80px',
       visible: true,
-      // eslint-disable-next-line react/display-name
-      render: (_, { account }) => (
-        <Typography.Text style={{ color: '#54B2D3' }}>
-          {account}
-        </Typography.Text>
-      ),
+      render: function render(data) {
+        return (
+          <Typography.Text style={{ color: '#54B2D3' }}>{data}</Typography.Text>
+        )
+      },
     },
     {
-      title: t('account.finance.payments.columns.Amount'),
+      title: t('account.finance.payments.columns.amount'),
       dataIndex: 'amount',
       className: 'drag-visible',
+      skeletonWidth: '80px',
+      width: '100px',
       visible: true,
-      // eslint-disable-next-line react/display-name
-      render: (_, { amount }) => (
-        <Typography.Text>£{amount.toFixed(2)}</Typography.Text>
-      ),
+      render: function render(amount) {
+        return <Typography.Text>£{amount}</Typography.Text>
+      },
     },
     {
       title: t('account.finance.payments.columns.payment.method'),
-      dataIndex: 'payment_method',
+      dataIndex: 'payment',
       className: 'drag-visible',
+      skeletonWidth: '50px',
       visible: true,
+      width: '180px',
     },
     {
       title: t('account.finance.payments.columns.user'),
       dataIndex: 'user',
       className: 'drag-visible',
+      skeletonWidth: '80px',
       visible: true,
     },
   ]
   return (
     <TableLayout
-      listQuery={LIST_QUERY}
-      aggregateQuery={LIST_AGGREGATE}
       columns={PaymentColumns}
+      searchTerm={searchTerm}
+      selectedDates={selectedDates}
+      filterValue={filterValue}
+      selectedRange={selectedRange}
+      listQuery={usePaymentsQuery}
+      aggregateQuery={usePaymentCountQuery}
+      noDataText={t('account.finance.payments.empty.data.text')}
+      tabName="payment"
     />
   )
 }
