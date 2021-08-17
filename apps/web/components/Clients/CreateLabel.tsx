@@ -253,7 +253,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
 
   const onApplyLabel = () => {
     handleApplyLabel(selectedLabels)
-
+    console.log('selectedLabels onApplyLabel', selectedLabels)
     setVisible(false)
     if (selectedRowKeys && selectedRowKeys.length > 0) {
       for (const selectContact of selectedRowKeys) {
@@ -279,8 +279,8 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
 
           if (
             addedLabel.length > 0 &&
-            !testEqual
-            // !defaultSelectedLabels.includes(selectedLabel)
+            // !testEqual
+            !defaultSelectedLabels.includes(selectedLabel)
             // defaultSelectedLabels.some((e) => e.text !== selectedLabel.text)
           ) {
             insertContactsLabelsMutaton({
@@ -315,6 +315,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
         }
       }
     }
+    // handleApplyLabel(selectedLabels)
   }
 
   const content = () => {

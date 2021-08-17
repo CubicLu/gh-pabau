@@ -24,6 +24,7 @@ import {
   useAddLabelMutation,
   useGetContactsLabelsLazyQuery,
   useInsertContactsLabelsMutation,
+  useGetContactsLazyQuery,
 } from '@pabau/graphql'
 import { test } from 'shelljs'
 
@@ -62,6 +63,7 @@ export const Clients: FC<ClientsProps> = () => {
       // setContactsLabels([...contactsLabels, tempLab])
       setResponseLabels(true)
       setCountLabelS(() => [...countLabelS, tempLab])
+      // getContactsData()
       getContactsLabelsQuery()
     },
     onError() {
@@ -167,6 +169,19 @@ export const Clients: FC<ClientsProps> = () => {
     },
   })
 
+  // const [getContactsData2] = useGetContactsLazyQuery({
+  //   onCompleted(response) {
+  //     console.log('response getContactsData', response)
+  //   },
+  //   fetchPolicy: 'no-cache',
+  //   variables: {
+  //     offset: paginateData.offset,
+  //     limit: paginateData.limit,
+  //     searchTerm: searchText,
+  //   },
+  // })
+  //
+
   useEffect(() => {
     if (getClientsCountData) {
       setPaginateData((d) => ({
@@ -210,8 +225,37 @@ export const Clients: FC<ClientsProps> = () => {
           // return fieldContact
         }
       }
+      // setTestData(fieldContact)
     })
   }, [getContactsData])
+
+  // useEffect(() => {
+  //   contactsData?.map((fieldContact) => {
+  //     // const tempCON = []
+  //     for (const fieldCL of contactsLabels) {
+  //       if (fieldCL.contact_id === fieldContact.id) {
+  //         const labelComplete = {}
+  //         // labelComplete['id'] = ''
+  //         labelComplete['id'] = fieldCL.label.id
+  //         labelComplete['text'] = fieldCL.label.text
+  //         labelComplete['color'] = fieldCL.label.color
+  //         // const updatedContact = fieldContact.labelTest.push(labelComplete)
+  //         // fieldContact
+  //         // fieldContact = [...fieldCL, labelComplete]
+  //         // setContactsLabels([...contactsLabels, updatedContact])
+  //         // setTestData([updatedContact])
+  //         return {
+  //           ...fieldContact,
+  //           labelTest: [labelComplete],
+  //         }
+  //         // setTestData(tempContactX)
+  //         // return updatedContact
+  //         // return tempContactX
+  //       }
+  //     }
+  //   })
+  //   // setTestData(tempContactX)
+  // }, [getContactsData])
 
   // console.log('contactsLabels', contactsLabels)
 
@@ -321,10 +365,14 @@ export const Clients: FC<ClientsProps> = () => {
   // }
 
   useEffect(() => {
+    console.log('testData START', testData)
     let filteredData = testData?.map((a) => ({ ...a }))
     if (selectedTab === tab.clients) {
       filteredData = testData
+      console.log('enter useEffect')
     } else if (selectedTab === tab.archived) {
+      console.log('enter useEffect 2')
+
       filteredData = testData.filter((item) => item.is_active === 0)
     } else if (
       selectedTab === tab.contacts ||
@@ -333,14 +381,20 @@ export const Clients: FC<ClientsProps> = () => {
       selectedTab === tab.import ||
       selectedTab === tab.export
     ) {
+      console.log('enter useEffect 3')
+
       filteredData = [...filteredData]
     } else {
+      console.log('enter useEffect 4')
+
       filteredData = testData?.filter((item) =>
         item.labelTest.some((x) => x.text === selectedTab)
       )
     }
 
     if (searchText) {
+      console.log('searchText', searchText)
+      console.log('enter useEffect 5')
       const filterObject = []
       for (const data of filteredData) {
         for (const key of Object.keys(data)) {
@@ -358,9 +412,12 @@ export const Clients: FC<ClientsProps> = () => {
       }
       filteredData = filterObject
     }
+    console.log('entering exit')
+    console.log('filteredData', filteredData)
     setSourceFilteredData(filteredData)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchText, selectedTab, testData])
+  console.log('testData 000', testData)
 
   useEffect(() => {
     const selectedData = testData?.filter((item) =>
@@ -481,6 +538,8 @@ export const Clients: FC<ClientsProps> = () => {
   const uniqLabel = (oldLabelList, selectedLabelList) => {
     const newList = [...selectedLabelList]
     const removedLabel = differenceBy(defaultSelectedLabels, selectedLabelList)
+    console.log('newList 888', newList)
+    console.log('removedLabel 888', removedLabel)
     const uniqData = oldLabelList.filter((data) => {
       return (
         !newList.some((item) => item.labelTest === data.labelTest) &&
@@ -495,14 +554,39 @@ export const Clients: FC<ClientsProps> = () => {
     setCountLabelS(contactsLabels)
   }, [contactsLabels])
 
+  // const handleApplyLabel = (selectedLabelList) => {
+  //   console.log('handleApplyLabel')
+  //   const newData = testData?.map((data) => {
+  //     const temp = { ...data }
+  //     if (selectedRowKeys.includes(data.id)) {
+  //       temp.labelTest = uniqLabel(data.labelTest, selectedLabelList)
+  //       // const tempX = uniqLabel(data.labelTest, selectedLabelList)
+  //       // temp.labelTest = [..., tempX]
+  //     }
+  //     return temp
+  //   })
+  //   console.log('newData', newData)
+  //   setTestData(newData)
+  // }
+
   const handleApplyLabel = (selectedLabelList) => {
+    console.log('handleApplyLabel')
     const newData = testData?.map((data) => {
       const temp = { ...data }
+      // if (selectedRowKeys.includes(data.id)) {
+      //   temp.labelTest = uniqLabel(data.labelTest, selectedLabelList)
+      // }
+
       if (selectedRowKeys.includes(data.id)) {
-        temp.labelTest = uniqLabel(data.labelTest, selectedLabelList)
+        // temp.labelTest = uniqLabel(data.labelTest, selectedLabelList)
+        for (const selectedRow of selectedRowKeys) {
+          temp.labelTest = uniqLabel(data.labelTest, selectedLabelList)
+        }
       }
+
       return temp
     })
+    console.log('newData', newData)
     setTestData(newData)
   }
 
@@ -586,6 +670,8 @@ export const Clients: FC<ClientsProps> = () => {
   }
 
   countLabels()
+
+  console.log('sourceFilteredData index', sourceFilteredData)
 
   const labelCountAll = countLabels()
 
