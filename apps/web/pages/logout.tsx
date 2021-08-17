@@ -2,8 +2,6 @@
   THIS PAGE IS FOR PABAU 1 PURPOSES ONLY
   Stan
 */
-
-import { Result } from 'antd'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
@@ -20,11 +18,7 @@ const Logout = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return (
-    <div>
-      <Result title="Securely logging you out!" />,
-    </div>
-  )
+  return <div></div>
 }
 
 export default Logout

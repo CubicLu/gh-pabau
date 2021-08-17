@@ -26,9 +26,9 @@ const LoginMain: FC<P> = ({ handlePageShow }) => {
       In an ideal scenario where we don't have Pabau1
       we would do router.reload(), until then it is what it is:)
        */
-      const pab1JWT = jwt.decode(data.login) as any /*<-- To Improve */
+      const pab1JWT = jwt.decode(data.login) as any
       window.location.href =
-        'https://prelive-crm.pabau.com/auth.php?t=' +
+        'https://crm.pabau.com/auth.php?t=' +
         pab1JWT.pab1 +
         '&r=' +
         encodeURIComponent(window.location.origin)
