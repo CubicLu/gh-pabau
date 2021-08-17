@@ -1,5 +1,6 @@
 import { queryField, extendType, objectType } from 'nexus'
 import { PrismaSelect } from '@paljs/plugins'
+import { Context } from '../../context'
 
 export const PodCompany = objectType({
   name: 'PodCompany',
@@ -16,7 +17,11 @@ export const UserWithCompanies = extendType({
   definition(t) {
     t.list.nonNull.field('companies', {
       type: 'PodCompany',
-      async resolve(_root, _args, { authenticated, prisma, prismaArray }) {
+      async resolve(
+        _root,
+        _args,
+        { authenticated, prisma, prismaArray }: Context
+      ) {
         const { username } = await prisma.user.findUnique({
           rejectOnNotFound: true,
           where: { id: authenticated.user },
@@ -31,16 +36,35 @@ export const UserWithCompanies = extendType({
             },
           },
           select: {
-            Company: { select: { name: true, id: true, remote_url: true } },
+            Company: {
+              select: {
+                id: true,
+                remote_url: true,
+                details: {
+                  select: {
+                    logo: true,
+                    company_name: true,
+                  },
+                },
+              },
+            },
           },
         })
 
-        return users.map(({ Company: { id, remote_url, name, logo } }) => ({
-          id,
-          isPod: Boolean(remote_url),
-          name,
-          logo,
-        }))
+        return users.map(
+          ({
+            Company: {
+              id,
+              remote_url,
+              details: { company_name: name, logo },
+            },
+          }) => ({
+            id,
+            isPod: Boolean(remote_url),
+            name,
+            logo,
+          })
+        )
       },
     })
   },
