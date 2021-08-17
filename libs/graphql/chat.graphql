@@ -1,8 +1,8 @@
 subscription chatListMessagesNotify {
   chat(
-    distinct_on: from
+    distinct_on: [from,to]
     order_by: { created_at: desc, from: asc }
-    where: { to: { _is_null: false } }
+    where: { to_channel: { _is_null: true } }
   ) {
     id
     message
@@ -84,7 +84,7 @@ query chatListRooms {
       id
       name
       chats(limit: 1, order_by: { created_at: desc })
-        @connection(key: "chats") {
+      @connection(key: "chats") {
         id
         message
         from
@@ -188,6 +188,15 @@ mutation chatPostToChannelId($message: String!, $channelId: uuid!) {
 mutation chatPostToUserId($message: String!, $userId: Int!) {
   insert_chat_one(object: { message: $message, to: $userId }) {
     id
+    message
+    fromUser {
+      id
+      full_name
+    }
+    toUser {
+      id
+      full_name
+    }
   }
 }
 

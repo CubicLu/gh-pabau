@@ -44,7 +44,30 @@ export const Chat = (props: P): JSX.Element => {
 
   const me = React.useContext(UserContext)
 
-  const [postToUser] = useChatPostToUserIdMutation()
+  const [postToUser] = useChatPostToUserIdMutation({
+    update(cache, args) {
+      cache.modify({
+        id: cache.identify(chatDirectHistory),
+        fields: {
+          chat(existingItems = []) {
+            console.log('*** ADDING TO DM CACHE', args.data.insert_chat_one)
+            const newItemRef = cache.writeFragment({
+              data: args.data.insert_chat_one,
+              fragment: gql`
+                fragment NewChat on chat {
+                  id
+                  message
+                  created_at
+                }
+              `,
+            })
+
+            return [...existingItems, newItemRef]
+          },
+        },
+      })
+    },
+  })
 
   const [postToChannel] = useChatPostToChannelIdMutation({
     update(cache, args) {
@@ -147,28 +170,35 @@ export const Chat = (props: P): JSX.Element => {
     }
   }, [topic, fetchDirectHistory, fetchRoomHistory])
 
-  const chatHistory =
-    chatRoomHistory && chatRoomHistory.chat_room_by_pk.id === topic?.id
-      ? {
-          name: chatRoomHistory.chat_room_by_pk.name,
-          chats: [...chatRoomHistory.chat_room_by_pk.chats]
-            .sort((a, b) => (a.created_at < b.created_at ? -1 : 1))
-            .map<ChatMessage>((e) => ({
-              ...e,
-              userName: e.fromUser.full_name,
-              dateTime: dayjs().calendar(dayjs(e.created_at)),
-            })),
-        }
-      : {
-          chats: chatDirectHistory?.chat
-            .sort((a, b) => (a.created_at < b.created_at ? -1 : 1))
-            .map<ChatMessage>((e) => ({
-              ...e,
-              userName: e.fromUser.full_name,
-              dateTime: dayjs().calendar(dayjs(e.created_at)),
-            })),
-        }
+  let chatHistory
+  if (chatRoomHistory && chatRoomHistory.chat_room_by_pk.id === topic?.id) {
+    chatHistory = {
+      name: chatRoomHistory.chat_room_by_pk.name,
+      chats: [...chatRoomHistory.chat_room_by_pk.chats]
+        .sort((a, b) => (a.created_at < b.created_at ? -1 : 1))
+        .map<ChatMessage>((e) => ({
+          ...e,
+          //id: e.fromUser.id.toString(),
+          message: e.message,
+          userName: e.fromUser.full_name,
+          dateTime: dayjs().calendar(dayjs(e.created_at)),
+        })),
+    }
+  } else if (chatDirectHistory) {
+    chatHistory = {
+      name: topic.id,
+      chats: [...chatDirectHistory?.chat]
+        .sort((a, b) => (a.created_at < b.created_at ? -1 : 1))
+        .map<ChatMessage>((e) => ({
+          ...e,
+          from: e.fromUser.id,
+          userName: e.fromUser.full_name,
+          dateTime: dayjs().calendar(dayjs(e.created_at)),
+        })),
+    }
+  }
 
+  console.log('chatHistory', chatHistory)
   return (
     <PabauMessages
       onClose={closeDrawer}
@@ -196,9 +226,9 @@ export const Chat = (props: P): JSX.Element => {
         userName: `#${room.name} ${room.chats[0]?.fromUser.full_name}`,
       }))}
       chatList={data?.chat.map<ChatMessage>(
-        ({ id, message, created_at, fromUser, toUser }) => ({
-          id,
-          message,
+        ({ created_at, fromUser, toUser, ...rest }) => ({
+          ...rest,
+          id: rest.to.toString(),
           userName:
             (fromUser.id !== me.me.id
               ? fromUser?.full_name
@@ -211,6 +241,29 @@ export const Chat = (props: P): JSX.Element => {
           !('participants' in topic) &&
           postToUser({
             variables: { userId: Number.parseInt(topic.id), message },
+            optimisticResponse: (e) => {
+              return {
+                insert_chat_one: {
+                  ...e,
+                  __typename: 'chat',
+                  id: 'newly-created',
+                  to: e.userId,
+                  message: '....',
+                },
+              }
+            },
+            update(cache) {
+              cache.modify({
+                fields: {
+                  chat(e) {
+                    console.log('updating chat cache', e)
+                  },
+                  chats(e) {
+                    console.log('updating chats cache', e)
+                  },
+                },
+              })
+            },
           })
 
         typeof topic === 'object' &&
