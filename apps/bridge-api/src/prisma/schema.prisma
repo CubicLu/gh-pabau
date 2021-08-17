@@ -3741,22 +3741,25 @@ model CompanyEmail {
 //  @@unique([company_id, ipv4_range_start, ipv4_range_end], name: "unique_range_per_company")
 //}
 //
-//model company_groups {
-//  ID                  Int    @id @default(autoincrement())
-//  Name                String
-//  occupier            String
-//  category_product_id Int
-//  cat_order           Int
-//  image               String
-//  online_enabled      Int
-//  group_color         String
-//  import_id           Int
-//  equipment_id        Int
-//  deposit_amount      Float
-//  tax_id              Int
-//  master_cat_id       Int
-//  company_position_id Int    @default(0)
-//}
+model ServiceCategory {
+  id                  Int    @id @default(autoincrement()) @map("ID")
+  name                String @map("Name")
+  company_id          Int    @map("occupier")
+  category_product_id Int
+  cat_order           Int
+  image               String
+  online_enabled      Int
+  group_color         String
+  import_id           Int
+  equipment_id        Int
+  deposit_amount      Float
+  tax_id              Int
+  master_cat_id       Int
+  company_position_id Int    @default(0)
+
+  @@map("company_groups")
+}
+
 //
 //model company_hits {
 //  id         Int    @id @default(autoincrement())
