@@ -63,68 +63,6 @@ export class NotificationServices {
     return { id: notificationId }
   }
 
-  async findUserById(id: number): Promise<{ full_name: string }> {
-    const data = {
-      query: `query MyQuery {\n  findFirstUser(where: { id: { equals : ${id} } } ){\n    full_name\n  }\n}\n`,
-      variables: null,
-      operationName: 'MyQuery',
-    }
-
-    const response = await this.httpService
-      .post(this.GRAPHQL_ENDPOINT, data)
-      .toPromise()
-    const full_name = response.data?.data?.findFirstUser?.full_name
-    return { full_name }
-  }
-
-  async findClientById(id: number): Promise<{ full_name: string }> {
-    const data = {
-      query: `query findClientDetails {\n  findFirstCmContact(where:{ ID :{ equals: ${id} } }) {\n    Fname\n    Lname\n    ID\n  }\n}`,
-      variables: null,
-      operationName: 'findClientDetails',
-    }
-
-    const response = await this.httpService
-      .post(this.GRAPHQL_ENDPOINT, data)
-      .toPromise()
-
-    const client = response.data?.data?.findFirstCmContact
-    const full_name = `${client?.Fname} ${client?.Lname}`
-    return { full_name }
-  }
-
-  async findStaffMembersByCompany(company: number): Promise<[number]> {
-    const data = {
-      query: `query findStaffDetails {\n  findManyCmStaffGeneral(where:{ company_id:{ equals: ${company} } }){\n    Fname\n    ID\n  }\n}`,
-      variables: null,
-      operationName: 'findStaffDetails',
-    }
-
-    const response = await this.httpService
-      .post(this.GRAPHQL_ENDPOINT, data)
-      .toPromise()
-    const staffMembers = response?.data?.data?.findManyCmStaffGeneral.map(
-      (staff) => staff?.ID
-    )
-    return staffMembers
-  }
-
-  async findManagersByCompany(company: number): Promise<[number]> {
-    const data = {
-      query: `query findCompanyManager{\n  findManyUser(where:{ company_id:{ equals:${company} }, staff_read_only: { equals: false } }){\n    id\n    full_name\n  }\n}`,
-      variables: null,
-      operationName: 'findCompanyManager',
-    }
-
-    const response = await this.httpService
-      .post(this.GRAPHQL_ENDPOINT, data)
-      .toPromise()
-    const managers = response?.data?.data?.findManyUser.map(
-      (manager) => manager?.id
-    )
-    return managers
-  }
-
   async findUserEnabledNotifications(
     company: number,
     type: string

@@ -1,5 +1,9 @@
 import React, { FC, useState } from 'react'
-import { ClientCard as ClientCardComponent, Button } from '@pabau/ui'
+import {
+  ClientCard as ClientCardComponent,
+  Button,
+  ClientData,
+} from '@pabau/ui'
 import {
   searchResults,
   notes,
@@ -38,7 +42,7 @@ const ClientCard: FC = () => {
       <ClientCardComponent
         visible={show}
         onClose={() => setShow((show) => !show)}
-        clientData={clientData}
+        clientData={clientData as ClientData}
         notes={notes}
         searchResults={searchResults}
         medicalConditions={medicalConditions}

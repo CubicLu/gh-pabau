@@ -66,6 +66,8 @@ import {
   conversation,
   tests,
   products,
+  thirdPartySearchResults,
+  appointments,
   clientPackages,
 } from './mock'
 
@@ -859,7 +861,13 @@ const ClientCardModal: FC<ClientCardProps> = ({
           </div>
           <div className={styles.clientCardBody}>
             <div className={styles.clientDetails}>
-              {client && <ClientDetails clientData={client} />}
+              {client && (
+                <ClientDetails
+                  clientData={client}
+                  searchResults={thirdPartySearchResults}
+                  appointments={appointments}
+                />
+              )}
             </div>
             <div className={styles.clientCardContent}>
               <CustomTabMenu
