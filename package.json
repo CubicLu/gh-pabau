@@ -1,6 +1,6 @@
 {
   "name": "pabau",
-  "version": "2.0.512",
+  "version": "2.0.513",
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
   "workspaces": {
@@ -39,6 +39,7 @@
     "hasura:clean": "docker-compose -f hasura/docker-compose.yml down -v",
     "mysql:clean": "docker-compose -f tools/pabau1/docker-compose.yml down -v",
     "hasura:export": "yarn hasura:cli metadata export && yarn apollo client:download-schema hasura/schema.graphql && yarn graphql-codegen",
+    "hasura:export2": "yarn hasura:cli metadata export && yarn apollo client:download-schema hasura/schema.graphql",
     "graphql-codegen:cached": "postmon --include hasura/schema.graphql --include \"libs/graphql/**/*.graphql\" graphql-codegen",
     "graphql-codegen:watch": "graphql-codegen --watch",
     "production:web": "env-cmd -f apps/web/.env.production yarn nx serve",
