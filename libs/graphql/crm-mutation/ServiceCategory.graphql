@@ -17,6 +17,12 @@ fragment ServiceCategoryFields on ServiceCategory {
 
 fragment ServiceCategory on ServiceCategory {
   ...ServiceCategoryFields
+  ServicesMasterCategory {
+    ...ServicesMasterCategoryFields
+  }
+  InvCategory {
+    ...InvCategoryFields
+  }
 }
 
 mutation createOneServiceCategory($data: ServiceCategoryCreateInput!) {

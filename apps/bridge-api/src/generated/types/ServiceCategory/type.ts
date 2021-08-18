@@ -21,5 +21,37 @@ export const ServiceCategory = objectType({
     t.int('tax_id')
     t.int('master_cat_id')
     t.int('company_position_id')
+    t.field('ServicesMasterCategory', {
+      type: 'ServicesMasterCategory',
+      resolve(root: any) {
+        return root.ServicesMasterCategory
+      },
+    })
+    t.field('InvCategory', {
+      type: 'InvCategory',
+      resolve(root: any) {
+        return root.InvCategory
+      },
+    })
+    t.list.field('CompanyService', {
+      type: 'CompanyService',
+      args: {
+        where: 'CompanyServiceWhereInput',
+        orderBy: 'CompanyServiceOrderByInput',
+        cursor: 'CompanyServiceWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CompanyServiceScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CompanyService
+      },
+    })
+    t.nullable.field('_count', {
+      type: 'ServiceCategoryCountOutputType',
+      resolve(root: any) {
+        return root._count
+      },
+    })
   },
 })

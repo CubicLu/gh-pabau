@@ -3005,6 +3005,7 @@ model CmStaffGeneral {
   CompanyPosition     CompanyPosition?            @relation(fields: [Position], references: [id])
   HolidayRequest      HolidayRequest[]
   SalonBookings       Booking[]
+  RotaShift           RotaShift[]
 
   InventoryDiscrepancy InventoryDiscrepancy[]
   @@index([Position], name: "Position")
@@ -3740,27 +3741,28 @@ model CompanyEmail {
 //
 //  @@unique([company_id, ipv4_range_start, ipv4_range_end], name: "unique_range_per_company")
 //}
-//
 model ServiceCategory {
-  id                  Int    @id @default(autoincrement()) @map("ID")
-  name                String @map("Name")
-  company_id          Int    @map("occupier")
-  category_product_id Int
-  cat_order           Int
-  image               String
-  online_enabled      Int
-  group_color         String
-  import_id           Int
-  equipment_id        Int
-  deposit_amount      Float
-  tax_id              Int
-  master_cat_id       Int
-  company_position_id Int    @default(0)
+  id                     Int                    @id @default(autoincrement()) @map("ID")
+  name                   String                 @map("Name")
+  company_id             Int                    @map("occupier")
+  category_product_id    Int
+  cat_order              Int
+  image                  String
+  online_enabled         Int
+  group_color            String
+  import_id              Int
+  equipment_id           Int
+  deposit_amount         Float
+  tax_id                 Int
+  master_cat_id          Int
+  company_position_id    Int                    @default(0)
+  ServicesMasterCategory ServicesMasterCategory @relation(fields: [master_cat_id], references: [id])
+  InvCategory            InvCategory            @relation(fields: [category_product_id], references: [id])
+  CompanyService         CompanyService[]
 
   @@map("company_groups")
 }
 
-//
 //model company_hits {
 //  id         Int    @id @default(autoincrement())
 //  company_id Int    @unique
@@ -3982,6 +3984,7 @@ model CompanyService {
   online_only_service    Int
   Company                Company                           @relation(fields: [company_id], references: [id])
   CompanyRoomService     CompanyRoomService[]
+  ServiceCategory        ServiceCategory                   @relation(fields: [group_id], references: [id])
 
   @@index([company_id], name: "company_index")
   @@index([group_id], name: "group_index")
@@ -6283,7 +6286,8 @@ model InvCategory {
   master_cat_id     Int?
   Company           Company?                @relation(fields: [company_id], references: [id])
   InvProduct        InvProduct[]
-  MasterCategory    ServicesMasterCategory? @relation("master_cat_id_to_services_master_category_id", fields: [master_cat_id], references: [id])
+  MasterCategory    ServicesMasterCategory? @relation(fields: [master_cat_id], references: [id])
+  ServiceCategory   ServiceCategory?
   Tax               Tax?                    @relation(fields: [tax_id], references: [id])
   User              User?                   @relation(fields: [user_id], references: [id])
 
@@ -10287,7 +10291,6 @@ model ReportCategory {
 model RotaShift {
   id             Int            @id @default(autoincrement())
   uid            Int
-  User           User           @relation(fields: [uid], references: [id])
   start          Int
   end            Int
   company_id     Int            @map("occupier")
@@ -10316,7 +10319,7 @@ model RotaShift {
   Location       CompanyBranch  @relation(fields: [location_id], references: [id])
   CompanyRoom    CompanyRoom    @relation(fields: [room_id], references: [id])
   HolidayRequest HolidayRequest @relation(fields: [holiday_id], references: [id])
-
+  CmStaffGeneral CmStaffGeneral @relation(fields: [uid], references: [ID])
 
   @@index([end], name: "end")
   @@index([holiday_id], name: "holiday_id")
@@ -10986,14 +10989,15 @@ model UserSalutation {
 //}
 //
 model ServicesMasterCategory {
-  id          Int                           @id @default(autoincrement())
-  name        String
-  company_id  Int                           @map("occupier")
-  ord         Int                           @default(0)
-  type        services_master_category_type @default(SERVICE)
-  image       String
-  Company     Company                       @relation(fields: [company_id], references: [id])
-  InvCategory InvCategory[]                 @relation("master_cat_id_to_services_master_category_id")
+  id              Int                           @id @default(autoincrement())
+  name            String
+  company_id      Int                           @map("occupier")
+  ord             Int                           @default(0)
+  type            services_master_category_type @default(SERVICE)
+  image           String
+  Company         Company                       @relation(fields: [company_id], references: [id])
+  ServiceCategory ServiceCategory[]
+  InvCategory     InvCategory[]
 
   @@map("services_master_category")
 }
@@ -12498,7 +12502,6 @@ model User {
   UserSecurityQuestionsAnswer  UserSecurityQuestionsAnswer[]
   Company                      Company?                       @relation(fields: [company_id], references: [id])
   CompanyDetails               CompanyDetails?                @relation(fields: [company_id], references: [company_id])
-  RotaShift                    RotaShift[]
   UserGroupMember              UserGroupMember?
   UserMainPermission           UserMainPermission[]
   UserMobilePermission         UserMobilePermission[]
