@@ -13,6 +13,7 @@ import {
   Avatar,
   AvatarUploader,
   Relationship,
+  RelationshipType,
   CustomizeFields,
 } from '@pabau/ui'
 import { Carousel, Form } from 'antd'
@@ -51,8 +52,22 @@ export interface ClientData {
   allocatedAuthorisations: string
 }
 
-export interface ClientDetailsProps {
-  clientData: ClientData
+interface SearchItem {
+  name: string
+  street: string
+  postCode: string
+  city: string
+  country: string
+  phone: string
+}
+
+interface Appointment {
+  id: string
+  firstName: string
+  lastName: string
+  avatarUrl?: string
+  mobile?: string
+  email?: string
 }
 
 type FieldType =
@@ -71,7 +86,17 @@ interface FieldOrderItem {
   field: FieldType
 }
 
-export const ClientDetails: FC<ClientDetailsProps> = ({ clientData }) => {
+export interface ClientDetailsProps {
+  clientData: ClientData
+  searchResults: SearchItem[]
+  appointments: Appointment[]
+}
+
+export const ClientDetails: FC<ClientDetailsProps> = ({
+  clientData,
+  searchResults,
+  appointments,
+}) => {
   const { t } = useTranslation('common')
   const defaultFieldOrder: FieldOrderItem[] = [
     {
@@ -149,7 +174,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({ clientData }) => {
   const [addRelationship, setAddRelationship] = useState(false)
   const [addContact, setAddContact] = useState(false)
   const [addThirdParty, setAddThirdParty] = useState(false)
-  const [type, setType] = useState('')
+  const [type, setType] = useState<RelationshipType>('family-member')
   const [customizingFields, setCustomizingFields] = useState(false)
   const [hoverDetails, setHoverDetails] = useState(false)
   const [fieldsOrder, setFieldsOrder] = useState<FieldOrderItem[]>(
@@ -157,7 +182,7 @@ export const ClientDetails: FC<ClientDetailsProps> = ({ clientData }) => {
   )
   const [form] = Form.useForm()
 
-  const handleOpenAddModal = (type: string) => {
+  const handleOpenAddModal = (type: RelationshipType) => {
     setType(type)
     if (
       type === 'family-member' ||
@@ -176,7 +201,51 @@ export const ClientDetails: FC<ClientDetailsProps> = ({ clientData }) => {
     setAddContact(false)
     setAddThirdParty(false)
     const data = { ...client }
-    data.relationships.push(relationship)
+    const findIndex = data.relationships.findIndex((el) => {
+      const {
+        type,
+        firstName,
+        lastName,
+        phone,
+        email,
+        address,
+        avatar,
+        surgeryName,
+        company,
+      } = relationship
+      if (
+        (type === 'family-member' ||
+          type === 'emergency-contact' ||
+          type === 'next-of-kin') &&
+        el.type === type &&
+        el.firstName === firstName &&
+        el.lastName === lastName &&
+        el.phone === phone &&
+        el.email === email &&
+        el.avatar === avatar
+      )
+        return true
+      if (
+        (type === 'company' || type === 'insurance-provider') &&
+        el.type === type &&
+        company === el.company &&
+        address === el.address &&
+        phone === el.phone
+      )
+        return true
+      if (
+        type === 'practioner' &&
+        type === el.type &&
+        el.surgeryName === surgeryName &&
+        address === el.address &&
+        phone === el.phone
+      )
+        return true
+      return false
+    })
+    if (findIndex < 0) {
+      data.relationships.push(relationship)
+    }
     setClient(data)
   }
 
@@ -422,14 +491,20 @@ export const ClientDetails: FC<ClientDetailsProps> = ({ clientData }) => {
                       key={`relationship-item-${index}`}
                     >
                       <div>
-                        <MedicalCenter />
+                        {relationship.avatar ? (
+                          <Avatar src={relationship.avatar} size={32} />
+                        ) : (
+                          <MedicalCenter />
+                        )}
                       </div>
                       <div>
                         <div className={styles.companyName}>
-                          {relationship.company}
+                          {relationship.company ||
+                            relationship.surgeryName ||
+                            `${relationship.firstName} ${relationship.lastName}`}
                         </div>
                         <div className={styles.address}>
-                          {relationship.address}
+                          {relationship.address || relationship.email}
                         </div>
                         <div className={styles.phone}>{relationship.phone}</div>
                       </div>
@@ -590,27 +665,34 @@ export const ClientDetails: FC<ClientDetailsProps> = ({ clientData }) => {
         onCancel={() => setShowAvatarUploader(false)}
       />
 
-      <AddRelationship
-        visible={addRelationship}
-        title={t('ui.add.relationship.title')}
-        onClose={() => setAddRelationship(false)}
-        onOpenAddModal={(type) => handleOpenAddModal(type)}
-      />
+      {addRelationship && (
+        <AddRelationship
+          visible={addRelationship}
+          title={t('ui.add.relationship.title')}
+          onClose={() => setAddRelationship(false)}
+          onOpenAddModal={(type) => handleOpenAddModal(type)}
+        />
+      )}
 
-      <AddContact
-        visible={addContact}
-        contactType={type}
-        appointments={[]}
-        onClose={() => setAddContact(false)}
-        onAddRelationship={handleAddRelationship}
-      />
+      {addContact && (
+        <AddContact
+          visible={addContact}
+          contactType={type}
+          appointments={appointments}
+          onClose={() => setAddContact(false)}
+          onAddRelationship={handleAddRelationship}
+        />
+      )}
 
-      <AddThirdParty
-        visible={addThirdParty}
-        thirdPartyType={type}
-        onClose={() => setAddThirdParty(false)}
-        onAddRelationship={handleAddRelationship}
-      />
+      {addThirdParty && (
+        <AddThirdParty
+          visible={addThirdParty}
+          thirdPartyType={type}
+          onClose={() => setAddThirdParty(false)}
+          onAddRelationship={handleAddRelationship}
+          searchResults={searchResults}
+        />
+      )}
     </div>
   )
 }

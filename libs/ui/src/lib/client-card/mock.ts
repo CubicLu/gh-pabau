@@ -187,6 +187,36 @@ export const conversation = {
   ],
 }
 
+export const thirdPartySearchResults = [
+  {
+    name: 'Deddington Health Centre',
+    postCode: 'OX15 0TQ',
+    city: 'Deddington',
+    street: 'Banbury',
+    country: 'United Kingdom',
+    phone: '+44 (0) 1869338611',
+  },
+  {
+    name: 'Deddington Lorem Health Centre',
+    postCode: 'OX15 4TN',
+    city: 'Deddington',
+    street: 'Banbury',
+    country: 'United Kingdom',
+    phone: '+44 (0) 1869338611',
+  },
+]
+
+export const appointments = [
+  {
+    id: '1',
+    firstName: 'Bruno',
+    lastName: 'Ballardin',
+    avatarUrl: userAvatar,
+    mobile: '383299103',
+    email: 'bruno.barllardin@sample.io',
+  },
+]
+
 export const clientPackages = [
   {
     id: '1',

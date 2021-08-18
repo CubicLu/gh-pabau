@@ -25,6 +25,7 @@ import Filter from '../../components/Product/Filter'
 import { UserContext } from '../../context/UserContext'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './list.module.less'
+import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
 
 const ProductList = (): JSX.Element => {
   const { t } = useTranslationI18()
@@ -290,6 +291,13 @@ const ProductList = (): JSX.Element => {
         </TabMenu>
         {openMenuDrawer && (
           <MobileSidebar
+            userData={{
+              company: user?.me?.company?.id,
+              companyName: user?.me?.company?.details?.company_name,
+              fullName: user?.me?.full_name,
+              user: user?.me?.id,
+              image: getImage(user?.me?.image),
+            }}
             searchRender={() => <SearchGlobal />}
             onSideBarClosed={() => setMenuDrawer(() => !openMenuDrawer)}
             onClickNotificationDrawer={() => setNotificationDrawer((e) => !e)}

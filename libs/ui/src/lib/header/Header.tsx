@@ -31,13 +31,6 @@ interface ProductNews {
   readUsers: number[]
 }
 
-interface UserProps {
-  user: number
-  company: number
-  companyName: string
-  fullName: string
-}
-
 interface P {
   notifications?: Notification[]
   productNews?: ProductNews[]
@@ -46,7 +39,7 @@ interface P {
   updateNotification?: MutationFunction
   readAddMutation?: MutationFunction
   relativeTime?: (lan: string, date: Date) => string
-  user?: UserProps
+  user?: UserDataProps
   searchRender?: (innerComponent: JSX.Element) => JSX.Element
   onMessageIconClick?(): void
   // onCreateChannel?: (

@@ -445,6 +445,7 @@ export const Search: FC<P> = ({
               advancedSearch ? styles.advanceSearchModal : styles.searchInput,
               styles.mobileViewNone
             )}
+            placement="bottom"
           >
             <Input
               className={styles.searchInputStyle}

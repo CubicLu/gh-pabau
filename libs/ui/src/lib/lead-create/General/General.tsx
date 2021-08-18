@@ -83,7 +83,12 @@ export const General: FC<GeneralProps> = ({
               name={'Salutation'}
             >
               {!isSalutationLoading ? (
-                <Select name={'Salutation'}>
+                <Select
+                  name={'Salutation'}
+                  placeholder={t(
+                    'quickCreate.client.modal.general.salutation.placeholder'
+                  )}
+                >
                   {salutationData?.map((item) => (
                     <Select.Option key={item.id} value={item.name}>
                       {item.name}
@@ -203,7 +208,6 @@ export const General: FC<GeneralProps> = ({
               name={'Description'}
             >
               <Input
-                size="large"
                 name={'Description'}
                 placeholder={t(
                   'quickCreate.client.modal.general.description.placeholder'
@@ -233,6 +237,9 @@ export const General: FC<GeneralProps> = ({
                 }}
                 format={'DD/MM/YY'}
                 placeholder={'DD/MM/YY'}
+                getPopupContainer={(trigger) =>
+                  trigger.parentElement as HTMLElement
+                }
               />
             </AntForm.Item>
           )

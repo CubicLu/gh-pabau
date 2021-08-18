@@ -787,6 +787,9 @@ export const CreateProduct = ({
                                   placeholder={t(
                                     'products.list.product.customField.date.placeholder'
                                   )}
+                                  getPopupContainer={(trigger) =>
+                                    trigger.parentElement as HTMLElement
+                                  }
                                 />
                               ) : item.field_type === 'phone' ? (
                                 <PhoneNumberInput
