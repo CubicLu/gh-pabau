@@ -3941,7 +3941,7 @@ model CompanyRoomService {
 model CompanyService {
   id                     Int                               @id @default(autoincrement())
   company_id             Int                               @map("company")
-  service                String
+  name                   String                            @map("service")
   duration               String
   description            String
   price                  Float
@@ -3990,7 +3990,7 @@ model CompanyService {
   @@index([group_id], name: "group_index")
   @@index([pos_only], name: "pos_only")
   @@index([product_id], name: "product_index")
-  @@index([service], name: "service")
+  @@index([name], name: "name")
   @@map("company_services")
 }
 
@@ -10374,72 +10374,72 @@ model RotaShift {
 model Booking {
   id                            Int             @id @default(autoincrement())
   title                         String
-  start_date                    Int?
-  end_date                      Int?
+  start_date                    Decimal
+  end_date                      Decimal
   start_time                    Int?
   end_time                      Int?
   service                       String?
   contact_id                    Int?
   UID                           Int
-  occupier                      Int
+  company_id                    Int             @map("occupier")
   backgroudcolor                String?
   create_date                   Int?
   update_date                   Int?
   status                        String
-  estimated_cost                Float
-  tips                          Float
-  discounts                     Float
-  where                         String
+  estimated_cost                Float?
+  tips                          Float?
+  discounts                     Float?
+  where                         String?
   room_id                       Int?
   unique_id                     String
   reason                        String?
   invoice_id                    Int?
-  booking_id                    Int
+  booking_id                    Int?
   Online                        Int?            @default(0)
-  package_id                    Int
-  cancel_take                   Int
-  book_take                     Int
-  class_master_id               Int
-  unavailable                   Int
-  coupon_claim_id               String
-  related_id                    Int
+  package_id                    Int?
+  cancel_take                   Int?
+  book_take                     Int?
+  class_master_id               Int?
+  unavailable                   Int?
+  coupon_claim_id               String?
+  related_id                    Int?
   service_id                    Int
-  rebook                        Int
-  repeat_id                     Int
-  requested                     Int
-  sent_sms                      Int
-  sent_email                    Int
-  sent_survey                   Int
-  custom_contact_id             Int
+  rebook                        Int?
+  repeat_id                     Int?
+  requested                     Int?
+  sent_sms                      Int?
+  sent_email                    Int?
+  sent_survey                   Int?
+  custom_contact_id             Int?
   custom_contact_name           String?
-  custom_user_id                String
+  custom_user_id                String?
   custom_user_name              String?
-  custom_service_id             String
-  imported                      Int
-  client_confirmed              Int
-  hold_guid                     String
-  created_by_uid                Int
-  marketing_source              Int
-  resource_id                   Int
+  custom_service_id             String?
+  imported                      Int?
+  client_confirmed              Int?
+  hold_guid                     String?
+  created_by_uid                Int?
+  marketing_source              Int?
+  resource_id                   Int?
   custom_room_name              String?
-  custom_created_by_user_name   String
+  custom_created_by_user_name   String?
   location_id                   Int
-  modified_by_uid               Int
-  sent_email_reminder           Boolean         @default(false)
-  disable_locations             Int
-  participant_master_uid        Int             @default(0)
-  participant_master_booking_id Int             @default(0)
-  participant_slave_uids        String
-  participant_slave_booking_ids String
-  private                       Int             @default(0)
-  external_guest_ids            String
-  description                   String
-  issued_to                     Int
-  contract_id                   Int
-  all_day                       Int             @default(0)
-  interlinked_master_uid        Int             @default(0)
-  all_day_start_date            Int             @default(0)
-  all_day_end_date              Int             @default(0)
+  modified_by_uid               Int?
+  sent_email_reminder           Boolean?        @default(false)
+  disable_locations             Int?
+  participant_master_uid        Int?            @default(0)
+  participant_master_booking_id Int?            @default(0)
+  participant_slave_uids        String?
+  participant_slave_booking_ids String?
+  private                       Int?            @default(0)
+  external_guest_ids            String?
+  description                   String?
+  issued_to                     Int?
+  contract_id                   Int?
+  all_day                       Int?            @default(0)
+  interlinked_master_uid        Int?            @default(0)
+  all_day_start_date            Int?            @default(0)
+  all_day_end_date              Int?            @default(0)
   InvSale                       InvSale?        @relation(fields: [invoice_id], references: [id])
   User                          User?           @relation(fields: [UID], references: [id])
   Contact                       CmContact?      @relation(fields: [contact_id], references: [ID])
@@ -10448,15 +10448,15 @@ model Booking {
   booking_location              CompanyBranch?  @relation(fields: [location_id], references: [id])
 
   @@index([UID], name: "UID")
-  @@index([occupier, start_date], name: "company_time")
+  @@index([company_id, start_date], name: "company_time")
   @@index([contact_id], name: "contact_id")
   @@index([create_date], name: "create_date")
   @@index([custom_contact_id], name: "custom_contact_id")
   @@index([end_date], name: "end_date")
   @@index([invoice_id], name: "invoice_id")
   @@index([location_id], name: "location_id")
-  @@index([occupier], name: "occupier")
-  @@index([occupier, unique_id], name: "occupier_uniqueid")
+  @@index([company_id], name: "company_id")
+  @@index([company_id, unique_id], name: "company_id_uniqueid")
   @@index([participant_master_booking_id], name: "participant_master_booking_id")
   @@index([participant_master_uid], name: "participant_master_uid")
   @@index([related_id], name: "related_id")

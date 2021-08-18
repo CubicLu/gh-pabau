@@ -8,7 +8,7 @@ fragment BookingFields on Booking {
   service
   contact_id
   UID
-  occupier
+  company_id
   backgroudcolor
   create_date
   update_date
