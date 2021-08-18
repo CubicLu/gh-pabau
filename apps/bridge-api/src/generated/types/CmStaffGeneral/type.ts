@@ -105,6 +105,20 @@ export const CmStaffGeneral = objectType({
         return root.SalonBookings
       },
     })
+    t.list.field('RotaShift', {
+      type: 'RotaShift',
+      args: {
+        where: 'RotaShiftWhereInput',
+        orderBy: 'RotaShiftOrderByInput',
+        cursor: 'RotaShiftWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'RotaShiftScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.RotaShift
+      },
+    })
     t.list.field('InventoryDiscrepancy', {
       type: 'InventoryDiscrepancy',
       args: {

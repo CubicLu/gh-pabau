@@ -49,6 +49,9 @@ fragment CompanyService on CompanyService {
   Company {
     ...CompanyFields
   }
+  ServiceCategory {
+    ...ServiceCategoryFields
+  }
 }
 
 mutation createOneCompanyService($data: CompanyServiceCreateInput!) {

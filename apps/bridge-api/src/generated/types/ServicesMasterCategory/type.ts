@@ -19,6 +19,20 @@ export const ServicesMasterCategory = objectType({
         return root.Company
       },
     })
+    t.list.field('ServiceCategory', {
+      type: 'ServiceCategory',
+      args: {
+        where: 'ServiceCategoryWhereInput',
+        orderBy: 'ServiceCategoryOrderByInput',
+        cursor: 'ServiceCategoryWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ServiceCategoryScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ServiceCategory
+      },
+    })
     t.list.field('InvCategory', {
       type: 'InvCategory',
       args: {

@@ -70,6 +70,12 @@ export const CompanyService = objectType({
         return root.CompanyRoomService
       },
     })
+    t.field('ServiceCategory', {
+      type: 'ServiceCategory',
+      resolve(root: any) {
+        return root.ServiceCategory
+      },
+    })
     t.nullable.field('_count', {
       type: 'CompanyServiceCountOutputType',
       resolve(root: any) {
