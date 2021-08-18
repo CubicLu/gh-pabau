@@ -10291,8 +10291,8 @@ model ReportCategory {
 model RotaShift {
   id             Int            @id @default(autoincrement())
   uid            Int
-  start          Int
-  end            Int
+  start          Decimal
+  end            Decimal
   company_id     Int            @map("occupier")
   notes          String?
   last_seen      DateTime?

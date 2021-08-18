@@ -1,71 +1,71 @@
-mutation createAppointment(
-  $UID: Int!,
-  $company_id: Int!,
-  $contact_id: Int,
-  $location_id: Int = 0,
-  $service_id: Int = 0,
-  $status: String = "Waiting",
-  $unique_id: String!,
-  $title: String = "",
-  $end_date: Decimal!,
-  $start_date: Decimal!,
-  $sent_sms: Int = 0,
-  $sent_email: Int = 0,
-  $sent_email_reminder: Boolean = false,
-  $sent_survey: Int = 0,
-  $issued_to: Int = 0
-) {
-  createOneBooking(
-    data: {
-      company_id: $company_id,
-      location_id: $location_id,
-      service_id: $service_id,
-      status: $status,
-      unique_id: $unique_id,
-      UID: $UID,
-      contact_id: $contact_id,
-      Online: 1,
-      title: $title,
-      end_date: $end_date,
-      start_date: $start_date,
-      estimated_cost: 0,
-      tips: 1.5,
-      where: "online",
-      sent_sms: $sent_sms,
-      sent_email: $sent_email,
-      sent_email_reminder: $sent_email_reminder,
-      sent_survey: $sent_survey,
-      issued_to: $issued_to
-    }
-  ) {
-    id
-  }
-}
+# mutation createAppointment(
+#   $UID: Int!,
+#   $company_id: Int!,
+#   $contact_id: Int,
+#   $location_id: Int = 0,
+#   $service_id: Int = 0,
+#   $status: String = "Waiting",
+#   $unique_id: String!,
+#   $title: String = "",
+#   $end_date: Decimal!,
+#   $start_date: Decimal!,
+#   $sent_sms: Int = 0,
+#   $sent_email: Int = 0,
+#   $sent_email_reminder: Boolean = false,
+#   $sent_survey: Int = 0,
+#   $issued_to: Int = 0
+# ) {
+#   createOneBooking(
+#     data: {
+#       company_id: $company_id,
+#       location_id: $location_id,
+#       service_id: $service_id,
+#       status: $status,
+#       unique_id: $unique_id,
+#       UID: $UID,
+#       contact_id: $contact_id,
+#       Online: 1,
+#       title: $title,
+#       end_date: $end_date,
+#       start_date: $start_date,
+#       estimated_cost: 0,
+#       tips: 1.5,
+#       where: "online",
+#       sent_sms: $sent_sms,
+#       sent_email: $sent_email,
+#       sent_email_reminder: $sent_email_reminder,
+#       sent_survey: $sent_survey,
+#       issued_to: $issued_to
+#     }
+#   ) {
+#     id
+#   }
+# }
 
-query getBookingsBetweeenDatesByUID(
-  $start_date: Decimal = ""
-  $end_date: Decimal = ""
-  $company_id: Int = 10
-  $user_id: Int = 10
-) {
-  bookings(
-    where: {
-      status: { not: { equals: "Cancelled" } }
-      start_date: { gte: $start_date }
-      end_date: { lte: $end_date }
-      company_id: { equals: $company_id }
-      UID: { equals: $user_id }
-    }
-    orderBy: { start_date: asc }
-  ) {
-    UID
-    company_id
-    contact_id
-    end_date
-    all_day
-    location_id
-    start_date
-    status
-  }
-}
+# query getBookingsBetweeenDatesByUID(
+#   $start_date: Decimal = ""
+#   $end_date: Decimal = ""
+#   $company_id: Int = 10
+#   $user_id: Int = 10
+# ) {
+#   bookings(
+#     where: {
+#       status: { not: { equals: "Cancelled" } }
+#       start_date: { gte: $start_date }
+#       end_date: { lte: $end_date }
+#       company_id: { equals: $company_id }
+#       UID: { equals: $user_id }
+#     }
+#     orderBy: { start_date: asc }
+#   ) {
+#     UID
+#     company_id
+#     contact_id
+#     end_date
+#     all_day
+#     location_id
+#     start_date
+#     status
+#   }
+# }
 
