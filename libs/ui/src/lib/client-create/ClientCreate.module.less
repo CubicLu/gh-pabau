@@ -73,11 +73,23 @@
       }
       .salutation{
          margin-right: 16px;
+        :global {
+          .ant-form-item {
+            .ant-form-item-control {
+              .ant-select-selector {
+                .ant-select-selection-placeholder {
+                  line-height: 40px;
+                }
+              }
+            }
+          }
+        }
       }
       .first-name{
         margin-right: 16px;
       }
       .last-name, .first-name {
+        flex: 1;
         :global {
           .ant-form-item {
             .ant-form-item-label {
@@ -116,12 +128,10 @@
       input {
         border: 1px solid #ecedf0;
         border-radius: 4px;
-        font-size: 16px;
       }
     }
 
     .skeleton-wrapper {
-      margin-bottom: 24px;
       .skeleton-input {
         h3 {
           margin-top: 0;
@@ -143,6 +153,7 @@
     .custom-common {
       :global {
         .ant-form-item-label {
+          padding: 0;
           label {
             font-size: 14px;
             line-height: 24px;
@@ -163,7 +174,7 @@
                     line-height: 40px;
                   }
                   .ant-select-selection-placeholder{
-                    margin-top: 4px;
+                    line-height: 40px;
                   }
                 }
               }
@@ -205,11 +216,20 @@
         .ant-form-item-control {
           .ant-form-item-control-input {
             .ant-form-item-control-input-content {
+              .form-control {
+                &::placeholder {
+                  color: #c1c1c1;
+                  font-size: 14px;
+                }
+              }
               input {
                 height: 40px;
                 border: 1px solid #ecedf0;
                 box-sizing: border-box;
                 border-radius: 4px;
+              }
+              .flag-dropdown {
+                height: 38px;
               }
             }
           }
@@ -282,7 +302,6 @@
                   height: 40px;
                   .ant-select-selection-item {
                     line-height: 40px;
-                    font-size: 16px;
                     color: #b8b8c0;
                   }
                 }
@@ -293,7 +312,6 @@
                   border: none;
                   height: auto;
                   &::placeholder {
-                    font-size: 16px;
                     line-height: 24px;
                     color: #b8b8c0;
                   }
@@ -305,7 +323,6 @@
                 box-sizing: border-box;
                 border-radius: 4px;
                 &::placeholder {
-                  font-size: 16px;
                   line-height: 24px;
                   color: #b8b8c0;
                 }

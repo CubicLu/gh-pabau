@@ -8,8 +8,8 @@ import {
   AddressDetails,
 } from '@pabau/ui'
 import {
-  GetBussinessDetailsQuery,
-  GetBussinessDetailsDocument,
+  GetBusinessDetailsQuery,
+  GetBusinessDetailsDocument,
   useUpdateCompanyDetailsMutation,
   useSetMultipleMetaDataMutation,
   useUpdateOneCompanyDetailsMutation,
@@ -20,7 +20,7 @@ import { cdnURL } from '../../../baseUrl'
 import { message } from 'antd'
 
 interface BusinessDetailsTabProps {
-  data: GetBussinessDetailsQuery
+  data: GetBusinessDetailsQuery
   addrSuiteNo: string
   forcePassword: number
   user: number
@@ -235,7 +235,7 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
         variables: CompanyDetailData,
         refetchQueries: [
           {
-            query: GetBussinessDetailsDocument,
+            query: GetBusinessDetailsDocument,
           },
         ],
       })
@@ -246,7 +246,7 @@ export const BusinessDetailTab: FC<BusinessDetailsTabProps> = ({
         optimisticResponse: {},
         refetchQueries: [
           {
-            query: GetBussinessDetailsDocument,
+            query: GetBusinessDetailsDocument,
           },
         ],
       })

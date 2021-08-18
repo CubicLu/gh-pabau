@@ -9,5 +9,9 @@ COPY [ "package.json", "./" ]
 RUN yarn install
 COPY . .
 
+# Install Prisma here because it's a devDependency, it doesn't get installed.
+RUN yarn add -D prisma@2.29.0
+RUN node_modules/.bin/prisma generate
+
 EXPOSE 4000
 ENTRYPOINT [ "node", "main.js" ]

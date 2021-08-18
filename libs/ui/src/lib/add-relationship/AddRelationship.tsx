@@ -9,10 +9,18 @@ import { ReactComponent as NextOfKin } from '../../assets/images/relationship/ne
 import { ReactComponent as Practioner } from '../../assets/images/relationship/practioner.svg'
 import styles from './AddRelationship.module.less'
 
+export type RelationshipType =
+  | 'family-member'
+  | 'emergency-contact'
+  | 'next-of-kin'
+  | 'practioner'
+  | 'insurance-provider'
+  | 'company'
 export interface Relationship {
-  type: string
+  type: RelationshipType
   company?: string
   address?: string
+  email?: string
   phone?: string
   avatar?: string
   firstName?: string
@@ -24,7 +32,7 @@ export interface AddRelationshipProps {
   title?: string
   visible: boolean
   onClose: () => void
-  onOpenAddModal: (relationshipType: string) => void
+  onOpenAddModal: (relationshipType: RelationshipType) => void
 }
 
 export const AddRelationship: FC<AddRelationshipProps> = ({
@@ -86,7 +94,7 @@ export const AddRelationship: FC<AddRelationshipProps> = ({
             <div
               className={styles.item}
               key={`relationship-contact-${index}`}
-              onClick={() => onOpenAddModal(contact.type)}
+              onClick={() => onOpenAddModal(contact.type as RelationshipType)}
             >
               {contact.logo}
               {contact.title}
@@ -101,7 +109,9 @@ export const AddRelationship: FC<AddRelationshipProps> = ({
             <div
               className={styles.item}
               key={`relationship-third-party-${index}`}
-              onClick={() => onOpenAddModal(thirdParty.type)}
+              onClick={() =>
+                onOpenAddModal(thirdParty.type as RelationshipType)
+              }
             >
               {thirdParty.logo}
               {thirdParty.title}

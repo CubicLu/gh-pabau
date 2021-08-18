@@ -20,7 +20,7 @@ esbuild.build({
   bundle: true,
   format: "cjs",
   platform: "node",
-  outfile: "dist/asdf/codegen.cjs",
+  outfile: "dist/asdf/bridge-api-nexus.cjs",
   sourcemap: true,
   plugins: [nodeExternalsPlugin()],
 })

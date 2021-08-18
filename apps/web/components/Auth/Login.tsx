@@ -3,11 +3,10 @@ import { EyeInvisibleOutlined } from '@ant-design/icons'
 import { Formik } from 'formik'
 import { Checkbox, Form, Input, SubmitButton } from 'formik-antd'
 import { LoginValidation } from '@pabau/yup'
-// import { ReactComponent as GoogleIcon } from '../../assets/images/google.svg'
-// import { ReactComponent as SSOIcon } from '../../assets/images/sso.svg'
 import styles from '../../pages/login.module.less'
-import { QueryLazyOptions } from '@apollo/client'
 import Link from 'next/link'
+import { useLoginMutation } from '@pabau/graphql'
+import jwt from 'jsonwebtoken'
 
 export interface LoginFormProps {
   email: string
@@ -15,33 +14,44 @@ export interface LoginFormProps {
   remember?: boolean
 }
 
-interface LoginProps {
+interface P {
   handlePageShow: React.Dispatch<React.SetStateAction<string>>
-  verifyCredentials: (
-    options: QueryLazyOptions<{ username: string; password: string }>
-  ) => void
 }
 
-const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
+const LoginMain: FC<P> = ({ handlePageShow }) => {
+  const [login] = useLoginMutation({
+    onCompleted(data) {
+      localStorage.setItem('token', data.login)
+      /*
+      In an ideal scenario where we don't have Pabau1
+      we would do router.reload(), until then it is what it is:)
+       */
+      const pab1JWT = jwt.decode(data.login) as any
+      window.location.href =
+        'https://crm.pabau.com/auth.php?t=' +
+        pab1JWT.pab1 +
+        '&r=' +
+        encodeURIComponent(window.location.origin)
+    },
+  })
   const loginHandler = async (loginProps: LoginFormProps) => {
     if (localStorage?.getItem('token')) {
       localStorage.removeItem('token')
     }
     const { email, password } = loginProps
-    await verifyCredentials({
+    login({
       variables: {
         username: email,
         password: password,
       },
     })
-    console.log('finished verifyCredentials')
   }
 
   return (
     <div>
       <div className={styles.signInForm}>
         <div className={styles.formHead}>
-          <h6>Log In!!</h6>
+          <h6>Log In!</h6>
           <span>
             Do not have an account?{' '}
             <Link href="/signup">Start a free trial</Link>

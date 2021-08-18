@@ -1,11 +1,6 @@
 import { BellOutlined, MailOutlined } from '@ant-design/icons'
 import { MutationFunction } from '@apollo/client'
-import {
-  Dropdown as AvatarDropDown,
-  Logo,
-  NotificationDrawer,
-  QuickCreate,
-} from '@pabau/ui'
+import { Dropdown, Logo, NotificationDrawer, QuickCreate } from '@pabau/ui'
 import { Badge, Col, Layout, Row } from 'antd'
 import classNames from 'classnames'
 import React, { useState, useEffect } from 'react'
@@ -36,13 +31,6 @@ interface ProductNews {
   readUsers: number[]
 }
 
-interface UserProps {
-  user: number
-  company: number
-  companyName: string
-  fullName: string
-}
-
 interface P {
   notifications?: Notification[]
   productNews?: ProductNews[]
@@ -51,7 +39,7 @@ interface P {
   updateNotification?: MutationFunction
   readAddMutation?: MutationFunction
   relativeTime?: (lan: string, date: Date) => string
-  user?: UserProps
+  user?: UserDataProps
   searchRender?: (innerComponent: JSX.Element) => JSX.Element
   onMessageIconClick?(): void
   // onCreateChannel?: (
@@ -166,7 +154,7 @@ export const Header = ({
                     leadCreateRender={leadCreateRender}
                   />
                 </div>
-                <AvatarDropDown
+                <Dropdown
                   taskManagerIFrameComponent={taskManagerIFrameComponent}
                   userData={user}
                 />

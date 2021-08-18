@@ -4,6 +4,7 @@ export interface JwtCmStaffGeneral {
 export interface JwtCompanyDetails {
   admin: number
   enable_2fa: number
+  language: string
 }
 export interface JwtCompany {
   details?: JwtCompanyDetails
@@ -16,6 +17,7 @@ export interface JwtUser {
   username: string
   company_id: number
   admin: number
+  locale: string
   company: JwtCompany
   CmStaffGeneral?: JwtCmStaffGeneral
 }

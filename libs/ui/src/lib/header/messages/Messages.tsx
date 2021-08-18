@@ -1,7 +1,8 @@
 import React, { useState, MouseEvent, useEffect } from 'react'
 import { Input, Drawer } from 'antd'
 import styles from './Messages.module.less'
-import { EditOutlined, SearchOutlined } from '@ant-design/icons'
+import { CloseOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons'
+import { ReactComponent as CloseIcon } from '../../../assets/images/close-icon.svg'
 import {
   BasicModal,
   Switch,
@@ -165,7 +166,7 @@ export const PabauMessages = ({
       onClose={() => onClose?.()}
       className={styles.messagesDrawer}
     >
-      <div className={styles.messageBox}>
+      <div className={styles.messageBox} style={!view ? { width: '100%' } : {}}>
         <div
           className={
             showGlobalSearch
@@ -187,6 +188,13 @@ export const PabauMessages = ({
                   )}
                 />
               }
+              suffix={
+                <CloseIcon
+                  onClick={() => {
+                    setGlobalSearch(() => false)
+                  }}
+                />
+              }
               onChange={(e) => onHandleGlobalSearch(e.target.value)}
               onBlur={() => globalSearch()}
             />
@@ -205,13 +213,23 @@ export const PabauMessages = ({
                   )}
                 />
                 <SearchOutlined
+                  onClick={globalSearch}
                   className={classNames(
                     styles.grayTextColor,
                     styles.pr5,
                     styles.chatIconStyle
                   )}
-                  onClick={globalSearch}
                 />
+                {!view && (
+                  <CloseOutlined
+                    onClick={closeDrawer}
+                    className={classNames(
+                      styles.grayTextColor,
+                      styles.pr5,
+                      styles.chatIconStyle
+                    )}
+                  />
+                )}
               </div>
             </div>
           )}

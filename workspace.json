@@ -56,9 +56,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/web/**/*.{ts,tsx,js,jsx}"
-            ],
+            "lintFilePatterns": ["apps/web/**/*.{ts,tsx,js,jsx}"],
             "maxWarnings": 0
           }
         },
@@ -117,9 +115,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/web-e2e/**/*.{js,ts}"
-            ]
+            "lintFilePatterns": ["apps/web-e2e/**/*.{js,ts}"]
           }
         },
         "tsc": {
@@ -148,9 +144,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "libs/graphql/**/*.{ts,tsx,js,jsx}"
-            ],
+            "lintFilePatterns": ["libs/graphql/**/*.{ts,tsx,js,jsx}"],
             "maxWarnings": 0
           }
         },
@@ -180,9 +174,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "libs/ui/**/*.{ts,tsx,js,jsx}"
-            ],
+            "lintFilePatterns": ["libs/ui/**/*.{ts,tsx,js,jsx}"],
             "maxWarnings": 0
           }
         },
@@ -272,9 +264,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/ui-e2e/**/*.{js,ts}"
-            ]
+            "lintFilePatterns": ["apps/ui-e2e/**/*.{js,ts}"]
           }
         },
         "tsc": {
@@ -303,16 +293,14 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "libs/yup/**/*.[tj]s"
-            ]
+            "lintFilePatterns": ["libs/yup/**/*.[tj]s"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/yup/jest.config.js",
-            "passWithNoTests": true,
+            "passWithNoTests": false,
             "runInBand": true
           }
         },
@@ -341,16 +329,12 @@
       "architect": {
         "export": {
           "builder": "@nrwl/node:build",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "outputs": ["{options.outputPath}"],
           "options": {
             "outputPath": "dist/apps/backend",
             "main": "apps/backend/src/main.ts",
             "tsConfig": "apps/backend/tsconfig.app.json",
-            "assets": [
-              "apps/backend/src/assets"
-            ],
+            "assets": ["apps/backend/src/assets"],
             "maxWorkers": 2,
             "generatePackageJson": true
           },
@@ -377,9 +361,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/backend/**/*.[tj]s"
-            ]
+            "lintFilePatterns": ["apps/backend/**/*.[tj]s"]
           }
         },
         "test": {
@@ -455,9 +437,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/mgmt/**/*.{ts,tsx,js,jsx}"
-            ]
+            "lintFilePatterns": ["apps/mgmt/**/*.{ts,tsx,js,jsx}"]
           }
         },
         "test": {
@@ -516,9 +496,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/mgmt-e2e/**/*.{js,ts}"
-            ]
+            "lintFilePatterns": ["apps/mgmt-e2e/**/*.{js,ts}"]
           }
         },
         "tsc": {
@@ -576,9 +554,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/connect/**/*.{ts,tsx,js,jsx}"
-            ]
+            "lintFilePatterns": ["apps/connect/**/*.{ts,tsx,js,jsx}"]
           }
         },
         "test": {
@@ -637,9 +613,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/connect-e2e/**/*.{js,ts}"
-            ]
+            "lintFilePatterns": ["apps/connect-e2e/**/*.{js,ts}"]
           }
         },
         "tsc": {
@@ -667,9 +641,7 @@
       "architect": {
         "export": {
           "builder": "@nrwl/node:build",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "outputs": ["{options.outputPath}"],
           "options": {
             "outputPath": "dist/apps/bridge-api",
             "main": "apps/bridge-api/src/main.ts",
@@ -677,7 +649,11 @@
             "assets": [
               "apps/bridge-api/src/assets",
               "apps/bridge-api/src/prisma",
-              "apps/bridge-api/cicd/healthcheck.sh"
+              {
+                "glob": "healthcheck.sh",
+                "input": "apps/bridge-api/cicd",
+                "output": "/"
+              }
             ],
             "maxWorkers": 1,
             "generatePackageJson": true
@@ -711,17 +687,13 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/bridge-api/**/*.ts"
-            ],
+            "lintFilePatterns": ["apps/bridge-api/**/*.ts"],
             "maxWarnings": 0
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/bridge-api"
-          ],
+          "outputs": ["coverage/apps/bridge-api"],
           "options": {
             "jestConfig": "apps/bridge-api/jest.config.js",
             "runInBand": true
@@ -729,12 +701,10 @@
         },
         "e2e": {
           "builder": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/bridge-api-e2e"
-          ],
+          "outputs": ["coverage/apps/bridge-api-e2e"],
           "options": {
             "jestConfig": "apps/bridge-api/jest.e2e.config.js",
-            "runInBand": true
+            "runInBand": false
           }
         },
         "deploy-docker": {
@@ -772,16 +742,12 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "libs/i18n/**/*.[tj]s"
-            ]
+            "lintFilePatterns": ["libs/i18n/**/*.[tj]s"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/i18n"
-          ],
+          "outputs": ["coverage/libs/i18n"],
           "options": {
             "jestConfig": "libs/i18n/jest.config.js",
             "passWithNoTests": true,
@@ -824,16 +790,12 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/bridge-proxy/**/*.[tj]s"
-            ]
+            "lintFilePatterns": ["apps/bridge-proxy/**/*.[tj]s"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/bridge-proxy"
-          ],
+          "outputs": ["coverage/apps/bridge-proxy"],
           "options": {
             "jestConfig": "apps/bridge-proxy/jest.config.js",
             "passWithNoTests": true,
@@ -860,16 +822,12 @@
       "architect": {
         "build": {
           "builder": "@nrwl/node:build",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "outputs": ["{options.outputPath}"],
           "options": {
             "outputPath": "dist/apps/storage",
             "main": "apps/storage/src/main.ts",
             "tsConfig": "apps/storage/tsconfig.app.json",
-            "assets": [
-              "apps/storage/src/assets"
-            ]
+            "assets": ["apps/storage/src/assets"]
           },
           "configurations": {
             "production": {
@@ -894,16 +852,12 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/storage/**/*.ts"
-            ]
+            "lintFilePatterns": ["apps/storage/**/*.ts"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/storage"
-          ],
+          "outputs": ["coverage/apps/storage"],
           "options": {
             "jestConfig": "apps/storage/jest.config.js",
             "passWithNoTests": true

@@ -1,5 +1,5 @@
 import { LeftOutlined } from '@ant-design/icons'
-import { useGetBussinessDetailsQuery } from '@pabau/graphql'
+import { useGetBusinessDetailsQuery } from '@pabau/graphql'
 import {
   Breadcrumb,
   BusinessDetailsNotifications,
@@ -106,7 +106,7 @@ export const Index: FC = () => {
   const parentMenu = getParentSetupData(router.pathname)
   const user = useContext(UserContext)
 
-  const { data, loading } = useGetBussinessDetailsQuery()
+  const { data, loading } = useGetBusinessDetailsQuery()
 
   const handleBack = () => {
     if (parentMenu.length > 0) {

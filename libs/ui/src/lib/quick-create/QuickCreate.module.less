@@ -13,6 +13,18 @@
   box-shadow: none !important;
   padding: 6px 11px !important;
   text-transform: none !important;
+
+  @media screen and (max-width: 767px) {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px !important;
+    span:first-child {
+      color: var(--primary-color) !important;
+      font-size: 14px;
+    }
+  }
 }
 
 .quick-create-content-conatiner {
