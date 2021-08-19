@@ -1,56 +1,56 @@
 query GetInvoiceData($guid: String, $saleId: Int!) {
-    data: getInvoiceData(guid: $guid, saleId: $saleId) {
-      details{
-        issue_to
-        invoice_id
-        issue_by
-        date
-      }
-      items {
-        key
-        after_disc
-        category
-        date
-        description
-        disc_amount
-        disc_per
-        net
-        practitioner
-        product
-        quantity
-        sku
-        total
-        unitprice
-        vat
-        vat_per
-      }
-      payments {
-        key
-        insurer
-        payment_date
-        payment_method
-        payment_amount
-      }
-      payment_details {
-        key
-        total_vat
-        amount_paid
-        sub_total_amount
-        outstanding
-        grand_total
-        refund_amount
-        paid
-        total_net
-        payment_time
-        total
-        card
-        cash
-      }
+  data: getInvoiceData(guid: $guid, saleId: $saleId) {
+    details {
+      issue_to
+      invoice_id
+      issue_by
+      date
+    }
+    items {
+      key
+      after_disc
+      category
+      date
+      description
+      disc_amount
+      disc_per
+      net
+      practitioner
+      product
+      quantity
+      sku
+      total
+      unitprice
+      vat
+      vat_per
+    }
+    payments {
+      key
+      insurer
+      payment_date
+      payment_method
+      payment_amount
+    }
+    payment_details {
+      key
+      total_vat
+      amount_paid
+      sub_total_amount
+      outstanding
+      grand_total
+      refund_amount
+      paid
+      total_net
+      payment_time
+      total
+      card
+      cash
     }
   }
+}
 
-query getInvoiceTemplate{
-  company: findFirstCompanyDetails{
+query getInvoiceTemplate {
+  company: findFirstCompanyDetails {
     website
     info_email
     phone
@@ -58,9 +58,9 @@ query getInvoiceTemplate{
     city
     country
     post_code
-    InvoiceDefaultTemplate{
+    InvoiceDefaultTemplate {
       id
-       name
+      name
       description
       date_created
       payment_information

@@ -1,9 +1,9 @@
-query GetBookingById($id: Int){
-  findManyBooking(where: {id: {equals: $id}}){
+query GetBookingById($id: Int) {
+  findManyBooking(where: { id: { equals: $id } }) {
     id
     status
     location_id
-    practitioner {
+    CmStaffGeneral {
       Fname
       Lname
       Avatar
@@ -11,7 +11,7 @@ query GetBookingById($id: Int){
     service
     start_date
     end_date
-    booking_location {
+    CompanyBranch {
       address
       street
       postcode

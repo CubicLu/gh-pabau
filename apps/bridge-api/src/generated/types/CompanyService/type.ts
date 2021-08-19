@@ -9,7 +9,7 @@ export const CompanyService = objectType({
   definition(t) {
     t.int('id')
     t.int('company_id')
-    t.string('service')
+    t.string('name')
     t.string('duration')
     t.string('description')
     t.float('price')
