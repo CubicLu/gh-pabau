@@ -2,7 +2,25 @@ version: '3.6'
 services:
   postgres:
     image: postgres:12
+    restart: always
     environment:
       POSTGRES_PASSWORD: postgrespassword
+  graphql-engine:
+    image: hasura/graphql-engine:v2.0.7.cli-migrations-v3
     ports:
-      - "5432:5432"
+      - "8080:8080"
+    depends_on:
+      - postgres
+    restart: always
+    env_file: .env.development
+    extra_hosts:
+      - 'host.docker.internal:172.17.0.1'
+    volumes:
+      - ./migrations/:/hasura-migrations/:ro
+      - ./metadata/:/hasura-metadata/:ro
+      - ./seeds/:/hasura-seeds/:ro
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: "public" # only use this role so the whole unauthenticated world can query
