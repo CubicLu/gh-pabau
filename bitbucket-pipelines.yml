@@ -57,6 +57,21 @@ pipelines:
                 - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
 
           - step:
+              name: integration
+              script:
+                - |
+                  echo "Testing Hasura database..."
+                  docker-compose -f tools/pabau1/docker-compose.yml up -d && wait-on -t 60000 tcp:127.0.0.1:3307
+                  yarn nx serve bridge-api &
+                  yarn wait-on -t 160000 http-get://localhost:4000
+                  docker-compose -f hasura/docker-compose.yml -f hasura/docker-compose.ci.yml up -d postgres && wait-on -t 60000 tcp:127.0.0.1:5432
+                  docker-compose -f hasura/docker-compose.yml -f hasura/docker-compose.ci.yml up -d && wait-on -t 60000 http-get://localhost:8080/console
+                  yarn hasura:cli metadata inconsistency status
+                  yarn hasura:export
+                  git diff --exit-code --no-ext-diff -p
+
+      - parallel:
+          - step:
               name: lint
               script:
                 #                - while true; do ps -aux && sleep 30; done &
