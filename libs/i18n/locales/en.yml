@@ -2350,6 +2350,8 @@ en:
   ui.medicalform.setting.component.vaccinescheduler.description: 'Schedule a vaccine to be administered'
   ui.medicalform.setting.component.vaccinehistory.title: 'Vaccine history'
   ui.medicalform.setting.component.vaccinehistory.description: 'Display vaccine history info'
+  ui.medicalform.setting.component.snomed.title: 'Code Lookup'
+  ui.medicalform.setting.component.snomed.description: 'Lookup a SNOMED ct code'
   ui.medicalform.setting.component.custom.emailmarketing.title: 'Accepts email marketing'
   ui.medicalform.setting.component.custom.emailmarketing.description: 'Clients can opt in to marketing'
   ui.medicalform.setting.component.custom.smsmarketing.title: 'Accepts SMS/Text marketing'

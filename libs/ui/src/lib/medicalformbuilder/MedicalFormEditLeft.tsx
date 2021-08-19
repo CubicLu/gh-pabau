@@ -70,11 +70,9 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
     setIsEpaper(setting.epaper)
     changeLayout?.(!setting.epaper)
     if (isSelectedFormType(setting) && setting.epaper === false) {
-      console.log('111')
       setOpenPanel(['2'])
       setComponentClass(styles.medicalFormEditLeftPanelCollapseComponentExpend)
     } else {
-      console.log('222')
       setOpenPanel(['1'])
       setComponentClass(
         styles.medicalFormEditLeftPanelCollapseComponentCollapse
@@ -104,7 +102,6 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
   }, [openPanel])
 
   useEffect(() => {
-    console.log('medicalFormType =', medicalFormType)
     const setting = {
       medicalHistory: false,
       consent: false,
@@ -135,15 +132,12 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
           break
       }
     }
-    console.log('setting =', setting)
     setSelectedFormTypes(setting)
     setIsEpaper(setting.epaper)
     if (medicalFormType !== '' && setting.epaper === false) {
-      console.log('333')
       setOpenPanel(['2'])
       setComponentClass(styles.medicalFormEditLeftPanelCollapseComponentExpend)
     } else {
-      console.log('444')
       setOpenPanel(['1'])
       setComponentClass(
         styles.medicalFormEditLeftPanelCollapseComponentCollapse

@@ -185,6 +185,15 @@ LeftSidebarBasicVaccineHistory.args = {
   component: 'basic_vaccinehistory',
 }
 
+const LeftSidebarBasicSnomedStory = ({ type, component, ...rest }) => (
+  <LeftSidebarElement type={type} component={component} {...rest} />
+)
+export const LeftSidebarBasicSnomed = LeftSidebarBasicSnomedStory.bind({})
+LeftSidebarBasicSnomed.args = {
+  type: 'basic',
+  component: 'basic_snomed',
+}
+
 const LeftSidebarCustomEmailMarketingStory = ({ type, component, ...rest }) => (
   <LeftSidebarElement type={type} component={component} {...rest} />
 )
@@ -748,6 +757,31 @@ export const InnerBasicVaccineHistory = InnerBasicVaccineHistoryStory.bind({})
 InnerBasicVaccineHistory.args = {
   type: 'basic',
   component: 'basic_vaccinehistory',
+}
+
+const InnerBasicSnomedStory = ({
+  required,
+  activate,
+  type,
+  component,
+  handleId,
+  formData,
+  ...rest
+}) => (
+  <InnerElement
+    required={required}
+    activate={activate}
+    type={type}
+    component={component}
+    handleId={handleId}
+    formData={formData}
+    {...rest}
+  />
+)
+export const InnerBasicSnomed = InnerBasicSnomedStory.bind({})
+InnerBasicSnomed.args = {
+  type: 'basic',
+  component: 'basic_snomed',
 }
 
 const InnerCustomEmailMarketingStory = ({
@@ -1379,6 +1413,25 @@ export const SettingBasicVaccineHistory = SettingBasicVaccineHistoryStory.bind(
 SettingBasicVaccineHistory.args = {
   type: 'basic',
   component: 'basic_vaccinehistory',
+}
+
+const SettingBasicSnomedStory = ({
+  type,
+  component,
+  selectedForm,
+  ...rest
+}) => (
+  <SettingElement
+    type={type}
+    component={component}
+    selectedForm={selectedForm}
+    {...rest}
+  />
+)
+export const SettingBasicSnomed = SettingBasicSnomedStory.bind({})
+SettingBasicSnomed.args = {
+  type: 'basic',
+  component: 'basic_snomed',
 }
 
 const SettingCustomEmailMarketingStory = ({

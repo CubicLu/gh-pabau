@@ -13,6 +13,7 @@ import dobIcon from '../../assets/images/medicalform_dob.svg'
 import drawingIcon from '../../assets/images/medicalform_drawing.svg'
 import dropdownIcon from '../../assets/images/medicalform_dropdown.svg'
 import drugsIcon from '../../assets/images/medicalform_drugs.svg'
+import snomedIcon from '../../assets/images/medicalform_drugs.svg'
 import headingIcon from '../../assets/images/medicalform_heading.svg'
 import labTestIcon from '../../assets/images/medicalform_labtest.svg'
 import longAnswerIcon from '../../assets/images/medicalform_longanswer.svg'
@@ -196,7 +197,14 @@ const SettingElement: FC<P> = ({
       title: t('ui.medicalform.setting.component.vaccinehistory.title'),
       desc: t('ui.medicalform.setting.component.vaccinehistory.description'),
     },
-
+    {
+      component: 'basic_snomed',
+      type: { type },
+      iconUrl: snomedIcon,
+      bgcolor: '#FAAD14',
+      title: t('ui.medicalform.setting.component.snomed.title'),
+      desc: t('ui.medicalform.setting.component.snomed.description'),
+    },
     {
       component: 'custom_emailmarketing',
       type: { type },
@@ -417,6 +425,7 @@ const SettingElement: FC<P> = ({
               filteredComponent[0].component === 'basic_traveldestination' ||
               filteredComponent[0].component === 'basic_vaccinescheduler' ||
               filteredComponent[0].component === 'basic_vaccinehistory' ||
+              filteredComponent[0].component === 'basic_snomed' ||
               filteredComponent[0].component === 'custom_emailmarketing' ||
               filteredComponent[0].component === 'custom_smsmarketing' ||
               filteredComponent[0].component === 'custom_phonecall' ||

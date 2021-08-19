@@ -21,6 +21,7 @@ import singleChoiceIcon from '../../assets/images/medicalform_singlechoice.svg'
 import textBlockIcon from '../../assets/images/medicalform_textblock.svg'
 import travelDesctinationIcon from '../../assets/images/medicalform_traveldestination.svg'
 import vaccineHistoryIcon from '../../assets/images/medicalform_vaccinehistory.svg'
+import snomedIcon from '../../assets/images/medicalform_drugs.svg'
 import vaccineSchedulerIcon from '../../assets/images/medicalform_vaccinescheduler.svg'
 import styles from './LeftSidebar.module.less'
 import LeftSidebarMedicalFormTitle from './LeftSidebarMedicalFormTitle'
@@ -174,7 +175,14 @@ export const LeftSidebarElement: FC<P> = ({
       title: t('ui.medicalform.setting.component.vaccinehistory.title'),
       desc: t('ui.medicalform.setting.component.vaccinehistory.description'),
     },
-
+    {
+      component: 'basic_snomed',
+      type: { type },
+      iconUrl: snomedIcon,
+      bgcolor: '#FAAD14',
+      title: t('ui.medicalform.setting.component.snomed.title'),
+      desc: t('ui.medicalform.setting.component.snomed.description'),
+    },
     {
       component: 'custom_emailmarketing',
       type: { type },

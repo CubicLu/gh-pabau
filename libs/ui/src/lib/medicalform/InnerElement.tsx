@@ -12,6 +12,7 @@ import dobIcon from '../../assets/images/medicalform_dob.svg'
 import drawingIcon from '../../assets/images/medicalform_drawing.svg'
 import dropdownIcon from '../../assets/images/medicalform_dropdown.svg'
 import drugsIcon from '../../assets/images/medicalform_drugs.svg'
+import snomedIcon from '../../assets/images/medicalform_drugs.svg'
 import headingIcon from '../../assets/images/medicalform_heading.svg'
 import innerDrawingIcon from '../../assets/images/medicalform_innerdrawing.svg'
 import labTestIcon from '../../assets/images/medicalform_labtest.svg'
@@ -175,7 +176,13 @@ export const InnerElement: FC<P> = ({
       bgcolor: '#FAAD14',
       title: 'Vaccine history',
     },
-
+    {
+      component: 'basic_snomed',
+      type: { type },
+      iconUrl: snomedIcon,
+      bgcolor: '#FAAD14',
+      title: 'Code Lookup',
+    },
     {
       component: 'custom_emailmarketing',
       type: { type },
