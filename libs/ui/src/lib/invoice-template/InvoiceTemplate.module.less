@@ -1,5 +1,5 @@
 .invoice-template {
-  min-width: 682px;
+  min-width: 910px;
   :global .ant-modal-content {
     .ant-modal-body {
       padding: 0 !important;
@@ -68,7 +68,6 @@
     width: 100%;
     padding: 16px 0;
     .table-data{
-      overflow: auto;
       width: 100%;
     }
     .section1 {
@@ -142,7 +141,7 @@
           }
           .inner1 {
             display: flex;
-            align-items: flex-end;
+            align-items: flex-start;
             justify-content: flex-start;
             flex-direction: column;
             .header-text {
@@ -376,10 +375,12 @@
         justify-content: flex-start;
         width: 100%;
         margin-bottom: 12px;
+        flex-wrap: wrap;
         .inner {
           display: flex;
+          flex: 1 33.33%;
           flex-direction: column;
-          width: 33.33%;
+          margin-bottom: 10px;
           align-items: flex-start;
           justify-content: flex-start;
           .head-text {
@@ -454,12 +455,12 @@
     margin-top: 5px;
   }
   .table-skeleton{
-    width: 635px;
+    width: 100%;
     height: 120px;
     margin-top: 15px;
   }
   .payment-skeleton{
-    width: 635px;
+    width: 100%;
     height: 120px;
     margin-top: 15px;
   }
