@@ -26,6 +26,9 @@ fragment InvCategory on InvCategory {
   MasterCategory {
     ...ServicesMasterCategoryFields
   }
+  ServiceCategory {
+    ...ServiceCategoryFields
+  }
   Tax {
     ...TaxFields
   }

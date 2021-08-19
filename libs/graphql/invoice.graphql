@@ -4,6 +4,7 @@ query GetInvoiceData($guid: String, $saleId: Int!) {
         issue_to
         invoice_id
         issue_by
+        date
       }
       items {
         key

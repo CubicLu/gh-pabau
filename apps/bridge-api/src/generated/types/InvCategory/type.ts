@@ -50,6 +50,12 @@ export const InvCategory = objectType({
         return root.MasterCategory
       },
     })
+    t.nullable.field('ServiceCategory', {
+      type: 'ServiceCategory',
+      resolve(root: any) {
+        return root.ServiceCategory
+      },
+    })
     t.nullable.field('Tax', {
       type: 'Tax',
       resolve(root: any) {

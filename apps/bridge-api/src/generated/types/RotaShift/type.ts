@@ -9,12 +9,6 @@ export const RotaShift = objectType({
   definition(t) {
     t.int('id')
     t.int('uid')
-    t.field('User', {
-      type: 'User',
-      resolve(root: any) {
-        return root.User
-      },
-    })
     t.int('start')
     t.int('end')
     t.int('company_id')
@@ -61,6 +55,12 @@ export const RotaShift = objectType({
       type: 'HolidayRequest',
       resolve(root: any) {
         return root.HolidayRequest
+      },
+    })
+    t.field('CmStaffGeneral', {
+      type: 'CmStaffGeneral',
+      resolve(root: any) {
+        return root.CmStaffGeneral
       },
     })
   },
