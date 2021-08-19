@@ -20,7 +20,8 @@ pipelines:
           name: yarn audit
           size: 2x
           caches:
-            - node
+            - nodemodules
+            - yarncustom
           script:
             #            - while true; do ps -aux && sleep 30; done &
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 16 ]] && exit 0 || exit 1'
@@ -58,9 +59,13 @@ pipelines:
 
           - step:
               name: integration
+              services:
+                - docker
               script:
                 - |
                   echo "Testing Hasura database..."
+                  docker-compose -f tools/pabau1/docker-compose.yml up -d || echo "1 failed"
+                  docker compose -f tools/pabau1/docker-compose.yml up -d || echo "2 failed"
                   docker-compose -f tools/pabau1/docker-compose.yml up -d && wait-on -t 60000 tcp:127.0.0.1:3307
                   yarn nx serve bridge-api &
                   yarn wait-on -t 160000 http-get://localhost:4000
