@@ -8,6 +8,7 @@ export const InvoiceSkeleton: FC = () => {
       visible={true}
       footer={null}
       centered={true}
+      width={800}
       className={styles.invoiceTemplate}
     >
       <div className={styles.mainLayout}>
@@ -363,8 +364,6 @@ export const InvoiceSkeleton: FC = () => {
                   />
                 </span>
               </div>
-            </div>
-            <div className={styles.section4Inner}>
               <div className={styles.inner}>
                 <span className={styles.headText}>
                   <Skeleton.Input
@@ -397,8 +396,6 @@ export const InvoiceSkeleton: FC = () => {
                   />
                 </span>
               </div>
-            </div>
-            <div className={styles.section4Inner}>
               <div className={styles.inner}>
                 <span className={styles.headText}>
                   <Skeleton.Input
@@ -431,8 +428,6 @@ export const InvoiceSkeleton: FC = () => {
                   />
                 </span>
               </div>
-            </div>
-            <div className={styles.section4Inner}>
               <div className={styles.inner}>
                 <span className={styles.headText}>
                   <Skeleton.Input
