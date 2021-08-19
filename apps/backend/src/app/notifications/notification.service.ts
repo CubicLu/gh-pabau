@@ -55,8 +55,11 @@ export class NotificationServices {
       },
       operationName: 'insert_notifications_one',
     }
+    const headers = {
+      'x-hasura-admin-secret': process.env.HASURA_GRAPHQL_ADMIN_SECRET,
+    }
     const response = await this.httpService
-      .post(this.GRAPHQL_ENDPOINT, data)
+      .post(this.GRAPHQL_ENDPOINT, data, { headers })
       .toPromise()
 
     const notificationId = response.data?.data?.insert_notifications_one?.id
@@ -72,9 +75,12 @@ export class NotificationServices {
       variables: null,
       operationName: 'findUserEnabledNotification',
     }
+    const headers = {
+      'x-hasura-admin-secret': process.env.HASURA_GRAPHQL_ADMIN_SECRET,
+    }
 
     const response = await this.httpService
-      .post(this.GRAPHQL_ENDPOINT, data)
+      .post(this.GRAPHQL_ENDPOINT, data, { headers })
       .toPromise()
     const users = response.data?.data?.notification_toggle?.map(
       (notification) => notification.user
