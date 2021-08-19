@@ -87,10 +87,11 @@ export function Index() {
     data: companySettingsResult,
   } = useGetCompanyBySlugQuery({
     variables: {
-      slug: companySlug,
+      slug: 'nenad-clinic',
     },
   })
 
+  console.log('CRS', companySettingsResult)
   const company = companySettingsResult?.findFirstCompany
 
   const {
@@ -127,7 +128,7 @@ export function Index() {
   if (!companySettingsResult === null) {
     return <div>Invalid Company</div>
   }
-  const masterCategories = servicesCategorised.serviceMasterCategories.map(
+  const masterCategories = servicesCategorised.findManyServicesMasterCategory.map(
     (row) => {
       return {
         id: row.id,
@@ -325,9 +326,9 @@ export function Index() {
           )}
           {currentStep === 2 && (
             <LocationSelector
-              items={locationsResult.companyBranches}
+              items={locationsResult.findManyCompanyBranch}
               onLocationSelected={(locationID) => {
-                const location = locationsResult.companyBranches.find(
+                const location = locationsResult.findManyCompanyBranch.find(
                   (loc) => loc.id === locationID
                 )
                 setSelectedData({
@@ -371,7 +372,7 @@ export function Index() {
                 changescreen={function () {
                   createBooking({
                     variables: {
-                      UID: selectedData.employeeID,
+                      user_id: selectedData.employeeID,
                       company_id: company.id,
                       location_id: selectedData.locationID,
                       service_id: 2691491,

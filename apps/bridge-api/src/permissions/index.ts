@@ -233,6 +233,8 @@ export const permissions = shield(
       findManyServicesMasterCategory: allow,
       findManyCmStaffGeneral: allow,
       findManyCompanyBranch: allow,
+      findFirstCompany: allow,
+      findManyRotaShift: allow,
       '*': and(
         rules.authentication.isAuthenticated,
         rules.interceptors.interceptAccessToCompanyData

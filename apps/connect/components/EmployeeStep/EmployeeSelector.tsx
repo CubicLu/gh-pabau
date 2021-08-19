@@ -29,7 +29,7 @@ const EmployeeSelector: FC<P> = ({ onEmployeeSelected }) => {
   return (
     <div className={Styles.mainBox}>
       <h4>{t('connect.onlinebooking.employes.title')}</h4>
-      {staffResult.cmStaffGenerals.map((val) => (
+      {staffResult.findManyCmStaffGeneral.map((val) => (
         <div
           key={val.User.id}
           onClick={() => onEmployeeSelected(val.User.id, val.ID)}

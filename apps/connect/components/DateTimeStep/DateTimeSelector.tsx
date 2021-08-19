@@ -68,7 +68,7 @@ const DateTimeSelector: FC<P> = ({
   if (loadingShifts || loadingBookings) return <div>Loading...</div>
 
   const shiftsByDate = []
-  for (const shift of shiftsResult.rotaShifts) {
+  for (const shift of shiftsResult.findManyRotaShift) {
     if (staffID === 0 || staffID === shift.uid) {
       const index = shift.start.toString().substring(0, 8)
       if (!shiftsByDate[index]) {
@@ -154,7 +154,7 @@ const DateTimeSelector: FC<P> = ({
     }
 
     const takenTimeslots = []
-    for (const b of bookingsResult.bookings.filter(
+    for (const b of bookingsResult.findManyBooking.filter(
       (b) =>
         b.start_date.toString().substr(0, 8) === shiftStart.format('YYYYMMDD')
     )) {
