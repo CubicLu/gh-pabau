@@ -1,9 +1,19 @@
-query GetClientAppointments($take: Int, $skip: Int, $orderBy: SortOrder, $contactId: Int) {
-  findManyBooking(take: $take, skip: $skip, orderBy: {id: $orderBy}, where: {contact_id: {equals: $contactId}}) {
+query GetClientAppointments(
+  $take: Int
+  $skip: Int
+  $orderBy: SortOrder
+  $contactId: Int
+) {
+  findManyBooking(
+    take: $take
+    skip: $skip
+    orderBy: { id: $orderBy }
+    where: { contact_id: { equals: $contactId } }
+  ) {
     id
     status
     location_id
-    practitioner {
+    CmStaffGeneral {
       Fname
       Lname
       Avatar
@@ -11,7 +21,7 @@ query GetClientAppointments($take: Int, $skip: Int, $orderBy: SortOrder, $contac
     service
     start_date
     end_date
-    booking_location {
+    CompanyBranch {
       address
       street
       postcode
@@ -19,7 +29,7 @@ query GetClientAppointments($take: Int, $skip: Int, $orderBy: SortOrder, $contac
     }
     where
   }
-  totalCount:findManyBooking(where:{contact_id:{equals: $contactId}}){
+  totalCount: findManyBooking(where: { contact_id: { equals: $contactId } }) {
     id
   }
 }
