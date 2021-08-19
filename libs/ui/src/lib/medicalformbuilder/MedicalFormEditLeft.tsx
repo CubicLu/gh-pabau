@@ -11,7 +11,6 @@ import MedicalFormComponentMedicalHistory from './MedicalFormComponentMedicalHis
 import MedicalFormComponentPanel from './MedicalFormComponentPanel'
 import MedicalFormGeneralPanel from './MedicalFormGeneralPanel'
 import MedicalFormUploadButtons from './MedicalFormUploadButtons'
-import { cloneDeep } from 'lodash'
 
 const { Panel } = Collapse
 
