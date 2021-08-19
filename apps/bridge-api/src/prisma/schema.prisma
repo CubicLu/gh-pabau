@@ -10443,9 +10443,9 @@ model Booking {
   InvSale                       InvSale?        @relation(fields: [invoice_id], references: [id])
   User                          User?           @relation(fields: [UID], references: [id])
   Contact                       CmContact?      @relation(fields: [contact_id], references: [ID])
-  connect_client                UserMaster?     @relation(fields: [contact_id], references: [contact_id])
-  practitioner                  CmStaffGeneral? @relation(fields: [UID], references: [pabau_id])
-  booking_location              CompanyBranch?  @relation(fields: [location_id], references: [id])
+  UserMaster                    UserMaster?     @relation(fields: [contact_id], references: [contact_id])
+  CmStaffGeneral                CmStaffGeneral? @relation(fields: [UID], references: [pabau_id])
+  CompanyBranch                 CompanyBranch?  @relation(fields: [location_id], references: [id])
 
   @@index([UID], name: "UID")
   @@index([company_id, start_date], name: "company_time")

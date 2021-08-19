@@ -49,7 +49,7 @@ describe('InvoiceTemplate', () => {
             subTotalAmount: 2520,
             outstanding: 2520,
             grandTotal: 2500,
-            paymentTime: '29 May 2021, 1:09PM',
+            paymentTime: new Date(),
             total: 15,
             card: 5,
             cash: 10,

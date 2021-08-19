@@ -80,13 +80,13 @@ fragment Booking on Booking {
   Contact {
     ...CmContactFields
   }
-  connect_client {
+  UserMaster {
     ...UserMasterFields
   }
-  practitioner {
+  CmStaffGeneral {
     ...CmStaffGeneralFields
   }
-  booking_location {
+  CompanyBranch {
     ...CompanyBranchFields
   }
 }
