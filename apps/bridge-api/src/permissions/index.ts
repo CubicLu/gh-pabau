@@ -111,6 +111,9 @@ export const permissions = shield(
 
       ConnectGetJWTClient: allow,
 
+      // TEMP
+      createOneBooking: allow,
+
       // Default fallback
       '*': and(
         rules.authentication.isAuthenticated,
@@ -225,6 +228,11 @@ export const permissions = shield(
       getStatementData: rules.authentication.isAuthenticated,
       //TODO once jest mocks are resolved move it to rules.authentication.isAuthenticated
       featureRequestsWeeklyAvg: allow,
+
+      //TEMP
+      findManyServicesMasterCategory: allow,
+      findManyCmStaffGeneral: allow,
+      findManyCompanyBranch: allow,
       '*': and(
         rules.authentication.isAuthenticated,
         rules.interceptors.interceptAccessToCompanyData
