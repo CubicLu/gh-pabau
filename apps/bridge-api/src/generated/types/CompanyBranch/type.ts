@@ -35,6 +35,7 @@ export const CompanyBranch = objectType({
     t.string('color')
     t.boolean('notify_on_lead')
     t.nullable.string('notice')
+    t.nullable.string('image')
     t.field('Company', {
       type: 'Company',
       resolve(root: any) {
@@ -171,6 +172,20 @@ export const CompanyBranch = objectType({
       },
       resolve(root: any) {
         return root.CompanyBranchAttachment
+      },
+    })
+    t.list.field('SalonBookings', {
+      type: 'Booking',
+      args: {
+        where: 'BookingWhereInput',
+        orderBy: 'BookingOrderByInput',
+        cursor: 'BookingWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'BookingScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.SalonBookings
       },
     })
     t.list.field('InventoryMovement', {

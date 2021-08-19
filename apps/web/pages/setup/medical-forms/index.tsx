@@ -563,6 +563,7 @@ export const Index: FC = () => {
                 visible={showCreateForm}
                 previewData=""
                 preFormName=""
+                preFormType=""
                 onHideFormBuilder={() => setShowCreateForm(false)}
                 onSaveForm={saveForm}
                 create={true}

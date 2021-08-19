@@ -63,6 +63,7 @@ interface MedicalFormBuilderProps {
   onHideFormBuilder: () => void
   onSaveForm?: (MedicalFormItem) => void
   preFormName: string
+  preFormType: string
   create?: boolean
   currentForm?: MedicalFormItem
   smsMessageTemplateItems?: SmsMessageTemplateItem[]
@@ -76,6 +77,7 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
   onHideFormBuilder,
   onSaveForm,
   preFormName = '',
+  preFormType = '',
   create = true,
   currentForm = null,
   smsMessageTemplateItems = [],
@@ -84,6 +86,7 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
 }) => {
   const { t } = useTranslation('common')
   const [formName, setFormName] = useState(preFormName)
+  const [medicalFormType, setMedicalFormType] = useState(preFormType)
   const [formSaveLabel, setFormSaveLabel] = useState('')
   const [
     currentMedicalForm,
@@ -102,7 +105,6 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
   )
   const [draggedFormCnts, setDraggedFormCnts] = useState(0)
   const [draggedForms, setDraggedForms] = useState<MedicalFormTypes[]>([])
-
   const [disabledButton, setDisabledButton] = useState(true)
 
   useEffect(() => {
@@ -110,7 +112,13 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
   }, [preFormName])
 
   useEffect(() => {
-    if (currentForm) setCurrentMedicalForm(currentForm)
+    setMedicalFormType(preFormType)
+  }, [preFormType])
+
+  useEffect(() => {
+    if (currentForm) {
+      setCurrentMedicalForm(currentForm)
+    }
   }, [currentForm])
 
   useEffect(() => {
@@ -266,6 +274,7 @@ export const MedicalFormBuilder: FC<MedicalFormBuilderProps> = ({
             currentRules={
               create ? defaultMedicalForm?.rules : currentMedicalForm?.rules
             }
+            medicalFormType={medicalFormType}
           />
           {visiblePreview === true && (
             <MedicalFormPreview

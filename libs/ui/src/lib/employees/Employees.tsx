@@ -49,7 +49,9 @@ export const Employees: FC<EmployeesProps> = ({
     onSelected?.(items.filter((item) => item.selected === true))
   }
   const handleSelectEmployeeBasedOnId = (employee) => {
-    const items: Employee[] = [...employeeItems]
+    const items: Employee[] = multiple
+      ? [...employeeItems]
+      : employees.map((item) => ({ ...item, selected: false }))
     for (const item of items) {
       if (item.id === employee.id) item.selected = !item.selected
     }

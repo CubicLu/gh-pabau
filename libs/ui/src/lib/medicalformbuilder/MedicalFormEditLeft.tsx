@@ -21,6 +21,7 @@ interface P {
   changeFormName: (formName: string) => void
   changeFormType: (formType: string) => void
   formName: string
+  medicalFormType: string
   changeLayout: (noRight: boolean) => void
   runPreviewPdf: () => void
   handlingClickLeft: (componentName: string) => void
@@ -35,10 +36,12 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
     changeFormName,
     changeFormType,
     formName,
+    medicalFormType = '',
     changeLayout,
     runPreviewPdf,
     handlingClickLeft,
   } = props
+
   const [selectedFormTypes, setSelectedFormTypes] = useState<SelectedForms>(
     defaultSelectedFormInfos
   )
@@ -98,6 +101,43 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
       setComponentClass(styles.medicalFormEditLeftPanelCollapseComponentExpend)
   }, [openPanel])
 
+  useEffect(() => {
+    const setting = defaultSelectedFormInfos
+    if (medicalFormType !== '') {
+      switch (medicalFormType) {
+        case 'questionnaire':
+          setting.medicalHistory = true
+          break
+        case 'consent':
+          setting.consent = true
+          break
+        case 'treatment':
+          setting.treatment = true
+          break
+        case 'prescription':
+          setting.prescription = true
+          break
+        case 'lab':
+          setting.lab = true
+          break
+        case 'epaper':
+          setting.epaper = true
+          break
+      }
+    }
+    setSelectedFormTypes(setting)
+    setIsEpaper(setting.epaper)
+    if (medicalFormType !== '' && setting.epaper === false) {
+      setOpenPanel(['2'])
+      setComponentClass(styles.medicalFormEditLeftPanelCollapseComponentExpend)
+    } else {
+      setOpenPanel(['1'])
+      setComponentClass(
+        styles.medicalFormEditLeftPanelCollapseComponentCollapse
+      )
+    }
+  }, [medicalFormType])
+
   return (
     <div className={styles.medicalFormEditLeftPanel}>
       <Collapse
@@ -116,6 +156,7 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
             onSelectFormType={onSelectFormType}
             changeFormName={changeFormName}
             formName={formName}
+            medicalFormType={medicalFormType}
           />
           {isEpaper && <MedicalFormUploadButtons onPreviewPdf={onPreviewPdf} />}
         </Panel>

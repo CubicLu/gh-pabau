@@ -5,7 +5,7 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
 } from '@ant-design/icons'
-import { Button } from '@pabau/ui'
+import { Button } from '../../index'
 import styles from './Menu.module.less'
 import classNames from 'classnames'
 import Link from 'next/link'
@@ -131,7 +131,12 @@ export const Menu: FC<P> = ({ onSideBarCollapsed, active }) => {
             </SubMenu>
           )
         })}
-        <AntMenu.Item disabled className={styles.setupMenuItem} key="setup">
+        <AntMenu.Item
+          disabled
+          className={styles.setupMenuItem}
+          style={{ height: 'fit-content' }}
+          key="setup"
+        >
           <Tooltip title={collapsed ? t('sidebar.setup') : ''} placement="left">
             <div
               className={styles.sidebarBtnAlign}

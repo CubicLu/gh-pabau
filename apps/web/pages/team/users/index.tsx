@@ -29,7 +29,7 @@ import {
   ListView,
 } from '../../../components/team/Users'
 import { UserContext } from '../../../context/UserContext'
-import { getImage } from '../../../helper/cdn/imageUrl'
+import { getImage } from '../../../components/Uploaders/UploadHelpers/UploadHelpers'
 import styles from './index.module.less'
 
 export interface userDataProps extends UserProps {
@@ -369,7 +369,7 @@ const Index: FunctionComponent = () => {
                               isPending(user.staff_id)
                             }
                             owner={user.main_contact}
-                            img={getImage(user.image)}
+                            img={user.image && getImage(user.image)}
                             admin={user.admin}
                             isLoading={loading}
                             isSick={user.sickness === 1}

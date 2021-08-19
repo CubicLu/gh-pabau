@@ -1,5 +1,5 @@
-query GetInvoiceData($guid: String, $saleId: Int) {
-    getInvoiceData(guid: $guid, saleId: $saleId) {
+query GetInvoiceData($guid: String, $saleId: Int!) {
+    data: getInvoiceData(guid: $guid, saleId: $saleId) {
       details{
         issue_to
         invoice_id
@@ -50,6 +50,13 @@ query GetInvoiceData($guid: String, $saleId: Int) {
 
 query getInvoiceTemplate{
   company: findFirstCompanyDetails{
+    website
+    info_email
+    phone
+    street
+    city
+    country
+    post_code
     InvoiceDefaultTemplate{
       id
        name
@@ -58,15 +65,6 @@ query getInvoiceTemplate{
       payment_information
       appearance
       activity
-      CompanyDetails{
-        website
-        info_email
-        phone
-        street
-        city
-        country
-        post_code
-      }
     }
   }
 }

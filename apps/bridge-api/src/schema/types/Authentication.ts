@@ -63,6 +63,17 @@ export const Authentication = extendType({
                 key: 'name',
                 value: user?.full_name,
               },
+              {
+                key: 'url',
+                value:
+                  typeof window !== 'undefined'
+                    ? `${window?.location?.origin}/`
+                    : '',
+              },
+              {
+                key: 'userEmail',
+                value: user?.username,
+              },
             ],
           })
         }
@@ -140,14 +151,30 @@ export const Me = extendType({
               email: loginInput.username,
             },
           })
-          .then((res) => {
+          .then(async (res) => {
             if (res.username === null) {
               throw new Error('Invalid User')
             }
-            return new AuthenticationService(ctx).encryptDecryptText(
-              'encryption',
-              res.username
-            )
+            const token = await new AuthenticationService(
+              ctx
+            ).encryptDecryptText('encryption', res.username)
+            if (token) {
+              await ctx.prisma.passwordResetAuth.upsert({
+                where: { username: loginInput?.username },
+                create: {
+                  username: loginInput?.username,
+                  key_code: token,
+                  date: new Date().toISOString(),
+                  old_password: res.password,
+                },
+                update: {
+                  username: { set: loginInput?.username },
+                  key_code: { set: token },
+                  date: { set: new Date().toISOString() },
+                },
+              })
+              return token
+            }
           })
       },
     })

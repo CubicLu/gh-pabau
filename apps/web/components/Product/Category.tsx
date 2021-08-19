@@ -280,7 +280,10 @@ const CategoryList = ({
               },
             }))
           }}
-          onClose={() => changeModalState(false)}
+          onClose={() => {
+            changeModalState(false)
+            setRecord(null)
+          }}
           onCreate={async (category) => {
             const categoryData = {
               code: category?.code,

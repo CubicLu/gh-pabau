@@ -58,6 +58,7 @@ export const CreateCompanyBranchInputType = {
   sendConfEmil: nonNull(intArg()),
   onlineBooking: nonNull(intArg()),
   customId: nonNull(stringArg()),
+  image: nonNull(stringArg()),
   employees: list(EmployeeType),
   badges: list(BadgeType),
 }
@@ -82,6 +83,7 @@ export const UpdateCompanyBranchInputType = {
   lat: nonNull(floatArg()),
   sendConfEmil: nonNull(intArg()),
   onlineBooking: nonNull(intArg()),
+  image: nonNull(stringArg()),
   employees: list(EmployeeType),
   badges: list(BadgeType),
 }

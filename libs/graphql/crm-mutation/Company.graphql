@@ -19,6 +19,9 @@ fragment Company on Company {
   subscription {
     ...CompanySubscriptionFields
   }
+  owner {
+    ...UserFields
+  }
 }
 
 mutation updateOneCompany($where: CompanyWhereUniqueInput!, $data: CompanyUpdateInput!) {

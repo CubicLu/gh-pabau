@@ -8,6 +8,27 @@
     justify-content: flex-end;
   }
 
+  .chart-container {
+    > div {
+      @media (max-width: 767px) {
+        width: fit-content;
+      }
+    }
+
+    .chart-loader {
+      width: 100%;
+
+      span {
+        height: 440px;
+        margin-top: 40px;
+
+        @media (max-width: 767px) {
+          margin-top: 0px;
+        }
+      }
+    }
+  }
+
   .team-report-chart {
     margin-top: 40px;
     font-family: Circular-Std-Book, -apple-system, sans-serif;
@@ -37,6 +58,58 @@
 
       &.target::before {
         border-top-style: dashed;
+      }
+    }
+
+    .table-loader {
+      width: 100%;
+      padding: 24px;
+
+      :global .ant-space-item {
+        width: 100%;
+      }
+
+      :global .ant-skeleton.ant-skeleton-element.ant-skeleton-active {
+        width: 100% !important;
+      }
+    }
+  }
+
+  @media (max-width: 767px) {
+    padding: 0px;
+
+    .team-report-chart {
+      margin-top: 0px;
+    }
+
+    .team-report-table {
+      th,
+      td {
+        padding: 8px 16px;
+      }
+    }
+
+    .mini-chart-list {
+      width: 100%;
+
+      .mini-chart-item {
+        width: 100%;
+
+        .mini-chart-title {
+          font-weight: 500;
+          font-size: 16px;
+          line-height: 20px;
+          color: #3d3d46;
+          margin-bottom: 8px;
+        }
+
+        :global .ant-space-item {
+          width: 100%;
+        }
+
+        :global .ant-skeleton.ant-skeleton-element.ant-skeleton-active {
+          width: 100% !important;
+        }
       }
     }
   }

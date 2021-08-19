@@ -3,7 +3,7 @@ import { Formik } from 'formik'
 import { Form, Input, SubmitButton } from 'formik-antd'
 import React, { FC } from 'react'
 import * as Yup from 'yup'
-import styles from './Common.module.less'
+import styles from '../../pages/signup.module.less'
 
 export interface StepOneFormProps {
   firstName: string

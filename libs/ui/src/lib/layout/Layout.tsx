@@ -1,5 +1,5 @@
 import { MutationFunction } from '@apollo/client'
-import { Footer, Header, Menu } from '@pabau/ui'
+import { Footer, Header, Menu, UserDataProps } from '@pabau/ui'
 import { Card, Layout as AntLayout } from 'antd'
 import classNames from 'classnames'
 import React, { FC, useState } from 'react'
@@ -20,19 +20,25 @@ interface Notification {
   link: string
 }
 
-interface UserProps {
-  user: number
-  company: number
-  companyName: string
-  fullName: string
+interface ProductNews {
+  id: string
+  img: string
+  link: string
+  title: string
+  description: string
+  time: Date | string
+  readUsers: number[]
 }
+
 export interface LayoutProps {
   deleteNotification?: MutationFunction
   updateNotification?: MutationFunction
+  readNewsMutation?: MutationFunction
   readAddMutation?: MutationFunction
   relativeTime?: (lan: string, date: Date) => string
   notifications?: Notification[]
-  user?: UserProps
+  productNews?: ProductNews[]
+  user?: UserDataProps
   pageTitle?: string
   newButtonText?: string
   onNewClicked?: string | (() => void)
@@ -46,6 +52,9 @@ export interface LayoutProps {
   taskManagerIFrameComponent?: JSX.Element
   allowed?: boolean
   requireAdminAccess?: boolean
+  clientCreateRender?: () => JSX.Element
+  leadCreateRender?: () => JSX.Element
+  handleSearch?: (searchTerm: string) => void
 }
 
 export const Layout: FC<LayoutProps> = ({
@@ -61,12 +70,16 @@ export const Layout: FC<LayoutProps> = ({
   active,
   legacyContent = false,
   notifications,
+  productNews,
   relativeTime,
   deleteNotification,
   updateNotification,
   readAddMutation,
+  readNewsMutation,
   user,
   taskManagerIFrameComponent,
+  clientCreateRender,
+  leadCreateRender,
   ...rest
 }) => {
   const [collapsed, setCollapsed] = useState(true)
@@ -78,14 +91,18 @@ export const Layout: FC<LayoutProps> = ({
           user={user}
           deleteNotification={deleteNotification}
           updateNotification={updateNotification}
+          readNewsMutation={readNewsMutation}
           readAddMutation={readAddMutation}
           searchRender={searchRender}
           onMessageIconClick={onMessageIconClick}
           // onCreateChannel={onCreateChannel}
           // onMessageType={onMessageType}
           notifications={notifications}
+          productNews={productNews}
           relativeTime={relativeTime}
           taskManagerIFrameComponent={taskManagerIFrameComponent}
+          clientCreateRender={clientCreateRender}
+          leadCreateRender={leadCreateRender}
           {...rest}
         />
         <AntLayout className={styles.headerMargin}>

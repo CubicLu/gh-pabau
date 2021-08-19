@@ -56,7 +56,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/web/**/*.{ts,tsx,js,jsx}"],
+            "lintFilePatterns": [
+              "apps/web/**/*.{ts,tsx,js,jsx}"
+            ],
             "maxWarnings": 0
           }
         },
@@ -81,7 +83,12 @@
           "builder": "@nrwl/workspace:run-commands",
           "outputs": [],
           "options": {
-            "command": "tsc -p apps/web && tsc -p apps/web/tsconfig.spec.json"
+            "commands": [
+              {
+                "command": "tsc -p apps/web && tsc -p apps/web/tsconfig.spec.json",
+                "forwardAllArgs": false
+              }
+            ]
           },
           "configurations": {
             "production": {}
@@ -110,14 +117,21 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/web-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "apps/web-e2e/**/*.{js,ts}"
+            ]
           }
         },
         "tsc": {
           "builder": "@nrwl/workspace:run-commands",
           "outputs": [],
           "options": {
-            "command": "tsc -p apps/web-e2e && tsc -p apps/web-e2e/tsconfig.e2e.json"
+            "commands": [
+              {
+                "command": "tsc -p apps/web-e2e && tsc -p apps/web-e2e/tsconfig.e2e.json",
+                "forwardAllArgs": false
+              }
+            ]
           },
           "configurations": {
             "production": {}
@@ -134,7 +148,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/graphql/**/*.{ts,tsx,js,jsx}"],
+            "lintFilePatterns": [
+              "libs/graphql/**/*.{ts,tsx,js,jsx}"
+            ],
             "maxWarnings": 0
           }
         },
@@ -142,7 +158,12 @@
           "builder": "@nrwl/workspace:run-commands",
           "outputs": [],
           "options": {
-            "command": "tsc -p libs/graphql/tsconfig.lib.json && tsc -p libs/graphql/tsconfig.spec.json"
+            "commands": [
+              {
+                "command": "tsc -p libs/graphql/tsconfig.lib.json && tsc -p libs/graphql/tsconfig.spec.json",
+                "forwardAllArgs": false
+              }
+            ]
           },
           "configurations": {
             "production": {}
@@ -159,7 +180,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/ui/**/*.{ts,tsx,js,jsx}"],
+            "lintFilePatterns": [
+              "libs/ui/**/*.{ts,tsx,js,jsx}"
+            ],
             "maxWarnings": 0
           }
         },
@@ -215,7 +238,12 @@
           "builder": "@nrwl/workspace:run-commands",
           "outputs": [],
           "options": {
-            "command": "tsc -p libs/ui/tsconfig.lib.json && tsc -p libs/ui/tsconfig.spec.json"
+            "commands": [
+              {
+                "command": "tsc -p libs/ui/tsconfig.lib.json && tsc -p libs/ui/tsconfig.spec.json",
+                "forwardAllArgs": false
+              }
+            ]
           },
           "configurations": {
             "production": {}
@@ -244,14 +272,21 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/ui-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "apps/ui-e2e/**/*.{js,ts}"
+            ]
           }
         },
         "tsc": {
           "builder": "@nrwl/workspace:run-commands",
           "outputs": [],
           "options": {
-            "command": "tsc -p apps/ui-e2e && tsc -p apps/ui-e2e/tsconfig.e2e.json"
+            "commands": [
+              {
+                "command": "tsc -p apps/ui-e2e && tsc -p apps/ui-e2e/tsconfig.e2e.json",
+                "forwardAllArgs": false
+              }
+            ]
           },
           "configurations": {
             "production": {}
@@ -268,7 +303,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/yup/**/*.[tj]s"]
+            "lintFilePatterns": [
+              "libs/yup/**/*.[tj]s"
+            ]
           }
         },
         "test": {
@@ -283,7 +320,12 @@
           "builder": "@nrwl/workspace:run-commands",
           "outputs": [],
           "options": {
-            "command": "tsc -p libs/yup/tsconfig.lib.json && tsc -p libs/yup/tsconfig.spec.json"
+            "commands": [
+              {
+                "command": "tsc -p libs/yup/tsconfig.lib.json && tsc -p libs/yup/tsconfig.spec.json",
+                "forwardAllArgs": false
+              }
+            ]
           },
           "configurations": {
             "production": {}
@@ -299,13 +341,18 @@
       "architect": {
         "export": {
           "builder": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/backend",
             "main": "apps/backend/src/main.ts",
             "tsConfig": "apps/backend/tsconfig.app.json",
-            "assets": ["apps/backend/src/assets"],
-            "maxWorkers": 1
+            "assets": [
+              "apps/backend/src/assets"
+            ],
+            "maxWorkers": 2,
+            "generatePackageJson": true
           },
           "configurations": {
             "production": {
@@ -330,7 +377,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/backend/**/*.[tj]s"]
+            "lintFilePatterns": [
+              "apps/backend/**/*.[tj]s"
+            ]
           }
         },
         "test": {
@@ -355,7 +404,12 @@
           "builder": "@nrwl/workspace:run-commands",
           "outputs": [],
           "options": {
-            "command": "tsc -p apps/backend && tsc -p apps/backend/tsconfig.spec.json"
+            "commands": [
+              {
+                "command": "tsc -p apps/backend && tsc -p apps/backend/tsconfig.spec.json",
+                "forwardAllArgs": false
+              }
+            ]
           },
           "configurations": {
             "production": {}
@@ -401,7 +455,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/mgmt/**/*.{ts,tsx,js,jsx}"]
+            "lintFilePatterns": [
+              "apps/mgmt/**/*.{ts,tsx,js,jsx}"
+            ]
           }
         },
         "test": {
@@ -426,7 +482,12 @@
           "builder": "@nrwl/workspace:run-commands",
           "outputs": [],
           "options": {
-            "command": "tsc -p apps/mgmt && tsc -p apps/mgmt/tsconfig.spec.json"
+            "commands": [
+              {
+                "command": "tsc -p apps/mgmt && tsc -p apps/mgmt/tsconfig.spec.json",
+                "forwardAllArgs": false
+              }
+            ]
           },
           "configurations": {
             "production": {}
@@ -455,14 +516,21 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/mgmt-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "apps/mgmt-e2e/**/*.{js,ts}"
+            ]
           }
         },
         "tsc": {
           "builder": "@nrwl/workspace:run-commands",
           "outputs": [],
           "options": {
-            "command": "tsc -p apps/mgmt-e2e && tsc -p apps/mgmt-e2e/tsconfig.e2e.json"
+            "commands": [
+              {
+                "command": "tsc -p apps/mgmt-e2e && tsc -p apps/mgmt-e2e/tsconfig.e2e.json",
+                "forwardAllArgs": false
+              }
+            ]
           },
           "configurations": {
             "production": {}
@@ -508,7 +576,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/connect/**/*.{ts,tsx,js,jsx}"]
+            "lintFilePatterns": [
+              "apps/connect/**/*.{ts,tsx,js,jsx}"
+            ]
           }
         },
         "test": {
@@ -533,7 +603,12 @@
           "builder": "@nrwl/workspace:run-commands",
           "outputs": [],
           "options": {
-            "command": "tsc -p apps/connect && tsc -p apps/connect/tsconfig.spec.json"
+            "commands": [
+              {
+                "command": "tsc -p apps/connect && tsc -p apps/connect/tsconfig.spec.json",
+                "forwardAllArgs": false
+              }
+            ]
           },
           "configurations": {
             "production": {}
@@ -562,14 +637,21 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/connect-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "apps/connect-e2e/**/*.{js,ts}"
+            ]
           }
         },
         "tsc": {
           "builder": "@nrwl/workspace:run-commands",
           "outputs": [],
           "options": {
-            "command": "tsc -p apps/connect-e2e && tsc -p apps/connect-e2e/tsconfig.e2e.json"
+            "commands": [
+              {
+                "command": "tsc -p apps/connect-e2e && tsc -p apps/connect-e2e/tsconfig.e2e.json",
+                "forwardAllArgs": false
+              }
+            ]
           },
           "configurations": {
             "production": {}
@@ -585,19 +667,28 @@
       "architect": {
         "export": {
           "builder": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/bridge-api",
             "main": "apps/bridge-api/src/main.ts",
             "tsConfig": "apps/bridge-api/tsconfig.app.json",
             "assets": [
               "apps/bridge-api/src/assets",
-              "apps/bridge-api/src/prisma"
+              "apps/bridge-api/src/prisma",
+              {
+                "glob": "healthcheck.sh",
+                "input": "apps/bridge-api/cicd",
+                "output": "/"
+              }
             ],
-            "maxWorkers": 1
+            "maxWorkers": 1,
+            "generatePackageJson": true
           },
           "configurations": {
             "production": {
+              "maxWorkers": 4,
               "optimization": true,
               "extractLicenses": true,
               "inspect": false,
@@ -624,13 +715,17 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/bridge-api/**/*.ts"],
+            "lintFilePatterns": [
+              "apps/bridge-api/**/*.ts"
+            ],
             "maxWarnings": 0
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/bridge-api"],
+          "outputs": [
+            "coverage/apps/bridge-api"
+          ],
           "options": {
             "jestConfig": "apps/bridge-api/jest.config.js",
             "runInBand": true
@@ -638,7 +733,9 @@
         },
         "e2e": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/bridge-api-e2e"],
+          "outputs": [
+            "coverage/apps/bridge-api-e2e"
+          ],
           "options": {
             "jestConfig": "apps/bridge-api/jest.e2e.config.js",
             "runInBand": true
@@ -658,7 +755,12 @@
           "builder": "@nrwl/workspace:run-commands",
           "outputs": [],
           "options": {
-            "command": "tsc -p apps/bridge-api/tsconfig.app.json && tsc -p apps/bridge-api/tsconfig.spec.json"
+            "commands": [
+              {
+                "command": "tsc -p apps/bridge-api/tsconfig.app.json && tsc -p apps/bridge-api/tsconfig.spec.json",
+                "forwardAllArgs": false
+              }
+            ]
           },
           "configurations": {
             "production": {}
@@ -674,12 +776,16 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/i18n/**/*.[tj]s"]
+            "lintFilePatterns": [
+              "libs/i18n/**/*.[tj]s"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/i18n"],
+          "outputs": [
+            "coverage/libs/i18n"
+          ],
           "options": {
             "jestConfig": "libs/i18n/jest.config.js",
             "passWithNoTests": true,
@@ -690,7 +796,12 @@
           "builder": "@nrwl/workspace:run-commands",
           "outputs": [],
           "options": {
-            "command": "tsc -p libs/i18n/tsconfig.lib.json && tsc -p libs/i18n/tsconfig.spec.json"
+            "commands": [
+              {
+                "command": "tsc -p libs/i18n/tsconfig.lib.json && tsc -p libs/i18n/tsconfig.spec.json",
+                "forwardAllArgs": false
+              }
+            ]
           },
           "configurations": {
             "production": {}
@@ -717,12 +828,16 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/bridge-proxy/**/*.[tj]s"]
+            "lintFilePatterns": [
+              "apps/bridge-proxy/**/*.[tj]s"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/bridge-proxy"],
+          "outputs": [
+            "coverage/apps/bridge-proxy"
+          ],
           "options": {
             "jestConfig": "apps/bridge-proxy/jest.config.js",
             "passWithNoTests": true,
@@ -737,6 +852,65 @@
           },
           "configurations": {
             "production": {}
+          }
+        }
+      }
+    },
+    "storage": {
+      "root": "apps/storage",
+      "sourceRoot": "apps/storage/src",
+      "projectType": "application",
+      "prefix": "storage",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/storage",
+            "main": "apps/storage/src/main.ts",
+            "tsConfig": "apps/storage/tsconfig.app.json",
+            "assets": [
+              "apps/storage/src/assets"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/storage/src/environments/environment.ts",
+                  "with": "apps/storage/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "storage:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/storage/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/storage"
+          ],
+          "options": {
+            "jestConfig": "apps/storage/jest.config.js",
+            "passWithNoTests": true
           }
         }
       }

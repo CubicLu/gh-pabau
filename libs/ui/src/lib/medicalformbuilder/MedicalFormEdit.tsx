@@ -108,7 +108,6 @@ const copy = (source, destination, droppableSourceId, endIndex, formInfo) => {
 }
 
 const reverseForm = (form) => {
-  console.log('reverseForm =', form)
   const mappingInfo = previewMapping.filter(
     (item) => Object.values(item)[0] === form.formName
   )
@@ -301,6 +300,7 @@ interface P {
   onSaveForm: (formdata: string) => void
   triggerChangeForms: (forms: MedicalFormTypes[]) => void
   formName: string
+  medicalFormType: string
   currentRules?: RuleProp[]
   currentAdvSettings?: MedicaFormAdvanceSettingData
 }
@@ -316,6 +316,7 @@ const MedicalFormEdit: FC<P> = ({
   onSaveForm,
   triggerChangeForms,
   formName,
+  medicalFormType = '',
   currentRules = [],
   currentAdvSettings = defaultMedicaFormAdvanceSettingData,
 }) => {
@@ -814,6 +815,7 @@ const MedicalFormEdit: FC<P> = ({
             changeFormName={changeFormName}
             changeFormType={changeFormType}
             formName={formName}
+            medicalFormType={medicalFormType}
             changeLayout={changeLayout}
             runPreviewPdf={runPreviewPdf}
             handlingClickLeft={handlingClickLeft}

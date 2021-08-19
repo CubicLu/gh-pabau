@@ -42,12 +42,15 @@ export default class AuthenticationService {
 
   public constructor(private ctx: Context) {}
 
-  //TODO Refactor once company select screen is defined
-  public async handleLoginRequest(input: LoginInputDto): Promise<string> {
-    const users: AuthenticatedUser[] = await this.ctx.prisma.user.findMany({
+  private async queryUser(
+    prisma: Context['prisma'],
+    username: string,
+    password: string
+  ) {
+    const users = await prisma.user.findMany({
       where: {
         username: {
-          equals: input.username,
+          equals: username,
         },
       },
       select: {
@@ -74,12 +77,57 @@ export default class AuthenticationService {
         },
       },
     })
-    this.user = users.find(
-      (user) => user?.password === this.generatePassword(user, input?.password)
+    const user = users.find(
+      (user) => user?.password === this.generatePassword(user, password)
     )
-    if (!this.user) {
+    if (!user) {
       throw new Error('Incorrect email or password')
     }
+    return user
+  }
+
+  //TODO Refactor once company select screen is defined
+  public async handleLoginRequest({
+    username,
+    password,
+  }: LoginInputDto): Promise<string> {
+    const user = await this.queryUser(
+      this.ctx.prismaArray(this.ctx.authenticated?.remote_url),
+      username,
+      password
+    )
+
+    // Check if user appears to have no remote_url on pod db
+    if (this.ctx.authenticated?.remote_url && !user.Company.remote_url) {
+      throw new Error('Legacy/pod mismatch 1')
+    }
+
+    // Check if user appears to have a legacy JWT but company is now on a pod
+    if (
+      this.ctx.authenticated &&
+      !this.ctx.authenticated.remote_url &&
+      user.Company.remote_url
+    ) {
+      throw new Error('Legacy/pod mismatch 2')
+    }
+
+    // If user belongs to a pod, but we are legacy, then re-authenticate against the correct pod
+    if (
+      Boolean(this.ctx.authenticated?.remote_url) !==
+      Boolean(user.Company.remote_url)
+    ) {
+      const user2 = await this.queryUser(
+        this.ctx.prismaArray(user.Company.remote_url),
+        username,
+        password
+      )
+      this.user = user2
+      console.log(`[auth] pod login: legacy=${user.id} pod=${this.user.id}`)
+    } else {
+      this.user = user
+      console.log(`[auth] legacy login: legacy=${user.id}`)
+    }
+
     return this.generateJWT()
   }
   //TODO refactor this method with a login class, the service class should not update the password
@@ -130,6 +178,7 @@ export default class AuthenticationService {
       {
         remote_url: this.user.Company.remote_url,
         remote_connect: this.user.Company.remote_connect,
+        username: this.user.username,
         user: this.user.id,
         company: this.user.Company.id,
         admin: Boolean(this.user.admin) ?? false,
@@ -157,7 +206,7 @@ export default class AuthenticationService {
    * Enum: [1: md5, 2:sha1]
    *
    * @param user - The `User` database model
-   * @param loginInput - The user-supplied login form
+   * @param password - The user-supplied password
    *
    * @returns encoded password as string
    */
@@ -222,9 +271,9 @@ export default class AuthenticationService {
       })
     ) {
       const HashPassword = this.generatePassword(users, input.newPassword)
-      const update = await this.ctx.prisma.user.updateMany({
+      const update = await this.ctx.prisma.user.update({
         where: {
-          username: users.username,
+          id: users.id,
         },
         data: {
           password: HashPassword,

@@ -1,0 +1,34 @@
+query upcomingWebinars {
+  upcomingWebinars {
+    id
+    course_id
+    course_date
+    name: trainer
+    description
+    title: course_name
+    webinar_id
+    registered_id
+    duration
+    category
+    difficulty
+  }
+}
+mutation webinarEnroll(
+  $course_id: Int!
+  $webinar_id: Int!
+  $course_date: String!
+) {
+  enroll(
+    webinar: {
+      course_id: $course_id
+      webinar_id: $webinar_id
+      course_date: $course_date
+    }
+  ) {
+    status
+    user {
+      webinar_id
+      live_room_url
+    }
+  }
+}

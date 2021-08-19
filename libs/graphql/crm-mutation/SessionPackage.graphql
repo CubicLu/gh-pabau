@@ -1,0 +1,57 @@
+fragment SessionPackageFields on SessionPackage {
+  id
+  name
+  description
+  session_count
+  duration
+  price
+  activities
+  company_id
+  CreatedDate
+  imported
+  inactive
+  deleted
+  product_id
+  service_product_id
+  hard_deleted
+  session_package_master_id
+  tax_id
+  custom_service_name
+  custom_price_item
+  empty_name
+  old_price
+  old_duration
+  disabledusers
+  sold_online
+}
+
+fragment SessionPackage on SessionPackage {
+  ...SessionPackageFields
+  contact_packages {
+    ...ContactPackageFields
+  }
+}
+
+mutation createOneSessionPackage($data: SessionPackageCreateInput!) {
+  createOneSessionPackage(data: $data) {
+    ...SessionPackage
+  }
+}
+
+mutation updateOneSessionPackage($where: SessionPackageWhereUniqueInput!, $data: SessionPackageUpdateInput!) {
+  updateOneSessionPackage(where: $where, data: $data) {
+    ...SessionPackage
+  }
+}
+
+mutation deleteOneSessionPackage($where: SessionPackageWhereUniqueInput!) {
+  deleteOneSessionPackage(where: $where) {
+    ...SessionPackage
+  }
+}
+
+mutation updateManySessionPackage($where: SessionPackageWhereInput, $data: SessionPackageUpdateManyMutationInput!) {
+  updateManySessionPackage(where: $where, data: $data) {
+    count
+  }
+}

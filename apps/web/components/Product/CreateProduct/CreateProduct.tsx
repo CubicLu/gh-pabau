@@ -20,6 +20,8 @@ import {
   PhoneNumberInput,
   DatePicker,
   ConfirmationDialog,
+  Notification,
+  NotificationType,
 } from '@pabau/ui'
 import { InputNumber, Tooltip, Checkbox } from 'antd'
 import { Formik } from 'formik'
@@ -33,6 +35,8 @@ import styles from './CreateProduct.module.less'
 import dayjs from 'dayjs'
 import stringToCurrencySignConverter from '../../../helper/stringToCurrencySignConverter'
 import { isActionDisabled } from '../utility'
+import postData, { getImage } from '../../Uploaders/UploadHelpers/UploadHelpers'
+import { cdnURL } from '../../../baseUrl'
 
 const { Option } = Select
 
@@ -84,6 +88,7 @@ const defaultValue: Partial<Product> = {
   sku: '',
   code: '',
   category_id: null,
+  category_name: '',
   size: '',
   name: '',
   Description: '',
@@ -92,7 +97,7 @@ const defaultValue: Partial<Product> = {
   price: 0,
   max_level: 0,
   supplier: '',
-  image: null,
+  image: '',
   allow_negative_qty: 0,
   is_active: 1,
 }
@@ -135,32 +140,31 @@ export const CreateProduct = ({
   }, [visible])
 
   useEffect(() => {
-    action === 'Edit'
-      ? setInitialValue({
-          id: product?.id,
-          sku: product?.sku ?? '',
-          code: product?.code,
-          size: product?.size,
-          is_active: product?.is_active,
-          name: product?.name,
-          category_id: product?.category_id,
-          category_name:
-            categories?.find(
-              (category) => category?.id === product?.category_id
-            )?.name ?? '',
-          Description: product?.Description,
-          supplier: suppliers?.find(
-            (supplier) => supplier?.id === product?.supplier_id
-          )?.organisation_name,
-          tax: taxes?.find((tax) => tax?.id === product?.VATRate_id)?.name,
-          cost: product?.cost,
-          max_level: product?.max_level,
-          price: product?.price,
-          image: `https://cdn.pabau.com/cdn/${product?.image}`,
-          alert_quantity: product?.alert_quantity,
-          allow_negative_qty: product?.allow_negative_qty,
-        })
-      : setInitialValue(defaultValue)
+    if (action === 'Edit')
+      setInitialValue({
+        id: product?.id,
+        sku: product?.sku ?? '',
+        code: product?.code,
+        size: product?.size,
+        is_active: product?.is_active,
+        name: product?.name,
+        category_id: product?.category_id,
+        category_name:
+          categories?.find((category) => category?.id === product?.category_id)
+            ?.name ?? '',
+        Description: product?.Description,
+        supplier: suppliers?.find(
+          (supplier) => supplier?.id === product?.supplier_id
+        )?.organisation_name,
+        tax: taxes?.find((tax) => tax?.id === product?.VATRate_id)?.name,
+        cost: product?.cost,
+        max_level: product?.max_level,
+        price: product?.price,
+        image: product?.image ?? '',
+        alert_quantity: product?.alert_quantity,
+        allow_negative_qty: product?.allow_negative_qty,
+      })
+    else setInitialValue(defaultValue)
   }, [categories, product, suppliers, taxes, action])
 
   const customFieldDefaultValue = (id: number) => {
@@ -180,13 +184,14 @@ export const CreateProduct = ({
           .min(
             2,
             t('crud-table-input-min-length-validate', {
-              what: t('ui.create.product.name.validate'),
+              what: t('ui.create.product.name.validate').toLowerCase(),
               min: 2,
             })
           )
           .max(
             50,
             t('crud-table-input-max-length-validate', {
+              what: t('ui.create.product.name.validate').toLowerCase(),
               max: 50,
             })
           ),
@@ -225,9 +230,9 @@ export const CreateProduct = ({
         image: Yup.string().required(
           t('ui.create.product.image.validate.required')
         ),
-        price: Yup.number()
-          .notRequired()
-          .required(t('ui.create.product.retail.validate.required')),
+        price: Yup.number().required(
+          t('ui.create.product.retail.validate.required')
+        ),
         alert_quantity: Yup.number()
           .notRequired()
           .moreThan(-1, t('ui.create.product.minstock.validate.more')),
@@ -253,7 +258,14 @@ export const CreateProduct = ({
         )
       }}
     >
-      {({ setFieldValue, values, resetForm, submitForm, isValid, dirty }) => (
+      {({
+        setFieldValue,
+        values,
+        resetForm,
+        submitForm,
+        isValid,
+        submitCount,
+      }) => (
         <>
           <FullScreenReportModal
             visible={showModal}
@@ -269,10 +281,12 @@ export const CreateProduct = ({
             }
             operations={values.id ? editOperations : createOperations}
             createBtnText={
-              product?.id ? t('common-label-edit') : t('common-label-create')
+              product?.id ? t('common-label-save') : t('common-label-create')
             }
             activeBtnText={t('common-label-active')}
-            enableCreateBtn={isValid && dirty && !submitting}
+            enableCreateBtn={
+              submitCount === 0 ? !submitting : !submitting && isValid
+            }
             subMenu={[
               t('ui.create.product.tab.general'),
               t('ui.create.product.tab.pricing'),
@@ -281,7 +295,7 @@ export const CreateProduct = ({
             ]}
             onBackClick={() => {
               resetForm()
-              onClose()
+              onClose?.()
               setShowModal(false)
             }}
             onActivated={(val) => setFieldValue('is_active', Number(val))}
@@ -309,7 +323,8 @@ export const CreateProduct = ({
                   <div className={styles.createProductSectionItem}>
                     <Form.Item
                       label={t('ui.create.product.general.category')}
-                      name="category"
+                      name="category_name"
+                      rules={[{ required: true, message: 'string' }]}
                     >
                       <Select
                         name="category_name"
@@ -435,7 +450,32 @@ export const CreateProduct = ({
                   visible={showImageSelector}
                   initialSearch={values?.name}
                   onCancel={() => setShowImageSelector(false)}
-                  onOk={(image) => {
+                  onOk={(image, file) => {
+                    if (file) {
+                      const reader = new FileReader()
+                      if (file?.type?.match('image.*')) {
+                        reader.readAsDataURL(file)
+                      }
+                      reader.onloadend = async () => {
+                        const data = await postData(
+                          cdnURL + '/api/upload.php',
+                          {
+                            mode: 'upload-cropped-photo',
+                            imageData: reader.result.toString(),
+                            section: 'avatar_photos',
+                            type: 'file_attachments',
+                          },
+                          null
+                        )
+                        if (data.error) {
+                          Notification(NotificationType.error, t(data.code))
+                          return
+                        } else {
+                          setFieldValue('image', getImage(data.path))
+                          setShowImageSelector(false)
+                        }
+                      }
+                    }
                     setShowImageSelector(false)
                     setFieldValue('image', image.source)
                   }}
@@ -614,153 +654,169 @@ export const CreateProduct = ({
                   <h2 className={styles.createProductSectionTitle}>
                     {t('ui.create.product.advanced')}
                   </h2>
-                  <div className={styles.createProductSectionDoubleItems}>
-                    <div>
-                      <div className={styles.customFieldForm}>
-                        <Form
-                          className={styles.customFormInput}
-                          layout={'vertical'}
-                          requiredMark={false}
-                        >
-                          {!fetchingCustomFields &&
-                            customFields?.findManyManageCustomField?.map(
-                              (item) => (
-                                <div key={item.field_label}>
-                                  {item.field_type !== 'phone' && (
-                                    <p>{item.field_label}</p>
+                  <div className={styles.customFieldForm}>
+                    <Form
+                      className={styles.customFormInput}
+                      layout={'vertical'}
+                      requiredMark={false}
+                    >
+                      {!fetchingCustomFields &&
+                        customFields?.findManyManageCustomField?.map((item) => (
+                          <div key={item.field_label}>
+                            <Form.Item
+                              name={`customField-${item.id}`}
+                              label={
+                                item.field_type !== 'phone' && item.field_label
+                              }
+                            >
+                              {item.field_type === 'email' ? (
+                                <Input
+                                  defaultValue={customFieldDefaultValue(
+                                    item?.id
                                   )}
-                                  <Form.Item name={`customField-${item.id}`}>
-                                    {item.field_type === 'string' ||
-                                    item.field_type === 'email' ? (
-                                      <Input
-                                        defaultValue={customFieldDefaultValue(
-                                          item?.id
-                                        )}
-                                        size={'middle'}
-                                        name={`customField-${item.id}`}
-                                      />
-                                    ) : item.field_type === 'text' ? (
-                                      <Input.TextArea
-                                        defaultValue={customFieldDefaultValue(
-                                          item?.id
-                                        )}
-                                        name={`customField-${item.id}`}
-                                        rows={4}
-                                      />
-                                    ) : item.field_type === 'number' ? (
-                                      <Input
-                                        name={`customField-${item.id}`}
-                                        type="number"
-                                        size="large"
-                                        defaultValue={customFieldDefaultValue(
-                                          item?.id
-                                        )}
-                                        onChange={(value) =>
-                                          setFieldValue(
-                                            `customField-${item.id}`,
-                                            typeof value === 'number'
-                                              ? value
-                                              : 0
-                                          )
-                                        }
-                                      />
-                                    ) : item.field_type === 'multiple' ? (
-                                      <Checkbox.Group
-                                        name={`customField-${item.id}`}
-                                        options={
-                                          item?.ManageCustomFieldItem?.length >
-                                          0
-                                            ? item.ManageCustomFieldItem.map(
-                                                (item) => item.item_label
-                                              )
-                                            : []
-                                        }
-                                      />
-                                    ) : item.field_type === 'bool' ? (
-                                      <Radio.Group
-                                        name={`customField-${item.id}`}
-                                      >
-                                        {item.ManageCustomFieldItem?.map(
-                                          (option) => (
-                                            <Radio
-                                              key={option?.id}
-                                              defaultValue={customFieldDefaultValue(
-                                                item?.id
-                                              )}
-                                              value={option.item_label}
-                                              name={`customField-${item.id}`}
-                                            >
-                                              {option.item_label}
-                                            </Radio>
-                                          )
-                                        )}
-                                      </Radio.Group>
-                                    ) : item.field_type === 'list' ? (
-                                      <Select name={`customField-${item.id}`}>
-                                        {item?.ManageCustomFieldItem?.map(
-                                          (item) => (
-                                            <Select.Option
-                                              key={item.id}
-                                              defaultValue={customFieldDefaultValue(
-                                                item?.id
-                                              )}
-                                              value={item.item_label}
-                                            >
-                                              {item.item_label}
-                                            </Select.Option>
-                                          )
-                                        )}
-                                      </Select>
-                                    ) : item.field_type === 'date' ? (
-                                      <DatePicker
-                                        name={`customField-${item?.id}`}
-                                        key={item.id}
-                                        format={'DD/MM/YY'}
-                                        value={
+                                  size={'middle'}
+                                  name={`customField-${item.id}`}
+                                  type="email"
+                                  placeholder={t('common-label-enter', {
+                                    what: item?.field_label.toLowerCase(),
+                                  })}
+                                />
+                              ) : item.field_type === 'string' ? (
+                                <Input
+                                  defaultValue={customFieldDefaultValue(
+                                    item?.id
+                                  )}
+                                  size={'middle'}
+                                  name={`customField-${item.id}`}
+                                  placeholder={t('common-label-enter', {
+                                    what: item?.field_label.toLowerCase(),
+                                  })}
+                                />
+                              ) : item.field_type === 'text' ? (
+                                <Input.TextArea
+                                  defaultValue={customFieldDefaultValue(
+                                    item?.id
+                                  )}
+                                  name={`customField-${item.id}`}
+                                  rows={4}
+                                  placeholder={t('common-label-enter', {
+                                    what: item?.field_label.toLowerCase(),
+                                  })}
+                                />
+                              ) : item.field_type === 'number' ? (
+                                <Input
+                                  name={`customField-${item.id}`}
+                                  type="number"
+                                  defaultValue={customFieldDefaultValue(
+                                    item?.id
+                                  )}
+                                  onChange={(value) =>
+                                    setFieldValue(
+                                      `customField-${item.id}`,
+                                      typeof value === 'number' ? value : 0
+                                    )
+                                  }
+                                  placeholder={t('common-label-enter', {
+                                    what: item?.field_label.toLowerCase(),
+                                  })}
+                                />
+                              ) : item.field_type === 'multiple' ? (
+                                <Checkbox.Group
+                                  name={`customField-${item.id}`}
+                                  options={
+                                    item?.ManageCustomFieldItem?.length > 0
+                                      ? item.ManageCustomFieldItem.map(
+                                          (item) => item.item_label
+                                        )
+                                      : []
+                                  }
+                                />
+                              ) : item.field_type === 'bool' ? (
+                                <Radio.Group name={`customField-${item.id}`}>
+                                  {item.ManageCustomFieldItem?.map((option) => (
+                                    <Radio
+                                      key={option?.id}
+                                      defaultValue={customFieldDefaultValue(
+                                        item?.id
+                                      )}
+                                      value={option.item_label}
+                                      name={`customField-${item.id}`}
+                                    >
+                                      {option.item_label}
+                                    </Radio>
+                                  ))}
+                                </Radio.Group>
+                              ) : item.field_type === 'list' ? (
+                                <Select
+                                  name={`customField-${item.id}`}
+                                  placeholder={t('common-label-select', {
+                                    what: item?.field_label.toLowerCase(),
+                                  })}
+                                >
+                                  {item?.ManageCustomFieldItem?.map((item) => (
+                                    <Select.Option
+                                      key={item.id}
+                                      defaultValue={customFieldDefaultValue(
+                                        item?.id
+                                      )}
+                                      value={item.item_label}
+                                    >
+                                      {item.item_label}
+                                    </Select.Option>
+                                  ))}
+                                </Select>
+                              ) : item.field_type === 'date' ? (
+                                <DatePicker
+                                  style={{ width: '100%' }}
+                                  name={`customField-${item?.id}`}
+                                  key={item.id}
+                                  format={'DD/MM/YY'}
+                                  value={
+                                    values?.[`customField-${item?.id}`]
+                                      ? dayjs(
                                           values?.[`customField-${item?.id}`]
-                                            ? dayjs(
-                                                values?.[
-                                                  `customField-${item?.id}`
-                                                ]
-                                              )
-                                            : null
-                                        }
-                                        onChange={(date) => {
-                                          setFieldValue(
-                                            `customField-${item?.id}`,
-                                            date
-                                          )
-                                        }}
-                                        placeholder={t(
-                                          'products.list.product.customField.date.placeholder'
-                                        )}
-                                      />
-                                    ) : item.field_type === 'phone' ? (
-                                      <PhoneNumberInput
-                                        key={item.id}
-                                        label={item.field_label}
-                                        value={
-                                          values?.[`customField-${item?.id}`]
-                                            ? values?.[
-                                                `customField-${item?.id}`
-                                              ]?.toString()
-                                            : undefined
-                                        }
-                                        onChange={(value) =>
-                                          setFieldValue(
-                                            `customField-${item?.id}`,
-                                            value
-                                          )
-                                        }
-                                      />
-                                    ) : null}
-                                  </Form.Item>
-                                </div>
-                              )
-                            )}
-                        </Form>
-                      </div>
-                    </div>
+                                        )
+                                      : null
+                                  }
+                                  onChange={(date) => {
+                                    setFieldValue(
+                                      `customField-${item?.id}`,
+                                      date
+                                    )
+                                  }}
+                                  placeholder={t(
+                                    'products.list.product.customField.date.placeholder'
+                                  )}
+                                  getPopupContainer={(trigger) =>
+                                    trigger.parentElement as HTMLElement
+                                  }
+                                />
+                              ) : item.field_type === 'phone' ? (
+                                <PhoneNumberInput
+                                  key={item.id}
+                                  label={item.field_label}
+                                  value={
+                                    values?.[`customField-${item?.id}`]
+                                      ? values?.[
+                                          `customField-${item?.id}`
+                                        ]?.toString()
+                                      : undefined
+                                  }
+                                  onChange={(value) =>
+                                    setFieldValue(
+                                      `customField-${item?.id}`,
+                                      value
+                                    )
+                                  }
+                                  placeholder={t('common-label-enter', {
+                                    what: item?.field_label.toLowerCase(),
+                                  })}
+                                />
+                              ) : null}
+                            </Form.Item>
+                          </div>
+                        ))}
+                    </Form>
                   </div>
                   <div
                     className={styles.createProductSectionItem}

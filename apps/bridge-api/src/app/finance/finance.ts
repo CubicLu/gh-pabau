@@ -11,8 +11,10 @@ import {
   CreditNoteQueryResult,
   InvoiceOutput,
   InvoiceArgs,
+  StatementArgs,
+  StatementOutput,
 } from './types'
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 export const findManyFinanceInvoice = async (
   ctx: Context,
@@ -858,7 +860,7 @@ export const getInvoiceData = async (
     },
   })
   if (!sales) {
-    throw new Error('Invalid guid or sale id')
+    throw new Error(`Error occure while loading, invoice can't be generated`)
   }
   const refund = await ctx.prisma.invSale.findMany({
     where: { refund_to: { in: sales.map((sale) => sale.id) } },
@@ -884,7 +886,7 @@ export const getInvoiceData = async (
         const tax_rate =
           saleItem.Tax?.rate !== undefined ? saleItem.Tax?.rate : 0
         data.push({
-          key: `${index}`,
+          key: index,
           quantity: saleItem.quantity ?? '1',
           unitprice: saleItem.unit_price ?? '0.00',
           total: vat_value + net_value ? (vat_value + net_value).toFixed(2) : 0,
@@ -921,7 +923,7 @@ export const getInvoiceData = async (
     if (sale?.InvPayment) {
       sale?.InvPayment?.map((paymentItem, index) => {
         payment.push({
-          key: `${index}`,
+          key: index,
           insurer: sales[0]?.InsuranceDetail?.insurer_name ?? '',
           payment_date: `${new Date(paymentItem.datetime).toLocaleDateString(
             'en-GB'
@@ -941,7 +943,7 @@ export const getInvoiceData = async (
   const details = {
     key: 0,
     total_vat: data?.reduce((prev, cur) => {
-      return prev + Number.parseFloat(cur.vat)
+      return prev + cur.vat ?? 0
     }, 0),
     amount_paid: paid_amount ? paid_amount.toFixed(2) : 0,
     sub_total_amount: sub_total ? sub_total : 0,
@@ -949,7 +951,7 @@ export const getInvoiceData = async (
     grand_total:
       sub_total + total_discount_amount ? sub_total + total_discount_amount : 0,
     refund_amount: refund?.reduce((prev, cur) => {
-      return prev + cur.total
+      return prev + cur.total ?? 0
     }, 0),
     paid: payment
       ?.reduce((prev, cur) => {
@@ -962,7 +964,7 @@ export const getInvoiceData = async (
       }, 0)
 
       .toFixed(2),
-    payment_time: moment(sales[0]?.InvPayment[0]?.datetime).format(
+    payment_time: dayjs(sales[0]?.InvPayment[0]?.datetime).format(
       'D MMM YYYY, hh:mm A'
     ),
     total: total ? total : 0,
@@ -979,5 +981,183 @@ export const getInvoiceData = async (
     items: data,
     payments: payment,
     payment_details: details,
+  }
+}
+
+export const getStatementData = async (
+  ctx: Context,
+  input: StatementArgs
+): Promise<StatementOutput> => {
+  const sales = await ctx.prisma.invSale.findMany({
+    where: {
+      AND: [
+        { company_id: { equals: ctx.authenticated.company } },
+        { location_id: { equals: input?.locationId } },
+        { customer_id: { equals: input?.customerId } },
+        {
+          date: {
+            gte: input?.statementPeriodFrom,
+            lte: input?.statementPeriodTo,
+          },
+        },
+      ],
+    },
+    select: {
+      id: true,
+      paid_amount: true,
+      discount_amount: true,
+      inv_total: true,
+      total: true,
+      custom_id: true,
+      date: true,
+      User: {
+        select: {
+          full_name: true,
+        },
+      },
+      InsuranceDetail: {
+        select: {
+          insurer_name: true,
+        },
+      },
+      Booking: {
+        select: {
+          User: {
+            select: {
+              full_name: true,
+            },
+          },
+        },
+      },
+      InvPayment: {
+        select: {
+          datetime: true,
+          pmethod: true,
+          amount: true,
+        },
+      },
+      SaleItem: {
+        select: {
+          VAT_id: true,
+          tax_total: true,
+          gross_total: true,
+          quantity: true,
+          unit_price: true,
+          val_tax: true,
+          discount_reason: true,
+          created_date: true,
+          product_category_name: true,
+          Tax: {
+            select: {
+              rate: true,
+              value: true,
+            },
+          },
+          Product: {
+            select: {
+              sku: true,
+              InvCategory: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+  if (!sales) {
+    throw new Error(`Error occure while loading, satement can't be generated`)
+  }
+  const refund = await ctx.prisma.invSale.findMany({
+    where: { refund_to: { in: sales.map((sale) => sale.id) } },
+    select: {
+      total: true,
+    },
+  })
+  const data = []
+  let total_discount_amount
+  let inv_total
+  let paid_amount
+  sales.map((sale) => {
+    total_discount_amount += sale.discount_amount
+    inv_total += sale.inv_total
+    paid_amount += sale.paid_amount
+    if (sale?.SaleItem) {
+      sale?.SaleItem.map((saleItem, index) => {
+        const vat_value = saleItem.tax_total
+        const net_value = saleItem.gross_total - saleItem.val_tax - vat_value
+        const tax_rate =
+          saleItem.Tax?.rate !== undefined ? saleItem.Tax?.rate : 0
+        data.push({
+          key: index,
+          quantity: saleItem.quantity ?? '1',
+          unitprice: saleItem.unit_price ?? '0.00',
+          total: vat_value + net_value ? (vat_value + net_value).toFixed(2) : 0,
+          vat_per: saleItem.Tax?.value ?? '0.00',
+          vat:
+            saleItem.unit_price - saleItem.unit_price / (tax_rate / 100 + 1)
+              ? (
+                  saleItem.unit_price -
+                  saleItem.unit_price / (tax_rate / 100 + 1)
+                ).toFixed(2)
+              : '0.00',
+          net: net_value ? net_value.toFixed(2) : '0.00',
+          after_disc:
+            saleItem.unit_price - saleItem.val_tax
+              ? (saleItem.unit_price - saleItem.val_tax).toFixed(2)
+              : '0.00',
+          disc_amount: saleItem.val_tax ? saleItem.val_tax.toFixed(2) : '0.00',
+          disc_per:
+            (saleItem.val_tax / saleItem.unit_price) * 100
+              ? ((saleItem.val_tax / saleItem.unit_price) * 100).toFixed(2)
+              : '0.00',
+          description: saleItem.discount_reason ?? '',
+          date: `${new Date(saleItem.created_date).toLocaleDateString(
+            'en-GB'
+          )}`,
+          category: saleItem.product_category_name,
+          practitioner: sales[0]?.Booking[0]?.User?.full_name ?? '',
+          product: saleItem.Product?.InvCategory?.name ?? '',
+          sku: saleItem.Product?.sku ?? '',
+        })
+        return saleItem
+      })
+    }
+    return sale
+  })
+  const sub_total =
+    total_discount_amount !== 0 ? inv_total + total_discount_amount : inv_total
+  const details = {
+    key: 0,
+    total_vat: data?.reduce((prev, cur) => {
+      return prev + Number.parseFloat(cur.vat)
+    }, 0),
+    amount_paid: paid_amount ? paid_amount.toFixed(2) : 0,
+    sub_total_amount: sub_total ? sub_total : 0,
+    outstanding: paid_amount ? paid_amount.toFixed(2) : 0,
+    grand_total:
+      sub_total + total_discount_amount ? sub_total + total_discount_amount : 0,
+    refund_amount: refund?.reduce((prev, cur) => {
+      return prev + cur.total ?? 0
+    }, 0),
+    paid: 0,
+    total_net: data
+      ?.reduce((prev, cur) => {
+        return prev + Number.parseFloat(cur.net)
+      }, 0)
+
+      .toFixed(2),
+  }
+
+  return {
+    details: {
+      issue_to: sales[0]?.InsuranceDetail?.insurer_name ?? '',
+      issue_by: sales[0]?.User?.full_name ?? '',
+      invoice_id: sales[0]?.custom_id,
+    },
+    items: data,
+    payments: details,
   }
 }

@@ -3,7 +3,9 @@ mutation AuthenticateUser(
   $username: String!
   $company_id: Int!
   $user_admin: Int!
+  $user_locale: String!
   $company_admin: Int!
+  $company_language: String!
   $remote_url: String
   $remote_connect: String
 ) {
@@ -12,7 +14,9 @@ mutation AuthenticateUser(
     username: $username
     company_id: $company_id
     user_admin: $user_admin
+    user_locale: $user_locale
     company_admin: $company_admin
+    company_language: $company_language
     remote_url: $remote_url
     remote_connect: $remote_connect
   )

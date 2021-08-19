@@ -11,22 +11,28 @@ export interface PhoneNumberInputProps {
   value?: string
   labelStyle?: string
   onChange(val: string, valid?: boolean): void
+  placeholder?: string
+  showValidErrorMessage?: boolean
 }
 
 export const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
   countryCode = 'GB',
   label = 'Phone Number',
-  value = '',
+  value = '44',
   onChange,
   labelStyle,
+  placeholder = '',
+  showValidErrorMessage = true,
 }) => {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [valid, setValid] = useState(true)
+  const [country, setCountry] = useState(countryCode)
   useEffect(() => {
-    if (value) {
-      setPhoneNumber(value)
+    setPhoneNumber(value)
+    if (!value) {
+      setCountry(countryCode)
     }
-  }, [value])
+  }, [value, countryCode])
 
   const handleChangeInput = (val, country) => {
     let validNumber
@@ -42,6 +48,7 @@ export const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
       validNumber = false
     }
     setPhoneNumber(val)
+    setCountry(country.countryCode)
     onChange(`${val}`, validNumber)
   }
 
@@ -65,11 +72,14 @@ export const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
       >
         <PhoneInput
           value={phoneNumber}
-          country={countryCode.toLowerCase()}
+          country={country.toLowerCase()}
           onChange={(value, country) => handleChangeInput(value, country)}
+          inputProps={{
+            placeholder: placeholder,
+          }}
         />
       </div>
-      {!valid && (
+      {showValidErrorMessage && !valid && (
         <div className={styles.phoneNumberValidMsg}>
           Please enter a valid phone number
         </div>

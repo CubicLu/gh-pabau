@@ -40,7 +40,7 @@ import {
 } from '@pabau/graphql'
 import styles from './index.module.less'
 
-const Index: FC = ({ ...props }) => {
+const Index: FC = () => {
   const user = useContext(UserContext)
   const size = useWindowSize()
   const { t } = useTranslationI18()
@@ -175,13 +175,25 @@ const Index: FC = ({ ...props }) => {
     }
   }
 
+  const saveAvatarPhoto = (imgData) => {
+    const data = { ...profileData }
+    const variables = {
+      where: { id: data?.id },
+      data: {
+        image: { set: imgData?.path },
+      },
+    }
+    updateProfileMutation({
+      variables: variables,
+      refetchQueries: [{ query: GetProfileTabDocument }],
+    })
+  }
+
   const saveProfileSection = () => {
     if (!isPhoneValid) return
     setSaveLoading(true)
     const data = { ...profileData }
-    if (!data?.image?.includes('/cdn/')) {
-      data.image = '/cdn/not-finished-yet.png'
-    }
+
     const variables = {
       where: { id: data?.id },
       data: {
@@ -241,6 +253,7 @@ const Index: FC = ({ ...props }) => {
           const variables = {
             where: { id: el?.id },
             data: {
+              ios_notification: { set: el?.ios_notification },
               sms_notification: { set: el?.sms_notification },
               email_notification: { set: el?.email_notification },
             },
@@ -463,6 +476,9 @@ const Index: FC = ({ ...props }) => {
                   profileData={profileData}
                   onProfileChange={(data) => {
                     setProfileData(data)
+                  }}
+                  onAvatarChange={(data) => {
+                    saveAvatarPhoto(data)
                   }}
                   setPhoneValid={(isValid) => setIsPhoneValid(isValid)}
                 />

@@ -7,7 +7,7 @@ export interface AddSuggestionProps {
   label: string
   defaultSelected: Array<string | number>
   options: Array<string | number>
-  onChange
+  onChange: (value) => void
 }
 
 export const AddSuggestion: FC<AddSuggestionProps> = ({

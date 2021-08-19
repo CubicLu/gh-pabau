@@ -93,5 +93,23 @@ export const Booking = objectType({
         return root.Contact
       },
     })
+    t.nullable.field('connect_client', {
+      type: 'UserMaster',
+      resolve(root: any) {
+        return root.connect_client
+      },
+    })
+    t.nullable.field('practitioner', {
+      type: 'CmStaffGeneral',
+      resolve(root: any) {
+        return root.practitioner
+      },
+    })
+    t.nullable.field('booking_location', {
+      type: 'CompanyBranch',
+      resolve(root: any) {
+        return root.booking_location
+      },
+    })
   },
 })

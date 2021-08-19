@@ -1,5 +1,3 @@
-import { TeamReportChartSeries } from '@pabau/ui'
-
 export const ticks = [
   'Sep 19',
   'Oct 19',
@@ -15,10 +13,17 @@ export const ticks = [
   'Aug 20',
 ]
 
-export const seriesData: TeamReportChartSeries = {
-  title: 'Team Commision',
-  serviceName: 'Team Commision',
-  data: [100, 100, 250, 100, 150, 0, 120, 140, 200, 250, 200, 100],
-  color: '#54B2D3',
-  target: 150,
-}
+export const seriesData = [
+  100,
+  100,
+  250,
+  100,
+  150,
+  0,
+  120,
+  140,
+  200,
+  250,
+  200,
+  100,
+]

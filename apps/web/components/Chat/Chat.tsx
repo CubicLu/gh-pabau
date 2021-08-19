@@ -31,6 +31,12 @@ export const Chat = (props: P): JSX.Element => {
 
   useChatListRoomNotifySubscription({
     skip: typeof window === 'undefined',
+    onSubscriptionData(e) {
+      console.log(
+        'ws update for rooms:',
+        e.subscriptionData.data.chat_room_participant
+      )
+    },
   })
   useChatListMessagesNotifySubscription({
     skip: typeof window === 'undefined',
@@ -194,7 +200,7 @@ export const Chat = (props: P): JSX.Element => {
           id,
           message,
           userName:
-            (fromUser.id === me.me.user
+            (fromUser.id !== me.me.id
               ? fromUser?.full_name
               : toUser?.full_name) || '??',
           dateTime: dayjs(created_at).calendar(),

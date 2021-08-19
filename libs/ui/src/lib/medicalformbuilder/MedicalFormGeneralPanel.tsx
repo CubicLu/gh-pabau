@@ -1,9 +1,4 @@
-import {
-  AddSuggestion,
-  defaultSelectedFormInfos,
-  FormType,
-  SelectedForms,
-} from '@pabau/ui'
+import { AddSuggestion, FormType, SelectedForms } from '@pabau/ui'
 import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import styles from './MedicalFormBuilder.module.less'
@@ -14,6 +9,7 @@ interface MedicalFormGeneralProps {
   onSelectFormType: (val: SelectedForms) => void
   changeFormName: (formName: string) => void
   formName: string
+  medicalFormType: string
 }
 
 const MedicalFormGeneralPanel: FC<MedicalFormGeneralProps> = ({
@@ -21,8 +17,10 @@ const MedicalFormGeneralPanel: FC<MedicalFormGeneralProps> = ({
   onSelectFormType,
   changeFormName,
   formName,
+  medicalFormType = '',
 }) => {
   const { t } = useTranslation('common')
+
   const onChangeSetting = (setting) => {
     onSelectFormType(setting)
   }
@@ -34,6 +32,7 @@ const MedicalFormGeneralPanel: FC<MedicalFormGeneralProps> = ({
     t('ui.medicalformbuilder.form.service.all'),
   ]
   const defaultServices = []
+
   return (
     <div className={styles.medicalFormGeneralPanel}>
       <MedicalFormName
@@ -50,7 +49,7 @@ const MedicalFormGeneralPanel: FC<MedicalFormGeneralProps> = ({
       />
       <FormType
         isEditing={isEditing}
-        setting={defaultSelectedFormInfos}
+        medicalFormType={medicalFormType}
         onChangeSetting={onChangeSetting}
       />
     </div>

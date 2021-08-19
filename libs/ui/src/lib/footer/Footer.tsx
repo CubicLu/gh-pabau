@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import { Row, Col } from 'antd'
 import styles from './Footer.module.less'
 import Guides from './Guides'
-import Webinar from './Webinar'
+// import Webinar from './Webinar'
 import { useTranslation } from 'react-i18next'
 
 export const Footer: FC = () => {
@@ -18,9 +18,9 @@ export const Footer: FC = () => {
           </div>
           <Guides />
         </Col>
-        <Col md={8} sm={24} className={styles.footerWebinar}>
+        {/* <Col md={8} sm={24} className={styles.footerWebinar}>
           <Webinar />
-        </Col>
+        </Col> */}
       </Row>
     </div>
   )

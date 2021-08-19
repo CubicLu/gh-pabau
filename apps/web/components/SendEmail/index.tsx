@@ -2,13 +2,14 @@ import React, { FC, useState, useEffect } from 'react'
 // import { SendMail as PabauSendMail } from '@pabau/ui'
 import { useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
-import { Skeleton } from 'antd'
+import { Select, Skeleton } from 'antd'
 import {
   Notification,
   NotificationType,
   SimpleDropdown,
   InputHtmlWithTags,
 } from '@pabau/ui'
+
 import {
   SendEmailDataDocument,
   SendEmailWithTagsDocument,
@@ -18,15 +19,17 @@ import { Formik } from 'formik'
 import { Form, Input, SubmitButton } from 'formik-antd'
 import { useMutation } from '@apollo/client'
 
+const { Option, OptGroup } = Select
+
 export const SendMail: FC = () => {
   const router = useRouter()
   const [contactID, setContactID] = useState(0)
   const [leadID, setLeadID] = useState(0)
   const [staffID, setStaffID] = useState(0)
   const [content, setContent] = useState('')
+  const [subject, setSubject] = useState('')
   //   const [forms, setForms] = useState(null)
   //   const [senders, setSenders] = useState(null)
-  //   const [subject, setSubject] = useState('')
 
   console.info('router:', router, router.query)
 
@@ -54,8 +57,21 @@ export const SendMail: FC = () => {
     },
   })
 
+  let templates = []
   if (!init) {
     console.info('Ful Data Loaded:', data)
+    const tmp = []
+    let group = ''
+    let items = []
+    for (const element of data.templates) {
+      if (group !== '' && group !== element.template_group) {
+        tmp.push({ groupTitle: group, groupItems: items })
+        items = []
+      }
+      items.push(element)
+      group = element.template_group
+    }
+    templates = tmp
   }
 
   if (!loading) {
@@ -73,6 +89,17 @@ export const SendMail: FC = () => {
 
   const onTextWithTagChange = (e) => {
     setContent(e)
+  }
+
+  const setTemplateContent = (e) => {
+    console.info('change template', e)
+    for (const element of data.templates) {
+      if (e === element.template_id && element.message) {
+        setContent(element.message)
+        setSubject(element.subject)
+        return
+      }
+    }
   }
 
   return (
@@ -113,14 +140,15 @@ export const SendMail: FC = () => {
                     data?.senders[0]?.company_email +
                     '>'
                   : '',
-              subject: 'Test Subject',
+              templates: '',
+              subject: '',
             }}
             onSubmit={async (values) => {
               console.info('Values on Submit:', values, contactID)
               await sendEmailMutation({
                 variables: {
                   to: values.to_email,
-                  subject: values.subject,
+                  subject: values.subject || subject || 'Pabau Email',
                   text: content,
                   html: content,
                   contact_id: receiverData?.contact?.ID,
@@ -131,7 +159,7 @@ export const SendMail: FC = () => {
               })
             }}
           >
-            {({ setFieldValue, values }) => (
+            {({ setFieldValue, values, handleChange }) => (
               <Form>
                 <div>
                   <div style={{ margin: '1%' }}>
@@ -166,19 +194,54 @@ export const SendMail: FC = () => {
                     />
                   </div>
                   <div style={{ margin: '1%' }}>
+                    Templates
+                    <Select
+                      style={{ width: '100%' }}
+                      placeholder="Select Template"
+                      onSelect={(val: string) => setTemplateContent(val)}
+                    >
+                      {templates?.map((item) => (
+                        <OptGroup
+                          label={
+                            <span
+                              style={{
+                                color: 'var(--grey-text-color)',
+                                fontSize: '13px',
+                                textTransform: 'capitalize',
+                              }}
+                            >
+                              {item?.groupTitle}
+                            </span>
+                          }
+                          key={item?.groupTitle}
+                        >
+                          {item?.groupItems?.map((subItem) => (
+                            <Option
+                              key={subItem?.template_id}
+                              value={subItem?.template_id}
+                            >
+                              {subItem?.template_name}
+                            </Option>
+                          ))}
+                        </OptGroup>
+                      ))}
+                    </Select>
+                  </div>
+                  <div style={{ margin: '1%' }}>
                     Subject
                     <Input
                       name="subject"
                       type="text"
                       placeholder="Subject"
                       size="large"
+                      value={subject}
                     />
                   </div>
-                  <div style={{ height: 460 }}>
+                  <div style={{ height: 460 }} id="content">
                     <InputHtmlWithTags
-                      value={''}
-                      placeholder={''}
-                      valueWithTag={''}
+                      value={content}
+                      placeholder={'Message Content'}
+                      valueWithTag={content}
                       disabledTags={[
                         'appointments',
                         'opportunity',

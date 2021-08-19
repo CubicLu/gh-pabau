@@ -8,7 +8,7 @@ export const CmContact = objectType({
   name: 'CmContact',
   definition(t) {
     t.int('ID')
-    t.string('Avatar')
+    t.nullable.string('Avatar')
     t.int('OwnerID')
     t.string('Salutation')
     t.string('Fname')
@@ -22,69 +22,69 @@ export const CmContact = objectType({
     t.int('location_id')
     t.string('Email')
     t.string('Phone')
-    t.string('OtherPhone')
+    t.nullable.string('OtherPhone')
     t.string('Mobile')
-    t.string('Assistant')
-    t.string('ReportsTo')
-    t.string('LeadSource')
+    t.nullable.string('Assistant')
+    t.nullable.string('ReportsTo')
+    t.nullable.string('LeadSource')
     t.string('Lname')
-    t.string('Title')
-    t.string('Department')
-    t.string('HomePhone')
-    t.string('Fax')
+    t.nullable.string('Title')
+    t.nullable.string('Department')
+    t.nullable.string('HomePhone')
+    t.nullable.string('Fax')
     t.nullable.field('DOB', { type: 'DateTime' })
-    t.string('AsstPhone')
+    t.nullable.string('AsstPhone')
     t.field('EmailOptOut', { type: 'cm_contacts_EmailOptOut' })
-    t.string('SkypeId')
+    t.nullable.string('SkypeId')
     t.field('AddToQuickBooks', { type: 'cm_contacts_AddToQuickBooks' })
-    t.string('SecondaryEmail')
-    t.string('Twitter')
+    t.nullable.string('SecondaryEmail')
+    t.nullable.string('Twitter')
     t.string('MailingStreet')
-    t.string('OtherStreet')
+    t.nullable.string('OtherStreet')
     t.string('MailingCity')
-    t.string('OtherCity')
+    t.nullable.string('OtherCity')
     t.string('MailingProvince')
-    t.string('OtherProvince')
+    t.nullable.string('OtherProvince')
     t.string('MailingPostal')
-    t.string('OtherPostal')
+    t.nullable.string('OtherPostal')
     t.string('MailingCountry')
-    t.string('OtherCountry')
-    t.string('Description')
+    t.nullable.string('OtherCountry')
+    t.nullable.string('Description')
     t.field('Status', { type: 'cm_contacts_Status' })
-    t.field('CreatedDate', { type: 'DateTime' })
-    t.int('IpAddress')
-    t.string('fbimg')
-    t.int('MarketingSource')
+    t.nullable.field('CreatedDate', { type: 'DateTime' })
+    t.nullable.int('IpAddress')
+    t.nullable.string('fbimg')
+    t.nullable.int('MarketingSource')
     t.nullable.string('RefferalSource')
-    t.int('LeadID')
-    t.string('group_tag')
-    t.string('polite_notice')
+    t.nullable.int('LeadID')
+    t.nullable.string('group_tag')
+    t.nullable.string('polite_notice')
     t.string('custom_id')
-    t.string('gender')
+    t.nullable.string('gender')
     t.nullable.int('MarketingOptInAll')
     t.nullable.int('MarketingOptInEmail')
     t.nullable.int('MarketingOptInPhone')
     t.nullable.int('MarketingOptInPost')
     t.nullable.int('MarketingOptInText')
-    t.string('notes_drop')
-    t.int('imported')
-    t.string('alerts_drop')
-    t.int('MarketingSourceRelated')
-    t.string('customer_reference')
+    t.nullable.string('notes_drop')
+    t.nullable.int('imported')
+    t.nullable.string('alerts_drop')
+    t.nullable.int('MarketingSourceRelated')
+    t.nullable.string('customer_reference')
     t.int('MarketingOptInNewsletter')
-    t.string('custom_marketing_source')
-    t.int('insurer_id')
+    t.nullable.string('custom_marketing_source')
+    t.nullable.int('insurer_id')
     t.int('is_active')
-    t.string('xero_contact_id')
+    t.nullable.string('xero_contact_id')
     t.int('is_ambassador')
     t.nullable.field('UpdatedDate', { type: 'DateTime' })
     t.nullable.field('xero_updated_date', { type: 'DateTime' })
-    t.int('discount_type')
-    t.int('custom_clinic_id')
-    t.int('ambassador_id')
-    t.int('contract_id')
-    t.string('privacy_policy')
-    t.boolean('need_to_knows')
+    t.nullable.int('discount_type')
+    t.nullable.int('custom_clinic_id')
+    t.nullable.int('ambassador_id')
+    t.nullable.int('contract_id')
+    t.nullable.string('privacy_policy')
+    t.nullable.boolean('need_to_knows')
     t.int('contact_type')
     t.nullable.field('SocialSurveyFeedback', {
       type: 'SocialSurveyFeedback',
@@ -274,16 +274,58 @@ export const CmContact = objectType({
         return root.InvPayment
       },
     })
+    t.list.field('LoyaltyLog', {
+      type: 'LoyaltyLog',
+      args: {
+        where: 'LoyaltyLogWhereInput',
+        orderBy: 'LoyaltyLogOrderByInput',
+        cursor: 'LoyaltyLogWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'LoyaltyLogScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.LoyaltyLog
+      },
+    })
+    t.nullable.field('LoyaltyPoints', {
+      type: 'LoyaltyPoints',
+      resolve(root: any) {
+        return root.LoyaltyPoints
+      },
+    })
+    t.list.field('Attachments', {
+      type: 'ContactAttachment',
+      args: {
+        where: 'ContactAttachmentWhereInput',
+        orderBy: 'ContactAttachmentOrderByInput',
+        cursor: 'ContactAttachmentWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ContactAttachmentScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Attachments
+      },
+    })
+    t.list.field('Packages', {
+      type: 'ContactPackage',
+      args: {
+        where: 'ContactPackageWhereInput',
+        orderBy: 'ContactPackageOrderByInput',
+        cursor: 'ContactPackageWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ContactPackageScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.Packages
+      },
+    })
     t.nullable.field('Insurance', {
       type: 'InsuranceDetail',
       resolve(root: any) {
         return root.Insurance
-      },
-    })
-    t.nullable.field('LoyaltyPoint', {
-      type: 'LoyaltyPoint',
-      resolve(root: any) {
-        return root.LoyaltyPoint
       },
     })
     t.list.field('Booking', {
@@ -314,20 +356,6 @@ export const CmContact = objectType({
         return root.InvSale
       },
     })
-    t.list.field('ContactInsurance', {
-      type: 'ContactInsurance',
-      args: {
-        where: 'ContactInsuranceWhereInput',
-        orderBy: 'ContactInsuranceOrderByInput',
-        cursor: 'ContactInsuranceWhereUniqueInput',
-        take: 'Int',
-        skip: 'Int',
-        distinct: 'ContactInsuranceScalarFieldEnum',
-      },
-      resolve(root: any) {
-        return root.ContactInsurance
-      },
-    })
     t.list.field('InventoryMovement', {
       type: 'InventoryMovement',
       args: {
@@ -342,6 +370,34 @@ export const CmContact = objectType({
         return root.InventoryMovement
       },
     })
+    t.list.field('InsuranceCompany', {
+      type: 'ContactInsurance',
+      args: {
+        where: 'ContactInsuranceWhereInput',
+        orderBy: 'ContactInsuranceOrderByInput',
+        cursor: 'ContactInsuranceWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ContactInsuranceScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.InsuranceCompany
+      },
+    })
+    t.list.field('ContactMeta', {
+      type: 'ContactMeta',
+      args: {
+        where: 'ContactMetaWhereInput',
+        orderBy: 'ContactMetaOrderByInput',
+        cursor: 'ContactMetaWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'ContactMetaScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.ContactMeta
+      },
+    })
     t.list.field('CommunicationRecipient', {
       type: 'CommunicationRecipient',
       args: {
@@ -354,6 +410,34 @@ export const CmContact = objectType({
       },
       resolve(root: any) {
         return root.CommunicationRecipient
+      },
+    })
+    t.list.field('CmContactCustom', {
+      type: 'CmContactCustom',
+      args: {
+        where: 'CmContactCustomWhereInput',
+        orderBy: 'CmContactCustomOrderByInput',
+        cursor: 'CmContactCustomWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CmContactCustomScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CmContactCustom
+      },
+    })
+    t.list.field('CmContactLabel', {
+      type: 'CmContactLabel',
+      args: {
+        where: 'CmContactLabelWhereInput',
+        orderBy: 'CmContactLabelOrderByInput',
+        cursor: 'CmContactLabelWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'CmContactLabelScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.CmContactLabel
       },
     })
     t.nullable.field('_count', {

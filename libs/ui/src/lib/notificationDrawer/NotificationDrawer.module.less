@@ -38,12 +38,28 @@
     border: none;
     background: none !important;
     padding-bottom: 5px;
+    padding-top: 5px;
     text-align: center;
     color: var(--light-grey-color);
     font-weight: 500;
     font-size: 14px;
     cursor: pointer;
     font-style: normal;
+
+    .badge-circle sup {
+      background-color: #54b2d3;
+      right: -64px;
+      top: -8px;
+      min-width: 18px;
+      max-width: 18px;
+      height: 18px;
+      display: flex;
+      border-radius: 50%;
+      justify-content: center;
+      line-height: 21px;
+      align-items: center;
+      font-size: 12px;
+    }
   }
   button:focus {
     outline: none;
@@ -187,6 +203,16 @@
       line-height: 18px;
       color: var(--light-grey-color);
       margin-bottom: 8px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      height: 54px;
+      position: relative;
+    }
+    p::before {
+      content: '...';
+      position: absolute;
+      bottom: 0;
+      right: 0;
     }
   }
   .learn-more {

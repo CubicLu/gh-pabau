@@ -28,9 +28,24 @@ export const VerifyCredentials = extendType({
               },
             },
             include: {
-              Company: true,
-              CompanyDetails: true,
-              CmStaffGeneral: true,
+              Company: {
+                select: {
+                  remote_url: true,
+                  remote_connect: true,
+                },
+              },
+              CompanyDetails: {
+                select: {
+                  admin: true,
+                  enable_2fa: true,
+                  language: true,
+                },
+              },
+              CmStaffGeneral: {
+                select: {
+                  CellPhone: true,
+                },
+              },
             },
           })
         } catch (error) {
@@ -81,7 +96,9 @@ export const AuthenticateUser = extendType({
         username: nonNull(stringArg()),
         company_id: nonNull(intArg()),
         user_admin: nonNull(intArg()),
+        user_locale: nonNull(stringArg()),
         company_admin: nonNull(intArg()),
+        company_language: nonNull(stringArg()),
         remote_url: stringArg(),
         remote_connect: stringArg(),
       },
@@ -91,10 +108,14 @@ export const AuthenticateUser = extendType({
           username: args.username,
           company_id: args.company_id,
           admin: args.user_admin,
+          locale: args.user_locale,
           company: {
             admin: args.company_admin,
             remote_url: args.remote_url,
             remote_connect: args.remote_connect,
+            details: {
+              language: args.company_language,
+            },
           },
         })
       },

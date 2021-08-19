@@ -91,6 +91,34 @@ export const CmStaffGeneral = objectType({
         return root.HolidayRequest
       },
     })
+    t.list.field('SalonBookings', {
+      type: 'Booking',
+      args: {
+        where: 'BookingWhereInput',
+        orderBy: 'BookingOrderByInput',
+        cursor: 'BookingWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'BookingScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.SalonBookings
+      },
+    })
+    t.list.field('RotaShift', {
+      type: 'RotaShift',
+      args: {
+        where: 'RotaShiftWhereInput',
+        orderBy: 'RotaShiftOrderByInput',
+        cursor: 'RotaShiftWhereUniqueInput',
+        take: 'Int',
+        skip: 'Int',
+        distinct: 'RotaShiftScalarFieldEnum',
+      },
+      resolve(root: any) {
+        return root.RotaShift
+      },
+    })
     t.list.field('InventoryDiscrepancy', {
       type: 'InventoryDiscrepancy',
       args: {

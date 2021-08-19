@@ -437,6 +437,7 @@ const Custom: FC<CustomProps> = ({
         visible={editFormModal}
         previewData={selectedItem?.formData}
         preFormName={selectedItem?.name}
+        preFormType={selectedItem?.formType}
         currentForm={selectedItem}
         onHideFormBuilder={() => setEditFormModal(false)}
         onSaveForm={handleSaveForm}

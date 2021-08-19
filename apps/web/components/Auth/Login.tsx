@@ -1,15 +1,13 @@
 import React, { FC } from 'react'
-import { EyeInvisibleOutlined, LinkedinFilled } from '@ant-design/icons'
-import { Button } from '@pabau/ui'
+import { EyeInvisibleOutlined } from '@ant-design/icons'
 import { Formik } from 'formik'
 import { Checkbox, Form, Input, SubmitButton } from 'formik-antd'
 import { LoginValidation } from '@pabau/yup'
-import { ReactComponent as GoogleIcon } from '../../assets/images/google.svg'
-import { ReactComponent as SSOIcon } from '../../assets/images/sso.svg'
-import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import { Exact } from '@pabau/graphql'
-import { QueryLazyOptions } from '@apollo/client'
+// import { ReactComponent as GoogleIcon } from '../../assets/images/google.svg'
+// import { ReactComponent as SSOIcon } from '../../assets/images/sso.svg'
 import styles from '../../pages/login.module.less'
+import { QueryLazyOptions } from '@apollo/client'
+import Link from 'next/link'
 
 export interface LoginFormProps {
   email: string
@@ -20,14 +18,12 @@ export interface LoginFormProps {
 interface LoginProps {
   handlePageShow: React.Dispatch<React.SetStateAction<string>>
   verifyCredentials: (
-    options?: QueryLazyOptions<Exact<{ username: string; password: string }>>
+    options: QueryLazyOptions<{ username: string; password: string }>
   ) => void
 }
 
 const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
-  const { t } = useTranslationI18()
-
-  const loginHandler = async (loginProps: LoginFormProps): Promise<boolean> => {
+  const loginHandler = async (loginProps: LoginFormProps) => {
     if (localStorage?.getItem('token')) {
       localStorage.removeItem('token')
     }
@@ -38,16 +34,17 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
         password: password,
       },
     })
-    return true
+    console.log('finished verifyCredentials')
   }
 
   return (
     <div>
       <div className={styles.signInForm}>
         <div className={styles.formHead}>
-          <h6>{t('login.title')}</h6>
+          <h6>Log In!!</h6>
           <span>
-            Do not have an account? <a>Start a free trial</a>
+            Do not have an account?{' '}
+            <Link href="/signup">Start a free trial</Link>
           </span>
         </div>
       </div>
@@ -60,6 +57,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
           }}
           validationSchema={LoginValidation}
           onSubmit={async (value: LoginFormProps) => {
+            console.log('logging in...')
             await loginHandler(value)
           }}
           render={({ isValid, values }) => (
@@ -94,22 +92,15 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
               </div>
               <div className={styles.btnSubmit}>
                 <SubmitButton
-                  className={
-                    isValid && values.email !== '' && values.password !== ''
-                      ? styles.btnStarted
-                      : styles.btnDisabled
-                  }
+                  className={isValid ? styles.btnStarted : styles.btnDisabled}
                   type={'primary'}
-                  disabled={
-                    isValid && values.email !== '' && values.password !== ''
-                      ? false
-                      : true
-                  }
+                  disabled={!isValid}
                 >
                   Confirm
                 </SubmitButton>
               </div>
-              <div className={styles.accessKey}>
+              {/* TODO uncomment them (followings) once something gets done */}
+              {/*<div className={styles.accessKey}>
                 <div className={styles.line}>
                   <span>or access quickly</span>
                 </div>
@@ -118,6 +109,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
                 <div className={styles.google}>
                   <Button
                     className={styles.btnStarted}
+                    disabled
                     type={'default'}
                     icon={<GoogleIcon />}
                   >
@@ -126,6 +118,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
                 </div>
                 <div className={styles.socialLine}>
                   <Button
+                    disabled
                     className={styles.btnStarted}
                     type={'default'}
                     icon={<LinkedinFilled />}
@@ -133,6 +126,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
                     LinkedIn
                   </Button>
                   <Button
+                    disabled
                     className={styles.btnStarted}
                     type={'default'}
                     icon={<SSOIcon className={styles.keyIc} />}
@@ -140,7 +134,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
                     <span className={styles.iconTxtKey}>SSO</span>
                   </Button>
                 </div>
-              </div>
+              </div>*/}
             </Form>
           )}
         />

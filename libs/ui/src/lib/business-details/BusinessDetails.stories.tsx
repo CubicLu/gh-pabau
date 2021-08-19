@@ -8,7 +8,7 @@ export default {
   argTypes: {},
 }
 
-const DetailsStory = ({ ...args }) => {
+const DetailsStory = ({ args }) => {
   return <BusinessDetails {...args} />
 }
 

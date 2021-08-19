@@ -6,7 +6,7 @@ import * as recursiveReaddir from 'recursive-readdir'
   // Detect case-insensitive duplicates (thanks FAT).
   {
     const files = await new Promise<string[]>((resolve, reject) => {
-      recursiveReaddir('.', ["node_modules", "dist"], function (err, files) {
+      recursiveReaddir('.', ["node_modules", "dist", ".git"], function (err, files) {
         if (err) {
           reject(err)
         } else {

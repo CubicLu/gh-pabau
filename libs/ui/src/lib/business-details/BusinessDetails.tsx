@@ -1,6 +1,4 @@
 import {
-  Avatar,
-  AvatarUploader,
   BusinessLocation,
   BusinessTypes,
   Button,
@@ -8,14 +6,14 @@ import {
   LanguageDropdown,
   PhoneNumberInput,
   SimpleDropdown,
+  AddressDetails,
 } from '@pabau/ui'
-import { Col, Divider, Row, Skeleton } from 'antd'
+import { Col, Divider, Row, Skeleton, Image } from 'antd'
 import React, { FC, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useWindowSize } from 'react-use'
 import currency from '../../assets/currency'
 import { bizTypes } from '../../assets/images/biz-types'
-import NormalClinicLogo from '../../assets/images/our-clinic.png'
 import timezones from '../../assets/timezone'
 import styles from './BusinessDetails.module.less'
 import * as Yup from 'yup'
@@ -27,6 +25,7 @@ export interface BasicInformation {
   companyEmail: string
   phone: string
   website: string
+  logo: string
   businessType: string
 }
 
@@ -47,6 +46,9 @@ export interface BusinessDetailsProps {
   languageSetting?: LanguageSetting
   businessLocation?: string
   buttonClicked?: boolean
+  showUploader?: () => void
+  companyLogo?: string
+  AddressDetails?: AddressDetails
 }
 
 export const BusinessDetails: FC<BusinessDetailsProps> = ({
@@ -57,13 +59,45 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
   languageSetting,
   businessLocation,
   buttonClicked,
+  showUploader,
+  companyLogo,
+  AddressDetails,
 }) => {
   const { t } = useTranslation('common')
   const size = useWindowSize()
 
+  const weeklist = [
+    {
+      key: 'monday',
+      label: t('business.details.week.day.monday'),
+    },
+    {
+      key: 'tuesday',
+      label: t('business.details.week.day.tuesday'),
+    },
+    {
+      key: 'wednesday',
+      label: t('business.details.week.day.wednesday'),
+    },
+    {
+      key: 'thursday',
+      label: t('business.details.week.day.thursday'),
+    },
+    {
+      key: 'friday',
+      label: t('business.details.week.day.friday'),
+    },
+    {
+      key: 'saturday',
+      label: t('business.details.week.day.saturday'),
+    },
+    {
+      key: 'sunday',
+      label: t('business.details.week.day.sunday'),
+    },
+  ]
+
   const [location, setLocation] = useState('')
-  const [showAvatarUploader, setShowAvatarUploader] = useState(false)
-  const [userImage, setUserImage] = useState<string>(NormalClinicLogo)
   const [businessType, setBusinessType] = useState<IOption[]>(bizTypes)
   const [businessTypeData, setBusinessTypeData] = useState('')
   const [locationDetails, setLocationDetails] = useState({
@@ -80,13 +114,14 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
     if (businessLocation !== undefined) {
       setLocation(businessLocation)
     }
+
     const List = [...businessType]
     const type =
       basicInformation?.businessType !== undefined
         ? basicInformation?.businessType
         : ''
-    const typeList = type.split(',')
 
+    const typeList = type.split(',')
     typeList.map((item) => {
       const index = List.findIndex((i) => i.title === item)
       if (index !== -1) {
@@ -98,12 +133,6 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [basicInformation])
 
-  const handleChangeImage = (image: string) => {
-    setUserImage(image)
-  }
-  const uploadPhoto = () => {
-    setShowAvatarUploader(true)
-  }
   const handleSaveChanges = (handleSubmit, values) => {
     handleSubmit()
     onSave?.({
@@ -120,7 +149,8 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
         timezone: values.timezone,
         currency: values.currency,
         dateFormat: values.dateFormat,
-        weekStart: values.weekStart,
+        weekStart: weeklist.find((item) => item.label === values.weekStart)
+          ?.key,
       },
       businessLocation: locationDetails,
       businessLocationData: businessLocationData,
@@ -144,7 +174,9 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
     timezone: languageSetting?.timezone || '',
     currency: languageSetting?.currency || '',
     dateFormat: languageSetting?.dateFormat || '',
-    weekStart: languageSetting?.weekStart || '',
+    weekStart:
+      weeklist.find((item) => item.key === languageSetting?.weekStart)?.label ||
+      '',
   }
 
   const formikValidationSchema = Yup.object({
@@ -158,12 +190,12 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
 
   const handleLocationChanges = (value, data) => {
     setLocationDetails({
-      address: data.address ?? '',
-      apt: data.apt ?? '',
-      city: data.city ?? '',
-      country: data.country ?? '',
-      postcode: data.postcode ?? '',
-      region: data.region ?? '',
+      address: data?.address ?? '',
+      apt: data?.apt ?? '',
+      city: data?.city ?? '',
+      country: data?.country ?? '',
+      postcode: data?.postcode ?? '',
+      region: data?.region ?? '',
     })
     setBusinessLocationData(value)
   }
@@ -203,16 +235,34 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
                 {t('business.details.tab.basic.information.section')}
               </p>
               <div className={styles.normalClinicLogo}>
-                <div onClick={uploadPhoto}>
-                  <Avatar
-                    src={userImage}
-                    size={size.width > 767 ? 128 : 88}
-                    name={'Clinic Logo'}
-                    edit={true}
-                  />
+                <div>
+                  {!loading ? (
+                    <Image preview={false} width={200} src={companyLogo} />
+                  ) : (
+                    <Skeleton.Image style={{ width: 200 }} />
+                  )}
                 </div>
               </div>
-              <Row gutter={[32, 28]} className={styles.name}>
+              <div className={styles.normalClinicLogo}>
+                <Button
+                  style={
+                    size.width > 767
+                      ? { margin: '0 16px', verticalAlign: 'middle' }
+                      : { margin: '0 10px', verticalAlign: 'middle' }
+                  }
+                  onClick={showUploader}
+                >
+                  {t('setup.business-details.uploadlogo')}
+                </Button>
+                <Button style={{ verticalAlign: 'middle' }}>
+                  {t('setup.business-details.delete')}
+                </Button>
+              </div>
+              <Row gutter={[48, 0]}>
+                <Divider style={{ marginTop: 10, marginBottom: 25 }} />
+              </Row>
+
+              <Row gutter={[32, 0]} className={styles.name}>
                 <Col className="gutter-row" xs={24} sm={12}>
                   <Form.Item
                     label={t('business.details.input.business.name')}
@@ -359,7 +409,9 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
                         dropdownItems={timezones.map(
                           (timezone) => timezone.text || ''
                         )}
-                        onSelected={(value) => setFieldValue('timezone', value)}
+                        onSelected={(value) => {
+                          setFieldValue('timezone', value)
+                        }}
                       />
                     ) : (
                       <Skeleton.Input active={true} size={'small'} />
@@ -409,7 +461,7 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
                 </Col>
                 <Col className="gutter-row" xs={24} sm={12}>
                   <Form.Item
-                    name={'values'}
+                    name={'weekStart'}
                     label={
                       loading ? t('business.details.week.start.label') : ''
                     }
@@ -419,18 +471,10 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
                         label={t('business.details.week.start.label')}
                         tooltip={t('business.details.week.start.tooltip')}
                         value={values.weekStart}
-                        dropdownItems={[
-                          t('business.details.week.day.monday'),
-                          t('business.details.week.day.tuesday'),
-                          t('business.details.week.day.wednesday'),
-                          t('business.details.week.day.thursday'),
-                          t('business.details.week.day.friday'),
-                          t('business.details.week.day.saturday'),
-                          t('business.details.week.day.sunday'),
-                        ]}
-                        onSelected={(value) =>
+                        dropdownItems={weeklist.map((item) => item.label)}
+                        onSelected={(value) => {
                           setFieldValue('weekStart', value)
-                        }
+                        }}
                       />
                     ) : (
                       <Skeleton.Input active={true} size={'small'} />
@@ -449,6 +493,7 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
                 loading={loading}
                 value={location}
                 onChange={handleLocationChanges}
+                AddressDetails={AddressDetails}
               />
             </div>
             <div className={styles.btnSave}>
@@ -473,14 +518,6 @@ export const BusinessDetails: FC<BusinessDetailsProps> = ({
           </Form>
         )}
       </Formik>
-      <AvatarUploader
-        visible={showAvatarUploader}
-        title={t('account.settings.profile.avatarupload.title')}
-        onCreate={handleChangeImage}
-        imageURL={userImage}
-        onCancel={() => setShowAvatarUploader(false)}
-        shape={'rectangle'}
-      />
     </div>
   )
 }

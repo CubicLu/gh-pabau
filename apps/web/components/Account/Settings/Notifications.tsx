@@ -88,14 +88,14 @@ const Notification: FC<NotificationProps> = ({
       ),
     },
     'Appointment Booked': {
-      type: 'New Appointment via pabau',
+      type: 'New Appointment via calendar',
       title: t('account.settings.notification.general.appointmentbooked'),
       description: t(
         'account.settings.notification.general.appointmentbooked.description'
       ),
     },
     'Appointment Cancelled': {
-      type: 'Cancelled appointment via pabau',
+      type: 'Cancelled appointment via calendar',
       title: t('account.settings.notification.general.appointmentcancelled'),
       description: t(
         'account.settings.notification.general.appointmentcancelled.description'
@@ -106,6 +106,13 @@ const Notification: FC<NotificationProps> = ({
       title: t('account.settings.notification.general.leadinquiry'),
       description: t(
         'account.settings.notification.general.leadinquiry.description'
+      ),
+    },
+    'Lead Assigned': {
+      type: 'Lead assigned via pabau',
+      title: t('account.settings.notification.general.lead.assigned.title'),
+      description: t(
+        'account.settings.notification.general.lead.assigned.description'
       ),
     },
   }
@@ -191,13 +198,25 @@ const Notification: FC<NotificationProps> = ({
     if (!current) {
       current = defaultTab
     }
+    const checkBtnOptions = [...btnOptions]
+    if (
+      rest?.title === 'Appointment Booked' ||
+      rest?.title === 'Appointment Cancelled'
+    ) {
+      const ios_obj = {
+        key: 'ios_notification',
+        label: t('account.settings.notification.general.button.label1'),
+        disabled: false,
+      }
+      checkBtnOptions.unshift(ios_obj)
+    }
     return (
       <>
         <h2>{alertTranslations[`${rest?.title}`]?.title}</h2>
         <span>{alertTranslations[`${rest?.title}`]?.description}</span>
         <br />
         <br />
-        {btnOptions.map(({ key, label }) =>
+        {checkBtnOptions.map(({ key, label }) =>
           loading ? (
             <Skeleton.Button
               active
@@ -233,18 +252,22 @@ const Notification: FC<NotificationProps> = ({
         <Form.Item>
           <h1>{t('account.settings.notification.general.label')}</h1>
         </Form.Item>
-        {allAlertsState?.map(({ id, title, description }, index) => (
-          <>
-            <Form.Item key={`allAlerts${index}`}>
-              <AlertAction
-                title={title}
-                description={description}
-                alertId={id}
-              />
-            </Form.Item>
-            <Divider />
-          </>
-        ))}
+        {allAlertsState?.map(
+          ({ id, title, description }, index) =>
+            title !== 'Feed Post' &&
+            title !== 'Like Post' && (
+              <>
+                <Form.Item key={`allAlerts${index}`}>
+                  <AlertAction
+                    title={title}
+                    description={description}
+                    alertId={id}
+                  />
+                </Form.Item>
+                <Divider />
+              </>
+            )
+        )}
       </Form>
     </div>
   )

@@ -24,7 +24,9 @@ const Subscription: FC = () => {
   const [activeTab, setActiveTab] = useState('0')
   const setHide = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
-  const [filterValue, setFilterValue] = useState(0)
+  const [filterValue, setFilterValue] = useState<'ALL' | 'PAID' | 'NOT_PAID'>(
+    'ALL'
+  )
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 768px)', false)
   const router = useRouter()
@@ -50,10 +52,6 @@ const Subscription: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab])
 
-  const onFilterApply = (e) => {
-    setFilterValue((e) => (e === 1 ? 0 : 1))
-  }
-
   const filterContent = () => (
     <div className={styles.filterContent}>
       {!isMobile && (
@@ -65,15 +63,18 @@ const Subscription: FC = () => {
       <div className={styles.radioTextStyle}>
         <Radio.Group
           onChange={(e) => {
-            onFilterApply(e.target.value)
+            setFilterValue(e.target.value)
           }}
           value={filterValue}
         >
-          <Radio value={1}>
-            <span>{t('setup.table.status.submitted')}</span>
+          <Radio value="ALL">
+            <span>{t('setup.table.status.all')}</span>
           </Radio>
-          <Radio value={0}>
+          <Radio value="PAID">
             <span>{t('setup.table.status.paidout')}</span>
+          </Radio>
+          <Radio value="NOT_PAID">
+            <span>{t('setup.table.status.other')}</span>
           </Radio>
         </Radio.Group>
       </div>

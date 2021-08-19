@@ -123,8 +123,8 @@ en:
   notifications.email.letters.subject: 'Letters Test'
   notifications.email.labResults.subject: 'Lab Result Test'
   notifications.sms.send.successMessage: 'Test SMS sent'
-  notifications.email.send.successMessage: 'Test Email sent'
-  notifications.email.send.failedMessage: 'Test Email failed'
+  notifications.email.send.successMessage: 'Test Email Sent'
+  notifications.email.send.failedMessage: 'Test Email Failed'
   notifications.emailPreview.footer.contactMessage: 'Or get in touch with us via Phone or Email:'
   notifications.classBookedGroup.title: 'Booked onto class (group)'
   notifications.medicalForms.title: 'Medical forms'
@@ -700,41 +700,60 @@ en:
     +44 000 987 507
 
     info@theclinic.com'
+  ui.report-help-sidebar.payroll-title: Payroll
   ui.report-help-sidebar.payroll-team-commission-title: 'Team Comission'
   ui.report-help-sidebar.payroll-team-commission-content: ui.report-help-sidebar.payroll-team-commission-content-en
   ui.report-help-sidebar.payroll-team-wages-title: 'Team Wages'
   ui.report-help-sidebar.payroll-team-wages-content: ui.report-help-sidebar.payroll-team-wages-content-en
+  ui.report-help-sidebar.shifts-title: Shifts
   ui.report-help-sidebar.shifts-days-worked-title: 'Days Worked'
   ui.report-help-sidebar.shifts-days-worked-content: ui.report-help-sidebar.shifts-days-worked-content-en
   ui.report-help-sidebar.shifts-days-off-title: 'Days Off'
   ui.report-help-sidebar.shifts-days-off-content: ui.report-help-sidebar.shifts-days-off-content-en
-  ui.report-help-sidebar.performance-title: performance
+  ui.report-help-sidebar.shifts-holiday-title: Holiday
+  ui.report-help-sidebar.shifts-others-title: Others
+  ui.report-help-sidebar.shifts-sickness-title: Sickness
+  ui.report-help-sidebar.performance-title: Performance
   ui.report-help-sidebar.performance-services-title: Services
   ui.report-help-sidebar.performance-services-content: ui.report-help-sidebar.performance-services-content-en
   ui.report-help-sidebar.performance-products-title: Products
   ui.report-help-sidebar.performance-products-content: ui.report-help-sidebar.performance-products-content-en
   ui.report-help-sidebar.performance-packages-title: Packages
   ui.report-help-sidebar.performance-packages-content: ui.report-help-sidebar.performance-packages-content-en
+  ui.report-help-sidebar.performance-accounts-title: Accounts
+  ui.report-help-sidebar.performance-retails-title: Retails
   ui.report-help-sidebar.performance-vouchers-title: Vouchers
   ui.report-help-sidebar.performance-vouchers-content: ui.report-help-sidebar.performance-vouchers-content-en
-  ui.report-help-sidebar.kpis-title: kpis
+  ui.report-help-sidebar.kpis-title: Kpis
   ui.report-help-sidebar.kpis-services-title: Services
   ui.report-help-sidebar.kpis-services-content: ui.report-help-sidebar.kpis-services-content-en
   ui.report-help-sidebar.kpis-products-title: Products
   ui.report-help-sidebar.kpis-products-content: ui.report-help-sidebar.kpis-products-content-en
   ui.report-help-sidebar.kpis-avg-bill-title: 'Avg Bill (per visit)'
   ui.report-help-sidebar.kpis-avg-bill-content: ui.report-help-sidebar.kpis-avg-bill-content-en
+  ui.report-help-sidebar.kpis-avg-per-user-title: Avg Bill (per user)
+  ui.report-help-sidebar.kpis-packages-title: Packages
+  ui.report-help-sidebar.kpis-vouchers-title: Vouchers
+  ui.report-help-sidebar.kpis-accounts-title: Accounts
+  ui.report-help-sidebar.kpis-retails-title: Retails
   ui.report-help-sidebar.kpis-client-visits-title: 'Client Visits'
   ui.report-help-sidebar.kpis-client-visits-content: ui.report-help-sidebar.kpis-client-visits-content-en
+  ui.report-help-sidebar.kpis-new-clients-title: New Clients
+  ui.report-help-sidebar.kpis-existing-clients-title: Existing Clients
+  ui.report-help-sidebar.kpis-walking-title: Walking
   ui.report-help-sidebar.kpis-rebook-title: Rebook
   ui.report-help-sidebar.kpis-rebook-content: ui.report-help-sidebar.kpis-rebook-content-en
   ui.report-help-sidebar.kpis-utilization-title: Utilization
   ui.report-help-sidebar.kpis-utilization-content: ui.report-help-sidebar.kpis-utilization-content-en
   ui.report-help-sidebar.kpis-review-score-title: 'Review Score'
   ui.report-help-sidebar.kpis-review-score-content: ui.report-help-sidebar.kpis-review-score-content-en
+  ui.report-help-sidebar.kpis-review-5-title: 5* Review
+  ui.report-help-sidebar.kpis-review-4-title: 4* Review
+  ui.report-help-sidebar.kpis-review-3-title: 3* Review
+  ui.report-help-sidebar.kpis-review-2-title: 2* Review
+  ui.report-help-sidebar.kpis-review-1-title: 1* Review
   ui.report-help-sidebar.kpis-care-factor-title: 'Care Factor'
   ui.report-help-sidebar.kpis-care-factor-content: ui.report-help-sidebar.kpis-care-factor-content-en
-  ui.report-help-sidebar.kpis-vouchers-title: Vouchers
   ui.report-help-sidebar.kpis-vouchers-content: ui.report-help-sidebar.kpis-vouchers-content_en
   marketingsource-title-short: Source
   marketingsource-status-field: Status
@@ -767,6 +786,7 @@ en:
   crud-table-pagination-test-displaying: 'Rows per page'
   crud-table-no-search-results: 'No results found'
   crud-table-try-adjust: 'Try adjusting your search to find what you’re looking for'
+  crud-table-input-required: '{{what}} is required!'
   crud-table-input-min-length-validate: 'The value for {{what}} must be at least {{min}} characters.'
   crud-table-input-max-length-validate: 'The max length of {{max}} is reached.'
   crud-table-input-invalid-validate: 'Invalid {{what}}'
@@ -782,14 +802,27 @@ en:
   common-label-create: Create
   common-label-cancel: Cancel
   common-label-save: Save
+  common-label-select: Select {{what}}
+  common-label-enter: Enter {{what}}
   common-label-delete-warning: 'will be deleted. This action is irreversible'
   webinar-header-recomended-webinar: 'Recommended Webinar'
   intercom-title-type-article: Article
   webinar-body-type-video: Video
-  intercom-article-title-setting-up-a-marketing-source: 'Setting up a Marketing Source'
-  intercom-article-title-create-a-marketing-source: 'Creating a Marketing Source'
+  webinar-body-type-blog: Blog
+  intercom.article.title.how.pabau.help: 'How Pabau helps you with HIPAA compliance'
+  intercom.article.title.how.setup.rota: 'How to set up Rota Templates'
+  intercom.article.title.how.send.social: 'How to send a Social Survey manually'
+  intercom.article.title.how.add.links: 'How to add and hyperlink a picture in a template'
   header-search-text-placeholder: 'Search clients or leads'
   footer-guides-header-status-text: 'Related guides'
+  footer.webinar.join.btn: 'Join class'
+  footer.webinar.register.btn: 'Register'
+  footer.webinar.getting.started: 'Getting Started'
+  footer.webinar.elapsed: 'elapsed'
+  footer.webinar.progress: 'in progress'
+  footer.webinar.minutes: 'minutes'
+  footer.webinar.join: 'Join'
+  footer.webinar.register: 'Register'
   avatar.give.feedback.giveus: 'Give us feedback'
   avatar.give.feedback.helpus: 'Help us improve Pabau'
   avatar.give.feedback.somethingwrong: 'Something went wrong'
@@ -820,7 +853,9 @@ en:
   notifications.holidayrequest: 'Holiday Request'
   notifications.businessrefer: 'Business Refer'
   notifications.empty.msg: 'No notifications yet'
+  news.empty.msg: 'No news yet'
   notifications.empty.hint: 'Stay tuned! Notifications about your activity will show up here.'
+  news.empty.hint: 'Stay tuned! News will show up here'
   notifications.empty.anchor: 'Notification settings'
   quickcreate.client: Client
   quickcreate.lead: Lead
@@ -950,6 +985,9 @@ en:
   invoice.card.label: Card
   invoice.cash.label: Cash
   invoice.pay.button.label: Pay with card
+  statement.invoice.label: Statment Invoice
+  statement.invoice.date.label: Statment Date
+  statement.period.label: Statement Period
   receipt.payment.date.label: Payment Date
   receipt.payment.with.invoice: Payments applied to invoices
   settings-header: Settings
@@ -976,7 +1014,6 @@ en:
   setup.discount.data.consultation: Consultation
   setup.discount.data.cooltech: Cooltech
   setup.discount.data.cooltech+accentprime: 'Cooltech + Accent Prime'
-  ui.report-help-sidebar.payroll-title: payroll
   setup.discount.data.dermalux: 'Dermalux'
   setup.discount.data.londonroad,london,england: 'London Road, London, England'
   setup.discount.data.loremstreet,liverpool,england: 'Lorem Street, Liverpool, England'
@@ -1070,7 +1107,8 @@ en:
   setup.clinic.data.custom.field: 'Custom Fields'
   setup.clinic.data.imports: 'Data Imports'
   setup.clinic.subscription: 'Pabau Subscription'
-  setup.clinic.subscription.billing: 'Billing Activity'
+  setup.clinic.subscription.billing: 'Billing Details'
+  setup.clinic.subscription.billing.details: 'Billing history'
   setup.clinic.subscription.addons: Addons
   setup.product.service.title: 'Products & Services'
   setup.services: Services
@@ -1816,6 +1854,10 @@ en:
   setup.business-details.2fa.tooltip: 'Force 2 Factor Authentication for your system to enhance logging and browsing security throughout the system.'
   setup.business-details.2fa.content: 'Two-factor authentication adds an extra layer of security to your Pabau account. By asking you to enter a verification code after entering the correct email address and password, it will protect you from potential attackers who also might have gained access to your email address. It will ensure that the secure data you share with your clients stays secure, as they will need to enter a verification code as well. /n*SMS credits are mandatory, in order for the two-factor authentication to work.'
   setup.business-details.2fa.update-success: 'Updated successfully!'
+  setup.business-details.uploadlogo: 'Upload Logo'
+  setup.business-details.delete: 'Delete'
+  setup.business-details.update.success: 'Company details updated succesfully'
+  setup.business-details.update.error: 'Something went wrong while updating the data.'
   settings-performance-tab-header-description: 'Lorem ipsum carrots, enhanced undergraduate developer, but they do occaecat time and vitality.'
   account.settings.response.notification.profilesection.success: Profile Updated Successfully
   account.settings.response.notification.securitysection.success: Security Information Updated Successfully
@@ -1919,6 +1961,8 @@ en:
   account.settings.notification.general.appointmentcancelled.description: 'Who cancelled service appointment'
   account.settings.notification.general.leadinquiry: 'Lead Enquiry'
   account.settings.notification.general.leadinquiry.description: 'Receive notification whenever you receive new Enquiry.'
+  account.settings.notification.general.lead.assigned.title: 'Lead Assigned'
+  account.settings.notification.general.lead.assigned.description: 'Receive notification whenever you assigned to lead.'
   account.settings.notification.application.label: APPLICATION
   account.settings.notification.general.button.label1: iOS
   account.settings.notification.general.button.label2: Email
@@ -2342,6 +2386,37 @@ en:
   ui.medicalform.setting.requried.tooltip: 'You must use "Required" if you wish to link the answer from the client to a field'
   ui.inputwithtag.addtag: 'Add field'
   ui.inputwithtag.modal.title: 'Add a Personalization'
+  setup.reports.team-report: Team Report
+  setup.reports.search-report: Search by report name
+  setup.reports.team.title: Team
+  setup.reports.financials.title: Financials
+  setup.reports.team.report-details: Report Details
+  setup.reports.team.kpi-explorer: KPI Explorer
+  setup.reports.team.trend: Trend
+  setup.reports.enable-benchmarks: Enable industry benchmarks
+  setup.reports.download: Download
+  setup.reports.settings: Settings
+  setup.reports.help: Help
+  setup.reports.by-teams: By Teams
+  setup.reports.by-locations: By Locations
+  setup.reports.by-time-period: By Time Period
+  setup.reports.by-date: By Date
+  setup.reports.coming-soon: Coming Soon
+  setup.reports.all-team: All Team
+  setup.reports.for: For
+  setup.reports.of: of
+  setup.reports.select-range-type: Select a
+  setup.reports.all: All
+  setup.reports.select-employee: Select an employee
+  setup.reports.by: By
+  setup.reports.at: at
+  setup.reports.all-locations: All Locations
+  setup.reports.select-location: Select location
+  setup.reports.select-all: Select All
+  setup.reports.target: Target
+  setup.reports.remove-metric: Remove Metric
+  setup.reports.showing: Showing
+  setup.reports.show: Show
   setup.reports.title: Reports
   setup.reports.search.result: 'Search results'
   setup.reports.search.text.placeholder: 'Search by report name'
@@ -2485,6 +2560,8 @@ en:
   setup.reports.hide: 'Hide'
   setup.reports.showmore: 'Show more'
   setup.reports.custome.description: 'Create your first custom report by finding a report, editing and saving.'
+  setup.reports.table.error: Error occured while loading a table, data can't be rendered right now
+  setup.reports.table.empty: There is no data available for now
   setup.reports.month.Jan: 'Jan'
   setup.reports.month.Feb: 'Feb'
   setup.reports.month.Mar: 'Mar'
@@ -2611,12 +2688,12 @@ en:
     Please find attached your file. If you have any questions do not hesitate to contact us at +44 000 987 507.
     Kind regards,
     The clinic Team'
+  quickcreate.required.label: 'Required'
+  quickCreate.custom.field.date.placeholder: 'Select a date'
   quickCreate.client.modal.newContact: 'New Contact'
   quickCreate.client.modal.cancel: 'Cancel'
   quickCreate.client.modal.create: 'Create'
   quickCreate.client.modal.tab.general: 'General'
-  quickCreate.client.modal.tab.gpDetails: 'GP Details'
-  quickCreate.client.modal.tab.customDetails: 'Custom Details'
   quickCreate.client.modal.more: 'More'
   quickCreate.client.modal.general: 'General'
   quickCreate.client.modal.general.noLabel: 'No label'
@@ -2624,6 +2701,7 @@ en:
   quickCreate.client.modal.general.addLabels: 'Add to label'
   quickCreate.client.modal.general.newLabel: 'New Label'
   quickCreate.client.modal.general.salutation: 'Salutation'
+  quickCreate.client.modal.general.salutation.placeholder: 'Salutation'
   quickCreate.client.modal.general.firstName: 'First Name'
   quickCreate.client.modal.general.lastName: 'Last Name'
   quickCreate.client.modal.general.firstName.placeHolder: 'Enter first name'
@@ -2633,11 +2711,15 @@ en:
   quickCreate.client.modal.general.gender.male: 'Male'
   quickCreate.client.modal.general.gender.female: 'Female'
   quickCreate.client.modal.general.hearOption.label: 'How did you hear about us?'
+  quickCreate.client.modal.general.lead.status.label: 'Lead Stage'
+  quickCreate.client.modal.general.description.label: 'Description'
+  quickCreate.client.modal.general.description.placeholder: 'Enter description'
   quickCreate.client.modal.general.hearOption.selectOption: 'Select an option'
   quickCreate.client.modal.general.hearOption.anythingHere: 'Anything here'
   quickCreate.client.modal.general.date: 'Date of birth'
+  quickCreate.client.modal.general.location.label: 'Location'
   quickCreate.client.modal.general.preferredLanguage: 'Select preferred language'
-  quickCreate.client.modal.general.preferredLanguage.default: 'Use Provider Language (English)'
+  quickCreate.client.modal.general.preferredLanguage.default: 'English'
   quickCreate.client.modal.general.contactInfo: 'Contact Info'
   quickCreate.client.modal.general.email: 'Email'
   quickCreate.client.modal.general.email.placeHolder: 'Enter email'
@@ -2647,13 +2729,15 @@ en:
   quickCreate.client.modal.general.subscription.detail:
     'When you ask a client to opt in, please do remind them that you will
     always send information deemed to be critical'
-  quickCreate.client.modal.general.subscription.newsLetter: 'NewsLatter'
+  quickCreate.client.modal.general.subscription.newsLetter: 'Newslatter'
   quickCreate.client.modal.general.subscription.sms: 'SMS'
   quickCreate.client.modal.general.subscription.postal: 'Postal'
   quickCreate.client.modal.general.subscription.phoneCalls: 'Phone Calls'
   quickCreate.client.modal.general.addresses: 'Address'
-  quickCreate.client.modal.general.addresses.label: 'Addresses'
+  quickCreate.client.modal.general.addresses.label: 'Address'
   quickCreate.client.modal.general.addresses.placeHolder: 'Search Address'
+  quickCreate.client.modal.general.county.label: 'County'
+  quickCreate.client.modal.general.address.two.label: 'Address 2'
   quickCreate.client.modal.general.addresses.country: 'Country'
   quickCreate.client.modal.general.addresses.country.placeHolder: 'Select country'
   quickCreate.client.modal.general.addresses.city: 'City'
@@ -2665,39 +2749,31 @@ en:
   quickCreate.client.modal.general.thirdParty.botox: 'Botox'
   quickCreate.client.modal.general.thirdParty.laser: 'Laser'
   quickCreate.client.modal.general.addLabel.duplicateError: 'Same Label already Exist'
-  quickCreate.validation.salutation.required: 'Salutation is required'
+  quickCreate.client.modal.create.success: 'Success! Contact successfully created'
+  quickCreate.client.modal.create.contact.exits.error: 'A contact already exists!'
+  quickCreate.client.modal.create.contact.error: 'Error! while add contact'
+  quickCreate.number.validation.message: '{{field}} must be a number'
+  quickCreate.validation.is.required: '{{field}} is required'
   quickCreate.validation.firstName.required: 'First name is required'
   quickCreate.validation.lastName.required: 'Last name is required'
-  quickCreate.validation.gender.required: 'Gender is required'
   quickCreate.validation.hearOption.required: 'Hear option is required'
-  quickCreate.validation.preferredLanguage.required: 'Preferred Language is required'
   quickCreate.validation.email.required: 'Email is required'
   quickCreate.validation.address.required: 'Address is required'
   quickCreate.validation.country.required: 'Country is required'
   quickCreate.validation.city.required: 'City is required'
   quickCreate.validation.postCode.required: 'Postcode is required'
-  quickCreate.validation.thirdPartyDetails.required: 'Third Party detail is required'
   quickCreate.validation.email.validate: 'Please enter valid email'
-  quickCreate.validation.procedureType.required: 'Procedure type is required'
   quickCreate.validation.treatmentInterestPage.required: 'Treatment interest page is required'
   quickCreate.validation.title.required: 'Title is required'
   quickCreate.validation.keyword.required: 'Keyword is required'
   quickCreate.lead.modal.newLead: 'New Lead'
   quickCreate.lead.modal.newLead.assigneeTitle: 'Assignee'
-  quickCreate.lead.modal.tab.general: 'General'
   quickCreate.lead.modal.general.notes: 'Notes'
-  quickCreate.lead.modal.general.notes.placeholder: 'Note'
-  quickCreate.lead.modal.general.statisticCustom: 'Statistic *custom*'
-  quickCreate.lead.modal.general.procedureType: 'Procedure Type'
-  quickCreate.lead.modal.general.procedureType.placeholder: 'Enter Procedure Type'
-  quickCreate.lead.modal.general.title: 'Title'
-  quickCreate.lead.modal.general.title.placeholder: 'Enter Title'
-  quickCreate.lead.modal.general.keyword: 'Keyword'
-  quickCreate.lead.modal.general.keyword.placeholder: 'Enter keyword'
-  quickCreate.lead.modal.general.treatmentInterestPage: 'Treatment interest page'
-  quickCreate.lead.modal.general.treatmentInterestPage.placeholder: 'Select Treatment interest'
+  quickCreate.lead.modal.general.notes.placeholder: 'Enter notes'
   quickCreate.lead.modal.general.addEmployee: 'Add Employee'
   quickCreate.lead.modal.general.selectEmployee: 'Select Employee'
+  quickCreate.lead.modal.create.success: 'Success! Lead successfully created'
+  quickCreate.lead.modal.create.error: 'Error! while create lead'
   settings.calendar.title: Calendar settings
   settings.calendar.breadcrumb.setup: Setup
   settings.calendar.breadcrumb.title: Calendar Settings
@@ -3053,6 +3129,8 @@ en:
   reset.password.confirm.required.message: 'confirm password is required'
   reset.password.confirm.match.message: 'password & confirm password both need to be the same'
   reset.password.confirm.title: 'Confirm Password'
+  reset.company.name.title: 'Company Name'
+  reset.username.title: 'Email'
   reset.password.change.button: 'Change'
   setup.appointmentstatuses.schema.title: 'Appointment Status'
   setup.appointmentstatuses.schema.title.lowercase: 'appointment status'
@@ -3235,12 +3313,17 @@ en:
   ui.add.thirdparty.addmanual.phone.label: 'Phone Number'
   ui.add.thirdparty.address: 'Address'
   ui.add.thirdparty.address.street.label: 'Street address'
-  ui.add.thirdparty.address.street.placholder: 'eg. 17 Hanbury Place, High Street'
+  ui.add.thirdparty.address.street.placeholder: 'eg. 17 Hanbury Place, High Street'
   ui.add.thirdparty.address.postcode.label: 'Postcode'
-  ui.add.thirdparty.address.postcode.placholder: 'eg. E1 6AN'
+  ui.add.thirdparty.address.postcode.placeholder: 'eg. E1 6AN'
   ui.add.thirdparty.address.town.label: 'Town'
-  ui.add.thirdparty.address.town.placholder: 'eg. London'
+  ui.add.thirdparty.address.town.placeholder: 'eg. London'
   ui.add.thirdparty.address.country.label: 'Country'
+  ui.add.thirdparty.set.button.practice: 'Set as a practice'
+  ui.add.thirdparty.set.button.company: 'Set as a company'
+  ui.add.thirdparty.set.button.insurance: 'Set as an insurance provider'
+  ui.add.thirdparty.search.guide: 'Select your practice from the results below'
+  ui.add.thirdparty.search.loading: 'Loading Results'
   ui.clientdetails.selfpaid: 'Self paid'
   ui.clientdetails.active: 'Active'
   ui.clientdetails.deactivate: 'Deactivate'
@@ -3361,12 +3444,80 @@ en:
   setup.table.column.amount: 'Amount'
   setup.table.column.status: 'Status'
   setup.table.btn.preview: 'Preview'
-  setup.table.status.submitted: 'Submitted'
   setup.table.status.paidout: 'Paid Out'
+  setup.table.status.all: 'All'
+  setup.table.status.other: 'Other'
   setup.subscription: 'Subscription'
   setup.subscription.invoiceactvity: 'Invoice Activity'
+  setup.subscription.soon: 'Soon'
   setup.subscription.billingdetails: 'Billing Details'
   setup.subscription.accountinformations: 'Account Information'
+  setup.subscription.invoice: 'Subscription Invoice'
+  setup.subscription.account-summary: 'Account Summary'
+  setup.subscription.account-owner: 'Account Owner'
+  setup.subscription.your-pabau-url: 'Your Pabau URL'
+  setup.subscription.active-employees: 'Active Employees'
+  setup.subscription.server-name: 'Server name'
+  setup.subscription.file-storage: 'File Storage'
+  setup.subscription.payments: 'Payments'
+  setup.subscription.account-manager: 'Account Manager'
+  setup.subscription.account-manager-info: 'Have an on-call dedicated account manager to bounce ideas off of and dedicated help in setting up your account'
+  setup.subscription.payments-title: 'List of payments'
+  setup.subscription.payments-subtitle: 'Online payments processing from our gateway service'
+  setup.subscription.billing-information: 'Billing Information'
+  setup.subscription.billing-information-info: 'Manage details displayed on our invoices issued to you'
+  setup.subscription.bill-estimate: 'Bill estimate'
+  setup.subscription.save: 'Save'
+  setup.subscription.edit-payment-method: 'Edit payment method'
+  setup.subscription.next-charge: 'Next Charge'
+  setup.subscription.payment-fee: 'Payment Fee'
+  setup.subscription.card-payment: 'Card Payment'
+  setup.subscription.payment-fee-info: 'Fully inclusive of all card processing and bank fees'
+  setup.subscription.payment-fee-2: 'Rates are exclusive of VAT'
+  setup.subscription.payment-fee-3: 'learn more about pricing'
+  setup.subscription.company-details: 'Company Details'
+  setup.subscription.owner-of-company: 'Owner of company'
+  setup.subscription.address: 'Address'
+  setup.subscription.subscription-name: 'Subscription Name'
+  setup.table.column.actions: Actions
+  setup.subscription.please-enter-card: 'Please enter card owner name'
+  setup.subscription.your-payment-method: 'Your Payment Method'
+  setup.subscription.your-card-is: 'Your card is only used for topping up your account'
+  setup.subscription.in-case-your: 'in case your balance becomes negative'
+  setup.subscription.view-full-estimate: 'View Full Estimate'
+  setup.subscription.card-details: 'Card details'
+  setup.subscription.card-owner: 'Card Owner'
+  setup.subscription.card-number: 'Card number'
+  setup.subscription.expiration-date: 'Expiration date'
+  setup.subscription.valid-thru: 'Valid thru'
+  setup.subscription.bank-details: 'Bank details'
+  setup.subscription.name: 'Name'
+  setup.subscription.account-number: 'Account Number'
+  setup.subscription.sort-code: 'Sort Code'
+  setup.subscription.bank-name: 'Bank Name'
+  setup.subscription.see-the: 'see the'
+  setup.subscription.billing-activity-page: 'billing activity page'
+  setup.subscription.for-full-billing: 'for full billing history'
+  setup.subscription.enter-card: 'Please enter card number'
+  setup.subscription.enter-valid-card: 'Please enter valid card number'
+  setup.subscription.enter-sort-code: 'Please enter sort code'
+  setup.subscription.enter-acc-no: 'Please enter your account number'
+  setup.subscription.enter-bank-name: 'Please enter bank name'
+  setup.subscription.enter-exp-date: 'Please enter expiration date'
+  setup.subscription.enter-csv: 'Please enter CSC'
+  setup.subscription.enter-valid-csv: 'Enter valid CSC'
+  setup.subscription.learn-more: 'Learn More'
+  setup.subscription.in-trial: 'In trial'
+  setup.subscription.you-have-trial-d: 'You have days {{trialDays}} left in your free trial'
+  setup.subscription.reach-out: 'Reach out to you product specialist or give us a call at {{phoneNumber}} to sign up.'
+  setup.subscription.marketing-plus: 'Marketing Plus'
+  setup.subscription.care-plus: 'Care Plus'
+  setup.subscription.automation: 'Automation'
+  setup.subscription.intelligence: 'Intelligence'
+  setup.subscription.team-plus: 'Team Plus'
+  setup.subscription.using-it: 'Using it'
+  setup.subscription.supercharge-your-m: 'Supercharge your marketing with our extended suite of tools'
+  setup.subscription.create-custom-p: 'Create custom pathways and embrace automated care with Pabau care'
   setup.crud.filter: 'Filter'
   setup.crud.subscription.searchholder: 'Search in Invoice'
   setup.header.chip.blog: 'Blog'
@@ -3387,9 +3538,21 @@ en:
   setup.page.live.upcoming.webinar.title: 'Live & Upcoming Webinars'
   setup.page.live.upcoming.webinar.view.schedule: 'View Full Schedule'
   setup.page.live.upcoming.webinar.join.class.label: 'Join class'
+  setup.page.live.upcoming.webinar.closed.label: 'Closed'
+  setup.page.live.upcoming.webinar.closed-at.label: 'Closed at'
   setup.page.live.upcoming.webinar.count.me.label: 'Count me in'
+  setup.page.live.upcoming.getting-started.label: 'Getting Started'
+  setup.page.live.upcoming.start.label: 'start'
+  setup.page.live.upcoming.elapsed.label: 'elapsed'
+  setup.page.live.upcoming.closedAt.label: 'Closed at'
+  setup.page.live.upcoming.elapsed.uppercase.label: 'Elapsed'
   setup.page.webinar.modal.join.label: 'Join'
   setup.page.webinar.modal.register.label: 'Register'
+  setup.page.webinar.modal.register.show: 'Show Results'
+  modals.webinar.tab.discover: 'Discover & Learn'
+  modals.webinar.tab.schedule: 'Your schedule'
+  modals.webinar.tab.schedule.empty: 'You don’t have any upcoming webinars'
+  modals.webinar.title: 'Discover & Learn'
   iframe-incompatible: 'Unable to load content. Please update your browser.'
   avatar.task_manager: 'Task Manager'
   rules.no-configured-message: 'No field rules are configured for this form'
@@ -4433,3 +4596,8 @@ en:
   peer.feedback.filled: 'Filled'
   peer.feedback.pending: 'Pending'
   modal.confirmation.header.title: 'Are u sure u want to delete this {{name}}'
+  upload.cropper.error.invalidFile.message: 'Invalid File.'
+  upload.cropper.error.invalidImageFile.message: 'Invalid Image File.'
+  upload.cropper.error.malformedImage.message: 'Malformed Image File.'
+  upload.cropper.success.message: 'Upload Successfully'
+  intercom-article-title-setting-up-a-marketing-source: 'Setting up a marketing source'

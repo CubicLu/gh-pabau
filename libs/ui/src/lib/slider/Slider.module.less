@@ -21,3 +21,54 @@
     text-align: right;
   }
 }
+
+.slider-custom {
+  min-height: 48px;
+  :global {
+    .ant-slider-with-marks{
+      margin-bottom: 12px;
+      .ant-slider-rail {
+        background:#E4E6EA;
+        height: 6px;
+      }
+      .ant-slider-step {
+        height: 6px;
+        .ant-slider-dot {
+          &:first-child, &:last-child {
+            display: none;
+          }
+          border-radius: 0;
+          width: 1px;
+          height: 6px;
+          border: none;
+          background: #000;
+          opacity: 0.35;
+          top: 0;
+          margin-left: 0;
+        }
+      }
+      .ant-slider-track {
+        background: #54B2D3;
+        height: 6px;
+      }
+      .ant-slider-handle {
+        border: solid 5px #54B2D3;
+      }
+    }
+
+  }
+  .slider-custom-title{
+    text-align: right;
+    font-size: 16px;
+    line-height: 24px;
+    color: #54B2D3;
+  }
+  .ant-slider-track{
+    background: #54B2D3;
+  }
+  .ant-slider{
+    &:hover{
+      background: #54B2D3;
+    }
+  }
+}

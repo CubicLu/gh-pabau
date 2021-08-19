@@ -1,5 +1,6 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useContext } from 'react'
 import { ReactComponent as LoginImage } from '../assets/images/login.svg'
+import { UserContext } from '../context/UserContext'
 import styles from './login.module.less'
 import { Logo, Notification, NotificationType } from '@pabau/ui'
 import LoginMain from '../components/Auth/Login'
@@ -17,15 +18,22 @@ import { useRouter } from 'next/router'
 import fetch from 'cross-fetch'
 
 const Login: FC = () => {
+  const loggedInUser = useContext(UserContext)
   const [showPage, setShowPage] = useState<string>('login')
   const [user, setUser] = useState<JwtUser>()
   const { t } = useTranslationI18()
   const router = useRouter()
-  const [tempLegacyTab, setTempLegacyTab] = useState(null)
+  const [tempLegacyTab, setTempLegacyTab] = useState<Window | null>(null)
 
   const [verifyCredentials] = useVerifyCredentialsLazyQuery({
+    onError(e) {
+      console.log('handling useVerifyCredentialsLazyQuery onError!', e)
+      Notification(NotificationType.error, e.message || 'Error logging in')
+    },
+    fetchPolicy: 'network-only',
     onCompleted(verifyData) {
       const user = verifyData.VerifyCredentials
+
       if (!user) {
         return Notification(
           NotificationType.error,
@@ -33,27 +41,35 @@ const Login: FC = () => {
         )
       }
 
+      if (!user.CmStaffGeneral) {
+        Notification(NotificationType.error, 'You are not a staff member')
+        return
+      }
+
       setUser({
         id: user.id,
         username: user.username,
         company_id: user.company_id,
         admin: user.admin,
+        locale: user.locale,
         company: {
           details: {
             admin: user.CompanyDetails?.admin,
             enable_2fa: user.CompanyDetails?.enable_2fa,
+            language: user.CompanyDetails?.language,
           },
           admin: user.CompanyDetails?.admin,
           remote_url: user.Company?.remote_url,
           remote_connect: user.Company?.remote_connect,
         },
         CmStaffGeneral: {
-          CellPhone: user.CmStaffGeneral.CellPhone,
+          CellPhone: user.CmStaffGeneral?.CellPhone,
         },
       })
 
       //check for 2fa if enabled or disabled
-      if (user.CompanyDetails?.enable_2fa) {
+      // eslint-disable-next-line no-constant-condition
+      if (false && user.CompanyDetails?.enable_2fa) {
         setShowPage('twoStepAuth')
         return
       }
@@ -89,6 +105,8 @@ const Login: FC = () => {
               const tempWindow = window.open(response, '_blank')
               setTempLegacyTab(tempWindow)
 
+              console.log('logging in properly..')
+
               //regular login - authenticate user
               authenticateUserMutation({
                 variables: {
@@ -96,7 +114,9 @@ const Login: FC = () => {
                   username: user.username,
                   company_id: user.company_id,
                   user_admin: user.admin,
+                  user_locale: user.locale,
                   company_admin: user.CompanyDetails?.admin,
+                  company_language: user.CompanyDetails?.language,
                   remote_url: user.Company?.remote_url,
                   remote_connect: user.Company?.remote_connect,
                 },
@@ -125,7 +145,9 @@ const Login: FC = () => {
           username: user.username,
           company_id: user.company_id,
           user_admin: user.admin,
+          user_locale: user.locale,
           company_admin: user.company.details.admin,
+          company_language: user.company.details?.language,
           remote_url: user.company.remote_url,
           remote_connect: user.company.remote_connect,
         },
@@ -139,14 +161,20 @@ const Login: FC = () => {
       if (response) {
         localStorage.setItem('token', response)
         setTimeout(() => {
-          tempLegacyTab.close()
+          tempLegacyTab?.close()
           router.reload()
         }, 2000)
       }
     },
   })
 
-  return (
+  if (router.pathname.includes('login') && loggedInUser?.me?.id) {
+    window.location.href = window.location.origin
+  }
+
+  return loggedInUser?.me?.id ? (
+    <div />
+  ) : (
     <div className={styles.signInWrapper}>
       <div className={styles.signInBackground}>
         <LoginImage />

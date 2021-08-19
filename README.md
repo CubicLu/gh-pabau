@@ -48,7 +48,8 @@ Please read this file in Preview mode (not the source code).
 - `**/cicd/` - devops only.
 
 Notes:
-* Libs are not allowed to import from apps
+
+- Libs are not allowed to import from apps
 
 ## Our Stack
 
@@ -96,7 +97,7 @@ Notes:
    1. Or (easier): Ask Toshe to share his public MySQL URL and put that into `apps/bridge-api/src/prisma/.env.local` as `DATABASE_URL=`
 
 1. Create some bookmarks in your browser:
-   
+
    1. "Prisma" to <http://localhost:4000/graphql>
    1. "Hasura READ-ONLY" to <http://localhost:8080>
    1. "Hasura EDITABLE" to <http://localhost:9695>
@@ -262,16 +263,16 @@ To run production build locally, type `docker build -t bridge-proxy -f tools/cic
 In addition to Ticket workflow, if you are doing backend:
 
 1. Run `yarn dev` as per Ticket workflow above.
-1. This should open the local Hasura console on port 9695. You can still use localhost:8080 to view-only, but remember to never make any changes on this port! __ALL CHANGES MUST BE MADE ON PORT 9695__.
+1. This should open the local Hasura console on port 9695. You can still use localhost:8080 to view-only, but remember to never make any changes on this port! **ALL CHANGES MUST BE MADE ON PORT 9695**.
 1. Whenever you make a change, you should see a new `/hasura/migrations/default/**/*.sql` file appear!
 1. When you are finished, you can squash all your edits into 1 migration file by running `yarn hasura:cli migrate squash --database-name default --from NNNN --name "My shiny new database stuff"` where `NNNN` is the oldest non-committed datetime stamp you have. At the end, it will ask if you want to delete the migration files, press `y` to choose yes.
 1. Export the metadata (this overwrites on top in a "Git-safe" fashion): `yarn hasura:export`
 
-* Never change previous migrations in Git that have already been merged to master.
-* If you are out-of-sync, you'll have to `git checkout master hasura/ && yarn hasura:clean` to start over.
-* Careful not to create a resolver in Hasura that is same name as Prisma.
-* Naming conventions should follow Hasura guidelines for Hasura, and GraphQL spec for Prisma.
-* Add comments for the customer to all tables and columns. You can omit the 3-5 boilerplate columns such as `id`.
+- Never change previous migrations in Git that have already been merged to master.
+- If you are out-of-sync, you'll have to `git checkout master hasura/ && yarn hasura:clean` to start over.
+- Careful not to create a resolver in Hasura that is same name as Prisma.
+- Naming conventions should follow Hasura guidelines for Hasura, and GraphQL spec for Prisma.
+- Add comments for the customer to all tables and columns. You can omit the 3-5 boilerplate columns such as `id`.
 
 ## Troubleshooting
 

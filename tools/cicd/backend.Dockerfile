@@ -1,11 +1,9 @@
-FROM node:alpine
-
+FROM node:16-buster
 WORKDIR /usr/app
 
-COPY [ "package.json", "yarn.lock", "./" ]
-RUN yarn --pure-lockfile
+COPY [ "package.json", "./" ]
+RUN yarn install
 COPY . .
 
 EXPOSE 3333
-
 ENTRYPOINT [ "node", "main.js" ]
