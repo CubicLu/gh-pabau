@@ -1,0 +1,15 @@
+schema:
+  - hasura/apollo-client.graphql
+  - http://localhost:8080/v1/graphql:
+      headers:
+        X-Hasura-Admin-Secret: "${HASURA_ADMIN_SECRET:1234}"
+generates:
+  hasura/schema.json:
+    plugins:
+      - introspection
+  hasura/schema.graphql:
+    plugins:
+      - schema-ast
+    config:
+      commentDescriptions: false
+      includeDirectives: true

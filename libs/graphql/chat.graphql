@@ -1,6 +1,20 @@
+subscription chatSelfNotify {
+  chat(
+    distinct_on: to
+    order_by: { created_at: desc, from: asc }
+    where: { to_channel: { _is_null: true } }
+  ) {
+    id
+    message
+    created_at
+    updated_at
+    to
+  }
+}
+
 subscription chatListMessagesNotify {
   chat(
-    distinct_on: [from,to]
+    distinct_on: from
     order_by: { created_at: desc, from: asc }
     where: { to_channel: { _is_null: true } }
   ) {
@@ -90,10 +104,6 @@ query chatListRooms {
         from
         created_at
         to
-        room {
-          id
-          name
-        }
         toUser {
           id
           username
@@ -168,19 +178,8 @@ mutation createChannel($name: String!, $description: String) {
 
 mutation chatPostToChannelId($message: String!, $channelId: uuid!) {
   insert_chat_one(object: { message: $message, to_channel: $channelId }) {
-    __typename
     id
     message
-    room {
-      id
-    }
-    #      to_channel
-
-    #    room {
-    #      __typename
-    #      id
-    #      name
-    #    }
   }
 }
 

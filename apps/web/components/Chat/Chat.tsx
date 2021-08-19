@@ -40,6 +40,10 @@ export const Chat = (props: P): JSX.Element => {
   })
   useChatListMessagesNotifySubscription({
     skip: typeof window === 'undefined',
+    onSubscriptionData(e) {
+      console.log('ws update for dm:', e.subscriptionData.data.chat)
+      fetchDirectHistory({ variables: { userId: Number.parseInt(topic.id) } })
+    },
   })
 
   const me = React.useContext(UserContext)
@@ -61,7 +65,6 @@ export const Chat = (props: P): JSX.Element => {
                 }
               `,
             })
-
             return [...existingItems, newItemRef]
           },
         },
@@ -72,7 +75,7 @@ export const Chat = (props: P): JSX.Element => {
   const [postToChannel] = useChatPostToChannelIdMutation({
     update(cache, args) {
       cache.modify({
-        id: cache.identify(chatRoomHistory.chat_room_by_pk),
+        id: cache.identify(chatRoomHistory),
         fields: {
           chats(existingItems = []) {
             const newItemRef = cache.writeFragment({
@@ -82,21 +85,9 @@ export const Chat = (props: P): JSX.Element => {
                   id
                   message
                   created_at
-                  room {
-                    id
-                  }
                 }
               `,
             })
-
-            ;[...existingItems, newItemRef].reduce((a, c) => {
-              if (c.__ref in a) console.error('Found a dupe!')
-              return {
-                ...a,
-                [c.__ref]: c,
-              }
-            }, {})
-
             return [...existingItems, newItemRef]
           },
         },
@@ -217,7 +208,7 @@ export const Chat = (props: P): JSX.Element => {
       roomList={data?.chat_room_participant?.map<Group>(({ room }) => ({
         id: room.id,
         name: `#${room.name}`,
-        messages: room.chats.map<Group['messages'][number]>((e) => ({
+        messages: room.chats.map((e) => ({
           ...e,
           userName: e.fromUser.full_name,
           dateTime: dayjs(e.created_at).calendar(),
@@ -275,9 +266,6 @@ export const Chat = (props: P): JSX.Element => {
                 __typename: 'chat',
                 id: `being-created`,
                 message,
-                room: {
-                  id: topic.id,
-                },
               },
             },
           })

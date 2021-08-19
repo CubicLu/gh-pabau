@@ -33,6 +33,7 @@
     "bridge:start": "yarn nx serve bridge-api",
     "bridge:start2": "node tools/cli/esbuild.cjs && yarn env-cmd -f apps/bridge-api/.env node dist/asdf/main.cjs",
     "mysql:start": "docker-compose -f tools/pabau1/docker-compose.yml up -d || (docker-compose -f tools/pabau1/docker-compose.yml down && docker-compose -f tools/pabau1/docker-compose.yml up -d)",
+    "postgres:start": "docker-compose -f hasura/docker-compose.yml up -d postgres",
     "hasura:start": "run-script-os",
     "hasura:start:default": "docker-compose -f hasura/docker-compose.yml up -d postgres && docker-compose -f hasura/docker-compose.yml up -d graphql-engine",
     "hasura:start:linux": "docker-compose -f hasura/docker-compose.yml up -d postgres && docker-compose -f hasura/docker-compose.yml -f hasura/docker-compose.linux.yml up graphql-engine",
