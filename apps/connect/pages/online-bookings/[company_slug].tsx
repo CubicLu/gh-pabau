@@ -91,7 +91,6 @@ export function Index() {
     },
   })
 
-  console.log('CRS', companySettingsResult)
   const company = companySettingsResult?.findFirstCompany
 
   const {
