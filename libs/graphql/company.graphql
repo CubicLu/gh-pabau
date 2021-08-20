@@ -1,9 +1,0 @@
-query getCompanyBySlug($slug: String = "") {
-  findFirstCompany(where: {slug: {equals: $slug}}) {
-    id
-    image
-    remote_connect
-    remote_url
-    slug
-  }
-}

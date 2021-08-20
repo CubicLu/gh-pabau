@@ -203,11 +203,11 @@ const DateTimeSelector: FC<P> = ({
                   className={false ? Styles.gray : Styles.green}
                   key={val}
                   onClick={() => {
-                    // const hour = Number.parseInt(val.substring(0, 2))
-                    // const minute = Number.parseInt(val.substring(3, 5))
-                    // onSelectedTimeslot(
-                    //   moment(selectedDate).set({ hour: hour, minute: minute })
-                    // )
+                    const hour = Number.parseInt(val.substring(0, 2))
+                    const minute = Number.parseInt(val.substring(3, 5))
+                    onSelectedTimeslot(
+                      moment(selectedDate).set({ hour: hour, minute: minute })
+                    )
                   }}
                 >
                   <p>{val}</p>

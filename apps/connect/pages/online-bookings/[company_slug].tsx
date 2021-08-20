@@ -68,11 +68,10 @@ export function Index() {
   const [back, Setback] = useState(false)
   const [view, Setview] = useState(true)
   const [user, setuser] = useState<userData>(userData)
-  const [lang, setlang] = useState('en')
 
   // FIXED
   const router = useRouter()
-
+  const [language, setLanguage] = useState('en')
   const [currentStep, setCurrentStep] = useState<number>(0)
   const [selectedData, setSelectedData] = useState<BookingData>({})
   const { t } = useTranslationI18()
@@ -168,7 +167,7 @@ export function Index() {
   )
 
   const translation = (key) => {
-    return t(key, { lng: lang.toString().slice(0, 2).toLowerCase() })
+    return t(key, { lng: language.toString().slice(0, 2).toLowerCase() })
   }
   const rech = () => {
     setCurrentStep(currentStep + 1)
@@ -442,7 +441,7 @@ export function Index() {
         </div>
       </div>
 
-      <Footer select={(value) => setlang(value)} />
+      <Footer select={(value) => setLanguage(value)} />
     </div>
   )
 }
