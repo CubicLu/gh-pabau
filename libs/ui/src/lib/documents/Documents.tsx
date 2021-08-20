@@ -163,7 +163,7 @@ export const Documents: FC<DocumentsProps> = ({
                                 <span className="date">{file.addedByDate}</span>
                                 <div className="seperator"></div>
                                 <span className="size">
-                                  {file.size && `(${file.size})`}
+                                  {file.size?.length && `(${file.size})`}
                                 </span>
                               </div>
                             </div>
