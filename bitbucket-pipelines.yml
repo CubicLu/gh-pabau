@@ -20,11 +20,14 @@ pipelines:
           name: yarn audit
           size: 2x
           caches:
-            - node
+            - nodemodules
+            - yarncustom
           script:
             #            - while true; do ps -aux && sleep 30; done &
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 16 ]] && exit 0 || exit 1'
+            - ls -al .postmon-lock && (echo Dont commit the .postmon-lock && exit 1) || echo Good, no .postmon-lock was found
             - CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
+            - rm -f .postmon-lock
           artifacts:
             - node_modules/**
             - libs/graphql/generated/**
@@ -35,24 +38,19 @@ pipelines:
               size: 1x
               script:
                 #                - while true; do ps -aux && sleep 30; done &
-                - openssl version || true
-                - ls -al || true
-                - yarn bin || true
-                - yarn bin || true
-                - yarn bridge:generate
-                - git status || true
-                - git config core.whitespace cr-at-eol
-                - git diff --exit-code --no-ext-diff -p
+                - if git ls-files | git check-ignore --no-index --stdin; then echo "The above files are committed, but yet they are also in .gitignore. Don't mix."; fi
+                - rm -rf libs/graphql/crm-mutation apps/bridge-api/src/generated && yarn bridge:generate && git diff --exit-code --no-ext-diff -p
+                - rm -rf libs/graphql/generated && yarn graphql-codegen && git diff --exit-code --no-ext-diff -p
                 - yarn lint:tsc --base=origin/master
                 - yarn lint:ls || true
-                - yarn lint:workspace || true
-                - npm i -g @graphql-inspector/cli@2.5.0 graphql || true
-                - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
-                - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql
+                - yarn lint:workspace
+                - yarn graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql
+                - yarn graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
                 #                - graphql-inspector similar hasura/schema.graphql || echo TODO
-                - graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
-                - DANGER_BITBUCKETCLOUD_OAUTH_KEY="${BITBUCKET_CLIENT_ID}" DANGER_BITBUCKETCLOUD_OAUTH_SECRET="${BITBUCKET_CLIENT_SECRET}" yarn danger ci --no-publish-check
+                - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
                 - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
+                - DANGER_BITBUCKETCLOUD_OAUTH_KEY="${BITBUCKET_CLIENT_ID}" DANGER_BITBUCKETCLOUD_OAUTH_SECRET="${BITBUCKET_CLIENT_SECRET}" yarn danger ci --no-publish-check
+
 
           - step:
               name: lint
@@ -66,6 +64,37 @@ pipelines:
               script:
                 #                - while true; do ps -aux && sleep 30; done &
                 - yarn affected:test --base=origin/master
+
+          - step:
+              name: integration tests
+              size: 2x
+              services:
+                - docker
+              script:
+                - |
+                  echo "Testing Hasura database is consistent with schema.graphql..."
+                  echo "============================================================"
+                  echo ""
+                  echo "Installing docker-compose..."
+                  curl -L https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+                  chmod +x ~/docker-compose
+                  mv ~/docker-compose /usr/local/bin/docker-compose
+                - yarn bridge:start2 &
+                - |
+                  echo "Waiting for bridge-api to boot..."
+                  yarn wait-on -t 160000 http-get://localhost:4000
+                  echo "Waiting for postgres to boot..."
+                  docker-compose -f hasura/docker-compose.ci.yml up -d postgres && yarn wait-on -t 60000 -w 12000 tcp:127.0.0.1:5432 || docker-compose -f hasura/docker-compose.ci.yml logs postgres
+                  echo "Waiting for Hasura to boot..."
+                  docker-compose -f hasura/docker-compose.ci.yml up -d graphql-engine && yarn wait-on -t 60000 -w 20000 http-get://localhost:8080/console || docker-compose -f hasura/docker-compose.ci.yml logs graphql-engine
+                  echo "Ensuring Hasura is really booted..."
+                  HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:wait
+                  echo "Checking Metadata is consistent so far..."
+                  HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:cli metadata inconsistency status
+                  echo "Exporting Hasura metadata..."
+                  HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:export
+                  echo "Ensuring everything is identical..."
+                  git diff --exit-code --no-ext-diff -p || (git status && exit 1)
 
           - step:
               name: build
@@ -192,7 +221,9 @@ pipelines:
           script:
             #            - while true; do ps -aux && sleep 30; done &
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 16 ]] && exit 0 || exit 1'
+            - ls -al .postmon-lock && (echo Dont commit the .postmon-lock && exit 1) || echo Good, no .postmon-lock was found
             - CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
+            - rm -f .postmon-lock
           artifacts:
             - node_modules/**
             - libs/graphql/generated/**
@@ -203,27 +234,16 @@ pipelines:
               size: 1x
               script:
                 #                - while true; do ps -aux && sleep 30; done &
-                - openssl version || true
-                - ls -al || true
-                - ls -al node_modules || true
-                - ls -al libs/graphql/generated/ || true
-                - yarn postinstall || yarn --frozen-lockfile
-                - ls -al node_modules || true
-                - ls -al libs/graphql/generated/ || true
-                - yarn bin || true
-                - yarn bin || true
-                - yarn bridge:generate
-                - git status || true
-                - git config core.whitespace cr-at-eol
-                - git diff --exit-code --no-ext-diff -p
+                - if git ls-files | git check-ignore --no-index --stdin; then echo "The above files are committed, but yet they are also in .gitignore. Don't mix."; fi
+                - rm -rf libs/graphql/crm-mutation apps/bridge-api/src/generated && yarn bridge:generate && git diff --exit-code --no-ext-diff -p
+                - rm -rf libs/graphql/generated && yarn graphql-codegen && git diff --exit-code --no-ext-diff -p
                 - yarn lint:tsc --base=HEAD~1
                 - yarn lint:ls || true
-                - yarn lint:workspace || true
-                - npm i -g @graphql-inspector/cli graphql || true
-                - graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
-                - graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql
+                - yarn lint:workspace
+                - yarn graphql-inspector validate "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql
+                - yarn graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
                 #                - graphql-inspector similar hasura/schema.graphql || echo TODO
-                - graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
+                - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
                 - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
 
           - step:

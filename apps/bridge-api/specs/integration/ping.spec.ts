@@ -1,21 +1,10 @@
-import { ApolloServer, gql } from 'apollo-server'
-import { createTestClient } from 'apollo-server-testing'
-import { middleware } from '../../src/schema'
+import { createTestClient } from 'apollo-server-integration-testing'
+import { server } from '../../src/app'
 
-it('ping pong', async () => {
-  const server = new ApolloServer({
-    schema: middleware,
-    context: () => {
-      return { user: { company: 123 } }
-    },
-  })
-  const { query } = createTestClient(server)
-  const res = await query({
-    query: gql`
-      query {
-        ping
-      }
-    `,
-  })
-  expect(res).toMatchSnapshot()
+const { query } = createTestClient({
+  apolloServer: server,
+})
+
+it('server responds to ping', () => {
+  expect(query(`{ ping }`)).resolves.toMatchSnapshot()
 })

@@ -155,7 +155,7 @@ i18next.use(initReactI18next).init({
 
 function CustomApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
-    <Sentry.ErrorBoundary fallback={'An error has occurred'}>
+    <Sentry.ErrorBoundary fallback={() => <>An error has occurred</>}>
       <ApolloProvider client={apolloClient}>
         <I18nextProvider i18n={i18next}>
           <style jsx global>{`

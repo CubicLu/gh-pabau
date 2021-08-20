@@ -42,25 +42,22 @@ export const System: FC<SystemProps> = ({
         ? config.disablePrescriptions
         : false,
     performSurgical:
-      config?.performSurgical !== undefined ? config.performSurgical : true,
+      config?.performSurgical !== undefined ? config?.performSurgical : true,
     medicalApprovals:
-      config?.medicalApprovals !== undefined ? config.medicalApprovals : false,
-    historyData: config?.historyData !== undefined ? config.historyData : true,
-    enableLabs: config?.enableLabs !== undefined ? config.enableLabs : true,
-    timeFormat:
-      config?.timeFormat !== undefined
-        ? config.timeFormat
-        : '12 hours (e.g. 9:00pm)',
+      config?.medicalApprovals !== undefined ? config?.medicalApprovals : false,
+    historyData: config?.historyData !== undefined ? config?.historyData : true,
+    enableLabs: config?.enableLabs !== undefined ? config?.enableLabs : true,
+    timeFormat: config?.timeFormat !== undefined ? config?.timeFormat : '',
   }
 
   const { t } = useTranslation('common')
-  const [configs, setConfigs] = useState<MedicalConfig>(defaultConfig)
+  const [configs, setConfigs] = useState(defaultConfig)
   const handleSaveChanges = () => {
     setConfigs(configs)
     onSave?.(configs)
   }
   const handleItemChange = (change) => {
-    const configChange: MedicalConfig = { ...configs }
+    const configChange = { ...configs }
     configChange[change.key] = change.value
     setConfigs(configChange)
   }
@@ -108,7 +105,7 @@ export const System: FC<SystemProps> = ({
               <SimpleDropdown
                 label={t('business.system.time.format')}
                 tooltip={t('business.system.time.format')}
-                value={configs.timeFormat}
+                value={configs?.timeFormat}
                 dropdownItems={[
                   t('busines.system.time.format.option1'),
                   t('busines.system.time.format.option2'),

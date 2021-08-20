@@ -54,8 +54,8 @@ const formatAppts = (appts) => {
     const temp_appt = {
       id: appt.id,
       doctor: {
-        name: `${appt.practitioner.Fname} ${appt.practitioner.Lname}`,
-        avatar: appt.practitioner.Avatar,
+        name: `${appt.CmStaffGeneral.Fname} ${appt.CmStaffGeneral.Lname}`,
+        avatar: appt.CmStaffGeneral.Avatar,
         title: 'Hell of an Epic Practitioner.',
       },
       service: appt.service,
@@ -63,9 +63,9 @@ const formatAppts = (appts) => {
       time: formatted_start_time,
       time_to: formatted_end_time,
       duration: `${appt_duration} min.`,
-      address_street: appt.booking_location.street,
-      address_postcode: appt.booking_location.postcode,
-      address_city: appt.booking_location.city,
+      address_street: appt.CompanyBranch.street,
+      address_postcode: appt.CompanyBranch.postcode,
+      address_city: appt.CompanyBranch.city,
       status: appt_status,
       type: appt.where,
     }

@@ -8,17 +8,20 @@ import { version } from '../../../package.json'
 import { createApp } from './app'
 
 console.log(`Starting bridge-api v${version}`)
+console.log('NODE_ENV', process.env.NODE_ENV)
 
 const LOGGING = !!stringToBoolean(process.env['LOGGING'])
 const TRACING = !!stringToBoolean(process.env['TRACING'])
 const DEBUG_APOLLO = !!stringToBoolean(process.env['DEBUG_APOLLO'])
 const PORT = process.env['PORT'] || 4000
 
-createApp({
-  tracing: TRACING,
-  logging: LOGGING,
-  debugApollo: DEBUG_APOLLO,
-}).listen(PORT, () => {
+// {
+//   tracing: TRACING,
+//     logging: LOGGING,
+//   debugApollo: DEBUG_APOLLO,
+// }
+
+createApp().listen(PORT, () => {
   config({
     default_node_env: 'development',
     purge_dotenv: true,

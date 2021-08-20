@@ -45,19 +45,41 @@ const Index: FC = () => {
     optimisticResponse: {},
   })
 
+  if (data?.findFirstPasswordResetAuth === null) {
+    setTimeout(() => {
+      router.push('/')
+    }, 5000)
+  }
+
   return (
     <>
-      {!loading && (
-        <div className={styles.logo}>
-          <Logo />
-        </div>
-      )}
+      <div className={styles.logo}>
+        {!loading ? (
+          data?.findFirstPasswordResetAuth ? (
+            <Logo />
+          ) : null
+        ) : (
+          <Skeleton.Input active style={{ width: '100px' }} size={'large'} />
+        )}
+      </div>
       <div className={styles.mainDiv}>
         <div className={styles.formLogin}>
+          <div className={styles.errorSection}>
+            {data?.findFirstPasswordResetAuth === null && (
+              <div className={styles.mainErrorWrap}>
+                <div className={styles.errorPage}>
+                  <div className={styles.message}>Something went wrong!</div>
+                  <h5>Token is not found or Expired, Please try again!</h5>
+                </div>
+              </div>
+            )}
+          </div>
           <div className={styles.formHead}>
             <h1>
               {!loading ? (
-                t('reset.password.title.text', { fallbackLng: 'en' })
+                data?.findFirstPasswordResetAuth !== null ? (
+                  t('reset.password.title.text', { fallbackLng: 'en' })
+                ) : null
               ) : (
                 <Skeleton.Input
                   active
@@ -110,9 +132,11 @@ const Index: FC = () => {
                 <Form.Item
                   label={
                     !loading ? (
-                      t('reset.company.name.title', {
-                        fallbackLng: 'en',
-                      })
+                      data?.findFirstPasswordResetAuth ? (
+                        t('reset.company.name.title', {
+                          fallbackLng: 'en',
+                        })
+                      ) : null
                     ) : (
                       <Skeleton.Input
                         active
@@ -125,14 +149,16 @@ const Index: FC = () => {
                   className={styles.Input}
                 >
                   {!loading ? (
-                    <Input
-                      name={'companyName'}
-                      value={
-                        data?.findFirstPasswordResetAuth?.User?.CompanyDetails
-                          ?.company_name
-                      }
-                      disabled
-                    />
+                    data?.findFirstPasswordResetAuth ? (
+                      <Input
+                        name={'companyName'}
+                        value={
+                          data?.findFirstPasswordResetAuth?.User?.CompanyDetails
+                            ?.company_name
+                        }
+                        disabled
+                      />
+                    ) : null
                   ) : (
                     <Skeleton.Input active className={styles.Input} />
                   )}
@@ -140,9 +166,11 @@ const Index: FC = () => {
                 <Form.Item
                   label={
                     !loading ? (
-                      t('reset.username.title', {
-                        fallbackLng: 'en',
-                      })
+                      data?.findFirstPasswordResetAuth ? (
+                        t('reset.username.title', {
+                          fallbackLng: 'en',
+                        })
+                      ) : null
                     ) : (
                       <Skeleton.Input
                         active
@@ -155,11 +183,13 @@ const Index: FC = () => {
                   className={styles.Input}
                 >
                   {!loading ? (
-                    <Input
-                      name={'email'}
-                      value={data?.findFirstPasswordResetAuth?.username}
-                      disabled
-                    />
+                    data?.findFirstPasswordResetAuth ? (
+                      <Input
+                        name={'email'}
+                        value={data?.findFirstPasswordResetAuth?.username}
+                        disabled
+                      />
+                    ) : null
                   ) : (
                     <Skeleton.Input active className={styles.Input} />
                   )}
@@ -167,9 +197,11 @@ const Index: FC = () => {
                 <Form.Item
                   label={
                     !loading ? (
-                      t('notifications.connectRegistration.passwordMessage', {
-                        fallbackLng: 'en',
-                      })
+                      data?.findFirstPasswordResetAuth ? (
+                        t('notifications.connectRegistration.passwordMessage', {
+                          fallbackLng: 'en',
+                        })
+                      ) : null
                     ) : (
                       <Skeleton.Input
                         active
@@ -182,13 +214,15 @@ const Index: FC = () => {
                   className={styles.Input}
                 >
                   {!loading ? (
-                    <PasswordWithHelper
-                      onChange={(value) => setFieldValue('password', value)}
-                      placeholder={t(
-                        'account.settings.security.new-password.label',
-                        { fallbackLng: 'en' }
-                      )}
-                    />
+                    data?.findFirstPasswordResetAuth ? (
+                      <PasswordWithHelper
+                        onChange={(value) => setFieldValue('password', value)}
+                        placeholder={t(
+                          'account.settings.security.new-password.label',
+                          { fallbackLng: 'en' }
+                        )}
+                      />
+                    ) : null
                   ) : (
                     <Skeleton.Input active className={styles.Input} />
                   )}
@@ -196,9 +230,11 @@ const Index: FC = () => {
                 <Form.Item
                   label={
                     !loading ? (
-                      t('reset.password.confirm.title', {
-                        fallbackLng: 'en',
-                      })
+                      data?.findFirstPasswordResetAuth ? (
+                        t('reset.password.confirm.title', {
+                          fallbackLng: 'en',
+                        })
+                      ) : null
                     ) : (
                       <Skeleton.Input
                         active
@@ -211,42 +247,48 @@ const Index: FC = () => {
                   className={styles.Input}
                 >
                   {!loading ? (
-                    <Input
-                      name={'confirmPassword'}
-                      type="password"
-                      placeholder={t(
-                        'account.settings.security.confirm-password.placeholder',
-                        {
-                          fallbackLng: 'en',
-                        }
-                      )}
-                    />
+                    data?.findFirstPasswordResetAuth ? (
+                      <Input
+                        name={'confirmPassword'}
+                        type="password"
+                        placeholder={t(
+                          'account.settings.security.confirm-password.placeholder',
+                          {
+                            fallbackLng: 'en',
+                          }
+                        )}
+                      />
+                    ) : null
                   ) : (
                     <Skeleton.Input active className={styles.Input} />
                   )}
                 </Form.Item>
                 <div className={`${styles.btnSubmit} ${styles.Input}`}>
                   {!loading ? (
-                    <SubmitButton
-                      className={
-                        isValid &&
-                        values.password !== '' &&
-                        values.confirmPassword !== ''
-                          ? ''
-                          : styles.btnDisabled
-                      }
-                      type={'primary'}
-                      loading={isLoading}
-                      disabled={
-                        isValid &&
-                        values.password !== '' &&
-                        values.confirmPassword !== ''
-                          ? false
-                          : true
-                      }
-                    >
-                      {t('reset.password.change.button', { fallbackLng: 'en' })}
-                    </SubmitButton>
+                    data?.findFirstPasswordResetAuth ? (
+                      <SubmitButton
+                        className={
+                          isValid &&
+                          values.password !== '' &&
+                          values.confirmPassword !== ''
+                            ? ''
+                            : styles.btnDisabled
+                        }
+                        type={'primary'}
+                        loading={isLoading}
+                        disabled={
+                          isValid &&
+                          values.password !== '' &&
+                          values.confirmPassword !== ''
+                            ? false
+                            : true
+                        }
+                      >
+                        {t('reset.password.change.button', {
+                          fallbackLng: 'en',
+                        })}
+                      </SubmitButton>
+                    ) : null
                   ) : (
                     <Skeleton.Input active className={styles.Input} />
                   )}

@@ -41,6 +41,10 @@ export const authenticateUser = (user: JwtUser): string => {
       company: user.company_id,
       admin: Boolean(user.admin) ?? false,
       owner: user.id === user.company.admin ?? false,
+      language: {
+        user: user.locale,
+        company: user.company.details?.language,
+      },
       remote_url: user.company.remote_url,
       remote_connect: user.company.remote_connect,
       'https://hasura.io/jwt/claims': {

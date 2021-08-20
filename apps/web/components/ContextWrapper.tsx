@@ -12,6 +12,7 @@ export interface User {
   admin: number
   company: Company
   timezone: string
+  image?: string
 }
 
 export interface Company {
@@ -35,6 +36,7 @@ const ContextWrapper: FunctionComponent = ({ children }) => {
           full_name
           admin
           timezone
+          image
           company: Company {
             id
             remote_url
