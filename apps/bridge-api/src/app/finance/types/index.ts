@@ -105,7 +105,7 @@ export interface SalesData {
   key: string
   after_disc: string
   category: string
-  date: string
+  date: Date
   description: string
   disc_amount: string
   disc_per: string
@@ -123,7 +123,7 @@ export interface SalesData {
 export interface PaymentsData {
   key: string
   insurer: string
-  payment_date: string
+  payment_date: Date
   payment_method: string
   payment_amount: string
 }
@@ -132,14 +132,14 @@ export interface PaymentsDetails {
   key: number
   total_vat: string
   amount_paid: string
-  sub_total_amount: number
-  outstanding: number
-  grand_total: number
-  refund_amount: number
-  paid: number
+  sub_total_amount: string
+  outstanding: string
+  grand_total: string
+  refund_amount: string
+  paid: string
   total_net: string
-  payment_time: string
-  total: number
+  payment_time: Date
+  total: string
   card: number
   cash: number
 }
@@ -147,12 +147,12 @@ export interface PaymentsDetails {
 export interface StatementPaymentDetails {
   key: number
   total_vat: string
-  amount_paid: number
-  sub_total_amount: number
-  outstanding: number
-  grand_total: number
-  refund_amount: number
-  paid: number
+  amount_paid: string
+  sub_total_amount: string
+  outstanding: string
+  grand_total: string
+  refund_amount: string
+  paid: string
   total_net: string
 }
 
@@ -160,6 +160,7 @@ export interface Details {
   issue_to: string
   issue_by: string
   invoice_id: string
+  date?: Date
 }
 
 export interface InvoiceOutput {

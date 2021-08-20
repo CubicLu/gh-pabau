@@ -1,7 +1,7 @@
 fragment CompanyServiceFields on CompanyService {
   id
   company_id
-  service
+  name
   duration
   description
   price

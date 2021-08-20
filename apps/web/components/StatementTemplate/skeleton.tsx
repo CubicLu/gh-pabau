@@ -355,8 +355,6 @@ export const StatementTemplateSkeleton: FC = () => {
                   className={styles.bankdetailSkeleton}
                 />
               </div>
-            </div>
-            <div className={styles.section4Inner}>
               <div className={styles.inner}>
                 <Skeleton.Input
                   active
@@ -393,8 +391,6 @@ export const StatementTemplateSkeleton: FC = () => {
                   className={styles.bankdetailSkeleton}
                 />
               </div>
-            </div>
-            <div className={styles.section4Inner}>
               <div className={styles.inner}>
                 <Skeleton.Input
                   active
