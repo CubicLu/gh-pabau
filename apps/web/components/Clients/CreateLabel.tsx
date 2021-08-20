@@ -18,7 +18,6 @@ import { Labels } from '../../pages/clients'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { differenceBy, difference } from 'lodash'
 import { FetchResult, MutationFunctionOptions } from '@apollo/client'
-import { test } from 'shelljs'
 
 interface CreateLabelsProps {
   children?: ReactNode
@@ -245,21 +244,12 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     return diff1.length === 0 && diff2.length === 0
   }
 
-  console.log('selectedRowKeys createLabel', selectedRowKeys)
-
-  // if (selectedRowKeys.length > 1) {
-  //   setDefaultSelectedLabels([])
-  // }
-
   const onApplyLabel = () => {
     handleApplyLabel(selectedLabels)
-    console.log('selectedLabels onApplyLabel', selectedLabels)
     setVisible(false)
     if (selectedRowKeys && selectedRowKeys.length > 0) {
       for (const selectContact of selectedRowKeys) {
         for (const selectedLabel of selectedLabels) {
-          console.log('selectedLabel 1111', selectedLabel)
-          console.log('defaultSelectedLabels 1111', defaultSelectedLabels)
           const addedLabel: any = difference(
             selectedLabels,
             defaultSelectedLabels
@@ -268,20 +258,12 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
             defaultSelectedLabels,
             selectedLabels
           )
-          // const testEqual = contactsLabels.some(
-          //   (e) => e.label_id === selectedLabel.id
-          // )
-          console.log('addedLabel 1111', addedLabel)
           const testEqual = defaultSelectedLabels.some(
             (e) => e.id === addedLabel.id
           )
-          console.log('testEqual 1111', testEqual)
-
           if (
             addedLabel.length > 0 &&
-            // !testEqual
             !defaultSelectedLabels.includes(selectedLabel)
-            // defaultSelectedLabels.some((e) => e.text !== selectedLabel.text)
           ) {
             insertContactsLabelsMutaton({
               variables: {
@@ -315,7 +297,6 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
         }
       }
     }
-    // handleApplyLabel(selectedLabels)
   }
 
   const content = () => {
