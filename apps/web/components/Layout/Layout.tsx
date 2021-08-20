@@ -46,6 +46,17 @@ interface ProductNews {
   readUsers: number[]
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const onMessageType = () => {
+  //add mutation for send message textbox
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const onCreateChannel = (name, description, isPrivate) => {
+  //add mutation for create Channel here
+  console.log('onCreateChannel-- or another one', name, description, isPrivate)
+}
+
 const Layout: FC<LayoutProps> = ({
   children,
   allowed = true,

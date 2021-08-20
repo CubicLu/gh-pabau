@@ -6,15 +6,15 @@ import {
   Terminology,
 } from '@pabau/ui'
 import {
-  GetBusinessDetailsQuery,
-  GetBusinessDetailsDocument,
+  GetBussinessDetailsQuery,
+  GetBussinessDetailsDocument,
   useUpdateCompanyDetailsMutation,
   useSetMultipleMetaDataMutation,
 } from '@pabau/graphql'
 import { TFunction } from 'react-i18next'
 
 interface TerminologyTabProps {
-  data: GetBusinessDetailsQuery
+  data: GetBussinessDetailsQuery
   addrSuiteNo: string
   forcePassword: number
   user: number
@@ -206,7 +206,7 @@ export const TerminologyTab: FC<TerminologyTabProps> = ({
           variables: CompanyDetailData,
           refetchQueries: [
             {
-              query: GetBusinessDetailsDocument,
+              query: GetBussinessDetailsDocument,
             },
           ],
         })
@@ -218,7 +218,7 @@ export const TerminologyTab: FC<TerminologyTabProps> = ({
           optimisticResponse: {},
           refetchQueries: [
             {
-              query: GetBusinessDetailsDocument,
+              query: GetBussinessDetailsDocument,
             },
           ],
         })

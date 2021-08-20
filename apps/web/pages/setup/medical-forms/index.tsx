@@ -15,7 +15,7 @@ import {
   useFindMedicalFormsQuery,
   useFindMessageTemplateQuery,
   useFindUserQuery,
-  useGetBusinessDetailsQuery,
+  useGetBussinessDetailsQuery,
   UserOrderByInput,
   UserWhereInput,
   useUpdateOneMedicalFormMutation,
@@ -127,7 +127,7 @@ export const Index: FC = () => {
     return queryOptions
   }, [paginateData.take, paginateData.skip, searchData])
 
-  const businessDetails = useGetBusinessDetailsQuery()
+  const businessDetails = useGetBussinessDetailsQuery()
   const {
     data: medicalForms,
     loading: loadingMedicalForms,

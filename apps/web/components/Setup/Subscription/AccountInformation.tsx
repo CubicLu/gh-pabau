@@ -30,7 +30,7 @@ const AccountInformation: FC = () => {
       const trial_days = Math.round(
         Math.abs(
           (Date.now() -
-            new Date(data.me.Company.subscription?.license_expiry).valueOf()) /
+            new Date(data.company?.subscription?.license_expiry).valueOf()) /
             (24 * 60 * 60 * 1000)
         )
       )
@@ -39,24 +39,32 @@ const AccountInformation: FC = () => {
         data.metas?.filter(
           (item) => item.meta_name === 'goPlusActive' && item.meta_value === '1'
         ).length > 0
+          ? true
+          : false
 
       const automationActive =
         data.metas?.filter(
           (item) =>
             item.meta_name === 'automationActive' && item.meta_value === '1'
         ).length > 0
+          ? true
+          : false
 
       const intelligenceActive =
         data.metas?.filter(
           (item) =>
             item.meta_name === 'intelligenceActive' && item.meta_value === '1'
         ).length > 0
+          ? true
+          : false
 
       const teamPlusActive =
         data.metas?.filter(
           (item) =>
             item.meta_name === 'teamPlusActive' && item.meta_value === '1'
         ).length > 0
+          ? true
+          : false
 
       const goPlusStartDate = data.metas?.filter(
         (item) => item.meta_name === 'goPlusStartDate'
@@ -75,15 +83,17 @@ const AccountInformation: FC = () => {
       )[0]?.meta_value
 
       const preparedData = {
-        subscriptionName: data.me.Company.subscription
+        subscriptionName: data.company?.subscription
           ?.subscription_name as SubscriptionType,
-        inTrial: data.me.Company.subscription?.trial as boolean,
+        inTrial: data.company?.subscription?.trial as boolean,
         trialDaysRemaining: trial_days,
         marketingPlusStartDate: new Date(
-          data?.me.Company.subscription?.am_start_date
+          data?.company?.subscription?.am_start_date
         ),
         marketingPlusActive:
-          data.me.Company.subscription?.advanced_marketing_addon === 1,
+          data.company?.subscription?.advanced_marketing_addon === 1
+            ? true
+            : false,
         goPlusActive: goPlusActive,
         automationActive: automationActive,
         intelligenceActive: intelligenceActive,
@@ -123,14 +133,14 @@ const AccountInformation: FC = () => {
             <Row style={{ marginTop: 16 }}>
               <Avatar
                 src={
-                  data?.me.Company.owner?.image
-                    ? `https://crm.pabau.com${data?.me.Company.owner?.image}`
+                  data?.company?.owner?.image
+                    ? `https://crm.pabau.com${data?.company?.owner?.image}`
                     : profileImg
                 }
               />
               <Col style={{ marginLeft: 12 }}>
                 <Text className={styles.blackText}>
-                  {data?.me.Company.owner?.full_name}
+                  {data?.company?.owner?.full_name}
                 </Text>
                 <Paragraph type="secondary">
                   {t('setup.subscription.account-owner')}
@@ -146,7 +156,7 @@ const AccountInformation: FC = () => {
                 style={{ fontSize: 13, marginTop: 4 }}
               />
               <Link className={styles.link} style={{ marginLeft: 8 }}>
-                {data?.me.Company.remote_url.replace('https://', '')}
+                {data?.company?.remote_url.replace('https://', '')}
               </Link>
             </Row>
             <Row style={{ marginTop: 16 }}>
@@ -168,7 +178,7 @@ const AccountInformation: FC = () => {
                 </Paragraph>
                 <img src={location} height={13} alt="logo" />
                 <Text className={styles.link} style={{ marginLeft: 8 }}>
-                  {data?.me.Company.subscription?.live_server
+                  {data?.company?.subscription?.live_server
                     ?.toUpperCase()
                     .split('.')[0] ?? 'CRM01'}
                 </Text>
@@ -183,7 +193,7 @@ const AccountInformation: FC = () => {
                 style={{ fontSize: 13 }}
               />
               <Text className={styles.link} style={{ marginLeft: 8 }}>
-                {data?.me.Company.subscription?.storage.toFixed(2)} MB
+                {data?.company?.subscription?.storage.toFixed(2)} MB
               </Text>
             </div>
           </div>

@@ -274,39 +274,6 @@ In addition to Ticket workflow, if you are doing backend:
 - Naming conventions should follow Hasura guidelines for Hasura, and GraphQL spec for Prisma.
 - Add comments for the customer to all tables and columns. You can omit the 3-5 boilerplate columns such as `id`.
 
-## Code Generations
-Here you can mentally map out what commands to run when you change which files.
-
-```
-command: yarn prisma generate
-inputs: apps/bridge-api/src/prisma/schema.prisma
-outputs: node_modules/.prisma
-```
-
-```
-command: yarn pal g
-inputs: apps/bridge-api/src/prisma/schema.prisma
-outputs: apps/bridge-api/src/prisma/src/generated libs/graphql/crm-mutation/**/*.graphql
-```
-
-```
-command: yarn nexus:generate
-inputs: apps/bridge-api/src/**/*(!.d).ts
-outputs: apps/bridge-api/src/generated/nexus.d.ts
-```
-
-```
-command: yarn graphql-codegen
-inputs: libs/graphql/**/*.graphql
-outputs: libs/graphql/generated/graphql.tsx
-```
-
-```
-command: yarn hasura:export
-inputs: http://localhost
-outputs: hasura/metadata/**/*
-```
-
 ## Troubleshooting
 
 Any problems, type `yarn hasura:clean`

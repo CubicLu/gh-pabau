@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 import { Badge, Select, Avatar, Input } from 'antd'
@@ -19,7 +19,6 @@ import { MessageItem } from './MessageItem'
 import { ChatMessage } from '../chatsList/ChatsList'
 import { Group, Participant } from '../groupList/GroupList'
 import ChatInput from '../chatInput/ChatInput'
-import { useUpdateEffect } from 'react-use'
 
 const { Option } = Select
 
@@ -47,14 +46,6 @@ export const MessageContainer = ({
   selectedContact,
 }: P): JSX.Element => {
   const { t } = useTranslation('common')
-
-  // Keep scroll sticky to bottom
-  const messageContainerRef = useRef<HTMLDivElement>(null)
-  useUpdateEffect(() => {
-    messageContainerRef.current?.scrollTo({
-      top: messageContainerRef.current.scrollHeight,
-    })
-  }, [messages])
 
   const [chatSearchValue, setChatSearchValue] = useState('')
   const [draftRecipient, setDraftReceipient] = useState<string | undefined>()
@@ -336,7 +327,7 @@ export const MessageContainer = ({
           )}
         </div>
       )}
-      <div className={styles.messageContainer} ref={messageContainerRef}>
+      <div className={styles.messageContainer}>
         <div className={styles.messageContainerInner}>
           {!messages?.length ? (
             <div className={styles.invalidMessage}>

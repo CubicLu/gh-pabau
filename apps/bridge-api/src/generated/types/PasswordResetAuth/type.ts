@@ -10,7 +10,7 @@ export const PasswordResetAuth = objectType({
     t.int('id')
     t.string('key_code')
     t.string('username')
-    t.nullable.string('old_password')
+    t.string('old_password')
     t.nullable.field('date', { type: 'DateTime' })
     t.field('User', {
       type: 'User',

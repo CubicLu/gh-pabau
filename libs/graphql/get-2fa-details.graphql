@@ -1,9 +1,7 @@
-query getCompanyDetails2fa {
-  me {
-    Company {
-      details {
-        enable_2fa
-      }
+query getCompanyDetails2fa{
+  company{
+    details{
+      enable_2fa
     }
   }
 }

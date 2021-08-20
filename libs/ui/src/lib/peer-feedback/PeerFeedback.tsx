@@ -368,13 +368,13 @@ export const PeerFeedback: FC<PeerFeedbackProps> = ({
           <div>{t('peer.feedback.overall.avg')}</div>
         </AntTable.Summary.Cell>
         <AntTable.Summary.Cell index={2} className={styles.summaryColumn}>
-          <div>{avg1.toFixed(2)}</div>
+          <div>{avg1.toFixed()}</div>
         </AntTable.Summary.Cell>
         <AntTable.Summary.Cell index={3} className={styles.summaryColumn}>
-          <div>{avg2.toFixed(2)}</div>
+          <div>{avg2.toFixed()}</div>
         </AntTable.Summary.Cell>
         <AntTable.Summary.Cell index={4} className={styles.summaryColumn}>
-          <div>{avg3.toFixed(2)}</div>
+          <div>{avg3.toFixed()}</div>
         </AntTable.Summary.Cell>
       </AntTable.Summary.Row>
     )

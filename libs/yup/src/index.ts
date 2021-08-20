@@ -1,3 +1,6 @@
-export * from './lib'
+export * from './lib/yup'
+export * from './validate-email'
+export * from './validate-password'
 export * from './login-validation'
 export * from './reset-password-validation'
+export * from './confirm-password-validation'

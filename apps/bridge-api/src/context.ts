@@ -55,7 +55,7 @@ export const createContext: ContextFunction<ExpressContext, Context> = (
       console.log('invalid jwt found')
     }
   }
-  ret.prisma = prisma(ret.authenticated?.remote_url || undefined)
+  ret.prisma = prisma(ret.authenticated?.remote_url)
   ret.prismaArray = (remote_url) => prisma(remote_url)
 
   return ret

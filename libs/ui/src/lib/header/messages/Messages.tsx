@@ -358,7 +358,6 @@ export const PabauMessages = ({
           onMessageSend={onMessageSend}
           onMessageType={onMessageType}
           selectedContact={view}
-          messages={chatHistory?.chats}
           onClick={closeDrawer}
         />
       )}
