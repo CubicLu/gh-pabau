@@ -3082,7 +3082,7 @@ en:
   business.security.tool.data.encrypted.encryption.modal.content: 'Would you like to encrypt your emails?'
   business.notification.tab.title: 'Notifications'
   business.notification.sub.title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-  business.notification.setting.notification: 'Notification'
+  business.notification.setting.pabau.web: 'Pabau Web'
   business.notification.setting.email: 'Email'
   business.notification.review: 'When receiving a new review.'
   business.notification.sms.delivered: 'When a SMS campaign is delivered.'
