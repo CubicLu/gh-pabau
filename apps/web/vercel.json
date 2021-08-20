@@ -47,6 +47,8 @@
     }
   ],
   "rewrites": [
+    {"source": "/test/demo-routing/dyn/:id", "destination": "/test/demo-routing/dyn/[id]?id=:id"},
+    {"source": "/test/demo-routing/dyn-both/:id", "destination": "/test/demo-routing/dyn-both/[id]?id=:id"},
     {"source": "/reports/:name", "destination": "/reports/[name]?name=:name"},
     {"source": "/clients/:id", "destination": "/clients/[id]?id=:id"},
     {"source": "/clients/finance/invoice/:id", "destination": "/clients/finance/invoice/[id]?id=:id"},
