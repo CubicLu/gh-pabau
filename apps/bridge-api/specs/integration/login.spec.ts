@@ -1,6 +1,6 @@
 import { createTestClient } from 'apollo-server-integration-testing'
-import { server } from '../../src/server'
 import { gql } from 'apollo-server'
+import { server } from '../../src/app'
 
 const { query } = createTestClient({
   apolloServer: server,
