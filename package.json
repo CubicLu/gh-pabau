@@ -1,6 +1,6 @@
 {
   "name": "pabau",
-  "version": "2.0.513",
+  "version": "2.0.516",
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
   "workspaces": {
@@ -39,6 +39,7 @@
     "hasura:clean": "docker-compose -f hasura/docker-compose.yml down -v",
     "mysql:clean": "docker-compose -f tools/pabau1/docker-compose.yml down -v",
     "hasura:export": "yarn hasura:cli metadata export && yarn apollo client:download-schema hasura/schema.graphql && yarn graphql-codegen",
+    "hasura:export2": "yarn hasura:cli metadata export && yarn apollo client:download-schema hasura/schema.graphql",
     "graphql-codegen:cached": "postmon --include hasura/schema.graphql --include \"libs/graphql/**/*.graphql\" graphql-codegen",
     "graphql-codegen:watch": "graphql-codegen --watch",
     "production:web": "env-cmd -f apps/web/.env.production yarn nx serve",
@@ -69,6 +70,9 @@
     "update": "yarn upgrade-interactive && yarn nx migrate latest",
     "workspace-schematic": "yarn nx workspace-schematic",
     "dep-graph": "yarn nx dep-graph",
+    "nexus:generate": "ts-node-dev --transpile-only apps/bridge-api/src/schema --nexus-typegen",
+    "bridge:generate": "prisma format && prisma generate && rimraf libs/graphql/crm-mutation && yarn dotenv-flow -p apps/bridge-api pal g && concurrently -n NEXUS,GRAPHQL-CODEGEN -c blue,yellow,green \"yarn nexus:generate\" \"yarn graphql-codegen:cached\"",
+    "bridge:generate2": "prisma format && prisma generate && rimraf libs/graphql/crm-mutation && yarn dotenv-flow -p apps/bridge-api pal g && concurrently -n NEXUS -c blue,yellow \"yarn nexus:generate\"",
     "nexus:generate": "node tools/cli/esbuild.cjs && ls -al tools/cli/ && ls -al dist/ && ls -al dist/asdf/ && yarn env-cmd -f apps/bridge-api/.env node dist/asdf/bridge-api-nexus.cjs --nexus-typegen && ls -al tools/cli/ && ls -al dist/ && ls -al dist/asdf/ && ls -al && ls -al apps/bridge-api/src && cp -f dist/asdf/nexus.d.ts apps/bridge-api/src/generated/",
     "bridge:generate": "prisma format && prisma generate && node tools/cli/convert-file-to-lf.js apps/bridge-api/src/prisma/schema.prisma && rimraf libs/graphql/crm-mutation && yarn dotenv-flow -p apps/bridge-api pal g && concurrently -n NEXUS,GRAPHQL-CODEGEN -c blue,yellow,green \"yarn nexus:generate\" \"yarn graphql-codegen:cached\"",
     "bridge:prune": "rm -rf apps/bridge-api/src/generated libs/graphql/crm-mutation",

@@ -57,16 +57,25 @@ export const InvoiceTemplates: FC<InvoiceProps> = ({ guid, saleId }) => {
         activity[key].enabled === 1
       ) {
         if (key === 'practitioner') {
-          sale_columns[activity[key].order - 1] = {
+          sale_columns[0] = {
             key: key,
             title: 'Employee Name',
             dataIndex: key,
           }
-        } else {
-          sale_columns[activity[key].order - 1] = {
+        }
+        if (salesDetails?.data?.items[0]?.date) {
+          sale_columns[activity[key].order] = {
             key: key,
             title: activity[key].label,
             dataIndex: key,
+          }
+        } else {
+          if (key !== 'date') {
+            sale_columns[activity[key].order] = {
+              key: key,
+              title: activity[key].label,
+              dataIndex: key,
+            }
           }
         }
       }
@@ -87,7 +96,7 @@ export const InvoiceTemplates: FC<InvoiceProps> = ({ guid, saleId }) => {
       setPaymentColumnData(payment_columns)
       return key
     })
-  }, [templateData, activity])
+  }, [templateData, activity, salesDetails])
 
   return !invoice_loading && !template_loading ? (
     <InvoiceTemplate
@@ -130,9 +139,7 @@ export const InvoiceTemplates: FC<InvoiceProps> = ({ guid, saleId }) => {
           invoice: salesDetails?.data?.details?.invoice_id ?? '',
           issuedTo: salesDetails?.data?.details?.issue_to ?? '',
           issuedBy: salesDetails?.data?.details?.issue_by ?? '',
-          date: `${new Date(
-            templateData?.company?.InvoiceDefaultTemplate?.date_created
-          ).toLocaleDateString('en-GB')}`,
+          date: salesDetails?.data?.details?.date,
         },
       ]}
       paymentDetails={[
