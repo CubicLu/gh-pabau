@@ -134,6 +134,10 @@ const reverseForm = (form) => {
       defaults = form.txtBlock
     }
 
+    if (cssClass === 'snomed') {
+      defaults = form.txtBlock
+    }
+
     if (cssClass === 'staticText') {
       values = form.txtBlock
     }
@@ -232,6 +236,10 @@ const getFormInfo = (form) => {
 
   let txtBlockValue = ''
   if (form.cssClass === 'textarea') {
+    txtBlockValue = form.defaults ? form.defaults : ''
+  }
+
+  if (form.cssClass === 'snomed') {
     txtBlockValue = form.defaults ? form.defaults : ''
   }
 

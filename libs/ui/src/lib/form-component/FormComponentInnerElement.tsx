@@ -16,6 +16,7 @@ import FormStaticText from './FormStaticText'
 import FormTextArea from './FormTextArea'
 import FormTextField from './FormTextField'
 import FormTravel from './FormTravel'
+import FormSnomed from './FormSnomed'
 
 interface P {
   required: boolean
@@ -59,6 +60,9 @@ const FormComponentInnerElement: FC<P> = ({
     },
     {
       component: 'form_statictext',
+    },
+    {
+      component: 'form_snomed',
     },
     {
       component: 'form_textfield',
@@ -184,6 +188,16 @@ const FormComponentInnerElement: FC<P> = ({
           )}
           {formData && formData.formName === 'form_textarea' && (
             <FormTextArea
+              title={formData.txtQuestion}
+              desc={''}
+              placeHolder={''}
+              defaultValue={formData.txtDefaults}
+              required={formData.required}
+              onChangeTextValue={onChangeTextValue}
+            />
+          )}
+          {formData && formData.formName === 'form_snomed' && (
+            <FormSnomed
               title={formData.txtQuestion}
               desc={''}
               placeHolder={''}

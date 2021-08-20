@@ -18,6 +18,7 @@ const medicalForms = [
   { id: 11, formType: 'basic', formName: 'form_drugs' },
   { id: 12, formType: 'basic', formName: 'form_travel' },
   { id: 13, formType: 'basic', formName: 'form_labtests' },
+  { id: 14, formType: 'basic', formName: 'form_snomed' },
 ]
 
 const previewMapping = [
@@ -35,6 +36,7 @@ const previewMapping = [
   { signature: 'form_signature' },
   { cl_drugs: 'form_drugs' },
   { labs_tests: 'form_labtests' },
+  { snomed: 'form_snomed' },
   { vaccine_scheduler: 'empty' },
   { vaccine_history: 'empty' },
   { travel_destination: 'form_travel' },
@@ -93,6 +95,10 @@ const getFormInfo = (form) => {
 
   let txtBlockValue = ''
   if (form.cssClass === 'textarea') {
+    txtBlockValue = form.defaults ? form.defaults : ''
+  }
+
+  if (form.cssClass === 'snomed') {
     txtBlockValue = form.defaults ? form.defaults : ''
   }
 

@@ -26,7 +26,7 @@ export default {
           'basic_labtests',
           'basic_traveldestination',
           'basic_vaccinescheduler',
-          'basic_labtests',
+          'basic_snomed',
           'custom_emailmarketing',
           'custom_smsmarketing',
           'custom_phonecall',
