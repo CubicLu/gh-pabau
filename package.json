@@ -246,6 +246,7 @@
     "@storybook/addon-storysource": "6.3.2",
     "@storybook/react": "6.3.2",
     "@testing-library/react": "11.2.6",
+    "@types/async-retry": "1.4.3",
     "@types/dotenv-flow": "3.1.1",
     "@types/googlemaps": "3.43.3",
     "@types/jest": "26.0.24",
