@@ -72,9 +72,9 @@ pipelines:
                 - yarn wait-on -t 160000 http-get://localhost:4000
                 - docker-compose -f hasura/docker-compose.ci.yml up -d postgres && yarn wait-on -t 60000 tcp:127.0.0.1:5432 || docker-compose -f hasura/docker-compose.ci.yml logs postgres
                 - docker-compose -f hasura/docker-compose.ci.yml up -d graphql-engine && yarn wait-on -t 60000 http-get://localhost:8080/console || docker-compose -f hasura/docker-compose.ci.yml logs graphql-engine
-                - yarn hasura:cli metadata inconsistency status
-                - yarn hasura:export
-                - git diff --exit-code --no-ext-diff -p
+                - HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:cli metadata inconsistency status
+                - HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:export
+                - git diff --exit-code --no-ext-diff -p || (git status && exit 1)
 
       - parallel:
           - step:
