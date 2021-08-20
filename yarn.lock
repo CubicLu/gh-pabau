@@ -14851,7 +14851,7 @@ hastscript@^6.0.0:
     property-information "^5.0.0"
     space-separated-tokens "^1.0.0"
 
-hasura-cli@^2.0.5:
+hasura-cli@2.0.7:
   version "2.0.7"
   resolved "https://registry.yarnpkg.com/hasura-cli/-/hasura-cli-2.0.7.tgz#6d322656ca9b39a41db2680df85e74777b295af7"
   integrity sha512-P7K6tYB9p4AX245BDTFluklw6bplUWzsO5utz39l4bhwm24d9e8AOsmSXW/LX7FPBe9ooA4zfVEFmBpgPCWFJg==
@@ -21065,7 +21065,7 @@ prettysize@^2.0.0:
   resolved "https://registry.yarnpkg.com/prettysize/-/prettysize-2.0.0.tgz#902c02480d865d9cc0813011c9feb4fa02ce6996"
   integrity sha512-VVtxR7sOh0VsG8o06Ttq5TrI1aiZKmC+ClSn4eBPaNf4SHr5lzbYW+kYGX3HocBL/MfpVrRfFZ9V3vCbLaiplg==
 
-prisma@^2.29.0:
+prisma@2.29.1:
   version "2.29.1"
   resolved "https://registry.yarnpkg.com/prisma/-/prisma-2.29.1.tgz#7845f55c7f09955b01f973c6a4b1f330cb212e7d"
   integrity sha512-fRGh90+z0m3Jw3D6KBE6wyVCRR0w6M6QD93jh+em8IOQycmC48zB8hho8zeri3J9//C0k8fkDeQrRLJUosXROw==
