@@ -45,6 +45,7 @@ export const EditMedicalForm: React.FC<CustomProps> = ({ data }) => {
         previewData=""
         onHideFormBuilder={hideFormBuilder}
         preFormName={Item.name}
+        preFormType={Item.formType}
       />
     </div>
   )
