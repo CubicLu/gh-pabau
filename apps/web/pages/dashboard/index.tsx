@@ -15,6 +15,7 @@ import dayjs, { Dayjs } from 'dayjs'
 import { Menu, Dropdown, Drawer, Col, Row, Typography, Select } from 'antd'
 import { TopBoard } from '../../components/Dashboard/TopBoard/TopBoard'
 import { Charts } from '../../components/Dashboard/Charts/Charts'
+import { locationList, userList } from './mock'
 
 interface ISetUser {
   key: string
@@ -27,21 +28,12 @@ const { Option } = Select
 
 export function Index() {
   const isMobile = useMedia('(max-width: 767px)', false)
-  const userList = [
-    { key: 'bristol', label: 'Pabaucare - Bristol', select: true },
-    { key: 'london', label: 'Pabaucare - London', select: false },
-    { key: 'leeds', label: 'Pabaucare - Leeds', select: false },
-    { key: 'manchester', label: 'Pabaucare - Manchester', select: false },
-  ]
-  const locationList = [
-    { key: 'user1', label: 'user1', select: true },
-    { key: 'user2', label: 'user2', select: false },
-    { key: 'user3', label: 'user3', select: false },
-    { key: 'user4', label: 'user4', select: false },
-  ]
+  const user = useContext(UserContext)
+
+  const [visible, setVisible] = useState(false)
   const [openUserList, setOpenUserList] = useState(false)
   const [openDateModel, setOpenDateModel] = useState(false)
-  const [dashboardMode, setDashboardMode] = useState(1)
+  const [dashboardMode, setDashboardMode] = useState(0)
   const [userListData, setUserListData] = useState<ISetUser[]>(
     dashboardMode === 0 ? locationList : userList
   )
@@ -55,13 +47,9 @@ export function Index() {
     dayjs().startOf('month'),
     dayjs(),
   ])
-  const [visible, setVisible] = useState(false)
-
-  const user = useContext(UserContext)
 
   const handleSelectMenu = (selectedUser) => {
     const List = [...userListData]
-
     List.map((item) => {
       if (item.key === selectedUser) {
         item.select = true
@@ -70,11 +58,9 @@ export function Index() {
       }
       return item
     })
-
     setUserListData(List)
     setOpenUserList(false)
   }
-
   const customMenu = (
     <div className={styles.customMenu}>
       <Menu className={styles.customMenuDropdown}>
@@ -98,13 +84,11 @@ export function Index() {
       </Menu>
     </div>
   )
-
   const onDateFilterApply = () => {
     setFilterDate([...selectedDates])
     setFilterRange(selectedRange)
     setOpenDateModel(false)
   }
-
   const onDataRangeSelect = (value) => {
     setSelectedRange(value)
     switch (value) {
@@ -153,6 +137,20 @@ export function Index() {
         break
       }
     }
+  }
+  const handleDateFilter = () => {
+    setOpenDateModel(!openDateModel)
+  }
+  const showDrawer = () => {
+    setVisible(true)
+    setOpenUserList(true)
+  }
+  const onClose = () => {
+    setVisible(false)
+    setOpenUserList(false)
+  }
+  const handleDashboardMode = () => {
+    setDashboardMode(dashboardMode === 1 ? 0 : 1)
   }
   const dateFilter = (
     <div className={styles.dateFilterContainer}>
@@ -204,23 +202,6 @@ export function Index() {
       </div>
     </div>
   )
-
-  const handleDateFilter = () => {
-    setOpenDateModel(!openDateModel)
-  }
-
-  const showDrawer = () => {
-    setVisible(true)
-    setOpenUserList(true)
-  }
-  const onClose = () => {
-    setVisible(false)
-    setOpenUserList(false)
-  }
-
-  const handleDashboardMode = () => {
-    setDashboardMode(dashboardMode === 1 ? 0 : 1)
-  }
 
   return (
     <div>

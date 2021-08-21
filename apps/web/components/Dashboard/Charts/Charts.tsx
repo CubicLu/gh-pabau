@@ -3,92 +3,9 @@ import { Row, Col, Table } from 'antd'
 import * as Highcharts from 'highcharts'
 import { CustomHighChart } from '@pabau/ui'
 import styles from './Charts.module.less'
+import { columns, data } from '../../../pages/dashboard/mock'
 
 export const Charts: FC = () => {
-  const columns = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-    },
-    {
-      title: 'Units',
-      dataIndex: 'units',
-    },
-    {
-      title: 'Value',
-      dataIndex: 'value',
-    },
-    {
-      title: 'Percentage',
-      dataIndex: 'percentage',
-    },
-  ]
-
-  const data = [
-    {
-      key: '1',
-      name: 'Spray tan',
-      units: 2,
-      value: '£41.67',
-      percentage: '3%',
-    },
-    {
-      key: '2',
-      name: 'Nails',
-      units: 51,
-      value: '£711.67',
-      percentage: '76%',
-    },
-    {
-      key: '3',
-      name: 'ESPA Facial',
-      units: 2,
-      value: '£50.00',
-      percentage: '3%',
-    },
-    {
-      key: '4',
-      name: 'Ear Percing',
-      units: 6,
-      value: '£150.00',
-      percentage: '9%',
-    },
-    {
-      key: '5',
-      name: 'ESPA Massage',
-      units: 1,
-      value: '£50.00',
-      percentage: '1%',
-    },
-    {
-      key: '6',
-      name: 'Eye treatments',
-      units: 19,
-      value: '£285.83',
-      percentage: '28%',
-    },
-    {
-      key: '7',
-      name: 'Waxing',
-      units: 26,
-      value: '£394.58',
-      percentage: '39%',
-    },
-    {
-      key: '8',
-      name: 'Consultations',
-      units: 1,
-      value: '£0.00',
-      percentage: '1%',
-    },
-    {
-      key: '9',
-      name: 'Total',
-      units: 111,
-      value: '£1,792.00',
-      percentage: '-',
-    },
-  ]
   const optionLine: Highcharts.Options = {
     chart: {
       type: 'line',
@@ -194,6 +111,7 @@ export const Charts: FC = () => {
         type: 'column',
         marker: {
           lineColor: '#65CD98',
+          fillColor: '#65CD98',
           color: '#65CD98',
         },
         pointWidth: 20,
