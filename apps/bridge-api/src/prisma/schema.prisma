@@ -1854,7 +1854,7 @@ model CmContact {
   group_tag                 String?                     @default("")
   polite_notice             String?                     @default("")
   custom_id                 String
-  gender                    String
+  gender                    String?                     @default("")
   MarketingOptInAll         Int?                        @default(0)
   MarketingOptInEmail       Int?
   MarketingOptInPhone       Int?
@@ -1880,7 +1880,6 @@ model CmContact {
   privacy_policy            String?                     @default("")
   need_to_knows             Boolean?                    @default(false)
   contact_type              Int                         @default(0)
-  preferred_language        String?
   SocialSurveyFeedback      SocialSurveyFeedback?
   CmContactAlert            CmContactAlert[]
   AccountBalance            AccountBalance[]
@@ -3006,6 +3005,7 @@ model CmStaffGeneral {
   CompanyPosition     CompanyPosition?            @relation(fields: [Position], references: [id])
   HolidayRequest      HolidayRequest[]
   SalonBookings       Booking[]
+  RotaShift           RotaShift[]
 
   InventoryDiscrepancy InventoryDiscrepancy[]
   @@index([Position], name: "Position")
@@ -3741,24 +3741,28 @@ model CompanyEmail {
 //
 //  @@unique([company_id, ipv4_range_start, ipv4_range_end], name: "unique_range_per_company")
 //}
-//
-//model company_groups {
-//  ID                  Int    @id @default(autoincrement())
-//  Name                String
-//  occupier            String
-//  category_product_id Int
-//  cat_order           Int
-//  image               String
-//  online_enabled      Int
-//  group_color         String
-//  import_id           Int
-//  equipment_id        Int
-//  deposit_amount      Float
-//  tax_id              Int
-//  master_cat_id       Int
-//  company_position_id Int    @default(0)
-//}
-//
+model ServiceCategory {
+  id                     Int                    @id @default(autoincrement()) @map("ID")
+  name                   String                 @map("Name")
+  company_id             Int                    @map("occupier")
+  category_product_id    Int
+  cat_order              Int
+  image                  String
+  online_enabled         Int
+  group_color            String
+  import_id              Int
+  equipment_id           Int
+  deposit_amount         Float
+  tax_id                 Int
+  master_cat_id          Int
+  company_position_id    Int                    @default(0)
+  ServicesMasterCategory ServicesMasterCategory @relation(fields: [master_cat_id], references: [id])
+  InvCategory            InvCategory            @relation(fields: [category_product_id], references: [id])
+  CompanyService         CompanyService[]
+
+  @@map("company_groups")
+}
+
 //model company_hits {
 //  id         Int    @id @default(autoincrement())
 //  company_id Int    @unique
@@ -3937,7 +3941,7 @@ model CompanyRoomService {
 model CompanyService {
   id                     Int                               @id @default(autoincrement())
   company_id             Int                               @map("company")
-  service                String
+  name                   String                            @map("service")
   duration               String
   description            String
   price                  Float
@@ -3980,12 +3984,13 @@ model CompanyService {
   online_only_service    Int
   Company                Company                           @relation(fields: [company_id], references: [id])
   CompanyRoomService     CompanyRoomService[]
+  ServiceCategory        ServiceCategory                   @relation(fields: [group_id], references: [id])
 
   @@index([company_id], name: "company_index")
   @@index([group_id], name: "group_index")
   @@index([pos_only], name: "pos_only")
   @@index([product_id], name: "product_index")
-  @@index([service], name: "service")
+  @@index([name], name: "name")
   @@map("company_services")
 }
 
@@ -6281,7 +6286,8 @@ model InvCategory {
   master_cat_id     Int?
   Company           Company?                @relation(fields: [company_id], references: [id])
   InvProduct        InvProduct[]
-  MasterCategory    ServicesMasterCategory? @relation("master_cat_id_to_services_master_category_id", fields: [master_cat_id], references: [id])
+  MasterCategory    ServicesMasterCategory? @relation(fields: [master_cat_id], references: [id])
+  ServiceCategory   ServiceCategory?
   Tax               Tax?                    @relation(fields: [tax_id], references: [id])
   User              User?                   @relation(fields: [user_id], references: [id])
 
@@ -10285,9 +10291,8 @@ model ReportCategory {
 model RotaShift {
   id             Int            @id @default(autoincrement())
   uid            Int
-  User           User           @relation(fields: [uid], references: [id])
-  start          Int
-  end            Int
+  start          Decimal
+  end            Decimal
   company_id     Int            @map("occupier")
   notes          String?
   last_seen      DateTime?
@@ -10314,7 +10319,7 @@ model RotaShift {
   Location       CompanyBranch  @relation(fields: [location_id], references: [id])
   CompanyRoom    CompanyRoom    @relation(fields: [room_id], references: [id])
   HolidayRequest HolidayRequest @relation(fields: [holiday_id], references: [id])
-
+  CmStaffGeneral CmStaffGeneral @relation(fields: [uid], references: [ID])
 
   @@index([end], name: "end")
   @@index([holiday_id], name: "holiday_id")
@@ -10369,89 +10374,89 @@ model RotaShift {
 model Booking {
   id                            Int             @id @default(autoincrement())
   title                         String
-  start_date                    Int?
-  end_date                      Int?
+  start_date                    Decimal
+  end_date                      Decimal
   start_time                    Int?
   end_time                      Int?
   service                       String?
   contact_id                    Int?
   UID                           Int
-  occupier                      Int
+  company_id                    Int             @map("occupier")
   backgroudcolor                String?
   create_date                   Int?
   update_date                   Int?
   status                        String
-  estimated_cost                Float
-  tips                          Float
-  discounts                     Float
-  where                         String
+  estimated_cost                Float?
+  tips                          Float?
+  discounts                     Float?
+  where                         String?
   room_id                       Int?
   unique_id                     String
   reason                        String?
   invoice_id                    Int?
-  booking_id                    Int
+  booking_id                    Int?
   Online                        Int?            @default(0)
-  package_id                    Int
-  cancel_take                   Int
-  book_take                     Int
-  class_master_id               Int
-  unavailable                   Int
-  coupon_claim_id               String
-  related_id                    Int
+  package_id                    Int?
+  cancel_take                   Int?
+  book_take                     Int?
+  class_master_id               Int?
+  unavailable                   Int?
+  coupon_claim_id               String?
+  related_id                    Int?
   service_id                    Int
-  rebook                        Int
-  repeat_id                     Int
-  requested                     Int
-  sent_sms                      Int
-  sent_email                    Int
-  sent_survey                   Int
-  custom_contact_id             Int
+  rebook                        Int?
+  repeat_id                     Int?
+  requested                     Int?
+  sent_sms                      Int?
+  sent_email                    Int?
+  sent_survey                   Int?
+  custom_contact_id             Int?
   custom_contact_name           String?
-  custom_user_id                String
+  custom_user_id                String?
   custom_user_name              String?
-  custom_service_id             String
-  imported                      Int
-  client_confirmed              Int
-  hold_guid                     String
-  created_by_uid                Int
-  marketing_source              Int
-  resource_id                   Int
+  custom_service_id             String?
+  imported                      Int?
+  client_confirmed              Int?
+  hold_guid                     String?
+  created_by_uid                Int?
+  marketing_source              Int?
+  resource_id                   Int?
   custom_room_name              String?
-  custom_created_by_user_name   String
+  custom_created_by_user_name   String?
   location_id                   Int
-  modified_by_uid               Int
-  sent_email_reminder           Boolean         @default(false)
-  disable_locations             Int
-  participant_master_uid        Int             @default(0)
-  participant_master_booking_id Int             @default(0)
-  participant_slave_uids        String
-  participant_slave_booking_ids String
-  private                       Int             @default(0)
-  external_guest_ids            String
-  description                   String
-  issued_to                     Int
-  contract_id                   Int
-  all_day                       Int             @default(0)
-  interlinked_master_uid        Int             @default(0)
-  all_day_start_date            Int             @default(0)
-  all_day_end_date              Int             @default(0)
+  modified_by_uid               Int?
+  sent_email_reminder           Boolean?        @default(false)
+  disable_locations             Int?
+  participant_master_uid        Int?            @default(0)
+  participant_master_booking_id Int?            @default(0)
+  participant_slave_uids        String?
+  participant_slave_booking_ids String?
+  private                       Int?            @default(0)
+  external_guest_ids            String?
+  description                   String?
+  issued_to                     Int?
+  contract_id                   Int?
+  all_day                       Int?            @default(0)
+  interlinked_master_uid        Int?            @default(0)
+  all_day_start_date            Int?            @default(0)
+  all_day_end_date              Int?            @default(0)
   InvSale                       InvSale?        @relation(fields: [invoice_id], references: [id])
   User                          User?           @relation(fields: [UID], references: [id])
   Contact                       CmContact?      @relation(fields: [contact_id], references: [ID])
-  connect_client                UserMaster?     @relation(fields: [contact_id], references: [contact_id])
-  practitioner                  CmStaffGeneral? @relation(fields: [UID], references: [pabau_id])
-  booking_location              CompanyBranch?  @relation(fields: [location_id], references: [id])
+  UserMaster                    UserMaster?     @relation(fields: [contact_id], references: [contact_id])
+  CmStaffGeneral                CmStaffGeneral? @relation(fields: [UID], references: [pabau_id])
+  CompanyBranch                 CompanyBranch?  @relation(fields: [location_id], references: [id])
 
   @@index([UID], name: "UID")
-  @@index([occupier, start_date], name: "company_time")
+  @@index([company_id, start_date], name: "company_time")
   @@index([contact_id], name: "contact_id")
   @@index([create_date], name: "create_date")
   @@index([custom_contact_id], name: "custom_contact_id")
   @@index([end_date], name: "end_date")
   @@index([invoice_id], name: "invoice_id")
   @@index([location_id], name: "location_id")
-  @@index([occupier], name: "occupier")
-  @@index([occupier, unique_id], name: "occupier_uniqueid")
+  @@index([company_id], name: "company_id")
+  @@index([company_id, unique_id], name: "company_id_uniqueid")
   @@index([participant_master_booking_id], name: "participant_master_booking_id")
   @@index([participant_master_uid], name: "participant_master_uid")
   @@index([related_id], name: "related_id")
@@ -10984,14 +10989,15 @@ model UserSalutation {
 //}
 //
 model ServicesMasterCategory {
-  id          Int                           @id @default(autoincrement())
-  name        String
-  company_id  Int                           @map("occupier")
-  ord         Int                           @default(0)
-  type        services_master_category_type @default(SERVICE)
-  image       String
-  Company     Company                       @relation(fields: [company_id], references: [id])
-  InvCategory InvCategory[]                 @relation("master_cat_id_to_services_master_category_id")
+  id              Int                           @id @default(autoincrement())
+  name            String
+  company_id      Int                           @map("occupier")
+  ord             Int                           @default(0)
+  type            services_master_category_type @default(SERVICE)
+  image           String
+  Company         Company                       @relation(fields: [company_id], references: [id])
+  ServiceCategory ServiceCategory[]
+  InvCategory     InvCategory[]
 
   @@map("services_master_category")
 }
@@ -12496,7 +12502,6 @@ model User {
   UserSecurityQuestionsAnswer  UserSecurityQuestionsAnswer[]
   Company                      Company?                       @relation(fields: [company_id], references: [id])
   CompanyDetails               CompanyDetails?                @relation(fields: [company_id], references: [company_id])
-  RotaShift                    RotaShift[]
   UserGroupMember              UserGroupMember?
   UserMainPermission           UserMainPermission[]
   UserMobilePermission         UserMobilePermission[]

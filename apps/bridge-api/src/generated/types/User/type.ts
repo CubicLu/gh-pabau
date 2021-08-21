@@ -123,20 +123,6 @@ export const User = objectType({
         return root.CompanyDetails
       },
     })
-    t.list.field('RotaShift', {
-      type: 'RotaShift',
-      args: {
-        where: 'RotaShiftWhereInput',
-        orderBy: 'RotaShiftOrderByInput',
-        cursor: 'RotaShiftWhereUniqueInput',
-        take: 'Int',
-        skip: 'Int',
-        distinct: 'RotaShiftScalarFieldEnum',
-      },
-      resolve(root: any) {
-        return root.RotaShift
-      },
-    })
     t.nullable.field('UserGroupMember', {
       type: 'UserGroupMember',
       resolve(root: any) {

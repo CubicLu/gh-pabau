@@ -17,6 +17,7 @@ const createContact = async (
   data: ContactType,
   customFields: CustomFieldType[],
   locationId: number[],
+  language: string,
   companyId: number
 ): Promise<CmContact> => {
   const customFieldData = customFields.map((cmFields) => {
@@ -48,6 +49,12 @@ const createContact = async (
           data: locationData,
         },
       },
+      ContactMeta: {
+        create: {
+          meta_name: 'preferred_language',
+          meta_value: language,
+        },
+      },
     },
   })
 }
@@ -70,13 +77,13 @@ export const create = async (
     const inputData: ContactType = {
       ...input.data,
       company_id: id,
-      preferred_language: !input.data.preferred_language
-        ? ctx.authenticated.language?.company
-        : input.data.preferred_language,
       OwnerID: ctx.authenticated.user,
       DOB: input.data.DOB ? new Date(input.data.DOB) : null,
       custom_id: maxCustomId,
     }
+
+    delete inputData.preferred_language
+
     const contactData = await createContact(
       ctx,
       inputData,
@@ -84,6 +91,9 @@ export const create = async (
       id === ctx.authenticated.company && input.limitContactLocations
         ? input.limitContactLocations
         : [],
+      !input.data.preferred_language
+        ? ctx.authenticated.language?.company
+        : input.data.preferred_language,
       id
     )
 

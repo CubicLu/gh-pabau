@@ -307,8 +307,6 @@ export const ReceiptTemplateSkeleton: FC = () => {
                   />
                 </span>
               </div>
-            </div>
-            <div className={styles.section3Inner}>
               <div className={styles.inner}>
                 <span className={styles.headText}>
                   <Skeleton.Input
@@ -341,8 +339,6 @@ export const ReceiptTemplateSkeleton: FC = () => {
                   />
                 </span>
               </div>
-            </div>
-            <div className={styles.section3Inner}>
               <div className={styles.inner}>
                 <span className={styles.headText}>
                   <Skeleton.Input
@@ -375,8 +371,6 @@ export const ReceiptTemplateSkeleton: FC = () => {
                   />
                 </span>
               </div>
-            </div>
-            <div className={styles.section3Inner}>
               <div className={styles.inner}>
                 <span className={styles.headText}>
                   <Skeleton.Input

@@ -2,6 +2,7 @@ import {
   CheckCircleFilled,
   PlusCircleOutlined,
   SearchOutlined,
+  LoadingOutlined,
 } from '@ant-design/icons'
 import {
   FullScreenReportModal as FullScreenModal,
@@ -9,30 +10,51 @@ import {
   OperationType,
   PhoneNumberInput,
   Relationship,
+  RelationshipType,
+  Button,
 } from '@pabau/ui'
+import useDebounce from '../../hooks/useDebounce'
 import { Input as AntInput, Select as AntSelect } from 'antd'
 import classNames from 'classnames'
 import { Formik } from 'formik'
 import { Form, Input, Select } from 'formik-antd'
 import countries from 'i18n-iso-countries'
 import english from 'i18n-iso-countries/langs/en.json'
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import * as Yup from 'yup'
 import activeThirdPartyCompany from '../../assets/images/active-company.svg'
 import activeThirdPartyInsurance from '../../assets/images/active-insurance.svg'
 import thirdPartyCompany from '../../assets/images/company.svg'
 import thirdPartyInsurance from '../../assets/images/insurance.svg'
+import { ReactComponent as MedicalCenter } from '../../assets/images/medical-center.svg'
+import MapComponent from './Map'
 import styles from './AddThirdParty.module.less'
 
+const apiKey = 'AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw'
 const { Option } = Select
 const { Option: AntOption } = AntSelect
 
+interface Coordinate {
+  lat: number
+  lng: number
+}
+interface SearchItem {
+  name: string
+  street: string
+  postCode: string
+  city: string
+  country: string
+  phone: string
+  location?: Coordinate
+}
+
 export interface AddThirdPartyProps {
   visible: boolean
-  thirdPartyType: string
+  thirdPartyType: RelationshipType
   onAddRelationship: (relationship: Relationship) => void
   onClose: () => void
+  searchResults: SearchItem[]
 }
 
 export const AddThirdParty: FC<AddThirdPartyProps> = ({
@@ -40,15 +62,59 @@ export const AddThirdParty: FC<AddThirdPartyProps> = ({
   thirdPartyType,
   onAddRelationship,
   onClose,
+  searchResults,
 }) => {
   const { t } = useTranslation('common')
-  const [postcode, setPostcode] = useState('')
-  const [address, setAddress] = useState('')
-  const [phone, setPhone] = useState('')
-  const [company, setCompany] = useState('')
-  const [surgeryName, setSurgeryName] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selected, setSelected] = useState(-1)
+  const [results, setResults] = useState<SearchItem[]>([])
   const [showThirdPartyModal, setShowThirdPartyModal] = useState(false)
   const [showPracticeModal, setShowPracticeModal] = useState(false)
+
+  const debouncedSearchTerm = useDebounce(searchTerm, 500)
+
+  const handleSearch = useCallback(
+    async (search) => {
+      setLoading(true)
+      const searchItems: SearchItem[] = []
+      const searchStr = search.replace(' ', '').toLowerCase()
+      for (const item of searchResults.filter(
+        (el) =>
+          el.postCode.replace(' ', '').toLowerCase().includes(searchStr) ||
+          el.name.replace(' ', '').toLowerCase().includes(searchStr)
+      )) {
+        await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${item.postCode.replace(
+            /\s/g,
+            '+'
+          )}&key=${apiKey}`
+        )
+          .then((res) => res.json())
+          .then((res) => {
+            if (res.status === 'OK') {
+              const searchItem: SearchItem = {
+                ...item,
+                location: res.results[0].geometry.location,
+              }
+              searchItems.push(searchItem)
+            }
+          })
+      }
+      setResults(searchItems)
+      setLoading(false)
+    },
+    [searchResults]
+  )
+
+  useEffect(() => {
+    if (debouncedSearchTerm) {
+      handleSearch(debouncedSearchTerm)
+    } else {
+      setSelected(-1)
+      setResults([])
+    }
+  }, [debouncedSearchTerm, handleSearch])
 
   const modalTitle =
     thirdPartyType === 'practioner'
@@ -71,55 +137,42 @@ export const AddThirdParty: FC<AddThirdPartyProps> = ({
       ? t('ui.add.thirdparty.addmanual.company')
       : t('ui.add.thirdparty.addmanual.insurance')
 
-  const handleSaveChanges = () => {
-    if (thirdPartyType === 'practioner') {
-      onAddRelationship({
-        surgeryName,
-        phone,
-        address,
-        type: thirdPartyType,
-      })
-    } else {
-      onAddRelationship({
-        company,
-        phone,
-        address,
-        type: thirdPartyType,
-      })
-    }
-    setSurgeryName('')
-    setPhone('')
-    setAddress('')
-    setCompany('')
-  }
-
-  const handleSearch = () => {
-    return
-  }
-
-  const enableCreateButton = (): boolean => {
-    if (thirdPartyType === 'practioner') {
-      return surgeryName !== '' && address !== '' && phone !== ''
-    }
-    return company !== '' && address !== '' && phone !== ''
-  }
-
   const onSubmit = async (values, { resetForm }) => {
     resetForm()
+    setShowPracticeModal(false)
     if (thirdPartyType !== 'practioner') {
-      setShowThirdPartyModal(false)
-      setCompany(values.name)
-      setPhone(values.phone)
-      setAddress(
-        `${values.street} ${values.postCode} ${values.city} ${values.country}`
-      )
+      onAddRelationship({
+        company: values.name,
+        phone: values.phone,
+        address: `${values.street} ${values.postCode} ${values.city} ${values.country}`,
+        type: thirdPartyType,
+      })
     } else {
-      setShowPracticeModal(false)
-      setSurgeryName(values.surgeryName)
-      setPhone(values.phone)
-      setAddress(
-        `${values.street} ${values.postCode} ${values.city} ${values.country}`
-      )
+      onAddRelationship({
+        surgeryName: values.name,
+        phone: values.phone,
+        address: `${values.street} ${values.postCode} ${values.city} ${values.country}`,
+        type: thirdPartyType,
+      })
+    }
+  }
+
+  const handleSetAsRelationship = (result: SearchItem) => {
+    const { name, phone, street, postCode, city, country } = result
+    if (thirdPartyType !== 'practioner') {
+      onAddRelationship({
+        company: name,
+        phone: phone,
+        address: `${street} ${postCode} ${city} ${country}`,
+        type: thirdPartyType,
+      })
+    } else {
+      onAddRelationship({
+        surgeryName: name,
+        phone: phone,
+        address: `${street} ${postCode} ${city} ${country}`,
+        type: thirdPartyType,
+      })
     }
   }
 
@@ -370,11 +423,8 @@ export const AddThirdParty: FC<AddThirdPartyProps> = ({
       <FullScreenModal
         visible={visible}
         title={modalTitle}
-        operations={[OperationType.create]}
-        enableCreateBtn={enableCreateButton()}
+        operations={[]}
         onBackClick={() => onClose()}
-        createBtnText={t('ui.add.thirdparty.addbutton')}
-        onCreate={() => handleSaveChanges()}
         footer={true}
       >
         <div className={styles.addThirdPartyContainer}>
@@ -387,20 +437,80 @@ export const AddThirdParty: FC<AddThirdPartyProps> = ({
               <AntInput
                 placeholder={t('ui.add.thirdparty.postcode.placeholder')}
                 prefix={<SearchOutlined className={styles.searchIcon} />}
-                value={postcode}
-                onChange={(e) => setPostcode(e.target.value)}
-                onPressEnter={() => handleSearch()}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                allowClear
               />
             </div>
-            <div
-              className={styles.addManuallyContainer}
-              onClick={() => handleClickAddManually()}
-            >
-              <PlusCircleOutlined /> {addManuallyText}
-            </div>
+            {!searchTerm && (
+              <div
+                className={styles.addManuallyContainer}
+                onClick={() => handleClickAddManually()}
+              >
+                <PlusCircleOutlined /> {addManuallyText}
+              </div>
+            )}
+            {searchTerm && (
+              <div className={styles.searchResults}>
+                {loading && (
+                  <div className={styles.loadingContainer}>
+                    <LoadingOutlined />
+                    <div className={styles.loadingText}>
+                      {t('ui.add.thirdparty.search.loading')}
+                    </div>
+                  </div>
+                )}
+                {!loading && results.length > 0 && (
+                  <p>{t('ui.add.thirdparty.search.guide')}</p>
+                )}
+                {!loading && results.length > 0 && (
+                  <div className={styles.searchItems}>
+                    {results.map((result, index) => (
+                      <React.Fragment key={`search-item-${index}`}>
+                        <div
+                          className={
+                            selected === index
+                              ? classNames(styles.searchItem, styles.selected)
+                              : styles.searchItem
+                          }
+                          onClick={() => setSelected(index)}
+                        >
+                          <div>
+                            <MedicalCenter />
+                          </div>
+                          <div>
+                            <div>{result.name}</div>
+                            <div>{`${result.street} ${result.postCode} ${result.city} ${result.country}`}</div>
+                            <div>{result.phone}</div>
+                          </div>
+                          <div className={styles.checked}>
+                            <CheckCircleFilled />
+                          </div>
+                        </div>
+                        {selected === index && (
+                          <Button
+                            type="primary"
+                            className={styles.thirdPartySetButton}
+                            onClick={() => handleSetAsRelationship(result)}
+                          >
+                            {thirdPartyType === 'practioner'
+                              ? t('ui.add.thirdparty.set.button.practice')
+                              : thirdPartyType === 'company'
+                              ? t('ui.add.thirdparty.set.button.company')
+                              : t('ui.add.thirdparty.set.button.insurance')}
+                          </Button>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
           <div>
-            <div className={styles.mapContainer}></div>
+            <div className={styles.mapContainer}>
+              <MapComponent searchItems={results} />
+            </div>
           </div>
         </div>
       </FullScreenModal>
@@ -511,7 +621,7 @@ export const AddThirdParty: FC<AddThirdPartyProps> = ({
                       label={t('ui.add.thirdparty.address.postcode.label')}
                       text={values.postCode}
                       placeHolderText={t(
-                        'ui.add.thirdparty.address.postcode.placholder'
+                        'ui.add.thirdparty.address.postcode.placeholder'
                       )}
                       onChange={(val) => setFieldValue('postCode', val)}
                     />
@@ -521,7 +631,7 @@ export const AddThirdParty: FC<AddThirdPartyProps> = ({
                       label={t('ui.add.thirdparty.address.town.label')}
                       text={values.city}
                       placeHolderText={t(
-                        'ui.add.thirdparty.address.town.placholder'
+                        'ui.add.thirdparty.address.town.placeholder'
                       )}
                       onChange={(val) => setFieldValue('city', val)}
                     />

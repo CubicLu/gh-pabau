@@ -106,3 +106,4 @@ buck-out/
 **/ios/Pods/
 
 .postmon-lock
+*.0x/
