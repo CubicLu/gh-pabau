@@ -154,6 +154,7 @@ export const Charts: FC = () => {
       symbolWidth: 24,
       symbolRadius: 9,
       squareSymbol: false,
+      align: 'center',
     },
     xAxis: {
       labels: {

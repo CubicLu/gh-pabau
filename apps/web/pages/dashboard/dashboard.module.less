@@ -148,63 +148,65 @@
   text-align: center;
 }
 .mobile-drawer {
-  :global .ant-drawer-content-wrapper {
-    .ant-drawer-content {
-      border-top-left-radius: 16px;
-      border-top-right-radius: 16px;
+  @media (max-width: 767px) {
+    :global .ant-drawer-content-wrapper {
+      .ant-drawer-content {
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
 
-      .ant-drawer-close {
-        display: none;
+        .ant-drawer-close {
+          display: none;
+        }
       }
     }
-  }
-  .header-stick {
-    width: 40px;
-    height: 4px;
-    background: #e3e3e5;
-    border-radius: 16px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 12px;
-  }
-  .header-title {
-    width: 100%;
-    text-align: center;
-    margin-bottom: 12px;
-    font-weight: 500;
-    font-size: 17px;
-    line-height: 22px;
-    color: #3d3d46;
-  }
-  .collapse {
-    :global .ant-collapse-item {
-      color: #3d3d46;
-      font-size: 16px;
-      line-height: 18px;
-      border-top: 1px solid #f1f1f1;
-      .ant-collapse-header {
-        border-bottom: 1px solid #f1f1f1;
-      }
-      .ant-collapse-content-box {
-        padding: 0px;
-      }
+    .header-stick {
+      width: 40px;
+      height: 4px;
+      background: #e3e3e5;
+      border-radius: 16px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 12px;
     }
-    .panel-item {
+    .header-title {
       width: 100%;
-      padding: 8px 16px;
+      text-align: center;
+      margin-bottom: 12px;
+      font-weight: 500;
+      font-size: 17px;
+      line-height: 22px;
       color: #3d3d46;
-      cursor: pointer;
-      &.selected {
-        background: #eef7fb;
-        border: 1px solid #54b2d3;
-        color: #54b2d3;
+    }
+    .collapse {
+      :global .ant-collapse-item {
+        color: #3d3d46;
+        font-size: 16px;
+        line-height: 18px;
+        border-top: 1px solid #f1f1f1;
+        .ant-collapse-header {
+          border-bottom: 1px solid #f1f1f1;
+        }
+        .ant-collapse-content-box {
+          padding: 0px;
+        }
+      }
+      .panel-item {
+        width: 100%;
+        padding: 8px 16px;
+        color: #3d3d46;
+        cursor: pointer;
+        &.selected {
+          background: #eef7fb;
+          border: 1px solid #54b2d3;
+          color: #54b2d3;
+        }
       }
     }
-  }
-  .drawer-button {
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 20px;
+    .drawer-button {
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 20px;
+    }
   }
 }
 .date-filter-container {
