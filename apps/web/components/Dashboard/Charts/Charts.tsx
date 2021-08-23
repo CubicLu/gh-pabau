@@ -96,7 +96,7 @@ export const Charts: FC = () => {
       {
         name: 'Pencilled-in',
         allowPointSelect: true,
-        data: [],
+        data: [0, 1, 4, 3, 2, 1, 2, 3],
         type: 'column',
         marker: {
           lineColor: '#54B2D3',
@@ -107,7 +107,7 @@ export const Charts: FC = () => {
       {
         name: 'Confirmed',
         allowPointSelect: true,
-        data: [0, 1, 4, 3, 2, 1, 2, 3],
+        data: [],
         type: 'column',
         marker: {
           lineColor: '#65CD98',
