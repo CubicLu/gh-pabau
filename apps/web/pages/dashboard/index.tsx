@@ -15,7 +15,7 @@ import dayjs, { Dayjs } from 'dayjs'
 import { Menu, Dropdown, Drawer, Col, Row, Typography, Select } from 'antd'
 import { TopBoard } from '../../components/Dashboard/TopBoard/TopBoard'
 import { Charts } from '../../components/Dashboard/Charts/Charts'
-import { locationList, userList } from './mock'
+import { locationList, userList } from '../../mocks/Dashboard'
 
 interface ISetUser {
   key: string
@@ -139,7 +139,7 @@ export function Index() {
     }
   }
   const handleDateFilter = () => {
-    setOpenDateModel(!openDateModel)
+    setOpenDateModel((openDateModel) => !openDateModel)
   }
   const showDrawer = () => {
     setVisible(true)

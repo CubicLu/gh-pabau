@@ -3,7 +3,7 @@ import { Row, Col, Table } from 'antd'
 import * as Highcharts from 'highcharts'
 import { CustomHighChart } from '@pabau/ui'
 import styles from './Charts.module.less'
-import { columns, data } from '../../../pages/dashboard/mock'
+import { columns, data } from '../../../mocks/Dashboard'
 
 export const Charts: FC = () => {
   const optionLine: Highcharts.Options = {
@@ -110,9 +110,8 @@ export const Charts: FC = () => {
         data: [],
         type: 'column',
         marker: {
-          lineColor: '#65CD98',
-          fillColor: '#65CD98',
-          color: '#65CD98',
+          lineColor: '#ED72AA',
+          color: '#ED72AA',
         },
         pointWidth: 20,
       },
@@ -150,6 +149,12 @@ export const Charts: FC = () => {
         pointWidth: 20,
       },
     ],
+    legend: {
+      symbolHeight: 8,
+      symbolWidth: 24,
+      symbolRadius: 9,
+      squareSymbol: false,
+    },
     xAxis: {
       labels: {
         style: {
