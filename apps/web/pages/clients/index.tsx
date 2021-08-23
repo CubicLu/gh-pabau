@@ -203,18 +203,17 @@ export const Clients: FC<ClientsProps> = () => {
     is_active: d.is_active,
     labelTest: [],
   }))
-
-  // useEffect(() => {
-  //   if (getContactsData) {
-  //     setTestData(contactsData)
-  //   }
-  // }, [getContactsData])
+  const [testData, setTestData] = useState(contactsData)
 
   useEffect(() => {
     if (getContactsData) {
       setTestData(contactsData)
     }
   }, [getContactsData])
+
+  // if (contactsData && contactsData?.some((e) => e.labelTest.length > 0)) {
+  //   setTestData(contactsData)
+  // }
 
   // WORKING
   useEffect(() => {
@@ -231,6 +230,31 @@ export const Clients: FC<ClientsProps> = () => {
       }
     })
   }, [getContactsData])
+
+  // useEffect(() => {
+  //   contactsData?.map((fieldContact) => {
+  //     // const tempCON = []
+  //     for (const fieldCL of contactsLabels) {
+  //       if (fieldCL.contact_id === fieldContact.id) {
+  //         const labelComplete = {}
+  //         labelComplete['id'] = fieldCL.label.id
+  //         labelComplete['text'] = fieldCL.label.text
+  //         labelComplete['color'] = fieldCL.label.color
+  //         fieldContact.labelTest.push(labelComplete)
+  //         // fieldContact = {
+  //         //   ...fieldContact
+  //         // }
+  //         // return {
+  //         //   ...fieldContact,
+  //         //   labelTest: [labelComplete],
+  //         // }
+  //       }
+  //       // return fieldContact
+  //     }
+  //   })
+  //   // console.log('updatedData', updatedData)
+  //   // setTestData(updatedData)
+  // }, [getContactsData])
 
   // useEffect(() => {
   //   contactsData?.map((fieldContact) => {
@@ -276,7 +300,7 @@ export const Clients: FC<ClientsProps> = () => {
   const [duplicateDataList, setDuplicateDataList] = useState<
     SourceDataProps[][]
   >([])
-  const [testData, setTestData] = useState(contactsData)
+  // const [testData, setTestData] = useState(contactsData)
   const [duplicateContactsTest, setDuplicateContactsTest] = useState(
     getDuplicateContactsData
   )
@@ -347,10 +371,6 @@ export const Clients: FC<ClientsProps> = () => {
     }
     return res
   }
-
-  // if (selectedRowKeys.length > 2) {
-  //   setDefaultSelectedLabels([])
-  // }
 
   useEffect(() => {
     let filteredData = testData?.map((a) => ({ ...a }))
@@ -462,9 +482,9 @@ export const Clients: FC<ClientsProps> = () => {
     setDeleteModal(false)
   }
 
-  if (testData && testData.some((e) => e.labelTest.length > 0)) {
-    console.log('testData exist', testData)
-  }
+  // if (testData && testData.some((e) => e.labelTest.length > 0)) {
+  //   console.log('testData exist', testData)
+  // }
 
   const handleCreateClient = (values) => {
     if (isEdit) {

@@ -264,6 +264,8 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
           if (
             addedLabel.length > 0 &&
             !defaultSelectedLabels.includes(selectedLabel)
+            // &&
+            // !defaultSelectedLabels.some((e) => e.id === addedLabel.id)
           ) {
             insertContactsLabelsMutaton({
               variables: {
@@ -294,6 +296,9 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
               id: findToDeleteCL.id,
             },
           })
+        }
+        if (selectedRowKeys.length > 1) {
+          console.log('MULTI SELECTED')
         }
       }
     }
