@@ -110,6 +110,7 @@ title {
 
 .marketing-source-header {
   background-color: #fff;
+  z-index: 9;
 }
 
 .advance-collapsible {
@@ -143,6 +144,19 @@ title {
   }
 }
 
+.form-subject-item {
+  text-align: 'center';
+  cursor: 'pointer';
+  padding: 8px;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+.form-subject-item-selected {
+  background: #54b2d3;
+  color: #fff;
+}
+
 @media (min-width: 768px) and (max-width: 1024px) {
   .table-main-heading {
     display: block;
@@ -169,6 +183,10 @@ title {
     display: block;
   }
 
+  .marketing-sources-table-container {
+    margin-top: 14px;
+  }
+
   .marketing-source-page {
     .marketing-text-style {
       display: flex;
@@ -177,7 +195,7 @@ title {
         margin-bottom: 0px;
         font-family: Circular-Std-Medium;
         font-style: normal;
-        font-weight: 500;
+        font-weight: bolder;
         font-size: 17px;
         line-height: 22px;
         text-transform: capitalize;
@@ -206,13 +224,3 @@ title {
     align-items: center;
   }
 }
-
-// .table-custom {
-//   :global .ant-table-tbody {
-//     tr {
-//       td {
-//         word-break: break-all;
-//       }
-//     }
-//   }
-// }

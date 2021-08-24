@@ -66,7 +66,7 @@ export const MembersListModal: FC<P> = ({
         <Search
           placeHolder="Search members"
           onChange={handleChange}
-          searchResults={searchMember}
+          searchResults={searchMember as Member[]}
         >
           <div className={styles.memberWrapper}>
             {searchMemberText === '' &&

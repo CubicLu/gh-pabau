@@ -20,14 +20,20 @@ import { QuestionCircleOutlined } from '@ant-design/icons'
 import { ColorPicker, ClientLanguage, SocialMediaCheckbox } from '@pabau/ui'
 import styles from './Standard.module.less'
 import { PabauPlus } from '../badge/Badge'
+import { ServiceSpecific } from './ServiceSpecific'
+import { useTranslation } from 'react-i18next'
 
 interface P {
   enableReminder: boolean
   onEnableReminder: (boolean) => void
   standardMessage?: string
   hideReminderTimeFrameTabPane?: boolean
+  showServiceSpecific?: boolean
   smartDelivery: boolean
   onSmartDelivery: (boolean) => void
+  hideReminderSettingTabPane?: boolean
+  smartFramework: boolean
+  onSmartFramework: (boolean) => void
   requestConfirmation: boolean
   onRequestConfirmation: (boolean) => void
   hideRequestConfirmationOption?: boolean
@@ -42,8 +48,10 @@ interface P {
   hideDisplayPolicyOption?: boolean
   showService: boolean
   onShowService: (boolean) => void
+  hideServiceOption?: boolean
   showEmployeeName: boolean
   onShowEmployeeName: (boolean) => void
+  hideEmployeeNameOption?: boolean
   addMedicalHisButton: boolean
   onAddMedicalHisButton: (boolean) => void
   hideMedicalHistoryOption?: boolean
@@ -53,6 +61,8 @@ interface P {
   onButtonColor: (string) => void
   selectLanguage: string
   onSelectLanguage: (string) => void
+  selectService: string
+  onSelectService: (string) => void
   medicalMessage: string
   onMedicalMessage: (string) => void
   informationMessage: string
@@ -61,8 +71,12 @@ interface P {
   hideAppearanceTabPane: boolean
   smsMessage: string
   onSmsMessage: (string) => void
+  hideMessageBox?: boolean
   onActiveSocialIcon: (value: string[]) => void
   disableCustomTab: boolean
+  hideEnablePay?: boolean
+  onShowEnablePay: (boolean) => void
+  showEnablePay?: boolean
 }
 
 const { TabPane } = Tabs
@@ -77,6 +91,10 @@ export const Standard: FC<P> = ({
   smartDelivery,
   onSmartDelivery,
   hideReminderTimeFrameTabPane = false,
+  showServiceSpecific = false,
+  smartFramework,
+  onSmartFramework,
+  hideReminderSettingTabPane = true,
   requestConfirmation,
   onRequestConfirmation,
   hideRequestConfirmationOption = false,
@@ -91,8 +109,10 @@ export const Standard: FC<P> = ({
   hideDisplayPolicyOption = false,
   showService,
   onShowService,
+  hideServiceOption = false,
   showEmployeeName,
   onShowEmployeeName,
+  hideEmployeeNameOption = false,
   addMedicalHisButton,
   onAddMedicalHisButton,
   hideMedicalHistoryOption = false,
@@ -102,6 +122,8 @@ export const Standard: FC<P> = ({
   onButtonColor,
   selectLanguage,
   onSelectLanguage,
+  selectService,
+  onSelectService,
   medicalMessage,
   onMedicalMessage,
   informationMessage,
@@ -110,14 +132,19 @@ export const Standard: FC<P> = ({
   hideAppearanceTabPane,
   smsMessage,
   onSmsMessage,
+  hideMessageBox = true,
   onActiveSocialIcon,
   disableCustomTab,
+  hideEnablePay = false,
+  showEnablePay,
+  onShowEnablePay,
 }) => {
   function callback(key) {
     onStandardTabChanged(key)
   }
-
   const size = useWindowSize()
+  const { t } = useTranslation('common')
+
   function useWindowSize() {
     // Initialize state with undefined width/height so server and client renders match
     // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
@@ -151,16 +178,13 @@ export const Standard: FC<P> = ({
 
   return (
     <Row className={styles.tabsAlign}>
-      <Tabs defaultActiveKey="1" onChange={callback}>
-        <TabPane tab="Standard" key="1">
+      <Tabs defaultActiveKey="standard" onChange={callback}>
+        <TabPane tab="Standard" key="standard">
           <div style={{ padding: '10px 9px' }}>
             <Row style={{ padding: '0 15px' }}>
               <span className={styles.line1}>
                 {standardMessage ||
-                  'This notification automatically sends to clients the moment their appointment is booked.'}
-                {/* <span className={styles.anchor}>
-                  <Button type="link">Learn more</Button>
-                </span> */}
+                  t('notifications.standard.defaultStandardMessage')}
               </span>
             </Row>
             <Collapse
@@ -172,8 +196,8 @@ export const Standard: FC<P> = ({
             >
               {!hideReminderTimeFrameTabPane && (
                 <Panel
-                  className={styles.panelAlign}
-                  header="Reminder timeframe"
+                  className={`${styles.panelAlign} ${styles.reminderTimeFrame}`}
+                  header={t('notifications.standard.remiderTimeFrame')}
                   key="1"
                 >
                   <>
@@ -184,12 +208,16 @@ export const Standard: FC<P> = ({
                         checked={smartDelivery}
                         onChange={() => onSmartDelivery(!smartDelivery)}
                       >
-                        Smart delivery
+                        {t(
+                          'notifications.standard.remiderTimeFrame.smartDelivery'
+                        )}
                       </Checkbox>
                       <Tooltip
                         placement="topLeft"
                         color="#595959"
-                        title={`"We will intelligently schedule additional confirmations to clients who have a history of forgetting"`}
+                        title={t(
+                          'notifications.standard.remiderTimeFrame.smartDeliveyTooltip'
+                        )}
                       >
                         <QuestionCircleOutlined />
                       </Tooltip>
@@ -197,28 +225,98 @@ export const Standard: FC<P> = ({
                     <Row gutter={[0, 16]}>
                       <Col>
                         <span className={styles.line1}>
-                          Choose how far in advance your reminder notification
-                          messages are sent to clients
+                          {t(
+                            'notifications.standard.reminderTimeFrame.message'
+                          )}
                         </span>
                       </Col>
                     </Row>
                     <Row>
                       <Col>
                         <span className={styles.reminder}>
-                          Reminder advance notice
+                          {t(
+                            'notifications.standard.reminderTimeFrame.advanceNotice'
+                          )}
                         </span>
                       </Col>
                     </Row>
                     <Select defaultValue="48" style={{ width: '100%' }}>
-                      <Option value="48">48 hours</Option>
-                      <Option value="24">24 hours</Option>
-                      <Option value="12">12 hours</Option>
-                      <Option value="6">6 hours</Option>
+                      <Option value="48">
+                        48 {t('notifications.standard.reminderTimeFrame.hours')}
+                      </Option>
+                      <Option value="24">
+                        24 {t('notifications.standard.reminderTimeFrame.hours')}
+                      </Option>
+                      <Option value="12">
+                        12 {t('notifications.standard.reminderTimeFrame.hours')}
+                      </Option>
+                      <Option value="6">
+                        6 {t('notifications.standard.reminderTimeFrame.hours')}
+                      </Option>
                     </Select>
                   </>
                 </Panel>
               )}
-              {!hideAppearanceTabPane && (
+              {!hideReminderSettingTabPane && (
+                <Panel
+                  className={styles.panelAlign}
+                  header={t('notifications.standard.reminderSettings')}
+                  key="1"
+                >
+                  <>
+                    <Row align="middle">
+                      <Checkbox
+                        className={styles.checkboxStyle}
+                        value="smart_framework"
+                        checked={smartFramework}
+                        onChange={() => onSmartFramework(!smartFramework)}
+                      >
+                        {t('notifications.standard.smartFramework')}
+                      </Checkbox>
+                      <Tooltip
+                        placement="topLeft"
+                        color="#595959"
+                        title={t(
+                          'notifications.standard.smartFrameworkTooltip'
+                        )}
+                      >
+                        <QuestionCircleOutlined />
+                      </Tooltip>
+                    </Row>
+                    <Row gutter={[0, 16]}>
+                      <Col>
+                        <span className={styles.line1}>
+                          {t('notifications.standard.reminderSettings.message')}
+                        </span>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <span className={styles.reminder}>
+                          {t(
+                            'notifications.standard.reminderSettings.afterNotice'
+                          )}
+                        </span>
+                      </Col>
+                    </Row>
+                    <Select defaultValue="48" style={{ width: '100%' }}>
+                      <Option value="48">
+                        48 {t('notifications.standard.reminderTimeFrame.hours')}
+                      </Option>
+                      <Option value="24">
+                        24 {t('notifications.standard.reminderTimeFrame.hours')}
+                      </Option>
+                      <Option value="12">
+                        12 {t('notifications.standard.reminderTimeFrame.hours')}
+                      </Option>
+                      <Option value="6">
+                        6 {t('notifications.standard.reminderTimeFrame.hours')}
+                      </Option>
+                    </Select>
+                  </>
+                </Panel>
+              )}
+              {!hideMessageBox && (
                 <div
                   className={`${styles.panelAlign} ${styles.messageSection}`}
                 >
@@ -239,7 +337,7 @@ export const Standard: FC<P> = ({
               {hideAppearanceTabPane && (
                 <Panel
                   className={styles.panelAlign}
-                  header="Appearance"
+                  header={t('notifications.standard.appearance')}
                   key="2"
                 >
                   {!hideRequestConfirmationOption && (
@@ -252,12 +350,16 @@ export const Standard: FC<P> = ({
                           onRequestConfirmation(!requestConfirmation)
                         }
                       >
-                        Request confirmation
+                        {t(
+                          'notifications.standard.appearance.requestConfirmation'
+                        )}
                       </Checkbox>
                       <Tooltip
                         placement="topLeft"
                         color="#595959"
-                        title={`"We will intelligently schedule additional confirmations to clients who have a history of forgetting"`}
+                        title={t(
+                          'notifications.standard.appearance.requestConfirmationToolTip'
+                        )}
                       >
                         <QuestionCircleOutlined />
                       </Tooltip>
@@ -271,7 +373,9 @@ export const Standard: FC<P> = ({
                         checked={allowRescheduling}
                         onChange={() => onAllowRescheduling(!allowRescheduling)}
                       >
-                        Allow rescheduling
+                        {t(
+                          'notifications.standard.appearance.allowRescheduling'
+                        )}
                       </Checkbox>
                     </Row>
                   )}
@@ -283,7 +387,9 @@ export const Standard: FC<P> = ({
                         checked={allowCancellation}
                         onChange={() => onAllowCancellation(!allowCancellation)}
                       >
-                        Allow cancellation
+                        {t(
+                          'notifications.standard.appearance.allowCancellation'
+                        )}
                       </Checkbox>
                     </Row>
                   )}
@@ -295,38 +401,68 @@ export const Standard: FC<P> = ({
                         checked={displayPolicy}
                         onChange={() => onDisplayPolicy(!displayPolicy)}
                       >
-                        Display policy
+                        {t('notifications.standard.appearance.displayPolicy')}
                       </Checkbox>
                     </Row>
                   )}
-                  <Row>
-                    <Checkbox
-                      className={styles.checkboxStyle}
-                      value="show_service"
-                      checked={showService}
-                      onChange={() => onShowService(!showService)}
-                    >
-                      Show service
-                    </Checkbox>
-                  </Row>
-                  <Row>
-                    <Checkbox
-                      className={styles.checkboxStyle}
-                      value="show_employee_name"
-                      checked={showEmployeeName}
-                      onChange={() => onShowEmployeeName(!showEmployeeName)}
-                    >
-                      Show employee name
-                    </Checkbox>
-                  </Row>
+                  {!hideServiceOption && (
+                    <Row>
+                      <Checkbox
+                        className={styles.checkboxStyle}
+                        value="show_service"
+                        checked={showService}
+                        onChange={() => onShowService(!showService)}
+                      >
+                        {t('notifications.standard.appearance.showService')}
+                      </Checkbox>
+                    </Row>
+                  )}
+                  {!hideEmployeeNameOption && (
+                    <Row>
+                      <Checkbox
+                        className={styles.checkboxStyle}
+                        value="show_employee_name"
+                        checked={showEmployeeName}
+                        onChange={() => onShowEmployeeName(!showEmployeeName)}
+                      >
+                        {t(
+                          'notifications.standard.appearance.showEmployeeName'
+                        )}
+                      </Checkbox>
+                    </Row>
+                  )}
+                  {!hideEnablePay && (
+                    <Row align="middle">
+                      <Checkbox
+                        className={styles.checkboxStyle}
+                        value="show_enable_pay"
+                        checked={showEnablePay}
+                        onChange={() => onShowEnablePay(!showEnablePay)}
+                      >
+                        {t('notifications.standard.appearance.enablePayButton')}
+                      </Checkbox>
+                      <Tooltip
+                        className={styles.tooltipStyle}
+                        placement="topLeft"
+                        color="#595959"
+                        title={t(
+                          'notifications.standard.appearance.enablePayButtonTooltip'
+                        )}
+                      >
+                        <QuestionCircleOutlined />
+                      </Tooltip>
+                    </Row>
+                  )}
                   {!hideMedicalHistoryOption && (
                     <>
                       <Row>
                         <span className={styles.separateText}>
-                          Medical History settings
+                          {t(
+                            'notifications.standard.appearance.medicalSetting'
+                          )}
                         </span>
                       </Row>
-                      <Row>
+                      <Row align="middle">
                         <Checkbox
                           className={styles.checkboxStyle}
                           value="add_his_button"
@@ -335,8 +471,19 @@ export const Standard: FC<P> = ({
                             onAddMedicalHisButton(!addMedicalHisButton)
                           }
                         >
-                          Add Medical History button
+                          {t(
+                            'notifications.standard.appearance.addCompeleteFormButton'
+                          )}
                         </Checkbox>
+                        <Tooltip
+                          placement="topLeft"
+                          color="#595959"
+                          title={t(
+                            'notifications.standard.appearance.addCompeleteFormButtonToolTip'
+                          )}
+                        >
+                          <QuestionCircleOutlined />
+                        </Tooltip>
                       </Row>
                       <div className={styles.hidesection}>
                         {addMedicalHisButton && (
@@ -346,12 +493,16 @@ export const Standard: FC<P> = ({
                                 className={styles.checkboxStyle}
                                 value="hide_his_completed"
                               >
-                                Hide if history is already completed
+                                {t(
+                                  'notifications.standard.appearance.hideHistory'
+                                )}
                               </Checkbox>
                             </Row>
                             <Row>
                               <span className={styles.reminder}>
-                                Medical History message
+                                {t(
+                                  'notifications.standard.appearance.medicalhistoryButton'
+                                )}
                               </span>
                             </Row>
                             <Row>
@@ -370,22 +521,30 @@ export const Standard: FC<P> = ({
                     </>
                   )}
                   <ColorPicker
-                    heading="Background color"
+                    heading={t(
+                      'notifications.standard.appearance.backgroundColor'
+                    )}
                     onSelected={(val) => onBackGroundColor(val)}
                     selectedColor=""
                   />
                   <ColorPicker
-                    heading="Buttons color"
+                    heading={t(
+                      'notifications.standard.appearance.buttonsColor'
+                    )}
                     onSelected={(val) => onButtonColor(val)}
                     selectedColor=""
                   />
                   <Row className={styles.informText}>
-                    <span className={styles.reminder}>Information</span>
+                    <span className={styles.reminder}>
+                      {t('notifications.standard.appearance.information')}
+                    </span>
                   </Row>
                   <Row>
                     <TextArea
                       className={styles.textareaStyle}
-                      placeholder="e.g. Special offer"
+                      placeholder={t(
+                        'notifications.standard.appearance.specialOffer'
+                      )}
                       autoSize={{ minRows: 3, maxRows: 3 }}
                       maxLength={size.width > 768 ? 500 : 160}
                       onChange={(event) =>
@@ -399,7 +558,7 @@ export const Standard: FC<P> = ({
               {hideAppearanceTabPane && (
                 <Panel
                   className={styles.panelAlign}
-                  header="Social media icons"
+                  header={t('notifications.standard.socialMedia.title')}
                   key="3"
                 >
                   <Row>
@@ -435,19 +594,19 @@ export const Standard: FC<P> = ({
               )}
               <div className={styles.clientLang}>
                 <div className={styles.papauPlusContainer}>
-                  <PabauPlus label="Plus" modalType="Care" />
+                  <PabauPlus label="Plus" modalType="Marketing" />
                 </div>
               </div>
 
               <Panel
                 className={styles.panelAlign}
-                header="Client languages"
+                header={t('notifications.standard.clientLanguage')}
                 key="4"
               >
                 <Row>
                   <Col>
                     <span className={styles.reminder}>
-                      Setup templates in your clients preferred language
+                      {t('notifications.standard.clientlanguage.message')}
                     </span>
                   </Col>
                 </Row>
@@ -464,13 +623,15 @@ export const Standard: FC<P> = ({
           </div>
         </TabPane>
         {!disableCustomTab && (
-          <TabPane tab="Custom" key="2">
+          <TabPane tab="Custom" key="custom">
             <div style={{ padding: '10px 9px' }}>
               <Row style={{ padding: '0 15px' }}>
                 <span className={styles.line1}>
-                  Design or upload your own custom email from your
+                  {t('notifications.custom.line1')}
                   <span className={styles.anchor}>
-                    <Button type="link">message templates</Button>
+                    <Button type="link">
+                      {t('notifications.custom.messageTemplate')}
+                    </Button>
                   </span>
                 </span>
               </Row>
@@ -479,17 +640,27 @@ export const Standard: FC<P> = ({
                   <Row style={{ padding: '0 15px' }}>
                     <Col>
                       <span className={styles.reminder}>
-                        Reminder advance notice
+                        {t(
+                          'notifications.standard.reminderTimeFrame.advanceNotice'
+                        )}
                       </span>
                     </Col>
                   </Row>
 
                   <Row style={{ padding: '0 15px' }}>
                     <Select defaultValue="48" style={{ width: '100%' }}>
-                      <Option value="48">48 hours</Option>
-                      <Option value="24">24 hours</Option>
-                      <Option value="12">12 hours</Option>
-                      <Option value="6">6 hours</Option>
+                      <Option value="48">
+                        48 {t('notifications.standard.reminderTimeFrame.hours')}
+                      </Option>
+                      <Option value="24">
+                        24 {t('notifications.standard.reminderTimeFrame.hours')}
+                      </Option>
+                      <Option value="12">
+                        12 {t('notifications.standard.reminderTimeFrame.hours')}
+                      </Option>
+                      <Option value="6">
+                        6 {t('notifications.standard.reminderTimeFrame.hours')}
+                      </Option>
                     </Select>
                   </Row>
                 </>
@@ -499,7 +670,6 @@ export const Standard: FC<P> = ({
                   <PabauPlus label="Plus" modalType="Marketing" />
                 </div>
               </div>
-
               <Collapse
                 className={styles.collapseAlignFirst}
                 bordered={false}
@@ -509,13 +679,13 @@ export const Standard: FC<P> = ({
               >
                 <Panel
                   className={styles.panelAlign}
-                  header="Client languages"
+                  header={t('notifications.standard.clientLanguage')}
                   key="1"
                 >
                   <Row>
                     <Col>
                       <span className={styles.reminder}>
-                        Setup templates in your clients preferred language
+                        {t('notifications.standard.clientlanguage.message')}
                       </span>
                     </Col>
                   </Row>
@@ -529,6 +699,38 @@ export const Standard: FC<P> = ({
                   </Row>
                 </Panel>
               </Collapse>
+              {showServiceSpecific && (
+                <Collapse
+                  className={styles.collapseAlignFirst}
+                  bordered={false}
+                  defaultActiveKey={['1']}
+                  expandIconPosition="right"
+                  style={{ backgroundColor: 'white' }}
+                >
+                  <Panel
+                    className={styles.panelAlign}
+                    header="Service Specific"
+                    key="1"
+                  >
+                    <Row>
+                      <Col>
+                        <span className={styles.reminder1}>
+                          {t('notifications.standard.serviceSpecific.message')}
+                        </span>
+                      </Col>
+                    </Row>
+                    <Row className={styles.clientLangLogo}>
+                      <ServiceSpecific
+                        selectServiceHook={[selectService, onSelectService]}
+                        defaultService={'Japanese straightening'}
+                        isClickable={true}
+                        isHover={false}
+                        selectLanguage={selectLanguage}
+                      />
+                    </Row>
+                  </Panel>
+                </Collapse>
+              )}
             </div>
           </TabPane>
         )}

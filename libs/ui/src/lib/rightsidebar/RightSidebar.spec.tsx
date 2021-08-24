@@ -11,11 +11,17 @@ describe('RightSidebar', () => {
           formType: '',
           formName: '',
           txtQuestion: '',
+          txtQuestionWithTag: '',
           txtBlock: '',
+          txtBlockWithTag: '',
           txtInputType: '',
           txtDefaults: '',
+          txtDefaultsWithTag: '',
           txtLinkedField: '',
+          signData: '',
           arrItems: [],
+          txtValue: '',
+          arrValue: [],
           required: false,
         }}
         component={''}

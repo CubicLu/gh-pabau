@@ -1,4 +1,11 @@
-import { Avatar, BasicModal, Stepper, StepperItem, TabMenu } from '@pabau/ui'
+import {
+  Avatar,
+  BasicModal,
+  FormComponentBuilder,
+  Stepper,
+  StepperItem,
+  TabMenu,
+} from '@pabau/ui'
 import { Divider, Tag } from 'antd'
 import React, { FC } from 'react'
 import styles from './MedicalFormPreview.module.less'
@@ -13,6 +20,9 @@ interface MedicalPreviewUserProps {
 export interface MedicalFormPreviewProps {
   user: MedicalPreviewUserProps
   desktopTemp: string
+  formData?: string
+  formName?: string
+  formSaveLabel?: string
   appTemp: string
   step: number
   stepData: StepperItem[]
@@ -21,6 +31,9 @@ export interface MedicalFormPreviewProps {
 }
 
 export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
+  formData = '',
+  formName = '',
+  formSaveLabel = '',
   user,
   desktopTemp,
   appTemp,
@@ -37,7 +50,7 @@ export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
       {visible && (
         <BasicModal
           wrapClassName={styles.tempPreviewContainer}
-          title="Template Preview"
+          title={formName === '' ? 'Template Preview' : formName + ' Preview'}
           visible={visible}
           newButtonText="Test As Client"
           width="50%"
@@ -46,7 +59,14 @@ export const MedicalFormPreview: FC<MedicalFormPreviewProps> = ({
           <div className={styles.tempPreviewTabMenuContainer}>
             <TabMenu tabPosition="top" menuItems={['Desktop', 'App']}>
               <div className={styles.tempPreviewTabContainer}>
-                <iframe title="Desktop" src={desktopTemp} />
+                {formData === '' ? (
+                  <iframe title="Desktop" src={desktopTemp} />
+                ) : (
+                  <FormComponentBuilder
+                    previewData={formData}
+                    formSaveLabel={formSaveLabel}
+                  />
+                )}
               </div>
               <div className={styles.tempPreviewTabContainer}>
                 <div className={styles.tempAppPreviewHeader}>

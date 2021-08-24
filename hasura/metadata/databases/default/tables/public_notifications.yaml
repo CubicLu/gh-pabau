@@ -1,0 +1,77 @@
+table:
+  name: notifications
+  schema: public
+object_relationships:
+- name: notification_type
+  using:
+    manual_configuration:
+      column_mapping:
+        type: notification_type
+      insertion_order: null
+      remote_table:
+        name: notification_types
+        schema: public
+array_relationships:
+- name: read_by
+  using:
+    manual_configuration:
+      column_mapping:
+        id: notification
+      insertion_order: null
+      remote_table:
+        name: read_notification
+        schema: public
+remote_relationships:
+- definition:
+    hasura_fields:
+    - sent_by
+    remote_field:
+      findUniqueUser:
+        arguments:
+          where:
+            id: $sent_by
+    remote_schema: CRM
+  name: sentBy
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - destination
+    - loop
+    - sent_by
+    - sent_to
+    - type
+    - variables
+  role: user
+select_permissions:
+- permission:
+    columns:
+    - order
+    - sent_by
+    - loop
+    - sent_to
+    - variables
+    - destination
+    - created_at
+    - updated_at
+    - id
+    - type
+    filter: {}
+  role: user
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - destination
+    - loop
+    - sent_by
+    - sent_to
+    - type
+    - variables
+    filter: {}
+  role: user
+delete_permissions:
+- permission:
+    filter: {}
+  role: user

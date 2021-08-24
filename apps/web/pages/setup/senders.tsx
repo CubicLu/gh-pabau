@@ -1,17 +1,20 @@
-import React from 'react'
-import { Layout, Breadcrumb, MobileHeader, Button } from '@pabau/ui'
-import styles from './senders.module.less'
 import {
   FilterOutlined,
   LeftOutlined,
   MailOutlined,
   MobileOutlined,
+  PlusSquareFilled,
 } from '@ant-design/icons'
-import { Typography, Row, Col } from 'antd'
-import Link from 'next/link'
+import { Breadcrumb, Button, MobileHeader } from '@pabau/ui'
+import { Col, Row, Typography } from 'antd'
 import { useRouter } from 'next/router'
-
+import React, { useContext } from 'react'
 import { ReactComponent as Verified } from '../../assets/images/verified.svg'
+import Layout from '../../components/Layout/Layout'
+import { UserContext } from '../../context/UserContext'
+import { useGridData } from '../../hooks/useGridData'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import styles from './senders.module.less'
 
 const { Title } = Typography
 
@@ -69,46 +72,64 @@ export const subCriteriaOptions = ['Sub category', 'Sub category 2']
 export const mergeTagTypeOptions = ['Tag Type 1', 'Tag Type 2']
 
 export const Communications: React.FC = () => {
+  const user = useContext(UserContext)
   const router = useRouter()
-
+  const { t } = useTranslationI18()
+  const { getParentSetupData } = useGridData(t)
+  const parentMenu = getParentSetupData(router.pathname)
+  const handleBack = () => {
+    if (parentMenu.length > 0) {
+      router.push({
+        pathname: '/setup',
+        query: { menu: parentMenu[0]?.keyValue },
+      })
+    } else {
+      router.push('/setup')
+    }
+  }
   return (
     <>
       <div className={styles.desktopViewNone}>
         <MobileHeader className={styles.mobileHeader}>
           <div className={styles.allContentAlignMobile}>
             <div className={styles.mobileHeaderTextStyle}>
-              <Link href="/setup">
-                <LeftOutlined />
-              </Link>
-              <p>Communications</p>
+              <LeftOutlined onClick={handleBack} />
+              <p>{t('setup.senders.title')}</p>
+            </div>
+            <div className={styles.mobileHeaderOpsStyle}>
+              <FilterOutlined className={styles.filterIconStyle} />
+              <PlusSquareFilled
+                className={styles.plusIconStyle}
+                onClick={() => router.push('senders/create')}
+              />
             </div>
           </div>
         </MobileHeader>
       </div>
 
-      <Layout active={'setup'}>
+      <Layout {...user} active={'setup'}>
         <div className={styles.cardWrapper}>
           <div className={styles.cardHeader}>
             <div>
               <Breadcrumb
                 breadcrumbItems={[
-                  { breadcrumbName: 'Setup', path: 'setup' },
-                  { breadcrumbName: 'Communications', path: '' },
+                  { breadcrumbName: t('sidebar.setup'), path: 'setup' },
+                  { breadcrumbName: t('setup.senders.title'), path: '' },
                 ]}
               />
-              <Title>Communications</Title>
+              <Title>{t('setup.senders.title')}</Title>
             </div>
             <div className={styles.actions}>
               <Button>
                 <FilterOutlined />
-                Filter
+                {t('setup.senders.filter')}
               </Button>
               <Button
                 onClick={() => router.push('senders/create')}
                 backgroundColor="#54B2D3"
                 className={styles.senderButton}
               >
-                Create a sender
+                {t('setup.senders.create')}
               </Button>
             </div>
           </div>
@@ -128,7 +149,9 @@ export const Communications: React.FC = () => {
                       )}
                       <div className={styles.verifiedWrapper}>
                         {item.isDefaultSender && (
-                          <div className={styles.defaultText}>Default</div>
+                          <div className={styles.defaultText}>
+                            {t('setup.senders.default')}
+                          </div>
                         )}
                         {item.isEnableReplies && <Verified />}
                       </div>

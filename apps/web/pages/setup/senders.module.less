@@ -6,6 +6,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  @media (max-width: 767px) {
+    display: none;
+  }
 }
 
 .actions {
@@ -48,6 +52,23 @@
     color: var(--grey-text-color);
     padding-left: 10px;
   }
+}
+
+.mobile-header-ops-style {
+  display: flex;
+  align-items: center;
+}
+
+.filter-icon-style {
+  font-size: 19px;
+  color: var(--light-grey-color);
+  padding-right: 25px;
+}
+
+.plus-icon-style {
+  color: var(--primary-color);
+  font-size: 25px;
+  border-radius: 4px;
 }
 
 .desktop-view-none {

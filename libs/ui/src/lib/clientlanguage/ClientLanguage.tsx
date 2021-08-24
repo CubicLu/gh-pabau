@@ -1,24 +1,24 @@
-import React, { FC, useState, useEffect } from 'react'
+import { CloseOutlined, PlusOutlined } from '@ant-design/icons'
 import { Image, Popover } from 'antd'
-import { PlusOutlined, CloseOutlined } from '@ant-design/icons'
-import styles from './ClientLanguage.module.less'
+import React, { FC, useEffect, useState } from 'react'
 import { ReactComponent as CircleCheck } from '../../assets/images/circle-check.svg'
-import ENSVG from '../../assets/images/lang-logos/en.svg'
-import FRSVG from '../../assets/images/lang-logos/french.svg'
-import SPSVG from '../../assets/images/lang-logos/spanish.svg'
 import ARSVG from '../../assets/images/lang-logos/arabic.svg'
 import BRSVG from '../../assets/images/lang-logos/bulgarian.svg'
 import CZSVG from '../../assets/images/lang-logos/czech.svg'
+import DASVG from '../../assets/images/lang-logos/dutch.svg'
+import ENSVG from '../../assets/images/lang-logos/en.svg'
+import FRSVG from '../../assets/images/lang-logos/french.svg'
 import HGSVG from '../../assets/images/lang-logos/hungarian.svg'
 import LTSVG from '../../assets/images/lang-logos/latvian.svg'
 import NWSVG from '../../assets/images/lang-logos/norwegian.svg'
 import POSVG from '../../assets/images/lang-logos/polish.svg'
-import SWSVG from '../../assets/images/lang-logos/swedish.svg'
 import ROMSVG from '../../assets/images/lang-logos/romanian.svg'
 import RUSSVG from '../../assets/images/lang-logos/russian.svg'
-import DASVG from '../../assets/images/lang-logos/dutch.svg'
+import SPSVG from '../../assets/images/lang-logos/spanish.svg'
+import SWSVG from '../../assets/images/lang-logos/swedish.svg'
+import styles from './ClientLanguage.module.less'
 
-const languageMenu: LangData[] = [
+export const languageMenu: LangData[] = [
   {
     label: 'English',
     shortLabel: 'EN',
@@ -35,7 +35,7 @@ const languageMenu: LangData[] = [
   },
   {
     label: 'Spanish',
-    shortLabel: 'SP',
+    shortLabel: 'ES',
     logo: SPSVG,
     selected: false,
     default: false,
@@ -191,6 +191,9 @@ interface ClientLanguageProps {
   defaultLanguage: string
   isClickable: boolean
   isHover: boolean
+  addButton?: React.ReactNode
+  onChangeLanguage?: (e) => void
+  showPreferredLng?: boolean
 }
 
 const defaultLan = (defaultLanguage: string): LangData => {
@@ -215,6 +218,9 @@ export const ClientLanguage: FC<ClientLanguageProps> = ({
   defaultLanguage,
   isClickable,
   isHover,
+  addButton,
+  onChangeLanguage,
+  showPreferredLng = true,
 }) => {
   const [preferredLang, setPreferredLang] = useState<LangData[]>([])
 
@@ -225,6 +231,13 @@ export const ClientLanguage: FC<ClientLanguageProps> = ({
   //   }
   // }, [])
 
+  const updatePreferredLang = (e) => {
+    setPreferredLang(e)
+    if (typeof onChangeLanguage !== 'undefined') {
+      onChangeLanguage(e)
+    }
+  }
+
   const deletePreferredLang = (index) => {
     // if (preferredLang[index].selected === false || preferredLang[index].selected === undefined) {
     // 	preferredLang.splice(index, 1)
@@ -234,13 +247,19 @@ export const ClientLanguage: FC<ClientLanguageProps> = ({
 
     preferredLang.splice(index, 1)
     setPreferredLang([...preferredLang])
+    if (typeof onChangeLanguage !== 'undefined') {
+      onChangeLanguage([...preferredLang])
+    }
   }
 
   const [flagStatus, setFlagStatus] = useState(false)
 
   useEffect(() => {
     setPreferredLang([defaultLan(defaultLanguage)])
-  }, [defaultLanguage])
+    if (typeof onChangeLanguage !== 'undefined') {
+      onChangeLanguage([defaultLan(defaultLanguage)])
+    }
+  }, [defaultLanguage, onChangeLanguage])
 
   function checkEvent1(value) {
     if (isHover) {
@@ -258,54 +277,61 @@ export const ClientLanguage: FC<ClientLanguageProps> = ({
   return (
     <div className={styles.container}>
       <div className={styles.languageWrap}>
-        {preferredLang?.map((item, index) => {
-          return (
-            <div
-              key={item.label}
-              className={`${
-                flagStatus && item.shortLabel === selectLanguage
-                  ? styles.preferredLanguage
-                  : styles.preferredLanguageOut
-              } ${
-                isHover && item.shortLabel === selectLanguage
-                  ? styles.preferredLanguageMouseIn
-                  : styles.preferredLanguageMouseOut
-              }`}
-              onMouseEnter={() => checkEvent1(item.shortLabel)}
-              onClick={() => checkEvent2(item.shortLabel)}
-              onMouseOver={() => setFlagStatus(true)}
-              onMouseLeave={() => setFlagStatus(true)}
-            >
-              <Image
+        {showPreferredLng &&
+          preferredLang?.map((item, index) => {
+            return (
+              <div
                 key={item.label}
-                preview={false}
-                width={26}
-                src={item.logo}
-                alt={item.label}
-              />
-              <span className={styles.languageName}>{item.shortLabel}</span>
-              {!isDefault(item, defaultLanguage) && (
-                <CloseOutlined
-                  className={styles.closeBadge}
-                  onClick={() => deletePreferredLang(index)}
+                className={`${
+                  flagStatus && item.shortLabel === selectLanguage
+                    ? styles.preferredLanguage
+                    : styles.preferredLanguageOut
+                } ${
+                  isHover && item.shortLabel === selectLanguage
+                    ? styles.preferredLanguageMouseIn
+                    : styles.preferredLanguageMouseOut
+                }`}
+                onMouseEnter={() => checkEvent1(item.shortLabel)}
+                onClick={() => checkEvent2(item.shortLabel)}
+                onMouseOver={() => setFlagStatus(true)}
+                onMouseLeave={() => setFlagStatus(true)}
+              >
+                <Image
+                  key={item.label}
+                  preview={false}
+                  width={26}
+                  src={item.logo}
+                  alt={item.label}
                 />
-              )}
-            </div>
-          )
-        })}
+                <span className={styles.languageName}>{item.shortLabel}</span>
+                {!isDefault(item, defaultLanguage) && (
+                  <CloseOutlined
+                    className={styles.closeBadge}
+                    onClick={() => deletePreferredLang(index)}
+                  />
+                )}
+              </div>
+            )
+          })}
       </div>
       <div className={styles.addpopover}>
         <Popover
           content={
-            <LanguagePop childHook={[preferredLang, setPreferredLang]} />
+            <LanguagePop childHook={[preferredLang, updatePreferredLang]} />
           }
           placement="topLeft"
           trigger="click"
         >
-          <div className={styles.addLanguageBtn}>
-            <PlusOutlined className={styles.popButton} />
-          </div>
-          <span className={styles.addLanguageText}>Add language</span>
+          {addButton ? (
+            addButton
+          ) : (
+            <>
+              <div className={styles.addLanguageBtn}>
+                <PlusOutlined className={styles.popButton} />
+              </div>
+              <span className={styles.addLanguageText}>Add language</span>
+            </>
+          )}
         </Popover>
       </div>
     </div>

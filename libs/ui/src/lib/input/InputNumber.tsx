@@ -1,6 +1,6 @@
-import React, { PropsWithChildren } from 'react'
 import { Form, InputNumber as AntInput } from 'antd'
 import { FormProps } from 'antd/lib/form'
+import React, { PropsWithChildren } from 'react'
 import styles from './Input.module.less'
 
 enum ButtonSize {
@@ -16,6 +16,7 @@ export interface InputNumberProps extends FormProps {
   disabled?: boolean
   placeHolderText?: string
   requiredMsg?: string
+  tooltip?: string
   type?: string
   showCurrency?: boolean
   currency?: string
@@ -30,6 +31,7 @@ export function InputNumber({
   placeHolderText,
   requiredMark = false,
   requiredMsg,
+  tooltip,
   type,
   onChange,
   showCurrency,
@@ -57,6 +59,7 @@ export function InputNumber({
           label={label ? label : ''}
           name="input-item"
           help={requiredMsg}
+          tooltip={tooltip}
           validateStatus={requiredMsg ? 'error' : 'success'}
         >
           <AntInput

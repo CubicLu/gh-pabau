@@ -1,153 +1,360 @@
 # Bitbucket Pipeline definition
-
-image: node:14-buster
+image: node:16-buster
 
 options:
-  max-time: 45 # max time in minutes for each step
+  max-time: 60 # max time in minutes for each step
 
 definitions:
   caches:
-    nodemodules: 'node_modules/'
-    yarncustom: '/usr/local/share/.cache/yarn'
+    nodemodules: node_modules/
+    yarncustom: /usr/local/share/.cache/yarn
     cypress: '/root/.cache/Cypress'
-#  services:
-#    docker:
-#      memory: 2048
+  services:
+    docker:
+      memory: 3072
 
 pipelines:
   pull-requests:
     '**':
       - step:
-          name: PR pipeline
+          name: yarn audit
           size: 2x
           caches:
             - nodemodules
             - yarncustom
           script:
-            - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -gt 2 ]] && exit 1 || exit 0'
+            #            - while true; do ps -aux && sleep 30; done &
+            - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 16 ]] && exit 0 || exit 1'
+            - ls -al .postmon-lock && (echo Dont commit the .postmon-lock && exit 1) || echo Good, no .postmon-lock was found
+            - CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
+            - rm -f .postmon-lock
+          artifacts:
+            - node_modules/**
+            - libs/graphql/generated/**
 
-            # Get an oauth access token using the client credentials, parsing out the token with jq.
-            - apt-get update && apt-get install -y curl jq
-            - >
-              export access_token=$(curl -s -X POST -u "${BITBUCKET_CLIENT_ID}:${BITBUCKET_CLIENT_SECRET}" \
-                https://bitbucket.org/site/oauth2/access_token \
-                -d grant_type=client_credentials -d scopes="pullrequest"| jq --raw-output '.access_token')
+      - parallel:
+          - step:
+              name: misc checks
+              size: 1x
+              script:
+                #                - while true; do ps -aux && sleep 30; done &
+                - if git ls-files | git check-ignore --no-index --stdin; then echo "The above files are committed, but yet they are also in .gitignore. Don't mix."; fi
+                - rm -rf libs/graphql/crm-mutation apps/bridge-api/src/generated && yarn bridge:generate && git diff --exit-code --no-ext-diff -p
+                - rm -rf libs/graphql/generated && yarn graphql-codegen && git diff --exit-code --no-ext-diff -p
+                - yarn lint:tsc --base=origin/master
+                - yarn lint:ls || true
+                - yarn lint:workspace
+                - yarn lint:graphql-inspector
+                - yarn graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
+                #                - graphql-inspector similar hasura/schema.graphql || echo TODO
+                - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
+                - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
+                - DANGER_BITBUCKETCLOUD_OAUTH_KEY="${BITBUCKET_CLIENT_ID}" DANGER_BITBUCKETCLOUD_OAUTH_SECRET="${BITBUCKET_CLIENT_SECRET}" yarn danger ci --no-publish-check
 
-            # Configure git to use the oauth token.
-            - >
-              curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}"
-            - >
-              export PR_AUTHOR=$(curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}" | jq -r '.author.display_name')
 
-            # get the commit message for this commit
-            - export LAST_COMMIT_LOG=$(git log HEAD -1 | tail -n +4 | perl -p -e 's/[\r\n]//' | awk '{$1=$1;print}')
-            - echo "${LAST_COMMIT_LOG}"
+          - step:
+              name: lint
+              script:
+                #                - while true; do ps -aux && sleep 30; done &
+                - yarn affected:lint --base=origin/master
 
-            - touch /tmp/bot_message.txt
-            - yarn install --frozen-lockfile --prefer-offline
+          - step:
+              name: unit tests
+              size: 2x
+              script:
+                #                - while true; do ps -aux && sleep 30; done &
+                - yarn affected:test --base=origin/master
 
-            # TODO: move these to eslint so that `yarn lint` picks up these errors instead
-            - npm i -g typescript
-            - tsc --noEmit -p apps/backend/
-            - tsc --noEmit -p apps/connect/
-            - tsc --noEmit -p apps/connect-e2e/
-            - tsc --noEmit -p apps/mgmt/
-            - tsc --noEmit -p apps/mgmt-e2e/
-            - tsc --noEmit -p apps/ui-e2e/
-            - tsc --noEmit -p apps/web/
-            - tsc --noEmit -p apps/web-e2e/
-            - tsc --noEmit -p libs/ui/tsconfig.lib.json
-            - tsc --noEmit -p libs/yup/tsconfig.lib.json
+          - step:
+              name: integration tests
+              size: 2x
+              services:
+                - docker
+              script:
+                - |
+                  echo "Testing Hasura database is consistent with schema.graphql..."
+                  echo "============================================================"
+                  echo ""
+                  echo "Installing docker-compose..."
+                  curl -L https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+                  chmod +x ~/docker-compose
+                  mv ~/docker-compose /usr/local/bin/docker-compose
+                - yarn bridge:start2 &
+                - |
+                  echo "Waiting for bridge-api to boot..."
+                  yarn wait-on -t 160000 http-get://localhost:4000
+                  echo "Waiting for postgres to boot..."
+                  docker-compose -f hasura/docker-compose.ci.yml up -d postgres && yarn wait-on -t 60000 -w 12000 tcp:127.0.0.1:5432 || docker-compose -f hasura/docker-compose.ci.yml logs postgres
+                  echo "Waiting for Hasura to boot..."
+                  docker-compose -f hasura/docker-compose.ci.yml up -d graphql-engine && yarn wait-on -t 60000 -w 20000 http-get://localhost:8080/console || docker-compose -f hasura/docker-compose.ci.yml logs graphql-engine
+                  echo "Ensuring Hasura is really booted..."
+                  HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:wait
+                  echo "Checking Metadata is consistent so far..."
+                  HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:cli metadata inconsistency status
+                  echo "Exporting Hasura metadata..."
+                  HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:export
+                  echo "Ensuring everything is identical..."
+                  git diff --exit-code --no-ext-diff -p || (git status && exit 1)
 
-            - yarn affected --base=origin/master --target=lint --with-deps --parallel
-            - yarn affected --base=origin/master --target=test
-            - yarn affected --base=origin/master --target=export --prod
-            - yarn affected --base=origin/master --target=deploy
-            - cat /tmp/bot_message.txt
+          - step:
+              name: build
+              max-time: 80
+              size: 2x
+              script:
+                #                - while true; do ps -aux && sleep 30; done &
+                - NEXT_PUBLIC_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/v1/graphql' NEXT_PUBLIC_WS_ENDPOINT='wss://api-v2-staging.pabau.com/v1/graphql' yarn affected:export --base=origin/master --prod
+              artifacts:
+                - dist/**
 
-            - npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "origin/master" "$(cat /tmp/bot_url_web.txt)" "$(cat /tmp/bot_url_ui.txt)" >> /tmp/bot_message.txt
-            - |
-              printf ":shallow_pan_of_food: *<https://bitbucket.org/pabau/monorepo/pull-requests/${BITBUCKET_PR_ID}|PR ${BITBUCKET_PR_ID}> published by ${PR_AUTHOR}*\n\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
-            - cat /tmp/bot_message.txt >> /tmp/bot_message2.txt
+          - step:
+              name: e2e
+              size: 2x
+              caches:
+                - cypress
+              script:
+                #                - while true; do ps -aux && sleep 30; done &
+                - apt update -y && apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+                - yarn cypress install || true
+                - yarn affected:e2e --base=origin/master || true
+
+      - parallel:
+          - step:
+              name: deploy dockers
+              size: 2x
+              services:
+                - docker
+              script:
+                #                - while true; do ps -aux && sleep 30; done &
+                - apt-get update -y && apt-get install -y curl jq time
+                - yarn affected --base=origin/master --target=deploy-docker
+                - mkdir -p dist && cp -f /tmp/bot_message.txt dist/ || true
+              artifacts:
+                - dist/bot_message.txt
+
+          - step:
+              name: deploy previews
+              image: node
+              max-time: 20
+              script:
+                #                - while true; do ps -aux && sleep 30; done &
+                - node -v
+                - ls -al . || true
+                - ls -al node_modules/ || true
+                - ls -al dist || true
+                - ls -al dist/apps || true
+                - cat /tmp/bot_message.txt || true
+                - apt-get update -y && apt-get install -y curl jq time
+
+                # get the commit message for this merge
+                - export LAST_COMMIT_LOG=$(git log HEAD -1 | tail -n +4 | perl -p -e 's/[\r\n]//' | awk '{$1=$1;print}')
+                - echo "${LAST_COMMIT_LOG}"
+                - if [ "${LAST_COMMIT_LOG}" == "[skip ci] bumping version (patch)" ]; then (echo yes && export LAST_COMMIT_LOG=$(git log HEAD~1 -1 | tail -n +4)); fi
+                - echo "${LAST_COMMIT_LOG}"
+
+                - NODE_OPTIONS=--max_old_space_size=2750 /usr/bin/time -v yarn affected --base=origin/master --head=HEAD --target=deploy --prod
+                - cat /tmp/bot_message.txt || true
+                - cat /tmp/bot_message2.txt || true
+
+                # Configure git to use the oauth token.
+                - |
+                  curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}"
+                  export PR_AUTHOR=$(curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}" | jq -r '.author.display_name')
+                  export COMMIT_AUTHOR=$(git log -2 --pretty=format:'%an' | head -n1)
+
+                - |
+                  printf ":shallow_pan_of_food::shallow_pan_of_food: *New PR Preview*\n## <https://bitbucket.org/pabau/monorepo/pull-requests/${BITBUCKET_PR_ID}|PR ${BITBUCKET_PR_ID}> committed by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
+                  npm i -g ts-node@9 && ts-node tools/cicd/PrintChangedUrls.ts "origin/master" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
+                  printf "\n" >> /tmp/bot_message2.txt
+                  cat /tmp/bot_message.txt >> /tmp/bot_message2.txt || true
+                  printf "\n" >> /tmp/bot_message2.txt
+
+                - cat /tmp/bot_message.txt || true
+                - cat /tmp/bot_message2.txt || true
+                - mkdir -p dist && cp -f /tmp/bot_message2.txt dist/ || true
+
+              artifacts:
+                - dist/bot_message2.txt
+
+      - step:
+          name: announce to slack
+          max-time: 25
+          script:
+            #                - while true; do ps -aux && sleep 30; done &
+            - cat dist/bot_message2.txt || true
+            - cat dist/bot_message.txt || true
+            - apt-get update -y && apt-get install -y curl jq
 
             # Post to Slack
             - |
-              jq --arg var "$(cat /tmp/bot_message2.txt)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
-              -H "Expect:" \
-              -H 'Content-Type: application/json; charset=utf-8' \
-              --data-binary @-
+              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)${IFS}$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | \
+                curl -0 "${SLACK_HOOK_URL}" \
+                -H "Expect:" \
+                -H 'Content-Type: application/json; charset=utf-8' \
+                --data-binary @-
+
+            - |
+              export access_token=$(curl -s -X POST -u "${BITBUCKET_CLIENT_ID}:${BITBUCKET_CLIENT_SECRET}" https://bitbucket.org/site/oauth2/access_token -d grant_type=client_credentials | tee | jq -r '.access_token')
+
+            # Configure git to use the oauth token.
+            - |
+              curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}"
+              export PR_AUTHOR=$(curl -sS -H "Authorization: Bearer ${access_token}" "https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PR_ID}" | jq -r '.author.display_name')
+              export COMMIT_AUTHOR=$(git log -2 --pretty=format:'%an' | tail -n1)
+
+            # Post to Bitbucket PR
+            - |
+              jq --arg var "$(cat dist/bot_message2.txt | head -c 5900)${IFS}$(cat dist/bot_message.txt | head -c 5900)" '.content.raw = $var' tools/cicd/bitbucket_comment.json | \
+              curl -0 https://api.bitbucket.org/2.0/repositories/pabau/monorepo/pullrequests/${BITBUCKET_PR_ID}/comments \
+                              --header "Authorization: Bearer ${access_token}" \
+                              --request POST \
+                              --header 'Content-Type: application/json' \
+                              --data-binary @-
+
 
   branches:
     master:
-
-#        - step:
-#            size: 2x
-#            name: e2e
-#            caches:
-#              - cypress
-#            script:
-#              - yarn install --frozen-lockfile --prefer-offline
-#              - apt update -y && apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
-#              - yarn cypress install || true
-#              - yarn affected:e2e --base=HEAD~1
-
       - step:
-          name: test (lint+unit), build, deploy
-          deployment: Production
+          name: yarn audit
           size: 2x
           caches:
-            - nodemodules
-            - yarncustom
+            - node
           script:
-            - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -gt 2 ]] && exit 1 || exit 0'
-            - touch /tmp/bot_message.txt
-            - apt-get update -y && apt-get install -y curl jq time
-            - /usr/bin/time -v yarn install --frozen-lockfile --prefer-offline
+            #            - while true; do ps -aux && sleep 30; done &
+            - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 16 ]] && exit 0 || exit 1'
+            - ls -al .postmon-lock && (echo Dont commit the .postmon-lock && exit 1) || echo Good, no .postmon-lock was found
+            - CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
+            - rm -f .postmon-lock
+          artifacts:
+            - node_modules/**
+            - libs/graphql/generated/**
 
-            # TODO: move these to eslint so that `yarn lint` picks up these errors instead
-            - npm i -g typescript
-            - tsc --noEmit -p apps/backend/
-            - tsc --noEmit -p apps/connect/
-            - tsc --noEmit -p apps/connect-e2e/
-            - tsc --noEmit -p apps/mgmt/
-            - tsc --noEmit -p apps/mgmt-e2e/
-            - tsc --noEmit -p apps/ui-e2e/
-            - tsc --noEmit -p apps/web/
-            - tsc --noEmit -p apps/web-e2e/
-            - tsc --noEmit -p libs/ui/tsconfig.lib.json
-            - tsc --noEmit -p libs/yup/tsconfig.lib.json
+      - parallel:
+          - step:
+              name: misc checks
+              size: 1x
+              script:
+                #                - while true; do ps -aux && sleep 30; done &
+                - if git ls-files | git check-ignore --no-index --stdin; then echo "The above files are committed, but yet they are also in .gitignore. Don't mix."; fi
+                - rm -rf libs/graphql/crm-mutation apps/bridge-api/src/generated && yarn bridge:generate && git diff --exit-code --no-ext-diff -p
+                - rm -rf libs/graphql/generated && yarn graphql-codegen && git diff --exit-code --no-ext-diff -p
+                - yarn lint:tsc --base=HEAD~1
+                - yarn lint:ls || true
+                - yarn lint:workspace
+                - yarn lint:graphql-inspector
+                - yarn graphql-inspector coverage "{libs,apps}/**/*.{graphql,tsx}" hasura/schema.graphql || echo TODO
+                #                - graphql-inspector similar hasura/schema.graphql || echo TODO
+                - yarn graphql-inspector diff 'git:origin/master:./hasura/schema.graphql' 'hasura/schema.graphql' || echo TODO
+                - node_modules/.bin/ts-node tools/cli/check-duplicate-filenames.ts
 
-            - /usr/bin/time -v yarn affected:lint --base=HEAD~1 --with-deps --parallel
-            - /usr/bin/time -v yarn affected:test --base=HEAD~1
+          - step:
+              name: lint
+              script:
+                #                - while true; do ps -aux && sleep 30; done &
+                - yarn affected:lint --base=HEAD~1
 
-            # get the commit message for this merge
-            - export LAST_COMMIT_LOG=$(git log HEAD -1 | tail -n +4 | perl -p -e 's/[\r\n]//' | awk '{$1=$1;print}')
-            - echo "${LAST_COMMIT_LOG}"
-            - if [ "${LAST_COMMIT_LOG}" == "[skip ci] bumping version (patch)" ]; then (echo yes && export LAST_COMMIT_LOG=$(git log HEAD~1 -1 | tail -n +4)); fi
-            - echo "${LAST_COMMIT_LOG}"
+          - step:
+              name: unit tests
+              size: 2x
+              script:
+                #                - while true; do ps -aux && sleep 30; done &
+                - yarn affected:test --base=HEAD~1
 
+          - step:
+              name: e2e
+              size: 2x
+              caches:
+                - cypress
+              script:
+                #                - while true; do ps -aux && sleep 30; done &
+                - apt update -y && apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+                - yarn cypress install || true
+                - yarn affected:e2e --base=HEAD~1 || true
+
+      - step:
+          name: bump version
+          max-time: 5
+          script:
             # Get an oauth access token using the client credentials, parsing out the token with jq.
-            - apt-get update && apt-get install -y curl jq && jq --version && curl --version
             - git remote set-url origin "${BITBUCKET_GIT_SSH_ORIGIN}"
 
             # bump the package.json version by 0.0.1
             - yarn version --message "[skip ci] bumping version (patch)" --patch --non-interactive --no-progress
-            - git push && git push --tags
+            - HUSKY=0 git push && HUSKY=0 git push --tags
             - export PACKAGE_JSON_VERSION=$(jq -r .version < package.json)
 
-            - /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=export --prod
-            - /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=build-storybook --prod
-            - /usr/bin/time -v yarn affected --base=HEAD~2 --head=HEAD~1 --target=deploy --prod
+      - step:
+          name: build
+          max-time: 80
+          size: 2x
+          script:
+            #            - while true; do ps -aux && sleep 30; done &
+            - NEXT_PUBLIC_GRAPHQL_ENDPOINT='https://api-v2.pabau.com/v1/graphql' NEXT_PUBLIC_WS_ENDPOINT='wss://api-v2.pabau.com/v1/graphql' yarn affected:export --base=HEAD~1 --prod
+          artifacts:
+            - dist/**
 
-            - npm i -g ts-node && ts-node tools/cicd/PrintChangedUrls.ts "HEAD~2" "$(cat /tmp/bot_url_web.txt)" "$(cat /tmp/bot_url_ui.txt)" >> /tmp/bot_message.txt
-            - |
-              printf "*New Version Staged for Production*\n## v${PACKAGE_JSON_VERSION}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
-            - cat /tmp/bot_message.txt >> /tmp/bot_message2.txt
+      - parallel:
+          - step:
+              name: deploy dockers
+              size: 2x
+              deployment: production-dockers
+              services:
+                - docker
+              script:
+                #                - while true; do ps -aux && sleep 30; done &
+                - apt-get update -y && apt-get install -y curl jq time
+                - yarn affected --base=HEAD~1 --target=deploy-docker --prod
+                - mkdir -p dist && cp -f /tmp/bot_message.txt dist/ || true
+              artifacts:
+                - dist/bot_message.txt
+
+          - step:
+              name: deploy previews
+              max-time: 20
+              deployment: production-serverless
+              script:
+                #                - while true; do ps -aux && sleep 30; done &
+                - ls -al . || true
+                - ls -al node_modules/ || true
+                - ls -al dist || true
+                - ls -al dist/apps || true
+                - cat /tmp/bot_message.txt || true
+                - apt-get update -y && apt-get install -y curl jq time
+
+                # get the commit message for this merge
+                - export LAST_COMMIT_LOG=$(git log HEAD -1 | tail -n +4 | perl -p -e 's/[\r\n]//' | awk '{$1=$1;print}')
+                - echo "${LAST_COMMIT_LOG}"
+                - if [ "${LAST_COMMIT_LOG}" == "[skip ci] bumping version (patch)" ]; then (echo yes && export LAST_COMMIT_LOG=$(git log HEAD~1 -1 | tail -n +4)); fi
+                - echo "${LAST_COMMIT_LOG}"
+
+                - NODE_OPTIONS=--max_old_space_size=2750 /usr/bin/time -v yarn affected --base=HEAD~1 --target=deploy --prod
+                - export COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
+
+                - |
+                  export PACKAGE_JSON_VERSION=$(jq -r .version < package.json)
+                  printf "*:rocket: New Version Staged for Production*\n# v${PACKAGE_JSON_VERSION} committed by ${COMMIT_AUTHOR}\n${LAST_COMMIT_LOG}\n\n" > /tmp/bot_message2.txt
+                  npm i -g ts-node@9 && ts-node tools/cicd/PrintChangedUrls.ts "HEAD~1" "$(cat /tmp/bot_url_web.txt || echo '')" "$(cat /tmp/bot_url_ui.txt || echo '')" >> /tmp/bot_message2.txt
+                  printf "\n" >> /tmp/bot_message2.txt
+                  cat /tmp/bot_message.txt >> /tmp/bot_message2.txt || true
+                  printf "\n" >> /tmp/bot_message2.txt
+
+                - cat /tmp/bot_message2.txt || true
+                - mkdir -p dist && cp -f /tmp/bot_message2.txt dist/ || true
+
+              artifacts:
+                - dist/bot_message2.txt
+
+      - step:
+          name: announce to slack
+          max-time: 25
+          script:
+            #            - while true; do ps -aux && sleep 30; done &
+            - cat dist/bot_message2.txt || true
+            - cat dist/bot_message.txt || true
+            - apt-get update -y && apt-get install -y curl jq time
 
             # Post to Slack
             - |
-              jq --arg var "$(cat /tmp/bot_message2.txt)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
+              jq --arg var "$(cat dist/bot_message2.txt | head -c 2900)${IFS}$(cat dist/bot_message.txt | head -c 2900)" '.blocks[0].text.text = $var' tools/cicd/slack_notification.json | curl -0 "${SLACK_HOOK_URL}" \
               -H "Expect:" \
               -H 'Content-Type: application/json; charset=utf-8' \
               --data-binary @-
-

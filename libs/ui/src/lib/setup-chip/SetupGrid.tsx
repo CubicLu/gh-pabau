@@ -7,9 +7,15 @@ import styles from './SetupChip.module.less'
 
 const { Panel } = Collapse
 
+export interface SubData {
+  title: string
+  href?: string
+  isModal?: boolean
+}
+
 export interface SubDataTitle {
   title: string
-  data: string[]
+  data: SubData[]
   href?: string
 }
 
@@ -19,10 +25,20 @@ export interface SetupGridProps {
   subDataTitles: SubDataTitle[]
   isExpand?: boolean
   expandTitle?: SubDataTitle[]
+  setSMSModalVisible?: () => void
+  expandLabel?: string
 }
 
 export function SetupGrid(props: SetupGridProps): JSX.Element {
-  const { image, title, subDataTitles, expandTitle, isExpand } = props
+  const {
+    image,
+    title,
+    subDataTitles,
+    expandTitle,
+    isExpand,
+    setSMSModalVisible,
+    expandLabel,
+  } = props
   const [data, setData] = useState<SubDataTitle[]>(subDataTitles)
   const [expand, setExpand] = useState<boolean>(isExpand ?? false)
 
@@ -58,7 +74,17 @@ export function SetupGrid(props: SetupGridProps): JSX.Element {
                   {subTitle.data.map((thread, index) => {
                     return (
                       <div key={index} className={styles.panelItem}>
-                        <span>{thread}</span>
+                        {thread.href ? (
+                          <Link href={thread.href}>
+                            <span>{thread.title}</span>
+                          </Link>
+                        ) : thread.isModal ? (
+                          <span onClick={setSMSModalVisible}>
+                            {thread.title}
+                          </span>
+                        ) : (
+                          <span>{thread.title}</span>
+                        )}
                       </div>
                     )
                   })}
@@ -78,7 +104,7 @@ export function SetupGrid(props: SetupGridProps): JSX.Element {
           })}
         {expand && (
           <div className={styles.listItem} onClick={onExpandClick}>
-            <b>Expand</b>
+            <b>{expandLabel}</b>
           </div>
         )}
       </div>

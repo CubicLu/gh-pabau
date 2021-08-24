@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const withAntdLess = require('next-plugin-antd-less')
 const withImages = require('next-images')
 const withNx = require('@nrwl/next/plugins/with-nx')
@@ -5,6 +6,50 @@ const withNx = require('@nrwl/next/plugins/with-nx')
 module.exports = {
   env: {
     google_api_key: 'AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw',
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/reports/:name',
+        destination: '/reports/[name]?name=:name',
+      },
+      {
+        source: '/clients/:id',
+        destination: '/clients/[id]?id=:id',
+      },
+      {
+        source: '/clients/finance/invoice/:id',
+        destination: '/clients/finance/invoice/[id]?id=:id',
+      },
+      {
+        source: '/clients/finance/receipt/:id',
+        destination: '/clients/finance/receipt/[id]?id=:id',
+      },
+      {
+        source: '/clients/finance/statement/:id',
+        destination: '/clients/finance/statement/[id]?id=:id',
+      },
+    ]
+  },
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    // !! WARN !!
+    ignoreBuildErrors: true,
+  },
+  onDemandEntries: {
+    // period (in ms) where the server will keep pages in the buffer
+    maxInactiveAge: 25 * 60 * 60 * 1000,
+    // number of pages that should be kept simultaneously without being disposed
+    pagesBufferLength: 25,
+  },
+  eslint: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has ESLint errors.
+    // !! WARN !!
+    build: false,
   },
   trailingSlash: false,
   ...withImages({
@@ -21,7 +66,7 @@ module.exports = {
       'woff2',
       'otf',
     ],
-    inlineImageLimit: 100000,
+    inlineImageLimit: 9_000,
     ...withAntdLess({
       lessVarsFilePath: 'libs/ui/src/styles/antd.less',
       importLoaders: 3,
@@ -37,26 +82,26 @@ module.exports = {
       ...withNx({
         cssModules: false,
         webpack(config, options) {
-          config.module.rules.push({
-            test: /\.graphql$/,
-            exclude: /node_modules/,
-            use: [
-              options.defaultLoaders.babel,
-              { loader: 'graphql-let/loader' },
-            ],
-          })
-
-          config.module.rules.push({
-            test: /\.graphqls$/,
-            exclude: /node_modules/,
-            use: ['graphql-let/schema/loader'],
-          })
-
-          config.module.rules.push({
-            test: /\.ya?ml$/,
-            type: 'json',
-            use: 'yaml-loader',
-          })
+          config.module.rules.push(
+            {
+              test: /\.graphql$/,
+              exclude: /node_modules/,
+              use: [
+                options.defaultLoaders.babel,
+                { loader: 'graphql-let/loader' },
+              ],
+            },
+            {
+              test: /\.graphqls$/,
+              exclude: /node_modules/,
+              use: ['graphql-let/schema/loader'],
+            },
+            {
+              test: /\.ya?ml$/,
+              type: 'json',
+              use: 'yaml-loader',
+            }
+          )
 
           return config
         },

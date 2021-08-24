@@ -1,6 +1,6 @@
-import React, { PropsWithChildren, useEffect, useState } from 'react'
 import { Form, Input as AntInput } from 'antd'
 import { FormProps, Rule } from 'antd/lib/form'
+import React, { PropsWithChildren, useEffect, useState, ReactNode } from 'react'
 import styles from './Input.module.less'
 
 export enum ButtonSize {
@@ -9,7 +9,7 @@ export enum ButtonSize {
   large = 'large',
 }
 export interface CheckBoxProps extends FormProps {
-  label?: string
+  label?: string | JSX.Element
   text?: string
   size?: ButtonSize
   disabled?: boolean
@@ -17,8 +17,9 @@ export interface CheckBoxProps extends FormProps {
   reqiredMsg?: string
   type?: string
   tooltip?: string
-  suffix?: JSX.Element
+  suffix?: ReactNode
   onChange?(val): void
+  maxLength?: number
 }
 
 export function Input({
@@ -51,7 +52,6 @@ export function Input({
           message: reqiredMsg ? reqiredMsg : '',
         },
       ]
-      console.log('requiredMark', items)
     }
     if (type === 'email') {
       items = [
@@ -61,7 +61,6 @@ export function Input({
           message: 'Please enter valid email!',
         },
       ]
-      console.log('type === email', items)
     }
     setRules(items)
   }, [requiredMark, reqiredMsg, type])
@@ -87,8 +86,8 @@ export function Input({
             value={text}
             // defaultValue={text}
             size={size}
-            disabled={disabled}
             suffix={suffix}
+            disabled={disabled}
             onChange={(e) => handleInputChange(e)}
           />
         </Form.Item>

@@ -1,8 +1,8 @@
-@color-green: #65CD98;
-@color-yellow: #FAAD14;
-@color-grey: #9292A3;
-@color-main: #3D3D46;
-@color-lt-grey-02: #ECEDF0;
+@color-green: #65cd98;
+@color-yellow: #faad14;
+@color-grey: #9292a3;
+@color-main: #3d3d46;
+@color-lt-grey-02: #ecedf0;
 .peerFeedbackStyles {
   box-sizing: border-box;
   padding: 28px 24px;
@@ -24,6 +24,7 @@
 
     .remind-button-container {
       margin-top: 0;
+      margin-right: 30px;
       @media screen and (max-width: 767px) {
         display: flex;
         justify-content: flex-end;
@@ -82,7 +83,6 @@
       display: flex;
 
       .filled-percent-title {
-
         .filled-percent-text {
           font-size: 30px;
           line-height: 38px;
@@ -105,15 +105,12 @@
         }
       }
     }
-
-
   }
 
   .table-container {
     margin-top: 20px;
     padding: 0px;
     .table-content {
-
       :global .ant-table-thead > tr > th {
         background: transparent;
         font-weight: 500;
@@ -139,8 +136,8 @@
             padding: 9.3px 6.3px;
 
             .user-avatar {
-              Width: 50.67px;
-              Height: 33.33px;
+              width: 50.67px;
+              height: 33.33px;
               margin: auto;
               text-align: center;
             }
@@ -169,21 +166,21 @@
           padding: 0px;
           background: rgba(101, 205, 152, 0.05);
           font-size: 14px;
-          color: #65CD98;
+          color: #65cd98;
         }
 
         .column-attention-to-detail {
           padding: 0px;
           background: rgba(101, 205, 152, 0.05);
           font-size: 14px;
-          color: #65CD98;
+          color: #65cd98;
         }
 
         .column-my-custom-category {
           padding: 0px;
-          background: rgba(255, 168, 39, 0.05);;
+          background: rgba(255, 168, 39, 0.05);
           font-size: 14px;
-          color: #FAAD14;
+          color: #faad14;
         }
       }
 
@@ -201,8 +198,8 @@
             display: flex;
             padding: 9.3px 6.3px;
             .user-avatar {
-              Width: 50.67px;
-              Height: 33.33px;
+              width: 50.67px;
+              height: 33.33px;
               margin: auto;
               text-align: center;
             }
@@ -261,6 +258,76 @@
           padding: 0px;
         }
       }
+    }
+  }
+}
+.previewModal {
+  padding-bottom: 25px;
+  .previewTitle {
+    margin: 0;
+  }
+  .preview-description {
+    margin: 0;
+  }
+}
+.modal-Container {
+  .headerWrapper {
+    display: inline-block;
+    width: 100%;
+    .search-box {
+      float: right;
+      margin: 0 15px;
+    }
+    .check-btn {
+      float: right;
+      margin-left: 10px;
+    }
+  }
+  .user-wrapper {
+    margin: 10px;
+    width: 600px;
+    height: 250px;
+    overflow-y: auto;
+    .flex-div {
+      display: flex;
+      padding: 9.3px 6.3px;
+      width: 230px;
+      margin: auto;
+      .user-avatar {
+        width: 50.67px;
+        height: 33.33px;
+        margin: auto;
+        text-align: center;
+      }
+      .flex-full-div {
+        flex: 1;
+        padding-left: 8px;
+        text-align: left;
+        .user-name {
+          font-size: 14px;
+          line-height: 18px;
+          color: @color-main;
+        }
+        .user-title {
+          font-size: 12px;
+          line-height: 16px;
+          color: @color-grey;
+        }
+      }
+    }
+    :global .ant-checkbox-wrapper {
+      margin-left: 8px;
+    }
+    &::-webkit-scrollbar {
+      width: 2px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: #c9c9d1;
+      border-radius: 24px;
+    }
+
+    &::-webkit-scrollbar-track {
+      border-radius: 10px;
     }
   }
 }

@@ -1,14 +1,16 @@
-import React, { FC, useState, useEffect } from 'react'
-import { Divider, Button, Row, Col } from 'antd'
-import { Input, Notification, NotificationType } from '@pabau/ui'
+import { Input } from '@pabau/ui'
+import { Button, Col, Divider, Row, Skeleton } from 'antd'
+import React, { FC, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import styles from './Terminology.module.less'
 
 interface TerminologyConfigItem {
   key: string
+  label?: string
   value: string
 }
 
-interface TerminologyConfig {
+export interface TerminologyConfig {
   title: string
   items: TerminologyConfigItem[]
 }
@@ -16,125 +18,130 @@ interface TerminologyConfig {
 export interface TerminologyProps {
   config?: TerminologyConfig[]
   optIns?: TerminologyConfig[]
+  loading?: boolean
   onSave?(val): void
+  buttonClicked?: boolean
 }
-
-const defaultConfig = [
-  {
-    title: 'What do you call people who attend appointments with you?',
-    items: [
-      {
-        key: 'Singular',
-        value: 'Patient',
-      },
-      {
-        key: 'Plural',
-        value: 'Patients',
-      },
-    ],
-  },
-  {
-    title: 'What do you call bookings with multiple attendees?',
-    items: [
-      {
-        key: 'Singular',
-        value: 'Class',
-      },
-      {
-        key: 'Plural',
-        value: 'Classes',
-      },
-    ],
-  },
-  {
-    title: 'What do you call employees who perform services?',
-    items: [
-      {
-        key: 'Singular',
-        value: 'Employee',
-      },
-      {
-        key: 'Plural',
-        value: 'Employees',
-      },
-    ],
-  },
-  {
-    title: 'What do you call people who perform classes?',
-    items: [
-      {
-        key: 'Singular',
-        value: 'Teacher',
-      },
-      {
-        key: 'Plural',
-        value: 'Teachers',
-      },
-    ],
-  },
-  {
-    title: 'What do you call TAX?',
-    items: [
-      {
-        key: 'Singular',
-        value: 'VAT',
-      },
-    ],
-  },
-]
-
-const defaultOptIns = [
-  {
-    title: 'For Clients',
-    items: [
-      {
-        key: 'Postal',
-        value: 'Whould you like to receive postal communications?',
-      },
-      {
-        key: 'SMS',
-        value: 'Whould you like to receive SMS messages from us?',
-      },
-      {
-        key: 'Email',
-        value: 'Whould you like to receive email communications?',
-      },
-      {
-        key: 'Phone',
-        value: 'Whould you like to receive phone calls?',
-      },
-    ],
-  },
-  {
-    title: 'For Leads',
-    items: [
-      {
-        key: 'Postal',
-        value: 'Whould you like to receive postal communications?',
-      },
-      {
-        key: 'SMS',
-        value: 'Whould you like to receive SMS messages from us?',
-      },
-      {
-        key: 'Email',
-        value: 'Whould you like to receive email communications?',
-      },
-      {
-        key: 'Phone',
-        value: 'Whould you like to receive phone calls?',
-      },
-    ],
-  },
-]
 
 export const Terminology: FC<TerminologyProps> = ({
   config,
   optIns,
+  loading,
   onSave,
+  buttonClicked,
 }) => {
-  const [configs, setConfigs] = useState(defaultConfig)
-  const [optInsItems, setOptInsItems] = useState(defaultOptIns)
+  const { t } = useTranslation('common')
+  const defaultConfig = [
+    {
+      title: t('business.default.config.title1'),
+      items: [
+        {
+          key: t('business.default.config.key.singular'),
+          value: t('setup.business-details.people.appointment.singular'),
+        },
+        {
+          key: t('business.default.config.key.plural'),
+          value: t('setup.business-details.people.appointment.plural'),
+        },
+      ],
+    },
+    {
+      title: t('business.default.config.title2'),
+      items: [
+        {
+          key: t('business.default.config.key.singular'),
+          value: t('setup.business-details.booking.attendees.singular'),
+        },
+        {
+          key: t('business.default.config.key.plural'),
+          value: t('setup.business-details.booking.attendees.plural'),
+        },
+      ],
+    },
+    {
+      title: t('business.default.config.title3'),
+      items: [
+        {
+          key: t('business.default.config.key.singular'),
+          value: t('setup.business-details.employee.singular'),
+        },
+        {
+          key: t('business.default.config.key.plural'),
+          value: t('setup.business-details.employee.plural'),
+        },
+      ],
+    },
+    {
+      title: t('business.default.config.title4'),
+      items: [
+        {
+          key: t('business.default.config.key.singular'),
+          value: t('setup.business-details.teacher.singular'),
+        },
+        {
+          key: t('business.default.config.key.plural'),
+          value: t('setup.business-details.teacher.plural'),
+        },
+      ],
+    },
+    {
+      title: t('business.default.config.title5'),
+      items: [
+        {
+          key: t('business.default.config.key.singular'),
+          value: t('business.default.config.value.vate'),
+        },
+      ],
+    },
+  ]
+
+  const defaultOptIns = [
+    {
+      title: t('business.default.opt.title.client'),
+      items: [
+        {
+          key: t('business.default.opt.key.postal'),
+          value: t('setup.business-details.client.postal'),
+        },
+        {
+          key: t('business.default.opt.key.sms'),
+          value: t('setup.business-details.client.sms'),
+        },
+        {
+          key: t('business.default.opt.key.email'),
+          value: t('setup.business-details.client.email'),
+        },
+        {
+          key: t('business.default.opt.key.phone'),
+          value: t('setup.business-details.client.phone'),
+        },
+      ],
+    },
+    {
+      title: t('business.default.opt.title.leads'),
+      items: [
+        {
+          key: t('business.default.opt.key.postal'),
+          value: t('setup.business-details.client.postal'),
+        },
+        {
+          key: t('business.default.opt.key.sms'),
+          value: t('setup.business-details.client.sms'),
+        },
+        {
+          key: t('business.default.opt.key.email'),
+          value: t('setup.business-details.client.email'),
+        },
+        {
+          key: t('business.default.opt.key.phone'),
+          value: t('setup.business-details.client.phone'),
+        },
+      ],
+    },
+  ]
+
+  const [configs, setConfigs] = useState(config || [])
+  const [optInsItems, setOptInsItems] = useState(optIns || [])
   const handleConfigItemChange = ({ index, itemIndex, val }) => {
     const configItems = [...configs]
     configItems[index].items[itemIndex].value = val
@@ -146,7 +153,6 @@ export const Terminology: FC<TerminologyProps> = ({
     setOptInsItems(OptInsItems)
   }
   const handleSaveChanges = () => {
-    Notification(NotificationType.success, 'Successfully saved changes')
     onSave?.({
       config: configs,
       optIns: optInsItems,
@@ -156,6 +162,7 @@ export const Terminology: FC<TerminologyProps> = ({
   useEffect(() => {
     setConfigs(config || defaultConfig)
     setOptInsItems(optIns || defaultOptIns)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [config, optIns])
 
   return (
@@ -163,15 +170,14 @@ export const Terminology: FC<TerminologyProps> = ({
       <div className={styles.terminologySubContainer}>
         <div className={styles.terminologyHeaderContainer}>
           <div>
-            <p className={styles.tabTitle}>Terminology</p>
-            <p className={styles.tabSubTitle} style={{ maxWidth: '420px' }}>
-              Every business is different, and that`s why here we allow you to
-              customize how you name certain features here within Pabau
+            <p className={styles.tabTitle}>
+              {' '}
+              {t('business.terminology.tab.title')}
+            </p>
+            <p className={styles.tabSubTitle}>
+              {t('business.terminology.sub.title')}
             </p>
           </div>
-          <Button type="primary" onClick={() => handleSaveChanges()}>
-            Save Changes
-          </Button>
         </div>
       </div>
       <Divider />
@@ -182,13 +188,20 @@ export const Terminology: FC<TerminologyProps> = ({
             <Row gutter={[32, 28]}>
               {configItem.items.map((item, itemIndex) => (
                 <Col className="gutter-row" xs={24} sm={12} key={item.key}>
-                  <Input
-                    text={item.value}
-                    label={item.key}
-                    onChange={(val) =>
-                      handleConfigItemChange({ index, itemIndex, val })
-                    }
-                  />
+                  {!loading ? (
+                    <Input
+                      text={item.value}
+                      label={item.key}
+                      onChange={(val) =>
+                        handleConfigItemChange({ index, itemIndex, val })
+                      }
+                    />
+                  ) : (
+                    <>
+                      <span className={styles.text}>{item.key}</span>
+                      <Skeleton.Input active={true} size={'small'} />
+                    </>
+                  )}
                 </Col>
               ))}
             </Row>
@@ -196,7 +209,9 @@ export const Terminology: FC<TerminologyProps> = ({
           <Divider />
         </div>
       ))}
-      <p className={styles.configTitle}>Opt Ins</p>
+      <p className={styles.configTitle}>
+        {t('business.terminology.config.title')}
+      </p>
       {optInsItems?.map((optInsItem, index) => (
         <div className={styles.configItem} key={optInsItem.title}>
           <div className={styles.terminologySubContainer}>
@@ -204,13 +219,20 @@ export const Terminology: FC<TerminologyProps> = ({
             <Row gutter={[32, 28]}>
               {optInsItem.items.map((item, itemIndex) => (
                 <Col className="gutter-row" xs={24} sm={12} key={item.key}>
-                  <Input
-                    text={item.value}
-                    label={item.key}
-                    onChange={(val) =>
-                      handleOptInsItemChange({ index, itemIndex, val })
-                    }
-                  />
+                  {!loading ? (
+                    <Input
+                      text={item.value}
+                      label={item.label}
+                      onChange={(val) =>
+                        handleOptInsItemChange({ index, itemIndex, val })
+                      }
+                    />
+                  ) : (
+                    <>
+                      <span className={styles.text}>{item.label}</span>
+                      <Skeleton.Input active={true} size={'small'} />
+                    </>
+                  )}
                 </Col>
               ))}
             </Row>
@@ -218,6 +240,24 @@ export const Terminology: FC<TerminologyProps> = ({
           <Divider />
         </div>
       ))}
+      <div className={styles.btnSave}>
+        {!loading ? (
+          <Button
+            type="primary"
+            onClick={() => handleSaveChanges()}
+            loading={buttonClicked}
+            className={styles.savebtn}
+          >
+            {t('business.details.save.changes')}
+          </Button>
+        ) : (
+          <Skeleton.Button
+            active={true}
+            size={'small'}
+            className={styles.btn}
+          />
+        )}
+      </div>
     </div>
   )
 }

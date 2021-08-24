@@ -8,20 +8,34 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es2015",
+    "target": "es2019",
     "module": "esnext",
     "typeRoots": ["node_modules/@types"],
-    "lib": ["es2019", "dom"],
-    "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
+    "lib": ["DOM", "ES2020", "ESNext"],
     "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "paths": {
+      "@pabau/graphql": ["libs/graphql/generated/graphql.tsx"],
       "@pabau/ui": ["libs/ui/src/index.ts"],
       "@pabau/yup": ["libs/yup/src/index.ts"],
       "@pabau/i18n": ["libs/i18n/src/index.ts"]
-    }
+    },
+    "allowUnreachableCode": true, //TODO: 12 errors
+    "skipLibCheck": true, //TODO: 17 errors
+    "importsNotUsedAsValues": "preserve", //TODO: 128 errors
+    "strictBindCallApply": false, //TODO: 1 error
+    "strictFunctionTypes": false, //TODO: 10 errors
+    "strictNullChecks": false, //TODO: 537 errors
+    "strictPropertyInitialization": false, //TODO: requires strictNullChecks on first
+    "noStrictGenericChecks": false, //default: false
+    //"noUncheckedIndexedAccess": true,
+    "allowUmdGlobalAccess": false, //default: false
+    "allowUnusedLabels": false,
+    "alwaysStrict": true,
+    "suppressImplicitAnyIndexErrors": false, //default: false
+    "suppressExcessPropertyErrors": false
+    //"incremental": true //TODO: fully test switching branches etc
   },
   "exclude": ["node_modules", "tmp"]
 }

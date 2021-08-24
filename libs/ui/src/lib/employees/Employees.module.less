@@ -1,5 +1,9 @@
 .employeesContainer {
   width: 100%;
+  @media screen and (max-width: 767px) {
+    background: #fff;
+    padding: 12px;
+  }
   > h2 {
     font-family: var(--font-family);
     font-size: 14px;
@@ -35,7 +39,7 @@
   border-radius: 4px;
   border: 1px solid var(--border-color-base);
   margin-top: 1rem;
-  >div {
+  > div {
     &:nth-child(1) {
       display: flex;
       justify-content: center;

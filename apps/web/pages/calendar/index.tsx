@@ -1,18 +1,9 @@
-import React from 'react'
-import { Layout } from '@pabau/ui'
-import './calendar.module.less'
+import Layout from '../../components/Layout/Layout'
 
-/* eslint-disable-next-line */
-export interface CalendarProps {}
-
-export function Calendar(props: CalendarProps) {
+export default function Calendar() {
   return (
-    <div>
-      <Layout active={'calendar'}>
-        <h1>Welcome to calendar!</h1>
-      </Layout>
-    </div>
+    <Layout>
+      <p>Calendar</p>
+    </Layout>
   )
 }
-
-export default Calendar

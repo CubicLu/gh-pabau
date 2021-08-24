@@ -5,6 +5,21 @@ import { Col, Row, Collapse } from 'antd'
 import styles from './CrudTable.module.less'
 import { ColorPicker, FontIcon, HelpTooltip, TimeInput } from '@pabau/ui'
 import { FormikContextType } from 'formik'
+import classNames from 'classnames'
+import {
+  SendOutlined,
+  PhoneOutlined,
+  MessageOutlined,
+  TeamOutlined,
+  MedicineBoxOutlined,
+  CustomerServiceOutlined,
+  BellOutlined,
+  ShoppingOutlined,
+  ClockCircleOutlined,
+  CameraOutlined,
+  TrophyOutlined,
+  EnvironmentOutlined,
+} from '@ant-design/icons'
 import moment from 'moment'
 
 const { Panel } = Collapse
@@ -22,6 +37,57 @@ const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
   const { fields } = schema
   const { values } = formik
 
+  const subjectOptions = [
+    {
+      key: 'Send',
+      value: <SendOutlined />,
+    },
+    {
+      key: 'Phone',
+      value: <PhoneOutlined />,
+    },
+    {
+      key: 'Chat',
+      value: <MessageOutlined />,
+    },
+    {
+      key: 'Team',
+      value: <TeamOutlined />,
+    },
+    {
+      key: 'Medical',
+      value: <MedicineBoxOutlined />,
+    },
+    {
+      key: 'Customer',
+      value: <CustomerServiceOutlined />,
+    },
+    {
+      key: 'Emergency',
+      value: <BellOutlined />,
+    },
+    {
+      key: 'Reward',
+      value: <TrophyOutlined />,
+    },
+    {
+      key: 'Shopping',
+      value: <ShoppingOutlined />,
+    },
+    {
+      key: 'Time',
+      value: <ClockCircleOutlined />,
+    },
+    {
+      key: 'Camera',
+      value: <CameraOutlined />,
+    },
+    {
+      key: 'Location',
+      value: <EnvironmentOutlined />,
+    },
+  ]
+
   return (
     <AntForm layout={layout} requiredMark={false}>
       <Row>
@@ -32,7 +98,8 @@ const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
               {
                 short,
                 shortLower,
-                example,
+                placeholder,
+                tooltip,
                 description,
                 extra,
                 min,
@@ -43,11 +110,31 @@ const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
                 col = 24,
                 selectOptions,
                 required,
+                defaultvalue,
               },
             ],
             i
           ) => (
             <Col span={col} key={name}>
+              {type === 'subjects' ? (
+                <AntForm.Item key={name} name={name}>
+                  <Row>
+                    {subjectOptions.map((s, i) => (
+                      <Col
+                        key={i}
+                        className={classNames(
+                          styles.formSubjectItem,
+                          values[name] === s.key &&
+                            styles.formSubjectItemSelected
+                        )}
+                        onClick={() => formik.setFieldValue(name, s.key)}
+                      >
+                        {s.value}
+                      </Col>
+                    ))}
+                  </Row>
+                </AntForm.Item>
+              ) : null}
               {type === 'radio-group' ? (
                 <AntForm.Item key={name} name={name}>
                   <Radio.Group name={name}>
@@ -114,12 +201,16 @@ const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
                   </AntForm.Item>
                 </div>
               )}
-              {type === 'icon' && values.appointment_type === 'Icon' && (
+              {type === 'icon' && values.indicator === 'ICON' && (
                 <AntForm.Item key={name} name={name}>
                   <FontIcon
                     max={60}
                     height={172}
-                    selectedIcon={values.icon}
+                    selectedIcon={
+                      values.icon.includes('fa')
+                        ? values.icon.replace(/fa-/, '')
+                        : values.icon
+                    }
                     onIconSelected={(icon) => {
                       values.icon = icon
                     }}
@@ -128,7 +219,11 @@ const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
               )}
               {type === 'select' && (
                 <AntForm.Item label={full} name={name} required>
-                  <Select name={name} style={{ width: '100%' }}>
+                  <Select
+                    name={name}
+                    style={{ width: '100%' }}
+                    defaultValue={defaultvalue}
+                  >
                     {selectOptions?.map((option) => {
                       return (
                         <Select.Option value={option.value} key={option.label}>
@@ -143,12 +238,16 @@ const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
                 <AntForm.Item key={name} name={name} required={required}>
                   <div style={{ width: '344px' }}>
                     <ColorPicker
-                      selectedColor={values.color}
+                      selectedColor={values.color || values?.icon_color}
                       isDarkColor={true}
                       onSelected={(val) => {
                         formik.setFieldValue(name, val)
                       }}
-                      heading={values.appointment_type + ' ' + full}
+                      heading={
+                        (values.appointment_type === 'LINE'
+                          ? 'Line '
+                          : 'Icon ') + full
+                      }
                     />
                     {!values[name] && formik.errors?.color && (
                       <span style={{ color: 'red' }}>
@@ -186,7 +285,7 @@ const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
                         <Input
                           name={name}
                           type={type}
-                          placeholder={example && `eg ${example}`}
+                          placeholder={placeholder}
                           autoFocus={i === 0}
                         />
                       </AntForm.Item>
@@ -201,23 +300,25 @@ const Form: FC<P> = ({ schema, formik, layout = 'vertical' }) => {
                   label={short}
                   name={name}
                   required={!!min}
-                  tooltip={
-                    description &&
-                    `${description} for this ${shortLower}, eg: ${example}`
-                  }
-                  // showValidateSuccess={!!min}
+                  tooltip={tooltip}
                   extra={extra && <div>{extra}</div>}
                 >
                   <Input
-                    //disabled={isSubmitting}
                     name={name}
                     type={type}
                     onChange={(e) => {
                       formik.handleChange(e)
                       formik.setFieldTouched(name, true)
                     }}
-                    placeholder={example && `eg ${example}`}
+                    placeholder={placeholder}
                     autoFocus={i === 0}
+                    disabled={
+                      schema?.disable
+                        ? values[schema?.disable.conditionalField]
+                          ? true
+                          : false
+                        : false
+                    }
                   />
                 </AntForm.Item>
               )}

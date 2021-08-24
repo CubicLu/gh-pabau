@@ -11,12 +11,12 @@ import {
   OperationType,
   BasicModal as Modal,
 } from '@pabau/ui'
-import { Form, Select } from 'antd'
+import { Form, Select, Switch } from 'antd'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import countries from 'i18n-iso-countries'
 import english from 'i18n-iso-countries/langs/en.json'
-
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './issuing-company.module.less'
 
 const LIST_QUERY = gql`
@@ -149,55 +149,6 @@ const UPDATE_ORDER_MUTATION = gql`
   }
 `
 
-const schema: Schema = {
-  full: 'Issuing Company',
-  fullLower: 'issuing company',
-  short: 'issuing company',
-  shortLower: 'issuing company',
-  createButtonLabel: 'Create Issuing Company',
-  messages: {
-    create: {
-      success: 'You have successfully created a IssuingCompany',
-      error: 'While creating a issuingCompany',
-    },
-    update: {
-      success: 'You have successfully updated a IssuingCompany',
-      error: 'While updating a issuingCompany',
-    },
-    delete: {
-      success: 'You have successfully deleted a IssuingCompany',
-      error: 'While deleting a IssuingCompany',
-    },
-  },
-  fields: {
-    name: {
-      full: 'Issuing Company',
-      fullLower: 'issuing company',
-      short: 'Name',
-      shortLower: 'name',
-      min: 2,
-      example: 'Company Name',
-      cssWidth: 'max',
-      type: 'string',
-    },
-    address: {
-      full: 'Issuing Company',
-      fullLower: 'issuing company',
-      short: 'Address',
-      shortLower: 'address',
-      min: 2,
-      example: '13 Pleasent Road',
-      cssWidth: 'max',
-      type: 'string',
-    },
-    is_active: {
-      full: 'Status',
-      type: 'boolean',
-      defaultvalue: true,
-    },
-  },
-}
-
 interface InputTypes {
   companyName: string
   phone: string
@@ -236,6 +187,7 @@ interface FocusedTypes {
 }
 
 export const IssuingCompany: NextPage = () => {
+  const { t } = useTranslationI18()
   const [showModal, setShowModal] = useState<boolean>(false)
   const { Option } = Select
   const [focused, setFocused] = useState<FocusedTypes>({
@@ -243,18 +195,66 @@ export const IssuingCompany: NextPage = () => {
     address: false,
     financial: false,
   })
+  const schema: Schema = {
+    full: t('setup.issuing.title'),
+    fullLower: t('setup.issuing.title.lower'),
+    short: t('setup.issuing.title.short'),
+    shortLower: t('setup.issuing.title.short.lower'),
+    createButtonLabel: t('setup.issuing.createbutton'),
+    messages: {
+      create: {
+        success: t('setup.issuing.notification.create.success'),
+        error: t('setup.issuing.notification.create.error'),
+      },
+      update: {
+        success: t('setup.issuing.notification.edit.success'),
+        error: t('setup.issuing.notification.edit.error'),
+      },
+      delete: {
+        success: t('setup.issuing.notification.delete.success'),
+        error: t('setup.issuing.notification.delete.error'),
+      },
+    },
+    fields: {
+      name: {
+        full: t('setup.issuing.fields.name'),
+        fullLower: t('setup.issuing.fields.name.lower'),
+        short: t('setup.issuing.fields.name.short'),
+        shortLower: t('setup.issuing.fields.name.short.lower'),
+        min: 2,
+        example: t('setup.issuing.fields.name.example'),
+        cssWidth: 'max',
+        type: 'string',
+      },
+      address: {
+        full: t('setup.issuing.fields.address'),
+        fullLower: t('setup.issuing.fields.address.lower'),
+        short: t('setup.issuing.fields.address.short'),
+        shortLower: t('setup.issuing.fields.address.short.lower'),
+        min: 2,
+        example: t('setup.issuing.fields.address.example'),
+        cssWidth: 'max',
+        type: 'string',
+      },
+      is_active: {
+        full: t('setup.issuing.fields.isactive'),
+        type: 'boolean',
+        defaultvalue: true,
+      },
+    },
+  }
   const [addMutation] = useMutation(ADD_MUTATION, {
     onCompleted(data) {
       Notification(
         NotificationType.success,
-        `Success! You have successfully created an issuing company`
+        t('setup.issuing.notification.create.success')
       )
       setShowModal(false)
     },
     onError(err) {
       Notification(
         NotificationType.error,
-        `Error! While creating an issuing company`
+        t('setup.issuing.notification.create.error')
       )
     },
   })
@@ -263,14 +263,14 @@ export const IssuingCompany: NextPage = () => {
     onCompleted(data) {
       Notification(
         NotificationType.success,
-        `Success! You have successfully updated an issuing company`
+        t('setup.issuing.notification.edit.success')
       )
       setShowModal(false)
     },
     onError(err) {
       Notification(
         NotificationType.error,
-        `Error! While updating an issuing company`
+        t('setup.issuing.notification.edit.error')
       )
     },
   })
@@ -279,13 +279,13 @@ export const IssuingCompany: NextPage = () => {
     onCompleted(data) {
       Notification(
         NotificationType.success,
-        `Success! You have successfully deleted an issuing company`
+        t('setup.issuing.notification.delete.success')
       )
     },
     onError(err) {
       Notification(
         NotificationType.error,
-        `Error! While deleting an issuing company`
+        t('setup.issuing.notification.delete.error')
       )
     },
   })
@@ -362,7 +362,9 @@ export const IssuingCompany: NextPage = () => {
   }
 
   const issuingCompanySchema = Yup.object({
-    companyName: Yup.string().required('Company name is required'),
+    companyName: Yup.string().required(
+      t('setup.issuing.company.validate.required')
+    ),
   })
 
   const formik = useFormik({
@@ -388,17 +390,14 @@ export const IssuingCompany: NextPage = () => {
     setShowDeleteModal(true)
   }
 
-  const onchange = (name: string | boolean | number, key: string) => {
-    formik.setFieldValue(key, name)
+  const onchange = (value: string | boolean | number, key: string) => {
+    formik.setFieldValue(key, value)
   }
 
   const createPageOnClick = () => {
     setEditPage(formikEditFields())
     setFocused({ general: false, address: false, financial: false })
     setShowModal(true)
-  }
-  const onChecked = (value: boolean, key: string) => {
-    formik.setFieldValue(key, value)
   }
 
   const handleFocusElement = (name: string, status: boolean) => {
@@ -415,26 +414,15 @@ export const IssuingCompany: NextPage = () => {
     return formik.values.phone
   }
 
-  const handleFullScreenModalBackClick = (e) => {
+  const handleFullScreenModalBackClick = () => {
     setShowModal(false)
-    formik.handleReset(e)
+    formik.handleReset(true)
   }
 
   const handleOperations = () => {
     return !editPage.id
-      ? [
-          OperationType.vat,
-          OperationType.active,
-          OperationType.cancel,
-          OperationType.create,
-        ]
-      : [
-          OperationType.vat,
-          OperationType.active,
-          OperationType.cancel,
-          OperationType.delete,
-          OperationType.save,
-        ]
+      ? [OperationType.active, OperationType.create]
+      : [OperationType.active, OperationType.delete, OperationType.create]
   }
 
   const ModalContents = () => {
@@ -450,12 +438,14 @@ export const IssuingCompany: NextPage = () => {
             onFocus={() => handleFocusElement('general', true)}
             onBlur={() => handleFocusElement('general', false)}
           >
-            <h3>General</h3>
+            <h3>{t('setup.issuing.form.field.general')}</h3>
             <div className={styles.customForm}>
-              <Form.Item label="Company name">
+              <Form.Item label={t('setup.issuing.form.field.companyname')}>
                 <FormikInput
                   name="companyName"
-                  placeholder="Enter company name"
+                  placeholder={t(
+                    'setup.issuing.form.field.companyname.placeholder'
+                  )}
                   onChange={formik.handleChange}
                   value={formik.values.companyName}
                 />
@@ -467,15 +457,17 @@ export const IssuingCompany: NextPage = () => {
               </Form.Item>
               <Form.Item>
                 <PhoneNumberInput
-                  label="Phone"
+                  label={t('setup.issuing.form.field.phone')}
                   value={handlePhoneInputValue()}
                   onChange={(e: string) => onchange(e, 'phone')}
                 />
               </Form.Item>
-              <Form.Item label="Website">
+              <Form.Item label={t('setup.issuing.form.field.website')}>
                 <FormikInput
                   name="website"
-                  placeholder="https://www.company.com"
+                  placeholder={t(
+                    'setup.issuing.form.field.website.placeholder'
+                  )}
                   onChange={formik.handleChange}
                   value={formik.values.website}
                 />
@@ -491,42 +483,44 @@ export const IssuingCompany: NextPage = () => {
             onFocus={() => handleFocusElement('address', true)}
             onBlur={() => handleFocusElement('address', false)}
           >
-            <h3>{'Address information'}</h3>
+            <h3>{t('setup.issuing.form.field.address')}</h3>
             <div className={styles.customForm}>
-              <Form.Item label={'Country'}>
+              <Form.Item label={t('setup.issuing.form.field.country')}>
                 <Select
                   showSearch
                   value={
                     formik.values.country
                       ? formik.values.country
-                      : 'Select country'
+                      : t('setup.issuing.form.field.country.placeholder')
                   }
                   onChange={(e) => onchange(e, 'country')}
                 >
                   {createOptions()}
                 </Select>
               </Form.Item>
-              <Form.Item label={'City'}>
+              <Form.Item label={t('setup.issuing.form.field.city')}>
                 <FormikInput
                   name="city"
-                  placeholder="Enter city"
+                  placeholder={t('setup.issuing.form.field.city.placeholder')}
                   onChange={formik.handleChange}
                   value={formik.values.city}
                 />
               </Form.Item>
-              <Form.Item label="Street">
+              <Form.Item label={t('setup.issuing.form.field.street')}>
                 <FormikInput
                   name="street"
-                  placeholder="Enter street"
+                  placeholder={t('setup.issuing.form.field.street.placeholder')}
                   className="input-style"
                   onChange={formik.handleChange}
                   value={formik.values.street}
                 />
               </Form.Item>
-              <Form.Item label="Post code">
+              <Form.Item label={t('setup.issuing.form.field.postcode')}>
                 <FormikInput
                   name="postCode"
-                  placeholder="Enter post code"
+                  placeholder={t(
+                    'setup.issuing.form.field.postcode.placeholder'
+                  )}
                   className="input-style"
                   onChange={formik.handleChange}
                   value={formik.values.postCode}
@@ -543,15 +537,17 @@ export const IssuingCompany: NextPage = () => {
             onFocus={() => handleFocusElement('financial', true)}
             onBlur={() => handleFocusElement('financial', false)}
           >
-            <h3>Finanacial Information</h3>
+            <h3>{t('setup.issuing.form.field.financial')}</h3>
             <div className={styles.customForm}>
-              <Form.Item label="Invoice template">
+              <Form.Item label={t('setup.issuing.form.field.invoicetemplate')}>
                 <Select
                   onChange={(e) => onchange(e, 'invoiceTemplate')}
                   value={
                     formik.values.invoiceTemplate
                       ? formik.values.invoiceTemplate
-                      : 'Select invoice template'
+                      : t(
+                          'setup.issuing.form.field.invoicetemplate.placeholder'
+                        )
                   }
                 >
                   <Option value="I">I</Option>
@@ -561,21 +557,38 @@ export const IssuingCompany: NextPage = () => {
                   <Option value="V">V</Option>
                 </Select>
               </Form.Item>
-              <Form.Item label="Invoice prefix">
+              <Form.Item label={t('setup.issuing.form.field.invoiceprefix')}>
                 <FormikInput
                   name="invoicePrefix"
-                  placeholder="Enter invoice prefix"
+                  placeholder={t(
+                    'setup.issuing.form.field.invoiceprefix.placeholder'
+                  )}
                   onChange={formik.handleChange}
                   value={formik.values.invoicePrefix}
                 />
               </Form.Item>
-              <Form.Item label="Invoice starting number">
+              <Form.Item
+                label={t('setup.issuing.form.field.invoicestartingnumber')}
+              >
                 <FormikInput
                   name="invoiceStartingNumber"
-                  placeholder="Enter Invoice starting number"
+                  placeholder={t(
+                    'setup.issuing.form.field.invoicestartingnumber.placeholder'
+                  )}
                   onChange={formik.handleChange}
                   value={formik.values.invoiceStartingNumber}
                 />
+              </Form.Item>
+              <Form.Item>
+                <div className={styles.operationSwitch}>
+                  {`${t('setup.issuing.form.field.vat')} `}
+                  <Switch
+                    size="small"
+                    checked={formik.values.vatRegistered}
+                    onChange={(checked) => onchange(checked, 'vatRegistered')}
+                    style={{ marginLeft: '12px' }}
+                  />
+                </div>
               </Form.Item>
             </div>
           </div>
@@ -601,17 +614,26 @@ export const IssuingCompany: NextPage = () => {
       />
       <FullScreenReportModal
         operations={handleOperations()}
-        title={`${!editPage.id ? 'Create' : 'Edit'} Issuing Company`}
+        title={t('setup.issuing.fullscreenmodal.title', {
+          what: !editPage.id
+            ? t('common-label-create')
+            : t('common-label-edit'),
+        })}
+        deleteBtnText={t('common-label-delete')}
         visible={showModal}
-        onBackClick={(e) => handleFullScreenModalBackClick(e)}
-        onCancel={(e) => handleFullScreenModalBackClick(e)}
+        onBackClick={() => handleFullScreenModalBackClick()}
         activated={formik.values.isActive}
-        vatRegistered={formik.values.vatRegistered}
-        onVatRegistered={(value) => onChecked(value, 'vatRegistered')}
+        activeBtnText={
+          formik.values.isActive
+            ? t('common-label-active')
+            : t('common-label-inactive')
+        }
         enableCreateBtn={true}
-        onActivated={(value) => onChecked(value, 'isActive')}
+        createBtnText={
+          !editPage.id ? t('common-label-create') : t('common-label-save')
+        }
+        onActivated={(value) => onchange(value, 'isActive')}
         onCreate={() => formik.handleSubmit()}
-        onSave={() => formik.handleSubmit()}
         onDelete={showDeleteConfirmDialog}
         footer={true}
       >
@@ -633,8 +655,10 @@ export const IssuingCompany: NextPage = () => {
           setShowModal(false)
         }}
         visible={showDeleteModal}
-        title={`Delete ${schema.short}?`}
-        newButtonText={schema.deleteBtnLabel || 'Yes, Delete'}
+        title={t('setup.issuing.deletemodal.title', { what: schema.short })}
+        newButtonText={
+          schema.deleteBtnLabel || t('setup.issuing.deletemodal.button')
+        }
         isValidate={true}
       >
         <span
@@ -646,7 +670,7 @@ export const IssuingCompany: NextPage = () => {
             color: '#9292A3',
           }}
         >
-          {editPage?.name} will be deleted. This action is irreversable
+          {t('setup.issuing.deletemodal.message', { what: editPage?.name })}
         </span>
       </Modal>
     </>

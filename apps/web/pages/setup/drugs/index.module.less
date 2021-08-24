@@ -1,13 +1,20 @@
+.setupDragsContainer {
+  :global {
+    @media (max-width: 767px) {
+      .ant-layout {
+        margin-top: 0;
+        min-height: min-content;
+      }
+      .ant-layout-content {
+        border-top: none;
+        min-height: min-content !important;
+      }
+    }
+  }
+}
+
 .drugsListingMain {
   :global {
-    .ant-card-head,
-    .ant-card-head-title,
-    .ant-card-body {
-      padding: 0px;
-    }
-    .ant-tabs {
-      min-height: 70vh !important;
-    }
     .ant-tabs-tab {
       padding: 15px 50px !important;
       background-color: transparent !important;
@@ -64,6 +71,7 @@
     flex-wrap: wrap;
     justify-content: space-between;
     border-bottom: 1px solid #ecedf0;
+    background-color: white;
 
     .searchDrugsListing {
       width: 256px;
@@ -101,46 +109,43 @@
           color: #3d3d46;
           margin: 5px 0px 10px 0px;
         }
+
+        @media (max-width: 767px) {
+          flex-direction: row;
+          align-items: center;
+
+          h3 {
+            font-size: 17px;
+            margin: 0;
+            padding-left: 10px;
+          }
+        }
       }
       div.rightDiv {
-        padding-left: 20px;
         display: flex;
         align-items: center;
-
-        @media screen and (max-width: 400px) {
-          padding-left: 0px;
-          justify-content: flex-end;
-          width: 100%;
-        }
 
         > div {
           width: fit-content;
         }
         .search-icon {
-          line-height: 100%;
-          margin-top: 6px;
-          margin-right: 5px;
-
-          font-size: 24px;
-          svg {
-            fill: rgba(0, 0, 0, 0.65);
-          }
-          &:hover,
-          &:active {
-            svg {
-              fill: rgba(0, 0, 0, 0.85);
-            }
-          }
+          font-size: 19px;
+          color: var(--light-grey-color);
+          padding-right: 25px;
         }
         .plus-btn {
-          // border: 2px solid red;
-          padding: 5px 5px 5px 5px;
-          font-size: 20px;
+          color: var(--primary-color);
+          font-size: 25px;
+          border-radius: 4px;
         }
       }
     }
+    @media (max-width: 767px) {
+      padding: 16px 16px 21px;
+    }
   }
   .body {
+    background-color: white;
     .library {
       padding: 10px;
 
@@ -293,4 +298,10 @@
       padding-left: 5px !important;
     }
   }
+}
+
+.backToSetup {
+  cursor: pointer;
+  color: var(--grey-text-color);
+  font-size: 14px;
 }

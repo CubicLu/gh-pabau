@@ -1,0 +1,99 @@
+query getProfileTab {
+  me {
+    id
+    image
+    email
+    signature
+    full_name
+    phone_number
+    language
+    timezone
+    CmStaffGeneral {
+      ID #Id to be used for CmStaffGeneral mutation
+      Fname #Name
+      Lname #Surname
+    }
+  }
+}
+
+query getSecurityTab {
+  me {
+    last_login
+    passcode
+  }
+}
+
+query getNotificationTab {
+  me {
+    UserAlertPermission {
+      id #Id to be used for updating in Notifications tab
+      ios_notification
+      email_notification
+      sms_notification
+      UserAlert {
+        # same as allAlerts above but for the currently logged in user
+        id
+      }
+    }
+  }
+}
+
+query accountSettingsUserAlerts {
+  findManyUserAlert {
+    # Dispaly all types of user alerts
+    id
+    title # example: Report title
+    description #example: When a scheduled report is delivered to you
+  }
+}
+
+query getNotificationsTypes {
+  notification_types {
+    id
+    type
+    notification_type
+    permission_type
+  }
+}
+
+query getNotificationsData($user: Int) {
+  notification_toggle(where: { user: { _eq: $user } }) {
+    id
+    enabled
+    notification_type
+  }
+}
+
+mutation createNotificationToggle(
+  $company: Int
+  $user: Int
+  $notification_type: uuid!
+  $enabled: Boolean = false
+) {
+  insert_notification_toggle_one(
+    object: {
+      user: $user
+      notification_type: $notification_type
+      enabled: $enabled
+      company: $company
+    }
+  ) {
+    id
+  }
+}
+
+mutation updateNotificationToggle($id: uuid!, $enabled: Boolean) {
+  update_notification_toggle_by_pk(
+    pk_columns: { id: $id }
+    _set: { enabled: $enabled }
+  ) {
+    id
+  }
+}
+
+mutation updateUserPassword($currentPassword: String!, $newPassword: String!) {
+  updateUserPassword(
+    currentPassword: $currentPassword
+    newPassword: $newPassword
+  )
+}

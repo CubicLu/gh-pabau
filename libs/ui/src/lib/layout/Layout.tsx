@@ -1,13 +1,44 @@
-import React, { FC, useState, MouseEvent } from 'react'
-import { ReactComponent as IllustrationSvg } from './example.svg'
+import { MutationFunction } from '@apollo/client'
+import { Footer, Header, Menu, UserDataProps } from '@pabau/ui'
 import { Card, Layout as AntLayout } from 'antd'
-import { Footer, Header, Menu } from '@pabau/ui'
-import styles from './Layout.module.less'
 import classNames from 'classnames'
-// import { isMobile, isTablet } from 'react-device-detect'
+import React, { FC, useState } from 'react'
+import { ReactComponent as IllustrationSvg } from './example.svg'
+import styles from './Layout.module.less'
 
 const { Content } = AntLayout
+
+interface Notification {
+  id: string
+  notificationTime: Date
+  notificationType: string
+  notificationTypeIcon?: string
+  title: string
+  desc: string
+  read: number[]
+  users: number[]
+  link: string
+}
+
+interface ProductNews {
+  id: string
+  img: string
+  link: string
+  title: string
+  description: string
+  time: Date | string
+  readUsers: number[]
+}
+
 export interface LayoutProps {
+  deleteNotification?: MutationFunction
+  updateNotification?: MutationFunction
+  readNewsMutation?: MutationFunction
+  readAddMutation?: MutationFunction
+  relativeTime?: (lan: string, date: Date) => string
+  notifications?: Notification[]
+  productNews?: ProductNews[]
+  user?: UserDataProps
   pageTitle?: string
   newButtonText?: string
   onNewClicked?: string | (() => void)
@@ -15,25 +46,40 @@ export interface LayoutProps {
   card?: true
   searchRender?: (innerComponent: JSX.Element) => JSX.Element
   active?: string
-  onCreateChannel?: (
-    name: string,
-    description: string,
-    isPrivate: boolean
-  ) => void
-  onMessageType?: (e: MouseEvent<HTMLElement>) => void
+  onMessageIconClick?(): void
+  isDisplayingFooter?: boolean
+  legacyContent?: boolean
+  taskManagerIFrameComponent?: JSX.Element
+  allowed?: boolean
+  requireAdminAccess?: boolean
+  clientCreateRender?: () => JSX.Element
+  leadCreateRender?: () => JSX.Element
+  handleSearch?: (searchTerm: string) => void
 }
 
 export const Layout: FC<LayoutProps> = ({
   searchRender,
-  onCreateChannel,
+  onMessageIconClick,
   pageTitle,
   newButtonText,
   onNewClicked,
   onCancelClicked,
-  onMessageType,
+  isDisplayingFooter = true,
   card,
   children,
   active,
+  legacyContent = false,
+  notifications,
+  productNews,
+  relativeTime,
+  deleteNotification,
+  updateNotification,
+  readAddMutation,
+  readNewsMutation,
+  user,
+  taskManagerIFrameComponent,
+  clientCreateRender,
+  leadCreateRender,
   ...rest
 }) => {
   const [collapsed, setCollapsed] = useState(true)
@@ -42,16 +88,28 @@ export const Layout: FC<LayoutProps> = ({
     <AntLayout {...rest} className={styles.main}>
       <AntLayout style={{ background: '#F7F7F9' }}>
         <Header
+          user={user}
+          deleteNotification={deleteNotification}
+          updateNotification={updateNotification}
+          readNewsMutation={readNewsMutation}
+          readAddMutation={readAddMutation}
           searchRender={searchRender}
-          onCreateChannel={onCreateChannel}
-          onMessageType={onMessageType}
+          onMessageIconClick={onMessageIconClick}
+          // onCreateChannel={onCreateChannel}
+          // onMessageType={onMessageType}
+          notifications={notifications}
+          productNews={productNews}
+          relativeTime={relativeTime}
+          taskManagerIFrameComponent={taskManagerIFrameComponent}
+          clientCreateRender={clientCreateRender}
+          leadCreateRender={leadCreateRender}
           {...rest}
         />
         <AntLayout className={styles.headerMargin}>
           <Menu onSideBarCollapsed={onSideBarCollapsed} active={active} />
           <Content
             className={classNames(
-              styles.layoutContent,
+              !legacyContent ? styles.layoutContent : styles.layoutIframed,
               collapsed ? styles.collapsedSidebarMargin : styles.sidebarMargin
             )}
           >
@@ -76,7 +134,7 @@ export const Layout: FC<LayoutProps> = ({
                 </>
               )}
             </Content>
-            <Footer />
+            {isDisplayingFooter && <Footer />}
           </Content>
 
           {onNewClicked && (

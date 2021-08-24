@@ -1,31 +1,31 @@
-const generalInputOption = [
-  {
-    key: 1,
-    name: 'reward',
-    label: 'Reward Value',
-    value: 25,
-    helpText: 'Help tooltip',
-    showCurrency: true,
-  },
-  {
-    key: 2,
-    name: 'refereeReward',
-    label: 'Referree Reward Value',
-    value: 25,
-    helpText: 'Help tooltip',
-    showCurrency: true,
-  },
-  {
-    key: 3,
-    name: 'expiryDays',
-    label: 'Expiry Days',
-    value: 15,
-    helpText: 'Help tooltip',
-  },
-]
-
 export const ReferralConfigObj = {
   general: {
-    inputList: generalInputOption,
+    inputList: [
+      {
+        key: 1,
+        name: 'expiryDays',
+        label: 'Expiry Days',
+        value: 15,
+        helpText: 'Help tooltip',
+      },
+    ],
+    dropdownList: [
+      {
+        key: 1,
+        id: 'reward',
+        label: 'Reward Voucher',
+        value: 'Standard Referral Voucher £20.00',
+        options: ['None', 'Standard Referral Voucher £20.00'],
+        helpText: 'Help tooltip',
+      },
+      {
+        key: 2,
+        id: 'refereeReward',
+        label: 'Referee reward voucher',
+        value: 'Standard Referral Voucher £20.00',
+        options: ['None', 'Standard Referral Voucher £20.00'],
+        helpText: 'Help tooltip',
+      },
+    ],
   },
 }

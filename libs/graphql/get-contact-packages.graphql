@@ -1,0 +1,27 @@
+query GetContactPackages(
+  $take: Int
+  $skip: Int
+  $cmContactId: IntFilter!
+  $packageContactId: Int!
+) {
+  findFirstCmContact(where: { ID: $cmContactId }) {
+    Packages(take: $take, skip: $skip) {
+      activation_date
+      expiration_date
+      voided
+      code
+      session_package {
+        name
+        session_count
+        price
+      }
+      contact_package_used {
+        id
+        status
+      }
+    }
+  }
+  findManyContactPackage(where: { contact_id: { equals: $packageContactId } }) {
+    id
+  }
+}

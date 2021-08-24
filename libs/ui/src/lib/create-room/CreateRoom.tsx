@@ -211,23 +211,18 @@ export const CreateRoom: FC<CreateRoomProps> = ({
       title={`Create Room`}
       operations={[
         OperationType.active,
-        OperationType.cancel,
         OperationType.delete,
         OperationType.create,
       ]}
       activated={true}
-      cancelBtnText="Cancel"
       createBtnText="Create"
       enableCreateBtn
       subMenu={['Details', 'Location']}
-      onCancel={() => {
-        setShowModal(false)
-        onClose()
-      }}
       onCreate={() => {
         onCreate?.()
       }}
       onDelete={() => onDelete?.()}
+      className="createRoomModal"
     >
       <div className={styles.createServiceGeneral}>
         <div className={styles.createServiceSection}>

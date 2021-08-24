@@ -1,24 +1,25 @@
-import React, { FC, useState } from 'react'
-import classNames from 'classnames'
-import { useFormik } from 'formik'
-import { Badge, Form, Row, Col, Radio, Select } from 'antd'
 import { BellOutlined } from '@ant-design/icons'
 import {
-  TabMenu,
-  Slider,
-  ColorPicker,
   Appointment,
+  ColorPicker,
+  PabauPlus,
   ReadReview,
   ReviewListing,
-  PabauPlus,
+  Slider,
+  TabMenu,
 } from '@pabau/ui'
-import userAvatar from '../../../assets/images/users/alex.png'
+import { Badge, Col, Form, Radio, Row, Select } from 'antd'
+import classNames from 'classnames'
+import { useFormik } from 'formik'
+import React, { FC, useState } from 'react'
 import clinicLogo from '../../../assets/images/clinic-logo.png'
 import { ReactComponent as ExternalLinkGrey } from '../../../assets/images/external-link-grey.svg'
 import { ReactComponent as Palette } from '../../../assets/images/palette.svg'
+import userAvatar from '../../../assets/images/users/alex.png'
 import { ReactComponent as Voucher } from '../../../assets/images/voucher.svg'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import { FeedbackSurveyBuilder } from './ReviewsConfigSetting'
-import styles from './style.module.less'
+import styles from './Style.module.less'
 
 const { Option } = Select
 
@@ -38,6 +39,8 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
   const [form] = Form.useForm()
   const [isListing, setIsListing] = useState(true)
   const [isEmail, setIsEmail] = useState(true)
+  const { t } = useTranslationI18()
+
   const handleChangeSetting = (key, val) => {
     formik.setFieldValue(key, val)
   }
@@ -287,7 +290,7 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
                 <Radio.Button value={false}>SMS Text</Radio.Button>
               </Radio.Group>
               <div className={styles.templatePanel}>
-                {isEmail && <Appointment selectLanguage="en" />}
+                {isEmail && <Appointment t={t} selectLanguage="en" />}
                 {!isEmail && <SMSText />}
               </div>
             </div>
@@ -496,7 +499,7 @@ export const ReviewsConfigStepOne: FC<ReviewsConfigStepOneProps> = ({
                 <Radio.Button value={false}>SMS Text</Radio.Button>
               </Radio.Group>
               <div className={styles.templatePanel}>
-                {isEmail && <Appointment selectLanguage="en" />}
+                {isEmail && <Appointment t={t} selectLanguage="en" />}
                 {!isEmail && <SMSText />}
               </div>
             </div>

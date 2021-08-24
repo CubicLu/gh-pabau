@@ -1,66 +1,212 @@
-import React, { useState } from 'react'
-import { Layout, Button, TabMenu, MobileHeader } from '@pabau/ui'
+import React, { useState, useEffect, useContext } from 'react'
 import {
-  Dropdown,
-  Typography,
-  Input,
-  Menu,
-  Select,
-  DatePicker,
+  AvatarList,
+  Button,
+  Notification,
+  NotificationType,
+  Table,
+  TabMenu,
+  SetupSearchInput,
+  RangePicker,
+} from '@pabau/ui'
+import {
   Divider,
+  Dropdown,
+  Menu,
+  Modal,
+  Select,
+  Typography,
+  Popover,
 } from 'antd'
 import {
   CalendarOutlined,
-  FilterOutlined,
-  LeftOutlined,
-  SearchOutlined,
+  CheckOutlined,
   ExportOutlined,
+  FilterOutlined,
   MailOutlined,
 } from '@ant-design/icons'
 import classNames from 'classnames'
-import moment, { Moment } from 'moment'
+import Layout from '../../components/Layout/Layout'
 import Invoice from '../../components/Account/Invoice'
 import Payments from '../../components/Account/Payments'
 import Debt from '../../components/Account/Debt'
 import CreditNote from '../../components/Account/CreditNote'
+import { FilterValueType } from '../../components/Account/TableLayout'
 import styles from './accounts.module.less'
-import Link from 'next/link'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import CommonHeader from '../../components/CommonHeader'
+import dayjs, { Dayjs } from 'dayjs'
+import { Formik } from 'formik'
+import { UserContext } from '../../context/UserContext'
+import {
+  useFindAllowedLocationQuery,
+  useIssuingCompaniesQuery,
+  useCreditNoteTypesLazyQuery,
+} from '@pabau/graphql'
 
-const tabMenuItems = ['Invoices', 'Payments', 'Debt', 'Credit Notes']
+interface FilterList {
+  id: number
+  name: string
+}
+
+const WAIT_INTERVAL = 400
 
 export function Account() {
+  const [showModal, setShowModal] = useState(false)
+  const user = useContext(UserContext)
+
+  const { t } = useTranslationI18()
+  const tabMenuItems = [
+    t('account.finance.tab.menu.invoices'),
+    t('account.finance.tab.menu.payments'),
+    t('account.finance.tab.menu.debt'),
+    t('account.finance.tab.menu.credit.notes'),
+  ]
   const { Title } = Typography
   const { Option } = Select
-  const { RangePicker } = DatePicker
   const [activeTab, setActiveTab] = useState('0')
   const [showDateFilter, setShowDateFilter] = useState(false)
-  const [selectedRange, setSelectedRange] = useState('90-days')
-  const [selectedDates, setSelectedDates] = useState<[Moment, Moment]>([
-    moment(),
-    moment().subtract(90, 'days'),
+  const [selectedRange, setSelectedRange] = useState<string>(
+    t('account.finance.date.range.option.month')
+  )
+  const [selectedDates, setSelectedDates] = useState<[Dayjs, Dayjs]>([
+    dayjs().startOf('month'),
+    dayjs(),
   ])
+  const [sendDebtReminder, setDebtReminder] = useState(false)
+  const [sendNextDebtReminder, setNextDebtReminder] = useState(false)
+  const [sendLastDebtReminder, setLastDebtReminder] = useState(false)
+  const [searchValue, setSearchValue] = useState('')
+  const [filterDate, setFilterDate] = useState<[Dayjs, Dayjs]>([
+    dayjs().startOf('month'),
+    dayjs(),
+  ])
+  const [isPopOverVisible, setIsPopOverVisible] = useState(false)
+  const [locationList, setLocationList] = useState<FilterList[]>([])
+  const [issuingCompanyList, setIssuingCompanyList] = useState<FilterList[]>([])
+  const [creditNoteTypesList, setCreditNoteTypesList] = useState<FilterList[]>(
+    []
+  )
+  const [filterValues, setFilterValues] = useState<FilterValueType>({
+    location: 0,
+    issuingCompany: 0,
+    creditNoteType: '',
+  })
+  const [filterRange, setFilterRange] = useState<string>('This Month')
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const { data: locations } = useFindAllowedLocationQuery()
+  const { data: issuingCompanyData } = useIssuingCompaniesQuery()
+  const [
+    getCreditNote,
+    { data: creditNoteTypeData },
+  ] = useCreditNoteTypesLazyQuery()
+
+  useEffect(() => {
+    if (activeTab === '3') {
+      getCreditNote()
+    }
+  }, [activeTab, getCreditNote])
+
+  useEffect(() => {
+    if (locations?.findAllowedLocation) {
+      const data = locations.findAllowedLocation.map((item) => {
+        return {
+          id: item.id,
+          name: item.name,
+        }
+      })
+      setLocationList(data)
+    }
+  }, [locations])
+
+  useEffect(() => {
+    if (issuingCompanyData?.findManyIssuingCompany) {
+      const data = issuingCompanyData?.findManyIssuingCompany.map((item) => {
+        return {
+          id: item.id,
+          name: item.name,
+        }
+      })
+      setIssuingCompanyList(data)
+    }
+  }, [issuingCompanyData])
+
+  useEffect(() => {
+    if (creditNoteTypeData?.findManyCreditNoteType) {
+      setCreditNoteTypesList(creditNoteTypeData?.findManyCreditNoteType)
+    }
+  }, [creditNoteTypeData])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchTerm(searchValue)
+    }, WAIT_INTERVAL)
+
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchValue])
 
   const onDateFilterApply = () => {
+    setFilterDate([...selectedDates])
+    setFilterRange(selectedRange)
     setShowDateFilter(false)
   }
 
   const onDataRangeSelect = (value) => {
     setSelectedRange(value)
-    if (value === '90-days') {
-      setSelectedDates([moment().subtract(90, 'days'), moment()])
-    } else if (value === '30-days') {
-      setSelectedDates([moment().subtract(30, 'days'), moment()])
-    } else if (value === '6-months') {
-      setSelectedDates([moment().subtract(30, 'days'), moment()])
-    } else if (value === '1-year') {
-      setSelectedDates([moment().subtract(30, 'days'), moment()])
+    switch (value) {
+      case 'Today': {
+        setSelectedDates([dayjs(), dayjs()])
+        break
+      }
+      case 'Yesterday': {
+        setSelectedDates([
+          dayjs().subtract(1, 'day'),
+          dayjs().subtract(1, 'day'),
+        ])
+        break
+      }
+      case 'This Week': {
+        setSelectedDates([dayjs().day(1), dayjs()])
+        break
+      }
+      case 'Last Week': {
+        setSelectedDates([
+          dayjs().subtract(1, 'weeks').day(1),
+          dayjs().subtract(1, 'weeks').day(6),
+        ])
+        break
+      }
+      case 'This Month': {
+        setSelectedDates([dayjs().startOf('month'), dayjs()])
+        break
+      }
+      case 'Last Month': {
+        setSelectedDates([
+          dayjs().subtract(1, 'month').startOf('month'),
+          dayjs().subtract(1, 'months').endOf('month'),
+        ])
+        break
+      }
+      case 'This Year': {
+        setSelectedDates([dayjs().startOf('year'), dayjs()])
+        break
+      }
+      case 'Last Year': {
+        setSelectedDates([
+          dayjs().subtract(1, 'year').startOf('year'),
+          dayjs().subtract(1, 'year').endOf('year'),
+        ])
+        break
+      }
     }
   }
 
   const manageOptions = (
     <Menu>
       <Menu.Item key="1" icon={<ExportOutlined />}>
-        Export to CVS
+        {t('account.finance.export.csv')}
       </Menu.Item>
     </Menu>
   )
@@ -72,66 +218,282 @@ export function Account() {
         defaultValue={selectedRange}
         onChange={onDataRangeSelect}
       >
-        <Option value="30-days">Last 30 days</Option>
-        <Option value="90-days">Last 90 days</Option>
-        <Option value="6-months">Last 6 months</Option>
-        <Option value="1-year">Last 1 year</Option>
-        <Option value="custom">Custom</Option>
+        <Option value="All records">
+          {t('account.finance.date.range.option.all')}
+        </Option>
+        <Option value="Today">
+          {t('account.finance.date.range.option.today')}
+        </Option>
+        <Option value="Yesterday">
+          {t('account.finance.date.range.option.yesterday')}
+        </Option>
+        <Option value="This Week">
+          {t('account.finance.date.range.option.week')}
+        </Option>
+        <Option value="Last Week">
+          {t('account.finance.date.range.option.lastWeek')}
+        </Option>
+        <Option value="This Month">
+          {t('account.finance.date.range.option.month')}
+        </Option>
+        <Option value="Last Month">
+          {t('account.finance.date.range.option.lastMonth')}
+        </Option>
+        <Option value="This Year">
+          {t('account.finance.date.range.option.year')}
+        </Option>
+        <Option value="Last Year">
+          {t('account.finance.date.range.option.lastYear')}
+        </Option>
+        <Option value="custom">
+          {t('account.finance.date.range.option.custom')}
+        </Option>
       </Select>
-      <RangePicker
-        className={styles.rangePicker}
-        value={selectedDates}
-        disabled={selectedRange !== 'custom'}
-        onChange={(val) => setSelectedDates(val)}
-      />
+      {selectedRange !== 'All records' && (
+        <RangePicker
+          className={styles.rangePicker}
+          value={selectedDates}
+          disabledDate={(current) => {
+            return current > dayjs().endOf('day')
+          }}
+          disabled={selectedRange.toString() !== 'custom'}
+          onChange={(val) => setSelectedDates(val)}
+        />
+      )}
       <div className={styles.footer}>
         <Button type="ghost" onClick={() => setShowDateFilter(false)}>
-          Cancel
+          {t('account.finance.date.range.btn.cancel')}
         </Button>
         <Button
           type="primary"
           style={{ marginLeft: 16 }}
           onClick={onDateFilterApply}
         >
-          Apply
+          {t('account.finance.date.range.btn.apply')}
         </Button>
       </div>
     </div>
   )
+  const avatarList = (
+    <AvatarList
+      size="default"
+      users={[
+        {
+          avatarUrl: 'https://avatars2.githubusercontent.com/u/263385',
+          id: 1,
+          name: 'Dominic Nguyen',
+        },
+        {
+          avatarUrl: 'https://avatars2.githubusercontent.com/u/132554',
+          id: 2,
+          name: 'Tom Coleman',
+        },
+        {
+          avatarUrl: 'https://avatars0.githubusercontent.com/u/81672',
+          id: 3,
+          name: 'Zoltan Olah',
+        },
+        {
+          avatarUrl: 'https://avatars3.githubusercontent.com/u/1831709',
+          id: 4,
+          name: 'Tim Hingston',
+        },
+      ]}
+    />
+  )
+  const actionSendBtn = (
+    <>
+      <CheckOutlined /> {t('account.finance.debt.send.reminder.sended.btn')}
+    </>
+  )
+  const actionSendedBtn = (
+    <>
+      <MailOutlined /> {t('account.finance.debt.send.reminder.send.btn')}
+    </>
+  )
+  const actionHandler = (actionProps, actionSetProps) => {
+    return (
+      <Button
+        className={styles.reminderBtn}
+        onClick={() => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          actionSetProps(!actionProps)
+          !actionProps &&
+            Notification(
+              NotificationType.success,
+              t('account.finance.debt.send.notification')
+            )
+        }}
+        style={
+          actionProps && {
+            color: '#65cd98',
+            border: '1px solid #65cd98',
+          }
+        }
+      >
+        {actionProps ? actionSendBtn : actionSendedBtn}
+      </Button>
+    )
+  }
+  const renderOptions = (
+    list,
+    defaultValue: string | number = 0,
+    key = 'id'
+  ) => (
+    <>
+      <Select.Option key={'all'} value={defaultValue}>
+        <span style={{ marginLeft: 8 }}>{'ALL'}</span>
+      </Select.Option>
+      {list.map((item) => (
+        <Select.Option key={item.id} value={item[key]}>
+          <span style={{ marginLeft: 8 }}>{item.name}</span>
+        </Select.Option>
+      ))}
+    </>
+  )
+
+  const renderFilter = () => (
+    <Formik
+      enableReinitialize={true}
+      initialValues={{
+        location: 0,
+        issuingCompany: 0,
+        creditNoteType: '',
+      }}
+      onSubmit={(value) => {
+        if (activeTab !== '3') {
+          value.creditNoteType = ''
+        }
+        setFilterValues(value)
+        setIsPopOverVisible(false)
+      }}
+    >
+      {({ setFieldValue, handleReset, values, handleSubmit }) => (
+        <div className={styles.filterBox}>
+          <p>{t('account.finance.filter.location')}</p>
+          <Select
+            showArrow
+            style={{ width: '100%' }}
+            value={values.location}
+            onChange={(value) => {
+              setFieldValue('location', value)
+            }}
+          >
+            {renderOptions(locationList)}
+          </Select>
+          <p>{t('account.finance.filter.issuing.company')}</p>
+          <Select
+            showArrow
+            style={{ width: '100%' }}
+            value={values.issuingCompany}
+            onChange={(value) => {
+              setFieldValue('issuingCompany', value)
+            }}
+          >
+            {renderOptions(issuingCompanyList)}
+          </Select>
+          {activeTab === '3' && (
+            <>
+              <p>{t('account.finance.filter.credit.note')}</p>
+              <Select
+                showArrow
+                style={{ width: '100%' }}
+                value={values.creditNoteType}
+                onChange={(value) => {
+                  setFieldValue('creditNoteType', value)
+                }}
+              >
+                {renderOptions(creditNoteTypesList, '', 'name')}
+              </Select>
+            </>
+          )}
+          <div className={styles.footerWrapper}>
+            <Button onClick={handleReset} className={styles.clearBtn}>
+              {t('setup.locations.clearall')}
+            </Button>
+            <Button
+              type={'primary'}
+              className={styles.btn}
+              onClick={() => handleSubmit()}
+            >
+              {t('setup.locations.applyfilters')}
+            </Button>
+          </div>
+        </div>
+      )}
+    </Formik>
+  )
+  const columns = [
+    {
+      title: t('account.finance.debt.send.reminder.title.days'),
+      dataIndex: 'Days',
+      className: 'drag-visible',
+      visible: true,
+    },
+    {
+      title: t('account.finance.debt.send.reminder.title.clients'),
+      dataIndex: 'Clients',
+      className: 'drag-visible',
+      visible: true,
+    },
+    {
+      title: t('account.finance.debt.send.reminder.title.actions'),
+      dataIndex: 'Actions',
+      className: 'drag-visible',
+      visible: true,
+    },
+  ]
+  const data = [
+    {
+      Days: t('account.finance.debt.send.reminder.days.first'),
+      Clients: avatarList,
+      Actions: actionHandler(sendDebtReminder, setDebtReminder),
+    },
+    {
+      Days: t('account.finance.debt.send.reminder.days.secound'),
+      Clients: avatarList,
+      Actions: actionHandler(sendNextDebtReminder, setNextDebtReminder),
+    },
+    {
+      Days: t('account.finance.debt.send.reminder.days.last'),
+      Clients: avatarList,
+      Actions: actionHandler(sendLastDebtReminder, setLastDebtReminder),
+    },
+  ]
+  const searchPlaceHoler = {
+    '0': t('account.finance.search.placeholder.invoice'),
+    '1': t('account.finance.search.placeholder.payment'),
+    '2': t('account.finance.search.placeholder.invoice'),
+    '3': t('account.finance.search.placeholder.credit.note'),
+  }
 
   return (
     <React.Fragment>
-      <MobileHeader
-        className={classNames(
-          styles.desktopViewNone,
-          styles.mobileHeaderContainer
-        )}
-      >
-        <div className={styles.mobileHeader}>
-          <Link href="/">
-            <LeftOutlined className={styles.leftOutlined} />
-          </Link>
-          <Title level={5} className={styles.title}>
-            Accounts
-          </Title>
-        </div>
-      </MobileHeader>
-      <Layout active={'account'}>
+      <CommonHeader />
+      <Layout active={'account'} {...user}>
         <div
           className={classNames(styles.desktopHeader, styles.mobileViewNone)}
         >
           <div style={{ marginTop: '17px' }}>
-            <Title>Accounts</Title>
+            <Title>{t('account.finance.title')}</Title>
           </div>
           <div className={styles.searchInputText}>
-            <Input
-              placeholder="Search by Invoice or clients"
-              prefix={<SearchOutlined />}
-              className={styles.searchInput}
-            />
+            <div
+              className={classNames(
+                styles.searchInput,
+                activeTab === '1' && styles.paymentSearch
+              )}
+            >
+              <SetupSearchInput
+                placeholder={searchPlaceHoler[activeTab]}
+                onChange={(item) => {
+                  setSearchValue(item)
+                }}
+              />
+            </div>
             <Dropdown
               overlay={dateRange}
-              placement="bottomLeft"
+              placement="bottomRight"
               trigger={['click']}
               visible={showDateFilter}
               onVisibleChange={(val) => setShowDateFilter(val)}
@@ -144,22 +506,43 @@ export function Account() {
                     )} - ${Intl.DateTimeFormat('en').format(
                       new Date(`${selectedDates[1]}`)
                     )}`
-                  : `Last ${selectedRange.replace('-', ' ')}`}
+                  : `${selectedRange.replace('-', ' ')}`}
               </Button>
             </Dropdown>
-            <Dropdown overlay={manageOptions} placement="bottomLeft">
-              <Button type="ghost">Manage Options</Button>
-            </Dropdown>
-            {activeTab === '2' && (
-              <Button type="primary" style={{ color: 'white' }}>
-                <MailOutlined /> Send Reminders
-                <span className={styles.reminderText2}>2</span>
+            {false && (
+              <Dropdown overlay={manageOptions} placement="bottomLeft">
+                <Button type="ghost">
+                  {t('account.finance.manage.options')}
+                </Button>
+              </Dropdown>
+            )}
+            {false && (
+              <Button
+                type="primary"
+                style={{ color: 'white' }}
+                onClick={() => {
+                  setShowModal(true)
+                }}
+              >
+                <MailOutlined /> {t('account.finance.send.reminders')}
+                <span className={styles.reminderText2}>
+                  {t('account.finance.send.reminders.count')}
+                </span>
               </Button>
             )}
-            <Button type="ghost">
-              <FilterOutlined />
-              Filter
-            </Button>
+            <Popover
+              trigger="click"
+              content={renderFilter}
+              placement="bottomRight"
+              overlayClassName={styles.filterPopOver}
+              visible={isPopOverVisible}
+              onVisibleChange={(visible) => setIsPopOverVisible(visible)}
+            >
+              <Button type="ghost">
+                <FilterOutlined />
+                {t('account.finance.filter')}
+              </Button>
+            </Popover>
           </div>
         </div>
         <Divider style={{ margin: 0 }} />
@@ -169,11 +552,48 @@ export function Account() {
           tabBarStyle={{ backgroundColor: '#FFF' }}
           onTabClick={(activeKey) => setActiveTab(activeKey)}
         >
-          <Invoice />
-          <Payments />
-          <Debt />
-          <CreditNote />
+          <Invoice
+            searchTerm={searchTerm}
+            selectedDates={filterDate}
+            filterValue={filterValues}
+            selectedRange={filterRange}
+          />
+          <Payments
+            searchTerm={searchTerm}
+            selectedDates={filterDate}
+            filterValue={filterValues}
+            selectedRange={filterRange}
+          />
+          <Debt
+            searchTerm={searchTerm}
+            selectedDates={filterDate}
+            filterValue={filterValues}
+            selectedRange={filterRange}
+          />
+          <CreditNote
+            searchTerm={searchTerm}
+            selectedDates={filterDate}
+            filterValue={filterValues}
+            selectedRange={filterRange}
+          />
         </TabMenu>
+        <Modal
+          title={t('account.finance.send.reminder.modal.title')}
+          visible={showModal}
+          onCancel={() => {
+            setShowModal(false)
+          }}
+          footer={false}
+          width={680}
+          bodyStyle={{ paddingTop: '0px' }}
+          centered={true}
+        >
+          <Table
+            columns={columns}
+            dataSource={data as never[]}
+            bordered={false}
+          />
+        </Modal>
       </Layout>
     </React.Fragment>
   )

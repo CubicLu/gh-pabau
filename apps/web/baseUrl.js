@@ -1,3 +1,4 @@
 module.exports = {
-  apiURL: 'http://localhost:3333',
+  apiURL: 'https://backend.pabau.com',
+  cdnURL: 'https://cdn.pabau.com',
 }

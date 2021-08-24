@@ -1,0 +1,8 @@
+mutation updateCompanyDetails2fa($company_id: Int!, $enable_2fa: Int!){
+  updateOneCompany(where: {id: $company_id}, data: {details: {update: {enable_2fa: {set: $enable_2fa}}}}) {
+    id
+    details{
+      enable_2fa
+    }
+  }
+}

@@ -1,8 +1,17 @@
-.env
-apps/web/.env.local
-package-lock.json
-
 # See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# Ignore .local's - To clarify, we allow .env's to be committed
+.env.local
+.env.*.local
+*.local.yml
+*.local.yaml
+
+# Lock files for major installers that we don't support
+package-lock.json
+pnpm-lock.yaml
+
+# Ignore generated files
+/libs/graphql/**/generated
 
 # compiled output
 /dist
@@ -10,7 +19,7 @@ package-lock.json
 /out-tsc
 
 # dependencies
-/node_modules
+node_modules/
 
 # IDEs and editors
 /.idea
@@ -96,6 +105,5 @@ buck-out/
 ## CocoaPods
 **/ios/Pods/
 
-## Nested node_modules
-
-node_modules/
+.postmon-lock
+*.0x/

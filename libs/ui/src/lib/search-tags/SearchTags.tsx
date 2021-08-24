@@ -13,7 +13,11 @@ export interface SearchTagsProps {
   title?: string
   description?: string
   items: Array<string>
+  selectedItems?: Array<string>
   itemType?: string
+  noItemText?: string
+  selectAllText?: string
+  onChange?: (items: Array<string>) => void
 }
 
 export interface SearchTag {
@@ -26,6 +30,10 @@ export const SearchTags: FC<SearchTagsProps> = ({
   description,
   items,
   itemType,
+  selectedItems = [],
+  noItemText,
+  selectAllText,
+  onChange,
 }) => {
   const [searchQuery, setSearchQuery] = useState('')
   const [searchTagItems, setSearchTagItems] = useState<SearchTag[]>([])
@@ -36,6 +44,7 @@ export const SearchTags: FC<SearchTagsProps> = ({
       searchTagItems.map((item) => ({ ...item, selected: true }))
     )
     setShowSelectAll(false)
+    onChange?.(searchTagItems.map((item) => item.title))
   }
   const handleSelectItem = (tag) => {
     const items = [...searchTagItems]
@@ -48,6 +57,9 @@ export const SearchTags: FC<SearchTagsProps> = ({
     }
     setSearchTagItems([...items])
     setShowSelectAll(!showAll)
+    onChange?.(
+      items.filter((item) => item.selected === true).map((item) => item.title)
+    )
   }
   const handleSearch = (e) => {
     const query = e.target.value
@@ -59,8 +71,13 @@ export const SearchTags: FC<SearchTagsProps> = ({
     setShowSearchInput(false)
   }
   useEffect(() => {
-    setSearchTagItems(items.map((item) => ({ title: item, selected: false })))
-  }, [items])
+    setSearchTagItems(
+      items.map((item) => ({
+        title: item,
+        selected: selectedItems?.includes(item),
+      }))
+    )
+  }, [items, selectedItems])
   return (
     <div className={styles.searchTags}>
       {title && <h2>{title}</h2>}
@@ -104,7 +121,7 @@ export const SearchTags: FC<SearchTagsProps> = ({
                 marginBottom: '1rem',
               }}
             />
-            <p>{`No ${itemType} found`}</p>
+            <p>{noItemText || 'No item found'}</p>
           </div>
         )}
         {items.length > 0 && (
@@ -114,7 +131,7 @@ export const SearchTags: FC<SearchTagsProps> = ({
                 className={styles.searchTagItem}
                 onClick={() => handleSelectAll()}
               >
-                Select All
+                {selectAllText || 'Select All'}
               </span>
             )}
             {searchTagItems.map((item) => (

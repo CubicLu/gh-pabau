@@ -1,15 +1,18 @@
-import React, { FC, useEffect, useState } from 'react'
-import { Button, MobileHeader } from '@pabau/ui'
-import styles from './AddButton.module.less'
 import {
   FilterOutlined,
+  InboxOutlined,
   PlusSquareFilled,
   SearchOutlined,
-  InboxOutlined,
 } from '@ant-design/icons'
+import { Button, MobileHeader } from '@pabau/ui'
 import { Drawer, Input, Popover, Radio } from 'antd'
 import classNames from 'classnames'
+import React, { FC, useEffect, useState } from 'react'
+import { useMedia } from 'react-use'
+import { ReactComponent as CloseIcon } from '../assets/images/close-icon.svg'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
+import styles from './AddButton.module.less'
+
 // import { isMobile, isTablet } from 'react-device-detect'
 // import { useKeyPressEvent } from 'react-use'
 
@@ -25,6 +28,10 @@ interface P {
   needTranslation?: boolean
   isCustomFilter?: boolean
   customFilter?: () => JSX.Element
+  onResetFilter?: () => void
+  setMobileSearch?: () => void
+  mobileSearch?: boolean
+  isCreateButtonVisible?: boolean
 }
 
 const AddButton: FC<P> = ({
@@ -35,14 +42,28 @@ const AddButton: FC<P> = ({
   onSearch,
   tableSearch = true,
   addFilter = true,
-  needTranslation,
   isCustomFilter = false,
+  onResetFilter,
   customFilter,
+  setMobileSearch,
+  mobileSearch,
+  needTranslation,
+  isCreateButtonVisible = true,
 }) => {
-  const [isActive, setIsActive] = useState(true)
+  const [isActive, setIsActive] = useState<boolean | number>(
+    schema?.filter?.primary?.default ?? true
+  )
   const [mobFilterDrawer, setMobFilterDrawer] = useState(false)
   const [marketingSourceSearch, setMarketingSourceSearch] = useState('')
+  const [isPopOverVisible, setIsPopOverVisible] = useState(false)
   const { t } = useTranslationI18()
+  const isMobile = useMedia('(max-width: 768px)', false)
+
+  useEffect(() => {
+    if (!isMobile && mobFilterDrawer) {
+      setMobFilterDrawer(false)
+    }
+  }, [isMobile, mobFilterDrawer])
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -53,6 +74,7 @@ const AddButton: FC<P> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [marketingSourceSearch])
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onReset = () => {
     if (!isActive) {
       setIsActive(!isActive)
@@ -68,8 +90,8 @@ const AddButton: FC<P> = ({
     <div className={styles.filterContent}>
       {!isMobile && (
         <div className={classNames(styles.filterHeader)}>
-          <h6>Filter by</h6>
-          <p>Status</p>
+          <h6>{t('add-button-filter-header-text-filter')}:</h6>
+          <p>{t('add-button-filter-header-text-status')}</p>
         </div>
       )}
       <div className={styles.radioTextStyle}>
@@ -80,35 +102,63 @@ const AddButton: FC<P> = ({
           }}
           value={isActive}
         >
-          <Radio value={true}>
-            <span>Active</span>
+          <Radio value={schema?.filter?.primary?.active ?? true}>
+            <span>{t('basic-crud-table-button-active')}</span>
           </Radio>
-          <Radio value={false}>
-            <span>Inactive</span>
+          <Radio value={schema?.filter?.primary?.inactive ?? false}>
+            <span>{t('basic-crud-table-button-inactive')}</span>
           </Radio>
         </Radio.Group>
       </div>
     </div>
   )
-
+  //TODO INVESTIGATE which branch this changes came from and are they needed
   return (
     <>
-      {/* Mobile header */}
-      <div className={classNames(styles.marketingIcon, styles.desktopViewNone)}>
-        {tableSearch && (
-          <SearchOutlined className={styles.marketingIconStyle} />
-        )}
-        {addFilter && (
-          <FilterOutlined
-            className={styles.marketingIconStyle}
-            onClick={() => setMobFilterDrawer((e) => !e)}
+      {mobileSearch && (
+        <div className={styles.mobileSearchInput}>
+          <Input
+            className={styles.searchMarketingStyle}
+            placeholder={t('basic-crud-table-input-search-placeholder')}
+            onChange={(e) => setMarketingSourceSearch(e.target.value)}
+            suffix={
+              <CloseIcon
+                onClick={() => {
+                  setMobileSearch?.()
+                }}
+              />
+            }
+            autoFocus
           />
-        )}
-        <PlusSquareFilled
-          className={styles.plusIconStyle}
-          onClick={() => onClick?.()}
-        />
-      </div>
+        </div>
+      )}
+      {!mobileSearch && (
+        <div
+          className={classNames(styles.marketingIcon, styles.desktopViewNone)}
+        >
+          {tableSearch && (
+            <SearchOutlined
+              onClick={() => {
+                setMobileSearch?.()
+              }}
+              className={styles.marketingIconStyle}
+            />
+          )}
+          {addFilter && (
+            <FilterOutlined
+              className={styles.marketingIconStyle}
+              onClick={() => setMobFilterDrawer((e) => !e)}
+            />
+          )}
+
+          {isCreateButtonVisible && (
+            <PlusSquareFilled
+              className={styles.plusIconStyle}
+              onClick={() => onClick?.()}
+            />
+          )}
+        </div>
+      )}
       <Drawer
         visible={mobFilterDrawer}
         className={styles.mobFilterDrawer}
@@ -117,15 +167,16 @@ const AddButton: FC<P> = ({
         <MobileHeader className={styles.marketingSourceFilterHeader}>
           <div className={styles.allContentAlignMobile}>
             <div className={styles.marketingTextStyle}>
-              <span style={{ cursor: 'pointer' }} onClick={onReset}>
-                Reset
+              <span onClick={isCustomFilter ? onResetFilter : onReset}>
+                {t('add-button-filter-reset')}
               </span>
-              <p> Filter </p>
+              <p>{t('add-button-filter')}</p>
               <span
-                onClick={() => setMobFilterDrawer((e) => !e)}
-                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                  setMobFilterDrawer((e) => !e)
+                }}
               >
-                Cancel
+                {t('add-button-filter-cancel')}
               </span>
             </div>
           </div>
@@ -138,11 +189,9 @@ const AddButton: FC<P> = ({
           className={styles.applyButton}
           onClick={handleMobileDrawerApply}
         >
-          Apply
+          {t('common-label-apply')}
         </Button>
       </Drawer>
-
-      {/* Desktop header */}
       <div
         className={classNames(styles.marketingSource, styles.mobileViewNone)}
       >
@@ -150,12 +199,14 @@ const AddButton: FC<P> = ({
           <Input
             className={styles.searchMarketingStyle}
             placeholder={
-              needTranslation
-                ? t('marketingsource-input-search-placeholder.translation')
-                : 'Search'
+              schema.searchPlaceholder
+                ? schema.searchPlaceholder
+                : t('basic-crud-table-input-search-placeholder')
             }
             value={marketingSourceSearch}
-            onChange={(e) => setMarketingSourceSearch(e.target.value)}
+            onChange={(e) => {
+              setMarketingSourceSearch(e.target.value)
+            }}
             suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
             autoFocus
           />
@@ -164,6 +215,8 @@ const AddButton: FC<P> = ({
           trigger="click"
           content={isCustomFilter ? customFilter : filterContent}
           placement="bottomRight"
+          visible={isPopOverVisible}
+          onVisibleChange={(visible) => setIsPopOverVisible(visible)}
           overlayClassName={
             isCustomFilter === false
               ? styles.filterPopover
@@ -171,23 +224,21 @@ const AddButton: FC<P> = ({
           }
         >
           {addFilter && (
-            <Button className={styles.filterBtn}>
-              <FilterOutlined />{' '}
-              {needTranslation
-                ? t('marketingsource-button-filter.translation')
-                : 'Filter'}
+            <Button
+              className={styles.filterBtn}
+              onClick={() => setIsPopOverVisible(true)}
+            >
+              <FilterOutlined /> {t('basic-crud-table-button-filter')}
             </Button>
           )}
         </Popover>
-        {schema.createButtonLabel && (
+        {schema.createButtonLabel && isCreateButtonVisible && (
           <Button
             className={styles.createSourceBtn}
             type="primary"
             onClick={() => onClick?.()}
           >
-            {needTranslation
-              ? t('marketingsource-header-create.translation')
-              : schema.createButtonLabel}
+            {t(schema.createButtonLabel)}
           </Button>
         )}
         {schema.inboxButton && (
@@ -196,10 +247,7 @@ const AddButton: FC<P> = ({
             type="primary"
             onClick={() => onClick?.()}
           >
-            <InboxOutlined />{' '}
-            {needTranslation
-              ? t('marketingsource-header-create.translation')
-              : 'Inbox'}
+            <InboxOutlined /> {t(schema.createButtonLabel) ?? 'Inbox'}
             <span className={styles.inboxMsgNum}> 3</span>
           </Button>
         )}

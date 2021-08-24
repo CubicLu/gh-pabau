@@ -18,12 +18,14 @@ export interface ButtonProps extends NativeButtonProps {
   backgroundColor?: string
   style?: HTMLProps<HTMLElement>['style']
   className?: string
+  loading?: boolean
 }
 
 export const Button: FC<ButtonProps> = ({
   className,
   disabled,
   color,
+  loading = false,
   backgroundColor,
   children,
   style,
@@ -34,6 +36,7 @@ export const Button: FC<ButtonProps> = ({
     //size={ButtonSize.large}
     disabled={disabled}
     color={color}
+    loading={loading}
     className={className}
     {...props}
   >

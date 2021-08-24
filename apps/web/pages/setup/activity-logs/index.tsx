@@ -1,20 +1,20 @@
-import React, { FC, useState, useEffect } from 'react'
-import CommonHeader from '../common-header'
-import Layout from '../../../components/Layout/Layout'
-import { CustomScrollbar } from '../../../components/CustomScrollbar'
-import { Typography, Row, Popover, List } from 'antd'
+import { FileFilled, UserOutlined } from '@ant-design/icons'
 import {
   Breadcrumb,
-  SetupSearchInput,
   Checkbox,
   EmployeeListModel,
+  SetupSearchInput,
 } from '@pabau/ui'
-import styles from './index.module.less'
+import { List, Popover, Row, Typography } from 'antd'
 import dynamic from 'next/dynamic'
+import React, { FC, useEffect, useState } from 'react'
 import Highlighter from 'react-highlight-words'
-import { UserOutlined, FileFilled } from '@ant-design/icons'
 import Logo from '../../../assets/images/logo.svg'
 import userAvatar from '../../../assets/images/user-avatar.svg'
+import CommonHeader from '../../../components/CommonHeader'
+import { CustomScrollbar } from '../../../components/CustomScrollbar/Index'
+import Layout from '../../../components/Layout/Layout'
+import styles from './index.module.less'
 
 const ActivityChart = dynamic(
   () => import('../../../components/activity-logs/ActivityChart'),

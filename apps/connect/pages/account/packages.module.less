@@ -1,0 +1,92 @@
+.myPackages {
+  width: 100%;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 20px 0;
+
+  @media (max-width: 767px) {
+    max-width: 100%;
+    min-height: 100%;
+    padding: 0;
+    padding-bottom: 40px;
+    background-color: white;
+  }
+}
+
+.myPackagesHeader {
+  :global {
+    .ant-typography {
+      padding-left: 0;
+      font-family: var(--font-family);
+    }
+    .ant-breadcrumb {
+      padding-left: 0;
+      padding-top: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    padding: 32px 20px 28px;
+    background-color: white;
+    :global {
+      .ant-typography {
+        padding: 0;
+        font-family: var(--font-family);
+      }
+    }
+  }
+}
+
+.myPackagesContent {
+  width: 100%;
+}
+
+.packageTableContainer {
+  width: 100%;
+  background-color: white;
+  box-sizing: border-box;
+  border: 1px solid #f4f5f7;
+  box-shadow: 2px 2px 17px rgba(9, 20, 41, 0.05);
+  :global {
+    .ant-table-thead {
+      .ant-table-cell {
+        background-color: white;
+        font-family: var(--font-family);
+        font-size: 14px;
+        line-height: 20px;
+        letter-spacing: 1%;
+        color: #737387;
+      }
+    }
+    .ant-table-tbody {
+      .ant-table-cell {
+        background-color: white;
+        font-family: var(--font-family);
+        font-size: 16px;
+        line-height: 24px;
+        color: var(--grey-text-color);
+      }
+    }
+  }
+  @media (max-width: 767px) {
+    box-shadow: none;
+    border: none;
+  }
+}
+
+.buttonLabelContainer {
+  width: 88px;
+}
+
+.active {
+  color: #65cd98 !important;
+  border: 1px solid rgba(101, 205, 152, 0.5) !important;
+  background: rgba(101, 205, 152, 0.05) !important;
+  border-radius: 28px !important;
+}
+
+.inactive {
+  color: var(--light-grey-color) !important;
+  background: rgba(146, 146, 163, 0.05) !important;
+  border: 1px solid rgba(146, 146, 163, 0.5) !important;
+  border-radius: 28px !important;
+}

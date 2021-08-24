@@ -10,9 +10,14 @@
     .ant-tabs-nav {
       margin-bottom: 0px;
       height: 80px;
+      background: white;
+      position: fixed;
+      width: 100%;
+      z-index: 1;
     }
     .ant-tabs-content-holder {
       background: #f7f7f9;
+      margin-top: 80px;
     }
     .ant-tabs-tab {
       align-items: flex-end;
@@ -36,17 +41,17 @@
   font-style: normal;
 }
 .MedicalFormPreviewOldPanel {
-  padding : 10px;
+  padding: 10px;
   width: 100%;
   // height: 100%;
 }
 .MedicalFormPreviewOldResultPanel {
   width: 100%;
   height: 100%;
-  padding : 0 20px;
+  padding: 0 20px;
 }
 .formPreviewButton {
-  margin-top : 10px;
+  margin-top: 10px;
   margin-bottom: 10px;
 }
 .medicalFormEditPanel {
@@ -118,14 +123,22 @@
 }
 .MedicalFormEditLeft {
   width: 336px;
+  :global {
+    .ant-tabs-nav {
+      position: relative;
+    }
+    .ant-tabs-content-holder {
+      margin-top: 0px;
+    }
+  }
 }
 .MedicalFormEditMain {
   max-height: 805px;
-  width:  calc(100% - 744px);
+  width: calc(100% - 744px);
 }
 .MedicalFormEditMainNoRight {
   max-height: 805px;
-  width:  calc(100% - 336px);
+  width: calc(100% - 336px);
 }
 .MedicalFormEditRight {
   width: 408px;
@@ -189,8 +202,8 @@
   display: block;
 }
 .medicalFormSettingPanel {
-  z-index: 1;
-  position: absolute;
+  z-index: 2;
+  position: fixed;
   right: 16px;
   margin-top: 25px;
   .createButton {
@@ -201,8 +214,8 @@
   }
 }
 .medicalFormInfoPanel {
-  z-index: 1;
-  position: absolute;
+  z-index: 2;
+  position: fixed;
   left: 16px;
   padding-top: 30px;
   span {
@@ -266,20 +279,47 @@
     .expireDesc {
       font-size: 14px;
       line-height: 20px;
-      color: #9292A3;
+      color: #9292a3;
       span {
         margin-right: 5px;
       }
     }
   }
   .dropdown {
-    margin-top : 5px;
+    margin-top: 5px;
     :global {
       .ant-select {
-        color: #9292A3;
+        color: #9292a3;
         width: 100%;
       }
     }
-
+  }
+}
+.fullScreenModal {
+  padding: 0;
+  margin: 0;
+  overflow: overlay;
+  :global {
+    .ant-modal {
+      padding: 0;
+      margin: 0;
+      max-width: 100%;
+      width: 100%;
+      min-height: 100vh;
+      top: 0;
+      left: 0;
+    }
+    .ant-modal-content {
+      min-height: 100vh;
+      border-radius: 0;
+    }
+    .ant-modal-body {
+      padding: 0;
+      min-height: 100vh;
+      background-color: #f7f7f9;
+    }
+    .ant-modal-close {
+      display: none;
+    }
   }
 }

@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import { Typography, Modal } from 'antd'
 import { PauseCircleOutlined, MessageOutlined } from '@ant-design/icons'
 import {
@@ -6,21 +6,47 @@ import {
   Breadcrumb,
   NotificationBanner,
   NotificationMessages,
-  DropdownButton,
+  DropdownButton as DropDownButton,
 } from '@pabau/ui'
 import Layout from '../../components/Layout/Layout'
-import CommonHeader from '../setup/common-header'
+import CommonHeader from '../../components/CommonHeader'
 import notificationData from '../../assets/notificationData'
 import notificationBannerImage from '../../assets/images/notification-image.png'
 import styles from './style.module.less'
 import { useRouter } from 'next/router'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 
 const { Title } = Typography
 
 const Index: FC = () => {
-  const [hideBanner, setHideBanner] = React.useState(false)
-  const menuItems = ['Appointments', 'Engagement', 'Classes', 'Other']
+  const [hideBanner, setHideBanner] = useState(false)
+  const { t } = useTranslationI18()
+
+  const menuItems = [
+    {
+      name: t('notifications.clientNotifications.menuItem.appointments'),
+      value: 'Appointments',
+    },
+    {
+      name: t('notifications.clientNotifications.menuItem.engagement'),
+      value: 'Engagement',
+    },
+    {
+      name: t('notifications.clientNotifications.menuItem.sharing'),
+      value: 'Sharing',
+    },
+    {
+      name: t('notifications.clientNotifications.menuItem.classes'),
+      value: 'Classes',
+    },
+    {
+      name: t('notifications.clientNotifications.menuItem.other'),
+      value: 'Other',
+    },
+  ]
+
   const router = useRouter()
+
   const options = [
     {
       title: 'Pause notifications',
@@ -32,7 +58,6 @@ const Index: FC = () => {
     },
   ]
   const handleOptionClick = (val) => {
-    console.log(val)
     switch (val) {
       case options[0].title:
         Modal.info({
@@ -56,59 +81,74 @@ const Index: FC = () => {
       router.push(link)
     }
   }
-
   return (
     <>
       <CommonHeader />
       <Layout>
         <NotificationBanner
-          title="Non-scheduled appointments found"
-          desc="We found 232 scheduled appointments which do not have reminders scheduled. This is usually down to recently imported appointments. Would you like to schedule these?"
+          title={t('notifications.banner.title')}
+          desc={t('notifications.banner.desc')}
           imgPath={notificationBannerImage}
           allowClose={true}
           setHide={[hideBanner, setHideBanner]}
+          showPaymentTitle={t('notifications.banner.enablePayment')}
         />
         <div className={styles.clientNotificationsContent}>
           <div className={styles.clientNotificationTop}>
             <div>
               <Breadcrumb
                 breadcrumbItems={[
-                  { breadcrumbName: 'Setup', path: 'setup' },
-                  { breadcrumbName: 'Notification Messages', path: '' },
+                  {
+                    breadcrumbName: t('notifications.breadcrumb.setup'),
+                    path: 'setup',
+                  },
+                  {
+                    breadcrumbName: t(
+                      'notifications.breadcrumb.notificationMessage'
+                    ),
+                    path: '',
+                  },
                 ]}
               />
-              <Title>Notification Messages</Title>
+              <Title>{t('notifications.breadcrumb.notificationMessage')}</Title>
               <p className={styles.clientNotificationsSubtitle}>
-                Client notifications are crucial to your business. Use this
-                section to customize all outbound notifications (Email/SMS)
+                {t('notifications.clientNotificationsSubtitle')}
               </p>
             </div>
             <div className={styles.clientNotificationsOps}>
-              <DropdownButton
+              <DropDownButton
                 menuItems={options}
                 onMenuClick={(val) => handleOptionClick(val)}
               >
-                Manage Options
-              </DropdownButton>
+                {t('notifications.manageOptions')}
+              </DropDownButton>
             </div>
           </div>
           <div className={styles.clientInnerNotifciationsDesktop}>
-            <TabMenu tabPosition="left" menuItems={menuItems} minHeight="592px">
+            <TabMenu
+              tabPosition="left"
+              menuItems={menuItems.map((menuItem) => menuItem.name)}
+              minHeight="592px"
+            >
               {menuItems.map((item) => (
                 <NotificationMessages
-                  key={item}
-                  notificationData={notificationData[item]}
+                  key={item.value}
+                  notificationData={notificationData({ t })?.[item.value]}
                   onClick={handleNotificationClick}
                 />
               ))}
             </TabMenu>
           </div>
           <div className={styles.clientInnerNotifciationsMobile}>
-            <TabMenu tabPosition="top" menuItems={menuItems}>
+            <TabMenu
+              tabPosition="top"
+              menuItems={menuItems.map((menuItem) => menuItem.name)}
+            >
               {menuItems.map((item) => (
                 <NotificationMessages
-                  key={item}
-                  notificationData={notificationData[item]}
+                  key={item.value}
+                  notificationData={notificationData({ t })?.[item.value]}
+                  onClick={handleNotificationClick}
                 />
               ))}
             </TabMenu>

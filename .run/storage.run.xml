@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="storage" type="js.build_tools.npm">
+    <package-json value="$PROJECT_DIR$/package.json" />
+    <command value="run" />
+    <scripts>
+      <script value="nx" />
+    </scripts>
+    <arguments value="serve storage" />
+    <node-interpreter value="project" />
+    <envs>
+      <env name="DEBUG" value="*" />
+    </envs>
+    <method v="2" />
+  </configuration>
+</component>

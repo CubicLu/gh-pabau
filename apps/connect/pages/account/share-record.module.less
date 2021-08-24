@@ -1,0 +1,83 @@
+.shareRecord {
+  width: 480px;
+  margin: 0 auto;
+  @media (max-width: 767px) {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+  }
+}
+
+.shareRecordHeader {
+  width: 100%;
+
+  :global {
+    .ant-typography,
+    .ant-breadcrumb {
+      padding-left: 0;
+      padding-right: 0;
+      font-family: var(--font-family);
+    }
+  }
+  @media (max-width: 767px) {
+    display: none;
+  }
+}
+
+.shareRecordMobileHeader {
+  width: 100%;
+  display: none;
+  padding: 2rem 0 28px 20px;
+  :global {
+    .ant-typography {
+      padding: 0;
+      font-family: var(--font-family);
+    }
+  }
+  @media (max-width: 767px) {
+    display: block;
+  }
+}
+
+.shareRecordContent {
+  width: 100%;
+  padding: 28px 40px;
+  border-radius: 4px;
+  box-shadow: 2px 2px 17px rgba(9, 20, 41, 0.05);
+  background-color: white;
+  border: 1px solid #f4f5f7;
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 767px) {
+    box-shadow: none;
+    border: none;
+    padding: 0 20px;
+  }
+
+  .textSectionTitle {
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .shareLinkLabel {
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    color: #000;
+    font-weight: 1000;
+  }
+  .shareLinkBtns {
+    height: 50px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 20px 0px;
+
+    button {
+      width: 47%;
+    }
+    .qrText {
+      font-size: 13px;
+    }
+  }
+}

@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`server responds to ping 1`] = `
+Object {
+  "data": Object {
+    "ping": "pong",
+  },
+}
+`;

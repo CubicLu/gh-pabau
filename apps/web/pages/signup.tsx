@@ -1,18 +1,21 @@
-import React, { FC, useState } from 'react'
 import { Logo } from '@pabau/ui'
+import Link from 'next/link'
+import React, { FC, useState, useContext } from 'react'
+import { UserContext } from '../context/UserContext'
 import { ReactComponent as LaunchingImage } from '../assets/images/launching-pana.svg'
-
+import styles from './signup.module.less'
 import {
   SignupStepOne,
   StepOneFormProps,
-} from '../components/Auth/signupStepOne'
+} from '../components/Auth/SignupStepOne'
 import {
   SignupStepTwo,
   StepTwoFormProps,
-} from '../components/Auth/signupStepTwo'
-import styles from '../components/Auth/common.module.less'
+} from '../components/Auth/SignupStepTwo'
 
 const Signup: FC = () => {
+  const loggedInUser = useContext(UserContext)
+
   const [step, setStep] = useState<number>(1)
 
   const handleStepOneSubmit = (value: StepOneFormProps) => {
@@ -24,7 +27,13 @@ const Signup: FC = () => {
     console.log(value)
   }
 
-  return (
+  if (window.location.pathname.includes('signup') && loggedInUser?.me?.id) {
+    window.location.href = window.location.origin
+  }
+
+  return loggedInUser?.me?.id ? (
+    <div />
+  ) : (
     <div className={styles.signupWrapper}>
       <div className={styles.signupBackground}>
         <LaunchingImage />
@@ -45,7 +54,7 @@ const Signup: FC = () => {
           )}
           <div className={styles.signupLogin}>
             <span>
-              Already has an account? <a>Log in</a>
+              Already has an account? <Link href="/login">Log in</Link>
             </span>
           </div>
         </div>

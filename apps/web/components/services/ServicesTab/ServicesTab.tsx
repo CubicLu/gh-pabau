@@ -1,35 +1,43 @@
-import React, { FC, useState, useEffect } from 'react'
-import {
-  TabMenu,
-  Table,
-  DotButton,
-  Pagination,
-  Avatar,
-  BasicModal as CreateServiceGroup,
-  CreateService,
-  Input,
-  Switch,
-  SearchTags,
-  ImageSelectorModal,
-  BasicModal as Modal,
-} from '@pabau/ui'
-import { Button, Dropdown, Menu, Popover, Tooltip } from 'antd'
 import {
   CaretDownFilled,
-  MenuFoldOutlined,
-  PlusOutlined,
-  EditOutlined,
-  VideoCameraOutlined,
-  PlusCircleFilled,
   DeleteOutlined,
+  EditOutlined,
+  MenuFoldOutlined,
   PictureOutlined,
+  PlusCircleFilled,
+  PlusOutlined,
+  VideoCameraOutlined,
 } from '@ant-design/icons'
+import {
+  Avatar,
+  BasicModal as CreateServiceGroup,
+  BasicModal as Modal,
+  CreateService,
+  DotButton,
+  ImageSelectorModal,
+  Input,
+  Pagination,
+  SearchTags,
+  Switch,
+  Table,
+  TabMenu,
+} from '@pabau/ui'
+import { Button, Dropdown, Menu, Popover, Tooltip } from 'antd'
 import className from 'classnames'
-import { Donate, File, Folder, Injection, Key, Team, Globe } from '../assets'
-import { ReactComponent as Bupa } from '../../../assets/images/bupa.svg'
+import React, { FC, useEffect, useState } from 'react'
 import { ReactComponent as AxaPPP } from '../../../assets/images/axa-ppp.svg'
-import Label from '../StatusLabel/label'
-import styles from './services_tab.module.less'
+import { ReactComponent as Bupa } from '../../../assets/images/bupa.svg'
+import {
+  Donate,
+  File,
+  Folder,
+  Globe,
+  Injection,
+  Key,
+  Team,
+} from '../assets/Index'
+import Label from '../StatusLabel/Label'
+import styles from './ServicesTab.module.less'
 
 const data = [
   {

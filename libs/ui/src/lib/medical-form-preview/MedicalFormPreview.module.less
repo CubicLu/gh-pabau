@@ -2,9 +2,22 @@
   :global {
     .ant-modal {
       min-width: 680px;
-      height: 80vh;
+      padding-bottom: 0px;
+      top: 0px;
+      height: 100%;
+
       @media (max-width: 767px) {
         min-width: 100%;
+      }
+      .ant-modal-content {
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        .ant-modal-body {
+          flex: 1 1;
+          overflow: auto;
+        }
       }
     }
     .ant-tabs {

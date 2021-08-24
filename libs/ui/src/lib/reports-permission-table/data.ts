@@ -1,4 +1,5 @@
 export const title = 'Reports'
+
 export const subtitle =
   'Setup which sections are accessible to each user permission level. All logged in staff can access the calendar, and owner accounts have full system access.'
 

@@ -5,7 +5,13 @@ import AddQuestion from './AddQuestion'
 
 describe('AddQuestion', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<AddQuestion />)
+    const { baseElement } = render(
+      <AddQuestion
+        onQuestionBankAddButton={(questions) => {
+          return true
+        }}
+      />
+    )
     expect(baseElement).toBeTruthy()
   })
 })

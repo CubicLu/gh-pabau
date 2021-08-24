@@ -1,32 +1,47 @@
-import { ApolloServer } from 'apollo-server-express'
-import express from 'express';
-import { schema } from './schema'
-import { createContext } from './context'
-import cookieSession from 'cookie-session'
+import {
+  assertEnvVarsExist,
+  stringToBoolean,
+  truthyToMaskedString,
+} from './utils'
+import { config } from 'dotenv-flow'
+import { version } from '../../../package.json'
+import { createApp } from './app'
 
-const PORT = 4000;
-const app = express();
-app.set('trust proxy', true);
+console.log(`Starting bridge-api v${version}`)
+console.log('NODE_ENV', process.env.NODE_ENV)
 
-const server = new ApolloServer({
-  schema,
-  context: createContext,
-  tracing: true,
-});
+const LOGGING = !!stringToBoolean(process.env['LOGGING'])
+const TRACING = !!stringToBoolean(process.env['TRACING'])
+const DEBUG_APOLLO = !!stringToBoolean(process.env['DEBUG_APOLLO'])
+const PORT = process.env['PORT'] || 4000
 
-app.use(
-  cookieSession({
-    signed: false,
-    secure: false,
+// {
+//   tracing: TRACING,
+//     logging: LOGGING,
+//   debugApollo: DEBUG_APOLLO,
+// }
+
+createApp().listen(PORT, () => {
+  config({
+    default_node_env: 'development',
+    purge_dotenv: true,
   })
-)
-server.applyMiddleware({app})
-app.listen(
-  { port: PORT },
-  () =>
-    console.log(
-      `Server running on port ${PORT}`,
-    ),
-)
 
+  console.table({
+    __dirname,
+    cwd: process.cwd(),
+    NODE_ENV: process.env.NODE_ENV,
+    LOGGING,
+    TRACING,
+    DEBUG_APOLLO,
+    PORT,
+    'Database URL': truthyToMaskedString(process.env.DATABASE_URL),
+    'JWT Secret': truthyToMaskedString(process.env.JWT_SECRET),
+    'Database URL[]': truthyToMaskedString(process.env['DATABASE_URL']),
+    'JWT Secret[]': truthyToMaskedString(process.env['JWT_SECRET']),
+  })
 
+  assertEnvVarsExist(['DATABASE_URL', 'JWT_SECRET'])
+
+  console.log(`Server running on http://localhost:${PORT}`)
+})

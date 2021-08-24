@@ -1,0 +1,210 @@
+query locations(
+  $isActive: Int
+  $searchTerm: String
+  $filter: CompanyBranchAttachmentListRelationFilter
+) {
+  findManyCompanyBranch(
+    orderBy: { loc_order: desc }
+    where: {
+      is_active: { equals: $isActive }
+      name: { contains: $searchTerm }
+      CompanyBranchAttachment: $filter
+    }
+  ) {
+    id
+    name
+    location: address
+    isActive: is_active
+    bookable: bookable_online
+    showOnline: show_online
+    hasCalender: calendar_bookable
+    email
+    phone
+    lat
+    lng
+    website
+    city
+    country: county
+    region
+    street
+    postcode
+    order: loc_order
+    imageUrl: image
+    AssignedBadge: CompanyBranchAttachment {
+      id
+      company_id
+      icon: url
+      name: description
+      type
+    }
+  }
+}
+
+mutation insertLocation(
+  $name: String!
+  $isActive: Int!
+  $showOnline: Int!
+  $website: String!
+  $phone: String!
+  $email: String!
+  $hasCalender: Int!
+  $bookable: Int!
+  $location: String!
+  $postcode: String!
+  $street: String!
+  $city: String!
+  $country: String!
+  $lat: Float!
+  $lng: Float!
+  $region: String!
+  $color: String! = "#D32F2F"
+  $onlineBooking: Int! = 0
+  $customId: String! = "0"
+  $sendConfEmil: Int! = 0
+  $employees: [EmployeeType]
+  $badges: [BadgeType]
+  $image: String!
+) {
+  createOneCompanyBranchWithAssignedStaff(
+    name: $name
+    phone: $phone
+    email: $email
+    website: $website
+    hasCalender: $hasCalender
+    bookable: $bookable
+    showOnline: $showOnline
+    address: $location
+    postcode: $postcode
+    isActive: $isActive
+    street: $street
+    city: $city
+    country: $country
+    lat: $lat
+    lng: $lng
+    region: $region
+    color: $color
+    sendConfEmil: $sendConfEmil
+    onlineBooking: $onlineBooking
+    customId: $customId
+    employees: $employees
+    badges: $badges
+    image: $image
+  ) {
+    id
+  }
+}
+
+mutation updateLocationsOrder($id: Int!, $order: Int) {
+  updateOneCompanyBranch(
+    where: { id: $id }
+    data: { loc_order: { set: $order } }
+  ) {
+    id
+  }
+}
+
+mutation updateLocation(
+  $id: Int!
+  $name: String!
+  $isActive: Int!
+  $showOnline: Int!
+  $website: String!
+  $phone: String!
+  $email: String!
+  $hasCalender: Int!
+  $bookable: Int!
+  $location: String!
+  $postcode: String!
+  $street: String!
+  $city: String!
+  $country: String!
+  $lat: Float!
+  $lng: Float!
+  $region: String!
+  $onlineBooking: Int! = 0
+  $sendConfEmil: Int! = 0
+  $employees: [EmployeeType]
+  $badges: [BadgeType]
+  $image: String!
+) {
+  updateOneCompanyBranchWithAssignedStaff(
+    id: $id
+    name: $name
+    phone: $phone
+    email: $email
+    website: $website
+    hasCalender: $hasCalender
+    bookable: $bookable
+    showOnline: $showOnline
+    address: $location
+    postcode: $postcode
+    isActive: $isActive
+    street: $street
+    city: $city
+    country: $country
+    lat: $lat
+    lng: $lng
+    region: $region
+    sendConfEmil: $sendConfEmil
+    onlineBooking: $onlineBooking
+    employees: $employees
+    badges: $badges
+    image: $image
+  ) {
+    affected_row
+  }
+}
+
+query getLastOrder {
+  findManyCompanyBranch(take: 1, orderBy: { loc_order: desc }) {
+    id
+    loc_order
+  }
+}
+
+query listEmployeeQuery {
+  findManyCmStaffGeneral(
+    where: {
+      Status: { not: { equals: 5 } }
+      OR: [{ deleted_on: { equals: "" } }, { deleted_on: { equals: "0" } }]
+    }
+    orderBy: { Fname: asc }
+  ) {
+    id: ID
+    Fname
+    Lname
+    User {
+      image
+    }
+  }
+}
+
+query getLocationStaffList($location: [CmStaffGeneralWhereInput]) {
+  findManyCmStaffGeneral(
+    where: {
+      Status: { not: { equals: 5 } }
+      AND: { OR: $location }
+      OR: [{ deleted_on: { equals: "" } }, { deleted_on: { equals: "0" } }]
+    }
+    orderBy: { Fname: asc }
+  ) {
+    id: ID
+    Location
+    Fname
+    Lname
+    User {
+      image
+    }
+  }
+}
+
+query locationLimit {
+  findManyCompanySubscription {
+    id: license_id
+    multiple_locations
+  }
+}
+
+query activeLocationCount {
+  findManyCompanyBranchCount(where: { is_active: { equals: 1 } })
+}

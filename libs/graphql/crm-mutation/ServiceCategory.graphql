@@ -1,0 +1,50 @@
+fragment ServiceCategoryFields on ServiceCategory {
+  id
+  name
+  company_id
+  category_product_id
+  cat_order
+  image
+  online_enabled
+  group_color
+  import_id
+  equipment_id
+  deposit_amount
+  tax_id
+  master_cat_id
+  company_position_id
+}
+
+fragment ServiceCategory on ServiceCategory {
+  ...ServiceCategoryFields
+  ServicesMasterCategory {
+    ...ServicesMasterCategoryFields
+  }
+  InvCategory {
+    ...InvCategoryFields
+  }
+}
+
+mutation createOneServiceCategory($data: ServiceCategoryCreateInput!) {
+  createOneServiceCategory(data: $data) {
+    ...ServiceCategory
+  }
+}
+
+mutation updateOneServiceCategory($where: ServiceCategoryWhereUniqueInput!, $data: ServiceCategoryUpdateInput!) {
+  updateOneServiceCategory(where: $where, data: $data) {
+    ...ServiceCategory
+  }
+}
+
+mutation deleteOneServiceCategory($where: ServiceCategoryWhereUniqueInput!) {
+  deleteOneServiceCategory(where: $where) {
+    ...ServiceCategory
+  }
+}
+
+mutation updateManyServiceCategory($where: ServiceCategoryWhereInput, $data: ServiceCategoryUpdateManyMutationInput!) {
+  updateManyServiceCategory(where: $where, data: $data) {
+    count
+  }
+}

@@ -21,7 +21,7 @@ module.exports = {
       'woff2',
       'otf',
     ],
-    inlineImageLimit: 100000,
+    inlineImageLimit: 9_000,
     ...withAntdLess({
       lessVarsFilePath: 'libs/ui/src/styles/antd.less',
       importLoaders: 3,
@@ -37,22 +37,26 @@ module.exports = {
       ...withNx({
         cssModules: false,
         webpack(config, options) {
-          config.module.rules.push({
-            test: /\.graphql$/,
-            exclude: /node_modules/,
-            use: [
-              options.defaultLoaders.babel,
-              { loader: 'graphql-let/loader' },
-            ],
-          }, {
-            test: /\.graphqls$/,
-            exclude: /node_modules/,
-            use: ['graphql-let/schema/loader'],
-          }, {
-            test: /\.ya?ml$/,
-            type: 'json',
-            use: 'yaml-loader',
-          })
+          config.module.rules.push(
+            {
+              test: /\.graphql$/,
+              exclude: /node_modules/,
+              use: [
+                options.defaultLoaders.babel,
+                { loader: 'graphql-let/loader' },
+              ],
+            },
+            {
+              test: /\.graphqls$/,
+              exclude: /node_modules/,
+              use: ['graphql-let/schema/loader'],
+            },
+            {
+              test: /\.ya?ml$/,
+              type: 'json',
+              use: 'yaml-loader',
+            }
+          )
 
           return config
         },

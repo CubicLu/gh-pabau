@@ -1,0 +1,209 @@
+query findContacts($searchTerm1: String, $searchTerm2: String) {
+  findManyCmContact(
+    where: {
+      AND: [
+        {
+          OR: [
+            { Fname: { contains: $searchTerm1 } }
+            { Lname: { contains: $searchTerm1 } }
+            { Mobile: { contains: $searchTerm1 } }
+            { Email: { contains: $searchTerm1 } }
+            { custom_id: { contains: $searchTerm1 } }
+          ]
+        }
+        {
+          OR: [
+            { Fname: { contains: $searchTerm2 } }
+            { Lname: { contains: $searchTerm2 } }
+            { Mobile: { contains: $searchTerm2 } }
+            { Email: { contains: $searchTerm2 } }
+            { custom_id: { contains: $searchTerm2 } }
+          ]
+        }
+      ]
+    }
+    take: 10
+  ) {
+    ID
+    Fname
+    Lname
+    Email
+    Mobile
+    Avatar
+    custom_id
+  }
+}
+
+
+query findContactByInvoiceNum($invoice_number: String) {
+  findFirstInvSale(where: { custom_id: { equals: $invoice_number } }) {
+    CmContact {
+      ID
+      Fname
+      Lname
+      Email
+      Mobile
+      Avatar
+      custom_id
+    }
+  }
+}
+
+query findContactByInsuranceNum($policy_number: String) {
+  findFirstContactInsurance(
+    where: { membership_number: { equals: $policy_number } }
+  ) {
+    contact_id
+    CmContact {
+      Fname
+      Lname
+      Email
+      Mobile
+      Avatar
+      custom_id
+    }
+  }
+}
+
+query findManyLimitContactLocation {
+  findManyLimitContactLocation {
+    id
+    name
+  }
+}
+
+query findManySharedCompany {
+  findManySharedCompany {
+    company_id
+    company_name
+  }
+}
+
+query getContactCustomFields{
+  custom: findManyManageCustomFieldCategory {
+    id
+    name
+    ManageCustomField {
+      id
+      field_label
+      field_type
+      is_required
+      is_active
+      ManageCustomFieldItem {
+        id
+        item_label
+      }
+    }
+  }
+  generalCustom: findManyManageCustomField(
+    where: {
+      category_id: { equals: 0 }
+      is_active: { equals: true }
+      field_for: { in: [CONTACT, CONTACTLEAD] }
+    }
+  ) {
+    id
+    field_label
+    field_type
+    category_id
+    is_required
+    is_active
+    ManageCustomFieldItem {
+      id
+      item_label
+    }
+  }
+}
+
+query getTblModuleFieldsSettings {
+  findManyTblModuleFieldsSetting(
+    where: { module_id: { equals: 1 }, is_active: { equals: true } }
+  ) {
+    id
+    field_name
+    field_label
+    is_required
+    is_active
+  }
+}
+
+query getMarketingSources {
+  findManyMarketingSource(
+    orderBy: { name: asc }
+    where: { public: { equals: true } }
+  ) {
+    id
+    name
+  }
+}
+
+query getSalutations {
+  findManyUserSalutation {
+    id
+    name
+  }
+}
+
+query getCmLabels{
+  findManyCmLabel {
+    id
+    name
+    color
+  }
+}
+
+mutation createOneContact(
+  $firstName: String!
+  $lastName: String!
+  $email: String!
+  $salutation: String!
+  $mailingProvince: String!
+  $mailingCity: String!
+  $mailingStreet: String!
+  $mailingPostal: String!
+  $mailingCountry: String!
+  $marketingOptInEmail: Int!
+  $marketingOptInPhone: Int!
+  $marketingOptInPost: Int!
+  $marketingOptInText: Int!
+  $marketingSource: Int!
+  $DOB: DateTime
+  $mobile: String!
+  $phone: String!
+  $gender: String!
+  $limitContactsLocations: [Int]
+  $otherCompanyIds: [Int]
+  $customFields: [createContactCustomFieldType]
+  $preferredLanguage: String!
+  $labels: [labelFieldType]
+) {
+  createOneContact(
+    data:{
+      Fname: $firstName
+      Lname: $lastName
+      Email: $email
+      Salutation: $salutation
+      MailingProvince: $mailingProvince
+      MailingCity: $mailingCity
+      MailingStreet: $mailingStreet
+      MailingPostal: $mailingPostal
+      MailingCountry: $mailingCountry
+      MarketingOptInEmail: $marketingOptInEmail
+      MarketingOptInPhone: $marketingOptInPhone
+      MarketingOptInPost: $marketingOptInPost
+      MarketingOptInText: $marketingOptInText
+      MarketingSource: $marketingSource
+      DOB: $DOB
+      Mobile: $mobile
+      Phone: $phone
+      gender: $gender
+      preferred_language: $preferredLanguage
+    }
+    customFields: $customFields
+    limitContactLocations: $limitContactsLocations
+    otherCompanyIds: $otherCompanyIds
+    labels: $labels
+  ) {
+    ID
+  }
+}

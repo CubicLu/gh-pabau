@@ -1,38 +1,6 @@
 import React from 'react'
 import AddPeopleModal from './AddPeopleModal'
-import Alex from '../../assets/images/users/alex.png'
-import Arya from '../../assets/images/users/arya.png'
-import James from '../../assets/images/users/james.png'
-import Austin from '../../assets/images/users/austin.png'
-import Walter from '../../assets/images/users/walter.png'
-import Liza from '../../assets/images/users/liza.png'
-
-const members = [
-  {
-    userName: 'Alex Johnson',
-    profileURL: Alex,
-  },
-  {
-    userName: 'Arya Davis',
-    profileURL: Arya,
-  },
-  {
-    userName: 'James Ocean',
-    profileURL: James,
-  },
-  {
-    userName: 'Austin Winter',
-    profileURL: Austin,
-  },
-  {
-    userName: 'Walter Brown',
-    profileURL: Walter,
-  },
-  {
-    userName: 'Liza Frank',
-    profileURL: Liza,
-  },
-]
+import { staff } from '../../mocks/chat'
 
 export default {
   component: AddPeopleModal,
@@ -42,7 +10,7 @@ export default {
 }
 
 const AddPeopleModalStory = ({ ...args }) => (
-  <AddPeopleModal isAddModalVisible={true} members={members} {...args} />
+  <AddPeopleModal isAddModalVisible={true} members={staff} {...args} />
 )
 
 export const AddPeople = AddPeopleModalStory.bind({})
@@ -50,6 +18,6 @@ AddPeople.args = {
   isAddModalVisible: true,
   searchAddMember: [],
   selectedGroup: 'general',
-  members: members,
+  members: staff,
   searchMemberText: '',
 }

@@ -1,0 +1,405 @@
+.mainBox {
+  width: 560px;
+  height: 612px;
+  padding: 30px;
+  border: 1px solid #f4f5f7;
+  box-sizing: border-box;
+  box-shadow: 2px 2px 17px rgba(9, 20, 41, 0.05);
+  border-radius: 4px;
+  background: #fff;
+  h4 {
+    color: #3d3d46;
+    font-weight: 500;
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+}
+:global .ant-modal-close {
+  display: none;
+}
+:global .ant-modal-body {
+  padding: 40px 32px 40px;
+  height: 630px;
+  overflow-y: auto;
+}
+.contentBox {
+  height: 88px;
+  align-items: center;
+  display: flex;
+  position: relative;
+  border: 1px solid #ecedf0;
+  box-sizing: border-box;
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 16px;
+  &:hover {
+    border: 1px solid #54b2d3;
+    box-shadow: 0 4px 17px rgba(0, 0, 0, 0.13);
+    cursor: pointer;
+  }
+  .userImage {
+    height: 50px;
+    width: 50px;
+    float: left;
+  }
+  .userDetailWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    .userDetail {
+      margin-left: 16px;
+      .userdetailInner {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        .userName {
+          color: #3d3d46;
+          font-size: 20px;
+          line-height: 24px;
+          margin-bottom: 4px;
+          margin-right: 10px;
+        }
+      }
+
+      p {
+        margin-bottom: 0;
+        font-size: 16px;
+        line-height: 20px;
+        color: #737387;
+      }
+    }
+    .userCharge {
+      color: #65cd98;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 24px;
+    }
+  }
+}
+
+.aboutHeader {
+  font-size: 16px;
+  line-height: 28px;
+  color: #000000;
+}
+.aboutText {
+  font-size: 14px;
+  line-height: 18px;
+  color: #000000;
+  margin-top: 10px;
+}
+.mainServices {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  span {
+    font-size: 16px;
+    line-height: 28px;
+    color: #000000;
+    margin: 16px 0px;
+  }
+  .innerServices {
+    display: flex;
+    align-items: center;
+    svg {
+      margin: 0 5px;
+    }
+  }
+}
+.sliderDiv {
+  margin-top: 24px;
+  .sliderheader {
+    font-size: 16px;
+    line-height: 28px;
+    color: #000000;
+    margin: 0 0 25px;
+    display: block;
+  }
+  :global .slick-slider {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  :global .ant-carousel {
+    .prevArrow {
+      background: #ffffff;
+      border-radius: 4px;
+      transform: matrix(1, 0, 0, -1, 0, 0);
+      width: 36px;
+      height: 36px;
+      display: inline-table;
+      text-align: center;
+      margin-right: 8px;
+      span {
+        font-size: 18px;
+        vertical-align: bottom;
+      }
+    }
+    .nextArrow {
+      background: #ffffff;
+      border-radius: 4px;
+      transform: matrix(1, 0, 0, -1, 0, 0);
+      width: 36px;
+      height: 36px;
+      display: inline-table;
+      text-align: center;
+      margin-left: 8px;
+      span {
+        vertical-align: bottom;
+        font-size: 18px;
+      }
+    }
+    .slick-initialized {
+      .slick-list {
+        background: #f9f9fb;
+        border-radius: 4px;
+      }
+    }
+  }
+}
+.dectTextShow {
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+  color: #faad14;
+  margin: 25px 0 0 0;
+}
+.deskmainbox {
+  .deskbox {
+    display: flex;
+    margin-bottom: 15px;
+    img {
+      width: 38px;
+      height: 33px;
+      border-radius: 50%;
+      margin-right: 11px;
+    }
+    .deskupperbox {
+      display: flex;
+      align-items: center;
+      .deskHeadding {
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 24px;
+        color: #3d3d46;
+        margin-right: 8px;
+      }
+      .deskRatting {
+        color: #65cd98;
+        font-size: 16px;
+        line-height: 24px;
+        font-weight: normal;
+        margin: 0 10px 0 5px;
+      }
+      .deskMonth {
+        color: #9292a3;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 22px;
+      }
+    }
+  }
+  .deskDescription {
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    color: #3d3d46;
+    margin-bottom: 22px;
+  }
+  .deskFootertext {
+    display: flex;
+    align-items: center;
+    p {
+      margin: 0 8px 0 0;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 20px;
+      color: #9292a3;
+    }
+    .textEvrybrow {
+      margin-left: 8px;
+      padding: 1px 8px;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 20px;
+      background: #f2f5f7;
+      opacity: 0.85;
+      border: 1px solid #e8e8e8;
+      box-sizing: border-box;
+      border-radius: 2px;
+      color: #595959;
+    }
+  }
+}
+:global .ant-modal {
+  width: 560px !important;
+  top: 85px;
+}
+:global .ant-carousel .slick-list .slick-slide > div > div {
+  padding: 19px;
+}
+@media screen and (max-width: 767px) {
+  .mbLogo {
+    text-align: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #ecedf0;
+  }
+  .mbHeding {
+    margin-top: 8px;
+    text-align: center;
+    span {
+      color: #3d3d46;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 24px;
+    }
+    p {
+      color: #737387;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 20px;
+      margin-bottom: 20px;
+    }
+  }
+  .mainBox {
+    width: 100%;
+    height: auto;
+    padding: 20px;
+    border: none;
+    box-shadow: none;
+
+    h4 {
+      font-size: 16px;
+      margin-bottom: 16px;
+    }
+
+    .contentBox {
+      height: 88px;
+      align-items: center;
+      display: flex;
+      position: relative;
+      border: 1px solid #ecedf0;
+      box-sizing: border-box;
+      border-radius: 4px;
+      padding: 20px;
+      margin-bottom: 16px;
+
+      &:hover {
+        border: 1px solid #54b2d3;
+        box-shadow: 0 4px 17px rgba(0, 0, 0, 0.13);
+        cursor: pointer;
+      }
+
+      .userImage {
+        height: 50px;
+        width: 50px;
+        float: left;
+      }
+
+      .userDetailWrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        width: 100%;
+
+        .userDetail {
+          margin-left: 16px;
+
+          .userName {
+            color: #3d3d46;
+            font-size: 20px;
+            line-height: 24px;
+            margin-bottom: 4px;
+          }
+
+          p {
+            margin-bottom: 0;
+            font-size: 16px;
+            line-height: 20px;
+            color: #737387;
+          }
+        }
+
+        .userCharge {
+          color: #65cd98;
+          font-weight: 500;
+          font-size: 20px;
+          line-height: 24px;
+        }
+      }
+    }
+  }
+
+  :global .ant-modal-body {
+    padding: 0;
+    height: unset;
+  }
+  :global .ant-modal-close {
+    display: block;
+    font-size: 18px;
+    margin-top: 8px;
+  }
+  .modifuContex {
+    margin: 0 15px;
+  }
+  .modifAbout {
+    margin: 0 15px;
+  }
+  .mainServices {
+    margin: 0 15px;
+  }
+  .aboutText {
+    margin-top: 8px;
+    margin-bottom: 32px;
+  }
+  .sliderDiv {
+    margin: 24px 15px;
+    .sliderheader {
+      margin: 0 0 20px;
+    }
+  }
+  .dectTextShow {
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 20px;
+    color: #faad14;
+    margin: 25px 0 24px 0;
+  }
+  :global .ant-modal {
+    top: 0;
+    padding: 0;
+    margin: 0;
+    max-width: calc(100vw - 0px);
+  }
+  .deskmainbox {
+    background: #f9f9fb;
+    padding: 16px 14px;
+    .deskbox {
+      display: flex;
+      margin-bottom: 15px;
+      img {
+        width: 34px;
+        height: 33px;
+        border-radius: 50%;
+        margin-right: 11px;
+      }
+    }
+    .deskDescription {
+      margin-bottom: 0;
+    }
+  }
+  .mdFooterLogo {
+    margin-top: 58px;
+    justify-content: center;
+    display: flex;
+    padding: 13px 0;
+    p {
+      color: #3d3d46;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 18px;
+    }
+  }
+}

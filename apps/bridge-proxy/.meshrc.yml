@@ -1,0 +1,11 @@
+serve:
+  port: 5006
+  hostname: 0.0.0.0
+sources:
+  - name: Pabau
+    handler:
+      graphql:
+        endpoint: ''
+        customFetch: ../../../fetcher.js#default
+        operationHeaders:
+          Authorization: '{context.headers.authorization}'

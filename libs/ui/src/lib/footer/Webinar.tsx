@@ -3,21 +3,27 @@ import styles from './Footer.module.less'
 import { Button, WebinarModal, WebinarModalProps } from '@pabau/ui'
 import { PlayCircleOutlined } from '@ant-design/icons'
 import BackgroundImage from '../../assets/images/footer.png'
+import { useTranslation } from 'react-i18next'
 
 export const Webinar: FC = () => {
+  const { t } = useTranslation('common')
   const [isOpenModal, setIsOpen] = useState<boolean>(false)
-  const [modalData, setModalData] = useState({})
+  const [modalData, setModalData] = useState<WebinarModalProps>()
 
   const handleOpenModal = () => {
     const selectedData: WebinarModalProps = {
-      title: 'Stock Management',
-      name: 'Alexander Turner ',
-      time: 'Tuesday, 15 10:00 AM',
-      timeLeft: '18:28',
+      id: 34324,
       description:
         'This training session is to kick start your Pabau jorney, suitable for anyone starting off with the system, fron desh, practioers and anyone who nneds to know how to book. It covers all the core features you will need on a daily basisss, to ensure you are able to work at ease with the system.',
+      course_id: 32,
+      webinar_id: 546,
+      name: 'Alexander Turner ',
+      title: 'Stock Management',
+      duration: 60,
+      time: 'Tuesday, 15 10:00 AM',
       backgroundImage: BackgroundImage,
       buttonType: 'join',
+      registered_id: 0,
     }
     setModalData(selectedData)
     setIsOpen(true)
@@ -32,7 +38,7 @@ export const Webinar: FC = () => {
       <div className={styles.webinarBannerEnd}>
         <div>
           <div className={styles.footerHeading}>
-            <h1>Recommended Webinar</h1>
+            <h1>{t('webinar-header-recomended-webinar')}</h1>
           </div>
           <div className={styles.webinarBox} style={{ marginTop: '12px' }}>
             <div className={styles.webinarBanner}> </div>
@@ -58,7 +64,19 @@ export const Webinar: FC = () => {
       </div>
       <WebinarModal
         visible={isOpenModal}
-        {...modalData}
+        id={modalData?.id || 0}
+        name={modalData?.name || ''}
+        description={modalData?.description || ''}
+        time={modalData?.time || ''}
+        registered_id={modalData?.registered_id}
+        buttonType={
+          modalData?.buttonType ||
+          (modalData?.registered_id ? 'join' : 'register')
+        }
+        course_id={modalData?.course_id || 0}
+        webinar_id={modalData?.webinar_id || 0}
+        title={modalData?.title || ''}
+        duration={modalData?.duration || 0}
         onCancel={handleCloseModal}
       />
     </>

@@ -1,11 +1,9 @@
 import React from 'react'
 import { CustomModal } from './CustomModal'
-import { securityToolsData } from '../../assets/securityData'
 
 export default {
   component: CustomModal,
   title: 'Modals/customModal',
-  args: { datasource: securityToolsData },
   argTypes: {
     onClick: { action: 'clicked' },
   },
@@ -13,7 +11,7 @@ export default {
 }
 
 const story = ({ ...args }) => (
-  <CustomModal {...args} datasource={args.datasource} />
+  <CustomModal {...args} datasource={args.datasource} config={args.config} />
 )
 
 export const defaultTool = story.bind({})

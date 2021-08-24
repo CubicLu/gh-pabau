@@ -1,180 +1,82 @@
-import React, { FC, useState } from 'react'
-import { Layout } from '@pabau/ui'
-import CommonHeader from './common-header'
-import HeaderChip from './headerChip'
-import Grid from './grid'
-import WebinarCard from './webinar'
-import SearchResults from './searchResults'
-import GridMobile from './grid/grid-mobile'
-import GridSubMenuMobile from './grid/grid-sub-title-mobile'
-import { SetupSearchInput, SetupGridProps } from '@pabau/ui'
-import styles from './Setup.module.less'
+import React, { FC, useState, useEffect, useContext } from 'react'
+import Layout from '../../components/Layout/Layout'
+import HeaderChip from '../../components/Setup/HeaderChip/Index'
+import Grid from '../../components/Setup/Grid/Index'
+import WebinarCard from '../../components/Setup/Webinar/Index'
+import SearchResults from '../../components/Setup/SearchResults/Index'
+import GridMobile from '../../components/Setup/Grid/GridMobile'
+import GridSubMenuMobile from '../../components/Setup/Grid/GridSubTitleMobile'
+import { SetupSearchInput, SetupGridProps, SMSPurchaseModal } from '@pabau/ui'
+import { useRouter } from 'next/router'
+import { useMedia } from 'react-use'
+import { useGridData } from '../../hooks/useGridData'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import styles from './setup.module.less'
+import { UserContext } from '../../context/UserContext'
 
-import clinicImage from '../../assets/images/our-clinic.png'
-import servicesImage from '../../assets/images/services.png'
-import clinicalImage from '../../assets/images/clinical.png'
-import marketingImage from '../../assets/images/marketing.png'
-import financialImage from '../../assets/images/financial.png'
-import developerImage from '../../assets/images/developer.png'
-
+export interface LoadingType {
+  videoLoader: boolean
+  communityLoader: boolean
+}
 const Index: FC = () => {
+  const { t } = useTranslationI18()
   const [searchValue, setSearchValue] = useState<string>('')
-  const [title, setTitle] = useState<string>('Setup')
+  const [title, setTitle] = useState<string>(t('setup.page.title'))
   const [searchData, setSearchData] = useState([])
   const [showSubMenu, setShowSubMenu] = useState<boolean>(false)
   const [selectedMenuData, setMenuData] = useState<SetupGridProps[]>([])
+  const [isSMSModalVisible, setSMSModalVisible] = useState<boolean>(false)
+  const router = useRouter()
+  const isMobile = useMedia('(max-width: 768px)', false)
+  const { setupGridData } = useGridData(t)
+  const user = useContext(UserContext)
 
-  const setupGridData = [
-    {
-      title: 'Our clinic',
-      subDataTitles: [
-        { title: 'Business Details', data: [] },
-        { title: 'Users', data: ['Users', 'User Groups'] },
-        { title: 'Locations', data: [] },
-        {
-          title: 'General settings',
-          data: [
-            'Calendar',
-            'Loyalty',
-            'Performance',
-            'Point of Sale',
-            'Referral',
-          ],
-        },
-        { title: 'Integrations', data: [] },
-        { title: 'Data', data: ['Custom Fields', 'Data Imports'] },
-        { title: 'Pabau Subscription', data: ['Billing Activity', 'Addons'] },
-      ],
-      image: clinicImage,
-    },
-    {
-      title: 'Services',
-      subDataTitles: [
-        { title: 'Services', data: [], href: '/setup/services' },
-        { title: 'Products', data: [], href: '/setup/products' },
-        { title: 'Packages', data: [], href: '/setup/packages' },
-        { title: 'Resources', data: ['Rooms', 'Equipment'] },
-        { title: 'Online Booking', data: [] },
-      ],
-      image: servicesImage,
-    },
-    {
-      title: 'Clinical',
-      subDataTitles: [
-        { title: 'Care Pathways', data: [] },
-        { title: 'Medical form templates', data: [] },
-        { title: 'Diagnostic Codes', data: [] },
-        { title: 'Labs', data: [] },
-        { title: 'Drugs', data: [] },
-        {
-          title: 'Medical Conditions',
-          data: ['Contraindication', 'Medical Conditions'],
-        },
-        {
-          title: 'Vaccine',
-          data: [' Vaccines', 'Diseases', 'Vaccine Schedules'],
-        },
-        { title: 'Body Charts', data: [] },
-      ],
-      image: clinicalImage,
-    },
-    {
-      title: 'Marketing & Communication',
-      subDataTitles: [
-        {
-          title: 'Communications',
-          data: [
-            'Client Notifications',
-            'Sender Addresses',
-            'Templates',
-            'SMS Bundles & Settings',
-          ],
-        },
-        { title: 'Client Portal', data: [] },
-        { title: 'Feedback Survey', data: [] },
-        { title: 'Lead Forms', data: [] },
-        {
-          title: 'Marketing Sources',
-          data: [],
-          href: '/setup/marketing-sources',
-        },
-      ],
-      image: marketingImage,
-    },
-    {
-      title: 'Financials',
-      subDataTitles: [
-        {
-          title: 'Payment Processing',
-          data: [],
-          href: '/setup/payment-processing',
-        },
-        { title: 'Discounts', data: [], href: '/setup/discounts' },
-        { title: 'Taxes', data: [] },
-        { title: 'Invoice Templates', data: [] },
-        { title: 'Payment Types', data: [], href: '/setup/payment-types' },
-        { title: 'Contract Pricing', data: [] },
-        { title: 'Cancellation Policy', data: [] },
-      ],
-      image: financialImage,
-    },
-    {
-      title: 'Developer & Other',
-      subDataTitles: [
-        { title: 'Webhooks', data: [] },
-        { title: 'API keys', data: [] },
-        { title: 'Credit Note Types', data: [] },
-        { title: 'Departments', data: [] },
-        { title: 'Field Capture Labels', data: [] },
-        { title: 'Block Out Options', data: [] },
-        { title: 'Appointment Statuses', data: [] },
-        { title: 'Lead Groups', data: [] },
-        { title: 'Petty Cash Types', data: [] },
-      ],
-      expandTitle: [
-        { title: 'Webhooks', data: [] },
-        { title: 'API keys', data: [] },
-        { title: 'Credit Note Types', data: [] },
-        { title: 'Salutations', data: [] },
-        { title: 'Training titles', data: [] },
-        { title: 'Titles', data: [] },
-        { title: 'Photo Uploader', data: [] },
-        { title: 'Cancellation Reasons', data: [] },
-        { title: 'Lead views', data: [] },
-        { title: 'Lead groups', data: [] },
-        { title: 'Lead assignment rules', data: [] },
-        { title: 'Family relationships', data: [] },
-        { title: 'Doc label manager', data: [] },
-        { title: 'Departments', data: [] },
-        { title: 'Invoice distribution', data: [] },
-        { title: 'Issuing companies', data: [] },
-        { title: 'Job statues', data: [] },
-        { title: 'Supplier categories', data: [] },
-      ],
-      isExpand: true,
-      image: developerImage,
-    },
-  ]
+  useEffect(() => {
+    if (router.query?.menu) {
+      const menu = router.query.menu
+      const selectedMenuData = setupGridData.filter(
+        (thread) => thread.keyValue === menu
+      )
+      if (selectedMenuData.length > 0) {
+        setMenuData(selectedMenuData)
+        setShowSubMenu((value) => !value)
+      }
+    } else {
+      setShowSubMenu(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.query.menu])
 
   const handleSearch = (searchTerm: string) => {
     setSearchValue(searchTerm)
     if (searchTerm) {
-      setTitle('Search Results')
+      setTitle(t('setup.page.search.result.title'))
       const searchDataArray = []
 
       setupGridData.map((data: SetupGridProps) => {
-        const titles = data.expandTitle ? data.expandTitle : data.subDataTitles
+        const titles = data.expandTitle
+          ? [...data.expandTitle, ...data.subDataTitles]
+          : data.subDataTitles
         if (titles.length > 0) {
           titles.map((subTitle) => {
-            if (
-              subTitle.title.toLowerCase().includes(searchTerm.toLowerCase())
-            ) {
-              searchDataArray.push({
-                subTitle: subTitle.title,
-                title: data.title,
-              })
-            }
-            return searchDataArray
+            const subTitleData =
+              subTitle.data.length > 0
+                ? subTitle.data
+                : [{ title: subTitle.title, href: subTitle.href }]
+            subTitleData.map((record) => {
+              if (
+                record.title.toLowerCase().includes(searchTerm.toLowerCase())
+              ) {
+                searchDataArray.push({
+                  subTitle: record.title,
+                  href: record.href,
+                  title: data.title,
+                  isModal: record.isModal,
+                })
+              }
+              return searchDataArray
+            })
+            return subTitle
           })
         }
         return data
@@ -182,29 +84,46 @@ const Index: FC = () => {
 
       setSearchData(searchDataArray)
     } else {
-      setTitle('Setup')
+      setTitle(t('setup.page.title'))
     }
   }
 
-  const handleShowSubMenuMobile = (title: string) => {
-    const data = setupGridData.filter((thread) => thread.title === title)
-    setShowSubMenu(true)
-    setMenuData(data)
+  const handleShowSubMenuMobile = (key: string) => {
+    router.push({
+      pathname: '/setup',
+      query: { menu: key },
+    })
   }
 
   const handleBack = () => {
     setShowSubMenu(false)
+    router.push('/setup', undefined, { shallow: true })
+  }
+
+  const smsModalOnComplete = () => {
+    console.log('Completed')
+  }
+
+  const setModalVisible = () => {
+    setSMSModalVisible(true)
   }
 
   return (
     <div>
-      <CommonHeader handleSearch={handleSearch} />
-      <Layout active={'setup'}>
+      <Layout
+        active={'setup'}
+        isDisplayingFooter={false}
+        handleSearch={handleSearch}
+        {...user}
+      >
         <div className={styles.cardWrapper}>
           <div className={styles.titleWrapper}>
             <span className={styles.title}>{title}</span>
             <div className={styles.search}>
-              <SetupSearchInput onChange={handleSearch} />
+              <SetupSearchInput
+                onChange={handleSearch}
+                placeholder={t('setup.page.search.placeholder')}
+              />
             </div>
           </div>
           {!searchValue ? (
@@ -213,6 +132,7 @@ const Index: FC = () => {
                 <GridSubMenuMobile
                   data={selectedMenuData}
                   handleBack={handleBack}
+                  setSMSModalVisible={setModalVisible}
                 />
               ) : (
                 <GridMobile
@@ -222,14 +142,33 @@ const Index: FC = () => {
               )}
               {!showSubMenu && <HeaderChip />}
               <div className={styles.mainWrap}>
-                <Grid data={setupGridData} />
-                {!showSubMenu && <WebinarCard />}
+                <Grid
+                  data={setupGridData}
+                  setSMSModalVisible={setModalVisible}
+                />
+                {isMobile ? (
+                  !showSubMenu ? (
+                    <WebinarCard />
+                  ) : null
+                ) : (
+                  <WebinarCard />
+                )}
               </div>
             </>
           ) : (
-            <SearchResults data={searchData} searchTerm={searchValue} />
+            <SearchResults
+              data={searchData}
+              searchTerm={searchValue}
+              setSMSModalVisible={setModalVisible}
+            />
           )}
         </div>
+        <SMSPurchaseModal
+          visible={isSMSModalVisible}
+          onClose={() => setSMSModalVisible(false)}
+          numberFormatter={new Intl.NumberFormat('en-US')}
+          onComplete={smsModalOnComplete}
+        />
       </Layout>
     </div>
   )

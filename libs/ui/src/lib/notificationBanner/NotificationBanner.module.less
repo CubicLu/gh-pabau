@@ -59,6 +59,9 @@
   color: #54b2d3;
   position: absolute;
   bottom: 0;
+  @media screen and (max-width: 767px) {
+    position: unset;
+  }
 }
 
 .backgroundImg {
@@ -72,9 +75,9 @@
   position: relative !important;
   min-height: 144px;
   @media screen and (max-width: 767px) {
-   :global .ant-col {
-     margin-top: 110px;
-   }
+    :global .ant-col {
+      margin-top: 110px;
+    }
   }
 }
 

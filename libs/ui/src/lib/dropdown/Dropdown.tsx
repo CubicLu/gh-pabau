@@ -3,16 +3,16 @@ import {
   CheckCircleFilled,
   ExclamationOutlined,
   ExportOutlined,
-  GlobalOutlined,
   InfoCircleOutlined,
   LeftOutlined,
+  LoadingOutlined,
   NotificationOutlined,
   PlaySquareOutlined,
   QuestionCircleOutlined,
   RightOutlined,
   UserOutlined,
 } from '@ant-design/icons'
-import { Avatar, Badge, Drawer, Image, Menu, Popover } from 'antd'
+import { Avatar, Badge, Drawer, Image, Menu, Popover, Spin } from 'antd'
 import classNames from 'classnames'
 import Link from 'next/link'
 import QueueAnim from 'rc-queue-anim'
@@ -22,116 +22,119 @@ import { ReactComponent as LaunchSVG } from '../../assets/images/launch.svg'
 import { ReactComponent as PABAULOGO } from '../../assets/images/pabaulogo.svg'
 import { ReactComponent as TaskSVG } from '../../assets/images/Vector.svg'
 import styles from './Dropdown.module.less'
+import { useTranslation } from 'react-i18next'
+import Router from 'next/router'
 
-// import { isMobile, isTablet } from 'react-device-detect'
+export interface UserDataProps {
+  user: number
+  company: number
+  companyName: string
+  fullName: string
+  image?: string
+}
+
 export interface DropDownInterface {
   isOpen?: boolean
   onCloseDrawer?: () => void
-  data?: { user: UserProps; company: CompanyProps }
-}
-
-interface UserProps {
-  full_name: string
-  username?: string
-  _typename?: string
-}
-
-interface CompanyProps {
-  details: CompanyDetails
-}
-
-interface CompanyDetails {
-  company_name: string
+  userData?: UserDataProps
+  taskManagerIFrameComponent?: JSX.Element
 }
 
 export const Dropdown: FC<DropDownInterface> = ({
   isOpen,
   onCloseDrawer,
-  ...rest
+  taskManagerIFrameComponent,
+  userData,
 }): JSX.Element => {
+  const { t } = useTranslation('common')
   const [activeMenu, setActiveMenu] = useState('Menu')
-
-  // used for mobile device
   const [openProfileDrawer, setProfileDrawer] = useState(isOpen)
   const [activeMenuTitle, setActiveMenuTitle] = useState('Profile')
-  const data: Pick<
-    DropDownInterface & { children?: React.ReactNode },
-    'data' | 'children'
-  > = rest
-  const [user, setCurrentUser] = useState<UserProps | null>(null)
-  const [company, setCurrentCompany] = useState<CompanyProps | null>(null)
+  const [user, setCurrentUser] = useState<UserDataProps | null>(null)
 
   useEffect(() => {
-    setCurrentUser(data['user'])
-    setCurrentCompany(data['company'])
-  }, [data, user, company])
+    setCurrentUser(userData ?? null)
+  }, [userData])
+
+  async function handleLogOut() {
+    localStorage.removeItem('token')
+    window.location.pathname = '/'
+    await Router.push('/')
+  }
 
   const menu = (
     <Menu className={styles.avatarMenu}>
       <Menu.Item
+        key="logo"
         className={classNames(styles.dropdownMenu, styles.clinicHeader)}
         onClick={() => onClickAvatarMenu('ClinicMenu')}
       >
         <div className={styles.dropdownHeader}>
           <PABAULOGO />
-          <span className={styles.headerText}>
-            {company?.details.company_name ?? 'Pabau Clinic Software'}
-          </span>
+          <span className={styles.headerText}>{user?.companyName}</span>
         </div>
         <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
-      <Menu.Item className={styles.userinfo}>
-        <div className={styles.userName}>
-          {user?.full_name ?? 'William Branham'}
-        </div>
-        <div className={styles.userBalance}>
-          <p>Balance</p>
+      <Menu.Item className={styles.userinfo} key="userName">
+        <div className={styles.userName}>{user?.fullName}</div>
+        {/* TODO */}
+        {/* <div className={styles.userBalance}>
+          <p>{t('avatar.balance')}</p>
           <span>9445,00</span>
-        </div>
+        </div> */}
       </Menu.Item>
       <Menu.Item
+        key="account"
         className={classNames(styles.dropdownMenu, styles.avatarSpaceTop)}
       >
         <div className={styles.dropdownHeader}>
           <UserOutlined style={{ color: '#9292A3' }} />
           <Link href="/account/settings">
-            <span className={styles.headerText}>Account Settings</span>
+            <span className={styles.headerText}>
+              {t('avatar.account.settings')}
+            </span>
           </Link>
         </div>
         <LaunchSVG className={styles.launchLogo} />
       </Menu.Item>
       <Menu.Item
+        key="task"
         className={styles.dropdownMenu}
         style={{ borderBottom: '1px solid #F1F1F1' }}
+        onClick={() => onClickAvatarMenu('TaskManagerMenu')}
       >
         <div className={styles.dropdownHeader}>
           <TaskSVG />
           <span className={classNames(styles.headerText, styles.taskText)}>
-            Tasks
+            {t('avatar.tasks')}
           </span>
         </div>
       </Menu.Item>
       <Menu.Item
+        key="feedback"
         className={classNames(styles.dropdownMenu, styles.avatarSpaceTop)}
         onClick={() => onClickAvatarMenu('FeedbackMenu')}
       >
         <div className={styles.dropdownHeader}>
           <NotificationOutlined className={styles.dropdownIcon} />
-          <span className={styles.headerText}>Give feedback</span>
+          <span className={styles.headerText}>{t('avatar.give.feedback')}</span>
         </div>
         <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
       <Menu.Item
+        key="help"
         className={styles.dropdownMenu}
         onClick={() => onClickAvatarMenu('HelpMenu')}
       >
         <div className={styles.dropdownHeader}>
           <QuestionCircleOutlined className={styles.dropdownIcon} />
-          <span className={styles.headerText}>Help & Support</span>
+          <span className={styles.headerText}>{t('avatar.help.support')}</span>
         </div>
         <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
-      <Menu.Item
+      {/* TODO Temp commenting it out due to translation not being part of the MVP
+       <Menu.Item
+        key="language"
         className={styles.dropdownMenu}
         onClick={() => onClickAvatarMenu('LangMenu')}
       >
@@ -140,11 +143,15 @@ export const Dropdown: FC<DropDownInterface> = ({
           <span className={styles.headerText}>English</span>
         </div>
         <RightOutlined className={styles.dropdownIcon} />
-      </Menu.Item>
-      <Menu.Item className={styles.dropdownMenu}>
+      </Menu.Item> */}
+      <Menu.Item
+        key="logout"
+        onClick={handleLogOut}
+        className={styles.dropdownMenu}
+      >
         <div className={styles.dropdownHeader}>
           <ExportOutlined className={styles.dropdownIcon} />
-          <span className={styles.headerText}>Log out</span>
+          <span className={styles.headerText}>{t('avatar.logout')}</span>
         </div>
       </Menu.Item>
       <div style={{ marginTop: '8px' }} />
@@ -155,16 +162,19 @@ export const Dropdown: FC<DropDownInterface> = ({
     <QueueAnim interval={300}>
       <Menu key="2" className={styles.avatarSubMenu}>
         <Menu.Item
+          key="selectCompany"
           className={styles.subDropdownList}
           onClick={() => onClickAvatarMenu('Menu')}
           style={{ height: '56px' }}
         >
           <div className={styles.subDropdownListHeader}>
             <LeftOutlined className={styles.subLogo} />
-            <span className={styles.subHeaderText}>Select company</span>
+            <span className={styles.subHeaderText}>
+              {t('avatar.change.company')}
+            </span>
           </div>
         </Menu.Item>
-        <Menu.Item className={styles.subDropdownList}>
+        <Menu.Item key="company" className={styles.subDropdownList}>
           <div className={styles.subDropdownListHeader}>
             <PABAULOGO />
             <span
@@ -174,7 +184,7 @@ export const Dropdown: FC<DropDownInterface> = ({
                 styles.activeMenu
               )}
             >
-              {company?.details.company_name ?? 'Pabau Clinic Software'}
+              {user?.companyName}
             </span>
           </div>
           <CheckCircleFilled
@@ -190,25 +200,31 @@ export const Dropdown: FC<DropDownInterface> = ({
     <QueueAnim interval={600}>
       <Menu key="3" className={styles.avatarHelpMenu}>
         <Menu.Item
+          key="giveUsFeedback"
           className={classNames(styles.avatarHelpSubList)}
           onClick={() => setActiveMenu('Menu')}
           style={{ height: '56px' }}
         >
           <div className={styles.feedbackAlignContent}>
             <LeftOutlined className={styles.subLogo} />
-            <p className={styles.subHeaderText}>Give us feedback</p>
+            <p className={styles.subHeaderText}>
+              {t('avatar.give.feedback.giveus')}
+            </p>
           </div>
         </Menu.Item>
-        <Menu.Item className={styles.avatarHelpSubList}>
+        <Menu.Item key="helpUs" className={styles.avatarHelpSubList}>
           <div className={styles.feedbackAlignContent}>
             <InfoCircleOutlined className="" />
-            <span className="">Help us improve Pabau</span>
+            <span className="">{t('avatar.give.feedback.helpus')}</span>
           </div>
         </Menu.Item>
-        <Menu.Item className={styles.avatarHelpSubList}>
+        <Menu.Item
+          key="SomethingWentWrong"
+          className={styles.avatarHelpSubList}
+        >
           <div className={styles.feedbackAlignContent}>
             <ExclamationOutlined className="" />
-            <span className="">Something went wrong</span>
+            <span className="">{t('avatar.give.feedback.somethingwrong')}</span>
           </div>
         </Menu.Item>
         <div style={{ marginTop: '8px' }} />
@@ -220,31 +236,36 @@ export const Dropdown: FC<DropDownInterface> = ({
     <QueueAnim interval={600}>
       <Menu key="4" className={styles.avatarHelpMenu}>
         <Menu.Item
+          key="helpSupport"
           className={classNames(styles.avatarHelpSubList)}
           onClick={() => onClickAvatarMenu('Menu')}
           style={{ height: '56px' }}
         >
           <div className={styles.feedbackAlignContent}>
             <LeftOutlined className={styles.subLogo} />
-            <p className={styles.subHeaderText}>Help & Support </p>
+            <p className={styles.subHeaderText}>
+              {t('avatar.help.support.header')}
+            </p>
           </div>
         </Menu.Item>
-        <Menu.Item className={styles.avatarHelpSubList}>
+        <Menu.Item key="helpCentre" className={styles.avatarHelpSubList}>
           <div className={styles.feedbackAlignContent}>
             <QuestionCircleOutlined className="" />
-            <span className="">Help Centre</span>
+            <span className="">{t('avatar.help.support.centre')}</span>
           </div>
         </Menu.Item>
         <Menu.Item className={styles.avatarHelpSubList}>
           <div className={styles.feedbackAlignContent}>
             <PlaySquareOutlined className="" />
-            <span className="">Video Guides</span>
+            <span key="videoGuides" className="">
+              {t('avatar.help.video.guides')}
+            </span>
           </div>
         </Menu.Item>
-        <Menu.Item className={styles.avatarHelpSubList}>
+        <Menu.Item key="contactSupport" className={styles.avatarHelpSubList}>
           <div className={styles.feedbackAlignContent}>
             <ExclamationOutlined className="" />
-            <span className="">Contact Support</span>
+            <span className="">{t('avatar.help.contact.support')}</span>
           </div>
         </Menu.Item>
         <div style={{ marginTop: '8px' }} />
@@ -256,20 +277,27 @@ export const Dropdown: FC<DropDownInterface> = ({
     <QueueAnim interval={600}>
       <Menu key="5" className={styles.avatarHelpMenu}>
         <Menu.Item
+          key="selectLanguage"
           className={styles.langSubDropdownMenu}
           onClick={() => onClickAvatarMenu('Menu')}
           style={{ height: '56px' }}
         >
           <div className={styles.langAlignContent}>
             <LeftOutlined className="" />
-            <p className="">Select language </p>
+            <p className="">{t('avatar.select.language')}</p>
           </div>
         </Menu.Item>
         {languageMenu.map((lang, index) => {
           return (
             <Menu.Item key={index} className={styles.languageTextAlign}>
               <div className={styles.languageFlagCenter}>
-                <Image src={lang.logo} alt={lang.label} />
+                <Image
+                  src={lang.logo}
+                  alt={lang.label}
+                  preview={false}
+                  width="16px"
+                  height="16px"
+                />
                 <span className={lang.selected ? styles.activeMenu : undefined}>
                   {lang.label}
                 </span>
@@ -287,32 +315,96 @@ export const Dropdown: FC<DropDownInterface> = ({
     </QueueAnim>
   )
 
+  const TaskManagerMenu = (
+    <QueueAnim interval={600}>
+      <Menu key="6" className={styles.avatarHelpMenu}>
+        <Menu.Item
+          key="taskManager"
+          className={styles.langSubDropdownMenu}
+          onClick={() => onClickAvatarMenu('Menu')}
+          style={{ height: '56px' }}
+        >
+          <div className={styles.langAlignContent}>
+            <LeftOutlined className="" />
+            <p className="">{t('avatar.task_manager')}</p>
+          </div>
+        </Menu.Item>
+        <div style={{ marginTop: '8px' }} />
+        {taskManagerIFrameComponent ? (
+          taskManagerIFrameComponent
+        ) : (
+          <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+        )}
+      </Menu>
+    </QueueAnim>
+  )
+
   const onClickAvatarMenu = (menuName: string) => {
-    if (menuName === 'Menu') {
-      setActiveMenuTitle('Profile')
-    } else if (menuName === 'ClinicMenu') {
-      setActiveMenuTitle('Select company')
-    } else if (menuName === 'FeedbackMenu') {
-      setActiveMenuTitle('Give us feedback')
-    } else if (menuName === 'HelpMenu') {
-      setActiveMenuTitle('Help & Support')
-    } else if (menuName === 'LangMenu') {
-      setActiveMenuTitle('Select language')
+    switch (menuName) {
+      case 'Menu': {
+        setActiveMenuTitle('Profile')
+
+        break
+      }
+      case 'ClinicMenu': {
+        setActiveMenuTitle('Select company')
+
+        break
+      }
+      case 'FeedbackMenu': {
+        setActiveMenuTitle('Give us feedback')
+
+        break
+      }
+      case 'HelpMenu': {
+        setActiveMenuTitle('Help & Support')
+
+        break
+      }
+      case 'LangMenu': {
+        setActiveMenuTitle('Select language')
+
+        break
+      }
+      case 'TaskManager': {
+        setActiveMenuTitle('Task Manager')
+      }
+      // No default
     }
     setActiveMenu(menuName)
   }
 
   const getActiveAvatarMenu = () => {
-    if (activeMenu === 'Menu') {
-      return menu
-    } else if (activeMenu === 'ClinicMenu') {
-      return ClinicSubMenu
-    } else if (activeMenu === 'FeedbackMenu') {
-      return FeedbackMenu
-    } else if (activeMenu === 'HelpMenu') {
-      return HelpMenu
-    } else if (activeMenu === 'LangMenu') {
-      return LangMenu
+    switch (activeMenu) {
+      case 'Menu': {
+        return menu
+
+        break
+      }
+      case 'ClinicMenu': {
+        return ClinicSubMenu
+
+        break
+      }
+      case 'FeedbackMenu': {
+        return FeedbackMenu
+
+        break
+      }
+      case 'HelpMenu': {
+        return HelpMenu
+
+        break
+      }
+      case 'LangMenu': {
+        return LangMenu
+
+        break
+      }
+      case 'TaskManagerMenu': {
+        return TaskManagerMenu
+      }
+      // No default
     }
   }
 
@@ -350,7 +442,7 @@ export const Dropdown: FC<DropDownInterface> = ({
               size="default"
               style={{ height: '8px', width: '8px' }}
             >
-              <Avatar size={40} icon={<UserOutlined />} />
+              <Avatar src={user?.image} size={40} icon={<UserOutlined />} />
             </Badge>
 
             <CaretDownOutlined

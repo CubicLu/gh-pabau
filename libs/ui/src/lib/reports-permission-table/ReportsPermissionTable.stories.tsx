@@ -1,7 +1,9 @@
 import React, { FC } from 'react'
+
 import ReportsPermissionTable, {
   ReportsPermissionTableProps,
 } from './ReportsPermissionTable'
+
 import { title, subtitle, data, columns } from './data'
 
 export default {
@@ -16,6 +18,7 @@ export const ReportsPermissionTableStory: FC<ReportsPermissionTableProps> = ({
   ...args
 }) => (
   <ReportsPermissionTable
+    tableColumnName={'Reports Name'}
     dataSource={data}
     columns={columns}
     pageTitle={title}

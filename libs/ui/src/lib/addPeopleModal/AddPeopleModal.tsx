@@ -1,18 +1,13 @@
-import React, { FC, useState } from 'react'
+import React, { useState } from 'react'
 import { Select } from 'antd'
-import { BasicModal, Button, Avatar } from '@pabau/ui'
+import { BasicModal, Button, Avatar, Participant } from '@pabau/ui'
 import styles from './AddPeopleModal.module.less'
 
 const { Option } = Select
 
-interface Member {
-  userName: string
-  profileURL: string
-}
-
 export interface P {
-  searchAddMember?: Member[]
-  members: Member[]
+  searchAddMember?: Participant[]
+  members: Participant[]
   selectedGroup?: string
   isAddModalVisible: boolean
   onOk?: () => void
@@ -20,19 +15,18 @@ export interface P {
   onAddMembers?: (value: string[]) => void
 }
 
-export const AddPeopleModal: FC<P> = ({
+export const AddPeopleModal = ({
   selectedGroup,
   isAddModalVisible,
   onOk,
   onCancel,
   members,
   onAddMembers,
-}) => {
+}: P): JSX.Element => {
   const [searchAddMember, setSearchAddMember] = useState<string[]>([])
   const [isCancelWarning, setIsCancelWarning] = useState<boolean>(false)
 
   const handleAddMemberChange = (value) => {
-    console.log(`selected ${value}`)
     setSearchAddMember(value)
   }
 
@@ -66,24 +60,20 @@ export const AddPeopleModal: FC<P> = ({
           <Select
             mode="multiple"
             style={{ width: '100%' }}
-            placeholder=" Type the name of a channel or people"
+            placeholder="Type the name of a channel or people"
             onChange={handleAddMemberChange}
           >
-            {members?.map((member) => (
-              <Option
-                key={member.userName}
-                value={member.userName}
-                label={member.userName}
-              >
+            {members?.map(({ id, name, avatarURL }) => (
+              <Option key={id} value={id} label={name}>
                 <div>
                   <span role="img">
                     <Avatar
                       className={styles.memberAvatar}
                       size={32}
-                      src={member.profileURL}
+                      src={avatarURL}
                     />
                   </span>
-                  {` ${member.userName}`}
+                  {name}
                 </div>
               </Option>
             ))}

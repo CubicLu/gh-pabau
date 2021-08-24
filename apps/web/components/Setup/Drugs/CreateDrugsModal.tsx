@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react'
 import * as Yup from 'yup'
 import { Form } from 'formik-antd'
 import { Formik } from 'formik'
-
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import {
   ButtonSize as InputSize,
   Input,
@@ -36,6 +36,7 @@ export const CreateDrugsModal: FC<CreateDrugModalProps> = ({
   onClose,
   ...props
 }) => {
+  const { t } = useTranslationI18()
   const [createDrugData, setCreateDrugData] = useState<CreateDrugDataType>(null)
 
   const inputHandler = (name, val) => {
@@ -50,7 +51,12 @@ export const CreateDrugsModal: FC<CreateDrugModalProps> = ({
     data.is_active = data.is_active || false
     for (const el of required) {
       if (!data[el]) {
-        Notification(NotificationType.error, `${el.toUpperCase()} is required`)
+        Notification(
+          NotificationType.error,
+          t('setup.drugs.fullscreenmodal.validate.required', {
+            what: el.toUpperCase(),
+          })
+        )
         return
       }
     }
@@ -61,16 +67,17 @@ export const CreateDrugsModal: FC<CreateDrugModalProps> = ({
     <Row>
       <Col md={24}>
         <CreateDrugModal
-          title="Create Drugs"
+          title={t('setup.drugs.fullscreenmdoal.title.create')}
           visible={visible}
           enableCreateBtn={createDrugData ? true : false}
-          operations={[
-            OperationType['active'],
-            OperationType['cancel'],
-            OperationType['create'],
-          ]}
+          operations={[OperationType['active'], OperationType['create']]}
+          createBtnText={t('common-label-create')}
+          activeBtnText={
+            createDrugData?.is_active
+              ? t('common-label-active')
+              : t('common-label-inactive')
+          }
           onActivated={(active) => inputHandler('is_active', active)}
-          onCancel={onClose}
           onBackClick={onClose}
           onCreate={submitCreateDrug}
           footer={true}
@@ -87,11 +94,21 @@ export const CreateDrugsModal: FC<CreateDrugModalProps> = ({
                 comment: '',
               }}
               validationSchema={Yup.object({
-                name: Yup.string().required('Name is required'),
-                dosage: Yup.string().required('Dosage is required'),
-                unit: Yup.string().required('Units are required'),
-                frequency: Yup.string().required('Frequency is required'),
-                route: Yup.string().required('Route is required'),
+                name: Yup.string().required(
+                  t('setup.drugs.fullscreenmdoal.name.validate.required')
+                ),
+                dosage: Yup.string().required(
+                  t('setup.drugs.fullscreenmdoal.dosage.validate.required')
+                ),
+                unit: Yup.string().required(
+                  t('setup.drugs.fullscreenmdoal.unit.validate.required')
+                ),
+                frequency: Yup.string().required(
+                  t('setup.drugs.fullscreenmdoal.frequency.validate.required')
+                ),
+                route: Yup.string().required(
+                  t('setup.drugs.fullscreenmdoal.route.validate.required')
+                ),
               })}
               onSubmit={async (value: CreateDrugDataType) => {
                 submitCreateDrug()
@@ -99,13 +116,20 @@ export const CreateDrugsModal: FC<CreateDrugModalProps> = ({
               render={() => (
                 <Form layout="vertical">
                   <div className={styles.card}>
-                    <div className={styles.cardTitle}>General</div>
+                    <div className={styles.cardTitle}>
+                      {t('setup.drugs.fullscreenmdoal.form.general')}
+                    </div>
                     <div className={styles.cardForm}>
-                      <Form.Item label="Drug's Name" name="name">
+                      <Form.Item
+                        label={t('setup.drugs.fullscreenmdoal.form.name')}
+                        name="name"
+                      >
                         <Input
                           name="name"
                           type="text"
-                          placeHolderText="Enter Drug's Name"
+                          placeHolderText={t(
+                            'setup.drugs.fullscreenmdoal.form.name.placeholder'
+                          )}
                           size={InputSize['large']}
                           onChange={(val) => inputHandler('name', val)}
                         />
@@ -113,57 +137,88 @@ export const CreateDrugsModal: FC<CreateDrugModalProps> = ({
                     </div>
                   </div>
                   <div className={styles.card}>
-                    <div className={styles.cardTitle}>Medical</div>
+                    <div className={styles.cardTitle}>
+                      {t('setup.drugs.fullscreenmdoal.form.medical')}
+                    </div>
                     <div className={styles.cardForm}>
-                      <Form.Item label="Dosage" name="dosage">
+                      <Form.Item
+                        label={t('setup.drugs.fullscreenmdoal.form.dosage')}
+                        name="dosage"
+                      >
                         <Input
                           name="dosage"
                           type="text"
-                          placeHolderText="e.g. 50 mg"
+                          placeHolderText={t(
+                            'setup.drugs.fullscreenmdoal.form.dosage.placeholder'
+                          )}
                           size={InputSize['large']}
                           onChange={(val) => inputHandler('dosage', val)}
                         />
                       </Form.Item>
-                      <Form.Item label="Units" name="unit">
+                      <Form.Item
+                        label={t('setup.drugs.fullscreenmdoal.form.unit')}
+                        name="unit"
+                      >
                         <Input
                           name="unit"
                           type="text"
-                          placeHolderText="e.g. 1 unit"
+                          placeHolderText={t(
+                            'setup.drugs.fullscreenmdoal.form.unit.placeholder'
+                          )}
                           size={InputSize['large']}
                           onChange={(val) => inputHandler('unit', val)}
                         />
                       </Form.Item>
-                      <Form.Item label="Frequency" name="frequency">
+                      <Form.Item
+                        label={t('setup.drugs.fullscreenmdoal.form.frequency')}
+                        name="frequency"
+                      >
                         <Input
                           name="frequency"
                           type="text"
-                          placeHolderText="e.g. twice daily"
+                          placeHolderText={t(
+                            'setup.drugs.fullscreenmdoal.form.frequency.placeholder'
+                          )}
                           size={InputSize['large']}
                           onChange={(val) => inputHandler('frequency', val)}
                         />
                       </Form.Item>
-                      <Form.Item label="Route" name="route">
+                      <Form.Item
+                        label={t('setup.drugs.fullscreenmdoal.form.route')}
+                        name="route"
+                      >
                         <Select
-                          placeholder="Select Route"
+                          placeholder={t(
+                            'setup.drugs.fullscreenmdoal.form.route.placeholder'
+                          )}
                           size="large"
                           onChange={(val) => inputHandler('route', val)}
                         >
                           <Select.Option value="Dummy">
-                            Dummy Route
+                            {t('setup.drugs.fullscreenmdoal.form.route.dummy')}
                           </Select.Option>
                         </Select>
                       </Form.Item>
                     </div>
                   </div>
                   <div className={styles.card}>
-                    <div className={styles.cardTitle}>Comment</div>
+                    <div className={styles.cardTitle}>
+                      {t('setup.drugs.fullscreenmdoal.form.comment')}
+                    </div>
                     <div className={styles.cardForm}>
-                      <Form.Item label="Comment - Optional" name="comment">
+                      <Form.Item
+                        label={t(
+                          'setup.drugs.fullscreenmdoal.form.comment.label'
+                        )}
+                        name="comment"
+                      >
                         <AntInput.TextArea
                           onChange={(e) =>
                             inputHandler('comment', e.target.value)
                           }
-                          placeholder="E.g. take one tablet every 2 hours"
+                          placeholder={t(
+                            'setup.drugs.fullscreenmdoal.form.comment.placeholder'
+                          )}
                           rows={4}
                           size="large"
                         />

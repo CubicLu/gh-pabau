@@ -1,6 +1,7 @@
 import { MedicalForms, SelectedForms } from '@pabau/ui'
 import { Tabs } from 'antd'
 import React, { FC } from 'react'
+import { useTranslation } from 'react-i18next'
 import styles from './MedicalFormBuilder.module.less'
 import MedicalFormLeftSidebarBasicPanels from './MedicalFormLeftSidebarBasicPanels'
 import MedicalFormLeftSidebarCustomPanels from './MedicalFormLeftSidebarCustomPanels'
@@ -31,9 +32,9 @@ const hideFormInfos: HideForm = {
     'basic_traveldestination',
     'basic_labtests',
   ],
-  treatmentForm: [],
+  treatment: [],
   epaper: [],
-  presciption: [
+  prescription: [
     'basic_labtests',
     'basic_vaccinehistory',
     'basic_vaccinescheduler',
@@ -41,8 +42,9 @@ const hideFormInfos: HideForm = {
     'basic_conditions',
     'basic_drawing',
     'basic_staticimage',
+    'basic_photo',
   ],
-  labForm: [
+  lab: [
     'basic_drugs',
     'basic_conditions',
     'basic_vaccinehistory',
@@ -50,10 +52,12 @@ const hideFormInfos: HideForm = {
     'basic_traveldestination',
     'basic_drawing',
     'basic_staticimage',
+    'basic_photo',
   ],
 }
 
 const MedicalFormComponentPanel: FC<P> = ({ ...props }) => {
+  const { t } = useTranslation('common')
   const { selectedFormTypes, medicalForms, handlingClickLeft } = props
   const hideForms: string[] = []
 
@@ -77,13 +81,27 @@ const MedicalFormComponentPanel: FC<P> = ({ ...props }) => {
   return (
     <div className={styles.MedicalFormComponentPanel}>
       <Tabs defaultActiveKey="1" centered>
-        <TabPane tab={<span className={styles.tabName}>Basic</span>} key="1">
+        <TabPane
+          tab={
+            <span className={styles.tabName}>
+              {t('ui.medicalformbuilder.medicalcomponent.basic')}
+            </span>
+          }
+          key="1"
+        >
           <MedicalFormLeftSidebarBasicPanels
             medicalForms={basicMedicalForms}
             handlingClickLeft={handlingClickLeft}
           />
         </TabPane>
-        <TabPane tab={<span className={styles.tabName}>Custom</span>} key="2">
+        <TabPane
+          tab={
+            <span className={styles.tabName}>
+              {t('ui.medicalformbuilder.medicalcomponent.custom')}
+            </span>
+          }
+          key="2"
+        >
           <MedicalFormLeftSidebarCustomPanels
             medicalForms={customMedicalForms}
             handlingClickLeft={handlingClickLeft}

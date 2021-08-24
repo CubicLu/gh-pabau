@@ -1,0 +1,51 @@
+subscription notifications($user: jsonb) {
+  notifications(
+    order_by: { order: desc }
+    where: { sent_to: { _contains: $user } }
+  ) {
+    id
+    sent_to
+    created_at
+    variables
+    destination
+    sent_by
+    loop
+    notification_type {
+      id
+      name
+      title
+      description
+    }
+    read_by {
+      user
+    }
+  }
+}
+
+mutation update_notifications_by_pk($id: uuid!, $sent_to: jsonb) {
+  update_notifications_by_pk(
+    pk_columns: { id: $id }
+    _set: { sent_to: $sent_to }
+  ) {
+    id
+  }
+}
+
+mutation delete_notifications_by_pk($id: uuid!) {
+  delete_notifications_by_pk(id: $id) {
+    __typename
+    id
+  }
+}
+
+mutation insert_read_notification_one(
+  $company: numeric
+  $notification: uuid
+  $user: numeric
+) {
+  insert_read_notification_one(
+    object: { company: $company, notification: $notification, user: $user }
+  ) {
+    id
+  }
+}

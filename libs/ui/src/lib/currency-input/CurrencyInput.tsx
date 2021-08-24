@@ -7,6 +7,7 @@ export interface CurrencyInputProps {
   value?: string | number
   onChange?: (val) => void
   placeholder?: string
+  onBlur?: () => void
 }
 
 export const CurrencyInput: FC<CurrencyInputProps> = ({
@@ -14,6 +15,7 @@ export const CurrencyInput: FC<CurrencyInputProps> = ({
   value = '',
   onChange,
   placeholder,
+  onBlur,
 }) => {
   const [isPrefixed, setIsPrefixed] = useState(false)
   const handleChange = (val: NumberFormatValues) => {
@@ -38,6 +40,7 @@ export const CurrencyInput: FC<CurrencyInputProps> = ({
         decimalScale={2}
         prefix={isPrefixed ? unit : ''}
         onValueChange={(val: NumberFormatValues) => handleChange(val)}
+        onBlur={() => onBlur?.()}
       />
     </div>
   )

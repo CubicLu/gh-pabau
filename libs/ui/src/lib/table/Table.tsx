@@ -1,16 +1,25 @@
-import React, { FC } from 'react'
-import { Button, Table as AntTable, Avatar } from 'antd'
+import { ContactsOutlined, LockOutlined, MenuOutlined } from '@ant-design/icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Daily } from '@pabau/ui'
+import {
+  Avatar,
+  Button,
+  Image,
+  Popover,
+  Skeleton,
+  Table as AntTable,
+} from 'antd'
+import { ColumnsType, TableProps } from 'antd/es/table'
+import React, { FC } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   SortableContainer,
   SortableElement,
   SortableHandle,
 } from 'react-sortable-hoc'
-import { ContactsOutlined, LockOutlined, MenuOutlined } from '@ant-design/icons'
+import searchEmpty from '../../assets/images/empty.png'
 import styles from './Table.module.less'
-import { TableProps } from 'antd/es/table'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useTranslation } from 'react-i18next'
+
 export interface DragProps {
   draggable?: boolean
   isCustomColorExist?: boolean
@@ -42,8 +51,22 @@ function array_move(arr, old_index, new_index) {
   })
 }
 
-export type TableType = {
+interface DataSourceType {
+  [key: string]: string | number
+}
+
+type CustomColumns = {
+  skeletonWidth?: string
+  visible?: boolean
+  columnType?: string
+}
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type TableType<T = object> = {
+  onRowClickWithEvent?: (e, event) => void
   onRowClick?: (e) => void
+  onRowHover?: (e) => void
+  onLeaveRow?: (e) => void
   padlocked?: string[]
   noDataText?: string
   noDataBtnText?: string
@@ -52,7 +75,14 @@ export type TableType = {
   searchTerm?: string
   needTranslation?: boolean
   showSizeChanger?: boolean
-} & TableProps<never> &
+  isHover?: boolean
+  loading?: boolean
+  displayColor?: boolean
+  displayLock?: boolean
+  columns?: CustomColumns[]
+  defaultSkeletonRows?: number
+  needEvent?: boolean
+} & TableProps<T> &
   DragProps
 
 export const Table: FC<TableType> = ({
@@ -60,8 +90,12 @@ export const Table: FC<TableType> = ({
   padlocked,
   isCustomColorExist = false,
   isCustomIconExist = false,
+  isHover = false,
   updateDataSource,
+  onRowClickWithEvent,
   onRowClick,
+  onRowHover,
+  onLeaveRow,
   noDataText,
   noDataBtnText,
   noDataIcon = <ContactsOutlined />,
@@ -69,6 +103,11 @@ export const Table: FC<TableType> = ({
   searchTerm = '',
   needTranslation,
   showSizeChanger,
+  loading,
+  displayColor = false,
+  displayLock = false,
+  defaultSkeletonRows = 50,
+  needEvent = false,
   ...props
 }) => {
   const onSortEnd = ({ oldIndex, newIndex }) => {
@@ -79,7 +118,6 @@ export const Table: FC<TableType> = ({
   }
 
   const DraggableBodyRow = ({ className, style, ...restProps }) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const index = dataSource.findIndex(
       (x: { key: string }) => x.key === restProps['data-row-key']
     )
@@ -111,29 +149,50 @@ export const Table: FC<TableType> = ({
         className={isActive ? styles.activeBtn : styles.disableSourceBtn}
         disabled={!isActive}
       >
-        {needTranslation
-          ? isActive
-            ? t('marketingsource-tableRow-active-btn.translation')
-            : t('marketingsource-tableRow-inActive-btn.translation')
-          : isActive
-          ? 'Active'
-          : 'Inactive'}
+        {isActive
+          ? t('basic-crud-table-button-active')
+          : t('basic-crud-table-button-inactive')}
       </Button>
     )
   }
-
+  const renderLockIcon = (isLock) => {
+    return (
+      <div className={styles.lockIcon}>
+        {isLock ? <LockOutlined color="#B8B8C0" /> : null}{' '}
+      </div>
+    )
+  }
   const renderTableSource = (val, rowData) => {
     return (
       <div className={styles.alignItems}>
-        {isCustomColorExist && renderCustomColor(val, rowData)}
+        {(isCustomColorExist || displayColor) &&
+          renderCustomColor(val, rowData)}
         {val}
         {padlocked?.includes(val) && (
           <div style={{ marginLeft: '6px' }}>
             <LockOutlined />
           </div>
         )}
+        {displayLock ? (
+          rowData['basic_field'] ? (
+            <div style={{ marginLeft: '6px' }}>
+              <LockOutlined />
+            </div>
+          ) : null
+        ) : null}
         {isCustomIconExist && rowData.icon && (
-          <FontAwesomeIcon icon={rowData.icon} className={styles.tableIcon} />
+          <FontAwesomeIcon
+            style={
+              rowData?.icon_color &&
+              displayColor && { color: rowData.icon_color }
+            }
+            icon={
+              rowData.icon.includes('-') && rowData.icon.includes('fa')
+                ? rowData.icon.replace(/fa-/gi, 'fa,').split(',')
+                : rowData.icon
+            }
+            className={styles.tableIcon}
+          />
         )}
       </div>
     )
@@ -141,22 +200,50 @@ export const Table: FC<TableType> = ({
 
   const renderCustomColor = (val, rowData) => {
     return (
-      <div
-        style={{ background: rowData.color }}
-        className={styles.customColor}
-      ></div>
+      <div>
+        {displayColor ? (
+          <div
+            style={{
+              background:
+                rowData['name'] === 'Complete'
+                  ? '#5cd828'
+                  : rowData['name'] === 'no-show'
+                  ? '#f15d3b'
+                  : rowData.color || rowData?.icon_color,
+            }}
+            className={styles.customColor}
+          />
+        ) : (
+          <div
+            style={{ background: rowData.color }}
+            className={styles.customColor}
+          />
+        )}
+      </div>
+    )
+  }
+
+  const renderAmount = (val) => {
+    return <div> $ {val?.toFixed(2)} </div>
+  }
+
+  const renderCodeInput = (code) => {
+    return (
+      <Button type="dashed" className={styles.codeBtn}>
+        {code}
+      </Button>
     )
   }
 
   const checkPadLocks = (record) => {
-    let alloWClicked = true
+    let clickable = true
     Object.keys(record).map((key) => {
       if (padlocked?.includes(record[key])) {
-        alloWClicked = false
+        clickable = false
       }
       return key
     })
-    return alloWClicked
+    return clickable
   }
 
   const renderDays = (data) => {
@@ -180,6 +267,33 @@ export const Table: FC<TableType> = ({
     return <div className={styles.alignItems}>{val.slice(0, 5)}</div>
   }
 
+  const renderMessageHover = (val) => {
+    if (val.length > 60) {
+      return (
+        <Popover trigger="hover" content={val}>
+          {val.slice(0, 60)}...
+        </Popover>
+      )
+    }
+    return <span>{val}</span>
+  }
+
+  const renderHoverContent = (val, rowData) => {
+    let display = '1'
+    if (!rowData.isShow) {
+      display = '0'
+    }
+    return (
+      <div
+        key={rowData.key}
+        className={styles.renderHoverWrap}
+        style={{ opacity: display }}
+      >
+        {rowData?.visibleData}
+      </div>
+    )
+  }
+
   const renderSortHandler = () => {
     if (props?.columns) {
       props.columns = props.columns
@@ -194,16 +308,44 @@ export const Table: FC<TableType> = ({
               col.dataIndex === 'integration')
           ) {
             col.render = renderActiveButton
-          } else if (col.dataIndex === 'days') {
-            col.render = renderDays
-          } else if (
-            col.dataIndex === 'start_time' ||
-            col.dataIndex === 'end_time'
-          ) {
-            col.render = renderTime
-          } else if (!col.render) {
-            col.render = renderTableSource
-          }
+          } else if (col.dataIndex === 'is_lock') {
+            col.render = renderLockIcon
+          } else if (col.isHover) {
+            col.render = renderHoverContent
+          } else
+            switch (col.dataIndex) {
+              case 'messageHover': {
+                col.render = renderMessageHover
+
+                break
+              }
+              case 'days': {
+                col.render = renderDays
+
+                break
+              }
+              case 'amount': {
+                col.render = renderAmount
+
+                break
+              }
+              case 'start_time':
+              case 'end_time': {
+                col.render = renderTime
+
+                break
+              }
+              case 'code': {
+                col.render = renderCodeInput
+
+                break
+              }
+              default: {
+                if (!col.render) {
+                  col.render = renderTableSource
+                }
+              }
+            }
           return col
         })
     }
@@ -212,20 +354,91 @@ export const Table: FC<TableType> = ({
       ? [{ ...dragColumn }, ...(props.columns || [])]
       : props.columns
   }
-  return !dataSource?.length && !props.loading && !searchTerm ? (
+
+  const onHoverEnterHandle = (data) => {
+    onRowHover?.(data)
+  }
+
+  const onHoverLeaveHandle = (data) => {
+    onLeaveRow?.(data)
+  }
+
+  const renderAvatarLoader = () => {
+    return <Skeleton.Avatar active={true} size="default" shape={'circle'} />
+  }
+
+  if (loading && props?.columns) {
+    // eslint-disable-next-line
+    const columns: ColumnsType<any> = []
+    const dataSource: DataSourceType[] = []
+    for (const key of props?.columns) {
+      const { visible = true, columnType = '' } = key
+      if (visible) {
+        if (columnType === 'avatar') {
+          columns.push({ ...key, render: renderAvatarLoader })
+        } else {
+          columns.push({
+            ...key,
+            render: function render() {
+              const width = key.skeletonWidth ?? '200px'
+              return (
+                <div>
+                  <Skeleton.Input
+                    active={true}
+                    size="small"
+                    style={{ width: width }}
+                  />
+                </div>
+              )
+            },
+          })
+        }
+      }
+    }
+    for (let i = 0; i < defaultSkeletonRows; i = i + 1) {
+      let data
+      for (const key of props?.columns) {
+        // eslint-disable-next-line
+        // @ts-ignore
+        data = { ...data, id: i, key: i, [key.dataIndex]: '' }
+      }
+      dataSource.push(data)
+    }
+    return (
+      <AntTable
+        dataSource={dataSource}
+        columns={columns}
+        rowKey="key"
+        pagination={false}
+        className={styles.dragTable}
+      />
+    )
+  }
+
+  return !dataSource?.length && !loading && !searchTerm ? (
     <div className={styles.noDataTableBox}>
       <div className={styles.noDataTextStyle}>
         <Avatar icon={noDataIcon} size="large" className={styles.roundDesign} />
-        <p>{`Add ${noDataText} to create more shifts faster`}</p>
-        <div className={styles.spaceBetweenText}></div>
-        <Button
-          className={styles.createTemaplateBtn}
-          type="primary"
-          onClick={() => onAddTemplate?.()}
-        >
-          {`Add ${noDataBtnText}`}
-        </Button>
+        <p>{`${noDataText}`}</p>
+        <div className={styles.spaceBetweenText} />
+        {noDataBtnText && (
+          <Button
+            className={styles.createTemaplateBtn}
+            type="primary"
+            onClick={() => onAddTemplate?.()}
+          >
+            {`${noDataBtnText}`}
+          </Button>
+        )}
       </div>
+    </div>
+  ) : !dataSource?.length && !loading && searchTerm ? (
+    <div className={styles.noSearchResult}>
+      <Image src={searchEmpty} preview={false} />
+      <p className={styles.noResultsText}>
+        {t('crud-table-no-search-results')}
+      </p>
+      <p className={styles.tryAdjustText}>{t('crud-table-try-adjust')}</p>
     </div>
   ) : (
     <AntTable
@@ -234,14 +447,17 @@ export const Table: FC<TableType> = ({
         return {
           onClick: (event) => {
             if (checkPadLocks(record)) {
-              onRowClick?.(record)
-              console.log(event, record)
+              needEvent
+                ? onRowClickWithEvent?.(record, event)
+                : onRowClick?.(record)
             }
-          }, // click row
-          //   onDoubleClick: (event) => {}, // double click row
-          //   onContextMenu: (event) => {}, // right button click row
-          //   onMouseEnter: (event) => {}, // mouse enter row
-          //   onMouseLeave: (event) => {}, // mouse leave row
+          },
+          onMouseEnter: (event) => {
+            isHover && onHoverEnterHandle(record)
+          },
+          onMouseLeave: (event) => {
+            isHover && onHoverLeaveHandle(record)
+          },
         }
       }}
       pagination={
@@ -251,9 +467,6 @@ export const Table: FC<TableType> = ({
       columns={renderSortHandler()}
       rowKey="key"
       className={styles.dragTable}
-      locale={{
-        emptyText: !props.loading && searchTerm && 'No results found',
-      }}
       components={{
         body: {
           wrapper: DraggableContainer,

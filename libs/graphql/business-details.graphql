@@ -1,0 +1,195 @@
+query getBussinessDetails {
+  company {
+    details {
+      details_id
+      company_name
+      info_email
+      phone
+      website
+      logo
+      language
+      timezone {
+        db_format
+      }
+      currency
+      street
+      city
+      county
+      country
+      post_code
+      contact_term_singular
+      contact_term_plural
+      employee_term_singular
+      employee_term_plural
+      class_teacher_singular
+      class_term_singular
+      class_term_plural
+      tax_name
+      cycles_display
+      disable_prescriptions
+      medical_approvals
+      secure_medical_forms
+      is_surgical
+      enable_2fa
+      date_format
+      week_start_day
+      industry_sector
+      enable_sens_data
+    }
+    User {
+      id
+      force_password
+    }
+  }
+  findManyCompanyMeta(
+    where: {
+      meta_name: {
+        in: [
+          "opt_in_email"
+          "opt_in_postal"
+          "opt_in_sms"
+          "opt_in_phone"
+          "opt_in_postal_lead"
+          "opt_in_sms_lead"
+          "opt_in_email_lead"
+          "opt_in_phone_lead"
+          "history_data"
+          "time_format"
+          "password_expire"
+          "login_attempts"
+          "password_enforce_history"
+          "lockout_period"
+          "password_expiration"
+          "address_suite_no"
+          "business_location"
+          "lab_enabled"
+        ]
+      }
+    }
+  ) {
+    meta_name
+    meta_value
+  }
+}
+
+mutation updateCompanyDetails(
+  $details_id: Int!
+  $business_name: String
+  $info_email: String
+  $phone: String
+  $industry_sector: String
+  $website: String
+  $language: String
+  $timezone: String
+  $currency: String
+  $date_formate: String
+  $week_start_day: String
+  $contact_term_singular: String
+  $contact_term_plural: String
+  $class_term_singular: String
+  $class_term_plural: String
+  $employee_term_singular: String
+  $employee_term_plural: String
+  $class_teacher_singular: String
+  $tax_name: company_details_tax_name
+  $disable_prescriptions: Int
+  $secure_medical_forms: Int
+  $is_surgical: Int
+  $medical_approvals: Int
+  $cycles_display: Int
+  $enable_2fa: Int
+  $enable_sens_data: Int
+  $user_id: Int
+  $force_password: Int
+  $street: String
+  $city: String
+  $country: String
+  $region: String
+  $post_code: String
+) {
+  updateOneCompanyDetails(
+    where: { details_id: $details_id }
+    data: {
+      company_name: { set: $business_name }
+      info_email: { set: $info_email }
+      phone: { set: $phone }
+      website: { set: $website }
+      language: { set: $language }
+      timezone: { update: { db_format: { set: $timezone } } }
+      currency: { set: $currency }
+      date_format: { set: $date_formate }
+      week_start_day: { set: $week_start_day }
+      industry_sector: { set: $industry_sector }
+      contact_term_singular: { set: $contact_term_singular }
+      contact_term_plural: { set: $contact_term_plural }
+      class_term_singular: { set: $class_term_singular }
+      class_term_plural: { set: $class_term_plural }
+      employee_term_singular: { set: $employee_term_singular }
+      employee_term_plural: { set: $employee_term_plural }
+      class_teacher_singular: { set: $class_teacher_singular }
+      tax_name: { set: $tax_name }
+      secure_medical_forms: { set: $secure_medical_forms }
+      disable_prescriptions: { set: $disable_prescriptions }
+      is_surgical: { set: $is_surgical }
+      medical_approvals: { set: $medical_approvals }
+      cycles_display: { set: $cycles_display }
+      street: { set: $street }
+      city: { set: $city }
+      country: { set: $country }
+      county: { set: $region }
+      post_code: { set: $post_code }
+      enable_2fa: { set: $enable_2fa }
+      enable_sens_data: { set: $enable_sens_data }
+      User: {
+        update: {
+          where: { id: $user_id }
+          data: { force_password: { set: $force_password } }
+        }
+      }
+    }
+  ) {
+    __typename
+    company_name
+    info_email
+    phone
+    website
+    language
+    timezone {
+      db_format
+    }
+    currency
+    date_format
+    week_start_day
+    industry_sector
+    contact_term_singular
+    contact_term_plural
+    class_term_singular
+    class_term_plural
+    employee_term_singular
+    employee_term_plural
+    class_teacher_singular
+    tax_name
+    secure_medical_forms
+    disable_prescriptions
+    is_surgical
+    medical_approvals
+    cycles_display
+    User {
+      force_password
+    }
+    enable_2fa
+    enable_sens_data
+    street
+    city
+    country
+    county
+    post_code
+  }
+}
+
+mutation setMultipleMetaData($company_meta: [CompanyMetaData]!) {
+  setManyCompanyMeta(company_meta: $company_meta) {
+    meta_name
+    meta_value
+  }
+}

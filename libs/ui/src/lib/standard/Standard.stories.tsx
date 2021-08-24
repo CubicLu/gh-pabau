@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 
 import Standard from './Standard'
+import { useTranslation } from 'react-i18next'
 
 export default {
   component: Standard,
@@ -19,13 +20,25 @@ const Story: React.FC = ({ ...args }) => {
   const [displayPolicy, setDisplayPolicy] = useState(true)
   const [showService, setShowService] = useState(true)
   const [showEmployeeName, setShowEmployeeName] = useState(true)
+  const [showEnablePay, setShowEnablePay] = useState(true)
   const [addMedicalHisButton, setAddMedicalHisButton] = useState(true)
   const [backGroundColor, setBackGroundColor] = useState('')
   const [buttonColor, setButtonColor] = useState('')
   const [selectLanguage, setSelectLanguage] = useState('EN')
   const [medicalMessage, setMedicalMessage] = useState('')
   const [informationMessage, setInformationMessage] = useState('')
-  const [smsMessage, setSmsMessage] = useState('Hi, Kristy')
+  const { t } = useTranslation('common')
+  const [smsMessage, setSmsMessage] = useState(
+    t('notifications.standardStories.defaultMessage')
+  )
+  const [selectService, setSelectService] = useState({
+    EN: 'Japanese straightening',
+  })
+  const [smartFramework, setSmartFramework] = useState(false)
+
+  const handleServiceSelected = (val) => {
+    setSelectService({ ...selectService, [selectLanguage]: val })
+  }
 
   return (
     <div style={{ width: '392px' }}>
@@ -62,8 +75,18 @@ const Story: React.FC = ({ ...args }) => {
           console.log(value)
         }}
         hideAppearanceTabPane={true}
-        smsMessage={smsMessage}
+        smsMessage={smsMessage as never}
         onSmsMessage={(value) => setSmsMessage(value)}
+        showEnablePay={showEnablePay}
+        onShowEnablePay={(value) => setShowEnablePay(value)}
+        selectService={selectService[selectLanguage]}
+        onSelectService={(value) => handleServiceSelected(value)}
+        smartFramework={smartFramework}
+        onSmartFramework={(value) => setSmartFramework(value)}
+        onActiveSocialIcon={(value) => {
+          console.log(value)
+        }}
+        disableCustomTab={false}
       />
       <p>{medicalMessage}</p>
     </div>

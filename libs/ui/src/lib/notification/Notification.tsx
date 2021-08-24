@@ -1,7 +1,3 @@
-import React from 'react'
-import { message } from 'antd'
-import styles from './Notification.module.less'
-import Reconnect from './ReconnectNotification'
 import {
   CheckCircleFilled,
   CloseCircleOutlined,
@@ -9,6 +5,10 @@ import {
   ExclamationCircleOutlined,
   InfoCircleOutlined,
 } from '@ant-design/icons'
+import { message } from 'antd'
+import React from 'react'
+import styles from './Notification.module.less'
+import Reconnect from './ReconnectNotification'
 
 export enum NotificationType {
   info = 'info',
@@ -30,14 +30,28 @@ export const Notification = (
   }
 
   const notifyIcon = () => {
-    if (notificationType === NotificationType.success) {
-      return <CheckCircleFilled className={styles.notifyIcon} />
-    } else if (notificationType === NotificationType.error) {
-      return <CloseCircleOutlined className={styles.notifyIcon} />
-    } else if (notificationType === NotificationType.info) {
-      return <InfoCircleOutlined className={styles.notifyIcon} />
-    } else if (notificationType === NotificationType.warning) {
-      return <ExclamationCircleOutlined className={styles.notifyIcon} />
+    switch (notificationType) {
+      case NotificationType.success: {
+        return <CheckCircleFilled className={styles.notifyIcon} />
+
+        break
+      }
+      case NotificationType.error: {
+        return <CloseCircleOutlined className={styles.notifyIcon} />
+
+        break
+      }
+      case NotificationType.info: {
+        return <InfoCircleOutlined className={styles.notifyIcon} />
+
+        break
+      }
+      case NotificationType.warning: {
+        return <ExclamationCircleOutlined className={styles.notifyIcon} />
+
+        break
+      }
+      // No default
     }
   }
 

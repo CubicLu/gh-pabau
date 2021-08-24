@@ -1,15 +1,15 @@
-import React, { FC, useState, useEffect } from 'react'
+import { PlusOutlined } from '@ant-design/icons'
 import {
-  Table,
   Avatar,
   BasicModal as CreateCategoryModal,
-  Input,
   Button,
+  Input,
   Switch,
+  Table,
 } from '@pabau/ui'
 import classNames from 'classnames'
-import { PlusOutlined } from '@ant-design/icons'
-import styles from './categories_tab.module.less'
+import React, { FC, useEffect, useState } from 'react'
+import styles from './CategoriesTab.module.less'
 
 const data = [
   {

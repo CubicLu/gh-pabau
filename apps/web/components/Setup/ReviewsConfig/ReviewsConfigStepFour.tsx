@@ -1,17 +1,17 @@
-import React, { FC, useState } from 'react'
-import { useMedia } from 'react-use'
 import { LinkOutlined } from '@ant-design/icons'
 import {
-  Button,
   BasicModal,
+  Button,
+  CopyEmbedCodeModal,
   DotButton,
   ReviewSlider,
   ReviewSliderProps,
-  CopyEmbedCodeModal,
 } from '@pabau/ui'
+import React, { FC, useState } from 'react'
+import { useMedia } from 'react-use'
 import FeedbackSurveyFinal from '../../../assets/images/feedback-survey-final.png'
 import { defaultPreview, ReviewBadgeProp } from './ReviewsConfigSetting'
-import styles from './style.module.less'
+import styles from './Style.module.less'
 
 interface ReviewsConfigStepFourProps {
   reviewBadges: ReviewBadgeProp[]

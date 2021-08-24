@@ -1,0 +1,45 @@
+query ClientsData($limit: Int = 10, $offset: Int = 0, $searchTerm: String) {
+    clients_data(
+        limit: $limit
+        offset: $offset
+        order_by: { is_liked: desc }
+        where: {
+            _or: [
+                { _and: [{ name: { _ilike: $searchTerm } }] }
+                { _and: [{ label: { _ilike: $searchTerm } }] }
+                { _and: [{ category: { _ilike: $searchTerm } }] }
+                { _and: [{ format: { _ilike: $searchTerm } }] }
+            ]
+        }
+    ) {
+        id
+        name
+        label
+        format
+        fieldFor
+        category
+        is_mendatory
+        is_liked
+        is_private
+        is_active
+        is_locked
+        created_date
+    }
+}
+
+query ClientsDataAggregate($searchTerm: String) {
+    clients_data_aggregate(
+        where: {
+        _or: [
+            { _and: [{ name: { _ilike: $searchTerm } }] }
+            { _and: [{ label: { _ilike: $searchTerm } }] }
+            { _and: [{ category: { _ilike: $searchTerm } }] }
+            { _and: [{ format: { _ilike: $searchTerm } }] }
+        ]
+        }
+    ) {
+        aggregate {
+            count
+        }
+    }
+}

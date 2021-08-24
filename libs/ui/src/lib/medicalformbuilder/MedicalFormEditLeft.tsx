@@ -5,6 +5,7 @@ import {
 } from '@pabau/ui'
 import { Collapse } from 'antd'
 import React, { FC, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import styles from './MedicalFormBuilder.module.less'
 import MedicalFormComponentMedicalHistory from './MedicalFormComponentMedicalHistory'
 import MedicalFormComponentPanel from './MedicalFormComponentPanel'
@@ -18,6 +19,7 @@ interface P {
   isEditing: () => boolean
   medicalForms: MedicalForms[]
   changeFormName: (formName: string) => void
+  changeFormType: (formType: string) => void
   formName: string
   changeLayout: (noRight: boolean) => void
   runPreviewPdf: () => void
@@ -25,11 +27,13 @@ interface P {
 }
 
 const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
+  const { t } = useTranslation('common')
   const {
     refreshDraggedForms,
     isEditing,
     medicalForms,
     changeFormName,
+    changeFormType,
     formName,
     changeLayout,
     runPreviewPdf,
@@ -45,11 +49,18 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
   const [isEpaper, setIsEpaper] = useState(false)
 
   const isSelectedFormType = (setting) => {
-    const selectedFormType = Object.entries(setting).filter(
-      ([key, value]) => value === true
-    )
+    const selectedFormType = Object.entries(setting)
+      .map(([key, value]) => {
+        if (value === true) {
+          changeFormType?.(key)
+          return true
+        }
+        return false
+      })
+      .filter((item) => item)
     return selectedFormType.length === 0 ? false : true
   }
+
   const onSelectFormType = (setting) => {
     refreshDraggedForms?.()
     setSelectedFormTypes(setting)
@@ -65,6 +76,7 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
       )
     }
   }
+
   const callback = (key) => {
     if (isSelectedFormType(selectedFormTypes)) {
       setOpenPanel(key)
@@ -95,7 +107,7 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
         onChange={callback}
       >
         <Panel
-          header="GENERAL"
+          header={t('ui.medicalformbuilder.left.tab.general')}
           key="1"
           className={styles.medicalFormEditLeftPanelCollapseGeneral}
         >
@@ -108,7 +120,11 @@ const MedicalFormEditLeft: FC<P> = ({ ...props }) => {
           {isEpaper && <MedicalFormUploadButtons onPreviewPdf={onPreviewPdf} />}
         </Panel>
         {isEpaper === false && (
-          <Panel header="COMPONENTS" key="2" className={componentClass}>
+          <Panel
+            header={t('ui.medicalformbuilder.left.tab.components')}
+            key="2"
+            className={componentClass}
+          >
             {selectedFormTypes.medicalHistory === true && (
               <MedicalFormComponentMedicalHistory />
             )}

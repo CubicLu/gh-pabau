@@ -1,0 +1,306 @@
+.general-form-wrapper {
+  form {
+    .general-section {
+      max-width: 502px;
+      background: #ffffff;
+      border-radius: 4px;
+      margin: 40px auto 0;
+      padding: 27px 32px;
+      &:last-child {
+        margin-bottom: 40px;
+      }
+      h4 {
+        font-size: 14px;
+        line-height: 24px;
+        color: #3d3d46;
+        margin-bottom: 20px;
+      }
+      .sub-title {
+        font-size: 14px;
+        line-height: 22px;
+        margin-top: -18px;
+        color: #9292a3;
+      }
+      :global .ant-form-item {
+        margin-bottom: 20px;
+        .ant-form-item-label {
+          padding-bottom: 0;
+          label {
+            font-size: 14px;
+            line-height: 22px;
+            color: #9292a3;
+          }
+        }
+        .ant-form-item-control {
+          .ant-form-item-control-input {
+            .ant-form-item-control-input-content {
+              .ant-input {
+                height: 40px;
+                border: 1px solid #ecedf0;
+                box-sizing: border-box;
+                border-radius: 4px;
+              }
+            }
+          }
+        }
+        .ant-form-item-control {
+          .ant-form-item-control-input {
+            .ant-form-item-control-input-content {
+              .ant-input-number {
+                line-height: 41px;
+                width: 100%;
+                height: 40px;
+                border: 1px solid #ecedf0;
+                box-sizing: border-box;
+                border-radius: 4px;
+              }
+            }
+          }
+        }
+      }
+      .custom-switch {
+        display: flex;
+        align-items: center;
+        p {
+          margin-left: 9px;
+          margin-right: 9px;
+          font-size: 14px;
+          margin-bottom: 0;
+          line-height: 22px;
+          color: #9292a3;
+        }
+      }
+      .typeWrapper {
+        display: flex;
+        .percentage-wrapper {
+          cursor: pointer;
+          flex: 1;
+          border: 1px solid #ecedf0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 18px 32px 10px;
+          position: relative;
+          :global .anticon {
+            font-size: 18px;
+            svg {
+              fill: #9292a3;
+            }
+          }
+          h5 {
+            font-size: 14px;
+            line-height: 22px;
+            margin-top: 8px;
+            color: #3d3d46;
+            margin-bottom: 0;
+          }
+          .verify {
+            display: none;
+          }
+          &:nth-of-type(1) {
+            border-radius: 4px 0 0 4px;
+          }
+          &:nth-of-type(2) {
+            border-radius: 0 4px 4px 0;
+          }
+          &.active {
+            background: #eef7fb;
+            border: 1px solid #b0dbeb;
+            :global .anticon {
+              svg {
+                fill: #54b2d3;
+              }
+            }
+            .verify {
+              position: absolute;
+              top: 10px;
+              right: 10px;
+              display: flex;
+              :global .anticon {
+                svg {
+                  fill: #54b2d3;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .advance-setting-open {
+      max-width: 502px;
+      margin: 28px auto 30px;
+      .general-section {
+        margin-top: 0;
+        .reciept {
+          display: flex;
+          align-items: center;
+          p {
+            font-size: 14px;
+            line-height: 22px;
+            color: #9292a3;
+            margin-bottom: 0;
+            padding-left: 9px;
+          }
+        }
+      }
+      :global .ant-collapse {
+        .ant-collapse-item {
+          .ant-collapse-header {
+            font-size: 14px;
+            line-height: 18px;
+            color: #9292a3;
+            padding-left: 25px;
+            .anticon {
+              left: 5px;
+              top: 0;
+            }
+          }
+          .ant-collapse-content {
+            .ant-collapse-content-box {
+              padding: 0 !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.emp-section {
+  max-width: 502px;
+  background: #ffffff;
+  border-radius: 4px;
+  margin: 40px auto;
+  padding: 27px 32px;
+}
+
+.employee-wrap-tab {
+  max-width: 502px;
+  margin: 40px auto;
+  background: #ffffff;
+  border-radius: 4px;
+  padding: 27px 32px;
+}
+
+.emp {
+  width: 502px;
+  margin: 40px auto;
+}
+
+.popover {
+  width: 358px;
+  height: auto;
+}
+
+.title {
+  height: 55px;
+  border-bottom: 1px solid #ecedf0;
+}
+
+.divider {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 18px;
+  color: #3d3d46;
+  padding: 19px 0px 18px 24px;
+}
+
+.status {
+  margin-top: 18px;
+  margin-left: 24px;
+  font-size: 14px;
+  line-height: 18px;
+  margin-bottom: 9px;
+  color: #9292a3;
+}
+
+.radio {
+  display: flex;
+  flex-direction: column;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 22px;
+  padding: 0 24px;
+  .active {
+    margin-bottom: 5px;
+    :global .ant-radio-checked {
+      font-size: 14px;
+      line-height: 22px;
+      color: #3d3d46;
+    }
+  }
+}
+
+.inactive {
+  margin-bottom: 22px;
+}
+
+.btngroup {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 24px;
+  button {
+    height: 32px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+  }
+}
+
+.box {
+  margin-top: 13px;
+  padding: 0 24px;
+  :global .ant-form-vertical {
+    .ant-form-item {
+      .ant-form-item-label {
+        padding-bottom: 0;
+        label {
+          color: #9292a3;
+          font-size: 14px;
+          line-height: 18px;
+        }
+      }
+    }
+  }
+}
+
+.btn {
+  margin-left: 12px;
+}
+
+@media screen and (max-width: 767px) {
+  .general-form-wrapper {
+    form {
+      .general-section {
+        &:last-child {
+          margin-bottom: 100px;
+        }
+      }
+    }
+  }
+  .emp-section {
+    margin-bottom: 100px;
+  }
+  .box {
+    padding-left: 0;
+    padding-right: 24px;
+  }
+  .btngroup {
+    display: none;
+  }
+  .radio {
+    padding-left: 0;
+    padding-right: 24px;
+  }
+  .title {
+    display: none;
+  }
+  .popover {
+    width: 100%;
+  }
+  .status {
+    display: none;
+  }
+}

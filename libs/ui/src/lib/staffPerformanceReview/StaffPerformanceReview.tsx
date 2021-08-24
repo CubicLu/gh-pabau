@@ -1,35 +1,31 @@
 import React, { FC, ReactNode, useState } from 'react'
 import { Steps, DatePicker, Dropdown, Menu, Tooltip } from 'antd'
 import classNames from 'classnames'
-
 import {
   FileSearchOutlined,
   TeamOutlined,
   MailOutlined,
 } from '@ant-design/icons'
-import dateFormat from 'dateformat'
-import moment from 'moment'
+import dateFormat from 'dateformat' //TODO: remove this
+import moment from 'moment' //TODO: replace this
 import { Button } from '@pabau/ui'
 import styles from './StaffPerformanceReview.module.less'
 import { ClockCircleOutlined } from '@ant-design/icons/lib'
-const { Step } = Steps
 
-export enum periodType {
-  annual = 'annual',
-  threeMonth = 'threeMonth',
-}
+const { Step } = Steps
 
 interface P {
   reviewDate: Date
-  reviewPeriod?: periodType
+  isNote?: boolean
   isReviewDatePeriodFrequency?: boolean
 }
 
 export const StaffPerformanceReview: FC<P> = ({
-  isReviewDatePeriodFrequency,
+  isNote = false,
+  isReviewDatePeriodFrequency = true,
 }) => {
   const [reviewDate, setReviewDate] = useState(new Date())
-  const [reviewPeriod, setReviewPeriod] = useState('threeMonth')
+  const [reviewPeriod, setReviewPeriod] = useState('Every 3 Months')
 
   const handleMenuClick = (e) => {
     setReviewPeriod(e.key)
@@ -37,8 +33,8 @@ export const StaffPerformanceReview: FC<P> = ({
 
   const menu = (
     <Menu onClick={handleMenuClick}>
-      <Menu.Item key="threeMonth">3 months</Menu.Item>
-      <Menu.Item key="annual">Annual</Menu.Item>
+      <Menu.Item key="Every 3 Months">Every 3 Months</Menu.Item>
+      <Menu.Item key="1 Year">1 Year</Menu.Item>
     </Menu>
   )
 
@@ -76,7 +72,7 @@ export const StaffPerformanceReview: FC<P> = ({
     icon: ReactNode
     status: 'wait' | 'finish' | 'process' | 'error'
   }> = []
-  if (reviewPeriod === 'annual') {
+  if (reviewPeriod === '1 Year') {
     if (DateFormatter(today) !== DateFormatter(reviewDate)) {
       const difference = Math.round(
         moment(new Date(aYear)).diff(new Date(reviewDate), 'months', true)
@@ -364,30 +360,62 @@ export const StaffPerformanceReview: FC<P> = ({
       }
     }
   }
+  const nextReminderDate = DateArray.findIndex(
+    (item) => item.status === 'finish'
+  )
+  const nextPeerFeedback = DateArray.findIndex(
+    (item) =>
+      (item?.status === 'process' || item?.status === 'wait') &&
+      /* eslint-disable @typescript-eslint/no-explicit-any */
+      (item as any)?.icon?.props?.title === 'Peer Feedback'
+  )
+
   return (
     <div>
       {isReviewDatePeriodFrequency && (
         <div className={styles.review}>
-          <DatePicker
-            style={{ marginRight: '25px' }}
-            disabledDate={(current) => {
-              return (
-                moment().add(-1, 'days') >= current ||
-                moment().endOf('year') <= current
-              )
-            }}
-            onChange={onDateChange}
-          />
-          <Dropdown overlay={menu} placement="bottomCenter" arrow>
-            <Button>{reviewPeriod}</Button>
-          </Dropdown>
+          <div className={styles.drop}>
+            <label>Next Review Is Due...*</label>
+            <DatePicker
+              style={{ marginRight: '25px' }}
+              disabledDate={(current) => {
+                return (
+                  moment().add(-1, 'days') >= current ||
+                  moment().endOf('year') <= current
+                )
+              }}
+              onChange={onDateChange}
+            />
+          </div>
+          <div className={styles.drop}>
+            <label>Review Period Frequency</label>
+            <Dropdown overlay={menu} placement="bottomCenter" arrow>
+              <Button>{reviewPeriod}</Button>
+            </Dropdown>
+          </div>
         </div>
       )}
-      <div className={styles.reviewDate}>
-        NEXT REVIEW IS ON {DateFormatter(reviewDate)}
-      </div>
-      <div>
-        {reviewPeriod === 'annual' ? (
+      {isNote ? (
+        <div className={styles.noteWrap}>
+          <span>Note</span>
+          <div>
+            <p>
+              Next Peer Feedback requests will be sent out on&nbsp;
+              {DateFormatter(DateArray[nextPeerFeedback]?.date)}
+            </p>
+            <p>
+              Next Assessment reminders will be sent out on&nbsp;
+              {DateFormatter(DateArray[nextReminderDate]?.date)}
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className={styles.reviewDate}>
+          NEXT REVIEW IS ON {DateFormatter(reviewDate)}
+        </div>
+      )}
+      <div className={styles.reviewWrap}>
+        {reviewPeriod === '1 Year' ? (
           <div>
             <Steps
               className={styles.stepsDemo}

@@ -1,38 +1,40 @@
+import { LeftOutlined } from '@ant-design/icons'
+import { DocumentNode, useMutation } from '@apollo/client'
 import {
-  Table,
-  useLiveQuery,
-  Pagination,
+  Breadcrumb,
   MobileHeader,
   Notification,
   NotificationType,
+  Pagination,
+  Table,
+  useLiveQuery,
 } from '@pabau/ui'
-import React, { FC, useEffect, useState, useRef } from 'react'
-import { DocumentNode, useMutation } from '@apollo/client'
-import AddButton from './AddButton'
-import { Breadcrumb } from '@pabau/ui'
+import { LastAppointmentStatusOrderDocument } from '@pabau/graphql'
 import { Typography } from 'antd'
-// import pluralize from 'pluralize'
-import styles from './CrudTable.module.less'
-// import DeleteButton from './DeleteButton'
-import CrudModal from './CrudModal'
-import { Formik, FormikErrors } from 'formik'
-import Layout from './Layout/Layout'
-import { LeftOutlined } from '@ant-design/icons'
 import classNames from 'classnames'
-import { useTranslationI18 } from '../hooks/useTranslationI18'
+import { Formik, FormikErrors } from 'formik'
+import load from 'lodash'
 import { useRouter } from 'next/router'
+import React, { FC, RefObject, useEffect, useMemo, useState } from 'react'
+import { useGridData } from '../hooks/useGridData'
+import { useTranslationI18 } from '../hooks/useTranslationI18'
+import AddButton from './AddButton'
+import CrudModal from './CrudModal'
+import styles from './CrudTable.module.less'
 
 const { Title } = Typography
 
+let lastOrder = 0
 interface P {
   schema: Schema
+  crudLayoutRef: RefObject<HTMLDivElement>
   addQuery?: DocumentNode
   deleteQuery?: DocumentNode
   listQuery: DocumentNode
   editQuery: DocumentNode
   aggregateQuery?: DocumentNode
   tableSearch?: boolean
-  updateOrderQuery?: DocumentNode
+  updateOrderQuery?: DocumentNode | null
   showNotificationBanner?: boolean
   createPage?: boolean
   notificationBanner?: React.ReactNode
@@ -44,6 +46,18 @@ interface P {
   isCustomFilter?: boolean
   customFilter?: () => JSX.Element
   setEditPage?(e): void
+  draggable?: boolean
+  getLastOrder?: DocumentNode
+  isCustomOrder?: boolean
+  isDependentField?: boolean
+  displayColor?: boolean
+  displayLock?: boolean
+  isNestedQuery?: boolean
+  isFilterNumber?: boolean
+  isNotificationBannerOnData?: boolean
+  isCodeGen?: boolean
+  deleteOnInactive?: boolean
+  isHavingDefaultRecords?: boolean
 }
 
 const CrudTable: FC<P> = ({
@@ -63,52 +77,57 @@ const CrudTable: FC<P> = ({
   needTranslation = false,
   editPage = false,
   editPageRouteLink,
-  isCustomFilter,
+  isCustomFilter = false,
   customFilter,
   setEditPage,
+  draggable = true,
+  getLastOrder = LastAppointmentStatusOrderDocument,
+  isCustomOrder = false,
+  isDependentField = false,
+  displayColor = false,
+  displayLock = false,
+  isNestedQuery = false,
+  isFilterNumber = false,
+  isNotificationBannerOnData = false,
+  crudLayoutRef,
+  isCodeGen = false,
+  deleteOnInactive = false,
+  isHavingDefaultRecords = false,
 }) => {
   const [isLoading, setIsLoading] = useState(true)
-  const [isActive, setIsActive] = useState(true)
+  const [isActive, setIsActive] = useState<boolean | number>(
+    schema?.filter?.primary?.default ?? true
+  )
   const [searchTerm, setSearchTerm] = useState('')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [isMobileSearch, setMobileSearch] = useState(false)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [formSubmitAllowed, setFormSubmitAllowedStatus] = useState(true)
   const { t } = useTranslationI18()
-  const crudTableRef = useRef(null)
+  const { getParentSetupData } = useGridData(t)
   const router = useRouter()
 
-  // eslint-disable-next-line graphql/template-strings
   const [editMutation] = useMutation(editQuery, {
-    onCompleted(data) {
-      Notification(
-        NotificationType.success,
-        `Success! ${schema.messages.update.success}`
-      )
+    onCompleted() {
+      Notification(NotificationType.success, schema.messages.update.success)
     },
-    onError(err) {
-      Notification(
-        NotificationType.error,
-        `Error! ${schema.messages.update.error}`
-      )
+    onError() {
+      Notification(NotificationType.error, schema.messages.update.error)
     },
+    optimisticResponse: {},
   })
   const [updateOrderMutation] = useMutation(updateOrderQuery, {
-    onError(err) {
-      Notification(
-        NotificationType.error,
-        `Error! ${schema.messages.update.error}`
-      )
+    onError() {
+      Notification(NotificationType.error, schema.messages.update.error)
     },
+    optimisticResponse: {},
   })
   const [addMutation] = useMutation(addQuery, {
-    onCompleted(data) {
-      Notification(
-        NotificationType.success,
-        `Success! ${schema.messages.create.success}`
-      )
+    onCompleted() {
+      Notification(NotificationType.success, schema.messages.create.success)
     },
-    onError(err) {
-      Notification(
-        NotificationType.error,
-        `Error! ${schema.messages.create.error}`
-      )
+    onError() {
+      Notification(NotificationType.error, schema.messages.create.error)
     },
   })
   const [sourceData, setSourceData] = useState(null)
@@ -124,7 +143,7 @@ const CrudTable: FC<P> = ({
     Record<string, string | boolean | number>
   >({})
 
-  const getQueryVariables = () => {
+  const getQueryVariables = useMemo(() => {
     const queryOptions = {
       variables: {
         isActive,
@@ -133,15 +152,22 @@ const CrudTable: FC<P> = ({
         limit: paginateData.limit,
       },
     }
-
     if (!tableSearch) {
       delete queryOptions.variables.searchTerm
     }
     if (!addFilter) {
+      console.log('my query vars', queryOptions.variables)
       delete queryOptions.variables.isActive
     }
     return queryOptions
-  }
+  }, [
+    searchTerm,
+    tableSearch,
+    addFilter,
+    paginateData.offset,
+    paginateData.limit,
+    isActive,
+  ])
 
   const getAggregateQueryVariables = () => {
     const queryOptions = {
@@ -160,12 +186,20 @@ const CrudTable: FC<P> = ({
     return queryOptions
   }
 
-  const { data, error, loading } = useLiveQuery(listQuery, getQueryVariables())
+  const { data, error, loading } = useLiveQuery(listQuery, getQueryVariables)
 
   const { data: aggregateData } = useLiveQuery(
     aggregateQuery,
     getAggregateQueryVariables()
   )
+
+  const { data: lastOrderData } = useLiveQuery(getLastOrder, {
+    skip: !isCustomOrder,
+  })
+
+  if (lastOrderData?.[0].order) {
+    lastOrder = lastOrderData?.[0].order
+  }
 
   const getAddress = (data) => {
     const addressPreference = new Set([
@@ -200,29 +234,55 @@ const CrudTable: FC<P> = ({
           }
         })
         setSourceData(newData)
+      } else if (isNotificationBannerOnData && Object.keys(data).length > 1) {
+        let restData = { ...data }
+        restData = restData[schema?.showNotification?.list]
+        setSourceData(restData)
       } else {
         setSourceData(data)
       }
     }
-    if (aggregateData)
-      setPaginateData({
-        ...paginateData,
-        total: aggregateData?.aggregate.count,
-        showingRecords: data?.length,
-      })
+    if (aggregateData !== undefined) {
+      if (aggregateData?.aggregate?.count) {
+        setPaginateData({
+          ...paginateData,
+          total: aggregateData?.aggregate.count,
+          showingRecords: data?.length,
+        })
+      } else if (isNotificationBannerOnData) {
+        setPaginateData({
+          ...paginateData,
+          total: aggregateData,
+          showingRecords: data && data[schema?.showNotification?.list]?.length,
+        })
+      } else {
+        setPaginateData({
+          ...paginateData,
+          total: aggregateData,
+          showingRecords: data?.length,
+        })
+      }
+    }
     if (!loading && data) setIsLoading(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, aggregateData, loading])
 
   useEffect(() => {
-    if (crudTableRef.current) {
-      crudTableRef.current.scrollIntoView({ behavior: 'smooth' })
+    if (crudLayoutRef.current) {
+      crudLayoutRef.current.scrollIntoView({ behavior: 'smooth' })
     }
-  }, [paginateData.currentPage])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paginateData.currentPage, paginateData.limit])
 
   const onFilterMarketingSource = () => {
     resetPagination()
-    setIsActive((e) => !e)
+    if (schema?.filter?.primary?.type === 'number') {
+      setIsActive((e) => {
+        return e ? 0 : 1
+      })
+    } else {
+      setIsActive((e) => !e)
+    }
   }
 
   const onSearch = async (val) => {
@@ -232,9 +292,14 @@ const CrudTable: FC<P> = ({
     }
   }
 
-  const onPaginationChange = (currentPage) => {
+  const onPaginationChange = (currentPage, limit) => {
     const offset = paginateData.limit * (currentPage - 1)
-    setPaginateData({ ...paginateData, offset, currentPage: currentPage })
+    setPaginateData({
+      ...paginateData,
+      offset,
+      limit,
+      currentPage: currentPage,
+    })
   }
 
   const resetPagination = () => {
@@ -247,52 +312,117 @@ const CrudTable: FC<P> = ({
     })
   }
 
-  if (error) return <p>Error :( {error.message}</p>
+  if (error) {
+    console.error(error)
+  }
 
   const { fields } = schema
 
+  const getTrackTime = (value) => {
+    return value.track_time ? 1 : 0
+  }
+
+  const getDependentValue = (name) => {
+    return name.toLowerCase().replace(/[^\dA-Za-z]+/g, '')
+  }
+
+  const getCodeGenEditVariableValues = (values) => {
+    const { key, __typename, id, ...rest } = values
+    let newEditValues = {}
+    for (const item of Object.keys(rest)) {
+      if (values[item] !== null) {
+        newEditValues = { ...newEditValues, [item]: { set: values[item] } }
+      }
+    }
+    return { data: newEditValues, where: { id: id } }
+  }
+
   const onSubmit = async (values, { resetForm }) => {
-    console.log('got submittal!', values)
+    setFormSubmitAllowedStatus(false)
+    if (draggable && isCustomOrder && !values.id) {
+      values = {
+        ...values,
+        order: lastOrder + 1,
+        track_time: getTrackTime(values.track_time),
+        value: getDependentValue(values.name),
+      }
+    } else if (isDependentField && values.id) {
+      values = {
+        ...values,
+        track_time: getTrackTime(values.track_time),
+        value: getDependentValue(values.name),
+      }
+    } else if (isFilterNumber && schema?.filter?.primary?.type === 'number') {
+      values = {
+        ...values,
+        [schema?.filter?.primary?.name]: values[schema?.filter?.primary?.name]
+          ? schema?.filter?.primary?.active
+          : schema?.filter?.primary?.inactive,
+      }
+    }
+
+    let newValues
+    if (isCodeGen) {
+      if (schema?.company) {
+        newValues = { data: { ...values, [schema['company']]: {} } }
+      } else {
+        newValues = { data: { ...values } }
+      }
+      if (values.id) {
+        newValues = getCodeGenEditVariableValues(values)
+      }
+    } else {
+      newValues = values
+    }
+
+    if (isCodeGen && isCustomOrder) {
+      if (values.id) {
+        newValues.data = {
+          ...newValues.data,
+          [schema?.ordering?.name ?? 'order']: { set: values.order },
+        }
+      } else {
+        newValues.data = {
+          ...newValues.data,
+          [schema?.ordering?.name ?? 'order']: values.order,
+        }
+      }
+      delete newValues.data.order
+    }
+    if (isHavingDefaultRecords && !values.id) {
+      newValues.data = {
+        ...newValues.data,
+        default: false,
+      }
+    }
     await (values.id
       ? editMutation({
-          variables: values,
+          variables: newValues,
           optimisticResponse: {},
-          update: (proxy) => {
-            if (listQuery) {
-              const existing = proxy.readQuery({
-                query: listQuery,
-              })
-              if (existing) {
-                const key = Object.keys(existing)[0]
-                proxy.writeQuery({
-                  query: listQuery,
-                  data: {
-                    [key]: [...existing[key], values],
-                  },
-                })
-              }
-            }
-          },
+          refetchQueries: [
+            {
+              query: listQuery,
+              ...getQueryVariables,
+            },
+            {
+              query: aggregateQuery,
+              ...getAggregateQueryVariables(),
+            },
+          ],
         })
       : addMutation({
-          variables: values,
+          variables: newValues,
           optimisticResponse: {},
-          update: (proxy) => {
-            if (listQuery) {
-              const existing = proxy.readQuery({
-                query: listQuery,
-              })
-              if (existing) {
-                const key = Object.keys(existing)[0]
-                proxy.writeQuery({
-                  query: listQuery,
-                  data: {
-                    [key]: [...existing[key], values],
-                  },
-                })
-              }
-            }
-          },
+          refetchQueries: [
+            {
+              query: listQuery,
+              ...getQueryVariables,
+            },
+            {
+              query: aggregateQuery,
+              ...getAggregateQueryVariables(),
+            },
+          ],
         }))
     resetForm()
     setModalShowing(false)
@@ -315,50 +445,48 @@ const CrudTable: FC<P> = ({
       case 'string':
       case 'color-picker':
       case 'radio-group':
-        return defaultVal || ''
+        return defaultVal ?? ''
       case 'boolean':
       case 'checkbox':
-        return defaultVal || true
-      case 'number':
-        return defaultVal
+        return defaultVal ?? true
       default:
-        return defaultVal || ''
+        return defaultVal ?? ''
     }
   }
 
-  const checkCustomColorIconExsist = (type) => {
-    let isExist = false
+  const checkCustomColorIconExist = (type) => {
+    let exists = false
     sourceData?.map((data) => {
       if (data[type]) {
-        isExist = true
+        exists = true
       }
       return data
     })
-    return isExist
+    return exists
   }
 
   const updateOrder = async (values) => {
-    if (values.id)
+    let newValues
+    if (values.id) {
+      if (isCodeGen) {
+        newValues = {
+          data: { ord: { set: values.order } },
+          where: { id: values.id },
+        }
+      } else {
+        newValues = values
+      }
       await updateOrderMutation({
-        variables: values,
+        variables: newValues,
         optimisticResponse: {},
-        update: (proxy) => {
-          if (listQuery) {
-            const existing = proxy.readQuery({
-              query: listQuery,
-            })
-            if (existing) {
-              const key = Object.keys(existing)[0]
-              proxy.writeQuery({
-                query: listQuery,
-                data: {
-                  [key]: [...existing[key], values],
-                },
-              })
-            }
-          }
-        },
+        refetchQueries: [
+          {
+            query: listQuery,
+            ...getQueryVariables,
+          },
+        ],
       })
+    }
   }
 
   const createNew = () => {
@@ -371,145 +499,113 @@ const CrudTable: FC<P> = ({
   }
 
   const handleBack = () => {
-    router.back()
+    const parentMenu = getParentSetupData(router.pathname)
+    if (parentMenu.length > 0) {
+      router.push({
+        pathname: '/setup',
+        query: { menu: parentMenu[0]?.keyValue },
+      })
+    } else {
+      router.back()
+    }
+  }
+
+  const recursiveCallToFlatten = (value, main) => {
+    for (const key in value) {
+      if (typeof value[key] === 'object') {
+        recursiveCallToFlatten(value[key], main)
+      } else {
+        main = load.defaults(main, { [key]: value[key] })
+      }
+    }
+    return main
+  }
+
+  const handleEditValues = () => {
+    if (isNestedQuery) {
+      const nestedData = { ...editingRow }
+      let newNestedData
+      for (const key in nestedData) {
+        newNestedData =
+          typeof nestedData[key] === 'object' && nestedData[key]
+            ? recursiveCallToFlatten(nestedData[key], newNestedData)
+            : load.defaults(newNestedData, { [key]: nestedData[key] })
+      }
+      return newNestedData
+    } else {
+      return editingRow
+    }
   }
 
   return (
-    <div ref={crudTableRef}>
-      <Formik
-        enableReinitialize={true}
-        validate={(e) =>
-          Object.entries(fields).reduce((a, c) => {
-            if (
-              c[1].min && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              c[1].min > e[c[0]]?.length &&
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              e[c[0]]?.length <= 50
-            ) {
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              a[
-                c[0]
-              ] = `The value for ${c[1].shortLower} at least ${c[1].min} characters.`
-            } else if (
-              c[1].required && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              e[c[0]]?.length === 0 &&
-              c[1].validateMsg
-            ) {
-              a[c[0]] = c[1].validateMsg
-            } else if (
-              c[1].max && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              c[1].max < e[c[0]]?.toString().length
-            ) {
-              a[c[0]] = `The max length of ${c[1].max} characters is reached.`
-            } else if (
-              e[c[0]] &&
-              c[1].type === 'number' &&
-              // eslint-disable-next-line
-              !/^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?$/.test(
-                e[c[0]].toString()
-              )
-            ) {
-              a[c[0]] = `Invalid ${c[1].shortLower}.`
-            }
-            return a
+    <Formik
+      enableReinitialize={true}
+      validate={(e) =>
+        Object.entries(fields).reduce((a, c) => {
+          if (
+            c[1].min && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            c[1].min > e[c[0]]?.length &&
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            e[c[0]]?.length <= 50
+          ) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            a[c[0]] = t('crud-table-input-min-length-validate', {
+              what: c[1].shortLower,
+              min: c[1].min,
+            })
+          } else if (
+            c[1].required && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            e[c[0]]?.length === 0 &&
+            c[1].validateMsg
+          ) {
+            a[c[0]] = c[1].validateMsg
+          } else if (
+            c[1].max && // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            c[1].max < e[c[0]]?.toString().length
+          ) {
+            a[c[0]] = t('crud-table-input-max-length-validate', {
+              max: c[1].max,
+            })
+          } else if (
+            e[c[0]] &&
+            c[1].type === 'number' &&
             // eslint-disable-next-line
+              !/^[+]?([0-9]+(?:\.][0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?$/.test(
+              e[c[0]].toString()
+            )
+          ) {
+            a[c[0]] = t('crud-table-input-invalid-validate', {
+              what: c[1].shortLower,
+            })
+          }
+          return a
+          // eslint-disable-next-line
           }, {} as FormikErrors<any>)
-        }
-        onSubmit={(values, { resetForm }) => {
-          console.log('formik onsubmit', values)
-          onSubmit(values, { resetForm })
-        }}
-        //initialValues={typeof modalShowing === 'object' ? modalShowing : undefined}
-        initialValues={
-          editingRow?.id ? editingRow : formikFields() //TODO: remove this, it should come from schema.fields[].*
-        }
-      >
-        <>
-          <div
-            className={classNames(
-              styles.marketingSourcePage,
-              styles.desktopViewNone
-            )}
-          >
-            <MobileHeader className={styles.marketingSourceHeader}>
-              <div className={styles.allContentAlignMobile}>
-                <div className={styles.marketingTextStyle}>
-                  <LeftOutlined onClick={handleBack} />
-                  <p>
-                    {' '}
-                    {needTranslation
-                      ? t('marketingsource-title.translation')
-                      : schema.full || schema.short}{' '}
-                  </p>
-                </div>
-                {addQuery && !createPage ? (
-                  <AddButton
-                    onClick={createNew}
-                    onFilterSource={onFilterMarketingSource}
-                    onSearch={onSearch}
-                    schema={schema}
-                    tableSearch={tableSearch}
-                    needTranslation={needTranslation}
-                    addFilter={addFilter}
-                    isCustomFilter={isCustomFilter}
-                    customFilter={customFilter}
-                  />
-                ) : (
-                  <AddButton
-                    onClick={createPageOnClick}
-                    onFilterSource={onFilterMarketingSource}
-                    onSearch={onSearch}
-                    schema={schema}
-                    tableSearch={tableSearch}
-                    addFilter={addFilter}
-                    needTranslation={needTranslation}
-                    isCustomFilter={isCustomFilter}
-                    customFilter={customFilter}
-                  />
-                )}
-              </div>
-            </MobileHeader>
-          </div>
-
-          {modalShowing && (
-            <CrudModal
-              schema={schema}
-              editingRow={editingRow}
-              addQuery={addQuery}
-              listQuery={listQuery}
-              deleteQuery={deleteQuery}
-              onClose={() => setModalShowing(false)}
-            />
+      }
+      onSubmit={(values, { resetForm }) => {
+        onSubmit(values, { resetForm })
+      }}
+      initialValues={
+        editingRow?.id ? handleEditValues() : formikFields() //TODO: remove this, it should come from schema.fields[].*
+      }
+    >
+      <>
+        <div
+          className={classNames(
+            styles.marketingSourcePage,
+            styles.desktopViewNone
           )}
-
-          <Layout>
-            {showNotificationBanner && notificationBanner}
-            <div
-              className={classNames(
-                styles.tableMainHeading,
-                styles.mobileViewNone
-              )}
-            >
-              <div style={{ background: '#FFF' }}>
-                <Breadcrumb
-                  breadcrumbItems={[
-                    {
-                      breadcrumbName: needTranslation
-                        ? t(
-                            'marketingsource-header-breadcrumb-setup-link.translation'
-                          )
-                        : 'Setup',
-                      path: 'setup',
-                    },
-                    { breadcrumbName: schema.full || schema.short, path: '' },
-                  ]}
-                />
-                <Title>{schema.full || schema.short}</Title>
+        >
+          <MobileHeader className={styles.marketingSourceHeader}>
+            <div className={styles.allContentAlignMobile}>
+              <div className={styles.marketingTextStyle}>
+                <LeftOutlined onClick={handleBack} />
+                {!isMobileSearch && <p>{schema.full || schema.short} </p>}
               </div>
               {addQuery && !createPage ? (
                 <AddButton
@@ -522,6 +618,10 @@ const CrudTable: FC<P> = ({
                   addFilter={addFilter}
                   isCustomFilter={isCustomFilter}
                   customFilter={customFilter}
+                  mobileSearch={isMobileSearch}
+                  setMobileSearch={() => {
+                    setMobileSearch((e) => !e)
+                  }}
                 />
               ) : (
                 <AddButton
@@ -534,87 +634,162 @@ const CrudTable: FC<P> = ({
                   needTranslation={needTranslation}
                   isCustomFilter={isCustomFilter}
                   customFilter={customFilter}
+                  mobileSearch={isMobileSearch}
+                  setMobileSearch={() => {
+                    setMobileSearch((e) => !e)
+                  }}
                 />
               )}
             </div>
-            <Table
-              loading={isLoading}
-              style={{ height: '100%' }}
-              scroll={{ x: 'max-content' }}
-              sticky={{ offsetScroll: 80, offsetHeader: 80 }}
-              pagination={sourceData?.length > 10 ? {} : false}
-              draggable={true}
-              isCustomColorExist={checkCustomColorIconExsist('color')}
-              isCustomIconExist={checkCustomColorIconExsist('icon')}
-              noDataBtnText={schema.full}
-              noDataText={schema.fullLower}
-              padlocked={schema.padlocked}
-              onAddTemplate={
-                createPage ? () => createPageOnClick() : () => createNew()
-              }
-              searchTerm={searchTerm}
-              columns={[
-                ...Object.entries(schema.fields).map(([k, v]) => ({
-                  dataIndex: k,
-                  width: v.cssWidth,
-                  title: v.short || v.full,
-                  visible: Object.prototype.hasOwnProperty.call(v, 'visible')
-                    ? v.visible
-                    : true,
-                })),
+          </MobileHeader>
+        </div>
+
+        {modalShowing && (
+          <CrudModal
+            schema={schema}
+            editingRow={editingRow}
+            addQuery={addQuery}
+            deleteQuery={deleteQuery}
+            onClose={() => setModalShowing(false)}
+            needTranslation={needTranslation}
+            listQuery={listQuery}
+            listQueryVariables={getQueryVariables}
+            aggregateQuery={aggregateQuery}
+            aggregateQueryVariables={getAggregateQueryVariables}
+            isCodeGen={isCodeGen}
+            deleteOnInactive={deleteOnInactive}
+          />
+        )}
+        {isNotificationBannerOnData
+          ? data?.[schema?.showNotification?.query]?.length > 0 &&
+            data?.[schema?.showNotification?.query][0]?.create_invoice === '1'
+            ? showNotificationBanner && notificationBanner
+            : null
+          : showNotificationBanner && notificationBanner}
+        <div
+          className={classNames(styles.tableMainHeading, styles.mobileViewNone)}
+        >
+          <div style={{ background: '#FFF' }}>
+            <Breadcrumb
+              breadcrumbItems={[
+                {
+                  breadcrumbName: t('navigation-breadcrumb-setup'),
+                  path: 'setup',
+                },
+                { breadcrumbName: schema.full || schema.short, path: '' },
               ]}
-              // eslint-disable-next-line
-              dataSource={sourceData?.map((e: { id: any }) => ({
-                key: e.id,
-                ...e,
-              }))}
-              updateDataSource={({ newData, oldIndex, newIndex }) => {
-                newData = newData.map((data, i) => {
-                  data.order = sourceData[i].order
-                  return data
-                })
-                if (oldIndex > newIndex) {
-                  for (let i = newIndex; i <= oldIndex; i++) {
-                    updateOrder(newData[i])
-                  }
-                } else {
-                  for (let i = oldIndex; i <= newIndex; i++) {
-                    updateOrder(newData[i])
-                  }
-                }
-                setSourceData(newData)
-                console.log('newData, oldIndex, newIndex', {
-                  newData,
-                  oldIndex,
-                  newIndex,
-                })
-              }}
-              onRowClick={(e) => {
-                if (editPage) {
-                  router.push(`${editPageRouteLink}/${e.id}`)
-                } else if (createPage) {
-                  setEditPage(e)
-                } else {
-                  setEditingRow(e)
-                  setModalShowing((e) => !e)
-                }
-              }}
+            />
+            <Title>{schema.full || schema.short}</Title>
+          </div>
+          {addQuery && !createPage ? (
+            <AddButton
+              onClick={createNew}
+              onFilterSource={onFilterMarketingSource}
+              onSearch={onSearch}
+              schema={schema}
+              tableSearch={tableSearch}
               needTranslation={needTranslation}
+              addFilter={addFilter}
+              isCustomFilter={isCustomFilter}
+              customFilter={customFilter}
             />
-            <Pagination
-              total={paginateData.total}
-              defaultPageSize={50}
-              showSizeChanger={false}
-              onChange={onPaginationChange}
-              pageSize={paginateData.limit}
-              current={paginateData.currentPage}
-              showingRecords={paginateData.showingRecords}
+          ) : (
+            <AddButton
+              onClick={createPageOnClick}
+              onFilterSource={onFilterMarketingSource}
+              onSearch={onSearch}
+              schema={schema}
+              tableSearch={tableSearch}
+              addFilter={addFilter}
+              needTranslation={needTranslation}
+              isCustomFilter={isCustomFilter}
+              customFilter={customFilter}
             />
-          </Layout>
-        </>
-      </Formik>
-    </div>
+          )}
+        </div>
+        <div className={styles.marketingSourcesTableContainer}>
+          <Table
+            loading={isLoading}
+            style={{ height: '100%' }}
+            sticky={{ offsetScroll: 80, offsetHeader: 64 }}
+            pagination={sourceData?.length > 10 ? {} : false}
+            draggable={draggable}
+            isCustomColorExist={checkCustomColorIconExist('color')}
+            isCustomIconExist={checkCustomColorIconExist('icon')}
+            noDataBtnText={schema?.noDataBtnText ?? schema.full}
+            noDataText={schema?.noDataText ?? schema.fullLower}
+            padlocked={schema.padlocked}
+            scroll={{ x: 'max-content' }}
+            onAddTemplate={
+              createPage ? () => createPageOnClick() : () => createNew()
+            }
+            searchTerm={searchTerm}
+            columns={[
+              ...Object.entries(schema.fields).map(([k, v]) => ({
+                dataIndex: k,
+                width: v.cssWidth,
+                title: v.short || v.full,
+                visible: Object.prototype.hasOwnProperty.call(v, 'visible')
+                  ? v.visible
+                  : true,
+                render: v.render,
+              })),
+            ]}
+            dataSource={sourceData?.map((e: { id: string | number }) => ({
+              key: e.id,
+              ...e,
+            }))}
+            updateDataSource={({ newData, oldIndex, newIndex }) => {
+              newData = newData.map((data, i) => {
+                data.order = sourceData[i].order
+                return data
+              })
+              if (oldIndex > newIndex) {
+                for (let i = newIndex; i <= oldIndex; i++) {
+                  updateOrder(newData[i])
+                }
+              } else {
+                for (let i = oldIndex; i <= newIndex; i++) {
+                  updateOrder(newData[i])
+                }
+              }
+              setSourceData(newData)
+            }}
+            onRowClick={(e) => {
+              if (editPage) {
+                router.push(`${editPageRouteLink}/${e.id}`)
+              } else if (createPage) {
+                setEditPage(e)
+              } else {
+                setEditingRow(e)
+                setModalShowing((e) => !e)
+              }
+            }}
+            needTranslation={needTranslation}
+            displayColor={displayColor}
+            displayLock={displayLock}
+          />
+        </div>
+        <Pagination
+          total={paginateData.total}
+          defaultPageSize={50}
+          showSizeChanger={false}
+          onChange={onPaginationChange}
+          pageSizeOptions={['10', '25', '50', '100']}
+          onPageSizeChange={(pageSize) => {
+            setPaginateData({
+              ...paginateData,
+              limit: pageSize,
+              offset: 0,
+              currentPage: 1,
+            })
+          }}
+          pageSize={paginateData.limit}
+          current={paginateData.currentPage}
+          showingRecords={paginateData.showingRecords}
+        />
+      </>
+    </Formik>
   )
 }
-
 export default CrudTable

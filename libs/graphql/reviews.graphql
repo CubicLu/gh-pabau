@@ -1,0 +1,129 @@
+query getSocialSurveyFeedback(
+  $take: Int
+  $skip: Int
+  $full_name: String
+  $rating: IntFilter
+  $service: String
+) {
+  findManySocialSurveyFeedback(
+    take: $take
+    skip: $skip
+    orderBy: { date: desc }
+    where: {
+      User: { full_name: { contains: $full_name } }
+      rating: $rating
+      service: { contains: $service }
+    }
+  ) {
+    feedback_source
+    id
+    date
+    contact_id
+    feedback_status
+    rating
+    service
+    feedback_name
+    feedback_comment
+    feedback_for
+    public_use
+    Response {
+      response
+      id
+    }
+    CmContact {
+      Email
+    }
+    Company {
+      details {
+        company_name
+      }
+    }
+    User {
+      username
+      full_name
+      image
+    }
+  }
+}
+query getAllSocialSurveyFeedback {
+  findManySocialSurveyFeedback(orderBy: { date: desc }) {
+    feedback_source
+    rating
+    service
+    date
+    User {
+      username
+      full_name
+    }
+  }
+}
+
+query getAllSocialSurveyFeedbackRecords(
+  $full_name: String
+  $rating: IntFilter
+  $service: String
+) {
+  findManySocialSurveyFeedback(
+    orderBy: { date: desc }
+    where: {
+      User: { full_name: { contains: $full_name } }
+      rating: $rating
+      service: { contains: $service }
+    }
+  ) {
+    id
+  }
+}
+
+query socialSurveyFeedbackAggregate {
+  findManySocialSurveyFeedbackCount
+}
+
+mutation insertSocialSurveyResposnes(
+  $response: String!
+  $feedback: Int!
+  $uid: Int!
+) {
+  createOneSocialSurveyFeedbackResponse(
+    data: {
+      response: $response
+      Company: {}
+      User: { connect: { id: $uid } }
+      Feedback: { connect: { id: $feedback } }
+    }
+  ) {
+    __typename
+    response
+    review_id
+    id
+  }
+}
+
+mutation updateSocialSurveyResponse($id: Int!, $updated_text: String!) {
+  updateOneSocialSurveyFeedbackResponse(
+    data: { response: { set: $updated_text } }
+    where: { id: $id }
+  ) {
+    __typename
+    id
+    response
+    review_id
+  }
+}
+
+mutation updateSocialSurveyFeedback($public_use: Int!, $feedback_id: Int!) {
+  updateOneSocialSurveyFeedback(
+    where: { id: $feedback_id }
+    data: { public_use: { set: $public_use } }
+  ) {
+    __typename
+    public_use
+  }
+}
+
+mutation deleteSocialSurveyResponse($id: Int) {
+  deleteOneSocialSurveyFeedbackResponse(where: { id: $id }) {
+    __typename
+    id
+  }
+}

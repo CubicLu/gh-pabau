@@ -3,15 +3,17 @@ import { RightOutlined } from '@ant-design/icons'
 import styles from './SetupChip.module.less'
 import { Collapse } from 'antd'
 import Link from 'next/link'
+import { SubData } from './SetupGrid'
 
 export interface SubDataMenuTitleMobile {
   title: string
-  data: string[]
+  data: SubData[]
   href?: string
 }
 
 export interface SetupGridSubMenuMobileProps {
   subTitleData: SubDataMenuTitleMobile
+  setSMSModalVisible?: () => void
 }
 
 const { Panel } = Collapse
@@ -19,7 +21,7 @@ const { Panel } = Collapse
 export function SetupGridSubMenuMobile(
   props: SetupGridSubMenuMobileProps
 ): JSX.Element {
-  const { subTitleData } = props
+  const { subTitleData, setSMSModalVisible } = props
 
   return (
     <div className={styles.gridMobileWrapper}>
@@ -39,7 +41,15 @@ export function SetupGridSubMenuMobile(
             {subTitleData.data.map((thread, index) => {
               return (
                 <div key={index}>
-                  <span>{thread}</span>
+                  {thread.href ? (
+                    <Link href={thread.href}>
+                      <span>{thread.title}</span>
+                    </Link>
+                  ) : thread.isModal ? (
+                    <span onClick={setSMSModalVisible}>{thread.title}</span>
+                  ) : (
+                    <span>{thread.title}</span>
+                  )}
                 </div>
               )
             })}

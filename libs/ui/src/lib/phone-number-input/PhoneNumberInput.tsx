@@ -1,7 +1,7 @@
-import React, { FC, useState, useEffect } from 'react'
-import PhoneInput from 'react-phone-input-2'
-import { PhoneNumberUtil } from 'google-libphonenumber'
 import ClassNames from 'classnames'
+import { PhoneNumberUtil } from 'google-libphonenumber'
+import React, { FC, useEffect, useState } from 'react'
+import PhoneInput from 'react-phone-input-2'
 import styles from './PhoneNumberInput.module.less'
 
 const phoneUtil = PhoneNumberUtil.getInstance()
@@ -9,22 +9,28 @@ export interface PhoneNumberInputProps {
   countryCode?: string
   label?: string
   value?: string
+  labelStyle?: string
   onChange(val: string, valid?: boolean): void
+  placeholder?: string
+  showValidErrorMessage?: boolean
 }
 
 export const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
   countryCode = 'GB',
   label = 'Phone Number',
-  value = '',
+  value = '44',
   onChange,
+  labelStyle,
+  placeholder = '',
+  showValidErrorMessage = true,
 }) => {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [valid, setValid] = useState(true)
+  const [country, setCountry] = useState(countryCode)
   useEffect(() => {
-    if (value) {
-      setPhoneNumber(value)
-    } else {
-      setPhoneNumber('44')
+    setPhoneNumber(value)
+    if (!value) {
+      setCountry(countryCode)
     }
   }, [value, countryCode])
 
@@ -42,12 +48,21 @@ export const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
       validNumber = false
     }
     setPhoneNumber(val)
+    setCountry(country.countryCode)
     onChange(`${val}`, validNumber)
   }
 
   return (
     <div className={styles.phoneNumberInputContainer}>
-      <p className={styles.phoneNumberLabel}>{label}</p>
+      <p
+        className={
+          labelStyle
+            ? ClassNames(styles.phoneNumberLabel, labelStyle)
+            : styles.phoneNumberLabel
+        }
+      >
+        {label}
+      </p>
       <div
         className={
           valid
@@ -56,12 +71,15 @@ export const PhoneNumberInput: FC<PhoneNumberInputProps> = ({
         }
       >
         <PhoneInput
-          country={countryCode.toLowerCase()}
           value={phoneNumber}
+          country={country.toLowerCase()}
           onChange={(value, country) => handleChangeInput(value, country)}
+          inputProps={{
+            placeholder: placeholder,
+          }}
         />
       </div>
-      {!valid && (
+      {showValidErrorMessage && !valid && (
         <div className={styles.phoneNumberValidMsg}>
           Please enter a valid phone number
         </div>

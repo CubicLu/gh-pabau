@@ -1,5 +1,6 @@
 import { Input } from 'antd'
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import styles from './MedicalFormBuilder.module.less'
 
 interface P {
@@ -9,8 +10,20 @@ interface P {
   changeFormName: (formName: string) => void
 }
 
-const MedicalFormName: FC<P> = ({ label, desc, name, changeFormName }) => {
+export const MedicalFormName: FC<P> = ({
+  label,
+  desc,
+  name,
+  changeFormName,
+}) => {
+  const { t } = useTranslation('common')
   const [formName, setFormName] = useState(name)
+  const defaultFormName = t('ui.medicalformbuilder.form.empty')
+
+  useEffect(() => {
+    setFormName(name)
+  }, [name])
+
   const onChangeFormName = (e) => {
     setFormName(e.target.value)
     changeFormName(e.target.value)
@@ -18,7 +31,11 @@ const MedicalFormName: FC<P> = ({ label, desc, name, changeFormName }) => {
   return (
     <div className={styles.medicalFormName}>
       <div className={styles.label}>{label}</div>
-      <Input placeholder={desc} value={formName} onChange={onChangeFormName} />
+      <Input
+        placeholder={desc}
+        value={formName === '' ? defaultFormName : formName}
+        onChange={onChangeFormName}
+      />
     </div>
   )
 }

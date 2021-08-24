@@ -1,26 +1,39 @@
-import React from 'react'
-import { AppProps } from 'next/app'
-import Head from 'next/head'
-import { ReactComponent as NxLogo } from '../public/nx-logo-white.svg'
-// import './styles.less'
+// import App from "next/app";
+import { NextComponentType } from 'next'
+import { AppContext, AppInitialProps, AppProps } from 'next/app'
 
-function CustomApp({ Component, pageProps }: AppProps) {
+//TODO: ideally remove these
+import 'react-phone-input-2/lib/style.css'
+import 'react-quill/dist/quill.snow.css'
+import 'react-image-crop/dist/ReactCrop.css'
+
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
+
+const client = new ApolloClient({
+  uri: 'https://api-v2.pabau.com/v1/graphql', //TODO: make this env var
+  cache: new InMemoryCache(),
+})
+
+// https://github.com/myeongjae-kim/next-js-with-typescript-valid-app-type/blob/master/pages/_app.tsx
+const MyApp: NextComponentType<AppContext, AppInitialProps, AppProps> = ({
+  Component,
+  pageProps,
+}) => {
   return (
-    <>
-      <Head>
-        <title>Welcome to mgmt!</title>
-      </Head>
-      <div className="app">
-        <header className="flex">
-          <NxLogo width="75" height="50" />
-          <h1>Welcome to mgmt!</h1>
-        </header>
-        <main>
-          <Component {...pageProps} />
-        </main>
-      </div>
-    </>
+    <ApolloProvider client={client}>
+      <Component {...pageProps} />
+    </ApolloProvider>
   )
 }
 
-export default CustomApp
+// Only uncomment this method if you have blocking data requirements for
+// every single page in your application. This disables the ability to
+// perform automatic static optimization, causing every page in your app to
+// be server-side rendered.
+
+// MyApp.getInitialProps = async (appContext) => {
+//   const appProps = await App.getInitialProps(appContext)
+//   return { ...appProps }
+// }
+
+export default MyApp

@@ -1,17 +1,20 @@
 import React, { useState, ReactNode } from 'react'
 import styles from './Securitytools.module.less'
 import { Badge } from '@pabau/ui'
+import { Skeleton } from 'antd'
 
 interface P {
   datasource: SecurityToolsItemInfo[]
   title: string
   onItemClick: (index) => void
+  loading?: boolean
 }
 
 export const SecurityTools: React.FC<P> = ({
   datasource,
   title,
   onItemClick,
+  loading,
 }) => {
   const [selectedId, setSelectedId] = useState(0)
 
@@ -24,7 +27,12 @@ export const SecurityTools: React.FC<P> = ({
     <div className={styles.scoreBody}>
       <p className={styles.phead}>{title}</p>
       {datasource?.map((el, i) => (
-        <Item key={i} item={el} onClick={() => handleItemClick(i)} />
+        <Item
+          key={i}
+          item={el}
+          onClick={() => handleItemClick(i)}
+          loading={loading}
+        />
       ))}
     </div>
   )
@@ -35,6 +43,7 @@ export default SecurityTools
 interface ItemProps {
   item: SecurityToolsItemInfo
   onClick: () => void
+  loading?: boolean
 }
 
 export interface SecurityToolsItemInfo {
@@ -47,7 +56,7 @@ export interface SecurityToolsItemInfo {
 }
 
 function Item(props: ItemProps) {
-  const { onClick, item } = props
+  const { onClick, item, loading } = props
 
   function handleClick() {
     onClick()
@@ -62,10 +71,14 @@ function Item(props: ItemProps) {
           <span className={styles.p2}>{item.name}</span>
         </div>
         <div className={styles.statelabel}>
-          <Badge
-            disabled={item.isActive}
-            label={item.isActive ? 'Enabled' : 'Disabled'}
-          />
+          {!loading ? (
+            <Badge
+              disabled={item.isActive}
+              label={item.isActive ? 'Enabled' : 'Disabled'}
+            />
+          ) : (
+            <Skeleton.Button active={true} size={'small'} />
+          )}
         </div>
       </div>
       <hr className={styles.securityToolsline} />

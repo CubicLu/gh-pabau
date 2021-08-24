@@ -2,14 +2,13 @@ module.exports = {
   client: {
     service: {
       name: 'hasura',
-      url: 'https://api.new.pabau.com/v1/graphql',
-
-// optional headers
+      url:
+        process.env.NODE_ENV !== 'production'
+          ? 'http://localhost:8080/v1/graphql'
+          : 'https://api-v2.pabau.com/v1/graphql',
       headers: {
-        //authorization: 'Bearer lkjfalkfjadkfjeopknavadf'
+        'X-Hasura-Admin-Secret': `${process.env.HASURA_GRAPHQL_ADMIN_SECRET}`,
       },
-      // optional disable SSL validation check
-      //skipSSLValidation: true
     },
   },
-};
+}

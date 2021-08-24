@@ -5,6 +5,7 @@ import { DocumentNode, useMutation } from '@apollo/client'
 import { useFormikContext } from 'formik'
 import { Tooltip } from 'antd'
 import { QuestionCircleOutlined } from '@ant-design/icons'
+import { useTranslationI18 } from '../hooks/useTranslationI18'
 
 interface P {
   schema: Schema
@@ -12,24 +13,39 @@ interface P {
   deleteQuery?: DocumentNode
   listQuery: DocumentNode
   editingRow?: Record<string, string | boolean | number>
+  needTranslation?: boolean
   onClose?: () => void
+  listQueryVariables: any
+  aggregateQuery?: DocumentNode
+  aggregateQueryVariables?: any
+  submitting?: boolean
   showModalInitially?: boolean
+  isDataIntegrityCheck?: boolean
+  dataIntegrityCount?: number
+  isCodeGen?: boolean
+  deleteOnInactive?: boolean
 }
 
 const CrudModal: FC<P> = ({
   schema,
-  addQuery,
   deleteQuery,
   listQuery,
+  listQueryVariables,
   onClose,
   editingRow,
   showModalInitially,
+  aggregateQuery,
+  aggregateQueryVariables,
+  submitting = false,
+  isCodeGen = false,
+  deleteOnInactive = false,
 }) => {
+  const { t } = useTranslationI18()
   const [openDeleteModal, setDeleteModal] = useState(
     showModalInitially || false
   )
   const [deleteMutation] = useMutation(deleteQuery, {
-    onCompleted(data) {
+    onCompleted() {
       Notification(
         NotificationType.success,
         `Success! ${schema.messages.delete.success}`
@@ -44,32 +60,45 @@ const CrudModal: FC<P> = ({
   })
   const formik = useFormikContext<unknown>()
 
-  //let formRef: { submitForm: () => void } | null = null
-  // const formRef = useEnsuredForwardedRef<{ submitForm: () => void }>(null)
-
   const schemaForm = { ...schema, fields: { ...schema.fields } }
-  const specialFormElement = schemaForm.fields['is_active']
-  delete schemaForm.fields['is_active']
+  const specialFormElement =
+    schemaForm.fields[schema?.filter?.primary?.name] ??
+    schemaForm.fields['is_active'] //TODO remove it ONCE is_active is fully refactored
+  delete schemaForm.fields['is_active'] //TODO remove it ONCE is_active is fully refactored
+  delete schemaForm.fields[schema?.filter?.primary?.name]
+  delete schemaForm.fields[schema?.company?.toString()]
   const [specialBoolean, setSpecialBoolean] = useState<boolean>(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    (editingRow?.id && editingRow?.is_active) ??
-      (typeof specialFormElement?.defaultvalue === 'boolean' &&
-        specialFormElement.defaultvalue) ??
-      true
+    schema?.filter?.primary?.name
+      ? (editingRow?.id &&
+          editingRow?.[schema?.filter?.primary?.name?.toString()]) ??
+          (typeof specialFormElement?.defaultvalue === 'boolean' &&
+            specialFormElement.defaultvalue) ??
+          true
+      : (editingRow?.id && editingRow?.is_active) ?? //TODO remove it ONCE is_active is fully refactored
+          (typeof specialFormElement?.defaultvalue === 'boolean' &&
+            specialFormElement.defaultvalue) ??
+          true
   )
+  const [formSubmitting, setFormSubmitting] = useState(submitting)
 
   useEffect(() => {
     setSpecialBoolean(
-      (editingRow?.id && (editingRow?.is_active as boolean)) ??
-        (typeof specialFormElement?.defaultvalue === 'boolean' &&
-          (specialFormElement.defaultvalue as boolean)) ??
-        true
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      schema?.filter?.primary?.name
+        ? (editingRow?.id &&
+            editingRow?.[schema?.filter?.primary?.name?.toString()]) ??
+            (typeof specialFormElement?.defaultvalue === 'boolean' &&
+              specialFormElement.defaultvalue) ??
+            true
+        : (editingRow?.id && editingRow?.is_active) ?? //TODO remove this later on when no pages have hardcoded is_active
+            (typeof specialFormElement?.defaultvalue === 'boolean' &&
+              specialFormElement.defaultvalue) ??
+            true
     )
-  }, [editingRow, specialFormElement])
-
-  console.log('formik', formik)
-
+  }, [editingRow, schema?.filter?.primary?.name, specialFormElement])
   return (
     <>
       <Modal
@@ -80,35 +109,28 @@ const CrudModal: FC<P> = ({
           onClose?.()
         }}
         onOk={async () => {
-          const { id } = editingRow as { id: string }
+          const { id } = editingRow
+          setFormSubmitting(true)
           await deleteMutation({
-            variables: { id },
+            variables: isCodeGen ? { where: { id: id } } : { id },
             optimisticResponse: {},
-            update: (cache) => {
-              const existing = cache.readQuery({
+            refetchQueries: [
+              {
                 query: listQuery,
-              })
-              if (existing) {
-                // eslint-disable-next-line @typescript-eslint/ban-types
-                const key = Object.keys(existing as object)[0]
-                cache.writeQuery({
-                  query: listQuery,
-                  data: {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    [key]: (existing[key] as Record<string, never>).filter(
-                      (e) => e.id !== id
-                    ),
-                  },
-                })
-              }
-            },
+                ...listQueryVariables,
+              },
+              {
+                query: aggregateQuery,
+                ...aggregateQueryVariables(),
+              },
+            ],
           })
           setDeleteModal(false)
           onClose?.()
+          setFormSubmitting(false)
         }}
         visible={openDeleteModal}
-        title={`Delete ${schema.short}?`}
+        title={schema.deleteModalHeader || `Delete ${schema.short}?`}
         newButtonText={schema.deleteBtnLabel || 'Yes, Delete'}
         isValidate={true}
       >
@@ -124,23 +146,29 @@ const CrudModal: FC<P> = ({
           {schema.deleteDescField
             ? editingRow[schema.deleteDescField]
             : editingRow?.name}{' '}
-          will be deleted. This action is irreversable
+          {t('common-label-delete-warning')}
         </span>
       </Modal>
       <Modal
         modalWidth={682}
         centered={true}
+        submitting={formSubmitting}
         onCancel={() => {
           onClose?.()
           formik.resetForm()
         }}
         onDelete={() => setDeleteModal(true)}
-        onOk={() => formik.submitForm()}
+        onOk={() => {
+          setFormSubmitting(true)
+          formik.submitForm()
+        }}
         visible={!openDeleteModal}
         title={
           typeof editingRow === 'object' && editingRow.isCreate ? (
             <span>
-              {`Create ${schema.full}`}
+              {schema.createModalHeader
+                ? schema.createModalHeader
+                : `Create ${schema.full}`}
               {schema.tooltip && (
                 <Tooltip placement="top" title={schema.tooltip}>
                   <QuestionCircleOutlined
@@ -149,64 +177,44 @@ const CrudModal: FC<P> = ({
                 </Tooltip>
               )}
             </span>
+          ) : schema.editModalHeader ? (
+            schema.editModalHeader
           ) : (
             `Edit ${schema.full}`
           )
         }
         newButtonText={
-          typeof editingRow === 'object' && editingRow.isCreate
-            ? `Create`
-            : 'Save'
+          typeof editingRow === 'object' && editingRow?.isCreate
+            ? t('common-label-create')
+            : t('common-label-save')
         }
-        dangerButtonText={editingRow?.id && `Delete`}
-        specialBooleanLabel={!!specialFormElement && 'Active'}
+        dangerButtonText={
+          schema?.disable?.deleteable && editingRow?.id
+            ? !formik.values[schema?.disable.conditionalField]
+              ? t('common-label-delete')
+              : null
+            : deleteOnInactive && editingRow?.id
+            ? !formik?.values['is_active'] && t('common-label-delete')
+            : editingRow?.id && t('common-label-delete')
+        }
+        specialBooleanLabel={
+          !!specialFormElement && t('marketingsource-status-label')
+        }
         specialBooleanValue={specialBoolean}
         onSpecialBooleanClick={() => {
           setSpecialBoolean((e) => !e)
-          formik.setFieldValue('is_active', !specialBoolean)
-          // if (editingRow) {
-          //   editingRow.is_active = !specialBoolean
-          // }
+          schema?.filter?.primary?.name
+            ? formik.setFieldValue(
+                schema?.filter?.primary?.name?.toString(),
+                !specialBoolean
+              )
+            : formik.setFieldValue('is_active', !specialBoolean) //TODO remove this later on when no pages have hardcoded is_active
         }}
         isValidate={
-          editingRow?.isCreate
-            ? formik?.dirty && formik?.isValid
-            : formik?.isValid
+          editingRow?.isCreate ? formik.dirty && formik.isValid : formik.isValid
         }
       >
-        <Form
-          // ref={formRef} typeof editingRow === 'object' ? editingRow : undefined}
-          formik={formik}
-          schema={schemaForm}
-          // initialValues={typeof editingRow === 'object' ? editingRow : { name: 'erm' }}
-          // onSubmit={async (form: Record<string, unknown>) => {
-          //   console.log('ONsUBMIT', form)
-          //   return
-          //   if (specialFormElement) form['is_active'] = specialBoolean
-          //   debugger
-          //   await addMutation({
-          //     variables: form,
-          //     optimisticResponse: {},
-          //     update: (proxy) => {
-          //       if (listQuery) {
-          //         const existing = proxy.readQuery({
-          //           query: listQuery,
-          //         })
-          //         if (existing) {
-          //           const key = Object.keys(existing)[0]
-          //           proxy.writeQuery({
-          //             query: listQuery,
-          //             data: {
-          //               [key]: [...existing[key], form],
-          //             },
-          //           })
-          //         }
-          //       }
-          //     },
-          //   })
-          //   onClose?.()
-          // }}
-        />
+        <Form formik={formik} schema={schemaForm} />
       </Modal>
     </>
   )

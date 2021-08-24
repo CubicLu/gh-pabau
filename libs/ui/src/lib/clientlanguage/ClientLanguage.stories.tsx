@@ -20,6 +20,8 @@ const DefaultClientLanguage: FC<P> = ({ ...args }) => {
   return (
     <div style={{ width: '350px' }}>
       <ClientLanguage
+        isHover={true}
+        isClickable={true}
         selectLanguageHook={[selectLanguage, SetSelectLanguage]}
         defaultLanguage={args.defaultLanguage}
       />

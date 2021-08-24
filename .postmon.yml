@@ -1,0 +1,29 @@
+Configure your codegens here as a DAG
+---
+scripts:
+  graphql-codegen:
+    inputs:
+      - codegen.yml
+      - hasura/schema.graphql
+      - libs/graphql/**/*.graphql
+    command: yarn graphql-codegen
+  nexus:
+    inputs:
+      - apps/bridge-api/src/**/*
+    outputs:
+      - apps/bridge-api/src/generated/nexus.d.ts
+    command: yarn nexus:generate
+  pal:
+    inputs:
+      - pal.js
+      - apps/bridge-api/src/prisma/schema.prisma
+      - node_modules/.prisma/
+    outputs:
+      - apps/bridge-api/src/types
+      - libs/graphql/crm-mutation/
+    command: yarn rimraf libs/graphql/crm-mutation apps/bridge-api/src/generated/types && yarn env-cmd -f apps/bridge-api/.env yarn pal g
+  prisma:
+    inputs:
+      - apps/bridge-api/src/prisma/schema.prisma
+    outputs:
+      - node_modules/.prisma/

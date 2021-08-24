@@ -1,11 +1,12 @@
 import React from 'react'
 import SecurityTools from './Securitytools'
-import { securityToolsData } from '../../assets/securityData'
 
 export default {
   component: SecurityTools,
   title: 'Misc/Securitytool',
-  args: { title: 'Security tools', datasource: securityToolsData },
+  args: {
+    title: 'Security tools',
+  },
   argTypes: {
     title: { control: { type: 'text' } },
     onClick: { action: 'clicked' },
@@ -25,5 +26,4 @@ const SecuritytoolsStory = ({ ...args }) => (
 export const Securitytool = SecuritytoolsStory.bind({})
 Securitytool.args = {
   title: 'Security Tools',
-  datasource: securityToolsData,
 }

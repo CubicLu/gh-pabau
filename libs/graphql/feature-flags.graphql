@@ -1,0 +1,40 @@
+query getFeatureFlags {
+  feature_flags {
+    id
+    page_slug
+    status
+    fallback_slug
+  }
+}
+
+mutation newFeatureFlag($fallback_slug: String = "", $page_slug: String = "") {
+  insert_feature_flags_one(
+    object: {
+      fallback_slug: $fallback_slug
+      page_slug: $page_slug
+      status: false
+    }
+  ) {
+    status
+    page_slug
+    id
+    fallback_slug
+  }
+}
+
+mutation UpdateFeatureStatus($id: uuid = "", $status: Boolean = false) {
+  update_feature_flags_by_pk(
+    pk_columns: { id: $id }
+    _set: { status: $status }
+  ) {
+    id
+    status
+  }
+}
+
+query disabledFeatures {
+  feature_flags(where: { status: { _eq: false } }) {
+    page_slug
+    fallback_slug
+  }
+}

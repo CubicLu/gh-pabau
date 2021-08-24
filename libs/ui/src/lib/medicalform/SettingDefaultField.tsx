@@ -1,25 +1,42 @@
 import { PlusOutlined } from '@ant-design/icons'
-import { Button, ButtonTypes, HelpTooltip, InputWithHelper } from '@pabau/ui'
+import { Button, ButtonTypes, HelpTooltip, InputWithTags } from '@pabau/ui'
 import React, { FC, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import styles from './Setting.module.less'
 
 type linkedFieldProps = {
   linkedLabel: string
   defaultFieldValue: string
+  defaultFieldValueWithTag: string
+  changedForm: boolean
   onChangeDefaults: (value: string) => void
 }
 
 const SettingDefaultField: FC<linkedFieldProps> = ({
   linkedLabel,
   defaultFieldValue,
+  defaultFieldValueWithTag,
+  changedForm,
   onChangeDefaults,
 }) => {
+  const { t } = useTranslation('common')
   const [defaultField, setDefaultField] = useState(defaultFieldValue)
+  const [defaultFieldWithTag, setDefaultFieldWithTag] = useState(
+    defaultFieldValueWithTag
+  )
   const [addDefaultField, setAddDefaultField] = useState(false)
+  const [triggerChangeValue, setTriggerChangeValue] = useState(false)
 
   useEffect(() => {
     setDefaultField(defaultFieldValue)
   }, [defaultFieldValue])
+  useEffect(() => {
+    setDefaultFieldWithTag(defaultFieldValueWithTag)
+  }, [defaultFieldValueWithTag])
+
+  useEffect(() => {
+    setTriggerChangeValue((triggerChangeValue) => !triggerChangeValue)
+  }, [changedForm])
 
   const onChange = (value) => {
     setDefaultField(value)
@@ -29,15 +46,21 @@ const SettingDefaultField: FC<linkedFieldProps> = ({
   return (
     <>
       <p style={{ marginTop: '20px' }}>
-        {linkedLabel} <HelpTooltip helpText="Hello" />
+        {linkedLabel}{' '}
+        <HelpTooltip
+          helpText={t('ui.medicalform.setting.defaultfield.tooltip')}
+        />
       </p>
 
       {(addDefaultField || defaultFieldValue !== '') && (
-        <div className={styles.linkedField}>
-          <InputWithHelper
-            help="Personalize Default Field"
+        <div className={styles.defaultField}>
+          <InputWithTags
+            placeholder={t('ui.medicalform.setting.defaultfield.placeholder')}
+            onChange={onChange}
             value={defaultField}
-            onChangeValue={onChange}
+            valueWithTag={defaultFieldWithTag}
+            triggerChangeValue={triggerChangeValue}
+            disabledTags={['leads', 'opportunity']}
           />
         </div>
       )}
@@ -50,7 +73,7 @@ const SettingDefaultField: FC<linkedFieldProps> = ({
             size="small"
             onClick={() => setAddDefaultField((e) => true)}
           >
-            Add
+            {t('ui.medicalform.setting.defaultfield.add')}
           </Button>
           <br />
         </>

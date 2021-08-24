@@ -1,0 +1,42 @@
+table:
+  name: courses
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - is_active
+    - name
+    - order
+    - service
+    - session
+  role: public
+select_permissions:
+- permission:
+    columns:
+    - created_at
+    - id
+    - is_active
+    - name
+    - order
+    - service
+    - session
+    - updated_at
+    filter: {}
+  role: public
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - is_active
+    - name
+    - order
+    - service
+    - session
+    filter: {}
+  role: public
+delete_permissions:
+- permission:
+    filter: {}
+  role: public

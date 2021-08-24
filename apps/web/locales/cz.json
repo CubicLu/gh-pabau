@@ -1,0 +1,38 @@
+{
+  "marketingsource-header-create": {
+    "translation": "Vytvořte marketingový zdroj"
+  },
+  "marketingsource-title": {
+    "translation": "Marketingové zdroje"
+  },
+  "marketingsource-name-textfield": {
+    "translation": "Příjmení"
+  },
+  "marketingsource-name-placeholder": {
+    "translation": "například. Facebook"
+  },
+  "marketingsource-header-edit": {
+    "translation": "Vytvořte marketingový zdroj"
+  },
+  "basic-crud-table-input-search-placeholder": {
+    "translation": "Hledat"
+  },
+  "basic-crud-table-button-filter": {
+    "translation": "Filtrovaný"
+  },
+  "basic-crud-table-column--active": {
+    "translation": "Aktivní"
+  },
+  "basic-crud-table-button-active": {
+    "translation": "Aktiv"
+  },
+  "basic-crud-table-button-inactive": {
+    "translation": "Neaktivní"
+  },
+  "basic-crud-table-header-button-create": {
+    "translation": "Vytvořte zdroj"
+  },
+  "basic-crud-table-header-breadcrumb-setup-link": {
+    "translation": "Nainstalujte"
+  }
+}

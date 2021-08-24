@@ -1,24 +1,65 @@
 import React, { FC } from 'react'
 import { InvoicesProps, EmailSMSPreviewProps } from './EmailSmsPreview'
 import { Col, Row } from 'antd'
+import { Button } from '@pabau/ui'
 import styles from './EmailSmsPreview.module.less'
 
 export const Invoices: FC<EmailSMSPreviewProps & InvoicesProps> = ({
   message,
   footerText,
+  bestRegards,
+  senderFirstName,
+  showInvoiceButton = false,
+  buttonColor,
+  showEnablePay = false,
+  payButtonName = 'Pay Invoice',
+  viewButtonName = 'View Invoice',
 }) => {
   return (
     <>
-      <Row gutter={[0, 4]} className={styles.break}>
-        <Col>
-          <span className={styles.message}>{message}</span>
-        </Col>
-      </Row>
-      <Row gutter={[0, 4]} className={styles.break}>
-        <Col>
-          Please find attached a detailed copy of your invoice to this email.
-        </Col>
-      </Row>
+      {message?.map((msg, key) => {
+        return (
+          <Row gutter={[0, 4]} className={styles.break} key={key}>
+            <Col>
+              <span className={styles.message}>{msg}</span>
+            </Col>
+          </Row>
+        )
+      })}
+      {showEnablePay && (
+        <Row gutter={[0, 4]} className={styles.invoiceButton}>
+          <Col>
+            <Button
+              type="primary"
+              backgroundColor={buttonColor}
+              className={styles.bookButton}
+            >
+              {payButtonName}
+            </Button>
+          </Col>
+        </Row>
+      )}
+      {(bestRegards || senderFirstName) && (
+        <Row gutter={[0, 4]} className={styles.textBox}>
+          <Col>
+            <p className={styles.text}>{bestRegards}</p>
+            <p className={styles.text}>{senderFirstName}</p>
+          </Col>
+        </Row>
+      )}
+      {showInvoiceButton && (
+        <Row gutter={[0, 4]} className={styles.invoiceButton}>
+          <Col>
+            <Button
+              type="primary"
+              backgroundColor={buttonColor}
+              className={styles.bookButton}
+            >
+              {viewButtonName}
+            </Button>
+          </Col>
+        </Row>
+      )}
       <Row gutter={[0, 4]} className={styles.textBox}>
         <Col>
           <span

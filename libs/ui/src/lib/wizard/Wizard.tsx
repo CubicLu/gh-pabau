@@ -1,8 +1,7 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 import styles from './Wizard.module.less'
 import { Button } from '@pabau/ui'
-import { ButtonType } from 'antd/lib/button/button'
-
+import classnames from 'classnames'
 interface WizardProps {
   onPrev?: () => void
   onNext?: () => void
@@ -10,12 +9,15 @@ interface WizardProps {
   active: number
   allSteps: number
   showNextBtn?: boolean
-  nextBtnLabel?: string | number | ReactNode
+  nextBtnLabel?: string | number | React.ReactNode
   disableNextStep?: boolean
-  disablePrevStep?: boolean
-  extraBtn?: boolean
-  extraBtnType?: ButtonType
-  extraBtnLabel?: string | number | ReactNode
+  nextButtonDecorator?: React.ReactNode
+  nextButtonContent?: React.ReactNode | string
+  previousButtonContent?: React.ReactNode | string
+  background?: string
+  allowDisablePrevious?: boolean
+  finishDisablesNextStep?: boolean
+  hideStep?: boolean
 }
 
 export const Wizard: React.FC<WizardProps> = ({
@@ -24,48 +26,66 @@ export const Wizard: React.FC<WizardProps> = ({
   extraBtnClick,
   active,
   allSteps,
-  showNextBtn = true,
-  disableNextStep = true,
-  disablePrevStep = true,
-  extraBtn = false,
-  extraBtnType = 'default',
-  extraBtnLabel = 'Extra Button',
-  nextBtnLabel = 'Next Step',
-  children,
+  disableNextStep = false,
+  nextButtonDecorator,
+  background,
+  nextButtonContent,
+  previousButtonContent,
+  allowDisablePrevious = true,
+  finishDisablesNextStep = true,
+  hideStep = false,
 }) => {
   return (
-    <div className={styles.container}>
-      {children}
-      {/* <div style={{ marginTop: '20px' }}></div> */}
-      <div className={styles.footer}>
+    <div
+      className={styles.footer}
+      style={{
+        backgroundColor: background || 'unset',
+        gridTemplateColumns: `1fr `.repeat(hideStep ? 2 : 3),
+      }}
+    >
+      <div>
         <Button
-          onClick={() => onPrev?.()}
-          disabled={active < 1 || (active === allSteps - 1 && disablePrevStep)}
+          onClick={(event) => onPrev?.()}
+          disabled={
+            active <= 0 || (active === allSteps - 1 && allowDisablePrevious)
+          }
         >
-          Previous Step
+          {previousButtonContent || 'Previous Step'}
         </Button>
-        <span className={styles.breadcrumbgraytxt}>
+      </div>
+      {!hideStep && (
+        <span
+          className={classnames(styles.breadcrumbgraytxt, styles.centeredtext)}
+        >
           Step {active + 1}/{allSteps}
         </span>
-
-        <div>
-          {extraBtn && (
-            <Button type={extraBtnType} onClick={() => extraBtnClick?.()}>
-              {extraBtnLabel}
-            </Button>
-          )}
-          {showNextBtn && (
-            <Button
-              type="primary"
-              onClick={() => onNext?.()}
-              style={{ marginLeft: '10px' }}
-              disabled={disableNextStep && allSteps - 1 <= active}
-            >
-              {nextBtnLabel}
-            </Button>
-          )}
+      )}
+      {nextButtonDecorator ? (
+        <div className={styles.nextButtonDecorator}>
+          {nextButtonDecorator}
+          <Button
+            type="primary"
+            onClick={(event) => onNext?.()}
+            disabled={
+              disableNextStep ||
+              (allSteps - 1 <= active && finishDisablesNextStep)
+            }
+          >
+            {nextButtonContent || 'Next Step'}
+          </Button>
         </div>
-      </div>
+      ) : (
+        <Button
+          type="primary"
+          onClick={(event) => onNext?.()}
+          disabled={
+            disableNextStep ||
+            (allSteps - 1 <= active && finishDisablesNextStep)
+          }
+        >
+          {nextButtonContent || 'Next Step'}
+        </Button>
+      )}
     </div>
   )
 }

@@ -10,7 +10,7 @@ import {
 
 export default {
   component: Security,
-  title: 'Business Details/Security',
+  title: 'UI/Security',
   args: {
     percent: 30,
     data: [],

@@ -1,7 +1,7 @@
 import React, { FC, useState, useRef } from 'react'
-import StartScreen from './ReviewsScreens/StartScreen'
-import FinishScreen from './ReviewsScreens/FinishScreen'
-import ReviewQuestionScreen from './ReviewsScreens/ReviewQuestionScreen'
+import StartScreen from '../../components/PeerReviews/ReviewsScreens/StartScreen'
+import FinishScreen from '../../components/PeerReviews/ReviewsScreens/FinishScreen'
+import ReviewQuestionScreen from '../../components/PeerReviews/ReviewsScreens/ReviewQuestionScreen'
 import { Logo } from '@pabau/ui'
 import classNames from 'classnames'
 import { Carousel as PageSlider } from 'antd'
@@ -23,6 +23,7 @@ const user: User = {
   userName: 'James Warner',
   userImagePath: 'UserAvatar',
 }
+
 const reviewQuestions: ReviewQuestions[] = [
   {
     reviewType: 'Analytical thinking 1',
@@ -57,7 +58,6 @@ const reviewQuestions: ReviewQuestions[] = [
 ]
 const reviewTitle = 'Quarterly Appraisal'
 const reviewSubTitle = 'Please complete your quarterly peer review'
-
 const finishTitle = 'Feedback Completed'
 const finishDescription =
   'Your feedback has been submitted successfullly. It took us a little while to generate your feedback report.'
@@ -75,11 +75,9 @@ export const Index: FC<IndexProps> = ({ ...props }) => {
   const randomInRange = (min, max) => {
     return Math.random() * (max - min) + min
   }
-
   const onStart = async () => {
     await setIsStarted(true)
   }
-
   const onNext = async (answerData) => {
     const existingAnswers = { ...answers }
     const currentAnswerData = existingAnswers[totalQs[current].id] || {}
@@ -126,7 +124,7 @@ export const Index: FC<IndexProps> = ({ ...props }) => {
         {isStarted && !isFinished && (
           <PageSlider dots={false} ref={ref}>
             {totalQs.map((el, key) => (
-              <div key={`sliderPageKey${key * 12345}`}>
+              <div key={`sliderPageKey${key * 12_345}`}>
                 <ReviewQuestionScreen
                   reviewType={el.reviewType}
                   reviewDescription={el.reviewDescription}

@@ -1,28 +1,22 @@
 overwrite: true
-schema: "https://api.new.pabau.com/v1/graphql"
-documents:
-  - "**/*.tsx"
-#  - "!**/components/*.tsx"
+schema: hasura/schema.graphql
+documents: ['libs/graphql/**/*.graphql']
 generates:
-#  src/generated/graphql.ts:
-#    plugins:
-#      - "typescript"
-#      - "typescript-operations"
-#      - "typescript-resolvers"
-#      - "typescript-react-apollo"
-#      - "typescript-document-nodes"
-#      - "fragment-matcher"
-#  src/generated/graphql.d.ts:
-#    plugins:
-#      - "typescript-graphql-files-modules"
-
-  ./graphql.schema.json:
+  libs/graphql/generated/graphql.tsx:
     plugins:
-      - "introspection"
-
-#  ./remote-schema.graphql:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-apollo'
+    config:
+      withHooks: true
+      withRefetchFn: false
+      withComponent: false
+      withMutationOptionsType: true
+      withMutationFn: true
+      addDocBlocks: true
+      addOperationExport: true
+      withResultType: true
+#  tools/sdk/index.ts:
 #    plugins:
-#      - schema-ast
-#    config:
-#      includeDirectives: true
-#
+#      - typescript
+#      - typescript-generic-sdk

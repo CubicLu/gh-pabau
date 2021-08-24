@@ -1,219 +1,123 @@
-import React, { FC } from 'react'
-import { Typography, Input, Modal, Menu, Dropdown, Checkbox, Row } from 'antd'
-import { Button, Breadcrumb, PhoneNumberInput, Notification } from '@pabau/ui'
+import { Notification, NotificationType } from '@pabau/ui'
+import React, { FC, useRef, useState } from 'react'
+import CommonNotificationHeader from '../../../components/ClientNotification/CommonNotificationHeader'
+import ClientNotification from '../../../components/ClientNotification/Index'
+import CancelAppointmentEmailPreview from '../../../components/ClientNotificationEmailPreview/CancelAppointmentEmailPreview'
+import { sendEmailService } from '../../../components/ClientNotificationEmailPreview/sendEmailService'
 import Layout from '../../../components/Layout/Layout'
-import ClientNotification from '../../../components/ClientNotification/index'
-import styles from './index.module.less'
-import CommonHeader from '../../setup/common-header'
-import { DownOutlined, LeftOutlined } from '@ant-design/icons'
-
-const { Title } = Typography
-
-enum NotificationType {
-  info = 'info',
-  success = 'success',
-  error = 'error',
-  warning = 'warning',
-  loading = 'loading',
-  connect = 'connect',
-}
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const Index: FC = () => {
-  const [setIndexTab, setSelectedTab] = React.useState(1)
-  const [sendEmail, setSendEmail] = React.useState(false)
-  const [validEmail, setValidEmail] = React.useState(false)
-  const [visible, setVisible] = React.useState(false)
-
-  function handleSendEmailBtn(value) {
-    setSendEmail(value)
-  }
-
-  const handleVisibleChange = (flag) => {
-    setVisible(flag)
-  }
-
-  function showNotification() {
-    if (validEmail && setIndexTab === 1) {
-      Notification(NotificationType.success, 'Test message sent')
-      setSendEmail(false)
-    }
-    if (setIndexTab === 2) {
-      Notification(NotificationType.success, 'Test SMS sent')
-      setSendEmail(false)
-    }
-  }
-
-  function isEmail(search: string) {
-    const regexp = new RegExp(
-      /* eslint-disable-next-line */
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    )
-    const serchfind = regexp.test(search)
-    setValidEmail(serchfind)
-  }
-  const menu = (
-    <Menu className={styles.menuListUl}>
-      <Menu.Item className={styles.menuListItem}>
-        <Row>
-          <Checkbox value="enable_reminder">
-            Enable reminders via email
-          </Checkbox>
-        </Row>
-      </Menu.Item>
-      <Menu.Item className={styles.menuListItem}>
-        <Row>
-          <Checkbox value="enable_reminder">Enable reminders via sms</Checkbox>
-        </Row>
-      </Menu.Item>
-    </Menu>
+  const [selectedTab, setSelectedTab] = useState<'emailPreview' | 'smsPreview'>(
+    'emailPreview'
   )
+  const ref = useRef(null)
+  const { t } = useTranslationI18()
+
+  const showNotification = (email) => {
+    if (selectedTab === 'emailPreview') {
+      const propsData = ref?.current?.propsData() || {}
+      const {
+        showService,
+        showEmployeeName,
+        backGroundColor,
+        buttonColor,
+        informationMessage,
+        activeSocialIcons,
+        type,
+        localTranslation,
+      } = propsData
+      const bodyContent = () => {
+        const t = localTranslation
+        return (
+          <CancelAppointmentEmailPreview
+            backGroundColor={backGroundColor}
+            activeSocialIcons={activeSocialIcons}
+            buttonColor={buttonColor}
+            informationMessage={informationMessage}
+            type={type}
+            greeting={t('notifications.cancelledAppointment.greeting')}
+            dateTime={t('notifications.cancelledAppointment.dateTime')}
+            text={
+              type === 'cancelClassBooking'
+                ? t('notifications.cancelledAppointment.classText')
+                : t('notifications.cancelledAppointment.text')
+            }
+            consultancyName={t('notifications.cancelledAppointment.title')}
+            consultationDetail={
+              showService
+                ? showEmployeeName
+                  ? `${t(
+                      'notifications.cancelledAppointment.consultationDetail'
+                    )}${t('notifications.cancelledAppointment.employee')}`
+                  : `${t(
+                      'notifications.cancelledAppointment.consultationDetail'
+                    )}`
+                : ''
+            }
+            address={t('notifications.cancelledAppointment.address')}
+            message={t('notifications.cancelledAppointment.message')}
+            cancelButtonName={t(
+              'notifications.cancelledAppointment.cancelButtonName'
+            )}
+            rebookButtonName={t(
+              'notifications.cancelledAppointment.rebookButtonName'
+            )}
+          />
+        )
+      }
+      sendEmailService({
+        email,
+        subject: t('notifications.email.cancelAppointment.subject'),
+        bodyContent: bodyContent(),
+        successMessage: t('notifications.email.send.successMessage'),
+        failedMessage: t('notifications.email.send.failedMessage'),
+      })
+    } else if (selectedTab === 'smsPreview') {
+      Notification(
+        NotificationType.success,
+        t('notifications.sms.send.successMessage')
+      )
+    }
+  }
 
   return (
-    <>
-      <CommonHeader />
-      <Layout>
-        <div className={styles.appointmentWrapper}>
-          <span className={styles.hideSection}>
-            <Breadcrumb
-              breadcrumbItems={[
-                { path: '', breadcrumbName: 'Setup' },
-                {
-                  path: 'client-notifications',
-                  breadcrumbName: 'Notification Messages',
-                },
-                {
-                  path: 'client-notifications/cancelled-appointment',
-                  breadcrumbName: 'Cancelled appointment',
-                },
-              ]}
-            />
-          </span>
-          <Title>
-            <span className={`${styles.backArrow} ${styles.hideSection}`}>
-              <LeftOutlined className={styles.leftIcon} />
-            </span>
-            Cancelled appointment
-          </Title>
-        </div>
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            margin: '1em 8px',
-            height: '40px',
-            minWidth: '124px',
-            fontSize: '14px',
-          }}
-        >
-          <span className={styles.hideSection}>
-            <Dropdown
-              overlay={menu}
-              placement="bottomRight"
-              onVisibleChange={handleVisibleChange}
-              visible={visible}
-              arrow
-            >
-              <Button size={'large'}>
-                Enable settings <DownOutlined />
-              </Button>
-            </Dropdown>
-          </span>
-          <Button
-            className={styles.notificationSendButton}
-            style={{ margin: '1em 8px', height: '40px', fontSize: '14px' }}
-            type="default"
-            onClick={() => handleSendEmailBtn(!sendEmail)}
-          >
-            {setIndexTab === 1 ? 'Send Test Email' : 'Send Test SMS'}
-          </Button>
-          <Modal
-            title={setIndexTab === 1 ? 'Send Test Email' : 'Send Test Message'}
-            visible={sendEmail}
-            onCancel={() => setSendEmail(false)}
-            centered={true}
-            wrapClassName={styles.modal}
-            footer={null}
-          >
-            <div>
-              {setIndexTab === 1 ? (
-                <div>
-                  <p style={{ color: '#9292A3' }}>Email</p>
-                  <Input
-                    placeholder="client@email.com"
-                    onChange={(event) => isEmail(event.target.value)}
-                  />
-                </div>
-              ) : (
-                <div>
-                  <PhoneNumberInput
-                    countryCode={'GB'}
-                    onChange={(val) => {
-                      console.log(val)
-                    }}
-                  />
-                </div>
-              )}
-
-              <div className={styles.footerBtnGroup}>
-                <Button
-                  type="default"
-                  style={{ marginRight: '10px' }}
-                  onClick={() => setSendEmail(false)}
-                >
-                  Cancel
-                </Button>
-                {setIndexTab === 1 && (
-                  <Button
-                    type="primary"
-                    disabled={validEmail ? false : true}
-                    onClick={() => showNotification()}
-                  >
-                    Send
-                  </Button>
-                )}
-                {setIndexTab === 2 && (
-                  <Button type="primary" onClick={() => showNotification()}>
-                    Send
-                  </Button>
-                )}
-              </div>
-            </div>
-          </Modal>
-
-          <Button
-            className={styles.notificationSaveButton}
-            style={{
-              margin: '1em 8px',
-              height: '40px',
-              fontSize: '14px',
-            }}
-            type="primary"
-            onClick={() =>
-              Notification(
-                NotificationType.success,
-                'Success! Notification Source Updated'
-              )
-            }
-          >
-            Save
-          </Button>
-        </div>
-        <ClientNotification
-          onSeletedTab={(value) => setSelectedTab(value)}
-          hideRequestConfirmationOption={true}
-          hideAllowReschedulingOption={true}
-          hideAllowCancellationOption={true}
-          hideDisplayPolicyOption={true}
-          hideMedicalHistoryOption={true}
-          hideReminderTimeFrameTabPane={true}
-          standardMessage={
-            'this notification automatically sends to clients the moment they cancel an appointment'
-          }
-          type={'cancel'}
-        />
-      </Layout>
-    </>
+    <Layout>
+      <CommonNotificationHeader
+        breadcrumbItems={[
+          {
+            path: 'setup',
+            breadcrumbName: t('notifications.breadcrumb.setup'),
+          },
+          {
+            path: 'client-notifications',
+            breadcrumbName: t('notifications.breadcrumb.notificationMessage'),
+          },
+          {
+            path: 'client-notifications/cancelled-appointment',
+            breadcrumbName: t('notifications.cancelAppointment.title'),
+          },
+        ]}
+        title={t('notifications.cancelAppointment.title')}
+        selectedTab={selectedTab}
+        handleNotificationSubmit={showNotification}
+      />
+      <ClientNotification
+        ref={ref}
+        onSelectedTab={(value) => setSelectedTab(value)}
+        hideRequestConfirmationOption={true}
+        hideAllowReschedulingOption={true}
+        hideAllowCancellationOption={true}
+        hideDisplayPolicyOption={true}
+        hideMedicalHistoryOption={true}
+        hideReminderTimeFrameTabPane={true}
+        standardMessage={t('notifications.cancelAppointment.standardMessage')}
+        type={'cancel'}
+        name={t('notifications.cancelAppointment.title')}
+        langKey={'cancelledAppointment'}
+        handleNotificationSubmit={showNotification}
+      />
+    </Layout>
   )
 }
 

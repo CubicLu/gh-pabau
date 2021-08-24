@@ -9,7 +9,7 @@ export default {
   title: 'Forms/Radio Button',
   args: {
     group: 'Group Name',
-    Items: data
+    Items: data,
   },
   argTypes: {
     group: { control: { type: 'text' } },

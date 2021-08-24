@@ -10,6 +10,7 @@ import {
   CurrencyInput,
 } from '@pabau/ui'
 import { useFormik } from 'formik'
+import * as Yup from 'yup'
 import { Form, Select, Tooltip, Input as AntInput, InputNumber } from 'antd'
 import {
   PlusOutlined,
@@ -46,24 +47,46 @@ export const CreateProduct: FC<CreateProductProps> = ({
   const [form] = Form.useForm()
   const [showModal, setShowModal] = useState(false)
   const [showImageSelector, setShowImageSelector] = useState(false)
+  const formikInitialValues = {
+    sku: '',
+    barcode: '',
+    category: '',
+    size: '',
+    name: '',
+    supplierName: '',
+    description: '',
+    costPrice: '',
+    retailPrice: '',
+    taxName: 'default-tax-setting',
+    plotColor: '',
+    incrementDefault: '',
+    minStockLevel: 0,
+    is_active: 0,
+    maxStockLevel: 0,
+    selectedImage: '',
+  }
   const formik = useFormik({
-    initialValues: {
-      sku: '',
-      barcode: '',
-      category: '',
-      size: '',
-      name: '',
-      supplierName: '',
-      description: '',
-      costPrice: '',
-      retailPrice: '',
-      taxName: 'default-tax-setting',
-      plotColor: '',
-      incrementDefault: '',
-      minStockLevel: 0,
-      maxStockLevel: 0,
-      selectedImage: '',
-    },
+    initialValues: formikInitialValues,
+    validationSchema: Yup.object({
+      sku: Yup.string().required('SKU is required'),
+      barcode: Yup.string().required('Barcode is required'),
+      category: Yup.string().required('Category is required'),
+      size: Yup.string().required('Size is required'),
+      name: Yup.string().required('Name is required'),
+      supplierName: Yup.string().required('Supplier name is required'),
+      costPrice: Yup.string().required('Cost price is required'),
+      retailPrice: Yup.string().required('Retail price is required'),
+      taxName: Yup.string().required('Tas name is required'),
+      plotColor: Yup.string().required('Plot color is required'),
+      incrementDefault: Yup.string().required('Increment default is required'),
+      selectedImage: Yup.string().required('Image is required'),
+      minStockLevel: Yup.number()
+        .required('Min stock level is required')
+        .moreThan(0, 'Min stock level should be more than 0'),
+      maxStockLevel: Yup.number()
+        .required('Max stock level is required')
+        .moreThan(0, 'Max stock level should be more than 0'),
+    }),
     onSubmit: (values) => {
       console.log('Values >>>', values)
     },
@@ -78,22 +101,24 @@ export const CreateProduct: FC<CreateProductProps> = ({
     <FullScreenReportModal
       visible={showModal}
       title="Create Product"
-      operations={[
-        OperationType.active,
-        OperationType.cancel,
-        OperationType.create,
-      ]}
+      operations={[OperationType.active, OperationType.create]}
       activated={true}
-      cancelBtnText="Cancel"
       createBtnText="Save changes"
       enableCreateBtn={true}
       subMenu={['General', 'Pricing', 'Inventory levels', 'Advanced']}
-      onCancel={() => {
+      onBackClick={() => {
         setShowModal(false)
+        formik.setValues(formikInitialValues)
         onClose()
       }}
       onCreate={() => {
-        onSaveChanges?.()
+        if (formik.isValid) {
+          onSaveChanges?.()
+          setShowModal(false)
+          formik.setValues(formikInitialValues)
+        } else {
+          console.log(formik.errors)
+        }
       }}
     >
       <Form form={form} layout="vertical">
@@ -115,7 +140,7 @@ export const CreateProduct: FC<CreateProductProps> = ({
                   onSelect={(val) => handleChange('category', val)}
                   defaultValue={formik.values.category}
                 >
-                  {categories.map((item) => (
+                  {categories?.map((item) => (
                     <Option key={item} value={item}>
                       {item}
                     </Option>
@@ -335,7 +360,7 @@ export const CreateProduct: FC<CreateProductProps> = ({
             </h2>
             <div className={styles.createProductSectionDoubleItems}>
               <div>
-                <Form.Item label="Increment default *custome field*">
+                <Form.Item label="Increment default *custom field*">
                   <Select
                     placeholder="Select an increment"
                     onSelect={(val) => handleChange('incrementDefault', val)}

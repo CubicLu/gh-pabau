@@ -1,13 +1,8 @@
-import React, {
-  FC,
-  PropsWithChildren,
-  useEffect,
-  useState,
-  MouseEvent,
-} from 'react'
-import { Drawer, Input } from 'antd'
+import React, { useState, MouseEvent, useEffect } from 'react'
+import { Input, Drawer } from 'antd'
 import styles from './Messages.module.less'
 import { CloseOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons'
+import { ReactComponent as CloseIcon } from '../../../assets/images/close-icon.svg'
 import {
   BasicModal,
   Switch,
@@ -16,295 +11,116 @@ import {
   AddGroupModal,
   AddPeopleModal,
   MessageContainer,
+  ChatMessage,
+  Participant,
+  Group,
 } from '@pabau/ui'
-
-import Stephen from '../../../assets/images/users/stephen.png'
-import Linda from '../../../assets/images/users/linda.png'
-import Alex from '../../../assets/images/users/alex.png'
-import Arya from '../../../assets/images/users/arya.png'
-import James from '../../../assets/images/users/james.png'
-import Austin from '../../../assets/images/users/austin.png'
-import Walter from '../../../assets/images/users/walter.png'
-import Liza from '../../../assets/images/users/liza.png'
-
 import classNames from 'classnames'
+import { DrawerProps } from 'antd/es/drawer'
+import { Formik, FormikErrors } from 'formik'
+import { Form, FormItem } from 'formik-antd'
 
-export interface MessagesProps {
-  openDrawer: boolean
+interface FormikProps {
+  name: string
+  description: string
+}
+
+export type MessagesProps = {
+  /** List of users/staff that is possible to add to a room */
+  members: Participant[]
+
+  /** DMs */
+  chatList?: ChatMessage[]
+
+  /** Rooms */
+  roomList?: Group[]
+
+  /** The focused channel */
+  chatHistory?: {
+    name?: string
+    chats: ChatMessage[]
+  }
+
+  /** Close the whole chat panel */
   closeDrawer: () => void
+
+  /** When the user opens a new conversation, we need to fetch more messages */
+  onLoadMessages?(topic: Group | Participant): void
+
+  /** User creating a new channel */
   onCreateChannel?: (
     name: string,
-    description: string,
-    isPrivate: boolean
+    description: string
+    // isPrivate: boolean
   ) => void
+
   onMessageType?: (e: MouseEvent<HTMLElement>) => void
-}
 
-interface Contact {
-  userName: string
-  message: string
-  unread?: number
-  dateTime: string
-  isOnline: boolean
-  profileURL: string
-}
+  onClose?(): void
+} & Pick<DrawerProps, 'visible'> &
+  Pick<
+    React.ComponentProps<typeof MessageContainer>,
+    'onMessageType' | 'onMessageSend'
+  >
 
-const members = [
-  {
-    userName: 'Alex Johnson',
-    profileURL: Alex,
-    isOnline: true,
-  },
-  {
-    userName: 'Arya Davis',
-    profileURL: Arya,
-    isOnline: false,
-  },
-  {
-    userName: 'James Ocean',
-    profileURL: James,
-    isOnline: true,
-  },
-  {
-    userName: 'Austin Winter',
-    profileURL: Austin,
-    isOnline: false,
-  },
-  {
-    userName: 'Walter Brown',
-    profileURL: Walter,
-    isOnline: true,
-  },
-  {
-    userName: 'Liza Frank',
-    profileURL: Liza,
-    isOnline: true,
-  },
-]
-
-const groupData = {
-  general: [
-    {
-      userName: 'Alex Johnson',
-      profileURL: Alex,
-    },
-    {
-      userName: 'Arya Davis',
-      profileURL: Arya,
-    },
-    {
-      userName: 'James Ocean',
-      profileURL: James,
-    },
-    {
-      userName: 'Austin Winter',
-      profileURL: Austin,
-    },
-    {
-      userName: 'Walter Brown',
-      profileURL: Walter,
-    },
-    {
-      userName: 'Liza Frank',
-      profileURL: Liza,
-    },
-  ],
-  design: [
-    {
-      userName: 'Arya Davis',
-      profileURL: Arya,
-    },
-    {
-      userName: 'Stephen Cox',
-      profileURL: Stephen,
-    },
-    {
-      userName: 'Linda Starck',
-      profileURL: Linda,
-    },
-    {
-      userName: 'Walter Brown',
-      profileURL: Walter,
-    },
-  ],
-}
-
-const chatListData = [
-  {
-    userName: 'Stephen Cox',
-    message: '2 unread messages',
-    unread: 2,
-    dateTime: '11:20 AM',
-    isOnline: true,
-    profileURL: Stephen,
-  },
-  {
-    userName: 'Linda Starck',
-    message: 'Sounds good to me!',
-    dateTime: '11:20 AM',
-    isOnline: true,
-    profileURL: Linda,
-  },
-  {
-    userName: 'Alex Johnson',
-    message: 'Yes, we can try it.',
-    dateTime: '11:20 AM',
-    isOnline: false,
-    profileURL: Alex,
-  },
-  {
-    userName: 'Arya Davis',
-    message: 'Hi, Arya',
-    dateTime: '11:20 AM',
-    isOnline: false,
-    profileURL: Arya,
-    isMultiple: true,
-    data: [
-      {
-        userName: 'Arya Davis',
-        message: 'Hi, Arya',
-        dateTime: '11:20 AM',
-        isOnline: false,
-        profileURL: Arya,
-      },
-      {
-        userName: 'James Ocean',
-        message: 'Yes, look! This is awesome',
-        dateTime: '11:20 AM',
-        isOnline: true,
-        profileURL: James,
-      },
-    ],
-  },
-  {
-    userName: 'James Ocean',
-    message: 'Yes, look! This is awesome',
-    dateTime: '11:20 AM',
-    isOnline: true,
-    profileURL: James,
-  },
-  {
-    userName: 'Austin Winter',
-    message: 'On Friday',
-    dateTime: '11:20 AM',
-    isOnline: true,
-    profileURL: Austin,
-  },
-  {
-    userName: 'Walter Brown',
-    message:
-      'We can schedule a meeting at 8:00 PM today. I think we will discuss...',
-    dateTime: '11:20 AM',
-    isOnline: true,
-    profileURL: Walter,
-  },
-  {
-    userName: 'Liza Frank',
-    message: 'On Friday',
-    dateTime: '11:20 AM',
-    isOnline: true,
-    profileURL: Liza,
-  },
-]
-
-export const PabauMessages: FC<MessagesProps> = ({
-  openDrawer = false,
+export const PabauMessages = ({
+  onClose,
   closeDrawer,
   onMessageType,
+  onMessageSend,
   onCreateChannel,
-}: PropsWithChildren<MessagesProps>) => {
+  chatList = [],
+  roomList,
+  chatHistory,
+  onLoadMessages,
+  members,
+  visible,
+}: MessagesProps): JSX.Element => {
   const WidthEnum = {
     MessageBox: 392,
     ChatBox: 522,
   }
-  const [messageDrawer, setMessageDrawer] = useState(openDrawer)
-  const [selectedContact, setSelectedContact] = useState<Contact>()
   const [drawerWidth, setDrawerWidth] = useState(WidthEnum.MessageBox)
-  const [showChatBox, setShowChatBox] = useState(false)
+  const [view, setView] = useState<Participant | Group | 'new-dm'>()
   const [showGlobalSearch, setGlobalSearch] = useState(false)
-  const [showGroupChatBox, setShowGroupChatBox] = useState(false)
-  const [selectedGroup, setSelectedGroup] = useState('general')
+  // const [selectedGroup, setSelectedGroup] = useState('general')
   const [isGroupModalVisible, setIsGroupModalVisible] = useState(false)
   const [isAddModalVisible, setIsAddModalVisible] = useState(false)
-  const [memberModalTitle, setMemberModalTitle] = useState('')
-  const [chatMessages, setChatMessage] = useState(chatListData)
   const [globalSearchValue, setGlobalSearchValue] = useState('')
-  const [typingContact, setTypingContact] = useState<Contact>()
+  // const [typingContact, setTypingContact] = useState<Contact>()
 
-  //createChaneel
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [isPrivate, setIsPrivate] = useState(false)
+  //createChannel
+  const [, setIsPrivate] = useState(false)
   const [isCreateChannel, setIsCreateChannel] = useState(false)
-
-  //new DM
-  const [isNewDm, setIsNewDm] = useState(false)
-
-  const handleNameChange = (e): void => {
-    if (e.target.value.length < 80) {
-      setName(e.target.value)
-    }
-  }
-
-  const handleDescriptionChange = (e) => {
-    setDescription(e.target.value)
-  }
 
   const onChangeToPrivate = (checked) => {
     setIsPrivate(checked)
   }
 
-  const onCreate = async () => {
-    onCreateChannel
-      ? await onCreateChannel(name, description, isPrivate)
-      : toggleCreateChannel()
-    toggleCreateChannel()
-  }
   const toggleCreateChannel = () => {
     setIsCreateChannel(!isCreateChannel)
   }
 
   const toggleNewDm = () => {
-    setShowChatBox(false)
-    setShowGroupChatBox(false)
-    setIsNewDm(true)
+    setView('new-dm')
     setDrawerWidth(WidthEnum.MessageBox + WidthEnum.ChatBox)
   }
 
   const closeNewDm = () => {
-    setIsNewDm(false)
-    closeDrawer()
-  }
-
-  const closeDrawerMenu = () => {
-    setMessageDrawer(false)
     closeDrawer()
   }
 
   useEffect(() => {
-    if (selectedGroup !== '') {
-      setMemberModalTitle(
-        Object.keys(groupData[selectedGroup]).length +
-          ' Members In #' +
-          selectedGroup.charAt(0).toUpperCase() +
-          selectedGroup.slice(1)
-      )
-    }
-  }, [selectedGroup])
+    typeof view === 'object' && onLoadMessages?.(view)
+  }, [view, onLoadMessages])
 
-  const handleGroupClick = (e, type) => {
-    setShowGroupChatBox(true)
-    setShowChatBox(false)
-    setIsNewDm(false)
-    setSelectedGroup(type)
+  const handleGroupClick = (e) => {
+    setView(e)
     setDrawerWidth(WidthEnum.ChatBox + WidthEnum.MessageBox)
   }
 
   const handleClick = (e) => {
-    setSelectedContact(e)
-    setShowGroupChatBox(false)
-    setShowChatBox(true)
-    setIsNewDm(false)
+    setView(e)
     setDrawerWidth(WidthEnum.MessageBox + WidthEnum.ChatBox)
   }
 
@@ -332,43 +148,25 @@ export const PabauMessages: FC<MessagesProps> = ({
     setIsAddModalVisible(true)
   }
 
-  const handleMessageType = (e) => {
-    if (isNewDm || showGroupChatBox) {
-      setTypingContact(undefined)
-    } else {
-      e.target.value !== ''
-        ? setTypingContact(selectedContact)
-        : setTypingContact(undefined)
-    }
-    onMessageType?.(e)
-  }
-
   const globalSearch = () => {
     setGlobalSearch((e) => !e)
   }
 
   const onHandleGlobalSearch = (value: string) => {
-    const reg = new RegExp(value.split('').join('\\w*').replace(/\W/, ''), 'i')
-    // eslint-disable-next-line array-callback-return
-    const resultData = chatListData.filter((person) => {
-      if (reg.test(person.userName)) {
-        return person
-      }
-    })
     setGlobalSearchValue(value)
-    setChatMessage(resultData)
+    //TODO: setChatMessage(resultData)
   }
 
   return (
     <Drawer
+      visible={visible}
       width={drawerWidth}
       placement="right"
       closable={false}
-      onClose={closeDrawerMenu}
-      visible={messageDrawer}
+      onClose={() => onClose?.()}
       className={styles.messagesDrawer}
     >
-      <div className={styles.messageBox}>
+      <div className={styles.messageBox} style={!view ? { width: '100%' } : {}}>
         <div
           className={
             showGlobalSearch
@@ -390,6 +188,13 @@ export const PabauMessages: FC<MessagesProps> = ({
                   )}
                 />
               }
+              suffix={
+                <CloseIcon
+                  onClick={() => {
+                    setGlobalSearch(() => false)
+                  }}
+                />
+              }
               onChange={(e) => onHandleGlobalSearch(e.target.value)}
               onBlur={() => globalSearch()}
             />
@@ -408,21 +213,21 @@ export const PabauMessages: FC<MessagesProps> = ({
                   )}
                 />
                 <SearchOutlined
+                  onClick={globalSearch}
                   className={classNames(
                     styles.grayTextColor,
                     styles.pr5,
                     styles.chatIconStyle
                   )}
-                  onClick={globalSearch}
                 />
-                {!showChatBox && !showGroupChatBox && (
+                {!view && (
                   <CloseOutlined
+                    onClick={closeDrawer}
                     className={classNames(
                       styles.grayTextColor,
-                      styles.chatIconStyle,
-                      styles.closeIcon
+                      styles.pr5,
+                      styles.chatIconStyle
                     )}
-                    onClick={closeDrawerMenu}
                   />
                 )}
               </div>
@@ -435,124 +240,167 @@ export const PabauMessages: FC<MessagesProps> = ({
               className={classNames(styles.channelsText, styles.channelsHead)}
             >
               <p className={classNames(styles.grayTextColor, styles.textSm)}>
-                chats & channels
+                chats &amp; channels
               </p>
             </div>
           )}
           <GroupList
             onClick={handleGroupClick}
-            showChatBox={showChatBox}
-            isNewDm={isNewDm}
             onCreateModalClick={toggleCreateChannel}
             isHeaderShow={!showGlobalSearch}
+            groups={roomList}
+            active={typeof view === 'object' && 'participants' in view && view}
           />
           <ChatsList
-            chatMessages={chatMessages}
-            typingContact={typingContact}
+            messages={chatList.filter((e) => !e.userName.startsWith('#'))}
             onClick={handleClick}
-            showGroupChatBox={showGroupChatBox}
-            showChatBox={showChatBox}
-            isNewDm={isNewDm}
-            selectedContact={selectedContact}
+            // showGroupChatBox={showGroupChatBox}
+            // showChatBox={showChatBox}
+            // isNewDm={isNewDm}
+            active={typeof view === 'object' && 'from' in view && view}
             isHeaderShow={!showGlobalSearch}
           />
         </div>
 
-        <BasicModal
-          modalWidth={682}
-          centered={true}
-          title="create A Channel"
-          newButtonText={'Create'}
-          className={styles.createChannelModal}
-          newButtonDisable={name.length <= 0}
-          onOk={() => onCreate()}
-          dangerButtonText={`Cancel`}
-          onCancel={toggleCreateChannel}
-          onDelete={toggleCreateChannel}
-          visible={isCreateChannel}
+        <Formik
+          initialValues={{ name: '', description: '' }}
+          validate={(props) => {
+            const { name } = props
+            const errors: FormikErrors<FormikProps> = {}
+            if (!name) errors.name = 'Required'
+            return errors
+          }}
+          onSubmit={async ({ name, description }, { setSubmitting }) => {
+            console.log('submitting new channel form')
+            setSubmitting(true)
+            await onCreateChannel?.(name, description)
+            setSubmitting(false)
+          }}
         >
-          <div className={styles.content}>
-            Channels are where your team communicates. They’re best when
-            organized around a topic – #marketing, for example.
-          </div>
-          <div className={styles.textControl}>
-            <div>Name</div>
-            <Input
-              className={styles.nameInput}
-              placeholder="# e.g. plan-budget"
-              onChange={handleNameChange}
-              value={name}
-              suffix={80 - name.length}
-            />
-          </div>
-          <div className={styles.textControl}>
-            <div>Description</div>
-            <Input
-              placeholder="What’s this channel about?"
-              onChange={handleDescriptionChange}
-            />
-          </div>
-          <div>
-            <div>Make private</div>
-            <div className={styles.switchContent}>
-              <div className={styles.switchText}>
-                When a channel is set to private, it can be only be viewed or
-                joined by invitation.
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleSubmit,
+            isValid,
+          }) => (
+            <BasicModal
+              modalWidth={682}
+              centered={true}
+              title="Create A Channel"
+              newButtonText={'Create'}
+              className={styles.createChannelModal}
+              onOk={() => handleSubmit()}
+              isValidate={isValid}
+              dangerButtonText={`Cancel`}
+              onCancel={toggleCreateChannel}
+              onDelete={toggleCreateChannel}
+              visible={isCreateChannel}
+            >
+              <div className={styles.content}>
+                Channels are where your team communicates. They’re best when
+                organized around a topic – #marketing, for example.
               </div>
-              <div className={styles.switch}>
-                <Switch onChange={onChangeToPrivate} />
-              </div>
-            </div>
-          </div>
-        </BasicModal>
+
+              <Form
+              // style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}
+              // labelCol={{ xs: 4 }}
+              // wrapperCol={{ xs: 20 }}
+              >
+                <div className={styles.textControl}>
+                  <div>Name</div>
+                  <FormItem
+                    name="firstName"
+                    label="Firstname"
+                    required={true}
+                    //validate={() => false}
+                  >
+                    <Input
+                      className={styles.nameInput}
+                      placeholder="# e.g. plan-budget"
+                      onChange={handleChange}
+                      name="name"
+                      suffix={80 - values.name.length}
+                      prefix="#"
+                      autoFocus
+                    />
+                  </FormItem>
+                  {errors.name && touched.name && errors.name}
+                </div>
+                <div className={styles.textControl}>
+                  <div>Description</div>
+                  <Input
+                    placeholder="What’s this channel about?"
+                    name="description"
+                    onChange={handleChange}
+                  />
+                </div>
+                <div style={{ display: 'none' }}>
+                  <div>Make private</div>
+                  <div className={styles.switchContent}>
+                    <div className={styles.switchText}>
+                      When a channel is set to private, it can be only be viewed
+                      or joined by invitation.
+                    </div>
+                    <div className={styles.switch}>
+                      <Switch onChange={onChangeToPrivate} />
+                    </div>
+                  </div>
+                </div>
+              </Form>
+            </BasicModal>
+          )}
+        </Formik>
       </div>
-      {showChatBox && (
+      {view && typeof view === 'object' && !('participants' in view) && (
         <MessageContainer
-          selectedContact={selectedContact}
-          onClick={closeDrawerMenu}
-          onMessageType={handleMessageType}
+          onMessageSend={onMessageSend}
+          onMessageType={onMessageType}
+          selectedContact={view}
+          onClick={closeDrawer}
         />
       )}
-      {showGroupChatBox && (
+      {view && typeof view === 'object' && 'participants' in view && (
         <div className={styles.chatBoxContainer}>
           <MessageContainer
-            onClick={closeDrawerMenu}
-            onMessageType={handleMessageType}
-            /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
-            // @ts-ignore
-            groupData={groupData}
-            selectedGroup={selectedGroup}
+            onMessageSend={onMessageSend}
+            onMessageType={onMessageType}
+            selectedGroup={view}
+            onClick={closeDrawer}
+            messages={chatHistory?.chats}
+            members={view.participants}
+            // groupData={{}}
+            // selectedGroup={view}
             onModalOpen={() => setIsGroupModalVisible(true)}
           />
           <AddGroupModal
-            memberModalTitle={memberModalTitle}
-            groupData={groupData}
-            selectedGroup={selectedGroup}
+            groupData={view.participants}
+            memberModalTitle={view.name}
+            // groupData={groupData}
+            // selectedGroup={selectedGroup}
             isGroupModalVisible={isGroupModalVisible}
             onOk={handleOk}
             onCancel={handleCancel}
             onClick={handleAddClick}
           />
           <AddPeopleModal
-            /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
-            // @ts-ignore
-            groupData={groupData}
             isAddModalVisible={isAddModalVisible}
             members={members}
-            selectedGroup={selectedGroup}
+            // selectedGroup={selectedGroup}
             onOk={handleAddOk}
             onAddMembers={onAddMembers}
             onCancel={handleAddCancel}
           />
         </div>
       )}
-      {isNewDm && (
+      {view === 'new-dm' && (
         <MessageContainer
-          isNewDm={isNewDm}
           members={members}
           messages={[]}
           onCloseNewDm={closeNewDm}
-          onMessageType={handleMessageType}
+          onMessageSend={onMessageSend}
+          onMessageType={onMessageType}
         />
       )}
     </Drawer>

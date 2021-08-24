@@ -1,8 +1,16 @@
-import { MedicalFormTypes } from '@pabau/ui'
+import {
+  defaultMedicaFormAdvanceSettingData,
+  MedicaFormAdvanceSettingData,
+  MedicalFormTypes,
+  Notification,
+  NotificationType,
+  RuleProp,
+} from '@pabau/ui'
 import { Col, Modal, Row } from 'antd'
-import _ from 'lodash'
+import { cloneDeep, isEqual } from 'lodash'
 import React, { FC, useEffect, useReducer, useState } from 'react'
 import { DragDropContext } from 'react-beautiful-dnd'
+import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
 import RightSidebar from '../rightsidebar/RightSidebar'
 import styles from './MedicalFormBuilder.module.less'
@@ -22,24 +30,25 @@ const medicalForms = [
   { id: 7, formType: 'basic', formName: 'basic_staticimage' },
   { id: 8, formType: 'basic', formName: 'basic_drawing' },
   { id: 9, formType: 'basic', formName: 'basic_signature' },
-  { id: 10, formType: 'basic', formName: 'basic_conditions' },
-  { id: 11, formType: 'basic', formName: 'basic_drugs' },
-  { id: 12, formType: 'basic', formName: 'basic_labtests' },
-  { id: 13, formType: 'basic', formName: 'basic_traveldestination' },
-  { id: 14, formType: 'basic', formName: 'basic_vaccinescheduler' },
-  { id: 15, formType: 'basic', formName: 'basic_vaccinehistory' },
-  { id: 16, formType: 'custom', formName: 'custom_emailmarketing' },
-  { id: 17, formType: 'custom', formName: 'custom_smsmarketing' },
-  { id: 18, formType: 'custom', formName: 'custom_phonecall' },
-  { id: 19, formType: 'custom', formName: 'custom_lettermarketing' },
-  { id: 20, formType: 'custom', formName: 'custom_membershipnumber' },
-  { id: 21, formType: 'custom', formName: 'custom_authorizationcode' },
-  { id: 22, formType: 'custom', formName: 'custom_company' },
-  { id: 23, formType: 'custom', formName: 'custom_dob' },
-  { id: 24, formType: 'custom', formName: 'custom_gender' },
-  { id: 25, formType: 'custom', formName: 'custom_physicaladdress' },
-  { id: 26, formType: 'custom', formName: 'custom_referredby' },
-  { id: 27, formType: 'custom', formName: 'custom_telephonenumber' },
+  { id: 10, formType: 'basic', formName: 'basic_photo' },
+  { id: 11, formType: 'basic', formName: 'basic_conditions' },
+  { id: 12, formType: 'basic', formName: 'basic_drugs' },
+  { id: 13, formType: 'basic', formName: 'basic_labtests' },
+  { id: 14, formType: 'basic', formName: 'basic_traveldestination' },
+  { id: 15, formType: 'basic', formName: 'basic_vaccinescheduler' },
+  { id: 16, formType: 'basic', formName: 'basic_vaccinehistory' },
+  { id: 17, formType: 'custom', formName: 'custom_emailmarketing' },
+  { id: 18, formType: 'custom', formName: 'custom_smsmarketing' },
+  { id: 19, formType: 'custom', formName: 'custom_phonecall' },
+  { id: 20, formType: 'custom', formName: 'custom_lettermarketing' },
+  { id: 21, formType: 'custom', formName: 'custom_membershipnumber' },
+  { id: 22, formType: 'custom', formName: 'custom_authorizationcode' },
+  { id: 23, formType: 'custom', formName: 'custom_company' },
+  { id: 24, formType: 'custom', formName: 'custom_dob' },
+  { id: 25, formType: 'custom', formName: 'custom_gender' },
+  { id: 26, formType: 'custom', formName: 'custom_physicaladdress' },
+  { id: 27, formType: 'custom', formName: 'custom_referredby' },
+  { id: 28, formType: 'custom', formName: 'custom_telephonenumber' },
 ]
 const previewMapping = [
   { heading: 'basic_heading' },
@@ -63,7 +72,7 @@ const previewMapping = [
   { diagram: 'empty' },
   { facediagram: 'empty' },
   { diagram_mini: 'empty' },
-  { photo_and_drawer: 'empty' },
+  { photo_and_drawer: 'basic_photo' },
   { epaper: 'empty' },
   { custom_photo_and_drawer: 'empty' },
   { cl_services: 'empty' },
@@ -82,17 +91,24 @@ const copy = (source, destination, droppableSourceId, endIndex, formInfo) => {
     ...item,
     id: uuidv4(),
     txtQuestion: formInfo.txtQuestion,
+    txtQuestionWithTag: formInfo.txtQuestionWithTag,
     txtBlock: formInfo.txtBlock,
+    txtBlockWithTag: formInfo.txtBlockWithTag,
     txtInputType: formInfo.txtInputType,
     txtDefaults: formInfo.txtDefaults,
+    txtDefaultsWithTag: formInfo.txtDefaultsWithTag,
     txtLinkedField: formInfo.txtLinkedField,
+    signData: formInfo.signData,
     arrItems: formInfo.arrItems,
     required: formInfo.required,
+    txtValue: formInfo.txtValue,
+    arrValue: formInfo.arrValue,
   })
   return destination
 }
 
 const reverseForm = (form) => {
+  console.log('reverseForm =', form)
   const mappingInfo = previewMapping.filter(
     (item) => Object.values(item)[0] === form.formName
   )
@@ -116,12 +132,27 @@ const reverseForm = (form) => {
     if (cssClass === 'textarea') {
       defaults = form.txtBlock
     }
+
     if (cssClass === 'staticText') {
       values = form.txtBlock
     }
-    if (cssClass === 'signature' || form.arrItems.length > 0) {
+
+    if (cssClass === 'signature') {
+      values = form.signData
+    }
+
+    if (
+      cssClass === 'signature' ||
+      cssClass === 'cl_drugs' ||
+      form.arrItems.length > 0
+    ) {
       title = form.txtQuestion
     }
+
+    if (cssClass === 'cl_drugs' && form.arrItems.length === 0) {
+      values = ''
+    }
+
     reverseObj = {
       cssClass: cssClass,
       required: required,
@@ -158,7 +189,6 @@ const reverseForm = (form) => {
 }
 
 const getFormInfo = (form) => {
-  // let name = ''
   let label = ''
   if (form.title) {
     if (typeof form.title === 'object') {
@@ -170,13 +200,34 @@ const getFormInfo = (form) => {
   }
 
   label = form.title ? form.title.trim() : ''
-  label = label === '' && form.values ? form.values.trim() : label
+  label =
+    label === '' && typeof form.values === 'string' && form.values
+      ? form.values.trim()
+      : label
 
-  if (form.cssClass === 'cl_services') label = 'Services'
-  else if (form.cssClass === 'cl_drugs') label = 'Drugs'
-  else if (form.cssClass === 'labs_tests') label = 'Labs Tests'
-  else if (form.cssClass === 'vaccine_scheduler') label = ''
-  else if (form.cssClass === 'staticText') label = ''
+  switch (form.cssClass) {
+    case 'cl_services': {
+      label = 'Services'
+      break
+    }
+    case 'cl_drugs': {
+      label = 'Drugs'
+      break
+    }
+    case 'labs_tests': {
+      label = 'Labs Tests'
+      break
+    }
+    case 'vaccine_scheduler': {
+      label = ''
+      break
+    }
+    case 'staticText': {
+      label = ''
+      // No default
+      break
+    }
+  }
 
   let txtBlockValue = ''
   if (form.cssClass === 'textarea') {
@@ -202,14 +253,20 @@ const getFormInfo = (form) => {
     txtLinkedFieldValue = form.linked
   }
 
+  let signData = ''
+  if (form.cssClass === 'signature' && typeof form.values === 'string') {
+    signData = form.values
+  }
+
   let arrItemsValue: OptionType[] = []
   if (
-    form.cssClass === 'checkbox' ||
-    form.cssClass === 'radio' ||
-    form.cssClass === 'select' ||
-    form.cssClass === 'staticImage' ||
-    form.cssClass === 'diagram_mini' ||
-    form.cssClass === 'image'
+    (form.cssClass === 'checkbox' ||
+      form.cssClass === 'radio' ||
+      form.cssClass === 'select' ||
+      form.cssClass === 'staticImage' ||
+      form.cssClass === 'diagram_mini' ||
+      form.cssClass === 'image') &&
+    typeof form.values !== 'string'
   ) {
     const arrayItems: ArrayItem[] = form.values
     arrItemsValue = Object.entries(arrayItems).map(([key, value]) => ({
@@ -225,7 +282,10 @@ const getFormInfo = (form) => {
     txtInputType: txtInputTypeValue,
     txtDefaults: txtDefaultsValue,
     txtLinkedField: txtLinkedFieldValue,
+    signData: signData,
     arrItems: arrItemsValue,
+    txtValue: txtDefaultsValue,
+    arrValue: [],
     required: form.required === 'true' ? true : false,
   }
 }
@@ -233,20 +293,38 @@ const getFormInfo = (form) => {
 interface P {
   previewData: string
   changeFormName: (formName: string) => void
+  changeFormType: (formType: string) => void
   clickedCreateForm: boolean
+  clickedPreviewForm: boolean
   clearCreateFormBtn: () => void
+  getFormData: (formData: string) => void
+  onSaveForm: (formdata: string) => void
+  triggerChangeForms: (forms: MedicalFormTypes[]) => void
   formName: string
+  currentRules?: RuleProp[]
+  currentAdvSettings?: MedicaFormAdvanceSettingData
 }
 
 const MedicalFormEdit: FC<P> = ({
   previewData,
   changeFormName,
+  changeFormType,
   clickedCreateForm,
   clearCreateFormBtn,
+  clickedPreviewForm,
+  getFormData,
+  onSaveForm,
+  triggerChangeForms,
   formName,
+  currentRules = [],
+  currentAdvSettings = defaultMedicaFormAdvanceSettingData,
 }) => {
+  const { t } = useTranslation('common')
   const [, forceUpdate] = useReducer((x) => x + 1, 0)
   const [draggedForms, setDraggedForms] = useState<MedicalFormTypes[]>([])
+  const [prevDraggedForms, setPrevDraggedForms] = useState<MedicalFormTypes[]>(
+    []
+  )
   const [reservedFormData, setReservedFormData] = useState('')
   const [selectedForm, setSelectedForm] = useState(defaultFormValue)
   const [displaySettingBar, setDisplaySettingBar] = useState(false)
@@ -261,14 +339,47 @@ const MedicalFormEdit: FC<P> = ({
       const reversedFormObject = {
         form_structure: reversedFormData,
       }
-      setReservedFormData(btoa(JSON.stringify(reversedFormObject)))
-      setIsModalVisible(true)
+      const formData = btoa(
+        unescape(encodeURIComponent(JSON.stringify(reversedFormObject)))
+      )
+      setReservedFormData(formData)
+      onSaveForm(formData)
+    } else {
+      clearCreateFormBtn?.()
     }
-  }, [clickedCreateForm, draggedForms])
+  }, [clickedCreateForm, draggedForms, onSaveForm, clearCreateFormBtn])
+
+  useEffect(() => {
+    if (clickedPreviewForm === true && draggedForms.length > 0) {
+      const reversedFormData = draggedForms.map((form) => reverseForm(form))
+      const reversedFormObject = {
+        form_structure: reversedFormData,
+      }
+      const formData = btoa(
+        unescape(encodeURIComponent(JSON.stringify(reversedFormObject)))
+      )
+      getFormData(formData)
+    }
+  }, [clickedPreviewForm, draggedForms, getFormData])
+
+  useEffect(() => {
+    if (!isEqual(prevDraggedForms, draggedForms)) {
+      if (draggedForms.length > 0) {
+        triggerChangeForms(draggedForms)
+      } else {
+        triggerChangeForms([])
+      }
+      setPrevDraggedForms(draggedForms)
+    }
+  }, [draggedForms.length, draggedForms, prevDraggedForms, triggerChangeForms])
 
   useEffect(() => {
     setDraggedForms([])
-    if (typeof previewData != 'undefined' && previewData !== '') {
+    if (
+      previewData &&
+      typeof previewData != 'undefined' &&
+      previewData !== ''
+    ) {
       const previewDataArray = JSON.parse(atob(previewData))
       const previewForms = []
       if (previewDataArray['form_structure']) {
@@ -317,12 +428,25 @@ const MedicalFormEdit: FC<P> = ({
   }
 
   const handlingDeleteForm = (componentID) => {
-    handlingFormSetting('')
-    setDraggedForms(draggedForms.filter((item) => item['id'] !== componentID))
+    let delFlag = true
+    if (currentRules.length > 0) {
+      const rulesWithThisComponent = currentRules[0].if.answers.filter(
+        (item) => item.answer === componentID
+      )
+      if (rulesWithThisComponent.length > 0) delFlag = false
+    }
+    if (!delFlag) {
+      Notification(
+        NotificationType.error,
+        t('ui.medicalformbuilder.delete.rules.error')
+      )
+    } else {
+      setDraggedForms(draggedForms.filter((item) => item['id'] !== componentID))
+    }
   }
 
   const handlingSaveForm = (form) => {
-    const index = _.findIndex(draggedForms, (item) => item['id'] === form.id)
+    const index = draggedForms.findIndex((item) => item['id'] === form.id)
     if (index !== -1) {
       draggedForms.splice(index, 1, form)
     }
@@ -343,17 +467,27 @@ const MedicalFormEdit: FC<P> = ({
     )
     if (mappingForm?.length > 0) {
       const item = medicalForms[mappingForm[0].id]
-      const cloneFormInfo = _.cloneDeep(defaultFormValue)
+      const cloneFormInfo = cloneDeep(defaultFormValue)
       if (item.formType === 'custom' && item.formName === 'custom_gender') {
         const alterForm = medicalForms.filter(
           (medicalForm) => medicalForm.formName === 'basic_singlechoice'
         )
         if (alterForm.length > 0) {
-          cloneFormInfo.txtQuestion = 'What is your gender?'
+          cloneFormInfo.txtQuestion = t(
+            'ui.medicalformbuilder.form.gender.question'
+          )
           cloneFormInfo.txtLinkedField = 'Gender'
           const arrItemsVaues = [
-            { id: 1, name: 'Male', editing: false },
-            { id: 2, name: 'Female', editing: false },
+            {
+              id: 1,
+              name: t('ui.medicalformbuilder.form.gender.male'),
+              editing: false,
+            },
+            {
+              id: 2,
+              name: t('ui.medicalformbuilder.form.gender.female'),
+              editing: false,
+            },
           ]
           cloneFormInfo.arrItems = arrItemsVaues
           setDraggedForms(
@@ -374,7 +508,9 @@ const MedicalFormEdit: FC<P> = ({
           (medicalForm) => medicalForm.formName === 'basic_shortanswer'
         )
         if (alterForm.length > 0) {
-          cloneFormInfo.txtQuestion = 'Phone number'
+          cloneFormInfo.txtQuestion = t(
+            'ui.medicalformbuilder.form.phone.question'
+          )
           cloneFormInfo.txtLinkedField = 'Phone'
           cloneFormInfo.txtDefaults = '[CLIENTPHONE]'
           setDraggedForms(
@@ -392,7 +528,9 @@ const MedicalFormEdit: FC<P> = ({
           (medicalForm) => medicalForm.formName === 'basic_shortanswer'
         )
         if (alterForm.length > 0) {
-          cloneFormInfo.txtQuestion = 'Date of birth'
+          cloneFormInfo.txtQuestion = t(
+            'ui.medicalformbuilder.form.dob.question'
+          )
           cloneFormInfo.txtLinkedField = 'DOB'
           cloneFormInfo.txtDefaults = '[CLIENTDOB]'
           cloneFormInfo.txtInputType = 'date'
@@ -414,7 +552,9 @@ const MedicalFormEdit: FC<P> = ({
           (medicalForm) => medicalForm.formName === 'basic_shortanswer'
         )
         if (alterForm.length > 0) {
-          cloneFormInfo.txtQuestion = 'Postcode'
+          cloneFormInfo.txtQuestion = t(
+            'ui.medicalformbuilder.form.postcode.question'
+          )
           cloneFormInfo.txtLinkedField = 'MailingPostal'
           cloneFormInfo.txtDefaults = '[Postal]'
           setDraggedForms(
@@ -427,7 +567,9 @@ const MedicalFormEdit: FC<P> = ({
             )
           )
 
-          cloneFormInfo.txtQuestion = 'City'
+          cloneFormInfo.txtQuestion = t(
+            'ui.medicalformbuilder.form.city.question'
+          )
           cloneFormInfo.txtLinkedField = 'MailingCity'
           cloneFormInfo.txtDefaults = '[City]'
           setDraggedForms(
@@ -440,7 +582,9 @@ const MedicalFormEdit: FC<P> = ({
             )
           )
 
-          cloneFormInfo.txtQuestion = 'Street Address'
+          cloneFormInfo.txtQuestion = t(
+            'ui.medicalformbuilder.form.street.question'
+          )
           cloneFormInfo.txtLinkedField = 'MailingStreet'
           cloneFormInfo.txtDefaults = '[Street]'
           setDraggedForms(
@@ -467,7 +611,12 @@ const MedicalFormEdit: FC<P> = ({
       forceUpdate()
     }
   }
-
+  const genderQuestion = t('ui.medicalformbuilder.form.gender.question')
+  const phoneQuestion = t('ui.medicalformbuilder.form.phone.question')
+  const dobQuestion = t('ui.medicalformbuilder.form.dob.question')
+  const postcodeQuestion = t('ui.medicalformbuilder.form.postcode.question')
+  const cityQuestion = t('ui.medicalformbuilder.form.city.question')
+  const streetQuestion = t('ui.medicalformbuilder.form.street.question')
   const onDragEnd = React.useCallback(
     (result) => {
       const { source, destination } = result
@@ -493,13 +642,13 @@ const MedicalFormEdit: FC<P> = ({
           break
         case 'LeftSideCustom': {
           const item = medicalForms[source.index]
-          const cloneFormInfo = _.cloneDeep(defaultFormValue)
+          const cloneFormInfo = cloneDeep(defaultFormValue)
           if (item.formType === 'custom' && item.formName === 'custom_gender') {
             const alterForm = medicalForms.filter(
               (medicalForm) => medicalForm.formName === 'basic_singlechoice'
             )
             if (alterForm.length > 0) {
-              cloneFormInfo.txtQuestion = 'What is your gender?'
+              cloneFormInfo.txtQuestion = genderQuestion
               cloneFormInfo.txtLinkedField = 'Gender'
               const arrItemsVaues = [
                 { id: 1, name: 'Male', editing: false },
@@ -524,7 +673,7 @@ const MedicalFormEdit: FC<P> = ({
               (medicalForm) => medicalForm.formName === 'basic_shortanswer'
             )
             if (alterForm.length > 0) {
-              cloneFormInfo.txtQuestion = 'Phone number'
+              cloneFormInfo.txtQuestion = phoneQuestion
               cloneFormInfo.txtLinkedField = 'Phone'
               cloneFormInfo.txtDefaults = '[CLIENTPHONE]'
               setDraggedForms((state) =>
@@ -545,7 +694,7 @@ const MedicalFormEdit: FC<P> = ({
               (medicalForm) => medicalForm.formName === 'basic_shortanswer'
             )
             if (alterForm.length > 0) {
-              cloneFormInfo.txtQuestion = 'Date of birth'
+              cloneFormInfo.txtQuestion = dobQuestion
               cloneFormInfo.txtLinkedField = 'DOB'
               cloneFormInfo.txtDefaults = '[CLIENTDOB]'
               cloneFormInfo.txtInputType = 'date'
@@ -567,7 +716,7 @@ const MedicalFormEdit: FC<P> = ({
               (medicalForm) => medicalForm.formName === 'basic_shortanswer'
             )
             if (alterForm.length > 0) {
-              cloneFormInfo.txtQuestion = 'Postcode'
+              cloneFormInfo.txtQuestion = postcodeQuestion
               cloneFormInfo.txtLinkedField = 'MailingPostal'
               cloneFormInfo.txtDefaults = '[Postal]'
               setDraggedForms((state) =>
@@ -580,7 +729,7 @@ const MedicalFormEdit: FC<P> = ({
                 )
               )
 
-              cloneFormInfo.txtQuestion = 'City'
+              cloneFormInfo.txtQuestion = cityQuestion
               cloneFormInfo.txtLinkedField = 'MailingCity'
               cloneFormInfo.txtDefaults = '[City]'
               setDraggedForms((state) =>
@@ -593,7 +742,7 @@ const MedicalFormEdit: FC<P> = ({
                 )
               )
 
-              cloneFormInfo.txtQuestion = 'Street Address'
+              cloneFormInfo.txtQuestion = streetQuestion
               cloneFormInfo.txtLinkedField = 'MailingStreet'
               cloneFormInfo.txtDefaults = '[Street]'
               setDraggedForms((state) =>
@@ -624,7 +773,15 @@ const MedicalFormEdit: FC<P> = ({
           break
       }
     },
-    [setDraggedForms]
+    [
+      setDraggedForms,
+      genderQuestion,
+      phoneQuestion,
+      dobQuestion,
+      postcodeQuestion,
+      cityQuestion,
+      streetQuestion,
+    ]
   )
 
   const handleOk = () => {
@@ -655,6 +812,7 @@ const MedicalFormEdit: FC<P> = ({
             isEditing={isEditing}
             medicalForms={medicalForms}
             changeFormName={changeFormName}
+            changeFormType={changeFormType}
             formName={formName}
             changeLayout={changeLayout}
             runPreviewPdf={runPreviewPdf}

@@ -1,0 +1,3 @@
+table:
+  name: packages
+  schema: public

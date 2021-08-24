@@ -23,18 +23,22 @@ export interface FileUploderProps {
   onDelete?(file: UploadProps[]): void
   onFileChange?(file: UploadProps): void
   acceptFileType?: string
+  withList?: boolean
 }
 
-const FileUploder: FC<FileUploderProps> = (props) => {
+export const FileUploder: FC<FileUploderProps> = (props) => {
+  const { withList } = props
   const [fileList, setFileList] = useState<UploadProps[]>([])
   const { Dragger } = Upload
 
   const handleFileOnChange = (info) => {
+    const list = [...fileList]
     const { status } = info.file
+    console.log(info)
     if (status !== 'uploading') {
-      setFileList(info?.fileList)
+      setFileList([...list, info.file])
     }
-    props.onFileChange?.(info?.fileList)
+    props.onFileChange?.(info.file)
   }
 
   const getFileType = (extension) => {
@@ -63,7 +67,7 @@ const FileUploder: FC<FileUploderProps> = (props) => {
     props.onDelete?.(newFileList)
   }
 
-  return (
+  return !withList ? (
     <div className={styles.DragDropSection}>
       {fileList.length === 0 ? (
         <div className={styles.fileUploader}>
@@ -85,6 +89,48 @@ const FileUploder: FC<FileUploderProps> = (props) => {
         </div>
       ) : (
         <div>
+          {fileList.map((file, index) => {
+            return (
+              <div className={styles.fileWrap} key={index}>
+                <div className={styles.fileName}>
+                  {getFileType(file.type)}
+                  {file.name}
+                </div>
+                <Button
+                  size="large"
+                  type="default"
+                  icon={<DeleteOutlined />}
+                  onClick={() => onDelete(file, index)}
+                >
+                  Delete
+                </Button>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  ) : (
+    <div className={styles.DragDropSection}>
+      <div className={styles.fileUploader}>
+        <Dragger
+          {...props?.draggerProps}
+          onChange={handleFileOnChange}
+          accept={props.acceptFileType}
+          className={styles.dropBox}
+        >
+          <div className={styles.DropFileText}>
+            <img src={Download} className={styles.image} alt="" />
+            <p className={styles.text}>Drop Files Here To Upload</p>
+          </div>
+          <div className={styles.orBox}>or</div>
+          <Button type="primary" className={styles.chooseFileButton}>
+            Choose File(s)
+          </Button>
+        </Dragger>
+      </div>
+      {fileList.length > 0 && (
+        <div className={styles.selectedFileList}>
           {fileList.map((file, index) => {
             return (
               <div className={styles.fileWrap} key={index}>

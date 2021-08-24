@@ -1,0 +1,181 @@
+.sendSMSContainer {
+  width: 100%;
+  height: 100%;
+}
+
+.sendSMSComponentContainer {
+  width: 100%;
+  height: 100%;
+  background-color: #eceff1;
+  display: grid;
+  grid-template-rows: 1fr min-content;
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 0 28px;
+  display: flex;
+  flex-direction: column-reverse;
+  .smsItems {
+    display: flex;
+    flex-direction: column;
+    .smsItem {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 24px;
+      .date {
+        width: 100%;
+        text-align: center;
+        font-family: var(--font-family);
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 24px;
+        color: var(--light-grey-color);
+        margin-bottom: 4px;
+      }
+      .smsItemContent {
+        max-width: 80%;
+        padding: 1rem;
+        font-family: var(--font-family);
+        font-size: 14px;
+        line-height: 24px;
+        font-weight: 400;
+        word-wrap: break-word;
+      }
+      .directionFrom {
+        margin-right: auto;
+        background-color: var(--light-grey-color);
+        color: white;
+        border-radius: 1rem 1rem 1rem 4px;
+      }
+      .directionTo {
+        margin-left: auto;
+        background-color: white;
+        color: var(--grey-text-color);
+        border-radius: 1rem 1rem 4px 1rem;
+      }
+      :global {
+        .ant-btn {
+          font-size: 0.8rem;
+          border-radius: 4px;
+          letter-spacing: 0.05em;
+          padding-left: 1em;
+          padding-right: 1em;
+          line-height: 1.5715;
+          position: relative;
+          display: inline-block;
+          font-weight: 400;
+          white-space: nowrap;
+          text-align: center;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+          user-select: none;
+          touch-action: manipulation;
+        }
+        .ant-btn-danger {
+          color: #7f4d0d;
+          background: #ffe1b3;
+          border-color: #e9cda3;
+          text-shadow: 0 -1px 0 rgb(0 0 0 / 12%);
+          box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
+        }
+        .ant-btn-primary {
+          color: #7a787a;
+          background: #eeedef;
+          border-color: #d4d3d5;
+          text-shadow: 0 -1px 0 rgb(0 0 0 / 12%);
+          box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
+        }
+        .ant-btn-sm {
+          height: 18px;
+          padding: 0px 3px;
+          font-size: 11px;
+          border-radius: 2px;
+        }
+      }
+    }
+  }
+}
+
+.ops {
+  padding: 28px;
+  background-color: white;
+}
+
+.smsInputContent {
+  position: relative;
+  margin-bottom: 1rem;
+  :global {
+    .ant-input-textarea {
+      > textarea {
+        padding: 50px 20px 20px;
+        border: 1px solid var(--border-color-base);
+        border-radius: 4px;
+        font-family: var(--font-family);
+        font-size: 14px;
+        line-height: 24px;
+        font-weight: 400;
+        color: var(--grey-text-color);
+      }
+      &::after {
+        display: none;
+      }
+    }
+  }
+}
+
+.smsInputContentHeader {
+  z-index: 1;
+  position: absolute;
+  width: calc(100% - 2px);
+  padding: 0 20px;
+  height: 49px;
+  top: 4px;
+  left: 1px;
+  > div {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    .operations {
+      display: flex;
+      align-items: center;
+      .operation {
+        margin-right: 1rem;
+        width: 20px;
+        height: 20px;
+        font-family: var(--font-family);
+        font-size: 18px;
+        color: var(--light-grey-color);
+        cursor: pointer;
+      }
+    }
+    .maxLengthText {
+      font-family: var(--font-family);
+      font-size: 12px;
+      line-height: 24px;
+      font-weight: 400;
+      color: #b8b8c0;
+    }
+  }
+}
+
+.smsInputContentBody {
+  padding: 55px 10px 10px 10px;
+  border-radius: 4px;
+  border: 2px solid var(--border-color-base);
+  height: 150px;
+  & > div {
+    align-items: baseline !important;
+  }
+}
+.smsInputContentBody:focus-within {
+  border: 2px solid #ddf0f6;
+  transition: 0.1s;
+}

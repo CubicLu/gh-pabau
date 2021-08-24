@@ -1,86 +1,79 @@
-import React, { FC, useState } from 'react'
 import { CloseOutlined } from '@ant-design/icons'
-import styles from './NotificationDrawer.module.less'
-import { Drawer, Image } from 'antd'
-import { ReactComponent as EmptySVG } from '../../assets/images/notification-empty.svg'
-import { ReactComponent as Lead1SVG } from '../../assets/images/lead.svg'
-import { ReactComponent as Lead2SVG } from '../../assets/images/lead1.svg'
+import { MutationFunction } from '@apollo/client'
+import { Drawer, Badge } from 'antd'
 import classNames from 'classnames'
+import React, { FC, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { ReactComponent as EmptySVG } from '../../assets/images/notification-empty.svg'
+import Notification from './Notification'
+import styles from './NotificationDrawer.module.less'
+import News from './News'
 
-interface Notification {
-  notificationTime: string
+interface UserProps {
+  user: number
+  company: number
+  fullName: string
+}
+
+export interface Notifications {
+  id: string
+  notificationTime: Date
   notificationType: string
   notificationTypeIcon: string
   title: string
   desc: string
-  read: boolean
+  read: number[]
+  users: number[]
+  link: string
 }
 
-interface NotificationData {
-  [key: string]: Notification[]
+export interface ProductNews {
+  id: string
+  img: string
+  link: string
+  title: string
+  description: string
+  time: Date | string
+  readUsers: number[]
 }
 
 interface P {
+  deleteNotification?: MutationFunction
+  updateNotification?: MutationFunction
+  readNewsMutation?: MutationFunction
+  readAddMutation?: MutationFunction
+  unreadNewsCount?: number
+  unreadNotificationCount?: number
   openDrawer?: boolean
   closeDrawer?: () => void
-  notifications?: NotificationData[]
+  notifications?: Notifications[]
+  productNews?: ProductNews[]
+  user?: UserProps
+  relativeTime?: (lan: string, date: Date) => string
 }
 
 export const NotificationDrawer: FC<P> = ({
   openDrawer = true,
   closeDrawer,
   notifications = [],
+  productNews = [],
+  relativeTime,
+  deleteNotification,
+  updateNotification,
+  readAddMutation,
+  readNewsMutation,
+  unreadNewsCount,
+  unreadNotificationCount,
+  user,
 }) => {
-  console.log('notifications', notifications)
+  const { t } = useTranslation('common')
   const [notificationDrawer, setNotificationDrawer] = useState(openDrawer)
   const [notifyTab, setNotifyTab] = useState('Activity')
-  const [notificationData, setNotificationData] = useState<NotificationData[]>(
-    notifications
-  )
-
-  const notificationLeadsData = [
-    {
-      Today: [
-        {
-          leadDate: new Date(),
-          title: 'New features to sell vouchers with blase messages',
-          desc:
-            'Encourage clients and loved ones to treat themselves right in the time for the festive season!',
-        },
-      ],
-    },
-    {
-      '14 December': [
-        {
-          leadDate: new Date(),
-          title: 'Are you ready for reopening soon?',
-          desc:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean malesuada lobortis ex eget viverra. Ut viverra non nisi eget viverra.',
-        },
-      ],
-    },
-  ]
+  const [notificationData] = useState<Notifications[]>(notifications)
 
   const closeDrawerMenu = () => {
     setNotificationDrawer(false)
     closeDrawer?.()
-  }
-
-  const removeSingleNotification = (index, dayIndex, objectKey) => {
-    const selectedObject = notificationData[index]
-    selectedObject[objectKey].splice(dayIndex, 1)
-    if (selectedObject[objectKey].length === 0) {
-      notificationData.splice(index, 1)
-      setNotificationData([...notificationData])
-    } else {
-      const newNotificationData = notificationData.map((item, i) => {
-        if (i !== index) {
-          return item
-        }
-        return { ...selectedObject }
-      })
-      setNotificationData([...newNotificationData])
-    }
   }
 
   let lengths = 0
@@ -88,6 +81,19 @@ export const NotificationDrawer: FC<P> = ({
     const length = Object.values(item)[0] ? Object.values(item)[0].length : 0
     lengths = lengths + length
   }
+
+  const renderEmptyPlaceholder = (title: string, hint: string) => (
+    <div className={styles.notificationEmpty}>
+      <EmptySVG />
+      <p className={styles.emptyMessage}>{title}</p>
+      <p className={styles.emptyHint}>{hint}</p>
+      {notifyTab === 'Activity' && (
+        <a href="#test" className={styles.emptyAnchor}>
+          {t('notifications.empty.anchor')} {'>'}
+        </a>
+      )}
+    </div>
+  )
 
   return (
     <Drawer
@@ -100,7 +106,7 @@ export const NotificationDrawer: FC<P> = ({
     >
       <div className={styles.notificationHeader}>
         <div className={styles.notificationAlign}>
-          <h1> Notifications</h1>
+          <h1>{t('notifications.header')}</h1>
           <CloseOutlined
             onClick={closeDrawerMenu}
             className={styles.searchIconSize}
@@ -116,7 +122,11 @@ export const NotificationDrawer: FC<P> = ({
             )}
             onClick={() => setNotifyTab('Activity')}
           >
-            Activity
+            {t('notifications.tab.activity')}
+            <Badge
+              count={unreadNotificationCount}
+              className={styles.badgeCircle}
+            />
           </button>
           <button
             className={classNames(
@@ -125,142 +135,60 @@ export const NotificationDrawer: FC<P> = ({
             )}
             onClick={() => setNotifyTab('News')}
           >
-            News
+            {t('notifications.tab.news')}
+            <Badge count={unreadNewsCount} className={styles.badgeCircle} />
           </button>
         </div>
       </div>
+      {notifyTab === 'Activity' && (
+        <div
+          className={classNames(
+            styles.notificationAlign,
+            styles.todayTextTopSpace
+          )}
+        >
+          <h2>{/* {t('notifications.today')} */}</h2>
+        </div>
+      )}
 
       {notifyTab === 'Activity' &&
-        notificationData.map((notify, index) => {
-          return Object.keys(notify).map((notification) => {
-            return (
-              <div key={notification}>
-                <div
-                  className={classNames(
-                    styles.notificationAlign,
-                    styles.todayTextTopSpace
-                  )}
-                >
-                  <h2>{notify[notification].length > 0 && notification}</h2>
-                </div>
-                {notify[notification].map((dayNotify, dayIndex) => {
-                  return (
-                    <div key={dayIndex}>
-                      <div className={styles.notificationCard}>
-                        <div className={styles.notifyAlign}>
-                          <div className={classNames(styles.logo, styles.flex)}>
-                            <Image src={dayNotify.notificationTypeIcon} />
-                            <p className={styles.textSm}>
-                              {dayNotify.notificationType}
-                            </p>
-                          </div>
-                          <div className={styles.time}>
-                            <p
-                              className={classNames(
-                                styles.textMd,
-                                styles.grayTextColor
-                              )}
-                            >
-                              {dayNotify.notificationTime}
-                              <CloseOutlined
-                                className={styles.notificationClearIcon}
-                                onClick={() =>
-                                  removeSingleNotification(
-                                    index,
-                                    dayIndex,
-                                    notification
-                                  )
-                                }
-                              />
-                            </p>
-                          </div>
-                        </div>
-                        <div className={styles.descAlign}>
-                          <div className={styles.notifyTitleDesc}>
-                            <h1>{dayNotify.title}</h1>
-                            <p>{dayNotify.desc}</p>
-                          </div>
-                          <div className={styles.readStatus}>
-                            {!dayNotify.read && <span></span>}
-                          </div>
-                        </div>
-                      </div>
-                      <div className={styles.cardBorder} />
-                    </div>
-                  )
-                })}
-              </div>
-            )
-          })
+        notifications.map((notify, index) => {
+          return (
+            <Notification
+              key={index}
+              notify={notify}
+              relativeTime={relativeTime}
+              user={user}
+              updateMutation={updateNotification}
+              deleteMutation={deleteNotification}
+              readAddMutation={readAddMutation}
+            />
+          )
         })}
 
-      {Array.isArray(notificationData) &&
-        (notificationData.length === 0 || lengths === 0) &&
-        notifyTab === 'Activity' && (
-          <div className={styles.notificationEmpty}>
-            <EmptySVG />
-            <p className={styles.emptyMessage}>No notifications yet</p>
-            <p className={styles.emptyHint}>
-              Stay tuned! Notifications about your activity will show up here.
-            </p>
-            <a href="#test" className={styles.emptyAnchor}>
-              Notification settings {'>'}
-            </a>
-          </div>
+      {Array.isArray(notifications) &&
+        notifications.length === 0 &&
+        notifyTab === 'Activity' &&
+        renderEmptyPlaceholder(
+          t('notifications.empty.msg'),
+          t('notifications.empty.hint')
         )}
 
+      {Array.isArray(productNews) &&
+        productNews.length === 0 &&
+        notifyTab === 'News' &&
+        renderEmptyPlaceholder(t('news.empty.msg'), t('news.empty.hint'))}
+
       {notifyTab === 'News' &&
-        notificationLeadsData.map((notify, index) => {
-          return Object.keys(notify).map((notification) => {
-            return (
-              <>
-                <div
-                  className={classNames(
-                    styles.notificationAlign,
-                    styles.todayTextTopSpace
-                  )}
-                >
-                  <h2>{notification}</h2>
-                </div>
-                {notify[notification].map((dayNotify, index) => {
-                  return (
-                    <>
-                      <div
-                        key={dayNotify.title}
-                        className={styles.notificationCard}
-                      >
-                        <div className={styles.notifyAlign}>
-                          <div className={classNames(styles.logo, styles.flex)}>
-                            {notification === 'Today' ? (
-                              <Lead1SVG />
-                            ) : (
-                              <Lead2SVG />
-                            )}
-                            <p className={styles.textSm}>
-                              {dayNotify.notificationType}
-                            </p>
-                          </div>
-                        </div>
-                        <div className={styles.leadTitleDesc}>
-                          <h1>{dayNotify.title}</h1>
-                          <p>{dayNotify.desc}</p>
-                        </div>
-                        <span
-                          className={classNames(
-                            styles.textMd,
-                            styles.learnMore
-                          )}
-                        >
-                          Learn more
-                        </span>
-                      </div>
-                      <div className={styles.cardBorder} />
-                    </>
-                  )
-                })}
-              </>
-            )
-          })
+        productNews.map((news) => {
+          return (
+            <News
+              key={news.id}
+              notify={news}
+              user={user}
+              readNewsMutation={readNewsMutation}
+            />
+          )
         })}
     </Drawer>
   )

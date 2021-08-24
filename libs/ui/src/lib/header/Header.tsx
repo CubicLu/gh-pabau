@@ -1,129 +1,119 @@
-import React, { FC, useState, MouseEvent } from 'react'
-import { Badge, Col, Layout, Row } from 'antd'
 import { BellOutlined, MailOutlined } from '@ant-design/icons'
-import styles from './Header.module.less'
+import { MutationFunction } from '@apollo/client'
 import {
   Dropdown as AvatarDropDown,
-  QuickCreate,
-  NotificationDrawer,
   Logo,
+  NotificationDrawer,
+  QuickCreate,
+  UserDataProps,
 } from '@pabau/ui'
-import { Search } from './search/Search'
-import PabauMessages from './messages/Messages'
+import { Badge, Col, Layout, Row } from 'antd'
 import classNames from 'classnames'
-import AppointmentSVG from '../../assets/images/notification.svg'
-import ReportSVG from '../../assets/images/notification-report.svg'
-import LeadSVG from '../../assets/images/notification-lead.svg'
-import ReviewSVG from '../../assets/images/review.svg'
-import CampaignSVG from '../../assets/images/campaign.svg'
-import NewsletterSVG from '../../assets/images/newsletter.svg'
-import RequestSVG from '../../assets/images/request.svg'
-import ReferSVG from '../../assets/images/refer.svg'
+import React, { useState, useEffect } from 'react'
+import styles from './Header.module.less'
+import { Search } from './search/Search'
+
 const AntHeader = Layout.Header
 
-const notifications = [
-  {
-    Today: [
-      {
-        notificationTime: '3:00 PM',
-        notificationType: 'Appointment',
-        notificationTypeIcon: AppointmentSVG,
-        title: 'Cancelled appointment',
-        desc: 'Your appointment at 17:00 PM with John Smith was cancelled',
-        read: false,
-      },
-      {
-        notificationTime: '1:20 PM',
-        notificationType: 'Appointment',
-        notificationTypeIcon: AppointmentSVG,
-        title: 'Cancelled appointment',
-        desc: 'Your appointment at 17:00 PM with John Smith was cancelled',
-        read: true,
-      },
-    ],
-  },
-  {
-    Yesterday: [
-      {
-        notificationTime: '1:20 PM',
-        notificationType: 'Report',
-        notificationTypeIcon: ReportSVG,
-        title: 'New financial report',
-        desc: 'Your appointment at 17:00 PM with John Smith was cancelled',
-        read: false,
-      },
-      {
-        notificationTime: '1:20 PM',
-        notificationType: 'Lead',
-        notificationTypeIcon: LeadSVG,
-        title: 'New lead',
-        desc: 'John Smith has enquired about Botox',
-        read: true,
-      },
-      {
-        notificationTime: '1:21 PM',
-        notificationType: 'review',
-        notificationTypeIcon: ReviewSVG,
-        title: 'New review delivered',
-        desc: 'Olivia Sanders has left a new review',
-        read: true,
-      },
-      {
-        notificationTime: '1:13 PM',
-        notificationType: 'sms campaign',
-        notificationTypeIcon: CampaignSVG,
-        title: 'New SMS campaign delivered',
-        desc: 'Check out new SMS campaign',
-        read: false,
-      },
-      {
-        notificationTime: '12:48 PM',
-        notificationType: 'Newsletter campaign',
-        notificationTypeIcon: NewsletterSVG,
-        title: 'New Newsletter campaign delivered',
-        desc: 'Check out new newsletter campaign',
-        read: true,
-      },
-      {
-        notificationTime: '12:12 PM',
-        notificationType: 'holiday request',
-        notificationTypeIcon: RequestSVG,
-        title: 'Joe Hickey requests a holiday',
-        desc: 'Deny or confirm it',
-        read: false,
-      },
-      {
-        notificationTime: '10:42 AM',
-        notificationType: 'business refer',
-        notificationTypeIcon: ReferSVG,
-        title: 'Someone refers into the business',
-        desc: 'Click to learn more',
-        read: true,
-      },
-    ],
-  },
-]
-
-interface P {
-  searchRender?: (innerComponent: JSX.Element) => JSX.Element
-  onCreateChannel?: (
-    name: string,
-    description: string,
-    isPrivate: boolean
-  ) => void
-  onMessageType?: (e: MouseEvent<HTMLElement>) => void
+interface Notification {
+  id: string
+  notificationTime: Date
+  notificationType: string
+  notificationTypeIcon?: string
+  title: string
+  desc: string
+  read: number[]
+  users: number[]
+  link: string
 }
 
-export const Header: FC<P> = ({
+interface ProductNews {
+  id: string
+  img: string
+  link: string
+  title: string
+  description: string
+  time: Date | string
+  readUsers: number[]
+}
+
+interface P {
+  notifications?: Notification[]
+  productNews?: ProductNews[]
+  readNewsMutation?: MutationFunction
+  deleteNotification?: MutationFunction
+  updateNotification?: MutationFunction
+  readAddMutation?: MutationFunction
+  relativeTime?: (lan: string, date: Date) => string
+  user?: UserDataProps
+  searchRender?: (innerComponent: JSX.Element) => JSX.Element
+  onMessageIconClick?(): void
+  // onCreateChannel?: (
+  //   name: string,
+  //   description: string,
+  //   isPrivate: boolean
+  // ) => void
+  // onMessageType?: (e: MouseEvent<HTMLElement>) => void
+  taskManagerIFrameComponent?: JSX.Element
+  clientCreateRender?: () => JSX.Element
+  leadCreateRender?: () => JSX.Element
+}
+
+export const Header = ({
+  notifications,
+  productNews,
+  user,
   searchRender,
-  onCreateChannel,
-  onMessageType,
+  onMessageIconClick,
+  // onCreateChannel,
+  // onMessageType,
+  relativeTime,
+  deleteNotification,
+  updateNotification,
+  readAddMutation,
+  readNewsMutation,
+  taskManagerIFrameComponent,
+  clientCreateRender,
+  leadCreateRender,
   ...rest
-}) => {
+}: P): JSX.Element => {
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
     false
   )
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [openMessageDrawer, setMessageDrawer] = useState<boolean>(false)
+  const [unreadNewsCount, setUnreadNewsCount] = useState<number>(0)
+  const [
+    unreadNotificationCount,
+    setUnreadNotificationCount,
+  ] = useState<number>(0)
+
+  const isReadNotify = (users: number[]) => {
+    return users?.find((user_id) => user_id === user?.user) ? true : false
+  }
+
+  const setUnreadNotify = (notifyArray, readKey, setter) => {
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const notifies: any = []
+    for (const notify in notifyArray) {
+      const _notify = notifyArray[notify]
+      const users = _notify[readKey]
+      if (!isReadNotify(users)) {
+        notifies.push(notify)
+      }
+    }
+    setter(notifies?.length > 0 ? notifies?.length : 0)
+  }
+
+  useEffect(() => {
+    setUnreadNotify(productNews, 'readUsers', (length) =>
+      setUnreadNewsCount(length)
+    )
+    setUnreadNotify(notifications, 'read', (length) =>
+      setUnreadNotificationCount(length)
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productNews, notifications])
 
   return (
     <>
@@ -143,28 +133,37 @@ export const Header: FC<P> = ({
               <Logo />
             </Col>
             <Col md={8} lg={8} className={styles.headerSearchCenter}>
-              <div style={{ width: '360px' }}>
+              <div style={{ width: '400px' }}>
                 {searchRender ? searchRender(<Search />) : <Search />}
               </div>
             </Col>
             <Col md={10} lg={8} className={styles.headerIconEnd}>
               <div className={styles.headerAlign}>
-                <Badge count={3} className={styles.badgeCircle}>
+                <Badge
+                  count={unreadNewsCount + unreadNotificationCount}
+                  className={styles.badgeCircle}
+                >
                   <BellOutlined
                     className={styles.headerIcon}
                     onClick={() => setNotificationDrawer((e) => !e)}
                   />
                 </Badge>
-                <Badge count={3} className={styles.badgeCircle}>
+                <Badge count={4} className={styles.badgeCircle}>
                   <MailOutlined
                     className={styles.headerIcon}
-                    onClick={() => setMessageDrawer((e) => !e)}
+                    onClick={() => onMessageIconClick?.()}
                   />
                 </Badge>
                 <div>
-                  <QuickCreate />
+                  <QuickCreate
+                    clientCreateRender={clientCreateRender}
+                    leadCreateRender={leadCreateRender}
+                  />
                 </div>
-                <AvatarDropDown {...rest} />
+                <AvatarDropDown
+                  taskManagerIFrameComponent={taskManagerIFrameComponent}
+                  userData={user}
+                />
               </div>
             </Col>
           </Row>
@@ -173,19 +172,20 @@ export const Header: FC<P> = ({
 
       {openNotificationDrawer && (
         <NotificationDrawer
+          user={user}
           openDrawer={openNotificationDrawer}
+          unreadNewsCount={unreadNewsCount}
+          unreadNotificationCount={unreadNotificationCount}
           closeDrawer={() => setNotificationDrawer((e) => !e)}
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           notifications={notifications}
-        />
-      )}
-      {openMessageDrawer && (
-        <PabauMessages
-          openDrawer={openMessageDrawer}
-          closeDrawer={() => setMessageDrawer((e) => !e)}
-          onCreateChannel={onCreateChannel}
-          onMessageType={onMessageType}
+          productNews={productNews}
+          relativeTime={relativeTime}
+          deleteNotification={deleteNotification}
+          updateNotification={updateNotification}
+          readNewsMutation={readNewsMutation}
+          readAddMutation={readAddMutation}
         />
       )}
     </>
@@ -193,3 +193,4 @@ export const Header: FC<P> = ({
 }
 
 export default Header
+export * from './messages/Messages'

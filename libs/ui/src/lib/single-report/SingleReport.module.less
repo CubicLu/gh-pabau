@@ -1,0 +1,98 @@
+.singleReport {
+  box-sizing: border-box;
+
+  height: 39px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  line-height: 22px;
+
+  border-top: 1px solid #ecedf0;
+
+  transition: all 0.2s;
+
+  &.disable {
+    cursor: not-allowed;
+  }
+}
+
+.singleReport:hover {
+  background-color: #f9f9f9;
+}
+
+.singleReportContainer {
+  display: inline-flex;
+  align-items: center;
+  width: calc(100% - 10px);
+}
+.singleReportDisable {
+  opacity: 0.5;
+  display: flex;
+  align-items: center;
+  cursor: not-allowed;
+}
+.newBtnAdd {
+  display: inline-flex;
+  align-items: center;
+  width: calc(100% - 75px);
+}
+
+.singleReportStar {
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+
+.singleReportCode {
+  margin-left: 6px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+  :global {
+    .ant-skeleton {
+      .ant-skeleton-input {
+        width: 300px;
+      }
+    }
+  }
+}
+
+.singleReportNew {
+  margin-right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 50px;
+  height: 20px;
+  background: #eef7fb;
+  border-radius: 6px;
+
+  font-size: 12px;
+  line-height: 14px;
+  color: #54b2d3;
+}
+
+.singleReportNewLoader {
+  margin-right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media screen and (max-width: 767px) {
+  .singleReportCode {
+    :global {
+      .ant-skeleton {
+        .ant-skeleton-input {
+          width: 265px;
+        }
+      }
+    }
+  }
+}

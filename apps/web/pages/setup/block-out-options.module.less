@@ -1,4 +1,35 @@
+.setupBlockOutOptionsContainer {
+  :global {
+    @media (max-width: 767px) {
+      .ant-layout {
+        margin-top: 0;
+        min-height: min-content;
+      }
+      .ant-layout-content {
+        border-top: none;
+        min-height: min-content !important;
+      }
+    }
+  }
+}
+
 .headerContainer {
   justify-content: space-between;
   align-items: center;
+
+  @media (max-width: 767px) {
+    padding: 16px 16px 21px;
+    :global {
+      .ant-col:nth-child(1) {
+        // mobile header left part
+        display: flex;
+        align-items: center;
+        > h1 {
+          padding: 0;
+          font-size: 17px;
+          padding-left: 10px;
+        }
+      }
+    }
+  }
 }

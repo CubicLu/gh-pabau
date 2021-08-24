@@ -2,11 +2,22 @@ import React, { FC } from 'react'
 import { EmailSMSPreviewProps, NoShowAppointmentProps } from './EmailSmsPreview'
 import { Col, Row } from 'antd'
 import styles from './EmailSmsPreview.module.less'
-import { Button } from '../button/Button'
+import { Button } from '@pabau/ui'
 
 export const NoShowAppointment: FC<
   NoShowAppointmentProps & EmailSMSPreviewProps
-> = ({ message, contactNumber, footerContact }) => {
+> = ({
+  message,
+  contactNumber,
+  footerContact,
+  buttonColor,
+  closingText,
+  signatureBlock,
+  bookButtonName = 'Book Now',
+  buttonTitleMessage = 'Click here to get your appointment online',
+  contactFirstHalfMsg = 'Please get back in touch on',
+  contactSecondHalfMsg = 'to reschedule or you can book your next appointment below',
+}) => {
   return (
     <>
       <Row gutter={[0, 4]} className={styles.break}>
@@ -18,9 +29,9 @@ export const NoShowAppointment: FC<
         <Row gutter={[0, 4]} className={styles.titleRow}>
           <Col>
             <span className={styles.message}>
-              Please get back in touch on{' '}
-              <span className={styles.contactInfo}>{contactNumber}</span> to
-              reschedule or you can book your next appointment below
+              {contactFirstHalfMsg}{' '}
+              <span className={styles.contactInfo}>{contactNumber}</span>
+              {contactSecondHalfMsg}
             </span>
           </Col>
         </Row>
@@ -30,22 +41,20 @@ export const NoShowAppointment: FC<
           className={`${styles.titleRow} ${styles.centerline}`}
         >
           <Col>
-            <span className={styles.message}>
-              Click here to get your appointment online
-            </span>
+            <span className={styles.message}>{buttonTitleMessage}</span>
           </Col>
         </Row>
       )}
       <Row gutter={[0, 4]} className={styles.bookAppointment}>
-        <Button className={styles.bookButton}>Book now</Button>
+        <Button backgroundColor={buttonColor} className={styles.bookButton}>
+          {bookButtonName}
+        </Button>
       </Row>
       {!footerContact && (
         <Row gutter={[0, 4]} className={styles.textBox}>
           <Col>
-            <p className={styles.text}>
-              Looking forward to hearing from you soon,
-            </p>
-            <p className={styles.text}>Your friends at The Clinic</p>
+            <p className={styles.text}>{closingText}</p>
+            <p className={styles.text}>{signatureBlock}</p>
           </Col>
         </Row>
       )}

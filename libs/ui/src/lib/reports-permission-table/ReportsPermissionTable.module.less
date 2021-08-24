@@ -49,7 +49,7 @@
       }
 
       .expand-icon-placeholder {
-        margin-right: 21px;
+        margin-right: 35px;
       }
     }
 
@@ -64,5 +64,88 @@
         background: fade(#eef7fb, 40);
       }
     }
+  }
+}
+
+.apply-changes-modal {
+  h4 {
+    font-size: 16px;
+    line-height: 20px;
+    color: #9292a3;
+    margin-bottom: 20px;
+  }
+  .review-wrapper {
+    padding: 20px;
+    border: 1px solid #ecedf0;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    position: relative;
+    h4 {
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 20px;
+      color: #3d3d46;
+    }
+    .permissionDescWrapper{
+      min-height: 35px;
+      max-height: 150px;
+      margin-right: 5px;
+      overflow: auto;
+
+      .permission-desc {
+        display: flex;
+        margin-bottom: 10px;
+        .desc {
+          font-size: 14px;
+          line-height: 20px;
+          margin-left: 20px;
+        }
+        .plusIcon {
+          color: green;
+          margin-top: 3px;
+        }
+        .minusIcon {
+          color: red;
+          margin-top: 3px;
+        }
+      }
+
+    }
+    .permissionDescButton{
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+  }
+  .apply-btn {
+    display: flex;
+    justify-content: flex-end;
+    .cancel-btn {
+      margin-right: 20px;
+    }
+  }
+}
+
+.staff-popover {
+  .trash-icon {
+    position: absolute;
+    right: 5px;
+    bottom: 0;
+  }
+  :global {
+    .ant-popover-content {
+      .ant-popover-inner {
+        .ant-popover-inner-content {
+          position: relative;
+        }
+      }
+    }
+  }
+}
+.delete-modal {
+  margin-bottom: 16px;
+  .ok-btn {
+    display: flex;
+    justify-content: flex-end;
   }
 }

@@ -1,8 +1,8 @@
-import React, { FC } from 'react'
-import { Typography, Input, Modal } from 'antd'
-import { Button, Breadcrumb, PhoneNumberInput, Notification } from '@pabau/ui'
+import { Breadcrumb, Button, Notification, PhoneNumberInput } from '@pabau/ui'
+import { Input, Modal, Typography } from 'antd'
+import React, { FC, useState } from 'react'
+import ClientNotification from '../../components/ClientNotification/Index'
 import Layout from '../../components/Layout/Layout'
-import ClientNotification from '../../components/ClientNotification'
 import styles from './index.module.less'
 
 const { Title } = Typography
@@ -17,9 +17,9 @@ enum NotificationType {
 }
 
 const Index: FC = () => {
-  const [setIndexTab, setSelectedTab] = React.useState(1)
-  const [sendEmail, setSendEmail] = React.useState(false)
-  const [valideEmail, setValidEmail] = React.useState(false)
+  const [setIndexTab, setSelectedTab] = useState(1)
+  const [sendEmail, setSendEmail] = useState(false)
+  const [valideEmail, setValidEmail] = useState(false)
 
   function handleSendEmailBtn(value) {
     setSendEmail(value)
@@ -148,7 +148,7 @@ const Index: FC = () => {
           Save
         </Button>
       </div>
-      <ClientNotification onSeletedTab={(value) => setSelectedTab(value)} />
+      <ClientNotification onSelectedTab={(value) => setSelectedTab(value)} />
     </Layout>
   )
 }

@@ -1,0 +1,134 @@
+query getReportByID($id: Int) {
+  findFirstReport(where: { id: { equals: $id } }) {
+    id
+    name
+    description
+    ReportCategory {
+      type
+      name
+    }
+  }
+}
+
+query getReportByCode($code: String) {
+  findFirstReport(where: { report_code: { equals: $code } }) {
+    id
+    name
+    description
+    ReportCategory {
+      type
+      name
+    }
+  }
+}
+
+query listTeamReport(
+  $startDate: String!
+  $endDate: String!
+  $locationIds: [Int]
+) {
+  retrieveReport(
+    id: "team_report"
+    start_date: $startDate
+    end_date: $endDate
+    location_ids: $locationIds
+  )
+}
+
+query cellDetails(
+  $startDate: String!
+  $endDate: String!
+  $locationIds: [Int]
+  $staffIds: [Int]
+  $columns: [String]
+) {
+  retrieveReport(
+    id: "cell"
+    start_date: $startDate
+    end_date: $endDate
+    location_ids: $locationIds
+    columns: $columns
+    staff_ids: $staffIds
+  )
+}
+
+query miniGraphs($startDate: String!, $endDate: String!) {
+  retrieveReport(id: "mini_graphs", start_date: $startDate, end_date: $endDate)
+}
+
+query listReportById(
+  $reportId: String!
+  $startDate: String!
+  $endDate: String!
+) {
+  retrieveReport(id: $reportId, start_date: $startDate, end_date: $endDate)
+}
+
+query listTrendReport(
+  $startDate: String!
+  $endDate: String!
+  $locationIds: [Int]
+  $columns: [String]
+  $staffIds: [Int]
+) {
+  retrieveReport(
+    id: "trend"
+    start_date: $startDate
+    end_date: $endDate
+    location_ids: $locationIds
+    columns: $columns
+    staff_ids: $staffIds
+  )
+}
+
+query graphsData($startDate: String!, $endDate: String!) {
+  retrieveReport(id: "mini_graphs", start_date: $startDate, end_date: $endDate)
+}
+
+query listReportPermission {
+  me {
+    all_reports
+    UserReport {
+      report_id
+      favorite
+      Report {
+        id
+        report_code
+      }
+    }
+  }
+}
+
+mutation upsertReport($reportCode: String!, $fav: Boolean!) {
+  upsertUserReportByReportCode(report_code: $reportCode, favorite: $fav) {
+    report_code
+    affected_row
+    favorite
+  }
+}
+
+query findCustomReport {
+  findManyCustomReportWithPermissions {
+    isPermission
+    report_code
+    report_id
+    report_name
+    favorite
+  }
+}
+
+query getUserAccessPageList {
+  me {
+    userPermission: UserPermission {
+      Page {
+        name
+      }
+    }
+  }
+}
+
+# {
+#  "reportId": "10520",
+#  "startDate": "01-01-2020",
+#  "endDate": "31-03-2020"
+# }

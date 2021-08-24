@@ -3,12 +3,12 @@ import BusinessDetails from './BusinessDetails'
 
 export default {
   component: BusinessDetails,
-  title: 'Business Details/Details',
+  title: 'UI/Details',
   args: {},
   argTypes: {},
 }
 
-const DetailsStory = ({ ...args }) => {
+const DetailsStory = ({ args }) => {
   return <BusinessDetails {...args} />
 }
 

@@ -32,22 +32,20 @@ function convert(doc: DocumentNode): DocumentNode {
 /**
  * Like useQuery + useSubscription combined =]
  *
- * @param query
- * @param options
+ * @param query - the gql that is a `query{}` with a single top-level query
+ * @param options - contains `{variables:{}}`
  */
 export function useLiveQuery<T>(
   query: DocumentNode,
   options?: QueryHookOptions<T> & { subscription?: DocumentNode }
 ): Omit<QueryResult, 'subscribeToMore'> {
   const { subscribeToMore, ...rest } = useQuery<T>(query, {
-    //ssr: typeof window === 'undefined',
-    ssr: true,
+    ssr: false,
     skip: typeof window === 'undefined',
-    onCompleted: (data1) => {
-      console.log('GOT QUERY DATA', data1)
-    },
+    fetchPolicy: 'network-only',
     ...options,
   })
+
   useEffect(() => {
     console.log('creating sub!')
     const cancelFunc = subscribeToMore({
@@ -63,7 +61,6 @@ export function useLiveQuery<T>(
         })
       },
     })
-
     return () => {
       console.log('cleaning up sub!')
       cancelFunc()

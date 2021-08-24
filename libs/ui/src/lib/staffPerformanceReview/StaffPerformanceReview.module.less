@@ -1,13 +1,63 @@
 .review {
-  left: 0;
-  margin: 25px 25px;
+  padding: 24px;
+  display: flex;
+  @media screen and (max-width: 767px) {
+    flex-direction: column;
+  }
+  .drop {
+    display: flex;
+    flex-direction: column;
+    @media screen and (max-width: 767px) {
+      margin: 5px 0;
+    }
+    label {
+      font-size: 14px;
+      line-height: 22px;
+      color: #9292a3;
+    }
+    :global .ant-picker,
+    :global .ant-dropdown-trigger {
+      min-width: 180px;
+      max-width: 216px;
+    }
+  }
+}
+
+.review-wrap {
+  padding-top: 40px;
+  overflow: auto;
+}
+.note-wrap {
+  margin: 0 24px 24px;
+
+  span {
+    line-height: 16px;
+    color: #9292a3;
+  }
+  p {
+    margin-bottom: 4px;
+    color: #3d3d46;
+    &:first-child {
+      margin-top: 10px;
+    }
+    &::before {
+      display: inline-block;
+      content: '';
+      -webkit-border-radius: 0.375rem;
+      border-radius: 0.375rem;
+      height: 8px;
+      width: 8px;
+      margin-right: 0.5rem;
+      background-color: #54b2d3;
+    }
+  }
 }
 .reviewDate {
   font-size: 12px;
   line-height: 15px;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: #9292A3;
+  color: #9292a3;
   margin-left: 24px;
   margin-bottom: 35px;
 }
@@ -16,7 +66,7 @@
   .firstStep {
     :global .ant-steps-item-container {
       .ant-steps-item-description {
-        color: #54B2D3;
+        color: #54b2d3;
       }
     }
   }
@@ -29,11 +79,11 @@
         left: 37px;
         font-size: 12px;
         line-height: 15px;
-        color: #54B2D3;
+        color: #54b2d3;
       }
     }
   }
- .step-version {
+  .step-version {
     :global .ant-steps-item-container {
       position: relative;
       .ant-steps-item-title {
@@ -42,7 +92,7 @@
         left: 33%;
         font-size: 12px;
         line-height: 15px;
-        color: #54B2D3;
+        color: #54b2d3;
       }
     }
   }
@@ -57,7 +107,7 @@
         left: 18%;
         font-size: 12px;
         line-height: 15px;
-        color: #54B2D3;
+        color: #54b2d3;
       }
     }
   }
@@ -72,7 +122,7 @@
         left: 18%;
         font-size: 12px;
         line-height: 15px;
-        color: #54B2D3;
+        color: #54b2d3;
       }
     }
   }

@@ -1,112 +1,138 @@
 import React, { FC } from 'react'
-import { Typography } from 'antd'
-import { gql } from '@apollo/client'
-import TableLayout from './TableLayout'
-const CreditNoteColumns = [
-  {
-    title: 'Credit No.',
-    dataIndex: 'credit_no',
-    visible: true,
-    width: '90px',
-    // eslint-disable-next-line react/display-name
-    render: (_, { credit_no }) => (
-      <Typography.Text style={{ color: '#54B2D3' }}>
-        {credit_no}
-      </Typography.Text>
-    ),
-  },
-  {
-    title: 'Location',
-    dataIndex: 'location',
-    visible: true,
-  },
-  {
-    title: 'Credit Date',
-    dataIndex: 'credit_date',
-    visible: true,
-    width: '120px',
-  },
-  {
-    title: 'Customer',
-    dataIndex: 'customer',
-    visible: true,
-    // eslint-disable-next-line react/display-name
-    render: (_, { customer }) => (
-      <Typography.Text style={{ color: '#54B2D3' }}>{customer}</Typography.Text>
-    ),
-    ellipsis: true,
-  },
-  {
-    title: 'Debtor',
-    dataIndex: 'debtor',
-    visible: true,
-    // eslint-disable-next-line react/display-name
-    render: (_, { debtor }) => (
-      <Typography.Text style={{ color: '#54B2D3' }}>{debtor}</Typography.Text>
-    ),
-    ellipsis: true,
-  },
-  {
-    title: 'Invoice No.',
-    dataIndex: 'invoice_no',
-    visible: true,
-    width: '100px',
-    // eslint-disable-next-line react/display-name
-    render: (_, { invoice_no }) => (
-      <Typography.Text style={{ color: '#54B2D3' }}>
-        {invoice_no}
-      </Typography.Text>
-    ),
-  },
-  {
-    title: 'Total',
-    dataIndex: 'total',
-    visible: true,
-    width: '80px',
-    // eslint-disable-next-line react/display-name
-    render: (_, { total }) => (
-      <Typography.Text>£{total.toFixed(2)}</Typography.Text>
-    ),
-  },
-  {
-    title: 'Type',
-    dataIndex: 'type',
-    visible: true,
-  },
-]
+import { Avatar, Typography, Tooltip } from 'antd'
+import TableLayout, { FilterValueType } from './TableLayout'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { Dayjs } from 'dayjs'
+import xeroBlue from '../../assets/images/xero.svg'
+import xeroRed from '../../assets/images/xero/red.svg'
+import { useCreditNotesQuery, useCreditNoteCountQuery } from '@pabau/graphql'
 
-const LIST_QUERY = gql`
-  query credit_notes($offset: Int, $limit: Int) {
-    credit_notes(offset: $offset, limit: $limit) {
-      id
-      credit_no
-      invoice_no
-      location
-      credit_date
-      customer
-      debtor
-      total
-      type
-    }
-  }
-`
+interface CreditNoteProps {
+  searchTerm: string
+  selectedDates: Dayjs[]
+  filterValue: FilterValueType
+  selectedRange: string
+}
 
-const LIST_AGGREGATE = gql`
-  query credit_notes_aggregate {
-    credit_notes_aggregate {
-      aggregate {
-        count
-      }
-    }
-  }
-`
+const CreditNotes: FC<CreditNoteProps> = ({
+  searchTerm,
+  selectedDates,
+  filterValue,
+  selectedRange,
+}) => {
+  const { t } = useTranslationI18()
 
-const CreditNotes: FC = () => {
+  const CreditNoteColumns = [
+    {
+      title: '',
+      dataIndex: '',
+      visible: true,
+      width: '40px',
+      skeletonWidth: '30px',
+      render: function render(_, { status, tooltip }) {
+        const image = status === 2 ? xeroBlue : xeroRed
+        return (
+          <Tooltip placement="top" title={tooltip}>
+            <Avatar src={image} size="small" />
+          </Tooltip>
+        )
+      },
+    },
+    {
+      title: t('account.finance.credit.note.columns.credit.no'),
+      dataIndex: 'creditNo',
+      visible: true,
+      width: '90px',
+      skeletonWidth: '50px',
+      render: function render(data) {
+        return (
+          <Typography.Text style={{ color: '#54B2D3' }}>{data}</Typography.Text>
+        )
+      },
+    },
+    {
+      title: t('account.finance.credit.note.columns.location'),
+      dataIndex: 'location',
+      visible: true,
+      skeletonWidth: '100px',
+    },
+    {
+      title: t('account.finance.credit.note.columns.credit.date'),
+      dataIndex: 'creditDate',
+      visible: true,
+      width: '120px',
+      skeletonWidth: '80px',
+      render: function render(data) {
+        return <Typography.Text>{data.split('T')[0]}</Typography.Text>
+      },
+    },
+    {
+      title: t('account.finance.credit.note.columns.customer'),
+      dataIndex: 'customer',
+      visible: true,
+      skeletonWidth: '100px',
+      render: function render(data) {
+        return (
+          <Typography.Text style={data !== 'N/A' && { color: '#54B2D3' }}>
+            {data}
+          </Typography.Text>
+        )
+      },
+      ellipsis: true,
+    },
+    {
+      title: t('account.finance.credit.note.columns.debtor'),
+      dataIndex: 'debtor',
+      visible: true,
+      skeletonWidth: '100px',
+      render: function render(data) {
+        return (
+          <Typography.Text style={{ color: '#54B2D3' }}>{data}</Typography.Text>
+        )
+      },
+      ellipsis: true,
+    },
+    {
+      title: t('account.finance.credit.note.columns.invoice.no'),
+      dataIndex: 'invoiceNo',
+      visible: true,
+      width: '100px',
+      skeletonWidth: '50px',
+      render: function render(data) {
+        return (
+          <Typography.Text style={{ color: '#54B2D3' }}>{data}</Typography.Text>
+        )
+      },
+    },
+    {
+      title: t('account.finance.credit.note.columns.total'),
+      dataIndex: 'total',
+      visible: true,
+      width: '100px',
+      skeletonWidth: '50px',
+      render: function render(data) {
+        return <Typography.Text>£{data}</Typography.Text>
+      },
+    },
+    {
+      title: t('account.finance.credit.note.columns.type'),
+      dataIndex: 'type',
+      visible: true,
+      skeletonWidth: '50px',
+    },
+  ]
+
   return (
     <TableLayout
-      listQuery={LIST_QUERY}
-      aggregateQuery={LIST_AGGREGATE}
       columns={CreditNoteColumns}
+      searchTerm={searchTerm}
+      selectedDates={selectedDates}
+      filterValue={filterValue}
+      selectedRange={selectedRange}
+      listQuery={useCreditNotesQuery}
+      aggregateQuery={useCreditNoteCountQuery}
+      noDataText={t('account.finance.credit.not.empty.data.text')}
+      tabName="creditNote"
     />
   )
 }

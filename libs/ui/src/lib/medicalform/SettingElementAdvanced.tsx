@@ -1,5 +1,6 @@
 import { Button, ButtonTypes } from '@pabau/ui'
 import React, { FC, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import SettingDefaultField from './SettingDefaultField'
 import SettingElementTypeOption from './SettingElementTypeOption'
 import SettingLinkedField from './SettingLinkedField'
@@ -7,6 +8,7 @@ import SettingLinkedField from './SettingLinkedField'
 interface P {
   changedForm: boolean
   defaultFieldValue: string
+  defaultFieldValueWithTag: string
   onChangeDefaults: (value: string) => void
   linkedFieldValue: string
   onChangeLinkedField: (value: string) => void
@@ -18,6 +20,7 @@ interface P {
 const SettingElementAdvanced: FC<P> = ({
   changedForm,
   defaultFieldValue,
+  defaultFieldValueWithTag,
   onChangeDefaults,
   linkedFieldValue,
   onChangeLinkedField,
@@ -25,6 +28,7 @@ const SettingElementAdvanced: FC<P> = ({
   onChangeInputType,
   componentName,
 }) => {
+  const { t } = useTranslation('common')
   const [advanced, setAdvanced] = useState(false)
 
   useEffect(() => {
@@ -37,19 +41,21 @@ const SettingElementAdvanced: FC<P> = ({
         <>
           {componentName === 'basic_shortanswer' && (
             <SettingElementTypeOption
-              title="Input type"
+              title={t('ui.medicalform.setting.advanced.inputtype')}
               value={inputTypeValue}
               onChangeInputType={onChangeInputType}
             />
           )}
           <SettingLinkedField
-            linkedLabel="Linked field"
+            linkedLabel={t('ui.medicalform.setting.advanced.linked')}
             linkedFieldValue={linkedFieldValue}
             onChangeLinkedField={onChangeLinkedField}
           />
           <SettingDefaultField
-            linkedLabel="Default field"
+            linkedLabel={t('ui.medicalform.setting.advanced.default')}
             defaultFieldValue={defaultFieldValue}
+            defaultFieldValueWithTag={defaultFieldValueWithTag}
+            changedForm={changedForm}
             onChangeDefaults={onChangeDefaults}
           />
         </>
@@ -60,8 +66,8 @@ const SettingElementAdvanced: FC<P> = ({
         onClick={(e) => setAdvanced((advanced) => !advanced)}
         size="small"
       >
-        {!advanced && `Show advanced settings`}
-        {advanced && `Hide advanced settings`}
+        {!advanced && t('ui.medicalform.setting.advanced.show')}
+        {advanced && t('ui.medicalform.setting.advanced.hide')}
       </Button>
     </>
   )

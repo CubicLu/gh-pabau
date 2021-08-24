@@ -2,6 +2,7 @@ import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
 import { Button, ButtonTypes, HelpTooltip } from '@pabau/ui'
 import { Input, Select } from 'antd'
 import React, { FC, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import styles from './Setting.module.less'
 
 const { Option, OptGroup } = Select
@@ -27,6 +28,7 @@ const SettingLinkedField: FC<linkedFieldProps> = ({
   linkedFieldValue,
   onChangeLinkedField,
 }) => {
+  const { t } = useTranslation('common')
   const linkedFields: LinkedFieldGroup[] = [
     {
       group_label: 'Basic Fields',
@@ -249,13 +251,16 @@ const SettingLinkedField: FC<linkedFieldProps> = ({
   return (
     <>
       <p style={{ marginTop: '20px' }}>
-        {linkedLabel} <HelpTooltip helpText="Hello" />
+        {linkedLabel}{' '}
+        <HelpTooltip
+          helpText={t('ui.medicalform.setting.linkedfield.tooltip')}
+        />
       </p>
-      {linkedFieldValue !== '' ? (
+      {getLinkedFileName(linkedFieldValue) !== '' ? (
         <div className={styles.linkedField}>
           <Input
             className={styles.optionInput}
-            placeholder="Enter new option"
+            placeholder={t('ui.medicalform.setting.linkedfield.input.tooltip')}
             readOnly={true}
             value={getLinkedFileName(linkedFieldValue)}
           />
@@ -303,7 +308,7 @@ const SettingLinkedField: FC<linkedFieldProps> = ({
               size="small"
               onClick={() => setAddLinkedField((e) => true)}
             >
-              Add
+              {t('ui.medicalform.setting.linkedfield.add')}
             </Button>
           )}
         </div>

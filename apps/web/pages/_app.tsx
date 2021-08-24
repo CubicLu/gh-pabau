@@ -5,88 +5,125 @@ import {
   HttpLink,
   InMemoryCache,
   split,
+  NormalizedCacheObject,
 } from '@apollo/client'
+import { setContext } from '@apollo/client/link/context'
+import { onError } from '@apollo/client/link/error'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import * as Icons from '@fortawesome/free-solid-svg-icons'
 import { OperationDefinitionNode } from 'graphql'
-import i18next from 'i18next'
 import { AppProps } from 'next/app'
-import React from 'react'
-import { I18nextProvider, initReactI18next } from 'react-i18next'
-import 'react-phone-input-2/lib/style.css'
-import 'react-quill/dist/quill.snow.css'
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import 'react-image-crop/dist/ReactCrop.css'
-import ContextWrapper from '../components/ContextWrapper'
+import 'react-phone-input-2/lib/style.css'
+import Router from 'next/router'
+import 'react-quill/dist/quill.snow.css'
+import i18next from 'i18next'
+import { I18nextProvider, initReactI18next } from 'react-i18next'
 import { languages } from '@pabau/i18n'
-
+import ContextWrapper from '../components/ContextWrapper'
+import { Integrations } from '@sentry/tracing'
+import * as Sentry from '@sentry/react'
 require('../styles/global.less')
 require('../../../libs/ui/src/styles/antd.less')
 require('react-phone-input-2/lib/style.css')
 
-const cache = new InMemoryCache()
-const GRAPHQL_ENDPOINT = 'wss://api.new.pabau.com/v1/graphql'
+let apolloClient: ApolloClient<NormalizedCacheObject | null> = null
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN || '',
+  release: 'pabau2',
+  integrations: [new Integrations.BrowserTracing()],
+  tracesSampleRate: 1,
+})
+
+const cache = new InMemoryCache({
+  resultCaching: true,
+  typePolicies: {
+    chat_room: {
+      fields: {
+        chats: {
+          merge(existing = [], incoming: any[]) {
+            console.log('APOLLO CACHE: room.chat.merge()', existing, incoming)
+            return [...existing, ...incoming]
+          },
+        },
+      },
+    },
+  },
+})
+
+const GRAPHQL_WS_ENDPOINT =
+  process.env.NEXT_PUBLIC_WS_ENDPOINT || 'wss://api.new.pabau.com/v1/graphql'
 const GRAPHQL_HTTP_ENDPOINT =
   process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
   'https://api.new.pabau.com/v1/graphql'
 
+//TODO: enable tree shaking
 const iconList = Object.keys(Icons)
   .filter((key) => key !== 'fas' && key !== 'prefix')
   .map((icon) => Icons[icon])
 library.add(...iconList)
-// const request = async (operation) => {
-//   operation.setContext({
-//     http: {
-//       includeExtensions: true,
-//       includeQuery: false,
-//     },
-//     headers,
-//   })
-// }
-//
-// const requestLink = new ApolloLink(
-//   (operation, forward) =>
-//     new Observable((observer) => {
-//       let handle
-//       Promise.resolve(operation)
-//         .then((oper) => request(oper))
-//         .then(() => {
-//           handle = forward(operation).subscribe({
-//             next: observer.next.bind(observer),
-//             error: observer.error.bind(observer),
-//             complete: observer.complete.bind(observer),
-//           })
-//         })
-//         .catch(observer.error.bind(observer))
-//
-//       return () => {
-//         if (handle) handle.unsubscribe()
-//       }
-//     })
-// )
 
-// const httpLink = new BatchHttpLink({
-//   uri: GRAPHQL_ENDPOINT,
-// })
-
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem('token')
+  return {
+    headers: token
+      ? {
+          ...headers,
+          authorization: `Bearer ${token}`,
+        }
+      : headers,
+  }
+})
 const httpLink = new HttpLink({
+  /**
+   * Fixes Jest complaining about:
+   *  Invariant Violation:
+   *    "fetch" has not been found globally and no fetcher has been configured. To fix this, install a fetch package (like https://www.npmjs.com/package/cross-fetch), instantiate the fetcher, and pass it into your HttpLink constructor.
+   */
+  fetch,
+
   uri: GRAPHQL_HTTP_ENDPOINT,
 })
-
-const wsLink = process.browser
-  ? new WebSocketLink({
-      uri: GRAPHQL_ENDPOINT,
-      options: {
-        reconnect: true,
-        connectionParams: {
-          authToken: 'user.authToken goes here',
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    for (const error of graphQLErrors) {
+      if (process?.browser) {
+        switch (error?.message) {
+          case 'Not Authorized':
+            Router.replace('/403')
+            break
+          default:
+            console.log(
+              `[GraphQL error]: Message: ${error.message}, Location: ${error.locations}, Path: ${error.path}`
+            )
+        }
+      }
+    }
+  }
+  if (networkError) {
+    console.log(`[Network error]: ${networkError}`)
+  }
+})
+const getWebSocketLink = () => {
+  const token = localStorage.getItem('token')
+  return new WebSocketLink({
+    uri: GRAPHQL_WS_ENDPOINT,
+    options: {
+      lazy: true,
+      reconnect: true,
+      connectionParams: {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
       },
-    })
-  : null
-
-// Let Apollo figure out if the request is over ws or http
+    },
+  })
+}
+const wsLink = process.browser ? getWebSocketLink() : null
 const terminatingLink = wsLink
   ? split(
       ({ query }) => {
@@ -100,90 +137,50 @@ const terminatingLink = wsLink
         )
       },
       wsLink,
-      httpLink
+      authLink.concat(httpLink)
     )
   : httpLink
-
-const client = new ApolloClient({
+apolloClient = new ApolloClient({
   ssrMode: false,
-  link: ApolloLink.from([
-    // onError(({ graphQLErrors, networkError }) => {
-    //   if (graphQLErrors) {
-    //     console.error({ graphQLErrors })
-    //   }
-    //   if (networkError) {
-    //     console.error({ networkError })
-    //   }
-    // }),
-    terminatingLink,
-
-    // link,
-
-    // withClientState({
-    //   defaults: {
-    //     isConnected: true,
-    //   },
-    //   resolvers: {
-    //     Mutation: {
-    //       updateNetworkStatus: (_, { isConnected }, { cache }) => {
-    //         cache.writeData({ data: { isConnected } })
-    //         return null
-    //       },
-    //     },
-    //   },
-    //   cache,
-    // }),
-
-    // Push the links into the Apollo client
-    // createPersistedQueryLink({ generateHash: ({}) => documentId }).concat(
-    //   // New config
-    //   terminatingLink
-    //   // Old config
-    //   // new BatchHttpLink({
-    //   //   uri: GRAPHQL_ENDPOINT,
-    //   //   credentials: 'include'
-    //   // })
-    // ),
-  ]),
+  link: ApolloLink.from([errorLink, terminatingLink]),
   cache,
 })
-console.log(languages)
+
 i18next.use(initReactI18next).init({
   interpolation: { escapeValue: false },
   lng: 'en',
-  fallbackLng: 'en',
   keySeparator: false,
   resources: languages,
 })
 
-export default function CustomApp({
-  Component,
-  pageProps,
-}: AppProps): JSX.Element {
+function CustomApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
-    <ApolloProvider client={client}>
-      <I18nextProvider i18n={i18next}>
-        <style jsx global>{`
-          @font-face {
-            font-family: 'Circular-Std-Black';
-            src: local('Circular-Std-Black'),
-              url(../public/fonts/CircularStd-Black.otf) format('opentype');
-          }
+    <Sentry.ErrorBoundary fallback={() => <>An error has occurred</>}>
+      <ApolloProvider client={apolloClient}>
+        <I18nextProvider i18n={i18next}>
+          <style jsx global>{`
+            @font-face {
+              font-family: 'Circular-Std-Black';
+              src: local('Circular-Std-Black'),
+                url(../public/fonts/CircularStd-Black.otf) format('opentype');
+            }
+            @font-face {
+              font-family: 'Circular-Std-Book';
+              src: url('/fonts/CircularStd-Book.otf') format('opentype');
+            }
 
-          @font-face {
-            font-family: 'Circular-Std-Book';
-            src: url('/fonts/CircularStd-Book.otf') format('opentype');
-          }
-
-          @font-face {
-            font-family: 'Circular-Std-Medium';
-            src: url('/fonts/CircularStd-Medium.otf') format('opentype');
-          }
-        `}</style>
-        <ContextWrapper>
-          <Component {...pageProps} />
-        </ContextWrapper>
-      </I18nextProvider>
-    </ApolloProvider>
+            @font-face {
+              font-family: 'Circular-Std-Medium';
+              src: url('/fonts/CircularStd-Medium.otf') format('opentype');
+            }
+          `}</style>
+          <ContextWrapper>
+            <Component {...pageProps} />
+          </ContextWrapper>
+        </I18nextProvider>
+      </ApolloProvider>
+    </Sentry.ErrorBoundary>
   )
 }
+
+export default Sentry.withProfiler(CustomApp)

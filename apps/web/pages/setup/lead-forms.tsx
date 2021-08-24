@@ -1,18 +1,19 @@
 import React, { useState } from 'react'
 import {
-  Layout,
   Breadcrumb,
-  Wstepper,
+  Wstepper as WStepper,
   StepperItem,
   MobileHeader,
 } from '@pabau/ui'
+import Layout from '../../components/Layout/Layout'
 import styles from './lead-forms.module.less'
-import LeadSettings from './lead-capture/lead-setting'
-import LeadIntegration from './lead-capture/lead-integration'
-import LeadTesting from './lead-capture/lead-testing'
-import LeadResult from './lead-capture/lead-result'
-import LeadFormResult from './lead-capture/lead-forms/lead-form-result'
-import LeadCustomizeForm from './lead-capture/lead-forms/lead-customize-form'
+import LeadSettings from '../../components/Setup/LeadCapture/LeadSetting'
+import LeadIntegration from '../../components/Setup/LeadCapture/LeadIntegration'
+import LeadTesting from '../../components/Setup/LeadCapture/LeadTesting'
+import LeadResult from '../../components/Setup/LeadCapture/LeadResult'
+import LeadFormResult from '../../components/Setup/LeadCapture/lead-forms/LeadFormResult'
+import LeadCustomizeForm from '../../components/Setup/LeadCapture/lead-forms/LeadCustomizeForm'
+import { useRouter } from 'next/router'
 import {
   FlagOutlined,
   HomeOutlined,
@@ -22,7 +23,6 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as Icons from '@fortawesome/free-solid-svg-icons'
 import { Typography } from 'antd'
-import Link from 'next/link'
 
 const { Title } = Typography
 
@@ -105,15 +105,19 @@ export const LeadForms: React.FC = () => {
     setActiveStep(allAPISteps.length - 1)
   }
 
+  const router = useRouter()
+
+  const handleBack = () => {
+    router.back()
+  }
+
   return (
     <>
       <div className={styles.desktopViewNone}>
         <MobileHeader className={styles.mobileHeader}>
           <div className={styles.allContentAlignMobile}>
             <div className={styles.mobileHeaderTextStyle}>
-              <Link href="/setup">
-                <LeftOutlined />
-              </Link>
+              <LeftOutlined onClick={handleBack} />
               <p>Lead Capture</p>
             </div>
           </div>
@@ -131,7 +135,7 @@ export const LeadForms: React.FC = () => {
             />
             <Title>Lead Capture</Title>
           </div>
-          <Wstepper
+          <WStepper
             data={activeStepper === 'API' ? apiStepper : formStepper}
             active={activeStep}
             disableNextStep={
@@ -166,7 +170,7 @@ export const LeadForms: React.FC = () => {
                 {allFormSteps[activeStep] === 'Result' && <LeadFormResult />}
               </>
             )}
-          </Wstepper>
+          </WStepper>
         </div>
       </Layout>
     </>

@@ -1,0 +1,66 @@
+table:
+  name: lead
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - is_active
+    - created_at
+    - updated_at
+    - age
+    - order
+    - phone
+    - email
+    - interest
+    - location
+    - name
+    - owner
+    - source
+    - status
+    - id
+  role: public
+select_permissions:
+- permission:
+    columns:
+    - is_active
+    - created_at
+    - updated_at
+    - age
+    - order
+    - phone
+    - email
+    - interest
+    - location
+    - name
+    - owner
+    - source
+    - status
+    - id
+    filter: {}
+  role: public
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - is_active
+    - created_at
+    - updated_at
+    - age
+    - order
+    - phone
+    - email
+    - interest
+    - location
+    - name
+    - owner
+    - source
+    - status
+    - id
+    filter: {}
+  role: public
+delete_permissions:
+- permission:
+    filter: {}
+  role: public

@@ -1,7 +1,10 @@
 {
   "recommendations": [
-    "ms-vscode.vscode-typescript-tslint-plugin",
+    "editorconfig.editorconfig",
+    "graphql.vscode-graphql",
+    "dbaeumer.vscode-eslint",
+    "prisma.prisma",
     "esbenp.prettier-vscode",
-    "firsttris.vscode-jest-runner"
+    "mikestead.dotenv"
   ]
 }

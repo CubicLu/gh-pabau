@@ -6,7 +6,16 @@ import styles from './EmailSmsPreview.module.less'
 
 export const BookedOntoClass: FC<
   BookedOntoClassProps & EmailSMSPreviewProps
-> = ({ dateTime, consultancyName, consultationDetail, message, address }) => {
+> = ({
+  dateTime,
+  consultancyName,
+  consultationDetail,
+  message,
+  address,
+  appointmentDetailMessage = 'Your class appointment details',
+  regards = 'Kind regards,',
+  regardsName = 'Your friends at The Clinic',
+}) => {
   return (
     <>
       <Divider className={styles.dividerHr} />
@@ -14,7 +23,7 @@ export const BookedOntoClass: FC<
         <Col>
           <Calendar />
           <span className={styles.calenderAppoint}>
-            Your class appointment details:
+            {appointmentDetailMessage}:
           </span>
         </Col>
       </Row>
@@ -37,8 +46,8 @@ export const BookedOntoClass: FC<
       </Row>
       <Row className={styles.textBox}>
         <Col>
-          <p>Kind regards,</p>
-          <p>Your friends at The Clinic</p>
+          <p>{regards}</p>
+          <p>{regardsName}</p>
         </Col>
       </Row>
     </>

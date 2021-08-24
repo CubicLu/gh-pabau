@@ -1,0 +1,38 @@
+{
+  "marketingsource-header-create": {
+    "translation": "Izveidojiet mārketinga avotu"
+  },
+  "marketingsource-title": {
+    "translation": "Mārketinga avoti"
+  },
+  "marketingsource-name-textfield": {
+    "translation": "Uzvārds"
+  },
+  "marketingsource-name-placeholder": {
+    "translation": "piemēram. Facebook"
+  },
+  "marketingsource-header-edit": {
+    "translation": "Izveidojiet mārketinga avotu"
+  },
+  "basic-crud-table-input-search-placeholder": {
+    "translation": "Meklēt"
+  },
+  "basic-crud-table-button-filter": {
+    "translation": "Filtrēts"
+  },
+  "basic-crud-table-column--active": {
+    "translation": "Aktīvs"
+  },
+  "basic-crud-table-button-active": {
+    "translation": "Aktiv"
+  },
+  "basic-crud-table-button-inactive": {
+    "translation": "Inaktiv"
+  },
+  "basic-crud-table-header-button-create": {
+    "translation": "Opret kildē"
+  },
+  "basic-crud-table-header-breadcrumb-setup-link": {
+    "translation": "Uzstādīt"
+  }
+}

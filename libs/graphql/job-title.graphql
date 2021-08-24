@@ -1,0 +1,44 @@
+query companyPositions($offset: Int, $limit: Int, $searchTerm: String = "") {
+  findManyCompanyPosition(
+    take: $limit
+    skip: $offset
+    orderBy: { id: desc }
+    where: { position: { contains: $searchTerm } }
+  ) {
+    id
+    position
+  }
+}
+
+query companyPositionsAggregate($searchTerm: String = "") {
+  findManyCompanyPositionCount(where: { position: { contains: $searchTerm } })
+}
+
+mutation deleteCompanyPositions($id: Int) {
+  deleteOneCompanyPosition(where: { id: $id }) {
+    id
+  }
+}
+
+mutation createCompanyPositions($position: String!) {
+  createOneCompanyPosition(data: { Company: {}, position: $position }) {
+    id
+    position
+  }
+}
+
+mutation updateCompanyPositions($id: Int!, $position: String!) {
+  updateOneCompanyPosition(
+    where: { id: $id }
+    data: { position: { set: $position } }
+  ) {
+    id
+    position
+  }
+}
+
+mutation updateCompanyPositionOrder($id: Int!, $order: Int) {
+  updateOneJobStatus(where: { id: $id }, data: { order: { set: $order } }) {
+    id
+  }
+}

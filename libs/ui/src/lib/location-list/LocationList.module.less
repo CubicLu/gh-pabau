@@ -1,25 +1,25 @@
 .checkboxWrapper {
-    .labelText {
-      font-size: 14px;
-      line-height: 18px;
-      color: #9292A3;
-      margin-top: 24px;
-      margin-bottom: 16px;
-    }
-  
-    :global .ant-checkbox-wrapper {
-      display: flex;
+  .labelText {
+    font-size: 14px;
+    line-height: 18px;
+    color: #9292a3;
+    margin-top: 24px;
+    margin-bottom: 16px;
+  }
+
+  :global .ant-checkbox-wrapper {
+    display: flex;
+    margin-left: 0;
+    .ant-checkbox {
       margin-left: 0;
+      margin-bottom: 22px;
+      display: flex;
       .ant-checkbox {
-        margin-left: 0;
-        margin-bottom: 22px;
-        display: flex;
-        .ant-checkbox {
-          @media screen and (max-width: 992px) {
-            display: flex;
-            align-items: center;
-          }
+        @media screen and (max-width: 992px) {
+          display: flex;
+          align-items: center;
         }
       }
     }
   }
+}

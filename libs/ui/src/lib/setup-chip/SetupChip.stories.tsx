@@ -12,12 +12,16 @@ import backgroundImage from '../../assets/images/footer.png'
 
 export default {
   title: 'Basics/SetupChip',
+  parameters: {
+    layout: 'fullscreen',
+  },
 }
 
 export const SetupChipStory: FC = () => {
   const props = {
     title: 'Blog',
-    subTitle: '53 posts',
+    count: '53',
+    subTitle: 'posts',
     image: <EditOutlined />,
     onClick: (title: string): string => {
       return title
@@ -32,22 +36,61 @@ export const SetupGridStory: FC = () => {
     title: 'Our clinic',
     subDataTitles: [
       { title: 'Business Details', data: [] },
-      { title: 'Users', data: ['Users', 'User Groups'] },
+      {
+        title: 'Users',
+        data: [
+          {
+            title: 'Users',
+          },
+          {
+            title: 'User Groups',
+          },
+        ],
+      },
       { title: 'Locations', data: [] },
       {
         title: 'General settings',
         data: [
-          ' Calendar Settings',
-          'Point of Sale Configuration',
-          'Loyalty',
-          'Referral Settings',
+          {
+            title: ' Calendar Settings',
+          },
+          {
+            title: 'Point of Sale Configuration',
+          },
+          {
+            title: 'Loyalty',
+          },
+          {
+            title: 'Referral Settings',
+          },
         ],
       },
       { title: 'Integrations', data: [] },
-      { title: 'Data', data: ['Custom Fields', 'Data Imports'] },
-      { title: 'Pabau Subscription', data: ['Billing Activity', 'Addons'] },
+      {
+        title: 'Data',
+        data: [
+          {
+            title: 'Custom Fields',
+          },
+          {
+            title: 'Data Imports',
+          },
+        ],
+      },
+      {
+        title: 'Pabau Subscription',
+        data: [
+          {
+            title: 'Billing Activity',
+          },
+          {
+            title: 'Addons',
+          },
+        ],
+      },
     ],
     image: clinicImage,
+    expandLabel: 'Expand',
   }
   return <SetupGrid {...props} />
 }
@@ -57,25 +100,64 @@ export const SetupGridMobileStory: FC = () => {
     title: 'Our clinic',
     subDataTitles: [
       { title: 'Business Details', data: [] },
-      { title: 'Users', data: ['Users', 'User Groups'] },
+      {
+        title: 'Users',
+        data: [
+          {
+            title: 'Users',
+          },
+          {
+            title: 'User Groups',
+          },
+        ],
+      },
       { title: 'Locations', data: [] },
       {
         title: 'General settings',
         data: [
-          ' Calendar Settings',
-          'Point of Sale Configuration',
-          'Loyalty',
-          'Referral Settings',
+          {
+            title: ' Calendar Settings',
+          },
+          {
+            title: 'Point of Sale Configuration',
+          },
+          {
+            title: 'Loyalty',
+          },
+          {
+            title: 'Referral Settings',
+          },
         ],
       },
       { title: 'Integrations', data: [] },
-      { title: 'Data', data: ['Custom Fields', 'Data Imports'] },
-      { title: 'Pabau Subscription', data: ['Billing Activity', 'Addons'] },
+      {
+        title: 'Data',
+        data: [
+          {
+            title: 'Custom Fields',
+          },
+          {
+            title: 'Data Imports',
+          },
+        ],
+      },
+      {
+        title: 'Pabau Subscription',
+        data: [
+          {
+            title: 'Billing Activity',
+          },
+          {
+            title: 'Addons',
+          },
+        ],
+      },
     ],
     image: clinicImage,
     onClick: (title: string): string => {
       return title
     },
+    keyValue: 'Our clinic',
   }
   return <SetupGridMobile {...props} />
 }
@@ -84,7 +166,14 @@ export const GridSubMenuMobile: FC = () => {
   const props = {
     subTitleData: {
       title: 'Users',
-      data: ['Users', 'User Groups'],
+      data: [
+        {
+          title: 'Users',
+        },
+        {
+          title: 'User Groups',
+        },
+      ],
     },
   }
   return <SetupGridSubMenuMobile {...props} />
@@ -107,6 +196,7 @@ const WebinarStory = ({ ...args }) => {
 }
 
 export const webinarStory = WebinarStory.bind({})
+
 webinarStory.args = {
   title: 'Stock Management',
   name: 'Alexander Turner',
@@ -119,6 +209,7 @@ webinarStory.args = {
 const searchInputStory = ({ ...args }) => <SetupSearchInput {...args} />
 
 export const setupSearchInput = searchInputStory.bind({})
+
 setupSearchInput.args = {
   onChange: (searchTerm: string): string => {
     return searchTerm

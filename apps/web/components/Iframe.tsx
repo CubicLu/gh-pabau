@@ -18,11 +18,9 @@ interface P extends HTMLProps<HTMLIFrameElement> {
 
 const Iframe: FC<P> = ({ urlPath, title, ...rest }) => (
   <iframe
-    src={`https://crm.pabau.com${
-      urlPath?.startsWith('/') ? urlPath : `/${urlPath}`
-    }`}
+    src={urlPath}
     title={title || 'Pabau'}
-    style={{ width: '100%', height: '75vh' }}
+    style={{ width: '100%', height: '92vh' }}
     frameBorder={0}
     {...rest}
   />

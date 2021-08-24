@@ -1,4 +1,5 @@
-import { MedicalFormTypes } from '@pabau/ui'
+import { MedicalFormTypes, RenderHtml } from '@pabau/ui'
+import _ from 'lodash'
 import React, { FC } from 'react'
 import conditionsIcon from '../../assets/images/medicalform_conditions.svg'
 import customCompanyIcon from '../../assets/images/medicalform_custom_company.svg'
@@ -23,12 +24,14 @@ import textBlockIcon from '../../assets/images/medicalform_textblock.svg'
 import travelDesctinationIcon from '../../assets/images/medicalform_traveldestination.svg'
 import vaccineHistoryIcon from '../../assets/images/medicalform_vaccinehistory.svg'
 import vaccineSchedulerIcon from '../../assets/images/medicalform_vaccinescheduler.svg'
+import { tagList } from '../merge-tag-modal/data'
 import InnerMedicalForm from './InnerMedicalForm'
 import InnerMedicalFormBody from './InnerMedicalFormBody'
 import InnerMedicalFormCheckbox from './InnerMedicalFormCheckbox'
 import InnerMedicalFormEditIcon from './InnerMedicalFormEditIcon'
 import InnerMedicalFormRadio from './InnerMedicalFormRadio'
 import InnerMedicalFormRequired from './InnerMedicalFormRequired'
+import InnerMedicalFormSign from './InnerMedicalFormSign'
 import InnerMedicalFormTitle from './InnerMedicalFormTitle'
 
 interface P {
@@ -41,7 +44,9 @@ interface P {
   handlingSelectForm?: (isActive?: boolean, handleId?: string) => void
 }
 
-const InnerElement: FC<P> = ({
+const HANDLE_REGEX = /\[.+?]/g
+
+export const InnerElement: FC<P> = ({
   required,
   activate,
   type,
@@ -120,6 +125,13 @@ const InnerElement: FC<P> = ({
       iconUrl: signatureIcon,
       bgcolor: '#F78561',
       title: 'Signature',
+    },
+    {
+      component: 'basic_photo',
+      type: { type },
+      iconUrl: signatureIcon,
+      bgcolor: '#F78561',
+      title: 'Add Photo',
     },
     {
       component: 'basic_conditions',
@@ -254,6 +266,57 @@ const InnerElement: FC<P> = ({
     (item) => item.component === component
   )
 
+  const findTagInfo = (tag) => {
+    const findTag = Object.entries(tagList)
+      .map(([key, value], index) => {
+        const _index = value.items.findIndex((item) => item.tag === tag)
+        if (_index !== -1) {
+          return value.items[_index]
+        }
+        return false
+      })
+      .filter((item) => item)
+    return findTag.length > 0 ? findTag[0] : false
+  }
+
+  const findAndReplaceTag = (orgString) => {
+    let matchArr
+    let replaceTagInfos = {}
+
+    while ((matchArr = HANDLE_REGEX.exec(orgString)) !== null) {
+      const tagInfo = findTagInfo(matchArr[0])
+      let repalceTag = {}
+      repalceTag = tagInfo
+        ? {
+            [tagInfo.tag]:
+              '<button type="button" class="ant-btn ant-btn-primary ant-btn-sm">&lt;-&gt; ' +
+              tagInfo.name +
+              ' (' +
+              tagInfo.module +
+              ') ' +
+              '</button>',
+          }
+        : {
+            [matchArr[0]]:
+              '<button type="button" class="ant-btn ant-btn-danger ant-btn-sm" title="This tag does not exist or will not work with this type of form">' +
+              matchArr[0].substring(1, matchArr[0].length - 1) +
+              '</button>',
+          }
+      replaceTagInfos = { ...replaceTagInfos, ...repalceTag }
+    }
+
+    if (!_.isEmpty(replaceTagInfos)) {
+      const re = new RegExp(
+        '\\' + Object.keys(replaceTagInfos).join('|\\'),
+        'gi'
+      )
+      orgString = orgString.replace(re, function (matched) {
+        return replaceTagInfos[matched]
+      })
+    }
+    return orgString
+  }
+
   return (
     <div>
       {filteredComponent.length > 0 && (
@@ -275,6 +338,7 @@ const InnerElement: FC<P> = ({
               formData.txtInputType !== '' ||
               formData.formName === 'basic_drawing' ||
               formData.formName === 'basic_staticimage' ||
+              formData.formName === 'basic_photo' ||
               formData.arrItems?.length > 0) && (
               <InnerMedicalFormBody>
                 {formData.formName === 'basic_drawing' && (
@@ -309,19 +373,38 @@ const InnerElement: FC<P> = ({
                     alt=""
                   />
                 )}
+                {formData.formName === 'basic_photo' && (
+                  <img
+                    style={{
+                      width: '300px',
+                      display: 'block',
+                      marginLeft: 'auto',
+                      marginRight: 'auto',
+                    }}
+                    src={
+                      formData.arrItems?.length > 0
+                        ? `https://prelive-crm.pabau.com${formData.arrItems[0].name}`
+                        : innerDrawingIcon
+                    }
+                    alt=""
+                  />
+                )}
                 {formData.txtQuestion !== '' &&
-                  formData.formName !== 'basic_textblock' &&
-                  formData.formName !== 'basic_singlechoice' &&
-                  formData.formName !== 'basic_multiplechoice' &&
-                  formData.formName !== 'basic_dropdown' && (
-                    <div
-                      dangerouslySetInnerHTML={{ __html: formData.txtQuestion }}
+                  formData.formName !== 'basic_textblock' && (
+                    <RenderHtml
+                      __html={
+                        formData.formName === 'basic_signature' ||
+                        formData.formName === 'basic_shortanswer' ||
+                        formData.formName === 'basic_longanswer' ||
+                        formData.formName === 'basic_singlechoice' ||
+                        formData.formName === 'basic_multiplechoice'
+                          ? findAndReplaceTag(formData.txtQuestion)
+                          : formData.txtQuestion
+                      }
                     />
                   )}
                 {formData.formName === 'basic_textblock' && (
-                  <div
-                    dangerouslySetInnerHTML={{ __html: formData.txtBlock }}
-                  />
+                  <RenderHtml __html={findAndReplaceTag(formData.txtBlock)} />
                 )}
                 {formData.txtBlock !== '' &&
                   formData.formName !== 'basic_textblock' &&
@@ -338,26 +421,22 @@ const InnerElement: FC<P> = ({
                         )
                       })}
                     </div>
-                    // <div
-                    //   dangerouslySetInnerHTML={{ __html: formData.txtBlock }}
-                    // />
                   )}
                 {((formData.arrItems && formData.arrItems?.length > 0) ||
                   formData.txtQuestion !== '') &&
                   (formData.formName === 'basic_singlechoice' ||
                     formData.formName === 'basic_dropdown') && (
-                    <InnerMedicalFormRadio
-                      title={formData.txtQuestion}
-                      options={formData.arrItems}
-                    />
+                    <InnerMedicalFormRadio options={formData.arrItems} />
                   )}
                 {((formData.arrItems && formData.arrItems.length > 0) ||
                   formData.txtQuestion !== '') &&
                   formData.formName === 'basic_multiplechoice' && (
-                    <InnerMedicalFormCheckbox
-                      title={formData.txtQuestion}
-                      options={formData.arrItems}
-                    />
+                    <InnerMedicalFormCheckbox options={formData.arrItems} />
+                  )}
+                {formData.signData &&
+                  formData.signData.length > 0 &&
+                  formData.formName === 'basic_signature' && (
+                    <InnerMedicalFormSign signData={formData.signData} />
                   )}
               </InnerMedicalFormBody>
             )}

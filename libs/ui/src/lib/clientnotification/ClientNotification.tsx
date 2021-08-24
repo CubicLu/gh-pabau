@@ -1,16 +1,16 @@
-import React, { FC } from 'react'
-import { Row, Col, Radio, Input, Modal } from 'antd'
+import React, { FC, useState } from 'react'
+import { Row, Col, Radio, Input, Modal, Dropdown, Menu, Checkbox } from 'antd'
 import styles from './ClientNotification.module.less'
-import { Button, Notification } from '@pabau/ui'
-
-enum NotificationType {
-  info = 'info',
-  success = 'success',
-  error = 'error',
-  warning = 'warning',
-  loading = 'loading',
-  connect = 'connect',
-}
+import {
+  Button,
+  Notification,
+  NotificationType,
+  PhoneNumberInput,
+} from '@pabau/ui'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import { DownOutlined } from '@ant-design/icons'
+import { useTranslation } from 'react-i18next'
 
 interface P {
   tabComponent?: React.ReactNode
@@ -19,6 +19,7 @@ interface P {
   onSmsTabChanged?: (index) => void
   displayButtons?: boolean
   displayRadioGroup?: boolean
+  handleNotificationSubmit?(val: string): void
 }
 
 export const ClientNotification: FC<P> = ({
@@ -28,8 +29,20 @@ export const ClientNotification: FC<P> = ({
   onSmsTabChanged,
   displayButtons = true,
   displayRadioGroup = true,
+  handleNotificationSubmit,
 }) => {
-  const [previewStatus, setPreviewStatus] = React.useState(1)
+  const [previewStatus, setPreviewStatus] = useState('emailPreview')
+  const [sendEmail, setSendEmail] = useState(false)
+  const [visible, setVisible] = useState(false)
+  const { t } = useTranslation('common')
+
+  const handleVisibleChange = (flag) => {
+    setVisible(flag)
+  }
+
+  const handleShowNotification = () => {
+    setSendEmail(false)
+  }
 
   function handleSmsTabChanged(value) {
     setPreviewStatus(value)
@@ -38,173 +51,196 @@ export const ClientNotification: FC<P> = ({
     }
   }
 
-  const [visibleModal, setVisibleModal] = React.useState(false)
-  const [valideEmail, setValidEmail] = React.useState(false)
+  const sendEmailForm = useFormik({
+    initialValues: {
+      email: '',
+    },
+    validationSchema: Yup.object({
+      email: Yup.string().email(
+        t('notifications.commonNotificationHeader.error')
+      ),
+    }),
+    onSubmit: (val) => {
+      handleNotificationSubmit?.(val.email)
+      setSendEmail(false)
+    },
+  })
 
-  function showNotification() {
-    if (valideEmail) {
-      Notification(NotificationType.success, 'Test message sent')
-      setVisibleModal(false)
-    }
-  }
-
-  function isEmail(search) {
-    const regexp = new RegExp(
-      /* eslint-disable-next-line */
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    )
-    const serchfind = regexp.test(search)
-    setValidEmail(serchfind)
-  }
+  const menu = (
+    <Menu className={styles.menuListUl}>
+      <Menu.Item className={styles.menuListItem}>
+        <Row>
+          <Checkbox value="enable_reminder">
+            {t('notifications.commonNotificationHeader.enableReminderViaEmail')}
+          </Checkbox>
+        </Row>
+      </Menu.Item>
+      <Menu.Item className={styles.menuListItem}>
+        <Row>
+          <Checkbox value="enable_reminder">
+            {t('notifications.commonNotificationHeader.enableReminderViaSms')}
+          </Checkbox>
+        </Row>
+      </Menu.Item>
+    </Menu>
+  )
 
   return (
     <Row className={styles.notificationPage}>
       {tabComponent && (
         <Col className={styles.builderColumn}>
           <Row className={styles.headerStyle}>
-            <div>BUILDER</div>
+            <div>{t('notifications.clientNotification.builder')}</div>
           </Row>
           <Row className={styles.tabsAlign}>{tabComponent}</Row>
         </Col>
       )}
-      <Col className={styles.buttionGruop}>
+      <Col className={styles.buttonGroup}>
         {displayButtons && (
-          <Row>
-            <Col span={12} style={{ padding: '10px' }}>
+          <Row className={styles.justifyCenter}>
+            <Col span={8} className={styles.buttonWrapper}>
+              <Dropdown
+                overlay={menu}
+                placement="bottomRight"
+                onVisibleChange={handleVisibleChange}
+                visible={visible}
+                arrow
+              >
+                <Button style={{ width: '100%' }}>
+                  {t('notifications.commonNotificationHeader.enableSettings')}{' '}
+                  <DownOutlined />
+                </Button>
+              </Dropdown>
+            </Col>
+            <Col span={8} className={styles.buttonWrapper}>
               <Button
-                onClick={() => setVisibleModal(true)}
+                onClick={() => setSendEmail(!sendEmail)}
                 type="default"
                 style={{ width: '100%' }}
               >
-                Send Test Email
+                {previewStatus === 'emailPreview'
+                  ? t('notifications.commonNotificationHeader.sendExampleEmail')
+                  : t('notifications.commonNotificationHeader.sendTestSms')}
               </Button>
             </Col>
-            <Col span={12} style={{ padding: '10px' }}>
-              <Button type="primary" style={{ width: '100%' }}>
-                Save
+            <Col span={8} className={styles.buttonWrapper}>
+              <Button
+                type="primary"
+                style={{ width: '100%' }}
+                onClick={() =>
+                  Notification(
+                    NotificationType.success,
+                    t('notifications.commonNotificationHeader.successMessage')
+                  )
+                }
+              >
+                {t('notifications.commonNotificationHeader.save')}
               </Button>
             </Col>
           </Row>
         )}
 
         <Modal
-          title={'Send Test Email'}
-          visible={visibleModal}
-          onCancel={() => setVisibleModal(false)}
+          title={
+            previewStatus === 'emailPreview'
+              ? t('notifications.commonNotificationHeader.sendExampleEmailail')
+              : t('notifications.commonNotificationHeader.sendTestMessage')
+          }
+          visible={sendEmail}
+          onCancel={() => setSendEmail(false)}
           centered={true}
           wrapClassName={styles.modal}
           footer={null}
         >
-          <div>
-            <p style={{ color: '#9292A3' }}>Email</p>
-            <Input
-              placeholder="client@email.com"
-              onChange={(event) => isEmail(event.target.value)}
-            />
+          <form onSubmit={sendEmailForm.handleSubmit}>
+            <div>
+              {previewStatus === 'emailPreview' ? (
+                <div>
+                  <p style={{ color: '#9292A3' }}>
+                    {t('notifications.commonNotificationHeader.model.email')}
+                  </p>
+                  <Input
+                    placeholder="client@email.com"
+                    onChange={sendEmailForm.handleChange('email')}
+                  />
+                </div>
+              ) : (
+                <div>
+                  <PhoneNumberInput
+                    countryCode={'GB'}
+                    onChange={(val) => {
+                      console.log(val)
+                    }}
+                  />
+                </div>
+              )}
 
-            <div className={styles.footerBtnGroup}>
-              <Button
-                type="default"
-                style={{ marginRight: '10px' }}
-                onClick={() => setVisibleModal(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="primary"
-                disabled={valideEmail ? false : true}
-                onClick={() => showNotification()}
-              >
-                Send
-              </Button>
+              <div className={styles.footerBtnGroup}>
+                <Button
+                  type="default"
+                  style={{ marginRight: '10px' }}
+                  onClick={() => setSendEmail(false)}
+                >
+                  {t('notifications.commonNotificationHeader.Modal.cancel')}
+                </Button>
+                {previewStatus === 'emailPreview' && (
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    disabled={
+                      sendEmailForm.errors.email === undefined &&
+                      sendEmailForm.values.email !== ''
+                        ? false
+                        : true
+                    }
+                  >
+                    {t('notifications.commonNotificationHeader.Modal.send')}
+                  </Button>
+                )}
+                {previewStatus === 'smsPreview' && (
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    onClick={handleShowNotification}
+                  >
+                    {t('notifications.commonNotificationHeader.Modal.send')}
+                  </Button>
+                )}
+              </div>
             </div>
-          </div>
-        </Modal>
-      </Col>
-      <Col className={styles.buttionGruop}>
-        {displayButtons && (
-          <Row>
-            <Col span={12} style={{ padding: '10px' }}>
-              <Button
-                onClick={() => setVisibleModal(true)}
-                type="default"
-                style={{ width: '100%' }}
-              >
-                Send Test Email
-              </Button>
-            </Col>
-            <Col span={12} style={{ padding: '10px' }}>
-              <Button type="primary" style={{ width: '100%' }}>
-                Save
-              </Button>
-            </Col>
-          </Row>
-        )}
-
-        <Modal
-          title={'Send Test Email'}
-          visible={visibleModal}
-          onCancel={() => setVisibleModal(false)}
-          centered={true}
-          wrapClassName={styles.modal}
-          footer={null}
-        >
-          <div>
-            <p style={{ color: '#9292A3' }}>Email</p>
-            <Input
-              placeholder="client@email.com"
-              onChange={(event) => isEmail(event.target.value)}
-            />
-
-            <div className={styles.footerBtnGroup}>
-              <Button
-                type="default"
-                style={{ marginRight: '10px' }}
-                onClick={() => setVisibleModal(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="primary"
-                disabled={valideEmail ? false : true}
-                onClick={() => showNotification()}
-              >
-                Send
-              </Button>
-            </div>
-          </div>
+          </form>
         </Modal>
       </Col>
       <Col className={styles.previewColumn}>
         <Row className={styles.headerStyle}>
-          <div>PREVIEW</div>
+          <div>{t('notifications.clientNotification.preview')}</div>
         </Row>
         {displayRadioGroup && (
           <Row justify="center" className={styles.previewButtonGroup}>
-            <Radio.Group defaultValue="a" buttonStyle="solid">
+            <Radio.Group defaultValue="emailPreview" buttonStyle="solid">
               <Radio.Button
                 className={styles.radioLeftButton}
-                value="a"
-                onClick={() => handleSmsTabChanged(1)}
+                value="emailPreview"
+                onClick={() => handleSmsTabChanged('emailPreview')}
               >
-                Email
+                {t('notifications.commonNotificationHeader.model.email')}
               </Radio.Button>
               <Radio.Button
                 className={styles.radioRightButton}
-                value="b"
-                onClick={() => handleSmsTabChanged(2)}
+                value="smsPreview"
+                onClick={() => handleSmsTabChanged('smsPreview')}
               >
-                SMS Text
+                {t('notifications.clientNotification.smsText')}
               </Radio.Button>
             </Radio.Group>
           </Row>
         )}
-        {previewStatus === 1 && (
+        {previewStatus === 'emailPreview' && (
           <Row justify="center">
             <div className={styles.previewCard}>{previewComponent}</div>
           </Row>
         )}
-        {previewStatus === 2 && (
+        {previewStatus === 'smsPreview' && (
           <Row justify="center">
             <div className={styles.previewSms}>{smsComponent}</div>
           </Row>

@@ -1,17 +1,17 @@
-import React from 'react'
 import { render } from '@testing-library/react'
+import React from 'react'
+import MedicalFilter, { MedicalFilterType } from './MedicalFilter'
 
-import MedicalFilter from './MedicalFilter'
-const defaultFilter = {
+const defaultFilter: MedicalFilterType = {
   language: 'English (UK)',
   status: 'active',
   formtype: {
     medicalHistory: false,
     consent: false,
-    treatmentForm: false,
+    treatment: false,
     epaper: false,
-    presciption: false,
-    labForm: false,
+    prescription: false,
+    lab: false,
   },
 }
 

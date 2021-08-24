@@ -1,17 +1,17 @@
-import React, { FC, ReactText, useState } from 'react'
-import { Form, Input, Select, Checkbox } from 'formik-antd'
-import { DatePicker, Tooltip } from 'antd'
-import { Formik } from 'formik'
-import * as Yup from 'yup'
 import {
   Button,
   Notification,
   NotificationType,
   PhoneNumberInput,
 } from '@pabau/ui'
-import styles from '../UserDetail.module.less'
-import { customFieldsProps } from '../index'
+import { DatePicker, Tooltip } from 'antd'
+import { Formik } from 'formik'
+import { Checkbox, Form, Input, Select } from 'formik-antd'
 import dynamic from 'next/dynamic'
+import React, { FC, ReactText, useState } from 'react'
+import * as Yup from 'yup'
+import { customFieldsProps } from '../Index'
+import styles from '../UserDetail.module.less'
 
 export interface GraphDataProps {
   daysLeft: string
@@ -20,7 +20,7 @@ export interface GraphDataProps {
   holidayRemaining: number
 }
 
-interface PersonalDetail {
+interface P {
   field: customFieldsProps[]
   graphData: GraphDataProps
 }
@@ -30,7 +30,7 @@ const GraphDetail = dynamic(() => import('./GraphDetail'), {
   ssr: false,
 })
 
-const PersonalDetail: FC<PersonalDetail> = ({ field, graphData }) => {
+const PersonalDetail: FC<P> = ({ field, graphData }) => {
   const [isDisableResetEmail, setIsDisableResetEmail] = useState<boolean>(false)
 
   const formikFields = () => {

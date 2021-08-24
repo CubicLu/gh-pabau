@@ -7,6 +7,7 @@ import {
   ShareAltOutlined,
   LinkOutlined,
 } from '@ant-design/icons'
+import { useRouter } from 'next/router'
 import { Breadcrumb, NotificationBanner, Switch, Stepper } from '@pabau/ui'
 import confetti from 'canvas-confetti'
 import {
@@ -17,7 +18,7 @@ import {
   ReviewsConfigStepFour,
 } from '../../../components/Setup/ReviewsConfig'
 import Layout from '../../../components/Layout/Layout'
-import CommonHeader from '../common-header'
+import CommonHeader from '../../../components/CommonHeader'
 import reviewsConfigBanner from '../../../assets/images/reviews-config-banner.png'
 import { ReactComponent as ExternalLink } from '../../../assets/images/external-link.svg'
 import {
@@ -96,6 +97,12 @@ export const Index: FC<ReviewsConfigProps> = ({
     }
   }, [step])
 
+  const router = useRouter()
+
+  const handleBack = () => {
+    router.back()
+  }
+
   return (
     <div ref={reviewsConfigRef}>
       <CommonHeader />
@@ -125,7 +132,7 @@ export const Index: FC<ReviewsConfigProps> = ({
             </div>
             <div className={styles.reviewsConfigBreadcrumbMobile}>
               <Typography.Title>
-                <LeftOutlined /> Feedback Survey
+                <LeftOutlined onClick={handleBack} /> Feedback Survey
               </Typography.Title>
             </div>
             <div className={styles.reviewsConfigOps}>

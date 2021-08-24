@@ -1,0 +1,452 @@
+.setting-content {
+  padding-top: 20px;
+  padding-left: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color-base);
+  @media screen and (max-width: 767px) {
+    padding: 20px 16px 18px;
+  }
+  .header-text {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 25px;
+    color: var(--grey-text-color);
+    padding: 0;
+    margin-bottom: 8px;
+  }
+  .description {
+    font-family: 'Circular-Std-Book';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--light-grey-color);
+    min-height: 60px;
+    width: 400px;
+    display: block;
+    @media screen and (max-width: 767px) {
+      min-height: auto;
+      width: 320px;
+    }
+    @media screen and (max-width: 360px) {
+      min-height: auto;
+      width: 100%;
+    }
+  }
+}
+:global {
+  .ant-checkbox-wrapper {
+    .ant-checkbox::after {
+      display: none;
+    }
+  }
+}
+.calendar-settings-configuration {
+  .configuration-controls {
+    padding-top: 23px;
+    padding-right: 24px;
+    padding-left: 24px;
+    @media screen and (max-width: 767px) {
+      padding: 20px 16px 18px;
+    }
+
+    .time-slot-select {
+      width: 448px;
+      @media screen and (max-width: 767px) {
+        width: 100%;
+      }
+      :global {
+        .ant-select-selector {
+          min-height: 40px;
+          display: flex;
+          align-items: center;
+          border: 1px solid #ecedf0;
+          border-radius: 4px;
+          width: 100%;
+        }
+
+        .ant-select-selection-item {
+          color: var(--grey-text-color);
+          font-size: 16px;
+          font-family: 'Circular-Std-Book';
+        }
+      }
+    }
+    :global {
+      .ant-input {
+        padding: 8px 11px;
+        border: 1px solid #ecedf0;
+        color: var(--grey-text-color);
+        font-family: 'Circular-Std-Book';
+        border-radius: 4px;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 24px;
+      }
+    }
+
+    .col-left-space {
+      padding-left: 6px;
+      @media screen and (max-width: 767px) {
+        width: 100%;
+        padding-left: 0;
+        padding-top: 16px;
+      }
+      p {
+        font-size: 14px;
+        color: var(--light-grey-color);
+        margin-bottom: 0px;
+        font-family: 'Circular-Std-Medium';
+        line-height: 22px;
+        font-weight: normal;
+      }
+      :global {
+        .ant-picker {
+          .ant-picker-input {
+            > input {
+              font-size: 16px;
+              color: var(--grey-text-color);
+              font-family: 'Circular-Std-Book';
+              border-radius: 4px;
+              font-style: normal;
+              line-height: 24px;
+              font-weight: 400;
+            }
+          }
+          padding: 8px 11px;
+          border: 1px solid #ecedf0;
+        }
+      }
+    }
+    .col-right-space {
+      padding-right: 6px;
+      @media screen and (max-width: 767px) {
+        width: 100%;
+        padding-right: 0;
+      }
+      p {
+        font-size: 14px;
+        color: var(--light-grey-color);
+        margin-bottom: 0px;
+        font-family: 'Circular-Std-Medium';
+        line-height: 22px;
+        font-weight: normal;
+      }
+      :global {
+        .ant-picker {
+          .ant-picker-input {
+            > input {
+              font-size: 16px;
+              color: var(--grey-text-color);
+              font-family: 'Circular-Std-Book';
+              border-radius: 4px;
+              font-style: normal;
+              line-height: 24px;
+              font-weight: 400;
+            }
+          }
+          padding: 8px 11px;
+          border: 1px solid #ecedf0;
+        }
+      }
+    }
+    .time-input-space {
+      padding-top: 16px;
+      width: 448px;
+      @media screen and (max-width: 767px) {
+        width: 100%;
+      }
+      :global .ant-col {
+        @media screen and (max-width: 767px) {
+          width: 100%;
+        }
+      }
+    }
+  }
+  .title-text-style {
+    font-size: 14px;
+    color: var(--light-grey-color);
+    margin-bottom: 0px;
+    font-family: 'Circular-Std-Medium';
+    line-height: 22px;
+    font-weight: normal;
+  }
+}
+.calendar-settings-appointment {
+  .appointments-controls {
+    padding-top: 30px;
+    padding-left: 24px;
+    @media screen and (max-width: 767px) {
+      padding: 18px 16px 0;
+    }
+    :global {
+      .ant-checkbox-wrapper {
+        padding-bottom: 22px;
+      }
+    }
+    .advanced-check-list {
+      display: flex;
+      .advanced-check {
+        // border: 1px solid red;
+        display: flex;
+      }
+    }
+    .appointment-text {
+      font-family: Circular-Std-Book;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 18px;
+      color: var(--grey-text-color);
+    }
+    .appointment-icon {
+      font-size: 14px;
+      color: var(--light-grey-color);
+    }
+  }
+}
+.calendar-settings-appearance {
+  .general-controls {
+    padding-top: 30px;
+    padding-left: 24px;
+    border-bottom: 1px solid var(--border-color-base);
+    @media screen and (max-width: 767px) {
+      padding: 18px 16px 0;
+    }
+    :global {
+      .ant-checkbox-wrapper {
+        padding-bottom: 22px;
+      }
+    }
+    .appointment-text {
+      font-family: Circular-Std-Book;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 18px;
+      color: var(--grey-text-color);
+    }
+    .appointment-icon {
+      font-size: 14px;
+      color: var(--light-grey-color);
+    }
+  }
+  .font-controls {
+    padding-top: 30px;
+    padding-left: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border-color-base);
+    @media screen and (max-width: 767px) {
+      padding: 18px 16px 20px;
+    }
+    .font-size-select {
+      width: 448px;
+      @media screen and (max-width: 767px) {
+        width: 100%;
+      }
+      :global {
+        .ant-select {
+          width: 40% !important;
+        }
+        .ant-select-selector {
+          min-height: 40px;
+          display: flex;
+          align-items: center;
+          border: 1px solid #ecedf0;
+          border-radius: 4px;
+        }
+
+        .ant-select-selection-item {
+          color: var(--grey-text-color);
+          font-size: 16px;
+          font-family: 'Circular-Std-Book';
+        }
+      }
+    }
+  }
+
+  .appointment-preview {
+    max-width: 472px;
+    :global {
+      .ant-tabs-nav-list {
+        width: 100%;
+        .ant-tabs-tab {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+        }
+      }
+      .ant-tabs-content-holder {
+        border: none;
+      }
+    }
+  }
+  .block-text {
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: bold;
+    font-family: Circular-Std-Book;
+    font-style: normal;
+    margin-bottom: 12px;
+  }
+  .paddingDiv {
+    padding-top: 25px;
+    * {
+      color: #9292a3;
+    }
+
+    .appointment-tab-card {
+      border-radius: 5px;
+      :global .ant-card-body {
+        padding: 15px 0px;
+      }
+
+      .edit-btn {
+        padding: 0px 15px;
+        margin-bottom: 5px;
+        display: flex;
+        justify-content: flex-end;
+
+        :global {
+          .ant-btn:hover span {
+            color: #54b2d3 !important;
+          }
+          .ant-btn:focus span {
+            color: #54b2d3 !important;
+          }
+        }
+      }
+      .add-btn {
+        padding: 0px 15px;
+        margin-top: 5px;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 22px;
+        display: inline-block;
+        cursor: pointer;
+
+        &:hover {
+          * {
+            color: #54b2d3;
+          }
+        }
+      }
+
+      .appointments-view-list {
+        :global {
+          .helper {
+            width: 100%;
+          }
+        }
+      }
+
+      .draggable-list-item {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 7.5px 15px;
+        position: relative;
+
+        span:not(:last-child) {
+          padding-right: 15px;
+        }
+
+        .dragg-icon {
+          cursor: move;
+          line-height: 100%;
+        }
+
+        .cross-icon {
+          cursor: pointer;
+          display: none;
+          position: absolute;
+          right: 15px;
+        }
+
+        &:hover {
+          background-color: #eef7fb;
+          * {
+            color: #54b2d3;
+          }
+          .cross-icon {
+            display: inline-block;
+          }
+        }
+      }
+    }
+  }
+}
+.calendar-settings-advanced {
+  .advanced-controls {
+    padding-top: 30px;
+    padding-left: 24px;
+    @media screen and (max-width: 767px) {
+      padding: 18px 16px;
+    }
+    :global {
+      .ant-checkbox-wrapper {
+        padding-bottom: 22px;
+      }
+    }
+    .advanced-check-list {
+      display: flex;
+      .advanced-check {
+        display: flex;
+      }
+    }
+    .advanced-text {
+      font-family: Circular-Std-Book;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 18px;
+      color: var(--grey-text-color);
+    }
+    .advanced-icon {
+      font-size: 14px;
+      color: var(--light-grey-color);
+    }
+    .number-input {
+      max-width: 448px;
+
+      :global input {
+        min-height: 40px;
+      }
+      .number-input-label {
+        display: flex;
+        min-height: 20px;
+        position: relative;
+        align-items: center;
+        display: inline-block;
+        padding-bottom: 5px;
+        span {
+          font-size: 14px;
+          padding-right: 7.5px;
+          color: rgba(0, 0, 0, 0.65);
+        }
+        span:last-child {
+          top: -2.5px;
+          position: absolute;
+        }
+
+        & + div {
+          :global {
+            .ant-input-number {
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.hideSection {
+  @media screen and (min-width: 767px) {
+    display: none;
+  }
+}

@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import {
   Breadcrumb,
-  Layout,
   Button,
   Input,
   MobileHeader,
   NotificationBanner,
 } from '@pabau/ui'
+import Layout from '../../../components/Layout/Layout'
 import classNames from 'classnames'
 import { Form, Typography } from 'antd'
 import styles from './create.module.less'
