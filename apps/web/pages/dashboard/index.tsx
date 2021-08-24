@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { Avatar, Button, MobileHeader, RangePicker } from '@pabau/ui'
 import Layout from '../../components/Layout/Layout'
 import styles from './dashboard.module.less'
@@ -15,11 +15,13 @@ import dayjs, { Dayjs } from 'dayjs'
 import { Menu, Dropdown, Drawer, Col, Row, Typography, Select } from 'antd'
 import { TopBoard } from '../../components/Dashboard/TopBoard/TopBoard'
 import { Charts } from '../../components/Dashboard/Charts/Charts'
-import { locationList, userList } from '../../mocks/Dashboard'
+import { locationList } from '../../mocks/Dashboard'
+import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
 
 interface ISetUser {
   key: string
   label: string
+  date?: string
   select: boolean
 }
 
@@ -29,14 +31,17 @@ const { Option } = Select
 export function Index() {
   const isMobile = useMedia('(max-width: 767px)', false)
   const user = useContext(UserContext)
-
   const [visible, setVisible] = useState(false)
   const [openUserList, setOpenUserList] = useState(false)
   const [openDateModel, setOpenDateModel] = useState(false)
   const [dashboardMode, setDashboardMode] = useState(0)
-  const [userListData, setUserListData] = useState<ISetUser[]>(
-    dashboardMode === 0 ? locationList : userList
-  )
+  const [userListData, setUserListData] = useState<ISetUser[]>(locationList)
+  const [location, setLocation] = useState<ISetUser>({
+    key: '',
+    label: '',
+    date: '',
+    select: false,
+  })
   const [selectedRange, setSelectedRange] = useState<string>('This month')
   const [filterRange, setFilterRange] = useState<string>('This Month')
   const [selectedDates, setSelectedDates] = useState<[Dayjs, Dayjs]>([
@@ -48,6 +53,11 @@ export function Index() {
     dayjs(),
   ])
 
+  useEffect(() => {
+    const record = userListData.find((item) => item.select === true)
+    setLocation(record)
+  }, [userListData])
+
   const handleSelectMenu = (selectedUser) => {
     const List = [...userListData]
     List.map((item) => {
@@ -58,6 +68,8 @@ export function Index() {
       }
       return item
     })
+    const record = List.find((item) => item.key === selectedUser)
+    setLocation(record)
     setUserListData(List)
     setOpenUserList(false)
   }
@@ -170,7 +182,7 @@ export function Index() {
         <Option value="Last Year">Last year</Option>
         <Option value="custom">Custom</Option>
       </Select>
-      {selectedRange !== 'All records' && (
+      {selectedRange === 'custom' && (
         <RangePicker
           className={styles.rangePicker}
           value={selectedDates}
@@ -223,11 +235,13 @@ export function Index() {
         <div className={styles.dashboardWrapper}>
           <div className={styles.topWrapper}>
             <div className={styles.userBlock}>
-              <Avatar name="R M" size="large" />
+              <Avatar size="large" src={getImage(user?.me?.image)} />
               <div className={styles.detailBlock}>
                 <div className={styles.topTitle}>
-                  <div className={styles.title}>Pabaucare - London</div>{' '}
-                  {!isMobile ? (
+                  <div className={styles.title}>
+                    {dashboardMode === 1 ? user?.me?.full_name : location.label}
+                  </div>{' '}
+                  {dashboardMode === 1 ? null : !isMobile ? (
                     <Dropdown
                       overlay={customMenu}
                       placement="bottomCenter"
@@ -283,7 +297,10 @@ export function Index() {
           </div>
           <div className={styles.bottomWrapper}>
             <TopBoard />
-            <Charts />
+            <Charts
+              location={location}
+              dashboardMode={user?.me?.admin ? dashboardMode : 0}
+            />
           </div>
         </div>
       </Layout>

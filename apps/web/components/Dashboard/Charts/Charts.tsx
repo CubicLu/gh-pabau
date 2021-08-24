@@ -5,7 +5,19 @@ import { CustomHighChart } from '@pabau/ui'
 import styles from './Charts.module.less'
 import { columns, data } from '../../../mocks/Dashboard'
 
-export const Charts: FC = () => {
+interface ILocation {
+  key: string
+  label: string
+  date?: string
+  select: boolean
+}
+
+interface ICharts {
+  location: ILocation
+  dashboardMode: number
+}
+
+export const Charts: FC<ICharts> = ({ location, dashboardMode }) => {
   const optionLine: Highcharts.Options = {
     chart: {
       type: 'line',
@@ -60,11 +72,29 @@ export const Charts: FC = () => {
         },
       },
     ],
+    legend: {
+      itemMarginTop: 15,
+      itemStyle: {
+        color: '#3D3D46',
+        fontWeight: 'normal',
+        fontFamily: 'Circular-Std-Book, -apple-system, sans-serif',
+      },
+    },
     yAxis: [
       {
         min: 0,
         title: {
           text: '',
+        },
+        labels: {
+          style: {
+            fontSize: '14px',
+            fontStyle: 'normal',
+            fontWeight: 'normal',
+            lineHeight: '18px',
+            fontFamily: 'Circular-Std-Book, -apple-system, sans-serif',
+            color: '#9292A3',
+          },
         },
       },
     ],
@@ -72,7 +102,11 @@ export const Charts: FC = () => {
       labels: {
         style: {
           fontSize: '14px',
-          fontFamily: 'Circular Std',
+          fontStyle: 'normal',
+          fontWeight: 'normal',
+          lineHeight: '18px',
+          fontFamily: 'Circular-Std-Book, -apple-system, sans-serif',
+          color: '#9292A3',
         },
       },
       categories: [
@@ -152,9 +186,15 @@ export const Charts: FC = () => {
     legend: {
       symbolHeight: 8,
       symbolWidth: 24,
-      symbolRadius: 9,
+      symbolRadius: 6,
       squareSymbol: false,
       align: 'center',
+      itemMarginTop: 15,
+      itemStyle: {
+        color: '#3D3D46',
+        fontWeight: 'normal',
+        fontFamily: 'Circular-Std-Book, -apple-system, sans-serif',
+      },
     },
     xAxis: {
       labels: {
@@ -163,7 +203,7 @@ export const Charts: FC = () => {
           fontStyle: 'normal',
           fontWeight: 'normal',
           lineHeight: '18px',
-          fontFamily: 'Circular Std',
+          fontFamily: 'Circular-Std-Book, -apple-system, sans-serif',
           color: '#9292A3',
         },
       },
@@ -184,6 +224,16 @@ export const Charts: FC = () => {
         title: {
           text: '',
         },
+        labels: {
+          style: {
+            fontSize: '14px',
+            fontStyle: 'normal',
+            fontWeight: 'normal',
+            lineHeight: '18px',
+            fontFamily: 'Circular-Std-Book, -apple-system, sans-serif',
+            color: '#9292A3',
+          },
+        },
       },
     ],
   }
@@ -196,7 +246,9 @@ export const Charts: FC = () => {
               <div className={styles.chartsHeader}>£0</div>
               <div className={styles.chartsSubHeader}>Recent sales</div>
               <div className={styles.chartsExtraHeader}>
-                All locations, last 7 days
+                {dashboardMode === 1
+                  ? `${location.label},` + location.date
+                  : 'all locations, last 7 days'}
               </div>
               <CustomHighChart options={optionLine} />
             </div>
@@ -208,7 +260,7 @@ export const Charts: FC = () => {
               <div className={styles.chartsHeader}>5 booked</div>
               <div className={styles.chartsSubHeader}>Recent Appointments</div>
               <div className={styles.chartsExtraHeader}>
-                All locations, last 7 days
+                {location.label}, {location.date}
               </div>
               <CustomHighChart options={option1} />
             </div>

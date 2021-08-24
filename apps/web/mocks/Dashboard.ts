@@ -1,14 +1,29 @@
 export const locationList = [
-  { key: 'bristol', label: 'Pabaucare - Bristol', select: true },
-  { key: 'london', label: 'Pabaucare - London', select: false },
-  { key: 'leeds', label: 'Pabaucare - Leeds', select: false },
-  { key: 'manchester', label: 'Pabaucare - Manchester', select: false },
-]
-export const userList = [
-  { key: 'user1', label: 'user1', select: true },
-  { key: 'user2', label: 'user2', select: false },
-  { key: 'user3', label: 'user3', select: false },
-  { key: 'user4', label: 'user4', select: false },
+  {
+    key: 'All-location',
+    label: 'All Locations',
+    date: '10/10/20',
+    select: true,
+  },
+  {
+    key: 'bristol',
+    label: 'Pabaucare - Bristol',
+    date: '10/10/20',
+    select: false,
+  },
+  {
+    key: 'london',
+    label: 'Pabaucare - London',
+    date: '10/10/20',
+    select: false,
+  },
+  { key: 'leeds', label: 'Pabaucare - Leeds', date: '10/10/20', select: false },
+  {
+    key: 'manchester',
+    label: 'Pabaucare - Manchester',
+    date: '10/10/20',
+    select: false,
+  },
 ]
 export const columns = [
   {
