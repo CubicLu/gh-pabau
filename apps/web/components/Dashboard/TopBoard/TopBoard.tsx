@@ -2,10 +2,11 @@ import React, { FC } from 'react'
 import { Row, Col } from 'antd'
 import { Avatar } from '@pabau/ui'
 import styles from './TopBoard.module.less'
-import Team from '../../../assets/images/dashboard/team.svg'
-import Bill from '../../../assets/images/dashboard/bill.svg'
-import User from '../../../assets/images/dashboard/user.svg'
-import Folder from '../../../assets/images/dashboard/folder.png'
+import {
+  UsergroupDeleteOutlined,
+  FolderOutlined,
+  FileTextOutlined,
+} from '@ant-design/icons'
 
 export const TopBoard: FC = () => {
   return (
@@ -16,7 +17,10 @@ export const TopBoard: FC = () => {
             <div className={styles.card}>
               <div className={styles.cardWrapper}>
                 <div className={styles.avatarIcon}>
-                  <Avatar size="large" src={Team} />
+                  <Avatar
+                    size="large"
+                    icon={<UsergroupDeleteOutlined className={styles.user} />}
+                  />
                 </div>
                 <div className={styles.cardContent}>
                   <div className={styles.title}>42</div>
@@ -29,7 +33,10 @@ export const TopBoard: FC = () => {
             <div className={styles.card}>
               <div className={styles.cardWrapper}>
                 <div className={styles.docsIcon}>
-                  <Avatar size="large" src={Bill} />
+                  <Avatar
+                    size="large"
+                    icon={<FileTextOutlined className={styles.file} />}
+                  />
                 </div>
                 <div className={styles.cardContent}>
                   <div className={styles.title}>£82.50</div>
@@ -42,7 +49,10 @@ export const TopBoard: FC = () => {
             <div className={styles.card}>
               <div className={styles.cardWrapper}>
                 <div className={styles.userIcon}>
-                  <Avatar size="large" src={User} />
+                  <Avatar
+                    size="large"
+                    icon={<UsergroupDeleteOutlined className={styles.users} />}
+                  />
                 </div>
                 <div className={styles.cardContent}>
                   <div className={styles.title}>£82.50</div>
@@ -55,7 +65,10 @@ export const TopBoard: FC = () => {
             <div className={styles.card}>
               <div className={styles.cardWrapper}>
                 <div className={styles.folderIcon}>
-                  <Avatar size="large" src={Folder} />
+                  <Avatar
+                    size="large"
+                    icon={<FolderOutlined className={styles.folder} />}
+                  />
                 </div>
                 <div className={styles.cardContent}>
                   <div className={styles.title}>42%</div>

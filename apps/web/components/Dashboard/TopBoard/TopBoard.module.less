@@ -11,8 +11,8 @@
     height: 100%;
     display: flex;
     .avatarIcon {
-      :global .ant-avatar {
-        background-color: #65CD981a;
+      :global .ant-avatar.ant-avatar-icon {
+        background-color: #65CD981a !important;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -20,11 +20,15 @@
           width: 18px;
           height: 18px;
         }
+      }
+
+      .user{
+        color: #65CD98;
       }
     }
     .docsIcon{
-      :global .ant-avatar {
-        background-color: #54B2D31a;
+      :global .ant-avatar.ant-avatar-icon {
+        background-color: #54B2D31a !important;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -32,11 +36,14 @@
           width: 18px;
           height: 18px;
         }
+      }
+      .file{
+        color: #54B2D3;
       }
     }
     .userIcon{
-      :global .ant-avatar {
-        background-color: #FAAD141a;
+      :global .ant-avatar.ant-avatar-icon {
+        background-color: #FAAD141a !important;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -45,10 +52,13 @@
           height: 18px;
         }
       }
+      .users{
+        color: #FAAD14;
+      }
     }
     .folderIcon{
-      :global .ant-avatar {
-        background-color: #7B61E21a;
+      :global .ant-avatar.ant-avatar-icon {
+        background-color: #7B61E21a !important;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -56,6 +66,9 @@
           width: 18px;
           height: 18px;
         }
+      }
+      .folder{
+        color: #7B61E2
       }
     }
     .cardContent{
