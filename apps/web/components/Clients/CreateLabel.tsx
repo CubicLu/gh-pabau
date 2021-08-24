@@ -244,12 +244,18 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     return diff1.length === 0 && diff2.length === 0
   }
 
+  console.log('defaultSelectedLabels 000', defaultSelectedLabels)
   const onApplyLabel = () => {
     handleApplyLabel(selectedLabels)
     setVisible(false)
     if (selectedRowKeys && selectedRowKeys.length > 0) {
       for (const selectContact of selectedRowKeys) {
         for (const selectedLabel of selectedLabels) {
+          const checkDuplicateLabel = contactsLabels.some(
+            (e) =>
+              e.contact_id === selectContact && e.label_id === selectedLabel.id
+          )
+          console.log('xxx', checkDuplicateLabel)
           const addedLabel: any = difference(
             selectedLabels,
             defaultSelectedLabels
@@ -259,14 +265,10 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
             selectedLabels
           )
           const testEqual = defaultSelectedLabels.some(
-            (e) => e.id === addedLabel.id
+            (e) => e.id === selectedLabel.id
           )
-          if (
-            addedLabel.length > 0 &&
-            !defaultSelectedLabels.includes(selectedLabel)
-            // &&
-            // !defaultSelectedLabels.some((e) => e.id === addedLabel.id)
-          ) {
+          console.log('testEqual 000', testEqual)
+          if (addedLabel.length > 0 && !checkDuplicateLabel) {
             insertContactsLabelsMutaton({
               variables: {
                 contact_id: selectContact,
@@ -284,6 +286,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
                   id: findToDeleteCL.id,
                 },
               })
+              return label
             })
           }
         }
@@ -296,9 +299,6 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
               id: findToDeleteCL.id,
             },
           })
-        }
-        if (selectedRowKeys.length > 1) {
-          console.log('MULTI SELECTED')
         }
       }
     }

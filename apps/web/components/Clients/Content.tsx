@@ -8,14 +8,14 @@ import {
 } from '@ant-design/icons'
 import { Button, Avatar, Table, Checkbox, Pagination } from '@pabau/ui'
 import styles from '../../pages/clients/clients.module.less'
-import { Image, Popover, Skeleton, Tooltip } from 'antd'
+import { Popover, Tooltip } from 'antd'
 import { useMedia } from 'react-use'
 import { Labels } from '../../pages/clients'
 import CreateLabel from './CreateLabel'
 import ManageColumnsPopover from './ManageColumnPopover'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import classNames from 'classnames'
-import { useImage } from '../../hooks/cdn'
+// import { useImage } from '../../hooks/cdn'
 import { FetchResult, MutationFunctionOptions } from '@apollo/client'
 import { AddLabelMutation, Exact } from '@pabau/graphql'
 
@@ -209,6 +209,9 @@ export const ClientsContent: FC<ClientsContentProps> = ({
       visible: visiblePrimaryColumns('Label'),
       // eslint-disable-next-line react/display-name
       render: (labelTest) => {
+        // const { labelTest } = data
+
+        console.log('labelTest 777', labelTest)
         return (
           <Popover
             trigger={'hover'}
@@ -232,7 +235,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
           >
             <div className={styles.labelShow}>
               {labelTest?.slice(0, 2).map((label) => (
-                <div>
+                <div key={label.id}>
                   <Button
                     className={styles.labelButton}
                     key={label.id}
@@ -245,12 +248,11 @@ export const ClientsContent: FC<ClientsContentProps> = ({
                     icon={<TagOutlined />}
                   >
                     {label.text}
-                    {/*vlatko*/}
                   </Button>
                 </div>
               ))}
               {/*<p>...</p>*/}
-              {labelTest.length > 2 ? (
+              {labelTest?.length > 2 ? (
                 <p>
                   <b>. . .</b>
                 </p>
@@ -372,8 +374,6 @@ export const ClientsContent: FC<ClientsContentProps> = ({
   const renderTooltip = ({ title, icon }) => {
     return <Tooltip title={title}>{icon}</Tooltip>
   }
-
-  // console.log('sourceData', sourceData)
 
   return (
     <div className={styles.tableContent}>
@@ -502,7 +502,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
                     trigger={'click'}
                     placement={'bottom'}
                   >
-                    {data.label.length > 0 && (
+                    {data.labelTest.length > 0 && (
                       <Button
                         icon={<TagOutlined />}
                         style={

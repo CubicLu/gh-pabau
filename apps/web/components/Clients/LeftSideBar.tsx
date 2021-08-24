@@ -14,10 +14,8 @@ import { Labels, tab } from '../../pages/clients'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { FetchResult, MutationFunctionOptions } from '@apollo/client'
 import { AddLabelMutation, Exact } from '@pabau/graphql'
-import { CustomScrollbar } from '../CustomScrollbar/Index'
-import Scrollbars from 'react-custom-scrollbars'
+
 const { SubMenu } = Menu
-// import { CustomScrollbar } from '../../../components/CustomScrollbar/Index'
 
 interface LeftSideBarProps {
   selectedTab?: string
@@ -77,22 +75,9 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
     setSelectedTab(e.key)
   }
 
-  // console.log('testLabels leftSidebar', testLabels)
-
-  // function getKeyByValue(object, value) {
-  //   return Object.keys(object).find(key => object[key] === value);
-  // }
-
-  // const getValueByKey = (object, value) => {
-  //   return Object.keys(object).find((key) => object[key] === value)
-  // }
-
   const getValueByKey = (object, key) => {
     return Object.values(object).find((value) => object[key] === value)
   }
-
-  // console.log('keyvalue', getValueByKey(labelCountAll, 505))
-  // console.log('labelCountAll LeftSideBar', labelCountAll)
 
   return (
     <div className={styles.clientLeftSidebar}>
@@ -100,7 +85,6 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
         className={styles.clientMenu}
         defaultSelectedKeys={[tab.clients]}
         selectedKeys={[selectedTab]}
-        // defaultOpenKeys={[tab.labels, 'testKey']}
         defaultOpenKeys={['testKey', tab.labels]}
         mode="inline"
         onClick={handleSelectedTab}
@@ -108,9 +92,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
         <Menu.Item key={tab.clients} onClick={handleClientClick}>
           <div className={styles.clientMenuItem}>
             <span>{t('clients.leftSidebar.clients')}</span>
-            {/*<span>{sourceData.length}</span>*/}
             <span>{getClientsCountData?.cmContactsCount}</span>
-            {/*getClientsCountData*/}
           </div>
         </Menu.Item>
         <Menu.Item key={tab.contacts}>
@@ -121,14 +103,10 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
         <Menu.Item key={tab.mergeFix}>
           <div className={styles.clientMenuItem}>
             <span>{t('clients.leftSidebar.mergeFix')}</span>
-            {/*<span>{duplicateData.length > 0 && duplicateData?.length}</span>*/}
             <span>
-              {/*{duplicateContactsCount.length > 0 &&*/}
-              {/*  duplicateContactsCount?.length}*/}
               {duplicateContactsCount?.duplicateContacts.length > 0 &&
                 duplicateContactsCount?.duplicateContacts.length}
             </span>
-            {/*duplicateContactsTest.duplicateContacts.length*/}
           </div>
         </Menu.Item>
         <Menu.Divider />
@@ -168,7 +146,6 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
               )
             })}
           </SubMenu>
-          {/*</div>*/}
           <Menu.Item key={tab.createLabel}>
             <CreateLabel
               selectedLabels={selectedLabels}
@@ -186,7 +163,6 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
               </div>
             </CreateLabel>
           </Menu.Item>
-          {/*</CustomScrollbar>*/}
         </SubMenu>
         <Menu.Divider />
         <Menu.Item key={tab.import}>

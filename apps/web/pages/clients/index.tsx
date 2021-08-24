@@ -24,9 +24,7 @@ import {
   useAddLabelMutation,
   useGetContactsLabelsLazyQuery,
   useInsertContactsLabelsMutation,
-  useGetContactsLazyQuery,
 } from '@pabau/graphql'
-import { test } from 'shelljs'
 
 const { TabPane } = Tabs
 const { Sider, Content } = Layout
@@ -59,11 +57,8 @@ export const Clients: FC<ClientsProps> = () => {
   const [insertContactsLabelsMutaton] = useInsertContactsLabelsMutation({
     onCompleted(response) {
       const tempLab = response.insert_contacts_labels.returning[0]
-      // setTestLabels([tempLab])
-      // setContactsLabels([...contactsLabels, tempLab])
       setResponseLabels(true)
       setCountLabelS(() => [...countLabelS, tempLab])
-      // getContactsData()
       getContactsLabelsQuery()
     },
     onError() {
@@ -136,8 +131,6 @@ export const Clients: FC<ClientsProps> = () => {
 
           return contact
         })
-        // setTestData(tempData)
-        // getLabelsQuery()
         setTestData(tempData)
       }
       return responseLabel
@@ -149,7 +142,7 @@ export const Clients: FC<ClientsProps> = () => {
 
   useEffect(() => {
     getContactsLabelsQuery()
-  }, [])
+  }, [getContactsLabelsQuery])
 
   const [contactsLabels, setContactsLabels] = useState([])
 
@@ -169,19 +162,6 @@ export const Clients: FC<ClientsProps> = () => {
     },
   })
 
-  // const [getContactsData2] = useGetContactsLazyQuery({
-  //   onCompleted(response) {
-  //     console.log('response getContactsData', response)
-  //   },
-  //   fetchPolicy: 'no-cache',
-  //   variables: {
-  //     offset: paginateData.offset,
-  //     limit: paginateData.limit,
-  //     searchTerm: searchText,
-  //   },
-  // })
-  //
-
   useEffect(() => {
     if (getClientsCountData) {
       setPaginateData((d) => ({
@@ -190,8 +170,8 @@ export const Clients: FC<ClientsProps> = () => {
         showingRecords: getContactsData?.cmContacts.length,
       }))
     }
-    // }, [getContactsData, getClientsCountData])
-  }, [getClientsCountData])
+  }, [getContactsData, getClientsCountData])
+  // }, [getClientsCountData])
 
   const contactsData = getContactsData?.cmContacts.map((d) => ({
     id: d.ID,
@@ -203,17 +183,13 @@ export const Clients: FC<ClientsProps> = () => {
     is_active: d.is_active,
     labelTest: [],
   }))
-  const [testData, setTestData] = useState(contactsData)
+  // const [testData, setTestData] = useState(contactsData)
 
   useEffect(() => {
     if (getContactsData) {
       setTestData(contactsData)
     }
   }, [getContactsData])
-
-  // if (contactsData && contactsData?.some((e) => e.labelTest.length > 0)) {
-  //   setTestData(contactsData)
-  // }
 
   // WORKING
   useEffect(() => {
@@ -227,48 +203,26 @@ export const Clients: FC<ClientsProps> = () => {
           labelComplete['color'] = fieldCL.label.color
           fieldContact.labelTest.push(labelComplete)
         }
+        // return  fieldCL
       }
+      return fieldContact
     })
   }, [getContactsData])
 
   // useEffect(() => {
-  //   contactsData?.map((fieldContact) => {
-  //     // const tempCON = []
-  //     for (const fieldCL of contactsLabels) {
-  //       if (fieldCL.contact_id === fieldContact.id) {
-  //         const labelComplete = {}
-  //         labelComplete['id'] = fieldCL.label.id
-  //         labelComplete['text'] = fieldCL.label.text
-  //         labelComplete['color'] = fieldCL.label.color
-  //         fieldContact.labelTest.push(labelComplete)
-  //         // fieldContact = {
-  //         //   ...fieldContact
-  //         // }
-  //         // return {
-  //         //   ...fieldContact,
-  //         //   labelTest: [labelComplete],
-  //         // }
-  //       }
-  //       // return fieldContact
-  //     }
-  //   })
-  //   // console.log('updatedData', updatedData)
-  //   // setTestData(updatedData)
-  // }, [getContactsData])
-
-  // useEffect(() => {
-  //   contactsData?.map((fieldContact) => {
-  //     // const tempCON = []
-  //     for (const fieldCL of contactsLabels) {
-  //       if (fieldCL.contact_id === fieldContact.id) {
-  //         const labelComplete = {}
-  //         labelComplete['id'] = fieldCL.label.id
-  //         labelComplete['text'] = fieldCL.label.text
-  //         labelComplete['color'] = fieldCL.label.color
-  //         fieldContact.labelTest.push(labelComplete)
+  //   if (contactsData) {
+  //     for (const fieldContact of contactsLabels) {
+  //       for (const fieldCL of contactsLabels) {
+  //         if (fieldCL.contact_id === fieldContact.id) {
+  //           const labelComplete = {}
+  //           labelComplete['id'] = fieldCL.label.id
+  //           labelComplete['text'] = fieldCL.label.text
+  //           labelComplete['color'] = fieldCL.label.color
+  //           fieldContact.labelTest.push(labelComplete)
+  //         }
   //       }
   //     }
-  //   })
+  //   }
   // }, [getContactsData])
 
   const onPaginationChange = (currentPage) => {
@@ -300,7 +254,7 @@ export const Clients: FC<ClientsProps> = () => {
   const [duplicateDataList, setDuplicateDataList] = useState<
     SourceDataProps[][]
   >([])
-  // const [testData, setTestData] = useState(contactsData)
+  const [testData, setTestData] = useState(contactsData)
   const [duplicateContactsTest, setDuplicateContactsTest] = useState(
     getDuplicateContactsData
   )
@@ -555,7 +509,7 @@ export const Clients: FC<ClientsProps> = () => {
         !removedLabel.some((item) => item.labelTest === data.labelTest)
       )
     })
-
+    console.log('uniqData', uniqData)
     return [...newList, ...uniqData]
   }
 
@@ -563,39 +517,39 @@ export const Clients: FC<ClientsProps> = () => {
     setCountLabelS(contactsLabels)
   }, [contactsLabels])
 
-  // const handleApplyLabel = (selectedLabelList) => {
-  //   console.log('handleApplyLabel')
-  //   const newData = testData?.map((data) => {
-  //     const temp = { ...data }
-  //     if (selectedRowKeys.includes(data.id)) {
-  //       temp.labelTest = uniqLabel(data.labelTest, selectedLabelList)
-  //       // const tempX = uniqLabel(data.labelTest, selectedLabelList)
-  //       // temp.labelTest = [..., tempX]
-  //     }
-  //     return temp
-  //   })
-  //   console.log('newData', newData)
-  //   setTestData(newData)
-  // }
-
   const handleApplyLabel = (selectedLabelList) => {
+    console.log('handleApplyLabel')
     const newData = testData?.map((data) => {
       const temp = { ...data }
-      // if (selectedRowKeys.includes(data.id)) {
-      //   temp.labelTest = uniqLabel(data.labelTest, selectedLabelList)
-      // }
-
       if (selectedRowKeys.includes(data.id)) {
-        // temp.labelTest = uniqLabel(data.labelTest, selectedLabelList)
-        for (const selectedRow of selectedRowKeys) {
-          temp.labelTest = uniqLabel(data.labelTest, selectedLabelList)
-        }
+        temp.labelTest = uniqLabel(data.labelTest, selectedLabelList)
+        // const tempX = uniqLabel(data.labelTest, selectedLabelList)
+        // temp.labelTest = [..., tempX]
       }
-
       return temp
     })
+    console.log('newData', newData)
     setTestData(newData)
   }
+
+  // const handleApplyLabel = (selectedLabelList) => {
+  //   const newData = testData?.map((data) => {
+  //     const temp = { ...data }
+  //     // if (selectedRowKeys.includes(data.id)) {
+  //     //   temp.labelTest = uniqLabel(data.labelTest, selectedLabelList)
+  //     // }
+  //
+  //     if (selectedRowKeys.includes(data.id)) {
+  //       // temp.labelTest = uniqLabel(data.labelTest, selectedLabelList)
+  //       for (const selectedRow of selectedRowKeys) {
+  //         temp.labelTest = uniqLabel(data.labelTest, selectedLabelList)
+  //       }
+  //     }
+  //
+  //     return temp
+  //   })
+  //   setTestData(newData)
+  // }
 
   const handleRowClick = (value) => {
     setEditedValues(value)
@@ -789,7 +743,8 @@ export const Clients: FC<ClientsProps> = () => {
                     selectedLabels={selectedLabels}
                     setSelectedLabels={setSelectedLabels}
                     // sourceData={sourceData}
-                    sourceData={testData}
+                    // sourceData={testData}
+                    sourceData={sourceFilteredData}
                     handleLabelClick={handleLabelClick}
                     duplicateData={duplicateDataList}
                     getClientsCountData={getClientsCountData}
