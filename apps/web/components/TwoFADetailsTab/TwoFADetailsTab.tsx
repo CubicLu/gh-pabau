@@ -4,13 +4,13 @@ import {
   useGetCompanyDetails2faQuery,
   useUpdateCompanyDetails2faMutation,
 } from '@pabau/graphql'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
-import { UserContext } from '../../context/UserContext'
+import { useUser } from '../../context/UserContext'
 
 const TwoFADetailsTab = () => {
-  const { me } = useContext(UserContext)
+  const { me } = useUser()
   const { t } = useTranslationI18()
   const {
     data: twoFAdata,
@@ -22,14 +22,14 @@ const TwoFADetailsTab = () => {
 
   useEffect(() => {
     if (!twoFAloading) {
-      setTwoFAstatus(twoFAdata.company.details.enable_2fa)
+      setTwoFAstatus(twoFAdata.me.Company.details.enable_2fa)
     }
   }, [twoFAloading, twoFAdata])
 
   const handleDisable2fa = async () => {
     try {
       await updateCompanyDetails2faMutation({
-        variables: { company_id: me.company.id, enable_2fa: 0 },
+        variables: { company_id: me.company, enable_2fa: 0 },
       })
       setTwoFAstatus(0)
       Notification(
@@ -44,7 +44,7 @@ const TwoFADetailsTab = () => {
   const handleEnable2fa = async () => {
     try {
       await updateCompanyDetails2faMutation({
-        variables: { company_id: me.company.id, enable_2fa: 1 },
+        variables: { company_id: me.company, enable_2fa: 1 },
       })
       setTwoFAstatus(1)
       Notification(

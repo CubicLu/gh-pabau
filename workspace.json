@@ -521,7 +521,7 @@
       "sourceRoot": "apps/connect",
       "projectType": "application",
       "schematics": {},
-      "architect": {
+      "_architect": {
         "build": {
           "builder": "@nrwl/next:build",
           "options": {
@@ -697,14 +697,6 @@
           "options": {
             "jestConfig": "apps/bridge-api/jest.config.js",
             "runInBand": true
-          }
-        },
-        "e2e": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/bridge-api-e2e"],
-          "options": {
-            "jestConfig": "apps/bridge-api/jest.e2e.config.js",
-            "runInBand": false
           }
         },
         "deploy-docker": {

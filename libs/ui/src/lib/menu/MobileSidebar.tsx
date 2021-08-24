@@ -5,7 +5,6 @@ import {
   Search,
   Dropdown as AvatarDropDown,
   QuickCreate,
-  UserDataProps,
 } from '@pabau/ui'
 import styles from './MobileSidebar.module.less'
 import classNames from 'classnames'
@@ -26,20 +25,21 @@ import User from '../../assets/images/users/stephen.png'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
+import { FullAuthenticationUser } from '@pabau/yup'
 
 const { SubMenu } = Menu
 
-interface SidebarProps {
+interface P {
   searchRender?: (innerComponent: JSX.Element) => JSX.Element
   onSideBarClosed: () => void
   onClickNotificationDrawer: () => void
   onClickChatDrawer: () => void
   clientCreateRender?: () => JSX.Element
   leadCreateRender?: () => JSX.Element
-  userData: UserDataProps
+  userData: FullAuthenticationUser
 }
 
-export const MobileSidebar: FC<SidebarProps> = ({
+export const MobileSidebar: FC<P> = ({
   searchRender,
   onSideBarClosed,
   onClickNotificationDrawer,

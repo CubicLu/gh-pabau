@@ -1,28 +1,32 @@
 import { paljs } from '@paljs/nexus'
-import { applyMiddleware } from 'graphql-middleware'
 import { makeSchema } from 'nexus'
-import { permissions } from './permissions'
-import * as types from './schema/types'
+import * as types from './resolvers'
+import * as generatedTypes from './generated/types'
 
 //TODO: speed this up
 console.log('Loading schema (this may take up to a minute)...')
 
-const schema = makeSchema({
+console.time('schema-load')
+export const schema = makeSchema({
   plugins: [paljs()],
   shouldGenerateArtifacts: process.argv.includes('--nexus-typegen'),
-  types,
+  // shouldExitAfterGenerateArtifacts: true,
+  types: [generatedTypes, types],
   outputs: {
     typegen: __dirname + '/generated/nexus.d.ts',
   },
   sourceTypes: {
     modules: [
       {
-        module: '@prisma/client',
+        module: '.prisma/client',
         alias: 'prisma',
       },
     ],
   },
+  contextType: {
+    export: 'Context',
+    module: __dirname + '/../../apps/bridge-api/src/context.ts',
+    // alias: 'ctx',
+  },
 })
-
-console.log('Applying shields...')
-export const middleware = applyMiddleware(schema, permissions)
+console.timeEnd('schema-load')
