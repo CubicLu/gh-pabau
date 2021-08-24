@@ -5,6 +5,17 @@
     .ant-card-body {
       padding: 0px;
     }
+    @media screen and (max-width: 767px) {
+      .ant-tabs-nav-list {
+        width: 100%;
+
+        .ant-tabs-tab {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+        }
+      }
+    }
     .ant-tabs {
       min-height: 70vh !important;
     }
@@ -63,15 +74,28 @@
       div.rightDiv {
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
 
         div {
           display: flex;
           align-items: center;
         }
+
+        @media screen and (max-width: 767px) {
+          width: 100%;
+          justify-content: flex-end;
+
+          div {
+            width: 100%;
+          }
+        }
       }
     }
     .searchDrugsListing {
       width: 256px;
+      @media screen and (max-width: 767px) {
+        width: 100%;
+      }
       height: 40px;
       background: #ffffff;
       border: 1px solid var(--border-color-base);

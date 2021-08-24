@@ -7,6 +7,7 @@ import {
   NotificationOutlined,
 } from '@ant-design/icons'
 import styles from './VoucherCard.module.less'
+import classNames from 'classnames'
 export interface VoucherCardProps {
   cardWidth?: number
   backgroundColor1?: string
@@ -126,7 +127,12 @@ export const VoucherCard: FC<VoucherCardProps> = ({
                 : {}
             }
           >
-            <div className={styles.dots}>
+            <div
+              className={classNames(
+                styles.dots,
+                (voucherBackgrounUrl || voucherType) && styles.bgOpacity
+              )}
+            >
               <div className="dotsInner">
                 <div className="dot1" style={{ ...dotsStyles }}></div>
                 <div className="dot2" style={{ ...dotsStyles }}></div>

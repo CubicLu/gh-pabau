@@ -6,35 +6,35 @@
       perspective: 1000px;
       border-radius: 5px;
 
-      @media screen and (max-width: 1440px) {
-        max-width: 400px;
-      }
-      @media screen and (max-width: 1024px) {
-        max-width: 275px;
-      }
-      @media screen and (max-width: 991px) {
-        max-width: 405px;
-        max-height: 220px;
-      }
-      @media screen and (max-width: 768px) {
-        max-width: 295px;
-        max-height: 250px;
-      }
-      @media screen and (max-width: 767px) and (min-width: 560px) {
-        max-width: 350px;
-      }
-      @media screen and (max-width: 550px) {
-        max-width: 500px;
-      }
-      @media screen and (max-width: 425px) {
-        max-width: 380px;
-      }
-      @media screen and (max-width: 375px) {
-        max-width: 330px;
-      }
-      @media screen and (max-width: 320px) {
-        max-width: 280px;
-      }
+      // @media screen and (max-width: 1440px) {
+      //   max-width: 400px;
+      // }
+      // @media screen and (max-width: 1024px) {
+      //   max-width: 275px;
+      // }
+      // @media screen and (max-width: 991px) {
+      //   max-width: 405px;
+      //   max-height: 220px;
+      // }
+      // @media screen and (max-width: 768px) {
+      //   max-width: 295px;
+      //   max-height: 250px;
+      // }
+      // @media screen and (max-width: 767px) and (min-width: 560px) {
+      //   max-width: 350px;
+      // }
+      // @media screen and (max-width: 550px) {
+      //   max-width: 500px;
+      // }
+      // @media screen and (max-width: 425px) {
+      //   max-width: 380px;
+      // }
+      // @media screen and (max-width: 375px) {
+      //   max-width: 330px;
+      // }
+      // @media screen and (max-width: 320px) {
+      //   max-width: 280px;
+      // }
     }
 
     .flip-card-inner {
@@ -136,13 +136,14 @@
       h1,
       h2,
       p,
-      span,
-      button {
+      span {
         color: #d12c28 !important;
       }
-      button:first-child {
+      // .buttonsRow {
+      button.ant-btn-default {
         border-color: #d12c28 !important;
       }
+      // }
     }
 
     .flip-card-front.birthday {
@@ -167,6 +168,11 @@
     position: absolute;
     height: 100%;
     width: 100%;
+
+    &.bg-opacity {
+      background-color: rgba(0, 0, 0, 0.25);
+      border-radius: 10px;
+    }
 
     :global {
       .dotsInner {
@@ -253,6 +259,10 @@
             background-color: transparent;
             border-color: transparent;
             color: #ffffff;
+            border-radius: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
           }
         }
       }
@@ -385,6 +395,12 @@
           max-width: 100%;
           overflow: hidden;
           word-break: break-word;
+          margin-bottom: 0px;
+          overflow-y: auto;
+
+          &::-webkit-scrollbar {
+            width: 5px;
+          }
         }
       }
     }

@@ -2790,20 +2790,24 @@ en:
   create.client.modal.privacy.sharing.setting.email.button.title: 'Email Link'
   create.client.modal.privacy.sharing.setting.copy.button.title: 'Copy Link'
   create.client.modal.privacy.sharing.setting.access.code.title: 'Access Code'
-  create.client.modal.privacy.sharing.setting.access.code.description: 'You will be asked to enter the following code to access shared
-            clinical records'
+  create.client.modal.privacy.sharing.setting.access.code.description:
+    'You will be asked to enter the following code to access shared
+    clinical records'
   create.client.modal.privacy.sharing.setting.QR.code.title: 'QR code access'
-  create.client.modal.privacy.sharing.setting.QR.code.description: 'Scan the QR code with a smartphone or tablet for quick access to the
-            shared clinical records'
-  create.client.modal.privacy.sharing.setting.QR.code.access.description: 'Give the link or QR code, along with the access code to the person
-              you`d like to share the record with. The shared record will be
-              publicly accessable for 24 hours. You can stop sharing this record
-              or manage access on the '
+  create.client.modal.privacy.sharing.setting.QR.code.description:
+    'Scan the QR code with a smartphone or tablet for quick access to the
+    shared clinical records'
+  create.client.modal.privacy.sharing.setting.QR.code.access.description:
+    'Give the link or QR code, along with the access code to the person
+    you`d like to share the record with. The shared record will be
+    publicly accessable for 24 hours. You can stop sharing this record
+    or manage access on the '
   create.client.modal.privacy.sharing.setting.QR.code.access.link.description: 'share your record page'
-  create.client.modal.privacy.sharing.setting.sharing.warn.description: 'You are sharing this record with a third party. This means that the
-            third party can have access to information around the options
-            enabled above. Please, ensure that you have consent from the client
-            in order to do so.'
+  create.client.modal.privacy.sharing.setting.sharing.warn.description:
+    'You are sharing this record with a third party. This means that the
+    third party can have access to information around the options
+    enabled above. Please, ensure that you have consent from the client
+    in order to do so.'
   create.client.modal.privacy.communication.preference.title: 'Communication preferences'
   create.client.modal.privacy.communication.marketing.promotion.title: 'Marketing promotion'
   create.client.modal.privacy.communication.marketing.promotion.description: 'They will receive any bulk messages you send for marketing purposes.'
@@ -2818,10 +2822,11 @@ en:
   create.client.modal.privacy.policy.accepted.label: 'Accepted'
   create.client.modal.privacy.policy.rejected.label: 'Rejected'
   create.client.modal.privacy.subscription.receive.alert.title: 'Are you sure?'
-  create.client.modal.privacy.subscription.receive.alert.description: 'You are about to turn off all need to know communications such as
-          reminders, aftercare and more. You should only do this if you
-          absolutely do not want to ever send this client a communication (even
-          if by mistake).'
+  create.client.modal.privacy.subscription.receive.alert.description:
+    'You are about to turn off all need to know communications such as
+    reminders, aftercare and more. You should only do this if you
+    absolutely do not want to ever send this client a communication (even
+    if by mistake).'
   create.client.modal.privacy.subscription.receive.alert.button.title: 'Turn off'
   create.client.modal.privacy.sharing.history.title: 'Sharing history'
   create.client.modal.privacy.sharing.history.sms.description: 'SMS concent changed from “No” to “Yes”'
@@ -4683,3 +4688,70 @@ en:
   upload.cropper.error.malformedImage.message: 'Malformed Image File.'
   upload.cropper.success.message: 'Upload Successfully'
   intercom-article-title-setting-up-a-marketing-source: 'Setting up a marketing source'
+  giftvouchers.title: 'Gift Vouchers'
+  giftvouchers.create: 'Create Voucher'
+  giftvouchers.filter: 'Filter'
+  giftvouchers.add.label: 'Add a voucher'
+  giftvouchers.no.voucher.label: 'You have no active vouchers'
+  giftvouchers.search.placeholder: 'Search'
+  giftvouchers.tabs.tab1: 'Types'
+  giftvouchers.tabs.tab2: 'Circlulation'
+  giftvouchers.circulations.nodata: 'Circlulation'
+  giftvouchers.circulations.columns.number: 'Number'
+  giftvouchers.circulations.columns.description: 'Description'
+  giftvouchers.circulations.columns.name: 'Name'
+  giftvouchers.circulations.columns.purchasedate: 'Purchase Date'
+  giftvouchers.circulations.columns.expirydate: 'Expiry Date'
+  giftvouchers.circulations.columns.amount: 'Amount'
+  giftvouchers.circulations.columns.remainingbalance: 'Remaining Balance'
+  giftvouchers.circulations.columns.status: 'Status'
+  giftvouchers.create.breadcrumb.vouchers: 'Vouchers'
+  giftvouchers.create.breadcrumb.create: 'Create Voucher'
+  giftvouchers.create.label: 'Gift Voucher'
+  giftvouchers.create.btn.send.email: 'Send Test Email'
+  giftvouchers.create.btn.save: 'Save'
+  giftvouchers.create.label.vouchersetting: 'Voucher Settings'
+  giftvouchers.create.label.vouchersetting.para: 'Give a background colour or theme to your voucher.'
+  giftvouchers.create.label.vouchersetting.para2:
+    'Here you can customize the rules around your voucher such as an
+    expiry, its terms or what it can be used for.'
+  giftvouchers.create.label.voucherinfo: 'Voucher Info'
+  giftvouchers.create.label.voucherinfo.para:
+    'Add the voucher name, value and duration of the voucher. If the
+    voucher value is higher than the retail price it will encourage
+    more sales.'
+  giftvouchers.create.label.vouchername: 'Voucher name'
+  giftvouchers.create.label.termscondition: 'Terms & Conditions'
+  giftvouchers.create.label.value: 'Value'
+  giftvouchers.create.label.validfor: 'Valid for'
+  giftvouchers.create.label.validfor.options1: '14 days'
+  giftvouchers.create.label.validfor.options2: '1 month'
+  giftvouchers.create.label.validfor.options3: '2 month'
+  giftvouchers.create.label.validfor.options4: '3 month'
+  giftvouchers.create.label.validfor.options5: '6 month'
+  giftvouchers.create.label.validfor.options6: '1 year'
+  giftvouchers.create.label.validfor.options7: '3 years'
+  giftvouchers.create.label.validfor.options8: '5 years'
+  giftvouchers.create.label.validfor.options9: 'Forever'
+  giftvouchers.create.label.servicesincluded: 'Services included'
+  giftvouchers.create.label.services: 'Included services'
+  giftvouchers.create.vouchertheme: 'Voucher Theme'
+  giftvouchers.create.label.enablebooking: 'Enable online booking'
+  giftvouchers.create.label.enablebooking.para:
+    'Allow clients to book online, and automatically apply the
+    voucher.'
+  giftvouchers.create.label.addbookbtn: 'Add a Book now button'
+  giftvouchers.create.label.notesforclient: 'Notes for client'
+  giftvouchers.create.label.notesforclient.para: 'Add a note for clients. This will always be visible..'
+  giftvouchers.create.label.enablenotes: 'Enable notes for clients'
+  giftvouchers.create.label.note: 'Note'
+  giftvouchers.create.label.appearance: 'Appearance'
+  giftvouchers.create.label.appearance.para:
+    'Here you can customize the look and feel of the voucher to match
+    your brand colours.'
+  giftvouchers.create.label.bgcolors: 'Background Colors'
+  giftvouchers.create.label.none: 'None'
+  giftvouchers.create.label.nextstep: 'Next Step'
+  giftvouchers.create.label.create: 'Create'
+  giftvouchers.create.tabs.builder: 'Builder'
+  giftvouchers.create.tabs.preview: 'Preview'

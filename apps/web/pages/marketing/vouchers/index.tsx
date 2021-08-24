@@ -1,5 +1,6 @@
 import React, { FC, useState, useEffect } from 'react'
 import Layout from '../../../components/Layout/Layout'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import {
   SearchOutlined,
   FilterOutlined,
@@ -7,6 +8,8 @@ import {
 } from '@ant-design/icons'
 import { Input } from 'antd'
 import { TabbedTable, Button, VoucherCard, Pagination, Table } from '@pabau/ui'
+import CommonHeader from '../../../components/CommonHeader'
+import useWindowSize from '../../../hooks/useWindowSize'
 import VoucherIcon from '../../../components/Marketing/GiftVouchersList/assets/VocherIcon.svg'
 import { Card, Row, Col } from 'antd'
 import Link from 'next/link'
@@ -132,87 +135,92 @@ const data = [
   },
 ]
 
-const columns = [
-  {
-    title: 'Number',
-    dataIndex: 'number',
-    visible: true,
-    width: '150px',
-  },
-  {
-    title: 'Description',
-    dataIndex: 'description',
-    visible: true,
-    width: '250px',
-  },
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    visible: true,
-    width: '250px',
-  },
-  {
-    title: 'Purchase Date',
-    dataIndex: 'purchase_date',
-    visible: true,
-  },
-  {
-    title: 'Expiry Date',
-    dataIndex: 'expiry_date',
-    visible: true,
-  },
-  {
-    title: 'Amount',
-    dataIndex: 'amount',
-    visible: true,
-  },
-  {
-    title: 'Remaining Balance',
-    dataIndex: 'remaining_balance',
-    visible: true,
-  },
-  {
-    title: 'Status',
-    dataIndex: 'is_active',
-    visible: true,
-  },
-  {
-    title: <span style={{ visibility: 'hidden' }}>view</span>,
-    dataIndex: 'view',
-    visible: true,
-    className: 'lastColumn',
-    render: function renderTableSource() {
-      return (
-        <div>
-          <Button size="large">View</Button>
-        </div>
-      )
-    },
-  },
-]
-
 export interface GiftVouchersProps {
   title?: string
 }
 
 const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
-  const tabItems = ['Types', 'Circlulation']
+  const { t } = useTranslationI18()
+  const size = useWindowSize()
+
+  const columns = [
+    {
+      title: t('giftvouchers.circulations.columns.number'),
+      dataIndex: 'number',
+      visible: true,
+      width: '150px',
+    },
+    {
+      title: t('giftvouchers.circulations.columns.description'),
+      dataIndex: 'description',
+      visible: true,
+      width: '250px',
+    },
+    {
+      title: t('giftvouchers.circulations.columns.name'),
+      dataIndex: 'name',
+      visible: true,
+      width: '250px',
+    },
+    {
+      title: t('giftvouchers.circulations.columns.purchasedate'),
+      dataIndex: 'purchase_date',
+      visible: true,
+    },
+    {
+      title: t('giftvouchers.circulations.columns.expirydate'),
+      dataIndex: 'expiry_date',
+      visible: true,
+    },
+    {
+      title: t('giftvouchers.circulations.columns.amount'),
+      dataIndex: 'amount',
+      visible: true,
+    },
+    {
+      title: t('giftvouchers.circulations.columns.remainingbalance'),
+      dataIndex: 'remaining_balance',
+      visible: true,
+    },
+    {
+      title: t('giftvouchers.circulations.columns.status'),
+      dataIndex: 'is_active',
+      visible: true,
+    },
+    {
+      title: <span style={{ visibility: 'hidden' }}>view</span>,
+      dataIndex: 'view',
+      visible: true,
+      className: 'lastColumn',
+      render: function renderTableSource() {
+        return (
+          <div>
+            <Button size="large">View</Button>
+          </div>
+        )
+      },
+    },
+  ]
+
+  const tabItems = [t('giftvouchers.tabs.tab1'), t('giftvouchers.tabs.tab2')]
   const [gifts, setGifts] = useState([])
   const [searchTerm, setSearchTerm] = useState(null)
   const [paginationState, setPaginationState] = useState(true)
   const [dataSource, setDataSource] = useState(null)
   const [activeTab, setActiveTab] = useState(tabItems[0])
 
-  const cardHeader = (
+  const CardHeader = () => (
     <div className={styles.header}>
-      <div className="leftDiv">
-        <h3 className={styles.drugsHeading}>Gift Vouchers</h3>
-      </div>
+      {size.width > 767 && (
+        <div className="leftDiv">
+          <h3 className={styles.drugsHeading}>{t('giftvouchers.title')}</h3>
+        </div>
+      )}
       <div className="rightDiv">
         {activeTab === tabItems[0] && (
           <Link href="/marketing/vouchers/create">
             <Button type="primary" size="large">
-              Create Voucher
+              {t('giftvouchers.create')}
             </Button>
           </Link>
         )}
@@ -221,14 +229,14 @@ const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
             <Input
               className={styles.searchDrugsListing}
               autoFocus
-              placeholder="Search"
+              placeholder={t('giftvouchers.search.placeholder')}
               suffix={<SearchOutlined style={{ color: '#8C8C8C' }} />}
               onChange={(e) => {
                 setSearchTerm(e.target.value)
               }}
             />
             <Button type="default" size="large">
-              <FilterOutlined /> Filter
+              <FilterOutlined /> {t('giftvouchers.filter')}
             </Button>
           </div>
         )}
@@ -280,8 +288,9 @@ const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
 
   return (
     <Layout>
+      <CommonHeader isLeftOutlined title={t('giftvouchers.title')} />
       <div className={styles.giftVoucherMain}>
-        <Card title={cardHeader}>
+        <Card title={<CardHeader />}>
           <div className={styles.body}>
             <TabbedTable
               tabItems={tabItems}
@@ -310,11 +319,11 @@ const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
                           <div className={styles.noDataIcon}>
                             <img src={VoucherIcon} alt="voucher-icon" />
                           </div>
-                          <h2>Add a voucher</h2>
-                          <p>You have no active vouchers</p>
+                          <h2>{t('giftvouchers.add.label')}</h2>
+                          <p>{t('giftvouchers.no.voucher.label')}</p>
                           <Link href="/marketing/vouchers/create">
                             <Button type="primary" size="large">
-                              Create Voucher
+                              {t('giftvouchers.create')}
                             </Button>
                           </Link>
                         </div>
@@ -328,9 +337,9 @@ const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
                   draggable={false}
                   columns={columns}
                   searchTerm={searchTerm}
-                  noDataText="Circulation"
+                  noDataText={t('giftvouchers.circulations.nodata')}
                   noDataIcon={<ApartmentOutlined />}
-                  noDataBtnText="Circulation"
+                  noDataBtnText={t('giftvouchers.circulations.nodata')}
                   scroll={{ x: 'max-content' }}
                   dataSource={dataSource}
                 />

@@ -3,8 +3,11 @@ import Layout from '../../../../components/Layout/Layout'
 // import ExternalLink from '../../../../components/Marketing/CreateGiftVoucher/assets/external-link.svg'
 import ActiveIcon from '../../../../components/Marketing/CreateGiftVoucher/assets/active.svg'
 import SelectServices from '../../../../components/Marketing/CreateGiftVoucher/SelectServices'
-import { Card, Row, Col, Input, Select } from 'antd'
+import { useTranslationI18 } from '../../../../hooks/useTranslationI18'
+import { Card, Row, Col, Input, Select, Form } from 'antd'
 import classNames from 'classnames'
+import useWindowSize from '../../../..//hooks/useWindowSize'
+
 import { HomeOutlined, EditOutlined, RightOutlined } from '@ant-design/icons'
 import {
   Breadcrumb,
@@ -19,6 +22,7 @@ import {
 } from '@pabau/ui'
 import Link from 'next/link'
 import styles from './index.module.less'
+import CommonHeader from '../../../../components/CommonHeader'
 
 const { TextArea } = Input
 const { Option } = Select
@@ -65,9 +69,12 @@ export interface CreateVoucherProps {
 }
 
 export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
+  const { t } = useTranslationI18()
   const aligns = [styles.pRight, styles.pX, styles.pX, styles.pLeft]
   const bgSelectRef = useRef<HTMLInputElement>(null)
   const spanLink = useRef<HTMLSpanElement>(null)
+  const [form] = Form.useForm()
+  const size = useWindowSize()
 
   const steps = [
     {
@@ -122,40 +129,44 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
     setActiveStep(step)
   }
 
-  const cardHeader = (
+  const CardHeader = () => (
     <div className={styles.voucherBuilderHeader}>
-      <div className={styles.leftCardHeading}>
-        <div className={styles.breadcrumbDiv}>
-          <Breadcrumb
-            breadcrumbItems={[
-              { breadcrumbName: 'Vouchers', path: 'marketing/vouchers' },
-              { breadcrumbName: 'Create Voucher', path: '' },
-            ]}
-          />
+      {size.width > 767 && (
+        <div className={styles.leftCardHeading}>
+          <div className={styles.breadcrumbDiv}>
+            <Breadcrumb
+              breadcrumbItems={[
+                {
+                  breadcrumbName: t('giftvouchers.create.breadcrumb.vouchers'),
+                  path: 'marketing/vouchers',
+                },
+                {
+                  breadcrumbName: t('giftvouchers.create.breadcrumb.create'),
+                  path: '',
+                },
+              ]}
+            />
+          </div>
+          <div className={styles.heading}>{t('giftvouchers.create.label')}</div>
         </div>
-        <div className={styles.heading}>Gift Voucher</div>
-      </div>
+      )}
       <div className={styles.rightCardHeadBtns}>
-        <div>
+        <div className={styles.emailBtn}>
           <Button type="default" size="large">
-            Send Test Email
+            {t('giftvouchers.create.btn.send.email')}
           </Button>
         </div>
-        <div>
-          <Button type="primary" size="large">
-            Save
+        <div className={styles.saveBtn}>
+          <Button type="primary" size="large" onClick={() => form.submit()}>
+            {t('giftvouchers.create.btn.save')}
           </Button>
         </div>
       </div>
     </div>
   )
 
-  const PreviewTab = (
+  const PreviewTab = () => (
     <div className={styles.voucherPreview}>
-      {/* <div className={styles.previewHeader}>
-        <div>Voucher email subject:</div>
-        <div>Voucher from Elite Beauty Co.& Kirsty Lillian Aesthetics</div>
-      </div> */}
       <div className={styles.previewCard}>
         <div className={styles.card}>
           <VoucherCard
@@ -180,180 +191,208 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
     </div>
   )
 
-  const BuilderTab = (
-    <div>
+  const BuilderTab = () => (
+    <Form layout="vertical" form={form} onFinish={() => false}>
       {activeStep === 0 && (
         <div className={styles.controls}>
           <div className={styles.contDiv}>
-            <span className={styles.contHeading}>Voucher Settings</span>
-            <p>Give a background colour or theme to your voucher.</p>
+            <span className={styles.contHeading}>
+              {t('giftvouchers.create.label.vouchersetting')}
+            </span>
+            <p>{t('giftvouchers.create.label.vouchersetting.para')}</p>
           </div>
           <div className={styles.contDiv}>
-            <span className={styles.contHeading}>Voucher Info</span>
-            <p>
-              Add the voucher name, value and duration of the voucher. If the
-              voucher value is higher than the retail price it will encourage
-              more sales.
-            </p>
+            <span className={styles.contHeading}>
+              {t('giftvouchers.create.label.voucherinfo')}
+            </span>
+            <p>{t('giftvouchers.create.label.voucherinfo.para')}</p>
           </div>
+          <Form.Item
+            name="name"
+            className={classNames(styles.contDiv, styles.customedBefore)}
+            label={
+              <>
+                <span className={styles.pl10}>
+                  {t('giftvouchers.create.label.vouchername')}
+                </span>
+                <span>{voucherNameCount}/100</span>
+              </>
+            }
+            rules={[{ required: true, message: 'HELLo' }]}
+          >
+            <Input
+              type="text"
+              size="large"
+              maxLength={100}
+              placeholder="Voucher Name"
+              value={voucherName}
+              onChange={(e) =>
+                onInputChange(e, setVoucherName, setVoucherNameCount)
+              }
+            />
+          </Form.Item>
+          <Form.Item
+            name="terms"
+            className={styles.contDiv}
+            label={
+              <>
+                <span>{t('giftvouchers.create.label.termscondition')}</span>
+                <span>{termsConditionsCount}/500</span>
+              </>
+            }
+          >
+            <TextArea
+              rows={6}
+              placeholder={t('giftvouchers.create.label.termscondition')}
+              maxLength={500}
+              value={voucherTermsConditions}
+              onChange={(e) =>
+                onInputChange(
+                  e,
+                  setVoucherTermsConditions,
+                  setTermsConditionsCount
+                )
+              }
+            />
+          </Form.Item>
+          <Form.Item
+            name="value"
+            className={styles.contDiv}
+            label={<span>{t('giftvouchers.create.label.value')}</span>}
+          >
+            <Input
+              addonBefore="£"
+              type="number"
+              size="large"
+              min={0}
+              value={voucherPrice}
+              placeholder={t('giftvouchers.create.label.value')}
+              onChange={(e) => onInputChange(e, setVoucherPrice)}
+            />
+          </Form.Item>
+          <Form.Item
+            name="validity"
+            className={styles.contDiv}
+            label={<span>{t('giftvouchers.create.label.validfor')}</span>}
+          >
+            <Select
+              size="large"
+              placeholder={t('giftvouchers.create.label.validfor')}
+              style={{ width: '100%' }}
+            >
+              <Option value="14 days">
+                {t('giftvouchers.create.label.validfor.options1')}
+              </Option>
+              <Option value="1 month">
+                {t('giftvouchers.create.label.validfor.options2')}
+              </Option>
+              <Option value="2 months">
+                {t('giftvouchers.create.label.validfor.options3')}
+              </Option>
+              <Option value="3 months">
+                {t('giftvouchers.create.label.validfor.options4')}
+              </Option>
+              <Option value="6 months">
+                {t('giftvouchers.create.label.validfor.options5')}
+              </Option>
+              <Option value="1 year">
+                {t('giftvouchers.create.label.validfor.options6')}
+              </Option>
+              <Option value="3 years">
+                {t('giftvouchers.create.label.validfor.options7')}
+              </Option>
+              <Option value="5 years">
+                {t('giftvouchers.create.label.validfor.options8')}
+              </Option>
+              <Option default value="Forever">
+                {t('giftvouchers.create.label.validfor.options9')}
+              </Option>
+            </Select>
+          </Form.Item>
           <div className={styles.contDiv}>
-            <label>
-              <span>Voucher name</span>
-              <span>{voucherNameCount}/100</span>
-            </label>
-            <div>
-              <Input
-                type="text"
-                size="large"
-                maxLength={100}
-                placeholder="Voucher Name"
-                value={voucherName}
-                onChange={(e) =>
-                  onInputChange(e, setVoucherName, setVoucherNameCount)
-                }
-              />
-            </div>
+            <span className={styles.contHeading}>
+              {t('giftvouchers.create.label.servicesincluded')}
+            </span>
           </div>
-          <div className={styles.contDiv}>
-            <label>
-              <span>Terms & Conditions</span>
-              <span>{termsConditionsCount}/500</span>
-            </label>
-            <div>
-              <TextArea
-                rows={6}
-                placeholder="Voucher Name"
-                maxLength={500}
-                value={voucherTermsConditions}
-                onChange={(e) =>
-                  onInputChange(
-                    e,
-                    setVoucherTermsConditions,
-                    setTermsConditionsCount
-                  )
-                }
-              />
-            </div>
-          </div>
-          <div className={styles.contDiv}>
-            <label>
-              <span>Value</span>
-            </label>
-            <div>
-              <Input
-                addonBefore="£"
-                type="number"
-                size="large"
-                min={0}
-                value={voucherPrice}
-                placeholder="Value"
-                onChange={(e) => onInputChange(e, setVoucherPrice)}
-              />
-            </div>
-          </div>
-          <div className={styles.contDiv}>
-            <label>
-              <span>Valid for</span>
-            </label>
-            <div>
-              <Select
-                size="large"
-                placeholder="valid for"
-                style={{ width: '100%' }}
-              >
-                <Option value="14 days">14 days</Option>
-                <Option value="1 month">1 month</Option>
-                <Option value="2 months">2 months</Option>
-                <Option value="3 months">3 months</Option>
-                <Option value="6 months">6 months</Option>
-                <Option value="1 year">1 year</Option>
-                <Option value="3 years">3 years</Option>
-                <Option value="5 years">5 years</Option>
-                <Option default value="Forever">
-                  Forever
-                </Option>
-              </Select>
-            </div>
-          </div>
-          <div className={styles.contDiv}>
-            <span className={styles.contHeading}>Services included</span>
-          </div>
-          <div className={styles.contDiv}>
-            <label>
-              <span>Included services</span>
-            </label>
-            <div>
-              <SelectServices />
-            </div>
-          </div>
+          <Form.Item
+            name="services"
+            className={styles.contDiv}
+            label={<span>{t('giftvouchers.create.label.services')}</span>}
+          >
+            <SelectServices />
+          </Form.Item>
         </div>
       )}
       {activeStep === 1 && (
         <div className={styles.controls}>
           <div className={styles.contDiv}>
-            <span className={styles.contHeading}>Voucher Settings</span>
-            <p>
-              Here you can customize the rules around your voucher such as an
-              expiry, its terms or what it can be used for.
-            </p>
+            <span className={styles.contHeading}>
+              {t('giftvouchers.create.label.vouchersetting')}
+            </span>
+            <p>{t('giftvouchers.create.label.vouchersetting.para2')}</p>
           </div>
           <div className={styles.contDiv}>
-            <span className={styles.contHeading}>Voucher Theme</span>
+            <span className={styles.contHeading}>
+              {t('giftvouchers.create.vouchertheme')}
+            </span>
             <p></p>
           </div>
-          <div className={styles.contDiv}>
-            <span className={styles.contHeadingMin}>Enable online booking</span>
+          <Form.Item name="bookBtn" className={styles.contDiv}>
+            <span className={styles.contHeadingMin}>
+              {t('giftvouchers.create.label.enablebooking')}
+            </span>
             <label>
-              <span>
-                Allow clients to book online, and automatically apply the
-                voucher.
-              </span>
+              <span>{t('giftvouchers.create.label.enablebooking.para')}</span>
             </label>
             <div className={styles.topMargin}>
               <Switch
                 checked={bookBtn}
                 onChange={() => setBookBtn((bookBtn) => !bookBtn)}
               />{' '}
-              <label>Add a Book now button</label>
+              <label>{t('giftvouchers.create.label.addbookbtn')}</label>
             </div>
-          </div>
-          <div className={styles.contDiv}>
-            <span className={styles.contHeadingMin}>Notes for client</span>
+          </Form.Item>
+          <Form.Item name="notes" className={styles.contDiv}>
+            <span className={styles.contHeadingMin}>
+              {t('giftvouchers.create.label.notesforclient')}
+            </span>
             <label>
-              <span>Add a note for clients. This will always be visible..</span>
+              <span>{t('giftvouchers.create.label.notesforclient.para')}</span>
             </label>
             <div className={styles.topMargin}>
               <Switch defaultChecked={true} />{' '}
-              <label>Enable notes for clients</label>
+              <label>{t('giftvouchers.create.label.enablenotes')}</label>
             </div>
-          </div>
+          </Form.Item>
+          <Form.Item
+            name="note"
+            className={styles.contDiv}
+            label={
+              <>
+                <span>{t('giftvouchers.create.label.note')}</span>
+                <span>{clientNotesCount}/500</span>
+              </>
+            }
+          >
+            <TextArea
+              rows={6}
+              placeholder="Notes"
+              maxLength={500}
+              value={clientNotes}
+              onChange={(e) =>
+                onInputChange(e, setClientNotes, setClientNotesCount)
+              }
+            />
+          </Form.Item>
           <div className={styles.contDiv}>
-            <label>
-              <span>Note</span>
-              <span>{clientNotesCount}/500</span>
-            </label>
-            <div>
-              <TextArea
-                rows={6}
-                placeholder="Notes"
-                maxLength={500}
-                value={clientNotes}
-                onChange={(e) =>
-                  onInputChange(e, setClientNotes, setClientNotesCount)
-                }
-              />
-            </div>
-          </div>
-          <div className={styles.contDiv}>
-            <span className={styles.contHeading}>Appearance</span>
-            <p>
-              Here you can customize the look and feel of the voucher to match
-              your brand colours.
-            </p>
+            <span className={styles.contHeading}>
+              {t('giftvouchers.create.label.appearance')}
+            </span>
+            <p>{t('giftvouchers.create.label.appearance.para')}</p>
           </div>
           <div className={styles.themesDiv}>
             <div>
-              <span>Voucher Theme</span>
+              <span>{t('giftvouchers.create.vouchertheme')}</span>
               <PabauPlus label="Plus" modalType="Marketing" />
             </div>
             <div>
@@ -404,7 +443,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
           </div>
           <div className={styles.themesDiv}>
             <div>
-              <span>Background Colors</span>
+              <span>{t('giftvouchers.create.label.bgcolors')}</span>
               <span></span>
             </div>
             <div>
@@ -444,7 +483,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
           </div>
         </div>
       )}
-    </div>
+    </Form>
   )
 
   useEffect(() => {
@@ -465,7 +504,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
       if (file) {
         const url = await URL.createObjectURL(file)
         existingThemes.push({
-          name: 'None',
+          name: t('giftvouchers.create.label.none'),
           url: url,
         })
         await updateThemes(existingThemes)
@@ -482,8 +521,9 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
 
   return (
     <Layout>
+      <CommonHeader isLeftOutlined title="Gift Voucher" />
       <div className={styles.mainCreateVoucher}>
-        <Card title={cardHeader}>
+        <Card title={<CardHeader />}>
           <Row>
             <Col md={24} className={styles.voucherBuilderBody}>
               <Wstepper
@@ -491,7 +531,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
                 showNextBtn={showNextBtn}
                 nextBtnLabel={
                   <span>
-                    Next Step <RightOutlined />
+                    {t('giftvouchers.create.label.nextstep')} <RightOutlined />
                   </span>
                 }
                 active={activeStep}
@@ -501,10 +541,11 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
                 extraBtnType="primary"
                 extraBtnLabel={
                   <span>
-                    Create <RightOutlined />
+                    {t('giftvouchers.create.label.create')} <RightOutlined />
                   </span>
                 }
                 extraBtnClick={createVoucher}
+                allowDisablePrevious={false}
               >
                 <Row
                   className={classNames(
@@ -521,9 +562,9 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
                     className={styles.voucherBuilderControls}
                   >
                     <div className={styles.heading}>
-                      <span>Builder</span>
+                      <span>{t('giftvouchers.create.tabs.builder')}</span>
                     </div>
-                    {BuilderTab}
+                    <BuilderTab />
                   </Col>
                   <Col
                     lg={18}
@@ -533,9 +574,9 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
                     className={styles.voucherPreviewSelection}
                   >
                     <div className={styles.heading}>
-                      <span>Preview</span>
+                      <span>{t('giftvouchers.create.tabs.preview')}</span>
                     </div>
-                    {PreviewTab}
+                    <PreviewTab />
                   </Col>
                 </Row>
                 <Row
@@ -543,7 +584,10 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
                 >
                   <Col md={24}>
                     <TabMenu
-                      menuItems={['Builder', 'Preview']}
+                      menuItems={[
+                        t('giftvouchers.create.tabs.builder'),
+                        t('giftvouchers.create.tabs.preview'),
+                      ]}
                       tabPosition="top"
                     >
                       <Row className={styles.voucherBuilderSection}>
@@ -554,7 +598,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
                           xs={24}
                           className={styles.voucherBuilderControls}
                         >
-                          {BuilderTab}
+                          <BuilderTab />
                         </Col>
                       </Row>
                       <Row className={styles.voucherBuilderSection}>
@@ -565,7 +609,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
                           xs={24}
                           className={styles.voucherPreviewSelection}
                         >
-                          {PreviewTab}
+                          <PreviewTab />
                         </Col>
                       </Row>
                     </TabMenu>

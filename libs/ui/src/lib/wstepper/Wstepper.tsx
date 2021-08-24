@@ -18,6 +18,7 @@ interface WStepperProps {
   extraBtnLabel?: string | number | ReactNode
   extraBtnClick?: () => void
   onActiveStepChange?: (index) => void
+  allowDisablePrevious?: boolean
 }
 
 export const Wstepper: React.FC<WStepperProps> = ({
@@ -26,6 +27,7 @@ export const Wstepper: React.FC<WStepperProps> = ({
   data,
   disableNextStep = false,
   onActiveStepChange,
+  allowDisablePrevious = true,
   ...props
 }) => {
   const [index, setIndex] = React.useState(0)
@@ -55,6 +57,7 @@ export const Wstepper: React.FC<WStepperProps> = ({
         active={index}
         allSteps={data.length}
         disableNextStep={disableNextStep}
+        allowDisablePrevious={allowDisablePrevious}
       />
     </div>
   )
