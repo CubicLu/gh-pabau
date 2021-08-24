@@ -20,7 +20,47 @@ array_relationships:
       table:
         name: notification_toggle
         schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - type
+    - description
+    - permission_type
+    - notification_type
+    - title
+    - name
+    - destination
+  role: public
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - description
+    - destination
+    - id
+    - name
+    - notification_type
+    - permission_type
+    - title
+    - type
+  role: user
 select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - description
+    - destination
+    - id
+    - name
+    - notification_type
+    - permission_type
+    - title
+    - type
+    filter: {}
+  role: public
 - permission:
     columns:
     - description
@@ -31,5 +71,39 @@ select_permissions:
     - permission_type
     - title
     - type
+    filter: {}
+  role: user
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - description
+    - destination
+    - name
+    - notification_type
+    - permission_type
+    - title
+    - type
+    - id
+    filter: {}
+  role: public
+- permission:
+    check: null
+    columns:
+    - description
+    - destination
+    - id
+    - name
+    - notification_type
+    - permission_type
+    - title
+    - type
+    filter: {}
+  role: user
+delete_permissions:
+- permission:
+    filter: {}
+  role: public
+- permission:
     filter: {}
   role: user

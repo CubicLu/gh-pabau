@@ -16,6 +16,16 @@ insert_permissions:
     backend_only: false
     check: {}
     columns:
+    - id
+    - user
+    - company
+    - read_at
+    - notification
+  role: public
+- permission:
+    backend_only: false
+    check: {}
+    columns:
     - company
     - user
     - read_at
@@ -23,6 +33,15 @@ insert_permissions:
     - notification
   role: user
 select_permissions:
+- permission:
+    columns:
+    - company
+    - user
+    - read_at
+    - id
+    - notification
+    filter: {}
+  role: public
 - permission:
     columns:
     - company
@@ -42,8 +61,21 @@ update_permissions:
     - id
     - notification
     filter: {}
+  role: public
+- permission:
+    check: null
+    columns:
+    - company
+    - user
+    - read_at
+    - id
+    - notification
+    filter: {}
   role: user
 delete_permissions:
+- permission:
+    filter: {}
+  role: public
 - permission:
     filter: {}
   role: user

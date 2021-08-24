@@ -26,7 +26,7 @@ remote_relationships:
     hasura_fields:
     - sent_by
     remote_field:
-      findUniqueUser:
+      user:
         arguments:
           where:
             id: $sent_by
@@ -37,14 +37,47 @@ insert_permissions:
     backend_only: false
     check: {}
     columns:
-    - destination
-    - loop
-    - sent_by
+    - id
+    - created_at
+    - updated_at
+    - order
     - sent_to
     - type
     - variables
+    - destination
+    - sent_by
+    - loop
+  role: public
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - order
+    - sent_by
+    - loop
+    - sent_to
+    - variables
+    - destination
+    - created_at
+    - updated_at
+    - id
+    - type
   role: user
 select_permissions:
+- permission:
+    columns:
+    - order
+    - sent_by
+    - loop
+    - sent_to
+    - variables
+    - destination
+    - created_at
+    - updated_at
+    - id
+    - type
+    filter: {}
+  role: public
 - permission:
     columns:
     - order
@@ -63,15 +96,37 @@ update_permissions:
 - permission:
     check: null
     columns:
-    - destination
-    - loop
+    - order
     - sent_by
+    - loop
     - sent_to
-    - type
     - variables
+    - destination
+    - created_at
+    - updated_at
+    - id
+    - type
+    filter: {}
+  role: public
+- permission:
+    check: null
+    columns:
+    - order
+    - sent_by
+    - loop
+    - sent_to
+    - variables
+    - destination
+    - created_at
+    - updated_at
+    - id
+    - type
     filter: {}
   role: user
 delete_permissions:
+- permission:
+    filter: {}
+  role: public
 - permission:
     filter: {}
   role: user

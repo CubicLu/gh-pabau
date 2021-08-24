@@ -2,32 +2,20 @@ table:
   name: chat_room_participant
   schema: public
 object_relationships:
-- name: room
+- name: chat_room
   using:
-    foreign_key_constraint_on: room_id
-remote_relationships:
-- definition:
-    hasura_fields:
-    - user_id
-    remote_field:
-      findUniqueUser:
-        arguments:
-          where:
-            id: $user_id
-    remote_schema: CRM
-  name: User
+    foreign_key_constraint_on: room
 insert_permissions:
 - permission:
     backend_only: false
     check:
-      room:
-        company_id:
+      chat_room:
+        company:
           _eq: X-Hasura-Org-Id
     columns:
-    - room_id
-    - user_id
+    - room
     set:
-      user_id: x-hasura-User-Id
+      user: x-hasura-User-Id
   role: user
 select_permissions:
 - permission:
@@ -36,17 +24,10 @@ select_permissions:
     - id
     - created_at
     - updated_at
-    - user_id
-    - room_id
+    - user
+    - room
     filter:
-      room:
-        company_id:
-          _eq: X-Hasura-Org-Id
-  role: user
-delete_permissions:
-- permission:
-    filter:
-      room:
-        company_id:
+      chat_room:
+        company:
           _eq: X-Hasura-Org-Id
   role: user
