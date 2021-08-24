@@ -16,12 +16,15 @@ import connectLogo from '../../assets/images/connect-logo.png'
 import { ReactComponent as PabauLogo } from '../../assets/images/pabau-logo.svg'
 import styles from './ConnectHeader.module.less'
 import { ClientContext } from '../ConnectLayout/interfaces/common'
-import { useUser } from '../UserContext/UserContext'
 
-const ConnectHeader = (): JSX.Element => {
+interface ConnectHeaderProps {
+  clientContext: ClientContext
+}
+const ConnectHeader: FC<ConnectHeaderProps> = (props) => {
   const router = useRouter()
   const [openDrawer, setOpenDrawer] = useState(false)
-  const { me } = useUser()
+  const clientContext = props.clientContext[0]
+  const setLoggedInUser = props.clientContext[1]
   const ConnectAvatarDropdown = (
     <div className={styles.avatarMenu}>
       <div className={styles.dropdownMenu}>

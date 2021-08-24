@@ -1,43 +1,47 @@
-import React, { useState } from 'react'
+import React, { FC } from 'react'
 import { EyeInvisibleOutlined } from '@ant-design/icons'
 import { Formik } from 'formik'
 import { Checkbox, Form, Input, SubmitButton } from 'formik-antd'
-import { LoginForm, LoginValidation } from '@pabau/yup'
+import { LoginValidation } from '@pabau/yup'
+// import { ReactComponent as GoogleIcon } from '../../assets/images/google.svg'
+// import { ReactComponent as SSOIcon } from '../../assets/images/sso.svg'
 import styles from '../../pages/login.module.less'
+import { QueryLazyOptions } from '@apollo/client'
 import Link from 'next/link'
-import { useLoginMutation } from '@pabau/graphql'
-import ResetPassword from './ResetPassword'
-import { useUser } from '../../context/UserContext'
 
-export const LoginMain = (): JSX.Element => {
-  const [page, setPage] = useState<'login' | 'resetPassword'>('login')
-  const { me, login, logout } = useUser()
-  const [loginMutate] = useLoginMutation()
-  const loginHandler = async (loginProps: LoginForm) => {
+export interface LoginFormProps {
+  email: string
+  password: string
+  remember?: boolean
+}
+
+interface LoginProps {
+  handlePageShow: React.Dispatch<React.SetStateAction<string>>
+  verifyCredentials: (
+    options: QueryLazyOptions<{ username: string; password: string }>
+  ) => void
+}
+
+const LoginMain: FC<LoginProps> = ({ handlePageShow, verifyCredentials }) => {
+  const loginHandler = async (loginProps: LoginFormProps) => {
+    if (localStorage?.getItem('token')) {
+      localStorage.removeItem('token')
+    }
     const { email, password } = loginProps
-    await logout()
-    const result = await loginMutate({
+    await verifyCredentials({
       variables: {
         username: email,
         password: password,
       },
     })
-    await login(result.data.login)
-    window.location.href =
-      'https://crm.pabau.com/auth.php?t=' +
-      me.pab1 +
-      '&r=' +
-      encodeURIComponent(window.location.origin)
+    console.log('finished verifyCredentials')
   }
-
-  if (page === 'resetPassword')
-    return <ResetPassword onClose={() => setPage('login')} />
 
   return (
     <div>
       <div className={styles.signInForm}>
         <div className={styles.formHead}>
-          <h6>Log In!</h6>
+          <h6>Log In!!</h6>
           <span>
             Do not have an account?{' '}
             <Link href="/signup">Start a free trial</Link>
@@ -52,8 +56,11 @@ export const LoginMain = (): JSX.Element => {
             remember: false,
           }}
           validationSchema={LoginValidation}
-          onSubmit={loginHandler}
-          render={({ isValid }) => (
+          onSubmit={async (value: LoginFormProps) => {
+            console.log('logging in...')
+            await loginHandler(value)
+          }}
+          render={({ isValid, values }) => (
             <Form layout="vertical">
               <Form.Item
                 label={'Email'}
@@ -75,7 +82,7 @@ export const LoginMain = (): JSX.Element => {
               <div className={styles.forgotWrap}>
                 <div
                   className={styles.forgotKey}
-                  onClick={() => setPage('resetPassword')}
+                  onClick={() => handlePageShow('resetPassword')}
                 >
                   Forgot password?
                 </div>
@@ -135,3 +142,5 @@ export const LoginMain = (): JSX.Element => {
     </div>
   )
 }
+
+export default LoginMain

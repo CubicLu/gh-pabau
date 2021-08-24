@@ -1,8 +1,8 @@
 import { EyeOutlined } from '@ant-design/icons'
 import { BasicModal, Button, Pagination, Table } from '@pabau/ui'
-import { useUser } from '../../../context/UserContext'
+import { UserContext } from '../../../context/UserContext'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useContext, useEffect, useState } from 'react'
 import { sendEmailService } from '../../ClientNotificationEmailPreview/sendEmailService'
 import EmailSendButton from './EmailSendButton'
 import styles from './SubscriptionComponents.module.less'
@@ -23,7 +23,7 @@ const InvoiceActivity: FC<P> = (p) => {
   const [status, setStatus] = useState<FilterStatus>('ALL')
   const [searchTerm, setSearchTerm] = useState('')
   const { t } = useTranslationI18()
-  const user = useUser()
+  const user = useContext(UserContext)
 
   const [paginateData, setPaginateData] = useState({
     total: 0,

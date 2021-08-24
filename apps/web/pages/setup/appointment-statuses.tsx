@@ -1,3 +1,4 @@
+import React, { useContext } from 'react'
 import { NextPage } from 'next'
 import {
   AppointmentStatusDocument,
@@ -9,11 +10,11 @@ import {
 } from '@pabau/graphql'
 import CrudLayout from '../../components/CrudLayout/CrudLayout'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import { useUser } from '../../context/UserContext'
+import { UserContext } from '../../context/UserContext'
 
 export const AppointmentStatuses: NextPage = () => {
   const { t } = useTranslationI18()
-  const user = useUser()
+  const user = useContext(UserContext)
 
   const schema: Schema = {
     full: t('setup.appointmentstatuses.schema.title'),

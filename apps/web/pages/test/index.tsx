@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import dayjs from 'dayjs'
 import { version } from '../../../../package.json'
-import { useUser } from '../../context/UserContext'
+import { UserContext } from '../../context/UserContext'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 dayjs.extend(utc)
 dayjs.extend(timezone)
 
 const IndexPage = (): JSX.Element => {
-  const user = useUser()
+  const user = useContext(UserContext)
 
   const [time, setTime] = useState(new Date())
 
@@ -39,7 +39,7 @@ const IndexPage = (): JSX.Element => {
         <br />
         User ID: &#160; {user?.me?.id}
         <br />
-        Company ID: &#160; {user?.me?.company}
+        Company ID: &#160; {user?.me?.company?.id}
       </p>
     </>
   )

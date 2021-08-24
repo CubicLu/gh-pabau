@@ -18,8 +18,7 @@ import { getMainDefinition } from '@apollo/client/utilities'
 import { OperationDefinitionNode } from 'graphql'
 import { setContext } from '@apollo/client/link/context'
 import { WebSocketLink } from '@apollo/client/link/ws'
-import { UserProvider } from '../components/UserContext/UserContext'
-
+import ContextWrapper from '../components/ContextWrapper/ContextWrapper'
 require('../../../libs/ui/src/styles/antd.less')
 require('react-phone-input-2/lib/style.css')
 
@@ -101,9 +100,9 @@ function CustomApp({ Component, pageProps }: AppProps) {
 
   return (
     <ApolloProvider client={getApolloClient()}>
-      <UserProvider>
+      <ContextWrapper>
         <Component {...pageProps} />
-      </UserProvider>
+      </ContextWrapper>
     </ApolloProvider>
   )
 }

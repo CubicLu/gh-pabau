@@ -1,14 +1,24 @@
 import { MutationFunction } from '@apollo/client'
-import { Footer, Header, Menu } from '@pabau/ui'
+import { Footer, Header, Menu, UserDataProps } from '@pabau/ui'
 import { Card, Layout as AntLayout } from 'antd'
 import classNames from 'classnames'
 import React, { FC, useState } from 'react'
 import { ReactComponent as IllustrationSvg } from './example.svg'
 import styles from './Layout.module.less'
-import { NotificationDrawerItemType } from '../notification-drawer/NotificationItem'
-import { JwtAuthenticationToken } from '@pabau/yup'
 
 const { Content } = AntLayout
+
+interface Notification {
+  id: string
+  notificationTime: Date
+  notificationType: string
+  notificationTypeIcon?: string
+  title: string
+  desc: string
+  read: number[]
+  users: number[]
+  link: string
+}
 
 interface ProductNews {
   id: string
@@ -20,20 +30,15 @@ interface ProductNews {
   readUsers: number[]
 }
 
-export interface ExtraUserData {
-  handleCompanySwitch?(companyId): void
-}
-
 export interface LayoutProps {
-  onLogOut?(): void
   deleteNotification?: MutationFunction
   updateNotification?: MutationFunction
   readNewsMutation?: MutationFunction
   readAddMutation?: MutationFunction
   relativeTime?: (lan: string, date: Date) => string
-  notifications?: NotificationDrawerItemType[]
+  notifications?: Notification[]
   productNews?: ProductNews[]
-  user?: JwtAuthenticationToken & ExtraUserData
+  user?: UserDataProps
   pageTitle?: string
   newButtonText?: string
   onNewClicked?: string | (() => void)
@@ -62,7 +67,6 @@ export const Layout: FC<LayoutProps> = ({
   isDisplayingFooter = true,
   card,
   children,
-  onLogOut,
   active,
   legacyContent = false,
   notifications,
@@ -72,6 +76,7 @@ export const Layout: FC<LayoutProps> = ({
   updateNotification,
   readAddMutation,
   readNewsMutation,
+  user,
   taskManagerIFrameComponent,
   clientCreateRender,
   leadCreateRender,
@@ -83,13 +88,15 @@ export const Layout: FC<LayoutProps> = ({
     <AntLayout {...rest} className={styles.main}>
       <AntLayout style={{ background: '#F7F7F9' }}>
         <Header
+          user={user}
           deleteNotification={deleteNotification}
           updateNotification={updateNotification}
           readNewsMutation={readNewsMutation}
           readAddMutation={readAddMutation}
           searchRender={searchRender}
           onMessageIconClick={onMessageIconClick}
-          onLogOut={onLogOut}
+          // onCreateChannel={onCreateChannel}
+          // onMessageType={onMessageType}
           notifications={notifications}
           productNews={productNews}
           relativeTime={relativeTime}

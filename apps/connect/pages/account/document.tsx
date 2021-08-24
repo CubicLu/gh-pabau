@@ -6,7 +6,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import userAvatar from '../../assets/images/users/alex.png'
 import ConnectLayout from '../../components/ConnectLayout/ConnectLayout'
-import { ClientContext } from '../../components/UserContext/context/ClientContext'
+import { ClientContext } from '../../components/ContextWrapper/context/ClientContext'
 import { useDateFormatter } from '../../hooks/useDateFormatter'
 import styles from './documents.module.less'
 

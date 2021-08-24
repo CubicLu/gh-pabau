@@ -8,9 +8,10 @@ import {
 import { Breadcrumb, Button, MobileHeader } from '@pabau/ui'
 import { Col, Row, Typography } from 'antd'
 import { useRouter } from 'next/router'
+import React, { useContext } from 'react'
 import { ReactComponent as Verified } from '../../assets/images/verified.svg'
 import Layout from '../../components/Layout/Layout'
-import { useUser } from '../../context/UserContext'
+import { UserContext } from '../../context/UserContext'
 import { useGridData } from '../../hooks/useGridData'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './senders.module.less'
@@ -71,7 +72,7 @@ export const subCriteriaOptions = ['Sub category', 'Sub category 2']
 export const mergeTagTypeOptions = ['Tag Type 1', 'Tag Type 2']
 
 export const Communications: React.FC = () => {
-  const user = useUser()
+  const user = useContext(UserContext)
   const router = useRouter()
   const { t } = useTranslationI18()
   const { getParentSetupData } = useGridData(t)

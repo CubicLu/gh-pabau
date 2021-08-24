@@ -1,35 +1,33 @@
 query calendarSettingsData {
-  me {
-    Company {
-      BookingSetting {
-        id
-        slot_interval
-        start_time
-        end_time
-        lock_timer
+  company {
+    BookingSetting {
+      id
+      slot_interval
+      start_time
+      end_time
+      lock_timer
 
-        allow_overlapping_appts
-        send_reminder
-        send_email
-        send_sms
-        send_feedback
+      allow_overlapping_appts
+      send_reminder
+      send_email
+      send_sms
+      send_feedback
 
-        disable_surname
-        font_size
-        disable_time
-        appt_body
-        tooltip_body
+      disable_surname
+      font_size
+      disable_time
+      appt_body
+      tooltip_body
 
-        disable_service_filter
-        column_total
-        noshow_count
-        initials
-      }
-      CompanyMeta {
-        id
-        meta_name
-        meta_value
-      }
+      disable_service_filter
+      column_total
+      noshow_count
+      initials
+    }
+    CompanyMeta {
+      id
+      meta_name
+      meta_value
     }
   }
 }

@@ -3,9 +3,9 @@ import { Button, Col, Row } from 'antd'
 import { Formik } from 'formik'
 import { Form as AntForm, Input, Select } from 'formik-antd'
 import { NextPage } from 'next'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import Layout from '../../components/Layout/Layout'
-import { useUser } from '../../context/UserContext'
+import { UserContext } from '../../context/UserContext'
 import { notificationVariables } from '../../mocks/StaffNotifications'
 import styles from './staff-notifications.module.less'
 import {
@@ -63,12 +63,12 @@ export const StaffNotifications: NextPage = () => {
   const notificationTypes = notificationTypesData?.notification_types
 
   const [user, setUser] = useState<LoggedUser>()
-  const loggedUser = useUser()
+  const loggedUser = useContext(UserContext)
 
   useEffect(() => {
     const me = loggedUser?.me
     const userData = {
-      company: me?.company,
+      company: me?.company?.id,
       user: me?.id,
       fullName: me?.full_name,
     }

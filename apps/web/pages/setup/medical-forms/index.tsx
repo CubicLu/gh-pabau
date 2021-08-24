@@ -15,7 +15,7 @@ import {
   useFindMedicalFormsQuery,
   useFindMessageTemplateQuery,
   useFindUserQuery,
-  useGetBusinessDetailsQuery,
+  useGetBussinessDetailsQuery,
   UserOrderByInput,
   UserWhereInput,
   useUpdateOneMedicalFormMutation,
@@ -127,7 +127,7 @@ export const Index: FC = () => {
     return queryOptions
   }, [paginateData.take, paginateData.skip, searchData])
 
-  const businessDetails = useGetBusinessDetailsQuery()
+  const businessDetails = useGetBussinessDetailsQuery()
   const {
     data: medicalForms,
     loading: loadingMedicalForms,
@@ -188,10 +188,8 @@ export const Index: FC = () => {
   const userLists = useFindUserQuery(getUserListQueryVariables)
 
   useEffect(() => {
-    if (businessDetails?.data?.me?.Company?.details?.date_format)
-      setCompanyDateFormat(
-        businessDetails?.data?.me?.Company?.details?.date_format
-      )
+    if (businessDetails?.data?.company?.details?.date_format)
+      setCompanyDateFormat(businessDetails?.data?.company?.details?.date_format)
   }, [businessDetails])
 
   useEffect(() => {

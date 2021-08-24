@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import ConnectLayout from '../../components/ConnectLayout/ConnectLayout'
-import { ClientContext } from '../../components/UserContext/context/ClientContext'
+import { ClientContext } from '../../components/ContextWrapper/context/ClientContext'
 
 export const PurchasePackage = () => {
   const clientContext = useContext(ClientContext)

@@ -1,5 +1,0 @@
-export * from './2fa'
-export * from './email'
-export * from './password'
-export * from './reset-password'
-export * from './login'

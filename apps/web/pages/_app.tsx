@@ -4,8 +4,8 @@ import {
   ApolloProvider,
   HttpLink,
   InMemoryCache,
-  NormalizedCacheObject,
   split,
+  NormalizedCacheObject,
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
@@ -15,20 +15,20 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import * as Icons from '@fortawesome/free-solid-svg-icons'
 import { OperationDefinitionNode } from 'graphql'
 import { AppProps } from 'next/app'
-import Router from 'next/router'
-import i18next from 'i18next'
-import { I18nextProvider, initReactI18next } from 'react-i18next'
-import { languages } from '@pabau/i18n'
-import { Integrations } from '@sentry/tracing'
-import * as Sentry from '@sentry/react'
-import { Notification, NotificationType } from '@pabau/ui'
-import { UserProvider } from '../context/UserContext'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import 'react-image-crop/dist/ReactCrop.css'
 import 'react-phone-input-2/lib/style.css'
+import Router from 'next/router'
 import 'react-quill/dist/quill.snow.css'
-
+import i18next from 'i18next'
+import { I18nextProvider, initReactI18next } from 'react-i18next'
+import { languages } from '@pabau/i18n'
+import ContextWrapper from '../components/ContextWrapper'
+import { Integrations } from '@sentry/tracing'
+import * as Sentry from '@sentry/react'
+require('../styles/global.less')
 require('../../../libs/ui/src/styles/antd.less')
+require('react-phone-input-2/lib/style.css')
 
 let apolloClient: ApolloClient<NormalizedCacheObject | null> = null
 
@@ -69,13 +69,11 @@ library.add(...iconList)
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token')
-  let token2 = null
-  if (token) token2 = JSON.parse(token)
   return {
-    headers: token2
+    headers: token
       ? {
           ...headers,
-          authorization: `Bearer ${token2}`,
+          authorization: `Bearer ${token}`,
         }
       : headers,
   }
@@ -99,7 +97,6 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
             Router.replace('/403')
             break
           default:
-            Notification(NotificationType.error, error.message)
             console.log(
               `[GraphQL error]: Message: ${error.message}, Location: ${error.locations}, Path: ${error.path}`
             )
@@ -108,24 +105,20 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
     }
   }
   if (networkError) {
-    console.log(`[Network error]: ${networkError.message}`)
+    console.log(`[Network error]: ${networkError}`)
   }
 })
 const getWebSocketLink = () => {
+  const token = localStorage.getItem('token')
   return new WebSocketLink({
     uri: GRAPHQL_WS_ENDPOINT,
     options: {
       lazy: true,
       reconnect: true,
-      connectionParams: () => {
-        const token = localStorage.getItem('token')
-        let token2 = null
-        if (token) token2 = JSON.parse(token)
-        return {
-          headers: {
-            Authorization: `Bearer ${token2}`,
-          },
-        }
+      connectionParams: {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
     },
   })
@@ -147,7 +140,6 @@ const terminatingLink = wsLink
       authLink.concat(httpLink)
     )
   : httpLink
-
 apolloClient = new ApolloClient({
   ssrMode: false,
   link: ApolloLink.from([errorLink, terminatingLink]),
@@ -166,9 +158,25 @@ function CustomApp({ Component, pageProps }: AppProps): JSX.Element {
     <Sentry.ErrorBoundary fallback={() => <>An error has occurred</>}>
       <ApolloProvider client={apolloClient}>
         <I18nextProvider i18n={i18next}>
-          <UserProvider>
+          <style jsx global>{`
+            @font-face {
+              font-family: 'Circular-Std-Black';
+              src: local('Circular-Std-Black'),
+                url(../public/fonts/CircularStd-Black.otf) format('opentype');
+            }
+            @font-face {
+              font-family: 'Circular-Std-Book';
+              src: url('/fonts/CircularStd-Book.otf') format('opentype');
+            }
+
+            @font-face {
+              font-family: 'Circular-Std-Medium';
+              src: url('/fonts/CircularStd-Medium.otf') format('opentype');
+            }
+          `}</style>
+          <ContextWrapper>
             <Component {...pageProps} />
-          </UserProvider>
+          </ContextWrapper>
         </I18nextProvider>
       </ApolloProvider>
     </Sentry.ErrorBoundary>

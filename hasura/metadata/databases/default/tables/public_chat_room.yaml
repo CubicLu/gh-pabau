@@ -20,14 +20,10 @@ array_relationships:
         schema: public
 remote_relationships:
 - definition:
-    hasura_fields:
-    - company_id
+    hasura_fields: []
     remote_field:
-      findFirstCompany:
-        arguments:
-          where:
-            id:
-              equals: $company_id
+      company:
+        arguments: {}
     remote_schema: CRM
   name: company
 insert_permissions:

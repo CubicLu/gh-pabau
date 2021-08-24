@@ -13,9 +13,9 @@ import {
 } from '@pabau/ui'
 import { useUpdateUserPasswordMutation } from '@pabau/graphql'
 import { Collapse, Descriptions, Divider, Form, Input, Skeleton } from 'antd'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useContext, useEffect, useState } from 'react'
 import { browserName, isMobile, osName } from 'react-device-detect'
-import { useUser } from '../../../context/UserContext'
+import { UserContext } from '../../../context/UserContext'
 import { relativeTime } from '../../../helper/relativeTimeFormat'
 import { dateTimeFormatter } from '../../../helper/dateTimeFormat'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
@@ -44,7 +44,7 @@ const Security: FC<SecurityProps> = ({
   const [cPassLoading, setCPassLoading] = useState(false)
   const [passcode, setPasscode] = useState(null)
   const [locationInfo, setLocationInfo] = useState(null)
-  const user = useUser()
+  const user = useContext(UserContext)
   const [form] = Form.useForm()
 
   const PasswordErrors = {
@@ -356,7 +356,7 @@ const Security: FC<SecurityProps> = ({
                       <div className="osInfo"></div>
                       <div className="appInfo">
                         {relativeTime(
-                          user?.me?.Company?.details?.language
+                          user?.me?.company?.details?.language
                             ?.toString()
                             .slice(0, 2) || 'en',
                           new Date(profile?.last_login)
@@ -366,7 +366,7 @@ const Security: FC<SecurityProps> = ({
                           |{' '}
                           {dateTimeFormatter({
                             date: new Date(String(profile?.last_login)),
-                            lan: user?.me?.Company?.details?.language
+                            lan: user?.me?.company?.details?.language
                               ?.toString()
                               .slice(0, 2),
                           })}

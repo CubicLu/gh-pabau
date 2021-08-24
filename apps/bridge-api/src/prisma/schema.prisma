@@ -1049,13 +1049,13 @@ model CancellationPolicy {
 }
 
 model MarketingSource {
-  id         Int      @id @default(autoincrement())
-  name       String   @map("source_name")
-  company_id Int      @map("occupier")
+  id         Int     @id @default(autoincrement())
+  name       String  @map("source_name")
+  company_id Int     @map("occupier")
   custom_id  Int
   public     Boolean
   imported   Int
-  Company    Company? @relation(fields: [company_id], references: [id])
+  Company    Company @relation(fields: [company_id], references: [id])
 
 
   CmExtraPatient CmExtraPatient[]
@@ -9492,7 +9492,7 @@ model PasswordResetAuth {
   id           Int       @id @default(autoincrement())
   key_code     String
   username     String    @unique
-  old_password String?
+  old_password String
   date         DateTime?
   User         User      @relation(fields: [username], references: [username])
 

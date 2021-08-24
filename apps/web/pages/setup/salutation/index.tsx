@@ -1,7 +1,8 @@
 import { gql } from '@apollo/client'
 import { NextPage } from 'next'
+import React, { useContext } from 'react'
 import CrudLayout from '../../../components/CrudLayout/CrudLayout'
-import { useUser } from '../../../context/UserContext'
+import { UserContext } from '../../../context/UserContext'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const LIST_QUERY = gql`
@@ -55,7 +56,7 @@ const UPDATE_ORDER_MUTATION = gql`
 
 export const Salutation: NextPage = () => {
   const { t } = useTranslationI18()
-  const user = useUser()
+  const user = useContext(UserContext)
 
   const schema: Schema = {
     full: t('setup.salutation.schema.title'),

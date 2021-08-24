@@ -1,7 +1,7 @@
 import { Logo } from '@pabau/ui'
 import Link from 'next/link'
-import React, { FC, useState } from 'react'
-import { useUser } from '../context/UserContext'
+import React, { FC, useState, useContext } from 'react'
+import { UserContext } from '../context/UserContext'
 import { ReactComponent as LaunchingImage } from '../assets/images/launching-pana.svg'
 import styles from './signup.module.less'
 import {
@@ -14,7 +14,7 @@ import {
 } from '../components/Auth/SignupStepTwo'
 
 const Signup: FC = () => {
-  const loggedInUser = useUser()
+  const loggedInUser = useContext(UserContext)
 
   const [step, setStep] = useState<number>(1)
 

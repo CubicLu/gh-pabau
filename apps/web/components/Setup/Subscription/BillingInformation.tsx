@@ -158,7 +158,7 @@ const BillingInformation: FC = () => {
             />
           ) : (
             <Paragraph className={Styles.blackText}>
-              {info?.me.Company?.owner?.full_name}
+              {info?.company?.owner?.full_name}
             </Paragraph>
           )}
           <Paragraph

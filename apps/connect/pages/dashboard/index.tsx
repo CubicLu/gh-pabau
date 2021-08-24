@@ -9,7 +9,7 @@ import { ReactComponent as ConnectCalendar } from '../../assets/images/connect-c
 import { ReactComponent as ConnectNotification } from '../../assets/images/connect-notification.svg'
 import { ReactComponent as ConnectSpeechBubble } from '../../assets/images/connect-speech-bubble.svg'
 import ConnectLayout from '../../components/ConnectLayout/ConnectLayout'
-import { ClientContext } from '../../components/UserContext/context/ClientContext'
+import { ClientContext } from '../../components/ContextWrapper/context/ClientContext'
 import { useApptFormatter } from '../../hooks/useApptFormatter'
 import styles from './dashboard.module.less'
 

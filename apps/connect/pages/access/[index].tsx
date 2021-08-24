@@ -7,16 +7,20 @@ import ConnectLayout from '../../components/ConnectLayout/ConnectLayout'
 import styles from './index.module.less'
 import { useTranslation } from 'react-i18next'
 
+import { ClientContext } from '../../components/ContextWrapper/context/ClientContext'
+
 const { Title } = Typography
 
 export default function Access() {
   const router = useRouter()
   const { index } = router.query
   const destination = atob(index.toString())
+  const clientContext = useContext(ClientContext)
   const { t } = useTranslation('connect')
   const [phone, setPhone] = useState('')
   const [code, setCode] = useState('')
   const [verifyForm, setVerifyForm] = useState(false)
+
   const [buttonDisable, setButtonDisable] = useState(true)
   const [buttonConfirmDisable, setButtonConfirmDisable] = useState(true)
 
@@ -57,7 +61,7 @@ export default function Access() {
   }
 
   return (
-    <ConnectLayout>
+    <ConnectLayout clientContext={clientContext}>
       <div className={styles.access}>
         <div className={styles.accessContent}>
           <div>

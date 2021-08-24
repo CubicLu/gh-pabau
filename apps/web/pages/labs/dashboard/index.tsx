@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { FC, ReactNode } from 'react'
 import { Breadcrumb } from '@pabau/ui'
 import CrudLayout from '../../../components/CrudLayout/CrudLayout'
@@ -51,17 +52,18 @@ const DELETE_MUTATION = gql`
 const ADD_MUTATION = gql`
   mutation add_marketing_source(
     $imported: Int = 0
-    $is_active: Boolean = false
+    $is_active: Int = 1
     $name: String!
     $custom_id: Int = 0
+    $company_id: Int = 8901 #TODO refactor with actual company_id
   ) {
     createOneMarketingSource(
       data: {
+        company: { connect: { id: $company_id } }
         imported: $imported
-        name: $name
+        source_name: $name
         public: $is_active
         custom_id: $custom_id
-        Company: {}
       }
     ) {
       id
@@ -72,10 +74,10 @@ const EDIT_MUTATION = gql`
   mutation update_marketing_source_by_pk(
     $id: Int!
     $source_name: String
-    $public: Boolean = false
+    $public: Int = 1
   ) {
     updateOneMarketingSource(
-      data: { name: { set: $source_name }, public: { set: $public } }
+      data: { source_name: { set: $source_name }, public: { set: $public } }
       where: { id: $id }
     ) {
       id

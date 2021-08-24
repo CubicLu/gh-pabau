@@ -1,11 +1,17 @@
+import React from 'react'
 import Layout from '../../components/Layout/Layout'
 import './dashboard.module.less'
 
-export function Index() {
+/* eslint-disable-next-line */
+export interface IndexProps {}
+
+export function Index(props: IndexProps) {
   return (
-    <Layout active={'dashboard'}>
-      <h1>Welcome to Dashboard!</h1>
-    </Layout>
+    <div>
+      <Layout active={'dashboard'}>
+        <h1>Welcome to Dashboard!</h1>
+      </Layout>
+    </div>
   )
 }
 

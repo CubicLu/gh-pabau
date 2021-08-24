@@ -16,13 +16,13 @@ import {
 } from '@pabau/ui'
 import { Card, Typography } from 'antd'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Layout from '../../../components/Layout/Layout'
 import Advanced from '../../../components/Settings/Calendar/Advanced'
 import Appearance from '../../../components/Settings/Calendar/Appearance'
 import AppointmentSettings from '../../../components/Settings/Calendar/AppointmentSettings'
 import Configuration from '../../../components/Settings/Calendar/Configuration'
-import { useUser } from '../../../context/UserContext'
+import { UserContext } from '../../../context/UserContext'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
 
@@ -30,7 +30,7 @@ const { Title } = Typography
 
 export function Calendar({ ...props }) {
   const { t } = useTranslationI18()
-  const user = useUser()
+  const user = useContext(UserContext)
 
   const [isLoading, setIsLoading] = useState(false)
   const [settingsData, setSettingsData] = useState(null)
@@ -159,9 +159,9 @@ export function Calendar({ ...props }) {
     setIsLoading(loading)
     if (data) {
       setSettingsData({
-        ...data?.me?.Company?.BookingSetting?.[0],
+        ...data?.company?.BookingSetting?.[0],
       })
-      setCompanyMetas(data?.me?.Company?.CompanyMeta)
+      setCompanyMetas(data?.company?.CompanyMeta)
     }
   }, [data, loading])
 
@@ -237,9 +237,7 @@ export function Calendar({ ...props }) {
       <Layout
         {...user}
         requireAdminAccess={
-          user?.me?.isAdmin === 0 || user?.me?.isAdmin === undefined
-            ? false
-            : true
+          user?.me?.admin === 0 || user?.me?.admin === undefined ? false : true
         }
       >
         <Card className={styles.calendarCard}>

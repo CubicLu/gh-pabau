@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import {
   AvatarList,
   Button,
@@ -37,7 +37,7 @@ import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import CommonHeader from '../../components/CommonHeader'
 import dayjs, { Dayjs } from 'dayjs'
 import { Formik } from 'formik'
-import { useUser } from '../../context/UserContext'
+import { UserContext } from '../../context/UserContext'
 import {
   useFindAllowedLocationQuery,
   useIssuingCompaniesQuery,
@@ -53,7 +53,7 @@ const WAIT_INTERVAL = 400
 
 export function Account() {
   const [showModal, setShowModal] = useState(false)
-  const user = useUser()
+  const user = useContext(UserContext)
 
   const { t } = useTranslationI18()
   const tabMenuItems = [

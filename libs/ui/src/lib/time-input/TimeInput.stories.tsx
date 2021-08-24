@@ -1,5 +1,5 @@
 import React from 'react'
-import { TimeInput } from './TimeInput'
+import TimeInput from './TimeInput'
 import { TimePicker, DatePicker } from './TimePicker'
 
 export default {

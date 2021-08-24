@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { NextPage } from 'next'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import CrudLayout from '../../components/CrudLayout/CrudLayout'
@@ -11,11 +11,11 @@ import {
   DeleteOneInvPaymentTypeDocument,
 } from '@pabau/graphql'
 import PaymentNotificationImage from '../../assets/images/payment-type-notify-image.png'
-import { useUser } from '../../context/UserContext'
+import { UserContext } from '../../context/UserContext'
 
 export const PaymentTypes: NextPage = () => {
   const { t } = useTranslationI18()
-  const user = useUser()
+  const user = useContext(UserContext)
 
   const schema: Schema = {
     full: t('setup.paymenttypes.schema.title'),

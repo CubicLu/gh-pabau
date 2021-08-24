@@ -13,7 +13,7 @@ export const MarketingSource = objectType({
     t.int('custom_id')
     t.boolean('public')
     t.int('imported')
-    t.nullable.field('Company', {
+    t.field('Company', {
       type: 'Company',
       resolve(root: any) {
         return root.Company

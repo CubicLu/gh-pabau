@@ -1,15 +1,15 @@
 import { languages } from '@pabau/i18n'
 import i18next from 'i18next'
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import { I18nextProvider, initReactI18next } from 'react-i18next'
-import { useUser } from '../context/UserContext'
+import { UserContext } from '../context/UserContext'
 
 const TranslationWrapper: FC = ({ children }) => {
-  const me = useUser()
+  const me = useContext(UserContext)
 
   i18next.use(initReactI18next).init({
     interpolation: { escapeValue: false },
-    lng: me?.me?.Company?.details?.language?.toString().slice(0, 2),
+    lng: me?.me?.company?.details?.language?.toString().slice(0, 2),
     fallbackLng: 'en',
     keySeparator: false,
     resources: languages,

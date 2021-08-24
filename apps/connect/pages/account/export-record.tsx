@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react'
 import ConnectLayout from '../../components/ConnectLayout/ConnectLayout'
 import styles from './export-record.module.less'
 import { useTranslation } from 'react-i18next'
-import { ClientContext } from '../../components/UserContext/context/ClientContext'
+import { ClientContext } from '../../components/ContextWrapper/context/ClientContext'
 
 export const ExportRecord = () => {
   const [secitons, setSections] = useState('allergies')

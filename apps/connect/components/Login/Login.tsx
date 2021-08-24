@@ -1,32 +1,62 @@
 import { EyeInvisibleOutlined } from '@ant-design/icons'
-import { useLoginMutation } from '@pabau/graphql'
+import {
+  useConnectAuthorizeUserMutation,
+  useConnectVerifyCredentialsMutation,
+} from '@pabau/graphql'
 import { Formik } from 'formik'
 import { Checkbox, Form, Input, SubmitButton } from 'formik-antd'
+import { useRouter } from 'next/router'
 import React, { FC } from 'react'
 import styles from './Login.module.less'
-import { useUser } from '../UserContext/UserContext'
-import { LoginForm } from '@pabau/yup'
 
 const Login: FC = () => {
-  const { me, login, logout } = useUser()
-  const [loginMutate] = useLoginMutation()
-  const loginHandler = async (loginProps: LoginForm) => {
-    const { email, password } = loginProps
-    await logout()
-    const result = await loginMutate({
+  const router = useRouter()
+
+  const [
+    connectVerifyCredentialsMutation,
+  ] = useConnectVerifyCredentialsMutation({
+    onCompleted(response) {
+      connectAuthorizeUserMutation({
+        // variables: {
+        //   contact_id: 1000,
+        //   company_id: 8254,
+        // },
+        variables: {
+          contact_id: response.ConnectVerifyCredentials.contact_id,
+          company_id: response.ConnectVerifyCredentials.company_id,
+        },
+      })
+    },
+    onError(error) {
+      console.log('error', error)
+    },
+  })
+
+  const [connectAuthorizeUserMutation] = useConnectAuthorizeUserMutation({
+    onCompleted(response) {
+      localStorage.setItem('token', response.ConnectAuthorizeUser)
+      // localStorage.setItem('token', '1111')
+      router.push('/dashboard')
+    },
+    onError(error) {
+      console.log('error', error)
+    },
+  })
+
+  const verifyCredentials = ({ email, password }) => {
+    connectVerifyCredentialsMutation({
       variables: {
         username: email,
         password: password,
       },
     })
-    await login(result.data.login)
   }
 
   return (
     <div className={styles.formLogin}>
       <Formik
         initialValues={{ email: '', password: '' }}
-        onSubmit={loginHandler}
+        onSubmit={verifyCredentials}
         render={() => (
           <Form layout="vertical">
             <Form.Item

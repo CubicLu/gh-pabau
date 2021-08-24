@@ -66,11 +66,11 @@
     "update": "yarn upgrade-interactive && yarn nx migrate latest",
     "workspace-schematic": "yarn nx workspace-schematic",
     "dep-graph": "yarn nx dep-graph",
-    "nexus:generate": "node tools/cli/esbuild.cjs && yarn env-cmd -f apps/bridge-api/.env node dist/asdf/bridge-api-nexus.cjs --nexus-typegen && ls -al dist/asdf/ && cp -f dist/asdf/generated/nexus.d.ts apps/bridge-api/src/generated/",
+    "nexus:generate": "node tools/cli/esbuild.cjs && ls -al tools/cli/ && ls -al dist/ && ls -al dist/asdf/ && yarn env-cmd -f apps/bridge-api/.env node dist/asdf/bridge-api-nexus.cjs --nexus-typegen && ls -al tools/cli/ && ls -al dist/ && ls -al dist/asdf/ && ls -al && ls -al apps/bridge-api/src && cp -f dist/asdf/generated/nexus.d.ts apps/bridge-api/src/generated/",
     "bridge:generate": "prisma generate && prisma format && node tools/cli/convert-file-to-lf.js apps/bridge-api/src/prisma/schema.prisma && rimraf libs/graphql/crm-mutation && yarn dotenv-flow -p apps/bridge-api pal g && concurrently -n NEXUS,GRAPHQL-CODEGEN -c blue,yellow,green \"yarn nexus:generate\" \"yarn graphql-codegen:cached\"",
-    "bridge:prune": "rimraf apps/bridge-api/src/generated libs/graphql/crm-mutation",
+    "bridge:prune": "rm -rf apps/bridge-api/src/generated libs/graphql/crm-mutation",
     "lint:graphql-inspector": "yarn graphql-inspector validate --noStrictFragments --deprecated \"{libs,apps}/**/*.graphql\" hasura/schema.graphql",
-    "postinstall": "patch-package --patch-dir tools/patches && husky install && (yarn graphql-codegen:cached && ls libs/graphql/generated/graphql.ts) || (yarn lint:graphql-inspector && exit 1)"
+    "postinstall": "patch-package --patch-dir tools/patches && husky install && (yarn graphql-codegen:cached || (yarn lint:graphql-inspector && exit 1))"
   },
   "resolutions": {
     "**/immer": ">=8.0.1",
@@ -177,7 +177,6 @@
     "react-number-format": "4.7.3",
     "react-pdf": "5.3.2",
     "react-phone-input-2": "2.14.0",
-    "react-pin-input": "1.0.1",
     "react-qr-code": "2.0.1",
     "react-quill": "1.3.5",
     "react-signature-canvas": "1.0.3",
@@ -195,7 +194,6 @@
     "subscriptions-transport-ws": "0.9.19",
     "ts-node-dev": "1.1.8",
     "tslib": "2.2.0",
-    "use-persisted-state": "0.3.3",
     "uuid": "8.3.2",
     "wait-on": "6.0.0",
     "yup": "0.32.9",

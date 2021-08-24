@@ -18,18 +18,18 @@ import AddButton from '../../components/AddButton'
 import { Card, Col, Divider, Row, Typography } from 'antd'
 import classNames from 'classnames'
 import Link from 'next/link'
-import React, { useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import Layout from '../../components/Layout/Layout'
 import CreateTaxRateModal from '../../components/Setup/TaxRate/CreateTaxRateModal'
 import DefaultTax from '../../components/Setup/TaxRate/DefaultTax'
 import TaxRateList from '../../components/Setup/TaxRate/TaxRateList'
-import { useUser } from '../../context/UserContext'
+import { UserContext } from '../../context/UserContext'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import useWindowSize from '../../hooks/useWindowSize'
 import styles from './tax-rate.module.less'
 
 export function TaxRate() {
-  const user = useUser()
+  const user = useContext(UserContext)
   const { Title } = Typography
   const size = useWindowSize()
   const { t } = useTranslationI18()

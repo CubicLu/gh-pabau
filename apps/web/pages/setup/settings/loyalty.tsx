@@ -3,12 +3,12 @@ import { Breadcrumb, Button } from '@pabau/ui'
 import { Card, Col, Row } from 'antd'
 import { useFormik } from 'formik'
 import { useRouter } from 'next/router'
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import { useMedia } from 'react-use'
 import * as Yup from 'yup'
 import Layout from '../../../components/Layout/Layout'
 import General from '../../../components/Setup/Settings/LoyaltySettings/General'
-import { useUser } from '../../../context/UserContext'
+import { UserContext } from '../../../context/UserContext'
 import { useGridData } from '../../../hooks/useGridData'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './loyalty.module.less'
@@ -21,7 +21,7 @@ const LoyaltySettings: FC<P> = () => {
   const { t } = useTranslationI18()
   const router = useRouter()
   const isMobile = useMedia('(max-width: 768px)', false)
-  const user = useUser()
+  const user = useContext(UserContext)
 
   const LoyaltySettingsObj = {
     general: {

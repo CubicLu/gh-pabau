@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useState, useEffect, useContext } from 'react'
 import Layout from '../../components/Layout/Layout'
 import HeaderChip from '../../components/Setup/HeaderChip/Index'
 import Grid from '../../components/Setup/Grid/Index'
@@ -12,7 +12,7 @@ import { useMedia } from 'react-use'
 import { useGridData } from '../../hooks/useGridData'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './setup.module.less'
-import { useUser } from '../../context/UserContext'
+import { UserContext } from '../../context/UserContext'
 
 export interface LoadingType {
   videoLoader: boolean
@@ -29,7 +29,7 @@ const Index: FC = () => {
   const router = useRouter()
   const isMobile = useMedia('(max-width: 768px)', false)
   const { setupGridData } = useGridData(t)
-  const user = useUser()
+  const user = useContext(UserContext)
 
   useEffect(() => {
     if (router.query?.menu) {

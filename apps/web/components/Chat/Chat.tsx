@@ -16,12 +16,12 @@ import {
   PabauMessages,
   Participant,
 } from '@pabau/ui'
+import { UserContext } from '../../context/UserContext'
 import * as React from 'react'
 import dayjs from 'dayjs'
 import calendar from 'dayjs/plugin/calendar'
 import { useEffect, useState } from 'react'
 import { gql } from '@apollo/client/core'
-import { useUser } from '../../context/UserContext'
 
 dayjs.extend(calendar)
 
@@ -42,7 +42,7 @@ export const Chat = (props: P): JSX.Element => {
     skip: typeof window === 'undefined',
   })
 
-  const me = useUser()
+  const me = React.useContext(UserContext)
 
   const [postToUser] = useChatPostToUserIdMutation()
 
