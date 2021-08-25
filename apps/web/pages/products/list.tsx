@@ -5,14 +5,11 @@ import {
   PlusSquareFilled,
   SearchOutlined,
 } from '@ant-design/icons'
-import {
-  useCreateProductModalInitQuery,
-  // usePageAccessAuthorizationQuery,
-} from '@pabau/graphql'
+import { useCreateProductModalInitQuery } from '@pabau/graphql'
 import { Button, MobileSidebar, NotificationDrawer, TabMenu } from '@pabau/ui'
 import { Card, Divider, Input as AntInput, Typography } from 'antd'
 import { useRouter } from 'next/router'
-import React, { SetStateAction, useContext, useEffect, useState } from 'react'
+import React, { SetStateAction, useEffect, useState } from 'react'
 import { useWindowSize } from 'react-use'
 import Layout from '../../components/Layout/Layout'
 import SearchGlobal from '../../components/Search'
@@ -22,10 +19,9 @@ import PurchaseOrder from '../../components/Product/PurchaseOrder'
 import StockTake from '../../components/Product/StockTake'
 import Supplier from '../../components/Product/Supplier'
 import Filter from '../../components/Product/Filter'
-import { UserContext } from '../../context/UserContext'
+import { useUser } from '../../context/UserContext'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './list.module.less'
-import { getImage } from '../../components/Uploaders/UploadHelpers/UploadHelpers'
 
 const ProductList = (): JSX.Element => {
   const { t } = useTranslationI18()
@@ -100,7 +96,7 @@ const ProductList = (): JSX.Element => {
 
   const [, setMessageDrawer] = useState(false)
 
-  const user = useContext(UserContext)
+  const user = useUser()
   const router = useRouter()
 
   useEffect(() => {
@@ -291,13 +287,7 @@ const ProductList = (): JSX.Element => {
         </TabMenu>
         {openMenuDrawer && (
           <MobileSidebar
-            userData={{
-              company: user?.me?.company?.id,
-              companyName: user?.me?.company?.details?.company_name,
-              fullName: user?.me?.full_name,
-              user: user?.me?.id,
-              image: getImage(user?.me?.image),
-            }}
+            userData={user?.me}
             searchRender={() => <SearchGlobal />}
             onSideBarClosed={() => setMenuDrawer(() => !openMenuDrawer)}
             onClickNotificationDrawer={() => setNotificationDrawer((e) => !e)}

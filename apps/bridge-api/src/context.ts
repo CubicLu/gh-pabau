@@ -2,9 +2,9 @@ import jwt from 'jsonwebtoken'
 import { prisma } from './prisma'
 import { ExpressContext } from 'apollo-server-express'
 import { version } from '../../../package.json'
-import { JwtPayloadDto } from './app/authentication/dto'
 import { ContextFunction } from 'apollo-server-core'
 import { PrismaClient } from '@prisma/client'
+import { JwtAuthenticationToken } from '@pabau/yup'
 
 export interface Context {
   /**
@@ -23,7 +23,7 @@ export interface Context {
   /**
    * The currently logged in user
    */
-  authenticated?: JwtPayloadDto
+  authenticated?: JwtAuthenticationToken
 
   /**
    * The package.json version for this app
@@ -50,12 +50,12 @@ export const createContext: ContextFunction<ExpressContext, Context> = (
         authorizationRaw.replace(/^Bearer /, ''),
         process.env.JWT_SECRET,
         { algorithms: ['HS512'] }
-      ) as JwtPayloadDto
+      ) as JwtAuthenticationToken
     } catch {
       console.log('invalid jwt found')
     }
   }
-  ret.prisma = prisma(ret.authenticated?.remote_url)
+  ret.prisma = prisma(ret.authenticated?.remote_url || undefined)
   ret.prismaArray = (remote_url) => prisma(remote_url)
 
   return ret

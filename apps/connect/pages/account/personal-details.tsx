@@ -23,7 +23,7 @@ import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
 import * as Yup from 'yup'
 import ConnectLayout from '../../components/ConnectLayout/ConnectLayout'
-import { ClientContext } from '../../components/ContextWrapper/context/ClientContext'
+import { ClientContext } from '../../components/UserContext/context/ClientContext'
 import styles from './personal-details.module.less'
 
 const { Title } = Typography

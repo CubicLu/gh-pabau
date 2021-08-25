@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import {
   Notification,
   NotificationType,
@@ -20,7 +20,7 @@ import {
   useCreateOneContactMutation,
   GetTblModuleFieldsSettingsQuery,
 } from '@pabau/graphql'
-import { UserContext } from '../../context/UserContext'
+import { useUser } from '../../context/UserContext'
 
 export interface Label {
   label?: string
@@ -63,7 +63,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   ...props
 }) => {
   const { t } = useTranslation('common')
-  const user = useContext(UserContext)
+  const user = useUser()
   const [labelsData, setLabelsData] = useState<LabelDataProps[]>([])
   const [validationObject, setValidationObject] = useState({})
   const [initialValues, setInitialValues] = useState<InitialDetailsProps>({
@@ -483,7 +483,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       initialValues={initialValues}
       validationObject={validationObject}
       isDisabledBtn={checkIsLoading()}
-      companyName={user?.me?.company?.details?.company_name}
+      companyName={user?.me?.Company?.details?.company_name}
       {...props}
     />
   )

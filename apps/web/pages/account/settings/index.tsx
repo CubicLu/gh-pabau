@@ -11,12 +11,12 @@ import {
   TabMenu,
 } from '@pabau/ui'
 import { Button, Col, Row } from 'antd'
-import React, { FC, useContext, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import Notification from '../../../components/Account/Settings/Notifications'
 import Profile from '../../../components/Account/Settings/Profile'
 import Security from '../../../components/Account/Settings/Security'
 import Layout from '../../../components/Layout/Layout'
-import { UserContext } from '../../../context/UserContext'
+import { useUser } from '../../../context/UserContext'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import useWindowSize from '../../../hooks/useWindowSize'
 import Link from 'next/link'
@@ -41,7 +41,7 @@ import {
 import styles from './index.module.less'
 
 const Index: FC = () => {
-  const user = useContext(UserContext)
+  const user = useUser()
   const size = useWindowSize()
   const { t } = useTranslationI18()
 
@@ -305,7 +305,7 @@ const Index: FC = () => {
             variables: {
               ...el,
               user: user?.me?.id,
-              company: user?.me?.company?.id,
+              company: user?.me?.company,
             },
             refetchQueries: [
               {
@@ -440,7 +440,7 @@ const Index: FC = () => {
       )}
       <Layout {...user}>
         <Row className={styles.container}>
-          {size.width > 767 && <Col span={size.width < 1024 ? 1 : 5}></Col>}
+          {size.width > 767 && <Col span={size.width < 1024 ? 1 : 5} />}
           <Col
             span={
               size.width < 1024 && size.width > 767

@@ -1,13 +1,13 @@
 import express from 'express'
 import { ApolloServer } from 'apollo-server-express'
-import { middleware } from './schema'
+import { schema } from './schema'
 import { createContext } from './context'
 
 /**
  * Creates a testable ApolloServer
  */
 export const server = new ApolloServer({
-  schema: middleware,
+  schema,
   context: createContext,
   introspection: true,
   persistedQueries: false,

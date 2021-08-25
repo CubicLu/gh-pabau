@@ -11,12 +11,12 @@ import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from '../../../pages/setup/setup.module.less'
 
 const GET_VIDEO_COUNT = gql`
-  query {
+  query getTrainings {
     findManyTrainingCourseCount
   }
 `
 const GET_COMMUNITY_COUNT = gql`
-  query {
+  query getCommunityCount {
     featureRequestsWeeklyAvg
   }
 `

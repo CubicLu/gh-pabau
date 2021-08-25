@@ -12,7 +12,7 @@ import React, { FC, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
 import ConnectLayout from '../../components/ConnectLayout/ConnectLayout'
-import { ClientContext } from '../../components/ContextWrapper/context/ClientContext'
+import { ClientContext } from '../../components/UserContext/context/ClientContext'
 import styles from './chat-history.module.less'
 
 const { Title } = Typography
