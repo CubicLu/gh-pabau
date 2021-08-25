@@ -25,7 +25,6 @@ pipelines:
           script:
             #            - while true; do ps -aux && sleep 30; done &
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 16 ]] && exit 0 || exit 1'
-            - ls -al .postmon-lock && (echo Dont commit the .postmon-lock && exit 1) || echo Good, no .postmon-lock was found
             - CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
             - rm -f .postmon-lock
           artifacts:
@@ -221,7 +220,6 @@ pipelines:
           script:
             #            - while true; do ps -aux && sleep 30; done &
             - /bin/bash -c 'yarn audit --no-progress --non-interactive; [[ $? -lt 16 ]] && exit 0 || exit 1'
-            - ls -al .postmon-lock && (echo Dont commit the .postmon-lock && exit 1) || echo Good, no .postmon-lock was found
             - CYPRESS_CACHE_FOLDER=./dist/cypress CYPRESS_SKIP_BINARY_INSTALL=1 yarn install --frozen-lockfile --prefer-offline
             - rm -f .postmon-lock
           artifacts:

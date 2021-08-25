@@ -2787,8 +2787,8 @@ en:
   create.client.modal.privacy.sharing.setting.enabled.button.title: 'Enabled'
   create.client.modal.privacy.sharing.setting.disabled.button.title: 'Disabled'
   create.client.modal.privacy.sharing.setting.sharelink.title: 'Share Link'
-  create.client.modal.privacy.sharing.setting.email.button.title: 'Email Link'
   create.client.modal.privacy.sharing.setting.copy.button.title: 'Copy Link'
+  create.client.modal.privacy.sharing.setting.copy.notification.message: 'Coppied to clipboard'
   create.client.modal.privacy.sharing.setting.access.code.title: 'Access Code'
   create.client.modal.privacy.sharing.setting.access.code.description:
     'You will be asked to enter the following code to access shared
@@ -2816,6 +2816,7 @@ en:
   create.client.modal.privacy.communication.marketing.promotion.phone.title: 'Phone'
   create.client.modal.privacy.communication.marketing.promotion.postal.title: 'Postal'
   create.client.modal.privacy.communication.marketing.promotion.subscription.receive.title: 'Subscribe to receive need to know messages'
+  create.client.modal.privacy.communication.marketing.promotion.subscription.receive.tooltip: 'Tooltip text'
   create.client.modal.privacy.privacy.policy.title: 'Privacy policy'
   create.client.modal.privacy.privacy.policy.label: 'Does the patient concent to your privacy policy?'
   create.client.modal.privacy.policy.no.response.label: 'No response'

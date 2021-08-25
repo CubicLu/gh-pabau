@@ -3,7 +3,12 @@ import QRCode from 'react-qr-code'
 import { settingSharing } from '../mock'
 import styles from './SharingPrivacy.module.less'
 import { useTranslation } from 'react-i18next'
-import { ButtonCheckbox, InitialDetailsProps } from '@pabau/ui'
+import {
+  ButtonCheckbox,
+  InitialDetailsProps,
+  Notification,
+  NotificationType,
+} from '@pabau/ui'
 import { Form as AntForm, Input } from 'formik-antd'
 import { Button } from 'antd'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
@@ -46,7 +51,14 @@ const SettingSharing: FC<P> = ({ companyName, setFieldValue, values }) => {
 
   const handleCopy = () => {
     const text = values?.shareLink || ''
-    navigator.clipboard.writeText(text)
+    navigator.clipboard.writeText(text).then(() => {
+      Notification(
+        NotificationType.success,
+        t(
+          'create.client.modal.privacy.sharing.setting.copy.notification.message'
+        )
+      )
+    })
   }
 
   return (
@@ -109,11 +121,6 @@ const SettingSharing: FC<P> = ({ companyName, setFieldValue, values }) => {
             <Input name={'shareLink'} size={'large'} />
           </AntForm.Item>
           <div className={styles.linkGroupBtn}>
-            <Button size={'large'}>
-              {t(
-                'create.client.modal.privacy.sharing.setting.email.button.title'
-              )}
-            </Button>
             <Button type={'primary'} size={'large'} onClick={handleCopy}>
               {t(
                 'create.client.modal.privacy.sharing.setting.copy.button.title'

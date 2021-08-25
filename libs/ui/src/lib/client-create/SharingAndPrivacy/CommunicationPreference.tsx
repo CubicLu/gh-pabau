@@ -102,7 +102,11 @@ const CommunicationPreference: FC<P> = ({ setFieldValue, values }) => {
                         {t(
                           'create.client.modal.privacy.communication.marketing.promotion.subscription.receive.title'
                         )}
-                        <Tooltip title={'Tooltip text'}>
+                        <Tooltip
+                          title={t(
+                            'create.client.modal.privacy.communication.marketing.promotion.subscription.receive.tooltip'
+                          )}
+                        >
                           <Button className={styles.btnIcon}>
                             <QuestionCircleOutlined />
                           </Button>

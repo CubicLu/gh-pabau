@@ -1,3 +1,4 @@
+export * from './lib/custom-high-chart/CustomHighChart'
 export * from './lib/dropdown-with-icon/DropdownWithIcon'
 export * from './lib/photo-gallery/PhotoGallery'
 export * from './lib/attach-dialog/AttachDialog'
