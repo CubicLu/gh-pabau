@@ -1,34 +1,32 @@
 query subscriptionInvoices(
-  $offset: Int, 
-  $limit: Int,
-  $status: String,
-  $searchTerm: String,
-){ 
-   invoices: subscriptionInvoices(
-    offset: $offset, 
-    limit: $limit,
-    status: $status,
-    searchTerm: $searchTerm,
-  ){
+  $offset: Int
+  $limit: Int
+  $status: String
+  $searchTerm: String
+) {
+  invoices: subscriptionInvoices(
+    offset: $offset
+    limit: $limit
+    status: $status
+    searchTerm: $searchTerm
+  ) {
     id
     date
     invoice_link
     description
-    amount 
+    amount
     status
     currency
   }
 }
 
-query totalSubscriptions($status: String,$searchTerm: String){
-  total: subscriptionInvoicesTotal(
-    status: $status,
-    searchTerm: $searchTerm
-  )
+query totalSubscriptions($status: String, $searchTerm: String) {
+  total: subscriptionInvoicesTotal(status: $status, searchTerm: $searchTerm)
 }
 
 query accountInformations {
-    company {
+  me {
+    Company {
       remote_url
       subscription {
         license_id
@@ -46,58 +44,63 @@ query accountInformations {
         image
       }
     }
-    usersCount: findManyUserCount(where: { deleted: { equals: 0 } })
-    metas: findManyCompanyMeta(
-      where: {
-        meta_name: {
-          in: [
-            "goPlusActive"
-            "goPlusStartDate"
-            "teamPlusActive"
-            "teamPlusStartDate"
-            "intelligenceActive"
-            "intelligenceStartDate"
-            "automationActive"
-            "automationStartDate"
-          ]
-        }
+  }
+
+  usersCount: findManyUserCount(where: { deleted: { equals: 0 } })
+  metas: findManyCompanyMeta(
+    where: {
+      meta_name: {
+        in: [
+          "goPlusActive"
+          "goPlusStartDate"
+          "teamPlusActive"
+          "teamPlusStartDate"
+          "intelligenceActive"
+          "intelligenceStartDate"
+          "automationActive"
+          "automationStartDate"
+        ]
       }
-    ) {
-      meta_name
-      meta_value
+    }
+  ) {
+    meta_name
+    meta_value
+  }
+}
+
+query billingInformations {
+  subscription: subscriptionDetails {
+    id
+    next_charge_date
+    next_charge_amount
+    name
+    currency
+    app_fee
+    interval_unit
+    created_at
+    amount
+    status
+  }
+  me {
+    Company {
+      owner {
+        full_name
+      }
     }
   }
 
-  query billingInformations {
-      subscription: subscriptionDetails {
-        id
-        next_charge_date
-        next_charge_amount
-        name
-        currency
-        app_fee
-        interval_unit
-        created_at
-        amount
-        status
-      }
-      company {
-        owner {
-          full_name
-        }
-      }
-      address: findFirstCompanyDetails {
-        street
-        city
-        post_code
-      }
-      bank: subscriptionCardDetails {
-        account_number_ending
-        bank_name
-        account_holder_name
-        last4
-        exp_month
-        exp_year
-        branch_code
-      }
-    }
+  address: findFirstCompanyDetails {
+    street
+    city
+    post_code
+  }
+  bank: subscriptionCardDetails {
+    account_number_ending
+    bank_name
+    account_holder_name
+    last4
+    exp_month
+    exp_year
+    branch_code
+  }
+}

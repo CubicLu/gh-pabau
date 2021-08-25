@@ -1,3 +1,0 @@
-query VerifyTwoFaCode($pincode:String!){
-    VerifyTwoFaCode(pincode: $pincode)
-}

@@ -5,7 +5,7 @@ import {
   SetupSearchInput,
 } from '@pabau/ui'
 import { Card, Tabs, Typography } from 'antd'
-import React, { FC, useContext, useState } from 'react'
+import React, { FC, useState } from 'react'
 import Highlighter from 'react-highlight-words'
 import { useMedia } from 'react-use'
 import CommonHeader from '../../components/CommonHeader'
@@ -14,7 +14,7 @@ import IntegrationHeader, {
   IntegrationTabBody,
   ModalSchema,
 } from '../../components/Integration/Integration'
-import { UserContext } from '../../context/UserContext'
+import { useUser } from '../../context/UserContext'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { setupIntegrationData } from '../../mocks/SetupIntegration'
 import logo from './../../assets/images/pabau-badge-1.png'
@@ -98,7 +98,7 @@ const Search: FC<SearchProps> = ({ data, searchString }) => {
 
 export const Integration: FC = () => {
   const { t } = useTranslationI18()
-  const user = useContext(UserContext)
+  const user = useUser()
   const { integrationBodyCollections, tabMenuItems } = setupIntegrationData(t)
 
   const [active, setActive] = useState<string>('3')
