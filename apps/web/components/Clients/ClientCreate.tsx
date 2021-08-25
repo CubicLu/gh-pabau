@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useContext, useEffect, useState } from 'react'
 import {
   Notification,
   NotificationType,
@@ -20,6 +20,7 @@ import {
   useCreateOneContactMutation,
   GetTblModuleFieldsSettingsQuery,
 } from '@pabau/graphql'
+import { UserContext } from '../../context/UserContext'
 
 export interface Label {
   label?: string
@@ -62,6 +63,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
   ...props
 }) => {
   const { t } = useTranslation('common')
+  const user = useContext(UserContext)
   const [labelsData, setLabelsData] = useState<LabelDataProps[]>([])
   const [validationObject, setValidationObject] = useState({})
   const [initialValues, setInitialValues] = useState<InitialDetailsProps>({
@@ -84,6 +86,31 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
     MarketingOptInText: false,
     MarketingOptInPost: false,
     MarketingOptInPhone: false,
+    marketingPromotion: ['subscriptionToReceive'],
+    recordSharing: {
+      company: 'access',
+      emergencyContact: 'sharing',
+      family: 'sharing',
+      gp: 'sharing',
+      insuranceProvider: 'sharing',
+      nextOfKin: 'restricted',
+    },
+    privacyPolicy: 'No response',
+    settingSharing: {
+      bookAppointments: true,
+      bookClass: false,
+      loyalty: true,
+      myPackages: false,
+      purchasePackage: false,
+      payments: false,
+      appointments: false,
+      class: false,
+      documents: false,
+      medications: false,
+      allergies: false,
+      gpDetails: false,
+    },
+    shareLink: 'https://prelive-crm.new.pabau.com/',
   })
   const [customFields, setCustomFields] = useState<CustomFieldsProps[]>([])
   const [isVisible, setVisible] = useState(modalVisible)
@@ -456,6 +483,7 @@ export const ClientCreateWeb: FC<ClientCreateWebProps> = ({
       initialValues={initialValues}
       validationObject={validationObject}
       isDisabledBtn={checkIsLoading()}
+      companyName={user?.me?.company?.details?.company_name}
       {...props}
     />
   )
