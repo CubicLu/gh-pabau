@@ -24,7 +24,7 @@ import { ReactComponent as SkinHealth } from '../../../web/assets/images/skin-he
 import { ReactComponent as LogoSvg } from '../../../../libs/ui/src/lib/logo/logo.svg'
 import { MasterCategory, Category, Service } from '../../types/services'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-
+import { useSelectedDataStore } from '../../store/selectedData'
 export interface P {
   catID: number
   mCatID: number
@@ -46,14 +46,14 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
   const isMobile = useMedia('(max-width: 768px)', false)
 
   //FIXED
+  const [selectedData, setSelectedData] = useSelectedDataStore()
+
   const [categoryID, setCategoryID] = useState(catID)
   const [masterCategoryID, setMasterCategoryID] = useState(mCatID)
-  const [selectedServices, setSelectedServices] = useState<number[]>([])
   const [virtualServicesOnly, setVirtualServicesOnly] = useState<boolean>(false)
   const [totalEstimate, setTotalEstimate] = useState<number>(0)
 
   const { t } = useTranslationI18()
-
   const renderService = (val: Service) => {
     if (
       (virtualServicesOnly && val.online_only_service !== 1) ||
@@ -61,22 +61,24 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
     ) {
       return null
     }
-    const isSelected = selectedServices.includes(val.id)
+    const isSelected = selectedData.services.includes(val.id)
     return (
       <div style={{ width: '100%', marginBottom: '16px' }}>
         <div
           className={styles.consultationCard}
           key={val.id}
           onClick={(e) => {
+            let newSelectedServices = []
             if (isSelected) {
-              setSelectedServices(
-                selectedServices.filter((el) => el !== val.id)
+              newSelectedServices = selectedData.services.filter(
+                (el) => el !== val.id
               )
               setTotalEstimate(totalEstimate - Number.parseFloat(val.price))
             } else {
-              setSelectedServices([...selectedServices, val.id])
+              newSelectedServices = [...selectedData.services, val.id]
               setTotalEstimate(totalEstimate + Number.parseFloat(val.price))
             }
+            setSelectedData('SET_SELECTED_SERVICES', newSelectedServices)
           }}
         >
           <div className={styles.consultationLine}>
@@ -499,14 +501,14 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
           {!isMobile && renderServices()}
         </div>
       </div>
-      {(selectedServices.length > 0 || Vcount > 0) && (
+      {(selectedData.services.length > 0 || Vcount > 0) && (
         <div className={styles.servicefooter}>
           <p>
-            {selectedServices.length === 1
+            {selectedData.services.length === 1
               ? `1 service £ ${totalEstimate}`
-              : `${selectedServices.length} services £ ${totalEstimate}`}
+              : `${selectedData.services.length} services £ ${totalEstimate}`}
 
-            {Vcount > 0 && selectedServices.length > 0 && '  ,'}
+            {Vcount > 0 && selectedData.services.length > 0 && '  ,'}
             {Vcount > 0 &&
               (Vcount === 1
                 ? `1 voucher £ ${Vprice}`
@@ -514,7 +516,7 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
           </p>
           <Button
             onClick={() => {
-              onStepCompleted(selectedServices)
+              onStepCompleted(selectedData.services)
             }}
           >
             Next

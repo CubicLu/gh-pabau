@@ -13,6 +13,7 @@ import * as Yup from 'yup'
 import classnames from 'classnames'
 import { MasterCategory } from '../../types/services'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { useSelectedDataStore } from '../../store/selectedData'
 
 export interface P {
   items: MasterCategory[]
@@ -26,19 +27,16 @@ export const ServiceCategorySelector: FC<P> = ({
   click,
 }) => {
   const [showMasterCategories, setShowMasterCategories] = useState(true)
-  const [masterCategoryID, setMasterCategoryID] = useState<number>()
-  const [categoryID, setCategoryID] = useState<number>()
-  const [peopleBooked, setPeopleBooked] = useState(1)
-
-  const [type, settype] = useState('')
+  const [selectedData, setSelectedData] = useSelectedDataStore()
+  const [isGroup, setIsGroup] = useState<boolean>(false)
 
   const handleSelectedMasterCategory = (id: number) => {
     setShowMasterCategories(false)
-    setMasterCategoryID(id)
+    setSelectedData('SET_MASTER_CATEGORY_ID', id)
   }
 
   const handleSelectedCategory = (id: number) => {
-    setCategoryID(id)
+    setSelectedData('SET_CATEGORY_ID', id)
     onSelected(id)
   }
 
@@ -64,9 +62,15 @@ export const ServiceCategorySelector: FC<P> = ({
               <div
                 className={classnames(
                   styles.userInfo,
-                  type !== 'group' && styles.active
+                  !isGroup && styles.active
                 )}
-                onClick={() => settype('me')}
+                onClick={() => {
+                  setSelectedData(
+                    'SET_PEOPLE_COUNT',
+                    Number(values.target.value)
+                  )
+                  setIsGroup(false)
+                }}
               >
                 <span className={styles.userIcon}>
                   <UserOutlined />
@@ -77,9 +81,15 @@ export const ServiceCategorySelector: FC<P> = ({
               <div
                 className={classnames(
                   styles.userInfo,
-                  type === 'group' && styles.active
+                  isGroup && styles.active
                 )}
-                onClick={() => settype('group')}
+                onClick={() => {
+                  setSelectedData(
+                    'SET_PEOPLE_COUNT',
+                    Number(values.target.value)
+                  )
+                  setIsGroup(true)
+                }}
               >
                 <span className={styles.userIcon}>
                   <TeamOutlined />
@@ -89,12 +99,12 @@ export const ServiceCategorySelector: FC<P> = ({
               </div>
             </div>
 
-            {type === 'group' && (
+            {isGroup && (
               <Formik
                 enableReinitialize={true}
                 initialValues={formIntialValues}
                 validationSchema={formikValidationSchema}
-                onSubmit={(values) => {}}
+                onSubmit={null}
               >
                 {({ setFieldValue }) => (
                   <Form
@@ -110,7 +120,10 @@ export const ServiceCategorySelector: FC<P> = ({
                         type={'number'}
                         autoComplete="off"
                         onChange={(values) => {
-                          setPeopleBooked(Number(values.target.value))
+                          setSelectedData(
+                            'SET_PEOPLE_COUNT',
+                            Number(values.target.value)
+                          )
                           setFieldValue('persons', values.target.value)
                         }}
                       />
@@ -143,7 +156,7 @@ export const ServiceCategorySelector: FC<P> = ({
             <div className={styles.btnView}>
               <Button
                 onClick={() => {
-                  click(type === 'group' ? peopleBooked : 1, true)
+                  click(isGroup ? selectedData.peopleCount : 1, true)
                 }}
                 className={styles.viewBut}
               >
@@ -156,7 +169,7 @@ export const ServiceCategorySelector: FC<P> = ({
         <div className={styles.slide}>
           <div className={styles.custCard}>
             {items
-              .find((row) => row.id === masterCategoryID)
+              .find((row) => row.id === selectedData.masterCategoryID)
               ?.categories.map((item) => (
                 <div
                   key={item.id}

@@ -23,7 +23,6 @@ import {
 } from '@pabau/graphql'
 import { Image } from 'antd'
 
-import useServices from '../../hooks/useServices'
 import { BookingData } from '../../types/booking'
 import { useRouter } from 'next/router'
 
@@ -73,8 +72,9 @@ export function Index() {
   const router = useRouter()
   const [language, setLanguage] = useState('en')
   const [currentStep, setCurrentStep] = useState<number>(0)
-  const [selectedData, setSelectedData] = useState<BookingData>({})
+  const [selectedData, setSelectedData] = useState<BookingData>()
   const { t } = useTranslationI18()
+
   const companySlug =
     typeof router.query.company_slug === 'object'
       ? router.query.company_slug[0]
@@ -166,9 +166,6 @@ export function Index() {
     }
   )
 
-  const translation = (key) => {
-    return t(key, { lng: language.toString().slice(0, 2).toLowerCase() })
-  }
   const rech = () => {
     setCurrentStep(currentStep + 1)
     Setback(true)
@@ -179,19 +176,17 @@ export function Index() {
     if (currentStep === 1) {
       buttonName = t('connect.onlinebooking.backButton.service')
     } else if (currentStep === 2) {
-      buttonName = translation('connect.onlinebooking.backButton.service')
+      buttonName = t('connect.onlinebooking.backButton.service')
     } else if (currentStep === 3) {
-      buttonName = translation('connect.onlinbooking.backButton.location')
+      buttonName = t('connect.onlinbooking.backButton.location')
     } else if (currentStep === 4) {
-      buttonName = translation('connect.onlinebooking.backButton.employe')
+      buttonName = t('connect.onlinebooking.backButton.employe')
     } else if (currentStep === 5) {
-      buttonName = translation('connect.onlinebooking.backButton.choosedate')
+      buttonName = t('connect.onlinebooking.backButton.choosedate')
     } else if (currentStep === 6) {
-      buttonName = translation('connect.onlinebooking.backButton.conformation')
+      buttonName = t('connect.onlinebooking.backButton.conformation')
     } else if (currentStep === 7) {
-      buttonName = translation(
-        'connect.onlinebooking.backButton.bookingdetaile'
-      )
+      buttonName = t('connect.onlinebooking.backButton.bookingdetaile')
     }
 
     return (
@@ -210,32 +205,11 @@ export function Index() {
       )
     )
   }
+
   const userinfo = (userdata) => {
     user.firstname = userdata.first
     user.lastname = userdata.last
     setuser(user)
-  }
-
-  const classname = () => {
-    if (currentStep === 1) {
-      return styles.slide1
-    } else if (currentStep === 2) {
-      return styles.slide2
-    } else if (currentStep === 3) {
-      return styles.slide3
-    } else if (currentStep === 4) {
-      return styles.slide4
-    } else if (currentStep === 5) {
-      return styles.slide5
-    } else if (currentStep === 6) {
-      return styles.slide6
-    } else if (currentStep === 7) {
-      return styles.slide7
-    } else if (currentStep === 8) {
-      return styles.slide8
-    } else if (currentStep === 9) {
-      return styles.slide9
-    }
   }
 
   const findServiceByIDs = (serviceIDs: number[]) => {
@@ -281,9 +255,9 @@ export function Index() {
 
       <div className={styles.mainBody}>
         {goBackButton()}
-        <div className={classname()}>
+        <div className={styles.slide}>
           {currentStep === 0 && (
-            <div>
+            <>
               <ServiceCategorySelector
                 items={masterCategories}
                 onSelected={(id) => {
@@ -296,13 +270,13 @@ export function Index() {
                 }}
               />
               <div className={styles.verification}>
-                {translation('connect.onlinebooking.first.description')}
+                {t('connect.onlinebooking.first.description')}
                 <span>
                   &nbsp;
                   <a href={'online-booking/045787498450'}>045787498450</a>
                 </span>
               </div>
-            </div>
+            </>
           )}
           {currentStep === 1 && (
             <div className={styles.slide1}>
@@ -393,7 +367,7 @@ export function Index() {
                 }}
                 charge={user.charge}
                 getinfo={userinfo}
-                translation={translation}
+                translation={t}
                 member={user.member}
                 backToStep={(step: number) => {
                   setCurrentStep(step)
@@ -408,7 +382,7 @@ export function Index() {
                 image={user.image}
                 firstname={user.firstname}
                 lastname={user.lastname}
-                translation={translation}
+                translation={t}
               />
             </div>
           )}
@@ -417,7 +391,7 @@ export function Index() {
               <Payment
                 changescreen={rech}
                 type={user.type}
-                translation={translation}
+                translation={t}
                 price={user.charge}
               />
             </div>
@@ -431,7 +405,7 @@ export function Index() {
                 date={user.date}
                 time={user.time}
                 description={user.docDescription}
-                translation={translation}
+                translation={t}
                 online={user.online}
                 duration={user.duration}
               />
