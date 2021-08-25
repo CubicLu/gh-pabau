@@ -763,49 +763,6 @@
         }
       }
     },
-    "bridge-proxy": {
-      "root": "apps/bridge-proxy",
-      "sourceRoot": "apps/bridge-proxy/src",
-      "projectType": "application",
-      "prefix": "bridge-proxy",
-      "architect": {
-        "serve": {
-          "builder": "@nrwl/workspace:run-script",
-          "outputs": [],
-          "options": {
-            "script": "mesh serve"
-          },
-          "configurations": {
-            "production": {}
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/bridge-proxy/**/*.[tj]s"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/bridge-proxy"],
-          "options": {
-            "jestConfig": "apps/bridge-proxy/jest.config.js",
-            "passWithNoTests": true,
-            "runInBand": true
-          }
-        },
-        "deploy-docker": {
-          "builder": "@nrwl/workspace:run-commands",
-          "outputs": [],
-          "options": {
-            "command": "sh apps/bridge-proxy/cicd/deploy.sh"
-          },
-          "configurations": {
-            "production": {}
-          }
-        }
-      }
-    },
     "storage": {
       "root": "apps/storage",
       "sourceRoot": "apps/storage/src",
