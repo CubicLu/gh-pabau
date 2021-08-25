@@ -1,2 +1,2 @@
-export * from './jwt-authentication-token'
 export * from './login-form'
+export * from './jwt-user'

@@ -29,16 +29,16 @@ import React, { FC, useState } from 'react'
 import { languageMenu } from '../../assets/images/lang-logos'
 import { ReactComponent as LaunchSVG } from '../../assets/images/launch.svg'
 import { ReactComponent as TaskSVG } from '../../assets/images/Vector.svg'
-import { FullAuthenticationUser } from '@pabau/yup'
 import { ExtraUserData } from '@pabau/ui'
 import styles from './Dropdown.module.less'
 import { useTranslation } from 'react-i18next'
+import { AuthenticatedUser, JwtUser } from '@pabau/yup'
 
 export interface DropDownInterface {
   isOpen?: boolean
   onCloseDrawer?: () => void
   onLogOut?(): void
-  userData?: FullAuthenticationUser & ExtraUserData
+  userData?: Partial<AuthenticatedUser> & JwtUser & ExtraUserData
   taskManagerIFrameComponent?: JSX.Element
 }
 
@@ -67,14 +67,12 @@ export const Dropdown: FC<DropDownInterface> = ({
         onClick={() => onClickAvatarMenu('ClinicMenu')}
       >
         <div className={styles.dropdownHeader}>
-          <span className={styles.headerText}>
-            {userData?.Company?.details?.company_name}
-          </span>
+          <span className={styles.headerText}>{userData?.companyName}</span>
         </div>
         <RightOutlined className={styles.dropdownIcon} />
       </Menu.Item>
       <Menu.Item className={styles.userinfo} key="userName">
-        <div className={styles.userName}>{userData?.full_name}</div>
+        <div className={styles.userName}>{userData?.fullName}</div>
         {/* TODO */}
         {/* <div className={styles.userBalance}>
           <p>{t('avatar.balance')}</p>
@@ -185,7 +183,7 @@ export const Dropdown: FC<DropDownInterface> = ({
               <div className={styles.subDropdownListHeader}>
                 <Text> {company.name} </Text>
               </div>
-              {userData?.Company?.details?.company_name === company.name ? (
+              {userData?.companyName === company.name ? (
                 <CheckCircleFilled
                   key={company.id}
                   className={classNames(styles.checkIcon, styles.activeMenu)}
@@ -446,7 +444,11 @@ export const Dropdown: FC<DropDownInterface> = ({
               size="default"
               style={{ height: '8px', width: '8px' }}
             >
-              <Avatar src={userData?.image} size={40} icon={<UserOutlined />} />
+              <Avatar
+                src={userData?.imageUrl}
+                size={40}
+                icon={<UserOutlined />}
+              />
             </Badge>
 
             <CaretDownOutlined

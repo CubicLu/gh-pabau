@@ -280,15 +280,49 @@ pipelines:
             - HUSKY=0 git push && HUSKY=0 git push --tags
             - export PACKAGE_JSON_VERSION=$(jq -r .version < package.json)
 
-      - step:
-          name: build
-          max-time: 80
-          size: 2x
-          script:
-            #            - while true; do ps -aux && sleep 30; done &
-            - NEXT_PUBLIC_GRAPHQL_ENDPOINT='https://api-v2.pabau.com/v1/graphql' NEXT_PUBLIC_WS_ENDPOINT='wss://api-v2.pabau.com/v1/graphql' yarn affected:export --base=HEAD~1 --prod
-          artifacts:
-            - dist/**
+      - parallel:
+
+          - step:
+              name: integration tests
+              size: 2x
+              services:
+                - docker
+              script:
+                - |
+                  echo "Testing Hasura database is consistent with schema.graphql..."
+                  echo "============================================================"
+                  echo ""
+                  echo "Installing docker-compose..."
+                  curl -L https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+                  chmod +x ~/docker-compose
+                  mv ~/docker-compose /usr/local/bin/docker-compose
+                - yarn bridge:start2 &
+                - |
+                  echo "Waiting for bridge-api to boot..."
+                  yarn wait-on -t 160000 http-get://localhost:4000
+                  echo "Waiting for postgres to boot..."
+                  docker-compose -f hasura/docker-compose.ci.yml up -d postgres && yarn wait-on -t 60000 -w 12000 tcp:127.0.0.1:5432 || docker-compose -f hasura/docker-compose.ci.yml logs postgres
+                  echo "Waiting for Hasura to boot..."
+                  docker-compose -f hasura/docker-compose.ci.yml up -d graphql-engine && yarn wait-on -t 60000 -w 20000 http-get://localhost:8080/console || docker-compose -f hasura/docker-compose.ci.yml logs graphql-engine
+                  echo "Ensuring Hasura is really booted..."
+                  HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:wait
+                  echo "Checking Metadata is consistent so far..."
+                  HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:cli metadata inconsistency status
+                  echo "Exporting Hasura metadata..."
+                  HASURA_GRAPHQL_ENDPOINT="http://localhost:8080" yarn hasura:export
+                  echo "Ensuring everything is identical..."
+                  git diff --exit-code --no-ext-diff -p || (git status && exit 1)
+
+
+          - step:
+              name: build
+              max-time: 80
+              size: 2x
+              script:
+                #            - while true; do ps -aux && sleep 30; done &
+                - NEXT_PUBLIC_GRAPHQL_ENDPOINT='https://api-v2.pabau.com/v1/graphql' NEXT_PUBLIC_WS_ENDPOINT='wss://api-v2.pabau.com/v1/graphql' yarn affected:export --base=HEAD~1 --prod
+              artifacts:
+                - dist/**
 
       - parallel:
           - step:

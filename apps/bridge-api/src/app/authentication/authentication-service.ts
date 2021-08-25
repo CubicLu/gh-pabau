@@ -1,49 +1,49 @@
-import { Company, User, CompanyDetails } from '@prisma/client'
 import jwt from 'jsonwebtoken'
-import { JwtAuthenticationToken } from '@pabau/yup'
+import { JwtUser } from '@pabau/yup'
 
-export type AuthenticatedUser = Pick<
-  User,
-  | 'id'
-  | 'username'
-  | 'password'
-  | 'password_algor'
-  | 'salt'
-  | 'hash'
-  | 'admin'
-  | 'locale'
-> & {
-  Company?: Pick<Company, 'id' | 'admin' | 'remote_url' | 'remote_connect'> & {
-    details: Pick<CompanyDetails, 'language'> | null
+interface AuthenticatedUser {
+  Company: {
+    details: { language: string }
+    id: number
+    admin: number
+    remote_connect: string
+    remote_url: string
   }
+  id: number
+  username: string
+  hash: string
+  admin: number
+  locale: string
+  password_algor: number
+  password: string
+  salt: string
 }
 
 export const generateJWT = (user: AuthenticatedUser): string => {
-  return jwt.sign(
-    {
-      pab1: generatePab1JWT(user),
-      remote_url: user.Company.remote_url,
-      remote_connect: user.Company.remote_connect,
-      username: user.username,
-      user: user.id,
-      company: user.Company.id,
-      admin: Boolean(user.admin) ?? false,
-      owner: user.id === user.Company.admin ?? false,
-      language: {
-        user: user.locale,
-        company: user.Company?.details?.language,
-      },
-      'https://hasura.io/jwt/claims': {
-        'x-hasura-allowed-roles': ['public', 'user'],
-        'x-hasura-default-role': 'user',
-        'x-hasura-user-id': user.id.toString(),
-        'x-hasura-org-id': user.Company.id.toString(),
-        'x-hasura-pabau': 'test',
-      },
-    } as JwtAuthenticationToken,
-    process.env.JWT_SECRET,
-    { algorithm: 'HS512', expiresIn: '30d', notBefore: -60 }
-  )
+  const jwtObjectToSign: JwtUser = {
+    pab1: generatePab1JWT(user),
+    remote_url: user.Company.remote_url,
+    remote_connect: user.Company.remote_connect,
+    user: user.id,
+    company: user.Company.id,
+    admin: Boolean(user.admin) ?? false,
+    owner: user.id === user.Company.admin,
+    language: {
+      user: user.locale,
+      company: user.Company?.details?.language,
+    },
+    'https://hasura.io/jwt/claims': {
+      'x-hasura-allowed-roles': ['public', 'user'],
+      'x-hasura-default-role': 'user',
+      'x-hasura-user-id': user.id.toString(),
+      'x-hasura-org-id': user.Company.id.toString(),
+    },
+  }
+  return jwt.sign(jwtObjectToSign, process.env.JWT_SECRET, {
+    algorithm: 'HS512',
+    expiresIn: '30d',
+    notBefore: -60,
+  })
 }
 
 /* Legacy */

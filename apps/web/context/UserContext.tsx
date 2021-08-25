@@ -1,20 +1,15 @@
 import React, { createContext, FC, useContext, useEffect, useMemo } from 'react'
 import { useApolloClient } from '@apollo/client'
-import {
-  RetrieveAuthenticatedUserQuery,
-  useRetrieveAuthenticatedUserLazyQuery,
-} from '@pabau/graphql'
+import { useRetrieveAuthenticatedUserLazyQuery } from '@pabau/graphql'
 import { Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import createPersistedState from 'use-persisted-state'
 import jwt from 'jsonwebtoken'
 import Login from '../pages/login'
-import { JwtAuthenticationToken } from '@pabau/yup'
+import { AuthenticatedUser, JwtUser } from '@pabau/yup'
 
 interface P {
-  me?: jwt.JwtPayload &
-    JwtAuthenticationToken &
-    Partial<RetrieveAuthenticatedUserQuery['me']>
+  me?: jwt.JwtPayload & Partial<AuthenticatedUser> & JwtUser
   login(jwt: string): Promise<void>
   logout(): Promise<void>
 }
@@ -43,9 +38,7 @@ export const UserProvider: FC = ({ children }) => {
   }, [retrieveAuthenticatedUser, token])
 
   const jwtUser = useMemo(
-    () =>
-      jwt.decode(token, { json: true }) as jwt.JwtPayload &
-        JwtAuthenticationToken,
+    () => jwt.decode(token, { json: true }) as jwt.JwtPayload & JwtUser,
     [token]
   )
   const me = token ? (data?.me ? { ...jwtUser, ...data.me } : jwtUser) : null

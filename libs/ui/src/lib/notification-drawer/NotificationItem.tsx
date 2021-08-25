@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import React, { FC, useEffect, useState } from 'react'
 import { notificationIcons } from './mock'
 import styles from './NotificationDrawer.module.less'
-import { JwtAuthenticationToken } from '@pabau/yup'
+import { AuthenticatedUser, JwtUser } from '@pabau/yup'
 
 export interface NotificationDrawerItemType {
   id: string
@@ -23,7 +23,7 @@ export interface NotificationDrawerItemType {
 interface P {
   notify: NotificationDrawerItemType
   relativeTime?: (lan: string, date: Date) => string
-  user?: JwtAuthenticationToken
+  user?: Partial<AuthenticatedUser> & JwtUser
   updateMutation?: MutationFunction
   deleteMutation?: MutationFunction
   readAddMutation?: MutationFunction
