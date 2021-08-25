@@ -3,14 +3,6 @@
   "version": "2.0.522",
   "private": true,
   "license": "Copyright Hambrand Technologies Ltd",
-  "workspaces": {
-    "packages": [
-      "apps/bridge-proxy"
-    ],
-    "nohoist": [
-      "bridge-proxy/**"
-    ]
-  },
   "scripts": {
     "nx": "cross-env NODE_OPTIONS=\"--max-old-space-size=6543 --inspect\" nx",
     "serve": "yarn nx serve",
