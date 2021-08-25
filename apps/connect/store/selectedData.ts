@@ -6,6 +6,7 @@ let globalState = {
   masterCategoryID: null,
   peopleCount: 1,
 }
+
 let listeners = []
 const actions = {
   SET_SELECTED_SERVICES: (curState, newServices) => {
