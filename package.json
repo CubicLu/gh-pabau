@@ -73,7 +73,7 @@
     "bridge:clean": "rimraf apps/bridge-api/src/generated libs/graphql/crm-mutation",
     "bridge:prune": "yarn bridge:clean",
     "lint:graphql-inspector": "yarn graphql-inspector validate --noStrictFragments --deprecated \"{libs,apps}/**/*.graphql\" hasura/schema.graphql",
-    "postinstall": "patch-package --patch-dir tools/patches && husky install && (yarn graphql-codegen:cached && ls libs/graphql/generated/graphql.ts) || (yarn lint:graphql-inspector && exit 1)"
+    "postinstall": "patch-package --patch-dir tools/patches && husky install && yarn graphql-codegen:cached || (yarn lint:graphql-inspector && exit 1)"
   },
   "resolutions": {
     "**/immer": ">=8.0.1",
