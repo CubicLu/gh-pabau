@@ -67,7 +67,6 @@ export const TreeSelectCheckBox: FC<TreeSelectCheckBoxProps> = ({
       children: data,
     }
     setTreeData([firsObj])
-    keys.push('all')
     setCheckedKeys(keys)
   }, [data, defaultChecked])
 

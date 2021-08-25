@@ -4,7 +4,10 @@ import Layout from '../../../../components/Layout/Layout'
 import ActiveIcon from '../../../../components/Marketing/CreateGiftVoucher/assets/active.svg'
 import SelectServices from '../../../../components/Marketing/CreateGiftVoucher/SelectServices'
 import { useTranslationI18 } from '../../../../hooks/useTranslationI18'
-import { Card, Row, Col, Input, Select, Form } from 'antd'
+import { Card, Row, Col, Select, message } from 'antd'
+import { Formik } from 'formik'
+import { Form, Input } from 'formik-antd'
+import * as Yup from 'yup'
 import classNames from 'classnames'
 import useWindowSize from '../../../..//hooks/useWindowSize'
 
@@ -24,8 +27,9 @@ import Link from 'next/link'
 import styles from './index.module.less'
 import CommonHeader from '../../../../components/CommonHeader'
 
-const { TextArea } = Input
+// const { TextArea } = Input
 const { Option } = Select
+const { TextArea } = Input
 
 const defaultThemes = [
   {
@@ -73,7 +77,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
   const aligns = [styles.pRight, styles.pX, styles.pX, styles.pLeft]
   const bgSelectRef = useRef<HTMLInputElement>(null)
   const spanLink = useRef<HTMLSpanElement>(null)
-  const [form] = Form.useForm()
+
   const size = useWindowSize()
 
   const steps = [
@@ -94,15 +98,12 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
   ]
   const [activeStep, setActiveStep] = useState(0)
   const [bookBtn, setBookBtn] = useState(false)
-  const [voucherName, setVoucherName] = useState(null)
-  const [voucherNameCount, setVoucherNameCount] = useState(0)
-  const [voucherPrice, setVoucherPrice] = useState(0)
-  const [voucherRelation] = useState('Family')
-  const [voucherRelationLabel] = useState('Redeem all services')
-  const [voucherTermsConditions, setVoucherTermsConditions] = useState(null)
-  const [termsConditionsCount, setTermsConditionsCount] = useState(0)
-  const [clientNotes, setClientNotes] = useState(null)
-  const [clientNotesCount, setClientNotesCount] = useState(0)
+  const [voucherRelation] = useState(
+    t('giftvouchers.create.label.voucherrelation').toString()
+  )
+  const [voucherRelationLabel] = useState(
+    t('giftvouchers.create.label.voucherrelation.para').toString()
+  )
   const [voucherBackgrounUrl, setVoucherBackgroundUrl] = useState(null)
   const [themes, updateThemes] = useState([])
   const [bgColors, updateBGColors] = useState([])
@@ -111,22 +112,83 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
   const [showNextBtn, setShowNextBtn] = useState(true)
   const [showExtraBtn, setShowExtraBtn] = useState(false)
 
-  const onStepChange = (step) => {
+  const [formValues, setFormValues] = useState({
+    name: '',
+    terms: '',
+    price: 0,
+    validity: '',
+    services: '',
+    note: '',
+  })
+
+  const step0Schema = Yup.object({
+    name: Yup.string()
+      .min(
+        2,
+        t('crud-table-input-min-length-validate', {
+          what: t('giftvouchers.create.label.vouchername'),
+          min: 2,
+        })
+      )
+      .required(
+        t('crud-table-input-required', {
+          what: t('giftvouchers.create.label.vouchername'),
+        })
+      ),
+    terms: Yup.string().required(
+      t('crud-table-input-required', {
+        what: t('giftvouchers.create.label.termscondition'),
+      })
+    ),
+    price: Yup.number()
+      .min(0)
+      .required(
+        t('crud-table-input-required', {
+          what: t('giftvouchers.create.label.value'),
+        })
+      ),
+    validity: Yup.string().required(
+      t('crud-table-input-required', {
+        what: t('giftvouchers.create.label.validfor'),
+      })
+    ),
+    services: Yup.array()
+      .of(Yup.number())
+      .min(1)
+      .required(
+        t('crud-table-input-required', {
+          what: t('giftvouchers.create.label.services'),
+        })
+      ),
+  })
+
+  const step1Schema = Yup.object({
+    note: Yup.string().required('Note is required'),
+  })
+
+  const onStepChange = async (step, values, handleSubmit) => {
     switch (step) {
       case 0:
+        setFormValues({ ...formValues, ...values })
         setShowNextBtn(true)
         setShowExtraBtn(false)
+        setActiveStep(step)
         break
 
       case 1:
-        setShowNextBtn(false)
-        setShowExtraBtn(true)
+        if (step > activeStep) handleSubmit()
+        if (await step0Schema.isValid(values)) {
+          setFormValues({ ...formValues, ...values })
+          setShowNextBtn(false)
+          setShowExtraBtn(true)
+          setActiveStep(step)
+        }
+        if (step < activeStep) setActiveStep(step)
         break
 
       default:
         return
     }
-    setActiveStep(step)
   }
 
   const CardHeader = () => (
@@ -157,7 +219,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
           </Button>
         </div>
         <div className={styles.saveBtn}>
-          <Button type="primary" size="large" onClick={() => form.submit()}>
+          <Button type="primary" size="large">
             {t('giftvouchers.create.btn.save')}
           </Button>
         </div>
@@ -165,7 +227,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
     </div>
   )
 
-  const PreviewTab = () => (
+  const PreviewTab = ({ values }) => (
     <div className={styles.voucherPreview}>
       <div className={styles.previewCard}>
         <div className={styles.card}>
@@ -178,9 +240,9 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
             buttonLabel="Book Now"
             bookNowButton={bookBtn}
             gradientType="linear-gradient"
-            termsConditions={voucherTermsConditions}
-            voucherPrice={voucherPrice}
-            voucherPriceLabel={voucherName}
+            termsConditions={values?.terms}
+            voucherPrice={values.price}
+            voucherPriceLabel={values?.name}
             voucherRelation={voucherRelation}
             voucherRelationLabel={voucherRelationLabel}
             currencyType="£"
@@ -191,8 +253,8 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
     </div>
   )
 
-  const BuilderTab = () => (
-    <Form layout="vertical" form={form} onFinish={() => false}>
+  const BuilderTab = ({ setValue, values }) => (
+    <Form layout="vertical" onFinish={() => false}>
       {activeStep === 0 && (
         <div className={styles.controls}>
           <div className={styles.contDiv}>
@@ -208,27 +270,22 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
             <p>{t('giftvouchers.create.label.voucherinfo.para')}</p>
           </div>
           <Form.Item
+            className={styles.contDiv}
             name="name"
-            className={classNames(styles.contDiv, styles.customedBefore)}
             label={
               <>
-                <span className={styles.pl10}>
-                  {t('giftvouchers.create.label.vouchername')}
-                </span>
-                <span>{voucherNameCount}/100</span>
+                <span>{t('giftvouchers.create.label.vouchername')}</span>
+                <span>{values?.name?.length || 0}/100</span>
               </>
             }
-            rules={[{ required: true, message: 'HELLo' }]}
           >
             <Input
+              name="name"
               type="text"
               size="large"
               maxLength={100}
               placeholder="Voucher Name"
-              value={voucherName}
-              onChange={(e) =>
-                onInputChange(e, setVoucherName, setVoucherNameCount)
-              }
+              value={values?.name}
             />
           </Form.Item>
           <Form.Item
@@ -237,48 +294,44 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
             label={
               <>
                 <span>{t('giftvouchers.create.label.termscondition')}</span>
-                <span>{termsConditionsCount}/500</span>
+                <span>{values?.terms?.length || 0}/500</span>
               </>
             }
           >
             <TextArea
+              name="terms"
               rows={6}
               placeholder={t('giftvouchers.create.label.termscondition')}
               maxLength={500}
-              value={voucherTermsConditions}
-              onChange={(e) =>
-                onInputChange(
-                  e,
-                  setVoucherTermsConditions,
-                  setTermsConditionsCount
-                )
-              }
+              value={values?.terms}
             />
           </Form.Item>
           <Form.Item
-            name="value"
+            name="price"
             className={styles.contDiv}
-            label={<span>{t('giftvouchers.create.label.value')}</span>}
+            label={t('giftvouchers.create.label.value')}
           >
             <Input
+              name="price"
               addonBefore="£"
               type="number"
               size="large"
               min={0}
-              value={voucherPrice}
               placeholder={t('giftvouchers.create.label.value')}
-              onChange={(e) => onInputChange(e, setVoucherPrice)}
+              value={values?.price}
             />
           </Form.Item>
           <Form.Item
             name="validity"
             className={styles.contDiv}
-            label={<span>{t('giftvouchers.create.label.validfor')}</span>}
+            label={t('giftvouchers.create.label.validfor')}
           >
             <Select
               size="large"
               placeholder={t('giftvouchers.create.label.validfor')}
               style={{ width: '100%' }}
+              value={values?.validity}
+              onChange={(data) => setValue('validity', data)}
             >
               <Option value="14 days">
                 {t('giftvouchers.create.label.validfor.options1')}
@@ -317,9 +370,12 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
           <Form.Item
             name="services"
             className={styles.contDiv}
-            label={<span>{t('giftvouchers.create.label.services')}</span>}
+            label={t('giftvouchers.create.label.services')}
           >
-            <SelectServices />
+            <SelectServices
+              onChange={(data) => setValue('services', data)}
+              data={values?.services}
+            />
           </Form.Item>
         </div>
       )}
@@ -370,18 +426,16 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
             label={
               <>
                 <span>{t('giftvouchers.create.label.note')}</span>
-                <span>{clientNotesCount}/500</span>
+                <span>{values?.note?.length || 0}/500</span>
               </>
             }
           >
             <TextArea
+              name="note"
               rows={6}
               placeholder="Notes"
               maxLength={500}
-              value={clientNotes}
-              onChange={(e) =>
-                onInputChange(e, setClientNotes, setClientNotesCount)
-              }
+              value={values?.note}
             />
           </Form.Item>
           <div className={styles.contDiv}>
@@ -491,12 +545,6 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
     updateBGColors(defaultBgColors)
   }, [])
 
-  const onInputChange = (e, fn = null, countFn = null) => {
-    const val = e.target.value
-    countFn?.(val.length)
-    fn?.(val)
-  }
-
   const addNewBgImage = async (e) => {
     if (e) {
       const existingThemes = [...themes]
@@ -523,119 +571,146 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
     <Layout>
       <CommonHeader isLeftOutlined title="Gift Voucher" />
       <div className={styles.mainCreateVoucher}>
-        <Card title={<CardHeader />}>
-          <Row>
-            <Col md={24} className={styles.voucherBuilderBody}>
-              <Wstepper
-                disablePrevStep={false}
-                showNextBtn={showNextBtn}
-                nextBtnLabel={
-                  <span>
-                    {t('giftvouchers.create.label.nextstep')} <RightOutlined />
-                  </span>
-                }
-                active={activeStep}
-                data={steps}
-                onActiveStepChange={onStepChange}
-                extraBtn={showExtraBtn}
-                extraBtnType="primary"
-                extraBtnLabel={
-                  <span>
-                    {t('giftvouchers.create.label.create')} <RightOutlined />
-                  </span>
-                }
-                extraBtnClick={createVoucher}
-                allowDisablePrevious={false}
-              >
-                <Row
-                  className={classNames(
-                    styles.voucherBuilderSection,
-                    styles.showDefault,
-                    styles.desktopView
-                  )}
-                >
-                  <Col
-                    lg={6}
-                    md={24}
-                    sm={24}
-                    xs={24}
-                    className={styles.voucherBuilderControls}
+        <Formik
+          enableReinitialize={true}
+          initialValues={formValues}
+          validationSchema={activeStep === 0 ? step0Schema : step1Schema}
+          onSubmit={async (values) => {
+            if (await step0Schema.concat(step1Schema).isValid(values)) {
+              console.log(values)
+            }
+          }}
+        >
+          {({ setFieldValue, handleSubmit, values }) => (
+            <Card title={<CardHeader />}>
+              <Row>
+                <Col md={24} className={styles.voucherBuilderBody}>
+                  <Wstepper
+                    disablePrevStep={false}
+                    showNextBtn={showNextBtn}
+                    nextBtnLabel={
+                      <span>
+                        {t('giftvouchers.create.label.nextstep')}{' '}
+                        <RightOutlined />
+                      </span>
+                    }
+                    active={activeStep}
+                    data={steps}
+                    onActiveStepChange={(step) =>
+                      onStepChange(step, values, handleSubmit)
+                    }
+                    nextButtonDecorator={
+                      showExtraBtn && (
+                        <Button
+                          type="primary"
+                          style={{ marginRight: '10px' }}
+                          onClick={() => handleSubmit()}
+                        >
+                          {t('giftvouchers.create.label.create')}{' '}
+                          <RightOutlined />
+                        </Button>
+                      )
+                    }
+                    extraBtnClick={createVoucher}
+                    allowDisablePrevious={false}
                   >
-                    <div className={styles.heading}>
-                      <span>{t('giftvouchers.create.tabs.builder')}</span>
-                    </div>
-                    <BuilderTab />
-                  </Col>
-                  <Col
-                    lg={18}
-                    md={24}
-                    sm={24}
-                    xs={24}
-                    className={styles.voucherPreviewSelection}
-                  >
-                    <div className={styles.heading}>
-                      <span>{t('giftvouchers.create.tabs.preview')}</span>
-                    </div>
-                    <PreviewTab />
-                  </Col>
-                </Row>
-                <Row
-                  className={classNames(styles.hideDefault, styles.mobileView)}
-                >
-                  <Col md={24}>
-                    <TabMenu
-                      menuItems={[
-                        t('giftvouchers.create.tabs.builder'),
-                        t('giftvouchers.create.tabs.preview'),
-                      ]}
-                      tabPosition="top"
+                    <Row
+                      className={classNames(
+                        styles.voucherBuilderSection,
+                        styles.showDefault,
+                        styles.desktopView
+                      )}
                     >
-                      <Row className={styles.voucherBuilderSection}>
-                        <Col
-                          lg={24}
-                          md={24}
-                          sm={24}
-                          xs={24}
-                          className={styles.voucherBuilderControls}
+                      <Col
+                        lg={6}
+                        md={24}
+                        sm={24}
+                        xs={24}
+                        className={styles.voucherBuilderControls}
+                      >
+                        <div className={styles.heading}>
+                          <span>{t('giftvouchers.create.tabs.builder')}</span>
+                        </div>
+                        <BuilderTab setValue={setFieldValue} values={values} />
+                      </Col>
+                      <Col
+                        lg={18}
+                        md={24}
+                        sm={24}
+                        xs={24}
+                        className={styles.voucherPreviewSelection}
+                      >
+                        <div className={styles.heading}>
+                          <span>{t('giftvouchers.create.tabs.preview')}</span>
+                        </div>
+                        <PreviewTab values={values} />
+                      </Col>
+                    </Row>
+                    <Row
+                      className={classNames(
+                        styles.hideDefault,
+                        styles.mobileView
+                      )}
+                    >
+                      <Col md={24}>
+                        <TabMenu
+                          menuItems={[
+                            t('giftvouchers.create.tabs.builder'),
+                            t('giftvouchers.create.tabs.preview'),
+                          ]}
+                          tabPosition="top"
                         >
-                          <BuilderTab />
-                        </Col>
-                      </Row>
-                      <Row className={styles.voucherBuilderSection}>
-                        <Col
-                          lg={24}
-                          md={24}
-                          sm={24}
-                          xs={24}
-                          className={styles.voucherPreviewSelection}
-                        >
-                          <PreviewTab />
-                        </Col>
-                      </Row>
-                    </TabMenu>
-                  </Col>
-                </Row>
-              </Wstepper>
-            </Col>
-          </Row>
-          <Row>
-            <Col style={{ display: 'none' }}>
-              <input
-                type="file"
-                accept=".jpg, .png"
-                ref={bgSelectRef}
-                onChange={addNewBgImage}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col md={24}>
-              <Link href="/marketing/vouchers">
-                <span ref={spanLink}></span>
-              </Link>
-            </Col>
-          </Row>
-        </Card>
+                          <Row className={styles.voucherBuilderSection}>
+                            <Col
+                              lg={24}
+                              md={24}
+                              sm={24}
+                              xs={24}
+                              className={styles.voucherBuilderControls}
+                            >
+                              <BuilderTab
+                                setValue={setFieldValue}
+                                values={values}
+                              />
+                            </Col>
+                          </Row>
+                          <Row className={styles.voucherBuilderSection}>
+                            <Col
+                              lg={24}
+                              md={24}
+                              sm={24}
+                              xs={24}
+                              className={styles.voucherPreviewSelection}
+                            >
+                              <PreviewTab values={values} />
+                            </Col>
+                          </Row>
+                        </TabMenu>
+                      </Col>
+                    </Row>
+                  </Wstepper>
+                </Col>
+              </Row>
+              <Row>
+                <Col style={{ display: 'none' }}>
+                  <input
+                    type="file"
+                    accept=".jpg, .png"
+                    ref={bgSelectRef}
+                    onChange={addNewBgImage}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col md={24}>
+                  <Link href="/marketing/vouchers">
+                    <span ref={spanLink}></span>
+                  </Link>
+                </Col>
+              </Row>
+            </Card>
+          )}
+        </Formik>
       </div>
     </Layout>
   )

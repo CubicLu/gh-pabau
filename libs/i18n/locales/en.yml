@@ -4756,3 +4756,5 @@ en:
   giftvouchers.create.label.create: 'Create'
   giftvouchers.create.tabs.builder: 'Builder'
   giftvouchers.create.tabs.preview: 'Preview'
+  giftvouchers.create.label.voucherrelation: 'Family'
+  giftvouchers.create.label.voucherrelation.para: 'Redeem all services'

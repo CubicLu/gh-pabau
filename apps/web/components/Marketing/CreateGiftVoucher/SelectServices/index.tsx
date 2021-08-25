@@ -81,7 +81,12 @@ const treeData = [
   },
 ]
 
-export const SelectService: FC = () => {
+interface SelectServiceProps {
+  onChange?: (data) => void
+  data?: number[]
+}
+
+export const SelectService: FC<SelectServiceProps> = ({ onChange, data }) => {
   const [servicesModal, toggleServicesModal] = useState(false)
   const [selectedServices, setSelectedServices] = useState([])
   const [totalService, setTotalService] = useState(0)
@@ -89,6 +94,7 @@ export const SelectService: FC = () => {
   const onSave = (data) => {
     toggleServicesModal((servicesModal) => !servicesModal)
     setSelectedServices(data)
+    onChange?.(data)
   }
 
   useEffect(() => {
@@ -104,9 +110,9 @@ export const SelectService: FC = () => {
     countKeys(treeData)
     if (keys.length > 0) {
       setTotalService(keys.length)
-      setSelectedServices(keys)
     }
-  }, [])
+    setSelectedServices(data)
+  }, [data])
 
   return (
     <div className={styles.selectService}>

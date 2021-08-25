@@ -19,6 +19,7 @@ interface WStepperProps {
   extraBtnClick?: () => void
   onActiveStepChange?: (index) => void
   allowDisablePrevious?: boolean
+  nextButtonDecorator?: ReactNode
 }
 
 export const Wstepper: React.FC<WStepperProps> = ({
@@ -36,9 +37,6 @@ export const Wstepper: React.FC<WStepperProps> = ({
     setIndex(active)
   }, [active])
 
-  useEffect(() => {
-    onActiveStepChange?.(index)
-  }, [index])
 
   return (
     <div className={styles.container}>
@@ -52,8 +50,8 @@ export const Wstepper: React.FC<WStepperProps> = ({
 
       <Wizard
         {...props}
-        onPrev={() => setIndex(index - 1)}
-        onNext={() => setIndex(index + 1)}
+        onPrev={() => onActiveStepChange?.(index - 1)}
+        onNext={() => onActiveStepChange?.(index + 1)}
         active={index}
         allSteps={data.length}
         disableNextStep={disableNextStep}
