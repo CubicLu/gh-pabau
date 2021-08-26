@@ -72,11 +72,24 @@ export const UserWithCompanies = extendType({
 
 export const Me = queryField('me', {
   type: 'User',
-  resolve: async (_root, _args, { prisma, authenticated }, info) =>
-    prisma.user.findUnique({
+  resolve: async (_root, _args, { prisma, authenticated }, info) => {
+    console.log(
+      'starting me resolver... authenticated.user=',
+      authenticated.user
+    )
+    console.log('extended..', {
       where: {
         id: authenticated.user,
       },
       ...new PrismaSelect(info).value,
-    }),
+    })
+    const ret = await prisma.user.findUnique({
+      where: {
+        id: authenticated.user,
+      },
+      ...new PrismaSelect(info).value,
+    })
+    console.log('got result!', ret)
+    return ret
+  },
 })
