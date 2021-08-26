@@ -21,14 +21,14 @@ import { I18nextProvider, initReactI18next } from 'react-i18next'
 import { languages } from '@pabau/i18n'
 import { Integrations } from '@sentry/tracing'
 import * as Sentry from '@sentry/react'
-import { Notification, NotificationType } from '@pabau/ui'
-import { UserProvider } from '../context/UserContext'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import 'react-image-crop/dist/ReactCrop.css'
 import 'react-phone-input-2/lib/style.css'
 import 'react-quill/dist/quill.snow.css'
 
-require('../../../libs/ui/src/styles/antd.less')
+import '../../../libs/ui/src/styles/antd.less'
+import { Notification, NotificationType } from '@pabau/ui'
+import { UserProvider } from '../context/UserContext'
 
 let apolloClient: ApolloClient<NormalizedCacheObject | null> = null
 
