@@ -1,10 +1,10 @@
-import React, { FC } from 'react'
+import React, { FC, ReactNode } from 'react'
 import { Tree } from 'antd'
 import style from './CheckboxTree.module.less'
 
 export interface TreeDataType {
-  title: string
-  key: string
+  title: string | ReactNode
+  key: string | number
   children?: TreeDataType[]
 }
 export interface CheckboxTreeProps {
@@ -14,24 +14,29 @@ export interface CheckboxTreeProps {
   onExpand?: (value: string[]) => void
   onCheck?: (value: string[]) => void
   autoExpandParent?: boolean
+  defaultExpandAll?: boolean
+  showIcon?: boolean
+  blockNode?: boolean
+  showLine?: boolean
+  switcherIcon?: JSX.Element
+  checkable?: boolean
 }
 
 export const CheckboxTree: FC<CheckboxTreeProps> = ({
   treeData,
   onCheck,
   onExpand,
-  expandedKeys,
   autoExpandParent,
   checkedKeys,
+  checkable = true,
   ...props
 }) => {
   return (
     <div className={style.checkboxTreeWrapper}>
       <Tree
         className={style.treeCheckbox}
-        checkable
+        checkable={checkable}
         onExpand={onExpand}
-        expandedKeys={expandedKeys}
         autoExpandParent={autoExpandParent}
         onCheck={onCheck}
         checkedKeys={checkedKeys}

@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect } from 'react'
-import { Input } from 'antd'
-import { TreeSelectCheckBox } from '@pabau/ui'
-import { EditOutlined } from '@ant-design/icons'
+import { Button, Input } from 'antd'
+import { BasicModal, CheckboxTree } from '@pabau/ui'
+import { DownOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons'
 import styles from './index.module.less'
 
 const arrangeTitle = (
@@ -19,85 +19,46 @@ const arrangeTitle = (
     </span>
   )
 }
-
-const treeData = [
-  {
-    title: arrangeTitle('Seasonal Offers (8)'),
-    key: 2,
-    children: [
-      {
-        title: arrangeTitle('4 ml contour package', '1h 30min'),
-        key: 2.1,
-      },
-      {
-        title: arrangeTitle('2 ml contour', '1h'),
-        key: 2.2,
-      },
-      {
-        title: arrangeTitle('1 ml filler', '1h 25min'),
-        key: 2.3,
-      },
-    ],
-  },
-  {
-    title: arrangeTitle('Special Offers (12)'),
-    key: 3,
-    children: [
-      {
-        title: arrangeTitle('4 ml contour package', '1h 30min'),
-        key: 3.1,
-      },
-    ],
-  },
-  {
-    title: arrangeTitle('Face Services (23)'),
-    key: 4,
-    children: [
-      {
-        title: arrangeTitle('4 ml contour package', '1h 30min'),
-        key: 4.1,
-      },
-    ],
-  },
-  {
-    title: arrangeTitle('Body Services (23)'),
-    key: 5,
-    children: [
-      {
-        title: arrangeTitle('4 ml contour package', '1h 30min'),
-        key: 5.1,
-      },
-    ],
-  },
-  {
-    title: arrangeTitle('Hair Services (23)'),
-    key: 6,
-    children: [
-      {
-        title: arrangeTitle('4 ml contour package', '1h 30min'),
-        key: 6.1,
-      },
-    ],
-  },
-]
+export interface SingleCheckBoxDropDown {
+  title: string | number | JSX.Element
+  key: string | number
+  children?: SingleCheckBoxDropDown[]
+}
 
 interface SelectServiceProps {
+  dataSource: SingleCheckBoxDropDown[]
   onChange?: (data) => void
   data?: number[]
 }
 
-export const SelectService: FC<SelectServiceProps> = ({ onChange, data }) => {
+export const SelectService: FC<SelectServiceProps> = ({
+  dataSource,
+  onChange,
+  data,
+}) => {
   const [servicesModal, toggleServicesModal] = useState(false)
   const [selectedServices, setSelectedServices] = useState([])
   const [totalService, setTotalService] = useState(0)
+  const [treeData, setTreeData] = useState<SingleCheckBoxDropDown[]>([])
 
-  const onSave = (data) => {
+  const onSave = () => {
     toggleServicesModal((servicesModal) => !servicesModal)
-    setSelectedServices(data)
-    onChange?.(data)
+    const keys = [...selectedServices]
+    if (selectedServices.includes('all')) {
+      const index = keys.indexOf('all')
+      keys.splice(index, 1)
+    }
+    onChange?.(keys)
   }
 
   useEffect(() => {
+    const firsObj: SingleCheckBoxDropDown = {
+      title: arrangeTitle('Select All'),
+      key: 'all',
+      children: dataSource,
+    }
+    setTreeData([firsObj])
+
     let keys: string[] = []
     function countKeys(data) {
       keys = [...keys, ...data.map((el) => el.key)]
@@ -107,12 +68,16 @@ export const SelectService: FC<SelectServiceProps> = ({ onChange, data }) => {
         }
       }
     }
-    countKeys(treeData)
+    countKeys(dataSource)
     if (keys.length > 0) {
       setTotalService(keys.length)
     }
     setSelectedServices(data)
-  }, [data])
+  }, [data, dataSource])
+
+  const onCheck = (checkedKeysValue: string[]) => {
+    setSelectedServices(checkedKeysValue)
+  }
 
   return (
     <div className={styles.selectService}>
@@ -138,17 +103,46 @@ export const SelectService: FC<SelectServiceProps> = ({ onChange, data }) => {
         }
         placeholder="Services"
       />
-      <TreeSelectCheckBox
-        modalTitle="Select Services"
-        data={treeData}
+      <BasicModal
         visible={servicesModal}
-        inputPlaceholder="Search Services"
-        onClose={() => toggleServicesModal((servicesModal) => !servicesModal)}
-        defaultExpandedAll={true}
-        defaultChecked={selectedServices}
-        modalWidth={800}
-        onSave={(data) => onSave(data)}
-      />
+        title={'Select Services'}
+        className="servicesModal"
+        width={800}
+        onCancel={() => toggleServicesModal((modal) => !modal)}
+      >
+        <div className={styles.serviceInputSearch}>
+          <Input
+            type="text"
+            size="large"
+            placeholder={'Search Services'}
+            suffix={<SearchOutlined />}
+          />
+        </div>
+        <div className={styles.serviceInputSearch}>
+          <CheckboxTree
+            checkable
+            defaultExpandAll={true}
+            onCheck={onCheck}
+            checkedKeys={selectedServices}
+            treeData={treeData}
+            showIcon={true}
+            blockNode={true}
+            showLine={false}
+            switcherIcon={<DownOutlined />}
+          />
+        </div>
+        <div className={styles.saveBtn}>
+          <Button type="primary" size="large" onClick={onSave}>
+            Save{' '}
+            {selectedServices?.length > 0
+              ? selectedServices.includes('all')
+                ? selectedServices.length - 1
+                : selectedServices.length
+              : ''}{' '}
+            Services
+          </Button>
+        </div>
+      </BasicModal>
     </div>
   )
 }

@@ -1,7 +1,5 @@
 import React, { FC, useState, useEffect, useRef } from 'react'
 import Layout from '../../../../components/Layout/Layout'
-// import ExternalLink from '../../../../components/Marketing/CreateGiftVoucher/assets/external-link.svg'
-import ActiveIcon from '../../../../components/Marketing/CreateGiftVoucher/assets/active.svg'
 import SelectServices from '../../../../components/Marketing/CreateGiftVoucher/SelectServices'
 import { useTranslationI18 } from '../../../../hooks/useTranslationI18'
 import { Card, Row, Col } from 'antd'
@@ -11,7 +9,13 @@ import * as Yup from 'yup'
 import classNames from 'classnames'
 import useWindowSize from '../../../..//hooks/useWindowSize'
 
-import { HomeOutlined, EditOutlined, RightOutlined } from '@ant-design/icons'
+import {
+  HomeOutlined,
+  EditOutlined,
+  RightOutlined,
+  CheckCircleFilled,
+  CloudUploadOutlined,
+} from '@ant-design/icons'
 import {
   Breadcrumb,
   Switch,
@@ -30,6 +34,22 @@ import CommonHeader from '../../../../components/CommonHeader'
 // const { TextArea } = Input
 const { Option } = Select
 const { TextArea } = Input
+
+const arrangeTitle = (
+  title: string | number | JSX.Element = '',
+  subTitle: string | number | JSX.Element = ''
+) => {
+  return (
+    <span className="title">
+      <span className="main">{title}</span>
+      {subTitle && (
+        <span className="sub" style={{ marginTop: '2.5px' }}>
+          {subTitle}
+        </span>
+      )}
+    </span>
+  )
+}
 
 const defaultThemes = [
   {
@@ -65,6 +85,67 @@ const defaultBgColors = [
   {
     background: 'linear-gradient(67.52deg, #00A36E 0%, #00A69B 92.36%)',
     selected: false,
+  },
+]
+
+const treeData = [
+  {
+    title: arrangeTitle('Seasonal Offers (8)'),
+    key: 2,
+    children: [
+      {
+        title: arrangeTitle('4 ml contour package', '1h 30min'),
+        key: 2.1,
+      },
+      {
+        title: arrangeTitle('2 ml contour', '1h'),
+        key: 2.2,
+      },
+      {
+        title: arrangeTitle('1 ml filler', '1h 25min'),
+        key: 2.3,
+      },
+    ],
+  },
+  {
+    title: arrangeTitle('Special Offers (12)'),
+    key: 3,
+    children: [
+      {
+        title: arrangeTitle('4 ml contour package', '1h 30min'),
+        key: 3.1,
+      },
+    ],
+  },
+  {
+    title: arrangeTitle('Face Services (23)'),
+    key: 4,
+    children: [
+      {
+        title: arrangeTitle('4 ml contour package', '1h 30min'),
+        key: 4.1,
+      },
+    ],
+  },
+  {
+    title: arrangeTitle('Body Services (23)'),
+    key: 5,
+    children: [
+      {
+        title: arrangeTitle('4 ml contour package', '1h 30min'),
+        key: 5.1,
+      },
+    ],
+  },
+  {
+    title: arrangeTitle('Hair Services (23)'),
+    key: 6,
+    children: [
+      {
+        title: arrangeTitle('4 ml contour package', '1h 30min'),
+        key: 6.1,
+      },
+    ],
   },
 ]
 
@@ -374,6 +455,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
             label={t('giftvouchers.create.label.services')}
           >
             <SelectServices
+              dataSource={treeData}
               onChange={(data) => setValue('services', data)}
               data={values?.services}
             />
@@ -475,7 +557,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
                         }
                       >
                         {el.url === voucherBackgrounUrl && (
-                          <img src={ActiveIcon} alt="active" />
+                          <CheckCircleFilled />
                         )}
                       </div>
                       <span>{el?.name}</span>
@@ -491,7 +573,9 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
                     aligns[themes.length % 4]
                   )}
                 >
-                  <div onClick={() => bgSelectRef?.current.click()}></div>
+                  <div onClick={() => bgSelectRef?.current.click()}>
+                    <CloudUploadOutlined />
+                  </div>
                 </Col>
               </Row>
             </div>
@@ -528,7 +612,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
                         }
                       >
                         {el.background === selectedBgColor?.background && (
-                          <img src={ActiveIcon} alt="active" />
+                          <CheckCircleFilled />
                         )}
                       </div>
                     </Col>
