@@ -4,9 +4,9 @@ import Layout from '../../../../components/Layout/Layout'
 import ActiveIcon from '../../../../components/Marketing/CreateGiftVoucher/assets/active.svg'
 import SelectServices from '../../../../components/Marketing/CreateGiftVoucher/SelectServices'
 import { useTranslationI18 } from '../../../../hooks/useTranslationI18'
-import { Card, Row, Col, Select } from 'antd'
+import { Card, Row, Col } from 'antd'
 import { Formik } from 'formik'
-import { Form, Input } from 'formik-antd'
+import { Form, Input, Select } from 'formik-antd'
 import * as Yup from 'yup'
 import classNames from 'classnames'
 import useWindowSize from '../../../..//hooks/useWindowSize'
@@ -213,15 +213,14 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
         </div>
       )}
       <div className={styles.rightCardHeadBtns}>
-        <div className={styles.emailBtn}>
-          <Button type="default" size="large">
-            {t('giftvouchers.create.btn.send.email')}
-          </Button>
+        <div className={styles.switchDiv}>
+          <span>Sell this voucher online</span>
+          <Switch />
         </div>
-        <div className={styles.saveBtn}>
-          <Button type="primary" size="large">
-            {t('giftvouchers.create.btn.save')}
-          </Button>
+        <div className={styles.hrefDiv}>
+          <Link href="https://connect-lutetia.pabau.me/booking">
+            https://connect-lutetia.pabau.me/booking
+          </Link>
         </div>
       </div>
     </div>
@@ -241,12 +240,14 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
             bookNowButton={bookBtn}
             gradientType="linear-gradient"
             termsConditions={values?.terms}
-            voucherPrice={values.price}
+            voucherPrice={values?.price}
             voucherPriceLabel={values?.name}
             voucherRelation={voucherRelation}
             voucherRelationLabel={voucherRelationLabel}
             currencyType="£"
-            voucherType=""
+            voucherSoldPrice={values?.price}
+            voucherSoldPriceLabel="Sold 5"
+            voucherNum={100011}
           />
         </div>
       </div>
@@ -327,11 +328,11 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
             label={t('giftvouchers.create.label.validfor')}
           >
             <Select
+              name="validity"
               size="large"
               placeholder={t('giftvouchers.create.label.validfor')}
               style={{ width: '100%' }}
-              value={values?.validity}
-              onChange={(data) => setValue('validity', data)}
+              value={values?.validity || null}
             >
               <Option value="14 days">
                 {t('giftvouchers.create.label.validfor.options1')}
@@ -569,7 +570,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
 
   return (
     <Layout>
-      <CommonHeader isLeftOutlined title="Gift Voucher" />
+      <CommonHeader isLeftOutlined title={t('giftvouchers.create.label')} />
       <div className={styles.mainCreateVoucher}>
         <Formik
           enableReinitialize={true}

@@ -18,7 +18,7 @@ export interface VoucherCardProps {
   buttonLabel: string
   dotMenuShow?: boolean
   borderColor: string
-  voucherType: string
+  voucherType?: string
   voucherNum?: number
   voucherPrice: number
   voucherPriceLabel: string
@@ -42,11 +42,11 @@ export const VoucherCard: FC<VoucherCardProps> = ({
   buttonLabel,
   dotMenuShow,
   borderColor,
-  voucherType,
+  voucherType = '',
   voucherNum,
-  voucherPrice,
+  voucherPrice = 0,
   voucherPriceLabel,
-  voucherSoldPrice,
+  voucherSoldPrice = 0,
   voucherSoldPriceLabel,
   voucherRelation,
   voucherRelationLabel,
@@ -154,7 +154,7 @@ export const VoucherCard: FC<VoucherCardProps> = ({
 
                 <div className={styles.middleRow}>
                   <div>
-                    <h1>{voucherPrice && currencyType + voucherPrice}</h1>
+                    <h1>{voucherPrice >= 0 && currencyType + voucherPrice}</h1>
                     <p>{voucherPriceLabel}</p>
                   </div>
                 </div>
@@ -166,7 +166,8 @@ export const VoucherCard: FC<VoucherCardProps> = ({
                   </div>
                   <div className={styles.soldDetails}>
                     <h1>
-                      {voucherSoldPrice && currencyType + voucherSoldPrice}
+                      {voucherSoldPrice >= 0 &&
+                        `${currencyType + voucherSoldPrice}`}
                     </h1>
                     <p>{voucherSoldPriceLabel && voucherSoldPriceLabel}</p>
                     <h1>{voucherNum && `#${voucherNum}`}</h1>

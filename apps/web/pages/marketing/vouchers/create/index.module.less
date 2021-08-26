@@ -12,13 +12,6 @@
       padding-top: 0px;
       padding-bottom: 0px;
     }
-    hr.Wizard_bottomline__1H48w {
-      margin: 0px;
-
-      @media screen and (max-width: 992px) {
-        display: none;
-      }
-    }
     .ant-tabs-tab {
       background-color: transparent;
       padding: 12px 60px !important;
@@ -44,35 +37,6 @@
             padding: 12px 0px !important;
             display: flex;
             justify-content: center;
-          }
-        }
-        .VoucherCard_voucherCardMain__1otWm {
-          padding: 0px 50px !important;
-
-          .flip-card {
-            max-width: 100% !important;
-          }
-        }
-      }
-    }
-    @media screen and (max-width: 375px) {
-      :global {
-        .VoucherCard_voucherCardMain__1otWm {
-          padding: 0px 70px !important;
-
-          .flip-card {
-            max-width: 100% !important;
-          }
-        }
-      }
-    }
-    @media screen and (max-width: 320px) {
-      :global {
-        .VoucherCard_voucherCardMain__1otWm {
-          padding: 0px 100px !important;
-
-          .flip-card {
-            max-width: 100% !important;
           }
         }
       }
@@ -109,9 +73,9 @@
       padding: 0px 24px;
 
       display: flex;
-      // flex-direction: column;
+      flex-direction: column;
       justify-content: flex-end;
-      align-items: center;
+      align-items: flex-end;
 
       @media screen and (max-width: 767px) {
         width: 100%;
@@ -132,7 +96,7 @@
         font-weight: normal;
         font-size: 14px;
         line-height: 18px;
-        color: #54b2d3;
+        color: var(--primary-color);
       }
       button {
         margin-left: 10px;
