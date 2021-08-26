@@ -1,3 +1,4 @@
+/* eslint-disable import/first */
 import {
   ApolloClient,
   ApolloLink,
@@ -26,7 +27,7 @@ import 'react-image-crop/dist/ReactCrop.css'
 import 'react-phone-input-2/lib/style.css'
 import 'react-quill/dist/quill.snow.css'
 
-import '../../../libs/ui/src/styles/antd.less'
+require('../../../libs/ui/src/styles/antd.less')
 import { Notification, NotificationType } from '@pabau/ui'
 import { UserProvider } from '../context/UserContext'
 
