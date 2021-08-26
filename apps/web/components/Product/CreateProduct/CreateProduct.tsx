@@ -26,9 +26,8 @@ import {
 import { InputNumber, Tooltip, Checkbox } from 'antd'
 import { Formik } from 'formik'
 import { Form, Input, Select, Radio } from 'formik-antd'
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NumberFormatValues } from 'react-number-format'
-import { UserContext } from '../../../context/UserContext'
 import * as Yup from 'yup'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './CreateProduct.module.less'
@@ -37,6 +36,7 @@ import stringToCurrencySignConverter from '../../../helper/stringToCurrencySignC
 import { isActionDisabled } from '../utility'
 import postData, { getImage } from '../../Uploaders/UploadHelpers/UploadHelpers'
 import { cdnURL } from '../../../baseUrl'
+import { useUser } from '../../../context/UserContext'
 
 const { Option } = Select
 
@@ -118,7 +118,7 @@ export const CreateProduct = ({
   onDelete,
 }: P): JSX.Element => {
   const { t } = useTranslationI18()
-  const user = useContext(UserContext)
+  const user = useUser()
   const [showModal, setShowModal] = useState(false)
   const [submitting, changeSubmittingStatus] = useState(false)
   const [showImageSelector, setShowImageSelector] = useState(false)
@@ -498,7 +498,7 @@ export const CreateProduct = ({
                     >
                       <CurrencyInput
                         unit={stringToCurrencySignConverter(
-                          user?.me?.company?.details?.currency
+                          user?.me?.Company?.details?.currency
                         )}
                         value={values?.cost}
                         onChange={(val: NumberFormatValues) =>
@@ -514,7 +514,7 @@ export const CreateProduct = ({
                     >
                       <CurrencyInput
                         unit={stringToCurrencySignConverter(
-                          user?.me?.company?.details?.currency
+                          user?.me?.Company?.details?.currency
                         )}
                         value={values?.price}
                         onChange={(val: NumberFormatValues) =>

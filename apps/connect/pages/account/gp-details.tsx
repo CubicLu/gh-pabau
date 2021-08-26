@@ -14,7 +14,7 @@ import { useMedia } from 'react-use'
 import ConnectLayout from '../../components/ConnectLayout/ConnectLayout'
 import styles from './gp-details.module.less'
 import { useTranslation } from 'react-i18next'
-import { ClientContext } from '../../components/ContextWrapper/context/ClientContext'
+import { ClientContext } from '../../components/UserContext/context/ClientContext'
 
 const { Title } = Typography
 const { Option } = Select

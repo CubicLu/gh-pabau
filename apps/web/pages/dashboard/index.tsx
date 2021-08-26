@@ -1,8 +1,8 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Avatar, Button, MobileHeader, RangePicker } from '@pabau/ui'
 import Layout from '../../components/Layout/Layout'
 import styles from './dashboard.module.less'
-import { UserContext } from '../../context/UserContext'
+import { useUser } from '../../context/UserContext'
 import { useMedia } from 'react-use'
 import {
   DownOutlined,
@@ -30,7 +30,7 @@ const { Option } = Select
 
 export function Index() {
   const isMobile = useMedia('(max-width: 767px)', false)
-  const user = useContext(UserContext)
+  const user = useUser()
   const [visible, setVisible] = useState(false)
   const [openUserList, setOpenUserList] = useState(false)
   const [openDateModel, setOpenDateModel] = useState(false)
@@ -223,7 +223,7 @@ export function Index() {
             <div className={styles.marketingTextStyle}>
               <LeftOutlined />
               <Title>
-                {user?.me?.admin === 1
+                {user?.me?.admin
                   ? dashboardMode === 0
                     ? 'Business Dashboard'
                     : 'Personal Dashboard'
@@ -260,7 +260,7 @@ export function Index() {
                     </div>
                   )}
                 </div>
-                {user?.me?.admin === 1 ? (
+                {user?.me?.admin ? (
                   <div
                     className={styles.topDescription}
                     onClick={handleDashboardMode}

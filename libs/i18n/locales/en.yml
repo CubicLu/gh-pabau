@@ -2787,23 +2787,27 @@ en:
   create.client.modal.privacy.sharing.setting.enabled.button.title: 'Enabled'
   create.client.modal.privacy.sharing.setting.disabled.button.title: 'Disabled'
   create.client.modal.privacy.sharing.setting.sharelink.title: 'Share Link'
-  create.client.modal.privacy.sharing.setting.email.button.title: 'Email Link'
   create.client.modal.privacy.sharing.setting.copy.button.title: 'Copy Link'
+  create.client.modal.privacy.sharing.setting.copy.notification.message: 'Coppied to clipboard'
   create.client.modal.privacy.sharing.setting.access.code.title: 'Access Code'
-  create.client.modal.privacy.sharing.setting.access.code.description: 'You will be asked to enter the following code to access shared
-            clinical records'
+  create.client.modal.privacy.sharing.setting.access.code.description:
+    'You will be asked to enter the following code to access shared
+    clinical records'
   create.client.modal.privacy.sharing.setting.QR.code.title: 'QR code access'
-  create.client.modal.privacy.sharing.setting.QR.code.description: 'Scan the QR code with a smartphone or tablet for quick access to the
-            shared clinical records'
-  create.client.modal.privacy.sharing.setting.QR.code.access.description: 'Give the link or QR code, along with the access code to the person
-              you`d like to share the record with. The shared record will be
-              publicly accessable for 24 hours. You can stop sharing this record
-              or manage access on the '
+  create.client.modal.privacy.sharing.setting.QR.code.description:
+    'Scan the QR code with a smartphone or tablet for quick access to the
+    shared clinical records'
+  create.client.modal.privacy.sharing.setting.QR.code.access.description:
+    'Give the link or QR code, along with the access code to the person
+    you`d like to share the record with. The shared record will be
+    publicly accessable for 24 hours. You can stop sharing this record
+    or manage access on the '
   create.client.modal.privacy.sharing.setting.QR.code.access.link.description: 'share your record page'
-  create.client.modal.privacy.sharing.setting.sharing.warn.description: 'You are sharing this record with a third party. This means that the
-            third party can have access to information around the options
-            enabled above. Please, ensure that you have consent from the client
-            in order to do so.'
+  create.client.modal.privacy.sharing.setting.sharing.warn.description:
+    'You are sharing this record with a third party. This means that the
+    third party can have access to information around the options
+    enabled above. Please, ensure that you have consent from the client
+    in order to do so.'
   create.client.modal.privacy.communication.preference.title: 'Communication preferences'
   create.client.modal.privacy.communication.marketing.promotion.title: 'Marketing promotion'
   create.client.modal.privacy.communication.marketing.promotion.description: 'They will receive any bulk messages you send for marketing purposes.'
@@ -2812,16 +2816,18 @@ en:
   create.client.modal.privacy.communication.marketing.promotion.phone.title: 'Phone'
   create.client.modal.privacy.communication.marketing.promotion.postal.title: 'Postal'
   create.client.modal.privacy.communication.marketing.promotion.subscription.receive.title: 'Subscribe to receive need to know messages'
+  create.client.modal.privacy.communication.marketing.promotion.subscription.receive.tooltip: 'Tooltip text'
   create.client.modal.privacy.privacy.policy.title: 'Privacy policy'
   create.client.modal.privacy.privacy.policy.label: 'Does the patient concent to your privacy policy?'
   create.client.modal.privacy.policy.no.response.label: 'No response'
   create.client.modal.privacy.policy.accepted.label: 'Accepted'
   create.client.modal.privacy.policy.rejected.label: 'Rejected'
   create.client.modal.privacy.subscription.receive.alert.title: 'Are you sure?'
-  create.client.modal.privacy.subscription.receive.alert.description: 'You are about to turn off all need to know communications such as
-          reminders, aftercare and more. You should only do this if you
-          absolutely do not want to ever send this client a communication (even
-          if by mistake).'
+  create.client.modal.privacy.subscription.receive.alert.description:
+    'You are about to turn off all need to know communications such as
+    reminders, aftercare and more. You should only do this if you
+    absolutely do not want to ever send this client a communication (even
+    if by mistake).'
   create.client.modal.privacy.subscription.receive.alert.button.title: 'Turn off'
   create.client.modal.privacy.sharing.history.title: 'Sharing history'
   create.client.modal.privacy.sharing.history.sms.description: 'SMS concent changed from “No” to “Yes”'

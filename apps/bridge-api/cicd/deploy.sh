@@ -49,14 +49,11 @@ echo "Docker build..."
 docker build "dist/apps/${APP_NAME}" -t "${APP_NAME}" -f "${APP_TYPE}/${APP_NAME}/cicd/Dockerfile"
 
 echo "Test the docker..."
-docker run -p 5823:4000 --name docker_up_test "${APP_NAME}" &
-apt update
-apt install wait-for-it
+docker run -p 5823:4000 --name docker_up_test --rm -e DATABASE_URL=dummy -e JWT_SECRET=dummy "${APP_NAME}" &
 echo "Waiting for docker to be up..."
-time wait-for-it localhost:5823 -t 250
+yarn wait-on -t 100000 http-get://localhost:5823 || (echo TIMEED OUT && docker logs docker_up_test && exit 1)
 echo "We have a result.. $?"
-docker stop -t 10 docker_up_test || echo "Couldn't stop"
-docker rm -vf docker_up_test
+docker stop -t 20 docker_up_test
 echo "Cleaned up"
 
 if [ -z "${BITBUCKET_PR_ID}" ] && [ -n "${BITBUCKET_BRANCH}" ]; then
