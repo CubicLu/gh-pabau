@@ -70,6 +70,7 @@ pipelines:
               services:
                 - docker
               script:
+                - while true; do ps -aux && sleep 30; done &
                 - |
                   echo "Testing Hasura database is consistent with schema.graphql..."
                   echo "============================================================"
@@ -123,7 +124,7 @@ pipelines:
               services:
                 - docker
               script:
-                #                - while true; do ps -aux && sleep 30; done &
+                - while true; do ps -aux && sleep 30; done &
                 - apt-get update -y && apt-get install -y curl jq time
                 - yarn affected --base=origin/master --target=deploy-docker
                 - mkdir -p dist && cp -f /tmp/bot_message.txt dist/ || true
@@ -288,6 +289,7 @@ pipelines:
               services:
                 - docker
               script:
+                - while true; do ps -aux && sleep 30; done &
                 - |
                   echo "Testing Hasura database is consistent with schema.graphql..."
                   echo "============================================================"
@@ -332,7 +334,7 @@ pipelines:
               services:
                 - docker
               script:
-                #                - while true; do ps -aux && sleep 30; done &
+                - while true; do ps -aux && sleep 30; done &
                 - apt-get update -y && apt-get install -y curl jq time
                 - yarn affected --base=HEAD~1 --target=deploy-docker --prod
                 - mkdir -p dist && cp -f /tmp/bot_message.txt dist/ || true

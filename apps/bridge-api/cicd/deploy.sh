@@ -51,7 +51,7 @@ docker build "dist/apps/${APP_NAME}" -t "${APP_NAME}" -f "${APP_TYPE}/${APP_NAME
 echo "Test the docker..."
 docker run -p 5823:4000 --name docker_up_test --rm -e DATABASE_URL=dummy -e JWT_SECRET=dummy "${APP_NAME}" &
 echo "Waiting for docker to be up..."
-yarn wait-on -t 100 http-get://localhost:5823
+yarn wait-on -t 200 http-get://localhost:5823
 echo "We have a result.. $?"
 docker stop -t 10 docker_up_test || echo "Couldn't stop"
 docker rm -vf docker_up_test
