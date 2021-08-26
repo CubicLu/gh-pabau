@@ -2,14 +2,14 @@ import { MutationFunction } from '@apollo/client'
 import { Image } from 'antd'
 import classNames from 'classnames'
 import React, { FC } from 'react'
-import { ProductNews } from './NotificationDrawer'
+import { ProductNews } from '@pabau/ui'
 import styles from './NotificationDrawer.module.less'
 import { useTranslation } from 'react-i18next'
-import { JwtAuthenticationToken } from '@pabau/yup'
+import { AuthenticatedUser, JwtUser } from '@pabau/yup'
 
 interface NewsProps {
   notify: ProductNews
-  user?: JwtAuthenticationToken
+  user?: Partial<AuthenticatedUser> & JwtUser
   readNewsMutation?: MutationFunction
 }
 

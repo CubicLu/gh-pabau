@@ -11,7 +11,7 @@ import {
 } from './NotificationItem'
 import styles from './NotificationDrawer.module.less'
 import News from './News'
-import { JwtAuthenticationToken } from '@pabau/yup'
+import { AuthenticatedUser, JwtUser } from '@pabau/yup'
 
 export interface ProductNews {
   id: string
@@ -34,7 +34,7 @@ interface P {
   closeDrawer?: () => void
   notifications?: NotificationDrawerItemType[]
   productNews?: ProductNews[]
-  user?: JwtAuthenticationToken
+  user?: Partial<AuthenticatedUser> & JwtUser
   relativeTime?: (lan: string, date: Date) => string
 }
 

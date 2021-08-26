@@ -6,7 +6,7 @@ import React, { FC, useState } from 'react'
 import { ReactComponent as IllustrationSvg } from './example.svg'
 import styles from './Layout.module.less'
 import { NotificationDrawerItemType } from '../notification-drawer/NotificationItem'
-import { JwtAuthenticationToken } from '@pabau/yup'
+import { AuthenticatedUser, JwtUser } from '@pabau/yup'
 
 const { Content } = AntLayout
 
@@ -33,7 +33,7 @@ export interface LayoutProps {
   relativeTime?: (lan: string, date: Date) => string
   notifications?: NotificationDrawerItemType[]
   productNews?: ProductNews[]
-  user?: JwtAuthenticationToken & ExtraUserData
+  user?: Partial<AuthenticatedUser> & JwtUser & ExtraUserData
   pageTitle?: string
   newButtonText?: string
   onNewClicked?: string | (() => void)

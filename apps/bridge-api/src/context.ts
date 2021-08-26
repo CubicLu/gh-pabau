@@ -4,7 +4,7 @@ import { ExpressContext } from 'apollo-server-express'
 import { version } from '../../../package.json'
 import { ContextFunction } from 'apollo-server-core'
 import { PrismaClient } from '@prisma/client'
-import { JwtAuthenticationToken } from '@pabau/yup'
+import { JwtUser } from '@pabau/yup'
 
 export interface Context {
   /**
@@ -23,7 +23,7 @@ export interface Context {
   /**
    * The currently logged in user
    */
-  authenticated?: JwtAuthenticationToken
+  authenticated?: JwtUser
 
   /**
    * The package.json version for this app
@@ -50,7 +50,7 @@ export const createContext: ContextFunction<ExpressContext, Context> = (
         authorizationRaw.replace(/^Bearer /, ''),
         process.env.JWT_SECRET,
         { algorithms: ['HS512'] }
-      ) as JwtAuthenticationToken
+      ) as JwtUser
     } catch {
       console.log('invalid jwt found')
     }

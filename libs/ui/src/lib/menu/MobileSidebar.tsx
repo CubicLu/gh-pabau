@@ -25,7 +25,7 @@ import User from '../../assets/images/users/stephen.png'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
-import { FullAuthenticationUser } from '@pabau/yup'
+import { AuthenticatedUser, JwtUser } from '@pabau/yup'
 
 const { SubMenu } = Menu
 
@@ -36,7 +36,7 @@ interface P {
   onClickChatDrawer: () => void
   clientCreateRender?: () => JSX.Element
   leadCreateRender?: () => JSX.Element
-  userData: FullAuthenticationUser
+  userData: Partial<AuthenticatedUser> & JwtUser
 }
 
 export const MobileSidebar: FC<P> = ({
@@ -173,7 +173,7 @@ export const MobileSidebar: FC<P> = ({
         })}
         <Menu.Item
           className={classNames(styles.sidebarMenu, styles.profileMenu)}
-          icon={<Avatar size={24} src={userData?.image || User} />}
+          icon={<Avatar size={24} src={userData?.imageUrl || User} />}
           onClick={() => {
             setProfileDrawer(true)
           }}

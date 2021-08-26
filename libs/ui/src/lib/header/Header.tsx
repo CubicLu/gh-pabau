@@ -12,7 +12,7 @@ import React, { useState, useEffect } from 'react'
 import styles from './Header.module.less'
 import { Search } from './search/Search'
 import { NotificationDrawerItemType } from '../notification-drawer/NotificationItem'
-import { JwtAuthenticationToken } from '@pabau/yup'
+import { AuthenticatedUser, JwtUser } from '@pabau/yup'
 
 const AntHeader = Layout.Header
 
@@ -34,7 +34,7 @@ interface P {
   updateNotification?: MutationFunction
   readAddMutation?: MutationFunction
   relativeTime?: (lan: string, date: Date) => string
-  user?: JwtAuthenticationToken
+  user?: Partial<AuthenticatedUser> & JwtUser
   searchRender?: (innerComponent: JSX.Element) => JSX.Element
   onMessageIconClick?(): void
   onLogOut?(): void
