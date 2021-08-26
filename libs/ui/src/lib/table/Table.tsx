@@ -223,7 +223,7 @@ export const Table: FC<TableType> = ({
   }
 
   const renderAmount = (val) => {
-    return <div> {typeof val === 'number' ? `$${val?.toFixed(2)}` : val} </div>
+    return <div> $ {val?.toFixed(2)} </div>
   }
 
   const renderCodeInput = (code) => {
