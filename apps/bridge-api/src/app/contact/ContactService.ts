@@ -28,7 +28,7 @@ export default class ContactService {
     return false
   }
 
-  public async findAllDuplicates(): Promise<any> {
+  public async findAllDuplicates(): Promise<Array<CmContact>> {
     /// all patients in array
     const allContacts = await this.getAllClients()
     const duplicates = []
@@ -58,7 +58,7 @@ export default class ContactService {
 
       if (foundGroup.length > 0) duplicates.push(foundGroup)
     }
-
+    console.log('duplicates', duplicates)
     return duplicates
   }
 }

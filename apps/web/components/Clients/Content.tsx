@@ -15,7 +15,6 @@ import CreateLabel from './CreateLabel'
 import ManageColumnsPopover from './ManageColumnPopover'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import classNames from 'classnames'
-// import { useImage } from '../../hooks/cdn'
 import { FetchResult, MutationFunctionOptions } from '@apollo/client'
 import { AddLabelMutation, Exact } from '@pabau/graphql'
 
@@ -40,7 +39,7 @@ interface ClientsContentProps {
   onPaginationChange?: (val) => void
   getClientsCountLoading?: boolean
   setPaginateData?: (val) => void
-  testLabels?: any
+  labelsList?: any
   addLabelMutation?: (
     options?: MutationFunctionOptions<
       AddLabelMutation,
@@ -49,7 +48,7 @@ interface ClientsContentProps {
   ) => Promise<
     FetchResult<AddLabelMutation, Record<any, any>, Record<any, any>>
   >
-  setTestLabels?: (val) => void
+  setLabelsList?: (val) => void
   contactsLabels?: any
   getContactsLabelsQuery?: (val) => void
   getLabelsQuery?: (val) => void
@@ -73,8 +72,8 @@ export interface SourceDataProps {
   setupFee?: string
   is_dismissed?: boolean
   avatar?: string
-  labelTest?: any
-  setTestLabels?: (val) => void
+  clientLabel?: any
+  setLabelsList?: (val) => void
 }
 
 export const ClientsContent: FC<ClientsContentProps> = ({
@@ -98,14 +97,13 @@ export const ClientsContent: FC<ClientsContentProps> = ({
   onPaginationChange,
   getClientsCountLoading,
   setPaginateData,
-  testLabels,
-  setTestLabels,
+  labelsList,
+  setLabelsList,
   getContactsLabelsQuery,
   getLabelsQuery,
   addLabelMutation,
   insertContactsLabelsMutaton,
   contactsLabels,
-  // labelTest,
 }) => {
   const { t } = useTranslationI18()
   const isMobile = useMedia('(max-width: 768px)', false)
@@ -152,28 +150,6 @@ export const ClientsContent: FC<ClientsContentProps> = ({
           </div>
         )
       },
-      // eslint-disable-next-line react/display-name
-      // render: (data) => {
-      //   const { avatar, firstName } = data
-      //   return (
-      //     <div>
-      //       <span className={styles.avatarWrapper}>
-      //         {/*<img src="/cdn/attachments/8254/avatar_photos/thumb_20200108142441.jpeg?time=1578493621" />*/}
-      //         {/*<img>{data.avatar}</img>*/}
-      //         {/*<Image src={data.avatar} preview={false} />*/}
-      //         {/*<Avatar size={40} src={data.avatar} />*/}
-      //         {avatar ? (
-      //           // <Avatar size={30} src={useImage(avatar)} />
-      //           <div>{firstName}</div>
-      //         ) : (
-      //           // <div style={{ background: useImage(avatar) }}></div>
-      //           // <Avatar name={firstName} />
-      //           <div>{firstName}</div>
-      //         )}
-      //       </span>
-      //     </div>
-      //   )
-      // },
     },
     {
       title: t('clients.content.column.name'),
@@ -205,18 +181,16 @@ export const ClientsContent: FC<ClientsContentProps> = ({
           {t('clients.content.column.label')}
         </div>
       ),
-      dataIndex: 'labelTest',
+      dataIndex: null,
       visible: visiblePrimaryColumns('Label'),
       // eslint-disable-next-line react/display-name
-      render: (labelTest) => {
-        // const { labelTest } = data
-
-        console.log('labelTest 777', labelTest)
+      render: (data) => {
+        const { clientLabel } = data
         return (
           <Popover
             trigger={'hover'}
             placement={'bottom'}
-            content={labelTest?.map((label) => (
+            content={clientLabel?.map((label) => (
               <Button
                 className={styles.labelButton}
                 key={label.id}
@@ -229,12 +203,11 @@ export const ClientsContent: FC<ClientsContentProps> = ({
                 icon={<TagOutlined />}
               >
                 {label.text}
-                {/*{labelTest.length < 0 ? label.text : null}*/}
               </Button>
             ))}
           >
             <div className={styles.labelShow}>
-              {labelTest?.slice(0, 2).map((label) => (
+              {clientLabel?.slice(0, 2).map((label) => (
                 <div key={label.id}>
                   <Button
                     className={styles.labelButton}
@@ -252,7 +225,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
                 </div>
               ))}
               {/*<p>...</p>*/}
-              {labelTest?.length > 2 ? (
+              {clientLabel?.length > 2 ? (
                 <p>
                   <b>. . .</b>
                 </p>
@@ -396,9 +369,9 @@ export const ClientsContent: FC<ClientsContentProps> = ({
             defaultSelectedLabels={defaultSelectedLabels}
             setDefaultSelectedLabels={setDefaultSelectedLabels}
             handleApplyLabel={handleApplyLabel}
-            testLabels={testLabels}
+            labelsList={labelsList}
             selectedRowKeys={selectedRowKeys}
-            setTestLabels={setTestLabels}
+            setLabelsList={setLabelsList}
             getContactsLabelsQuery={getContactsLabelsQuery}
             getLabelsQuery={getLabelsQuery}
             addLabelMutation={addLabelMutation}
@@ -502,7 +475,7 @@ export const ClientsContent: FC<ClientsContentProps> = ({
                     trigger={'click'}
                     placement={'bottom'}
                   >
-                    {data.labelTest.length > 0 && (
+                    {data.clientLabel.length > 0 && (
                       <Button
                         icon={<TagOutlined />}
                         style={

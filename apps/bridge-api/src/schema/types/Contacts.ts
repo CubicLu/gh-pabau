@@ -9,6 +9,7 @@ export const duplicateContacts = extendType({
       type: list(list('CmContact')),
       async resolve(_root, args, ctx: Context) {
         const contactHandler = await new ContactService(ctx).findAllDuplicates()
+        console.log('contactHandler', contactHandler)
         return contactHandler
       },
     })

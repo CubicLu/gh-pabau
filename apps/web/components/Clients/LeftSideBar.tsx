@@ -31,8 +31,8 @@ interface LeftSideBarProps {
   duplicateData?: SourceDataProps[][]
   getClientsCountData?: any
   duplicateContactsCount?: any
-  testLabels?: any
-  setTestLabels?: (val) => void
+  labelsList?: any
+  setLabelsList?: (val) => void
   handleApplyLabel?: (val) => void
   labelCountAll?: any
   contactsLabels?: any
@@ -58,16 +58,13 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
   setLabels,
   selectedLabels,
   setSelectedLabels,
-  // duplicateData = [],
   getClientsCountData,
   duplicateContactsCount,
-  testLabels,
-  // setTestLabels,
+  labelsList,
   addLabelMutation,
   handleApplyLabel,
   labelCountAll,
   contactsLabels,
-  selectedRowKeys,
 }) => {
   const { t } = useTranslationI18()
 
@@ -85,7 +82,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
         className={styles.clientMenu}
         defaultSelectedKeys={[tab.clients]}
         selectedKeys={[selectedTab]}
-        defaultOpenKeys={['testKey', tab.labels]}
+        defaultOpenKeys={['mainLabels', tab.labels]}
         mode="inline"
         onClick={handleSelectedTab}
       >
@@ -110,10 +107,10 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
           </div>
         </Menu.Item>
         <Menu.Divider />
-        <SubMenu title={t('clients.leftSidebar.labels')} key="testKey">
+        <SubMenu title={t('clients.leftSidebar.labels')} key="mainLabels">
           <SubMenu
             style={
-              testLabels.length > 10
+              labelsList.length > 10
                 ? {
                     minHeight: '200px',
                     maxHeight: '400px',
@@ -123,10 +120,10 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
                 : null
             }
             key={tab.labels}
-            title={'should be GONE'}
+            title={'no title'}
             className={styles.modifiedItem}
           >
-            {testLabels?.map((label) => {
+            {labelsList?.map((label) => {
               return (
                 label?.text && (
                   <Menu.Item
@@ -138,7 +135,6 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
                         <TagOutlined />
                         &nbsp;{label.text}
                       </span>
-                      {/*{label.count > 0 && <span>{label.count}</span>}*/}
                       {getValueByKey(labelCountAll, label.id)}
                     </div>
                   </Menu.Item>
@@ -151,7 +147,7 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({
               selectedLabels={selectedLabels}
               setSelectedLabels={setSelectedLabels}
               labels={labels}
-              testLabels={testLabels}
+              labelsList={labelsList}
               setLabels={setLabels}
               addLabelMutation={addLabelMutation}
               handleApplyLabel={handleApplyLabel}

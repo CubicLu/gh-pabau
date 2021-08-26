@@ -29,9 +29,9 @@ interface CreateLabelsProps {
   defaultSelectedLabels?: any
   setDefaultSelectedLabels?: (val) => void
   handleApplyLabel?: (val) => void
-  testLabels?: any
+  labelsList?: any
   selectedRowKeys?: any
-  setTestLabels?: (val) => void
+  setLabelsList?: (val) => void
   getContactsLabelsQuery?: () => any
   sourceData?: any
   insertContactsLabelsMutaton?: (val) => void
@@ -92,9 +92,9 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   fromHeader = false,
   defaultSelectedLabels = [],
   handleApplyLabel,
-  testLabels,
+  labelsList,
   selectedRowKeys,
-  setTestLabels,
+  setLabelsList,
   getContactsLabelsQuery,
   // getLabelsQuery,
   sourceData,
@@ -123,16 +123,15 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
 
   const [deleteContactsLabelsMutaton] = useDeleteContactsLabelsMutation({
     onCompleted(response) {
-      console.log('deleted contactLabel')
       getContactsLabelsQuery()
     },
     onError(error) {
-      console.log('not deleted contactLabel')
+      console.error(error)
     },
   })
 
   const editLabelData = (valueObject) => {
-    const labelData = [...testLabels]
+    const labelData = [...labelsList]
     const labelIndex = labelData.findIndex(
       (label) => label.text === selectedEditData.text
     )
@@ -147,7 +146,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
       (label) => label.text === valueObject.text
     )
     if (index === -1 || index === editIndex) {
-      setTestLabels([...labelData])
+      setLabelsList([...labelData])
       setSelectedLabels([...selectedLabelData])
       fromHeader && handleApplyLabel([...selectedLabelData])
     } else {
@@ -161,7 +160,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   }
 
   const addLabelData = (valueObject) => {
-    if (!testLabels?.some((item) => item.text === valueObject.text)) {
+    if (!labelsList?.some((item) => item.text === valueObject.text)) {
       setSelectedLabels([...selectedLabels, valueObject])
       fromHeader && handleApplyLabel([...selectedLabels, valueObject])
       addLabelMutation({
@@ -185,7 +184,6 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     } = e
 
     if (key === 'Enter' && value) {
-      // onApplyLabel()
       if (isEdit) {
         editLabelData({ text: value, color: selectedColor, count: 0 })
       } else {
@@ -215,7 +213,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     const selectedData = [...selectedLabels]
     if (selectedData.some((item) => item.text === label.text)) {
       const selectedIndex = selectedLabels?.findIndex(
-        (selectedLabel) => selectedLabel.text === testLabels[index].text
+        (selectedLabel) => selectedLabel.text === labelsList[index].text
       )
       selectedIndex !== -1 && selectedData.splice(selectedIndex, 1)
       setSelectedLabels(selectedData)
@@ -244,7 +242,10 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     return diff1.length === 0 && diff2.length === 0
   }
 
-  console.log('defaultSelectedLabels 000', defaultSelectedLabels)
+  // TO DO onApplyLabel
+  // const onApplyLabel = () => {
+  //   console.log('clicked onApplyApply')
+  // }
   const onApplyLabel = () => {
     handleApplyLabel(selectedLabels)
     setVisible(false)
@@ -255,7 +256,6 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
             (e) =>
               e.contact_id === selectContact && e.label_id === selectedLabel.id
           )
-          console.log('xxx', checkDuplicateLabel)
           const addedLabel: any = difference(
             selectedLabels,
             defaultSelectedLabels
@@ -264,10 +264,6 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
             defaultSelectedLabels,
             selectedLabels
           )
-          const testEqual = defaultSelectedLabels.some(
-            (e) => e.id === selectedLabel.id
-          )
-          console.log('testEqual 000', testEqual)
           if (addedLabel.length > 0 && !checkDuplicateLabel) {
             insertContactsLabelsMutaton({
               variables: {
@@ -308,7 +304,7 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     return (
       <div>
         <div className={styles.scrollerTag}>
-          {testLabels?.map((label, index) => {
+          {labelsList?.map((label, index) => {
             return (
               <div key={`m-${label.id}`}>
                 {label?.text && (
