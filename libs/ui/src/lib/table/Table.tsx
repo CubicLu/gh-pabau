@@ -24,7 +24,6 @@ export interface DragProps {
   draggable?: boolean
   isCustomColorExist?: boolean
   isCustomIconExist?: boolean
-  customColumnRender?: boolean
   updateDataSource?: ({ newData, oldIndex, newIndex }) => void
 }
 
@@ -223,6 +222,10 @@ export const Table: FC<TableType> = ({
     )
   }
 
+  const renderAmount = (val) => {
+    return <div> {typeof val === 'number' ? `$${val?.toFixed(2)}` : val} </div>
+  }
+
   const renderCodeInput = (code) => {
     return (
       <Button type="dashed" className={styles.codeBtn}>
@@ -317,6 +320,11 @@ export const Table: FC<TableType> = ({
               }
               case 'days': {
                 col.render = renderDays
+
+                break
+              }
+              case 'amount': {
+                col.render = renderAmount
 
                 break
               }
