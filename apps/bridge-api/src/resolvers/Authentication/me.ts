@@ -86,6 +86,22 @@ export const Me = queryField('me', {
       },
       ...new PrismaSelect(info).value,
     })
+    console.log(
+      'full',
+      await prisma.user.findUnique({
+        where: {
+          id: authenticated.user,
+        },
+      })
+    )
+    console.log(
+      'first',
+      await prisma.user.findFirst({
+        where: {
+          id: authenticated.user,
+        },
+      })
+    )
     const ret = await prisma.user.findUnique({
       where: {
         id: authenticated.user,
