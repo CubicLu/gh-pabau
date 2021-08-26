@@ -24,8 +24,6 @@ import {
   TabMenu,
   PabauPlus,
   Button,
-  Notification,
-  NotificationType,
 } from '@pabau/ui'
 import Link from 'next/link'
 import styles from './index.module.less'
