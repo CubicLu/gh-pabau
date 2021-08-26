@@ -44,8 +44,11 @@
     .title {
       display: flex;
       flex-direction: column;
+      justify-content: center;
       align-items: flex-start;
       width: 100%;
+      padding: 5px 0px;
+      min-height: 45px;
 
       span.main:first-child {
         font-weight: normal;
@@ -69,6 +72,8 @@
       padding: 15px 0px;
       position: absolute;
       right: 0px;
+      top: 50%;
+      transform: translateY(-50%);
 
       span {
         font-size: 15px;

@@ -157,7 +157,6 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
   const { t } = useTranslationI18()
   const aligns = [styles.pRight, styles.pX, styles.pX, styles.pLeft]
   const bgSelectRef = useRef<HTMLInputElement>(null)
-  const spanLink = useRef<HTMLSpanElement>(null)
 
   const size = useWindowSize()
 
@@ -310,14 +309,14 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
   const PreviewTab = ({ values }) => (
     <div className={styles.voucherPreview}>
       <div className={styles.previewCard}>
-        <div className={styles.card}>
+        <div className={styles.vCard}>
           <VoucherCard
             backgroundColor1="#9013FE"
             backgroundColor2="#BD10E0"
             borderColor="#000"
             voucherBackgrounUrl={voucherBackgrounUrl}
             background={selectedBgColor?.background}
-            buttonLabel="Book Now"
+            buttonLabel={t('giftvouchers.create.label.booknow')}
             bookNowButton={bookBtn}
             gradientType="linear-gradient"
             termsConditions={values?.terms}
@@ -327,7 +326,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
             voucherRelationLabel={voucherRelationLabel}
             currencyType="£"
             voucherSoldPrice={values?.price}
-            voucherSoldPriceLabel="Sold 5"
+            voucherSoldPriceLabel={`${t('giftvouchers.create.label.sold')} 5`}
             voucherNum={100011}
           />
         </div>
@@ -366,7 +365,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
               type="text"
               size="large"
               maxLength={100}
-              placeholder="Voucher Name"
+              placeholder={t('giftvouchers.create.label.vouchername')}
               value={values?.name}
             />
           </Form.Item>
@@ -516,7 +515,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
             <TextArea
               name="note"
               rows={6}
-              placeholder="Notes"
+              placeholder={t('giftvouchers.create.label.note')}
               maxLength={500}
               value={values?.note}
             />
@@ -530,7 +529,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
           <div className={styles.themesDiv}>
             <div>
               <span>{t('giftvouchers.create.vouchertheme')}</span>
-              <PabauPlus label="Plus" modalType="Marketing" />
+              <PabauPlus label={t('common-label-plus')} modalType="Marketing" />
             </div>
             <div>
               <Row>
@@ -647,11 +646,6 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
     }
   }
 
-  const createVoucher = () => {
-    Notification(NotificationType['success'], 'Voucher Created Successfully')
-    spanLink?.current?.click()
-  }
-
   return (
     <Layout>
       <CommonHeader isLeftOutlined title={t('giftvouchers.create.label')} />
@@ -668,131 +662,113 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
         >
           {({ setFieldValue, handleSubmit, values }) => (
             <Card title={<CardHeader />}>
-              <Row>
-                <Col md={24} className={styles.voucherBuilderBody}>
-                  <Wstepper
-                    disablePrevStep={false}
-                    showNextBtn={showNextBtn}
-                    nextBtnLabel={
-                      <span>
-                        {t('giftvouchers.create.label.nextstep')}{' '}
+              <div className={styles.voucherBuilderBody}>
+                <Wstepper
+                  disablePrevStep={false}
+                  showNextBtn={showNextBtn}
+                  active={activeStep}
+                  data={steps}
+                  onActiveStepChange={(step) =>
+                    onStepChange(step, values, handleSubmit)
+                  }
+                  nextButtonDecorator={
+                    showExtraBtn && (
+                      <Button
+                        type="primary"
+                        style={{ marginRight: '10px' }}
+                        onClick={() => handleSubmit()}
+                      >
+                        {t('giftvouchers.create.label.create')}{' '}
                         <RightOutlined />
-                      </span>
-                    }
-                    active={activeStep}
-                    data={steps}
-                    onActiveStepChange={(step) =>
-                      onStepChange(step, values, handleSubmit)
-                    }
-                    nextButtonDecorator={
-                      showExtraBtn && (
-                        <Button
-                          type="primary"
-                          style={{ marginRight: '10px' }}
-                          onClick={() => handleSubmit()}
-                        >
-                          {t('giftvouchers.create.label.create')}{' '}
-                          <RightOutlined />
-                        </Button>
-                      )
-                    }
-                    extraBtnClick={createVoucher}
-                    allowDisablePrevious={false}
+                      </Button>
+                    )
+                  }
+                  allowDisablePrevious={false}
+                >
+                  <Row
+                    className={classNames(
+                      styles.voucherBuilderSection,
+                      styles.showDefault,
+                      styles.desktopView
+                    )}
                   >
-                    <Row
-                      className={classNames(
-                        styles.voucherBuilderSection,
-                        styles.showDefault,
-                        styles.desktopView
-                      )}
+                    <Col
+                      lg={6}
+                      md={24}
+                      sm={24}
+                      xs={24}
+                      className={styles.voucherBuilderControls}
                     >
-                      <Col
-                        lg={6}
-                        md={24}
-                        sm={24}
-                        xs={24}
-                        className={styles.voucherBuilderControls}
-                      >
-                        <div className={styles.heading}>
-                          <span>{t('giftvouchers.create.tabs.builder')}</span>
-                        </div>
-                        <BuilderTab setValue={setFieldValue} values={values} />
-                      </Col>
-                      <Col
-                        lg={18}
-                        md={24}
-                        sm={24}
-                        xs={24}
-                        className={styles.voucherPreviewSelection}
-                      >
-                        <div className={styles.heading}>
-                          <span>{t('giftvouchers.create.tabs.preview')}</span>
-                        </div>
-                        <PreviewTab values={values} />
-                      </Col>
-                    </Row>
-                    <Row
-                      className={classNames(
-                        styles.hideDefault,
-                        styles.mobileView
-                      )}
+                      <div className={styles.heading}>
+                        <span>{t('giftvouchers.create.tabs.builder')}</span>
+                      </div>
+                      <BuilderTab setValue={setFieldValue} values={values} />
+                    </Col>
+                    <Col
+                      lg={18}
+                      md={24}
+                      sm={24}
+                      xs={24}
+                      className={styles.voucherPreviewSelection}
                     >
-                      <Col md={24}>
-                        <TabMenu
-                          menuItems={[
-                            t('giftvouchers.create.tabs.builder'),
-                            t('giftvouchers.create.tabs.preview'),
-                          ]}
-                          tabPosition="top"
-                        >
-                          <Row className={styles.voucherBuilderSection}>
-                            <Col
-                              lg={24}
-                              md={24}
-                              sm={24}
-                              xs={24}
-                              className={styles.voucherBuilderControls}
-                            >
-                              <BuilderTab
-                                setValue={setFieldValue}
-                                values={values}
-                              />
-                            </Col>
-                          </Row>
-                          <Row className={styles.voucherBuilderSection}>
-                            <Col
-                              lg={24}
-                              md={24}
-                              sm={24}
-                              xs={24}
-                              className={styles.voucherPreviewSelection}
-                            >
-                              <PreviewTab values={values} />
-                            </Col>
-                          </Row>
-                        </TabMenu>
-                      </Col>
-                    </Row>
-                  </Wstepper>
-                </Col>
-              </Row>
-              <Row>
-                <Col style={{ display: 'none' }}>
-                  <input
-                    type="file"
-                    accept=".jpg, .png"
-                    ref={bgSelectRef}
-                    onChange={addNewBgImage}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col md={24}>
-                  <Link href="/marketing/vouchers">
-                    <span ref={spanLink}></span>
-                  </Link>
-                </Col>
-              </Row>
+                      <div className={styles.heading}>
+                        <span>{t('giftvouchers.create.tabs.preview')}</span>
+                      </div>
+                      <PreviewTab values={values} />
+                    </Col>
+                  </Row>
+                  <Row
+                    className={classNames(
+                      styles.hideDefault,
+                      styles.mobileView
+                    )}
+                  >
+                    <Col md={24}>
+                      <TabMenu
+                        menuItems={[
+                          t('giftvouchers.create.tabs.builder'),
+                          t('giftvouchers.create.tabs.preview'),
+                        ]}
+                        tabPosition="top"
+                      >
+                        <Row className={styles.voucherBuilderSection}>
+                          <Col
+                            lg={24}
+                            md={24}
+                            sm={24}
+                            xs={24}
+                            className={styles.voucherBuilderControls}
+                          >
+                            <BuilderTab
+                              setValue={setFieldValue}
+                              values={values}
+                            />
+                          </Col>
+                        </Row>
+                        <Row className={styles.voucherBuilderSection}>
+                          <Col
+                            lg={24}
+                            md={24}
+                            sm={24}
+                            xs={24}
+                            className={styles.voucherPreviewSelection}
+                          >
+                            <PreviewTab values={values} />
+                          </Col>
+                        </Row>
+                      </TabMenu>
+                    </Col>
+                  </Row>
+                </Wstepper>
+              </div>
+              <div style={{ display: 'none' }}>
+                <input
+                  type="file"
+                  accept=".jpg, .png"
+                  ref={bgSelectRef}
+                  onChange={addNewBgImage}
+                />
+              </div>
             </Card>
           )}
         </Formik>

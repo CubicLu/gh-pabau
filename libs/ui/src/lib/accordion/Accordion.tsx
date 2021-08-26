@@ -1,14 +1,15 @@
 import React, { FC, ReactNode, useState } from 'react'
 import { Collapse } from 'antd'
 import { Button } from '@pabau/ui'
+import {
+  FolderOutlined,
+  FolderOpenOutlined,
+  DownOutlined,
+} from '@ant-design/icons'
 import styles from './Accordion.module.less'
-import ArrowIcon from './assets/DownArrow.svg'
-import FolderIcon from './assets/FolderIcon.svg'
-import OpenFolderIcon from './assets/OpenFolder.svg'
 
 const { Panel } = Collapse
 
-/* eslint-disable-next-line */
 export interface AccordionProps {
   headerLabel: ReactNode | number | string
   folderIconShow?: boolean
@@ -49,10 +50,7 @@ export const Accordion: FC<AccordionProps> = ({
               shape="circle"
               className={styles.arrowIcon}
             >
-              <img
-                src={ArrowIcon}
-                alt="CaretDown"
-                width="100%"
+              <DownOutlined
                 className={`arrow ${accordionState && 'rotated'}`}
               />
             </Button>
@@ -78,11 +76,10 @@ export const Accordion: FC<AccordionProps> = ({
                 <div className={styles.folderIcon}>
                   {folderIcon ? (
                     folderIcon
+                  ) : accordionState ? (
+                    <FolderOpenOutlined />
                   ) : (
-                    <img
-                      src={accordionState ? OpenFolderIcon : FolderIcon}
-                      alt="Folder"
-                    />
+                    <FolderOutlined />
                   )}
                 </div>
               )}

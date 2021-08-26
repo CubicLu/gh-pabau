@@ -1,8 +1,8 @@
 import React, { FC } from 'react'
 import { Collapse } from 'antd'
 import { Button } from '@pabau/ui'
+import { DownOutlined } from '@ant-design/icons'
 import styles from './FeaturePermission.module.less'
-import DownArrowIcon from '../accordion/assets/DownArrow.svg'
 
 const { Panel } = Collapse
 
@@ -25,7 +25,7 @@ export const FeatureAccordion: FC<AccordionProps> = ({
           shape="circle"
           className={styles.arrowIcon}
         >
-          <img src={DownArrowIcon} alt="CaretDown" width="100%" />
+          <DownOutlined />
         </Button>
       </div>
     )

@@ -1,6 +1,7 @@
 import React, { FC, useState, useEffect } from 'react'
 import { Button, Input } from 'antd'
 import { BasicModal, CheckboxTree } from '@pabau/ui'
+import { useTranslationI18 } from '../../../../hooks/useTranslationI18'
 import { DownOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons'
 import styles from './index.module.less'
 
@@ -40,6 +41,7 @@ export const SelectService: FC<SelectServiceProps> = ({
   const [selectedServices, setSelectedServices] = useState([])
   const [totalService, setTotalService] = useState(0)
   const [treeData, setTreeData] = useState<SingleCheckBoxDropDown[]>([])
+  const { t } = useTranslationI18()
 
   const onSave = () => {
     toggleServicesModal((servicesModal) => !servicesModal)
@@ -53,7 +55,7 @@ export const SelectService: FC<SelectServiceProps> = ({
 
   useEffect(() => {
     const firsObj: SingleCheckBoxDropDown = {
-      title: arrangeTitle('Select All'),
+      title: arrangeTitle(t('giftvouchers.create.label.selectall').toString()),
       key: 'all',
       children: dataSource,
     }
@@ -73,7 +75,7 @@ export const SelectService: FC<SelectServiceProps> = ({
       setTotalService(keys.length)
     }
     setSelectedServices(data)
-  }, [data, dataSource])
+  }, [data, dataSource, t])
 
   const onCheck = (checkedKeysValue: string[]) => {
     setSelectedServices(checkedKeysValue)
@@ -87,9 +89,11 @@ export const SelectService: FC<SelectServiceProps> = ({
         size="large"
         value={
           selectedServices.length === totalService
-            ? 'All Services'
+            ? t('giftvouchers.create.label.allservice').toString()
             : selectedServices.length > 0
-            ? `${selectedServices.length} services`
+            ? `${selectedServices.length} ${t(
+                'giftvouchers.create.label.countedservices'
+              )}`
             : null
         }
         disabled={true}
@@ -105,7 +109,7 @@ export const SelectService: FC<SelectServiceProps> = ({
       />
       <BasicModal
         visible={servicesModal}
-        title={'Select Services'}
+        title={t('giftvouchers.create.label.selectservices')}
         className="servicesModal"
         width={800}
         onCancel={() => toggleServicesModal((modal) => !modal)}
@@ -114,7 +118,7 @@ export const SelectService: FC<SelectServiceProps> = ({
           <Input
             type="text"
             size="large"
-            placeholder={'Search Services'}
+            placeholder={t('giftvouchers.create.label.searchservices')}
             suffix={<SearchOutlined />}
           />
         </div>
@@ -133,13 +137,13 @@ export const SelectService: FC<SelectServiceProps> = ({
         </div>
         <div className={styles.saveBtn}>
           <Button type="primary" size="large" onClick={onSave}>
-            Save{' '}
+            {t('giftvouchers.create.label.save')}{' '}
             {selectedServices?.length > 0
               ? selectedServices.includes('all')
                 ? selectedServices.length - 1
                 : selectedServices.length
               : ''}{' '}
-            Services
+            {t('giftvouchers.create.label.countedservices')}
           </Button>
         </div>
       </BasicModal>
