@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { EyeInvisibleOutlined } from '@ant-design/icons'
 import { Formik } from 'formik'
 import { Checkbox, Form, Input, SubmitButton } from 'formik-antd'
@@ -11,7 +11,7 @@ import { useUser } from '../../context/UserContext'
 
 export const LoginMain = (): JSX.Element => {
   const [page, setPage] = useState<'login' | 'resetPassword'>('login')
-  const { me, login, logout } = useUser()
+  const { login, logout } = useUser()
   const [loginMutate] = useLoginMutation()
 
   const loginHandler = async (loginProps: LoginForm) => {
@@ -21,13 +21,6 @@ export const LoginMain = (): JSX.Element => {
       variables: {
         username: email,
         password: password,
-      },
-      onCompleted(e) {
-        try {
-          console.log('oinCompleted pab1', me?.pab1)
-        } catch {
-          console.log('onCompleted method failed!')
-        }
       },
     })
     try {
