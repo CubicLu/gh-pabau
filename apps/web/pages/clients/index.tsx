@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useMemo, useState } from 'react'
 import LayoutComponent from '../../components/Layout/Layout'
 import { Layout, Tabs } from 'antd'
 import dayjs from 'dayjs'
@@ -149,7 +149,26 @@ export const Clients: FC<ClientsProps> = () => {
     currentPage: 1,
     showingRecords: 0,
   })
+
+  // let contactsData = []
+  let contactsData = useMemo(() => {
+    const tempContactsData = []
+    return tempContactsData
+  }, [])
   const { data: getContactsData } = useGetContactsQuery({
+    onCompleted(response) {
+      contactsData = response.cmContacts.map((d) => ({
+        id: d.ID,
+        avatar: d.Avatar,
+        firstName: d.Fname,
+        lastName: d.Lname,
+        email: d.Email,
+        mobileNumber: d.Mobile,
+        is_active: d.is_active,
+        clientLabel: [],
+      }))
+      setContactsSourceData(contactsData)
+    },
     fetchPolicy: 'no-cache',
     variables: {
       offset: paginateData.offset,
@@ -169,22 +188,22 @@ export const Clients: FC<ClientsProps> = () => {
   }, [getContactsData, getClientsCountData])
 
   // Contacts + Labels Data
-  const contactsData = getContactsData?.cmContacts.map((d) => ({
-    id: d.ID,
-    avatar: d.Avatar,
-    firstName: d.Fname,
-    lastName: d.Lname,
-    email: d.Email,
-    mobileNumber: d.Mobile,
-    is_active: d.is_active,
-    clientLabel: [],
-  }))
+  // const contactsData = getContactsData?.cmContacts.map((d) => ({
+  //   id: d.ID,
+  //   avatar: d.Avatar,
+  //   firstName: d.Fname,
+  //   lastName: d.Lname,
+  //   email: d.Email,
+  //   mobileNumber: d.Mobile,
+  //   is_active: d.is_active,
+  //   clientLabel: [],
+  // }))
 
-  useEffect(() => {
-    if (getContactsData) {
-      setContactsSourceData(contactsData)
-    }
-  }, [getContactsData])
+  // useEffect(() => {
+  //   if (getContactsData) {
+  //     setContactsSourceData(contactsData)
+  //   }
+  // }, [getContactsData])
 
   useEffect(() => {
     contactsData?.map((fieldContact) => {
@@ -199,7 +218,7 @@ export const Clients: FC<ClientsProps> = () => {
       }
       return fieldContact
     })
-  }, [getContactsData])
+  }, [getContactsData, contactsData, contactsLabels])
 
   const onPaginationChange = (currentPage) => {
     const offset = paginateData.limit * (currentPage - 1)
@@ -254,7 +273,7 @@ export const Clients: FC<ClientsProps> = () => {
   }, [getDuplicateContactsData])
 
   useEffect(() => {
-    setSourceFilteredData(contactsData)
+    // setSourceFilteredData(contactsData)
 
     const duplicateList = []
     const newList = sourceData.filter((data) => !data.is_dismissed)
@@ -341,7 +360,6 @@ export const Clients: FC<ClientsProps> = () => {
     }
 
     setSourceFilteredData(filteredData)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchText, selectedTab, contactsSourceData])
 
   useEffect(() => {

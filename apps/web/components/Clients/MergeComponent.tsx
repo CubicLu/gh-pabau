@@ -37,39 +37,6 @@ export const MergeComponent: FC<MergeComponentProps> = ({
             {duplicateContactsTest.duplicateContacts.length > 0 &&
               ` (${duplicateContactsTest.duplicateContacts.length})`}
           </Button>
-          {/*<div className={styles.mergeContacts}>*/}
-          {/*  {duplicateData.map((data, dataIndex) => {*/}
-          {/*    return (*/}
-          {/*      <div className={styles.userDataWrap} key={dataIndex}>*/}
-          {/*        <div className={styles.userContent}>*/}
-          {/*          {data.map((item, index) => {*/}
-          {/*            const { firstName = '', lastName = '' } = item*/}
-          {/*            return (*/}
-          {/*              <div className={styles.userInfo} key={index}>*/}
-          {/*                <div className={styles.avtarIcon}>*/}
-          {/*                  <Avatar name={firstName}></Avatar>*/}
-          {/*                </div>*/}
-          {/*                <div className={styles.mergeData}>*/}
-          {/*                  <h6>{`${firstName} ${lastName}`}</h6>*/}
-          {/*                  <span>{item?.email}</span>*/}
-          {/*                  <span>{item?.mobileNumber}</span>*/}
-          {/*                </div>*/}
-          {/*              </div>*/}
-          {/*            )*/}
-          {/*          })}*/}
-          {/*        </div>*/}
-          {/*        <div className={styles.mergeFooterBtn}>*/}
-          {/*          <Button onClick={() => onDismiss(data)}>*/}
-          {/*            {t('clients.mergeFix.button.dismiss')}*/}
-          {/*          </Button>*/}
-          {/*          <Button onClick={() => onMerge(data)} type={'primary'}>*/}
-          {/*            {t('clients.mergeFix.button.merge')}*/}
-          {/*          </Button>*/}
-          {/*        </div>*/}
-          {/*      </div>*/}
-          {/*    )*/}
-          {/*  })}*/}
-          {/*</div>*/}
           <div className={styles.mergeContacts}>
             {duplicateContactsTest.duplicateContacts.map((data, dataIndex) => {
               return (
