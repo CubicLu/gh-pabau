@@ -5,6 +5,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useState,
 } from 'react'
 import { useApolloClient } from '@apollo/client'
 import { useRetrieveAuthenticatedUserLazyQuery } from '@pabau/graphql'
@@ -14,8 +15,13 @@ import Login from '../pages/login'
 import { AuthenticatedUser, JwtUser } from '@pabau/yup'
 
 interface P {
+  // The currently logged in user details (from JWT and Maybe the Database)
   me?: jwt.JwtPayload & Partial<AuthenticatedUser> & JwtUser
-  login(jwt: string): Promise<jwt.JwtPayload & JwtUser>
+
+  // Log in (raw)
+  login(jwt: string): Promise<void>
+
+  // Log out (universal)
   logout(): Promise<void>
 }
 
@@ -29,7 +35,7 @@ export const UserProvider: FC = ({ children }) => {
   ;(() => {
     if (typeof window !== 'undefined') {
       const current = window.localStorage.getItem('token')
-      if (current?.length > 0 && current[0] !== '"') {
+      if (current?.length > 0 && current !== 'null' && current[0] !== '"') {
         console.log('Found old token, deleting')
         window.localStorage.removeItem('token')
       }
@@ -79,6 +85,18 @@ export const UserProvider: FC = ({ children }) => {
   const me: Partial<AuthenticatedUser> & JwtUser =
     token && jwtUser ? (data?.me ? authenticated : jwtUser) : null
 
+  const [didLogin, setDidLogin] = useState(false)
+  useEffect(() => {
+    if (didLogin && me?.pab1) {
+      window.location.replace(
+        'https://crm.pabau.com/auth.php?t=' +
+          me.pab1 +
+          '&r=' +
+          encodeURIComponent(window.location.origin)
+      )
+    }
+  }, [me, didLogin])
+
   let ret: ReactNode = null
   if (typeof window !== 'undefined') {
     if (!me) ret = <Login />
@@ -99,7 +117,7 @@ export const UserProvider: FC = ({ children }) => {
               error
             )
           }
-          return jwtUser
+          setDidLogin(true)
         },
         async logout() {
           setToken(null)

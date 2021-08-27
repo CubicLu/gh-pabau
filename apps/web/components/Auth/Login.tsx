@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { EyeInvisibleOutlined } from '@ant-design/icons'
 import { Formik } from 'formik'
 import { Checkbox, Form, Input, SubmitButton } from 'formik-antd'
@@ -11,8 +11,9 @@ import { useUser } from '../../context/UserContext'
 
 export const LoginMain = (): JSX.Element => {
   const [page, setPage] = useState<'login' | 'resetPassword'>('login')
-  const { login, logout } = useUser()
+  const { me, login, logout } = useUser()
   const [loginMutate] = useLoginMutation()
+
   const loginHandler = async (loginProps: LoginForm) => {
     const { email, password } = loginProps
     await logout()
@@ -21,18 +22,20 @@ export const LoginMain = (): JSX.Element => {
         username: email,
         password: password,
       },
+      onCompleted(e) {
+        try {
+          console.log('oinCompleted pab1', me?.pab1)
+        } catch {
+          console.log('onCompleted method failed!')
+        }
+      },
     })
     try {
-      const jwtUser = await login(result.data.login)
-      window.location.replace(
-        'https://crm.pabau.com/auth.php?t=' +
-          jwtUser.pab1 +
-          '&r=' +
-          encodeURIComponent(window.location.origin)
-      )
+      await login(result.data.login)
     } catch (error) {
       console.log('LOGIN FAILED', error)
     }
+    // BEWARE: Don't try and do anything after here because React garbage disposes of this function after login is completed.
   }
 
   if (page === 'resetPassword')
@@ -42,7 +45,7 @@ export const LoginMain = (): JSX.Element => {
     <div>
       <div className={styles.signInForm}>
         <div className={styles.formHead}>
-          <h6>Log In!</h6>
+          <h6>Log In</h6>
           <span>
             Do not have an account?{' '}
             <Link href="/signup">Start a free trial</Link>
