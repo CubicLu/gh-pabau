@@ -8,7 +8,24 @@ import {
   FileTextOutlined,
 } from '@ant-design/icons'
 
-export const TopBoard: FC = () => {
+interface ICount {
+  count: number
+  per: string
+}
+
+interface IAppointment {
+  completed: ICount
+  notCompleted: ICount
+  canceled: ICount
+  noShow: ICount
+  deposits: ICount
+}
+
+interface ITopBoard {
+  appointment: IAppointment
+}
+
+export const TopBoard: FC<ITopBoard> = ({ appointment }) => {
   return (
     <div>
       <div className={styles.mainCard}>
@@ -94,25 +111,36 @@ export const TopBoard: FC = () => {
                 <Row className={styles.record}>
                   <div className={styles.content}>
                     <div className={styles.text}>Completed</div>
-                    <div className={styles.text}>0 (0%)</div>
+                    <div className={styles.text}>
+                      {appointment.completed.count}
+                      {appointment.completed.per}
+                    </div>
                   </div>
                 </Row>
                 <Row className={styles.record}>
                   <div className={styles.content}>
-                    <div className={styles.text}>Not completed</div>
-                    <div className={styles.text}>0 (0%)</div>
+                    <div className={styles.text}>Waiting</div>
+                    <div className={styles.text}>
+                      {appointment.notCompleted.count}
+                      {appointment.notCompleted.per}
+                    </div>
                   </div>
                 </Row>
                 <Row className={styles.record}>
                   <div className={styles.content}>
                     <div className={styles.text}>Canceled</div>
-                    <div className={styles.text}>0 (0%)</div>
+                    <div className={styles.text}>
+                      {appointment.canceled.count} {appointment.canceled.per}
+                    </div>
                   </div>
                 </Row>
                 <Row className={styles.record}>
                   <div className={styles.content}>
                     <div className={styles.text}>No show</div>
-                    <div className={styles.text}>0 (0%)</div>
+                    <div className={styles.text}>
+                      {appointment.noShow.count}
+                      {appointment.noShow.per}
+                    </div>
                   </div>
                 </Row>
                 <Row className={styles.record}></Row>
@@ -162,31 +190,46 @@ export const TopBoard: FC = () => {
                 <Row className={styles.record}>
                   <div className={styles.content}>
                     <div className={styles.text}>Completed</div>
-                    <div className={styles.text}>0 (0%)</div>
+                    <div className={styles.text}>
+                      {appointment.completed.count}
+                      {appointment.completed.per}
+                    </div>
                   </div>
                 </Row>
                 <Row className={styles.record}>
                   <div className={styles.content}>
-                    <div className={styles.text}>Not completed</div>
-                    <div className={styles.text}>0 (0%)</div>
+                    <div className={styles.text}>Waiting</div>
+                    <div className={styles.text}>
+                      {appointment.notCompleted.count}{' '}
+                      {appointment.notCompleted.per}`
+                    </div>
                   </div>
                 </Row>
                 <Row className={styles.record}>
                   <div className={styles.content}>
                     <div className={styles.text}>Canceled</div>
-                    <div className={styles.text}>0 (0%)</div>
+                    <div className={styles.text}>
+                      {appointment.canceled.count}
+                      {appointment.canceled.per}
+                    </div>
                   </div>
                 </Row>
                 <Row className={styles.record}>
                   <div className={styles.content}>
                     <div className={styles.text}>No show</div>
-                    <div className={styles.text}>0 (0%)</div>
+                    <div className={styles.text}>
+                      {appointment.noShow.count}
+                      {appointment.noShow.per}
+                    </div>
                   </div>
                 </Row>
                 <Row className={styles.record}>
                   <div className={styles.content}>
                     <div className={styles.text}>Deposits</div>
-                    <div className={styles.text}>0 (0%)</div>
+                    <div className={styles.text}>
+                      {appointment.deposits.count}
+                      {appointment.deposits.per}
+                    </div>
                   </div>
                 </Row>
               </Col>

@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react'
+/* eslint-disable graphql/template-strings */
+import React, { useState, useEffect, useMemo } from 'react'
 import { Avatar, Button, MobileHeader, RangePicker } from '@pabau/ui'
 import Layout from '../../components/Layout/Layout'
 import styles from './dashboard.module.less'
 import { useUser } from '../../context/UserContext'
+import { gql, useQuery } from '@apollo/client'
 import { useMedia } from 'react-use'
 import {
   DownOutlined,
@@ -28,6 +30,25 @@ interface ISetUser {
 const { Title } = Typography
 const { Option } = Select
 
+const GET_LOCATION_LIST = gql`
+  query getLocationList($company_id: Int!, $is_active: Int!) {
+    findManyCompanyBranch(
+      where: {
+        company_id: { equals: $company_id }
+        is_active: { equals: $is_active }
+      }
+    ) {
+      name
+    }
+  }
+`
+
+const GET_APPOINTMENT_COUNTS = gql`
+  query get_status($start_date: Decimal!, $end_date: Decimal!) {
+    getBookingStatus(data: { start_date: $start_date, end_date: $end_date })
+  }
+`
+
 export function Index() {
   const isMobile = useMedia('(max-width: 767px)', false)
   const user = useUser()
@@ -52,6 +73,101 @@ export function Index() {
     dayjs().startOf('month'),
     dayjs(),
   ])
+  const [appointment, setAppointment] = useState({
+    completed: { count: 0, per: '0%' },
+    notCompleted: { count: 0, per: '0%' },
+    canceled: { count: 0, per: '0%' },
+    noShow: { count: 0, per: '0%' },
+    deposits: { count: 0, per: '0%' },
+  })
+
+  const { data: locations } = useQuery(GET_LOCATION_LIST, {
+    variables: {
+      company_id: user?.me?.company,
+      is_active: 1,
+    },
+  })
+
+  const getAppointmentQueryVariables = useMemo(() => {
+    const queryOptions = {
+      variables: {
+        start_date: dayjs(new Date(`${filterDate[0]}`)).format(
+          'YYYYMMDDHHmmss'
+        ),
+        end_date: dayjs(new Date(`${filterDate[1]}`)).format('YYYYMMDDHHmmss'),
+      },
+    }
+    return queryOptions
+  }, [filterDate])
+
+  const { data: appointment_status } = useQuery(
+    GET_APPOINTMENT_COUNTS,
+    getAppointmentQueryVariables
+  )
+
+  useEffect(() => {
+    if (appointment_status) {
+      setAppointment({
+        completed: {
+          count:
+            appointment_status?.getBookingStatus?.appointmentStatusCounts
+              ?.completeCount,
+          per:
+            appointment_status?.getBookingStatus?.appointmentStatusCounts
+              ?.completePer,
+        },
+        notCompleted: {
+          count:
+            appointment_status?.getBookingStatus?.appointmentStatusCounts
+              ?.waitingCount,
+          per:
+            appointment_status?.getBookingStatus?.appointmentStatusCounts
+              ?.waitingPer,
+        },
+        canceled: {
+          count:
+            appointment_status?.getBookingStatus?.appointmentStatusCounts
+              ?.cancelledCount,
+          per:
+            appointment_status?.getBookingStatus?.appointmentStatusCounts
+              ?.cancelledPer,
+        },
+        noShow: {
+          count:
+            appointment_status?.getBookingStatus?.appointmentStatusCounts
+              ?.noShowCount,
+          per:
+            appointment_status?.getBookingStatus?.appointmentStatusCounts
+              ?.noShowPer,
+        },
+        deposits: {
+          count:
+            appointment_status?.getBookingStatus?.appointmentStatusCounts
+              ?.depositPaidCount,
+          per:
+            appointment_status?.getBookingStatus?.appointmentStatusCounts
+              ?.depositPaidPer,
+        },
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [appointment_status])
+
+  useEffect(() => {
+    const List = [...userListData]
+    if (locations && userListData.length === 1) {
+      locations?.findManyCompanyBranch?.map((item) => {
+        List.push({
+          key: item.name,
+          label: item.name,
+          select: false,
+        })
+        return List
+      })
+    }
+    setUserListData(List)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locations])
 
   useEffect(() => {
     const record = userListData.find((item) => item.select === true)
@@ -73,6 +189,7 @@ export function Index() {
     setUserListData(List)
     setOpenUserList(false)
   }
+
   const customMenu = (
     <div className={styles.customMenu}>
       <Menu className={styles.customMenuDropdown}>
@@ -190,7 +307,9 @@ export function Index() {
             return current > dayjs().endOf('day')
           }}
           disabled={selectedRange.toString() !== 'custom'}
-          onChange={(val) => setSelectedDates(val)}
+          onChange={(val) => {
+            setSelectedDates(val)
+          }}
         />
       )}
       <div className={styles.footer}>
@@ -286,9 +405,9 @@ export function Index() {
                 <Button icon={<CalendarOutlined />} onClick={handleDateFilter}>
                   {filterRange === 'custom'
                     ? `${Intl.DateTimeFormat('en').format(
-                        new Date(`${filterRange[0]}`)
+                        new Date(`${filterDate[0]}`)
                       )} - ${Intl.DateTimeFormat('en').format(
-                        new Date(`${filterRange[1]}`)
+                        new Date(`${filterDate[1]}`)
                       )}`
                     : `${filterRange.replace('-', ' ')}`}
                 </Button>
@@ -296,7 +415,7 @@ export function Index() {
             </div>
           </div>
           <div className={styles.bottomWrapper}>
-            <TopBoard />
+            <TopBoard appointment={appointment} />
             <Charts
               location={location}
               dashboardMode={user?.me?.admin ? dashboardMode : 0}

@@ -2,27 +2,7 @@ export const locationList = [
   {
     key: 'All-location',
     label: 'All Locations',
-    date: '10/10/20',
     select: true,
-  },
-  {
-    key: 'bristol',
-    label: 'Pabaucare - Bristol',
-    date: '10/10/20',
-    select: false,
-  },
-  {
-    key: 'london',
-    label: 'Pabaucare - London',
-    date: '10/10/20',
-    select: false,
-  },
-  { key: 'leeds', label: 'Pabaucare - Leeds', date: '10/10/20', select: false },
-  {
-    key: 'manchester',
-    label: 'Pabaucare - Manchester',
-    date: '10/10/20',
-    select: false,
   },
 ]
 export const columns = [
