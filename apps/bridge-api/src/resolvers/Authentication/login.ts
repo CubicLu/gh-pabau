@@ -123,7 +123,7 @@ export const Login = extendType({
             select: userSelect,
           })
           console.log(`[auth] pod login: legacy=${user.id} pod=${user2.id}`)
-          return generateJWT(user2)
+          return generateJWT(user2, user)
         } else {
           console.log(`[auth] legacy login: legacy=${user.id}`)
           return generateJWT(user)

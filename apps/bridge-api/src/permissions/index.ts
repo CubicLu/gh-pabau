@@ -1,6 +1,8 @@
 import { allow, and, or, shield } from 'graphql-shield'
 import * as rules from './types'
 
+console.log('Creating shield...')
+
 export const permissions = shield(
   {
     Mutation: {
@@ -81,9 +83,6 @@ export const permissions = shield(
 
       // Public access mutations
       login: allow,
-      ConnectVerifyCredentials: allow,
-      ConnectAuthorizeUser: allow,
-      logout: rules.authentication.isAuthenticated,
       switchCompany: rules.authentication.isAuthenticated,
 
       upsertUserReportByReportCode: rules.authentication.isAdmin,
@@ -106,8 +105,6 @@ export const permissions = shield(
       updateManyInvBiller: rules.authentication.isAdmin,
       updateManyStaffMetaFeaturesByGroupId: rules.authentication.isAdmin,
       upsertManyUsersMainPermissionByGroupId: rules.authentication.isAdmin,
-
-      ConnectGetJWTClient: allow,
 
       // Default fallback
       '*': and(

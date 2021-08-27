@@ -12,8 +12,6 @@ import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import { getMainDefinition } from '@apollo/client/utilities'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import * as Icons from '@fortawesome/free-solid-svg-icons'
 import { OperationDefinitionNode } from 'graphql'
 import { AppProps } from 'next/app'
 import Router from 'next/router'
@@ -47,7 +45,6 @@ const cache = new InMemoryCache({
       fields: {
         chats: {
           merge(existing = [], incoming: any[]) {
-            console.log('APOLLO CACHE: room.chat.merge()', existing, incoming)
             return [...existing, ...incoming]
           },
         },
@@ -61,12 +58,6 @@ const GRAPHQL_WS_ENDPOINT =
 const GRAPHQL_HTTP_ENDPOINT =
   process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
   'https://api.new.pabau.com/v1/graphql'
-
-//TODO: enable tree shaking
-const iconList = Object.keys(Icons)
-  .filter((key) => key !== 'fas' && key !== 'prefix')
-  .map((icon) => Icons[icon])
-library.add(...iconList)
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token')
@@ -109,7 +100,9 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
     }
   }
   if (networkError) {
-    console.log(`[Network error]: ${networkError.message}`)
+    console.log(
+      `[Network error]: ${networkError.message} ${networkError.stack}`
+    )
   }
 })
 const getWebSocketLink = () => {

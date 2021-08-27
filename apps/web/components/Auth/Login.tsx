@@ -11,7 +11,7 @@ import { useUser } from '../../context/UserContext'
 
 export const LoginMain = (): JSX.Element => {
   const [page, setPage] = useState<'login' | 'resetPassword'>('login')
-  const { me, login, logout } = useUser()
+  const { login, logout } = useUser()
   const [loginMutate] = useLoginMutation()
   const loginHandler = async (loginProps: LoginForm) => {
     const { email, password } = loginProps
@@ -22,12 +22,17 @@ export const LoginMain = (): JSX.Element => {
         password: password,
       },
     })
-    await login(result.data.login)
-    window.location.href =
-      'https://crm.pabau.com/auth.php?t=' +
-      me.pab1 +
-      '&r=' +
-      encodeURIComponent(window.location.origin)
+    try {
+      const jwtUser = await login(result.data.login)
+      window.location.replace(
+        'https://crm.pabau.com/auth.php?t=' +
+          jwtUser.pab1 +
+          '&r=' +
+          encodeURIComponent(window.location.origin)
+      )
+    } catch (error) {
+      console.log('LOGIN FAILED', error)
+    }
   }
 
   if (page === 'resetPassword')

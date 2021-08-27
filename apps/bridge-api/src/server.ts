@@ -6,6 +6,8 @@ import { createContext } from './context'
 import { BASIC_LOGGING } from './logging'
 import { stringToBoolean } from './utils'
 
+console.log('Creating Apollo Server...')
+
 export const server = new ApolloServer({
   schema: applyMiddleware(schema, permissions),
   context: createContext,
