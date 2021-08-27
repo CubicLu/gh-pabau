@@ -58,7 +58,6 @@ export default class ContactService {
 
       if (foundGroup.length > 0) duplicates.push(foundGroup)
     }
-    console.log('duplicates', duplicates)
     return duplicates
   }
 }

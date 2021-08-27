@@ -187,24 +187,6 @@ export const Clients: FC<ClientsProps> = () => {
     }
   }, [getContactsData, getClientsCountData])
 
-  // Contacts + Labels Data
-  // const contactsData = getContactsData?.cmContacts.map((d) => ({
-  //   id: d.ID,
-  //   avatar: d.Avatar,
-  //   firstName: d.Fname,
-  //   lastName: d.Lname,
-  //   email: d.Email,
-  //   mobileNumber: d.Mobile,
-  //   is_active: d.is_active,
-  //   clientLabel: [],
-  // }))
-
-  // useEffect(() => {
-  //   if (getContactsData) {
-  //     setContactsSourceData(contactsData)
-  //   }
-  // }, [getContactsData])
-
   useEffect(() => {
     contactsData?.map((fieldContact) => {
       for (const fieldCL of contactsLabels) {
@@ -250,7 +232,7 @@ export const Clients: FC<ClientsProps> = () => {
     SourceDataProps[][]
   >([])
   const [contactsSourceData, setContactsSourceData] = useState(contactsData)
-  const [duplicateContactsTest, setDuplicateContactsTest] = useState(
+  const [duplicateContactsData, setDuplicateContactsData] = useState(
     getDuplicateContactsData
   )
   const [countLabelS, setCountLabelS] = useState(contactsLabels)
@@ -269,12 +251,10 @@ export const Clients: FC<ClientsProps> = () => {
   }, [clientsList])
 
   useEffect(() => {
-    setDuplicateContactsTest(getDuplicateContactsData)
+    setDuplicateContactsData(getDuplicateContactsData)
   }, [getDuplicateContactsData])
 
   useEffect(() => {
-    // setSourceFilteredData(contactsData)
-
     const duplicateList = []
     const newList = sourceData.filter((data) => !data.is_dismissed)
     const data = groupBy(newList, (data) => {
@@ -621,7 +601,7 @@ export const Clients: FC<ClientsProps> = () => {
       onDismiss={handleDismiss}
       onMerge={handleMerge}
       onMergeAll={handleMergeAll}
-      duplicateContactsTest={duplicateContactsTest}
+      duplicateContactsData={duplicateContactsData}
     />
   )
 
@@ -694,7 +674,7 @@ export const Clients: FC<ClientsProps> = () => {
                     handleLabelClick={handleLabelClick}
                     duplicateData={duplicateDataList}
                     getClientsCountData={getClientsCountData}
-                    duplicateContactsCount={duplicateContactsTest}
+                    duplicateContactsCount={duplicateContactsData}
                     addLabelMutation={addLabelMutation}
                     handleApplyLabel={handleApplyLabel}
                     labelCountAll={labelCountAll}

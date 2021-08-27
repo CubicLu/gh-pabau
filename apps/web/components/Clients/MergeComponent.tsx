@@ -10,7 +10,7 @@ interface MergeComponentProps {
   onDismiss?: (val) => void
   onMerge?: (val) => void
   onMergeAll?: (val) => void
-  duplicateContactsTest?: any
+  duplicateContactsData?: any
 }
 
 export const MergeComponent: FC<MergeComponentProps> = ({
@@ -18,13 +18,13 @@ export const MergeComponent: FC<MergeComponentProps> = ({
   onDismiss,
   onMerge,
   onMergeAll,
-  duplicateContactsTest,
+  duplicateContactsData,
 }) => {
   const { t } = useTranslationI18()
 
   return (
     <div className={styles.mergeFixWrapper}>
-      {duplicateContactsTest.duplicateContacts.length === 0 ? (
+      {duplicateContactsData.duplicateContacts.length === 0 ? (
         <div className={styles.noDuplicateCard}>
           <img src={noDuplicateData} alt={'No Data'} />
           <span>{t('clients.mergeFix.button.merge.empty')}</span>
@@ -34,11 +34,11 @@ export const MergeComponent: FC<MergeComponentProps> = ({
           <h5>{t('clients.mergeFix.title')}</h5>
           <Button type={'primary'} onClick={() => onMergeAll(duplicateData)}>
             {t('clients.mergeFix.button.mergeAll')}
-            {duplicateContactsTest.duplicateContacts.length > 0 &&
-              ` (${duplicateContactsTest.duplicateContacts.length})`}
+            {duplicateContactsData.duplicateContacts.length > 0 &&
+              ` (${duplicateContactsData.duplicateContacts.length})`}
           </Button>
           <div className={styles.mergeContacts}>
-            {duplicateContactsTest.duplicateContacts.map((data, dataIndex) => {
+            {duplicateContactsData.duplicateContacts.map((data, dataIndex) => {
               return (
                 <div className={styles.userDataWrap} key={dataIndex}>
                   <div className={styles.userContent}>

@@ -8,15 +8,11 @@ import {
   Button,
   CustomIcon,
 } from '@pabau/ui'
-import {
-  AddLabelMutation,
-  Exact,
-  useDeleteContactsLabelsMutation,
-} from '@pabau/graphql'
+import { AddLabelMutation, Exact } from '@pabau/graphql'
 import styles from '../../pages/clients/clients.module.less'
 import { Labels } from '../../pages/clients'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import { differenceBy, difference } from 'lodash'
+import { differenceBy } from 'lodash'
 import { FetchResult, MutationFunctionOptions } from '@apollo/client'
 
 interface CreateLabelsProps {
@@ -119,15 +115,6 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     text: '',
     color: '',
     count: 0,
-  })
-
-  const [deleteContactsLabelsMutaton] = useDeleteContactsLabelsMutation({
-    onCompleted(response) {
-      getContactsLabelsQuery()
-    },
-    onError(error) {
-      console.error(error)
-    },
   })
 
   const editLabelData = (valueObject) => {
@@ -243,61 +230,9 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
   }
 
   // TO DO onApplyLabel
-  // const onApplyLabel = () => {
-  //   console.log('clicked onApplyApply')
-  // }
   const onApplyLabel = () => {
     handleApplyLabel(selectedLabels)
     setVisible(false)
-    if (selectedRowKeys && selectedRowKeys.length > 0) {
-      for (const selectContact of selectedRowKeys) {
-        for (const selectedLabel of selectedLabels) {
-          const checkDuplicateLabel = contactsLabels.some(
-            (e) =>
-              e.contact_id === selectContact && e.label_id === selectedLabel.id
-          )
-          const addedLabel: any = difference(
-            selectedLabels,
-            defaultSelectedLabels
-          )
-          const removedLabel: any = difference(
-            defaultSelectedLabels,
-            selectedLabels
-          )
-          if (addedLabel.length > 0 && !checkDuplicateLabel) {
-            insertContactsLabelsMutaton({
-              variables: {
-                contact_id: selectContact,
-                label_id: selectedLabel.id,
-              },
-            })
-          }
-          if (removedLabel.length > 0) {
-            removedLabel.map((label) => {
-              const findToDeleteCL = contactsLabels?.find(
-                (x) => x.label_id === label.id
-              )
-              deleteContactsLabelsMutaton({
-                variables: {
-                  id: findToDeleteCL.id,
-                },
-              })
-              return label
-            })
-          }
-        }
-        if (selectedLabels.length === 0 && defaultSelectedLabels.length > 0) {
-          const findToDeleteCL = contactsLabels?.find(
-            (x) => x.label_id === defaultSelectedLabels[0].id
-          )
-          deleteContactsLabelsMutaton({
-            variables: {
-              id: findToDeleteCL.id,
-            },
-          })
-        }
-      }
-    }
   }
 
   const content = () => {
