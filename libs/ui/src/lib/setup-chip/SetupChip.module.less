@@ -154,6 +154,7 @@
   border: 1px solid #ecedf0;
   border-radius: 4px;
   position: relative;
+  margin-bottom: 24px;
 }
 
 .webinar-text {
@@ -167,6 +168,9 @@
 
     @media screen and (min-width: 1366px) {
       font-size: 14px;
+    }
+    @media screen and (max-width: 767px) {
+      padding-bottom: 8px;
     }
   }
 
@@ -188,7 +192,7 @@
     margin-top: 14px;
     margin-bottom: 0px;
     text-transform: uppercase;
-
+    width: 55%;
     @media screen and (min-width: 1366px) {
       font-size: 10px;
     }
@@ -250,7 +254,17 @@
   height: 25px;
   display: flex;
   align-items: center;
-
+  :global .anticon-plus {
+    color: #9292a3;
+  }
+  &:hover,
+  &:focus,
+  &:active {
+    :global span.anticon.anticon-plus {
+      color: #7ec9e0;
+      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
+  }
   @media screen and (min-width: 1366px) {
     font-size: 12px;
     min-width: 100px;

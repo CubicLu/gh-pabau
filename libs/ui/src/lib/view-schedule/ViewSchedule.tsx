@@ -187,7 +187,12 @@ export const ViewScheduleModal: FC<ViewScheduleProps> = ({
               <div className={styles.webinarWrapperModal}>
                 {orderByDay?.[1]?.map((webinar) => {
                   return (
-                    <div className={styles.webBox} key={webinar?.id}>
+                    <div
+                      className={
+                        orderByDay?.[1]?.length > 1 ? styles.webBox : undefined
+                      }
+                      key={webinar?.id}
+                    >
                       <Webinar
                         key={webinar?.id}
                         title={webinar?.title}
