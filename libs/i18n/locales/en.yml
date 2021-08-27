@@ -3636,6 +3636,7 @@ en:
   setup.page.live.upcoming.elapsed.uppercase.label: 'Elapsed'
   setup.page.webinar.modal.join.label: 'Join'
   setup.page.webinar.modal.register.label: 'Register'
+  setup.page.webinar.modal.registered.label: 'Registered'
   setup.page.webinar.modal.register.show: 'Show Results'
   modals.webinar.tab.discover: 'Discover & Learn'
   modals.webinar.tab.schedule: 'Your schedule'
