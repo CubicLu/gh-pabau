@@ -1,5 +1,6 @@
 import React, { FC, useState, useEffect, useRef } from 'react'
 import Layout from '../../../../components/Layout/Layout'
+import { useUser } from '../../../../context/UserContext'
 import SelectServices from '../../../../components/Marketing/CreateGiftVoucher/SelectServices'
 import { useTranslationI18 } from '../../../../hooks/useTranslationI18'
 import { Card, Row, Col } from 'antd'
@@ -155,6 +156,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
   const { t } = useTranslationI18()
   const aligns = [styles.pRight, styles.pX, styles.pX, styles.pLeft]
   const bgSelectRef = useRef<HTMLInputElement>(null)
+  const user = useUser()
 
   const size = useWindowSize()
 
@@ -645,7 +647,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
   }
 
   return (
-    <Layout>
+    <Layout {...user}>
       <CommonHeader isLeftOutlined title={t('giftvouchers.create.label')} />
       <div className={styles.mainCreateVoucher}>
         <Formik

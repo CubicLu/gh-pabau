@@ -1,5 +1,6 @@
 import React, { FC, useState, useEffect } from 'react'
 import Layout from '../../../components/Layout/Layout'
+import { useUser } from '../../../context/UserContext'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import {
   SearchOutlined,
@@ -142,6 +143,7 @@ export interface GiftVouchersProps {
 const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
   const { t } = useTranslationI18()
   const size = useWindowSize()
+  const user = useUser()
 
   const columns = [
     {
@@ -201,10 +203,13 @@ const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
       },
     },
   ]
-
-  const tabItems = [t('giftvouchers.tabs.tab1'), t('giftvouchers.tabs.tab2')]
+  type TabItems = 'Types' | 'Circlulation'
+  const tabItems = [
+    t('giftvouchers.tabs.tab1') as TabItems,
+    t('giftvouchers.tabs.tab2') as TabItems,
+  ]
   const [gifts, setGifts] = useState([])
-  const [searchTerm, setSearchTerm] = useState(null)
+  const [searchTerm, setSearchTerm] = useState<string>('')
   const [paginationState, setPaginationState] = useState(true)
   const [dataSource, setDataSource] = useState(null)
   const [activeTab, setActiveTab] = useState(tabItems[0])
@@ -287,7 +292,7 @@ const GiftVouchers: FC<GiftVouchersProps> = ({ title }) => {
   }
 
   return (
-    <Layout>
+    <Layout {...user}>
       <CommonHeader isLeftOutlined title={t('giftvouchers.title')} />
       <div className={styles.giftVoucherMain}>
         <Card title={<CardHeader />}>
