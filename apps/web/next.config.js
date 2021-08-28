@@ -1,96 +1,30 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const withAntdLess = require('next-plugin-antd-less')
-const withImages = require('next-images')
 const withNx = require('@nrwl/next/plugins/with-nx')
+const withPlugins = require('next-compose-plugins')
+const withLess = require('next-with-less')
+const withYaml = require('next-plugin-yaml')
 
-module.exports = {
-  env: {
-    google_api_key: 'AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw',
+/**
+ * @type {import('@nrwl/next/plugins/with-nx').WithNxOptions}
+ **/
+const nxNextConfig = {
+  nx: {
+    svgr: true,
   },
-  async rewrites() {
-    return [
-      {
-        source: '/reports/:name',
-        destination: '/reports/[name]?name=:name',
-      },
-      {
-        source: '/clients/:id',
-        destination: '/clients/[id]?id=:id',
-      },
-      {
-        source: '/clients/finance/invoice/:id',
-        destination: '/clients/finance/invoice/[id]?id=:id',
-      },
-      {
-        source: '/clients/finance/receipt/:id',
-        destination: '/clients/finance/receipt/[id]?id=:id',
-      },
-      {
-        source: '/clients/finance/statement/:id',
-        destination: '/clients/finance/statement/[id]?id=:id',
-      },
-    ]
-  },
-  typescript: {
-    // !! WARN !!
-    // Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
-    // !! WARN !!
-    ignoreBuildErrors: true,
-  },
-  onDemandEntries: {
-    // period (in ms) where the server will keep pages in the buffer
-    maxInactiveAge: 25 * 60 * 60 * 1000,
-    // number of pages that should be kept simultaneously without being disposed
-    pagesBufferLength: 3,
-  },
-  eslint: {
-    // !! WARN !!
-    // Dangerously allow production builds to successfully complete even if
-    // your project has ESLint errors.
-    // !! WARN !!
-    build: false,
-  },
-  trailingSlash: false,
-  ...withImages({
-    fileExtensions: [
-      'jpg',
-      'jpeg',
-      'png',
-      'gif',
-      'ico',
-      'webp',
-      'jp2',
-      'avif',
-      'woff',
-      'woff2',
-      'otf',
-    ],
-    inlineImageLimit: 9_000,
-    ...withAntdLess({
-      lessVarsFilePath: 'libs/ui/src/styles/antd.less',
-      importLoaders: 3,
-      cssLoaderOptions: {
-        sourceMap: true,
-        esModule: true,
-        modules: {
-          exportLocalsConvention: 'camelCase',
-          // exportOnlyLocals: false,
-          mode: 'local',
-        },
-      },
-      ...withNx({
-        // cssModules: false,
-        webpack(config, options) {
-          config.module.rules.push({
-            test: /\.ya?ml$/,
-            type: 'json',
-            use: 'yaml-loader',
-          })
-
-          return config
-        },
-      }),
-    }),
-  }),
+  cssModules: true,
+  webpack5: true,
 }
+
+module.exports = withPlugins([
+  [withYaml],
+  [
+    withLess,
+    {
+      lessLoaderOptions: {
+        javascriptEnabled: true,
+        modifyVars: { '@primary-color': '#ff0000' },
+      },
+    },
+  ],
+  [withNx, nxNextConfig],
+])
