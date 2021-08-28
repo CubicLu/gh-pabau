@@ -29,18 +29,11 @@ import { Avatar, Col, Image, Row, Skeleton, Tooltip, Typography } from 'antd'
 import classNames from 'classnames'
 import { Formik } from 'formik'
 import { useRouter } from 'next/router'
-import React, {
-  FC,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import * as Yup from 'yup'
 import LogoSvg from '../../assets/images/logo.svg'
-import { UserContext } from '../../context/UserContext'
+import { useUser } from '../../context/UserContext'
 import { useGridData } from '../../hooks/useGridData'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { getBadgesList } from '../../mocks/Locations'
@@ -212,7 +205,7 @@ const LocationsLayout: FC<P> = ({ schema }) => {
 
   const router = useRouter()
   const { getParentSetupData } = useGridData(t)
-  const user = useContext(UserContext)
+  const user = useUser()
   const filterFormRef = useRef(null)
 
   const validationSchema = Yup.object().shape({

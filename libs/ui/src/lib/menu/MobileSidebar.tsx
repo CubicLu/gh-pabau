@@ -5,7 +5,6 @@ import {
   Search,
   Dropdown as AvatarDropDown,
   QuickCreate,
-  UserDataProps,
 } from '@pabau/ui'
 import styles from './MobileSidebar.module.less'
 import classNames from 'classnames'
@@ -26,20 +25,21 @@ import User from '../../assets/images/users/stephen.png'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
+import { AuthenticatedUser, JwtUser } from '@pabau/yup'
 
 const { SubMenu } = Menu
 
-interface SidebarProps {
+interface P {
   searchRender?: (innerComponent: JSX.Element) => JSX.Element
   onSideBarClosed: () => void
   onClickNotificationDrawer: () => void
   onClickChatDrawer: () => void
   clientCreateRender?: () => JSX.Element
   leadCreateRender?: () => JSX.Element
-  userData: UserDataProps
+  userData: Partial<AuthenticatedUser> & JwtUser
 }
 
-export const MobileSidebar: FC<SidebarProps> = ({
+export const MobileSidebar: FC<P> = ({
   searchRender,
   onSideBarClosed,
   onClickNotificationDrawer,
@@ -173,7 +173,7 @@ export const MobileSidebar: FC<SidebarProps> = ({
         })}
         <Menu.Item
           className={classNames(styles.sidebarMenu, styles.profileMenu)}
-          icon={<Avatar size={24} src={userData?.image || User} />}
+          icon={<Avatar size={24} src={userData?.imageUrl || User} />}
           onClick={() => {
             setProfileDrawer(true)
           }}

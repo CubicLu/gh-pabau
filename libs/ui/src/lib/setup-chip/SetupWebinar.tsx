@@ -82,6 +82,7 @@ export const Webinar: FC<WebinarProps> = ({
             <div className={styles.joinBtnTopSpace}>
               <Button
                 className={styles.joinBtn}
+                type="primary"
                 icon={<PlayCircleOutlined />}
                 onClick={() => onClick?.('join', id)}
               >

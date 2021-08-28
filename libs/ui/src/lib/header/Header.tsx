@@ -5,27 +5,16 @@ import {
   Logo,
   NotificationDrawer,
   QuickCreate,
-  UserDataProps,
 } from '@pabau/ui'
 import { Badge, Col, Layout, Row } from 'antd'
 import classNames from 'classnames'
 import React, { useState, useEffect } from 'react'
 import styles from './Header.module.less'
 import { Search } from './search/Search'
+import { NotificationDrawerItemType } from '../notification-drawer/NotificationItem'
+import { AuthenticatedUser, JwtUser } from '@pabau/yup'
 
 const AntHeader = Layout.Header
-
-interface Notification {
-  id: string
-  notificationTime: Date
-  notificationType: string
-  notificationTypeIcon?: string
-  title: string
-  desc: string
-  read: number[]
-  users: number[]
-  link: string
-}
 
 interface ProductNews {
   id: string
@@ -38,16 +27,17 @@ interface ProductNews {
 }
 
 interface P {
-  notifications?: Notification[]
+  notifications?: NotificationDrawerItemType[]
   productNews?: ProductNews[]
   readNewsMutation?: MutationFunction
   deleteNotification?: MutationFunction
   updateNotification?: MutationFunction
   readAddMutation?: MutationFunction
   relativeTime?: (lan: string, date: Date) => string
-  user?: UserDataProps
+  user?: Partial<AuthenticatedUser> & JwtUser
   searchRender?: (innerComponent: JSX.Element) => JSX.Element
   onMessageIconClick?(): void
+  onLogOut?(): void
   // onCreateChannel?: (
   //   name: string,
   //   description: string,
@@ -65,8 +55,7 @@ export const Header = ({
   user,
   searchRender,
   onMessageIconClick,
-  // onCreateChannel,
-  // onMessageType,
+  onLogOut,
   relativeTime,
   deleteNotification,
   updateNotification,
@@ -75,13 +64,10 @@ export const Header = ({
   taskManagerIFrameComponent,
   clientCreateRender,
   leadCreateRender,
-  ...rest
 }: P): JSX.Element => {
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
     false
   )
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [openMessageDrawer, setMessageDrawer] = useState<boolean>(false)
   const [unreadNewsCount, setUnreadNewsCount] = useState<number>(0)
   const [
     unreadNotificationCount,
@@ -89,7 +75,7 @@ export const Header = ({
   ] = useState<number>(0)
 
   const isReadNotify = (users: number[]) => {
-    return users?.find((user_id) => user_id === user?.user) ? true : false
+    return !!users?.find((user_id) => user_id === user?.user)
   }
 
   const setUnreadNotify = (notifyArray, readKey, setter) => {
@@ -163,6 +149,7 @@ export const Header = ({
                 <AvatarDropDown
                   taskManagerIFrameComponent={taskManagerIFrameComponent}
                   userData={user}
+                  onLogOut={onLogOut}
                 />
               </div>
             </Col>
@@ -177,8 +164,6 @@ export const Header = ({
           unreadNewsCount={unreadNewsCount}
           unreadNotificationCount={unreadNotificationCount}
           closeDrawer={() => setNotificationDrawer((e) => !e)}
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
           notifications={notifications}
           productNews={productNews}
           relativeTime={relativeTime}
@@ -191,6 +176,3 @@ export const Header = ({
     </>
   )
 }
-
-export default Header
-export * from './messages/Messages'

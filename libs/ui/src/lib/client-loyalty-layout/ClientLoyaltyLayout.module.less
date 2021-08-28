@@ -2,3 +2,69 @@
   width: 100%;
   height: 100%;
 }
+.loyalty-layout-main {
+  :global {
+    .ant-table-thead {
+      th {
+        color: #9292a3;
+        background: #F8F9FA !important;
+        font-size: 12px;
+        padding: 12px 0 13px 24px;
+        border-bottom: 1px solid #ECEDF0;
+      }
+    }
+    .ant-table-tbody {
+      td {
+        color: #3d3d46;
+        padding: 19px 0 19px 25px;
+        border-bottom: 1px solid #ECEDF0;
+      }
+      .loyalty-name {
+        @media screen and (max-width: 768px) {
+          min-width: 350px !important;
+        }
+      }
+    }
+  }
+  .total-wrapper {
+    padding: 17px 15px 16px 15px;
+    display: flex;
+    justify-content: flex-end;
+    background: #F8F9FA;
+    border-bottom: 1px solid #ecedf0;
+    span {
+      font-style: normal;
+      font-weight: normal;
+      font-size: 12px;
+      line-height: 15px;
+      color: #9292a3;
+    }
+    :first-child {
+      width: 73px;
+      margin-right: 36px;
+    }
+    :last-child {
+      width: 80px;
+    }
+  }
+  .amount-wrapper {
+    padding: 12px 45px 0 0;
+    display: flex;
+    justify-content: flex-end;
+    span {
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 18px;
+    }
+    :first-child {
+      margin-right: 49px;
+    }
+    :last-child {
+      color: #65cd98;
+    }
+  }
+  .pagination-wrapper {
+    padding: 53px 25px 11px 25px;
+  }
+}

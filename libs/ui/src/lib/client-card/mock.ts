@@ -1103,3 +1103,76 @@ export const serviceData = [
     ],
   },
 ]
+
+export const loyaltyData = [
+  {
+    id: 1,
+    date: '2020-07-23T17:30:00.007Z',
+    time: '17:34',
+    action: 'Purchaising each service - at ringup only',
+    points: '+30.00',
+  },
+  {
+    id: 2,
+    date: '2020-07-22T17:30:00.007Z',
+    time: '16:25',
+    action: 'Percantage paid on spend - at ringup only',
+    points: '+5.00',
+  },
+  {
+    id: 3,
+    date: '2020-07-19T17:30:00.007Z',
+    time: '16:25',
+    action: 'Percantage paid on spend - at ringup only',
+    points: '+5.00',
+  },
+  {
+    id: 4,
+    date: '2020-07-19T17:30:00.007Z',
+    time: '16:25',
+    action: 'Purchaising each service - at ringup only',
+    points: '+5.00',
+  },
+  {
+    id: 5,
+    date: '2020-07-19T17:30:00.007Z',
+    time: '16:25',
+    action: 'Percantage paid on spend - at ringup only',
+    points: '+5.00',
+  },
+  {
+    id: 6,
+    date: '2020-07-19T17:30:00.007Z',
+    time: '16:25',
+    action: 'Percantage paid on spend - at ringup only',
+    points: '+5.00',
+  },
+  {
+    id: 7,
+    date: '2020-07-19T17:30:00.007Z',
+    time: '16:25',
+    action: 'Purchaising each service - at ringup only',
+    points: '+5.00',
+  },
+  {
+    id: 8,
+    date: '2020-07-19T17:30:00.007Z',
+    time: '16:25',
+    action: 'Purchaising each service - at ringup only',
+    points: '+5.00',
+  },
+  {
+    id: 9,
+    date: '2020-07-19T17:30:00.007Z',
+    time: '16:25',
+    action: 'Percantage paid on spend - at ringup only',
+    points: '+5.00',
+  },
+  {
+    id: 10,
+    date: '2020-07-19T17:30:00.007Z',
+    time: '16:25',
+    action: 'Percantage paid on spend - at ringup only',
+    points: '+5.00',
+  },
+]
