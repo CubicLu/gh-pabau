@@ -2,6 +2,7 @@ import React from 'react'
 import { AppProps } from 'next/app'
 import TranslationWrapper from '../components/TranslationWrapper'
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client'
+import SettingsProvider from '../context/settings-context'
 require('../../../libs/ui/src/styles/antd.less')
 
 const client = new ApolloClient({
@@ -12,9 +13,11 @@ const client = new ApolloClient({
 function Connect({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
-      <TranslationWrapper>
-        <Component {...pageProps} />
-      </TranslationWrapper>
+      <SettingsProvider>
+        <TranslationWrapper>
+          <Component {...pageProps} />
+        </TranslationWrapper>
+      </SettingsProvider>
     </ApolloProvider>
   )
 }

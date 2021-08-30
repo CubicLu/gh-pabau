@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useContext } from 'react'
 import styles from './ServiceCategorySelector.module.less'
 import { Formik } from 'formik'
 import { Form, Input } from 'formik-antd'
@@ -14,6 +14,7 @@ import classnames from 'classnames'
 import { MasterCategory } from '../../types/services'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { useSelectedDataStore } from '../../store/selectedData'
+import { SettingsContext } from '../../context/settings-context'
 
 export interface P {
   items: MasterCategory[]
@@ -24,7 +25,8 @@ export const ServiceCategorySelector: FC<P> = ({ items, onSelected }) => {
   const [showMasterCategories, setShowMasterCategories] = useState(true)
   const [selectedData, setSelectedData] = useSelectedDataStore()
   const [isGroup, setIsGroup] = useState<boolean>(false)
-
+  const settings = useContext(SettingsContext)
+  console.log('SETTINGS', settings)
   const handleSelectedMasterCategory = (id: number) => {
     setShowMasterCategories(false)
     setSelectedData('SET_MASTER_CATEGORY_ID', id)

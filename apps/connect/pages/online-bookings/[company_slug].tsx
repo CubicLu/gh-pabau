@@ -293,20 +293,13 @@ export function Index() {
           )}
           {currentStep === 3 && (
             <EmployeeSelector
-              onEmployeeSelected={(employeeID, staffID) => {
-                setSelectedData({
-                  ...selectedData,
-                  employeeID: employeeID,
-                  staffID: staffID,
-                })
+              onSelected={() => {
                 setCurrentStep(currentStep + 1)
               }}
             />
           )}
           {currentStep === 4 && (
             <DateTimeSelector
-              employeeID={selectedData.employeeID}
-              staffID={selectedData.staffID}
               onSelectedTimeslot={(dateTime) => {
                 setSelectedData({
                   ...selectedData,
@@ -323,9 +316,9 @@ export function Index() {
                 changescreen={function () {
                   createBooking({
                     variables: {
-                      user_id: selectedData.employeeID,
+                      user_id: selectedData.employee.ID,
                       company_id: company.id,
-                      location_id: selectedData.locationID,
+                      location_id: selectedData.location.id,
                       service_id: 2691491,
                       contact_id: 22293092,
                       unique_id: '123',

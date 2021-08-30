@@ -16,22 +16,18 @@ import {
 } from '@pabau/graphql'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { decimalToISO8601 } from '../../helpers/DatesHelper'
+import { useSelectedDataStore } from '../../store/selectedData'
 
 export interface P {
-  employeeID: number
-  staffID: number
   onSelectedTimeslot: (dateTime: moment.Moment) => void
 }
 
-const DateTimeSelector: FC<P> = ({
-  employeeID,
-  staffID,
-  onSelectedTimeslot,
-}) => {
+const DateTimeSelector: FC<P> = ({ onSelectedTimeslot }) => {
   // CRAP
   const [mdisplay, setmdisplay] = useState(true)
   const [calcount, setcalcount] = useState(1)
   const isMobile = useMedia('(max-width: 768px)', false)
+  const [selectedData, setSelectedData] = useSelectedDataStore()
 
   const data = {
     name: 'Nenad Jovanovski',
@@ -60,7 +56,7 @@ const DateTimeSelector: FC<P> = ({
       start_date: Number.parseInt(moment().format('YYYYMMDD000000')),
       end_date: Number.parseInt(moment().add(3, 'M').format('YYYYMMDD235959')),
       company_id: 8021,
-      user_id: employeeID,
+      user_id: selectedData.employee.ID,
     },
   })
 
@@ -69,7 +65,10 @@ const DateTimeSelector: FC<P> = ({
 
   const shiftsByDate = []
   for (const shift of shiftsResult.findManyRotaShift) {
-    if (staffID === 0 || staffID === shift.uid) {
+    if (
+      selectedData.employee.User.id === 0 ||
+      selectedData.employee.User.id === shift.uid
+    ) {
       const index = shift.start.toString().substring(0, 8)
       if (!shiftsByDate[index]) {
         shiftsByDate[index] = [shift]
@@ -299,7 +298,7 @@ const DateTimeSelector: FC<P> = ({
         mdisplay && (
           <div className={Styles.content}>
             <h4 className={Styles.headTitle}>
-              {employeeID === 0
+              {selectedData.employee.ID === 0
                 ? t('connect.onlinebooking.date&time.chooseanyone')
                 : `${t('connect.onlinebooking.date&time.d&tfor')} ${
                     data.name
@@ -340,7 +339,7 @@ const DateTimeSelector: FC<P> = ({
       ) : (
         <div className={Styles.content}>
           <h4 className={Styles.headTitle}>
-            {employeeID === 0
+            {selectedData.employee.ID === 0
               ? t('connect.onlinebooking.date&time.chooseanyone')
               : `${t('connect.onlinebooking.date&time.d&tfor')} ${
                   data.name

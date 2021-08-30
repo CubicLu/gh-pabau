@@ -3,11 +3,9 @@ import { BookingData } from '../types/booking'
 
 let globalState: BookingData = {
   services: [],
-  serviceID: null,
   categoryID: null,
   masterCategoryID: null,
-  employeeID: null,
-  staffID: null,
+  employee: null,
   location: null,
   peopleCount: 1,
 }
@@ -30,6 +28,9 @@ const actions = {
   },
   SET_PEOPLE_COUNT: (curState, peopleCount) => {
     return { peopleCount: peopleCount }
+  },
+  SET_EMPLOYEE: (curState, employee) => {
+    return { employee: employee }
   },
 }
 
