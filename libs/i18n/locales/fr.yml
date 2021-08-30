@@ -651,6 +651,38 @@ fr:
   setup.creditnotes.schema.fields.invoiceprefix.description: 'Un exemple de préfixe'
   setup.creditnotes.schema.fields.invoiceprefix.example: 'RCN'
   setup.creditnotes.schema.fields.isactive: 'Statut'
+  setup.reports.team-report: Team Report
+  setup.reports.title: Reports
+  setup.reports.search-report: Search by report name
+  setup.reports.team.title: Team
+  setup.reports.financials.title: Financials
+  setup.reports.team.report-details: Report Details
+  setup.reports.team.kpi-explorer: KPI Explorer
+  setup.reports.team.trend: Trend
+  setup.reports.enable-benchmarks: Enable industry benchmarks
+  setup.reports.download: Download
+  setup.reports.settings: Settings
+  setup.reports.help: Help
+  setup.reports.by-teams: By Teams
+  setup.reports.by-locations: By Locations
+  setup.reports.by-time-period: By Time Period
+  setup.reports.by-date: By Date
+  setup.reports.coming-soon: Coming Soon
+  setup.reports.all-team: All Team
+  setup.reports.for: For
+  setup.reports.of: of
+  setup.reports.select-range-type: Select a
+  setup.reports.all: All
+  setup.reports.select-employee: Select an employee
+  setup.reports.by: By
+  setup.reports.at: at
+  setup.reports.all-locations: All Locations
+  setup.reports.select-location: Select location
+  setup.reports.select-all: Select All
+  setup.reports.target: Target
+  setup.reports.remove-metric: Remove Metric
+  setup.reports.showing: Showing
+  setup.reports.show: Show
   products.list.newbtn.product: 'Nouveau produit'
   products.list.newbtn.category: 'Nouvelle catégorie'
   products.list.newbtn.supplier: 'Nouveau fournisseur'

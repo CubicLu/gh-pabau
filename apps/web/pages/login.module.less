@@ -19,6 +19,7 @@
     max-width: 50%;
     padding: 40px 130px;
     background: #ffffff;
+    min-width: 500px;
     .sign-in-form {
       .form-head {
         display: flex;
@@ -382,4 +383,33 @@
       }
     }
   }
+}
+
+@media (max-width: 768px) {
+  .signInWrapper {
+    .form-wrapper {
+      width: 100%;
+      max-width: 100%;
+    }
+    .sign-in-background {
+      display: none;
+    }
+  }
+}
+@media (max-width: 600px) {
+  .signInWrapper {
+    .form-wrapper {
+      min-width: 300px;
+      padding: 40px 5%;
+    }
+  }
+}
+.btn-disabled {
+  background: rgb(170, 170, 170) !important;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #ffffff;
+  height: 40px;
 }

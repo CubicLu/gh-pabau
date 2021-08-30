@@ -28,10 +28,15 @@ APP_TYPE="$(basename "$(dirname "$(
 )")")"
 VERCEL_JSON_LOCATION=$(cd "${APP_TYPE}/${APP_NAME}" && pwd)
 
+apt update -y
+apt install -y jq
+APP_VERSION=$(jq -r '.version' package.json)
+
 echo "----- DEBUG -----"
 echo "(pwd)=$(pwd)"
 echo "NODE_OPTIONS=${NODE_OPTIONS}"
 echo "APP_NAME=${APP_NAME}"
+echo "APP_VERSION=${APP_VERSION}"
 echo "APP_TYPE=${APP_TYPE}"
 echo "VERCEL_JSON_LOCATION=${VERCEL_JSON_LOCATION}"
 echo "BITBUCKET_COMMIT=${BITBUCKET_COMMIT}"
@@ -50,8 +55,12 @@ fi
 
 if [ -z "${BITBUCKET_PR_ID}" ]; then
   echo "===== Processing type COMMIT ====="
-  OUTPUT=$(cd "${build_output_path}" && vercel -c -C --token "${VERCEL_TOKEN}" --scope pabau2 -A "${VERCEL_JSON_LOCATION}/vercel.json" --prod)
+  OUTPUT=$(cd "${build_output_path}" && vercel -c -C --token "${VERCEL_TOKEN}" --scope pabau2 -A "${VERCEL_JSON_LOCATION}/vercel.json")
   echo "errorlevel: $?"
+  echo "output: ${OUTPUT}"
+  yarn vercel --token "${VERCEL_TOKEN}" --scope pabau2 alias ${OUTPUT} prelive-crm.new.pabau.com
+  echo "errorlevel: $?"
+  echo "<https://mgmt.new.pabau.com/deploy/?version=${APP_VERSION}&deployment=${OUTPUT}&service=${APP_NAME}|Deploy ${APP_NAME} to prod>" >> /tmp/bot_message.txt
 else
   echo "===== Processing type PR ====="
   OUTPUT=$(cd "${build_output_path}" && vercel -c -C --token "${VERCEL_TOKEN}" --scope pabau2 -A "${VERCEL_JSON_LOCATION}/vercel.json")
@@ -65,32 +74,4 @@ LAST_LINE=$(echo "${OUTPUT}" | tail -n1)
 echo "last line: ${LAST_LINE}"
 echo "${LAST_LINE}" > "/tmp/bot_url_${APP_NAME}.txt"
 
-message_body=''
-read_heredoc message_body <<HEREDOC
-${APP_NAME}: ${LAST_LINE}
-HEREDOC
-echo "${message_body}" >> /tmp/bot_message.txt
-
-echo "---- Deploying DB to Hasura Staging (api-v2-staging.pabau.com) ----"
-pwd
-curl -LO https://github.com/hasura/graphql-engine/releases/download/v2.0.1/cli-hasura-linux-amd64
-chmod +x cli-hasura-linux-amd64
-mv ./cli-hasura-linux-amd64 /usr/local/bin/hasura
-cp -r hasura/ dist/
-rm dist/hasura/metadata/actions.yaml
-cp -f hasura/remote_schemas.production.yaml dist/hasura/remote_schemas.yaml
-echo "Applying migrations..."
-HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" hasura --project dist/hasura migrate status --database-name default || echo "SILENTLY FAILED"
-HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" hasura --project dist/hasura migrate apply --database-name default || echo "SILENTLY FAILED"
-sleep 1
-echo "Applying metadata..."
-HASURA_GRAPHQL_ENDPOINT='https://api-v2-staging.pabau.com/' HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" hasura --project dist/hasura metadata apply || echo "SILENTLY FAILED"
-yarn hasura:cli migrate status --database-name default || echo "SILENTLY FAILED"
-
-echo "Trying docker..."
-docker run --rm golang:buster \
-  -v "./hasura/:/hasura/:ro" \
-  -e HASURA_GRAPHQL_ENDPOINT="https://api-v2-staging.pabau.com/" \
-  -e HASURA_GRAPHQL_ADMIN_SECRET="${HASURA_STAGING_GRAPHQL_ADMIN_SECRET}" \
-  bash -c "curl -LO https://github.com/hasura/graphql-engine/releases/download/v2.0.1/cli-hasura-linux-amd64 && chmod +x cli-hasura-linux-amd64 && mv ./cli-hasura-linux-amd64 /usr/local/bin/hasura && hasura version && hasura --project /hasura migrate apply --database-name default && hasura --project /hasura metadata apply" \
-  || echo "FAILED"
+echo "${APP_NAME}: ${LAST_LINE}" >> /tmp/bot_message.txt

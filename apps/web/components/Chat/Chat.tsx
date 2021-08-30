@@ -16,12 +16,12 @@ import {
   PabauMessages,
   Participant,
 } from '@pabau/ui'
-import { UserContext } from '../../context/UserContext'
 import * as React from 'react'
 import dayjs from 'dayjs'
 import calendar from 'dayjs/plugin/calendar'
 import { useEffect, useState } from 'react'
 import { gql } from '@apollo/client/core'
+import { useUser } from '../../context/UserContext'
 
 dayjs.extend(calendar)
 
@@ -31,12 +31,18 @@ export const Chat = (props: P): JSX.Element => {
 
   useChatListRoomNotifySubscription({
     skip: typeof window === 'undefined',
+    onSubscriptionData(e) {
+      console.log(
+        'ws update for rooms:',
+        e.subscriptionData.data.chat_room_participant
+      )
+    },
   })
   useChatListMessagesNotifySubscription({
     skip: typeof window === 'undefined',
   })
 
-  const me = React.useContext(UserContext)
+  const me = useUser()
 
   const [postToUser] = useChatPostToUserIdMutation()
 
@@ -77,7 +83,7 @@ export const Chat = (props: P): JSX.Element => {
   const { data: membersData } = useChatGetUsersQuery({
     fetchPolicy: 'cache-first',
   })
-  const members = membersData?.users
+  const members = membersData?.findManyUser
 
   const [
     fetchDirectHistory,
@@ -194,7 +200,7 @@ export const Chat = (props: P): JSX.Element => {
           id,
           message,
           userName:
-            (fromUser.id === me.me.user
+            (fromUser.id !== me.me.id
               ? fromUser?.full_name
               : toUser?.full_name) || '??',
           dateTime: dayjs(created_at).calendar(),

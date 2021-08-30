@@ -11,12 +11,12 @@ import {
   TabMenu,
 } from '@pabau/ui'
 import { Button, Col, Row } from 'antd'
-import React, { FC, useContext, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import Notification from '../../../components/Account/Settings/Notifications'
 import Profile from '../../../components/Account/Settings/Profile'
 import Security from '../../../components/Account/Settings/Security'
 import Layout from '../../../components/Layout/Layout'
-import { UserContext } from '../../../context/UserContext'
+import { useUser } from '../../../context/UserContext'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import useWindowSize from '../../../hooks/useWindowSize'
 import Link from 'next/link'
@@ -40,8 +40,8 @@ import {
 } from '@pabau/graphql'
 import styles from './index.module.less'
 
-const Index: FC = ({ ...props }) => {
-  const user = useContext(UserContext)
+const Index: FC = () => {
+  const user = useUser()
   const size = useWindowSize()
   const { t } = useTranslationI18()
 
@@ -94,7 +94,7 @@ const Index: FC = ({ ...props }) => {
       ...securityTabData?.me,
       ...notificationTabData?.me,
     })
-    setAllAlerts(defaultAlertTypes?.userAlerts)
+    setAllAlerts(defaultAlertTypes?.findManyUserAlert)
     setNotificationTypes(notificationsTypes?.notification_types)
     setNotificationToggles(notificationsData?.notification_toggle)
   }, [
@@ -175,13 +175,25 @@ const Index: FC = ({ ...props }) => {
     }
   }
 
+  const saveAvatarPhoto = (imgData) => {
+    const data = { ...profileData }
+    const variables = {
+      where: { id: data?.id },
+      data: {
+        image: { set: imgData?.path },
+      },
+    }
+    updateProfileMutation({
+      variables: variables,
+      refetchQueries: [{ query: GetProfileTabDocument }],
+    })
+  }
+
   const saveProfileSection = () => {
     if (!isPhoneValid) return
     setSaveLoading(true)
     const data = { ...profileData }
-    if (!data?.image?.includes('/cdn/')) {
-      data.image = '/cdn/not-finished-yet.png'
-    }
+
     const variables = {
       where: { id: data?.id },
       data: {
@@ -241,6 +253,7 @@ const Index: FC = ({ ...props }) => {
           const variables = {
             where: { id: el?.id },
             data: {
+              ios_notification: { set: el?.ios_notification },
               sms_notification: { set: el?.sms_notification },
               email_notification: { set: el?.email_notification },
             },
@@ -292,7 +305,7 @@ const Index: FC = ({ ...props }) => {
             variables: {
               ...el,
               user: user?.me?.id,
-              company: user?.me?.company?.id,
+              company: user?.me?.company,
             },
             refetchQueries: [
               {
@@ -427,7 +440,7 @@ const Index: FC = ({ ...props }) => {
       )}
       <Layout {...user}>
         <Row className={styles.container}>
-          {size.width > 767 && <Col span={size.width < 1024 ? 1 : 5}></Col>}
+          {size.width > 767 && <Col span={size.width < 1024 ? 1 : 5} />}
           <Col
             span={
               size.width < 1024 && size.width > 767
@@ -463,6 +476,9 @@ const Index: FC = ({ ...props }) => {
                   profileData={profileData}
                   onProfileChange={(data) => {
                     setProfileData(data)
+                  }}
+                  onAvatarChange={(data) => {
+                    saveAvatarPhoto(data)
                   }}
                   setPhoneValid={(isValid) => setIsPhoneValid(isValid)}
                 />

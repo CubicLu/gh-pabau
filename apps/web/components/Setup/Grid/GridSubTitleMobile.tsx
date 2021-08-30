@@ -15,7 +15,9 @@ const GridSubMenuMobile: FC<P> = ({ handleBack, data, setSMSModalVisible }) => {
 
   useEffect(() => {
     if (data && data.length > 0) {
-      setSubTitle([...data[0].subDataTitles, ...data[0].expandTitle])
+      if (data[0]?.expandTitle)
+        setSubTitle([...data[0]?.subDataTitles, ...data[0]?.expandTitle])
+      else setSubTitle([...data[0]?.subDataTitles])
     }
   }, [data])
 
@@ -29,6 +31,17 @@ const GridSubMenuMobile: FC<P> = ({ handleBack, data, setSMSModalVisible }) => {
           {data && data.length > 0 ? data[0].title : ''}
         </div>
       </div>
+      {data?.[0]?.image && (
+        <div
+          style={{
+            minHeight: '160px',
+            backgroundImage: `url(${data?.[0]?.image})`,
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundSize: '160px 160px',
+          }}
+        />
+      )}
       {subTitle &&
         subTitle.length > 0 &&
         subTitle.map((value, index) => (

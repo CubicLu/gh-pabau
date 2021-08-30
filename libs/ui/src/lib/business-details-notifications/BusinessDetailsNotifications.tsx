@@ -1,23 +1,20 @@
 import React, { FC, useEffect, useState } from 'react'
 import { Divider, Form } from 'antd'
-import {
-  Button,
-  ButtonCheckbox,
-  Notification,
-  NotificationType,
-} from '@pabau/ui'
+import { Button, ButtonCheckbox } from '@pabau/ui'
 import styles from './BusinessDetailsNotifications.module.less'
 import { useTranslation } from 'react-i18next'
 
 interface NotificationSetting {
   setting: string
   disabled: boolean
+  checked: boolean
 }
 
 interface NotificationConfig {
   title: string
   tooltip?: string
   settings: NotificationSetting[]
+  badge?: boolean
 }
 
 export interface BusinessDetailsNotificationsProps {
@@ -33,96 +30,85 @@ export const BusinessDetailsNotifications: FC<BusinessDetailsNotificationsProps>
 
   const defaultConfigs: NotificationConfig[] = [
     {
-      title: t('business.notification.lead'),
-      settings: [
-        {
-          setting: t('business.notification.setting.notification'),
-          disabled: false,
-        },
-        {
-          setting: t('business.notification.setting.email'),
-          disabled: false,
-        },
-      ],
-    },
-    {
       title: t('business.notification.review'),
       settings: [
         {
-          setting: t('business.notification.setting.notification'),
+          setting: t('business.notification.setting.pabau.web'),
           disabled: false,
+          checked: true,
         },
         {
           setting: t('business.notification.setting.email'),
           disabled: false,
+          checked: true,
         },
       ],
+      badge: false,
     },
     {
       title: t('business.notification.sms.delivered'),
       settings: [
         {
-          setting: t('business.notification.setting.notification'),
+          setting: t('business.notification.setting.pabau.web'),
           disabled: false,
+          checked: true,
         },
         {
           setting: t('business.notification.setting.email'),
           disabled: false,
+          checked: true,
         },
       ],
+      badge: false,
     },
     {
       title: t('business.notification.newsletter.delivered'),
       settings: [
         {
-          setting: t('business.notification.setting.notification'),
+          setting: t('business.notification.setting.pabau.web'),
           disabled: false,
+          checked: true,
         },
         {
           setting: t('business.notification.setting.email'),
           disabled: false,
+          checked: true,
         },
       ],
-    },
-    {
-      title: t('business.notification.report'),
-      settings: [
-        {
-          setting: t('business.notification.setting.notification'),
-          disabled: false,
-        },
-        {
-          setting: t('business.notification.setting.email'),
-          disabled: false,
-        },
-      ],
+      badge: false,
     },
     {
       title: t('business.notification.holiday'),
       tooltip: t('business.notification.holiday.tooltip'),
       settings: [
         {
-          setting: t('business.notification.setting.notification'),
+          setting: t('business.notification.setting.pabau.web'),
           disabled: false,
+          checked: true,
         },
         {
           setting: t('business.notification.setting.email'),
           disabled: false,
+          checked: true,
         },
       ],
+      badge: false,
     },
     {
       title: t('business.notification.refer'),
       settings: [
         {
-          setting: t('business.notification.setting.notification'),
+          setting: t('business.notification.setting.pabau.web'),
           disabled: false,
+          checked: true,
         },
         {
           setting: t('business.notification.setting.email'),
           disabled: false,
+          checked: true,
         },
       ],
+      badge: false,
     },
     ...[
       t('business.notification.unattended'),
@@ -135,22 +121,21 @@ export const BusinessDetailsNotifications: FC<BusinessDetailsNotificationsProps>
       title,
       settings: [
         {
-          setting: t('business.notification.setting.notification'),
-          disabled: false,
+          setting: t('business.notification.setting.pabau.web'),
+          disabled: true,
+          checked: true,
         },
         {
           setting: t('business.notification.setting.email'),
-          disabled: false,
+          disabled: true,
+          checked: true,
         },
       ],
+      badge: true,
     })),
   ]
   const [configs, setConfigs] = useState<NotificationConfig[]>([])
   const handleSaveChanges = () => {
-    Notification(
-      NotificationType.success,
-      t('notification.type.success.message')
-    )
     onSave?.(configs)
   }
 
@@ -172,17 +157,34 @@ export const BusinessDetailsNotifications: FC<BusinessDetailsNotificationsProps>
           </div>
         </div>
       </div>
-      {configs.map((config) => (
+      {configs.map((config, index) => (
         <React.Fragment key={config.title}>
           <Divider />
           <div className={styles.sectionContainer}>
+            {config.badge && (
+              <div className={styles.mainDiv}>
+                <p className={styles.title}>{config.title}</p>
+                <span className={styles.label}>
+                  {t('notification.coming.soon.label')}
+                </span>
+              </div>
+            )}
             <Form layout="vertical">
-              <Form.Item label={config.title} tooltip={config.tooltip}>
-                {config.settings.map((setting) => (
+              <Form.Item
+                label={!config.badge ? config.title : ''}
+                tooltip={config.tooltip}
+              >
+                {config.settings.map((setting, i) => (
                   <ButtonCheckbox
                     key={setting.setting}
                     label={setting.setting}
                     disabled={setting.disabled}
+                    onChange={(val) => {
+                      const List = [...configs]
+                      List[index].settings[i].checked = !setting.checked
+                      setConfigs(List)
+                    }}
+                    checked={setting.checked}
                   />
                 ))}
               </Form.Item>
@@ -191,7 +193,11 @@ export const BusinessDetailsNotifications: FC<BusinessDetailsNotificationsProps>
         </React.Fragment>
       ))}
       <div className={styles.btnSave}>
-        <Button type="primary" onClick={() => handleSaveChanges()}>
+        <Button
+          type="primary"
+          onClick={() => handleSaveChanges()}
+          className={styles.savebtn}
+        >
           {t('business.details.save.changes')}
         </Button>
       </div>

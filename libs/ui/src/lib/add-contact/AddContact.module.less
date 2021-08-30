@@ -13,34 +13,17 @@
     .chooseAppointment {
       width: 100%;
       margin-bottom: 8px;
-      :global {
-        .ant-select {
-          width: 100% !important;
-          height: 40px !important;
-          font-family: var(--font-family);
-          font-weight: 400;
-          font-size: 16px;
-          line-height: 24px;
-          .ant-select-selector {
+      .displaySelectedAppointment {
+        :global {
+          .ant-input {
             width: 100% !important;
-            height: 100% !important;
-            box-sizing: border-box;
-            border: 1px solid var(--border-color-base);
-            border-radius: 4px;
+            height: 40px !important;
+            font-family: var(--font-family);
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 24px;
             padding: 8px 12px;
             color: var(--grey-text-color);
-            .ant-select-selection-search-input {
-              height: 40px;
-              padding-top: 8px;
-              padding-bottom: 8px;
-              line-height: 24px;
-            }
-            .ant-select-selection-item {
-              line-height: 24px;
-            }
-            .ant-select-selection-placeholder {
-              line-height: 24px;
-            }
           }
         }
       }

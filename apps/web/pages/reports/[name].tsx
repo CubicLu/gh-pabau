@@ -7,10 +7,9 @@ const reportPrefixes = new Set(['CO', 'FI', 'LE', 'MA', 'OT', 'ST', 'AD'])
 
 export default function Report() {
   const router = useRouter()
-  const report_id =
-    typeof router.query.name === 'object'
-      ? router.query.name[0]
-      : router.query.name
+  const { name } = router.query
+
+  const report_id = typeof name === 'object' ? name[0] : name
 
   let searchingByID = true
   if (reportPrefixes.has(report_id?.substr(0, 2))) {
@@ -46,9 +45,11 @@ export default function Report() {
   const report = searchingByID ? dataI.findFirstReport : dataC.findFirstReport
 
   return (
-    <Layout active="reports">
-      <h1>{report?.name}</h1>
-      <p>report content page...</p>
-    </Layout>
+    name && (
+      <Layout active="reports">
+        <h1>{report?.name}</h1>
+        <p>report content page...</p>
+      </Layout>
+    )
   )
 }

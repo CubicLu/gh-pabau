@@ -1,22 +1,22 @@
-import React, { useEffect, useState, FC, ReactElement } from 'react'
-import { gql } from '@apollo/client'
-import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import {
   EditOutlined,
   PlaySquareOutlined,
   QuestionCircleOutlined,
   UsergroupAddOutlined,
 } from '@ant-design/icons'
+import { gql } from '@apollo/client'
 import { SetupChip, useLiveQuery } from '@pabau/ui'
+import React, { FC, ReactElement, useEffect, useState } from 'react'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from '../../../pages/setup/setup.module.less'
 
 const GET_VIDEO_COUNT = gql`
-  query {
-    trainingCoursesCount
+  query getTrainings {
+    findManyTrainingCourseCount
   }
 `
 const GET_COMMUNITY_COUNT = gql`
-  query {
+  query getCommunityCount {
     featureRequestsWeeklyAvg
   }
 `

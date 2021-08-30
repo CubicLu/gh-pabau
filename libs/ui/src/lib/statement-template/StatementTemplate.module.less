@@ -1,5 +1,5 @@
 .invoice-template {
-  min-width: 834px;
+  min-width: 910px;
   height: 951px;
   :global .ant-modal-content {
     .ant-modal-body {
@@ -7,6 +7,14 @@
       margin-top: 24px;
       margin-right: 24px;
       margin-left: 24px;
+    }
+  }
+  :global {
+    .ant-divider-horizontal {
+      margin: 0;
+    }
+   .ant-skeleton-element {
+      width: 100%;
     }
   }
 }
@@ -18,6 +26,10 @@
   justify-content: flex-start;
   width: 100%;
   padding: 20px 10px;
+
+  .table-data{
+    width: 100%;
+  }
   .header {
     display: flex;
     align-items: center;
@@ -340,10 +352,12 @@
         justify-content: flex-start;
         width: 100%;
         margin-bottom: 12px;
+        flex-wrap: wrap;
         .inner {
           display: flex;
           flex-direction: column;
-          width: 33.33%;
+          flex: 1 33.33%;
+          margin-bottom: 10px;
           align-items: flex-start;
           justify-content: flex-start;
           .head-text {
@@ -366,5 +380,77 @@
         }
       }
     }
+  }
+  :global {
+    .ant-table-thead > tr > th, .ant-table-tbody > tr > td{
+      padding: 8px 6px;
+      vertical-align: initial;
+      text-align: center;
+      font-family: roboto;
+    }
+    .ant-table-tbody > tr > td{
+      font-size: 12px;
+    }
+    .ant-table-thead > tr > th {
+      border-bottom: 1px solid #ecedf0;
+      border-top: 1px solid #ecedf0;
+      background: #fafafb;
+      font-size: 10px;
+      font-weight: bold;
+      line-height: 21px;
+      color: #3d3d46;
+    }
+    .ant-table-thead > tr > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+      display: none;
+    }
+    .test .ant-table table {
+      table-layout: fixed !important;
+    }
+   .ant-table table {
+      margin: 10px 0;
+    }
+    .ant-table-wrapper {
+      width: 100%;
+    }
+  }
+  .title-skeleton{
+    width: 200px;
+    height: 15px;
+  }
+  .desc-skeleton{
+    width: 200px;
+    height: 15px;
+    margin-top: 5px;
+  }
+  .from-skeleton{
+    width: 50px;
+    height: 12px;
+    margin-top: 5px;
+  }
+  .input-skeleton{
+    width: 100px;
+    height: 12px;
+    margin-top: 5px;
+  }
+  .table-skeleton{
+    width: 100%;
+    height: 120px;
+    margin-top: 15px;
+  }
+  .payment-skeleton{
+    width: 100%;
+    height: 120px;
+    margin-top: 15px;
+  }
+  .bankdetail-skeleton{
+    width: 160px;
+    height: 12px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+  }
+  .grand-total-skeleton{
+    width: 130px;
+    height: 20px;
+    margin-top: 5px;
   }
 }

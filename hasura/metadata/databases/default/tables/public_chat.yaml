@@ -16,20 +16,22 @@ remote_relationships:
     hasura_fields:
     - from
     remote_field:
-      user:
+      findFirstUser:
         arguments:
           where:
-            id: $from
+            id:
+              equals: $from
     remote_schema: CRM
   name: fromUser
 - definition:
     hasura_fields:
     - to
     remote_field:
-      user:
+      findFirstUser:
         arguments:
           where:
-            id: $to
+            id:
+              equals: $to
     remote_schema: CRM
   name: toUser
 insert_permissions:

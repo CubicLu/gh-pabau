@@ -21,52 +21,30 @@ array_relationships:
       remote_table:
         name: read_notification
         schema: public
+remote_relationships:
+- definition:
+    hasura_fields:
+    - sent_by
+    remote_field:
+      findUniqueUser:
+        arguments:
+          where:
+            id: $sent_by
+    remote_schema: CRM
+  name: sentBy
 insert_permissions:
 - permission:
     backend_only: false
     check: {}
     columns:
-    - id
-    - created_at
-    - updated_at
-    - order
+    - destination
+    - loop
+    - sent_by
     - sent_to
     - type
     - variables
-    - destination
-    - sent_by
-    - loop
-  role: public
-- permission:
-    backend_only: false
-    check: {}
-    columns:
-    - order
-    - sent_by
-    - loop
-    - sent_to
-    - variables
-    - destination
-    - created_at
-    - updated_at
-    - id
-    - type
   role: user
 select_permissions:
-- permission:
-    columns:
-    - order
-    - sent_by
-    - loop
-    - sent_to
-    - variables
-    - destination
-    - created_at
-    - updated_at
-    - id
-    - type
-    filter: {}
-  role: public
 - permission:
     columns:
     - order
@@ -85,37 +63,15 @@ update_permissions:
 - permission:
     check: null
     columns:
-    - order
-    - sent_by
-    - loop
-    - sent_to
-    - variables
     - destination
-    - created_at
-    - updated_at
-    - id
-    - type
-    filter: {}
-  role: public
-- permission:
-    check: null
-    columns:
-    - order
-    - sent_by
     - loop
+    - sent_by
     - sent_to
-    - variables
-    - destination
-    - created_at
-    - updated_at
-    - id
     - type
+    - variables
     filter: {}
   role: user
 delete_permissions:
-- permission:
-    filter: {}
-  role: public
 - permission:
     filter: {}
   role: user

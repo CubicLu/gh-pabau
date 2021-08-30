@@ -41,20 +41,21 @@ describe('InvoiceTemplate', () => {
             date: '12/03/2021',
           },
         ]}
-        headersColumns={['Item Name', 'Qty', 'Price', 'Net', 'VAT', 'Total']}
-        data={['laser hair', '2', '2500', '2520', '2520', '2520']}
         paymentDetails={[
           {
             key: 0,
             totalVat: 0,
             amountPaid: 0,
             subTotalAmount: 2520,
-            outStanding: 2520,
+            outstanding: 2520,
             grandTotal: 2500,
-            paymentTime: '29 May 2021, 1:09PM',
+            paymentTime: new Date(),
             total: 15,
             card: 5,
             cash: 10,
+            paid: 0,
+            refundAmount: 0,
+            totalNet: 0,
           },
         ]}
       />

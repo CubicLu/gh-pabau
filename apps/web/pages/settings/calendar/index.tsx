@@ -1,28 +1,28 @@
 import { LeftOutlined } from '@ant-design/icons'
 import {
+  CalendarSettingsDataDocument,
+  useCalendarSettingsDataQuery,
+  useCreateOneCalendarSettingMutation,
+  useSetCompanyMetaMutation,
+  useUpdateCompanyMetaMutation,
+  useUpdateOneCalendarSettingMutation,
+} from '@pabau/graphql'
+import {
   Breadcrumb,
   Button,
   Notification,
   NotificationType,
   SettingsMenu,
 } from '@pabau/ui'
-import {
-  useCalendarSettingsDataQuery,
-  CalendarSettingsDataDocument,
-  useCreateOneCalendarSettingMutation,
-  useUpdateOneCalendarSettingMutation,
-  useSetCompanyMetaMutation,
-  useUpdateCompanyMetaMutation,
-} from '@pabau/graphql'
 import { Card, Typography } from 'antd'
 import Link from 'next/link'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../../../components/Layout/Layout'
 import Advanced from '../../../components/Settings/Calendar/Advanced'
 import Appearance from '../../../components/Settings/Calendar/Appearance'
 import AppointmentSettings from '../../../components/Settings/Calendar/AppointmentSettings'
 import Configuration from '../../../components/Settings/Calendar/Configuration'
-import { UserContext } from '../../../context/UserContext'
+import { useUser } from '../../../context/UserContext'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 import styles from './index.module.less'
 
@@ -30,7 +30,7 @@ const { Title } = Typography
 
 export function Calendar({ ...props }) {
   const { t } = useTranslationI18()
-  const user = useContext(UserContext)
+  const user = useUser()
 
   const [isLoading, setIsLoading] = useState(false)
   const [settingsData, setSettingsData] = useState(null)
@@ -159,9 +159,9 @@ export function Calendar({ ...props }) {
     setIsLoading(loading)
     if (data) {
       setSettingsData({
-        ...data?.company?.BookingSetting?.[0],
+        ...data?.me?.Company?.BookingSetting?.[0],
       })
-      setCompanyMetas(data?.company?.CompanyMeta)
+      setCompanyMetas(data?.me?.Company?.CompanyMeta)
     }
   }, [data, loading])
 
@@ -177,7 +177,6 @@ export function Calendar({ ...props }) {
         variables: {
           ...settings,
         },
-        optimisticResponse: {},
         refetchQueries: [
           {
             query: CalendarSettingsDataDocument,
@@ -209,7 +208,6 @@ export function Calendar({ ...props }) {
               id: updatedMeta?.id,
               value: updatedMeta?.meta_value,
             },
-            optimisticResponse: {},
             refetchQueries: [
               {
                 query: CalendarSettingsDataDocument,
@@ -239,7 +237,9 @@ export function Calendar({ ...props }) {
       <Layout
         {...user}
         requireAdminAccess={
-          user?.me?.admin === 0 || user?.me?.admin === undefined ? false : true
+          user?.me?.isAdmin === 0 || user?.me?.isAdmin === undefined
+            ? false
+            : true
         }
       >
         <Card className={styles.calendarCard}>

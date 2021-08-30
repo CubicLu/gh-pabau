@@ -1,17 +1,17 @@
 query companyPositions($offset: Int, $limit: Int, $searchTerm: String = "") {
-  companyPositions(
-      take: $limit
-      skip: $offset
-      orderBy: { id: desc }
-      where: { position: { contains: $searchTerm } }
+  findManyCompanyPosition(
+    take: $limit
+    skip: $offset
+    orderBy: { id: desc }
+    where: { position: { contains: $searchTerm } }
   ) {
-      id
-      position
+    id
+    position
   }
 }
 
 query companyPositionsAggregate($searchTerm: String = "") {
-  companyPositionsCount(where: { position: { contains: $searchTerm } })
+  findManyCompanyPositionCount(where: { position: { contains: $searchTerm } })
 }
 
 mutation deleteCompanyPositions($id: Int) {
@@ -42,4 +42,3 @@ mutation updateCompanyPositionOrder($id: Int!, $order: Int) {
     id
   }
 }
-

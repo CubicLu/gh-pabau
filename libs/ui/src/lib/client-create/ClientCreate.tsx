@@ -2,14 +2,95 @@ import React, { FC, useEffect, useState } from 'react'
 import {
   BasicModal,
   FullScreenReportModal,
-  OperationType,
   OperationType as Operation,
 } from '@pabau/ui'
 import { Formik } from 'formik'
-import General from './General/index'
+import General, { CommonProps } from './General/index'
+import SharingPrivacy from './SharingAndPrivacy'
 import { useTranslation } from 'react-i18next'
 import * as Yup from 'yup'
 import { Dayjs } from 'dayjs'
+
+export interface cmFieldsCreateProps {
+  id: number
+  label: string
+  value: string
+}
+
+export interface ManageCustomFieldItemProps {
+  id: number
+  item_label?: string
+}
+
+export interface ManageCustomFieldProps {
+  id: number
+  field_label?: string
+  field_type?: string
+  is_required: number
+  is_active?: boolean
+  ManageCustomFieldItem: ManageCustomFieldItemProps[]
+}
+
+export interface CustomFieldsProps {
+  id: number
+  name: string
+  CmFields: ManageCustomFieldProps[]
+}
+
+export interface LimitLocation {
+  id: number
+  name: string
+}
+
+export interface OtherCompany {
+  company_id: number
+  company_name: string
+}
+
+export interface InitialDetailsProps {
+  salutation?: string
+  Fname: string
+  Lname: string
+  gender: string
+  MarketingSource: string
+  DOB: Dayjs | undefined
+  preferredLanguage?: string
+  Email: string
+  Mobile: string
+  Phone: string
+  MailingProvince?: string
+  MailingCountry?: string
+  MailingStreet?: string
+  MailingCity: string
+  MailingPostal: string
+  MarketingOptInEmail?: boolean
+  MarketingOptInText?: boolean
+  MarketingOptInPost?: boolean
+  MarketingOptInPhone?: boolean
+  marketingPromotion?: string[]
+  recordSharing?: Record<string, string>
+  privacyPolicy?: string
+  settingSharing?: Record<string, boolean>
+  shareLink?: string
+  [key: string]:
+    | string
+    | string[]
+    | Record<string, string>
+    | Record<string, boolean>
+    | number
+    | Dayjs
+    | boolean
+    | undefined
+    | null
+}
+
+export interface FieldSetting {
+  id: number
+  field_name?: string
+  field_label?: string
+  is_required: number
+  is_active?: boolean
+}
 
 export interface ClientCreateProps {
   modalVisible?: boolean
@@ -18,9 +99,14 @@ export interface ClientCreateProps {
   onSelectTemplate?: (string) => void
   searchText?: string
   onSearchTextChange?: (string) => void
-  handleSubmit?: (val) => void
+  handleSubmit?: (
+    val,
+    resetForm?: () => void,
+    setSelectedLabels?: (
+      value: ((prevState: Label[]) => Label[]) | Label[]
+    ) => void
+  ) => void
   isEdit?: boolean
-  editedValues?: InitialDetailsProps
   activated?: boolean
   onActivated?: (val: boolean) => void
   defaultLabels?: Label[]
@@ -28,28 +114,22 @@ export interface ClientCreateProps {
   handleDelete?: () => void
   deleteModalVisible?: boolean
   onDelete?: () => void
-}
-
-export interface InitialDetailsProps {
-  salutation?: string
-  firstName: string
-  lastName: string
-  gender?: string
-  hearOption?: string
-  dateOfBirth: Dayjs | undefined
-  preferredLanguage?: string
-  email: string
-  phoneNumber: string
-  telePhone?: string
-  address?: string
-  country?: string
-  city: string
-  postCode: string
-  thirdPartyDetails?: string
-  newsLetter?: string
-  sms?: string
-  postal?: string
-  phoneCalls?: string
+  salutationData?: CommonProps[]
+  customFields?: CustomFieldsProps[]
+  fieldsSettings?: FieldSetting[]
+  marketingSources?: CommonProps[]
+  limitContactsLocations?: LimitLocation[]
+  otherCompanies?: OtherCompany[]
+  isLoading?: boolean
+  isMarketingSourceLoading?: boolean
+  isSalutationLoading?: boolean
+  labelsData?: LabelDataProps[]
+  validationObject?: {
+    [key: string]: Yup.AnyObjectSchema
+  }
+  initialValues: InitialDetailsProps
+  isDisabledBtn?: boolean
+  companyName?: string
 }
 
 export interface Label {
@@ -58,12 +138,17 @@ export interface Label {
   count?: number
 }
 
+export interface LabelDataProps {
+  id?: number
+  value: string
+  color?: string | null
+}
+
 export const ClientCreate: FC<ClientCreateProps> = ({
   modalVisible = true,
   handleClose,
   handleSubmit,
   isEdit = false,
-  editedValues,
   activated,
   onActivated,
   defaultLabels,
@@ -71,6 +156,12 @@ export const ClientCreate: FC<ClientCreateProps> = ({
   handleDelete,
   deleteModalVisible,
   onDelete,
+  labelsData,
+  initialValues,
+  validationObject,
+  isDisabledBtn,
+  companyName,
+  ...props
 }) => {
   const { t } = useTranslation('common')
   const [labels, setLabels] = useState<Label[]>([])
@@ -84,77 +175,8 @@ export const ClientCreate: FC<ClientCreateProps> = ({
     defaultSelectedLabels && setSelectedLabels(defaultSelectedLabels)
   }, [defaultSelectedLabels])
 
-  const initialValue: InitialDetailsProps = {
-    salutation: 'Mr',
-    firstName: '',
-    lastName: '',
-    gender: t('quickCreate.client.modal.general.gender.other'),
-    hearOption: t('quickCreate.client.modal.general.hearOption.selectOption'),
-    dateOfBirth: undefined,
-    preferredLanguage: '',
-    email: '',
-    phoneNumber: '',
-    telePhone: '',
-    address: '',
-    country: '',
-    city: '',
-    postCode: '',
-    thirdPartyDetails: t(
-      'quickCreate.client.modal.general.thirdParty.selfPaid'
-    ),
-    newsLetter: '',
-    sms: '',
-    postal: '',
-    phoneCalls: '',
-  }
-
-  const [initialValues, setInitialValues] = useState(initialValue)
-
-  useEffect(() => {
-    if (isEdit && editedValues) {
-      setInitialValues((prevState) => ({ ...prevState, ...editedValues }))
-    }
-  }, [isEdit, editedValues])
-
   const validationSchema = Yup.object({
-    salutation: Yup.string().required(
-      t('quickCreate.validation.salutation.required')
-    ),
-    firstName: Yup.string().required(
-      t('quickCreate.validation.firstName.required')
-    ),
-    lastName: Yup.string().required(
-      t('quickCreate.validation.lastName.required')
-    ),
-    gender: Yup.string().required(t('quickCreate.validation.gender.required')),
-    dateOfBirth: Yup.date().required(
-      t('quickCreate.validation.birthday.required')
-    ),
-    phoneNumber: Yup.string().required(
-      t('quickCreate.validation.phoneNumber.required')
-    ),
-    hearOption: Yup.string().required(
-      t('quickCreate.validation.hearOption.required')
-    ),
-    preferredLanguage: Yup.string().required(
-      t('quickCreate.validation.preferredLanguage.required')
-    ),
-    email: Yup.string()
-      .email(t('quickCreate.validation.email.validate'))
-      .required(t('quickCreate.validation.email.required')),
-    address: Yup.string().required(
-      t('quickCreate.validation.address.required')
-    ),
-    country: Yup.string().required(
-      t('quickCreate.validation.country.required')
-    ),
-    city: Yup.string().required(t('quickCreate.validation.city.required')),
-    postCode: Yup.string().required(
-      t('quickCreate.validation.postCode.required')
-    ),
-    thirdPartyDetails: Yup.string().required(
-      t('quickCreate.validation.thirdPartyDetails.required')
-    ),
+    ...validationObject,
   })
 
   return (
@@ -163,65 +185,82 @@ export const ClientCreate: FC<ClientCreateProps> = ({
         initialValues={initialValues}
         enableReinitialize={true}
         validationSchema={validationSchema}
-        onSubmit={(values) => {
-          handleSubmit?.({ ...values, labels, selectedLabels })
+        onSubmit={async (values, { resetForm, setSubmitting }) => {
+          setSubmitting(true)
+          await handleSubmit?.(
+            { ...values, selectedLabels, labels },
+            resetForm,
+            setSelectedLabels
+          )
+          setSubmitting(false)
         }}
       >
-        {({ setFieldValue, handleSubmit, values, isValid, dirty, errors }) => {
-          return (
-            <FullScreenReportModal
-              title={
-                !isEdit
-                  ? t('quickCreate.client.modal.newContact')
-                  : t('clients.editClient')
-              }
-              operations={
-                !isEdit
-                  ? [Operation.create]
-                  : [
-                      OperationType.active,
-                      OperationType.delete,
-                      OperationType.create,
-                    ]
-              }
-              visible={modalVisible}
-              onBackClick={handleClose}
-              createBtnText={
-                !isEdit
-                  ? t('quickCreate.client.modal.create')
-                  : t('common-label-save')
-              }
-              subMenu={[
-                t('quickCreate.client.modal.tab.general'),
-                t('quickCreate.client.modal.tab.gpDetails'),
-                t('quickCreate.client.modal.tab.customDetails'),
-              ]}
-              enableCreateBtn={isValid}
-              onCreate={handleSubmit}
-              activated={activated}
-              onActivated={onActivated}
-              deleteBtnText={t('common-label-delete')}
-              activeBtnText={
-                activated
-                  ? t('common-label-active')
-                  : t('common-label-archived')
-              }
-              onSave={handleSubmit}
-              onDelete={handleDelete}
-            >
+        {({
+          setFieldValue,
+          handleSubmit,
+          values,
+          isValid,
+          isSubmitting,
+          submitCount,
+        }) => (
+          <FullScreenReportModal
+            title={
+              !isEdit
+                ? t('quickCreate.client.modal.newContact')
+                : t('clients.editClient')
+            }
+            operations={
+              !isEdit
+                ? [Operation.create]
+                : [Operation.active, Operation.delete, Operation.create]
+            }
+            visible={modalVisible}
+            onBackClick={handleClose}
+            createBtnText={
+              !isEdit
+                ? t('quickCreate.client.modal.create')
+                : t('common-label-save')
+            }
+            enableCreateBtn={
+              submitCount === 0
+                ? !(!isSubmitting && isDisabledBtn)
+                : !isSubmitting && isValid
+            }
+            onCreate={handleSubmit}
+            activated={activated}
+            onActivated={onActivated}
+            deleteBtnText={t('common-label-delete')}
+            activeBtnText={
+              activated ? t('common-label-active') : t('common-label-archived')
+            }
+            onSave={handleSubmit}
+            onDelete={handleDelete}
+            subMenu={[
+              t('quickCreate.client.modal.tab.general'),
+              t('quickCreate.client.modal.tab.sharing.privacy'),
+            ]}
+          >
+            {[
               <General
+                key={'general'}
                 values={values}
                 setFieldValue={setFieldValue}
                 labels={labels}
                 setLabels={setLabels}
                 selectedLabels={selectedLabels}
                 setSelectedLabels={setSelectedLabels}
-              />
-              <div>{t('quickCreate.client.modal.tab.gpDetails')}</div>
-              <div>{t('quickCreate.client.modal.tab.customDetails')}</div>
-            </FullScreenReportModal>
-          )
-        }}
+                labelsData={labelsData ?? []}
+                {...props}
+              />,
+              <SharingPrivacy
+                key={'sharing'}
+                companyName={companyName}
+                values={values}
+                setFieldValue={setFieldValue}
+              />,
+            ]}
+          </FullScreenReportModal>
+        )}
       </Formik>
       <BasicModal
         modalWidth={682}

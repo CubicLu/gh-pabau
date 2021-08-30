@@ -1,8 +1,19 @@
-import { extendType, intArg } from 'nexus'
+import { extendType, intArg, stringArg, arg, nonNull } from 'nexus'
 import { Context } from '../../../context'
-import { findManyFinanceInvoice, invoiceCount } from '../finance'
-import { FinanceInvoiceResponse } from '../nexus-type'
+import {
+  findManyFinanceInvoice,
+  invoiceCount,
+  getInvoiceData,
+  getStatementData,
+} from '../finance'
+import {
+  FinanceInvoiceResponse,
+  InvSaleData,
+  StatementSaleData,
+} from '../nexus-type'
+import { InvoiceArgs, StatementArgs } from '../types/index'
 
+const dateArg = (options) => arg({ type: 'DateTime', ...options })
 export const AccountInvoiceQuery = extendType({
   type: 'Query',
   definition(t) {
@@ -42,6 +53,41 @@ export const AccountInvoiceQuery = extendType({
         } catch (error) {
           return error
         }
+      },
+    })
+    t.field('getInvoiceData', {
+      type: InvSaleData,
+      args: {
+        guid: stringArg(),
+        saleId: nonNull(intArg()),
+      },
+      async resolve(_, args: InvoiceArgs, ctx: Context) {
+        if (!args.guid && !args.saleId) {
+          throw new Error('can not be nullable, must required guid or sale id')
+        }
+        return await getInvoiceData(ctx, args)
+      },
+    })
+    t.field('getStatementData', {
+      type: StatementSaleData,
+      args: {
+        locationId: intArg(),
+        customerId: nonNull(intArg()),
+        statementPeriodFrom: dateArg(stringArg()),
+        statementPeriodTo: dateArg(stringArg()),
+      },
+      async resolve(_, args: StatementArgs, ctx: Context) {
+        if (
+          !args.locationId &&
+          !args.customerId &&
+          !args.statementPeriodFrom &&
+          !args.statementPeriodTo
+        ) {
+          throw new Error(
+            'can not be nullable, must required location id or customer id or statementPeriod(From-To)'
+          )
+        }
+        return await getStatementData(ctx, args)
       },
     })
   },

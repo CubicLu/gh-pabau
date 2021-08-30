@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import { NextPage } from 'next'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import CrudLayout from '../../components/CrudLayout/CrudLayout'
@@ -6,17 +6,16 @@ import { NotificationBanner } from '@pabau/ui'
 import {
   PaymentTypesDocument,
   PaymentTypesAggregateDocument,
-  PaymentMethodsDataIntegrityDocument,
   CreateOneInvPaymentTypeDocument,
   UpdateOneInvPaymentTypeDocument,
   DeleteOneInvPaymentTypeDocument,
 } from '@pabau/graphql'
 import PaymentNotificationImage from '../../assets/images/payment-type-notify-image.png'
-import { UserContext } from '../../context/UserContext'
+import { useUser } from '../../context/UserContext'
 
 export const PaymentTypes: NextPage = () => {
   const { t } = useTranslationI18()
-  const user = useContext(UserContext)
+  const user = useUser()
 
   const schema: Schema = {
     full: t('setup.paymenttypes.schema.title'),
@@ -125,67 +124,10 @@ export const PaymentTypes: NextPage = () => {
     },
     showNotification: {
       query: 'stripe',
-      list: 'invPaymentTypes',
+      list: 'findManyInvPaymentType',
     },
     company: 'Company',
   }
-
-  const staticDataSource = [
-    {
-      id: '1',
-      name: 'Card',
-      type: 'money',
-      description: null,
-      is_active: true,
-      company_id: null,
-      GlCode: null,
-    },
-    {
-      id: '2',
-      name: 'Cash',
-      type: 'money',
-      description: null,
-      is_active: true,
-      company_id: null,
-      GlCode: null,
-    },
-    {
-      id: '3',
-      name: 'Loyalty',
-      type: 'money',
-      description: null,
-      is_active: true,
-      company_id: null,
-      GlCode: null,
-    },
-    {
-      id: '4',
-      name: 'Packages',
-      type: 'money',
-      description: null,
-      is_active: true,
-      company_id: null,
-      GlCode: null,
-    },
-    {
-      id: '5',
-      name: 'Account',
-      type: 'money',
-      description: null,
-      is_active: true,
-      company_id: null,
-      GlCode: null,
-    },
-    {
-      id: '6',
-      name: 'Voucher',
-      type: 'money',
-      description: null,
-      is_active: true,
-      company_id: null,
-      GlCode: null,
-    },
-  ]
 
   const [showNotificationBanner, setShowNotificationBanner] = useState(false)
   return (
@@ -211,13 +153,11 @@ export const PaymentTypes: NextPage = () => {
       draggable={false}
       isNestedQuery={true}
       isFilterNumber={true}
-      isDataIntegrityCheck={true}
-      dataIntegrityCheckQuery={PaymentMethodsDataIntegrityDocument}
       requireAdminAccess={true}
       isNotificationBannerOnData={true}
-      showStaticData={true}
-      staticData={staticDataSource}
       isCodeGen={true}
+      deleteOnInactive={true}
+      isHavingDefaultRecords={true}
       {...user}
     />
   )

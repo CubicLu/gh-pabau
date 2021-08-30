@@ -1,0 +1,370 @@
+.main-wrapper {
+  width: 600px;
+  margin: auto auto 40px;
+  .inner-main-wrapper {
+    background-color: #fff;
+    padding: 27px 32px;
+    margin-top: 40px;
+    border-radius: 4px;
+    h4 {
+      font-size: 14px;
+      line-height: 24px;
+      color: #3D3D46;
+      margin-bottom: 20px;
+    }
+    .description {
+      margin-bottom: 20px;
+      padding: 9px 16px;
+      background-color: #EEF7FB;
+      border: 1px solid #54B2D3;
+      border-radius: 2px;
+      p {
+        margin-bottom: 0;
+      }
+    }
+    .section-to-share {
+      h5 {
+        font-size: 14px;
+        line-height: 24px;
+        color: #3D3D46;
+        margin-bottom: 12px;
+      }
+      .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-top: 1px solid #ECEDF0;
+        :global {
+          .ant-tag {
+            line-height: 22px;
+          }
+        }
+      }
+    }
+    .setting-sharing-wrapper {
+      margin-top: 16px;
+      .settingSharingInner {
+        h5 {
+          color: #9292A3;
+          font-size: 14px;
+          line-height: 24px;
+          padding-top: 8px;
+        }
+        .item-wrapper {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 8px 0;
+          .btnBottom {
+            div {
+              margin-bottom: 0;
+              margin-right: 0;
+            }
+          }
+          .item-title {
+            display: flex;
+            align-items: center;
+            span {
+              color: #3D3D46;
+              font-size: 14px;
+              line-height: 18px;
+            }
+            .item-icon {
+              width: 32px;
+              height: 32px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background-color: #EEF7FB;
+              border-radius: 50%;
+              margin-right: 8px;
+              span {
+                display: flex;
+                svg {
+                  fill: #54B2D3;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .marketing-wrapper {
+      .market-text {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        h6 {
+          font-size: 14px;
+          line-height: 24px;
+          color: #3D3D46;
+          margin-bottom: 0;
+        }
+        :global .anticon-edit {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          border: 1px solid #ECEDF0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+        }
+      }
+      p {
+        font-size: 14px;
+        line-height: 22px;
+        color: #3D3D46;
+        margin-bottom: 14px;
+      }
+      .market-checkbox {
+        :global {
+          .ant-form-item {
+            .ant-form-item-control {
+              .ant-form-item-control-input {
+                .ant-checkbox-group {
+                  label {
+                    margin-bottom: 24px;
+                    span {
+                      font-size: 14px;
+                      line-height: 18px;
+                      color: #3D3D46;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        .check-title {
+          .btn-icon {
+            padding: 0;
+            height: 0;
+            border: none;
+            margin-left: 5px;
+            &:after {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+    .policy-wrap {
+      h6 {
+        font-size: 14px;
+        line-height: 24px;
+        color: #3D3D46;
+        margin-bottom: 12px;
+      }
+      p {
+        font-size: 14px;
+        line-height: 22px;
+        color: #3D3D46;
+        margin-bottom: 14px;
+      }
+      :global {
+        .ant-form {
+          label {
+            span {
+              font-size: 14px;
+              line-height: 18px;
+              color: #3D3D46;
+            }
+          }
+        }
+      }
+    }
+    .history-wrap {
+      .text-header {
+        display: flex;
+        flex-direction: column;
+        h3 {
+          font-size: 14px;
+          line-height: 24px;
+          color: #3D3D46;
+          margin-bottom: 0;
+        }
+        span {
+          font-size: 12px;
+          line-height: 16px;
+          margin-bottom: 4px;
+          color: #9292A3;
+        }
+      }
+      :global {
+        .vertical-timeline {
+          padding: 0;
+          &:before {
+            width: auto;
+          }
+          .vertical-timeline-element {
+            margin-bottom: 12px;
+            margin-top: 12px;
+            .vertical-timeline-element-content {
+              box-shadow: inset 1px 1px 0 #ecedf0, 1px 1px 0 #ecedf0,
+                1px 1px 0 #ecedf0, 1px 1px 0 #ecedf0;
+              margin-left: 30px;
+              .vertical-timeline-element-date {
+                display: none;
+              }
+              .vertical-timeline-element-content-arrow {
+                &:before {
+                  content: '';
+                  position: absolute;
+                  border-top: 10px solid transparent;
+                  border-right: 7px solid #ffffff;
+                  border-bottom: 10px solid transparent;
+                  left: 1px;
+                  top: -10px;
+                  z-index: 1;
+                }
+                &:after {
+                  content: '';
+                  position: absolute;
+                  border-top: 10px solid transparent;
+                  border-right: 7px solid #ecedf0;
+                  border-bottom: 10px solid transparent;
+                  left: 0;
+                  top: -10px;
+                }
+              }
+            }
+            .vertical-timeline-element-icon {
+              width: 24px;
+              height: 24px;
+              background: #40A0C1;
+              border-radius: 50%;
+              box-shadow: none;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin-top: 8px;
+              margin-left: -10px;
+              svg {
+                width: 15px;
+                height: 15px;
+                position: unset;
+                margin: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .custom-link {
+    margin-top: 16px;
+    h5 {
+      font-size: 14px;
+      line-height: 24px;
+      text-transform: uppercase;
+      color: #3D3D46;
+    }
+    p {
+      font-size: 16px;
+      line-height: 24px;
+      color: #3D3D46;
+    }
+    h3 {
+      margin-bottom: 24px;
+      font-size: 36px;
+      line-height: 36px;
+      color: #3D3D46;
+    }
+    .qr-code-section {
+      display: flex;
+      margin-bottom: 28px;
+      span {
+        margin-right: 16px;
+      }
+      p {
+        font-size: 14px;
+        line-height: 20px;
+        a {
+          color: #54b2d3;
+        }
+      }
+    }
+    .scan-warn {
+      font-size: 14px;
+      line-height: 24px;
+      color: #3D3D46;
+      padding: 9px 16px;
+      border: 1px solid #FFE58F;
+      background: #FFFBE6;
+    }
+    .link-group-btn {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      button {
+        flex: 1;
+        margin-right: 20px;
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}
+.preference-modal {
+  p {
+    font-size: 16px;
+    color: #9292A3;
+    line-height: 23px;
+  }
+  .btn-turn-off {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .main-wrapper {
+    width: 100%;
+    padding: 16px;
+    .inner-main-wrapper {
+      padding: 26px;
+      .marketing-wrapper {
+        .market-checkbox {
+          :global {
+            .ant-form-item {
+              .ant-form-item-control {
+                .ant-form-item-control-input {
+                  .ant-checkbox-group {
+                    label {
+                      margin-bottom: 15px;
+                      width: 100%;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      .policy-wrap {
+        :global {
+          .ant-form {
+            label {
+              width: 100%;
+              margin-bottom: 10px;
+              span {
+                font-size: 14px;
+                line-height: 18px;
+                color: #3D3D46;
+              }
+            }
+          }
+        }
+      }
+    }
+    .qr-code-section {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+}

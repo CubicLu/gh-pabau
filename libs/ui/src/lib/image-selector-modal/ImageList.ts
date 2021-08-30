@@ -1188,7 +1188,7 @@ let list = [
 ]
 
 list = list.map((img, index) => {
-  img.key = index
+  img.key = index + 1
   return img
 })
 

@@ -23,7 +23,9 @@ module.exports = {
   },
   rules: {
     '@typescript-eslint/no-explicit-any': 'off',
+    'react/display-name': 0,
     '@typescript-eslint/explicit-module-boundary-types': 0,
+    'unicorn/prefer-spread': 0,
     'jsx-a11y/anchor-is-valid': [
       'error',
       {

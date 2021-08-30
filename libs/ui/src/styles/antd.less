@@ -2,9 +2,12 @@
 
 @primary-color: #54b2d3; // primary color for all components
 @link-color: #1890ff; // link color
+@primary-info-color: #e2f6f5;
 @success-color: #52c41a; // success state color
 @warning-color: #faad14; // warning state color
 @error-color: #f5222d; // error state color
+@red-color-text: #ff5b64;
+@blue-color-text: #6383f1;
 @font-size-base: 14px; // major text font size
 @heading-color: rgba(0, 0, 0, 0.85); // heading text color
 @text-color: rgba(0, 0, 0, 0.65); // major text color
@@ -12,9 +15,12 @@
 @disabled-color: rgba(0, 0, 0, 0.25); // disable state color
 @light-color: #ffffff;
 @red-focused-color: #df562b;
+@green-primary-color: #65cd98;
 @blue-focused-color: #eef7fb;
 // @border-radius-base: 4px; // major border radius
 @border-color-base: #ecedf0; // major border color
+@gray-background-color: #ecedf070;
+@gray-background-light-color: #fcfcfc;
 @box-shadow-base: 0 3px 6px -4px rgba(0, 0, 0, 0.12),
   0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05); // major shadow for layers
 @font-variant-base: normal;
@@ -24,8 +30,11 @@
 :root {
   --primary-color: @primary-color;
   --link-color: @link-color;
+  --primary-info-color: @primary-info-color;
   --success-color: @success-color;
   --warning-color: @warning-color;
+  --red-color-text: @red-color-text;
+  --blue-color-text: @blue-color-text;
   --error-color: @error-color;
   --font-size-base: @font-size-base;
   --heading-color: @heading-color;
@@ -52,6 +61,9 @@
   --screen-size-md: @screen-md;
   --screen-size-lg: @screen-lg;
   --screen-size-xl: @screen-xl;
+  --gray-background-color: @gray-background-color;
+  --gray-background-light-color: @gray-background-light-color;
+  --green-primary-color: @green-primary-color;
 }
 
 @font-face {
@@ -109,7 +121,34 @@ h1.ant-typography,
   padding-left: 1em;
   padding-right: 1em;
 }
+.ant-btn-circle {
+  min-width: 32px;
+  padding-right: 0;
+  padding-left: 0;
+  text-align: center;
+  border-radius: 50%;
+}
 
 strong {
   font-family: Circular-Std-Bold;
+}
+
+#draggable {
+  position: absolute;
+  pointer-events: none;
+  height: 100%;
+  width: 100%;
+}
+
+@font-face {
+  font-family: 'Circular-Std-Black';
+  src: url('/fonts/CircularStd-Black.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Circular-Std-Book';
+  src: url('/fonts/CircularStd-Book.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Circular-Std-Medium';
+  src: url('/fonts/CircularStd-Medium.otf') format('opentype');
 }

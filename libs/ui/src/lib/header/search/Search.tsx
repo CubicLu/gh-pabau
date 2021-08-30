@@ -336,16 +336,20 @@ export const Search: FC<P> = ({
               placeholder={t('search.advanced.search.postcode.placeholder')}
             />
           </Form.Item>
-          <Form.Item
-            className={styles.searchForm}
-            name="policyNumber"
-            label={t('search.advanced.search.policynumber.label')}
-          >
-            <Input
-              className={styles.advSearchInput}
-              placeholder={t('search.advanced.search.policynumber.placeholder')}
-            />
-          </Form.Item>
+          {searchTab === SearchMode.Clients && (
+            <Form.Item
+              className={styles.searchForm}
+              name="policyNumber"
+              label={t('search.advanced.search.policynumber.label')}
+            >
+              <Input
+                className={styles.advSearchInput}
+                placeholder={t(
+                  'search.advanced.search.policynumber.placeholder'
+                )}
+              />
+            </Form.Item>
+          )}
           <Form.Item
             className={styles.searchForm}
             name="custom_id"
@@ -356,24 +360,28 @@ export const Search: FC<P> = ({
               placeholder={t('search.advanced.search.patientid.placeholder')}
             />
           </Form.Item>
-          <Form.Item
-            className={styles.searchForm}
-            name="invoiceNumber"
-            label={t('search.advanced.search.invoiceno.label')}
-          >
-            <Input
-              className={styles.advSearchInput}
-              placeholder={t('search.advanced.search.invoiceno.placeholder')}
-            />
-          </Form.Item>
-          <Form.Item name="is_active" valuePropName="checked">
-            <Checkbox>
-              <span className={styles.inactiveClientText}>
-                {' '}
-                {t('search.advanced.search.inactiveclients.label')}
-              </span>{' '}
-            </Checkbox>
-          </Form.Item>
+          {searchTab === SearchMode.Clients && (
+            <Form.Item
+              className={styles.searchForm}
+              name="invoiceNumber"
+              label={t('search.advanced.search.invoiceno.label')}
+            >
+              <Input
+                className={styles.advSearchInput}
+                placeholder={t('search.advanced.search.invoiceno.placeholder')}
+              />
+            </Form.Item>
+          )}
+          {searchTab === SearchMode.Clients && (
+            <Form.Item name="is_active" valuePropName="checked">
+              <Checkbox>
+                <span className={styles.inactiveClientText}>
+                  {' '}
+                  {t('search.advanced.search.inactiveclients.label')}
+                </span>{' '}
+              </Checkbox>
+            </Form.Item>
+          )}
           <div className={classNames(styles.buttonEnd, styles.searchBtnBlock)}>
             <Button
               disabled={false}
@@ -437,6 +445,7 @@ export const Search: FC<P> = ({
               advancedSearch ? styles.advanceSearchModal : styles.searchInput,
               styles.mobileViewNone
             )}
+            placement="bottom"
           >
             <Input
               className={styles.searchInputStyle}

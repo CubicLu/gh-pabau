@@ -2,18 +2,28 @@ import { Select } from 'antd'
 import React, { FC } from 'react'
 import { languageMenu } from '../../assets/images/lang-logos'
 
-export const Language: FC = () => {
+interface LanguageProps {
+  onSelect?: (val) => void
+  defaultValue?: string
+  useAbbreviation?: boolean
+}
+
+export const Language: FC<LanguageProps> = ({
+  onSelect,
+  defaultValue,
+  useAbbreviation,
+}) => {
   const { Option } = Select
   return (
-    <Select defaultValue="English">
+    <Select defaultValue={defaultValue} onSelect={(val) => onSelect?.(val)}>
       {languageMenu.map((lang, index) => (
-        <Option key={index} value={lang.label}>
+        <Option key={`lang-item-${index}`} value={lang.label}>
           <img
             alt={lang.label}
             src={lang.logo}
             style={{ width: '18px', marginBottom: '2px' }}
           />{' '}
-          {lang.label}
+          {useAbbreviation ? lang.shortLabel : lang.label}
         </Option>
       ))}
     </Select>

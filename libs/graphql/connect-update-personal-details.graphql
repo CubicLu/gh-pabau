@@ -1,0 +1,21 @@
+mutation UpdateConnectPersonalDetails($contactId: Int!, $avatar: String, $fname: String, $lname: String, $dob: DateTime, $gender: String, $mobile: String, $email: String, $mailingStreet: String, $mailingPostal: String, $mailingCountry: String, $mailingCity: String) {
+  updateOneCmContact(where: {ID: $contactId}, data: {Avatar: {set: $avatar}, Fname: {set: $fname}, Lname: {set: $lname}, DOB: {set: $dob}, gender: {set: $gender}, Mobile: {set: $mobile}, Email: {set: $email}, MailingStreet: {set: $mailingStreet}, MailingPostal: {set: $mailingPostal}, MailingCountry: {set: $mailingCountry}, MailingCity: {set: $mailingCity}}) {
+    ID
+    Avatar
+    Fname
+    Lname
+    DOB
+    gender
+    Phone
+    Mobile
+    Email
+    MailingStreet
+    MailingPostal
+    MailingCity
+    MailingCountry
+    ContactMeta {
+      meta_name
+      meta_value
+    }
+  }
+}

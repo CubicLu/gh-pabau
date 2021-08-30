@@ -1,13 +1,12 @@
 import { gql } from '@apollo/client'
 import { NextPage } from 'next'
-import React, { useContext } from 'react'
 import CrudLayout from '../../../components/CrudLayout/CrudLayout'
+import { useUser } from '../../../context/UserContext'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-import { UserContext } from '../../../context/UserContext'
 
 const LIST_QUERY = gql`
   query user_salutations($limit: Int!, $offset: Int!) {
-    userSalutations(take: $limit, skip: $offset, orderBy: { id: desc }) {
+    findManyUserSalutation(take: $limit, skip: $offset, orderBy: { id: desc }) {
       id
       name
     }
@@ -15,7 +14,7 @@ const LIST_QUERY = gql`
 `
 const LIST_AGGREGATE_QUERY = gql`
   query user_salutations_aggregate {
-    userSalutationsCount
+    findManyUserSalutationCount
   }
 `
 const DELETE_MUTATION = gql`
@@ -56,7 +55,7 @@ const UPDATE_ORDER_MUTATION = gql`
 
 export const Salutation: NextPage = () => {
   const { t } = useTranslationI18()
-  const user = useContext(UserContext)
+  const user = useUser()
 
   const schema: Schema = {
     full: t('setup.salutation.schema.title'),

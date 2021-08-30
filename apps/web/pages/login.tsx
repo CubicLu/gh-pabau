@@ -1,17 +1,9 @@
-import { Logo } from '@pabau/ui'
-import React, { FC, useState } from 'react'
 import { ReactComponent as LoginImage } from '../assets/images/login.svg'
-import LoginMain from '../components/Auth/Login'
-import MoreWayAuthentication from '../components/Auth/MoreWayToAuthentication'
-import ResetPassword from '../components/Auth/ResetPassword'
-import TwoStepAuthentication from '../components/Auth/TwoStepAuthentication'
+import { Logo } from '@pabau/ui'
+import { LoginMain } from '../components/Auth/Login'
 import styles from './login.module.less'
 
-const Login: FC = () => {
-  const [showPage, setShowPage] = useState<string>('login')
-  const handlePageShow = (page: string) => {
-    setShowPage(page)
-  }
+const Login = () => {
   return (
     <div className={styles.signInWrapper}>
       <div className={styles.signInBackground}>
@@ -23,17 +15,7 @@ const Login: FC = () => {
             <Logo />
           </div>
         </div>
-        {showPage === 'login' ? (
-          <LoginMain handlePageShow={handlePageShow} />
-        ) : showPage === 'twoStepAuth' ? (
-          <TwoStepAuthentication handlePageShow={handlePageShow} />
-        ) : showPage === 'moreWayAuth' ? (
-          <MoreWayAuthentication />
-        ) : (
-          showPage === 'resetPassword' && (
-            <ResetPassword handlePageShow={handlePageShow} />
-          )
-        )}
+        <LoginMain />
       </div>
     </div>
   )

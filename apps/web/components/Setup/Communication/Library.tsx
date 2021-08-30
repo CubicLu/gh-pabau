@@ -1,24 +1,24 @@
-import React, { FC, useEffect, useState } from 'react'
-import { FormTypeGroup, FormTypeGroupInfo, MedicalFormCard } from '@pabau/ui'
-import { Form, Divider, Button, Popover, Tag } from 'antd'
 import {
-  FilePdfOutlined,
   BarsOutlined,
   CheckOutlined,
+  FilePdfOutlined,
   MailOutlined,
   MessageOutlined,
 } from '@ant-design/icons'
-import { ReactComponent as LetterOutlined } from '../../../assets/images/form-type/letter.svg'
+import { FormTypeGroup, FormTypeGroupInfo, MedicalFormCard } from '@pabau/ui'
+import { Button, Divider, Form, Popover, Tag } from 'antd'
+import React, { FC, useEffect, useState } from 'react'
 import { ReactComponent as LetterOutlinedSelected } from '../../../assets/images/form-type/letter-selected.svg'
+import { ReactComponent as LetterOutlined } from '../../../assets/images/form-type/letter.svg'
 import styles from './Library.module.less'
 
 interface Setting {
   medicalHistory: boolean
   consent: boolean
-  treatmentForm: boolean
+  treatment: boolean
   epaper: boolean
-  presciption: boolean
-  labForm: boolean
+  prescription: boolean
+  lab: boolean
 }
 
 const formTypeItems: FormTypeGroupInfo = {

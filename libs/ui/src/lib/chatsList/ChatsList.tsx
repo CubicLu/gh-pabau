@@ -1,7 +1,7 @@
-import React from 'react'
-import classNames from 'classnames'
-import { Badge } from 'antd'
 import { Avatar } from '@pabau/ui'
+import { Badge } from 'antd'
+import classNames from 'classnames'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ReactComponent as MessageRead } from '../../assets/images/message-read.svg'
 import styles from './ChatsList.module.less'
@@ -36,7 +36,7 @@ export const ChatsList = (props: P): JSX.Element => {
   const { messages, active, onClick } = props
 
   return (
-    <div>
+    <>
       {props.isHeaderShow && (
         <div className={classNames(styles.channelsText, styles.channelsHead)}>
           <p className={classNames(styles.grayTextColor, styles.textSm)}>
@@ -143,7 +143,7 @@ export const ChatsList = (props: P): JSX.Element => {
           )
         })}
       </div>
-    </div>
+    </>
   )
 }
 

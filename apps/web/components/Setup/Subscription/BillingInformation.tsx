@@ -1,26 +1,59 @@
 import { FileDoneOutlined } from '@ant-design/icons'
+import {
+  BillingInformationsQuery,
+  useBillingInformationsQuery,
+} from '@pabau/graphql'
 import { Button, TabMenu } from '@pabau/ui'
-import { Col, DatePicker, Divider, Form, Input, Row, Typography } from 'antd'
-import React, { FC, useState } from 'react'
+import {
+  Badge,
+  Col,
+  DatePicker,
+  Divider,
+  Form,
+  Input,
+  Row,
+  Skeleton,
+  Typography,
+} from 'antd'
+import React, { FC, useEffect, useState } from 'react'
 import Styles from './SubscriptionComponents.module.less'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const BillingInformation: FC = () => {
   const { Title, Paragraph, Link } = Typography
   const { Password } = Input
   const [form] = Form.useForm()
+  const { t } = useTranslationI18()
   const [editPayment, setEditPayment] = useState(false)
+  const [info, setInfo] = useState<BillingInformationsQuery>()
+  const { data, loading } = useBillingInformationsQuery()
+
+  useEffect(() => {
+    if (data !== undefined) {
+      setInfo(data)
+    }
+  }, [data])
 
   const renderBillingInformation = () => {
     return (
       <div>
         <div style={{ paddingTop: 25, paddingRight: 24 }}>
-          <Title style={{ paddingBottom: 8 }}>Billing Information</Title>
+          <Title style={{ paddingBottom: 8 }}>
+            {t('setup.subscription.billing-information')}
+          </Title>
           <Paragraph className={Styles.billingTitleParagraph}>
-            Manage details displayed on our invoices issued to you,
+            {t('setup.subscription.billing-information-info')},
           </Paragraph>
           <Paragraph className={Styles.billingTitleParagraph}>
-            see the <Link className={Styles.link}>billing activity page</Link>{' '}
-            for full billing history.
+            {t('setup.subscription.see-the')}{' '}
+            <Link
+              className={Styles.link}
+              href={`https://pabau.com/pricing/`}
+              target="_blank"
+            >
+              {t('setup.subscription.billing-activity-page')}{' '}
+            </Link>{' '}
+            {t('setup.subscription.for-full-billing')} .
           </Paragraph>
         </div>
         <Divider />
@@ -31,62 +64,141 @@ const BillingInformation: FC = () => {
             shape="circle"
             backgroundColor="#EEF7FB"
             className={Styles.billingBtn}
+            title={info?.subscription?.status}
             icon={<FileDoneOutlined size={28} />}
           />
           <div style={{ marginLeft: 24 }}>
-            <Paragraph style={{ marginBottom: 8 }}>Bill estimate</Paragraph>
-            <Paragraph className={Styles.blackText}>
-              £551.25 (tax inclusive)
+            <Paragraph style={{ marginBottom: 8 }}>
+              {t('setup.subscription.bill-estimate')}
             </Paragraph>
-            <Paragraph type="secondary" className={Styles.font12p}>
-              *Next Charge: Feb 27, 2021
-            </Paragraph>
+            {loading ? (
+              <Skeleton.Input
+                active={loading}
+                className={Styles.skeletonBillingInformation}
+              />
+            ) : (
+              <div>
+                <Paragraph className={Styles.blackText}>
+                  £ {info?.subscription?.amount?.toFixed(2)} (
+                  {info?.subscription?.interval_unit})
+                </Paragraph>
+                {loading ? (
+                  <Skeleton.Input
+                    active={loading}
+                    className={Styles.skeletonBillingInformation}
+                  />
+                ) : (
+                  <Paragraph type="secondary" className={Styles.font12p}>
+                    *{t('setup.subscription.next-charge')}:{' '}
+                    {new Date(
+                      info?.subscription?.next_charge_date
+                    ).toLocaleDateString('en-GB')}
+                  </Paragraph>
+                )}
+              </div>
+            )}
           </div>
         </div>
         <Divider />
         <div style={{ padding: '0 24px' }}>
-          <Paragraph className={Styles.subTitle}>Payment Fee</Paragraph>
+          <Paragraph className={Styles.subTitle}>
+            {t('setup.subscription.payment-fee')}
+          </Paragraph>
           <Paragraph
             type="secondary"
             style={{ marginTop: 20 }}
             className={Styles.font12p}
           >
-            Card Payment
+            {t('setup.subscription.card-payment')}
           </Paragraph>
-          <Paragraph className={Styles.blackText}>1,29% + 20p Per</Paragraph>
+          {loading ? (
+            <Skeleton.Input
+              active={loading}
+              className={Styles.skeletonBillingInformation}
+            />
+          ) : (
+            <Paragraph className={Styles.blackText}>
+              {info?.subscription?.app_fee ?? '0.00'}%
+            </Paragraph>
+          )}
           <Paragraph
             type="secondary"
             style={{ marginTop: 8 }}
             className={Styles.font12p}
           >
-            *Fully inclusive of all card processing and bank fees
+            *{t('setup.subscription.payment-fee-info')}
           </Paragraph>
           <Paragraph className={Styles.paymentFeeParagraph}>
-            Rates are exclusive of VAT,{' '}
-            <Link className={Styles.link}>learn more about pricing</Link>
+            {t('setup.subscription.payment-fee-2')},{' '}
+            <Link
+              className={Styles.link}
+              href={`https://pabau.com/pricing/`}
+              target="_blank"
+            >
+              {t('setup.subscription.payment-fee-3')}
+            </Link>
           </Paragraph>
         </div>
         <Divider />
         <div style={{ margin: 24 }}>
-          <Paragraph className={Styles.subTitle}>Company Details</Paragraph>
+          <Paragraph className={Styles.subTitle}>
+            {t('setup.subscription.company-details')}
+          </Paragraph>
           <Paragraph
             type="secondary"
             style={{ marginTop: 20 }}
             className={Styles.font12p}
           >
-            Owner of company
+            {t('setup.subscription.owner-of-company')}
           </Paragraph>
-          <Paragraph className={Styles.blackText}>Michael Barnes</Paragraph>
+          {loading ? (
+            <Skeleton.Input
+              active={loading}
+              className={Styles.skeletonBillingInformation}
+            />
+          ) : (
+            <Paragraph className={Styles.blackText}>
+              {info?.me.Company?.owner?.full_name}
+            </Paragraph>
+          )}
           <Paragraph
             type="secondary"
             style={{ marginTop: 16 }}
             className={Styles.font12p}
           >
-            Address
+            {t('setup.subscription.address')}
           </Paragraph>
-          <Paragraph className={Styles.blackText}>
-            5 Howardsgate, Welwyn Garden City, England, AL8 6AL
+          {loading ? (
+            <Skeleton.Input
+              active={loading}
+              className={Styles.skeletonBillingInformation}
+            />
+          ) : (
+            <Paragraph className={Styles.blackText}>
+              {info?.address?.street +
+                ' ' +
+                info?.address?.city +
+                ' ' +
+                info?.address?.post_code}
+            </Paragraph>
+          )}
+          <Paragraph
+            type="secondary"
+            style={{ marginTop: 16 }}
+            className={Styles.font12p}
+          >
+            {t('setup.subscription.subscription-name')}
           </Paragraph>
+          {loading ? (
+            <Skeleton.Input
+              active={loading}
+              className={Styles.skeletonBillingInformation}
+            />
+          ) : (
+            <Paragraph className={Styles.blackText}>
+              {info?.subscription?.name}
+            </Paragraph>
+          )}
         </div>
       </div>
     )
@@ -97,17 +209,30 @@ const BillingInformation: FC = () => {
       <div>
         <div className={Styles.paymentMethodTitle}>
           <div>
-            <Title style={{ paddingBottom: 8 }}>Your Payment Method</Title>
+            <Title style={{ paddingBottom: 8 }}>
+              {t('setup.subscription.your-payment-method')}
+            </Title>
             <Paragraph className={Styles.billingTitleParagraph}>
-              Your card is only used for topping up your account,
+              {t('setup.subscription.your-card-is')},
             </Paragraph>
             <Paragraph className={Styles.billingTitleParagraph}>
-              in case your balance becomes negative
+              {t('setup.subscription.in-case-your')}
             </Paragraph>
           </div>
-          <Button type="primary" onClick={() => setEditPayment(!editPayment)}>
-            {editPayment ? 'save' : 'Edit payment method'}
-          </Button>
+          <Badge
+            count={t('setup.subscription.soon')}
+            style={{ backgroundColor: '#52c41a' }}
+          >
+            <Button
+              type="primary"
+              onClick={() => setEditPayment(!editPayment)}
+              disabled
+            >
+              {editPayment
+                ? t('setup.subscription.save')
+                : t('setup.subscription.edit-payment-method')}
+            </Button>
+          </Badge>
         </div>
         {editPayment && (
           <>
@@ -124,31 +249,39 @@ const BillingInformation: FC = () => {
                 />
                 <div style={{ marginLeft: 24 }}>
                   <Paragraph style={{ marginBottom: 8 }}>
-                    Bill estimate
+                    {t('setup.subscription.bill-estimate')}
                   </Paragraph>
                   <Paragraph className={Styles.blackText}>
-                    £551.25 (tax inclusive)
+                    £ {info?.subscription?.amount?.toFixed(2)} (
+                    {info?.subscription?.interval_unit})
                   </Paragraph>
                   <Paragraph type="secondary" className={Styles.font12p}>
-                    *Next Charge: Feb 27, 2021
+                    *{t('setup.subscription.next-charge')}:{' '}
+                    {new Date(
+                      info?.subscription?.next_charge_date
+                    ).toLocaleDateString('en-GB')}
                   </Paragraph>
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'flex-end' }}>
-                <Link className={Styles.link}>View Full Estimate</Link>
+                <Link className={Styles.link}>
+                  {t('setup.subscription.view-full-estimate')}
+                </Link>
               </div>
             </div>
           </>
         )}
         <Divider />
         <div style={{ padding: '0 24px' }}>
-          <Paragraph className={Styles.subTitle}>Card details</Paragraph>
+          <Paragraph className={Styles.subTitle}>
+            {t('setup.subscription.card-details')}
+          </Paragraph>
           <Form
             layout="vertical"
             form={form}
             initialValues={{
-              cardOwner: '',
-              cardNumber: '',
+              cardOwner: info?.bank?.account_holder_name,
+              cardNumber: info?.bank?.last4,
               csc: '',
               expireDate: undefined,
             }}
@@ -158,23 +291,32 @@ const BillingInformation: FC = () => {
               style={{ marginTop: 20 }}
               className={Styles.font12p}
             >
-              Card owner
+              {t('setup.subscription.card-owner')}
             </Paragraph>
             {editPayment ? (
               <Form.Item
                 name="cardOwner"
                 rules={[
-                  { required: true, message: 'Please enter card owner name.' },
+                  {
+                    required: true,
+                    message: t('setup.subscription.please-enter-card'),
+                  },
                 ]}
               >
                 <Input
-                  placeholder="Card owner"
+                  placeholder={t('setup.subscription.card-number')}
+                  value={info?.bank?.account_holder_name}
                   style={{ maxWidth: 450, marginTop: 2 }}
                 />
               </Form.Item>
+            ) : loading ? (
+              <Skeleton.Input
+                active={loading}
+                className={Styles.skeletonBillingInformation}
+              />
             ) : (
               <Paragraph className={Styles.blackText} style={{ marginTop: 2 }}>
-                William Brandham
+                {info?.bank?.account_holder_name ?? '-'}
               </Paragraph>
             )}
             {editPayment ? (
@@ -184,13 +326,19 @@ const BillingInformation: FC = () => {
                   style={{ marginTop: 16 }}
                   className={Styles.font12p}
                 >
-                  Card number
+                  {t('setup.subscription.card-number')}
                 </Paragraph>
                 <Form.Item
                   name="cardNumber"
                   rules={[
-                    { required: true, message: 'Please enter card number.' },
-                    { max: 16, message: 'Please enter valid card number.' },
+                    {
+                      required: true,
+                      message: t('setup.subscription.enter-card'),
+                    },
+                    {
+                      max: 16,
+                      message: t('setup.subscription.enter-valid-card'),
+                    },
                   ]}
                 >
                   <Password
@@ -208,8 +356,14 @@ const BillingInformation: FC = () => {
                     <Form.Item
                       name="csc"
                       rules={[
-                        { required: true, message: 'Please enter CSC' },
-                        { max: 3, message: 'Enter valid CSC' },
+                        {
+                          required: true,
+                          message: t('setup.subscription.enter-csv'),
+                        },
+                        {
+                          max: 3,
+                          message: t('setup.subscription.enter-valid-csv'),
+                        },
                       ]}
                     >
                       <Input
@@ -226,14 +380,14 @@ const BillingInformation: FC = () => {
                   </Col>
                   <Col span={12} style={{ flex: 1 }}>
                     <Paragraph type="secondary" className={Styles.font12p}>
-                      Expiration date
+                      {t('setup.subscription.expiration-date')}
                     </Paragraph>
                     <Form.Item
                       name="expireDate"
                       rules={[
                         {
                           required: true,
-                          message: 'Please enter expiration date',
+                          message: t('setup.subscription.enter-exp-date'),
                         },
                       ]}
                     >
@@ -255,14 +409,23 @@ const BillingInformation: FC = () => {
                     style={{ marginTop: 16 }}
                     className={Styles.font12p}
                   >
-                    Card number
+                    {t('setup.subscription.card-number')}
                   </Paragraph>
-                  <Paragraph
-                    className={Styles.blackText}
-                    style={{ marginTop: 2 }}
-                  >
-                    **** **** **** 2002
-                  </Paragraph>
+                  {loading ? (
+                    <Skeleton.Input
+                      active={loading}
+                      className={Styles.skeletonBillingInformation}
+                    />
+                  ) : (
+                    <Paragraph
+                      className={Styles.blackText}
+                      style={{ marginTop: 2 }}
+                    >
+                      {info?.bank?.last4
+                        ? '**** **** ****' + info?.bank?.last4
+                        : '-'}
+                    </Paragraph>
+                  )}
                 </div>
                 <div style={{ marginLeft: 40 }}>
                   <Paragraph
@@ -270,27 +433,38 @@ const BillingInformation: FC = () => {
                     style={{ marginTop: 16 }}
                     className={Styles.font12p}
                   >
-                    Valid thru
+                    {t('setup.subscription.valid-thru')}
                   </Paragraph>
-                  <Paragraph
-                    className={Styles.blackText}
-                    style={{ marginTop: 2 }}
-                  >
-                    02/25
-                  </Paragraph>
+                  {loading ? (
+                    <Skeleton.Input
+                      active={loading}
+                      className={Styles.skeletonBillingInformation}
+                    />
+                  ) : (
+                    <Paragraph
+                      className={Styles.blackText}
+                      style={{ marginTop: 2 }}
+                    >
+                      {info?.bank?.exp_year
+                        ? info?.bank?.exp_month + '/' + info?.bank?.exp_year
+                        : '-'}
+                    </Paragraph>
+                  )}
                 </div>
               </div>
             )}
           </Form>
           {(editPayment && (
             <div style={{ marginTop: 20, maxWidth: 450 }}>
-              <Paragraph className={Styles.subTitle}>Bank details</Paragraph>
+              <Paragraph className={Styles.subTitle}>
+                {t('setup.subscription.bank-details')}
+              </Paragraph>
               <Form
                 layout="vertical"
                 form={form}
                 initialValues={{
-                  bankName: '',
-                  accountNumber: '',
+                  bankName: info?.bank?.bank_name,
+                  accountNumber: info?.bank?.last4,
                   sortCode: '',
                 }}
               >
@@ -299,27 +473,33 @@ const BillingInformation: FC = () => {
                   style={{ marginTop: 20 }}
                   className={Styles.font12p}
                 >
-                  Name
+                  {t('setup.subscription.name')}
                 </Paragraph>
                 <Form.Item
                   name="bankName"
                   rules={[
-                    { required: true, message: 'Please enter bank name.' },
+                    {
+                      required: true,
+                      message: t('setup.subscription.enter-bank-name'),
+                    },
                   ]}
                 >
-                  <Input placeholder="Bank name" style={{ marginTop: 2 }} />
+                  <Input
+                    placeholder={t('setup.subscription.bank-name')}
+                    style={{ marginTop: 2 }}
+                  />
                 </Form.Item>
                 <Row gutter={16} style={{ maxWidth: 460, flex: 1 }}>
                   <Col span={12} style={{ flex: 1 }}>
                     <Paragraph type="secondary" className={Styles.font12p}>
-                      Account Number
+                      {t('setup.subscription.account-number')}
                     </Paragraph>
                     <Form.Item
                       name="accountNumber"
                       rules={[
                         {
                           required: true,
-                          message: 'Please enter your account number',
+                          message: t('setup.subscription.enter-acc-no'),
                         },
                       ]}
                     >
@@ -333,12 +513,15 @@ const BillingInformation: FC = () => {
                   </Col>
                   <Col span={12} style={{ flex: 1 }}>
                     <Paragraph type="secondary" className={Styles.font12p}>
-                      Sort Code
+                      {t('setup.subscription.sort-code')}
                     </Paragraph>
                     <Form.Item
                       name="sortCode"
                       rules={[
-                        { required: true, message: 'Please enter sort code' },
+                        {
+                          required: true,
+                          message: t('setup.subscription.enter-sort-code'),
+                        },
                       ]}
                     >
                       <Input style={{ width: '100%', marginTop: 2 }} />
@@ -349,17 +532,29 @@ const BillingInformation: FC = () => {
             </div>
           )) || (
             <div style={{ marginTop: 20 }}>
-              <Paragraph className={Styles.subTitle}>Bank details</Paragraph>
+              <Paragraph className={Styles.subTitle}>
+                {t('setup.subscription.bank-details')}
+              </Paragraph>
               <Paragraph
                 type="secondary"
                 style={{ marginTop: 20 }}
                 className={Styles.font12p}
               >
-                Bank Name
+                {t('setup.subscription.bank-name')}
               </Paragraph>
-              <Paragraph className={Styles.blackText} style={{ marginTop: 2 }}>
-                State Bank Of India
-              </Paragraph>
+              {loading ? (
+                <Skeleton.Input
+                  active={loading}
+                  className={Styles.skeletonBillingInformation}
+                />
+              ) : (
+                <Paragraph
+                  className={Styles.blackText}
+                  style={{ marginTop: 2 }}
+                >
+                  {info?.bank?.bank_name}
+                </Paragraph>
+              )}
               <div style={{ display: 'flex' }}>
                 <div>
                   <Paragraph
@@ -367,14 +562,21 @@ const BillingInformation: FC = () => {
                     style={{ marginTop: 16 }}
                     className={Styles.font12p}
                   >
-                    Account number
+                    {t('setup.subscription.account-number')}
                   </Paragraph>
-                  <Paragraph
-                    className={Styles.blackText}
-                    style={{ marginTop: 2 }}
-                  >
-                    ************2002
-                  </Paragraph>
+                  {loading ? (
+                    <Skeleton.Input
+                      active={loading}
+                      className={Styles.skeletonBillingInformation}
+                    />
+                  ) : (
+                    <Paragraph
+                      className={Styles.blackText}
+                      style={{ marginTop: 2 }}
+                    >
+                      ************{info?.bank?.account_number_ending}
+                    </Paragraph>
+                  )}
                 </div>
                 <div style={{ marginLeft: 40 }}>
                   <Paragraph
@@ -382,14 +584,21 @@ const BillingInformation: FC = () => {
                     style={{ marginTop: 16 }}
                     className={Styles.font12p}
                   >
-                    Sort Code
+                    {t('setup.subscription.sort-code')}
                   </Paragraph>
-                  <Paragraph
-                    className={Styles.blackText}
-                    style={{ marginTop: 2 }}
-                  >
-                    1234
-                  </Paragraph>
+                  {loading ? (
+                    <Skeleton.Input
+                      active={loading}
+                      className={Styles.skeletonBillingInformation}
+                    />
+                  ) : (
+                    <Paragraph
+                      className={Styles.blackText}
+                      style={{ marginTop: 2 }}
+                    >
+                      {info?.bank?.branch_code ?? '-'}
+                    </Paragraph>
+                  )}
                 </div>
               </div>
             </div>

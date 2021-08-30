@@ -6,7 +6,7 @@ import english from 'i18n-iso-countries/langs/en.json'
 import React, { FC, useState } from 'react'
 import * as Yup from 'yup'
 import { timezone as timezones } from '@pabau/ui'
-import styles from './Common.module.less'
+import styles from '../../pages/signup.module.less'
 
 export interface StepTwoFormProps {
   phoneNumber: string

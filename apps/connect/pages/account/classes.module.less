@@ -1,0 +1,128 @@
+.classes {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  @media (max-width: 767px) {
+    background-color: white;
+    height: 100%;
+  }
+}
+
+.classesHeader {
+  width: 100%;
+  :global {
+    .ant-typography {
+      font-family: var(--font-family);
+    }
+  }
+  @media (max-width: 767px) {
+    display: none;
+  }
+}
+
+.classesMobileHeader {
+  width: 100%;
+  display: none;
+  padding: 2rem 0 28px 20px;
+  :global {
+    .ant-typography {
+      font-family: var(--font-family);
+      padding: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    display: block;
+  }
+}
+
+.classesContent {
+  width: 100%;
+  padding: 0 20px;
+  > div {
+    background-color: white;
+  }
+  @media (max-width: 767px) {
+    padding: 0;
+  }
+}
+
+.classesTableContainer {
+  width: 100%;
+  :global {
+    .ant-table-thead {
+      background-color: white;
+      .ant-table-cell {
+        background-color: white;
+        font-family: var(--font-family);
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        letter-spacing: 1%;
+        color: #737373;
+      }
+    }
+    .ant-table-tbody {
+      .ant-table-cell {
+        font-family: var(--font-family);
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+        color: var(--grey-text-color);
+      }
+    }
+  }
+}
+
+.paginationContainer {
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.buttonLabelContainer {
+  width: 88px;
+}
+
+.buttonLabel {
+  border-radius: 20px;
+}
+
+.buttonLabelCancelled {
+  border-radius: 20px;
+  border: 1px solid rgba(146, 146, 163, 0.5) !important;
+  color: var(--light-grey-color) !important;
+  background: rgba(146, 146, 163, 0.05) !important;
+}
+
+.noItems {
+  width: 100%;
+  height: 212px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.noItemsImageContainer {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  position: relative;
+  background-color: rgba(238, 247, 251, 0.6);
+  margin-bottom: 12px;
+  .noItemsImage {
+    position: absolute;
+    top: 7px;
+    left: 10px;
+  }
+}
+
+.noItemsText {
+  font-family: var(--font-family);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  color: #737387;
+  text-align: center;
+  margin: 0;
+}

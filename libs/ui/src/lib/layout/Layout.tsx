@@ -5,34 +5,35 @@ import classNames from 'classnames'
 import React, { FC, useState } from 'react'
 import { ReactComponent as IllustrationSvg } from './example.svg'
 import styles from './Layout.module.less'
+import { NotificationDrawerItemType } from '../notification-drawer/NotificationItem'
+import { AuthenticatedUser, JwtUser } from '@pabau/yup'
 
 const { Content } = AntLayout
 
-interface Notification {
+interface ProductNews {
   id: string
-  notificationTime: Date
-  notificationType: string
-  notificationTypeIcon?: string
-  title: string
-  desc: string
-  read: number[]
-  users: number[]
+  img: string
   link: string
+  title: string
+  description: string
+  time: Date | string
+  readUsers: number[]
 }
 
-interface UserProps {
-  user: number
-  company: number
-  companyName: string
-  fullName: string
+export interface ExtraUserData {
+  handleCompanySwitch?(companyId): void
 }
+
 export interface LayoutProps {
+  onLogOut?(): void
   deleteNotification?: MutationFunction
   updateNotification?: MutationFunction
+  readNewsMutation?: MutationFunction
   readAddMutation?: MutationFunction
   relativeTime?: (lan: string, date: Date) => string
-  notifications?: Notification[]
-  user?: UserProps
+  notifications?: NotificationDrawerItemType[]
+  productNews?: ProductNews[]
+  user?: Partial<AuthenticatedUser> & JwtUser & ExtraUserData
   pageTitle?: string
   newButtonText?: string
   onNewClicked?: string | (() => void)
@@ -41,16 +42,14 @@ export interface LayoutProps {
   searchRender?: (innerComponent: JSX.Element) => JSX.Element
   active?: string
   onMessageIconClick?(): void
-  // onCreateChannel?: (
-  //   name: string,
-  //   description: string,
-  //   isPrivate: boolean
-  // ) => void
   isDisplayingFooter?: boolean
-  // onMessageType?: (e: MouseEvent<HTMLElement>) => void
   legacyContent?: boolean
   taskManagerIFrameComponent?: JSX.Element
+  allowed?: boolean
   requireAdminAccess?: boolean
+  clientCreateRender?: () => JSX.Element
+  leadCreateRender?: () => JSX.Element
+  handleSearch?: (searchTerm: string) => void
 }
 
 export const Layout: FC<LayoutProps> = ({
@@ -63,15 +62,19 @@ export const Layout: FC<LayoutProps> = ({
   isDisplayingFooter = true,
   card,
   children,
+  onLogOut,
   active,
   legacyContent = false,
   notifications,
+  productNews,
   relativeTime,
   deleteNotification,
   updateNotification,
   readAddMutation,
-  user,
+  readNewsMutation,
   taskManagerIFrameComponent,
+  clientCreateRender,
+  leadCreateRender,
   ...rest
 }) => {
   const [collapsed, setCollapsed] = useState(true)
@@ -80,17 +83,19 @@ export const Layout: FC<LayoutProps> = ({
     <AntLayout {...rest} className={styles.main}>
       <AntLayout style={{ background: '#F7F7F9' }}>
         <Header
-          user={user}
           deleteNotification={deleteNotification}
           updateNotification={updateNotification}
+          readNewsMutation={readNewsMutation}
           readAddMutation={readAddMutation}
           searchRender={searchRender}
           onMessageIconClick={onMessageIconClick}
-          // onCreateChannel={onCreateChannel}
-          // onMessageType={onMessageType}
+          onLogOut={onLogOut}
           notifications={notifications}
+          productNews={productNews}
           relativeTime={relativeTime}
           taskManagerIFrameComponent={taskManagerIFrameComponent}
+          clientCreateRender={clientCreateRender}
+          leadCreateRender={leadCreateRender}
           {...rest}
         />
         <AntLayout className={styles.headerMargin}>

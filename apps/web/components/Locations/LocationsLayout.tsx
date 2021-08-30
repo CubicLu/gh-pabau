@@ -29,18 +29,11 @@ import { Avatar, Col, Image, Row, Skeleton, Tooltip, Typography } from 'antd'
 import classNames from 'classnames'
 import { Formik } from 'formik'
 import { useRouter } from 'next/router'
-import React, {
-  FC,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import * as Yup from 'yup'
 import LogoSvg from '../../assets/images/logo.svg'
-import { UserContext } from '../../context/UserContext'
+import { useUser } from '../../context/UserContext'
 import { useGridData } from '../../hooks/useGridData'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { getBadgesList } from '../../mocks/Locations'
@@ -52,6 +45,8 @@ import General from './General'
 import LocationDetails from './LocationDetails'
 import styles from './LocationsLayout.module.less'
 import { QuestionCircleOutlined } from '@ant-design/icons'
+import postData, { getImage } from '../Uploaders/UploadHelpers/UploadHelpers'
+import { cdnURL } from '../../baseUrl'
 
 const { Title } = Typography
 
@@ -86,7 +81,6 @@ export interface InitialLocationProps {
   address: string
   street: string
   postcode: string
-  img: File
   employees: EmployeeListProps[]
   badges: string[]
   position: Position
@@ -95,6 +89,8 @@ export interface InitialLocationProps {
   region?: string
   country?: string
   location?: string
+  imageUrl?: string
+  imageData?: string
 }
 
 const createLocationOperation = [OperationType.active, OperationType.create]
@@ -174,7 +170,6 @@ const defaultValue: InitialLocationProps = {
   city: '',
   country: '',
   region: '',
-  img: null,
   employees: [],
   badges: [],
   position: {
@@ -182,6 +177,8 @@ const defaultValue: InitialLocationProps = {
     lng: 0,
   },
   isActive: true,
+  imageUrl: '',
+  imageData: '',
 }
 
 const LocationsLayout: FC<P> = ({ schema }) => {
@@ -208,7 +205,7 @@ const LocationsLayout: FC<P> = ({ schema }) => {
 
   const router = useRouter()
   const { getParentSetupData } = useGridData(t)
-  const user = useContext(UserContext)
+  const user = useUser()
   const filterFormRef = useRef(null)
 
   const validationSchema = Yup.object().shape({
@@ -227,6 +224,11 @@ const LocationsLayout: FC<P> = ({ schema }) => {
       variables: {
         isActive,
         searchTerm: '%' + searchTerm + '%',
+        filter: {
+          every: {
+            AND: [],
+          },
+        },
       },
     }
 
@@ -298,25 +300,26 @@ const LocationsLayout: FC<P> = ({ schema }) => {
   const [locationData, setLocationData] = useState(null)
 
   useEffect(() => {
-    if (data?.companyBranches) {
+    if (data?.findManyCompanyBranch) {
       const locationIds = []
-      for (const item of data.companyBranches) {
+      for (const item of data?.findManyCompanyBranch) {
         locationIds.push(item.id)
       }
       setLocationIds(locationIds)
-      setLocationData(data.companyBranches)
+      setLocationData(data?.findManyCompanyBranch)
       loadStaffList()
     }
   }, [data, loading, filterChange, loadStaffList])
 
   useEffect(() => {
-    if (employeeDataResponse?.cmStaffGenerals) {
+    if (employeeDataResponse?.findManyCmStaffGeneral) {
       const employeeData = []
-      for (const item of employeeDataResponse.cmStaffGenerals) {
+      for (const item of employeeDataResponse.findManyCmStaffGeneral) {
         employeeData.push({
           id: item.id,
           name: `${item.Fname} ${item.Lname}`,
           selected: false,
+          avatar: item?.User?.image && getImage(item?.User?.image),
         })
       }
       setEmployeeListData(employeeData)
@@ -324,16 +327,16 @@ const LocationsLayout: FC<P> = ({ schema }) => {
   }, [employeeDataResponse])
 
   useEffect(() => {
-    if (staffData?.cmStaffGenerals) {
+    if (staffData?.findManyCmStaffGeneral) {
       const locationRecord = []
       for (const item of locationData) {
         const assignedUserData = []
-        for (const staff of staffData?.cmStaffGenerals) {
+        for (const staff of staffData?.findManyCmStaffGeneral) {
           if (staff?.Location?.includes(item.id.toString())) {
             assignedUserData.push({
               id: staff.id,
               name: `${staff.Fname} ${staff.Lname}`,
-              avatarUrl: '',
+              avatarUrl: staff?.User?.image && getImage(staff?.User?.image),
             })
           }
         }
@@ -349,20 +352,18 @@ const LocationsLayout: FC<P> = ({ schema }) => {
   }, [staffData])
 
   useEffect(() => {
-    if (locationLimit?.companySubscriptions) {
+    if (locationLimit?.findManyCompanySubscription) {
       setAllowedLocationCount(
-        locationLimit?.companySubscriptions?.[0]['multiple_locations']
+        locationLimit?.findManyCompanySubscription?.[0]['multiple_locations']
       )
     }
   }, [locationLimit])
 
   useEffect(() => {
-    if (activeLocationCount?.companyBranchesCount) {
-      setActiveLocation(activeLocationCount.companyBranchesCount)
+    if (activeLocationCount?.findManyCompanyBranchCount) {
+      setActiveLocation(activeLocationCount?.findManyCompanyBranchCount)
     }
-    if (!activeLoading) {
-      setActiveLocationLoading(false)
-    }
+    setActiveLocationLoading(activeLoading)
   }, [activeLocationCount, activeLoading])
 
   const [updateOrderMutation] = useUpdateLocationsOrderMutation()
@@ -406,7 +407,7 @@ const LocationsLayout: FC<P> = ({ schema }) => {
     }
     if (isCustomOrder) {
       const totalRecord = locationData.length
-      const lastOrderValue = lastOrder?.companyBranches?.[0].loc_order
+      const lastOrderValue = lastOrder?.findManyCompanyBranch?.[0].loc_order
       const newData = []
       for (const [index, item] of items.entries()) {
         newData.push({
@@ -449,7 +450,6 @@ const LocationsLayout: FC<P> = ({ schema }) => {
     if (values?.id)
       await updateOrderMutation({
         variables: values,
-        optimisticResponse: {},
         refetchQueries: [
           {
             query: LocationsDocument,
@@ -565,7 +565,8 @@ const LocationsLayout: FC<P> = ({ schema }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialValues])
 
-  const onSubmit = async (values, { resetForm }) => {
+  const onSubmit = async (values, { resetForm, setSubmitting }) => {
+    setSubmitting(true)
     if (values.isActive && !(allowedLocationCount > activeLocation)) {
       setCreateLocationModal((e) => !e)
       resetForm()
@@ -581,9 +582,29 @@ const LocationsLayout: FC<P> = ({ schema }) => {
         name: item.name,
       })
     }
+    let imageLink
+    if (values.imageData) {
+      const data = await postData(
+        cdnURL + '/api/upload.php',
+        {
+          mode: 'upload-cropped-photo',
+          imageData: values.imageData,
+          section: 'avatar_photos',
+          type: 'file_attachments',
+        },
+        null
+      )
+      if (data.error) {
+        Notification(NotificationType.error, t(data.code))
+        return
+      } else {
+        imageLink = data.path
+      }
+    }
+
     const variables = {
       ...values,
-      // img: locationImg,
+      image: imageLink ?? values.imageUrl,
       lat: values.position.lat,
       lng: values.position.lng,
       isActive: values.isActive ? 1 : 0,
@@ -614,6 +635,7 @@ const LocationsLayout: FC<P> = ({ schema }) => {
             },
           ],
         }))
+    setSubmitting(false)
     resetForm()
     setCreateLocationModal((e) => !e)
     refetchActiveLocationCount()
@@ -793,7 +815,7 @@ const LocationsLayout: FC<P> = ({ schema }) => {
                       return (
                         <Draggable
                           className={styles.locationRow}
-                          key={location.name}
+                          key={location.id}
                           index={index}
                           draggableId={location.id.toString()}
                         >
@@ -815,8 +837,9 @@ const LocationsLayout: FC<P> = ({ schema }) => {
                                   preview={false}
                                   fallback={LogoSvg}
                                   src={
-                                    location.img ??
-                                    'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
+                                    location.imageUrl
+                                      ? getImage(location?.imageUrl)
+                                      : 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
                                   }
                                 />
                               </Col>
@@ -906,7 +929,14 @@ const LocationsLayout: FC<P> = ({ schema }) => {
         validationSchema={validationSchema}
         onSubmit={onSubmit}
       >
-        {({ setFieldValue, handleSubmit, values, isValid, dirty }) => (
+        {({
+          setFieldValue,
+          handleSubmit,
+          values,
+          isValid,
+          dirty,
+          isSubmitting,
+        }) => (
           <FullScreenReportModal
             title={
               values.id
@@ -926,7 +956,7 @@ const LocationsLayout: FC<P> = ({ schema }) => {
               setInitialValues(defaultValue)
             }}
             onSave={handleSubmit}
-            enableCreateBtn={isValid && dirty}
+            enableCreateBtn={isValid && dirty && !isSubmitting}
             operations={
               values.id ? editLocationOperation : createLocationOperation
             }

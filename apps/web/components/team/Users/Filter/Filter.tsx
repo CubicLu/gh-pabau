@@ -1,20 +1,20 @@
-import React, { FunctionComponent, useState, useEffect } from 'react'
-import { Button, MobileHeader, GridVsList, SimpleDropdown } from '@pabau/ui'
-import addButtonStyles from '../../../AddButton.module.less'
-import styles from './Filter.module.less'
 import {
   AppstoreOutlined,
   FilterOutlined,
   MenuOutlined,
   SearchOutlined,
 } from '@ant-design/icons'
-import { Drawer, Input, Popover, Radio, Select, Checkbox, Skeleton } from 'antd'
-import classNames from 'classnames'
-import { useTranslation } from 'react-i18next'
 import {
   useFindManyCompanyBranchesLazyQuery,
   useFindManyCompanyDepartmentsLazyQuery,
 } from '@pabau/graphql'
+import { Button, GridVsList, MobileHeader, SimpleDropdown } from '@pabau/ui'
+import { Checkbox, Drawer, Input, Popover, Radio, Select, Skeleton } from 'antd'
+import classNames from 'classnames'
+import React, { FunctionComponent, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import addButtonStyles from '../../../AddButton.module.less'
+import styles from './Filter.module.less'
 
 interface P {
   onNewStaffMemberClick?: () => void
@@ -123,10 +123,10 @@ export const Filter: FunctionComponent<P> = ({
         ) : (
           departmentCalled &&
           !departmentLoader &&
-          companyDepartments?.companyDepartments.length > 0 && (
+          companyDepartments?.findManyCompanyDepartment?.length > 0 && (
             <SimpleDropdown
               value={departmentValue}
-              dropdownItems={companyDepartments.companyDepartments.map(
+              dropdownItems={companyDepartments?.findManyCompanyDepartment?.map(
                 (thread) => {
                   return thread.department
                 }
@@ -152,13 +152,13 @@ export const Filter: FunctionComponent<P> = ({
         ) : (
           locationCalled &&
           !locationLoader &&
-          locationData?.companyBranches.length > 0 && (
+          locationData?.findManyCompanyBranch?.length > 0 && (
             <Select
               className={styles.locationDropdown}
               value={locationValue}
               onSelect={(value) => setLocation(value)}
             >
-              {locationData.companyBranches.map((item) => (
+              {locationData?.findManyCompanyBranch?.map((item) => (
                 <Select.Option key={item.id} value={item.id}>
                   {item.name}
                 </Select.Option>

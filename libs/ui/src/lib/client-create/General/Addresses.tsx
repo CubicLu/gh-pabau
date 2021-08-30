@@ -1,21 +1,22 @@
 import React, { FC } from 'react'
 import styles from '../ClientCreate.module.less'
-import { InitialDetailsProps } from '../ClientCreate'
 import { Form as AntForm, Input } from 'formik-antd'
-import { SimpleDropdown } from '@pabau/ui'
-import { SearchOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
+import { FieldSetting } from '@pabau/ui'
 
 interface Props {
-  values?: InitialDetailsProps
-  setFieldValue(
-    field: keyof InitialDetailsProps,
-    values: string | string[] | boolean | number
-  ): void
+  fieldsSettings: FieldSetting[]
+  requiredLabel: (name: string) => string
 }
 
-export const Addresses: FC<Props> = ({ setFieldValue, values }) => {
+export const Addresses: FC<Props> = ({ fieldsSettings, requiredLabel }) => {
   const { t } = useTranslation('common')
+
+  const getLabel = (label) => {
+    return fieldsSettings.find((thread) => thread.field_name === label)
+      ?.field_label
+  }
+
   return (
     <div className={styles.addressForm}>
       <h5>{t('quickCreate.client.modal.general.addresses')}</h5>
@@ -24,55 +25,116 @@ export const Addresses: FC<Props> = ({ setFieldValue, values }) => {
         layout={'vertical'}
         requiredMark={false}
       >
-        <AntForm.Item
-          label={t('quickCreate.client.modal.general.addresses.label')}
-          name={'address'}
-        >
-          <Input
-            name={'address'}
-            placeholder={t(
-              'quickCreate.client.modal.general.addresses.placeHolder'
-            )}
-            prefix={<SearchOutlined />}
-          />
-        </AntForm.Item>
-        <AntForm.Item
-          label={t('quickCreate.client.modal.general.addresses.country')}
-          name={'country'}
-        >
-          <SimpleDropdown
-            name={'country'}
-            defaultValue={t(
-              'quickCreate.client.modal.general.addresses.country.placeHolder'
-            )}
-            onSelected={(value) => setFieldValue('country', value)}
-            dropdownItems={['United Kingdom', 'India']}
-          />
-        </AntForm.Item>
-        <AntForm.Item
-          label={t('quickCreate.client.modal.general.addresses.city')}
-          name={'city'}
-        >
-          <SimpleDropdown
-            name={'country'}
-            defaultValue={t(
-              'quickCreate.client.modal.general.addresses.city.placeHolder'
-            )}
-            onSelected={(value) => setFieldValue('city', value)}
-            dropdownItems={['London', 'India']}
-          />
-        </AntForm.Item>
-        <AntForm.Item
-          label={t('quickCreate.client.modal.general.addresses.postcode')}
-          name={'postCode'}
-        >
-          <Input
-            name={'postCode'}
-            placeholder={t(
-              'quickCreate.client.modal.general.addresses.postcode.placeHolder'
-            )}
-          />
-        </AntForm.Item>
+        {fieldsSettings.find(
+          (thread) => thread.field_name === 'MailingStreet'
+        ) && (
+          <AntForm.Item
+            label={`${
+              getLabel('MailingStreet') ||
+              t('quickCreate.client.modal.general.addresses.label')
+            }${requiredLabel('MailingStreet')}`}
+            name={'MailingStreet'}
+          >
+            <Input
+              name={'MailingStreet'}
+              placeholder={t('common-label-enter', {
+                what: getLabel('MailingStreet')
+                  ? getLabel('MailingStreet')?.toLowerCase()
+                  : t(
+                      'quickCreate.client.modal.general.addresses.label'
+                    ).toLowerCase(),
+              })}
+            />
+          </AntForm.Item>
+        )}
+        {fieldsSettings.find(
+          (thread) => thread.field_name === 'MailingProvince'
+        ) && (
+          <AntForm.Item
+            label={`${
+              getLabel('MailingProvince') ||
+              t('quickCreate.client.modal.general.county.label')
+            }${requiredLabel('MailingProvince')}`}
+            name={'MailingProvince'}
+          >
+            <Input
+              name={'MailingProvince'}
+              placeholder={t('common-label-enter', {
+                what: getLabel('MailingProvince')
+                  ? getLabel('MailingProvince')?.toLowerCase()
+                  : t(
+                      'quickCreate.client.modal.general.county.label'
+                    ).toLowerCase(),
+              })}
+            />
+          </AntForm.Item>
+        )}
+        {fieldsSettings.find(
+          (thread) => thread.field_name === 'MailingCity'
+        ) && (
+          <AntForm.Item
+            label={`${
+              getLabel('MailingCity') ||
+              t('quickCreate.client.modal.general.addresses.city')
+            }${requiredLabel('MailingCity')}`}
+            name={'MailingCity'}
+          >
+            <Input
+              name={'MailingCity'}
+              placeholder={t('common-label-enter', {
+                what: getLabel('MailingCity')
+                  ? getLabel('MailingCity')?.toLowerCase()
+                  : t(
+                      'quickCreate.client.modal.general.county.label'
+                    ).toLowerCase(),
+              })}
+            />
+          </AntForm.Item>
+        )}
+        {fieldsSettings.find(
+          (thread) => thread.field_name === 'MailingCountry'
+        ) && (
+          <AntForm.Item
+            label={`${
+              getLabel('MailingCountry') ||
+              t('quickCreate.client.modal.general.addresses.country')
+            }${requiredLabel('MailingCountry')}`}
+            name={'MailingCountry'}
+          >
+            <Input
+              name={'MailingCountry'}
+              placeholder={t('common-label-enter', {
+                what: getLabel('MailingCountry')
+                  ? getLabel('MailingCountry')?.toLowerCase()
+                  : t(
+                      'quickCreate.client.modal.general.addresses.country'
+                    ).toLowerCase(),
+              })}
+            />
+          </AntForm.Item>
+        )}
+        {fieldsSettings.find(
+          (thread) => thread.field_name === 'MailingPostal'
+        ) && (
+          <AntForm.Item
+            label={`${
+              getLabel('MailingPostal') ||
+              t('quickCreate.client.modal.general.addresses.postcode')
+            }${requiredLabel('MailingPostal')}`}
+            name={'MailingPostal'}
+          >
+            <Input
+              name={'MailingPostal'}
+              placeholder={t('common-label-enter', {
+                what: getLabel('MailingPostal')
+                  ? getLabel('MailingPostal')?.toLowerCase()
+                  : t(
+                      'quickCreate.client.modal.general.addresses.postcode'
+                    ).toLowerCase(),
+              })}
+            />
+          </AntForm.Item>
+        )}
       </AntForm>
     </div>
   )

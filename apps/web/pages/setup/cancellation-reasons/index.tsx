@@ -1,9 +1,8 @@
-import React, { useContext } from 'react'
 import { gql } from '@apollo/client'
 import { NextPage } from 'next'
 import CrudLayout from '../../../components/CrudLayout/CrudLayout'
+import { useUser } from '../../../context/UserContext'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-import { UserContext } from '../../../context/UserContext'
 
 const LIST_QUERY = gql`
   query cancellation_reasons(
@@ -11,7 +10,7 @@ const LIST_QUERY = gql`
     $offset: Int
     $limit: Int
   ) {
-    cancelReasons(
+    findManyCancelReason(
       skip: $offset
       take: $limit
       orderBy: { id: desc }
@@ -26,7 +25,7 @@ const LIST_QUERY = gql`
 `
 const LIST_AGGREGATE_QUERY = gql`
   query cancellation_reasons_aggregate($searchTerm: String = "") {
-    cancelReasonsCount(where: { reason_name: { contains: $searchTerm } })
+    findManyCancelReasonCount(where: { reason_name: { contains: $searchTerm } })
   }
 `
 const DELETE_MUTATION = gql`
@@ -92,7 +91,7 @@ const UPDATE_ORDER_MUTATION = gql`
 
 export const CancellationReasons: NextPage = () => {
   const { t } = useTranslationI18()
-  const user = useContext(UserContext)
+  const user = useUser()
 
   const schema: Schema = {
     full: t('setup.cancellation.reason.schema.title'),

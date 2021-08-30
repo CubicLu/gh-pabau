@@ -1,5 +1,5 @@
 .invoice-template {
-  min-width: 682px;
+  min-width: 910px;
   :global .ant-modal-content {
     .ant-modal-body {
       padding: 0 !important;
@@ -16,7 +16,7 @@
   align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
-  padding: 20px 32px;
+  padding: 20px 0;
   .header {
     display: flex;
     align-items: center;
@@ -67,6 +67,9 @@
     justify-content: flex-start;
     width: 100%;
     padding: 16px 0;
+    .table-data{
+      width: 100%;
+    }
     .section1 {
       display: flex;
       align-items: flex-start;
@@ -138,7 +141,7 @@
           }
           .inner1 {
             display: flex;
-            align-items: flex-end;
+            align-items: flex-start;
             justify-content: flex-start;
             flex-direction: column;
             .header-text {
@@ -190,7 +193,7 @@
           line-height: 21px;
           color: #3d3d46;
           text-align: start;
-          margin: 8px 10px;
+          margin: 8px 6px;
         }
         .table-headertext1 {
           font-family: Roboto, serif;
@@ -200,7 +203,7 @@
           line-height: 21px;
           color: #3d3d46;
           text-align: end;
-          margin: 8px 10px;
+          margin: 8px 6px;
         }
       }
       .table-body {
@@ -245,6 +248,7 @@
       width: 100%;
       background: #fafafb;
       border-radius: 0 0 4px 4px;
+      border-top: 1px solid #ecedf0;
       padding: 16px 12px 0;
       .section3-inner {
         display: flex;
@@ -277,7 +281,7 @@
               align-items: flex-start;
               justify-content: flex-start;
               flex-direction: column;
-              width: 156px;
+              width: 145px;
               .header-text {
                 font-family: Roboto, serif;
                 font-style: normal;
@@ -371,10 +375,12 @@
         justify-content: flex-start;
         width: 100%;
         margin-bottom: 12px;
+        flex-wrap: wrap;
         .inner {
           display: flex;
+          flex: 1 33.33%;
           flex-direction: column;
-          width: 33.33%;
+          margin-bottom: 10px;
           align-items: flex-start;
           justify-content: flex-start;
           .head-text {
@@ -396,5 +402,76 @@
         }
       }
     }
+  }
+  :global {
+    .ant-table-thead > tr > th, .ant-table-tbody > tr > td{
+      padding: 8px 6px;
+      vertical-align: initial;
+      text-align: center;
+      font-family: roboto;
+    }
+    .ant-table-tbody > tr > td{
+      font-size: 12px;
+    }
+    .ant-table-thead > tr > th {
+      border-bottom: 1px solid #ecedf0;
+      border-top: 1px solid #ecedf0;
+      background: #fafafb;
+      font-size: 10px;
+      font-weight: bold;
+      line-height: 21px;
+      color: #3d3d46;
+    }
+    .ant-table-thead > tr > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+      display: none;
+    }
+    .test .ant-table table {
+      table-layout: fixed !important;
+    }
+   .ant-table table {
+      margin: 10px 0;
+    }
+    .ant-table-wrapper {
+      width: 100%;
+    }
+  }
+  .title-skeleton{
+    width: 200px;
+    height: 15px;
+  }
+  .desc-skeleton{
+    width: 200px;
+    height: 15px;
+    margin-top: 5px;
+  }
+  .from-skeleton{
+    width: 50px;
+    height: 12px;
+    margin-top: 5px;
+  }
+  .input-skeleton{
+    width: 100px;
+    height: 12px;
+    margin-top: 5px;
+  }
+  .table-skeleton{
+    width: 100%;
+    height: 120px;
+    margin-top: 15px;
+  }
+  .payment-skeleton{
+    width: 100%;
+    height: 120px;
+    margin-top: 15px;
+  }
+  .bankdetail-skeleton{
+    width: 160px;
+    height: 12px;
+    margin-top: 5px;
+  }
+  .grand-total-skeleton{
+    width: 130px;
+    height: 20px;
+    margin-top: 5px;
   }
 }

@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
-import { NowRequest, NowResponse } from '@vercel/node'
+import type { VercelRequest, VercelResponse } from '@vercel/node'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import { AppController } from './app/app.controller'
@@ -28,13 +28,13 @@ if (!process.env.VERCEL) {
   bootstrapDevServer()
 }
 
-function invokeNest(req: NowRequest, res: NowResponse) {
+function invokeNest(req: VercelRequest, res: VercelResponse) {
   NestFactory.create(AppModule).then(async (e) => {
     const app2 = e.get(AppController)
     res.json(await app2.getData())
   })
 }
 
-export default function (req: NowRequest, res: NowResponse) {
+export default function (req: VercelRequest, res: VercelResponse) {
   invokeNest(req, res)
 }

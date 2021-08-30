@@ -1,65 +1,47 @@
-import React, { FC } from 'react'
-import styles from '../../pages/login.module.less'
-import { Button, Notification, NotificationType } from '@pabau/ui'
-import * as Yup from 'yup'
-import { Form, Input, Checkbox, SubmitButton } from 'formik-antd'
+import React, { useState } from 'react'
+import { EyeInvisibleOutlined } from '@ant-design/icons'
 import { Formik } from 'formik'
-import { EyeInvisibleOutlined, LinkedinFilled } from '@ant-design/icons'
-import { ReactComponent as GoogleIcon } from '../../assets/images/google.svg'
-import { ReactComponent as SSOIcon } from '../../assets/images/sso.svg'
-import { gql, useMutation } from '@apollo/client'
-import { useTranslationI18 } from '../../hooks/useTranslationI18'
-import { useRouter } from 'next/router'
+import { Checkbox, Form, Input, SubmitButton } from 'formik-antd'
+import { LoginForm, LoginValidation } from '@pabau/yup'
+import styles from '../../pages/login.module.less'
+import Link from 'next/link'
+import { useLoginMutation } from '@pabau/graphql'
+import ResetPassword from './ResetPassword'
+import { useUser } from '../../context/UserContext'
 
-export interface LoginFormProps {
-  email: string
-  password: string
-  remember?: boolean
-}
+export const LoginMain = (): JSX.Element => {
+  const [page, setPage] = useState<'login' | 'resetPassword'>('login')
+  const { login, logout } = useUser()
+  const [loginMutate] = useLoginMutation()
 
-interface LoginProps {
-  handlePageShow: (page: string) => void
-}
-const LOGIN_MUTATION = gql`
-  mutation login($email: String!, $password: String!) {
-    login(username: $email, password: $password)
-  }
-`
-const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
-  const [login] = useMutation(LOGIN_MUTATION)
-  const { t } = useTranslationI18()
-  const router = useRouter()
-
-  const loginHandler = async (loginProps: LoginFormProps): Promise<boolean> => {
-    if (localStorage?.getItem('token')) {
-      localStorage.removeItem('token')
-    }
+  const loginHandler = async (loginProps: LoginForm) => {
     const { email, password } = loginProps
-    const result = await login({
+    await logout()
+    const result = await loginMutate({
       variables: {
-        email,
-        password,
+        username: email,
+        password: password,
       },
     })
-    if (!result) {
-      throw new Error('Wrong user/password')
+    try {
+      await login(result.data.login)
+    } catch (error) {
+      console.log('LOGIN FAILED', error)
     }
-    // setCookie('user', JSON.stringify(result.data?.login), {
-    //   path: '/',
-    //   maxAge: 3600,
-    //   sameSite: true,
-    // })
-    localStorage.setItem('token', result.data?.login)
-    return true
+    // BEWARE: Don't try and do anything after here because React garbage disposes of this function after login is completed.
   }
+
+  if (page === 'resetPassword')
+    return <ResetPassword onClose={() => setPage('login')} />
 
   return (
     <div>
       <div className={styles.signInForm}>
         <div className={styles.formHead}>
-          <h6>{t('login.title')}</h6>
+          <h6>Log In</h6>
           <span>
-            Do not have an account? <a>Start a free trial</a>
+            Do not have an account?{' '}
+            <Link href="/signup">Start a free trial</Link>
           </span>
         </div>
       </div>
@@ -70,24 +52,9 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
             password: '',
             remember: false,
           }}
-          validationSchema={Yup.object({
-            email: Yup.string()
-              .email('Invalid work email')
-              .required('Email is required'),
-            password: Yup.string().required('Password is required'),
-          })}
-          onSubmit={async (value: LoginFormProps) => {
-            try {
-              await loginHandler(value)
-              router.reload()
-            } catch (error) {
-              if (localStorage?.getItem('token')) {
-                localStorage.removeItem('token')
-              }
-              Notification(NotificationType.error, error.toString())
-            }
-          }}
-          render={() => (
+          validationSchema={LoginValidation}
+          onSubmit={loginHandler}
+          render={({ isValid }) => (
             <Form layout="vertical">
               <Form.Item
                 label={'Email'}
@@ -109,7 +76,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
               <div className={styles.forgotWrap}>
                 <div
                   className={styles.forgotKey}
-                  onClick={() => handlePageShow('resetPassword')}
+                  onClick={() => setPage('resetPassword')}
                 >
                   Forgot password?
                 </div>
@@ -118,11 +85,16 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
                 <Checkbox name={'remember'}>Remember me</Checkbox>
               </div>
               <div className={styles.btnSubmit}>
-                <SubmitButton className={styles.btnStarted} type={'primary'}>
-                  Login
+                <SubmitButton
+                  className={isValid ? styles.btnStarted : styles.btnDisabled}
+                  type={'primary'}
+                  disabled={!isValid}
+                >
+                  Confirm
                 </SubmitButton>
               </div>
-              <div className={styles.accessKey}>
+              {/* TODO uncomment them (followings) once something gets done */}
+              {/*<div className={styles.accessKey}>
                 <div className={styles.line}>
                   <span>or access quickly</span>
                 </div>
@@ -131,6 +103,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
                 <div className={styles.google}>
                   <Button
                     className={styles.btnStarted}
+                    disabled
                     type={'default'}
                     icon={<GoogleIcon />}
                   >
@@ -139,6 +112,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
                 </div>
                 <div className={styles.socialLine}>
                   <Button
+                    disabled
                     className={styles.btnStarted}
                     type={'default'}
                     icon={<LinkedinFilled />}
@@ -146,6 +120,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
                     LinkedIn
                   </Button>
                   <Button
+                    disabled
                     className={styles.btnStarted}
                     type={'default'}
                     icon={<SSOIcon className={styles.keyIc} />}
@@ -153,7 +128,7 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
                     <span className={styles.iconTxtKey}>SSO</span>
                   </Button>
                 </div>
-              </div>
+              </div>*/}
             </Form>
           )}
         />
@@ -161,5 +136,3 @@ const LoginMain: FC<LoginProps> = ({ handlePageShow }) => {
     </div>
   )
 }
-
-export default LoginMain

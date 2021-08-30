@@ -1,8 +1,7 @@
 import gql from 'graphql-tag'
 import { NextPage } from 'next'
-import React, { useContext } from 'react'
 import CrudLayout from '../../../components/CrudLayout/CrudLayout'
-import { UserContext } from '../../../context/UserContext'
+import { useUser } from '../../../context/UserContext'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
 
 const LIST_QUERY = gql`
@@ -12,7 +11,7 @@ const LIST_QUERY = gql`
     $offset: Int
     $limit: Int
   ) {
-    marketingSources(
+    findManyMarketingSource(
       take: $limit
       skip: $offset
       orderBy: { id: desc }
@@ -34,7 +33,7 @@ const LIST_AGGREGATE_QUERY = gql`
     $isActive: Boolean = true
     $searchTerm: String = ""
   ) {
-    marketingSourcesCount(
+    findManyMarketingSourceCount(
       where: {
         public: { equals: $isActive }
         OR: [{ AND: [{ name: { contains: $searchTerm } }] }]
@@ -62,7 +61,7 @@ const ADD_MUTATION = gql`
     createOneMarketingSource(
       data: {
         imported: $imported
-        company: {}
+        Company: {}
         name: $name
         public: $public
         custom_id: $custom_id
@@ -105,7 +104,7 @@ const UPDATE_ORDER_MUTATION = gql`
 export const Index: NextPage = () => {
   const { t } = useTranslationI18()
 
-  const user = useContext(UserContext)
+  const user = useUser()
 
   const schema: Schema = {
     full: t('marketingsource-title'),

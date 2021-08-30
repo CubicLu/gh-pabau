@@ -6,7 +6,7 @@ query findAllowedLocation {
 }
 
 query issuingCompanies {
-  issuingCompanies(
+  findManyIssuingCompany(
     where: { is_active: { equals: true } }
     orderBy: { name: asc }
   ) {
@@ -17,7 +17,7 @@ query issuingCompanies {
 }
 
 query creditNoteTypes {
-  creditNoteTypes(orderBy: { name: asc }) {
+  findManyCreditNoteType(orderBy: { name: asc }) {
     name
     id
   }
@@ -55,8 +55,9 @@ query invoices(
     gross
     paid
     balance
-    status
     tooltip
+    isHealthcodeEnabled
+		status: healthcodeStatus
   }
 }
 
@@ -159,8 +160,10 @@ query debts(
     status
     lastAction {
       communication_id
-			time
+      time
     }
+    isHealthcodeEnabled
+		healthcodeStatus
   }
 }
 

@@ -14,6 +14,7 @@ import classNames from 'classnames'
 import { useRouter } from 'next/router'
 import React, { FC, useState } from 'react'
 import Search from '../components/Search'
+import { useUser } from '../context/UserContext'
 import { useGridData } from '../hooks/useGridData'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
 import styles from './Setup.module.less'
@@ -28,10 +29,12 @@ interface P {
   displayCreateButton?: boolean
   handleCreate?: () => void
   showChat?: boolean
+  onChatClick?: () => void
+  clientCreateRender?: () => JSX.Element
+  leadCreateRender?: () => JSX.Element
 }
 
 const CommonHeader: FC<P> = ({
-  showChat,
   handleSearch,
   title = 'Setup',
   isShowSearch,
@@ -40,7 +43,11 @@ const CommonHeader: FC<P> = ({
   isLeftOutlined = false,
   displayCreateButton = false,
   handleCreate,
+  onChatClick,
+  clientCreateRender,
+  leadCreateRender,
 }) => {
+  const user = useUser()
   const [openMenuDrawer, setMenuDrawer] = useState<boolean>(false)
   const [openNotificationDrawer, setNotificationDrawer] = useState<boolean>(
     false
@@ -81,25 +88,26 @@ const CommonHeader: FC<P> = ({
             <p>{title}</p>
           </div>
           <div className={styles.rightContentWrapper}>
-            {!isLeftOutlined ||
-              (isShowSearch && (
-                <div className={styles.searchInput}>
-                  {!showSearch ? (
-                    <SearchOutlined
-                      onClick={() => {
-                        setShowSearch(true)
-                      }}
+            {!isLeftOutlined && isShowSearch && (
+              <div className={styles.searchInput}>
+                {!showSearch ? (
+                  <SearchOutlined
+                    onClick={() => {
+                      setShowSearch(true)
+                    }}
+                  />
+                ) : (
+                  <div className={styles.search}>
+                    <SetupSearchInput
+                      onChange={handleSearch}
+                      placeholder={
+                        isLeftOutlined ? t('integration.search') : ''
+                      }
                     />
-                  ) : (
-                    <div className={styles.search}>
-                      <SetupSearchInput
-                        onChange={handleSearch}
-                        placeholder={isLeftOutlined && t('integration.search')}
-                      />
-                    </div>
-                  )}
-                </div>
-              ))}
+                  </div>
+                )}
+              </div>
+            )}
             {isContent && <ContentJsx />}
           </div>
           {displayCreateButton && (
@@ -117,10 +125,10 @@ const CommonHeader: FC<P> = ({
           searchRender={() => <Search />}
           onSideBarClosed={() => setMenuDrawer(() => !openMenuDrawer)}
           onClickNotificationDrawer={() => setNotificationDrawer((e) => !e)}
-          onClickChatDrawer={() => {
-            //TODO:
-            // setMessageDrawer((e) => !e)
-          }}
+          onClickChatDrawer={onChatClick}
+          clientCreateRender={clientCreateRender}
+          leadCreateRender={leadCreateRender}
+          userData={user?.me}
         />
       )}
       {openNotificationDrawer && (

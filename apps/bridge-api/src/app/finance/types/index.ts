@@ -41,6 +41,7 @@ export interface InvoiceQueryResult {
   xero_status: number
   xero_response: string
   xero_modifiedAt: Date
+  healthcode_status: string
 }
 
 export interface FinanceCountQueryResult {
@@ -75,6 +76,7 @@ export interface DebtQueryResult {
   customerId: number
   contractId: number
   insurerName: string
+  healthcode_status: string
 }
 
 export interface CreditNoteQueryResult {
@@ -92,4 +94,91 @@ export interface CreditNoteQueryResult {
   xero_status: number
   xero_response: string
   xero_modifiedAt: Date
+}
+
+export interface InvoiceArgs {
+  guid?: string
+  saleId: number
+}
+
+export interface SalesData {
+  key: string
+  after_disc: string
+  category: string
+  date: Date
+  description: string
+  disc_amount: string
+  disc_per: string
+  net: string
+  practitioner: string
+  product: string
+  quantity: string
+  sku: string
+  total: string
+  unitprice: string
+  vat: string
+  vat_per: string
+}
+
+export interface PaymentsData {
+  key: string
+  insurer: string
+  payment_date: Date
+  payment_method: string
+  payment_amount: string
+}
+
+export interface PaymentsDetails {
+  key: number
+  total_vat: string
+  amount_paid: string
+  sub_total_amount: string
+  outstanding: string
+  grand_total: string
+  refund_amount: string
+  paid: string
+  total_net: string
+  payment_time: Date
+  total: string
+  card: number
+  cash: number
+}
+
+export interface StatementPaymentDetails {
+  key: number
+  total_vat: string
+  amount_paid: string
+  sub_total_amount: string
+  outstanding: string
+  grand_total: string
+  refund_amount: string
+  paid: string
+  total_net: string
+}
+
+export interface Details {
+  issue_to: string
+  issue_by: string
+  invoice_id: string
+  date?: Date
+}
+
+export interface InvoiceOutput {
+  details: Details
+  items: SalesData[]
+  payments: PaymentsData[]
+  payment_details: PaymentsDetails
+}
+
+export interface StatementArgs {
+  locationId?: number
+  customerId: number
+  statementPeriodFrom?: string
+  statementPeriodTo?: string
+}
+
+export interface StatementOutput {
+  details: Details
+  items: SalesData[]
+  payments: StatementPaymentDetails
 }

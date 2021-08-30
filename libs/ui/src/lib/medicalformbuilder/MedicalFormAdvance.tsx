@@ -10,7 +10,15 @@ import {
   UserOutlined,
   WindowsOutlined,
 } from '@ant-design/icons'
-import { MedicalFormTypes, RuleProp, RulesContainer } from '@pabau/ui'
+import {
+  EmailMessageTemplateItem,
+  MedicaFormAdvanceSettingData,
+  MedicalFormTypes,
+  RuleProp,
+  RulesContainer,
+  SmsMessageTemplateItem,
+  UserListItem,
+} from '@pabau/ui'
 import { Tabs } from 'antd'
 import React, { FC, useEffect, useState } from 'react'
 import styles from './MedicalFormAdvance.module.less'
@@ -23,6 +31,11 @@ interface P {
   draggedForms: MedicalFormTypes[]
   onSaveRules?: (rules: RuleProp[]) => void
   currentRules?: RuleProp[]
+  emailMessageTemplateItems?: EmailMessageTemplateItem[]
+  smsMessageTemplateItems?: SmsMessageTemplateItem[]
+  userListItems?: UserListItem[]
+  onSaveAdvSettings?: (advSettings: MedicaFormAdvanceSettingData) => void
+  currentAdvSettings?: MedicaFormAdvanceSettingData
 }
 
 const MedicalFormAdvance: FC<P> = ({
@@ -31,6 +44,11 @@ const MedicalFormAdvance: FC<P> = ({
   draggedForms = [],
   onSaveRules,
   currentRules = [],
+  emailMessageTemplateItems = [],
+  smsMessageTemplateItems = [],
+  userListItems = [],
+  onSaveAdvSettings,
+  currentAdvSettings,
 }) => {
   const [activatePanel, setActivatePanel] = useState('1')
   const [answersOptions, setAnswersOptions] = useState({})
@@ -43,7 +61,7 @@ const MedicalFormAdvance: FC<P> = ({
         (item) => item.txtQuestion !== '' && item.formName !== 'basic_signature'
       )
       .map((item, index) => {
-        return { [index]: { id: item.id, answer: item.txtQuestion } }
+        return { [item.id]: { id: item.id, answer: item.txtQuestion } }
       })
       .reduce(function (result, item) {
         const key = Object.keys(item)[0]
@@ -91,13 +109,19 @@ const MedicalFormAdvance: FC<P> = ({
             age: { id: 'age', answer: 'Age' },
           }}
           medicalForms={medicalForms}
+          smsMessageTemplateItems={smsMessageTemplateItems}
+          emailMessageTemplateItems={emailMessageTemplateItems}
+          userListItems={userListItems}
           operatorOptions={{
             is: 'is',
             is_not: 'is not',
             is_empty: 'is empty',
             is_not_empty: 'is not empty',
-            greater_than: 'greater than',
-            less_than: 'less than',
+            is_any_of: 'is any of',
+            greater_than: 'is greater than',
+            less_than: 'is less than',
+            equal_greater_than: 'is equal or greater than',
+            equal_less_than: 'is equal or less than',
           }}
           actionTitle={'Pabau'}
           actions={[
@@ -168,6 +192,8 @@ const MedicalFormAdvance: FC<P> = ({
         <MedicalFormAdvanceSettings
           changeFormSaveLabel={changeFormSaveLabel}
           formSaveLabel={formSaveLabel}
+          onSaveAdvSettings={onSaveAdvSettings}
+          currentAdvSettings={currentAdvSettings}
         />
       </TabPane>
       <TabPane

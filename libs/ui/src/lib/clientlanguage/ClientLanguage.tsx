@@ -35,7 +35,7 @@ export const languageMenu: LangData[] = [
   },
   {
     label: 'Spanish',
-    shortLabel: 'SP',
+    shortLabel: 'ES',
     logo: SPSVG,
     selected: false,
     default: false,

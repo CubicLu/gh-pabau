@@ -1,0 +1,106 @@
+query subscriptionInvoices(
+  $offset: Int
+  $limit: Int
+  $status: String
+  $searchTerm: String
+) {
+  invoices: subscriptionInvoices(
+    offset: $offset
+    limit: $limit
+    status: $status
+    searchTerm: $searchTerm
+  ) {
+    id
+    date
+    invoice_link
+    description
+    amount
+    status
+    currency
+  }
+}
+
+query totalSubscriptions($status: String, $searchTerm: String) {
+  total: subscriptionInvoicesTotal(status: $status, searchTerm: $searchTerm)
+}
+
+query accountInformations {
+  me {
+    Company {
+      remote_url
+      subscription {
+        license_id
+        license_expiry
+        license_type
+        subscription_name
+        storage
+        trial
+        live_server
+        advanced_marketing_addon
+        am_start_date
+      }
+      owner: owner {
+        full_name
+        image
+      }
+    }
+  }
+
+  usersCount: findManyUserCount(where: { deleted: { equals: 0 } })
+  metas: findManyCompanyMeta(
+    where: {
+      meta_name: {
+        in: [
+          "goPlusActive"
+          "goPlusStartDate"
+          "teamPlusActive"
+          "teamPlusStartDate"
+          "intelligenceActive"
+          "intelligenceStartDate"
+          "automationActive"
+          "automationStartDate"
+        ]
+      }
+    }
+  ) {
+    meta_name
+    meta_value
+  }
+}
+
+query billingInformations {
+  subscription: subscriptionDetails {
+    id
+    next_charge_date
+    next_charge_amount
+    name
+    currency
+    app_fee
+    interval_unit
+    created_at
+    amount
+    status
+  }
+  me {
+    Company {
+      owner {
+        full_name
+      }
+    }
+  }
+
+  address: findFirstCompanyDetails {
+    street
+    city
+    post_code
+  }
+  bank: subscriptionCardDetails {
+    account_number_ending
+    bank_name
+    account_holder_name
+    last4
+    exp_month
+    exp_year
+    branch_code
+  }
+}

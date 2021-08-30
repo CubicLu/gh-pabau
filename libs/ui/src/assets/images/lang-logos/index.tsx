@@ -1,5 +1,5 @@
 import ARSVG from './arabic.svg'
-import BRSVG from './bulgarian.svg'
+// import BRSVG from './bulgarian.svg'
 import CZSVG from './czech.svg'
 import DASVG from './dutch.svg'
 import ENSVG from './en.svg'
@@ -27,35 +27,29 @@ export const languageMenu = [
     shortLabel: 'EN',
   },
   {
-    label: 'English (US)',
+    label: 'en',
     logo: USSVG,
     selected: true,
-    shortLabel: 'US',
   },
   {
-    label: 'French',
+    label: 'fr',
     logo: FRSVG,
     shortLabel: 'FR',
   },
   {
-    label: 'Spanish',
+
+    label: 'sp',
     logo: SPSVG,
-    shortLabel: 'SP',
   },
   {
     label: 'Arabic',
-    logo: ARSVG,
     shortLabel: 'AR',
+    logo: ARSVG,
   },
   {
-    label: 'Bulgarian',
-    logo: BRSVG,
-    shortLabel: 'BG',
-  },
-  {
-    label: 'Czech',
+    label: 'cz',
+    shortLabel: 'CZ',
     logo: CZSVG,
-    shortLabel: 'CS',
   },
   {
     label: 'Danish',
@@ -79,8 +73,8 @@ export const languageMenu = [
   },
   {
     label: 'Polish',
-    logo: POSVG,
     shortLabel: 'PL',
+    logo: POSVG,
   },
   {
     label: 'Swedish',
@@ -89,13 +83,13 @@ export const languageMenu = [
   },
   {
     label: 'Romanian',
-    logo: ROMSVG,
     shortLabel: 'RO',
+    logo: ROMSVG,
   },
   {
     label: 'Russian',
-    logo: RUSSVG,
     shortLabel: 'RU',
+    logo: RUSSVG,
   },
 ]
 

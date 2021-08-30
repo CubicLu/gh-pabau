@@ -4,59 +4,54 @@ import {
   useUpdate_Notifications_By_PkMutation,
   useDelete_Notifications_By_PkMutation,
   useInsert_Read_Notification_OneMutation,
+  useProduct_NewsSubscription,
+  useInsert_Product_News_Read_OneMutation,
+  useSwitchCompanyMutation,
 } from '@pabau/graphql'
-import {
-  Iframe,
-  Layout as PabauLayout,
-  LayoutProps,
-  StickyPopout,
-} from '@pabau/ui'
+import { Layout as PabauLayout, LayoutProps, StickyPopout } from '@pabau/ui'
 import { useRouter } from 'next/router'
-import React, { FC, useContext, useEffect, useState } from 'react'
-import { UserContext } from '../../context/UserContext'
+import React, { FC, useEffect, useState } from 'react'
+import { useUser } from '../../context/UserContext'
 import { relativeTime } from '../../helper/relativeTimeFormat'
-import useLogin from '../../hooks/authentication/useLogin'
-import Login from '../../pages/login'
 import Search from '../Search'
+import ClientCreate from '../Clients/ClientCreate'
+import LeadCreate from '../Lead/LeadCreate'
 import styles from './Layout.module.less'
 import TaskManagerIFrame from '../TaskManagerIFrame/TaskManagerIFrame'
 import { Unauthorized } from '../Unauthorized'
 import CommonHeader from '../CommonHeader'
 import Chat from '../Chat/Chat'
+import LegacyPage from '../LegacyPage'
+import Login from '../../pages/login'
 
-interface Notification {
+interface ProductNews {
   id: string
-  notificationTime: Date
-  notificationType: string
-  notificationTypeIcon?: string
-  title: string
-  desc: string
-  read: number[]
-  users: number[]
+  img: string
   link: string
+  title: string
+  description: string
+  time: Date | string
+  readUsers: number[]
 }
 
 const Layout: FC<LayoutProps> = ({
   children,
+  allowed = true,
   requireAdminAccess = false,
+  handleSearch,
   ...props
 }) => {
-  const [authenticated, user] = useLogin(false)
-  const [notifications, setNotifications] = useState<Notification[]>()
+  const { me, login, logout } = useUser()
+  const [notifications, setNotifications] = useState()
+  const [productNews, setProductNews] = useState<ProductNews[]>()
   const [showChat, setShowChat] = useState(false)
   const router = useRouter()
-  const { data, error, loading } = useDisabledFeaturesQuery()
+  const { data, error } = useDisabledFeaturesQuery()
 
-  const { data: notificationData } = useNotificationsSubscription({
-    variables: { user: [user?.user] },
-  })
+  const { data: notificationData } = useNotificationsSubscription()
+  const { data: productNewsData } = useProduct_NewsSubscription()
 
-  const loggedUser = useContext(UserContext)
-  const userData = {
-    ...user,
-    companyName: loggedUser?.me?.company?.details.company_name,
-    fullName: loggedUser?.me?.full_name,
-  }
+  const [switchCompany] = useSwitchCompanyMutation()
 
   const [
     insertReadNotificationOneMutation,
@@ -67,6 +62,28 @@ const Layout: FC<LayoutProps> = ({
   const [
     deleteNotificationsByPkMutation,
   ] = useDelete_Notifications_By_PkMutation()
+
+  const [
+    insertProductNewsReadOneMutation,
+  ] = useInsert_Product_News_Read_OneMutation()
+  useEffect(() => {
+    if (productNewsData?.product_news?.length > 0) {
+      const news: ProductNews[] = productNewsData?.product_news.map((news) => {
+        const readUsers = news?.read_by?.map((users) => users.user)
+        return {
+          id: news.id,
+          img: news.img,
+          link: news.link,
+          title: news.title,
+          description: news.description,
+          time: news.created_at,
+          readUsers,
+        }
+      })
+      setProductNews(news)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productNewsData?.product_news])
 
   useEffect(() => {
     if (notificationData?.notifications?.length > 0) {
@@ -89,79 +106,91 @@ const Layout: FC<LayoutProps> = ({
           }
         }
       )
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       setNotifications(todayNotification)
+    } else {
+      setNotifications(null)
     }
   }, [notificationData?.notifications])
 
   if (error) {
-    return (
-      <div>
-        {error.graphQLErrors.map(({ message }, i) => (
-          <span key={i}>{message}</span>
-        ))}
-      </div>
-    )
+    return <Login />
   }
 
-  if (typeof window === 'undefined' || !data || loading) {
-    return <PabauLayout> Loading animation placeholder </PabauLayout>
-  }
-
-  let legacyPage: boolean | string = false
-  for (const [, row] of data.feature_flags.entries()) {
-    if (router.pathname.substring(1) === row.page_slug) {
-      legacyPage = '/' + row.fallback_slug
+  let legacyPage: false | string = false
+  if (data)
+    for (const [, row] of data.feature_flags.entries()) {
+      if (
+        router.asPath.substring(1) === row.page_slug ||
+        (router.asPath.substring(1) === '' && row.page_slug === '/dashboard') // Hack until Nenad can namespace the feature flags
+      ) {
+        legacyPage = '/' + row.fallback_slug
+      }
     }
-  }
 
-  if (
-    typeof window !== 'undefined' &&
-    authenticated &&
-    user &&
-    localStorage?.getItem('token')
-  ) {
-    return requireAdminAccess && !user?.admin ? (
-      <Unauthorized />
-    ) : (
-      <>
-        <PabauLayout
-          relativeTime={relativeTime}
-          notifications={notifications}
-          deleteNotification={deleteNotificationsByPkMutation}
-          updateNotification={updateNotificationsByPkMutation}
-          readAddMutation={insertReadNotificationOneMutation}
-          user={userData}
-          searchRender={() => <Search />}
-          onMessageIconClick={() => setShowChat((e) => !e)}
-          // onCreateChannel={onCreateChannel}
-          // onMessageType={onMessageType}
-          legacyContent={!!legacyPage}
-          taskManagerIFrameComponent={<TaskManagerIFrame />}
-          {...props}
-        >
-          <CommonHeader
-            // handleSearch={handleSearch}
-            // title={} t('setup.page.title')
-            showChat={showChat}
-            title="yoyo"
-            isShowSearch={true}
-          />
-          <Chat
-            // closeDrawer={}
-            closeDrawer={() => setShowChat(false)}
-            visible={showChat}
-            //closeDrawer={() => setMessageDrawer((e) => !e)}
-          />
+  const userData = me
+    ? {
+        ...me,
+        handleCompanySwitch: async (companyId) => {
+          if (companyId !== me.company) {
+            const result = await switchCompany({
+              variables: {
+                companyId,
+              },
+            })
+            await login(result.data.switchCompany)
+            window.location.href =
+              'https://crm.pabau.com/auth.php?t=' +
+              me.pab1 +
+              '&r=' +
+              encodeURIComponent(window.location.origin)
+          }
+        },
+      }
+    : null
+  return requireAdminAccess && !me?.admin ? (
+    <Unauthorized />
+  ) : (
+    <>
+      <PabauLayout
+        onLogOut={logout}
+        relativeTime={relativeTime}
+        notifications={notifications}
+        productNews={productNews}
+        deleteNotification={deleteNotificationsByPkMutation}
+        updateNotification={updateNotificationsByPkMutation}
+        readAddMutation={insertReadNotificationOneMutation}
+        readNewsMutation={insertProductNewsReadOneMutation}
+        user={userData}
+        searchRender={() => <Search />}
+        onMessageIconClick={() => setShowChat((e) => !e)}
+        legacyContent={!!legacyPage}
+        taskManagerIFrameComponent={<TaskManagerIFrame />}
+        clientCreateRender={() => <ClientCreate />}
+        leadCreateRender={() => <LeadCreate />}
+        {...props}
+      >
+        <CommonHeader
+          showChat={showChat}
+          title="Pabau"
+          isShowSearch={true}
+          onChatClick={() => setShowChat((e) => !e)}
+          clientCreateRender={() => <ClientCreate />}
+          leadCreateRender={() => <LeadCreate />}
+          handleSearch={handleSearch}
+        />
+        <Chat closeDrawer={() => setShowChat(false)} visible={showChat} />
 
-          {!legacyPage ? children : <Iframe urlPath={legacyPage} />}
-        </PabauLayout>
-        <div className={styles.stickyPopoutContainer}>
-          <StickyPopout />
-        </div>
-      </>
-    )
-  }
-  return <Login />
+        {!legacyPage ? children : <LegacyPage urlPath={legacyPage} />}
+      </PabauLayout>
+      <div className={styles.stickyPopoutContainer}>
+        <StickyPopout />
+      </div>
+    </>
+  )
+
+  //return <Login />
 }
 
 export default Layout

@@ -61,6 +61,7 @@ export const CreateProduct: FC<CreateProductProps> = ({
     plotColor: '',
     incrementDefault: '',
     minStockLevel: 0,
+    is_active: 0,
     maxStockLevel: 0,
     selectedImage: '',
   }
@@ -139,7 +140,7 @@ export const CreateProduct: FC<CreateProductProps> = ({
                   onSelect={(val) => handleChange('category', val)}
                   defaultValue={formik.values.category}
                 >
-                  {categories.map((item) => (
+                  {categories?.map((item) => (
                     <Option key={item} value={item}>
                       {item}
                     </Option>

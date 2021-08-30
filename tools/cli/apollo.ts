@@ -15,4 +15,4 @@ const commandLineHead = 'npx apollo'
 
 const commandLine = commandLineHead + " " + process.argv.splice(2).join(' ')
 
-execSync(commandLine, {stdio: 'inherit'})
+execSync(commandLine, {stdio: 'inherit', env:{...process.env, "npm_config_yes":"true"}})

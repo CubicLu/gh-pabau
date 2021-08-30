@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   AvatarList,
   Button,
@@ -7,7 +7,7 @@ import {
   Table,
   TabMenu,
   SetupSearchInput,
-  DatePicker,
+  RangePicker,
 } from '@pabau/ui'
 import {
   Divider,
@@ -37,7 +37,7 @@ import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import CommonHeader from '../../components/CommonHeader'
 import dayjs, { Dayjs } from 'dayjs'
 import { Formik } from 'formik'
-import { UserContext } from '../../context/UserContext'
+import { useUser } from '../../context/UserContext'
 import {
   useFindAllowedLocationQuery,
   useIssuingCompaniesQuery,
@@ -49,9 +49,11 @@ interface FilterList {
   name: string
 }
 
+const WAIT_INTERVAL = 400
+
 export function Account() {
   const [showModal, setShowModal] = useState(false)
-  const user = useContext(UserContext)
+  const user = useUser()
 
   const { t } = useTranslationI18()
   const tabMenuItems = [
@@ -62,7 +64,6 @@ export function Account() {
   ]
   const { Title } = Typography
   const { Option } = Select
-  const { RangePicker } = DatePicker
   const [activeTab, setActiveTab] = useState('0')
   const [showDateFilter, setShowDateFilter] = useState(false)
   const [selectedRange, setSelectedRange] = useState<string>(
@@ -92,6 +93,7 @@ export function Account() {
     creditNoteType: '',
   })
   const [filterRange, setFilterRange] = useState<string>('This Month')
+  const [searchTerm, setSearchTerm] = useState('')
 
   const { data: locations } = useFindAllowedLocationQuery()
   const { data: issuingCompanyData } = useIssuingCompaniesQuery()
@@ -119,8 +121,8 @@ export function Account() {
   }, [locations])
 
   useEffect(() => {
-    if (issuingCompanyData?.issuingCompanies) {
-      const data = issuingCompanyData.issuingCompanies.map((item) => {
+    if (issuingCompanyData?.findManyIssuingCompany) {
+      const data = issuingCompanyData?.findManyIssuingCompany.map((item) => {
         return {
           id: item.id,
           name: item.name,
@@ -131,10 +133,19 @@ export function Account() {
   }, [issuingCompanyData])
 
   useEffect(() => {
-    if (creditNoteTypeData?.creditNoteTypes) {
-      setCreditNoteTypesList(creditNoteTypeData.creditNoteTypes)
+    if (creditNoteTypeData?.findManyCreditNoteType) {
+      setCreditNoteTypesList(creditNoteTypeData?.findManyCreditNoteType)
     }
   }, [creditNoteTypeData])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchTerm(searchValue)
+    }, WAIT_INTERVAL)
+
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchValue])
 
   const onDateFilterApply = () => {
     setFilterDate([...selectedDates])
@@ -242,6 +253,9 @@ export function Account() {
         <RangePicker
           className={styles.rangePicker}
           value={selectedDates}
+          disabledDate={(current) => {
+            return current > dayjs().endOf('day')
+          }}
           disabled={selectedRange.toString() !== 'custom'}
           onChange={(val) => setSelectedDates(val)}
         />
@@ -495,12 +509,14 @@ export function Account() {
                   : `${selectedRange.replace('-', ' ')}`}
               </Button>
             </Dropdown>
-            <Dropdown overlay={manageOptions} placement="bottomLeft">
-              <Button type="ghost">
-                {t('account.finance.manage.options')}
-              </Button>
-            </Dropdown>
-            {activeTab === '2' && (
+            {false && (
+              <Dropdown overlay={manageOptions} placement="bottomLeft">
+                <Button type="ghost">
+                  {t('account.finance.manage.options')}
+                </Button>
+              </Dropdown>
+            )}
+            {false && (
               <Button
                 type="primary"
                 style={{ color: 'white' }}
@@ -537,25 +553,25 @@ export function Account() {
           onTabClick={(activeKey) => setActiveTab(activeKey)}
         >
           <Invoice
-            searchTerm={searchValue}
+            searchTerm={searchTerm}
             selectedDates={filterDate}
             filterValue={filterValues}
             selectedRange={filterRange}
           />
           <Payments
-            searchTerm={searchValue}
+            searchTerm={searchTerm}
             selectedDates={filterDate}
             filterValue={filterValues}
             selectedRange={filterRange}
           />
           <Debt
-            searchTerm={searchValue}
+            searchTerm={searchTerm}
             selectedDates={filterDate}
             filterValue={filterValues}
             selectedRange={filterRange}
           />
           <CreditNote
-            searchTerm={searchValue}
+            searchTerm={searchTerm}
             selectedDates={filterDate}
             filterValue={filterValues}
             selectedRange={filterRange}

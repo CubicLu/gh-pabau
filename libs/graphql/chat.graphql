@@ -28,9 +28,7 @@ subscription chatListRoomNotify {
 }
 
 query chatRoomHistory($roomId: uuid!) {
-  chat_room_by_pk(
-    id: $roomId
-  ) {
+  chat_room_by_pk(id: $roomId) {
     id
     name
     participants {
@@ -58,9 +56,7 @@ query chatDirectHistory($userId: Int!) {
         to_channel: { _is_null: true }
       }
     }
-    order_by: {
-      created_at: desc
-    }
+    order_by: { created_at: desc }
     limit: 20
   ) {
     id
@@ -87,7 +83,8 @@ query chatListRooms {
     room {
       id
       name
-      chats(limit: 1, order_by: { created_at: desc }) @connection(key: "chats") {
+      chats(limit: 1, order_by: { created_at: desc })
+        @connection(key: "chats") {
         id
         message
         from
@@ -170,7 +167,7 @@ mutation createChannel($name: String!, $description: String) {
 }
 
 mutation chatPostToChannelId($message: String!, $channelId: uuid!) {
-  insert_chat_one(object: { message: $message,   to_channel: $channelId }) {
+  insert_chat_one(object: { message: $message, to_channel: $channelId }) {
     __typename
     id
     message
@@ -196,7 +193,7 @@ mutation chatPostToUserId($message: String!, $userId: Int!) {
 
 # Get all staff/users that is possible to add to a dchat room
 query chatGetUsers {
-  users {
+  findManyUser {
     id
     name: full_name
     avatarURL: image

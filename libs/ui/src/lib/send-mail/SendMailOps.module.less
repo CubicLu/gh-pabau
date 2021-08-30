@@ -1,0 +1,79 @@
+.sendMailOpsContainer {
+  width: 100%;
+  height: 40px;
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr;
+  .leftArror,
+  .rightArror
+  {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--light-grey-color);
+    font-size: 18px;
+    cursor: pointer;
+    &:hover {
+      color: var(--primary-color);
+    }
+  }
+  .operationGroup {
+    overflow-x: auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    > div {
+      margin-left: 20px;
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+    .templatesContainer,
+    .signatureContainer
+    {
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: 20px min-content 12px;
+      grid-column-gap: 4px;
+      align-items: center;
+      > div {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        color: var(--light-grey-color);
+        &:nth-child(1) {
+          font-size: 18px;
+        }
+        &:nth-child(2) {
+          white-space: nowrap;
+        }
+      }
+      &:hover {
+        > div {
+          color: var(--primary-color);
+          svg > path {
+            fill: var(--primary-color);
+          }
+        }
+      }
+    }
+    &::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+      
+    &::-webkit-scrollbar-track {
+      display: none;
+    }
+      
+    &::-webkit-scrollbar-thumb {
+      display: none;
+    }
+  }
+  &.scrollAllow {
+    grid-template-columns: 20px 1fr 20px;
+  }
+}

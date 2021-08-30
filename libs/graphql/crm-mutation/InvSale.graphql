@@ -77,6 +77,21 @@ fragment InvSale on InvSale {
   CmContact {
     ...CmContactFields
   }
+  User {
+    ...UserFields
+  }
+  InsuranceDetail {
+    ...InsuranceDetailFields
+  }
+  IssuingCompany {
+    ...IssuingCompanyFields
+  }
+  InvBiller {
+    ...InvBillerFields
+  }
+  package {
+    ...ContactPackageFields
+  }
 }
 
 mutation createOneInvSale($data: InvSaleCreateInput!) {

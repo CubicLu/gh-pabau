@@ -1,0 +1,118 @@
+.documents {
+  width: 480px;
+  margin: 0 auto;
+  @media (max-width: 767px) {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+  }
+}
+
+.documentsHeader {
+  width: 100%;
+
+  :global {
+    .ant-typography,
+    .ant-breadcrumb {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    display: none;
+  }
+}
+
+.documentsMobileHeader {
+  width: 100%;
+  display: none;
+  padding: 2rem 0 28px 20px;
+  :global {
+    .ant-typography {
+      padding: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    display: block;
+  }
+}
+
+.documentsContent {
+  width: 100%;
+  border-radius: 4px;
+  box-shadow: 2px 2px 17px rgba(9, 20, 41, 0.05);
+  background-color: white;
+  border: 1px solid #f4f5f7;
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 767px) {
+    box-shadow: none;
+    border: none;
+    padding: 0 20px;
+  }
+
+  .document {
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 5px;
+    padding: 12px 25px;
+    border-bottom: 1px solid #ecedf0;
+
+    .top {
+      display: flex;
+      flex: 1;
+      justify-content: space-between;
+
+      .left {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+
+        .name {
+          margin-left: 7px;
+        }
+
+        .action {
+          margin-left: 5px;
+          color: var(--light-grey-color);
+        }
+      }
+      .right {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+      }
+    }
+
+    .bottom {
+      display: flex;
+      flex: 1 1;
+      padding: 10px 0px;
+      cursor: pointer;
+
+      .icon {
+        color: #55b2d3;
+        margin-right: 10px;
+      }
+
+      .documentCont {
+        flex: 1 1;
+        border: 1px solid #ecedf0;
+        border-radius: 5px;
+        flex-direction: row;
+        justify-content: space-between;
+        display: flex;
+        align-items: center;
+        padding: 0px 10px;
+      }
+    }
+  }
+
+  .document:last-child {
+    border-bottom: none;
+  }
+}

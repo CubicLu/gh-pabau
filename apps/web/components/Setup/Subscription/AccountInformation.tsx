@@ -4,9 +4,16 @@ import {
   LinkOutlined,
   UserOutlined,
 } from '@ant-design/icons'
-import { Avatar, SubscriptionInfo } from '@pabau/ui'
-import { Card, Col, Row, Typography } from 'antd'
-import React, { FC } from 'react'
+import { useAccountInformationsQuery } from '@pabau/graphql'
+import {
+  Avatar,
+  SubscriptionInfo,
+  SubscriptionInfoProps,
+  SubscriptionType,
+} from '@pabau/ui'
+import { Card, Col, Row, Typography, Skeleton } from 'antd'
+import { useTranslationI18 } from '../../../hooks/useTranslationI18'
+import React, { FC, useEffect, useState } from 'react'
 import profileImg from '../../../assets/images/icons/img.png'
 import location from '../../../assets/images/icons/location.png'
 import paymentTerminal from '../../../assets/images/icons/payment_terminal.png'
@@ -14,6 +21,81 @@ import styles from './SubscriptionComponents.module.less'
 
 const AccountInformation: FC = () => {
   const { Text, Paragraph, Link } = Typography
+  const { t } = useTranslationI18()
+  const [info, setInfo] = useState<SubscriptionInfoProps>()
+  const { data, loading } = useAccountInformationsQuery()
+
+  useEffect(() => {
+    if (data !== undefined) {
+      const trial_days = Math.round(
+        Math.abs(
+          (Date.now() -
+            new Date(data.me.Company.subscription?.license_expiry).valueOf()) /
+            (24 * 60 * 60 * 1000)
+        )
+      )
+
+      const goPlusActive =
+        data.metas?.filter(
+          (item) => item.meta_name === 'goPlusActive' && item.meta_value === '1'
+        ).length > 0
+
+      const automationActive =
+        data.metas?.filter(
+          (item) =>
+            item.meta_name === 'automationActive' && item.meta_value === '1'
+        ).length > 0
+
+      const intelligenceActive =
+        data.metas?.filter(
+          (item) =>
+            item.meta_name === 'intelligenceActive' && item.meta_value === '1'
+        ).length > 0
+
+      const teamPlusActive =
+        data.metas?.filter(
+          (item) =>
+            item.meta_name === 'teamPlusActive' && item.meta_value === '1'
+        ).length > 0
+
+      const goPlusStartDate = data.metas?.filter(
+        (item) => item.meta_name === 'goPlusStartDate'
+      )[0]?.meta_value
+
+      const automationStartDate = data.metas?.filter(
+        (item) => item.meta_name === 'automationStartDate'
+      )[0]?.meta_value
+
+      const intelligenceStartDate = data.metas?.filter(
+        (item) => item.meta_name === 'intelligenceStartDate'
+      )[0]?.meta_value
+
+      const teamPlusStartDate = data.metas?.filter(
+        (item) => item.meta_name === 'teamPlusStartDate'
+      )[0]?.meta_value
+
+      const preparedData = {
+        subscriptionName: data.me.Company.subscription
+          ?.subscription_name as SubscriptionType,
+        inTrial: data.me.Company.subscription?.trial as boolean,
+        trialDaysRemaining: trial_days,
+        marketingPlusStartDate: new Date(
+          data?.me.Company.subscription?.am_start_date
+        ),
+        marketingPlusActive:
+          data.me.Company.subscription?.advanced_marketing_addon === 1,
+        goPlusActive: goPlusActive,
+        automationActive: automationActive,
+        intelligenceActive: intelligenceActive,
+        teamPlusActive: teamPlusActive,
+        goPlusStartDate: new Date(goPlusStartDate),
+        automationStartDate: new Date(automationStartDate),
+        intelligenceStartDate: new Date(intelligenceStartDate),
+        teamPlusStartDate: new Date(teamPlusStartDate),
+      }
+      setInfo(preparedData)
+    }
+  }, [data])
 
   const CheckedItem = (text: string) => {
     return (
@@ -28,52 +110,84 @@ const AccountInformation: FC = () => {
     )
   }
 
-  const AccountSummery = () => {
+  const AccountSummary = () => {
     return (
       <Card bodyStyle={{ padding: 20 }}>
-        <div className={styles.subTitle}>Account Summary</div>
-        <Row style={{ marginTop: 16 }}>
-          <Avatar src={profileImg} size="large" />
-          <Col style={{ marginLeft: 12 }}>
-            <Text className={styles.blackText}>Mick Gibbons</Text>
-            <Paragraph type="secondary">Account Owner</Paragraph>
-          </Col>
-        </Row>
-        <Paragraph className={styles.font12p} style={{ marginTop: 10 }}>
-          Your Pabau URL:
-        </Paragraph>
-        <Row>
-          <LinkOutlined
-            className={styles.link}
-            style={{ fontSize: 13, marginTop: 4 }}
-          />
-          <Link className={styles.link} style={{ marginLeft: 8 }}>
-            perfectskin.pabau.me
-          </Link>
-        </Row>
-        <Row style={{ marginTop: 16 }}>
-          <Col span={12}>
-            <Paragraph className={styles.font12p}>Active Employees:</Paragraph>
-            <UserOutlined className={styles.link} style={{ fontSize: 13 }} />
-            <Text className={styles.link} style={{ marginLeft: 8 }}>
-              86
-            </Text>
-          </Col>
-          <Col span={12}>
-            <Paragraph className={styles.font12p}>Server name:</Paragraph>
-            <img src={location} height={13} alt="logo" />
-            <Text className={styles.link} style={{ marginLeft: 8 }}>
-              UK 1
-            </Text>
-          </Col>
-        </Row>
-        <div style={{ marginTop: 16 }}>
-          <Paragraph className={styles.font12p}>File Storage:</Paragraph>
-          <FileTextOutlined className={styles.link} style={{ fontSize: 13 }} />
-          <Text className={styles.link} style={{ marginLeft: 8 }}>
-            33.0MB of 12.4GB
-          </Text>
+        <div className={styles.subTitle}>
+          {t('setup.subscription.account-summary')}
         </div>
+        {loading ? (
+          <Skeleton loading={loading} active />
+        ) : (
+          <div>
+            <Row style={{ marginTop: 16 }}>
+              <Avatar
+                src={
+                  data?.me.Company.owner?.image
+                    ? `https://crm.pabau.com${data?.me.Company.owner?.image}`
+                    : profileImg
+                }
+              />
+              <Col style={{ marginLeft: 12 }}>
+                <Text className={styles.blackText}>
+                  {data?.me.Company.owner?.full_name}
+                </Text>
+                <Paragraph type="secondary">
+                  {t('setup.subscription.account-owner')}
+                </Paragraph>
+              </Col>
+            </Row>
+            <Paragraph className={styles.font12p} style={{ marginTop: 10 }}>
+              {t('setup.subscription.your-pabau-url')}:
+            </Paragraph>
+            <Row>
+              <LinkOutlined
+                className={styles.link}
+                style={{ fontSize: 13, marginTop: 4 }}
+              />
+              <Link className={styles.link} style={{ marginLeft: 8 }}>
+                {data?.me.Company.remote_url.replace('https://', '')}
+              </Link>
+            </Row>
+            <Row style={{ marginTop: 16 }}>
+              <Col span={12}>
+                <Paragraph className={styles.font12p}>
+                  {t('setup.subscription.active-employees')}:
+                </Paragraph>
+                <UserOutlined
+                  className={styles.link}
+                  style={{ fontSize: 13 }}
+                />
+                <Text className={styles.link} style={{ marginLeft: 8 }}>
+                  {data?.usersCount}
+                </Text>
+              </Col>
+              <Col span={12}>
+                <Paragraph className={styles.font12p}>
+                  {t('setup.subscription.server-name')}:
+                </Paragraph>
+                <img src={location} height={13} alt="logo" />
+                <Text className={styles.link} style={{ marginLeft: 8 }}>
+                  {data?.me.Company.subscription?.live_server
+                    ?.toUpperCase()
+                    .split('.')[0] ?? 'CRM01'}
+                </Text>
+              </Col>
+            </Row>
+            <div style={{ marginTop: 16 }}>
+              <Paragraph className={styles.font12p}>
+                {t('setup.subscription.file-storage')}:
+              </Paragraph>
+              <FileTextOutlined
+                className={styles.link}
+                style={{ fontSize: 13 }}
+              />
+              <Text className={styles.link} style={{ marginLeft: 8 }}>
+                {data?.me.Company.subscription?.storage.toFixed(2)} MB
+              </Text>
+            </div>
+          </div>
+        )}
       </Card>
     )
   }
@@ -81,7 +195,9 @@ const AccountInformation: FC = () => {
   const PaymentHistory = () => {
     return (
       <Card bodyStyle={{ padding: 20 }}>
-        <Text className={styles.subTitle}>Pabau Payments</Text>
+        <Text className={styles.subTitle}>
+          Pabau {t('setup.subscription.payments')}
+        </Text>
         <Row gutter={24} style={{ marginTop: 16 }}>
           <Col>
             <div className={styles.iconBtn}>
@@ -90,20 +206,19 @@ const AccountInformation: FC = () => {
           </Col>
           <Col span={20}>
             <Paragraph className={styles.subTitle} style={{ marginBottom: 4 }}>
-              Lorem ipsum dolor sit amet
+              {t('setup.subscription.payments-title')}
             </Paragraph>
             <Paragraph type="secondary">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              tempor incididunt ut labore et dolore magna aliqua.
+              {t('setup.subscription.payments-subtitle')}
             </Paragraph>
           </Col>
         </Row>
         <Row gutter={[0, 12]}>
-          {CheckedItem('Lorem ipsum dolor sit amet.')}
-          {CheckedItem('Lorem ipsum dolor sit amet.')}
-          {CheckedItem('Lorem ipsum dolor sit amet.')}
-          {CheckedItem('Lorem ipsum dolor sit amet.')}
-          {CheckedItem('Lorem ipsum dolor sit amet.')}
+          {CheckedItem('#INV001 Dummy')}
+          {CheckedItem('#INV002 Dummy')}
+          {CheckedItem('#INV003 Dummy')}
+          {CheckedItem('#INV004 Dummy')}
+          {CheckedItem('#INV005 Dummy')}
         </Row>
       </Card>
     )
@@ -112,20 +227,51 @@ const AccountInformation: FC = () => {
   return (
     <Row gutter={24} style={{ padding: 20 }}>
       <Col span={9}>
-        <SubscriptionInfo
-          subscriptionName="Solo"
-          inTrial
-          trialDaysRemaining={7}
-          goPlusActive
-          goPlusStartDate={new Date('03-02-2020')}
-          teamPlusActive
-          teamPlusStartDate={new Date('03-02-2020')}
-        />
+        {loading ? (
+          <div className={styles.skeletonBorder}>
+            <Skeleton.Button
+              active={loading}
+              className={styles.skeletonAccountInformation}
+            />
+            <Skeleton.Avatar
+              active={loading}
+              className={styles.skeletonAccountInformation}
+            />
+            <Skeleton.Input
+              active={loading}
+              className={styles.skeletonAccountInformation}
+            />
+            <Skeleton.Input
+              active={loading}
+              className={styles.skeletonAccountInformation}
+            />
+            <Skeleton.Input
+              active={loading}
+              className={styles.skeletonAccountInformation}
+            />
+          </div>
+        ) : (
+          <SubscriptionInfo
+            subscriptionName={info?.subscriptionName}
+            trialDaysRemaining={info?.trialDaysRemaining}
+            marketingPlusActive={info?.marketingPlusActive}
+            marketingPlusStartDate={info?.marketingPlusStartDate}
+            inTrial={info?.inTrial}
+            goPlusActive={info?.goPlusActive}
+            goPlusStartDate={info?.goPlusStartDate}
+            teamPlusActive={info?.teamPlusActive}
+            teamPlusStartDate={info?.teamPlusStartDate}
+            intelligenceActive={info?.intelligenceActive}
+            intelligenceStartDate={info?.intelligenceStartDate}
+            automationActive={info?.automationActive}
+            automationStartDate={info?.automationStartDate}
+          />
+        )}
       </Col>
       <Col span={15}>
         <Row gutter={24} style={{ display: 'flex' }}>
           <Col span={12}>
-            <AccountSummery />
+            <AccountSummary />
           </Col>
           <Col span={12}>
             <Card bodyStyle={{ padding: 20 }}>
@@ -133,13 +279,18 @@ const AccountInformation: FC = () => {
                 className={styles.subTitle}
                 style={{ marginBottom: 2 }}
               >
-                Account Manager
+                {t('setup.subscription.account-manager')}
               </Paragraph>
               <Paragraph type="secondary" style={{ maxWidth: '90%' }}>
-                Have an on-call dedicated account manager to bounce ideas off of
-                and dedicated help in setting up your account..{' '}
+                {t('setup.subscription.account-manager-info')}...
               </Paragraph>
-              <Link className={styles.learnMoreLink}>Learn more</Link>
+              <Link
+                className={styles.learnMoreLink}
+                href={`https://pabau.com/education/`}
+                target="_blank"
+              >
+                {t('news.learn')}
+              </Link>
             </Card>
           </Col>
         </Row>
