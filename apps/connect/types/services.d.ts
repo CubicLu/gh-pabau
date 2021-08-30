@@ -12,7 +12,6 @@ export interface Category {
   name: string
   icon: JSX.Element
   video: boolean
-  rdmValue: number
   active: boolean
   services: Service[]
 }

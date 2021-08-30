@@ -260,7 +260,7 @@ export function Index() {
             <>
               <ServiceCategorySelector
                 items={masterCategories}
-                onSelected={(id) => {
+                onSelected={() => {
                   setCurrentStep(currentStep + 1)
                 }}
               />
@@ -277,13 +277,7 @@ export function Index() {
             <div className={styles.slide1}>
               <ServiceSelector
                 items={masterCategories}
-                onStepCompleted={(services: number[]) => {
-                  const slist = findServiceByIDs(services)
-                  setSelectedData({
-                    ...selectedData,
-                    serviceID: services,
-                    services: slist,
-                  })
+                onSelected={() => {
                   setCurrentStep(currentStep + 1)
                 }}
               />
@@ -292,15 +286,7 @@ export function Index() {
           {currentStep === 2 && (
             <LocationSelector
               items={locationsResult.findManyCompanyBranch}
-              onLocationSelected={(locationID) => {
-                const location = locationsResult.findManyCompanyBranch.find(
-                  (loc) => loc.id === locationID
-                )
-                setSelectedData({
-                  ...selectedData,
-                  locationID: locationID,
-                  location: location,
-                })
+              onSelected={() => {
                 setCurrentStep(currentStep + 1)
               }}
             />

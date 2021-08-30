@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react'
 import { Staff } from '../../types/staff'
 import Styles from './EmployeeSelector.module.less'
-import { ReactComponent as SkinHealth } from '../../../web/assets/images/skin-health-logo.svg'
+import { ReactComponent as SkinHealth } from '../../assets/images/skin-health-logo.svg'
 import { ReactComponent as Hair } from '../../../web/assets/images/Hair.svg'
 import { ReactComponent as Face } from '../../../web/assets/images/face.svg'
 import { ReactComponent as Massage } from '../../../web/assets/images/massage.svg'

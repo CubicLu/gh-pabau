@@ -1,62 +1,70 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { Input, Button } from '@pabau/ui'
 import Styles from './LocationSelector.module.less'
 import { CheckCircleFilled, CloseCircleOutlined } from '@ant-design/icons'
 import fetch from 'node-fetch'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
+import { useSelectedDataStore } from '../../store/selectedData'
 import { Location } from '../../types/locations'
 
 export interface P {
   items: Location[]
-  onLocationSelected: (locationID) => void
+  onSelected: () => void
 }
 
-const LocationSelector: FC<P> = ({ items, onLocationSelected }) => {
-  const { t } = useTranslationI18()
-  const apiKey = process.env.google_api_key
+const LocationSelector: FC<P> = ({ items, onSelected }) => {
   const [auto, setauto] = useState(true)
-  const [location, setlocation] = useState<string>('')
-
+  const [, setSelectedData] = useSelectedDataStore()
+  const { t } = useTranslationI18()
   const [searchLocation, setSearchLocation] = useState<boolean>(
     items.length > 5
   )
+  const [formattedAddress, setFormattedAddress] = useState<string>()
+  const [userLocation, setUserLocation] = useState({
+    lng: 0,
+    lat: 0,
+  })
+
+  function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    function deg2rad(deg) {
+      return deg * (Math.PI / 180)
+    }
+
+    const R = 6371 // Radius of the earth in km
+    const dLat = deg2rad(lat2 - lat1) // deg2rad below
+    const dLon = deg2rad(lon2 - lon1)
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) *
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2)
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    const d = R * c // Distance in km
+    return d
+  }
 
   const getLatLng = () => {
-    //let obj = undefined
     navigator.geolocation.getCurrentPosition((item) => {
-      // obj = item.coords.latitude
-      // setlat(item.coords.latitude)
       fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${item.coords.latitude},${item.coords.longitude}&key=${apiKey}`
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${item.coords.latitude},${item.coords.longitude}&key=${process.env.google_api_key}`
       )
         .then((response) => response.json())
         .then((res) => {
-          // setarr([...res.results])
-
-          setTimeout(() => {
-            console.log(
-              res.results[0].address_components.slice(-1)[0].long_name
-            )
-            setlocation(
-              `${res.results[0].address_components.slice(-1)[0].long_name}`
-            )
-            setauto(false)
-            // setauto(false)
-            //  setlocation(
-            //   arr[0].address_components.slice(-1)[0].long_name
-            //  )
-            //console.log(arr[0].address_components.slice(-1))
-          }, 5)
-          // res.results[0].address_components[res.results[0].address_components.length()-1].long_name
-          // console.log( res.results[0].address_components[res.results[0].address_components.length()-1].long_name)
+          setUserLocation({ ...res.results[0].geometry.location })
+          setFormattedAddress(res.results[0].formatted_address)
+          setauto(false)
         })
     })
-    // console.log(
-    //   navigator.geolocation.getCurrentPosition((item) => item.coords.longitude)
-    // )
-    // console.log(obj)
-    //return ob1
   }
+
+  useEffect(() => {
+    if (!searchLocation) {
+      getLatLng()
+    }
+  }, [])
+
+  console.log('userLocation', userLocation)
   return (
     <>
       {searchLocation && (
@@ -69,13 +77,13 @@ const LocationSelector: FC<P> = ({ items, onLocationSelected }) => {
               <div className={Styles.inputWrap}>
                 <Input
                   placeHolderText="Enter a postcode, town or city"
-                  text={location}
+                  text={formattedAddress}
                   onChange={(val) => {
-                    setlocation(val)
+                    setFormattedAddress(val)
                     setauto(true)
                   }}
                 />
-                {location.length > 0 && <CloseCircleOutlined />}
+                {formattedAddress && <CloseCircleOutlined />}
                 {!auto && <CheckCircleFilled />}
               </div>
               <Button
@@ -103,17 +111,31 @@ const LocationSelector: FC<P> = ({ items, onLocationSelected }) => {
       {!searchLocation && (
         <div className={Styles.slide1}>
           <div className={Styles.chooseWrapper}>
-            <p className={Styles.chooseHeading}>{location}</p>
+            <p className={Styles.chooseHeading}>{formattedAddress}</p>
             {items.map((val) => (
               <div
                 key={val.id}
-                onClick={() => onLocationSelected(val.id)}
+                onClick={() => {
+                  setSelectedData('SET_LOCATION', val)
+                  onSelected()
+                }}
                 className={Styles.contentBox}
               >
                 <div className={Styles.rightContent}>
                   <p className={Styles.clinicName}>{val.name}</p>
                   <p>{val.address}</p>
-                  <p>0 km</p>
+                  {val.lat !== 0 && userLocation.lat !== 0 && (
+                    <p>
+                      {'~ '}
+                      {getDistanceFromLatLonInKm(
+                        userLocation.lat,
+                        userLocation.lng,
+                        val.lat,
+                        val.lng
+                      ).toFixed(1)}
+                      {' km'}
+                    </p>
+                  )}
                 </div>
               </div>
             ))}

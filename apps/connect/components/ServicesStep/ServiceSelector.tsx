@@ -14,47 +14,47 @@ import {
 } from '@ant-design/icons'
 import { useMedia } from 'react-use'
 import { Button } from '@pabau/ui'
-import { ReactComponent as Promocode } from '../../../web/assets/images/coupenCode.svg'
+
 import { Rate, Modal, Badge, Popover, Tooltip } from 'antd'
 import { data, voucherData } from '../../../web/mocks/connect/ScreenTwoMock'
 import styles from './ServiceSelector.module.less'
 import ClassNames from 'classnames'
-import { ReactComponent as SelectAll } from '../../../web/assets/images/SelectAll.svg'
-import { ReactComponent as SkinHealth } from '../../../web/assets/images/skin-health-logo.svg'
-import { ReactComponent as LogoSvg } from '../../../../libs/ui/src/lib/logo/logo.svg'
 import { MasterCategory, Category, Service } from '../../types/services'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { useSelectedDataStore } from '../../store/selectedData'
+
+import { ReactComponent as SelectAllIcon } from '../../assets/images/SelectAll.svg'
+import { ReactComponent as Promocode } from '../../assets/images/coupenCode.svg'
+import { ReactComponent as SkinHealth } from '../../assets/images/skin-health-logo.svg'
+import { ReactComponent as LogoSvg } from '../../../../libs/ui/src/lib/logo/logo.svg'
 export interface P {
   items: MasterCategory[]
-  onStepCompleted: (services: number[]) => void
+  onSelected: () => void
 }
 
-const ServiceSelector: FC<P> = ({ items, onStepCompleted }) => {
+const ServiceSelector: FC<P> = ({ items, onSelected }) => {
   // CRAP
   const [showmodal, setshowmodal] = useState(false)
   const [visible, setvisible] = useState(false)
   const [popover, setpopover] = useState(true)
   const [Vcount, setVcount] = useState(0)
   const [Vprice, setVprice] = useState(0)
-  const [voucher, setvoucher] = useState(false)
   const [VoucherData, setVoucherData] = useState(voucherData)
   const [mbactive, setmbactive] = useState(true)
   const [infomodal, setinfomodal] = useState(false)
   const isMobile = useMedia('(max-width: 768px)', false)
 
-  //FIXED
+  //HOOKS
   const [selectedData, setSelectedData] = useSelectedDataStore()
-  console.log(selectedData)
-
-  const [categoryID, setCategoryID] = useState(selectedData.categoryID)
-  const [masterCategoryID, setMasterCategoryID] = useState(
-    selectedData.masterCategoryID
-  )
   const [virtualServicesOnly, setVirtualServicesOnly] = useState<boolean>(false)
   const [totalEstimate, setTotalEstimate] = useState<number>(0)
+  const [viewVouchers, setViewVouchers] = useState<boolean>(false)
 
   const { t } = useTranslationI18()
+
+  // EVENT HANDLERS
+
+  // RENDER HELPERS
   const renderService = (val: Service) => {
     if (
       (virtualServicesOnly && val.online_only_service !== 1) ||
@@ -62,7 +62,10 @@ const ServiceSelector: FC<P> = ({ items, onStepCompleted }) => {
     ) {
       return null
     }
-    const isSelected = selectedData.services.includes(val.id)
+    const isSelected =
+      selectedData.services.findIndex((service) => service.id === val.id) > -1
+        ? true
+        : false
     return (
       <div style={{ width: '100%', marginBottom: '16px' }}>
         <div
@@ -76,7 +79,7 @@ const ServiceSelector: FC<P> = ({ items, onStepCompleted }) => {
               )
               setTotalEstimate(totalEstimate - Number.parseFloat(val.price))
             } else {
-              newSelectedServices = [...selectedData.services, val.id]
+              newSelectedServices = [...selectedData.services, val]
               setTotalEstimate(totalEstimate + Number.parseFloat(val.price))
             }
             setSelectedData('SET_SELECTED_SERVICES', newSelectedServices)
@@ -162,7 +165,6 @@ const ServiceSelector: FC<P> = ({ items, onStepCompleted }) => {
       </div>
     )
   }
-
   const rendervoucher = (voucherd) => {
     return (
       <div
@@ -228,8 +230,12 @@ const ServiceSelector: FC<P> = ({ items, onStepCompleted }) => {
   const renderServices = (category: Category | undefined) => {
     if (typeof category === 'undefined') {
       category = items
-        .find((item) => item.id === masterCategoryID)
-        ?.categories.find((item) => item.id === categoryID)
+        .find(
+          (item) =>
+            item.id === selectedData.masterCategoryID ||
+            !selectedData.masterCategoryID
+        )
+        ?.categories.find((item) => item.id === selectedData.categoryID)
     }
 
     if (!category) {
@@ -244,7 +250,7 @@ const ServiceSelector: FC<P> = ({ items, onStepCompleted }) => {
     return (
       <div>
         <div className={styles.custCard}>
-          {!voucher ? (
+          {!viewVouchers ? (
             hasOnlineConsultations ? (
               <div className={styles.treatmentTabWrapper}>
                 <div
@@ -277,7 +283,7 @@ const ServiceSelector: FC<P> = ({ items, onStepCompleted }) => {
               </div>
             )
           ) : null}
-          {!voucher
+          {!viewVouchers
             ? category.services.map((val) => renderService(val))
             : !isMobile &&
               VoucherData.map((item) => (
@@ -294,19 +300,20 @@ const ServiceSelector: FC<P> = ({ items, onStepCompleted }) => {
     )
   }
   const renderCategoryItem = (category: Category) => {
+    const isCurrentCategory = category.id === selectedData.categoryID
     return (
       <>
         <div
           style={{ margin: '12px 0', cursor: 'pointer' }}
           key={category.id}
           onClick={() => {
-            setCategoryID(category.id)
+            setSelectedData('SET_CATEGORY_ID', category.id)
           }}
         >
           <span
             className={ClassNames(
               styles.servicename,
-              categoryID === category.id && styles.serviceactive
+              isCurrentCategory && styles.serviceactive
             )}
           >
             {category.name}
@@ -318,7 +325,7 @@ const ServiceSelector: FC<P> = ({ items, onStepCompleted }) => {
                   color: '#65CD98',
                 }}
               >
-                {category.rdmValue}
+                {category.services.length}
               </span>
             )}
             {!isMobile && (
@@ -329,11 +336,11 @@ const ServiceSelector: FC<P> = ({ items, onStepCompleted }) => {
                   color: '#54B2D3',
                 }}
               >
-                {category.rdmValue}
+                {category.services.length}
               </span>
             )}
             {isMobile &&
-              (category.id === categoryID && mbactive ? (
+              (isCurrentCategory && mbactive ? (
                 <UpOutlined
                   style={{
                     position: 'absolute',
@@ -350,7 +357,7 @@ const ServiceSelector: FC<P> = ({ items, onStepCompleted }) => {
               ))}
           </span>
         </div>
-        {isMobile && category.active && mbactive && renderServices(category)}
+        {isMobile && isCurrentCategory && mbactive && renderServices(category)}
       </>
     )
   }
@@ -363,31 +370,33 @@ const ServiceSelector: FC<P> = ({ items, onStepCompleted }) => {
             <div
               className={ClassNames(
                 styles.serviceselectall,
-                !masterCategoryID && styles.serviceselectallSelect
+                !selectedData.masterCategoryID &&
+                  !viewVouchers &&
+                  styles.serviceselectallSelect
               )}
               onClick={() => {
-                setMasterCategoryID(null)
+                setSelectedData('SET_MASTER_CATEGORY_ID', null)
+                setViewVouchers(false)
               }}
             >
-              <SelectAll />
+              <SelectAllIcon />
               <span>All</span>
             </div>
             {items.map((item) => (
               <div
                 className={ClassNames(
                   styles.serviceselectall,
-                  item.id === masterCategoryID && styles.serviceselectallSelect
+                  item.id === selectedData.masterCategoryID &&
+                    styles.serviceselectallSelect
                 )}
                 key={item.id}
                 onClick={() => {
-                  setMasterCategoryID(item.id)
+                  setSelectedData('SET_MASTER_CATEGORY_ID', item.id)
+                  setViewVouchers(false)
                 }}
               >
-                {item.id === masterCategoryID && (
-                  <CheckCircleFilled
-                    className={styles.checkfill}
-                    style={{ color: ' #54B2D3' }}
-                  />
+                {item.id === selectedData.masterCategoryID && (
+                  <CheckCircleFilled className={styles.checkfill} />
                 )}
 
                 {item.icon}
@@ -397,26 +406,18 @@ const ServiceSelector: FC<P> = ({ items, onStepCompleted }) => {
             <div
               className={ClassNames(
                 styles.serviceselectall,
-                voucher && styles.serviceselectallSelect
+                viewVouchers && styles.serviceselectallSelect
               )}
               onClick={() => {
-                // old.map((item) => {
-                //   item.active = false
-                //   item.categories.map((itm) => (itm.active = false))
-                //   return item
-                // })
-                // setold([...old])
-                // setvoucher(true)
-                // setmbactive(false)
+                setViewVouchers(true)
+                setSelectedData('SET_MASTER_CATEGORY_ID', null)
               }}
             >
               {Vcount > 0 && (
                 <CheckCircleFilled
                   className={styles.checkfill}
                   style={{
-                    position: 'absolute',
                     right: '8px',
-                    color: '#54B2D3',
                   }}
                 />
               )}
@@ -433,8 +434,8 @@ const ServiceSelector: FC<P> = ({ items, onStepCompleted }) => {
           <div>
             <div className={styles.serlist}>
               <div className={styles.servicelist}>
-                {!voucher ? (
-                  !masterCategoryID ? (
+                {!viewVouchers ? (
+                  !selectedData.masterCategoryID ? (
                     items.map((masterCategory) => (
                       <div key={masterCategory.id}>
                         {masterCategory.categories.map((val) => {
@@ -444,7 +445,7 @@ const ServiceSelector: FC<P> = ({ items, onStepCompleted }) => {
                     ))
                   ) : (
                     items
-                      .find((item) => item.id === masterCategoryID)
+                      .find((item) => item.id === selectedData.masterCategoryID)
                       .categories.map((val) => {
                         return renderCategoryItem(val)
                       })
@@ -517,7 +518,7 @@ const ServiceSelector: FC<P> = ({ items, onStepCompleted }) => {
           </p>
           <Button
             onClick={() => {
-              onStepCompleted(selectedData.services)
+              onSelected()
             }}
           >
             Next

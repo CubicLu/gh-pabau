@@ -9,9 +9,9 @@ export interface BookingData {
   services: Service[]
   employeeID?: number
   staffID: number
-  employee: Staff
+  employee?: Staff
   locationID?: number
-  location: Location
+  location?: Location
   dateTime?: moment.Moment
   peopleCount: number
 }

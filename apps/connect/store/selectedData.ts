@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react'
 import { BookingData } from '../types/booking'
-import { Staff } from '../types/staff'
-import { Location } from '../types/locations'
 
 let globalState: BookingData = {
   services: [],
@@ -10,7 +8,7 @@ let globalState: BookingData = {
   masterCategoryID: null,
   employeeID: null,
   staffID: null,
-  locationID: null,
+  location: null,
   peopleCount: 1,
 }
 
@@ -27,6 +25,9 @@ const actions = {
   SET_MASTER_CATEGORY_ID: (curState, masterCategoryID) => {
     return { masterCategoryID: masterCategoryID }
   },
+  SET_LOCATION: (curState, location) => {
+    return { location: location }
+  },
   SET_PEOPLE_COUNT: (curState, peopleCount) => {
     return { peopleCount: peopleCount }
   },
@@ -35,7 +36,7 @@ const actions = {
 export const useSelectedDataStore = (shouldListen = true) => {
   const setState = useState(globalState)[1]
 
-  const dispatch = (actionIdentifier, payload) => {
+  const dispatch = (actionIdentifier, payload): void => {
     const newState = actions[actionIdentifier](globalState, payload)
     globalState = { ...globalState, ...newState }
 

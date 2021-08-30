@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import styles from './Header.module.less'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { ReactComponent as SkinHealth } from '../../web/assets/images/skin-health-logo.svg'
+import { ReactComponent as SkinHealth } from '../assets/images/skin-health-logo.svg'
 import { useMedia } from 'react-use'
 import { useTranslationI18 } from '../hooks/useTranslationI18'
 export interface P {
