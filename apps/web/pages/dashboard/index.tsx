@@ -78,9 +78,32 @@ export function Index() {
     notCompleted: { count: 0, per: '0%' },
     canceled: { count: 0, per: '0%' },
     noShow: { count: 0, per: '0%' },
+  })
+  const [onlineAppointment, setOnlineAppointment] = useState({
+    completed: { count: 0, per: '0%' },
+    notCompleted: { count: 0, per: '0%' },
+    canceled: { count: 0, per: '0%' },
+    noShow: { count: 0, per: '0%' },
     deposits: { count: 0, per: '0%' },
   })
-
+  const [sales, setSales] = useState({
+    services: { count: 0, per: '0%' },
+    products: { count: 0, per: '0%' },
+    packages: { count: 0, per: '0%' },
+    giftVouchers: { count: 0, per: '0%' },
+  })
+  const [totalBooking, setTotalBooking] = useState({
+    count: 0,
+    per: '0%',
+  })
+  const [totalOnlineBooking, setTotalOnlineBooking] = useState({
+    count: 0,
+    per: '0%',
+  })
+  const [totalSalesCount, setTotalSalesCount] = useState({
+    count: 0,
+    per: '0%',
+  })
   const { data: locations } = useQuery(GET_LOCATION_LIST, {
     variables: {
       company_id: user?.me?.company,
@@ -110,44 +133,134 @@ export function Index() {
       setAppointment({
         completed: {
           count:
-            appointment_status?.getBookingStatus?.appointmentStatusCounts
-              ?.completeCount,
+            appointment_status?.getBookingStatus?.bookingStatus
+              ?.bookingStatusCounts?.completeCount,
           per:
-            appointment_status?.getBookingStatus?.appointmentStatusCounts
-              ?.completePer,
+            appointment_status?.getBookingStatus?.bookingStatus
+              ?.bookingStatusCounts?.completePer,
         },
         notCompleted: {
           count:
-            appointment_status?.getBookingStatus?.appointmentStatusCounts
-              ?.waitingCount,
+            appointment_status?.getBookingStatus?.bookingStatus
+              ?.bookingStatusCounts?.waitingCount,
           per:
-            appointment_status?.getBookingStatus?.appointmentStatusCounts
-              ?.waitingPer,
+            appointment_status?.getBookingStatus?.bookingStatus
+              ?.bookingStatusCounts?.waitingPer,
         },
         canceled: {
           count:
-            appointment_status?.getBookingStatus?.appointmentStatusCounts
-              ?.cancelledCount,
+            appointment_status?.getBookingStatus?.bookingStatus
+              ?.bookingStatusCounts?.cancelledCount,
           per:
-            appointment_status?.getBookingStatus?.appointmentStatusCounts
-              ?.cancelledPer,
+            appointment_status?.getBookingStatus?.bookingStatus
+              ?.bookingStatusCounts?.cancelledPer,
         },
         noShow: {
           count:
-            appointment_status?.getBookingStatus?.appointmentStatusCounts
-              ?.noShowCount,
+            appointment_status?.getBookingStatus?.bookingStatus
+              ?.bookingStatusCounts?.noShowCount,
           per:
-            appointment_status?.getBookingStatus?.appointmentStatusCounts
-              ?.noShowPer,
+            appointment_status?.getBookingStatus?.bookingStatus
+              ?.bookingStatusCounts?.noShowPer,
+        },
+      })
+      setOnlineAppointment({
+        completed: {
+          count:
+            appointment_status?.getBookingStatus?.bookingStatus
+              ?.onlineBookingStatusCounts?.Complete,
+          per:
+            appointment_status?.getBookingStatus?.bookingStatus
+              ?.onlineBookingStatusCounts?.completePer,
+        },
+        notCompleted: {
+          count:
+            appointment_status?.getBookingStatus?.bookingStatus
+              ?.onlineBookingStatusCounts?.waitingCount,
+          per:
+            appointment_status?.getBookingStatus?.bookingStatus
+              ?.onlineBookingStatusCounts?.waitingPer,
+        },
+        canceled: {
+          count:
+            appointment_status?.getBookingStatus?.bookingStatus
+              ?.onlineBookingStatusCounts?.cancelledCount,
+          per:
+            appointment_status?.getBookingStatus?.bookingStatus
+              ?.onlineBookingStatusCounts?.cancelledPer,
+        },
+        noShow: {
+          count:
+            appointment_status?.getBookingStatus?.bookingStatus
+              ?.onlineBookingStatusCounts?.noShowCount,
+          per:
+            appointment_status?.getBookingStatus?.bookingStatus
+              ?.onlineBookingStatusCounts?.noShowPer,
         },
         deposits: {
           count:
-            appointment_status?.getBookingStatus?.appointmentStatusCounts
-              ?.depositPaidCount,
+            appointment_status?.getBookingStatus?.bookingStatus
+              ?.onlineBookingStatusCounts?.depositPaidCount,
           per:
-            appointment_status?.getBookingStatus?.appointmentStatusCounts
-              ?.depositPaidPer,
+            appointment_status?.getBookingStatus?.bookingStatus
+              ?.onlineBookingStatusCounts?.depositPaidPer,
         },
+      })
+      setTotalBooking({
+        count:
+          appointment_status?.getBookingStatus?.bookingStatus?.totalBooking,
+        per:
+          appointment_status?.getBookingStatus?.bookingStatus?.totalBookingPer,
+      })
+      setTotalOnlineBooking({
+        count:
+          appointment_status?.getBookingStatus?.bookingStatus
+            ?.totalOnlineBooking,
+        per:
+          appointment_status?.getBookingStatus?.bookingStatus
+            ?.totalOnlineBookingPer,
+      })
+      setSales({
+        services: {
+          count:
+            appointment_status?.getBookingStatus?.salesStatus?.saleStatusCount
+              ?.serviceCount,
+          per:
+            appointment_status?.getBookingStatus?.salesStatus?.saleStatusCount
+              ?.servicePer,
+        },
+        products: {
+          count:
+            appointment_status?.getBookingStatus?.salesStatus?.saleStatusCount
+              ?.retailCount,
+          per:
+            appointment_status?.getBookingStatus?.salesStatus?.saleStatusCount
+              ?.retailPer,
+        },
+        packages: {
+          count:
+            appointment_status?.getBookingStatus?.salesStatus?.saleStatusCount
+              ?.packagesCount,
+          per:
+            appointment_status?.getBookingStatus?.salesStatus?.saleStatusCount
+              ?.packagesPer,
+        },
+        giftVouchers: {
+          count:
+            appointment_status?.getBookingStatus?.salesStatus?.saleStatusCount
+              ?.vouchersCount,
+          per:
+            appointment_status?.getBookingStatus?.salesStatus?.saleStatusCount
+              ?.vouchersPer,
+        },
+      })
+      setTotalSalesCount({
+        count:
+          appointment_status?.getBookingStatus?.salesStatus
+            ?.totalAvailableCategoryTypeCount,
+        per:
+          appointment_status?.getBookingStatus?.salesStatus
+            ?.totalAvailableCategoryTypePer,
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -415,7 +528,14 @@ export function Index() {
             </div>
           </div>
           <div className={styles.bottomWrapper}>
-            <TopBoard appointment={appointment} />
+            <TopBoard
+              appointment={appointment}
+              onlineAppointment={onlineAppointment}
+              sales={sales}
+              totalBooking={totalBooking}
+              totalOnlineBooking={totalOnlineBooking}
+              totalSalesCount={totalSalesCount}
+            />
             <Charts
               location={location}
               dashboardMode={user?.me?.admin ? dashboardMode : 0}

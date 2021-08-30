@@ -18,14 +18,40 @@ interface IAppointment {
   notCompleted: ICount
   canceled: ICount
   noShow: ICount
+}
+
+interface IOnlineAppointment {
+  completed: ICount
+  notCompleted: ICount
+  canceled: ICount
+  noShow: ICount
   deposits: ICount
+}
+
+interface ISales {
+  services: ICount
+  products: ICount
+  packages: ICount
+  giftVouchers: ICount
 }
 
 interface ITopBoard {
   appointment: IAppointment
+  onlineAppointment: IOnlineAppointment
+  sales: ISales
+  totalBooking: ICount
+  totalOnlineBooking: ICount
+  totalSalesCount: ICount
 }
 
-export const TopBoard: FC<ITopBoard> = ({ appointment }) => {
+export const TopBoard: FC<ITopBoard> = ({
+  appointment,
+  sales,
+  onlineAppointment,
+  totalBooking,
+  totalOnlineBooking,
+  totalSalesCount,
+}) => {
   return (
     <div>
       <div className={styles.mainCard}>
@@ -103,17 +129,19 @@ export const TopBoard: FC<ITopBoard> = ({ appointment }) => {
               <Col className={styles.table} xs={{ span: 24 }} md={{ span: 8 }}>
                 <Row>
                   <div className={styles.topheader}>
-                    <div className={styles.title}>0</div>
+                    <div className={styles.title}>{totalBooking.count}</div>
                     <div className={styles.subtitle}>Appointments</div>
-                    <div className={styles.description}>0% previous day</div>
+                    <div className={styles.description}>
+                      {totalBooking.per} previous day
+                    </div>
                   </div>
                 </Row>
                 <Row className={styles.record}>
                   <div className={styles.content}>
                     <div className={styles.text}>Completed</div>
                     <div className={styles.text}>
-                      {appointment.completed.count}
-                      {appointment.completed.per}
+                      {appointment.completed.count} ({appointment.completed.per}
+                      )
                     </div>
                   </div>
                 </Row>
@@ -121,8 +149,8 @@ export const TopBoard: FC<ITopBoard> = ({ appointment }) => {
                   <div className={styles.content}>
                     <div className={styles.text}>Waiting</div>
                     <div className={styles.text}>
-                      {appointment.notCompleted.count}
-                      {appointment.notCompleted.per}
+                      {appointment.notCompleted.count} (
+                      {appointment.notCompleted.per})
                     </div>
                   </div>
                 </Row>
@@ -130,7 +158,7 @@ export const TopBoard: FC<ITopBoard> = ({ appointment }) => {
                   <div className={styles.content}>
                     <div className={styles.text}>Canceled</div>
                     <div className={styles.text}>
-                      {appointment.canceled.count} {appointment.canceled.per}
+                      {appointment.canceled.count} ({appointment.canceled.per})
                     </div>
                   </div>
                 </Row>
@@ -138,8 +166,7 @@ export const TopBoard: FC<ITopBoard> = ({ appointment }) => {
                   <div className={styles.content}>
                     <div className={styles.text}>No show</div>
                     <div className={styles.text}>
-                      {appointment.noShow.count}
-                      {appointment.noShow.per}
+                      {appointment.noShow.count} ({appointment.noShow.per})
                     </div>
                   </div>
                 </Row>
@@ -148,33 +175,43 @@ export const TopBoard: FC<ITopBoard> = ({ appointment }) => {
               <Col className={styles.table} xs={{ span: 24 }} md={{ span: 8 }}>
                 <Row>
                   <div className={styles.topheader}>
-                    <div className={styles.title}>£0</div>
+                    <div className={styles.title}>{totalSalesCount.count}</div>
                     <div className={styles.subtitle}>Sales</div>
-                    <div className={styles.description}>0% previous day</div>
+                    <div className={styles.description}>
+                      {totalSalesCount.per} previous day
+                    </div>
                   </div>
                 </Row>
                 <Row className={styles.record}>
                   <div className={styles.content}>
                     <div className={styles.text}>Services</div>
-                    <div className={styles.text}>0 (0%)</div>
+                    <div className={styles.text}>
+                      {sales.services.count} ({sales.services.per})
+                    </div>
                   </div>
                 </Row>
                 <Row className={styles.record}>
                   <div className={styles.content}>
                     <div className={styles.text}>Products</div>
-                    <div className={styles.text}>0 (0%)</div>
+                    <div className={styles.text}>
+                      {sales.products.count} ({sales.products.per})
+                    </div>
                   </div>
                 </Row>
                 <Row className={styles.record}>
                   <div className={styles.content}>
                     <div className={styles.text}>Packages</div>
-                    <div className={styles.text}>0 (0%)</div>
+                    <div className={styles.text}>
+                      {sales.packages.count} ({sales.packages.per})
+                    </div>
                   </div>
                 </Row>
                 <Row className={styles.record}>
                   <div className={styles.content}>
                     <div className={styles.text}>Gift Vouchers</div>
-                    <div className={styles.text}>0 (0%)</div>
+                    <div className={styles.text}>
+                      {sales.giftVouchers.count} ({sales.giftVouchers.per})
+                    </div>
                   </div>
                 </Row>
                 <Row className={styles.record}></Row>
@@ -182,17 +219,21 @@ export const TopBoard: FC<ITopBoard> = ({ appointment }) => {
               <Col className={styles.table} xs={{ span: 24 }} md={{ span: 8 }}>
                 <Row>
                   <div className={styles.topheader}>
-                    <div className={styles.title}>0 (0%)</div>
+                    <div className={styles.title}>
+                      {totalOnlineBooking.count} ({totalOnlineBooking.per})
+                    </div>
                     <div className={styles.subtitle}>Online appointments</div>
-                    <div className={styles.description}>0% previous day</div>
+                    <div className={styles.description}>
+                      {totalOnlineBooking.per} previous day
+                    </div>
                   </div>
                 </Row>
                 <Row className={styles.record}>
                   <div className={styles.content}>
                     <div className={styles.text}>Completed</div>
                     <div className={styles.text}>
-                      {appointment.completed.count}
-                      {appointment.completed.per}
+                      {onlineAppointment.completed.count} (
+                      {onlineAppointment.completed.per})
                     </div>
                   </div>
                 </Row>
@@ -200,8 +241,8 @@ export const TopBoard: FC<ITopBoard> = ({ appointment }) => {
                   <div className={styles.content}>
                     <div className={styles.text}>Waiting</div>
                     <div className={styles.text}>
-                      {appointment.notCompleted.count}{' '}
-                      {appointment.notCompleted.per}`
+                      {onlineAppointment.notCompleted.count} (
+                      {onlineAppointment.notCompleted.per})
                     </div>
                   </div>
                 </Row>
@@ -209,8 +250,8 @@ export const TopBoard: FC<ITopBoard> = ({ appointment }) => {
                   <div className={styles.content}>
                     <div className={styles.text}>Canceled</div>
                     <div className={styles.text}>
-                      {appointment.canceled.count}
-                      {appointment.canceled.per}
+                      {onlineAppointment.canceled.count} (
+                      {onlineAppointment.canceled.per})
                     </div>
                   </div>
                 </Row>
@@ -218,8 +259,8 @@ export const TopBoard: FC<ITopBoard> = ({ appointment }) => {
                   <div className={styles.content}>
                     <div className={styles.text}>No show</div>
                     <div className={styles.text}>
-                      {appointment.noShow.count}
-                      {appointment.noShow.per}
+                      {onlineAppointment.noShow.count} (
+                      {onlineAppointment.noShow.per})
                     </div>
                   </div>
                 </Row>
@@ -227,8 +268,8 @@ export const TopBoard: FC<ITopBoard> = ({ appointment }) => {
                   <div className={styles.content}>
                     <div className={styles.text}>Deposits</div>
                     <div className={styles.text}>
-                      {appointment.deposits.count}
-                      {appointment.deposits.per}
+                      {onlineAppointment.deposits.count} (
+                      {onlineAppointment.deposits.per})
                     </div>
                   </div>
                 </Row>
