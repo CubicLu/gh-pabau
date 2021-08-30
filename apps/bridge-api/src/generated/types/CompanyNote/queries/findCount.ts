@@ -6,7 +6,7 @@ export const CompanyNoteFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CompanyNoteWhereInput',
-      orderBy: list('CompanyNoteOrderByInput'),
+      orderBy: list('CompanyNoteOrderByWithRelationInput'),
       cursor: 'CompanyNoteWhereUniqueInput',
       distinct: 'CompanyNoteScalarFieldEnum',
       skip: 'Int',

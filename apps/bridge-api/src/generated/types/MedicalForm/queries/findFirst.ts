@@ -4,7 +4,7 @@ export const MedicalFormFindFirstQuery = queryField('findFirstMedicalForm', {
   type: 'MedicalForm',
   args: {
     where: 'MedicalFormWhereInput',
-    orderBy: list('MedicalFormOrderByInput'),
+    orderBy: list('MedicalFormOrderByWithRelationInput'),
     cursor: 'MedicalFormWhereUniqueInput',
     distinct: 'MedicalFormScalarFieldEnum',
     skip: 'Int',

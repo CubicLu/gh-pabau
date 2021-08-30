@@ -6,7 +6,7 @@ export const CmBookingNoteFindFirstQuery = queryField(
     type: 'CmBookingNote',
     args: {
       where: 'CmBookingNoteWhereInput',
-      orderBy: list('CmBookingNoteOrderByInput'),
+      orderBy: list('CmBookingNoteOrderByWithRelationInput'),
       cursor: 'CmBookingNoteWhereUniqueInput',
       distinct: 'CmBookingNoteScalarFieldEnum',
       skip: 'Int',

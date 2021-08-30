@@ -4,7 +4,7 @@ export const TaxFindManyQuery = queryField('findManyTax', {
   type: nonNull(list(nonNull('Tax'))),
   args: {
     where: 'TaxWhereInput',
-    orderBy: list('TaxOrderByInput'),
+    orderBy: list('TaxOrderByWithRelationInput'),
     cursor: 'TaxWhereUniqueInput',
     distinct: 'TaxScalarFieldEnum',
     skip: 'Int',

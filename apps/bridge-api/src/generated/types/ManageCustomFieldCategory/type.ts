@@ -20,7 +20,7 @@ export const ManageCustomFieldCategory = objectType({
       type: 'ManageCustomField',
       args: {
         where: 'ManageCustomFieldWhereInput',
-        orderBy: 'ManageCustomFieldOrderByInput',
+        orderBy: 'ManageCustomFieldOrderByWithRelationInput',
         cursor: 'ManageCustomFieldWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

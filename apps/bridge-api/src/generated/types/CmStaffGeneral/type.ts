@@ -81,7 +81,7 @@ export const CmStaffGeneral = objectType({
       type: 'HolidayRequest',
       args: {
         where: 'HolidayRequestWhereInput',
-        orderBy: 'HolidayRequestOrderByInput',
+        orderBy: 'HolidayRequestOrderByWithRelationInput',
         cursor: 'HolidayRequestWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -95,7 +95,7 @@ export const CmStaffGeneral = objectType({
       type: 'Booking',
       args: {
         where: 'BookingWhereInput',
-        orderBy: 'BookingOrderByInput',
+        orderBy: 'BookingOrderByWithRelationInput',
         cursor: 'BookingWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -109,7 +109,7 @@ export const CmStaffGeneral = objectType({
       type: 'RotaShift',
       args: {
         where: 'RotaShiftWhereInput',
-        orderBy: 'RotaShiftOrderByInput',
+        orderBy: 'RotaShiftOrderByWithRelationInput',
         cursor: 'RotaShiftWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -123,7 +123,7 @@ export const CmStaffGeneral = objectType({
       type: 'InventoryDiscrepancy',
       args: {
         where: 'InventoryDiscrepancyWhereInput',
-        orderBy: 'InventoryDiscrepancyOrderByInput',
+        orderBy: 'InventoryDiscrepancyOrderByWithRelationInput',
         cursor: 'InventoryDiscrepancyWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

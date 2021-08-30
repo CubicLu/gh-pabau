@@ -2,7 +2,7 @@ query findMedicalForms(
   $take: Int = 0
   $skip: Int = 0
   $where: MedicalFormWhereInput
-  $orderBy: [MedicalFormOrderByInput!]
+  $orderBy: [MedicalFormOrderByWithRelationInput!]
 ) {
   findManyMedicalForm(
     take: $take
@@ -29,14 +29,14 @@ query findMedicalFormsCount($where: MedicalFormWhereInput) {
 }
 query findMessageTemplate(
   $where: MessageTemplateWhereInput
-  $orderBy: [MessageTemplateOrderByInput!]
+  $orderBy: [MessageTemplateOrderByWithRelationInput!]
 ) {
   findManyMessageTemplate(orderBy: $orderBy, where: $where) {
     template_id
     template_name
   }
 }
-query findUser($where: UserWhereInput, $orderBy: [UserOrderByInput!]) {
+query findUser($where: UserWhereInput, $orderBy: [UserOrderByWithRelationInput!]) {
   findManyUser(orderBy: $orderBy, where: $where) {
     id
     full_name

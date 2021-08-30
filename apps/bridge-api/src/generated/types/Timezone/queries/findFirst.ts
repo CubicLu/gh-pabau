@@ -4,7 +4,7 @@ export const TimezoneFindFirstQuery = queryField('findFirstTimezone', {
   type: 'Timezone',
   args: {
     where: 'TimezoneWhereInput',
-    orderBy: list('TimezoneOrderByInput'),
+    orderBy: list('TimezoneOrderByWithRelationInput'),
     cursor: 'TimezoneWhereUniqueInput',
     distinct: 'TimezoneScalarFieldEnum',
     skip: 'Int',

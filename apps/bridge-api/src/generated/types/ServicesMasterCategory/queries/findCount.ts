@@ -6,7 +6,7 @@ export const ServicesMasterCategoryFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'ServicesMasterCategoryWhereInput',
-      orderBy: list('ServicesMasterCategoryOrderByInput'),
+      orderBy: list('ServicesMasterCategoryOrderByWithRelationInput'),
       cursor: 'ServicesMasterCategoryWhereUniqueInput',
       distinct: 'ServicesMasterCategoryScalarFieldEnum',
       skip: 'Int',

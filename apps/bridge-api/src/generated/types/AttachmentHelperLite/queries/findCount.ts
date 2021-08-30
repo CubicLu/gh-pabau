@@ -6,7 +6,7 @@ export const AttachmentHelperLiteFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'AttachmentHelperLiteWhereInput',
-      orderBy: list('AttachmentHelperLiteOrderByInput'),
+      orderBy: list('AttachmentHelperLiteOrderByWithRelationInput'),
       cursor: 'AttachmentHelperLiteWhereUniqueInput',
       distinct: 'AttachmentHelperLiteScalarFieldEnum',
       skip: 'Int',

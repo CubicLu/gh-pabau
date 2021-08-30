@@ -29,7 +29,7 @@ export const PermissionTemplate = objectType({
       type: 'UserGroup',
       args: {
         where: 'UserGroupWhereInput',
-        orderBy: 'UserGroupOrderByInput',
+        orderBy: 'UserGroupOrderByWithRelationInput',
         cursor: 'UserGroupWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

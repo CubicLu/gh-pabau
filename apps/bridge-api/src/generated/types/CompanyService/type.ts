@@ -60,7 +60,7 @@ export const CompanyService = objectType({
       type: 'CompanyRoomService',
       args: {
         where: 'CompanyRoomServiceWhereInput',
-        orderBy: 'CompanyRoomServiceOrderByInput',
+        orderBy: 'CompanyRoomServiceOrderByWithRelationInput',
         cursor: 'CompanyRoomServiceWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

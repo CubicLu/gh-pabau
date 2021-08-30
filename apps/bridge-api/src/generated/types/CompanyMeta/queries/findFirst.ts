@@ -4,7 +4,7 @@ export const CompanyMetaFindFirstQuery = queryField('findFirstCompanyMeta', {
   type: 'CompanyMeta',
   args: {
     where: 'CompanyMetaWhereInput',
-    orderBy: list('CompanyMetaOrderByInput'),
+    orderBy: list('CompanyMetaOrderByWithRelationInput'),
     cursor: 'CompanyMetaWhereUniqueInput',
     distinct: 'CompanyMetaScalarFieldEnum',
     skip: 'Int',

@@ -6,7 +6,7 @@ export const MediaLlibraryAttachmentAggregateQuery = queryField(
     type: 'AggregateMediaLlibraryAttachment',
     args: {
       where: 'MediaLlibraryAttachmentWhereInput',
-      orderBy: list('MediaLlibraryAttachmentOrderByInput'),
+      orderBy: list('MediaLlibraryAttachmentOrderByWithRelationInput'),
       cursor: 'MediaLlibraryAttachmentWhereUniqueInput',
       distinct: 'MediaLlibraryAttachmentScalarFieldEnum',
       skip: 'Int',

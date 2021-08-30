@@ -6,7 +6,7 @@ export const CmProductCustomFieldFindFirstQuery = queryField(
     type: 'CmProductCustomField',
     args: {
       where: 'CmProductCustomFieldWhereInput',
-      orderBy: list('CmProductCustomFieldOrderByInput'),
+      orderBy: list('CmProductCustomFieldOrderByWithRelationInput'),
       cursor: 'CmProductCustomFieldWhereUniqueInput',
       distinct: 'CmProductCustomFieldScalarFieldEnum',
       skip: 'Int',

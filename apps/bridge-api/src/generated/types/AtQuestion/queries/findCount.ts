@@ -4,7 +4,7 @@ export const AtQuestionFindCountQuery = queryField('findManyAtQuestionCount', {
   type: nonNull('Int'),
   args: {
     where: 'AtQuestionWhereInput',
-    orderBy: list('AtQuestionOrderByInput'),
+    orderBy: list('AtQuestionOrderByWithRelationInput'),
     cursor: 'AtQuestionWhereUniqueInput',
     distinct: 'AtQuestionScalarFieldEnum',
     skip: 'Int',

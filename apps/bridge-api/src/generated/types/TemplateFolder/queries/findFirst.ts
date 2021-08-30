@@ -6,7 +6,7 @@ export const TemplateFolderFindFirstQuery = queryField(
     type: 'TemplateFolder',
     args: {
       where: 'TemplateFolderWhereInput',
-      orderBy: list('TemplateFolderOrderByInput'),
+      orderBy: list('TemplateFolderOrderByWithRelationInput'),
       cursor: 'TemplateFolderWhereUniqueInput',
       distinct: 'TemplateFolderScalarFieldEnum',
       skip: 'Int',

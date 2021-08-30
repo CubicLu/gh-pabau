@@ -6,7 +6,7 @@ export const ClockinTimesheetFindManyQuery = queryField(
     type: nonNull(list(nonNull('ClockinTimesheet'))),
     args: {
       where: 'ClockinTimesheetWhereInput',
-      orderBy: list('ClockinTimesheetOrderByInput'),
+      orderBy: list('ClockinTimesheetOrderByWithRelationInput'),
       cursor: 'ClockinTimesheetWhereUniqueInput',
       distinct: 'ClockinTimesheetScalarFieldEnum',
       skip: 'Int',

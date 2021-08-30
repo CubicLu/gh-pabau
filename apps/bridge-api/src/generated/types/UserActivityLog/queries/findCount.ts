@@ -6,7 +6,7 @@ export const UserActivityLogFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'UserActivityLogWhereInput',
-      orderBy: list('UserActivityLogOrderByInput'),
+      orderBy: list('UserActivityLogOrderByWithRelationInput'),
       cursor: 'UserActivityLogWhereUniqueInput',
       distinct: 'UserActivityLogScalarFieldEnum',
       skip: 'Int',

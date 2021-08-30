@@ -6,7 +6,7 @@ export const CmLeadCustomFieldOrderAggregateQuery = queryField(
     type: 'AggregateCmLeadCustomFieldOrder',
     args: {
       where: 'CmLeadCustomFieldOrderWhereInput',
-      orderBy: list('CmLeadCustomFieldOrderOrderByInput'),
+      orderBy: list('CmLeadCustomFieldOrderOrderByWithRelationInput'),
       cursor: 'CmLeadCustomFieldOrderWhereUniqueInput',
       distinct: 'CmLeadCustomFieldOrderScalarFieldEnum',
       skip: 'Int',

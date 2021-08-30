@@ -6,7 +6,7 @@ export const TwoFactorHistoryFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'TwoFactorHistoryWhereInput',
-      orderBy: list('TwoFactorHistoryOrderByInput'),
+      orderBy: list('TwoFactorHistoryOrderByWithRelationInput'),
       cursor: 'TwoFactorHistoryWhereUniqueInput',
       distinct: 'TwoFactorHistoryScalarFieldEnum',
       skip: 'Int',

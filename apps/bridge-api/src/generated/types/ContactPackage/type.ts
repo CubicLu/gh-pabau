@@ -46,7 +46,7 @@ export const ContactPackage = objectType({
       type: 'PackageUsed',
       args: {
         where: 'PackageUsedWhereInput',
-        orderBy: 'PackageUsedOrderByInput',
+        orderBy: 'PackageUsedOrderByWithRelationInput',
         cursor: 'PackageUsedWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

@@ -4,7 +4,7 @@ export const ApiDebugFindCountQuery = queryField('findManyApiDebugCount', {
   type: nonNull('Int'),
   args: {
     where: 'ApiDebugWhereInput',
-    orderBy: list('ApiDebugOrderByInput'),
+    orderBy: list('ApiDebugOrderByWithRelationInput'),
     cursor: 'ApiDebugWhereUniqueInput',
     distinct: 'ApiDebugScalarFieldEnum',
     skip: 'Int',

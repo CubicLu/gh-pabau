@@ -16,7 +16,7 @@ export const MedicalCondition = objectType({
       type: 'CmContactAlert',
       args: {
         where: 'CmContactAlertWhereInput',
-        orderBy: 'CmContactAlertOrderByInput',
+        orderBy: 'CmContactAlertOrderByWithRelationInput',
         cursor: 'CmContactAlertWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -30,7 +30,7 @@ export const MedicalCondition = objectType({
       type: 'CmContactMedicalCondition',
       args: {
         where: 'CmContactMedicalConditionWhereInput',
-        orderBy: 'CmContactMedicalConditionOrderByInput',
+        orderBy: 'CmContactMedicalConditionOrderByWithRelationInput',
         cursor: 'CmContactMedicalConditionWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

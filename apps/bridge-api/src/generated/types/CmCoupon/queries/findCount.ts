@@ -4,7 +4,7 @@ export const CmCouponFindCountQuery = queryField('findManyCmCouponCount', {
   type: nonNull('Int'),
   args: {
     where: 'CmCouponWhereInput',
-    orderBy: list('CmCouponOrderByInput'),
+    orderBy: list('CmCouponOrderByWithRelationInput'),
     cursor: 'CmCouponWhereUniqueInput',
     distinct: 'CmCouponScalarFieldEnum',
     skip: 'Int',

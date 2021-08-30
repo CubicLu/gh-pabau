@@ -6,7 +6,7 @@ export const InventoryDiscrepancyFindManyQuery = queryField(
     type: nonNull(list(nonNull('InventoryDiscrepancy'))),
     args: {
       where: 'InventoryDiscrepancyWhereInput',
-      orderBy: list('InventoryDiscrepancyOrderByInput'),
+      orderBy: list('InventoryDiscrepancyOrderByWithRelationInput'),
       cursor: 'InventoryDiscrepancyWhereUniqueInput',
       distinct: 'InventoryDiscrepancyScalarFieldEnum',
       skip: 'Int',
