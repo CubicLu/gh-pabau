@@ -34,4 +34,5 @@ export interface AuthenticatedUser extends JwtUser {
   companyName: string
   imageUrl?: string
   companies: CompanyPersona[]
+  companyDateFormat: string
 }

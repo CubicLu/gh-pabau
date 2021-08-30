@@ -79,6 +79,7 @@ export const UserProvider: FC = ({ children }) => {
         fullName: data.me.full_name,
         companies: data.me.companies,
         imageUrl: data.me.image,
+        companyDateFormat: data.me.Company.details.date_format,
       }
     : null
 
