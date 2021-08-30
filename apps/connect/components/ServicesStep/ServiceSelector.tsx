@@ -26,13 +26,11 @@ import { MasterCategory, Category, Service } from '../../types/services'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { useSelectedDataStore } from '../../store/selectedData'
 export interface P {
-  catID: number
-  mCatID: number
   items: MasterCategory[]
   onStepCompleted: (services: number[]) => void
 }
 
-const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
+const ServiceSelector: FC<P> = ({ items, onStepCompleted }) => {
   // CRAP
   const [showmodal, setshowmodal] = useState(false)
   const [visible, setvisible] = useState(false)
@@ -47,9 +45,12 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
 
   //FIXED
   const [selectedData, setSelectedData] = useSelectedDataStore()
+  console.log(selectedData)
 
-  const [categoryID, setCategoryID] = useState(catID)
-  const [masterCategoryID, setMasterCategoryID] = useState(mCatID)
+  const [categoryID, setCategoryID] = useState(selectedData.categoryID)
+  const [masterCategoryID, setMasterCategoryID] = useState(
+    selectedData.masterCategoryID
+  )
   const [virtualServicesOnly, setVirtualServicesOnly] = useState<boolean>(false)
   const [totalEstimate, setTotalEstimate] = useState<number>(0)
 
@@ -362,10 +363,10 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
             <div
               className={ClassNames(
                 styles.serviceselectall,
-                masterCategoryID === 0 && styles.serviceselectallSelect
+                !masterCategoryID && styles.serviceselectallSelect
               )}
               onClick={() => {
-                setMasterCategoryID(0)
+                setMasterCategoryID(null)
               }}
             >
               <SelectAll />
@@ -433,7 +434,7 @@ const ServiceSelector: FC<P> = ({ catID, mCatID, items, onStepCompleted }) => {
             <div className={styles.serlist}>
               <div className={styles.servicelist}>
                 {!voucher ? (
-                  masterCategoryID === 0 ? (
+                  !masterCategoryID ? (
                     items.map((masterCategory) => (
                       <div key={masterCategory.id}>
                         {masterCategory.categories.map((val) => {

@@ -261,11 +261,6 @@ export function Index() {
               <ServiceCategorySelector
                 items={masterCategories}
                 onSelected={(id) => {
-                  setSelectedData({
-                    ...selectedData,
-                    categoryID: id,
-                    masterCategoryID: findMasterCategoryIDByCategoryID(id),
-                  })
                   setCurrentStep(currentStep + 1)
                 }}
               />
@@ -282,8 +277,6 @@ export function Index() {
             <div className={styles.slide1}>
               <ServiceSelector
                 items={masterCategories}
-                catID={selectedData.categoryID}
-                mCatID={selectedData.masterCategoryID}
                 onStepCompleted={(services: number[]) => {
                   const slist = findServiceByIDs(services)
                   setSelectedData({

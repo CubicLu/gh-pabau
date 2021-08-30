@@ -13,4 +13,5 @@ export interface BookingData {
   locationID?: number
   location: Location
   dateTime?: moment.Moment
+  peopleCount: number
 }

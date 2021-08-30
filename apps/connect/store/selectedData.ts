@@ -1,9 +1,16 @@
 import { useState, useEffect } from 'react'
+import { BookingData } from '../types/booking'
+import { Staff } from '../types/staff'
+import { Location } from '../types/locations'
 
-let globalState = {
+let globalState: BookingData = {
   services: [],
+  serviceID: null,
   categoryID: null,
   masterCategoryID: null,
+  employeeID: null,
+  staffID: null,
+  locationID: null,
   peopleCount: 1,
 }
 

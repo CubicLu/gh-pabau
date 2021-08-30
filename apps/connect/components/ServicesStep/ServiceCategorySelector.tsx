@@ -18,14 +18,9 @@ import { useSelectedDataStore } from '../../store/selectedData'
 export interface P {
   items: MasterCategory[]
   onSelected: (id: number) => void
-  click: (member: number, viewbtn: boolean) => void
 }
 
-export const ServiceCategorySelector: FC<P> = ({
-  items,
-  onSelected,
-  click,
-}) => {
+export const ServiceCategorySelector: FC<P> = ({ items, onSelected }) => {
   const [showMasterCategories, setShowMasterCategories] = useState(true)
   const [selectedData, setSelectedData] = useSelectedDataStore()
   const [isGroup, setIsGroup] = useState<boolean>(false)
@@ -39,13 +34,6 @@ export const ServiceCategorySelector: FC<P> = ({
     setSelectedData('SET_CATEGORY_ID', id)
     onSelected(id)
   }
-
-  const formIntialValues = {
-    persons: 2,
-  }
-  const formikValidationSchema = Yup.object({
-    persons: Yup.number().min(2).max(50).required('between two and fifty'),
-  })
 
   const { t } = useTranslationI18()
 
@@ -65,10 +53,7 @@ export const ServiceCategorySelector: FC<P> = ({
                   !isGroup && styles.active
                 )}
                 onClick={() => {
-                  setSelectedData(
-                    'SET_PEOPLE_COUNT',
-                    Number(values.target.value)
-                  )
+                  setSelectedData('SET_PEOPLE_COUNT', 1)
                   setIsGroup(false)
                 }}
               >
@@ -84,10 +69,7 @@ export const ServiceCategorySelector: FC<P> = ({
                   isGroup && styles.active
                 )}
                 onClick={() => {
-                  setSelectedData(
-                    'SET_PEOPLE_COUNT',
-                    Number(values.target.value)
-                  )
+                  setSelectedData('SET_PEOPLE_COUNT', 2)
                   setIsGroup(true)
                 }}
               >
@@ -102,8 +84,13 @@ export const ServiceCategorySelector: FC<P> = ({
             {isGroup && (
               <Formik
                 enableReinitialize={true}
-                initialValues={formIntialValues}
-                validationSchema={formikValidationSchema}
+                initialValues={{ persons: 2 }}
+                validationSchema={Yup.object({
+                  persons: Yup.number()
+                    .min(2)
+                    .max(50)
+                    .required('between two and fifty'),
+                })}
                 onSubmit={null}
               >
                 {({ setFieldValue }) => (
@@ -135,6 +122,7 @@ export const ServiceCategorySelector: FC<P> = ({
           </div>
         </>
       ) : null}
+
       {showMasterCategories ? (
         <div>
           <div className={styles.custCard}>
@@ -156,7 +144,7 @@ export const ServiceCategorySelector: FC<P> = ({
             <div className={styles.btnView}>
               <Button
                 onClick={() => {
-                  click(isGroup ? selectedData.peopleCount : 1, true)
+                  onSelected(null)
                 }}
                 className={styles.viewBut}
               >
