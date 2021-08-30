@@ -140,11 +140,6 @@ const Layout: FC<LayoutProps> = ({
               },
             })
             await login(result.data.switchCompany)
-            window.location.href =
-              'https://crm.pabau.com/auth.php?t=' +
-              me.pab1 +
-              '&r=' +
-              encodeURIComponent(window.location.origin)
           }
         },
       }
