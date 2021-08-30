@@ -19,12 +19,9 @@ interface AuthenticatedUser {
   salt: string
 }
 
-export const generateJWT = (
-  user: AuthenticatedUser,
-  legacyUser?: AuthenticatedUser
-): string => {
+export const generateJWT = (user: AuthenticatedUser): string => {
   const jwtObjectToSign: JwtUser = {
-    pab1: generatePab1JWT(legacyUser || user),
+    pab1: generatePab1JWT(user),
     remote_url: user.Company.remote_url,
     remote_connect: user.Company.remote_connect,
     user: user.id,
