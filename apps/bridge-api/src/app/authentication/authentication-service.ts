@@ -26,7 +26,7 @@ export const generateJWT = (user: AuthenticatedUser): string => {
     remote_connect: user.Company.remote_connect,
     user: user.id,
     company: user.Company.id,
-    admin: Boolean(user.admin) ?? false,
+    admin: Boolean(user.admin),
     owner: user.id === user.Company.admin,
     language: {
       user: user.locale,

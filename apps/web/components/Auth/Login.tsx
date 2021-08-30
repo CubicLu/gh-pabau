@@ -11,8 +11,9 @@ import { useUser } from '../../context/UserContext'
 
 export const LoginMain = (): JSX.Element => {
   const [page, setPage] = useState<'login' | 'resetPassword'>('login')
-  const { me, login, logout } = useUser()
+  const { login, logout } = useUser()
   const [loginMutate] = useLoginMutation()
+
   const loginHandler = async (loginProps: LoginForm) => {
     const { email, password } = loginProps
     await logout()
@@ -22,12 +23,12 @@ export const LoginMain = (): JSX.Element => {
         password: password,
       },
     })
-    await login(result.data.login)
-    window.location.href =
-      'https://crm.pabau.com/auth.php?t=' +
-      me.pab1 +
-      '&r=' +
-      encodeURIComponent(window.location.origin)
+    try {
+      await login(result.data.login)
+    } catch (error) {
+      console.log('LOGIN FAILED', error)
+    }
+    // BEWARE: Don't try and do anything after here because React garbage disposes of this function after login is completed.
   }
 
   if (page === 'resetPassword')
@@ -37,7 +38,7 @@ export const LoginMain = (): JSX.Element => {
     <div>
       <div className={styles.signInForm}>
         <div className={styles.formHead}>
-          <h6>Log In!</h6>
+          <h6>Log In</h6>
           <span>
             Do not have an account?{' '}
             <Link href="/signup">Start a free trial</Link>

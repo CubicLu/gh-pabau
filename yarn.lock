@@ -20335,10 +20335,10 @@ postcss@^7.0.14, postcss@^7.0.26, postcss@^7.0.32, postcss@^7.0.36, postcss@^7.0
   version "2.0.0"
   resolved "https://github.com/simply-vat/postinstall-postinstall#59b0064272e72ab62eab205d6c63e7e60495b097"
 
-postmon@0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/postmon/-/postmon-0.1.1.tgz#70f27cc1f63a278f90c7f3a645a8edb4768b4de4"
-  integrity sha512-gU8rDIfRMpCXFwS51PtxfHVU7f0ojH2iwgKGM/0ZSIxM6cAcMid2xRxI7q0RwIX5EQamgsBk8/Lcqbl+fMXiWw==
+postmon@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/postmon/-/postmon-0.2.0.tgz#03745bfa929add2f9e6cdd1434ddc9ffbf4fe546"
+  integrity sha512-u8hy2GGER51u0vtceZYcdbDHKG3YTtmTgYMr5OMMmtmbxMQ3G9Z+SnuDWqws2+9F+t1h1AydJg7v5lcZ1mVQJQ==
   dependencies:
     commander "8.1.0"
     fast-glob "3.2.7"
