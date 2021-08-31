@@ -476,33 +476,125 @@
   color: red;
   margin-left: 3px;
 }
-.snomedItem {
-  padding: 12px;
-}
-.snomedTitle {
-  font-size: 14px;
-  line-height: 22px;
-  display: flex;
-  align-items: center;
-  color: #3d3d46;
-}
-.snomedDescription {
-  font-size: 12px;
-  line-height: 14px;
-  display: flow-root;
-  align-items: center;
-  color: #9292a3;
-}
-.snomedFsn {
-  float: left;
-}
-.snomedConceptId {
-  float: right;
-}
 .autocompleteWrap {
   :global {
     .ant-select-item-option {
       border-bottom: 1px solid #ecedf0;
+    }
+  }
+}
+.snomedEditor {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid black;
+}
+
+.formSnomedArea {
+  .formSnomedAreaValue {
+    margin-top: 11px;
+    border: 1px solid #ecedf0;
+    color: rgba(0, 0, 0, 0.65);
+    border-radius: 2px;
+    display: inline-block;
+    background-color: #fff;
+    width: 100%;
+    :global {
+      .DraftEditor-root {
+        padding: 0 11px;
+        cursor: text;
+      }
+    }
+    .snomed {
+      background: lightblue;
+      font-size: 12px;
+      padding: 2px 4px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    .snomedList {
+      position: absolute;
+      margin: 4px 0 0 0;
+      padding: 0;
+      // box-shadow: 0 0 2px #54b2d3;
+      border: 1px solid #54b2d3;
+      list-style: none;
+      background: white;
+      width: 74.5%;
+      z-index: 1;
+      height: 300px;
+      overflow: auto;
+    }
+
+    .snomedListItem {
+      padding: 10px;
+    }
+
+    .snomedListItem.current {
+      background: lightgrey;
+    }
+
+    .snomedLoading {
+      margin-top: 10px;
+      position: absolute;
+      left: 50%;
+      :global {
+        .ant-spin-spinning {
+          position: relative;
+          left: -50%;
+        }
+      }
+    }
+
+    .snomedItem {
+      padding: 12px;
+      border-bottom: 1px solid #ecedf0;
+    }
+    .snomedTitle {
+      font-size: 14px;
+      line-height: 22px;
+      display: flex;
+      align-items: center;
+      color: #3d3d46;
+    }
+    .snomedDescription {
+      font-size: 12px;
+      line-height: 14px;
+      display: flow-root;
+      align-items: center;
+      color: #9292a3;
+    }
+    .snomedFsn {
+      float: left;
+      width: 80%;
+    }
+    .snomedConceptId {
+      float: right;
+      text-align: right;
+      width: 20%;
+    }
+  }
+
+  .formSnomedAreaValue:hover {
+    border: 1px solid #54b2d3;
+  }
+
+  .formSnomedAreaValue:focus {
+    border: 1px solid #54b2d3;
+  }
+
+  :global {
+    .public-DraftStyleDefault-block {
+      margin: 0.5em 0;
+    }
+
+    .Snomed {
+      background: lightblue;
+      font-size: 12px;
+      padding: 2px 4px;
+      border-radius: 2px;
+      cursor: pointer;
     }
   }
 }
