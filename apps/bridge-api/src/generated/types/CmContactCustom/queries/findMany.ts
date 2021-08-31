@@ -6,7 +6,7 @@ export const CmContactCustomFindManyQuery = queryField(
     type: nonNull(list(nonNull('CmContactCustom'))),
     args: {
       where: 'CmContactCustomWhereInput',
-      orderBy: list('CmContactCustomOrderByInput'),
+      orderBy: list('CmContactCustomOrderByWithRelationInput'),
       cursor: 'CmContactCustomWhereUniqueInput',
       distinct: 'CmContactCustomScalarFieldEnum',
       skip: 'Int',

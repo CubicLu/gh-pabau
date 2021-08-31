@@ -4,7 +4,7 @@ export const AtQuizTakeFindCountQuery = queryField('findManyAtQuizTakeCount', {
   type: nonNull('Int'),
   args: {
     where: 'AtQuizTakeWhereInput',
-    orderBy: list('AtQuizTakeOrderByInput'),
+    orderBy: list('AtQuizTakeOrderByWithRelationInput'),
     cursor: 'AtQuizTakeWhereUniqueInput',
     distinct: 'AtQuizTakeScalarFieldEnum',
     skip: 'Int',

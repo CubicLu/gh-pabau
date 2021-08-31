@@ -73,7 +73,7 @@ export const CmLead = objectType({
       type: 'CmLeadCustomField',
       args: {
         where: 'CmLeadCustomFieldWhereInput',
-        orderBy: 'CmLeadCustomFieldOrderByInput',
+        orderBy: 'CmLeadCustomFieldOrderByWithRelationInput',
         cursor: 'CmLeadCustomFieldWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -87,7 +87,7 @@ export const CmLead = objectType({
       type: 'CommunicationRecipient',
       args: {
         where: 'CommunicationRecipientWhereInput',
-        orderBy: 'CommunicationRecipientOrderByInput',
+        orderBy: 'CommunicationRecipientOrderByWithRelationInput',
         cursor: 'CommunicationRecipientWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -101,7 +101,7 @@ export const CmLead = objectType({
       type: 'CmLeadNote',
       args: {
         where: 'CmLeadNoteWhereInput',
-        orderBy: 'CmLeadNoteOrderByInput',
+        orderBy: 'CmLeadNoteOrderByWithRelationInput',
         cursor: 'CmLeadNoteWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

@@ -6,7 +6,7 @@ export const AppSubscriptionsCompanyPriceAggregateQuery = queryField(
     type: 'AggregateAppSubscriptionsCompanyPrice',
     args: {
       where: 'AppSubscriptionsCompanyPriceWhereInput',
-      orderBy: list('AppSubscriptionsCompanyPriceOrderByInput'),
+      orderBy: list('AppSubscriptionsCompanyPriceOrderByWithRelationInput'),
       cursor: 'AppSubscriptionsCompanyPriceWhereUniqueInput',
       distinct: 'AppSubscriptionsCompanyPriceScalarFieldEnum',
       skip: 'Int',

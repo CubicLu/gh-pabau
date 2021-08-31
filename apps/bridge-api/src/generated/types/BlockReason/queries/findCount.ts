@@ -6,7 +6,7 @@ export const BlockReasonFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'BlockReasonWhereInput',
-      orderBy: list('BlockReasonOrderByInput'),
+      orderBy: list('BlockReasonOrderByWithRelationInput'),
       cursor: 'BlockReasonWhereUniqueInput',
       distinct: 'BlockReasonScalarFieldEnum',
       skip: 'Int',

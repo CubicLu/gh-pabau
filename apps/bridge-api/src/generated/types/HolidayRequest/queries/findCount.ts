@@ -6,7 +6,7 @@ export const HolidayRequestFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'HolidayRequestWhereInput',
-      orderBy: list('HolidayRequestOrderByInput'),
+      orderBy: list('HolidayRequestOrderByWithRelationInput'),
       cursor: 'HolidayRequestWhereUniqueInput',
       distinct: 'HolidayRequestScalarFieldEnum',
       skip: 'Int',

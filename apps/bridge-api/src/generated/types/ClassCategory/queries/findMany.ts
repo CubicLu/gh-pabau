@@ -4,7 +4,7 @@ export const ClassCategoryFindManyQuery = queryField('findManyClassCategory', {
   type: nonNull(list(nonNull('ClassCategory'))),
   args: {
     where: 'ClassCategoryWhereInput',
-    orderBy: list('ClassCategoryOrderByInput'),
+    orderBy: list('ClassCategoryOrderByWithRelationInput'),
     cursor: 'ClassCategoryWhereUniqueInput',
     distinct: 'ClassCategoryScalarFieldEnum',
     skip: 'Int',

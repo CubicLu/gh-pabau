@@ -6,7 +6,7 @@ export const CreditNoteTypeFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CreditNoteTypeWhereInput',
-      orderBy: list('CreditNoteTypeOrderByInput'),
+      orderBy: list('CreditNoteTypeOrderByWithRelationInput'),
       cursor: 'CreditNoteTypeWhereUniqueInput',
       distinct: 'CreditNoteTypeScalarFieldEnum',
       skip: 'Int',

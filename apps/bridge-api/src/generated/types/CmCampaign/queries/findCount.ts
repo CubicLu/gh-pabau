@@ -4,7 +4,7 @@ export const CmCampaignFindCountQuery = queryField('findManyCmCampaignCount', {
   type: nonNull('Int'),
   args: {
     where: 'CmCampaignWhereInput',
-    orderBy: list('CmCampaignOrderByInput'),
+    orderBy: list('CmCampaignOrderByWithRelationInput'),
     cursor: 'CmCampaignWhereUniqueInput',
     distinct: 'CmCampaignScalarFieldEnum',
     skip: 'Int',

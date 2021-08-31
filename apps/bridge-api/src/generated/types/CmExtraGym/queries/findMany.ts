@@ -4,7 +4,7 @@ export const CmExtraGymFindManyQuery = queryField('findManyCmExtraGym', {
   type: nonNull(list(nonNull('CmExtraGym'))),
   args: {
     where: 'CmExtraGymWhereInput',
-    orderBy: list('CmExtraGymOrderByInput'),
+    orderBy: list('CmExtraGymOrderByWithRelationInput'),
     cursor: 'CmExtraGymWhereUniqueInput',
     distinct: 'CmExtraGymScalarFieldEnum',
     skip: 'Int',

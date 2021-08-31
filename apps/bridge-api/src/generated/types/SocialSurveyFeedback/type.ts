@@ -45,7 +45,7 @@ export const SocialSurveyFeedback = objectType({
       type: 'SocialSurveyFeedbackResponse',
       args: {
         where: 'SocialSurveyFeedbackResponseWhereInput',
-        orderBy: 'SocialSurveyFeedbackResponseOrderByInput',
+        orderBy: 'SocialSurveyFeedbackResponseOrderByWithRelationInput',
         cursor: 'SocialSurveyFeedbackResponseWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -59,7 +59,7 @@ export const SocialSurveyFeedback = objectType({
       type: 'SocialSurveyAnswer',
       args: {
         where: 'SocialSurveyAnswerWhereInput',
-        orderBy: 'SocialSurveyAnswerOrderByInput',
+        orderBy: 'SocialSurveyAnswerOrderByWithRelationInput',
         cursor: 'SocialSurveyAnswerWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

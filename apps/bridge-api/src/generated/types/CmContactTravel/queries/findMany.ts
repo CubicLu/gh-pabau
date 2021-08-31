@@ -6,7 +6,7 @@ export const CmContactTravelFindManyQuery = queryField(
     type: nonNull(list(nonNull('CmContactTravel'))),
     args: {
       where: 'CmContactTravelWhereInput',
-      orderBy: list('CmContactTravelOrderByInput'),
+      orderBy: list('CmContactTravelOrderByWithRelationInput'),
       cursor: 'CmContactTravelWhereUniqueInput',
       distinct: 'CmContactTravelScalarFieldEnum',
       skip: 'Int',

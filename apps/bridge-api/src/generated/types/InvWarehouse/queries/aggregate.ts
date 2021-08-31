@@ -4,7 +4,7 @@ export const InvWarehouseAggregateQuery = queryField('aggregateInvWarehouse', {
   type: 'AggregateInvWarehouse',
   args: {
     where: 'InvWarehouseWhereInput',
-    orderBy: list('InvWarehouseOrderByInput'),
+    orderBy: list('InvWarehouseOrderByWithRelationInput'),
     cursor: 'InvWarehouseWhereUniqueInput',
     distinct: 'InvWarehouseScalarFieldEnum',
     skip: 'Int',

@@ -66,6 +66,7 @@ import {
   conversation,
   tests,
   products,
+  loyaltyData,
   thirdPartySearchResults,
   appointments,
   clientPackages,
@@ -922,7 +923,14 @@ const ClientCardModal: FC<ClientCardProps> = ({
                   <ClientGiftVoucherLayout isEmpty={true} />
                 </div>
                 <div>
-                  <ClientLoyaltyLayout isEmpty={true} />
+                  <ClientLoyaltyLayout
+                    isEmpty={false}
+                    data={loyaltyData}
+                    onLoyaltySelect={(e) => {
+                      console.log('Loyalty selected:', e) //Removed while integration
+                      return Promise.resolve(true)
+                    }}
+                  />
                 </div>
                 <div>
                   <ClientActivitiesLayout isEmpty={true} />

@@ -6,7 +6,7 @@ export const InvPaymentTypeFindFirstQuery = queryField(
     type: 'InvPaymentType',
     args: {
       where: 'InvPaymentTypeWhereInput',
-      orderBy: list('InvPaymentTypeOrderByInput'),
+      orderBy: list('InvPaymentTypeOrderByWithRelationInput'),
       cursor: 'InvPaymentTypeWhereUniqueInput',
       distinct: 'InvPaymentTypeScalarFieldEnum',
       skip: 'Int',

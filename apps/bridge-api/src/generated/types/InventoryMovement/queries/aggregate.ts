@@ -6,7 +6,7 @@ export const InventoryMovementAggregateQuery = queryField(
     type: 'AggregateInventoryMovement',
     args: {
       where: 'InventoryMovementWhereInput',
-      orderBy: list('InventoryMovementOrderByInput'),
+      orderBy: list('InventoryMovementOrderByWithRelationInput'),
       cursor: 'InventoryMovementWhereUniqueInput',
       distinct: 'InventoryMovementScalarFieldEnum',
       skip: 'Int',

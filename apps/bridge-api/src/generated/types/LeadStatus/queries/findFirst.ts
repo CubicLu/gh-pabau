@@ -4,7 +4,7 @@ export const LeadStatusFindFirstQuery = queryField('findFirstLeadStatus', {
   type: 'LeadStatus',
   args: {
     where: 'LeadStatusWhereInput',
-    orderBy: list('LeadStatusOrderByInput'),
+    orderBy: list('LeadStatusOrderByWithRelationInput'),
     cursor: 'LeadStatusWhereUniqueInput',
     distinct: 'LeadStatusScalarFieldEnum',
     skip: 'Int',

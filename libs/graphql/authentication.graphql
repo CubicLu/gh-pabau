@@ -1,0 +1,33 @@
+mutation login($username: String!, $password: String!) {
+  login(username: $username, password: $password)
+}
+
+mutation switchCompany($companyId: Int!) {
+  switchCompany(companyId: $companyId)
+}
+
+query retrieveAuthenticatedUser {
+  me {
+    id
+    username
+    full_name
+    isAdmin: admin
+    timezone
+    image
+    Company {
+      id
+      remote_url
+      details {
+        company_name
+        language
+        currency
+        date_format
+      }
+    }
+    companies: companies {
+      id
+      name
+      logo
+    }
+  }
+}

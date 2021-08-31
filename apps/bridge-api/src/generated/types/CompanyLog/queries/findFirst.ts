@@ -4,7 +4,7 @@ export const CompanyLogFindFirstQuery = queryField('findFirstCompanyLog', {
   type: 'CompanyLog',
   args: {
     where: 'CompanyLogWhereInput',
-    orderBy: list('CompanyLogOrderByInput'),
+    orderBy: list('CompanyLogOrderByWithRelationInput'),
     cursor: 'CompanyLogWhereUniqueInput',
     distinct: 'CompanyLogScalarFieldEnum',
     skip: 'Int',

@@ -6,7 +6,7 @@ export const CmStaffGeneralFindFirstQuery = queryField(
     type: 'CmStaffGeneral',
     args: {
       where: 'CmStaffGeneralWhereInput',
-      orderBy: list('CmStaffGeneralOrderByInput'),
+      orderBy: list('CmStaffGeneralOrderByWithRelationInput'),
       cursor: 'CmStaffGeneralWhereUniqueInput',
       distinct: 'CmStaffGeneralScalarFieldEnum',
       skip: 'Int',

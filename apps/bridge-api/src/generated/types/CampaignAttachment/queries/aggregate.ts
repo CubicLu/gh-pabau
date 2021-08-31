@@ -6,7 +6,7 @@ export const CampaignAttachmentAggregateQuery = queryField(
     type: 'AggregateCampaignAttachment',
     args: {
       where: 'CampaignAttachmentWhereInput',
-      orderBy: list('CampaignAttachmentOrderByInput'),
+      orderBy: list('CampaignAttachmentOrderByWithRelationInput'),
       cursor: 'CampaignAttachmentWhereUniqueInput',
       distinct: 'CampaignAttachmentScalarFieldEnum',
       skip: 'Int',

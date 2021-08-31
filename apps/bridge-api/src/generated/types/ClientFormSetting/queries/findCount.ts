@@ -6,7 +6,7 @@ export const ClientFormSettingFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'ClientFormSettingWhereInput',
-      orderBy: list('ClientFormSettingOrderByInput'),
+      orderBy: list('ClientFormSettingOrderByWithRelationInput'),
       cursor: 'ClientFormSettingWhereUniqueInput',
       distinct: 'ClientFormSettingScalarFieldEnum',
       skip: 'Int',

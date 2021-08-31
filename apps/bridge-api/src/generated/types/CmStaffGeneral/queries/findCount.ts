@@ -6,7 +6,7 @@ export const CmStaffGeneralFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CmStaffGeneralWhereInput',
-      orderBy: list('CmStaffGeneralOrderByInput'),
+      orderBy: list('CmStaffGeneralOrderByWithRelationInput'),
       cursor: 'CmStaffGeneralWhereUniqueInput',
       distinct: 'CmStaffGeneralScalarFieldEnum',
       skip: 'Int',

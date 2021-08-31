@@ -6,7 +6,7 @@ export const CalRangeRequestFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CalRangeRequestWhereInput',
-      orderBy: list('CalRangeRequestOrderByInput'),
+      orderBy: list('CalRangeRequestOrderByWithRelationInput'),
       cursor: 'CalRangeRequestWhereUniqueInput',
       distinct: 'CalRangeRequestScalarFieldEnum',
       skip: 'Int',

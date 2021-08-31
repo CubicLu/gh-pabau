@@ -6,7 +6,7 @@ export const TrainingCourseAggregateQuery = queryField(
     type: 'AggregateTrainingCourse',
     args: {
       where: 'TrainingCourseWhereInput',
-      orderBy: list('TrainingCourseOrderByInput'),
+      orderBy: list('TrainingCourseOrderByWithRelationInput'),
       cursor: 'TrainingCourseWhereUniqueInput',
       distinct: 'TrainingCourseScalarFieldEnum',
       skip: 'Int',

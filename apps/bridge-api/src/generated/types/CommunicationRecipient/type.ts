@@ -25,7 +25,7 @@ export const CommunicationRecipient = objectType({
       type: 'Communication',
       args: {
         where: 'CommunicationWhereInput',
-        orderBy: 'CommunicationOrderByInput',
+        orderBy: 'CommunicationOrderByWithRelationInput',
         cursor: 'CommunicationWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -45,7 +45,7 @@ export const CommunicationRecipient = objectType({
       type: 'CommunicationHash',
       args: {
         where: 'CommunicationHashWhereInput',
-        orderBy: 'CommunicationHashOrderByInput',
+        orderBy: 'CommunicationHashOrderByWithRelationInput',
         cursor: 'CommunicationHashWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

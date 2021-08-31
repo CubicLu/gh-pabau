@@ -13,7 +13,7 @@ export const MarketingSource = objectType({
     t.int('custom_id')
     t.boolean('public')
     t.int('imported')
-    t.field('Company', {
+    t.nullable.field('Company', {
       type: 'Company',
       resolve(root: any) {
         return root.Company
@@ -23,7 +23,7 @@ export const MarketingSource = objectType({
       type: 'CmExtraPatient',
       args: {
         where: 'CmExtraPatientWhereInput',
-        orderBy: 'CmExtraPatientOrderByInput',
+        orderBy: 'CmExtraPatientOrderByWithRelationInput',
         cursor: 'CmExtraPatientWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

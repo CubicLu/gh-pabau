@@ -106,7 +106,7 @@ export const CompanyDetails = objectType({
       type: 'User',
       args: {
         where: 'UserWhereInput',
-        orderBy: 'UserOrderByInput',
+        orderBy: 'UserOrderByWithRelationInput',
         cursor: 'UserWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -120,7 +120,7 @@ export const CompanyDetails = objectType({
       type: 'InvoiceTemplate',
       args: {
         where: 'InvoiceTemplateWhereInput',
-        orderBy: 'InvoiceTemplateOrderByInput',
+        orderBy: 'InvoiceTemplateOrderByWithRelationInput',
         cursor: 'InvoiceTemplateWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

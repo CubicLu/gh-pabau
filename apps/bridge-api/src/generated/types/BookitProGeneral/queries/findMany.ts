@@ -6,7 +6,7 @@ export const BookitProGeneralFindManyQuery = queryField(
     type: nonNull(list(nonNull('BookitProGeneral'))),
     args: {
       where: 'BookitProGeneralWhereInput',
-      orderBy: list('BookitProGeneralOrderByInput'),
+      orderBy: list('BookitProGeneralOrderByWithRelationInput'),
       cursor: 'BookitProGeneralWhereUniqueInput',
       distinct: 'BookitProGeneralScalarFieldEnum',
       skip: 'Int',

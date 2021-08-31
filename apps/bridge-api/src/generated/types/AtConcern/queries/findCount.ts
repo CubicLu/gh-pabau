@@ -4,7 +4,7 @@ export const AtConcernFindCountQuery = queryField('findManyAtConcernCount', {
   type: nonNull('Int'),
   args: {
     where: 'AtConcernWhereInput',
-    orderBy: list('AtConcernOrderByInput'),
+    orderBy: list('AtConcernOrderByWithRelationInput'),
     cursor: 'AtConcernWhereUniqueInput',
     distinct: 'AtConcernScalarFieldEnum',
     skip: 'Int',

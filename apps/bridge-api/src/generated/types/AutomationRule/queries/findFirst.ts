@@ -6,7 +6,7 @@ export const AutomationRuleFindFirstQuery = queryField(
     type: 'AutomationRule',
     args: {
       where: 'AutomationRuleWhereInput',
-      orderBy: list('AutomationRuleOrderByInput'),
+      orderBy: list('AutomationRuleOrderByWithRelationInput'),
       cursor: 'AutomationRuleWhereUniqueInput',
       distinct: 'AutomationRuleScalarFieldEnum',
       skip: 'Int',

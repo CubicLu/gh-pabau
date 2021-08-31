@@ -4,7 +4,7 @@ export const ClassGuestsFindManyQuery = queryField('findManyClassGuests', {
   type: nonNull(list(nonNull('ClassGuests'))),
   args: {
     where: 'ClassGuestsWhereInput',
-    orderBy: list('ClassGuestsOrderByInput'),
+    orderBy: list('ClassGuestsOrderByWithRelationInput'),
     cursor: 'ClassGuestsWhereUniqueInput',
     distinct: 'ClassGuestsScalarFieldEnum',
     skip: 'Int',

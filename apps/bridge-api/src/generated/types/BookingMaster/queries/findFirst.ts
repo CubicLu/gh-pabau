@@ -6,7 +6,7 @@ export const BookingMasterFindFirstQuery = queryField(
     type: 'BookingMaster',
     args: {
       where: 'BookingMasterWhereInput',
-      orderBy: list('BookingMasterOrderByInput'),
+      orderBy: list('BookingMasterOrderByWithRelationInput'),
       cursor: 'BookingMasterWhereUniqueInput',
       distinct: 'BookingMasterScalarFieldEnum',
       skip: 'Int',

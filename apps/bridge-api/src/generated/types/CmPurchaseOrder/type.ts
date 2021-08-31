@@ -61,7 +61,7 @@ export const CmPurchaseOrder = objectType({
       type: 'CmPurchaseItem',
       args: {
         where: 'CmPurchaseItemWhereInput',
-        orderBy: 'CmPurchaseItemOrderByInput',
+        orderBy: 'CmPurchaseItemOrderByWithRelationInput',
         cursor: 'CmPurchaseItemWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

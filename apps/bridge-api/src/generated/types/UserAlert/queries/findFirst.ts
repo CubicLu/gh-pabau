@@ -4,7 +4,7 @@ export const UserAlertFindFirstQuery = queryField('findFirstUserAlert', {
   type: 'UserAlert',
   args: {
     where: 'UserAlertWhereInput',
-    orderBy: list('UserAlertOrderByInput'),
+    orderBy: list('UserAlertOrderByWithRelationInput'),
     cursor: 'UserAlertWhereUniqueInput',
     distinct: 'UserAlertScalarFieldEnum',
     skip: 'Int',

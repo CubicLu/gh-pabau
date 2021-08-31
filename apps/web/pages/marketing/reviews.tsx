@@ -55,7 +55,6 @@ import { useRouter } from 'next/router'
 import React, {
   FC,
   ReactNode,
-  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -68,7 +67,7 @@ import notificationBannerReviewPageImage from '../../assets/images/notification-
 import { apiURL } from '../../baseUrl'
 import CommonHeader from '../../components/CommonHeader'
 import Layout from '../../components/Layout/Layout'
-import { UserContext } from '../../context/UserContext'
+import { useUser } from '../../context/UserContext'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import styles from './reviews.module.less'
 
@@ -172,7 +171,7 @@ const Reviews: FC<ReviewConfig> = () => {
   })
   const crudTableRef = useRef(null)
   const { t } = useTranslationI18()
-  const user = useContext(UserContext)
+  const user = useUser()
 
   const sendResponseEmail = () => {
     const requestOptions = {
@@ -977,7 +976,7 @@ const Reviews: FC<ReviewConfig> = () => {
         response: message,
         feedback: selectedRow?.id,
         uid: user.me.id,
-        company_id: user.me.company.id,
+        company_id: user.me.company,
       }
       addMutation({
         variables: addValue,

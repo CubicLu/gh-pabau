@@ -6,7 +6,7 @@ export const BodyChartTemplateFindManyQuery = queryField(
     type: nonNull(list(nonNull('BodyChartTemplate'))),
     args: {
       where: 'BodyChartTemplateWhereInput',
-      orderBy: list('BodyChartTemplateOrderByInput'),
+      orderBy: list('BodyChartTemplateOrderByWithRelationInput'),
       cursor: 'BodyChartTemplateWhereUniqueInput',
       distinct: 'BodyChartTemplateScalarFieldEnum',
       skip: 'Int',

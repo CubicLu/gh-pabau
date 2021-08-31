@@ -1,5 +1,5 @@
 import {
-  useGetBussinessDetailsQuery,
+  useGetBusinessDetailsQuery,
   useGetContactDetailsLazyQuery,
   useGetMedicalFormDetailsLazyQuery,
 } from '@pabau/graphql'
@@ -18,7 +18,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
 import ConnectLayout from '../../../../../../components/ConnectLayout/ConnectLayout'
-import { ClientContext } from '../../../../../../components/ContextWrapper/context/ClientContext'
+import { ClientContext } from '../../../../../../components/UserContext/context/ClientContext'
 import styles from '../../../style.module.less'
 
 const { Title } = Typography
@@ -155,11 +155,13 @@ export const MedicalHistory = () => {
     console.log('router.query.appointment_id =', router.query.appointment_id)
   }, [router.query.appointment_id])
 
-  const businessDetails = useGetBussinessDetailsQuery()
+  const businessDetails = useGetBusinessDetailsQuery()
 
   useEffect(() => {
-    if (businessDetails?.data?.company?.details?.date_format)
-      setCompanyDateFormat(businessDetails?.data?.company?.details?.date_format)
+    if (businessDetails?.data?.me?.Company?.details?.date_format)
+      setCompanyDateFormat(
+        businessDetails?.data?.me?.Company?.details?.date_format
+      )
   }, [businessDetails])
 
   const saveMedicalFormHistory = (draggedForms: MedicalFormTypes[]) => {

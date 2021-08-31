@@ -1,8 +1,7 @@
 import { NextPage } from 'next'
-import React, { useContext } from 'react'
 import CrudLayout from '../../../components/CrudLayout/CrudLayout'
 import { useTranslationI18 } from '../../../hooks/useTranslationI18'
-import { UserContext } from '../../../context/UserContext'
+import { useUser } from '../../../context/UserContext'
 import {
   CompanyPositionsDocument,
   CompanyPositionsAggregateDocument,
@@ -14,7 +13,7 @@ import {
 
 export const JobTitle: NextPage = () => {
   const { t } = useTranslationI18()
-  const user = useContext(UserContext)
+  const user = useUser()
 
   const schema: Schema = {
     full: t('setup.jobtitle.schema.title'),

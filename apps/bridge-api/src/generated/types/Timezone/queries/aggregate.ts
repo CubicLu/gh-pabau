@@ -4,7 +4,7 @@ export const TimezoneAggregateQuery = queryField('aggregateTimezone', {
   type: 'AggregateTimezone',
   args: {
     where: 'TimezoneWhereInput',
-    orderBy: list('TimezoneOrderByInput'),
+    orderBy: list('TimezoneOrderByWithRelationInput'),
     cursor: 'TimezoneWhereUniqueInput',
     distinct: 'TimezoneScalarFieldEnum',
     skip: 'Int',

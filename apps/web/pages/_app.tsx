@@ -1,34 +1,33 @@
+/* eslint-disable import/first */
 import {
   ApolloClient,
   ApolloLink,
   ApolloProvider,
   HttpLink,
   InMemoryCache,
-  split,
   NormalizedCacheObject,
+  split,
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import { getMainDefinition } from '@apollo/client/utilities'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import * as Icons from '@fortawesome/free-solid-svg-icons'
 import { OperationDefinitionNode } from 'graphql'
 import { AppProps } from 'next/app'
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-import 'react-image-crop/dist/ReactCrop.css'
-import 'react-phone-input-2/lib/style.css'
 import Router from 'next/router'
-import 'react-quill/dist/quill.snow.css'
 import i18next from 'i18next'
 import { I18nextProvider, initReactI18next } from 'react-i18next'
 import { languages } from '@pabau/i18n'
-import ContextWrapper from '../components/ContextWrapper'
 import { Integrations } from '@sentry/tracing'
 import * as Sentry from '@sentry/react'
-require('../styles/global.less')
+import { ErrorNotification } from '../components/Notification/ErrorNotification'
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
+import 'react-image-crop/dist/ReactCrop.css'
+import 'react-phone-input-2/lib/style.css'
+import 'react-quill/dist/quill.snow.css'
+
 require('../../../libs/ui/src/styles/antd.less')
-require('react-phone-input-2/lib/style.css')
+import { UserProvider } from '../context/UserContext'
 
 let apolloClient: ApolloClient<NormalizedCacheObject | null> = null
 
@@ -46,7 +45,6 @@ const cache = new InMemoryCache({
       fields: {
         chats: {
           merge(existing = [], incoming: any[]) {
-            console.log('APOLLO CACHE: room.chat.merge()', existing, incoming)
             return [...existing, ...incoming]
           },
         },
@@ -61,19 +59,15 @@ const GRAPHQL_HTTP_ENDPOINT =
   process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
   'https://api.new.pabau.com/v1/graphql'
 
-//TODO: enable tree shaking
-const iconList = Object.keys(Icons)
-  .filter((key) => key !== 'fas' && key !== 'prefix')
-  .map((icon) => Icons[icon])
-library.add(...iconList)
-
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token')
+  let token2 = null
+  if (token) token2 = JSON.parse(token)
   return {
-    headers: token
+    headers: token2
       ? {
           ...headers,
-          authorization: `Bearer ${token}`,
+          authorization: `Bearer ${token2}`,
         }
       : headers,
   }
@@ -97,6 +91,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
             Router.replace('/403')
             break
           default:
+            ErrorNotification(error.message)
             console.log(
               `[GraphQL error]: Message: ${error.message}, Location: ${error.locations}, Path: ${error.path}`
             )
@@ -105,20 +100,26 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
     }
   }
   if (networkError) {
-    console.log(`[Network error]: ${networkError}`)
+    console.log(
+      `[Network error]: ${networkError.message} ${networkError.stack}`
+    )
   }
 })
 const getWebSocketLink = () => {
-  const token = localStorage.getItem('token')
   return new WebSocketLink({
     uri: GRAPHQL_WS_ENDPOINT,
     options: {
       lazy: true,
       reconnect: true,
-      connectionParams: {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      connectionParams: () => {
+        const token = localStorage.getItem('token')
+        let token2 = null
+        if (token) token2 = JSON.parse(token)
+        return {
+          headers: {
+            Authorization: `Bearer ${token2}`,
+          },
+        }
       },
     },
   })
@@ -140,6 +141,7 @@ const terminatingLink = wsLink
       authLink.concat(httpLink)
     )
   : httpLink
+
 apolloClient = new ApolloClient({
   ssrMode: false,
   link: ApolloLink.from([errorLink, terminatingLink]),
@@ -158,25 +160,9 @@ function CustomApp({ Component, pageProps }: AppProps): JSX.Element {
     <Sentry.ErrorBoundary fallback={() => <>An error has occurred</>}>
       <ApolloProvider client={apolloClient}>
         <I18nextProvider i18n={i18next}>
-          <style jsx global>{`
-            @font-face {
-              font-family: 'Circular-Std-Black';
-              src: local('Circular-Std-Black'),
-                url(../public/fonts/CircularStd-Black.otf) format('opentype');
-            }
-            @font-face {
-              font-family: 'Circular-Std-Book';
-              src: url('/fonts/CircularStd-Book.otf') format('opentype');
-            }
-
-            @font-face {
-              font-family: 'Circular-Std-Medium';
-              src: url('/fonts/CircularStd-Medium.otf') format('opentype');
-            }
-          `}</style>
-          <ContextWrapper>
+          <UserProvider>
             <Component {...pageProps} />
-          </ContextWrapper>
+          </UserProvider>
         </I18nextProvider>
       </ApolloProvider>
     </Sentry.ErrorBoundary>

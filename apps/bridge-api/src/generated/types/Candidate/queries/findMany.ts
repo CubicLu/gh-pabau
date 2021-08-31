@@ -4,7 +4,7 @@ export const CandidateFindManyQuery = queryField('findManyCandidate', {
   type: nonNull(list(nonNull('Candidate'))),
   args: {
     where: 'CandidateWhereInput',
-    orderBy: list('CandidateOrderByInput'),
+    orderBy: list('CandidateOrderByWithRelationInput'),
     cursor: 'CandidateWhereUniqueInput',
     distinct: 'CandidateScalarFieldEnum',
     skip: 'Int',

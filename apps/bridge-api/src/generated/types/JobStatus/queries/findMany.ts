@@ -4,7 +4,7 @@ export const JobStatusFindManyQuery = queryField('findManyJobStatus', {
   type: nonNull(list(nonNull('JobStatus'))),
   args: {
     where: 'JobStatusWhereInput',
-    orderBy: list('JobStatusOrderByInput'),
+    orderBy: list('JobStatusOrderByWithRelationInput'),
     cursor: 'JobStatusWhereUniqueInput',
     distinct: 'JobStatusScalarFieldEnum',
     skip: 'Int',

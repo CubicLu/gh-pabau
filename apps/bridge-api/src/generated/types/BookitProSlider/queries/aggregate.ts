@@ -6,7 +6,7 @@ export const BookitProSliderAggregateQuery = queryField(
     type: 'AggregateBookitProSlider',
     args: {
       where: 'BookitProSliderWhereInput',
-      orderBy: list('BookitProSliderOrderByInput'),
+      orderBy: list('BookitProSliderOrderByWithRelationInput'),
       cursor: 'BookitProSliderWhereUniqueInput',
       distinct: 'BookitProSliderScalarFieldEnum',
       skip: 'Int',

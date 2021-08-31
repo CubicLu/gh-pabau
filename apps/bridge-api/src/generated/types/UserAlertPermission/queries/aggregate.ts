@@ -6,7 +6,7 @@ export const UserAlertPermissionAggregateQuery = queryField(
     type: 'AggregateUserAlertPermission',
     args: {
       where: 'UserAlertPermissionWhereInput',
-      orderBy: list('UserAlertPermissionOrderByInput'),
+      orderBy: list('UserAlertPermissionOrderByWithRelationInput'),
       cursor: 'UserAlertPermissionWhereUniqueInput',
       distinct: 'UserAlertPermissionScalarFieldEnum',
       skip: 'Int',

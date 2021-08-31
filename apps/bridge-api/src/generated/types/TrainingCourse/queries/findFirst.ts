@@ -6,7 +6,7 @@ export const TrainingCourseFindFirstQuery = queryField(
     type: 'TrainingCourse',
     args: {
       where: 'TrainingCourseWhereInput',
-      orderBy: list('TrainingCourseOrderByInput'),
+      orderBy: list('TrainingCourseOrderByWithRelationInput'),
       cursor: 'TrainingCourseWhereUniqueInput',
       distinct: 'TrainingCourseScalarFieldEnum',
       skip: 'Int',

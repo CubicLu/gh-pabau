@@ -6,7 +6,7 @@ export const TblModuleFieldsSettingAggregateQuery = queryField(
     type: 'AggregateTblModuleFieldsSetting',
     args: {
       where: 'TblModuleFieldsSettingWhereInput',
-      orderBy: list('TblModuleFieldsSettingOrderByInput'),
+      orderBy: list('TblModuleFieldsSettingOrderByWithRelationInput'),
       cursor: 'TblModuleFieldsSettingWhereUniqueInput',
       distinct: 'TblModuleFieldsSettingScalarFieldEnum',
       skip: 'Int',

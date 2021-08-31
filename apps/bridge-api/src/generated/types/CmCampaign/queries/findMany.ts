@@ -4,7 +4,7 @@ export const CmCampaignFindManyQuery = queryField('findManyCmCampaign', {
   type: nonNull(list(nonNull('CmCampaign'))),
   args: {
     where: 'CmCampaignWhereInput',
-    orderBy: list('CmCampaignOrderByInput'),
+    orderBy: list('CmCampaignOrderByWithRelationInput'),
     cursor: 'CmCampaignWhereUniqueInput',
     distinct: 'CmCampaignScalarFieldEnum',
     skip: 'Int',

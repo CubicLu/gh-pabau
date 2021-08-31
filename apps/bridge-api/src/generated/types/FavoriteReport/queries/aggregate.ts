@@ -6,7 +6,7 @@ export const FavoriteReportAggregateQuery = queryField(
     type: 'AggregateFavoriteReport',
     args: {
       where: 'FavoriteReportWhereInput',
-      orderBy: list('FavoriteReportOrderByInput'),
+      orderBy: list('FavoriteReportOrderByWithRelationInput'),
       cursor: 'FavoriteReportWhereUniqueInput',
       distinct: 'FavoriteReportScalarFieldEnum',
       skip: 'Int',
