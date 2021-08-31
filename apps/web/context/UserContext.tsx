@@ -93,7 +93,7 @@ export const UserProvider: FC = ({ children }) => {
         'https://crm.pabau.com/auth.php?t=' +
           me.pab1 +
           '&r=' +
-          encodeURIComponent(window.location.origin)
+          encodeURIComponent(window.location.href)
       )
     }
   }, [me, didLogin])
