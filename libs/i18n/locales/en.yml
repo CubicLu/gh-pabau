@@ -4820,4 +4820,10 @@ en:
   ui.clientcard-labtests.options.delete: 'Delete'
   ui.clientcard-labtests.expand: 'expand'
   ui.clientcard-labtests.shrink: 'shrink'
+  ui.clientcard-prescriptions.options.preview: 'Preview'
+  ui.clientcard-prescriptions.options.print: 'Print'
+  ui.clientcard-prescriptions.options.share: 'Share'
+  ui.clientcard-prescriptions.options.edit: 'Edit'
+  ui.clientcard-prescriptions.options.repeat: 'Repeat'
+  ui.clientcard-prescriptions.options.delete: 'Delete'
 

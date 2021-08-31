@@ -13,6 +13,7 @@ import {
   ClientFormsLayout,
   ClientPackagesLayout,
   ClientPhotosLayout,
+  ClientPrescriptionsLayout,
   ClientActivitiesLayout,
   ClientVaccineHistoryLayout,
   Button,
@@ -78,6 +79,7 @@ import {
   thirdPartySearchResults,
   appointments,
   clientPackages,
+  prescriptions,
   testList,
 } from './mock'
 
@@ -196,10 +198,14 @@ const ClientCardModal: FC<ClientCardProps> = ({
         },
         {
           key: 8,
-          content: 'Lab Tests',
+          content: 'Prescriptions',
         },
         {
           key: 9,
+          content: 'Lab Tests',
+        },
+        {
+          key: 10,
           content: 'Vaccine History',
         },
       ],
@@ -928,6 +934,21 @@ const ClientCardModal: FC<ClientCardProps> = ({
                 </div>
                 <div>
                   <ClientDocumentsLayout isEmpty={true} />
+                </div>
+                <div>
+                  <ClientPrescriptionsLayout
+                    isEmpty={false}
+                    prescriptions={prescriptions}
+                    onPreviewClick={(e) => {
+                      console.log('Preview selected:', e)
+                      return Promise.resolve(true)
+                    }}
+                    onPrintClick={(e) => Promise.resolve(true)}
+                    onShareClick={(e) => Promise.resolve(true)}
+                    onEditClick={(e) => Promise.resolve(true)}
+                    onRepeatClick={(e) => Promise.resolve(true)}
+                    onDeleteClick={(e) => Promise.resolve(true)}
+                  />
                 </div>
                 <div>
                   <ClientLabTestsLayout

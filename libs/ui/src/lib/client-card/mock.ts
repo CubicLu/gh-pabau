@@ -6,6 +6,7 @@ import linda from '../../assets/images/users/linda.png'
 import liza from '../../assets/images/users/liza.png'
 import EmployeeImg from './assets/employees/1.png'
 import labTests from '../../assets/images/lab-tests.svg'
+import Prescriptions2 from '../../assets/images/user2.png'
 
 export const searchResults = [
   { id: '1', firstName: 'Will', lastName: 'Lawsons', avatarUrl: userAvatar },
@@ -1139,6 +1140,45 @@ export const testList = [
     img: labTests,
     testStatus: 'Received',
     isPreviewAvailable: true,
+  },
+]
+
+export const prescriptions = [
+  {
+    id: 1,
+    name: 'Minoxidil 2mg',
+    date: '2021-08-21T08:30:00.00Z',
+    img: labTests,
+    isRepeated: false,
+    details: {
+      date: '2019-11-01T00:00:00Z',
+      perWeek: '150 mg every 2 weeks',
+      perDay: '75 mg/ml, 1',
+    },
+  },
+  {
+    id: 2,
+    name: 'Minoxidil 2mg',
+    date: '2021-08-21T08:30:00.00Z',
+    img: Prescriptions2,
+    isRepeated: false,
+    details: {
+      date: '2019-11-01T00:00:00Z',
+      perWeek: '150 mg every 2 weeks',
+      perDay: '75 mg/ml, 1',
+    },
+  },
+  {
+    id: 3,
+    name: 'Minoxidil 2mg',
+    date: '2021-08-21T08:30:00.00Z',
+    img: labTests,
+    isRepeated: false,
+    details: {
+      date: '2019-11-01T00:00:00Z',
+      perWeek: '150 mg every 2 weeks',
+      perDay: '75 mg/ml, 1',
+    },
   },
 ]
 
