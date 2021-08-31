@@ -188,8 +188,14 @@ export const CreateLabels: FC<CreateLabelsProps> = ({
     if (selectedLabels.length !== defaultSelectedLabels.length) {
       return false
     }
-    const diff1 = differenceBy(selectedLabels, defaultSelectedLabels) || []
-    const diff2 = differenceBy(selectedLabels, defaultSelectedLabels) || []
+    const diff1 =
+      differenceBy(selectedLabels, defaultSelectedLabels, (obj) => {
+        return obj.label + obj.color
+      }) || []
+    const diff2 =
+      differenceBy(defaultSelectedLabels, selectedLabels, (obj) => {
+        return obj.label + obj.color
+      }) || []
     return diff1.length === 0 && diff2.length === 0
   }
 
