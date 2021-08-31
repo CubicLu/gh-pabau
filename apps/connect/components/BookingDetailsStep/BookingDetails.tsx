@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useContext, useState } from 'react'
 import { PhoneNumberInput, PasswordWithHelper } from '@pabau/ui'
 import { Form, Input, SubmitButton } from 'formik-antd'
 import { Select, Checkbox } from 'antd'
@@ -16,19 +16,19 @@ import Conformation, {
   productType,
 } from '../conformation/conformation'
 import { countrylist } from '../../../web/mocks/connect/mock'
-import { BookingData } from '../../types/booking'
+import { SettingsContext } from '../../context/settings-context'
+import { useSelectedDataStore } from '../../store/selectedData'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 
 const { Option } = Select
 
 export interface P {
-  bookingData: BookingData
   changescreen: () => void
   charge: string
   type: string
   services: number
   getinfo: (val) => void
   member: number
-  translation: (val: string) => string
   backToStep?: (val: number) => void
 }
 export interface userType {
@@ -39,14 +39,15 @@ export interface userType {
   count: number
 }
 const BookingDetails: FC<P> = ({
-  bookingData,
   changescreen,
   charge,
   getinfo,
-  translation,
   member,
   backToStep,
 }) => {
+  const settings = useContext(SettingsContext)
+  const [selectedData, setSelectedData] = useSelectedDataStore()
+  const { t } = useTranslationI18()
   const [valid, setvalid] = useState(false)
   const [verify, setverify] = useState(false)
   const list = () => {
@@ -129,43 +130,39 @@ const BookingDetails: FC<P> = ({
       return String((Number(charge) * (100 - products.extra)) / 100)
     }
   }
-  console.log('DATA GOT', bookingData)
+
   return (
     <div>
       {confim ? (
         <Conformation
           changescreen={changescreen}
-          clinic={bookingData.location.name}
-          docname={'Nenad Jovanovski'}
-          date={bookingData.dateTime.format('dddd, Do MMMM')}
-          time={bookingData.dateTime.format('HH:mm')}
+          clinic={selectedData.location.name}
+          docname={selectedData.employee.User.full_name}
+          date={selectedData.dateTime.format('dddd, Do MMMM')}
+          time={selectedData.dateTime.format('HH:mm')}
           charge={charge}
-          address={bookingData.location.address}
-          type={bookingData.services.map((s) => s.name).join(', ')}
+          address={selectedData.location.address}
+          type={selectedData.services.map((s) => s.name).join(', ')}
           image={image}
-          services={bookingData.services.length}
-          translation={translation}
+          services={selectedData.services.length}
           backToStep={backToStep}
           products={products}
         />
       ) : (
         <div className={styles.bookingMainWrapper}>
           <div className={styles.appointmentDetails}>
-            <h6>
-              {translation('connect.onlinebooking.bookdetail.conform.title')}
-            </h6>
+            <h6>{t('connect.onlinebooking.bookdetail.conform.title')}</h6>
             <Verification
-              clinic={bookingData.location.name}
+              clinic={selectedData.location.name}
               docname={'Nenad Jovanovski'}
-              date={bookingData.dateTime.format('dddd, Do MMMM')}
-              time={bookingData.dateTime.format('HH:mm')}
+              date={selectedData.dateTime.format('dddd, Do MMMM')}
+              time={selectedData.dateTime.format('HH:mm')}
               charge={0}
-              address={bookingData.location.address}
+              address={selectedData.location.address}
               image={
                 'https://crm.pabau.com//cdn/file_attachments/8021/avatar_photos/20201208134720.jpeg'
               }
-              type={bookingData.services.map((s) => s.name).join(', ')}
-              translation={translation}
+              type={selectedData.services.map((s) => s.name).join(', ')}
               clickable={true}
               backToStep={backToStep}
             />
@@ -173,15 +170,13 @@ const BookingDetails: FC<P> = ({
           {/*<RenderProduct products={products} type={type} tooltip={tooltip} />*/}
           <div className={styles.accountLoginWrapper}>
             <p>
-              {translation('connect.onlinebooking.bookdetail.alreadyaccount')}{' '}
+              {t('connect.onlinebooking.bookdetail.alreadyaccount')}{' '}
               <a>Log in</a>
             </p>
             <div className={styles.btnSocial} onClick={() => setconfirm(true)}>
               <span>
                 <img src={img1} alt={'nothing'} />
-                {translation(
-                  'connect.onlinebooking.bookdetail.continue.google'
-                )}
+                {t('connect.onlinebooking.bookdetail.continue.google')}
               </span>
             </div>
             <div
@@ -190,12 +185,10 @@ const BookingDetails: FC<P> = ({
             >
               <span>
                 <img src={img} alt={'nothing'} />
-                {translation(
-                  'connect.onlinebooking.bookdetail.continue.facebook'
-                )}
+                {t('connect.onlinebooking.bookdetail.continue.facebook')}
               </span>
             </div>
-            <h6>{translation('connect.onlinebooking.bookdetail.or')}</h6>
+            <h6>{t('connect.onlinebooking.bookdetail.or')}</h6>
           </div>
           <div className={styles.formWrapper}>
             <div className={styles.bookFormHead}>
@@ -238,14 +231,12 @@ const BookingDetails: FC<P> = ({
                     )}
 
                     <Form.Item
-                      label={translation(
-                        'connect.onlinebooking.bookdetail.form.fname'
-                      )}
+                      label={t('connect.onlinebooking.bookdetail.form.fname')}
                       name="firstname"
                     >
                       <Input
                         name="firstname"
-                        placeholder={translation(
+                        placeholder={t(
                           'connect.onlinebooking.bookdetail.form.fname.place'
                         )}
                         autoComplete="off"
@@ -259,14 +250,12 @@ const BookingDetails: FC<P> = ({
                       />
                     </Form.Item>
                     <Form.Item
-                      label={translation(
-                        'connect.onlinebooking.bookdetail.form.lname'
-                      )}
+                      label={t('connect.onlinebooking.bookdetail.form.lname')}
                       name="lastname"
                     >
                       <Input
                         name="lastname"
-                        placeholder={translation(
+                        placeholder={t(
                           'connect.onlinebooking.bookdetail.form.lname.place'
                         )}
                         autoComplete="off"
@@ -279,14 +268,12 @@ const BookingDetails: FC<P> = ({
                       />
                     </Form.Item>
                     <Form.Item
-                      label={translation(
-                        'connect.onlinebooking.bookdetail.form.email'
-                      )}
+                      label={t('connect.onlinebooking.bookdetail.form.email')}
                       name="email"
                     >
                       <Input
                         name="email"
-                        placeholder={translation(
+                        placeholder={t(
                           'connect.onlinebooking.bookdetail.form.email.place'
                         )}
                         autoComplete="off"
@@ -299,9 +286,7 @@ const BookingDetails: FC<P> = ({
                       />
                     </Form.Item>
                     <Form.Item
-                      name={translation(
-                        'connect.onlinebooking.bookdetail.form.phone'
-                      )}
+                      name={t('connect.onlinebooking.bookdetail.form.phone')}
                     >
                       <PhoneNumberInput
                         label="Phone"
@@ -338,9 +323,7 @@ const BookingDetails: FC<P> = ({
                 >
                   <Form.Item
                     name="password"
-                    label={translation(
-                      'connect.onlinebooking.bookdetail.form.password'
-                    )}
+                    label={t('connect.onlinebooking.bookdetail.form.password')}
                   >
                     <PasswordWithHelper
                       placeholder=""
@@ -354,9 +337,7 @@ const BookingDetails: FC<P> = ({
                   </Form.Item>
                   <Form.Item
                     name="country"
-                    label={translation(
-                      'connect.onlinebooking.bookdetail.form.country'
-                    )}
+                    label={t('connect.onlinebooking.bookdetail.form.country')}
                   >
                     <Select
                       defaultValue="United Kingdom"
@@ -379,9 +360,7 @@ const BookingDetails: FC<P> = ({
                         console.log(val.target.checked)
                       }}
                     >
-                      {translation(
-                        'connect.onlinebooking.bookdetail.form.verify1'
-                      )}
+                      {t('connect.onlinebooking.bookdetail.form.verify1')}
                     </Checkbox>
                   </Form.Item>
                   <Form.Item name="verify2">
@@ -392,13 +371,11 @@ const BookingDetails: FC<P> = ({
                         console.log(verify)
                       }}
                     >
-                      {translation(
-                        'connect.onlinebooking.bookdetail.form.verify2'
-                      )}
+                      {t('connect.onlinebooking.bookdetail.form.verify2')}
                     </Checkbox>
                   </Form.Item>
                   <p>
-                    {translation(
+                    {t(
                       'connect.onlinebooking.bookdetail.form.finaldescription'
                     )}
                   </p>
@@ -410,7 +387,7 @@ const BookingDetails: FC<P> = ({
                     disabled={valid && verify ? false : true}
                     //onInvalid={() => console.log('---------')}
                   >
-                    {translation('connect.onlinebooking.bookdetail.submit')}
+                    {t('connect.onlinebooking.bookdetail.submit')}
                   </SubmitButton>
                 </Form>
               )}

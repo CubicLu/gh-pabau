@@ -9,6 +9,7 @@ import ClassNames from 'classnames'
 import { Input, Rate, Tooltip } from 'antd'
 import { productType } from './conformation'
 import { Button } from '@pabau/ui'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 
 export interface P {
   clinic: string
@@ -19,7 +20,6 @@ export interface P {
   address: string
   type: string
   image: any
-  translation: (val: string) => string
   clickable?: boolean
   backToStep?: (val: number) => void
 }
@@ -37,17 +37,17 @@ export const Verification: FC<P> = ({
   type,
   address,
   image,
-  translation,
   backToStep,
   clickable = false,
 }) => {
-  //const { t } = useTranslationI18()
+  const { t } = useTranslationI18()
+
   return (
     <div className={styles.appWrapper}>
       <div className={styles.applicationWrap}>
         <div className={styles.confirmBox}>
           <h5>
-            {translation('connect.onlinebooking.verification.appoitmenttype')}{' '}
+            {t('connect.onlinebooking.verification.appoitmenttype')}{' '}
             {clickable && (
               <EditOutlined
                 onClick={() => {
@@ -61,7 +61,7 @@ export const Verification: FC<P> = ({
         </div>
         <div className={styles.confirmBox}>
           <h5>
-            {translation('connect.onlinebooking.verification.clinic')}{' '}
+            {t('connect.onlinebooking.verification.clinic')}{' '}
             {clickable && (
               <EditOutlined
                 onClick={() => {
@@ -74,14 +74,14 @@ export const Verification: FC<P> = ({
           <p>{clinic}</p>
         </div>
         <div className={styles.confirmBox}>
-          <h5> {translation('connect.onlinebooking.verification.address')} </h5>
+          <h5> {t('connect.onlinebooking.verification.address')} </h5>
           <p>{address}</p>
         </div>
       </div>
       <div className={styles.applicationWrap}>
         <div className={styles.confirmBox}>
           <h5>
-            {translation('connect.onlinebooking.verification.seeing')}{' '}
+            {t('connect.onlinebooking.verification.seeing')}{' '}
             {clickable && (
               <EditOutlined
                 onClick={() => {
@@ -97,7 +97,7 @@ export const Verification: FC<P> = ({
         </div>
         <div className={styles.confirmBox}>
           <h5>
-            {translation('connect.onlinebooking.verification.date')}{' '}
+            {t('connect.onlinebooking.verification.date')}{' '}
             {clickable && (
               <EditOutlined
                 onClick={() => {
@@ -110,7 +110,7 @@ export const Verification: FC<P> = ({
         </div>
         <div className={styles.confirmBox}>
           <h5>
-            {translation('connect.onlinebooking.verification.time')}{' '}
+            {t('connect.onlinebooking.verification.time')}{' '}
             {clickable && (
               <EditOutlined
                 onClick={() => {
@@ -123,9 +123,7 @@ export const Verification: FC<P> = ({
           <p>{time}</p>
         </div>
         <div className={styles.confirmBox}>
-          <h5>
-            {translation('connect.onlinebooking.verification.appoitmentprice')}
-          </h5>
+          <h5>{t('connect.onlinebooking.verification.appoitmentprice')}</h5>
           <p>£ {charge}</p>
         </div>
       </div>

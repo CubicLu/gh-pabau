@@ -8,6 +8,7 @@ let globalState: BookingData = {
   employee: null,
   location: null,
   peopleCount: 1,
+  dateTime: null,
 }
 
 let listeners = []
@@ -31,6 +32,9 @@ const actions = {
   },
   SET_EMPLOYEE: (curState, employee) => {
     return { employee: employee }
+  },
+  SET_DATETIME: (curState, dateTime) => {
+    return { dateTime: dateTime }
   },
 }
 

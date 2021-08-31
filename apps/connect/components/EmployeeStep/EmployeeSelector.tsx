@@ -5,6 +5,7 @@ import { useOnlineBookableStaffQuery } from '@pabau/graphql'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { useSelectedDataStore } from '../../store/selectedData'
 import { SettingsContext } from '../../context/settings-context'
+import moment from 'moment'
 export interface P {
   onSelected: () => void
 }
@@ -22,13 +23,12 @@ const EmployeeSelector: FC<P> = ({ onSelected }) => {
   } = useOnlineBookableStaffQuery({
     variables: {
       shift_start: Number.parseInt(moment().format('YYYYMMDD000000')),
-      company_id: settings.company_id,
+      company_id: settings.id,
     },
   })
 
   if (errorStaff) return <div>Error!</div>
   if (loadingStaff) return <div>Loading...</div>
-  console.log('EmployeeSelector', selectedData)
   return (
     <div className={Styles.mainBox}>
       <h4>{t('connect.onlinebooking.employes.title')}</h4>

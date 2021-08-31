@@ -26,7 +26,6 @@ export const ServiceCategorySelector: FC<P> = ({ items, onSelected }) => {
   const [selectedData, setSelectedData] = useSelectedDataStore()
   const [isGroup, setIsGroup] = useState<boolean>(false)
   const settings = useContext(SettingsContext)
-  console.log('SETTINGS', settings)
   const handleSelectedMasterCategory = (id: number) => {
     setShowMasterCategories(false)
     setSelectedData('SET_MASTER_CATEGORY_ID', id)

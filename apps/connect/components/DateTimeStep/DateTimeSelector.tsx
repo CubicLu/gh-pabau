@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useContext, useState } from 'react'
 import Styles from './DateTimeSelector.module.less'
 import { Calendar } from 'antd'
 import moment from 'moment'
@@ -17,31 +17,31 @@ import {
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { decimalToISO8601 } from '../../helpers/DatesHelper'
 import { useSelectedDataStore } from '../../store/selectedData'
+import { SettingsContext } from '../../context/settings-context'
 
 export interface P {
-  onSelectedTimeslot: (dateTime: moment.Moment) => void
+  onSelected: () => void
 }
 
-const DateTimeSelector: FC<P> = ({ onSelectedTimeslot }) => {
+const DateTimeSelector: FC<P> = ({ onSelected }) => {
   // CRAP
   const [mdisplay, setmdisplay] = useState(true)
   const [calcount, setcalcount] = useState(1)
   const isMobile = useMedia('(max-width: 768px)', false)
-  const [selectedData, setSelectedData] = useSelectedDataStore()
 
-  const data = {
-    name: 'Nenad Jovanovski',
-  }
   // FIXED
   const { t } = useTranslationI18()
   const [selectedDate, setSelectedDate] = useState(moment())
+  const [selectedData, setSelectedData] = useSelectedDataStore()
+  const settings = useContext(SettingsContext)
+
   const {
     loading: loadingShifts,
     error: errorShifts,
     data: shiftsResult,
   } = useBookingAvailableShiftsQuery({
     variables: {
-      company_id: 8021,
+      company_id: settings.id,
       shift_start: Number.parseInt(moment().format('YYYYMMDD000000')),
       shift_end: Number.parseInt(moment().add(3, 'M').format('YYYYMMDD235959')),
     },
@@ -55,7 +55,7 @@ const DateTimeSelector: FC<P> = ({ onSelectedTimeslot }) => {
     variables: {
       start_date: Number.parseInt(moment().format('YYYYMMDD000000')),
       end_date: Number.parseInt(moment().add(3, 'M').format('YYYYMMDD235959')),
-      company_id: 8021,
+      company_id: settings.id,
       user_id: selectedData.employee.ID,
     },
   })
@@ -65,10 +65,7 @@ const DateTimeSelector: FC<P> = ({ onSelectedTimeslot }) => {
 
   const shiftsByDate = []
   for (const shift of shiftsResult.findManyRotaShift) {
-    if (
-      selectedData.employee.User.id === 0 ||
-      selectedData.employee.User.id === shift.uid
-    ) {
+    if (!selectedData.employee || selectedData.employee.ID === shift.uid) {
       const index = shift.start.toString().substring(0, 8)
       if (!shiftsByDate[index]) {
         shiftsByDate[index] = [shift]
@@ -204,9 +201,11 @@ const DateTimeSelector: FC<P> = ({ onSelectedTimeslot }) => {
                   onClick={() => {
                     const hour = Number.parseInt(val.substring(0, 2))
                     const minute = Number.parseInt(val.substring(3, 5))
-                    onSelectedTimeslot(
+                    setSelectedData(
+                      'SET_DATETIME',
                       moment(selectedDate).set({ hour: hour, minute: minute })
                     )
+                    onSelected()
                   }}
                 >
                   <p>{val}</p>
@@ -301,7 +300,7 @@ const DateTimeSelector: FC<P> = ({ onSelectedTimeslot }) => {
               {selectedData.employee.ID === 0
                 ? t('connect.onlinebooking.date&time.chooseanyone')
                 : `${t('connect.onlinebooking.date&time.d&tfor')} ${
-                    data.name
+                    selectedData.employee.User.full_name
                   } ${t('connect.onlinebooking.date&time.appointment')}`}
             </h4>
             <div className={Styles.mobileHeader}>
@@ -341,8 +340,8 @@ const DateTimeSelector: FC<P> = ({ onSelectedTimeslot }) => {
           <h4 className={Styles.headTitle}>
             {selectedData.employee.ID === 0
               ? t('connect.onlinebooking.date&time.chooseanyone')
-              : `${t('connect.onlinebooking.date&time.d&tfor')} ${
-                  data.name
+              : `${t('conn  ect.onlinebooking.date&time.d&tfor')} ${
+                  selectedData.employee.User.full_name
                 } ${t('connect.onlinebooking.date&time.appointment')}`}
           </h4>
           <h4>{selectedDate.format('MMMM YYYY')}</h4>
@@ -352,13 +351,13 @@ const DateTimeSelector: FC<P> = ({ onSelectedTimeslot }) => {
             onSelect={dateSelectedHandler}
             disabledDate={dateHasShift}
           />
-          {/*<h4>{moment(selectedDate).add(1, 'M').format('MMMM YYYY')}</h4>*/}
-          {/*<Calendar*/}
-          {/*  value={moment().add(1, 'M')}*/}
-          {/*  dateCellRender={dateCellRender}*/}
-          {/*  onSelect={dateSelectedHandler}*/}
-          {/*  disabledDate={dateHasShift}*/}
-          {/*/>*/}
+          <h4>{moment(selectedDate).add(1, 'M').format('MMMM YYYY')}</h4>
+          <Calendar
+            value={moment(selectedDate).add(1, 'M')}
+            dateCellRender={dateCellRender}
+            onSelect={dateSelectedHandler}
+            disabledDate={dateHasShift}
+          />
           {/*<h4>{moment(selectedDate).add(2, 'M').format('MMMM YYYY')}</h4>*/}
           {/*<Calendar*/}
           {/*  value={moment().add(2, 'M')}*/}

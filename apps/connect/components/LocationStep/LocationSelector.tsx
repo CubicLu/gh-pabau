@@ -1,48 +1,28 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useState, useEffect, useContext } from 'react'
 import { Input, Button } from '@pabau/ui'
 import Styles from './LocationSelector.module.less'
 import { CheckCircleFilled, CloseCircleOutlined } from '@ant-design/icons'
 import fetch from 'node-fetch'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { useSelectedDataStore } from '../../store/selectedData'
-import { Location } from '../../types/locations'
-
+import { SettingsContext } from '../../context/settings-context'
+import { useOnlineBookableLocationsQuery } from '@pabau/graphql'
+import { getDistanceFromLatLonInKm } from '../../helpers/DistanceHelper'
 export interface P {
-  items: Location[]
   onSelected: () => void
 }
 
-const LocationSelector: FC<P> = ({ items, onSelected }) => {
+const LocationSelector: FC<P> = ({ onSelected }) => {
   const [auto, setauto] = useState(true)
-  const [, setSelectedData] = useSelectedDataStore()
+  const [selectedData, setSelectedData] = useSelectedDataStore()
   const { t } = useTranslationI18()
-  const [searchLocation, setSearchLocation] = useState<boolean>(
-    items.length > 5
-  )
+  const settings = useContext(SettingsContext)
+
   const [formattedAddress, setFormattedAddress] = useState<string>()
   const [userLocation, setUserLocation] = useState({
     lng: 0,
     lat: 0,
   })
-
-  function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-    function deg2rad(deg) {
-      return deg * (Math.PI / 180)
-    }
-
-    const R = 6371 // Radius of the earth in km
-    const dLat = deg2rad(lat2 - lat1) // deg2rad below
-    const dLon = deg2rad(lon2 - lon1)
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(deg2rad(lat1)) *
-        Math.cos(deg2rad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2)
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-    const d = R * c // Distance in km
-    return d
-  }
 
   const getLatLng = () => {
     navigator.geolocation.getCurrentPosition((item) => {
@@ -64,7 +44,22 @@ const LocationSelector: FC<P> = ({ items, onSelected }) => {
     }
   }, [])
 
-  console.log('userLocation', userLocation)
+  const {
+    loading: loadingLocations,
+    error: errorLocations,
+    data: locationsResult,
+  } = useOnlineBookableLocationsQuery({
+    variables: {
+      company_id: settings.id,
+    },
+  })
+  const [searchLocation, setSearchLocation] = useState<boolean>(
+    locationsResult?.findManyCompanyBranch.length > 5
+  )
+
+  if (loadingLocations) return <div>Error!</div>
+  if (errorLocations) return <div>Loading...</div>
+
   return (
     <>
       {searchLocation && (
@@ -112,7 +107,7 @@ const LocationSelector: FC<P> = ({ items, onSelected }) => {
         <div className={Styles.slide1}>
           <div className={Styles.chooseWrapper}>
             <p className={Styles.chooseHeading}>{formattedAddress}</p>
-            {items.map((val) => (
+            {locationsResult.findManyCompanyBranch.map((val) => (
               <div
                 key={val.id}
                 onClick={() => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Header } from '../../components/Header'
 import { Footer } from '../../components/Footer'
 
@@ -18,13 +18,11 @@ import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import {
   useCompanyServicesCategorisedQuery,
   useCreateAppointmentMutation,
-  useGetCompanyBySlugQuery,
-  useOnlineBookableLocationsQuery,
 } from '@pabau/graphql'
 import { Image } from 'antd'
 
 import { BookingData } from '../../types/booking'
-import { useRouter } from 'next/router'
+import { SettingsContext } from '../../context/settings-context'
 
 interface userData {
   firstname: string
@@ -69,28 +67,11 @@ export function Index() {
   const [user, setuser] = useState<userData>(userData)
 
   // FIXED
-  const router = useRouter()
   const [language, setLanguage] = useState('en')
   const [currentStep, setCurrentStep] = useState<number>(0)
   const [selectedData, setSelectedData] = useState<BookingData>()
   const { t } = useTranslationI18()
-
-  const companySlug =
-    typeof router.query.company_slug === 'object'
-      ? router.query.company_slug[0]
-      : router.query.company_slug
-
-  const {
-    loading: loadingSettings,
-    error: errorSettings,
-    data: companySettingsResult,
-  } = useGetCompanyBySlugQuery({
-    variables: {
-      slug: 'nenad-clinic',
-    },
-  })
-
-  const company = companySettingsResult?.findFirstCompany
+  const settings = useContext(SettingsContext)
 
   const {
     loading: loadingServices,
@@ -98,20 +79,8 @@ export function Index() {
     data: servicesCategorised,
   } = useCompanyServicesCategorisedQuery({
     variables: {
-      company_id: company?.id,
+      company_id: settings?.id,
     },
-    skip: loadingSettings,
-  })
-
-  const {
-    loading: loadingLocations,
-    error: errorLocations,
-    data: locationsResult,
-  } = useOnlineBookableLocationsQuery({
-    variables: {
-      company_id: company?.id,
-    },
-    skip: loadingSettings,
   })
 
   const [createBooking] = useCreateAppointmentMutation({
@@ -119,13 +88,9 @@ export function Index() {
     onError(err) {},
   })
 
-  if (errorSettings || errorServices || errorLocations) return <div>Error!</div>
-  if (loadingSettings || loadingServices || loadingLocations)
-    return <div>Loading...</div>
+  if (errorServices) return <div>Error!</div>
+  if (loadingServices) return <div>Loading...</div>
 
-  if (!companySettingsResult === null) {
-    return <div>Invalid Company</div>
-  }
   const masterCategories = servicesCategorised.findManyServicesMasterCategory.map(
     (row) => {
       return {
@@ -285,7 +250,6 @@ export function Index() {
           )}
           {currentStep === 2 && (
             <LocationSelector
-              items={locationsResult.findManyCompanyBranch}
               onSelected={() => {
                 setCurrentStep(currentStep + 1)
               }}
@@ -300,11 +264,7 @@ export function Index() {
           )}
           {currentStep === 4 && (
             <DateTimeSelector
-              onSelectedTimeslot={(dateTime) => {
-                setSelectedData({
-                  ...selectedData,
-                  dateTime: dateTime,
-                })
+              onSelected={() => {
                 setCurrentStep(currentStep + 1)
               }}
             />
@@ -312,12 +272,11 @@ export function Index() {
           {currentStep === 5 && (
             <div>
               <BookingDetails
-                bookingData={selectedData}
                 changescreen={function () {
                   createBooking({
                     variables: {
                       user_id: selectedData.employee.ID,
-                      company_id: company.id,
+                      company_id: settings.id,
                       location_id: selectedData.location.id,
                       service_id: 2691491,
                       contact_id: 22293092,
@@ -339,7 +298,6 @@ export function Index() {
                 }}
                 charge={user.charge}
                 getinfo={userinfo}
-                translation={t}
                 member={user.member}
                 backToStep={(step: number) => {
                   setCurrentStep(step)

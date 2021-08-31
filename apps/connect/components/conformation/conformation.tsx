@@ -5,6 +5,7 @@ import { Button } from '@pabau/ui'
 import styles from './conformation.module.less'
 import { Verification, RenderProduct } from './verification'
 import { tooltip } from '../../../web/mocks/connect/confirmMock'
+import { useTranslationI18 } from '../../hooks/useTranslationI18'
 
 export interface datatype {
   key: number
@@ -50,7 +51,6 @@ export interface ConformationProps {
   type: string
   image: any
   services: number
-  translation: (val: string) => string
   submitBtn?: boolean
   backToStep?: (val: number) => void
   products: productType
@@ -69,7 +69,6 @@ const Conformation: FC<ConformationProps> = ({
   services,
   submitBtn = true,
   image,
-  translation,
   backToStep,
   products,
 }) => {
@@ -80,12 +79,12 @@ const Conformation: FC<ConformationProps> = ({
       return String((Number(charge) * (100 - products.extra)) / 100)
     }
   }
+  const { t } = useTranslationI18()
+
   return (
     <div className={styles.confirmMainWrapper}>
       <div className={styles.contentWrap}>
-        <h6>
-          {translation('connect.onlinebooking.conformation.conform.title')}
-        </h6>
+        <h6>{t('connect.onlinebooking.conformation.conform.title')}</h6>
         <Verification
           clinic={clinic}
           docname={docname}
@@ -103,7 +102,6 @@ const Conformation: FC<ConformationProps> = ({
           address={address}
           image={image}
           type={type}
-          translation={translation}
           clickable={true}
           backToStep={backToStep}
         />
@@ -128,7 +126,7 @@ const Conformation: FC<ConformationProps> = ({
                 changescreen()
               }}
             >
-              {translation('connect.onlinebooking.conformation.conformbutton')}
+              {t('connect.onlinebooking.conformation.conformbutton')}
             </Button>
           </div>
         )}
