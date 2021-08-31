@@ -90,9 +90,6 @@ export const MobileSidebar: FC<P> = ({
     } else if (e.key?.includes('Chat') && e?.keyPath) {
       onClickChatDrawer()
     }
-    if (e.key?.includes('Marketing')) {
-      await router.push('/marketing/sources')
-    }
     if (path) {
       router.push(path)
       if (router.pathname === path) onSideBarClosed?.()
@@ -109,7 +106,7 @@ export const MobileSidebar: FC<P> = ({
       <div className={styles.mobileViewAlign}>
         <div className={styles.menuHeaderHeading}>
           <CloseOutlined
-            className="menuHeaderIconColor"
+            className={styles.menuHeaderIconColor}
             onClick={onSideBarClosed}
           />
           <p>{t('sidebar.mobile.menu')}</p>
