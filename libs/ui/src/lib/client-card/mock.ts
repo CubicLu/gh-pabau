@@ -5,6 +5,7 @@ import arya from '../../assets/images/users/arya.png'
 import linda from '../../assets/images/users/linda.png'
 import liza from '../../assets/images/users/liza.png'
 import EmployeeImg from './assets/employees/1.png'
+import labTests from '../../assets/images/lab-tests.svg'
 
 export const searchResults = [
   { id: '1', firstName: 'Will', lastName: 'Lawsons', avatarUrl: userAvatar },
@@ -1101,6 +1102,43 @@ export const serviceData = [
         ],
       },
     ],
+  },
+]
+
+export const testList = [
+  {
+    id: 1,
+    name: 'DL7 Lab Profile',
+    orderNo: '284957392',
+    date: '2021-08-21T08:30:00.00Z',
+    tester: 'William Brandham',
+    laboratory: 'TDL Labratory',
+    img: labTests,
+    testStatus: 'Received',
+    isPreviewAvailable: true,
+  },
+
+  {
+    id: 2,
+    name: 'DL7 Lab Profile',
+    orderNo: '284957392',
+    date: '2021-08-21T08:30:00.00Z',
+    tester: 'William Brandham',
+    laboratory: 'TDL Labratory',
+    img: labTests,
+    testStatus: 'Awaiting results',
+    isPreviewAvailable: false,
+  },
+  {
+    id: 3,
+    name: 'H5 Blood Test',
+    orderNo: '284957392',
+    date: '2021-08-21T08:30:00.00Z',
+    tester: 'William Brandham',
+    laboratory: 'TDL Labratory',
+    img: labTests,
+    testStatus: 'Received',
+    isPreviewAvailable: true,
   },
 ]
 

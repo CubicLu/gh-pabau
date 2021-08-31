@@ -4696,3 +4696,10 @@ en:
   upload.cropper.error.malformedImage.message: 'Malformed Image File.'
   upload.cropper.success.message: 'Upload Successfully'
   intercom-article-title-setting-up-a-marketing-source: 'Setting up a marketing source'
+  ui.clientcard-labtests.options.viewreport: 'View Report'
+  ui.clientcard-labtests.options.print: 'Print'
+  ui.clientcard-labtests.options.share: 'Share'
+  ui.clientcard-labtests.options.delete: 'Delete'
+  ui.clientcard-labtests.expand: 'expand'
+  ui.clientcard-labtests.shrink: 'shrink'
+
