@@ -37,7 +37,7 @@ export const ServiceCategory = objectType({
       type: 'CompanyService',
       args: {
         where: 'CompanyServiceWhereInput',
-        orderBy: 'CompanyServiceOrderByInput',
+        orderBy: 'CompanyServiceOrderByWithRelationInput',
         cursor: 'CompanyServiceWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

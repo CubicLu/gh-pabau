@@ -6,7 +6,7 @@ export const CancelReasonFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'CancelReasonWhereInput',
-      orderBy: list('CancelReasonOrderByInput'),
+      orderBy: list('CancelReasonOrderByWithRelationInput'),
       cursor: 'CancelReasonWhereUniqueInput',
       distinct: 'CancelReasonScalarFieldEnum',
       skip: 'Int',

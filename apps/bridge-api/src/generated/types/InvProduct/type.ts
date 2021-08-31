@@ -77,7 +77,7 @@ export const InvProduct = objectType({
       type: 'CmDrug',
       args: {
         where: 'CmDrugWhereInput',
-        orderBy: 'CmDrugOrderByInput',
+        orderBy: 'CmDrugOrderByWithRelationInput',
         cursor: 'CmDrugWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -91,7 +91,7 @@ export const InvProduct = objectType({
       type: 'CmPurchaseItem',
       args: {
         where: 'CmPurchaseItemWhereInput',
-        orderBy: 'CmPurchaseItemOrderByInput',
+        orderBy: 'CmPurchaseItemOrderByWithRelationInput',
         cursor: 'CmPurchaseItemWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -105,7 +105,7 @@ export const InvProduct = objectType({
       type: 'InventoryDiscrepancy',
       args: {
         where: 'InventoryDiscrepancyWhereInput',
-        orderBy: 'InventoryDiscrepancyOrderByInput',
+        orderBy: 'InventoryDiscrepancyOrderByWithRelationInput',
         cursor: 'InventoryDiscrepancyWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -119,7 +119,7 @@ export const InvProduct = objectType({
       type: 'InvWarehouseProduct',
       args: {
         where: 'InvWarehouseProductWhereInput',
-        orderBy: 'InvWarehouseProductOrderByInput',
+        orderBy: 'InvWarehouseProductOrderByWithRelationInput',
         cursor: 'InvWarehouseProductWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -133,7 +133,7 @@ export const InvProduct = objectType({
       type: 'CmProductCustomField',
       args: {
         where: 'CmProductCustomFieldWhereInput',
-        orderBy: 'CmProductCustomFieldOrderByInput',
+        orderBy: 'CmProductCustomFieldOrderByWithRelationInput',
         cursor: 'CmProductCustomFieldWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -147,7 +147,7 @@ export const InvProduct = objectType({
       type: 'InventoryMovement',
       args: {
         where: 'InventoryMovementWhereInput',
-        orderBy: 'InventoryMovementOrderByInput',
+        orderBy: 'InventoryMovementOrderByWithRelationInput',
         cursor: 'InventoryMovementWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -161,7 +161,7 @@ export const InvProduct = objectType({
       type: 'SaleItem',
       args: {
         where: 'SaleItemWhereInput',
-        orderBy: 'SaleItemOrderByInput',
+        orderBy: 'SaleItemOrderByWithRelationInput',
         cursor: 'SaleItemWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

@@ -4,7 +4,7 @@ export const CmExtraGymFindFirstQuery = queryField('findFirstCmExtraGym', {
   type: 'CmExtraGym',
   args: {
     where: 'CmExtraGymWhereInput',
-    orderBy: list('CmExtraGymOrderByInput'),
+    orderBy: list('CmExtraGymOrderByWithRelationInput'),
     cursor: 'CmExtraGymWhereUniqueInput',
     distinct: 'CmExtraGymScalarFieldEnum',
     skip: 'Int',

@@ -33,7 +33,7 @@ export const UserGroup = objectType({
       type: 'UserGroupMember',
       args: {
         where: 'UserGroupMemberWhereInput',
-        orderBy: 'UserGroupMemberOrderByInput',
+        orderBy: 'UserGroupMemberOrderByWithRelationInput',
         cursor: 'UserGroupMemberWhereUniqueInput',
         take: 'Int',
         skip: 'Int',
@@ -47,7 +47,7 @@ export const UserGroup = objectType({
       type: 'GroupPermission',
       args: {
         where: 'GroupPermissionWhereInput',
-        orderBy: 'GroupPermissionOrderByInput',
+        orderBy: 'GroupPermissionOrderByWithRelationInput',
         cursor: 'GroupPermissionWhereUniqueInput',
         take: 'Int',
         skip: 'Int',

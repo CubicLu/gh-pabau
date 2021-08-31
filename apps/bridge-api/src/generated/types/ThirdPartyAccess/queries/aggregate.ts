@@ -6,7 +6,7 @@ export const ThirdPartyAccessAggregateQuery = queryField(
     type: 'AggregateThirdPartyAccess',
     args: {
       where: 'ThirdPartyAccessWhereInput',
-      orderBy: list('ThirdPartyAccessOrderByInput'),
+      orderBy: list('ThirdPartyAccessOrderByWithRelationInput'),
       cursor: 'ThirdPartyAccessWhereUniqueInput',
       distinct: 'ThirdPartyAccessScalarFieldEnum',
       skip: 'Int',

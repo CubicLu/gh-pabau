@@ -6,7 +6,7 @@ export const InvoiceTemplateFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'InvoiceTemplateWhereInput',
-      orderBy: list('InvoiceTemplateOrderByInput'),
+      orderBy: list('InvoiceTemplateOrderByWithRelationInput'),
       cursor: 'InvoiceTemplateWhereUniqueInput',
       distinct: 'InvoiceTemplateScalarFieldEnum',
       skip: 'Int',

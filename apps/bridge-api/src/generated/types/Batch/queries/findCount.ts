@@ -4,7 +4,7 @@ export const BatchFindCountQuery = queryField('findManyBatchCount', {
   type: nonNull('Int'),
   args: {
     where: 'BatchWhereInput',
-    orderBy: list('BatchOrderByInput'),
+    orderBy: list('BatchOrderByWithRelationInput'),
     cursor: 'BatchWhereUniqueInput',
     distinct: 'BatchScalarFieldEnum',
     skip: 'Int',

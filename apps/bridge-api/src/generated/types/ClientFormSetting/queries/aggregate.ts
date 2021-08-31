@@ -6,7 +6,7 @@ export const ClientFormSettingAggregateQuery = queryField(
     type: 'AggregateClientFormSetting',
     args: {
       where: 'ClientFormSettingWhereInput',
-      orderBy: list('ClientFormSettingOrderByInput'),
+      orderBy: list('ClientFormSettingOrderByWithRelationInput'),
       cursor: 'ClientFormSettingWhereUniqueInput',
       distinct: 'ClientFormSettingScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const CompanyServiceAggregateQuery = queryField(
     type: 'AggregateCompanyService',
     args: {
       where: 'CompanyServiceWhereInput',
-      orderBy: list('CompanyServiceOrderByInput'),
+      orderBy: list('CompanyServiceOrderByWithRelationInput'),
       cursor: 'CompanyServiceWhereUniqueInput',
       distinct: 'CompanyServiceScalarFieldEnum',
       skip: 'Int',

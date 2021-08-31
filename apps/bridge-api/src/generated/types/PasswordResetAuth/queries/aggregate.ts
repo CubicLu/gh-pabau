@@ -6,7 +6,7 @@ export const PasswordResetAuthAggregateQuery = queryField(
     type: 'AggregatePasswordResetAuth',
     args: {
       where: 'PasswordResetAuthWhereInput',
-      orderBy: list('PasswordResetAuthOrderByInput'),
+      orderBy: list('PasswordResetAuthOrderByWithRelationInput'),
       cursor: 'PasswordResetAuthWhereUniqueInput',
       distinct: 'PasswordResetAuthScalarFieldEnum',
       skip: 'Int',

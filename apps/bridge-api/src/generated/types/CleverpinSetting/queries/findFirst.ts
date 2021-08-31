@@ -6,7 +6,7 @@ export const CleverpinSettingFindFirstQuery = queryField(
     type: 'CleverpinSetting',
     args: {
       where: 'CleverpinSettingWhereInput',
-      orderBy: list('CleverpinSettingOrderByInput'),
+      orderBy: list('CleverpinSettingOrderByWithRelationInput'),
       cursor: 'CleverpinSettingWhereUniqueInput',
       distinct: 'CleverpinSettingScalarFieldEnum',
       skip: 'Int',

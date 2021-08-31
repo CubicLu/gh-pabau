@@ -6,7 +6,7 @@ export const UserSalutationFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'UserSalutationWhereInput',
-      orderBy: list('UserSalutationOrderByInput'),
+      orderBy: list('UserSalutationOrderByWithRelationInput'),
       cursor: 'UserSalutationWhereUniqueInput',
       distinct: 'UserSalutationScalarFieldEnum',
       skip: 'Int',

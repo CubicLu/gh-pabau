@@ -5,9 +5,9 @@ import {
 } from '@ant-design/icons'
 import {
   FindMedicalFormsDocument,
-  MedicalFormOrderByInput,
+  MedicalFormOrderByWithRelationInput,
   MedicalFormWhereInput,
-  MessageTemplateOrderByInput,
+  MessageTemplateOrderByWithRelationInput,
   MessageTemplateWhereInput,
   SortOrder,
   useCreateOneMedicalFormMutation,
@@ -16,7 +16,7 @@ import {
   useFindMessageTemplateQuery,
   useFindUserQuery,
   useGetBusinessDetailsQuery,
-  UserOrderByInput,
+  UserOrderByWithRelationInput,
   UserWhereInput,
   useUpdateOneMedicalFormMutation,
 } from '@pabau/graphql'
@@ -112,7 +112,7 @@ export const Index: FC = () => {
       whereQuery.AND.push({ name: { contains: searchData.searchValue } })
     }
 
-    const orderBy: MedicalFormOrderByInput = {
+    const orderBy: MedicalFormOrderByWithRelationInput = {
       [searchData.sortName]: searchData.sortOrder,
     }
 
@@ -138,7 +138,7 @@ export const Index: FC = () => {
   const whereQuerySmsTemplate: MessageTemplateWhereInput = {}
   whereQuerySmsTemplate.AND = []
   whereQuerySmsTemplate.AND.push({ template_type: { equals: 'sms' } })
-  const orderBySmsTemplate: MessageTemplateOrderByInput = {
+  const orderBySmsTemplate: MessageTemplateOrderByWithRelationInput = {
     template_id: SortOrder.Asc,
   }
 
@@ -156,7 +156,7 @@ export const Index: FC = () => {
   const whereQueryEmailTemplate: MessageTemplateWhereInput = {}
   whereQueryEmailTemplate.AND = []
   whereQueryEmailTemplate.AND.push({ template_type: { equals: 'email' } })
-  const orderByEmailTemplate: MessageTemplateOrderByInput = {
+  const orderByEmailTemplate: MessageTemplateOrderByWithRelationInput = {
     template_id: SortOrder.Asc,
   }
 
@@ -174,7 +174,7 @@ export const Index: FC = () => {
   const whereQueryUserList: UserWhereInput = {}
   whereQueryUserList.AND = []
   whereQueryUserList.AND.push({ deleted: { not: { equals: 1 } } })
-  const orderByUserList: UserOrderByInput = {
+  const orderByUserList: UserOrderByWithRelationInput = {
     full_name: SortOrder.Asc,
   }
 

@@ -6,6 +6,7 @@ import { Dayjs } from 'dayjs'
 import xeroBlue from '../../assets/images/xero.svg'
 import xeroRed from '../../assets/images/xero/red.svg'
 import { useCreditNotesQuery, useCreditNoteCountQuery } from '@pabau/graphql'
+import { DisplayDate } from '../../hooks/displayDate'
 
 interface CreditNoteProps {
   searchTerm: string
@@ -63,7 +64,7 @@ const CreditNotes: FC<CreditNoteProps> = ({
       width: '120px',
       skeletonWidth: '80px',
       render: function render(data) {
-        return <Typography.Text>{data.split('T')[0]}</Typography.Text>
+        return <Typography.Text>{DisplayDate(data)}</Typography.Text>
       },
     },
     {

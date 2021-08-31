@@ -6,7 +6,7 @@ export const CmContactTravelAggregateQuery = queryField(
     type: 'AggregateCmContactTravel',
     args: {
       where: 'CmContactTravelWhereInput',
-      orderBy: list('CmContactTravelOrderByInput'),
+      orderBy: list('CmContactTravelOrderByWithRelationInput'),
       cursor: 'CmContactTravelWhereUniqueInput',
       distinct: 'CmContactTravelScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const ClassCategoryAggregateQuery = queryField(
     type: 'AggregateClassCategory',
     args: {
       where: 'ClassCategoryWhereInput',
-      orderBy: list('ClassCategoryOrderByInput'),
+      orderBy: list('ClassCategoryOrderByWithRelationInput'),
       cursor: 'ClassCategoryWhereUniqueInput',
       distinct: 'ClassCategoryScalarFieldEnum',
       skip: 'Int',

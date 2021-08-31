@@ -4,7 +4,7 @@ export const TaxAggregateQuery = queryField('aggregateTax', {
   type: 'AggregateTax',
   args: {
     where: 'TaxWhereInput',
-    orderBy: list('TaxOrderByInput'),
+    orderBy: list('TaxOrderByWithRelationInput'),
     cursor: 'TaxWhereUniqueInput',
     distinct: 'TaxScalarFieldEnum',
     skip: 'Int',

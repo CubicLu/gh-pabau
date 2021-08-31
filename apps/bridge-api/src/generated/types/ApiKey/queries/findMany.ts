@@ -4,7 +4,7 @@ export const ApiKeyFindManyQuery = queryField('findManyApiKey', {
   type: nonNull(list(nonNull('ApiKey'))),
   args: {
     where: 'ApiKeyWhereInput',
-    orderBy: list('ApiKeyOrderByInput'),
+    orderBy: list('ApiKeyOrderByWithRelationInput'),
     cursor: 'ApiKeyWhereUniqueInput',
     distinct: 'ApiKeyScalarFieldEnum',
     skip: 'Int',

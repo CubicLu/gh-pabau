@@ -259,7 +259,7 @@ const calculateNetAndGst = async (
         const vatId = list['VAT_id']
         if (vatId !== 0) {
           const rowTax = list.Tax?.value
-          tax = Number.parseFloat(rowTax?.split('%')[0])
+          tax = rowTax ? Number.parseFloat(rowTax?.split('%')[0]) : 0
         }
         const vatMultiplier = tax / 100 + 1
         const realGrossTotal = list['gross_total'] - Math.abs(list['val_tax'])

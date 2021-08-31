@@ -6,7 +6,7 @@ export const UserActivityLogFindManyQuery = queryField(
     type: nonNull(list(nonNull('UserActivityLog'))),
     args: {
       where: 'UserActivityLogWhereInput',
-      orderBy: list('UserActivityLogOrderByInput'),
+      orderBy: list('UserActivityLogOrderByWithRelationInput'),
       cursor: 'UserActivityLogWhereUniqueInput',
       distinct: 'UserActivityLogScalarFieldEnum',
       skip: 'Int',

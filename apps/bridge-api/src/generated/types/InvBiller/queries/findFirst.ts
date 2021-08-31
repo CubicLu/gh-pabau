@@ -4,7 +4,7 @@ export const InvBillerFindFirstQuery = queryField('findFirstInvBiller', {
   type: 'InvBiller',
   args: {
     where: 'InvBillerWhereInput',
-    orderBy: list('InvBillerOrderByInput'),
+    orderBy: list('InvBillerOrderByWithRelationInput'),
     cursor: 'InvBillerWhereUniqueInput',
     distinct: 'InvBillerScalarFieldEnum',
     skip: 'Int',

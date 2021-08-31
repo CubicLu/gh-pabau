@@ -4,7 +4,7 @@ export const AcLogUrlFindCountQuery = queryField('findManyAcLogUrlCount', {
   type: nonNull('Int'),
   args: {
     where: 'AcLogUrlWhereInput',
-    orderBy: list('AcLogUrlOrderByInput'),
+    orderBy: list('AcLogUrlOrderByWithRelationInput'),
     cursor: 'AcLogUrlWhereUniqueInput',
     distinct: 'AcLogUrlScalarFieldEnum',
     skip: 'Int',

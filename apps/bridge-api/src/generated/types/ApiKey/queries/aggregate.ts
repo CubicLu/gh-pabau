@@ -4,7 +4,7 @@ export const ApiKeyAggregateQuery = queryField('aggregateApiKey', {
   type: 'AggregateApiKey',
   args: {
     where: 'ApiKeyWhereInput',
-    orderBy: list('ApiKeyOrderByInput'),
+    orderBy: list('ApiKeyOrderByWithRelationInput'),
     cursor: 'ApiKeyWhereUniqueInput',
     distinct: 'ApiKeyScalarFieldEnum',
     skip: 'Int',

@@ -4,6 +4,7 @@ import TableLayout, { FilterValueType } from './TableLayout'
 import { useTranslationI18 } from '../../hooks/useTranslationI18'
 import { Dayjs } from 'dayjs'
 import { usePaymentsQuery, usePaymentCountQuery } from '@pabau/graphql'
+import { DisplayDate } from '../../hooks/displayDate'
 
 interface PaymentProps {
   searchTerm: string
@@ -55,7 +56,7 @@ const Payments: FC<PaymentProps> = ({
       width: '120px',
       visible: true,
       render: function render(data) {
-        return <Typography.Text>{data.split('T')[0]}</Typography.Text>
+        return <Typography.Text>{DisplayDate(data)}</Typography.Text>
       },
     },
     {

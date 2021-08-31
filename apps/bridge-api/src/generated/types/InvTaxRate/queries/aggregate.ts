@@ -4,7 +4,7 @@ export const InvTaxRateAggregateQuery = queryField('aggregateInvTaxRate', {
   type: 'AggregateInvTaxRate',
   args: {
     where: 'InvTaxRateWhereInput',
-    orderBy: list('InvTaxRateOrderByInput'),
+    orderBy: list('InvTaxRateOrderByWithRelationInput'),
     cursor: 'InvTaxRateWhereUniqueInput',
     distinct: 'InvTaxRateScalarFieldEnum',
     skip: 'Int',

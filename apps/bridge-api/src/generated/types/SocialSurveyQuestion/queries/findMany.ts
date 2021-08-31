@@ -6,7 +6,7 @@ export const SocialSurveyQuestionFindManyQuery = queryField(
     type: nonNull(list(nonNull('SocialSurveyQuestion'))),
     args: {
       where: 'SocialSurveyQuestionWhereInput',
-      orderBy: list('SocialSurveyQuestionOrderByInput'),
+      orderBy: list('SocialSurveyQuestionOrderByWithRelationInput'),
       cursor: 'SocialSurveyQuestionWhereUniqueInput',
       distinct: 'SocialSurveyQuestionScalarFieldEnum',
       skip: 'Int',

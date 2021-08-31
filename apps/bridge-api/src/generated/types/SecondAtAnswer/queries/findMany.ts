@@ -6,7 +6,7 @@ export const SecondAtAnswerFindManyQuery = queryField(
     type: nonNull(list(nonNull('SecondAtAnswer'))),
     args: {
       where: 'SecondAtAnswerWhereInput',
-      orderBy: list('SecondAtAnswerOrderByInput'),
+      orderBy: list('SecondAtAnswerOrderByWithRelationInput'),
       cursor: 'SecondAtAnswerWhereUniqueInput',
       distinct: 'SecondAtAnswerScalarFieldEnum',
       skip: 'Int',

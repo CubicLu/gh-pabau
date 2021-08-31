@@ -6,7 +6,7 @@ export const AutomationRuleFindManyQuery = queryField(
     type: nonNull(list(nonNull('AutomationRule'))),
     args: {
       where: 'AutomationRuleWhereInput',
-      orderBy: list('AutomationRuleOrderByInput'),
+      orderBy: list('AutomationRuleOrderByWithRelationInput'),
       cursor: 'AutomationRuleWhereUniqueInput',
       distinct: 'AutomationRuleScalarFieldEnum',
       skip: 'Int',

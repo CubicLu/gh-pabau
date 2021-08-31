@@ -6,7 +6,7 @@ export const ClientFormSettingFindFirstQuery = queryField(
     type: 'ClientFormSetting',
     args: {
       where: 'ClientFormSettingWhereInput',
-      orderBy: list('ClientFormSettingOrderByInput'),
+      orderBy: list('ClientFormSettingOrderByWithRelationInput'),
       cursor: 'ClientFormSettingWhereUniqueInput',
       distinct: 'ClientFormSettingScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const AppPermissionFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'AppPermissionWhereInput',
-      orderBy: list('AppPermissionOrderByInput'),
+      orderBy: list('AppPermissionOrderByWithRelationInput'),
       cursor: 'AppPermissionWhereUniqueInput',
       distinct: 'AppPermissionScalarFieldEnum',
       skip: 'Int',

@@ -6,7 +6,7 @@ export const ClassSmsHistoryAggregateQuery = queryField(
     type: 'AggregateClassSmsHistory',
     args: {
       where: 'ClassSmsHistoryWhereInput',
-      orderBy: list('ClassSmsHistoryOrderByInput'),
+      orderBy: list('ClassSmsHistoryOrderByWithRelationInput'),
       cursor: 'ClassSmsHistoryWhereUniqueInput',
       distinct: 'ClassSmsHistoryScalarFieldEnum',
       skip: 'Int',

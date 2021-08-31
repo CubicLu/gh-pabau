@@ -6,7 +6,7 @@ export const AutomationFolderFindCountQuery = queryField(
     type: nonNull('Int'),
     args: {
       where: 'AutomationFolderWhereInput',
-      orderBy: list('AutomationFolderOrderByInput'),
+      orderBy: list('AutomationFolderOrderByWithRelationInput'),
       cursor: 'AutomationFolderWhereUniqueInput',
       distinct: 'AutomationFolderScalarFieldEnum',
       skip: 'Int',

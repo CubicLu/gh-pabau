@@ -6,7 +6,7 @@ export const AcceptEmailTokenFindFirstQuery = queryField(
     type: 'AcceptEmailToken',
     args: {
       where: 'AcceptEmailTokenWhereInput',
-      orderBy: list('AcceptEmailTokenOrderByInput'),
+      orderBy: list('AcceptEmailTokenOrderByWithRelationInput'),
       cursor: 'AcceptEmailTokenWhereUniqueInput',
       distinct: 'AcceptEmailTokenScalarFieldEnum',
       skip: 'Int',

@@ -4,7 +4,7 @@ export const ClockinBreakAggregateQuery = queryField('aggregateClockinBreak', {
   type: 'AggregateClockinBreak',
   args: {
     where: 'ClockinBreakWhereInput',
-    orderBy: list('ClockinBreakOrderByInput'),
+    orderBy: list('ClockinBreakOrderByWithRelationInput'),
     cursor: 'ClockinBreakWhereUniqueInput',
     distinct: 'ClockinBreakScalarFieldEnum',
     skip: 'Int',

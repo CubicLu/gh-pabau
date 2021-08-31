@@ -6,7 +6,7 @@ export const CampaignAttachmentFindFirstQuery = queryField(
     type: 'CampaignAttachment',
     args: {
       where: 'CampaignAttachmentWhereInput',
-      orderBy: list('CampaignAttachmentOrderByInput'),
+      orderBy: list('CampaignAttachmentOrderByWithRelationInput'),
       cursor: 'CampaignAttachmentWhereUniqueInput',
       distinct: 'CampaignAttachmentScalarFieldEnum',
       skip: 'Int',

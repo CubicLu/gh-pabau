@@ -6,7 +6,7 @@ export const UserSecurityQuestionsAnswerFindManyQuery = queryField(
     type: nonNull(list(nonNull('UserSecurityQuestionsAnswer'))),
     args: {
       where: 'UserSecurityQuestionsAnswerWhereInput',
-      orderBy: list('UserSecurityQuestionsAnswerOrderByInput'),
+      orderBy: list('UserSecurityQuestionsAnswerOrderByWithRelationInput'),
       cursor: 'UserSecurityQuestionsAnswerWhereUniqueInput',
       distinct: 'UserSecurityQuestionsAnswerScalarFieldEnum',
       skip: 'Int',

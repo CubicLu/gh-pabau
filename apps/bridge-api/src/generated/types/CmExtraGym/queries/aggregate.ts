@@ -4,7 +4,7 @@ export const CmExtraGymAggregateQuery = queryField('aggregateCmExtraGym', {
   type: 'AggregateCmExtraGym',
   args: {
     where: 'CmExtraGymWhereInput',
-    orderBy: list('CmExtraGymOrderByInput'),
+    orderBy: list('CmExtraGymOrderByWithRelationInput'),
     cursor: 'CmExtraGymWhereUniqueInput',
     distinct: 'CmExtraGymScalarFieldEnum',
     skip: 'Int',

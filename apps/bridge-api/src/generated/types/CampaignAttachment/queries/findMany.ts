@@ -6,7 +6,7 @@ export const CampaignAttachmentFindManyQuery = queryField(
     type: nonNull(list(nonNull('CampaignAttachment'))),
     args: {
       where: 'CampaignAttachmentWhereInput',
-      orderBy: list('CampaignAttachmentOrderByInput'),
+      orderBy: list('CampaignAttachmentOrderByWithRelationInput'),
       cursor: 'CampaignAttachmentWhereUniqueInput',
       distinct: 'CampaignAttachmentScalarFieldEnum',
       skip: 'Int',

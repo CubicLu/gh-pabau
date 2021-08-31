@@ -6,7 +6,7 @@ export const AccountBalanceLogFindFirstQuery = queryField(
     type: 'AccountBalanceLog',
     args: {
       where: 'AccountBalanceLogWhereInput',
-      orderBy: list('AccountBalanceLogOrderByInput'),
+      orderBy: list('AccountBalanceLogOrderByWithRelationInput'),
       cursor: 'AccountBalanceLogWhereUniqueInput',
       distinct: 'AccountBalanceLogScalarFieldEnum',
       skip: 'Int',

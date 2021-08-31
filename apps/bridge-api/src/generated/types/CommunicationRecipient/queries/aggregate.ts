@@ -6,7 +6,7 @@ export const CommunicationRecipientAggregateQuery = queryField(
     type: 'AggregateCommunicationRecipient',
     args: {
       where: 'CommunicationRecipientWhereInput',
-      orderBy: list('CommunicationRecipientOrderByInput'),
+      orderBy: list('CommunicationRecipientOrderByWithRelationInput'),
       cursor: 'CommunicationRecipientWhereUniqueInput',
       distinct: 'CommunicationRecipientScalarFieldEnum',
       skip: 'Int',
