@@ -168,7 +168,7 @@ export function Index() {
         completed: {
           count:
             appointment_status?.getBookingStatus?.bookingStatus
-              ?.onlineBookingStatusCounts?.Complete,
+              ?.onlineBookingStatusCounts?.completeCount,
           per:
             appointment_status?.getBookingStatus?.bookingStatus
               ?.onlineBookingStatusCounts?.completePer,
@@ -535,6 +535,15 @@ export function Index() {
               totalBooking={totalBooking}
               totalOnlineBooking={totalOnlineBooking}
               totalSalesCount={totalSalesCount}
+              filterRange={
+                filterRange === 'custom'
+                  ? `${Intl.DateTimeFormat('en').format(
+                      new Date(`${filterDate[0]}`)
+                    )} - ${Intl.DateTimeFormat('en').format(
+                      new Date(`${filterDate[1]}`)
+                    )}`
+                  : filterRange
+              }
             />
             <Charts
               location={location}

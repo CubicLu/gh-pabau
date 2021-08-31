@@ -1,5 +1,5 @@
 import { Context } from '../../context'
-import { DateRangeInput } from '../../resolvers/types/DashboardStatus'
+import { DateRangeInput } from '../../resolvers/types/Dashboard'
 import dayjs from 'dayjs'
 
 export const retrieveBookingStatuses = async (
@@ -24,6 +24,7 @@ export const retrieveBookingStatuses = async (
   const onlineBookingStatusCount = await ctx.prisma.booking.groupBy({
     by: ['status'],
     where: {
+      NOT: [{ Contact: null }],
       start_date: { gte: data.start_date },
       end_date: { lte: data.end_date },
       Online: { equals: 1 },
@@ -120,11 +121,11 @@ export const retrieveBookingStatuses = async (
     },
     onlineBookingStatusCounts: {
       completeCount:
-        onlineBookingStatusCount?.find((item) => item.status === 'complete')
+        onlineBookingStatusCount?.find((item) => item.status === 'Complete')
           ?._count?.id ?? 0,
       completePer:
         (
-          ((onlineBookingStatusCount?.find((item) => item.status === 'complete')
+          ((onlineBookingStatusCount?.find((item) => item.status === 'Complete')
             ?._count?.id ?? 0) *
             100) /
           (totalOnlineBookingStatusCount?._count?.id ?? 0)

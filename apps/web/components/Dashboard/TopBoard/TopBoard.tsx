@@ -42,6 +42,7 @@ interface ITopBoard {
   totalBooking: ICount
   totalOnlineBooking: ICount
   totalSalesCount: ICount
+  filterRange: string
 }
 
 export const TopBoard: FC<ITopBoard> = ({
@@ -51,6 +52,7 @@ export const TopBoard: FC<ITopBoard> = ({
   totalBooking,
   totalOnlineBooking,
   totalSalesCount,
+  filterRange,
 }) => {
   return (
     <div>
@@ -132,7 +134,7 @@ export const TopBoard: FC<ITopBoard> = ({
                     <div className={styles.title}>{totalBooking.count}</div>
                     <div className={styles.subtitle}>Appointments</div>
                     <div className={styles.description}>
-                      {totalBooking.per} previous day
+                      {totalBooking.per} {filterRange}
                     </div>
                   </div>
                 </Row>
@@ -178,7 +180,7 @@ export const TopBoard: FC<ITopBoard> = ({
                     <div className={styles.title}>{totalSalesCount.count}</div>
                     <div className={styles.subtitle}>Sales</div>
                     <div className={styles.description}>
-                      {totalSalesCount.per} previous day
+                      {totalSalesCount.per} {filterRange}
                     </div>
                   </div>
                 </Row>
@@ -224,7 +226,7 @@ export const TopBoard: FC<ITopBoard> = ({
                     </div>
                     <div className={styles.subtitle}>Online appointments</div>
                     <div className={styles.description}>
-                      {totalOnlineBooking.per} previous day
+                      {totalOnlineBooking.per} {filterRange}
                     </div>
                   </div>
                 </Row>

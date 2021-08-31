@@ -1,9 +1,7 @@
 import { extendType, inputObjectType, arg } from 'nexus'
 import { Context } from '../../context'
-import {
-  retrieveBookingStatuses,
-  retrieveSalesCount,
-} from '../../app/dashboard/status'
+import { retrieveBookingStatuses } from '../../app/booking/booking'
+import { retrieveSalesCount } from '../../app/finance/finance'
 
 export interface DateRangeInput {
   start_date: number

@@ -14,6 +14,8 @@ import {
   StatementArgs,
   StatementOutput,
 } from './types'
+import { DateRangeInput } from '../../resolvers/types/Dashboard'
+import dayjs from 'dayjs'
 
 export const findManyFinanceInvoice = async (
   ctx: Context,
@@ -1199,5 +1201,98 @@ export const getStatementData = async (
     },
     items: data,
     payments: details,
+  }
+}
+
+export const retrieveSalesCount = async (
+  ctx: Context,
+  data: DateRangeInput
+) => {
+  const start_date = dayjs(`${data.start_date}` as 'YYYYMMDDHHmmss').format(
+    'YYYY-MM-DDTHH:mm:ssZ'
+  )
+  const end_date = dayjs(`${data.end_date}` as 'YYYYMMDDHHmmss').format(
+    'YYYY-MM-DDTHH:mm:ssZ'
+  )
+
+  const salesCount = await ctx.prisma.saleItem.groupBy({
+    by: ['product_category_type'],
+    where: {
+      InvSale: {
+        date: {
+          gte: start_date,
+          lte: end_date,
+        },
+      },
+      product_category_type: {
+        in: ['service', 'retail', 'packages', 'vouchers'],
+      },
+    },
+    _count: {
+      id: true,
+    },
+  })
+
+  const totalSalesCount = await ctx.prisma.invSale.aggregate({
+    _count: {
+      id: true,
+    },
+  })
+  return {
+    totalSalesCounts: totalSalesCount?._count?.id ?? 0,
+    totalAvailableCategoryTypeCount: salesCount?.reduce((prev, cur) => {
+      return prev + cur._count.id ?? 0
+    }, 0),
+    totalAvailableCategoryTypePer: `${(
+      (salesCount?.reduce((prev, cur) => {
+        return prev + cur._count.id ?? 0
+      }, 0) *
+        100) /
+        totalSalesCount?._count?.id ?? 0
+    ).toFixed(2)}%`,
+    saleStatusCount: {
+      serviceCount:
+        salesCount?.find((item) => item.product_category_type === 'service')
+          ?._count?.id ?? 0,
+      servicePer:
+        (
+          ((salesCount?.find((item) => item.product_category_type === 'service')
+            ?._count?.id ?? 0) *
+            100) /
+          (totalSalesCount?._count?.id ?? 0)
+        ).toFixed(2) + '%',
+      retailCount:
+        salesCount?.find((item) => item.product_category_type === 'retail')
+          ?._count?.id ?? 0,
+      retailPer:
+        (
+          ((salesCount?.find((item) => item.product_category_type === 'retail')
+            ?._count?.id ?? 0) *
+            100) /
+          (totalSalesCount?._count?.id ?? 0)
+        ).toFixed(2) + '%',
+      packagesCount:
+        salesCount?.find((item) => item.product_category_type === 'packages')
+          ?._count?.id ?? 0,
+      packagesPer:
+        (
+          ((salesCount?.find(
+            (item) => item.product_category_type === 'packages'
+          )?._count?.id ?? 0) *
+            100) /
+          (totalSalesCount?._count?.id ?? 0)
+        ).toFixed(2) + '%',
+      vouchersCount:
+        salesCount?.find((item) => item.product_category_type === 'vouchers')
+          ?._count?.id ?? 0,
+      vouchersPer:
+        (
+          ((salesCount?.find(
+            (item) => item.product_category_type === 'vouchers'
+          )?._count?.id ?? 0) *
+            100) /
+          (totalSalesCount?._count?.id ?? 0)
+        ).toFixed(2) + '%',
+    },
   }
 }
