@@ -202,7 +202,7 @@ export const CreateVoucher: FC<CreateVoucherProps> = ({ title }) => {
         <div className={styles.vCard}>
           <VoucherCard
             borderColor="#000"
-            voucherBackgrounUrl={values?.bgUrl}
+            voucherBackgroundUrl={values?.bgUrl}
             background={values?.bgColor}
             buttonLabel={t('giftvouchers.create.label.booknow')}
             bookNowButton={bookBtn}
