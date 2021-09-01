@@ -12,7 +12,7 @@ import ActivitiesTable from '../../components/Activities/ActivitiesTable'
 import { leadOptions, clientOptions, userOptions } from '../../mocks/Activities'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { Tabs, Tooltip, Popover, Skeleton } from 'antd'
-import { CreateActivity, DatePicker } from '@pabau/ui'
+import { CreateActivity, RangePicker } from '@pabau/ui'
 import styles from './index.module.less'
 import dayjs, { Dayjs } from 'dayjs'
 import classNames from 'classnames'
@@ -30,9 +30,10 @@ import {
   useFindManyActivityDataQuery,
   useFindFirstActivityUserColumnsQuery,
 } from '@pabau/graphql'
+import utc from 'dayjs/plugin/utc'
+dayjs.extend(utc)
 
 const { TabPane } = Tabs
-const { RangePicker } = DatePicker
 /* eslint-disable-next-line */
 export interface IndexProps {
   client?: ApolloClient<NormalizedCacheObject>
@@ -228,7 +229,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
     const queryOptions = {
       variables: {
         search: `%${searchTerm}%`,
-        offset: paginateData.offset,
+        skip: paginateData.offset,
         limit: paginateData.limit,
         startDate: filterDates?.[0],
         endDate: filterDates?.[1],
@@ -437,7 +438,12 @@ export const Index: FC<IndexProps> = ({ client }) => {
   }, [filterActivityType])
 
   useEffect(() => {
-    if (selectedDates.length > 0) setFilterDates(selectedDates)
+    if (selectedDates.length > 0) {
+      setFilterDates([
+        dayjs(selectedDates[0]).utc().startOf('day'),
+        dayjs(selectedDates[1]).utc().endOf('day'),
+      ])
+    }
   }, [selectedDates])
 
   // useEffect(() => {
@@ -1012,27 +1018,30 @@ export const Index: FC<IndexProps> = ({ client }) => {
         break
       }
       case 'Today': {
-        setFilterDates([dayjs().startOf('day'), dayjs().endOf('day')])
+        setFilterDates([
+          dayjs().utc().startOf('day'),
+          dayjs().utc().endOf('day'),
+        ])
         break
       }
       case 'Tomorrow': {
         setFilterDates([
-          dayjs().add(1, 'day').startOf('day'),
-          dayjs().add(1, 'day').endOf('day'),
+          dayjs().utc().add(1, 'day').startOf('day'),
+          dayjs().utc().add(1, 'day').endOf('day'),
         ])
         break
       }
       case 'This week': {
         setFilterDates([
-          dayjs().startOf('week').day(1),
-          dayjs().endOf('week').day(7),
+          dayjs().utc().startOf('week').day(1),
+          dayjs().utc().endOf('week').day(7),
         ])
         break
       }
       case 'Next week': {
         setFilterDates([
-          dayjs().add(1, 'week').startOf('day'),
-          dayjs().add(1, 'week').endOf('week').day(7),
+          dayjs().utc().add(1, 'week').startOf('day'),
+          dayjs().utc().add(1, 'week').endOf('week').day(7),
         ])
         break
       }
@@ -1080,7 +1089,7 @@ export const Index: FC<IndexProps> = ({ client }) => {
         <div>
           <Tabs
             tabPosition={'top'}
-            onChange={(key) => onDataRangeSelect(key)}
+            onChange={(key) => tabValue !== key && onDataRangeSelect(key)}
             activeKey={tabValue}
             className={styles.tabsClass}
           >
