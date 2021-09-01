@@ -14,7 +14,7 @@ import {
 import CommonHeader from '../../../components/CommonHeader'
 import AddButton from '../../../components/AddButton'
 import useWindowSize from '../../../hooks/useWindowSize'
-import VoucherIcon from '../../../components/Marketing/GiftVouchersList/assets/VocherIcon.svg'
+import { ReactComponent as VoucherIcon } from '../../../assets/images/voucher-icon.svg'
 import { data, giftCardSettings } from '../../../mocks/vouchers'
 import { Card, Row, Col, Typography } from 'antd'
 import Link from 'next/link'
@@ -131,30 +131,30 @@ const GiftVouchers: FC = () => {
   )
 
   useEffect(() => {
-    setGifts([
-      { ...giftCardSettings(t) },
-      { ...giftCardSettings(t) },
-      {
-        ...giftCardSettings(t),
-        gradientType: 'linear-gradient',
-        voucherType: 'birthday',
-      },
-      {
-        ...giftCardSettings(t),
-        gradientType: 'linear-gradient',
-        voucherType: 'valentine',
-      },
-      {
-        ...giftCardSettings(t),
-        gradientType: 'radial-gradient',
-      },
-      {
-        ...giftCardSettings(t),
-        gradientType: 'linear-gradient',
-        voucherType: 'flowers',
-      },
-    ])
-    setDataSource(data)
+    // setGifts([
+    //   { ...giftCardSettings(t) },
+    //   { ...giftCardSettings(t) },
+    //   {
+    //     ...giftCardSettings(t),
+    //     gradientType: 'linear-gradient',
+    //     voucherType: 'birthday',
+    //   },
+    //   {
+    //     ...giftCardSettings(t),
+    //     gradientType: 'linear-gradient',
+    //     voucherType: 'valentine',
+    //   },
+    //   {
+    //     ...giftCardSettings(t),
+    //     gradientType: 'radial-gradient',
+    //   },
+    //   {
+    //     ...giftCardSettings(t),
+    //     gradientType: 'linear-gradient',
+    //     voucherType: 'flowers',
+    //   },
+    // ])
+    // setDataSource(data)
   }, [t])
 
   const onTabChange = (tab) => {
@@ -218,7 +218,7 @@ const GiftVouchers: FC = () => {
                       <div className={styles.noDataTableBox}>
                         <div className={styles.noDataTextStyle}>
                           <div className={styles.noDataIcon}>
-                            <img src={VoucherIcon} alt="voucher-icon" />
+                            <VoucherIcon />
                           </div>
                           <h2>{t('giftvouchers.add.label')}</h2>
                           <p>{t('giftvouchers.no.voucher.label')}</p>
